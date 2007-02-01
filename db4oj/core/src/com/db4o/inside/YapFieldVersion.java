@@ -20,7 +20,7 @@ public class YapFieldVersion extends YapFieldVirtual {
         i_handler = new YLong(stream);
     }
     
-    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, StatefulBuffer writer, Slot oldSlot) {
+    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {
         writer.writeLong(writer.getStream().generateTimeStampId());
     }
     

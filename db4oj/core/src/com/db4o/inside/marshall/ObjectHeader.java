@@ -11,7 +11,7 @@ import com.db4o.inside.*;
  */
 public final class ObjectHeader {
     
-    private final YapClass _yapClass;
+    private final ClassMetadata _yapClass;
     
     public final MarshallerFamily _marshallerFamily;
     
@@ -21,7 +21,7 @@ public final class ObjectHeader {
     	this(stream,null,reader);
     }
 
-    public ObjectHeader(YapClass yapClass, Buffer reader){
+    public ObjectHeader(ClassMetadata yapClass, Buffer reader){
     	this(null,yapClass,reader);
     }
 
@@ -29,7 +29,7 @@ public final class ObjectHeader {
         this(writer.getStream(), writer);
     }
     
-    public ObjectHeader(ObjectContainerBase stream, YapClass yc, Buffer reader){
+    public ObjectHeader(ObjectContainerBase stream, ClassMetadata yc, Buffer reader){
         if (Deploy.debug) {
             reader.readBegin(YapConst.YAPOBJECT);
         }
@@ -95,7 +95,7 @@ public final class ObjectHeader {
     	return (id<0 ? -id : id);
     }
 
-    public YapClass yapClass() {
+    public ClassMetadata yapClass() {
         return _yapClass;
     }
 }

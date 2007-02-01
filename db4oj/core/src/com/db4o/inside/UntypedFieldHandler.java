@@ -3,18 +3,13 @@
 package com.db4o.inside;
 
 import com.db4o.*;
-import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
 
-
-/**
- * Undefined YapClass used for members of type Object.
- */
-final class YapClassAny extends YapClass {
+final class UntypedFieldHandler extends ClassMetadata {
     
-	public YapClassAny(ObjectContainerBase stream){
+	public UntypedFieldHandler(ObjectContainerBase stream){
 		super(stream, stream.i_handlers.ICLASS_OBJECT);
 	}
 
@@ -27,7 +22,7 @@ final class YapClassAny extends YapClass {
 		Object a_object,
 		int a_depth,
 		boolean a_activate) {
-		YapClass yc = forObject(a_trans, a_object, false);
+		ClassMetadata yc = forObject(a_trans, a_object, false);
 		if (yc != null) {
 			yc.cascadeActivation(a_trans, a_object, a_depth, a_activate);
 		}
@@ -71,7 +66,7 @@ final class YapClassAny extends YapClass {
         }else{
             header.addPayLoadLength(YapConst.INT_LENGTH);  // single relink
         }
-        YapClass yc = forObject(trans, obj, true);
+        ClassMetadata yc = forObject(trans, obj, true);
         if( yc == null){
             return;
         }

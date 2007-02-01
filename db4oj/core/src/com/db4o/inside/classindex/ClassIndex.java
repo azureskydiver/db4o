@@ -13,14 +13,14 @@ import com.db4o.inside.slots.Slot;
  public class ClassIndex extends YapMeta implements ReadWriteable {
      
      
-    private final YapClass _yapClass;
+    private final ClassMetadata _yapClass;
      
 	/**
 	 * contains TreeInt with object IDs 
 	 */
 	private TreeInt i_root;
     
-    ClassIndex(YapClass yapClass){
+    ClassIndex(ClassMetadata yapClass){
         _yapClass = yapClass;
     }
 	

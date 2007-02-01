@@ -15,7 +15,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
         return true;
     }
     
-    public int writeNew(Transaction trans, YapClassPrimitive yapClassPrimitive, Object obj, boolean topLevel, StatefulBuffer parentWriter, boolean withIndirection, boolean restoreLinkOffset){
+    public int writeNew(Transaction trans, PrimitiveFieldHandler yapClassPrimitive, Object obj, boolean topLevel, StatefulBuffer parentWriter, boolean withIndirection, boolean restoreLinkOffset){
         
         int id = 0;
         

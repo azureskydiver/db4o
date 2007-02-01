@@ -14,7 +14,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	
 	private BTree _btreeIndex;
 	
-	public BTreeClassIndexStrategy(YapClass yapClass) {
+	public BTreeClassIndexStrategy(ClassMetadata yapClass) {
 		super(yapClass);
 	}	
 	
@@ -87,7 +87,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public void dontDelete(Transaction transaction, int id) {
 	}
 	
-	public void defragReference(YapClass yapClass, ReaderPair readers,int classIndexID) {
+	public void defragReference(ClassMetadata yapClass, ReaderPair readers,int classIndexID) {
 		int newID = -classIndexID;
 		readers.writeInt(newID);
 	}
@@ -104,7 +104,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 		_btreeIndex.defragIndex(readers);
 	}
 	
-	public static BTree btree(YapClass clazz) {
+	public static BTree btree(ClassMetadata clazz) {
 		ClassIndexStrategy index = clazz.index();
 		if(! (index instanceof BTreeClassIndexStrategy)){
 			throw new IllegalStateException();
@@ -112,7 +112,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 		return ((BTreeClassIndexStrategy)index).btree();
 	}
 	
-	public static Iterator4 iterate(YapClass clazz, Transaction trans) {
+	public static Iterator4 iterate(ClassMetadata clazz, Transaction trans) {
 		return btree(clazz).asRange(trans).keys();
 	}
 	

@@ -75,7 +75,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-    public void write(Transaction trans, YapClass clazz, YapField field, Buffer writer) {
+    public void write(Transaction trans, ClassMetadata clazz, YapField field, Buffer writer) {
         
         field.alive();
         
@@ -86,7 +86,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         
         TypeHandler4 handler = field.getHandler();
         
-        if (handler instanceof YapClass) {
+        if (handler instanceof ClassMetadata) {
             
             // TODO: ensure there is a test case, to make this happen 
             if (handler.getID() == 0) {
@@ -118,7 +118,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-	public void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException {
+	public void defrag(ClassMetadata yapClass, YapField yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException {
 		readers.readShortString(sio);
         if (yapField.isVirtual()) {
         	return;

@@ -57,7 +57,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 		return getYapClass(clazz).getYapField(fieldName).getIndex(null);
 	}
 
-	private YapClass getYapClass(Class clazz) {
+	private ClassMetadata getYapClass(Class clazz) {
 		return stream().getYapClass(getReflectClass(clazz));
 	}
 

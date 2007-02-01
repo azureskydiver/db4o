@@ -44,14 +44,14 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     private void calculateLengths(ObjectReference yo) {
         _baseLength = headerLength() + nullBitMapLength();
         _payLoadLength = 0;
-        YapClass yc = yo.getYapClass();
+        ClassMetadata yc = yo.getYapClass();
         Transaction trans = yo.getTrans();
         Object obj = yo.getObject();
         calculateLengths(trans, yc, obj, 0);
         _baseLength = yo.getStream().alignToBlockSize(_baseLength);        
     }
     
-    private void calculateLengths(Transaction trans, YapClass yc, Object obj, int fieldIndex) {
+    private void calculateLengths(Transaction trans, ClassMetadata yc, Object obj, int fieldIndex) {
         _baseLength += YapConst.INT_LENGTH;
         if (yc.i_fields != null) {
             for (int i = 0; i < yc.i_fields.length; i++) {

@@ -22,7 +22,7 @@ public abstract class ClassMarshaller {
 		return new RawClassSpec(className,ancestorID,numFields);
     }
 
-    public void write(Transaction trans, YapClass clazz, Buffer writer) {
+    public void write(Transaction trans, ClassMetadata clazz, Buffer writer) {
         
         writer.writeShortString(trans, clazz.nameToWrite());
         
@@ -45,7 +45,7 @@ public abstract class ClassMarshaller {
         }
     }
 
-    protected void writeIndex(Transaction trans, YapClass clazz, Buffer writer) {
+    protected void writeIndex(Transaction trans, ClassMetadata clazz, Buffer writer) {
         int indexID = clazz.index().write(trans);
         writer.writeInt(indexIDForWriting(indexID));
     }
@@ -76,7 +76,7 @@ public abstract class ClassMarshaller {
         return nameBytes;
     }
 
-    public void read(ObjectContainerBase stream, YapClass clazz, Buffer reader) {
+    public void read(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) {
         clazz.i_ancestor = stream.getYapClass(reader.readInt());
         
         if(clazz.i_dontCallConstructors){
@@ -94,9 +94,9 @@ public abstract class ClassMarshaller {
         readFields(stream, reader, clazz.i_fields);        
     }
 
-    protected abstract void readIndex(ObjectContainerBase stream, YapClass clazz, Buffer reader) ;
+    protected abstract void readIndex(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) ;
 
-	private YapField[] createFields(YapClass clazz, final int fieldCount) {
+	private YapField[] createFields(ClassMetadata clazz, final int fieldCount) {
 		final YapField[] fields = new YapField[fieldCount];
         for (int i = 0; i < fields.length; i++) {
             fields[i] = new YapField(clazz);
@@ -111,7 +111,7 @@ public abstract class ClassMarshaller {
         }
 	}
 
-    public int marshalledLength(ObjectContainerBase stream, YapClass clazz) {
+    public int marshalledLength(ObjectContainerBase stream, ClassMetadata clazz) {
         int len = stream.stringIO().shortLength(clazz.nameToWrite())
                 + YapConst.OBJECT_LENGTH
                 + (YapConst.INT_LENGTH * 2)
@@ -127,7 +127,7 @@ public abstract class ClassMarshaller {
         return len;
     }
 
-	public void defrag(YapClass yapClass,YapStringIO sio,ReaderPair readers, int classIndexID) throws CorruptionException {
+	public void defrag(ClassMetadata yapClass,YapStringIO sio,ReaderPair readers, int classIndexID) throws CorruptionException {
 		readName(sio, readers.source());
 		readName(sio, readers.target());
 		

@@ -11,7 +11,7 @@ import com.db4o.inside.*;
  */
 public interface FieldMarshaller {
 
-    void write(Transaction trans, YapClass clazz, YapField field, Buffer writer);
+    void write(Transaction trans, ClassMetadata clazz, YapField field, Buffer writer);
 
     RawFieldSpec readSpec(ObjectContainerBase stream,Buffer reader);
     
@@ -19,6 +19,6 @@ public interface FieldMarshaller {
 
     int marshalledLength(ObjectContainerBase stream, YapField field);
 
-	void defrag(YapClass yapClass, YapField yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException;
+	void defrag(ClassMetadata yapClass, YapField yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException;
 
 }

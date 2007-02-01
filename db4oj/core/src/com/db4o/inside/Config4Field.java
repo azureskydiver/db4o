@@ -95,7 +95,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	}
 
 	private void reindex(Transaction systemTrans, YapField yapField, LocalObjectContainer stream) {
-		YapClass yapClass = yapField.getParentYapClass();		
+		ClassMetadata yapClass = yapField.getParentYapClass();		
 		if (yapField.rebuildIndexForClass(stream, yapClass)) {
 		    systemTrans.commit();
 		}

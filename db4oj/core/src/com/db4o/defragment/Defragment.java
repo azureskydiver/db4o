@@ -154,7 +154,7 @@ public class Defragment {
 			ReaderPair.processCopy(context, origID, new SlotCopyHandler() {
 				public void processCopy(ReaderPair readers)
 						throws CorruptionException {
-					YapClass.defragObject(readers);
+					ClassMetadata.defragObject(readers);
 				}
 
 			}, true);
@@ -194,7 +194,7 @@ public class Defragment {
 		StoredClass[] classes = context
 				.storedClasses(DefragContextImpl.SOURCEDB);
 		for (int classIdx = 0; classIdx < classes.length; classIdx++) {
-			YapClass yapClass = (YapClass) classes[classIdx];
+			ClassMetadata yapClass = (ClassMetadata) classes[classIdx];
 			if (!config.storedClassFilter().accept(yapClass)) {
 				continue;
 			}
@@ -220,7 +220,7 @@ public class Defragment {
 	// reproducable with SelectiveCascadingDeleteTestCase and ObjectSetTestCase
 	// - investigate.
 	private static void processYapClass(final DefragContextImpl context,
-			final YapClass curClass, final PassCommand command)
+			final ClassMetadata curClass, final PassCommand command)
 			throws CorruptionException {
 		processClassIndex(context, curClass, command);
 		if (!parentHasIndex(curClass)) {
@@ -229,8 +229,8 @@ public class Defragment {
 		processYapClassAndFieldIndices(context, curClass, command);
 	}
 
-	private static boolean parentHasIndex(YapClass curClass) {
-		YapClass parentClass = curClass.i_ancestor;
+	private static boolean parentHasIndex(ClassMetadata curClass) {
+		ClassMetadata parentClass = curClass.i_ancestor;
 		while (parentClass != null) {
 			if (parentClass.hasIndex()) {
 				return true;
@@ -241,7 +241,7 @@ public class Defragment {
 	}
 
 	private static void processObjectsForYapClass(
-			final DefragContextImpl context, final YapClass curClass,
+			final DefragContextImpl context, final ClassMetadata curClass,
 			final PassCommand command) {
 		final boolean withStringIndex = withFieldIndex(curClass);
 		context.traverseAll(curClass, new Visitor4() {
@@ -257,7 +257,7 @@ public class Defragment {
 		});
 	}
 
-	private static boolean withFieldIndex(YapClass clazz) {
+	private static boolean withFieldIndex(ClassMetadata clazz) {
 		Iterator4 fieldIter = clazz.fields();
 		while (fieldIter.moveNext()) {
 			YapField curField = (YapField) fieldIter.current();
@@ -270,7 +270,7 @@ public class Defragment {
 	}
 
 	private static void processYapClassAndFieldIndices(
-			final DefragContextImpl context, final YapClass curClass,
+			final DefragContextImpl context, final ClassMetadata curClass,
 			final PassCommand command) throws CorruptionException {
 		int sourceClassIndexID = 0;
 		int targetClassIndexID = 0;
@@ -283,7 +283,7 @@ public class Defragment {
 	}
 
 	private static void processClassIndex(final DefragContextImpl context,
-			final YapClass curClass, final PassCommand command)
+			final ClassMetadata curClass, final PassCommand command)
 			throws CorruptionException {
 		if (curClass.hasIndex()) {
 			BTreeClassIndexStrategy indexStrategy = (BTreeClassIndexStrategy) curClass

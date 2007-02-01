@@ -217,8 +217,8 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return new TransactionClient(this, parentTransaction);
 	}
 
-	public boolean createYapClass(YapClass a_yapClass, ReflectClass a_class,
-			YapClass a_superYapClass) {
+	public boolean createYapClass(ClassMetadata a_yapClass, ReflectClass a_class,
+			ClassMetadata a_superYapClass) {
 		writeMsg(Msg.CREATE_CLASS.getWriterForString(i_systemTrans, a_class
 				.getName()), true);
 		Msg resp = getResponse();
@@ -390,11 +390,11 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return null;
 	}
 
-	public YapClass getYapClass(int a_id) {
+	public ClassMetadata getYapClass(int a_id) {
 		if(a_id == 0) {
 			return null;
 		}
-		YapClass yc = super.getYapClass(a_id);
+		ClassMetadata yc = super.getYapClass(a_id);
 		if (yc != null) {
 			return yc;
 		}
@@ -756,7 +756,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		}
 	}
 
-	public final void writeNew(YapClass a_yapClass, StatefulBuffer aWriter) {
+	public final void writeNew(ClassMetadata a_yapClass, StatefulBuffer aWriter) {
 		MsgD msg = Msg.WRITE_NEW.getWriter(a_yapClass, aWriter);
 		writeMsg(msg, false);
 	}
@@ -765,7 +765,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		// do nothing
 	}
 
-	public final void writeUpdate(YapClass a_yapClass, StatefulBuffer a_bytes) {
+	public final void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes) {
 		MsgD msg = Msg.WRITE_UPDATE.getWriter(a_yapClass, a_bytes);
 		writeMsg(msg, false);
 	}
@@ -819,7 +819,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
         processBlobMessage(msg);
     }
     
-    public long[] getIDsForClass(Transaction trans, YapClass clazz){
+    public long[] getIDsForClass(Transaction trans, ClassMetadata clazz){
     	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInt(trans, clazz.getID());
     	writeMsg(msg, true);
     	Buffer reader = expectedByteResponse(Msg.ID_LIST);
@@ -831,7 +831,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
     	return ids;
     }
     
-    public QueryResult classOnlyQuery(Transaction trans, YapClass clazz){
+    public QueryResult classOnlyQuery(Transaction trans, ClassMetadata clazz){
         long[] ids = clazz.getIDs(trans); 
         ClientQueryResult resClient = new ClientQueryResult(trans, ids.length);
         for (int i = 0; i < ids.length; i++) {

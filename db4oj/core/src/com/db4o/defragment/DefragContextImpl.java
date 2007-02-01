@@ -191,18 +191,18 @@ public class DefragContextImpl implements DefragContext {
 
 	private Hashtable4 _classIndices=new Hashtable4(16);
 
-	public int classIndexID(YapClass yapClass) {
+	public int classIndexID(ClassMetadata yapClass) {
 		return classIndex(yapClass).id();
 	}
 
-	public void traverseAll(YapClass yapClass,Visitor4 command) {
+	public void traverseAll(ClassMetadata yapClass,Visitor4 command) {
 		if(!yapClass.hasIndex()) {
 			return;
 		}
 		yapClass.index().traverseAll(SOURCEDB.transaction(this), command);
 	}
 	
-	public void traverseAllIndexSlots(YapClass yapClass,Visitor4 command) {
+	public void traverseAllIndexSlots(ClassMetadata yapClass,Visitor4 command) {
 		Iterator4 slotIDIter=yapClass.index().allSlotIDs(SOURCEDB.transaction(this));
 		while(slotIDIter.moveNext()) {
 			command.visit(slotIDIter.current());
@@ -225,7 +225,7 @@ public class DefragContextImpl implements DefragContext {
 		return identity.getID(selector.transaction(this));
 	}
 	
-	private ClassIndexStrategy classIndex(YapClass yapClass) {
+	private ClassIndexStrategy classIndex(ClassMetadata yapClass) {
 		ClassIndexStrategy classIndex=(ClassIndexStrategy)_classIndices.get(yapClass);
 		if(classIndex==null) {
 			classIndex=new BTreeClassIndexStrategy(yapClass);
@@ -266,7 +266,7 @@ public class DefragContextImpl implements DefragContext {
 		return _sourceDb.systemData().uuidIndexId();
 	}
 	
-	public YapClass yapClass(int id) {
+	public ClassMetadata yapClass(int id) {
 		return _sourceDb.getYapClass(id);
 	}
 	

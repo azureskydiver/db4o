@@ -19,7 +19,7 @@ import com.db4o.reflect.ReflectClass;
 /**
  * @exclude
  */
-public final class YapClassCollection extends YapMeta {
+public final class ClassMetadataRepository extends YapMeta {
 
     private Collection4 i_classes;
     private Hashtable4 i_creating;
@@ -36,13 +36,13 @@ public final class YapClassCollection extends YapMeta {
 	private final PendingClassInits _classInits; 
 
 
-    YapClassCollection(Transaction systemTransaction) {
+    ClassMetadataRepository(Transaction systemTransaction) {
         _systemTransaction = systemTransaction;
         i_initYapClassesOnUp = new Queue4();
 		_classInits = new PendingClassInits(_systemTransaction);
     }
 
-    public void addYapClass(YapClass yapClass) {
+    public void addYapClass(ClassMetadata yapClass) {
         stream().setDirtyInSystemTransaction(this);
         i_classes.add(yapClass);
         if(yapClass.stateUnread()){
@@ -61,9 +61,9 @@ public final class YapClassCollection extends YapMeta {
     }
 
     void attachQueryNode(final String fieldName, final Visitor4 a_visitor) {
-        YapClassCollectionIterator i = iterator();
+        ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
-            final YapClass yc = i.currentClass();
+            final ClassMetadata yc = i.currentClass();
             if(! yc.isInternal()){
                 yc.forEachYapField(new Visitor4() {
                     public void visit(Object obj) {
@@ -80,14 +80,14 @@ public final class YapClassCollection extends YapMeta {
     void checkChanges() {
         Iterator4 i = i_classes.iterator();
         while (i.moveNext()) {
-            ((YapClass)i.current()).checkChanges();
+            ((ClassMetadata)i.current()).checkChanges();
         }
     }
     
-    final boolean createYapClass(YapClass a_yapClass, ReflectClass a_class) {
+    final boolean createYapClass(ClassMetadata a_yapClass, ReflectClass a_class) {
         i_yapClassCreationDepth++;
         ReflectClass superClass = a_class.getSuperclass();
-        YapClass superYapClass = null;
+        ClassMetadata superYapClass = null;
         if (superClass != null && ! superClass.equals(stream().i_handlers.ICLASS_OBJECT)) {
             superYapClass = produceYapClass(superClass);
         }
@@ -117,14 +117,14 @@ public final class YapClassCollection extends YapMeta {
 			int numClasses=i_classes.size();
 	        Iterator4 classIter = i_classes.iterator();
 	        while(classIter.moveNext()) {
-	        	YapClass yapClass=(YapClass)classIter.current();
+	        	ClassMetadata yapClass=(ClassMetadata)classIter.current();
 	        	if(yapClass.stateUnread()) {
 	        		unreadClasses.add(yapClass);
 	        	}
 	        }
 	        Iterator4 unreadIter=unreadClasses.iterator();
 	        while(unreadIter.moveNext()) {
-	        	YapClass yapClass=(YapClass)unreadIter.current();
+	        	ClassMetadata yapClass=(ClassMetadata)unreadIter.current();
 	        	readYapClass(yapClass,null);
 	            if(yapClass.classReflector() == null){
 	            	yapClass.forceRead();
@@ -136,7 +136,7 @@ public final class YapClassCollection extends YapMeta {
 	}
 
     boolean fieldExists(String a_field) {
-        YapClassCollectionIterator i = iterator();
+        ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
             if (i.currentClass().getYapField(a_field) != null) {
                 return true;
@@ -147,18 +147,18 @@ public final class YapClassCollection extends YapMeta {
 
     Collection4 forInterface(ReflectClass claxx) {
         Collection4 col = new Collection4();
-        YapClassCollectionIterator i = iterator();
+        ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
-            YapClass yc = i.currentClass();
+            ClassMetadata yc = i.currentClass();
             ReflectClass candidate = yc.classReflector();
             if(! candidate.isInterface()){
                 if (claxx.isAssignableFrom(candidate)) {
                     col.add(yc);
                     Iterator4 j = new Collection4(col).iterator();
                     while (j.moveNext()) {
-                        YapClass existing = (YapClass)j.current();
+                        ClassMetadata existing = (ClassMetadata)j.current();
                         if(existing != yc){
-                            YapClass higher = yc.getHigherHierarchy(existing);
+                            ClassMetadata higher = yc.getHigherHierarchy(existing);
                             if (higher != null) {
                                 if (higher == yc) {
                                     col.remove(existing);
@@ -178,35 +178,35 @@ public final class YapClassCollection extends YapMeta {
         return YapConst.YAPCLASSCOLLECTION;
     }
     
-    YapClass getActiveYapClass(ReflectClass a_class) {
-        return (YapClass)i_yapClassByClass.get(a_class);
+    ClassMetadata getActiveYapClass(ReflectClass a_class) {
+        return (ClassMetadata)i_yapClassByClass.get(a_class);
     }
     
-    YapClass getYapClass (ReflectClass a_class) {
-    	YapClass yapClass = (YapClass)i_yapClassByClass.get(a_class);
+    ClassMetadata getYapClass (ReflectClass a_class) {
+    	ClassMetadata yapClass = (ClassMetadata)i_yapClassByClass.get(a_class);
         if (yapClass != null) {
         	return yapClass;
         }
-        yapClass = (YapClass)i_yapClassByBytes.remove(getNameBytes(a_class.getName()));
+        yapClass = (ClassMetadata)i_yapClassByBytes.remove(getNameBytes(a_class.getName()));
         readYapClass(yapClass, a_class);
         return yapClass;
     }
 
-    YapClass produceYapClass(ReflectClass a_class) {
+    ClassMetadata produceYapClass(ReflectClass a_class) {
     	
-    	YapClass yapClass = getYapClass(a_class);
+    	ClassMetadata yapClass = getYapClass(a_class);
     	
         if (yapClass != null ) {
             return yapClass;
         }
         
-        yapClass = (YapClass)i_creating.get(a_class);
+        yapClass = (ClassMetadata)i_creating.get(a_class);
         
         if(yapClass != null){
             return yapClass;
         }
         
-        yapClass = new YapClass(stream(), a_class);
+        yapClass = new ClassMetadata(stream(), a_class);
         
         i_creating.put(a_class, yapClass);
         
@@ -247,17 +247,17 @@ public final class YapClassCollection extends YapMeta {
         return yapClass;
     }    
     
-	YapClass getYapClass(int id) {
-        return readYapClass((YapClass)i_yapClassByID.get(id), null);
+	ClassMetadata getYapClass(int id) {
+        return readYapClass((ClassMetadata)i_yapClassByID.get(id), null);
     }
 	
-    public YapClass getYapClass(String a_name) {
-        YapClass yapClass = (YapClass)i_yapClassByBytes.remove(getNameBytes(a_name));
+    public ClassMetadata getYapClass(String a_name) {
+        ClassMetadata yapClass = (ClassMetadata)i_yapClassByBytes.remove(getNameBytes(a_name));
         readYapClass(yapClass, null);
         if (yapClass == null) {
-            YapClassCollectionIterator i = iterator();
+            ClassMetadataIterator i = iterator();
             while (i.moveNext()) {
-                yapClass = (YapClass)i.current();
+                yapClass = (ClassMetadata)i.current();
                 if (a_name.equals(yapClass.getName())) {
                     readYapClass(yapClass, null);
                     return yapClass;
@@ -269,7 +269,7 @@ public final class YapClassCollection extends YapMeta {
     }
     
     public int getYapClassID(String name){
-        YapClass yc = (YapClass)i_yapClassByBytes.get(getNameBytes(name));
+        ClassMetadata yc = (ClassMetadata)i_yapClassByBytes.get(getNameBytes(name));
         if(yc != null){
             return yc.getID();
         }
@@ -289,7 +289,7 @@ public final class YapClassCollection extends YapMeta {
         systemTrans.stream().showInternalClasses(true);
         Iterator4 i = i_classes.iterator();
         while (i.moveNext()) {
-            ((YapClass)i.current()).initOnUp(systemTrans);
+            ((ClassMetadata)i.current()).initOnUp(systemTrans);
         }
         systemTrans.stream().showInternalClasses(false);
         i_yapClassCreationDepth--;
@@ -309,16 +309,16 @@ public final class YapClassCollection extends YapMeta {
     
     private void initYapClassesOnUp() {
         if(i_yapClassCreationDepth == 0){
-            YapClass yc = (YapClass)i_initYapClassesOnUp.next();
+            ClassMetadata yc = (ClassMetadata)i_initYapClassesOnUp.next();
             while(yc != null){
                 yc.initOnUp(_systemTransaction);
-                yc = (YapClass)i_initYapClassesOnUp.next();
+                yc = (ClassMetadata)i_initYapClassesOnUp.next();
             }
         }
     }
     
-    public YapClassCollectionIterator iterator(){
-        return new YapClassCollectionIterator(this, new ArrayIterator4(i_classes.toArray()));
+    public ClassMetadataIterator iterator(){
+        return new ClassMetadataIterator(this, new ArrayIterator4(i_classes.toArray()));
     } 
 
     private static class ClassIDIterator extends MappingIterator {
@@ -328,7 +328,7 @@ public final class YapClassCollection extends YapMeta {
 		}
     	
     	protected Object map(Object current) {
-    		return new Integer(((YapClass)current).getID());
+    		return new Integer(((ClassMetadata)current).getID());
     	}
     }
     
@@ -345,7 +345,7 @@ public final class YapClassCollection extends YapMeta {
     void purge() {
         Iterator4 i = i_classes.iterator();
         while (i.moveNext()) {
-            ((YapClass)i.current()).purge();
+            ((ClassMetadata)i.current()).purge();
         }
     }
 
@@ -363,7 +363,7 @@ public final class YapClassCollection extends YapMeta {
 		StatefulBuffer[] yapWriters = stream.readWritersByIDs(a_trans, ids);
 
 		for (int i = 0; i < classCount; ++i) {
-			YapClass yapClass = new YapClass(stream, null);
+			ClassMetadata yapClass = new ClassMetadata(stream, null);
 			yapClass.setID(ids[i]);
 			i_classes.add(yapClass);
 			i_yapClassByID.put(ids[i], yapClass);
@@ -388,7 +388,7 @@ public final class YapClassCollection extends YapMeta {
                 String useName = (String)readAs.get(dbName);
                 byte[] useBytes = getNameBytes(useName);
                 if(classByBytes().get(useBytes) == null){
-                    YapClass yc = (YapClass)classByBytes().get(dbbytes);
+                    ClassMetadata yc = (ClassMetadata)classByBytes().get(dbbytes);
                     if(yc != null){
                         yc.i_nameBytes = useBytes;
                         yc.setConfig(stream().configImpl().configClass(dbName));
@@ -400,7 +400,7 @@ public final class YapClassCollection extends YapMeta {
         });
     }
 
-    public YapClass readYapClass(YapClass yapClass, ReflectClass a_class) {
+    public ClassMetadata readYapClass(ClassMetadata yapClass, ReflectClass a_class) {
     	if(yapClass == null){
     		return null;
     	}
@@ -422,12 +422,12 @@ public final class YapClassCollection extends YapMeta {
     }
 
     public void refreshClasses() {
-        YapClassCollection rereader = new YapClassCollection(_systemTransaction);
+        ClassMetadataRepository rereader = new ClassMetadataRepository(_systemTransaction);
         rereader.i_id = i_id;
         rereader.read(stream().getSystemTransaction());
         Iterator4 i = rereader.i_classes.iterator();
         while (i.moveNext()) {
-            YapClass yc = (YapClass)i.current();
+            ClassMetadata yc = (ClassMetadata)i.current();
             if (i_yapClassByID.get(yc.getID()) == null) {
                 i_classes.add(yc);
                 i_yapClassByID.put(yc.getID(), yc);
@@ -440,12 +440,12 @@ public final class YapClassCollection extends YapMeta {
         }
         i = i_classes.iterator();
         while (i.moveNext()) {
-            YapClass yc = (YapClass)i.current();
+            ClassMetadata yc = (ClassMetadata)i.current();
             yc.refresh();
         }
     }
 
-    void reReadYapClass(YapClass yapClass){
+    void reReadYapClass(ClassMetadata yapClass){
         if(yapClass != null){
             reReadYapClass(yapClass.i_ancestor);
             yapClass.readName(_systemTransaction);
@@ -469,12 +469,12 @@ public final class YapClassCollection extends YapMeta {
     public void writeAllClasses(){
         StoredClass[] storedClasses = storedClasses();
         for (int i = 0; i < storedClasses.length; i++) {
-            YapClass yc = (YapClass)storedClasses[i];
+            ClassMetadata yc = (ClassMetadata)storedClasses[i];
             yc.setStateDirty();
         }
         
         for (int i = 0; i < storedClasses.length; i++) {
-            YapClass yc = (YapClass)storedClasses[i];
+            ClassMetadata yc = (ClassMetadata)storedClasses[i];
             yc.write(_systemTransaction);
         }
     }
@@ -494,7 +494,7 @@ public final class YapClassCollection extends YapMeta {
 		String str = "Active:\n";
 		Iterator4 i = i_classes.iterator();
 		while(i.moveNext()){
-			YapClass yc = (YapClass)i.current();
+			ClassMetadata yc = (ClassMetadata)i.current();
 			str += yc.getID() + " " + yc + "\n";
 		}
 		return str;

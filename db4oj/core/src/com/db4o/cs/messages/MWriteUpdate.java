@@ -14,7 +14,7 @@ public final class MWriteUpdate extends MsgObject {
 	    LocalObjectContainer stream = (LocalObjectContainer)stream();
 	    unmarshall(_payLoad._offset);
 	    synchronized(streamLock()){
-	        YapClass yc = stream.getYapClass(yapClassId);
+	        ClassMetadata yc = stream.getYapClass(yapClassId);
 			_payLoad.writeEmbedded();
 			int id = _payLoad.getID();
 			transaction().dontDelete(id);

@@ -44,7 +44,7 @@ public class YapArray extends YapIndependantType {
         int a_depth,
         boolean a_activate) {
         // We simply activate all Objects here
-        if (i_handler instanceof YapClass) {
+        if (i_handler instanceof ClassMetadata) {
             
             a_depth --;
             
@@ -100,7 +100,7 @@ public class YapArray extends YapIndependantType {
     public final void deletePrimitiveEmbedded(
         
         StatefulBuffer a_bytes,
-        YapClassPrimitive a_classPrimitive) {
+        PrimitiveFieldHandler a_classPrimitive) {
         
         int address = a_bytes.readInt();
         int length = a_bytes.readInt();
@@ -156,7 +156,7 @@ public class YapArray extends YapIndependantType {
         return i_handler.getTypeID();
     }
 
-    public YapClass getYapClass(ObjectContainerBase a_stream) {
+    public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
         return i_handler.getYapClass(a_stream);
     }
 
@@ -352,7 +352,7 @@ public class YapArray extends YapIndependantType {
 		        }
 		    }
 		    int classID = - elements;
-			YapClass yc = a_trans.stream().getYapClass(classID);
+			ClassMetadata yc = a_trans.stream().getYapClass(classID);
 		    if (yc != null) {
 		        return (primitive ? yc.primitiveClassReflector() : yc.classReflector());
 		    }
@@ -393,7 +393,7 @@ public class YapArray extends YapIndependantType {
         if(primitive){
             claxx = stream.i_handlers.handlerForClass(stream,claxx).classReflector();
         }
-        YapClass yc = stream.produceYapClass(claxx);
+        ClassMetadata yc = stream.produceYapClass(claxx);
         if (yc != null) {
             yapClassID = yc.getID();
         }

@@ -24,7 +24,7 @@ public class QConObject extends QCon {
     public int                           i_objectID;
 
     // the YapClass
-    transient YapClass            i_yapClass;
+    transient ClassMetadata            i_yapClass;
 
     // needed for marshalling the request
     public int                           i_yapClassID;
@@ -158,7 +158,7 @@ public class QConObject extends QCon {
             DTrace.EVALUATE_SELF.log(i_id);
         }
         if (i_yapClass != null) {
-            if (!(i_yapClass instanceof YapClassPrimitive)) {
+            if (!(i_yapClass instanceof PrimitiveFieldHandler)) {
                 if (!i_evaluator.identity()) {
 //                	TODO: consider another strategy to avoid reevaluating the class constraint when
 //                	the candidate collection is loaded from the class index
@@ -200,7 +200,7 @@ public class QConObject extends QCon {
         return i_comparator;
     }
 
-    YapClass getYapClass() {
+    ClassMetadata getYapClass() {
         return i_yapClass;
     }
 
@@ -345,7 +345,7 @@ public class QConObject extends QCon {
         boolean res = true;
         boolean processed = false;
         if (i_selfComparison) {
-            YapClass yc = qc.readYapClass();
+            ClassMetadata yc = qc.readYapClass();
             if (yc != null) {
                 res = i_evaluator
                     .not(i_yapClass.getHigherHierarchy(yc) == i_yapClass);

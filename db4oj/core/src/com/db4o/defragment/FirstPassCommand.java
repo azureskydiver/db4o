@@ -30,7 +30,7 @@ final class FirstPassCommand implements PassCommand {
 		return _ids!=null&&_ids.size()==ID_BATCH_SIZE;
 	}
 
-	public void processClass(DefragContextImpl context, YapClass yapClass,int id,int classIndexID) {
+	public void processClass(DefragContextImpl context, ClassMetadata yapClass,int id,int classIndexID) {
 		process(context,id, true);
 		for (int fieldIdx = 0; fieldIdx < yapClass.i_fields.length; fieldIdx++) {
 			YapField field=yapClass.i_fields[fieldIdx];
@@ -41,7 +41,7 @@ final class FirstPassCommand implements PassCommand {
 
 	}
 
-	public void processObjectSlot(DefragContextImpl context, YapClass yapClass, int sourceID, boolean registerAddresses) {
+	public void processObjectSlot(DefragContextImpl context, ClassMetadata yapClass, int sourceID, boolean registerAddresses) {
 		process(context,sourceID, false);
 	}
 

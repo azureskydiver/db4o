@@ -19,9 +19,9 @@ import com.db4o.reflect.generic.*;
 /**
  * @exclude
  */
-public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
+public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass {
 
-    public YapClass i_ancestor;
+    public ClassMetadata i_ancestor;
 
     Config4Class i_config;
     public int _metaClassID;
@@ -85,7 +85,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		return new BTreeClassIndexStrategy(this);
 	}
 
-    YapClass(ObjectContainerBase stream, ReflectClass reflector){
+    ClassMetadata(ObjectContainerBase stream, ReflectClass reflector){
     	i_stream = stream;
         _reflector = reflector;
         _index = createIndexStrategy();
@@ -636,11 +636,11 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
     
     private static class YapFieldIterator implements Iterator4 {
-    	private final YapClass _initialClazz;
-    	private YapClass _curClazz;
+    	private final ClassMetadata _initialClazz;
+    	private ClassMetadata _curClazz;
     	private int _curIdx;
     	
-    	public YapFieldIterator(YapClass clazz) {
+    	public YapFieldIterator(ClassMetadata clazz) {
     		_initialClazz=clazz;
     		reset();
     	}
@@ -707,7 +707,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         }
     }
     
-    public static YapClass forObject(Transaction trans, Object obj, boolean allowCreation){
+    public static ClassMetadata forObject(Transaction trans, Object obj, boolean allowCreation){
         ReflectClass reflectClass = trans.reflector().forObject(obj);
         if (reflectClass != null && reflectClass.getSuperclass() == null && obj != null) {
         	throw new ObjectNotStorableException(obj.toString());
@@ -759,7 +759,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     }
 
 
-    YapClass getAncestor() {
+    ClassMetadata getAncestor() {
         return i_ancestor;
     }
 
@@ -772,15 +772,15 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return forObject;
     }
 
-    YapClass getHigherHierarchy(YapClass a_yapClass) {
-        YapClass yc = getHigherHierarchy1(a_yapClass);
+    ClassMetadata getHigherHierarchy(ClassMetadata a_yapClass) {
+        ClassMetadata yc = getHigherHierarchy1(a_yapClass);
         if (yc != null) {
             return yc;
         }
         return a_yapClass.getHigherHierarchy1(this);
     }
 
-    private YapClass getHigherHierarchy1(YapClass a_yapClass) {
+    private ClassMetadata getHigherHierarchy1(ClassMetadata a_yapClass) {
         if (a_yapClass == this) {
             return this;
         }
@@ -790,8 +790,8 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return null;
     }
 
-    YapClass getHigherOrCommonHierarchy(YapClass a_yapClass) {
-        YapClass yc = getHigherHierarchy1(a_yapClass);
+    ClassMetadata getHigherOrCommonHierarchy(ClassMetadata a_yapClass) {
+        ClassMetadata yc = getHigherHierarchy1(a_yapClass);
         if (yc != null) {
             return yc;
         }
@@ -914,7 +914,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return YapConst.TYPE_CLASS;
     }
 
-    public YapClass getYapClass(ObjectContainerBase a_stream) {
+    public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
         return this;
     }
 
@@ -964,7 +964,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
         return a_object;
     }
     
-    final boolean init( ObjectContainerBase a_stream, YapClass a_ancestor,ReflectClass claxx) {
+    final boolean init( ObjectContainerBase a_stream, ClassMetadata a_ancestor,ReflectClass claxx) {
         
         if(DTrace.enabled){
             DTrace.YAPCLASS_INIT.log(getID());
@@ -1673,7 +1673,7 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
     public StoredField storedField(String a_name, Object a_type) {
         synchronized(i_stream.i_lock){
             
-            YapClass yc = i_stream.getYapClass(i_stream.configImpl().reflectorFor(a_type)); 
+            ClassMetadata yc = i_stream.getYapClass(i_stream.configImpl().reflectorFor(a_type)); 
     		
 	        if(i_fields != null){
 	            for (int i = 0; i < i_fields.length; i++) {
@@ -1936,12 +1936,12 @@ public class YapClass extends YapMeta implements TypeHandler4, StoredClass {
 		mf._class.defrag(this,i_stream.stringIO(), readers, classIndexID);
 	}
 
-    public static YapClass readClass(ObjectContainerBase stream, Buffer reader) {
+    public static ClassMetadata readClass(ObjectContainerBase stream, Buffer reader) {
         ObjectHeader oh = new ObjectHeader(stream, reader);
         return oh.yapClass();
     }
 
-	public boolean isAssignableFrom(YapClass other) {
+	public boolean isAssignableFrom(ClassMetadata other) {
 		return classReflector().isAssignableFrom(other.classReflector());
 	}
 

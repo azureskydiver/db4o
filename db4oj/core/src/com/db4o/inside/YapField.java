@@ -21,7 +21,7 @@ import com.db4o.reflect.generic.*;
  */
 public class YapField implements StoredField {
 
-    private YapClass         i_yapClass;
+    private ClassMetadata         i_yapClass;
 
     //  position in YapClass i_fields
     private int              i_arrayPosition;
@@ -56,11 +56,11 @@ public class YapField implements StoredField {
 
     static final YapField[]  EMPTY_ARRAY = new YapField[0];
 
-    public YapField(YapClass a_yapClass) {
+    public YapField(ClassMetadata a_yapClass) {
         i_yapClass = a_yapClass;
     }
 
-    YapField(YapClass a_yapClass, ObjectTranslator a_translator) {
+    YapField(ClassMetadata a_yapClass, ObjectTranslator a_translator) {
         // for YapFieldTranslator only
     	this(a_yapClass);
         init(a_yapClass, a_translator.getClass().getName());
@@ -70,7 +70,7 @@ public class YapField implements StoredField {
             stream, stream.reflector().forClass(a_translator.storedClass()));
     }
 
-    YapField(YapClass a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
+    YapField(ClassMetadata a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
     	this(a_yapClass);
         init(a_yapClass, a_field.getName());
         i_javaField = a_field;
@@ -87,7 +87,7 @@ public class YapField implements StoredField {
         i_state = AVAILABLE;
     }
 
-    public void addFieldIndex(MarshallerFamily mf, YapClass yapClass, StatefulBuffer writer, Slot oldSlot) {
+    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {
         if (! hasIndex()) {
             writer.incrementOffset(linkLength());
             return;
@@ -229,8 +229,8 @@ public class YapField implements StoredField {
     }
 
     public final boolean canLoadByIndex() {
-        if (i_handler instanceof YapClass) {
-            YapClass yc = (YapClass) i_handler;
+        if (i_handler instanceof ClassMetadata) {
+            ClassMetadata yc = (ClassMetadata) i_handler;
             if(yc.isArray()){
                 return false;
             }
@@ -295,7 +295,7 @@ public class YapField implements StoredField {
 
     public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer a_bytes) {
         if (alive()) {
-            if (i_handler instanceof YapClass) {
+            if (i_handler instanceof ClassMetadata) {
                 tree = (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
             } else if (i_handler instanceof YapArray) {
                 tree = ((YapArray) i_handler).collectIDs(mf, tree, a_bytes);
@@ -447,7 +447,7 @@ public class YapField implements StoredField {
         return i_name;
     }
 
-    YapClass getFieldYapClass(ObjectContainerBase a_stream) {
+    ClassMetadata getFieldYapClass(ObjectContainerBase a_stream) {
         // alive needs to be checked by all callers: Done
         return i_handler.getYapClass(a_stream);
     }
@@ -499,7 +499,7 @@ public class YapField implements StoredField {
         return null;
     }
 
-    public YapClass getParentYapClass() {
+    public ClassMetadata getParentYapClass() {
         // alive needs to be checked by all callers: Done
         return i_yapClass;
     }
@@ -536,13 +536,13 @@ public class YapField implements StoredField {
         a_bytes.incrementOffset(linkLength());
     }
 
-    public final void init(YapClass a_yapClass, String a_name) {
+    public final void init(ClassMetadata a_yapClass, String a_name) {
         i_yapClass = a_yapClass;
         i_name = a_name;
         initIndex(a_yapClass, a_name);
     }
 
-	final void initIndex(YapClass a_yapClass, String a_name) {
+	final void initIndex(ClassMetadata a_yapClass, String a_name) {
 		if (a_yapClass.i_config != null) {
             i_config = a_yapClass.i_config.configField(a_name);
             if (Debug.configureAllFields) {
@@ -921,7 +921,7 @@ public class YapField implements StoredField {
 	    return getIndex(transaction).searchLeaf(transaction, createFieldIndexKey(parentID, keyPart), SearchTarget.LOWEST);
 	}
 
-	public boolean rebuildIndexForClass(LocalObjectContainer stream, YapClass yapClass) {
+	public boolean rebuildIndexForClass(LocalObjectContainer stream, ClassMetadata yapClass) {
 		// FIXME: BTree traversal over index here.
 		long[] ids = yapClass.getIDs();		
 		for (int i = 0; i < ids.length; i++) {
@@ -930,7 +930,7 @@ public class YapField implements StoredField {
 		return ids.length > 0;
 	}
 
-	protected void rebuildIndexForObject(LocalObjectContainer stream, final YapClass yapClass, final int objectId) {
+	protected void rebuildIndexForObject(LocalObjectContainer stream, final ClassMetadata yapClass, final int objectId) {
 		StatefulBuffer writer = stream.readWriterByID(stream.getSystemTransaction(), objectId);
 		if (writer != null) {
 		    rebuildIndexForWriter(stream, writer, objectId);

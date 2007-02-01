@@ -86,7 +86,7 @@ public class QConPath extends QConClass {
     private void morph(boolean[] removeExisting, QConObject newConstraint, ReflectClass claxx) {
         boolean mayMorph = true;
         if (claxx != null) {
-        	YapClass yc = i_trans.stream().produceYapClass(claxx);
+        	ClassMetadata yc = i_trans.stream().produceYapClass(claxx);
         	if (yc != null) {
         		Iterator4 i = iterateChildren();
         		while (i.moveNext()) {

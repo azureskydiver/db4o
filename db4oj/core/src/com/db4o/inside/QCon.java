@@ -103,7 +103,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     	
     	final QCon qcon = this;
     	
-    	YapClass yc = getYapClass();
+    	ClassMetadata yc = getYapClass();
     	final boolean[] foundField = { false };
     	forEachChildField(a_field, new Visitor4() {
     		public void visit(Object obj) {
@@ -353,7 +353,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return qcon;
     }
 
-    YapClass getYapClass() {
+    ClassMetadata getYapClass() {
         return null;
     }
 

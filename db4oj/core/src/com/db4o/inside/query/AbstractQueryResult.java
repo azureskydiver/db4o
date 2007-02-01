@@ -122,11 +122,11 @@ public abstract class AbstractQueryResult implements QueryResult {
 		throw new NotImplementedException();
 	}
 
-	public void loadFromClassIndex(YapClass c) {
+	public void loadFromClassIndex(ClassMetadata c) {
 		throw new NotImplementedException();
 	}
 
-	public void loadFromClassIndexes(YapClassCollectionIterator i) {
+	public void loadFromClassIndexes(ClassMetadataIterator i) {
 		throw new NotImplementedException();
 	}
 

@@ -61,7 +61,7 @@ public abstract class YapJavaClass implements TypeHandler4 {
         return YapConst.TYPE_SIMPLE;
     }
 
-    public YapClass getYapClass(ObjectContainerBase a_stream) {
+    public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
         return a_stream.i_handlers.primitiveClassById(getID());
     }
 

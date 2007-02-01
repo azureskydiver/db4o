@@ -17,7 +17,7 @@ final class MClassNameForID extends MsgD{
         // FIXME: CS access through method
         synchronized (streamLock()) {
             try {
-                YapClass yapClass = stream().getYapClass(id);
+                ClassMetadata yapClass = stream().getYapClass(id);
                 if(yapClass != null){
                     name = yapClass.getName();
                 }

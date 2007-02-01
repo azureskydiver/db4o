@@ -425,7 +425,7 @@ public class YapFileTransaction extends Transaction {
 		i_writtenUpdateDeletedMembers = null;
 	}
 
-    public void writeUpdateDeleteMembers(int id, YapClass clazz, int typeInfo, int cascade) {
+    public void writeUpdateDeleteMembers(int id, ClassMetadata clazz, int typeInfo, int cascade) {
 
     	checkSynchronization();
     	

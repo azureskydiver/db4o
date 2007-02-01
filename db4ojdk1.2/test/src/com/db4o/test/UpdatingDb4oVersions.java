@@ -104,7 +104,7 @@ public class UpdatingDb4oVersions {
     private void checkBTreeSize(ExtObjectContainer objectContainer) {
         ObjectContainerBase yapStream = (ObjectContainerBase)objectContainer;
         StoredClass storedClass = objectContainer.storedClass(this.getClass().getName());
-        YapClass yc = (YapClass) storedClass;
+        ClassMetadata yc = (ClassMetadata) storedClass;
         BTreeClassIndexStrategy btreeClassIndexStrategy = (BTreeClassIndexStrategy) yc.index();
         BTree btree = btreeClassIndexStrategy.btree();
         Test.ensure(btree != null);

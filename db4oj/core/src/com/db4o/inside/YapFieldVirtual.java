@@ -24,7 +24,7 @@ public abstract class YapFieldVirtual extends YapField {
         super(null);
     }
     
-    public abstract void addFieldIndex(MarshallerFamily mf, YapClass yapClass, StatefulBuffer a_writer, Slot oldSlot);
+    public abstract void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer a_writer, Slot oldSlot);
     
     public boolean alive() {
         return true;
