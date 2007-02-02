@@ -620,7 +620,6 @@
 				<include name="**/*.cs" />
 				<exclude name="JDK_*.cs" />
 				<exclude name="JDKReflect*.cs" />
-				<exclude name="Handlers/*.*" />
 				<exclude name="Reflect/Jdk/**/*.*" />
 				<exclude name="Reflect/Self/*.*" />
 			</fileset>
