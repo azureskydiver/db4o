@@ -7,13 +7,12 @@ import java.math.*;
 import com.db4o.internal.*;
 
 /**
- * @exclude
- * @sharpen.ignore
- */
-/**
  * .NET decimal layout is (bytewise)
  * |M3|M2|M1|M0|M7|M6|M5|M4|M11|M10|M9|M8|S[7]|E[4-0]|X|X|
  * (M=mantissa, E=exponent(negative powers of 10), S=sign, X=unused/unknown)
+ * 
+ * @exclude
+ * @sharpen.ignore
  */
 public class NetDecimal extends NetSimpleTypeHandler{
 	
