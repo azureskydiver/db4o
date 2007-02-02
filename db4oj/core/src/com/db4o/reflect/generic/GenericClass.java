@@ -3,7 +3,7 @@
 package com.db4o.reflect.generic;
 
 import com.db4o.foundation.DeepClone;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectConstructor;
 import com.db4o.reflect.ReflectField;

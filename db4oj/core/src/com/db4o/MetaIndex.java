@@ -2,7 +2,7 @@
 
 package com.db4o;
 
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 /**
  * The index record that is written to the database file.

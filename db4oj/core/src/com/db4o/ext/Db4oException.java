@@ -3,7 +3,7 @@
 package com.db4o.ext;
 
 import com.db4o.*;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 /**
  * db4o exception wrapper: Exceptions occurring during internal processing
