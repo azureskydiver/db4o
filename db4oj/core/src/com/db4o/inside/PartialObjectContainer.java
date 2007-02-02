@@ -1770,7 +1770,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 			&& yc.dispatchEvent(_this, a_object, EventDispatcher.CAN_NEW);
 	}
 
-    public abstract void setDirtyInSystemTransaction(YapMeta a_object);
+    public abstract void setDirtyInSystemTransaction(PersistentBase a_object);
 
     public abstract boolean setSemaphore(String name, int timeout);
 

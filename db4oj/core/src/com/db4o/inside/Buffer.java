@@ -249,15 +249,15 @@ public class Buffer implements SlotReader {
             return;
         }
         
-        if(obj instanceof YapMeta){
-            writeIDOf(trans, (YapMeta)obj);
+        if(obj instanceof PersistentBase){
+            writeIDOf(trans, (PersistentBase)obj);
             return;
         }
         
         writeInt(((Integer)obj).intValue());
     }
     
-    public void writeIDOf(Transaction trans, YapMeta yapMeta) {
+    public void writeIDOf(Transaction trans, PersistentBase yapMeta) {
         if(yapMeta == null){
             writeInt(0);
             return;

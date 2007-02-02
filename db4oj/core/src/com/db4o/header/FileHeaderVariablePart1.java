@@ -10,7 +10,7 @@ import com.db4o.inside.*;
 /**
  * @exclude
  */
-public class FileHeaderVariablePart1 extends YapMeta{
+public class FileHeaderVariablePart1 extends PersistentBase{
     
     // The variable part format is:
 

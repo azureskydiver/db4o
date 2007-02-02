@@ -19,7 +19,7 @@ import com.db4o.reflect.ReflectClass;
 /**
  * @exclude
  */
-public final class ClassMetadataRepository extends YapMeta {
+public final class ClassMetadataRepository extends PersistentBase {
 
     private Collection4 i_classes;
     private Hashtable4 i_creating;

@@ -672,7 +672,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		}
 	}
 
-	public final void setDirtyInSystemTransaction(YapMeta a_object) {
+	public final void setDirtyInSystemTransaction(PersistentBase a_object) {
 		// do nothing
 	}
 
