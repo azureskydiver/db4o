@@ -11,7 +11,7 @@ import com.db4o.inside.*;
  * get the classname for an internal ID
  */
 final class MClassNameForID extends MsgD{
-    public final boolean processAtServer(YapServerThread serverThread) {
+    public final boolean processAtServer(ServerMessageDispatcher serverThread) {
         int id = _payLoad.readInt();
         String name = "";
         // FIXME: CS access through method

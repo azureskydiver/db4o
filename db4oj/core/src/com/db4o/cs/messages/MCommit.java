@@ -5,7 +5,7 @@ package com.db4o.cs.messages;
 import com.db4o.cs.*;
 
 final class MCommit extends Msg {
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		transaction().commit();
 		return true;
 	}

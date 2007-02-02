@@ -2,14 +2,13 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.*;
 import com.db4o.inside.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
 
 
-public class YapHandlersTestCase extends AbstractDb4oTestCase {
+public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	
 	public interface FooInterface {
 	}

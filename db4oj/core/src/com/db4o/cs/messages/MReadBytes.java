@@ -23,7 +23,7 @@ public final class MReadBytes extends MsgD {
 		return message;
 	}
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		int address = readInt();
 		int length = readInt();
 		synchronized (streamLock()) {

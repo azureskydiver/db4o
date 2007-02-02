@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 
 public final class MReadMultipleObjects extends MsgD {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		int size = readInt();
 		MsgD[] ret = new MsgD[size];
 		int length = (1 + size) * Const4.INT_LENGTH;

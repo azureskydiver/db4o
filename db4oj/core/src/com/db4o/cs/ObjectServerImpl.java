@@ -11,8 +11,9 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.inside.*;
 
-public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
+public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable,
 		LoopbackSocketServer {
+	
 	private String i_name;
 
 	private ServerSocket4 i_serverSocket;
@@ -25,7 +26,7 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 
 	private final Object _lock=new Object();
 	
-	public YapServer(final LocalObjectContainer a_yapFile, int a_port) {
+	public ObjectServerImpl(final LocalObjectContainer a_yapFile, int a_port) {
 		a_yapFile.setServer(true);
 		i_name = "db4o ServerSocket  FILE: " + a_yapFile.toString() + "  PORT:"
 				+ a_port;
@@ -99,7 +100,7 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 			synchronized (i_threads) {
 				Iterator4 i = new Collection4(i_threads).iterator();
 				while (i.moveNext()) {
-					((YapServerThread) i.current()).close();
+					((ServerMessageDispatcher) i.current()).close();
 				}
 			}
 			i_yapFile = null;
@@ -115,11 +116,11 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 		return this;
 	}
 
-	YapServerThread findThread(int a_threadID) {
+	ServerMessageDispatcher findThread(int a_threadID) {
 		synchronized (i_threads) {
 			Iterator4 i = i_threads.iterator();
 			while (i.moveNext()) {
-				YapServerThread serverThread = (YapServerThread) i.current();
+				ServerMessageDispatcher serverThread = (ServerMessageDispatcher) i.current();
 				if (serverThread.i_threadID == a_threadID) {
 					return serverThread;
 				}
@@ -194,7 +195,7 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 		LoopbackSocket clientFake = new LoopbackSocket(this, timeout);
 		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
 		try {
-			YapServerThread thread = new YapServerThread(this, i_yapFile,
+			ServerMessageDispatcher thread = new ServerMessageDispatcher(this, i_yapFile,
 					serverFake, i_threadIDGen++, true);
 			synchronized (i_threads) {
 				i_threads.add(thread);
@@ -208,7 +209,7 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 
 	}
 
-	void removeThread(YapServerThread aThread) {
+	void removeThread(ServerMessageDispatcher aThread) {
 		synchronized (i_threads) {
 			i_threads.remove(aThread);
 		}
@@ -242,7 +243,7 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 		}
 		while (i_serverSocket != null) {
 			try {
-				YapServerThread thread = new YapServerThread(this, i_yapFile,
+				ServerMessageDispatcher thread = new ServerMessageDispatcher(this, i_yapFile,
 						i_serverSocket.accept(), i_threadIDGen++, false);
 				synchronized (i_threads) {
 					i_threads.add(thread);

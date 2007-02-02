@@ -635,12 +635,12 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return count;
     }
     
-    private static class YapFieldIterator implements Iterator4 {
+    private static class FieldMetadataIterator implements Iterator4 {
     	private final ClassMetadata _initialClazz;
     	private ClassMetadata _curClazz;
     	private int _curIdx;
     	
-    	public YapFieldIterator(ClassMetadata clazz) {
+    	public FieldMetadataIterator(ClassMetadata clazz) {
     		_initialClazz=clazz;
     		reset();
     	}
@@ -674,7 +674,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 	}
     
 	public Iterator4 fields() {
-		return new YapFieldIterator(this);
+		return new FieldMetadataIterator(this);
 	}
 
     // Scrolls offset in passed reader to the offset the passed field should

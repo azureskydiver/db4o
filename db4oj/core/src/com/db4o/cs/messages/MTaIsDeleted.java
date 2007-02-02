@@ -6,7 +6,7 @@ import com.db4o.cs.*;
 
 public final class MTaIsDeleted extends MsgD {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		synchronized (streamLock()) {
 			boolean isDeleted = transaction().isDeleted(readInt());
 			int ret = isDeleted ? 1 : 0;

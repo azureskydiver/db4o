@@ -11,11 +11,11 @@ import com.db4o.inside.query.*;
  */
 public abstract class MObjectSet extends MsgD {
 	
-	protected AbstractQueryResult queryResult(YapServerThread serverThread, int queryResultID){
+	protected AbstractQueryResult queryResult(ServerMessageDispatcher serverThread, int queryResultID){
 		return stub(serverThread, queryResultID).queryResult();
 	}
 
-	protected LazyClientObjectSetStub stub(YapServerThread serverThread, int queryResultID) {
+	protected LazyClientObjectSetStub stub(ServerMessageDispatcher serverThread, int queryResultID) {
 		return serverThread.queryResultForID(queryResultID);
 	}
 

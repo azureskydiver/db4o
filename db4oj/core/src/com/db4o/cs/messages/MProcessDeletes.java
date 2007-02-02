@@ -7,7 +7,7 @@ import com.db4o.cs.*;
 
 public class MProcessDeletes extends Msg {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 	    synchronized (streamLock()) {
 	        transaction().processDeletes();
 	        return true;

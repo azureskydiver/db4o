@@ -7,7 +7,7 @@ import com.db4o.messaging.*;
 
 public final class MUserMessage extends MsgObject {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		if (messageRecipient() != null) {
 			unmarshall();
 			messageRecipient().processMessage(stream(), stream().unmarshall(_payLoad));

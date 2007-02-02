@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 
 public final class MWriteNew extends MsgObject {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
         int yapClassId = _payLoad.readInt();
         LocalObjectContainer stream = (LocalObjectContainer)stream();
         unmarshall(_payLoad._offset);

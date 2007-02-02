@@ -13,7 +13,7 @@ import com.db4o.inside.*;
  */
 public class MObjectSetFetch extends MObjectSet {
 	
-	public boolean processAtServer(YapServerThread serverThread) {
+	public boolean processAtServer(ServerMessageDispatcher serverThread) {
 		int queryResultID = readInt();
 		int fetchSize = readInt();
 		IntIterator4 idIterator = stub(serverThread, queryResultID).idIterator();

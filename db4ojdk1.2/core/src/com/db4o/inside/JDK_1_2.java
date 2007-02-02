@@ -32,7 +32,7 @@ class JDK_1_2 extends JDKReflect {
     }
 
     Object createReferenceQueue() {
-        return new YapReferenceQueue();
+        return new ReferenceQueue4();
     }
 
     public Object createWeakReference(Object obj){
@@ -40,7 +40,7 @@ class JDK_1_2 extends JDKReflect {
     }
     
     Object createYapRef(Object a_queue, ObjectReference a_yapObject, Object a_object) {
-        return new YapRef(a_queue, a_yapObject, a_object);
+        return new ActiveObjectReference(a_queue, a_yapObject, a_object);
     }
 
     Object getContextClassLoader() {
@@ -62,8 +62,8 @@ class JDK_1_2 extends JDKReflect {
     }
 
     Object getYapRefObject(Object a_object) {
-        if (a_object instanceof YapRef) {
-            return ((YapRef) a_object).get();
+        if (a_object instanceof ActiveObjectReference) {
+            return ((ActiveObjectReference) a_object).get();
         }
         return a_object;
     }
@@ -83,15 +83,15 @@ class JDK_1_2 extends JDKReflect {
     }
     
 	void killYapRef(Object obj){
-		if(obj instanceof YapRef){
-			((YapRef)obj)._referent = null;
+		if(obj instanceof ActiveObjectReference){
+			((ActiveObjectReference)obj)._referent = null;
 		}
 	}
 
     void pollReferenceQueue(ObjectContainerBase a_stream, Object a_referenceQueue) {
         if (a_referenceQueue != null) {
-            YapReferenceQueue yrq = (YapReferenceQueue) a_referenceQueue;
-            YapRef ref;
+            ReferenceQueue4 yrq = (ReferenceQueue4) a_referenceQueue;
+            ActiveObjectReference ref;
             synchronized(a_stream.lock()){
 	            while ((ref = yrq.yapPoll()) != null) {
 	                a_stream.purge1(ref._referent);

@@ -15,7 +15,7 @@ public abstract class MsgQuery extends MsgObject {
 	
 	private static int nextID;
 	
-	protected final void writeQueryResult(AbstractQueryResult queryResult, YapServerThread serverThread, QueryEvaluationMode evaluationMode) {
+	protected final void writeQueryResult(AbstractQueryResult queryResult, ServerMessageDispatcher serverThread, QueryEvaluationMode evaluationMode) {
 		
 		int queryResultId = 0;
 		int maxCount = 0;

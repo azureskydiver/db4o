@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 
 public class MTaDelete extends MsgD {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 	    int id = _payLoad.readInt();
 	    int cascade = _payLoad.readInt();
 	    Transaction trans = transaction();
