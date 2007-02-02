@@ -164,7 +164,7 @@ public class Msg implements Cloneable {
 		return false; // since not processed
 	}
 
-	public static final Msg readMessage(Transaction a_trans, YapSocket sock) throws IOException {
+	public static final Msg readMessage(Transaction a_trans, Socket4 sock) throws IOException {
 		StatefulBuffer reader = new StatefulBuffer(a_trans, Const4.MESSAGE_LENGTH);
 		if(!reader.read(sock)) {
 			return null;
@@ -176,7 +176,7 @@ public class Msg implements Cloneable {
 		return message;
 	}
 
-	Msg readPayLoad(Transaction a_trans, YapSocket sock, Buffer reader)
+	Msg readPayLoad(Transaction a_trans, Socket4 sock, Buffer reader)
 		throws IOException {
 	    a_trans = checkParentTransaction(a_trans, reader);
 	    return clone(a_trans);
@@ -198,7 +198,7 @@ public class Msg implements Cloneable {
 	}
 	
 
-	public final void write(ObjectContainerBase stream, YapSocket sock) {
+	public final void write(ObjectContainerBase stream, Socket4 sock) {
 		if (Debug.fakeServer) {
 		    ObjectContainerBase i_stream = null;
 			if (stream == DebugCS.serverStream) {

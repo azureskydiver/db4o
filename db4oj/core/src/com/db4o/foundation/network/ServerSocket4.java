@@ -5,11 +5,11 @@ package com.db4o.foundation.network;
 import java.io.*;
 import java.net.*;
 
-public class YapServerSocket {
+public class ServerSocket4 {
 
     private ServerSocket _serverSocket;
 
-    public YapServerSocket(int port) throws IOException {
+    public ServerSocket4(int port) throws IOException {
         _serverSocket = new ServerSocket(port);
     }
 
@@ -25,10 +25,10 @@ public class YapServerSocket {
         return _serverSocket.getLocalPort();
     }
 
-    public YapSocket accept() throws IOException {
+    public Socket4 accept() throws IOException {
         Socket sock = _serverSocket.accept();
         // TODO: check connection permissions here
-        return new YapSocketReal(sock);
+        return new NetworkSocket(sock);
     }
 	
 	public void close() throws IOException {

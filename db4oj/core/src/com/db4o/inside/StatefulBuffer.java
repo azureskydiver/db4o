@@ -210,7 +210,7 @@ public final class StatefulBuffer extends Buffer {
         stream().readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
-    public final boolean read(YapSocket sock) throws IOException {
+    public final boolean read(Socket4 sock) throws IOException {
         int offset = 0;
         int length = i_length;
         while (length > 0) {

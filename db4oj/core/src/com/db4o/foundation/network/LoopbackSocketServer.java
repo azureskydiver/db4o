@@ -2,6 +2,6 @@
 
 package com.db4o.foundation.network;
 
-public interface YapSocketFakeServer {
-	YapSocketFake openClientSocket();
+public interface LoopbackSocketServer {
+	LoopbackSocket openClientSocket();
 }

@@ -24,7 +24,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	private YapClientBlobThread blobThread;
 
-	private YapSocket i_socket;
+	private Socket4 i_socket;
 
 	Queue4 messageQueue = new Queue4();
 
@@ -82,7 +82,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		}
 	}
 
-	public ClientObjectContainer(Configuration config,YapSocket socket, String user, String password_, boolean login)
+	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password_, boolean login)
 			throws IOException {
 		this(config);
 		synchronized (lock()) {
@@ -123,7 +123,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		}
 	}
 
-	private void startReaderThread(YapSocket socket, String user) {
+	private void startReaderThread(Socket4 socket, String user) {
 		_readerThread = new YapClientThread(this, socket, messageQueue,
 				messageQueueLock);
 		_readerThread.setName("db4o message client for user " + user);
@@ -185,14 +185,14 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
         return Converter.VERSION;
     }
 	
-	YapSocket createParalellSocket() throws IOException {
+	Socket4 createParalellSocket() throws IOException {
 		writeMsg(Msg.GET_THREAD_ID, true);
 		
 		int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
 
-		YapSocket sock = i_socket.openParalellSocket();
+		Socket4 sock = i_socket.openParalellSocket();
 
-		if (!(i_socket instanceof YapSocketFake)) {
+		if (!(i_socket instanceof LoopbackSocket)) {
 			loginToServer(sock);
 		}
 
@@ -436,7 +436,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return true;
 	}
 
-	void loginToServer(YapSocket a_socket) throws IOException {
+	void loginToServer(Socket4 a_socket) throws IOException {
 		if (password != null) {
 			UnicodeStringIO stringWriter = new UnicodeStringIO();
 			int length = stringWriter.length(userName)
@@ -780,7 +780,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	// Remove, for testing purposes only
-	public YapSocket socket() {
+	public Socket4 socket() {
 		return i_socket;
 	}
 	

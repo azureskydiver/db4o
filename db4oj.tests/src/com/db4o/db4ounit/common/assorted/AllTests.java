@@ -36,7 +36,7 @@ public class AllTests extends Db4oTestSuite {
             SystemInfoTestCase.class,
             ObjectVersionTest.class,
             YapHandlersTestCase.class,
-            YapClassTestCase.class,
+            ClassMetadataTestCase.class,
 		};
 	}
 }

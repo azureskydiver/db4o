@@ -8,7 +8,7 @@ import com.db4o.inside.slots.Slot;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class YapStringTestCase extends AbstractDb4oTestCase {
+public class StringHandlerTestCase extends AbstractDb4oTestCase {
 
 	public void testIndexMarshalling() {
 		Buffer reader=new Buffer(2*Const4.INT_LENGTH);

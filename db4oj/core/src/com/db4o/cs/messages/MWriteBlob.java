@@ -10,13 +10,13 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.ext.Status;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.foundation.network.Socket4;
 import com.db4o.inside.*;
 
 
 public class MWriteBlob extends MsgBlob {
 	
-	public void processClient(YapSocket sock) throws IOException {
+	public void processClient(Socket4 sock) throws IOException {
         Msg message = Msg.readMessage(transaction(), sock);
         if (message.equals(Msg.OK)) {
             try {
@@ -54,7 +54,7 @@ public class MWriteBlob extends MsgBlob {
             if (blobImpl != null) {
                 blobImpl.setTrans(transaction());
                 File file = blobImpl.serverFile(null, true);
-                YapSocket sock = serverThread.socket();
+                Socket4 sock = serverThread.socket();
                 Msg.OK.write(stream, sock);
                 FileOutputStream fout = new FileOutputStream(file);
                 copy(sock,fout,blobImpl.getLength(),false);

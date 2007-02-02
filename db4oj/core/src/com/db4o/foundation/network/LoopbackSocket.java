@@ -7,21 +7,21 @@ import java.io.*;
 /**
  * Fakes a socket connection for an embedded client.
  */
-public class YapSocketFake implements YapSocket {
+public class LoopbackSocket implements Socket4 {
 	
-	private final YapSocketFakeServer _server;
+	private final LoopbackSocketServer _server;
 
-    private YapSocketFake _affiliate;
+    private LoopbackSocket _affiliate;
     private ByteBuffer4 _uploadBuffer;
     private ByteBuffer4 _downloadBuffer;
 
-    public YapSocketFake(YapSocketFakeServer a_server, int timeout) {
+    public LoopbackSocket(LoopbackSocketServer a_server, int timeout) {
     	_server = a_server;
         _uploadBuffer = new ByteBuffer4(timeout);
         _downloadBuffer = new ByteBuffer4(timeout);
     }
 
-    public YapSocketFake(YapSocketFakeServer a_server, int timeout, YapSocketFake affiliate) {
+    public LoopbackSocket(LoopbackSocketServer a_server, int timeout, LoopbackSocket affiliate) {
         this(a_server, timeout);
         _affiliate = affiliate;
         affiliate._affiliate = this;
@@ -31,7 +31,7 @@ public class YapSocketFake implements YapSocket {
 
     public void close() throws IOException {
         if (_affiliate != null) {
-            YapSocketFake temp = _affiliate;
+            LoopbackSocket temp = _affiliate;
             _affiliate = null;
             temp.close();
         }
@@ -76,7 +76,7 @@ public class YapSocketFake implements YapSocket {
         _uploadBuffer.write(i);
     }
     
-    public YapSocket openParalellSocket() throws IOException {
+    public Socket4 openParalellSocket() throws IOException {
     	return _server.openClientSocket();
     }
 }

@@ -9,7 +9,7 @@ import com.db4o.inside.*;
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
 
-public class YapClassTestCase extends AbstractDb4oTestCase {
+public class ClassMetadataTestCase extends AbstractDb4oTestCase {
 	
 	public static class SuperClazz {
 		public int _id;

@@ -12,10 +12,10 @@ import com.db4o.foundation.network.*;
 import com.db4o.inside.*;
 
 public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
-		YapSocketFakeServer {
+		LoopbackSocketServer {
 	private String i_name;
 
-	private YapServerSocket i_serverSocket;
+	private ServerSocket4 i_serverSocket;
 
 	private int i_threadIDGen = 1;
 
@@ -46,7 +46,7 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 
 		if (a_port > 0) {
 			try {
-				i_serverSocket = new YapServerSocket(a_port);
+				i_serverSocket = new ServerSocket4(a_port);
 				i_serverSocket.setSoTimeout(config.timeoutServerSocket());
 			} catch (IOException e) {
 				Exceptions4.throwRuntimeException(30, "" + a_port);
@@ -189,10 +189,10 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 		return null;
 	}
 
-	public YapSocketFake openClientSocket() {
+	public LoopbackSocket openClientSocket() {
 		int timeout = ((Config4Impl) configure()).timeoutClientSocket();
-		YapSocketFake clientFake = new YapSocketFake(this, timeout);
-		YapSocketFake serverFake = new YapSocketFake(this, timeout, clientFake);
+		LoopbackSocket clientFake = new LoopbackSocket(this, timeout);
+		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
 		try {
 			YapServerThread thread = new YapServerThread(this, i_yapFile,
 					serverFake, i_threadIDGen++, true);
