@@ -3,7 +3,7 @@
 package com.db4o.cluster;
 
 import com.db4o.*;
-import com.db4o.inside.cluster.*;
+import com.db4o.internal.cluster.*;
 import com.db4o.query.*;
 
 /**

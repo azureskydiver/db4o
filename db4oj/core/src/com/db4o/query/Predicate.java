@@ -6,7 +6,7 @@ import java.io.*;
 import java.lang.reflect.*;
 
 import com.db4o.*;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 /**
  * Base class for native queries.

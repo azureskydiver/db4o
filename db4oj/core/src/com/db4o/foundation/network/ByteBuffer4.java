@@ -6,7 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 /**
  * Transport buffer for C/S mode to simulate a

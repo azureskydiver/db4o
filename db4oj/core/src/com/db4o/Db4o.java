@@ -5,11 +5,11 @@ package  com.db4o;
 import java.io.IOException;
 
 import com.db4o.config.Configuration;
-import com.db4o.cs.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.NetworkSocket;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
+import com.db4o.internal.cs.*;
 import com.db4o.reflect.Reflector;
 
 /**

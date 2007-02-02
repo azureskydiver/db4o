@@ -3,8 +3,8 @@
 package com.db4o.defragment;
 
 import com.db4o.*;
-import com.db4o.inside.*;
-import com.db4o.inside.btree.*;
+import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
 
 /**
  * Implements one step in the defragmenting process.

@@ -3,8 +3,8 @@
 package com.db4o.defragment;
 
 import com.db4o.*;
-import com.db4o.inside.*;
-import com.db4o.inside.btree.*;
+import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
 
 /**
  * Second step in the defragmenting process: Fills in target file pointer slots, copies
