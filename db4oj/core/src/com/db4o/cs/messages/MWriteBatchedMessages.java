@@ -18,7 +18,7 @@ public class MWriteBatchedMessages extends MsgD {
 				MsgD mso = (MsgD) clonedMessage;
 				mso.payLoad(writer);
 				if (mso.payLoad() != null) {
-					mso.payLoad().incrementOffset(YapConst.MESSAGE_LENGTH - YapConst.INT_LENGTH);
+					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH - Const4.INT_LENGTH);
 					mso.payLoad().setTransaction(ta);
 					mso.processAtServer(serverThread);
 				}

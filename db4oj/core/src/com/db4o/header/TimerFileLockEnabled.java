@@ -17,7 +17,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     
     private final LocalObjectContainer _file;
     
-    private int _headerLockOffset = 2 + YapConst.INT_LENGTH; 
+    private int _headerLockOffset = 2 + Const4.INT_LENGTH; 
     
     private final long _opentime;
     
@@ -68,9 +68,9 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
     
     private StatefulBuffer headerLockIO(){
-        StatefulBuffer writer = getWriter(0, _headerLockOffset, YapConst.INT_LENGTH);
+        StatefulBuffer writer = getWriter(0, _headerLockOffset, Const4.INT_LENGTH);
         if (Debug.xbytes) {
-            writer.setID(YapConst.IGNORE_ID);
+            writer.setID(Const4.IGNORE_ID);
         }
         return writer;
     }
@@ -87,9 +87,9 @@ public class TimerFileLockEnabled extends TimerFileLock{
         if(_baseAddress == 0){
             return null;
         }
-        StatefulBuffer writer = getWriter(_baseAddress,  _openTimeOffset, YapConst.LONG_LENGTH);
+        StatefulBuffer writer = getWriter(_baseAddress,  _openTimeOffset, Const4.LONG_LENGTH);
         if (Debug.xbytes) {
-            writer.setID(YapConst.IGNORE_ID);
+            writer.setID(Const4.IGNORE_ID);
         }
         return writer;
     }
@@ -99,7 +99,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
         t.setName("db4o file lock");
         try{
             while(writeAccessTime(false)){
-                Cool.sleepIgnoringInterruption(YapConst.LOCK_TIME_INTERVAL);
+                Cool.sleepIgnoringInterruption(Const4.LOCK_TIME_INTERVAL);
                 if(_closed){
                     break;
                 }

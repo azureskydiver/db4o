@@ -13,7 +13,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     
 	private final static KeySpec QUERY_EVALUATION=new KeySpec(true);
     
-	private final static KeySpec INDEXED=new KeySpec(YapConst.DEFAULT);
+	private final static KeySpec INDEXED=new KeySpec(Const4.DEFAULT);
     
 	protected Config4Field(Config4Class a_class, KeySpecHashtable4 config) {
 		super(config);
@@ -65,7 +65,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
         
     	LocalObjectContainer stream = (LocalObjectContainer)anyStream;
         int indexedFlag=_config.getAsInt(INDEXED);        
-        if (indexedFlag == YapConst.NO) {
+        if (indexedFlag == Const4.NO) {
             yapField.dropIndex(systemTrans);
             return;
         }
@@ -74,7 +74,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
         	return;
         }
         
-        if (indexedFlag != YapConst.YES) {
+        if (indexedFlag != Const4.YES) {
         	return;
         }
         
@@ -86,7 +86,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 	}
 
 	private void createIndex(Transaction systemTrans, FieldMetadata yapField, LocalObjectContainer stream) {
-        if (stream.configImpl().messageLevel() > YapConst.NONE) {
+        if (stream.configImpl().messageLevel() > Const4.NONE) {
             stream.message("creating index " + yapField.toString());
         }
 	    yapField.initIndex(systemTrans);

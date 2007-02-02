@@ -34,7 +34,7 @@ public final class FreeSlotNode extends TreeInt {
 	}
 
 	public final int ownLength() {
-		return YapConst.INT_LENGTH * 2;
+		return Const4.INT_LENGTH * 2;
 	}
 
 	final static Tree removeGreaterOrEqual(FreeSlotNode a_in,

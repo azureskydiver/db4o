@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
 public class YapStringTestCase extends AbstractDb4oTestCase {
 
 	public void testIndexMarshalling() {
-		Buffer reader=new Buffer(2*YapConst.INT_LENGTH);
+		Buffer reader=new Buffer(2*Const4.INT_LENGTH);
 		ObjectContainerBase stream=(ObjectContainerBase)db();
 		StringHandler handler=new StringHandler(stream,stream.stringIO());
 		final Slot original = new Slot(0xdb,0x40);

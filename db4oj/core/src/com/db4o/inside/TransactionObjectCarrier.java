@@ -6,7 +6,7 @@ package com.db4o.inside;
 /**
  * TODO: Check if all time-consuming stuff is overridden! 
  */
-class TransactionObjectCarrier extends YapFileTransaction{
+class TransactionObjectCarrier extends LocalTransaction{
 	
 	TransactionObjectCarrier(ObjectContainerBase a_stream, Transaction a_parent) {
 		super(a_stream, a_parent);

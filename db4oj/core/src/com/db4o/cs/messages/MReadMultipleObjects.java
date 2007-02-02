@@ -11,7 +11,7 @@ public final class MReadMultipleObjects extends MsgD {
 	public final boolean processAtServer(YapServerThread serverThread) {
 		int size = readInt();
 		MsgD[] ret = new MsgD[size];
-		int length = (1 + size) * YapConst.INT_LENGTH;
+		int length = (1 + size) * Const4.INT_LENGTH;
 		synchronized (streamLock()) {
 			for (int i = 0; i < size; i++) {
 				int id = this._payLoad.readInt();

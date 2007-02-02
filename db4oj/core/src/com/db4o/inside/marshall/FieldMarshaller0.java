@@ -3,6 +3,7 @@
 package com.db4o.inside.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.handlers.*;
 
@@ -17,7 +18,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
             len += 1;
         }
         if(field.needsHandlerId()){
-            len += YapConst.ID_LENGTH;
+            len += Const4.ID_LENGTH;
         }
         return len;
     }
@@ -32,7 +33,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
             return null;
         }
         
-        if (name.indexOf(YapConst.VIRTUAL_FIELD_PREFIX) == 0) {
+        if (name.indexOf(Const4.VIRTUAL_FIELD_PREFIX) == 0) {
             VirtualFieldMetadata[] virtuals = stream.i_handlers.i_virtualFields;
             for (int i = 0; i < virtuals.length; i++) {
                 if (name.equals(virtuals[i].getName())) {
@@ -110,15 +111,15 @@ public class FieldMarshaller0 implements FieldMarshaller {
             handlerID = field.getHandlerID();
         }
         writer.writeInt(handlerID);
-        YapBit yb = new YapBit(0);
-        yb.set(handler instanceof MultidimensionalArrayHandler); // keep the order
-        yb.set(handler instanceof ArrayHandler);
-        yb.set(field.isPrimitive());
-        writer.append(yb.getByte());
+        BitMap4 bitmap = new BitMap4(3);
+        bitmap.set(0, field.isPrimitive());
+        bitmap.set(1, handler instanceof ArrayHandler);
+        bitmap.set(2, handler instanceof MultidimensionalArrayHandler); // keep the order
+        writer.append(bitmap.getByte(0));
     }
 
 
-	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, YapStringIO sio,ReaderPair readers) throws CorruptionException {
+	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,ReaderPair readers) throws CorruptionException {
 		readers.readShortString(sio);
         if (yapField.isVirtual()) {
         	return;

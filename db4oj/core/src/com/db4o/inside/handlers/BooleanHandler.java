@@ -12,7 +12,7 @@ import com.db4o.inside.*;
 public final class BooleanHandler extends PrimitiveHandler
 {
 
-    static final int LENGTH = 1 + YapConst.ADDED_LENGTH;
+    static final int LENGTH = 1 + Const4.ADDED_LENGTH;
 	
 	private static final byte TRUE = (byte) 'T';
 	private static final byte FALSE = (byte) 'F';
@@ -45,7 +45,7 @@ public final class BooleanHandler extends PrimitiveHandler
 
 	Object read1(Buffer a_bytes){
 		if (Deploy.debug){
-			a_bytes.readBegin(YapConst.YAPBOOLEAN);
+			a_bytes.readBegin(Const4.YAPBOOLEAN);
 		}
 		byte ret = a_bytes.readByte();
 		if (Deploy.debug){
@@ -64,7 +64,7 @@ public final class BooleanHandler extends PrimitiveHandler
 	
 	public void write(Object a_object, Buffer a_bytes){
 		if(Deploy.debug){
-			a_bytes.writeBegin(YapConst.YAPBOOLEAN);
+			a_bytes.writeBegin(Const4.YAPBOOLEAN);
 		}
 		byte set;
 		if(((Boolean)a_object).booleanValue()){

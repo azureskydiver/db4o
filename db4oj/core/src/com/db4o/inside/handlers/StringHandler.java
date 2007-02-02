@@ -18,9 +18,9 @@ import com.db4o.reflect.*;
  */
 public final class StringHandler extends BuiltinTypeHandler {
     
-    public YapStringIO i_stringIo; 
+    public LatinStringIO i_stringIo; 
     
-    public StringHandler(ObjectContainerBase stream, YapStringIO stringIO) {
+    public StringHandler(ObjectContainerBase stream, LatinStringIO stringIO) {
         super(stream);
         i_stringIo = stringIO;
     }
@@ -71,7 +71,7 @@ public final class StringHandler extends BuiltinTypeHandler {
     }
 
     byte getIdentifier() {
-        return YapConst.YAPSTRING;
+        return Const4.YAPSTRING;
     }
 
     public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
@@ -92,7 +92,7 @@ public final class StringHandler extends BuiltinTypeHandler {
     }
     
     public int isSecondClass(){
-        return YapConst.YES;
+        return Const4.YES;
     }
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection){
@@ -166,7 +166,7 @@ public final class StringHandler extends BuiltinTypeHandler {
 	    return reader;
 	}
     
-    public void setStringIo(YapStringIO a_io) {
+    public void setStringIo(LatinStringIO a_io) {
         i_stringIo = a_io;
     }
     
@@ -209,7 +209,7 @@ public final class StringHandler extends BuiltinTypeHandler {
     }
 
     public int getTypeID() {
-        return YapConst.TYPE_SIMPLE;
+        return Const4.TYPE_SIMPLE;
     }
 
 
@@ -235,7 +235,7 @@ public final class StringHandler extends BuiltinTypeHandler {
 	    i_compareTo = (Buffer)obj;    
 	}
 
-    public YapComparable prepareComparison(Object obj) {
+    public Comparable4 prepareComparison(Object obj) {
         if (obj == null) {
             i_compareTo = null;
             return Null.INSTANCE;
@@ -303,10 +303,10 @@ public final class StringHandler extends BuiltinTypeHandler {
     
     public static final int compare(byte[] compare, byte[] with){
         int min = compare.length < with.length ? compare.length : with.length;
-        int start = YapConst.INT_LENGTH;
+        int start = Const4.INT_LENGTH;
         if(Deploy.debug) {
-            start += YapConst.LEADING_LENGTH;
-            min -= YapConst.BRACKETS_BYTES;
+            start += Const4.LEADING_LENGTH;
+            min -= Const4.BRACKETS_BYTES;
         }
         for(int i = start;i < min;i++) {
             if (compare[i] != with[i]) {

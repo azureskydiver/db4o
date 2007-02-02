@@ -161,7 +161,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
     }
 
     public byte identifier() {
-        return YapConst.YAPARRAY;
+        return Const4.YAPARRAY;
     }
     
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
@@ -190,7 +190,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
     }
 
 	private int ownLength() {
-		return YapConst.OBJECT_LENGTH + YapConst.INT_LENGTH * 2;
+		return Const4.OBJECT_LENGTH + Const4.INT_LENGTH * 2;
 	}
     
 	public void prepareComparison(Transaction a_trans, Object obj) {
@@ -322,18 +322,18 @@ public class ArrayHandler extends BuiltinTypeHandler {
     }
 
    final protected int mapElementsEntry(int orig,IDMapping mapping) {
-    	if(orig>=0||orig==YapConst.IGNORE_ID) {
+    	if(orig>=0||orig==Const4.IGNORE_ID) {
     		return orig;
     	}
-    	boolean primitive=!Deploy.csharp&&orig<YapConst.PRIMITIVE;
+    	boolean primitive=!Deploy.csharp&&orig<Const4.PRIMITIVE;
     	if(primitive) {
-    		orig-=YapConst.PRIMITIVE;
+    		orig-=Const4.PRIMITIVE;
     	}
     	int origID=-orig;
     	int mappedID=mapping.mappedID(origID);
     	int mapped=-mappedID;
     	if(primitive) {
-    		mapped+=YapConst.PRIMITIVE;
+    		mapped+=Const4.PRIMITIVE;
     	}
     	return mapped;
     }
@@ -343,12 +343,12 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		// TODO: Here is a low-frequency mistake, extremely unlikely.
 		// If YapClass-ID == 99999 by accident then we will get ignore.
 		
-		if(elements != YapConst.IGNORE_ID){
+		if(elements != Const4.IGNORE_ID){
 		    boolean primitive = false;
 		    if(!Deploy.csharp){
-		        if(elements < YapConst.PRIMITIVE){
+		        if(elements < Const4.PRIMITIVE){
 		            primitive = true;
-		            elements -= YapConst.PRIMITIVE;
+		            elements -= Const4.PRIMITIVE;
 		        }
 		    }
 		    int classID = - elements;
@@ -402,11 +402,11 @@ public class ArrayHandler extends BuiltinTypeHandler {
             // TODO: This one is a terrible low-frequency blunder !!!
             // If YapClass-ID == 99999 then we will get IGNORE back.
             // Discovered on adding the primitives
-            yapClassID = - YapConst.IGNORE_ID;
+            yapClassID = - Const4.IGNORE_ID;
             
         } else{
             if(primitive){
-                yapClassID -= YapConst.PRIMITIVE;
+                yapClassID -= Const4.PRIMITIVE;
             }
         }
 
@@ -447,7 +447,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
 
     // Comparison_______________________
 
-    public YapComparable prepareComparison(Object obj) {
+    public Comparable4 prepareComparison(Object obj) {
         i_handler.prepareComparison(obj);
         return this;
     }
@@ -498,7 +498,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
     }
     
     public final void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
-    	if(!(i_handler.isSecondClass()==YapConst.YES)) {
+    	if(!(i_handler.isSecondClass()==Const4.YES)) {
     		mf._array.defragIDs(this, readers);
     	}
     	else {

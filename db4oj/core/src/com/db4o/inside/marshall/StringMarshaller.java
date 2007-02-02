@@ -14,7 +14,7 @@ public abstract class StringMarshaller {
     public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
     
     protected final int linkLength(){
-        return YapConst.INT_LENGTH + YapConst.ID_LENGTH;
+        return Const4.INT_LENGTH + Const4.ID_LENGTH;
     }
     
     public abstract Object writeNew(Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean redirect);
@@ -24,7 +24,7 @@ public abstract class StringMarshaller {
             return null;
         }
         if (Deploy.debug) {
-            reader.readBegin(YapConst.YAPSTRING);
+            reader.readBegin(Const4.YAPSTRING);
         }
         String ret = readShort(stream, reader);
         if (Deploy.debug) {
@@ -57,9 +57,9 @@ public abstract class StringMarshaller {
     	return readShort(stream.stringIO(),stream.configImpl().internStrings(),bytes);
     }
 
-    public static String readShort(YapStringIO io, boolean internStrings, Buffer bytes) throws CorruptionException {
+    public static String readShort(LatinStringIO io, boolean internStrings, Buffer bytes) throws CorruptionException {
         int length = bytes.readInt();
-        if (length > YapConst.MAXIMUM_BLOCK_SIZE) {
+        if (length > Const4.MAXIMUM_BLOCK_SIZE) {
             throw new CorruptionException();
         }
         if (length > 0) {
@@ -88,7 +88,7 @@ public abstract class StringMarshaller {
     public static void writeShort(ObjectContainerBase stream, String str, Buffer reader){
         int length = str.length();
         if (Deploy.debug) {
-            reader.writeBegin(YapConst.YAPSTRING);
+            reader.writeBegin(Const4.YAPSTRING);
         }
         reader.writeInt(length);
         stream.stringIO().write(reader, str);

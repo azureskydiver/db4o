@@ -223,7 +223,7 @@ public class FreespaceManagerRam extends FreespaceManager {
         _freeByAddress = addressTree.value;
         
         if(! Debug.freespace){
-          _file.free(freeSlotsID, YapConst.POINTER_LENGTH);
+          _file.free(freeSlotsID, Const4.POINTER_LENGTH);
           _file.free(reader.getAddress(), reader.getLength());
         }
     }

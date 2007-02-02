@@ -28,7 +28,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	    i_handlers = i_parent.i_handlers;
         _classCollection = i_parent.classCollection();
 		i_config = i_parent.configImpl();
-		i_references = new YapReferences(this);
+		i_references = new WeakReferenceCollector(this);
 		initialize2();
 	}
 	

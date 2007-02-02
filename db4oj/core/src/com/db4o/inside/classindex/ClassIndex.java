@@ -29,7 +29,7 @@ import com.db4o.inside.slots.Slot;
 	}
 
     public final int byteCount() {
-    	return YapConst.INT_LENGTH * (Tree.size(i_root) + 1);
+    	return Const4.INT_LENGTH * (Tree.size(i_root) + 1);
     }
 
     public final void clear() {
@@ -47,10 +47,10 @@ import com.db4o.inside.slots.Slot;
         if(isActive() || isNew()){
             return Tree.size(i_root);
         }
-        Slot slot = ((YapFileTransaction)ta).getCurrentSlotOfID(getID());
-        int length = YapConst.INT_LENGTH;
+        Slot slot = ((LocalTransaction)ta).getCurrentSlotOfID(getID());
+        int length = Const4.INT_LENGTH;
         if(Deploy.debug){
-            length += YapConst.LEADING_LENGTH;
+            length += Const4.LEADING_LENGTH;
         }
         Buffer reader = new Buffer(length);
         reader.readEncrypt(ta.stream(), slot._address);
@@ -61,7 +61,7 @@ import com.db4o.inside.slots.Slot;
     }
     
     public final byte getIdentifier() {
-        return YapConst.YAPINDEX;
+        return Const4.YAPINDEX;
     }
     
     TreeInt getRoot(){
@@ -69,7 +69,7 @@ import com.db4o.inside.slots.Slot;
     }
     
     public final int ownLength() {
-        return YapConst.OBJECT_LENGTH + byteCount();
+        return Const4.OBJECT_LENGTH + byteCount();
     }
 
     public final Object read(Buffer a_reader) {

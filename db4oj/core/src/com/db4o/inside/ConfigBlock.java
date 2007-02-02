@@ -8,7 +8,6 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.header.*;
-import com.db4o.inside.*;
 import com.db4o.inside.handlers.*;
 
 
@@ -18,7 +17,7 @@ import com.db4o.inside.handlers.*;
  * a pointer to the running transaction.
  * @exclude
  */
-public final class YapConfigBlock {
+public final class ConfigBlock {
     
     // ConfigBlock Format
     
@@ -43,41 +42,41 @@ public final class YapConfigBlock {
 	public int                 	_bootRecordID;
 	
 	private static final int	MINIMUM_LENGTH = 
-		YapConst.INT_LENGTH    			// own length
-		+ (YapConst.LONG_LENGTH * 2)	 	// candidate ID and last access time
+		Const4.INT_LENGTH    			// own length
+		+ (Const4.LONG_LENGTH * 2)	 	// candidate ID and last access time
 		+ 1;  						// Unicode byte
 	
-	static final int			OPEN_TIME_OFFSET		= YapConst.INT_LENGTH;
-	public static final int     ACCESS_TIME_OFFSET      = OPEN_TIME_OFFSET + YapConst.LONG_LENGTH;
+	static final int			OPEN_TIME_OFFSET		= Const4.INT_LENGTH;
+	public static final int     ACCESS_TIME_OFFSET      = OPEN_TIME_OFFSET + Const4.LONG_LENGTH;
 		
 	public static final int		TRANSACTION_OFFSET = MINIMUM_LENGTH;
-	private static final int	BOOTRECORD_OFFSET = TRANSACTION_OFFSET + YapConst.INT_LENGTH * 2;  
-	private static final int	INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET = BOOTRECORD_OFFSET + YapConst.INT_LENGTH;
+	private static final int	BOOTRECORD_OFFSET = TRANSACTION_OFFSET + Const4.INT_LENGTH * 2;  
+	private static final int	INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET = BOOTRECORD_OFFSET + Const4.INT_LENGTH;
 	private static final int	ENCRYPTION_PASSWORD_LENGTH = 5;
     private static final int    PASSWORD_OFFSET = INT_FORMERLY_KNOWN_AS_BLOCK_OFFSET+ENCRYPTION_PASSWORD_LENGTH;
     private static final int    FREESPACE_SYSTEM_OFFSET = PASSWORD_OFFSET + 1; 
-    private static final int    FREESPACE_ADDRESS_OFFSET = FREESPACE_SYSTEM_OFFSET + YapConst.INT_LENGTH; 
-    private static final int    CONVERTER_VERSION_OFFSET = FREESPACE_ADDRESS_OFFSET + YapConst.INT_LENGTH;
-    private static final int    UUID_INDEX_ID_OFFSET = CONVERTER_VERSION_OFFSET + YapConst.INT_LENGTH;
+    private static final int    FREESPACE_ADDRESS_OFFSET = FREESPACE_SYSTEM_OFFSET + Const4.INT_LENGTH; 
+    private static final int    CONVERTER_VERSION_OFFSET = FREESPACE_ADDRESS_OFFSET + Const4.INT_LENGTH;
+    private static final int    UUID_INDEX_ID_OFFSET = CONVERTER_VERSION_OFFSET + Const4.INT_LENGTH;
 	
 	
 	// complete possible data in config block
 	private static final int	LENGTH = 
 		MINIMUM_LENGTH 
-		+ (YapConst.INT_LENGTH * 7)	// (two transaction pointers, PDB ID, lost int, freespace address, converter_version, index id)
+		+ (Const4.INT_LENGTH * 7)	// (two transaction pointers, PDB ID, lost int, freespace address, converter_version, index id)
 	    + ENCRYPTION_PASSWORD_LENGTH
         + 1;
     
     
-    public static YapConfigBlock forNewFile(LocalObjectContainer file) throws IOException{
-        return new YapConfigBlock(file, true, 0);
+    public static ConfigBlock forNewFile(LocalObjectContainer file) throws IOException{
+        return new ConfigBlock(file, true, 0);
     }
     
-    public static YapConfigBlock forExistingFile(LocalObjectContainer file, int address) throws IOException{
-        return new YapConfigBlock(file, false, address);
+    public static ConfigBlock forExistingFile(LocalObjectContainer file, int address) throws IOException{
+        return new ConfigBlock(file, false, address);
     }
     
-	private YapConfigBlock(LocalObjectContainer stream, boolean isNew, int address) throws IOException{
+	private ConfigBlock(LocalObjectContainer stream, boolean isNew, int address) throws IOException{
 		_stream = stream;
         _timerFileLock = TimerFileLock.forFile(stream);
         timerFileLock().writeHeaderLock();
@@ -111,7 +110,7 @@ public final class YapConfigBlock {
         String fullpwd=_stream.configImpl().password();
         if(_stream.configImpl().encrypt() && fullpwd!=null) {
             try {
-                byte[] pwdbytes=new YapStringIO().write(fullpwd);
+                byte[] pwdbytes=new LatinStringIO().write(fullpwd);
                 Buffer encwriter=new StatefulBuffer(_stream.getTransaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
                 encwriter.append(pwdbytes);
                 encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
@@ -219,7 +218,7 @@ public final class YapConfigBlock {
         
 		if(lockFile() && ( lastAccessTime != 0)){
 			_stream.logMsg(28, null);
-			long waitTime = YapConst.LOCK_TIME_INTERVAL * 5;
+			long waitTime = Const4.LOCK_TIME_INTERVAL * 5;
 			long currentTime = System.currentTimeMillis();
 
 			// If someone changes the system clock here,
@@ -227,7 +226,7 @@ public final class YapConfigBlock {
 			while(System.currentTimeMillis() < currentTime + waitTime){
 				Cool.sleepIgnoringInterruption(waitTime);
 			}
-			reader = _stream.getWriter(_stream.getSystemTransaction(), _address, YapConst.LONG_LENGTH * 2);
+			reader = _stream.getWriter(_stream.getSystemTransaction(), _address, Const4.LONG_LENGTH * 2);
 			reader.moveForward(OPEN_TIME_OFFSET);
 			reader.read();
             
@@ -282,7 +281,7 @@ public final class YapConfigBlock {
 	
 	private void writePointer() {
         timerFileLock().checkHeaderLock();
-		StatefulBuffer writer = _stream.getWriter(_stream.getTransaction(), 0, YapConst.ID_LENGTH);
+		StatefulBuffer writer = _stream.getWriter(_stream.getTransaction(), 0, Const4.ID_LENGTH);
 		writer.moveForward(2);
 		IntHandler.writeInt(_address, writer);
         writer.noXByteCheck();

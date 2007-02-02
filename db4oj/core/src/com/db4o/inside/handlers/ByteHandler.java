@@ -12,7 +12,7 @@ import com.db4o.reflect.*;
 public final class ByteHandler extends PrimitiveHandler
 {
 
-    static final int LENGTH = 1 + YapConst.ADDED_LENGTH;
+    static final int LENGTH = 1 + Const4.ADDED_LENGTH;
 	
 	private static final Byte i_primitive = new Byte((byte)0);
 	
@@ -46,7 +46,7 @@ public final class ByteHandler extends PrimitiveHandler
 	
 	Object read1(Buffer a_bytes){
 		if (Deploy.debug){
-			a_bytes.readBegin(YapConst.YAPBYTE);
+			a_bytes.readBegin(Const4.YAPBYTE);
 		}
 		byte ret = a_bytes.readByte();
 		if (Deploy.debug){
@@ -57,7 +57,7 @@ public final class ByteHandler extends PrimitiveHandler
 	
 	public void write(Object a_object, Buffer a_bytes){
 		if(Deploy.debug){
-			a_bytes.writeBegin(YapConst.YAPBYTE);
+			a_bytes.writeBegin(Const4.YAPBYTE);
 		}
 		a_bytes.append(((Byte)a_object).byteValue());
 		if(Deploy.debug){

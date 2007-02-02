@@ -19,9 +19,9 @@ import com.db4o.inside.ix.*;
  */
 public final class BTreeNode extends YapMeta{
     
-    private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (YapConst.INT_LENGTH * 4) + 1; 
+    private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (Const4.INT_LENGTH * 4) + 1; 
  
-    private static final int SLOT_LEADING_LENGTH = YapConst.LEADING_LENGTH  + COUNT_LEAF_AND_3_LINK_LENGTH;
+    private static final int SLOT_LEADING_LENGTH = Const4.LEADING_LENGTH  + COUNT_LEAF_AND_3_LINK_LENGTH;
     
    
     final BTree _btree;
@@ -512,7 +512,7 @@ public final class BTreeNode extends YapMeta{
                 len += valueHandler().linkLength();
             }
         }else{
-            len += YapConst.ID_LENGTH;
+            len += Const4.ID_LENGTH;
         }
         return len;
     }
@@ -555,7 +555,7 @@ public final class BTreeNode extends YapMeta{
     }
     
     public byte getIdentifier() {
-        return YapConst.BTREE_NODE;
+        return Const4.BTREE_NODE;
     }
     
     private boolean handlesValues(){
@@ -665,7 +665,7 @@ public final class BTreeNode extends YapMeta{
     public int ownLength() {
         return SLOT_LEADING_LENGTH
           + (_count * entryLength())
-          + YapConst.BRACKETS_BYTES;
+          + Const4.BRACKETS_BYTES;
     }
     
     Buffer prepareRead(Transaction trans){
@@ -1212,7 +1212,7 @@ public final class BTreeNode extends YapMeta{
 
 	public static void defragIndex(ReaderPair readers,Indexable4 keyHandler,Indexable4 valueHandler) {
         if (Deploy.debug) {
-            readers.readBegin(YapConst.BTREE_NODE);
+            readers.readBegin(Const4.BTREE_NODE);
         }
 		// count
 		int count=readers.readInt();

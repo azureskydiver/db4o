@@ -16,7 +16,7 @@ public abstract class Transaction {
 
     protected int             i_address;                                  // only used to pass address to Thread
     
-    protected final byte[]          _pointerBuffer = new byte[YapConst.POINTER_LENGTH];
+    protected final byte[]          _pointerBuffer = new byte[Const4.POINTER_LENGTH];
 
     // contains DeleteInfo nodes
     public Tree          i_delete;  // public for .NET conversion
@@ -42,7 +42,7 @@ public abstract class Transaction {
         i_stream = a_stream;
         i_file = (a_stream instanceof LocalObjectContainer) ? (LocalObjectContainer) a_stream : null;
         i_parentTransaction = a_parent;
-        i_pointerIo = new StatefulBuffer(this, YapConst.POINTER_LENGTH);
+        i_pointerIo = new StatefulBuffer(this, Const4.POINTER_LENGTH);
     }
 
     public void addDirtyFieldIndex(IndexTransaction a_xft) {
@@ -348,7 +348,7 @@ public abstract class Transaction {
         checkSynchronization();
         i_pointerIo.useSlot(a_id);
         if (Deploy.debug) {
-            i_pointerIo.writeBegin(YapConst.YAPPOINTER);
+            i_pointerIo.writeBegin(Const4.YAPPOINTER);
         }
         i_pointerIo.writeInt(a_address);
         i_pointerIo.writeInt(a_length);
@@ -356,7 +356,7 @@ public abstract class Transaction {
             i_pointerIo.writeEnd();
         }
         if (Debug.xbytes && Deploy.overwrite) {
-            i_pointerIo.setID(YapConst.IGNORE_ID);
+            i_pointerIo.setID(Const4.IGNORE_ID);
         }
         i_pointerIo.write();
     }

@@ -4,7 +4,6 @@ package com.db4o.inside;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
 import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.handlers.*;
 import com.db4o.inside.replication.*;
@@ -15,8 +14,17 @@ import com.db4o.types.*;
 
 /**
  * @exclude
+ * 
+ * TODO: This class was written to make ObjectContainerBase 
+ * leaner, so TransportObjectContainer has less members.
+ * 
+ * All funcionality of this class should become part of 
+ * ObjectContainerBase and the functionality in 
+ * ObjectContainerBase should delegate to independant
+ * modules without circular references.
+ * 
  */
-public final class YapHandlers {
+public final class HandlerRegistry {
 	
 	private final ObjectContainerBase _masterStream;  // this is master YapStream and not valid
 	                                   // for YapObjectCarrier
@@ -53,7 +61,7 @@ public final class YapHandlers {
     
     Db4oCollections 				i_collections;
     
-    YapIndexes              		i_indexes;
+    SharedIndexedFields              		i_indexes;
     
     ReplicationImpl				    i_replication;
     
@@ -81,7 +89,7 @@ public final class YapHandlers {
 	public ReflectClass ICLASS_STRING;
     ReflectClass ICLASS_TRANSIENTCLASS;
 
-    YapHandlers(final ObjectContainerBase a_stream, byte stringEncoding, GenericReflector reflector) {
+    HandlerRegistry(final ObjectContainerBase a_stream, byte stringEncoding, GenericReflector reflector) {
     	
     	_masterStream = a_stream;
     	a_stream.i_handlers = this;
@@ -91,12 +99,12 @@ public final class YapHandlers {
     	
     	initClassReflectors(reflector);
         
-        i_indexes = new YapIndexes(a_stream);
+        i_indexes = new SharedIndexedFields(a_stream);
         
         i_virtualFields[0] = i_indexes.i_fieldVersion;
         i_virtualFields[1] = i_indexes.i_fieldUUID;
 
-        i_stringHandler = new StringHandler(a_stream, YapStringIO.forEncoding(stringEncoding));
+        i_stringHandler = new StringHandler(a_stream, LatinStringIO.forEncoding(stringEncoding));
 
         i_handlers = new TypeHandler4[] { new IntHandler(a_stream), new LongHandler(a_stream), new FloatHandler(a_stream),
             new BooleanHandler(a_stream), new DoubleHandler(a_stream), new ByteHandler(a_stream), new CharHandler(a_stream),
@@ -177,9 +185,9 @@ public final class YapHandlers {
             return 0;
         }
         if (_masterStream.reflector().array().isNDimensional(claxx)) {
-            return YapConst.TYPE_NARRAY;
+            return Const4.TYPE_NARRAY;
         } 
-        return YapConst.TYPE_ARRAY;
+        return Const4.TYPE_ARRAY;
     }
 	
     boolean createConstructor(final ReflectClass claxx, boolean skipConstructor){
@@ -349,18 +357,18 @@ public final class YapHandlers {
 	}
     
     private void initClassReflectors(GenericReflector reflector){
-		ICLASS_COMPARE = reflector.forClass(YapConst.CLASS_COMPARE);
-		ICLASS_DB4OTYPE = reflector.forClass(YapConst.CLASS_DB4OTYPE);
-		ICLASS_DB4OTYPEIMPL = reflector.forClass(YapConst.CLASS_DB4OTYPEIMPL);
-        ICLASS_INTERNAL = reflector.forClass(YapConst.CLASS_INTERNAL);
-        ICLASS_UNVERSIONED = reflector.forClass(YapConst.CLASS_UNVERSIONED);
-		ICLASS_OBJECT = reflector.forClass(YapConst.CLASS_OBJECT);
+		ICLASS_COMPARE = reflector.forClass(Const4.CLASS_COMPARE);
+		ICLASS_DB4OTYPE = reflector.forClass(Const4.CLASS_DB4OTYPE);
+		ICLASS_DB4OTYPEIMPL = reflector.forClass(Const4.CLASS_DB4OTYPEIMPL);
+        ICLASS_INTERNAL = reflector.forClass(Const4.CLASS_INTERNAL);
+        ICLASS_UNVERSIONED = reflector.forClass(Const4.CLASS_UNVERSIONED);
+		ICLASS_OBJECT = reflector.forClass(Const4.CLASS_OBJECT);
 		ICLASS_OBJECTCONTAINER = reflector
-				.forClass(YapConst.CLASS_OBJECTCONTAINER);
-		ICLASS_STATICCLASS = reflector.forClass(YapConst.CLASS_STATICCLASS);
+				.forClass(Const4.CLASS_OBJECTCONTAINER);
+		ICLASS_STATICCLASS = reflector.forClass(Const4.CLASS_STATICCLASS);
 		ICLASS_STRING = reflector.forClass(String.class);
 		ICLASS_TRANSIENTCLASS = reflector
-				.forClass(YapConst.CLASS_TRANSIENTCLASS);
+				.forClass(Const4.CLASS_TRANSIENTCLASS);
 		
 		Platform4.registerCollections(reflector);
     }

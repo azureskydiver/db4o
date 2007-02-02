@@ -37,7 +37,7 @@ public class LongHandler extends PrimitiveHandler {
 	}
 	
 	public int linkLength(){
-		return YapConst.LONG_LENGTH;
+		return Const4.LONG_LENGTH;
 	}
 	
 	public Object primitiveNull(){
@@ -51,17 +51,17 @@ public class LongHandler extends PrimitiveHandler {
 	public static final long readLong(Buffer a_bytes){
 		long l_return = 0;
 		if (Deploy.debug){
-			a_bytes.readBegin(YapConst.YAPLONG);
+			a_bytes.readBegin(Const4.YAPLONG);
 			if(Deploy.debugLong){
-				l_return = Long.parseLong(new YapStringIO().read(a_bytes, YapConst.LONG_BYTES).trim()); 
+				l_return = Long.parseLong(new LatinStringIO().read(a_bytes, Const4.LONG_BYTES).trim()); 
 			}else{
-				for (int i = 0; i < YapConst.LONG_BYTES; i++){
+				for (int i = 0; i < Const4.LONG_BYTES; i++){
 					l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
 				}
 			}
 			a_bytes.readEnd();
 		}else{
-			for (int i = 0; i < YapConst.LONG_BYTES; i++){
+			for (int i = 0; i < Const4.LONG_BYTES; i++){
 				l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
 			}
 		}
@@ -74,27 +74,27 @@ public class LongHandler extends PrimitiveHandler {
 	
 	public static final void writeLong(long a_long, Buffer a_bytes){
 		if(Deploy.debug){
-			a_bytes.writeBegin(YapConst.YAPLONG);
+			a_bytes.writeBegin(Const4.YAPLONG);
 			if(Deploy.debugLong){
 				String l_s = "                                " + a_long;
-				new YapStringIO().write(a_bytes, l_s.substring(l_s.length() - YapConst.LONG_BYTES));
+				new LatinStringIO().write(a_bytes, l_s.substring(l_s.length() - Const4.LONG_BYTES));
 			}
 			else{
-				for (int i = 0; i < YapConst.LONG_BYTES; i++){
-					a_bytes._buffer[a_bytes._offset++] = (byte) (a_long >> ((YapConst.LONG_BYTES - 1 - i) * 8));
+				for (int i = 0; i < Const4.LONG_BYTES; i++){
+					a_bytes._buffer[a_bytes._offset++] = (byte) (a_long >> ((Const4.LONG_BYTES - 1 - i) * 8));
 				}
 			}
 			a_bytes.writeEnd();
 		}else{
-			for (int i = 0; i < YapConst.LONG_BYTES; i++){
-				a_bytes._buffer[a_bytes._offset++] = (byte) (a_long >> ((YapConst.LONG_BYTES - 1 - i) * 8));
+			for (int i = 0; i < Const4.LONG_BYTES; i++){
+				a_bytes._buffer[a_bytes._offset++] = (byte) (a_long >> ((Const4.LONG_BYTES - 1 - i) * 8));
 			}
 		}
 	}	
 	
 	public static final void writeLong(long a_long, byte[] bytes){
-		for (int i = 0; i < YapConst.LONG_BYTES; i++){
-			bytes[i] = (byte) (a_long >> ((YapConst.LONG_BYTES - 1 - i) * 8));
+		for (int i = 0; i < Const4.LONG_BYTES; i++){
+			bytes[i] = (byte) (a_long >> ((Const4.LONG_BYTES - 1 - i) * 8));
 		}
 	}	
 	

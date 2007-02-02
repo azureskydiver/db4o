@@ -41,7 +41,7 @@ public final class ReaderPair implements SlotReader {
 	}
 
 	public void incrementIntSize() {
-		incrementOffset(YapConst.INT_LENGTH);
+		incrementOffset(Const4.INT_LENGTH);
 	}
 
 	public int copyUnindexedID() {
@@ -50,7 +50,7 @@ public final class ReaderPair implements SlotReader {
 		try {
 			mapped=_mapping.mappedID(orig);
 		} catch (MappingNotFoundException exc) {
-			mapped=_mapping.allocateTargetSlot(YapConst.POINTER_LENGTH);
+			mapped=_mapping.allocateTargetSlot(Const4.POINTER_LENGTH);
 			_mapping.mapIDs(orig,mapped, false);
 			_mapping.registerUnindexed(orig);
 		}
@@ -104,12 +104,12 @@ public final class ReaderPair implements SlotReader {
 
 	public int readInt() {
 		int value=_source.readInt();
-		_target.incrementOffset(YapConst.INT_LENGTH);
+		_target.incrementOffset(Const4.INT_LENGTH);
 		return value;
 	}
 
 	public void writeInt(int value) {
-		_source.incrementOffset(YapConst.INT_LENGTH);
+		_source.incrementOffset(Const4.INT_LENGTH);
 		_target.writeInt(value);
 	}
 	
@@ -117,7 +117,7 @@ public final class ReaderPair implements SlotReader {
 		file.writeBytes(_target,address,0);
 	}
 	
-	public String readShortString(YapStringIO sio) throws CorruptionException {
+	public String readShortString(LatinStringIO sio) throws CorruptionException {
 		String value=StringMarshaller.readShort(sio,false,_source);
 		StringMarshaller.readShort(sio,false,_target);
 		return value;
@@ -162,9 +162,9 @@ public final class ReaderPair implements SlotReader {
 			context.mapIDs(sourceAddress, targetAddress, false);
 		}
 		
-		Buffer targetPointerReader=new Buffer(YapConst.POINTER_LENGTH);
+		Buffer targetPointerReader=new Buffer(Const4.POINTER_LENGTH);
 		if(Deploy.debug) {
-			targetPointerReader.writeBegin(YapConst.YAPPOINTER);
+			targetPointerReader.writeBegin(Const4.YAPPOINTER);
 		}
 		targetPointerReader.writeInt(targetAddress);
 		targetPointerReader.writeInt(targetLength);
@@ -185,12 +185,12 @@ public final class ReaderPair implements SlotReader {
 
 	public long readLong() {
 		long value=_source.readLong();
-		_target.incrementOffset(YapConst.LONG_LENGTH);
+		_target.incrementOffset(Const4.LONG_LENGTH);
 		return value;
 	}
 
 	public void writeLong(long value) {
-		_source.incrementOffset(YapConst.LONG_LENGTH);
+		_source.incrementOffset(Const4.LONG_LENGTH);
 		_target.writeLong(value);
 	}
 

@@ -61,7 +61,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
     
     protected final int headerLength(){
-        return YapConst.OBJECT_LENGTH + YapConst.ID_LENGTH;
+        return Const4.OBJECT_LENGTH + Const4.ID_LENGTH;
     }
     
     public void instantiateFields(ClassMetadata yc, ObjectHeaderAttributes attributes, final ObjectReference yapObject, final Object onObject, final StatefulBuffer writer) {
@@ -78,7 +78,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
     
     private int linkLength(ClassMetadata yc, ObjectReference yo) {
-        int length = YapConst.INT_LENGTH;
+        int length = Const4.INT_LENGTH;
         if (yc.i_fields != null) {
             for (int i = 0; i < yc.i_fields.length; i++) {
                 length += linkLength(yc.i_fields[i], yo);

@@ -89,14 +89,14 @@ public class QField implements Visitor4, Unversioned{
 	}
 	
 	boolean isClass(){
-		return i_yapField == null || i_yapField.getHandler().getTypeID() == YapConst.TYPE_CLASS;
+		return i_yapField == null || i_yapField.getHandler().getTypeID() == Const4.TYPE_CLASS;
 	}
 	
 	boolean isSimple(){
-		return i_yapField != null && i_yapField.getHandler().getTypeID() == YapConst.TYPE_SIMPLE;
+		return i_yapField != null && i_yapField.getHandler().getTypeID() == Const4.TYPE_SIMPLE;
 	}
 	
-	YapComparable prepareComparison(Object obj){
+	Comparable4 prepareComparison(Object obj){
 		if(i_yapField != null){
 			return i_yapField.prepareComparison(obj);
 		}

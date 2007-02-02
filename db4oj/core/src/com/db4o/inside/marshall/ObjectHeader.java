@@ -31,7 +31,7 @@ public final class ObjectHeader {
     
     public ObjectHeader(ObjectContainerBase stream, ClassMetadata yc, Buffer reader){
         if (Deploy.debug) {
-            reader.readBegin(YapConst.YAPOBJECT);
+            reader.readBegin(Const4.YAPOBJECT);
         }
         int classID = reader.readInt();
         _marshallerFamily = readMarshallerFamily(reader, classID);
@@ -61,7 +61,7 @@ public final class ObjectHeader {
 		ObjectHeader header=new ObjectHeader(readers.context().systemTrans().stream(),null,source);
     	int newID =readers.mapping().mappedID(header.yapClass().getID());
         if (Deploy.debug) {
-            target.readBegin(YapConst.YAPOBJECT);
+            target.readBegin(Const4.YAPOBJECT);
         }
 		header._marshallerFamily._object.writeObjectClassID(target,newID);		
 		header._marshallerFamily._object.skipMarshallerInfo(target);

@@ -65,7 +65,7 @@ public class MappedIDPairHandler implements Indexable4 {
     	throw new NotImplementedException();
 	}
 
-	public YapComparable prepareComparison(Object obj) {
+	public Comparable4 prepareComparison(Object obj) {
         MappedIDPair mappedIDs = (MappedIDPair)obj;
         _origHandler.prepareComparison(mappedIDs.orig());
         _mappedHandler.prepareComparison(mappedIDs.mapped());

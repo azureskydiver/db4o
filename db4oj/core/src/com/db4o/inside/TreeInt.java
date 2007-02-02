@@ -102,7 +102,7 @@ public class TreeInt extends Tree implements ReadWriteable {
     }
 
 	public int ownLength() {
-		return YapConst.INT_LENGTH;
+		return Const4.INT_LENGTH;
 	}
 
 	boolean variableLength() {
@@ -141,14 +141,14 @@ public class TreeInt extends Tree implements ReadWriteable {
 	
 	public static int byteCount(TreeInt a_tree){
 		if(a_tree == null){
-			return YapConst.INT_LENGTH;
+			return Const4.INT_LENGTH;
 		}
 		return a_tree.byteCount();
 	}
 	
 	public final int byteCount(){
 		if(variableLength()){
-			final int[] length = new int[]{YapConst.INT_LENGTH};
+			final int[] length = new int[]{Const4.INT_LENGTH};
 			traverse(new Visitor4(){
 				public void visit(Object obj){
 					length[0] += ((TreeInt)obj).ownLength();
@@ -156,7 +156,7 @@ public class TreeInt extends Tree implements ReadWriteable {
 			});
 			return length[0];
 		}
-		return YapConst.INT_LENGTH + (size() * ownLength());
+		return Const4.INT_LENGTH + (size() * ownLength());
 	}
 	
     public Object key(){

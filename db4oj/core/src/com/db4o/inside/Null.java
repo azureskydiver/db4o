@@ -44,7 +44,7 @@ public class Null implements Indexable4{
         return 0;
     }
 
-	public YapComparable prepareComparison(Object obj) {
+	public Comparable4 prepareComparison(Object obj) {
 		// do nothing
 		return this;
 	}

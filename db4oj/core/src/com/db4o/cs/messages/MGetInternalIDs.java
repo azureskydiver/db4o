@@ -18,7 +18,7 @@ public final class MGetInternalIDs extends MsgD {
 			}
 		}
 		int size = ids.length;
-		MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), YapConst.ID_LENGTH * (size + 1));
+		MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), Const4.ID_LENGTH * (size + 1));
 		Buffer writer = message.payLoad();
 		writer.writeInt(size);
 		for (int i = 0; i < size; i++) {

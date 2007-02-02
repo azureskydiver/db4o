@@ -8,14 +8,14 @@ import com.db4o.inside.*;
 /**
  * @exclude
  */
-public final class YapStringIOUnicode extends YapStringIO{
+public final class UnicodeStringIO extends LatinStringIO{
 	
     public int bytesPerChar(){
         return 2;
     }
     
     public byte encodingByte(){
-		return YapConst.UNICODE;
+		return Const4.UNICODE;
 	}
 	
 //	Currently not needed
@@ -36,7 +36,7 @@ public final class YapStringIOUnicode extends YapStringIO{
 //	}
 	
 	public int length(String a_string){
-		return (a_string.length() * 2) + YapConst.OBJECT_LENGTH + YapConst.INT_LENGTH;
+		return (a_string.length() * 2) + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
 	}
 	
 	public String read(Buffer bytes, int a_length){
@@ -58,7 +58,7 @@ public final class YapStringIOUnicode extends YapStringIO{
 	}
 	
 	public int shortLength(String a_string){
-		return (a_string.length() * 2)  + YapConst.INT_LENGTH;
+		return (a_string.length() * 2)  + Const4.INT_LENGTH;
 	}
 	
 	public void write(Buffer bytes, String string){

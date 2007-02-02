@@ -101,9 +101,9 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
-        if (a_type == YapConst.TYPE_ARRAY) {
+        if (a_type == Const4.TYPE_ARRAY) {
             new ArrayHandler(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
-        } else if (a_type == YapConst.TYPE_NARRAY) {
+        } else if (a_type == Const4.TYPE_NARRAY) {
             new MultidimensionalArrayHandler(a_bytes.getStream(),this, true).deletePrimitiveEmbedded(a_bytes, this);
         }
     }
@@ -154,7 +154,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     public boolean isArray() {
-        return i_id == YapHandlers.ANY_ARRAY_ID || i_id == YapHandlers.ANY_ARRAY_N_ID;
+        return i_id == HandlerRegistry.ANY_ARRAY_ID || i_id == HandlerRegistry.ANY_ARRAY_N_ID;
     }
     
     public boolean isPrimitive(){
@@ -162,7 +162,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
     
     public int isSecondClass(){
-        return YapConst.UNKNOWN;
+        return Const4.UNKNOWN;
     }
     
 	boolean isStrongTyped(){
@@ -173,7 +173,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         i_handler.calculateLengths(trans, header, topLevel, obj, withIndirection);
     }
     
-    public YapComparable prepareComparison(Object a_constraint) {
+    public Comparable4 prepareComparison(Object a_constraint) {
         i_handler.prepareComparison(a_constraint);
         return i_handler;
     }

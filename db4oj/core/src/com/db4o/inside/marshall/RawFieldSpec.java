@@ -1,8 +1,7 @@
 /* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
 package com.db4o.inside.marshall;
 
-import com.db4o.*;
-import com.db4o.inside.*;
+import com.db4o.foundation.*;
 
 public class RawFieldSpec {
 	private final String _name;
@@ -16,10 +15,10 @@ public class RawFieldSpec {
 	public RawFieldSpec(final String name, final int handlerID, final byte attribs) {
 		_name = name;
 		_handlerID = handlerID;
-		YapBit yb = new YapBit(attribs);
-        _isPrimitive = yb.get();
-        _isArray = yb.get();
-        _isNArray = yb.get();
+		BitMap4 bitmap = new BitMap4(attribs);
+        _isPrimitive = bitmap.isTrue(0);
+        _isArray = bitmap.isTrue(1);
+        _isNArray = bitmap.isTrue(2);
         _isVirtual=false;
         _indexID=0;
 	}

@@ -81,21 +81,21 @@ public final class Platform4 {
         if (Deploy.csharp) {
             return true;
         }
-        if (setAccessibleCheck == YapConst.UNCHECKED) {
+        if (setAccessibleCheck == Const4.UNCHECKED) {
             if (Deploy.csharp) {
-                setAccessibleCheck = YapConst.NO;
+                setAccessibleCheck = Const4.NO;
             } else {
                 if (jdk().ver() >= 2) {
-                    setAccessibleCheck = YapConst.YES;
+                    setAccessibleCheck = Const4.YES;
                 } else {
-                    setAccessibleCheck = YapConst.NO;
+                    setAccessibleCheck = Const4.NO;
                     if (((Config4Impl)Db4o.configure()).messageLevel() >= 0) {
                         Messages.logErr(Db4o.configure(), 47, null, null);
                     }
                 }
             }
         }
-        return setAccessibleCheck == YapConst.YES;
+        return setAccessibleCheck == Const4.YES;
     }
     
     /**
@@ -305,16 +305,16 @@ public final class Platform4 {
     }
 
     static final synchronized boolean hasCollections() {
-        if (collectionCheck == YapConst.UNCHECKED) {
+        if (collectionCheck == Const4.UNCHECKED) {
             if (!Deploy.csharp) {
                 if (classIsAvailable(UTIL + "Collection")) {
-                    collectionCheck = YapConst.YES;
+                    collectionCheck = Const4.YES;
                     return true;
                 }
             }
-            collectionCheck = YapConst.NO;
+            collectionCheck = Const4.NO;
         }
-        return collectionCheck == YapConst.YES;
+        return collectionCheck == Const4.YES;
     }
 
     static final boolean hasLockFileThread() {
@@ -325,48 +325,48 @@ public final class Platform4 {
         if (!Debug.nio) {
             return false;
         }
-        if (nioCheck == YapConst.UNCHECKED) {
+        if (nioCheck == Const4.UNCHECKED) {
             if ((jdk().ver() >= 4)
                 && (!noNIO())) {
-                nioCheck = YapConst.YES;
+                nioCheck = Const4.YES;
                 return true;
             }
-            nioCheck = YapConst.NO;
+            nioCheck = Const4.NO;
         }
-        return nioCheck == YapConst.YES;
+        return nioCheck == Const4.YES;
 
     }
 
     static final boolean hasShutDownHook() {
-        if (shutDownHookCheck == YapConst.UNCHECKED) {
+        if (shutDownHookCheck == Const4.UNCHECKED) {
             if (!Deploy.csharp) {
                 if (jdk().ver() >= 3){
-                    shutDownHookCheck = YapConst.YES;
+                    shutDownHookCheck = Const4.YES;
                     return true;
                 } 
                 JDKReflect.invoke(System.class, RUNFINALIZERSONEXIT, new Class[] {boolean.class}, new Object[]{new Boolean(true)});
             }
-            shutDownHookCheck = YapConst.NO;
+            shutDownHookCheck = Const4.NO;
         }
-        return shutDownHookCheck == YapConst.YES;
+        return shutDownHookCheck == Const4.YES;
     }
 
     static final boolean hasWeakReferences() {
         if (!Debug.weakReferences) {
             return false;
         }
-        if (weakReferenceCheck == YapConst.UNCHECKED) {
+        if (weakReferenceCheck == Const4.UNCHECKED) {
             if (!Deploy.csharp) {
                 if (classIsAvailable(ACCESSIBLEOBJECT)
                     && classIsAvailable(REFERENCEQUEUE)
                     && jdk().ver() >= 2) {
-                    weakReferenceCheck = YapConst.YES;
+                    weakReferenceCheck = Const4.YES;
                     return true;
                 }
             }
-            weakReferenceCheck = YapConst.NO;
+            weakReferenceCheck = Const4.NO;
         }
-        return weakReferenceCheck == YapConst.YES;
+        return weakReferenceCheck == Const4.YES;
     }
     
     static final boolean ignoreAsConstraint(Object obj){
@@ -497,7 +497,7 @@ public final class Platform4 {
     }
 
     static boolean callConstructor() {
-        if (callConstructorCheck == YapConst.UNCHECKED) {
+        if (callConstructorCheck == Const4.UNCHECKED) {
             
             if(jdk().methodIsAvailable(
                 REFLECTIONFACTORY,
@@ -505,12 +505,12 @@ public final class Platform4 {
                 new Class[]{Class.class, jdk().constructorClass()}
                 )){
                 
-                callConstructorCheck = YapConst.NO;
+                callConstructorCheck = Const4.NO;
                 return false;
             }
-            callConstructorCheck = YapConst.YES;
+            callConstructorCheck = Const4.YES;
         }
-        return callConstructorCheck == YapConst.YES;
+        return callConstructorCheck == Const4.YES;
     }
     
     private static final void netReadAsJava(Config4Impl config, String className){
@@ -590,10 +590,10 @@ public final class Platform4 {
 
     public static final void setAccessible(Object a_accessible) {
         if (!Deploy.csharp) {
-            if (setAccessibleCheck == YapConst.UNCHECKED) {
+            if (setAccessibleCheck == Const4.UNCHECKED) {
                 canSetAccessible();
             }
-            if (setAccessibleCheck == YapConst.YES) {
+            if (setAccessibleCheck == Const4.YES) {
                 jdk().setAccessible(a_accessible);
             }
         }

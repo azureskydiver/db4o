@@ -43,7 +43,7 @@ public abstract class MsgQuery extends MsgObject {
 	}
 
 	private int bufferLength(int maxCount) {
-		return YapConst.INT_LENGTH * (maxCount + ID_AND_SIZE);
+		return Const4.INT_LENGTH * (maxCount + ID_AND_SIZE);
 	}
 	
 	private static synchronized int generateID(){

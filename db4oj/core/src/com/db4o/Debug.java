@@ -59,7 +59,7 @@ public abstract class Debug extends Debug4 {
     }
 
     public static boolean exceedsMaximumBlockSize(int a_length) {
-        if (a_length > YapConst.MAXIMUM_BLOCK_SIZE) {
+        if (a_length > Const4.MAXIMUM_BLOCK_SIZE) {
             if (atHome) {
                 System.err.println("Maximum block size  exceeded!!!");
                 new Exception().printStackTrace();
@@ -70,7 +70,7 @@ public abstract class Debug extends Debug4 {
     }
     
     public static boolean exceedsMaximumArrayEntries(int a_entries, boolean a_primitive){
-        if (a_entries > (a_primitive ? YapConst.MAXIMUM_ARRAY_ENTRIES_PRIMITIVE : YapConst.MAXIMUM_ARRAY_ENTRIES)) {
+        if (a_entries > (a_primitive ? Const4.MAXIMUM_ARRAY_ENTRIES_PRIMITIVE : Const4.MAXIMUM_ARRAY_ENTRIES)) {
             if (atHome) {
                 System.err.println("Maximum array elements exceeded!!!");
                 new Exception().printStackTrace();

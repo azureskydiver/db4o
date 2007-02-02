@@ -99,7 +99,7 @@ public final class ClassMetadataRepository extends YapMeta {
 
 	public static void defrag(ReaderPair readers) {
         if (Deploy.debug) {
-            readers.readBegin(YapConst.YAPCLASSCOLLECTION);
+            readers.readBegin(Const4.YAPCLASSCOLLECTION);
         }
 		int numClasses=readers.readInt();
 		for(int classIdx=0;classIdx<numClasses;classIdx++) {
@@ -175,7 +175,7 @@ public final class ClassMetadataRepository extends YapMeta {
     }
 
     public byte getIdentifier() {
-        return YapConst.YAPCLASSCOLLECTION;
+        return Const4.YAPCLASSCOLLECTION;
     }
     
     ClassMetadata getActiveYapClass(ReflectClass a_class) {
@@ -337,9 +337,9 @@ public final class ClassMetadataRepository extends YapMeta {
     } 
 
     public int ownLength() {
-        return YapConst.OBJECT_LENGTH
-            + YapConst.INT_LENGTH
-            + (i_classes.size() * YapConst.ID_LENGTH);
+        return Const4.OBJECT_LENGTH
+            + Const4.INT_LENGTH
+            + (i_classes.size() * Const4.ID_LENGTH);
     }
 
     void purge() {
@@ -451,10 +451,10 @@ public final class ClassMetadataRepository extends YapMeta {
             yapClass.readName(_systemTransaction);
             yapClass.forceRead();
             yapClass.setStateClean();
-            yapClass.bitFalse(YapConst.CHECKED_CHANGES);
-            yapClass.bitFalse(YapConst.READING);
-            yapClass.bitFalse(YapConst.CONTINUE);
-            yapClass.bitFalse(YapConst.DEAD);
+            yapClass.bitFalse(Const4.CHECKED_CHANGES);
+            yapClass.bitFalse(Const4.READING);
+            yapClass.bitFalse(Const4.CONTINUE);
+            yapClass.bitFalse(Const4.DEAD);
             yapClass.checkChanges();
         }
     }

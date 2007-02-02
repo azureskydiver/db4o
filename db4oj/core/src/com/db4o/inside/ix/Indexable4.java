@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 /**
  * @exclude
  */
-public interface Indexable4 extends YapComparable{
+public interface Indexable4 extends Comparable4{
     
     Object comparableObject(Transaction trans, Object indexEntry);
 

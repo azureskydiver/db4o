@@ -58,7 +58,7 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
     }
     
     public int getTypeID() {
-        return YapConst.TYPE_SIMPLE;
+        return Const4.TYPE_SIMPLE;
     }
 
     public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
@@ -78,7 +78,7 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
     }
     
     public int isSecondClass(){
-        return YapConst.YES;
+        return Const4.YES;
     }
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
@@ -190,7 +190,7 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
 		return a_object;
     }
 
-    public YapComparable prepareComparison(Object obj) {
+    public Comparable4 prepareComparison(Object obj) {
         if (obj == null) {
             i_compareToIsNull = true;
             return Null.INSTANCE;

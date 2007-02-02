@@ -13,11 +13,11 @@ import com.db4o.inside.*;
 public abstract class Config4Abstract {
 	protected KeySpecHashtable4 _config;
 
-	private final static KeySpec CASCADE_ON_ACTIVATE=new KeySpec(YapConst.DEFAULT);
+	private final static KeySpec CASCADE_ON_ACTIVATE=new KeySpec(Const4.DEFAULT);
     
-	private final static KeySpec CASCADE_ON_DELETE=new KeySpec(YapConst.DEFAULT);
+	private final static KeySpec CASCADE_ON_DELETE=new KeySpec(Const4.DEFAULT);
     
-	private final static KeySpec CASCADE_ON_UPDATE=new KeySpec(YapConst.DEFAULT);
+	private final static KeySpec CASCADE_ON_UPDATE=new KeySpec(Const4.DEFAULT);
 
     private final static KeySpec NAME=new KeySpec(null);
 
@@ -42,7 +42,7 @@ public abstract class Config4Abstract {
 	}
 
 	protected void putThreeValued(KeySpec spec,boolean flag) {
-		_config.put(spec, flag ? YapConst.YES : YapConst.NO);
+		_config.put(spec, flag ? Const4.YES : Const4.NO);
 	}
 	
 	public int cascadeOnActivate(){

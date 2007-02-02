@@ -18,6 +18,10 @@ import com.db4o.inside.*;
  * @exclude
  */
 public final class StatefulBuffer extends Buffer {
+	
+	private static interface StatefulBufferVisitor {
+		void visit(StatefulBuffer buffer);
+	}
     
 
     private int i_address;
@@ -94,7 +98,7 @@ public final class StatefulBuffer extends Buffer {
         a_bytes.append(_buffer);
         final int[] newID = { a_id };
         final int myID = a_id;
-        forEachEmbedded(new VisitorYapBytes() {
+        forEachEmbedded(new StatefulBufferVisitor() {
             public void visit(StatefulBuffer a_embedded) {
                 a_bytes.writeInt(myID);
                 newID[0] = a_embedded.appendTo(a_bytes, newID[0]);
@@ -119,7 +123,7 @@ public final class StatefulBuffer extends Buffer {
 
     public int embeddedCount() {
         final int[] count = { 0 };
-        forEachEmbedded(new VisitorYapBytes() {
+        forEachEmbedded(new StatefulBufferVisitor() {
             public void visit(StatefulBuffer a_bytes) {
                 count[0] += 1 + a_bytes.embeddedCount();
             }
@@ -129,7 +133,7 @@ public final class StatefulBuffer extends Buffer {
 
     public int embeddedLength() {
         final int[] length = { 0 };
-        forEachEmbedded(new VisitorYapBytes() {
+        forEachEmbedded(new StatefulBufferVisitor() {
             public void visit(StatefulBuffer a_bytes) {
                 length[0] += a_bytes.getLength() + a_bytes.embeddedLength();
             }
@@ -137,7 +141,7 @@ public final class StatefulBuffer extends Buffer {
         return length[0];
     }
 
-    void forEachEmbedded(final VisitorYapBytes a_visitor) {
+    void forEachEmbedded(final StatefulBufferVisitor a_visitor) {
         if (i_embedded != null) {
             i_embedded.traverse(new Visitor4() {
                 public void visit(Object a_object) {
@@ -325,7 +329,7 @@ public final class StatefulBuffer extends Buffer {
 
     public void writeEmbedded() {
         final StatefulBuffer finalThis = this;
-        forEachEmbedded(new VisitorYapBytes() {
+        forEachEmbedded(new StatefulBufferVisitor() {
             public void visit(StatefulBuffer a_bytes) {
                 a_bytes.writeEmbedded();
                 stream().writeEmbedded(finalThis, a_bytes);
@@ -364,8 +368,8 @@ public final class StatefulBuffer extends Buffer {
     }
     
     private void checkMinimumPayLoadOffsetAndWritePointerAndLength(int length, boolean alignToBlockSize){
-        if(_payloadOffset <= _offset + (YapConst.INT_LENGTH * 2)){
-            _payloadOffset = _offset + (YapConst.INT_LENGTH * 2);
+        if(_payloadOffset <= _offset + (Const4.INT_LENGTH * 2)){
+            _payloadOffset = _offset + (Const4.INT_LENGTH * 2);
         }
         if(alignToBlockSize){
             _payloadOffset = stream().alignToBlockSize(_payloadOffset);
@@ -427,7 +431,7 @@ public final class StatefulBuffer extends Buffer {
     
     public void noXByteCheck() {
         if(Debug.xbytes && Deploy.overwrite){
-            setID(YapConst.IGNORE_ID);
+            setID(Const4.IGNORE_ID);
         }
     }
     
@@ -447,6 +451,5 @@ public final class StatefulBuffer extends Buffer {
         writeInt(actualCount);
         _offset = secondSavedOffset;
 	}
-    
 
 }

@@ -10,14 +10,14 @@ public final class MReadBytes extends MsgD {
 	
 	public final Buffer getByteLoad() {
 		int address = _payLoad.readInt();
-		int length = _payLoad.getLength() - (YapConst.INT_LENGTH);
-		_payLoad.removeFirstBytes(YapConst.INT_LENGTH);
+		int length = _payLoad.getLength() - (Const4.INT_LENGTH);
+		_payLoad.removeFirstBytes(Const4.INT_LENGTH);
 		_payLoad.useSlot(address, length);
 		return this._payLoad;
 	}
 
 	public final MsgD getWriter(StatefulBuffer bytes) {
-		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength() + YapConst.INT_LENGTH);
+		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength() + Const4.INT_LENGTH);
 		message._payLoad.writeInt(bytes.getAddress());
 		message._payLoad.append(bytes._buffer);
 		return message;

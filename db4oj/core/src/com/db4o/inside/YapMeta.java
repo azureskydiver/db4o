@@ -33,10 +33,10 @@ public abstract class YapMeta {
     protected int i_state = 2; // DIRTY and ACTIVE
 
     final boolean beginProcessing() {
-        if (bitIsTrue(YapConst.PROCESSING)) {
+        if (bitIsTrue(Const4.PROCESSING)) {
             return false;
         }
-        bitTrue(YapConst.PROCESSING);
+        bitTrue(Const4.PROCESSING);
         return true;
     }
 
@@ -57,14 +57,14 @@ public abstract class YapMeta {
     }
 
     void cacheDirty(Collection4 col) {
-        if (!bitIsTrue(YapConst.CACHED_DIRTY)) {
-            bitTrue(YapConst.CACHED_DIRTY);
+        if (!bitIsTrue(Const4.CACHED_DIRTY)) {
+            bitTrue(Const4.CACHED_DIRTY);
             col.add(this);
         }
     }
 
     public void endProcessing() {
-        bitFalse(YapConst.PROCESSING);
+        bitFalse(Const4.PROCESSING);
     }
 
     public int getID() {
@@ -72,11 +72,11 @@ public abstract class YapMeta {
     }
 
     public final boolean isActive() {
-        return bitIsTrue(YapConst.ACTIVE);
+        return bitIsTrue(Const4.ACTIVE);
     }
 
     public boolean isDirty() {
-        return bitIsTrue(YapConst.ACTIVE) && (!bitIsTrue(YapConst.CLEAN));
+        return bitIsTrue(Const4.ACTIVE) && (!bitIsTrue(Const4.CLEAN));
     }
     
     public final boolean isNew(){
@@ -84,11 +84,11 @@ public abstract class YapMeta {
     }
 
     public int linkLength() {
-        return YapConst.ID_LENGTH;
+        return Const4.ID_LENGTH;
     }
 
     final void notCachedDirty() {
-        bitFalse(YapConst.CACHED_DIRTY);
+        bitFalse(Const4.CACHED_DIRTY);
     }
 
     public void read(Transaction trans) {
@@ -119,24 +119,24 @@ public abstract class YapMeta {
     }
 
     public final void setStateClean() {
-        bitTrue(YapConst.ACTIVE);
-        bitTrue(YapConst.CLEAN);
+        bitTrue(Const4.ACTIVE);
+        bitTrue(Const4.CLEAN);
     }
 
     public final void setStateDeactivated() {
-        bitFalse(YapConst.ACTIVE);
+        bitFalse(Const4.ACTIVE);
     }
 
     public void setStateDirty() {
-        bitTrue(YapConst.ACTIVE);
-        bitFalse(YapConst.CLEAN);
+        bitTrue(Const4.ACTIVE);
+        bitFalse(Const4.CLEAN);
     }
 
     void setStateOnRead(Buffer reader) {
         if (Deploy.debug) {
             reader.readEnd();
         }
-        if (bitIsTrue(YapConst.CACHED_DIRTY)) {
+        if (bitIsTrue(Const4.CACHED_DIRTY)) {
             setStateDirty();
         } else {
             setStateClean();

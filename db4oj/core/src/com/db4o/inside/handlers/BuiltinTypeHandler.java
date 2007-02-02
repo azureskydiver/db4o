@@ -45,7 +45,7 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
         //        longer needed. To stay compatible with marshaller family 0
         //        it was considered a bad idea to change this value.
         
-        return YapConst.INT_LENGTH + YapConst.ID_LENGTH;
+        return Const4.INT_LENGTH + Const4.ID_LENGTH;
     }
     
 	public ReflectClass primitiveClassReflector(){
@@ -66,7 +66,7 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
     
     // redundant, only added to make Sun JDK 1.2's java happy :(
     public abstract boolean isGreater(Object obj);	
-    public abstract YapComparable prepareComparison(Object obj);
+    public abstract Comparable4 prepareComparison(Object obj);
     public abstract int compareTo(Object obj);
     public abstract boolean isEqual(Object obj);
     public abstract boolean isSmaller(Object obj);
