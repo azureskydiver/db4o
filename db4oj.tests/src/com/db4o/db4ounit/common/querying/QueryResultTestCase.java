@@ -8,10 +8,10 @@ import com.db4o.config.*;
 import com.db4o.db4ounit.common.btree.*;
 import com.db4o.db4ounit.common.foundation.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
-import com.db4o.inside.query.*;
-import com.db4o.inside.query.processor.*;
-import com.db4o.inside.query.result.*;
+import com.db4o.internal.*;
+import com.db4o.internal.query.*;
+import com.db4o.internal.query.processor.*;
+import com.db4o.internal.query.result.*;
 import com.db4o.query.*;
 
 import db4ounit.extensions.*;

@@ -4,9 +4,9 @@ package com.db4o.test;
 
 import java.io.IOException;
 
-import com.db4o.cs.ClientObjectContainer;
 import com.db4o.ext.Db4oException;
 import com.db4o.ext.ExtObjectContainer;
+import com.db4o.internal.cs.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.ClientServerTestCase;

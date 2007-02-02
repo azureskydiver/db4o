@@ -7,7 +7,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.db4ounit.Db4oUnitPlatform;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 public class TCompare {
 

@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.inside.btree.*;
+import com.db4o.internal.btree.*;
 
 import db4ounit.Assert;
 

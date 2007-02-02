@@ -2,10 +2,8 @@
 
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.inside.*;
-import com.db4o.inside.btree.BTree;
-import com.db4o.inside.btree.BTreePointer;
-import com.db4o.inside.btree.BTreeRange;
+import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;

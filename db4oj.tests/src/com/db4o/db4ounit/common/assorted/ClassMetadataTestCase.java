@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;

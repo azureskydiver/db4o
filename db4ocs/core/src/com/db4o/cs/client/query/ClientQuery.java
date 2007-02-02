@@ -8,7 +8,7 @@ import com.db4o.ObjectSet;
 import com.db4o.cs.client.ClientConstraint;
 import com.db4o.cs.client.Db4oClient;
 import com.db4o.cs.client.ObjectSetListWrapper;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 import java.util.*;
 import java.io.Serializable;

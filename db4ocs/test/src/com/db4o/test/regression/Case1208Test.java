@@ -27,12 +27,12 @@ import com.db4o.ObjectContainer;
 	 Please mail the following to exception@db4o.com:
 	 <db4o 5.5.1 stacktrace>
 	java.lang.NullPointerException
-		at com.db4o.inside.btree.BTreeNode.seekKey(Unknown Source)
-		at com.db4o.inside.btree.BTreeNode.seekAfterKey(Unknown Source)
-		at com.db4o.inside.btree.BTreeNode.seekChild(Unknown Source)
-		at com.db4o.inside.btree.BTreeNode.childID(Unknown Source)
-		at com.db4o.inside.btree.BTreeNode.child(Unknown Source)
-		at com.db4o.inside.btree.BTreeNode.add(Unknown Source)
+		at com.db4o.internal.btree.BTreeNode.seekKey(Unknown Source)
+		at com.db4o.internal.btree.BTreeNode.seekAfterKey(Unknown Source)
+		at com.db4o.internal.btree.BTreeNode.seekChild(Unknown Source)
+		at com.db4o.internal.btree.BTreeNode.childID(Unknown Source)
+		at com.db4o.internal.btree.BTreeNode.child(Unknown Source)
+		at com.db4o.internal.btree.BTreeNode.add(Unknown Source)
 		...
 	======================================================================================
 	
@@ -41,10 +41,10 @@ import com.db4o.ObjectContainer;
 	======================================================================================
 	java.lang.ArrayIndexOutOfBoundsException: 69625
 	at com.db4o.YapClass$3.visit(Unknown Source)
-	at com.db4o.inside.btree.BTreeNode.traverseKeys(Unknown Source)
-	at com.db4o.inside.btree.BTreeNode.traverseKeys(Unknown Source)
-	at com.db4o.inside.btree.BTreeNode.traverseKeys(Unknown Source)
-	at com.db4o.inside.btree.BTree.traverseKeys(Unknown Source)
+	at com.db4o.internal.btree.BTreeNode.traverseKeys(Unknown Source)
+	at com.db4o.internal.btree.BTreeNode.traverseKeys(Unknown Source)
+	at com.db4o.internal.btree.BTreeNode.traverseKeys(Unknown Source)
+	at com.db4o.internal.btree.BTree.traverseKeys(Unknown Source)
 	======================================================================================
 	For defragment, I used just the following code: new Defragment().run("/testdb.yap", true);
 	

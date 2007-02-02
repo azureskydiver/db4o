@@ -7,8 +7,8 @@ import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.*;
-import com.db4o.inside.replication.Db4oReplicationReference;
+import com.db4o.internal.*;
+import com.db4o.internal.replication.*;
 
 /**
  * using YapObject's hc_tree functionality, only exposing the methods

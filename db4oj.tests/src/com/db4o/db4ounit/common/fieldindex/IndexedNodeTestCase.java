@@ -1,8 +1,8 @@
 package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.foundation.Iterator4;
-import com.db4o.inside.*;
-import com.db4o.inside.fieldindex.*;
+import com.db4o.internal.*;
+import com.db4o.internal.fieldindex.*;
 import com.db4o.query.*;
 
 import db4ounit.Assert;
