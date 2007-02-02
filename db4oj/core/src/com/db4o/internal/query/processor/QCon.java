@@ -419,7 +419,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return i_joins.size() > 0;
     }
 
-    boolean hasObjectInParentPath(Object obj) {
+    public boolean hasObjectInParentPath(Object obj) {
         if (i_parent != null) {
             return i_parent.hasObjectInParentPath(obj);
         }

@@ -8,6 +8,7 @@ import com.db4o.internal.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
 /**
  * .NET decimal layout is (bytewise)

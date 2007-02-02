@@ -9,6 +9,7 @@ import com.db4o.reflect.generic.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
 public abstract class NetSimpleTypeHandler extends NetTypeHandler implements GenericConverter{
 	

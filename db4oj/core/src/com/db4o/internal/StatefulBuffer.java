@@ -140,7 +140,7 @@ public final class StatefulBuffer extends Buffer {
         return length[0];
     }
 
-    void forEachEmbedded(final StatefulBufferVisitor a_visitor) {
+    private void forEachEmbedded(final StatefulBufferVisitor a_visitor) {
         if (i_embedded != null) {
             i_embedded.traverse(new Visitor4() {
                 public void visit(Object a_object) {
