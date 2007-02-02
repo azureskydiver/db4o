@@ -13,6 +13,8 @@ import com.db4o.inside.btree.*;
 import com.db4o.inside.convert.*;
 import com.db4o.inside.freespace.*;
 import com.db4o.inside.query.*;
+import com.db4o.inside.query.processor.*;
+import com.db4o.inside.query.result.*;
 import com.db4o.inside.slots.*;
 
 

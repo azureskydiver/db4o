@@ -7,6 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.mapping.*;
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.query.processor.*;
 import com.db4o.reflect.*;
 
 

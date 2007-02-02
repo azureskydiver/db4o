@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.querying;
 
 import com.db4o.inside.query.*;
+import com.db4o.inside.query.result.*;
 
 
 public class IdListQueryResultTestCase extends QueryResultTestCase {

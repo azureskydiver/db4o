@@ -78,12 +78,12 @@ public final class HandlerRegistry {
     
     final GenericReflector                _reflector;
     
-    ReflectClass ICLASS_COMPARE;
+    public ReflectClass ICLASS_COMPARE;
     ReflectClass ICLASS_DB4OTYPE;
     ReflectClass ICLASS_DB4OTYPEIMPL;
 	public ReflectClass ICLASS_INTERNAL;
     ReflectClass ICLASS_UNVERSIONED;
-    ReflectClass ICLASS_OBJECT;
+    public ReflectClass ICLASS_OBJECT;
     ReflectClass ICLASS_OBJECTCONTAINER;
 	public ReflectClass ICLASS_STATICCLASS;
 	public ReflectClass ICLASS_STRING;

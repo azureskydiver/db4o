@@ -12,7 +12,6 @@ import com.db4o.foundation.Iterator4;
 import com.db4o.foundation.MappingIterator;
 import com.db4o.foundation.Queue4;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.*;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -60,7 +59,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         return stream().stringIO().write(str);
     }
 
-    void attachQueryNode(final String fieldName, final Visitor4 a_visitor) {
+    public void attachQueryNode(final String fieldName, final Visitor4 a_visitor) {
         ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
             final ClassMetadata yc = i.currentClass();
@@ -145,7 +144,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         return false;
     }
 
-    Collection4 forInterface(ReflectClass claxx) {
+    public Collection4 forInterface(ReflectClass claxx) {
         Collection4 col = new Collection4();
         ClassMetadataIterator i = iterator();
         while (i.moveNext()) {

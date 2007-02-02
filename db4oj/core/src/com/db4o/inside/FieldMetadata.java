@@ -11,6 +11,7 @@ import com.db4o.inside.btree.*;
 import com.db4o.inside.handlers.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.query.processor.*;
 import com.db4o.inside.slots.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -211,7 +212,7 @@ public class FieldMetadata implements StoredField {
         return fieldName.equals(getName())  && getParentYapClass() != null && !getParentYapClass().isInternal(); 
     }
     
-    boolean canHold(ReflectClass claxx) {
+    public boolean canHold(ReflectClass claxx) {
         // alive() is checked in QField caller
         if (claxx == null) {
             return !i_isPrimitive;
@@ -447,7 +448,7 @@ public class FieldMetadata implements StoredField {
         return i_name;
     }
 
-    ClassMetadata getFieldYapClass(ObjectContainerBase a_stream) {
+    public ClassMetadata getFieldYapClass(ObjectContainerBase a_stream) {
         // alive needs to be checked by all callers: Done
         return i_handler.getYapClass(a_stream);
     }
@@ -698,7 +699,7 @@ public class FieldMetadata implements StoredField {
         return true;
     }
     
-    Comparable4 prepareComparison(Object obj) {
+    public Comparable4 prepareComparison(Object obj) {
         if (alive()) {
             i_handler.prepareComparison(obj);
             return i_handler;
@@ -706,7 +707,7 @@ public class FieldMetadata implements StoredField {
         return null;
     }
     
-    QField qField(Transaction a_trans) {
+    public QField qField(Transaction a_trans) {
         int yapClassID = 0;
         if(i_yapClass != null){
             yapClassID = i_yapClass.getID();
@@ -722,7 +723,7 @@ public class FieldMetadata implements StoredField {
         return i_handler.read(mf, a_bytes, true);
     }
 
-    Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader)
+    public Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader)
         throws CorruptionException {
         return i_handler.readQuery(a_trans, mf, true, a_reader, false);
     }

@@ -5,6 +5,7 @@ package com.db4o.inside.query;
 import java.util.AbstractList;
 
 import com.db4o.ext.ExtObjectSet;
+import com.db4o.inside.query.result.*;
 
 /**
  * @exclude 

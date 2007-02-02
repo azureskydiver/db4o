@@ -3,6 +3,7 @@
 package com.db4o.inside.fieldindex;
 
 import com.db4o.inside.*;
+import com.db4o.inside.query.processor.*;
 
 class QEBitmap {
 	public static QEBitmap forQE(QE qe) {

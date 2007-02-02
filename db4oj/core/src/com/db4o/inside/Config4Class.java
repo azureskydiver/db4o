@@ -284,7 +284,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 		return _config.getAsBoolean(PERSIST_STATIC_FIELD_VALUES);
 	}
 
-	ObjectAttribute queryAttributeProvider() {
+	public ObjectAttribute queryAttributeProvider() {
 		return (ObjectAttribute)_config.get(QUERY_ATTRIBUTE_PROVIDER);
 	}
 

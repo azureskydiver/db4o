@@ -3,11 +3,11 @@
 package com.db4o.inside;
 
 
-class IDGenerator {
+public class IDGenerator {
 	
 	private int id = 0;
 	
-	int next(){
+	public int next(){
 		id ++;
 		if(id > 0){
 			return id;

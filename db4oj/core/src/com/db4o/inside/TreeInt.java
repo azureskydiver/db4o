@@ -3,7 +3,7 @@
 package com.db4o.inside;
 
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
+import com.db4o.inside.query.processor.*;
 
 
 /**
@@ -58,7 +58,7 @@ public class TreeInt extends Tree implements ReadWriteable {
 		return ((TreeInt) a_in).find(a_key);
 	}
 
-	final TreeInt find(int a_key) {
+	public final TreeInt find(int a_key) {
 		int cmp = _key - a_key;
 		if (cmp < 0) {
 			if (_subsequent != null) {

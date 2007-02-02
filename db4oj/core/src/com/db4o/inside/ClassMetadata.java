@@ -10,6 +10,7 @@ import com.db4o.inside.classindex.*;
 import com.db4o.inside.diagnostic.*;
 import com.db4o.inside.handlers.*;
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.query.processor.*;
 import com.db4o.inside.slots.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -413,7 +414,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return canHold(claxx) ? obj : No4.INSTANCE;
     }
 
-    void collectConstraints(
+    public void collectConstraints(
         Transaction a_trans,
         QConObject a_parent,
         Object a_object,
@@ -428,12 +429,16 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         }
     }
     
-    final TreeInt collectFieldIDs(MarshallerFamily mf, ObjectHeaderAttributes attributes, TreeInt tree, StatefulBuffer a_bytes, String name) {
+    public final TreeInt collectFieldIDs(MarshallerFamily mf, ObjectHeaderAttributes attributes, TreeInt tree, StatefulBuffer a_bytes, String name) {
         return mf._object.collectFieldIDs(tree, this, attributes, a_bytes, name);
     }
 
-    final boolean configInstantiates(){
+    public final boolean configInstantiates(){
         return i_config != null && i_config.instantiates();
+    }
+    
+    public Config4Class config() {
+    	return i_config;
     }
 
     public Config4Class configOrAncestorConfig() {
@@ -683,7 +688,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 	// returns null if not successful or if the field value at this offset is null
     // returns MarshallerFamily from the object header if it is successful and
     //         if the value at this offset is not null
-    final MarshallerFamily findOffset(Buffer a_bytes, FieldMetadata a_field) {
+    public final MarshallerFamily findOffset(Buffer a_bytes, FieldMetadata a_field) {
         if (a_bytes == null) {
             return null;
         }
@@ -763,7 +768,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return i_ancestor;
     }
 
-    Object getComparableObject(Object forObject) {
+    public Object getComparableObject(Object forObject) {
         if (i_config != null) {
             if (i_config.queryAttributeProvider() != null) {
                 return i_config.queryAttributeProvider().attribute(forObject);
@@ -772,7 +777,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return forObject;
     }
 
-    ClassMetadata getHigherHierarchy(ClassMetadata a_yapClass) {
+    public ClassMetadata getHigherHierarchy(ClassMetadata a_yapClass) {
         ClassMetadata yc = getHigherHierarchy1(a_yapClass);
         if (yc != null) {
             return yc;
@@ -790,7 +795,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return null;
     }
 
-    ClassMetadata getHigherOrCommonHierarchy(ClassMetadata a_yapClass) {
+    public ClassMetadata getHigherOrCommonHierarchy(ClassMetadata a_yapClass) {
         ClassMetadata yc = getHigherHierarchy1(a_yapClass);
         if (yc != null) {
             return yc;
@@ -863,7 +868,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     	return _index;
     }    
     
-    int indexEntryCount(Transaction ta){
+    public int indexEntryCount(Transaction ta){
         if(!stateOK()){
             return 0;
         }
@@ -1206,7 +1211,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 	 * no any, primitive, array or other tricks. overriden in YapClassAny and
 	 * YapClassPrimitive
 	 */
-    boolean isStrongTyped() {
+    public boolean isStrongTyped() {
         return true;
     }
     

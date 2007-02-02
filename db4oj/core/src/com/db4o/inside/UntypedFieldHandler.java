@@ -4,10 +4,11 @@ package com.db4o.inside;
 
 import com.db4o.*;
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.query.processor.*;
 import com.db4o.reflect.*;
 
 
-final class UntypedFieldHandler extends ClassMetadata {
+public final class UntypedFieldHandler extends ClassMetadata {
     
 	public UntypedFieldHandler(ObjectContainerBase stream){
 		super(stream, stream.i_handlers.ICLASS_OBJECT);
@@ -56,7 +57,7 @@ final class UntypedFieldHandler extends ClassMetadata {
         return Const4.UNKNOWN;
     }
 	
-	boolean isStrongTyped(){
+    public boolean isStrongTyped(){
 		return false;
 	}
     
