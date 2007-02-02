@@ -4,13 +4,13 @@ using System.Collections;
 using com.db4o.ext;
 using com.db4o.foundation;
 
-namespace com.db4o.inside {
+namespace com.db4o.inside.handlers {
 
-    internal class YapReferenceQueue{
+    internal class WeakReferenceHandlerQueue {
 
         private List4 list;
 
-        internal void Add(YapRef reference) {
+        internal void Add(WeakReferenceHandler reference) {
             lock(this){
                 list = new List4(list, reference);
             }
@@ -22,7 +22,7 @@ namespace com.db4o.inside {
                 IEnumerator i = new Iterator4Impl(list);
                 list = null;
                 while(i.MoveNext()){
-                    YapRef yapRef = (YapRef)i.Current;
+                    WeakReferenceHandler yapRef = (WeakReferenceHandler)i.Current;
                     if(yapRef.IsAlive){
                         list = new List4(list, yapRef);
                     }else{

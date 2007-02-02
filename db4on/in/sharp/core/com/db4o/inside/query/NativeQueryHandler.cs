@@ -3,6 +3,7 @@ using System;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.optimization;
 using com.db4o.query;
+using com.db4o.inside;
 using com.db4o.inside.diagnostic;
 
 namespace com.db4o.inside.query
@@ -98,7 +99,7 @@ namespace com.db4o.inside.query
 																					System.Predicate<Extent> predicate,
 																					RuntimeMethodHandle predicateMethodHandle)
 		{
-			return ((YapStream)container).GetNativeQueryHandler().ExecuteMeta(
+			return ((ObjectContainerBase)container).GetNativeQueryHandler().ExecuteMeta(
 				new MetaDelegate<Predicate<Extent>>(
 					target,
 					predicate,
@@ -181,7 +182,7 @@ namespace com.db4o.inside.query
 			}
             if (OptimizeNativeQueries()) 
             {
-                DiagnosticProcessor dp = ((YapStream)_container).i_handlers._diagnosticProcessor;
+                DiagnosticProcessor dp = ((ObjectContainerBase)_container).i_handlers._diagnosticProcessor;
                 if (dp.Enabled()) dp.NativeQueryUnoptimized(predicate);
 
             }
