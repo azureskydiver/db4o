@@ -19,7 +19,7 @@ import com.db4o.reflect.generic.*;
 /**
  * @exclude
  */
-public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass {
+public class ClassMetadata extends PersistentBase implements TypeHandler4, StoredClass {
 
     public ClassMetadata i_ancestor;
 

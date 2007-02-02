@@ -10,7 +10,7 @@ import com.db4o.inside.slots.Slot;
 /**
  * representation to collect and hold all IDs of one class
  */
- public class ClassIndex extends YapMeta implements ReadWriteable {
+ public class ClassIndex extends PersistentBase implements ReadWriteable {
      
      
     private final ClassMetadata _yapClass;

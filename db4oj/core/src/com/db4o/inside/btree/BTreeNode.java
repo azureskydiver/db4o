@@ -17,7 +17,7 @@ import com.db4o.inside.ix.*;
  * 
  * @exclude
  */
-public final class BTreeNode extends YapMeta{
+public final class BTreeNode extends PersistentBase{
     
     private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (Const4.INT_LENGTH * 4) + 1; 
  

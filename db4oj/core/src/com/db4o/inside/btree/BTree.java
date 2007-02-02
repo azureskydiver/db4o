@@ -11,7 +11,7 @@ import com.db4o.inside.mapping.*;
 /**
  * @exclude
  */
-public class BTree extends YapMeta implements TransactionParticipant {
+public class BTree extends PersistentBase implements TransactionParticipant {
     
     private static final byte BTREE_VERSION = (byte)1;
     

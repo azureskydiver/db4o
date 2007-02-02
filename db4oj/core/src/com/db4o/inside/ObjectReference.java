@@ -14,7 +14,7 @@ import com.db4o.reflect.*;
  * @renameto ObjectReference
  * @exclude
  */
-public class ObjectReference extends YapMeta implements ObjectInfo{
+public class ObjectReference extends PersistentBase implements ObjectInfo{
     
 	private ClassMetadata _class;
 	private Object _object;

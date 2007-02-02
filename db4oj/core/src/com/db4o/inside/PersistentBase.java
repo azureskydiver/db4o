@@ -4,30 +4,15 @@ package com.db4o.inside;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
 import com.db4o.inside.slots.*;
 
 
 /**
  * @exclude
  * 
- * @renameto com.db4o.inside.PersistentBase
  */
-public abstract class YapMeta {
+public abstract class PersistentBase implements Persistent {
 
-	/**
-	 * @moveto new com.db4o.inside.Persistent interface
-	 * all four of the following abstract methods  
-	 */
-	public abstract byte getIdentifier();
-	
-	public abstract int ownLength();
-	
-	public abstract void readThis(Transaction trans, Buffer reader);
-	
-	public abstract void writeThis(Transaction trans, Buffer writer);
-
-    
     protected int i_id; // UID and address of pointer to the object in our file
 
     protected int i_state = 2; // DIRTY and ACTIVE

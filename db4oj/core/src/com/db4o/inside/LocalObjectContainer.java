@@ -586,7 +586,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         getTransaction().rollback();
     }
 
-    public final void setDirtyInSystemTransaction(YapMeta a_object) {
+    public final void setDirtyInSystemTransaction(PersistentBase a_object) {
         a_object.setStateDirty();
         a_object.cacheDirty(i_dirty);
     }
@@ -676,7 +676,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 	private void writeCachedDirty() {
 		Iterator4 i = i_dirty.iterator();
         while (i.moveNext()) {
-        	YapMeta dirty = (YapMeta) i.current();
+        	PersistentBase dirty = (PersistentBase) i.current();
             dirty.write(i_systemTrans);
             dirty.notCachedDirty();
         }
