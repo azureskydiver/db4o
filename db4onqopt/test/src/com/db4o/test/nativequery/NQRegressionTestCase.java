@@ -5,9 +5,8 @@ package com.db4o.test.nativequery;
 import java.lang.reflect.*;
 
 import com.db4o.*;
-import com.db4o.inside.*;
-import com.db4o.inside.ObjectContainerBase;
-import com.db4o.inside.query.*;
+import com.db4o.internal.*;
+import com.db4o.internal.query.*;
 import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.main.*;

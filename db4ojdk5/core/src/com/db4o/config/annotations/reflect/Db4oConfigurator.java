@@ -4,7 +4,7 @@ package com.db4o.config.annotations.reflect;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 /**
  * @exclude

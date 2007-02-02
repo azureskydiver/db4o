@@ -16,7 +16,7 @@ import com.db4o.config.annotations.Indexed;
 import com.db4o.config.annotations.PersistedStaticFieldValues;
 import com.db4o.config.annotations.StoredTransientFields;
 import com.db4o.config.annotations.UpdatedDepth;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 /**
  * sets db4o configurations accordingly annotations

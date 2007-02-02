@@ -8,7 +8,7 @@ import EDU.purdue.cs.bloat.context.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 
-import com.db4o.inside.query.*;
+import com.db4o.internal.query.*;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.query.*;

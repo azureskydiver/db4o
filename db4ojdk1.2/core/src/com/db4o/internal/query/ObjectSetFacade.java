@@ -1,11 +1,11 @@
 /* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.inside.query;
+package com.db4o.internal.query;
 
 import java.util.AbstractList;
 
 import com.db4o.ext.ExtObjectSet;
-import com.db4o.inside.query.result.*;
+import com.db4o.internal.query.result.*;
 
 /**
  * @exclude 
