@@ -36,7 +36,7 @@ public class Db4oTests extends DrsTestSuite {
 	}
 	
 	protected Class[] testCases() {
-		return one();
+		return shared();
 	}
 
 	protected Class[] one() {
