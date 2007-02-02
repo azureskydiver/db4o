@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.Iterator4;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.BTreeRange;
+import com.db4o.inside.query.processor.*;
 
 /**
  * @exclude

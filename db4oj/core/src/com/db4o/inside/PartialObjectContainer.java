@@ -27,10 +27,10 @@ import com.db4o.inside.*;
 import com.db4o.inside.callbacks.Callbacks;
 import com.db4o.inside.handlers.*;
 import com.db4o.inside.marshall.MarshallerFamily;
-import com.db4o.inside.query.AbstractQueryResult;
 import com.db4o.inside.query.NativeQueryHandler;
 import com.db4o.inside.query.ObjectSetFacade;
-import com.db4o.inside.query.QueryResult;
+import com.db4o.inside.query.processor.*;
+import com.db4o.inside.query.result.*;
 import com.db4o.inside.replication.Db4oReplicationReferenceProvider;
 import com.db4o.inside.replication.MigrationConnection;
 import com.db4o.query.Predicate;
@@ -1189,7 +1189,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return yapBytes;
     }
 
-    byte[] marshall(Object obj, int[] id) {
+    public byte[] marshall(Object obj, int[] id) {
         MemoryFile memoryFile = new MemoryFile();
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
@@ -1967,7 +1967,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return unmarshall(yapBytes._buffer, yapBytes.getID());
     }
 
-    Object unmarshall(byte[] bytes, int id) {
+    public Object unmarshall(byte[] bytes, int id) {
         MemoryFile memoryFile = new MemoryFile(bytes);
         TransportObjectContainer carrier = new TransportObjectContainer(configure(),_this, memoryFile);
         Object obj = carrier.getByID(id);

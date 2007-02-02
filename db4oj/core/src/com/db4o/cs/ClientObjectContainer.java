@@ -13,6 +13,8 @@ import com.db4o.foundation.network.*;
 import com.db4o.inside.*;
 import com.db4o.inside.convert.*;
 import com.db4o.inside.query.*;
+import com.db4o.inside.query.processor.*;
+import com.db4o.inside.query.result.*;
 import com.db4o.reflect.*;
 
 /**

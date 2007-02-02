@@ -5,6 +5,7 @@ package com.db4o.inside.ix;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.freespace.*;
+import com.db4o.inside.query.processor.*;
 
 /**
  * Index Path to represent a list of traversed index tree entries,

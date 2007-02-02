@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.Iterator4;
 import com.db4o.inside.*;
 import com.db4o.inside.query.*;
+import com.db4o.inside.query.result.*;
 
 /**
  * @exclude

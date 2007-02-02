@@ -7,6 +7,8 @@ import com.db4o.config.*;
 import com.db4o.cs.*;
 import com.db4o.inside.*;
 import com.db4o.inside.query.*;
+import com.db4o.inside.query.processor.*;
+import com.db4o.inside.query.result.*;
 
 public final class MQueryExecute extends MsgQuery {
 	

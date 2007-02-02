@@ -6,10 +6,11 @@ import com.db4o.db4ounit.common.btree.*;
 import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.inside.*;
-import com.db4o.inside.QQueryBase.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.classindex.BTreeClassIndexStrategy;
 import com.db4o.inside.fieldindex.*;
+import com.db4o.inside.query.processor.*;
+import com.db4o.inside.query.processor.QQueryBase.*;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 

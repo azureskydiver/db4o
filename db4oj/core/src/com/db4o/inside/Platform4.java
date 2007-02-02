@@ -10,6 +10,7 @@ import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.handlers.*;
 import com.db4o.inside.handlers.*;
+import com.db4o.inside.query.processor.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -130,7 +131,7 @@ public final class Platform4 {
         return jdk().createYapRef(a_queue, (ObjectReference) a_yapObject, a_object);
     }
     
-    static Object deserialize(byte[] bytes) {
+    public static Object deserialize(byte[] bytes) {
     	return jdk().deserialize(bytes);
     }
     
@@ -138,14 +139,14 @@ public final class Platform4 {
         return Double.doubleToLongBits(a_double);
     }
 
-    static final QConEvaluation evaluationCreate(Transaction a_trans, Object example){
+    public static final QConEvaluation evaluationCreate(Transaction a_trans, Object example){
         if(example instanceof Evaluation){
             return new QConEvaluation(a_trans, example);
         }
         return null;
     }
     
-    static final void evaluationEvaluate(Object a_evaluation, Candidate a_candidate){
+    public static final void evaluationEvaluate(Object a_evaluation, Candidate a_candidate){
         ((Evaluation)a_evaluation).evaluate(a_candidate);
     }
 
@@ -584,7 +585,7 @@ public final class Platform4 {
         }
     }
     
-    static final byte[] serialize(Object obj) throws Exception{
+    public static final byte[] serialize(Object obj) throws Exception{
     	return jdk().serialize(obj);
     }
 

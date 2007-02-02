@@ -8,6 +8,7 @@ import com.db4o.cs.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
 import com.db4o.inside.query.*;
+import com.db4o.inside.query.result.*;
 
 public abstract class MsgQuery extends MsgObject {
 	

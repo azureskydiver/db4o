@@ -7,6 +7,7 @@ import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.inside.*;
 import com.db4o.inside.btree.BTree;
 import com.db4o.inside.fieldindex.*;
+import com.db4o.inside.query.processor.*;
 import com.db4o.query.*;
 
 import db4ounit.Assert;

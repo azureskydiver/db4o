@@ -4,6 +4,7 @@ package com.db4o.cs.messages;
 
 import com.db4o.cs.*;
 import com.db4o.inside.query.*;
+import com.db4o.inside.query.result.*;
 
 
 public class MObjectSetSize extends MObjectSet {

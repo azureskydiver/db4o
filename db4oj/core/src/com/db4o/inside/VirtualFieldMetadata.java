@@ -5,9 +5,10 @@ package com.db4o.inside;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.inside.*;
-import com.db4o.inside.QQueryBase.*;
 import com.db4o.inside.ix.*;
 import com.db4o.inside.marshall.*;
+import com.db4o.inside.query.processor.*;
+import com.db4o.inside.query.processor.QQueryBase.*;
 import com.db4o.inside.replication.*;
 import com.db4o.inside.slots.*;
 
