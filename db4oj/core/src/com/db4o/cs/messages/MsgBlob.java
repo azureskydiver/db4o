@@ -10,7 +10,7 @@ import java.io.OutputStream;
 
 import com.db4o.*;
 import com.db4o.ext.Status;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.foundation.network.Socket4;
 import com.db4o.inside.*;
 
 public abstract class MsgBlob extends MsgD implements BlobStatus{
@@ -26,7 +26,7 @@ public abstract class MsgBlob extends MsgD implements BlobStatus{
         return Status.ERROR;
     }
 
-    public abstract void processClient(YapSocket sock) throws IOException;
+    public abstract void processClient(Socket4 sock) throws IOException;
 
     BlobImpl serverGetBlobImpl() {
         BlobImpl blobImpl = null;
@@ -39,7 +39,7 @@ public abstract class MsgBlob extends MsgD implements BlobStatus{
         return blobImpl;
     }
 
-    protected void copy(YapSocket sock,OutputStream rawout,int length,boolean update) throws IOException {
+    protected void copy(Socket4 sock,OutputStream rawout,int length,boolean update) throws IOException {
         BufferedOutputStream out = new BufferedOutputStream(rawout);
         byte[] buffer=new byte[BlobImpl.COPYBUFFER_LENGTH];
         int totalread=0;
@@ -62,7 +62,7 @@ public abstract class MsgBlob extends MsgD implements BlobStatus{
         out.close();
     }
 
-    protected void copy(InputStream rawin,YapSocket sock,boolean update) throws IOException {
+    protected void copy(InputStream rawin,Socket4 sock,boolean update) throws IOException {
         BufferedInputStream in = new BufferedInputStream(rawin);
         byte[] buffer=new byte[BlobImpl.COPYBUFFER_LENGTH];
         int bytesread=-1;

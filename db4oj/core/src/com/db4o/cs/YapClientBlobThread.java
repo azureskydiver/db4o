@@ -28,7 +28,7 @@ class YapClientBlobThread extends Thread{
 	
 	public void run(){
 		try{
-			YapSocket socket = stream.createParalellSocket();
+			Socket4 socket = stream.createParalellSocket();
 			
 			MsgBlob msg = null;
 			

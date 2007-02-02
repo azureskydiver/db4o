@@ -9,12 +9,12 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.cs.*;
 import com.db4o.ext.Status;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.foundation.network.Socket4;
 import com.db4o.inside.*;
 
 
 public class MReadBlob extends MsgBlob {
-	public void processClient(YapSocket sock) throws IOException {
+	public void processClient(Socket4 sock) throws IOException {
         Msg message = Msg.readMessage(transaction(), sock);
         if (message.equals(Msg.LENGTH)) {
             try {
@@ -44,7 +44,7 @@ public class MReadBlob extends MsgBlob {
                 blobImpl.setTrans(transaction());
                 File file = blobImpl.serverFile(null, false);
                 int length = (int) file.length();
-                YapSocket sock = serverThread.socket();
+                Socket4 sock = serverThread.socket();
                 Msg.LENGTH.getWriterForInt(transaction(), length).write(stream, sock);
                 FileInputStream fin = new FileInputStream(file);
                 copy(fin,sock,false);

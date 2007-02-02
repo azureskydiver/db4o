@@ -4,7 +4,7 @@ package com.db4o.foundation.network;
 
 import java.io.*;
 
-public interface YapSocket {
+public interface Socket4 {
 
 	public abstract void close() throws IOException;
 
@@ -26,6 +26,6 @@ public interface YapSocket {
 
 	public abstract void write(int i) throws IOException;
 
-	public abstract YapSocket openParalellSocket() throws IOException;
+	public abstract Socket4 openParalellSocket() throws IOException;
 
 }

@@ -9,12 +9,12 @@ import com.db4o.foundation.network.*;
 class YapClientThread extends Thread{
 	
 	private ClientObjectContainer i_stream;
-	private YapSocket i_socket;
+	private Socket4 i_socket;
 	final Queue4 messageQueue;
 	final Lock4 messageQueueLock;
 	
 	
-	YapClientThread(ClientObjectContainer client, YapSocket a_socket, Queue4 messageQueue_, Lock4 messageQueueLock_){
+	YapClientThread(ClientObjectContainer client, Socket4 a_socket, Queue4 messageQueue_, Lock4 messageQueueLock_){
 		synchronized(this){
 			i_stream = client;
 			messageQueue = messageQueue_;

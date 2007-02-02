@@ -84,7 +84,7 @@ class JDK_1_2 extends JDKReflect {
     
 	void killYapRef(Object obj){
 		if(obj instanceof YapRef){
-			((YapRef)obj).i_yapObject = null;
+			((YapRef)obj)._referent = null;
 		}
 	}
 
@@ -94,7 +94,7 @@ class JDK_1_2 extends JDKReflect {
             YapRef ref;
             synchronized(a_stream.lock()){
 	            while ((ref = yrq.yapPoll()) != null) {
-	                a_stream.purge1(ref.i_yapObject);
+	                a_stream.purge1(ref._referent);
 	            }
             }
         }

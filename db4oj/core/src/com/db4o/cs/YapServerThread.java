@@ -25,7 +25,7 @@ public final class YapServerThread extends Thread {
 
     private final YapServer i_server;
 
-    private YapSocket i_socket;
+    private Socket4 i_socket;
     private LocalObjectContainer i_substituteStream;
     private Transaction i_substituteTrans;
     
@@ -38,7 +38,7 @@ public final class YapServerThread extends Thread {
     YapServerThread(
         YapServer aServer,
         LocalObjectContainer aStream,
-        YapSocket aSocket,
+        Socket4 aSocket,
         int aThreadID,
         boolean loggedIn)
         throws Exception {
@@ -355,7 +355,7 @@ public final class YapServerThread extends Thread {
     	msg.write(getStream(), i_socket);
     }
     
-    public YapSocket socket(){
+    public Socket4 socket(){
     	return i_socket;
     }
     

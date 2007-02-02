@@ -12,7 +12,7 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 /**
  * @exclude
  */
-public class YDoubleTestCase extends AbstractDb4oTestCase {
+public class DoubleHandlerTestCase extends AbstractDb4oTestCase {
 	
 	private TypeHandler4 _handler;
 	

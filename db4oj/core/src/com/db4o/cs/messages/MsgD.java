@@ -5,7 +5,7 @@ package com.db4o.cs.messages;
 import java.io.IOException;
 
 import com.db4o.*;
-import com.db4o.foundation.network.YapSocket;
+import com.db4o.foundation.network.Socket4;
 import com.db4o.inside.*;
 
 /**
@@ -125,7 +125,7 @@ public class MsgD extends Msg{
 		return _payLoad.readByte() != 0;
 	}
 
-	final Msg readPayLoad(Transaction a_trans, YapSocket sock, Buffer reader)
+	final Msg readPayLoad(Transaction a_trans, Socket4 sock, Buffer reader)
 		throws IOException {
 		int length = reader.readInt();
 		

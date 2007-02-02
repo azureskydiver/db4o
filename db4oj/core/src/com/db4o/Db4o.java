@@ -8,7 +8,7 @@ import com.db4o.config.Configuration;
 import com.db4o.cs.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.YapSocketReal;
+import com.db4o.foundation.network.NetworkSocket;
 import com.db4o.inside.*;
 import com.db4o.reflect.Reflector;
 
@@ -124,7 +124,7 @@ public class Db4o {
 	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
 			throws IOException {
 		synchronized(Global4.lock){
-			return new ClientObjectContainer(config,new YapSocketReal(hostName, port), user, password, true);
+			return new ClientObjectContainer(config,new NetworkSocket(hostName, port), user, password, true);
 		}
 	}
 

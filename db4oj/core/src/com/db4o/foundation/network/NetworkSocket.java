@@ -5,22 +5,21 @@ package com.db4o.foundation.network;
 import java.io.*;
 import java.net.*;
 
-import com.db4o.*;
 import com.db4o.inside.*;
 
-public class YapSocketReal implements YapSocket {
+public class NetworkSocket implements Socket4 {
 
     private Socket _socket;
     private OutputStream _out;
     private InputStream _in;
     private String _hostName;
     
-    public YapSocketReal(String hostName, int port) throws IOException {
+    public NetworkSocket(String hostName, int port) throws IOException {
         this(new Socket(hostName, port));
         _hostName=hostName;
     }
 
-    public YapSocketReal(Socket socket) throws IOException {
+    public NetworkSocket(Socket socket) throws IOException {
     	_socket = socket;
     	_out = _socket.getOutputStream();
     	_in = _socket.getInputStream();
@@ -66,10 +65,10 @@ public class YapSocketReal implements YapSocket {
         _out.write(i);
     }
     
-	public YapSocket openParalellSocket() throws IOException {
+	public Socket4 openParalellSocket() throws IOException {
 		if(_hostName==null) {
 			throw new IOException("Cannot open parallel socket - invalid state.");
 		}
-		return new YapSocketReal(_hostName,_socket.getPort());
+		return new NetworkSocket(_hostName,_socket.getPort());
 	}
 }
