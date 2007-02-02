@@ -4,7 +4,6 @@ package com.db4o.events;
 
 import com.db4o.ObjectContainer;
 import com.db4o.foundation.ArgumentNullException;
-import com.db4o.inside.*;
 import com.db4o.internal.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.events.*;

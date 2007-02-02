@@ -4,7 +4,6 @@ package com.db4o.internal.marshall;
 
 import java.util.Date;
 
-import com.db4o.*;
 import com.db4o.internal.*;
 
 

@@ -6,7 +6,6 @@ package com.db4o.test.lib;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.internal.*;
 
 public class TCompare {

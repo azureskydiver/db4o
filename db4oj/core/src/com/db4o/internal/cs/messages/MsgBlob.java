@@ -11,7 +11,6 @@ import java.io.OutputStream;
 import com.db4o.*;
 import com.db4o.ext.Status;
 import com.db4o.foundation.network.Socket4;
-import com.db4o.inside.*;
 import com.db4o.internal.*;
 
 public abstract class MsgBlob extends MsgD implements BlobStatus{

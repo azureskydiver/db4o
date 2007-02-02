@@ -2,8 +2,6 @@
 
 package com.db4o.internal.query.processor;
 
-import com.db4o.internal.query.processor.*;
-
 
 class Order implements Orderable {
 	

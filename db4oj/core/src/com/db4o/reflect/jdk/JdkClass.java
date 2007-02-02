@@ -4,7 +4,6 @@ package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
-import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 

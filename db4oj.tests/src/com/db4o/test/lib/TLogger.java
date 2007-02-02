@@ -6,7 +6,6 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.test.legacy.soda.*;
 

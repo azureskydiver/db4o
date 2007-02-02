@@ -5,7 +5,6 @@ package com.db4o.db4ounit.common.soda.util;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.db4ounit.Db4oUnitPlatform;
 import com.db4o.internal.*;
 

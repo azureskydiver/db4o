@@ -5,7 +5,6 @@ package com.db4o.test;
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.query.*;
 
 

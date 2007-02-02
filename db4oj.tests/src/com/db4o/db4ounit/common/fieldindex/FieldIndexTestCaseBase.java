@@ -1,6 +1,5 @@
 package com.db4o.db4ounit.common.fieldindex;
 
-import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.internal.*;
 import com.db4o.query.Query;

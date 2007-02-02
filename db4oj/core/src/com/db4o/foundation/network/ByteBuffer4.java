@@ -4,7 +4,6 @@ package com.db4o.foundation.network;
 
 import java.io.*;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 

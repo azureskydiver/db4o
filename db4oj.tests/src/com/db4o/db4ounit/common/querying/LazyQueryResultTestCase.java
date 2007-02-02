@@ -2,7 +2,6 @@
 
 package com.db4o.db4ounit.common.querying;
 
-import com.db4o.internal.query.*;
 import com.db4o.internal.query.result.*;
 
 

@@ -5,7 +5,6 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.config.ObjectField;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
 
 
 class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
