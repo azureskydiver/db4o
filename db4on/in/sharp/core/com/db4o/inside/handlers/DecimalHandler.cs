@@ -2,11 +2,11 @@
 
 using System;
 
-namespace com.db4o.inside
+namespace com.db4o.inside.handlers
 {
-	internal class YapDecimal : YapTypeIntegral
+	public class DecimalHandler : IntegralTypeHandler
 	{
-        public YapDecimal(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
+        public DecimalHandler(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
         }
 
         public override int Compare(Object o1, Object o2){

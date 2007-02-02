@@ -2,11 +2,11 @@
 
 using System;
 
-namespace com.db4o.inside {
+namespace com.db4o.inside.handlers {
 
-    internal class YapDateTime : YapTypeStruct {
+    public class DateTimeHandler : StructHandler {
 
-        public YapDateTime(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
+        public DateTimeHandler(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
         }
 
         public override int Compare(object o1, object o2){

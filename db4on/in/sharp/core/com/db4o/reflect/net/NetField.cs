@@ -41,7 +41,7 @@
 
 		public virtual void SetAccessible()
 		{
-			com.db4o.Platform4.SetAccessible(field);
+			com.db4o.inside.Platform4.SetAccessible(field);
 		}
 
 		public virtual object Get(object onObject)

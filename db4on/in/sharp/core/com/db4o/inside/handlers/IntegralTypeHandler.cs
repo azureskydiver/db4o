@@ -2,11 +2,11 @@
 
 using System;
 
-namespace com.db4o.inside
+namespace com.db4o.inside.handlers
 {
-	abstract internal class YapTypeIntegral : YapTypeAbstract
+	abstract public class IntegralTypeHandler : NetTypeHandler
 	{
-		public YapTypeIntegral(com.db4o.inside.ObjectContainerBase stream)
+		public IntegralTypeHandler(com.db4o.inside.ObjectContainerBase stream)
 			: base(stream)
 		{
 		}

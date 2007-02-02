@@ -2,12 +2,11 @@
 
 using System;
 
-namespace com.db4o.inside
+namespace com.db4o.inside.handlers
 {
-	internal class YapUShort : YapTypeIntegral
+	public class UShortHandler : IntegralTypeHandler
 	{
-
-        public YapUShort(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
+        public UShortHandler(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
         }
 
         public override int Compare(Object o1, Object o2){

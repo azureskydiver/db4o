@@ -2,11 +2,11 @@
 
 using System;
 
-namespace com.db4o.inside
+namespace com.db4o.inside.handlers
 {
-	internal class YapSByte : YapTypeIntegral
+	public class SByteHandler : IntegralTypeHandler
 	{
-        public YapSByte(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
+        public SByteHandler(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
         }
 
         public override int Compare(Object o1, Object o2){

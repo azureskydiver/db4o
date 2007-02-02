@@ -3,6 +3,7 @@
 using System;
 using j4o.lang;
 using com.db4o.ext;
+using com.db4o.inside;
 using com.db4o.types;
 
 namespace com.db4o {

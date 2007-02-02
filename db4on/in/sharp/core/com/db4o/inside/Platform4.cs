@@ -8,6 +8,7 @@ using com.db4o.config;
 using com.db4o.config.attributes;
 using com.db4o.ext;
 using com.db4o.foundation;
+using com.db4o.inside.handlers;
 using com.db4o.inside.query;
 using com.db4o.query;
 using com.db4o.reflect;
@@ -117,7 +118,7 @@ namespace com.db4o.inside
 
 		internal static Object CreateReferenceQueue()
 		{
-			return new YapReferenceQueue();
+			return new WeakReferenceHandlerQueue();
 		}
 
         public static Object CreateWeakReference(Object obj)
@@ -127,7 +128,7 @@ namespace com.db4o.inside
 
 		internal static Object CreateYapRef(Object referenceQueue, Object yapObject, Object obj)
 		{
-			return new YapRef(referenceQueue, yapObject, obj);
+			return new WeakReferenceHandler(referenceQueue, yapObject, obj);
 		}
 
 		internal static long DoubleToLong(double a_double)
@@ -353,7 +354,7 @@ namespace com.db4o.inside
 
 		internal static Object GetYapRefObject(Object obj)
 		{
-			YapRef yapRef = obj as YapRef;
+			WeakReferenceHandler yapRef = obj as WeakReferenceHandler;
 			if (yapRef != null)
 			{
 				return yapRef.Get();
@@ -448,7 +449,7 @@ namespace com.db4o.inside
 
 		internal static void KillYapRef(Object obj)
 		{
-			YapRef yr = obj as YapRef;
+			WeakReferenceHandler yr = obj as WeakReferenceHandler;
 			if (yr != null)
 			{
 				yr.yapObject = null;
@@ -487,7 +488,7 @@ namespace com.db4o.inside
 
 		internal static void PollReferenceQueue(Object stream, Object referenceQueue)
 		{
-			((YapReferenceQueue) referenceQueue).Poll((ExtObjectContainer) stream);
+			((WeakReferenceHandlerQueue) referenceQueue).Poll((ExtObjectContainer) stream);
 		}
 
 		internal static void PostOpen(ObjectContainer objectContainer)
@@ -626,17 +627,17 @@ namespace com.db4o.inside
 	        return GetNetType(claxx);
         }
 
-		internal static YapTypeAbstract[] Types(ObjectContainerBase stream)
+		internal static NetTypeHandler[] Types(ObjectContainerBase stream)
 		{
-			return new YapTypeAbstract[]
+			return new NetTypeHandler[]
 				{
-					new YapDouble(stream),
-					new YapSByte(stream),
-					new YapDecimal(stream),
-					new YapUInt(stream),
-					new YapULong(stream),
-					new YapUShort(stream),
-					new YapDateTime(stream),
+					new DoubleHandler(stream),
+					new SByteHandler(stream),
+					new DecimalHandler(stream),
+					new UIntHandler(stream),
+					new ULongHandler(stream),
+					new UShortHandler(stream),
+					new DateTimeHandler(stream),
 				};
 		}
 
