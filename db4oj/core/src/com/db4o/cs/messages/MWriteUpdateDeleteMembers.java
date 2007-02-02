@@ -6,7 +6,7 @@ import com.db4o.cs.*;
 
 public final class MWriteUpdateDeleteMembers extends MsgD {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		synchronized (streamLock()) {
 			transaction().writeUpdateDeleteMembers(
 			    readInt(),

@@ -47,7 +47,7 @@ public class MWriteBlob extends MsgBlob {
         }
     }
 
-	public boolean processAtServer(YapServerThread serverThread) {
+	public boolean processAtServer(ServerMessageDispatcher serverThread) {
         try {
             ObjectContainerBase stream = stream();
             BlobImpl blobImpl = this.serverGetBlobImpl();

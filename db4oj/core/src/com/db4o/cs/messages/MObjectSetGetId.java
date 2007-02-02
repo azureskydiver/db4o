@@ -11,7 +11,7 @@ import com.db4o.inside.query.*;
  */
 public class MObjectSetGetId extends MObjectSet {
 	
-	public boolean processAtServer(YapServerThread serverThread) {
+	public boolean processAtServer(ServerMessageDispatcher serverThread) {
 		AbstractQueryResult queryResult = queryResult(serverThread, readInt());
 		int id = queryResult.getId(readInt()); 
 		serverThread.write(Msg.OBJECTSET_GET_ID.getWriterForInt(transaction(), id));

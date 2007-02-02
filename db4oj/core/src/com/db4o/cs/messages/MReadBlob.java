@@ -36,7 +36,7 @@ public class MReadBlob extends MsgBlob {
         }
 
     }
-    public boolean processAtServer(YapServerThread serverThread) {
+    public boolean processAtServer(ServerMessageDispatcher serverThread) {
         ObjectContainerBase stream = stream();
         try {
             BlobImpl blobImpl = this.serverGetBlobImpl();

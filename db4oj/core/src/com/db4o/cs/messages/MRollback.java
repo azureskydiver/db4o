@@ -6,7 +6,7 @@ import com.db4o.cs.*;
 
 public final class MRollback extends Msg {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		transaction().rollback();
 		return true;
 	}

@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 
 public final class MSetSemaphore extends MsgD {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		int timeout = readInt();
 		String name = readString();
 		LocalObjectContainer stream = (LocalObjectContainer)stream();

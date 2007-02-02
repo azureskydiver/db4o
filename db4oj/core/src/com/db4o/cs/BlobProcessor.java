@@ -6,12 +6,13 @@ import com.db4o.cs.messages.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 
-class YapClientBlobThread extends Thread{
+class BlobProcessor extends Thread{
+	
 	private ClientObjectContainer			stream;
 	private Queue4 				queue = new Queue4();
 	private boolean				terminated = false;
 	
-	YapClientBlobThread(ClientObjectContainer aStream){
+	BlobProcessor(ClientObjectContainer aStream){
 		stream = aStream;
 		setPriority(MIN_PRIORITY);
 	}

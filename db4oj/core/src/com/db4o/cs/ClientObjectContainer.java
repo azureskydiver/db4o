@@ -22,7 +22,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	
 	final Object blobLock = new Object();
 
-	private YapClientBlobThread blobThread;
+	private BlobProcessor blobThread;
 
 	private Socket4 i_socket;
 
@@ -34,7 +34,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	int[] _prefetchedIDs;
 
-	private YapClientThread _readerThread;
+	private ClientMessageDispatcher _readerThread;
 
 	int remainingIDs;
 
@@ -124,7 +124,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	private void startReaderThread(Socket4 socket, String user) {
-		_readerThread = new YapClientThread(this, socket, messageQueue,
+		_readerThread = new ClientMessageDispatcher(this, socket, messageQueue,
 				messageQueueLock);
 		_readerThread.setName("db4o message client for user " + user);
 		_readerThread.start();
@@ -537,7 +537,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		synchronized (blobLock) {
 			boolean needStart = blobThread == null || blobThread.isTerminated();
 			if (needStart) {
-				blobThread = new YapClientBlobThread(this);
+				blobThread = new BlobProcessor(this);
 			}
 			blobThread.add(msg);
 			if (needStart) {

@@ -8,7 +8,7 @@ import com.db4o.inside.query.*;
 
 public class MObjectSetSize extends MObjectSet {
 	
-	public boolean processAtServer(YapServerThread serverThread) {
+	public boolean processAtServer(ServerMessageDispatcher serverThread) {
 		AbstractQueryResult queryResult = queryResult(serverThread, readInt());
 		serverThread.write(Msg.OBJECTSET_SIZE.getWriterForInt(transaction(), queryResult.size()));
 		return true;

@@ -7,7 +7,7 @@ import com.db4o.cs.*;
 import com.db4o.inside.*;
 
 public final class MPrefetchIDs extends MsgD {
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		int prefetchIDCount = readInt();
 		MsgD reply =
 			Msg.ID_LIST.getWriterForLength(

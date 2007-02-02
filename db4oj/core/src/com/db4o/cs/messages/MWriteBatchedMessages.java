@@ -2,11 +2,11 @@
 
 package com.db4o.cs.messages;
 
-import com.db4o.cs.YapServerThread;
+import com.db4o.cs.ServerMessageDispatcher;
 import com.db4o.inside.*;
 
 public class MWriteBatchedMessages extends MsgD {
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		int count = readInt();
 		Transaction ta = transaction();
 		for (int i = 0; i < count; i++) {

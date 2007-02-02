@@ -9,7 +9,7 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.inside.*;
 
-public final class YapServerThread extends Thread {
+public final class ServerMessageDispatcher extends Thread {
 
     private String i_clientName;
 
@@ -23,7 +23,7 @@ public final class YapServerThread extends Thread {
     private boolean i_rollbackOnClose = true;
     private boolean i_sendCloseMessage = true;
 
-    private final YapServer i_server;
+    private final ObjectServerImpl i_server;
 
     private Socket4 i_socket;
     private LocalObjectContainer i_substituteStream;
@@ -35,8 +35,8 @@ public final class YapServerThread extends Thread {
 
     final int i_threadID;
 
-    YapServerThread(
-        YapServer aServer,
+    ServerMessageDispatcher(
+        ObjectServerImpl aServer,
         LocalObjectContainer aStream,
         Socket4 aSocket,
         int aThreadID,
@@ -335,7 +335,7 @@ public final class YapServerThread extends Thread {
 
     private void useTransaction(Msg message) {
         int threadID = ((MsgD) message).readInt();
-        YapServerThread transactionThread = i_server.findThread(threadID);
+        ServerMessageDispatcher transactionThread = i_server.findThread(threadID);
         if (transactionThread != null) {
             Transaction transToUse = transactionThread.getTransaction();
             if (i_substituteTrans != null) {

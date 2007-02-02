@@ -2,11 +2,11 @@
 
 package com.db4o.inside;
 
-class YapRef extends java.lang.ref.WeakReference{
+class ActiveObjectReference extends java.lang.ref.WeakReference{
 	
 	Object _referent;
 	
-	YapRef(Object queue, Object objectReference, Object obj){
+	ActiveObjectReference(Object queue, Object objectReference, Object obj){
 		super(obj, (java.lang.ref.ReferenceQueue)queue) ;
 		_referent = objectReference;
 	}

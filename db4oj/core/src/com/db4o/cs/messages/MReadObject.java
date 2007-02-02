@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 
 public final class MReadObject extends MsgD {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		StatefulBuffer bytes = null;
 
 		// readObjectByID may fail in certain cases

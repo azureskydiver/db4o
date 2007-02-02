@@ -6,7 +6,7 @@ import com.db4o.cs.messages.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 
-class YapClientThread extends Thread{
+class ClientMessageDispatcher extends Thread{
 	
 	private ClientObjectContainer i_stream;
 	private Socket4 i_socket;
@@ -14,7 +14,7 @@ class YapClientThread extends Thread{
 	final Lock4 messageQueueLock;
 	
 	
-	YapClientThread(ClientObjectContainer client, Socket4 a_socket, Queue4 messageQueue_, Lock4 messageQueueLock_){
+	ClientMessageDispatcher(ClientObjectContainer client, Socket4 a_socket, Queue4 messageQueue_, Lock4 messageQueueLock_){
 		synchronized(this){
 			i_stream = client;
 			messageQueue = messageQueue_;

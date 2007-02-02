@@ -4,12 +4,12 @@ package com.db4o.cs.messages;
 
 import com.db4o.*;
 import com.db4o.cs.ClassInfo;
-import com.db4o.cs.YapServerThread;
+import com.db4o.cs.ServerMessageDispatcher;
 import com.db4o.inside.*;
 import com.db4o.reflect.generic.GenericClass;
 
 public class MClassMeta extends MsgObject {
-	public boolean processAtServer(YapServerThread serverThread) {
+	public boolean processAtServer(ServerMessageDispatcher serverThread) {
 		ObjectContainerBase stream = stream();
 		unmarshall();
 		try{

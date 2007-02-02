@@ -9,7 +9,7 @@ import com.db4o.inside.query.*;
 
 public final class MGetAll extends MsgQuery {
 	
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		QueryEvaluationMode evaluationMode = QueryEvaluationMode.fromInt(readInt());
 		writeQueryResult(getAll(evaluationMode), serverThread, evaluationMode);
 		return true;

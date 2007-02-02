@@ -159,7 +159,7 @@ public class Msg implements Cloneable {
 	 * server side execution
 	 * @param serverThread TODO
 	 */
-	public boolean processAtServer(YapServerThread serverThread) {
+	public boolean processAtServer(ServerMessageDispatcher serverThread) {
 		// default: do nothing
 		return false; // since not processed
 	}

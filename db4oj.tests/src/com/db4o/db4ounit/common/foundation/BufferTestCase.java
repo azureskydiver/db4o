@@ -1,11 +1,10 @@
 package com.db4o.db4ounit.common.foundation;
 
-import com.db4o.*;
 import com.db4o.inside.*;
 
 import db4ounit.*;
 
-public class YapReaderTestCase implements TestCase {
+public class BufferTestCase implements TestCase {
 
 	private static final int READERLENGTH = 64;
 

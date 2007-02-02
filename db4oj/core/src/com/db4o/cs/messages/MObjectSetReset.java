@@ -10,7 +10,7 @@ import com.db4o.cs.*;
  */
 public class MObjectSetReset extends MObjectSet {
 	
-	public boolean processAtServer(YapServerThread serverThread) {
+	public boolean processAtServer(ServerMessageDispatcher serverThread) {
 		stub(serverThread, readInt()).reset();
 		return true;
 	}

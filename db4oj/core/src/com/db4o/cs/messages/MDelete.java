@@ -7,7 +7,7 @@ import com.db4o.cs.*;
 import com.db4o.inside.*;
 
 public final class MDelete extends MsgD {
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		Buffer bytes = this.getByteLoad();
 		ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {

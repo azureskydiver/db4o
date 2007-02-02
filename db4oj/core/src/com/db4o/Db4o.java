@@ -252,7 +252,7 @@ public class Db4o {
                 return null;
             }
             synchronized(stream.lock()){
-                return new YapServer(stream, port);
+                return new ObjectServerImpl(stream, port);
             }
 		}
 	}

@@ -11,7 +11,7 @@ import com.db4o.inside.*;
  * 
  */
 public class MObjectByUuid extends MsgD {
-	public final boolean processAtServer(YapServerThread serverThread) {
+	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
 		long uuid = readLong();
 		byte[] signature = readBytes();
 		int id = 0;
