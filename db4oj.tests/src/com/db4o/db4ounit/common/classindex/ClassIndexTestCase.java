@@ -3,8 +3,8 @@
 package com.db4o.db4ounit.common.classindex;
 
 import com.db4o.db4ounit.common.btree.ExpectingVisitor;
-import com.db4o.inside.*;
-import com.db4o.inside.classindex.ClassIndexStrategy;
+import com.db4o.internal.*;
+import com.db4o.internal.classindex.*;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.fixtures.*;

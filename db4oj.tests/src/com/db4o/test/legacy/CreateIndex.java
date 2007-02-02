@@ -3,7 +3,7 @@
 package com.db4o.test.legacy;
 
 import com.db4o.*;
-import com.db4o.inside.marshall.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.query.*;
 import com.db4o.test.*;
 

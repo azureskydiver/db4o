@@ -3,7 +3,7 @@
 package com.db4o.db4ounit.common.header;
 
 import com.db4o.config.*;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;

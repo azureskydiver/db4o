@@ -79,7 +79,7 @@ public class Db4oUtil {
 		System.out.println("Stored Classes:");
 
 		This is throwing:
-		com.db4o.cs.generic.GenericObjectsTest.testUpdate: java.lang.NullPointerException
+		com.db4o.internal.cs.generic.GenericObjectsTest.testUpdate: java.lang.NullPointerException
 	at com.db4o.reflect.generic.GenericReflector.readAll(Unknown Source)
 	at com.db4o.reflect.generic.GenericReflector.knownClasses(Unknown Source)
 	

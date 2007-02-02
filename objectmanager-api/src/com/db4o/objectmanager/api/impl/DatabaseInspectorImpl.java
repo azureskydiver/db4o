@@ -3,7 +3,7 @@ package com.db4o.objectmanager.api.impl;
 import com.db4o.*;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.query.Query;
 import com.db4o.objectmanager.api.DatabaseInspector;

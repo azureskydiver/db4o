@@ -4,7 +4,7 @@ package com.db4o.test.java;
 
 import java.lang.reflect.*;
 
-import com.db4o.inside.marshall.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.test.*;
 
 

@@ -3,9 +3,9 @@
 package com.db4o.db4ounit.common.btree;
 
 import com.db4o.*;
-import com.db4o.inside.*;
-import com.db4o.inside.freespace.*;
-import com.db4o.inside.slots.*;
+import com.db4o.internal.*;
+import com.db4o.internal.freespace.*;
+import com.db4o.internal.slots.*;
 
 
 public class FreespaceManagerForDebug extends FreespaceManager {

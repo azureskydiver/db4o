@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.foundation;
 import com.db4o.*;
 import com.db4o.db4ounit.common.btree.*;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 
