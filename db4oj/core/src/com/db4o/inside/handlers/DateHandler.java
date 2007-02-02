@@ -10,8 +10,6 @@ import com.db4o.inside.*;
 import com.db4o.inside.marshall.*;
 import com.db4o.reflect.*;
 
-
-
 public final class DateHandler extends LongHandler {
 	
 	private static final Date PROTO = new Date(0);
@@ -95,7 +93,5 @@ public final class DateHandler extends LongHandler {
 	
 	boolean isSmaller1(Object obj){
 		return obj instanceof Date && val(obj) < currentLong();
-	}
-	
-	
+	}	
 }
