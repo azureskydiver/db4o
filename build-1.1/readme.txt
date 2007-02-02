@@ -7,6 +7,9 @@ dBS helps you to build all db4o products including db4o java , db4o .net and dRS
 
 QuickStart
 ==========
+-svn checkout /javatocsharp to /javatocsharp
+-edit machine.properties to suit your environment
+	+ typically, you only need to change "dir.workspace"
 -Open a console
 -Type ant
 -Waiting for several minutes, all products are ready to use at /repository!
