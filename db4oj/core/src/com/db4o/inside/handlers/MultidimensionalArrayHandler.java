@@ -39,20 +39,20 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
     }
 
     public final byte identifier() {
-        return YapConst.YAPARRAYN;
+        return Const4.YAPARRAYN;
     }
 
     public final int objectLength(Object a_object) {
         int[] dim = _reflectArray.dimensions(a_object);
-        return YapConst.OBJECT_LENGTH
-            + (YapConst.INT_LENGTH * (2 + dim.length))
+        return Const4.OBJECT_LENGTH
+            + (Const4.INT_LENGTH * (2 + dim.length))
             + (elementCount(dim) * i_handler.linkLength());
     }
     
     public int ownLength(Object obj){
         int[] dim = _reflectArray.dimensions(obj);
-        return YapConst.OBJECT_LENGTH
-            + (YapConst.INT_LENGTH * (2 + dim.length));
+        return Const4.OBJECT_LENGTH
+            + (Const4.INT_LENGTH * (2 + dim.length));
     }
 
     public final Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException {

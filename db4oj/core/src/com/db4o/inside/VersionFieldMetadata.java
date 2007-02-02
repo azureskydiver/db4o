@@ -46,7 +46,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
     }
 
     public int linkLength() {
-        return YapConst.LONG_LENGTH;
+        return Const4.LONG_LENGTH;
     }
     
     void marshallIgnore(Buffer writer) {

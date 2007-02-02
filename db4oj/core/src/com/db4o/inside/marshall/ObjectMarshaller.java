@@ -80,7 +80,7 @@ public abstract class ObjectMarshaller {
         StatefulBuffer writer = new StatefulBuffer(a_trans, length);
         writer.useSlot(id, address, length);
         if (Deploy.debug) {
-            writer.writeBegin(YapConst.YAPOBJECT);
+            writer.writeBegin(Const4.YAPOBJECT);
         }
         writer.setUpdateDepth(updateDepth);
         return writer;

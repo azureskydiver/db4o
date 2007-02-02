@@ -111,7 +111,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     // all the per-YapStream references that we don't
     // want created in YapobjectCarrier
-    public YapHandlers             i_handlers;
+    public HandlerRegistry             i_handlers;
 
     // One of three constants in ReplicationHandler: NONE, OLD, NEW
     // Detailed replication variables are stored in i_handlers.
@@ -120,7 +120,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     int                 _replicationCallState;  
 
     // weak reference management
-    YapReferences           i_references;
+    WeakReferenceCollector           i_references;
 
 	private NativeQueryHandler _nativeQueryHandler;
     
@@ -366,7 +366,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract AbstractQueryResult newQueryResult(Transaction trans, QueryEvaluationMode mode);
 
     protected void createStringIO(byte encoding) {
-    	setStringIo(YapStringIO.forEncoding(encoding));
+    	setStringIo(LatinStringIO.forEncoding(encoding));
     }
 
     final protected void initializeTransactions() {
@@ -524,7 +524,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         
         if(delete4(trans, ref, cascade, userCall)){
         	objectOnDelete(yc, obj);
-            if (configImpl().messageLevel() > YapConst.STATE) {
+            if (configImpl().messageLevel() > Const4.STATE) {
                 message("" + ref.getID() + " delete " + ref.getYapClass().getName());
             }
         }
@@ -696,7 +696,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     private final QueryResult get2(Transaction ta, Object template) {
-        if (template == null || template.getClass() == YapConst.CLASS_OBJECT) {
+        if (template == null || template.getClass() == Const4.CLASS_OBJECT) {
             return getAll(ta);
         } 
         Query q = query(ta);
@@ -732,7 +732,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 
             }
             try {
-                return new ObjectReference(a_id).read(ta, null, null, 0,YapConst.ADD_TO_ID_TREE, true);
+                return new ObjectReference(a_id).read(ta, null, null, 0,Const4.ADD_TO_ID_TREE, true);
             } catch (Throwable t) {
                 if (Debug.atHome) {
                     t.printStackTrace();
@@ -755,7 +755,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         Object obj = null;
     	beginTopLevelCall();
         try {
-            obj = new ObjectReference(id).read(ta, null, null, configImpl().activationDepth(),YapConst.ADD_TO_ID_TREE, true);
+            obj = new ObjectReference(id).read(ta, null, null, configImpl().activationDepth(),Const4.ADD_TO_ID_TREE, true);
         } catch (Throwable t) {
             if (Debug.atHome) {
                 t.printStackTrace();
@@ -825,7 +825,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             }
             try {
                 yo = new ObjectReference(a_id);
-                arr[0] = yo.read(ta, null, null, 0, YapConst.ADD_TO_ID_TREE, true);
+                arr[0] = yo.read(ta, null, null, 0, Const4.ADD_TO_ID_TREE, true);
                 
                 if(arr[0] == null){
                     return arr;
@@ -959,7 +959,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return i_hcTree.hc_find(a_object);
     }
     
-    public YapHandlers handlers(){
+    public HandlerRegistry handlers(){
     	return i_handlers;
     }
 
@@ -1015,14 +1015,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     protected void initialize1(Configuration config) {
 
         i_config = initializeConfig(config);
-        i_handlers = new YapHandlers(_this, configImpl().encoding(), configImpl().reflector());
+        i_handlers = new HandlerRegistry(_this, configImpl().encoding(), configImpl().reflector());
         
         if (i_references != null) {
             gc();
             i_references.stopTimer();
         }
 
-        i_references = new YapReferences(_this);
+        i_references = new WeakReferenceCollector(_this);
 
         if (hasShutDownHook()) {
             Platform4.addShutDownHook(this, i_lock);
@@ -1077,8 +1077,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     void initializeEssentialClasses(){
-        for (int i = 0; i < YapConst.ESSENTIAL_CLASSES.length; i++) {
-            produceYapClass(reflector().forClass(YapConst.ESSENTIAL_CLASSES[i]));    
+        for (int i = 0; i < Const4.ESSENTIAL_CLASSES.length; i++) {
+            produceYapClass(reflector().forClass(Const4.ESSENTIAL_CLASSES[i]));    
         }
     }
 
@@ -1208,18 +1208,18 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public void migrateFrom(ObjectContainer objectContainer) {
         if(objectContainer == null){
-            if(_replicationCallState == YapConst.NONE){
+            if(_replicationCallState == Const4.NONE){
                 return;
             }
-            _replicationCallState = YapConst.NONE;
+            _replicationCallState = Const4.NONE;
             if(i_handlers.i_migration != null){
                 i_handlers.i_migration.terminate();
             }
             i_handlers.i_migration = null;
         }else{
             ObjectContainerBase peer = (ObjectContainerBase)objectContainer;
-            _replicationCallState = YapConst.OLD;
-            peer._replicationCallState = YapConst.OLD;
+            _replicationCallState = Const4.OLD;
+            peer._replicationCallState = Const4.OLD;
             i_handlers.i_migration = new MigrationConnection(_this, (ObjectContainerBase)objectContainer);
             peer.i_handlers.i_migration = i_handlers.i_migration;
         }
@@ -1266,7 +1266,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         TreeIntObject tio = (TreeIntObject) Tree.find(i_justPeeked, ti);
         if (tio == null) {
             return new ObjectReference(a_id).read(a_ta, null, null, a_depth,
-                YapConst.TRANSIENT, false);
+                Const4.TRANSIENT, false);
     
         } 
         return tio._object;
@@ -1501,7 +1501,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         
         // The double check on i_migrateFrom is necessary:
         // i_handlers.i_replicateFrom may be set in YapObjectCarrier for parent YapStream 
-        if(_replicationCallState != YapConst.OLD){
+        if(_replicationCallState != Const4.OLD){
             return 0;
         }
         
@@ -1543,11 +1543,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public void set(Object a_object) {
-        set(a_object, YapConst.UNSPECIFIED);
+        set(a_object, Const4.UNSPECIFIED);
     }
     
     public final void set(Transaction trans, Object obj) {
-    	set(trans, obj, YapConst.UNSPECIFIED);
+    	set(trans, obj, Const4.UNSPECIFIED);
     }    
     
     public final void set(Object obj, int depth) {
@@ -1561,7 +1561,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	}
     
     public final int setInternal(Transaction trans, Object obj, boolean checkJustSet) {
-       return setInternal(trans, obj, YapConst.UNSPECIFIED, checkJustSet);
+       return setInternal(trans, obj, Const4.UNSPECIFIED, checkJustSet);
     }
     
     public final int setInternal(Transaction trans, Object obj, int depth,  boolean checkJustSet) {
@@ -1607,12 +1607,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public final void setByNewReplication(Db4oReplicationReferenceProvider referenceProvider, Object obj){
         synchronized(i_lock){
-            _replicationCallState = YapConst.NEW;
+            _replicationCallState = Const4.NEW;
             i_handlers._replicationReferenceProvider = referenceProvider;
             
             set2(checkTransaction(null), obj, 1, false);
             
-            _replicationCallState = YapConst.NONE;
+            _replicationCallState = Const4.NONE;
             i_handlers._replicationReferenceProvider = null;
         }
     }
@@ -1728,7 +1728,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 			if(obj instanceof Db4oTypeImpl){
 			    ((Db4oTypeImpl)obj).setTrans(trans);
 			}
-			if (configImpl().messageLevel() > YapConst.STATE) {
+			if (configImpl().messageLevel() > Const4.STATE) {
 				message("" + ref.getID() + " new " + ref.getYapClass().getName());
 			}
 			
@@ -1758,11 +1758,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	}
     
     private final boolean updateDepthSufficient(int updateDepth){
-    	return (updateDepth == YapConst.UNSPECIFIED) || (updateDepth > 0);
+    	return (updateDepth == Const4.UNSPECIFIED) || (updateDepth > 0);
     }
 
     private final boolean isPlainObjectOrPrimitive(ClassMetadata yc) {
-        return yc.getID() == YapHandlers.ANY_ID  || yc.isPrimitive();
+        return yc.getID() == HandlerRegistry.ANY_ID  || yc.isPrimitive();
     }
 
 	private boolean objectCanNew(ClassMetadata yc, Object a_object) {
@@ -1774,7 +1774,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract boolean setSemaphore(String name, int timeout);
 
-    void setStringIo(YapStringIO a_io) {
+    void setStringIo(LatinStringIO a_io) {
         i_handlers.i_stringHandler.setStringIo(a_io);
     }
 
@@ -1799,7 +1799,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     private final boolean stackIsSmall(){
-        return _stackDepth < YapConst.MAX_STACK_DEPTH;
+        return _stackDepth < Const4.MAX_STACK_DEPTH;
     }
 
     boolean stateMessages() {
@@ -1907,7 +1907,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 		
-    public YapStringIO stringIO(){
+    public LatinStringIO stringIO(){
     	return i_handlers.i_stringHandler.i_stringIo;
     }
     

@@ -37,7 +37,7 @@ public class IntHandler extends PrimitiveHandler {
     }
 
     public int linkLength() {
-        return YapConst.INT_LENGTH;
+        return Const4.INT_LENGTH;
     }
 
     public Object primitiveNull() {
@@ -51,13 +51,13 @@ public class IntHandler extends PrimitiveHandler {
     public static final int readInt(Buffer a_bytes) {
         if (Deploy.debug) {
 			int ret = 0;
-            a_bytes.readBegin(YapConst.YAPINTEGER);
+            a_bytes.readBegin(Const4.YAPINTEGER);
             if (Deploy.debugLong) {
                 ret =
-                    Integer.valueOf(new YapStringIO().read(a_bytes, YapConst.INTEGER_BYTES).trim())
+                    Integer.valueOf(new LatinStringIO().read(a_bytes, Const4.INTEGER_BYTES).trim())
                         .intValue();
             } else {
-                for (int i = 0; i < YapConst.INTEGER_BYTES; i++) {
+                for (int i = 0; i < Const4.INTEGER_BYTES; i++) {
                     ret = (ret << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
                 }
             }
@@ -77,14 +77,14 @@ public class IntHandler extends PrimitiveHandler {
 
     public static final void writeInt(int a_int, Buffer a_bytes) {
         if (Deploy.debug) {
-            a_bytes.writeBegin(YapConst.YAPINTEGER);
+            a_bytes.writeBegin(Const4.YAPINTEGER);
             if (Deploy.debugLong) {
                 String l_s = "                " + new Integer(a_int).toString();
-                new YapStringIO().write(
+                new LatinStringIO().write(
                     a_bytes,
-                    l_s.substring(l_s.length() - YapConst.INTEGER_BYTES));
+                    l_s.substring(l_s.length() - Const4.INTEGER_BYTES));
             } else {
-                for (int i = YapConst.WRITE_LOOP; i >= 0; i -= 8) {
+                for (int i = Const4.WRITE_LOOP; i >= 0; i -= 8) {
                     a_bytes._buffer[a_bytes._offset++] = (byte) (a_int >> i);
                 }
             }

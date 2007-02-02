@@ -42,7 +42,7 @@ public class DefragContextImpl implements DefragContext {
 		}
 	};
 
-	private static final long CLASSCOLLECTION_POINTER_ADDRESS = 2+2*YapConst.INT_LENGTH;
+	private static final long CLASSCOLLECTION_POINTER_ADDRESS = 2+2*Const4.INT_LENGTH;
 	
 	public final LocalObjectContainer _sourceDb;
 	final LocalObjectContainer _targetDb;
@@ -158,7 +158,7 @@ public class DefragContextImpl implements DefragContext {
 		return classes;
 	}
 	
-	public YapStringIO stringIO() {
+	public LatinStringIO stringIO() {
 		return _sourceDb.stringIO();
 	}
 	
@@ -177,7 +177,7 @@ public class DefragContextImpl implements DefragContext {
 	public static void targetClassCollectionID(String file,int id) throws IOException {
 		RandomAccessFile raf=new RandomAccessFile(file,"rw");
 		try {
-			Buffer reader=new Buffer(YapConst.INT_LENGTH);
+			Buffer reader=new Buffer(Const4.INT_LENGTH);
 
 			raf.seek(CLASSCOLLECTION_POINTER_ADDRESS);			
 			reader._offset=0;
@@ -279,7 +279,7 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	private Slot readPointer(DbSelector selector,int id) {
-		Buffer reader=readerByAddress(selector, id, YapConst.POINTER_LENGTH);
+		Buffer reader=readerByAddress(selector, id, Const4.POINTER_LENGTH);
 		int address=reader.readInt();
 		int length=reader.readInt();
 		return new Slot(address,length);

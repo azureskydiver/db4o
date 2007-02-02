@@ -52,8 +52,8 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
         
     }
 
-	private YapFileTransaction fileTransaction() {
-		return ((YapFileTransaction)trans());
+	private LocalTransaction fileTransaction() {
+		return ((LocalTransaction)trans());
 	}
 
 }

@@ -8,9 +8,9 @@ package com.db4o.inside;
  * 
  * @renameto com.db4o.inside.Comparable4 
  */
-public interface YapComparable {
+public interface Comparable4 {
 	
-	YapComparable prepareComparison(Object obj);
+	Comparable4 prepareComparison(Object obj);
 	
 	int compareTo(Object obj);
 	

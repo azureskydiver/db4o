@@ -90,7 +90,7 @@ public class ReplicationRecord implements Internal4{
         ReplicationRecord res = null;
         stream.showInternalClasses(true);
         Query q = stream.query();
-        q.constrain(YapConst.CLASS_REPLICATIONRECORD);
+        q.constrain(Const4.CLASS_REPLICATIONRECORD);
         q.descend("_youngerPeer").constrain(younger).identity();
         q.descend("_olderPeer").constrain(older).identity();
         ObjectSet objectSet = q.execute();

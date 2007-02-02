@@ -22,7 +22,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     private IoAdapter          i_file;
     private IoAdapter          i_timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
     private volatile IoAdapter i_backupFile;
-    private byte[]             i_timerBytes = new byte[YapConst.LONG_BYTES];
+    private byte[]             i_timerBytes = new byte[Const4.LONG_BYTES];
 
     private Object             i_fileLock;
 
@@ -177,7 +177,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 i_file.blockSeek(a_newAddress, newAddressOffset);
                 i_file.read(checkXBytes);
                 for (int i = 0; i < checkXBytes.length; i++) {
-                    if (checkXBytes[i] != YapConst.XBYTE) {
+                    if (checkXBytes[i] != Const4.XBYTE) {
                         String msg = "XByte corruption adress:" + a_newAddress + " length:"
                             + a_length;
                         throw new RuntimeException(msg);
@@ -331,7 +331,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
             }
             i_timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
-                Buffer lockBytes = new StatefulBuffer(i_systemTrans, YapConst.LONG_LENGTH);
+                Buffer lockBytes = new StatefulBuffer(i_systemTrans, Const4.LONG_LENGTH);
                 lockBytes.writeLong(time);
                 i_timerFile.write(lockBytes._buffer);
             } else {
@@ -370,7 +370,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 boolean doCheck = true;
                 if(a_bytes instanceof StatefulBuffer){
                     StatefulBuffer writer = (StatefulBuffer)a_bytes;
-                    if(writer.getID() == YapConst.IGNORE_ID){
+                    if(writer.getID() == Const4.IGNORE_ID){
                         doCheck = false;
                     }
                 }

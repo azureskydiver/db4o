@@ -11,7 +11,7 @@ import com.db4o.reflect.ReflectClass;
 
 public final class ShortHandler extends PrimitiveHandler
 {
-    static final int LENGTH = YapConst.SHORT_BYTES + YapConst.ADDED_LENGTH;
+    static final int LENGTH = Const4.SHORT_BYTES + Const4.ADDED_LENGTH;
 	
 	private static final Short i_primitive = new Short((short)0);
 	
@@ -49,9 +49,9 @@ public final class ShortHandler extends PrimitiveHandler
 	static final short readShort(Buffer a_bytes){
 		int ret = 0;
 		if (Deploy.debug){
-			a_bytes.readBegin(YapConst.YAPSHORT);
+			a_bytes.readBegin(Const4.YAPSHORT);
 		}
-		for (int i = 0; i < YapConst.SHORT_BYTES; i++){
+		for (int i = 0; i < Const4.SHORT_BYTES; i++){
 			ret = (ret << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
 		}
 		if (Deploy.debug){
@@ -66,10 +66,10 @@ public final class ShortHandler extends PrimitiveHandler
 	
 	static final void writeShort(int a_short, Buffer a_bytes){
 		if(Deploy.debug){
-			a_bytes.writeBegin(YapConst.YAPSHORT);
+			a_bytes.writeBegin(Const4.YAPSHORT);
 		}
-		for (int i = 0; i < YapConst.SHORT_BYTES; i++){
-			a_bytes._buffer[a_bytes._offset++] = (byte) (a_short >> ((YapConst.SHORT_BYTES - 1 - i) * 8));
+		for (int i = 0; i < Const4.SHORT_BYTES; i++){
+			a_bytes._buffer[a_bytes._offset++] = (byte) (a_short >> ((Const4.SHORT_BYTES - 1 - i) * 8));
 		}
 		if(Deploy.debug){
 			a_bytes.writeEnd();

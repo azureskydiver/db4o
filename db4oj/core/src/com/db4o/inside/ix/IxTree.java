@@ -104,7 +104,7 @@ public abstract class IxTree extends Tree implements Visitor4{
     }
     
     int slotLength(){
-        return handler().linkLength() + YapConst.INT_LENGTH;
+        return handler().linkLength() + Const4.INT_LENGTH;
     }
     
     final LocalObjectContainer stream(){

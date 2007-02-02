@@ -255,7 +255,7 @@ public class FieldMetadata implements StoredField {
     private void checkDb4oType() {
         if (i_javaField != null) {
             if (getStream().i_handlers.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getFieldType())) {
-                i_db4oType = YapHandlers.getDb4oType(i_javaField.getFieldType());
+                i_db4oType = HandlerRegistry.getDb4oType(i_javaField.getFieldType());
             }
         }
     }
@@ -360,13 +360,13 @@ public class FieldMetadata implements StoredField {
             dotnetValueType = Platform4.isValueType(i_handler.classReflector());    
         }
         
-        if ((i_config != null && i_config.cascadeOnDelete() == YapConst.YES)
+        if ((i_config != null && i_config.cascadeOnDelete() == Const4.YES)
             || dotnetValueType) {
             int preserveCascade = a_bytes.cascadeDeletes();
             a_bytes.setCascadeDeletes(1);
             i_handler.deleteEmbedded(mf, a_bytes);
             a_bytes.setCascadeDeletes(preserveCascade);
-        }else if(i_config != null && i_config.cascadeOnDelete() == YapConst.NO){
+        }else if(i_config != null && i_config.cascadeOnDelete() == Const4.NO){
             int preserveCascade = a_bytes.cascadeDeletes();
             a_bytes.setCascadeDeletes(0);
             i_handler.deleteEmbedded(mf, a_bytes);
@@ -603,7 +603,7 @@ public class FieldMetadata implements StoredField {
         alive();
         if (i_handler == null) {
             // must be a YapClass
-            return YapConst.ID_LENGTH;
+            return Const4.ID_LENGTH;
         }
         return i_handler.linkLength();
     }
@@ -614,7 +614,7 @@ public class FieldMetadata implements StoredField {
             
             // must be a YapClass
             
-            header.addBaseLength(YapConst.ID_LENGTH);
+            header.addBaseLength(Const4.ID_LENGTH);
             return ;
         }
         
@@ -672,7 +672,7 @@ public class FieldMetadata implements StoredField {
         Object indexEntry = null;
         
         if (obj != null
-            && ((config != null && (config.cascadeOnUpdate() == YapConst.YES)) || (i_config != null && (i_config.cascadeOnUpdate() == YapConst.YES)))) {
+            && ((config != null && (config.cascadeOnUpdate() == Const4.YES)) || (i_config != null && (i_config.cascadeOnUpdate() == Const4.YES)))) {
             int min = 1;
             if (i_yapClass.isCollection(obj)) {
                 GenericReflector reflector = i_yapClass.reflector();
@@ -698,7 +698,7 @@ public class FieldMetadata implements StoredField {
         return true;
     }
     
-    YapComparable prepareComparison(Object obj) {
+    Comparable4 prepareComparison(Object obj) {
         if (alive()) {
             i_handler.prepareComparison(obj);
             return i_handler;
@@ -956,7 +956,7 @@ public class FieldMetadata implements StoredField {
             return;
         }
         ObjectContainerBase stream = systemTrans.stream(); 
-        if (stream.configImpl().messageLevel() > YapConst.NONE) {
+        if (stream.configImpl().messageLevel() > Const4.NONE) {
             stream.message("dropping index " + toString());
         }
         _index.free(systemTrans);

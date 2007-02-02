@@ -13,7 +13,7 @@ class NullFieldMetadata extends FieldMetadata{
         super(null);
     }
     
-	YapComparable prepareComparison(Object obj){
+	Comparable4 prepareComparison(Object obj){
 		return Null.INSTANCE;
 	}
 	

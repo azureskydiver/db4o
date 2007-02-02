@@ -25,7 +25,7 @@ public class MObjectSetFetch extends MObjectSet {
 	}
 
 	private int bufferLength(int fetchSize) {
-		return YapConst.INT_LENGTH * (fetchSize + 1);
+		return Const4.INT_LENGTH * (fetchSize + 1);
 	}
 
 }

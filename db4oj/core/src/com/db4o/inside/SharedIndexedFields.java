@@ -3,15 +3,12 @@
 package com.db4o.inside;
 
 
-/**
- * 
- */
-class YapIndexes {
+class SharedIndexedFields {
     
     final VersionFieldMetadata i_fieldVersion;
     final UUIDFieldMetadata i_fieldUUID;
     
-    YapIndexes(ObjectContainerBase stream){
+    SharedIndexedFields(ObjectContainerBase stream){
         i_fieldVersion = new VersionFieldMetadata(stream);
         i_fieldUUID = new UUIDFieldMetadata(stream);
     }

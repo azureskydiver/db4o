@@ -17,7 +17,7 @@ public class PrimitiveIntHandler extends IntHandler{
 		super(stream);
 	}
 	
-	public YapComparable prepareComparison(Object obj) {
+	public Comparable4 prepareComparison(Object obj) {
 		_currentInteger = ((Integer)obj);
 		_currentInt = _currentInteger.intValue();
 		return this;

@@ -165,7 +165,7 @@ public class Msg implements Cloneable {
 	}
 
 	public static final Msg readMessage(Transaction a_trans, YapSocket sock) throws IOException {
-		StatefulBuffer reader = new StatefulBuffer(a_trans, YapConst.MESSAGE_LENGTH);
+		StatefulBuffer reader = new StatefulBuffer(a_trans, Const4.MESSAGE_LENGTH);
 		if(!reader.read(sock)) {
 			return null;
 		}
@@ -183,7 +183,7 @@ public class Msg implements Cloneable {
 	}
 
 	protected Transaction checkParentTransaction(Transaction a_trans, Buffer reader) {
-		if(reader.readByte() == YapConst.SYSTEM_TRANS && a_trans.parentTransaction() != null){
+		if(reader.readByte() == Const4.SYSTEM_TRANS && a_trans.parentTransaction() != null){
 	        return a_trans.parentTransaction();
 	    }
 		return a_trans;
@@ -248,7 +248,7 @@ public class Msg implements Cloneable {
 	}
 
 	public StatefulBuffer payLoad() {
-		StatefulBuffer writer = new StatefulBuffer(transaction(), YapConst.MESSAGE_LENGTH);
+		StatefulBuffer writer = new StatefulBuffer(transaction(), Const4.MESSAGE_LENGTH);
 		writer.writeInt(_msgID);
 		return writer;
 	}

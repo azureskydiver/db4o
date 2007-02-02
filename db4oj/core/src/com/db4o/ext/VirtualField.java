@@ -17,6 +17,6 @@ public class VirtualField {
 	 * the field name of the virtual version field, to be used
 	 * for querying.
 	 */
-	public static final String VERSION = YapConst.VIRTUAL_FIELD_PREFIX + "version"; 
+	public static final String VERSION = Const4.VIRTUAL_FIELD_PREFIX + "version"; 
 
 }

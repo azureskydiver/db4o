@@ -17,7 +17,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     
     private static final int DEFRAGMENT_INCREMENT_OFFSET = 
     	1  // version byte
-    + YapConst.INT_LENGTH * 2;  // size, node size  
+    + Const4.INT_LENGTH * 2;  // size, node size  
     
     private final Indexable4 _keyHandler;
     
@@ -256,7 +256,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
     
     public byte getIdentifier() {
-        return YapConst.BTREE;
+        return Const4.BTREE;
     }
     
     public void setRemoveListener(Visitor4 vis){
@@ -264,7 +264,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
     }
     
     public int ownLength() {
-        return 1 + YapConst.OBJECT_LENGTH + (YapConst.INT_LENGTH * 2) + YapConst.ID_LENGTH;
+        return 1 + Const4.OBJECT_LENGTH + (Const4.INT_LENGTH * 2) + Const4.ID_LENGTH;
     }
     
     BTreeNode produceNode(int id){
@@ -383,7 +383,7 @@ public class BTree extends YapMeta implements TransactionParticipant {
 
 	public void defragIndex(ReaderPair readers) {
         if (Deploy.debug) {
-            readers.readBegin(YapConst.BTREE);
+            readers.readBegin(Const4.BTREE);
         }
 		readers.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
 		readers.copyID();

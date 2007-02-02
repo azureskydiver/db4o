@@ -24,7 +24,7 @@ public class YapHandlersTestCase extends AbstractDb4oTestCase {
 		return handlers().handlerForClass(stream(), reflectClass(clazz));
 	}
 
-	private YapHandlers handlers() {
+	private HandlerRegistry handlers() {
 		return stream().handlers();
 	}
 }

@@ -28,7 +28,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     }
 
     public int linkLength() {
-        return _valueHandler.linkLength() + YapConst.INT_LENGTH;
+        return _valueHandler.linkLength() + Const4.INT_LENGTH;
     }
 
     public Object readIndexEntry(Buffer a_reader) {
@@ -61,7 +61,7 @@ public class FieldIndexKeyHandler implements Indexable4{
     	return _valueHandler;
     }
     
-    public YapComparable prepareComparison(Object obj) {
+    public Comparable4 prepareComparison(Object obj) {
         FieldIndexKey composite = (FieldIndexKey)obj;
         _valueHandler.prepareComparison(composite.value());
         _parentIdHandler.prepareComparison(composite.parentID());

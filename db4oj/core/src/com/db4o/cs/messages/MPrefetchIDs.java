@@ -12,7 +12,7 @@ public final class MPrefetchIDs extends MsgD {
 		MsgD reply =
 			Msg.ID_LIST.getWriterForLength(
 				transaction(),
-				YapConst.INT_LENGTH * prefetchIDCount);
+				Const4.INT_LENGTH * prefetchIDCount);
 
 		synchronized (streamLock()) {
 			for (int i = 0; i < prefetchIDCount; i++) {

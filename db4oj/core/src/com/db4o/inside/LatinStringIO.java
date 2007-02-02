@@ -2,13 +2,12 @@
 
 package com.db4o.inside;
 
-import com.db4o.inside.*;
 
 
 /**
  * @exclude
  */
-public class YapStringIO {
+public class LatinStringIO {
     
     protected char[] chars = new char[0];
     
@@ -17,15 +16,15 @@ public class YapStringIO {
     }
     
     public byte encodingByte(){
-		return YapConst.ISO8859;
+		return Const4.ISO8859;
 	}
     
-    static YapStringIO forEncoding(byte encodingByte){
+    static LatinStringIO forEncoding(byte encodingByte){
         switch (encodingByte) {
-        case YapConst.ISO8859:
-        	return new YapStringIO();
+        case Const4.ISO8859:
+        	return new LatinStringIO();
         default:
-            return new YapStringIOUnicode();
+            return new UnicodeStringIO();
         }
     }
 
@@ -45,7 +44,7 @@ public class YapStringIO {
 //	}
 	
 	public int length(String a_string){
-		return a_string.length() + YapConst.OBJECT_LENGTH + YapConst.INT_LENGTH;
+		return a_string.length() + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
 	}
 	
 	protected void checkBufferLength(int a_length){
@@ -71,7 +70,7 @@ public class YapStringIO {
 	}
 	
 	public int shortLength(String a_string){
-		return a_string.length() + YapConst.INT_LENGTH;
+		return a_string.length() + Const4.INT_LENGTH;
 	}
 	
 	protected int writetoBuffer(String str){

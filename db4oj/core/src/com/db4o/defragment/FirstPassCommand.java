@@ -63,7 +63,7 @@ final class FirstPassCommand implements PassCommand {
 		if(_ids==null) {
 			return;
 		}
-		int pointerAddress=context.allocateTargetSlot(_ids.size()*YapConst.POINTER_LENGTH);
+		int pointerAddress=context.allocateTargetSlot(_ids.size()*Const4.POINTER_LENGTH);
 		Iterator4 idIter=new TreeKeyIterator(_ids);
 		while(idIter.moveNext()) {
 			int objectID=((Integer)idIter.current()).intValue();
@@ -82,7 +82,7 @@ final class FirstPassCommand implements PassCommand {
 			}
 			
 			context.mapIDs(objectID,pointerAddress, isClassID);
-			pointerAddress+=YapConst.POINTER_LENGTH;
+			pointerAddress+=Const4.POINTER_LENGTH;
 		}
 		_ids=null;
 	}

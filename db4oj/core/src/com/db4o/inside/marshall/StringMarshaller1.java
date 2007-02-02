@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 
 public class StringMarshaller1 extends StringMarshaller{
 	
-    private static final int DEFRAGMENT_INCREMENT_OFFSET = YapConst.INT_LENGTH * 2;  
+    private static final int DEFRAGMENT_INCREMENT_OFFSET = Const4.INT_LENGTH * 2;  
     
     public boolean inlinedStrings(){
         return true;

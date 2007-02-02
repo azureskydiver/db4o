@@ -20,6 +20,10 @@ public final class BitMap4 {
         System.arraycopy(buffer, pos, _bits, 0, _bits.length);
     }
     
+    public BitMap4(byte singleByte){
+    	_bits = new byte[]{singleByte};
+    }
+    
     public boolean isTrue(int bit) {
         return ((_bits[arrayOffset(bit)]>>>byteOffset(bit))&1)!=0;
     }
@@ -30,6 +34,14 @@ public final class BitMap4 {
     
     public void setFalse(int bit){
         _bits[arrayOffset(bit)] &= (byte)~bitMask(bit);
+    }
+    
+    public void set(int bit, boolean val){
+    	if(val){
+    		setTrue(bit);
+    	}else{
+    		setFalse(bit);
+    	}
     }
     
     public void setTrue(int bit){
@@ -54,5 +66,9 @@ public final class BitMap4 {
 	
 	private int byteCount(int numBits) {
 		return (numBits + 7) / 8;
+	}
+
+	public byte getByte(int index) {
+		return _bits[index];
 	}
 }

@@ -17,11 +17,11 @@ import com.db4o.inside.slots.*;
  */
 public class UUIDFieldMetadata extends VirtualFieldMetadata {
     
-    private static final int LINK_LENGTH = YapConst.LONG_LENGTH + YapConst.ID_LENGTH;
+    private static final int LINK_LENGTH = Const4.LONG_LENGTH + Const4.ID_LENGTH;
 
     UUIDFieldMetadata(ObjectContainerBase stream) {
         super();
-        i_name = YapConst.VIRTUAL_FIELD_PREFIX + "uuid";
+        i_name = Const4.VIRTUAL_FIELD_PREFIX + "uuid";
         i_handler = new LongHandler(stream);
     }
     
@@ -89,7 +89,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
             a_bytes.incrementOffset(linkLength());
             return;
         }
-        a_bytes.incrementOffset(YapConst.INT_LENGTH);
+        a_bytes.incrementOffset(Const4.INT_LENGTH);
         long longPart = a_bytes.readLong();
         if(longPart > 0){
             ObjectContainerBase stream = a_bytes.getStream();
@@ -109,7 +109,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     }
     
     protected void rebuildIndexForObject(LocalObjectContainer stream, ClassMetadata yapClass, int objectId) {
-    	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, ((YapFileTransaction)stream.getSystemTransaction()).getCurrentSlotOfID(objectId), true);
+    	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, ((LocalTransaction)stream.getSystemTransaction()).getCurrentSlotOfID(objectId), true);
     	if (null == data) {
     		return;
     	}
@@ -237,6 +237,6 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 		// database id
 		readers.copyID(); 
 		// uuid
-		readers.incrementOffset(YapConst.LONG_LENGTH);
+		readers.incrementOffset(Const4.LONG_LENGTH);
 	}
 }

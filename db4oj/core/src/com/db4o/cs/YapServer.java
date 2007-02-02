@@ -179,7 +179,7 @@ public class YapServer implements ObjectServer, ExtObjectServer, Runnable,
 		checkClosed();
 		try {
 			ClientObjectContainer client = new ClientObjectContainer(config, openClientSocket(),
-					YapConst.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1), "",
+					Const4.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1), "",
 					false);
 			client.blockSize(i_yapFile.blockSize());
 			return client;

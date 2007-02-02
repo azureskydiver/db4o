@@ -2,21 +2,20 @@
 
 package com.db4o.inside;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
 
 
 /**
  * 
  */
-class YapReferences implements Runnable {
+class WeakReferenceCollector implements Runnable {
     
     final Object            _queue;
     private final ObjectContainerBase _stream;
     private SimpleTimer     _timer;
     public final boolean    _weak;
 
-    YapReferences(ObjectContainerBase a_stream) {
+    WeakReferenceCollector(ObjectContainerBase a_stream) {
         _stream = a_stream;
         _weak = (!(a_stream instanceof TransportObjectContainer)
             && Platform4.hasWeakReferences() && a_stream.configImpl().weakReferences());

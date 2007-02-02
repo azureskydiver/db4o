@@ -17,7 +17,7 @@ public abstract class ClassMarshaller {
 		String className=trans.stream().stringIO().read(nameBytes);
 		readMetaClassID(reader); // skip
 		int ancestorID=reader.readInt();
-		reader.incrementOffset(YapConst.INT_LENGTH); // index ID
+		reader.incrementOffset(Const4.INT_LENGTH); // index ID
 		int numFields=reader.readInt();
 		return new RawClassSpec(className,ancestorID,numFields);
     }
@@ -61,9 +61,9 @@ public abstract class ClassMarshaller {
     	return reader.readInt();
     }
     
-    private byte[] readName(YapStringIO sio, Buffer reader) {
+    private byte[] readName(LatinStringIO sio, Buffer reader) {
         if (Deploy.debug) {
-            reader.readBegin(YapConst.YAPCLASS);
+            reader.readBegin(Const4.YAPCLASS);
         }
         int len = reader.readInt();
         len = len * sio.bytesPerChar();
@@ -113,9 +113,9 @@ public abstract class ClassMarshaller {
 
     public int marshalledLength(ObjectContainerBase stream, ClassMetadata clazz) {
         int len = stream.stringIO().shortLength(clazz.nameToWrite())
-                + YapConst.OBJECT_LENGTH
-                + (YapConst.INT_LENGTH * 2)
-                + (YapConst.ID_LENGTH);       
+                + Const4.OBJECT_LENGTH
+                + (Const4.INT_LENGTH * 2)
+                + (Const4.ID_LENGTH);       
 
         len += clazz.index().ownLength();
         
@@ -127,7 +127,7 @@ public abstract class ClassMarshaller {
         return len;
     }
 
-	public void defrag(ClassMetadata yapClass,YapStringIO sio,ReaderPair readers, int classIndexID) throws CorruptionException {
+	public void defrag(ClassMetadata yapClass,LatinStringIO sio,ReaderPair readers, int classIndexID) throws CorruptionException {
 		readName(sio, readers.source());
 		readName(sio, readers.target());
 		

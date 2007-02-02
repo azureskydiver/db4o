@@ -61,7 +61,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         _addressIx._index._metaIndex.write(writer);
         _lengthIx._index._metaIndex.write(writer);
         if (Debug.xbytes) {
-            writer.setID(YapConst.IGNORE_ID);  // no XBytes check
+            writer.setID(Const4.IGNORE_ID);  // no XBytes check
         }
         if(_file.configImpl().flushFileBuffers()){
             _file.syncFiles();

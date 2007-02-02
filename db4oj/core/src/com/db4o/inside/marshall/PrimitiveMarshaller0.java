@@ -35,7 +35,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             StatefulBuffer writer = new StatefulBuffer(trans, length);
             writer.useSlot(id, address, length);
             if (Deploy.debug) {
-                writer.writeBegin(YapConst.YAPOBJECT);
+                writer.writeBegin(Const4.YAPOBJECT);
             }
             writer.writeInt(yapClassPrimitive.getID());
             

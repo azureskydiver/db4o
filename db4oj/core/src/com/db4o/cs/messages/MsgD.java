@@ -25,7 +25,7 @@ public class MsgD extends Msg{
 
 	void fakePayLoad(Transaction a_trans) {
 		if (Debug.fakeServer) {
-			_payLoad.removeFirstBytes(YapConst.INT_LENGTH * 2);
+			_payLoad.removeFirstBytes(Const4.INT_LENGTH * 2);
 			_payLoad._offset = 0;
 			_payLoad.setTransaction(a_trans);
 		}
@@ -45,13 +45,13 @@ public class MsgD extends Msg{
 	
 	public final MsgD getWriterForLength(Transaction a_trans, int length) {
 		MsgD message = (MsgD)clone(a_trans);
-		message._payLoad = new StatefulBuffer(a_trans, length + YapConst.MESSAGE_LENGTH);
+		message._payLoad = new StatefulBuffer(a_trans, length + Const4.MESSAGE_LENGTH);
 		message.writeInt(_msgID);
 		message.writeInt(length);
 		if(a_trans.parentTransaction() == null){
-		    message._payLoad.append(YapConst.SYSTEM_TRANS);
+		    message._payLoad.append(Const4.SYSTEM_TRANS);
 		}else{
-		    message._payLoad.append(YapConst.USER_TRANS);
+		    message._payLoad.append(Const4.USER_TRANS);
 		}
 		return message;
 	}
@@ -61,7 +61,7 @@ public class MsgD extends Msg{
 	}
 	
 	public final MsgD getWriterForInts(Transaction a_trans, int[] ints) {
-        MsgD message = getWriterForLength(a_trans, YapConst.INT_LENGTH * ints.length);
+        MsgD message = getWriterForLength(a_trans, Const4.INT_LENGTH * ints.length);
         for (int i = 0; i < ints.length; i++) {
             message.writeInt(ints[i]);
         }
@@ -69,7 +69,7 @@ public class MsgD extends Msg{
     }
 	
     public final MsgD getWriterForIntArray(Transaction a_trans, int[] ints, int length){
-		MsgD message = getWriterForLength(a_trans, YapConst.INT_LENGTH * (length + 1));
+		MsgD message = getWriterForLength(a_trans, Const4.INT_LENGTH * (length + 1));
 		message.writeInt(length);
 		for (int i = 0; i < length; i++) {
 			message.writeInt(ints[i]);
@@ -78,27 +78,27 @@ public class MsgD extends Msg{
 	}
 
 	public final MsgD getWriterForInt(Transaction a_trans, int id) {
-		MsgD message = getWriterForLength(a_trans, YapConst.INT_LENGTH);
+		MsgD message = getWriterForLength(a_trans, Const4.INT_LENGTH);
 		message.writeInt(id);
 		return message;
 	}
 	
 	public final MsgD getWriterForIntString(Transaction a_trans,int anInt, String str) {
-		MsgD message = getWriterForLength(a_trans, YapConst.stringIO.length(str) + YapConst.INT_LENGTH * 2);
+		MsgD message = getWriterForLength(a_trans, Const4.stringIO.length(str) + Const4.INT_LENGTH * 2);
 		message.writeInt(anInt);
 		message.writeString(str);
 		return message;
 	}
 	
 	public final MsgD getWriterForLong(Transaction a_trans, long a_long){
-		MsgD message = getWriterForLength(a_trans, YapConst.LONG_LENGTH);
+		MsgD message = getWriterForLength(a_trans, Const4.LONG_LENGTH);
 		message.writeLong(a_long);
 		return message;
 	}
 	
 
 	public final MsgD getWriterForString(Transaction a_trans, String str) {
-		MsgD message = getWriterForLength(a_trans, YapConst.stringIO.length(str) + YapConst.INT_LENGTH);
+		MsgD message = getWriterForLength(a_trans, Const4.stringIO.length(str) + Const4.INT_LENGTH);
 		message.writeString(str);
 		return message;
 	}
@@ -139,7 +139,7 @@ public class MsgD extends Msg{
 
 	public final String readString() {
 		int length = readInt();
-		return YapConst.stringIO.read(_payLoad, length);
+		return Const4.stringIO.read(_payLoad, length);
 	}
 	
 	public final void writeBytes(byte[] aBytes){
@@ -157,7 +157,7 @@ public class MsgD extends Msg{
 
 	public final void writeString(String aStr) {
 		_payLoad.writeInt(aStr.length());
-		YapConst.stringIO.write(_payLoad, aStr);
+		Const4.stringIO.write(_payLoad, aStr);
 	}
 
 }

@@ -12,7 +12,7 @@ import com.db4o.inside.*;
  */
 public class FileHeader0 extends FileHeader {
     
-    static final int LENGTH = 2 + (YapConst.INT_LENGTH * 4);
+    static final int LENGTH = 2 + (Const4.INT_LENGTH * 4);
 
     // The header format is:
 
@@ -38,7 +38,7 @@ public class FileHeader0 extends FileHeader {
     // FreeBySize ID
 
     
-    private YapConfigBlock    _configBlock;
+    private ConfigBlock    _configBlock;
     
     private PBootRecord _bootRecord;
     
@@ -49,13 +49,13 @@ public class FileHeader0 extends FileHeader {
     
     protected FileHeader newOnSignatureMatch(LocalObjectContainer file, Buffer reader) {
         byte firstFileByte = reader.readByte();
-        if (firstFileByte != YapConst.YAPBEGIN) {
-            if(firstFileByte != YapConst.YAPFILEVERSION){
+        if (firstFileByte != Const4.YAPBEGIN) {
+            if(firstFileByte != Const4.YAPFILEVERSION){
                 return null;
             }
             file.blockSizeReadFromFile(reader.readByte());
         }else{
-            if (reader.readByte() != YapConst.YAPFILE) {
+            if (reader.readByte() != Const4.YAPFILE) {
                 return null;
             }
         }
@@ -64,13 +64,13 @@ public class FileHeader0 extends FileHeader {
 
     
     protected void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException {
-        _configBlock = YapConfigBlock.forExistingFile(file, reader.readInt());
+        _configBlock = ConfigBlock.forExistingFile(file, reader.readInt());
         skipConfigurationLockTime(reader);
         readClassCollectionAndFreeSpace(file, reader);
     }
 
     private void skipConfigurationLockTime(Buffer reader) {
-        reader.incrementOffset(YapConst.ID_LENGTH);
+        reader.incrementOffset(Const4.ID_LENGTH);
     }
 
     public void readVariablePart(LocalObjectContainer file){
@@ -95,7 +95,7 @@ public class FileHeader0 extends FileHeader {
     }
 
     public void initNew(LocalObjectContainer file) throws IOException {
-        _configBlock = YapConfigBlock.forNewFile(file);
+        _configBlock = ConfigBlock.forNewFile(file);
         initBootRecord(file);
     }
     
@@ -117,7 +117,7 @@ public class FileHeader0 extends FileHeader {
     }
 
     public void writeTransactionPointer(Transaction systemTransaction, int transactionAddress) {
-        writeTransactionPointer(systemTransaction, transactionAddress, _configBlock.address(), YapConfigBlock.TRANSACTION_OFFSET);
+        writeTransactionPointer(systemTransaction, transactionAddress, _configBlock.address(), ConfigBlock.TRANSACTION_OFFSET);
     }
 
     public MetaIndex getUUIDMetaIndex() {
@@ -129,14 +129,14 @@ public class FileHeader0 extends FileHeader {
     }
 
     public void writeFixedPart(LocalObjectContainer file, boolean shuttingDown, StatefulBuffer writer, int blockSize_, int freespaceID) {
-        writer.append(YapConst.YAPFILEVERSION);
+        writer.append(Const4.YAPFILEVERSION);
         writer.append((byte)blockSize_);
         writer.writeInt(_configBlock.address());
         writer.writeInt((int)timeToWrite(_configBlock.openTime(), shuttingDown));
         writer.writeInt(file.systemData().classCollectionID());
         writer.writeInt(freespaceID);
         if (Debug.xbytes && Deploy.overwrite) {
-            writer.setID(YapConst.IGNORE_ID);
+            writer.setID(Const4.IGNORE_ID);
         }
         writer.write();
     }

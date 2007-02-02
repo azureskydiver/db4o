@@ -25,7 +25,7 @@ public class Unobfuscated {
 	    StatefulBuffer writer = new StatefulBuffer(null, 300);
 	    if(! Deploy.csharp) {
 		    try {
-	            new YapStringIO().write(writer, java.net.InetAddress.getLocalHost().getHostName());
+	            new LatinStringIO().write(writer, java.net.InetAddress.getLocalHost().getHostName());
 	            writer.append((byte)0);
 	            writer.append(java.net.InetAddress.getLocalHost().getAddress());
 	        } catch (Exception e) {

@@ -54,7 +54,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	
 	// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
 	// used for to write the number of messages.
-	private int _batchedQueueLength = YapConst.INT_LENGTH;
+	private int _batchedQueueLength = Const4.INT_LENGTH;
 
 	private ClientObjectContainer(Configuration config) {
 		super(config,null);
@@ -214,7 +214,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	final public Transaction newTransaction(Transaction parentTransaction) {
-		return new TransactionClient(this, parentTransaction);
+		return new ClientTransaction(this, parentTransaction);
 	}
 
 	public boolean createYapClass(ClassMetadata a_yapClass, ReflectClass a_class,
@@ -438,7 +438,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	void loginToServer(YapSocket a_socket) throws IOException {
 		if (password != null) {
-			YapStringIOUnicode stringWriter = new YapStringIOUnicode();
+			UnicodeStringIO stringWriter = new UnicodeStringIO();
 			int length = stringWriter.length(userName)
 					+ stringWriter.length(password);
 
@@ -519,8 +519,8 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 						.clone(getTransaction());
 				mso.payLoad(message.payLoad().readYapBytes());
 				if (mso.payLoad() != null) {
-					mso.payLoad().incrementOffset(YapConst.MESSAGE_LENGTH);
-					StatefulBuffer reader = mso.unmarshall(YapConst.MESSAGE_LENGTH);
+					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
+					StatefulBuffer reader = mso.unmarshall(Const4.MESSAGE_LENGTH);
                     Object obj = objectForIDFromCache(idsToGet[i]);
                     if(obj != null){
                         prefetched[position[i]] = obj;
@@ -594,8 +594,8 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.clone(getTransaction());
 				mso.payLoad(message.payLoad().readYapBytes());
 				if (mso.payLoad() != null) {
-					mso.payLoad().incrementOffset(YapConst.MESSAGE_LENGTH);
-					yapWriters[i] = mso.unmarshall(YapConst.MESSAGE_LENGTH);
+					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
+					yapWriters[i] = mso.unmarshall(Const4.MESSAGE_LENGTH);
 					yapWriters[i].setTransaction(a_ta);
 				}
 			}
@@ -875,14 +875,14 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	public final void addToBatch(Msg msg) {
 		_batchedMessages.add(msg);
 		// the first INT_LENGTH is for buffer.length, and then buffer content.
-		_batchedQueueLength += YapConst.INT_LENGTH + msg.payLoad().getLength();
+		_batchedQueueLength += Const4.INT_LENGTH + msg.payLoad().getLength();
 	}
 
 	private final void clearBatchedObjects() {
 		_batchedMessages.clear();
 		// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
 		// used for to write the number of messages.
-		_batchedQueueLength = YapConst.INT_LENGTH;
+		_batchedQueueLength = Const4.INT_LENGTH;
 	}
 
 }

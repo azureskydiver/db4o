@@ -31,7 +31,7 @@ public class QConObject extends QCon {
 
     public QField                        i_field;
 
-    transient YapComparable       i_comparator;
+    transient Comparable4       i_comparator;
 
     public ObjectAttribute               i_attributeProvider;
 
@@ -193,7 +193,7 @@ public class QConObject extends QCon {
         }
     }
     
-    YapComparable getComparator(QCandidate a_candidate) {
+    Comparable4 getComparator(QCandidate a_candidate) {
         if (i_comparator == null) {
             return a_candidate.prepareComparison(i_trans.stream(), i_object);
         }
@@ -358,7 +358,7 @@ public class QConObject extends QCon {
         if (hasOrdering() && res && qc.fieldIsAvailable()) {
             Object cmp = qc.value();
             if (cmp != null && i_field != null) {
-                YapComparable comparatorBackup = i_comparator;
+                Comparable4 comparatorBackup = i_comparator;
                 i_comparator = i_field.prepareComparison(qc.value());
                 i_candidates.addOrder(new QOrder(this, qc));
                 i_comparator = comparatorBackup.prepareComparison(i_object);

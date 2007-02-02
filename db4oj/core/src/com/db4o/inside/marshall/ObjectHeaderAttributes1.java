@@ -52,7 +52,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     }
     
     private void calculateLengths(Transaction trans, ClassMetadata yc, Object obj, int fieldIndex) {
-        _baseLength += YapConst.INT_LENGTH;
+        _baseLength += Const4.INT_LENGTH;
         if (yc.i_fields != null) {
             for (int i = 0; i < yc.i_fields.length; i++) {
                 FieldMetadata yf = yc.i_fields[i];
@@ -72,8 +72,8 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     }
 
     private int headerLength(){
-        return YapConst.OBJECT_LENGTH 
-            + YapConst.ID_LENGTH  // YapClass ID 
+        return Const4.OBJECT_LENGTH 
+            + Const4.ID_LENGTH  // YapClass ID 
             + 1; // Marshaller Version 
     }
     
@@ -82,7 +82,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     }
     
     private int nullBitMapLength(){
-        return YapConst.INT_LENGTH + _nullBitMap.marshalledLength();
+        return Const4.INT_LENGTH + _nullBitMap.marshalledLength();
     }
 
     public int objectLength(){

@@ -8,7 +8,7 @@ import com.db4o.inside.*;
 
 public class MsgObject extends MsgD {
 	
-	private static final int LENGTH_FOR_ALL = YapConst.ID_LENGTH + (YapConst.INT_LENGTH * 3);
+	private static final int LENGTH_FOR_ALL = Const4.ID_LENGTH + (Const4.INT_LENGTH * 3);
 	private static final int LENGTH_FOR_FIRST = LENGTH_FOR_ALL;
 	
 	private int _id;
@@ -17,7 +17,7 @@ public class MsgObject extends MsgD {
 	MsgD getWriter(StatefulBuffer bytes, int[] prependInts) {
 		int lengthNeeded = bytes.getLength() + LENGTH_FOR_FIRST;
 		if(prependInts != null){
-			lengthNeeded += (prependInts.length * YapConst.INT_LENGTH);
+			lengthNeeded += (prependInts.length * Const4.INT_LENGTH);
 		}
 		int embeddedCount = bytes.embeddedCount();
 		if(embeddedCount > 0){

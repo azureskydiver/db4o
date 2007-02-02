@@ -47,7 +47,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     public Transaction newTransaction(Transaction parentTransaction) {
-		return new YapFileTransaction(this, parentTransaction);
+		return new LocalTransaction(this, parentTransaction);
 	}
 
     public FreespaceManager freespaceManager() {
@@ -155,7 +155,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             Object obj = yo.getObject();
             if (obj != null) {
                 if ((!showInternalClasses())
-                    && YapConst.CLASS_INTERNAL.isAssignableFrom(obj.getClass())) {
+                    && Const4.CLASS_INTERNAL.isAssignableFrom(obj.getClass())) {
                     return false;
                 }
             }
@@ -211,7 +211,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             i_prefetchedIDs.traverse(new Visitor4() {
 
                 public void visit(Object a_object) {
-                    free(((TreeInt) a_object)._key, YapConst.POINTER_LENGTH);
+                    free(((TreeInt) a_object)._key, Const4.POINTER_LENGTH);
                 }
             });
         }
@@ -249,7 +249,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
     final int getPointerSlot() {
-        int id = getSlot(YapConst.POINTER_LENGTH);
+        int id = getSlot(Const4.POINTER_LENGTH);
 
         // write a zero pointer first
         // to prevent delete interaction trouble
@@ -434,7 +434,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         }
         
         try {
-            Slot slot = ((YapFileTransaction)a_ta).getCurrentSlotOfID(a_id);
+            Slot slot = ((LocalTransaction)a_ta).getCurrentSlotOfID(a_id);
             if (slot == null) {
                 return null;
             }
@@ -520,7 +520,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         writeHeader(false);
         
-        YapFileTransaction trans = (YapFileTransaction) _fileHeader.interruptedTransaction();
+        LocalTransaction trans = (LocalTransaction) _fileHeader.interruptedTransaction();
         
         if (trans != null) {
             if (!configImpl().commitRecoveryDisabled()) {
@@ -746,7 +746,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     Buffer xBytes(int a_address, int a_length) {
         Buffer bytes = getWriter(i_systemTrans, a_address, a_length);
         for (int i = 0; i < a_length; i++) {
-            bytes.append(YapConst.XBYTE);
+            bytes.append(Const4.XBYTE);
         }
         return bytes;
     }

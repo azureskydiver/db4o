@@ -12,11 +12,11 @@ import com.db4o.inside.slots.*;
 /**
  * @exclude
  */
-public class YapFileTransaction extends Transaction {
+public class LocalTransaction extends Transaction {
 	
 	private Tree _slotChanges;
 
-	public YapFileTransaction(ObjectContainerBase a_stream, Transaction a_parent) {
+	public LocalTransaction(ObjectContainerBase a_stream, Transaction a_parent) {
 		super(a_stream, a_parent);
 	}
 	
@@ -45,7 +45,7 @@ public class YapFileTransaction extends Transaction {
         final int slotSetPointerCount = countSlotChanges();
         
         if (slotSetPointerCount > 0) {
-            int length = (((slotSetPointerCount * 3) + 2) * YapConst.INT_LENGTH);
+            int length = (((slotSetPointerCount * 3) + 2) * Const4.INT_LENGTH);
             int address = i_file.getSlot(length);
             final StatefulBuffer bytes = new StatefulBuffer(this, address, length);
             bytes.writeInt(length);
@@ -85,7 +85,7 @@ public class YapFileTransaction extends Transaction {
         if(_slotChanges != null){
             _slotChanges.traverse(new Visitor4() {
                 public void visit(Object a_object) {
-                    ((SlotChange)a_object).writePointer(YapFileTransaction.this);
+                    ((SlotChange)a_object).writePointer(LocalTransaction.this);
                 }
             });
             ret = true;
@@ -164,7 +164,7 @@ public class YapFileTransaction extends Transaction {
         if (Deploy.debug) {
             i_pointerIo.useSlot(id);
             i_pointerIo.read();
-            i_pointerIo.readBegin(YapConst.YAPPOINTER);
+            i_pointerIo.readBegin(Const4.YAPPOINTER);
             int debugAddress = i_pointerIo.readInt();
             int debugLength = i_pointerIo.readInt();
             i_pointerIo.readEnd();
@@ -174,7 +174,7 @@ public class YapFileTransaction extends Transaction {
         // a class collection in a new yap file that already has its ID assigned but hasn't been
         // written yet. Should be fixed in the YapClassCollection logic.
         try {
-        	i_file.readBytes(_pointerBuffer, id, YapConst.POINTER_LENGTH);
+        	i_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
         }
         catch(RuntimeException exc) {
         	return null;
@@ -241,7 +241,7 @@ public class YapFileTransaction extends Transaction {
             if (length > 0) {
                 StatefulBuffer bytes = new StatefulBuffer(this, i_address, length);
                 bytes.read();
-                bytes.incrementOffset(YapConst.INT_LENGTH);
+                bytes.incrementOffset(Const4.INT_LENGTH);
                 _slotChanges = new TreeReader(bytes, new SlotChange(0)).read();
                 if(writeSlots()){
                     flushFile();
@@ -372,11 +372,11 @@ public class YapFileTransaction extends Transaction {
     void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
         checkSynchronization();
         slotFreeOnCommit(a_address, a_address, a_length);
-        slotFreeOnCommit(a_id, a_id, YapConst.POINTER_LENGTH);
+        slotFreeOnCommit(a_id, a_id, Const4.POINTER_LENGTH);
     }
 	
-	private YapFileTransaction parentFileTransaction() {
-		return (YapFileTransaction)i_parentTransaction;
+	private LocalTransaction parentFileTransaction() {
+		return (LocalTransaction)i_parentTransaction;
 	}
 
 	public void processDeletes() {
@@ -412,12 +412,12 @@ public class YapFileTransaction extends Transaction {
 						// of possible nulls in #delete4().
 
 						Object[] arr = stream().getObjectAndYapObjectByID(
-								YapFileTransaction.this, info._key);
+								LocalTransaction.this, info._key);
 						info._reference = (ObjectReference) arr[1];
 						info._reference
 								.flagForDelete(stream().topLevelCallId());
 					}
-					stream().delete3(YapFileTransaction.this, info._reference,
+					stream().delete3(LocalTransaction.this, info._reference,
 							info._cascade, false);
 				}
 			});

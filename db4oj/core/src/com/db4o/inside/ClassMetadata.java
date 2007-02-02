@@ -56,17 +56,17 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     private int _canUpdateFast;
     
     public final boolean canUpdateFast(){
-    	if(_canUpdateFast == YapConst.UNCHECKED){
-        	_canUpdateFast =  checkCanUpdateFast() ? YapConst.YES : YapConst.NO;
+    	if(_canUpdateFast == Const4.UNCHECKED){
+        	_canUpdateFast =  checkCanUpdateFast() ? Const4.YES : Const4.NO;
     	}
-    	return _canUpdateFast == YapConst.YES;
+    	return _canUpdateFast == Const4.YES;
     }
     
     private final boolean checkCanUpdateFast() {
     	if(i_ancestor != null && ! i_ancestor.canUpdateFast()){
     		return false;
     	}
-		if(i_config != null && i_config.cascadeOnDelete() == YapConst.YES) {
+		if(i_config != null && i_config.cascadeOnDelete() == Const4.YES) {
 			return false;
 		}
 		for(int i = 0; i < i_fields.length; ++i) {
@@ -115,7 +115,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     }
     
     void addMembers(ObjectContainerBase a_stream) {
-        bitTrue(YapConst.CHECKED_CHANGES);
+        bitTrue(Const4.CHECKED_CHANGES);
         if (addTranslatorFields(a_stream)) {
         	return;
         }
@@ -336,8 +336,8 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
 
     void checkChanges() {
         if (stateOK()) {
-            if (!bitIsTrue(YapConst.CHECKED_CHANGES)) {
-                bitTrue(YapConst.CHECKED_CHANGES);
+            if (!bitIsTrue(Const4.CHECKED_CHANGES)) {
+                bitTrue(Const4.CHECKED_CHANGES);
                 if (i_ancestor != null) {
                     i_ancestor.checkChanges();
                     // Ancestor first, so the object length calculates
@@ -375,13 +375,13 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     public void checkUpdateDepth(StatefulBuffer a_bytes) {
         int depth = a_bytes.getUpdateDepth();
         Config4Class config = configOrAncestorConfig();
-        if (depth == YapConst.UNSPECIFIED) {
+        if (depth == Const4.UNSPECIFIED) {
             depth = checkUpdateDepthUnspecified(a_bytes.getStream());
             if (classReflector().isCollection()) {
                 depth = adjustDepth(depth);
             }
         }
-        if ((config != null && (config.cascadeOnDelete() == YapConst.YES || config.cascadeOnUpdate() == YapConst.YES))) {
+        if ((config != null && (config.cascadeOnDelete() == Const4.YES || config.cascadeOnUpdate() == Const4.YES))) {
             depth = adjustDepth(depth);
         }
         a_bytes.setUpdateDepth(depth - 1);
@@ -584,7 +584,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
         try{
 	        Config4Class config = configOrAncestorConfig();
-	        if (config != null && (config.cascadeOnDelete() == YapConst.YES)) {
+	        if (config != null && (config.cascadeOnDelete() == Const4.YES)) {
 	            int preserveCascade = a_bytes.cascadeDeletes();
 	            if (classReflector().isCollection()) {
 	                int newCascade =
@@ -805,7 +805,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     }
 
     public byte getIdentifier() {
-        return YapConst.YAPCLASS;
+        return Const4.YAPCLASS;
     }
 
     public long[] getIDs() {
@@ -911,7 +911,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     }
 
     public int getTypeID() {
-        return YapConst.TYPE_CLASS;
+        return Const4.TYPE_CLASS;
     }
 
     public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
@@ -986,7 +986,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
         }
         i_name = className;
         i_ancestor = a_ancestor;
-        bitTrue(YapConst.CHECKED_CHANGES);
+        bitTrue(Const4.CHECKED_CHANGES);
         
         return true;
     }
@@ -1108,7 +1108,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
 
 	private Object instantiateFromConfig(ObjectContainerBase stream, StatefulBuffer a_bytes, MarshallerFamily mf) {
 		int bytesOffset = a_bytes._offset;
-		a_bytes.incrementOffset(YapConst.INT_LENGTH);
+		a_bytes.incrementOffset(Const4.INT_LENGTH);
 		// Field length is always 1
 		try {
 		    return i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));                      
@@ -1128,7 +1128,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
 	}
 
 	private boolean cascadeOnActivate() {
-		return i_config != null && (i_config.cascadeOnActivate() == YapConst.YES);
+		return i_config != null && (i_config.cascadeOnActivate() == Const4.YES);
 	}
 
 	private void shareYapObject(Object obj, ObjectReference yapObj) {
@@ -1199,7 +1199,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     }
     
     public int isSecondClass(){
-        return YapConst.NO;
+        return Const4.NO;
     }
 
     /**
@@ -1239,26 +1239,26 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     
     private final boolean callConstructor1() {
         int res = callConstructorSpecialized();
-        if(res != YapConst.DEFAULT){
-            return res == YapConst.YES;
+        if(res != Const4.DEFAULT){
+            return res == Const4.YES;
         }
-        return (i_stream.configImpl().callConstructors() == YapConst.YES);
+        return (i_stream.configImpl().callConstructors() == Const4.YES);
     }
     
     private final int callConstructorSpecialized(){
         if(i_config!= null){
             int res = i_config.callConstructor();
-            if(res != YapConst.DEFAULT){
+            if(res != Const4.DEFAULT){
                 return res;
             }
         }
         if(_isEnum){
-            return YapConst.NO;
+            return Const4.NO;
         }
         if(i_ancestor != null){
             return i_ancestor.callConstructorSpecialized();
         }
-        return YapConst.DEFAULT;
+        return Const4.DEFAULT;
     }
 
     public int ownLength() {
@@ -1284,7 +1284,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
             Transaction trans = a_bytes.getTransaction();
             ObjectContainerBase stream = trans.stream();
 
-            if (a_bytes.getUpdateDepth() == YapConst.TRANSIENT) {
+            if (a_bytes.getUpdateDepth() == Const4.TRANSIENT) {
                 return stream.peekPersisted1(trans, id, depth);
             }
             
@@ -1320,7 +1320,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
                     null,
                     null,
                     depth,
-                    YapConst.ADD_TO_ID_TREE, false);
+                    Const4.ADD_TO_ID_TREE, false);
             } 
 
             Object ret = stream.getByID2(trans, id);
@@ -1366,7 +1366,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
         }
         if (isArray()) {
             if (Platform4.isCollectionTranslator(this.i_config)) {
-                a_bytes[0].incrementOffset(YapConst.INT_LENGTH);
+                a_bytes[0].incrementOffset(Const4.INT_LENGTH);
                 return new ArrayHandler(i_stream, null, false);
             }
             incrementFieldsOffset1(a_bytes[0]);
@@ -1466,8 +1466,8 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
 
             setStateUnread();
 
-            bitFalse(YapConst.CHECKED_CHANGES);
-            bitFalse(YapConst.STATIC_FIELDS_STORED);
+            bitFalse(Const4.CHECKED_CHANGES);
+            bitFalse(Const4.STATIC_FIELDS_STORED);
 
             return i_nameBytes;
 
@@ -1540,17 +1540,17 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     }
     
     final void forceRead(){
-        if(i_reader == null || bitIsTrue(YapConst.READING)){
+        if(i_reader == null || bitIsTrue(Const4.READING)){
             return;
         }
         
-        bitTrue(YapConst.READING);
+        bitTrue(Const4.READING);
         
         MarshallerFamily.forConverterVersion(i_stream.converterVersion())._class.read(i_stream, this, i_reader);
        
         i_nameBytes = null;
         i_reader = null;
-        bitFalse(YapConst.READING);
+        bitFalse(Const4.READING);
     }	
 
     public boolean readArray(Object array, Buffer reader) {
@@ -1564,7 +1564,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     public void refresh() {
         if (!stateUnread()) {
             createConstructor(i_stream, i_name);
-            bitFalse(YapConst.CHECKED_CHANGES);
+            bitFalse(Const4.CHECKED_CHANGES);
             checkChanges();
             if (i_fields != null) {
                 for (int i = 0; i < i_fields.length; i++) {
@@ -1614,28 +1614,28 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     }
 
     private final void setStateDead() {
-        bitTrue(YapConst.DEAD);
-        bitFalse(YapConst.CONTINUE);
+        bitTrue(Const4.DEAD);
+        bitFalse(Const4.CONTINUE);
     }
 
     private final void setStateUnread() {
-        bitFalse(YapConst.DEAD);
-        bitTrue(YapConst.CONTINUE);
+        bitFalse(Const4.DEAD);
+        bitTrue(Const4.CONTINUE);
     }
 
     private final void setStateOK() {
-        bitFalse(YapConst.DEAD);
-        bitFalse(YapConst.CONTINUE);
+        bitFalse(Const4.DEAD);
+        bitFalse(Const4.CONTINUE);
     }
     
     boolean stateDead(){
-        return bitIsTrue(YapConst.DEAD);
+        return bitIsTrue(Const4.DEAD);
     }
 
     private final boolean stateOK() {
-        return bitIsFalse(YapConst.CONTINUE)
-            && bitIsFalse(YapConst.DEAD)
-            && bitIsFalse(YapConst.READING);
+        return bitIsFalse(Const4.CONTINUE)
+            && bitIsFalse(Const4.DEAD)
+            && bitIsFalse(Const4.READING);
     }
     
     final boolean stateOKAndAncestors(){
@@ -1649,9 +1649,9 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     }
 
     boolean stateUnread() {
-        return bitIsTrue(YapConst.CONTINUE)
-            && bitIsFalse(YapConst.DEAD)
-            && bitIsFalse(YapConst.READING);
+        return bitIsTrue(Const4.CONTINUE)
+            && bitIsFalse(Const4.DEAD)
+            && bitIsFalse(Const4.READING);
     }
 
     boolean storeField(ReflectField a_field) {
@@ -1692,8 +1692,8 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
     }
 
     void storeStaticFieldValues(Transaction trans, boolean force) {
-        if (!bitIsTrue(YapConst.STATIC_FIELDS_STORED) || force) {
-            bitTrue(YapConst.STATIC_FIELDS_STORED);
+        if (!bitIsTrue(Const4.STATIC_FIELDS_STORED) || force) {
+            bitTrue(Const4.STATIC_FIELDS_STORED);
             boolean store = 
                 (i_config != null && i_config.staticFieldValuesArePersisted())
             || Platform4.storeStaticFieldValues(trans.reflector(), classReflector()); 
@@ -1702,7 +1702,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
                 ObjectContainerBase stream = trans.stream();
                 stream.showInternalClasses(true);
                 Query q = stream.query(trans);
-                q.constrain(YapConst.CLASS_STATICCLASS);
+                q.constrain(Const4.CLASS_STATICCLASS);
                 q.descend("name").constrain(i_name);
                 StaticClass sc = new StaticClass();
                 sc.name = i_name;
@@ -1797,9 +1797,9 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
         if(i_nameBytes==null){
             return "*CLASS NAME UNKNOWN*";
         }
-	    YapStringIO stringIO = 
+	    LatinStringIO stringIO = 
 	    	i_stream == null ? 
-	    			YapConst.stringIO 
+	    			Const4.stringIO 
 	    			: i_stream.stringIO();
 	    return stringIO.read(i_nameBytes);
     }
@@ -1852,7 +1852,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
 	    prepareComparison(obj);
 	}
 
-    public YapComparable prepareComparison(Object obj) {
+    public Comparable4 prepareComparison(Object obj) {
         if (obj != null) {
             if(obj instanceof Integer){
                 i_lastID = ((Integer)obj).intValue();
@@ -1927,7 +1927,7 @@ public class ClassMetadata extends YapMeta implements TypeHandler4, StoredClass 
 		else {
 			readers.copyUnindexedID();
 		}
-		int restLength = (linkLength()-YapConst.INT_LENGTH);
+		int restLength = (linkLength()-Const4.INT_LENGTH);
 		readers.incrementOffset(restLength);
 	}
 	

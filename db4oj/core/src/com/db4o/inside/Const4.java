@@ -7,9 +7,11 @@ import com.db4o.*;
 
 
 /**
- * @exclude 
+ * @exclude
+ * 
+ *  TODO: Split into separate enums with defined range and values. 
  */
-public final class YapConst
+public final class Const4
 {
 	public static final Object initMe = init();
 
@@ -150,7 +152,7 @@ public final class YapConst
     public static final int NEW = 1;
 
     
-	public static final YapStringIOUnicode stringIO = new YapStringIOUnicode();
+	public static final UnicodeStringIO stringIO = new UnicodeStringIO();
 	
 	private static final Object init(){
         CLASS_OBJECT = new Object().getClass();

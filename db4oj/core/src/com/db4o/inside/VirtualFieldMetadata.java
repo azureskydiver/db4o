@@ -99,12 +99,12 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         }
         
         ObjectContainerBase stream = trans.stream();
-        YapHandlers handlers = stream.i_handlers;
+        HandlerRegistry handlers = stream.i_handlers;
         boolean migrating = false;
         
         
-        if (stream._replicationCallState != YapConst.NONE) {
-            if (stream._replicationCallState == YapConst.OLD) {
+        if (stream._replicationCallState != Const4.NONE) {
+            if (stream._replicationCallState == Const4.OLD) {
                 
                 // old replication code 
 

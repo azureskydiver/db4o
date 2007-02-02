@@ -52,11 +52,11 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         if(! hasBTreeIndex(field)){
             return len;
         }
-        final int BTREE_ID = YapConst.ID_LENGTH;
+        final int BTREE_ID = Const4.ID_LENGTH;
         return  len + BTREE_ID;
     }
 
-    public void defrag(ClassMetadata yapClass, FieldMetadata yapField, YapStringIO sio,
+    public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,
     		final ReaderPair readers)
     		throws CorruptionException {
     	super.defrag(yapClass, yapField, sio, readers);

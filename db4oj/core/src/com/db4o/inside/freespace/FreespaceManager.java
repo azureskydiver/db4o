@@ -57,14 +57,14 @@ public abstract class FreespaceManager {
             writer.writeInt(0);
         }
         if (Debug.xbytes) {
-            writer.setID(YapConst.IGNORE_ID);  // no XBytes check
+            writer.setID(Const4.IGNORE_ID);  // no XBytes check
         }
         writer.writeEncrypt();
     }
     
     
     final static int slotLength(){
-        return YapConst.INT_LENGTH * INTS_IN_SLOT;
+        return Const4.INT_LENGTH * INTS_IN_SLOT;
     }
     
     public abstract void beginCommit();

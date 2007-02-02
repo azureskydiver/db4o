@@ -70,12 +70,12 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 				}
 				logActivation(stream, "activate");
 		    }
-			read(ta, null, a_object, a_depth, YapConst.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
+			read(ta, null, a_object, a_depth, Const4.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
 		}
 	}
 	
 	private void logActivation(ObjectContainerBase stream, String event) {
-		logEvent(stream, event, YapConst.ACTIVATION);
+		logEvent(stream, event, Const4.ACTIVATION);
 	}
 
 	private void logEvent(ObjectContainerBase stream, String event, final int level) {
@@ -92,7 +92,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 	
 	/** return false if class not completely initialized, otherwise true **/
 	boolean continueSet(Transaction a_trans, int a_updateDepth) {
-		if (bitIsTrue(YapConst.CONTINUE)) {
+		if (bitIsTrue(Const4.CONTINUE)) {
 		    if(! _class.stateOKAndAncestors()){
 		        return false;
 		    }
@@ -101,7 +101,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
                 DTrace.CONTINUESET.log(getID());
             }
             
-			bitFalse(YapConst.CONTINUE);
+			bitFalse(Const4.CONTINUE);
             
             StatefulBuffer writer = MarshallerFamily.current()._object.marshallNew(a_trans, this, a_updateDepth);
 
@@ -142,7 +142,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 	}
 	
 	public byte getIdentifier() {
-		return YapConst.YAPOBJECT;
+		return Const4.YAPOBJECT;
 	}
 	
 	public Object getObject() {
@@ -246,10 +246,10 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 				a_reader.setInstantiationDepth(a_instantiationDepth);
 				a_reader.setUpdateDepth(addToIDTree);
 				
-				if(addToIDTree == YapConst.TRANSIENT){
+				if(addToIDTree == Const4.TRANSIENT){
 				    a_object = _class.instantiateTransient(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader);
 				}else{
-				    a_object = _class.instantiate(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader, addToIDTree == YapConst.ADD_TO_ID_TREE);
+				    a_object = _class.instantiate(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader, addToIDTree == Const4.ADD_TO_ID_TREE);
 				}
 				
 			}
@@ -322,7 +322,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
         // will be ended in continueset()
         beginProcessing();
 
-        bitTrue(YapConst.CONTINUE);
+        bitTrue(Const4.CONTINUE);
 	}
 	
 	public void flagForDelete(int callId){
@@ -404,7 +404,7 @@ public class ObjectReference extends YapMeta implements ObjectInfo{
 					}
 				}
 				
-				logEvent(a_trans.stream(), "update", YapConst.STATE);
+				logEvent(a_trans.stream(), "update", Const4.STATE);
 				
 				setStateClean();
 

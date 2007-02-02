@@ -9,7 +9,7 @@ import com.db4o.inside.*;
 
 public final class CharHandler extends PrimitiveHandler {
 
-    static final int LENGTH = YapConst.CHAR_BYTES + YapConst.ADDED_LENGTH;
+    static final int LENGTH = Const4.CHAR_BYTES + Const4.ADDED_LENGTH;
 	
 	private static final Character i_primitive = new Character((char)0);
 	
@@ -39,7 +39,7 @@ public final class CharHandler extends PrimitiveHandler {
 
 	Object read1(Buffer a_bytes) {
 		if (Deploy.debug) {
-			a_bytes.readBegin(YapConst.YAPCHAR);
+			a_bytes.readBegin(Const4.YAPCHAR);
 		}
 		byte b1 = a_bytes.readByte();
 		byte b2 = a_bytes.readByte();
@@ -52,7 +52,7 @@ public final class CharHandler extends PrimitiveHandler {
 
 	public void write(Object a_object, Buffer a_bytes) {
 		if (Deploy.debug) {
-			a_bytes.writeBegin(YapConst.YAPCHAR);
+			a_bytes.writeBegin(Const4.YAPCHAR);
 		}
 		char char_ = ((Character) a_object).charValue();
 		a_bytes.append((byte) (char_ & 0xff));

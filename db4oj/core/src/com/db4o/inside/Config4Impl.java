@@ -45,7 +45,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec CALLBACKS=new KeySpec(true);
     
-	private final static KeySpec CALL_CONSTRUCTORS=new KeySpec(YapConst.DEFAULT);
+	private final static KeySpec CALL_CONSTRUCTORS=new KeySpec(Const4.DEFAULT);
     
 	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE=new KeySpec(true);
     
@@ -59,7 +59,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec DISCARD_FREESPACE=new KeySpec(0);
     
-	private final static KeySpec ENCODING=new KeySpec(YapConst.UNICODE);
+	private final static KeySpec ENCODING=new KeySpec(Const4.UNICODE);
     
 	private final static KeySpec ENCRYPT=new KeySpec(false);
     
@@ -107,11 +107,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec TEST_CONSTRUCTORS=new KeySpec(true);
     
-	private final static KeySpec TIMEOUT_CLIENT_SOCKET=new KeySpec(YapConst.CLIENT_SOCKET_TIMEOUT);
+	private final static KeySpec TIMEOUT_CLIENT_SOCKET=new KeySpec(Const4.CLIENT_SOCKET_TIMEOUT);
     
-	private final static KeySpec TIMEOUT_PING_CLIENTS=new KeySpec(YapConst.CONNECTION_TIMEOUT);
+	private final static KeySpec TIMEOUT_PING_CLIENTS=new KeySpec(Const4.CONNECTION_TIMEOUT);
     
-	private final static KeySpec TIMEOUT_SERVER_SOCKET=new KeySpec(YapConst.SERVER_SOCKET_TIMEOUT);
+	private final static KeySpec TIMEOUT_SERVER_SOCKET=new KeySpec(Const4.SERVER_SOCKET_TIMEOUT);
     
 	private final static KeySpec UPDATE_DEPTH=new KeySpec(0);
     
@@ -180,7 +180,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
     
     public void callConstructors(boolean flag){
-        _config.put(CALL_CONSTRUCTORS,(flag ? YapConst.YES : YapConst.NO));
+        _config.put(CALL_CONSTRUCTORS,(flag ? Const4.YES : Const4.NO));
     }
 
     public void classActivationDepthConfigurable(boolean turnOn) {
@@ -514,7 +514,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void unicode(boolean unicodeOn) {
-    	_config.put(ENCODING,(unicodeOn ? YapConst.UNICODE : YapConst.ISO8859));
+    	_config.put(ENCODING,(unicodeOn ? Const4.UNICODE : Const4.ISO8859));
     }
 
     public void updateDepth(int depth) {

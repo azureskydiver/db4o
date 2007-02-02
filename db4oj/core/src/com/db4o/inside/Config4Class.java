@@ -61,10 +61,10 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     int adjustActivationDepth(int a_depth) {
-        if ((cascadeOnActivate() == YapConst.YES)&& a_depth < 2) {
+        if ((cascadeOnActivate() == Const4.YES)&& a_depth < 2) {
             a_depth = 2;
         }
-        if((cascadeOnActivate() == YapConst.NO)  && a_depth > 1){
+        if((cascadeOnActivate() == Const4.NO)  && a_depth > 1){
             a_depth = 1;
         }
         if (config().classActivationDepthConfigurable()) {
@@ -185,7 +185,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     
     public int callConstructor() {
         if(_config.get(TRANSLATOR) != null){
-            return YapConst.YES;
+            return Const4.YES;
         }
         return _config.getAsInt(CALL_CONSTRUCTOR);
     }

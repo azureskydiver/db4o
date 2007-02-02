@@ -50,7 +50,7 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         arrayHandler.writeNew1(a_object, bytes);
         bytes.setID(a_bytes._offset);
         a_bytes.getStream().writeEmbedded(a_bytes, bytes);
-        a_bytes.incrementOffset(YapConst.ID_LENGTH);
+        a_bytes.incrementOffset(Const4.ID_LENGTH);
         a_bytes.writeInt(length);
         return a_object;
     }

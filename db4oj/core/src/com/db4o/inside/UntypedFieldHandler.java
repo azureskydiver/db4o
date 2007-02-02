@@ -53,7 +53,7 @@ final class UntypedFieldHandler extends ClassMetadata {
 	}
     
     public int isSecondClass(){
-        return YapConst.UNKNOWN;
+        return Const4.UNKNOWN;
     }
 	
 	boolean isStrongTyped(){
@@ -62,15 +62,15 @@ final class UntypedFieldHandler extends ClassMetadata {
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
         if(topLevel){
-            header.addBaseLength(YapConst.INT_LENGTH); 
+            header.addBaseLength(Const4.INT_LENGTH); 
         }else{
-            header.addPayLoadLength(YapConst.INT_LENGTH);  // single relink
+            header.addPayLoadLength(Const4.INT_LENGTH);  // single relink
         }
         ClassMetadata yc = forObject(trans, obj, true);
         if( yc == null){
             return;
         }
-        header.addPayLoadLength(YapConst.INT_LENGTH); //  type information int
+        header.addPayLoadLength(Const4.INT_LENGTH); //  type information int
         yc.calculateLengths(trans, header, false, obj, false);
     }
     

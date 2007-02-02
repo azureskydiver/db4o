@@ -82,7 +82,7 @@ public class Buffer implements SlotReader {
     public final void readBegin(byte a_identifier) {
 		if (Deploy.debug) {
 			if (Deploy.brackets) {
-				if (readByte() != YapConst.YAPBEGIN) {
+				if (readByte() != Const4.YAPBEGIN) {
 					throw new RuntimeException("YapBytes.readBegin() YAPBEGIN expected.");
 				}
 			}
@@ -128,7 +128,7 @@ public class Buffer implements SlotReader {
 
     public void readEnd() {
         if (Deploy.debug && Deploy.brackets) {
-            if (readByte() != YapConst.YAPEND) {
+            if (readByte() != Const4.YAPEND) {
                 throw new RuntimeException("YapBytes.readEnd() YAPEND expected");
             }
         }
@@ -193,7 +193,7 @@ public class Buffer implements SlotReader {
     public void writeBegin(byte a_identifier) {
         if (Deploy.debug) {
             if (Deploy.brackets) {
-                append(YapConst.YAPBEGIN);
+                append(Const4.YAPBEGIN);
             }
             if (Deploy.identifiers) {
                 append(a_identifier);
@@ -214,7 +214,7 @@ public class Buffer implements SlotReader {
     
     public void writeEnd() {
         if (Deploy.debug && Deploy.brackets) {
-            append(YapConst.YAPEND);
+            append(Const4.YAPEND);
         }
     }
     
@@ -274,7 +274,7 @@ public class Buffer implements SlotReader {
     }
 
 	public void incrementIntSize() {
-		incrementOffset(YapConst.INT_LENGTH);
+		incrementOffset(Const4.INT_LENGTH);
 	}
 
 	public int offset() {

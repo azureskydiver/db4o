@@ -88,12 +88,12 @@ public abstract class FileHeader {
     public abstract void writeTransactionPointer(Transaction systemTransaction, int transactionAddress);
 
     protected void writeTransactionPointer(Transaction systemTransaction, int transactionAddress, final int address, final int offset) {
-        StatefulBuffer bytes = new StatefulBuffer(systemTransaction, address, YapConst.INT_LENGTH * 2);
+        StatefulBuffer bytes = new StatefulBuffer(systemTransaction, address, Const4.INT_LENGTH * 2);
         bytes.moveForward(offset);
         bytes.writeInt(transactionAddress);
         bytes.writeInt(transactionAddress);
         if (Debug.xbytes && Deploy.overwrite) {
-            bytes.setID(YapConst.IGNORE_ID);
+            bytes.setID(Const4.IGNORE_ID);
         }
         bytes.write();
     }
