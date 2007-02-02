@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.inside;
+package com.db4o.internal;
 
 class JDK_1_3 extends JDK_1_2{
 

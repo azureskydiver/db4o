@@ -3,8 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.*;
-import com.db4o.inside.*;
-import com.db4o.inside.ObjectContainerBase;
+import com.db4o.internal.*;
 
 
 public class EmptyObjectSet {

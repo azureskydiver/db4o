@@ -8,10 +8,9 @@ import java.util.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
-import com.db4o.inside.*;
-import com.db4o.inside.ObjectContainerBase;
-import com.db4o.inside.btree.*;
-import com.db4o.inside.classindex.*;
+import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
+import com.db4o.internal.classindex.*;
 import com.db4o.query.*;
 import com.db4o.test.lib.*;
 
