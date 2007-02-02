@@ -2,12 +2,10 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
-import com.db4o.internal.query.*;
 import com.db4o.internal.query.result.*;
 
 public abstract class MsgQuery extends MsgObject {

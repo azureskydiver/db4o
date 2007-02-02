@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.foundation.Tree;
-import com.db4o.internal.*;
 
 
 /**

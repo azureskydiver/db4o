@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.foundation.*;
-import com.db4o.inside.*;
 import com.db4o.internal.*;
 import com.db4o.query.Query;
 import com.db4o.reflect.*;

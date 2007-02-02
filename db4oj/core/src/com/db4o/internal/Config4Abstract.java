@@ -4,7 +4,6 @@ package com.db4o.internal;
 
 import com.db4o.foundation.KeySpec;
 import com.db4o.foundation.KeySpecHashtable4;
-import com.db4o.internal.*;
 
 
 /**

@@ -2,9 +2,7 @@
 
 package com.db4o.internal.fieldindex;
 
-import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.internal.query.processor.*;
 
 public class IndexedNodeCollector {

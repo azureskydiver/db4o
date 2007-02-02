@@ -12,7 +12,6 @@ import com.db4o.foundation.Iterator4;
 import com.db4o.foundation.MappingIterator;
 import com.db4o.foundation.Queue4;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.*;
 import com.db4o.reflect.ReflectClass;
 
 

@@ -22,8 +22,6 @@ import com.db4o.foundation.List4;
 import com.db4o.foundation.PersistentTimeStampIdGenerator;
 import com.db4o.foundation.Tree;
 import com.db4o.foundation.Visitor4;
-import com.db4o.inside.*;
-import com.db4o.internal.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.cs.*;
 import com.db4o.internal.handlers.*;
