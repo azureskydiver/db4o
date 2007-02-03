@@ -17,7 +17,7 @@ namespace Db4oTools.NativeQueries
 	using com.db4o.nativequery.expr;
 	using com.db4o.nativequery.expr.cmp;
 	using com.db4o.nativequery.expr.cmp.field;
-	using com.db4o.inside.query;
+	using com.db4o.@internal.query;
 
 	/// <summary>
 	/// Build a com.db4o.nativequery.expr tree out of
