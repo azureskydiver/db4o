@@ -2,7 +2,7 @@
 
 using System.Collections;
 
-using com.db4o.inside;
+using com.db4o.@internal;
 using com.db4o.types;
 
 namespace com.db4o

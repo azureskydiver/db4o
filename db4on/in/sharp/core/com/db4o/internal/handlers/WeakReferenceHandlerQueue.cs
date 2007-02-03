@@ -4,7 +4,7 @@ using System.Collections;
 using com.db4o.ext;
 using com.db4o.foundation;
 
-namespace com.db4o.inside.handlers {
+namespace com.db4o.@internal.handlers {
 
     internal class WeakReferenceHandlerQueue {
 

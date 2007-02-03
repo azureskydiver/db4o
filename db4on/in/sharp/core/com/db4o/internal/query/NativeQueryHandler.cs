@@ -3,10 +3,10 @@ using System;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.optimization;
 using com.db4o.query;
-using com.db4o.inside;
-using com.db4o.inside.diagnostic;
+using com.db4o.@internal;
+using com.db4o.@internal.diagnostic;
 
-namespace com.db4o.inside.query
+namespace com.db4o.@internal.query
 {
 #if NET_2_0 || CF_2_0
 	/// <summary>
@@ -149,8 +149,8 @@ namespace com.db4o.inside.query
 
 		private static System.Collections.Generic.IList<Extent> WrapQueryResult<Extent>(com.db4o.query.Query q)
 		{
-			com.db4o.inside.query.QueryResult qr = ((QQuery)q).GetQueryResult();
-			return new com.db4o.inside.query.GenericObjectSetFacade<Extent>(qr);
+			com.db4o.@internal.query.QueryResult qr = ((QQuery)q).GetQueryResult();
+			return new com.db4o.@internal.query.GenericObjectSetFacade<Extent>(qr);
 		}
 #endif
 
@@ -186,7 +186,7 @@ namespace com.db4o.inside.query
                 if (dp.Enabled()) dp.NativeQueryUnoptimized(predicate);
 
             }
-			q.Constrain(new com.db4o.inside.query.PredicateEvaluation(predicate));
+			q.Constrain(new com.db4o.@internal.query.PredicateEvaluation(predicate));
 			OnQueryExecution(predicate, QueryExecutionKind.Unoptimized);
 			return q;
 		}

@@ -1,6 +1,6 @@
 /* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
 
-namespace com.db4o.inside.query
+namespace com.db4o.@internal.query
 {
 	using System;
 	using System.IO;

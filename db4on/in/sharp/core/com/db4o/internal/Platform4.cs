@@ -8,8 +8,9 @@ using com.db4o.config;
 using com.db4o.config.attributes;
 using com.db4o.ext;
 using com.db4o.foundation;
-using com.db4o.inside.handlers;
-using com.db4o.inside.query;
+using com.db4o.@internal.handlers;
+using com.db4o.@internal.query;
+using com.db4o.@internal.query.processor;
 using com.db4o.query;
 using com.db4o.reflect;
 using com.db4o.reflect.generic;
@@ -20,7 +21,7 @@ using j4o.lang;
 using j4o.lang.reflect;
 using j4o.util;
 
-namespace com.db4o.inside
+namespace com.db4o.@internal
 {
 	/// <exclude />
 	public class Platform4

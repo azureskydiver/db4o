@@ -2,11 +2,11 @@
 
 using System;
 
-namespace com.db4o.inside.handlers
+namespace com.db4o.@internal.handlers
 {
 	abstract public class IntegralTypeHandler : NetTypeHandler
 	{
-		public IntegralTypeHandler(com.db4o.inside.ObjectContainerBase stream)
+		public IntegralTypeHandler(com.db4o.@internal.ObjectContainerBase stream)
 			: base(stream)
 		{
 		}

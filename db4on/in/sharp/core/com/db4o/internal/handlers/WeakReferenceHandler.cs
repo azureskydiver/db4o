@@ -2,7 +2,7 @@
 
 using System;
 
-namespace com.db4o.inside.handlers
+namespace com.db4o.@internal.handlers
 {
 	internal class WeakReferenceHandler : WeakReference
 	{

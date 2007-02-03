@@ -1,4 +1,4 @@
-namespace com.db4o.inside.query
+namespace com.db4o.@internal.query
 {
 	public enum QueryExecutionKind
 	{

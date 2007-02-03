@@ -5,7 +5,7 @@ using System.Reflection;
 using com.db4o;
 using com.db4o.query;
 
-namespace com.db4o.inside.query
+namespace com.db4o.@internal.query
 {
     // TODO: Use DelegateEnvelope to build a generic delegate translator
     internal class DelegateEnvelope

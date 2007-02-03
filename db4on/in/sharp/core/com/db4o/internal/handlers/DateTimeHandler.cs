@@ -2,11 +2,11 @@
 
 using System;
 
-namespace com.db4o.inside.handlers {
+namespace com.db4o.@internal.handlers {
 
     public class DateTimeHandler : StructHandler {
 
-        public DateTimeHandler(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
+        public DateTimeHandler(com.db4o.@internal.ObjectContainerBase stream) : base(stream) {
         }
 
         public override int Compare(object o1, object o2){

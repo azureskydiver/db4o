@@ -2,11 +2,11 @@
 
 using System;
 
-namespace com.db4o.inside.handlers
+namespace com.db4o.@internal.handlers
 {
 	public class UShortHandler : IntegralTypeHandler
 	{
-        public UShortHandler(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
+        public UShortHandler(com.db4o.@internal.ObjectContainerBase stream) : base(stream) {
         }
 
         public override int Compare(Object o1, Object o2){
