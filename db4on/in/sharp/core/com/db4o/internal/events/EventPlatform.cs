@@ -3,7 +3,7 @@
 using com.db4o.query;
 using com.db4o.events;
 
-namespace com.db4o.events.impl
+namespace com.db4o.@internal.events
 {
 	internal class EventPlatform
 	{
