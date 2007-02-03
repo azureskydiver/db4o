@@ -1,6 +1,6 @@
 using System;
 
-namespace com.db4o.inside.query
+namespace com.db4o.@internal.query
 {
 	/// <summary>
 	/// A very simple caching strategy that caches only the last added item.

@@ -3,11 +3,11 @@
 using System;
 using j4o.lang;
 
-namespace com.db4o.inside.handlers
+namespace com.db4o.@internal.handlers
 {
     abstract public class StructHandler : NetTypeHandler {
 
-        public StructHandler(com.db4o.inside.ObjectContainerBase stream) : base(stream) {
+        public StructHandler(com.db4o.@internal.ObjectContainerBase stream) : base(stream) {
         }
 
         public override bool IsEqual(Object compare, Object with){

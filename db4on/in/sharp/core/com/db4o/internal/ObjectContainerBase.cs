@@ -1,15 +1,15 @@
-﻿namespace com.db4o.inside
+﻿namespace com.db4o.@internal
 {
 	using System;
-	using com.db4o.inside.query;
+	using com.db4o.@internal.query;
 	using com.db4o.ext;
 
 	/// <summary>
 	/// </summary>
 	/// <exclude />
-	public abstract class ObjectContainerBase : com.db4o.inside.PartialObjectContainer, ObjectContainer, ExtObjectContainer
+	public abstract class ObjectContainerBase : com.db4o.@internal.PartialObjectContainer, ObjectContainer, ExtObjectContainer
 	{
-		internal ObjectContainerBase(com.db4o.config.Configuration config, com.db4o.inside.ObjectContainerBase a_parent)
+		internal ObjectContainerBase(com.db4o.config.Configuration config, com.db4o.@internal.ObjectContainerBase a_parent)
 			: base(config, a_parent)
 		{
 		}
@@ -114,7 +114,7 @@
 			q.Constrain(extent);
 			if (null != comparer) q.SortBy(new GenericComparerAdaptor<ElementType>(comparer));
 			QueryResult qres = q.GetQueryResult();
-			return new com.db4o.inside.query.GenericObjectSetFacade<ElementType>(qres);
+			return new com.db4o.@internal.query.GenericObjectSetFacade<ElementType>(qres);
 		}
 
 		public System.Collections.Generic.IList<Extent> Query<Extent>()

@@ -1,8 +1,9 @@
 ﻿/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 using System;
 using com.db4o.ext;
+using com.db4o.@internal.query.result;
 
-namespace com.db4o.inside.query
+namespace com.db4o.@internal.query
 {
 #if NET_2_0 || CF_2_0
 	/// <summary>
