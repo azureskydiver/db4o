@@ -837,6 +837,7 @@
 	</target>
 		
 	<target name="ndoc-net" unless="mono">
+		<!--
 		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
 			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
 			<arg value="-documenter=MSDN 2003" />
@@ -851,6 +852,7 @@
             <arg value="-CopyrightHref=http://www.db4o.com/" />
 			<arg value="-IncludeFavorites=True" />			
 		</exec>
+		-->
 	</target>
 	
 	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs">
