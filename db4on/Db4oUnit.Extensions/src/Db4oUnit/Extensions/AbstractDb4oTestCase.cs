@@ -2,7 +2,7 @@ namespace Db4oUnit.Extensions
 {
 	public class AbstractDb4oTestCase : Db4oUnit.Extensions.Db4oTestCase
 	{
-		[com.db4o.Transient]
+		[System.NonSerialized]
 		private Db4oUnit.Extensions.Db4oFixture _fixture;
 
 		public virtual void Fixture(Db4oUnit.Extensions.Db4oFixture fixture)
@@ -13,6 +13,11 @@ namespace Db4oUnit.Extensions
 		public virtual Db4oUnit.Extensions.Db4oFixture Fixture()
 		{
 			return _fixture;
+		}
+
+		public virtual bool IsClientServer()
+		{
+			return Fixture() is Db4oUnit.Extensions.Fixtures.AbstractClientServerDb4oFixture;
 		}
 
 		protected virtual void Reopen()
@@ -27,6 +32,7 @@ namespace Db4oUnit.Extensions
 			_fixture.Open();
 			Db4oSetupBeforeStore();
 			Store();
+			_fixture.Db().Commit();
 			_fixture.Close();
 			_fixture.Open();
 			Db4oSetupAfterStore();
@@ -123,30 +129,36 @@ namespace Db4oUnit.Extensions
 				());
 		}
 
-		protected virtual com.db4o.YapStream Stream()
+		protected virtual com.db4o.@internal.ObjectContainerBase Stream()
 		{
-			return (com.db4o.YapStream)Db();
+			return (com.db4o.@internal.ObjectContainerBase)Db();
 		}
 
-		protected virtual com.db4o.Transaction Trans()
+		protected virtual com.db4o.@internal.LocalObjectContainer FileSession()
+		{
+			return Fixture().FileSession();
+		}
+
+		protected virtual com.db4o.@internal.Transaction Trans()
 		{
 			return Stream().GetTransaction();
 		}
 
-		protected virtual com.db4o.Transaction SystemTrans()
+		protected virtual com.db4o.@internal.Transaction SystemTrans()
 		{
 			return Stream().GetSystemTransaction();
 		}
 
-		protected virtual com.db4o.query.Query NewQuery(com.db4o.Transaction transaction, 
-			System.Type clazz)
+		protected virtual com.db4o.query.Query NewQuery(com.db4o.@internal.Transaction transaction
+			, System.Type clazz)
 		{
 			com.db4o.query.Query query = NewQuery(transaction);
 			query.Constrain(clazz);
 			return query;
 		}
 
-		protected virtual com.db4o.query.Query NewQuery(com.db4o.Transaction transaction)
+		protected virtual com.db4o.query.Query NewQuery(com.db4o.@internal.Transaction transaction
+			)
 		{
 			return Stream().Query(transaction);
 		}
@@ -167,7 +179,7 @@ namespace Db4oUnit.Extensions
 			config.ObjectClass(clazz).ObjectField(fieldName).Indexed(true);
 		}
 
-		protected virtual com.db4o.Transaction NewTransaction()
+		protected virtual com.db4o.@internal.Transaction NewTransaction()
 		{
 			return Stream().NewTransaction();
 		}
@@ -186,9 +198,52 @@ namespace Db4oUnit.Extensions
 			return result.Next();
 		}
 
+		protected virtual int CountOccurences(System.Type clazz)
+		{
+			com.db4o.ObjectSet result = NewQuery(clazz).Execute();
+			return result.Size();
+		}
+
+		protected virtual void Foreach(System.Type clazz, com.db4o.foundation.Visitor4 visitor
+			)
+		{
+			com.db4o.ext.ExtObjectContainer oc = Db();
+			oc.Deactivate(clazz, int.MaxValue);
+			com.db4o.ObjectSet set = NewQuery(clazz).Execute();
+			while (set.HasNext())
+			{
+				visitor.Visit(set.Next());
+			}
+		}
+
+		protected virtual void DeleteAll(System.Type clazz)
+		{
+			Foreach(clazz, new _AnonymousInnerClass192(this));
+		}
+
+		private sealed class _AnonymousInnerClass192 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass192(AbstractDb4oTestCase _enclosing)
+			{
+				this._enclosing = _enclosing;
+			}
+
+			public void Visit(object obj)
+			{
+				this._enclosing.Db().Delete(obj);
+			}
+
+			private readonly AbstractDb4oTestCase _enclosing;
+		}
+
 		protected void Store(object obj)
 		{
 			Db().Set(obj);
+		}
+
+		protected virtual com.db4o.reflect.ReflectClass ReflectClass(System.Type clazz)
+		{
+			return Reflector().ForClass(j4o.lang.Class.GetClassForType(clazz));
 		}
 	}
 }
