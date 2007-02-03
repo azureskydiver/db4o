@@ -60,29 +60,26 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         setName(a_name);
     }
 
-    int adjustActivationDepth(int a_depth) {
-        if ((cascadeOnActivate() == Const4.YES)&& a_depth < 2) {
-            a_depth = 2;
-        }
-        if((cascadeOnActivate() == Const4.NO)  && a_depth > 1){
-            a_depth = 1;
-        }
-        if (config().classActivationDepthConfigurable()) {
-        	int minimumActivationDepth=_config.getAsInt(MINIMUM_ACTIVATION_DEPTH);
-            if (minimumActivationDepth != 0) {
-                if (a_depth < minimumActivationDepth) {
-                    a_depth = minimumActivationDepth;
-                }
-            }
-        	int maximumActivationDepth=_config.getAsInt(MAXIMUM_ACTIVATION_DEPTH);
-            if (maximumActivationDepth != 0) {
-                if (a_depth > maximumActivationDepth) {
-                    a_depth = maximumActivationDepth;
-                }
-            }
-        }
-        return a_depth;
-    }
+    int adjustActivationDepth(int depth) {
+		int cascadeOnActivate = cascadeOnActivate();
+		if (cascadeOnActivate == Const4.YES) {
+			depth = Math.max(depth, 2);
+		}
+		if (cascadeOnActivate == Const4.NO) {
+			depth = Math.min(depth, 1);
+		}
+		if (config().classActivationDepthConfigurable()) {
+			int minimumActivationDepth = minimumActivationDepth();
+			if (minimumActivationDepth != 0) {
+				depth = Math.max(depth, minimumActivationDepth);
+			}
+			int maximumActivationDepth = maximumActivationDepth();
+			if (maximumActivationDepth != 0) {
+				depth = Math.min(depth, maximumActivationDepth);
+			}
+		}
+		return depth;
+	}
     
     public void callConstructor(boolean flag){
     	putThreeValued(CALL_CONSTRUCTOR, flag);
@@ -178,9 +175,17 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     public void maximumActivationDepth(int depth) {
     	_config.put(MAXIMUM_ACTIVATION_DEPTH,depth);
     }
+    
+    int maximumActivationDepth() {
+    	return _config.getAsInt(MAXIMUM_ACTIVATION_DEPTH);
+    }
 
     public void minimumActivationDepth(int depth) {
     	_config.put(MINIMUM_ACTIVATION_DEPTH,depth);
+    }
+    
+    int minimumActivationDepth() {
+    	return _config.getAsInt(MINIMUM_ACTIVATION_DEPTH);
     }
     
     public int callConstructor() {
