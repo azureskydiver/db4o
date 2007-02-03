@@ -52,5 +52,10 @@ namespace Db4oUnit.Extensions.Fixtures
 		{
 			return _server;
 		}
+
+		public override com.db4o.@internal.LocalObjectContainer FileSession()
+		{
+			return (com.db4o.@internal.LocalObjectContainer)_server.Ext().ObjectContainer();
+		}
 	}
 }

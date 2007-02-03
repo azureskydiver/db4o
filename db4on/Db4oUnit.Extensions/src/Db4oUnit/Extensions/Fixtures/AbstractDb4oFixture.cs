@@ -49,6 +49,10 @@ namespace Db4oUnit.Extensions.Fixtures
 
 		public abstract com.db4o.ext.ExtObjectContainer Db();
 
+		public abstract com.db4o.@internal.LocalObjectContainer FileSession();
+
+		public abstract string GetLabel();
+
 		public abstract void Open();
 	}
 }
