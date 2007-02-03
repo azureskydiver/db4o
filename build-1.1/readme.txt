@@ -10,6 +10,8 @@ QuickStart
 -svn checkout /javatocsharp to /javatocsharp
 -edit machine.properties to suit your environment
 	+ typically, you only need to change "dir.workspace"
+-execute \build-1.1\db4o-java\keytool1
+-if you installed Jdk5 only but do not have jdk 1.3, in \build-1.1\common-1.1.properties, uncomment the line "file.compiler.jdk1.3.args.optional=-source 1.3"
 -Open a console
 -Type ant
 -Waiting for several minutes, all products are ready to use at /repository!
