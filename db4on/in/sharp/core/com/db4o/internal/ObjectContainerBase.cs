@@ -2,6 +2,8 @@
 {
 	using System;
 	using com.db4o.@internal.query;
+	using com.db4o.@internal.query.result;
+	using com.db4o.@internal.query.processor;
 	using com.db4o.ext;
 
 	/// <summary>
@@ -114,7 +116,7 @@
 			q.Constrain(extent);
 			if (null != comparer) q.SortBy(new GenericComparerAdaptor<ElementType>(comparer));
 			QueryResult qres = q.GetQueryResult();
-			return new com.db4o.@internal.query.GenericObjectSetFacade<ElementType>(qres);
+			return new GenericObjectSetFacade<ElementType>(qres);
 		}
 
 		public System.Collections.Generic.IList<Extent> Query<Extent>()

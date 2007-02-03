@@ -4,6 +4,9 @@ using com.db4o.nativequery.expr;
 using com.db4o.nativequery.optimization;
 using com.db4o.query;
 using com.db4o.@internal;
+using com.db4o.@internal.query;
+using com.db4o.@internal.query.result;
+using com.db4o.@internal.query.processor;
 using com.db4o.@internal.diagnostic;
 
 namespace com.db4o.@internal.query
@@ -149,8 +152,8 @@ namespace com.db4o.@internal.query
 
 		private static System.Collections.Generic.IList<Extent> WrapQueryResult<Extent>(com.db4o.query.Query q)
 		{
-			com.db4o.@internal.query.QueryResult qr = ((QQuery)q).GetQueryResult();
-			return new com.db4o.@internal.query.GenericObjectSetFacade<Extent>(qr);
+			QueryResult qr = ((QQuery)q).GetQueryResult();
+			return new GenericObjectSetFacade<Extent>(qr);
 		}
 #endif
 
@@ -186,7 +189,7 @@ namespace com.db4o.@internal.query
                 if (dp.Enabled()) dp.NativeQueryUnoptimized(predicate);
 
             }
-			q.Constrain(new com.db4o.@internal.query.PredicateEvaluation(predicate));
+			q.Constrain(new PredicateEvaluation(predicate));
 			OnQueryExecution(predicate, QueryExecutionKind.Unoptimized);
 			return q;
 		}
