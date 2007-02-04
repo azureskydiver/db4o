@@ -1,0 +1,4 @@
+-typeMapping com.db4o.foundation.io.Path4 System.IO.Path
+-methodMapping com.db4o.foundation.io.File4.mkdirs System.IO.Directory.CreateDirectory
+-methodMapping com.db4o.foundation.io.File4.exists System.IO.File.Exists
+-methodMapping com.db4o.foundation.io.File4.rename System.IO.File.Move

@@ -1,4 +1,12 @@
 <project name="buildJarMacro" basedir="." default="">
+	<macrodef name="resetDir">
+		<attribute name="dir" />
+		<sequential>
+			<delete dir="@{dir}" />
+			<mkdir dir="@{dir}" />
+		</sequential>
+	</macrodef>
+
 	<path id="emptyClassPath"/>
 	<macrodef name="buildjar" description="javac, copy xml files in src then jar">
 		<attribute name="srcDir"/>
