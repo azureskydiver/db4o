@@ -19,6 +19,9 @@
       <fileset dir="../tutorial"						includes="build.xml"/>
       
       <fileset dir="db4o-java"							includes="build.xml"/>
+	
+	<!-- .net projects -->
+	<fileset dir="../javatocsharp/javatocsharp.core"	includes="build-1.1.xml"/>
     </ivy:buildlist>
   </target>
   
