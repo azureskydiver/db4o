@@ -1,0 +1,25 @@
+<project name="build.net" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	<import file="../../build-1.1/common-1.1.xml"/>	
+	<property file="build.properties" />
+
+	<target name="clean">
+  		<cleanIvyDir/>
+	</target>
+	
+	<target name="init" depends="">
+		<tstamp />
+		<initIvyDir/>
+	</target>
+	
+	 <target name="configure" depends="init">
+	 	<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+	 </target>
+   
+	<target name="resolve" depends="configure">
+		<ivy:retrieve/>
+	</target>
+   
+   	<target name="publish" depends="resolve, jar">
+	</target>
+
+</project>
