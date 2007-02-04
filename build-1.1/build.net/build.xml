@@ -2,6 +2,8 @@
 	<import file="../../build-1.1/common-1.1.xml"/>	
 	<property file="build.properties" />
 
+	<import file="build.net.macro.xml"/>
+
 	<fileset id="db4oj.srcfiles" dir="../..">
 		<include name="db4oj/core/src/**/*.java" />
 	</fileset>
@@ -23,104 +25,8 @@
 		<ivy:retrieve/>
 	</target>
    
-   	<target name="publish" depends="resolve">
+   	<target name="publish" depends="resolve, build-core">
 	</target>
-
-	<macrodef name="sharpen">
-		<attribute name="workspace" />
-		<attribute name="resource" />
-		
-		<element name="args" optional="yes" />
-		
-		<sequential>
-			<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main"
-				fork="yes"
-				failonerror="true"
-				timeout="1800000"
-				maxmemory="512M">
-				<classpath>
-					<pathelement location="${eclipse.home}/startup.jar" />
-				</classpath>
-					
-				<arg value="-data" />
-				<arg file="@{workspace}" />
-				<arg value="-application" />
-				<arg value="javatocsharp.core.application" />
-				<arg value="@{resource}" />
-				
-				<args />
-					
-			</java>
-		</sequential>
-	</macrodef>
-	
-
-	<macrodef name="csc-all">
-		<attribute name="assemblyName" />		
-		<attribute name="sources" description="sources fileset id" />
-		
-		<attribute name="netOutputDir" default="${dir.dist.dll.net}" />
-		<attribute name="netConfiguration" default=".NET" />
-		
-		<attribute name="compactOutputDir" default="${dir.dist.dll.compact}" />
-		<attribute name="compactConfiguration" default=".NET CompactFramework" />
-		
-		<element name="references" optional="yes" />
-		<element name="compact-args" optional="yes" />
-		
-		<sequential>
-			<mkdir dir="@{netOutputDir}" />
-			<mkdir dir="@{compactOutputDir}" />
-			
-			<reset-dir dir="${dir.dist.net.compile}" />
-			<copy todir="${dir.dist.net.compile}">
-				<fileset refid="@{sources}" />
-			</copy>			
-			<prepare-assemblyInfo configuration="@{netConfiguration}" />
-				
-			<csc
-				destfile="@{netOutputDir}/@{assemblyName}.dll"
-				docfile="@{netOutputDir}/@{assemblyName}.xml"
-				targettype="library"
-				definitions="${csharp.definitions}"
-				executable="${csc.executable}"
-				debug="${debug}"
-				optimize="true"
-				warnlevel="0"
-				srcdir="${dir.dist.net.compile}">
-				
-				<include name="**/*.cs" />
-				
-				<references />
-			</csc>
-			
-			<if>
-			<equals arg1="${mono}" arg2="true" />
-			<then>
-				<echo>skipping CompactFramework build</echo>
-			</then>
-			<else>
-				<prepare-assemblyInfo configuration="@{compactConfiguration}" />
-				
-				<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
-					<arg value="/optimize" />
-					<arg value="/debug-" />
-					<arg value="/define:${csharp.definitions.cf}" />
-					<arg value="/out:@{compactOutputDir}/@{assemblyName}.dll" />
-					<arg value="/target:library" />
-					<arg value="/warn:0" />
-					<arg value="/noconfig" />
-					<arg value="/nostdlib" />
-					<arg value="/r:${dir.dll.cf}/mscorlib.dll" />
-					<arg value="/r:${dir.dll.cf}/System.dll" />
-					<arg value="/doc:@{compactOutputDir}/@{assemblyName}.xml" />
-					<compact-args />
-					<arg value="/recurse:*.cs" />
-				</exec>
-			</else>
-			</if>
-		</sequential>
-	</macrodef>
 
 	<target name="prepare-conversion-workspace" depends="init">
 		<resetDir dir="${dir.sharpen}" />
@@ -165,17 +71,14 @@
 				<arg value="@sharpen-new-core-mapping" />
 			</args>
 		</sharpen>
-		<!--
+		
 		<delete failonerror="false">
 			<fileset dir="${dir.n.v6.core.src}">
 				<include name="**/*.cs" />
 				<exclude name="**/.svn/**" />
 			</fileset>
 		</delete>
-		<antcall target="copy-sharpened-files">
-			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
-			<param name="target.dir" value="${dir.n.v6.core.src}" />
-		</antcall>
+		<copy-sharpened-files src.dir="${dir.sharpen}/db4ojcsharp/src" target.dir="${dir.n.v6.core.src}"/>
 		
 		<fileset id="core.net.files" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
@@ -196,9 +99,7 @@
 		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2005.csproj">
 			<sources refid="core.net.files" />
 		</updatecsharpproject>
-		-->
 	</target>
-	<!--
 
 	<target name="check-dependencies">
 		<copy todir="${dir.dist.dll.net}">
@@ -226,9 +127,27 @@
 		</uptodate>
 	</target>
 	
-	<target name="build-core" depends="init, check-dependencies, sharpen">
+	<target name="configure-net2" unless="mono">
+		<echo>Configuring .net 2 build.</echo>
+		
+		<property name="target.framework.version" value="2.0" />
+		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
 	
-		<fileset id="core.sources" dir="${dir.n.v6.core}">
+		<property name="csharp.definitions" value="NET_2_0" />
+		<property name="csharp.definitions.cf" value="CF_2_0" />		
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
+		<property name="dir.dll.cf" location="${dir.compactframework}/v2.0/WindowsCE/" />
+		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-2.0" />
+		<property name="csc.tests.extraoptions" value="" />
+	
+		<property name="installer.package.suffix" value="net2" />
+		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
+		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
+	</target>
+	
+	<target name="build-core" depends="sharpen-core, configure-net2">	
+				<fileset id="core.sources" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
 		</fileset>
 		
@@ -237,5 +156,4 @@
 				sources="core.sources">
 		</csc-all>		
 	</target>
-	-->
 </project>
