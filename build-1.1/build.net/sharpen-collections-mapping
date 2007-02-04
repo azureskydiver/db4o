@@ -1,0 +1,4 @@
+-typeMapping com.db4o.foundation.Iterable4 System.Collections.IEnumerable
+-typeMapping com.db4o.foundation.Iterator4 System.Collections.IEnumerator
+-methodMapping com.db4o.foundation.Iterable4.iterator GetEnumerator
+-propertyMapping com.db4o.foundation.Iterator4.current Current
