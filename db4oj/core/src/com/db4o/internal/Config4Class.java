@@ -62,20 +62,20 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 
     int adjustActivationDepth(int depth) {
 		int cascadeOnActivate = cascadeOnActivate();
-		if (cascadeOnActivate == Const4.YES) {
-			depth = Math.max(depth, 2);
+		if (cascadeOnActivate == Const4.YES && depth < 2) {
+			depth = 2;
 		}
-		if (cascadeOnActivate == Const4.NO) {
-			depth = Math.min(depth, 1);
+		if (cascadeOnActivate == Const4.NO && depth > 1) {
+			depth = 1;
 		}
 		if (config().classActivationDepthConfigurable()) {
 			int minimumActivationDepth = minimumActivationDepth();
-			if (minimumActivationDepth != 0) {
-				depth = Math.max(depth, minimumActivationDepth);
+			if (minimumActivationDepth != 0 && depth < minimumActivationDepth) {
+				depth = minimumActivationDepth;
 			}
 			int maximumActivationDepth = maximumActivationDepth();
-			if (maximumActivationDepth != 0) {
-				depth = Math.min(depth, maximumActivationDepth);
+			if (maximumActivationDepth != 0 && depth > maximumActivationDepth) {
+				depth = maximumActivationDepth;
 			}
 		}
 		return depth;
