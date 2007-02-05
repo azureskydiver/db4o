@@ -34,9 +34,13 @@ public class ReflectHelper2 {
 				"java.lang.",
 				"java.util.",
 				"java.math.",
-				"com.db4o.",
-				"j4o.lang.AssemblyNameHint",
 				"System.",
+				"j4o.lang.AssemblyNameHint",
+				"com.db4o.",
+				/*"com.db4o.ext",
+				"com.db4o.config",
+				"com.db4o.StaticClass",
+				"com.db4o.StaticField",*/
 				"Db4objects.Db4o",
 		};
 
@@ -49,6 +53,13 @@ public class ReflectHelper2 {
 		for (int i = 0; i < knownClasses.length; i++) {
 			StoredClass sc = knownClasses[i];
 			ReflectClass knownClass = reflector.forName(sc.getName());
+			/*
+			this is null for someone in the forums.
+			if(knownClass == null){
+				// STRANGE???
+				System.out.println("knownClass: " + knownClass + " for " + sc.getName());
+				continue;
+			}*/
 			if (knownClass.isArray() || knownClass.isPrimitive()) {
 				continue;
 			}

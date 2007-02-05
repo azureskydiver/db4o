@@ -6,6 +6,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.Db4o;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
+import com.spaceprogram.db4o.sql.ReflectHelper;
 
 import javax.swing.table.TableModel;
 import javax.swing.table.DefaultTableModel;
@@ -63,7 +64,7 @@ public class FieldInfoTableModel extends DefaultTableModel implements TableModel
 
 	private StoredField[] getStoredFields(String className) {
 		StoredClass storedClass = session.getObjectContainer().ext().storedClass(className);
-		StoredField[] fields = storedClass.getStoredFields(); // todo: this is a problem if you're refactored classes that are available to OM, since it will use the available class, not the renamed stuff
+		StoredField[] fields = ReflectHelper.getDeclaredFieldsInHeirarchy(storedClass); // todo: this is a problem if you've refactored classes that are available to OM, since it will use the available class, not the renamed stuff
 		return fields;
 	}
 
