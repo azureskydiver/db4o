@@ -1,5 +1,64 @@
-<project name="build.net.macro" basedir=".">
-	<macrodef name="sharpen">
+<project name="build.net.common" basedir=".">
+	<condition property="mono" value="true">
+		<os family="unix" />
+	</condition>
+
+	<target name="configure" depends="configure-net2, configure-mono">
+		<property name="debug" value="true" />
+	</target>
+
+	<target name="configure-net1" unless="mono">
+		<echo>Configuring .net 1 build.</echo>
+		
+		<!-- don't build Db4oAdmin for .net 1.1 -->
+		<property name="skip.admin" value="true" />
+		
+		<property name="target.framework.version" value="1.1" />
+		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
+		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
+	
+		<property name="csharp.definitions" value="NET_1_1" />
+		<property name="csharp.definitions.cf" value="CF_1_0" />
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-1.1" />
+		<property name="dir.dll.cf" location="${dir.compactframework}/v1.0/WindowsCE/" />
+		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-1.0" />
+		<property name="csc.tests.extraoptions" value="" />
+	
+		<property name="installer.package.suffix" value="net1" />
+		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
+		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
+	</target>
+	<target name="configure-net2" unless="mono">
+		<echo>Configuring .net 2 build.</echo>
+		
+		<property name="target.framework.version" value="2.0" />
+		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
+	
+		<property name="csharp.definitions" value="NET_2_0" />
+		<property name="csharp.definitions.cf" value="CF_2_0" />		
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
+		<property name="dir.dll.cf" location="${dir.compactframework}/v2.0/WindowsCE/" />
+		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-2.0" />
+		<property name="csc.tests.extraoptions" value="" />
+	
+		<property name="installer.package.suffix" value="net2" />
+		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
+		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
+	</target>
+	<target name="configure-mono" if="mono">
+		<echo>Configuring mono build.</echo>
+		
+		<property name="target.framework.version" value="2.0" />
+		<property name="csharp.definitions" value="MONO,NET_2_0" />
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
+		<property name="csc.executable" value="gmcs" />
+		<property name="installer.package.suffix" value="mono2" />
+	
+		<property name="csc.tests.extraoptions" value="-r:System.Drawing" />
+	</target>
+	
+		<macrodef name="sharpen">
 		<attribute name="workspace" />
 		<attribute name="resource" />
 		
@@ -96,29 +155,15 @@
 		</sequential>
 	</macrodef>
 	
-	<macrodef name="copy-sharpened-files">
-		<attribute name="target.dir" />		
-		<attribute name="src.dir"/>
-				
-		<sequential>		
-			<copy todir="@{target.dir}">
-				<fileset dir="@{src.dir}/Db4objects/Db4o">
-					<include name="**/*.cs" />
-					<exclude name="JDK_*.cs" />
-					<exclude name="JDKReflect*.cs" />
-					<exclude name="Reflect/Jdk/**/*.*" />
-					<exclude name="Reflect/Self/*.*" />
-				</fileset>
-			</copy>
-		</sequential>
-	</macrodef>
 	<macrodef name="prepare-assemblyInfo">
 		<attribute name="configuration" />
 		<sequential>
+			<echo>ABC ${target.framework.version}</echo>
 			<updateAssemblyInfo
 				keyfile="${filename.keyfile}"
 				version="${db4o.version.full}"
-				configuration="@{configuration} ${target.framework.version}">
+				
+		configuration="@{configuration} ${target.framework.version}">
 				<fileset dir="${dir.dist.net.compile}">
 					<include name="**/AssemblyInfo.cs" />
 				</fileset>
@@ -135,4 +180,5 @@
 			<property name="compiledll.debug.symbol" value="-" />
 		</else>
 	</if>
+
 </project>
