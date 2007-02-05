@@ -1,8 +1,8 @@
-<project name="build.net" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="db4o.core.net2" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<import file="../../build-1.1/common-1.1.xml"/>	
-	<property file="build.properties" />
+	<import file="build.net.common.xml"/>	
 
-	<import file="build.net.macro.xml"/>
+	<property file="build.properties" />
 
 	<fileset id="db4oj.srcfiles" dir="../..">
 		<include name="db4oj/core/src/**/*.java" />
@@ -17,16 +17,33 @@
 		<initIvyDir/>
 	</target>
 	
-	 <target name="configure" depends="init">
+	 <target name="configure-ivy" depends="init">
 	 	<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
 	 </target>
    
-	<target name="resolve" depends="configure">
+	<target name="resolve" depends="configure-ivy">
 		<ivy:retrieve/>
 	</target>
    
    	<target name="publish" depends="resolve, build-core">
 	</target>
+
+	<macrodef name="copy-sharpened-files">
+		<attribute name="target.dir" />		
+		<attribute name="src.dir"/>
+				
+		<sequential>		
+			<copy todir="@{target.dir}">
+				<fileset dir="@{src.dir}/Db4objects/Db4o">
+					<include name="**/*.cs" />
+					<exclude name="JDK_*.cs" />
+					<exclude name="JDKReflect*.cs" />
+					<exclude name="Reflect/Jdk/**/*.*" />
+					<exclude name="Reflect/Self/*.*" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
 
 	<target name="prepare-conversion-workspace" depends="init">
 		<resetDir dir="${dir.sharpen}" />
@@ -50,21 +67,8 @@
 			</fileset>
 		</copy>
 	</target>
-	
-	<target name="copy-sharpened-files">
 		
-		<copy todir="${target.dir}">
-			<fileset dir="${src.dir}/Db4objects/Db4o">
-				<include name="**/*.cs" />
-				<exclude name="JDK_*.cs" />
-				<exclude name="JDKReflect*.cs" />
-				<exclude name="Reflect/Jdk/**/*.*" />
-				<exclude name="Reflect/Self/*.*" />
-			</fileset>
-		</copy>
-	</target>	
-	
-	<target name="sharpen-core" depends="prepare-conversion-workspace" unless="csharp.uptodate">
+	<target name="sharpen-core" depends="prepare-conversion-workspace">
 
 		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
 			<args>
@@ -101,52 +105,7 @@
 		</updatecsharpproject>
 	</target>
 
-	<target name="check-dependencies">
-		<copy todir="${dir.dist.dll.net}">
-			<fileset dir="${dir.libs.net}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
-		<if>
-			<not>
-				<equals arg1="${mono}" arg2="true" />
-			</not>
-			<then>
-				<copy todir="${dir.dist.dll.compact}">
-					<fileset dir="${dir.libs.cf}">
-						<include name="*.*" />
-					</fileset>
-				</copy>
-			</then>
-		</if>
-		<uptodate
-			property="csharp.uptodate"
-			targetfile="${dir.n.v6.core.src}/Transaction.cs">
-			<srcfiles refid="db4oj.srcfiles">
-			</srcfiles>
-		</uptodate>
-	</target>
-	
-	<target name="configure-net2" unless="mono">
-		<echo>Configuring .net 2 build.</echo>
-		
-		<property name="target.framework.version" value="2.0" />
-		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
-		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
-	
-		<property name="csharp.definitions" value="NET_2_0" />
-		<property name="csharp.definitions.cf" value="CF_2_0" />		
-		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
-		<property name="dir.dll.cf" location="${dir.compactframework}/v2.0/WindowsCE/" />
-		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-2.0" />
-		<property name="csc.tests.extraoptions" value="" />
-	
-		<property name="installer.package.suffix" value="net2" />
-		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
-		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
-	</target>
-	
-	<target name="build-core" depends="sharpen-core, configure-net2">	
+	<target name="build-core" depends="sharpen-core, configure">	
 				<fileset id="core.sources" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
 		</fileset>
