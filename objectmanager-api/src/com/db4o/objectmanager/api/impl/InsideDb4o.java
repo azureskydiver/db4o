@@ -3,9 +3,8 @@
 package com.db4o.objectmanager.api.impl;
 
 import com.db4o.*;
-import com.db4o.internal.*;
-import com.db4o.internal.btree.*;
-import com.db4o.internal.classindex.*;
+import com.db4o.inside.btree.*;
+import com.db4o.inside.classindex.*;
 import com.db4o.reflect.*;
 
 /**
@@ -14,25 +13,25 @@ import com.db4o.reflect.*;
  * public db4o API.
  */
 public class InsideDb4o {
-	
-	private final ObjectContainerBase _stream;
-	
+
+	private final YapStream _stream;
+
 	public InsideDb4o(ObjectContainer oc){
-		_stream = (ObjectContainerBase)oc;
+		_stream = (YapStream)oc;
 	}
 
 	/**
 	 * This should go into StoredClass.
 	 */
 	public int getNumberOfObjectsForClass(String name) {
-		
+
 		if(_stream.isClient()){
 			// no efficient way to do this for now.
 			// A dedicated method would have to be sent.
 			// todo: run it the old way with .size() in a separate thread and update the size info when done
 			return 0;
 		}
-		
+
 		try{
 			return index(yapClass(name)).size(trans());
 		}catch (Exception e){
@@ -40,22 +39,27 @@ public class InsideDb4o {
 		}
 		return 0;
 	}
-    
-    private ObjectContainerBase stream(){
+
+    private YapStream stream(){
     	return _stream;
     }
-    
-    private ClassMetadata yapClass(String name){
+
+    private YapClass yapClass(String name){
     	return stream().getYapClass(reflectClass(name));
     }
-    
+
     private ReflectClass reflectClass(String name){
     	return stream().reflector().forName(name);
     }
-    
-    private BTree index(ClassMetadata yapClass) throws ClassCastException, NullPointerException{
-    	return ((BTreeClassIndexStrategy) yapClass.index()).btree();
-    }
+
+    private BTree index(YapClass yapClass) throws ClassCastException, NullPointerException{
+		if (yapClass.index() != null) {
+			return ((BTreeClassIndexStrategy) yapClass.index()).btree();
+		} else {
+			System.out.println("CLASS INDEX IS NULL FOR: " + yapClass.getName());
+		}
+		return null;
+	}
     
     private Transaction trans(){
     	return stream().getTransaction();

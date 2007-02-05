@@ -23,7 +23,7 @@ public class DatabaseInspectorTest extends ObjectManagerTestCase {
         for (int i = 0; i < 10; i++) {
             Contact c = new Contact();
             c.setId(new Integer(i));
-            c.setName("Contact " + i);
+            c.setFirstName("Contact " + i);
             c.setAge(i * 5);
             getDb().set(c);
         }

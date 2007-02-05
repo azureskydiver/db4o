@@ -11,8 +11,9 @@ import java.util.Date;
  */
 public class Contact {
     private Integer id;
-    private String name;
-    private int age;
+    private String firstName;
+	private String lastName;
+	private int age;
     private List addresses;
     private List emailAddresses;
     private Note note;
@@ -31,15 +32,23 @@ public class Contact {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public int getAge() {
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public int getAge() {
         return age;
     }
 
@@ -81,7 +90,6 @@ public class Contact {
         this.friends = friends;
     }
 
-
     public Note getNote() {
         return note;
     }
@@ -91,7 +99,7 @@ public class Contact {
     }
 
     public String toString() {
-        return "Contact: id=" + id + " name=" + name + " age=" + age;
+        return "Contact: id=" + id + " name=" + firstName + " age=" + age;
     }
 
 	public void setCreated(Date created) {

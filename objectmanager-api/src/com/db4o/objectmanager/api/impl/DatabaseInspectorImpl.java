@@ -3,9 +3,6 @@ package com.db4o.objectmanager.api.impl;
 import com.db4o.*;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
-import com.db4o.internal.*;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.query.Query;
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 
@@ -66,7 +63,7 @@ public class DatabaseInspectorImpl implements DatabaseInspector {
             StoredField[] storedFields = storedClass.getStoredFields();
             for (int j = 0; j < storedFields.length; j++) {
                 StoredField storedField = storedFields[j];
-                if(((FieldMetadata)storedField).hasIndex()){
+                if(storedField.hasIndex()){
                     counter++;
                 }
             }

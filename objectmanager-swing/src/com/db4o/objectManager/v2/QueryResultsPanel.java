@@ -107,6 +107,7 @@ final class QueryResultsPanel extends JPanel {
 			//resultsTable.setA
 		} catch (Exception e) {
 			// don't display if there was an error
+			e.printStackTrace();
 		}
 		// todo: should grow columns depending on avg column length
 		if (resultsTable.getColumnCount() > 0) {
