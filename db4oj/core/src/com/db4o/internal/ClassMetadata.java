@@ -1060,9 +1060,8 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		// the type is marshalled through a lone virtual field
 		// of type YapFieldTranslator which should take care of everything		
 		//final boolean instantiatedByTranslator = instantiating && configInstantiates();
-		final boolean activatingActiveObject = !instantiating && !stream.i_refreshInsteadOfActivate && yapObject.isActive();
 		final boolean doFields = buffer.getInstantiationDepth() > 0 || cascadeOnActivate();
-		if (doFields && !activatingActiveObject /* && !instantiatedByTranslator*/) {
+		if (doFields && !activatingAlreadyActiveObject(instantiating, stream, yapObject) /* && !instantiatedByTranslator*/) {
 			if(objectCanActivate(stream, obj)){
 				yapObject.setStateClean();
 				instantiateFields(yapObject, obj, mf, attributes, buffer);
@@ -1081,6 +1080,10 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         }
         return obj;
     }
+
+	private boolean activatingAlreadyActiveObject(final boolean instantiating, final ObjectContainerBase stream, ObjectReference yapObject) {
+		return !instantiating && !stream.i_refreshInsteadOfActivate && yapObject.isActive();
+	}
 	
 	private Object instantiateObject(StatefulBuffer a_bytes, MarshallerFamily mf) {
 		Object instance = null;
