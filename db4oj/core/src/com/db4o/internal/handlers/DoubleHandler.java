@@ -8,11 +8,10 @@ import com.db4o.reflect.*;
 
 /**
  * @exclude
- * @sharpen.ignore
  */
-public final class DoubleHandler extends LongHandler
-{
-    private static final Double i_primitive = new Double(0);
+public final class DoubleHandler extends LongHandler {
+	
+    private static final Double DEFAULT_VALUE = new Double(0);
     
     public DoubleHandler(ObjectContainerBase stream) {
         super(stream);
@@ -23,7 +22,7 @@ public final class DoubleHandler extends LongHandler
     }
 
 	public Object defaultValue(){
-		return i_primitive;
+		return DEFAULT_VALUE;
 	}
 	
 	public int getID(){
@@ -35,7 +34,7 @@ public final class DoubleHandler extends LongHandler
 	}
 	
 	public Object primitiveNull(){
-		return i_primitive;
+		return DEFAULT_VALUE;
 	}
 	
 	Object read1(Buffer a_bytes){
