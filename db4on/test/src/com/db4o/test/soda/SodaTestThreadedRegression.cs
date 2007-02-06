@@ -8,6 +8,8 @@ using com.db4o.test.soda.classes.simple;
 using com.db4o.test.soda.classes.wrapper.untyped;
 using com.db4o.test.soda.collections;
 using com.db4o.test.soda.engines.db4o;
+using com.db4o.@internal;
+
 namespace com.db4o.test.soda {
 
     public class SodaTestThreadedRegression : SodaTest, Runnable {

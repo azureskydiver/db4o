@@ -5,7 +5,7 @@ using System.Text;
 
 using Db4oTools.NativeQueries;
 
-using com.db4o.inside.query;
+using com.db4o.@internal.query;
 using com.db4o.nativequery.expr;
 using com.db4o.nativequery.optimization;
 using com.db4o.query;

@@ -48,6 +48,11 @@ namespace com.db4o.db4ounit.util
 			return null == root ? null : Path.Combine(root, fname);
 		}
 
+        public static string WorkspaceTestFilePath(string fname)
+        {
+            return Path.Combine(WorkspaceLocations.TEST_FOLDER, fname);
+        }
+
 		public static string WorkspaceRoot
 		{
 			get { return IOServices.FindParentDirectory("db4obuild"); }

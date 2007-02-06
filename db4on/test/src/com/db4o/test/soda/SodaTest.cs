@@ -21,6 +21,8 @@ using com.db4o.test.soda.joins.typed;
 using com.db4o.test.soda.joins.untyped;
 using com.db4o.test.soda.ordered;
 using com.db4o.test.soda.utils;
+using com.db4o.@internal;
+
 namespace com.db4o.test.soda 
 {
 

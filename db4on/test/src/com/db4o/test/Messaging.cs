@@ -4,6 +4,7 @@ using System;
 using j4o.lang;
 using com.db4o;
 using com.db4o.messaging;
+
 namespace com.db4o.test {
 
    public class Messaging : MessageRecipient {
@@ -16,8 +17,8 @@ namespace com.db4o.test {
       
       public void Test() {
          if (Tester.IsClientServer()) {
-            Tester.Server().Ext().Configure().SetMessageRecipient(this);
-            MessageSender sender1 = Tester.ObjectContainer().Configure().GetMessageSender();
+            Tester.Server().Ext().Configure().ClientServer().SetMessageRecipient(this);
+            MessageSender sender1 = Tester.ObjectContainer().Configure().ClientServer().GetMessageSender();
             this.messageString = MSG;
             sender1.Send(this);
             Thread.Sleep(100);
