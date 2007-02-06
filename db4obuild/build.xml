@@ -1487,8 +1487,7 @@
 			<args>
 				<arg value="-cp" />
 				<arg path="${dependencies.jar}" />
-				<arg value="@sharpen-db4ounit-options" />
-				<arg value="@sharpen-core-options" />
+				<arg value="@sharpen-legacy-tests-options" />
 			</args>
 		</sharpen>
 		
@@ -1530,6 +1529,7 @@
 		<copy todir="${target.dir}/db4oj.tests/src">
 			<fileset dir="${dir.j.tests.src}">
 				<include name="**/db4ounit/common/**/*.java" />
+				<include name="**/db4ounit/util/**/*.java" />
 			</fileset>
 		</copy>
 		
@@ -1537,12 +1537,7 @@
 			<args>
 				<arg value="-cp" />
 				<arg path="${dependencies.jar}" />
-				<arg value="@sharpen-db4ounit-options" />
-				<arg value="@sharpen-core-options" />
-				
-				<arg value="-methodMapping" />
-				<arg value="com.db4o.reflect.Reflector.forClass" />
-				<arg value="com.db4o.db4ounit.Db4oUnitPlatform.GetReflectClass" />
+				<arg value="@sharpen-legacy-tests-options" />
 			</args>
 		</sharpen>
 		
@@ -1586,6 +1581,9 @@
 				<exclude name="**/compact*/**" />
 			</sources>
 		</updatecsharpproject>
+	</target>
+	
+	<target name="standalone-sharpen" depends="init, configure-net2, sharpen">
 	</target>
 	
 	<target name="sharpen" description="create .NET sources" depends="sharpen-core, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests" unless="skip.conversion">

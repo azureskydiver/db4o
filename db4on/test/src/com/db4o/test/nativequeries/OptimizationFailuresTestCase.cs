@@ -2,7 +2,8 @@
 using System.Collections;
 using System.IO;
 using com.db4o.ext;
-using com.db4o.inside.query;
+using com.db4o.@internal;
+using com.db4o.@internal.query;
 
 namespace com.db4o.test.nativequeries
 {
@@ -92,7 +93,7 @@ namespace com.db4o.test.nativequeries
 			ExtObjectContainer container = Tester.ObjectContainer();
 			container.Configure().OptimizeNativeQueries(true);
 
-			NativeQueryHandler handler = ((YapStream)container).GetNativeQueryHandler();
+			NativeQueryHandler handler = ((ObjectContainerBase)container).GetNativeQueryHandler();
 			handler.QueryOptimizationFailure += new QueryOptimizationFailureHandler(OnOptimizationFailure);
 			try
 			{

@@ -243,7 +243,7 @@ namespace Db4oUnit.Extensions
 
 		protected virtual com.db4o.reflect.ReflectClass ReflectClass(System.Type clazz)
 		{
-			return Reflector().ForClass(j4o.lang.Class.GetClassForType(clazz));
+			return Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass(Reflector(), clazz);
 		}
 	}
 }

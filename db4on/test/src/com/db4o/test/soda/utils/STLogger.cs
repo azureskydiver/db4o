@@ -4,9 +4,9 @@ using System;
 using System.Collections;
 using j4o.lang;
 using j4o.lang.reflect;
-using j4o.util;
-using j4o.io;
 using com.db4o.test.soda;
+using com.db4o.@internal;
+
 namespace com.db4o.test.soda.utils {
 
    public class STLogger {

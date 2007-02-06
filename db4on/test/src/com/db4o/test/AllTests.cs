@@ -3,6 +3,7 @@
 using System;
 using j4o.lang;
 using j4o.lang.reflect;
+using com.db4o.@internal;
 
 namespace com.db4o.test 
 {
@@ -41,7 +42,7 @@ namespace com.db4o.test
 			//
 			//            // BenchMark.Main(null);
 			//
-            int errorCount = new com.db4o.db4ounit.AllTests().RunSolo();
+            int errorCount = new com.db4o.db4ounit.AllTests().RunSoloAndClientServer();
 			new AllTests().Run();
 			errorCount += Tester.errorCount;
 			return errorCount;

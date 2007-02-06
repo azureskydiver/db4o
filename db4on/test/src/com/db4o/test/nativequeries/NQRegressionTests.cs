@@ -1,4 +1,5 @@
-﻿using com.db4o.inside.query;
+﻿using com.db4o.@internal.query;
+using com.db4o.@internal;
 
 namespace com.db4o.test.nativequeries
 {
@@ -803,7 +804,7 @@ namespace com.db4o.test.nativequeries
 			com.db4o.ObjectContainer db = com.db4o.test.Tester.ObjectContainer();
 			
 			QueryExecutionListener listener = new QueryExecutionListener(filter);
-			NativeQueryHandler handler = ((com.db4o.YapStream)db).GetNativeQueryHandler();
+			NativeQueryHandler handler = ((ObjectContainerBase)db).GetNativeQueryHandler();
 			handler.QueryExecution += new QueryExecutionHandler(listener.OnQueryExecution);
 			try
 			{
