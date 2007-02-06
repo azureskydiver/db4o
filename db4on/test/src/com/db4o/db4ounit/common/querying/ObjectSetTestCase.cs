@@ -17,9 +17,9 @@ namespace com.db4o.db4ounit.common.querying
 			{
 			}
 
-			public Item(string name)
+			public Item(string name_)
 			{
-				this.name = name;
+				name = name_;
 			}
 
 			public override string ToString()
@@ -37,14 +37,14 @@ namespace com.db4o.db4ounit.common.querying
 
 		public virtual void TestObjectsCantBeSeenAfterDelete()
 		{
-			com.db4o.Transaction trans1 = NewTransaction();
-			com.db4o.Transaction trans2 = NewTransaction();
+			com.db4o.@internal.Transaction trans1 = NewTransaction();
+			com.db4o.@internal.Transaction trans2 = NewTransaction();
 			com.db4o.ObjectSet os = QueryItems(trans1);
 			DeleteItemAndCommit(trans2, "foo");
 			AssertItems(new string[] { "bar", "baz" }, os);
 		}
 
-		public virtual void _testAccessOrder()
+		public virtual void TestAccessOrder()
 		{
 			com.db4o.ObjectSet result = NewQuery(typeof(com.db4o.db4ounit.common.querying.ObjectSetTestCase.Item)
 				).Execute();
@@ -67,13 +67,14 @@ namespace com.db4o.db4ounit.common.querying
 			Db4oUnit.Assert.IsFalse(actual.HasNext());
 		}
 
-		private void DeleteItemAndCommit(com.db4o.Transaction trans, string name)
+		private void DeleteItemAndCommit(com.db4o.@internal.Transaction trans, string name
+			)
 		{
 			Stream().Delete(trans, QueryItem(trans, name));
 			trans.Commit();
 		}
 
-		private com.db4o.db4ounit.common.querying.ObjectSetTestCase.Item QueryItem(com.db4o.Transaction
+		private com.db4o.db4ounit.common.querying.ObjectSetTestCase.Item QueryItem(com.db4o.@internal.Transaction
 			 trans, string name)
 		{
 			com.db4o.query.Query q = NewQuery(trans, typeof(com.db4o.db4ounit.common.querying.ObjectSetTestCase.Item)
@@ -83,7 +84,7 @@ namespace com.db4o.db4ounit.common.querying
 				();
 		}
 
-		private com.db4o.ObjectSet QueryItems(com.db4o.Transaction trans)
+		private com.db4o.ObjectSet QueryItems(com.db4o.@internal.Transaction trans)
 		{
 			com.db4o.query.Query q = NewQuery(trans, typeof(com.db4o.db4ounit.common.querying.ObjectSetTestCase.Item)
 				);

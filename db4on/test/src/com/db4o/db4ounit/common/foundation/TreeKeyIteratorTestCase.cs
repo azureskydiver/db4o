@@ -51,10 +51,10 @@ namespace com.db4o.db4ounit.common.foundation
 
 		private com.db4o.foundation.Tree CreateTree(int[] values)
 		{
-			com.db4o.foundation.Tree tree = new com.db4o.TreeInt(values[0]);
+			com.db4o.foundation.Tree tree = new com.db4o.@internal.TreeInt(values[0]);
 			for (int i = 1; i < values.Length; i++)
 			{
-				tree = tree.Add(new com.db4o.TreeInt(values[i]));
+				tree = tree.Add(new com.db4o.@internal.TreeInt(values[i]));
 			}
 			return tree;
 		}

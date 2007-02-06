@@ -11,8 +11,6 @@ namespace com.db4o.db4ounit.common.assorted
 		public virtual void Test()
 		{
 			com.db4o.ext.ExtObjectContainer oc = this.Db();
-			string msg = oc is com.db4o.cs.YapClient ? "running in C/S" : "Solo mode";
-			j4o.lang.JavaSystem.Out.WriteLine(msg);
 			com.db4o.db4ounit.common.assorted.SimplestPossibleItem @object = new com.db4o.db4ounit.common.assorted.SimplestPossibleItem
 				("c1");
 			oc.Set(@object);

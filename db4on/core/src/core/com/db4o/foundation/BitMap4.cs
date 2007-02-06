@@ -1,7 +1,7 @@
 namespace com.db4o.foundation
 {
 	/// <exclude></exclude>
-	public class BitMap4
+	public sealed class BitMap4
 	{
 		private readonly byte[] _bits;
 
@@ -15,27 +15,44 @@ namespace com.db4o.foundation
 			System.Array.Copy(buffer, pos, _bits, 0, _bits.Length);
 		}
 
-		public virtual bool IsTrue(int bit)
+		public BitMap4(byte singleByte)
+		{
+			_bits = new byte[] { singleByte };
+		}
+
+		public bool IsTrue(int bit)
 		{
 			return (((_bits[ArrayOffset(bit)]) >> (ByteOffset(bit) & 0x1f)) & 1) != 0;
 		}
 
-		public virtual int MarshalledLength()
+		public int MarshalledLength()
 		{
 			return _bits.Length;
 		}
 
-		public virtual void SetFalse(int bit)
+		public void SetFalse(int bit)
 		{
 			_bits[ArrayOffset(bit)] &= (byte)~BitMask(bit);
 		}
 
-		public virtual void SetTrue(int bit)
+		public void Set(int bit, bool val)
+		{
+			if (val)
+			{
+				SetTrue(bit);
+			}
+			else
+			{
+				SetFalse(bit);
+			}
+		}
+
+		public void SetTrue(int bit)
 		{
 			_bits[ArrayOffset(bit)] |= BitMask(bit);
 		}
 
-		public virtual void WriteTo(byte[] bytes, int pos)
+		public void WriteTo(byte[] bytes, int pos)
 		{
 			System.Array.Copy(_bits, 0, bytes, pos, _bits.Length);
 		}
@@ -58,6 +75,11 @@ namespace com.db4o.foundation
 		private int ByteCount(int numBits)
 		{
 			return (numBits + 7) / 8;
+		}
+
+		public byte GetByte(int index)
+		{
+			return _bits[index];
 		}
 	}
 }

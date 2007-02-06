@@ -41,10 +41,10 @@ namespace com.db4o.db4ounit.common.fieldindex
 			com.db4o.query.Query query = CreateComplexItemQuery();
 			query.Descend("child").Descend("foo").Constrain(3);
 			query.Descend("bar").Constrain(2);
-			com.db4o.inside.fieldindex.IndexedNode index = SelectBestIndex(query);
+			com.db4o.@internal.fieldindex.IndexedNode index = SelectBestIndex(query);
 			AssertComplexItemIndex("foo", index);
 			Db4oUnit.Assert.IsFalse(index.IsResolved());
-			com.db4o.inside.fieldindex.IndexedNode result = index.Resolve();
+			com.db4o.@internal.fieldindex.IndexedNode result = index.Resolve();
 			Db4oUnit.Assert.IsNotNull(result);
 			AssertComplexItemIndex("child", result);
 			Db4oUnit.Assert.IsTrue(result.IsResolved());
@@ -56,10 +56,10 @@ namespace com.db4o.db4ounit.common.fieldindex
 		{
 			com.db4o.query.Query query = CreateComplexItemQuery();
 			query.Descend("child").Descend("child").Descend("foo").Constrain(3);
-			com.db4o.inside.fieldindex.IndexedNode index = SelectBestIndex(query);
+			com.db4o.@internal.fieldindex.IndexedNode index = SelectBestIndex(query);
 			AssertComplexItemIndex("foo", index);
 			Db4oUnit.Assert.IsFalse(index.IsResolved());
-			com.db4o.inside.fieldindex.IndexedNode result = index.Resolve();
+			com.db4o.@internal.fieldindex.IndexedNode result = index.Resolve();
 			Db4oUnit.Assert.IsNotNull(result);
 			AssertComplexItemIndex("child", result);
 			Db4oUnit.Assert.IsFalse(result.IsResolved());
@@ -69,7 +69,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 			AssertComplexItems(new int[] { 7 }, result.ToTreeInt());
 		}
 
-		private void AssertComplexItems(int[] expectedFoos, com.db4o.TreeInt found)
+		private void AssertComplexItems(int[] expectedFoos, com.db4o.@internal.TreeInt found
+			)
 		{
 			Db4oUnit.Assert.IsNotNull(found);
 			AssertTreeInt(MapToObjectIds(CreateComplexItemQuery(), expectedFoos), found);
@@ -80,7 +81,7 @@ namespace com.db4o.db4ounit.common.fieldindex
 			System.Collections.IEnumerator nodes = CreateProcessor(query).CollectIndexedNodes
 				();
 			Db4oUnit.Assert.IsTrue(nodes.MoveNext());
-			com.db4o.inside.fieldindex.OrIndexedLeaf node = (com.db4o.inside.fieldindex.OrIndexedLeaf
+			com.db4o.@internal.fieldindex.OrIndexedLeaf node = (com.db4o.@internal.fieldindex.OrIndexedLeaf
 				)nodes.Current;
 			Db4oUnit.Assert.IsNotNull(node);
 			Db4oUnit.Assert.IsFalse(nodes.MoveNext());

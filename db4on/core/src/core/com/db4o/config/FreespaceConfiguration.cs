@@ -3,7 +3,7 @@ namespace com.db4o.config
 	/// <summary>interface to configure the freespace system to be used.</summary>
 	/// <remarks>
 	/// interface to configure the freespace system to be used.
-	/// All methods should be called before opening database files.
+	/// <br /><br />All methods should be called before opening database files.
 	/// If db4o is instructed to exchange the system
 	/// (
 	/// <see cref="com.db4o.config.FreespaceConfiguration.UseIndexSystem">com.db4o.config.FreespaceConfiguration.UseIndexSystem

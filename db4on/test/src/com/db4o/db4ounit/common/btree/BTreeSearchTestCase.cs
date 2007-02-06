@@ -1,6 +1,7 @@
 namespace com.db4o.db4ounit.common.btree
 {
 	public class BTreeSearchTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase, Db4oUnit.Extensions.Fixtures.OptOutDefragSolo
+		, Db4oUnit.Extensions.Fixtures.OptOutCS
 	{
 		protected const int BTREE_NODE_SIZE = 4;
 
@@ -20,16 +21,16 @@ namespace com.db4o.db4ounit.common.btree
 
 		private void CycleIntKeys(int[] values)
 		{
-			com.db4o.inside.btree.BTree btree = com.db4o.db4ounit.common.btree.BTreeAssert.CreateIntKeyBTree
-				(Stream(), 0, BTREE_NODE_SIZE);
+			com.db4o.@internal.btree.BTree btree = com.db4o.db4ounit.common.btree.BTreeAssert
+				.CreateIntKeyBTree(Stream(), 0, BTREE_NODE_SIZE);
 			for (int i = 0; i < 5; i++)
 			{
 				btree = CycleIntKeys(btree, values);
 			}
 		}
 
-		private com.db4o.inside.btree.BTree CycleIntKeys(com.db4o.inside.btree.BTree btree
-			, int[] values)
+		private com.db4o.@internal.btree.BTree CycleIntKeys(com.db4o.@internal.btree.BTree
+			 btree, int[] values)
 		{
 			for (int i = 0; i < values.Length; i++)
 			{
@@ -53,7 +54,7 @@ namespace com.db4o.db4ounit.common.btree
 			return btree;
 		}
 
-		private void ExpectKeysSearch(com.db4o.Transaction trans, com.db4o.inside.btree.BTree
+		private void ExpectKeysSearch(com.db4o.@internal.Transaction trans, com.db4o.@internal.btree.BTree
 			 btree, int[] keys)
 		{
 			int lastValue = int.MinValue;
@@ -64,7 +65,7 @@ namespace com.db4o.db4ounit.common.btree
 					com.db4o.db4ounit.common.btree.ExpectingVisitor expectingVisitor = com.db4o.db4ounit.common.btree.BTreeAssert
 						.CreateExpectingVisitor(keys[i], com.db4o.db4ounit.common.foundation.IntArrays4.
 						Occurences(keys, keys[i]));
-					com.db4o.inside.btree.BTreeRange range = btree.Search(trans, keys[i]);
+					com.db4o.@internal.btree.BTreeRange range = btree.Search(trans, keys[i]);
 					com.db4o.db4ounit.common.btree.BTreeAssert.TraverseKeys(range, expectingVisitor);
 					expectingVisitor.AssertExpectations();
 					lastValue = keys[i];

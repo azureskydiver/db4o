@@ -401,7 +401,8 @@ namespace com.db4o.reflect.generic
 			{
 				return new object[] { obj };
 			}
-			return com.db4o.Platform4.CollectionToArray(_reflector.GetStream(), obj);
+			return com.db4o.@internal.Platform4.CollectionToArray(_reflector.GetStream(), obj
+				);
 		}
 	}
 }

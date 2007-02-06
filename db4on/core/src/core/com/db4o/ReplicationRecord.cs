@@ -34,20 +34,20 @@ namespace com.db4o
 			_version = version;
 		}
 
-		public virtual void Store(com.db4o.YapStream stream)
+		public virtual void Store(com.db4o.@internal.ObjectContainerBase stream)
 		{
 			stream.ShowInternalClasses(true);
-			com.db4o.Transaction ta = stream.CheckTransaction(null);
+			com.db4o.@internal.Transaction ta = stream.CheckTransaction(null);
 			stream.SetAfterReplication(ta, this, 1, false);
 			stream.Commit();
 			stream.ShowInternalClasses(false);
 		}
 
-		public static com.db4o.ReplicationRecord BeginReplication(com.db4o.Transaction transA
-			, com.db4o.Transaction transB)
+		public static com.db4o.ReplicationRecord BeginReplication(com.db4o.@internal.Transaction
+			 transA, com.db4o.@internal.Transaction transB)
 		{
-			com.db4o.YapStream peerA = transA.Stream();
-			com.db4o.YapStream peerB = transB.Stream();
+			com.db4o.@internal.ObjectContainerBase peerA = transA.Stream();
+			com.db4o.@internal.ObjectContainerBase peerB = transB.Stream();
 			com.db4o.ext.Db4oDatabase dbA = peerA.Identity();
 			com.db4o.ext.Db4oDatabase dbB = peerB.Identity();
 			dbB.Bind(transA);
@@ -83,20 +83,20 @@ namespace com.db4o
 			if (rrA != rrB)
 			{
 				peerB.ShowInternalClasses(true);
-				int id = peerB.GetID1(transB, rrB);
+				int id = peerB.GetID1(rrB);
 				peerB.Bind1(transB, rrA, id);
 				peerB.ShowInternalClasses(false);
 			}
 			return rrA;
 		}
 
-		public static com.db4o.ReplicationRecord QueryForReplicationRecord(com.db4o.YapStream
+		public static com.db4o.ReplicationRecord QueryForReplicationRecord(com.db4o.@internal.ObjectContainerBase
 			 stream, com.db4o.ext.Db4oDatabase younger, com.db4o.ext.Db4oDatabase older)
 		{
 			com.db4o.ReplicationRecord res = null;
 			stream.ShowInternalClasses(true);
 			com.db4o.query.Query q = stream.Query();
-			q.Constrain(com.db4o.YapConst.CLASS_REPLICATIONRECORD);
+			q.Constrain(com.db4o.@internal.Const4.CLASS_REPLICATIONRECORD);
 			q.Descend("_youngerPeer").Constrain(younger).Identity();
 			q.Descend("_olderPeer").Constrain(older).Identity();
 			com.db4o.ObjectSet objectSet = q.Execute();

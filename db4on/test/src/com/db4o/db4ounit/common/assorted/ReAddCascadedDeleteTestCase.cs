@@ -4,7 +4,8 @@ namespace com.db4o.db4ounit.common.assorted
 	{
 		public static void Main(string[] args)
 		{
-			new com.db4o.db4ounit.common.assorted.ReAddCascadedDeleteTestCase().RunSolo();
+			new com.db4o.db4ounit.common.assorted.ReAddCascadedDeleteTestCase().RunClientServer
+				();
 		}
 
 		public class Item

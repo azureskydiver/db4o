@@ -1,6 +1,7 @@
 namespace com.db4o.db4ounit.common.fieldindex
 {
 	public abstract class FieldIndexTestCaseBase : Db4oUnit.Extensions.AbstractDb4oTestCase
+		, Db4oUnit.Extensions.Fixtures.OptOutCS
 	{
 		public FieldIndexTestCaseBase() : base()
 		{
@@ -39,23 +40,23 @@ namespace com.db4o.db4ounit.common.fieldindex
 			return CreateQuery(Trans(), clazz);
 		}
 
-		protected virtual com.db4o.query.Query CreateQuery(com.db4o.Transaction trans, System.Type
-			 clazz)
+		protected virtual com.db4o.query.Query CreateQuery(com.db4o.@internal.Transaction
+			 trans, System.Type clazz)
 		{
 			com.db4o.query.Query q = CreateQuery(trans);
 			q.Constrain(clazz);
 			return q;
 		}
 
-		protected virtual com.db4o.query.Query CreateItemQuery(com.db4o.Transaction trans
-			)
+		protected virtual com.db4o.query.Query CreateItemQuery(com.db4o.@internal.Transaction
+			 trans)
 		{
 			com.db4o.query.Query q = CreateQuery(trans);
 			q.Constrain(typeof(com.db4o.db4ounit.common.fieldindex.FieldIndexItem));
 			return q;
 		}
 
-		private com.db4o.query.Query CreateQuery(com.db4o.Transaction trans)
+		private com.db4o.query.Query CreateQuery(com.db4o.@internal.Transaction trans)
 		{
 			return Stream().Query(trans);
 		}

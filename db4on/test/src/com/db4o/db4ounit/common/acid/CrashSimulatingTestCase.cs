@@ -26,8 +26,9 @@ namespace com.db4o.db4ounit.common.acid
 
 		public virtual void Test()
 		{
-			com.db4o.db4ounit.util.File4.Delete(FILE);
+			com.db4o.foundation.io.File4.Delete(FILE);
 			System.IO.Directory.CreateDirectory(PATH);
+			com.db4o.Db4o.Configure().BTreeNodeSize(4);
 			CreateFile();
 			com.db4o.db4ounit.common.acid.CrashSimulatingIoAdapter adapterFactory = new com.db4o.db4ounit.common.acid.CrashSimulatingIoAdapter
 				(new com.db4o.io.RandomAccessFileAdapter());
@@ -42,6 +43,24 @@ namespace com.db4o.db4ounit.common.acid
 			oc.Set(new com.db4o.db4ounit.common.acid.CrashSimulatingTestCase(null, "seven"));
 			oc.Set(new com.db4o.db4ounit.common.acid.CrashSimulatingTestCase(null, "eight"));
 			oc.Set(new com.db4o.db4ounit.common.acid.CrashSimulatingTestCase(null, "nine"));
+			oc.Set(new com.db4o.db4ounit.common.acid.CrashSimulatingTestCase(null, "10"));
+			oc.Set(new com.db4o.db4ounit.common.acid.CrashSimulatingTestCase(null, "11"));
+			oc.Set(new com.db4o.db4ounit.common.acid.CrashSimulatingTestCase(null, "12"));
+			oc.Set(new com.db4o.db4ounit.common.acid.CrashSimulatingTestCase(null, "13"));
+			oc.Set(new com.db4o.db4ounit.common.acid.CrashSimulatingTestCase(null, "14"));
+			oc.Commit();
+			com.db4o.query.Query q = oc.Query();
+			q.Constrain(typeof(com.db4o.db4ounit.common.acid.CrashSimulatingTestCase));
+			objectSet = q.Execute();
+			while (objectSet.HasNext())
+			{
+				com.db4o.db4ounit.common.acid.CrashSimulatingTestCase cst = (com.db4o.db4ounit.common.acid.CrashSimulatingTestCase
+					)objectSet.Next();
+				if (!(cst._name.Equals("10") || cst._name.Equals("13")))
+				{
+					oc.Delete(cst);
+				}
+			}
 			oc.Commit();
 			oc.Close();
 			com.db4o.Db4o.Configure().Io(new com.db4o.io.RandomAccessFileAdapter());
@@ -59,7 +78,10 @@ namespace com.db4o.db4ounit.common.acid
 				com.db4o.ObjectContainer oc = com.db4o.Db4o.OpenFile(fileName);
 				if (!StateBeforeCommit(oc))
 				{
-					Db4oUnit.Assert.IsTrue(StateAfterCommit(oc));
+					if (!StateAfterFirstCommit(oc))
+					{
+						Db4oUnit.Assert.IsTrue(StateAfterSecondCommit(oc));
+					}
 				}
 				oc.Close();
 			}
@@ -70,10 +92,15 @@ namespace com.db4o.db4ounit.common.acid
 			return Expect(oc, new string[] { "one", "two", "three" });
 		}
 
-		private bool StateAfterCommit(com.db4o.ObjectContainer oc)
+		private bool StateAfterFirstCommit(com.db4o.ObjectContainer oc)
 		{
 			return Expect(oc, new string[] { "one", "two", "four", "five", "six", "seven", "eight"
-				, "nine" });
+				, "nine", "10", "11", "12", "13", "14" });
+		}
+
+		private bool StateAfterSecondCommit(com.db4o.ObjectContainer oc)
+		{
+			return Expect(oc, new string[] { "10", "13" });
 		}
 
 		private bool Expect(com.db4o.ObjectContainer oc, string[] names)
@@ -137,7 +164,7 @@ namespace com.db4o.db4ounit.common.acid
 				oc.Delete(objectSet.Next());
 			}
 			oc.Close();
-			com.db4o.db4ounit.util.File4.Copy(FILE, FILE + "0");
+			com.db4o.foundation.io.File4.Copy(FILE, FILE + "0");
 		}
 
 		public override string ToString()

@@ -38,5 +38,21 @@ namespace com.db4o.foundation
 			}
 			return true;
 		}
+
+		public static bool ContainsInstanceOf(object[] array, j4o.lang.Class klass)
+		{
+			if (array == null)
+			{
+				return false;
+			}
+			for (int i = 0; i < array.Length; ++i)
+			{
+				if (klass.IsInstance(array[i]))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }

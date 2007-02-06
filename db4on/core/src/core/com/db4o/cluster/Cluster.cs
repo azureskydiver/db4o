@@ -46,7 +46,7 @@ namespace com.db4o.cluster
 				{
 					queries[i] = _objectContainers[i].Query();
 				}
-				return new com.db4o.inside.cluster.ClusterQuery(this, queries);
+				return new com.db4o.@internal.cluster.ClusterQuery(this, queries);
 			}
 		}
 

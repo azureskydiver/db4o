@@ -20,40 +20,40 @@ namespace com.db4o.db4ounit.common.btree
 
 		public virtual void TestLastPointer()
 		{
-			com.db4o.inside.btree.BTreePointer pointer = _btree.LastPointer(Trans());
+			com.db4o.@internal.btree.BTreePointer pointer = _btree.LastPointer(Trans());
 			AssertPointerKey(9, pointer);
 		}
 
 		public virtual void TestPrevious()
 		{
-			com.db4o.inside.btree.BTreePointer pointer = GetPointerForKey(3);
-			com.db4o.inside.btree.BTreePointer previousPointer = pointer.Previous();
+			com.db4o.@internal.btree.BTreePointer pointer = GetPointerForKey(3);
+			com.db4o.@internal.btree.BTreePointer previousPointer = pointer.Previous();
 			AssertPointerKey(2, previousPointer);
 		}
 
 		public virtual void TestNextOperatesInReadMode()
 		{
-			com.db4o.inside.btree.BTreePointer pointer = _btree.FirstPointer(Trans());
+			com.db4o.@internal.btree.BTreePointer pointer = _btree.FirstPointer(Trans());
 			AssertReadModePointerIteration(keys, pointer);
 		}
 
 		public virtual void TestSearchOperatesInReadMode()
 		{
-			com.db4o.inside.btree.BTreePointer pointer = GetPointerForKey(3);
+			com.db4o.@internal.btree.BTreePointer pointer = GetPointerForKey(3);
 			AssertReadModePointerIteration(new int[] { 3, 4, 7, 9 }, pointer);
 		}
 
-		private com.db4o.inside.btree.BTreePointer GetPointerForKey(int key)
+		private com.db4o.@internal.btree.BTreePointer GetPointerForKey(int key)
 		{
-			com.db4o.inside.btree.BTreeRange range = Search(key);
+			com.db4o.@internal.btree.BTreeRange range = Search(key);
 			System.Collections.IEnumerator pointers = range.Pointers();
 			Db4oUnit.Assert.IsTrue(pointers.MoveNext());
-			com.db4o.inside.btree.BTreePointer pointer = (com.db4o.inside.btree.BTreePointer)
-				pointers.Current;
+			com.db4o.@internal.btree.BTreePointer pointer = (com.db4o.@internal.btree.BTreePointer
+				)pointers.Current;
 			return pointer;
 		}
 
-		private void AssertReadModePointerIteration(int[] expectedKeys, com.db4o.inside.btree.BTreePointer
+		private void AssertReadModePointerIteration(int[] expectedKeys, com.db4o.@internal.btree.BTreePointer
 			 pointer)
 		{
 			object[] expected = com.db4o.db4ounit.common.foundation.IntArrays4.ToObjectArray(
@@ -69,17 +69,17 @@ namespace com.db4o.db4ounit.common.btree
 			}
 		}
 
-		private void AssertInReadMode(com.db4o.inside.btree.BTreeNode node)
+		private void AssertInReadMode(com.db4o.@internal.btree.BTreeNode node)
 		{
 			Db4oUnit.Assert.IsFalse(node.CanWrite());
 		}
 
-		protected override com.db4o.inside.btree.BTree NewBTree()
+		protected override com.db4o.@internal.btree.BTree NewBTree()
 		{
 			return NewBTreeWithNoNodeCaching();
 		}
 
-		private com.db4o.inside.btree.BTree NewBTreeWithNoNodeCaching()
+		private com.db4o.@internal.btree.BTree NewBTreeWithNoNodeCaching()
 		{
 			return com.db4o.db4ounit.common.btree.BTreeAssert.CreateIntKeyBTree(Stream(), 0, 
 				0, BTREE_NODE_SIZE);

@@ -22,9 +22,9 @@ namespace com.db4o.db4ounit.common.btree
 
 		private void AssertLastPointer(int searchValue, int expectedValue)
 		{
-			com.db4o.inside.btree.BTreeRange single = Search(searchValue);
-			com.db4o.inside.btree.BTreeRange smallerRange = single.Smaller();
-			com.db4o.inside.btree.BTreePointer lastPointer = smallerRange.LastPointer();
+			com.db4o.@internal.btree.BTreeRange single = Search(searchValue);
+			com.db4o.@internal.btree.BTreeRange smallerRange = single.Smaller();
+			com.db4o.@internal.btree.BTreePointer lastPointer = smallerRange.LastPointer();
 			Db4oUnit.Assert.AreEqual(expectedValue, lastPointer.Key());
 		}
 
@@ -43,7 +43,7 @@ namespace com.db4o.db4ounit.common.btree
 			AssertSize(10, Range(0, 10));
 		}
 
-		private void AssertSize(int size, com.db4o.inside.btree.BTreeRange range)
+		private void AssertSize(int size, com.db4o.@internal.btree.BTreeRange range)
 		{
 			Db4oUnit.Assert.AreEqual(size, range.Size());
 		}
@@ -59,16 +59,16 @@ namespace com.db4o.db4ounit.common.btree
 
 		public virtual void TestIntersectSingleUnion()
 		{
-			com.db4o.inside.btree.BTreeRange union = Range(3, 3).Union(Range(7, 9));
-			com.db4o.inside.btree.BTreeRange single = Range(4, 7);
+			com.db4o.@internal.btree.BTreeRange union = Range(3, 3).Union(Range(7, 9));
+			com.db4o.@internal.btree.BTreeRange single = Range(4, 7);
 			AssertIntersection(new int[] { 7 }, union, single);
 			AssertIntersection(new int[] { 3, 7 }, union, Range(3, 7));
 		}
 
 		public virtual void TestIntersectUnionUnion()
 		{
-			com.db4o.inside.btree.BTreeRange union1 = Range(3, 3).Union(Range(7, 9));
-			com.db4o.inside.btree.BTreeRange union2 = Range(3, 3).Union(Range(9, 9));
+			com.db4o.@internal.btree.BTreeRange union1 = Range(3, 3).Union(Range(7, 9));
+			com.db4o.@internal.btree.BTreeRange union2 = Range(3, 3).Union(Range(9, 9));
 			AssertIntersection(new int[] { 3, 9 }, union1, union2);
 		}
 
@@ -90,42 +90,42 @@ namespace com.db4o.db4ounit.common.btree
 
 		public virtual void TestUnionWithEmptyDoesNotCreateNewRange()
 		{
-			com.db4o.inside.btree.BTreeRange range = Range(3, 4);
-			com.db4o.inside.btree.BTreeRange empty = Range(0, 0);
+			com.db4o.@internal.btree.BTreeRange range = Range(3, 4);
+			com.db4o.@internal.btree.BTreeRange empty = Range(0, 0);
 			Db4oUnit.Assert.AreSame(range, range.Union(empty));
 			Db4oUnit.Assert.AreSame(range, empty.Union(range));
-			com.db4o.inside.btree.BTreeRange union = range.Union(Range(8, 9));
+			com.db4o.@internal.btree.BTreeRange union = range.Union(Range(8, 9));
 			Db4oUnit.Assert.AreSame(union, union.Union(empty));
 			Db4oUnit.Assert.AreSame(union, empty.Union(union));
 		}
 
 		public virtual void TestUnionsMerge()
 		{
-			com.db4o.inside.btree.BTreeRange range = Range(3, 3).Union(Range(7, 7)).Union(Range
-				(4, 4));
+			com.db4o.@internal.btree.BTreeRange range = Range(3, 3).Union(Range(7, 7)).Union(
+				Range(4, 4));
 			AssertIsRangeSingle(range);
 			com.db4o.db4ounit.common.btree.BTreeAssert.AssertRange(new int[] { 3, 4, 7 }, range
 				);
 		}
 
-		private void AssertIsRangeSingle(com.db4o.inside.btree.BTreeRange range)
+		private void AssertIsRangeSingle(com.db4o.@internal.btree.BTreeRange range)
 		{
-			Db4oUnit.Assert.IsInstanceOf(typeof(com.db4o.inside.btree.BTreeRangeSingle), range
+			Db4oUnit.Assert.IsInstanceOf(typeof(com.db4o.@internal.btree.BTreeRangeSingle), range
 				);
 		}
 
 		public virtual void TestUnionsOfUnions()
 		{
-			com.db4o.inside.btree.BTreeRange union1 = Range(3, 4).Union(Range(8, 9));
+			com.db4o.@internal.btree.BTreeRange union1 = Range(3, 4).Union(Range(8, 9));
 			com.db4o.db4ounit.common.btree.BTreeAssert.AssertRange(new int[] { 3, 4, 9 }, union1
 				);
 			com.db4o.db4ounit.common.btree.BTreeAssert.AssertRange(new int[] { 3, 4, 7, 9 }, 
 				union1.Union(Range(7, 7)));
-			com.db4o.inside.btree.BTreeRange union2 = Range(3, 3).Union(Range(7, 7));
+			com.db4o.@internal.btree.BTreeRange union2 = Range(3, 3).Union(Range(7, 7));
 			AssertUnion(new int[] { 3, 4, 7, 9 }, union1, union2);
 			AssertIsRangeSingle(union1.Union(union2));
 			AssertIsRangeSingle(union2.Union(union1));
-			com.db4o.inside.btree.BTreeRange union3 = Range(3, 3).Union(Range(9, 9));
+			com.db4o.@internal.btree.BTreeRange union3 = Range(3, 3).Union(Range(9, 9));
 			AssertUnion(new int[] { 3, 7, 9 }, union2, union3);
 		}
 
@@ -139,12 +139,12 @@ namespace com.db4o.db4ounit.common.btree
 
 		public virtual void TestUnionOfOverlappingSingleRangesYieldSingleRange()
 		{
-			Db4oUnit.Assert.IsInstanceOf(typeof(com.db4o.inside.btree.BTreeRangeSingle), Range
+			Db4oUnit.Assert.IsInstanceOf(typeof(com.db4o.@internal.btree.BTreeRangeSingle), Range
 				(3, 4).Union(Range(4, 9)));
 		}
 
-		private void AssertUnion(int[] expectedKeys, com.db4o.inside.btree.BTreeRange range1
-			, com.db4o.inside.btree.BTreeRange range2)
+		private void AssertUnion(int[] expectedKeys, com.db4o.@internal.btree.BTreeRange 
+			range1, com.db4o.@internal.btree.BTreeRange range2)
 		{
 			com.db4o.db4ounit.common.btree.BTreeAssert.AssertRange(expectedKeys, range1.Union
 				(range2));
@@ -152,8 +152,8 @@ namespace com.db4o.db4ounit.common.btree
 				(range1));
 		}
 
-		private void AssertIntersection(int[] expectedKeys, com.db4o.inside.btree.BTreeRange
-			 range1, com.db4o.inside.btree.BTreeRange range2)
+		private void AssertIntersection(int[] expectedKeys, com.db4o.@internal.btree.BTreeRange
+			 range1, com.db4o.@internal.btree.BTreeRange range2)
 		{
 			com.db4o.db4ounit.common.btree.BTreeAssert.AssertRange(expectedKeys, range1.Intersect
 				(range2));

@@ -1,6 +1,7 @@
 namespace com.db4o.db4ounit.common.header
 {
 	public class SimpleTimeStampIdTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase
+		, Db4oUnit.Extensions.Fixtures.OptOutCS
 	{
 		public static void Main(string[] arguments)
 		{
@@ -54,7 +55,7 @@ namespace com.db4o.db4ounit.common.header
 
 		private long CurrentVersion()
 		{
-			return ((com.db4o.YapFile)Db()).CurrentVersion();
+			return ((com.db4o.@internal.LocalObjectContainer)Db()).CurrentVersion();
 		}
 	}
 }

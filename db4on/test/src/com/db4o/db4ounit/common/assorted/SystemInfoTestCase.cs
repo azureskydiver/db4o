@@ -18,14 +18,14 @@ namespace com.db4o.db4ounit.common.assorted
 
 		public virtual void TestDefaultFreespaceInfo()
 		{
-			AssertFreespaceInfo(Db().SystemInfo());
+			AssertFreespaceInfo(FileSession().SystemInfo());
 		}
 
 		public virtual void TestIndexBasedFreespaceInfo()
 		{
 			com.db4o.Db4o.Configure().Freespace().UseIndexSystem();
 			Reopen();
-			AssertFreespaceInfo(Db().SystemInfo());
+			AssertFreespaceInfo(FileSession().SystemInfo());
 		}
 
 		private void AssertFreespaceInfo(com.db4o.ext.SystemInfo info)

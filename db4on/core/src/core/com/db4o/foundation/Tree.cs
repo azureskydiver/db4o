@@ -1,8 +1,22 @@
 namespace com.db4o.foundation
 {
 	/// <exclude></exclude>
-	public abstract class Tree : com.db4o.foundation.ShallowClone
+	public abstract class Tree : com.db4o.foundation.ShallowClone, com.db4o.foundation.DeepClone
 	{
+		public sealed class ByRef
+		{
+			public ByRef()
+			{
+			}
+
+			public ByRef(com.db4o.foundation.Tree initialValue)
+			{
+				value = initialValue;
+			}
+
+			public com.db4o.foundation.Tree value;
+		}
+
 		public com.db4o.foundation.Tree _preceding;
 
 		public int _size = 1;
@@ -77,7 +91,7 @@ namespace com.db4o.foundation
 				}
 				else
 				{
-					a_new.IsDuplicateOf(this);
+					a_new.OnAttemptToAddDuplicate(this);
 				}
 			}
 			return this;
@@ -85,23 +99,31 @@ namespace com.db4o.foundation
 
 		/// <summary>
 		/// On adding a node to a tree, if it already exists, and if
-		/// Tree#duplicates() returns false, #isDuplicateOf() will be
-		/// called.
+		/// Tree#duplicates() returns false, #onAttemptToAddDuplicate()
+		/// will be called and the existing node will be stored in
+		/// this._preceding.
 		/// </summary>
 		/// <remarks>
 		/// On adding a node to a tree, if it already exists, and if
-		/// Tree#duplicates() returns false, #isDuplicateOf() will be
-		/// called. The added node can then be asked for the node that
-		/// prevails in the tree using #duplicateOrThis(). This mechanism
-		/// allows doing find() and add() in one run.
+		/// Tree#duplicates() returns false, #onAttemptToAddDuplicate()
+		/// will be called and the existing node will be stored in
+		/// this._preceding.
+		/// This node node can then be asked for the node that prevails
+		/// in the tree on adding, using the #addedOrExisting() method.
+		/// This mechanism allows doing find() and add() in one run.
 		/// </remarks>
-		public virtual com.db4o.foundation.Tree DuplicateOrThis()
+		public virtual com.db4o.foundation.Tree AddedOrExisting()
 		{
-			if (_size == 0)
+			if (WasAddedToTree())
 			{
-				return _preceding;
+				return this;
 			}
-			return this;
+			return _preceding;
+		}
+
+		public virtual bool WasAddedToTree()
+		{
+			return _size != 0;
 		}
 
 		public com.db4o.foundation.Tree Balance()
@@ -187,7 +209,8 @@ namespace com.db4o.foundation
 			{
 				return null;
 			}
-			com.db4o.foundation.Tree newNode = a_tree.DeepClone(a_param);
+			com.db4o.foundation.Tree newNode = (com.db4o.foundation.Tree)a_tree.DeepClone(a_param
+				);
 			newNode._size = a_tree._size;
 			newNode._preceding = com.db4o.foundation.Tree.DeepClone(a_tree._preceding, a_param
 				);
@@ -196,9 +219,9 @@ namespace com.db4o.foundation
 			return newNode;
 		}
 
-		public virtual com.db4o.foundation.Tree DeepClone(object a_param)
+		public virtual object DeepClone(object a_param)
 		{
-			return (com.db4o.foundation.Tree)this.ShallowClone();
+			return ShallowClone();
 		}
 
 		public virtual bool Duplicates()
@@ -313,7 +336,7 @@ namespace com.db4o.foundation
 			return _preceding.First();
 		}
 
-		public virtual void IsDuplicateOf(com.db4o.foundation.Tree a_tree)
+		public virtual void OnAttemptToAddDuplicate(com.db4o.foundation.Tree a_tree)
 		{
 			_size = 0;
 			_preceding = a_tree;

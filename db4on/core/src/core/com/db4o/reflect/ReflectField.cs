@@ -23,5 +23,9 @@ namespace com.db4o.reflect
 		void Set(object onObject, object value);
 
 		void SetAccessible();
+
+		com.db4o.reflect.ReflectClass IndexType();
+
+		object IndexEntry(object orig);
 	}
 }

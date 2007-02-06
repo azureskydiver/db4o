@@ -1,5 +1,6 @@
 namespace com.db4o.reflect.core
 {
+	/// <exclude></exclude>
 	public abstract class AbstractReflectArray : com.db4o.reflect.ReflectArray
 	{
 		protected readonly com.db4o.reflect.Reflector _reflector;

@@ -3,6 +3,8 @@
 using System;
 using System.Reflection;
 
+using com.db4o.@internal;
+
 namespace com.db4o.config.attributes
 {
 	class ConfigurationIntrospector

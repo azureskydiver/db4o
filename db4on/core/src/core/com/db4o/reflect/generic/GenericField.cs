@@ -89,5 +89,15 @@ namespace com.db4o.reflect.generic
 		{
 			_index = index;
 		}
+
+		public virtual object IndexEntry(object orig)
+		{
+			return orig;
+		}
+
+		public virtual com.db4o.reflect.ReflectClass IndexType()
+		{
+			return GetFieldType();
+		}
 	}
 }

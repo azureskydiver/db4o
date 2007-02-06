@@ -3,21 +3,11 @@ namespace com.db4o.reflect.generic
 	/// <exclude></exclude>
 	public class GenericReflector : com.db4o.reflect.Reflector, com.db4o.foundation.DeepClone
 	{
+		private com.db4o.reflect.generic.KnownClassesRepository _repository;
+
 		private com.db4o.reflect.Reflector _delegate;
 
 		private com.db4o.reflect.generic.GenericArrayReflector _array;
-
-		private readonly com.db4o.foundation.Hashtable4 _classByName = new com.db4o.foundation.Hashtable4
-			();
-
-		private readonly com.db4o.foundation.Hashtable4 _classByClass = new com.db4o.foundation.Hashtable4
-			();
-
-		private readonly com.db4o.foundation.Collection4 _classes = new com.db4o.foundation.Collection4
-			();
-
-		private readonly com.db4o.foundation.Hashtable4 _classByID = new com.db4o.foundation.Hashtable4
-			();
 
 		private com.db4o.foundation.Collection4 _collectionPredicates = new com.db4o.foundation.Collection4
 			();
@@ -25,16 +15,18 @@ namespace com.db4o.reflect.generic
 		private com.db4o.foundation.Collection4 _collectionUpdateDepths = new com.db4o.foundation.Collection4
 			();
 
-		private com.db4o.foundation.Collection4 _pendingClasses = new com.db4o.foundation.Collection4
+		private readonly com.db4o.foundation.Hashtable4 _classByClass = new com.db4o.foundation.Hashtable4
 			();
 
-		private com.db4o.Transaction _trans;
+		private com.db4o.@internal.Transaction _trans;
 
-		private com.db4o.YapStream _stream;
+		private com.db4o.@internal.ObjectContainerBase _stream;
 
-		public GenericReflector(com.db4o.Transaction trans, com.db4o.reflect.Reflector delegateReflector
-			)
+		public GenericReflector(com.db4o.@internal.Transaction trans, com.db4o.reflect.Reflector
+			 delegateReflector)
 		{
+			_repository = new com.db4o.reflect.generic.KnownClassesRepository(new com.db4o.reflect.generic.GenericClassBuilder
+				(this, delegateReflector));
 			SetTransaction(trans);
 			_delegate = delegateReflector;
 			if (_delegate != null)
@@ -54,7 +46,7 @@ namespace com.db4o.reflect.generic
 			return myClone;
 		}
 
-		internal virtual com.db4o.YapStream GetStream()
+		internal virtual com.db4o.@internal.ObjectContainerBase GetStream()
 		{
 			return _stream;
 		}
@@ -64,13 +56,14 @@ namespace com.db4o.reflect.generic
 			return _trans != null;
 		}
 
-		public virtual void SetTransaction(com.db4o.Transaction trans)
+		public virtual void SetTransaction(com.db4o.@internal.Transaction trans)
 		{
 			if (trans != null)
 			{
 				_trans = trans;
 				_stream = trans.Stream();
 			}
+			_repository.SetTransaction(trans);
 		}
 
 		public virtual com.db4o.reflect.ReflectArray Array()
@@ -110,13 +103,12 @@ namespace com.db4o.reflect.generic
 				return null;
 			}
 			com.db4o.reflect.generic.GenericClass claxx = (com.db4o.reflect.generic.GenericClass
-				)_classByName.Get(clazz.GetName());
+				)_repository.LookupByName(clazz.GetName());
 			if (claxx == null)
 			{
 				string name = clazz.GetName();
 				claxx = new com.db4o.reflect.generic.GenericClass(this, clazz, name, null);
-				_classes.Add(claxx);
-				_classByName.Put(name, claxx);
+				_repository.Register(claxx);
 			}
 			return claxx;
 		}
@@ -151,8 +143,7 @@ namespace com.db4o.reflect.generic
 
 		public virtual com.db4o.reflect.ReflectClass ForName(string className)
 		{
-			com.db4o.reflect.ReflectClass clazz = (com.db4o.reflect.ReflectClass)_classByName
-				.Get(className);
+			com.db4o.reflect.ReflectClass clazz = _repository.LookupByName(className);
 			if (clazz != null)
 			{
 				return clazz;
@@ -162,30 +153,43 @@ namespace com.db4o.reflect.generic
 			{
 				return EnsureDelegate(clazz);
 			}
-			if (_stream == null)
-			{
-				return null;
-			}
-			if (_stream.ClassCollection() != null)
-			{
-				int classID = _stream.ClassCollection().GetYapClassID(className);
-				if (classID > 0)
-				{
-					clazz = EnsureClassInitialised(classID);
-					_classByName.Put(className, clazz);
-					return clazz;
-				}
-			}
-			return null;
+			return _repository.ForName(className);
 		}
 
 		public virtual com.db4o.reflect.ReflectClass ForObject(object obj)
 		{
 			if (obj is com.db4o.reflect.generic.GenericObject)
 			{
-				return ((com.db4o.reflect.generic.GenericObject)obj)._class;
+				return ForGenericObject((com.db4o.reflect.generic.GenericObject)obj);
 			}
 			return _delegate.ForObject(obj);
+		}
+
+		private com.db4o.reflect.ReflectClass ForGenericObject(com.db4o.reflect.generic.GenericObject
+			 genericObject)
+		{
+			com.db4o.reflect.generic.GenericClass claxx = genericObject._class;
+			if (claxx == null)
+			{
+				throw new System.InvalidOperationException();
+			}
+			string name = claxx.GetName();
+			if (name == null)
+			{
+				throw new System.InvalidOperationException();
+			}
+			com.db4o.reflect.generic.GenericClass existingClass = (com.db4o.reflect.generic.GenericClass
+				)ForName(name);
+			if (existingClass == null)
+			{
+				_repository.Register(claxx);
+				return claxx;
+			}
+			if (existingClass != claxx)
+			{
+				throw new System.InvalidOperationException();
+			}
+			return claxx;
 		}
 
 		public virtual com.db4o.reflect.Reflector GetDelegate()
@@ -221,14 +225,14 @@ namespace com.db4o.reflect.generic
 			)
 		{
 			com.db4o.reflect.ReflectClass collectionClass = ForClass(clazz);
-			com.db4o.reflect.ReflectClassPredicate predicate = new _AnonymousInnerClass199(this
+			com.db4o.reflect.ReflectClassPredicate predicate = new _AnonymousInnerClass209(this
 				, collectionClass);
 			return predicate;
 		}
 
-		private sealed class _AnonymousInnerClass199 : com.db4o.reflect.ReflectClassPredicate
+		private sealed class _AnonymousInnerClass209 : com.db4o.reflect.ReflectClassPredicate
 		{
-			public _AnonymousInnerClass199(GenericReflector _enclosing, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass209(GenericReflector _enclosing, com.db4o.reflect.ReflectClass
 				 collectionClass)
 			{
 				this._enclosing = _enclosing;
@@ -261,18 +265,23 @@ namespace com.db4o.reflect.generic
 		public virtual void Register(com.db4o.reflect.generic.GenericClass clazz)
 		{
 			string name = clazz.GetName();
-			if (_classByName.Get(name) == null)
+			if (_repository.LookupByName(name) == null)
 			{
-				_classByName.Put(name, clazz);
-				_classes.Add(clazz);
+				_repository.Register(clazz);
 			}
 		}
 
 		public virtual com.db4o.reflect.ReflectClass[] KnownClasses()
 		{
-			ReadAll();
 			com.db4o.foundation.Collection4 classes = new com.db4o.foundation.Collection4();
-			System.Collections.IEnumerator i = _classes.GetEnumerator();
+			CollectKnownClasses(classes);
+			return (com.db4o.reflect.ReflectClass[])classes.ToArray(new com.db4o.reflect.ReflectClass
+				[classes.Size()]);
+		}
+
+		private void CollectKnownClasses(com.db4o.foundation.Collection4 classes)
+		{
+			System.Collections.IEnumerator i = _repository.Classes();
 			while (i.MoveNext())
 			{
 				com.db4o.reflect.generic.GenericClass clazz = (com.db4o.reflect.generic.GenericClass
@@ -288,151 +297,13 @@ namespace com.db4o.reflect.generic
 					}
 				}
 			}
-			com.db4o.reflect.ReflectClass[] ret = new com.db4o.reflect.ReflectClass[classes.Size
-				()];
-			int j = 0;
-			i = classes.GetEnumerator();
-			while (i.MoveNext())
-			{
-				ret[j++] = (com.db4o.reflect.ReflectClass)i.Current;
-			}
-			return ret;
-		}
-
-		private void ReadAll()
-		{
-			for (System.Collections.IEnumerator idIter = _stream.ClassCollection().Ids(); idIter
-				.MoveNext(); )
-			{
-				EnsureClassAvailability(((int)idIter.Current));
-			}
-			for (System.Collections.IEnumerator idIter = _stream.ClassCollection().Ids(); idIter
-				.MoveNext(); )
-			{
-				EnsureClassRead(((int)idIter.Current));
-			}
-		}
-
-		private com.db4o.reflect.generic.GenericClass EnsureClassInitialised(int id)
-		{
-			com.db4o.reflect.generic.GenericClass ret = EnsureClassAvailability(id);
-			while (_pendingClasses.Size() > 0)
-			{
-				com.db4o.foundation.Collection4 pending = _pendingClasses;
-				_pendingClasses = new com.db4o.foundation.Collection4();
-				System.Collections.IEnumerator i = pending.GetEnumerator();
-				while (i.MoveNext())
-				{
-					EnsureClassRead(((int)i.Current));
-				}
-			}
-			return ret;
-		}
-
-		private com.db4o.reflect.generic.GenericClass EnsureClassAvailability(int id)
-		{
-			if (id == 0)
-			{
-				return null;
-			}
-			com.db4o.reflect.generic.GenericClass ret = (com.db4o.reflect.generic.GenericClass
-				)_classByID.Get(id);
-			if (ret != null)
-			{
-				return ret;
-			}
-			com.db4o.YapReader classreader = _stream.ReadWriterByID(_trans, id);
-			com.db4o.inside.marshall.ClassMarshaller marshaller = MarshallerFamily()._class;
-			com.db4o.inside.marshall.RawClassSpec spec = marshaller.ReadSpec(_trans, classreader
-				);
-			string className = spec.Name();
-			ret = (com.db4o.reflect.generic.GenericClass)_classByName.Get(className);
-			if (ret != null)
-			{
-				_classByID.Put(id, ret);
-				_pendingClasses.Add(id);
-				return ret;
-			}
-			com.db4o.reflect.ReflectClass nativeClass = _delegate.ForName(className);
-			ret = new com.db4o.reflect.generic.GenericClass(this, nativeClass, className, EnsureClassAvailability
-				(spec.SuperClassID()));
-			ret.SetDeclaredFieldCount(spec.NumFields());
-			_classByID.Put(id, ret);
-			_pendingClasses.Add(id);
-			return ret;
-		}
-
-		private com.db4o.inside.marshall.MarshallerFamily MarshallerFamily()
-		{
-			return com.db4o.inside.marshall.MarshallerFamily.ForConverterVersion(_stream.ConverterVersion
-				());
-		}
-
-		private void EnsureClassRead(int id)
-		{
-			com.db4o.reflect.generic.GenericClass clazz = (com.db4o.reflect.generic.GenericClass
-				)_classByID.Get(id);
-			com.db4o.YapReader classreader = _stream.ReadWriterByID(_trans, id);
-			com.db4o.inside.marshall.ClassMarshaller classMarshaller = MarshallerFamily()._class;
-			com.db4o.inside.marshall.RawClassSpec classInfo = classMarshaller.ReadSpec(_trans
-				, classreader);
-			string className = classInfo.Name();
-			if (_classByName.Get(className) != null)
-			{
-				return;
-			}
-			_classByName.Put(className, clazz);
-			_classes.Add(clazz);
-			int numFields = classInfo.NumFields();
-			com.db4o.reflect.generic.GenericField[] fields = new com.db4o.reflect.generic.GenericField
-				[numFields];
-			com.db4o.inside.marshall.FieldMarshaller fieldMarshaller = MarshallerFamily()._field;
-			for (int i = 0; i < numFields; i++)
-			{
-				com.db4o.inside.marshall.RawFieldSpec fieldInfo = fieldMarshaller.ReadSpec(_stream
-					, classreader);
-				string fieldName = fieldInfo.Name();
-				int handlerID = fieldInfo.HandlerID();
-				if (fieldInfo.IsVirtual())
-				{
-					fields[i] = new com.db4o.reflect.generic.GenericVirtualField(fieldName);
-					continue;
-				}
-				com.db4o.reflect.generic.GenericClass fieldClass = null;
-				switch (handlerID)
-				{
-					case com.db4o.YapHandlers.ANY_ID:
-					{
-						fieldClass = (com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.JavaSystem.GetClassForType
-							(typeof(object)));
-						break;
-					}
-
-					case com.db4o.YapHandlers.ANY_ARRAY_ID:
-					{
-						fieldClass = ((com.db4o.reflect.generic.GenericClass)ForClass(j4o.lang.JavaSystem.GetClassForType
-							(typeof(object)))).ArrayClass();
-						break;
-					}
-
-					default:
-					{
-						EnsureClassAvailability(handlerID);
-						fieldClass = (com.db4o.reflect.generic.GenericClass)_classByID.Get(handlerID);
-						break;
-					}
-				}
-				fields[i] = new com.db4o.reflect.generic.GenericField(fieldName, fieldClass, fieldInfo
-					.IsPrimitive(), fieldInfo.IsArray(), fieldInfo.IsNArray());
-			}
-			clazz.InitFields(fields);
 		}
 
 		public virtual void RegisterPrimitiveClass(int id, string name, com.db4o.reflect.generic.GenericConverter
 			 converter)
 		{
 			com.db4o.reflect.generic.GenericClass existing = (com.db4o.reflect.generic.GenericClass
-				)_classByID.Get(id);
+				)_repository.LookupByID(id);
 			if (existing != null)
 			{
 				if (null != converter)
@@ -454,15 +325,14 @@ namespace com.db4o.reflect.generic
 			else
 			{
 				claxx = new com.db4o.reflect.generic.GenericClass(this, null, name, null);
-				_classByName.Put(name, claxx);
+				Register(claxx);
 				claxx.InitFields(new com.db4o.reflect.generic.GenericField[] { new com.db4o.reflect.generic.GenericField
 					(null, null, true, false, false) });
 				claxx.SetConverter(converter);
-				_classes.Add(claxx);
 			}
 			claxx.SetSecondClass();
 			claxx.SetPrimitive();
-			_classByID.Put(id, claxx);
+			_repository.Register(id, claxx);
 		}
 
 		public virtual void SetParent(com.db4o.reflect.Reflector reflector)

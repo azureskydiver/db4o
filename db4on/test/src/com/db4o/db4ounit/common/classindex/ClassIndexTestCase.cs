@@ -1,6 +1,6 @@
 namespace com.db4o.db4ounit.common.classindex
 {
-	public class ClassIndexTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase
+	public class ClassIndexTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase, Db4oUnit.Extensions.Fixtures.OptOutCS
 	{
 		public class Item
 		{
@@ -48,12 +48,12 @@ namespace com.db4o.db4ounit.common.classindex
 
 		private void AssertIndex(object[] expected)
 		{
-			com.db4o.YapClass clazz = Stream().GetYapClass(com.db4o.db4ounit.Db4oUnitPlatform.GetReflectClass
+            com.db4o.@internal.ClassMetadata clazz = Stream().GetYapClass(Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass
 				(Reflector(), typeof(com.db4o.db4ounit.common.classindex.ClassIndexTestCase.Item)
-				), false);
+				));
 			com.db4o.db4ounit.common.btree.ExpectingVisitor visitor = new com.db4o.db4ounit.common.btree.ExpectingVisitor
 				(expected);
-			com.db4o.inside.classindex.ClassIndexStrategy index = clazz.Index();
+			com.db4o.@internal.classindex.ClassIndexStrategy index = clazz.Index();
 			index.TraverseAll(Trans(), visitor);
 			visitor.AssertExpectations();
 		}

@@ -25,7 +25,7 @@ namespace com.db4o.reflect.generic
 			{
 				return false;
 			}
-			return IsAssignableFrom(((com.db4o.reflect.generic.GenericObject)candidate)._class
+			return IsAssignableFrom(((com.db4o.reflect.generic.GenericArray)candidate)._clazz
 				);
 		}
 

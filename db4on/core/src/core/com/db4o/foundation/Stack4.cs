@@ -29,5 +29,10 @@ namespace com.db4o.foundation
 			_tail = _tail._next;
 			return res;
 		}
+
+		public virtual bool IsEmpty()
+		{
+			return _tail == null;
+		}
 	}
 }

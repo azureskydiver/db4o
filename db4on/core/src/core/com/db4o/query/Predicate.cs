@@ -87,7 +87,7 @@ namespace com.db4o.query
 
 		private j4o.lang.Class _extentType;
 
-		[com.db4o.Transient]
+		[System.NonSerialized]
 		private j4o.lang.reflect.Method cachedFilterMethod = null;
 
 		public Predicate() : this(null)
@@ -155,7 +155,7 @@ namespace com.db4o.query
 			try
 			{
 				j4o.lang.reflect.Method filterMethod = GetFilterMethod();
-				com.db4o.Platform4.SetAccessible(filterMethod);
+				com.db4o.@internal.Platform4.SetAccessible(filterMethod);
 				object ret = filterMethod.Invoke(this, new object[] { candidate });
 				return ((bool)ret);
 			}

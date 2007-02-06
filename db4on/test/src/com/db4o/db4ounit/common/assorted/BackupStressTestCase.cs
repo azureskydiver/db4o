@@ -92,12 +92,12 @@ namespace com.db4o.db4ounit.common.assorted
 
 		private void StartBackupThread()
 		{
-			new j4o.lang.Thread(new _AnonymousInnerClass91(this)).Start();
+			new j4o.lang.Thread(new _AnonymousInnerClass92(this)).Start();
 		}
 
-		private sealed class _AnonymousInnerClass91 : j4o.lang.Runnable
+		private sealed class _AnonymousInnerClass92 : j4o.lang.Runnable
 		{
-			public _AnonymousInnerClass91(BackupStressTestCase _enclosing)
+			public _AnonymousInnerClass92(BackupStressTestCase _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -194,7 +194,8 @@ namespace com.db4o.db4ounit.common.assorted
 
 		private bool IsOldJDK()
 		{
-			com.db4o.YapStream stream = (com.db4o.YapStream)_objectContainer;
+			com.db4o.@internal.ObjectContainerBase stream = (com.db4o.@internal.ObjectContainerBase
+				)_objectContainer;
 			return stream.NeedsLockFileThread();
 		}
 
