@@ -12,14 +12,15 @@ namespace com.db4o
 			return false;
 		}
 
-		internal static bool IsCollectionTranslator(com.db4o.Config4Class a_config)
+		internal static bool IsCollectionTranslator(com.db4o.@internal.Config4Class a_config
+			)
 		{
 			return false;
 		}
 
-		public static com.db4o.JDK Jdk()
+		public static com.db4o.@internal.JDK Jdk()
 		{
-			return new com.db4o.JDK();
+			return new com.db4o.@internal.JDK();
 		}
 
 		public static void Link()

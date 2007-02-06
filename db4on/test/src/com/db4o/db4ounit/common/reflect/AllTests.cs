@@ -4,8 +4,8 @@ namespace com.db4o.db4ounit.common.reflect
 	{
 		protected override System.Type[] TestCases()
 		{
-			return new System.Type[] { typeof(com.db4o.db4ounit.common.reflect.ReflectArrayTestCase)
-				 };
+			return new System.Type[] { typeof(com.db4o.db4ounit.common.reflect.GenericReflectorStateTest)
+				, typeof(com.db4o.db4ounit.common.reflect.ReflectArrayTestCase) };
 		}
 
 		public static void Main(string[] args)

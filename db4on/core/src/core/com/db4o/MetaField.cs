@@ -12,14 +12,5 @@ namespace com.db4o
 		public string name;
 
 		public com.db4o.MetaIndex index;
-
-		public MetaField()
-		{
-		}
-
-		public MetaField(string name_)
-		{
-			name = name_;
-		}
 	}
 }

@@ -41,7 +41,7 @@
 
 		public virtual void SetAccessible()
 		{
-			com.db4o.Platform4.SetAccessible(field);
+			com.db4o.@internal.Platform4.SetAccessible(field);
 		}
 
 		public virtual object Get(object onObject)
@@ -65,6 +65,16 @@
 			catch (System.Exception e)
 			{
 			}
+		}
+		
+		public object IndexEntry(object orig)
+		{
+			return orig;
+		}
+		
+		public ReflectClass IndexType()
+		{
+			return GetFieldType();
 		}
 	}
 }

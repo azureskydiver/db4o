@@ -6,11 +6,11 @@ namespace com.db4o.db4ounit.common.assorted
 
 		public virtual void Test()
 		{
-			com.db4o.db4ounit.util.File4.Delete(FILE);
+			com.db4o.foundation.io.File4.Delete(FILE);
 			Db4oUnit.Assert.IsFalse(System.IO.File.Exists(FILE));
 			com.db4o.ObjectContainer oc = com.db4o.Db4o.OpenFile(FILE);
 			oc.Close();
-			com.db4o.db4ounit.util.File4.Delete(FILE);
+			com.db4o.foundation.io.File4.Delete(FILE);
 			Db4oUnit.Assert.IsFalse(System.IO.File.Exists(FILE));
 		}
 	}

@@ -6,7 +6,8 @@ namespace com.db4o.db4ounit.common.assorted
 		{
 			com.db4o.foundation.Hashtable4 ht = new com.db4o.foundation.Hashtable4();
 			com.db4o.ext.ExtObjectContainer oc = Db();
-			com.db4o.YapStream yapStream = ((com.db4o.YapStream)oc);
+			com.db4o.@internal.ObjectContainerBase yapStream = ((com.db4o.@internal.ObjectContainerBase
+				)oc);
 			yapStream.ShowInternalClasses(true);
 			com.db4o.query.Query q = Db().Query();
 			q.Constrain(typeof(com.db4o.ext.Db4oDatabase));

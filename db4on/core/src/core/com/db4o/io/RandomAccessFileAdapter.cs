@@ -20,7 +20,7 @@ namespace com.db4o.io
 			}
 			if (lockFile)
 			{
-				com.db4o.Platform4.LockFile(_delegate);
+				com.db4o.@internal.Platform4.LockFile(_delegate);
 			}
 		}
 
@@ -28,7 +28,7 @@ namespace com.db4o.io
 		{
 			try
 			{
-				com.db4o.Platform4.UnlockFile(_delegate);
+				com.db4o.@internal.Platform4.UnlockFile(_delegate);
 			}
 			catch
 			{

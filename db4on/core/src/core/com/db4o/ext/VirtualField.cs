@@ -16,7 +16,7 @@ namespace com.db4o.ext
 		/// the field name of the virtual version field, to be used
 		/// for querying.
 		/// </remarks>
-		public static readonly string VERSION = com.db4o.YapConst.VIRTUAL_FIELD_PREFIX + 
-			"version";
+		public static readonly string VERSION = com.db4o.@internal.Const4.VIRTUAL_FIELD_PREFIX
+			 + "version";
 	}
 }

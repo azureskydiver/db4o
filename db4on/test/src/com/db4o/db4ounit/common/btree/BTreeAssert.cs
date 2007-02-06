@@ -28,7 +28,7 @@ namespace com.db4o.db4ounit.common.btree
 				.ToObjectArray(keys), true, false);
 		}
 
-		public static void TraverseKeys(com.db4o.inside.btree.BTreeRange result, com.db4o.foundation.Visitor4
+		public static void TraverseKeys(com.db4o.@internal.btree.BTreeRange result, com.db4o.foundation.Visitor4
 			 visitor)
 		{
 			System.Collections.IEnumerator i = result.Keys();
@@ -38,7 +38,7 @@ namespace com.db4o.db4ounit.common.btree
 			}
 		}
 
-		public static void AssertKeys(com.db4o.Transaction transaction, com.db4o.inside.btree.BTree
+		public static void AssertKeys(com.db4o.@internal.Transaction transaction, com.db4o.@internal.btree.BTree
 			 btree, int[] keys)
 		{
 			com.db4o.db4ounit.common.btree.ExpectingVisitor visitor = CreateExpectingVisitor(
@@ -47,7 +47,7 @@ namespace com.db4o.db4ounit.common.btree
 			visitor.AssertExpectations();
 		}
 
-		public static void AssertEmpty(com.db4o.Transaction transaction, com.db4o.inside.btree.BTree
+		public static void AssertEmpty(com.db4o.@internal.Transaction transaction, com.db4o.@internal.btree.BTree
 			 tree)
 		{
 			com.db4o.db4ounit.common.btree.ExpectingVisitor visitor = new com.db4o.db4ounit.common.btree.ExpectingVisitor
@@ -57,15 +57,15 @@ namespace com.db4o.db4ounit.common.btree
 			Db4oUnit.Assert.AreEqual(0, tree.Size(transaction));
 		}
 
-		public static void DumpKeys(com.db4o.Transaction trans, com.db4o.inside.btree.BTree
+		public static void DumpKeys(com.db4o.@internal.Transaction trans, com.db4o.@internal.btree.BTree
 			 tree)
 		{
-			tree.TraverseKeys(trans, new _AnonymousInnerClass49());
+			tree.TraverseKeys(trans, new _AnonymousInnerClass51());
 		}
 
-		private sealed class _AnonymousInnerClass49 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass51 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass49()
+			public _AnonymousInnerClass51()
 			{
 			}
 
@@ -81,19 +81,19 @@ namespace com.db4o.db4ounit.common.btree
 			return CreateExpectingVisitor(expectedID, 1);
 		}
 
-		public static int FillSize(com.db4o.inside.btree.BTree btree)
+		public static int FillSize(com.db4o.@internal.btree.BTree btree)
 		{
 			return btree.NodeSize() + 1;
 		}
 
-		public static int[] NewBTreeNodeSizedArray(com.db4o.inside.btree.BTree btree, int
-			 value)
+		public static int[] NewBTreeNodeSizedArray(com.db4o.@internal.btree.BTree btree, 
+			int value)
 		{
 			return com.db4o.db4ounit.common.foundation.IntArrays4.Fill(new int[FillSize(btree
 				)], value);
 		}
 
-		public static void AssertRange(int[] expectedKeys, com.db4o.inside.btree.BTreeRange
+		public static void AssertRange(int[] expectedKeys, com.db4o.@internal.btree.BTreeRange
 			 range)
 		{
 			Db4oUnit.Assert.IsNotNull(range);
@@ -103,25 +103,26 @@ namespace com.db4o.db4ounit.common.btree
 			visitor.AssertExpectations();
 		}
 
-		public static com.db4o.inside.btree.BTree CreateIntKeyBTree(com.db4o.YapStream stream
-			, int id, int nodeSize)
+		public static com.db4o.@internal.btree.BTree CreateIntKeyBTree(com.db4o.@internal.ObjectContainerBase
+			 stream, int id, int nodeSize)
 		{
-			return new com.db4o.inside.btree.BTree(stream.GetSystemTransaction(), id, new com.db4o.YInt
-				(stream), null, nodeSize, stream.ConfigImpl().BTreeCacheHeight());
+			return new com.db4o.@internal.btree.BTree(stream.GetSystemTransaction(), id, new 
+				com.db4o.@internal.handlers.IntHandler(stream), null, nodeSize, stream.ConfigImpl
+				().BTreeCacheHeight());
 		}
 
-		public static com.db4o.inside.btree.BTree CreateIntKeyBTree(com.db4o.YapStream stream
-			, int id, int treeCacheHeight, int nodeSize)
+		public static com.db4o.@internal.btree.BTree CreateIntKeyBTree(com.db4o.@internal.ObjectContainerBase
+			 stream, int id, int treeCacheHeight, int nodeSize)
 		{
-			return new com.db4o.inside.btree.BTree(stream.GetSystemTransaction(), id, new com.db4o.YInt
-				(stream), null, nodeSize, treeCacheHeight);
+			return new com.db4o.@internal.btree.BTree(stream.GetSystemTransaction(), id, new 
+				com.db4o.@internal.handlers.IntHandler(stream), null, nodeSize, treeCacheHeight);
 		}
 
-		public static void AssertSingleElement(com.db4o.Transaction trans, com.db4o.inside.btree.BTree
+		public static void AssertSingleElement(com.db4o.@internal.Transaction trans, com.db4o.@internal.btree.BTree
 			 btree, object element)
 		{
 			Db4oUnit.Assert.AreEqual(1, btree.Size(trans));
-			com.db4o.inside.btree.BTreeRange result = btree.Search(trans, element);
+			com.db4o.@internal.btree.BTreeRange result = btree.Search(trans, element);
 			com.db4o.db4ounit.common.btree.ExpectingVisitor expectingVisitor = new com.db4o.db4ounit.common.btree.ExpectingVisitor
 				(new object[] { element });
 			com.db4o.db4ounit.common.btree.BTreeAssert.TraverseKeys(result, expectingVisitor);

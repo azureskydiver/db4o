@@ -4,7 +4,7 @@ using System;
 using j4o.lang;
 using com.db4o.config;
 
-namespace com.db4o {
+namespace com.db4o.config {
 
 	/// <exclude />
     public class TNull : ObjectTranslator {

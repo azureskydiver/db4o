@@ -200,9 +200,9 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		private void AssertCantOptimize(com.db4o.query.Query query)
 		{
-			com.db4o.inside.fieldindex.FieldIndexProcessorResult result = ExecuteProcessor(query
-				);
-			Db4oUnit.Assert.AreSame(com.db4o.inside.fieldindex.FieldIndexProcessorResult.NO_INDEX_FOUND
+			com.db4o.@internal.fieldindex.FieldIndexProcessorResult result = ExecuteProcessor
+				(query);
+			Db4oUnit.Assert.AreSame(com.db4o.@internal.fieldindex.FieldIndexProcessorResult.NO_INDEX_FOUND
 				, result);
 		}
 
@@ -221,7 +221,7 @@ namespace com.db4o.db4ounit.common.fieldindex
 		private void AssertBestIndex(string expectedFieldIndex, com.db4o.query.Query query
 			)
 		{
-			com.db4o.inside.fieldindex.IndexedNode node = SelectBestIndex(query);
+			com.db4o.@internal.fieldindex.IndexedNode node = SelectBestIndex(query);
 			AssertComplexItemIndex(expectedFieldIndex, node);
 		}
 
@@ -243,7 +243,7 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		public virtual void TestMultiTransactionSmallerWithCommit()
 		{
-			com.db4o.Transaction transaction = NewTransaction();
+			com.db4o.@internal.Transaction transaction = NewTransaction();
 			FillTransactionWith(transaction, 0);
 			int[] expectedZeros = NewBTreeNodeSizedArray(0);
 			AssertSmaller(transaction, expectedZeros, 3);
@@ -255,7 +255,7 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		public virtual void TestMultiTransactionWithRollback()
 		{
-			com.db4o.Transaction transaction = NewTransaction();
+			com.db4o.@internal.Transaction transaction = NewTransaction();
 			FillTransactionWith(transaction, 0);
 			int[] expectedZeros = NewBTreeNodeSizedArray(0);
 			AssertSmaller(transaction, expectedZeros, 3);
@@ -267,7 +267,7 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		public virtual void TestMultiTransactionSmaller()
 		{
-			com.db4o.Transaction transaction = NewTransaction();
+			com.db4o.@internal.Transaction transaction = NewTransaction();
 			FillTransactionWith(transaction, 0);
 			int[] expected = NewBTreeNodeSizedArray(0);
 			AssertSmaller(transaction, expected, 3);
@@ -314,48 +314,49 @@ namespace com.db4o.db4ounit.common.fieldindex
 		private void AssertExpectedFoos(System.Type itemClass, int[] expectedFoos, com.db4o.query.Query
 			 query)
 		{
-			com.db4o.Transaction trans = TransactionFromQuery(query);
+			com.db4o.@internal.Transaction trans = TransactionFromQuery(query);
 			int[] expectedIds = MapToObjectIds(CreateQuery(trans, itemClass), expectedFoos);
 			AssertExpectedIDs(expectedIds, query);
 		}
 
 		private void AssertExpectedIDs(int[] expectedIds, com.db4o.query.Query query)
 		{
-			com.db4o.inside.fieldindex.FieldIndexProcessorResult result = ExecuteProcessor(query
-				);
+			com.db4o.@internal.fieldindex.FieldIndexProcessorResult result = ExecuteProcessor
+				(query);
 			if (expectedIds.Length == 0)
 			{
-				Db4oUnit.Assert.AreSame(com.db4o.inside.fieldindex.FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH
+				Db4oUnit.Assert.AreSame(com.db4o.@internal.fieldindex.FieldIndexProcessorResult.FOUND_INDEX_BUT_NO_MATCH
 					, result);
 				return;
 			}
 			AssertTreeInt(expectedIds, result.ToTreeInt());
 		}
 
-		private com.db4o.inside.fieldindex.FieldIndexProcessorResult ExecuteProcessor(com.db4o.query.Query
-			 query)
+		private com.db4o.@internal.fieldindex.FieldIndexProcessorResult ExecuteProcessor(
+			com.db4o.query.Query query)
 		{
 			return CreateProcessor(query).Run();
 		}
 
-		private com.db4o.Transaction TransactionFromQuery(com.db4o.query.Query query)
+		private com.db4o.@internal.Transaction TransactionFromQuery(com.db4o.query.Query 
+			query)
 		{
-			return ((com.db4o.QQuery)query).GetTransaction();
+			return ((com.db4o.@internal.query.processor.QQuery)query).GetTransaction();
 		}
 
-		private com.db4o.inside.btree.BTree Btree()
+		private com.db4o.@internal.btree.BTree Btree()
 		{
 			return FieldIndexBTree(typeof(com.db4o.db4ounit.common.fieldindex.FieldIndexItem)
 				, "foo");
 		}
 
-		private void Store(com.db4o.Transaction trans, com.db4o.db4ounit.common.fieldindex.FieldIndexItem
+		private void Store(com.db4o.@internal.Transaction trans, com.db4o.db4ounit.common.fieldindex.FieldIndexItem
 			 item)
 		{
 			Stream().Set(trans, item);
 		}
 
-		private void FillTransactionWith(com.db4o.Transaction trans, int bar)
+		private void FillTransactionWith(com.db4o.@internal.Transaction trans, int bar)
 		{
 			for (int i = 0; i < com.db4o.db4ounit.common.btree.BTreeAssert.FillSize(Btree()); 
 				++i)
@@ -366,12 +367,12 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		private int[] NewBTreeNodeSizedArray(int value)
 		{
-			com.db4o.inside.btree.BTree btree = Btree();
+			com.db4o.@internal.btree.BTree btree = Btree();
 			return com.db4o.db4ounit.common.btree.BTreeAssert.NewBTreeNodeSizedArray(btree, value
 				);
 		}
 
-		private void RemoveFromTransaction(com.db4o.Transaction trans, int foo)
+		private void RemoveFromTransaction(com.db4o.@internal.Transaction trans, int foo)
 		{
 			com.db4o.ObjectSet found = CreateItemQuery(trans).Execute();
 			while (found.HasNext())
@@ -390,8 +391,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 			AssertSmaller(Trans(), expectedFoos, smallerThan);
 		}
 
-		private void AssertSmaller(com.db4o.Transaction transaction, int[] expectedFoos, 
-			int smallerThan)
+		private void AssertSmaller(com.db4o.@internal.Transaction transaction, int[] expectedFoos
+			, int smallerThan)
 		{
 			com.db4o.query.Query query = CreateItemQuery(transaction);
 			query.Descend("foo").Constrain(smallerThan).Smaller();

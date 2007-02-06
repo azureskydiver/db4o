@@ -12,7 +12,7 @@ namespace com.db4o.nativequery.optimization
 				{
 					j4o.lang.reflect.Method method = curclazz.GetDeclaredMethod(methodName, paramTypes
 						);
-					com.db4o.Platform4.SetAccessible(method);
+					com.db4o.@internal.Platform4.SetAccessible(method);
 					return method;
 				}
 				catch
@@ -31,7 +31,7 @@ namespace com.db4o.nativequery.optimization
 				try
 				{
 					j4o.lang.reflect.Field field = curclazz.GetDeclaredField(name);
-					com.db4o.Platform4.SetAccessible(field);
+					com.db4o.@internal.Platform4.SetAccessible(field);
 					return field;
 				}
 				catch

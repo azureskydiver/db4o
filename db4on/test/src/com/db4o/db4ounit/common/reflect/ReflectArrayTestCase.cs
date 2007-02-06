@@ -14,7 +14,7 @@ namespace com.db4o.db4ounit.common.reflect
 
 		private object NewInstance(System.Type elementType, int[] dimensions)
 		{
-			return Reflector().Array().NewInstance(com.db4o.db4ounit.Db4oUnitPlatform.GetReflectClass
+            return Reflector().Array().NewInstance(Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass
 				(Reflector(), elementType), dimensions);
 		}
 	}

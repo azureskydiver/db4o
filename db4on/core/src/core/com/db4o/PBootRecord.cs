@@ -12,7 +12,7 @@ namespace com.db4o
 	/// </remarks>
 	/// <exclude></exclude>
 	/// <persistent></persistent>
-	public class PBootRecord : com.db4o.P1Object, com.db4o.Db4oTypeImpl, com.db4o.Internal4
+	public class PBootRecord : com.db4o.P1Object, com.db4o.@internal.Db4oTypeImpl, com.db4o.Internal4
 	{
 		public com.db4o.ext.Db4oDatabase i_db;
 
@@ -30,9 +30,9 @@ namespace com.db4o
 			return i_uuidMetaIndex;
 		}
 
-		public virtual void Write(com.db4o.YapFile file)
+		public virtual void Write(com.db4o.@internal.LocalObjectContainer file)
 		{
-			com.db4o.inside.SystemData systemData = file.SystemData();
+			com.db4o.@internal.SystemData systemData = file.SystemData();
 			i_versionGenerator = systemData.LastTimeStampID();
 			i_db = systemData.Identity();
 			file.ShowInternalClasses(true);

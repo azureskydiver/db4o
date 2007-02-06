@@ -10,12 +10,12 @@ namespace com.db4o.db4ounit.common.btree
 				Add(count + i + 1);
 			}
 			int smallest = count + 1;
-			com.db4o.Transaction trans = NewTransaction();
+			com.db4o.@internal.Transaction trans = NewTransaction();
 			for (int i = 0; i < count; i++)
 			{
 				Add(trans, i);
 			}
-			com.db4o.inside.btree.BTreePointer firstPointer = _btree.FirstPointer(Trans());
+			com.db4o.@internal.btree.BTreePointer firstPointer = _btree.FirstPointer(Trans());
 			AssertPointerKey(smallest, firstPointer);
 		}
 
@@ -35,9 +35,9 @@ namespace com.db4o.db4ounit.common.btree
 			int[] keys = new int[] { 3, 4, 7, 9 };
 			Add(keys);
 			Remove(4);
-			com.db4o.inside.btree.BTreeRange result = Search(4);
+			com.db4o.@internal.btree.BTreeRange result = Search(4);
 			Db4oUnit.Assert.IsTrue(result.IsEmpty());
-			com.db4o.inside.btree.BTreeRange range = result.Greater();
+			com.db4o.@internal.btree.BTreeRange range = result.Greater();
 			com.db4o.db4ounit.common.btree.BTreeAssert.AssertRange(new int[] { 7, 9 }, range);
 		}
 
@@ -56,8 +56,8 @@ namespace com.db4o.db4ounit.common.btree
 			int element = 1;
 			Add(element);
 			Commit();
-			com.db4o.Transaction trans1 = NewTransaction();
-			com.db4o.Transaction trans2 = NewTransaction();
+			com.db4o.@internal.Transaction trans1 = NewTransaction();
+			com.db4o.@internal.Transaction trans2 = NewTransaction();
 			Remove(trans1, element);
 			AssertSingleElement(trans2, element);
 			Add(trans1, element);

@@ -15,6 +15,7 @@ namespace com.db4o.db4ounit.common.foundation
 			stack.Push("a");
 			stack.Push("b");
 			stack.Push("c");
+			Db4oUnit.Assert.IsFalse(stack.IsEmpty());
 			Db4oUnit.Assert.AreEqual("c", stack.Peek());
 			Db4oUnit.Assert.AreEqual("c", stack.Peek());
 			Db4oUnit.Assert.AreEqual("c", stack.Pop());
@@ -26,14 +27,15 @@ namespace com.db4o.db4ounit.common.foundation
 
 		private void AssertEmpty(com.db4o.foundation.Stack4 stack)
 		{
+			Db4oUnit.Assert.IsTrue(stack.IsEmpty());
 			Db4oUnit.Assert.IsNull(stack.Peek());
-			Db4oUnit.Assert.Expect(typeof(System.InvalidOperationException), new _AnonymousInnerClass33
+			Db4oUnit.Assert.Expect(typeof(System.InvalidOperationException), new _AnonymousInnerClass35
 				(this, stack));
 		}
 
-		private sealed class _AnonymousInnerClass33 : Db4oUnit.CodeBlock
+		private sealed class _AnonymousInnerClass35 : Db4oUnit.CodeBlock
 		{
-			public _AnonymousInnerClass33(Stack4TestCase _enclosing, com.db4o.foundation.Stack4
+			public _AnonymousInnerClass35(Stack4TestCase _enclosing, com.db4o.foundation.Stack4
 				 stack)
 			{
 				this._enclosing = _enclosing;

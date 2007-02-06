@@ -7,9 +7,10 @@ namespace com.db4o.db4ounit.common.querying
 			new com.db4o.db4ounit.common.querying.IdListQueryResultTestCase().RunSolo();
 		}
 
-		protected override com.db4o.inside.query.QueryResult NewQueryResult()
+		protected override com.db4o.@internal.query.result.AbstractQueryResult NewQueryResult
+			()
 		{
-			return new com.db4o.inside.query.IdListQueryResult(Trans());
+			return new com.db4o.@internal.query.result.IdListQueryResult(Trans());
 		}
 	}
 }

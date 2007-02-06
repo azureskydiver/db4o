@@ -22,7 +22,8 @@ namespace com.db4o.db4ounit.common.querying
 
 		public virtual void TestGetAll()
 		{
-			com.db4o.inside.query.QueryResult queryResult = NewQueryResult();
+			com.db4o.@internal.query.result.AbstractQueryResult queryResult = NewQueryResult(
+				);
 			queryResult.LoadFromClassIndexes(Stream().ClassCollection().Iterator());
 			int[] ids = com.db4o.db4ounit.common.foundation.IntArrays4.Concat(itemIds, new int
 				[] { idForGetAll });
@@ -33,7 +34,7 @@ namespace com.db4o.db4ounit.common.querying
 		{
 			com.db4o.query.Query query = NewItemQuery();
 			query.Descend("foo").Constrain(6).Smaller();
-			com.db4o.inside.query.QueryResult queryResult = ExecuteQuery(query);
+			com.db4o.@internal.query.result.QueryResult queryResult = ExecuteQuery(query);
 			AssertIDs(queryResult, new int[] { itemIds[0], itemIds[1] });
 		}
 
@@ -41,39 +42,41 @@ namespace com.db4o.db4ounit.common.querying
 		{
 			com.db4o.query.Query query = NewItemQuery();
 			query.Descend("bar").Constrain(6).Smaller();
-			com.db4o.inside.query.QueryResult queryResult = ExecuteQuery(query);
+			com.db4o.@internal.query.result.QueryResult queryResult = ExecuteQuery(query);
 			AssertIDs(queryResult, new int[] { itemIds[0], itemIds[1] });
 		}
 
-		private com.db4o.inside.query.QueryResult ClassOnlyQuery()
+		private com.db4o.@internal.query.result.QueryResult ClassOnlyQuery()
 		{
-			com.db4o.inside.query.QueryResult queryResult = NewQueryResult();
+			com.db4o.@internal.query.result.AbstractQueryResult queryResult = NewQueryResult(
+				);
 			queryResult.LoadFromClassIndex(YapClass());
 			return queryResult;
 		}
 
-		private com.db4o.YapClass YapClass()
+		private com.db4o.@internal.ClassMetadata YapClass()
 		{
-			return Stream().GetYapClass(com.db4o.db4ounit.Db4oUnitPlatform.GetReflectClass(Reflector
-				(), typeof(com.db4o.db4ounit.common.querying.QueryResultTestCase.Item)), false);
+            return Stream().GetYapClass(Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass(Reflector
+				(), typeof(com.db4o.db4ounit.common.querying.QueryResultTestCase.Item)));
 		}
 
-		private com.db4o.inside.query.QueryResult ExecuteQuery(com.db4o.query.Query query
-			)
+		private com.db4o.@internal.query.result.QueryResult ExecuteQuery(com.db4o.query.Query
+			 query)
 		{
-			com.db4o.inside.query.QueryResult queryResult = NewQueryResult();
-			queryResult.LoadFromQuery((com.db4o.QQuery)query);
+			com.db4o.@internal.query.result.AbstractQueryResult queryResult = NewQueryResult(
+				);
+			queryResult.LoadFromQuery((com.db4o.@internal.query.processor.QQuery)query);
 			return queryResult;
 		}
 
-		private void AssertIDs(com.db4o.inside.query.QueryResult queryResult, int[] expectedIDs
-			)
+		private void AssertIDs(com.db4o.@internal.query.result.QueryResult queryResult, int[]
+			 expectedIDs)
 		{
 			AssertIDs(queryResult, expectedIDs, false);
 		}
 
-		private void AssertIDs(com.db4o.inside.query.QueryResult queryResult, int[] expectedIDs
-			, bool ignoreUnexpected)
+		private void AssertIDs(com.db4o.@internal.query.result.QueryResult queryResult, int[]
+			 expectedIDs, bool ignoreUnexpected)
 		{
 			com.db4o.db4ounit.common.btree.ExpectingVisitor expectingVisitor = new com.db4o.db4ounit.common.btree.ExpectingVisitor
 				(com.db4o.db4ounit.common.foundation.IntArrays4.ToObjectArray(expectedIDs), false
@@ -133,6 +136,7 @@ namespace com.db4o.db4ounit.common.querying
 		{
 		}
 
-		protected abstract com.db4o.inside.query.QueryResult NewQueryResult();
+		protected abstract com.db4o.@internal.query.result.AbstractQueryResult NewQueryResult
+			();
 	}
 }

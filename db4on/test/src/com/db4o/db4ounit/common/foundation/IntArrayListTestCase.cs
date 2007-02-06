@@ -3,14 +3,14 @@ namespace com.db4o.db4ounit.common.foundation
 	/// <exclude></exclude>
 	public class IntArrayListTestCase : Db4oUnit.TestCase
 	{
-		public virtual void TestIteratorGoesBackwards()
+		public virtual void TestIteratorGoesForwards()
 		{
 			com.db4o.foundation.IntArrayList list = new com.db4o.foundation.IntArrayList();
 			AssertIterator(new int[] {  }, list.IntIterator());
 			list.Add(1);
 			AssertIterator(new int[] { 1 }, list.IntIterator());
 			list.Add(2);
-			AssertIterator(new int[] { 2, 1 }, list.IntIterator());
+			AssertIterator(new int[] { 1, 2 }, list.IntIterator());
 		}
 
 		private void AssertIterator(int[] expected, com.db4o.foundation.IntIterator4 iterator

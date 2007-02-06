@@ -1,0 +1,165 @@
+namespace com.db4o.@internal.btree
+{
+	/// <exclude></exclude>
+	public class Searcher
+	{
+		private int _lower;
+
+		private int _upper;
+
+		private int _cursor;
+
+		private int _cmp;
+
+		private readonly com.db4o.@internal.btree.SearchTarget _target;
+
+		private readonly int _count;
+
+		public Searcher(com.db4o.@internal.btree.SearchTarget target, int count)
+		{
+			if (count < 0)
+			{
+				throw new System.ArgumentException();
+			}
+			_target = target;
+			_count = count;
+			_cmp = -1;
+			if (count == 0)
+			{
+				Complete();
+				return;
+			}
+			_cursor = -1;
+			_upper = count - 1;
+			AdjustCursor();
+		}
+
+		private void AdjustBounds()
+		{
+			if (_cmp > 0)
+			{
+				_upper = _cursor - 1;
+				if (_upper < _lower)
+				{
+					_upper = _lower;
+				}
+				return;
+			}
+			if (_cmp < 0)
+			{
+				if (_lower == _cursor && _lower < _upper)
+				{
+					_lower++;
+				}
+				else
+				{
+					_lower = _cursor;
+				}
+				return;
+			}
+			if (_target == com.db4o.@internal.btree.SearchTarget.ANY)
+			{
+				_lower = _cursor;
+				_upper = _cursor;
+			}
+			else
+			{
+				if (_target == com.db4o.@internal.btree.SearchTarget.HIGHEST)
+				{
+					_lower = _cursor;
+				}
+				else
+				{
+					if (_target == com.db4o.@internal.btree.SearchTarget.LOWEST)
+					{
+						_upper = _cursor;
+					}
+					else
+					{
+						throw new System.InvalidOperationException("Unknown target");
+					}
+				}
+			}
+		}
+
+		private void AdjustCursor()
+		{
+			int oldCursor = _cursor;
+			if (_upper - _lower <= 1)
+			{
+				if ((_target == com.db4o.@internal.btree.SearchTarget.LOWEST) && (_cmp == 0))
+				{
+					_cursor = _lower;
+				}
+				else
+				{
+					_cursor = _upper;
+				}
+			}
+			else
+			{
+				_cursor = _lower + ((_upper - _lower) / 2);
+			}
+			if (_cursor == oldCursor)
+			{
+				Complete();
+			}
+		}
+
+		public virtual bool AfterLast()
+		{
+			if (_count == 0)
+			{
+				return false;
+			}
+			return (_cursor == _count - 1) && _cmp < 0;
+		}
+
+		public virtual bool BeforeFirst()
+		{
+			return (_cursor == 0) && (_cmp > 0);
+		}
+
+		private void Complete()
+		{
+			_upper = -2;
+		}
+
+		public virtual int Count()
+		{
+			return _count;
+		}
+
+		public virtual int Cursor()
+		{
+			return _cursor;
+		}
+
+		public virtual bool FoundMatch()
+		{
+			return _cmp == 0;
+		}
+
+		public virtual bool Incomplete()
+		{
+			return _upper >= _lower;
+		}
+
+		public virtual void MoveForward()
+		{
+			_cursor++;
+		}
+
+		public virtual void ResultIs(int cmp)
+		{
+			_cmp = cmp;
+			AdjustBounds();
+			AdjustCursor();
+		}
+
+		public virtual bool IsGreater()
+		{
+			return _cmp < 0;
+		}
+	}
+}

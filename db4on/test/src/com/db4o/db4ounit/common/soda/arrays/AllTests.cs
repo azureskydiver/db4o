@@ -14,10 +14,5 @@ namespace com.db4o.db4ounit.common.soda.arrays
 				, typeof(com.db4o.db4ounit.common.soda.arrays.typed.STArrIntegerWTTestCase), typeof(com.db4o.db4ounit.common.soda.arrays.@object.STArrIntegerWTONTestCase)
 				, typeof(com.db4o.db4ounit.common.soda.arrays.@object.STArrIntegerWUONTestCase) };
 		}
-
-		internal static int Main(string[] args)
-		{
-			return new com.db4o.db4ounit.common.soda.arrays.AllTests().RunSolo();
-		}
 	}
 }

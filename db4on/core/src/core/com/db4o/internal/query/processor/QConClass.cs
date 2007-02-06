@@ -1,0 +1,111 @@
+namespace com.db4o.@internal.query.processor
+{
+	/// <summary>Class constraint on queries</summary>
+	/// <exclude></exclude>
+	public class QConClass : com.db4o.@internal.query.processor.QConObject
+	{
+		[System.NonSerialized]
+		private com.db4o.reflect.ReflectClass _claxx;
+
+		public string _className;
+
+		public bool i_equal;
+
+		public QConClass()
+		{
+		}
+
+		internal QConClass(com.db4o.@internal.Transaction a_trans, com.db4o.@internal.query.processor.QCon
+			 a_parent, com.db4o.@internal.query.processor.QField a_field, com.db4o.reflect.ReflectClass
+			 claxx) : base(a_trans, a_parent, a_field, null)
+		{
+			if (claxx != null)
+			{
+				i_yapClass = a_trans.Stream().ProduceYapClass(claxx);
+				if (claxx.Equals(a_trans.Stream().i_handlers.ICLASS_OBJECT))
+				{
+					i_yapClass = (com.db4o.@internal.ClassMetadata)((com.db4o.@internal.PrimitiveFieldHandler
+						)i_yapClass).i_handler;
+				}
+			}
+			_claxx = claxx;
+		}
+
+		public override bool CanBeIndexLeaf()
+		{
+			return false;
+		}
+
+		internal override bool Evaluate(com.db4o.@internal.query.processor.QCandidate a_candidate
+			)
+		{
+			bool res = true;
+			com.db4o.reflect.ReflectClass claxx = a_candidate.ClassReflector();
+			if (claxx == null)
+			{
+				res = false;
+			}
+			else
+			{
+				res = i_equal ? _claxx.Equals(claxx) : _claxx.IsAssignableFrom(claxx);
+			}
+			return i_evaluator.Not(res);
+		}
+
+		internal override void EvaluateSelf()
+		{
+			i_candidates.Filter(this);
+		}
+
+		public override com.db4o.query.Constraint Equal()
+		{
+			lock (StreamLock())
+			{
+				i_equal = true;
+				return this;
+			}
+		}
+
+		internal override bool IsNullConstraint()
+		{
+			return false;
+		}
+
+		internal override string LogObject()
+		{
+			return string.Empty;
+		}
+
+		internal override void Marshall()
+		{
+			base.Marshall();
+			if (_claxx != null)
+			{
+				_className = _claxx.GetName();
+			}
+		}
+
+		public override string ToString()
+		{
+			return base.ToString();
+			string str = "QConClass ";
+			if (_claxx != null)
+			{
+				str += _claxx.ToString() + " ";
+			}
+			return str + base.ToString();
+		}
+
+		internal override void Unmarshall(com.db4o.@internal.Transaction a_trans)
+		{
+			if (i_trans == null)
+			{
+				base.Unmarshall(a_trans);
+				if (_className != null)
+				{
+					_claxx = a_trans.Reflector().ForName(_className);
+				}
+			}
+		}
+	}
+}

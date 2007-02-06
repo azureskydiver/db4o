@@ -13,7 +13,7 @@ namespace com.db4o.ext
 	[System.Serializable]
 	public class ObjectNotStorableException : System.Exception
 	{
-		public ObjectNotStorableException(com.db4o.reflect.ReflectClass a_class) : base(com.db4o.Messages
+		public ObjectNotStorableException(com.db4o.reflect.ReflectClass a_class) : base(com.db4o.@internal.Messages
 			.Get(a_class.IsPrimitive() ? 59 : 45, a_class.GetName()))
 		{
 		}

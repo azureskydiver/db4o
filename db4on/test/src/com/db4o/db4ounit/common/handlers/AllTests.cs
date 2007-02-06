@@ -9,8 +9,8 @@ namespace com.db4o.db4ounit.common.handlers
 
 		protected override System.Type[] TestCases()
 		{
-			return new System.Type[] { typeof(com.db4o.db4ounit.common.handlers.YapStringTestCase)
-				, typeof(com.db4o.db4ounit.common.handlers.YDoubleTestCase) };
+			return new System.Type[] { typeof(com.db4o.db4ounit.common.handlers.StringHandlerTestCase)
+				, typeof(com.db4o.db4ounit.common.handlers.DoubleHandlerTestCase) };
 		}
 	}
 }

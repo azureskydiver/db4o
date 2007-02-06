@@ -62,8 +62,12 @@ namespace com.db4o.config
 	/// </remarks>
 	public interface Alias
 	{
-		/// <summary>return the translated name or null if not handled.</summary>
-		/// <remarks>return the translated name or null if not handled.</remarks>
-		string Resolve(string runtimeType);
+		/// <summary>return the stored name for a runtime name or null if not handled.</summary>
+		/// <remarks>return the stored name for a runtime name or null if not handled.</remarks>
+		string ResolveRuntimeName(string runtimeTypeName);
+
+		/// <summary>return the runtime name for a stored name or null if not handled.</summary>
+		/// <remarks>return the runtime name for a stored name or null if not handled.</remarks>
+		string ResolveStoredName(string storedTypeName);
 	}
 }

@@ -13,8 +13,8 @@ namespace com.db4o
 		{
 		}
 
-		public P1ListElement(com.db4o.Transaction a_trans, com.db4o.P1ListElement a_next, 
-			object a_object) : base(a_trans)
+		public P1ListElement(com.db4o.@internal.Transaction a_trans, com.db4o.P1ListElement
+			 a_next, object a_object) : base(a_trans)
 		{
 			i_next = a_next;
 			i_object = a_object;
@@ -36,7 +36,7 @@ namespace com.db4o
 			return i_object;
 		}
 
-		public override object CreateDefault(com.db4o.Transaction a_trans)
+		public override object CreateDefault(com.db4o.@internal.Transaction a_trans)
 		{
 			com.db4o.P1ListElement elem4 = new com.db4o.P1ListElement();
 			elem4.SetTrans(a_trans);

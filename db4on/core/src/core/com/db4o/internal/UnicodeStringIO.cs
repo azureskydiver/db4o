@@ -1,0 +1,74 @@
+namespace com.db4o.@internal
+{
+	/// <exclude></exclude>
+	public sealed class UnicodeStringIO : com.db4o.@internal.LatinStringIO
+	{
+		public override int BytesPerChar()
+		{
+			return 2;
+		}
+
+		public override byte EncodingByte()
+		{
+			return com.db4o.@internal.Const4.UNICODE;
+		}
+
+		public override int Length(string a_string)
+		{
+			return (a_string.Length * 2) + com.db4o.@internal.Const4.OBJECT_LENGTH + com.db4o.@internal.Const4
+				.INT_LENGTH;
+		}
+
+		public override string Read(com.db4o.@internal.Buffer bytes, int a_length)
+		{
+			CheckBufferLength(a_length);
+			for (int ii = 0; ii < a_length; ii++)
+			{
+				chars[ii] = (char)((bytes._buffer[bytes._offset++] & unchecked((int)(0xff))) | ((
+					bytes._buffer[bytes._offset++] & unchecked((int)(0xff))) << 8));
+			}
+			return new string(chars, 0, a_length);
+		}
+
+		public override string Read(byte[] a_bytes)
+		{
+			int len = a_bytes.Length / 2;
+			CheckBufferLength(len);
+			int j = 0;
+			for (int ii = 0; ii < len; ii++)
+			{
+				chars[ii] = (char)((a_bytes[j++] & unchecked((int)(0xff))) | ((a_bytes[j++] & unchecked(
+					(int)(0xff))) << 8));
+			}
+			return new string(chars, 0, len);
+		}
+
+		public override int ShortLength(string a_string)
+		{
+			return (a_string.Length * 2) + com.db4o.@internal.Const4.INT_LENGTH;
+		}
+
+		public override void Write(com.db4o.@internal.Buffer bytes, string @string)
+		{
+			int len = WritetoBuffer(@string);
+			for (int i = 0; i < len; i++)
+			{
+				bytes._buffer[bytes._offset++] = (byte)(chars[i] & unchecked((int)(0xff)));
+				bytes._buffer[bytes._offset++] = (byte)(chars[i] >> 8);
+			}
+		}
+
+		internal override byte[] Write(string @string)
+		{
+			int len = WritetoBuffer(@string);
+			byte[] bytes = new byte[len * 2];
+			int j = 0;
+			for (int i = 0; i < len; i++)
+			{
+				bytes[j++] = (byte)(chars[i] & unchecked((int)(0xff)));
+				bytes[j++] = (byte)(chars[i] >> 8);
+			}
+			return bytes;
+		}
+	}
+}

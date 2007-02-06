@@ -98,6 +98,7 @@ namespace com.db4o.io
 			);
 
 		/// <summary>reads a buffer at the seeked address</summary>
+		/// <returns>the number of bytes read and returned</returns>
 		public virtual int Read(byte[] buffer)
 		{
 			return Read(buffer, buffer.Length);

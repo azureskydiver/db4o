@@ -17,10 +17,11 @@ namespace com.db4o.db4ounit.common.btree
 			while (allSlotIDs.MoveNext())
 			{
 				int slotID = (int)allSlotIDs.Current;
-				com.db4o.inside.slots.Slot slot = Trans().GetCurrentSlotOfID(slotID);
+				com.db4o.@internal.slots.Slot slot = FileTransaction().GetCurrentSlotOfID(slotID);
 				allSlots.Add(slot);
 			}
-			com.db4o.YapFile yapFile = (com.db4o.YapFile)Stream();
+			com.db4o.@internal.LocalObjectContainer yapFile = (com.db4o.@internal.LocalObjectContainer
+				)Stream();
 			com.db4o.foundation.Collection4 freedSlots = new com.db4o.foundation.Collection4(
 				);
 			yapFile.InstallDebugFreespaceManager(new com.db4o.db4ounit.common.btree.FreespaceManagerForDebug
@@ -39,7 +40,7 @@ namespace com.db4o.db4ounit.common.btree
 				this.freedSlots = freedSlots;
 			}
 
-			public void OnFree(com.db4o.inside.slots.Slot slot)
+			public void OnFree(com.db4o.@internal.slots.Slot slot)
 			{
 				freedSlots.Add(slot);
 			}
@@ -47,6 +48,11 @@ namespace com.db4o.db4ounit.common.btree
 			private readonly BTreeFreeTestCase _enclosing;
 
 			private readonly com.db4o.foundation.Collection4 freedSlots;
+		}
+
+		private com.db4o.@internal.LocalTransaction FileTransaction()
+		{
+			return ((com.db4o.@internal.LocalTransaction)Trans());
 		}
 	}
 }

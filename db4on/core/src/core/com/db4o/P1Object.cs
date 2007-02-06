@@ -3,35 +3,36 @@ namespace com.db4o
 	/// <summary>base class for all database aware objects</summary>
 	/// <exclude></exclude>
 	/// <persistent></persistent>
-	public class P1Object : com.db4o.Db4oTypeImpl
+	public class P1Object : com.db4o.@internal.Db4oTypeImpl
 	{
-		[com.db4o.Transient]
-		private com.db4o.Transaction i_trans;
+		[System.NonSerialized]
+		private com.db4o.@internal.Transaction i_trans;
 
-		[com.db4o.Transient]
-		private com.db4o.YapObject i_yapObject;
+		[System.NonSerialized]
+		private com.db4o.@internal.ObjectReference i_yapObject;
 
 		public P1Object()
 		{
 		}
 
-		internal P1Object(com.db4o.Transaction a_trans)
+		internal P1Object(com.db4o.@internal.Transaction a_trans)
 		{
 			i_trans = a_trans;
 		}
 
 		public virtual void Activate(object a_obj, int a_depth)
 		{
-			if (i_trans != null)
+			if (i_trans == null)
 			{
-				if (a_depth < 0)
-				{
-					i_trans.Stream().Activate1(i_trans, a_obj);
-				}
-				else
-				{
-					i_trans.Stream().Activate1(i_trans, a_obj, a_depth);
-				}
+				return;
+			}
+			if (a_depth < 0)
+			{
+				Stream().Activate1(i_trans, a_obj);
+			}
+			else
+			{
+				Stream().Activate1(i_trans, a_obj, a_depth);
 			}
 		}
 
@@ -52,27 +53,28 @@ namespace com.db4o
 
 		public virtual void CheckActive()
 		{
-			if (i_trans != null)
+			if (i_trans == null)
 			{
+				return;
+			}
+			if (i_yapObject == null)
+			{
+				i_yapObject = Stream().GetYapObject(this);
 				if (i_yapObject == null)
 				{
-					i_yapObject = i_trans.Stream().GetYapObject(this);
-					if (i_yapObject == null)
-					{
-						i_trans.Stream().Set(this);
-						i_yapObject = i_trans.Stream().GetYapObject(this);
-					}
+					Stream().Set(this);
+					i_yapObject = Stream().GetYapObject(this);
 				}
-				if (ValidYapObject())
-				{
-					i_yapObject.Activate(i_trans, this, ActivationDepth(), false);
-				}
+			}
+			if (ValidYapObject())
+			{
+				i_yapObject.Activate(i_trans, this, ActivationDepth(), false);
 			}
 		}
 
-		public virtual object CreateDefault(com.db4o.Transaction a_trans)
+		public virtual object CreateDefault(com.db4o.@internal.Transaction a_trans)
 		{
-			throw com.db4o.inside.Exceptions4.VirtualException();
+			throw com.db4o.@internal.Exceptions4.VirtualException();
 		}
 
 		internal virtual void Deactivate()
@@ -85,16 +87,17 @@ namespace com.db4o
 
 		internal virtual void Delete()
 		{
-			if (i_trans != null)
+			if (i_trans == null)
 			{
-				if (i_yapObject == null)
-				{
-					i_yapObject = i_trans.Stream().GetYapObject(this);
-				}
-				if (ValidYapObject())
-				{
-					i_trans.Stream().Delete3(i_trans, i_yapObject, this, 0, false);
-				}
+				return;
+			}
+			if (i_yapObject == null)
+			{
+				i_yapObject = Stream().GetYapObject(this);
+			}
+			if (ValidYapObject())
+			{
+				Stream().Delete2(i_trans, i_yapObject, this, 0, false);
 			}
 		}
 
@@ -102,7 +105,7 @@ namespace com.db4o
 		{
 			if (i_trans != null)
 			{
-				i_trans.Stream().Delete(a_obj);
+				Stream().Delete(a_obj);
 			}
 		}
 
@@ -112,10 +115,10 @@ namespace com.db4o
 			{
 				return 0;
 			}
-			return i_trans.Stream().GetID(a_obj);
+			return Stream().GetID(a_obj);
 		}
 
-		protected virtual com.db4o.Transaction GetTrans()
+		protected virtual com.db4o.@internal.Transaction GetTrans()
 		{
 			return i_trans;
 		}
@@ -129,12 +132,13 @@ namespace com.db4o
 		{
 		}
 
-		protected virtual object Replicate(com.db4o.Transaction fromTrans, com.db4o.Transaction
+		protected virtual object Replicate(com.db4o.@internal.Transaction fromTrans, com.db4o.@internal.Transaction
 			 toTrans)
 		{
-			com.db4o.YapStream fromStream = fromTrans.Stream();
-			com.db4o.YapStream toStream = toTrans.Stream();
-			com.db4o.inside.replication.MigrationConnection mgc = fromStream.i_handlers.i_migration;
+			com.db4o.@internal.ObjectContainerBase fromStream = fromTrans.Stream();
+			com.db4o.@internal.ObjectContainerBase toStream = toTrans.Stream();
+			com.db4o.@internal.replication.MigrationConnection mgc = fromStream.i_handlers.MigrationConnection
+				();
 			lock (fromStream.Lock())
 			{
 				int id = toStream.OldReplicationHandles(this);
@@ -169,12 +173,12 @@ namespace com.db4o
 		{
 		}
 
-		public virtual void SetTrans(com.db4o.Transaction a_trans)
+		public virtual void SetTrans(com.db4o.@internal.Transaction a_trans)
 		{
 			i_trans = a_trans;
 		}
 
-		public virtual void SetYapObject(com.db4o.YapObject a_yapObject)
+		public virtual void SetYapObject(com.db4o.@internal.ObjectReference a_yapObject)
 		{
 			i_yapObject = a_yapObject;
 		}
@@ -183,11 +187,11 @@ namespace com.db4o
 		{
 			if (i_trans != null)
 			{
-				i_trans.Stream().SetInternal(i_trans, a_obj, true);
+				Stream().SetInternal(i_trans, a_obj, true);
 			}
 		}
 
-		public virtual object StoredTo(com.db4o.Transaction a_trans)
+		public virtual object StoredTo(com.db4o.@internal.Transaction a_trans)
 		{
 			i_trans = a_trans;
 			return this;
@@ -197,28 +201,29 @@ namespace com.db4o
 		{
 			if (i_trans != null)
 			{
-				i_trans.Stream().CheckClosed();
-				return i_trans.Stream().Lock();
+				Stream().CheckClosed();
+				return Stream().Lock();
 			}
 			return this;
 		}
 
 		public virtual void Store(int a_depth)
 		{
-			if (i_trans != null)
+			if (i_trans == null)
 			{
+				return;
+			}
+			if (i_yapObject == null)
+			{
+				i_yapObject = i_trans.Stream().GetYapObject(this);
 				if (i_yapObject == null)
 				{
+					i_trans.Stream().SetInternal(i_trans, this, true);
 					i_yapObject = i_trans.Stream().GetYapObject(this);
-					if (i_yapObject == null)
-					{
-						i_trans.Stream().SetInternal(i_trans, this, true);
-						i_yapObject = i_trans.Stream().GetYapObject(this);
-						return;
-					}
+					return;
 				}
-				Update(a_depth);
 			}
+			Update(a_depth);
 		}
 
 		internal virtual void Update()
@@ -230,10 +235,16 @@ namespace com.db4o
 		{
 			if (ValidYapObject())
 			{
-				i_trans.Stream().BeginEndSet(i_trans);
-				i_yapObject.WriteUpdate(i_trans, depth);
-				i_trans.Stream().CheckStillToSet();
-				i_trans.Stream().BeginEndSet(i_trans);
+				Stream().BeginTopLevelSet();
+				try
+				{
+					i_yapObject.WriteUpdate(i_trans, depth);
+					Stream().CheckStillToSet();
+				}
+				finally
+				{
+					Stream().EndTopLevelSet(i_trans);
+				}
 			}
 		}
 
@@ -247,14 +258,19 @@ namespace com.db4o
 			if (ValidYapObject())
 			{
 				i_yapObject.WriteUpdate(i_trans, depth);
-				i_trans.Stream().RememberJustSet(i_yapObject.GetID());
-				i_trans.Stream().CheckStillToSet();
+				Stream().FlagAsHandled(i_yapObject);
+				Stream().CheckStillToSet();
 			}
 		}
 
 		private bool ValidYapObject()
 		{
 			return (i_trans != null) && (i_yapObject != null) && (i_yapObject.GetID() > 0);
+		}
+
+		private com.db4o.@internal.ObjectContainerBase Stream()
+		{
+			return i_trans.Stream();
 		}
 	}
 }

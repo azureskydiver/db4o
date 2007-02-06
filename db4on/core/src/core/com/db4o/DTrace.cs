@@ -51,6 +51,8 @@ namespace com.db4o
 
 		public static com.db4o.DTrace ADD_TO_CLASS_INDEX;
 
+		public static com.db4o.DTrace BEGIN_TOP_LEVEL_CALL;
+
 		public static com.db4o.DTrace BIND;
 
 		public static com.db4o.DTrace BTREE_NODE_COMMIT_OR_ROLLBACK;
@@ -72,6 +74,8 @@ namespace com.db4o
 		public static com.db4o.DTrace DELETE;
 
 		public static com.db4o.DTrace DONOTINCLUDE;
+
+		public static com.db4o.DTrace END_TOP_LEVEL_CALL;
 
 		public static com.db4o.DTrace EVALUATE_SELF;
 
@@ -219,6 +223,12 @@ namespace com.db4o
 
 		private static void TurnAllOffExceptFor(com.db4o.DTrace[] these)
 		{
+		}
+
+		public static void NoWarnings()
+		{
+			BreakOnEvent(0);
+			TrackEventsWithoutRange();
 		}
 	}
 }

@@ -1,11 +1,13 @@
 namespace com.db4o.events
 {
-	public delegate void QueryEventHandler(object sender, QueryEventArgs args);
-
-	public delegate void CancellableObjectEventHandler(object sender, CancellableObjectEventArgs
+	public delegate void QueryEventHandler(object sender, com.db4o.events.QueryEventArgs
 		 args);
 
-	public delegate void ObjectEventHandler(object sender, ObjectEventArgs args);
+	public delegate void CancellableObjectEventHandler(object sender, com.db4o.events.CancellableObjectEventArgs
+		 args);
+
+	public delegate void ObjectEventHandler(object sender, com.db4o.events.ObjectEventArgs
+		 args);
 
 	/// <summary>
 	/// Provides a way to register event handlers for specific
@@ -22,7 +24,7 @@ namespace com.db4o.events
 		/// .
 		/// </summary>
 		/// <returns></returns>
-		event QueryEventHandler QueryStarted;
+		event com.db4o.events.QueryEventHandler QueryStarted;
 
 		/// <summary>
 		/// Receives
@@ -30,7 +32,7 @@ namespace com.db4o.events
 		/// .
 		/// </summary>
 		/// <returns></returns>
-		event QueryEventHandler QueryFinished;
+		event com.db4o.events.QueryEventHandler QueryFinished;
 
 		/// <summary>
 		/// Receives
@@ -39,7 +41,7 @@ namespace com.db4o.events
 		/// .
 		/// </summary>
 		/// <returns></returns>
-		event CancellableObjectEventHandler Creating;
+		event com.db4o.events.CancellableObjectEventHandler Creating;
 
 		/// <summary>
 		/// Receives
@@ -48,7 +50,7 @@ namespace com.db4o.events
 		/// .
 		/// </summary>
 		/// <returns></returns>
-		event CancellableObjectEventHandler Activating;
+		event com.db4o.events.CancellableObjectEventHandler Activating;
 
 		/// <summary>
 		/// Receives
@@ -56,7 +58,7 @@ namespace com.db4o.events
 		/// 	</see>
 		/// </summary>
 		/// <returns></returns>
-		event CancellableObjectEventHandler Updating;
+		event com.db4o.events.CancellableObjectEventHandler Updating;
 
 		/// <summary>
 		/// Receives
@@ -64,7 +66,7 @@ namespace com.db4o.events
 		/// 	</see>
 		/// </summary>
 		/// <returns></returns>
-		event CancellableObjectEventHandler Deleting;
+		event com.db4o.events.CancellableObjectEventHandler Deleting;
 
 		/// <summary>
 		/// Receives
@@ -72,7 +74,7 @@ namespace com.db4o.events
 		/// 	</see>
 		/// </summary>
 		/// <returns></returns>
-		event CancellableObjectEventHandler Deactivating;
+		event com.db4o.events.CancellableObjectEventHandler Deactivating;
 
 		/// <summary>
 		/// Receives
@@ -80,7 +82,7 @@ namespace com.db4o.events
 		/// .
 		/// </summary>
 		/// <returns></returns>
-		event ObjectEventHandler Activated;
+		event com.db4o.events.ObjectEventHandler Activated;
 
 		/// <summary>
 		/// Receives
@@ -88,27 +90,27 @@ namespace com.db4o.events
 		/// .
 		/// </summary>
 		/// <returns></returns>
-		event ObjectEventHandler Created;
+		event com.db4o.events.ObjectEventHandler Created;
 
 		/// <summary>
 		/// Receives
 		/// <see cref="com.db4o.events.ObjectEventArgs">com.db4o.events.ObjectEventArgs</see>
 		/// </summary>
 		/// <returns></returns>
-		event ObjectEventHandler Updated;
+		event com.db4o.events.ObjectEventHandler Updated;
 
 		/// <summary>
 		/// Receives
 		/// <see cref="com.db4o.events.ObjectEventArgs">com.db4o.events.ObjectEventArgs</see>
 		/// </summary>
 		/// <returns></returns>
-		event ObjectEventHandler Deleted;
+		event com.db4o.events.ObjectEventHandler Deleted;
 
 		/// <summary>
 		/// Receives
 		/// <see cref="com.db4o.events.ObjectEventArgs">com.db4o.events.ObjectEventArgs</see>
 		/// </summary>
 		/// <returns></returns>
-		event ObjectEventHandler Deactivated;
+		event com.db4o.events.ObjectEventHandler Deactivated;
 	}
 }

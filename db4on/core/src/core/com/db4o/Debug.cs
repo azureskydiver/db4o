@@ -9,11 +9,11 @@ namespace com.db4o
 
 		public const bool atHome = false;
 
-		public static bool longTimeOuts = false;
+		public const bool longTimeOuts = false;
 
-		public const bool freespace = com.db4o.Deploy.debug ? true : false;
+		public const bool freespace = com.db4o.Deploy.debug;
 
-		public const bool xbytes = freespace ? true : false;
+		public const bool xbytes = freespace;
 
 		public const bool freespaceChecker = false;
 
@@ -47,7 +47,7 @@ namespace com.db4o
 
 		public static bool ExceedsMaximumBlockSize(int a_length)
 		{
-			if (a_length > com.db4o.YapConst.MAXIMUM_BLOCK_SIZE)
+			if (a_length > com.db4o.@internal.Const4.MAXIMUM_BLOCK_SIZE)
 			{
 				return true;
 			}
@@ -56,8 +56,8 @@ namespace com.db4o
 
 		public static bool ExceedsMaximumArrayEntries(int a_entries, bool a_primitive)
 		{
-			if (a_entries > (a_primitive ? com.db4o.YapConst.MAXIMUM_ARRAY_ENTRIES_PRIMITIVE : 
-				com.db4o.YapConst.MAXIMUM_ARRAY_ENTRIES))
+			if (a_entries > (a_primitive ? com.db4o.@internal.Const4.MAXIMUM_ARRAY_ENTRIES_PRIMITIVE
+				 : com.db4o.@internal.Const4.MAXIMUM_ARRAY_ENTRIES))
 			{
 				return true;
 			}

@@ -1,6 +1,6 @@
 namespace com.db4o.db4ounit.common.header
 {
-	public class IdentityTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase
+	public class IdentityTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase, Db4oUnit.Extensions.Fixtures.OptOutCS
 	{
 		public static void Main(string[] arguments)
 		{
@@ -26,7 +26,7 @@ namespace com.db4o.db4ounit.common.header
 
 		private void GenerateNewIdentity()
 		{
-			((com.db4o.YapFile)Db()).GenerateNewIdentity();
+			((com.db4o.@internal.LocalObjectContainer)Db()).GenerateNewIdentity();
 		}
 	}
 }

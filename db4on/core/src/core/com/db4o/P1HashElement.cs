@@ -14,8 +14,9 @@ namespace com.db4o
 		{
 		}
 
-		public P1HashElement(com.db4o.Transaction a_trans, com.db4o.P1ListElement a_next, 
-			object a_key, int a_hashCode, object a_object) : base(a_trans, a_next, a_object)
+		public P1HashElement(com.db4o.@internal.Transaction a_trans, com.db4o.P1ListElement
+			 a_next, object a_key, int a_hashCode, object a_object) : base(a_trans, a_next, 
+			a_object)
 		{
 			i_hashCode = a_hashCode;
 			i_key = a_key;
@@ -31,7 +32,7 @@ namespace com.db4o
 			CheckActive();
 			if (a_depth < 0)
 			{
-				com.db4o.Transaction trans = GetTrans();
+				com.db4o.@internal.Transaction trans = GetTrans();
 				if (trans != null)
 				{
 					if (trans.Stream().ConfigImpl().ActivationDepth() < 1)

@@ -44,11 +44,13 @@ namespace com.db4o.db4ounit.common.types.arrays
 
 		internal const int ARRAY_LENGTH = 1024 * 512;
 
+		#if !CF_1_0 && !CF_2_0
 		protected override void Configure(com.db4o.config.Configuration config)
 		{
 			config.ObjectClass(typeof(com.db4o.db4ounit.common.types.arrays.ByteArrayTestCase.SerializableByteArrayHolder)
 				).Translate(new com.db4o.config.TSerializable());
 		}
+		#endif // !CF_1_0 && !CF_2_0
 
 		protected override void Store()
 		{
@@ -61,17 +63,21 @@ namespace com.db4o.db4ounit.common.types.arrays
 			}
 		}
 
+		#if !CF_1_0 && !CF_2_0
 		public virtual void TestByteArrayHolder()
 		{
 			TimeQueryLoop("raw byte array", typeof(com.db4o.db4ounit.common.types.arrays.ByteArrayTestCase.ByteArrayHolder)
 				);
 		}
+		#endif // !CF_1_0 && !CF_2_0
 
+		#if !CF_1_0 && !CF_2_0
 		public virtual void TestSerializableByteArrayHolder()
 		{
 			TimeQueryLoop("TSerializable", typeof(com.db4o.db4ounit.common.types.arrays.ByteArrayTestCase.SerializableByteArrayHolder)
 				);
 		}
+		#endif // !CF_1_0 && !CF_2_0
 
 		private void TimeQueryLoop(string label, System.Type clazz)
 		{
@@ -81,7 +87,7 @@ namespace com.db4o.db4ounit.common.types.arrays
 			while (os.HasNext())
 			{
 				Db4oUnit.Assert.AreEqual(ARRAY_LENGTH, ((com.db4o.db4ounit.common.types.arrays.ByteArrayTestCase.IByteArrayHolder
-					)os.Next()).GetBytes().Length);
+					)os.Next()).GetBytes().Length, label);
 			}
 		}
 

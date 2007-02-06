@@ -3,13 +3,11 @@ namespace com.db4o.foundation
 	/// <exclude></exclude>
 	public class IntArrayList : System.Collections.IEnumerable
 	{
-		internal const int INC = 20;
-
 		protected int[] i_content;
 
 		private int i_count;
 
-		public IntArrayList() : this(INC)
+		public IntArrayList() : this(10)
 		{
 		}
 
@@ -22,7 +20,12 @@ namespace com.db4o.foundation
 		{
 			if (i_count >= i_content.Length)
 			{
-				int[] temp = new int[i_content.Length + INC];
+				int inc = i_content.Length / 2;
+				if (inc < 10)
+				{
+					inc = 10;
+				}
+				int[] temp = new int[i_content.Length + inc];
 				System.Array.Copy(i_content, 0, temp, 0, i_content.Length);
 				i_content = temp;
 			}
@@ -58,7 +61,7 @@ namespace com.db4o.foundation
 
 		public virtual com.db4o.foundation.IntIterator4 IntIterator()
 		{
-			return new com.db4o.foundation.ReverseIntIterator4Impl(i_content, i_count);
+			return new com.db4o.foundation.IntIterator4Impl(i_content, i_count);
 		}
 
 		public virtual System.Collections.IEnumerator GetEnumerator()

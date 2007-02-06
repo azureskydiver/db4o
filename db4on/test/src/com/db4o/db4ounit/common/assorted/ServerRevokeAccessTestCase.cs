@@ -8,9 +8,10 @@ namespace com.db4o.db4ounit.common.assorted
 
 		internal static readonly string SERVER_HOSTNAME = "localhost";
 
+		#if !CF_1_0 && !CF_2_0
 		public virtual void Test()
 		{
-			com.db4o.db4ounit.util.File4.Delete(FILE);
+			com.db4o.foundation.io.File4.Delete(FILE);
 			com.db4o.ObjectServer server = com.db4o.Db4o.OpenServer(FILE, SERVER_PORT);
 			try
 			{
@@ -22,7 +23,7 @@ namespace com.db4o.db4ounit.common.assorted
 				Db4oUnit.Assert.IsNotNull(con);
 				con.Close();
 				server.Ext().RevokeAccess(user);
-				Db4oUnit.Assert.Expect(typeof(System.Exception), new _AnonymousInnerClass34(this, 
+				Db4oUnit.Assert.Expect(typeof(System.Exception), new _AnonymousInnerClass37(this, 
 					user, password));
 			}
 			finally
@@ -30,10 +31,11 @@ namespace com.db4o.db4ounit.common.assorted
 				server.Close();
 			}
 		}
+		#endif // !CF_1_0 && !CF_2_0
 
-		private sealed class _AnonymousInnerClass34 : Db4oUnit.CodeBlock
+		private sealed class _AnonymousInnerClass37 : Db4oUnit.CodeBlock
 		{
-			public _AnonymousInnerClass34(ServerRevokeAccessTestCase _enclosing, string user, 
+			public _AnonymousInnerClass37(ServerRevokeAccessTestCase _enclosing, string user, 
 				string password)
 			{
 				this._enclosing = _enclosing;
