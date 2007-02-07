@@ -2,8 +2,6 @@
 
 package com.db4o.drs.test;
 
-import com.db4o.drs.test.hibernate.RoundRobinWithManyProviders;
-
 import db4ounit.TestSuite;
 import db4ounit.TestSuiteBuilder;
 
@@ -29,15 +27,17 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				ReplicationAfterDeletionTest.class,
 				SimpleArrayTest.class,
 				SimpleParentChild.class,
-				RoundRobinWithManyProviders.class,
+				
+				//RoundRobinWithManyProviders contains ref to Hibernate, does not work on .net
+				//RoundRobinWithManyProviders.class,
 //
 //				// Collection
-				MapTest.class, // TODO : Convert to .NET
-				ArrayReplicationTest.class,// TODO : Convert to .NET
+				//MapTest.class, // TODO : Convert to .NET
+				//ArrayReplicationTest.class,// TODO : Convert to .NET
 				ListTest.class, 
 				Db4oListTest.class, 
-				SingleTypeCollectionReplicationTest.class,
-				MixedTypesCollectionReplicationTest.class,// TODO : Convert to .NET
+				//SingleTypeCollectionReplicationTest.class,
+				//MixedTypesCollectionReplicationTest.class,// TODO : Convert to .NET
 //
 //				// Complex
 				R0to4Runner.class, 	
