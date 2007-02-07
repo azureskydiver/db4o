@@ -15,8 +15,8 @@ namespace com.db4o {
     /// </remarks>
     /// <exclude />
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Event)]
-    public class Transient : Attribute {
-        public Transient() {
+    public class TransientAttribute : Attribute {
+        public TransientAttribute() {
         }
     }
 }

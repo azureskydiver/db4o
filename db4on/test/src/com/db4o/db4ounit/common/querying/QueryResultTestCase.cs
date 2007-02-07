@@ -56,8 +56,9 @@ namespace com.db4o.db4ounit.common.querying
 
 		private com.db4o.@internal.ClassMetadata YapClass()
 		{
-            return Stream().GetYapClass(Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass(Reflector
-				(), typeof(com.db4o.db4ounit.common.querying.QueryResultTestCase.Item)));
+			return Stream().GetYapClass(Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass(
+				Reflector(), typeof(com.db4o.db4ounit.common.querying.QueryResultTestCase.Item))
+				);
 		}
 
 		private com.db4o.@internal.query.result.QueryResult ExecuteQuery(com.db4o.query.Query

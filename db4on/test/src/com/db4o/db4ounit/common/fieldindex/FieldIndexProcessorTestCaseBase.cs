@@ -68,8 +68,8 @@ namespace com.db4o.db4ounit.common.fieldindex
 
 		private com.db4o.reflect.ReflectClass GetReflectClass(System.Type clazz)
 		{
-            return Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass(Stream().Reflector(), clazz
-				);
+			return Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass(Stream().Reflector(), 
+				clazz);
 		}
 
 		protected virtual com.db4o.@internal.btree.BTree ClassIndexBTree(System.Type clazz

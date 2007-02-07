@@ -632,7 +632,6 @@ namespace com.db4o.@internal
 		{
 			return new NetTypeHandler[]
 				{
-					new DoubleHandler(stream),
 					new SByteHandler(stream),
 					new DecimalHandler(stream),
 					new UIntHandler(stream),
