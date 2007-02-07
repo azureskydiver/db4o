@@ -12,6 +12,7 @@ public class AllTests extends Db4oTestSuite {
         
         return new Class[] {
         		NonStaticConfigurationTestCase.class,
+        		ObjectTranslatorTestCase.class,
 		};
     }
 }
