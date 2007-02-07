@@ -78,25 +78,6 @@ namespace j4o.lang.reflect
             }
             return modifiers;
         }
-        
-        public static bool IsTransient(FieldInfo field)
-        {
-            return CheckForTransient(field.GetCustomAttributes(true));
-        }
-
-		private static bool CheckForTransient(object[] attributes)
-		{
-			if (attributes == null) return false;
-
-			foreach (object attribute in attributes)
-			{
-				string attributeName = attribute.ToString();
-				if ("com.db4o.Transient" == attributeName) return true;
-				if (_transientMarkers == null) continue;
-				if (_transientMarkers.Contains(attributeName)) return true;
-			}
-			return false;
-		}
 
         public String GetName()
         {
@@ -112,6 +93,36 @@ namespace j4o.lang.reflect
             return _fieldClass;
         }
 
+        public void Set(Object obj, Object value)
+        {
+            _fieldInfo.SetValue(obj, value);
+        }
+
+        public static bool IsTransient(FieldInfo field)
+        {
+            if (field.IsNotSerialized) return true;
+            if (field.IsDefined(typeof(com.db4o.TransientAttribute), true)) return true;
+            if (_transientMarkers == null) return false;
+            return CheckForTransient(field.GetCustomAttributes(true));
+        }
+
+        private static bool CheckForTransient(object[] attributes)
+        {
+            if (attributes == null) return false;
+
+            foreach (object attribute in attributes)
+            {
+                string attributeName = attribute.GetType().FullName;
+                if (_transientMarkers.Contains(attributeName)) return true;
+            }
+            return false;
+        }
+
+        public static void MarkTransient(System.Type attributeType)
+        {
+            MarkTransient(attributeType.FullName);
+        }
+
         public static void MarkTransient(string attributeName)
         {
             if (_transientMarkers == null)
@@ -125,9 +136,9 @@ namespace j4o.lang.reflect
             _transientMarkers.Add(attributeName);
         }
 
-        public void Set(Object obj, Object value)
+        public static void ResetTransientMarkers()
         {
-        	_fieldInfo.SetValue(obj, value);
+            _transientMarkers = null;
         }
     }
 }

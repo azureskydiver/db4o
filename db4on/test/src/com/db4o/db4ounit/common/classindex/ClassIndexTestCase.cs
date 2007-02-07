@@ -48,7 +48,7 @@ namespace com.db4o.db4ounit.common.classindex
 
 		private void AssertIndex(object[] expected)
 		{
-            com.db4o.@internal.ClassMetadata clazz = Stream().GetYapClass(Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass
+			com.db4o.@internal.ClassMetadata clazz = Stream().GetYapClass(Db4oUnit.Extensions.Db4oUnitPlatform.GetReflectClass
 				(Reflector(), typeof(com.db4o.db4ounit.common.classindex.ClassIndexTestCase.Item)
 				));
 			com.db4o.db4ounit.common.btree.ExpectingVisitor visitor = new com.db4o.db4ounit.common.btree.ExpectingVisitor

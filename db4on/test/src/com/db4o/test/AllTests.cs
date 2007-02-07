@@ -43,8 +43,8 @@ namespace com.db4o.test
 			//            // BenchMark.Main(null);
 			//
             int errorCount = new com.db4o.db4ounit.AllTests().RunSoloAndClientServer();
-			new AllTests().Run();
-			errorCount += Tester.errorCount;
+//			new AllTests().Run();
+//			errorCount += Tester.errorCount;
 			return errorCount;
 		}
 
