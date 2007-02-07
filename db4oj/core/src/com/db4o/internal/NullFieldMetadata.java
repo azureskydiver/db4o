@@ -1,13 +1,14 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.internal.query.processor;
+package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 
-
-class NullFieldMetadata extends FieldMetadata{
+/**
+ * @exclude
+ */
+public class NullFieldMetadata extends FieldMetadata {
     
     public NullFieldMetadata(){
         super(null);
