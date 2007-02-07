@@ -7,7 +7,6 @@ import java.lang.ref.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
 
@@ -20,11 +19,11 @@ class JDK_1_2 extends JDKReflect {
 	    // link standard translators, so they won't get deleted
 	    // by deployment
 	    
-	    Object obj = new TCollection();
-	    obj = new TMap();
-	    obj = new TSerializable();
-	    obj = new TTreeMap();
-	    obj = new TTreeSet();
+	    new TCollection();
+	    new TMap();
+	    new TSerializable();
+	    new TTreeMap();
+	    new TTreeSet();
 	}
 
     Db4oCollections collections(ObjectContainerBase a_stream){

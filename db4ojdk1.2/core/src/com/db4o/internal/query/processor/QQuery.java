@@ -5,7 +5,6 @@ package com.db4o.internal.query.processor;
 import java.util.*;
 
 import com.db4o.internal.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.query.*;
 
 /**

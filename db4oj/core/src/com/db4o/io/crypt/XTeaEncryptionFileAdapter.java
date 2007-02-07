@@ -175,7 +175,7 @@ public class XTeaEncryptionFileAdapter extends IoAdapter {
 		if (prePad != 0) {
 			seek(_pos - prePad);
 		}
-		int readResult = _adapter.read(pb);
+		_adapter.read(pb); //int readResult = _adapter.read(pb);
 		if (DEBUG) {
 			log("3. before dencrypt/read->", pb);
 		}

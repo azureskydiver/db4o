@@ -11,7 +11,6 @@ import com.db4o.internal.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
-
 /**
  * Represents an actual object in the database. Forms a tree structure, indexed
  * by id. Can have dependents that are doNotInclude'd in the query result when

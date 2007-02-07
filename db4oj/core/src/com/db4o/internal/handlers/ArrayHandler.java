@@ -10,7 +10,6 @@ import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.reflect.*;
 
-
 /**
  * @exclude
  */
@@ -103,14 +102,12 @@ public class ArrayHandler extends BuiltinTypeHandler {
         StatefulBuffer a_bytes,
         PrimitiveFieldHandler a_classPrimitive) {
         
-        int address = a_bytes.readInt();
-        int length = a_bytes.readInt();
-        
+		a_bytes.readInt(); //int address = a_bytes.readInt();
+		a_bytes.readInt(); //int length = a_bytes.readInt();
 
         if(true){
             return;
-        }
-        
+        }        
         
 //        if (address > 0) {
 //            Transaction trans = a_bytes.getTransaction();

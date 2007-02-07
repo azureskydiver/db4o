@@ -2,12 +2,10 @@
 
 package com.db4o.internal;
 
-import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.ext.*;
-import com.db4o.internal.*;
 
 class JDK_1_4 extends JDK_1_3 {
 	

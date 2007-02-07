@@ -2,12 +2,11 @@
 
 package com.db4o.internal.cluster;
 
-import java.util.Comparator;
+import java.util.*;
 
-import com.db4o.ObjectSet;
+import com.db4o.*;
 import com.db4o.cluster.Cluster;
 import com.db4o.internal.*;
-import com.db4o.internal.cluster.*;
 import com.db4o.internal.query.*;
 import com.db4o.query.*;
 
