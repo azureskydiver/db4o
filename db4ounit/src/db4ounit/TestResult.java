@@ -23,22 +23,24 @@ public class TestResult extends Printable {
 		this(false);
 	}
 
-	public void testStarted(Test test) throws IOException {		
+	public void testStarted(Test test) {		
 		++_testCount;
-		printLabel(test.getLabel());
-	}
-
-	private void printLabel(String label) throws IOException {
-		if (null != _stdout) {
-			_stdout.write(label + "\n");
-			_stdout.flush();
-		}
-	}
+		print(test.getLabel());
+	}	
 	
 	public void testFailed(Test test, Throwable failure) {
+		printFailure(failure);
 		_failures.add(new TestFailure(test, failure));
 	}
 	
+	private void printFailure(Throwable failure) {
+		if (failure == null) {
+			print("\t!");
+		} else {
+			print("\t! " + failure.getMessage());
+		}
+	}
+
 	public boolean green() {
 		return _failures.size() == 0;
 	}
@@ -70,5 +72,16 @@ public class TestResult extends Printable {
 
 	public void runFinished() {
 		_watch.stop();
+	}
+	
+	private void print(String message) {
+		if (null != _stdout) {
+			try {
+				_stdout.write(message + "\n");
+				_stdout.flush();
+			} catch (IOException x) {
+//				x.printStackTrace();
+			}
+		}
 	}
 }
