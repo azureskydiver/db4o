@@ -5,9 +5,8 @@ package com.db4o.internal;
 import java.net.*;
 
 import com.db4o.config.*;
-import com.db4o.config.annotations.reflect.ConfigurationIntrospector;
+import com.db4o.config.annotations.reflect.*;
 import com.db4o.ext.*;
-import com.db4o.internal.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
 

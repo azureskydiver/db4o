@@ -3,8 +3,8 @@
 package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.config.ObjectTranslator;
-import com.db4o.ext.StoredField;
+import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.handlers.*;
@@ -14,7 +14,6 @@ import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-
 
 /**
  * @exclude
