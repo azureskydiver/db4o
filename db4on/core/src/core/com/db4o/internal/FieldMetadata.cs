@@ -894,13 +894,13 @@ namespace com.db4o.@internal
 			lock (stream.Lock())
 			{
 				com.db4o.@internal.Transaction trans = stream.GetTransaction();
-				_index.TraverseKeys(trans, new _AnonymousInnerClass794(this, userVisitor, trans));
+				_index.TraverseKeys(trans, new _AnonymousInnerClass793(this, userVisitor, trans));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass794 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass793 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass794(FieldMetadata _enclosing, com.db4o.foundation.Visitor4
+			public _AnonymousInnerClass793(FieldMetadata _enclosing, com.db4o.foundation.Visitor4
 				 userVisitor, com.db4o.@internal.Transaction trans)
 			{
 				this._enclosing = _enclosing;
