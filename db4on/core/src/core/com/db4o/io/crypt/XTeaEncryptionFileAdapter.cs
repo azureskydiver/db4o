@@ -109,7 +109,7 @@ namespace com.db4o.io.crypt
 			{
 				Seek(_pos - prePad);
 			}
-			int readResult = _adapter.Read(pb);
+			_adapter.Read(pb);
 			_xtea.Decrypt(pb);
 			System.Array.Copy(pb, prePad, bytes, 0, length);
 			Seek(origPos + length);

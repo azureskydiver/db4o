@@ -98,8 +98,8 @@ namespace com.db4o.@internal.handlers
 		public void DeletePrimitiveEmbedded(com.db4o.@internal.StatefulBuffer a_bytes, com.db4o.@internal.PrimitiveFieldHandler
 			 a_classPrimitive)
 		{
-			int address = a_bytes.ReadInt();
-			int length = a_bytes.ReadInt();
+			a_bytes.ReadInt();
+			a_bytes.ReadInt();
 			if (true)
 			{
 				return;
