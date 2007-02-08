@@ -251,15 +251,7 @@ namespace j4o.lang
 
 		public bool IsInstance(object obj)
 		{
-			if (obj == null)
-			{
-				return false;
-			}
-			if (_type.IsInterface)
-			{
-				return _type.IsAssignableFrom(obj.GetType());
-			}
-			return obj.GetType() == _type;
+		    return _type.IsInstanceOfType(obj);
 		}
 
 		public bool IsInterface()
