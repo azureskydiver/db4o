@@ -6,8 +6,9 @@ import com.db4o.events.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.*;
 
-public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase {
+public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implements OptOutCS {
 	
 	public static void main(String[] arguments) {
 		new GlobalLifecycleEventsTestCase().runClientServer();
