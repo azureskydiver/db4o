@@ -34,6 +34,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		Config4Impl config = (Config4Impl) i_yapFile.configure();
 		config.callbacks(false);
 		config.isServer(true);
+		// the minium activation depth of com.db4o.User.class should be 1.
+		// Otherwise, we may get null password.
+		config.objectClass(User.class).minimumActivationDepth(1);
 
 		a_yapFile.produceYapClass(a_yapFile.i_handlers.ICLASS_STATICCLASS);
 
