@@ -17,6 +17,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private String i_name;
 
 	private ServerSocket4 i_serverSocket;
+	
+	private int i_port;
 
 	private int i_threadIDGen = 1;
 
@@ -26,49 +28,69 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	private final Object _lock=new Object();
 	
-	public ObjectServerImpl(final LocalObjectContainer a_yapFile, int a_port) {
-		a_yapFile.setServer(true);
-		i_name = "db4o ServerSocket  FILE: " + a_yapFile.toString() + "  PORT:"
-				+ a_port;
-		i_yapFile = a_yapFile;
-		Config4Impl config = (Config4Impl) i_yapFile.configure();
-		config.callbacks(false);
-		config.isServer(true);
-		// the minium activation depth of com.db4o.User.class should be 1.
-		// Otherwise, we may get null password.
-		config.objectClass(User.class).minimumActivationDepth(1);
+	private Config4Impl _config;
+	
+	public ObjectServerImpl(final LocalObjectContainer yapFile, int port) {
+		i_yapFile = yapFile;
+		i_port = port;
+		_config = i_yapFile.configImpl();
+		i_name = "db4o ServerSocket FILE: " + yapFile.toString() + "  PORT:"+ i_port;
+		
+		i_yapFile.setServer(true);	
+		
+		configureObjectServer();
 
-		a_yapFile.produceYapClass(a_yapFile.i_handlers.ICLASS_STATICCLASS);
+		ensureLoadStaticClass();
+		ensureLoadConfiguredClasses();
 
+		startupServerSocket();
+	}
+
+	private void startupServerSocket() {
+		if (i_port <= 0) {
+			return;
+		}
+		try {
+			i_serverSocket = new ServerSocket4(i_port);
+			i_serverSocket.setSoTimeout(_config.timeoutServerSocket());
+		} catch (IOException e) {
+			Exceptions4.throwRuntimeException(30, "" + i_port);
+		}
+
+		new Thread(this).start();
+		// TODO: Carl, shouldn't this be a daemon?
+		// Not sure Klaus, let's discuss.
+
+		synchronized (_lock) {
+			try {
+				_lock.wait(1000);
+				// Give the thread some time to get up.
+				// We will get notified.
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	private void ensureLoadStaticClass() {
+		i_yapFile.produceYapClass(i_yapFile.i_handlers.ICLASS_STATICCLASS);
+	}
+	
+	private void ensureLoadConfiguredClasses() {
 		// make sure all configured YapClasses are up in the repository
-		config.exceptionalClasses().forEachValue(new Visitor4() {
+		_config.exceptionalClasses().forEachValue(new Visitor4() {
 			public void visit(Object a_object) {
-				a_yapFile.produceYapClass(a_yapFile.reflector().forName(
+				i_yapFile.produceYapClass(i_yapFile.reflector().forName(
 						((Config4Class) a_object).getName()));
 			}
 		});
+	}
 
-		if (a_port > 0) {
-			try {
-				i_serverSocket = new ServerSocket4(a_port);
-				i_serverSocket.setSoTimeout(config.timeoutServerSocket());
-			} catch (IOException e) {
-				Exceptions4.throwRuntimeException(30, "" + a_port);
-			}
-
-			new Thread(this).start();
-			// TODO: Carl, shouldn't this be a daemon?
-			// Not sure Klaus, let's discuss.
-
-			synchronized (_lock) {
-				try {
-					_lock.wait(1000);
-					// Give the thread some time to get up.
-					// We will get notified.
-				} catch (Exception e) {
-				}
-			}
-		}
+	private void configureObjectServer() {
+		_config.callbacks(false);
+		_config.isServer(true);
+		// the minium activation depth of com.db4o.User.class should be 1.
+		// Otherwise, we may get null password.
+		_config.objectClass(User.class).minimumActivationDepth(1);
 	}
 
 	public void backup(String path) throws IOException {
@@ -112,7 +134,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	public Configuration configure() {
-		return i_yapFile.configure();
+		return _config;
 	}
 
 	public ExtObjectServer ext() {
@@ -194,7 +216,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	public LoopbackSocket openClientSocket() {
-		int timeout = ((Config4Impl) configure()).timeoutClientSocket();
+		int timeout = _config.timeoutClientSocket();
 		LoopbackSocket clientFake = new LoopbackSocket(this, timeout);
 		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
 		try {
