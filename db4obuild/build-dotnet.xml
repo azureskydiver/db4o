@@ -811,7 +811,7 @@
 		<property name="db4o-namespace-summaries.xml" location="config/db4o-namespace-summaries.xml" />		
 		<property name="ndoc.home" location="lib/ndoc" />
 				
-		<delete dir="${dir.dist.ndoc}" />
+		<delete dir="${dir.dist.ndoc}" failonerror="false" />
 		<mkdir dir="${dir.dist.ndoc}" />
 	</target>
 	
@@ -835,8 +835,107 @@
 			<arg value="-CleanIntermediates=True" />
 		</exec>
 	</target>
+	
+	<property name="sandcastle.tools" location="${dir.lib.sandcastle}/ProductionTools" />
+	<property name="XslTransform" location="${sandcastle.tools}/XslTransform" />
+	
+	<target name="sandcastle" depends="prepare-sandcastle-output">
+		
+		<exec executable="${dir.build}/lib/boo/booi">
+			<arg file="src/sandcastle/MRefConfigGenerator.boo" />
+			<arg path="${dir.build}" />
+		</exec>
+		
+		<exec executable="${sandcastle.tools}/MRefBuilder">
+			<arg value="/config:${dir.dist.ndoc}/Output/MRefBuilder.config" />
+			<arg file="${dir.dist.dll}/Db4objects.Db4o.dll" />
+			<arg value="/out:${dir.dist.ndoc}/sandcastle" />
+		</exec>	
+	
+		<exec executable="${XslTransform}">
+			<!--
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddOverloads.xsl" />
+			-->
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ApplyVSDocModel.xsl" />
+			<arg value="${dir.dist.ndoc}/sandcastle" />
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddFriendlyFilenames.xsl" />
+			<arg value="/out:${dir.dist.ndoc}/reflection.xml" />
+		</exec>
+	
+		<exec executable="${XslTransform}">
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToManifest.xsl" />
+			<arg value="${dir.dist.ndoc}/reflection.xml" />
+			<arg value="/out:${dir.dist.ndoc}/manifest.xml" />
+		</exec>
+	
+		<exec executable="${sandcastle.tools}/BuildAssembler"
+			dir="${dir.dist.ndoc}">
+			<arg value="/config:${dir.build}/config/sandcastle/sandcastle.config" />
+			<arg file="${dir.dist.ndoc}/manifest.xml" />
+	
+			<env key="XMLDOC" value="${dir.dist.dll}/Db4objects.Db4o.xml" />
+			<env key="DXROOT" value="${dir.lib.sandcastle}" />			
+		</exec>
+	
+		<antcall target="generate-sandcastle-chm" />
+
+	</target>
+	
+	<target name="prepare-sandcastle-output">
+	
+		<!-- adapted from ${dir.lib.sandcastle}/Presentation/vs2005/copyOutput.bat"  -->
+		<mkdir dir="${dir.dist.ndoc}/Output" />
+		<mkdir dir="${dir.dist.ndoc}/Output/html" />
+		<mkdir dir="${dir.dist.ndoc}/Output/icons" />
+		<mkdir dir="${dir.dist.ndoc}/Output/scripts" />
+		<mkdir dir="${dir.dist.ndoc}/Output/styles" />
+		<mkdir dir="${dir.dist.ndoc}/Output/media" />
+		<copy todir="${dir.dist.ndoc}/Output">
+			<fileset dir="${dir.lib.sandcastle}/Presentation/vs2005">
+				<include name="Icons/**" />
+				<include name="Scripts/**" />
+				<include name="Styles/**" />
+			</fileset>
+		</copy>
+		<mkdir dir="${dir.dist.ndoc}/Intellisense" />
+
+	</target>
+	
+	<target name="generate-sandcastle-chm">
+		<!-- Generate HTML help project -->
+		<exec executable="${XslTransform}">
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToChmProject.xsl" />
+			<arg value="${dir.dist.ndoc}/reflection.xml" />
+			<arg value="/out:${dir.dist.ndoc}/Output/test.hhp" />
+		</exec>	 
+	
+		<!--  Generate table of contents for HTML help project -->
+		<exec executable="${XslTransform}">
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToChmContents.xsl" />
+			<arg value="${dir.dist.ndoc}/reflection.xml" />
+			<arg value="/arg:html=${dir.dist.ndoc}/Output/html" />
+			<arg value="/out:${dir.dist.ndoc}/Output/test.hhc" />
+		</exec>
+	
+		<!-- Generate Index information -->
+		<exec executable="${XslTransform}">
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToChmIndex.xsl" />
+			<arg value="${dir.dist.ndoc}/reflection.xml" />
+			<arg value="/out:${dir.dist.ndoc}/Output/test.hhk" />
+		</exec>
+	
+		<property name="hhc.home" location="${env.ProgramFiles}/HTML Help Workshop" />
+		<exec executable="${hhc.home}/hhc.exe" dir="${dir.dist.ndoc}/Output">
+			<arg value="test.hhp" />
+		</exec>
+	
+		<copy file="${dir.dist.ndoc}/Output/test.chm" tofile="${dir.dist.ndoc}/db4o.chm" />
+	</target>	
 		
 	<target name="ndoc-net" unless="mono">
+	
+		<antcall target="sandcastle" />
+	
 		<!--
 		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
 			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
