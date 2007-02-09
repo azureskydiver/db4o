@@ -10,7 +10,7 @@ import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.ext.ExtObjectContainer;
 
 public class Db4oDrsFixture implements DrsFixture {
-	static final File RAM_DRIVE = new File("z:");
+	static final File RAM_DRIVE = new File("w:");
 	
 	protected String _name;
 	protected ExtObjectContainer _db;

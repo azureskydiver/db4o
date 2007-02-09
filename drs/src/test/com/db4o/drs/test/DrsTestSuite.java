@@ -20,7 +20,6 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 	protected Class[] shared() {
 		return new Class[] {
 				// Simple
-				//DO NOT run this - Hibernate does not have mappings InheritanceTest.class,
 				TheSimplest.class, 
 				ReplicationEventTest.class,
 				ReplicationProviderTest.class,
@@ -28,24 +27,23 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				SimpleArrayTest.class,
 				SimpleParentChild.class,
 				
-				//RoundRobinWithManyProviders contains ref to Hibernate, does not work on .net
-				//RoundRobinWithManyProviders.class,
-//
-//				// Collection
-				//MapTest.class, // TODO : Convert to .NET
-				//ArrayReplicationTest.class,// TODO : Convert to .NET
+				// Collection
 				ListTest.class, 
 				Db4oListTest.class, 
-				//SingleTypeCollectionReplicationTest.class,
-				//MixedTypesCollectionReplicationTest.class,// TODO : Convert to .NET
-//
+
 //				// Complex
 				R0to4Runner.class, 	
 				ReplicationFeaturesMain.class,
-//
+
 //				// General
 				//CollectionHandlerImplTest.class,  
 				//ReplicationTraversalTest.class,
-				};
+		
+				//TODO Convert to .NET
+				MapTest.class,
+				ArrayReplicationTest.class,
+				SingleTypeCollectionReplicationTest.class,
+				MixedTypesCollectionReplicationTest.class
+		};
 	}
 }
