@@ -59,7 +59,7 @@ def resetApiFilters(path as string):
 	filters.RemoveAll()
 	return filters
 	
-def getFilteredTypes(xmldocPath as string):
+def getExcludedTypes(xmldocPath as string):
 	return [member.GetAttribute("name")[2:]
 			for member as XmlElement
 			in queryXmlDoc(xmldocPath, "//member/exclude/..")]
@@ -76,7 +76,7 @@ try:
 	File.Copy(buildPath("config/sandcastle/MRefBuilder.config"), configPath, true)
 	
 	documentedNamespaces = namespacesFromXmlSummary(namespaceSummaryPath)
-	excludedTypes = getFilteredTypes(xmldocPath)
+	excludedTypes = getExcludedTypes(xmldocPath)
 	
 	filters = resetApiFilters(configPath)
 	types = getExportedTypes(assemblyPath)
