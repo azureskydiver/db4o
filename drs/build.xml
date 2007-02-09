@@ -3,7 +3,10 @@
 	
 	Jan 1, 2007
 	
-	This build file is obsoleted, please use build-1.1.bat
+	This build file is obsoleted, please use /build-1.1/build-1.1.bat
+
+	But if you still use it, copy db4o-6.1-db4ounit.jar and db4o-6.1-java5.jar to /drs/lib. 
+	Then ant "dist". It will work.
 	
 	Albert
 	
@@ -161,13 +164,13 @@
 		<copy file="${drs.dir.src.core}/log4j.xml" todir="${drs.dir.dist.classes}" />
 	</target>
 
-	<target name="run-example" depends="init, copyLog4j">
+	<target name="run-example" depends="init">
 		<java fork="true" classname="f1.stepbystep.StepByStepExample">
 			<classpath refid="class.path" />
 		</java>
 	</target>
 	
-	<target name="run-regression" depends="init, copyLog4j">
+	<target name="run-regression" depends="init">
 		<java fork="true" classname="com.db4o.drs.test.all.AllDrsTests">
 			<classpath refid="class.path" />
 		</java>

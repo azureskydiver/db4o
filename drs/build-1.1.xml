@@ -7,6 +7,7 @@
   	<delete dir="doc/out"			failonerror="true"/>
   	<delete dir="${tempApi}"	failonerror="true"/>
   	<delete dir="${tempJar}"	failonerror="true"/>
+	<delete dir="${tempZip}"	failonerror="true"/>
   	
   	<!--
   		TODO - After old build is obsolete
@@ -24,6 +25,7 @@
 		<tstamp />
 		<initIvyDir/>
 		<mkdir dir="${tempApi}"/>
+		<mkdir dir="${tempZip}"/>		
 	</target>
 	
 	 <target name="configure" depends="init">
@@ -83,10 +85,13 @@
 			<zipfileset dir="${tempJar}" prefix="${zipDir}/lib"/>
 			<zipfileset dir="." prefix="${zipDir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
 			<zipfileset dir="lib" prefix="${zipDir}/lib" includes="*.jar, *.txt" />
+			<!--<zipfileset dir="${tempSrcDir}" prefix="${zipDir}/src" excludes="misc, jira" />-->			
 			<zipfileset dir="doc/out" prefix="${zipDir}/doc/tutorial" />		
 			<zipfileset dir="${tempApi}" prefix="${zipDir}/doc/api" />
 			<zipfileset file="${tempSrcZipPath}" prefix="${zipDir}"/>	
 		</zip>	
+		
+		<delete dir="${tempSrcDir}" failonerror="true"/>
 	</target>
 	
 	<target name="src" depends="init">
@@ -105,7 +110,6 @@
 			<zipfileset dir="${tempSrcDir}" prefix="src"/>			
 		</zip>
 		
-		<delete dir="${tempSrcDir}" failonerror="true"/>
 	</target>
 	
 	<target name="doctor">
