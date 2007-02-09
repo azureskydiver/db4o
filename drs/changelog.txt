@@ -1,3 +1,8 @@
+Changes from dRS 6.0.200 to dRS 6.1.001
+=======================
+* DRS-30
+* DRS-37
+
 Changes from dRS 6.0.101 to dRS 6.0.200
 =======================
 * DRS-32
