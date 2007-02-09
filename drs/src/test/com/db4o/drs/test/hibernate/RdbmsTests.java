@@ -87,6 +87,7 @@ public class RdbmsTests extends DrsTestSuite {
 
 		out.add(TablesCreatorTest.class);
 		out.add(ReplicationConfiguratorTest.class);
+		out.add(RoundRobinWithManyProviders.class);
 
 		for (Class c : shared())
 			out.add(c);
