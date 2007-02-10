@@ -7,10 +7,6 @@ import com.db4o.drs.test.ByteArrayTest;
 import com.db4o.drs.test.Db4oClientServerDrsFixture;
 import com.db4o.drs.test.DrsTestSuite;
 import com.db4o.drs.test.DrsTestSuiteBuilder;
-import com.db4o.drs.test.ListTest;
-import com.db4o.drs.test.MapTest;
-import com.db4o.drs.test.ReplicationFeaturesMain;
-import com.db4o.drs.test.TheSimplest;
 
 import db4ounit.TestRunner;
 
@@ -22,7 +18,7 @@ public class RdbmsTests extends DrsTestSuite {
 		 * 
 		 */
 
-		new RdbmsTests().runHsqlHsql();
+		//new RdbmsTests().runHsqlHsql();
 		new RdbmsTests().runHsqldb4oCS();
 //		new RdbmsTests().runOracledb4oCS();
 //		new RdbmsTests().runMySQLdb4oCS();
@@ -80,7 +76,7 @@ public class RdbmsTests extends DrsTestSuite {
 	}
 
 	protected Class[] testCases() {
-		return one();
+		return all();
 	}
 
 	private Class[] all() {
@@ -97,9 +93,6 @@ public class RdbmsTests extends DrsTestSuite {
 	}
 
 	protected Class[] one() {
-		return new Class[] {
-				ByteArrayTest.class,
-		 //TheSimplest.class
-		};
+		return new Class[] {ByteArrayTest.class};
 	}
 }

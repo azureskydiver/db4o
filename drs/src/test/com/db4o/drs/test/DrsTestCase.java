@@ -22,7 +22,8 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	public static final Class[] extraMappingsForCleaning = new Class[]{Map.class, List.class};
 
 	static {
-		mappings = new Class[]{CollectionHolder.class, Replicated.class,
+		mappings = new Class[]{
+				CollectionHolder.class, Replicated.class,
 				SPCParent.class, SPCChild.class,
 				ListHolder.class, ListContent.class,
 				MapHolder.class, MapContent.class,
