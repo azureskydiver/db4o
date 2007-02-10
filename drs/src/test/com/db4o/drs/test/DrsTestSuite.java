@@ -26,6 +26,7 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				ReplicationAfterDeletionTest.class,
 				SimpleArrayTest.class,
 				SimpleParentChild.class,
+				ByteArrayTest.class,
 				
 				// Collection
 				ListTest.class, 
@@ -40,10 +41,10 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				//ReplicationTraversalTest.class,
 		
 				//TODO Convert to .NET
-				MapTest.class,
-				ArrayReplicationTest.class,
-				SingleTypeCollectionReplicationTest.class,
-				MixedTypesCollectionReplicationTest.class
+				//MapTest.class,
+				//ArrayReplicationTest.class,
+				//SingleTypeCollectionReplicationTest.class,
+				//MixedTypesCollectionReplicationTest.class
 		};
 	}
 }

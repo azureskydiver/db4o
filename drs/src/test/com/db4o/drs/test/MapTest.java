@@ -37,19 +37,19 @@ public class MapTest extends DrsTestCase {
 		a().provider().storeNew(mh);
 		a().provider().commit();
 
-		ensureContent(a().provider(), new String[]{"h1"}, new String[]{"key1", "key2"}, new String[]{"c1", "c2"});
+		ensureContent(a(), new String[]{"h1"}, new String[]{"key1", "key2"}, new String[]{"c1", "c2"});
 	}
 
 	private void replicateAllToProviderBFirstTime() {
 		replicateAll(a().provider(), b().provider());
 
-		ensureContent(a().provider(), new String[]{"h1"}, new String[]{"key1", "key2"}, new String[]{"c1", "c2"});
-		ensureContent(b().provider(), new String[]{"h1"}, new String[]{"key1", "key2"}, new String[]{"c1", "c2"});
+		ensureContent(a(), new String[]{"h1"}, new String[]{"key1", "key2"}, new String[]{"c1", "c2"});
+		ensureContent(b(), new String[]{"h1"}, new String[]{"key1", "key2"}, new String[]{"c1", "c2"});
 	}
 
 	private void modifyInProviderB() {
 
-		MapHolder mh = (MapHolder) getOneInstance(b().provider(), MapHolder.class);
+		MapHolder mh = (MapHolder) getOneInstance(b(), MapHolder.class);
 
 		mh.setName("h2");
 		MapContent mc1 = (MapContent) mh.getMap().get("key1");
@@ -64,19 +64,19 @@ public class MapTest extends DrsTestCase {
 
 		b().provider().commit();
 
-		ensureContent(b().provider(), new String[]{"h2"}, new String[]{"key1", "key2"}, new String[]{"co1", "co2"});
+		ensureContent(b(), new String[]{"h2"}, new String[]{"key1", "key2"}, new String[]{"co1", "co2"});
 	}
 
 	private void replicateAllStep2() {
 		replicateAll(b().provider(), a().provider());
 
-		ensureContent(a().provider(), new String[]{"h2"}, new String[]{"key1", "key2"}, new String[]{"co1", "co2"});
-		ensureContent(b().provider(), new String[]{"h2"}, new String[]{"key1", "key2"}, new String[]{"co1", "co2"});
+		ensureContent(a(), new String[]{"h2"}, new String[]{"key1", "key2"}, new String[]{"co1", "co2"});
+		ensureContent(b(), new String[]{"h2"}, new String[]{"key1", "key2"}, new String[]{"co1", "co2"});
 	}
 
 	private void addElementInProviderA() {
 
-		MapHolder mh = (MapHolder) getOneInstance(a().provider(), MapHolder.class);
+		MapHolder mh = (MapHolder) getOneInstance(a(), MapHolder.class);
 		mh.setName("h3");
 		MapContent mc3 = new MapContent("co3");
 		a().provider().storeNew(mc3);
@@ -86,26 +86,26 @@ public class MapTest extends DrsTestCase {
 		a().provider().update(mh);
 		a().provider().commit();
 
-		ensureContent(a().provider(), new String[]{"h3"}, new String[]{"key1", "key2", "key3"}, new String[]{"co1", "co2", "co3"});
+		ensureContent(a(), new String[]{"h3"}, new String[]{"key1", "key2", "key3"}, new String[]{"co1", "co2", "co3"});
 	}
 
 	private void replicateHolderStep3() {
 		replicateClass(a().provider(), b().provider(), MapHolder.class);
 
-		ensureContent(a().provider(), new String[]{"h3"}, new String[]{"key1", "key2", "key3"}, new String[]{"co1", "co2", "co3"});
-		ensureContent(b().provider(), new String[]{"h3"}, new String[]{"key1", "key2", "key3"}, new String[]{"co1", "co2", "co3"});
+		ensureContent(a(), new String[]{"h3"}, new String[]{"key1", "key2", "key3"}, new String[]{"co1", "co2", "co3"});
+		ensureContent(b(), new String[]{"h3"}, new String[]{"key1", "key2", "key3"}, new String[]{"co1", "co2", "co3"});
 	}
 
-	private void ensureContent(TestableReplicationProviderInside provider, String[] holderNames, String[] keyNames, String[] valueNames) {
+	private void ensureContent(DrsFixture fixture, String[] holderNames, String[] keyNames, String[] valueNames) {
 		int holderCount = holderNames.length;
-		ensureInstanceCount(provider, MapHolder.class, holderCount);
+		ensureInstanceCount(fixture, MapHolder.class, holderCount);
 
 		// After dropping generating uuid for collection, it does not
 		//  make sense to count collection because collection is never reused
 		// ensureInstanceCount(provider, Map.class, holderCount);
 
 		int i = 0;
-		ObjectSet objectSet = provider.getStoredObjects(MapHolder.class);
+		ObjectSet objectSet = fixture.provider().getStoredObjects(MapHolder.class);
 		while (objectSet.hasNext()) {
 			MapHolder lh = (MapHolder) objectSet.next();
 			

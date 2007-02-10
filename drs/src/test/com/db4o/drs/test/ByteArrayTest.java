@@ -4,22 +4,24 @@ package com.db4o.drs.test;
 
 import java.util.Iterator;
 
-import com.db4o.ObjectSet;
 import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.drs.test.SPCChild;
 
 import db4ounit.ArrayAssert;
-import db4ounit.Assert;
 
-
+/**
+ * Design of this case is copied from com.db4o.db4ounit.common.types.arrays.ByteArrayTestCase.
+ */
 public class ByteArrayTest extends DrsTestCase {
-
+	static final int ARRAY_LENGTH = 5;
+	
+	static byte[] expected = createByteArray(); 
+	
 	public void test() {
 		storeInA();
 		replicate();
-//		modifyInB();
+		modifyInB();
 //		replicate2();
 //		modifyInA();
 //		replicate3();
@@ -51,41 +53,40 @@ public class ByteArrayTest extends DrsTestCase {
 //	}
 
 	private void storeInA() {
-		ByteArrayContainer container = new ByteArrayContainer();
-		container.byteArray = new byte[]{1,2,3};
+		IByteArrayHolder byteArrayHolder = new ByteArrayHolder(createByteArray());
 		
-		a().provider().storeNew(container);
+		a().provider().storeNew(byteArrayHolder);
 		a().provider().commit();
 		
-		ensureNames(a().provider(), new byte[]{1,2,3});
+		ensureNames(a(), expected);
 	}
 		
 	private void replicate() {
 		replicateAll(a().provider(), b().provider());
 
-		ensureNames(a().provider(), new byte[]{1,2,3});
-		ensureNames(b().provider(), new byte[]{1,2,3});
+		ensureNames(a(), expected);
+		ensureNames(b(), expected);
 	}
 	
-//	private void modifyInB() {
-//		SPCChild child = getTheObject(b().provider());
+	private void modifyInB() {
+//		ByteArrayHolder c = getTheObject(b());
 //
 //		child.setName("c2");
 //		b().provider().update(child);
 //		b().provider().commit();
 //
 //		ensureNames(b().provider(), "c2");
-//	}
+	}
 	
-	private void ensureNames(TestableReplicationProviderInside provider, byte[] bs) {
-		ensureOneInstance(provider, ByteArrayContainer.class);
-		ByteArrayContainer c = getTheObject(provider);
-		ArrayAssert.areEqual(c.byteArray, bs);
+	private void ensureNames(DrsFixture fixture, byte[] bs) {
+		ensureOneInstance(fixture, IByteArrayHolder.class);
+		IByteArrayHolder c = getTheObject(fixture);
+		ArrayAssert.areEqual(c.getBytes(), bs);
 	}
 
 
-	private ByteArrayContainer getTheObject(TestableReplicationProviderInside provider) {
-		return (ByteArrayContainer) getOneInstance(provider, ByteArrayContainer.class);
+	private IByteArrayHolder getTheObject(DrsFixture fixture) {
+		return (IByteArrayHolder) getOneInstance(fixture, IByteArrayHolder.class);
 	}
 
 	protected void replicateClassasadsa(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
@@ -98,6 +99,14 @@ public class ByteArrayTest extends DrsTestCase {
 			replication.replicate(obj);
 		}
 		replication.commit();
+	}
+	
+	static byte[] createByteArray() {
+		byte[] bytes = new byte[ARRAY_LENGTH];
+		for (byte i=0; i<bytes.length; ++i) {
+			bytes[i] = i;
+		}
+		return bytes;
 	}
 
 }

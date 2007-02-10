@@ -105,20 +105,20 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		return _b;
 	}
 
-	protected void ensureOneInstance(TestableReplicationProviderInside provider, Class clazz) {
-		ensureInstanceCount(provider, clazz, 1);
+	protected void ensureOneInstance(DrsFixture fixture, Class clazz) {
+		ensureInstanceCount(fixture, clazz, 1);
 	}
 
-	protected void ensureInstanceCount(TestableReplicationProviderInside provider, Class clazz, int count) {
-		ObjectSet objectSet = provider.getStoredObjects(clazz);
+	protected void ensureInstanceCount(DrsFixture fixture, Class clazz, int count) {
+		ObjectSet objectSet = fixture.provider().getStoredObjects(clazz);
 		Assert.areEqual(count, objectSet.size());
 	}
 
-	protected Object getOneInstance(TestableReplicationProviderInside provider, Class clazz) {
-		ObjectSet objectSet = provider.getStoredObjects(clazz);
+	protected Object getOneInstance(DrsFixture fixture, Class clazz) {
+		ObjectSet objectSet = fixture.provider().getStoredObjects(clazz);
 
 		if (1 != objectSet.size())
-			throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + provider);
+			throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + fixture);
 
 		return objectSet.next();
 	}

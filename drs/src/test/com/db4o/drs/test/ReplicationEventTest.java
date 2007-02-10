@@ -53,9 +53,9 @@ public class ReplicationEventTest extends DrsTestCase {
 		ensureNotExist(a().provider(), SPCParent.class);
 	}
 
-	private void ensureNames(TestableReplicationProviderInside provider, String parentName, String childName) {
-		ensureOneInstanceOfParentAndChild(provider);
-		SPCParent parent = (SPCParent) getOneInstance(provider, SPCParent.class);
+	private void ensureNames(DrsFixture fixture, String parentName, String childName) {
+		ensureOneInstanceOfParentAndChild(fixture);
+		SPCParent parent = (SPCParent) getOneInstance(fixture, SPCParent.class);
 
 		if (! parent.getName().equals(parentName)) {
 			System.out.println("expected = " + parentName);
@@ -70,13 +70,13 @@ public class ReplicationEventTest extends DrsTestCase {
 		Assert.isTrue(! provider.getStoredObjects(type).iterator().hasNext());
 	}
 
-	private void ensureOneInstanceOfParentAndChild(TestableReplicationProviderInside provider) {
-		ensureOneInstance(provider, SPCParent.class);
-		ensureOneInstance(provider, SPCChild.class);
+	private void ensureOneInstanceOfParentAndChild(DrsFixture fixture) {
+		ensureOneInstance(fixture, SPCParent.class);
+		ensureOneInstance(fixture, SPCChild.class);
 	}
 
 	private void modifyInProviderA() {
-		SPCParent parent = (SPCParent) getOneInstance(a().provider(), SPCParent.class);
+		SPCParent parent = (SPCParent) getOneInstance(a(), SPCParent.class);
 		parent.setName(MODIFIED_IN_A);
 		SPCChild child = parent.getChild();
 		child.setName(MODIFIED_IN_A);
@@ -84,11 +84,11 @@ public class ReplicationEventTest extends DrsTestCase {
 		a().provider().update(child);
 		a().provider().commit();
 
-		ensureNames(a().provider(), MODIFIED_IN_A, MODIFIED_IN_A);
+		ensureNames(a(), MODIFIED_IN_A, MODIFIED_IN_A);
 	}
 
 	private void modifyInProviderB() {
-		SPCParent parent = (SPCParent) getOneInstance(b().provider(), SPCParent.class);
+		SPCParent parent = (SPCParent) getOneInstance(b(), SPCParent.class);
 		parent.setName(MODIFIED_IN_B);
 		SPCChild child = parent.getChild();
 		child.setName(MODIFIED_IN_B);
@@ -96,14 +96,14 @@ public class ReplicationEventTest extends DrsTestCase {
 		b().provider().update(child);
 		b().provider().commit();
 
-		ensureNames(b().provider(), MODIFIED_IN_B, MODIFIED_IN_B);
+		ensureNames(b(), MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
 	private void replicateAllToProviderBFirstTime() {
 		replicateAll(a().provider(), b().provider());
 
-		ensureNames(a().provider(), IN_A, IN_A);
-		ensureNames(b().provider(), IN_A, IN_A);
+		ensureNames(a(), IN_A, IN_A);
+		ensureNames(b(), IN_A, IN_A);
 	}
 
 	private void storeParentAndChildToProviderA() {
@@ -112,7 +112,7 @@ public class ReplicationEventTest extends DrsTestCase {
 		a().provider().storeNew(parent);
 		a().provider().commit();
 
-		ensureNames(a().provider(), IN_A, IN_A);
+		ensureNames(a(), IN_A, IN_A);
 	}
 
 	/*
@@ -174,8 +174,8 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		Test.ensure(invoked.getValue());
 
-		ensureNames(a().provider(), IN_A, IN_A);
-		ensureNames(b().provider(), IN_A, IN_A);
+		ensureNames(a(), IN_A, IN_A);
+		ensureNames(b(), IN_A, IN_A);
 	}
 
 	private void tstDeletionOverrideToPrevail() {
@@ -239,7 +239,7 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		Assert.isTrue(invoked.getValue());
 
-		ensureNames(a().provider(), IN_A, IN_A);
+		ensureNames(a(), IN_A, IN_A);
 		ensureNotExist(b().provider(), SPCParent.class);
 		ensureNotExist(b().provider(), SPCChild.class);
 	}
@@ -257,8 +257,8 @@ public class ReplicationEventTest extends DrsTestCase {
 		
 		replicateAll(b().provider(), a().provider(), listener);
 
-		ensureNames(a().provider(), MODIFIED_IN_B, MODIFIED_IN_B);
-		ensureNames(b().provider(), MODIFIED_IN_B, MODIFIED_IN_B);
+		ensureNames(a(), MODIFIED_IN_B, MODIFIED_IN_B);
+		ensureNames(b(), MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
 	private void tstOverrideWhenConflicts() {
@@ -280,8 +280,8 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		replicateAll(a().provider(), b().provider(), listener);
 
-		ensureNames(a().provider(), MODIFIED_IN_B, MODIFIED_IN_B);
-		ensureNames(b().provider(), MODIFIED_IN_B, MODIFIED_IN_B);
+		ensureNames(a(), MODIFIED_IN_B, MODIFIED_IN_B);
+		ensureNames(b(), MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
 	private void tstOverrideWhenNoConflicts() {
@@ -298,8 +298,8 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		replicateAll(b().provider(), a().provider(), listener);
 
-		ensureNames(a().provider(), IN_A, IN_A);
-		ensureNames(b().provider(), IN_A, IN_A);
+		ensureNames(a(), IN_A, IN_A);
+		ensureNames(b(), IN_A, IN_A);
 	}
 
 	private void tstStopTraversal() {
@@ -320,8 +320,8 @@ public class ReplicationEventTest extends DrsTestCase {
 
 		replicateAll(a().provider(), b().provider(), listener);
 
-		ensureNames(a().provider(), MODIFIED_IN_A, MODIFIED_IN_A);
-		ensureNames(b().provider(), MODIFIED_IN_B, MODIFIED_IN_B);
+		ensureNames(a(), MODIFIED_IN_A, MODIFIED_IN_A);
+		ensureNames(b(), MODIFIED_IN_B, MODIFIED_IN_B);
 	}
 
 	static class BooleanClosure {

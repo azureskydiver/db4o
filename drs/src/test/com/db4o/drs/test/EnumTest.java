@@ -38,7 +38,7 @@ public class EnumTest extends DrsTestCase {
 	private void modifyInB() {
 		final TestableReplicationProviderInside provider = b().provider();
 
-		Teacher out = (Teacher) getOneInstance(provider, Teacher.class);
+		Teacher out = (Teacher) getOneInstance(b(), Teacher.class);
 		out.name = "Audi R8";
 		out.qualification = Qualification.PROFESSIONAL;
 
@@ -58,7 +58,7 @@ public class EnumTest extends DrsTestCase {
 	private void modifyInA() {
 		final TestableReplicationProviderInside provider = a().provider();
 
-		Teacher out = (Teacher) getOneInstance(provider, Teacher.class);
+		Teacher out = (Teacher) getOneInstance(a(), Teacher.class);
 		out.name = "Honda Civic Type-R";
 		out.qualification = Qualification.WINNER;
 
