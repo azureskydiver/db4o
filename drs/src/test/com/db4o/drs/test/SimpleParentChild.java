@@ -23,9 +23,9 @@ public class SimpleParentChild extends DrsTestCase {
 		replicateParentClassStep3();
 	}
 
-	private void ensureNames(TestableReplicationProviderInside provider, String parentName, String childName) {
-		ensureOneInstanceOfParentAndChild(provider);
-		SPCParent parent = (SPCParent) getOneInstance(provider, SPCParent.class);
+	private void ensureNames(DrsFixture fixture, String parentName, String childName) {
+		ensureOneInstanceOfParentAndChild(fixture);
+		SPCParent parent = (SPCParent) getOneInstance(fixture, SPCParent.class);
 
 		if (! parent.getName().equals(parentName)) {
 			System.out.println("expected = " + parentName);
@@ -36,13 +36,13 @@ public class SimpleParentChild extends DrsTestCase {
 		Assert.areEqual(parent.getChild().getName(), childName);
 	}
 
-	private void ensureOneInstanceOfParentAndChild(TestableReplicationProviderInside provider) {
-		ensureOneInstance(provider, SPCParent.class);
-		ensureOneInstance(provider, SPCChild.class);
+	private void ensureOneInstanceOfParentAndChild(DrsFixture fixture) {
+		ensureOneInstance(fixture, SPCParent.class);
+		ensureOneInstance(fixture, SPCChild.class);
 	}
 
 	private void modifyParentAndChildInProviderA() {
-		SPCParent parent = (SPCParent) getOneInstance(a().provider(), SPCParent.class);
+		SPCParent parent = (SPCParent) getOneInstance(a(), SPCParent.class);
 		parent.setName("p3");
 		SPCChild child = parent.getChild();
 		child.setName("c3");
@@ -50,37 +50,37 @@ public class SimpleParentChild extends DrsTestCase {
 		a().provider().update(child);
 		a().provider().commit();
 
-		ensureNames(a().provider(), "p3", "c3");
+		ensureNames(a(), "p3", "c3");
 	}
 
 	private void modifyParentInProviderB() {
-		SPCParent parent = (SPCParent) getOneInstance(b().provider(), SPCParent.class);
+		SPCParent parent = (SPCParent) getOneInstance(b(), SPCParent.class);
 		parent.setName("p2");
 		b().provider().update(parent);
 		b().provider().commit();
 
-		ensureNames(b().provider(), "p2", "c1");
+		ensureNames(b(), "p2", "c1");
 	}
 
 	private void replicateAllStep2() {
 		replicateAll(b().provider(), a().provider());
 
-		ensureNames(a().provider(), "p2", "c1");
-		ensureNames(b().provider(), "p2", "c1");
+		ensureNames(a(), "p2", "c1");
+		ensureNames(b(), "p2", "c1");
 	}
 
 	private void replicateAllToProviderBFirstTime() {
 		replicateAll(a().provider(), b().provider());
 
-		ensureNames(a().provider(), "p1", "c1");
-		ensureNames(b().provider(), "p1", "c1");
+		ensureNames(a(), "p1", "c1");
+		ensureNames(b(), "p1", "c1");
 	}
 
 	private void replicateParentClassStep3() {
 		replicateClass(a().provider(), b().provider(), SPCParent.class);
 
-		ensureNames(a().provider(), "p3", "c3");
-		ensureNames(b().provider(), "p3", "c3");
+		ensureNames(a(), "p3", "c3");
+		ensureNames(b(), "p3", "c3");
 	}
 
 	private void storeParentAndChildToProviderA() {
@@ -89,7 +89,7 @@ public class SimpleParentChild extends DrsTestCase {
 		a().provider().storeNew(parent);
 		a().provider().commit();
 
-		ensureNames(a().provider(), "p1", "c1");
+		ensureNames(a(), "p1", "c1");
 	}
 
 }

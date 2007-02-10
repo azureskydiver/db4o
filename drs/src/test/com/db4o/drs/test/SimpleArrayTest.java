@@ -38,19 +38,19 @@ public class SimpleArrayTest extends DrsTestCase {
 		a().provider().storeNew(sah);
 		a().provider().commit();
 
-		ensureContent(a().provider(), new String[]{"h1"}, new String[]{"c1", "c2"});
+		ensureContent(a(), new String[]{"h1"}, new String[]{"c1", "c2"});
 	}
 
 	private void replicateAllToProviderBFirstTime() {
 		replicateAll(a().provider(), b().provider());
 
-		ensureContent(a().provider(), new String[]{"h1"}, new String[]{"c1", "c2"});
-		ensureContent(b().provider(), new String[]{"h1"}, new String[]{"c1", "c2"});
+		ensureContent(a(), new String[]{"h1"}, new String[]{"c1", "c2"});
+		ensureContent(b(), new String[]{"h1"}, new String[]{"c1", "c2"});
 	}
 
 	private void modifyInProviderB() {
 
-		SimpleArrayHolder sah = (SimpleArrayHolder) getOneInstance(b().provider(), SimpleArrayHolder.class);
+		SimpleArrayHolder sah = (SimpleArrayHolder) getOneInstance(b(), SimpleArrayHolder.class);
 
 		sah.setName("h2");
 		SimpleArrayContent sac1 = sah.getArr()[0];
@@ -64,19 +64,19 @@ public class SimpleArrayTest extends DrsTestCase {
 
 		b().provider().commit();
 
-		ensureContent(b().provider(), new String[]{"h2"}, new String[]{"co1", "co2"});
+		ensureContent(b(), new String[]{"h2"}, new String[]{"co1", "co2"});
 	}
 
 	private void replicateAllStep2() {
 		replicateAll(b().provider(), a().provider());
 
-		ensureContent(b().provider(), new String[]{"h2"}, new String[]{"co1", "co2"});
-		ensureContent(a().provider(), new String[]{"h2"}, new String[]{"co1", "co2"});
+		ensureContent(b(), new String[]{"h2"}, new String[]{"co1", "co2"});
+		ensureContent(a(), new String[]{"h2"}, new String[]{"co1", "co2"});
 	}
 
 	private void addElementInProviderA() {
 
-		SimpleArrayHolder sah = (SimpleArrayHolder) getOneInstance(a().provider(), SimpleArrayHolder.class);
+		SimpleArrayHolder sah = (SimpleArrayHolder) getOneInstance(a(), SimpleArrayHolder.class);
 		sah.setName("h3");
 		SimpleArrayContent lc3 = new SimpleArrayContent("co3");
 		a().provider().storeNew(lc3);
@@ -85,24 +85,24 @@ public class SimpleArrayTest extends DrsTestCase {
 		a().provider().update(sah);
 		a().provider().commit();
 
-		ensureContent(a().provider(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
+		ensureContent(a(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
 	}
 
 	private void replicateHolderStep3() {
 		replicateClass(a().provider(), b().provider(), SimpleArrayHolder.class);
 
-		ensureContent(a().provider(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
-		ensureContent(b().provider(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
+		ensureContent(a(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
+		ensureContent(b(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
 	}
 
-	private void ensureContent(TestableReplicationProviderInside provider, String[] holderNames, String[] contentNames) {
+	private void ensureContent(DrsFixture fixture, String[] holderNames, String[] contentNames) {
 		int holderCount = holderNames.length;
 		int contentCount = contentNames.length;
-		ensureInstanceCount(provider, SimpleArrayHolder.class, holderCount);
-		ensureInstanceCount(provider, SimpleArrayContent.class, contentCount);
+		ensureInstanceCount(fixture, SimpleArrayHolder.class, holderCount);
+		ensureInstanceCount(fixture, SimpleArrayContent.class, contentCount);
 
 		int i = 0;
-		ObjectSet objectSet = provider.getStoredObjects(SimpleArrayHolder.class);
+		ObjectSet objectSet = fixture.provider().getStoredObjects(SimpleArrayHolder.class);
 		Iterator iterator = objectSet.iterator();
 		while (iterator.hasNext()) {
 			SimpleArrayHolder lh = (SimpleArrayHolder) iterator.next();

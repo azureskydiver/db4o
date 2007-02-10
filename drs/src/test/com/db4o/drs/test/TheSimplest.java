@@ -27,26 +27,26 @@ public class TheSimplest extends DrsTestCase {
 	private void replicate3() {
 		replicateClass(a().provider(), b().provider(), SPCChild.class);
 
-		ensureNames(a().provider(), "c3");
-		ensureNames(b().provider(), "c3");
+		ensureNames(a(), "c3");
+		ensureNames(b(), "c3");
 	}
 
 	private void modifyInA() {
-		SPCChild child = getTheObject(a().provider());
+		SPCChild child = getTheObject(a());
 
 		child.setName("c3");
 
 		a().provider().update(child);
 		a().provider().commit();
 
-		ensureNames(a().provider(), "c3");
+		ensureNames(a(), "c3");
 	}
 
 	private void replicate2() {
 		replicateAll(b().provider(), a().provider());
 
-		ensureNames(a().provider(), "c2");
-		ensureNames(b().provider(), "c2");
+		ensureNames(a(), "c2");
+		ensureNames(b(), "c2");
 	}
 
 	private void storeInA() {
@@ -55,35 +55,35 @@ public class TheSimplest extends DrsTestCase {
 		a().provider().storeNew(child);
 		a().provider().commit();
 		
-		ensureNames(a().provider(), "c1");
+		ensureNames(a(), "c1");
 	}
 		
 	private void replicate() {
 		replicateAll(a().provider(), b().provider());
 
-		ensureNames(a().provider(), "c1");
-		ensureNames(b().provider(), "c1");
+		ensureNames(a(), "c1");
+		ensureNames(b(), "c1");
 	}
 	
 	private void modifyInB() {
-		SPCChild child = getTheObject(b().provider());
+		SPCChild child = getTheObject(b());
 
 		child.setName("c2");
 		b().provider().update(child);
 		b().provider().commit();
 
-		ensureNames(b().provider(), "c2");
+		ensureNames(b(), "c2");
 	}
 	
-	private void ensureNames(TestableReplicationProviderInside provider, String childName) {
-		ensureOneInstance(provider, SPCChild.class);
-		SPCChild child = getTheObject(provider);
+	private void ensureNames(DrsFixture fixture, String childName) {
+		ensureOneInstance(fixture, SPCChild.class);
+		SPCChild child = getTheObject(fixture);
 		Assert.areEqual(childName,child.getName());
 	}
 
 
-	private SPCChild getTheObject(TestableReplicationProviderInside provider) {
-		return (SPCChild) getOneInstance(provider, SPCChild.class);
+	private SPCChild getTheObject(DrsFixture fixture) {
+		return (SPCChild) getOneInstance(fixture, SPCChild.class);
 	}
 
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {

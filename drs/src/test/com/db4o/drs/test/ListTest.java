@@ -41,7 +41,7 @@ public class ListTest extends DrsTestCase {
 		a().provider().storeNew(lh);
 		a().provider().commit();
 
-		ensureContent(a().provider(), new String[]{"h1"}, new String[]{"c1", "c2"});
+		ensureContent(a(), new String[]{"h1"}, new String[]{"c1", "c2"});
 	}
 
 	protected ListHolder createHolder() {
@@ -53,13 +53,13 @@ public class ListTest extends DrsTestCase {
 	private void replicateAllToProviderBFirstTime() {
 		replicateAll(a().provider(), b().provider());
 
-		ensureContent(a().provider(), new String[]{"h1"}, new String[]{"c1", "c2"});
-		ensureContent(b().provider(), new String[]{"h1"}, new String[]{"c1", "c2"});
+		ensureContent(a(), new String[]{"h1"}, new String[]{"c1", "c2"});
+		ensureContent(b(), new String[]{"h1"}, new String[]{"c1", "c2"});
 	}
 
 	private void modifyInProviderB() {
 
-		ListHolder lh = (ListHolder) getOneInstance(b().provider(), ListHolder.class);
+		ListHolder lh = (ListHolder) getOneInstance(b(), ListHolder.class);
 
 		lh.setName("h2");
 		ListContent lc1 = (ListContent) lh.getList().get(0);
@@ -74,19 +74,19 @@ public class ListTest extends DrsTestCase {
 
 		b().provider().commit();
 
-		ensureContent(b().provider(), new String[]{"h2"}, new String[]{"co1", "co2"});
+		ensureContent(b(), new String[]{"h2"}, new String[]{"co1", "co2"});
 	}
 
 	private void replicateAllStep2() {
 		replicateAll(b().provider(), a().provider());
 
-		ensureContent(b().provider(), new String[]{"h2"}, new String[]{"co1", "co2"});
-		ensureContent(a().provider(), new String[]{"h2"}, new String[]{"co1", "co2"});
+		ensureContent(b(), new String[]{"h2"}, new String[]{"co1", "co2"});
+		ensureContent(a(), new String[]{"h2"}, new String[]{"co1", "co2"});
 	}
 
 	private void addElementInProviderA() {
 
-		ListHolder lh = (ListHolder) getOneInstance(a().provider(), ListHolder.class);
+		ListHolder lh = (ListHolder) getOneInstance(a(), ListHolder.class);
 		lh.setName("h3");
 		ListContent lc3 = new ListContent("co3");
 		a().provider().storeNew(lc3);
@@ -96,26 +96,26 @@ public class ListTest extends DrsTestCase {
 		a().provider().update(lh);
 		a().provider().commit();
 
-		ensureContent(a().provider(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
+		ensureContent(a(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
 	}
 
 	private void replicateHolderStep3() {
 		replicateClass(a().provider(), b().provider(), ListHolder.class);
 
-		ensureContent(a().provider(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
-		ensureContent(b().provider(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
+		ensureContent(a(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
+		ensureContent(b(), new String[]{"h3"}, new String[]{"co1", "co2", "co3"});
 	}
 
-	private void ensureContent(TestableReplicationProviderInside provider, String[] holderNames, String[] contentNames) {
+	private void ensureContent(DrsFixture fixture, String[] holderNames, String[] contentNames) {
 		int holderCount = holderNames.length;
-		ensureInstanceCount(provider, ListHolder.class, holderCount);
+		ensureInstanceCount(fixture, ListHolder.class, holderCount);
 
 		// After dropping generating uuid for collection, it does not
 		//  make sense to count collection because collection is never reused
 		//	ensureInstanceCount(provider, ArrayList.class, holderCount);
 
 		int i = 0;
-		ObjectSet objectSet = provider.getStoredObjects(ListHolder.class);
+		ObjectSet objectSet = fixture.provider().getStoredObjects(ListHolder.class);
 		while (objectSet.hasNext()) {
 			ListHolder lh = (ListHolder) objectSet.next();
 			Assert.areEqual(holderNames[i], lh.getName());

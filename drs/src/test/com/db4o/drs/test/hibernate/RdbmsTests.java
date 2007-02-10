@@ -3,6 +3,7 @@ package com.db4o.drs.test.hibernate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.db4o.drs.test.ByteArrayTest;
 import com.db4o.drs.test.Db4oClientServerDrsFixture;
 import com.db4o.drs.test.DrsTestSuite;
 import com.db4o.drs.test.DrsTestSuiteBuilder;
@@ -21,7 +22,7 @@ public class RdbmsTests extends DrsTestSuite {
 		 * 
 		 */
 
-//		new RdbmsTests().runHsqlHsql();
+		new RdbmsTests().runHsqlHsql();
 		new RdbmsTests().runHsqldb4oCS();
 //		new RdbmsTests().runOracledb4oCS();
 //		new RdbmsTests().runMySQLdb4oCS();
@@ -79,7 +80,7 @@ public class RdbmsTests extends DrsTestSuite {
 	}
 
 	protected Class[] testCases() {
-		return all();
+		return one();
 	}
 
 	private Class[] all() {
@@ -97,7 +98,7 @@ public class RdbmsTests extends DrsTestSuite {
 
 	protected Class[] one() {
 		return new Class[] {
-		RoundRobinWithManyProviders.class,
+				ByteArrayTest.class,
 		 //TheSimplest.class
 		};
 	}
