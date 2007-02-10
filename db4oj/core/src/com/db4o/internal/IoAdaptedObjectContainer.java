@@ -304,8 +304,36 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     void reserve(int byteCount) {
         synchronized (i_lock) {
             int address = getSlot(byteCount);
-            writeBytes(new Buffer(byteCount), address, 0);
+            zeroReservedStorage(address, byteCount);
             free(address, byteCount);
+        }
+    }
+
+    private void zeroReservedStorage(int address, int length) {
+        if (configImpl().isReadOnly()) {
+            return;
+        }
+        try {
+        	zeroFile(i_file, address, length);
+        	zeroFile(i_backupFile, address, length);
+        } catch (IOException e) {
+            Exceptions4.throwRuntimeException(16, e);
+        }
+    }
+    
+    private void zeroFile(IoAdapter io, int address, int length) throws IOException {
+    	if(io == null) {
+    		return;
+    	}
+    	byte[] zeroBytes = new byte[1024];
+        int left = length;
+        io.blockSeek(address, 0);
+        while (left > zeroBytes.length) {
+			io.write(zeroBytes, zeroBytes.length);
+			left -= zeroBytes.length;
+		}
+        if(left > 0) {
+        	io.write(zeroBytes, left);
         }
     }
 
