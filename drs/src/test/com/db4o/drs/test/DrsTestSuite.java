@@ -32,19 +32,19 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				ListTest.class, 
 				Db4oListTest.class, 
 
-//				// Complex
+				// Complex
 				R0to4Runner.class, 	
 				ReplicationFeaturesMain.class,
 
-//				// General
-				//CollectionHandlerImplTest.class,  
-				//ReplicationTraversalTest.class,
+				// General
+				CollectionHandlerImplTest.class,  
+				ReplicationTraversalTest.class,
 		
 				//TODO Convert to .NET
-				//MapTest.class,
-				//ArrayReplicationTest.class,
-				//SingleTypeCollectionReplicationTest.class,
-				//MixedTypesCollectionReplicationTest.class
+				MapTest.class,
+				ArrayReplicationTest.class,
+				SingleTypeCollectionReplicationTest.class,
+				MixedTypesCollectionReplicationTest.class
 		};
 	}
 }

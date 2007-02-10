@@ -10,6 +10,7 @@ import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.drs.test.Car;
 import com.db4o.drs.test.CollectionHolder;
 import com.db4o.drs.test.DrsFixture;
+import com.db4o.drs.test.IByteArrayHolder;
 import com.db4o.drs.test.ListContent;
 import com.db4o.drs.test.ListHolder;
 import com.db4o.drs.test.MapContent;
@@ -34,7 +35,9 @@ public abstract class RdbmsFixture implements DrsFixture {
 	protected String dbUrl;
 	
 	static {
-		mappings = new Class[]{CollectionHolder.class, Replicated.class,
+		mappings = new Class[]{
+				IByteArrayHolder.class,
+				CollectionHolder.class, Replicated.class,
 				SPCParent.class, SPCChild.class,
 				ListHolder.class, ListContent.class,
 				MapHolder.class,  MapContent.class,
