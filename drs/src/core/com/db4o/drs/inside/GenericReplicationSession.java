@@ -163,7 +163,7 @@ public final class GenericReplicationSession implements ReplicationSession {
 		int[] dimensions = _reflector.arrayDimensions(original);
 		Object result = _reflector.newArrayInstance(componentType, dimensions);
 		Object[] flatContents = _reflector.arrayContents(original); //TODO Optimize: Copy the structure without flattening. Do this in ReflectArray.
-		if (!claxx.isSecondClass())
+		if (!(claxx.isSecondClass()||componentType.isSecondClass()))
 			replaceWithCounterparts(flatContents, sourceProvider);
 		_reflector.arrayShape(flatContents, 0, result, dimensions, 0);
 		return result;
