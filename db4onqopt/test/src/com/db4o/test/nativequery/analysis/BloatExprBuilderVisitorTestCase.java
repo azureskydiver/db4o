@@ -473,7 +473,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return data.getName().toLowerCase().startsWith(STRING_CMPVAL);
 	}
 
-	public void _testFieldStringToLowerCaseStartsWith() throws Exception {
+	public void testFieldStringToLowerCaseStartsWith() throws Exception {
 		assertInvalid("sampleFieldStringToLowerCaseStartsWith");
 	}
 
