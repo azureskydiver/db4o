@@ -12,11 +12,11 @@ final class TranslatedFieldMetadata extends FieldMetadata
 {
 	private final ObjectTranslator i_translator;
 
-	TranslatedFieldMetadata(ClassMetadata a_yapClass, ObjectTranslator a_translator){
-	    super(a_yapClass, a_translator);
-		i_translator = a_translator;
-		ObjectContainerBase stream = a_yapClass.getStream();
-		configure(stream.reflector().forClass(a_translator.storedClass()), false);
+	TranslatedFieldMetadata(ClassMetadata containingClass, ObjectTranslator translator){
+	    super(containingClass, translator);
+		i_translator = translator;
+		ObjectContainerBase stream = containingClass.getStream();
+		configure(stream.reflector().forClass(translator.storedClass()), false);
 	}
     
     public boolean canUseNullBitmap(){

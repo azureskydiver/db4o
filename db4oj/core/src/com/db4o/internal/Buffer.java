@@ -7,10 +7,8 @@ import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 
 /**
- * public for .NET conversion reasons.
  * 
  * @exclude
- * @renameto Buffer
  */
 public class Buffer implements SlotReader {
 	

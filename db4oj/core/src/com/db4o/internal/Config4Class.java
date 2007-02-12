@@ -31,6 +31,8 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
      * object, if we maintain MetaClass information there 
      */
 	private final static KeySpec MAINTAIN_METACLASS=new KeySpec(true);
+	
+	private final static KeySpec MARSHALLER=new KeySpec(null);
 
 	private final static KeySpec MAXIMUM_ACTIVATION_DEPTH=new KeySpec(0);
 
@@ -171,6 +173,14 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     boolean instantiates() {
         return getTranslator() instanceof ObjectConstructor;
     }
+    
+	public void marshallWith(ObjectMarshaller marshaller) {
+    	_config.put(MARSHALLER, marshaller);
+	}
+	
+	ObjectMarshaller getMarshaller(){
+		return (ObjectMarshaller) _config.get(MARSHALLER);
+	}
 
     public void maximumActivationDepth(int depth) {
     	_config.put(MAXIMUM_ACTIVATION_DEPTH,depth);
@@ -304,5 +314,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	String writeAs() {
 		return _config.getAsString(WRITE_AS);
 	}
+
 
 }

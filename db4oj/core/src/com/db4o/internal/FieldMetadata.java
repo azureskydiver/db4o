@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.config.ObjectMarshaller;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.btree.*;
@@ -60,13 +61,21 @@ public class FieldMetadata implements StoredField {
     }
 
     FieldMetadata(ClassMetadata a_yapClass, ObjectTranslator a_translator) {
-        // for YapFieldTranslator only
+        // for TranslatedFieldMetadata only
     	this(a_yapClass);
         init(a_yapClass, a_translator.getClass().getName());
         i_state = AVAILABLE;
         ObjectContainerBase stream =getStream(); 
         i_handler = stream.i_handlers.handlerForClass(
             stream, stream.reflector().forClass(a_translator.storedClass()));
+    }
+
+    FieldMetadata(ClassMetadata containingClass, ObjectMarshaller marshaller) {
+        // for CustomMarshallerFieldMetadata only
+    	this(containingClass);
+        init(containingClass, marshaller.getClass().getName());
+        i_state = AVAILABLE;
+        i_handler = getStream().i_handlers.untypedHandler();
     }
 
     FieldMetadata(ClassMetadata a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
@@ -531,8 +540,8 @@ public class FieldMetadata implements StoredField {
         return _index != null;
     }
 
-    public final void incrementOffset(Buffer a_bytes) {
-        a_bytes.incrementOffset(linkLength());
+    public final void incrementOffset(Buffer buffer) {
+        buffer.incrementOffset(linkLength());
     }
 
     public final void init(ClassMetadata a_yapClass, String a_name) {
@@ -569,27 +578,27 @@ public class FieldMetadata implements StoredField {
         }
     }
 
-    public void instantiate(MarshallerFamily mf, ObjectReference a_yapObject, Object a_onObject, StatefulBuffer a_bytes)
+    public void instantiate(MarshallerFamily mf, ObjectReference ref, Object onObject, StatefulBuffer buffer)
         throws CorruptionException {
         
         if (! alive()) {
-            incrementOffset(a_bytes);
+            incrementOffset(buffer);
             return;
         }
             
         Object toSet = null;
         try {
-            toSet = read(mf, a_bytes);
+            toSet = read(mf, buffer);
         } catch (Exception e) {
             throw new CorruptionException();
         }
         if (i_db4oType != null) {
             if (toSet != null) {
-                ((Db4oTypeImpl) toSet).setTrans(a_bytes.getTransaction());
+                ((Db4oTypeImpl) toSet).setTrans(buffer.getTransaction());
             }
         }
         
-        set(a_onObject, toSet);
+        set(onObject, toSet);
         
     }
 
@@ -757,8 +766,7 @@ public class FieldMetadata implements StoredField {
         i_arrayPosition = a_index;
     }
     
-    public final void set(Object onObject, Object obj){
-        
+    public void set(Object onObject, Object obj){
         try {
             i_javaField.set(onObject, obj);
         } catch (Throwable t) {
