@@ -11,7 +11,6 @@ class ClientServerReplicationProvider extends FileReplicationProvider {
 
 	public ClientServerReplicationProvider(ObjectContainer objectContainer, String name) {
 		super(objectContainer, name);
-		System.out.println("ClientServerReplicationProvider");
 	}
 	
 	protected void refresh(Object obj) {
