@@ -86,14 +86,26 @@ public class ObjectMarshallerTestCase extends AbstractDb4oTestCase {
 		Assert.isTrue(marshaller.writeCalled);
 	}
 	
-	public void test(){
+	public void test() throws Exception{
+		Item item = assertRetrieve();
+		Assert.isTrue(marshaller.readCalled);
+		
+		marshaller.reset();
+		db().set(item);
+		Assert.isTrue(marshaller.writeCalled);
+		
+		defragment();
+		
+		assertRetrieve();
+	}
+	
+	private Item assertRetrieve(){
+		marshaller.reset();
 		Item item = (Item) retrieveOnlyInstance(Item.class);
 		Assert.areEqual(Integer.MAX_VALUE, item._one);
 		Assert.areEqual(Long.MAX_VALUE, item._two);
 		Assert.areEqual(1, item._three);
-		Assert.isTrue(marshaller.readCalled);
+		return item;
 	}
 	
-	
-
 }
