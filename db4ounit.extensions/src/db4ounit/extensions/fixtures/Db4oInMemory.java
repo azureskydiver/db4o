@@ -32,4 +32,10 @@ public class Db4oInMemory extends AbstractSoloDb4oFixture {
 	public String getLabel() {
 		return "IN-MEMORY";
 	}
+
+	public void defragment() throws Exception {
+		// do nothing
+		// defragment is file-based for now
+	}
+	
 }

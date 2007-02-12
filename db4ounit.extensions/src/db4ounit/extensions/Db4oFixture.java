@@ -26,4 +26,6 @@ public interface Db4oFixture {
 	
 	boolean accept(Class clazz);
 
+	void defragment() throws Exception;
+
 }

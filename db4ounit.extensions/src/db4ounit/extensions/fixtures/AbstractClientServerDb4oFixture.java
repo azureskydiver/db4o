@@ -5,6 +5,7 @@ package db4ounit.extensions.fixtures;
 import java.io.File;
 
 import com.db4o.*;
+import com.db4o.defragment.*;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.internal.*;
 
@@ -58,6 +59,10 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
     
 	public LocalObjectContainer fileSession() {
 		return (LocalObjectContainer)_server.ext().objectContainer();
+	}
+	
+	public void defragment() throws Exception {
+		defragment(FILE);
 	}
 
 }
