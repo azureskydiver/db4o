@@ -5,7 +5,7 @@ package com.db4o.drs.test;
 import java.io.File;
 
 import com.db4o.Db4o;
-import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.db4o.Db4oProviderFactory;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
 import com.db4o.ext.ExtObjectContainer;
 
@@ -49,6 +49,6 @@ public class Db4oDrsFixture implements DrsFixture {
 		//	Db4o.configure().io(memoryIoAdapter);
 		
 		_db = Db4o.openFile(testFile.getPath()).ext();
-		_provider = new Db4oReplicationProvider(_db, _name);
+		_provider = Db4oProviderFactory.newInstance(_db, _name);
 	}
 }
