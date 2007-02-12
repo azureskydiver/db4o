@@ -12,7 +12,7 @@ import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.inside.*;
+import com.db4o.internal.*;
 import com.db4o.query.Query;
 
 
