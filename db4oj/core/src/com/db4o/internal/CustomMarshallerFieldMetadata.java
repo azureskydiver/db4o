@@ -24,6 +24,14 @@ final class CustomMarshallerFieldMetadata extends FieldMetadata {
 		header.addBaseLength(linkLength());
 	}
 	
+    public void defragField(MarshallerFamily mf,ReaderPair readers) {
+    	readers.incrementOffset(linkLength());
+    }
+	
+    public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) {
+    	incrementOffset(a_bytes);
+    }
+	
 	public boolean hasIndex() {
 		return false;
 	}
