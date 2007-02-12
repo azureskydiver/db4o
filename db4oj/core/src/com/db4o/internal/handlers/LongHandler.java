@@ -48,56 +48,51 @@ public class LongHandler extends PrimitiveHandler {
 		return new Long(readLong(a_bytes));
 	}
 	
-	public static final long readLong(Buffer a_bytes){
-		long l_return = 0;
+	public static final long readLong(Buffer bytes){
+		long ret = 0;
 		if (Deploy.debug){
-			a_bytes.readBegin(Const4.YAPLONG);
+			bytes.readBegin(Const4.YAPLONG);
 			if(Deploy.debugLong){
-				l_return = Long.parseLong(new LatinStringIO().read(a_bytes, Const4.LONG_BYTES).trim()); 
+				ret = Long.parseLong(new LatinStringIO().read(bytes, Const4.LONG_BYTES).trim()); 
 			}else{
 				for (int i = 0; i < Const4.LONG_BYTES; i++){
-					l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
+					ret = (ret << 8) + (bytes._buffer[bytes._offset++] & 0xff);
 				}
 			}
-			a_bytes.readEnd();
+			bytes.readEnd();
 		}else{
-			for (int i = 0; i < Const4.LONG_BYTES; i++){
-				l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
-			}
+			ret = PrimitiveCodec.readLong(bytes._buffer, bytes._offset);
+			incrementOffset(bytes);
 		}
-		return l_return;
+		return ret;
 	}
 
-	public void write(Object a_object, Buffer a_bytes){
-	    writeLong(((Long)a_object).longValue(), a_bytes);
+	public void write(Object obj, Buffer buffer){
+	    writeLong(((Long)obj).longValue(), buffer);
 	}
 	
-	public static final void writeLong(long a_long, Buffer a_bytes){
+	public static final void writeLong(long val, Buffer bytes){
 		if(Deploy.debug){
-			a_bytes.writeBegin(Const4.YAPLONG);
+			bytes.writeBegin(Const4.YAPLONG);
 			if(Deploy.debugLong){
-				String l_s = "                                " + a_long;
-				new LatinStringIO().write(a_bytes, l_s.substring(l_s.length() - Const4.LONG_BYTES));
+				String l_s = "                                " + val;
+				new LatinStringIO().write(bytes, l_s.substring(l_s.length() - Const4.LONG_BYTES));
 			}
 			else{
 				for (int i = 0; i < Const4.LONG_BYTES; i++){
-					a_bytes._buffer[a_bytes._offset++] = (byte) (a_long >> ((Const4.LONG_BYTES - 1 - i) * 8));
+					bytes._buffer[bytes._offset++] = (byte) (val >> ((Const4.LONG_BYTES - 1 - i) * 8));
 				}
 			}
-			a_bytes.writeEnd();
+			bytes.writeEnd();
 		}else{
-			for (int i = 0; i < Const4.LONG_BYTES; i++){
-				a_bytes._buffer[a_bytes._offset++] = (byte) (a_long >> ((Const4.LONG_BYTES - 1 - i) * 8));
-			}
+			PrimitiveCodec.writeLong(bytes._buffer, bytes._offset,  val);
+			incrementOffset(bytes);
 		}
-	}	
+	}
 	
-	public static final void writeLong(long a_long, byte[] bytes){
-		for (int i = 0; i < Const4.LONG_BYTES; i++){
-			bytes[i] = (byte) (a_long >> ((Const4.LONG_BYTES - 1 - i) * 8));
-		}
-	}	
-	
+	private static final void incrementOffset(Buffer buffer){
+		buffer.incrementOffset(Const4.LONG_BYTES);
+	}
 	
 		
 	// Comparison_______________________

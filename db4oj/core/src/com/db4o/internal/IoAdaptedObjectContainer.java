@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.io.*;
 
@@ -362,7 +363,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 lockBytes.writeLong(time);
                 i_timerFile.write(lockBytes._buffer);
             } else {
-                LongHandler.writeLong(time, i_timerBytes);
+            	PrimitiveCodec.writeLong(i_timerBytes, time);
                 i_timerFile.write(i_timerBytes);
             }
             if(i_file == null){

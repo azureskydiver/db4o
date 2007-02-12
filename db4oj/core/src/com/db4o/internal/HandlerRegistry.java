@@ -169,12 +169,12 @@ public final class HandlerRegistry {
         }
 
         i_anyArray = new PrimitiveFieldHandler(a_stream, new ArrayHandler(_masterStream,
-            anyObject(), false));
+            untypedHandler(), false));
         i_anyArray.setID(ANY_ARRAY_ID);
         i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 
         i_anyArrayN = new PrimitiveFieldHandler(a_stream, new MultidimensionalArrayHandler(_masterStream,
-            anyObject(), false));
+            untypedHandler(), false));
         i_anyArrayN.setID(ANY_ARRAY_N_ID);
         i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
     }
@@ -352,7 +352,7 @@ public final class HandlerRegistry {
         return a_stream.produceYapClass(a_class);
     }
 
-	private TypeHandler4 anyObject() {
+	public TypeHandler4 untypedHandler() {
 		return i_handlers[ANY_INDEX];
 	}
     

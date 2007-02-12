@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.config.ObjectMarshaller;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.classindex.*;
@@ -115,13 +116,13 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         }
     }
     
-    void addMembers(ObjectContainerBase a_stream) {
+    void addMembers(ObjectContainerBase ocb) {
         bitTrue(Const4.CHECKED_CHANGES);
-        if (addTranslatorFields(a_stream)) {
+        if (installTranslator(ocb) || installMarshaller(ocb)) {
         	return;
         }
 
-        if (a_stream.detectSchemaChanges()) {
+        if (ocb.detectSchemaChanges()) {
             boolean dirty = isDirty();
 
             Collection4 members = new Collection4();
@@ -135,17 +136,17 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             }
             if(generateVersionNumbers()) {
                 if(! hasVersionField()) {
-                    members.add(a_stream.getVersionIndex());
+                    members.add(ocb.getVersionIndex());
                     dirty = true;
                 }
             }
             if(generateUUIDs()) {
                 if(! hasUUIDField()) {
-                    members.add(a_stream.getUUIDIndex());
+                    members.add(ocb.getUUIDIndex());
                     dirty = true;
                 }
             }
-            dirty = collectReflectFields(a_stream, members) | dirty;
+            dirty = collectReflectFields(ocb, members) | dirty;
             if (dirty) {
                 i_stream.setDirtyInSystemTransaction(this);
                 i_fields = new FieldMetadata[members.size()];
@@ -205,19 +206,31 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		}
 		return dirty;
 	}
+	
+	private boolean installMarshaller(ObjectContainerBase ocb) {
+		ObjectMarshaller om = getMarshaller();
+    	if (om == null) {
+    		return false;
+    	}
+    	installCustomFieldMetadata(ocb, new CustomMarshallerFieldMetadata(this, om));
+    	return true;
+	}
+	
 
-    private boolean addTranslatorFields(ObjectContainerBase a_stream) {
-        
+    private boolean installTranslator(ObjectContainerBase ocb) {
     	ObjectTranslator ot = getTranslator();
     	if (ot == null) {
     		return false;
     	}
-    	
     	if (isNewTranslator(ot)) {
     		i_stream.setDirtyInSystemTransaction(this);
     	}
-        
-        int fieldCount = 1;
+        installCustomFieldMetadata(ocb, new TranslatedFieldMetadata(this, ot));
+    	return true;
+    }
+
+	private void installCustomFieldMetadata(ObjectContainerBase ocb, FieldMetadata customFieldMetadata) {
+		int fieldCount = 1;
         
         boolean versions = generateVersionNumbers() && ! ancestorHasVersionField();
         boolean uuids = generateUUIDs()  && ! ancestorHasUUIDField();
@@ -231,8 +244,9 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         }
     	
     	i_fields = new FieldMetadata[fieldCount];
+    	
+        i_fields[0] = customFieldMetadata;
         
-        i_fields[0] = new TranslatedFieldMetadata(this, ot);
         
         // Some explanation on the thoughts here:
         
@@ -251,21 +265,26 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             // We don't want to have a null field, so let's add the version
             // number, if we have a UUID, even if it's not needed.
             
-            i_fields[1] = a_stream.getVersionIndex();
+            i_fields[1] = ocb.getVersionIndex();
         }
         
         if(uuids){
-            i_fields[2] = a_stream.getUUIDIndex();
+            i_fields[2] = ocb.getUUIDIndex();
         }
         
     	setStateOK();
-    	return true;
-    }
+	}
     
     private ObjectTranslator getTranslator() {
     	return i_config == null
     		? null
     		: i_config.getTranslator();
+    }
+    
+    private ObjectMarshaller getMarshaller() {
+    	return i_config == null
+		? null
+		: i_config.getMarshaller();
     }
 
 	private boolean isNewTranslator(ObjectTranslator ot) {
