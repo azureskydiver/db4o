@@ -3,7 +3,7 @@
 package com.db4o.drs;
 
 import com.db4o.ObjectContainer;
-import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.db4o.Db4oProviderFactory;
 import com.db4o.drs.inside.DefaultReplicationEventListener;
 import com.db4o.drs.inside.GenericReplicationSession;
 
@@ -55,6 +55,6 @@ public class Replication {
 	 */
 	public static ReplicationSession begin(ObjectContainer oc1, ObjectContainer oc2,
 			ReplicationEventListener listener) {
-		return begin(new Db4oReplicationProvider(oc1), new Db4oReplicationProvider(oc2), listener);
+		return begin(Db4oProviderFactory.newInstance(oc1), Db4oProviderFactory.newInstance(oc2), listener);
 	}
 }

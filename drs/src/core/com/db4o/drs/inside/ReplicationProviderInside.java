@@ -86,8 +86,6 @@ public interface ReplicationProviderInside extends ReplicationProvider {
 
 	void syncVersionWithPeer(long maxVersion);
 
-	void updateCounterpart(Object updated);
-
 	/**
 	 * Visits the object of each cached ReplicationReference.
 	 *

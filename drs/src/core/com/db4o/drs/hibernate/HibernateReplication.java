@@ -7,7 +7,7 @@ import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationConflictException;
 import com.db4o.drs.ReplicationEventListener;
 import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.db4o.Db4oProviderFactory;
 import com.db4o.drs.hibernate.impl.HibernateReplicationProviderImpl;
 
 /**
@@ -47,7 +47,7 @@ public class HibernateReplication {
 	 */
 	public static ReplicationSession begin(ObjectContainer oc, Configuration cfg,
 			ReplicationEventListener listener) {
-		return Replication.begin(new Db4oReplicationProvider(oc), new HibernateReplicationProviderImpl(cfg), listener);
+		return Replication.begin(Db4oProviderFactory.newInstance(oc), new HibernateReplicationProviderImpl(cfg), listener);
 	}
 
 	/**
