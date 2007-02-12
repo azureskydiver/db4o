@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
@@ -11,6 +12,7 @@ import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.generic.GenericClass;
 import com.db4o.reflect.generic.GenericField;
 import com.db4o.reflect.generic.GenericReflector;
+import com.db4o.reflect.generic.GenericArrayClass;
 import com.db4o.reflect.jdk.JdkReflector;
 
 import db4ounit.Assert;
@@ -44,7 +46,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		Assert.isNotNull(rc);
 		Query q = oc.query();
 		q.constrain(rc);
-		List results = q.execute();
+		ObjectSet results = q.execute();
 		Assert.isTrue(results.size() == 1);
 		Db4oUtil.dumpResults(fixture().db(), results);
 
@@ -100,7 +102,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		Assert.isNotNull(rc);
 		Query q = oc.query();
 		q.constrain(rc);
-		List results = q.execute();
+		ObjectSet results = q.execute();
 		Db4oUtil.dumpResults(oc, results);
 		Assert.isTrue(results.size() == 1);
 
@@ -124,7 +126,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		Query q = oc.query();
 		q.constrain(rc);
 		q.descend("surname").constrain("John");
-		List results = q.execute();
+		ObjectSet results = q.execute();
 		Assert.isTrue(results.size() == 1);
 	}
 
@@ -135,7 +137,7 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		Assert.isNotNull(rc);
 		Query q = oc.query();
 		q.constrain(rc);
-		List results = q.execute();
+		ObjectSet results = q.execute();
 		for (int i = 0; i < results.size(); i++) {
 			Object o = results.get(i);
 			oc.delete(o);
@@ -154,10 +156,30 @@ public class GenericObjectsTest1 extends AbstractDb4oTestCase {
 		// FIXME: If GenericReflector#knownClasses is not called, the test will
 		// fail.
 		ReflectClass[] classes = oc.reflector().knownClasses();
-		/*
-		 * for (int i = 0; i < classes.length; i++) { System.out.println("known
-		 * classes = " + classes[i]); }
-		 */
 		return oc.reflector().forName(className);
+	}
+
+	/**
+	 * This is to ensure that reflector.forObject(GenericArray) returns an instance of GenericArrayClass instead of GenericClass
+	 * http://tracker.db4o.com/jira/browse/COR-376
+	 */
+	public void testGenericArrayClass() {
+		ExtObjectContainer oc = fixture().db();
+		initGenericObjects();
+		ReflectClass rc = oc.reflector().forName(PERSON_CLASSNAME);
+
+		Object array = reflector().array().newInstance(rc, 5);
+
+		ReflectClass arrayClass = oc.reflector().forObject(array);
+		Assert.isTrue(arrayClass.isArray());
+		Assert.isTrue(arrayClass instanceof GenericArrayClass);
+
+		arrayClass = oc.reflector().forName(array.getClass().getName());
+		Assert.isTrue(arrayClass.isArray());
+		Assert.isTrue(arrayClass instanceof GenericArrayClass);
+
+		arrayClass = oc.reflector().forClass(array.getClass());
+		Assert.isTrue(arrayClass.isArray());
+		Assert.isTrue(arrayClass instanceof GenericArrayClass);
 	}
 }
