@@ -12,15 +12,17 @@ import com.db4o.reflect.*;
 public class GenericReflector implements Reflector, DeepClone {
 	
 	private KnownClassesRepository _repository;
-	
-    private Reflector _delegate;
+
+	/* default delegate Reflector is the JdkReflector */
+	private Reflector _delegate;
     private GenericArrayReflector _array;
     
     
     private Collection4 _collectionPredicates = new Collection4();
     private Collection4 _collectionUpdateDepths = new Collection4();
 
-    private final Hashtable4 _classByClass = new Hashtable4();
+	// todo: Why have this when there is already the _repository by name? Redundant
+	private final Hashtable4 _classByClass = new Hashtable4();
 
 	private Transaction _trans;
 	private ObjectContainerBase _stream;
@@ -104,15 +106,24 @@ public class GenericReflector implements Reflector, DeepClone {
         if(claxx == null){
             //  We don't have to worry about the superclass, it can be null
             //  because handling is delegated anyway
-            String name = clazz.getName();
-            claxx = new GenericClass(this,clazz, name,null);
-
-            _repository.register(claxx);
+			claxx = genericClass(clazz);
+			_repository.register(claxx);
         }
         return claxx;
     }
-    
-    public ReflectClass forClass(Class clazz) {
+
+	private GenericClass genericClass(ReflectClass clazz) {
+		GenericClass ret;
+		String name = clazz.getName();
+		if(name.equals(GenericArray.class.getName())){ // special case, comparing name because can't compare class == class directly with ReflectClass
+			ret = new GenericArrayClass(this, clazz, name, null);
+		} else {
+			ret = new GenericClass(this, clazz, name, null);
+		}
+		return ret;
+	}
+
+	public ReflectClass forClass(Class clazz) {
         if(clazz == null){
             return null;
         }

@@ -75,26 +75,12 @@ public class Db4oUtil {
 
 	public static int dump(ObjectContainer oc, Class aClass) {
 		System.out.println("DUMPING: " + oc.ext().identity());
-		/*
-		System.out.println("Stored Classes:");
-
-		This is throwing:
-		com.db4o.internal.cs.generic.GenericObjectsTest.testUpdate: java.lang.NullPointerException
-	at com.db4o.reflect.generic.GenericReflector.readAll(Unknown Source)
-	at com.db4o.reflect.generic.GenericReflector.knownClasses(Unknown Source)
-	
-		ReflectClass[] reflectClasses = oc.ext().reflector().knownClasses();
-		if (reflectClasses != null) {
-			for (int i = 0; i < reflectClasses.length; i++) {
-				ReflectClass reflectClass = reflectClasses[i];
-				System.out.println("rc: " + reflectClass);
-			}
-		}*/
+		
 		Query q = oc.query();
 		if(aClass != null){
 			q.constrain(aClass);
 		}
-		List results = q.execute();
+		ObjectSet results = q.execute();
 		int counter = 0;
 		for (Iterator iterator = results.iterator(); iterator.hasNext();) {
 			Object o = iterator.next();
@@ -105,9 +91,9 @@ public class Db4oUtil {
 		return counter;
 	}
 
-	public static void dumpResults(ObjectContainer oc, List results) {
-		for (int i = 0; i < results.size(); i++) {
-			Object o = results.get(i);
+	public static void dumpResults(ObjectContainer oc, Iterator results) {
+		while(results.hasNext()){
+			Object o = results.next();
 			System.out.println("o:" + o + " class:" + o.getClass().getName());
 			dumpObject(oc, o);
 		}
