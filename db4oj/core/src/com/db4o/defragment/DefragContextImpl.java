@@ -53,7 +53,8 @@ public class DefragContextImpl implements DefragContext {
 
 	public DefragContextImpl(DefragmentConfig defragConfig,DefragmentListener listener) {
 		_listener=listener;
-		Configuration sourceConfig=defragConfig.db4oConfig();
+		Config4Impl originalConfig =  (Config4Impl) defragConfig.db4oConfig();
+		Configuration sourceConfig=(Configuration) originalConfig.deepClone(null);
 		sourceConfig.weakReferences(false);
 		sourceConfig.flushFileBuffers(false);
 		sourceConfig.readOnly(true);
