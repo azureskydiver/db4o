@@ -73,7 +73,7 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 		long started = System.currentTimeMillis();		
 		q.execute();		
 		long elapsed = System.currentTimeMillis() - started;
-		Assert.isTrue(_stats.executionTime() > 0);
+		Assert.isTrue(_stats.executionTime() >= 0);
 		Assert.isTrue(_stats.executionTime() <= elapsed);
 	}
 
