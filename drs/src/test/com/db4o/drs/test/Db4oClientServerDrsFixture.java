@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectServer;
-import com.db4o.drs.db4o.Db4oReplicationProvider;
+import com.db4o.drs.db4o.Db4oProviderFactory;
 import com.db4o.ext.ExtObjectContainer;
 
 public class Db4oClientServerDrsFixture extends Db4oDrsFixture {
@@ -37,6 +37,6 @@ public class Db4oClientServerDrsFixture extends Db4oDrsFixture {
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
-		_provider = new Db4oReplicationProvider(_db, _name);
+		_provider = Db4oProviderFactory.newInstance(_db, _name);
 	}
 }
