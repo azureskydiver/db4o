@@ -34,6 +34,7 @@ public class AllTests extends Db4oTestSuite {
             PersistTypeTestCase.class,
             ServerRevokeAccessTestCase.class,
             SystemInfoTestCase.class,
+            ObjectMarshallerTestCase.class,
             ObjectVersionTest.class,
             HandlerRegistryTestCase.class,
             ClassMetadataTestCase.class,
