@@ -203,4 +203,11 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	protected ReflectClass reflectClass(Class clazz) {
 		return reflector().forClass(clazz);
 	}
+	
+	protected void defragment() throws Exception{
+		fixture().close();
+		fixture().defragment();
+		fixture().open();
+	}
+	
 }
