@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <project name="db4obuild" default="buildall" basedir=".">
-
 <!--
 	Depends on a custom local file 'machine.properties' with
 	the following entries:
