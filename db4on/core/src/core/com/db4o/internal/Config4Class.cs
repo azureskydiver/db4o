@@ -28,6 +28,9 @@ namespace com.db4o.@internal
 		private static readonly com.db4o.foundation.KeySpec MAINTAIN_METACLASS = new com.db4o.foundation.KeySpec
 			(true);
 
+		private static readonly com.db4o.foundation.KeySpec MARSHALLER = new com.db4o.foundation.KeySpec
+			(null);
+
 		private static readonly com.db4o.foundation.KeySpec MAXIMUM_ACTIVATION_DEPTH = new 
 			com.db4o.foundation.KeySpec(0);
 
@@ -194,6 +197,16 @@ namespace com.db4o.@internal
 		internal virtual bool Instantiates()
 		{
 			return GetTranslator() is com.db4o.config.ObjectConstructor;
+		}
+
+		public virtual void MarshallWith(com.db4o.config.ObjectMarshaller marshaller)
+		{
+			_config.Put(MARSHALLER, marshaller);
+		}
+
+		internal virtual com.db4o.config.ObjectMarshaller GetMarshaller()
+		{
+			return (com.db4o.config.ObjectMarshaller)_config.Get(MARSHALLER);
 		}
 
 		public virtual void MaximumActivationDepth(int depth)

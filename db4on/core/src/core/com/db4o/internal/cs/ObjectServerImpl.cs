@@ -7,6 +7,8 @@ namespace com.db4o.@internal.cs
 
 		private com.db4o.foundation.network.ServerSocket4 i_serverSocket;
 
+		private int i_port;
+
 		private int i_threadIDGen = 1;
 
 		private com.db4o.foundation.Collection4 i_threads = new com.db4o.foundation.Collection4
@@ -16,62 +18,82 @@ namespace com.db4o.@internal.cs
 
 		private readonly object _lock = new object();
 
-		public ObjectServerImpl(com.db4o.@internal.LocalObjectContainer a_yapFile, int a_port
+		private com.db4o.@internal.Config4Impl _config;
+
+		public ObjectServerImpl(com.db4o.@internal.LocalObjectContainer yapFile, int port
 			)
 		{
-			a_yapFile.SetServer(true);
-			i_name = "db4o ServerSocket  FILE: " + a_yapFile.ToString() + "  PORT:" + a_port;
-			i_yapFile = a_yapFile;
-			com.db4o.@internal.Config4Impl config = (com.db4o.@internal.Config4Impl)i_yapFile
-				.Configure();
-			config.Callbacks(false);
-			config.IsServer(true);
-			a_yapFile.ProduceYapClass(a_yapFile.i_handlers.ICLASS_STATICCLASS);
-			config.ExceptionalClasses().ForEachValue(new _AnonymousInnerClass41(this, a_yapFile
-				));
-			if (a_port > 0)
+			i_yapFile = yapFile;
+			i_port = port;
+			_config = i_yapFile.ConfigImpl();
+			i_name = "db4o ServerSocket FILE: " + yapFile.ToString() + "  PORT:" + i_port;
+			i_yapFile.SetServer(true);
+			ConfigureObjectServer();
+			EnsureLoadStaticClass();
+			EnsureLoadConfiguredClasses();
+			StartupServerSocket();
+		}
+
+		private void StartupServerSocket()
+		{
+			if (i_port <= 0)
+			{
+				return;
+			}
+			try
+			{
+				i_serverSocket = new com.db4o.foundation.network.ServerSocket4(i_port);
+				i_serverSocket.SetSoTimeout(_config.TimeoutServerSocket());
+			}
+			catch (System.IO.IOException)
+			{
+				com.db4o.@internal.Exceptions4.ThrowRuntimeException(30, string.Empty + i_port);
+			}
+			new j4o.lang.Thread(this).Start();
+			lock (_lock)
 			{
 				try
 				{
-					i_serverSocket = new com.db4o.foundation.network.ServerSocket4(a_port);
-					i_serverSocket.SetSoTimeout(config.TimeoutServerSocket());
+					j4o.lang.JavaSystem.Wait(_lock, 1000);
 				}
-				catch (System.IO.IOException)
+				catch
 				{
-					com.db4o.@internal.Exceptions4.ThrowRuntimeException(30, string.Empty + a_port);
-				}
-				new j4o.lang.Thread(this).Start();
-				lock (_lock)
-				{
-					try
-					{
-						j4o.lang.JavaSystem.Wait(_lock, 1000);
-					}
-					catch
-					{
-					}
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass41 : com.db4o.foundation.Visitor4
+		private void EnsureLoadStaticClass()
 		{
-			public _AnonymousInnerClass41(ObjectServerImpl _enclosing, com.db4o.@internal.LocalObjectContainer
-				 a_yapFile)
+			i_yapFile.ProduceYapClass(i_yapFile.i_handlers.ICLASS_STATICCLASS);
+		}
+
+		private void EnsureLoadConfiguredClasses()
+		{
+			_config.ExceptionalClasses().ForEachValue(new _AnonymousInnerClass80(this));
+		}
+
+		private sealed class _AnonymousInnerClass80 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass80(ObjectServerImpl _enclosing)
 			{
 				this._enclosing = _enclosing;
-				this.a_yapFile = a_yapFile;
 			}
 
 			public void Visit(object a_object)
 			{
-				a_yapFile.ProduceYapClass(a_yapFile.Reflector().ForName(((com.db4o.@internal.Config4Class
-					)a_object).GetName()));
+				this._enclosing.i_yapFile.ProduceYapClass(this._enclosing.i_yapFile.Reflector().ForName
+					(((com.db4o.@internal.Config4Class)a_object).GetName()));
 			}
 
 			private readonly ObjectServerImpl _enclosing;
+		}
 
-			private readonly com.db4o.@internal.LocalObjectContainer a_yapFile;
+		private void ConfigureObjectServer()
+		{
+			_config.Callbacks(false);
+			_config.IsServer(true);
+			_config.ObjectClass(j4o.lang.JavaSystem.GetClassForType(typeof(com.db4o.User))).MinimumActivationDepth
+				(1);
 		}
 
 		public virtual void Backup(string path)
@@ -121,7 +143,7 @@ namespace com.db4o.@internal.cs
 
 		public virtual com.db4o.config.Configuration Configure()
 		{
-			return i_yapFile.Configure();
+			return _config;
 		}
 
 		public virtual com.db4o.ext.ExtObjectServer Ext()
@@ -231,7 +253,7 @@ namespace com.db4o.@internal.cs
 
 		public virtual com.db4o.foundation.network.LoopbackSocket OpenClientSocket()
 		{
-			int timeout = ((com.db4o.@internal.Config4Impl)Configure()).TimeoutClientSocket();
+			int timeout = _config.TimeoutClientSocket();
 			com.db4o.foundation.network.LoopbackSocket clientFake = new com.db4o.foundation.network.LoopbackSocket
 				(this, timeout);
 			com.db4o.foundation.network.LoopbackSocket serverFake = new com.db4o.foundation.network.LoopbackSocket

@@ -332,8 +332,45 @@ namespace com.db4o.@internal
 			lock (i_lock)
 			{
 				int address = GetSlot(byteCount);
-				WriteBytes(new com.db4o.@internal.Buffer(byteCount), address, 0);
+				ZeroReservedStorage(address, byteCount);
 				Free(address, byteCount);
+			}
+		}
+
+		private void ZeroReservedStorage(int address, int length)
+		{
+			if (ConfigImpl().IsReadOnly())
+			{
+				return;
+			}
+			try
+			{
+				ZeroFile(i_file, address, length);
+				ZeroFile(i_backupFile, address, length);
+			}
+			catch (System.IO.IOException e)
+			{
+				com.db4o.@internal.Exceptions4.ThrowRuntimeException(16, e);
+			}
+		}
+
+		private void ZeroFile(com.db4o.io.IoAdapter io, int address, int length)
+		{
+			if (io == null)
+			{
+				return;
+			}
+			byte[] zeroBytes = new byte[1024];
+			int left = length;
+			io.BlockSeek(address, 0);
+			while (left > zeroBytes.Length)
+			{
+				io.Write(zeroBytes, zeroBytes.Length);
+				left -= zeroBytes.Length;
+			}
+			if (left > 0)
+			{
+				io.Write(zeroBytes, left);
 			}
 		}
 
@@ -366,7 +403,7 @@ namespace com.db4o.@internal
 					return false;
 				}
 				i_timerFile.BlockSeek(address, offset);
-				com.db4o.@internal.handlers.LongHandler.WriteLong(time, i_timerBytes);
+				com.db4o.foundation.PrimitiveCodec.WriteLong(i_timerBytes, time);
 				i_timerFile.Write(i_timerBytes);
 				if (i_file == null)
 				{

@@ -68,7 +68,10 @@ namespace com.db4o.defragment
 			 listener)
 		{
 			_listener = listener;
-			com.db4o.config.Configuration sourceConfig = defragConfig.Db4oConfig();
+			com.db4o.@internal.Config4Impl originalConfig = (com.db4o.@internal.Config4Impl)defragConfig
+				.Db4oConfig();
+			com.db4o.config.Configuration sourceConfig = (com.db4o.config.Configuration)originalConfig
+				.DeepClone(null);
 			sourceConfig.WeakReferences(false);
 			sourceConfig.FlushFileBuffers(false);
 			sourceConfig.ReadOnly(true);
