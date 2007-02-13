@@ -170,6 +170,41 @@ namespace com.db4o.config
 		/// </remarks>
 		void Indexed(bool flag);
 
+		/// <summary>registers a custom marshaller for this class.</summary>
+		/// <remarks>
+		/// registers a custom marshaller for this class.
+		/// <br /><br />
+		/// Custom marshallers can be used for tuning the performance to store
+		/// and read objects. Instead of letting db4o do all the marshalling
+		/// by detecting the fields on a class and by using reflection, a
+		/// custom
+		/// <see cref="com.db4o.config.ObjectMarshaller">ObjectMarshaller</see>
+		/// allows the
+		/// application developer to write the logic how the fields of an
+		/// object are converted to a byte[] and back.
+		/// <br /><br />Downside:<br />
+		/// - Indexes and querying can not be used.
+		/// <br /><br />Upsides:<br />
+		/// - Not all fields need to be stored.<br />
+		/// - Reflection does not need to be called.<br />
+		/// <br /><br />As an alternative to using a custom marshallers you may
+		/// want to consider writing an
+		/// <see cref="com.db4o.config.ObjectTranslator">ObjectTranslator</see>
+		/// or your own
+		/// <see cref="com.db4o.reflect.Reflector">Reflector</see>
+		/// .
+		/// <br /><br />The use of an
+		/// <see cref="com.db4o.config.ObjectMarshaller">ObjectMarshaller</see>
+		/// is not
+		/// compatible with the use of an
+		/// <see cref="com.db4o.config.ObjectTranslator">ObjectTranslator</see>
+		/// .<br /><br />
+		/// </remarks>
+		/// <param name="marshaller">to be used for this class</param>
+		/// <seealso cref="com.db4o.config.ObjectMarshaller">com.db4o.config.ObjectMarshaller
+		/// 	</seealso>
+		void MarshallWith(com.db4o.config.ObjectMarshaller marshaller);
+
 		/// <summary>sets the maximum activation depth to the desired value.</summary>
 		/// <remarks>
 		/// sets the maximum activation depth to the desired value.
@@ -278,6 +313,12 @@ namespace com.db4o.config
 		/// Preinstalled translators are documented in the sourcecode of
 		/// com.db4o.samples.translators.Default.java#defaultConfiguration().
 		/// <br /><br />Example translators can also be found in this folder.<br /><br />
+		/// <br /><br />The use of an
+		/// <see cref="com.db4o.config.ObjectTranslator">ObjectTranslator</see>
+		/// is not
+		/// compatible with the use of an
+		/// <see cref="com.db4o.config.ObjectMarshaller">ObjectMarshaller</see>
+		/// .<br /><br />
 		/// </remarks>
 		/// <param name="translator">
 		/// this may be an

@@ -106,11 +106,27 @@ namespace com.db4o.reflect.generic
 				)_repository.LookupByName(clazz.GetName());
 			if (claxx == null)
 			{
-				string name = clazz.GetName();
-				claxx = new com.db4o.reflect.generic.GenericClass(this, clazz, name, null);
+				claxx = GenericClass(clazz);
 				_repository.Register(claxx);
 			}
 			return claxx;
+		}
+
+		private com.db4o.reflect.generic.GenericClass GenericClass(com.db4o.reflect.ReflectClass
+			 clazz)
+		{
+			com.db4o.reflect.generic.GenericClass ret;
+			string name = clazz.GetName();
+			if (name.Equals(j4o.lang.JavaSystem.GetClassForType(typeof(com.db4o.reflect.generic.GenericArray)
+				).GetName()))
+			{
+				ret = new com.db4o.reflect.generic.GenericArrayClass(this, clazz, name, null);
+			}
+			else
+			{
+				ret = new com.db4o.reflect.generic.GenericClass(this, clazz, name, null);
+			}
+			return ret;
 		}
 
 		public virtual com.db4o.reflect.ReflectClass ForClass(j4o.lang.Class clazz)
@@ -225,14 +241,14 @@ namespace com.db4o.reflect.generic
 			)
 		{
 			com.db4o.reflect.ReflectClass collectionClass = ForClass(clazz);
-			com.db4o.reflect.ReflectClassPredicate predicate = new _AnonymousInnerClass209(this
+			com.db4o.reflect.ReflectClassPredicate predicate = new _AnonymousInnerClass220(this
 				, collectionClass);
 			return predicate;
 		}
 
-		private sealed class _AnonymousInnerClass209 : com.db4o.reflect.ReflectClassPredicate
+		private sealed class _AnonymousInnerClass220 : com.db4o.reflect.ReflectClassPredicate
 		{
-			public _AnonymousInnerClass209(GenericReflector _enclosing, com.db4o.reflect.ReflectClass
+			public _AnonymousInnerClass220(GenericReflector _enclosing, com.db4o.reflect.ReflectClass
 				 collectionClass)
 			{
 				this._enclosing = _enclosing;

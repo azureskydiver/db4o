@@ -1,9 +1,6 @@
 namespace com.db4o.@internal
 {
-	/// <summary>public for .NET conversion reasons.</summary>
-	/// <remarks>public for .NET conversion reasons.</remarks>
 	/// <exclude></exclude>
-	/// <renameto>Buffer</renameto>
 	public class Buffer : com.db4o.@internal.SlotReader
 	{
 		public byte[] _buffer;

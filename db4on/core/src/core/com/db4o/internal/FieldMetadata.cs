@@ -53,6 +53,15 @@ namespace com.db4o.@internal
 				(a_translator.StoredClass()));
 		}
 
+		internal FieldMetadata(com.db4o.@internal.ClassMetadata containingClass, com.db4o.config.ObjectMarshaller
+			 marshaller) : this(containingClass)
+		{
+			Init(containingClass, j4o.lang.JavaSystem.GetClassForObject(marshaller).GetName()
+				);
+			i_state = AVAILABLE;
+			i_handler = GetStream().i_handlers.UntypedHandler();
+		}
+
 		internal FieldMetadata(com.db4o.@internal.ClassMetadata a_yapClass, com.db4o.reflect.ReflectField
 			 a_field, com.db4o.@internal.TypeHandler4 a_handler) : this(a_yapClass)
 		{
@@ -597,9 +606,9 @@ namespace com.db4o.@internal
 			return _index != null;
 		}
 
-		public void IncrementOffset(com.db4o.@internal.Buffer a_bytes)
+		public void IncrementOffset(com.db4o.@internal.Buffer buffer)
 		{
-			a_bytes.IncrementOffset(LinkLength());
+			buffer.IncrementOffset(LinkLength());
 		}
 
 		public void Init(com.db4o.@internal.ClassMetadata a_yapClass, string a_name)
@@ -639,18 +648,18 @@ namespace com.db4o.@internal
 		}
 
 		public virtual void Instantiate(com.db4o.@internal.marshall.MarshallerFamily mf, 
-			com.db4o.@internal.ObjectReference a_yapObject, object a_onObject, com.db4o.@internal.StatefulBuffer
-			 a_bytes)
+			com.db4o.@internal.ObjectReference @ref, object onObject, com.db4o.@internal.StatefulBuffer
+			 buffer)
 		{
 			if (!Alive())
 			{
-				IncrementOffset(a_bytes);
+				IncrementOffset(buffer);
 				return;
 			}
 			object toSet = null;
 			try
 			{
-				toSet = Read(mf, a_bytes);
+				toSet = Read(mf, buffer);
 			}
 			catch
 			{
@@ -660,10 +669,10 @@ namespace com.db4o.@internal
 			{
 				if (toSet != null)
 				{
-					((com.db4o.@internal.Db4oTypeImpl)toSet).SetTrans(a_bytes.GetTransaction());
+					((com.db4o.@internal.Db4oTypeImpl)toSet).SetTrans(buffer.GetTransaction());
 				}
 			}
-			Set(a_onObject, toSet);
+			Set(onObject, toSet);
 		}
 
 		public virtual bool IsArray()
@@ -857,7 +866,7 @@ namespace com.db4o.@internal
 			i_arrayPosition = a_index;
 		}
 
-		public void Set(object onObject, object obj)
+		public virtual void Set(object onObject, object obj)
 		{
 			try
 			{
@@ -894,13 +903,13 @@ namespace com.db4o.@internal
 			lock (stream.Lock())
 			{
 				com.db4o.@internal.Transaction trans = stream.GetTransaction();
-				_index.TraverseKeys(trans, new _AnonymousInnerClass793(this, userVisitor, trans));
+				_index.TraverseKeys(trans, new _AnonymousInnerClass801(this, userVisitor, trans));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass793 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass801 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass793(FieldMetadata _enclosing, com.db4o.foundation.Visitor4
+			public _AnonymousInnerClass801(FieldMetadata _enclosing, com.db4o.foundation.Visitor4
 				 userVisitor, com.db4o.@internal.Transaction trans)
 			{
 				this._enclosing = _enclosing;

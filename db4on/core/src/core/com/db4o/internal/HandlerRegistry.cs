@@ -159,11 +159,11 @@ namespace com.db4o.@internal
 				i_classByClass.Put(i_platformTypes[i].ClassReflector(), i_yapClasses[idx]);
 			}
 			i_anyArray = new com.db4o.@internal.PrimitiveFieldHandler(a_stream, new com.db4o.@internal.handlers.ArrayHandler
-				(_masterStream, AnyObject(), false));
+				(_masterStream, UntypedHandler(), false));
 			i_anyArray.SetID(ANY_ARRAY_ID);
 			i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 			i_anyArrayN = new com.db4o.@internal.PrimitiveFieldHandler(a_stream, new com.db4o.@internal.handlers.MultidimensionalArrayHandler
-				(_masterStream, AnyObject(), false));
+				(_masterStream, UntypedHandler(), false));
 			i_anyArrayN.SetID(ANY_ARRAY_N_ID);
 			i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
 		}
@@ -391,7 +391,7 @@ namespace com.db4o.@internal
 			return a_stream.ProduceYapClass(a_class);
 		}
 
-		private com.db4o.@internal.TypeHandler4 AnyObject()
+		public com.db4o.@internal.TypeHandler4 UntypedHandler()
 		{
 			return i_handlers[ANY_INDEX];
 		}

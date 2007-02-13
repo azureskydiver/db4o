@@ -44,37 +44,28 @@ namespace com.db4o.@internal.handlers
 			return ReadLong(a_bytes);
 		}
 
-		public static long ReadLong(com.db4o.@internal.Buffer a_bytes)
+		public static long ReadLong(com.db4o.@internal.Buffer bytes)
 		{
-			long l_return = 0;
-			for (int i = 0; i < com.db4o.@internal.Const4.LONG_BYTES; i++)
-			{
-				l_return = (l_return << 8) + (a_bytes._buffer[a_bytes._offset++] & unchecked((int
-					)(0xff)));
-			}
-			return l_return;
+			long ret = 0;
+			ret = com.db4o.foundation.PrimitiveCodec.ReadLong(bytes._buffer, bytes._offset);
+			IncrementOffset(bytes);
+			return ret;
 		}
 
-		public override void Write(object a_object, com.db4o.@internal.Buffer a_bytes)
+		public override void Write(object obj, com.db4o.@internal.Buffer buffer)
 		{
-			WriteLong(((long)a_object), a_bytes);
+			WriteLong(((long)obj), buffer);
 		}
 
-		public static void WriteLong(long a_long, com.db4o.@internal.Buffer a_bytes)
+		public static void WriteLong(long val, com.db4o.@internal.Buffer bytes)
 		{
-			for (int i = 0; i < com.db4o.@internal.Const4.LONG_BYTES; i++)
-			{
-				a_bytes._buffer[a_bytes._offset++] = (byte)(a_long >> ((com.db4o.@internal.Const4
-					.LONG_BYTES - 1 - i) * 8));
-			}
+			com.db4o.foundation.PrimitiveCodec.WriteLong(bytes._buffer, bytes._offset, val);
+			IncrementOffset(bytes);
 		}
 
-		public static void WriteLong(long a_long, byte[] bytes)
+		private static void IncrementOffset(com.db4o.@internal.Buffer buffer)
 		{
-			for (int i = 0; i < com.db4o.@internal.Const4.LONG_BYTES; i++)
-			{
-				bytes[i] = (byte)(a_long >> ((com.db4o.@internal.Const4.LONG_BYTES - 1 - i) * 8));
-			}
+			buffer.IncrementOffset(com.db4o.@internal.Const4.LONG_BYTES);
 		}
 
 		private long i_compareTo;
