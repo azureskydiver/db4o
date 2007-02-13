@@ -1,0 +1,69 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Running The Tests</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Running The Tests</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+<p>The
+TestSuite can be built: </p>
+
+<ul><li>from the list of the arguments supplied to Db4oUnitTestMain class (only for Java
+version) . </li><li>using Db4oTestSuiteBuilder to specify
+test classes to be run.</li></ul>
+
+
+
+<p>If
+you are using java version you can test your class immediately (assuming the
+class is created in TestDb4oUnit package):</p>
+
+<p>java
+-cp db4o-6.0-db4ounit.jar;your_class_folder db4ounit.UnitTestMain
+your_class_package.AssertTestCase</p>
+
+<p>The
+second option is to list the test class in Db4oTestSuiteBuilder argument.&nbsp; You
+can use db4ounit.extensions.tests.AllTests class. Just add the following
+method:</p>
+
+<span class="net"></p><div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">AllTests.cs: <span class="fscMemberName">TestCascadeOnUpdate</span></span></div><div class="fscCode"><pre ID="TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img src="../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">virtual</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> TestCascadeOnUpdate()
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img id="TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Open_Image" src="../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Open_Text').style.display='none'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Closed_Image').style.display='inline'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Closed_Text').style.display='inline';"/><img id="TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Closed_Image" src="../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Closed_Text').style.display='none'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Open_Image').style.display='inline'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Open_Text').style.display='inline';"/>        </span><span id="TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_50_403_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            IDb4oFixture fixture </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Tests.AllTests.ExcludingInMemoryFixture
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>                        (</span><span style="color: #0000FF;">this</span><span style="color: #000000;">, </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Fixtures.IndependentConfigurationSource());
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img id="TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Open_Image" src="../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Open_Text').style.display='none'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Closed_Image').style.display='inline'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Closed_Text').style.display='inline';"/><img id="TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Closed_Image" src="../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Closed_Text').style.display='none'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Open_Image').style.display='inline'; document.getElementById('TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Open_Text').style.display='inline';"/>            TestSuite suite </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Db4oTestSuiteBuilder(fixture, </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> System.Type[] </span><span id="TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="TestsCS.ZipsAllTests.Cs_AllTests.Cs_TestCascadeOnUpdate_690_57_292_325_Open_Text"><span style="color: #000000;">{ </span><span style="color: #0000FF;">typeof</span><span style="color: #000000;">(Tests.CascadeOnUpdate) }</span></span><span style="color: #000000;">).Build();
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            FrameworkTestCase.RunTestAndExpect(suite, </span><span style="color: #800080;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>        }</span></span></div></pre></div></div><p></span>
+
+Now running the AllTests class will include your
+custom class too.<br></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-01-29T18:48:54 by Tetyana.
+				</div>
+  </body>
+</html>

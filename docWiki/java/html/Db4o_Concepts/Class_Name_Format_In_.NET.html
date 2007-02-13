@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Class Name Format In .NET</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Class Name Format In .NET</h1>
+<P>Db4o uses full class name to distinguish classes within the database file. In .NET full class name has the following format:</P>
+<P>Namespace.ClassName, AssemblyName</P>
+<P>Effectively that means that the same class definition within different assemblies (applications or libraries) will be recognized as two different classes by db4o. You should keep this in mind in the following cases:</P>
+<UL>
+<LI>2 or more applications working with the same database file;</LI>
+<LI>client/server application with the classes deployed on both the client and the server;</LI>
+<LI><a href="../Platform_Implementations/ASP.NET.html" class="wikiLink">ASP.NET2</a> application with dynamic compilation</LI></UL>
+<P>Let's use an example to see what happens in these cases. We will create 2 applications Test1.exe and Test2.exe. Both will have a simplest class definition:</P>
+
+
+<P>Test1 application will store one object of Test class to the database:</P>
+
+
+<P>Another application (Test2) will try to read this object from the same database file. To check how&nbsp; the Test object was actually stored in the database we will use StoredClass API:</P>
+
+
+<P>From the example we can see that though the class has been stored to the database, it cannot be retrieved from the Test2 application, as the assembly name is different from the original.</P>
+<P>In order to make your classes readable from another assembly you should use one of the existing workarounds:</P>
+<UL>
+<LI>keep your persistent classes in a separate class library, which should be available for your application assemblies (for the example above compile the Test class into Persistent.dll);</LI>
+<LI>use db4o <a href="../Advanced_Type_Handling/Aliases.html" class="wikiLink">Aliases</a>.</LI></UL></div>
+    </div>
+    <div id="footer">
+					This revision (13) was last Modified 2007-02-02T06:30:07 by Eric Falsken.
+				</div>
+  </body>
+</html>

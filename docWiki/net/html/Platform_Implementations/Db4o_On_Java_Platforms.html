@@ -7,7 +7,7 @@
   <body>
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>db4o on Java Platforms</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#All Java">All Java</a></li><li><a href ="#JDK1.1">JDK1.1</a></li><li><a href ="#Before JDK1.4">Before JDK1.4</a></li><li><a href ="#JDK 1.4">JDK 1.4</a></li><li><a href ="#JDK 1.5">JDK 1.5</a></li><li><a href ="#Mobile Java editions">Mobile Java editions</a></li><li><a href ="#Which db4o Java version to use?">Which db4o Java version to use?</a></li></ul></li></ul></div></div></div>
+        <h1>db4o on Java Platforms</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#All Java">All Java</a></li><li><a href ="#JDK1.1">JDK1.1</a></li><li><a href ="#JDK1.2 - JDK 1.3">JDK1.2 - JDK 1.3</a></li><li><a href ="#JDK 1.4">JDK 1.4</a></li><li><a href ="#JDK 1.5">JDK 1.5</a></li><li><a href ="#Mobile Java editions">Mobile Java editions</a></li><li><a href ="#Which db4o Java version to use?">Which db4o Java version to use?</a></li></ul></li></ul></div></div></div>
 
 <p><font color="#990000">This topic applies to Java version only</font>  <br></p>
 <a name="All Java"></a><h2>All Java</h2>
@@ -35,11 +35,9 @@
 </li>
 </ul>
 db4o for Java 1.1 also goes without support for Native Query Optimization. NQ optimization uses bytecode optimizer library Bloat (http://www.cs.purdue.edu/s3/projects/bloat/), which is not JDK1.1 compatible. 
-<a name="Before JDK1.4"></a><h2>Before JDK1.4</h2>
-<p>Java JDKs before 1.4 do not provide functionality to lock database files. db4o simulates locking files by using a timer thread that writes access time to the file. This can be quite slow. If the system provides some other way to ensure that a file can not be accessed twice, it can improve performance dramatically to call:</p>
+<a name="JDK1.2 - JDK 1.3"></a><h2>JDK1.2 - JDK 1.3<br></h2><p>Java JDKs after version 1.1 are free of JDK1.1 limitations mentioned above. You can also use Native Query Optimization since JDK1.2.</p><p>The main limitation of JDK1.2 - 1.3 is the lack of file locking functionality. As it is necessary to lock the database file in use, db4o simulates locking files by using a timer thread that writes access time to the file. This can be quite slow. <br></p><a name="JDK 1.4"></a><h2>JDK 1.4</h2><p>File locking functionality is available since JDK1.4, so that expensive database locking simulation is not necessary anymore and is advised to be switched off:
 
-<p><code>Db4o.configure().lockDatabaseFile(false)</code></p>
-<a name="JDK 1.4"></a><h2>JDK 1.4</h2>
+</p><p><code>Db4o.configure().lockDatabaseFile(false)</code></p>
 <p>Db4o can bypass the constructors declared for the class using platform-specific mechanisms. (For Java, this option is only available on JREs &gt;= 1.4.) This mode allows reinstantiating objects even when their class doesn't provide a suitable constructor. For more information see <a href="../Db4o_Concepts/Object_Construction.html" class="wikiLink">Constructors chapter</a></p>
 
 <p>If this option is available in the current runtime environment, it will be the default setting.</p>
@@ -115,7 +113,7 @@ because JRE1.4 provides a built-in functionality to lock database files and the
 costly db4o database locking simulation is not needed.</p></div>
     </div>
     <div id="footer">
-					This revision (18) was last Modified 2007-01-01T08:43:15 by Tetyana.
+					This revision (20) was last Modified 2007-02-02T05:46:47 by Tetyana.
 				</div>
   </body>
 </html>
