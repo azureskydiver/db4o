@@ -221,12 +221,12 @@
 	</target>
 	
 	<target name="run-tests-net" depends="build-tests" unless="mono">
-		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe">
+		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true">
 		</exec>
 	</target>
 	
 	<target name="run-tests-mono" depends="build-tests" if="mono">
-		<exec executable="mono">
+		<exec executable="mono" failonerror="true">
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" />
 		</exec>
