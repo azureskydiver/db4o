@@ -3,6 +3,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk1.2"/>
-	<classpathentry kind="lib" path="lib/db4o-unit.jar"/>
+	<classpathentry kind="lib" path="test.lib/db4ounit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
