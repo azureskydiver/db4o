@@ -28,7 +28,7 @@
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
 
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.query;
 
 import com.db4o.objectManager.v2.uif_lite.panel.SimpleInternalFrame;
 import com.db4o.objectManager.v2.custom.FastScrollPane;
@@ -37,6 +37,8 @@ import com.db4o.objectManager.v2.tree.ObjectTreeNode;
 import com.db4o.objectManager.v2.tree.ObjectTree;
 import com.db4o.objectManager.v2.tree.ObjectTreeCellEditor;
 import com.db4o.objectManager.v2.results.DateRenderer;
+import com.db4o.objectManager.v2.UISession;
+import com.db4o.objectManager.v2.TabType;
 import com.db4o.ObjectContainer;
 import com.db4o.objectmanager.model.IGraphIterator;
 import com.jgoodies.forms.factories.Borders;
@@ -53,7 +55,7 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.util.Date;
 
-final class QueryResultsPanel extends JPanel {
+public class QueryResultsPanel extends JPanel {
 	private JTable resultsTable;
 	private TableModel tableModel;
 	private SimpleInternalFrame resultsFrame;

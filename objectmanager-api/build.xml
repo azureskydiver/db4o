@@ -5,7 +5,8 @@
     <!-- set global properties for this build -->
     <property name="src" location="src"/>
     <property name="lib" location="lib"/>
-    <property name="build" location="classes/production"/>
+	<property name="build.root" location="classes"/>
+	<property name="build" location="${build.root}/production"/>
     <property name="dist" location="dist"/>
 
     <path id="class.path">
@@ -42,7 +43,8 @@
     <target name="clean"
             description="clean up">
         <!-- Delete the ${build} and ${dist} directory trees -->
-        <delete dir="${build}"/>
-        <delete dir="${dist}"/>
+        <delete dir="${build.root}"/>
+		<delete dir="bin"/>
+		<delete dir="${dist}"/>
     </target>
 </project>

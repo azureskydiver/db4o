@@ -92,10 +92,10 @@ public class DemoPopulator {
     }
 
 	public static Object getArbitraryObject(int i) {
-		int mod = i % 6;
+		int mod = i % 7;
 		switch(mod){
 			case 0:
-				return new String("arbitrary string");
+				return new Boolean(true);
 			case 1:
 				return new Integer(123);
 			case 2:
@@ -105,7 +105,9 @@ public class DemoPopulator {
 			case 4:
 				return new Date();
 			case 5:
-				return new Boolean(true);
+				return new String("arbitrary string");
+			case 7:
+				return new Object();
 		}
 		return null;
 	}

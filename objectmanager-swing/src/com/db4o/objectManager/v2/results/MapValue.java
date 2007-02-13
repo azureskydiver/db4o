@@ -1,4 +1,4 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.results;
 
 /**
  * User: treeder

@@ -1,14 +1,10 @@
 package com.db4o.objectManager.v2.tree;
 
-import com.db4o.ObjectContainer;
 import com.db4o.objectManager.v2.tree.ObjectTreeNode;
 import com.db4o.objectManager.v2.util.Log;
 import com.db4o.objectManager.v2.UISession;
 import com.db4o.objectmanager.api.helpers.ReflectHelper2;
-import com.db4o.reflect.generic.GenericReflector;
 import com.db4o.reflect.generic.GenericObject;
-import com.db4o.reflect.generic.GenericClass;
-import com.db4o.reflect.generic.GenericArray;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
@@ -52,26 +48,13 @@ public class ObjectTreeModel implements TreeModel {
 		
 		if (reflectClass.isArray()) {
 			//System.out.println("is array"); this wasn't returning properly for generic arrays??
-			return new ObjectTreeNode(parentNode, index, reflector.array().get(parentObject, index));
+			return makeArrayNode(parentObject, parentNode, index, reflector);
 		} else if (reflector.isCollection(reflectClass)) {
 			// reflector.isCollection returns true for Maps too
 			if (parentObject instanceof Map) {
-				Map map = (Map) parentObject;
-				Object[] arr = map.entrySet().toArray(); // todo: this may be poor performance, should do something else
-				return new ObjectTreeNode(parentNode, index, new MapEntry((Map.Entry) arr[index]));
+				return makeMapNode(parentObject, parentNode, index);
 			} else {
-				Collection collection = (Collection) parentObject;
-				int i = 0;
-				Object toUse = null;
-				for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
-					Object o = iterator.next();
-					if (i == index) {
-						toUse = o;
-						break;
-					}
-					i++;
-				}
-				return new ObjectTreeNode(parentNode, index, toUse);
+				return makeCollectionNode(parentObject, parentNode, index);
 			}
 		} else if (parentObject instanceof MapEntry) {
 			MapEntry entry = (MapEntry) parentObject;
@@ -81,8 +64,7 @@ public class ObjectTreeModel implements TreeModel {
 				return new ObjectTreeNode(parentNode, index, entry.getEntry().getValue());
 			}
 		} else {
-			// todo: could try caching all this reflect information if performance is bad
-			//System.out.println("reflectclass: " + reflectClass);
+			// todo: could try caching all this reflect information if performance is bad -> get from ObjectSetMetaData
 			ReflectField[] fields = ReflectHelper.getDeclaredFieldsInHeirarchy(reflectClass);
 			fields[index].setAccessible();
 			Object value = fields[index].get(parentObject);
@@ -91,22 +73,38 @@ public class ObjectTreeModel implements TreeModel {
 		}
 	}
 
+	private Object makeArrayNode(Object parentObject, ObjectTreeNode parentNode, int index, Reflector reflector) {
+		return new ObjectTreeNode(parentNode, index, reflector.array().get(parentObject, index));
+	}
+
+	private Object makeCollectionNode(Object parentObject, ObjectTreeNode parentNode, int index) {
+		Collection collection = (Collection) parentObject;
+		int i = 0;
+		Object toUse = null;
+		for (Iterator iterator = collection.iterator(); iterator.hasNext();) {
+			Object o = iterator.next();
+			if (i == index) {
+				toUse = o;
+				break;
+			}
+			i++;
+		}
+		return new ObjectTreeNode(parentNode, index, toUse);
+	}
+
+	private Object makeMapNode(Object parentObject, ObjectTreeNode parentNode, int index) {
+		Map map = (Map) parentObject;
+		Object[] arr = map.entrySet().toArray(); // todo: this may be poor performance, should do something else
+		return new ObjectTreeNode(parentNode, index, new MapEntry((Map.Entry) arr[index]));
+	}
+
 	public int getChildCount(Object parent) {
 		ObjectTreeNode parentNode = (ObjectTreeNode) parent;
 		Reflector reflector = session.getObjectContainer().ext().reflector();
 		ReflectClass reflectClass = reflector.forObject(parentNode.getObject());
-		//System.out.println("class: " + parentNode.getObject().getClass().getName());
-		//System.out.println("reflectclass: " + reflectClass.getName() + " - " + reflectClass.getClass().getName());
-		/*
-		I fixed this in core, so this shouldn't be needed
-		if (parentNode.getObject() instanceof GenericArray) {
-			// special handler
-			GenericArray ga = (GenericArray) parentNode.getObject();
-			return ga.getL
-		} else */
+
 		if (reflectClass.isArray()) {
-			//System.out.println("is array 2 " + parentNode.getObject().getClass());
-			//Object[] array = (Object[]) parentNode.getObject();
+			//System.out.println("is array " + parentNode.getObject().getClass());
 			return Array.getLength(parentNode.getObject());
 		} else if (parentNode.getObject() instanceof Collection) {
 			Collection collection = (Collection) parentNode.getObject();
@@ -144,7 +142,6 @@ public class ObjectTreeModel implements TreeModel {
 		try {
 			Object oldOb = aNode.getObject();
 			Object newOb = Converter.convertFromString(aNode.getObject().getClass(), (String) newValue);
-			//	System.out.println("converted class: " + newOb.getClass() + ", value: " + newOb);
 			ObjectTreeNode parentNode = aNode.getParentNode();
 			int index = aNode.getIndex();
 			Object parentObject = parentNode.getObject();
@@ -176,7 +173,6 @@ public class ObjectTreeModel implements TreeModel {
 				}
 				storeSuper = true;
 			} else if (parentObject instanceof MapEntry) {
-				System.out.println("mapentry???");
 				MapEntry entry = (MapEntry) parentObject;
 				if (index == 0) {
 					Map superMap = (Map) superParentNode.getObject();

@@ -6,6 +6,12 @@ import com.db4o.reflect.ReflectField;
 import com.db4o.objectManager.v2.uif_lite.component.Factory;
 import com.db4o.objectManager.v2.uif_lite.panel.SimpleInternalFrame;
 import com.db4o.objectManager.v2.util.Log;
+import com.db4o.objectManager.v2.query.QueryResultsPanel;
+import com.db4o.objectManager.v2.query.QueryBarPanel;
+import com.db4o.objectManager.v2.shortcuts.ShortcutsListener;
+import com.db4o.objectManager.v2.shortcuts.TabShortCutsListener;
+import com.db4o.objectManager.v2.resources.ResourceManager;
+import com.db4o.objectManager.v2.connections.ConnectionHelper;
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.db4o.objectmanager.api.impl.DatabaseInspectorImpl;
 import com.db4o.objectmanager.api.prefs.Preferences;
@@ -30,7 +36,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-import java.io.IOException;
 
 /**
  * <p/>
@@ -352,7 +357,7 @@ public class MainPanel extends JPanel implements UISession {
 		objectContainer.close();
 		databaseInspector = null;
 		try {
-			objectContainer = ConnectionHelper.connect(mainFrame, connectionSpec);	
+			objectContainer = ConnectionHelper.connect(mainFrame, connectionSpec);
 		} catch (Exception e) {
 			Log.addException(e);
 			e.printStackTrace();

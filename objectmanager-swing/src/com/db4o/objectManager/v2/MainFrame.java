@@ -3,8 +3,6 @@ package com.db4o.objectManager.v2;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
 
@@ -16,8 +14,8 @@ import com.jgoodies.looks.LookUtils;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
-import com.db4o.objectmanager.api.prefs.Preferences;
 import com.db4o.ObjectContainer;
+import com.db4o.objectManager.v2.resources.ResourceManager;
 
 /**
  * Main frame for a particular connection.
@@ -34,7 +32,7 @@ public class MainFrame extends JFrame implements WindowListener {
 					? new Dimension(650, 510)
 					: new Dimension(730, 560);
 
-	private static String WINDOW_TITLE = "ObjectManager 6.0";
+	private static String WINDOW_TITLE = Dashboard.TITLE;
 
 
 	/**

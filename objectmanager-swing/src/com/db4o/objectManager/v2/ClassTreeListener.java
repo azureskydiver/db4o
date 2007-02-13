@@ -1,9 +1,8 @@
 package com.db4o.objectManager.v2;
 
 import com.db4o.objectManager.v2.query.QueryBuilder;
+import com.db4o.objectManager.v2.query.QueryBarPanel;
 
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;

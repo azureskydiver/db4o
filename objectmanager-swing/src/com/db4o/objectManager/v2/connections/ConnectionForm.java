@@ -1,4 +1,4 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.connections;
 
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -8,7 +8,11 @@ import com.db4o.objectmanager.model.Db4oFileConnectionSpec;
 import com.db4o.objectmanager.model.Db4oSocketConnectionSpec;
 import com.db4o.objectmanager.api.prefs.Preferences;
 import com.db4o.ObjectContainer;
-import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
+import com.db4o.objectManager.v2.connections.RecentConnectionList;
+import com.db4o.objectManager.v2.connections.ConnectionHelper;
+import com.db4o.objectManager.v2.Dashboard;
+import com.db4o.objectManager.v2.MainFrame;
+import com.db4o.objectManager.v2.WindowPrefsListener;
 
 import javax.swing.*;
 import java.awt.*;

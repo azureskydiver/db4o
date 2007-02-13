@@ -1,4 +1,4 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.query;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;

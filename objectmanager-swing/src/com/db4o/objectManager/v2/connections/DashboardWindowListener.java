@@ -1,6 +1,7 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.connections;
 
 import com.db4o.objectmanager.api.prefs.Preferences;
+import com.db4o.objectManager.v2.Dashboard;
 
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
