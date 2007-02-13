@@ -3,8 +3,9 @@
 package com.db4o.objectmanager.api.impl;
 
 import com.db4o.*;
-import com.db4o.inside.btree.*;
-import com.db4o.inside.classindex.*;
+import com.db4o.internal.*;
+import com.db4o.internal.btree.*;
+import com.db4o.internal.classindex.*;
 import com.db4o.reflect.*;
 
 /**
@@ -14,10 +15,10 @@ import com.db4o.reflect.*;
  */
 public class InsideDb4o {
 
-	private final YapStream _stream;
+	private final ObjectContainerBase _stream;
 
 	public InsideDb4o(ObjectContainer oc){
-		_stream = (YapStream)oc;
+		_stream = (ObjectContainerBase)oc;
 	}
 
 	/**
@@ -40,11 +41,11 @@ public class InsideDb4o {
 		return 0;
 	}
 
-    private YapStream stream(){
+    private ObjectContainerBase stream(){
     	return _stream;
     }
 
-    private YapClass yapClass(String name){
+    private ClassMetadata yapClass(String name){
     	return stream().getYapClass(reflectClass(name));
     }
 
@@ -52,14 +53,14 @@ public class InsideDb4o {
     	return stream().reflector().forName(name);
     }
 
-    private BTree index(YapClass yapClass) throws ClassCastException, NullPointerException{
-		if (yapClass.index() != null) {
+    private BTree index(ClassMetadata yapClass) throws ClassCastException, NullPointerException{
+    	if (yapClass.index() != null) {
 			return ((BTreeClassIndexStrategy) yapClass.index()).btree();
 		} else {
-			System.out.println("CLASS INDEX IS NULL FOR: " + yapClass.getName());
+			System.err.println("CLASS INDEX IS NULL FOR: " + yapClass.getName());
 		}
 		return null;
-	}
+    }
     
     private Transaction trans(){
     	return stream().getTransaction();

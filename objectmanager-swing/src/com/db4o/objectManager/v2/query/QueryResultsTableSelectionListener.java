@@ -1,4 +1,6 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.query;
+
+import com.db4o.objectManager.v2.results.CollectionValue;
 
 import javax.swing.*;
 import java.awt.Point;

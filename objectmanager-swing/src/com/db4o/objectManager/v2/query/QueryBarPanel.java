@@ -1,9 +1,6 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.query;
 
-import com.spaceprogram.db4o.sql.Result;
-import com.spaceprogram.db4o.sql.Sql4o;
-import com.spaceprogram.db4o.sql.Sql4oException;
-import com.spaceprogram.db4o.sql.parser.SqlParseException;
+import com.db4o.objectManager.v2.MainPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

@@ -2,6 +2,7 @@ package com.db4o.objectmanager.api.helpers;
 
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
+import com.db4o.reflect.ReflectConstructor;
 import com.db4o.reflect.generic.GenericObject;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
@@ -109,7 +110,7 @@ public class ReflectHelper2 {
 	}
 
 	public static boolean isPrimitiveArray(Object ob) {
-		if(!ob.getClass().isArray()) return false;
+		if (!ob.getClass().isArray()) return false;
 		Class objectsType = ob.getClass().getComponentType();
 		return (objectsType == Boolean.TYPE
 				|| objectsType == Byte.TYPE
@@ -123,13 +124,56 @@ public class ReflectHelper2 {
 
 	public static boolean isIndexable(StoredField storedField) {
 		ReflectClass storedType = storedField.getStoredType();
-		if(storedType != null) { // primitive arrays return null
-			//System.out.println("storedType: " + storedType + ", isprim: " + storedType.isPrimitive() + ", " + storedType.isSecondClass());
-			if(storedType.isPrimitive() || storedType.isSecondClass()){
+		if (storedType != null) { // primitive arrays return null
+			if (storedType.isPrimitive() || storedType.isSecondClass()) {
 				// this appears to include the ones you'd expect: Date, String, primitives, and primitive wrappers.
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Converts from a ReflectClass to a pure java Class if possible.
+	 *
+	 * @param reflectClass
+	 * @return
+	 */
+	public static Class reflectClassToClass(ReflectClass reflectClass) {
+		// The only way I can see is to examine the ReflectClass.getName field
+		// primitive wrappers need a constructor
+		String className = reflectClass.getName();
+		// check for primitives
+		if (reflectClass.isPrimitive()) {
+			if (className.equals(Integer.TYPE.getName())) {
+				return Integer.class;
+			} else if (className.equals(Long.TYPE.getName())) {
+				return Long.class;
+			} else if (className.equals(Float.TYPE.getName())) {
+				return Float.class;
+			} else if (className.equals(Double.TYPE.getName())) {
+				return Double.class;
+			} else if (className.equals(Short.TYPE.getName())) {
+				return Short.class;
+			} else if (className.equals(Byte.TYPE.getName())) {
+				return Byte.class;
+			} else if (className.equals(Boolean.TYPE.getName())) {
+				return Boolean.class;
+			} else if (className.equals(Character.TYPE.getName())) {
+				return Character.class;
+			}
+		} else {
+			try {
+				Class c = Class.forName(reflectClass.getName());
+				if(c.isInterface()){
+					// this caused an error JTable if an interface was returned, so not sure if I should have this here or the user should check
+					return null;
+				}
+				return c;
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 }

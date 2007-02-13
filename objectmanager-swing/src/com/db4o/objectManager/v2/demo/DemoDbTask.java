@@ -1,10 +1,11 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.demo;
 
 import demo.objectmanager.model.DemoPopulator;
 
 import java.awt.Cursor;
 
 import com.db4o.objectManager.v2.util.Log;
+import com.db4o.objectManager.v2.Dashboard;
 
 /**
  * User: treeder

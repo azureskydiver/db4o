@@ -1,12 +1,14 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.query;
 
 import com.spaceprogram.db4o.sql.*;
-import com.spaceprogram.db4o.sql.parser.SqlParseException;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 import com.db4o.ObjectContainer;
 import com.db4o.objectManager.v2.util.Log;
+import com.db4o.objectManager.v2.resources.ResourceManager;
+import com.db4o.objectManager.v2.results.MapValue;
+import com.db4o.objectManager.v2.results.CollectionValue;
 import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 
 import javax.swing.table.AbstractTableModel;
@@ -46,11 +48,7 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 			long duration = System.currentTimeMillis() - startTime;
 			queryResultsPanel.setStatusMessage("Returned " + results.size() + " results in " + duration + "ms");
 			initTop(results);
-		} catch (SqlParseException e) {
-			queryResultsPanel.setErrorMessage("Error executing query!  " + e.getMessage());
-			Log.addException(e);
-			throw e;
-		} catch (Sql4oException e) {
+		} catch (Exception e) {
 			queryResultsPanel.setErrorMessage("Error executing query!  " + e.getMessage());
 			Log.addException(e);
 			throw e;
@@ -69,12 +67,11 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 	}
 
 	public int getColumnCount() {
-		//System.out.println("fields in ob: " + results.getMetaData().getColumnCount());
 		return results.getMetaData().getColumnCount() + extraColumns;
 	}
 
 	public Object getValueAt(int row, int column) {
-		//if(row > 0) System.out.println("getting row: " + row);
+		//System.out.println("getValueAt column: " + column);
 		if (column == COL_TREE) return treeIcon;
 		if (column == COL_ROW_NUMBER) return row;
 		Result result;
@@ -82,13 +79,10 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 			result = (Result) topResults.get(row);
 		} else {
 			int index = rowInCurrentWindow(row);
-			//System.out.println("got index " + index + " for row " + row);
-			if (index != -1) {
-				result = (Result) resultWindow.get(index);
-			} else {
+			if (index == -1) {
 				index = loadWindow(row);
-				result = (Result) resultWindow.get(index);
 			}
+			result = (Result) resultWindow.get(index);
 		}
 		Object ret = null;
 		try {
@@ -96,13 +90,9 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 			if (ret == null) return ret;
 			Reflector reflector = queryResultsPanel.getObjectContainer().ext().reflector();
 			ReflectClass rc = reflector.forObject(ret);
-			/*if(rc.getName().contains("Collection")){
-			todo: waiting for this fix: http://tracker.db4o.com/jira/browse/COR-245
-			// .NET collections are not working properly
-				System.out.println("class: " + rc + " is col: " + rc.isCollection() + " " + reflector.isCollection(rc));
-			}*/
+			// todo: .NET collections are not working properly - waiting for this fix: http://tracker.db4o.com/jira/browse/COR-245
 			if (reflector.isCollection(rc)) {
-				// reflector.isCollection returns true for Maps too I guess
+				// reflector.isCollection returns true for Maps too for some reason
 				if (ret instanceof Map) {
 					Map m = (Map) ret;
 					return new MapValue("Map: " + m.size());
@@ -112,7 +102,7 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 				}
 			}
 			if(rc.isArray()){
-				return new CollectionValue("Array: " + reflector.array().getLength(ret) + " items");				
+				return new CollectionValue("Array: " + reflector.array().getLength(ret) + " items");
 			}
 		} catch (Exception e) {
 			queryResultsPanel.setErrorMessage("Error occurred: " + e.getMessage());
@@ -132,7 +122,6 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 		}
 		int endIndex = row + NUM_IN_WINDOW;
 		if (endIndex >= results.size()) endIndex = results.size();
-		//System.out.println("Loading window: " + startIndex + " to " + endIndex);
 		for (int i = startIndex; i < endIndex; i++) {
 			Result result = (Result) results.get(i);
 			resultWindow.add(result);
@@ -182,16 +171,15 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 		return results.getMetaData().getColumnName(column - extraColumns);
 	}
 
-	public Class getColumnClass(int c) {
-		if (c == COL_TREE) return Icon.class;
-		if (c == COL_ROW_NUMBER) return Number.class;
-		for (int i = 0; i < results.size(); i++) {
-			Object o = getValueAt(0, c);
-			//System.out.println("class: " + o.getClass());
-			if (o != null) return o.getClass();
-			// todo: should i get this from the reflector?
-		}
-		return super.getColumnClass(c);
+	public Class getColumnClass(int column) {
+		// todo: I noticed this might get called for every row, if so, might want to optimize
+		if (column == COL_TREE) return Icon.class;
+		if (column == COL_ROW_NUMBER) return Number.class;
+
+		ReflectField reflectField = results.getMetaData().getColumnReflectField(column - extraColumns);
+		Class clazz = ReflectHelper2.reflectClassToClass(reflectField.getFieldType());
+		if(clazz == null) return super.getColumnClass(column);
+		return clazz;
 	}
 
 	public ObjectContainer getObjectContainer() {

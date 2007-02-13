@@ -1,7 +1,8 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.connections;
 
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
 import com.db4o.objectmanager.model.Db4oSocketConnectionSpec;
+import com.db4o.objectManager.v2.resources.ResourceManager;
 
 import javax.swing.*;
 import java.awt.Component;

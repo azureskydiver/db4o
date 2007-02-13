@@ -1,9 +1,7 @@
 package com.db4o.objectManager.v2;
 
 import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
-import com.db4o.defragment.Defragment;
-import com.db4o.defragment.AvailableClassFilter;
-import com.db4o.defragment.DefragmentConfig;
+import com.db4o.objectManager.v2.resources.ResourceManager;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;

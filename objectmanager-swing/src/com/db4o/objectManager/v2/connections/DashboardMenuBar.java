@@ -1,9 +1,13 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.connections;
 
 import com.jgoodies.looks.Options;
 import com.db4o.objectManager.v2.util.Log;
 import com.db4o.objectManager.v2.custom.ProgressDialog;
 import com.db4o.objectManager.v2.uiHelper.*;
+import com.db4o.objectManager.v2.BaseMenuBar;
+import com.db4o.objectManager.v2.Dashboard;
+import com.db4o.objectManager.v2.Settings;
+import com.db4o.objectManager.v2.demo.DemoDbTask;
 import demo.objectmanager.model.DemoPopulator;
 
 import javax.swing.*;

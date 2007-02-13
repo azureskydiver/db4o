@@ -1,4 +1,4 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.shortcuts;
 
 import javax.swing.*;
 import java.awt.event.KeyListener;

@@ -7,12 +7,14 @@ import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
 import com.db4o.objectManager.v2.uiHelper.SwingWorker;
 import com.db4o.objectManager.v2.maint.DefragTask;
 import com.db4o.objectManager.v2.util.Log;
+import com.db4o.objectManager.v2.connections.DashboardWindowListener;
+import com.db4o.objectManager.v2.connections.DashboardMenuBar;
+import com.db4o.objectManager.v2.connections.ConnectionForm;
+import com.db4o.objectManager.v2.resources.ResourceManager;
 import com.db4o.objectmanager.api.prefs.Preferences;
 import com.db4o.objectmanager.model.Db4oConnectionSpec;
 import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.ObjectContainer;
-import com.db4o.defragment.DefragmentConfig;
-import com.db4o.defragment.Defragment;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -32,10 +34,10 @@ import java.util.Iterator;
  */
 public class Dashboard {
 
-	private static final String COPYRIGHT =
-			"\u00a9 2006 db4objects Inc. All Rights Reserved.";
+	public static final String COPYRIGHT =
+			"\u00a9 2007 db4objects Inc. All Rights Reserved.";
 	public static final String VERSION = "6.1";
-	private static final String TITLE = "ObjectManager " + VERSION;
+	public static final String TITLE = "ObjectManager " + VERSION;
 
 	private JFrame frame;
 

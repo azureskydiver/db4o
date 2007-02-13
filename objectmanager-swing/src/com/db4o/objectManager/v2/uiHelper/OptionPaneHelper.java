@@ -1,7 +1,6 @@
 package com.db4o.objectManager.v2.uiHelper;
 
-import com.db4o.objectManager.v2.ResourceManager;
-import com.db4o.objectManager.v2.MainFrame;
+import com.db4o.objectManager.v2.resources.ResourceManager;
 
 import javax.swing.*;
 import java.awt.Component;

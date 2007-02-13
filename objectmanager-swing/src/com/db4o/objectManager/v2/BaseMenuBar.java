@@ -3,6 +3,7 @@ package com.db4o.objectManager.v2;
 import com.jgoodies.looks.Options;
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.db4o.objectManager.v2.resources.ResourceManager;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;

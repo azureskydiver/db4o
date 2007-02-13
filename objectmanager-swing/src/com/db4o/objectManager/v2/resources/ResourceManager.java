@@ -1,4 +1,6 @@
-package com.db4o.objectManager.v2;
+package com.db4o.objectManager.v2.resources;
+
+import com.db4o.objectManager.v2.Dashboard;
 
 import javax.swing.*;
 
