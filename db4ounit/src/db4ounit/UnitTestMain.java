@@ -25,8 +25,8 @@ public class UnitTestMain {
 	private TestSuite build(String[] args)
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
-		List plainTestMethods=new ArrayList();
-		List plainTestClasses=new ArrayList();
+		Vector plainTestMethods=new Vector();
+		Vector plainTestClasses=new Vector();
 		for(int idx=0;idx<args.length;idx++) {
 			String testIdentifier = args[idx];
 			int methodSeparatorIndex = testIdentifier.indexOf('#');
@@ -34,21 +34,27 @@ public class UnitTestMain {
 				String className=testIdentifier.substring(0,methodSeparatorIndex);
 				String methodName=testIdentifier.substring(methodSeparatorIndex+1);
 				TestMethod testMethod = testMethod(className, methodName);
-				plainTestMethods.add(testMethod);
+				plainTestMethods.addElement(testMethod);
 				continue;
 			}
 			Class curClazz=Class.forName(testIdentifier);
 			if(TestCase.class.isAssignableFrom(curClazz)) {
-				plainTestClasses.add(curClazz);
+				plainTestClasses.addElement(curClazz);
 			}
 		}
-		Class[] plainTestClassesArray = (Class[])plainTestClasses.toArray(new Class[plainTestClasses.size()]);
+		Class[] plainTestClassesArray = new Class[plainTestClasses.size()];
+		vectorToArray(plainTestClasses, plainTestClassesArray);
 		TestSuiteBuilder classBuilder=builder(plainTestClassesArray);
-		Test[] plainTestMethodArray=(Test[])plainTestMethods.toArray(new Test[plainTestMethods.size()]);
-		TestSuite methodSuite=new TestSuite(plainTestMethodArray);
+		Test[] plainTestMethodArray=new Test[plainTestMethods.size()];		vectorToArray(plainTestMethods, plainTestMethodArray);		TestSuite methodSuite=new TestSuite(plainTestMethodArray);
 		return new TestSuite(new Test[]{classBuilder.build(),methodSuite});
 	}
-
+	
+	private void vectorToArray(Vector vector, Object[] array){
+		int i = 0;		Enumeration enumer = vector.elements();
+		while(enumer.hasMoreElements()){
+			array[i++] = enumer.nextElement();
+		}
+	}
 	private TestMethod testMethod(String className, String methodName)
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {

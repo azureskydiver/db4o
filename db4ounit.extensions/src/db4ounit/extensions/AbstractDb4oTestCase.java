@@ -124,7 +124,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	    return (ObjectContainerBase) db();
 	}
 	
-	protected LocalObjectContainer fileSession() {
+	public LocalObjectContainer fileSession() {
 		return fixture().fileSession();
 	}
 
