@@ -17,6 +17,10 @@ public class Path4 {
 	}
 	
 	public static String getTempPath() {
-		return System.getProperty("java.io.tmpdir");
+		String path = System.getProperty("java.io.tmpdir"); 
+		if(path != null && path.length() > 0){
+			return path;
+		}
+		return "/temp";
 	}
 }
