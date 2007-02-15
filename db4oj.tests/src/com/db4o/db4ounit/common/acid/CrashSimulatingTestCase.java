@@ -20,8 +20,6 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     
     public CrashSimulatingTestCase _next;
     
-    private static final String PATH = Path4.combine(Path4.getTempPath(), "crashSimulate");
-    private static final String FILE = Path4.combine(PATH, "cs");
     
     static final boolean LOG = false;
     
@@ -36,17 +34,20 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     
     public void test() throws IOException{
     	
-    	File4.delete(FILE);
-    	File4.mkdirs(PATH);
+        String path = Path4.combine(Path4.getTempPath(), "crashSimulate");
+        String fileName = Path4.combine(path, "cs");
+        
+    	File4.delete(fileName);
+    	File4.mkdirs(path);
         
         Db4o.configure().bTreeNodeSize(4);
 
-        createFile();
+        createFile(fileName);
         
         CrashSimulatingIoAdapter adapterFactory = new CrashSimulatingIoAdapter(new RandomAccessFileAdapter());
         Db4o.configure().io(adapterFactory);
         
-        ObjectContainer oc = Db4o.openFile(FILE);
+        ObjectContainer oc = Db4o.openFile(fileName);
         
         ObjectSet objectSet = oc.get(new CrashSimulatingTestCase(null, "three"));
         oc.delete(objectSet.next());
@@ -81,21 +82,21 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 
         Db4o.configure().io(new RandomAccessFileAdapter());
 
-        int count = adapterFactory.batch.writeVersions(FILE);
+        int count = adapterFactory.batch.writeVersions(fileName);
 
-        checkFiles("R", adapterFactory.batch.numSyncs());
-        checkFiles("W", count);
+        checkFiles(fileName, "R", adapterFactory.batch.numSyncs());
+        checkFiles(fileName, "W", count);
                 
         System.out.println("Total versions: " + count);        
     }
 
-	private void checkFiles(String infix,int count) {
+	private void checkFiles(String fileName, String infix,int count) {
         for (int i = 1; i <= count; i++) {
             if(LOG){
                 System.out.println("Checking " + infix + i);
             }
-            String fileName = FILE + infix + i;
-            ObjectContainer oc = Db4o.openFile(fileName);
+            String versionedFileName = fileName + infix + i;
+            ObjectContainer oc = Db4o.openFile(versionedFileName);
             
             if(! stateBeforeCommit(oc)){
                 if(! stateAfterFirstCommit(oc)){
@@ -145,8 +146,8 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         return true;
     }
     
-    private void createFile(){
-        ObjectContainer oc = Db4o.openFile(FILE);
+    private void createFile(String fileName){
+        ObjectContainer oc = Db4o.openFile(fileName);
         for (int i = 0; i < 10; i++) {
             oc.set(new SimplestPossibleItem("delme"));
         }
@@ -162,7 +163,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
             oc.delete(objectSet.next());
         }
         oc.close();
-        File4.copy(FILE, FILE + "0");
+        File4.copy(fileName, fileName + "0");
     }
     
 	public String toString() {
