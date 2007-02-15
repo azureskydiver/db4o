@@ -2,12 +2,9 @@
 
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
-import com.db4o.internal.btree.*;
-import com.db4o.internal.handlers.*;
+import com.db4o.internal.Transaction;
+import com.db4o.internal.btree.BTree;
 
-import db4ounit.*;
 import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.fixtures.*;
 
@@ -56,13 +53,6 @@ public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements
 				BTREE_NODE_SIZE);
 		for (int i = 0; i < 5; i++) {
 			btree = cycleIntKeys(btree);
-		}
-	}
-
-	public void testIntKeysIntValues() throws Exception {
-		BTree btree = createIntKeyValueBTree(0);
-		for (int i = 0; i < 5; i++) {
-			btree = cycleIntKeysIntValues(btree);
 		}
 	}
 
@@ -124,77 +114,7 @@ public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements
 		return btree;
 
 	}
-
-	private BTree cycleIntKeysIntValues(BTree btree) throws Exception {
-
-		addKeysValues(btree);
-		expectKeys(btree, _sortedKeys);
-		expectValues(btree, _sortedValues);
-
-		btree.commit(trans());
-
-		expectKeys(btree, _sortedKeys);
-		expectValues(btree, _sortedValues);
-
-		removeKeys(btree);
-
-		expectKeys(btree, _keysOnRemoval);
-		expectValues(btree, _valuesOnRemoval);
-
-		btree.rollback(trans());
-
-		expectKeys(btree, _sortedKeys);
-		expectValues(btree, _sortedValues);
-
-		int id = btree.getID();
-
-		reopen();
-
-		btree = createIntKeyValueBTree(id);
-
-		expectKeys(btree, _sortedKeys);
-		expectValues(btree, _sortedValues);
-
-		removeKeys(btree);
-
-		expectKeys(btree, _keysOnRemoval);
-		expectValues(btree, _valuesOnRemoval);
-
-		btree.commit(trans());
-
-		expectKeys(btree, _keysOnRemoval);
-		expectValues(btree, _valuesOnRemoval);
-
-		// remove all but 1
-		for (int i = 1; i < _keysOnRemoval.length; i++) {
-			btree.remove(trans(), new Integer(_keysOnRemoval[i]));
-		}
-
-		expectKeys(btree, _one);
-		expectValues(btree, _one);
-
-		btree.commit(trans());
-
-		expectKeys(btree, _one);
-		expectValues(btree, _one);
-
-		btree.remove(trans(), new Integer(1));
-
-		btree.rollback(trans());
-
-		expectKeys(btree, _one);
-		expectValues(btree, _one);
-
-		btree.remove(trans(), new Integer(1));
-
-		btree.commit(trans());
-
-		expectKeys(btree, _none);
-		expectValues(btree, _none);
-
-		return btree;
-	}
-
+	
 	private void removeKeys(BTree btree) {
 		btree.remove(trans(), new Integer(3));
 		btree.remove(trans(), new Integer(101));
@@ -205,31 +125,6 @@ public class BTreeSimpleTestCase extends AbstractDb4oTestCase implements
 		for (int i = 0; i < _keys.length; i++) {
 			btree.add(trans, new Integer(_keys[i]));
 		}
-	}
-
-	private void addKeysValues(BTree btree) {
-		Transaction trans = trans();
-		for (int i = 0; i < _keys.length; i++) {
-			btree.add(trans, new Integer(_keys[i]), new Integer(_values[i]));
-		}
-	}
-
-	private void expectValues(BTree btree, final int[] values) {
-		final int[] cursor = new int[] { 0 };
-		btree.traverseValues(trans(), new Visitor4() {
-			public void visit(Object obj) {
-				// System.out.println(obj);
-				Assert.areEqual(values[cursor[0]], ((Integer) obj).intValue());
-				cursor[0]++;
-			}
-		});
-		Assert.areEqual(values.length, cursor[0]);
-	}
-
-	private BTree createIntKeyValueBTree(int id) {
-		return new BTree(stream().getSystemTransaction(), id,
-				new IntHandler(stream()), new IntHandler(stream()), 7, stream()
-						.configImpl().bTreeCacheHeight());
 	}
 
 	private void expectKeys(BTree btree, final int[] keys) {

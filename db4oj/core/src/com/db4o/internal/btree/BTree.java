@@ -21,8 +21,6 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     
     private final Indexable4 _keyHandler;
     
-    final Indexable4 _valueHandler;
-    
     private BTreeNode _root;
    
     /**
@@ -45,14 +43,10 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     private final int _cacheHeight;
     
     public BTree(Transaction trans, int id, Indexable4 keyHandler){
-        this(trans, id, keyHandler, null);
-    }		
-    		
-    public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler){
-		this(trans, id, keyHandler, valueHandler, config(trans).bTreeNodeSize(), config(trans).bTreeCacheHeight());
+		this(trans, id, keyHandler, config(trans).bTreeNodeSize(), config(trans).bTreeCacheHeight());
     }	
 
-	public BTree(Transaction trans, int id, Indexable4 keyHandler, Indexable4 valueHandler, final int treeNodeSize, final int treeCacheHeight) {
+	public BTree(Transaction trans, int id, Indexable4 keyHandler, final int treeNodeSize, final int treeCacheHeight) {
 		if (null == keyHandler) {
     		throw new ArgumentNullException();
     	}
@@ -62,7 +56,6 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         _nodeSize = _halfNodeSize * 2;
 		_cacheHeight = treeCacheHeight;
         _keyHandler = keyHandler;
-        _valueHandler = (valueHandler == null) ? Null.INSTANCE : valueHandler;
         _sizesByTransaction = new Hashtable4();
         if(id == 0){
             setStateDirty();
@@ -85,13 +78,8 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 	}
 
 	public void add(Transaction trans, Object key){	
-        add(trans, key, null);
-    }
-    
-    public void add(Transaction trans, Object key, Object value){
     	keyCantBeNull(key);
         _keyHandler.prepareComparison(key);
-        _valueHandler.prepareComparison(value);
         ensureDirty(trans);
         BTreeNode rootOrSplit = _root.add(trans);
         if(rootOrSplit != null && rootOrSplit != _root){
@@ -333,14 +321,6 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         _root.traverseKeys(trans, visitor);
     }
     
-    public void traverseValues(Transaction trans, Visitor4 visitor) {
-        ensureActive(trans);
-        if(_root == null){
-            return;
-        }
-        _root.traverseValues(trans, visitor);
-    }
-    
     public void sizeChanged(Transaction trans, int changeBy){
         Object sizeDiff = _sizesByTransaction.get(trans);
         if(sizeDiff == null){
@@ -393,7 +373,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 	}
 
 	public void defragIndexNode(ReaderPair readers) {
-		BTreeNode.defragIndex(readers, _keyHandler, _valueHandler);
+		BTreeNode.defragIndex(readers, _keyHandler);
 	}
 
 	public void defragBTree(final DefragContext context) throws CorruptionException {

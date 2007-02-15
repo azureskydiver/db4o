@@ -37,13 +37,7 @@ public final class BTreeNode extends PersistentBase{
     /**
      * Can contain BTreeNode or Integer for ID of BTreeNode 
      */
-    private Object[] _children;  
-    
-    /**
-     * Only used for leafs
-     */
-    private Object[] _values;
-    
+    private Object[] _children;
     
     private int _parentID;
     
@@ -105,8 +99,7 @@ public final class BTreeNode extends PersistentBase{
      */
     public BTreeNode add(Transaction trans){
         
-        Buffer reader = prepareRead(trans);
-        
+        Buffer reader = prepareRead(trans);        
         Searcher s = search(reader);
         
         if(_isLeaf){
@@ -124,10 +117,6 @@ public final class BTreeNode extends PersistentBase{
             
             prepareInsert(s.cursor());
             _keys[s.cursor()] = newAddPatch(trans);
-            if(handlesValues()){
-                _values[s.cursor()] = valueHandler().current();
-            }
-            
         }else{
             
             BTreeNode childNode = child(reader, s.cursor());
@@ -145,16 +134,20 @@ public final class BTreeNode extends PersistentBase{
             }
         }
         
-        if(_count >= _btree.nodeSize()){
+        if (mustSplit()) {
             return split(trans);
         }
         
-        if(s.cursor() == 0){
+        if (s.cursor() == 0) {
             return this;  
         }
         
         return null;
     }
+
+	private boolean mustSplit() {
+		return _count >= _btree.nodeSize();
+	}
 
     private BTreeAdd newAddPatch(Transaction trans) {
         sizeIncrement(trans);
@@ -338,11 +331,7 @@ public final class BTreeNode extends PersistentBase{
         
         Object keyZero = _keys[0];
         
-        boolean vals = handlesValues();
-        
-        Object[] tempKeys = new Object[_btree.nodeSize()];
-        Object[] tempValues = vals ? new Object[_btree.nodeSize()] : null; 
-        
+        Object[] tempKeys = new Object[_btree.nodeSize()];        
         int count = 0;
     
         for (int i = 0; i < _count; i++) {
@@ -353,16 +342,11 @@ public final class BTreeNode extends PersistentBase{
             }
             if(key != No4.INSTANCE){
                 tempKeys[count] = key;
-                if(vals){
-                    tempValues[count] = _values[i];
-                }
                 count ++;
             }
         }
         
         _keys = tempKeys;
-        _values = tempValues;
-        
         _count = count;
         
         if(freeIfEmpty(trans)){
@@ -449,7 +433,6 @@ public final class BTreeNode extends PersistentBase{
                 if(_count == 0){
                     // root node empty case only, have to turn it into a leaf
                     _isLeaf = true;
-                    prepareValues();
                 }
                 return;
             }
@@ -507,11 +490,7 @@ public final class BTreeNode extends PersistentBase{
     
     private int entryLength(){
         int len = keyHandler().linkLength();
-        if(_isLeaf){
-            if(handlesValues()){
-                len += valueHandler().linkLength();
-            }
-        }else{
+        if(!_isLeaf){
             len += Const4.ID_LENGTH;
         }
         return len;
@@ -558,10 +537,6 @@ public final class BTreeNode extends PersistentBase{
         return Const4.BTREE_NODE;
     }
     
-    private boolean handlesValues(){
-        return _btree._valueHandler != Null.INSTANCE; 
-    }
-    
     private void prepareInsert(int pos){
         if(pos > lastIndex()){
             _count ++;
@@ -569,9 +544,6 @@ public final class BTreeNode extends PersistentBase{
         }
         int len = _count - pos;
         System.arraycopy(_keys, pos, _keys, pos + 1, len);
-        if(_values != null){
-            System.arraycopy(_values, pos, _values, pos + 1, len);
-        }
         if(_children != null){
             System.arraycopy(_children, pos, _children, pos + 1, len);
         }
@@ -586,10 +558,6 @@ public final class BTreeNode extends PersistentBase{
         _count--;
         System.arraycopy(_keys, pos + 1, _keys, pos, len);
         _keys[_count] = null;
-        if(_values != null){
-            System.arraycopy(_values, pos + 1, _values, pos, len);
-            _values[_count] = null;
-        }
         if(_children != null){
             System.arraycopy(_children, pos + 1, _children, pos, len);
             _children[_count] = null;
@@ -716,16 +684,8 @@ public final class BTreeNode extends PersistentBase{
             return;
         }
         _keys = new Object[_btree.nodeSize()];
-        if(_isLeaf){
-            prepareValues();
-        }else{
+        if(!_isLeaf){
             _children = new Object[_btree.nodeSize()];
-        }
-    }
-    
-    private void prepareValues(){
-        if(handlesValues()){
-            _values = new Object[_btree.nodeSize()];
         }
     }
     
@@ -744,15 +704,10 @@ public final class BTreeNode extends PersistentBase{
         prepareArrays();
 
         boolean isInner = ! _isLeaf;
-        boolean vals = handlesValues() && _isLeaf;
         for (int i = 0; i < _count; i++) {
             _keys[i] = keyHandler().readIndexEntry(reader);
-            if(vals){
-                _values[i] = valueHandler().readIndexEntry(reader);
-            }else{
-                if(isInner){
-                    _children[i] = new Integer(reader.readInt());
-                }
+            if(isInner){
+                _children[i] = new Integer(reader.readInt());
             }
         }
     }
@@ -878,14 +833,6 @@ public final class BTreeNode extends PersistentBase{
         reader._offset = SLOT_LEADING_LENGTH + (entryLength() * ix);
     }
     
-    private void seekValue(Buffer reader, int ix){
-        if(handlesValues()){
-            seekAfterKey(reader, ix);
-        }else{
-            seekKey(reader, ix);
-        }
-    }
-    
     private BTreeNode split(Transaction trans){
         
         
@@ -894,13 +841,6 @@ public final class BTreeNode extends PersistentBase{
         System.arraycopy(_keys, _btree._halfNodeSize, res._keys, 0, _btree._halfNodeSize);
         for (int i = _btree._halfNodeSize; i < _keys.length; i++) {
             _keys[i] = null;
-        }
-        if(_values != null){
-            res._values = new Object[_btree.nodeSize()];
-            System.arraycopy(_values, _btree._halfNodeSize, res._values, 0, _btree._halfNodeSize);
-            for (int i = _btree._halfNodeSize; i < _values.length; i++) {
-                _values[i] = null;
-            }
         }
         if(_children != null){
             res._children = new Object[_btree.nodeSize()];
@@ -1013,7 +953,6 @@ public final class BTreeNode extends PersistentBase{
     void purge(){
         if(_dead){
             _keys = null;
-            _values = null;
             _children = null;
             return;
         }
@@ -1069,42 +1008,6 @@ public final class BTreeNode extends PersistentBase{
         }
     }
     
-    public void traverseValues(Transaction trans, Visitor4 visitor){
-        if(! handlesValues()){
-            traverseKeys(trans, visitor);
-            return;
-        }
-        Buffer reader = prepareRead(trans);
-        if(_isLeaf){
-            for (int i = 0; i < _count; i++) {
-                if(key(trans,reader, i) != No4.INSTANCE){
-                    visitor.visit(value(reader, i));
-                }
-            }
-        }else{
-            for (int i = 0; i < _count; i++) {
-                child(reader,i).traverseValues(trans, visitor);
-            }
-        }
-    }
-    
-    Object value(int index) {
-    	return _values[index];
-    }
-    
-    Object value(Buffer reader, int index){
-        if( _values != null ){
-            return _values[index];
-        }
-        seekValue(reader, index);
-        return valueHandler().readIndexEntry(reader);
-    }
-
-    
-    private Indexable4 valueHandler(){
-        return _btree._valueHandler;
-    }
-    
     public boolean writeObjectBegin() {
         if(_dead){
             return false;
@@ -1124,15 +1027,11 @@ public final class BTreeNode extends PersistentBase{
         a_writer.incrementOffset(COUNT_LEAF_AND_3_LINK_LENGTH);
 
         if(_isLeaf){
-            boolean vals = handlesValues();
             for (int i = 0; i < _count; i++) {
                 Object obj = key(trans, i);
                 if(obj != No4.INSTANCE){
                     count ++;
                     keyHandler().writeIndexEntry(a_writer, obj);
-                    if(vals){
-                        valueHandler().writeIndexEntry(a_writer, _values[i]);
-                    }
                 }
             }
         }else{
@@ -1210,7 +1109,7 @@ public final class BTreeNode extends PersistentBase{
 		}
 	}
 
-	public static void defragIndex(ReaderPair readers,Indexable4 keyHandler,Indexable4 valueHandler) {
+	public static void defragIndex(ReaderPair readers,Indexable4 keyHandler) {
         if (Deploy.debug) {
             readers.readBegin(Const4.BTREE_NODE);
         }
@@ -1219,7 +1118,6 @@ public final class BTreeNode extends PersistentBase{
 		// leafByte
         byte leafByte = readers.readByte();
         boolean isLeaf = (leafByte == 1);
-        boolean handlesValues=(valueHandler!=null)&&isLeaf;
 
         readers.copyID(); // parent ID
         readers.copyID(); // previous ID
@@ -1227,12 +1125,8 @@ public final class BTreeNode extends PersistentBase{
 
         for (int i = 0; i < count; i++) {
             keyHandler.defragIndexEntry(readers);
-            if(handlesValues){
-                valueHandler.defragIndexEntry(readers);
-            }else{
-                if(!isLeaf){
-                	readers.copyID();
-                }
+            if(!isLeaf){
+            	readers.copyID();
             }
         }
         if (Deploy.debug) {

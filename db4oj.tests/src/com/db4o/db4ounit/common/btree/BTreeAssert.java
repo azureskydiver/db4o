@@ -1,11 +1,10 @@
 package com.db4o.db4ounit.common.btree;
 
-import com.db4o.*;
 import com.db4o.db4ounit.common.foundation.IntArrays4;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
-import com.db4o.internal.handlers.*;
+import com.db4o.internal.handlers.IntHandler;
 
 import db4ounit.Assert;
 
@@ -76,11 +75,11 @@ public class BTreeAssert {
 	}
 
 	public static BTree createIntKeyBTree(final ObjectContainerBase stream, int id, int nodeSize) {
-		return new BTree(stream.getSystemTransaction(), id, new IntHandler(stream), null, nodeSize, stream.configImpl().bTreeCacheHeight());
+		return new BTree(stream.getSystemTransaction(), id, new IntHandler(stream), nodeSize, stream.configImpl().bTreeCacheHeight());
 	}
 	
 	public static BTree createIntKeyBTree(final ObjectContainerBase stream, int id, int treeCacheHeight, int nodeSize) {
-		return new BTree(stream.getSystemTransaction(), id, new IntHandler(stream), null, nodeSize, treeCacheHeight);
+		return new BTree(stream.getSystemTransaction(), id, new IntHandler(stream), nodeSize, treeCacheHeight);
 	}
 
 	public static void assertSingleElement(Transaction trans, BTree btree, Object element) {
