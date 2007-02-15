@@ -2,42 +2,20 @@
 
 package com.db4o.db4ounit.common.fieldindex;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.db4ounit.common.btree.ExpectingVisitor;
-import com.db4o.foundation.Visitor4;
-import com.db4o.internal.*;
-import com.db4o.internal.freespace.*;
-import com.db4o.internal.slots.*;
+import com.db4o.internal.Transaction;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.fixtures.OptOutCS;
 
 /**
  * @exclude
  */
-public class StringIndexTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class StringIndexTestCase extends StringIndexTestCaseBase implements OptOutCS {
 	
 	public static void main(String[] args) {
 		new StringIndexTestCase().runSolo();
 	}
-	
-	public static class Item {        
-        public String name;
-        
-        public Item() {            
-        }
-
-        public Item(String name_) {
-            name = name_;
-        }
-	}
-    
-    protected void configure(Configuration config){
-        indexField(config,Item.class, "name");
-    }
     
     public void testNotEquals() {
     	add("foo");
@@ -49,20 +27,6 @@ public class StringIndexTestCase extends AbstractDb4oTestCase implements OptOutC
     	query.descend("name").constrain("bar").not();
 		assertItems(new String[] { "foo", "baz", null }, query.execute());
     }
-
-	private void assertItems(final String[] expected, final ObjectSet result) {
-		final ExpectingVisitor expectingVisitor = new ExpectingVisitor(toObjectArray(expected));
-    	while (result.hasNext()) {
-    		expectingVisitor.visit(((Item)result.next()).name);
-    	}
-    	expectingVisitor.assertExpectations();
-	}
-    
-    private Object[] toObjectArray(String[] source) {
-    	Object[] array = new Object[source.length];
-    	System.arraycopy(source, 0, array, 0, source.length);
-    	return array;
-	}
 
 	public void testCancelRemovalRollback() throws Exception {
     	
@@ -129,18 +93,7 @@ public class StringIndexTestCase extends AbstractDb4oTestCase implements OptOutC
     	assertExists("original");
     }
     
-    private void grafittiFreeSpace() {
-    	final IoAdaptedObjectContainer file = ((IoAdaptedObjectContainer)db());
-		final FreespaceManagerRam fm = (FreespaceManagerRam) file.freespaceManager();
-    	fm.traverseFreeSlots(new Visitor4() {
-			public void visit(Object obj) {
-				Slot slot = (Slot) obj;
-				file.writeXBytes(slot.getAddress(), slot.getLength());
-			}
-		});
-	}
-
-	public void testDeletingAndReaddingMember() throws Exception{
+    public void testDeletingAndReaddingMember() throws Exception{
 		add("original");
     	assertExists("original");
         rename("original", "updated");        
@@ -150,50 +103,4 @@ public class StringIndexTestCase extends AbstractDb4oTestCase implements OptOutC
         assertExists("updated");
         Assert.isNull(query("original"));
     }
-
-	private void assertExists(String itemName) {
-		assertExists(trans(), itemName);
-	}
-
-	private void add(final String itemName) {
-		add(trans(), itemName);
-	}
-	
-	private void add(Transaction transaction, String itemName) {
-		stream().set(transaction, new Item(itemName));
-	}
-	
-	private void assertExists(Transaction transaction, String itemName) {
-		Assert.isNotNull(query(transaction, itemName));
-	}
-
-	private void rename(Transaction transaction, String from, String to) {
-		final Item item = query(transaction, from);
-		Assert.isNotNull(item);
-		item.name = to;
-		stream().set(transaction, item);
-	}
-
-    private void rename(String from, String to) {
-    	rename(trans(), from, to);
-	}
-
-	private Item query(String name){
-		return query(trans(), name);
-	}
-	
-	private Item query(Transaction transaction, String name) {
-    	ObjectSet objectSet = newQuery(transaction, name).execute();
-        if (!objectSet.hasNext()) {
-        	return null;
-        }
-        return (Item) objectSet.next();
-    }
-
-	private Query newQuery(Transaction transaction, String itemName) {
-		final Query query = stream().query(transaction);
-		query.constrain(Item.class);
-		query.descend("name").constrain(itemName);
-		return query;
-	}
 }
