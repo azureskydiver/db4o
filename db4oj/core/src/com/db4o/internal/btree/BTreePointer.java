@@ -70,10 +70,6 @@ public class BTreePointer{
 		return node().key(transaction(), nodeReader(), index());
 	}
 
-	public final Object value() {
-		return node().value(nodeReader(), index());
-	}
-	
 	private Buffer nodeReader() {
 		return _nodeReader;
 	}

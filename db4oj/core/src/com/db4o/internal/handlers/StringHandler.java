@@ -12,9 +12,6 @@ import com.db4o.reflect.*;
 
 
 /**
- * YapString
- * Legacy rename for C# obfuscator production trouble
- * 
  * @exclude
  */
 public final class StringHandler extends BuiltinTypeHandler {
