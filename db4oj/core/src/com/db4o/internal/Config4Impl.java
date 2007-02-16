@@ -376,7 +376,6 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void readOnly(boolean flag) {
-        globalSettingOnly();
         _readOnly = flag;
     }
 
