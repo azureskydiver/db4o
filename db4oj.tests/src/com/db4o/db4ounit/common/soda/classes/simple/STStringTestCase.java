@@ -90,6 +90,10 @@ public class STStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBas
 		q.constrain(new STStringTestCase("od"));
 		q.descend("str").constraints().startsWith(true);
 		expect(q, new int[] {});
+		q = newQuery();
+		q.constrain(new STStringTestCase("dodo"));
+		q.descend("str").constraints().startsWith(true);
+		expect(q, new int[] {});
 	}
 
 	public void testEndsWith() {
@@ -105,6 +109,10 @@ public class STStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBas
 		q.constrain(new STStringTestCase("D"));
 		q.descend("str").constraints().endsWith(false);
 		com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, new STStringTestCase("dod"));
+		q = newQuery();
+		q.constrain(new STStringTestCase("dodo")); // COR-413
+		q.descend("str").constraints().endsWith(false);
+		expect(q, new int[] {});
 	}
 
 	public void testNotLike() {
@@ -196,5 +204,4 @@ public class STStringTestCase extends com.db4o.db4ounit.common.soda.util.SodaBas
         });
         com.db4o.db4ounit.common.soda.util.SodaTestUtil.expectOne(q, new STStringTestCase("dod"));
     }
-
 }
