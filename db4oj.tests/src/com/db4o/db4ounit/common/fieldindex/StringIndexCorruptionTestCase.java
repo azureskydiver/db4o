@@ -19,7 +19,7 @@ public class StringIndexCorruptionTestCase extends StringIndexTestCaseBase {
 	    config.flushFileBuffers(false); // this just make the test faster
 	}
 	
-	public void _testStressSet() {		
+	public void testStressSet() {		
     	final ExtObjectContainer container = db();
     	final int itemCount = 3000;
 		for (int i=0; i<itemCount; ++i) {

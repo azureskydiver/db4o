@@ -22,10 +22,8 @@ public final class BTreeNode extends PersistentBase{
     private static final int COUNT_LEAF_AND_3_LINK_LENGTH = (Const4.INT_LENGTH * 4) + 1; 
  
     private static final int SLOT_LEADING_LENGTH = Const4.LEADING_LENGTH  + COUNT_LEAF_AND_3_LINK_LENGTH;
-    
    
     final BTree _btree;
-    
     
     private int _count;
     
@@ -47,9 +45,7 @@ public final class BTreeNode extends PersistentBase{
     
     private boolean _cached;
     
-    private boolean _dead;
-    
-    
+    private boolean _dead;    
     
     /* Constructor for new nodes */
     public BTreeNode(BTree btree, 
@@ -108,6 +104,10 @@ public final class BTreeNode extends PersistentBase{
             
             if (wasRemoved(trans, s)) {
             	cancelRemoval(trans, s.cursor());
+            	return null;
+            }
+            
+            if (s.foundMatch()) {
             	return null;
             }
             

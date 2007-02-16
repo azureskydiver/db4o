@@ -19,12 +19,7 @@ public class BTreeSearchTestCase extends AbstractDb4oTestCase implements
 	}
 
 	public void test() throws Exception {
-		cycleIntKeys(new int[] { 3, 5, 5, 5, 7, 10, 11, 12, 12, 14 });
-		cycleIntKeys(new int[] { 3, 5, 5, 5, 5, 7, 10, 11, 12, 12, 14 });
-		cycleIntKeys(new int[] { 3, 5, 5, 5, 5, 5, 7, 10, 11, 12, 12, 14 });
-		cycleIntKeys(new int[] { 3, 3, 5, 5, 5, 7, 10, 11, 12, 12, 14, 14 });
-		cycleIntKeys(new int[] { 3, 3, 3, 5, 5, 5, 7, 10, 11, 12, 12, 14, 14,
-				14 });
+		cycleIntKeys(new int[] { 3, 5, 7, 10, 11, 12, 14, 15, 17, 20, 21, 25 });
 	}
 
 	private void cycleIntKeys(int[] values) throws Exception {
