@@ -288,13 +288,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public boolean close() {
-        synchronized (Global4.lock) {
-            synchronized (i_lock) {
-                boolean ret = close1();
-                return ret;
-            }
-        }
-    }
+		synchronized (i_lock) {
+			boolean ret = close1();
+			return ret;
+		}
+	}
 
     final boolean close1() {
         // this is set to null in close2 and is therefore our check for down.
@@ -621,25 +619,23 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     void failedToShutDown() {
-        synchronized (Global4.lock) {
-            if (_classCollection == null) {
-            	return;
-            }
-            if(i_amDuringFatalExit){
-            	return;
-            }
-            if (_stackDepth == 0) {
-                Messages.logErr(configImpl(), 50, toString(), null);
-                while (!close()) {
-                }
-            } else {
-                emergencyClose();
-                if (_stackDepth > 0) {
-                    Messages.logErr(configImpl(), 24, null, null);
-                }
-            }
-        }
-    }
+		if (_classCollection == null) {
+			return;
+		}
+		if (i_amDuringFatalExit) {
+			return;
+		}
+		if (_stackDepth == 0) {
+			Messages.logErr(configImpl(), 50, toString(), null);
+			while (!close()) {
+			}
+		} else {
+			emergencyClose();
+			if (_stackDepth > 0) {
+				Messages.logErr(configImpl(), 24, null, null);
+			}
+		}
+	}
 
     void fatalException(int msgID) {
 		fatalException(null,msgID);
