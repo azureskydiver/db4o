@@ -100,38 +100,36 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
     protected boolean close2() {
-        boolean stopSession = true;
-        synchronized (Global4.lock) {
-            stopSession = i_session.closeInstance();
-            if (stopSession) {
-                freePrefetchedPointers();
-                if (Deploy.debug) {
-                    write(true);
-                } else {
-                    try {
-                        write(true);
-                    } catch (Throwable t) {
-                        fatalException(t);
-                    }
-                }
-                super.close2();
-                Sessions.sessionStopped(i_session);
-                synchronized (i_fileLock) {
-                    try {
-                        i_file.close();
-                        i_file = null;
-                        _fileHeader.close();
-                        closeTimerFile();
-                    } catch (Exception e) {
-                        i_file = null;
-                        Exceptions4.throwRuntimeException(11, e);
-                    }
-                    i_file = null;
-                }
-            }
-        }
-        return stopSession;
-    }
+		boolean stopSession = true;
+		stopSession = i_session.closeInstance();
+		if (stopSession) {
+			freePrefetchedPointers();
+			if (Deploy.debug) {
+				write(true);
+			} else {
+				try {
+					write(true);
+				} catch (Throwable t) {
+					fatalException(t);
+				}
+			}
+			super.close2();
+			Sessions.sessionStopped(i_session);
+			synchronized (i_fileLock) {
+				try {
+					i_file.close();
+					i_file = null;
+					_fileHeader.close();
+					closeTimerFile();
+				} catch (Exception e) {
+					i_file = null;
+					Exceptions4.throwRuntimeException(11, e);
+				}
+				i_file = null;
+			}
+		}
+		return stopSession;
+	}
     
     public void commit1() {
         ensureLastSlotWritten();
