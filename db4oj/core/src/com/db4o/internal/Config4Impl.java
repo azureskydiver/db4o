@@ -763,7 +763,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return (Hashtable4)_config.get(READ_AS);
 	}
 
-	boolean isReadOnly() {
+	public boolean isReadOnly() {
 		return _readOnly;
 	}
 
