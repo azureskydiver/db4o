@@ -333,6 +333,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public void commit() {
+    	if(i_config.isReadOnly()) {
+    		// TODO: throws ReadOnlyException after exception handling.
+    		return;
+    	}
         synchronized (i_lock) {
             if(DTrace.enabled){
                 DTrace.COMMIT.log();
@@ -435,6 +439,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public void delete(Transaction trans, Object obj) {
+    	if(i_config.isReadOnly()) {
+    		// TODO: throws ReadOnlyException after exception handling.
+    		return;
+    	}
         synchronized (i_lock) {
         	trans = checkTransaction(trans);
             delete1(trans, obj, true);
@@ -1558,6 +1566,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final int setInternal(Transaction trans, Object obj, int depth,  boolean checkJustSet) {
+    	if(i_config.isReadOnly()) {
+    		// TODO: throws ReadOnlyException after exception handling.
+    		return 0;
+    	}
+    	
     	beginTopLevelSet();
     	try{
 	        int id = oldReplicationHandles(obj); 
