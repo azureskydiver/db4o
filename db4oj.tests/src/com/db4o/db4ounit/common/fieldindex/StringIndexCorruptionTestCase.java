@@ -19,11 +19,11 @@ public class StringIndexCorruptionTestCase extends StringIndexTestCaseBase {
 	    config.flushFileBuffers(false); // this just make the test faster
 	}
 	
-	public void testStressSet() {		
+	public void _testStressSet() {		
     	final ExtObjectContainer container = db();
     	final int itemCount = 3000;
 		for (int i=0; i<itemCount; ++i) {
-    		Item item = new Item("item " + i);
+    		Item item = new Item(itemName(i));
     		container.set(item);
     		container.set(item);
     		container.commit();
@@ -32,11 +32,15 @@ public class StringIndexCorruptionTestCase extends StringIndexTestCaseBase {
     		container.commit();
     	}    	
     	for (int i=0; i<itemCount; ++i) {
-    		String itemName = "item " + i;
+    		String itemName = itemName(i);
     		final Item found = query(itemName);
     		Assert.isNotNull(found, "'" + itemName + "' not found");
 			Assert.areEqual(itemName, found.name);
     	}
     }
+
+	private String itemName(int i) {
+		return "item " + i;
+	}
 
 }
