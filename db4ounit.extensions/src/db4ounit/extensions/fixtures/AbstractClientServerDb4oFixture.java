@@ -6,7 +6,7 @@ import java.io.File;
 
 import com.db4o.*;
 import com.db4o.defragment.*;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 
@@ -26,7 +26,7 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 
     private final File _yap;
     
-    private final int _port;
+    protected final int _port;
     
     public AbstractClientServerDb4oFixture(ConfigurationSource configSource,String fileName, int port) {
     	super(configSource);
@@ -63,6 +63,10 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 	
 	public void defragment() throws Exception {
 		defragment(FILE);
+	}
+	
+	protected ObjectContainer openEmbeddedClient() {
+		return _server.openClient();
 	}
 
 }

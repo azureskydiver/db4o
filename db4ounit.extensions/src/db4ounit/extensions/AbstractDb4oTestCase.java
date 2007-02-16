@@ -99,8 +99,16 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
     public int runClientServer() {
     	return runClientServer(true);
     }
+    
+    public int runEmbeddedClientServer() {
+    	return runEmbeddedClientServer(true);
+    }
 
-    public int runClientServer(boolean independentConfig) {
+    private int runEmbeddedClientServer(boolean independentConfig) {
+		return new TestRunner(embeddedClientServerSuite(independentConfig)).run();
+	}
+
+	public int runClientServer(boolean independentConfig) {
         return new TestRunner(
                     clientServerSuite(independentConfig)).run();
     }
@@ -113,6 +121,12 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	private Db4oTestSuiteBuilder clientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
 		        new Db4oSingleClient(configSource(independentConfig)), 
+		        testCases());
+	}
+	
+	private Db4oTestSuiteBuilder embeddedClientServerSuite(boolean independentConfig) {
+		return new Db4oTestSuiteBuilder(
+		        new Db4oSingleClient(configSource(independentConfig), 0), 
 		        testCases());
 	}
 

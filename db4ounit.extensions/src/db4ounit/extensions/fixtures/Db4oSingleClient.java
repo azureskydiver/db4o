@@ -18,6 +18,10 @@ public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
 			int port) {
 		super(config, fileName, port);
 	}
+	
+	public Db4oSingleClient(ConfigurationSource config, int port) {
+		super(config, FILE, port);
+	}
 
 	public Db4oSingleClient(ConfigurationSource config) {
 		super(config);
@@ -35,8 +39,9 @@ public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
 	public void open() throws Exception {
 		super.open();
 		try {
-			_objectContainer = Db4o.openClient(config(), HOST, PORT, USERNAME,
-					PASSWORD).ext();
+			_objectContainer = _port == 0
+				? openEmbeddedClient().ext()
+				: Db4o.openClient(config(), HOST, _port, USERNAME, PASSWORD).ext();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new TestException(e);
