@@ -107,6 +107,7 @@ public final class Const4
 	public static final int LOCK_TIME_INTERVAL = 1000;
 	public static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 5000;  // jump out of the loop every 5 seconds
 	public static final int CLIENT_SOCKET_TIMEOUT = 300000;  // 5 minutes response time at the client side
+	public static final int CLIENT_EMBEDDED_TIMEOUT = 3000;
 	public static final int CONNECTION_TIMEOUT = Debug.longTimeOuts ? 1000000: 180000;  // 1 minute until we start pinging dead or blocking clients
 		
 	// TODO: Consider to make configurable

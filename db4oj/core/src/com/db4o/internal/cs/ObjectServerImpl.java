@@ -14,29 +14,29 @@ import com.db4o.internal.*;
 public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable,
 		LoopbackSocketServer {
 	
-	private String i_name;
+	private String _name;
 
-	private ServerSocket4 i_serverSocket;
+	private ServerSocket4 _serverSocket;
 	
-	private int i_port;
+	private int _port;
 
 	private int i_threadIDGen = 1;
 
 	private Collection4 i_threads = new Collection4();
 
-	private LocalObjectContainer i_yapFile;
+	private LocalObjectContainer _container;
 
 	private final Object _lock=new Object();
 	
 	private Config4Impl _config;
 	
-	public ObjectServerImpl(final LocalObjectContainer yapFile, int port) {
-		i_yapFile = yapFile;
-		i_port = port;
-		_config = i_yapFile.configImpl();
-		i_name = "db4o ServerSocket FILE: " + yapFile.toString() + "  PORT:"+ i_port;
+	public ObjectServerImpl(final LocalObjectContainer container, int port) {
+		_container = container;
+		_port = port;
+		_config = _container.configImpl();
+		_name = "db4o ServerSocket FILE: " + container.toString() + "  PORT:"+ _port;
 		
-		i_yapFile.setServer(true);	
+		_container.setServer(true);	
 		
 		configureObjectServer();
 
@@ -47,19 +47,19 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private void startupServerSocket() {
-		if (i_port <= 0) {
+		if (_port <= 0) {
 			return;
 		}
 		try {
-			i_serverSocket = new ServerSocket4(i_port);
-			i_serverSocket.setSoTimeout(_config.timeoutServerSocket());
+			_serverSocket = new ServerSocket4(_port);
+			_serverSocket.setSoTimeout(_config.timeoutServerSocket());
 		} catch (IOException e) {
-			Exceptions4.throwRuntimeException(30, "" + i_port);
+			Exceptions4.throwRuntimeException(30, "" + _port);
 		}
 
-		new Thread(this).start();
-		// TODO: Carl, shouldn't this be a daemon?
-		// Not sure Klaus, let's discuss.
+		final Thread thread = new Thread(this);
+		thread.setDaemon(true);
+		thread.start();
 
 		synchronized (_lock) {
 			try {
@@ -72,14 +72,14 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private void ensureLoadStaticClass() {
-		i_yapFile.produceYapClass(i_yapFile.i_handlers.ICLASS_STATICCLASS);
+		_container.produceYapClass(_container.i_handlers.ICLASS_STATICCLASS);
 	}
 	
 	private void ensureLoadConfiguredClasses() {
 		// make sure all configured YapClasses are up in the repository
 		_config.exceptionalClasses().forEachValue(new Visitor4() {
 			public void visit(Object a_object) {
-				i_yapFile.produceYapClass(i_yapFile.reflector().forName(
+				_container.produceYapClass(_container.reflector().forName(
 						((Config4Class) a_object).getName()));
 			}
 		});
@@ -94,43 +94,72 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	public void backup(String path) throws IOException {
-		i_yapFile.backup(path);
+		_container.backup(path);
 	}
 
 	final void checkClosed() {
-		if (i_yapFile == null) {
-			Exceptions4.throwRuntimeException(20, i_name);
+		if (_container == null) {
+			Exceptions4.throwRuntimeException(20, _name);
 		}
-		i_yapFile.checkClosed();
+		_container.checkClosed();
 	}
 
-	public boolean close() {
+	public synchronized boolean close() {
+		// Take it easy.
+		// Test cases hit close while communication
+		// is still in progress.
+		Cool.sleepIgnoringInterruption(100);
+
 		synchronized (Global4.lock) {
-			// Take it easy.
-			// Test cases hit close while communication
-			// is still in progress.
-			Cool.sleepIgnoringInterruption(100);
-			try {
-				if (i_serverSocket != null) {
-					i_serverSocket.close();
-				}
-			} catch (Exception e) {
-				if (Deploy.debug) {
-					System.out
-							.println("YapServer.close() ServerSocket failed to close.");
-				}
-			}
-			i_serverSocket = null;
-			boolean isClosed = i_yapFile == null ? true : i_yapFile.close();
-			synchronized (i_threads) {
-				Iterator4 i = new Collection4(i_threads).iterator();
-				while (i.moveNext()) {
-					((ServerMessageDispatcher) i.current()).close();
-				}
-			}
-			i_yapFile = null;
+			
+			closeServerSocket();
+			
+			boolean isClosed = closeFile();
+			
+			closeMessageDispatchers();
+			
 			return isClosed;
 		}
+	}
+
+	private boolean closeFile() {
+		if (_container == null) {
+			return true;
+		}
+		boolean isClosed = _container.close();
+		_container = null;
+		return isClosed;
+	}
+
+	private void closeMessageDispatchers() {
+		Iterator4 i = iterateThreads();
+		while (i.moveNext()) {
+			try {
+				((ServerMessageDispatcher) i.current()).close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private Iterator4 iterateThreads() {
+		synchronized (i_threads) {
+			return new Collection4(i_threads).iterator();
+		}
+	}
+
+	private void closeServerSocket() {
+		try {
+			if (_serverSocket != null) {
+				_serverSocket.close();
+			}
+		} catch (Exception e) {
+			if (Deploy.debug) {
+				System.out
+						.println("YapServer.close() ServerSocket failed to close.");
+			}
+		}
+		_serverSocket = null;
 	}
 
 	public Configuration configure() {
@@ -155,9 +184,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	public void grantAccess(String userName, String password) {
-		synchronized (i_yapFile.i_lock) {
+		synchronized (_container.i_lock) {
 			checkClosed();
-			i_yapFile.showInternalClasses(true);
+			_container.showInternalClasses(true);
 			try {
 				User existing = getUser(userName);
 				if (existing != null) {
@@ -165,20 +194,20 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 				} else {
 					addUser(userName, password);
 				}
-				i_yapFile.commit();
+				_container.commit();
 			} finally {
-				i_yapFile.showInternalClasses(false);
+				_container.showInternalClasses(false);
 			}
 		}
 	}
 
 	private void addUser(String userName, String password) {
-		i_yapFile.set(new User(userName, password));
+		_container.set(new User(userName, password));
 	}
 
 	private void setPassword(User existing, String password) {
 		existing.password = password;
-		i_yapFile.set(existing);
+		_container.set(existing);
 	}
 
 	User getUser(String userName) {
@@ -190,24 +219,24 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private ObjectSet queryUsers(String userName) {
-		return i_yapFile.get(new User(userName, null));
+		return _container.get(new User(userName, null));
 	}
 
 	public ObjectContainer objectContainer() {
-		return i_yapFile;
+		return _container;
 	}
 
 	public ObjectContainer openClient() {
 		return openClient(Db4o.cloneConfiguration());
 	}
 
-	public ObjectContainer openClient(Configuration config) {
+	public synchronized ObjectContainer openClient(Configuration config) {
 		checkClosed();
 		try {
 			ClientObjectContainer client = new ClientObjectContainer(config, openClientSocket(),
 					Const4.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1), "",
 					false);
-			client.blockSize(i_yapFile.blockSize());
+			client.blockSize(_container.blockSize());
 			return client;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -220,7 +249,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		LoopbackSocket clientFake = new LoopbackSocket(this, timeout);
 		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
 		try {
-			ServerMessageDispatcher thread = new ServerMessageDispatcher(this, i_yapFile,
+			ServerMessageDispatcher thread = new ServerMessageDispatcher(this, _container,
 					serverFake, i_threadIDGen++, true);
 			synchronized (i_threads) {
 				i_threads.add(thread);
@@ -241,14 +270,14 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	public void revokeAccess(String userName) {
-		synchronized (i_yapFile.i_lock) {
-			i_yapFile.showInternalClasses(true);
+		synchronized (_container.i_lock) {
+			_container.showInternalClasses(true);
 			try {
 				checkClosed();
 				deleteUsers(userName);
-				i_yapFile.commit();
+				_container.commit();
 			} finally {
-				i_yapFile.showInternalClasses(false);
+				_container.showInternalClasses(false);
 			}
 		}
 	}
@@ -256,20 +285,20 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private void deleteUsers(String userName) {
 		ObjectSet set = queryUsers(userName);
 		while (set.hasNext()) {
-			i_yapFile.delete(set.next());
+			_container.delete(set.next());
 		}
 	}
 
 	public void run() {
-		Thread.currentThread().setName(i_name);
-		i_yapFile.logMsg(31, "" + i_serverSocket.getLocalPort());
+		Thread.currentThread().setName(_name);
+		_container.logMsg(31, "" + _serverSocket.getLocalPort());
 		synchronized (_lock) {
 			_lock.notifyAll();
 		}
-		while (i_serverSocket != null) {
+		while (_serverSocket != null) {
 			try {
-				ServerMessageDispatcher thread = new ServerMessageDispatcher(this, i_yapFile,
-						i_serverSocket.accept(), i_threadIDGen++, false);
+				ServerMessageDispatcher thread = new ServerMessageDispatcher(this, _container,
+						_serverSocket.accept(), i_threadIDGen++, false);
 				synchronized (i_threads) {
 					i_threads.add(thread);
 				}

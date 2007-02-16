@@ -339,7 +339,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 					}
 
 					throwOnClosed();
-					messageQueueLock.snooze(configImpl().timeoutClientSocket());
+					messageQueueLock.snooze(timeout());
 					throwOnClosed();
 					return retrieveMessage();
 				}
@@ -884,6 +884,17 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
 		// used for to write the number of messages.
 		_batchedQueueLength = Const4.INT_LENGTH;
+	}
+
+	private int timeout() {
+		return isEmbeddedClient()
+			// TODO: make CLIENT_EMBEDDED_TIMEOUT configurable
+			? Const4.CLIENT_EMBEDDED_TIMEOUT
+			: configImpl().timeoutClientSocket();
+	}
+
+	private boolean isEmbeddedClient() {
+		return i_socket instanceof LoopbackSocket;
 	}
 
 }

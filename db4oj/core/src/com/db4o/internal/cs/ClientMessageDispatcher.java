@@ -13,14 +13,11 @@ class ClientMessageDispatcher extends Thread{
 	final Queue4 messageQueue;
 	final Lock4 messageQueueLock;
 	
-	
 	ClientMessageDispatcher(ClientObjectContainer client, Socket4 a_socket, Queue4 messageQueue_, Lock4 messageQueueLock_){
-		synchronized(this){
-			i_stream = client;
-			messageQueue = messageQueue_;
-			i_socket = a_socket;
-			messageQueueLock = messageQueueLock_;
-		}
+		i_stream = client;
+		messageQueue = messageQueue_;
+		i_socket = a_socket;
+		messageQueueLock = messageQueueLock_;
 	}
 	
 	synchronized boolean isClosed(){

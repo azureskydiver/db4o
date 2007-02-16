@@ -42,7 +42,8 @@ public final class ServerMessageDispatcher extends Thread {
         int aThreadID,
         boolean loggedIn)
         throws Exception {
-        
+    	
+    	setDaemon(true);
         	
         i_loggedin = loggedIn;
          
@@ -67,9 +68,19 @@ public final class ServerMessageDispatcher extends Thread {
         }
     }
 
-    public void close() {
+    public synchronized void close() {
+    	if (isClosed()) { 
+    		return;
+    	}    	
         closeSubstituteStream();
-        try {
+        sendCloseMessage();
+        rollbackMainTransaction();
+        closeSocket();
+        removeFromServer();
+    }
+
+	private void sendCloseMessage() {
+		try {
             if (i_sendCloseMessage) {
                 write(Msg.CLOSE);
             }
@@ -79,10 +90,26 @@ public final class ServerMessageDispatcher extends Thread {
             }
 
         }
-        if (i_mainStream != null && i_mainTrans != null) {
+	}
+
+	private void rollbackMainTransaction() {
+		if (i_mainStream != null && i_mainTrans != null) {
             i_mainTrans.close(i_rollbackOnClose);
         }
-        try {
+	}
+
+	private void removeFromServer() {
+		try {
+            i_server.removeThread(this);
+        } catch (Exception e) {
+            if (Debug.atHome) {
+                e.printStackTrace();
+            }
+        }
+	}
+
+	private void closeSocket() {
+		try {
             i_socket.close();
         } catch (Exception e) {
             if (Debug.atHome) {
@@ -90,16 +117,13 @@ public final class ServerMessageDispatcher extends Thread {
             }
         }
         i_socket = null;
-        try {
-            i_server.removeThread(this);
-        } catch (Exception e) {
-            if (Debug.atHome) {
-                e.printStackTrace();
-            }
-        }
-    }
+	}
 
-    private void closeSubstituteStream() {
+    private boolean isClosed() {
+		return i_socket == null;
+	}
+
+	private void closeSubstituteStream() {
         if (i_substituteStream != null) {
             if (i_substituteTrans != null) {
                 i_substituteTrans.close(i_rollbackOnClose);
