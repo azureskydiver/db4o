@@ -6,13 +6,17 @@ package com.db4o.internal.query.processor;
 /**
  * @exclude
  */
-public class QEEndsWith extends QEStringCmp
-{
+public class QEEndsWith extends QEStringCmp {
+
 	public QEEndsWith(boolean caseSensitive_) {
 		super(caseSensitive_);
 	}
 
 	protected boolean compareStrings(String candidate, String constraint) {
-		return candidate.lastIndexOf(constraint)==candidate.length()-constraint.length();
+		int lastIndex = candidate.lastIndexOf(constraint);
+		if (lastIndex == -1) {
+			return false;
+		}
+		return lastIndex == candidate.length() - constraint.length();
 	}
 }
