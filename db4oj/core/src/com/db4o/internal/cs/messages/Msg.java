@@ -199,6 +199,12 @@ public class Msg implements Cloneable {
 	
 
 	public final void write(ObjectContainerBase stream, Socket4 sock) {
+		if (null == stream) {
+			throw new ArgumentNullException();
+		}
+		if (null == sock) {
+			throw new ArgumentNullException();
+		}
 		if (Debug.fakeServer) {
 		    ObjectContainerBase i_stream = null;
 			if (stream == DebugCS.serverStream) {
