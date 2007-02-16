@@ -324,10 +324,24 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     protected int appendBlocks(int blockCount){
-        int blockedAddress = _blockEndAddress;
-        _blockEndAddress += blockCount;
-        return blockedAddress;
+    	int blockedStartAddress = _blockEndAddress;
+        int blockedEndAddress = _blockEndAddress + blockCount;
+        checkBlockedAddress(blockedEndAddress);
+        _blockEndAddress = blockedEndAddress;
+        return blockedStartAddress;
     }
+    
+    private void checkBlockedAddress(int blockedAddress) {
+    	if(blockedAddress < 0) {
+    		rollback1();
+    		switchToReadOnlyMode();
+    		Exceptions4.throwRuntimeException(69);
+    	}
+    }
+
+	private void switchToReadOnlyMode() {
+		i_config.readOnly(true);
+	}
     
     void ensureLastSlotWritten(){
         if (!Debug.xbytes){
@@ -655,7 +669,10 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
     public void write(boolean shuttingDown) {
-
+    	if(i_config.isReadOnly()) {
+    		// TODO: throw exception instead of returning silently
+    		return;
+    	}
         // This will also commit the System Transaction,
         // since it is the parent or the same object.
         i_trans.commit();
