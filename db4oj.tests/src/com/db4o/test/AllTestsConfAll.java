@@ -85,7 +85,6 @@ public class AllTestsConfAll extends TestSuite{
 	        SerializableTranslator.class,
 	    	SetDeactivated.class,
 	    	SetSemaphore.class,
-	    	SharedObjectContainer.class,
 			SmallerOrEqual.class,
 	    	SodaNoDuplicates.class,
 	    	SodaNumberCoercion.class,
