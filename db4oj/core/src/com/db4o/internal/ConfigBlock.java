@@ -34,7 +34,7 @@ public final class ConfigBlock {
     // int    freespace address
     // int    converter versions
     
-	private final LocalObjectContainer		_stream;
+	private final LocalObjectContainer		_container;
     private final TimerFileLock _timerFileLock;
     
 	private int					_address;
@@ -77,7 +77,7 @@ public final class ConfigBlock {
     }
     
 	private ConfigBlock(LocalObjectContainer stream, boolean isNew, int address) throws IOException{
-		_stream = stream;
+		_container = stream;
         _timerFileLock = TimerFileLock.forFile(stream);
         timerFileLock().writeHeaderLock();
         if(! isNew){
@@ -98,23 +98,16 @@ public final class ConfigBlock {
 		return _transactionToCommit;
 	}
     
-	private boolean lockFile(){
-		if(! Debug.lockFile){
-			return false;
-		}
-		return _stream.needsLockFileThread();
-	}
-    
-    private byte[] passwordToken() {
+	private byte[] passwordToken() {
         byte[] pwdtoken=new byte[ENCRYPTION_PASSWORD_LENGTH];
-        String fullpwd=_stream.configImpl().password();
-        if(_stream.configImpl().encrypt() && fullpwd!=null) {
+        String fullpwd=_container.configImpl().password();
+        if(_container.configImpl().encrypt() && fullpwd!=null) {
             try {
                 byte[] pwdbytes=new LatinStringIO().write(fullpwd);
-                Buffer encwriter=new StatefulBuffer(_stream.getTransaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
+                Buffer encwriter=new StatefulBuffer(_container.getTransaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
                 encwriter.append(pwdbytes);
                 encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
-                _stream.i_handlers.decrypt(encwriter);
+                _container.i_handlers.decrypt(encwriter);
                 System.arraycopy(encwriter._buffer, 0, pwdtoken, 0, ENCRYPTION_PASSWORD_LENGTH);                
             }
             catch(Exception exc) {
@@ -128,15 +121,15 @@ public final class ConfigBlock {
     }
     
     private SystemData systemData(){
-        return _stream.systemData();
+        return _container.systemData();
     }
 	
 	private void read(int address) {
         addressChanged(address);
 		timerFileLock().writeOpenTime();
-		StatefulBuffer reader = _stream.getWriter(_stream.getSystemTransaction(), _address, LENGTH);
+		StatefulBuffer reader = _container.getWriter(_container.getSystemTransaction(), _address, LENGTH);
 		try{
-			_stream.readBytes(reader._buffer, _address, LENGTH);
+			_container.readBytes(reader._buffer, _address, LENGTH);
 		}catch(Exception e){
 			// TODO: Exception handling
 		}
@@ -147,9 +140,9 @@ public final class ConfigBlock {
         if(oldLength != LENGTH){
         	// TODO: instead of bailing out, somehow trigger wrapping the stream's io adapter in
         	// a readonly decorator, issue a  notification and continue?
-            if(! _stream.configImpl().isReadOnly()  && ! _stream.configImpl().allowVersionUpdates()){
-            	if(_stream.configImpl().automaticShutDown()) {
-            		Platform4.removeShutDownHook(_stream, _stream.i_lock);
+            if(! _container.configImpl().isReadOnly()  && ! _container.configImpl().allowVersionUpdates()){
+            	if(_container.configImpl().automaticShutDown()) {
+            		Platform4.removeShutDownHook(_container, _container.i_lock);
             	}
                 throw new OldFormatException();
             }
@@ -161,7 +154,7 @@ public final class ConfigBlock {
         systemData().stringEncoding(reader.readByte());
 		
 		if(oldLength > TRANSACTION_OFFSET){
-            _transactionToCommit = Transaction.readInterruptedTransaction(_stream, reader);
+            _transactionToCommit = Transaction.readInterruptedTransaction(_container, reader);
 		}
 		
 		if(oldLength > BOOTRECORD_OFFSET) {
@@ -185,12 +178,12 @@ public final class ConfigBlock {
             }
             if(! nonZeroByte){
                 // no password in the databasefile, work without encryption
-                _stream.i_handlers.oldEncryptionOff();
+                _container.i_handlers.oldEncryptionOff();
             }else{
     			byte[] storedpwd=passwordToken();
     			for (int idx = 0; idx < storedpwd.length; idx++) {
     				if(storedpwd[idx]!=encpassword[idx]) {
-    					_stream.fatalException(54);
+    					_container.fatalException(54);
     				}
     			}
             }
@@ -214,47 +207,30 @@ public final class ConfigBlock {
             }
         }
         
-        _stream.ensureFreespaceSlot();
+        _container.ensureFreespaceSlot();
         
-		if(lockFile() && ( lastAccessTime != 0)){
-			_stream.logMsg(28, null);
-			long waitTime = Const4.LOCK_TIME_INTERVAL * 5;
-			long currentTime = System.currentTimeMillis();
-
-			// If someone changes the system clock here,
-			// he is out of luck.
-			while(System.currentTimeMillis() < currentTime + waitTime){
-				Cool.sleepIgnoringInterruption(waitTime);
-			}
-			reader = _stream.getWriter(_stream.getSystemTransaction(), _address, Const4.LONG_LENGTH * 2);
-			reader.moveForward(OPEN_TIME_OFFSET);
-			reader.read();
-            
-			reader.readLong();  // open time
-            
-			long currentAccessTime = reader.readLong();
-			if((currentAccessTime > lastAccessTime) ){
-				throw new DatabaseFileLockedException();
-			}
+		if(FileHeader.lockedByOtherSession(_container, lastAccessTime)){
+			FileHeader.checkIfOtherSessionAlive(_container, _address, OPEN_TIME_OFFSET, lastAccessTime);
 		}
-		if(lockFile()){
+		
+		if(_container.needsLockFileThread()){
 			// We give the other process a chance to 
 			// write its lock.
 			Cool.sleepIgnoringInterruption(100);
-            _stream.syncFiles();
+            _container.syncFiles();
             timerFileLock().checkOpenTime();
 		}
 		if(oldLength < LENGTH){
 			write();
 		}
 	}
-	
+
 	public void write() {
         
         timerFileLock().checkHeaderLock();
-        addressChanged(_stream.getSlot(LENGTH));
+        addressChanged(_container.getSlot(LENGTH));
         
-		StatefulBuffer writer = _stream.getWriter(_stream.getTransaction(), _address,LENGTH);
+		StatefulBuffer writer = _container.getWriter(_container.getTransaction(), _address,LENGTH);
 		IntHandler.writeInt(LENGTH, writer);
         for (int i = 0; i < 2; i++) {
             writer.writeLong(timerFileLock().openTime());
@@ -266,7 +242,7 @@ public final class ConfigBlock {
 		IntHandler.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.append(passwordToken());
         writer.append(systemData().freespaceSystem());
-        _stream.ensureFreespaceSlot();
+        _container.ensureFreespaceSlot();
         IntHandler.writeInt(systemData().freespaceAddress(), writer);
         IntHandler.writeInt(systemData().converterVersion(), writer);
         IntHandler.writeInt(systemData().uuidIndexId(), writer);
@@ -281,7 +257,7 @@ public final class ConfigBlock {
 	
 	private void writePointer() {
         timerFileLock().checkHeaderLock();
-		StatefulBuffer writer = _stream.getWriter(_stream.getTransaction(), 0, Const4.ID_LENGTH);
+		StatefulBuffer writer = _container.getWriter(_container.getTransaction(), 0, Const4.ID_LENGTH);
 		writer.moveForward(2);
 		IntHandler.writeInt(_address, writer);
         writer.noXByteCheck();

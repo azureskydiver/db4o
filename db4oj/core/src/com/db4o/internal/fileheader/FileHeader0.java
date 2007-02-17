@@ -128,7 +128,7 @@ public class FileHeader0 extends FileHeader {
         return LENGTH;
     }
 
-    public void writeFixedPart(LocalObjectContainer file, boolean shuttingDown, StatefulBuffer writer, int blockSize_, int freespaceID) {
+    public void writeFixedPart(LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize_, int freespaceID) {
         writer.append(Const4.YAPFILEVERSION);
         writer.append((byte)blockSize_);
         writer.writeInt(_configBlock.address());

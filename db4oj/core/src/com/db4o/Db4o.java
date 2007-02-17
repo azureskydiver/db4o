@@ -123,9 +123,7 @@ public class Db4o {
 	 */
 	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
 			throws IOException {
-		synchronized(Global4.lock){
 			return new ClientObjectContainer(config,new NetworkSocket(hostName, port), user, password, true);
-		}
 	}
 
     /**
@@ -171,37 +169,32 @@ public class Db4o {
      * @see Configuration#password
 	 */
 	public static final ObjectContainer openFile(Configuration config,String databaseFileName) throws DatabaseFileLockedException {
-		synchronized(Global4.lock){
-			return Sessions.open(config,databaseFileName);
-		}
+		return ObjectContainerFactory.openObjectContainer(config,databaseFileName);
 	}
 
 	protected static final ObjectContainer openMemoryFile1(Configuration config,MemoryFile memoryFile) {
-		synchronized(Global4.lock){
-			if(memoryFile == null){
-				memoryFile = new MemoryFile();
-			}
-			ObjectContainer oc = null;
-			if (Deploy.debug) {
-				System.out.println("db4o Debug is ON");
-		        oc = new InMemoryObjectContainer(config,memoryFile);
-	
-				// intentionally no exception handling,
-			    // in order to follow uncaught errors
-			}
-			else {
-			    try {
-			        oc = new InMemoryObjectContainer(config,memoryFile);
-				}
-			    catch(Throwable t) {
-			        Messages.logErr(i_config, 4, "Memory File", t);
-					return null;
-			    }
-			}
-		    Platform4.postOpen(oc);
-			Messages.logMsg(i_config, 5, "Memory File");
-			return oc;
+		if(memoryFile == null){
+			memoryFile = new MemoryFile();
 		}
+		ObjectContainer oc = null;
+		if (Deploy.debug) {
+			System.out.println("db4o Debug is ON");
+	        oc = new InMemoryObjectContainer(config,memoryFile);
+
+			// intentionally no exception handling,
+		    // in order to follow uncaught errors
+		} else {
+		    try {
+		        oc = new InMemoryObjectContainer(config,memoryFile);
+			}
+		    catch(Throwable t) {
+		        Messages.logErr(i_config, 4, "Memory File", t);
+				return null;
+		    }
+		}
+	    Platform4.postOpen(oc);
+		Messages.logMsg(i_config, 5, "Memory File");
+		return oc;
 	}
 	
 	
@@ -246,15 +239,13 @@ public class Db4o {
      * @see Configuration#password
 	 */
 	public static final ObjectServer openServer(Configuration config,String databaseFileName, int port) throws DatabaseFileLockedException {
-		synchronized(Global4.lock){
-			LocalObjectContainer stream = (LocalObjectContainer)openFile(config,databaseFileName);
-            if(stream == null){
-                return null;
-            }
-            synchronized(stream.lock()){
-                return new ObjectServerImpl(stream, port);
-            }
-		}
+		LocalObjectContainer stream = (LocalObjectContainer)openFile(config,databaseFileName);
+        if(stream == null){
+            return null;
+        }
+        synchronized(stream.lock()){
+            return new ObjectServerImpl(stream, port);
+        }
 	}
 
 	static Reflector reflector(){

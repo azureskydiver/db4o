@@ -5,6 +5,8 @@ package com.db4o.internal.fileheader;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 
@@ -65,7 +67,7 @@ public abstract class FileHeader {
     protected abstract FileHeader newOnSignatureMatch(LocalObjectContainer file, Buffer reader);
     
     protected long timeToWrite(long time, boolean shuttingDown) {
-        return shuttingDown ? 0 : time;
+    	return shuttingDown ? 0 : time;
     }
 
     protected abstract void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException;
@@ -83,7 +85,7 @@ public abstract class FileHeader {
     
     // TODO: freespaceID should not be passed here, it should be taken from SystemData
     public abstract void writeFixedPart(
-        LocalObjectContainer file, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID);
+        LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID);
     
     public abstract void writeTransactionPointer(Transaction systemTransaction, int transactionAddress);
 
@@ -105,5 +107,33 @@ public abstract class FileHeader {
         systemData.classCollectionID(reader.readInt());
         systemData.freespaceID(reader.readInt());
     }
+
+	public static boolean lockedByOtherSession(LocalObjectContainer container, long lastAccessTime) {
+		return container.needsLockFileThread() && ( lastAccessTime != 0);
+	}
+
+	public static void checkIfOtherSessionAlive(LocalObjectContainer container, int address, int offset, long lastAccessTime) {
+		StatefulBuffer reader;
+		container.logMsg(Messages.FAILED_TO_SHUTDOWN, null);
+		long waitTime = Const4.LOCK_TIME_INTERVAL * 5;
+		long currentTime = System.currentTimeMillis();
+	
+		// If someone changes the system clock here,
+		// he is out of luck.
+		while(System.currentTimeMillis() < currentTime + waitTime){
+			Cool.sleepIgnoringInterruption(waitTime);
+		}
+		reader = container.getWriter(container.getSystemTransaction(), address, Const4.LONG_LENGTH * 2);
+		reader.moveForward(offset);
+		reader.read();
+		
+		reader.readLong();  // open time
+		
+		long currentAccessTime = reader.readLong();
+		
+		if((currentAccessTime > lastAccessTime) ){
+			throw new DatabaseFileLockedException();
+		}
+	}
 
 }

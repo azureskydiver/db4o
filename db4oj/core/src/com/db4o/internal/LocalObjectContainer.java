@@ -15,6 +15,7 @@ import com.db4o.internal.freespace.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.slots.*;
+import com.db4o.io.*;
 
 
 /**
@@ -533,7 +534,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             _fileHeader.writeVariablePart(this, 1);
         }
         
-        writeHeader(false);
+        writeHeader(true, false);
         
         LocalTransaction trans = (LocalTransaction) _fileHeader.interruptedTransaction();
         
@@ -678,11 +679,9 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         i_trans.commit();
 
         if (shuttingDown) {
-            writeHeader(shuttingDown);
+            writeHeader(false, true);
         }
     }
-
-    public abstract boolean writeAccessTime(int address, int offset, long time) throws IOException;
 
     public abstract void writeBytes(Buffer a_Bytes, int address, int addressOffset);
 
@@ -722,7 +721,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         a_parent._offset = offsetBackup;
     }
 
-    void writeHeader(boolean shuttingDown) {
+    void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
         
         int freespaceID = _freespaceManager.write(shuttingDown);
         
@@ -737,7 +736,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         // FIXME: blocksize should be already valid in FileHeader
         StatefulBuffer writer = getWriter(i_systemTrans, 0, _fileHeader.length());
         
-        _fileHeader.writeFixedPart(this, shuttingDown, writer, blockSize(), freespaceID);
+        _fileHeader.writeFixedPart(this, startFileLockingThread, shuttingDown, writer, blockSize(), freespaceID);
         
         if(shuttingDown){
             ensureLastSlotWritten();
@@ -840,5 +839,4 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     	queryResult.loadFromQuery(query);
     	return queryResult;
     }
-
 }

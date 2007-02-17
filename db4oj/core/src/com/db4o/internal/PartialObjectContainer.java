@@ -965,6 +965,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public boolean needsLockFileThread() {
+		if(! Debug.lockFile){
+			return false;
+		}
         if (!Platform4.hasLockFileThread()) {
             return false;
         }

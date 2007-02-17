@@ -7,8 +7,6 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.io.*;
 
 
@@ -17,20 +15,19 @@ import com.db4o.io.*;
  */
 public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
-    private Session            i_session;
+    private final String _fileName;
 
     private IoAdapter          i_file;
     private IoAdapter          i_timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
     private volatile IoAdapter i_backupFile;
-    private byte[]             i_timerBytes = new byte[Const4.LONG_BYTES];
 
     private Object             i_fileLock;
 
-    IoAdaptedObjectContainer(Configuration config,Session a_session) throws Exception {
+    IoAdaptedObjectContainer(Configuration config, String fileName) throws Exception {
         super(config,null);
         synchronized (i_lock) {
             i_fileLock = new Object();
-            i_session = a_session;
+            _fileName = fileName;
             if (Deploy.debug) {
                 // intentionally no Exception handling
                 // to find and debug errors
@@ -100,35 +97,30 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
     protected boolean close2() {
-		boolean stopSession = true;
-		stopSession = i_session.closeInstance();
-		if (stopSession) {
-			freePrefetchedPointers();
-			if (Deploy.debug) {
+		freePrefetchedPointers();
+		if (Deploy.debug) {
+			write(true);
+		} else {
+			try {
 				write(true);
-			} else {
-				try {
-					write(true);
-				} catch (Throwable t) {
-					fatalException(t);
-				}
-			}
-			super.close2();
-			Sessions.sessionStopped(i_session);
-			synchronized (i_fileLock) {
-				try {
-					i_file.close();
-					i_file = null;
-					_fileHeader.close();
-					closeTimerFile();
-				} catch (Exception e) {
-					i_file = null;
-					Exceptions4.throwRuntimeException(11, e);
-				}
-				i_file = null;
+			} catch (Throwable t) {
+				fatalException(t);
 			}
 		}
-		return stopSession;
+		super.close2();
+		synchronized (i_fileLock) {
+			try {
+				i_file.close();
+				i_file = null;
+				_fileHeader.close();
+				closeTimerFile();
+			} catch (Exception e) {
+				i_file = null;
+				Exceptions4.throwRuntimeException(11, e);
+			}
+			i_file = null;
+		}
+		return true;
 	}
     
     public void commit1() {
@@ -193,10 +185,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
             i_file.close();
         } catch (Exception e) {
         }
-        try {
-            Sessions.sessionStopped(i_session);
-        } catch (Exception e) {
-        }
         i_file = null;
     }
 
@@ -209,7 +197,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
     String fileName() {
-        return i_session.fileName();
+        return _fileName;
     }
 
     private void open() throws Exception {
@@ -219,7 +207,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
             if (Deploy.deleteFile) {
                 System.out.println("Debug option set to DELETE file.");
                 try {
-                    ioAdapter.delete(i_session.fileName());
+                    ioAdapter.delete(_fileName);
                 } catch (Exception e) {
                 }
             }
@@ -251,7 +239,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                         reserve(configImpl().reservedStorageSpace());
                     }
                     write(false);
-                    writeHeader(false);
+                    writeHeader(true, false);
                 } else {
                     readThis();
                 }
@@ -350,28 +338,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         return needsLockFileThread() && Debug.lockFile;
     }
 
-    public boolean writeAccessTime(int address, int offset, long time) throws IOException {
-        synchronized (i_fileLock) {
-            if(i_timerFile == null){
-                return false;
-            }
-            i_timerFile.blockSeek(address, offset);
-            if (Deploy.debug) {
-                Buffer lockBytes = new StatefulBuffer(i_systemTrans, Const4.LONG_LENGTH);
-                lockBytes.writeLong(time);
-                i_timerFile.write(lockBytes._buffer);
-            } else {
-            	PrimitiveCodec.writeLong(i_timerBytes, time);
-                i_timerFile.write(i_timerBytes);
-            }
-            if(i_file == null){
-                closeTimerFile();
-                return false;
-            }
-            return true;
-        }
-    }
-    
     private void closeTimerFile() throws IOException{
         if(i_timerFile == null){
             return;
@@ -446,4 +412,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 	}
 
+	public IoAdapter timerFile() {
+		return i_timerFile;
+	}
 }

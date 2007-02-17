@@ -65,6 +65,7 @@ public class FileHeader1 extends FileHeader {
 
     private void newTimerFileLock(LocalObjectContainer file) {
         _timerFileLock = TimerFileLock.forFile(file);
+        _timerFileLock.setAddresses(0, OPEN_TIME_OFFSET, ACCESS_TIME_OFFSET);
     }
 
     public Transaction interruptedTransaction() {
@@ -77,6 +78,7 @@ public class FileHeader1 extends FileHeader {
 
     protected void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException {
         commonTasksForNewAndRead(file);
+        checkThreadFileLock(file, reader);
         reader.seek(TRANSACTION_POINTER_OFFSET);
         _interruptedTransaction = Transaction.readInterruptedTransaction(file, reader);
         file.blockSizeReadFromFile(reader.readInt());
@@ -84,7 +86,16 @@ public class FileHeader1 extends FileHeader {
         _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());
     }
     
-    private void commonTasksForNewAndRead(LocalObjectContainer file){
+    private void checkThreadFileLock(LocalObjectContainer container, Buffer reader) {
+    	reader.seek(OPEN_TIME_OFFSET);
+    	long lastOpenTime = reader.readLong();
+    	long lastAccessTime = reader.readLong();
+		if(FileHeader.lockedByOtherSession(container, lastAccessTime)){
+			FileHeader.checkIfOtherSessionAlive(container, 0, OPEN_TIME_OFFSET, lastAccessTime);
+		}
+	}
+
+	private void commonTasksForNewAndRead(LocalObjectContainer file){
         newTimerFileLock(file);
         file.i_handlers.oldEncryptionOff();
     }
@@ -94,20 +105,27 @@ public class FileHeader1 extends FileHeader {
     }
     
     public void writeFixedPart(
-        LocalObjectContainer file, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID) {
+        LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID) {
         writer.append(SIGNATURE);
         writer.append(VERSION);
         writer.writeInt((int)timeToWrite(_timerFileLock.openTime(), shuttingDown));
         writer.writeLong(timeToWrite(_timerFileLock.openTime(), shuttingDown));
         writer.writeLong(timeToWrite(System.currentTimeMillis(), shuttingDown));
-        writer.writeInt(0);
-        writer.writeInt(0);
+        writer.writeInt(0);  // transaction pointer 1 for "in-commit-mode"
+        writer.writeInt(0);  // transaction pointer 2
         writer.writeInt(blockSize);
         writer.writeInt(file.systemData().classCollectionID());
         writer.writeInt(freespaceID);
         writer.writeInt(_variablePart.getID());
         writer.noXByteCheck();
         writer.write();
+        if(startFileLockingThread){
+        	try {
+				_timerFileLock.start();
+			} catch (IOException e) {
+				// TODO: throw
+			}
+        }
     }
 
     public void writeTransactionPointer(Transaction systemTransaction, int transactionAddress) {

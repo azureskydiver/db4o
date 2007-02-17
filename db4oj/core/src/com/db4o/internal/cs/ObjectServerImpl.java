@@ -105,21 +105,10 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	public synchronized boolean close() {
-		// Take it easy.
-		// Test cases hit close while communication
-		// is still in progress.
-		Cool.sleepIgnoringInterruption(100);
-
-		synchronized (Global4.lock) {
-			
-			closeServerSocket();
-			
-			boolean isClosed = closeFile();
-			
-			closeMessageDispatchers();
-			
-			return isClosed;
-		}
+		closeServerSocket();
+		boolean isClosed = closeFile();
+		closeMessageDispatchers();
+		return isClosed;
 	}
 
 	private boolean closeFile() {

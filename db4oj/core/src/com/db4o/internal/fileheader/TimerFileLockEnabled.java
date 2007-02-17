@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.io.*;
 
 
 /**
@@ -15,13 +16,19 @@ import com.db4o.internal.*;
  */
 public class TimerFileLockEnabled extends TimerFileLock{
     
-    private final LocalObjectContainer _file;
+    private final IoAdapter _timerFile;
+    
+    private final Object _timerLock;
+    
+    private byte[] _longBytes = new byte[Const4.LONG_LENGTH];
+    
+    private byte[] _intBytes = new byte[Const4.INT_LENGTH];
     
     private int _headerLockOffset = 2 + Const4.INT_LENGTH; 
     
     private final long _opentime;
     
-    private int _baseAddress;
+    private int _baseAddress = -1;
     
     private int _openTimeOffset;
 
@@ -30,30 +37,33 @@ public class TimerFileLockEnabled extends TimerFileLock{
     private boolean _closed = false;
     
     
-    public TimerFileLockEnabled(LocalObjectContainer file) {
-        _file = file;
+    public TimerFileLockEnabled(IoAdaptedObjectContainer file) {
+        _timerLock = file.lock();
+        _timerFile = file.timerFile();
         _opentime = uniqueOpenTime();
     }
     
     public void checkHeaderLock() {
-        StatefulBuffer reader = headerLockIO();
-        reader.read();
-        if(reader.readInt() != (int)_opentime ){
-            throw new DatabaseFileLockedException();
-        }
-        writeHeaderLock();
+    	try {
+			if( ((int)_opentime) == readInt(0, _headerLockOffset)){
+				writeHeaderLock();
+			}
+		} catch (IOException e) {
+			
+		}
+		throw new DatabaseFileLockedException();
     }
     
     public void checkOpenTime() {
-        StatefulBuffer reader = openTimeIO();
-        if(reader == null){
-            return;
-        }
-        reader.read();
-        if(reader.readLong() != _opentime){
-            Exceptions4.throwRuntimeException(22);
-        }
-        writeOpenTime();
+    	try {
+			if(_opentime == readLong(_baseAddress, _openTimeOffset)){
+				writeOpenTime();
+				return;
+			}
+		} catch (IOException e) {
+			
+		}
+		throw new DatabaseFileLockedException();
     }
     
     public void close() throws IOException {
@@ -61,37 +71,12 @@ public class TimerFileLockEnabled extends TimerFileLock{
         _closed = true;
     }
     
-    private StatefulBuffer getWriter(int address, int offset, int length) {
-        StatefulBuffer writer = _file.getWriter(_file.getTransaction(), address, length);
-        writer.moveForward(offset);
-        return writer; 
-    }
-    
-    private StatefulBuffer headerLockIO(){
-        StatefulBuffer writer = getWriter(0, _headerLockOffset, Const4.INT_LENGTH);
-        if (Debug.xbytes) {
-            writer.setID(Const4.IGNORE_ID);
-        }
-        return writer;
-    }
-
     public boolean lockFile() {
         return true;
     }
     
     public long openTime() {
         return _opentime;
-    }
-
-    private StatefulBuffer openTimeIO(){
-        if(_baseAddress == 0){
-            return null;
-        }
-        StatefulBuffer writer = getWriter(_baseAddress,  _openTimeOffset, Const4.LONG_LENGTH);
-        if (Debug.xbytes) {
-            writer.setID(Const4.IGNORE_ID);
-        }
-        return writer;
     }
 
     public void run(){
@@ -116,7 +101,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     
     public void start() throws IOException{
         writeAccessTime(false);
-        _file.syncFiles();
+        _timerFile.sync();
         checkOpenTime();
         // TODO: Thread could be a daemon.
         new Thread(this).start(); 
@@ -129,27 +114,107 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
     
     private boolean writeAccessTime(boolean closing) throws IOException{
-        if(_baseAddress < 1){
+        if(noAddressSet()){
             return true;
         }
         long time = closing ? 0 : System.currentTimeMillis();
-        return _file.writeAccessTime(_baseAddress, _accessTimeOffset, time);
+        boolean ret = writeLong(_baseAddress, _accessTimeOffset, time);
+        sync();
+        return ret;
     }
 
+	private boolean noAddressSet() {
+		return _baseAddress < 0;
+	}
 
     public void writeHeaderLock(){
-        StatefulBuffer writer = headerLockIO();
-        writer.writeInt((int)_opentime);
-        writer.write();
+    	try {
+			writeInt(0, _headerLockOffset, (int)_opentime);
+			sync();
+		} catch (IOException e) {
+			
+		}
     }
 
     public void writeOpenTime() {
-        StatefulBuffer writer = openTimeIO();
-        if(writer== null){
-            return;
-        }
-        writer.writeLong(_opentime);
-        writer.write();
+    	try {
+			writeLong(_baseAddress, _openTimeOffset, _opentime);
+			sync();
+		} catch (IOException e) {
+			
+		}
+    }
+    
+    private boolean writeLong(int address, int offset, long time) throws IOException {
+    	synchronized (_timerLock) {
+            if(_timerFile == null){
+                return false;
+            }
+            _timerFile.blockSeek(address, offset);
+            if (Deploy.debug) {
+                Buffer lockBytes = new Buffer(Const4.LONG_LENGTH);
+                lockBytes.writeLong(time);
+                _timerFile.write(lockBytes._buffer);
+            } else {
+            	PrimitiveCodec.writeLong(_longBytes, time);
+                _timerFile.write(_longBytes);
+            }
+            return true;
+    	}
+    }
+    
+    private long readLong(int address, int offset) throws IOException {
+    	synchronized (_timerLock) {
+            if(_timerFile == null){
+                return 0;
+            }
+            _timerFile.blockSeek(address, offset);
+            if (Deploy.debug) {
+                Buffer lockBytes = new Buffer(Const4.LONG_LENGTH);
+                _timerFile.read(lockBytes._buffer, Const4.LONG_LENGTH);
+                return lockBytes.readLong();
+            }
+            _timerFile.read(_longBytes);
+            return PrimitiveCodec.readLong(_longBytes, 0);
+    	}
+    }
+    
+    private boolean writeInt(int address, int offset, int time) throws IOException {
+    	synchronized (_timerLock) {
+            if(_timerFile == null){
+                return false;
+            }
+            _timerFile.blockSeek(address, offset);
+            if (Deploy.debug) {
+                Buffer lockBytes = new Buffer(Const4.INT_LENGTH);
+                lockBytes.writeInt(time);
+                _timerFile.write(lockBytes._buffer);
+            } else {
+            	PrimitiveCodec.writeInt(_intBytes, 0, time);
+                _timerFile.write(_intBytes);
+            }
+            return true;
+    	}
+    }
+    
+    private long readInt(int address, int offset) throws IOException {
+    	synchronized (_timerLock) {
+            if(_timerFile == null){
+                return 0;
+            }
+            _timerFile.blockSeek(address, offset);
+            if (Deploy.debug) {
+                Buffer lockBytes = new Buffer(Const4.INT_LENGTH);
+                _timerFile.read(lockBytes._buffer, Const4.INT_LENGTH);
+                return lockBytes.readInt();
+            }
+            _timerFile.read(_longBytes);
+            return PrimitiveCodec.readInt(_longBytes, 0);
+    	}
+    }
+    
+    private void sync() throws IOException{
+    	_timerFile.sync();
     }
     
 }
