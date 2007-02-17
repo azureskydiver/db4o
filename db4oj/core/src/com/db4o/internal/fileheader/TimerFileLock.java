@@ -4,7 +4,6 @@ package com.db4o.internal.fileheader;
 
 import java.io.*;
 
-import com.db4o.*;
 import com.db4o.internal.*;
 
 
@@ -14,17 +13,10 @@ import com.db4o.internal.*;
 public abstract class TimerFileLock implements Runnable{
     
     public static TimerFileLock forFile(LocalObjectContainer file){
-        if(lockFile(file)){
-            return new TimerFileLockEnabled(file);
+        if(file.needsLockFileThread()){
+            return new TimerFileLockEnabled((IoAdaptedObjectContainer)file);
         }
         return new TimerFileLockDisabled();
-    }
-    
-    private static boolean lockFile(LocalObjectContainer file){
-        if(! Debug.lockFile){
-            return false;
-        }
-        return file.needsLockFileThread();
     }
 
     public abstract void checkHeaderLock();

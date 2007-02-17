@@ -413,17 +413,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void refreshClasses() {
-        if (i_stream == null) {
-            Sessions.forEachSession(new Visitor4() {
-
-                public void visit(Object obj) {
-                    ObjectContainerBase ys = ((Session) obj).i_stream;
-                    if (!ys.isClosed()) {
-                        ys.refreshClasses();
-                    }
-                }
-            });
-        } else {
+        if (i_stream != null) {
             i_stream.refreshClasses();
         }
     }
@@ -452,18 +442,7 @@ public final class Config4Impl implements Configuration, DeepClone,
      * The ConfigImpl also is our messageSender
      */
     public void send(Object obj) {
-        if (i_stream == null) {
-            Sessions.forEachSession(new Visitor4() {
-
-                public void visit(Object session) {
-                    ObjectContainerBase ys = ((Session) session).i_stream;
-                    if (!ys.isClosed()) {
-                        ys.send(session);
-                    }
-
-                }
-            });
-        } else {
+        if (i_stream != null) {
             i_stream.send(obj);
         }
     }

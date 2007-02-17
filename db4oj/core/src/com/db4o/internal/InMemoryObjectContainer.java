@@ -95,7 +95,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
             _memoryFile.setBytes(new byte[_memoryFile.getInitialSize()]);
             configureNewFile();
             write(false);
-            writeHeader(false);
+            writeHeader(false, false);
         } else {
             _length = bytes.length;
             readThis();
@@ -115,10 +115,6 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 	}
 
     public void syncFiles() {
-    }
-
-    public boolean writeAccessTime(int address, int offset, long time) {
-        return true;
     }
 
 	public void writeBytes(Buffer bytes, int address, int addressOffset) {

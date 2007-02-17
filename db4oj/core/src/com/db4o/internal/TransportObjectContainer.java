@@ -136,7 +136,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 		getTransaction().commit();
 	}
 	
-	final void writeHeader(boolean shuttingDown) {
+	final void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
 	    // do nothing
 	}
     
