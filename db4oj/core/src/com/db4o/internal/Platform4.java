@@ -318,11 +318,11 @@ public final class Platform4 {
         return collectionCheck == Const4.YES;
     }
 
-    static final boolean hasLockFileThread() {
+    public static final boolean hasLockFileThread() {
         return !Deploy.csharp;
     }
 
-    static final boolean hasNio() {
+    public static final boolean hasNio() {
         if (!Debug.nio) {
             return false;
         }

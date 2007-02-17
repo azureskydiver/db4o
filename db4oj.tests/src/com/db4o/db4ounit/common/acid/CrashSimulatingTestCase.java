@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.db4ounit.common.assorted.SimplestPossibleItem;
 import com.db4o.foundation.io.*;
+import com.db4o.internal.*;
 import com.db4o.io.RandomAccessFileAdapter;
 import com.db4o.query.*;
 
@@ -32,7 +33,18 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         _name = name;
     }
     
+    private boolean hasLockFileThread(){
+        if (!Platform4.hasLockFileThread()) {
+            return false;
+        }
+        return ! Platform4.hasNio();
+    }
+    
     public void test() throws IOException{
+    	if(hasLockFileThread()){
+    		System.out.println("CrashSimulatingTestCase is ignored on platforms with lock file thread.");
+    		return;
+    	}
     	
         String path = Path4.combine(Path4.getTempPath(), "crashSimulate");
         String fileName = Path4.combine(path, "cs");
