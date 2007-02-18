@@ -119,7 +119,7 @@ public abstract class BTreeUpdate extends BTreePatch {
 	}
 	
 	public BTreeUpdate replacePatch(BTreePatch patch, BTreeUpdate update) {
-		if(thisPatchGetsReplaced(patch)){
+		if(patch == this){
 			update._next = _next;
 			return update;
 		}
@@ -128,10 +128,6 @@ public abstract class BTreeUpdate extends BTreePatch {
 		}
 		_next = _next.replacePatch(patch, update);
 		return this;
-	}
-	
-	protected boolean thisPatchGetsReplaced(BTreePatch patch){
-		return patch == this;
 	}
 
 

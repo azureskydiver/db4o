@@ -731,7 +731,8 @@ public final class BTreeNode extends PersistentBase{
                 return;
             }
 			if(transPatch.isCancelledRemoval()){
-				_keys[index] = ((BTreeUpdate)patch).replacePatch(transPatch, newRemovePatch(trans));
+				BTreeRemove removePatch = newRemovePatch(trans, transPatch.getObject());
+				_keys[index] = ((BTreeUpdate)patch).replacePatch(transPatch, removePatch);
 				keyChanged(trans, index);
 				return;
 			}
@@ -787,9 +788,13 @@ public final class BTreeNode extends PersistentBase{
 		return _count - 1;
 	}
 
-	private BTreeUpdate newRemovePatch(Transaction trans) {
+	private BTreeRemove newRemovePatch(Transaction trans) {
+		return newRemovePatch(trans, currentKey());
+	}
+	
+	private BTreeRemove newRemovePatch(Transaction trans, Object key) {
         _btree.sizeChanged(trans, -1);
-		return new BTreeRemove(trans, currentKey());
+		return new BTreeRemove(trans, key);
 	}
 
 	private void keyChanged(Transaction trans, int index) {
