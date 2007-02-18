@@ -107,10 +107,6 @@ public final class BTreeNode extends PersistentBase{
             	return null;
             }
             
-            if (s.foundMatch()) {
-            	return null;
-            }
-            
             if(s.count() > 0  && ! s.beforeFirst()){
                 s.moveForward();
             }
@@ -734,6 +730,11 @@ public final class BTreeNode extends PersistentBase{
                 cancelAdding(trans, index);
                 return;
             }
+			if(transPatch.isCancelledRemoval()){
+				_keys[index] = ((BTreeUpdate)patch).replacePatch(transPatch, newRemovePatch(trans));
+				keyChanged(trans, index);
+				return;
+			}
         }else{
             // If the patch is a removal of a cancelled removal for another
             // transaction, we need one for this transaction also.

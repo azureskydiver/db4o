@@ -117,5 +117,18 @@ public abstract class BTreeUpdate extends BTreePatch {
 		}
 		return patch.getObject();
 	}
+	
+	public BTreeUpdate replacePatch(BTreePatch patch, BTreeUpdate update) {
+		if(patch == this){
+			update._next = _next;
+			return update;
+		}
+		if(_next == null){
+			throw new IllegalStateException();
+		}
+		_next = _next.replacePatch(patch, update);
+		return this;
+	}
+
 
 }
