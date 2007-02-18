@@ -130,6 +130,21 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 		assertSingleElement(systemTrans(), element);
 	}
 	
+	public void testAddAddRollbackCommmitInDifferentTransactions() {
+		final int element = 1;
+
+		add(trans(),element);
+		add(systemTrans(), element);
+		db().rollback();
+
+		assertSingleElement(systemTrans(), element);
+		
+		db().commit();
+		
+		assertSingleElement(trans(), element);
+		assertSingleElement(systemTrans(), element);
+	}
+	
 	public static void main(String[] args) {
 		new BTreeAddRemoveTestCase().runSolo();
 	}

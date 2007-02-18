@@ -2,8 +2,10 @@
 
 package com.db4o.db4ounit.common.fieldindex;
 
+import com.db4o.*;
 import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
+import com.db4o.internal.*;
 
 import db4ounit.Assert;
 
@@ -14,14 +16,20 @@ import db4ounit.Assert;
  */
 public class StringIndexCorruptionTestCase extends StringIndexTestCaseBase {
 	
+	public static void main(String[] arguments) {
+		new StringIndexCorruptionTestCase().runSolo();
+	}
+	
 	protected void configure(Configuration config) {
 		super.configure(config);
+		config.bTreeNodeSize(4);
 	    config.flushFileBuffers(false); // this just make the test faster
 	}
 	
-	public void _testStressSet() {		
+	public void testStressSet() {		
     	final ExtObjectContainer container = db();
-    	final int itemCount = 3000;
+    	
+    	final int itemCount = 300;
 		for (int i=0; i<itemCount; ++i) {
     		Item item = new Item(itemName(i));
     		container.set(item);
@@ -38,7 +46,7 @@ public class StringIndexCorruptionTestCase extends StringIndexTestCaseBase {
 			Assert.areEqual(itemName, found.name);
     	}
     }
-
+	
 	private String itemName(int i) {
 		return "item " + i;
 	}
