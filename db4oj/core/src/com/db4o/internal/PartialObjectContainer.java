@@ -435,6 +435,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public void delete(Object a_object) {
+    	generateCallIDOnTopLevel();
         delete(null, a_object);
     }
     
