@@ -34,14 +34,4 @@ public class BTreeCancelledRemoval extends BTreeUpdate {
 		return _newKey;
 	}
 	
-	public BTreeUpdate replacePatch(BTreePatch patch, BTreeUpdate update) {
-		preserveOriginalKey(patch, update);
-		return super.replacePatch(patch, update);
-	}
-
-	private void preserveOriginalKey(BTreePatch patch, BTreeUpdate update) {
-		if(thisPatchGetsReplaced(patch)){
-			update._object = _object;
-		}
-	}
 }
