@@ -47,6 +47,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     	try {
 			if( ((int)_opentime) == readInt(0, _headerLockOffset)){
 				writeHeaderLock();
+				return;
 			}
 		} catch (IOException e) {
 			
