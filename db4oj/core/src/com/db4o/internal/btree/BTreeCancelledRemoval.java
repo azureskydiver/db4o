@@ -21,6 +21,10 @@ public class BTreeCancelledRemoval extends BTreeUpdate {
 	
 	protected void committed(BTree btree) {
 	}
+	
+	public boolean isCancelledRemoval() {
+		return true;
+	}
     
     public String toString() {
         return "(u) " + super.toString();
@@ -28,5 +32,12 @@ public class BTreeCancelledRemoval extends BTreeUpdate {
 
 	protected Object getCommittedObject() {
 		return _newKey;
+	}
+	
+	public BTreeUpdate replacePatch(BTreePatch patch, BTreeUpdate update) {
+		if(patch == this){
+			update._object = _object;
+		}
+		return super.replacePatch(patch, update);
 	}
 }

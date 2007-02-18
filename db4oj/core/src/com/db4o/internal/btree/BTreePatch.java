@@ -17,15 +17,25 @@ public abstract class BTreePatch {
     
     public abstract Object commit(Transaction trans, BTree btree);
 
-    public boolean isRemove() {
-        return false;
-    }
-
     public abstract BTreePatch forTransaction(Transaction trans);
     
     public Object getObject() {
         return _object;
     }
+    
+    public boolean isAdd() {
+        return false;
+    }
+    
+	public boolean isCancelledRemoval() {
+		return false;
+	}
+	
+    public boolean isRemove() {
+        return false;
+    }
+
+    public abstract Object key(Transaction trans);
     
     public abstract Object rollback(Transaction trans, BTree btree);
     
@@ -35,10 +45,5 @@ public abstract class BTreePatch {
         }
         return _object.toString();
     }
-    
-    public boolean isAdd() {
-        return false;
-    }
-    
-    public abstract Object key(Transaction trans);
+
 }
