@@ -1,7 +1,11 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.db4ounit.common.soda.classes.typedhierarchy;
+import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.query.*;
+
+import db4ounit.*;
 
 
 /** RTH: Roundtrip Typed Hierarchy */
@@ -156,5 +160,23 @@ public class STRTH1TestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 		);
 		expect(q, new int[] {1, 3, 4, 5});
 	}
+	
+	public void testDeleteAll() throws Exception {
+		ExtObjectContainer oc = fixture().db(); 
+		ObjectSet os = oc.get(null); 
+		while(os.hasNext()) {
+			oc.delete(os.next()); 
+		}
+		db().commit();
+		fixture().reopen(); 
+		oc = fixture().db(); 
+		os = oc.get(null);
+		Assert.areEqual(0, os.size()); 
+	}
+	
+	public static void main(String[] arguments) {
+		new STRTH1TestCase().runSolo();
+	}
+
 }
 
