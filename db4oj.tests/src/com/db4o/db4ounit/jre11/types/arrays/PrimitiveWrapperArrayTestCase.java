@@ -1,10 +1,9 @@
 /* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre11.staging;
+package com.db4o.db4ounit.jre11.types.arrays;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
-
+import db4ounit.Assert;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class PrimitiveWrapperArrayTestCase extends AbstractDb4oTestCase {
 

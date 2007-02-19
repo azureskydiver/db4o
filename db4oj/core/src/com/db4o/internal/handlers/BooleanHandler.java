@@ -4,18 +4,19 @@ package com.db4o.internal.handlers;
 
 import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.MarshallerFamily;
 
 
 /**
  * @exclude
  */
-public final class BooleanHandler extends PrimitiveHandler
-{
+public final class BooleanHandler extends PrimitiveHandler {
 
     static final int LENGTH = 1 + Const4.ADDED_LENGTH;
 	
 	private static final byte TRUE = (byte) 'T';
 	private static final byte FALSE = (byte) 'F';
+	private static final byte NULL = (byte) 'N';
 	
 	private static final Boolean i_primitive = new Boolean(false);
 	
@@ -62,23 +63,36 @@ public final class BooleanHandler extends PrimitiveHandler
 		return null;
 	}
 	
-	public void write(Object a_object, Buffer a_bytes){
+	public Object writeNew(MarshallerFamily mf, Object obj,
+			boolean topLevel, StatefulBuffer buffer, boolean withIndirection,
+			boolean restoreLinkeOffset) {
+		
+		write(obj, buffer);
+		return obj;
+	}
+	
+	public void write(Object obj, Buffer buffer){
 		if(Deploy.debug){
-			a_bytes.writeBegin(Const4.YAPBOOLEAN);
-		}
-		byte set;
-		if(((Boolean)a_object).booleanValue()){
-			set = TRUE;
-		}else{
-			set = FALSE;
-		}
-		a_bytes.append(set);
+			buffer.writeBegin(Const4.YAPBOOLEAN);
+		}		
+		buffer.append(getEncodedByteValue(obj));
 		if(Deploy.debug){
-			a_bytes.writeEnd();
+			buffer.writeEnd();
 		}
 	}
 
 	
+	private byte getEncodedByteValue(Object obj) {
+		if (obj == null) {
+			return NULL;
+		}
+		if (((Boolean)obj).booleanValue()) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+
 	// Comparison_______________________
 	
 	private boolean i_compareTo;
