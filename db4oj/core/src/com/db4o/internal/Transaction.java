@@ -308,7 +308,7 @@ public abstract class Transaction {
     public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
     }
 
-    void slotFreeOnRollback(int a_id, int a_address, int a_length) {
+    public void slotFreeOnRollback(int a_id, int a_address, int a_length) {
     }
 
     void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
@@ -321,6 +321,9 @@ public abstract class Transaction {
     }
     
     void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
+    }
+    
+    public void slotFreePointerOnRollback(int a_id) {
     }
 
     boolean supportsVirtualFields(){

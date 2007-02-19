@@ -315,8 +315,11 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 		_class = yapClass;
 		
 		writeObjectBegin();
+		
+		int id = trans.stream().newUserObject();
+		trans.slotFreePointerOnRollback(id);
 
-        setID(trans.stream().newUserObject());
+        setID(id);
 
         // will be ended in continueset()
         beginProcessing();

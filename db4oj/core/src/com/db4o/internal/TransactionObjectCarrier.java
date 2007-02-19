@@ -20,7 +20,7 @@ class TransactionObjectCarrier extends LocalTransaction{
 //      do nothing
     }
     
-    void slotFreeOnRollback(int a_id, int a_address, int a_length) {
+    public void slotFreeOnRollback(int a_id, int a_address, int a_length) {
 //      do nothing
     }
     
@@ -34,6 +34,10 @@ class TransactionObjectCarrier extends LocalTransaction{
     
     void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
 //      do nothing
+    }
+    
+    public void slotFreePointerOnCommit(int a_id) {
+    	// do nothing
     }
 	
 	public void setPointer(int a_id, int a_address, int a_length) {

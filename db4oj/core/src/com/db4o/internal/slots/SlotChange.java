@@ -20,6 +20,10 @@ public class SlotChange extends TreeInt {
 	private static final int FREE_ON_ROLLBACK_BIT = 2;
 
 	private static final int SET_POINTER_BIT = 3;
+	
+	private static final int FREE_POINTER_ON_COMMIT_BIT = 4;
+	
+	private static final int FREE_POINTER_ON_ROLLBACK_BIT = 5; 
 
 	public SlotChange(int id) {
 		super(id);
@@ -39,6 +43,14 @@ public class SlotChange extends TreeInt {
 
 	private final void doFreeOnRollback() {
 		setBit(FREE_ON_ROLLBACK_BIT);
+	}
+	
+	private final void doFreePointerOnCommit(){
+		setBit(FREE_POINTER_ON_COMMIT_BIT);
+	}
+	
+	private final void doFreePointerOnRollback(){
+		setBit(FREE_POINTER_ON_ROLLBACK_BIT);
 	}
 
 	private final void doSetPointer() {
@@ -73,7 +85,7 @@ public class SlotChange extends TreeInt {
 
 		_shared = refSlot;
 	}
-
+	
 	public void freeOnRollback(int address, int length) {
 		doFreeOnRollback();
 		_newSlot = new Slot(address, length);
@@ -82,6 +94,14 @@ public class SlotChange extends TreeInt {
 	public void freeOnRollbackSetPointer(int address, int length) {
 		doSetPointer();
 		freeOnRollback(address, length);
+	}
+
+	public void freePointerOnCommit() {
+		doFreePointerOnCommit();
+	}
+	
+	public void freePointerOnRollback() {
+		doFreePointerOnRollback();
 	}
 
 	private final boolean isBitSet(int bitPos) {
@@ -102,6 +122,18 @@ public class SlotChange extends TreeInt {
 
 	public final boolean isSetPointer() {
 		return isBitSet(SET_POINTER_BIT);
+	}
+	
+	/**
+	 * FIXME:	Check where pointers should be freed on commit.
+	 * 			This should be triggered in this class.
+	 */
+	private final boolean isFreePointerOnCommit() {
+		return isBitSet(FREE_POINTER_ON_COMMIT_BIT);
+	}
+
+	public final boolean isFreePointerOnRollback() {
+		return isBitSet(FREE_POINTER_ON_ROLLBACK_BIT);
 	}
 
 	public Slot newSlot() {
@@ -128,6 +160,9 @@ public class SlotChange extends TreeInt {
 		}
 		if (isFreeOnRollback()) {
 			yapFile.free(_newSlot);
+		}
+		if(isFreePointerOnRollback()){
+			yapFile.free(_key, Const4.POINTER_LENGTH);
 		}
 	}
 
