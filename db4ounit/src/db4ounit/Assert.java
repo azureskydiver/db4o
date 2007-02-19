@@ -64,8 +64,12 @@ public final class Assert {
 	}
 	
 	public static void areEqual(double expected, double actual) {
+		areEqual(expected, actual, null);
+	}
+	
+	public static void areEqual(double expected, double actual, String message) {
 		if (expected == actual) return;
-		fail(failureMessage(new Double(expected), new Double(actual)));
+		fail(failureMessage(new Double(expected), new Double(actual), message));
 	}
 	
 	public static void areEqual(long expected, long actual) {
