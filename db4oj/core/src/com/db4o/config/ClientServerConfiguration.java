@@ -5,6 +5,9 @@ package com.db4o.config;
 import com.db4o.messaging.MessageRecipient;
 import com.db4o.messaging.MessageSender;
 
+/**
+ * Client/Server configuration interface. 
+ */
 public interface ClientServerConfiguration {
 	/**
 	 * Sets the number of IDs to be prefetched for an ObjectSet in C/S mode

@@ -7,6 +7,7 @@ import com.db4o.types.*;
 
 /**
  * @persistent
+ * @exclude
  */
 public class P2Collections implements Db4oCollections{
     
