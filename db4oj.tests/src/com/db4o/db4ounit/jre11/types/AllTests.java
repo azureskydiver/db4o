@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4o.db4ounit.jre11.staging;
+package com.db4o.db4ounit.jre11.types;
 
 import db4ounit.extensions.Db4oTestSuite;
 
@@ -12,11 +12,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			
-			/**
-			 *  When you add a test here, make sure you create a Jira issue. 
-			 */
-			
+			com.db4o.db4ounit.jre11.types.arrays.AllTests.class,
 		};
 	}
 }
