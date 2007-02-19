@@ -50,7 +50,7 @@ public class PrimitiveWrapperArrayTestCase extends AbstractDb4oTestCase {
 		
 		public static IntegerContainer testInstance() {
 			return new IntegerContainer(new Integer[] {
-					new Integer(42), new Integer(0), null, new Integer(1) });
+					new Integer(42), new Integer(0), null, new Integer(1), new Integer(-42) });
 		}
 	}
 	
