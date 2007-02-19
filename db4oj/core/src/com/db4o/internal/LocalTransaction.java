@@ -316,7 +316,7 @@ public class LocalTransaction extends Transaction {
         produceSlotChange(a_id).freeOnCommit(i_file, new Slot(a_address, a_length));
     }
 
-    void slotFreeOnRollback(int a_id, int a_address, int a_length) {
+    public void slotFreeOnRollback(int a_id, int a_address, int a_length) {
         checkSynchronization();
         if(DTrace.enabled){
             DTrace.SLOT_FREE_ON_ROLLBACK_ID.log(a_id);
@@ -365,13 +365,31 @@ public class LocalTransaction extends Transaction {
         // FIXME: From looking at this it should call slotFreePointerOnCommit
         //        Write a test case and check.
         
+        //        Looking at references, this method is only called from freed
+        //        BTree nodes. Indeed it should be checked what happens here.
+        
         slotFreeOnCommit(a_id, slot._address, slot._length);
     }
     
     void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
         checkSynchronization();
         slotFreeOnCommit(a_address, a_address, a_length);
+        
+        // FIXME: This does not look nice
         slotFreeOnCommit(a_id, a_id, Const4.POINTER_LENGTH);
+        
+        // FIXME: It should rather work like this:
+        // produceSlotChange(a_id).freePointerOnCommit();
+    }
+    
+    public void slotFreePointerOnRollback(int id) {
+    	
+    	// FIXME: The following fixes #COR-203 but it breaks
+    	//        Db4oHashMapTestCase.
+    	
+    	//        Uncommented until researched.
+    	
+    	// produceSlotChange(id).freePointerOnRollback();
     }
 	
 	private LocalTransaction parentFileTransaction() {

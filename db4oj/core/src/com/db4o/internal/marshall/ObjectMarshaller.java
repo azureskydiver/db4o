@@ -64,7 +64,8 @@ public abstract class ObjectMarshaller {
         int address = -1;
         
         if(! trans.stream().isClient()){
-            address = trans.i_file.getSlot(length); 
+            address = trans.i_file.getSlot(length);
+            trans.slotFreeOnRollback(id, address, length);
         }
         trans.setPointer(id, address, length);
         return createWriterForUpdate(trans, updateDepth, id, address, length);
