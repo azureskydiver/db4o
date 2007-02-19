@@ -368,12 +368,12 @@ namespace com.db4o.@internal
 			return true;
 		}
 
-		internal static bool HasLockFileThread()
+		public static bool HasLockFileThread()
 		{
 			return false;
 		}
 
-		internal static bool HasNio()
+		public static bool HasNio()
 		{
 			return false;
 		}
