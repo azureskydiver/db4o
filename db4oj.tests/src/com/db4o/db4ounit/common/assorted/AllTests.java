@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.assorted;
 
+
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
@@ -23,7 +24,6 @@ public class AllTests extends Db4oTestSuite {
             ComparatorSortTestCase.class,
             DatabaseUnicityTest.class,
             DescendToNullFieldTestCase.class,
-            FileSizeOnRollbackTestCase.class,
             GetByUUIDTestCase.class,
             GetSingleSimpleArrayTestCase.class,
             HandlerRegistryTestCase.class,

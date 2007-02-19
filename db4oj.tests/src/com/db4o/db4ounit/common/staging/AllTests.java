@@ -17,6 +17,7 @@ public class AllTests extends Db4oTestSuite {
 			 *  When you add a test here, make sure you create a Jira issue. 
 			 */
 			
+            FileSizeOnRollbackTestCase.class,
 			LazyQueryDeleteTestCase.class,
 			
 		};
