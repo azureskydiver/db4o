@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.jre11.types.arrays;
 
-import db4ounit.Assert;
+import db4ounit.*;
 import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class PrimitiveWrapperArrayTestCase extends AbstractDb4oTestCase {
@@ -12,80 +12,67 @@ public class PrimitiveWrapperArrayTestCase extends AbstractDb4oTestCase {
 	}
 	
 	protected void store() throws Exception {
-		store(Item.testInstance());
+		store(BooleanContainer.testInstance());
+		store(IntegerContainer.testInstance());
 	}
 	
-	public void test(){
-		Item item = (Item) retrieveOnlyInstance(Item.class);
-		Assert.areEqual(Item.testInstance(), item);
+	public void testBooleanArray() {
+		assertArrayContainer(BooleanContainer.testInstance());
 	}
 	
-	public static class Item{
+	public void _testIntegerArray() {
+		assertArrayContainer(IntegerContainer.testInstance());
+	}
+	
+	private void assertArrayContainer(final ArrayContainer expected) {
+		ArrayContainer item = (ArrayContainer) retrieveOnlyInstance(expected.getClass());		
+		ArrayAssert.areEqual(expected.getArray(), item.getArray());
+	}
+	
+	public static interface ArrayContainer {
 		
-		public Boolean[] _booleans;
+		public Object[] getArray();
+	}
+	
+	public static class IntegerContainer implements ArrayContainer {
+		public Integer[] _array;
 		
-		public Item(){
-			
+		public IntegerContainer() {
 		}
 		
-		public Item(Boolean[] booleans){
-			_booleans = booleans;
+		public IntegerContainer(Integer[] array) {
+			_array = array;
 		}
 		
-		public static Item testInstance(){
-			Boolean[] booleans = new Boolean[]{new Boolean(true), new Boolean(false), null };
-			return new Item(booleans);
+		public Object[] getArray() {
+			return _array;
 		}
 		
-		public boolean equals(Object obj) {
-			if(! (obj instanceof Item)){
-				return false;
-			}
-			Item other = (Item)obj;
-			return areEqual(_booleans, other._booleans);
+		public static IntegerContainer testInstance() {
+			return new IntegerContainer(new Integer[] {
+					new Integer(42), new Integer(0), null, new Integer(1) });
+		}
+	}
+	
+	public static class BooleanContainer implements ArrayContainer {
+		
+		public Boolean[] _array;
+		
+		public BooleanContainer() {
 		}
 		
-		public static boolean areEqual(Boolean[] cmp, Boolean[] with){
-			if(cmp == null){
-				return with == null;
-			}
-			if(with == null){
-				return false;
-			}
-			if(cmp.length != with.length){
-				return false;
-			}
-			for (int i = 0; i < cmp.length; i++) {
-				if(! areEqual(cmp[i], with[i])){
-					return false;
-				}
-			}
-			return true;
+		public BooleanContainer(Boolean[] array){
+			_array = array;
 		}
 		
-		public static boolean areEqual(Boolean cmp, Boolean with){
-			if(cmp == null){
-				return with == null;
-			}
-			return cmp.equals(with);
+		public Object[] getArray() {
+			return _array;
 		}
 		
-		public String toString() {
-			String res = "Item: ";
-			if(_booleans == null){
-				return res + "[null]";
-			}
-			if(_booleans.length == 0){
-				return res + "{ }";
-			}
-			res += "{ " + _booleans[0]; 
-			for (int i = 1; i < _booleans.length; i++) {
-				res += ", " + _booleans[i];
-			}
-			res += " }";
-			return res;
+		public static BooleanContainer testInstance(){
+			return new BooleanContainer(new Boolean[] {
+					new Boolean(true), new Boolean(false), null });
 		}
-		
 	}
 
 }
