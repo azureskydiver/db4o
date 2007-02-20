@@ -468,7 +468,7 @@ public final class Platform4 {
     }
 
     // FIXME: functionality should really be in IoAdapter
-    public static final void lockFile(Object file) {
+    public static final void lockFile(String path,Object file) {
         if (!hasNio()) {
             return;
         }
@@ -480,12 +480,12 @@ public final class Platform4 {
             return;
         }
         
-        jdk().lockFile(file);
+        jdk().lockFile(path,file);
     }
     
-    public static final void unlockFile(Object file) {
+    public static final void unlockFile(String path,Object file) {
         if (hasNio()) {
-            jdk().unlockFile(file);
+            jdk().unlockFile(path,file);
         }
     }
 

@@ -12,25 +12,27 @@ import com.db4o.internal.*;
  */
 public class RandomAccessFileAdapter extends IoAdapter {
 
+	private String _path;
     private RandomAccessFile _delegate;
 
     public RandomAccessFileAdapter(){
     }
 
     protected RandomAccessFileAdapter(String path, boolean lockFile, long initialLength) throws IOException {
-        _delegate = new RandomAccessFile(path, "rw");
+    	_path=new File(path).getCanonicalPath();
+        _delegate = new RandomAccessFile(_path, "rw");
         if(initialLength>0) {
 	        _delegate.seek(initialLength - 1);
 	        _delegate.write(new byte[] {0});
         }
         if(lockFile){
-            Platform4.lockFile(_delegate);
+            Platform4.lockFile(_path,_delegate);
         }
     }
 
     public void close() throws IOException {
         try {
-            Platform4.unlockFile(_delegate);
+            Platform4.unlockFile(_path,_delegate);
         } catch (Exception e) {
         }
         _delegate.close();

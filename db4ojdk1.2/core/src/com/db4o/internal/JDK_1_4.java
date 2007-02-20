@@ -16,24 +16,27 @@ class JDK_1_4 extends JDK_1_3 {
 	private Constructor objectConstructor;
 	private Method factoryMethod;
 	
-	synchronized void lockFile(Object file) {
+	synchronized void lockFile(String path,Object file) {
+		if(fileLocks == null){
+			fileLocks = new Hashtable();
+		}
+		if(fileLocks.containsKey(path)) {
+			throw new DatabaseFileLockedException();
+		}
 		Object channel = invoke(file, "getChannel", null, null);
 		Object fl = invoke(channel, "tryLock", null, null); 
 		if(fl == null){
 			throw new DatabaseFileLockedException();
 		}
-		if(fileLocks == null){
-			fileLocks = new Hashtable();
-		}
-		fileLocks.put(file, fl);
+		fileLocks.put(path, fl);
 	}
 	
-	synchronized void unlockFile(Object file) {
+	synchronized void unlockFile(String path,Object file) {
 		if(fileLocks != null){
-			Object fl = fileLocks.get(file);
+			Object fl = fileLocks.get(path);
 			if(fl != null){
 			    invoke(fl, "release", null, null); 
-				fileLocks.remove(file);
+				fileLocks.remove(path);
 			}
 		}
 	}
