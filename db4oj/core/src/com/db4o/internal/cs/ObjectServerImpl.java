@@ -114,7 +114,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	final void checkClosed() {
 		if (_container == null) {
-			Exceptions4.throwRuntimeException(20, _name);
+			Exceptions4.throwRuntimeException(Messages.CLOSED_OR_OPEN_FAILED, _name);
 		}
 		_container.checkClosed();
 	}
