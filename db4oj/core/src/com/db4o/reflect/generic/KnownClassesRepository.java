@@ -2,12 +2,33 @@
 
 package com.db4o.reflect.generic;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.reflect.*;
 
 public class KnownClassesRepository {
+	
+	// FIXME very java-centric, what about .NET?
+	private final static Map PRIMITIVES;
+	
+	static {
+		PRIMITIVES=new HashMap();
+		registerPrimitive(Boolean.class,Boolean.TYPE);
+		registerPrimitive(Byte.class,Byte.TYPE);
+		registerPrimitive(Short.class,Short.TYPE);
+		registerPrimitive(Character.class,Character.TYPE);
+		registerPrimitive(Integer.class,Integer.TYPE);
+		registerPrimitive(Long.class,Long.TYPE);
+		registerPrimitive(Float.class,Float.TYPE);
+		registerPrimitive(Double.class,Double.TYPE);
+	}
+
+	private static void registerPrimitive(Class wrapper,Class primitive) {
+		PRIMITIVES.put(wrapper.getName(),primitive);
+	}
 	
 	private ObjectContainerBase _stream;
 	private Transaction _trans;
@@ -146,13 +167,18 @@ public class KnownClassesRepository {
                     fieldClass = _stream.reflector().forClass(Object.class);
                     break;
                 case HandlerRegistry.ANY_ARRAY_ID:
-                    fieldClass = _builder.arrayClass(_stream.reflector().forClass(Object.class));
+                    fieldClass = arrayClass(_stream.reflector().forClass(Object.class));
                     break;
                 default:
                 	fieldClass=forID(handlerID);
                 	fieldClass=_stream.reflector().forName(fieldClass.getName());
+                	if(fieldInfo.isPrimitive()) {
+                		fieldClass=primitiveClass(fieldClass);
+                	}
+                	if(fieldInfo.isArray()) {
+                		fieldClass=arrayClass(fieldClass);
+                	}
             }
-    	    		    
 			fields[i]=_builder.createField(clazz, fieldName, fieldClass, fieldInfo.isVirtual(), fieldInfo.isPrimitive(), fieldInfo.isArray(), fieldInfo.isNArray());
 		}
 		_builder.initFields(clazz, fields);
@@ -191,4 +217,17 @@ public class KnownClassesRepository {
     public ReflectClass lookupByName(String name) {
     	return (ReflectClass)_classByName.get(name);
     }
+    
+	private ReflectClass arrayClass(ReflectClass clazz) {
+		Object proto=clazz.reflector().array().newInstance(clazz,0);
+		return clazz.reflector().forObject(proto);
+	}
+
+	private ReflectClass primitiveClass(ReflectClass baseClass) {
+		Class primitive=(Class) PRIMITIVES.get(baseClass.getName());
+		if(primitive!=null) {
+			return baseClass.reflector().forClass(primitive);
+		}
+		return baseClass;
+	}
 }
