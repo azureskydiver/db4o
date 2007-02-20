@@ -77,9 +77,7 @@ public class FileHeader0 extends FileHeader {
         if (_configBlock._bootRecordID <= 0) {
             return;
         }
-        file.showInternalClasses(true);
-        Object bootRecord = file.getByID1(file.getSystemTransaction(), _configBlock._bootRecordID);
-        file.showInternalClasses(false);
+        Object bootRecord = getBootRecord(file);
         
         if (! (bootRecord instanceof PBootRecord)) {
             initBootRecord(file);
@@ -94,6 +92,15 @@ public class FileHeader0 extends FileHeader {
         file.systemData().identity(_bootRecord.i_db);
     }
 
+	private Object getBootRecord(LocalObjectContainer file) {
+		file.showInternalClasses(true);
+		try {
+			return file.getByID1(file.getSystemTransaction(), _configBlock._bootRecordID);
+		} finally {
+			file.showInternalClasses(false);
+		}
+	}
+
     public void initNew(LocalObjectContainer file) throws IOException {
         _configBlock = ConfigBlock.forNewFile(file);
         initBootRecord(file);
@@ -102,14 +109,15 @@ public class FileHeader0 extends FileHeader {
     private void initBootRecord(LocalObjectContainer file){
         
         file.showInternalClasses(true);
-        
-        _bootRecord = new PBootRecord();
-        file.setInternal(file.getSystemTransaction(), _bootRecord, false);
-        
-        _configBlock._bootRecordID = file.getID1(_bootRecord);
-        writeVariablePart(file, 1);
-        
-        file.showInternalClasses(false);
+        try {
+	        _bootRecord = new PBootRecord();
+	        file.setInternal(file.getSystemTransaction(), _bootRecord, false);
+	        
+	        _configBlock._bootRecordID = file.getID1(_bootRecord);
+	        writeVariablePart(file, 1);
+        } finally {
+        	file.showInternalClasses(false);
+        }
     }
 
     public Transaction interruptedTransaction() {

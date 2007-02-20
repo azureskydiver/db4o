@@ -644,7 +644,6 @@ public class FieldMetadata implements StoredField {
 
     private TypeHandler4 loadJavaField1() {
         try {
-            ObjectContainerBase stream = i_yapClass.getStream();
             ReflectClass claxx = i_yapClass.classReflector();
             if(claxx == null){
                 return null;
@@ -654,11 +653,15 @@ public class FieldMetadata implements StoredField {
                 return null;
             }
             i_javaField.setAccessible();
+            
+            ObjectContainerBase stream = i_yapClass.getStream();
             stream.showInternalClasses(true);
-            TypeHandler4 handler = stream.i_handlers.handlerForClass(stream,
-                i_javaField.getFieldType());
-            stream.showInternalClasses(false);
-            return handler;
+            try {
+	            return stream.i_handlers.handlerForClass(stream,
+	                i_javaField.getFieldType());
+            } finally {
+            	stream.showInternalClasses(false);
+            }
         } catch (Exception e) {
             if (Debug.atHome) {
                 e.printStackTrace();

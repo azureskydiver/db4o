@@ -139,14 +139,17 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         int dbID = a_bytes.readInt();
         ObjectContainerBase stream = a_trans.stream();
         stream.showInternalClasses(true);
-        Db4oDatabase db = (Db4oDatabase)stream.getByID2(a_trans, dbID);
-        if(db != null && db.i_signature == null){
-            stream.activate2(a_trans, db, 2);
+        try {
+	        Db4oDatabase db = (Db4oDatabase)stream.getByID2(a_trans, dbID);
+	        if(db != null && db.i_signature == null){
+	            stream.activate2(a_trans, db, 2);
+	        }
+	        VirtualAttributes va = a_yapObject.virtualAttributes();
+	        va.i_database = db; 
+	        va.i_uuid = a_bytes.readLong();
+        } finally {
+        	stream.showInternalClasses(false);
         }
-        VirtualAttributes va = a_yapObject.virtualAttributes();
-        va.i_database = db; 
-        va.i_uuid = a_bytes.readLong();
-        stream.showInternalClasses(false);
     }
 
     public int linkLength() {

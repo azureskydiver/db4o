@@ -27,8 +27,6 @@ public class DatabaseUnicityTest extends AbstractDb4oTestCase  {
         	ht.put(d4b.i_signature, "");
         }
         yapStream.showInternalClasses(false);
-        
-        oc.close();
-	}
+    }
 
 }

@@ -286,11 +286,14 @@ public final class ClassMetadataRepository extends PersistentBase {
     void initOnUp(Transaction systemTrans) {
         i_yapClassCreationDepth++;
         systemTrans.stream().showInternalClasses(true);
-        Iterator4 i = i_classes.iterator();
-        while (i.moveNext()) {
-            ((ClassMetadata)i.current()).initOnUp(systemTrans);
+        try {
+	        Iterator4 i = i_classes.iterator();
+	        while (i.moveNext()) {
+	            ((ClassMetadata)i.current()).initOnUp(systemTrans);
+	        }
+        } finally {
+        	systemTrans.stream().showInternalClasses(false);
         }
-        systemTrans.stream().showInternalClasses(false);
         i_yapClassCreationDepth--;
         initYapClassesOnUp();
     }

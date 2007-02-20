@@ -40,8 +40,11 @@ public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
         i_versionGenerator = systemData.lastTimeStampID();
         i_db = systemData.identity();
         file.showInternalClasses(true);
-        store(2);
-        file.showInternalClasses(false);
+        try {
+        	store(2);
+        } finally {
+        	file.showInternalClasses(false);
+        }
     }
 
 }

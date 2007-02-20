@@ -155,8 +155,11 @@ public class DefragContextImpl implements DefragContext {
 	public StoredClass[] storedClasses(DbSelector selector) {
 		LocalObjectContainer db = selector.db(this);
 		db.showInternalClasses(true);
-		StoredClass[] classes=db.storedClasses();
-		return classes;
+		try {
+			return db.storedClasses();
+		} finally {
+			db.showInternalClasses(false);
+		}
 	}
 	
 	public LatinStringIO stringIO() {

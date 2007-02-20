@@ -33,10 +33,13 @@ public class ReplicationRecord implements Internal4{
     
     public void store(ObjectContainerBase stream){
         stream.showInternalClasses(true);
-        Transaction ta = stream.checkTransaction(null);
-        stream.setAfterReplication(ta, this, 1, false);
-        stream.commit();
-        stream.showInternalClasses(false);
+        try {
+	        Transaction ta = stream.checkTransaction(null);
+	        stream.setAfterReplication(ta, this, 1, false);
+	        stream.commit();
+        } finally {
+        	stream.showInternalClasses(false);
+        }
     }
     
     public static ReplicationRecord beginReplication(Transaction transA, Transaction  transB){
@@ -78,27 +81,31 @@ public class ReplicationRecord implements Internal4{
         
         if(rrA != rrB){
             peerB.showInternalClasses(true);
-            int id = peerB.getID1(rrB);
-            peerB.bind1(transB, rrA, id);
-            peerB.showInternalClasses(false);
+            try {
+	            int id = peerB.getID1(rrB);
+	            peerB.bind1(transB, rrA, id);
+	        } finally {
+            	peerB.showInternalClasses(false);
+            }
         }
         
         return rrA;
     }
     
     public static ReplicationRecord queryForReplicationRecord(ObjectContainerBase stream, Db4oDatabase younger, Db4oDatabase older) {
-        ReplicationRecord res = null;
         stream.showInternalClasses(true);
-        Query q = stream.query();
-        q.constrain(Const4.CLASS_REPLICATIONRECORD);
-        q.descend("_youngerPeer").constrain(younger).identity();
-        q.descend("_olderPeer").constrain(older).identity();
-        ObjectSet objectSet = q.execute();
-        if(objectSet.hasNext()){
-            res = (ReplicationRecord)objectSet.next();
+        try {
+	        Query q = stream.query();
+	        q.constrain(Const4.CLASS_REPLICATIONRECORD);
+	        q.descend("_youngerPeer").constrain(younger).identity();
+	        q.descend("_olderPeer").constrain(older).identity();
+	        ObjectSet objectSet = q.execute();
+	        return objectSet.hasNext() 
+	        	? (ReplicationRecord)objectSet.next()
+	        	: null;
+        } finally {
+        	stream.showInternalClasses(false);
         }
-        stream.showInternalClasses(false);
-        return res;
     }
 }
 
