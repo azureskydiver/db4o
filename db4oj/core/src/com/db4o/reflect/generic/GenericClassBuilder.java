@@ -39,12 +39,7 @@ public class GenericClassBuilder implements ReflectClassBuilder {
         ((GenericClass)clazz).initFields((GenericField[])fields);
 	}
 
-	public ReflectClass arrayClass(ReflectClass clazz) {
-		return ((GenericClass)clazz).arrayClass();
-	}
-
 	public ReflectField[] fieldArray(int length) {
 		return new GenericField[length];
 	}
-
 }
