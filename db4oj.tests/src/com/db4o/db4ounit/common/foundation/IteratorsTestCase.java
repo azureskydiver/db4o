@@ -11,6 +11,38 @@ import db4ounit.*;
  */
 public class IteratorsTestCase implements TestCase {
 	
+	public void testFilter() {
+		assertFilter(
+				new String[] { "bar", "baz" },
+				new String[] { "foo", "bar", "baz", "zong" },
+				new Predicate4() {
+					public boolean match(Object candidate) {
+						return ((String)candidate).startsWith("b");
+					}});
+		
+		assertFilter(
+				new String[] { "foo", "bar" },
+				new String[] { "foo", "bar" },
+				new Predicate4() {
+					public boolean match(Object candidate) {
+						return true;
+					}
+				});
+		
+		assertFilter(
+				new String[0],
+				new String[] { "foo", "bar" },
+				new Predicate4() {
+					public boolean match(Object candidate) {
+						return false;
+					}
+				});
+	}
+
+	private void assertFilter(String[] expected, String[] actual, Predicate4 filter) {
+		IteratorAssert.areEqual(expected, Iterators.filter(actual, filter));
+	}
+
 	public void testMap() {
 		final int[] array = new int[] { 1, 2, 3 };
 		final Collection4 args = new Collection4();

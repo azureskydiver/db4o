@@ -3,7 +3,7 @@
 package com.db4o.foundation;
 
 /**
- * Iterator primitives (cat, map, reduce, filter, etc...).
+ * Iterator primitives (concat, map, reduce, filter, etc...).
  * 
  * @exclude
  */
@@ -21,5 +21,13 @@ public class Iterators {
 	
 	public static Iterator4 map(Object[] array, Function4 function) {
 		return map(new ArrayIterator4(array), function);
+	}
+	
+	public static Iterator4 filter(Object[] array, Predicate4 predicate) {
+		return filter(new ArrayIterator4(array), predicate);
+	}
+	
+	public static Iterator4 filter(Iterator4 iterator, Predicate4 predicate) {
+		return new FilteredIterator(iterator, predicate);
 	}
 }
