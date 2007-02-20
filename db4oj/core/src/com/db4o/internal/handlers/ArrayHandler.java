@@ -170,7 +170,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return i_handler.indexNullHandling();
     }
     
-    public int isSecondClass(){
+    public TernaryBool isSecondClass(){
         return i_handler.isSecondClass();
     }
     
@@ -496,7 +496,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
     }
     
     public final void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
-    	if(!(i_handler.isSecondClass()==Const4.YES)) {
+    	if(!(i_handler.isSecondClass()==TernaryBool.YES)) {
     		mf._array.defragIDs(this, readers);
     	}
     	else {

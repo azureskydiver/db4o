@@ -44,7 +44,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec CALLBACKS=new KeySpec(true);
     
-	private final static KeySpec CALL_CONSTRUCTORS=new KeySpec(Const4.DEFAULT);
+	private final static KeySpec CALL_CONSTRUCTORS=new KeySpec(TernaryBool.UNSPECIFIED);
     
 	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE=new KeySpec(true);
     
@@ -179,7 +179,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
     
     public void callConstructors(boolean flag){
-        _config.put(CALL_CONSTRUCTORS,(flag ? Const4.YES : Const4.NO));
+        _config.put(CALL_CONSTRUCTORS,(flag ? TernaryBool.YES : TernaryBool.NO));
     }
 
     public void classActivationDepthConfigurable(boolean turnOn) {
@@ -620,8 +620,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsBoolean(CALLBACKS);
 	}
 
-	int callConstructors() {
-		return _config.getAsInt(CALL_CONSTRUCTORS);
+	TernaryBool callConstructors() {
+		return _config.getAsTernaryBool(CALL_CONSTRUCTORS);
 	}
 
 	boolean classActivationDepthConfigurable() {

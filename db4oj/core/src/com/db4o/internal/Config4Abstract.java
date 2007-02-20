@@ -2,8 +2,7 @@
 
 package com.db4o.internal;
 
-import com.db4o.foundation.KeySpec;
-import com.db4o.foundation.KeySpecHashtable4;
+import com.db4o.foundation.*;
 
 
 /**
@@ -12,11 +11,11 @@ import com.db4o.foundation.KeySpecHashtable4;
 public abstract class Config4Abstract {
 	protected KeySpecHashtable4 _config;
 
-	private final static KeySpec CASCADE_ON_ACTIVATE=new KeySpec(Const4.DEFAULT);
+	private final static KeySpec CASCADE_ON_ACTIVATE=new KeySpec(TernaryBool.UNSPECIFIED);
     
-	private final static KeySpec CASCADE_ON_DELETE=new KeySpec(Const4.DEFAULT);
+	private final static KeySpec CASCADE_ON_DELETE=new KeySpec(TernaryBool.UNSPECIFIED);
     
-	private final static KeySpec CASCADE_ON_UPDATE=new KeySpec(Const4.DEFAULT);
+	private final static KeySpec CASCADE_ON_UPDATE=new KeySpec(TernaryBool.UNSPECIFIED);
 
     private final static KeySpec NAME=new KeySpec(null);
 
@@ -41,23 +40,27 @@ public abstract class Config4Abstract {
 	}
 
 	protected void putThreeValued(KeySpec spec,boolean flag) {
-		_config.put(spec, flag ? Const4.YES : Const4.NO);
+		_config.put(spec, flag ? TernaryBool.YES : TernaryBool.NO);
 	}
-	
-	public int cascadeOnActivate(){
+
+	protected void putThreeValuedInt(KeySpec spec,boolean flag) {
+		_config.put(spec, flag ? 1 : -1);
+	}
+
+	public TernaryBool cascadeOnActivate(){
 		return cascade(CASCADE_ON_ACTIVATE);
 	}
 	
-	public int cascadeOnDelete(){
+	public TernaryBool cascadeOnDelete(){
 		return cascade(CASCADE_ON_DELETE);
 	}
 	
-	public int cascadeOnUpdate(){
+	public TernaryBool cascadeOnUpdate(){
 		return cascade(CASCADE_ON_UPDATE);
 	}
 
-	private int cascade(KeySpec spec) {
-		return _config.getAsInt(spec);
+	private TernaryBool cascade(KeySpec spec) {
+		return _config.getAsTernaryBool(spec);
 	}
 	
 	abstract String className();

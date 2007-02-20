@@ -162,8 +162,8 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return true;
     }
     
-    public int isSecondClass(){
-        return Const4.UNKNOWN;
+    public TernaryBool isSecondClass(){
+        return TernaryBool.UNSPECIFIED;
     }
     
 	public boolean isStrongTyped(){

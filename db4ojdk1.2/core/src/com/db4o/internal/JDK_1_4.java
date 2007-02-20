@@ -6,6 +6,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 class JDK_1_4 extends JDK_1_3 {
 	
@@ -40,7 +41,7 @@ class JDK_1_4 extends JDK_1_3 {
 	public Constructor serializableConstructor(Class clazz){
 	    if(reflectionFactory == null){
 	        if(! initSerializableConstructor()){
-	            Platform4.callConstructorCheck = Const4.YES;
+	            Platform4.callConstructorCheck = TernaryBool.YES;
 	            return null;
 	        }
 	    }

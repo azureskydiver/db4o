@@ -13,7 +13,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
     
 	private final static KeySpec QUERY_EVALUATION=new KeySpec(true);
     
-	private final static KeySpec INDEXED=new KeySpec(Const4.DEFAULT);
+	private final static KeySpec INDEXED=new KeySpec(TernaryBool.UNSPECIFIED);
     
 	protected Config4Field(Config4Class a_class, KeySpecHashtable4 config) {
 		super(config);
@@ -64,8 +64,8 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
         }
         
     	LocalObjectContainer stream = (LocalObjectContainer)anyStream;
-        int indexedFlag=_config.getAsInt(INDEXED);        
-        if (indexedFlag == Const4.NO) {
+        TernaryBool indexedFlag=_config.getAsTernaryBool(INDEXED);        
+        if (indexedFlag.definiteNo()) {
             yapField.dropIndex(systemTrans);
             return;
         }
@@ -74,7 +74,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
         	return;
         }
         
-        if (indexedFlag != Const4.YES) {
+        if (!indexedFlag.definiteYes()) {
         	return;
         }
         

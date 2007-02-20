@@ -78,8 +78,8 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
         return false;
     }
     
-    public int isSecondClass(){
-        return Const4.YES;
+    public TernaryBool isSecondClass(){
+        return TernaryBool.YES;
     }
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
