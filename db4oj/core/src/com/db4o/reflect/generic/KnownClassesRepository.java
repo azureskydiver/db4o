@@ -2,8 +2,6 @@
 
 package com.db4o.reflect.generic;
 
-import java.util.*;
-
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
@@ -12,18 +10,18 @@ import com.db4o.reflect.*;
 public class KnownClassesRepository {
 	
 	// FIXME very java-centric, what about .NET?
-	private final static Map PRIMITIVES;
+	private final static Hashtable4 PRIMITIVES;
 	
 	static {
-		PRIMITIVES=new HashMap();
-		registerPrimitive(Boolean.class,Boolean.TYPE);
-		registerPrimitive(Byte.class,Byte.TYPE);
-		registerPrimitive(Short.class,Short.TYPE);
-		registerPrimitive(Character.class,Character.TYPE);
-		registerPrimitive(Integer.class,Integer.TYPE);
-		registerPrimitive(Long.class,Long.TYPE);
-		registerPrimitive(Float.class,Float.TYPE);
-		registerPrimitive(Double.class,Double.TYPE);
+		PRIMITIVES=new Hashtable4();
+		registerPrimitive(Boolean.class,boolean.class);
+		registerPrimitive(Byte.class,byte.class);
+		registerPrimitive(Short.class,short.class);
+		registerPrimitive(Character.class,char.class);
+		registerPrimitive(Integer.class,int.class);
+		registerPrimitive(Long.class,long.class);
+		registerPrimitive(Float.class,float.class);
+		registerPrimitive(Double.class,double.class);
 	}
 
 	private static void registerPrimitive(Class wrapper,Class primitive) {
