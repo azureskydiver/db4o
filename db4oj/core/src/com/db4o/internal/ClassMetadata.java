@@ -175,7 +175,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 
 	private boolean collectReflectFields(ObjectContainerBase stream, Collection4 collectedFields) {
 		boolean dirty=false;
-		ReflectField[] fields = classReflector().getDeclaredFields();
+		ReflectField[] fields = reflectFields();
 		for (int i = 0; i < fields.length; i++) {
 		    if (storeField(fields[i])) {
 		        TypeHandler4 wrapper = stream.i_handlers.handlerForClass(stream, fields[i].getFieldType());
@@ -1719,100 +1719,141 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     }
 
     void storeStaticFieldValues(Transaction trans, boolean force) {
-        if (!bitIsTrue(Const4.STATIC_FIELDS_STORED) || force) {
-            bitTrue(Const4.STATIC_FIELDS_STORED);
-            boolean store = 
-                (i_config != null && i_config.staticFieldValuesArePersisted())
-            || Platform4.storeStaticFieldValues(trans.reflector(), classReflector()); 
-            
-            if (store) {
-                ObjectContainerBase stream = trans.stream();
-                stream.showInternalClasses(true);
-                
-                Query q = stream.query(trans);
-                q.constrain(Const4.CLASS_STATICCLASS);
-                q.descend("name").constrain(i_name);
-                StaticClass sc = new StaticClass();
+        if (bitIsTrue(Const4.STATIC_FIELDS_STORED) && !force) {
+        	return;
+        }
+        bitTrue(Const4.STATIC_FIELDS_STORED);
+        
+        final boolean storeStaticFields = staticFieldValuesArePersisted()
+        			|| Platform4.storeStaticFieldValues(trans.reflector(), classReflector()); 
+        if (!storeStaticFields) {
+        	return;
+        }
+        
+        ObjectContainerBase stream = trans.stream();
+        stream.showInternalClasses(true);
+        try {
+            StaticClass sc = queryStaticClass(trans);
+            StaticField[] existingFields = null;
+            if (sc != null) {
+                stream.activate1(trans, sc, 4);
+                existingFields = sc.fields;
+            } else {
+            	sc = new StaticClass();
                 sc.name = i_name;
-                ObjectSet os = q.execute();
-                StaticField[] oldFields = null;
-                if (os.size() > 0) {
-                    sc = (StaticClass)os.next();
-                    stream.activate1(trans, sc, 4);
-                    oldFields = sc.fields;
-                }
-                ReflectField[] fields = classReflector().getDeclaredFields();
-
-                Collection4 newFields = new Collection4();
-
-                for (int i = 0; i < fields.length; i++) {
-                    if (fields[i].isStatic()) {
-                        fields[i].setAccessible();
-                        String fieldName = fields[i].getName();
-                        Object value = fields[i].get(null);
-                        boolean handled = false;
-                        if (oldFields != null) {
-                            for (int j = 0; j < oldFields.length; j++) {
-                                if (fieldName.equals(oldFields[j].name)) {
-                                    if (oldFields[j].value != null
-                                        && value != null
-                                        && oldFields[j].value.getClass() == value.getClass()) {
-                                        long id = stream.getID1(oldFields[j].value);
-                                        if (id > 0) {
-                                            if (oldFields[j].value != value) {
-                                                
-                                                // This is the clue:
-                                                // Bind the current static member to it's old database identity,
-                                                // so constants and enums will work with '=='
-                                                stream.bind1(trans, value, id);
-                                                
-                                                // This may produce unwanted side effects if the static field object
-                                                // was modified in the current session. TODO:Add documentation case.
-                                                
-                                                stream.refresh(value, Integer.MAX_VALUE);
-                                                
-                                                oldFields[j].value = value;
-                                            }
-                                            handled = true;
-                                        }
-                                    }
-                                    if (!handled) {
-                                        if(value == null){
-                                            try{
-                                                fields[i].set(null, oldFields[j].value);
-                                            }catch(Exception ex){
-                                                // fail silently
-                                            }
-                                            
-                                        }else{
-                                            oldFields[j].value = value;
-                                            if (!stream.isClient()) {
-                                                stream.setInternal(trans, oldFields[j], true);
-                                            }
-                                        }
-                                    }
-                                    newFields.add(oldFields[j]);
-                                    handled = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!handled) {
-                            newFields.add(new StaticField(fieldName, value));
-                        }
-                    }
-                }
-                if (newFields.size() > 0) {
-                    sc.fields = new StaticField[newFields.size()];
-                    newFields.toArray(sc.fields);
-                    if (!stream.isClient()) {
-                        stream.setInternal(trans, sc, true);
-                    }
-                }
-                stream.showInternalClasses(false);
             }
+            
+            Collection4 newFields = new Collection4();
+            final Iterator4 staticFields = staticFields();
+            while (staticFields.moveNext()) {
+                final ReflectField reflectField = (ReflectField)staticFields.current();
+		        reflectField.setAccessible();
+		        
+                boolean handled = false;
+                if (existingFields != null) {
+                	StaticField existingField = fieldByName(existingFields, reflectField.getName());
+                    if (existingField != null) {
+                    	updateExistingStaticField(trans, existingField, reflectField);
+                        newFields.add(existingField);
+                        handled = true;
+                    }
+                }
+                if (!handled) {
+                	newFields.add(new StaticField(reflectField.getName(), reflectField.get(null)));
+                    
+                }
+            }
+            // TODO: the if looks suspicious cause the StaticClass should always be updated
+            if (newFields.size() > 0) {
+            	sc.fields = (StaticField[]) newFields.toArray(new StaticField[newFields.size()]);
+            	if (!stream.isClient()) {
+            		stream.setInternal(trans, sc, true);
+            	}
+            }
+        } finally {
+            stream.showInternalClasses(false);
         }
     }
+
+	private Iterator4 staticFields() {
+		return Iterators.filter(reflectFields(), new Predicate4() {
+			public boolean match(Object candidate) {
+				return ((ReflectField)candidate).isStatic();
+			}
+		});
+	}
+
+	private ReflectField[] reflectFields() {
+		return classReflector().getDeclaredFields();
+	}
+
+	private void updateExistingStaticField(Transaction trans, StaticField existingField, final ReflectField reflectField) {
+		final ObjectContainerBase stream = trans.stream();
+		final Object newValue = reflectField.get(null);
+		boolean handled = false;
+		if (existingField.value != null
+	        && newValue != null
+	        && existingField.value.getClass() == newValue.getClass()) {
+	        long id = stream.getID1(existingField.value);
+	        if (id > 0) {
+	            if (existingField.value != newValue) {
+	                
+	                // This is the clue:
+	                // Bind the current static member to it's old database identity,
+	                // so constants and enums will work with '=='
+	                stream.bind1(trans, newValue, id);
+	                
+	                // This may produce unwanted side effects if the static field object
+	                // was modified in the current session. TODO:Add documentation case.
+	                
+	                stream.refresh(newValue, Integer.MAX_VALUE);
+	                
+	                existingField.value = newValue;
+	            }
+	            handled = true;
+	        }
+	    }
+	    if (!handled) {
+	        if(newValue == null){
+	            try{
+	                reflectField.set(null, existingField.value);
+	            }catch(Exception ex){
+	                // fail silently
+	            	// TODO: why?
+	            }
+	            
+	        }else{
+	            existingField.value = newValue;
+	            if (!stream.isClient()) {
+	                stream.setInternal(trans, existingField, true);
+	            }
+	        }
+	    }
+	}
+
+	private boolean staticFieldValuesArePersisted() {
+		return (i_config != null && i_config.staticFieldValuesArePersisted());
+	}
+
+	private StaticField fieldByName(StaticField[] fields, final String fieldName) {
+		for (int i = 0; i < fields.length; i++) {
+		    final StaticField field = fields[i];
+			if (fieldName.equals(field.name)) {
+				return field;
+			}
+		}
+		return null;
+	}
+
+	private StaticClass queryStaticClass(Transaction trans) {
+		Query q = trans.stream().query(trans);
+		q.constrain(Const4.CLASS_STATICCLASS);
+		q.descend("name").constrain(i_name);
+		ObjectSet os = q.execute();
+		return os.size() > 0
+			? (StaticClass)os.next()
+			: null;
+	}
 
     public boolean supportsIndex() {
         return true;
