@@ -426,9 +426,12 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			writeMsg(Msg.IDENTITY, true);
 			Buffer reader = expectedByteResponse(Msg.ID_LIST);
 			showInternalClasses(true);
-			i_db = (Db4oDatabase) getByID(reader.readInt());
-			activate1(i_systemTrans, i_db, 3);
-			showInternalClasses(false);
+			try {
+				i_db = (Db4oDatabase) getByID(reader.readInt());
+				activate1(i_systemTrans, i_db, 3);
+			} finally {
+				showInternalClasses(false);
+			}
 		}
 		return i_db;
 	}
