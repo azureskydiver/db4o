@@ -141,15 +141,7 @@ public final class Const4
 	public static final int DEAD = 7;
 	public static final int READING = 8;
     
-	public static final int UNCHECKED = 0;
-    
-    // Universal speaking variables.
-    public static final int NO = -1;
-    public static final int YES = 1;
-    public static final int DEFAULT = 0;
-    public static final int UNKNOWN = 0;
-    
-    public static final int OLD = -1;
+	public static final int OLD = -1;
     public static final int NEW = 1;
 
     

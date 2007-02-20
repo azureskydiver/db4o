@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.ix.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -36,7 +37,7 @@ public interface TypeHandler4 extends Indexable4
     
     boolean indexNullHandling();
     
-    int isSecondClass();
+    TernaryBool isSecondClass();
     
     /**
      * The length calculation is different, depending from where we 

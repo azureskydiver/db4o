@@ -16,7 +16,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     
     private final Config4Impl _configImpl;
 
-	private final static KeySpec CALL_CONSTRUCTOR=new KeySpec(0);
+	private final static KeySpec CALL_CONSTRUCTOR=new KeySpec(TernaryBool.UNSPECIFIED);
 	
 	private final static KeySpec CLASS_INDEXED = new KeySpec(true);
 
@@ -63,11 +63,11 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     int adjustActivationDepth(int depth) {
-		int cascadeOnActivate = cascadeOnActivate();
-		if (cascadeOnActivate == Const4.YES && depth < 2) {
+		TernaryBool cascadeOnActivate = cascadeOnActivate();
+		if (cascadeOnActivate.definiteYes() && depth < 2) {
 			depth = 2;
 		}
-		if (cascadeOnActivate == Const4.NO && depth > 1) {
+		if (cascadeOnActivate.definiteNo() && depth > 1) {
 			depth = 1;
 		}
 		if (config().classActivationDepthConfigurable()) {
@@ -117,11 +117,11 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	}
     
     public void generateUUIDs(boolean setting) {
-    	putThreeValued(GENERATE_UUIDS, setting);
+    	putThreeValuedInt(GENERATE_UUIDS, setting);
     }
 
     public void generateVersionNumbers(boolean setting) {
-    	putThreeValued(GENERATE_VERSION_NUMBERS, setting);
+    	putThreeValuedInt(GENERATE_VERSION_NUMBERS, setting);
     }
 
     public ObjectTranslator getTranslator() {
@@ -198,11 +198,11 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     	return _config.getAsInt(MINIMUM_ACTIVATION_DEPTH);
     }
     
-    public int callConstructor() {
+    public TernaryBool callConstructor() {
         if(_config.get(TRANSLATOR) != null){
-            return Const4.YES;
+            return TernaryBool.YES;
         }
-        return _config.getAsInt(CALL_CONSTRUCTOR);
+        return _config.getAsTernaryBool(CALL_CONSTRUCTOR);
     }
 
     private Hashtable4 exceptionalFieldsOrNull() {

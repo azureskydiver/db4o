@@ -25,14 +25,14 @@ public final class Platform4 {
 
     private static final String	JDK_PACKAGE	= "com.db4o.internal.";
 
-	static private int collectionCheck;
+	static private TernaryBool collectionCheck=TernaryBool.UNSPECIFIED;
 
     static private JDK jdkWrapper;
-    static private int nioCheck;
+    static private TernaryBool nioCheck=TernaryBool.UNSPECIFIED;
 
-    static private int setAccessibleCheck;
-    static private int shutDownHookCheck;
-    static int callConstructorCheck;
+    static private TernaryBool setAccessibleCheck=TernaryBool.UNSPECIFIED;
+    static private TernaryBool shutDownHookCheck=TernaryBool.UNSPECIFIED;
+    static TernaryBool callConstructorCheck=TernaryBool.UNSPECIFIED;
     static ShutDownRunnable shutDownRunnable;
 
     static Thread shutDownThread;
@@ -50,7 +50,7 @@ public final class Platform4 {
     
     
     // static private int cCreateNewFile;
-    static private int weakReferenceCheck;
+    static private TernaryBool weakReferenceCheck=TernaryBool.UNSPECIFIED;
     
     private static final Class[] SIMPLE_CLASSES = {
 		Integer.class,
@@ -82,21 +82,21 @@ public final class Platform4 {
         if (Deploy.csharp) {
             return true;
         }
-        if (setAccessibleCheck == Const4.UNCHECKED) {
+        if (setAccessibleCheck.unspecified()) {
             if (Deploy.csharp) {
-                setAccessibleCheck = Const4.NO;
+                setAccessibleCheck = TernaryBool.NO;
             } else {
                 if (jdk().ver() >= 2) {
-                    setAccessibleCheck = Const4.YES;
+                    setAccessibleCheck = TernaryBool.YES;
                 } else {
-                    setAccessibleCheck = Const4.NO;
+                    setAccessibleCheck = TernaryBool.NO;
                     if (((Config4Impl)Db4o.configure()).messageLevel() >= 0) {
                         Messages.logErr(Db4o.configure(), 47, null, null);
                     }
                 }
             }
         }
-        return setAccessibleCheck == Const4.YES;
+        return setAccessibleCheck.definiteYes();
     }
     
     /**
@@ -306,16 +306,16 @@ public final class Platform4 {
     }
 
     static final synchronized boolean hasCollections() {
-        if (collectionCheck == Const4.UNCHECKED) {
+        if (collectionCheck.unspecified()) {
             if (!Deploy.csharp) {
                 if (classIsAvailable(UTIL + "Collection")) {
-                    collectionCheck = Const4.YES;
+                    collectionCheck = TernaryBool.YES;
                     return true;
                 }
             }
-            collectionCheck = Const4.NO;
+            collectionCheck = TernaryBool.NO;
         }
-        return collectionCheck == Const4.YES;
+        return collectionCheck.definiteYes();
     }
 
     public static final boolean hasLockFileThread() {
@@ -326,48 +326,48 @@ public final class Platform4 {
         if (!Debug.nio) {
             return false;
         }
-        if (nioCheck == Const4.UNCHECKED) {
+        if (nioCheck.unspecified()) {
             if ((jdk().ver() >= 4)
                 && (!noNIO())) {
-                nioCheck = Const4.YES;
+                nioCheck = TernaryBool.YES;
                 return true;
             }
-            nioCheck = Const4.NO;
+            nioCheck = TernaryBool.NO;
         }
-        return nioCheck == Const4.YES;
+        return nioCheck.definiteYes();
 
     }
 
     static final boolean hasShutDownHook() {
-        if (shutDownHookCheck == Const4.UNCHECKED) {
+        if (shutDownHookCheck.unspecified()) {
             if (!Deploy.csharp) {
                 if (jdk().ver() >= 3){
-                    shutDownHookCheck = Const4.YES;
+                    shutDownHookCheck = TernaryBool.YES;
                     return true;
                 } 
                 JDKReflect.invoke(System.class, RUNFINALIZERSONEXIT, new Class[] {boolean.class}, new Object[]{new Boolean(true)});
             }
-            shutDownHookCheck = Const4.NO;
+            shutDownHookCheck = TernaryBool.NO;
         }
-        return shutDownHookCheck == Const4.YES;
+        return shutDownHookCheck.definiteYes();
     }
 
     static final boolean hasWeakReferences() {
         if (!Debug.weakReferences) {
             return false;
         }
-        if (weakReferenceCheck == Const4.UNCHECKED) {
+        if (weakReferenceCheck.unspecified()) {
             if (!Deploy.csharp) {
                 if (classIsAvailable(ACCESSIBLEOBJECT)
                     && classIsAvailable(REFERENCEQUEUE)
                     && jdk().ver() >= 2) {
-                    weakReferenceCheck = Const4.YES;
+                    weakReferenceCheck = TernaryBool.YES;
                     return true;
                 }
             }
-            weakReferenceCheck = Const4.NO;
+            weakReferenceCheck = TernaryBool.NO;
         }
-        return weakReferenceCheck == Const4.YES;
+        return weakReferenceCheck.definiteYes();
     }
     
     static final boolean ignoreAsConstraint(Object obj){
@@ -498,7 +498,7 @@ public final class Platform4 {
     }
 
     static boolean callConstructor() {
-        if (callConstructorCheck == Const4.UNCHECKED) {
+        if (callConstructorCheck.unspecified()) {
             
             if(jdk().methodIsAvailable(
                 REFLECTIONFACTORY,
@@ -506,12 +506,12 @@ public final class Platform4 {
                 new Class[]{Class.class, jdk().constructorClass()}
                 )){
                 
-                callConstructorCheck = Const4.NO;
+                callConstructorCheck = TernaryBool.NO;
                 return false;
             }
-            callConstructorCheck = Const4.YES;
+            callConstructorCheck = TernaryBool.YES;
         }
-        return callConstructorCheck == Const4.YES;
+        return callConstructorCheck.definiteYes();
     }
     
     private static final void netReadAsJava(Config4Impl config, String className){
@@ -591,10 +591,10 @@ public final class Platform4 {
 
     public static final void setAccessible(Object a_accessible) {
         if (!Deploy.csharp) {
-            if (setAccessibleCheck == Const4.UNCHECKED) {
+            if (setAccessibleCheck == TernaryBool.UNSPECIFIED) {
                 canSetAccessible();
             }
-            if (setAccessibleCheck == Const4.YES) {
+            if (setAccessibleCheck == TernaryBool.YES) {
                 jdk().setAccessible(a_accessible);
             }
         }

@@ -2,6 +2,8 @@
 
 package com.db4o.foundation;
 
+import com.db4o.internal.*;
+
 /**
  * @exclude
  */
@@ -40,6 +42,10 @@ public class KeySpecHashtable4 extends Hashtable4 {
 
     public int getAsInt(KeySpec spec) {
     	return ((Integer)get(spec)).intValue();
+    }
+
+    public TernaryBool getAsTernaryBool(KeySpec spec) {
+    	return (TernaryBool)get(spec);
     }
 
     public String getAsString(KeySpec spec) {

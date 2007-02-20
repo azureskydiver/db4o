@@ -3,6 +3,7 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -89,8 +90,8 @@ public final class StringHandler extends BuiltinTypeHandler {
         return true;
     }
     
-    public int isSecondClass(){
-        return Const4.YES;
+    public TernaryBool isSecondClass(){
+        return TernaryBool.YES;
     }
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection){

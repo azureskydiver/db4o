@@ -55,20 +55,17 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     // TODO: check race conditions, upon multiple calls against the same class
     private int i_lastID;
     
-    private int _canUpdateFast;
+    private TernaryBool _canUpdateFast=TernaryBool.UNSPECIFIED;
     
     public final boolean canUpdateFast(){
-    	if(_canUpdateFast == Const4.UNCHECKED){
-        	_canUpdateFast =  checkCanUpdateFast() ? Const4.YES : Const4.NO;
-    	}
-    	return _canUpdateFast == Const4.YES;
+    	return _canUpdateFast.booleanValue(checkCanUpdateFast());
     }
     
     private final boolean checkCanUpdateFast() {
     	if(i_ancestor != null && ! i_ancestor.canUpdateFast()){
     		return false;
     	}
-		if(i_config != null && i_config.cascadeOnDelete() == Const4.YES) {
+		if(i_config != null && i_config.cascadeOnDelete() == TernaryBool.YES) {
 			return false;
 		}
 		for(int i = 0; i < i_fields.length; ++i) {
@@ -401,7 +398,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
                 depth = adjustDepth(depth);
             }
         }
-        if ((config != null && (config.cascadeOnDelete() == Const4.YES || config.cascadeOnUpdate() == Const4.YES))) {
+        if ((config != null && (config.cascadeOnDelete() == TernaryBool.YES || config.cascadeOnUpdate() == TernaryBool.YES))) {
             depth = adjustDepth(depth);
         }
         a_bytes.setUpdateDepth(depth - 1);
@@ -608,7 +605,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
         try{
 	        Config4Class config = configOrAncestorConfig();
-	        if (config != null && (config.cascadeOnDelete() == Const4.YES)) {
+	        if (config != null && (config.cascadeOnDelete() == TernaryBool.YES)) {
 	            int preserveCascade = a_bytes.cascadeDeletes();
 	            if (classReflector().isCollection()) {
 	                int newCascade =
@@ -770,10 +767,10 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     }
     
     private boolean generate1(int bootRecordValue, int configValue) {
-        if(bootRecordValue < 0) {
+        if(bootRecordValue<0) {
             return false;
         }
-        if(configValue < 0) {
+        if(configValue<0) {
             return false;
         }
         if(bootRecordValue > 1) {
@@ -1155,7 +1152,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 	}
 
 	private boolean cascadeOnActivate() {
-		return i_config != null && (i_config.cascadeOnActivate() == Const4.YES);
+		return i_config != null && (i_config.cascadeOnActivate() == TernaryBool.YES);
 	}
 
 	private void shareYapObject(Object obj, ObjectReference yapObj) {
@@ -1225,8 +1222,8 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return false;
     }
     
-    public int isSecondClass(){
-        return Const4.NO;
+    public TernaryBool isSecondClass(){
+        return TernaryBool.NO;
     }
 
     /**
@@ -1265,27 +1262,28 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     }
     
     private final boolean callConstructor1() {
-        int res = callConstructorSpecialized();
-        if(res != Const4.DEFAULT){
-            return res == Const4.YES;
+        TernaryBool res = callConstructorSpecialized();
+        // FIXME: If specified, return yes?!?
+        if(!res.unspecified()){
+            return res == TernaryBool.YES;
         }
-        return (i_stream.configImpl().callConstructors() == Const4.YES);
+        return i_stream.configImpl().callConstructors().definiteYes();
     }
     
-    private final int callConstructorSpecialized(){
+    private final TernaryBool callConstructorSpecialized(){
         if(i_config!= null){
-            int res = i_config.callConstructor();
-            if(res != Const4.DEFAULT){
+            TernaryBool res = i_config.callConstructor();
+            if(!res.unspecified()){
                 return res;
             }
         }
         if(_isEnum){
-            return Const4.NO;
+            return TernaryBool.NO;
         }
         if(i_ancestor != null){
             return i_ancestor.callConstructorSpecialized();
         }
-        return Const4.DEFAULT;
+        return TernaryBool.UNSPECIFIED;
     }
 
     public int ownLength() {
