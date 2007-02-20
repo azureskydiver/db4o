@@ -18,4 +18,8 @@ public class IteratorAssert {
 		Assert.isFalse(actual.moveNext());
 	}
 
+	public static void areEqual(Object[] expected, Iterator4 iterator) {
+		areEqual(new ArrayIterator4(expected), iterator);
+	}
+
 }
