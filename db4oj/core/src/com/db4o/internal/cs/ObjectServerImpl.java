@@ -14,19 +14,19 @@ import com.db4o.internal.*;
 public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable,
 		LoopbackSocketServer {
 	
-	private String _name;
+	private final String _name;
 
 	private ServerSocket4 _serverSocket;
 	
-	private int _port;
+	private final int _port;
 
 	private int i_threadIDGen = 1;
 
-	private Collection4 i_threads = new Collection4();
+	private final Collection4 _threads = new Collection4();
 
 	private LocalObjectContainer _container;
 
-	private final Object _lock=new Object();
+	private final Object _startupLock=new Object();
 	
 	private Config4Impl _config;
 	
@@ -43,27 +43,42 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		ensureLoadStaticClass();
 		ensureLoadConfiguredClasses();
 
-		startupServerSocket();
+		startServer();
 	}
 
-	private void startupServerSocket() {
-		if (_port <= 0) {
+	private void startServer() {
+		if (isEmbeddedServer()) {
 			return;
 		}
+		
+		startServerSocket();
+		startServerThread();
+		waitForThreadStart();
+	}
+
+	private void startServerThread() {
+		final Thread thread = new Thread(this);
+		thread.setDaemon(true);
+		thread.start();
+	}
+
+	private void startServerSocket() {
 		try {
 			_serverSocket = new ServerSocket4(_port);
 			_serverSocket.setSoTimeout(_config.timeoutServerSocket());
 		} catch (IOException e) {
-			Exceptions4.throwRuntimeException(30, "" + _port);
+			Exceptions4.throwRuntimeException(Messages.COULD_NOT_OPEN_PORT, "" + _port);
 		}
+	}
 
-		final Thread thread = new Thread(this);
-		thread.setDaemon(true);
-		thread.start();
+	private boolean isEmbeddedServer() {
+		return _port <= 0;
+	}
 
-		synchronized (_lock) {
+	private void waitForThreadStart() {
+		synchronized (_startupLock) {
 			try {
-				_lock.wait(1000);
+				_startupLock.wait(1000);
 				// Give the thread some time to get up.
 				// We will get notified.
 			} catch (Exception e) {
@@ -132,8 +147,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private Iterator4 iterateThreads() {
-		synchronized (i_threads) {
-			return new Collection4(i_threads).iterator();
+		synchronized (_threads) {
+			return new Collection4(_threads).iterator();
 		}
 	}
 
@@ -160,8 +175,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	ServerMessageDispatcher findThread(int a_threadID) {
-		synchronized (i_threads) {
-			Iterator4 i = i_threads.iterator();
+		synchronized (_threads) {
+			Iterator4 i = _threads.iterator();
 			while (i.moveNext()) {
 				ServerMessageDispatcher serverThread = (ServerMessageDispatcher) i.current();
 				if (serverThread.i_threadID == a_threadID) {
@@ -239,10 +254,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
 		try {
 			ServerMessageDispatcher thread = new ServerMessageDispatcher(this, _container,
-					serverFake, i_threadIDGen++, true);
-			synchronized (i_threads) {
-				i_threads.add(thread);
-			}
+					serverFake, newThreadId(), true);
+			addThread(thread);
 			thread.start();
 			return clientFake;
 		} catch (Exception e) {
@@ -253,8 +266,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	void removeThread(ServerMessageDispatcher aThread) {
-		synchronized (i_threads) {
-			i_threads.remove(aThread);
+		synchronized (_threads) {
+			_threads.remove(aThread);
 		}
 	}
 
@@ -280,20 +293,36 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	public void run() {
 		Thread.currentThread().setName(_name);
-		_container.logMsg(31, "" + _serverSocket.getLocalPort());
-		synchronized (_lock) {
-			_lock.notifyAll();
-		}
+		logListeningOnPort();
+		notifyThreadStarted();
 		while (_serverSocket != null) {
 			try {
 				ServerMessageDispatcher thread = new ServerMessageDispatcher(this, _container,
-						_serverSocket.accept(), i_threadIDGen++, false);
-				synchronized (i_threads) {
-					i_threads.add(thread);
-				}
+						_serverSocket.accept(), newThreadId(), false);
+				addThread(thread);
 				thread.start();
 			} catch (Exception e) {
 			}
+		}
+	}
+
+	private void notifyThreadStarted() {
+		synchronized (_startupLock) {
+			_startupLock.notifyAll();
+		}
+	}
+
+	private void logListeningOnPort() {
+		_container.logMsg(Messages.SERVER_LISTENING_ON_PORT, "" + _serverSocket.getLocalPort());
+	}
+
+	private int newThreadId() {
+		return i_threadIDGen++;
+	}
+
+	private void addThread(ServerMessageDispatcher thread) {
+		synchronized (_threads) {
+			_threads.add(thread);
 		}
 	}
 }

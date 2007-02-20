@@ -21,7 +21,9 @@ public final class Messages {
     public final static int OLD_DATABASE_FORMAT=65;
     public final static int ONLY_FOR_INDEXED_FIELDS=66;
     public final static int CLIENT_SERVER_UNSUPPORTED=67;
-	
+    public final static int COULD_NOT_OPEN_PORT=30;
+	public final static int SERVER_LISTENING_ON_PORT=31;
+    
     private static String[] i_messages;
 	
 	public static String get(int a_code){
