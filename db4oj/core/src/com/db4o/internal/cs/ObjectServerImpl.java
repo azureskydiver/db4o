@@ -190,18 +190,13 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	public void grantAccess(String userName, String password) {
 		synchronized (_container.i_lock) {
 			checkClosed();
-			_container.showInternalClasses(true);
-			try {
-				User existing = getUser(userName);
-				if (existing != null) {
-					setPassword(existing, password);
-				} else {
-					addUser(userName, password);
-				}
-				_container.commit();
-			} finally {
-				_container.showInternalClasses(false);
+			User existing = getUser(userName);
+			if (existing != null) {
+				setPassword(existing, password);
+			} else {
+				addUser(userName, password);
 			}
+			_container.commit();
 		}
 	}
 
@@ -223,7 +218,12 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private ObjectSet queryUsers(String userName) {
-		return _container.get(new User(userName, null));
+		_container.showInternalClasses(true);
+		try {
+			return _container.get(new User(userName, null));
+		} finally {
+			_container.showInternalClasses(false);
+		}
 	}
 
 	public ObjectContainer objectContainer() {
@@ -273,14 +273,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	public void revokeAccess(String userName) {
 		synchronized (_container.i_lock) {
-			_container.showInternalClasses(true);
-			try {
-				checkClosed();
-				deleteUsers(userName);
-				_container.commit();
-			} finally {
-				_container.showInternalClasses(false);
-			}
+			checkClosed();
+			deleteUsers(userName);
+			_container.commit();
 		}
 	}
 
