@@ -391,18 +391,20 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      * in the #set() method. 
      * @return object if handled here and #set() should not continue processing
      */
-    public Db4oType db4oTypeStored(Transaction a_trans, Object a_object) {
-        if (a_object instanceof Db4oDatabase) {
-            Db4oDatabase database = (Db4oDatabase) a_object;
-            if (getYapObject(a_object) != null) {
-                return database;
-            }
-            showInternalClasses(true);
-            Db4oDatabase res = database.query(a_trans);
-            showInternalClasses(false);
-            return res;
+    public Db4oType db4oTypeStored(Transaction trans, Object obj) {
+        if (!(obj instanceof Db4oDatabase)) {
+        	return null;
         }
-        return null;
+        Db4oDatabase database = (Db4oDatabase) obj;
+        if (getYapObject(obj) != null) {
+            return database;
+        }
+        showInternalClasses(true);
+        try {
+        	return database.query(trans);
+        } finally {
+        	showInternalClasses(false);
+        }
     }
 
     public void deactivate(Object a_deactivate, int a_depth) {

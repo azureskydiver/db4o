@@ -1728,6 +1728,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             if (store) {
                 ObjectContainerBase stream = trans.stream();
                 stream.showInternalClasses(true);
+                
                 Query q = stream.query(trans);
                 q.constrain(Const4.CLASS_STATICCLASS);
                 q.descend("name").constrain(i_name);

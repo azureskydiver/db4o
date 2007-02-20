@@ -162,11 +162,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
         ObjectContainerBase stream = trans.stream();
         Db4oDatabase stored = (Db4oDatabase)stream.db4oTypeStored(trans,this);
         if (stored == null) {
-            stream.showInternalClasses(true);
-            stream.set3(trans,this, 2, false);
-            int newID = stream.getID1(this);
-            stream.showInternalClasses(false);
-            return newID;
+        	return storeAndGetId(trans);
         }
         if(stored == this){
             return stream.getID1(this);
@@ -175,11 +171,25 @@ public class Db4oDatabase implements Db4oType, Internal4{
             i_uuid = stored.i_uuid;
         }
         stream.showInternalClasses(true);
-        int id = stream.getID1(stored);
-        stream.bind(this, id);
-        stream.showInternalClasses(false);
-        return id;
+        try {
+	        int id = stream.getID1(stored);
+	        stream.bind(this, id);
+	        return id;
+	    } finally {
+            stream.showInternalClasses(false);
+        }
     }
+
+	private int storeAndGetId(Transaction trans) {
+		ObjectContainerBase stream = trans.stream();
+		stream.showInternalClasses(true);
+		try {
+		    stream.set3(trans,this, 2, false);
+		    return stream.getID1(this);
+		} finally {
+			stream.showInternalClasses(false);
+		}
+	}
     
     /**
      * find a Db4oDatabase with the same signature as this one
