@@ -209,9 +209,7 @@ public final class ServerMessageDispatcher extends Thread {
             if (Msg.LOGIN.equals(message)) {
                 String userName = ((MsgD) message).readString();
                 String password = ((MsgD) message).readString();
-                i_mainStream.showInternalClasses(true);
                 User found = i_server.getUser(userName);
-                i_mainStream.showInternalClasses(false);
                 if (found != null) {
                     if (found.password.equals(password)) {
                         i_clientName = userName;
