@@ -104,7 +104,7 @@ public class JDK {
 		
 	}
 	
-	synchronized void lockFile(Object file) {
+	synchronized void lockFile(String path,Object file) {
 	}
 	
     /**
@@ -142,7 +142,7 @@ public class JDK {
         return false;
     }
 	
-	synchronized void unlockFile(Object file) {
+	synchronized void unlockFile(String path,Object file) {
 	}
     
     public Object weakReferenceTarget(Object weakRef){
