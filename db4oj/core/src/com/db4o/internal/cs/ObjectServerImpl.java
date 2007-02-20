@@ -187,9 +187,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		return null;
 	}
 
-	public void grantAccess(String userName, String password) {
+	public synchronized void grantAccess(String userName, String password) {
+		checkClosed();
 		synchronized (_container.i_lock) {
-			checkClosed();
 			User existing = getUser(userName);
 			if (existing != null) {
 				setPassword(existing, password);
@@ -271,9 +271,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		}
 	}
 
-	public void revokeAccess(String userName) {
+	public synchronized void revokeAccess(String userName) {
+		checkClosed();
 		synchronized (_container.i_lock) {
-			checkClosed();
 			deleteUsers(userName);
 			_container.commit();
 		}
