@@ -292,9 +292,17 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	public void run() {
-		Thread.currentThread().setName(_name);
+		setThreadName();
 		logListeningOnPort();
 		notifyThreadStarted();
+		socketServerLoop();
+	}
+
+	private void setThreadName() {
+		Thread.currentThread().setName(_name);
+	}
+
+	private void socketServerLoop() {
 		while (_serverSocket != null) {
 			try {
 				ServerMessageDispatcher thread = new ServerMessageDispatcher(this, _container,
