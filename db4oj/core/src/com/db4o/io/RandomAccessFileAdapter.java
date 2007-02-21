@@ -2,10 +2,13 @@
 
 package com.db4o.io;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 
-import com.db4o.*;
-import com.db4o.internal.*;
+import com.db4o.DTrace;
+import com.db4o.ext.DatabaseFileLockedException;
+import com.db4o.internal.Platform4;
 
 /**
  * IO adapter for random access files.
@@ -26,7 +29,12 @@ public class RandomAccessFileAdapter extends IoAdapter {
 	        _delegate.write(new byte[] {0});
         }
         if(lockFile){
-            Platform4.lockFile(_path,_delegate);
+        	try {
+				Platform4.lockFile(_path, _delegate);
+			} catch (DatabaseFileLockedException e) {
+				_delegate.close();
+				throw e;
+			}
         }
     }
 
