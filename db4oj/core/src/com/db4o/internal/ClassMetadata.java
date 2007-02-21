@@ -1722,9 +1722,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         }
         bitTrue(Const4.STATIC_FIELDS_STORED);
         
-        final boolean storeStaticFields = staticFieldValuesArePersisted()
-        			|| Platform4.storeStaticFieldValues(trans.reflector(), classReflector()); 
-        if (!storeStaticFields) {
+        if (!shouldStoreStaticFields(trans)) {
         	return;
         }
         
@@ -1741,6 +1739,11 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             stream.showInternalClasses(false);
         }
     }
+
+	private boolean shouldStoreStaticFields(Transaction trans) {
+		return staticFieldValuesArePersisted()
+        			|| Platform4.storeStaticFieldValues(trans.reflector(), classReflector());
+	}
 
 	private void updateStaticClass(final Transaction trans, final StaticClass sc) {
 		final ObjectContainerBase stream = trans.stream();
@@ -1770,11 +1773,11 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		if (trans.stream().isClient()) {
 			return;
 		}
-		StaticClass sc = new StaticClass(i_name, toStaticFieldArray(staticFields()));
+		StaticClass sc = new StaticClass(i_name, toStaticFieldArray(staticReflectFieldsToStaticFields()));
 		setStaticClass(trans, sc);
 	}
 
-	private Iterator4 staticFields() {
+	private Iterator4 staticReflectFieldsToStaticFields() {
 		return Iterators.map(
 			staticReflectFields(),
 			new Function4() {
@@ -1785,10 +1788,10 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 	}
 
 	private StaticField toStaticField(final ReflectField reflectField) {
-		return new StaticField(reflectField.getName(), getValue(reflectField));
+		return new StaticField(reflectField.getName(), staticReflectFieldValue(reflectField));
 	}
 
-	private Object getValue(final ReflectField reflectField) {
+	private Object staticReflectFieldValue(final ReflectField reflectField) {
 		reflectField.setAccessible();
 		return reflectField.get(null);
 	}
@@ -1820,7 +1823,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 
 	private void updateExistingStaticField(Transaction trans, StaticField existingField, final ReflectField reflectField) {
 		final ObjectContainerBase stream = trans.stream();
-		final Object newValue = getValue(reflectField);
+		final Object newValue = staticReflectFieldValue(reflectField);
 		
 		if (existingField.value != null
 	        && newValue != null
