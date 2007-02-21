@@ -1728,52 +1728,85 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         	return;
         }
         
-        ObjectContainerBase stream = trans.stream();
+        final ObjectContainerBase stream = trans.stream();
         stream.showInternalClasses(true);
         try {
             StaticClass sc = queryStaticClass(trans);
-            StaticField[] existingFields = null;
-            if (sc != null) {
-                stream.activate1(trans, sc, 4);
-                existingFields = sc.fields;
+            if (sc == null) {
+            	createStaticClass(trans);
             } else {
-            	sc = new StaticClass();
-                sc.name = i_name;
-            }
-            
-            Collection4 newFields = new Collection4();
-            final Iterator4 staticFields = staticFields();
-            while (staticFields.moveNext()) {
-                final ReflectField reflectField = (ReflectField)staticFields.current();
-		        reflectField.setAccessible();
-		        
-                boolean handled = false;
-                if (existingFields != null) {
-                	StaticField existingField = fieldByName(existingFields, reflectField.getName());
-                    if (existingField != null) {
-                    	updateExistingStaticField(trans, existingField, reflectField);
-                        newFields.add(existingField);
-                        handled = true;
-                    }
-                }
-                if (!handled) {
-                	newFields.add(new StaticField(reflectField.getName(), reflectField.get(null)));
-                    
-                }
-            }
-            // TODO: the if looks suspicious cause the StaticClass should always be updated
-            if (newFields.size() > 0) {
-            	sc.fields = (StaticField[]) newFields.toArray(new StaticField[newFields.size()]);
-            	if (!stream.isClient()) {
-            		stream.setInternal(trans, sc, true);
-            	}
+            	updateStaticClass(trans, sc);
             }
         } finally {
             stream.showInternalClasses(false);
         }
     }
 
+	private void updateStaticClass(final Transaction trans, final StaticClass sc) {
+		final ObjectContainerBase stream = trans.stream();
+		stream.activate1(trans, sc, 4);
+		
+		final StaticField[] existingFields = sc.fields;
+		final Iterator4 staticFields = Iterators.map(
+				staticReflectFields(),
+				new Function4() {
+					public Object apply(Object arg) {
+						final ReflectField reflectField = (ReflectField)arg;
+					    StaticField existingField = fieldByName(existingFields, reflectField.getName());
+					    if (existingField == null) {
+					    	return toStaticField(reflectField);  	
+					    } else {
+					    	updateExistingStaticField(trans, existingField, reflectField);
+					        return existingField;
+					    }
+					}
+				});
+		sc.fields = toStaticFieldArray(staticFields);
+		if (!stream.isClient()) {
+			setStaticClass(trans, sc);
+		}
+	}
+
+	private void createStaticClass(Transaction trans) {
+		if (trans.stream().isClient()) {
+			return;
+		}
+		StaticClass sc = new StaticClass(i_name, toStaticFieldArray(staticFields()));
+		setStaticClass(trans, sc);
+	}
+
 	private Iterator4 staticFields() {
+		return Iterators.map(
+			staticReflectFields(),
+			new Function4() {
+				public Object apply(Object arg) {
+					return toStaticField((ReflectField) arg);
+				}
+			});
+	}
+
+	private StaticField toStaticField(final ReflectField reflectField) {
+		return new StaticField(reflectField.getName(), getValue(reflectField));
+	}
+
+	private Object getValue(final ReflectField reflectField) {
+		reflectField.setAccessible();
+		return reflectField.get(null);
+	}
+
+	private void setStaticClass(Transaction trans, StaticClass sc) {
+		trans.stream().setInternal(trans, sc, true);
+	}
+
+	private StaticField[] toStaticFieldArray(Iterator4 iterator4) {
+		return toStaticFieldArray(new Collection4(iterator4));
+	}
+
+	private StaticField[] toStaticFieldArray(Collection4 fields) {
+		return (StaticField[]) fields.toArray(new StaticField[fields.size()]);
+	}
+
+	private Iterator4 staticReflectFields() {
 		return Iterators.filter(reflectFields(), new Predicate4() {
 			public boolean match(Object candidate) {
 				return ((ReflectField)candidate).isStatic();
@@ -1787,8 +1820,8 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 
 	private void updateExistingStaticField(Transaction trans, StaticField existingField, final ReflectField reflectField) {
 		final ObjectContainerBase stream = trans.stream();
-		final Object newValue = reflectField.get(null);
-		boolean handled = false;
+		final Object newValue = getValue(reflectField);
+		
 		if (existingField.value != null
 	        && newValue != null
 	        && existingField.value.getClass() == newValue.getClass()) {
@@ -1808,25 +1841,24 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 	                
 	                existingField.value = newValue;
 	            }
-	            handled = true;
+	            return;
 	        }
 	    }
-	    if (!handled) {
-	        if(newValue == null){
-	            try{
-	                reflectField.set(null, existingField.value);
-	            }catch(Exception ex){
-	                // fail silently
-	            	// TODO: why?
-	            }
-	            
-	        }else{
-	            existingField.value = newValue;
-	            if (!stream.isClient()) {
-	                stream.setInternal(trans, existingField, true);
-	            }
-	        }
-	    }
+		
+		if(newValue == null){
+            try{
+                reflectField.set(null, existingField.value);
+            }catch(Exception ex){
+                // fail silently
+            	// TODO: why?
+            }
+	        return;   
+	   }
+		
+		existingField.value = newValue;
+		if (!stream.isClient()) {
+			stream.setInternal(trans, existingField, true);
+		}
 	}
 
 	private boolean staticFieldValuesArePersisted() {
