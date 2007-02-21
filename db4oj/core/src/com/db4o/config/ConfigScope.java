@@ -54,10 +54,8 @@ public final class ConfigScope implements Serializable {
 				return DISABLED;
 			case INDIVIDUALLY_ID:
 				return INDIVIDUALLY;
-			case GLOBALLY_ID:
-			default:
-				return GLOBALLY;
 		}
+		return GLOBALLY;
 	}
 	
 	public boolean equals(Object obj) {
