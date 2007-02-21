@@ -743,8 +743,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         if(! generateVirtual()){
             return false;
         }
-        int configValue = (i_config == null) ? 0 : i_config.generateUUIDs();
-        
+        boolean configValue = (i_config == null) ? false : i_config.generateUUIDs();
         return generate1(i_stream.config().generateUUIDs(), configValue); 
     }
 
@@ -752,7 +751,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         if(! generateVirtual()){
             return false;
         }
-        int configValue = (i_config == null) ? 0 : i_config.generateVersionNumbers();
+        boolean configValue = (i_config == null) ? false : i_config.generateVersionNumbers();
         return generate1(i_stream.config().generateVersionNumbers(), configValue); 
     }
     
@@ -766,17 +765,8 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return true; 
     }
     
-    private boolean generate1(int bootRecordValue, int configValue) {
-        if(bootRecordValue<0) {
-            return false;
-        }
-        if(configValue<0) {
-            return false;
-        }
-        if(bootRecordValue > 1) {
-            return true;
-        }
-        return configValue > 0;
+    private boolean generate1(ConfigScope globalConfig, boolean individualConfig) {
+    	return globalConfig.applyConfig(individualConfig);
     }
 
 
