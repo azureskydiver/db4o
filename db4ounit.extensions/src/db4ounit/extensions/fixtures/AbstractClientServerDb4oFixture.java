@@ -67,7 +67,7 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 	}
 	
 	protected ObjectContainer openEmbeddedClient() {
-		return _server.openClient();
+		return _server.openClient(config());
 	}
 
 }

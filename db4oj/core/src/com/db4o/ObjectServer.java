@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.config.Configuration;
 import com.db4o.ext.*;
 
 /**
@@ -44,6 +45,7 @@ public interface ObjectServer {
 
     /**
      * opens a client against this server.
+     * 
      * <br><br>A client opened with this method operates within the same VM
      * as the server. Since an embedded client can use direct communication, without
      * an in-between socket connection, performance will be better than a client
@@ -55,5 +57,13 @@ public interface ObjectServer {
      * 
      */
     public ObjectContainer openClient();
+    
+    /**
+     * See {@link openClient()}
+     * 
+     * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
+     * @return an open {@link ObjectContainer ObjectContainer}
+     */
+    public ObjectContainer openClient(Configuration config);
 
 }
