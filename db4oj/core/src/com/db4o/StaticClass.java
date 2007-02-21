@@ -9,4 +9,12 @@ package com.db4o;
 public class StaticClass implements Internal4{
     public String name;
     public StaticField[] fields;
+    
+    public StaticClass() {
+    }
+    
+    public StaticClass(String name_, StaticField[] fields_) {
+    	name = name_;
+    	fields = fields_;
+    }
 }
