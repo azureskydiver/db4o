@@ -7,8 +7,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.ReflectClass;
 
-
-
 /**
  * @exclude
  */
