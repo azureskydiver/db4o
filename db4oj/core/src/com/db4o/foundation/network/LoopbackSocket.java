@@ -30,13 +30,17 @@ public class LoopbackSocket implements Socket4 {
     }
 
     public void close() throws IOException {
-        if (_affiliate != null) {
+        closeAffiliate();
+        closeSocket();
+    }
+
+	private void closeAffiliate() throws IOException {
+		if (_affiliate != null) {
             LoopbackSocket temp = _affiliate;
             _affiliate = null;
             temp.close();
         }
-        closeSocket();
-    }
+	}
 
 	private void closeSocket() {
         _downloadBuffer.close();

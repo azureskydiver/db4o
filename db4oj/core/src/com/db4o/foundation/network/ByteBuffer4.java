@@ -14,12 +14,12 @@ import com.db4o.internal.*;
 class ByteBuffer4 {
 
     private final static int DISCARD_BUFFER_SIZE = 500;
-    protected byte[] i_cache;
+    private byte[] i_cache;
     private boolean i_closed = false;
-    protected int i_readOffset;
-    protected int i_timeout;
-    protected int i_writeOffset;
-    protected final Lock4 i_lock = new Lock4();
+    private int i_readOffset;
+    private int i_timeout;
+    private int i_writeOffset;
+    private final Lock4 i_lock = new Lock4();
 
     public ByteBuffer4(int timeout) {
         i_timeout = timeout;
@@ -29,7 +29,7 @@ class ByteBuffer4 {
         return i_writeOffset - i_readOffset;
     }
 
-    protected void checkDiscardCache() {
+    private void checkDiscardCache() {
         if (i_readOffset == i_writeOffset && i_cache.length > DISCARD_BUFFER_SIZE) {
             i_cache = null;
             i_readOffset = 0;
@@ -81,6 +81,7 @@ class ByteBuffer4 {
             throw iex;
         }catch(Exception bex){
             // TODO: lots is caught here, be more exact
+//        	bex.printStackTrace();
         }
         return -1;
     }
@@ -107,6 +108,7 @@ class ByteBuffer4 {
             throw iex;
         }catch(Exception bex){
             // TODO: lots is caught here, be more exact
+//        	bex.printStackTrace();
         }
         return -1;
     }
@@ -146,6 +148,7 @@ class ByteBuffer4 {
         } catch (Exception e) {
             
             // TODO: delegate up
+//        	e.printStackTrace();
          
         }
 	}
@@ -163,6 +166,7 @@ class ByteBuffer4 {
         } catch (Exception e) {
             
             // TODO: delegate up
+//        	e.printStackTrace();
          
         }
     }
