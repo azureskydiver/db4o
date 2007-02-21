@@ -1753,12 +1753,11 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 					public Object apply(Object arg) {
 						final ReflectField reflectField = (ReflectField)arg;
 					    StaticField existingField = fieldByName(existingFields, reflectField.getName());
-					    if (existingField == null) {
-					    	return toStaticField(reflectField);  	
-					    } else {
+					    if (existingField != null) {
 					    	updateExistingStaticField(trans, existingField, reflectField);
 					        return existingField;
 					    }
+					    return toStaticField(reflectField);
 					}
 				});
 		sc.fields = toStaticFieldArray(staticFields);
