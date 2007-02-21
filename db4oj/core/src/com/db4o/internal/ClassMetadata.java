@@ -1794,6 +1794,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 	}
 
 	private void setStaticClass(Transaction trans, StaticClass sc) {
+		// TODO: we should probably use a specific update depth here, 4?
 		trans.stream().setInternal(trans, sc, true);
 	}
 
