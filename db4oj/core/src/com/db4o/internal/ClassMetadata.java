@@ -1855,9 +1855,6 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 	   }
 		
 		existingField.value = newValue;
-		if (!stream.isClient()) {
-			stream.setInternal(trans, existingField, true);
-		}
 	}
 
 	private boolean staticFieldValuesArePersisted() {
