@@ -2,9 +2,9 @@
 
 package db4ounit.extensions.fixtures;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.defragment.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.config.Configuration;
 
 public class Db4oSolo extends AbstractFileBasedDb4oFixture {
 	

@@ -4,10 +4,11 @@ package db4ounit.extensions.fixtures;
 
 import java.io.File;
 
-import com.db4o.*;
-import com.db4o.defragment.*;
-import com.db4o.ext.*;
-import com.db4o.internal.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectServer;
+import com.db4o.ext.ExtObjectContainer;
+import com.db4o.internal.LocalObjectContainer;
 
 
 public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixture{
