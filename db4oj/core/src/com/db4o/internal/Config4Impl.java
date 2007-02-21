@@ -70,9 +70,9 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec FREESPACE_SYSTEM=new KeySpec(FreespaceManager.FM_DEFAULT);
     
-	private final static KeySpec GENERATE_UUIDS=new KeySpec(0);
+	private final static KeySpec GENERATE_UUIDS=new KeySpec(ConfigScope.INDIVIDUALLY);
     
-	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(0);
+	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(ConfigScope.INDIVIDUALLY);
 	
 	private final static KeySpec IS_SERVER=new KeySpec(false);
     
@@ -179,7 +179,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
     
     public void callConstructors(boolean flag){
-        _config.put(CALL_CONSTRUCTORS,(flag ? TernaryBool.YES : TernaryBool.NO));
+        _config.put(CALL_CONSTRUCTORS,TernaryBool.forBoolean(flag));
     }
 
     public void classActivationDepthConfigurable(boolean turnOn) {
@@ -286,13 +286,27 @@ public final class Config4Impl implements Configuration, DeepClone,
     public FreespaceConfiguration freespace() {
         return this;
     }
-    
+
+    /**
+     * @deprecated Use {@link #generateUUIDs(ConfigScope)} instead.
+     */
     public void generateUUIDs(int setting) {
-        _config.put(GENERATE_UUIDS,setting);
+        generateUUIDs(ConfigScope.forID(setting));
     }
 
+	public void generateUUIDs(ConfigScope scope) {
+        _config.put(GENERATE_UUIDS,scope);
+    }
+
+    /**
+     * @deprecated Use {@link #generateVersionNumbers(ConfigScope)} instead.
+     */
     public void generateVersionNumbers(int setting) {
-        _config.put(GENERATE_VERSION_NUMBERS,setting);
+        generateVersionNumbers(ConfigScope.forID(setting));
+    }
+
+    public void generateVersionNumbers(ConfigScope scope) {
+        _config.put(GENERATE_VERSION_NUMBERS,scope);
     }
 
     public MessageSender getMessageSender() {
@@ -681,12 +695,12 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsByte(FREESPACE_SYSTEM);
 	}
 
-	public int generateUUIDs() {
-		return _config.getAsInt(GENERATE_UUIDS);
+	public ConfigScope generateUUIDs() {
+		return (ConfigScope) _config.get(GENERATE_UUIDS);
 	}
 
-	public int generateVersionNumbers() {
-		return _config.getAsInt(GENERATE_VERSION_NUMBERS);
+	public ConfigScope generateVersionNumbers() {
+		return (ConfigScope) _config.get(GENERATE_VERSION_NUMBERS);
 	}
 
 	public boolean internStrings() {

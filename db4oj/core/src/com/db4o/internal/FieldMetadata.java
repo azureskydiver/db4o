@@ -368,7 +368,7 @@ public class FieldMetadata implements StoredField {
             dotnetValueType = Platform4.isValueType(i_handler.classReflector());    
         }
         
-        if ((i_config != null && i_config.cascadeOnDelete() == TernaryBool.YES)
+        if ((i_config != null && i_config.cascadeOnDelete().definiteYes())
             || dotnetValueType) {
             int preserveCascade = a_bytes.cascadeDeletes();
             a_bytes.setCascadeDeletes(1);
@@ -683,7 +683,7 @@ public class FieldMetadata implements StoredField {
         Object indexEntry = null;
         
         if (obj != null
-            && ((config != null && (config.cascadeOnUpdate() == TernaryBool.YES)) || (i_config != null && (i_config.cascadeOnUpdate() == TernaryBool.YES)))) {
+            && ((config != null && (config.cascadeOnUpdate().definiteYes())) || (i_config != null && (i_config.cascadeOnUpdate().definiteYes())))) {
             int min = 1;
             if (i_yapClass.isCollection(obj)) {
                 GenericReflector reflector = i_yapClass.reflector();

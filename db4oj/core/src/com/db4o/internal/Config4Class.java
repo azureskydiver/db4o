@@ -22,9 +22,9 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 
 	private final static KeySpec EXCEPTIONAL_FIELDS=new KeySpec(null);
 
-	private final static KeySpec GENERATE_UUIDS=new KeySpec(0);
+	private final static KeySpec GENERATE_UUIDS=new KeySpec(false);
     
-	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(0);
+	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(false);
     
     /**
      * We are running into cyclic dependancies on reading the PBootRecord
@@ -117,11 +117,11 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	}
     
     public void generateUUIDs(boolean setting) {
-    	putThreeValuedInt(GENERATE_UUIDS, setting);
+    	_config.put(GENERATE_UUIDS, setting);
     }
 
     public void generateVersionNumbers(boolean setting) {
-    	putThreeValuedInt(GENERATE_VERSION_NUMBERS, setting);
+    	_config.put(GENERATE_VERSION_NUMBERS, setting);
     }
 
     public ObjectTranslator getTranslator() {
@@ -283,12 +283,12 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 		return _configImpl;
 	}
 
-	int generateUUIDs() {
-		return _config.getAsInt(GENERATE_UUIDS);
+	boolean generateUUIDs() {
+		return _config.getAsBoolean(GENERATE_UUIDS);
 	}
 
-	int generateVersionNumbers() {
-		return _config.getAsInt(GENERATE_VERSION_NUMBERS);
+	boolean generateVersionNumbers() {
+		return _config.getAsBoolean(GENERATE_VERSION_NUMBERS);
 	}
 
 	void maintainMetaClass(boolean flag){

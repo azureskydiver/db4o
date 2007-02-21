@@ -367,9 +367,18 @@ public interface Configuration {
      * -1 - off<br>
      * 1 - configure classes individually<br>
      * Integer.MAX_Value - on for all classes
+     * 
+     * @deprecated Use {@link #generateUUIDs(ConfigScope)} instead.
      */
     public void generateUUIDs(int setting);
-    
+
+    /**
+     * configures db4o to generate UUIDs for stored objects.
+     * 
+     * @param the scope for UUID generation: disabled, generate for all classes, or configure individually
+     */
+    public void generateUUIDs(ConfigScope setting);
+
     /**
      * configures db4o to generate version numbers for stored objects.
      * 
@@ -377,9 +386,18 @@ public interface Configuration {
      * -1 - off<br>
      * 1 - configure classes individually<br>
      * Integer.MAX_Value - on for all classes
+     * 
+     * @deprecated Use {@link #generateVersionNumbers(ConfigScope)} instead.
      */
     public void generateVersionNumbers(int setting);
-    
+
+    /**
+     * configures db4o to generate version numbers for stored objects.
+     * 
+     * @param the scope for version number generation: disabled, generate for all classes, or configure individually
+     */
+    public void generateVersionNumbers(ConfigScope setting);
+
     /**
      * Configures db4o to call intern() on strings upon retrieval.
      * @param doIntern intern strings on retrieval if true, don't otherwise

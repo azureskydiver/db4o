@@ -40,7 +40,7 @@ public abstract class Config4Abstract {
 	}
 
 	protected void putThreeValued(KeySpec spec,boolean flag) {
-		_config.put(spec, flag ? TernaryBool.YES : TernaryBool.NO);
+		_config.put(spec, TernaryBool.forBoolean(flag));
 	}
 
 	protected void putThreeValuedInt(KeySpec spec,boolean flag) {
