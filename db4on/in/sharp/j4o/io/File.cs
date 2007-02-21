@@ -44,9 +44,14 @@ namespace j4o.io
 			return System.IO.File.Exists(_path) || Directory.Exists(_path);
 		}
 
+		public string GetCanonicalPath()
+		{
+			return Path.GetFullPath(_path);
+		}
+
 		public string GetAbsolutePath()
 		{
-			return _path;
+			return Path.GetFullPath(_path);
 		}
 
 		public string GetName()

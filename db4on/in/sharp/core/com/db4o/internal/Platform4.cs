@@ -467,12 +467,12 @@ namespace com.db4o.@internal
 #endif
 		}
 
-		internal static void LockFile(object raf)
+		internal static void LockFile(string path, object file)
 		{
 			// do nothing. C# RAF is locked automatically upon opening
 		}
 		
-		internal static void UnlockFile(object randomaccessfile)
+		internal static void UnlockFile(string path, object file)
 		{
 			// do nothing. C# RAF is unlocked automatically upon closing
 		}		
