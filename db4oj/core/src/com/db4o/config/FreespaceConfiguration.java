@@ -31,6 +31,17 @@ public interface FreespaceConfiguration {
     public void discardSmallerThan(int byteCount);
     
     /**
+     * Configure a way to overwrite freed space in the database file with custom
+     * (for example: random) bytes. Will slow down I/O operation.
+     * 
+     * The value of this setting may be cached internally and can thus not be
+     * reliably set after an object container has been opened.
+     * 
+     * @param freespaceFiller The freespace overwriting callback to use
+     */
+    public void freespaceFiller(FreespaceFiller freespaceFiller);
+    
+    /**
      * configures db4o to use an index-based freespace system.
      * <br><br><b>Advantages</b><br>
      * - ACID, no freespace is lost on abnormal system termination<br>

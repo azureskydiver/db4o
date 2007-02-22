@@ -760,14 +760,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
     public abstract void debugWriteXBytes(int a_address, int a_length);
 
-    Buffer xBytes(int a_address, int a_length) {
-        Buffer bytes = getWriter(i_systemTrans, a_address, a_length);
-        for (int i = 0; i < a_length; i++) {
-            bytes.append(Const4.XBYTE);
-        }
-        return bytes;
-    }
-
     public final void writeTransactionPointer(int address) {
         _fileHeader.writeTransactionPointer(getSystemTransaction(), address);
     }
