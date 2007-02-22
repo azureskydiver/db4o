@@ -902,7 +902,7 @@
 				<path path="${path.classpath.full}" />
 				<path path="${path.classpath.jdk1.1}" />
 			</classpath>
-			<arg value="*" />
+			<arg value="-withExceptions" />
 		</java>
 		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.test.AllTestsJdk1_2" failonerror="true" timeout="3600000">
 			<classpath>
@@ -911,7 +911,7 @@
 				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
-			<arg value="*" />
+			<arg value="-withExceptions" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" timeout="3600000">
 			<classpath>
@@ -920,7 +920,7 @@
 				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
-			<arg value="*" />
+			<arg value="-withExceptions" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.defrag.RunTestsDefrag" failonerror="true" timeout="3000000">
 			<classpath>
@@ -937,7 +937,7 @@
 				<pathelement path="${file.db4ounit.jar}" />
 				<path path="${path.classpath.full}" />
 			</classpath>
-			<arg value="*" />
+			<arg value="-withExceptions" />
 		</java>
 	</target>
 

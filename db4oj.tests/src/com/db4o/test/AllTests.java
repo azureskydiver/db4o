@@ -33,7 +33,7 @@ public class AllTests extends AllTestsConfAll implements Runnable {
     		AllTests.run(solo, cs, testCasesFromArgs(args,1));
     		return;
     	}
-    	if(args!=null&&args.length==1&&args[0].equals("*")) {
+    	if(args!=null&&args.length==1&&args[0].equals("-withExceptions")) {
             new AllTests(new String[]{}).runWithException();
             return;
     	}
