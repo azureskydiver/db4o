@@ -8,7 +8,7 @@ import com.db4o.test.nativequery.*;
 public class AllTestsJdk5 extends AllTestsJdk1_2{
 	
     public static void main(String[] args) {
-    	if(args!=null&&args.length==1&&args[0].equals("*")) {
+    	if(args!=null&&args.length==1&&args[0].equals("-withExceptions")) {
             new AllTestsJdk5().runWithException();
             return;
     	}
