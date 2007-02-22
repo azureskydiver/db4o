@@ -68,6 +68,8 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec FLUSH_FILE_BUFFERS=new KeySpec(true);
     
+	private final static KeySpec FREESPACE_FILLER=new KeySpec(null);
+
 	private final static KeySpec FREESPACE_SYSTEM=new KeySpec(FreespaceManager.FM_DEFAULT);
     
 	private final static KeySpec GENERATE_UUIDS=new KeySpec(ConfigScope.INDIVIDUALLY);
@@ -286,7 +288,15 @@ public final class Config4Impl implements Configuration, DeepClone,
     public FreespaceConfiguration freespace() {
         return this;
     }
+    
+    public void freespaceFiller(FreespaceFiller freespaceFiller) {
+    	_config.put(FREESPACE_FILLER, freespaceFiller);
+    }
 
+    public FreespaceFiller freespaceFiller() {
+    	return (FreespaceFiller) _config.get(FREESPACE_FILLER);
+    }
+    
     /**
      * @deprecated Use {@link #generateUUIDs(ConfigScope)} instead.
      */

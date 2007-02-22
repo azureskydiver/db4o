@@ -17,17 +17,20 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     private final String _fileName;
 
-    private IoAdapter          i_file;
-    private IoAdapter          i_timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
-    private volatile IoAdapter i_backupFile;
+    private IoAdapter          _file;
+    private IoAdapter          _timerFile;                                 //This is necessary as a separate File because access is not synchronized with access for normal data read/write so the seek pointer can get lost.
+    private volatile IoAdapter _backupFile;
 
-    private Object             i_fileLock;
+    private Object             _fileLock;
+    
+    private final FreespaceFiller _freespaceFiller;
 
     IoAdaptedObjectContainer(Configuration config, String fileName) throws Exception {
         super(config,null);
         synchronized (i_lock) {
-            i_fileLock = new Object();
+            _fileLock = new Object();
             _fileName = fileName;
+            _freespaceFiller=createFreespaceFiller();
             if (Deploy.debug) {
                 // intentionally no Exception handling
                 // to find and debug errors
@@ -47,14 +50,14 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     public void backup(String path) throws IOException {
         synchronized (i_lock) {
             checkClosed();
-            if (i_backupFile != null) {
+            if (_backupFile != null) {
                 Exceptions4.throwRuntimeException(61);
             }
             try {
-                i_backupFile = configImpl().ioAdapter().open(path, true, i_file.getLength());
-                i_backupFile.blockSize(blockSize());
+                _backupFile = configImpl().ioAdapter().open(path, true, _file.getLength());
+                _backupFile.blockSize(blockSize());
             } catch (Exception e) {
-                i_backupFile = null;
+                _backupFile = null;
                 Exceptions4.throwRuntimeException(12, path);
             }
         }
@@ -63,13 +66,13 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         byte[] buffer = new byte[bufferlength];
         while(true){
             synchronized (i_lock) {
-                i_file.seek(pos);
-                int read = i_file.read(buffer);
+                _file.seek(pos);
+                int read = _file.read(buffer);
                 if(read <= 0 ){
                     break;
                 }
-                i_backupFile.seek(pos);
-                i_backupFile.write(buffer, read);
+                _backupFile.seek(pos);
+                _backupFile.write(buffer, read);
                 pos += read;
             }
             try {
@@ -80,20 +83,20 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         }
 
         synchronized (i_lock) {
-            i_backupFile.close();
-            i_backupFile = null;
+            _backupFile.close();
+            _backupFile = null;
         }
     }
     
     public void blockSize(int size){
-        i_file.blockSize(size);
-        if (i_timerFile != null) {
-            i_timerFile.blockSize(size);
+        _file.blockSize(size);
+        if (_timerFile != null) {
+            _timerFile.blockSize(size);
         }
     }
 
     public byte blockSize() {
-        return (byte) i_file.blockSize();
+        return (byte) _file.blockSize();
     }
 
     protected boolean close2() {
@@ -108,17 +111,17 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			}
 		}
 		super.close2();
-		synchronized (i_fileLock) {
+		synchronized (_fileLock) {
 			try {
-				i_file.close();
-				i_file = null;
+				_file.close();
+				_file = null;
 				_fileHeader.close();
 				closeTimerFile();
 			} catch (Exception e) {
-				i_file = null;
+				_file = null;
 				Exceptions4.throwRuntimeException(11, e);
 			}
-			i_file = null;
+			_file = null;
 		}
 		return true;
 	}
@@ -136,22 +139,22 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
         try {
 
-            if (i_backupFile == null) {
-                i_file
+            if (_backupFile == null) {
+                _file
                     .blockCopy(oldAddress, oldAddressOffset, newAddress, newAddressOffset, length);
                 return;
             }
 
             byte[] copyBytes = new byte[length];
-            i_file.blockSeek(oldAddress, oldAddressOffset);
-            i_file.read(copyBytes);
+            _file.blockSeek(oldAddress, oldAddressOffset);
+            _file.read(copyBytes);
 
-            i_file.blockSeek(newAddress, newAddressOffset);
-            i_file.write(copyBytes);
+            _file.blockSeek(newAddress, newAddressOffset);
+            _file.write(copyBytes);
 
-            if (i_backupFile != null) {
-                i_backupFile.blockSeek(newAddress, newAddressOffset);
-                i_backupFile.write(copyBytes);
+            if (_backupFile != null) {
+                _backupFile.blockSeek(newAddress, newAddressOffset);
+                _backupFile.write(copyBytes);
             }
 
         } catch (Exception e) {
@@ -160,16 +163,16 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     }
 
-    private void checkXBytes(int a_newAddress, int newAddressOffset, int a_length) {
+    private void checkXBytes(int newAddress, int newAddressOffset, int length) {
         if (Debug.xbytes && Deploy.overwrite) {
             try {
-                byte[] checkXBytes = new byte[a_length];
-                i_file.blockSeek(a_newAddress, newAddressOffset);
-                i_file.read(checkXBytes);
+                byte[] checkXBytes = new byte[length];
+                _file.blockSeek(newAddress, newAddressOffset);
+                _file.read(checkXBytes);
                 for (int i = 0; i < checkXBytes.length; i++) {
                     if (checkXBytes[i] != Const4.XBYTE) {
-                        String msg = "XByte corruption adress:" + a_newAddress + " length:"
-                            + a_length;
+                        String msg = "XByte corruption adress:" + newAddress + " length:"
+                            + length;
                         throw new RuntimeException(msg);
                     }
                 }
@@ -182,15 +185,15 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     void emergencyClose() {
         super.emergencyClose();
         try {
-            i_file.close();
+            _file.close();
         } catch (Exception e) {
         }
-        i_file = null;
+        _file = null;
     }
 
     public long fileLength() {
         try {
-            return i_file.getLength();
+            return _file.getLength();
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -224,9 +227,9 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 try {
                     boolean lockFile = Debug.lockFile && configImpl().lockFile()
                         && (!configImpl().isReadOnly());
-                    i_file = ioAdapter.open(fileName(), lockFile, 0);
+                    _file = ioAdapter.open(fileName(), lockFile, 0);
                     if (needsTimerFile()) {
-                        i_timerFile = ioAdapter.open(fileName(), false, 0);
+                        _timerFile = ioAdapter.open(fileName(), false, 0);
                     }
                 } catch (DatabaseFileLockedException de) {
                     throw de;
@@ -265,8 +268,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         }
 
         try{
-            i_file.blockSeek(address, addressOffset);
-            int bytesRead=i_file.read(bytes, length);
+            _file.blockSeek(address, addressOffset);
+            int bytesRead=_file.read(bytes, length);
             if(bytesRead!=length) {
             	Exceptions4.throwRuntimeException(68, address+"/"+addressOffset,null,false);
             }
@@ -301,8 +304,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
             return;
         }
         try {
-        	zeroFile(i_file, address, length);
-        	zeroFile(i_backupFile, address, length);
+        	zeroFile(_file, address, length);
+        	zeroFile(_backupFile, address, length);
         } catch (IOException e) {
             Exceptions4.throwRuntimeException(16, e);
         }
@@ -326,9 +329,9 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     public void syncFiles() {
         try {
-            i_file.sync();
-            if (i_timerFile != null) {
-                i_timerFile.sync();
+            _file.sync();
+            if (_timerFile != null) {
+                _timerFile.sync();
             }
         } catch (Exception e) {
         }
@@ -339,15 +342,15 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
     private void closeTimerFile() throws IOException{
-        if(i_timerFile == null){
+        if(_timerFile == null){
             return;
         }
-        i_timerFile.close();
-        i_timerFile = null;
+        _timerFile.close();
+        _timerFile = null;
     }
     
 
-    public void writeBytes(Buffer a_bytes, int address, int addressOffset) {
+    public void writeBytes(Buffer bytes, int address, int addressOffset) {
         if (configImpl().isReadOnly()) {
             return;
         }
@@ -360,26 +363,26 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
             if (Debug.xbytes && Deploy.overwrite) {
                 
                 boolean doCheck = true;
-                if(a_bytes instanceof StatefulBuffer){
-                    StatefulBuffer writer = (StatefulBuffer)a_bytes;
+                if(bytes instanceof StatefulBuffer){
+                    StatefulBuffer writer = (StatefulBuffer)bytes;
                     if(writer.getID() == Const4.IGNORE_ID){
                         doCheck = false;
                     }
                 }
                 if (doCheck) {
-                    checkXBytes(address, addressOffset, a_bytes.getLength());
+                    checkXBytes(address, addressOffset, bytes.getLength());
                 }
             }
 
             if (DTrace.enabled) {
-                DTrace.WRITE_BYTES.logLength(address + addressOffset,a_bytes.getLength());
+                DTrace.WRITE_BYTES.logLength(address + addressOffset,bytes.getLength());
             }
 
-            i_file.blockSeek(address, addressOffset);
-            i_file.write(a_bytes._buffer, a_bytes.getLength());
-            if (i_backupFile != null) {
-                i_backupFile.blockSeek(address, addressOffset);
-                i_backupFile.write(a_bytes._buffer, a_bytes.getLength());
+            _file.blockSeek(address, addressOffset);
+            _file.write(bytes._buffer, bytes.getLength());
+            if (_backupFile != null) {
+                _backupFile.blockSeek(address, addressOffset);
+                _backupFile.write(bytes._buffer, bytes.getLength());
             }
 
         } catch (Exception e) {
@@ -387,22 +390,21 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         }
     }
 
-    public void debugWriteXBytes(int a_address, int a_length) {
+    public void debugWriteXBytes(int address, int length) {
         if (Debug.xbytes) {
-            writeXBytes(a_address, a_length);
+            writeXBytes(address, length);
         }
     }
 
-	public void writeXBytes(int a_address, int a_length) {
+	public void writeXBytes(int address, int length) {
 		if (Deploy.flush) {
-		    if (!configImpl().isReadOnly()) {
-		        if(a_address > 0 && a_length > 0){
+		    if (!configImpl().isReadOnly()&&_freespaceFiller!=null) {
+		        if(address > 0 && length > 0){
 		            try {
 		                if(DTrace.enabled){
-		                    DTrace.WRITE_XBYTES.logLength(a_address, a_length);
+		                    DTrace.WRITE_XBYTES.logLength(address, length);
 		                }
-		                i_file.blockSeek(a_address);
-		                i_file.write(xBytes(a_address, a_length)._buffer, a_length);
+		                createFreespaceFiller().fill(new IoAdapterWindow(_file,address,length));
 		                
 		            } catch (Exception e) {
 		                e.printStackTrace();
@@ -413,6 +415,29 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	}
 
 	public IoAdapter timerFile() {
-		return i_timerFile;
+		return _timerFile;
+	}
+	
+	private FreespaceFiller createFreespaceFiller() {
+		FreespaceFiller freespaceFiller=config().freespaceFiller();
+		if(Debug.xbytes&&freespaceFiller==null) {
+			freespaceFiller=new XByteFreespaceFiller();
+		}
+		return freespaceFiller;
+	}
+	
+	private static class XByteFreespaceFiller implements FreespaceFiller {
+
+		public void fill(IoAdapterWindow io) throws IOException {
+			io.write(0,xBytes(io.length()));
+		}
+
+	    private byte[] xBytes(int len) {
+	        byte[] bytes = new byte[len];
+	        for (int i = 0; i < len; i++) {
+	            bytes[i]=Const4.XBYTE;
+	        }
+	        return bytes;
+	    }
 	}
 }
