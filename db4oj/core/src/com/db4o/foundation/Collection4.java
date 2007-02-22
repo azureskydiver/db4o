@@ -13,14 +13,28 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	
 	// FIELDS ARE PUBLIC SO THEY CAN BE REFLECTED ON IN JDKs <= 1.1
 
-	/** first element of the linked list */
+	/**
+	 * first element of the linked list
+	 * 
+	 * @sharpen.private
+	 */
 	public List4 _first;
-	
+
+	/**
+	 * @sharpen.private
+	 */
 	public List4 _last;
 
-	/** number of elements collected */
+	/**
+	 * number of elements collected
+	 * 
+	 * @sharpen.private
+	 */
 	public int _size;
 
+	/**
+	 * @sharpen.private
+	 */
 	public int _version;
 	
 	private static final Object NOT_FOUND = new Object();
