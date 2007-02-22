@@ -68,33 +68,33 @@ public class FreespaceManagerRam extends FreespaceManager {
         // do nothing
     }
     
-    public void free(int a_address, int a_length) {
+    public void free(int address, int length) {
         
-        if (a_address <= 0) {
+        if (address <= 0) {
             return;
         }
         
-        if (a_length <= discardLimit()) {
+        if (length <= discardLimit()) {
             return;
         }
         
         if(DTrace.enabled){
-            DTrace.FREE_RAM.logLength(a_address, a_length);
+            DTrace.FREE_RAM.logLength(address, length);
         }
         
-        a_length = _file.blocksFor(a_length);
-        _finder._key = a_address;
+        length = _file.blocksFor(length);
+        _finder._key = address;
         FreeSlotNode sizeNode;
         FreeSlotNode addressnode = (FreeSlotNode) Tree.findSmaller(_freeByAddress, _finder);
         if ((addressnode != null)
-            && ((addressnode._key + addressnode._peer._key) == a_address)) {
+            && ((addressnode._key + addressnode._peer._key) == address)) {
             sizeNode = addressnode._peer;
             _freeBySize = _freeBySize.removeNode(sizeNode);
-            sizeNode._key += a_length;
+            sizeNode._key += length;
             FreeSlotNode secondAddressNode = (FreeSlotNode) Tree
                 .findGreaterOrEqual(_freeByAddress, _finder);
             if ((secondAddressNode != null)
-                && (a_address + a_length == secondAddressNode._key)) {
+                && (address + length == secondAddressNode._key)) {
                 sizeNode._key += secondAddressNode._peer._key;
                 _freeBySize = _freeBySize
                     .removeNode(secondAddressNode._peer);
@@ -107,24 +107,22 @@ public class FreespaceManagerRam extends FreespaceManager {
             addressnode = (FreeSlotNode) Tree.findGreaterOrEqual(
                 _freeByAddress, _finder);
             if ((addressnode != null)
-                && (a_address + a_length == addressnode._key)) {
+                && (address + length == addressnode._key)) {
                 sizeNode = addressnode._peer;
                 _freeByAddress = _freeByAddress.removeNode(addressnode);
                 _freeBySize = _freeBySize.removeNode(sizeNode);
-                sizeNode._key += a_length;
-                addressnode._key = a_address;
+                sizeNode._key += length;
+                addressnode._key = address;
                 addressnode.removeChildren();
                 sizeNode.removeChildren();
                 _freeByAddress = Tree.add(_freeByAddress, addressnode);
                 _freeBySize = Tree.add(_freeBySize, sizeNode);
             } else {
-                addFreeSlotNodes(a_address, a_length);
+                addFreeSlotNodes(address, length);
             }
         }
-        if (Debug.xbytes) {
-            if(! Debug.freespaceChecker){
-                _file.debugWriteXBytes(a_address, a_length * blockSize());
-            }
+        if(! Debug.freespaceChecker){
+        	_file.overwriteDeletedBytes(address, length * blockSize());
         }
     }
     

@@ -20,6 +20,7 @@ public abstract class Debug extends Debug4 {
 
     public static final boolean freespace = Deploy.debug;
     
+    // overrides any configured freespace filler
     public static final boolean xbytes = freespace;
     
     public static final boolean freespaceChecker = false;

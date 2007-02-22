@@ -19,8 +19,11 @@ public class FreespaceManagerIx extends FreespaceManager{
     
     private Collection4 _xBytes;
 
+    private final boolean _overwriteDeletedSlots;
+    
     FreespaceManagerIx(LocalObjectContainer file){
         super(file);
+        _overwriteDeletedSlots=Debug.xbytes||file.config().freespaceFiller()!=null;
     }
     
     private void add(int address, int length){
@@ -51,7 +54,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         if( ! started()){
             return;
         }
-        if (Debug.xbytes) {
+        if (_overwriteDeletedSlots) {
             _xBytes = new Collection4();
         }
 
@@ -60,7 +63,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         StatefulBuffer writer = new StatefulBuffer(_file.getSystemTransaction(), _slotAddress, slotLength());
         _addressIx._index._metaIndex.write(writer);
         _lengthIx._index._metaIndex.write(writer);
-        if (Debug.xbytes) {
+        if (_overwriteDeletedSlots) {
             writer.setID(Const4.IGNORE_ID);  // no XBytes check
         }
         if(_file.configImpl().flushFileBuffers()){
@@ -68,12 +71,12 @@ public class FreespaceManagerIx extends FreespaceManager{
         }
         writer.writeEncrypt();
         
-        if(Debug.xbytes){
+        if(_overwriteDeletedSlots){
             Iterator4 i = _xBytes.iterator();
             _xBytes = null;
             while(i.moveNext()){
                 int[] addressLength = (int[])i.current();
-                writeXBytes(addressLength[0], addressLength[1]);
+                overwriteDeletedSlots(addressLength[0], addressLength[1]);
             }
         }
     }
@@ -125,8 +128,8 @@ public class FreespaceManagerIx extends FreespaceManager{
         
         add(address, length);
         
-        if (Debug.xbytes) {
-            writeXBytes(freedAddress, freedLength);
+        if (_overwriteDeletedSlots) {
+            overwriteDeletedSlots(freedAddress, freedLength);
         }
     }
     
@@ -248,11 +251,11 @@ public class FreespaceManagerIx extends FreespaceManager{
         return 0;  // no special ID, FreespaceIX information is stored in fileheader variable part 
     }
 
-    private void writeXBytes(int address, int length){
-        if (Debug.xbytes) {
+    private void overwriteDeletedSlots(int address, int length){
+        if (_overwriteDeletedSlots) {
             if(_xBytes == null){
                 length = length * blockSize();
-                _file.debugWriteXBytes(address, length);
+                _file.overwriteDeletedBytes(address, length);
             }else{
                 _xBytes.add(new int[] {address, length});
             }

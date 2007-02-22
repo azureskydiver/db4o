@@ -145,6 +145,6 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		bytes = null; // hey, GC, kick me hard!
 	}
 
-    public void debugWriteXBytes(int a_address, int a_length) {
+    public void overwriteDeletedBytes(int a_address, int a_length) {
     }
 }

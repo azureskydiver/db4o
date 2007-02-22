@@ -390,13 +390,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         }
     }
 
-    public void debugWriteXBytes(int address, int length) {
-        if (Debug.xbytes) {
-            writeXBytes(address, length);
-        }
-    }
-
-	public void writeXBytes(int address, int length) {
+    public void overwriteDeletedBytes(int address, int length) {
 		if (Deploy.flush) {
 		    if (!configImpl().isReadOnly()&&_freespaceFiller!=null) {
 		        if(address > 0 && length > 0){
@@ -420,7 +414,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	
 	private FreespaceFiller createFreespaceFiller() {
 		FreespaceFiller freespaceFiller=config().freespaceFiller();
-		if(Debug.xbytes&&freespaceFiller==null) {
+		if(Debug.xbytes) {
 			freespaceFiller=new XByteFreespaceFiller();
 		}
 		return freespaceFiller;

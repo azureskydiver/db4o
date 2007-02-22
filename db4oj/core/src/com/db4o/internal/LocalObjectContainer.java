@@ -319,7 +319,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         int blocksNeeded = blocksFor(bytes);
         if (Debug.xbytes && Deploy.overwrite) {
-            debugWriteXBytes(_blockEndAddress, blocksNeeded * blockSize());
+            overwriteDeletedBytes(_blockEndAddress, blocksNeeded * blockSize());
         }
         return appendBlocks(blocksNeeded);
     }
@@ -758,7 +758,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     // This is a reroute of writeBytes to write the free blocks
     // unchecked.
 
-    public abstract void debugWriteXBytes(int a_address, int a_length);
+    public abstract void overwriteDeletedBytes(int a_address, int a_length);
 
     public final void writeTransactionPointer(int address) {
         _fileHeader.writeTransactionPointer(getSystemTransaction(), address);
