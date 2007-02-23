@@ -7,13 +7,12 @@ import java.math.*;
 import com.db4o.*;
 import com.db4o.query.*;
 
-// TODO This fails on JDK1.3. JDK1.4+ is fine.
 public class StoreBigDecimal {
 	public BigDecimal _bd;
 
 	public void configure() {
-		Db4o.configure().objectClass(BigDecimal.class).callConstructor(true);
-		Db4o.configure().objectClass(BigDecimal.class).storeTransientFields(true);
+		Db4o.configure().objectClass(BigInteger.class).storeTransientFields(true); // needed for JDK1.3
+		Db4o.configure().objectClass(BigDecimal.class).storeTransientFields(true); // needed for JDK5
 	}
 	
 	public void store() {
