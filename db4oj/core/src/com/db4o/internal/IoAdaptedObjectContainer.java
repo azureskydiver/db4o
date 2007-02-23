@@ -394,14 +394,18 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		if (Deploy.flush) {
 		    if (!configImpl().isReadOnly()&&_freespaceFiller!=null) {
 		        if(address > 0 && length > 0){
+	                if(DTrace.enabled){
+	                    DTrace.WRITE_XBYTES.logLength(address, length);
+	                }
+	                IoAdapterWindow window = new IoAdapterWindow(_file,address,length);
 		            try {
-		                if(DTrace.enabled){
-		                    DTrace.WRITE_XBYTES.logLength(address, length);
-		                }
-		                createFreespaceFiller().fill(new IoAdapterWindow(_file,address,length));
+						createFreespaceFiller().fill(window);
 		                
 		            } catch (Exception e) {
 		                e.printStackTrace();
+		            }
+		            finally {
+						window.disable();
 		            }
 		        }
 		    }
