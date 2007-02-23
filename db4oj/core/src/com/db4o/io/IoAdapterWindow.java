@@ -57,6 +57,12 @@ public class IoAdapterWindow {
 		_disabled=true;
 	}
 	
+	public void flush() throws IOException {
+		if(!_disabled) {
+			_io.sync();
+		}
+	}
+	
 	private void checkBounds(int off, byte[] data) {
 		if(_disabled) {
 			throw new IllegalStateException();
