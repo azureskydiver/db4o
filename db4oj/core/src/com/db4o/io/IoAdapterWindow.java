@@ -12,6 +12,7 @@ public class IoAdapterWindow {
 	private IoAdapter _io;
 	private int _blockOff;
 	private int _len;
+	private boolean _disabled;
 
 	/**
 	 * @param io The delegate I/O adapter
@@ -22,6 +23,7 @@ public class IoAdapterWindow {
 		_io = io;
 		_blockOff=blockOff;
 		_len=len;
+		_disabled=false;
 	}
 
 	/**
@@ -35,7 +37,7 @@ public class IoAdapterWindow {
 	 * @param off Offset in bytes relative to the window start
 	 * @param data Data to write into the window starting from the given offset
 	 */
-	public void write(int off,byte[] data) throws IllegalArgumentException, IOException {
+	public void write(int off,byte[] data) throws IllegalArgumentException, IllegalStateException, IOException {
 		checkBounds(off, data);
 		_io.blockSeek(_blockOff+off);
 		_io.write(data);
@@ -45,13 +47,20 @@ public class IoAdapterWindow {
 	 * @param off Offset in bytes relative to the window start
 	 * @param data Data buffer to read from the window starting from the given offset
 	 */
-	public int read(int off,byte[] data) throws IllegalArgumentException, IOException {
+	public int read(int off,byte[] data) throws IllegalArgumentException, IllegalStateException, IOException {
 		checkBounds(off, data);
 		_io.blockSeek(_blockOff+off);
 		return _io.read(data);
 	}
 
+	public void disable() {
+		_disabled=true;
+	}
+	
 	private void checkBounds(int off, byte[] data) {
+		if(_disabled) {
+			throw new IllegalStateException();
+		}
 		if(data==null||off<0||off+data.length>_len) {
 			throw new IllegalArgumentException();
 		}
