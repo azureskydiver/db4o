@@ -17,7 +17,11 @@
     	<dependency name="db4o-java1.1" rev="latest.integration" transitive="false" conf="lib->default"/>
     	<dependency name="db4o-java1.2" rev="latest.integration" transitive="false" conf="lib->default"/>
       <dependency name="db4o-java5" 	rev="latest.integration" transitive="false" conf="lib->default"/>
-      <dependency name="db4ounit" 		rev="latest.integration" transitive="false" conf="lib->default"/>
+      
+      <dependency name="db4ounit" 						rev="latest.integration" transitive="false" conf="lib->default"/>
+      <dependency name="db4o-test-java1.1" 		rev="latest.integration" transitive="false" conf="lib->default"/>
+      <dependency name="db4o-test-java1.2" 		rev="latest.integration" transitive="false" conf="lib->default"/>
+      <dependency name="db4o-test-java5" 			rev="latest.integration" transitive="false" conf="lib->default"/>
         
       <dependency name="doctor" 				rev="latest.integration" transitive="false" conf="tutorial->signed"/>
       <dependency name="f1-signed" 			rev="latest.integration" transitive="false" conf="tutorial->default"/>

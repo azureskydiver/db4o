@@ -87,20 +87,12 @@
 	</target>  
    
   <target name="lib" depends="">
-   	<copy todir="${ivy.lib.dir}/lib">
-			<fileset dir="${dir.j.nqopt}/lib" includes="*.txt"/>
-		</copy>		
-		
-		<!--<renameJar srcJarDir="${ivy.lib.dir}/lib" excludes="ant.jar"/>-->
-		
-		<!--<move todir="${ivy.lib.dir}/lib">
-	    <fileset dir="${ivy.lib.dir}/lib">
-	       <include name="*.jar"/>
-	       <exclude name="ant.jar"/>
-	    </fileset>
-    	<mapper type="glob" from="*.jar" to="*-${db4o.version.dotted}.jar"/>
-  	</move>
-  	-->
+		<unzip dest="${ivy.lib.dir}/lib">
+	    <fileset dir="${ivy.lib.dir}/lib" includes="ant-n-bloat-*.zip"/>
+		</unzip>
+		<delete>
+    	<fileset dir="${ivy.lib.dir}/lib" includes="ant-n-bloat-*.zip"/>
+  	</delete>
 	</target>  
 	
 	<target name="src" depends="">
@@ -135,6 +127,13 @@
 	</target>
 	
 	<target name="tutorial" depends="">
+		<unzip dest="${ivy.lib.dir}/tutorial">
+	    <fileset dir="${ivy.lib.dir}/tutorial" includes="bloat-signed-*.zip"/>
+		</unzip>
+		<delete>
+    	<fileset dir="${ivy.lib.dir}/tutorial" includes="bloat-signed-*.zip"/>
+  	</delete>
+  	
 		<path id="javaDoctor.lib.path">
 	  	<fileset dir="${ivy.lib.dir}/tutorial" includes="*.jar"/>
 	  	<fileset dir="${ivy.lib.dir}/doctor" includes="*.jar"/>
@@ -156,7 +155,7 @@
 			outputfile="${db4o.file}tutorial" 
 			outputpath="${basedir}/doc/tutorial" 
 			pdfbasefont="${font.pdf.base}" 
-			archive="doctor-applet-signed.jar, db4o-java1.2-signed.jar, f1-signed.jar" 
+			archive="doctor-applet-signed-${db4o.version.dotted}.jar, db4o-java1.2-signed-${db4o.version.dotted}.jar, f1-signed-${db4o.version.dotted}.jar" 
 			outlineimage="db4objects.gif" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="true" />
