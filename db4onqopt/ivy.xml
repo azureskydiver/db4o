@@ -8,13 +8,13 @@
     </configurations>
     <publications>
     	<artifact name="${ant.project.name}"				conf="core"/>
-    	<artifact name="ant"												conf="core"/>
-    	<artifact name="bloat"											conf="core"/>
+    	<artifact name="ant" 		conf="core" type="zip" ext="zip"/>
+    	<artifact name="bloat"	conf="core" type="zip" ext="zip"/>
     	
       <artifact name="${ant.project.name}-test"		conf="test"/>
    
    		<artifact name="${ant.project.name}-signed"	conf="signed"/>
-      <artifact name="bloat-signed"								conf="signed"/>
+      <artifact name="bloat-signed" 							conf="signed" type="zip" ext="zip"/>
       
     </publications>
     <dependencies>
