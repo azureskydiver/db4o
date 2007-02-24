@@ -37,8 +37,8 @@
 			<copy file="lib/bloat-1.0.jar" tofile="${signedBloatJarPath}"/>			
 			<db4oSignJar jar="${signedBloatJarPath}"/>
 			
-			<zip destfile="${antZipPath}">
-				<fileset file="lib/ant.jar"/>
+			<zip destfile="${antNBloatZipPath}">
+				<fileset file="lib/*"/>
 			</zip>
 			
 			<zip destfile="${bloatZipPath}">

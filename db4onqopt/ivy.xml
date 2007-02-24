@@ -8,8 +8,7 @@
     </configurations>
     <publications>
     	<artifact name="${ant.project.name}"				conf="core"/>
-    	<artifact name="ant" 		conf="core" type="zip" ext="zip"/>
-    	<artifact name="bloat"	conf="core" type="zip" ext="zip"/>
+    	<artifact name="ant-n-bloat"	conf="core" type="zip" ext="zip"/>
     	
       <artifact name="${ant.project.name}-test"		conf="test"/>
    
