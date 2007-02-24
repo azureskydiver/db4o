@@ -7,9 +7,6 @@
     	<conf name="dist" 		extends="core" description="dRS java zip"/>
     </configurations>
     <publications>
-        	<artifact name="${ant.project.name}"						conf="core"/>
-        	<artifact name="${ant.project.name}-test"				conf="test"/>
-        	<artifact name="${ant.project.name}-tutorial" 	conf="tutorial"/>
         	<artifact name="${ant.project.name}" 						conf="dist" type="zip" ext="zip"/>
     </publications>
     <dependencies>
