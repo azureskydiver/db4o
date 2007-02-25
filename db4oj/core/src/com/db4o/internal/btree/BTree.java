@@ -9,6 +9,7 @@ import com.db4o.internal.ix.*;
 import com.db4o.internal.mapping.*;
 
 /**
+ * 
  * @exclude
  */
 public class BTree extends PersistentBase implements TransactionParticipant {
