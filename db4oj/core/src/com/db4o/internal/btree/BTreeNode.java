@@ -61,7 +61,6 @@ public final class BTreeNode extends PersistentBase{
         _count = count;
         _isLeaf = isLeaf;
         prepareArrays();
-        setStateDirty();
     }
     
     /* Constructor for existing nodes, requires valid ID */
@@ -348,6 +347,8 @@ public final class BTreeNode extends PersistentBase{
         if(freeIfEmpty(trans)){
             return;
         }
+        
+        setStateDirty();
         
         // TODO: Merge nodes here on low _count value.
         
@@ -803,7 +804,6 @@ public final class BTreeNode extends PersistentBase{
 		}
 	}
     
-    
     void rollback(Transaction trans){
         commitOrRollback(trans, false);
     }
@@ -840,7 +840,6 @@ public final class BTreeNode extends PersistentBase{
     }
     
     private BTreeNode split(Transaction trans){
-        
         
         BTreeNode res = new BTreeNode(_btree, _btree._halfNodeSize, _isLeaf,_parentID, getID(), _nextID);
         
@@ -983,19 +982,16 @@ public final class BTreeNode extends PersistentBase{
     private void setParentID(Transaction trans, int id){
         prepareWrite(trans);
         _parentID = id;
-        setStateDirty();
     }
     
     private void setPreviousID(Transaction trans, int id){
         prepareWrite(trans);
         _previousID = id;
-        setStateDirty();
     }
     
     private void setNextID(Transaction trans, int id){
         prepareWrite(trans);
         _nextID = id;
-        setStateDirty();
     }
     
     public void traverseKeys(Transaction trans, Visitor4 visitor){
@@ -1155,4 +1151,5 @@ public final class BTreeNode extends PersistentBase{
             child(reader, childIdx).traverseAllNodes(trans, command);
         }
     }
+    
 }
