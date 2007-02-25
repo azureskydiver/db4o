@@ -9,7 +9,6 @@ import com.db4o.internal.ix.*;
 import com.db4o.internal.mapping.*;
 
 /**
- * 
  * @exclude
  */
 public class BTree extends PersistentBase implements TransactionParticipant {
@@ -150,7 +149,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
             }
             _processing = null;
             
-            writeAllNodes(systemTransaction, true);
+            writeAllNodes(systemTransaction);
             
         }
         
@@ -176,7 +175,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         }
         _processing = null;
         
-        writeAllNodes(systemTransaction, false);
+        writeAllNodes(systemTransaction);
         
         setStateDirty();
         write(systemTransaction);
@@ -184,16 +183,13 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         purge();
     }
     
-    private void writeAllNodes(final Transaction systemTransaction, final boolean setDirty){
+    private void writeAllNodes(final Transaction systemTransaction){
         if(_nodes == null){
         	return;
         }
     	_nodes.traverse(new Visitor4() {
             public void visit(Object obj) {
                 BTreeNode node = (BTreeNode)((TreeIntObject)obj).getObject();
-                if(setDirty){
-                	node.setStateDirty();
-                }
                 node.write(systemTransaction);
             }
         });
