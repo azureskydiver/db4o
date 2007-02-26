@@ -55,7 +55,7 @@ public final class HandlerRegistry {
     private static final int        ANY_INDEX          = 10;
     public static final int         ANY_ID        = 11;
     
-    public final VirtualFieldMetadata[]         i_virtualFields = new VirtualFieldMetadata[2]; 
+    private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[2]; 
 
     private final Hashtable4        i_classByClass  = new Hashtable4(32);
     
@@ -101,8 +101,8 @@ public final class HandlerRegistry {
         
         i_indexes = new SharedIndexedFields(a_stream);
         
-        i_virtualFields[0] = i_indexes.i_fieldVersion;
-        i_virtualFields[1] = i_indexes.i_fieldUUID;
+        _virtualFields[0] = i_indexes.i_fieldVersion;
+        _virtualFields[1] = i_indexes.i_fieldUUID;
 
         i_stringHandler = new StringHandler(a_stream, LatinStringIO.forEncoding(stringEncoding));
 
@@ -454,4 +454,12 @@ public final class HandlerRegistry {
         return i_yapClasses[id - 1];
 	}
 	
+	public VirtualFieldMetadata virtualFieldByName(String name) {
+        for (int i = 0; i < _virtualFields.length; i++) {
+            if (name.equals(_virtualFields[i].getName())) {
+                return _virtualFields[i];
+            }
+        }
+        return null;
+	}
 }

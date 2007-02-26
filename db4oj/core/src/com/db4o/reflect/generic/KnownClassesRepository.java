@@ -156,7 +156,7 @@ public class KnownClassesRepository {
 			
 			RawFieldSpec fieldInfo=fieldMarshaller.readSpec(_stream, classreader);
 			String fieldName=fieldInfo.name();
-            int handlerID=fieldInfo.handlerID();
+            int handlerID=handlerID(fieldInfo);
             ReflectClass fieldClass = null;
 
             // need to take care of special handlers here
@@ -180,6 +180,13 @@ public class KnownClassesRepository {
 			fields[i]=_builder.createField(clazz, fieldName, fieldClass, fieldInfo.isVirtual(), fieldInfo.isPrimitive(), fieldInfo.isArray(), fieldInfo.isNArray());
 		}
 		_builder.initFields(clazz, fields);
+	}
+
+	private int handlerID(RawFieldSpec fieldInfo) {
+		if(!fieldInfo.isVirtual()) {
+			return fieldInfo.handlerID();
+		}
+		return _stream.handlers().virtualFieldByName(fieldInfo.name()).getHandlerID();
 	}
 
 	private MarshallerFamily marshallerFamily() {
