@@ -27,3 +27,4 @@ db4o devtools and doctor are required by dBS. They are already built and package
 Using dBS as Production
 =======================
 - Turn "failonerror" to "true" in the <java> task of macrodef <runJvmTests> in run-java-tests/build.xml
+
