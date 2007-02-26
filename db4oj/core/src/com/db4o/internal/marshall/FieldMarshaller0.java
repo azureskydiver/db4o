@@ -34,12 +34,9 @@ public class FieldMarshaller0 implements FieldMarshaller {
         }
         
         if (name.indexOf(Const4.VIRTUAL_FIELD_PREFIX) == 0) {
-            VirtualFieldMetadata[] virtuals = stream.i_handlers.i_virtualFields;
-            for (int i = 0; i < virtuals.length; i++) {
-                if (name.equals(virtuals[i].getName())) {
-                    return new RawFieldSpec(name);
-                }
-            }
+        	if(stream.i_handlers.virtualFieldByName(name)!=null) {
+                return new RawFieldSpec(name);
+        	}
         }
         int handlerID = reader.readInt();
         byte attribs=reader.readByte();
@@ -59,12 +56,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     	}
     	String name=spec.name();
         if (spec.isVirtual()) {
-            VirtualFieldMetadata[] virtuals = stream.i_handlers.i_virtualFields;
-            for (int i = 0; i < virtuals.length; i++) {
-                if (name.equals(virtuals[i].getName())) {
-                    return virtuals[i];
-                }
-            }
+        	return stream.i_handlers.virtualFieldByName(name);
         }
         
         field.init(field.getParentYapClass(), name);

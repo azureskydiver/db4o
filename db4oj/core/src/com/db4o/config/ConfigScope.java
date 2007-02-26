@@ -13,25 +13,31 @@ public final class ConfigScope implements Serializable {
 	public static final int INDIVIDUALLY_ID = 1;
 	public static final int GLOBALLY_ID = Integer.MAX_VALUE;
 
+	private static final String DISABLED_NAME="disabled";
+	private static final String INDIVIDUALLY_NAME="individually";
+	private static final String GLOBALLY_NAME="globally";
+	
 	/**
 	 * Marks a configuration feature as globally disabled.
 	 */
-	public static final ConfigScope DISABLED = new ConfigScope(DISABLED_ID);
+	public static final ConfigScope DISABLED = new ConfigScope(DISABLED_ID,DISABLED_NAME);
 
 	/**
 	 * Marks a configuration feature as individually configurable.
 	 */
-	public static final ConfigScope INDIVIDUALLY = new ConfigScope(INDIVIDUALLY_ID);
+	public static final ConfigScope INDIVIDUALLY = new ConfigScope(INDIVIDUALLY_ID,INDIVIDUALLY_NAME);
 
 	/**
 	 * Marks a configuration feature as globally enabled.
 	 */
-	public static final ConfigScope GLOBALLY = new ConfigScope(GLOBALLY_ID);
+	public static final ConfigScope GLOBALLY = new ConfigScope(GLOBALLY_ID,GLOBALLY_NAME);
 
 	private final int _value;
+	private final String _name;
 	
-	private ConfigScope(int value) {
+	private ConfigScope(int value,String name) {
 		_value=value;
+		_name=name;
 	}
 
 	public boolean applyConfig(boolean defaultValue) {
@@ -82,5 +88,9 @@ public final class ConfigScope implements Serializable {
 		default:
 			return GLOBALLY;
 		}
+	}
+	
+	public String toString() {
+		return _name;
 	}
 }
