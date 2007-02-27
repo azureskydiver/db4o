@@ -1036,7 +1036,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         storeStaticFieldValues(systemTrans, false);
     }
 
-	Object instantiate(ObjectReference yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, boolean a_addToIDTree) {
+	Object instantiate(ObjectReference ref, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, boolean addToIDTree) {
         
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
@@ -1052,14 +1052,14 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 			}  
             
 			shareTransaction(obj, buffer.getTransaction());
-			shareYapObject(obj, yapObject);
+			shareYapObject(obj, ref);
             
-			yapObject.setObjectWeak(stream, obj);
-			stream.hcTreeAdd(yapObject);
+			ref.setObjectWeak(stream, obj);
+			stream.referenceSystem().addExistingReferenceToObjectTree(ref);
 		}
         
-		if(a_addToIDTree){
-			yapObject.addToIDTree(stream);
+		if(addToIDTree){
+			ref.addExistingReferenceToIDTree(stream);
 		}
         
 		// when there's a ObjectConstructor configured for a type
@@ -1067,17 +1067,17 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		// of type YapFieldTranslator which should take care of everything		
 		//final boolean instantiatedByTranslator = instantiating && configInstantiates();
 		final boolean doFields = buffer.getInstantiationDepth() > 0 || cascadeOnActivate();
-		if (doFields && !activatingAlreadyActiveObject(instantiating, stream, yapObject) /* && !instantiatedByTranslator*/) {
+		if (doFields && !activatingAlreadyActiveObject(instantiating, stream, ref) /* && !instantiatedByTranslator*/) {
 			if(objectCanActivate(stream, obj)){
-				yapObject.setStateClean();
-				instantiateFields(yapObject, obj, mf, attributes, buffer);
+				ref.setStateClean();
+				instantiateFields(ref, obj, mf, attributes, buffer);
 				objectOnActivate(stream, obj);
 			} else if (instantiating) {
-				yapObject.setStateDeactivated();
+				ref.setStateDeactivated();
 			}
 		} else {
 			if (instantiating) {
-                yapObject.setStateDeactivated();
+                ref.setStateDeactivated();
             } else {
                 if (buffer.getInstantiationDepth() > 1) {
                     activateFields(buffer.getTransaction(), obj, buffer.getInstantiationDepth() - 1);

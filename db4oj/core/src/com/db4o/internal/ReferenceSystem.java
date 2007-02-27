@@ -24,12 +24,28 @@ class ReferenceSystem {
 	    _hashCodeTree = _idTree;
 	}
 
-	void addReference(ObjectReference ref){
+	void addNewReference(ObjectReference ref){
+		addReference(ref);
+	}
+
+	void addExistingReference(ObjectReference ref){
+		addReference(ref);
+	}
+
+	private void addReference(ObjectReference ref){
 		idAdd(ref);
 		hashCodeAdd(ref);
 	}
 	
-	void hashCodeAdd(ObjectReference ref){
+	void addExistingReferenceToObjectTree(ObjectReference ref) {
+		hashCodeAdd(ref);
+	}
+	
+	void addExistingReferenceToIDTree(ObjectReference ref) {
+		idAdd(ref);
+	}
+	
+	private void hashCodeAdd(ObjectReference ref){
 		if (Deploy.debug) {
 		    Object obj = ref.getObject();
 		    if (obj != null) {
@@ -42,7 +58,7 @@ class ReferenceSystem {
 		_hashCodeTree = _hashCodeTree.hc_add(ref);
 	}
 	
-	void idAdd(ObjectReference ref){
+	private void idAdd(ObjectReference ref){
 		if(DTrace.enabled){
 		    DTrace.ID_TREE_ADD.log(ref.getID());
 		}
