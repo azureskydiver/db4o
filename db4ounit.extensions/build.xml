@@ -1,6 +1,6 @@
-<project name="db4ounit" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="db4ounit" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<import file="../build-1.1/common-1.1.xml"/>
-	<property file="build.properties" />
+	<property file="${dir.db4ounit.extensions}/build.properties" />
 	
 	<!--
 	TODO 
@@ -40,7 +40,8 @@
    </target>
    
    <target name="resolve" depends="configure">
-        <ivy:retrieve />
+        <ivy:resolve file="${dir.db4ounit.extensions}/ivy.xml"/>
+   		  <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${ivy.configurations}" />
     </target>
     
     <target name="publish" depends="resolve, jar">
