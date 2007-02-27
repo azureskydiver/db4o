@@ -2,7 +2,7 @@
 	
 	<import file="../../build-1.1/common-1.1.xml"/>
 	
-	<property file="build.properties" />
+	<property file="${dir.j.jdk1.2.test}/build.properties" />
 	
 	<path id="lib.path.id">
         <fileset dir="${ivy.lib.dir}" includes="*.jar"/>
@@ -34,8 +34,9 @@
         <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
    </target>
    
-   <target name="resolve" depends="configure">
-        <ivy:retrieve />
+  <target name="resolve" depends="configure">
+        <ivy:resolve file="${dir.j.jdk1.2.test}/ivy.xml"/>
+   		  <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${ivy.configurations}" />
     </target>
     
     <target name="publish" depends="resolve, jar">
