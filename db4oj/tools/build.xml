@@ -25,7 +25,7 @@
 		<mkdir dir="${defaultTempDir}" />
 		
 		<javac compiler="classic" fork="yes" executable="${file.compiler.jdk1.3}"
-			srcdir="src" destdir="${defaultTempDir}" debug="off">
+			srcdir="${dir.j.tools.src}" destdir="${defaultTempDir}" debug="off">
 			<classpath refid="lib.path.id" />
 			<compilerarg line="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}"/>
 		</javac>
@@ -40,7 +40,8 @@
    </target>
    
    <target name="resolve" depends="configure">
-        <ivy:retrieve />
+        <ivy:resolve file="${dir.j.tools}/ivy.xml"/>
+   		  <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${ivy.configurations}" />
     </target>
     
     <target name="publish" depends="jar">
