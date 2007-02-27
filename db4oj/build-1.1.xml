@@ -30,7 +30,7 @@
 		<delete dir="${defaultTempDir}" failonerror="true"/>
 		<mkdir dir="${defaultTempDir}" />
 		
-		<javac compiler="classic" fork="yes" executable="${file.compiler.jdk1.3}"
+		<javac fork="yes" executable="${file.compiler.jdk1.3}"
 			srcdir="${coreSrcDir}" destdir="${defaultTempDir}" debug="off">
 			<compilerarg line="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}"/>
 		</javac>
