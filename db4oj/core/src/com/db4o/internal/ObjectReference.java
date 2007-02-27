@@ -83,9 +83,9 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 		}
 	}
 
-	final void addToIDTree(ObjectContainerBase a_stream) {
+	final void addExistingReferenceToIDTree(ObjectContainerBase a_stream) {
 		if (!(_class instanceof PrimitiveFieldHandler)) {
-			a_stream.idTreeAdd(this);
+			a_stream.referenceSystem().addExistingReferenceToIDTree(this);
 		}
 	}
 	

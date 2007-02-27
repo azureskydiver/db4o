@@ -220,14 +220,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public final void bind2(ObjectReference a_yapObject, Object obj){
-        int id = a_yapObject.getID();
-        removeReference(a_yapObject);
-        a_yapObject = new ObjectReference(getYapClass(reflector().forObject(obj)),
+    public final void bind2(ObjectReference ref, Object obj){
+        int id = ref.getID();
+        removeReference(ref);
+        ref = new ObjectReference(getYapClass(reflector().forObject(obj)),
             id);
-        a_yapObject.setObjectWeak(_this, obj);
-        a_yapObject.setStateDirty();
-        addToReferenceSystem(a_yapObject);
+        ref.setObjectWeak(_this, obj);
+        ref.setStateDirty();
+        _referenceSystem.addExistingReference(ref);
     }
     
     public byte blockSize() {
@@ -976,20 +976,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return configImpl().automaticShutDown();
     }
 
-    final void hcTreeAdd(ObjectReference ref) {
-        if(Debug.checkSychronization){
-            i_lock.notify();
-        }
-        _referenceSystem.hashCodeAdd(ref);
-    }
-
-    final void idTreeAdd(ObjectReference ref) {
-        if(Debug.checkSychronization){
-            i_lock.notify();
-        }
-        _referenceSystem.idAdd(ref);
-    }
-
     protected void initialize1(Configuration config) {
 
         i_config = initializeConfig(config);
@@ -1363,6 +1349,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         _classCollection.read(i_systemTrans);
     }
     
+	public ReferenceSystem referenceSystem() {
+		return _referenceSystem;
+	}
+    
     public GenericReflector reflector(){
         return i_handlers._reflector;
     }
@@ -1701,7 +1691,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             }
             ref = new ObjectReference();
             ref.store(trans, yc, obj);
-			addToReferenceSystem(ref);
+            _referenceSystem.addNewReference(ref);
 			if(obj instanceof Db4oTypeImpl){
 			    ((Db4oTypeImpl)obj).setTrans(trans);
 			}
@@ -1729,10 +1719,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return ref.getID();
     }
 
-	private void addToReferenceSystem(ObjectReference ref) {
-		_referenceSystem.addReference(ref);
-	}
-    
     private final boolean updateDepthSufficient(int updateDepth){
     	return (updateDepth == Const4.UNSPECIFIED) || (updateDepth > 0);
     }
