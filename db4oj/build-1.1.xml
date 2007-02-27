@@ -2,7 +2,7 @@
 	
 	<import file="../build-1.1/common-1.1.xml"/>
 	
-	<property file="build-1.1.properties" />
+	<property file="${dir.j}/build-1.1.properties" />
 	
 	<!--
 	TODO 
@@ -44,8 +44,10 @@
         <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
    </target>
    
-   <target name="resolve" depends="configure">
-        <ivy:retrieve />
+
+    <target name="resolve" depends="configure">
+        <ivy:resolve file="${dir.j}/ivy.xml"/>   
+   		  <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${ivy.configurations}" />
     </target>
     
     <target name="publish" depends="resolve, jar">
