@@ -67,11 +67,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     // Counts the number of toplevel calls into YapStream
     private int           _stackDepth;
 
-    // Tree of all YapObject references, sorted by IdentityHashCode
-    private ObjectReference       i_hcTree;
-
-    // Tree of all YapObject references, sorted by ID
-    private ObjectReference       i_idTree;
+    private ReferenceSystem _referenceSystem;
+    
     private Tree            i_justPeeked;
 
     public final Object            i_lock;
@@ -310,8 +307,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     protected boolean close2() {
     	stopSession();
-        i_hcTree = null;
-        i_idTree = null;
         i_systemTrans = null;
         i_trans = null;
         if (stateMessages()) {
@@ -950,17 +945,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public final ObjectReference getYapObject(int id) {
-        if(DTrace.enabled){
-            DTrace.GET_YAPOBJECT.log(id);
-        }
-        if(id <= 0){
-            return null;
-        }
-        return i_idTree.id_find(id);
+    	return _referenceSystem.referenceForId(id);
     }
 
-    public final ObjectReference getYapObject(Object a_object) {
-        return i_hcTree.hc_find(a_object);
+    public final ObjectReference getYapObject(Object obj) {
+    	return _referenceSystem.referenceForObject(obj);
     }
     
     public HandlerRegistry handlers(){
@@ -991,32 +980,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(Debug.checkSychronization){
             i_lock.notify();
         }
-        if (Deploy.debug) {
-            Object obj = ref.getObject();
-            if (obj != null) {
-                ObjectReference yo = getYapObject(obj);
-                if (yo != null) {
-                    System.out.println("Duplicate alarm hc_Tree");
-                }
-            }
-        }
-        i_hcTree = i_hcTree.hc_add(ref);
+        _referenceSystem.hashCodeAdd(ref);
     }
 
-    final void idTreeAdd(ObjectReference a_yo) {
+    final void idTreeAdd(ObjectReference ref) {
         if(Debug.checkSychronization){
             i_lock.notify();
         }
-        if(DTrace.enabled){
-            DTrace.ID_TREE_ADD.log(a_yo.getID());
-        }
-        if (Deploy.debug) {
-            ObjectReference yo = getYapObject(a_yo.getID());
-            if (yo != null) {
-                System.out.println("Duplicate alarm id_Tree:" + a_yo.getID());
-            }
-        }
-        i_idTree = i_idTree.id_add(a_yo);
+        _referenceSystem.idAdd(ref);
     }
 
     protected void initialize1(Configuration config) {
@@ -1050,14 +1021,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      * before file is open
      */
     void initialize2() {
-
-        // This is our one master root YapObject for the tree,
-        // to allow us to ignore null.
-        i_idTree = new ObjectReference(0);
-        i_idTree.setObject(new Object());
-        i_hcTree = i_idTree;
-
         initialize2NObjectCarrier();
+        _referenceSystem = new ReferenceSystem();
     }
 
     /**
@@ -1306,7 +1271,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     final void purge1(Object obj) {
-        if (obj == null || i_hcTree == null) {
+        if (obj == null) {
         	return;
         }
         
@@ -1765,8 +1730,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
 	private void addToReferenceSystem(ObjectReference ref) {
-		idTreeAdd(ref);
-		hcTreeAdd(ref);
+		_referenceSystem.addReference(ref);
 	}
     
     private final boolean updateDepthSufficient(int updateDepth){
@@ -2007,13 +1971,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes);
 
     public final void removeReference(ObjectReference ref) {
-        if(DTrace.enabled){
-            DTrace.REFERENCE_REMOVED.log(ref.getID());
-        }
-
-        i_hcTree = i_hcTree.hc_remove(ref);
-        i_idTree = i_idTree.id_remove(ref.getID());
         
+        _referenceSystem.removeReference(ref);
+
         // setting the ID to minus 1 ensures that the
         // gc mechanism does not kill the new YapObject
         ref.setID(-1);
