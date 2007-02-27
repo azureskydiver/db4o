@@ -2,11 +2,11 @@
 	
 	<import file="../build-1.1/common-1.1.xml"/>
 	
-	<property file="build.properties" />
+	<property file="${dir.j.nqopt}/build.properties" />
 	
 	<path id="compile.class.path">
-		<fileset dir="lib" 						includes="*.jar"/>
-		<fileset dir="${defaultArtifactDir}" includes="*.jar"/>
+		<fileset dir="${dir.j.nqopt.lib}"			includes="*.jar"/>
+		<fileset dir="${defaultArtifactDir}"	includes="*.jar"/>
 		<fileset dir="${ivy.lib.dir}" includes="*.jar"/>
 	</path>
 	
@@ -23,9 +23,10 @@
         <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
    </target>
    
-   <target name="resolve" depends="configure">
-        <ivy:retrieve/>
-   </target>
+  <target name="resolve" depends="configure">
+        <ivy:resolve file="${dir.j.nqopt}/ivy.xml"/>
+   		  <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${ivy.configurations}" />
+    </target>
    
    <target name="publish" depends="clean, resolve">
     	<antcall target="jar-core" />
@@ -34,15 +35,11 @@
 			<copy file="${coreJarPath}" tofile="${signedJarPath}"/>
 			<db4oSignJar jar="${signedJarPath}"/>
 			
-			<copy file="lib/bloat-1.0.jar" tofile="${signedBloatJarPath}"/>			
+			<copy file="${dir.j.nqopt.lib}/bloat-1.0.jar" tofile="${signedBloatJarPath}"/>			
 			<db4oSignJar jar="${signedBloatJarPath}"/>
 			
 			<zip destfile="${antNBloatZipPath}">
-				<fileset file="lib/*"/>
-			</zip>
-			
-			<zip destfile="${bloatZipPath}">
-				<fileset file="lib/bloat-1.0.jar"/>
+				<fileset file="${dir.j.nqopt.lib}/*"/>
 			</zip>
 			
 			<zip destfile="${signedBloatZipPath}">
@@ -53,13 +50,13 @@
 	</target>
 	
 	<target name="jar-core" description="This task does not work standalone">
-		<buildjar srcDir="${coreSrcDir}" jarPath="${coreJarPath}" classPathRefId="compile.class.path"
+		<buildjar srcDir="${dir.j.nqopt.src}" jarPath="${coreJarPath}" classPathRefId="compile.class.path"
 			fork="yes" target="1.2" source="1.2" 
 			compileExcludes="**/j2me/**"/>
 	</target>
 	
 	<target name="jar-test" description="This task does not work standalone">
-		<buildjar srcDir="${testSrcDir}" jarPath="${testJarPath}" classPathRefId="compile.class.path" 			
+		<buildjar srcDir="${dir.j.nqopt.test.src}" jarPath="${testJarPath}" classPathRefId="compile.class.path" 			
 			fork="yes" target="1.4" source="1.4" />
 	</target>
 </project>
