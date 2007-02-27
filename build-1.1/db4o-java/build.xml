@@ -2,7 +2,7 @@
 	
 	<import file="../common-1.1.xml"/>
 	
-	<property file="build.properties" />
+	<property file="${javaZipBuildDir}/build.properties" />
 	
 	<target name="clean">
   	<cleanIvyDir/>
@@ -20,6 +20,7 @@
    </target>
    
    <target name="resolve" depends="configure">
+   	<ivy:resolve file="${javaZipBuildDir}/ivy.xml"/>   
    	<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact]-[revision].[ext]"/>
    </target>
    
@@ -47,7 +48,7 @@
   <target name="reference" depends="">
 		<mkdir dir="doc/reference" />
 		<copy todir="doc/reference">
-			<fileset dir="../../docWiki/java"/>
+			<fileset dir="${dir.docwiki}/java"/>
 		</copy>
 	</target>  
 	
