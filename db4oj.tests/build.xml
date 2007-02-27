@@ -29,7 +29,7 @@
 			fork="yes"
 			classPathRefId="lib.path.id"
 			target="1.1"
-			source="1.1"
+			source="1.3"
 			include="**/*.yap"
 		/>
 		
@@ -51,6 +51,7 @@
    </target>
    
    <target name="resolve" depends="configure">
+   	<echo>crap, ${dir.j.tests}</echo>
         <ivy:resolve file="${dir.j.tests}/ivy.xml"/>
    		  <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${ivy.configurations}" />
     </target>
