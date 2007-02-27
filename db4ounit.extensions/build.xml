@@ -13,6 +13,7 @@
 	
 	<target name="clean">
   	<cleanIvyDir/>
+  	<delete dir="${tempSrcDir}"/>
 	</target>
 	
 	<target name="init">
@@ -30,7 +31,7 @@
 			fork="yes"
 			classPathRefId="lib.path.id"
 			target="1.1"
-			source="1.1"
+			source="1.3"
 		/>
 		<delete dir="${tempSrcDir}" failonerror="true"/>
 	</target>
