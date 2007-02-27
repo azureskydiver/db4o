@@ -7,18 +7,8 @@
   	<delete dir="doc/out"			failonerror="true"/>
   	<delete dir="${tempApi}"	failonerror="true"/>
   	<delete dir="${tempJar}"	failonerror="true"/>
-	<delete dir="${tempZip}"	failonerror="true"/>
-  	
-  	<!--
-  		TODO - After old build is obsolete
-  			- Remove db4o-6.0-db4ounit.jar and db4o-6.0-java5.jar from /lib
-  			- Remove this <delete>
-  	-->
-  	<delete>
-				<fileset dir="lib">
-					<include name="db4o*.jar"/>
-				</fileset>
-		</delete>
+		<delete dir="${tempZip}"	failonerror="true"/>
+  
 	</target>
 	
 	<target name="init" depends="">
