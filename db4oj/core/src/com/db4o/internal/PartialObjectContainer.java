@@ -1008,7 +1008,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      */
     void initialize2() {
         initialize2NObjectCarrier();
-        _referenceSystem = new ReferenceSystem();
+        _referenceSystem = new HashcodeReferenceSystem();
     }
 
     /**
