@@ -5,7 +5,7 @@
 	<property name="appletJarPath" value="${defaultArtifactDir}/${ant.project.name}-applet-signed.jar"/>
 	
 	<path id="lib.path.id">
-        <fileset dir="lib" includes="*.jar"/>
+        <fileset dir="${dir.doctor.lib}" includes="*.jar"/>
 	</path>
 	
 	<target name="clean">
@@ -19,7 +19,7 @@
 	
 	<target name="jar" depends="init, resolve">
 		<buildjar 
-			srcDir="src"
+			srcDir="${dir.doctor.src}"
 			jarPath="${jarPath}" 
 			classPathRefId="lib.path.id"
 			target="1.3"
@@ -27,7 +27,7 @@
 		/>
 		
 		<buildjar 
-			srcDir="src"
+			srcDir="${dir.doctor.src}"
 			jarPath="${appletJarPath}" 
 			
 			target="1.3"
@@ -42,13 +42,14 @@
         <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
    </target>
    
-   <target name="resolve" depends="configure">
-        <ivy:retrieve />
-   </target>
+    <target name="resolve" depends="configure">
+        <ivy:resolve file="${dir.doctor}/ivy.xml"/>
+   		  <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${ivy.configurations}" />
+    </target>
     
    <target name="publish" depends="resolve, jar">
    	<copy todir="${defaultArtifactDir}">
-			<fileset dir="lib"/>
+			<fileset dir="${dir.doctor.lib}"/>
 		</copy>
 		
    	<publishToIvy/>
