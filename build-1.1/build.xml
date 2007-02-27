@@ -3,13 +3,15 @@
 	
 	<target name="build-list" description="Build a list of ant build files, from least dependent to most dependent projects.">
   	<ivy:buildlist reference="buildPath">      
+      <fileset dir="../db4oj"								includes="build-1.1.xml"/>
+      
       <fileset dir="../db4ounit.extensions"	includes="build.xml"/>
+     
       <fileset dir="../db4oj/tools"					includes="build.xml"/>
 
-      <fileset dir="../db4oj"								includes="build-1.1.xml"/>
       <fileset dir="../db4ojdk1.2"					includes="build-1.1.xml"/>
       <fileset dir="../db4ojdk5"						includes="build-1.1.xml"/>
-      <fileset dir="../drs"									includes="build-1.1.xml"/>
+      
       <fileset dir="../db4oj.tests"					includes="build.xml"/>
       <fileset dir="../db4ojdk1.2/test"			includes="build.xml"/>
       <fileset dir="../db4ojdk5/test"				includes="build.xml"/>
@@ -18,8 +20,12 @@
       <fileset dir="../doctor"							includes="build-1.1-dynamic.xml"/>
       <fileset dir="../tutorial"						includes="build.xml"/>
       
+       <!--
       <fileset dir="db4o-java"							includes="build.xml"/>
-	
+			
+			
+			<fileset dir="../drs"									includes="build-1.1.xml"/>
+			-->
 			<!-- .net projects -->
 			<!--
 			<fileset dir="../javatocsharp/javatocsharp.core"	includes="build-1.1.xml"/>
@@ -29,7 +35,7 @@
   </target>
   
   <target name="dist" description="Produce all db4o, dRS, java, .net, mono distributions." depends="clean, clean-subprojects">    
-    <subant target="publish"			buildpathref="buildPath" />
+    <subant target="publish"			buildpathref="buildPath" inheritAll="false" inheritRefs="false"/>
     <delete dir="${ivy.cache.dir}" failonerror="true"/>  	
     <echo message="Produced jars, dlls and zips at ${repository.dir}."/>
   </target>
