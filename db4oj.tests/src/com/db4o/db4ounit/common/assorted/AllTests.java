@@ -9,7 +9,7 @@ public class AllTests extends Db4oTestSuite {
 
 	public static void main(String[] args) {
 		new AllTests().runSolo();
-		//new AllTests().runClientServer();
+		// new AllTests().runClientServer();
     }
 
 	protected Class[] testCases() {
@@ -24,6 +24,7 @@ public class AllTests extends Db4oTestSuite {
             ComparatorSortTestCase.class,
             DatabaseUnicityTest.class,
             DescendToNullFieldTestCase.class,
+            FileSizeOnRollbackTestCase.class,
             GetByUUIDTestCase.class,
             GetSingleSimpleArrayTestCase.class,
             HandlerRegistryTestCase.class,
@@ -37,6 +38,7 @@ public class AllTests extends Db4oTestSuite {
             PersistTypeTestCase.class,
             PreventMultipleOpenTestCase.class,
             ReAddCascadedDeleteTestCase.class,
+            ReferenceSystemTestCase.class,
             RollbackTestCase.class,
             SimplestPossibleTestCase.class,
             ServerRevokeAccessTestCase.class,
