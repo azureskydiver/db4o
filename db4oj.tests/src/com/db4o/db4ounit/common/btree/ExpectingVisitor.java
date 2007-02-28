@@ -28,7 +28,8 @@ public class ExpectingVisitor implements Visitor4{
     };
     
     public ExpectingVisitor(Object[] results, boolean obeyOrder, boolean ignoreUnexpected){
-        _expected = results;
+        _expected = new Object[results.length];
+        System.arraycopy(results, 0, _expected, 0, results.length);
         _obeyOrder = obeyOrder;
         _ignoreUnexpected = ignoreUnexpected;
     }
