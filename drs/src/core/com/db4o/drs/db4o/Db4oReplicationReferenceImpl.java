@@ -37,12 +37,12 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 		}
 		Object obj = yo.getObject();
 		setObject(obj);
-		hc_init(obj);
+		hc_init();
 	}
 
 	public Db4oReplicationReferenceImpl(Object myObject, Db4oDatabase db, long longPart, long version) {
 		setObject(myObject);
-		hc_init(myObject);
+		hc_init();
 		VirtualAttributes va = new VirtualAttributes();
 		va.i_database = db;
 		va.i_uuid = longPart;
