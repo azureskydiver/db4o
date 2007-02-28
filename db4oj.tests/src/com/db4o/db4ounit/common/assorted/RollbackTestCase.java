@@ -22,7 +22,7 @@ public class RollbackTestCase extends AbstractDb4oTestCase{
 	}
 
 	public static void main(String[] args) {
-		new RollbackTestCase().runSolo();
+		new RollbackTestCase().runClientServer();
 	}
 	
 	public void testNotIsStoredOnRollback(){
