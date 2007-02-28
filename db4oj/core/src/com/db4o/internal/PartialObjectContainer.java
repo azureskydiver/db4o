@@ -339,6 +339,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             beginTopLevelCall();
             try{
             	commit1();
+            	_referenceSystem.commit();
             }finally{
             	endTopLevelCall();
             }
@@ -1008,7 +1009,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      */
     void initialize2() {
         initialize2NObjectCarrier();
-        _referenceSystem = new HashcodeReferenceSystem();
+        _referenceSystem = new TransactionalReferenceSystem();
     }
 
     /**
@@ -1494,6 +1495,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public void rollback() {
         synchronized (i_lock) {
         	rollback1();
+        	_referenceSystem.rollback();
         }
     }
 
