@@ -383,13 +383,7 @@ public class LocalTransaction extends Transaction {
     }
     
     public void slotFreePointerOnRollback(int id) {
-    	
-    	// FIXME: The following fixes #COR-203 but it breaks
-    	//        Db4oHashMapTestCase.
-    	
-    	//        Uncommented until researched.
-    	
-    	// produceSlotChange(id).freePointerOnRollback();
+    	produceSlotChange(id).freePointerOnRollback();
     }
 	
 	private LocalTransaction parentFileTransaction() {

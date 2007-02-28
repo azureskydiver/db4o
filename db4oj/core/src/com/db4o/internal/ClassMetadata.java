@@ -1059,7 +1059,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		}
         
 		if(addToIDTree){
-			ref.addExistingReferenceToIDTree(stream);
+			ref.addExistingReferenceToIdTree(stream);
 		}
         
 		// when there's a ObjectConstructor configured for a type

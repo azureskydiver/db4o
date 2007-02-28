@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 
 
 /**
@@ -41,10 +42,14 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 		hashCodeAdd(ref);
 	}
 	
-	public void addExistingReferenceToIDTree(ObjectReference ref) {
+	public void addExistingReferenceToIdTree(ObjectReference ref) {
 		idAdd(ref);
 	}
 	
+	public void commit() {
+		// do nothing
+	}
+
 	private void hashCodeAdd(ObjectReference ref){
 		if (Deploy.debug) {
 		    Object obj = ref.getObject();
@@ -75,7 +80,7 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
         if(DTrace.enabled){
             DTrace.GET_YAPOBJECT.log(id);
         }
-        if(id <= 0){
+        if(! ObjectReference.isValidId(id)){
             return null;
         }
         return _idTree.id_find(id);
@@ -91,6 +96,21 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
         }
         _hashCodeTree = _hashCodeTree.hc_remove(ref);
         _idTree = _idTree.id_remove(ref.getID());
+	}
+
+	public void rollback() {
+		// do nothing
+	}
+	
+	public void traverseReferences(final Visitor4 visitor) {
+		_hashCodeTree.hc_traverse(new Visitor4() {
+			public void visit(Object obj) {
+				ObjectReference ref = (ObjectReference) obj;
+				if(ref.isValid()){
+					visitor.visit(obj);
+				}
+			}
+		});
 	}
 	
 }

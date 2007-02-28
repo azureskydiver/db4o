@@ -83,9 +83,9 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 		}
 	}
 
-	final void addExistingReferenceToIDTree(ObjectContainerBase a_stream) {
+	final void addExistingReferenceToIdTree(ObjectContainerBase a_stream) {
 		if (!(_class instanceof PrimitiveFieldHandler)) {
-			a_stream.referenceSystem().addExistingReferenceToIDTree(this);
+			a_stream.referenceSystem().addExistingReferenceToIdTree(this);
 		}
 	}
 	
@@ -341,6 +341,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 	
 	public final boolean isFlaggedAsHandled(int callID){
 		return _lastTopLevelCallId == callID;
+	}
+	
+	public final boolean isValid() {
+		return isValidId(getID()) && getObject() != null;
+	}
+	
+	public static final boolean isValidId(int id){
+		return id > 0;
 	}
 	
 	public VirtualAttributes virtualAttributes(){
@@ -604,10 +612,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
         if(hc_preceding != null){
             hc_preceding.hc_traverse(visitor);
         }
-        visitor.visit(this);
         if(hc_subsequent != null){
             hc_subsequent.hc_traverse(visitor);
         }
+        
+        // Traversing the leaves first allows to add ObjectReference 
+        // nodes to different ReferenceSystem trees during commit
+        
+        visitor.visit(this);
     }
 
 	private ObjectReference hc_remove() {
@@ -810,7 +822,4 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 	    return "Exception in YapObject analyzer";
 	}
 	
-
-
-    
 }
