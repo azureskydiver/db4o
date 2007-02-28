@@ -12,7 +12,9 @@ import com.db4o.internal.Config4Impl;
 import db4ounit.TestCase;
 
 public class COR52TestCase implements TestCase {
-	private static final String TEST_FILE = "COR52.dat";
+	
+	private static final String TEST_FILE = "COR52.db4o";
+	
 	public void test() throws Exception {
 		int originalActivationDepth = ((Config4Impl) Db4o.configure())
 				.activationDepth();
