@@ -15,16 +15,6 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 	
 	private ObjectReference       _idTree;
 	
-	public HashcodeReferenceSystem() {
-		addOneEmptyNode();
-	}
-	
-	private void addOneEmptyNode(){
-	    _idTree = new ObjectReference(0);
-	    _idTree.setObject(new Object());
-	    _hashCodeTree = _idTree;
-	}
-
 	public void addNewReference(ObjectReference ref){
 		addReference(ref);
 	}
@@ -60,6 +50,11 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 		        }
 		    }
 		}
+		if(_hashCodeTree == null){
+			ref.hc_init();
+			_hashCodeTree = ref;
+			return;
+		}
 		_hashCodeTree = _hashCodeTree.hc_add(ref);
 	}
 	
@@ -73,12 +68,20 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 		        System.out.println("Duplicate alarm id_Tree:" + ref.getID());
 		    }
 		}
+		if(_idTree == null){
+			ref.hc_init();
+			_idTree = ref;
+			return;
+		}
 		_idTree = _idTree.id_add(ref);
 	}
 	
 	public ObjectReference referenceForId(int id){
         if(DTrace.enabled){
             DTrace.GET_YAPOBJECT.log(id);
+        }
+        if(_idTree == null){
+        	return null;
         }
         if(! ObjectReference.isValidId(id)){
             return null;
@@ -87,6 +90,9 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 	}
 	
 	public ObjectReference referenceForObject(Object obj) {
+		if(_hashCodeTree == null){
+			return null;
+		}
 		return _hashCodeTree.hc_find(obj);
 	}
 
@@ -94,8 +100,12 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
         if(DTrace.enabled){
             DTrace.REFERENCE_REMOVED.log(ref.getID());
         }
-        _hashCodeTree = _hashCodeTree.hc_remove(ref);
-        _idTree = _idTree.id_remove(ref.getID());
+        if(_hashCodeTree != null){
+        	_hashCodeTree = _hashCodeTree.hc_remove(ref);
+        }
+        if(_idTree != null){
+        	_idTree = _idTree.id_remove(ref.getID());
+        }
 	}
 
 	public void rollback() {
@@ -103,14 +113,10 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 	}
 	
 	public void traverseReferences(final Visitor4 visitor) {
-		_hashCodeTree.hc_traverse(new Visitor4() {
-			public void visit(Object obj) {
-				ObjectReference ref = (ObjectReference) obj;
-				if(ref.isValid()){
-					visitor.visit(obj);
-				}
-			}
-		});
+		if(_hashCodeTree == null){
+			return;
+		}
+		_hashCodeTree.hc_traverse(visitor);
 	}
 	
 }

@@ -437,19 +437,18 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 	/***** HCTREE *****/
 
 	public ObjectReference hc_add(ObjectReference a_add) {
-		Object obj = a_add.getObject();
-		if (obj != null) {
-			a_add.hc_init(obj);
-			return hc_add1(a_add);
-		} 
-		return this;
+		if (a_add.getObject() == null) {
+			return this;
+		}
+		a_add.hc_init();
+		return hc_add1(a_add);
 	}
     
-    public void hc_init(Object obj){
+    public void hc_init(){
         hc_preceding = null;
         hc_subsequent = null;
         hc_size = 1;
-        hc_code = hc_getCode(obj);
+        hc_code = hc_getCode(getObject());
     }
     
 	private ObjectReference hc_add1(ObjectReference a_new) {
