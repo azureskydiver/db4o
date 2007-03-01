@@ -58,5 +58,6 @@
     
     <target name="publish" depends="resolve, jar">
       <publishToIvy/>
+      <antcall target="clean" />
     </target>
 </project>
