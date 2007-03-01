@@ -47,6 +47,7 @@
 			</zip>
 			
       <publishToIvy/>
+      <antcall target="clean" />
 	</target>
 	
 	<target name="jar-core" description="This task does not work standalone">
