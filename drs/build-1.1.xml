@@ -28,6 +28,7 @@
    
    <target name="publish" depends="zip">
 			<publishToIvy/>
+			<antcall target="clean" />
 	</target>
 	
 	<target name="run-tests" description="Run jar beforehand if you run this target manually">
