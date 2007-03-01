@@ -46,5 +46,6 @@
     
     <target name="publish" depends="jar">
     	<publishToIvy/>
+    	<antcall target="clean" />
     </target>
 </project>
