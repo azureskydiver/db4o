@@ -156,37 +156,41 @@ public class KnownClassesRepository {
 			
 			RawFieldSpec fieldInfo=fieldMarshaller.readSpec(_stream, classreader);
 			String fieldName=fieldInfo.name();
-            int handlerID=handlerID(fieldInfo);
-            ReflectClass fieldClass = null;
-
-            // need to take care of special handlers here
-            switch (handlerID){
-                case HandlerRegistry.ANY_ID:
-                    fieldClass = _stream.reflector().forClass(Object.class);
-                    break;
-                case HandlerRegistry.ANY_ARRAY_ID:
-                    fieldClass = arrayClass(_stream.reflector().forClass(Object.class));
-                    break;
-                default:
-                	fieldClass=forID(handlerID);
-                	fieldClass=_stream.reflector().forName(fieldClass.getName());
-                	if(fieldInfo.isPrimitive()) {
-                		fieldClass=primitiveClass(fieldClass);
-                	}
-                	if(fieldInfo.isArray()) {
-                		fieldClass=arrayClass(fieldClass);
-                	}
-            }
+            ReflectClass fieldClass = reflectClassForFieldSpec(fieldInfo);
 			fields[i]=_builder.createField(clazz, fieldName, fieldClass, fieldInfo.isVirtual(), fieldInfo.isPrimitive(), fieldInfo.isArray(), fieldInfo.isNArray());
 		}
 		_builder.initFields(clazz, fields);
 	}
 
-	private int handlerID(RawFieldSpec fieldInfo) {
-		if(!fieldInfo.isVirtual()) {
-			return fieldInfo.handlerID();
+	private ReflectClass reflectClassForFieldSpec(RawFieldSpec fieldInfo) {
+		
+		if(fieldInfo.isVirtual()) {
+			 VirtualFieldMetadata fieldMeta=_stream.handlers().virtualFieldByName(fieldInfo.name());
+			 return fieldMeta.getHandler().classReflector();
 		}
-		return _stream.handlers().virtualFieldByName(fieldInfo.name()).getHandlerID();
+		
+		int handlerID=fieldInfo.handlerID();
+		ReflectClass fieldClass = null;
+
+		// need to take care of special handlers here
+		switch (handlerID){
+		    case HandlerRegistry.ANY_ID:
+		        fieldClass = _stream.reflector().forClass(Object.class);
+		        break;
+		    case HandlerRegistry.ANY_ARRAY_ID:
+		        fieldClass = arrayClass(_stream.reflector().forClass(Object.class));
+		        break;
+		    default:
+		    	fieldClass=forID(handlerID);
+		    	fieldClass=_stream.reflector().forName(fieldClass.getName());
+		    	if(fieldInfo.isPrimitive()) {
+		    		fieldClass=primitiveClass(fieldClass);
+		    	}
+		    	if(fieldInfo.isArray()) {
+		    		fieldClass=arrayClass(fieldClass);
+		    	}
+		}
+		return fieldClass;
 	}
 
 	private MarshallerFamily marshallerFamily() {
