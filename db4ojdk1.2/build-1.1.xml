@@ -51,5 +51,6 @@
 			<db4oSignJar jar="${signedJarPath}"/>
 			
       <publishToIvy/>
+      <antcall target="clean" />
     </target>
 </project>
