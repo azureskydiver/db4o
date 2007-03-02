@@ -9,6 +9,9 @@ QuickStart
 ==========
 http://developer.db4o.com/ProjectSpaces/edit.aspx/Db4o_Product_Design/Build-1.1
 
+Don't forget to provide a machine.properties file to configure your local environment.
+For details, please refer to the comment header in common-1.1.xml.
+
 Using dBS as Production
 =======================
 - Turn "failonerror" to "true" in the <java> task of macrodef <runJvmTests> in run-java-tests/build.xml
