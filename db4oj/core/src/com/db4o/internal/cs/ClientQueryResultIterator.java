@@ -10,7 +10,7 @@ import com.db4o.internal.query.result.*;
  */
 class ClientQueryResultIterator implements Iterator4 {
 	
-	private static final PrefetchingStrategy _prefetchingStrategy = ClientObjectContainerPlatform.prefetchingStrategy();
+	private static final PrefetchingStrategy _prefetchingStrategy = SingleMessagePrefetchingStrategy.INSTANCE;
 	
 	private Object[] _prefetchedObjects;
 	private int _remainingObjects;
@@ -18,7 +18,7 @@ class ClientQueryResultIterator implements Iterator4 {
 	private final AbstractQueryResult _client;
 	private final IntIterator4 _ids;
 	
-	public ClientQueryResultIterator(AbstractQueryResult client) {
+	ClientQueryResultIterator(AbstractQueryResult client) {
 		_client = client;
 		_ids = client.iterateIDs();
 	}

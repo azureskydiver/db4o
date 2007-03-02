@@ -54,7 +54,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	}
 	
 	public Iterator4 iterator() {
-		return new ClientQueryResultIterator(this);
+		return ClientServerPlatform.createClientQueryResultIterator(this);
 	}
 
 	public int size() {
