@@ -2,7 +2,7 @@
 
 package com.db4o.internal.query;
 
-import java.util.AbstractList;
+import java.util.*;
 
 import com.db4o.ext.ExtObjectSet;
 import com.db4o.internal.query.result.*;
@@ -16,6 +16,22 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     
     public ObjectSetFacade(QueryResult qResult){
         _delegate = new StatefulQueryResult(qResult);
+    }
+    
+    public Iterator iterator() {
+    	return new Iterator() {
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		
+			public Object next() {
+				return _delegate.next();
+			}
+		
+			public boolean hasNext() {
+				return _delegate.hasNext();
+			}
+		};
     }
     
     public long[] getIDs() {
