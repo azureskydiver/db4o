@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
+import com.db4o.io.UncheckedIOException;
 
 /**
  * public for .NET conversion reasons
@@ -205,7 +206,7 @@ public final class StatefulBuffer extends Buffer {
         return linkOffSet;
     }
 
-    public void read() {
+    public void read() throws UncheckedIOException {
         stream().readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
@@ -223,7 +224,7 @@ public final class StatefulBuffer extends Buffer {
 		return true;
     }
 
-    public final StatefulBuffer readEmbeddedObject() {
+    public final StatefulBuffer readEmbeddedObject() throws UncheckedIOException {
         int id = readInt();
         int length = readInt();
         StatefulBuffer bytes = null;

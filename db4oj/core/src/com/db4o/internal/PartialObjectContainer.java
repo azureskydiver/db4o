@@ -30,6 +30,7 @@ import com.db4o.internal.query.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.replication.*;
+import com.db4o.io.UncheckedIOException;
 import com.db4o.query.Predicate;
 import com.db4o.query.Query;
 import com.db4o.query.QueryComparator;
@@ -1306,11 +1307,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void raiseVersion(long a_minimumVersion);
 
-    public abstract void readBytes(byte[] a_bytes, int a_address, int a_length);
+    public abstract void readBytes(byte[] a_bytes, int a_address, int a_length) throws UncheckedIOException;
 
-    public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length);
+    public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length) throws UncheckedIOException;
 
-    public final Buffer readReaderByAddress(int a_address, int a_length) {
+    public final Buffer readReaderByAddress(int a_address, int a_length) throws UncheckedIOException {
         if (a_address > 0) {
 
             // TODO: possibly load from cache here
@@ -1320,18 +1321,20 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             i_handlers.decrypt(reader);
             return reader;
         }
+        
+        //TODO FIXME throw exception when a_address <=0
         return null;
     }
 
     public final StatefulBuffer readWriterByAddress(Transaction a_trans,
-        int a_address, int a_length) {
-        if (a_address > 0) {
-            // TODO:
-            // load from cache here
-            StatefulBuffer reader = getWriter(a_trans, a_address, a_length);
-            reader.readEncrypt(_this, a_address);
+        int address, int length) throws UncheckedIOException {
+        if (address > 0) {
+            // TODO: load from cache here
+            StatefulBuffer reader = getWriter(a_trans, address, length);
+            reader.readEncrypt(_this, address);
             return reader;
         }
+        // FIXME: throw IllegalArgumentException instead of returning null silently
         return null;
     }
 
