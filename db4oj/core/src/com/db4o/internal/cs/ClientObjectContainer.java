@@ -53,6 +53,8 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
     
 	private Collection4 _batchedMessages = new Collection4();
 	
+	private final PrefetchingStrategy _prefetchingStrategy = ClientObjectContainerPlatform.prefetchingStrategy();
+	
 	// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
 	// used for to write the number of messages.
 	private int _batchedQueueLength = Const4.INT_LENGTH;
@@ -488,53 +490,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	public int prefetchObjects(IntIterator4 ids, Object[] prefetched,
 			int prefetchCount) {
 
-		int count = 0;
-
-		int toGet = 0;
-		int[] idsToGet = new int[prefetchCount];
-		int[] position = new int[prefetchCount];
-
-		while (count < prefetchCount) {
-			if (!ids.moveNext()) {
-				break;
-			}
-			int id = ids.currentInt();
-			if (id > 0) {
-                Object obj = objectForIDFromCache(id);
-                if(obj != null){
-                    prefetched[count] = obj;
-                }else{
-					idsToGet[toGet] = id;
-					position[toGet] = count;
-					toGet++;
-				}
-				count++;
-			}
-		}
-
-		if (toGet > 0) {
-			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(i_trans,
-					idsToGet, toGet);
-			writeMsg(msg, true);
-			MsgD message = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
-			int embeddedMessageCount = message.readInt();
-			for (int i = 0; i < embeddedMessageCount; i++) {
-				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT
-						.clone(getTransaction());
-				mso.payLoad(message.payLoad().readYapBytes());
-				if (mso.payLoad() != null) {
-					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
-					StatefulBuffer reader = mso.unmarshall(Const4.MESSAGE_LENGTH);
-                    Object obj = objectForIDFromCache(idsToGet[i]);
-                    if(obj != null){
-                        prefetched[position[i]] = obj;
-                    }else{
-    					prefetched[position[i]] = new ObjectReference(idsToGet[i]).readPrefetch(this, reader);
-                    }
-				}
-			}
-		}
-		return count;
+		return _prefetchingStrategy.prefetchObjects(this, ids, prefetched, prefetchCount);
 	}
 
 	void processBlobMessage(MsgBlob msg) {
