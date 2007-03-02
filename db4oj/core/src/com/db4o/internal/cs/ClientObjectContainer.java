@@ -95,7 +95,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			// System.out.println(socket.getSendBufferSize());
 
 			if (password_ == null) {
-				throw new NullPointerException(Messages.get(56));
+				throw new ArgumentNullException(Messages.get(56));
 			}
 			if (!login) {
 				password_ = null;
@@ -293,7 +293,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return msg.getByteLoad();
 	}
 
-	final Msg expectedResponse(Msg expectedMessage) {
+	public final Msg expectedResponse(Msg expectedMessage) {
 		Msg message = getResponse();
 		if (expectedMessage.equals(message)) {
 			return message;
@@ -692,7 +692,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		a_message.write(this, i_socket);
 	}
 	
-	final void writeMsg(Msg a_message, boolean flush) {
+	public final void writeMsg(Msg a_message, boolean flush) {
 		if(i_config.batchMessages()) {
 			if(flush && _batchedMessages.isEmpty()) {
 				// if there's nothing batched, just send this message directly

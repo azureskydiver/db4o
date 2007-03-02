@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.diagnostic.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.cs.QueryResultIteratorFactory;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.io.*;
@@ -89,6 +90,10 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec OUTSTREAM=new KeySpec(null);
     
 	private final static KeySpec PASSWORD=new KeySpec((String)null);
+	
+	// for playing with different strategies of prefetching
+	// object
+	private static final KeySpec CLIENT_QUERY_RESULT_ITERATOR_FACTORY=new KeySpec(null);
     
 	private static final KeySpec PREFETCH_ID_COUNT = new KeySpec(10);
 
@@ -824,6 +829,16 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public QueryEvaluationMode queryEvaluationMode() {
 		return (QueryEvaluationMode)_config.get(QUERY_EVALUATION_MODE);
 	}
+	
+
+	public void queryResultIteratorFactory(QueryResultIteratorFactory factory) {
+		_config.put(CLIENT_QUERY_RESULT_ITERATOR_FACTORY, factory);
+	}
+	
+	public QueryResultIteratorFactory queryResultIteratorFactory() {
+		return (QueryResultIteratorFactory)_config.get(CLIENT_QUERY_RESULT_ITERATOR_FACTORY);
+	}
+
 
 	public ClientServerConfiguration clientServer() {
 		return this;

@@ -20,6 +20,6 @@ public class ClientQueryResult extends IdListQueryResult {
     }
     
     public Iterator4 iterator() {
-    	return new ClientQueryResultIterator(this);
+    	return ClientServerPlatform.createClientQueryResultIterator(this);
     }	
 }
