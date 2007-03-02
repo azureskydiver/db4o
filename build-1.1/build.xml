@@ -1,4 +1,5 @@
 <project name="build-1.1" basedir="." default="dist" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	<!-- includes custom machine.properties for your local machine, please check documentation in common-1.1.xml comment header -->
 	<import file="common-1.1.xml" />
 	
 	<target name="build-list" description="Build a list of ant build files, from least dependent to most dependent projects.">
