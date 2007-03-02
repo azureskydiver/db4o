@@ -524,10 +524,7 @@ public interface Configuration {
      * {@link com.db4o.Db4o#openFile Db4o.openFile()} will open files.
      * <br><br>Readonly mode allows to open an unlimited number of reading
      * processes on one database file. It is also convenient
-     * for deploying db4o database files on CD-ROM.<br><br>If mixed access
-     * using many readOnly and one readWrite session is used, there is no
-     * guarantee that the data in the readOnly sessions will be kept up-to-date.
-     * <br><br>
+     * for deploying db4o database files on CD-ROM.<br>
      * @param flag <code>true</code> for configuring readOnly mode for subsequent
      * calls to {@link com.db4o.Db4o#openFile Db4o.openFile()}.
      */
@@ -678,7 +675,7 @@ public interface Configuration {
     public void weakReferenceCollectionInterval(int milliseconds);
     
     /**
-     * returns the freespace configuration interface.
+     * returns client/server configuration interface.
      */
     public ClientServerConfiguration clientServer();
 }
