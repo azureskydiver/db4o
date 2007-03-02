@@ -53,8 +53,6 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
     
 	private Collection4 _batchedMessages = new Collection4();
 	
-	private final PrefetchingStrategy _prefetchingStrategy = ClientObjectContainerPlatform.prefetchingStrategy();
-	
 	// initial value of _batchedQueueLength is YapConst.INT_LENGTH, which is
 	// used for to write the number of messages.
 	private int _batchedQueueLength = Const4.INT_LENGTH;
@@ -485,12 +483,6 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		}
 		remainingIDs--;
 		return _prefetchedIDs[remainingIDs];
-	}
-
-	public int prefetchObjects(IntIterator4 ids, Object[] prefetched,
-			int prefetchCount) {
-
-		return _prefetchingStrategy.prefetchObjects(this, ids, prefetched, prefetchCount);
 	}
 
 	void processBlobMessage(MsgBlob msg) {
