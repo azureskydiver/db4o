@@ -257,40 +257,34 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         }
     }
 
-    public void readBytes(byte[] bytes, int address, int length) {
+    public void readBytes(byte[] bytes, int address, int length) throws UncheckedIOException {
         readBytes(bytes, address, 0, length);
     }
 
-    public void readBytes(byte[] bytes, int address, int addressOffset, int length) {
-        
-        if (DTrace.enabled) {
-            DTrace.READ_BYTES.logLength(address + addressOffset, length);
-        }
+    public void readBytes(byte[] bytes, int address, int addressOffset,
+			int length) throws UncheckedIOException {
 
-        try{
-            _file.blockSeek(address, addressOffset);
-            int bytesRead=_file.read(bytes, length);
-            if(bytesRead!=length) {
-            	Exceptions4.throwRuntimeException(68, address+"/"+addressOffset,null,false);
-            }
-        }catch(IOException ioex){
-            
-            // We need to catch here and throw a runtime exception
-            // so the IOException does not need to get declared in 
-            // all callers.
-            
-            // IoExceptions are quite natural to happen if someone
-            // mistakenly uses any number as an ID and db4o just
-            // interprets as an ID what it reads.
-            
-            if(Debug.atHome){
-                ioex.printStackTrace();
-            }
-            
-            throw new RuntimeException();
-        }
-    }
+		if (DTrace.enabled) {
+			DTrace.READ_BYTES.logLength(address + addressOffset, length);
+		}
 
+		try {
+			_file.blockSeek(address, addressOffset);
+			int bytesRead = _file.read(bytes, length);
+			assertRead(bytesRead, length);
+		} catch (IOException ioex) {
+			throw new UncheckedIOException();
+		}
+	}
+
+	private void assertRead(int bytesRead, int expected)
+			throws UncheckedIOException {
+		if (bytesRead != expected) {
+			throw new UncheckedIOException("expected = " + expected
+					+ ", read = " + bytesRead);
+		}
+	}
+	
     void reserve(int byteCount) {
         synchronized (i_lock) {
             int address = getSlot(byteCount);

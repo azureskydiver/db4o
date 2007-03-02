@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.io.UncheckedIOException;
 
 /**
  * 
@@ -72,9 +73,10 @@ public class Buffer implements SlotReader {
      * non-encrypted read, used for indexes
      * @param a_stream
      * @param a_address
+     * @throws UncheckedIOException 
      */
-    public void read(ObjectContainerBase a_stream, int a_address, int addressOffset){
-        a_stream.readBytes(_buffer, a_address, addressOffset, getLength());
+    public void read(ObjectContainerBase stream, int address, int addressOffset) throws UncheckedIOException{
+        stream.readBytes(_buffer, address, addressOffset, getLength());
     }
 	
     public final void readBegin(byte a_identifier) {
@@ -115,13 +117,13 @@ public class Buffer implements SlotReader {
 	    _offset += length;
 	}
     
-	public final Buffer readEmbeddedObject(Transaction a_trans) {
-		return a_trans.stream().readReaderByAddress(readInt(), readInt());
+	public final Buffer readEmbeddedObject(Transaction trans) throws UncheckedIOException {
+		return trans.stream().readReaderByAddress(readInt(), readInt());
 	}
 	
-	public void readEncrypt(ObjectContainerBase a_stream, int a_address) {
-		a_stream.readBytes(_buffer, a_address, getLength());
-		a_stream.i_handlers.decrypt(this);
+	public void readEncrypt(ObjectContainerBase stream, int address) throws UncheckedIOException {
+		stream.readBytes(_buffer, address, getLength());
+		stream.i_handlers.decrypt(this);
 	}
 
     public void readEnd() {
