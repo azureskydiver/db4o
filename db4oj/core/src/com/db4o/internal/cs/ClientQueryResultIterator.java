@@ -10,6 +10,8 @@ import com.db4o.internal.query.result.*;
  */
 class ClientQueryResultIterator implements Iterator4 {
 	
+	private static final PrefetchingStrategy _prefetchingStrategy = ClientObjectContainerPlatform.prefetchingStrategy();
+	
 	private Object[] _prefetchedObjects;
 	private int _remainingObjects;
 	private int _prefetchRight;
@@ -63,7 +65,7 @@ class ClientQueryResultIterator implements Iterator4 {
 
 	private void prefetch() {
 		ensureObjectCacheAllocated(prefetchCount());
-		_remainingObjects = stream().prefetchObjects(_ids, _prefetchedObjects, prefetchCount());
+		_remainingObjects = _prefetchingStrategy.prefetchObjects(stream(), _ids, _prefetchedObjects, prefetchCount());
 		_prefetchRight=_remainingObjects;
 	}
 
