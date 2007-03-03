@@ -4,11 +4,7 @@
 	
 	<target name="clean">
   	<cleanIvyDir/>
-  	<delete dir="doc/out"			failonerror="true"/>
-  	<delete dir="${tempApi}"	failonerror="true"/>
-  	<delete dir="${tempJar}"	failonerror="true"/>
-		<delete dir="${tempZip}"	failonerror="true"/>
-  
+  	<delete dir="doc/out"	failonerror="true"/>
 	</target>
 	
 	<target name="init" depends="">
