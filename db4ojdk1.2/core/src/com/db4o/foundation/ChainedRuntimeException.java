@@ -8,6 +8,8 @@ package com.db4o.foundation;
  */
 public abstract class ChainedRuntimeException extends RuntimeException {
 	
+	private Throwable _cause;
+	
 	public ChainedRuntimeException() {
 	}
 	
@@ -16,6 +18,11 @@ public abstract class ChainedRuntimeException extends RuntimeException {
 	}
 	
 	public ChainedRuntimeException(String msg, Throwable cause) {
-		super(msg, cause);
+		super(msg);
+		_cause=cause;
+	}
+	
+	public Throwable getCause() {
+		return _cause;
 	}
 }
