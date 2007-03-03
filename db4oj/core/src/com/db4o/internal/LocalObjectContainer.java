@@ -67,17 +67,16 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         _blockEndAddress = blocksFor(address);
     }
     
-    protected boolean close2() {
-        boolean ret = super.close2();
+    protected void close2() {
+        super.close2();
         i_dirty = null;
-        return ret;
     }
 
     public void commit1() {
         try {
             write(false);
-        } catch (Throwable t) {
-            fatalException(t);
+        } catch (Exception e) {
+            fatalException(e);
         }
     }
 

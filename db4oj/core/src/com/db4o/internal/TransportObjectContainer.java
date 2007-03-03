@@ -61,17 +61,11 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
     }
 		
     public boolean close() {
-        
-        // TODO: An object carrier can simply be gc'd.
-        // It does not need to be cleaned up.
-        
         synchronized (i_lock) {
-            boolean ret = close1();
-            if (ret) {
-				i_config = null;
-            }
-            return ret;
+            close1();
+            i_config = null;
         }
+        return true;
     }
 	
 	final public Transaction newTransaction(Transaction parentTransaction) {

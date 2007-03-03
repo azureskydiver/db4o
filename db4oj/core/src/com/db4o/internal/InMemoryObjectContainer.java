@@ -2,11 +2,10 @@
 
 package com.db4o.internal;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.ext.*;
+import com.db4o.config.Configuration;
+import com.db4o.ext.MemoryFile;
 
 
 /**
@@ -41,25 +40,16 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
         // do nothing, blocksize is always 1
     }
 
-    protected boolean close2() {
-        if (Deploy.debug) {
-            write(true);
-        } else {
-            try {
-                write(true);
-            } catch (Throwable t) {
-                fatalException(t);
-            }
-        }
-        super.close2();
-        if (!_closed) {
-            byte[] temp = new byte[_length];
-            System.arraycopy(_memoryFile.getBytes(), 0, temp, 0, _length);
-            _memoryFile.setBytes(temp);
-        }
-        _closed = true;
-        return true;
-    }
+    protected void close2() {
+		write(true);
+		super.close2();
+		if (!_closed) {
+			byte[] temp = new byte[_length];
+			System.arraycopy(_memoryFile.getBytes(), 0, temp, 0, _length);
+			_memoryFile.setBytes(temp);
+		}
+		_closed = true;
+	}
 
 	public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
 		int fullNewAddress = newAddress + newAddressOffset;

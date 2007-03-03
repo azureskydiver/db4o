@@ -227,9 +227,9 @@ public final class HandlerRegistry {
                         constructors[i].setAccessible();
                         int parameterCount =  constructors[i].getParameterTypes().length;
                         sortedConstructors = Tree.add(sortedConstructors, new TreeIntObject(i+constructors.length*parameterCount, constructors[i]));
-                    } catch (Throwable t) {
+                    } catch (Exception e) {
                         if(Debug.atHome){
-                            t.printStackTrace();
+                            e.printStackTrace();
                         }
                     }
                 }
