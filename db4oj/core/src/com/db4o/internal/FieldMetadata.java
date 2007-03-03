@@ -336,23 +336,20 @@ public class FieldMetadata implements StoredField {
         if (!alive()) {
             return;
         }
-        try {
-            boolean isEnumClass = i_yapClass.isEnum();
-            if (i_isPrimitive && !i_isArray) {
-                if(!isEnumClass) {
-                    i_javaField.set(a_onObject, ((PrimitiveHandler) i_handler)
-                        .primitiveNull());
-                }
-                return;
-            }
-            if (a_depth > 0) {
-                cascadeActivation(a_trans, a_onObject, a_depth, false);
-            }
-            if(!isEnumClass) {
-                i_javaField.set(a_onObject, null);
-            }
-        } catch (Throwable t) {
-        }
+        boolean isEnumClass = i_yapClass.isEnum();
+		if (i_isPrimitive && !i_isArray) {
+			if (!isEnumClass) {
+				i_javaField.set(a_onObject, ((PrimitiveHandler) i_handler)
+						.primitiveNull());
+			}
+			return;
+		}
+		if (a_depth > 0) {
+			cascadeActivation(a_trans, a_onObject, a_depth, false);
+		}
+		if (!isEnumClass) {
+			i_javaField.set(a_onObject, null);
+		}
     }
 
     public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) {
@@ -470,21 +467,16 @@ public class FieldMetadata implements StoredField {
     }
 
     public Object getOn(Transaction a_trans, Object a_OnObject) {
-        if (alive()) {
-            try {
-                return i_javaField.get(a_OnObject);
-            } catch (Throwable t) {
-                // this is typically the case, if a field is removed from an
-                // object.
-            }
-        }
-        return null;
-    }
+		if (alive()) {
+			return i_javaField.get(a_OnObject);
+		}
+		return null;
+	}
 
     /**
-     * dirty hack for com.db4o.types some of them need to be set automatically
-     * TODO: Derive from YapField for Db4oTypes
-     */
+	 * dirty hack for com.db4o.types some of them need to be set automatically
+	 * TODO: Derive from YapField for Db4oTypes
+	 */
     public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         if (alive()) {
             try {
