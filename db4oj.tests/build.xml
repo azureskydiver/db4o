@@ -34,16 +34,6 @@
 		/>
 		
 		<delete dir="${tempSrcDir}" failonerror="true"/>		
-		<!--
-		<unjar src="${jarPath}" dest="${defaultTempDir}"/>
-		
-		<jar jarfile="${jarPath}">
-			<fileset dir="${defaultTempDir}"/>
-    	<fileset dir="test/db4oVersions"/>
-		</jar>
-		
-		<delete dir="${defaultTempDir}" failonerror="true"/>
-		-->
 	</target>
 	
 	 <target name="configure" depends="init">
