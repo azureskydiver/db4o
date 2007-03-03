@@ -50,7 +50,7 @@ public final class EventDispatcher {
 				if(res != null && res instanceof Boolean){
 				    return ((Boolean)res).booleanValue();
 				}
-			}catch(Throwable t){
+			}catch(Exception e){
 				// TODO: Exceptions in callbacks should be wrapped and thrown up.
 				
 			} finally {
@@ -77,19 +77,19 @@ public final class EventDispatcher {
 	    if(count > 0){
 			ReflectClass[] parameterClasses = {a_stream.i_handlers.ICLASS_OBJECTCONTAINER};
 			ReflectMethod[] methods = new ReflectMethod[COUNT];
-			for (int i = COUNT -1; i >=0; i--){
-				try{
-					ReflectMethod method = classReflector.getMethod(events[i], parameterClasses);
-					if (null == method) {
-						method = classReflector.getMethod(toPascalCase(events[i]), parameterClasses);
+			for (int i = COUNT - 1; i >= 0; i--) {
+				ReflectMethod method = classReflector.getMethod(events[i],
+						parameterClasses);
+				if (null == method) {
+					method = classReflector.getMethod(toPascalCase(events[i]),
+							parameterClasses);
+				}
+				if (method != null) {
+					methods[i] = method;
+					if (dispatcher == null) {
+						dispatcher = new EventDispatcher(methods);
 					}
-					if( method != null){
-						methods[i] = method;
-						if(dispatcher == null){
-							dispatcher = new EventDispatcher(methods);
-						}
-					}
-				}catch(Throwable t){}
+				}
 			}
 	    }
         
