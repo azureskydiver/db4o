@@ -1,8 +1,8 @@
 package com.db4o.internal;
 
-public class UncheckedException extends RuntimeException {
+import com.db4o.foundation.ChainedRuntimeException;
 
-	private Throwable _cause;
+public class UncheckedException extends ChainedRuntimeException {
 
 	public UncheckedException() {
 		super();
@@ -13,11 +13,6 @@ public class UncheckedException extends RuntimeException {
 	}
 	
 	public UncheckedException(Throwable cause) {
-		_cause = cause;
+		super(cause.getMessage(), cause);
 	}
-
-	public Throwable getCause() {
-		return _cause;
-	}
-
 }

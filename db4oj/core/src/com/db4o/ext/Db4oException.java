@@ -2,6 +2,7 @@
 
 package com.db4o.ext;
 
+import com.db4o.foundation.ChainedRuntimeException;
 import com.db4o.internal.*;
 
 /**
@@ -10,26 +11,16 @@ import com.db4o.internal.*;
  * of rhis type. The original exception, if any, is available through
  * {@link Db4oException#cause()}.
  */
-public class Db4oException extends RuntimeException {
-	private Exception _cause;
-	
+public class Db4oException extends ChainedRuntimeException {
 	public Db4oException(String msg) {
 		super(msg);
 	}
 
 	public Db4oException(Exception cause) {
-		this(cause.toString());
-		_cause = cause;
+		super(cause.getMessage(), cause);
 	}
 	
 	public Db4oException(int messageConstant){
 		this(Messages.get(messageConstant));
-	}
-
-	/**
-	 * @return The originating exception, if any
-	 */
-	public Exception cause() {
-		return _cause;
 	}
 }

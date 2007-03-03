@@ -1,4 +1,5 @@
 -typeMapping com.db4o.foundation.ArgumentNullException System.ArgumentNullException
 -typeMapping com.db4o.foundation.NotImplementedException System.NotImplementedException
 -typeMapping com.db4o.foundation.NotSupportedException System.NotSupportedException
+-typeMapping com.db4o.foundation.ChainedRuntimeException System.Exception
 
