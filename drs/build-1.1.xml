@@ -1,6 +1,10 @@
 <project name="dRS" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
-	<import file="../build-1.1/common-1.1.xml"/>	
-	<property file="build-1.1.properties" />
+	<import file="../build-1.1/common-1.1.xml"/>
+	
+	<dirname property="drs.basedir" file="${ant.file}"/>	
+	<echo>XXXX ${drs.basedir}</echo>
+	
+	<property file="${drs.basedir}/build-1.1.properties" />
 	
 	<target name="clean">
   	<cleanIvyDir/>
@@ -19,8 +23,9 @@
    </target>
    
    <target name="resolve" depends="configure">
-        <ivy:retrieve/>
-   </target>
+        <ivy:resolve file="${drs.basedir}/ivy.xml"/>   
+   		  <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${ivy.configurations}" />
+    </target>
    
    <target name="publish" depends="zip">
 			<publishToIvy/>
@@ -46,7 +51,7 @@
 		<attribute name="jarPath"/> 
 		<sequential>
 			<path id="compile.class.path">
-				<fileset dir="lib" 										includes="*.jar"/>
+				<fileset dir="${drsLibDir}" 					includes="*.jar"/>
 				<fileset dir="${defaultArtifactDir}"	includes="*.jar"/>
 				<fileset dir="${ivy.lib.dir}"					includes="*.jar"/>
 			</path>
@@ -71,9 +76,9 @@
 			<zipfileset dir="${ivy.lib.dir}" prefix="${zipDir}/lib"/>
 			<zipfileset dir="${tempJar}" prefix="${zipDir}/lib"/>
 			<zipfileset dir="." prefix="${zipDir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
-			<zipfileset dir="lib" prefix="${zipDir}/lib" includes="*.jar, *.txt" />
+			<zipfileset dir="${drsLibDir}" prefix="${zipDir}/lib" includes="*.jar, *.txt" />
 			<!--<zipfileset dir="${tempSrcDir}" prefix="${zipDir}/src" excludes="misc, jira" />-->			
-			<zipfileset dir="doc/out" prefix="${zipDir}/doc/tutorial" />		
+			<zipfileset dir="${drs.basedir}/doc/out" prefix="${zipDir}/doc/tutorial" />		
 			<zipfileset dir="${tempApi}" prefix="${zipDir}/doc/api" />
 			<zipfileset file="${tempSrcZipPath}" prefix="${zipDir}"/>	
 		</zip>	
@@ -84,7 +89,7 @@
 	<target name="src" depends="init">
 		<mkdir dir="${tempSrcDir}"/>
 		
-		<copySrcDir srcDir="src" 				destDir="${tempSrcDir}"/>
+		<copySrcDir srcDir="${coreSrcDir}" 				destDir="${tempSrcDir}"/>
 		
 		<echo message="inserting GPL header..."/>
 		<filehead beforePattern="package" header="${content.gplheader}" >
@@ -105,17 +110,17 @@
 			We are going to obsolete doctor very soon, right?
 		-->
 		<java fork="true" classname="com.yetac.doctor.Doctor" classpathref="compile.class.path">
-			<arg line="${basedir}/doc ${font.pdf.base}" />
+			<arg line="${drs.basedir}/doc ${font.pdf.base}" />
 			<classpath>
-				<fileset dir="lib/doctor" includes="*.jar"/>
+				<fileset dir="${drsLibDir}/doctor" includes="*.jar"/>
 			</classpath>
 		</java>
-		<move file="doc/out/doctor.pdf" tofile="doc/out/dRS-tutorial.pdf"/>
+		<move file="${drs.basedir}/doc/out/doctor.pdf" tofile="${drs.basedir}/doc/out/dRS-tutorial.pdf"/>
 	</target>
 	
 	<target name="javadoc">
 		<javadoc destdir="${tempApi}" author="true" version="true" use="true" windowtitle="dRS" classpathref="compile.class.path">
-			<fileset dir="src/core" defaultexcludes="yes">
+			<fileset dir="${coreSrcDir}" defaultexcludes="yes">
 				<include name="com/db4o/drs/**/*.java" />
 			</fileset>
 		</javadoc>
