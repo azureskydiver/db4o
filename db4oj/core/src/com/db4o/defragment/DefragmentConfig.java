@@ -19,6 +19,7 @@ public class DefragmentConfig {
 	
 	private String _origPath;
 	private String _backupPath;
+	private String _tempPath;
 	private ContextIDMapping _mapping;
 	private Configuration _config;
 	
@@ -84,7 +85,7 @@ public class DefragmentConfig {
 	public String backupPath() {
 		return _backupPath;
 	}
-
+	
 	/**
 	 * @return The intermediate mapping used internally. For internal use only.
 	 */
@@ -145,8 +146,30 @@ public class DefragmentConfig {
 		return _objectCommitFrequency;
 	}
 
+	/**
+	 * @param objectCommitFrequency The number of processed object (slots) that should trigger an
+	 * intermediate commit of the target file. Default: 0, meaning: never.
+	 */
 	public void objectCommitFrequency(int objectCommitFrequency) {
 		_objectCommitFrequency=objectCommitFrequency;
+	}
+
+	/**
+	 * Instruct the defragment process to upgrade the source file to the current db4o
+	 * version prior to defragmenting it. Use this option if your source file has been created
+	 * with an older db4o version than the one you are using.
+	 * @param tempPath The location for an intermediate, upgraded version of the source file. 
+	 */
+	public void upgradeFile(String tempPath) {
+		_tempPath=tempPath;
+	}
+	
+	public boolean fileNeedsUpgrade() {
+		return _tempPath!=null;
+	}
+	
+	public String tempPath() {
+		return (_tempPath!=null ? _tempPath : _backupPath);
 	}
 	
 	private static class NullFilter implements StoredClassFilter {

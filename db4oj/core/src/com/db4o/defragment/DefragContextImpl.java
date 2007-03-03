@@ -58,7 +58,7 @@ public class DefragContextImpl implements DefragContext {
 		sourceConfig.weakReferences(false);
 		sourceConfig.flushFileBuffers(false);
 		sourceConfig.readOnly(true);
-		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.backupPath()).ext();
+		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
 		_targetDb = freshYapFile(defragConfig.origPath());
 		_mapping=defragConfig.mapping();
 		_mapping.open();
