@@ -20,8 +20,7 @@
 	
 	<macrodef name="cleanIvyDir" description="">
 		<sequential>
-			<delete dir="${defaultArtifactDir}"	failonerror="true"/>
-			<delete dir="${ivy.lib.dir}" failonerror="true"/>
+			<delete dir="${tempDir}" failonerror="true"/>
 		</sequential>
 	</macrodef>
 	

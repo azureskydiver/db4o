@@ -10,7 +10,8 @@ QuickStart
 http://developer.db4o.com/ProjectSpaces/edit.aspx/Db4o_Product_Design/Build-1.1
 
 Don't forget to provide a machine.properties file to configure your local environment.
-For details, please refer to the comment header in common-1.1.xml.
+For details, please refer to machine.properties.example.windows as an example. 
+Rename it to machine.properties and you are ready to go.
 
 Using dBS as Production
 =======================
