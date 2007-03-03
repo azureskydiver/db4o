@@ -477,27 +477,19 @@ public class FieldMetadata implements StoredField {
 	 * dirty hack for com.db4o.types some of them need to be set automatically
 	 * TODO: Derive from YapField for Db4oTypes
 	 */
-    public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
-        if (alive()) {
-            try {
-                Object obj = i_javaField.get(a_OnObject);
-                if (i_db4oType != null) {
-                    if (obj == null) {
-                        obj = i_db4oType.createDefault(a_trans);
-                        i_javaField.set(a_OnObject, obj);
-                    }
-                }
-                return obj;
-            } catch (Throwable t) {
-                if(Debug.atHome){
-                    t.printStackTrace();
-                }
-            }
-            // this is typically the case, if a field is removed from an
-            // object.
-        }
-        return null;
-    }
+    public Object getOrCreate(Transaction trans, Object onObject) {
+		if (!alive()) {
+			return null;
+		}
+		Object obj = i_javaField.get(onObject);
+		if (i_db4oType != null && obj == null) {
+
+			obj = i_db4oType.createDefault(trans);
+			i_javaField.set(onObject, obj);
+
+		}
+		return obj;
+	}
 
     public ClassMetadata getParentYapClass() {
         // alive needs to be checked by all callers: Done
@@ -762,13 +754,9 @@ public class FieldMetadata implements StoredField {
     }
     
     public void set(Object onObject, Object obj){
-        try {
-            i_javaField.set(onObject, obj);
-        } catch (Throwable t) {
-            if(Debug.atHome){
-                t.printStackTrace();
-            }
-        }
+    	// TODO: remove the following if and check callers
+    	if (null == i_javaField) return;
+    	i_javaField.set(onObject, obj);
     }
 
     void setName(String a_name) {
