@@ -273,7 +273,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			int bytesRead = _file.read(bytes, length);
 			assertRead(bytesRead, length);
 		} catch (IOException ioex) {
-			throw new UncheckedIOException();
+			throw new UncheckedIOException(ioex);
 		}
 	}
 

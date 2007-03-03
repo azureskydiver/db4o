@@ -2,10 +2,20 @@
 
 package com.db4o.internal;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.foundation.*;
-import com.db4o.reflect.*;
+import com.db4o.Rename;
+import com.db4o.config.ObjectAttribute;
+import com.db4o.config.ObjectClass;
+import com.db4o.config.ObjectConstructor;
+import com.db4o.config.ObjectField;
+import com.db4o.config.ObjectMarshaller;
+import com.db4o.config.ObjectTranslator;
+import com.db4o.ext.Db4oException;
+import com.db4o.foundation.DeepClone;
+import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.KeySpec;
+import com.db4o.foundation.KeySpecHashtable4;
+import com.db4o.foundation.TernaryBool;
+import com.db4o.reflect.ReflectClass;
 
 
 /**
@@ -125,37 +135,38 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     public ObjectTranslator getTranslator() {
-    	ObjectTranslator translator=(ObjectTranslator)_config.get(TRANSLATOR);
-        if (translator != null) {
-        	return translator;
-        }
+    	ObjectTranslator translator = (ObjectTranslator) _config
+				.get(TRANSLATOR);
+		if (translator != null) {
+			return translator;
+		}
 
-        String translatorName=_config.getAsString(TRANSLATOR_NAME);
-        if (translatorName == null) {
-        	return null;
-        }
-        
-        try {
-            translator = (ObjectTranslator) config().reflector().forName(
-                translatorName).newInstance();
-        } catch (Throwable t) {
-            if (! Deploy.csharp){
-            	// TODO: why?
-                try{
-                    translator = (ObjectTranslator) Class.forName(translatorName).newInstance();
-                    if(translator != null){
-                    	translate(translator);
-                        return translator;
-                    }
-                }catch(Throwable th){
-                }
-            }
-            Messages.logErr(config(), 48, translatorName, null);
-            translateOnDemand(null);
-        }
-        translate(translator);
+		String translatorName = _config.getAsString(TRANSLATOR_NAME);
+		if (translatorName == null) {
+			return null;
+		}
+		try {
+			translator = newTranslatorFromReflector(translatorName);
+		} catch (RuntimeException t) {
+			try {
+				translator = newTranslatorFromPlatform(translatorName);
+			} catch (Exception e) {
+				throw new Db4oException(e);
+			} 
+		}
+		translate(translator);
         return translator;
     }
+
+
+	private ObjectTranslator newTranslatorFromPlatform(String translatorName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		return (ObjectTranslator) Class.forName(translatorName).newInstance();
+	}
+   
+	private ObjectTranslator newTranslatorFromReflector(String translatorName) {
+		return (ObjectTranslator) config().reflector().forName(
+		    translatorName).newInstance();
+	}
     
 	public void indexed(boolean flag) {
 		_config.put(CLASS_INDEXED, flag);
