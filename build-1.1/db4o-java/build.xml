@@ -6,8 +6,6 @@
 	
 	<target name="clean">
   	<cleanIvyDir/>
-  	<delete dir="doc" failonerror="true"/>
-  	<delete dir="${tempSrcDir}" failonerror="true"/>
 	</target>
 	
 	<target name="init" depends="">
@@ -34,10 +32,10 @@
 		<zip destfile="${zipPath}">
 			<zipfileset dir="${ivy.lib.dir}/lib" prefix="${zipbasedir}/lib"/>	
 			<zipfileset dir="${tempSrcDir}" prefix="${zipbasedir}/src"/>		
-			<zipfileset dir="doc" prefix="${zipbasedir}/doc"/>
+			<zipfileset dir="${tempDocDir}" prefix="${zipbasedir}/doc"/>
 			
 			<zipfileset file="${dir.j}/db4o.license.txt" prefix="${zipbasedir}"/>
-			<zipfileset file="README.txt" prefix="${zipbasedir}"/>
+			<zipfileset file="${javaZipBuildDir}/README.txt" prefix="${zipbasedir}"/>
 		</zip>
 		
     <publishToIvy/>
@@ -46,18 +44,18 @@
 	</target>
    
   <target name="reference" depends="">
-		<mkdir dir="doc/reference" />
-		<copy todir="doc/reference">
+		<mkdir dir="${tempDocDir}/reference" />
+		<copy todir="${tempDocDir}/reference">
 			<fileset dir="${dir.docwiki}/java"/>
 		</copy>
 	</target>  
 	
 	<target name="javadoc" depends="">
 		<copyjava5 destDir="${tempOne}" />
-		<mkdir dir="doc/api" />
+		<mkdir dir="${tempDocDir}/api" />
 		<javadoc 
 			classpath="" access="public" windowtitle="db4o - database for objects - documentation" 
-			header="db4o ${db4o.version.dotted}" destdir="doc/api">
+			header="db4o ${db4o.version.dotted}" destdir="${tempDocDir}/api">
 			<fileset dir="${tempOne}" includes="com/db4o/**/*.java">
 				<exclude name="com/db4o/cs/**/*.java" />
 				<exclude name="com/db4o/inside/**/*.java" />
@@ -134,8 +132,8 @@
 	  </path>
 	  <taskdef name="javaDoctor" classname="com.yetac.doctor.Doctor" classpathref="javaDoctor.lib.path"/>
 	  
-  	<mkdir dir="doc/tutorial/docs" />
-  	<copy todir="doc/tutorial/docs">
+  	<mkdir dir="${tempDocDir}/tutorial/docs" />
+  	<copy todir="${tempDocDir}/tutorial/docs">
 			<fileset dir="${ivy.lib.dir}/tutorial"/>
 		</copy>
 			
@@ -147,7 +145,7 @@
 			inputsource="${dir.j.tutorial.src}/" 
 			sourceextension="java" 
 			outputfile="${db4o.file}tutorial" 
-			outputpath="${basedir}/doc/tutorial" 
+			outputpath="${tempDocDir}/tutorial" 
 			pdfbasefont="${font.pdf.base}" 
 			archive="doctor-applet-signed-${db4o.version.dotted}.jar, db4o-java1.2-signed-${db4o.version.dotted}.jar, f1-signed-${db4o.version.dotted}.jar" 
 			outlineimage="db4objects.gif" 
