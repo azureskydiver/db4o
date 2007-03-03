@@ -174,22 +174,12 @@ public class Db4o {
 		if(memoryFile == null){
 			memoryFile = new MemoryFile();
 		}
-		ObjectContainer oc = null;
+		
 		if (Deploy.debug) {
 			System.out.println("db4o Debug is ON");
-	        oc = new InMemoryObjectContainer(config,memoryFile);
-
-			// intentionally no exception handling,
-		    // in order to follow uncaught errors
-		} else {
-		    try {
-		        oc = new InMemoryObjectContainer(config,memoryFile);
-			}
-		    catch(Throwable t) {
-		        Messages.logErr(i_config, 4, "Memory File", t);
-				return null;
-		    }
 		}
+	    
+		ObjectContainer oc = new InMemoryObjectContainer(config,memoryFile);
 	    Platform4.postOpen(oc);
 		Messages.logMsg(i_config, 5, "Memory File");
 		return oc;

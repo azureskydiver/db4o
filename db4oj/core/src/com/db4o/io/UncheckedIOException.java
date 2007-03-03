@@ -4,6 +4,10 @@ import com.db4o.internal.UncheckedException;
 
 public class UncheckedIOException extends UncheckedException {
 
+	public UncheckedIOException(Throwable cause) {
+		super(cause);
+	}
+
 	public UncheckedIOException() {
 		super();
 	}

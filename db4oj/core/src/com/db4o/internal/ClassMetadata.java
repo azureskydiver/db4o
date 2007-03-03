@@ -471,16 +471,9 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         // do nothing
     }
 
-    private boolean createConstructor(ObjectContainerBase a_stream, String a_name) {
-        
-        ReflectClass claxx;
-        try {
-        	claxx = a_stream.reflector().forName(a_name);
-        } catch (Throwable t) {
-            claxx = null;
-        }
-        
-        return createConstructor(a_stream,claxx , a_name, true);
+    private boolean createConstructor(ObjectContainerBase container, String className) {
+        ReflectClass claxx = container.reflector().forName(className);
+        return createConstructor(container, claxx , className, true);
     }
 
     public boolean createConstructor(ObjectContainerBase a_stream, ReflectClass a_class, String a_name, boolean errMessages) {
@@ -1469,31 +1462,30 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     }
 
     public final byte[] readName1(Transaction trans, Buffer reader) {
-    	if (reader == null) 
-    		return null;
-    	
-        i_reader = reader;
-        
-        try {
-            ClassMarshaller marshaller = MarshallerFamily.current()._class;
+		if (reader == null)
+			return null;
+
+		i_reader = reader;
+		boolean ok = false;
+		try {
+			ClassMarshaller marshaller = MarshallerFamily.current()._class;
 			i_nameBytes = marshaller.readName(trans, reader);
-            _metaClassID = marshaller.readMetaClassID(reader);
+			_metaClassID = marshaller.readMetaClassID(reader);
 
-            setStateUnread();
+			setStateUnread();
 
-            bitFalse(Const4.CHECKED_CHANGES);
-            bitFalse(Const4.STATIC_FIELDS_STORED);
+			bitFalse(Const4.CHECKED_CHANGES);
+			bitFalse(Const4.STATIC_FIELDS_STORED);
 
-            return i_nameBytes;
+			ok = true;
+			return i_nameBytes;
 
-        } catch (Throwable t) {
-            setStateDead();
-            if (Debug.atHome) {
-                t.printStackTrace();
-            }
-        }
-        return null;
-    }
+		} finally {
+			if (!ok) {
+				setStateDead();
+			}
+		}
+	}
     
     void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject) {
         int id = a_yapObject.getID();
