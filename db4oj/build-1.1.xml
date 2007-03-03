@@ -12,7 +12,7 @@
 		-->
 	
 	<target name="echo" >
-		<echo message="${defaultTempDir}"/>
+		<echo message="${tempOne}"/>
 	</target>
 	
 	<target name="clean">
@@ -27,17 +27,16 @@
 	<target name="jar" depends="init">
 		<property name="file.compiler.jdk1.3.args.optional" value="" />
 		
-		<delete dir="${defaultTempDir}" failonerror="true"/>
-		<mkdir dir="${defaultTempDir}" />
+		<resetDir dir="${tempOne}"/>
 		
 		<javac fork="yes" executable="${file.compiler.jdk1.3}"
-			srcdir="${coreSrcDir}" destdir="${defaultTempDir}" debug="off">
+			srcdir="${coreSrcDir}" destdir="${tempOne}" debug="off">
 			<compilerarg line="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}"/>
 		</javac>
 		
-		<jar jarfile="${coreJarPath}" basedir="${defaultTempDir}" />
+		<jar jarfile="${coreJarPath}" basedir="${tempOne}" />
 		
-		<delete dir="${defaultTempDir}" failonerror="true"/>
+		<delete dir="${tempOne}" failonerror="true"/>
 	</target>
 	
 	 <target name="configure" depends="init">
