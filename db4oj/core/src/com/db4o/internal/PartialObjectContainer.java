@@ -287,26 +287,29 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public boolean close() {
 		synchronized (i_lock) {
-			boolean ret = close1();
-			return ret;
+			try {
+				close1();
+			} catch (Exception e) {
+				fatalException(e);
+			}
+			return true;
 		}
 	}
 
-    final boolean close1() {
+    final void close1() {
         // this is set to null in close2 and is therefore our check for down.
         if (_classCollection == null) {
-            return true;
+            return;
         }
         Platform4.preClose(_this);
         checkNeededUpdates();
         if (stateMessages()) {
             logMsg(2, toString());
         }
-        boolean closeResult = close2();
-        return closeResult;
+        close2();
     }
 
-    protected boolean close2() {
+    protected void close2() {
     	stopSession();
         i_systemTrans = null;
         i_trans = null;
@@ -316,7 +319,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(DTrace.enabled){
             DTrace.CLOSE.log();
         }
-        return true;
     }
 
     public Db4oCollections collections() {

@@ -143,9 +143,10 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
         return (byte)_blockSize;
     }
 
-    protected boolean close2() {
+    protected void close2() {
 		if (_readerThread == null || _readerThread.isClosed()) {
-			return super.close2();
+			super.close2();
+			return;
 		}
 		try {
 			writeMsg(Msg.COMMIT_OK, true);
@@ -171,11 +172,10 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
 		
-		boolean ret = super.close2();
+		super.close2();
 		if (Debug.fakeServer) {
 			DebugCS.serverStream.close();
 		}
-		return ret;
 	}
 
 	public final void commit1() {

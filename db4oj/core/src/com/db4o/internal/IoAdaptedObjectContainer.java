@@ -99,17 +99,9 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         return (byte) _file.blockSize();
     }
 
-    protected boolean close2() {
+    protected void close2() {
 		freePrefetchedPointers();
-		if (Deploy.debug) {
-			write(true);
-		} else {
-			try {
-				write(true);
-			} catch (Throwable t) {
-				fatalException(t);
-			}
-		}
+		write(true);
 		super.close2();
 		synchronized (_fileLock) {
 			try {
@@ -123,7 +115,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			}
 			_file = null;
 		}
-		return true;
 	}
     
     public void commit1() {
