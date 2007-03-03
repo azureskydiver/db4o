@@ -5,6 +5,7 @@ package com.db4o.defragment;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
@@ -117,6 +118,11 @@ public class Defragment {
 			backupFile.delete();
 		}
 		File4.rename(config.origPath(), config.backupPath());
+		
+		if(config.fileNeedsUpgrade()) {
+			upgradeFile(config);
+		}
+		
 		DefragContextImpl context = new DefragContextImpl(config, listener);
 		int newClassCollectionID = 0;
 		int targetIdentityID = 0;
@@ -144,6 +150,14 @@ public class Defragment {
 		else {
 			listener.notifyDefragmentInfo(new DefragmentInfo("No database identity found in original file."));
 		}
+	}
+
+	private static void upgradeFile(DefragmentConfig config) {
+		File4.copy(config.backupPath(),config.tempPath());
+		Configuration db4oConfig=(Configuration)((Config4Impl)config.db4oConfig()).deepClone(null);
+		db4oConfig.allowVersionUpdates(true);
+		ObjectContainer db=Db4o.openFile(db4oConfig,config.tempPath());
+		db.close();
 	}
 
 	private static void defragUnindexed(DefragContextImpl context)
