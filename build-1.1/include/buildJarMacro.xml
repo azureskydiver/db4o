@@ -2,7 +2,7 @@
 	<macrodef name="resetDir">
 		<attribute name="dir" />
 		<sequential>
-			<delete dir="@{dir}" />
+			<delete dir="@{dir}" failonerror="true"/>
 			<mkdir dir="@{dir}" />
 		</sequential>
 	</macrodef>
@@ -31,10 +31,9 @@
 		<attribute name="compilerArg"  default=""/>
 		
 		<sequential>
-			<property name="temp.dir" value="${defaultTempDir}" />
+			<property name="temp.dir" value="${tempOne}" />
 			
-			<delete dir="${temp.dir}" failonerror="true"/>
-			<mkdir dir="${temp.dir}" />
+			<resetDir dir="${temp.dir}"/>
 
 			<javac 
 				srcdir="@{srcDir}" 

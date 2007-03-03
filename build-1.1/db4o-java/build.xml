@@ -53,12 +53,12 @@
 	</target>  
 	
 	<target name="javadoc" depends="">
-		<copyjava5 destDir="${defaultTempDir}" />
+		<copyjava5 destDir="${tempOne}" />
 		<mkdir dir="doc/api" />
 		<javadoc 
 			classpath="" access="public" windowtitle="db4o - database for objects - documentation" 
 			header="db4o ${db4o.version.dotted}" destdir="doc/api">
-			<fileset dir="${defaultTempDir}" includes="com/db4o/**/*.java">
+			<fileset dir="${tempOne}" includes="com/db4o/**/*.java">
 				<exclude name="com/db4o/cs/**/*.java" />
 				<exclude name="com/db4o/inside/**/*.java" />
 				<exclude name="com/db4o/foundation/**/*.java" />
@@ -83,7 +83,7 @@
 		
 		<copy file="${javadoc.stylesheet}" todir="doc/api" overwrite="true" />
 		
-		<delete dir="${defaultTempDir}" failonerror="true"/>
+		<delete dir="${tempOne}" failonerror="true"/>
 	</target>  
    
   <target name="lib" depends="">
