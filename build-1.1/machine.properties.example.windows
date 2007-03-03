@@ -1,0 +1,32 @@
+#############################
+# Section 1 - If you are building db4o/dRS java distribtutions, you need to set:
+
+font.pdf.base = C:/WINDOWS/Fonts/VERDANA.TTF
+
+# Optional - path to JDK1.3 compatible javac executable (default: "javac")
+# file.compiler.jdk1.3= C:/Program Files/Java/jdk1.5.0_11/bin/javac
+
+# Optional - path to JDK1.1 compatible java executable (default: "java")
+# file.jvm.jdk1.1 = C:/Program Files/Java/jdk1.5.0_11/bin/java
+
+# Optional - additional arguments needed for a JDK>1.3 javac executable, like "-source 1.3"
+file.compiler.jdk1.3.args.optional=-source 1.3
+
+# End db4o/dRS java settings
+#############################
+
+#############################
+#  Section 2 - If you are building db4o/dRS .net 2.0 distribtutions, you need to set:
+eclipse.home = c:/db4o/Apps/eclipse
+
+# Optional - net2 framework installation folder, default set to C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
+# csc.executable.path.net2 = C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
+
+# Optional - path to net2 csc executable (default: "csc")
+# csc.executable = ${csc.executable.path.net2}/csc.exe
+
+# Optional - net2 compact framework installation folder 
+# dir.compactframework=C:/Program Files/Microsoft.NET/SDK/CompactFramework
+
+# End db4o/dRS .net 2.0 settings
+#############################
