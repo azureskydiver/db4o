@@ -217,9 +217,20 @@ public class IndexedNodeCollector {
 		final IndexedNodeWithRange c1 = nodeForConstraint(join.i_constraint1);
 		final IndexedNodeWithRange c2 = nodeForConstraint(join.i_constraint2);
 		if (join.isOr()) {
-			return new OrIndexedLeaf(join.i_constraint1, c1, c2);
+			return new OrIndexedLeaf(findLeafForJoin(join), c1, c2);
 		}
 		return new AndIndexedLeaf(join.i_constraint1, c1, c2);
+	}
+
+	private QCon findLeafForJoin(QConJoin join) {
+		if (join.i_constraint1 instanceof QConObject) {
+			return join.i_constraint1;
+		}
+		QCon con = join.i_constraint2;
+		if (con instanceof QConObject) {
+			return con;
+		}
+		return findLeafForJoin((QConJoin)con);
 	}
 	
 	private IndexedNodeWithRange nodeForConstraint(QCon con) {
