@@ -28,12 +28,7 @@
 		}
 
         public virtual com.db4o.reflect.ReflectClass ForName(string className){
-			j4o.lang.Class clazz = null;
-			try {
-				clazz=j4o.lang.Class.ForName(className);
-			}		
-			catch(j4o.lang.ClassNotFoundException) {
-			}
+			j4o.lang.Class clazz = j4o.lang.Class.ForName(className);
             return clazz == null
 				? null
 				: new com.db4o.reflect.net.NetClass(_parent, clazz);

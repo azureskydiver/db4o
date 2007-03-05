@@ -53,6 +53,10 @@ public class Statistics {
 			System.out.println("File not found: '" + filename + "'");
 		}
 	}
+	
+	private static boolean canCallConstructor(String className) {
+		return ReflectPlatform.createInstance(className) != null;
+	}
 
 	private void printStats(ObjectContainer con, String filename) {
 
@@ -67,7 +71,7 @@ public class Statistics {
 			if(clazz == null) {
 				unavailable = unavailable.add(new TreeString(internalClassName));
 			} else {
-				if(!ReflectPlatform.isConstructorAvailable(clazz)) {
+				if(!canCallConstructor(internalClassName)) {
 					noConstructor =	noConstructor.add(new TreeString(internalClassName));
 				}
 			}
