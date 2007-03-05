@@ -2,6 +2,7 @@
 
 package com.db4o.reflect.self;
 
+import com.db4o.internal.ReflectPlatform;
 import com.db4o.reflect.*;
 
 public class SelfReflector implements Reflector {
@@ -30,12 +31,8 @@ public class SelfReflector implements Reflector {
 	}
 
 	public ReflectClass forName(String className) {
-		try {
-			Class clazz = Class.forName(className);
-			return forClass(clazz);
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
+		Class clazz = ReflectPlatform.forName(className);
+		return forClass(clazz);
 	}
 
 	public ReflectClass forObject(Object a_object) {

@@ -104,11 +104,7 @@ public final class Platform4 {
      * or Reflector-aware
      */
     static final boolean classIsAvailable(String className) {
-        try {
-            return Class.forName(className) != null;
-        } catch (Throwable t) {
-            return false;
-        }
+    	return ReflectPlatform.forName(className) != null;
     }
     
     static Db4oCollections collections(Object a_object){
@@ -396,7 +392,7 @@ public final class Platform4 {
     private static void createJdk() {
     	
         if (classIsAvailable("java.lang.reflect.Method")){
-            jdkWrapper = (JDK)createInstance(JDK_PACKAGE + "JDKReflect");
+            jdkWrapper = (JDK)ReflectPlatform.createInstance(JDK_PACKAGE + "JDKReflect");
         }
 
         if (classIsAvailable(Platform4.ACCESSIBLEOBJECT)){
@@ -419,26 +415,11 @@ public final class Platform4 {
     }
     
     private static JDK createJDKWrapper(String name){
-        JDK newWrapper = (JDK)createInstance(JDK_PACKAGE + "JDK_" + name);
+        JDK newWrapper = (JDK)ReflectPlatform.createInstance(JDK_PACKAGE + "JDK_" + name);
         if(newWrapper != null){
             return newWrapper;
         }
         return jdkWrapper;
-    }
-    
-    /**
-     * use for system classes only, since not ClassLoader
-     * or Reflector-aware
-     */
-    private static final Object createInstance(String name) {
-        try {
-            Class clazz = Class.forName(name);
-            if(clazz != null){
-                return clazz.newInstance();
-            }
-        } catch (Exception e) {
-        }
-        return null;
     }
     
 	public static boolean isSimple(Class a_class){
