@@ -2,14 +2,16 @@
 
 package com.db4o.tools;
 
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.File;
+import java.lang.reflect.Modifier;
 
-import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
-import com.db4o.types.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ext.StoredClass;
+import com.db4o.foundation.Hashtable4;
+import com.db4o.foundation.io.File4;
+import com.db4o.internal.ReflectPlatform;
+import com.db4o.types.SecondClass;
 
 /**
  * old Deframent source code, now replaced by the built-in functionality in com.db4o.defragment.Defragment.
@@ -247,14 +249,10 @@ public class Defragment {
 		// remove classes that are currently not available,
 		// abstract classes and all second class objects
 		for (int i = 0; i < classes.length; i++) {
-			try {
-				Class javaClass = Class.forName(classes[i].getName());
-				if (javaClass == null
+			Class javaClass = ReflectPlatform.forName(classes[i].getName());
+			if (javaClass == null
 					|| SecondClass.class.isAssignableFrom(javaClass)
 					|| Modifier.isAbstract(javaClass.getModifiers())) {
-					classes[i] = null;
-				}
-			} catch (Throwable t) {
 				classes[i] = null;
 			}
 		}

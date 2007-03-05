@@ -2,11 +2,17 @@
 
 package com.db4o.internal.query;
 
-import com.db4o.*;
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
-import com.db4o.internal.diagnostic.*;
-import com.db4o.query.*;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.Iterator4Impl;
+import com.db4o.foundation.List4;
+import com.db4o.internal.ObjectContainerBase;
+import com.db4o.internal.ReflectPlatform;
+import com.db4o.internal.diagnostic.DiagnosticProcessor;
+import com.db4o.query.Predicate;
+import com.db4o.query.Query;
+import com.db4o.query.QueryComparator;
 
 /**
  * @sharpen.ignore
@@ -83,11 +89,6 @@ public class NativeQueryHandler {
 	}
 	
 	private void loadQueryOptimizer() {
-		try {
-			Class enhancerClass = Class.forName(NativeQueryHandler.OPTIMIZER_IMPL_NAME);
-			_enhancer=(Db4oNQOptimizer)enhancerClass.newInstance();
-		} catch (Throwable ignored) {
-			_enhancer=null;
-		}
+		_enhancer = (Db4oNQOptimizer) ReflectPlatform.createInstance(NativeQueryHandler.OPTIMIZER_IMPL_NAME);
 	}
 }

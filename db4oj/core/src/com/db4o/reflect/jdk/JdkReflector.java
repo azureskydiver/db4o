@@ -2,6 +2,7 @@
 
 package com.db4o.reflect.jdk;
 
+import com.db4o.internal.ReflectPlatform;
 import com.db4o.reflect.*;
 
 public class JdkReflector implements Reflector{
@@ -34,16 +35,11 @@ public class JdkReflector implements Reflector{
 	}
 	
 	public ReflectClass forName(String className) {
-		try {
-            Class clazz = _classLoader == null ? Class.forName(className) : _classLoader.loadClass(className);
-            if(clazz == null){
-                return null;
-            }
-            return new JdkClass(_parent, clazz);
+		Class clazz = ReflectPlatform.forName(_classLoader, className);
+		if (clazz == null) {
+			return null;
 		}
-		catch(Exception exc) {
-		}
-		return null;
+		return new JdkClass(_parent, clazz);
 	}
 	
 	public ReflectClass forObject(Object a_object) {

@@ -2,10 +2,15 @@
 
 package com.db4o.tools;
 
-import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ext.StoredClass;
+import com.db4o.foundation.Tree;
+import com.db4o.foundation.Visitor4;
+import com.db4o.internal.ReflectPlatform;
+import com.db4o.internal.TreeInt;
+import com.db4o.internal.TreeString;
+import com.db4o.internal.TreeStringObject;
 
 /**
  * prints statistics about a database file to System.out.
@@ -57,16 +62,14 @@ public class Statistics {
 		// one element too many, substract one in the end
 		StoredClass[] internalClasses = con.ext().storedClasses();
 		for (int i = 0; i < internalClasses.length; i++) {
-			try {
-				Class clazz = Class.forName(internalClasses[i].getName());
-				try {
-					clazz.newInstance();
-				} catch (Throwable th) {
-					noConstructor =
-						noConstructor.add(new TreeString(internalClasses[i].getName()));
+			String internalClassName = internalClasses[i].getName();
+			Class clazz = ReflectPlatform.forName(internalClassName);
+			if(clazz == null) {
+				unavailable = unavailable.add(new TreeString(internalClassName));
+			} else {
+				if(!ReflectPlatform.isConstructorAvailable(clazz)) {
+					noConstructor =	noConstructor.add(new TreeString(internalClassName));
 				}
-			} catch (Throwable t) {
-				unavailable = unavailable.add(new TreeString(internalClasses[i].getName()));
 			}
 		}
 		unavailable = unavailable.removeLike(new TreeString(REMOVE));
