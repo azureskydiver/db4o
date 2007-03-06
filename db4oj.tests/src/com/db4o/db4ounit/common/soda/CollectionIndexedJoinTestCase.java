@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.util.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -47,10 +48,10 @@ public class CollectionIndexedJoinTestCase extends AbstractDb4oTestCase {
 	}
 
 	private void assertIndexedOr(int[] values, int expectedResultCount) {
-		assertIndexedOr(values, expectedResultCount, 0, true);
-		assertIndexedOr(values, expectedResultCount, values.length-1, true);
-		assertIndexedOr(values, expectedResultCount, 0, false);
-		assertIndexedOr(values, expectedResultCount, values.length-1, false);
+		TestConfig config=new TestConfig(values.length);
+		while(config.moveNext()) {
+			assertIndexedOr(values, expectedResultCount, config.rootIndex(), config.connectLeft());
+		}
 	}
 
 	public void testIndexedOrAll() {
@@ -84,5 +85,21 @@ public class CollectionIndexedJoinTestCase extends AbstractDb4oTestCase {
 		}
 		ObjectSet result=query.execute();
 		Assert.areEqual(expectedResultCount,result.size());
+	}
+	
+	private static class TestConfig extends PermutingTestConfig {
+		public TestConfig(int numValues) {
+			super(new Object[][]{
+					{new Integer(0),new Integer(numValues-1)},
+					{Boolean.FALSE,Boolean.TRUE}});
+		}
+
+		public int rootIndex() {
+			return ((Integer)current(0)).intValue();
+		}
+		
+		public boolean connectLeft() {
+			return ((Boolean)current(1)).booleanValue();
+		}
 	}
 }
