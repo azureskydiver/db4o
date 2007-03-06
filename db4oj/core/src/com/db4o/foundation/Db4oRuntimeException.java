@@ -8,7 +8,7 @@ public class Db4oRuntimeException extends ChainedRuntimeException {
 	}
 
 	public Db4oRuntimeException(Throwable cause) {
-		super(cause);
+		this(cause.getMessage(), cause);
 	}
 
 	public Db4oRuntimeException(String msg) {
