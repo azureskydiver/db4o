@@ -77,24 +77,23 @@ public abstract class PersistentBase implements Persistent {
     }
 
     public void read(Transaction trans) {
-        try {
-            if (beginProcessing()) {
-                Buffer reader = trans.stream().readReaderByID(trans, getID());
-                if (reader != null) {
-                    if (Deploy.debug) {
-                        reader.readBegin(getIdentifier());
-                    }
-                    readThis(trans, reader);
-                    setStateOnRead(reader);
-                }
-                endProcessing();
-            }
-        } catch (Throwable t) {
-            if (Debug.atHome) {
-                t.printStackTrace();
-            }
-        }
-    }
+		if (!beginProcessing()) {
+			return;
+		}
+		try {
+			Buffer reader = trans.stream().readReaderByID(trans, getID());
+			if (reader != null) {
+				if (Deploy.debug) {
+					reader.readBegin(getIdentifier());
+				}
+				readThis(trans, reader);
+				setStateOnRead(reader);
+			}
+		} finally {
+			endProcessing();
+		}
+	}
+	
     
     public void setID(int a_id) {
     	if(DTrace.enabled){

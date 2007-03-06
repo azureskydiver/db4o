@@ -370,7 +370,9 @@ public final class ClassMetadataRepository extends PersistentBase {
 			i_classes.add(yapClass);
 			i_yapClassByID.put(ids[i], yapClass);
 			byte[] name = yapClass.readName1(a_trans, yapWriters[i]);
-			i_yapClassByBytes.put(name, yapClass);
+			if (name != null) {
+				i_yapClassByBytes.put(name, yapClass);
+			}
 		}
 
 		applyReadAs();

@@ -163,6 +163,11 @@ public class Msg implements Cloneable {
 		// default: do nothing
 		return false; // since not processed
 	}
+	
+	public boolean writeFailedMessage(ServerMessageDispatcher serverThread) {
+		serverThread.write(Msg.FAILED);
+		return true;
+	}
 
 	public static final Msg readMessage(Transaction a_trans, Socket4 sock) throws IOException {
 		StatefulBuffer reader = new StatefulBuffer(a_trans, Const4.MESSAGE_LENGTH);
