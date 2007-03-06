@@ -11,11 +11,12 @@ public class AllTests extends Db4oTestSuite {
     }
 
     protected Class[] testCases() {
-        return new Class[]{
-                EventRegistryTestCase.class,
-                GlobalLifecycleEventsTestCase.class,
-                SelectiveCascadingDeleteTestCase.class,
-                SelectiveActivationTestCase.class
+        return new Class[] {
+        	CommitTimeCallbacksTestCase.class,
+            EventRegistryTestCase.class,
+            GlobalLifecycleEventsTestCase.class,
+            SelectiveCascadingDeleteTestCase.class,
+            SelectiveActivationTestCase.class
         };
     }
 }

@@ -4,6 +4,7 @@ package com.db4o.internal.events;
 
 import com.db4o.events.Event4;
 import com.db4o.events.EventRegistry;
+import com.db4o.ext.ObjectInfo;
 import com.db4o.internal.callbacks.*;
 import com.db4o.query.Query;
 
@@ -24,6 +25,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _updated = new Event4Impl();
 	protected final Event4Impl _deleted = new Event4Impl();
 	protected final Event4Impl _deactivated = new Event4Impl();
+	protected final Event4Impl _committing = new Event4Impl();
 
 	// Callbacks implementation
 	public void onQueryFinished(Query query) {
@@ -73,6 +75,10 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	public void objectOnDeactivate(Object obj) {
 		EventPlatform.triggerObjectEvent(_deactivated, obj);
 	}
+	
+	public void commitOnStarted(ObjectInfo[] added) {
+		EventPlatform.triggerCommitEvent(_committing, added);
+	}
 
 	public Event4 queryFinished() {
 		return _queryFinished;
@@ -120,5 +126,9 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 
 	public Event4 deactivated() {
 		return _deactivated;
+	}
+	
+	public Event4 committing() {
+		return _committing;
 	}
 }

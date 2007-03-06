@@ -35,12 +35,16 @@ public class TransactionalReferenceSystem implements ReferenceSystem{
 	}
 	
 	public void commit(){
-		_newReferences.traverseReferences(new Visitor4() {
+		traveseNewReferences(new Visitor4() {
 			public void visit(Object obj) {
 				_committedReferences.addExistingReference((ObjectReference)obj);
 			}
 		});
 		createNewReferences();
+	}
+
+	public void traveseNewReferences(final Visitor4 visitor) {
+		_newReferences.traverseReferences(visitor);
 	}
 	
 	private void createNewReferences(){
@@ -73,7 +77,7 @@ public class TransactionalReferenceSystem implements ReferenceSystem{
 	}
 	
 	public void traverseReferences(Visitor4 visitor) {
-		_newReferences.traverseReferences(visitor);
+		traveseNewReferences(visitor);
 		_committedReferences.traverseReferences(visitor);
 	}
 

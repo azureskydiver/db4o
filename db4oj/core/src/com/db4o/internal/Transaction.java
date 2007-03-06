@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.ext.ObjectInfo;
 import com.db4o.foundation.*;
 import com.db4o.internal.ix.*;
 import com.db4o.reflect.Reflector;
@@ -18,7 +19,7 @@ public abstract class Transaction {
     protected final byte[]          _pointerBuffer = new byte[Const4.POINTER_LENGTH];
 
     // contains DeleteInfo nodes
-    public Tree          i_delete;  // public for .NET conversion
+    public Tree          i_delete;
 
     private List4           i_dirtyFieldIndexes;
     
@@ -101,8 +102,8 @@ public abstract class Transaction {
             i_file.freeSpaceEndCommit();
         }
     }
-
-    private void commitExceptForFreespace(){
+    
+	private void commitExceptForFreespace(){
         
         if(DTrace.enabled){
             boolean systemTrans = (i_parentTransaction == null);

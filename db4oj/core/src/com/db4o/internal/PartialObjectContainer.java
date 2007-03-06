@@ -15,13 +15,7 @@ import com.db4o.ext.ObjectInfo;
 import com.db4o.ext.ObjectNotStorableException;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.SystemInfo;
-import com.db4o.foundation.IntIdGenerator;
-import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.Iterator4Impl;
-import com.db4o.foundation.List4;
-import com.db4o.foundation.PersistentTimeStampIdGenerator;
-import com.db4o.foundation.Tree;
-import com.db4o.foundation.Visitor4;
+import com.db4o.foundation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.cs.*;
 import com.db4o.internal.handlers.*;
@@ -68,7 +62,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     // Counts the number of toplevel calls into YapStream
     private int           _stackDepth;
 
-    private ReferenceSystem _referenceSystem;
+    private TransactionalReferenceSystem _referenceSystem;
     
     private Tree            i_justPeeked;
 
@@ -341,6 +335,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             }
             beginTopLevelCall();
             try{
+            	triggerCommitOnStarted();
             	commit1();
             	_referenceSystem.commit();
             }finally{
@@ -349,7 +344,21 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    public abstract void commit1();
+	private void triggerCommitOnStarted() {
+    	callbacks().commitOnStarted(getAddedReferences());
+	}
+
+	private ObjectInfo[] getAddedReferences() {
+		final Collection4 references = new Collection4();
+		_referenceSystem.traveseNewReferences(new Visitor4() {
+			public void visit(Object obj) {
+				references.add(obj);
+			}
+		});
+		return (ObjectInfo[]) references.toArray(new ObjectInfo[references.size()]);
+	}
+	
+	public abstract void commit1();
 
     public Configuration configure() {
         return configImpl();
@@ -1979,14 +1988,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public Callbacks callbacks() {
-    		return _callbacks;
+    	return _callbacks;
     }
     
     public void callbacks(Callbacks cb) {
-    		if (cb == null) {
-    			throw new IllegalArgumentException();
-    		}
-    		_callbacks = cb;
+		if (cb == null) {
+			throw new IllegalArgumentException();
+		}
+		_callbacks = cb;
     }
 
     public Config4Impl configImpl() {
