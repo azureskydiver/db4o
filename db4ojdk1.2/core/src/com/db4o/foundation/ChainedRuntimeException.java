@@ -11,6 +11,10 @@ public abstract class ChainedRuntimeException extends RuntimeException {
 	public ChainedRuntimeException() {
 	}
 	
+	public ChainedRuntimeException(Throwable cause) {
+		this(cause.getMessage(), cause);
+	}
+	
 	public ChainedRuntimeException(String msg) {
 		this(msg, null);
 	}
