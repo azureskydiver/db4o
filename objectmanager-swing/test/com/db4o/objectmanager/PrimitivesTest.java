@@ -43,6 +43,5 @@ public class PrimitivesTest implements TestCase, TestLifeCycle {
 		
 	}
 
-
 }
 
