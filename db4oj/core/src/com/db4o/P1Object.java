@@ -50,10 +50,10 @@ public class P1Object implements Db4oTypeImpl{
         	return;
         }
 	    if(i_yapObject == null){
-	        i_yapObject = stream().getYapObject(this);
+	        i_yapObject = stream().referenceForObject(this);
 	        if(i_yapObject == null){
 	            stream().set(this);
-	            i_yapObject = stream().getYapObject(this);
+	            i_yapObject = stream().referenceForObject(this);
 	        }
 	    }
 	    if(validYapObject()){
@@ -76,7 +76,7 @@ public class P1Object implements Db4oTypeImpl{
         	return;
         }
         if(i_yapObject == null){
-            i_yapObject = stream().getYapObject(this);
+            i_yapObject = stream().referenceForObject(this);
         }
         if(validYapObject()){
             stream().delete2(i_trans,i_yapObject,this, 0, false);
@@ -185,10 +185,10 @@ public class P1Object implements Db4oTypeImpl{
         	return;
         }
         if(i_yapObject == null){
-            i_yapObject = i_trans.stream().getYapObject(this);
+            i_yapObject = i_trans.stream().referenceForObject(this);
             if(i_yapObject == null){
                 i_trans.stream().setInternal(i_trans, this, true);
-                i_yapObject = i_trans.stream().getYapObject(this);
+                i_yapObject = i_trans.stream().referenceForObject(this);
                 return;
             }
         }

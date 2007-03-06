@@ -422,9 +422,9 @@ public class LocalTransaction extends Transaction {
 						// taking care
 						// of possible nulls in #delete4().
 
-						Object[] arr = stream().getObjectAndYapObjectByID(
+						HardObjectReference hardRef = stream().getHardObjectReferenceById(
 								LocalTransaction.this, info._key);
-						info._reference = (ObjectReference) arr[1];
+						info._reference = hardRef._reference;
 						info._reference
 								.flagForDelete(stream().topLevelCallId());
 					}

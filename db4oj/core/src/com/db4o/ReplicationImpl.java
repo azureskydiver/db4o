@@ -264,8 +264,8 @@ public class ReplicationImpl implements ReplicationProcess {
 			Object objectA = obj;
 			Object objectB = obj;
 			
-			ObjectReference referenceA = _peerA.getYapObject(obj);
-			ObjectReference referenceB = _peerB.getYapObject(obj);
+			ObjectReference referenceA = _peerA.referenceForObject(obj);
+			ObjectReference referenceB = _peerB.referenceForObject(obj);
 			
 			VirtualAttributes attA = null;
 			VirtualAttributes attB = null;
@@ -282,14 +282,14 @@ public class ReplicationImpl implements ReplicationProcess {
                     return notProcessed;
                 }
 				
-				Object[] arr = _transA.objectAndYapObjectBySignature(attB.i_uuid,
+				HardObjectReference hardRef = _transA.getHardReferenceBySignature(attB.i_uuid,
 						attB.i_database.i_signature);
-				if (arr[0] == null) {
+				if (hardRef._object == null) {
 					return notProcessed;
 				}
 				
-				referenceA = (ObjectReference) arr[1];
-				objectA = arr[0];
+				referenceA = hardRef._reference;
+				objectA = hardRef._object;
 				
 				attA = referenceA.virtualAttributes(_transA);
 			}else {
@@ -303,15 +303,15 @@ public class ReplicationImpl implements ReplicationProcess {
                     
 					sourceReference = referenceA;
                     
-					Object[] arr = _transB.objectAndYapObjectBySignature(attA.i_uuid,
+					HardObjectReference hardRef = _transB.getHardReferenceBySignature(attA.i_uuid,
 							attA.i_database.i_signature);
                     
-					if (arr[0] == null) {
+					if (hardRef._object == null) {
 						return notProcessed;
 					}
                     
-					referenceB = (ObjectReference) arr[1];
-					objectB = arr[0];
+					referenceB =  hardRef._reference;
+					objectB = hardRef._object;
                     
 				}
 				

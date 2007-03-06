@@ -236,7 +236,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
                 if(checkIDTree){
                     // the typical side effect: static fields and enums
                     
-                    Object objectInCacheFromClassCreation = stream.objectForIDFromCache(getID());
+                    Object objectInCacheFromClassCreation = stream.objectForIdFromCache(getID());
                     if(objectInCacheFromClassCreation != null){
                         return objectInCacheFromClassCreation;
                     }
