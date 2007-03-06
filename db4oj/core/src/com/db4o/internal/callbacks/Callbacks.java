@@ -2,12 +2,10 @@
 
 package com.db4o.internal.callbacks;
 
+import com.db4o.ext.ObjectInfo;
 import com.db4o.query.Query;
 
 public interface Callbacks {
-
-	void onQueryStarted(Query query);
-	void onQueryFinished(Query query);
 
 	boolean objectCanNew(Object obj);
 	boolean objectCanActivate(Object obj);
@@ -20,4 +18,9 @@ public interface Callbacks {
 	void objectOnUpdate(Object obj);
 	void objectOnDelete(Object obj);
 	void objectOnDeactivate(Object obj);
+	
+	void onQueryStarted(Query query);
+	void onQueryFinished(Query query);
+	
+	void commitOnStarted(ObjectInfo[] added);
 }
