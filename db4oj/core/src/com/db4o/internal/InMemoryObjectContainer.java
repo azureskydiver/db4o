@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import com.db4o.config.Configuration;
 import com.db4o.ext.MemoryFile;
+import com.db4o.io.UncheckedIOException;
 
 
 /**
@@ -22,8 +23,8 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		_memoryFile = memoryFile;
 		try {
 			open();
-		} catch (Exception e) {
-			Exceptions4.throwRuntimeException(22, e);
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
 		}
 		initialize3();
 	}
