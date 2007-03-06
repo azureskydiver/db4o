@@ -65,7 +65,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 		return _size;
 	}
 
-	protected void finalize() throws Throwable {
+	protected void finalize() {
 		_client.writeMsg(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _queryResultID));
 	}
 	
