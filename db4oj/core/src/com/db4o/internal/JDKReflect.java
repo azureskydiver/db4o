@@ -6,13 +6,16 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.db4o.*;
+import com.db4o.Db4o;
+import com.db4o.Deploy;
 import com.db4o.reflect.Reflector;
-import com.db4o.reflect.generic.*;
+import com.db4o.reflect.generic.GenericReflector;
 import com.db4o.reflect.jdk.JdkReflector;
 
 
@@ -48,22 +51,10 @@ class JDKReflect extends JDK {
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
      */
-    final boolean methodIsAvailable(
-        String className,
-        String methodName,
-        Class[] params) {
-    	
-        try {
-        	
-            Class clazz = Class.forName(className);
-            if (clazz.getMethod(methodName, params) !=null) {
-                return true;
-            }
-            return false;
-        } catch (Throwable t) {
-        }
-        return false;
-    }
+    final boolean methodIsAvailable(String className, String methodName,
+			Class[] params) {
+		return getMethod(className, methodName, params) != null;
+	}
     
     public static Object invoke (Class clazz, String methodName, Class[] paramClasses, Object[] params){
         return invoke(clazz.getName(), methodName, paramClasses, params, null);
@@ -82,30 +73,44 @@ class JDKReflect extends JDK {
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
      */
-    public static Object invoke (String className, String methodName, Class[] paramClasses, Object[] params, Object onObject){
-        try {
-                Method method = getMethod(className, methodName, paramClasses);
-                return method.invoke(onObject, params);
-            } catch (Throwable t) {
-            }
-        return null;
-    }
+    public static Object invoke(String className, String methodName,
+			Class[] paramClasses, Object[] params, Object onObject) {
+		Method method = getMethod(className, methodName, paramClasses);
+		if(method == null) {
+			return null;
+		}
+		try {
+			return method.invoke(onObject, params);
+		} catch (IllegalArgumentException e) {
+			// e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// e.printStackTrace();
+		}
+		return null;
+	}
 
     /**
-     * calling this "method" will break C# conversion with the old converter
-     * 
-     * use for system classes only, since not ClassLoader
-     * or Reflector-aware
-     */
-    public static Method getMethod(String className, String methodName, Class[] paramClasses) {
-        try {
-            Class clazz = Class.forName(className);
-            Method method = clazz.getMethod(methodName, paramClasses);
-            return method;
-        } catch (Throwable t) {
-        }
-        return null;
-    }
+	 * calling this "method" will break C# conversion with the old converter
+	 * 
+	 * use for system classes only, since not ClassLoader or Reflector-aware
+	 */
+    public static Method getMethod(String className, String methodName,
+			Class[] paramClasses) {
+		Class clazz = ReflectPlatform.forName(className);
+		if (clazz == null) {
+			return null;
+		}
+		try {
+			return clazz.getMethod(methodName, paramClasses);
+		} catch (SecurityException e) {
+			// e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// e.printStackTrace();
+		}
+		return null;
+	}
     
     public void registerCollections(GenericReflector reflector) {
         if(! Deploy.csharp){
