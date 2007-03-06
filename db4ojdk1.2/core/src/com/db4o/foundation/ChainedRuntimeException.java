@@ -16,6 +16,6 @@ public abstract class ChainedRuntimeException extends RuntimeException {
 	}
 	
 	public ChainedRuntimeException(String msg, Throwable cause) {
-		this(msg);
+		super(msg, cause);
 	}
 }
