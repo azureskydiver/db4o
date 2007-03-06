@@ -18,10 +18,9 @@ public class MObjectByUuid extends MsgD {
 		Transaction trans = transaction();
 		synchronized (streamLock()) {
 			try {
-			    Object[] arr = trans.objectAndYapObjectBySignature(uuid, signature);
-			    if(arr[1] != null){
-			        ObjectReference yo = (ObjectReference)arr[1];
-			        id = yo.getID();
+				HardObjectReference hardRef = trans.getHardReferenceBySignature(uuid, signature);
+			    if(hardRef._reference != null){
+			        id = hardRef._reference.getID();
 			    }
 			} catch (Exception e) {
 			    if(Deploy.debug){

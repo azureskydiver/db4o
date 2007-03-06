@@ -203,7 +203,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (obj != null) {
             Object oldObject = getByID(id);
             if (oldObject != null) {
-                ObjectReference yo = getYapObject(intID);
+                ObjectReference yo = referenceForId(intID);
                 if (yo != null) {
                     if (ta.reflector().forObject(obj) == yo.getYapClass().classReflector()) {
                         bind2(yo, obj);
@@ -404,7 +404,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	return null;
         }
         Db4oDatabase database = (Db4oDatabase) obj;
-        if (getYapObject(obj) != null) {
+        if (referenceForObject(obj) != null) {
             return database;
         }
         showInternalClasses(true);
@@ -465,7 +465,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (obj == null) {
         	return;
         }
-        ObjectReference ref = getYapObject(obj);
+        ObjectReference ref = referenceForObject(obj);
         if(ref == null){
         	return;
         }
@@ -565,7 +565,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     private Object descend1(Transaction trans, Object obj, String[] path){
-        ObjectReference yo = getYapObject(obj);
+        ObjectReference yo = referenceForObject(obj);
         if(yo == null){
             return null;
         }
@@ -735,7 +735,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     final Object getByID2(Transaction ta, int a_id) {
         if (a_id > 0) {
-            Object obj = objectForIDFromCache(a_id);
+            Object obj = objectForIdFromCache(a_id);
             if(obj != null){
                 
                 // Take care about handling the returned candidate reference.
@@ -755,7 +755,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final Object getActivatedObjectFromCache(Transaction ta, int id){
-        Object obj = objectForIDFromCache(id);
+        Object obj = objectForIdFromCache(id);
         if(obj == null){
             return null;
         }
@@ -785,10 +785,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 return null;
             }
             Transaction ta = checkTransaction(null);
-            Object[] arr = ta.objectAndYapObjectBySignature(
+            HardObjectReference hardRef = ta.getHardReferenceBySignature(
             					uuid.getLongPart(),
             					uuid.getSignaturePart());
-            return arr[0]; 
+            return hardRef._object; 
         }
     }
 
@@ -805,7 +805,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return 0;
         }
 
-        ObjectReference yo = getYapObject(obj);
+        ObjectReference yo = referenceForObject(obj);
         if (yo != null) {
             return yo.getID();
         }
@@ -814,50 +814,41 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public ObjectInfo getObjectInfo(Object obj){
         synchronized(i_lock){
-            return getYapObject(obj);
+            return referenceForObject(obj);
         }
     }
 
-    public final Object[] getObjectAndYapObjectByID(Transaction ta, int a_id) {
-        Object[] arr = new Object[2];
-        if (a_id > 0) {
-            ObjectReference yo = getYapObject(a_id);
-            if (yo != null) {
-
-                // Take care about handling the returned candidate reference.
-                // If you loose the reference, weak reference management might also.
-
-                Object candidate = yo.getObject();
-                if (candidate != null) {
-                    arr[0] = candidate;
-                    arr[1] = yo;
-                    return arr;
-                }
-                removeReference(yo);
-            }
-            try {
-                yo = new ObjectReference(a_id);
-                arr[0] = yo.read(ta, null, null, 0, Const4.ADD_TO_ID_TREE, true);
-                
-                if(arr[0] == null){
-                    return arr;
-                }
-                
-                // check class creation side effect and simply retry recursively
-                // if it hits:
-                if(arr[0] != yo.getObject()){
-                    return getObjectAndYapObjectByID(ta, a_id);
-                }
-                
-                arr[1] = yo;
-                
-            } catch (Throwable t) {
-                if (Debug.atHome) {
-                    t.printStackTrace();
-                }
-            }
+    public final HardObjectReference getHardObjectReferenceById(Transaction trans, int id) {
+        if (id <= 0) {
+        	return HardObjectReference.INVALID;
         }
-        return arr;
+        	
+        ObjectReference ref = referenceForId(id);
+        if (ref != null) {
+
+            // Take care about handling the returned candidate reference.
+            // If you loose the reference, weak reference management might also.
+
+            Object candidate = ref.getObject();
+            if (candidate != null) {
+            	return new HardObjectReference(ref, candidate);
+            }
+            removeReference(ref);
+        }
+        ref = new ObjectReference(id);
+        Object readObject = ref.read(trans, null, null, 0, Const4.ADD_TO_ID_TREE, true);
+        
+        if(readObject == null){
+            return HardObjectReference.INVALID;
+        }
+        
+        // check class creation side effect and simply retry recursively
+        // if it hits:
+        if(readObject != ref.getObject()){
+            return getHardObjectReferenceById(trans, id);
+        }
+        
+        return new HardObjectReference(ref, readObject);
     }
 
     public final StatefulBuffer getWriter(Transaction a_trans, int a_address, int a_length) {
@@ -876,7 +867,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final ClassMetadata getYapClass(ReflectClass claxx){
-    	if(cantGetYapClass(claxx)){
+    	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
         ClassMetadata yc = i_handlers.getYapClassStatic(claxx);
@@ -889,7 +880,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     // TODO: Some ReflectClass implementations could hold a 
     // reference to YapClass to improve lookup performance here.
     public final ClassMetadata produceYapClass(ReflectClass claxx) {
-    	if(cantGetYapClass(claxx)){
+    	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
         ClassMetadata yc = i_handlers.getYapClassStatic(claxx);
@@ -911,7 +902,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      * is not done on purpose
      */
     final ClassMetadata getActiveYapClass(ReflectClass claxx) {
-    	if(cantGetYapClass(claxx)){
+    	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
         ClassMetadata yc = i_handlers.getYapClassStatic(claxx);
@@ -921,7 +912,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return _classCollection.getActiveYapClass(claxx);
     }
     
-    private final boolean cantGetYapClass(ReflectClass claxx){
+    private final boolean cantGetClassMetadata(ReflectClass claxx){
         if (claxx == null) {
             return true;
         }
@@ -945,23 +936,23 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return _classCollection.getYapClass(id);
     }
     
-    public Object objectForIDFromCache(int id){
-        ObjectReference yo = getYapObject(id);
-        if (yo == null) {
+    public Object objectForIdFromCache(int id){
+        ObjectReference ref = referenceForId(id);
+        if (ref == null) {
             return null;
         }
-        Object candidate = yo.getObject();
+        Object candidate = ref.getObject();
         if(candidate == null){
-            removeReference(yo);
+            removeReference(ref);
         }
         return candidate;
     }
 
-    public final ObjectReference getYapObject(int id) {
+    public final ObjectReference referenceForId(int id) {
     	return _referenceSystem.referenceForId(id);
     }
 
-    public final ObjectReference getYapObject(Object obj) {
+    public final ObjectReference referenceForObject(Object obj) {
     	return _referenceSystem.referenceForObject(obj);
     }
     
@@ -1066,7 +1057,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     final boolean isActive1(Object obj) {
         checkClosed();
         if (obj != null) {
-            ObjectReference yo = getYapObject(obj);
+            ObjectReference yo = referenceForObject(obj);
             if (yo != null) {
                 return yo.isActive();
             }
@@ -1076,7 +1067,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public boolean isCached(long a_id) {
         synchronized (i_lock) {
-            return objectForIDFromCache((int)a_id) != null;
+            return objectForIdFromCache((int)a_id) != null;
         }
     }
 
@@ -1114,7 +1105,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (obj == null) {
             return false;
         }
-        ObjectReference yo = getYapObject(obj);
+        ObjectReference yo = referenceForObject(obj);
         if (yo == null) {
             return false;
         }
@@ -1217,7 +1208,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 Transaction ta = committed ? i_systemTrans
                     : checkTransaction(null);
                 Object cloned = null;
-                ObjectReference yo = getYapObject(obj);
+                ObjectReference yo = referenceForObject(obj);
                 if (yo != null) {
                     cloned = peekPersisted1(ta, yo.getID(), depth);
                 }
@@ -1279,7 +1270,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return;
         }
         
-        ObjectReference ref = getYapObject(obj);
+        ObjectReference ref = referenceForObject(obj);
         if (ref != null) {
             removeReference(ref);
         }
@@ -1490,7 +1481,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return 0;
         }
         
-        ObjectReference reference = getYapObject(obj);
+        ObjectReference reference = referenceForObject(obj);
         if(reference != null  && handledInCurrentTopLevelCall(reference)){
         	return reference.getID();
         }
@@ -1665,7 +1656,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
         
         ClassMetadata yc = null;
-        ObjectReference ref = getYapObject(obj);
+        ObjectReference ref = referenceForObject(obj);
         if (ref == null) {
         	
             ReflectClass claxx = reflector().forObject(obj);
@@ -1688,7 +1679,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 // in a static variable somewhere ( often: Enums) that gets
                 // stored or associated on initialization of the YapClass.
                 
-                ref = getYapObject(obj);
+                ref = referenceForObject(obj);
                 
             }
             
@@ -1794,7 +1785,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	return still;
         }
         
-        ObjectReference ref = getYapObject(obj);
+        ObjectReference ref = referenceForObject(obj);
         if (ref != null) {
         	if(handledInCurrentTopLevelCall(ref)){
         		return still;

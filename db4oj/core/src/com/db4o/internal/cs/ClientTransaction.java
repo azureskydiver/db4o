@@ -62,7 +62,7 @@ final class ClientTransaction extends Transaction {
         return res == 1;
     }
     
-    public Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
+    public final HardObjectReference getHardReferenceBySignature(final long a_uuid, final byte[] a_signature) {
         int messageLength = Const4.LONG_LENGTH + Const4.INT_LENGTH + a_signature.length;
         MsgD message = Msg.OBJECT_BY_UUID.getWriterForLength(this, messageLength);
         message.writeLong(a_uuid);
@@ -71,9 +71,9 @@ final class ClientTransaction extends Transaction {
         message = (MsgD)i_client.expectedResponse(Msg.OBJECT_BY_UUID);
         int id = message.readInt();
         if(id > 0){
-            return stream().getObjectAndYapObjectByID(this, id);
+            return stream().getHardObjectReferenceById(this, id);
         }
-        return new Object[2];
+        return HardObjectReference.INVALID;
     }
     
     

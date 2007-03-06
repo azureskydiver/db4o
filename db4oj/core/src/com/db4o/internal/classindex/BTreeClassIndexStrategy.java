@@ -61,7 +61,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         _btreeIndex.setRemoveListener(new Visitor4() {
             public void visit(Object obj) {
                 int id = ((Integer)obj).intValue();
-                ObjectReference yo = stream.getYapObject(id);
+                ObjectReference yo = stream.referenceForId(id);
                 if (yo != null) {
                     stream.removeReference(yo);
                 }

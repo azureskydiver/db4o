@@ -75,7 +75,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
             public void visit(Object a_object) {
                 int id = idFromValue(a_object);
                 final ObjectContainerBase stream = transaction.stream();
-				ObjectReference yo = stream.getYapObject(id);
+				ObjectReference yo = stream.referenceForId(id);
                 if (yo != null) {
                     stream.removeReference(yo);
                 }

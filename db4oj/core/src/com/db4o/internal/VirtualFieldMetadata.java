@@ -115,7 +115,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
                     if(mgc != null){
                         migrateYapObject = mgc.referenceFor(obj);
                         if(migrateYapObject == null){
-                            migrateYapObject = mgc.peer(stream).getYapObject(obj);
+                            migrateYapObject = mgc.peer(stream).referenceForObject(obj);
                         }
                     }
                     if (migrateYapObject != null){

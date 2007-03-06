@@ -241,9 +241,9 @@ public abstract class Transaction {
         yapClass.index().add(this, a_id);
     }    
     
-    public Object[] objectAndYapObjectBySignature(final long a_uuid, final byte[] a_signature) {
+    public HardObjectReference getHardReferenceBySignature(final long a_uuid, final byte[] a_signature) {
         checkSynchronization();  
-        return stream().getUUIDIndex().objectAndYapObjectBySignature(this, a_uuid, a_signature);
+        return stream().getUUIDIndex().getHardObjectReferenceBySignature(this, a_uuid, a_signature);
     }
     
 	public abstract void processDeletes();    

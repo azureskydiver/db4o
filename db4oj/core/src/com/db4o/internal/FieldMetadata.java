@@ -420,7 +420,7 @@ public class FieldMetadata implements StoredField {
             if (stream != null) {
                 synchronized (stream.i_lock) {
                     stream.checkClosed();
-                    ObjectReference yo = stream.getYapObject(a_onObject);
+                    ObjectReference yo = stream.referenceForObject(a_onObject);
                     if (yo != null) {
                         int id = yo.getID();
                         if (id > 0) {

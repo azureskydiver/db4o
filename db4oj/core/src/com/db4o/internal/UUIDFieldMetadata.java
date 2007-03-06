@@ -208,31 +208,29 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         writer.writeLong(0);
     }
 
-	public Object[] objectAndYapObjectBySignature(final Transaction transaction, final long longPart, final byte[] signature) {
+	public final HardObjectReference getHardObjectReferenceBySignature(final Transaction transaction, final long longPart, final byte[] signature) {
 		final BTreeRange range = search(transaction, new Long(longPart));		
 		final Iterator4 keys = range.keys();
 		while (keys.moveNext()) {
 			final FieldIndexKey current = (FieldIndexKey) keys.current();
-			final Object[] objectAndYapObject = getObjectAndYapObjectByID(transaction, current.parentID(), signature);
-			if (null != objectAndYapObject) {
-				return objectAndYapObject;
+			final HardObjectReference hardRef = getHardObjectReferenceById(transaction, current.parentID(), signature);
+			if (null != hardRef) {
+				return hardRef;
 			}
 		}
-		return new Object[2];
+		return HardObjectReference.INVALID;
 	}
 
-	protected Object[] getObjectAndYapObjectByID(Transaction transaction, int parentId, byte[] signature) {
-		Object[] arr = transaction.stream().getObjectAndYapObjectByID(
-        		transaction, parentId);
-        if (arr[1] == null) {
+	protected final HardObjectReference getHardObjectReferenceById(Transaction transaction, int parentId, byte[] signature) {
+		HardObjectReference hardRef = transaction.stream().getHardObjectReferenceById(transaction, parentId);
+        if (hardRef._reference == null) {
         	return null;
         }
-        ObjectReference yod = (ObjectReference) arr[1];
-        VirtualAttributes vad = yod.virtualAttributes(transaction);
+        VirtualAttributes vad = hardRef._reference.virtualAttributes(transaction);
         if (!Arrays4.areEqual(signature, vad.i_database.i_signature)) {
             return null;
         }
-        return arr;
+        return hardRef;
 	}
  
 	public void defragField(MarshallerFamily mf, ReaderPair readers) {

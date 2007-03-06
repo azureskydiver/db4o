@@ -588,7 +588,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
                 }
             }
 
-            ObjectReference yo = stream.getYapObject(a_id);
+            ObjectReference yo = stream.referenceForId(a_id);
             if (yo != null) {
                 a_bytes.getStream().delete2(a_bytes.getTransaction(), yo, obj,cascade, false);
             }
@@ -1312,7 +1312,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
                 // them every time ???
 
                 
-                ObjectReference yo = stream.getYapObject(id);
+                ObjectReference yo = stream.referenceForId(id);
                 if (yo != null) {
                     Object obj = yo.getObject();
                     if(obj == null){
