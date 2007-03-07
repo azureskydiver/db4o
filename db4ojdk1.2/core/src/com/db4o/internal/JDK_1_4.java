@@ -48,11 +48,7 @@ class JDK_1_4 extends JDK_1_3 {
 	            return null;
 	        }
 	    }
-	    try{
-	        return (Constructor) factoryMethod.invoke(reflectionFactory, new Object[]{clazz, objectConstructor});
-	    }catch(Exception e){
-	    }
-	    return null;
+	    return (Constructor) invoke(new Object[]{clazz, objectConstructor}, reflectionFactory, factoryMethod);
 	}
 	
 	boolean initSerializableConstructor(){
