@@ -215,73 +215,68 @@ public final class HandlerRegistry {
         }
         
         if (_masterStream.reflector().constructorCallsSupported()) {
-            try {
-                
-                ReflectConstructor[] constructors = claxx.getDeclaredConstructors();
-                
-                Tree sortedConstructors = null;
-                
-                // sort constructors by parameter count  
-                for (int i = 0; i < constructors.length; i++) {
-                    try{
-                        constructors[i].setAccessible();
-                        int parameterCount =  constructors[i].getParameterTypes().length;
-                        sortedConstructors = Tree.add(sortedConstructors, new TreeIntObject(i+constructors.length*parameterCount, constructors[i]));
-                    } catch (Exception e) {
-                        if(Debug.atHome){
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                
-                // call zero-arg constructors first
-                final boolean[] foundConstructor={false};
-                if(sortedConstructors != null){
-                    final TypeHandler4[] handlers = i_handlers;
-                    sortedConstructors.traverse(new Visitor4() {
-                        public void visit(Object a_object) {
-                            if(! foundConstructor[0]) {
-	                            ReflectConstructor constructor = (ReflectConstructor)((TreeIntObject)a_object)._object;
-	                            try {
-	                                ReflectClass[] pTypes = constructor.getParameterTypes();
-	                                Object[] parms = new Object[pTypes.length];
-	                                for (int j = 0; j < parms.length; j++) {
-	                                    for (int k = 0; k < PRIMITIVECOUNT; k++) {
-	                                        if (pTypes[j].equals(handlers[k].primitiveClassReflector())) {
-	                                            parms[j] = ((PrimitiveHandler) handlers[k])
-	                                                .primitiveNull();
-	                                            break;
-	                                        }
-	                                    }
-	                                }
-	                                Object res = constructor.newInstance(parms);
-	                                if (res != null) {
-	                                    foundConstructor[0] = true;
-                                        claxx.useConstructor(constructor, parms);
-	                                }
-	                            } catch (Throwable t) {
-	                                if(Debug.atHome){
-	                                    t.printStackTrace();
-	                                }
-	                            }
-                            }
-                        }
-                    });
-                    
-                }
-                if(foundConstructor[0]){
-                    return true;
-                }
-                
-            } catch (Throwable t1) {
-                if(Debug.atHome){
-                    t1.printStackTrace();
-                }
+			Tree sortedConstructors = sortConstructorsByParamsCount(claxx);
+			return findConstructor(claxx, sortedConstructors);
+		}
+		return false;
+	}
 
-            }
-        }
-        return false;
-    }
+	private boolean findConstructor(final ReflectClass claxx,
+			Tree sortedConstructors) {
+		if (sortedConstructors == null) {
+			return false;
+		}
+		final boolean[] foundConstructor = { false };
+		final TypeHandler4[] handlers = i_handlers;
+		//TODO: use Iterator4 instead of traverse.
+		sortedConstructors.traverse(new Visitor4() {
+			public void visit(Object a_object) {
+				if (!foundConstructor[0]) {
+					ReflectConstructor constructor = (ReflectConstructor) ((TreeIntObject) a_object)._object;
+					ReflectClass[] pTypes = constructor.getParameterTypes();
+					Object[] params = new Object[pTypes.length];
+					for (int j = 0; j < params.length; j++) {
+						for (int k = 0; k < PRIMITIVECOUNT; k++) {
+							if (pTypes[j].equals(handlers[k]
+									.primitiveClassReflector())) {
+								params[j] = ((PrimitiveHandler) handlers[k])
+										.primitiveNull();
+								break;
+							}
+						}
+					}
+					Object res = constructor.newInstance(params);
+					if (res != null) {
+						foundConstructor[0] = true;
+						claxx.useConstructor(constructor, params);
+					}
+				}
+			}
+		});
+		return foundConstructor[0];
+	}
+
+	private Tree sortConstructorsByParamsCount(final ReflectClass claxx) {
+		ReflectConstructor[] constructors = claxx.getDeclaredConstructors();
+
+		Tree sortedConstructors = null;
+
+		// sort constructors by parameter count
+		for (int i = 0; i < constructors.length; i++) {
+			try {
+				constructors[i].setAccessible();
+				int parameterCount = constructors[i].getParameterTypes().length;
+				sortedConstructors = Tree.add(sortedConstructors,
+						new TreeIntObject(i + constructors.length
+								* parameterCount, constructors[i]));
+			} catch (SecurityException e) {
+				if (Debug.atHome) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return sortedConstructors;
+	}
     
 	public final void decrypt(Buffer reader) {
 	    if(i_encrypt){
