@@ -3,18 +3,19 @@
 package com.db4o.test.util;
 
 import java.net.*;
-import java.util.*;
+
+import com.db4o.foundation.*;
 
 public class ExcludingClassLoader extends URLClassLoader {
-	private Vector excludedNames;
+	private Collection4 _excludedNames;
 	
-	public ExcludingClassLoader(ClassLoader parent,Vector excludedNames) {
+	public ExcludingClassLoader(ClassLoader parent,Collection4 excludedNames) {
 		super(new URL[]{},parent);
-		this.excludedNames=excludedNames;
+		this._excludedNames=excludedNames;
 	}
-	
+
 	protected synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
-		if(excludedNames.contains(name)) {
+		if(_excludedNames.contains(name)) {
 			throw new ClassNotFoundException(name);
 		}
 		return super.loadClass(name, resolve);
@@ -23,7 +24,7 @@ public class ExcludingClassLoader extends URLClassLoader {
 	public static void main(String[] args) throws Exception {
 		ClassLoader parent=ExcludingClassLoader.class.getClassLoader();
 		String excName=ExcludingClassLoader.class.getName();
-		Vector excluded=new Vector();
+		Collection4 excluded=new Collection4();
 		ClassLoader incLoader=new ExcludingClassLoader(parent,excluded);
 		System.out.println(incLoader.loadClass(excName));
 		excluded.add(excName);

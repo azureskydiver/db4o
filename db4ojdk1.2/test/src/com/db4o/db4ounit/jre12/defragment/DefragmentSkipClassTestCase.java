@@ -3,10 +3,10 @@
 package com.db4o.db4ounit.jre12.defragment;
 
 import java.io.*;
-import java.util.*;
 
 import com.db4o.db4ounit.common.defragment.*;
 import com.db4o.defragment.*;
+import com.db4o.foundation.*;
 import com.db4o.test.util.*;
 
 import db4ounit.*;
@@ -28,7 +28,7 @@ public class DefragmentSkipClassTestCase implements TestLifeCycle {
 		SlotDefragmentFixture.assertDataClassKnown(true);
 
 		defragConfig = SlotDefragmentFixture.defragConfig(true);
-		Vector excluded=new Vector();
+		Collection4 excluded=new Collection4();
 		excluded.add(SlotDefragmentFixture.Data.class.getName());
 		ExcludingClassLoader loader=new ExcludingClassLoader(getClass().getClassLoader(),excluded);
 		defragConfig.storedClassFilter(new AvailableClassFilter(loader));
