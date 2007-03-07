@@ -7,18 +7,18 @@ import db4ounit.*;
 public class PermutingTestConfigTestCase implements TestCase {
 
 	public void testPermutation() {
-		Object[][] data={
-				{"A","B"},
-				{"X","Y","Z"},
+		Object[][] data= new Object[][] {
+				new Object[] {"A","B"},
+				new Object[] {"X","Y","Z"},
 		};
 		final PermutingTestConfig config=new PermutingTestConfig(data);
-		Object[][] expected={
-				{"A","X"},	
-				{"A","Y"},	
-				{"A","Z"},	
-				{"B","X"},	
-				{"B","Y"},	
-				{"B","Z"},	
+		Object[][] expected= new Object[][] {
+				new Object[] {"A","X"},	
+				new Object[] {"A","Y"},	
+				new Object[] {"A","Z"},	
+				new Object[] {"B","X"},	
+				new Object[] {"B","Y"},	
+				new Object[] {"B","Z"},	
 		};
 		for (int groupIdx = 0; groupIdx < expected.length; groupIdx++) {
 			Assert.isTrue(config.moveNext());
