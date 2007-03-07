@@ -28,7 +28,7 @@ public class ReflectPlatform {
 		return createInstance(clazz);
 	}
 
-	private static Object createInstance(Class clazz) {
+	public static Object createInstance(Class clazz) {
 		if (clazz == null) {
 			return null;
 		}
