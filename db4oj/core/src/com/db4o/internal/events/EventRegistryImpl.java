@@ -2,10 +2,9 @@
 
 package com.db4o.internal.events;
 
-import com.db4o.events.Event4;
-import com.db4o.events.EventRegistry;
-import com.db4o.ext.ObjectInfo;
-import com.db4o.internal.callbacks.*;
+import com.db4o.events.*;
+import com.db4o.ext.ObjectInfoCollection;
+import com.db4o.internal.callbacks.Callbacks;
 import com.db4o.query.Query;
 
 /**
@@ -76,8 +75,8 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		EventPlatform.triggerObjectEvent(_deactivated, obj);
 	}
 	
-	public void commitOnStarted(ObjectInfo[] added) {
-		EventPlatform.triggerCommitEvent(_committing, added);
+	public void commitOnStarted(ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
+		EventPlatform.triggerCommitEvent(_committing, added, deleted, updated);
 	}
 
 	public Event4 queryFinished() {

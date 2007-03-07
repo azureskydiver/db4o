@@ -3,39 +3,23 @@
 package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.config.Configuration;
-import com.db4o.config.Entry;
-import com.db4o.config.QueryEvaluationMode;
-import com.db4o.ext.Db4oDatabase;
-import com.db4o.ext.Db4oException;
-import com.db4o.ext.Db4oUUID;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.ext.MemoryFile;
-import com.db4o.ext.ObjectInfo;
-import com.db4o.ext.ObjectNotStorableException;
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.SystemInfo;
+import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.callbacks.*;
-import com.db4o.internal.cs.*;
-import com.db4o.internal.handlers.*;
-import com.db4o.internal.marshall.*;
+import com.db4o.internal.callbacks.Callbacks;
+import com.db4o.internal.cs.ClassInfoHelper;
+import com.db4o.internal.handlers.ArrayHandler;
+import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.internal.query.*;
-import com.db4o.internal.query.processor.*;
+import com.db4o.internal.query.processor.QQuery;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.replication.*;
 import com.db4o.io.UncheckedIOException;
-import com.db4o.query.Predicate;
-import com.db4o.query.Query;
-import com.db4o.query.QueryComparator;
+import com.db4o.query.*;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.generic.GenericReflector;
-import com.db4o.replication.ReplicationConflictHandler;
-import com.db4o.replication.ReplicationProcess;
-import com.db4o.types.Db4oCollections;
-import com.db4o.types.Db4oType;
-import com.db4o.types.SecondClass;
-import com.db4o.types.TransientClass;
+import com.db4o.replication.*;
+import com.db4o.types.*;
 
 
 /**
@@ -345,19 +329,44 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
 	private void triggerCommitOnStarted() {
-    	callbacks().commitOnStarted(getAddedReferences());
+    	callbacks().commitOnStarted(getAddedReferences(), getDeletedReferences(), getUpdatedReferences());
 	}
 
-	private ObjectInfo[] getAddedReferences() {
+	private static final class ObjectInfoCollectionImpl implements ObjectInfoCollection {
+		
+		public static final ObjectInfoCollection EMPTY = new ObjectInfoCollectionImpl(Iterators.EMPTY_ITERABLE);
+		
+		private final Iterable4 _collection;
+
+		public ObjectInfoCollectionImpl(Iterable4 collection) {
+			_collection = collection;
+		}
+
+		public Iterator4 iterator() {
+			return _collection.iterator();
+		}
+		
+	}
+
+	private ObjectInfoCollection getDeletedReferences() {
+		return ObjectInfoCollectionImpl.EMPTY;
+	}
+
+	private ObjectInfoCollection getAddedReferences() {
 		final Collection4 references = new Collection4();
 		_referenceSystem.traveseNewReferences(new Visitor4() {
 			public void visit(Object obj) {
 				references.add(obj);
 			}
 		});
-		return (ObjectInfo[]) references.toArray(new ObjectInfo[references.size()]);
+		return new ObjectInfoCollectionImpl(references);
 	}
 	
+	private ObjectInfoCollection getUpdatedReferences() {
+		return ObjectInfoCollectionImpl.EMPTY;
+	}
+
+
 	public abstract void commit1();
 
     public Configuration configure() {

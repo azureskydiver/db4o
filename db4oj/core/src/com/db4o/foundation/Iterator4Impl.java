@@ -8,8 +8,6 @@ package  com.db4o.foundation;
  */
 public class Iterator4Impl implements Iterator4 {
 	
-    public static final Iterator4 EMPTY = new Iterator4Impl(null);
-    
     private List4 _first;
     private List4 _next;
 	

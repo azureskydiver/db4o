@@ -211,7 +211,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 */
 	public final Iterator4 iterator() {
 		return _first == null
-			? Iterator4Impl.EMPTY
+			? Iterators.EMPTY_ITERATOR
 			: new Collection4Iterator(this, _first);
 	}
 
