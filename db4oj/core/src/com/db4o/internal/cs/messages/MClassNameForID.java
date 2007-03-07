@@ -2,9 +2,8 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.*;
-import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
+import com.db4o.internal.ClassMetadata;
+import com.db4o.internal.cs.ServerMessageDispatcher;
 
 
 /**
@@ -14,20 +13,12 @@ final class MClassNameForID extends MsgD{
     public final boolean processAtServer(ServerMessageDispatcher serverThread) {
         int id = _payLoad.readInt();
         String name = "";
-        // FIXME: CS access through method
         synchronized (streamLock()) {
-            try {
-                ClassMetadata yapClass = stream().getYapClass(id);
-                if(yapClass != null){
-                    name = yapClass.getName();
-                }
-                
-            } catch (Throwable t) {
-                if (Deploy.debug) {
-                    System.out.println("MClassNameForID failed");
-                }
-            }
-        }
+			ClassMetadata yapClass = stream().getYapClass(id);
+			if (yapClass != null) {
+				name = yapClass.getName();
+			}
+		}
         serverThread.write(Msg.CLASS_NAME_FOR_ID.getWriterForString(transaction(), name));
         return true;
     }
