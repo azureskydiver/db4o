@@ -3,17 +3,15 @@
 package com.db4o.db4ounit.jre11.events;
 
 import com.db4o.events.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.query.Query;
 
-import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.OptOutCS;
 
 /**
  * @exclude
  */
-public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
+public class LocalCommitTimeCallbacksTestCase extends AbstractDb4oTestCase implements OptOutCS {
 
 	private static final Item[] NONE = new Item[0];
 
@@ -21,7 +19,7 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommitTimeCallbacksTestCase().runSolo();
+		new LocalCommitTimeCallbacksTestCase().runSolo();
 	}
 
 	
@@ -67,7 +65,7 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 		assertCommittingEvent(new Item[] { item4, item5 }, NONE, NONE);
 	}
 	
-	public void _testCommittingAddedDeleted() {
+	public void testCommittingAddedDeleted() {
 		
 		final Item item4 = new Item(4);
 		final Item item1 = getItem(1);
@@ -79,7 +77,7 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 		db().commit();
 		assertCommittingEvent(new Item[] { item4 }, new Item[] { item1, item2 }, NONE);
 	}
-
+	
 	private Item getItem(int id) {
 		final Query query = newQuery(Item.class);
 		query.descend("id").constrain(new Integer(id));
@@ -91,16 +89,11 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 			final Item[] expectedDeleted,
 			final Item[] expectedUpdated) {
 		
-		Assert.areEqual(1, _eventRecorder.size());
-		Assert.areSame(committing(), _eventRecorder.get(0).e);
-		CommitEventArgs args = (CommitEventArgs)_eventRecorder.get(0).args;
-		assertContainsAll(expectedAdded, args.added());
-		assertContainsAll(expectedDeleted, args.deleted());
-		assertContainsAll(expectedUpdated, args.updated());
+		EventAssert.assertCommitEvent(_eventRecorder, committing(), expectedAdded, expectedDeleted, expectedUpdated);
 	}
 
 	private void assertNoEvents() {
-		Assert.areEqual(0, _eventRecorder.size());
+		EventAssert.assertNoEvents(_eventRecorder);
 	}
 
 	private Event4 committing() {
@@ -110,23 +103,4 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 	private EventRegistry eventRegistry() {
 		return EventRegistryFactory.forObjectContainer(db());
 	}
-	
-	private void assertContainsAll(Item[] expectedItems, ObjectInfoCollection actualItems) {
-		for (int i = 0; i < expectedItems.length; i++) {
-			assertContains(expectedItems[i], actualItems);
-		}
-		Assert.areEqual(expectedItems.length, Iterators.size(actualItems));
-	}
-
-	private void assertContains(Item expectedItem, ObjectInfoCollection items) {
-		final Iterator4 iterator = items.iterator();
-		while (iterator.moveNext()) {
-			ObjectInfo info = (ObjectInfo)iterator.current();
-			if (expectedItem == info.getObject()) {
-				return;
-			}
-		}
-		Assert.fail("Object '" + expectedItem + "' not found.");
-	}
-
 }

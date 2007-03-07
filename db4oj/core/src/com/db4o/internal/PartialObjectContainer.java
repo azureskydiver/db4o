@@ -318,8 +318,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 DTrace.COMMIT.log();
             }
             beginTopLevelCall();
-            try{
-            	triggerCommitOnStarted();
+            try{            	
             	commit1();
             	_referenceSystem.commit();
             }finally{
@@ -327,45 +326,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             }
         }
     }
-
-	private void triggerCommitOnStarted() {
-    	callbacks().commitOnStarted(getAddedReferences(), getDeletedReferences(), getUpdatedReferences());
-	}
-
-	private static final class ObjectInfoCollectionImpl implements ObjectInfoCollection {
-		
-		public static final ObjectInfoCollection EMPTY = new ObjectInfoCollectionImpl(Iterators.EMPTY_ITERABLE);
-		
-		private final Iterable4 _collection;
-
-		public ObjectInfoCollectionImpl(Iterable4 collection) {
-			_collection = collection;
-		}
-
-		public Iterator4 iterator() {
-			return _collection.iterator();
-		}
-		
-	}
-
-	private ObjectInfoCollection getDeletedReferences() {
-		return ObjectInfoCollectionImpl.EMPTY;
-	}
-
-	private ObjectInfoCollection getAddedReferences() {
-		final Collection4 references = new Collection4();
-		_referenceSystem.traveseNewReferences(new Visitor4() {
-			public void visit(Object obj) {
-				references.add(obj);
-			}
-		});
-		return new ObjectInfoCollectionImpl(references);
-	}
-	
-	private ObjectInfoCollection getUpdatedReferences() {
-		return ObjectInfoCollectionImpl.EMPTY;
-	}
-
 
 	public abstract void commit1();
 

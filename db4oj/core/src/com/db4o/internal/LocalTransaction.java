@@ -3,15 +3,19 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.ext.ObjectInfoCollection;
 import com.db4o.foundation.*;
-import com.db4o.internal.marshall.*;
+import com.db4o.internal.marshall.ObjectHeader;
 import com.db4o.internal.slots.*;
-
 
 /**
  * @exclude
  */
 public class LocalTransaction extends Transaction {
+
+    private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
+    
+    private int i_address;	// only used to pass address to Thread
 	
 	private Tree _slotChanges;
 
@@ -19,21 +23,87 @@ public class LocalTransaction extends Transaction {
 		super(a_stream, a_parent);
 	}
 	
+    public void commit() {
+        synchronized (stream().i_lock) {
+        	triggerCommitOnStarted();
+            i_file.freeSpaceBeginCommit();
+            commitExceptForFreespace();
+            i_file.freeSpaceEndCommit();
+        }
+    }
+    
+	private void commitExceptForFreespace(){
+        
+        if(DTrace.enabled){
+            boolean systemTrans = (i_parentTransaction == null);
+            DTrace.TRANS_COMMIT.logInfo( "server == " + stream().isServer() + ", systemtrans == " +  systemTrans);
+        }
+        
+        commit2Listeners();
+        
+        commit3Stream();
+        
+        commit4FieldIndexes();
+        
+        commitParticipants();
+        
+        stream().writeDirty();
+        
+        commit6WriteChanges();
+        
+        freeOnCommit();
+        
+        commit7ClearAll();
+    }
+	
+	private void commit2Listeners(){
+        commitParentListeners(); 
+        commitTransactionListeners();
+    }
+
+	private void commitParentListeners() {
+		if (i_parentTransaction != null) {
+            parentLocalTransaction().commit2Listeners();
+        }
+	}
+    
+    private void commit3Stream(){
+        stream().checkNeededUpdates();
+        stream().writeDirty();
+        stream().classCollection().write(stream().getSystemTransaction());
+    }
+    
+	private LocalTransaction parentLocalTransaction() {
+		return (LocalTransaction) i_parentTransaction;
+	}
+    
+	private void commit7ClearAll(){
+        commit7ParentClearAll();
+        clearAll();
+    }
+
+	private void commit7ParentClearAll() {
+		if(i_parentTransaction != null){
+            parentLocalTransaction().commit7ClearAll();
+        }
+	}
+
+	
 	protected void clearAll() {
 		_slotChanges = null;
 		super.clearAll();
 	}
 	
 	protected void rollbackSlotChanges() {
-		if(_slotChanges != null){
-		    _slotChanges.traverse(new Visitor4() {
-		        public void visit(Object a_object) {
-		            ((SlotChange)a_object).rollback(i_file);
-		        }
-		    });
+		if(_slotChanges != null) {
+			_slotChanges.traverse(new Visitor4() {
+				public void visit(Object a_object) {
+					((SlotChange)a_object).rollback(i_file);
+				}
+			});
 		}
 	}
-	
+
 	public boolean isDeleted(int id) {
     	return slotChangeIsFlaggedDeleted(id);
     }
@@ -476,5 +546,70 @@ public class LocalTransaction extends Transaction {
         clazz.deleteMembers(oh._marshallerFamily, oh._headerAttributes, objectBytes, typeInfo, true);
         slotFreeOnCommit(id, new Slot(objectBytes.getAddress(), objectBytes.getLength()));
     }
+    
+	private void triggerCommitOnStarted() {
+		ObjectInfoCollection[] collections = partitionSlotChangesInAddedDeletedUpdated();
+    	stream().callbacks().commitOnStarted(collections[0], collections[1], collections[2]);
+	}
+
+	private static final class ObjectInfoCollectionImpl implements ObjectInfoCollection {
+		
+		public static final ObjectInfoCollection EMPTY = new ObjectInfoCollectionImpl(Iterators.EMPTY_ITERABLE);
+		
+		private final Iterable4 _collection;
+
+		public ObjectInfoCollectionImpl(Iterable4 collection) {
+			_collection = collection;
+		}
+
+		public Iterator4 iterator() {
+			return _collection.iterator();
+		}
+	}
+
+	private ObjectInfoCollection[] partitionSlotChangesInAddedDeletedUpdated() {
+		if (null == _slotChanges) {
+			return new ObjectInfoCollection[] { 
+				ObjectInfoCollectionImpl.EMPTY,
+				ObjectInfoCollectionImpl.EMPTY,
+				ObjectInfoCollectionImpl.EMPTY
+			};
+		}
+		final Collection4 added = new Collection4();
+		final Collection4 deleted = new Collection4();
+		_slotChanges.traverse(new Visitor4() {
+			public void visit(Object obj) {
+				final SlotChange slotChange = ((SlotChange)obj);
+				final ObjectReference reference = stream().referenceForId(slotChange._key);
+				if (slotChange.isDeleted()) {					
+					deleted.add(reference);
+				} else {
+					added.add(reference);
+				}
+			}
+		});
+		
+		return new ObjectInfoCollection[] {
+			new ObjectInfoCollectionImpl(added),
+			new ObjectInfoCollectionImpl(deleted),
+			ObjectInfoCollectionImpl.EMPTY
+		};
+	}
+	
+    private void setAddress(int a_address) {
+        i_address = a_address;
+    }
+
+	public static Transaction readInterruptedTransaction(LocalObjectContainer file, Buffer reader) {
+	    int transactionID1 = reader.readInt();
+	    int transactionID2 = reader.readInt();
+	    if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
+	        LocalTransaction transaction = (LocalTransaction) file.newTransaction(null);
+	        transaction.setAddress(transactionID1);
+	        return transaction;
+	    }
+	    return null;
+	}
+
 
 }

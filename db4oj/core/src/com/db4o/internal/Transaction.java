@@ -3,9 +3,8 @@
 package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.ext.ObjectInfo;
 import com.db4o.foundation.*;
-import com.db4o.internal.ix.*;
+import com.db4o.internal.ix.IndexTransaction;
 import com.db4o.reflect.Reflector;
 
 
@@ -13,11 +12,7 @@ import com.db4o.reflect.Reflector;
  * @exclude
  */
 public abstract class Transaction {
-
-    protected int             i_address;                                  // only used to pass address to Thread
-    
-    protected final byte[]          _pointerBuffer = new byte[Const4.POINTER_LENGTH];
-
+	
     // contains DeleteInfo nodes
     public Tree          i_delete;
 
@@ -94,74 +89,24 @@ public abstract class Transaction {
             }
         }
     }
-
-    public void commit() {
-        synchronized (stream().i_lock) {
-            i_file.freeSpaceBeginCommit();
-            commitExceptForFreespace();
-            i_file.freeSpaceEndCommit();
-        }
-    }
     
-	private void commitExceptForFreespace(){
-        
-        if(DTrace.enabled){
-            boolean systemTrans = (i_parentTransaction == null);
-            DTrace.TRANS_COMMIT.logInfo( "server == " + stream().isServer() + ", systemtrans == " +  systemTrans);
-        }
-        
-        commit2Listeners();
-        
-        commit3Stream();
-        
-        commit4FieldIndexes();
-        
-        commit5Participants();
-        
-        stream().writeDirty();
-        
-        commit6WriteChanges();
-        
-        freeOnCommit();
-        
-        commit7ClearAll();
-    }
+    public abstract void commit();    
     
     protected void freeOnCommit() {
 	}
-
-	protected void commit6WriteChanges() {
-	}
-	
-	private void commit7ClearAll(){
-        commit7ParentClearAll();
-        clearAll();
-    }
-
-	private void commit7ParentClearAll() {
-		if(i_parentTransaction != null){
-            i_parentTransaction.commit7ClearAll();
-        }
-	}
-
-	private void commit2Listeners(){
-        commit2ParentListeners(); 
-        commitTransactionListeners();
-    }
-
-	private void commit2ParentListeners() {
-		if (i_parentTransaction != null) {
-            i_parentTransaction.commit2Listeners();
-        }
-	}
     
-    private void commit3Stream(){
-        stream().checkNeededUpdates();
-        stream().writeDirty();
-        stream().classCollection().write(stream().getSystemTransaction());
+    protected void commitParticipants() {
+        if (i_parentTransaction != null) {
+            i_parentTransaction.commitParticipants();
+        }
+        
+        Iterator4 iterator = _participants.iterator();
+		while (iterator.moveNext()) {
+			((TransactionParticipant)iterator.current()).commit(this);
+		}
     }
     
-    private void commit4FieldIndexes(){
+    protected void commit4FieldIndexes(){
         if(i_parentTransaction != null){
             i_parentTransaction.commit4FieldIndexes();
         }
@@ -172,17 +117,7 @@ public abstract class Transaction {
             }
         }
     }
-    
-    private void commit5Participants() {
-        if (i_parentTransaction != null) {
-            i_parentTransaction.commit5Participants();
-        }
-        
-        Iterator4 iterator = _participants.iterator();
-		while (iterator.moveNext()) {
-			((TransactionParticipant)iterator.current()).commit(this);
-		}
-    }
+
     
     protected void commitTransactionListeners() {
         checkSynchronization();
@@ -295,11 +230,7 @@ public abstract class Transaction {
             }
             i_transactionListeners = null;
         }
-    }
-
-    void setAddress(int a_address) {
-        i_address = a_address;
-    }
+    }	
 
     public abstract void setPointer(int a_id, int a_address, int a_length);
     
@@ -380,18 +311,7 @@ public abstract class Transaction {
 		}
 	}
     
-    public static Transaction readInterruptedTransaction(LocalObjectContainer file, Buffer reader) {
-        int transactionID1 = reader.readInt();
-        int transactionID2 = reader.readInt();
-        if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
-            Transaction transaction = file.newTransaction(null);
-            transaction.setAddress(transactionID1);
-            return transaction;
-        }
-        return null;
-    }
-
-	public Transaction parentTransaction() {
+    public Transaction parentTransaction() {
 		return i_parentTransaction;
 	}
 

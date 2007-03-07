@@ -154,7 +154,7 @@ public final class ConfigBlock {
         systemData().stringEncoding(reader.readByte());
 		
 		if(oldLength > TRANSACTION_OFFSET){
-            _transactionToCommit = Transaction.readInterruptedTransaction(_container, reader);
+            _transactionToCommit = LocalTransaction.readInterruptedTransaction(_container, reader);
 		}
 		
 		if(oldLength > BOOTRECORD_OFFSET) {
