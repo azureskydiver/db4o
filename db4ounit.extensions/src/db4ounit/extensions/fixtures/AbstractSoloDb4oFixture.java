@@ -27,6 +27,10 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 			Assert.isTrue(db().close());
 			_db = null;
 		}
+	}	
+
+	public boolean accept(Class clazz) {
+		return !OptOutSolo.class.isAssignableFrom(clazz);
 	}
 
 	public ExtObjectContainer db() {

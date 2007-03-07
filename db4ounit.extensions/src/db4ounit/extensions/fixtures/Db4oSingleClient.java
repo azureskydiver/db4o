@@ -8,7 +8,6 @@ import com.db4o.Db4o;
 import com.db4o.ext.ExtObjectContainer;
 
 import db4ounit.TestException;
-import db4ounit.extensions.Db4oTestCase;
 
 public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
 
@@ -47,21 +46,7 @@ public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
 			throw new TestException(e);
 		}
 	}
-
-	/**
-	 * Does not accept a clazz which is assignable from OptOutCS, or not
-	 * assignable from Db4oTestCase.
-	 * 
-	 * @return returns false if the clazz is assignable from OptOutCS, or not
-	 *         assignable from Db4oTestCase. Otherwise, returns true.
-	 */
-	public boolean accept(Class clazz) {
-		if ((OptOutCS.class.isAssignableFrom(clazz))
-				|| !Db4oTestCase.class.isAssignableFrom(clazz)) {
-			return false;
-		}
-		return true;
-	}
+	
 
 	public ExtObjectContainer db() {
 		return _objectContainer;
