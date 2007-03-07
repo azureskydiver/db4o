@@ -2,6 +2,7 @@
 
 package com.db4o.reflect.self;
 
+import com.db4o.internal.ReflectPlatform;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectConstructor;
 
@@ -21,11 +22,7 @@ public class SelfConstructor implements ReflectConstructor{
 	}
 
 	public Object newInstance(Object[] parameters) {
-		try {
-			return _class.newInstance();
-		} catch (Exception exc) {
-			return null;
-		}
+		return ReflectPlatform.createInstance(_class);
 	}
 
 }
