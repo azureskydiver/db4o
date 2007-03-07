@@ -2,9 +2,8 @@
 
 package com.db4o.test.reflect;
 
-import java.util.*;
-
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -65,7 +64,7 @@ public class GRHierarchy {
 		if(Test.clientServer) {
 			return;
 		}
-		Vector excluded=new Vector();
+		Collection4 excluded=new Collection4();
 		excluded.add(A.class.getName());
 		excluded.add(B.class.getName());
 		excluded.add(A1.class.getName());
