@@ -10,6 +10,8 @@ import com.db4o.ObjectServer;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.internal.LocalObjectContainer;
 
+import db4ounit.extensions.Db4oTestCase;
+
 
 public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixture{
     
@@ -57,6 +59,21 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
     public ObjectServer server() {
     	return _server;
     }
+    
+    /**
+	 * Does not accept a clazz which is assignable from OptOutCS, or not
+	 * assignable from Db4oTestCase.
+	 * 
+	 * @return returns false if the clazz is assignable from OptOutCS, or not
+	 *         assignable from Db4oTestCase. Otherwise, returns true.
+	 */
+	public boolean accept(Class clazz) {
+		if ((OptOutCS.class.isAssignableFrom(clazz))
+				|| !Db4oTestCase.class.isAssignableFrom(clazz)) {
+			return false;
+		}
+		return true;
+	}
     
 	public LocalObjectContainer fileSession() {
 		return (LocalObjectContainer)_server.ext().objectContainer();
