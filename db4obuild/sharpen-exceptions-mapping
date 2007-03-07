@@ -2,4 +2,5 @@
 -typeMapping com.db4o.foundation.NotImplementedException System.NotImplementedException
 -typeMapping com.db4o.foundation.NotSupportedException System.NotSupportedException
 -typeMapping com.db4o.foundation.ChainedRuntimeException System.Exception
+-typeMapping java.lang.SecurityException System.Security.SecurityException
 
