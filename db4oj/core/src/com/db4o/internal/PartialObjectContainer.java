@@ -453,6 +453,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
+    // TODO: should probably hold i_lock to make sure generateCallIDOnTopLevel works
+    // correctly
     public void delete(Object a_object) {
     	generateCallIDOnTopLevel();
         delete(null, a_object);
