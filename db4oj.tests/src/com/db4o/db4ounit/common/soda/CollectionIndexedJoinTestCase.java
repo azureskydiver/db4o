@@ -90,8 +90,8 @@ public class CollectionIndexedJoinTestCase extends AbstractDb4oTestCase {
 	private static class TestConfig extends PermutingTestConfig {
 		public TestConfig(int numValues) {
 			super(new Object[][]{
-					{new Integer(0),new Integer(numValues-1)},
-					{Boolean.FALSE,Boolean.TRUE}});
+					new Object[] { new Integer(0),new Integer(numValues-1) },
+					new Object[] { Boolean.FALSE,Boolean.TRUE } } );
 		}
 
 		public int rootIndex() {
