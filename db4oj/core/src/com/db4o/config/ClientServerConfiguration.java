@@ -10,7 +10,8 @@ import com.db4o.messaging.MessageSender;
  */
 public interface ClientServerConfiguration {
 	/**
-	 * Sets the number of IDs to be prefetched for an ObjectSet in C/S mode
+	 * Sets the number of IDs to be pre-allocated in the database for new 
+	 * objects created on the client
 	 * 
 	 * @param prefetchIDCount
 	 *            The number of IDs to be prefetched
