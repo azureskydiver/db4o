@@ -2,20 +2,19 @@
 
 package com.db4o.internal;
 
-import java.io.*;
+import java.io.IOException;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.btree.*;
+import com.db4o.internal.btree.BTree;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.fileheader.*;
 import com.db4o.internal.freespace.*;
-import com.db4o.internal.query.processor.*;
+import com.db4o.internal.query.processor.QQuery;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.slots.*;
-import com.db4o.io.*;
 
 
 /**

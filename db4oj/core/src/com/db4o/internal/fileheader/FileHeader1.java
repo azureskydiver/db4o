@@ -80,7 +80,7 @@ public class FileHeader1 extends FileHeader {
         commonTasksForNewAndRead(file);
         checkThreadFileLock(file, reader);
         reader.seek(TRANSACTION_POINTER_OFFSET);
-        _interruptedTransaction = Transaction.readInterruptedTransaction(file, reader);
+        _interruptedTransaction = LocalTransaction.readInterruptedTransaction(file, reader);
         file.blockSizeReadFromFile(reader.readInt());
         readClassCollectionAndFreeSpace(file, reader);
         _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());
