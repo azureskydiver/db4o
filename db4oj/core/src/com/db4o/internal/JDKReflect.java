@@ -76,6 +76,10 @@ class JDKReflect extends JDK {
     public static Object invoke(String className, String methodName,
 			Class[] paramClasses, Object[] params, Object onObject) {
 		Method method = getMethod(className, methodName, paramClasses);
+		return invoke(params, onObject, method);
+	}
+
+	public static Object invoke(Object[] params, Object onObject, Method method) {
 		if(method == null) {
 			return null;
 		}
@@ -86,6 +90,8 @@ class JDKReflect extends JDK {
 		} catch (IllegalAccessException e) {
 			// e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			// e.printStackTrace();
+		} catch (ExceptionInInitializerError e) {
 			// e.printStackTrace();
 		}
 		return null;
