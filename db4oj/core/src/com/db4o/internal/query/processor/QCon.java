@@ -444,14 +444,14 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     
     Iterator4 iterateJoins(){
         if(i_joins == null){
-            return Iterator4Impl.EMPTY;
+            return Iterators.EMPTY_ITERATOR;
         }
         return i_joins.iterator();
     }
     
     public Iterator4 iterateChildren(){
         if(_children == null){
-            return Iterator4Impl.EMPTY;
+            return Iterators.EMPTY_ITERATOR;
         }
         return new Iterator4Impl(_children);
     }

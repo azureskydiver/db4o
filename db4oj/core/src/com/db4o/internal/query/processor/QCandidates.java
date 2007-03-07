@@ -204,13 +204,13 @@ public final class QCandidates implements Visitor4 {
     
     private Iterator4 iterateIndex (FieldIndexProcessorResult result ){
     	if(result.noMatch()){
-    		return Iterator4Impl.EMPTY;
+    		return Iterators.EMPTY_ITERATOR;
     	}
     	if(result.foundIndex()){
     		return result.iterateIDs();
     	}
     	if(i_yapClass.isPrimitive()){
-    		return Iterator4Impl.EMPTY;
+    		return Iterators.EMPTY_ITERATOR;
     	}
     	return BTreeClassIndexStrategy.iterate(i_yapClass, i_trans);
     }
@@ -345,7 +345,7 @@ public final class QCandidates implements Visitor4 {
     
     public Iterator4 iterateConstraints(){
         if(i_constraints == null){
-            return Iterator4Impl.EMPTY;
+            return Iterators.EMPTY_ITERATOR;
         }
         return new Iterator4Impl(i_constraints);
     }

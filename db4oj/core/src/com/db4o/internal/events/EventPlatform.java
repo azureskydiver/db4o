@@ -3,7 +3,7 @@
 package com.db4o.internal.events;
 
 import com.db4o.events.*;
-import com.db4o.ext.ObjectInfo;
+import com.db4o.ext.*;
 import com.db4o.query.Query;
 
 /**
@@ -27,7 +27,7 @@ class EventPlatform {
 		e.trigger(new ObjectEventArgs(o));
 	}
 
-	public static void triggerCommitEvent(Event4Impl committing, ObjectInfo[] added) {
-		committing.trigger(new CommitEventArgs(added));
+	public static void triggerCommitEvent(Event4Impl committing, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
+		committing.trigger(new CommitEventArgs(added, deleted, updated));
 	}
 }

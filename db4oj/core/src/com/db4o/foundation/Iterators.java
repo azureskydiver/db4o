@@ -2,12 +2,21 @@
 
 package com.db4o.foundation;
 
+
 /**
  * Iterator primitives (concat, map, reduce, filter, etc...).
  * 
  * @exclude
  */
 public class Iterators {
+
+	public static final Iterator4 EMPTY_ITERATOR = new Iterator4Impl(null);
+	
+	public static final Iterable4 EMPTY_ITERABLE = new Iterable4() {
+		public Iterator4 iterator() {
+			return EMPTY_ITERATOR;
+		}
+	};
 	
 	static final Object NO_ELEMENT = new Object();
 	
@@ -29,5 +38,17 @@ public class Iterators {
 	
 	public static Iterator4 filter(Iterator4 iterator, Predicate4 predicate) {
 		return new FilteredIterator(iterator, predicate);
+	}
+
+	public static int size(Iterable4 iterable) {
+		return size(iterable.iterator());
+	}
+
+	private static int size(Iterator4 iterator) {
+		int count=0;
+		while (iterator.moveNext()) {
+			++count;
+		}
+		return count;
 	}
 }
