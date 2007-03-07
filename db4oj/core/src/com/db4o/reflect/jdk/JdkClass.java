@@ -120,15 +120,11 @@ public class JdkClass implements ReflectClass{
         // return isPrimitive()||SecondClass.class.isAssignableFrom(_clazz);
     }
     
-    public Object newInstance(){
-		try {
-            if(_constructor == null){
-                return _clazz.newInstance();
-            }
-            return _constructor.newInstance(_constructorParams);
-		} catch (Throwable t) {
-		} 
-		return null;
+    public Object newInstance() {
+		if (_constructor == null) {
+			return ReflectPlatform.createInstance(_clazz);
+		}
+		return _constructor.newInstance(_constructorParams);
 	}
 	
 	Class getJavaClass(){

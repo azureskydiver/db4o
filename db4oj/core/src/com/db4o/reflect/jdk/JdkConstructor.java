@@ -29,15 +29,22 @@ public class JdkConstructor implements ReflectConstructor{
 		Platform4.setAccessible(constructor);
 	}
 	
-	public Object newInstance(Object[] parameters){
+	public Object newInstance(Object[] parameters) {
+		Object obj = null;
 		try {
-            Object obj = constructor.newInstance(parameters);
-            if(DTrace.enabled){
-                DTrace.NEW_INSTANCE.log(System.identityHashCode(obj));
-            }
-            return obj;
-		} catch (Exception e) {
-			return null;
-		} 
+			obj = constructor.newInstance(parameters);
+			if (DTrace.enabled) {
+				DTrace.NEW_INSTANCE.log(System.identityHashCode(obj));
+			}
+		} catch (IllegalArgumentException e) {
+			// e.printStackTrace();
+		} catch (InstantiationException e) {
+			// e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// e.printStackTrace();
+		}
+		return obj;
 	}
 }
