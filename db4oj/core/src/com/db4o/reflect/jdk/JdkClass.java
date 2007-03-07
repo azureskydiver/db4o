@@ -135,24 +135,25 @@ public class JdkClass implements ReflectClass{
         return _reflector;
     }
 	
-    public boolean skipConstructor(boolean flag){
-        if(flag){
-            Constructor constructor = Platform4.jdk().serializableConstructor(_clazz);
-            if(constructor != null){
-                try{
-                    Object o = constructor.newInstance((Object[])null);
-                    if(o != null){
-                        useConstructor(new JdkConstructor(_reflector, constructor), null);
-                        return true;
-                    }
-                }catch(Throwable t){
-                    
-                }
-            }
-        }
-        useConstructor(null, null);
-        return false;
-    }
+    public boolean skipConstructor(boolean skipConstructor) {
+		boolean useSerializableConstructor = false;
+		ReflectConstructor constructor = null;
+		if (skipConstructor) {
+			Constructor serializableConstructor = Platform4.jdk()
+					.serializableConstructor(_clazz);
+			if (serializableConstructor != null) {
+				JdkConstructor jdkConstructor = new JdkConstructor(_reflector,
+						serializableConstructor);
+				Object obj = jdkConstructor.newInstance((Object[]) null);
+				if (obj != null) {
+					useSerializableConstructor = true;
+					constructor = jdkConstructor;
+				}
+			}
+		}
+		useConstructor(constructor, null);
+		return useSerializableConstructor;
+	}
 	
     public void useConstructor(ReflectConstructor constructor, Object[] params){
         this._constructor = constructor;
