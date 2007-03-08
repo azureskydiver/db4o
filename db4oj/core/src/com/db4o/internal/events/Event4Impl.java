@@ -49,4 +49,8 @@ public class Event4Impl implements Event4 {
 			throw new ArgumentNullException("listener");
 		}
 	}
+
+	public boolean hasListeners() {
+		return _listeners != null;
+	}
 }

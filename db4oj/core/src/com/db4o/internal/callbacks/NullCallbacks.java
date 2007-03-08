@@ -50,4 +50,8 @@ public class NullCallbacks implements Callbacks {
 
 	public void commitOnStarted(ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
 	}
+
+	public boolean caresAboutCommit() {
+		return false;
+	}
 }
