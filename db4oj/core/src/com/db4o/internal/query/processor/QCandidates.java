@@ -42,7 +42,7 @@ public final class QCandidates implements Visitor4 {
     Tree i_ordered;
 
     // 
-    private int i_orderID;
+    private int _majorOrderingID;
     
     private IDGenerator _idGenerator;
 
@@ -93,50 +93,33 @@ public final class QCandidates implements Visitor4 {
     void addOrder(QOrder a_order) {
         i_ordered = Tree.add(i_ordered, a_order);
     }
-
-    void applyOrdering(Tree a_ordered, int a_orderID) {
-    	if (a_ordered == null || i_root == null) {
+    
+    void applyOrdering(Tree orderedCandidates, int orderingID) {
+    	
+    	if (orderedCandidates == null || i_root == null) {
     		return;
     	}
-    	if (a_orderID > 0) {
-    		a_orderID = -a_orderID;
+    	
+    	int absoluteOrderingID = Math.abs(orderingID);
+    	
+    	final boolean major = treatOrderingIDAsMajor(absoluteOrderingID); 
+    	
+    	if(major && ! isUnordered()) {
+	    	swapMajorOrderToMinor();
     	}
-    	final boolean major = (a_orderID - i_orderID) < 0;
+    	
+    	hintNewOrder(orderedCandidates, major);
+    	
+    	i_root = recreateTreeFromCandidates();
+    	
     	if (major) {
-    		i_orderID = a_orderID;
+    		_majorOrderingID = absoluteOrderingID;
     	}
-    	
-    	final int[] placement = { 0 };
-    	// Step 1: Clear possible old ordering criteria
-    	//         and store old order.
-    	i_root.traverse(new Visitor4() {
-    		public void visit(Object a_object) {
-    			((QCandidate) a_object).hintOrder(0, major);
-    			((QCandidate) a_object).hintOrder(placement[0]++, !major);
-    		}
-    	});
-    	
-    	// Step 2: Set new ordering criteria
-    	placement[0] = 1;
-    	a_ordered.traverse(new Visitor4() {
-    		public void visit(Object a_object) {
-    			QOrder qo = (QOrder) a_object;
-    			QCandidate candidate = qo._candidate.getRoot();
-    			candidate.hintOrder(placement[0]++, major);
-    		}
-    	});
-    	
-    	// Step 3: We need to put them all into a collection,
-    	//         so we can safely remove the old tree joins
-    	final Collection4 col = new Collection4();
-    	i_root.traverse(new Visitor4() {
-    		public void visit(Object a_object) {
-    			QCandidate candidate = (QCandidate) a_object;
-    			col.add(candidate);
-    		}
-    	});
-    	
-    	// Step 4: Add them to our tree again.
+    }
+
+	private Tree recreateTreeFromCandidates() {
+		Collection4 col = collectCandidates();
+		
     	Tree newTree = null;
     	Iterator4 i = col.iterator();
     	while(i.moveNext()){
@@ -146,11 +129,60 @@ public final class QCandidates implements Visitor4 {
     		candidate._size = 1;
     		newTree = Tree.add(newTree, candidate);
     	}
-    	
-    	i_root = newTree;
-    }
+		return newTree;
+	}
 
-    void collect(final QCandidates a_candidates) {
+	private Collection4 collectCandidates() {
+		final Collection4 col = new Collection4();
+		i_root.traverse(new Visitor4() {
+    		public void visit(Object a_object) {
+    			QCandidate candidate = (QCandidate) a_object;
+    			col.add(candidate);
+    		}
+    	});
+		return col;
+	}
+
+	private void hintNewOrder(Tree orderedCandidates, final boolean major) {
+		final int[] currentOrder = { 0 };
+    	final QOrder[] lastOrder = {null}; 
+    	
+    	orderedCandidates.traverse(new Visitor4() {
+    		public void visit(Object a_object) {
+    			QOrder qo = (QOrder) a_object;
+    			if(! qo.isEqual(lastOrder[0])){
+    				currentOrder[0]++;
+    			} 
+    			QCandidate candidate = qo._candidate.getRoot();
+    			candidate.hintOrder(currentOrder[0], major);
+    			lastOrder[0] = qo;
+    		}
+    	});
+	}
+
+	private void swapMajorOrderToMinor() {
+		i_root.traverse(new Visitor4() {
+			public void visit(Object obj) {
+				QCandidate candidate = (QCandidate)obj;
+				Order order = (Order) candidate._order;
+				order.swapMajorToMinor();
+			}
+		});
+	}
+
+	private boolean treatOrderingIDAsMajor(int absoluteOrderingID) {
+		return (isUnordered()) || (isMoreRelevantOrderingID(absoluteOrderingID));
+	}
+
+	private boolean isUnordered() {
+		return _majorOrderingID == 0;
+	}
+
+	private boolean isMoreRelevantOrderingID(int absoluteOrderingID) {
+		return absoluteOrderingID < _majorOrderingID;
+	}
+
+	void collect(final QCandidates a_candidates) {
 		Iterator4 i = iterateConstraints();
 		while(i.moveNext()){
 			QCon qCon = (QCon)i.current();
@@ -332,7 +364,6 @@ public final class QCandidates implements Visitor4 {
                 }
             });
         }
-
         return i_root != null;
     }
     
@@ -432,4 +463,20 @@ public final class QCandidates implements Visitor4 {
 		}
     		
     }
+    
+    public String toString() {
+    	final StringBuffer sb = new StringBuffer();
+    	i_root.traverse(new Visitor4() {
+			public void visit(Object obj) {
+				QCandidate candidate = (QCandidate) obj;
+				sb.append(" ");
+				sb.append(candidate._key);
+			}
+		});
+    	return sb.toString();
+    }
+
+	public void clearOrdering() {
+		i_ordered = null;
+	}
 }
