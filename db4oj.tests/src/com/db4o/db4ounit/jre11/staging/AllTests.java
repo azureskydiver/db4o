@@ -12,6 +12,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			com.db4o.db4ounit.common.staging.AllTests.class,
 			
 			/**
 			 *  When you add a test here, make sure you create a Jira issue. 
