@@ -24,7 +24,7 @@ class TransactionObjectCarrier extends LocalTransaction{
 //      do nothing
     }
     
-    void slotFreeOnRollbackSetPointer(int a_id, int a_address, int a_length) {
+    void producteUpdateSlotChange(int a_id, int a_address, int a_length) {
         setPointer(a_id, a_address, a_length);
     }
     

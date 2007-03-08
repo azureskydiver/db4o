@@ -19,6 +19,8 @@ public class LocalTransaction extends Transaction {
     private int i_address;	// only used to pass address to Thread
 	
 	private Tree _slotChanges;
+	
+    private Tree _writtenUpdateDeletedMembers;
 
 	public LocalTransaction(ObjectContainerBase a_stream, Transaction a_parent) {
 		super(a_stream, a_parent);
@@ -417,13 +419,16 @@ public class LocalTransaction extends Transaction {
         change.freeOnCommit(i_file, slot);
     }
 
-    void slotFreeOnRollbackSetPointer(int a_id, int a_address, int a_length) {
+    void producteUpdateSlotChange(int a_id, int a_address, int a_length) {
         checkSynchronization();
         if(DTrace.enabled){
             DTrace.FREE_ON_ROLLBACK.log(a_id);
             DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
         }
-        produceSlotChange(a_id).freeOnRollbackSetPointer(a_address, a_length);
+        
+        final SlotChange slotChange = produceSlotChange(a_id);
+        slotChange.flagForUpdate();
+        slotChange.freeOnRollbackSetPointer(a_address, a_length);
     }
     
     public void slotFreePointerOnCommit(int a_id) {
@@ -459,7 +464,7 @@ public class LocalTransaction extends Transaction {
 	
 	public void processDeletes() {
 		if (i_delete == null) {
-			i_writtenUpdateDeletedMembers = null;
+			_writtenUpdateDeletedMembers = null;
 			return;
 		}
 
@@ -500,7 +505,7 @@ public class LocalTransaction extends Transaction {
 				}
 			});
 		}
-		i_writtenUpdateDeletedMembers = null;
+		_writtenUpdateDeletedMembers = null;
 	}
 
     public void writeUpdateDeleteMembers(int id, ClassMetadata clazz, int typeInfo, int cascade) {
@@ -512,7 +517,7 @@ public class LocalTransaction extends Transaction {
         }
         
         TreeInt newNode = new TreeInt(id);
-        i_writtenUpdateDeletedMembers = Tree.add(i_writtenUpdateDeletedMembers, newNode);
+        _writtenUpdateDeletedMembers = Tree.add(_writtenUpdateDeletedMembers, newNode);
         if(! newNode.wasAddedToTree()){
         	return;
         }
@@ -585,6 +590,8 @@ public class LocalTransaction extends Transaction {
 				final ObjectReference reference = stream().referenceForId(slotChange._key);
 				if (slotChange.isDeleted()) {					
 					deleted.add(reference);
+				} else if (slotChange.isUpdate()) {
+					updated.add(reference);
 				} else {
 					added.add(reference);
 				}

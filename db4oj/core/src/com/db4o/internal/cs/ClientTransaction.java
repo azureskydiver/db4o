@@ -89,7 +89,6 @@ final class ClientTransaction extends Transaction {
             });
         }
         i_delete = null;
-        i_writtenUpdateDeletedMembers = null;
 		i_client.writeMsg(Msg.PROCESS_DELETES, false);
     }
     

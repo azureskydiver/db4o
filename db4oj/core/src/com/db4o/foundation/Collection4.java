@@ -275,20 +275,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	}
 
 	public String toString() {
-		if (_size == 0) {
-			return "[]";
-		}
-		StringBuffer sb = new StringBuffer();
-		sb.append("[");
-		Iterator4 i = internalIterator();
-		i.moveNext();
-		sb.append(i.current());
-		while (i.moveNext()) {
-			sb.append(", ");
-			sb.append(i.current());
-		}
-		sb.append("]");
-		return sb.toString();
+		return Iterators.toString(internalIterator());
 	}
 
 	private void changed() {

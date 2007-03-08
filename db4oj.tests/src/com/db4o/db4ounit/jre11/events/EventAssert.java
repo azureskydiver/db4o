@@ -21,19 +21,33 @@ public class EventAssert {
 		Assert.areEqual(1, eventRecorder.size());		
 		Assert.areSame(expectedEvent, eventRecorder.get(0).e);
 		CommitEventArgs args = (CommitEventArgs)eventRecorder.get(0).args;
-		assertContainsAll(expectedAdded, args.added());
-		assertContainsAll(expectedDeleted, args.deleted());
-		assertContainsAll(expectedUpdated, args.updated());
+		assertContainsAll(expectedAdded, args.added(), "added");
+		assertContainsAll(expectedDeleted, args.deleted(), "deleted");
+		assertContainsAll(expectedUpdated, args.updated(), "updated");
 	}
 	
-	private static void assertContainsAll(Object[] expectedItems, ObjectInfoCollection actualItems) {
+	private static void assertContainsAll(Object[] expectedItems, ObjectInfoCollection actualItems, String label) {
 		for (int i = 0; i < expectedItems.length; i++) {
-			assertContains(expectedItems[i], actualItems);
+			assertContains(expectedItems[i], actualItems, label);
 		}
-		Assert.areEqual(expectedItems.length, Iterators.size(actualItems));
+		if (expectedItems.length != Iterators.size(actualItems)) {
+			Assert.fail(label + ": " + toString(expectedItems) + " != " + toObjectString(actualItems));
+		}
 	}
 
-	private static void assertContains(Object expectedItem, ObjectInfoCollection items) {
+	private static String toObjectString(ObjectInfoCollection actualItems) {
+		return Iterators.toString(Iterators.map(actualItems.iterator(), new Function4() {
+			public Object apply(Object arg) {
+				return ((ObjectInfo)arg).getObject();
+			}
+		}));
+	}
+
+	private static String toString(Object[] expectedItems) {
+		return Iterators.toString(Iterators.iterate(expectedItems));
+	}
+
+	private static void assertContains(Object expectedItem, ObjectInfoCollection items, String label) {
 		final Iterator4 iterator = items.iterator();
 		while (iterator.moveNext()) {
 			ObjectInfo info = (ObjectInfo)iterator.current();
@@ -41,7 +55,7 @@ public class EventAssert {
 				return;
 			}
 		}
-		Assert.fail("Object '" + expectedItem + "' not found.");
+		Assert.fail("Object '" + expectedItem + "' not found for " + label + ".");
 	}
 
 

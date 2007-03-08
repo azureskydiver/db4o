@@ -768,7 +768,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         int length = forWriter.getLength();
         int address = getSlot(length);
         forWriter.address(address);
-        trans.slotFreeOnRollbackSetPointer(id, address, length);
+        trans.producteUpdateSlotChange(id, address, length);
     }
 
     public final void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes) {

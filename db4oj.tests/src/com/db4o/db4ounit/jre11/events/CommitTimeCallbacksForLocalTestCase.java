@@ -78,7 +78,7 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase im
 		assertCommittingEvent(new Item[] { item4 }, new Item[] { item1, item2 }, NONE);
 	}
 	
-	public void _testCommittingAddedUpdatedDeleted() {
+	public void testCommittingAddedUpdatedDeleted() {
 		final Item item1 = getItem(1);
 		final Item item2 = getItem(2);
 		final Item item4 = new Item(4);
@@ -88,6 +88,14 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase im
 		
 		db().commit();
 		assertCommittingEvent(new Item[] { item4 }, new Item[] { item1 }, new Item[] { item2 });
+	}
+	
+	public void testObjectSetTwiceShouldStillAppearAsAdded() {
+		final Item item4 = new Item(4);
+		db().set(item4);
+		db().set(item4);
+		db().commit();
+		assertCommittingEvent(NONE, NONE, new Item[] { item4 });
 	}
 	
 	private Item getItem(int id) {

@@ -24,6 +24,8 @@ public class SlotChange extends TreeInt {
 	private static final int FREE_POINTER_ON_COMMIT_BIT = 4;
 	
 	private static final int FREE_POINTER_ON_ROLLBACK_BIT = 5; 
+	
+	private static final int FOR_UPDATE_BIT = 6;
 
 	public SlotChange(int id) {
 		super(id);
@@ -111,6 +113,10 @@ public class SlotChange extends TreeInt {
 	public boolean isDeleted() {
 		return isSetPointer() && (_newSlot._address == 0);
 	}
+	
+	public boolean isUpdate() {
+		return isBitSet(FOR_UPDATE_BIT);
+	}
 
 	private final boolean isFreeOnCommit() {
 		return isBitSet(FREE_ON_COMMIT_BIT);
@@ -128,9 +134,9 @@ public class SlotChange extends TreeInt {
 	 * FIXME:	Check where pointers should be freed on commit.
 	 * 			This should be triggered in this class.
 	 */
-	private final boolean isFreePointerOnCommit() {
-		return isBitSet(FREE_POINTER_ON_COMMIT_BIT);
-	}
+//	private final boolean isFreePointerOnCommit() {
+//		return isBitSet(FREE_POINTER_ON_COMMIT_BIT);
+//	}
 
 	public final boolean isFreePointerOnRollback() {
 		return isBitSet(FREE_POINTER_ON_ROLLBACK_BIT);
@@ -187,5 +193,9 @@ public class SlotChange extends TreeInt {
 		if (isSetPointer()) {
 			trans.writePointer(_key, _newSlot._address, _newSlot._length);
 		}
+	}
+
+	public void flagForUpdate() {
+		setBit(FOR_UPDATE_BIT);
 	}
 }

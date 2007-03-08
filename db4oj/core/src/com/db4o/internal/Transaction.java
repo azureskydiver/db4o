@@ -28,8 +28,6 @@ public abstract class Transaction {
     
     private List4           i_transactionListeners;
     
-    protected Tree			i_writtenUpdateDeletedMembers;
-    
     // TODO: join _dirtyBTree and _enlistedIndices
     private final Collection4 _participants = new Collection4(); 
 
@@ -246,7 +244,7 @@ public abstract class Transaction {
     void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
     }
 
-    void slotFreeOnRollbackSetPointer(int a_id, int a_address, int a_length) {
+    void producteUpdateSlotChange(int a_id, int a_address, int a_length) {
     }
     
     public void slotFreePointerOnCommit(int a_id) {
