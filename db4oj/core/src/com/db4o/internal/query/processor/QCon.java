@@ -275,6 +275,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     		qcon.setCandidates(i_candidates);
     		qcon.evaluateSimpleExec(i_candidates);
     		qcon.applyOrdering();
+    		i_candidates.clearOrdering();
     	}
     	i_candidates.setCurrentConstraint(null);
     }

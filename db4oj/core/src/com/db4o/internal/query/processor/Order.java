@@ -11,13 +11,13 @@ class Order implements Orderable {
 	public int compareTo(Object obj) {
 		if(obj instanceof Order){
 			Order other = (Order)obj;
-			int res = other.i_major - i_major;
+			int res = i_major - other.i_major;
 			if(res != 0){
 				return res;
 			}
-			return other.i_minor - i_minor;
+			return i_minor - other.i_minor;
 		}
-		return 1;
+		return -1;
 	}
 
 	public void hintOrder(int a_order, boolean a_major) {
@@ -31,5 +31,15 @@ class Order implements Orderable {
 	public boolean hasDuplicates(){
 		return true;
 	}
+	
+	public String toString() {
+		return "Order " + i_major + " " + i_minor;
+	}
+
+	public void swapMajorToMinor() {
+		i_minor = i_major;
+		i_major = 0;
+	}
+	
 }
 

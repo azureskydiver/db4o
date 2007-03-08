@@ -110,8 +110,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	public int compare(Tree a_to) {
 		return _order.compareTo(((QCandidate) a_to)._order);
 	}
-
+	
 	public int compareTo(Object a_object) {
+		if(a_object instanceof Order){
+			return - ((Order)a_object).compareTo(this);
+		}
 		return _key - ((TreeInt) a_object)._key;
 	}
 
@@ -411,7 +414,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	}
 
 	public void hintOrder(int a_order, boolean a_major) {
-		_order = new Order();
+		if(_order == this){
+			_order = new Order();
+		}
 		_order.hintOrder(a_order, a_major);
 	}
 
