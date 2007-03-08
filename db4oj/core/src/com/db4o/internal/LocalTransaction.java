@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.ext.ObjectInfoCollection;
 import com.db4o.foundation.*;
+import com.db4o.internal.callbacks.Callbacks;
 import com.db4o.internal.marshall.ObjectHeader;
 import com.db4o.internal.slots.*;
 
@@ -146,7 +147,7 @@ public class LocalTransaction extends Transaction {
         boolean ret = false;
         
         if(i_parentTransaction != null){
-            if(parentFileTransaction().writeSlots()){
+            if(parentLocalTransaction().writeSlots()){
                 ret = true;
             }
         }
@@ -200,7 +201,7 @@ public class LocalTransaction extends Transaction {
         }
         
         if (i_parentTransaction != null) {
-            Slot parentSlot = parentFileTransaction().getCurrentSlotOfID(id); 
+            Slot parentSlot = parentLocalTransaction().getCurrentSlotOfID(id); 
             if (parentSlot != null) {
                 return parentSlot;
             }
@@ -221,7 +222,7 @@ public class LocalTransaction extends Transaction {
         }
         
         if (i_parentTransaction != null) {
-            Slot parentSlot = parentFileTransaction().getCommittedSlotOfID(id); 
+            Slot parentSlot = parentLocalTransaction().getCommittedSlotOfID(id); 
             if (parentSlot != null) {
                 return parentSlot;
             }
@@ -272,7 +273,7 @@ public class LocalTransaction extends Transaction {
             return slot.isDeleted();
         }
         if (i_parentTransaction != null) {
-            return parentFileTransaction().slotChangeIsFlaggedDeleted(id);
+            return parentLocalTransaction().slotChangeIsFlaggedDeleted(id);
         }
         return false;
     }
@@ -283,7 +284,7 @@ public class LocalTransaction extends Transaction {
 	        int count = 0;
 	        
 	        if(i_parentTransaction != null){
-	            count += parentFileTransaction().countSlotChanges();
+	            count += parentLocalTransaction().countSlotChanges();
 	        }
 	        
 	        final int slotSetPointerCount[]  = {count};
@@ -328,7 +329,7 @@ public class LocalTransaction extends Transaction {
 	protected final void freeOnCommit() {
         checkSynchronization();
         if(i_parentTransaction != null){
-            parentFileTransaction().freeOnCommit();
+        	parentLocalTransaction().freeOnCommit();
         }
         if(_slotChanges != null){
             _slotChanges.traverse(new Visitor4() {
@@ -342,7 +343,7 @@ public class LocalTransaction extends Transaction {
 	private void appendSlotChanges(final Buffer writer){
         
         if(i_parentTransaction != null){
-            parentFileTransaction().appendSlotChanges(writer);
+        	parentLocalTransaction().appendSlotChanges(writer);
         }
         
         Tree.traverse(_slotChanges, new Visitor4() {
@@ -456,10 +457,6 @@ public class LocalTransaction extends Transaction {
     	produceSlotChange(id).freePointerOnRollback();
     }
 	
-	private LocalTransaction parentFileTransaction() {
-		return (LocalTransaction)i_parentTransaction;
-	}
-
 	public void processDeletes() {
 		if (i_delete == null) {
 			i_writtenUpdateDeletedMembers = null;
@@ -548,8 +545,12 @@ public class LocalTransaction extends Transaction {
     }
     
 	private void triggerCommitOnStarted() {
+		final Callbacks callbacks = stream().callbacks();
+		if (!callbacks.caresAboutCommit()) {
+			return;
+		}
 		ObjectInfoCollection[] collections = partitionSlotChangesInAddedDeletedUpdated();
-    	stream().callbacks().commitOnStarted(collections[0], collections[1], collections[2]);
+		callbacks.commitOnStarted(collections[0], collections[1], collections[2]);
 	}
 
 	private static final class ObjectInfoCollectionImpl implements ObjectInfoCollection {
@@ -577,14 +578,17 @@ public class LocalTransaction extends Transaction {
 		}
 		final Collection4 added = new Collection4();
 		final Collection4 deleted = new Collection4();
+		final Collection4 updated = new Collection4();
 		_slotChanges.traverse(new Visitor4() {
 			public void visit(Object obj) {
 				final SlotChange slotChange = ((SlotChange)obj);
 				final ObjectReference reference = stream().referenceForId(slotChange._key);
 				if (slotChange.isDeleted()) {					
 					deleted.add(reference);
-				} else {
+				} else if (reference.isNew()){
 					added.add(reference);
+				} else {
+					updated.add(reference);
 				}
 			}
 		});
@@ -592,7 +596,7 @@ public class LocalTransaction extends Transaction {
 		return new ObjectInfoCollection[] {
 			new ObjectInfoCollectionImpl(added),
 			new ObjectInfoCollectionImpl(deleted),
-			ObjectInfoCollectionImpl.EMPTY
+			new ObjectInfoCollectionImpl(updated),
 		};
 	}
 	

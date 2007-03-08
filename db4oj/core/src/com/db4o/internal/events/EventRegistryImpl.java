@@ -130,4 +130,8 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	public Event4 committing() {
 		return _committing;
 	}
+
+	public boolean caresAboutCommit() {
+		return EventPlatform.hasListeners(_committing);
+	}
 }
