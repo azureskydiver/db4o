@@ -226,21 +226,15 @@ public final class HandlerRegistry {
 		if (sortedConstructors == null) {
 			return false;
 		}
-		final TypeHandler4[] handlers = i_handlers;
+		
 		Iterator4 iter = new TreeNodeIterator(sortedConstructors);
 		while (iter.moveNext()) {
 			Object obj = iter.current();
 			ReflectConstructor constructor = (ReflectConstructor) ((TreeIntObject) obj)._object;
-			ReflectClass[] pTypes = constructor.getParameterTypes();
-			Object[] params = new Object[pTypes.length];
+			ReflectClass[] paramTypes = constructor.getParameterTypes();
+			Object[] params = new Object[paramTypes.length];
 			for (int j = 0; j < params.length; j++) {
-				for (int k = 0; k < PRIMITIVECOUNT; k++) {
-					if (pTypes[j].equals(handlers[k].primitiveClassReflector())) {
-						params[j] = ((PrimitiveHandler) handlers[k])
-								.primitiveNull();
-						break;
-					}
-				}
+				params[j] = nullValue(paramTypes[j]);
 			}
 			Object res = constructor.newInstance(params);
 			if (res != null) {
@@ -251,6 +245,15 @@ public final class HandlerRegistry {
 		return false;
 	}
 
+	private Object nullValue(ReflectClass clazz) {
+		for (int k = 0; k < PRIMITIVECOUNT; k++) {
+			if (clazz.equals(i_handlers[k].primitiveClassReflector())) {
+				return ((PrimitiveHandler) i_handlers[k]).primitiveNull();
+			}
+		}
+		return null;
+	}
+	
 	private Tree sortConstructorsByParamsCount(final ReflectClass claxx) {
 		ReflectConstructor[] constructors = claxx.getDeclaredConstructors();
 
