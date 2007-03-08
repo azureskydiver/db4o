@@ -2,8 +2,7 @@
 
 package com.db4o.internal;
 
-import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.Deploy;
 
 
 /**
@@ -34,10 +33,6 @@ public class Unobfuscated {
         writer.writeLong(randomLong());
         writer.writeLong(randomLong() + 1);
         return writer.getWrittenBytes();
-	}
-	
-	static void logErr (Configuration config, int code, String msg, Throwable t) {
-		Messages.logErr(config, code, msg, t);
 	}
 	
 	static void purgeUnsychronized(Object a_stream, Object a_object){
