@@ -585,10 +585,8 @@ public class LocalTransaction extends Transaction {
 				final ObjectReference reference = stream().referenceForId(slotChange._key);
 				if (slotChange.isDeleted()) {					
 					deleted.add(reference);
-				} else if (reference.isNew()){
-					added.add(reference);
 				} else {
-					updated.add(reference);
+					added.add(reference);
 				}
 			}
 		});
