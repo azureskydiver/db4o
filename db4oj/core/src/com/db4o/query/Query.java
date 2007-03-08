@@ -83,9 +83,11 @@ public interface Query {
 
     
     /**
-	 * adds an ascending ordering criteria to this node of
-	 * the query graph. Multiple ordering criteria will be applied
-	 * in the order they were called.
+	 * adds an ascending ordering criteria to this node of the 
+	 * query graph.
+	 * <br><br>If multiple ordering criteria are applied,
+	 * the criteria created with earlier method calls are
+	 * more significant.
      * @return this {@link Query} object to allow the chaining of method calls.
      */
     public Query orderAscending ();
@@ -93,8 +95,10 @@ public interface Query {
 
     /**
 	 * adds a descending order criteria to this node of
-	 * the query graph. Multiple ordering criteria will be applied
-	 * in the order they were called.
+	 * the query graph.
+	 * <br><br>If multiple ordering criteria are applied,
+	 * the criteria created with earlier method calls are
+	 * more significant.
      * @return this {@link Query} object to allow the chaining of method calls.
      */
     public Query orderDescending ();
