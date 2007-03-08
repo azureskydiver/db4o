@@ -226,34 +226,29 @@ public final class HandlerRegistry {
 		if (sortedConstructors == null) {
 			return false;
 		}
-		final boolean[] foundConstructor = { false };
 		final TypeHandler4[] handlers = i_handlers;
-		//TODO: use Iterator4 instead of traverse.
-		sortedConstructors.traverse(new Visitor4() {
-			public void visit(Object a_object) {
-				if (!foundConstructor[0]) {
-					ReflectConstructor constructor = (ReflectConstructor) ((TreeIntObject) a_object)._object;
-					ReflectClass[] pTypes = constructor.getParameterTypes();
-					Object[] params = new Object[pTypes.length];
-					for (int j = 0; j < params.length; j++) {
-						for (int k = 0; k < PRIMITIVECOUNT; k++) {
-							if (pTypes[j].equals(handlers[k]
-									.primitiveClassReflector())) {
-								params[j] = ((PrimitiveHandler) handlers[k])
-										.primitiveNull();
-								break;
-							}
-						}
-					}
-					Object res = constructor.newInstance(params);
-					if (res != null) {
-						foundConstructor[0] = true;
-						claxx.useConstructor(constructor, params);
+		Iterator4 iter = new TreeNodeIterator(sortedConstructors);
+		while (iter.moveNext()) {
+			Object obj = iter.current();
+			ReflectConstructor constructor = (ReflectConstructor) ((TreeIntObject) obj)._object;
+			ReflectClass[] pTypes = constructor.getParameterTypes();
+			Object[] params = new Object[pTypes.length];
+			for (int j = 0; j < params.length; j++) {
+				for (int k = 0; k < PRIMITIVECOUNT; k++) {
+					if (pTypes[j].equals(handlers[k].primitiveClassReflector())) {
+						params[j] = ((PrimitiveHandler) handlers[k])
+								.primitiveNull();
+						break;
 					}
 				}
 			}
-		});
-		return foundConstructor[0];
+			Object res = constructor.newInstance(params);
+			if (res != null) {
+				claxx.useConstructor(constructor, params);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private Tree sortConstructorsByParamsCount(final ReflectClass claxx) {

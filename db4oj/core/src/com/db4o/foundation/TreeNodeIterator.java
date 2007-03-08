@@ -5,12 +5,12 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class TreeKeyIterator extends AbstractTreeIterator {
-	public TreeKeyIterator(Tree tree) {
+public class TreeNodeIterator extends AbstractTreeIterator {
+	public TreeNodeIterator(Tree tree) {
 		super(tree);
 	}
 
 	protected Object currentValue(Tree tree) {
-		return tree.key();
+		return tree.root();
 	}
 }
