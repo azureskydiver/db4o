@@ -14,11 +14,13 @@ import com.db4o.*;
 public class TSerializable implements ObjectConstructor {
 	
 	public Object onStore(ObjectContainer con, Object object){
-		try{
+		try {
 			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 			new ObjectOutputStream(byteStream).writeObject(object);
 			return byteStream.toByteArray();
-		}catch (Exception e){}
+		} catch (IOException e) {
+			// e.printStackTrace();
+		}
 		return null;
 	}
 

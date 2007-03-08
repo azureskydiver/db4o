@@ -31,11 +31,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 	}
 
 	public Object getOn(Transaction a_trans, Object a_OnObject){
-		try{
-			return i_translator.onStore(a_trans.stream(), a_OnObject);
-		}catch(Throwable t){
-			return null;
-		}
+		return i_translator.onStore(a_trans.stream(), a_OnObject);
 	}
 	
 	public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
@@ -59,9 +55,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 	}
 	
 	private void setOn(ObjectContainerBase a_stream, Object a_onObject, Object toSet){
-		try{
-			i_translator.onActivate(a_stream, a_onObject, toSet);
-		}catch(Throwable t){}
+		i_translator.onActivate(a_stream, a_onObject, toSet);
 	}
 	
 	protected Object indexEntryFor(Object indexEntry) {
