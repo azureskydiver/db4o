@@ -13,7 +13,7 @@ public class AllTests extends Db4oTestSuite {
     protected Class[] testCases() {
         return new Class[] {
         	CommitTimeCallbacksForClientServerTestCase.class,
-        	LocalCommitTimeCallbacksTestCase.class,
+        	CommitTimeCallbacksForLocalTestCase.class,
             EventRegistryTestCase.class,
             GlobalLifecycleEventsTestCase.class,
             SelectiveCascadingDeleteTestCase.class,

@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.jre11.events;
 
 import com.db4o.events.*;
+import com.db4o.ext.ExtObjectContainer;
 import com.db4o.foundation.Cool;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -19,12 +20,13 @@ public class CommitTimeCallbacksForClientServerTestCase extends AbstractDb4oTest
 		final EventRecorder clientRecorder = new EventRecorder();
 		clientRegistry().committing().addListener(clientRecorder);
 		
-		final EventRecorder serverRecorder = new EventRecorder();		
-		serverRegistry().committing().addListener(serverRecorder);
+		final EventRecorder serverRecorder = new EventRecorder();
+		serverRegistry().committing().addListener(serverRecorder);		
 		
 		final Item item = new Item();
-		db().set(item);
-		db().commit();
+		final ExtObjectContainer client = db();
+		client.set(item);
+		client.commit();
 		
 		Cool.sleepIgnoringInterruption(50);
 		
