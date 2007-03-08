@@ -527,9 +527,9 @@ namespace com.db4o.@internal
 		{
 			lock (typeof(Platform4))
 			{
-				foreach (object stream in shutDownStreams)
+				for (int i = 0; i < shutDownStreams.Count; i++)
 				{
-					Unobfuscated.ShutDownHookCallback(stream);
+					Unobfuscated.ShutDownHookCallback(shutDownStreams[i]);
 				}
 			}
 		}
@@ -542,15 +542,7 @@ namespace com.db4o.@internal
 
 		private static void Translate(Config4Impl config, object obj, ObjectTranslator translator)
 		{
-			try
-			{
-				config.ObjectClass(obj).Translate(translator);
-			}
-			catch (Exception ex)
-			{
-				// TODO: why the object is being logged instead of the error?
-				Unobfuscated.LogErr(config, 48, obj.ToString(), null);
-			}
+			config.ObjectClass(obj).Translate(translator);
 		}
 
 		internal static byte[] UpdateClassName(byte[] bytes)
