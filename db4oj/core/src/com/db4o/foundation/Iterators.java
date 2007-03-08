@@ -39,6 +39,10 @@ public class Iterators {
 	public static Iterator4 filter(Iterator4 iterator, Predicate4 predicate) {
 		return new FilteredIterator(iterator, predicate);
 	}
+	
+	public static Iterator4 iterate(Object[] array) {
+		return new ArrayIterator4(array);
+	}
 
 	public static int size(Iterable4 iterable) {
 		return size(iterable.iterator());
@@ -50,5 +54,21 @@ public class Iterators {
 			++count;
 		}
 		return count;
+	}
+
+	public static String toString(Iterator4 i) {
+		if (!i.moveNext()) {
+			return "[]";
+		}
+		StringBuffer sb = new StringBuffer();
+		sb.append("[");
+		sb.append(i.current());
+		
+		while (i.moveNext()) {
+			sb.append(", ");
+			sb.append(i.current());
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 }
