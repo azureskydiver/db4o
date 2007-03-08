@@ -78,7 +78,7 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase im
 		assertCommittingEvent(new Item[] { item4 }, new Item[] { item1, item2 }, NONE);
 	}
 	
-	public void testCommittingAddedUpdatedDeleted() {
+	public void _testCommittingAddedUpdatedDeleted() {
 		final Item item1 = getItem(1);
 		final Item item2 = getItem(2);
 		final Item item4 = new Item(4);
