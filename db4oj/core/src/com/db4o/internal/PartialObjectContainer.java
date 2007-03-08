@@ -662,7 +662,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	    }
 	}
 
-    ObjectSetFacade get1(Transaction ta, Object template) {
+    private ObjectSetFacade get1(Transaction ta, Object template) {
         ta = checkTransaction(ta);
         QueryResult res = null;
         if (Deploy.debug) {
@@ -739,10 +739,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	beginTopLevelCall();
         try {
             obj = new ObjectReference(id).read(ta, null, null, configImpl().activationDepth(),Const4.ADD_TO_ID_TREE, true);
-        } catch (Throwable t) {
-            if (Debug.atHome) {
-                t.printStackTrace();
-            }
         } finally{
         	endTopLevelCall();
         }
@@ -1382,55 +1378,51 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     protected boolean rename1(Config4Impl config) {
-        boolean renamedOne = false;
-        try {
-            Iterator4 i = config.rename().iterator();
-            while (i.moveNext()) {
-                Rename ren = (Rename) i.current();
-                if (get(ren).size() == 0) {
-                    boolean renamed = false;
+		boolean renamedOne = false;
+		Iterator4 i = config.rename().iterator();
+		while (i.moveNext()) {
+			Rename ren = (Rename) i.current();
+			if (get(ren).size() == 0) {
+				boolean renamed = false;
+				boolean isField = ren.rClass.length() > 0;
+				ClassMetadata yapClass = _classCollection
+						.getYapClass(isField ? ren.rClass : ren.rFrom);
+				if (yapClass != null) {
+					if (isField) {
+						renamed = yapClass.renameField(ren.rFrom, ren.rTo);
+					} else {
+						ClassMetadata existing = _classCollection
+								.getYapClass(ren.rTo);
+						if (existing == null) {
+							yapClass.setName(ren.rTo);
+							renamed = true;
+						} else {
+							logMsg(9, "class " + ren.rTo);
+						}
+					}
+				}
+				if (renamed) {
+					renamedOne = true;
+					setDirtyInSystemTransaction(yapClass);
 
-                    boolean isField = ren.rClass.length() > 0;
-                    ClassMetadata yapClass = _classCollection
-                        .getYapClass(isField ? ren.rClass : ren.rFrom);
-                    if (yapClass != null) {
-                        if (isField) {
-                            renamed = yapClass.renameField(ren.rFrom, ren.rTo);
-                        } else {
-                            ClassMetadata existing = _classCollection
-                                .getYapClass(ren.rTo);
-                            if (existing == null) {
-                                yapClass.setName(ren.rTo);
-                                renamed = true;
-                            } else {
-                                logMsg(9, "class " + ren.rTo);
-                            }
-                        }
-                    }
-                    if (renamed) {
-                        renamedOne = true;
-                        setDirtyInSystemTransaction(yapClass);
+					logMsg(8, ren.rFrom + " to " + ren.rTo);
 
-                        logMsg(8, ren.rFrom + " to " + ren.rTo);
+					// delete all that rename from the new name
+					// to allow future backswitching
+					ObjectSet backren = get(new Rename(ren.rClass, null,
+							ren.rFrom));
+					while (backren.hasNext()) {
+						delete(backren.next());
+					}
 
-                        // delete all that rename from the new name
-                        // to allow future backswitching
-                        ObjectSet backren = get(new Rename(ren.rClass, null,
-                            ren.rFrom));
-                        while (backren.hasNext()) {
-                            delete(backren.next());
-                        }
+					// store the rename, so we only do it once
+					set(ren);
+				}
+			}
+		}
 
-                        // store the rename, so we only do it once
-                        set(ren);
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            Messages.logErr(configImpl(), 10, null, t);
-        }
-        return renamedOne;
-    }
+		return renamedOne;
+	}
 
     public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
         return new ReplicationImpl(_this, peerB,conflictHandler);
@@ -1439,7 +1431,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public final int oldReplicationHandles(Object obj){
         
         // The double check on i_migrateFrom is necessary:
-        // i_handlers.i_replicateFrom may be set in YapObjectCarrier for parent YapStream 
+        // i_handlers.i_replicateFrom may be set in YapObjectCarrier for parent
+		// YapStream
         if(_replicationCallState != Const4.OLD){
             return 0;
         }
