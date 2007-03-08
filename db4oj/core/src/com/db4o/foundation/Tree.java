@@ -460,4 +460,8 @@ public abstract class Tree implements ShallowClone , DeepClone{
 	}
 	
 	public abstract Object key();
+	
+	public Object root() {
+		return this;
+	}
 }
