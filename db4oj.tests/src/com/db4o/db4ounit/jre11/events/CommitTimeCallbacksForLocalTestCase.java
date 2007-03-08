@@ -11,7 +11,7 @@ import db4ounit.extensions.fixtures.OptOutCS;
 /**
  * @exclude
  */
-public class LocalCommitTimeCallbacksTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase implements OptOutCS {
 
 	private static final Item[] NONE = new Item[0];
 
@@ -19,7 +19,7 @@ public class LocalCommitTimeCallbacksTestCase extends AbstractDb4oTestCase imple
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new LocalCommitTimeCallbacksTestCase().runSolo();
+		new CommitTimeCallbacksForLocalTestCase().runSolo();
 	}
 
 	
