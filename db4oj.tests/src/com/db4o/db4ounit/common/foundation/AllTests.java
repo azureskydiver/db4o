@@ -26,6 +26,7 @@ public class AllTests implements TestSuiteBuilder {
 			SortedCollection4TestCase.class,
 			Stack4TestCase.class,
 			TreeKeyIteratorTestCase.class,
+			TreeNodeIteratorTestCase.class,
 			BufferTestCase.class,
 		}).build();	
 	}
