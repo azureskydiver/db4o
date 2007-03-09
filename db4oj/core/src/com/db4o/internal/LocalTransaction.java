@@ -427,7 +427,6 @@ public class LocalTransaction extends Transaction {
         }
         
         final SlotChange slotChange = produceSlotChange(a_id);
-        slotChange.flagForUpdate();
         slotChange.freeOnRollbackSetPointer(a_address, a_length);
     }
     
@@ -590,10 +589,10 @@ public class LocalTransaction extends Transaction {
 				final ObjectReference reference = stream().referenceForId(slotChange._key);
 				if (slotChange.isDeleted()) {					
 					deleted.add(reference);
-				} else if (slotChange.isUpdate()) {
-					updated.add(reference);
-				} else {
+				} else if (slotChange.isNew()) {
 					added.add(reference);
+				} else {
+					updated.add(reference);
 				}
 			}
 		});

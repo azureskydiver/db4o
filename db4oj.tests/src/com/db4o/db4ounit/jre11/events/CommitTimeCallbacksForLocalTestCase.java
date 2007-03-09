@@ -95,7 +95,7 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase im
 		db().set(item4);
 		db().set(item4);
 		db().commit();
-		assertCommittingEvent(NONE, NONE, new Item[] { item4 });
+		assertCommittingEvent(new Item[] { item4 }, NONE, NONE);
 	}
 	
 	private Item getItem(int id) {
