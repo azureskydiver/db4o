@@ -51,13 +51,20 @@ def getExcludedTypes(xmldocPath as string):
 			for name as XmlAttribute
 			in queryXmlDoc(xmldocPath, "//member[exclude]/@name")]		
 
-basePath, = argv
-buildPath = { path as string | Path.Combine(basePath, path) }
+if len(argv) == 2:
+	 baseConfigPath, baseDistPath = argv
+else:
+	basePath, = argv
+	baseConfigPath = Path.Combine(basePath, "config")
+	baseDistPath = Path.Combine(basePath, "dist")
 
-configTemplatePath = buildPath("config/sandcastle/MRefBuilder.config")
-configPath = buildPath("dist/ndoc/Output/MRefBuilder.config")
-assemblyPath = buildPath("dist/dll/Db4objects.Db4o.dll")
-namespaceSummaryPath = buildPath("config/db4o-namespace-summaries.xml")
+buildDistPath = { path  | Path.Combine(baseDistPath, path) }
+buildConfigPath = { path | Path.Combine(baseConfigPath, path) }
+
+configTemplatePath = buildConfigPath("sandcastle/MRefBuilder.config")
+configPath = buildDistPath("ndoc/Output/MRefBuilder.config")
+assemblyPath = buildDistPath("dll/Db4objects.Db4o.dll")
+namespaceSummaryPath = buildConfigPath("db4o-namespace-summaries.xml")
 xmldocPath = Path.ChangeExtension(assemblyPath, ".xml")
 
 try: 
