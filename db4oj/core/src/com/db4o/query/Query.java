@@ -85,9 +85,15 @@ public interface Query {
     /**
 	 * adds an ascending ordering criteria to this node of the 
 	 * query graph.
-	 * <br><br>If multiple ordering criteria are applied,
-	 * the criteria created with earlier method calls are
-	 * more significant.
+	 * <p>
+	 * If multiple ordering criteria are applied, the chronological
+	 * order of method calls is relevant: criteria created by 'earlier' calls are
+	 * considered more significant, i.e. 'later' criteria only have an effect
+	 * for elements that are considered equal by all 'earlier' criteria.
+	 * <p>
+	 * As an example, consider a type with two int fields, and an instance set
+	 * {(a:1,b:3),(a:2,b:2),(a:1,b:2),(a:2,b:3)}. The call sequence [orderAscending(a),
+	 * orderDescending(b)] will result in [(a:1,b:3),(a:1,b:2),(a:2,b:3),(a:2,b:2)].
      * @return this {@link Query} object to allow the chaining of method calls.
      */
     public Query orderAscending ();
@@ -96,9 +102,8 @@ public interface Query {
     /**
 	 * adds a descending order criteria to this node of
 	 * the query graph.
-	 * <br><br>If multiple ordering criteria are applied,
-	 * the criteria created with earlier method calls are
-	 * more significant.
+	 * <br><br>
+	 * For semantics of multiple calls setting ordering criteria, see {@link #orderAscending()}.
      * @return this {@link Query} object to allow the chaining of method calls.
      */
     public Query orderDescending ();
