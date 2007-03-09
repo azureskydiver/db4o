@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.1">
 
   <xsl:output indent="yes" encoding="UTF-8" />
-  <xsl:variable name="derivedTypesLimit">10</xsl:variable>
+  <xsl:param name="derivedTypesLimit" />
 
   <xsl:key name="index" match="/reflection/apis/api" use="@id" />
 
@@ -36,7 +36,7 @@
         <xsl:choose>
           <xsl:when test="local-name(.)='elements' and $allMembersTopicId!=''">
             <elements allMembersTopicId="{$allMembersTopicId}">
-              <xsl:copy-of select="."/>
+              <xsl:copy-of select="element"/>
             </elements>
           </xsl:when>
           <xsl:when test="local-name(.)='family' and $derivedTypesTopicId!=''">
@@ -73,13 +73,13 @@
     
     <xsl:variable name="allMembersTopicId">
         <xsl:if test="(count(elements/*) &gt; 0) and apidata[not(@subgroup='enumeration')]">
-          <xsl:value-of select="concat($typeId, '.Members')"/>
+          <xsl:value-of select="concat('AllMembers.', $typeId)"/>
         </xsl:if>
     </xsl:variable>
 
     <xsl:variable name="derivedTypesTopicId">
       <xsl:if test="count(family/descendents/*) &gt; $derivedTypesLimit">
-        <xsl:value-of select="concat($typeId, '.DerivedTypes')"/>
+        <xsl:value-of select="concat('DerivedTypes.', $typeId)"/>
       </xsl:if>
     </xsl:variable>
 
@@ -92,14 +92,17 @@
     <xsl:if test="$derivedTypesTopicId!=''">
       <api>
         <xsl:attribute name="id">
+          <xsl:text>DerivedTypes.</xsl:text>
           <xsl:value-of select="$typeId"/>
-          <xsl:text>.DerivedTypes</xsl:text>
         </xsl:attribute>
         <apidata name="{apidata/@name}" group="derivedType" subgroup="DerivedTypeList"/>
+	<xsl:copy-of select="templates" />
         <containers>
           <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
           <namespace api="{containers/namespace/@api}" />
-          <type api="{containers/type/@api}" />
+          <type api="{$typeId}" >
+            <xsl:copy-of select="containers/type"/>
+          </type>
         </containers>
         <elements>
           <xsl:for-each select="family/descendents/*">
@@ -109,144 +112,100 @@
       </api>
     </xsl:if>
 
-    <!-- now create member APIs -->
+    <!-- now create all member APIs -->
     <xsl:if test="$allMembersTopicId!=''">
       <api>
         <xsl:attribute name="id">
+	        <xsl:text>AllMembers.</xsl:text>	
           <xsl:value-of select="$typeId"/>
-          <xsl:text>.Members</xsl:text>
         </xsl:attribute>
         <apidata name="{apidata/@name}" group="members" subgroup="members"/>
+        <xsl:copy-of select="templates"/>
         <containers>
           <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
           <namespace api="{containers/namespace/@api}" />
-          <type api="{containers/type/@api}" />
+          <type api="{$typeId}" >
+            <xsl:copy-of select="containers/type"/>
+          </type>
         </containers>
         <elements>
-          <xsl:for-each select="elements/element">
-            <element api="{@api}" />
+                   
+          <xsl:variable name="members" select="key('index',elements/element/@api)" />
+          <xsl:for-each select="$members">
+            <xsl:variable name="name" select="apidata/@name" />
+            <xsl:variable name="subgroup" select="apidata/@subgroup" />
+            <xsl:variable name="set" select="$members[apidata/@name=$name and apidata/@subgroup=$subgroup]" />
+            <xsl:if test="(count($set) &gt; 1) and (($set[containers/type/@api=$typeId][1]/@id)=@id)">
+              <xsl:variable name="id">
+                <xsl:call-template name="overloadId">
+                  <xsl:with-param name="memberId" select="@id" />
+                </xsl:call-template>
+              </xsl:variable>
+              <element api="{$id}" />
+            </xsl:if>
+            <xsl:if test="not(memberdata/@overload='true')">
+              <element api="{@id}" />
+            </xsl:if>
           </xsl:for-each>
+
+          <xsl:for-each select="elements/element">
+            <xsl:if test="apidata/@subgroup">
+              <element api="{@api}" />
+            </xsl:if>
+          </xsl:for-each>
+          
         </elements>
       </api>
     </xsl:if>
 
-    <xsl:if test="not(apidata/@subgroup = 'enumeration')">
-      <!-- create constructor APIs -->
-      <xsl:if test="(count(elements/element[contains(@api, '#ctor')]) &gt; 0)">
-        <api>
-          <xsl:attribute name="id">
-            <xsl:value-of select="$typeId"/>
-            <xsl:text>.Constructors</xsl:text>
-          </xsl:attribute>
-          <apidata name="{apidata/@name}" group="members" subgroup="constructors"/>
-          <containers>
-            <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
-            <namespace api="{containers/namespace/@api}" />
-            <type api="{containers/type/@api}" />
-          </containers>
-          <elements>
-            <xsl:for-each select="elements/element">
-              <xsl:if test="contains(@api, '#ctor')">
-                <element api="{@api}" />
-              </xsl:if>
-            </xsl:for-each>
-          </elements>
-        </api>
-      </xsl:if>
+    <!-- Add method APIs -->
+    <xsl:call-template name="AddMemberlistAPI">
+      <xsl:with-param name="subgroup">method</xsl:with-param>
+      <xsl:with-param name="subsubgroup">method</xsl:with-param>
+      <xsl:with-param name="topicSubgroup">Methods</xsl:with-param>
+      <xsl:with-param name="typeId" select="$typeId" />
+    </xsl:call-template>
 
-      <!-- create property APIs -->
-      <xsl:if test="(count(elements/element[contains(@api, 'P:')]) &gt; 0)">
-        <api>
-          <xsl:attribute name="id">
-            <xsl:value-of select="$typeId"/>
-            <xsl:text>.Properties</xsl:text>
-          </xsl:attribute>
-          <apidata name="{apidata/@name}" group="members" subgroup="properties"/>
-          <containers>
-            <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
-            <namespace api="{containers/namespace/@api}" />
-            <type api="{containers/type/@api}" />
-          </containers>
-          <elements>
-            <xsl:for-each select="elements/element">
-              <xsl:if test="contains(@api, 'P:')">
-                <element api="{@api}" />
-              </xsl:if>
-            </xsl:for-each>
-          </elements>
-        </api>
-      </xsl:if>
+    <!-- Add property APIs -->
+    <xsl:call-template name="AddMemberlistAPI">
+      <xsl:with-param name="subgroup">property</xsl:with-param>
+      <xsl:with-param name="subsubgroup">property</xsl:with-param>
+      <xsl:with-param name="topicSubgroup">Properties</xsl:with-param>
+      <xsl:with-param name="typeId" select="$typeId" />
+    </xsl:call-template>
 
-      <!-- create event APIs -->
-      <xsl:if test="(count(elements/element[contains(@api, 'E:')]) &gt; 0)">
-        <api>
-          <xsl:attribute name="id">
-            <xsl:value-of select="$typeId"/>
-            <xsl:text>.Events</xsl:text>
-          </xsl:attribute>
-          <apidata name="{apidata/@name}" group="members" subgroup="events"/>
-          <containers>
-            <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
-            <namespace api="{containers/namespace/@api}" />
-            <type api="{containers/type/@api}" />
-          </containers>
-          <elements>
-            <xsl:for-each select="elements/element">
-              <xsl:if test="contains(@api, 'E:')">
-                <element api="{@api}" />
-              </xsl:if>
-            </xsl:for-each>
-          </elements>
-        </api>
-      </xsl:if>
+    <!-- Add event APIs -->
+    <xsl:call-template name="AddMemberlistAPI">
+      <xsl:with-param name="subgroup">event</xsl:with-param>
+      <xsl:with-param name="subsubgroup">event</xsl:with-param>
+      <xsl:with-param name="topicSubgroup">Events</xsl:with-param>
+      <xsl:with-param name="typeId" select="$typeId" />
+    </xsl:call-template>
 
-      <!-- create field APIs -->
-      <xsl:if test="(count(elements/element[contains(@api, 'F:')]) &gt; 0)">
-        <api>
-          <xsl:attribute name="id">
-            <xsl:value-of select="$typeId"/>
-            <xsl:text>.Fields</xsl:text>
-          </xsl:attribute>
-          <apidata name="{apidata/@name}" group="members" subgroup="fields"/>
-          <containers>
-            <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
-            <namespace api="{containers/namespace/@api}" />
-            <type api="{containers/type/@api}" />
-          </containers>
-          <elements>
-            <xsl:for-each select="elements/element">
-              <xsl:if test="contains(@api, 'F:')">
-                <element api="{@api}" />
-              </xsl:if>
-            </xsl:for-each>
-          </elements>
-        </api>
-      </xsl:if>
-
-      <!-- create method APIs -->
-      <xsl:if test="(count(elements/element[contains(@api, 'M:') and not(contains(@api, '#ctor'))]) &gt; 0)">
-        <api>
-          <xsl:attribute name="id">
-            <xsl:value-of select="$typeId"/>
-            <xsl:text>.Methods</xsl:text>
-          </xsl:attribute>
-          <apidata name="{apidata/@name}" group="members" subgroup="methods"/>
-          <containers>
-            <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
-            <namespace api="{containers/namespace/@api}" />
-            <type api="{containers/type/@api}" />
-          </containers>
-          <elements>
-            <xsl:for-each select="elements/element">
-              <xsl:if test="(contains(@api, 'M:') and not(contains(@api, '#ctor')))">
-                <element api="{@api}" />
-              </xsl:if>
-            </xsl:for-each>
-          </elements>
-        </api>
-      </xsl:if>
-    </xsl:if>
+    <!-- Add field APIs -->
+    <xsl:call-template name="AddMemberlistAPI">
+      <xsl:with-param name="subgroup">field</xsl:with-param>
+      <xsl:with-param name="subsubgroup">field</xsl:with-param>
+      <xsl:with-param name="topicSubgroup">Fields</xsl:with-param>
+      <xsl:with-param name="typeId" select="$typeId" />
+    </xsl:call-template>
    
+    <!-- Add attached Property APIs -->
+    <xsl:call-template name="AddAttachedMemberlistAPI">
+      <xsl:with-param name="subgroup">property</xsl:with-param>
+      <xsl:with-param name="subsubgroup">attachedProperty</xsl:with-param>
+      <xsl:with-param name="topicSubgroup">AttachedProperties</xsl:with-param>
+      <xsl:with-param name="typeId" select="$typeId" />
+    </xsl:call-template>
+
+    <!-- Add attached Event APIs -->
+    <xsl:call-template name="AddAttachedMemberlistAPI">
+      <xsl:with-param name="subgroup">event</xsl:with-param>
+      <xsl:with-param name="subsubgroup">attachedEvent</xsl:with-param>
+      <xsl:with-param name="topicSubgroup">AttachedEvents</xsl:with-param>
+      <xsl:with-param name="typeId" select="$typeId" />
+    </xsl:call-template>
+       
     <!-- now create overload APIs -->
     <xsl:variable name="members" select="key('index',elements/element/@api)" />
     <xsl:for-each select="$members">
@@ -264,10 +223,14 @@
           </xsl:attribute>
 
           <apidata name="{apidata/@name}" group="{apidata/@group}" subgroup="{apidata/@subgroup}" pseudo="true" />
+          <xsl:copy-of select="templates" />
+          <memberdata visibility="{memberdata/@visibility}" />
           <containers>
             <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
             <namespace api="{containers/namespace/@api}" />
-            <type api="{containers/type/@api}" />
+            <type api="{$typeId}">
+              <xsl:copy-of select="containers/type" />
+            </type>
           </containers>
           <elements>
             <xsl:for-each select="$set">
@@ -283,7 +246,7 @@
   <xsl:template match="api[apidata/@group='member']">
     <xsl:copy-of select="." />
   </xsl:template>
-
+  
   <xsl:template name="overloadId">
     <xsl:param name="memberId" />
 		<xsl:text>Overload:</xsl:text>
@@ -309,5 +272,111 @@
 		</xsl:variable>
 		<xsl:value-of select="substring($noGeneric,3)" />
 	</xsl:template>
+
+  <xsl:template name="AddMemberlistAPI">
+    <xsl:param name="subgroup"/>
+    <xsl:param name="subsubgroup" />
+    <xsl:param name="topicSubgroup"/>
+    <xsl:param name="typeId" />
+    
+    <xsl:variable name="declaredMembers" select="key('index',elements/element/@api)[apidata/@subgroup=$subgroup and not(apidata/@subsubgroup)]" />
+    <xsl:variable name="inheritedMembers" select="elements/element[apidata/@subgroup=$subgroup and not(apidata/@subsubgroup)]" />
+     
+    <xsl:if test="(count($declaredMembers) &gt; 0) or (count($inheritedMembers) &gt; 0)">
+        <api>
+          <xsl:attribute name="id">
+            <xsl:value-of select="concat($topicSubgroup, '.', $typeId)"/> 	
+          </xsl:attribute>
+          <apidata name="{apidata/@name}" group="members" subgroup="{$topicSubgroup}"/>
+          <xsl:copy-of select="templates" />
+          <containers>
+            <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
+            <namespace api="{containers/namespace/@api}" />
+            <type api="{$typeId}" >
+              <xsl:copy-of select="containers/type"/>
+            </type>
+          </containers>
+          <elements>
+                       
+            <xsl:variable name="members" select="key('index',elements/element/@api)" />
+            <xsl:for-each select="$members">
+              <xsl:variable name="name" select="apidata/@name" />
+              <xsl:variable name="set" select="$members[apidata/@name=$name and apidata/@subgroup=$subgroup]" />
+              <xsl:if test="(count($set) &gt; 1) and (($set[containers/type/@api=$typeId][1]/@id)=@id)">
+                <xsl:variable name="id">
+                  <xsl:call-template name="overloadId">
+                    <xsl:with-param name="memberId" select="@id" />
+                  </xsl:call-template>
+                </xsl:variable>
+                <element api="{$id}" />
+              </xsl:if>
+              <xsl:if test="apidata/@subgroup=$subgroup and not(apidata/@subsubgroup) and not(memberdata/@overload = 'true')">
+                <element api="{@id}" />
+              </xsl:if>
+            </xsl:for-each>
+            
+            <xsl:for-each select="elements/element">
+              <xsl:if test="apidata/@subgroup=$subgroup and not(apidata/@subsubgroup)">
+                <element api="{@api}" />
+              </xsl:if>
+            </xsl:for-each>
+         </elements>
+        </api>
+          
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="AddAttachedMemberlistAPI">
+    <xsl:param name="subgroup"/>
+    <xsl:param name="subsubgroup" />
+    <xsl:param name="topicSubgroup"/>
+    <xsl:param name="typeId" />
+
+    <xsl:variable name="declaredMembers" select="key('index',elements/element/@api)[apidata/@subsubgroup=$subsubgroup]" />
+    <xsl:variable name="inheritedMembers" select="elements/element[apidata/@subsubgroup=$subsubgroup]" />
+   
+    <xsl:if test="(count($declaredMembers) &gt; 0) or (count($inheritedMembers) &gt; 0)">
+        <api>
+          <xsl:attribute name="id">
+            <xsl:value-of select="concat($topicSubgroup, '.', $typeId)"/>
+          </xsl:attribute>
+          <apidata name="{apidata/@name}" group="members" subgroup="{$topicSubgroup}" subsubgroup="{$subsubgroup}"/>
+          <xsl:copy-of select="templates" />
+          <containers>
+            <library assembly="{containers/library/@assembly}" module="{containers/library/@module}"/>
+            <namespace api="{containers/namespace/@api}" />
+            <type api="{$typeId}" >
+              <xsl:copy-of select="containers/type"/>
+            </type>
+          </containers>
+          <elements>
+          
+            <xsl:variable name="members" select="key('index',elements/element/@api)" />
+            <xsl:for-each select="$members">
+              <xsl:variable name="name" select="apidata/@name" />
+              <xsl:variable name="set" select="$members[apidata/@name=$name and apidata/@subgroup=$subgroup and apidata/@subsubgroup=$subsubgroup]" />
+              <xsl:if test="(count($set) &gt; 1) and (($set[containers/type/@api=$typeId][1]/@id)=@id)">
+                <xsl:variable name="id">
+                  <xsl:call-template name="overloadId">
+                    <xsl:with-param name="memberId" select="@id" />
+                  </xsl:call-template>
+                </xsl:variable>
+                <element api="{$id}" />
+              </xsl:if>
+              <xsl:if test="apidata/@subgroup=$subgroup and apidata/@subsubgroup=$subsubgroup and not(memberdata/@overload = 'true')">
+                <element api="{@id}" />
+              </xsl:if>
+            </xsl:for-each>
+
+            <xsl:for-each select="elements/element">
+              <xsl:if test="apidata/@subgroup=$subgroup and apidata/@subsubgroup=$subsubgroup">
+                <element api="{@api}" />
+              </xsl:if>
+            </xsl:for-each>
+          </elements>
+        </api>
+      
+    </xsl:if>
+  </xsl:template>
 
 </xsl:stylesheet>

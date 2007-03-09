@@ -10,11 +10,21 @@ import System
 import System.IO
 import System.Xml
 import System.Reflection
+import System.Collections.Generic
 
 def getExportedTypes(path as string):
-	types = List(Assembly.ReflectionOnlyLoadFrom(path).GetExportedTypes())
-	types.Sort(compareTypes)
-	return types
+	return groupByNamespace(Assembly.ReflectionOnlyLoadFrom(path).GetExportedTypes())
+	
+def groupByNamespace(types):
+	groups = Dictionary[of string, List[of Type]]()
+	for item as System.Type in types:
+		if item.Namespace in groups:
+			groups[item.Namespace].Add(item)
+		else:
+			group = List[of Type]()
+			group.Add(item)
+			groups[item.Namespace] = group
+	return groups
 	
 def compareTypes(t1 as Type, t2 as Type):
 	result = t1.Namespace.CompareTo(t2.Namespace)
@@ -34,15 +44,16 @@ def namespacesFromXmlSummary(path as string):
 			for nameAttr as XmlAttribute
 			in queryXmlDoc(path, "//namespace/@name")]
 	
-def appendFilter(filters as XmlElement, attributes as Hash):
-	f = filters.OwnerDocument.CreateElement("filter")
+def appendElement(parent as XmlElement, elementName as string, attributes as Hash):
+	e = parent.OwnerDocument.CreateElement(elementName)
 	for item in attributes:
-		f.SetAttribute(item.Key, item.Value)
-	filters.AppendChild(f)	
+		e.SetAttribute(item.Key, item.Value)
+	parent.AppendChild(e)	
+	return e
 	
 def resetApiFilters(path as string):
 	doc = loadXmlDoc(path)
-	filters as XmlElement = doc.SelectSingleNode("//apiFilters")
+	filters as XmlElement = doc.SelectSingleNode("//apiFilter")
 	filters.RemoveAll()
 	return filters
 	
@@ -74,13 +85,15 @@ try:
 	excludedTypes = getExcludedTypes(xmldocPath)
 	
 	filters = resetApiFilters(configPath)	
-	for type as Type in getExportedTypes(assemblyPath):
-		
-		expose = type.Namespace in documentedNamespaces and type.FullName not in excludedTypes
-		if expose: continue
-		appendFilter(filters, { "namespace": type.Namespace,
-								"type": type.Name,
-								"expose": expose.ToString().ToLower() })								
+	for namespaceGroup in getExportedTypes(assemblyPath):
+		currentNamespace = namespaceGroup.Key
+		if currentNamespace in documentedNamespaces:
+			filter = appendElement(filters, "namespace", {"name": currentNamespace, "expose": "true"})
+			for type as Type in namespaceGroup.Value:
+				if type.FullName in excludedTypes:
+					appendElement(filter, "type", { "name": type.Name, "expose": "false" })								
+		else:
+			appendElement(filters, "namespace", {"name": currentNamespace, "expose": "false" })		
 	
 	filters.OwnerDocument.Save(configPath)
 	

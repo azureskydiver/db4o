@@ -2,4 +2,5 @@
 	<reference />
 	<syntax />
 	<comments />
+  <metadata />
 </document>

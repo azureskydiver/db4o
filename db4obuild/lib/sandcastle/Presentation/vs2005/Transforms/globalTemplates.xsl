@@ -5,47 +5,51 @@
         >
 
   <xsl:template name="autogenSeeAlsoLinks">
-    <!-- a link to parent type -->
-    <xsl:if test="$group='member' or ($pseudo and not($group='root' or $group='namespace'))">
-      <xsl:call-template name="createReferenceLink">
-        <xsl:with-param name="id" select="$typeId" />
-        <xsl:with-param name="forceHot" select="true()" />
-      </xsl:call-template>
-      <br/>
+      
+    <xsl:if test="$group='enumeration' or $group='member' or $group='members' or $group='derivedType'">
+      <include item="SeeAlsoTypeLink">
+        <parameter>
+          <referenceLink target="{$typeId}" />
+        </parameter>
+      </include>
+      <br/> 
     </xsl:if>
 
     <!-- a link to type's All Members list -->
     <xsl:if test="$subgroup='class' or $subgroup='structure' or $subgroup='interface' 
-                 or $group='member' 
-                 or ($pseudo and not($group='root' or $group='namespace'))">
-      <xsl:call-template name="createReferenceLink">
-        <xsl:with-param name="id" select="concat('AllMembers.',$typeId)" />
-        <xsl:with-param name="forceHot" select="true()" />
-        <xsl:with-param name="displayText">
-          <include item="SeeAlsoTypeMembersLink">
-            <parameter>
-              <xsl:value-of  select="$typeName"/>
-            </parameter>
-          </include>
-        </xsl:with-param>
-      </xsl:call-template>
+                 or $subgroup='DerivedTypeList' or $pseudo">
+      <include item="SeeAlsoMembersLink">
+        <parameter>
+          <referenceLink target="{concat('AllMembers.',$typeId)}" />
+        </parameter>
+      </include>
+      <!--
+      <referenceLink target="{concat($typeId, '.Members')}">
+        <include item="SeeAlsoTypeMembersLink">
+          <parameter>
+            <xsl:value-of  select="$typeName"/>
+          </parameter>
+        </include>
+      </referenceLink>
+      -->
       <br/>
     </xsl:if>
-
+       
     <!-- a link to the namespace topic -->
-    <xsl:call-template name="createReferenceLink">
-      <xsl:with-param name="id">
-        <xsl:value-of select="$namespaceId"/>
-      </xsl:with-param>
-      <xsl:with-param name="forceHot" select="true()" />
-    </xsl:call-template>
+    <xsl:if test="$group='type' or $group='enumeration' or $group='member' or $group='members' or $group='derivedType'">
+    <include item="SeeAlsoNamespaceLink">
+      <parameter>
+        <referenceLink target="{$namespaceId}" />
+      </parameter>
+    </include>
     <br/>
-
+    </xsl:if>
+   
   </xsl:template>
 
   <xsl:variable name="typeId">
     <xsl:choose>
-      <xsl:when test="/document/reference/apidata[@group='type' and not(@pseudo='true')]">
+      <xsl:when test="/document/reference/apidata[@group='type']">
         <xsl:value-of select="$key"/>
       </xsl:when>
       <xsl:otherwise>
@@ -56,7 +60,7 @@
 
   <xsl:variable name="typeName">
     <xsl:choose>
-      <xsl:when test="/document/reference/apidata[@group='type' and not(@pseudo='true')]">
+      <xsl:when test="/document/reference/apidata[@group='type']">
         <xsl:for-each select="/document/reference">
           <xsl:call-template name="GetTypeName"/>
         </xsl:for-each>
@@ -83,14 +87,53 @@
   </xsl:template>
 
   <xsl:variable name="namespaceId">
-    <xsl:choose>
-      <xsl:when test="/document/reference/apidata[@group='type' and not(@pseudo='true')]">
-        <xsl:value-of select="/document/reference/containers/namespace/@api"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="/document/reference/containers/type/containers/namespace/@api"/>
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:value-of select="/document/reference/containers/namespace/@api"/>
   </xsl:variable>
+
+  <!-- indent by 2*n spaces -->
+  <xsl:template name="indent">
+    <xsl:param name="count" />
+    <xsl:if test="$count &gt; 1">
+      <xsl:text>&#160;&#160;</xsl:text>
+      <xsl:call-template name="indent">
+        <xsl:with-param name="count" select="$count - 1" />
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="codeSection">
+    <xsl:param name="codeLang" />
+    <div class="code">
+      <span codeLanguage="{$codeLang}">
+        <table width="100%" cellspacing="0" cellpadding="0">
+          <tr>
+            <th>
+              <include item="{$codeLang}"/>
+              <xsl:text>&#xa0;</xsl:text>
+            </th>
+            <th>
+              <span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this, event)" onmouseover="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" tabindex="0">
+                <img class="copyCodeImage" name="ccImage" align="absmiddle">
+                  <includeAttribute name="alt" item="CopyCodeImage" />
+                  <includeAttribute name="src" item="iconPath">
+                    <parameter>copycode.gif</parameter>
+                  </includeAttribute>
+                </img>
+                <include item="copyCode"/>
+              </span>
+            </th>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <pre>
+                <xsl:apply-templates/>
+              </pre>
+            </td>
+          </tr>
+        </table>
+      </span>
+    </div>
+
+  </xsl:template>
 
 </xsl:stylesheet>

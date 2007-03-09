@@ -340,6 +340,14 @@ div.code span.comment {
 	color: red;
 }
 
+span.foreignPhrase {
+	font-style: italic;
+}
+
+span.placeholder {
+	font-style: italic;
+}
+
 a {
 	color: blue;
 	font-weight: bold;

@@ -136,7 +136,7 @@ p
 	margin-top: 10;
 	margin-bottom: 5;
 }
-a
+a[href] 
 {
 	color:	#0000FF;
 }
@@ -180,11 +180,24 @@ div#mainSection
 	font-size: 70%;
 	width: 100%;
 }
+html>body #mainSection
+{
+	font-size:73%;
+	width: 100%;
+}
 
 /* Applies to everything below the non-scrolling header region, minus the footer. */
 div#mainBody
 {
 	font-size: 90%;
+	margin-left: 15;
+	margin-top: 10;
+	padding-bottom: 20;
+}
+
+html>body #mainBody
+{
+	font-size: 93%;
 	margin-left: 15;
 	margin-top: 10;
 	padding-bottom: 20;
@@ -391,6 +404,20 @@ div#footer
 	width:	100%;
 }
 
+html>body div#footer
+{
+	font-size: 80%;
+	margin-top:	0;
+	margin-bottom:	0;
+	margin-left:	0;
+	margin-right:	0;
+	padding-top:	2;
+	padding-bottom:	6;
+	padding-left:	5;
+	padding-right:	2;
+	width:	98%;
+}
+
 /* Unable to find this style in the transforms. The default footer SSC adds a plain horizontal rule.
    TODO: Determine whether this style is required by the doc spec. */
 /*
@@ -445,6 +472,15 @@ div.section
 	padding-right:	15;
 	width:	100%;
 }
+html>body div.section
+{
+	margin-left:0;
+	padding-top:	2;
+	padding-bottom:	2;
+	padding-left:	16;
+	padding-right:	15;
+	width:	97%;
+}
 div.seeSection
 {
 	margin-left:0;
@@ -478,6 +514,11 @@ h1.heading
 	font-weight:	bold;
 	margin-bottom:	4;
 }
+.procedureSubHeading
+{
+	font-weight: bold;
+	margin-bottom: 4;
+}
 
 /* Formats the titles of author-generated tables. */
 h3.subHeading
@@ -485,6 +526,12 @@ h3.subHeading
 	color:  #000000;
 	font-size: 120%;
     font-weight:800;
+}
+
+h3.procedureSubHeading
+{
+	color: #003399;
+	font-size: 120%;
 }
 
 /* Formats the titles of all subsections. */
@@ -785,11 +832,11 @@ div.hr3 {
 }
 
 span.cs {
-	display: inline;
+	display: none;
 }
 
 span.vb {
-	display: none;
+	display: inline;
 }
 
 span.cpp {
@@ -801,6 +848,48 @@ span.code {
 	font-size: 105%;
 	color:	#000066; 
 }
+span.ui {
+	font-weight: bold;
+}
+span.math {
+	font-style: italic;
+}
+span.input {
+	font-weight: bold;
+}
+span.term {
+	font-style: italic;
+}
+span.label {
+	font-weight: bold;
+}
+span.nonLinkTerms
+{
+	font-weight: bold;
+}
+span.foreignPhrase {
+	font-style: italic;
+}
+span.placeholder {
+	font-style: italic;
+}
+span.keyword 
+{
+	font-weight: bold;
+}
+div.code span.keyword {
+	
+}
+div.caption
+{
+	font-weight: bold;
+	font-size:100%;
+	color:#003399;
+}
+span.nolink {
+	font-weight: bold;
+}
+
 /* DaemondC: End custom CSS */
 
 

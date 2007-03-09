@@ -108,6 +108,8 @@
 	<item id="inheritedFrom">(Inherited from {0}.)</item>
 	<item id="overridesMember">(Overrides {0}.)</item>
 	<item id="locationInformation">Assembly: {0} (Module: {1})</item>
+	 <item id="hostProtectionAttributeShort">HostProtectionAttribute.</item>
+	<item id="hostProtectionAttributeLong">This API is protected by HostProtectionAttribute.</item>
   
   <!-- thread safety boilerplate -->
   <item id="staticThreadSafe">Static members of this type are safe for multi-threaded operations. </item>
@@ -132,5 +134,6 @@
 	<item id="protectedPropertyAltText">protected property</item>
 	<item id="protectedEventAltText">protected event</item>
 	<item id="staticAltText">static member</item>
+  
 
 </content>

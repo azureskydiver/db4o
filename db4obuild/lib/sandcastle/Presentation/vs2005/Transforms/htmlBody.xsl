@@ -2,7 +2,8 @@
 				xmlns:MSHelp="http://msdn.microsoft.com/mshelp"
 				xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5"
 				xmlns:xlink="http://www.w3.org/1999/xlink"
-        xmlns:msxsl="urn:schemas-microsoft-com:xslt">
+        xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+         >
 
   <xsl:import href="globalTemplates.xsl"/>
   <xsl:template name="upperBodyStuff">
@@ -26,18 +27,18 @@
       </xsl:if>
 
       <!-- include the member options dropdown on memberlist topics -->
-      <xsl:if test="$pseudo and not($subgroup='DerivedTypeList' or $group='root' or $group='member')">
+      <xsl:if test="$group='members'">
         <xsl:call-template name="membersOptionsSpan"/>
       </xsl:if>
     </div>
   </xsl:template>
 
   <xsl:template name="bodyHeaderTopTable">
-    <table width="100%" id="topTable">
+    <table id="topTable">
       <tr id="headerTableRow1">
         <td align="left">
           <span id="runningHeaderText">
-            <include item="productTitle"/>
+            <xsl:call-template name="runningHeader" />
           </span>
         </td>
       </tr>
@@ -61,7 +62,7 @@
     
     <xsl:if test="$hasSeeAlsoSection">
       
-      <a href="#seealsoToggle" onclick="OpenSection(seealsoToggle)">
+      <a href="#seeAlsoToggle" onclick="OpenSection(seeAlsoToggle)">
         <xsl:text/>
         <include item="SeeAlso"/>
         <xsl:text/>
@@ -83,15 +84,117 @@
     <!-- class, structure, and interface About topics get link to Members topic (unless the doc model has the all members lists on the type topic) -->
     <xsl:if test="/document/reference/elements/@allMembersTopicId">
       <referenceLink target="{/document/reference/elements/@allMembersTopicId}">
-        <include item="membersTitle"/>
+        <include item="allMembersTitle"/>
       </referenceLink>
     </xsl:if>
-    
+
+    <!--all members only -->
+    <xsl:if test="$subgroup='members'">
+        <xsl:variable name="visibility">
+          <xsl:for-each select="/document/reference/elements/element">
+          <xsl:choose>
+            <xsl:when test="memberdata[@visibility = 'public']">
+              <xsl:choose>
+                <xsl:when test="not(apidata[@subsubgroup])">
+                  <xsl:value-of select="concat('Public', apidata/@subgroup, ';')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="concat('Public', apidata/@subsubgroup, ';')"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+            <xsl:when test="memberdata[@visibility = 'private'] and not(proceduredata[@virtual = 'true'])">
+              <xsl:choose>
+                <xsl:when test="not(apidata[@subsubgroup])">
+                  <xsl:value-of select="concat('Private', apidata/@subgroup, ';')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="concat('Private', apidata/@subsubgroup, ';')"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+            <xsl:when test="memberdata[@visibility = 'private'] and proceduredata[@virtual = 'true']">
+              explicit;
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:choose>
+                <xsl:when test="not(apidata[@subsubgroup])">
+                  <xsl:value-of select="concat('Protected', apidata/@subgroup, ';')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="concat('Protected', apidata/@subsubgroup, ';')"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:otherwise>
+          </xsl:choose>
+          </xsl:for-each>
+        </xsl:variable>
+      
+      
+      <xsl:for-each select="/document/reference/elements/element">
+        <xsl:variable name="subgroup" select="apidata/@subgroup"/>
+        <xsl:variable name="subsubgroup" select="apidata/@subsubgroup" />
+        <xsl:if test="not(preceding-sibling::element[apidata[@subgroup=$subgroup]]) and not($subsubgroup)">
+          <xsl:if test="not($subsubgroup)">
+            <xsl:variable name="elementVisibility">
+              <xsl:choose>
+                <xsl:when test="contains($visibility, concat('Public', $subgroup))">
+                  <xsl:value-of select="concat('Public', $subgroup)"/>
+                </xsl:when>
+                <xsl:when test="contains($visibility, concat('Private', $subgroup))">
+                  <xsl:value-of select="concat('Private', $subgroup)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="concat('Protected', $subgroup)"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+            
+            <!-- add a link to the member list section for this subgroup -->
+            <a href="#{$elementVisibility}Toggle" onclick="OpenSection({$elementVisibility}Toggle)">
+              <xsl:text/>
+              <include item="{$subgroup}Group"/>
+              <xsl:text/>
+            </a>&#160;
+          </xsl:if>
+        </xsl:if>
+        <xsl:if test="not(preceding-sibling::element[apidata[@subsubgroup=$subsubgroup]]) and $subsubgroup">
+          <xsl:variable name="elementVisibility">
+            <xsl:choose>
+              <xsl:when test="contains($visibility, concat('Public', $subsubgroup))">
+                <xsl:value-of select="concat('Public', $subsubgroup)"/>
+              </xsl:when>
+              <xsl:when test="contains($visibility, concat('Private', $subsubgroup))">
+                <xsl:value-of select="concat('Private', $subsubgroup)"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="concat('Protected', $subsubgroup)"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <!-- add a link to the member list section for this subgroup -->
+          <a href="#{$elementVisibility}Toggle" onclick="OpenSection({$elementVisibility}Toggle)">
+            <xsl:text/>
+            <include item="{$subsubgroup}Group"/>
+            <xsl:text/>
+          </a>&#160;
+        </xsl:if>
+      </xsl:for-each>
+
+      <xsl:if test="contains($visibility, 'explicit')">
+        <a href="#ExplicitInterfaceImplementationToggle" onclick="OpenSection(ExplicitInterfaceImplementationSection)">
+          <xsl:text/>
+          <include item="ExplicitInterfaceImplementationTitle"/>
+          <xsl:text/>
+        </a>&#160;
+      </xsl:if>
+     </xsl:if>
+        
   </xsl:template>
 
 
   <xsl:template name="bodyHeaderBottomTable">
-    <table width="100%" id="bottomTable" cellspacing="0" cellpadding="0">
+    <table id="bottomTable" cellspacing="0" cellpadding="0">
       <tr>
         <td>
           <span onclick="ExpandCollapseAll(toggleAllImage)" style="cursor:default;" onkeypress="ExpandCollapseAll_CheckKey(toggleAllImage, event)" tabindex="0">
@@ -114,7 +217,7 @@
           </xsl:if>
 
           <!-- include the member options dropdown on memberlist topics -->
-          <xsl:if test="$pseudo and not($subgroup='DerivedTypeList' or $group='root' or $group='member')">
+          <xsl:if test="$group='members'">
             <xsl:call-template name="membersOptionsFilterToolTip"/>
           </xsl:if>
         </td>
@@ -139,6 +242,11 @@
         <include item="netcfMembersOnly"/>
       </label>
       <br/>
+      <!-- add a checkbox for XNA filtering -->
+      <input id="netXnaCheckbox" type='checkbox' name="membersOptionsFilter" onClick="SetMembersOptions(this)"/>
+      <label class="membersOptionsFilter" for="netXnaCheckbox">
+        <include item="netXnaMembersOnly"/>
+      </label>
     </div>
   </xsl:template>
   
@@ -308,18 +416,17 @@ copyHoverImage - overview (not namespace); list (only overload lists ctor, metho
         <parameter>drpdown_orange.gif</parameter>
       </includeAttribute>
     </img>
-    <xsl:if test="($group='type' or $group='member') and not($pseudo)">
-      <img id="copyImage" style="display:none; height:0; width:0;" alt="Copy image">
-        <includeAttribute name="src" item="iconPath">
-          <parameter>copycode.gif</parameter>
-        </includeAttribute>
-      </img>
-      <img id="copyHoverImage" style="display:none; height:0; width:0;" alt="CopyHover image">
-        <includeAttribute name="src" item="iconPath">
-          <parameter>copycodeHighlight.gif</parameter>
-        </includeAttribute>
-      </img>
-    </xsl:if>
+    <img id="copyImage" style="display:none; height:0; width:0;" alt="Copy image">
+      <includeAttribute name="src" item="iconPath">
+        <parameter>copycode.gif</parameter>
+      </includeAttribute>
+    </img>
+    <img id="copyHoverImage" style="display:none; height:0; width:0;" alt="CopyHover image">
+      <includeAttribute name="src" item="iconPath">
+        <parameter>copycodeHighlight.gif</parameter>
+      </includeAttribute>
+    </img>
+    
   </xsl:template>
 
   

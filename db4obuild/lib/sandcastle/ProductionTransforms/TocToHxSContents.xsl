@@ -5,15 +5,35 @@
 
 	<xsl:template match="/">
 		<HelpTOC DTDVersion="1.0">
-			<xsl:apply-templates select="/tableOfContents/topic" />
+			<xsl:apply-templates select="/topics" />
 		</HelpTOC>
 	</xsl:template>
 
 	<xsl:template match="topic">
-		<HelpTOCNode Url="html\{@id}.htm">
+		<HelpTOCNode Id="{@id}">
+      <xsl:choose>
+        <xsl:when test="@file">
+          <xsl:attribute name="Url">
+            <xsl:value-of select="concat('html\',@file,'.htm')" />
+          </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="Title">
+            <xsl:value-of select="@id" />
+          </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
 			<xsl:apply-templates />
 		</HelpTOCNode>
-	</xsl:template>	
+	</xsl:template>
 
+  <xsl:template match="stoc">
+    <HelpTOCNode NodeType="TOC" Url="{@project}" />
+  </xsl:template>
 
+  <xsl:template match="stopic">
+    <HelpTOCNode Url="ms-help:/../{@project}/html/{@file}.htm" Id="{@id}">
+      <xsl:apply-templates />
+    </HelpTOCNode>
+  </xsl:template>
 </xsl:stylesheet>

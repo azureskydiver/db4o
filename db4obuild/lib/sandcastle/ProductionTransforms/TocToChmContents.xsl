@@ -11,7 +11,24 @@
 
 <xsl:stylesheet version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:msxsl="urn:schemas-microsoft-com:xslt"
 		xmlns:ddue="http://ddue.schemas.microsoft.com/authoring/2003/5">
+
+  <msxsl:script language="C#" implements-prefix="ddue">
+    <msxsl:using namespace="System.Xml" />
+    <msxsl:using namespace="System.Xml.XPath" />
+    <![CDATA[
+   public static string getTitle(string fileName) {
+    XPathDocument doc = new XPathDocument(fileName);
+    XPathNavigator node = doc.CreateNavigator().SelectSingleNode("/html/head/title");
+    if (node != null)
+     return node.Value;
+    else
+     return String.Empty;
+   }
+  ]]>
+  </msxsl:script>
+
 
   <xsl:param name="html" select="string('Output/html')"/>
 
@@ -21,12 +38,12 @@
     <xsl:text>&lt;!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML/EN"&gt;&#x0a;</xsl:text>
     <xsl:text>&lt;HTML&gt;&#x0a;</xsl:text>
     <xsl:text>  &lt;BODY&gt;&#x0a;</xsl:text>
-    <xsl:apply-templates select="tableOfContents"/>
+    <xsl:apply-templates select="topics"/>
     <xsl:text>  &lt;/BODY&gt;&#x0a;</xsl:text>
     <xsl:text>&lt;/HTML&gt;&#x0a;</xsl:text>
   </xsl:template>
   
-  <xsl:template match="tableOfContents">
+  <xsl:template match="topics">
     <xsl:call-template name="parentNode"/>
   </xsl:template>
   
@@ -45,11 +62,11 @@
     <xsl:text><![CDATA[<LI><OBJECT type="text/sitemap">]]>&#x0a;</xsl:text>
     <xsl:call-template name="indent"/>
     <xsl:text>  &lt;param name="Name" value="</xsl:text>
-    <xsl:value-of select="document(concat($html, '/', @id, '.htm'),.)/html/head/title"/>
+    <xsl:value-of select="ddue:getTitle(concat($html,'/', @file, '.htm'))"/>
     <xsl:text>"&gt;&#x0a;</xsl:text>
     <xsl:call-template name="indent"/>
     <xsl:text>  &lt;param name="Local" value="html\</xsl:text>
-    <xsl:value-of select="@id"/>
+    <xsl:value-of select="@file"/>
     <xsl:text>.htm"&gt;&#x0a;</xsl:text>
     <xsl:call-template name="indent"/>
     <xsl:text><![CDATA[</OBJECT></LI>]]>&#x0a;</xsl:text>
