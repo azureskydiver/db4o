@@ -90,12 +90,15 @@ public class QueryResultsPanel extends JPanel {
 		resultsTable = new JTable();
 		resultsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		resultsTable.setDefaultRenderer(Date.class, new DateRenderer());
+		JTextField tf = new JTextField();
+		resultsTable.setDefaultEditor(Date.class, new DateEditor(tf));
 		JScrollPane scrollpane = new FastScrollPane(resultsTable);
+		scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollpane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		QueryResultsTableSelectionListener listener = new QueryResultsTableSelectionListener(resultsTable, this);
 		resultsTable.addMouseListener(listener);
 		return scrollpane;
 	}
-
 
 	/**
 	 * After a query executes, this will setup the table to display results.

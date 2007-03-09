@@ -1,6 +1,7 @@
 package com.db4o.objectManager.v2.query;
 
 import com.spaceprogram.db4o.sql.*;
+import com.spaceprogram.db4o.sql.util.ReflectHelper;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;

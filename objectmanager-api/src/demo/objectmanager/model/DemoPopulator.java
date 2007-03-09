@@ -112,6 +112,7 @@ public class DemoPopulator {
 			allDataTypes.setWFloat(new Float(allDataTypes.getAFloat()));
 			allDataTypes.setADouble(56.78);
 			allDataTypes.setWDouble(new Double(allDataTypes.getADouble()));
+			allDataTypes.setDate(new Date());
 			db.set(allDataTypes);
 		}
 	}

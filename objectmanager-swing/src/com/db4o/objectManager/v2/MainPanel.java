@@ -6,6 +6,7 @@ import com.db4o.reflect.ReflectField;
 import com.db4o.objectManager.v2.uif_lite.component.Factory;
 import com.db4o.objectManager.v2.uif_lite.panel.SimpleInternalFrame;
 import com.db4o.objectManager.v2.util.Log;
+import com.db4o.objectManager.v2.util.DateFormatter;
 import com.db4o.objectManager.v2.query.QueryResultsPanel;
 import com.db4o.objectManager.v2.query.QueryBarPanel;
 import com.db4o.objectManager.v2.shortcuts.ShortcutsListener;
@@ -47,23 +48,26 @@ import java.util.List;
  * Time: 1:12:30 PM
  */
 public class MainPanel extends JPanel implements UISession {
-    private MainFrame mainFrame;
-    private Settings settings;
-    private ObjectContainer objectContainer;
-    private Db4oConnectionSpec connectionSpec;
-    private DatabaseInspector databaseInspector;
-    //2private QueryResultsPanel queryResultsPanel;
+
+	public static DateFormatter dateFormatter = new DateFormatter();
+
+	private MainFrame mainFrame;
+	private Settings settings;
+	private ObjectContainer objectContainer;
+	private Db4oConnectionSpec connectionSpec;
+	private DatabaseInspector databaseInspector;
+	//2private QueryResultsPanel queryResultsPanel;
     private QueryBarPanel queryBarPanel;
-    private JTabbedPane tabbedPane;
-    private int queryCounter;
+	private JTabbedPane tabbedPane;
 
-    //private TreeModel classTreeModel;
+	private int queryCounter;
+	//private TreeModel classTreeModel;
     private JTree classTree;
-    private DatabaseSummaryPanel databaseSummaryPanel;
-    private static final int MAX_TABS = 8;
+	private DatabaseSummaryPanel databaseSummaryPanel;
+	private static final int MAX_TABS = 8;
 
 
-    public MainPanel(MainFrame mainFrame, Settings settings, Db4oConnectionSpec connectionSpec, ObjectContainer oc) {
+	public MainPanel(MainFrame mainFrame, Settings settings, Db4oConnectionSpec connectionSpec, ObjectContainer oc) {
         super(new BorderLayout());
         this.mainFrame = mainFrame;
         this.settings = settings;

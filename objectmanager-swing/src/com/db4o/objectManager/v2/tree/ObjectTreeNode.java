@@ -1,9 +1,11 @@
 package com.db4o.objectManager.v2.tree;
 
 import com.db4o.reflect.ReflectField;
+import com.db4o.objectManager.v2.MainPanel;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Date;
 import java.lang.reflect.Array;
 
 /**
@@ -22,11 +24,6 @@ public class ObjectTreeNode {
 		this.field = field;
 		this.ob = ob;
 	}
-
-	/*public ObjectTreeNode(ObjectTreeNode parentNode, Object ob) {
-		this.parentNode = parentNode;
-		this.ob = ob;
-	}*/
 
 	/**
 	 * Use this constructor for collections and arrays.
@@ -51,13 +48,9 @@ public class ObjectTreeNode {
 				ret = field.getName() + ": ";
 			} else ret = "";
 			if (ob == null) ret += ob;
-			else if (ob.getClass().isArray()) {
-				/*
-				wow, this is strange, this occurs on next line, that's why i surrounded with catch all
-				Exception in thread "AWT-EventQueue-0" java.lang.ClassCastException: [B
-				at com.db4o.objectManager.v2.tree.ObjectTreeNode.toString(ObjectTreeNode.java:40)
-				 */
-				//Object[] array = (Object[]) ob;
+			else if (ob instanceof Date){
+				ret += MainPanel.dateFormatter.display((Date) ob);
+			} else if (ob.getClass().isArray()) {
 				ret += "Array[" + Array.getLength(ob) + "]";
 			} else if (ob instanceof Collection) {
 				Collection collection = (Collection) ob;
