@@ -19,7 +19,7 @@ var scrollPos = 0;
 var inheritedMembers;
 var protectedMembers;
 var netcfMembersOnly;
-
+var netXnaMembersOnly;
 
 // Initialize array of section states
 
@@ -888,6 +888,13 @@ function SetMembersOptions(key)
 		else
 			netcfMembersOnly = "off";
 	}
+	if(key.id == "netXnaCheckbox")
+	{
+		if(key.checked == true)
+			netXnaMembersOnly = "on";
+		else
+			netXnaMembersOnly = "off";
+	}
 	DisplayFilteredMembers();
 	
 	ChangeMembersOptionsFilterLabel();
@@ -901,6 +908,7 @@ function DisplayFilteredMembers()
 	for(i = 0; i < iAllMembers.length; ++i)
 	{
 		if (((iAllMembers[i].getAttribute("protected") == "true") && (protectedMembers == "off")) ||
+		    ((iAllMembers[i].notSupportedOnXna == "true") && (netXnaMembersOnly == "on")) ||
 			((iAllMembers[i].getAttribute("name") == "inheritedMember") && (inheritedMembers == "off")) ||
 			((iAllMembers[i].getAttribute("notSupportedOn") == "netcf") && (netcfMembersOnly == "on")))
 			iAllMembers[i].style.display = "none";
@@ -914,7 +922,7 @@ function ChangeMembersOptionsFilterLabel()
 
 	var filtered = false;
 	
-	if((inheritedMembers=="off") || (protectedMembers=="off") || (netcfMembersOnly=="on"))
+	if((inheritedMembers=="off") || (protectedMembers=="off") || (netXnaMembersOnly == "on") || (netcfMembersOnly=="on"))
 		filtered = true;
 		
 	var labelElement;
@@ -961,6 +969,12 @@ function LoadMembersOptions()
 		netcfMembersOnly = "off";
 	else
 		netcfMembersOnly = value;
+	
+	value = Load("netXnaMembersOnly");
+	if(value == null)
+		netXnaMembersOnly = "off";
+	else
+		netXnaMembersOnly = value;
 }
 
 function SaveMembersOptions()
@@ -968,6 +982,7 @@ function SaveMembersOptions()
 	Save("inheritedMembers", inheritedMembers);
 	Save("protectedMembers", protectedMembers);
 	Save("netcfMembersOnly", netcfMembersOnly);
+	Save("netXnaMembersOnly", netXnaMembersOnly);
 }
 
 /*	

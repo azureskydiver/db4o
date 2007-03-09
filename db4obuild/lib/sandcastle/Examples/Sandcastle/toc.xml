@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topics>
+  <topic id="R:Project" file="d4648875-d41a-783b-d5f4-638df39ee413">
+    <topic id="N:TestNamespace" file="1e7f0145-fc8a-9430-3a05-ac7bee0be4ae">
+      <topic id="T:TestNamespace.StoredNumber" file="b305c67d-2c2c-88cb-9f35-0a3657b6e124">
+        <topic id="M:TestNamespace.StoredNumber.#ctor(System.Int32)" file="4b455201-84ff-ec0b-8399-43048a395243" />
+        <topic id="M:TestNamespace.StoredNumber.Dec" file="fd899a2f-4143-b376-be5d-e12bacf50140">
+          <topic id="M:TestNamespace.StoredNumber.Dec" file="6b81f360-4d0a-738e-a390-69686c36ed1d" />
+          <topic id="M:TestNamespace.StoredNumber.Dec(System.Int32)" file="43b9f7ca-5641-7146-dea3-b6fc46373324" />
+        </topic>
+        <topic id="M:TestNamespace.StoredNumber.IncludeTest" file="4c266aab-56fe-d790-01ad-09cb9f6018ac" />
+        <topic id="M:TestNamespace.StoredNumber.Increment" file="1d073562-dc13-e8da-833f-eaafad17a217">
+          <topic id="M:TestNamespace.StoredNumber.Increment" file="9bc681bc-c301-de15-af38-2c889e5dbd76" />
+          <topic id="M:TestNamespace.StoredNumber.Increment(System.Int32)" file="b363c602-6a74-6993-7b5f-765d44b545fa" />
+        </topic>
+        <topic id="P:TestNamespace.StoredNumber.MyProp" file="a960a48d-81b1-c8f3-7a6c-ecef3565df37" />
+        <topic id="M:TestNamespace.StoredNumber.PreliminaryTest" file="36f03e68-f4bc-84b4-568b-a0efb5a4cee8" />
+        <topic id="M:TestNamespace.StoredNumber.Swap``1(``0@,``0@)" file="711264c7-869a-1805-74e7-971471458735" />
+        <topic id="P:TestNamespace.StoredNumber.Value" file="027202e4-4131-5df7-9ad7-61bc2b1604af" />
+      </topic>
+    </topic>
+  </topic>
+</topics>

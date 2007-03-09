@@ -1,0 +1,335 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<reflection xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:ddue="urn:ddue-extensions">
+  <assemblies>
+    <assembly name="test" version="0.0.0.0" culture="" key="" hash="SHA1">
+      <attributes>
+        <attribute>
+          <type api="T:System.Runtime.CompilerServices.CompilationRelaxationsAttribute" ref="true" />
+          <argument>
+            <type api="T:System.Int32" ref="false" />
+            <value>8</value>
+          </argument>
+        </attribute>
+        <attribute>
+          <type api="T:System.Runtime.CompilerServices.RuntimeCompatibilityAttribute" ref="true" />
+          <assignment name="WrapNonExceptionThrows">
+            <type api="T:System.Boolean" ref="false" />
+            <value>True</value>
+          </assignment>
+        </attribute>
+      </attributes>
+    </assembly>
+  </assemblies>
+  <apis>
+    <api id="R:Project">
+      <apidata group="root" pseudo="true" />
+      <elements>
+        <element api="N:TestNamespace" />
+      </elements>
+      <file name="d4648875-d41a-783b-d5f4-638df39ee413" />
+    </api>
+    <api id="N:TestNamespace">
+      <apidata name="TestNamespace" group="namespace" />
+      <elements>
+        <element api="T:TestNamespace.StoredNumber" />
+      </elements>
+      <file name="1e7f0145-fc8a-9430-3a05-ac7bee0be4ae" />
+    </api>
+    <api id="T:TestNamespace.StoredNumber">
+      <apidata name="StoredNumber" group="type" subgroup="class" />
+      <typedata visibility="public" abstract="false" sealed="false" serializable="true" layout="auto" format="ansi" />
+      <family>
+        <ancestors>
+          <type api="T:System.Object" ref="true" />
+        </ancestors>
+      </family>
+      <elements>
+        <element api="M:TestNamespace.StoredNumber.#ctor(System.Int32)" />
+        <element api="M:TestNamespace.StoredNumber.PreliminaryTest" />
+        <element api="M:TestNamespace.StoredNumber.Dec" />
+        <element api="M:TestNamespace.StoredNumber.Dec(System.Int32)" />
+        <element api="M:TestNamespace.StoredNumber.Increment" />
+        <element api="M:TestNamespace.StoredNumber.Increment(System.Int32)" />
+        <element api="M:TestNamespace.StoredNumber.Swap``1(``0@,``0@)" />
+        <element api="M:TestNamespace.StoredNumber.IncludeTest" />
+        <element api="P:TestNamespace.StoredNumber.Value" />
+        <element api="P:TestNamespace.StoredNumber.MyProp" />
+        <element api="M:System.Object.ToString">
+          <apidata name="ToString" group="member" subgroup="method" />
+          <memberdata visibility="public" static="false" special="false" />
+          <proceduredata abstract="false" virtual="true" final="false" />
+          <returns>
+            <type api="T:System.String" ref="true" />
+          </returns>
+          <containers>
+            <library assembly="mscorlib" module="mscorlib" />
+            <namespace api="N:System" />
+            <type api="T:System.Object" ref="true" />
+          </containers>
+        </element>
+        <element api="M:System.Object.Equals(System.Object)">
+          <apidata name="Equals" group="member" subgroup="method" />
+          <memberdata visibility="public" static="false" special="false" overload="true" />
+          <proceduredata abstract="false" virtual="true" final="false" />
+          <parameters>
+            <parameter name="obj">
+              <type api="T:System.Object" ref="true" />
+            </parameter>
+          </parameters>
+          <returns>
+            <type api="T:System.Boolean" ref="false" />
+          </returns>
+          <containers>
+            <library assembly="mscorlib" module="mscorlib" />
+            <namespace api="N:System" />
+            <type api="T:System.Object" ref="true" />
+          </containers>
+        </element>
+        <element api="M:System.Object.GetHashCode">
+          <apidata name="GetHashCode" group="member" subgroup="method" />
+          <memberdata visibility="public" static="false" special="false" />
+          <proceduredata abstract="false" virtual="true" final="false" />
+          <returns>
+            <type api="T:System.Int32" ref="false" />
+          </returns>
+          <containers>
+            <library assembly="mscorlib" module="mscorlib" />
+            <namespace api="N:System" />
+            <type api="T:System.Object" ref="true" />
+          </containers>
+        </element>
+        <element api="M:System.Object.GetType">
+          <apidata name="GetType" group="member" subgroup="method" />
+          <memberdata visibility="public" static="false" special="false" />
+          <proceduredata abstract="false" virtual="false" final="false" />
+          <returns>
+            <type api="T:System.Type" ref="true" />
+          </returns>
+          <containers>
+            <library assembly="mscorlib" module="mscorlib" />
+            <namespace api="N:System" />
+            <type api="T:System.Object" ref="true" />
+          </containers>
+        </element>
+        <element api="M:System.Object.Finalize">
+          <apidata name="Finalize" group="member" subgroup="method" />
+          <memberdata visibility="family" static="false" special="false" />
+          <proceduredata abstract="false" virtual="true" final="false" />
+          <containers>
+            <library assembly="mscorlib" module="mscorlib" />
+            <namespace api="N:System" />
+            <type api="T:System.Object" ref="true" />
+          </containers>
+          <attributes>
+            <attribute>
+              <type api="T:System.Runtime.ConstrainedExecution.ReliabilityContractAttribute" ref="true" />
+              <argument>
+                <type api="T:System.Runtime.ConstrainedExecution.Consistency" ref="false" />
+                <enumValue>
+                  <field name="WillNotCorruptState" />
+                </enumValue>
+              </argument>
+              <argument>
+                <type api="T:System.Runtime.ConstrainedExecution.Cer" ref="false" />
+                <enumValue>
+                  <field name="Success" />
+                </enumValue>
+              </argument>
+            </attribute>
+          </attributes>
+        </element>
+        <element api="M:System.Object.MemberwiseClone">
+          <apidata name="MemberwiseClone" group="member" subgroup="method" />
+          <memberdata visibility="family" static="false" special="false" />
+          <proceduredata abstract="false" virtual="false" final="false" />
+          <returns>
+            <type api="T:System.Object" ref="true" />
+          </returns>
+          <containers>
+            <library assembly="mscorlib" module="mscorlib" />
+            <namespace api="N:System" />
+            <type api="T:System.Object" ref="true" />
+          </containers>
+        </element>
+      </elements>
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+      </containers>
+      <file name="b305c67d-2c2c-88cb-9f35-0a3657b6e124" />
+    </api>
+    <api id="Overload:TestNamespace.StoredNumber.Dec">
+      <apidata name="Dec" group="member" subgroup="method" pseudo="true" />
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" />
+      </containers>
+      <elements>
+        <element api="M:TestNamespace.StoredNumber.Dec" />
+        <element api="M:TestNamespace.StoredNumber.Dec(System.Int32)" />
+      </elements>
+      <file name="fd899a2f-4143-b376-be5d-e12bacf50140" />
+    </api>
+    <api id="Overload:TestNamespace.StoredNumber.Increment">
+      <apidata name="Increment" group="member" subgroup="method" pseudo="true" />
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" />
+      </containers>
+      <elements>
+        <element api="M:TestNamespace.StoredNumber.Increment" />
+        <element api="M:TestNamespace.StoredNumber.Increment(System.Int32)" />
+      </elements>
+      <file name="1d073562-dc13-e8da-833f-eaafad17a217" />
+    </api>
+    <api id="M:TestNamespace.StoredNumber.#ctor(System.Int32)">
+      <apidata name=".ctor" group="member" subgroup="constructor" />
+      <memberdata visibility="public" static="false" special="true" />
+      <parameters>
+        <parameter name="value">
+          <type api="T:System.Int32" ref="false" />
+        </parameter>
+      </parameters>
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="4b455201-84ff-ec0b-8399-43048a395243" />
+    </api>
+    <api id="M:TestNamespace.StoredNumber.Dec">
+      <apidata name="Dec" group="member" subgroup="method" />
+      <memberdata visibility="public" static="false" special="false" overload="true" />
+      <proceduredata abstract="false" virtual="false" final="false" />
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="6b81f360-4d0a-738e-a390-69686c36ed1d" />
+    </api>
+    <api id="M:TestNamespace.StoredNumber.Dec(System.Int32)">
+      <apidata name="Dec" group="member" subgroup="method" />
+      <memberdata visibility="public" static="false" special="false" overload="true" />
+      <proceduredata abstract="false" virtual="false" final="false" />
+      <parameters>
+        <parameter name="step">
+          <type api="T:System.Int32" ref="false" />
+        </parameter>
+      </parameters>
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="43b9f7ca-5641-7146-dea3-b6fc46373324" />
+    </api>
+    <api id="M:TestNamespace.StoredNumber.IncludeTest">
+      <apidata name="IncludeTest" group="member" subgroup="method" />
+      <memberdata visibility="public" static="false" special="false" />
+      <proceduredata abstract="false" virtual="false" final="false" />
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="4c266aab-56fe-d790-01ad-09cb9f6018ac" />
+    </api>
+    <api id="M:TestNamespace.StoredNumber.Increment">
+      <apidata name="Increment" group="member" subgroup="method" />
+      <memberdata visibility="public" static="false" special="false" overload="true" />
+      <proceduredata abstract="false" virtual="false" final="false" />
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="9bc681bc-c301-de15-af38-2c889e5dbd76" />
+    </api>
+    <api id="M:TestNamespace.StoredNumber.Increment(System.Int32)">
+      <apidata name="Increment" group="member" subgroup="method" />
+      <memberdata visibility="public" static="false" special="false" overload="true" />
+      <proceduredata abstract="false" virtual="false" final="false" />
+      <parameters>
+        <parameter name="step">
+          <type api="T:System.Int32" ref="false" />
+        </parameter>
+      </parameters>
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="b363c602-6a74-6993-7b5f-765d44b545fa" />
+    </api>
+    <api id="P:TestNamespace.StoredNumber.MyProp">
+      <apidata name="MyProp" group="member" subgroup="property" />
+      <memberdata visibility="public" static="false" special="false" />
+      <proceduredata abstract="false" virtual="false" final="false" />
+      <propertydata get="true" set="true" />
+      <returns>
+        <type api="T:System.Int32" ref="false" />
+      </returns>
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="a960a48d-81b1-c8f3-7a6c-ecef3565df37" />
+    </api>
+    <api id="M:TestNamespace.StoredNumber.PreliminaryTest">
+      <apidata name="PreliminaryTest" group="member" subgroup="method" />
+      <memberdata visibility="public" static="false" special="false" />
+      <proceduredata abstract="false" virtual="false" final="false" />
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="36f03e68-f4bc-84b4-568b-a0efb5a4cee8" />
+    </api>
+    <api id="M:TestNamespace.StoredNumber.Swap``1(``0@,``0@)">
+      <apidata name="Swap" group="member" subgroup="method" />
+      <memberdata visibility="public" static="false" special="false" />
+      <proceduredata abstract="false" virtual="false" final="false" />
+      <templates>
+        <template name="T" />
+      </templates>
+      <parameters>
+        <parameter name="lhs">
+          <referenceTo>
+            <template name="T" api="M:TestNamespace.StoredNumber.Swap``1(``0@,``0@)" />
+          </referenceTo>
+        </parameter>
+        <parameter name="rhs">
+          <referenceTo>
+            <template name="T" api="M:TestNamespace.StoredNumber.Swap``1(``0@,``0@)" />
+          </referenceTo>
+        </parameter>
+      </parameters>
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="711264c7-869a-1805-74e7-971471458735" />
+    </api>
+    <api id="P:TestNamespace.StoredNumber.Value">
+      <apidata name="Value" group="member" subgroup="property" />
+      <memberdata visibility="public" static="false" special="false" />
+      <proceduredata abstract="false" virtual="false" final="false" />
+      <propertydata get="true" />
+      <returns>
+        <type api="T:System.Int32" ref="false" />
+      </returns>
+      <containers>
+        <library assembly="test" module="test" />
+        <namespace api="N:TestNamespace" />
+        <type api="T:TestNamespace.StoredNumber" ref="true" />
+      </containers>
+      <file name="027202e4-4131-5df7-9ad7-61bc2b1604af" />
+    </api>
+  </apis>
+</reflection>

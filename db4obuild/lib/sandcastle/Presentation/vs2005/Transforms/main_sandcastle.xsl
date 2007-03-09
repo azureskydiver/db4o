@@ -21,8 +21,8 @@
       <xsl:apply-templates select="/document/reference/elements" mode="overloadSummary" />
     </xsl:if>
     <!-- assembly information -->
-    <xsl:if test="not($group='member' or $group='members')">
-      <xsl:apply-templates select="/document/reference/containers/library" />
+    <xsl:if test="not(($group='member' and $pseudo='true') or $group='members' or $group='derivedType' or $group='root' or $group='namespace')">
+      <xsl:call-template name="requirementsInfo"/>
     </xsl:if>
 		<!-- syntax -->
     <xsl:if test="not($group='members') and not($group ='namespace')">
@@ -53,7 +53,6 @@
 		</xsl:choose>
 		<!-- remarks -->
 		<xsl:apply-templates select="/document/comments/remarks" />
-    <xsl:apply-templates select="/document/comments/threadsafety" />
 		<!-- example -->
 		<xsl:apply-templates select="/document/comments/example" />
 		<!-- other comment sections -->
@@ -63,6 +62,7 @@
 		<xsl:call-template name="exceptions" />
 		<!-- inheritance -->
 		<xsl:apply-templates select="/document/reference/family" />
+    <xsl:apply-templates select="/document/comments/threadsafety" />
 		<!-- see also -->
     <xsl:call-template name="seealso" />
 
@@ -90,7 +90,9 @@
     <xsl:apply-templates select="overloads" mode="sections"/>
   </xsl:template>
 
- 
+  <xsl:template name="getInternalOnlyDescription">
+    
+  </xsl:template>
 
 
   <!-- block sections -->
@@ -186,7 +188,46 @@
 	</xsl:template>
 
 	<xsl:template match="code">
-		<div class="code"><pre><xsl:apply-templates /></pre></div>
+    
+    <xsl:variable name="codeLang">
+      <xsl:choose>
+        <xsl:when test="@language = 'vbs'">
+          <xsl:text>VBScript</xsl:text>
+        </xsl:when>
+        <xsl:when test="@language = 'vb' or @language = 'vb#'  or @language = 'VB'" >
+          <xsl:text>VisualBasic</xsl:text>
+        </xsl:when>
+        <xsl:when test="@language = 'c#' or @language = 'cs' or @language = 'C#'" >
+          <xsl:text>CSharp</xsl:text>
+        </xsl:when>
+        <xsl:when test="@language = 'cpp' or @language = 'cpp#' or @language = 'c' or @language = 'c++' or @language = 'C++'" >
+          <xsl:text>ManagedCPlusPlus</xsl:text>
+        </xsl:when>
+        <xsl:when test="@language = 'j#' or @language = 'jsharp'">
+          <xsl:text>JSharp</xsl:text>
+        </xsl:when>
+        <xsl:when test="@language = 'js' or @language = 'jscript#' or @language = 'jscript' or @language = 'JScript'">
+          <xsl:text>JScript</xsl:text>
+        </xsl:when>
+        <xsl:when test="@language = 'xml'">
+          <xsl:text>xml</xsl:text>
+        </xsl:when>
+        <xsl:when test="@language = 'html'">
+          <xsl:text>html</xsl:text>
+        </xsl:when>
+        <xsl:when test="@language = 'vb-c#'">
+          <xsl:text>visualbasicANDcsharp</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>other</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:call-template name="codeSection">
+      <xsl:with-param name="codeLang" select="$codeLang" />
+    </xsl:call-template>
+
 	</xsl:template>
 
 	<xsl:template name="exceptions">
@@ -195,7 +236,8 @@
         <xsl:with-param name="toggleSwitch" select="'exceptions'"/>
 				<xsl:with-param name="title"><include item="exceptionsTitle" /></xsl:with-param>
 				<xsl:with-param name="content">
-				<table class="exceptions">
+          <div class="tableSection">
+            <table width="100%" cellspacing="2" cellpadding="5" >
 					<tr>
 						<th class="exceptionNameColumn"><include item="exceptionNameHeader" /></th>
 						<th class="exceptionConditionColumn"><include item="exceptionConditionHeader" /></th>
@@ -203,10 +245,11 @@
 					<xsl:for-each select="/document/comments/exception">
 						<tr>
 							<td><referenceLink target="{@cref}" qualified="true" /></td>
-							<td><xsl:apply-templates select="." /></td>
+							<td><xsl:apply-templates select="." /><br /></td>
 						</tr>
 					</xsl:for-each>
 				</table>
+          </div>
 				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:if>
@@ -220,7 +263,8 @@
           <include item="permissionsTitle" />
         </xsl:with-param>
         <xsl:with-param name="content">
-          <table class="permissions">
+          <div class="tableSection">
+            <table width="100%" cellspacing="2" cellpadding="5" >
             <tr>
               <th class="permissionNameColumn">
                 <include item="permissionNameHeader" />
@@ -235,11 +279,12 @@
                   <referenceLink target="{@cref}" qualified="true" />
                 </td>
                 <td>
-                  <xsl:apply-templates select="." />
+                  <xsl:apply-templates select="." /><br />
                 </td>
               </tr>
             </xsl:for-each>
           </table>
+          </div>
         </xsl:with-param>
       </xsl:call-template>
     </xsl:if>
@@ -248,7 +293,7 @@
   <xsl:template name="seealso">
 		<xsl:if test="count(/document/comments/seealso | /document/comments/summary/seealso) &gt; 0">
       <xsl:call-template name="section">
-        <xsl:with-param name="toggleSwitch" select="'seealso'" />
+        <xsl:with-param name="toggleSwitch" select="'seeAlso'" />
         <xsl:with-param name="title">
           <include item="relatedTitle" />
         </xsl:with-param>
@@ -271,15 +316,16 @@
 	</xsl:template>
 
 	<xsl:template match="list[@type='number']">
-		<ul>
+		<ol>
 			<xsl:for-each select="item">
 				<li><xsl:apply-templates /></li>
 			</xsl:for-each>
-		</ul>
+		</ol>
 	</xsl:template>
 
 	<xsl:template match="list[@type='table']">
-		<table class="authoredTable">
+    <div class="tableSection">
+      <table width="100%" cellspacing="2" cellpadding="5" >
 			<xsl:for-each select="listheader">
 				<tr>
 					<xsl:for-each select="*">
@@ -290,11 +336,12 @@
 			<xsl:for-each select="item">
 				<tr>
 					<xsl:for-each select="*">
-						<td><xsl:apply-templates /></td>
+						<td><xsl:apply-templates /><br /></td>
 					</xsl:for-each>
 				</tr>
 			</xsl:for-each>
 		</table>
+    </div>
 	</xsl:template>
 
 	<!-- inline tags -->
@@ -302,12 +349,12 @@
   <xsl:template match="see[@cref]">
     <xsl:choose>
       <xsl:when test="normalize-space(.)">
-        <referenceLink target="{@cref}" qualified="true">
+        <referenceLink target="{@cref}">
           <xsl:value-of select="." />
         </referenceLink>
       </xsl:when>
       <xsl:otherwise>
-        <referenceLink target="{@cref}" qualified="true" />
+        <referenceLink target="{@cref}"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -379,6 +426,30 @@
     </span>
   </xsl:template>
 
+  <xsl:template match="syntax">
+    <xsl:if test="count(*) > 0">
+      <xsl:call-template name="section">
+        <xsl:with-param name="toggleSwitch" select="'syntax'" />
+        <xsl:with-param name="title">
+          <include item="syntaxTitle"/>
+        </xsl:with-param>
+        <xsl:with-param name="content">
+          <div id="syntaxCodeBlocks" class="code">
+            <xsl:call-template name="syntaxBlocks" />
+          </div>
+          <!-- parameters & return value -->
+          <xsl:apply-templates select="/document/reference/parameters" />
+          <xsl:apply-templates select="/document/comments/value" />
+          <xsl:apply-templates select="/document/comments/returns" />
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="runningHeader">
+    <include item="runningHeaderText" />
+  </xsl:template>
+
 	<!-- pass through html tags -->
 
 	<xsl:template match="p|ol|ul|li|dl|dt|dd|table|tr|th|td|a|img|b|i|strong|em|del|sub|sup|br|hr|h1|h2|h3|h4|h5|h6|pre|div|span|blockquote|abbr|acronym">
@@ -444,9 +515,9 @@
   <xsl:template name="createReferenceLink">
     <xsl:param name="id" />
     <xsl:param name="qualified" select="false()" />
-    <b>
+    
       <referenceLink target="{$id}" qualified="{$qualified}" />
-    </b>
+    
   </xsl:template>
  
 	<xsl:template name="section">
@@ -485,5 +556,77 @@
     
   </xsl:template>
 
+  <xsl:template name="memberIntro">
+    <p>
+      <xsl:apply-templates select="/document/reference/containers/summary"/>
+    </p>
+    <xsl:if test="/document/reference/elements/element/memberdata[@visibility='public' or @visibility='family']">
+      <!-- if there are exposed members, show a boilerplate intro p -->
+      <xsl:variable name="introTextItemId">
+        <xsl:choose>
+          <xsl:when test="/document/reference/containers/type/templates">genericExposedMembersTableText</xsl:when>
+          <xsl:otherwise>exposedMembersTableText</xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      <p>
+        <include item="{$introTextItemId}">
+          <parameter>
+            <xsl:variable name="api" select="/document/reference/containers/type/@api"/>
+            <referenceLink target="{$api}" />
+          </parameter>
+        </include>
+      </p>
+    </xsl:if>
+  </xsl:template>
 
+  <xsl:template name="mshelpCodelangAttributes">
+    <xsl:for-each select="/document/comments/example/code">
+
+      <xsl:if test="not(@language=preceding::*/@language)">
+        <xsl:variable name="codeLang">
+          <xsl:choose>
+            <xsl:when test="@language = 'VBScript' or @language = 'vbs'">
+              <xsl:text>VBScript</xsl:text>
+            </xsl:when>
+            <xsl:when test="@language = 'VisualBasic' or @language = 'vb' or @language = 'vb#' or @language = 'VB' or @language = 'kbLangVB'" >
+              <xsl:text>kbLangVB</xsl:text>
+            </xsl:when>
+            <xsl:when test="@language = 'CSharp' or @language = 'c#' or @language = 'cs' or @language = 'C#'" >
+              <xsl:text>CSharp</xsl:text>
+            </xsl:when>
+            <xsl:when test="@language = 'ManagedCPlusPlus' or @language = 'cpp' or @language = 'cpp#' or @language = 'c' or @language = 'c++' or @language = 'C++' or @language = 'kbLangCPP'" >
+              <xsl:text>kbLangCPP</xsl:text>
+            </xsl:when>
+            <xsl:when test="@language = 'JSharp' or @language = 'j#' or @language = 'jsharp' or @language = 'VJ#'">
+              <xsl:text>VJ#</xsl:text>
+            </xsl:when>
+            <xsl:when test="@language = 'JScript' or @language = 'js' or @language = 'jscript#' or @language = 'jscript' or @language = 'JScript' or @language = 'kbJScript'">
+              <xsl:text>kbJScript</xsl:text>
+            </xsl:when>
+            <xsl:when test="@language = 'xml'">
+              <xsl:text>xml</xsl:text>
+            </xsl:when>
+            <xsl:when test="@language = 'html'">
+              <xsl:text>html</xsl:text>
+            </xsl:when>
+            <xsl:when test="@language = 'vb-c#'">
+              <xsl:text>visualbasicANDcsharp</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:text>other</xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:choose>
+          <xsl:when test="$codeLang='other'" />
+          <xsl:otherwise>
+            <xsl:call-template name="codeLang">
+              <xsl:with-param name="codeLang" select="$codeLang" />
+            </xsl:call-template>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+
+    </xsl:for-each>
+  </xsl:template>
 </xsl:stylesheet>

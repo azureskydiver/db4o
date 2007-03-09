@@ -76,6 +76,10 @@
 		<xsl:apply-templates select="summary" />
 	</xsl:template>
 
+	<xsl:template name="getInternalOnlyDescription">
+    		<!-- To do -->
+  	</xsl:template>
+
 	<!-- block sections -->
 
 	<xsl:template match="summary">
@@ -140,7 +144,32 @@
 	<xsl:template match="example">
 		<xsl:call-template name="section">
 			<xsl:with-param name="title"><include item="examplesTitle" /></xsl:with-param>
-			<xsl:with-param name="content"><xsl:apply-templates /></xsl:with-param>
+			<xsl:with-param name="content">
+	      <xsl:choose>
+	        <xsl:when test="code/@language">
+        <xsl:variable name="codeId" select="generate-id()" />
+        <table class="filter"><tr class="tabs" id="ct_{$codeId}">
+            <xsl:for-each select="code">
+              <td class="tab" x-lang="{@language}" onclick="ct{$codeId}.toggleClass('x-lang','{@language}','activeTab','tab'); cb{$codeId}.toggleStyle('x-lang','{@language}','display','block','none');"><include item="{@language}Label" /></td>
+            </xsl:for-each></tr></table>
+        <div id="cb_{$codeId}">
+          <xsl:for-each select="code">
+            <div class="code" x-lang="{@language}"><pre><xsl:copy-of select="node()" /></pre></div>
+          </xsl:for-each>
+        </div>
+        <script type="text/javascript"><xsl:text>
+			    var ct</xsl:text><xsl:value-of select="$codeId" /><xsl:text> = new ElementCollection('ct_</xsl:text><xsl:value-of select="$codeId" /><xsl:text>');
+			    var cb</xsl:text><xsl:value-of select="$codeId" /><xsl:text> = new ElementCollection('cb_</xsl:text><xsl:value-of select="$codeId" /><xsl:text>');
+			    lfc.registerTabbedArea(ct</xsl:text><xsl:value-of select="$codeId" /><xsl:text>, cb</xsl:text><xsl:value-of select="$codeId" /><xsl:text>);
+			    ct</xsl:text><xsl:value-of select="$codeId" /><xsl:text>.toggleClass('x-lang','CSharp','activeTab','tab');
+          cb</xsl:text><xsl:value-of select="$codeId" /><xsl:text>.toggleStyle('x-lang','CSharp','display','block','none');</xsl:text>
+        </script>
+	        </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:with-param>
 		</xsl:call-template>
 	</xsl:template>
 
@@ -165,7 +194,7 @@
 					<xsl:for-each select="/document/comments/exception">
 						<tr>
 							<td><referenceLink target="{@cref}" /></td>
-							<td><xsl:apply-templates select="." /></td>
+							<td><xsl:apply-templates select="." /><br /></td>
 						</tr>
 					</xsl:for-each>
 				</table>
@@ -187,7 +216,7 @@
 					<xsl:for-each select="/document/comments/permission">
 						<tr>
 							<td><referenceLink target="{@cref}" /></td>
-							<td><xsl:apply-templates select="." /></td>
+              <td><xsl:apply-templates select="." /><br /></td>
 						</tr>
 					</xsl:for-each>
 				</table>
@@ -219,11 +248,11 @@
 	</xsl:template>
 
 	<xsl:template match="list[@type='number']">
-		<ul>
+		<ol>
 			<xsl:for-each select="item">
 				<li><xsl:apply-templates /></li>
 			</xsl:for-each>
-		</ul>
+		</ol>
 	</xsl:template>
 
 	<xsl:template match="list[@type='table']">
@@ -238,7 +267,7 @@
 			<xsl:for-each select="item">
 				<tr>
 					<xsl:for-each select="*">
-						<td><xsl:apply-templates /></td>
+						<td><xsl:apply-templates /><br /></td>
 					</xsl:for-each>
 				</tr>
 			</xsl:for-each>
@@ -314,7 +343,7 @@
 
 	<!-- pass through html tags -->
 
-	<xsl:template match="p|ol|ul|li|dl|dt|dd|table|tr|th|td|h1|h2|h3|h4|h5|h6|pre|blockquote|div|span|a|img|b|i|strong|em|del|sub|sup|abbr|acronym">
+	<xsl:template match="p|ol|ul|li|dl|dt|dd|table|tr|th|td|h1|h2|h3|h4|h5|h6|hr|br|pre|blockquote|div|span|a|img|b|i|strong|em|del|sub|sup|abbr|acronym">
 		<xsl:copy>
 			<xsl:copy-of select="@*" />
 			<xsl:apply-templates />

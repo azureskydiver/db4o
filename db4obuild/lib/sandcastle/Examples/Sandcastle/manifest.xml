@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topics>
+  <topic id="R:Project" />
+  <topic id="N:TestNamespace" />
+  <topic id="T:TestNamespace.StoredNumber" />
+  <topic id="Overload:TestNamespace.StoredNumber.Dec" />
+  <topic id="Overload:TestNamespace.StoredNumber.Increment" />
+  <topic id="M:TestNamespace.StoredNumber.#ctor(System.Int32)" />
+  <topic id="M:TestNamespace.StoredNumber.Dec" />
+  <topic id="M:TestNamespace.StoredNumber.Dec(System.Int32)" />
+  <topic id="M:TestNamespace.StoredNumber.IncludeTest" />
+  <topic id="M:TestNamespace.StoredNumber.Increment" />
+  <topic id="M:TestNamespace.StoredNumber.Increment(System.Int32)" />
+  <topic id="P:TestNamespace.StoredNumber.MyProp" />
+  <topic id="M:TestNamespace.StoredNumber.PreliminaryTest" />
+  <topic id="M:TestNamespace.StoredNumber.Swap``1(``0@,``0@)" />
+  <topic id="P:TestNamespace.StoredNumber.Value" />
+</topics>
