@@ -1,17 +1,15 @@
 package com.db4o.objectManager.v2;
 
-import com.db4o.objectmanager.api.DatabaseInspector;
-import com.db4o.objectmanager.api.helpers.ReflectHelper2;
-import com.db4o.ObjectContainer;
 import com.db4o.Db4o;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
-import com.spaceprogram.db4o.sql.ReflectHelper;
+import com.db4o.objectmanager.api.helpers.ReflectHelper2;
+import com.spaceprogram.db4o.sql.util.ReflectHelper;
 
-import javax.swing.table.TableModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.event.TableModelListener;
 import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  * User: treeder

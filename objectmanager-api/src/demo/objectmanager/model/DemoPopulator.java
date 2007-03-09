@@ -86,10 +86,35 @@ public class DemoPopulator {
 		
 		db.set(Collections.forDemo());
 		Inheritance.forDemo(db);
+
+		fillAllDataTypes(db);
 		
-        db.commit();
+		db.commit();
         db.close();
     }
+
+	private void fillAllDataTypes(ObjectContainer db) {
+		for(int i = 0; i < NUMBER_TO_MAKE; i++){
+			AllDataTypes allDataTypes = new AllDataTypes();
+			allDataTypes.setABoolean(i % 2 == 0 ? true : false);
+			allDataTypes.setWBoolean(new Boolean(allDataTypes.isABoolean()));
+			allDataTypes.setAByte((byte) 1);
+			allDataTypes.setWByte(new Byte(allDataTypes.getAByte()));
+			allDataTypes.setAChar('z');
+			allDataTypes.setWChar(new Character(allDataTypes.getAChar()));
+			allDataTypes.setAShort((short) 8);
+			allDataTypes.setWShort(new Short(allDataTypes.getAShort()));
+			allDataTypes.setAInt(123);
+			allDataTypes.setWInt(new Integer(allDataTypes.getAInt()));
+			allDataTypes.setALong(4567l);
+			allDataTypes.setWLong(new Long(allDataTypes.getALong()));
+			allDataTypes.setAFloat(12.34f);
+			allDataTypes.setWFloat(new Float(allDataTypes.getAFloat()));
+			allDataTypes.setADouble(56.78);
+			allDataTypes.setWDouble(new Double(allDataTypes.getADouble()));
+			db.set(allDataTypes);
+		}
+	}
 
 	public static Object getArbitraryObject(int i) {
 		int mod = i % 7;

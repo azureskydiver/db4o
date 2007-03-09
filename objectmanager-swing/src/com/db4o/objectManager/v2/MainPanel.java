@@ -20,7 +20,7 @@ import com.jgoodies.looks.Options;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.windows.WindowsLookAndFeel;
 import com.jgoodies.forms.factories.Borders;
-import com.spaceprogram.db4o.sql.ReflectHelper;
+import com.spaceprogram.db4o.sql.util.ReflectHelper;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;

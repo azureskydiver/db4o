@@ -15,7 +15,7 @@ public class ObjectTreeCellEditor extends DefaultCellEditor {
         super(textField);
         delegate = new EditorDelegate() {
             public void setValue(Object value) {
-               // System.out.println("value: " + value + " " + value.getClass());
+//               System.out.println("value: " + value + " class=" + value.getClass() + " value=" + value);
                 if (value instanceof ObjectTreeNode) {
                     ObjectTreeNode node = (ObjectTreeNode) value;
                     textField.setText((node.getObject() != null) ? node.getObject().toString() : "");
@@ -25,7 +25,8 @@ public class ObjectTreeCellEditor extends DefaultCellEditor {
             }
 
             public Object getCellEditorValue() {
-                return textField.getText();
+//				System.out.println("getCellEditorValue: " + textField.getText());
+				return textField.getText();
             }
         };
         textField.addActionListener(delegate);
@@ -41,7 +42,7 @@ public class ObjectTreeCellEditor extends DefaultCellEditor {
 
 
     public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
-        //System.out.println("value: " + value + " " + value.getClass());
+//        System.out.println("value: " + value + " " + value.getClass());
         delegate.setValue(value);
         return editorComponent;
 	}
