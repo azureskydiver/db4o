@@ -1,5 +1,7 @@
 package demo.objectmanager.model;
 
+import java.util.Date;
+
 /**
  * User: treeder
  * Date: Mar 9, 2007
@@ -23,6 +25,7 @@ public class AllDataTypes {
 	Long wLong;
 	Float wFloat;
 	Double wDouble;
+	private Date date;
 
 	public byte getAByte() {
 		return aByte;
@@ -151,5 +154,14 @@ public class AllDataTypes {
 
 	public void setWDouble(Double wDouble) {
 		this.wDouble = wDouble;
+	}
+
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public Date getDate() {
+		return date;
 	}
 }

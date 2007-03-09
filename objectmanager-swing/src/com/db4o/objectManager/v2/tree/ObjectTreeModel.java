@@ -2,13 +2,14 @@ package com.db4o.objectManager.v2.tree;
 
 import com.db4o.objectManager.v2.tree.ObjectTreeNode;
 import com.db4o.objectManager.v2.util.Log;
+import com.db4o.objectManager.v2.util.Converter;
 import com.db4o.objectManager.v2.UISession;
+import com.db4o.objectManager.v2.MainPanel;
 import com.db4o.objectmanager.api.helpers.ReflectHelper2;
 import com.db4o.reflect.generic.GenericObject;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
-import com.spaceprogram.db4o.sql.Converter;
 import com.spaceprogram.db4o.sql.util.ReflectHelper;
 
 import javax.swing.tree.TreeModel;
@@ -32,8 +33,6 @@ public class ObjectTreeModel implements TreeModel {
 	public ObjectTreeModel(ObjectTreeNode top, UISession session) {
 		this.root = top;
 		this.session = session;
-
-
 	}
 
 	public Object getRoot() {
@@ -144,7 +143,7 @@ public class ObjectTreeModel implements TreeModel {
 			Class c = aNode.getObject().getClass();
 			System.out.println("class: " + c);
 			System.out.println("isBoolean: " + (Boolean.class.isAssignableFrom(c)));
-			Object newOb = Converter.convertFromString(c, (String) newValue);
+			Object newOb = convertToObject(c, (String) newValue);
 			ObjectTreeNode parentNode = aNode.getParentNode();
 			int index = aNode.getIndex();
 			Object parentObject = parentNode.getObject();
@@ -204,6 +203,10 @@ public class ObjectTreeModel implements TreeModel {
 			Log.addException(e);
 		}
 
+	}
+
+	private Object convertToObject(Class c, String newValue) throws Exception {
+		return Converter.convertFromString(c, newValue);
 	}
 
 	private void addToBatch(Object o) {

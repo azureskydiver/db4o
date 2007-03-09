@@ -1,8 +1,11 @@
 package com.db4o.objectManager.v2.results;
 
+import com.db4o.objectManager.v2.util.DateFormatter;
+import com.db4o.objectManager.v2.MainPanel;
+
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
-import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * User: treeder
@@ -10,17 +13,13 @@ import java.text.DateFormat;
  * Time: 10:13:46 PM
  */
 public class DateRenderer extends DefaultTableCellRenderer implements TableCellRenderer {
-	static DateFormat formatter;
 
 	public DateRenderer() {
 		super();
 	}
 
 	public void setValue(Object value) {
-		if (formatter == null) {
-			formatter = DateFormat.getDateTimeInstance();
-		}
-		setText((value == null) ? "" : formatter.format(value));
+		setText((value == null) ? "" : MainPanel.dateFormatter.display((Date) value));
 	}
 
 }

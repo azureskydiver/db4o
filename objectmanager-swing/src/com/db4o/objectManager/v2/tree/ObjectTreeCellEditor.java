@@ -1,7 +1,11 @@
 package com.db4o.objectManager.v2.tree;
 
+import com.db4o.objectManager.v2.MainPanel;
+
 import javax.swing.*;
+import javax.swing.text.DateFormatter;
 import java.awt.Component;
+import java.util.Date;
 
 /**
  * User: treeder
@@ -10,40 +14,52 @@ import java.awt.Component;
  */
 public class ObjectTreeCellEditor extends DefaultCellEditor {
 
-    public ObjectTreeCellEditor(final JTextField textField) {
-        // from superclass
-        super(textField);
-        delegate = new EditorDelegate() {
-            public void setValue(Object value) {
+	public ObjectTreeCellEditor(final JTextField textField) {
+		// from superclass
+		super(textField);
+		delegate = new EditorDelegate() {
+			public void setValue(Object value) {
 //               System.out.println("value: " + value + " class=" + value.getClass() + " value=" + value);
-                if (value instanceof ObjectTreeNode) {
-                    ObjectTreeNode node = (ObjectTreeNode) value;
-                    textField.setText((node.getObject() != null) ? node.getObject().toString() : "");
-                } else {
-                    textField.setText((value != null) ? value.toString() : "");
-                }
-            }
+				if(value instanceof ObjectTreeNode) {
+					ObjectTreeNode node = (ObjectTreeNode) value;
+					setValueOnTextField(node.getObject(), textField);
+				} else {
+					setValueOnTextField(value, textField);
+				}
+			}
 
-            public Object getCellEditorValue() {
+			public Object getCellEditorValue() {
 //				System.out.println("getCellEditorValue: " + textField.getText());
 				return textField.getText();
-            }
-        };
-        textField.addActionListener(delegate);
-    }
+			}
+		};
+		textField.addActionListener(delegate);
+	}
 
-    public ObjectTreeCellEditor(JCheckBox checkBox) {
-        super(checkBox);
-    }
+	private void setValueOnTextField(Object value, JTextField textField) {
+		String text = "";
+		if(value != null) {
+			if(value instanceof Date) {
+				text = MainPanel.dateFormatter.edit((Date) value);
+			} else {
+				text = value.toString();
+			}
+		}
+		textField.setText(text);
+	}
 
-    public ObjectTreeCellEditor(JComboBox comboBox) {
-        super(comboBox);
-    }
+	public ObjectTreeCellEditor(JCheckBox checkBox) {
+		super(checkBox);
+	}
+
+	public ObjectTreeCellEditor(JComboBox comboBox) {
+		super(comboBox);
+	}
 
 
-    public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
+	public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean leaf, int row) {
 //        System.out.println("value: " + value + " " + value.getClass());
-        delegate.setValue(value);
-        return editorComponent;
+		delegate.setValue(value);
+		return editorComponent;
 	}
 }
