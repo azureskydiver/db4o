@@ -6,6 +6,9 @@ font.pdf.base = C:/WINDOWS/Fonts/VERDANA.TTF
 # Optional - Temp directory that build-1.1 can use. build-1.1 must have the permission to delete and re-create this directory.
 # tempDir = c:/temp
 
+# Optional - directory to contain all the builds, e.g. db4o-java.zip dRS.zip 
+# repository.dir = c:/repository
+
 # Optional - path to JDK1.3 compatible javac executable (default: "javac")
 # file.compiler.jdk1.3= C:/Program Files/Java/jdk1.5.0_11/bin/javac
 

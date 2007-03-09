@@ -10,6 +10,7 @@
   
   <!--Default values for OPTIONAL properties if are not specified in machine.properties-->
   <property name="dir.workspace" value="${imported.basedir}/.." />
+  <property name="repository.dir" value="${imported.basedir}/../builds" />
   <property name="tempDir" value="${imported.basedir}/../build-1.1-temp" />
   
   <property name="file.compiler.jdk1.3" value="javac" />
