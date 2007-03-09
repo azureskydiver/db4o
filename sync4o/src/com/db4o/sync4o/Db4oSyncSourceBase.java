@@ -242,7 +242,7 @@ public class Db4oSyncSourceBase implements Serializable{
       _synchronizers.add(new Synchronizer(_syncDb, syncClass));
       
     }
-    
+
   }
   
   protected void finalizeSync() throws Sync4jException{

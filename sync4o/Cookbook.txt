@@ -55,7 +55,7 @@ commands will work:
 > .\bin\install-modules tomcat50
 
 When prompted whether to recreate the database for module sync4o-3.0.1 answer
-yes (y) (you should get a "build sucessful" message).
+yes (y) (you should get a "BUILD SUCESSFUL" message).
 
 
 3. Create a sample server database
@@ -176,7 +176,8 @@ by the client SyncSource when necessary.
 7. Synchronizing
 ----------------
 Now you should have everything installed, configured and ready to go to see the
-cookbook sample in action.
+cookbook sample in action. Make sure you close the Funambolm Administration
+Tool before this since it may lock the database file.
 
 To see Sync4o in action, use the following steps:
 

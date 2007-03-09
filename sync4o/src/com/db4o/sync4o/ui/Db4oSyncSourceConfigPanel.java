@@ -377,8 +377,18 @@ public class Db4oSyncSourceConfigPanel extends SourceManagementPanel implements
    * @return true if the file is a db4o database, else false
    */
   private boolean isValidDatabase(File f) {
-
-    return (null != Db4o.openFile(f.getAbsolutePath()));
+	ObjectContainer oc = null;
+	try{
+		oc = Db4o.openFile(f.getAbsolutePath());
+	}
+	catch(com.db4o.ext.DatabaseFileLockedException fle){
+		return true;
+	}
+	if(oc != null){
+		oc.close();
+		return true;
+	}
+    return false;
   }
 
   /**
@@ -392,6 +402,7 @@ public class Db4oSyncSourceConfigPanel extends SourceManagementPanel implements
     if (f != null) {
       
       ObjectContainer container = Db4o.openFile(f.getAbsolutePath());
+
       if (container != null) {
       
         ExtObjectContainer db = container.ext();
@@ -407,6 +418,7 @@ public class Db4oSyncSourceConfigPanel extends SourceManagementPanel implements
           }
 
         }
+        container.close();
     
       }
     
