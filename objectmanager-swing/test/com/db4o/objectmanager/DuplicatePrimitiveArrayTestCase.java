@@ -9,7 +9,7 @@ import com.db4o.objectmanager.api.impl.DatabaseInspectorImpl;
 import com.db4o.objectmanager.api.DatabaseInspector;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
-import com.spaceprogram.db4o.sql.ReflectHelper;
+import com.spaceprogram.db4o.sql.util.ReflectHelper;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.List;

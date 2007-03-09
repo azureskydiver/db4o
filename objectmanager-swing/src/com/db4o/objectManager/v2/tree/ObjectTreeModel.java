@@ -8,8 +8,8 @@ import com.db4o.reflect.generic.GenericObject;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
-import com.spaceprogram.db4o.sql.ReflectHelper;
 import com.spaceprogram.db4o.sql.Converter;
+import com.spaceprogram.db4o.sql.util.ReflectHelper;
 
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -138,10 +138,13 @@ public class ObjectTreeModel implements TreeModel {
 
 	public void valueForPathChanged(TreePath path, Object newValue) {
 		ObjectTreeNode aNode = (ObjectTreeNode) path.getLastPathComponent();
-		//System.out.println("new value: " + newValue + " " + newValue.getClass() + " old ob: " + aNode.getObject() + " " + aNode.getObject().getClass());
+		System.out.println("new value: " + newValue + " " + newValue.getClass() + " old ob: " + aNode.getObject() + " " + aNode.getObject().getClass());
 		try {
 			Object oldOb = aNode.getObject();
-			Object newOb = Converter.convertFromString(aNode.getObject().getClass(), (String) newValue);
+			Class c = aNode.getObject().getClass();
+			System.out.println("class: " + c);
+			System.out.println("isBoolean: " + (Boolean.class.isAssignableFrom(c)));
+			Object newOb = Converter.convertFromString(c, (String) newValue);
 			ObjectTreeNode parentNode = aNode.getParentNode();
 			int index = aNode.getIndex();
 			Object parentObject = parentNode.getObject();
@@ -229,10 +232,11 @@ public class ObjectTreeModel implements TreeModel {
 	 */
 	public boolean isPathEditable(TreePath path) {
 		ObjectTreeNode aNode = (ObjectTreeNode) path.getLastPathComponent();
+//		System.out.println("aNode:" + aNode + " - object:" + aNode.getObject());
 		// todo: should check the expect class type if this is null so you can edit null values
 		if (aNode.getObject() == null) return false;
 		Class c = aNode.getObject().getClass();
-		//System.out.println("class editable: " + c);
+//		System.out.println("class editable: " + c);
 		return ReflectHelper2.isEditable(c);
 	}
 }
