@@ -25,8 +25,6 @@ public class SlotChange extends TreeInt {
 	
 	private static final int FREE_POINTER_ON_ROLLBACK_BIT = 5; 
 	
-	private static final int FOR_UPDATE_BIT = 6;
-
 	public SlotChange(int id) {
 		super(id);
 	}
@@ -114,8 +112,8 @@ public class SlotChange extends TreeInt {
 		return isSetPointer() && (_newSlot._address == 0);
 	}
 	
-	public boolean isUpdate() {
-		return isBitSet(FOR_UPDATE_BIT);
+	public boolean isNew() {
+		return isFreePointerOnRollback();
 	}
 
 	private final boolean isFreeOnCommit() {
@@ -193,9 +191,5 @@ public class SlotChange extends TreeInt {
 		if (isSetPointer()) {
 			trans.writePointer(_key, _newSlot._address, _newSlot._length);
 		}
-	}
-
-	public void flagForUpdate() {
-		setBit(FOR_UPDATE_BIT);
 	}
 }
