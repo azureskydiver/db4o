@@ -1,25 +1,60 @@
 <?xml version="1.0"?>
-<project name="Db4objects.Db4o" default="package">
+<project name="Db4objects.Db4o" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<import file="../common-1.1.xml"/>
 	<dirname property="build.db4o.net.basedir" file="${ant.file}"/>	
-	<property file="${build.db4o.net.basedir}/build.properties" />
 	
-	<echo>XXXX ${dir.n.v6.libs}</echo>
+	<echo>basedir ${basedir}</echo>
 	
+	<property environment="env" />
+	
+	<copy todir="${build.db4o.net.basedir}">
+		<fileset dir="${dir.old.build}">
+			<include name="sharpen*" />
+		</fileset>
+	</copy>	
+    
+  <target name="publish" depends="package">
+    <publishToIvy/>
+    <antcall target="clean" />
+  </target>
+	
+	<target name="clean">
+  	<cleanIvyDir/>
+	</target>
 	
 	<condition property="mono" value="true">
 		<os family="unix" />
 	</condition>
 	
-	<fileset id="db4oj.srcfiles" dir="..">
+	<fileset id="db4oj.srcfiles" dir="${dir.workspace}">
 		<include name="db4oj/core/src/**/*.java" />
 	</fileset>
 	
-	<macrodef name="reset-dir">
-		<attribute name="dir" />
+	<macrodef name="sharpen">
+		<attribute name="workspace" />
+		<attribute name="resource" />
+		
+		<element name="args" optional="yes" />
+		
 		<sequential>
-			<delete dir="@{dir}" />
-			<mkdir dir="@{dir}" />
+			<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main"
+				fork="yes"
+				failonerror="true"
+				timeout="1800000"
+				maxmemory="512M">
+				<classpath>
+					<pathelement location="${eclipse.home}/startup.jar" />
+				</classpath>
+					
+				<arg value="-data" />
+				<arg file="@{workspace}" />
+				<arg value="-application" />
+				<arg value="javatocsharp.core.application" />
+				<arg value="@{resource}" />
+				
+				<args />
+					
+			</java>
 		</sequential>
 	</macrodef>
 	
@@ -79,7 +114,7 @@
 			<mkdir dir="@{netOutputDir}" />
 			<mkdir dir="@{compactOutputDir}" />
 			
-			<reset-dir dir="${dir.dist.net.compile}" />
+			<resetDir dir="${dir.dist.net.compile}" />
 			<copy todir="${dir.dist.net.compile}">
 				<fileset refid="@{sources}" />
 			</copy>			
@@ -408,7 +443,7 @@
 	<target name="build-net1" depends="configure-net1, build-all">
 	</target>
 	
-	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-tutorial, build-legacy">
+	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-tutorial">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -502,62 +537,6 @@
 		</ant>
 	</target>
 	
-	<target name="build-legacy" depends="init, sharpen-legacy">
-		<fileset
-			id="legacy.core.sources"
-			dir="${dir.n.core}">			
-			<include name="**/*.cs" />			
-		</fileset>
-		
-		<csc-all
-				assemblyName="db4o"
-				sources="legacy.core.sources"
-				
-				netOutputDir="${dir.dist.dll.legacy.net}"
-				netConfiguration="Legacy .NET"
-				
-				compactOutputDir="${dir.dist.dll.legacy.compact}"
-				compactConfiguration="Legacy CompactFramework">
-		</csc-all>
-		
-		<fileset
-			id="legacy.tools.sources"
-			dir="${dir.n.tools}">			
-			<include name="**/*.cs" />
-			<exclude name="compact*/**" />
-			<exclude name="**/templates/**" />
-			<exclude name="**/Cecil.FlowAnalysis.Tests/**" />
-			<exclude name="**/Cecil.FlowAnalysis/AssemblyInfo.cs" />
-			<exclude name="**/Mono.Cecil/AssemblyInfo.cs" />
-		</fileset>
-		
-		<csc-all
-			assemblyName="Db4oTools"
-			sources="legacy.tools.sources"
-			netOutputDir="${dir.dist.dll.legacy.net}"
-			netConfiguration="Legacy .NET"
-				
-			compactOutputDir="${dir.dist.dll.legacy.compact}"
-			compactConfiguration="Legacy CompactFramework">			
-			
-			<references>
-				<reference dir="${dir.dist.dll.legacy.net}">
-					<include name="db4o.dll" />
-				</reference>
-			</references>
-			
-			<compact-args>
-				<arg value="/r:${dir.dist.dll.legacy.compact}/db4o.dll" />
-			</compact-args>
-		</csc-all>		
-		
-	</target>
-	
-	<target name="sharpen-legacy">
-		<ant antfile="build.xml" target="sharpen-core">
-		</ant>
-	</target>
-	
 	<target name="sharpen-tools">
 		<fileset id="tools.sources" dir="${dir.n.v6.tools}">
 			<include name="**/*.cs" />
@@ -590,7 +569,7 @@
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
-		<reset-dir dir="${dir.sharpen}" />
+		<resetDir dir="${dir.sharpen}" />
 		
 		<copy todir="${dir.sharpen}">
 			<fileset refid="db4oj.srcfiles" />
@@ -605,6 +584,7 @@
 			</fileset>
 		</copy>
 		
+		<echo> dir.n.in.java ${dir.n.in.java}</echo>
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
 			<fileset dir="${dir.n.in.java}">
 				<include name="**/*.java" />
@@ -667,16 +647,12 @@
 	</target>
 	
 	<target name="sharpen-db4ounit">
-		<ant antfile="build-new-db4ounit.xml" target="buildnet" inheritall="false">
+		<ant antfile="${build.db4o.net.basedir}/build-new-db4ounit.xml" target="buildnet" inheritall="false">
 			<property name="csc.executable" value="${csc.executable}" />
 		</ant>
 	</target>
-	
-	<target name="compiletestsjava">
-		<ant antfile="build.xml" target="compiletestsjava" />
-	</target>
 		
-	<target name="sharpen-db4ounit-extensions" depends="compiletestsjava">		
+	<target name="sharpen-db4ounit-extensions">		
 		
 		<property name="target.dir" value="${dir.sharpen}" />
 		
@@ -684,12 +660,6 @@
 		<mkdir dir="${target.dir}" />
 		
 		<mkdir dir="${target.dir}/lib" />
-		<property name="dependencies.jar" location="${target.dir}/lib/dependencies.jar" />
-		<jar destfile="${dependencies.jar}">			
-			<fileset dir="${dir.dist.classes.java1.1}" />
-			<fileset dir="${dir.dist.classes.db4ounit}" />
-			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
-		</jar>
 
 		<copy todir="${target.dir}/db4ounit.extensions/src">
 			<fileset dir="${dir.db4ounit.extensions.src}">
@@ -700,7 +670,10 @@
 		<sharpen workspace="${target.dir}" resource="db4ounit.extensions/src">
 			<args>
 				<arg value="-cp" />
-				<arg path="${dependencies.jar}" />
+				<arg path="${ivy.lib.dir}/db4o-java1.1.jar" />
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4ounit.jar" />
+				
 				<arg value="@sharpen-db4ounit-options" />
 				<arg value="@sharpen-new-core-mapping" />
 			</args>
@@ -760,7 +733,11 @@
 		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
 			<args>
 				<arg value="-cp" />
-				<arg path="${dependencies.jar}" />	
+				<arg path="${ivy.lib.dir}/db4o-java1.1.jar" />
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4ounit.jar" />
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4o-test-java1.1.jar" />
 				<arg value="@sharpen-tests-options" />
 			</args>
 		</sharpen>
@@ -841,7 +818,7 @@
 	<target name="sandcastle" depends="prepare-sandcastle-output">
 		
 		<exec executable="${dir.build}/lib/boo/booi">
-			<arg file="src/sandcastle/MRefConfigGenerator.boo" />
+			<arg file="${dir.build}/src/sandcastle/MRefConfigGenerator.boo" />
 			<arg path="${dir.build}" />
 		</exec>
 		
@@ -983,17 +960,9 @@
 		</exec>
 	</target>
 	
-	<target name="init">
-		<mkdir dir="${dir.dist.dll.net}" />
-		<mkdir dir="${dir.dist.dll.compact}" />
+	<target name="init" depends="clean">
+		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+		<ivy:resolve file="${build.db4o.net.basedir}/ivy.xml"/>
+		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]" conf="${ivy.configurations}" />
 	</target>
-	
-	<target name="clean" description="Delete all generated files">
-		<delete failonerror="false" includeemptydirs="true" description="Removing all generated files">
-			<fileset dir="${dir.dist}">
-				<include name="**/*" />
-			</fileset>
-		</delete>
-	</target>
-
 </project>
