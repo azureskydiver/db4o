@@ -585,14 +585,14 @@ public class LocalTransaction extends Transaction {
 		final Collection4 updated = new Collection4();
 		_slotChanges.traverse(new Visitor4() {
 			public void visit(Object obj) {
-				final SlotChange slotChange = ((SlotChange)obj);
-				final ObjectReference reference = stream().referenceForId(slotChange._key);
+				SlotChange slotChange = ((SlotChange)obj);
+				LazyObjectReference lazyRef = new LazyObjectReference(stream(), slotChange._key);
 				if (slotChange.isDeleted()) {					
-					deleted.add(reference);
+					deleted.add(lazyRef);
 				} else if (slotChange.isNew()) {
-					added.add(reference);
+					added.add(lazyRef);
 				} else {
-					updated.add(reference);
+					updated.add(lazyRef);
 				}
 			}
 		});
