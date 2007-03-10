@@ -359,9 +359,7 @@
 			
 		-->
 		<property name="dir.bin" location="${dir.dist.net.build}/bin" />
-		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />
-		<copy-bin-set suffix="-legacy" srcdir="${dir.dist.dll}/legacy" />
-		
+		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />		
 	</target>
 	
 	<target name="package-tutorial">
@@ -819,7 +817,8 @@
 		
 		<exec executable="${dir.build}/lib/boo/booi">
 			<arg file="${dir.build}/src/sandcastle/MRefConfigGenerator.boo" />
-			<arg path="${dir.build}" />
+			<arg path="${dir.build}/config" />
+			<arg path="${dir.dist}" />
 		</exec>
 		
 		<exec executable="${sandcastle.tools}/MRefBuilder">

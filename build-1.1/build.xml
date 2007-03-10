@@ -4,7 +4,7 @@
 	
 	<target name="build-list" description="Build a list of ant build files, from least dependent to most dependent projects.">
   	<ivy:buildlist reference="buildPath">
-  		<!-- db4o java.zip projects -->      
+  		<!-- db4o java.zip projects       -->
       <fileset dir="${dir.j}"										includes="build-1.1.xml"/>
       <fileset dir="${dir.j.tools}"							includes="build.xml"/>
       <fileset dir="${dir.db4ounit.extensions}"	includes="build.xml"/>
@@ -26,9 +26,10 @@
 			<fileset dir="../drs"											includes="build-1.1.xml"/>
 			
 			<!-- .net projects -->
-			<!--
+			
 			<fileset dir="../javatocsharp/javatocsharp.core"	includes="build-1.1.xml"/>
-			<fileset dir="build.net"	includes="build.xml"/>
+			<!--
+			<fileset dir="db4o.net"	includes="build.xml"/>
 			-->
     </ivy:buildlist>
   </target>
