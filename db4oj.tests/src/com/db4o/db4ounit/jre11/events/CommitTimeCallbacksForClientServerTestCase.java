@@ -3,8 +3,9 @@
 package com.db4o.db4ounit.jre11.events;
 
 import com.db4o.events.*;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.ext.*;
 import com.db4o.foundation.Cool;
+import com.db4o.internal.*;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.fixtures.*;
@@ -13,6 +14,10 @@ import db4ounit.extensions.fixtures.*;
 public class CommitTimeCallbacksForClientServerTestCase extends AbstractDb4oTestCase implements OptOutSolo {
 	
 	public static final class Item {
+	}
+	
+	public static void main(String[] arguments) {
+		new CommitTimeCallbacksForClientServerTestCase().runClientServer();
 	}
 
 	public void _testCommittingIsTriggeredOnServer() {
@@ -30,9 +35,14 @@ public class CommitTimeCallbacksForClientServerTestCase extends AbstractDb4oTest
 		
 		Cool.sleepIgnoringInterruption(50);
 		
-		EventAssert.assertCommitEvent(serverRecorder, serverRegistry().committing(), new Item[] { item }, new Item[0], new Item[0]);
+		EventAssert.assertCommitEvent(serverRecorder, serverRegistry().committing(), new ObjectInfo[] { infoFor(item) }, new ObjectInfo[0], new ObjectInfo[0]);
 		EventAssert.assertNoEvents(clientRecorder);
 		
+	}
+	
+	private ObjectInfo infoFor(Object obj){
+		int id = (int) db().getID(obj);
+		return new LazyObjectReference((ObjectContainerBase) db(), id);
 	}
 
 	private EventRegistry serverRegistry() {
