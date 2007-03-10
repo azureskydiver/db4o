@@ -9,6 +9,7 @@
     	<artifact name="ant" conf="default"/>
     	<artifact name="iText" conf="default"/>
     	<artifact name="junit" conf="default"/>
+    	
    		<artifact name="${ant.project.name}-applet-signed"	conf="signed"/>
     </publications>
 </ivy-module>
