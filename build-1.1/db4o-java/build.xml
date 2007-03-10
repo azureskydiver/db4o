@@ -119,42 +119,8 @@
 	</target>
 	
 	<target name="tutorial" depends="">
-		<unzip dest="${ivy.lib.dir}/tutorial">
-	    <fileset dir="${ivy.lib.dir}/tutorial" includes="bloat-signed-*.zip"/>
+		<unzip dest="${tempDocDir}">
+	    <fileset dir="${ivy.lib.dir}/tutorial" includes="db4o-tutorial-java-*.zip"/>
 		</unzip>
-		<delete>
-    	<fileset dir="${ivy.lib.dir}/tutorial" includes="bloat-signed-*.zip"/>
-  	</delete>
-  	
-		<path id="javaDoctor.lib.path">
-	  	<fileset dir="${ivy.lib.dir}/tutorial" includes="*.jar"/>
-	  	<fileset dir="${ivy.lib.dir}/doctor" includes="*.jar"/>
-	  </path>
-	  <taskdef name="javaDoctor" classname="com.yetac.doctor.Doctor" classpathref="javaDoctor.lib.path"/>
-	  
-  	<mkdir dir="${tempDocDir}/tutorial/docs" />
-  	<copy todir="${tempDocDir}/tutorial/docs">
-			<fileset dir="${ivy.lib.dir}/tutorial"/>
-		</copy>
-			
-		<javaDoctor 
-			name="f1" 
-			home="${dir.j.tutorial}" 
-			interactive="true" 
-			workspace="${dir.workspace}" 
-			inputsource="${dir.j.tutorial.src}/" 
-			sourceextension="java" 
-			outputfile="${db4o.file}tutorial" 
-			outputpath="${tempDocDir}/tutorial" 
-			pdfbasefont="${font.pdf.base}" 
-			archive="doctor-applet-signed-${db4o.version.dotted}.jar, db4o-java1.2-signed-${db4o.version.dotted}.jar, f1-signed-${db4o.version.dotted}.jar" 
-			outlineimage="db4objects.gif" 
-			linkhome="http://www.db4o.com">
-			<variable name="java" boolean="true" />
-			<variable name="net" boolean="false" />
-			<variable name="mono" boolean="false" />
-			<ignoreinputfolder name="net" />
-			<ignoreinputfolder name="mono" />
-		</javaDoctor>
-	</target>  
+	</target>
 </project>
