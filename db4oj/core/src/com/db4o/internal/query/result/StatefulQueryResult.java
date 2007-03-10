@@ -20,41 +20,54 @@ public class StatefulQueryResult {
     }
 
     public Object get(int index) {
-        return _delegate.get(index);
+    	synchronized(streamLock()){
+    		return _delegate.get(index);
+    	}
     }
     
     public long[] getIDs() {
-    	long[] ids = new long[size()];
-        int i = 0;
-        final IntIterator4 iterator = _delegate.iterateIDs();
-        while (iterator.moveNext()) {
-        	ids[i++] = iterator.currentInt();
-        }
-        return ids;
+    	synchronized(streamLock()){
+	    	long[] ids = new long[size()];
+	        int i = 0;
+	        final IntIterator4 iterator = _delegate.iterateIDs();
+	        while (iterator.moveNext()) {
+	        	ids[i++] = iterator.currentInt();
+	        }
+	        return ids;
+    	}
     }
 
     public boolean hasNext() {
-        return _iterable.hasNext();
+    	synchronized(streamLock()){
+    		return _iterable.hasNext();
+    	}
     }
 
     public Object next() {
-        return _iterable.next();
+    	synchronized(streamLock()){
+    		return _iterable.next();
+    	}
     }
 
     public void reset() {
-        _iterable.reset();
+    	synchronized(streamLock()){
+    		_iterable.reset();
+    	}
     }
 
     public int size() {
-        return _delegate.size();
+    	synchronized(streamLock()){
+    		return _delegate.size();
+    	}
     }
 
 	public void sort(QueryComparator cmp) {
-		_delegate.sort(cmp);
+		synchronized(streamLock()){
+			_delegate.sort(cmp);
+		}
 	}	
 		
 	Object streamLock() {
-		// used on the .net version
 		return objectContainer().lock();
 	}
 	
@@ -73,10 +86,14 @@ public class StatefulQueryResult {
 	}
 
 	public Iterator4 iterateIDs() {
-		return _delegate.iterateIDs();
+		synchronized(streamLock()){
+			return _delegate.iterateIDs();
+		}
 	}
 
 	public Iterator4 iterator() {
-		return _delegate.iterator();
+		synchronized(streamLock()){
+			return _delegate.iterator();
+		}
 	}
 }
