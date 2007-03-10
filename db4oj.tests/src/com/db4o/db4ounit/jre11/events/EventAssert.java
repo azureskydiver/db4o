@@ -16,8 +16,8 @@ public class EventAssert {
 	}
 
 	public static void assertCommitEvent(final EventRecorder eventRecorder,
-			final Event4 expectedEvent, final Object[] expectedAdded,
-			final Object[] expectedDeleted, final Object[] expectedUpdated) {
+			final Event4 expectedEvent, final ObjectInfo[] expectedAdded,
+			final ObjectInfo[] expectedDeleted, final ObjectInfo[] expectedUpdated) {
 		Assert.areEqual(1, eventRecorder.size());		
 		Assert.areSame(expectedEvent, eventRecorder.get(0).e);
 		CommitEventArgs args = (CommitEventArgs)eventRecorder.get(0).args;
@@ -26,12 +26,12 @@ public class EventAssert {
 		assertContainsAll(expectedUpdated, args.updated(), "updated");
 	}
 	
-	private static void assertContainsAll(Object[] expectedItems, ObjectInfoCollection actualItems, String label) {
-		for (int i = 0; i < expectedItems.length; i++) {
-			assertContains(expectedItems[i], actualItems, label);
+	private static void assertContainsAll(ObjectInfo[] expectedInfos, ObjectInfoCollection actualItems, String label) {
+		for (int i = 0; i < expectedInfos.length; i++) {
+			assertContains(expectedInfos[i], actualItems, label);
 		}
-		if (expectedItems.length != Iterators.size(actualItems)) {
-			Assert.fail(label + ": " + toString(expectedItems) + " != " + toObjectString(actualItems));
+		if (expectedInfos.length != Iterators.size(actualItems)) {
+			Assert.fail(label + ": " + toString(expectedInfos) + " != " + toObjectString(actualItems));
 		}
 	}
 
@@ -47,15 +47,15 @@ public class EventAssert {
 		return Iterators.toString(Iterators.iterate(expectedItems));
 	}
 
-	private static void assertContains(Object expectedItem, ObjectInfoCollection items, String label) {
+	private static void assertContains(ObjectInfo expectedInfo, ObjectInfoCollection items, String label) {
 		final Iterator4 iterator = items.iterator();
 		while (iterator.moveNext()) {
 			ObjectInfo info = (ObjectInfo)iterator.current();
-			if (expectedItem == info.getObject()) {
+			if (expectedInfo.getInternalID() == info.getInternalID()) {
 				return;
 			}
 		}
-		Assert.fail("Object '" + expectedItem + "' not found for " + label + ".");
+		Assert.fail("Object '" + expectedInfo + "' not found for " + label + ".");
 	}
 
 
