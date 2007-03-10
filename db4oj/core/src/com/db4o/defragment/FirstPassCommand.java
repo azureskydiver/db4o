@@ -63,7 +63,15 @@ final class FirstPassCommand implements PassCommand {
 		if(_ids==null) {
 			return;
 		}
-		int pointerAddress=context.allocateTargetSlot(_ids.size()*Const4.POINTER_LENGTH);
+		int blockSize = context.blockSize();
+		int blockLength=Math.max(Const4.POINTER_LENGTH,blockSize);
+		boolean overlapping=(Const4.POINTER_LENGTH%blockSize>0);
+		int blocksPerPointer=Const4.POINTER_LENGTH/blockSize;
+		if(overlapping) {
+			blocksPerPointer++;
+		}
+		int batchSize = _ids.size()*blockLength;
+		int pointerAddress=context.allocateTargetSlot(batchSize);
 		Iterator4 idIter=new TreeKeyIterator(_ids);
 		while(idIter.moveNext()) {
 			int objectID=((Integer)idIter.current()).intValue();
@@ -82,7 +90,7 @@ final class FirstPassCommand implements PassCommand {
 			}
 			
 			context.mapIDs(objectID,pointerAddress, isClassID);
-			pointerAddress+=Const4.POINTER_LENGTH;
+			pointerAddress+=blocksPerPointer;
 		}
 		_ids=null;
 	}
