@@ -59,14 +59,14 @@ public class DefragContextImpl implements DefragContext {
 		sourceConfig.flushFileBuffers(false);
 		sourceConfig.readOnly(true);
 		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
-		_targetDb = freshYapFile(defragConfig.origPath());
+		_targetDb = freshYapFile(defragConfig.origPath(),defragConfig.blockSize());
 		_mapping=defragConfig.mapping();
 		_mapping.open();
 	}
 	
-	static LocalObjectContainer freshYapFile(String fileName) {
+	static LocalObjectContainer freshYapFile(String fileName,int blockSize) {
 		new File(fileName).delete();
-		return (LocalObjectContainer)Db4o.openFile(DefragmentConfig.vanillaDb4oConfig(),fileName).ext();
+		return (LocalObjectContainer)Db4o.openFile(DefragmentConfig.vanillaDb4oConfig(blockSize),fileName).ext();
 	}
 	
 	public int mappedID(int oldID,int defaultID) {
@@ -287,6 +287,10 @@ public class DefragContextImpl implements DefragContext {
 		int address=reader.readInt();
 		int length=reader.readInt();
 		return new Slot(address,length);
+	}
+
+	public int blockSize() {
+		return _sourceDb.config().blockSize();
 	}
 	
 }

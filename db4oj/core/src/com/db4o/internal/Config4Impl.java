@@ -629,7 +629,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsBoolean(AUTOMATIC_SHUTDOWN);
 	}
 
-	byte blockSize() {
+	public byte blockSize() {
 		return _config.getAsByte(BLOCKSIZE);
 	}
     

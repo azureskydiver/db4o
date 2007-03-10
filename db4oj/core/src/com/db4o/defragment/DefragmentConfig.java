@@ -5,6 +5,7 @@ package com.db4o.defragment;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.internal.*;
 
 /**
  * Configuration for a defragmentation run.
@@ -129,7 +130,7 @@ public class DefragmentConfig {
 	 */
 	public Configuration db4oConfig() {
 		if(_config==null) {
-			_config=vanillaDb4oConfig();
+			_config=vanillaDb4oConfig(1);
 		}
 		return _config;
 	}
@@ -172,6 +173,10 @@ public class DefragmentConfig {
 		return (_tempPath!=null ? _tempPath : _backupPath);
 	}
 	
+	public int blockSize() {
+		return ((Config4Impl)db4oConfig()).blockSize();
+	}
+	
 	private static class NullFilter implements StoredClassFilter {
 		public boolean accept(StoredClass storedClass) {
 			return true;
@@ -180,9 +185,10 @@ public class DefragmentConfig {
 	
 	private final static StoredClassFilter NULLFILTER=new NullFilter();
 	
-	public static Configuration vanillaDb4oConfig(){
+	public static Configuration vanillaDb4oConfig(int blockSize){
 		Configuration config = Db4o.newConfiguration();
 		config.weakReferences(false);
+		config.blockSize(blockSize);
 		return config;
 	}
 	
