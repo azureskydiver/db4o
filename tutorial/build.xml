@@ -30,8 +30,7 @@
 	</target>
 		
 	<target name="publish" depends="doctorJava, doctorNet, doctorMono">
-		<!--<publishToIvy/>
-		<antcall target="clean" />-->
+		<publishToIvy/>
 	</target>
 	
 	<target name="doctorSetup" depends="jar">
@@ -43,11 +42,11 @@
 	  <taskdef name="doctor" classname="com.yetac.doctor.Doctor" classpathref="doctor.lib.path"/>
 	</target>  
 	<target name="doctorJava" depends="doctorSetup">	  
-  	<mkdir dir="${tempDocDir}/tutorial/docs" />
-  	<copy todir="${tempDocDir}/tutorial/docs">
+  	<mkdir dir="${dir.j.tutorial.out.java}/docs" />
+  	<copy todir="${dir.j.tutorial.out.java}/docs">
 			<fileset file="${signedJarPath}"/>
 		</copy>
-		<copy todir="${tempDocDir}/tutorial/docs">
+		<copy todir="${dir.j.tutorial.out.java}/docs">
 			<fileset dir="${ivy.lib.dir}/runAsApplet"/>
 		</copy>			
 		<doctor 
@@ -58,7 +57,7 @@
 			inputsource="${dir.j.tutorial.src}/" 
 			sourceextension="java" 
 			outputfile="${db4o.file}tutorial" 
-			outputpath="${tempDocDir}/tutorial" 
+			outputpath="${dir.j.tutorial.out.java}" 
 			pdfbasefont="${font.pdf.base}" 
 			archive="doctor-applet-signed.jar, db4o-java1.2-signed.jar, ${filename.tutorial.jar}" 
 			outlineimage="db4objects.gif" 
@@ -69,6 +68,9 @@
 			<ignoreinputfolder name="net" />
 			<ignoreinputfolder name="mono" />
 		</doctor>
+		<zip destfile="${javaZip}">
+			<zipfileset dir="${dir.j.tutorial.out.java}" prefix="tutorial"/>
+		</zip>
 	</target>  
 	<target name="doctorNet" depends="doctorSetup">	  
   	<doctor 
@@ -91,6 +93,9 @@
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="mono" />
 		</doctor>
+		<zip destfile="${netZip}">
+			<zipfileset dir="${dir.j.tutorial.out.net}" prefix="tutorial"/>
+		</zip>
 	</target>  
 	<target name="doctorMono" depends="doctorSetup">	  
   	<doctor 
@@ -114,5 +119,8 @@
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="net" />
 		</doctor>	
+		<zip destfile="${monoZip}">
+			<zipfileset dir="${dir.j.tutorial.out.mono}" prefix="tutorial"/>
+		</zip>
 	</target> 
 </project>
