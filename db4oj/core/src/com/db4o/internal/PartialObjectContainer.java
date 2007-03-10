@@ -784,6 +784,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return referenceForObject(obj);
         }
     }
+    
+    public final HardObjectReference getHardObjectReferenceById(int id) {
+    	return getHardObjectReferenceById(getTransaction(), id);
+    }
 
     public final HardObjectReference getHardObjectReferenceById(Transaction trans, int id) {
         if (id <= 0) {

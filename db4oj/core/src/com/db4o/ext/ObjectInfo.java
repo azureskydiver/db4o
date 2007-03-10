@@ -9,6 +9,11 @@ package com.db4o.ext;
  */
 public interface ObjectInfo {
     
+	/**
+	 * returns the internal db4o ID.
+	 */
+	public long getInternalID();
+
     /**
      * returns the object that is referenced.
      * <br><br>This method may return null, if the object has
@@ -37,8 +42,4 @@ public interface ObjectInfo {
 	 */
 	public long getVersion();
 	
-    
-    
-    
-
 }
