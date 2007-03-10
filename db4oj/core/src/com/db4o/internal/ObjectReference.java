@@ -144,6 +144,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 		return Const4.YAPOBJECT;
 	}
 	
+	public long getInternalID() {
+		return getID();
+	}
+	
 	public Object getObject() {
 		if (Platform4.hasWeakReferences()) {
 			return Platform4.getYapRefObject(_object);
@@ -820,5 +824,6 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 	    }
 	    return "Exception in YapObject analyzer";
 	}
+
 	
 }
