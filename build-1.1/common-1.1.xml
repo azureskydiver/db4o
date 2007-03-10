@@ -19,7 +19,7 @@
   
   <property name="csc.executable.path.net2" value="C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/" />
   <property name="csc.executable" value="${csc.executable.path.net2}/csc.exe" />
-  <property name="dir.compactframework" value="C:/Program Files/Microsoft.NET/SDK/CompactFramework" />
+  <property name="dir.compactframework" value="C:/Program Files/Microsoft.NET/SDK/CompactFramework/" />
   
   <!--Internal Property table-->
 	<property file="${imported.basedir}/common-1.1.properties" />
