@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.jre11.events;
 
+import com.db4o.config.Configuration;
 import com.db4o.events.*;
 import com.db4o.query.Query;
 
@@ -39,6 +40,10 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase im
 	}
 
 	private EventRecorder _eventRecorder;	
+	
+	protected void configure(Configuration config) {
+		indexField(config, Item.class, "id");
+	}
 	
 	protected void store() throws Exception {
 		for (int i=0; i<3; ++i) {
