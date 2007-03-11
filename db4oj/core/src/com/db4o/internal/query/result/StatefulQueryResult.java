@@ -20,13 +20,13 @@ public class StatefulQueryResult {
     }
 
     public Object get(int index) {
-    	synchronized(streamLock()){
+    	synchronized(lock()){
     		return _delegate.get(index);
     	}
     }
     
     public long[] getIDs() {
-    	synchronized(streamLock()){
+    	synchronized(lock()){
 	    	long[] ids = new long[size()];
 	        int i = 0;
 	        final IntIterator4 iterator = _delegate.iterateIDs();
@@ -38,36 +38,36 @@ public class StatefulQueryResult {
     }
 
     public boolean hasNext() {
-    	synchronized(streamLock()){
+    	synchronized(lock()){
     		return _iterable.hasNext();
     	}
     }
 
     public Object next() {
-    	synchronized(streamLock()){
+    	synchronized(lock()){
     		return _iterable.next();
     	}
     }
 
     public void reset() {
-    	synchronized(streamLock()){
+    	synchronized(lock()){
     		_iterable.reset();
     	}
     }
 
     public int size() {
-    	synchronized(streamLock()){
+    	synchronized(lock()){
     		return _delegate.size();
     	}
     }
 
 	public void sort(QueryComparator cmp) {
-		synchronized(streamLock()){
+		synchronized(lock()){
 			_delegate.sort(cmp);
 		}
 	}	
 		
-	Object streamLock() {
+	public Object lock() {
 		return _delegate.lock();
 	}
 	
@@ -76,7 +76,7 @@ public class StatefulQueryResult {
 	}
 	
 	public int indexOf(Object a_object) {	
-		synchronized(streamLock()){
+		synchronized(lock()){
 	        int id = (int)objectContainer().getID(a_object);
 	        if(id <= 0){
 	            return -1;
@@ -86,13 +86,13 @@ public class StatefulQueryResult {
 	}
 
 	public Iterator4 iterateIDs() {
-		synchronized(streamLock()){
+		synchronized(lock()){
 			return _delegate.iterateIDs();
 		}
 	}
 
 	public Iterator4 iterator() {
-		synchronized(streamLock()){
+		synchronized(lock()){
 			return _delegate.iterator();
 		}
 	}
