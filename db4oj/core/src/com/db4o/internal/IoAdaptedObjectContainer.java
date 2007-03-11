@@ -190,7 +190,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         }
     }
 
-    String fileName() {
+    public String fileName() {
         return _fileName;
     }
 
