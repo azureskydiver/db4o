@@ -9,10 +9,9 @@ import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 
-public class FileSizeOnRollbackTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class FileSizeOnRollbackTestCase extends AbstractDb4oTestCase {
 
 	public static void main(String[] args) {
 		new FileSizeOnRollbackTestCase().runSolo();
@@ -51,10 +50,10 @@ public class FileSizeOnRollbackTestCase extends AbstractDb4oTestCase implements 
 	}
 	
 	private int fileSize(){
-        AbstractFileBasedDb4oFixture fixture = (AbstractFileBasedDb4oFixture) fixture();
-        IoAdaptedObjectContainer container = (IoAdaptedObjectContainer) fixture().db();
+		LocalObjectContainer localContainer = fixture().fileSession();
+        IoAdaptedObjectContainer container = (IoAdaptedObjectContainer) localContainer;
         container.syncFiles();
-        long length = new File(fixture.getAbsolutePath()).length();
+        long length = new File(container.fileName()).length();
         return (int)length;
 	}
 }
