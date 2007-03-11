@@ -68,7 +68,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
         return _length;
     }
 
-    String fileName() {
+    public String fileName() {
         return "Memory File";
     }
 

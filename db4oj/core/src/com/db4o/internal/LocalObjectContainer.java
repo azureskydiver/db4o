@@ -179,7 +179,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
     public abstract long fileLength();
 
-    abstract String fileName();
+    public abstract String fileName();
     
     public void free(Slot slot) {
         if(slot == null){
