@@ -20,7 +20,7 @@ public class CommitTimeCallbacksForClientServerTestCase extends AbstractDb4oTest
 		new CommitTimeCallbacksForClientServerTestCase().runClientServer();
 	}
 
-	public void _testCommittingIsTriggeredOnServer() {
+	public void testCommittingIsTriggeredOnServer() {
 		
 		final EventRecorder clientRecorder = new EventRecorder();
 		clientRegistry().committing().addListener(clientRecorder);

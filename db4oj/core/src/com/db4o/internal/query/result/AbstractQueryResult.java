@@ -34,7 +34,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	    return stream.readActivatedObjectNotInCache(_transaction, id);
 	}
 
-	public Object streamLock() {
+	public Object lock() {
 		final ObjectContainerBase stream = stream();
 		stream.checkClosed();
 		return stream.lock();
@@ -58,7 +58,7 @@ public abstract class AbstractQueryResult implements QueryResult {
     			if(current == null){
     				return MappingIterator.SKIP;
     			}
-    			synchronized (streamLock()) {
+    			synchronized (lock()) {
     				Object obj = activatedObject(((Integer)current).intValue());
     				if(obj == null){
     					return MappingIterator.SKIP;

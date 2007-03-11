@@ -30,7 +30,7 @@ class ClientQueryResultIterator implements Iterator4 {
 	}
 
 	private Object streamLock() {
-		return _client.streamLock();
+		return _client.lock();
 	}
 	
 	public void reset() {

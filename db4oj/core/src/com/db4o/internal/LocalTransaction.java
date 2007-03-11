@@ -28,7 +28,9 @@ public class LocalTransaction extends Transaction {
 	
     public void commit() {
         synchronized (stream().i_lock) {
-        	triggerCommitOnStarted();
+        	if(! isSystemTransaction()){
+        		triggerCommitOnStarted();
+        	}
             i_file.freeSpaceBeginCommit();
             commitExceptForFreespace();
             i_file.freeSpaceEndCommit();
@@ -419,7 +421,7 @@ public class LocalTransaction extends Transaction {
         change.freeOnCommit(i_file, slot);
     }
 
-    void producteUpdateSlotChange(int a_id, int a_address, int a_length) {
+    void produceUpdateSlotChange(int a_id, int a_address, int a_length) {
         checkSynchronization();
         if(DTrace.enabled){
             DTrace.FREE_ON_ROLLBACK.log(a_id);

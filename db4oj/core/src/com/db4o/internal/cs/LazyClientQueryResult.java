@@ -31,7 +31,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	}
 
 	public Object get(int index) {
-        synchronized (streamLock()) {
+        synchronized (lock()) {
             return activatedObject(getId(index));
         }
 	}
