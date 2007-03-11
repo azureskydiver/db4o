@@ -35,7 +35,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
     }
 
     public Object get(int index) {
-        synchronized (streamLock()) {
+        synchronized (lock()) {
             return activatedObject(getId(index));
         }
     }

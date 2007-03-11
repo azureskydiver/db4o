@@ -99,7 +99,7 @@ public class ClusterQueryResult implements QueryResult {
         }
     }
 
-    public Object streamLock() {
+    public Object lock() {
         return _cluster;
     }
 

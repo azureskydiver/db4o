@@ -129,6 +129,10 @@ public abstract class Transaction {
     }   
     
     public abstract boolean isDeleted(int id);
+    
+	protected boolean isSystemTransaction() {
+		return i_parentTransaction == null;
+	}
 
     public boolean delete(ObjectReference ref, int id, int cascade) {
         checkSynchronization();
@@ -244,7 +248,7 @@ public abstract class Transaction {
     void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
     }
 
-    void producteUpdateSlotChange(int a_id, int a_address, int a_length) {
+    void produceUpdateSlotChange(int a_id, int a_address, int a_length) {
     }
     
     public void slotFreePointerOnCommit(int a_id) {

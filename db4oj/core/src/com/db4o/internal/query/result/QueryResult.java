@@ -15,12 +15,14 @@ public interface QueryResult extends Iterable4 {
 
 	public IntIterator4 iterateIDs();
 	
-    public int size();
-    
+	public Object lock();
+	
     public ExtObjectContainer objectContainer();
     
     public int indexOf(int id);
 
+    public int size();
+    
 	public void sort(QueryComparator cmp);
 
 }

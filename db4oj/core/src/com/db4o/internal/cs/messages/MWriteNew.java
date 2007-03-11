@@ -14,16 +14,23 @@ public final class MWriteNew extends MsgObject {
         synchronized (streamLock()) {
             ClassMetadata yc = yapClassId == 0 ? null : stream.getYapClass(yapClassId);
             _payLoad.writeEmbedded();
-            stream.prefetchedIDConsumed(_payLoad.getID());
-            _payLoad.address(stream.getSlot(_payLoad.getLength()));
+            
+            int id = _payLoad.getID();
+            int length = _payLoad.getLength();
+            
+            stream.prefetchedIDConsumed(id);
+            transaction().slotFreePointerOnRollback(id);
+            
+            int address = stream.getSlot(length);
+            _payLoad.address(address);
+            
+            transaction().slotFreeOnRollback(id, address, length);
+            
             if(yc != null){
                 yc.addFieldIndices(_payLoad,null);
             }
             stream.writeNew(yc, _payLoad);
-            transaction().writePointer(
-                _payLoad.getID(),
-                _payLoad.getAddress(),
-                _payLoad.getLength());
+            transaction().writePointer( id, address, length);
         }
         return true;
     }

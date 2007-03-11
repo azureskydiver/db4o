@@ -68,7 +68,7 @@ public class StatefulQueryResult {
 	}	
 		
 	Object streamLock() {
-		return objectContainer().lock();
+		return _delegate.lock();
 	}
 	
 	ExtObjectContainer objectContainer() {
