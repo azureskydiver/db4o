@@ -8,10 +8,11 @@ import com.db4o.internal.*;
 /**
  * db4o exception wrapper: Exceptions occurring during internal processing
  * will be proliferated to the client calling code encapsulated in an exception
- * of rhis type. The original exception, if any, is available through
+ * of this type. The original exception, if any, is available through
  * {@link Db4oException#cause()}.
  */
 public class Db4oException extends ChainedRuntimeException {
+	
 	public Db4oException(String msg) {
 		super(msg);
 	}

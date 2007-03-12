@@ -74,8 +74,10 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     public void commit1() {
         try {
             write(false);
-        } catch (Exception e) {
-            fatalException(e);
+        } catch (Db4oException exc) {
+            throw exc;
+        } catch (Throwable t) {
+            fatalException(t);
         }
     }
 
