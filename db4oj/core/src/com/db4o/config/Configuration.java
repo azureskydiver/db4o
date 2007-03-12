@@ -61,6 +61,13 @@ public interface Configuration {
     public void activationDepth(int depth);
     
     /**
+     * adds ConfigurationItems to be applied when
+     * an ObjectContainer or ObjectServer is opened. 
+     * @param configurationItem the ConfigurationItem
+     */
+    public void add(ConfigurationItem configurationItem);
+    
+    /**
      * adds a new Alias for a class, namespace or package.
      * <br><br>Aliases can be used to persist classes in the running
      * application to different persistent classes in a database file

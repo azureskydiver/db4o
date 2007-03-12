@@ -1673,8 +1673,8 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     
     public StoredField storedField(String a_name, Object a_type) {
         synchronized(i_stream.i_lock){
-            
-            ClassMetadata yc = i_stream.getYapClass(i_stream.configImpl().reflectorFor(a_type)); 
+        	
+            ClassMetadata yc = i_stream.getYapClass(ReflectorUtils.reflectClassFor(reflector(), a_type)); 
     		
 	        if(i_fields != null){
 	            for (int i = 0; i < i_fields.length; i++) {
