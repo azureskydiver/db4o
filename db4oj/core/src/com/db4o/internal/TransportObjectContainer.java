@@ -40,7 +40,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	    // do nothing
 	}
 	
-	void initialize4NObjectCarrier(){
+	protected void initializePostOpenExcludingTransportObjectContainer(){
 		// do nothing
 	}
 	

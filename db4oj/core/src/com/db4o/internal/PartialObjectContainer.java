@@ -16,7 +16,7 @@ import com.db4o.internal.query.result.*;
 import com.db4o.internal.replication.*;
 import com.db4o.io.UncheckedIOException;
 import com.db4o.query.*;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.*;
 import com.db4o.reflect.generic.GenericReflector;
 import com.db4o.replication.*;
 import com.db4o.types.*;
@@ -994,19 +994,20 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         i_references.startTimer();
     }
 
-    protected void initialize3() {
+    protected final void initializePostOpen() {
         i_showInternalClasses = 100000;
-        initialize4NObjectCarrier();
+        initializePostOpenExcludingTransportObjectContainer();
         i_showInternalClasses = 0;
     }
     
-    void initialize4NObjectCarrier() {
+    protected void initializePostOpenExcludingTransportObjectContainer() {
         initializeEssentialClasses();
         rename(configImpl());
         _classCollection.initOnUp(i_systemTrans);
         if (configImpl().detectSchemaChanges()) {
             i_systemTrans.commit();
         }
+        configImpl().applyConfigurationItems(_this);
     }
 
     void initializeEssentialClasses(){
@@ -1827,7 +1828,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public StoredClass storedClass(Object clazz) {
         synchronized (i_lock) {
             checkClosed();
-            ReflectClass claxx = configImpl().reflectorFor(clazz);
+            ReflectClass claxx = ReflectorUtils.reflectClassFor(reflector(), clazz);
             if (claxx == null) {
             	return null;
             }

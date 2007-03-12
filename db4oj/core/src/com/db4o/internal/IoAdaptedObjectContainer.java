@@ -43,7 +43,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                     throw e;
                 }
             }
-            initialize3();
+            initializePostOpen();
         }
     }
 

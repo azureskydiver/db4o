@@ -46,6 +46,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec CALLBACKS=new KeySpec(true);
     
 	private final static KeySpec CALL_CONSTRUCTORS=new KeySpec(TernaryBool.UNSPECIFIED);
+	
+	private final static KeySpec CONFIGURATION_ITEMS=new KeySpec(null);
     
 	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE=new KeySpec(true);
     
@@ -153,9 +155,35 @@ public final class Config4Impl implements Configuration, DeepClone,
     	_config.put(ACTIVATION_DEPTH,depth);
     }
     
+	public void add(ConfigurationItem item) {
+		Hashtable4 items = configurationItems();
+		if(items==null) {
+			items=new Hashtable4(16);
+			_config.put(CONFIGURATION_ITEMS,items);
+		}
+		items.put(item, item);
+	}
+	
     public void allowVersionUpdates(boolean flag){
     	_config.put(ALLOW_VERSION_UPDATES,flag);
     }
+    
+    private Hashtable4 configurationItems(){
+    	return (Hashtable4)_config.get(CONFIGURATION_ITEMS);
+    }
+    
+	public void applyConfigurationItems(final ObjectContainerBase container) {
+		Hashtable4 items = configurationItems();
+		if(items == null){
+			return;
+		}
+		items.forEachValue(new Visitor4() {
+			public void visit(Object obj) {
+				ConfigurationItem item = (ConfigurationItem) obj;
+				item.apply(container);
+			}
+		});
+	}
 
     public void automaticShutDown(boolean flag) {
     	_config.put(AUTOMATIC_SHUTDOWN,flag);
@@ -603,22 +631,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
     
     ReflectClass reflectorFor(Object clazz) {
-        
-        clazz = Platform4.getClassForType(clazz);
-        
-        if(clazz instanceof ReflectClass){
-            return (ReflectClass)clazz;
-        }
-        
-        if(clazz instanceof Class){
-            return reflector().forClass((Class)clazz);
-        }
-        
-        if(clazz instanceof String){
-            return reflector().forName((String)clazz);
-        }
-        
-        return reflector().forObject(clazz);
+    	return ReflectorUtils.reflectClassFor(reflector(), clazz);
     }
 
 	public boolean allowVersionUpdates() {

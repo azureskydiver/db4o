@@ -78,7 +78,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				throw new RuntimeException(
 						"This constructor is for Debug.fakeServer use only.");
 			}
-			initialize3();
+			initializePostOpen();
 			Platform4.postOpen(this);
 		}
 	}
@@ -119,7 +119,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 			readThis();
 
-			initialize3();
+			initializePostOpen();
 			Platform4.postOpen(this);
 		}
 	}

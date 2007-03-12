@@ -26,7 +26,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
-		initialize3();
+		initializePostOpen();
 	}
 
     public InMemoryObjectContainer(Configuration config, MemoryFile memoryFile) {
