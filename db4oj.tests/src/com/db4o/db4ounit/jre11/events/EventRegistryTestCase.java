@@ -20,7 +20,7 @@ public class EventRegistryTestCase extends AbstractDb4oTestCase {
 
 		EventRegistry registry = EventRegistryFactory.forObjectContainer(db());
 
-		EventRecorder recorder = new EventRecorder();
+		EventRecorder recorder = new EventRecorder(fileSession().lock());
 		
 		registry.queryStarted().addListener(recorder);
 		registry.queryFinished().addListener(recorder);

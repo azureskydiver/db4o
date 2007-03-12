@@ -14,7 +14,7 @@ import db4ounit.extensions.fixtures.OptOutCS;
 /**
  * @exclude
  */
-public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase {
 
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
 
@@ -54,7 +54,7 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase im
 	}
 	
 	protected void db4oSetupAfterStore() throws Exception {
-		_eventRecorder = new EventRecorder();
+		_eventRecorder = new EventRecorder(fileSession().lock());
 		committing().addListener(_eventRecorder);
 	}
 	
@@ -112,7 +112,17 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase im
 		assertCommittingEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1 }, new ObjectInfo[] { info2 });
 	}
 	
-	public void testObjectSetTwiceShouldStillAppearAsAdded() {
+	public void testCommittingDeleted(){
+		Item item1 = getItem(1);
+		ObjectInfo info1 = getInfo(1);
+		
+		db().delete(item1);
+		db().commit();
+		
+		assertCommittingEvent(NONE, new ObjectInfo[] { info1 }, NONE);
+	}
+	
+	public void _testObjectSetTwiceShouldStillAppearAsAdded() {
 		final Item item4 = new Item(4);
 		db().set(item4);
 		db().set(item4);
@@ -153,6 +163,6 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase im
 	}
 
 	private EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(db());
+		return EventRegistryFactory.forObjectContainer(fixture().fileSession());
 	}
 }

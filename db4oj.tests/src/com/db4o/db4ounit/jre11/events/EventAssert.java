@@ -18,6 +18,7 @@ public class EventAssert {
 	public static void assertCommitEvent(final EventRecorder eventRecorder,
 			final Event4 expectedEvent, final ObjectInfo[] expectedAdded,
 			final ObjectInfo[] expectedDeleted, final ObjectInfo[] expectedUpdated) {
+		eventRecorder.waitForEventCount(1);
 		Assert.areEqual(1, eventRecorder.size());		
 		Assert.areSame(expectedEvent, eventRecorder.get(0).e);
 		CommitEventArgs args = (CommitEventArgs)eventRecorder.get(0).args;
