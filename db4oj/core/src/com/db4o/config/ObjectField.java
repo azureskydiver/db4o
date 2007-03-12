@@ -108,10 +108,4 @@ public interface ObjectField {
      */
     public void queryEvaluation (boolean flag);
 
-
-	/**
-	 * configures creation of a unique index. 
-	 * @param flag specify <code>true</code> to create a uniquw index on this field.
-	 */
-    public void uniqueIndex(boolean flag);
 }

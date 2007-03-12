@@ -105,11 +105,4 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 		return _config.getAsBoolean(QUERY_EVALUATION);
 	}
 
-	public void uniqueIndex(boolean flag) {
-		if(flag){
-			indexed(true);
-		}
-	}
-
-
 }
