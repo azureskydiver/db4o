@@ -27,7 +27,7 @@ namespace com.db4o.@internal.query.result
 			return stream.ReadActivatedObjectNotInCache(_transaction, id);
 		}
 
-		public virtual object StreamLock()
+		public virtual object Lock()
 		{
 			com.db4o.@internal.ObjectContainerBase stream = Stream();
 			stream.CheckClosed();
@@ -68,7 +68,7 @@ namespace com.db4o.@internal.query.result
 				{
 					return com.db4o.foundation.MappingIterator.SKIP;
 				}
-				lock (this._enclosing.StreamLock())
+				lock (this._enclosing.Lock())
 				{
 					object obj = this._enclosing.ActivatedObject(((int)current));
 					if (obj == null)

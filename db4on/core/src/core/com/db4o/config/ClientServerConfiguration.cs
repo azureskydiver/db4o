@@ -1,8 +1,13 @@
 namespace com.db4o.config
 {
+	/// <summary>Client/Server configuration interface.</summary>
+	/// <remarks>Client/Server configuration interface.</remarks>
 	public interface ClientServerConfiguration
 	{
-		/// <summary>Sets the number of IDs to be prefetched for an ObjectSet in C/S mode</summary>
+		/// <summary>
+		/// Sets the number of IDs to be pre-allocated in the database for new
+		/// objects created on the client
+		/// </summary>
 		/// <param name="prefetchIDCount">The number of IDs to be prefetched</param>
 		void PrefetchIDCount(int prefetchIDCount);
 

@@ -54,5 +54,15 @@ namespace com.db4o.@internal.callbacks
 		public virtual void ObjectOnDeactivate(object obj)
 		{
 		}
+
+		public virtual void CommitOnStarted(com.db4o.ext.ObjectInfoCollection added, com.db4o.ext.ObjectInfoCollection
+			 deleted, com.db4o.ext.ObjectInfoCollection updated)
+		{
+		}
+
+		public virtual bool CaresAboutCommit()
+		{
+			return false;
+		}
 	}
 }

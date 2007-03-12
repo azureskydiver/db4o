@@ -2,8 +2,9 @@ namespace com.db4o.db4ounit.common.types.arrays
 {
 	public class TypedArrayInObjectTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase
 	{
-		private static readonly com.db4o.db4ounit.common.sampledata.AtomData[] ARRAY = { 
-			new com.db4o.db4ounit.common.sampledata.AtomData("TypedArrayInObject") };
+		private static readonly com.db4o.db4ounit.common.sampledata.AtomData[] ARRAY = new 
+			com.db4o.db4ounit.common.sampledata.AtomData[] { new com.db4o.db4ounit.common.sampledata.AtomData
+			("TypedArrayInObject") };
 
 		public class Data
 		{

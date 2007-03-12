@@ -2,7 +2,7 @@ namespace com.db4o.db4ounit.common.types.arrays
 {
 	public class SimpleTypeArrayInUntypedVariableTestCase : Db4oUnit.Extensions.AbstractDb4oTestCase
 	{
-		private static readonly int[] ARRAY = { 1, 2, 3 };
+		private static readonly int[] ARRAY = new int[] { 1, 2, 3 };
 
 		public class Data
 		{

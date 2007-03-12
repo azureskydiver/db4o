@@ -3,11 +3,6 @@ namespace com.db4o.@internal
 	/// <exclude></exclude>
 	public abstract class Transaction
 	{
-		protected int i_address;
-
-		protected readonly byte[] _pointerBuffer = new byte[com.db4o.@internal.Const4.POINTER_LENGTH
-			];
-
 		public com.db4o.foundation.Tree i_delete;
 
 		private com.db4o.foundation.List4 i_dirtyFieldIndexes;
@@ -21,8 +16,6 @@ namespace com.db4o.@internal
 		private readonly com.db4o.@internal.ObjectContainerBase i_stream;
 
 		private com.db4o.foundation.List4 i_transactionListeners;
-
-		protected com.db4o.foundation.Tree i_writtenUpdateDeletedMembers;
 
 		private readonly com.db4o.foundation.Collection4 _participants = new com.db4o.foundation.Collection4
 			();
@@ -97,72 +90,26 @@ namespace com.db4o.@internal
 			}
 		}
 
-		public virtual void Commit()
-		{
-			lock (Stream().i_lock)
-			{
-				i_file.FreeSpaceBeginCommit();
-				CommitExceptForFreespace();
-				i_file.FreeSpaceEndCommit();
-			}
-		}
-
-		private void CommitExceptForFreespace()
-		{
-			Commit2Listeners();
-			Commit3Stream();
-			Commit4FieldIndexes();
-			Commit5Participants();
-			Stream().WriteDirty();
-			Commit6WriteChanges();
-			FreeOnCommit();
-			Commit7ClearAll();
-		}
+		public abstract void Commit();
 
 		protected virtual void FreeOnCommit()
 		{
 		}
 
-		protected virtual void Commit6WriteChanges()
-		{
-		}
-
-		private void Commit7ClearAll()
-		{
-			Commit7ParentClearAll();
-			ClearAll();
-		}
-
-		private void Commit7ParentClearAll()
+		protected virtual void CommitParticipants()
 		{
 			if (i_parentTransaction != null)
 			{
-				i_parentTransaction.Commit7ClearAll();
+				i_parentTransaction.CommitParticipants();
 			}
-		}
-
-		private void Commit2Listeners()
-		{
-			Commit2ParentListeners();
-			CommitTransactionListeners();
-		}
-
-		private void Commit2ParentListeners()
-		{
-			if (i_parentTransaction != null)
+			System.Collections.IEnumerator iterator = _participants.GetEnumerator();
+			while (iterator.MoveNext())
 			{
-				i_parentTransaction.Commit2Listeners();
+				((com.db4o.@internal.TransactionParticipant)iterator.Current).Commit(this);
 			}
 		}
 
-		private void Commit3Stream()
-		{
-			Stream().CheckNeededUpdates();
-			Stream().WriteDirty();
-			Stream().ClassCollection().Write(Stream().GetSystemTransaction());
-		}
-
-		private void Commit4FieldIndexes()
+		protected virtual void Commit4FieldIndexes()
 		{
 			if (i_parentTransaction != null)
 			{
@@ -176,19 +123,6 @@ namespace com.db4o.@internal
 				{
 					((com.db4o.@internal.ix.IndexTransaction)i.Current).Commit();
 				}
-			}
-		}
-
-		private void Commit5Participants()
-		{
-			if (i_parentTransaction != null)
-			{
-				i_parentTransaction.Commit5Participants();
-			}
-			System.Collections.IEnumerator iterator = _participants.GetEnumerator();
-			while (iterator.MoveNext())
-			{
-				((com.db4o.@internal.TransactionParticipant)iterator.Current).Commit(this);
 			}
 		}
 
@@ -208,6 +142,11 @@ namespace com.db4o.@internal
 		}
 
 		public abstract bool IsDeleted(int id);
+
+		protected virtual bool IsSystemTransaction()
+		{
+			return i_parentTransaction == null;
+		}
 
 		public virtual bool Delete(com.db4o.@internal.ObjectReference @ref, int id, int cascade
 			)
@@ -253,11 +192,11 @@ namespace com.db4o.@internal
 			yapClass.Index().Add(this, a_id);
 		}
 
-		public virtual object[] ObjectAndYapObjectBySignature(long a_uuid, byte[] a_signature
-			)
+		public virtual com.db4o.@internal.HardObjectReference GetHardReferenceBySignature
+			(long a_uuid, byte[] a_signature)
 		{
 			CheckSynchronization();
-			return Stream().GetUUIDIndex().ObjectAndYapObjectBySignature(this, a_uuid, a_signature
+			return Stream().GetUUIDIndex().GetHardObjectReferenceBySignature(this, a_uuid, a_signature
 				);
 		}
 
@@ -321,11 +260,6 @@ namespace com.db4o.@internal
 			}
 		}
 
-		internal virtual void SetAddress(int a_address)
-		{
-			i_address = a_address;
-		}
-
 		public abstract void SetPointer(int a_id, int a_address, int a_length);
 
 		public virtual void SlotDelete(int a_id, int a_address, int a_length)
@@ -336,7 +270,7 @@ namespace com.db4o.@internal
 		{
 		}
 
-		internal virtual void SlotFreeOnRollback(int a_id, int a_address, int a_length)
+		public virtual void SlotFreeOnRollback(int a_id, int a_address, int a_length)
 		{
 		}
 
@@ -345,7 +279,7 @@ namespace com.db4o.@internal
 		{
 		}
 
-		internal virtual void SlotFreeOnRollbackSetPointer(int a_id, int a_address, int a_length
+		internal virtual void ProduceUpdateSlotChange(int a_id, int a_address, int a_length
 			)
 		{
 		}
@@ -356,6 +290,10 @@ namespace com.db4o.@internal
 
 		internal virtual void SlotFreePointerOnCommit(int a_id, int a_address, int a_length
 			)
+		{
+		}
+
+		public virtual void SlotFreePointerOnRollback(int a_id)
 		{
 		}
 
@@ -410,20 +348,6 @@ namespace com.db4o.@internal
 			{
 				_participants.Add(participant);
 			}
-		}
-
-		public static com.db4o.@internal.Transaction ReadInterruptedTransaction(com.db4o.@internal.LocalObjectContainer
-			 file, com.db4o.@internal.Buffer reader)
-		{
-			int transactionID1 = reader.ReadInt();
-			int transactionID2 = reader.ReadInt();
-			if ((transactionID1 > 0) && (transactionID1 == transactionID2))
-			{
-				com.db4o.@internal.Transaction transaction = file.NewTransaction(null);
-				transaction.SetAddress(transactionID1);
-				return transaction;
-			}
-			return null;
 		}
 
 		public virtual com.db4o.@internal.Transaction ParentTransaction()

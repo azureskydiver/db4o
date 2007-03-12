@@ -1,9 +1,5 @@
 namespace com.db4o.@internal.handlers
 {
-	/// <summary>
-	/// YapString
-	/// Legacy rename for C# obfuscator production trouble
-	/// </summary>
 	/// <exclude></exclude>
 	public sealed class StringHandler : com.db4o.@internal.handlers.BuiltinTypeHandler
 	{
@@ -96,9 +92,9 @@ namespace com.db4o.@internal.handlers
 			return true;
 		}
 
-		public override int IsSecondClass()
+		public override com.db4o.foundation.TernaryBool IsSecondClass()
 		{
-			return com.db4o.@internal.Const4.YES;
+			return com.db4o.foundation.TernaryBool.YES;
 		}
 
 		public override void CalculateLengths(com.db4o.@internal.Transaction trans, com.db4o.@internal.marshall.ObjectHeaderAttributes

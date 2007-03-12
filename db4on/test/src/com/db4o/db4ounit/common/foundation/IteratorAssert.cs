@@ -17,5 +17,11 @@ namespace com.db4o.db4ounit.common.foundation
 			}
 			Db4oUnit.Assert.IsFalse(actual.MoveNext());
 		}
+
+		public static void AreEqual(object[] expected, System.Collections.IEnumerator iterator
+			)
+		{
+			AreEqual(new com.db4o.foundation.ArrayIterator4(expected), iterator);
+		}
 	}
 }

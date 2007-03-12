@@ -163,7 +163,7 @@ namespace com.db4o.@internal.handlers
 			return i_handler.IndexNullHandling();
 		}
 
-		public override int IsSecondClass()
+		public override com.db4o.foundation.TernaryBool IsSecondClass()
 		{
 			return i_handler.IsSecondClass();
 		}
@@ -522,7 +522,7 @@ namespace com.db4o.@internal.handlers
 		public sealed override void Defrag(com.db4o.@internal.marshall.MarshallerFamily mf
 			, com.db4o.@internal.ReaderPair readers, bool redirect)
 		{
-			if (!(i_handler.IsSecondClass() == com.db4o.@internal.Const4.YES))
+			if (!(i_handler.IsSecondClass() == com.db4o.foundation.TernaryBool.YES))
 			{
 				mf._array.DefragIDs(this, readers);
 			}

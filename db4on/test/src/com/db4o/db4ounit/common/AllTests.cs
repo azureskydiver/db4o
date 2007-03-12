@@ -13,7 +13,7 @@ namespace com.db4o.db4ounit.common
 				, typeof(com.db4o.db4ounit.common.reflect.AllTests), typeof(com.db4o.db4ounit.common.regression.AllTests)
 				, typeof(com.db4o.db4ounit.common.querying.AllTests), typeof(com.db4o.db4ounit.common.soda.AllTests)
 				, typeof(com.db4o.db4ounit.common.stored.AllTests), typeof(com.db4o.db4ounit.common.types.AllTests)
-				 };
+				, typeof(com.db4o.db4ounit.util.test.AllTests) };
 		}
 	}
 }

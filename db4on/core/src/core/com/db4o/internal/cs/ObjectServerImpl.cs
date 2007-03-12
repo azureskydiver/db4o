@@ -3,58 +3,81 @@ namespace com.db4o.@internal.cs
 	public class ObjectServerImpl : com.db4o.ObjectServer, com.db4o.ext.ExtObjectServer
 		, j4o.lang.Runnable, com.db4o.foundation.network.LoopbackSocketServer
 	{
-		private string i_name;
+		private readonly string _name;
 
-		private com.db4o.foundation.network.ServerSocket4 i_serverSocket;
+		private com.db4o.foundation.network.ServerSocket4 _serverSocket;
 
-		private int i_port;
+		private readonly int _port;
 
 		private int i_threadIDGen = 1;
 
-		private com.db4o.foundation.Collection4 i_threads = new com.db4o.foundation.Collection4
+		private readonly com.db4o.foundation.Collection4 _threads = new com.db4o.foundation.Collection4
 			();
 
-		private com.db4o.@internal.LocalObjectContainer i_yapFile;
+		private com.db4o.@internal.LocalObjectContainer _container;
 
-		private readonly object _lock = new object();
+		private readonly object _startupLock = new object();
 
 		private com.db4o.@internal.Config4Impl _config;
 
-		public ObjectServerImpl(com.db4o.@internal.LocalObjectContainer yapFile, int port
+		public ObjectServerImpl(com.db4o.@internal.LocalObjectContainer container, int port
 			)
 		{
-			i_yapFile = yapFile;
-			i_port = port;
-			_config = i_yapFile.ConfigImpl();
-			i_name = "db4o ServerSocket FILE: " + yapFile.ToString() + "  PORT:" + i_port;
-			i_yapFile.SetServer(true);
+			_container = container;
+			_port = port;
+			_config = _container.ConfigImpl();
+			_name = "db4o ServerSocket FILE: " + container.ToString() + "  PORT:" + _port;
+			_container.SetServer(true);
 			ConfigureObjectServer();
 			EnsureLoadStaticClass();
 			EnsureLoadConfiguredClasses();
-			StartupServerSocket();
+			StartServer();
 		}
 
-		private void StartupServerSocket()
+		private void StartServer()
 		{
-			if (i_port <= 0)
+			if (IsEmbeddedServer())
 			{
 				return;
 			}
+			StartServerSocket();
+			StartServerThread();
+			WaitForThreadStart();
+		}
+
+		private void StartServerThread()
+		{
+			j4o.lang.Thread thread = new j4o.lang.Thread(this);
+			thread.SetDaemon(true);
+			thread.Start();
+		}
+
+		private void StartServerSocket()
+		{
 			try
 			{
-				i_serverSocket = new com.db4o.foundation.network.ServerSocket4(i_port);
-				i_serverSocket.SetSoTimeout(_config.TimeoutServerSocket());
+				_serverSocket = new com.db4o.foundation.network.ServerSocket4(_port);
+				_serverSocket.SetSoTimeout(_config.TimeoutServerSocket());
 			}
 			catch (System.IO.IOException)
 			{
-				com.db4o.@internal.Exceptions4.ThrowRuntimeException(30, string.Empty + i_port);
+				com.db4o.@internal.Exceptions4.ThrowRuntimeException(com.db4o.@internal.Messages.
+					COULD_NOT_OPEN_PORT, string.Empty + _port);
 			}
-			new j4o.lang.Thread(this).Start();
-			lock (_lock)
+		}
+
+		private bool IsEmbeddedServer()
+		{
+			return _port <= 0;
+		}
+
+		private void WaitForThreadStart()
+		{
+			lock (_startupLock)
 			{
 				try
 				{
-					j4o.lang.JavaSystem.Wait(_lock, 1000);
+					j4o.lang.JavaSystem.Wait(_startupLock, 1000);
 				}
 				catch
 				{
@@ -64,25 +87,25 @@ namespace com.db4o.@internal.cs
 
 		private void EnsureLoadStaticClass()
 		{
-			i_yapFile.ProduceYapClass(i_yapFile.i_handlers.ICLASS_STATICCLASS);
+			_container.ProduceYapClass(_container.i_handlers.ICLASS_STATICCLASS);
 		}
 
 		private void EnsureLoadConfiguredClasses()
 		{
-			_config.ExceptionalClasses().ForEachValue(new _AnonymousInnerClass80(this));
+			_config.ExceptionalClasses().ForEachValue(new _AnonymousInnerClass95(this));
 		}
 
-		private sealed class _AnonymousInnerClass80 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass95 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass80(ObjectServerImpl _enclosing)
+			public _AnonymousInnerClass95(ObjectServerImpl _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
 
 			public void Visit(object a_object)
 			{
-				this._enclosing.i_yapFile.ProduceYapClass(this._enclosing.i_yapFile.Reflector().ForName
-					(((com.db4o.@internal.Config4Class)a_object).GetName()));
+				this._enclosing._container.ProduceYapClass(this._enclosing._container.Reflector()
+					.ForName(((com.db4o.@internal.Config4Class)a_object).GetName()));
 			}
 
 			private readonly ObjectServerImpl _enclosing;
@@ -98,47 +121,78 @@ namespace com.db4o.@internal.cs
 
 		public virtual void Backup(string path)
 		{
-			i_yapFile.Backup(path);
+			_container.Backup(path);
 		}
 
 		internal void CheckClosed()
 		{
-			if (i_yapFile == null)
+			if (_container == null)
 			{
-				com.db4o.@internal.Exceptions4.ThrowRuntimeException(20, i_name);
+				com.db4o.@internal.Exceptions4.ThrowRuntimeException(com.db4o.@internal.Messages.
+					CLOSED_OR_OPEN_FAILED, _name);
 			}
-			i_yapFile.CheckClosed();
+			_container.CheckClosed();
 		}
 
 		public virtual bool Close()
 		{
-			lock (com.db4o.@internal.Global4.Lock)
+			lock (this)
 			{
-				com.db4o.foundation.Cool.SleepIgnoringInterruption(100);
-				try
-				{
-					if (i_serverSocket != null)
-					{
-						i_serverSocket.Close();
-					}
-				}
-				catch
-				{
-				}
-				i_serverSocket = null;
-				bool isClosed = i_yapFile == null ? true : i_yapFile.Close();
-				lock (i_threads)
-				{
-					System.Collections.IEnumerator i = new com.db4o.foundation.Collection4(i_threads)
-						.GetEnumerator();
-					while (i.MoveNext())
-					{
-						((com.db4o.@internal.cs.ServerMessageDispatcher)i.Current).Close();
-					}
-				}
-				i_yapFile = null;
+				CloseServerSocket();
+				bool isClosed = CloseFile();
+				CloseMessageDispatchers();
 				return isClosed;
 			}
+		}
+
+		private bool CloseFile()
+		{
+			if (_container == null)
+			{
+				return true;
+			}
+			bool isClosed = _container.Close();
+			_container = null;
+			return isClosed;
+		}
+
+		private void CloseMessageDispatchers()
+		{
+			System.Collections.IEnumerator i = IterateThreads();
+			while (i.MoveNext())
+			{
+				try
+				{
+					((com.db4o.@internal.cs.ServerMessageDispatcher)i.Current).Close();
+				}
+				catch (System.Exception e)
+				{
+					j4o.lang.JavaSystem.PrintStackTrace(e);
+				}
+			}
+		}
+
+		private System.Collections.IEnumerator IterateThreads()
+		{
+			lock (_threads)
+			{
+				return new com.db4o.foundation.Collection4(_threads).GetEnumerator();
+			}
+		}
+
+		private void CloseServerSocket()
+		{
+			try
+			{
+				if (_serverSocket != null)
+				{
+					_serverSocket.Close();
+				}
+			}
+			catch
+			{
+			}
+			_serverSocket = null;
 		}
 
 		public virtual com.db4o.config.Configuration Configure()
@@ -154,9 +208,9 @@ namespace com.db4o.@internal.cs
 		internal virtual com.db4o.@internal.cs.ServerMessageDispatcher FindThread(int a_threadID
 			)
 		{
-			lock (i_threads)
+			lock (_threads)
 			{
-				System.Collections.IEnumerator i = i_threads.GetEnumerator();
+				System.Collections.IEnumerator i = _threads.GetEnumerator();
 				while (i.MoveNext())
 				{
 					com.db4o.@internal.cs.ServerMessageDispatcher serverThread = (com.db4o.@internal.cs.ServerMessageDispatcher
@@ -172,11 +226,10 @@ namespace com.db4o.@internal.cs
 
 		public virtual void GrantAccess(string userName, string password)
 		{
-			lock (i_yapFile.i_lock)
+			lock (this)
 			{
 				CheckClosed();
-				i_yapFile.ShowInternalClasses(true);
-				try
+				lock (_container.i_lock)
 				{
 					com.db4o.User existing = GetUser(userName);
 					if (existing != null)
@@ -187,24 +240,20 @@ namespace com.db4o.@internal.cs
 					{
 						AddUser(userName, password);
 					}
-					i_yapFile.Commit();
-				}
-				finally
-				{
-					i_yapFile.ShowInternalClasses(false);
+					_container.Commit();
 				}
 			}
 		}
 
 		private void AddUser(string userName, string password)
 		{
-			i_yapFile.Set(new com.db4o.User(userName, password));
+			_container.Set(new com.db4o.User(userName, password));
 		}
 
 		private void SetPassword(com.db4o.User existing, string password)
 		{
 			existing.password = password;
-			i_yapFile.Set(existing);
+			_container.Set(existing);
 		}
 
 		internal virtual com.db4o.User GetUser(string userName)
@@ -219,12 +268,20 @@ namespace com.db4o.@internal.cs
 
 		private com.db4o.ObjectSet QueryUsers(string userName)
 		{
-			return i_yapFile.Get(new com.db4o.User(userName, null));
+			_container.ShowInternalClasses(true);
+			try
+			{
+				return _container.Get(new com.db4o.User(userName, null));
+			}
+			finally
+			{
+				_container.ShowInternalClasses(false);
+			}
 		}
 
 		public virtual com.db4o.ObjectContainer ObjectContainer()
 		{
-			return i_yapFile;
+			return _container;
 		}
 
 		public virtual com.db4o.ObjectContainer OpenClient()
@@ -235,20 +292,23 @@ namespace com.db4o.@internal.cs
 		public virtual com.db4o.ObjectContainer OpenClient(com.db4o.config.Configuration 
 			config)
 		{
-			CheckClosed();
-			try
+			lock (this)
 			{
-				com.db4o.@internal.cs.ClientObjectContainer client = new com.db4o.@internal.cs.ClientObjectContainer
-					(config, OpenClientSocket(), com.db4o.@internal.Const4.EMBEDDED_CLIENT_USER + (i_threadIDGen
-					 - 1), string.Empty, false);
-				client.BlockSize(i_yapFile.BlockSize());
-				return client;
+				CheckClosed();
+				try
+				{
+					com.db4o.@internal.cs.ClientObjectContainer client = new com.db4o.@internal.cs.ClientObjectContainer
+						(config, OpenClientSocket(), com.db4o.@internal.Const4.EMBEDDED_CLIENT_USER + (i_threadIDGen
+						 - 1), string.Empty, false);
+					client.BlockSize(_container.BlockSize());
+					return client;
+				}
+				catch (System.IO.IOException e)
+				{
+					j4o.lang.JavaSystem.PrintStackTrace(e);
+				}
+				return null;
 			}
-			catch (System.IO.IOException e)
-			{
-				j4o.lang.JavaSystem.PrintStackTrace(e);
-			}
-			return null;
 		}
 
 		public virtual com.db4o.foundation.network.LoopbackSocket OpenClientSocket()
@@ -261,11 +321,8 @@ namespace com.db4o.@internal.cs
 			try
 			{
 				com.db4o.@internal.cs.ServerMessageDispatcher thread = new com.db4o.@internal.cs.ServerMessageDispatcher
-					(this, i_yapFile, serverFake, i_threadIDGen++, true);
-				lock (i_threads)
-				{
-					i_threads.Add(thread);
-				}
+					(this, _container, serverFake, NewThreadId(), true);
+				AddThread(thread);
 				thread.Start();
 				return clientFake;
 			}
@@ -279,26 +336,21 @@ namespace com.db4o.@internal.cs
 		internal virtual void RemoveThread(com.db4o.@internal.cs.ServerMessageDispatcher 
 			aThread)
 		{
-			lock (i_threads)
+			lock (_threads)
 			{
-				i_threads.Remove(aThread);
+				_threads.Remove(aThread);
 			}
 		}
 
 		public virtual void RevokeAccess(string userName)
 		{
-			lock (i_yapFile.i_lock)
+			lock (this)
 			{
-				i_yapFile.ShowInternalClasses(true);
-				try
+				CheckClosed();
+				lock (_container.i_lock)
 				{
-					CheckClosed();
 					DeleteUsers(userName);
-					i_yapFile.Commit();
-				}
-				finally
-				{
-					i_yapFile.ShowInternalClasses(false);
+					_container.Commit();
 				}
 			}
 		}
@@ -308,33 +360,64 @@ namespace com.db4o.@internal.cs
 			com.db4o.ObjectSet set = QueryUsers(userName);
 			while (set.HasNext())
 			{
-				i_yapFile.Delete(set.Next());
+				_container.Delete(set.Next());
 			}
 		}
 
 		public virtual void Run()
 		{
-			j4o.lang.Thread.CurrentThread().SetName(i_name);
-			i_yapFile.LogMsg(31, string.Empty + i_serverSocket.GetLocalPort());
-			lock (_lock)
-			{
-				j4o.lang.JavaSystem.NotifyAll(_lock);
-			}
-			while (i_serverSocket != null)
+			SetThreadName();
+			LogListeningOnPort();
+			NotifyThreadStarted();
+			SocketServerLoop();
+		}
+
+		private void SetThreadName()
+		{
+			j4o.lang.Thread.CurrentThread().SetName(_name);
+		}
+
+		private void SocketServerLoop()
+		{
+			while (_serverSocket != null)
 			{
 				try
 				{
 					com.db4o.@internal.cs.ServerMessageDispatcher thread = new com.db4o.@internal.cs.ServerMessageDispatcher
-						(this, i_yapFile, i_serverSocket.Accept(), i_threadIDGen++, false);
-					lock (i_threads)
-					{
-						i_threads.Add(thread);
-					}
+						(this, _container, _serverSocket.Accept(), NewThreadId(), false);
+					AddThread(thread);
 					thread.Start();
 				}
 				catch
 				{
 				}
+			}
+		}
+
+		private void NotifyThreadStarted()
+		{
+			lock (_startupLock)
+			{
+				j4o.lang.JavaSystem.NotifyAll(_startupLock);
+			}
+		}
+
+		private void LogListeningOnPort()
+		{
+			_container.LogMsg(com.db4o.@internal.Messages.SERVER_LISTENING_ON_PORT, string.Empty
+				 + _serverSocket.GetLocalPort());
+		}
+
+		private int NewThreadId()
+		{
+			return i_threadIDGen++;
+		}
+
+		private void AddThread(com.db4o.@internal.cs.ServerMessageDispatcher thread)
+		{
+			lock (_threads)
+			{
+				_threads.Add(thread);
 			}
 		}
 	}

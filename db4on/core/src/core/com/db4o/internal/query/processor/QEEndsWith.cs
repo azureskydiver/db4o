@@ -9,7 +9,12 @@ namespace com.db4o.@internal.query.processor
 
 		protected override bool CompareStrings(string candidate, string constraint)
 		{
-			return candidate.LastIndexOf(constraint) == candidate.Length - constraint.Length;
+			int lastIndex = candidate.LastIndexOf(constraint);
+			if (lastIndex == -1)
+			{
+				return false;
+			}
+			return lastIndex == candidate.Length - constraint.Length;
 		}
 	}
 }

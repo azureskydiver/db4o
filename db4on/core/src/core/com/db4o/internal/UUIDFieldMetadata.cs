@@ -159,16 +159,22 @@ namespace com.db4o.@internal
 			int dbID = a_bytes.ReadInt();
 			com.db4o.@internal.ObjectContainerBase stream = a_trans.Stream();
 			stream.ShowInternalClasses(true);
-			com.db4o.ext.Db4oDatabase db = (com.db4o.ext.Db4oDatabase)stream.GetByID2(a_trans
-				, dbID);
-			if (db != null && db.i_signature == null)
+			try
 			{
-				stream.Activate2(a_trans, db, 2);
+				com.db4o.ext.Db4oDatabase db = (com.db4o.ext.Db4oDatabase)stream.GetByID2(a_trans
+					, dbID);
+				if (db != null && db.i_signature == null)
+				{
+					stream.Activate2(a_trans, db, 2);
+				}
+				com.db4o.@internal.VirtualAttributes va = a_yapObject.VirtualAttributes();
+				va.i_database = db;
+				va.i_uuid = a_bytes.ReadLong();
 			}
-			com.db4o.@internal.VirtualAttributes va = a_yapObject.VirtualAttributes();
-			va.i_database = db;
-			va.i_uuid = a_bytes.ReadLong();
-			stream.ShowInternalClasses(false);
+			finally
+			{
+				stream.ShowInternalClasses(false);
+			}
 		}
 
 		public override int LinkLength()
@@ -242,7 +248,7 @@ namespace com.db4o.@internal
 			writer.WriteLong(0);
 		}
 
-		public virtual object[] ObjectAndYapObjectBySignature(com.db4o.@internal.Transaction
+		public com.db4o.@internal.HardObjectReference GetHardObjectReferenceBySignature(com.db4o.@internal.Transaction
 			 transaction, long longPart, byte[] signature)
 		{
 			com.db4o.@internal.btree.BTreeRange range = Search(transaction, longPart);
@@ -251,33 +257,32 @@ namespace com.db4o.@internal
 			{
 				com.db4o.@internal.btree.FieldIndexKey current = (com.db4o.@internal.btree.FieldIndexKey
 					)keys.Current;
-				object[] objectAndYapObject = GetObjectAndYapObjectByID(transaction, current.ParentID
-					(), signature);
-				if (null != objectAndYapObject)
+				com.db4o.@internal.HardObjectReference hardRef = GetHardObjectReferenceById(transaction
+					, current.ParentID(), signature);
+				if (null != hardRef)
 				{
-					return objectAndYapObject;
+					return hardRef;
 				}
 			}
-			return new object[2];
+			return com.db4o.@internal.HardObjectReference.INVALID;
 		}
 
-		protected virtual object[] GetObjectAndYapObjectByID(com.db4o.@internal.Transaction
+		protected com.db4o.@internal.HardObjectReference GetHardObjectReferenceById(com.db4o.@internal.Transaction
 			 transaction, int parentId, byte[] signature)
 		{
-			object[] arr = transaction.Stream().GetObjectAndYapObjectByID(transaction, parentId
-				);
-			if (arr[1] == null)
+			com.db4o.@internal.HardObjectReference hardRef = transaction.Stream().GetHardObjectReferenceById
+				(transaction, parentId);
+			if (hardRef._reference == null)
 			{
 				return null;
 			}
-			com.db4o.@internal.ObjectReference yod = (com.db4o.@internal.ObjectReference)arr[
-				1];
-			com.db4o.@internal.VirtualAttributes vad = yod.VirtualAttributes(transaction);
+			com.db4o.@internal.VirtualAttributes vad = hardRef._reference.VirtualAttributes(transaction
+				);
 			if (!com.db4o.foundation.Arrays4.AreEqual(signature, vad.i_database.i_signature))
 			{
 				return null;
 			}
-			return arr;
+			return hardRef;
 		}
 
 		public override void DefragField(com.db4o.@internal.marshall.MarshallerFamily mf, 

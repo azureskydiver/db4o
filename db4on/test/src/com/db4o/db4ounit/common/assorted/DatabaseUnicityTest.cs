@@ -19,7 +19,6 @@ namespace com.db4o.db4ounit.common.assorted
 				ht.Put(d4b.i_signature, string.Empty);
 			}
 			yapStream.ShowInternalClasses(false);
-			oc.Close();
 		}
 	}
 }

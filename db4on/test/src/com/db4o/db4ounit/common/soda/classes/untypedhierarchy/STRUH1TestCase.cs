@@ -32,15 +32,16 @@ namespace com.db4o.db4ounit.common.soda.classes.untypedhierarchy
 		public override object[] CreateData()
 		{
 			com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase[] objects = 
-				{ new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase(), new 
-				com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase("str1"), new 
+				new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase[] { new 
+				com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase(), new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase
+				("str1"), new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase
+				(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH2()), new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase
+				(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH2("str2")), new 
 				com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH2
-				()), new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase(new 
-				com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH2("str2")), new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase
-				(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH2(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH3
-				("str3"))), new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase
-				(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH2(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH3
-				("str3"), "str2")) };
+				(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH3("str3"))), new 
+				com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH1TestCase(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH2
+				(new com.db4o.db4ounit.common.soda.classes.untypedhierarchy.STRUH3("str3"), "str2"
+				)) };
 			for (int i = 0; i < objects.Length; i++)
 			{
 				objects[i].AdjustParents();

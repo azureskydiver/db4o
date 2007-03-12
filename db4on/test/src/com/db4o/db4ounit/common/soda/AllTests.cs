@@ -5,7 +5,8 @@ namespace com.db4o.db4ounit.common.soda
 		protected override System.Type[] TestCases()
 		{
 			return new System.Type[] { typeof(com.db4o.db4ounit.common.soda.arrays.AllTests), 
-				typeof(com.db4o.db4ounit.common.soda.classes.simple.STBooleanTestCase), typeof(com.db4o.db4ounit.common.soda.wrapper.untyped.STBooleanWUTestCase)
+				typeof(com.db4o.db4ounit.common.soda.CollectionIndexedJoinTestCase), typeof(com.db4o.db4ounit.common.soda.SortMultipleTestCase)
+				, typeof(com.db4o.db4ounit.common.soda.classes.simple.STBooleanTestCase), typeof(com.db4o.db4ounit.common.soda.wrapper.untyped.STBooleanWUTestCase)
 				, typeof(com.db4o.db4ounit.common.soda.classes.simple.STByteTestCase), typeof(com.db4o.db4ounit.common.soda.wrapper.untyped.STByteWUTestCase)
 				, typeof(com.db4o.db4ounit.common.soda.classes.simple.STCharTestCase), typeof(com.db4o.db4ounit.common.soda.wrapper.untyped.STCharWUTestCase)
 				, typeof(com.db4o.db4ounit.common.soda.classes.simple.STDoubleTestCase), typeof(com.db4o.db4ounit.common.soda.wrapper.untyped.STDoubleWUTestCase)

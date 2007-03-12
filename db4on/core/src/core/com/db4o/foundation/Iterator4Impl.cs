@@ -3,9 +3,6 @@ namespace com.db4o.foundation
 	/// <exclude></exclude>
 	public class Iterator4Impl : System.Collections.IEnumerator
 	{
-		public static readonly System.Collections.IEnumerator EMPTY = new com.db4o.foundation.Iterator4Impl
-			(null);
-
 		private com.db4o.foundation.List4 _first;
 
 		private com.db4o.foundation.List4 _next;

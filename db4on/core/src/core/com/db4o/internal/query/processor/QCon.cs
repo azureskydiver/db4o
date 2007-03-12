@@ -23,7 +23,7 @@ namespace com.db4o.@internal.query.processor
 
 		public com.db4o.foundation.Collection4 i_joins;
 
-		private int i_orderID = 0;
+		public int i_orderID = 0;
 
 		public com.db4o.@internal.query.processor.QCon i_parent;
 
@@ -94,7 +94,7 @@ namespace com.db4o.@internal.query.processor
 		{
 			com.db4o.@internal.query.processor.QCon qcon = this;
 			com.db4o.@internal.ClassMetadata yc = GetYapClass();
-			bool[] foundField = { false };
+			bool[] foundField = new bool[] { false };
 			ForEachChildField(a_field, new _AnonymousInnerClass108(this, foundField, query));
 			if (foundField[0])
 			{
@@ -103,8 +103,9 @@ namespace com.db4o.@internal.query.processor
 			com.db4o.@internal.query.processor.QField qf = null;
 			if (yc == null || yc.HoldsAnyClass())
 			{
-				int[] count = { 0 };
-				com.db4o.@internal.FieldMetadata[] yfs = { null };
+				int[] count = new int[] { 0 };
+				com.db4o.@internal.FieldMetadata[] yfs = new com.db4o.@internal.FieldMetadata[] { 
+					null };
 				i_trans.Stream().ClassCollection().AttachQueryNode(a_field, new _AnonymousInnerClass126
 					(this, yfs, count));
 				if (count[0] == 0)
@@ -326,6 +327,7 @@ namespace com.db4o.@internal.query.processor
 				qcon.SetCandidates(i_candidates);
 				qcon.EvaluateSimpleExec(i_candidates);
 				qcon.ApplyOrdering();
+				i_candidates.ClearOrdering();
 			}
 			i_candidates.SetCurrentConstraint(null);
 		}
@@ -550,7 +552,7 @@ namespace com.db4o.@internal.query.processor
 		{
 			if (i_joins == null)
 			{
-				return com.db4o.foundation.Iterator4Impl.EMPTY;
+				return com.db4o.foundation.Iterators.EMPTY_ITERATOR;
 			}
 			return i_joins.GetEnumerator();
 		}
@@ -559,7 +561,7 @@ namespace com.db4o.@internal.query.processor
 		{
 			if (_children == null)
 			{
-				return com.db4o.foundation.Iterator4Impl.EMPTY;
+				return com.db4o.foundation.Iterators.EMPTY_ITERATOR;
 			}
 			return new com.db4o.foundation.Iterator4Impl(_children);
 		}

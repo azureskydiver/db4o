@@ -81,9 +81,9 @@ namespace com.db4o.@internal.handlers
 			return false;
 		}
 
-		public virtual int IsSecondClass()
+		public virtual com.db4o.foundation.TernaryBool IsSecondClass()
 		{
-			return com.db4o.@internal.Const4.YES;
+			return com.db4o.foundation.TernaryBool.YES;
 		}
 
 		public virtual void CalculateLengths(com.db4o.@internal.Transaction trans, com.db4o.@internal.marshall.ObjectHeaderAttributes

@@ -110,7 +110,7 @@ namespace com.db4o.@internal.handlers
 
 		public abstract bool IndexNullHandling();
 
-		public abstract int IsSecondClass();
+		public abstract com.db4o.foundation.TernaryBool IsSecondClass();
 
 		public abstract void PrepareComparison(com.db4o.@internal.Transaction arg1, object
 			 arg2);

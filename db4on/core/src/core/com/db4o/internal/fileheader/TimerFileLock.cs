@@ -6,16 +6,12 @@ namespace com.db4o.@internal.fileheader
 		public static com.db4o.@internal.fileheader.TimerFileLock ForFile(com.db4o.@internal.LocalObjectContainer
 			 file)
 		{
-			if (LockFile(file))
+			if (file.NeedsLockFileThread())
 			{
-				return new com.db4o.@internal.fileheader.TimerFileLockEnabled(file);
+				return new com.db4o.@internal.fileheader.TimerFileLockEnabled((com.db4o.@internal.IoAdaptedObjectContainer
+					)file);
 			}
 			return new com.db4o.@internal.fileheader.TimerFileLockDisabled();
-		}
-
-		private static bool LockFile(com.db4o.@internal.LocalObjectContainer file)
-		{
-			return file.NeedsLockFileThread();
 		}
 
 		public abstract void CheckHeaderLock();

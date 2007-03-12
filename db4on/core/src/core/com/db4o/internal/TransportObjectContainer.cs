@@ -60,13 +60,10 @@ namespace com.db4o.@internal
 		{
 			lock (i_lock)
 			{
-				bool ret = Close1();
-				if (ret)
-				{
-					i_config = null;
-				}
-				return ret;
+				Close1();
+				i_config = null;
 			}
+			return true;
 		}
 
 		public sealed override com.db4o.@internal.Transaction NewTransaction(com.db4o.@internal.Transaction
@@ -142,7 +139,8 @@ namespace com.db4o.@internal
 			GetTransaction().Commit();
 		}
 
-		internal sealed override void WriteHeader(bool shuttingDown)
+		internal sealed override void WriteHeader(bool startFileLockingThread, bool shuttingDown
+			)
 		{
 		}
 

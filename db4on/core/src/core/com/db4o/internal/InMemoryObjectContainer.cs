@@ -17,9 +17,9 @@ namespace com.db4o.@internal
 			{
 				Open();
 			}
-			catch (System.Exception e)
+			catch (System.IO.IOException e)
 			{
-				com.db4o.@internal.Exceptions4.ThrowRuntimeException(22, e);
+				throw new com.db4o.io.UncheckedIOException(e);
 			}
 			Initialize3();
 		}
@@ -38,16 +38,9 @@ namespace com.db4o.@internal
 		{
 		}
 
-		protected override bool Close2()
+		protected override void Close2()
 		{
-			try
-			{
-				Write(true);
-			}
-			catch (System.Exception t)
-			{
-				FatalException(t);
-			}
+			Write(true);
 			base.Close2();
 			if (!_closed)
 			{
@@ -56,7 +49,6 @@ namespace com.db4o.@internal
 				_memoryFile.SetBytes(temp);
 			}
 			_closed = true;
-			return true;
 		}
 
 		public override void Copy(int oldAddress, int oldAddressOffset, int newAddress, int
@@ -80,7 +72,7 @@ namespace com.db4o.@internal
 			return _length;
 		}
 
-		internal override string FileName()
+		public override string FileName()
 		{
 			return "Memory File";
 		}
@@ -103,7 +95,7 @@ namespace com.db4o.@internal
 				_memoryFile.SetBytes(new byte[_memoryFile.GetInitialSize()]);
 				ConfigureNewFile();
 				Write(false);
-				WriteHeader(false);
+				WriteHeader(false, false);
 			}
 			else
 			{
@@ -132,11 +124,6 @@ namespace com.db4o.@internal
 
 		public override void SyncFiles()
 		{
-		}
-
-		public override bool WriteAccessTime(int address, int offset, long time)
-		{
-			return true;
 		}
 
 		public override void WriteBytes(com.db4o.@internal.Buffer bytes, int address, int
@@ -172,7 +159,7 @@ namespace com.db4o.@internal
 			bytes = null;
 		}
 
-		public override void DebugWriteXBytes(int a_address, int a_length)
+		public override void OverwriteDeletedBytes(int a_address, int a_length)
 		{
 		}
 	}

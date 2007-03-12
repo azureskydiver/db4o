@@ -45,9 +45,21 @@ namespace Db4oUnit.Extensions.Fixtures
 			_config = null;
 		}
 
+		protected virtual void Defragment(string fileName)
+		{
+			string targetFile = fileName + ".defrag.backup";
+			com.db4o.defragment.DefragmentConfig defragConfig = new com.db4o.defragment.DefragmentConfig
+				(fileName, targetFile);
+			defragConfig.ForceBackupDelete(true);
+			defragConfig.Db4oConfig(Config());
+			com.db4o.defragment.Defragment.Defrag(defragConfig);
+		}
+
 		public abstract void Close();
 
 		public abstract com.db4o.ext.ExtObjectContainer Db();
+
+		public abstract void Defragment();
 
 		public abstract com.db4o.@internal.LocalObjectContainer FileSession();
 

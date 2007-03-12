@@ -27,7 +27,7 @@ namespace com.db4o.@internal.query.result
 
 		public override object Get(int index)
 		{
-			lock (StreamLock())
+			lock (Lock())
 			{
 				return ActivatedObject(GetId(index));
 			}

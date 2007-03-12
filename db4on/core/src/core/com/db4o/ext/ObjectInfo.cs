@@ -10,6 +10,10 @@ namespace com.db4o.ext
 	/// </remarks>
 	public interface ObjectInfo
 	{
+		/// <summary>returns the internal db4o ID.</summary>
+		/// <remarks>returns the internal db4o ID.</remarks>
+		long GetInternalID();
+
 		/// <summary>returns the object that is referenced.</summary>
 		/// <remarks>
 		/// returns the object that is referenced.

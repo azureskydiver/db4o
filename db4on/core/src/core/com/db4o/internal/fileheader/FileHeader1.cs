@@ -3,8 +3,8 @@ namespace com.db4o.@internal.fileheader
 	/// <exclude></exclude>
 	public class FileHeader1 : com.db4o.@internal.fileheader.FileHeader
 	{
-		private static readonly byte[] SIGNATURE = { (byte)'d', (byte)'b', (byte)'4', (byte
-			)'o' };
+		private static readonly byte[] SIGNATURE = new byte[] { (byte)'d', (byte)'b', (byte
+			)'4', (byte)'o' };
 
 		private static byte VERSION = 1;
 
@@ -54,6 +54,7 @@ namespace com.db4o.@internal.fileheader
 		private void NewTimerFileLock(com.db4o.@internal.LocalObjectContainer file)
 		{
 			_timerFileLock = com.db4o.@internal.fileheader.TimerFileLock.ForFile(file);
+			_timerFileLock.SetAddresses(0, OPEN_TIME_OFFSET, ACCESS_TIME_OFFSET);
 		}
 
 		public override com.db4o.@internal.Transaction InterruptedTransaction()
@@ -70,13 +71,28 @@ namespace com.db4o.@internal.fileheader
 			, com.db4o.@internal.Buffer reader)
 		{
 			CommonTasksForNewAndRead(file);
+			CheckThreadFileLock(file, reader);
 			reader.Seek(TRANSACTION_POINTER_OFFSET);
-			_interruptedTransaction = com.db4o.@internal.Transaction.ReadInterruptedTransaction
+			_interruptedTransaction = com.db4o.@internal.LocalTransaction.ReadInterruptedTransaction
 				(file, reader);
 			file.BlockSizeReadFromFile(reader.ReadInt());
 			ReadClassCollectionAndFreeSpace(file, reader);
 			_variablePart = new com.db4o.@internal.fileheader.FileHeaderVariablePart1(reader.
 				ReadInt(), file.SystemData());
+		}
+
+		private void CheckThreadFileLock(com.db4o.@internal.LocalObjectContainer container
+			, com.db4o.@internal.Buffer reader)
+		{
+			reader.Seek(OPEN_TIME_OFFSET);
+			long lastOpenTime = reader.ReadLong();
+			long lastAccessTime = reader.ReadLong();
+			if (com.db4o.@internal.fileheader.FileHeader.LockedByOtherSession(container, lastAccessTime
+				))
+			{
+				com.db4o.@internal.fileheader.FileHeader.CheckIfOtherSessionAlive(container, 0, OPEN_TIME_OFFSET
+					, lastAccessTime);
+			}
 		}
 
 		private void CommonTasksForNewAndRead(com.db4o.@internal.LocalObjectContainer file
@@ -93,8 +109,8 @@ namespace com.db4o.@internal.fileheader
 		}
 
 		public override void WriteFixedPart(com.db4o.@internal.LocalObjectContainer file, 
-			bool shuttingDown, com.db4o.@internal.StatefulBuffer writer, int blockSize, int 
-			freespaceID)
+			bool startFileLockingThread, bool shuttingDown, com.db4o.@internal.StatefulBuffer
+			 writer, int blockSize, int freespaceID)
 		{
 			writer.Append(SIGNATURE);
 			writer.Append(VERSION);
@@ -110,6 +126,16 @@ namespace com.db4o.@internal.fileheader
 			writer.WriteInt(_variablePart.GetID());
 			writer.NoXByteCheck();
 			writer.Write();
+			if (startFileLockingThread)
+			{
+				try
+				{
+					_timerFileLock.Start();
+				}
+				catch (System.IO.IOException)
+				{
+				}
+			}
 		}
 
 		public override void WriteTransactionPointer(com.db4o.@internal.Transaction systemTransaction

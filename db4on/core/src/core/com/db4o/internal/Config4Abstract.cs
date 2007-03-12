@@ -6,13 +6,13 @@ namespace com.db4o.@internal
 		protected com.db4o.foundation.KeySpecHashtable4 _config;
 
 		private static readonly com.db4o.foundation.KeySpec CASCADE_ON_ACTIVATE = new com.db4o.foundation.KeySpec
-			(com.db4o.@internal.Const4.DEFAULT);
+			(com.db4o.foundation.TernaryBool.UNSPECIFIED);
 
 		private static readonly com.db4o.foundation.KeySpec CASCADE_ON_DELETE = new com.db4o.foundation.KeySpec
-			(com.db4o.@internal.Const4.DEFAULT);
+			(com.db4o.foundation.TernaryBool.UNSPECIFIED);
 
 		private static readonly com.db4o.foundation.KeySpec CASCADE_ON_UPDATE = new com.db4o.foundation.KeySpec
-			(com.db4o.@internal.Const4.DEFAULT);
+			(com.db4o.foundation.TernaryBool.UNSPECIFIED);
 
 		private static readonly com.db4o.foundation.KeySpec NAME = new com.db4o.foundation.KeySpec
 			(null);
@@ -44,28 +44,33 @@ namespace com.db4o.@internal
 		protected virtual void PutThreeValued(com.db4o.foundation.KeySpec spec, bool flag
 			)
 		{
-			_config.Put(spec, flag ? com.db4o.@internal.Const4.YES : com.db4o.@internal.Const4
-				.NO);
+			_config.Put(spec, com.db4o.foundation.TernaryBool.ForBoolean(flag));
 		}
 
-		public virtual int CascadeOnActivate()
+		protected virtual void PutThreeValuedInt(com.db4o.foundation.KeySpec spec, bool flag
+			)
+		{
+			_config.Put(spec, flag ? 1 : -1);
+		}
+
+		public virtual com.db4o.foundation.TernaryBool CascadeOnActivate()
 		{
 			return Cascade(CASCADE_ON_ACTIVATE);
 		}
 
-		public virtual int CascadeOnDelete()
+		public virtual com.db4o.foundation.TernaryBool CascadeOnDelete()
 		{
 			return Cascade(CASCADE_ON_DELETE);
 		}
 
-		public virtual int CascadeOnUpdate()
+		public virtual com.db4o.foundation.TernaryBool CascadeOnUpdate()
 		{
 			return Cascade(CASCADE_ON_UPDATE);
 		}
 
-		private int Cascade(com.db4o.foundation.KeySpec spec)
+		private com.db4o.foundation.TernaryBool Cascade(com.db4o.foundation.KeySpec spec)
 		{
-			return _config.GetAsInt(spec);
+			return _config.GetAsTernaryBool(spec);
 		}
 
 		internal abstract string ClassName();

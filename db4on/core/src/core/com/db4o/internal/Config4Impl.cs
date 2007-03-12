@@ -25,7 +25,7 @@ namespace com.db4o.@internal
 			(null);
 
 		private static readonly com.db4o.foundation.KeySpec BTREE_NODE_SIZE = new com.db4o.foundation.KeySpec
-			(4096);
+			(119);
 
 		private static readonly com.db4o.foundation.KeySpec BTREE_CACHE_HEIGHT = new com.db4o.foundation.KeySpec
 			(1);
@@ -34,7 +34,7 @@ namespace com.db4o.@internal
 			(true);
 
 		private static readonly com.db4o.foundation.KeySpec CALL_CONSTRUCTORS = new com.db4o.foundation.KeySpec
-			(com.db4o.@internal.Const4.DEFAULT);
+			(com.db4o.foundation.TernaryBool.UNSPECIFIED);
 
 		private static readonly com.db4o.foundation.KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE
 			 = new com.db4o.foundation.KeySpec(true);
@@ -69,14 +69,17 @@ namespace com.db4o.@internal
 		private static readonly com.db4o.foundation.KeySpec FLUSH_FILE_BUFFERS = new com.db4o.foundation.KeySpec
 			(true);
 
+		private static readonly com.db4o.foundation.KeySpec FREESPACE_FILLER = new com.db4o.foundation.KeySpec
+			(null);
+
 		private static readonly com.db4o.foundation.KeySpec FREESPACE_SYSTEM = new com.db4o.foundation.KeySpec
 			(com.db4o.@internal.freespace.FreespaceManager.FM_DEFAULT);
 
 		private static readonly com.db4o.foundation.KeySpec GENERATE_UUIDS = new com.db4o.foundation.KeySpec
-			(0);
+			(com.db4o.config.ConfigScope.INDIVIDUALLY);
 
 		private static readonly com.db4o.foundation.KeySpec GENERATE_VERSION_NUMBERS = new 
-			com.db4o.foundation.KeySpec(0);
+			com.db4o.foundation.KeySpec(com.db4o.config.ConfigScope.INDIVIDUALLY);
 
 		private static readonly com.db4o.foundation.KeySpec IS_SERVER = new com.db4o.foundation.KeySpec
 			(false);
@@ -98,6 +101,9 @@ namespace com.db4o.@internal
 
 		private static readonly com.db4o.foundation.KeySpec PASSWORD = new com.db4o.foundation.KeySpec
 			((string)null);
+
+		private static readonly com.db4o.foundation.KeySpec CLIENT_QUERY_RESULT_ITERATOR_FACTORY
+			 = new com.db4o.foundation.KeySpec(null);
 
 		private static readonly com.db4o.foundation.KeySpec PREFETCH_ID_COUNT = new com.db4o.foundation.KeySpec
 			(10);
@@ -214,8 +220,7 @@ namespace com.db4o.@internal
 
 		public void CallConstructors(bool flag)
 		{
-			_config.Put(CALL_CONSTRUCTORS, (flag ? com.db4o.@internal.Const4.YES : com.db4o.@internal.Const4
-				.NO));
+			_config.Put(CALL_CONSTRUCTORS, com.db4o.foundation.TernaryBool.ForBoolean(flag));
 		}
 
 		public void ClassActivationDepthConfigurable(bool turnOn)
@@ -313,14 +318,46 @@ namespace com.db4o.@internal
 			return this;
 		}
 
-		public void GenerateUUIDs(int setting)
+		public void FreespaceFiller(com.db4o.config.FreespaceFiller freespaceFiller)
 		{
-			_config.Put(GENERATE_UUIDS, setting);
+			_config.Put(FREESPACE_FILLER, freespaceFiller);
 		}
 
+		public com.db4o.config.FreespaceFiller FreespaceFiller()
+		{
+			return (com.db4o.config.FreespaceFiller)_config.Get(FREESPACE_FILLER);
+		}
+
+		/// <deprecated>
+		/// Use
+		/// <see cref="com.db4o.@internal.Config4Impl.GenerateUUIDs">com.db4o.@internal.Config4Impl.GenerateUUIDs
+		/// 	</see>
+		/// instead.
+		/// </deprecated>
+		public void GenerateUUIDs(int setting)
+		{
+			GenerateUUIDs(com.db4o.config.ConfigScope.ForID(setting));
+		}
+
+		public void GenerateUUIDs(com.db4o.config.ConfigScope scope)
+		{
+			_config.Put(GENERATE_UUIDS, scope);
+		}
+
+		/// <deprecated>
+		/// Use
+		/// <see cref="com.db4o.@internal.Config4Impl.GenerateVersionNumbers">com.db4o.@internal.Config4Impl.GenerateVersionNumbers
+		/// 	</see>
+		/// instead.
+		/// </deprecated>
 		public void GenerateVersionNumbers(int setting)
 		{
-			_config.Put(GENERATE_VERSION_NUMBERS, setting);
+			GenerateVersionNumbers(com.db4o.config.ConfigScope.ForID(setting));
+		}
+
+		public void GenerateVersionNumbers(com.db4o.config.ConfigScope scope)
+		{
+			_config.Put(GENERATE_VERSION_NUMBERS, scope);
 		}
 
 		public com.db4o.messaging.MessageSender GetMessageSender()
@@ -423,7 +460,6 @@ namespace com.db4o.@internal
 
 		public void ReadOnly(bool flag)
 		{
-			GlobalSettingOnly();
 			_readOnly = flag;
 		}
 
@@ -464,33 +500,10 @@ namespace com.db4o.@internal
 
 		public void RefreshClasses()
 		{
-			if (i_stream == null)
-			{
-				com.db4o.@internal.Sessions.ForEachSession(new _AnonymousInnerClass418(this));
-			}
-			else
+			if (i_stream != null)
 			{
 				i_stream.RefreshClasses();
 			}
-		}
-
-		private sealed class _AnonymousInnerClass418 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass418(Config4Impl _enclosing)
-			{
-				this._enclosing = _enclosing;
-			}
-
-			public void Visit(object obj)
-			{
-				com.db4o.@internal.ObjectContainerBase ys = ((com.db4o.@internal.Session)obj).i_stream;
-				if (!ys.IsClosed())
-				{
-					ys.RefreshClasses();
-				}
-			}
-
-			private readonly Config4Impl _enclosing;
 		}
 
 		internal void Rename(com.db4o.Rename a_rename)
@@ -521,34 +534,10 @@ namespace com.db4o.@internal
 		/// <summary>The ConfigImpl also is our messageSender</summary>
 		public void Send(object obj)
 		{
-			if (i_stream == null)
-			{
-				com.db4o.@internal.Sessions.ForEachSession(new _AnonymousInnerClass457(this));
-			}
-			else
+			if (i_stream != null)
 			{
 				i_stream.Send(obj);
 			}
-		}
-
-		private sealed class _AnonymousInnerClass457 : com.db4o.foundation.Visitor4
-		{
-			public _AnonymousInnerClass457(Config4Impl _enclosing)
-			{
-				this._enclosing = _enclosing;
-			}
-
-			public void Visit(object session)
-			{
-				com.db4o.@internal.ObjectContainerBase ys = ((com.db4o.@internal.Session)session)
-					.i_stream;
-				if (!ys.IsClosed())
-				{
-					ys.Send(session);
-				}
-			}
-
-			private readonly Config4Impl _enclosing;
 		}
 
 		public void SetBlobPath(string path)
@@ -743,7 +732,7 @@ namespace com.db4o.@internal
 			return _config.GetAsBoolean(AUTOMATIC_SHUTDOWN);
 		}
 
-		internal byte BlockSize()
+		public byte BlockSize()
 		{
 			return _config.GetAsByte(BLOCKSIZE);
 		}
@@ -768,9 +757,9 @@ namespace com.db4o.@internal
 			return _config.GetAsBoolean(CALLBACKS);
 		}
 
-		internal int CallConstructors()
+		internal com.db4o.foundation.TernaryBool CallConstructors()
 		{
-			return _config.GetAsInt(CALL_CONSTRUCTORS);
+			return _config.GetAsTernaryBool(CALL_CONSTRUCTORS);
 		}
 
 		internal bool ClassActivationDepthConfigurable()
@@ -845,14 +834,14 @@ namespace com.db4o.@internal
 			return _config.GetAsByte(FREESPACE_SYSTEM);
 		}
 
-		public int GenerateUUIDs()
+		public com.db4o.config.ConfigScope GenerateUUIDs()
 		{
-			return _config.GetAsInt(GENERATE_UUIDS);
+			return (com.db4o.config.ConfigScope)_config.Get(GENERATE_UUIDS);
 		}
 
-		public int GenerateVersionNumbers()
+		public com.db4o.config.ConfigScope GenerateVersionNumbers()
 		{
-			return _config.GetAsInt(GENERATE_VERSION_NUMBERS);
+			return (com.db4o.config.ConfigScope)_config.Get(GENERATE_VERSION_NUMBERS);
 		}
 
 		public bool InternStrings()
@@ -920,7 +909,7 @@ namespace com.db4o.@internal
 			return (com.db4o.foundation.Hashtable4)_config.Get(READ_AS);
 		}
 
-		internal bool IsReadOnly()
+		public bool IsReadOnly()
 		{
 			return _readOnly;
 		}
@@ -993,6 +982,19 @@ namespace com.db4o.@internal
 		public com.db4o.config.QueryEvaluationMode QueryEvaluationMode()
 		{
 			return (com.db4o.config.QueryEvaluationMode)_config.Get(QUERY_EVALUATION_MODE);
+		}
+
+		public void QueryResultIteratorFactory(com.db4o.@internal.cs.QueryResultIteratorFactory
+			 factory)
+		{
+			_config.Put(CLIENT_QUERY_RESULT_ITERATOR_FACTORY, factory);
+		}
+
+		public com.db4o.@internal.cs.QueryResultIteratorFactory QueryResultIteratorFactory
+			()
+		{
+			return (com.db4o.@internal.cs.QueryResultIteratorFactory)_config.Get(CLIENT_QUERY_RESULT_ITERATOR_FACTORY
+				);
 		}
 
 		public com.db4o.config.ClientServerConfiguration ClientServer()

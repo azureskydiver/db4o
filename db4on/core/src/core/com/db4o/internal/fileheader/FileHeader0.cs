@@ -57,10 +57,7 @@ namespace com.db4o.@internal.fileheader
 			{
 				return;
 			}
-			file.ShowInternalClasses(true);
-			object bootRecord = file.GetByID1(file.GetSystemTransaction(), _configBlock._bootRecordID
-				);
-			file.ShowInternalClasses(false);
+			object bootRecord = GetBootRecord(file);
 			if (!(bootRecord is com.db4o.PBootRecord))
 			{
 				InitBootRecord(file);
@@ -73,6 +70,19 @@ namespace com.db4o.@internal.fileheader
 			file.SystemData().Identity(_bootRecord.i_db);
 		}
 
+		private object GetBootRecord(com.db4o.@internal.LocalObjectContainer file)
+		{
+			file.ShowInternalClasses(true);
+			try
+			{
+				return file.GetByID1(file.GetSystemTransaction(), _configBlock._bootRecordID);
+			}
+			finally
+			{
+				file.ShowInternalClasses(false);
+			}
+		}
+
 		public override void InitNew(com.db4o.@internal.LocalObjectContainer file)
 		{
 			_configBlock = com.db4o.@internal.ConfigBlock.ForNewFile(file);
@@ -82,11 +92,17 @@ namespace com.db4o.@internal.fileheader
 		private void InitBootRecord(com.db4o.@internal.LocalObjectContainer file)
 		{
 			file.ShowInternalClasses(true);
-			_bootRecord = new com.db4o.PBootRecord();
-			file.SetInternal(file.GetSystemTransaction(), _bootRecord, false);
-			_configBlock._bootRecordID = file.GetID1(_bootRecord);
-			WriteVariablePart(file, 1);
-			file.ShowInternalClasses(false);
+			try
+			{
+				_bootRecord = new com.db4o.PBootRecord();
+				file.SetInternal(file.GetSystemTransaction(), _bootRecord, false);
+				_configBlock._bootRecordID = file.GetID1(_bootRecord);
+				WriteVariablePart(file, 1);
+			}
+			finally
+			{
+				file.ShowInternalClasses(false);
+			}
 		}
 
 		public override com.db4o.@internal.Transaction InterruptedTransaction()
@@ -112,8 +128,8 @@ namespace com.db4o.@internal.fileheader
 		}
 
 		public override void WriteFixedPart(com.db4o.@internal.LocalObjectContainer file, 
-			bool shuttingDown, com.db4o.@internal.StatefulBuffer writer, int blockSize_, int
-			 freespaceID)
+			bool startFileLockingThread, bool shuttingDown, com.db4o.@internal.StatefulBuffer
+			 writer, int blockSize_, int freespaceID)
 		{
 			writer.Append(com.db4o.@internal.Const4.YAPFILEVERSION);
 			writer.Append((byte)blockSize_);

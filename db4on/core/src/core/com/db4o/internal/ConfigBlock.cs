@@ -13,7 +13,7 @@ namespace com.db4o.@internal
 	/// <exclude></exclude>
 	public sealed class ConfigBlock
 	{
-		private readonly com.db4o.@internal.LocalObjectContainer _stream;
+		private readonly com.db4o.@internal.LocalObjectContainer _container;
 
 		private readonly com.db4o.@internal.fileheader.TimerFileLock _timerFileLock;
 
@@ -72,7 +72,7 @@ namespace com.db4o.@internal
 		private ConfigBlock(com.db4o.@internal.LocalObjectContainer stream, bool isNew, int
 			 address)
 		{
-			_stream = stream;
+			_container = stream;
 			_timerFileLock = com.db4o.@internal.fileheader.TimerFileLock.ForFile(stream);
 			TimerFileLock().WriteHeaderLock();
 			if (!isNew)
@@ -97,25 +97,20 @@ namespace com.db4o.@internal
 			return _transactionToCommit;
 		}
 
-		private bool LockFile()
-		{
-			return _stream.NeedsLockFileThread();
-		}
-
 		private byte[] PasswordToken()
 		{
 			byte[] pwdtoken = new byte[ENCRYPTION_PASSWORD_LENGTH];
-			string fullpwd = _stream.ConfigImpl().Password();
-			if (_stream.ConfigImpl().Encrypt() && fullpwd != null)
+			string fullpwd = _container.ConfigImpl().Password();
+			if (_container.ConfigImpl().Encrypt() && fullpwd != null)
 			{
 				try
 				{
 					byte[] pwdbytes = new com.db4o.@internal.LatinStringIO().Write(fullpwd);
-					com.db4o.@internal.Buffer encwriter = new com.db4o.@internal.StatefulBuffer(_stream
+					com.db4o.@internal.Buffer encwriter = new com.db4o.@internal.StatefulBuffer(_container
 						.GetTransaction(), pwdbytes.Length + ENCRYPTION_PASSWORD_LENGTH);
 					encwriter.Append(pwdbytes);
 					encwriter.Append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
-					_stream.i_handlers.Decrypt(encwriter);
+					_container.i_handlers.Decrypt(encwriter);
 					System.Array.Copy(encwriter._buffer, 0, pwdtoken, 0, ENCRYPTION_PASSWORD_LENGTH);
 				}
 				catch (System.Exception exc)
@@ -128,18 +123,18 @@ namespace com.db4o.@internal
 
 		private com.db4o.@internal.SystemData SystemData()
 		{
-			return _stream.SystemData();
+			return _container.SystemData();
 		}
 
 		private void Read(int address)
 		{
 			AddressChanged(address);
 			TimerFileLock().WriteOpenTime();
-			com.db4o.@internal.StatefulBuffer reader = _stream.GetWriter(_stream.GetSystemTransaction
+			com.db4o.@internal.StatefulBuffer reader = _container.GetWriter(_container.GetSystemTransaction
 				(), _address, LENGTH);
 			try
 			{
-				_stream.ReadBytes(reader._buffer, _address, LENGTH);
+				_container.ReadBytes(reader._buffer, _address, LENGTH);
 			}
 			catch
 			{
@@ -152,12 +147,12 @@ namespace com.db4o.@internal
 			}
 			if (oldLength != LENGTH)
 			{
-				if (!_stream.ConfigImpl().IsReadOnly() && !_stream.ConfigImpl().AllowVersionUpdates
+				if (!_container.ConfigImpl().IsReadOnly() && !_container.ConfigImpl().AllowVersionUpdates
 					())
 				{
-					if (_stream.ConfigImpl().AutomaticShutDown())
+					if (_container.ConfigImpl().AutomaticShutDown())
 					{
-						com.db4o.@internal.Platform4.RemoveShutDownHook(_stream, _stream.i_lock);
+						com.db4o.@internal.Platform4.RemoveShutDownHook(_container, _container.i_lock);
 					}
 					throw new com.db4o.ext.OldFormatException();
 				}
@@ -167,8 +162,8 @@ namespace com.db4o.@internal
 			SystemData().StringEncoding(reader.ReadByte());
 			if (oldLength > TRANSACTION_OFFSET)
 			{
-				_transactionToCommit = com.db4o.@internal.Transaction.ReadInterruptedTransaction(
-					_stream, reader);
+				_transactionToCommit = com.db4o.@internal.LocalTransaction.ReadInterruptedTransaction
+					(_container, reader);
 			}
 			if (oldLength > BOOTRECORD_OFFSET)
 			{
@@ -192,7 +187,7 @@ namespace com.db4o.@internal
 				}
 				if (!nonZeroByte)
 				{
-					_stream.i_handlers.OldEncryptionOff();
+					_container.i_handlers.OldEncryptionOff();
 				}
 				else
 				{
@@ -201,7 +196,7 @@ namespace com.db4o.@internal
 					{
 						if (storedpwd[idx] != encpassword[idx])
 						{
-							_stream.FatalException(54);
+							_container.FatalException(54);
 						}
 					}
 				}
@@ -226,31 +221,17 @@ namespace com.db4o.@internal
 					SystemData().UuidIndexId(uuidIndexId);
 				}
 			}
-			_stream.EnsureFreespaceSlot();
-			if (LockFile() && (lastAccessTime != 0))
+			_container.EnsureFreespaceSlot();
+			if (com.db4o.@internal.fileheader.FileHeader.LockedByOtherSession(_container, lastAccessTime
+				))
 			{
-				_stream.LogMsg(28, null);
-				long waitTime = com.db4o.@internal.Const4.LOCK_TIME_INTERVAL * 5;
-				long currentTime = j4o.lang.JavaSystem.CurrentTimeMillis();
-				while (j4o.lang.JavaSystem.CurrentTimeMillis() < currentTime + waitTime)
-				{
-					com.db4o.foundation.Cool.SleepIgnoringInterruption(waitTime);
-				}
-				reader = _stream.GetWriter(_stream.GetSystemTransaction(), _address, com.db4o.@internal.Const4
-					.LONG_LENGTH * 2);
-				reader.MoveForward(OPEN_TIME_OFFSET);
-				reader.Read();
-				reader.ReadLong();
-				long currentAccessTime = reader.ReadLong();
-				if ((currentAccessTime > lastAccessTime))
-				{
-					throw new com.db4o.ext.DatabaseFileLockedException();
-				}
+				com.db4o.@internal.fileheader.FileHeader.CheckIfOtherSessionAlive(_container, _address
+					, OPEN_TIME_OFFSET, lastAccessTime);
 			}
-			if (LockFile())
+			if (_container.NeedsLockFileThread())
 			{
 				com.db4o.foundation.Cool.SleepIgnoringInterruption(100);
-				_stream.SyncFiles();
+				_container.SyncFiles();
 				TimerFileLock().CheckOpenTime();
 			}
 			if (oldLength < LENGTH)
@@ -262,8 +243,8 @@ namespace com.db4o.@internal
 		public void Write()
 		{
 			TimerFileLock().CheckHeaderLock();
-			AddressChanged(_stream.GetSlot(LENGTH));
-			com.db4o.@internal.StatefulBuffer writer = _stream.GetWriter(_stream.GetTransaction
+			AddressChanged(_container.GetSlot(LENGTH));
+			com.db4o.@internal.StatefulBuffer writer = _container.GetWriter(_container.GetTransaction
 				(), _address, LENGTH);
 			com.db4o.@internal.handlers.IntHandler.WriteInt(LENGTH, writer);
 			for (int i = 0; i < 2; i++)
@@ -277,7 +258,7 @@ namespace com.db4o.@internal
 			com.db4o.@internal.handlers.IntHandler.WriteInt(0, writer);
 			writer.Append(PasswordToken());
 			writer.Append(SystemData().FreespaceSystem());
-			_stream.EnsureFreespaceSlot();
+			_container.EnsureFreespaceSlot();
 			com.db4o.@internal.handlers.IntHandler.WriteInt(SystemData().FreespaceAddress(), 
 				writer);
 			com.db4o.@internal.handlers.IntHandler.WriteInt(SystemData().ConverterVersion(), 
@@ -297,7 +278,7 @@ namespace com.db4o.@internal
 		private void WritePointer()
 		{
 			TimerFileLock().CheckHeaderLock();
-			com.db4o.@internal.StatefulBuffer writer = _stream.GetWriter(_stream.GetTransaction
+			com.db4o.@internal.StatefulBuffer writer = _container.GetWriter(_container.GetTransaction
 				(), 0, com.db4o.@internal.Const4.ID_LENGTH);
 			writer.MoveForward(2);
 			com.db4o.@internal.handlers.IntHandler.WriteInt(_address, writer);

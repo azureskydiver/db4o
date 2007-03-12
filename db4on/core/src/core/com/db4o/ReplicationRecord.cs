@@ -37,10 +37,16 @@ namespace com.db4o
 		public virtual void Store(com.db4o.@internal.ObjectContainerBase stream)
 		{
 			stream.ShowInternalClasses(true);
-			com.db4o.@internal.Transaction ta = stream.CheckTransaction(null);
-			stream.SetAfterReplication(ta, this, 1, false);
-			stream.Commit();
-			stream.ShowInternalClasses(false);
+			try
+			{
+				com.db4o.@internal.Transaction ta = stream.CheckTransaction(null);
+				stream.SetAfterReplication(ta, this, 1, false);
+				stream.Commit();
+			}
+			finally
+			{
+				stream.ShowInternalClasses(false);
+			}
 		}
 
 		public static com.db4o.ReplicationRecord BeginReplication(com.db4o.@internal.Transaction
@@ -83,9 +89,15 @@ namespace com.db4o
 			if (rrA != rrB)
 			{
 				peerB.ShowInternalClasses(true);
-				int id = peerB.GetID1(rrB);
-				peerB.Bind1(transB, rrA, id);
-				peerB.ShowInternalClasses(false);
+				try
+				{
+					int id = peerB.GetID1(rrB);
+					peerB.Bind1(transB, rrA, id);
+				}
+				finally
+				{
+					peerB.ShowInternalClasses(false);
+				}
 			}
 			return rrA;
 		}
@@ -93,19 +105,20 @@ namespace com.db4o
 		public static com.db4o.ReplicationRecord QueryForReplicationRecord(com.db4o.@internal.ObjectContainerBase
 			 stream, com.db4o.ext.Db4oDatabase younger, com.db4o.ext.Db4oDatabase older)
 		{
-			com.db4o.ReplicationRecord res = null;
 			stream.ShowInternalClasses(true);
-			com.db4o.query.Query q = stream.Query();
-			q.Constrain(com.db4o.@internal.Const4.CLASS_REPLICATIONRECORD);
-			q.Descend("_youngerPeer").Constrain(younger).Identity();
-			q.Descend("_olderPeer").Constrain(older).Identity();
-			com.db4o.ObjectSet objectSet = q.Execute();
-			if (objectSet.HasNext())
+			try
 			{
-				res = (com.db4o.ReplicationRecord)objectSet.Next();
+				com.db4o.query.Query q = stream.Query();
+				q.Constrain(com.db4o.@internal.Const4.CLASS_REPLICATIONRECORD);
+				q.Descend("_youngerPeer").Constrain(younger).Identity();
+				q.Descend("_olderPeer").Constrain(older).Identity();
+				com.db4o.ObjectSet objectSet = q.Execute();
+				return objectSet.HasNext() ? (com.db4o.ReplicationRecord)objectSet.Next() : null;
 			}
-			stream.ShowInternalClasses(false);
-			return res;
+			finally
+			{
+				stream.ShowInternalClasses(false);
+			}
 		}
 	}
 }

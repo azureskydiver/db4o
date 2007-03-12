@@ -16,12 +16,12 @@ namespace com.db4o.@internal
 		{
 		}
 
-		internal override void SlotFreeOnRollback(int a_id, int a_address, int a_length)
+		public override void SlotFreeOnRollback(int a_id, int a_address, int a_length)
 		{
 		}
 
-		internal override void SlotFreeOnRollbackSetPointer(int a_id, int a_address, int 
-			a_length)
+		internal override void ProduceUpdateSlotChange(int a_id, int a_address, int a_length
+			)
 		{
 			SetPointer(a_id, a_address, a_length);
 		}
@@ -34,6 +34,10 @@ namespace com.db4o.@internal
 
 		internal override void SlotFreePointerOnCommit(int a_id, int a_address, int a_length
 			)
+		{
+		}
+
+		public override void SlotFreePointerOnCommit(int a_id)
 		{
 		}
 

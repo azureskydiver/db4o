@@ -25,7 +25,7 @@ namespace com.db4o.@internal
 
 		bool IndexNullHandling();
 
-		int IsSecondClass();
+		com.db4o.foundation.TernaryBool IsSecondClass();
 
 		/// <summary>
 		/// The length calculation is different, depending from where we

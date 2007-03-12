@@ -32,13 +32,18 @@ namespace com.db4o.foundation.network
 
 		public virtual void Close()
 		{
+			CloseAffiliate();
+			CloseSocket();
+		}
+
+		private void CloseAffiliate()
+		{
 			if (_affiliate != null)
 			{
 				com.db4o.foundation.network.LoopbackSocket temp = _affiliate;
 				_affiliate = null;
 				temp.Close();
 			}
-			CloseSocket();
 		}
 
 		private void CloseSocket()

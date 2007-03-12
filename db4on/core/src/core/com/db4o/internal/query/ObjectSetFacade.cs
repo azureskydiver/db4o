@@ -60,9 +60,9 @@ namespace com.db4o.@internal.query
             return _delegate.Size();
         }
 
-        private Object StreamLock()
+        private Object Lock()
         {
-            return _delegate.StreamLock();
+            return _delegate.Lock();
         }
 
         private ObjectContainer ObjectContainer()
@@ -162,7 +162,7 @@ namespace com.db4o.@internal.query
 
         public void CopyTo(Array array, int index)
         {
-            lock (StreamLock())
+            lock (Lock())
             {
                 int i = 0;
                 int s = _delegate.Size();
@@ -178,7 +178,7 @@ namespace com.db4o.@internal.query
         {
             get
             {
-                return StreamLock();
+                return Lock();
             }
         }
 

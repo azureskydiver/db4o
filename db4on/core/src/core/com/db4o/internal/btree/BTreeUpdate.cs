@@ -146,5 +146,21 @@ namespace com.db4o.@internal.btree
 			}
 			return patch.GetObject();
 		}
+
+		public virtual com.db4o.@internal.btree.BTreeUpdate ReplacePatch(com.db4o.@internal.btree.BTreePatch
+			 patch, com.db4o.@internal.btree.BTreeUpdate update)
+		{
+			if (patch == this)
+			{
+				update._next = _next;
+				return update;
+			}
+			if (_next == null)
+			{
+				throw new System.InvalidOperationException();
+			}
+			_next = _next.ReplacePatch(patch, update);
+			return this;
+		}
 	}
 }

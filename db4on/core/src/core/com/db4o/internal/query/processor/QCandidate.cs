@@ -96,6 +96,10 @@ namespace com.db4o.@internal.query.processor
 
 		public virtual int CompareTo(object a_object)
 		{
+			if (a_object is com.db4o.@internal.query.processor.Order)
+			{
+				return -((com.db4o.@internal.query.processor.Order)a_object).CompareTo(this);
+			}
 			return _key - ((com.db4o.@internal.TreeInt)a_object)._key;
 		}
 
@@ -111,7 +115,8 @@ namespace com.db4o.@internal.query.processor
 				com.db4o.@internal.TypeHandler4 handler = _yapField.GetHandler();
 				if (handler != null)
 				{
-					com.db4o.@internal.Buffer[] arrayBytes = { _bytes };
+					com.db4o.@internal.Buffer[] arrayBytes = new com.db4o.@internal.Buffer[] { _bytes
+						 };
 					com.db4o.@internal.TypeHandler4 arrayHandler = handler.ReadArrayHandler(GetTransaction
 						(), _marshallerFamily, arrayBytes);
 					if (arrayHandler != null)
@@ -141,15 +146,15 @@ namespace com.db4o.@internal.query.processor
 								}
 								candidates.Evaluate();
 								com.db4o.foundation.Tree.ByRef pending = new com.db4o.foundation.Tree.ByRef();
-								bool[] innerRes = { isNot };
-								candidates.Traverse(new _AnonymousInnerClass169(this, innerRes, isNot, pending));
+								bool[] innerRes = new bool[] { isNot };
+								candidates.Traverse(new _AnonymousInnerClass172(this, innerRes, isNot, pending));
 								if (isNot)
 								{
 									qcon.Not();
 								}
 								if (pending.value != null)
 								{
-									pending.value.Traverse(new _AnonymousInnerClass238(this));
+									pending.value.Traverse(new _AnonymousInnerClass241(this));
 								}
 								if (!innerRes[0])
 								{
@@ -207,9 +212,9 @@ namespace com.db4o.@internal.query.processor
 			return true;
 		}
 
-		private sealed class _AnonymousInnerClass169 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass172 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass169(QCandidate _enclosing, bool[] innerRes, bool isNot
+			public _AnonymousInnerClass172(QCandidate _enclosing, bool[] innerRes, bool isNot
 				, com.db4o.foundation.Tree.ByRef pending)
 			{
 				this._enclosing = _enclosing;
@@ -228,13 +233,13 @@ namespace com.db4o.@internal.query.processor
 				}
 				if (cand._pendingJoins != null)
 				{
-					cand._pendingJoins.Traverse(new _AnonymousInnerClass182(this, pending));
+					cand._pendingJoins.Traverse(new _AnonymousInnerClass185(this, pending));
 				}
 			}
 
-			private sealed class _AnonymousInnerClass182 : com.db4o.foundation.Visitor4
+			private sealed class _AnonymousInnerClass185 : com.db4o.foundation.Visitor4
 			{
-				public _AnonymousInnerClass182(_AnonymousInnerClass169 _enclosing, com.db4o.foundation.Tree.ByRef
+				public _AnonymousInnerClass185(_AnonymousInnerClass172 _enclosing, com.db4o.foundation.Tree.ByRef
 					 pending)
 				{
 					this._enclosing = _enclosing;
@@ -261,7 +266,7 @@ namespace com.db4o.@internal.query.processor
 					}
 				}
 
-				private readonly _AnonymousInnerClass169 _enclosing;
+				private readonly _AnonymousInnerClass172 _enclosing;
 
 				private readonly com.db4o.foundation.Tree.ByRef pending;
 			}
@@ -275,9 +280,9 @@ namespace com.db4o.@internal.query.processor
 			private readonly com.db4o.foundation.Tree.ByRef pending;
 		}
 
-		private sealed class _AnonymousInnerClass238 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass241 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass238(QCandidate _enclosing)
+			public _AnonymousInnerClass241(QCandidate _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -396,7 +401,10 @@ namespace com.db4o.@internal.query.processor
 
 		public virtual void HintOrder(int a_order, bool a_major)
 		{
-			_order = new com.db4o.@internal.query.processor.Order();
+			if (_order == this)
+			{
+				_order = new com.db4o.@internal.query.processor.Order();
+			}
 			_order.HintOrder(a_order, a_major);
 		}
 

@@ -175,11 +175,8 @@ namespace com.db4o
 		public static com.db4o.ObjectContainer OpenClient(com.db4o.config.Configuration config
 			, string hostName, int port, string user, string password)
 		{
-			lock (com.db4o.@internal.Global4.Lock)
-			{
-				return new com.db4o.@internal.cs.ClientObjectContainer(config, new com.db4o.foundation.network.NetworkSocket
-					(hostName, port), user, password, true);
-			}
+			return new com.db4o.@internal.cs.ClientObjectContainer(config, new com.db4o.foundation.network.NetworkSocket
+				(hostName, port), user, password, true);
 		}
 
 		/// <summary>
@@ -192,11 +189,12 @@ namespace com.db4o
 		/// opens an
 		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
 		/// on the specified database file for local use.
-		/// <br /><br />Subsidiary calls with the same database file name will return the same
+		/// <br /><br />A database file can only be opened once, subsequent attempts to open
+		/// another
 		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
-		/// object.<br /><br />
-		/// Every call to <code>openFile()</code> requires a corresponding
-		/// <see cref="com.db4o.ObjectContainer.Close">ObjectContainer.close</see>
+		/// against the same file will result in
+		/// a
+		/// <see cref="com.db4o.ext.DatabaseFileLockedException">DatabaseFileLockedException</see>
 		/// .<br /><br />
 		/// Database files can only be accessed for readwrite access from one process
 		/// (one Java VM) at one time. All versions except for db4o mobile edition use an
@@ -223,11 +221,12 @@ namespace com.db4o
 		/// opens an
 		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
 		/// on the specified database file for local use.
-		/// <br /><br />Subsidiary calls with the same database file name will return the same
+		/// <br /><br />A database file can only be opened once, subsequent attempts to open
+		/// another
 		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
-		/// object.<br /><br />
-		/// Every call to <code>openFile()</code> requires a corresponding
-		/// <see cref="com.db4o.ObjectContainer.Close">ObjectContainer.close</see>
+		/// against the same file will result in
+		/// a
+		/// <see cref="com.db4o.ext.DatabaseFileLockedException">DatabaseFileLockedException</see>
 		/// .<br /><br />
 		/// Database files can only be accessed for readwrite access from one process
 		/// (one Java VM) at one time. All versions except for db4o mobile edition use an
@@ -254,35 +253,22 @@ namespace com.db4o
 		public static com.db4o.ObjectContainer OpenFile(com.db4o.config.Configuration config
 			, string databaseFileName)
 		{
-			lock (com.db4o.@internal.Global4.Lock)
-			{
-				return com.db4o.@internal.Sessions.Open(config, databaseFileName);
-			}
+			return com.db4o.@internal.ObjectContainerFactory.OpenObjectContainer(config, databaseFileName
+				);
 		}
 
 		protected static com.db4o.ObjectContainer OpenMemoryFile1(com.db4o.config.Configuration
 			 config, com.db4o.ext.MemoryFile memoryFile)
 		{
-			lock (com.db4o.@internal.Global4.Lock)
+			if (memoryFile == null)
 			{
-				if (memoryFile == null)
-				{
-					memoryFile = new com.db4o.ext.MemoryFile();
-				}
-				com.db4o.ObjectContainer oc = null;
-				try
-				{
-					oc = new com.db4o.@internal.InMemoryObjectContainer(config, memoryFile);
-				}
-				catch (System.Exception t)
-				{
-					com.db4o.@internal.Messages.LogErr(i_config, 4, "Memory File", t);
-					return null;
-				}
-				com.db4o.@internal.Platform4.PostOpen(oc);
-				com.db4o.@internal.Messages.LogMsg(i_config, 5, "Memory File");
-				return oc;
+				memoryFile = new com.db4o.ext.MemoryFile();
 			}
+			com.db4o.ObjectContainer oc = new com.db4o.@internal.InMemoryObjectContainer(config
+				, memoryFile);
+			com.db4o.@internal.Platform4.PostOpen(oc);
+			com.db4o.@internal.Messages.LogMsg(i_config, 5, "Memory File");
+			return oc;
 		}
 
 		/// <summary>
@@ -363,18 +349,15 @@ namespace com.db4o
 		public static com.db4o.ObjectServer OpenServer(com.db4o.config.Configuration config
 			, string databaseFileName, int port)
 		{
-			lock (com.db4o.@internal.Global4.Lock)
+			com.db4o.@internal.LocalObjectContainer stream = (com.db4o.@internal.LocalObjectContainer
+				)OpenFile(config, databaseFileName);
+			if (stream == null)
 			{
-				com.db4o.@internal.LocalObjectContainer stream = (com.db4o.@internal.LocalObjectContainer
-					)OpenFile(config, databaseFileName);
-				if (stream == null)
-				{
-					return null;
-				}
-				lock (stream.Lock())
-				{
-					return new com.db4o.@internal.cs.ObjectServerImpl(stream, port);
-				}
+				return null;
+			}
+			lock (stream.Lock())
+			{
+				return new com.db4o.@internal.cs.ObjectServerImpl(stream, port);
 			}
 		}
 

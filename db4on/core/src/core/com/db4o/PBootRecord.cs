@@ -36,8 +36,14 @@ namespace com.db4o
 			i_versionGenerator = systemData.LastTimeStampID();
 			i_db = systemData.Identity();
 			file.ShowInternalClasses(true);
-			Store(2);
-			file.ShowInternalClasses(false);
+			try
+			{
+				Store(2);
+			}
+			finally
+			{
+				file.ShowInternalClasses(false);
+			}
 		}
 	}
 }

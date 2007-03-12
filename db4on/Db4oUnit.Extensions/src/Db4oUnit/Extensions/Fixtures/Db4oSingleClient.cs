@@ -9,6 +9,11 @@ namespace Db4oUnit.Extensions.Fixtures
 		{
 		}
 
+		public Db4oSingleClient(Db4oUnit.Extensions.Fixtures.ConfigurationSource config, 
+			int port) : base(config, FILE, port)
+		{
+		}
+
 		public Db4oSingleClient(Db4oUnit.Extensions.Fixtures.ConfigurationSource config) : 
 			base(config)
 		{
@@ -30,36 +35,14 @@ namespace Db4oUnit.Extensions.Fixtures
 			base.Open();
 			try
 			{
-				_objectContainer = com.db4o.Db4o.OpenClient(Config(), HOST, PORT, USERNAME, PASSWORD
-					).Ext();
+				_objectContainer = _port == 0 ? OpenEmbeddedClient().Ext() : com.db4o.Db4o.OpenClient
+					(Config(), HOST, _port, USERNAME, PASSWORD).Ext();
 			}
 			catch (System.IO.IOException e)
 			{
 				j4o.lang.JavaSystem.PrintStackTrace(e);
 				throw new Db4oUnit.TestException(e);
 			}
-		}
-
-		/// <summary>
-		/// Does not accept a clazz which is assignable from OptOutCS, or not
-		/// assignable from Db4oTestCase.
-		/// </summary>
-		/// <remarks>
-		/// Does not accept a clazz which is assignable from OptOutCS, or not
-		/// assignable from Db4oTestCase.
-		/// </remarks>
-		/// <returns>
-		/// returns false if the clazz is assignable from OptOutCS, or not
-		/// assignable from Db4oTestCase. Otherwise, returns true.
-		/// </returns>
-		public override bool Accept(System.Type clazz)
-		{
-			if ((typeof(Db4oUnit.Extensions.Fixtures.OptOutCS).IsAssignableFrom(clazz)) || !typeof(Db4oUnit.Extensions.Db4oTestCase)
-				.IsAssignableFrom(clazz))
-			{
-				return false;
-			}
-			return true;
 		}
 
 		public override com.db4o.ext.ExtObjectContainer Db()

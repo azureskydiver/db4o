@@ -76,10 +76,11 @@ namespace com.db4o.@internal
 		/// <summary>non-encrypted read, used for indexes</summary>
 		/// <param name="a_stream"></param>
 		/// <param name="a_address"></param>
-		public virtual void Read(com.db4o.@internal.ObjectContainerBase a_stream, int a_address
+		/// <exception cref="com.db4o.io.UncheckedIOException"></exception>
+		public virtual void Read(com.db4o.@internal.ObjectContainerBase stream, int address
 			, int addressOffset)
 		{
-			a_stream.ReadBytes(_buffer, a_address, addressOffset, GetLength());
+			stream.ReadBytes(_buffer, address, addressOffset, GetLength());
 		}
 
 		public void ReadBegin(byte a_identifier)
@@ -114,16 +115,16 @@ namespace com.db4o.@internal
 		}
 
 		public com.db4o.@internal.Buffer ReadEmbeddedObject(com.db4o.@internal.Transaction
-			 a_trans)
+			 trans)
 		{
-			return a_trans.Stream().ReadReaderByAddress(ReadInt(), ReadInt());
+			return trans.Stream().ReadReaderByAddress(ReadInt(), ReadInt());
 		}
 
-		public virtual void ReadEncrypt(com.db4o.@internal.ObjectContainerBase a_stream, 
-			int a_address)
+		public virtual void ReadEncrypt(com.db4o.@internal.ObjectContainerBase stream, int
+			 address)
 		{
-			a_stream.ReadBytes(_buffer, a_address, GetLength());
-			a_stream.i_handlers.Decrypt(this);
+			stream.ReadBytes(_buffer, address, GetLength());
+			stream.i_handlers.Decrypt(this);
 		}
 
 		public virtual void ReadEnd()

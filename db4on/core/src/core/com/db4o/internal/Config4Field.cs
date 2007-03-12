@@ -9,7 +9,7 @@ namespace com.db4o.@internal
 			(true);
 
 		private static readonly com.db4o.foundation.KeySpec INDEXED = new com.db4o.foundation.KeySpec
-			(com.db4o.@internal.Const4.DEFAULT);
+			(com.db4o.foundation.TernaryBool.UNSPECIFIED);
 
 		protected Config4Field(com.db4o.@internal.Config4Class a_class, com.db4o.foundation.KeySpecHashtable4
 			 config) : base(config)
@@ -70,8 +70,8 @@ namespace com.db4o.@internal
 			}
 			com.db4o.@internal.LocalObjectContainer stream = (com.db4o.@internal.LocalObjectContainer
 				)anyStream;
-			int indexedFlag = _config.GetAsInt(INDEXED);
-			if (indexedFlag == com.db4o.@internal.Const4.NO)
+			com.db4o.foundation.TernaryBool indexedFlag = _config.GetAsTernaryBool(INDEXED);
+			if (indexedFlag.DefiniteNo())
 			{
 				yapField.DropIndex(systemTrans);
 				return;
@@ -80,7 +80,7 @@ namespace com.db4o.@internal
 			{
 				return;
 			}
-			if (indexedFlag != com.db4o.@internal.Const4.YES)
+			if (!indexedFlag.DefiniteYes())
 			{
 				return;
 			}
@@ -118,6 +118,14 @@ namespace com.db4o.@internal
 		internal virtual bool QueryEvaluation()
 		{
 			return _config.GetAsBoolean(QUERY_EVALUATION);
+		}
+
+		public virtual void UniqueIndex(bool flag)
+		{
+			if (flag)
+			{
+				Indexed(true);
+			}
 		}
 	}
 }

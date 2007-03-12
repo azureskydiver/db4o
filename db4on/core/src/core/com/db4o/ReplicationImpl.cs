@@ -273,8 +273,8 @@ namespace com.db4o
 			{
 				object objectA = obj;
 				object objectB = obj;
-				com.db4o.@internal.ObjectReference referenceA = _peerA.GetYapObject(obj);
-				com.db4o.@internal.ObjectReference referenceB = _peerB.GetYapObject(obj);
+				com.db4o.@internal.ObjectReference referenceA = _peerA.ReferenceForObject(obj);
+				com.db4o.@internal.ObjectReference referenceB = _peerB.ReferenceForObject(obj);
 				com.db4o.@internal.VirtualAttributes attA = null;
 				com.db4o.@internal.VirtualAttributes attB = null;
 				if (referenceA == null)
@@ -289,14 +289,14 @@ namespace com.db4o
 					{
 						return notProcessed;
 					}
-					object[] arr = _transA.ObjectAndYapObjectBySignature(attB.i_uuid, attB.i_database
-						.i_signature);
-					if (arr[0] == null)
+					com.db4o.@internal.HardObjectReference hardRef = _transA.GetHardReferenceBySignature
+						(attB.i_uuid, attB.i_database.i_signature);
+					if (hardRef._object == null)
 					{
 						return notProcessed;
 					}
-					referenceA = (com.db4o.@internal.ObjectReference)arr[1];
-					objectA = arr[0];
+					referenceA = hardRef._reference;
+					objectA = hardRef._object;
 					attA = referenceA.VirtualAttributes(_transA);
 				}
 				else
@@ -309,14 +309,14 @@ namespace com.db4o
 					if (referenceB == null)
 					{
 						sourceReference = referenceA;
-						object[] arr = _transB.ObjectAndYapObjectBySignature(attA.i_uuid, attA.i_database
-							.i_signature);
-						if (arr[0] == null)
+						com.db4o.@internal.HardObjectReference hardRef = _transB.GetHardReferenceBySignature
+							(attA.i_uuid, attA.i_database.i_signature);
+						if (hardRef._object == null)
 						{
 							return notProcessed;
 						}
-						referenceB = (com.db4o.@internal.ObjectReference)arr[1];
-						objectB = arr[0];
+						referenceB = hardRef._reference;
+						objectB = hardRef._object;
 					}
 					attB = referenceB.VirtualAttributes(_transB);
 				}

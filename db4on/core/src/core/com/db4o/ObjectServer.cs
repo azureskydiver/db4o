@@ -65,5 +65,21 @@ namespace com.db4o
 		/// for it's own version of all peristent objects.
 		/// </remarks>
 		com.db4o.ObjectContainer OpenClient();
+
+		/// <summary>
+		/// See
+		/// <see>openClient()</see>
+		/// </summary>
+		/// <param name="config">
+		/// a custom
+		/// <see cref="com.db4o.config.Configuration">Configuration</see>
+		/// instance to be obtained via
+		/// <see cref="com.db4o.Db4o.NewConfiguration">com.db4o.Db4o.NewConfiguration</see>
+		/// </param>
+		/// <returns>
+		/// an open
+		/// <see cref="com.db4o.ObjectContainer">ObjectContainer</see>
+		/// </returns>
+		com.db4o.ObjectContainer OpenClient(com.db4o.config.Configuration config);
 	}
 }

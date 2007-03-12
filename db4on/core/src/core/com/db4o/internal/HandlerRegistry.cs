@@ -12,8 +12,8 @@ namespace com.db4o.@internal
 	{
 		private readonly com.db4o.@internal.ObjectContainerBase _masterStream;
 
-		private static readonly com.db4o.@internal.Db4oTypeImpl[] i_db4oTypes = { new com.db4o.@internal.BlobImpl
-			() };
+		private static readonly com.db4o.@internal.Db4oTypeImpl[] i_db4oTypes = new com.db4o.@internal.Db4oTypeImpl
+			[] { new com.db4o.@internal.BlobImpl() };
 
 		public const int ANY_ARRAY_ID = 12;
 
@@ -41,7 +41,7 @@ namespace com.db4o.@internal
 
 		public const int ANY_ID = 11;
 
-		public readonly com.db4o.@internal.VirtualFieldMetadata[] i_virtualFields = new com.db4o.@internal.VirtualFieldMetadata
+		private readonly com.db4o.@internal.VirtualFieldMetadata[] _virtualFields = new com.db4o.@internal.VirtualFieldMetadata
 			[2];
 
 		private readonly com.db4o.foundation.Hashtable4 i_classByClass = new com.db4o.foundation.Hashtable4
@@ -96,8 +96,8 @@ namespace com.db4o.@internal
 			_diagnosticProcessor = a_stream.ConfigImpl().DiagnosticProcessor();
 			InitClassReflectors(reflector);
 			i_indexes = new com.db4o.@internal.SharedIndexedFields(a_stream);
-			i_virtualFields[0] = i_indexes.i_fieldVersion;
-			i_virtualFields[1] = i_indexes.i_fieldUUID;
+			_virtualFields[0] = i_indexes.i_fieldVersion;
+			_virtualFields[1] = i_indexes.i_fieldUUID;
 			i_stringHandler = new com.db4o.@internal.handlers.StringHandler(a_stream, com.db4o.@internal.LatinStringIO
 				.ForEncoding(stringEncoding));
 			i_handlers = new com.db4o.@internal.TypeHandler4[] { new com.db4o.@internal.handlers.IntHandler
@@ -211,97 +211,76 @@ namespace com.db4o.@internal
 			}
 			if (_masterStream.Reflector().ConstructorCallsSupported())
 			{
-				try
+				com.db4o.foundation.Tree sortedConstructors = SortConstructorsByParamsCount(claxx
+					);
+				return FindConstructor(claxx, sortedConstructors);
+			}
+			return false;
+		}
+
+		private bool FindConstructor(com.db4o.reflect.ReflectClass claxx, com.db4o.foundation.Tree
+			 sortedConstructors)
+		{
+			if (sortedConstructors == null)
+			{
+				return false;
+			}
+			System.Collections.IEnumerator iter = new com.db4o.foundation.TreeNodeIterator(sortedConstructors
+				);
+			while (iter.MoveNext())
+			{
+				object obj = iter.Current;
+				com.db4o.reflect.ReflectConstructor constructor = (com.db4o.reflect.ReflectConstructor
+					)((com.db4o.@internal.TreeIntObject)obj)._object;
+				com.db4o.reflect.ReflectClass[] paramTypes = constructor.GetParameterTypes();
+				object[] @params = new object[paramTypes.Length];
+				for (int j = 0; j < @params.Length; j++)
 				{
-					com.db4o.reflect.ReflectConstructor[] constructors = claxx.GetDeclaredConstructors
-						();
-					com.db4o.foundation.Tree sortedConstructors = null;
-					for (int i = 0; i < constructors.Length; i++)
-					{
-						try
-						{
-							constructors[i].SetAccessible();
-							int parameterCount = constructors[i].GetParameterTypes().Length;
-							sortedConstructors = com.db4o.foundation.Tree.Add(sortedConstructors, new com.db4o.@internal.TreeIntObject
-								(i + constructors.Length * parameterCount, constructors[i]));
-						}
-						catch (System.Exception t)
-						{
-						}
-					}
-					bool[] foundConstructor = { false };
-					if (sortedConstructors != null)
-					{
-						com.db4o.@internal.TypeHandler4[] handlers = i_handlers;
-						sortedConstructors.Traverse(new _AnonymousInnerClass241(this, foundConstructor, handlers
-							, claxx));
-					}
-					if (foundConstructor[0])
-					{
-						return true;
-					}
+					@params[j] = NullValue(paramTypes[j]);
 				}
-				catch (System.Exception t1)
+				object res = constructor.NewInstance(@params);
+				if (res != null)
 				{
+					claxx.UseConstructor(constructor, @params);
+					return true;
 				}
 			}
 			return false;
 		}
 
-		private sealed class _AnonymousInnerClass241 : com.db4o.foundation.Visitor4
+		private object NullValue(com.db4o.reflect.ReflectClass clazz)
 		{
-			public _AnonymousInnerClass241(HandlerRegistry _enclosing, bool[] foundConstructor
-				, com.db4o.@internal.TypeHandler4[] handlers, com.db4o.reflect.ReflectClass claxx
-				)
+			for (int k = 0; k < PRIMITIVECOUNT; k++)
 			{
-				this._enclosing = _enclosing;
-				this.foundConstructor = foundConstructor;
-				this.handlers = handlers;
-				this.claxx = claxx;
-			}
-
-			public void Visit(object a_object)
-			{
-				if (!foundConstructor[0])
+				if (clazz.Equals(i_handlers[k].PrimitiveClassReflector()))
 				{
-					com.db4o.reflect.ReflectConstructor constructor = (com.db4o.reflect.ReflectConstructor
-						)((com.db4o.@internal.TreeIntObject)a_object)._object;
-					try
-					{
-						com.db4o.reflect.ReflectClass[] pTypes = constructor.GetParameterTypes();
-						object[] parms = new object[pTypes.Length];
-						for (int j = 0; j < parms.Length; j++)
-						{
-							for (int k = 0; k < com.db4o.@internal.HandlerRegistry.PRIMITIVECOUNT; k++)
-							{
-								if (pTypes[j].Equals(handlers[k].PrimitiveClassReflector()))
-								{
-									parms[j] = ((com.db4o.@internal.handlers.PrimitiveHandler)handlers[k]).PrimitiveNull
-										();
-									break;
-								}
-							}
-						}
-						object res = constructor.NewInstance(parms);
-						if (res != null)
-						{
-							foundConstructor[0] = true;
-							claxx.UseConstructor(constructor, parms);
-						}
-					}
-					catch (System.Exception t)
-					{
-					}
+					return ((com.db4o.@internal.handlers.PrimitiveHandler)i_handlers[k]).PrimitiveNull
+						();
 				}
 			}
+			return null;
+		}
 
-			private readonly HandlerRegistry _enclosing;
-
-			private readonly bool[] foundConstructor;
-
-			private readonly com.db4o.@internal.TypeHandler4[] handlers;
-
-			private readonly com.db4o.reflect.ReflectClass claxx;
+		private com.db4o.foundation.Tree SortConstructorsByParamsCount(com.db4o.reflect.ReflectClass
+			 claxx)
+		{
+			com.db4o.reflect.ReflectConstructor[] constructors = claxx.GetDeclaredConstructors
+				();
+			com.db4o.foundation.Tree sortedConstructors = null;
+			for (int i = 0; i < constructors.Length; i++)
+			{
+				try
+				{
+					constructors[i].SetAccessible();
+					int parameterCount = constructors[i].GetParameterTypes().Length;
+					sortedConstructors = com.db4o.foundation.Tree.Add(sortedConstructors, new com.db4o.@internal.TreeIntObject
+						(i + constructors.Length * parameterCount, constructors[i]));
+				}
+				catch (System.Security.SecurityException e)
+				{
+				}
+			}
+			return sortedConstructors;
 		}
 
 		public void Decrypt(com.db4o.@internal.Buffer reader)
@@ -520,6 +499,18 @@ namespace com.db4o.@internal
 		public com.db4o.@internal.ClassMetadata PrimitiveClassById(int id)
 		{
 			return i_yapClasses[id - 1];
+		}
+
+		public com.db4o.@internal.VirtualFieldMetadata VirtualFieldByName(string name)
+		{
+			for (int i = 0; i < _virtualFields.Length; i++)
+			{
+				if (name.Equals(_virtualFields[i].GetName()))
+				{
+					return _virtualFields[i];
+				}
+			}
+			return null;
 		}
 	}
 }

@@ -64,31 +64,30 @@ namespace com.db4o.@internal.freespace
 		{
 		}
 
-		public override void Free(int a_address, int a_length)
+		public override void Free(int address, int length)
 		{
-			if (a_address <= 0)
+			if (address <= 0)
 			{
 				return;
 			}
-			if (a_length <= DiscardLimit())
+			if (length <= DiscardLimit())
 			{
 				return;
 			}
-			a_length = _file.BlocksFor(a_length);
-			_finder._key = a_address;
+			length = _file.BlocksFor(length);
+			_finder._key = address;
 			com.db4o.@internal.freespace.FreeSlotNode sizeNode;
 			com.db4o.@internal.freespace.FreeSlotNode addressnode = (com.db4o.@internal.freespace.FreeSlotNode
 				)com.db4o.foundation.Tree.FindSmaller(_freeByAddress, _finder);
-			if ((addressnode != null) && ((addressnode._key + addressnode._peer._key) == a_address
+			if ((addressnode != null) && ((addressnode._key + addressnode._peer._key) == address
 				))
 			{
 				sizeNode = addressnode._peer;
 				_freeBySize = _freeBySize.RemoveNode(sizeNode);
-				sizeNode._key += a_length;
+				sizeNode._key += length;
 				com.db4o.@internal.freespace.FreeSlotNode secondAddressNode = (com.db4o.@internal.freespace.FreeSlotNode
 					)com.db4o.foundation.Tree.FindGreaterOrEqual(_freeByAddress, _finder);
-				if ((secondAddressNode != null) && (a_address + a_length == secondAddressNode._key
-					))
+				if ((secondAddressNode != null) && (address + length == secondAddressNode._key))
 				{
 					sizeNode._key += secondAddressNode._peer._key;
 					_freeBySize = _freeBySize.RemoveNode(secondAddressNode._peer);
@@ -101,13 +100,13 @@ namespace com.db4o.@internal.freespace
 			{
 				addressnode = (com.db4o.@internal.freespace.FreeSlotNode)com.db4o.foundation.Tree
 					.FindGreaterOrEqual(_freeByAddress, _finder);
-				if ((addressnode != null) && (a_address + a_length == addressnode._key))
+				if ((addressnode != null) && (address + length == addressnode._key))
 				{
 					sizeNode = addressnode._peer;
 					_freeByAddress = _freeByAddress.RemoveNode(addressnode);
 					_freeBySize = _freeBySize.RemoveNode(sizeNode);
-					sizeNode._key += a_length;
-					addressnode._key = a_address;
+					sizeNode._key += length;
+					addressnode._key = address;
 					addressnode.RemoveChildren();
 					sizeNode.RemoveChildren();
 					_freeByAddress = com.db4o.foundation.Tree.Add(_freeByAddress, addressnode);
@@ -115,9 +114,10 @@ namespace com.db4o.@internal.freespace
 				}
 				else
 				{
-					AddFreeSlotNodes(a_address, a_length);
+					AddFreeSlotNodes(address, length);
 				}
 			}
+			_file.OverwriteDeletedBytes(address, length * BlockSize());
 		}
 
 		public override void FreeSelf()
@@ -127,14 +127,14 @@ namespace com.db4o.@internal.freespace
 		public override int FreeSize()
 		{
 			com.db4o.foundation.MutableInt mint = new com.db4o.foundation.MutableInt();
-			com.db4o.foundation.Tree.Traverse(_freeBySize, new _AnonymousInnerClass138(this, 
+			com.db4o.foundation.Tree.Traverse(_freeBySize, new _AnonymousInnerClass136(this, 
 				mint));
 			return mint.Value();
 		}
 
-		private sealed class _AnonymousInnerClass138 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass136 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass138(FreespaceManagerRam _enclosing, com.db4o.foundation.MutableInt
+			public _AnonymousInnerClass136(FreespaceManagerRam _enclosing, com.db4o.foundation.MutableInt
 				 mint)
 			{
 				this._enclosing = _enclosing;
@@ -189,13 +189,13 @@ namespace com.db4o.@internal.freespace
 		{
 			if (_freeByAddress != null)
 			{
-				_freeByAddress.Traverse(new _AnonymousInnerClass182(this, newFM));
+				_freeByAddress.Traverse(new _AnonymousInnerClass180(this, newFM));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass182 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass180 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass182(FreespaceManagerRam _enclosing, com.db4o.@internal.freespace.FreespaceManager
+			public _AnonymousInnerClass180(FreespaceManagerRam _enclosing, com.db4o.@internal.freespace.FreespaceManager
 				 newFM)
 			{
 				this._enclosing = _enclosing;
@@ -242,16 +242,16 @@ namespace com.db4o.@internal.freespace
 			com.db4o.foundation.Tree.ByRef addressTree = new com.db4o.foundation.Tree.ByRef();
 			if (_freeBySize != null)
 			{
-				_freeBySize.Traverse(new _AnonymousInnerClass215(this, addressTree));
+				_freeBySize.Traverse(new _AnonymousInnerClass213(this, addressTree));
 			}
 			_freeByAddress = addressTree.value;
 			_file.Free(freeSlotsID, com.db4o.@internal.Const4.POINTER_LENGTH);
 			_file.Free(reader.GetAddress(), reader.GetLength());
 		}
 
-		private sealed class _AnonymousInnerClass215 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass213 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass215(FreespaceManagerRam _enclosing, com.db4o.foundation.Tree.ByRef
+			public _AnonymousInnerClass213(FreespaceManagerRam _enclosing, com.db4o.foundation.Tree.ByRef
 				 addressTree)
 			{
 				this._enclosing = _enclosing;
