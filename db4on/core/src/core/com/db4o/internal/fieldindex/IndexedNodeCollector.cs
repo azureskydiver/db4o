@@ -305,11 +305,26 @@ namespace com.db4o.@internal.fieldindex
 				);
 			if (join.IsOr())
 			{
-				return new com.db4o.@internal.fieldindex.OrIndexedLeaf(join.i_constraint1, c1, c2
-					);
+				return new com.db4o.@internal.fieldindex.OrIndexedLeaf(FindLeafForJoin(join), c1, 
+					c2);
 			}
 			return new com.db4o.@internal.fieldindex.AndIndexedLeaf(join.i_constraint1, c1, c2
 				);
+		}
+
+		private com.db4o.@internal.query.processor.QCon FindLeafForJoin(com.db4o.@internal.query.processor.QConJoin
+			 join)
+		{
+			if (join.i_constraint1 is com.db4o.@internal.query.processor.QConObject)
+			{
+				return join.i_constraint1;
+			}
+			com.db4o.@internal.query.processor.QCon con = join.i_constraint2;
+			if (con is com.db4o.@internal.query.processor.QConObject)
+			{
+				return con;
+			}
+			return FindLeafForJoin((com.db4o.@internal.query.processor.QConJoin)con);
 		}
 
 		private com.db4o.@internal.fieldindex.IndexedNodeWithRange NodeForConstraint(com.db4o.@internal.query.processor.QCon

@@ -52,11 +52,10 @@ namespace com.db4o.@internal
 			_blockEndAddress = BlocksFor(address);
 		}
 
-		protected override bool Close2()
+		protected override void Close2()
 		{
-			bool ret = base.Close2();
+			base.Close2();
 			i_dirty = null;
-			return ret;
 		}
 
 		public override void Commit1()
@@ -65,9 +64,9 @@ namespace com.db4o.@internal
 			{
 				Write(false);
 			}
-			catch (System.Exception t)
+			catch (System.Exception e)
 			{
-				FatalException(t);
+				FatalException(e);
 			}
 		}
 
@@ -166,7 +165,7 @@ namespace com.db4o.@internal
 
 		public abstract long FileLength();
 
-		internal abstract string FileName();
+		public abstract string FileName();
 
 		public virtual void Free(com.db4o.@internal.slots.Slot slot)
 		{
@@ -198,14 +197,14 @@ namespace com.db4o.@internal
 		{
 			if (i_prefetchedIDs != null)
 			{
-				i_prefetchedIDs.Traverse(new _AnonymousInnerClass212(this));
+				i_prefetchedIDs.Traverse(new _AnonymousInnerClass211(this));
 			}
 			i_prefetchedIDs = null;
 		}
 
-		private sealed class _AnonymousInnerClass212 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass211 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass212(LocalObjectContainer _enclosing)
+			public _AnonymousInnerClass211(LocalObjectContainer _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -316,16 +315,33 @@ namespace com.db4o.@internal
 			int blocksNeeded = BlocksFor(bytes);
 			if (com.db4o.Debug.xbytes && com.db4o.Deploy.overwrite)
 			{
-				DebugWriteXBytes(_blockEndAddress, blocksNeeded * BlockSize());
+				OverwriteDeletedBytes(_blockEndAddress, blocksNeeded * BlockSize());
 			}
 			return AppendBlocks(blocksNeeded);
 		}
 
 		protected virtual int AppendBlocks(int blockCount)
 		{
-			int blockedAddress = _blockEndAddress;
-			_blockEndAddress += blockCount;
-			return blockedAddress;
+			int blockedStartAddress = _blockEndAddress;
+			int blockedEndAddress = _blockEndAddress + blockCount;
+			CheckBlockedAddress(blockedEndAddress);
+			_blockEndAddress = blockedEndAddress;
+			return blockedStartAddress;
+		}
+
+		private void CheckBlockedAddress(int blockedAddress)
+		{
+			if (blockedAddress < 0)
+			{
+				Rollback1();
+				SwitchToReadOnlyMode();
+				com.db4o.@internal.Exceptions4.ThrowRuntimeException(69);
+			}
+		}
+
+		private void SwitchToReadOnlyMode()
+		{
+			i_config.ReadOnly(true);
 		}
 
 		internal virtual void EnsureLastSlotWritten()
@@ -521,7 +537,7 @@ namespace com.db4o.@internal
 					);
 				_fileHeader.WriteVariablePart(this, 1);
 			}
-			WriteHeader(false);
+			WriteHeader(true, false);
 			com.db4o.@internal.LocalTransaction trans = (com.db4o.@internal.LocalTransaction)
 				_fileHeader.InterruptedTransaction();
 			if (trans != null)
@@ -590,16 +606,16 @@ namespace com.db4o.@internal
 				com.db4o.foundation.Hashtable4 semaphores = i_semaphores;
 				lock (semaphores)
 				{
-					semaphores.ForEachKeyForIdentity(new _AnonymousInnerClass576(this, semaphores), ta
+					semaphores.ForEachKeyForIdentity(new _AnonymousInnerClass589(this, semaphores), ta
 						);
 					j4o.lang.JavaSystem.NotifyAll(semaphores);
 				}
 			}
 		}
 
-		private sealed class _AnonymousInnerClass576 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass589 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass576(LocalObjectContainer _enclosing, com.db4o.foundation.Hashtable4
+			public _AnonymousInnerClass589(LocalObjectContainer _enclosing, com.db4o.foundation.Hashtable4
 				 semaphores)
 			{
 				this._enclosing = _enclosing;
@@ -700,14 +716,16 @@ namespace com.db4o.@internal
 
 		public override void Write(bool shuttingDown)
 		{
+			if (i_config.IsReadOnly())
+			{
+				return;
+			}
 			i_trans.Commit();
 			if (shuttingDown)
 			{
-				WriteHeader(shuttingDown);
+				WriteHeader(false, true);
 			}
 		}
-
-		public abstract bool WriteAccessTime(int address, int offset, long time);
 
 		public abstract void WriteBytes(com.db4o.@internal.Buffer a_Bytes, int address, int
 			 addressOffset);
@@ -755,7 +773,7 @@ namespace com.db4o.@internal
 			a_parent._offset = offsetBackup;
 		}
 
-		internal virtual void WriteHeader(bool shuttingDown)
+		internal virtual void WriteHeader(bool startFileLockingThread, bool shuttingDown)
 		{
 			int freespaceID = _freespaceManager.Write(shuttingDown);
 			if (shuttingDown)
@@ -768,7 +786,8 @@ namespace com.db4o.@internal
 			}
 			com.db4o.@internal.StatefulBuffer writer = GetWriter(i_systemTrans, 0, _fileHeader
 				.Length());
-			_fileHeader.WriteFixedPart(this, shuttingDown, writer, BlockSize(), freespaceID);
+			_fileHeader.WriteFixedPart(this, startFileLockingThread, shuttingDown, writer, BlockSize
+				(), freespaceID);
 			if (shuttingDown)
 			{
 				EnsureLastSlotWritten();
@@ -790,17 +809,7 @@ namespace com.db4o.@internal
 			}
 		}
 
-		public abstract void DebugWriteXBytes(int a_address, int a_length);
-
-		internal virtual com.db4o.@internal.Buffer XBytes(int a_address, int a_length)
-		{
-			com.db4o.@internal.Buffer bytes = GetWriter(i_systemTrans, a_address, a_length);
-			for (int i = 0; i < a_length; i++)
-			{
-				bytes.Append(com.db4o.@internal.Const4.XBYTE);
-			}
-			return bytes;
-		}
+		public abstract void OverwriteDeletedBytes(int a_address, int a_length);
 
 		public sealed override void WriteTransactionPointer(int address)
 		{
@@ -814,7 +823,7 @@ namespace com.db4o.@internal
 			int length = forWriter.GetLength();
 			int address = GetSlot(length);
 			forWriter.Address(address);
-			trans.SlotFreeOnRollbackSetPointer(id, address, length);
+			trans.ProduceUpdateSlotChange(id, address, length);
 		}
 
 		public sealed override void WriteUpdate(com.db4o.@internal.ClassMetadata a_yapClass
@@ -858,13 +867,13 @@ namespace com.db4o.@internal
 			 clazz)
 		{
 			com.db4o.foundation.IntArrayList ids = new com.db4o.foundation.IntArrayList();
-			clazz.Index().TraverseAll(trans, new _AnonymousInnerClass798(this, ids));
+			clazz.Index().TraverseAll(trans, new _AnonymousInnerClass804(this, ids));
 			return ids.AsLong();
 		}
 
-		private sealed class _AnonymousInnerClass798 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass804 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass798(LocalObjectContainer _enclosing, com.db4o.foundation.IntArrayList
+			public _AnonymousInnerClass804(LocalObjectContainer _enclosing, com.db4o.foundation.IntArrayList
 				 ids)
 			{
 				this._enclosing = _enclosing;

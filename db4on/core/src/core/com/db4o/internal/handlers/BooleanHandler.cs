@@ -9,6 +9,8 @@ namespace com.db4o.@internal.handlers
 
 		private const byte FALSE = (byte)'F';
 
+		private const byte NULL = (byte)'N';
+
 		private static readonly bool i_primitive = false;
 
 		public BooleanHandler(com.db4o.@internal.ObjectContainerBase stream) : base(stream
@@ -55,18 +57,30 @@ namespace com.db4o.@internal.handlers
 			return null;
 		}
 
-		public override void Write(object a_object, com.db4o.@internal.Buffer a_bytes)
+		public override object WriteNew(com.db4o.@internal.marshall.MarshallerFamily mf, 
+			object obj, bool topLevel, com.db4o.@internal.StatefulBuffer buffer, bool withIndirection
+			, bool restoreLinkeOffset)
 		{
-			byte set;
-			if (((bool)a_object))
+			Write(obj, buffer);
+			return obj;
+		}
+
+		public override void Write(object obj, com.db4o.@internal.Buffer buffer)
+		{
+			buffer.Append(GetEncodedByteValue(obj));
+		}
+
+		private byte GetEncodedByteValue(object obj)
+		{
+			if (obj == null)
 			{
-				set = TRUE;
+				return NULL;
 			}
-			else
+			if (((bool)obj))
 			{
-				set = FALSE;
+				return TRUE;
 			}
-			a_bytes.Append(set);
+			return FALSE;
 		}
 
 		private bool i_compareTo;

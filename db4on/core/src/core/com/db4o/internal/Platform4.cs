@@ -368,12 +368,12 @@ namespace com.db4o.@internal
 			return true;
 		}
 
-		internal static bool HasLockFileThread()
+		public static bool HasLockFileThread()
 		{
 			return false;
 		}
 
-		internal static bool HasNio()
+		public static bool HasNio()
 		{
 			return false;
 		}
@@ -467,12 +467,12 @@ namespace com.db4o.@internal
 #endif
 		}
 
-		internal static void LockFile(object raf)
+		internal static void LockFile(string path, object file)
 		{
 			// do nothing. C# RAF is locked automatically upon opening
 		}
 		
-		internal static void UnlockFile(object randomaccessfile)
+		internal static void UnlockFile(string path, object file)
 		{
 			// do nothing. C# RAF is unlocked automatically upon closing
 		}		
@@ -527,9 +527,9 @@ namespace com.db4o.@internal
 		{
 			lock (typeof(Platform4))
 			{
-				foreach (object stream in shutDownStreams)
+				for (int i = 0; i < shutDownStreams.Count; i++)
 				{
-					Unobfuscated.ShutDownHookCallback(stream);
+					Unobfuscated.ShutDownHookCallback(shutDownStreams[i]);
 				}
 			}
 		}
@@ -542,15 +542,7 @@ namespace com.db4o.@internal
 
 		private static void Translate(Config4Impl config, object obj, ObjectTranslator translator)
 		{
-			try
-			{
-				config.ObjectClass(obj).Translate(translator);
-			}
-			catch (Exception ex)
-			{
-				// TODO: why the object is being logged instead of the error?
-				Unobfuscated.LogErr(config, 48, obj.ToString(), null);
-			}
+			config.ObjectClass(obj).Translate(translator);
 		}
 
 		internal static byte[] UpdateClassName(byte[] bytes)

@@ -10,7 +10,7 @@ namespace com.db4o.db4ounit.common.config
 		protected override System.Type[] TestCases()
 		{
 			return new System.Type[] { typeof(com.db4o.db4ounit.common.config.NonStaticConfigurationTestCase)
-				 };
+				, typeof(com.db4o.db4ounit.common.config.ObjectTranslatorTestCase) };
 		}
 	}
 }

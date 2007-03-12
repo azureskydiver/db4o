@@ -74,8 +74,8 @@ namespace com.db4o.@internal.cs
 			return res == 1;
 		}
 
-		public override object[] ObjectAndYapObjectBySignature(long a_uuid, byte[] a_signature
-			)
+		public sealed override com.db4o.@internal.HardObjectReference GetHardReferenceBySignature
+			(long a_uuid, byte[] a_signature)
 		{
 			int messageLength = com.db4o.@internal.Const4.LONG_LENGTH + com.db4o.@internal.Const4
 				.INT_LENGTH + a_signature.Length;
@@ -89,9 +89,9 @@ namespace com.db4o.@internal.cs
 			int id = message.ReadInt();
 			if (id > 0)
 			{
-				return Stream().GetObjectAndYapObjectByID(this, id);
+				return Stream().GetHardObjectReferenceById(this, id);
 			}
-			return new object[2];
+			return com.db4o.@internal.HardObjectReference.INVALID;
 		}
 
 		public override void ProcessDeletes()
@@ -101,7 +101,6 @@ namespace com.db4o.@internal.cs
 				i_delete.Traverse(new _AnonymousInnerClass82(this));
 			}
 			i_delete = null;
-			i_writtenUpdateDeletedMembers = null;
 			i_client.WriteMsg(com.db4o.@internal.cs.messages.Msg.PROCESS_DELETES, false);
 		}
 

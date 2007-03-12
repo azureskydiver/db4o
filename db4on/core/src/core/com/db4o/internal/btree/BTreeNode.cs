@@ -33,9 +33,6 @@ namespace com.db4o.@internal.btree
 		/// <summary>Can contain BTreeNode or Integer for ID of BTreeNode</summary>
 		private object[] _children;
 
-		/// <summary>Only used for leafs</summary>
-		private object[] _values;
-
 		private int _parentID;
 
 		private int _previousID;
@@ -56,7 +53,6 @@ namespace com.db4o.@internal.btree
 			_count = count;
 			_isLeaf = isLeaf;
 			PrepareArrays();
-			SetStateDirty();
 		}
 
 		public BTreeNode(int id, com.db4o.@internal.btree.BTree btree)
@@ -107,10 +103,6 @@ namespace com.db4o.@internal.btree
 				}
 				PrepareInsert(s.Cursor());
 				_keys[s.Cursor()] = NewAddPatch(trans);
-				if (HandlesValues())
-				{
-					_values[s.Cursor()] = ValueHandler().Current();
-				}
 			}
 			else
 			{
@@ -130,7 +122,7 @@ namespace com.db4o.@internal.btree
 					_children[splitCursor] = childNodeOrSplit;
 				}
 			}
-			if (_count >= _btree.NodeSize())
+			if (MustSplit())
 			{
 				return Split(trans);
 			}
@@ -139,6 +131,11 @@ namespace com.db4o.@internal.btree
 				return this;
 			}
 			return null;
+		}
+
+		private bool MustSplit()
+		{
+			return _count >= _btree.NodeSize();
 		}
 
 		private com.db4o.@internal.btree.BTreeAdd NewAddPatch(com.db4o.@internal.Transaction
@@ -367,9 +364,7 @@ namespace com.db4o.@internal.btree
 				return;
 			}
 			object keyZero = _keys[0];
-			bool vals = HandlesValues();
 			object[] tempKeys = new object[_btree.NodeSize()];
-			object[] tempValues = vals ? new object[_btree.NodeSize()] : null;
 			int count = 0;
 			for (int i = 0; i < _count; i++)
 			{
@@ -382,20 +377,16 @@ namespace com.db4o.@internal.btree
 				if (key != com.db4o.foundation.No4.INSTANCE)
 				{
 					tempKeys[count] = key;
-					if (vals)
-					{
-						tempValues[count] = _values[i];
-					}
 					count++;
 				}
 			}
 			_keys = tempKeys;
-			_values = tempValues;
 			_count = count;
 			if (FreeIfEmpty(trans))
 			{
 				return;
 			}
+			SetStateDirty();
 			if (_keys[0] != keyZero)
 			{
 				TellParentAboutChangedKey(trans);
@@ -495,7 +486,6 @@ namespace com.db4o.@internal.btree
 					if (_count == 0)
 					{
 						_isLeaf = true;
-						PrepareValues();
 					}
 					return;
 				}
@@ -565,14 +555,7 @@ namespace com.db4o.@internal.btree
 		private int EntryLength()
 		{
 			int len = KeyHandler().LinkLength();
-			if (_isLeaf)
-			{
-				if (HandlesValues())
-				{
-					len += ValueHandler().LinkLength();
-				}
-			}
-			else
+			if (!_isLeaf)
 			{
 				len += com.db4o.@internal.Const4.ID_LENGTH;
 			}
@@ -632,11 +615,6 @@ namespace com.db4o.@internal.btree
 			return com.db4o.@internal.Const4.BTREE_NODE;
 		}
 
-		private bool HandlesValues()
-		{
-			return _btree._valueHandler != com.db4o.@internal.Null.INSTANCE;
-		}
-
 		private void PrepareInsert(int pos)
 		{
 			if (pos > LastIndex())
@@ -646,10 +624,6 @@ namespace com.db4o.@internal.btree
 			}
 			int len = _count - pos;
 			System.Array.Copy(_keys, pos, _keys, pos + 1, len);
-			if (_values != null)
-			{
-				System.Array.Copy(_values, pos, _values, pos + 1, len);
-			}
 			if (_children != null)
 			{
 				System.Array.Copy(_children, pos, _children, pos + 1, len);
@@ -663,11 +637,6 @@ namespace com.db4o.@internal.btree
 			_count--;
 			System.Array.Copy(_keys, pos + 1, _keys, pos, len);
 			_keys[_count] = null;
-			if (_values != null)
-			{
-				System.Array.Copy(_values, pos + 1, _values, pos, len);
-				_values[_count] = null;
-			}
 			if (_children != null)
 			{
 				System.Array.Copy(_children, pos + 1, _children, pos, len);
@@ -807,21 +776,9 @@ namespace com.db4o.@internal.btree
 				return;
 			}
 			_keys = new object[_btree.NodeSize()];
-			if (_isLeaf)
-			{
-				PrepareValues();
-			}
-			else
+			if (!_isLeaf)
 			{
 				_children = new object[_btree.NodeSize()];
-			}
-		}
-
-		private void PrepareValues()
-		{
-			if (HandlesValues())
-			{
-				_values = new object[_btree.NodeSize()];
 			}
 		}
 
@@ -841,20 +798,12 @@ namespace com.db4o.@internal.btree
 			ReadNodeHeader(reader);
 			PrepareArrays();
 			bool isInner = !_isLeaf;
-			bool vals = HandlesValues() && _isLeaf;
 			for (int i = 0; i < _count; i++)
 			{
 				_keys[i] = KeyHandler().ReadIndexEntry(reader);
-				if (vals)
+				if (isInner)
 				{
-					_values[i] = ValueHandler().ReadIndexEntry(reader);
-				}
-				else
-				{
-					if (isInner)
-					{
-						_children[i] = reader.ReadInt();
-					}
+					_children[i] = reader.ReadInt();
 				}
 			}
 		}
@@ -879,6 +828,15 @@ namespace com.db4o.@internal.btree
 				if (transPatch.IsAdd())
 				{
 					CancelAdding(trans, index);
+					return;
+				}
+				if (transPatch.IsCancelledRemoval())
+				{
+					com.db4o.@internal.btree.BTreeRemove removePatch = NewRemovePatch(trans, transPatch
+						.GetObject());
+					_keys[index] = ((com.db4o.@internal.btree.BTreeUpdate)patch).ReplacePatch(transPatch
+						, removePatch);
+					KeyChanged(trans, index);
 					return;
 				}
 			}
@@ -935,11 +893,17 @@ namespace com.db4o.@internal.btree
 			return _count - 1;
 		}
 
-		private com.db4o.@internal.btree.BTreeUpdate NewRemovePatch(com.db4o.@internal.Transaction
+		private com.db4o.@internal.btree.BTreeRemove NewRemovePatch(com.db4o.@internal.Transaction
 			 trans)
 		{
+			return NewRemovePatch(trans, CurrentKey());
+		}
+
+		private com.db4o.@internal.btree.BTreeRemove NewRemovePatch(com.db4o.@internal.Transaction
+			 trans, object key)
+		{
 			_btree.SizeChanged(trans, -1);
-			return new com.db4o.@internal.btree.BTreeRemove(trans, CurrentKey());
+			return new com.db4o.@internal.btree.BTreeRemove(trans, key);
 		}
 
 		private void KeyChanged(com.db4o.@internal.Transaction trans, int index)
@@ -999,18 +963,6 @@ namespace com.db4o.@internal.btree
 			reader._offset = SLOT_LEADING_LENGTH + (EntryLength() * ix);
 		}
 
-		private void SeekValue(com.db4o.@internal.Buffer reader, int ix)
-		{
-			if (HandlesValues())
-			{
-				SeekAfterKey(reader, ix);
-			}
-			else
-			{
-				SeekKey(reader, ix);
-			}
-		}
-
 		private com.db4o.@internal.btree.BTreeNode Split(com.db4o.@internal.Transaction trans
 			)
 		{
@@ -1021,16 +973,6 @@ namespace com.db4o.@internal.btree
 			for (int i = _btree._halfNodeSize; i < _keys.Length; i++)
 			{
 				_keys[i] = null;
-			}
-			if (_values != null)
-			{
-				res._values = new object[_btree.NodeSize()];
-				System.Array.Copy(_values, _btree._halfNodeSize, res._values, 0, _btree._halfNodeSize
-					);
-				for (int i = _btree._halfNodeSize; i < _values.Length; i++)
-				{
-					_values[i] = null;
-				}
 			}
 			if (_children != null)
 			{
@@ -1175,7 +1117,6 @@ namespace com.db4o.@internal.btree
 			if (_dead)
 			{
 				_keys = null;
-				_values = null;
 				_children = null;
 				return;
 			}
@@ -1202,21 +1143,18 @@ namespace com.db4o.@internal.btree
 		{
 			PrepareWrite(trans);
 			_parentID = id;
-			SetStateDirty();
 		}
 
 		private void SetPreviousID(com.db4o.@internal.Transaction trans, int id)
 		{
 			PrepareWrite(trans);
 			_previousID = id;
-			SetStateDirty();
 		}
 
 		private void SetNextID(com.db4o.@internal.Transaction trans, int id)
 		{
 			PrepareWrite(trans);
 			_nextID = id;
-			SetStateDirty();
 		}
 
 		public void TraverseKeys(com.db4o.@internal.Transaction trans, com.db4o.foundation.Visitor4
@@ -1243,54 +1181,6 @@ namespace com.db4o.@internal.btree
 			}
 		}
 
-		public void TraverseValues(com.db4o.@internal.Transaction trans, com.db4o.foundation.Visitor4
-			 visitor)
-		{
-			if (!HandlesValues())
-			{
-				TraverseKeys(trans, visitor);
-				return;
-			}
-			com.db4o.@internal.Buffer reader = PrepareRead(trans);
-			if (_isLeaf)
-			{
-				for (int i = 0; i < _count; i++)
-				{
-					if (Key(trans, reader, i) != com.db4o.foundation.No4.INSTANCE)
-					{
-						visitor.Visit(Value(reader, i));
-					}
-				}
-			}
-			else
-			{
-				for (int i = 0; i < _count; i++)
-				{
-					Child(reader, i).TraverseValues(trans, visitor);
-				}
-			}
-		}
-
-		internal object Value(int index)
-		{
-			return _values[index];
-		}
-
-		internal object Value(com.db4o.@internal.Buffer reader, int index)
-		{
-			if (_values != null)
-			{
-				return _values[index];
-			}
-			SeekValue(reader, index);
-			return ValueHandler().ReadIndexEntry(reader);
-		}
-
-		private com.db4o.@internal.ix.Indexable4 ValueHandler()
-		{
-			return _btree._valueHandler;
-		}
-
 		public override bool WriteObjectBegin()
 		{
 			if (_dead)
@@ -1312,7 +1202,6 @@ namespace com.db4o.@internal.btree
 			a_writer.IncrementOffset(COUNT_LEAF_AND_3_LINK_LENGTH);
 			if (_isLeaf)
 			{
-				bool vals = HandlesValues();
 				for (int i = 0; i < _count; i++)
 				{
 					object obj = Key(trans, i);
@@ -1320,10 +1209,6 @@ namespace com.db4o.@internal.btree
 					{
 						count++;
 						KeyHandler().WriteIndexEntry(a_writer, obj);
-						if (vals)
-						{
-							ValueHandler().WriteIndexEntry(a_writer, _values[i]);
-						}
 					}
 				}
 			}
@@ -1413,28 +1298,20 @@ namespace com.db4o.@internal.btree
 		}
 
 		public static void DefragIndex(com.db4o.@internal.ReaderPair readers, com.db4o.@internal.ix.Indexable4
-			 keyHandler, com.db4o.@internal.ix.Indexable4 valueHandler)
+			 keyHandler)
 		{
 			int count = readers.ReadInt();
 			byte leafByte = readers.ReadByte();
 			bool isLeaf = (leafByte == 1);
-			bool handlesValues = (valueHandler != null) && isLeaf;
 			readers.CopyID();
 			readers.CopyID();
 			readers.CopyID();
 			for (int i = 0; i < count; i++)
 			{
 				keyHandler.DefragIndexEntry(readers);
-				if (handlesValues)
+				if (!isLeaf)
 				{
-					valueHandler.DefragIndexEntry(readers);
-				}
-				else
-				{
-					if (!isLeaf)
-					{
-						readers.CopyID();
-					}
+					readers.CopyID();
 				}
 			}
 		}

@@ -12,5 +12,13 @@ namespace com.db4o.ext
 	[System.Serializable]
 	public class DatabaseFileLockedException : System.Exception
 	{
+		public DatabaseFileLockedException()
+		{
+		}
+
+		public DatabaseFileLockedException(System.Exception cause) : base(cause.Message, 
+			cause)
+		{
+		}
 	}
 }

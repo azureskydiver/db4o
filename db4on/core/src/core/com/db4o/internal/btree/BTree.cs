@@ -10,8 +10,6 @@ namespace com.db4o.@internal.btree
 
 		private readonly com.db4o.@internal.ix.Indexable4 _keyHandler;
 
-		internal readonly com.db4o.@internal.ix.Indexable4 _valueHandler;
-
 		private com.db4o.@internal.btree.BTreeNode _root;
 
 		/// <summary>All instantiated nodes are held in this tree.</summary>
@@ -33,19 +31,13 @@ namespace com.db4o.@internal.btree
 		private readonly int _cacheHeight;
 
 		public BTree(com.db4o.@internal.Transaction trans, int id, com.db4o.@internal.ix.Indexable4
-			 keyHandler) : this(trans, id, keyHandler, null)
+			 keyHandler) : this(trans, id, keyHandler, Config(trans).BTreeNodeSize(), Config
+			(trans).BTreeCacheHeight())
 		{
 		}
 
 		public BTree(com.db4o.@internal.Transaction trans, int id, com.db4o.@internal.ix.Indexable4
-			 keyHandler, com.db4o.@internal.ix.Indexable4 valueHandler) : this(trans, id, keyHandler
-			, valueHandler, Config(trans).BTreeNodeSize(), Config(trans).BTreeCacheHeight())
-		{
-		}
-
-		public BTree(com.db4o.@internal.Transaction trans, int id, com.db4o.@internal.ix.Indexable4
-			 keyHandler, com.db4o.@internal.ix.Indexable4 valueHandler, int treeNodeSize, int
-			 treeCacheHeight)
+			 keyHandler, int treeNodeSize, int treeCacheHeight)
 		{
 			if (null == keyHandler)
 			{
@@ -56,7 +48,6 @@ namespace com.db4o.@internal.btree
 			_nodeSize = _halfNodeSize * 2;
 			_cacheHeight = treeCacheHeight;
 			_keyHandler = keyHandler;
-			_valueHandler = (valueHandler == null) ? com.db4o.@internal.Null.INSTANCE : valueHandler;
 			_sizesByTransaction = new com.db4o.foundation.Hashtable4();
 			if (id == 0)
 			{
@@ -85,15 +76,8 @@ namespace com.db4o.@internal.btree
 
 		public virtual void Add(com.db4o.@internal.Transaction trans, object key)
 		{
-			Add(trans, key, null);
-		}
-
-		public virtual void Add(com.db4o.@internal.Transaction trans, object key, object 
-			value)
-		{
 			KeyCantBeNull(key);
 			_keyHandler.PrepareComparison(key);
-			_valueHandler.PrepareComparison(value);
 			EnsureDirty(trans);
 			com.db4o.@internal.btree.BTreeNode rootOrSplit = _root.Add(trans);
 			if (rootOrSplit != null && rootOrSplit != _root)
@@ -168,7 +152,7 @@ namespace com.db4o.@internal.btree
 					((com.db4o.@internal.btree.BTreeNode)_processing.Next()).Commit(trans);
 				}
 				_processing = null;
-				WriteAllNodes(systemTransaction, true);
+				WriteAllNodes(systemTransaction);
 			}
 			SetStateDirty();
 			Write(systemTransaction);
@@ -189,29 +173,27 @@ namespace com.db4o.@internal.btree
 				((com.db4o.@internal.btree.BTreeNode)_processing.Next()).Rollback(trans);
 			}
 			_processing = null;
-			WriteAllNodes(systemTransaction, false);
+			WriteAllNodes(systemTransaction);
 			SetStateDirty();
 			Write(systemTransaction);
 			Purge();
 		}
 
-		private void WriteAllNodes(com.db4o.@internal.Transaction systemTransaction, bool
-			 setDirty)
+		private void WriteAllNodes(com.db4o.@internal.Transaction systemTransaction)
 		{
 			if (_nodes == null)
 			{
 				return;
 			}
-			_nodes.Traverse(new _AnonymousInnerClass202(this, setDirty, systemTransaction));
+			_nodes.Traverse(new _AnonymousInnerClass190(this, systemTransaction));
 		}
 
-		private sealed class _AnonymousInnerClass202 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass190 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass202(BTree _enclosing, bool setDirty, com.db4o.@internal.Transaction
-				 systemTransaction)
+			public _AnonymousInnerClass190(BTree _enclosing, com.db4o.@internal.Transaction systemTransaction
+				)
 			{
 				this._enclosing = _enclosing;
-				this.setDirty = setDirty;
 				this.systemTransaction = systemTransaction;
 			}
 
@@ -219,16 +201,10 @@ namespace com.db4o.@internal.btree
 			{
 				com.db4o.@internal.btree.BTreeNode node = (com.db4o.@internal.btree.BTreeNode)((com.db4o.@internal.TreeIntObject
 					)obj).GetObject();
-				if (setDirty)
-				{
-					node.SetStateDirty();
-				}
 				node.Write(systemTransaction);
 			}
 
 			private readonly BTree _enclosing;
-
-			private readonly bool setDirty;
 
 			private readonly com.db4o.@internal.Transaction systemTransaction;
 		}
@@ -250,12 +226,12 @@ namespace com.db4o.@internal.btree
 				_root.HoldChildrenAsIDs();
 				AddNode(_root);
 			}
-			temp.Traverse(new _AnonymousInnerClass229(this));
+			temp.Traverse(new _AnonymousInnerClass214(this));
 		}
 
-		private sealed class _AnonymousInnerClass229 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass214 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass229(BTree _enclosing)
+			public _AnonymousInnerClass214(BTree _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -273,12 +249,12 @@ namespace com.db4o.@internal.btree
 		private void ProcessAllNodes()
 		{
 			_processing = new com.db4o.foundation.Queue4();
-			_nodes.Traverse(new _AnonymousInnerClass239(this));
+			_nodes.Traverse(new _AnonymousInnerClass224(this));
 		}
 
-		private sealed class _AnonymousInnerClass239 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass224 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass239(BTree _enclosing)
+			public _AnonymousInnerClass224(BTree _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -412,17 +388,6 @@ namespace com.db4o.@internal.btree
 			_root.TraverseKeys(trans, visitor);
 		}
 
-		public virtual void TraverseValues(com.db4o.@internal.Transaction trans, com.db4o.foundation.Visitor4
-			 visitor)
-		{
-			EnsureActive(trans);
-			if (_root == null)
-			{
-				return;
-			}
-			_root.TraverseValues(trans, visitor);
-		}
-
 		public virtual void SizeChanged(com.db4o.@internal.Transaction trans, int changeBy
 			)
 		{
@@ -484,18 +449,17 @@ namespace com.db4o.@internal.btree
 
 		public virtual void DefragIndexNode(com.db4o.@internal.ReaderPair readers)
 		{
-			com.db4o.@internal.btree.BTreeNode.DefragIndex(readers, _keyHandler, _valueHandler
-				);
+			com.db4o.@internal.btree.BTreeNode.DefragIndex(readers, _keyHandler);
 		}
 
 		public virtual void DefragBTree(com.db4o.@internal.mapping.DefragContext context)
 		{
-			com.db4o.@internal.ReaderPair.ProcessCopy(context, GetID(), new _AnonymousInnerClass400
+			com.db4o.@internal.ReaderPair.ProcessCopy(context, GetID(), new _AnonymousInnerClass377
 				(this));
-			com.db4o.CorruptionException[] exc = { null };
+			com.db4o.CorruptionException[] exc = new com.db4o.CorruptionException[] { null };
 			try
 			{
-				context.TraverseAllIndexSlots(this, new _AnonymousInnerClass407(this, context, exc
+				context.TraverseAllIndexSlots(this, new _AnonymousInnerClass384(this, context, exc
 					));
 			}
 			catch (System.Exception e)
@@ -508,9 +472,9 @@ namespace com.db4o.@internal.btree
 			}
 		}
 
-		private sealed class _AnonymousInnerClass400 : com.db4o.@internal.SlotCopyHandler
+		private sealed class _AnonymousInnerClass377 : com.db4o.@internal.SlotCopyHandler
 		{
-			public _AnonymousInnerClass400(BTree _enclosing)
+			public _AnonymousInnerClass377(BTree _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -523,9 +487,9 @@ namespace com.db4o.@internal.btree
 			private readonly BTree _enclosing;
 		}
 
-		private sealed class _AnonymousInnerClass407 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass384 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass407(BTree _enclosing, com.db4o.@internal.mapping.DefragContext
+			public _AnonymousInnerClass384(BTree _enclosing, com.db4o.@internal.mapping.DefragContext
 				 context, com.db4o.CorruptionException[] exc)
 			{
 				this._enclosing = _enclosing;
@@ -538,7 +502,7 @@ namespace com.db4o.@internal.btree
 				int id = ((int)obj);
 				try
 				{
-					com.db4o.@internal.ReaderPair.ProcessCopy(context, id, new _AnonymousInnerClass411
+					com.db4o.@internal.ReaderPair.ProcessCopy(context, id, new _AnonymousInnerClass388
 						(this));
 				}
 				catch (com.db4o.CorruptionException e)
@@ -548,9 +512,9 @@ namespace com.db4o.@internal.btree
 				}
 			}
 
-			private sealed class _AnonymousInnerClass411 : com.db4o.@internal.SlotCopyHandler
+			private sealed class _AnonymousInnerClass388 : com.db4o.@internal.SlotCopyHandler
 			{
-				public _AnonymousInnerClass411(_AnonymousInnerClass407 _enclosing)
+				public _AnonymousInnerClass388(_AnonymousInnerClass384 _enclosing)
 				{
 					this._enclosing = _enclosing;
 				}
@@ -560,7 +524,7 @@ namespace com.db4o.@internal.btree
 					this._enclosing._enclosing.DefragIndexNode(readers);
 				}
 
-				private readonly _AnonymousInnerClass407 _enclosing;
+				private readonly _AnonymousInnerClass384 _enclosing;
 			}
 
 			private readonly BTree _enclosing;
@@ -606,13 +570,13 @@ namespace com.db4o.@internal.btree
 		{
 			com.db4o.foundation.Collection4 allNodeIDs = new com.db4o.foundation.Collection4(
 				);
-			TraverseAllNodes(systemTrans, new _AnonymousInnerClass455(this, allNodeIDs));
+			TraverseAllNodes(systemTrans, new _AnonymousInnerClass432(this, allNodeIDs));
 			return allNodeIDs.GetEnumerator();
 		}
 
-		private sealed class _AnonymousInnerClass455 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass432 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass455(BTree _enclosing, com.db4o.foundation.Collection4 
+			public _AnonymousInnerClass432(BTree _enclosing, com.db4o.foundation.Collection4 
 				allNodeIDs)
 			{
 				this._enclosing = _enclosing;

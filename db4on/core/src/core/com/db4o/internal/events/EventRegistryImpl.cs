@@ -27,6 +27,8 @@ namespace com.db4o.@internal.events
 
 		protected com.db4o.events.ObjectEventHandler _deactivated;
 
+		protected com.db4o.events.CommitEventHandler _committing;
+
 		public virtual void OnQueryFinished(com.db4o.query.Query query)
 		{
 			com.db4o.@internal.events.EventPlatform.TriggerQueryEvent(_queryFinished, query);
@@ -90,6 +92,13 @@ namespace com.db4o.@internal.events
 		public virtual void ObjectOnDeactivate(object obj)
 		{
 			com.db4o.@internal.events.EventPlatform.TriggerObjectEvent(_deactivated, obj);
+		}
+
+		public virtual void CommitOnStarted(com.db4o.ext.ObjectInfoCollection added, com.db4o.ext.ObjectInfoCollection
+			 deleted, com.db4o.ext.ObjectInfoCollection updated)
+		{
+			com.db4o.@internal.events.EventPlatform.TriggerCommitEvent(_committing, added, deleted
+				, updated);
 		}
 
 		public virtual event com.db4o.events.QueryEventHandler QueryFinished
@@ -258,6 +267,25 @@ namespace com.db4o.@internal.events
 				_deactivated = (com.db4o.events.ObjectEventHandler)System.Delegate.Remove(_deactivated
 					, value);
 			}
+		}
+
+		public virtual event com.db4o.events.CommitEventHandler Committing
+		{
+			add
+			{
+				_committing = (com.db4o.events.CommitEventHandler)System.Delegate.Combine(_committing
+					, value);
+			}
+			remove
+			{
+				_committing = (com.db4o.events.CommitEventHandler)System.Delegate.Remove(_committing
+					, value);
+			}
+		}
+
+		public virtual bool CaresAboutCommit()
+		{
+			return com.db4o.@internal.events.EventPlatform.HasListeners(_committing);
 		}
 	}
 }

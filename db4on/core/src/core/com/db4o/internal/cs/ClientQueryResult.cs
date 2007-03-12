@@ -14,7 +14,8 @@ namespace com.db4o.@internal.cs
 
 		public override System.Collections.IEnumerator GetEnumerator()
 		{
-			return new com.db4o.@internal.cs.ClientQueryResultIterator(this);
+			return com.db4o.@internal.cs.ClientServerPlatform.CreateClientQueryResultIterator
+				(this);
 		}
 	}
 }

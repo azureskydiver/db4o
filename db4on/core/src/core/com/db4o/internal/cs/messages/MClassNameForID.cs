@@ -10,16 +10,10 @@ namespace com.db4o.@internal.cs.messages
 			string name = string.Empty;
 			lock (StreamLock())
 			{
-				try
+				com.db4o.@internal.ClassMetadata yapClass = Stream().GetYapClass(id);
+				if (yapClass != null)
 				{
-					com.db4o.@internal.ClassMetadata yapClass = Stream().GetYapClass(id);
-					if (yapClass != null)
-					{
-						name = yapClass.GetName();
-					}
-				}
-				catch
-				{
+					name = yapClass.GetName();
 				}
 			}
 			serverThread.Write(com.db4o.@internal.cs.messages.Msg.CLASS_NAME_FOR_ID.GetWriterForString

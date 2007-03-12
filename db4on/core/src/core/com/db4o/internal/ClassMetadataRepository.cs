@@ -343,12 +343,18 @@ namespace com.db4o.@internal
 		{
 			i_yapClassCreationDepth++;
 			systemTrans.Stream().ShowInternalClasses(true);
-			System.Collections.IEnumerator i = i_classes.GetEnumerator();
-			while (i.MoveNext())
+			try
 			{
-				((com.db4o.@internal.ClassMetadata)i.Current).InitOnUp(systemTrans);
+				System.Collections.IEnumerator i = i_classes.GetEnumerator();
+				while (i.MoveNext())
+				{
+					((com.db4o.@internal.ClassMetadata)i.Current).InitOnUp(systemTrans);
+				}
 			}
-			systemTrans.Stream().ShowInternalClasses(false);
+			finally
+			{
+				systemTrans.Stream().ShowInternalClasses(false);
+			}
 			i_yapClassCreationDepth--;
 			InitYapClassesOnUp();
 		}
@@ -440,7 +446,10 @@ namespace com.db4o.@internal
 				i_classes.Add(yapClass);
 				i_yapClassByID.Put(ids[i], yapClass);
 				byte[] name = yapClass.ReadName1(a_trans, yapWriters[i]);
-				i_yapClassByBytes.Put(name, yapClass);
+				if (name != null)
+				{
+					i_yapClassByBytes.Put(name, yapClass);
+				}
 			}
 			ApplyReadAs();
 		}
@@ -453,12 +462,12 @@ namespace com.db4o.@internal
 		private void ApplyReadAs()
 		{
 			com.db4o.foundation.Hashtable4 readAs = Stream().ConfigImpl().ReadAs();
-			readAs.ForEachKey(new _AnonymousInnerClass383(this, readAs));
+			readAs.ForEachKey(new _AnonymousInnerClass388(this, readAs));
 		}
 
-		private sealed class _AnonymousInnerClass383 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass388 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass383(ClassMetadataRepository _enclosing, com.db4o.foundation.Hashtable4
+			public _AnonymousInnerClass388(ClassMetadataRepository _enclosing, com.db4o.foundation.Hashtable4
 				 readAs)
 			{
 				this._enclosing = _enclosing;

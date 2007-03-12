@@ -2,10 +2,6 @@ namespace com.db4o.@internal.callbacks
 {
 	public interface Callbacks
 	{
-		void OnQueryStarted(com.db4o.query.Query query);
-
-		void OnQueryFinished(com.db4o.query.Query query);
-
 		bool ObjectCanNew(object obj);
 
 		bool ObjectCanActivate(object obj);
@@ -25,5 +21,14 @@ namespace com.db4o.@internal.callbacks
 		void ObjectOnDelete(object obj);
 
 		void ObjectOnDeactivate(object obj);
+
+		void OnQueryStarted(com.db4o.query.Query query);
+
+		void OnQueryFinished(com.db4o.query.Query query);
+
+		void CommitOnStarted(com.db4o.ext.ObjectInfoCollection added, com.db4o.ext.ObjectInfoCollection
+			 deleted, com.db4o.ext.ObjectInfoCollection updated);
+
+		bool CaresAboutCommit();
 	}
 }

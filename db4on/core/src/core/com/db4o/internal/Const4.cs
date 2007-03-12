@@ -136,6 +136,8 @@ namespace com.db4o.@internal
 
 		public const int CLIENT_SOCKET_TIMEOUT = 300000;
 
+		public const int CLIENT_EMBEDDED_TIMEOUT = 3000;
+
 		public const int CONNECTION_TIMEOUT = com.db4o.Debug.longTimeOuts ? 1000000 : 180000;
 
 		public const int MAXIMUM_BLOCK_SIZE = 70000000;
@@ -186,16 +188,6 @@ namespace com.db4o.@internal
 
 		public const int READING = 8;
 
-		public const int UNCHECKED = 0;
-
-		public const int NO = -1;
-
-		public const int YES = 1;
-
-		public const int DEFAULT = 0;
-
-		public const int UNKNOWN = 0;
-
 		public const int OLD = -1;
 
 		public const int NEW = 1;
@@ -228,8 +220,8 @@ namespace com.db4o.@internal
 			return null;
 		}
 
-		public static readonly j4o.lang.Class[] ESSENTIAL_CLASSES = { CLASS_STATICFIELD, 
-			CLASS_STATICCLASS };
+		public static readonly j4o.lang.Class[] ESSENTIAL_CLASSES = new j4o.lang.Class[] 
+			{ CLASS_STATICFIELD, CLASS_STATICCLASS };
 
 		public static readonly string VIRTUAL_FIELD_PREFIX = "v4o";
 

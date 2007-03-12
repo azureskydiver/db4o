@@ -23,7 +23,7 @@ namespace com.db4o.@internal.cs
 
 		public override object Get(int index)
 		{
-			lock (StreamLock())
+			lock (Lock())
 			{
 				return ActivatedObject(GetId(index));
 			}
@@ -54,7 +54,8 @@ namespace com.db4o.@internal.cs
 
 		public override System.Collections.IEnumerator GetEnumerator()
 		{
-			return new com.db4o.@internal.cs.ClientQueryResultIterator(this);
+			return com.db4o.@internal.cs.ClientServerPlatform.CreateClientQueryResultIterator
+				(this);
 		}
 
 		public override int Size()

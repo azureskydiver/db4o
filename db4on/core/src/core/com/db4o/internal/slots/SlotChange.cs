@@ -15,6 +15,10 @@ namespace com.db4o.@internal.slots
 
 		private const int SET_POINTER_BIT = 3;
 
+		private const int FREE_POINTER_ON_COMMIT_BIT = 4;
+
+		private const int FREE_POINTER_ON_ROLLBACK_BIT = 5;
+
 		public SlotChange(int id) : base(id)
 		{
 		}
@@ -37,6 +41,16 @@ namespace com.db4o.@internal.slots
 		private void DoFreeOnRollback()
 		{
 			SetBit(FREE_ON_ROLLBACK_BIT);
+		}
+
+		private void DoFreePointerOnCommit()
+		{
+			SetBit(FREE_POINTER_ON_COMMIT_BIT);
+		}
+
+		private void DoFreePointerOnRollback()
+		{
+			SetBit(FREE_POINTER_ON_ROLLBACK_BIT);
 		}
 
 		private void DoSetPointer()
@@ -83,6 +97,16 @@ namespace com.db4o.@internal.slots
 			FreeOnRollback(address, length);
 		}
 
+		public virtual void FreePointerOnCommit()
+		{
+			DoFreePointerOnCommit();
+		}
+
+		public virtual void FreePointerOnRollback()
+		{
+			DoFreePointerOnRollback();
+		}
+
 		private bool IsBitSet(int bitPos)
 		{
 			return (_action | (1 << bitPos)) == _action;
@@ -91,6 +115,11 @@ namespace com.db4o.@internal.slots
 		public virtual bool IsDeleted()
 		{
 			return IsSetPointer() && (_newSlot._address == 0);
+		}
+
+		public virtual bool IsNew()
+		{
+			return IsFreePointerOnRollback();
 		}
 
 		private bool IsFreeOnCommit()
@@ -106,6 +135,16 @@ namespace com.db4o.@internal.slots
 		public bool IsSetPointer()
 		{
 			return IsBitSet(SET_POINTER_BIT);
+		}
+
+		/// <summary>FIXME:	Check where pointers should be freed on commit.</summary>
+		/// <remarks>
+		/// FIXME:	Check where pointers should be freed on commit.
+		/// This should be triggered in this class.
+		/// </remarks>
+		public bool IsFreePointerOnRollback()
+		{
+			return IsBitSet(FREE_POINTER_ON_ROLLBACK_BIT);
 		}
 
 		public virtual com.db4o.@internal.slots.Slot NewSlot()
@@ -141,6 +180,10 @@ namespace com.db4o.@internal.slots
 			if (IsFreeOnRollback())
 			{
 				yapFile.Free(_newSlot);
+			}
+			if (IsFreePointerOnRollback())
+			{
+				yapFile.Free(_key, com.db4o.@internal.Const4.POINTER_LENGTH);
 			}
 		}
 

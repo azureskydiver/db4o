@@ -90,8 +90,17 @@ namespace com.db4o.defragment
 			{
 				return;
 			}
-			int pointerAddress = context.AllocateTargetSlot(_ids.Size() * com.db4o.@internal.Const4
-				.POINTER_LENGTH);
+			int blockSize = context.BlockSize();
+			int blockLength = System.Math.Max(com.db4o.@internal.Const4.POINTER_LENGTH, blockSize
+				);
+			bool overlapping = (com.db4o.@internal.Const4.POINTER_LENGTH % blockSize > 0);
+			int blocksPerPointer = com.db4o.@internal.Const4.POINTER_LENGTH / blockSize;
+			if (overlapping)
+			{
+				blocksPerPointer++;
+			}
+			int batchSize = _ids.Size() * blockLength;
+			int pointerAddress = context.AllocateTargetSlot(batchSize);
 			System.Collections.IEnumerator idIter = new com.db4o.foundation.TreeKeyIterator(_ids
 				);
 			while (idIter.MoveNext())
@@ -104,7 +113,7 @@ namespace com.db4o.defragment
 					isClassID = true;
 				}
 				context.MapIDs(objectID, pointerAddress, isClassID);
-				pointerAddress += com.db4o.@internal.Const4.POINTER_LENGTH;
+				pointerAddress += blocksPerPointer;
 			}
 			_ids = null;
 		}

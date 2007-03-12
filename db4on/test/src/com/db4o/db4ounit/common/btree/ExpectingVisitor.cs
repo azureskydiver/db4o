@@ -31,7 +31,8 @@ namespace com.db4o.db4ounit.common.btree
 
 		public ExpectingVisitor(object[] results, bool obeyOrder, bool ignoreUnexpected)
 		{
-			_expected = results;
+			_expected = new object[results.Length];
+			System.Array.Copy(results, 0, _expected, 0, results.Length);
 			_obeyOrder = obeyOrder;
 			_ignoreUnexpected = ignoreUnexpected;
 		}

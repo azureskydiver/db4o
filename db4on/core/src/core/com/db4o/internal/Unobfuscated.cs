@@ -21,12 +21,6 @@ namespace com.db4o.@internal
 			return writer.GetWrittenBytes();
 		}
 
-		internal static void LogErr(com.db4o.config.Configuration config, int code, string
-			 msg, System.Exception t)
-		{
-			com.db4o.@internal.Messages.LogErr(config, code, msg, t);
-		}
-
 		internal static void PurgeUnsychronized(object a_stream, object a_object)
 		{
 			((com.db4o.@internal.ObjectContainerBase)a_stream).Purge1(a_object);

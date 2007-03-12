@@ -38,6 +38,7 @@ namespace com.db4o.@internal.cs
 			com.db4o.@internal.LocalObjectContainer aStream, com.db4o.foundation.network.Socket4
 			 aSocket, int aThreadID, bool loggedIn)
 		{
+			SetDaemon(true);
 			i_loggedin = loggedIn;
 			i_lastClientMessage = j4o.lang.JavaSystem.CurrentTimeMillis();
 			i_server = aServer;
@@ -61,7 +62,22 @@ namespace com.db4o.@internal.cs
 
 		public void Close()
 		{
-			CloseSubstituteStream();
+			lock (this)
+			{
+				if (IsClosed())
+				{
+					return;
+				}
+				CloseSubstituteStream();
+				SendCloseMessage();
+				RollbackMainTransaction();
+				CloseSocket();
+				RemoveFromServer();
+			}
+		}
+
+		private void SendCloseMessage()
+		{
 			try
 			{
 				if (i_sendCloseMessage)
@@ -72,10 +88,29 @@ namespace com.db4o.@internal.cs
 			catch (System.Exception e)
 			{
 			}
+		}
+
+		private void RollbackMainTransaction()
+		{
 			if (i_mainStream != null && i_mainTrans != null)
 			{
 				i_mainTrans.Close(i_rollbackOnClose);
 			}
+		}
+
+		private void RemoveFromServer()
+		{
+			try
+			{
+				i_server.RemoveThread(this);
+			}
+			catch (System.Exception e)
+			{
+			}
+		}
+
+		private void CloseSocket()
+		{
 			try
 			{
 				i_socket.Close();
@@ -84,13 +119,11 @@ namespace com.db4o.@internal.cs
 			{
 			}
 			i_socket = null;
-			try
-			{
-				i_server.RemoveThread(this);
-			}
-			catch (System.Exception e)
-			{
-			}
+		}
+
+		private bool IsClosed()
+		{
+			return i_socket == null;
 		}
 
 		private void CloseSubstituteStream()
@@ -196,9 +229,7 @@ namespace com.db4o.@internal.cs
 				{
 					string userName = ((com.db4o.@internal.cs.messages.MsgD)message).ReadString();
 					string password = ((com.db4o.@internal.cs.messages.MsgD)message).ReadString();
-					i_mainStream.ShowInternalClasses(true);
 					com.db4o.User found = i_server.GetUser(userName);
-					i_mainStream.ShowInternalClasses(false);
 					if (found != null)
 					{
 						if (found.password.Equals(password))

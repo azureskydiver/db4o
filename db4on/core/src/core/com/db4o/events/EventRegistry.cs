@@ -9,6 +9,9 @@ namespace com.db4o.events
 	public delegate void ObjectEventHandler(object sender, com.db4o.events.ObjectEventArgs
 		 args);
 
+	public delegate void CommitEventHandler(object sender, com.db4o.events.CommitEventArgs
+		 args);
+
 	/// <summary>
 	/// Provides a way to register event handlers for specific
 	/// <see cref="ObjectContainer">ObjectContainer</see>
@@ -112,5 +115,12 @@ namespace com.db4o.events
 		/// </summary>
 		/// <returns></returns>
 		event com.db4o.events.ObjectEventHandler Deactivated;
+
+		/// <summary>
+		/// Receives
+		/// <see cref="com.db4o.events.CommitEventArgs">com.db4o.events.CommitEventArgs</see>
+		/// </summary>
+		/// <returns></returns>
+		event com.db4o.events.CommitEventHandler Committing;
 	}
 }

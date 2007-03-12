@@ -31,11 +31,12 @@ namespace com.db4o.db4ounit.common.soda.classes.typedhierarchy
 
 		public override object[] CreateData()
 		{
-			com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase[] objects = { 
-				new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase(), new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase
-				("str1"), new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase
-				(new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH2()), new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase
-				(new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH2("str2")), new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase
+			com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase[] objects = new 
+				com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase[] { new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase
+				(), new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase("str1"
+				), new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase(new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH2
+				()), new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase(new 
+				com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH2("str2")), new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase
 				(new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH2(new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH3
 				("str3"))), new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase
 				(new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH2(new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH3
@@ -171,6 +172,27 @@ namespace com.db4o.db4ounit.common.soda.classes.typedhierarchy
 			q.Descend("foo1").Constraints().Or(q.Descend("h2").Descend("foo2").Constrain("str2"
 				)).Or(q.Descend("h2").Descend("h3").Descend("foo3").Constrain("str3"));
 			Expect(q, new int[] { 1, 3, 4, 5 });
+		}
+
+		public virtual void TestDeleteAll()
+		{
+			com.db4o.ext.ExtObjectContainer oc = Fixture().Db();
+			com.db4o.ObjectSet os = oc.Get(null);
+			while (os.HasNext())
+			{
+				oc.Delete(os.Next());
+			}
+			Db().Commit();
+			Fixture().Reopen();
+			oc = Fixture().Db();
+			os = oc.Get(null);
+			Db4oUnit.Assert.AreEqual(0, os.Size());
+		}
+
+		public static void Main(string[] arguments)
+		{
+			new com.db4o.db4ounit.common.soda.classes.typedhierarchy.STRTH1TestCase().RunSolo
+				();
 		}
 	}
 }

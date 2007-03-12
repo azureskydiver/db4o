@@ -94,8 +94,8 @@ namespace com.db4o.@internal.fileheader
 		}
 
 		public abstract void WriteFixedPart(com.db4o.@internal.LocalObjectContainer file, 
-			bool shuttingDown, com.db4o.@internal.StatefulBuffer writer, int blockSize, int 
-			freespaceID);
+			bool startFileLockingThread, bool shuttingDown, com.db4o.@internal.StatefulBuffer
+			 writer, int blockSize, int freespaceID);
 
 		public abstract void WriteTransactionPointer(com.db4o.@internal.Transaction systemTransaction
 			, int transactionAddress);
@@ -124,6 +124,35 @@ namespace com.db4o.@internal.fileheader
 			com.db4o.@internal.SystemData systemData = file.SystemData();
 			systemData.ClassCollectionID(reader.ReadInt());
 			systemData.FreespaceID(reader.ReadInt());
+		}
+
+		public static bool LockedByOtherSession(com.db4o.@internal.LocalObjectContainer container
+			, long lastAccessTime)
+		{
+			return container.NeedsLockFileThread() && (lastAccessTime != 0);
+		}
+
+		public static void CheckIfOtherSessionAlive(com.db4o.@internal.LocalObjectContainer
+			 container, int address, int offset, long lastAccessTime)
+		{
+			com.db4o.@internal.StatefulBuffer reader;
+			container.LogMsg(com.db4o.@internal.Messages.FAILED_TO_SHUTDOWN, null);
+			long waitTime = com.db4o.@internal.Const4.LOCK_TIME_INTERVAL * 5;
+			long currentTime = j4o.lang.JavaSystem.CurrentTimeMillis();
+			while (j4o.lang.JavaSystem.CurrentTimeMillis() < currentTime + waitTime)
+			{
+				com.db4o.foundation.Cool.SleepIgnoringInterruption(waitTime);
+			}
+			reader = container.GetWriter(container.GetSystemTransaction(), address, com.db4o.@internal.Const4
+				.LONG_LENGTH * 2);
+			reader.MoveForward(offset);
+			reader.Read();
+			reader.ReadLong();
+			long currentAccessTime = reader.ReadLong();
+			if ((currentAccessTime > lastAccessTime))
+			{
+				throw new com.db4o.ext.DatabaseFileLockedException();
+			}
 		}
 	}
 }

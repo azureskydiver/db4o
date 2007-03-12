@@ -76,18 +76,18 @@ namespace com.db4o.defragment
 			sourceConfig.FlushFileBuffers(false);
 			sourceConfig.ReadOnly(true);
 			_sourceDb = (com.db4o.@internal.LocalObjectContainer)com.db4o.Db4o.OpenFile(sourceConfig
-				, defragConfig.BackupPath()).Ext();
-			_targetDb = FreshYapFile(defragConfig.OrigPath());
+				, defragConfig.TempPath()).Ext();
+			_targetDb = FreshYapFile(defragConfig.OrigPath(), defragConfig.BlockSize());
 			_mapping = defragConfig.Mapping();
 			_mapping.Open();
 		}
 
 		internal static com.db4o.@internal.LocalObjectContainer FreshYapFile(string fileName
-			)
+			, int blockSize)
 		{
 			new j4o.io.File(fileName).Delete();
 			return (com.db4o.@internal.LocalObjectContainer)com.db4o.Db4o.OpenFile(com.db4o.defragment.DefragmentConfig
-				.VanillaDb4oConfig(), fileName).Ext();
+				.VanillaDb4oConfig(blockSize), fileName).Ext();
 		}
 
 		public virtual int MappedID(int oldID, int defaultID)
@@ -207,8 +207,14 @@ namespace com.db4o.defragment
 		{
 			com.db4o.@internal.LocalObjectContainer db = selector.Db(this);
 			db.ShowInternalClasses(true);
-			com.db4o.ext.StoredClass[] classes = db.StoredClasses();
-			return classes;
+			try
+			{
+				return db.StoredClasses();
+			}
+			finally
+			{
+				db.ShowInternalClasses(false);
+			}
 		}
 
 		public virtual com.db4o.@internal.LatinStringIO StringIO()
@@ -377,6 +383,11 @@ namespace com.db4o.defragment
 			int address = reader.ReadInt();
 			int length = reader.ReadInt();
 			return new com.db4o.@internal.slots.Slot(address, length);
+		}
+
+		public virtual int BlockSize()
+		{
+			return _sourceDb.Config().BlockSize();
 		}
 	}
 }

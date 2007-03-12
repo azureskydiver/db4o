@@ -96,12 +96,12 @@ namespace com.db4o.defragment
 
 		public override void Open()
 		{
-			_mappingDb = com.db4o.defragment.DefragContextImpl.FreshYapFile(_fileName);
+			_mappingDb = com.db4o.defragment.DefragContextImpl.FreshYapFile(_fileName, 1);
 			com.db4o.@internal.ix.Indexable4 handler = new com.db4o.@internal.mapping.MappedIDPairHandler
 				(_mappingDb);
 			_idTree = (_treeSpec == null ? new com.db4o.@internal.btree.BTree(Trans(), 0, handler
-				) : new com.db4o.@internal.btree.BTree(Trans(), 0, handler, null, _treeSpec.NodeSize
-				(), _treeSpec.CacheHeight()));
+				) : new com.db4o.@internal.btree.BTree(Trans(), 0, handler, _treeSpec.NodeSize()
+				, _treeSpec.CacheHeight()));
 		}
 
 		public override void Close()

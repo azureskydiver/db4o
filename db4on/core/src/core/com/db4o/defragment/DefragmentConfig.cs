@@ -13,6 +13,8 @@ namespace com.db4o.defragment
 
 		private string _backupPath;
 
+		private string _tempPath;
+
 		private com.db4o.defragment.ContextIDMapping _mapping;
 
 		private com.db4o.config.Configuration _config;
@@ -107,7 +109,7 @@ namespace com.db4o.defragment
 		{
 			if (_config == null)
 			{
-				_config = VanillaDb4oConfig();
+				_config = VanillaDb4oConfig(1);
 			}
 			return _config;
 		}
@@ -128,9 +130,44 @@ namespace com.db4o.defragment
 			return _objectCommitFrequency;
 		}
 
+		/// <param name="objectCommitFrequency">
+		/// The number of processed object (slots) that should trigger an
+		/// intermediate commit of the target file. Default: 0, meaning: never.
+		/// </param>
 		public virtual void ObjectCommitFrequency(int objectCommitFrequency)
 		{
 			_objectCommitFrequency = objectCommitFrequency;
+		}
+
+		/// <summary>
+		/// Instruct the defragment process to upgrade the source file to the current db4o
+		/// version prior to defragmenting it.
+		/// </summary>
+		/// <remarks>
+		/// Instruct the defragment process to upgrade the source file to the current db4o
+		/// version prior to defragmenting it. Use this option if your source file has been created
+		/// with an older db4o version than the one you are using.
+		/// </remarks>
+		/// <param name="tempPath">The location for an intermediate, upgraded version of the source file.
+		/// 	</param>
+		public virtual void UpgradeFile(string tempPath)
+		{
+			_tempPath = tempPath;
+		}
+
+		public virtual bool FileNeedsUpgrade()
+		{
+			return _tempPath != null;
+		}
+
+		public virtual string TempPath()
+		{
+			return (_tempPath != null ? _tempPath : _backupPath);
+		}
+
+		public virtual int BlockSize()
+		{
+			return ((com.db4o.@internal.Config4Impl)Db4oConfig()).BlockSize();
 		}
 
 		private class NullFilter : com.db4o.defragment.StoredClassFilter
@@ -144,10 +181,11 @@ namespace com.db4o.defragment
 		private static readonly com.db4o.defragment.StoredClassFilter NULLFILTER = new com.db4o.defragment.DefragmentConfig.NullFilter
 			();
 
-		public static com.db4o.config.Configuration VanillaDb4oConfig()
+		public static com.db4o.config.Configuration VanillaDb4oConfig(int blockSize)
 		{
 			com.db4o.config.Configuration config = com.db4o.Db4o.NewConfiguration();
 			config.WeakReferences(false);
+			config.BlockSize(blockSize);
 			return config;
 		}
 	}

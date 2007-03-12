@@ -3,6 +3,9 @@ namespace com.db4o.@internal.cs
 	/// <exclude></exclude>
 	internal class ClientQueryResultIterator : System.Collections.IEnumerator
 	{
+		private static readonly com.db4o.@internal.cs.PrefetchingStrategy _prefetchingStrategy
+			 = com.db4o.@internal.cs.SingleMessagePrefetchingStrategy.INSTANCE;
+
 		private object[] _prefetchedObjects;
 
 		private int _remainingObjects;
@@ -13,7 +16,7 @@ namespace com.db4o.@internal.cs
 
 		private readonly com.db4o.foundation.IntIterator4 _ids;
 
-		public ClientQueryResultIterator(com.db4o.@internal.query.result.AbstractQueryResult
+		internal ClientQueryResultIterator(com.db4o.@internal.query.result.AbstractQueryResult
 			 client)
 		{
 			_client = client;
@@ -33,7 +36,7 @@ namespace com.db4o.@internal.cs
 
 		private object StreamLock()
 		{
-			return _client.StreamLock();
+			return _client.Lock();
 		}
 
 		public virtual void Reset()
@@ -73,8 +76,8 @@ namespace com.db4o.@internal.cs
 		private void Prefetch()
 		{
 			EnsureObjectCacheAllocated(PrefetchCount());
-			_remainingObjects = Stream().PrefetchObjects(_ids, _prefetchedObjects, PrefetchCount
-				());
+			_remainingObjects = _prefetchingStrategy.PrefetchObjects(Stream(), _ids, _prefetchedObjects
+				, PrefetchCount());
 			_prefetchRight = _remainingObjects;
 		}
 

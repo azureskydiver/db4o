@@ -24,6 +24,11 @@ namespace Db4oUnit.Extensions.Fixtures
 			}
 		}
 
+		public override bool Accept(System.Type clazz)
+		{
+			return !typeof(Db4oUnit.Extensions.Fixtures.OptOutSolo).IsAssignableFrom(clazz);
+		}
+
 		public override com.db4o.ext.ExtObjectContainer Db()
 		{
 			return _db;

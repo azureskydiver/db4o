@@ -16,7 +16,7 @@ namespace Db4oUnit.Extensions.Fixtures
 
 		private readonly j4o.io.File _yap;
 
-		private readonly int _port;
+		protected readonly int _port;
 
 		public AbstractClientServerDb4oFixture(Db4oUnit.Extensions.Fixtures.ConfigurationSource
 			 configSource, string fileName, int port) : base(configSource)
@@ -53,9 +53,41 @@ namespace Db4oUnit.Extensions.Fixtures
 			return _server;
 		}
 
+		/// <summary>
+		/// Does not accept a clazz which is assignable from OptOutCS, or not
+		/// assignable from Db4oTestCase.
+		/// </summary>
+		/// <remarks>
+		/// Does not accept a clazz which is assignable from OptOutCS, or not
+		/// assignable from Db4oTestCase.
+		/// </remarks>
+		/// <returns>
+		/// returns false if the clazz is assignable from OptOutCS, or not
+		/// assignable from Db4oTestCase. Otherwise, returns true.
+		/// </returns>
+		public override bool Accept(System.Type clazz)
+		{
+			if ((typeof(Db4oUnit.Extensions.Fixtures.OptOutCS).IsAssignableFrom(clazz)) || !typeof(Db4oUnit.Extensions.Db4oTestCase)
+				.IsAssignableFrom(clazz))
+			{
+				return false;
+			}
+			return true;
+		}
+
 		public override com.db4o.@internal.LocalObjectContainer FileSession()
 		{
 			return (com.db4o.@internal.LocalObjectContainer)_server.Ext().ObjectContainer();
+		}
+
+		public override void Defragment()
+		{
+			Defragment(FILE);
+		}
+
+		protected virtual com.db4o.ObjectContainer OpenEmbeddedClient()
+		{
+			return _server.OpenClient(Config());
 		}
 	}
 }

@@ -3,8 +3,8 @@ namespace com.db4o.@internal
 	/// <exclude></exclude>
 	public sealed class EventDispatcher
 	{
-		private static readonly string[] events = { "objectCanDelete", "objectOnDelete", 
-			"objectOnActivate", "objectOnDeactivate", "objectOnNew", "objectOnUpdate", "objectCanActivate"
+		private static readonly string[] events = new string[] { "objectCanDelete", "objectOnDelete"
+			, "objectOnActivate", "objectOnDeactivate", "objectOnNew", "objectOnUpdate", "objectCanActivate"
 			, "objectCanDeactivate", "objectCanNew", "objectCanUpdate" };
 
 		internal const int CAN_DELETE = 0;
@@ -89,31 +89,25 @@ namespace com.db4o.@internal
 			}
 			if (count > 0)
 			{
-				com.db4o.reflect.ReflectClass[] parameterClasses = { a_stream.i_handlers.ICLASS_OBJECTCONTAINER
-					 };
+				com.db4o.reflect.ReflectClass[] parameterClasses = new com.db4o.reflect.ReflectClass
+					[] { a_stream.i_handlers.ICLASS_OBJECTCONTAINER };
 				com.db4o.reflect.ReflectMethod[] methods = new com.db4o.reflect.ReflectMethod[COUNT
 					];
 				for (int i = COUNT - 1; i >= 0; i--)
 				{
-					try
+					com.db4o.reflect.ReflectMethod method = classReflector.GetMethod(events[i], parameterClasses
+						);
+					if (null == method)
 					{
-						com.db4o.reflect.ReflectMethod method = classReflector.GetMethod(events[i], parameterClasses
-							);
-						if (null == method)
-						{
-							method = classReflector.GetMethod(ToPascalCase(events[i]), parameterClasses);
-						}
-						if (method != null)
-						{
-							methods[i] = method;
-							if (dispatcher == null)
-							{
-								dispatcher = new com.db4o.@internal.EventDispatcher(methods);
-							}
-						}
+						method = classReflector.GetMethod(ToPascalCase(events[i]), parameterClasses);
 					}
-					catch
+					if (method != null)
 					{
+						methods[i] = method;
+						if (dispatcher == null)
+						{
+							dispatcher = new com.db4o.@internal.EventDispatcher(methods);
+						}
 					}
 				}
 			}

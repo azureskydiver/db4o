@@ -3,11 +3,84 @@ namespace com.db4o.@internal
 	/// <exclude></exclude>
 	public class LocalTransaction : com.db4o.@internal.Transaction
 	{
+		private readonly byte[] _pointerBuffer = new byte[com.db4o.@internal.Const4.POINTER_LENGTH
+			];
+
+		private int i_address;
+
 		private com.db4o.foundation.Tree _slotChanges;
+
+		private com.db4o.foundation.Tree _writtenUpdateDeletedMembers;
 
 		public LocalTransaction(com.db4o.@internal.ObjectContainerBase a_stream, com.db4o.@internal.Transaction
 			 a_parent) : base(a_stream, a_parent)
 		{
+		}
+
+		public override void Commit()
+		{
+			lock (Stream().i_lock)
+			{
+				if (!IsSystemTransaction())
+				{
+					TriggerCommitOnStarted();
+				}
+				i_file.FreeSpaceBeginCommit();
+				CommitExceptForFreespace();
+				i_file.FreeSpaceEndCommit();
+			}
+		}
+
+		private void CommitExceptForFreespace()
+		{
+			Commit2Listeners();
+			Commit3Stream();
+			Commit4FieldIndexes();
+			CommitParticipants();
+			Stream().WriteDirty();
+			Commit6WriteChanges();
+			FreeOnCommit();
+			Commit7ClearAll();
+		}
+
+		private void Commit2Listeners()
+		{
+			CommitParentListeners();
+			CommitTransactionListeners();
+		}
+
+		private void CommitParentListeners()
+		{
+			if (i_parentTransaction != null)
+			{
+				ParentLocalTransaction().Commit2Listeners();
+			}
+		}
+
+		private void Commit3Stream()
+		{
+			Stream().CheckNeededUpdates();
+			Stream().WriteDirty();
+			Stream().ClassCollection().Write(Stream().GetSystemTransaction());
+		}
+
+		private com.db4o.@internal.LocalTransaction ParentLocalTransaction()
+		{
+			return (com.db4o.@internal.LocalTransaction)i_parentTransaction;
+		}
+
+		private void Commit7ClearAll()
+		{
+			Commit7ParentClearAll();
+			ClearAll();
+		}
+
+		private void Commit7ParentClearAll()
+		{
+			if (i_parentTransaction != null)
+			{
+				ParentLocalTransaction().Commit7ClearAll();
+			}
 		}
 
 		protected override void ClearAll()
@@ -20,13 +93,13 @@ namespace com.db4o.@internal
 		{
 			if (_slotChanges != null)
 			{
-				_slotChanges.Traverse(new _AnonymousInnerClass29(this));
+				_slotChanges.Traverse(new _AnonymousInnerClass104(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass29 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass104 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass29(LocalTransaction _enclosing)
+			public _AnonymousInnerClass104(LocalTransaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -44,7 +117,7 @@ namespace com.db4o.@internal
 			return SlotChangeIsFlaggedDeleted(id);
 		}
 
-		protected override void Commit6WriteChanges()
+		protected virtual void Commit6WriteChanges()
 		{
 			CheckSynchronization();
 			int slotSetPointerCount = CountSlotChanges();
@@ -78,22 +151,22 @@ namespace com.db4o.@internal
 			bool ret = false;
 			if (i_parentTransaction != null)
 			{
-				if (ParentFileTransaction().WriteSlots())
+				if (ParentLocalTransaction().WriteSlots())
 				{
 					ret = true;
 				}
 			}
 			if (_slotChanges != null)
 			{
-				_slotChanges.Traverse(new _AnonymousInnerClass85(this));
+				_slotChanges.Traverse(new _AnonymousInnerClass160(this));
 				ret = true;
 			}
 			return ret;
 		}
 
-		private sealed class _AnonymousInnerClass85 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass160 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass85(LocalTransaction _enclosing)
+			public _AnonymousInnerClass160(LocalTransaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -146,7 +219,7 @@ namespace com.db4o.@internal
 			}
 			if (i_parentTransaction != null)
 			{
-				com.db4o.@internal.slots.Slot parentSlot = ParentFileTransaction().GetCurrentSlotOfID
+				com.db4o.@internal.slots.Slot parentSlot = ParentLocalTransaction().GetCurrentSlotOfID
 					(id);
 				if (parentSlot != null)
 				{
@@ -173,7 +246,7 @@ namespace com.db4o.@internal
 			}
 			if (i_parentTransaction != null)
 			{
-				com.db4o.@internal.slots.Slot parentSlot = ParentFileTransaction().GetCommittedSlotOfID
+				com.db4o.@internal.slots.Slot parentSlot = ParentLocalTransaction().GetCommittedSlotOfID
 					(id);
 				if (parentSlot != null)
 				{
@@ -215,7 +288,7 @@ namespace com.db4o.@internal
 			}
 			if (i_parentTransaction != null)
 			{
-				return ParentFileTransaction().SlotChangeIsFlaggedDeleted(id);
+				return ParentLocalTransaction().SlotChangeIsFlaggedDeleted(id);
 			}
 			return false;
 		}
@@ -225,19 +298,19 @@ namespace com.db4o.@internal
 			int count = 0;
 			if (i_parentTransaction != null)
 			{
-				count += ParentFileTransaction().CountSlotChanges();
+				count += ParentLocalTransaction().CountSlotChanges();
 			}
-			int[] slotSetPointerCount = { count };
+			int[] slotSetPointerCount = new int[] { count };
 			if (_slotChanges != null)
 			{
-				_slotChanges.Traverse(new _AnonymousInnerClass222(this, slotSetPointerCount));
+				_slotChanges.Traverse(new _AnonymousInnerClass297(this, slotSetPointerCount));
 			}
 			return slotSetPointerCount[0];
 		}
 
-		private sealed class _AnonymousInnerClass222 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass297 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass222(LocalTransaction _enclosing, int[] slotSetPointerCount
+			public _AnonymousInnerClass297(LocalTransaction _enclosing, int[] slotSetPointerCount
 				)
 			{
 				this._enclosing = _enclosing;
@@ -294,17 +367,17 @@ namespace com.db4o.@internal
 			CheckSynchronization();
 			if (i_parentTransaction != null)
 			{
-				ParentFileTransaction().FreeOnCommit();
+				ParentLocalTransaction().FreeOnCommit();
 			}
 			if (_slotChanges != null)
 			{
-				_slotChanges.Traverse(new _AnonymousInnerClass264(this));
+				_slotChanges.Traverse(new _AnonymousInnerClass339(this));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass264 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass339 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass264(LocalTransaction _enclosing)
+			public _AnonymousInnerClass339(LocalTransaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -322,15 +395,15 @@ namespace com.db4o.@internal
 		{
 			if (i_parentTransaction != null)
 			{
-				ParentFileTransaction().AppendSlotChanges(writer);
+				ParentLocalTransaction().AppendSlotChanges(writer);
 			}
-			com.db4o.foundation.Tree.Traverse(_slotChanges, new _AnonymousInnerClass278(this, 
+			com.db4o.foundation.Tree.Traverse(_slotChanges, new _AnonymousInnerClass353(this, 
 				writer));
 		}
 
-		private sealed class _AnonymousInnerClass278 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass353 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass278(LocalTransaction _enclosing, com.db4o.@internal.Buffer
+			public _AnonymousInnerClass353(LocalTransaction _enclosing, com.db4o.@internal.Buffer
 				 writer)
 			{
 				this._enclosing = _enclosing;
@@ -379,7 +452,7 @@ namespace com.db4o.@internal
 				, a_length));
 		}
 
-		internal override void SlotFreeOnRollback(int a_id, int a_address, int a_length)
+		public override void SlotFreeOnRollback(int a_id, int a_address, int a_length)
 		{
 			CheckSynchronization();
 			ProduceSlotChange(a_id).FreeOnRollback(a_address, a_length);
@@ -399,11 +472,12 @@ namespace com.db4o.@internal
 			change.FreeOnCommit(i_file, slot);
 		}
 
-		internal override void SlotFreeOnRollbackSetPointer(int a_id, int a_address, int 
-			a_length)
+		internal override void ProduceUpdateSlotChange(int a_id, int a_address, int a_length
+			)
 		{
 			CheckSynchronization();
-			ProduceSlotChange(a_id).FreeOnRollbackSetPointer(a_address, a_length);
+			com.db4o.@internal.slots.SlotChange slotChange = ProduceSlotChange(a_id);
+			slotChange.FreeOnRollbackSetPointer(a_address, a_length);
 		}
 
 		public override void SlotFreePointerOnCommit(int a_id)
@@ -425,30 +499,30 @@ namespace com.db4o.@internal
 			SlotFreeOnCommit(a_id, a_id, com.db4o.@internal.Const4.POINTER_LENGTH);
 		}
 
-		private com.db4o.@internal.LocalTransaction ParentFileTransaction()
+		public override void SlotFreePointerOnRollback(int id)
 		{
-			return (com.db4o.@internal.LocalTransaction)i_parentTransaction;
+			ProduceSlotChange(id).FreePointerOnRollback();
 		}
 
 		public override void ProcessDeletes()
 		{
 			if (i_delete == null)
 			{
-				i_writtenUpdateDeletedMembers = null;
+				_writtenUpdateDeletedMembers = null;
 				return;
 			}
 			while (i_delete != null)
 			{
 				com.db4o.foundation.Tree delete = i_delete;
 				i_delete = null;
-				delete.Traverse(new _AnonymousInnerClass392(this));
+				delete.Traverse(new _AnonymousInnerClass477(this));
 			}
-			i_writtenUpdateDeletedMembers = null;
+			_writtenUpdateDeletedMembers = null;
 		}
 
-		private sealed class _AnonymousInnerClass392 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass477 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass392(LocalTransaction _enclosing)
+			public _AnonymousInnerClass477(LocalTransaction _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -467,9 +541,9 @@ namespace com.db4o.@internal
 				}
 				if (obj == null)
 				{
-					object[] arr = this._enclosing.Stream().GetObjectAndYapObjectByID(this._enclosing
-						, info._key);
-					info._reference = (com.db4o.@internal.ObjectReference)arr[1];
+					com.db4o.@internal.HardObjectReference hardRef = this._enclosing.Stream().GetHardObjectReferenceById
+						(this._enclosing, info._key);
+					info._reference = hardRef._reference;
 					info._reference.FlagForDelete(this._enclosing.Stream().TopLevelCallId());
 				}
 				this._enclosing.Stream().Delete3(this._enclosing, info._reference, info._cascade, 
@@ -484,7 +558,7 @@ namespace com.db4o.@internal
 		{
 			CheckSynchronization();
 			com.db4o.@internal.TreeInt newNode = new com.db4o.@internal.TreeInt(id);
-			i_writtenUpdateDeletedMembers = com.db4o.foundation.Tree.Add(i_writtenUpdateDeletedMembers
+			_writtenUpdateDeletedMembers = com.db4o.foundation.Tree.Add(_writtenUpdateDeletedMembers
 				, newNode);
 			if (!newNode.WasAddedToTree())
 			{
@@ -520,6 +594,118 @@ namespace com.db4o.@internal
 				, true);
 			SlotFreeOnCommit(id, new com.db4o.@internal.slots.Slot(objectBytes.GetAddress(), 
 				objectBytes.GetLength()));
+		}
+
+		private void TriggerCommitOnStarted()
+		{
+			com.db4o.@internal.callbacks.Callbacks callbacks = Stream().Callbacks();
+			if (!callbacks.CaresAboutCommit())
+			{
+				return;
+			}
+			com.db4o.ext.ObjectInfoCollection[] collections = PartitionSlotChangesInAddedDeletedUpdated
+				();
+			callbacks.CommitOnStarted(collections[0], collections[1], collections[2]);
+		}
+
+		private sealed class ObjectInfoCollectionImpl : com.db4o.ext.ObjectInfoCollection
+		{
+			public static readonly com.db4o.ext.ObjectInfoCollection EMPTY = new com.db4o.@internal.LocalTransaction.ObjectInfoCollectionImpl
+				(com.db4o.foundation.Iterators.EMPTY_ITERABLE);
+
+			private readonly System.Collections.IEnumerable _collection;
+
+			public ObjectInfoCollectionImpl(System.Collections.IEnumerable collection)
+			{
+				_collection = collection;
+			}
+
+			public System.Collections.IEnumerator GetEnumerator()
+			{
+				return _collection.GetEnumerator();
+			}
+		}
+
+		private com.db4o.ext.ObjectInfoCollection[] PartitionSlotChangesInAddedDeletedUpdated
+			()
+		{
+			if (null == _slotChanges)
+			{
+				return new com.db4o.ext.ObjectInfoCollection[] { com.db4o.@internal.LocalTransaction.ObjectInfoCollectionImpl
+					.EMPTY, com.db4o.@internal.LocalTransaction.ObjectInfoCollectionImpl.EMPTY, com.db4o.@internal.LocalTransaction.ObjectInfoCollectionImpl
+					.EMPTY };
+			}
+			com.db4o.foundation.Collection4 added = new com.db4o.foundation.Collection4();
+			com.db4o.foundation.Collection4 deleted = new com.db4o.foundation.Collection4();
+			com.db4o.foundation.Collection4 updated = new com.db4o.foundation.Collection4();
+			_slotChanges.Traverse(new _AnonymousInnerClass588(this, deleted, added, updated));
+			return new com.db4o.ext.ObjectInfoCollection[] { new com.db4o.@internal.LocalTransaction.ObjectInfoCollectionImpl
+				(added), new com.db4o.@internal.LocalTransaction.ObjectInfoCollectionImpl(deleted
+				), new com.db4o.@internal.LocalTransaction.ObjectInfoCollectionImpl(updated) };
+		}
+
+		private sealed class _AnonymousInnerClass588 : com.db4o.foundation.Visitor4
+		{
+			public _AnonymousInnerClass588(LocalTransaction _enclosing, com.db4o.foundation.Collection4
+				 deleted, com.db4o.foundation.Collection4 added, com.db4o.foundation.Collection4
+				 updated)
+			{
+				this._enclosing = _enclosing;
+				this.deleted = deleted;
+				this.added = added;
+				this.updated = updated;
+			}
+
+			public void Visit(object obj)
+			{
+				com.db4o.@internal.slots.SlotChange slotChange = ((com.db4o.@internal.slots.SlotChange
+					)obj);
+				com.db4o.@internal.LazyObjectReference lazyRef = new com.db4o.@internal.LazyObjectReference
+					(this._enclosing.Stream(), slotChange._key);
+				if (slotChange.IsDeleted())
+				{
+					deleted.Add(lazyRef);
+				}
+				else
+				{
+					if (slotChange.IsNew())
+					{
+						added.Add(lazyRef);
+					}
+					else
+					{
+						updated.Add(lazyRef);
+					}
+				}
+			}
+
+			private readonly LocalTransaction _enclosing;
+
+			private readonly com.db4o.foundation.Collection4 deleted;
+
+			private readonly com.db4o.foundation.Collection4 added;
+
+			private readonly com.db4o.foundation.Collection4 updated;
+		}
+
+		private void SetAddress(int a_address)
+		{
+			i_address = a_address;
+		}
+
+		public static com.db4o.@internal.Transaction ReadInterruptedTransaction(com.db4o.@internal.LocalObjectContainer
+			 file, com.db4o.@internal.Buffer reader)
+		{
+			int transactionID1 = reader.ReadInt();
+			int transactionID2 = reader.ReadInt();
+			if ((transactionID1 > 0) && (transactionID1 == transactionID2))
+			{
+				com.db4o.@internal.LocalTransaction transaction = (com.db4o.@internal.LocalTransaction
+					)file.NewTransaction(null);
+				transaction.SetAddress(transactionID1);
+				return transaction;
+			}
+			return null;
 		}
 	}
 }

@@ -12,14 +12,14 @@ namespace com.db4o.@internal.query.processor
 			{
 				com.db4o.@internal.query.processor.Order other = (com.db4o.@internal.query.processor.Order
 					)obj;
-				int res = other.i_major - i_major;
+				int res = i_major - other.i_major;
 				if (res != 0)
 				{
 					return res;
 				}
-				return other.i_minor - i_minor;
+				return i_minor - other.i_minor;
 			}
-			return 1;
+			return -1;
 		}
 
 		public virtual void HintOrder(int a_order, bool a_major)
@@ -37,6 +37,17 @@ namespace com.db4o.@internal.query.processor
 		public virtual bool HasDuplicates()
 		{
 			return true;
+		}
+
+		public override string ToString()
+		{
+			return "Order " + i_major + " " + i_minor;
+		}
+
+		public virtual void SwapMajorToMinor()
+		{
+			i_minor = i_major;
+			i_major = 0;
 		}
 	}
 }

@@ -7,11 +7,13 @@ namespace com.db4o.@internal.query.result
 
 		com.db4o.foundation.IntIterator4 IterateIDs();
 
-		int Size();
+		object Lock();
 
 		com.db4o.ext.ExtObjectContainer ObjectContainer();
 
 		int IndexOf(int id);
+
+		int Size();
 
 		void Sort(com.db4o.query.QueryComparator cmp);
 	}

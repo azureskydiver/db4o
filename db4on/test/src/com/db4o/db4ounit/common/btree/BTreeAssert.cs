@@ -60,12 +60,12 @@ namespace com.db4o.db4ounit.common.btree
 		public static void DumpKeys(com.db4o.@internal.Transaction trans, com.db4o.@internal.btree.BTree
 			 tree)
 		{
-			tree.TraverseKeys(trans, new _AnonymousInnerClass51());
+			tree.TraverseKeys(trans, new _AnonymousInnerClass50());
 		}
 
-		private sealed class _AnonymousInnerClass51 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass50 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass51()
+			public _AnonymousInnerClass50()
 			{
 			}
 
@@ -107,15 +107,15 @@ namespace com.db4o.db4ounit.common.btree
 			 stream, int id, int nodeSize)
 		{
 			return new com.db4o.@internal.btree.BTree(stream.GetSystemTransaction(), id, new 
-				com.db4o.@internal.handlers.IntHandler(stream), null, nodeSize, stream.ConfigImpl
-				().BTreeCacheHeight());
+				com.db4o.@internal.handlers.IntHandler(stream), nodeSize, stream.ConfigImpl().BTreeCacheHeight
+				());
 		}
 
 		public static com.db4o.@internal.btree.BTree CreateIntKeyBTree(com.db4o.@internal.ObjectContainerBase
 			 stream, int id, int treeCacheHeight, int nodeSize)
 		{
 			return new com.db4o.@internal.btree.BTree(stream.GetSystemTransaction(), id, new 
-				com.db4o.@internal.handlers.IntHandler(stream), null, nodeSize, treeCacheHeight);
+				com.db4o.@internal.handlers.IntHandler(stream), nodeSize, treeCacheHeight);
 		}
 
 		public static void AssertSingleElement(com.db4o.@internal.Transaction trans, com.db4o.@internal.btree.BTree

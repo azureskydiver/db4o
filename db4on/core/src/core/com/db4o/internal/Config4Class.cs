@@ -7,7 +7,7 @@ namespace com.db4o.@internal
 		private readonly com.db4o.@internal.Config4Impl _configImpl;
 
 		private static readonly com.db4o.foundation.KeySpec CALL_CONSTRUCTOR = new com.db4o.foundation.KeySpec
-			(0);
+			(com.db4o.foundation.TernaryBool.UNSPECIFIED);
 
 		private static readonly com.db4o.foundation.KeySpec CLASS_INDEXED = new com.db4o.foundation.KeySpec
 			(true);
@@ -16,10 +16,10 @@ namespace com.db4o.@internal
 			(null);
 
 		private static readonly com.db4o.foundation.KeySpec GENERATE_UUIDS = new com.db4o.foundation.KeySpec
-			(0);
+			(false);
 
 		private static readonly com.db4o.foundation.KeySpec GENERATE_VERSION_NUMBERS = new 
-			com.db4o.foundation.KeySpec(0);
+			com.db4o.foundation.KeySpec(false);
 
 		/// <summary>
 		/// We are running into cyclic dependancies on reading the PBootRecord
@@ -73,12 +73,12 @@ namespace com.db4o.@internal
 
 		internal virtual int AdjustActivationDepth(int depth)
 		{
-			int cascadeOnActivate = CascadeOnActivate();
-			if (cascadeOnActivate == com.db4o.@internal.Const4.YES && depth < 2)
+			com.db4o.foundation.TernaryBool cascadeOnActivate = CascadeOnActivate();
+			if (cascadeOnActivate.DefiniteYes() && depth < 2)
 			{
 				depth = 2;
 			}
-			if (cascadeOnActivate == com.db4o.@internal.Const4.NO && depth > 1)
+			if (cascadeOnActivate.DefiniteNo() && depth > 1)
 			{
 				depth = 1;
 			}
@@ -142,12 +142,12 @@ namespace com.db4o.@internal
 
 		public virtual void GenerateUUIDs(bool setting)
 		{
-			PutThreeValued(GENERATE_UUIDS, setting);
+			_config.Put(GENERATE_UUIDS, setting);
 		}
 
 		public virtual void GenerateVersionNumbers(bool setting)
 		{
-			PutThreeValued(GENERATE_VERSION_NUMBERS, setting);
+			_config.Put(GENERATE_VERSION_NUMBERS, setting);
 		}
 
 		public virtual com.db4o.config.ObjectTranslator GetTranslator()
@@ -165,16 +165,35 @@ namespace com.db4o.@internal
 			}
 			try
 			{
-				translator = (com.db4o.config.ObjectTranslator)Config().Reflector().ForName(translatorName
-					).NewInstance();
+				translator = NewTranslatorFromReflector(translatorName);
 			}
 			catch
 			{
-				com.db4o.@internal.Messages.LogErr(Config(), 48, translatorName, null);
-				TranslateOnDemand(null);
+				try
+				{
+					translator = NewTranslatorFromPlatform(translatorName);
+				}
+				catch (System.Exception e)
+				{
+					throw new com.db4o.ext.Db4oException(e);
+				}
 			}
 			Translate(translator);
 			return translator;
+		}
+
+		private com.db4o.config.ObjectTranslator NewTranslatorFromPlatform(string translatorName
+			)
+		{
+			return (com.db4o.config.ObjectTranslator)com.db4o.@internal.ReflectPlatform.ForName
+				(translatorName).NewInstance();
+		}
+
+		private com.db4o.config.ObjectTranslator NewTranslatorFromReflector(string translatorName
+			)
+		{
+			return (com.db4o.config.ObjectTranslator)Config().Reflector().ForName(translatorName
+				).NewInstance();
 		}
 
 		public virtual void Indexed(bool flag)
@@ -229,13 +248,13 @@ namespace com.db4o.@internal
 			return _config.GetAsInt(MINIMUM_ACTIVATION_DEPTH);
 		}
 
-		public virtual int CallConstructor()
+		public virtual com.db4o.foundation.TernaryBool CallConstructor()
 		{
 			if (_config.Get(TRANSLATOR) != null)
 			{
-				return com.db4o.@internal.Const4.YES;
+				return com.db4o.foundation.TernaryBool.YES;
 			}
-			return _config.GetAsInt(CALL_CONSTRUCTOR);
+			return _config.GetAsTernaryBool(CALL_CONSTRUCTOR);
 		}
 
 		private com.db4o.foundation.Hashtable4 ExceptionalFieldsOrNull()
@@ -335,14 +354,14 @@ namespace com.db4o.@internal
 			return _configImpl;
 		}
 
-		internal virtual int GenerateUUIDs()
+		internal virtual bool GenerateUUIDs()
 		{
-			return _config.GetAsInt(GENERATE_UUIDS);
+			return _config.GetAsBoolean(GENERATE_UUIDS);
 		}
 
-		internal virtual int GenerateVersionNumbers()
+		internal virtual bool GenerateVersionNumbers()
 		{
-			return _config.GetAsInt(GENERATE_VERSION_NUMBERS);
+			return _config.GetAsBoolean(GENERATE_VERSION_NUMBERS);
 		}
 
 		internal virtual void MaintainMetaClass(bool flag)

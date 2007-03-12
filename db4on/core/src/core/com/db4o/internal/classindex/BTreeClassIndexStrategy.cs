@@ -78,7 +78,7 @@ namespace com.db4o.@internal.classindex
 			public void Visit(object obj)
 			{
 				int id = ((int)obj);
-				com.db4o.@internal.ObjectReference yo = stream.GetYapObject(id);
+				com.db4o.@internal.ObjectReference yo = stream.ReferenceForId(id);
 				if (yo != null)
 				{
 					stream.RemoveReference(yo);

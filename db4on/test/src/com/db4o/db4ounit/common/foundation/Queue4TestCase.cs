@@ -5,7 +5,7 @@ namespace com.db4o.db4ounit.common.foundation
 		public virtual void TestIterator()
 		{
 			com.db4o.foundation.Queue4 queue = new com.db4o.foundation.Queue4();
-			string[] data = { "a", "b", "c", "d" };
+			string[] data = new string[] { "a", "b", "c", "d" };
 			for (int idx = 0; idx < data.Length; idx++)
 			{
 				AssertIterator(queue, data, idx);

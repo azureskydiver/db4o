@@ -1,13 +1,13 @@
 /* Copyright (C) 2006   db4objects Inc.   http://www.db4o.com */
 
-using com.db4o.query;
 using com.db4o.events;
+using com.db4o.ext;
 
 namespace com.db4o.@internal.events
 {
 	internal class EventPlatform
 	{
-		public static void TriggerQueryEvent(QueryEventHandler e, Query q)
+		public static void TriggerQueryEvent(QueryEventHandler e, com.db4o.query.Query q)
 		{
 			if (null == e) return;
 			e(q, new QueryEventArgs(q));
@@ -25,6 +25,17 @@ namespace com.db4o.@internal.events
 		{
 			if (null == e) return;
 			e(o, new ObjectEventArgs(o));
+		}
+		
+		public static void TriggerCommitEvent(CommitEventHandler e, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated)
+		{
+			if (null == e) return;
+			e(null, new CommitEventArgs(added, deleted, updated));
+		}
+		
+		public static bool HasListeners(System.Delegate e)
+		{
+			return null != e;
 		}
 	}
 }

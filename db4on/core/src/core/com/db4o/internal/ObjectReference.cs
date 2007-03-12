@@ -101,11 +101,12 @@ namespace com.db4o.@internal
 			}
 		}
 
-		internal void AddToIDTree(com.db4o.@internal.ObjectContainerBase a_stream)
+		internal void AddExistingReferenceToIdTree(com.db4o.@internal.ObjectContainerBase
+			 a_stream)
 		{
 			if (!(_class is com.db4o.@internal.PrimitiveFieldHandler))
 			{
-				a_stream.IdTreeAdd(this);
+				a_stream.ReferenceSystem().AddExistingReferenceToIdTree(this);
 			}
 		}
 
@@ -166,6 +167,11 @@ namespace com.db4o.@internal
 		public override byte GetIdentifier()
 		{
 			return com.db4o.@internal.Const4.YAPOBJECT;
+		}
+
+		public virtual long GetInternalID()
+		{
+			return GetID();
 		}
 
 		public virtual object GetObject()
@@ -240,6 +246,17 @@ namespace com.db4o.@internal
 			return _virtualAttributes;
 		}
 
+		internal object PeekPersisted(com.db4o.@internal.Transaction trans, int depth)
+		{
+			return Read(trans, depth, com.db4o.@internal.Const4.TRANSIENT, false);
+		}
+
+		internal object Read(com.db4o.@internal.Transaction trans, int instantiationDepth
+			, int addToIDTree, bool checkIDTree)
+		{
+			return Read(trans, null, null, instantiationDepth, addToIDTree, checkIDTree);
+		}
+
 		internal object Read(com.db4o.@internal.Transaction ta, com.db4o.@internal.StatefulBuffer
 			 a_reader, object a_object, int a_instantiationDepth, int addToIDTree, bool checkIDTree
 			)
@@ -262,7 +279,7 @@ namespace com.db4o.@internal
 					}
 					if (checkIDTree)
 					{
-						object objectInCacheFromClassCreation = stream.ObjectForIDFromCache(GetID());
+						object objectInCacheFromClassCreation = stream.ObjectForIdFromCache(GetID());
 						if (objectInCacheFromClassCreation != null)
 						{
 							return objectInCacheFromClassCreation;
@@ -341,7 +358,9 @@ namespace com.db4o.@internal
 			_object = obj;
 			_class = yapClass;
 			WriteObjectBegin();
-			SetID(trans.Stream().NewUserObject());
+			int id = trans.Stream().NewUserObject();
+			trans.SlotFreePointerOnRollback(id);
+			SetID(id);
 			BeginProcessing();
 			BitTrue(com.db4o.@internal.Const4.CONTINUE);
 		}
@@ -364,6 +383,16 @@ namespace com.db4o.@internal
 		public bool IsFlaggedAsHandled(int callID)
 		{
 			return _lastTopLevelCallId == callID;
+		}
+
+		public bool IsValid()
+		{
+			return IsValidId(GetID()) && GetObject() != null;
+		}
+
+		public static bool IsValidId(int id)
+		{
+			return id > 0;
 		}
 
 		public virtual com.db4o.@internal.VirtualAttributes VirtualAttributes()
@@ -448,21 +477,20 @@ namespace com.db4o.@internal
 		public virtual com.db4o.@internal.ObjectReference Hc_add(com.db4o.@internal.ObjectReference
 			 a_add)
 		{
-			object obj = a_add.GetObject();
-			if (obj != null)
+			if (a_add.GetObject() == null)
 			{
-				a_add.Hc_init(obj);
-				return Hc_add1(a_add);
+				return this;
 			}
-			return this;
+			a_add.Hc_init();
+			return Hc_add1(a_add);
 		}
 
-		public virtual void Hc_init(object obj)
+		public virtual void Hc_init()
 		{
 			hc_preceding = null;
 			hc_subsequent = null;
 			hc_size = 1;
-			hc_code = Hc_getCode(obj);
+			hc_code = Hc_getCode(GetObject());
 		}
 
 		private com.db4o.@internal.ObjectReference Hc_add1(com.db4o.@internal.ObjectReference
@@ -696,11 +724,11 @@ namespace com.db4o.@internal
 			{
 				hc_preceding.Hc_traverse(visitor);
 			}
-			visitor.Visit(this);
 			if (hc_subsequent != null)
 			{
 				hc_subsequent.Hc_traverse(visitor);
 			}
+			visitor.Visit(this);
 		}
 
 		private com.db4o.@internal.ObjectReference Hc_remove()

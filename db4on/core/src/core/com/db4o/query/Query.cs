@@ -115,13 +115,21 @@ namespace com.db4o.query
 		com.db4o.ObjectSet Execute();
 
 		/// <summary>
-		/// adds an ascending ordering criteria to this node of
-		/// the query graph.
+		/// adds an ascending ordering criteria to this node of the
+		/// query graph.
 		/// </summary>
 		/// <remarks>
-		/// adds an ascending ordering criteria to this node of
-		/// the query graph. Multiple ordering criteria will be applied
-		/// in the order they were called.
+		/// adds an ascending ordering criteria to this node of the
+		/// query graph.
+		/// <p>
+		/// If multiple ordering criteria are applied, the chronological
+		/// order of method calls is relevant: criteria created by 'earlier' calls are
+		/// considered more significant, i.e. 'later' criteria only have an effect
+		/// for elements that are considered equal by all 'earlier' criteria.
+		/// <p>
+		/// As an example, consider a type with two int fields, and an instance set
+		/// {(a:1,b:3),(a:2,b:2),(a:1,b:2),(a:2,b:3)}. The call sequence [orderAscending(a),
+		/// orderDescending(b)] will result in [(<b>a:1</b>,b:3),(<b>a:1</b>,b:2),(<b>a:2</b>,b:3),(<b>a:2</b>,b:2)].
 		/// </remarks>
 		/// <returns>
 		/// this
@@ -136,8 +144,12 @@ namespace com.db4o.query
 		/// </summary>
 		/// <remarks>
 		/// adds a descending order criteria to this node of
-		/// the query graph. Multiple ordering criteria will be applied
-		/// in the order they were called.
+		/// the query graph.
+		/// <br /><br />
+		/// For semantics of multiple calls setting ordering criteria, see
+		/// <see cref="com.db4o.query.Query.OrderAscending">com.db4o.query.Query.OrderAscending
+		/// 	</see>
+		/// .
 		/// </remarks>
 		/// <returns>
 		/// this

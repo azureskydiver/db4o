@@ -588,5 +588,10 @@ namespace com.db4o.foundation
 		}
 
 		public abstract object Key();
+
+		public virtual object Root()
+		{
+			return this;
+		}
 	}
 }

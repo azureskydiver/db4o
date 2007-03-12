@@ -363,29 +363,23 @@ namespace com.db4o.@internal
 			{
 				return;
 			}
-			try
+			bool isEnumClass = i_yapClass.IsEnum();
+			if (i_isPrimitive && !i_isArray)
 			{
-				bool isEnumClass = i_yapClass.IsEnum();
-				if (i_isPrimitive && !i_isArray)
-				{
-					if (!isEnumClass)
-					{
-						i_javaField.Set(a_onObject, ((com.db4o.@internal.handlers.PrimitiveHandler)i_handler
-							).PrimitiveNull());
-					}
-					return;
-				}
-				if (a_depth > 0)
-				{
-					CascadeActivation(a_trans, a_onObject, a_depth, false);
-				}
 				if (!isEnumClass)
 				{
-					i_javaField.Set(a_onObject, null);
+					i_javaField.Set(a_onObject, ((com.db4o.@internal.handlers.PrimitiveHandler)i_handler
+						).PrimitiveNull());
 				}
+				return;
 			}
-			catch
+			if (a_depth > 0)
 			{
+				CascadeActivation(a_trans, a_onObject, a_depth, false);
+			}
+			if (!isEnumClass)
+			{
+				i_javaField.Set(a_onObject, null);
 			}
 		}
 
@@ -401,8 +395,8 @@ namespace com.db4o.@internal
 			bool dotnetValueType = false;
 			dotnetValueType = com.db4o.@internal.Platform4.IsValueType(i_handler.ClassReflector
 				());
-			if ((i_config != null && i_config.CascadeOnDelete() == com.db4o.@internal.Const4.
-				YES) || dotnetValueType)
+			if ((i_config != null && i_config.CascadeOnDelete().DefiniteYes()) || dotnetValueType
+				)
 			{
 				int preserveCascade = a_bytes.CascadeDeletes();
 				a_bytes.SetCascadeDeletes(1);
@@ -411,8 +405,7 @@ namespace com.db4o.@internal
 			}
 			else
 			{
-				if (i_config != null && i_config.CascadeOnDelete() == com.db4o.@internal.Const4.NO
-					)
+				if (i_config != null && i_config.CascadeOnDelete().DefiniteNo())
 				{
 					int preserveCascade = a_bytes.CascadeDeletes();
 					a_bytes.SetCascadeDeletes(0);
@@ -474,7 +467,7 @@ namespace com.db4o.@internal
 					lock (stream.i_lock)
 					{
 						stream.CheckClosed();
-						com.db4o.@internal.ObjectReference yo = stream.GetYapObject(a_onObject);
+						com.db4o.@internal.ObjectReference yo = stream.ReferenceForObject(a_onObject);
 						if (yo != null)
 						{
 							int id = yo.GetID();
@@ -533,13 +526,7 @@ namespace com.db4o.@internal
 		{
 			if (Alive())
 			{
-				try
-				{
-					return i_javaField.Get(a_OnObject);
-				}
-				catch
-				{
-				}
+				return i_javaField.Get(a_OnObject);
 			}
 			return null;
 		}
@@ -548,29 +535,20 @@ namespace com.db4o.@internal
 		/// dirty hack for com.db4o.types some of them need to be set automatically
 		/// TODO: Derive from YapField for Db4oTypes
 		/// </summary>
-		public virtual object GetOrCreate(com.db4o.@internal.Transaction a_trans, object 
-			a_OnObject)
+		public virtual object GetOrCreate(com.db4o.@internal.Transaction trans, object onObject
+			)
 		{
-			if (Alive())
+			if (!Alive())
 			{
-				try
-				{
-					object obj = i_javaField.Get(a_OnObject);
-					if (i_db4oType != null)
-					{
-						if (obj == null)
-						{
-							obj = i_db4oType.CreateDefault(a_trans);
-							i_javaField.Set(a_OnObject, obj);
-						}
-					}
-					return obj;
-				}
-				catch (System.Exception t)
-				{
-				}
+				return null;
 			}
-			return null;
+			object obj = i_javaField.Get(onObject);
+			if (i_db4oType != null && obj == null)
+			{
+				obj = i_db4oType.CreateDefault(trans);
+				i_javaField.Set(onObject, obj);
+			}
+			return obj;
 		}
 
 		public virtual com.db4o.@internal.ClassMetadata GetParentYapClass()
@@ -721,7 +699,6 @@ namespace com.db4o.@internal
 		{
 			try
 			{
-				com.db4o.@internal.ObjectContainerBase stream = i_yapClass.GetStream();
 				com.db4o.reflect.ReflectClass claxx = i_yapClass.ClassReflector();
 				if (claxx == null)
 				{
@@ -733,11 +710,16 @@ namespace com.db4o.@internal
 					return null;
 				}
 				i_javaField.SetAccessible();
+				com.db4o.@internal.ObjectContainerBase stream = i_yapClass.GetStream();
 				stream.ShowInternalClasses(true);
-				com.db4o.@internal.TypeHandler4 handler = stream.i_handlers.HandlerForClass(stream
-					, i_javaField.GetFieldType());
-				stream.ShowInternalClasses(false);
-				return handler;
+				try
+				{
+					return stream.i_handlers.HandlerForClass(stream, i_javaField.GetFieldType());
+				}
+				finally
+				{
+					stream.ShowInternalClasses(false);
+				}
 			}
 			catch (System.Exception e)
 			{
@@ -750,9 +732,8 @@ namespace com.db4o.@internal
 			, bool isNew)
 		{
 			object indexEntry = null;
-			if (obj != null && ((config != null && (config.CascadeOnUpdate() == com.db4o.@internal.Const4
-				.YES)) || (i_config != null && (i_config.CascadeOnUpdate() == com.db4o.@internal.Const4
-				.YES))))
+			if (obj != null && ((config != null && (config.CascadeOnUpdate().DefiniteYes())) 
+				|| (i_config != null && (i_config.CascadeOnUpdate().DefiniteYes()))))
 			{
 				int min = 1;
 				if (i_yapClass.IsCollection(obj))
@@ -868,13 +849,11 @@ namespace com.db4o.@internal
 
 		public virtual void Set(object onObject, object obj)
 		{
-			try
+			if (null == i_javaField)
 			{
-				i_javaField.Set(onObject, obj);
+				return;
 			}
-			catch (System.Exception t)
-			{
-			}
+			i_javaField.Set(onObject, obj);
 		}
 
 		internal virtual void SetName(string a_name)
@@ -903,13 +882,13 @@ namespace com.db4o.@internal
 			lock (stream.Lock())
 			{
 				com.db4o.@internal.Transaction trans = stream.GetTransaction();
-				_index.TraverseKeys(trans, new _AnonymousInnerClass801(this, userVisitor, trans));
+				_index.TraverseKeys(trans, new _AnonymousInnerClass784(this, userVisitor, trans));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass801 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass784 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass801(FieldMetadata _enclosing, com.db4o.foundation.Visitor4
+			public _AnonymousInnerClass784(FieldMetadata _enclosing, com.db4o.foundation.Visitor4
 				 userVisitor, com.db4o.@internal.Transaction trans)
 			{
 				this._enclosing = _enclosing;

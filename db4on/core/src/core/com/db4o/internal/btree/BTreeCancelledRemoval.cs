@@ -20,6 +20,11 @@ namespace com.db4o.@internal.btree
 		{
 		}
 
+		public override bool IsCancelledRemoval()
+		{
+			return true;
+		}
+
 		public override string ToString()
 		{
 			return "(u) " + base.ToString();

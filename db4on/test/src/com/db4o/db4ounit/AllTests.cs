@@ -9,9 +9,9 @@ namespace com.db4o.db4ounit
 		{
 			return new System.Type[]
 			{
-				typeof(com.db4o.db4ounit.common.AllTests),
+//				typeof(com.db4o.db4ounit.common.AllTests),
 				typeof(com.db4o.db4ounit.cli1.AllTests),
-				typeof(com.db4o.db4ounit.cli2.AllTests),
+//				typeof(com.db4o.db4ounit.cli2.AllTests),
 			};
 		}
 	}

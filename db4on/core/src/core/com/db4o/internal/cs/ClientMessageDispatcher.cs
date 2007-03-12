@@ -14,13 +14,10 @@ namespace com.db4o.@internal.cs
 			, com.db4o.foundation.network.Socket4 a_socket, com.db4o.foundation.Queue4 messageQueue_
 			, com.db4o.foundation.Lock4 messageQueueLock_)
 		{
-			lock (this)
-			{
-				i_stream = client;
-				messageQueue = messageQueue_;
-				i_socket = a_socket;
-				messageQueueLock = messageQueueLock_;
-			}
+			i_stream = client;
+			messageQueue = messageQueue_;
+			i_socket = a_socket;
+			messageQueueLock = messageQueueLock_;
 		}
 
 		internal virtual bool IsClosed()
@@ -58,7 +55,7 @@ namespace com.db4o.@internal.cs
 					}
 					catch
 					{
-						messageQueueLock.Run(new _AnonymousInnerClass47(this));
+						messageQueueLock.Run(new _AnonymousInnerClass44(this));
 						Close();
 						return;
 					}
@@ -76,7 +73,7 @@ namespace com.db4o.@internal.cs
 						}
 						else
 						{
-							messageQueueLock.Run(new _AnonymousInnerClass77(this, message));
+							messageQueueLock.Run(new _AnonymousInnerClass74(this, message));
 						}
 					}
 				}
@@ -88,9 +85,9 @@ namespace com.db4o.@internal.cs
 			}
 		}
 
-		private sealed class _AnonymousInnerClass47 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass44 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass47(ClientMessageDispatcher _enclosing)
+			public _AnonymousInnerClass44(ClientMessageDispatcher _enclosing)
 			{
 				this._enclosing = _enclosing;
 			}
@@ -106,9 +103,9 @@ namespace com.db4o.@internal.cs
 			private readonly ClientMessageDispatcher _enclosing;
 		}
 
-		private sealed class _AnonymousInnerClass77 : com.db4o.foundation.Closure4
+		private sealed class _AnonymousInnerClass74 : com.db4o.foundation.Closure4
 		{
-			public _AnonymousInnerClass77(ClientMessageDispatcher _enclosing, com.db4o.@internal.cs.messages.Msg
+			public _AnonymousInnerClass74(ClientMessageDispatcher _enclosing, com.db4o.@internal.cs.messages.Msg
 				 message)
 			{
 				this._enclosing = _enclosing;

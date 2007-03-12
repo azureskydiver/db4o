@@ -414,7 +414,19 @@ namespace com.db4o.config
 		/// 1 - configure classes individually<br />
 		/// Integer.MAX_Value - on for all classes
 		/// </param>
+		/// <deprecated>
+		/// Use
+		/// <see cref="com.db4o.config.Configuration.GenerateUUIDs">com.db4o.config.Configuration.GenerateUUIDs
+		/// 	</see>
+		/// instead.
+		/// </deprecated>
 		void GenerateUUIDs(int setting);
+
+		/// <summary>configures db4o to generate UUIDs for stored objects.</summary>
+		/// <remarks>configures db4o to generate UUIDs for stored objects.</remarks>
+		/// <param name="the">scope for UUID generation: disabled, generate for all classes, or configure individually
+		/// 	</param>
+		void GenerateUUIDs(com.db4o.config.ConfigScope setting);
 
 		/// <summary>configures db4o to generate version numbers for stored objects.</summary>
 		/// <remarks>configures db4o to generate version numbers for stored objects.</remarks>
@@ -424,7 +436,19 @@ namespace com.db4o.config
 		/// 1 - configure classes individually<br />
 		/// Integer.MAX_Value - on for all classes
 		/// </param>
+		/// <deprecated>
+		/// Use
+		/// <see cref="com.db4o.config.Configuration.GenerateVersionNumbers">com.db4o.config.Configuration.GenerateVersionNumbers
+		/// 	</see>
+		/// instead.
+		/// </deprecated>
 		void GenerateVersionNumbers(int setting);
+
+		/// <summary>configures db4o to generate version numbers for stored objects.</summary>
+		/// <remarks>configures db4o to generate version numbers for stored objects.</remarks>
+		/// <param name="the">scope for version number generation: disabled, generate for all classes, or configure individually
+		/// 	</param>
+		void GenerateVersionNumbers(com.db4o.config.ConfigScope setting);
 
 		/// <summary>Configures db4o to call intern() on strings upon retrieval.</summary>
 		/// <remarks>Configures db4o to call intern() on strings upon retrieval.</remarks>
@@ -585,10 +609,7 @@ namespace com.db4o.config
 		/// will open files.
 		/// <br /><br />Readonly mode allows to open an unlimited number of reading
 		/// processes on one database file. It is also convenient
-		/// for deploying db4o database files on CD-ROM.<br /><br />If mixed access
-		/// using many readOnly and one readWrite session is used, there is no
-		/// guarantee that the data in the readOnly sessions will be kept up-to-date.
-		/// <br /><br />
+		/// for deploying db4o database files on CD-ROM.<br />
 		/// </remarks>
 		/// <param name="flag">
 		/// <code>true</code> for configuring readOnly mode for subsequent
@@ -771,8 +792,8 @@ namespace com.db4o.config
 		/// <param name="milliseconds">the time in milliseconds</param>
 		void WeakReferenceCollectionInterval(int milliseconds);
 
-		/// <summary>returns the freespace configuration interface.</summary>
-		/// <remarks>returns the freespace configuration interface.</remarks>
+		/// <summary>returns client/server configuration interface.</summary>
+		/// <remarks>returns client/server configuration interface.</remarks>
 		com.db4o.config.ClientServerConfiguration ClientServer();
 	}
 }

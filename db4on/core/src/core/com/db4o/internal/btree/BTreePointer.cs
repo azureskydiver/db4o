@@ -80,11 +80,6 @@ namespace com.db4o.@internal.btree
 			return Node().Key(Transaction(), NodeReader(), Index());
 		}
 
-		public object Value()
-		{
-			return Node().Value(NodeReader(), Index());
-		}
-
 		private com.db4o.@internal.Buffer NodeReader()
 		{
 			return _nodeReader;

@@ -116,6 +116,10 @@ namespace com.db4o.defragment
 				backupFile.Delete();
 			}
 			System.IO.File.Move(config.OrigPath(), config.BackupPath());
+			if (config.FileNeedsUpgrade())
+			{
+				UpgradeFile(config);
+			}
 			com.db4o.defragment.DefragContextImpl context = new com.db4o.defragment.DefragContextImpl
 				(config, listener);
 			int newClassCollectionID = 0;
@@ -143,13 +147,25 @@ namespace com.db4o.defragment
 			}
 			if (targetIdentityID > 0)
 			{
-				SetIdentity(config.OrigPath(), targetIdentityID, targetUuidIndexID);
+				SetIdentity(config.OrigPath(), targetIdentityID, targetUuidIndexID, config.BlockSize
+					());
 			}
 			else
 			{
 				listener.NotifyDefragmentInfo(new com.db4o.defragment.DefragmentInfo("No database identity found in original file."
 					));
 			}
+		}
+
+		private static void UpgradeFile(com.db4o.defragment.DefragmentConfig config)
+		{
+			com.db4o.foundation.io.File4.Copy(config.BackupPath(), config.TempPath());
+			com.db4o.config.Configuration db4oConfig = (com.db4o.config.Configuration)((com.db4o.@internal.Config4Impl
+				)config.Db4oConfig()).DeepClone(null);
+			db4oConfig.AllowVersionUpdates(true);
+			com.db4o.ObjectContainer db = com.db4o.Db4o.OpenFile(db4oConfig, config.TempPath(
+				));
+			db.Close();
 		}
 
 		private static void DefragUnindexed(com.db4o.defragment.DefragContextImpl context
@@ -159,14 +175,14 @@ namespace com.db4o.defragment
 			while (unindexedIDs.MoveNext())
 			{
 				int origID = ((int)unindexedIDs.Current);
-				com.db4o.@internal.ReaderPair.ProcessCopy(context, origID, new _AnonymousInnerClass154
+				com.db4o.@internal.ReaderPair.ProcessCopy(context, origID, new _AnonymousInnerClass168
 					(), true);
 			}
 		}
 
-		private sealed class _AnonymousInnerClass154 : com.db4o.@internal.SlotCopyHandler
+		private sealed class _AnonymousInnerClass168 : com.db4o.@internal.SlotCopyHandler
 		{
-			public _AnonymousInnerClass154()
+			public _AnonymousInnerClass168()
 			{
 			}
 
@@ -177,11 +193,11 @@ namespace com.db4o.defragment
 		}
 
 		private static void SetIdentity(string targetFile, int targetIdentityID, int targetUuidIndexID
-			)
+			, int blockSize)
 		{
 			com.db4o.@internal.LocalObjectContainer targetDB = (com.db4o.@internal.LocalObjectContainer
-				)com.db4o.Db4o.OpenFile(com.db4o.defragment.DefragmentConfig.VanillaDb4oConfig()
-				, targetFile);
+				)com.db4o.Db4o.OpenFile(com.db4o.defragment.DefragmentConfig.VanillaDb4oConfig(blockSize
+				), targetFile);
 			try
 			{
 				com.db4o.ext.Db4oDatabase identity = (com.db4o.ext.Db4oDatabase)targetDB.GetByID(
@@ -269,13 +285,13 @@ namespace com.db4o.defragment
 			 command)
 		{
 			bool withStringIndex = WithFieldIndex(curClass);
-			context.TraverseAll(curClass, new _AnonymousInnerClass247(command, context, curClass
+			context.TraverseAll(curClass, new _AnonymousInnerClass261(command, context, curClass
 				, withStringIndex));
 		}
 
-		private sealed class _AnonymousInnerClass247 : com.db4o.foundation.Visitor4
+		private sealed class _AnonymousInnerClass261 : com.db4o.foundation.Visitor4
 		{
-			public _AnonymousInnerClass247(com.db4o.defragment.PassCommand command, com.db4o.defragment.DefragContextImpl
+			public _AnonymousInnerClass261(com.db4o.defragment.PassCommand command, com.db4o.defragment.DefragContextImpl
 				 context, com.db4o.@internal.ClassMetadata curClass, bool withStringIndex)
 			{
 				this.command = command;

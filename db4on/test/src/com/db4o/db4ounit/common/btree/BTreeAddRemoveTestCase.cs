@@ -112,6 +112,18 @@ namespace com.db4o.db4ounit.common.btree
 			AssertSingleElement(SystemTrans(), element);
 		}
 
+		public virtual void TestAddAddRollbackCommmitInDifferentTransactions()
+		{
+			int element = 1;
+			Add(Trans(), element);
+			Add(SystemTrans(), element);
+			Db().Rollback();
+			AssertSingleElement(SystemTrans(), element);
+			Db().Commit();
+			AssertSingleElement(Trans(), element);
+			AssertSingleElement(SystemTrans(), element);
+		}
+
 		public static void Main(string[] args)
 		{
 			new com.db4o.db4ounit.common.btree.BTreeAddRemoveTestCase().RunSolo();

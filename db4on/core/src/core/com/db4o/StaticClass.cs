@@ -7,5 +7,15 @@ namespace com.db4o
 		public string name;
 
 		public com.db4o.StaticField[] fields;
+
+		public StaticClass()
+		{
+		}
+
+		public StaticClass(string name_, com.db4o.StaticField[] fields_)
+		{
+			name = name_;
+			fields = fields_;
+		}
 	}
 }

@@ -84,21 +84,22 @@ namespace com.db4o.@internal
 
 		public virtual void Read(com.db4o.@internal.Transaction trans)
 		{
+			if (!BeginProcessing())
+			{
+				return;
+			}
 			try
 			{
-				if (BeginProcessing())
+				com.db4o.@internal.Buffer reader = trans.Stream().ReadReaderByID(trans, GetID());
+				if (reader != null)
 				{
-					com.db4o.@internal.Buffer reader = trans.Stream().ReadReaderByID(trans, GetID());
-					if (reader != null)
-					{
-						ReadThis(trans, reader);
-						SetStateOnRead(reader);
-					}
-					EndProcessing();
+					ReadThis(trans, reader);
+					SetStateOnRead(reader);
 				}
 			}
-			catch (System.Exception t)
+			finally
 			{
+				EndProcessing();
 			}
 		}
 

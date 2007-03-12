@@ -109,7 +109,7 @@ namespace com.db4o.@internal
 							migrateYapObject = mgc.ReferenceFor(obj);
 							if (migrateYapObject == null)
 							{
-								migrateYapObject = mgc.Peer(stream).GetYapObject(obj);
+								migrateYapObject = mgc.Peer(stream).ReferenceForObject(obj);
 							}
 						}
 						if (migrateYapObject != null)

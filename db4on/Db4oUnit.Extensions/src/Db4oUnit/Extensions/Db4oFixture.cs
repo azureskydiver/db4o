@@ -19,5 +19,7 @@ namespace Db4oUnit.Extensions
 		com.db4o.config.Configuration Config();
 
 		bool Accept(System.Type clazz);
+
+		void Defragment();
 	}
 }

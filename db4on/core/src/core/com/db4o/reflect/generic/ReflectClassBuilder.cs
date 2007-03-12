@@ -12,8 +12,6 @@ namespace com.db4o.reflect.generic
 		void InitFields(com.db4o.reflect.ReflectClass clazz, com.db4o.reflect.ReflectField[]
 			 fields);
 
-		com.db4o.reflect.ReflectClass ArrayClass(com.db4o.reflect.ReflectClass clazz);
-
 		com.db4o.reflect.ReflectField[] FieldArray(int length);
 	}
 }

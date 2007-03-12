@@ -7,14 +7,14 @@ namespace com.db4o.foundation
 		, com.db4o.types.Unversioned
 	{
 		/// <summary>first element of the linked list</summary>
-		public com.db4o.foundation.List4 _first;
+		private com.db4o.foundation.List4 _first;
 
-		public com.db4o.foundation.List4 _last;
+		private com.db4o.foundation.List4 _last;
 
 		/// <summary>number of elements collected</summary>
-		public int _size;
+		private int _size;
 
-		public int _version;
+		private int _version;
 
 		private static readonly object NOT_FOUND = new object();
 
@@ -231,7 +231,7 @@ namespace com.db4o.foundation
 		/// <returns></returns>
 		public System.Collections.IEnumerator GetEnumerator()
 		{
-			return _first == null ? com.db4o.foundation.Iterator4Impl.EMPTY : new com.db4o.foundation.Collection4Iterator
+			return _first == null ? com.db4o.foundation.Iterators.EMPTY_ITERATOR : new com.db4o.foundation.Collection4Iterator
 				(this, _first);
 		}
 
@@ -311,22 +311,7 @@ namespace com.db4o.foundation
 
 		public override string ToString()
 		{
-			if (_size == 0)
-			{
-				return "[]";
-			}
-			System.Text.StringBuilder sb = new System.Text.StringBuilder();
-			sb.Append("[");
-			System.Collections.IEnumerator i = InternalIterator();
-			i.MoveNext();
-			sb.Append(i.Current);
-			while (i.MoveNext())
-			{
-				sb.Append(", ");
-				sb.Append(i.Current);
-			}
-			sb.Append("]");
-			return sb.ToString();
+			return com.db4o.foundation.Iterators.ToString(InternalIterator());
 		}
 
 		private void Changed()

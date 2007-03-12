@@ -13,12 +13,11 @@ namespace com.db4o.@internal.cs.messages
 			{
 				try
 				{
-					object[] arr = trans.ObjectAndYapObjectBySignature(uuid, signature);
-					if (arr[1] != null)
+					com.db4o.@internal.HardObjectReference hardRef = trans.GetHardReferenceBySignature
+						(uuid, signature);
+					if (hardRef._reference != null)
 					{
-						com.db4o.@internal.ObjectReference yo = (com.db4o.@internal.ObjectReference)arr[1
-							];
-						id = yo.GetID();
+						id = hardRef._reference.GetID();
 					}
 				}
 				catch (System.Exception e)

@@ -54,9 +54,9 @@ namespace com.db4o.@internal
 			return true;
 		}
 
-		public override int IsSecondClass()
+		public override com.db4o.foundation.TernaryBool IsSecondClass()
 		{
-			return com.db4o.@internal.Const4.UNKNOWN;
+			return com.db4o.foundation.TernaryBool.UNSPECIFIED;
 		}
 
 		public override bool IsStrongTyped()

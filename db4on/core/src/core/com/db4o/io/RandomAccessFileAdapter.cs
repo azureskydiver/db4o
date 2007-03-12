@@ -4,6 +4,8 @@ namespace com.db4o.io
 	/// <remarks>IO adapter for random access files.</remarks>
 	public class RandomAccessFileAdapter : com.db4o.io.IoAdapter
 	{
+		private string _path;
+
 		private j4o.io.RandomAccessFile _delegate;
 
 		public RandomAccessFileAdapter()
@@ -12,7 +14,8 @@ namespace com.db4o.io
 
 		protected RandomAccessFileAdapter(string path, bool lockFile, long initialLength)
 		{
-			_delegate = new j4o.io.RandomAccessFile(path, "rw");
+			_path = new j4o.io.File(path).GetCanonicalPath();
+			_delegate = new j4o.io.RandomAccessFile(_path, "rw");
 			if (initialLength > 0)
 			{
 				_delegate.Seek(initialLength - 1);
@@ -20,7 +23,15 @@ namespace com.db4o.io
 			}
 			if (lockFile)
 			{
-				com.db4o.@internal.Platform4.LockFile(_delegate);
+				try
+				{
+					com.db4o.@internal.Platform4.LockFile(_path, _delegate);
+				}
+				catch (com.db4o.ext.DatabaseFileLockedException e)
+				{
+					_delegate.Close();
+					throw;
+				}
 			}
 		}
 
@@ -28,7 +39,7 @@ namespace com.db4o.io
 		{
 			try
 			{
-				com.db4o.@internal.Platform4.UnlockFile(_delegate);
+				com.db4o.@internal.Platform4.UnlockFile(_path, _delegate);
 			}
 			catch
 			{
