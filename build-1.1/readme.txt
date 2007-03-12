@@ -16,4 +16,3 @@ Rename it to machine.properties and you are ready to go.
 Using dBS as Production
 =======================
 - Turn "failonerror" to "true" in the <java> task of macrodef <runJvmTests> in run-java-tests/build.xml
-
