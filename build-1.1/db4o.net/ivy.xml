@@ -1,5 +1,16 @@
 <ivy-module version="1.0">
 	<info organisation="db4o" module="${ant.project.name}"/>
+	<configurations>
+    	<conf name="net2" />
+    	<conf name="mono2" />
+  </configurations>
+  <publications>
+  	<artifact name="db4o-net2"  conf="net2"  type="zip" ext="zip"/>
+  	<artifact name="db4o-net2"  conf="net2"  type="msi" ext="msi"/>
+  	
+  	<artifact name="db4o-mono2" conf="mono2" type="zip" ext="zip"/>
+  	<artifact name="db4o-mono2" conf="mono2" type="msi" ext="msi"/>
+  </publications>
 	<dependencies>
 		<dependency name="javatocsharp" rev="latest.integration" />
     <dependency name="db4o-test-java1.1" rev="latest.integration" />
