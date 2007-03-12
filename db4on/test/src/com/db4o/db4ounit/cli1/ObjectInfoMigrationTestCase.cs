@@ -1,9 +1,8 @@
 using System.IO;
 using System.Text;
-using Db4objects.Db4o;
-using Db4objects.Db4o.Config;
-using Db4objects.Db4o.Ext;
-using Db4objects.Db4o.Tests.Util;
+using com.db4o.config;
+using com.db4o.db4ounit.util;
+using com.db4o.ext;
 using Db4oUnit;
 
 namespace Db4o52Regression
@@ -24,9 +23,9 @@ namespace Db4o52Regression
     }
 }
 
-namespace Db4objects.Db4o.Tests.CLI1
+namespace com.db4o.db4ounit.cli1
 {
-    public class ObjectInfoMigrationTestCase : ITestCase
+    public class ObjectInfoMigrationTestCase : TestCase
     {
         public void Test52UuidAndVersion()
         {
@@ -34,19 +33,19 @@ namespace Db4objects.Db4o.Tests.CLI1
             string fname = Path.GetTempFileName();
             File.Copy(originalFile, fname, true);
 
-            IConfiguration configuration = Db4oFactory.NewConfiguration();
+            Configuration configuration = Db4oFactory.NewConfiguration();
             configuration.AllowVersionUpdates(true);
             configuration.AddAlias(new WildcardAlias("*GenerateDb4o52File", "*" + GetType().Assembly.GetName().Name));
-            IObjectClass itemConfig = configuration.ObjectClass(typeof(Db4o52Regression.Item));
+            ObjectClass itemConfig = configuration.ObjectClass(typeof(Db4o52Regression.Item));
             itemConfig.ObjectField("_name").Indexed(true);
 
-            IObjectContainer container = Db4oFactory.OpenFile(configuration, fname);
+            ObjectContainer container = Db4oFactory.OpenFile(configuration, fname);
             try
             {
                 StringWriter writer = new StringWriter();
                 foreach (Db4o52Regression.Item item in container.Get(typeof(Db4o52Regression.Item)))
                 {
-                    IObjectInfo info = container.Ext().GetObjectInfo(item);
+                    ObjectInfo info = container.Ext().GetObjectInfo(item);
                     writer.WriteLine("{0}, UUID={1}, Version={2}", item.Name, ToUUIDString(info.GetUUID()),
                                       info.GetVersion());
                 }
@@ -57,13 +56,13 @@ namespace Db4objects.Db4o.Tests.CLI1
                 container.Close();
             }
         }
-        
+
         static string ReadAllText(string fname)
         {
-        	using (StreamReader reader = File.OpenText(fname))
-        	{
-        		return reader.ReadToEnd();
-        	}
+            using (StreamReader reader = File.OpenText(fname))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         private static string ToUUIDString(Db4oUUID uuid)

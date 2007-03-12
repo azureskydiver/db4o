@@ -9,6 +9,7 @@ namespace com.db4o.db4ounit.cli1
 			return new System.Type[]
 				{
 					typeof (ObjectSetAsListTestCase),
+                    typeof (ObjectInfoMigrationTestCase),
 				};
 		}
 	}
