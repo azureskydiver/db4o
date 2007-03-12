@@ -19,4 +19,9 @@ public class HardObjectReference {
 		_object = obj;
 	}
 	
+	public static HardObjectReference peekPersisted(Transaction trans, int id, int depth) {
+		ObjectReference ref = new ObjectReference(id);
+		Object obj = ref.peekPersisted(trans, depth);
+		return new HardObjectReference(ref, obj);
+	}
 }

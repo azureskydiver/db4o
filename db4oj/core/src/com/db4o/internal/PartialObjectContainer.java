@@ -715,7 +715,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 
             }
             try {
-                return new ObjectReference(a_id).read(ta, null, null, 0,Const4.ADD_TO_ID_TREE, true);
+                return new ObjectReference(a_id).read(ta, 0,Const4.ADD_TO_ID_TREE, true);
             } catch (Throwable t) {
                 if (Debug.atHome) {
                     t.printStackTrace();
@@ -738,7 +738,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         Object obj = null;
     	beginTopLevelCall();
         try {
-            obj = new ObjectReference(id).read(ta, null, null, configImpl().activationDepth(),Const4.ADD_TO_ID_TREE, true);
+            obj = new ObjectReference(id).read(ta, configImpl().activationDepth(),Const4.ADD_TO_ID_TREE, true);
         } finally{
         	endTopLevelCall();
         }
@@ -807,7 +807,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             removeReference(ref);
         }
         ref = new ObjectReference(id);
-        Object readObject = ref.read(trans, null, null, 0, Const4.ADD_TO_ID_TREE, true);
+        Object readObject = ref.read(trans, 0, Const4.ADD_TO_ID_TREE, true);
         
         if(readObject == null){
             return HardObjectReference.INVALID;
@@ -1181,7 +1181,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 Object cloned = null;
                 ObjectReference yo = referenceForObject(obj);
                 if (yo != null) {
-                    cloned = peekPersisted1(ta, yo.getID(), depth);
+                    cloned = peekPersisted(ta, yo.getID(), depth);
                 }
                 i_justPeeked = null;
                 return cloned;
@@ -1191,16 +1191,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    Object peekPersisted1(Transaction a_ta, int a_id, int a_depth) {
-        if(a_depth < 0){
+    public final Object peekPersisted(Transaction trans, int id, int depth) {
+        if(depth < 0){
             return null;
         }
-        TreeInt ti = new TreeInt(a_id);
+        TreeInt ti = new TreeInt(id);
         TreeIntObject tio = (TreeIntObject) Tree.find(i_justPeeked, ti);
         if (tio == null) {
-            return new ObjectReference(a_id).read(a_ta, null, null, a_depth,
-                Const4.TRANSIENT, false);
-    
+        	return new ObjectReference(id).peekPersisted(trans, depth);
         } 
         return tio._object;
     }

@@ -1293,7 +1293,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             ObjectContainerBase stream = trans.stream();
 
             if (a_bytes.getUpdateDepth() == Const4.TRANSIENT) {
-                return stream.peekPersisted1(trans, id, depth);
+                return stream.peekPersisted(trans, id, depth);
             }
             
             if (isValueType()) {
@@ -1322,13 +1322,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
                         return yo.getObject();
                     }
                 }
-                
-                return new ObjectReference(id).read(
-                    trans,
-                    null,
-                    null,
-                    depth,
-                    Const4.ADD_TO_ID_TREE, false);
+                return new ObjectReference(id).read( trans, depth,Const4.ADD_TO_ID_TREE, false);
             } 
 
             Object ret = stream.getByID2(trans, id);

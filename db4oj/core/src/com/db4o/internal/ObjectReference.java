@@ -209,6 +209,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 		return _virtualAttributes;
 	}
 	
+	final Object peekPersisted(Transaction trans, int depth) {
+        return read(trans, depth, Const4.TRANSIENT, false);
+	}
+	
+	final Object read (Transaction trans, int instantiationDepth,int addToIDTree,boolean checkIDTree) {
+		return read(trans, null, null, instantiationDepth, addToIDTree, checkIDTree); 
+	}
+	
 	final Object read(
 		Transaction ta,
 		StatefulBuffer a_reader,
@@ -825,5 +833,6 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 	    return "Exception in YapObject analyzer";
 	}
 
+	
 	
 }
