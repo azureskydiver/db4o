@@ -4,6 +4,7 @@ package com.db4o.db4ounit.jre11.constraints;
 
 import com.db4o.config.*;
 import com.db4o.constraints.*;
+import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -49,5 +50,29 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 		});
 		db().rollback();
 	}
+	
+	public void testUpdateViolates(){
+		Query q = newQuery(Item.class);
+		q.descend("_str").constrain("2");
+		Item item = (Item) q.execute().next();
+		item._str = "3";
+		store(item);
+		Assert.expect(UniqueFieldValueConstraintViolationException.class, new CodeBlock() {
+			public void run() throws Exception {
+				db().commit();
+			}
+		});
+		db().rollback();
+	}
+	
+	public void testUpdateDoesNotViolate(){
+		Query q = newQuery(Item.class);
+		q.descend("_str").constrain("2");
+		Item item = (Item) q.execute().next();
+		item._str = "4";
+		store(item);
+		db().commit();
+	}
+	
 
 }
