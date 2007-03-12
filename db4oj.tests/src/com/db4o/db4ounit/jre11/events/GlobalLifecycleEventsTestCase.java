@@ -8,7 +8,7 @@ import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.fixtures.*;
 
-public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	
 	public static void main(String[] arguments) {
 		new GlobalLifecycleEventsTestCase().runClientServer();
@@ -35,7 +35,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 	private EventRecorder _recorder;
 	
 	protected void db4oSetupBeforeStore() throws Exception {
-		_recorder = new EventRecorder();
+		_recorder = new EventRecorder(fileSession().lock());
 	}	
 	
 	public void testActivating() throws Exception {
