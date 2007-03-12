@@ -314,7 +314,7 @@
 		<mkdir dir="${dir.dist.net.build}/src" />
 	
 		<copy todir="${dir.dist.net.build}/src">
-			<fileset dir="../db4o.net">
+			<fileset dir="${dir.n.v6}">
 				<include name="**/*.cs" />
 				<include name="**/*.csproj" />
 				<include name="**/*.csdproj" />
@@ -369,14 +369,6 @@
 				<exclude name="**/*.pdb" />
 			</fileset>
 		</copy>
-		
-		<!--
-		<copy todir="${dir.dist.net.build.tutorial}/vb">
-			<fileset dir="${dir.j.tutorial.out.vb}">
-				<include name="**/**" />
-			</fileset>
-		</copy>
-		-->
 	</target>
 	
 	<target name="package-api" depends="package-api-net, package-api-mono">
@@ -391,7 +383,7 @@
 				<include name="db4oCollection.*" />
 				<include name="db4oCollection.h2reg.ini" />
 			</fileset>
-			<fileset dir="lib/h2reg">
+			<fileset dir="${dir.build}/lib/h2reg">
 				<include name="*.exe" />
 				<include name="*.ini" />
 			</fileset>
@@ -412,7 +404,7 @@
 	
 		<mkdir dir="${dir.dist.net.build}/doc/reference" />
 		<copy todir="${dir.dist.net.build}/doc/reference">
-			<fileset dir="../docWiki/net/">
+			<fileset dir="${dir.docwiki}/net/">
 				<include name="**/**" />
 			</fileset>
 		</copy>
@@ -531,8 +523,7 @@
 	</target>
 
 	<target name="build-tutorial" depends="build-tools">
-		<ant antfile="build-dotnet-tutorial.xml">
-		</ant>
+		<ant antfile="build-dotnet-tutorial.xml"/>
 	</target>
 	
 	<target name="sharpen-tools">
