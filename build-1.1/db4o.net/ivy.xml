@@ -3,5 +3,6 @@
 	<dependencies>
 		<dependency name="javatocsharp" rev="latest.integration" />
     <dependency name="db4o-test-java1.1" rev="latest.integration" />
+    <dependency name="db4o-tutorial" 		rev="latest.integration" transitive="false"/>
 	</dependencies>
 </ivy-module>
