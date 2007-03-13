@@ -2,6 +2,8 @@
 
 package com.db4o.internal.btree;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -373,13 +375,14 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 		BTreeNode.defragIndex(readers, _keyHandler);
 	}
 
-	public void defragBTree(final DefragContext context) throws CorruptionException {
+	public void defragBTree(final DefragContext context) throws CorruptionException, IOException {
 		ReaderPair.processCopy(context,getID(),new SlotCopyHandler() {
 			public void processCopy(ReaderPair readers) throws CorruptionException {
 				defragIndex(readers);
 			}
 		});
-		final CorruptionException[] exc={null};
+		final CorruptionException[] corruptx={null};
+		final IOException[] iox={null};
 		try {
 			context.traverseAllIndexSlots(this, new Visitor4() {
 				public void visit(Object obj) {
@@ -391,14 +394,20 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 							}
 						});
 					} catch (CorruptionException e) {
-						exc[0]=e;
+						corruptx[0]=e;
+						throw new RuntimeException();
+					} catch (IOException e) {
+						iox[0] = e;
 						throw new RuntimeException();
 					}
 				}
 			});
 		} catch (RuntimeException e) {
-			if(exc[0]!=null) {
-				throw exc[0];
+			if(corruptx[0]!=null) {
+				throw corruptx[0];
+			}
+			if(iox[0]!=null) {
+				throw iox[0];
 			}
 			throw e;
 		}

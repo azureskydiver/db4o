@@ -2,10 +2,13 @@
 
 package com.db4o.internal.freespace;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.ix.*;
+import com.db4o.io.UncheckedIOException;
 
 
 public class FreespaceManagerIx extends FreespaceManager{
@@ -216,7 +219,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         _lengthIx.remove(address, length);
     }
     
-    public void start(int slotAddress) {
+    public void start(int slotAddress) throws IOException {
         
         if(started()){
             return;

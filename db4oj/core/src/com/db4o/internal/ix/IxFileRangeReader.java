@@ -2,6 +2,8 @@
 
 package com.db4o.internal.ix;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.Tree;
 import com.db4o.internal.*;
@@ -35,12 +37,17 @@ class IxFileRangeReader {
         _reader = new Buffer(_slotLength);
     }
 
-    Tree add(IxFileRange fileRange, final Tree newTree) {
+    Tree add(IxFileRange fileRange, final Tree newTree) throws IxException {
         setFileRange(fileRange);
         LocalObjectContainer yf = fileRange.stream();
         Transaction trans = fileRange.trans();
         while (true) {
-            _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+        	int offset = _baseAddressOffset + _addressOffset;
+            try {
+				_reader.read(yf, _baseAddress, offset);
+			} catch (IOException e) {
+				throw new IxException(e, _baseAddress, offset);
+			}
             _reader._offset = 0;
 
             int cmp = compare(trans);
@@ -116,7 +123,7 @@ class IxFileRangeReader {
         return _cursor != oldCursor;
     }
 
-    int compare(IxFileRange fileRange, int[] matches) {
+    int compare(IxFileRange fileRange, int[] matches) throws IxException {
 
         setFileRange(fileRange);
         LocalObjectContainer yf = fileRange.stream();
@@ -125,7 +132,12 @@ class IxFileRangeReader {
         int res = 0;
 
         while (true) {
-            _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+        	int offset = _baseAddressOffset + _addressOffset; 
+        	try {
+				_reader.read(yf, _baseAddress, offset);
+			} catch (IOException e) {
+				throw new IxException(e, _baseAddress, offset);
+			}
             _reader._offset = 0;
             int cmp = compare(trans);
             if (cmp > 0) {
@@ -160,7 +172,12 @@ class IxFileRangeReader {
         _upper = _cursor;
         adjustCursor();
         while (true) {
-            _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+        	int offset = _baseAddressOffset + _addressOffset;
+            try {
+				_reader.read(yf, _baseAddress, offset);
+			} catch (IOException e) {
+				throw new IxException(e, _baseAddress, offset);
+			}
             _reader._offset = 0;
             int cmp = compare(trans);
             if (cmp == 0) {
@@ -184,7 +201,12 @@ class IxFileRangeReader {
         }
         adjustCursor();
         while (true) {
-            _reader.read(yf, _baseAddress, _baseAddressOffset + _addressOffset);
+        	int offset = _baseAddressOffset + _addressOffset;
+            try {
+				_reader.read(yf, _baseAddress, offset);
+			} catch (IOException e) {
+				throw new IxException(e, _baseAddress, offset);
+			}
             _reader._offset = 0;
             int cmp = compare(trans);
             if (cmp == 0) {

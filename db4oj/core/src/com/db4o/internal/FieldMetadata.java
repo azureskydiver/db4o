@@ -95,7 +95,7 @@ public class FieldMetadata implements StoredField {
         i_state = AVAILABLE;
     }
 
-    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {
+    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot)  throws FieldIndexException {
         if (! hasIndex()) {
             writer.incrementOffset(linkLength());
             return;
@@ -920,7 +920,7 @@ public class FieldMetadata implements StoredField {
 		return ids.length > 0;
 	}
 
-	protected void rebuildIndexForObject(LocalObjectContainer stream, final ClassMetadata yapClass, final int objectId) {
+	protected void rebuildIndexForObject(LocalObjectContainer stream, final ClassMetadata yapClass, final int objectId) throws FieldIndexException {
 		StatefulBuffer writer = stream.readWriterByID(stream.getSystemTransaction(), objectId);
 		if (writer != null) {
 		    rebuildIndexForWriter(stream, writer, objectId);

@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.ext.ObjectInfoCollection;
 import com.db4o.foundation.*;
@@ -192,7 +194,7 @@ public class LocalTransaction extends Transaction {
         return (SlotChange)TreeInt.find(_slotChanges, a_id);
     }    
 
-    public Slot getCurrentSlotOfID(int id) {
+    public Slot getCurrentSlotOfID(int id) throws SlotRetrievalException {
         checkSynchronization();
         if (id == 0) {
             return null;
@@ -211,9 +213,10 @@ public class LocalTransaction extends Transaction {
             }
         }
         return readCommittedSlotOfID(id);
+		
     }
     
-    public Slot getCommittedSlotOfID(int id){
+    public Slot getCommittedSlotOfID(int id) throws SlotRetrievalException {
         if (id == 0) {
             return null;
         }
@@ -231,18 +234,12 @@ public class LocalTransaction extends Transaction {
                 return parentSlot;
             }
         }
-        return readCommittedSlotOfID(id);
+		return readCommittedSlotOfID(id);
     }
 
-    private Slot readCommittedSlotOfID(int id) {
+    private Slot readCommittedSlotOfID(int id) throws SlotRetrievalException {
         if (Deploy.debug) {
-            i_pointerIo.useSlot(id);
-            i_pointerIo.read();
-            i_pointerIo.readBegin(Const4.YAPPOINTER);
-            int debugAddress = i_pointerIo.readInt();
-            int debugLength = i_pointerIo.readInt();
-            i_pointerIo.readEnd();
-            return new Slot(debugAddress, debugLength);
+            return debugReadCommittedSlotOfID(id);
         }
         // FIXME: This shouldn't be silently swallowed. Currently this situation can occur for
         // a class collection in a new yap file that already has its ID assigned but hasn't been
@@ -251,7 +248,10 @@ public class LocalTransaction extends Transaction {
         	i_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
         }
         catch(RuntimeException exc) {
-        	return null;
+        	throw new SlotRetrievalException(exc,id);
+        }
+        catch(IOException exc) {
+        	throw new SlotRetrievalException(exc,id);
         }
         int address = (_pointerBuffer[3] & 255)
             | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
@@ -261,6 +261,20 @@ public class LocalTransaction extends Transaction {
             | _pointerBuffer[4] << 24;
         return new Slot(address, length);
     }
+
+	private Slot debugReadCommittedSlotOfID(int id) throws SlotRetrievalException {
+		try {
+			i_pointerIo.useSlot(id);
+			i_pointerIo.read();
+			i_pointerIo.readBegin(Const4.YAPPOINTER);
+			int debugAddress = i_pointerIo.readInt();
+			int debugLength = i_pointerIo.readInt();
+			i_pointerIo.readEnd();
+			return new Slot(debugAddress, debugLength);
+		} catch (IOException exc) {
+			throw new SlotRetrievalException(exc,id);
+		}
+	}
     
     public void setPointer(int a_id, int a_address, int a_length) {
         if(DTrace.enabled){
@@ -307,7 +321,7 @@ public class LocalTransaction extends Transaction {
 	        return slotSetPointerCount[0];
 	    }
 	
-	void writeOld() {
+	void writeOld() throws IOException {
         synchronized (stream().i_lock) {
             i_pointerIo.useSlot(i_address);
             i_pointerIo.read();

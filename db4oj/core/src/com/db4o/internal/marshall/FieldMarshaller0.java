@@ -2,6 +2,8 @@
 
 package com.db4o.internal.marshall;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -111,7 +113,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,ReaderPair readers) throws CorruptionException {
+	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,ReaderPair readers) throws CorruptionException, IOException {
 		readers.readShortString(sio);
         if (yapField.isVirtual()) {
         	return;

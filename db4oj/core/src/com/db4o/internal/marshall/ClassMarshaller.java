@@ -2,6 +2,8 @@
 
 package com.db4o.internal.marshall;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.internal.*;
 
@@ -127,7 +129,7 @@ public abstract class ClassMarshaller {
         return len;
     }
 
-	public void defrag(ClassMetadata yapClass,LatinStringIO sio,ReaderPair readers, int classIndexID) throws CorruptionException {
+	public void defrag(ClassMetadata yapClass,LatinStringIO sio,ReaderPair readers, int classIndexID) throws CorruptionException, IOException {
 		readName(sio, readers.source());
 		readName(sio, readers.target());
 		

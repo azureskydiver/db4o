@@ -114,29 +114,29 @@ public class DefragContextImpl implements DefragContext {
 		_mapping.close();
 	}
 	
-	public Buffer readerByID(DbSelector selector,int id) {
+	public Buffer readerByID(DbSelector selector,int id) throws IOException {
 		Slot slot=readPointer(selector, id);
 		return readerByAddress(selector,slot._address,slot._length);
 	}
 
-	public StatefulBuffer sourceWriterByID(int id) {
+	public StatefulBuffer sourceWriterByID(int id) throws IOException {
 		Slot slot=readPointer(SOURCEDB, id);
 		return _sourceDb.readWriterByAddress(SOURCEDB.transaction(this),slot._address,slot._length);
 	}
 
-	public Buffer sourceReaderByAddress(int address,int length) {
+	public Buffer sourceReaderByAddress(int address,int length) throws IOException {
 		return readerByAddress(SOURCEDB, address, length);
 	}
 
-	public Buffer targetReaderByAddress(int address,int length) {
+	public Buffer targetReaderByAddress(int address,int length) throws IOException {
 		return readerByAddress(TARGETDB, address, length);
 	}
 
-	public Buffer readerByAddress(DbSelector selector,int address,int length) {
-		return selector.db(this).readReaderByAddress(address,length);
+	public Buffer readerByAddress(DbSelector selector,int address,int length) throws IOException {
+		return selector.db(this).bufferByAddress(address,length);
 	}
 
-	public StatefulBuffer targetWriterByAddress(int address,int length) {
+	public StatefulBuffer targetWriterByAddress(int address,int length) throws IllegalArgumentException, IOException {
 		return _targetDb.readWriterByAddress(TARGETDB.transaction(this),address,length);
 	}
 	
@@ -251,7 +251,7 @@ public class DefragContextImpl implements DefragContext {
 		_targetDb.systemData().classCollectionID(newClassCollectionID);
 	}
 
-	public Buffer sourceReaderByID(int sourceID) {
+	public Buffer sourceReaderByID(int sourceID) throws IOException {
 		return readerByID(SOURCEDB,sourceID);
 	}
 	
@@ -282,7 +282,7 @@ public class DefragContextImpl implements DefragContext {
 		return _unindexed.iterator();
 	}
 
-	private Slot readPointer(DbSelector selector,int id) {
+	private Slot readPointer(DbSelector selector,int id) throws IOException {
 		Buffer reader=readerByAddress(selector, id, Const4.POINTER_LENGTH);
 		int address=reader.readInt();
 		int length=reader.readInt();
