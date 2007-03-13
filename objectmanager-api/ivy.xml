@@ -1,0 +1,10 @@
+<ivy-module version="1.0">
+    <info organisation="db4o" module="${ant.project.name}"/>
+    
+    <publications>
+        	<artifact name="${ant.project.name}"/>
+    </publications>
+    <dependencies>
+        <dependency name="db4o-java5" rev="latest.integration" />
+    </dependencies>
+</ivy-module>
