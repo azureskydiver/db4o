@@ -86,8 +86,8 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
     
     private FieldMetadata yapField() {
         ReflectClass claxx = stream().reflector().forObject(new FieldIndexItem());
-        ClassMetadata yc = stream().getYapClass(claxx);
-        FieldMetadata yf = yc.getYapField("foo");
+        ClassMetadata yc = stream().classMetadataForReflectClass(claxx);
+        FieldMetadata yf = yc.fieldMetadataForName("foo");
         return yf;
     }
     

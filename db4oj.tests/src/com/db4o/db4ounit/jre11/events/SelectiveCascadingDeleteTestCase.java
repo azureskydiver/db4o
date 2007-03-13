@@ -112,7 +112,7 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 	}
 
 	private ClassMetadata yapClass() {
-		ClassMetadata clazz = fileSession().getYapClass(reflector().forClass(Item.class));
+		ClassMetadata clazz = fileSession().classMetadataForReflectClass(reflector().forClass(Item.class));
 		return clazz;
 	}
 
