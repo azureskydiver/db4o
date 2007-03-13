@@ -84,12 +84,14 @@
 				<classpath>
 					<pathelement location="${eclipse.home}/startup.jar" />
 				</classpath>
-					
+				
 				<arg value="-data" />
 				<arg file="@{workspace}" />
 				<arg value="-application" />
 				<arg value="javatocsharp.core.application" />
 				<arg value="@{resource}" />
+				<arg value="-threads" />
+				<arg value="${sharpen.threads}" />
 				
 				<args />
 					
