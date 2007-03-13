@@ -2,15 +2,18 @@
 
 package com.db4o.internal.marshall;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.io.UncheckedIOException;
 
 
 class ArrayMarshaller0  extends ArrayMarshaller{
     
-    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) {
+    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader)  throws UncheckedIOException {
         int address = reader.readInt();
         int length = reader.readInt();
         if (address <= 0) {
@@ -18,11 +21,16 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         }
         Transaction trans = reader.getTransaction();
         if (reader.cascadeDeletes() > 0 && arrayHandler.i_handler instanceof ClassMetadata) {
-            StatefulBuffer bytes =
-                reader.getStream().readWriterByAddress(
+            StatefulBuffer bytes;
+			try {
+				bytes = reader.getStream().readWriterByAddress(
                     trans,
                     address,
                     length);
+			} catch (IOException e) {
+				// FIXME: WILL BE HANDLED IN NEXT SESSION.
+				throw new UncheckedIOException(e);
+			}
             if (bytes != null) {
                 if (Deploy.debug) {
                     bytes.readBegin(arrayHandler.identifier());
@@ -56,8 +64,14 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         return a_object;
     }
     
-    public Object read(ArrayHandler arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException{
-        StatefulBuffer bytes = a_bytes.readEmbeddedObject();
+    public Object read(ArrayHandler arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException, UncheckedIOException {
+        StatefulBuffer bytes = null;
+		try {
+			bytes = a_bytes.readEmbeddedObject();
+		} catch (IOException e) {
+			// FIXME: WILL BE HANDLED IN NEXT SESSION.
+			throw new UncheckedIOException(e);
+		}
         if (bytes == null) {
             return null;
         }
@@ -65,7 +79,13 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     }
     
     public void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) {
-        Buffer bytes = reader.readEmbeddedObject(candidates.i_trans);
+        Buffer bytes = null;
+		try {
+			bytes = reader.readEmbeddedObject(candidates.i_trans);
+		} catch (IOException e) {
+			// FIXME: WILL BE HANDLED IN NEXT SESSION.
+			throw new UncheckedIOException(e);
+		}
         if (bytes == null) {
             return;
         }
@@ -79,8 +99,14 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     }
 
     
-    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException{
-        Buffer bytes = reader.readEmbeddedObject(trans);
+    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, UncheckedIOException {
+        Buffer bytes = null;
+		try {
+			bytes = reader.readEmbeddedObject(trans);
+		} catch (IOException e) {
+			// FIXME: WILL BE HANDLED IN NEXT SESSION.
+			throw new UncheckedIOException(e);
+		}
         if (bytes == null) {
             return null;
         }
@@ -88,8 +114,13 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         return array;
     }
     
-    protected Buffer prepareIDReader(Transaction trans,Buffer reader) {
-    	return reader.readEmbeddedObject(trans);
+    protected Buffer prepareIDReader(Transaction trans,Buffer reader) throws UncheckedIOException {
+    	try {
+			return reader.readEmbeddedObject(trans);
+		} catch (IOException e) {
+			// FIXME: WILL BE HANDLED IN NEXT SESSION.
+			throw new UncheckedIOException(e);
+		}
     }
     
     public void defragIDs(ArrayHandler arrayHandler,ReaderPair readers) {

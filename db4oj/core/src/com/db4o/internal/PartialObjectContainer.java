@@ -2,24 +2,60 @@
 
 package com.db4o.internal;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
+import java.io.IOException;
+
+import com.db4o.CorruptionException;
+import com.db4o.DTrace;
+import com.db4o.Debug;
+import com.db4o.Deploy;
+import com.db4o.Internal4;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.Rename;
+import com.db4o.ReplicationImpl;
+import com.db4o.config.Configuration;
+import com.db4o.config.Entry;
+import com.db4o.config.QueryEvaluationMode;
+import com.db4o.ext.Db4oDatabase;
+import com.db4o.ext.Db4oException;
+import com.db4o.ext.Db4oUUID;
+import com.db4o.ext.ExtObjectContainer;
+import com.db4o.ext.MemoryFile;
+import com.db4o.ext.ObjectInfo;
+import com.db4o.ext.ObjectNotStorableException;
+import com.db4o.ext.StoredClass;
+import com.db4o.ext.SystemInfo;
+import com.db4o.foundation.IntIdGenerator;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.Iterator4Impl;
+import com.db4o.foundation.List4;
+import com.db4o.foundation.PersistentTimeStampIdGenerator;
+import com.db4o.foundation.Tree;
+import com.db4o.foundation.Visitor4;
 import com.db4o.internal.callbacks.Callbacks;
 import com.db4o.internal.cs.ClassInfoHelper;
 import com.db4o.internal.handlers.ArrayHandler;
 import com.db4o.internal.marshall.MarshallerFamily;
-import com.db4o.internal.query.*;
+import com.db4o.internal.query.NativeQueryHandler;
+import com.db4o.internal.query.ObjectSetFacade;
 import com.db4o.internal.query.processor.QQuery;
-import com.db4o.internal.query.result.*;
-import com.db4o.internal.replication.*;
+import com.db4o.internal.query.result.AbstractQueryResult;
+import com.db4o.internal.query.result.QueryResult;
+import com.db4o.internal.replication.Db4oReplicationReferenceProvider;
+import com.db4o.internal.replication.MigrationConnection;
 import com.db4o.io.UncheckedIOException;
-import com.db4o.query.*;
-import com.db4o.reflect.*;
+import com.db4o.query.Predicate;
+import com.db4o.query.Query;
+import com.db4o.query.QueryComparator;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectorUtils;
 import com.db4o.reflect.generic.GenericReflector;
-import com.db4o.replication.*;
-import com.db4o.types.*;
+import com.db4o.replication.ReplicationConflictHandler;
+import com.db4o.replication.ReplicationProcess;
+import com.db4o.types.Db4oCollections;
+import com.db4o.types.Db4oType;
+import com.db4o.types.SecondClass;
+import com.db4o.types.TransientClass;
 
 
 /**
@@ -1279,35 +1315,33 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void raiseVersion(long a_minimumVersion);
 
-    public abstract void readBytes(byte[] a_bytes, int a_address, int a_length) throws UncheckedIOException;
+    public abstract void readBytes(byte[] a_bytes, int a_address, int a_length) throws IOException;
 
-    public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length) throws UncheckedIOException;
+    public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length) throws IOException;
 
-    public final Buffer readReaderByAddress(int a_address, int a_length) throws UncheckedIOException {
-        if (a_address > 0) {
+    public final Buffer bufferByAddress(int address, int length)
+			throws IOException {
+		checkAddress(address);
 
-            // TODO: possibly load from cache here
+		Buffer reader = new Buffer(length);
+		readBytes(reader._buffer, address, length);
+		i_handlers.decrypt(reader);
+		return reader;
+	}
 
-            Buffer reader = new Buffer(a_length);
-            readBytes(reader._buffer, a_address, a_length);
-            i_handlers.decrypt(reader);
-            return reader;
-        }
-        
-        //TODO FIXME throw exception when a_address <=0
-        return null;
-    }
+	private void checkAddress(int address) throws IllegalArgumentException {
+		if (address <= 0) {
+			throw new IllegalArgumentException("Invalid address offset: "
+					+ address);
+		}
+	}
 
     public final StatefulBuffer readWriterByAddress(Transaction a_trans,
-        int address, int length) throws UncheckedIOException {
-        if (address > 0) {
-            // TODO: load from cache here
-            StatefulBuffer reader = getWriter(a_trans, address, length);
-            reader.readEncrypt(_this, address);
-            return reader;
-        }
-        // FIXME: throw IllegalArgumentException instead of returning null silently
-        return null;
+        int address, int length) throws IOException,IllegalArgumentException {
+    	checkAddress(address);
+        StatefulBuffer reader = getWriter(a_trans, address, length);
+        reader.readEncrypt(_this, address);
+        return reader;
     }
 
     public abstract StatefulBuffer readWriterByID(Transaction a_ta, int a_id);

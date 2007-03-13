@@ -2,6 +2,8 @@
 
 package com.db4o.internal.freespace;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.Tree;
 import com.db4o.internal.*;
@@ -65,34 +67,45 @@ public final class FreeSlotNode extends TreeInt {
 		return a_in;
 	}
 
-	public Object read(Buffer a_reader) {
-		int size = a_reader.readInt();
-		int address = a_reader.readInt();
+	public Object read(Buffer buffer) {
+		int size = buffer.readInt();
+		int address = buffer.readInt();
 		if (size > sizeLimit) {
 			FreeSlotNode node = new FreeSlotNode(size);
 			node.createPeer(address);
 			if (Deploy.debug) {
-				if (a_reader instanceof StatefulBuffer) {
-					Transaction trans = ((StatefulBuffer) a_reader).getTransaction();
-					if (trans.stream() instanceof IoAdaptedObjectContainer) {
-						StatefulBuffer checker = trans.stream().getWriter(trans,
-								node._peer._key, node._key);
-						checker.read();
-						for (int i = 0; i < node._key; i++) {
-							if (checker.readByte() != (byte) 'X') {
-								System.out
-										.println("!!! Free space corruption at:"
-												+ node._peer._key);
-								break;
-							}
-						}
-					}
-				}
+				debugCheckBuffer(buffer, node);
 			}
 			return node;
 		}
 		return null;
 	}
+
+	private void debugCheckBuffer(Buffer buffer, FreeSlotNode node) {
+		if (!(buffer instanceof StatefulBuffer)) {
+			return;
+		}
+		Transaction trans = ((StatefulBuffer) buffer).getTransaction();
+		if (!(trans.stream() instanceof IoAdaptedObjectContainer)) {
+			return;
+		}
+		StatefulBuffer checker = trans.stream().getWriter(trans,
+				node._peer._key, node._key);
+		try {
+			checker.read();
+			for (int i = 0; i < node._key; i++) {
+				if (checker.readByte() != (byte) 'X') {
+					System.out.println("!!! Free space corruption at:"
+							+ node._peer._key);
+					break;
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 
 	public final void write(Buffer a_writer) {
 		// byte order: size, address

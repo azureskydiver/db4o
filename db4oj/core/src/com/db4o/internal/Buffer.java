@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
@@ -74,8 +76,9 @@ public class Buffer implements SlotReader {
      * @param a_stream
      * @param a_address
      * @throws UncheckedIOException 
+     * @throws IOException 
      */
-    public void read(ObjectContainerBase stream, int address, int addressOffset) throws UncheckedIOException{
+    public void read(ObjectContainerBase stream, int address, int addressOffset) throws IOException{
         stream.readBytes(_buffer, address, addressOffset, getLength());
     }
 	
@@ -117,11 +120,11 @@ public class Buffer implements SlotReader {
 	    _offset += length;
 	}
     
-	public final Buffer readEmbeddedObject(Transaction trans) throws UncheckedIOException {
-		return trans.stream().readReaderByAddress(readInt(), readInt());
+	public final Buffer readEmbeddedObject(Transaction trans) throws IOException {
+		return trans.stream().bufferByAddress(readInt(), readInt());
 	}
 	
-	public void readEncrypt(ObjectContainerBase stream, int address) throws UncheckedIOException {
+	public void readEncrypt(ObjectContainerBase stream, int address) throws  IOException {
 		stream.readBytes(_buffer, address, getLength());
 		stream.i_handlers.decrypt(this);
 	}

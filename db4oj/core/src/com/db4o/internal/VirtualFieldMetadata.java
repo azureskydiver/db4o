@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.ix.*;
@@ -23,7 +25,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         super(null);
     }
     
-    public abstract void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer a_writer, Slot oldSlot);
+    public abstract void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer a_writer, Slot oldSlot) throws FieldIndexException;
     
     public boolean alive() {
         return true;

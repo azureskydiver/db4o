@@ -2,12 +2,15 @@
 
 package com.db4o.internal.handlers;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
+import com.db4o.io.UncheckedIOException;
 import com.db4o.reflect.*;
 
 
@@ -40,7 +43,7 @@ public final class StringHandler extends BuiltinTypeHandler {
     	return _stream.i_handlers.ICLASS_STRING;
     }
 
-    public Object comparableObject(Transaction a_trans, Object a_object){
+    public Object comparableObject(Transaction a_trans, Object a_object) throws UncheckedIOException {
         if(a_object == null){
             return null;
         }
@@ -48,7 +51,12 @@ public final class StringHandler extends BuiltinTypeHandler {
             return a_object;    
         }
         Slot s = (Slot) a_object;
-        return a_trans.stream().readReaderByAddress(s._address, s._length);
+        try {
+			return a_trans.stream().bufferByAddress(s._address, s._length);
+		} catch (IOException e) {
+			// FIXME: WE'LL DO A BIG SESSION NEXT TIME TO FIX IT!!!
+			throw new UncheckedIOException(e);
+		}
     }
     
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes){
@@ -132,8 +140,13 @@ public final class StringHandler extends BuiltinTypeHandler {
      * This readIndexEntry method reads from the parent slot.
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
      */
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
-        return mf._string.readIndexEntry(a_writer);
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, UncheckedIOException {
+        try {
+			return mf._string.readIndexEntry(a_writer);
+		} catch (IOException e) {
+			// FIXME: WILL BE HANDLED IN NEXT SESSION.
+			throw new UncheckedIOException(e);
+		}
     }
 
     /**
@@ -152,11 +165,17 @@ public final class StringHandler extends BuiltinTypeHandler {
 		return (slot._address == 0) && (slot._length == 0);
 	}
     
-	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException{
+	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, UncheckedIOException {
         if(! withRedirection){
             return mf._string.read(a_trans.stream(), a_reader);
         }
-	    Buffer reader = mf._string.readSlotFromParentSlot(a_trans.stream(), a_reader);
+	    Buffer reader;
+		try {
+			reader = mf._string.readSlotFromParentSlot(a_trans.stream(), a_reader);
+		} catch (IOException e) {
+			// FIXME: !!!!
+			throw new UncheckedIOException(e);
+		}
 	    if(a_toArray) {
 	        if(reader != null) {
                 return mf._string.readFromOwnSlot(a_trans.stream(), reader);
@@ -216,18 +235,26 @@ public final class StringHandler extends BuiltinTypeHandler {
 
     private Buffer i_compareTo;
 
-    private Buffer val(Object obj) {
+    private Buffer val(Object obj) throws UncheckedIOException {
         if(obj instanceof Buffer) {
             return (Buffer)obj;
         }
         if(obj instanceof String) {
             return StringMarshaller.writeShort(_stream, (String)obj);
         }
-        if(obj instanceof Slot){
-            Slot s = (Slot) obj;
-            return _stream.readReaderByAddress(s._address, s._length);
-        }
-        return null;
+
+        if (obj instanceof Slot) {
+			Slot s = (Slot) obj;
+
+			try {
+				return _stream.bufferByAddress(s._address, s._length);
+			} catch (IOException e) {
+				// FIXME: WE'LL DO A BIG SESSION NEXT TIME TO FIX IT!!!
+				throw new UncheckedIOException(e);
+			}
+		}
+        
+		return null;
     }
     
 	public void prepareComparison(Transaction a_trans, Object obj) {

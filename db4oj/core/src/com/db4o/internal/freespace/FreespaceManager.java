@@ -2,6 +2,8 @@
 
 package com.db4o.internal.freespace;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.internal.*;
 
@@ -95,7 +97,7 @@ public abstract class FreespaceManager {
     
     public abstract void read(int freeSlotsID);
     
-    public abstract void start(int slotAddress);
+    public abstract void start(int slotAddress) throws IOException;
     
     public abstract byte systemType();
     

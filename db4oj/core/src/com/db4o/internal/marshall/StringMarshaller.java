@@ -2,8 +2,11 @@
 
 package com.db4o.internal.marshall;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.io.UncheckedIOException;
 
 
 public abstract class StringMarshaller {
@@ -44,14 +47,19 @@ public abstract class StringMarshaller {
         return "";
     }
     
-    public String readFromParentSlot(ObjectContainerBase stream, Buffer reader, boolean redirect) throws CorruptionException {
+    public String readFromParentSlot(ObjectContainerBase stream, Buffer reader, boolean redirect) throws CorruptionException, UncheckedIOException {
         if(! redirect){
             return read(stream, reader);
         }
-        return read(stream, readSlotFromParentSlot(stream, reader));
+        try {
+			return read(stream, readSlotFromParentSlot(stream, reader));
+		} catch (IOException e) {
+			// FIXME: !!!!
+			throw new UncheckedIOException(e);
+		}
     }
     
-    public abstract Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException;
+    public abstract Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, IllegalArgumentException, IOException;
     
     public static String readShort(ObjectContainerBase stream, Buffer bytes) throws CorruptionException {
     	return readShort(stream.stringIO(),stream.configImpl().internStrings(),bytes);
@@ -77,7 +85,7 @@ public abstract class StringMarshaller {
     // TODO: Instead of working with YapReader objects to transport
     // string buffers, we should consider to have a specific string
     // buffer class, that allows comparisons and carries it's encoding.
-    public abstract Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException;
+    public abstract Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException, IOException;
 
     public static Buffer writeShort(ObjectContainerBase stream, String str){
         Buffer reader = new Buffer(stream.stringIO().length(str));

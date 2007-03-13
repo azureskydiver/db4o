@@ -206,7 +206,7 @@ public final class StatefulBuffer extends Buffer {
         return linkOffSet;
     }
 
-    public void read() throws UncheckedIOException {
+    public void read() throws IOException {
         stream().readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
@@ -224,7 +224,7 @@ public final class StatefulBuffer extends Buffer {
 		return true;
     }
 
-    public final StatefulBuffer readEmbeddedObject() throws UncheckedIOException {
+    public final StatefulBuffer readEmbeddedObject() throws IOException {
         int id = readInt();
         int length = readInt();
         StatefulBuffer bytes = null;

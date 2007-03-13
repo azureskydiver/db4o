@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.io.UncheckedIOException;
 
 
 /**
@@ -39,7 +40,7 @@ public abstract class FileHeader {
         return header;
     }
 
-	private static Buffer prepareFileHeaderReader(LocalObjectContainer file) {
+	private static Buffer prepareFileHeaderReader(LocalObjectContainer file) throws IOException {
 		Buffer reader = new Buffer(readerLength()); 
         reader.read(file, 0, 0);
 		return reader;
@@ -112,7 +113,7 @@ public abstract class FileHeader {
 		return container.needsLockFileThread() && ( lastAccessTime != 0);
 	}
 
-	public static void checkIfOtherSessionAlive(LocalObjectContainer container, int address, int offset, long lastAccessTime) {
+	public static void checkIfOtherSessionAlive(LocalObjectContainer container, int address, int offset, long lastAccessTime) throws IOException {
 		StatefulBuffer reader;
 		container.logMsg(Messages.FAILED_TO_SHUTDOWN, null);
 		long waitTime = Const4.LOCK_TIME_INTERVAL * 5;

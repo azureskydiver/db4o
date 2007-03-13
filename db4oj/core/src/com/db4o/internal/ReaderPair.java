@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.mapping.*;
@@ -142,11 +144,11 @@ public final class ReaderPair implements SlotReader {
 		return _mapping;
 	}
 
-	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command) throws CorruptionException {
+	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command) throws CorruptionException, IOException {
 		processCopy(context, sourceID, command, false);
 	}
 
-	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException {
+	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException, IOException {
 		Buffer sourceReader=(
 				registerAddressMapping 
 					? context.sourceWriterByID(sourceID) 

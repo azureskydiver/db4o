@@ -161,7 +161,7 @@ public class Defragment {
 	}
 
 	private static void defragUnindexed(DefragContextImpl context)
-			throws CorruptionException {
+			throws CorruptionException, IOException {
 		Iterator4 unindexedIDs = context.unindexedIDs();
 		while (unindexedIDs.moveNext()) {
 			final int origID = ((Integer) unindexedIDs.current()).intValue();
@@ -190,20 +190,20 @@ public class Defragment {
 	}
 
 	private static void firstPass(DefragContextImpl context,
-			DefragmentConfig config) throws CorruptionException {
+			DefragmentConfig config) throws CorruptionException, IOException {
 		// System.out.println("FIRST");
 		pass(context, config, new FirstPassCommand());
 	}
 
 	private static void secondPass(final DefragContextImpl context,
-			DefragmentConfig config) throws CorruptionException {
+			DefragmentConfig config) throws CorruptionException, IOException {
 		// System.out.println("SECOND");
 		pass(context, config, new SecondPassCommand(config.objectCommitFrequency()));
 	}
 
 	private static void pass(DefragContextImpl context,
 			DefragmentConfig config, PassCommand command)
-			throws CorruptionException {
+			throws CorruptionException, IOException {
 		command.processClassCollection(context);
 		StoredClass[] classes = context
 				.storedClasses(DefragContextImpl.SOURCEDB);
@@ -235,7 +235,7 @@ public class Defragment {
 	// - investigate.
 	private static void processYapClass(final DefragContextImpl context,
 			final ClassMetadata curClass, final PassCommand command)
-			throws CorruptionException {
+			throws CorruptionException, IOException {
 		processClassIndex(context, curClass, command);
 		if (!parentHasIndex(curClass)) {
 			processObjectsForYapClass(context, curClass, command);
@@ -262,9 +262,12 @@ public class Defragment {
 			public void visit(Object obj) {
 				int id = ((Integer) obj).intValue();
 				try {
+					// FIXME bubble up exceptions
 					command.processObjectSlot(context, curClass, id,
 							withStringIndex);
 				} catch (CorruptionException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -285,7 +288,7 @@ public class Defragment {
 
 	private static void processYapClassAndFieldIndices(
 			final DefragContextImpl context, final ClassMetadata curClass,
-			final PassCommand command) throws CorruptionException {
+			final PassCommand command) throws CorruptionException, IOException {
 		int sourceClassIndexID = 0;
 		int targetClassIndexID = 0;
 		if (curClass.hasIndex()) {
@@ -298,7 +301,7 @@ public class Defragment {
 
 	private static void processClassIndex(final DefragContextImpl context,
 			final ClassMetadata curClass, final PassCommand command)
-			throws CorruptionException {
+			throws CorruptionException, IOException {
 		if (curClass.hasIndex()) {
 			BTreeClassIndexStrategy indexStrategy = (BTreeClassIndexStrategy) curClass
 					.index();

@@ -2,6 +2,8 @@
 
 package com.db4o.internal.mapping;
 
+import java.io.IOException;
+
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
@@ -13,10 +15,10 @@ import com.db4o.internal.btree.*;
  */
 public interface DefragContext extends IDMapping {
 	
-	Buffer sourceReaderByAddress(int address,int length);
-	Buffer targetReaderByAddress(int address,int length);
+	Buffer sourceReaderByAddress(int address,int length) throws IOException;
+	Buffer targetReaderByAddress(int address,int length) throws IOException;
 
-	Buffer sourceReaderByID(int sourceID);
+	Buffer sourceReaderByID(int sourceID) throws IOException;
 
 	int allocateTargetSlot(int targetLength);
 
@@ -30,7 +32,7 @@ public interface DefragContext extends IDMapping {
 	
 	ClassMetadata yapClass(int id);
 
-	StatefulBuffer sourceWriterByID(int sourceID);
+	StatefulBuffer sourceWriterByID(int sourceID) throws IOException;
 	
 	int mappedID(int id,boolean lenient);
 

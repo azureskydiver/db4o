@@ -124,13 +124,13 @@ public final class ConfigBlock {
         return _container.systemData();
     }
 	
-	private void read(int address) {
+	private void read(int address) throws IOException {
         addressChanged(address);
 		timerFileLock().writeOpenTime();
 		StatefulBuffer reader = _container.getWriter(_container.getSystemTransaction(), _address, LENGTH);
 		try{
 			_container.readBytes(reader._buffer, _address, LENGTH);
-		}catch(Exception e){
+		}catch(RuntimeException e){
 			// TODO: Exception handling
 		}
 		int oldLength = reader.readInt();

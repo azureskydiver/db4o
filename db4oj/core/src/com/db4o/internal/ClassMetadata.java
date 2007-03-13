@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.config.ObjectMarshaller;
@@ -2006,7 +2008,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		readers.incrementOffset(restLength);
 	}
 	
-	public void defragClass(ReaderPair readers, int classIndexID) throws CorruptionException {
+	public void defragClass(ReaderPair readers, int classIndexID) throws CorruptionException, IOException {
 		MarshallerFamily mf = MarshallerFamily.current();
 		mf._class.defrag(this,i_stream.stringIO(), readers, classIndexID);
 	}

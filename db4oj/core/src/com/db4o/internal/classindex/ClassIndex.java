@@ -2,10 +2,24 @@
 
 package com.db4o.internal.classindex;
 
-import com.db4o.*;
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
-import com.db4o.internal.slots.*;
+import java.io.IOException;
+
+import com.db4o.Deploy;
+import com.db4o.foundation.Debug4;
+import com.db4o.foundation.Tree;
+import com.db4o.internal.Buffer;
+import com.db4o.internal.ClassIndexException;
+import com.db4o.internal.ClassMetadata;
+import com.db4o.internal.Const4;
+import com.db4o.internal.Exceptions4;
+import com.db4o.internal.LocalTransaction;
+import com.db4o.internal.ObjectContainerBase;
+import com.db4o.internal.PersistentBase;
+import com.db4o.internal.ReadWriteable;
+import com.db4o.internal.Transaction;
+import com.db4o.internal.TreeInt;
+import com.db4o.internal.TreeReader;
+import com.db4o.internal.slots.Slot;
 
 /**
  * representation to collect and hold all IDs of one class
@@ -13,7 +27,7 @@ import com.db4o.internal.slots.*;
  public class ClassIndex extends PersistentBase implements ReadWriteable {
      
      
-    private final ClassMetadata _yapClass;
+    private final ClassMetadata _clazz;
      
 	/**
 	 * contains TreeInt with object IDs 
@@ -21,7 +35,7 @@ import com.db4o.internal.slots.*;
 	private TreeInt i_root;
     
     ClassIndex(ClassMetadata yapClass){
-        _yapClass = yapClass;
+        _clazz = yapClass;
     }
 	
 	public void add(int a_id){
@@ -53,7 +67,11 @@ import com.db4o.internal.slots.*;
             length += Const4.LEADING_LENGTH;
         }
         Buffer reader = new Buffer(length);
-        reader.readEncrypt(ta.stream(), slot._address);
+        try {
+			reader.readEncrypt(ta.stream(), slot._address);
+		} catch (IOException exc) {
+			throw new ClassIndexException(exc, _clazz);
+		}
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
         }
@@ -101,6 +119,6 @@ import com.db4o.internal.slots.*;
         if(! Debug4.prettyToStrings){
             return super.toString();
         }
-        return _yapClass + " index";  
+        return _clazz + " index";  
     }
 }

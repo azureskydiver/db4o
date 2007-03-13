@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -24,7 +26,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         i_handler = new LongHandler(stream);
     }
     
-    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {
+    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) throws FieldIndexException {
         
         boolean isnew = (oldSlot == null);
 
@@ -36,9 +38,13 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         LocalObjectContainer yf = (LocalObjectContainer)writer.getStream();
         
         if( (uuid == 0 || db4oDatabaseIdentityID == 0) && writer.getID() > 0 && ! isnew){
-        	DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(yf, yapClass, oldSlot, false);            
-            db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
-            uuid = identityAndUUID.uuid;
+        	try {
+				DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(yf, yapClass, oldSlot, false);            
+				db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
+				uuid = identityAndUUID.uuid;
+			} catch (IOException exc) {
+				throw new FieldIndexException(exc,this);
+			}
         }
         
         if(db4oDatabaseIdentityID == 0){
@@ -66,11 +72,12 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 		}
     }
 
-	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, ClassMetadata yapClass, Slot oldSlot, boolean checkClass) {
+    // FIXME probably always should throw in exceptional circumstances?
+	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, ClassMetadata yapClass, Slot oldSlot, boolean checkClass) throws IOException {
         if(DTrace.enabled){
             DTrace.REREAD_OLD_UUID.logLength(oldSlot.getAddress(), oldSlot.getLength());
         }
-		Buffer reader = stream.readReaderByAddress(oldSlot.getAddress(), oldSlot.getLength());
+		Buffer reader = stream.bufferByAddress(oldSlot.getAddress(), oldSlot.getLength());
 		if(checkClass){
             ClassMetadata realClass = ClassMetadata.readClass(stream,reader);
             if(realClass != yapClass){
@@ -107,12 +114,18 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	return super.getIndex(transaction);
     }
     
-    protected void rebuildIndexForObject(LocalObjectContainer stream, ClassMetadata yapClass, int objectId) {
-    	DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, ((LocalTransaction)stream.getSystemTransaction()).getCurrentSlotOfID(objectId), true);
-    	if (null == data) {
-    		return;
-    	}
-    	addIndexEntry(stream.getSystemTransaction(), objectId, new Long(data.uuid));
+    protected void rebuildIndexForObject(LocalObjectContainer stream, ClassMetadata yapClass, int objectId) throws FieldIndexException {
+    	try {
+			DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, ((LocalTransaction)stream.getSystemTransaction()).getCurrentSlotOfID(objectId), true);
+			if (null == data) {
+				return;
+			}
+			addIndexEntry(stream.getSystemTransaction(), objectId, new Long(data.uuid));
+		} catch (SlotRetrievalException exc) {
+			throw new FieldIndexException(exc,this);
+		} catch (IOException exc) {
+			throw new FieldIndexException(exc,this);
+		}
     }
     
 	private void ensureIndex(Transaction transaction) {

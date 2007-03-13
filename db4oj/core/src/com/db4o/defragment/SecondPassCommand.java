@@ -2,6 +2,8 @@
 
 package com.db4o.defragment;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
@@ -25,18 +27,18 @@ final class SecondPassCommand implements PassCommand {
 		_objectCommitFrequency = objectCommitFrequency;
 	}
 
-	public void processClass(final DefragContextImpl context, final ClassMetadata yapClass, int id,final int classIndexID) throws CorruptionException {
+	public void processClass(final DefragContextImpl context, final ClassMetadata yapClass, int id,final int classIndexID) throws CorruptionException, IOException {
 		if(context.mappedID(id,-1)==-1) {
 			System.err.println("MAPPING NOT FOUND: "+id);
 		}
 		ReaderPair.processCopy(context, id, new SlotCopyHandler() {
-			public void processCopy(ReaderPair readers) throws CorruptionException {
+			public void processCopy(ReaderPair readers) throws CorruptionException, IOException {
 				yapClass.defragClass(readers, classIndexID);
 			}
 		});
 	}
 
-	public void processObjectSlot(final DefragContextImpl context, final ClassMetadata yapClass, int id, boolean registerAddresses) throws CorruptionException {
+	public void processObjectSlot(final DefragContextImpl context, final ClassMetadata yapClass, int id, boolean registerAddresses) throws CorruptionException, IOException {
 		ReaderPair.processCopy(context, id, new SlotCopyHandler() {
 			public void processCopy(ReaderPair readers) {
 				ClassMetadata.defragObject(readers);
@@ -51,7 +53,7 @@ final class SecondPassCommand implements PassCommand {
 		},registerAddresses);
 	}
 
-	public void processClassCollection(DefragContextImpl context) throws CorruptionException {
+	public void processClassCollection(DefragContextImpl context) throws CorruptionException, IOException {
 		ReaderPair.processCopy(context, context.sourceClassCollectionID(), new SlotCopyHandler() {
 			public void processCopy(ReaderPair readers) {
 				ClassMetadataRepository.defrag(readers);
@@ -59,7 +61,7 @@ final class SecondPassCommand implements PassCommand {
 		});
 	}
 
-	public void processBTree(final DefragContextImpl context, BTree btree) throws CorruptionException {
+	public void processBTree(final DefragContextImpl context, BTree btree) throws CorruptionException, IOException {
 		btree.defragBTree(context);
 	}
 

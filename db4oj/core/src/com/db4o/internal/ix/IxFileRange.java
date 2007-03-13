@@ -2,9 +2,17 @@
 
 package com.db4o.internal.ix;
 
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
-import com.db4o.internal.freespace.*;
+import java.io.IOException;
+
+import com.db4o.foundation.Debug4;
+import com.db4o.foundation.IntObjectVisitor;
+import com.db4o.foundation.Tree;
+import com.db4o.foundation.Visitor4;
+import com.db4o.internal.Buffer;
+import com.db4o.internal.LocalObjectContainer;
+import com.db4o.internal.StatefulBuffer;
+import com.db4o.internal.Transaction;
+import com.db4o.internal.freespace.FreespaceVisitor;
 
 /**
  * A range of index entries in the database file. 
@@ -71,7 +79,7 @@ class IxFileRange extends IxTree{
         visit((Visitor4)obj, null);
     }
 
-    public void visit(Visitor4 visitor, int[] lowerUpper){
+    public void visit(Visitor4 visitor, int[] lowerUpper) throws IxException {
         IxFileRangeReader frr = reader();
         if (lowerUpper == null) {
             lowerUpper = new int[] { 0, _entries - 1};
@@ -79,7 +87,12 @@ class IxFileRange extends IxTree{
         int count = lowerUpper[1] - lowerUpper[0] + 1;
         if (count > 0) {
             Buffer fileReader = new Buffer(count * frr._slotLength);
-            fileReader.read(stream(), _address, _addressOffset + (lowerUpper[0] * frr._slotLength));
+			int offset = _addressOffset + (lowerUpper[0] * frr._slotLength);
+			try {
+				fileReader.read(stream(), _address, offset);
+			} catch (IOException e) {
+				throw new IxException(e, _address, offset);
+			}
             for (int i = lowerUpper[0]; i <= lowerUpper[1]; i++) {
                 fileReader.incrementOffset(frr._linkLegth);
                 visitor.visit(new Integer(fileReader.readInt()));
@@ -95,18 +108,25 @@ class IxFileRange extends IxTree{
         return _entries;
     }
     
-    public void visitAll(IntObjectVisitor visitor) {
-        LocalObjectContainer yf = stream();
-        Transaction transaction = trans();
-        Buffer fileReader = new Buffer(slotLength());
-        for (int i = 0; i < _entries; i++) {
-            int address = _address + (i * slotLength());
-            fileReader.read(yf, address, _addressOffset);
-            fileReader._offset = 0;
-            Object obj = handler().comparableObject(transaction, handler().readIndexEntry(fileReader));
-            visitor.visit(fileReader.readInt(), obj);
-        }
-    }
+    public void visitAll(IntObjectVisitor visitor) throws IxException {
+		LocalObjectContainer yf = stream();
+		Transaction transaction = trans();
+		Buffer fileReader = new Buffer(slotLength());
+		for (int i = 0; i < _entries; i++) {
+			int address = _address + (i * slotLength());
+			try {
+
+				fileReader.read(yf, address, _addressOffset);
+			} catch (IOException e) {
+				throw new IxException(e, address, _addressOffset);
+			}
+			fileReader._offset = 0;
+			Object obj = handler().comparableObject(transaction,
+					handler().readIndexEntry(fileReader));
+			visitor.visit(fileReader.readInt(), obj);
+		}
+
+	}
     
     public void visitFirst(FreespaceVisitor visitor){
         if(_preceding != null){
@@ -131,7 +151,11 @@ class IxFileRange extends IxTree{
     public void freespaceVisit(FreespaceVisitor visitor, int index){
         IxFileRangeReader frr = reader();
         Buffer fileReader = new Buffer(frr._slotLength);
-        fileReader.read(stream(), _address, _addressOffset + (index * frr._slotLength));
+        try {
+			fileReader.read(stream(), _address, _addressOffset + (index * frr._slotLength));
+		} catch (IOException e) {
+			throw new IxException(e, _address, _addressOffset);
+		}
         int val = fileReader.readInt();
         int parentID = fileReader.readInt();
         visitor.visit(parentID, val);
