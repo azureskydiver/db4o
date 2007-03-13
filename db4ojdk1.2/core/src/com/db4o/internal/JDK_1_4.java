@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -16,11 +17,14 @@ class JDK_1_4 extends JDK_1_3 {
 	private Constructor objectConstructor;
 	private Method factoryMethod;
 	
-	synchronized void lockFile(String path,Object file) {
+	synchronized void lockFile(String path,Object file) throws IOException {
+		// Conversion to canonical is already done by RandomAccessFileAdapter, but it's probably
+		// not safe to rely on that for other file-based adapters.
+		String canonicalPath=new File(path).getCanonicalPath();
 		if(fileLocks == null){
 			fileLocks = new Hashtable();
 		}
-		if(fileLocks.containsKey(path)) {
+		if(fileLocks.containsKey(canonicalPath)) {
 			throw new DatabaseFileLockedException();
 		}
 		Object channel = invoke(file, "getChannel", null, null);
@@ -28,7 +32,7 @@ class JDK_1_4 extends JDK_1_3 {
 		if(fl == null){
 			throw new DatabaseFileLockedException();
 		}
-		fileLocks.put(path, fl);
+		fileLocks.put(canonicalPath, fl);
 	}
 	
 	synchronized void unlockFile(String path,Object file) {
