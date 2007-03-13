@@ -101,7 +101,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		if (_member instanceof Compare) {
 			_member = ((Compare) _member).compare();
 			LocalObjectContainer stream = getStream();
-			_yapClass = stream.getYapClass(stream.reflector().forObject(_member));
+			_yapClass = stream.classMetadataForReflectClass(stream.reflector().forObject(_member));
 			_key = (int) stream.getID(_member);
             setBytes(stream.readReaderByID(getTransaction(), _key));
 		}
@@ -451,10 +451,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 			ClassMetadata yc = null;
 			if (_bytes != null) {
-				yc = a_stream.produceYapClass(a_stream.reflector().forObject(a_constraint));
+				yc = a_stream.produceClassMetadata(a_stream.reflector().forObject(a_constraint));
 			} else {
 				if (_member != null) {
-					yc = a_stream.getYapClass(a_stream.reflector().forObject(_member));
+					yc = a_stream.classMetadataForReflectClass(a_stream.reflector().forObject(_member));
 				}
 			}
 			if (yc != null) {

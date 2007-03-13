@@ -10,7 +10,7 @@ public final class MWriteUpdateDeleteMembers extends MsgD {
 		synchronized (streamLock()) {
 			transaction().writeUpdateDeleteMembers(
 			    readInt(),
-				stream().getYapClass(readInt()),
+				stream().classMetadataForId(readInt()),
 				readInt(),
 				readInt()
                 );

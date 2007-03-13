@@ -454,7 +454,7 @@ public class FieldMetadata implements StoredField {
 
     public ClassMetadata getFieldYapClass(ObjectContainerBase a_stream) {
         // alive needs to be checked by all callers: Done
-        return i_handler.getYapClass(a_stream);
+        return i_handler.getClassMetadata(a_stream);
     }
     
     public TypeHandler4 getHandler() {

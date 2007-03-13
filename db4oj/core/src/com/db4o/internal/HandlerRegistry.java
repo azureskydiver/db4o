@@ -342,7 +342,7 @@ public final class HandlerRegistry {
         if (yc != null) {
             return ((PrimitiveFieldHandler) yc).i_handler;
         }
-        return a_stream.produceYapClass(a_class);
+        return a_stream.produceClassMetadata(a_class);
     }
 
 	public TypeHandler4 untypedHandler() {

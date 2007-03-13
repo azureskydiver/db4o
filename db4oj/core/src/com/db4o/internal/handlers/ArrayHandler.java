@@ -154,8 +154,8 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return i_handler.getTypeID();
     }
 
-    public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
-        return i_handler.getYapClass(a_stream);
+    public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
+        return i_handler.getClassMetadata(a_stream);
     }
 
     public byte identifier() {
@@ -350,7 +350,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		        }
 		    }
 		    int classID = - elements;
-			ClassMetadata yc = a_trans.stream().getYapClass(classID);
+			ClassMetadata yc = a_trans.stream().classMetadataForId(classID);
 		    if (yc != null) {
 		        return (primitive ? yc.primitiveClassReflector() : yc.classReflector());
 		    }
@@ -391,7 +391,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
         if(primitive){
             claxx = stream.i_handlers.handlerForClass(stream,claxx).classReflector();
         }
-        ClassMetadata yc = stream.produceYapClass(claxx);
+        ClassMetadata yc = stream.produceClassMetadata(claxx);
         if (yc != null) {
             yapClassID = yc.getID();
         }

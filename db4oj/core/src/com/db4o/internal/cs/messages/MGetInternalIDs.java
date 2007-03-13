@@ -11,7 +11,7 @@ public final class MGetInternalIDs extends MsgD {
 		long[] ids;
 		synchronized (streamLock()) {
 			try {
-				ids = stream().getYapClass(bytes.readInt()).getIDs(transaction());
+				ids = stream().classMetadataForId(bytes.readInt()).getIDs(transaction());
 			} catch (Exception e) {
 				ids = new long[0];
 			}

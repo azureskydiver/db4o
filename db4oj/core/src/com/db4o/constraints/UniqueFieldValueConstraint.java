@@ -66,13 +66,13 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 				if(_fieldMetaData != null){
 					return _fieldMetaData;
 				}
-				_fieldMetaData = classMetadata().getYapField(_fieldName);
+				_fieldMetaData = classMetadata().fieldMetadataForName(_fieldName);
 				return _fieldMetaData;
 			}
 			
 			private ClassMetadata classMetadata(){
 				ReflectClass reflectClass = ReflectorUtils.reflectClassFor(objectContainer.reflector(), _clazz);
-				return objectContainer.getYapClass(reflectClass); 
+				return objectContainer.classMetadataForReflectClass(reflectClass); 
 			}
 			
 			private final Transaction transaction(){
@@ -84,8 +84,5 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 		
 		EventRegistryFactory.forObjectContainer(objectContainer).committing().addListener(listener);
 	}
-	
-	
-	
 	
 }

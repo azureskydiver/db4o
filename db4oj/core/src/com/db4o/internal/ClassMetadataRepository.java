@@ -64,7 +64,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         while (i.moveNext()) {
             final ClassMetadata yc = i.currentClass();
             if(! yc.isInternal()){
-                yc.forEachYapField(new Visitor4() {
+                yc.forEachFieldMetadata(new Visitor4() {
                     public void visit(Object obj) {
                         FieldMetadata yf = (FieldMetadata)obj;
                         if(yf.canAddToQuery(fieldName)){
@@ -88,9 +88,9 @@ public final class ClassMetadataRepository extends PersistentBase {
         ReflectClass superClass = a_class.getSuperclass();
         ClassMetadata superYapClass = null;
         if (superClass != null && ! superClass.equals(stream().i_handlers.ICLASS_OBJECT)) {
-            superYapClass = produceYapClass(superClass);
+            superYapClass = produceClassMetadata(superClass);
         }
-        boolean ret = stream().createYapClass(a_yapClass, a_class, superYapClass);
+        boolean ret = stream().createClassMetadata(a_yapClass, a_class, superYapClass);
         i_yapClassCreationDepth--;
         initYapClassesOnUp();
         return ret;
@@ -137,7 +137,7 @@ public final class ClassMetadataRepository extends PersistentBase {
     boolean fieldExists(String a_field) {
         ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
-            if (i.currentClass().getYapField(a_field) != null) {
+            if (i.currentClass().fieldMetadataForName(a_field) != null) {
                 return true;
             }
         }
@@ -181,7 +181,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         return (ClassMetadata)i_yapClassByClass.get(a_class);
     }
     
-    ClassMetadata getYapClass (ReflectClass a_class) {
+    ClassMetadata classMetadataForReflectClass (ReflectClass a_class) {
     	ClassMetadata yapClass = (ClassMetadata)i_yapClassByClass.get(a_class);
         if (yapClass != null) {
         	return yapClass;
@@ -191,9 +191,9 @@ public final class ClassMetadataRepository extends PersistentBase {
         return yapClass;
     }
 
-    ClassMetadata produceYapClass(ReflectClass a_class) {
+    ClassMetadata produceClassMetadata(ReflectClass a_class) {
     	
-    	ClassMetadata yapClass = getYapClass(a_class);
+    	ClassMetadata yapClass = classMetadataForReflectClass(a_class);
     	
         if (yapClass != null ) {
             return yapClass;

@@ -12,7 +12,7 @@ public final class MWriteNew extends MsgObject {
         LocalObjectContainer stream = (LocalObjectContainer)stream();
         unmarshall(_payLoad._offset);
         synchronized (streamLock()) {
-            ClassMetadata yc = yapClassId == 0 ? null : stream.getYapClass(yapClassId);
+            ClassMetadata yc = yapClassId == 0 ? null : stream.classMetadataForId(yapClassId);
             _payLoad.writeEmbedded();
             
             int id = _payLoad.getID();

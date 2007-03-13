@@ -38,7 +38,7 @@ public final class ObjectHeader {
         
         classID=normalizeID(classID);
 
-        _yapClass=(yc!=null ? yc : stream.getYapClass(classID));
+        _yapClass=(yc!=null ? yc : stream.classMetadataForId(classID));
 
         if (Deploy.debug) {
         	// This check has been added to cope with defragment in debug mode: SlotDefragment#setIdentity()

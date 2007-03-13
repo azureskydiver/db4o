@@ -87,14 +87,14 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private void ensureLoadStaticClass() {
-		_container.produceYapClass(_container.i_handlers.ICLASS_STATICCLASS);
+		_container.produceClassMetadata(_container.i_handlers.ICLASS_STATICCLASS);
 	}
 	
 	private void ensureLoadConfiguredClasses() {
 		// make sure all configured YapClasses are up in the repository
 		_config.exceptionalClasses().forEachValue(new Visitor4() {
 			public void visit(Object a_object) {
-				_container.produceYapClass(_container.reflector().forName(
+				_container.produceClassMetadata(_container.reflector().forName(
 						((Config4Class) a_object).getName()));
 			}
 		});

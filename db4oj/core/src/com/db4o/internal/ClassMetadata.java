@@ -710,14 +710,14 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return oh._marshallerFamily;
     }
 
-    void forEachYapField(Visitor4 visitor) {
+    void forEachFieldMetadata(Visitor4 visitor) {
         if (i_fields != null) {
             for (int i = 0; i < i_fields.length; i++) {
                 visitor.visit(i_fields[i]);
             }
         }
         if (i_ancestor != null) {
-            i_ancestor.forEachYapField(visitor);
+            i_ancestor.forEachFieldMetadata(visitor);
         }
     }
     
@@ -727,9 +727,9 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         	throw new ObjectNotStorableException(obj.toString());
         }
         if(allowCreation){
-        	return trans.stream().produceYapClass(reflectClass);
+        	return trans.stream().produceClassMetadata(reflectClass);
         }
-        return trans.stream().getYapClass(reflectClass);
+        return trans.stream().classMetadataForReflectClass(reflectClass);
     }
     
     public boolean generateUUIDs() {
@@ -918,13 +918,13 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return Const4.TYPE_CLASS;
     }
 
-    public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
+    public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
         return this;
     }
 
-    public FieldMetadata getYapField(final String name) {
+    public FieldMetadata fieldMetadataForName(final String name) {
         final FieldMetadata[] yf = new FieldMetadata[1];
-        forEachYapField(new Visitor4() {
+        forEachFieldMetadata(new Visitor4() {
             public void visit(Object obj) {
                 if (name.equals(((FieldMetadata)obj).getName())) {
                     yf[0] = (FieldMetadata)obj;
@@ -943,7 +943,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     	if(classReflector().isCollection()){
             return true;
         }
-        return getYapField(a_field) != null;
+        return fieldMetadataForName(a_field) != null;
     }
     
     boolean hasVirtualAttributes(){
@@ -1045,7 +1045,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 			}  
             
 			shareTransaction(obj, buffer.getTransaction());
-			shareYapObject(obj, ref);
+			shareObjectReference(obj, ref);
             
 			ref.setObjectWeak(stream, obj);
 			stream.referenceSystem().addExistingReferenceToObjectTree(ref);
@@ -1138,9 +1138,9 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		return i_config != null && (i_config.cascadeOnActivate() == TernaryBool.YES);
 	}
 
-	private void shareYapObject(Object obj, ObjectReference yapObj) {
+	private void shareObjectReference(Object obj, ObjectReference ref) {
 		if (obj instanceof Db4oTypeImpl) {
-		    ((Db4oTypeImpl)obj).setYapObject(yapObj);
+		    ((Db4oTypeImpl)obj).setObjectReference(ref);
 		}
 	}
 
@@ -1674,7 +1674,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     public StoredField storedField(String a_name, Object a_type) {
         synchronized(i_stream.i_lock){
         	
-            ClassMetadata yc = i_stream.getYapClass(ReflectorUtils.reflectClassFor(reflector(), a_type)); 
+            ClassMetadata yc = i_stream.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), a_type)); 
     		
 	        if(i_fields != null){
 	            for (int i = 0; i < i_fields.length; i++) {

@@ -22,7 +22,7 @@ public final class MCreateClass extends MsgD {
 		}
 		synchronized (streamLock()) {
 			try {
-				ClassMetadata yapClass = stream.produceYapClass(claxx);
+				ClassMetadata yapClass = stream.produceClassMetadata(claxx);
 				if (yapClass == null) {
 					return writeFailedMessage(serverThread);
 				}

@@ -12,19 +12,19 @@ import com.db4o.*;
  */
 public interface Db4oTypeImpl extends TransactionAware {
 	
-	int adjustReadDepth(int a_depth);
+	int adjustReadDepth(int depth);
     
     boolean canBind();
 	
-	Object createDefault(Transaction a_trans);
+	Object createDefault(Transaction trans);
 	
 	boolean hasClassIndex();
     
     void replicateFrom(Object obj);
 	
-	void setYapObject(ObjectReference a_yapObject);
+	void setObjectReference(ObjectReference ref);
 	
-	Object storedTo(Transaction a_trans);
+	Object storedTo(Transaction trans);
 	
 	void preDeactivate();
 	

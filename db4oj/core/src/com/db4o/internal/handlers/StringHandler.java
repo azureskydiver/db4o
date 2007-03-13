@@ -73,7 +73,7 @@ public final class StringHandler extends BuiltinTypeHandler {
         return Const4.YAPSTRING;
     }
 
-    public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
+    public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
         return a_stream.i_handlers.primitiveClassById(getID());
     }
     

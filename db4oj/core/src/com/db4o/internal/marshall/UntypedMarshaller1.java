@@ -21,7 +21,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
             int linkOffset = reader._offset;
             reader._offset = payLoadOffset;
             int yapClassID = reader.readInt();
-            ClassMetadata yc = reader.getStream().getYapClass(yapClassID);
+            ClassMetadata yc = reader.getStream().classMetadataForId(yapClassID);
             if(yc != null){
                 yc.deleteEmbedded(_family, reader);
             }
@@ -43,7 +43,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader.readInt();
         
-        ClassMetadata yc = reader.getStream().getYapClass(yapClassID);
+        ClassMetadata yc = reader.getStream().classMetadataForId(yapClassID);
         if(yc != null){
             ret = yc.read(_family, reader, true);
         }
@@ -67,7 +67,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader.readInt();
         
-        ClassMetadata yc = trans.stream().getYapClass(yapClassID);
+        ClassMetadata yc = trans.stream().classMetadataForId(yapClassID);
         if(yc != null){
             ret = yc.readQuery(trans, _family, false, reader, toArray);
         }
@@ -91,7 +91,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader[0].readInt();
         
-        ClassMetadata yc = trans.stream().getYapClass(yapClassID);
+        ClassMetadata yc = trans.stream().classMetadataForId(yapClassID);
         if(yc != null){
             ret = yc.readArrayHandler(trans, _family, reader);
         }
@@ -111,7 +111,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader.readInt();
         
-        ClassMetadata yc = candidates.i_trans.stream().getYapClass(yapClassID);
+        ClassMetadata yc = candidates.i_trans.stream().classMetadataForId(yapClassID);
         if(yc != null){
             ret = yc.readSubCandidate(_family, reader, candidates, false);
         }
