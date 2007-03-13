@@ -21,14 +21,16 @@
       <fileset dir="${dir.j.tutorial}"					includes="build.xml"/>
   
       <fileset dir="db4o-java"									includes="build.xml"/>
+	  <fileset dir="${dir.objectmanager-api}"					includes="build-1.1.xml"/>
+	  <fileset dir="${dir.objectmanager-swing}"					includes="build-1.1.xml"/>
 			
 			<!-- dRS.zip projects -->
 			<fileset dir="../drs"											includes="build-1.1.xml"/>
 			
 			<!-- .net projects -->
-			
-			<fileset dir="../javatocsharp/javatocsharp.core"	includes="build-1.1.xml"/>
 			<!--
+			<fileset dir="../javatocsharp/javatocsharp.core"	includes="build-1.1.xml"/>
+			
 			<fileset dir="db4o.net"	includes="build.xml"/>
 			-->
     </ivy:buildlist>
