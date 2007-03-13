@@ -19,7 +19,7 @@ public class EventAssert {
 			final Event4 expectedEvent, final ObjectInfo[] expectedAdded,
 			final ObjectInfo[] expectedDeleted, final ObjectInfo[] expectedUpdated) {
 		eventRecorder.waitForEventCount(1);
-		Assert.areEqual(1, eventRecorder.size());		
+		Assert.areEqual(1, eventRecorder.size(), eventRecorder.toString());		
 		Assert.areSame(expectedEvent, eventRecorder.get(0).e);
 		CommitEventArgs args = (CommitEventArgs)eventRecorder.get(0).args;
 		assertContainsAll(expectedAdded, args.added(), "added");
