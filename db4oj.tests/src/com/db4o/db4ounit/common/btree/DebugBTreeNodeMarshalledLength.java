@@ -40,7 +40,7 @@ public class DebugBTreeNodeMarshalledLength extends AbstractDb4oTestCase{
 	}
 	
 	private BTree btree(){
-		ClassMetadata clazz = stream().getYapClass(reflector().forClass(Item.class));
+		ClassMetadata clazz = stream().classMetadataForReflectClass(reflector().forClass(Item.class));
 		ClassIndexStrategy index = clazz.index();
 		return ((BTreeClassIndexStrategy)index).btree();
 	}

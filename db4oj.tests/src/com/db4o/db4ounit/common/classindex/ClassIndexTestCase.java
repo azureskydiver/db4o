@@ -53,7 +53,7 @@ public class ClassIndexTestCase extends AbstractDb4oTestCase implements OptOutCS
 	}
 
 	private void assertIndex(Object[] expected) {
-		ClassMetadata clazz = stream().getYapClass(reflector().forClass(Item.class));
+		ClassMetadata clazz = stream().classMetadataForReflectClass(reflector().forClass(Item.class));
 		ExpectingVisitor visitor = new ExpectingVisitor(expected);
 		ClassIndexStrategy index = clazz.index();
 		index.traverseAll(trans(),visitor);
