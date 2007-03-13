@@ -271,7 +271,7 @@ public class DefragContextImpl implements DefragContext {
 	}
 	
 	public ClassMetadata yapClass(int id) {
-		return _sourceDb.getYapClass(id);
+		return _sourceDb.classMetadataForId(id);
 	}
 	
 	public void registerUnindexed(int id) {

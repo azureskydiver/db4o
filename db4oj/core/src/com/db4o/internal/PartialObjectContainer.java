@@ -202,7 +202,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public final void bind2(ObjectReference ref, Object obj){
         int id = ref.getID();
         removeReference(ref);
-        ref = new ObjectReference(getYapClass(reflector().forObject(obj)),
+        ref = new ObjectReference(classMetadataForReflectClass(reflector().forObject(obj)),
             id);
         ref.setObjectWeak(_this, obj);
         ref.setStateDirty();
@@ -358,8 +358,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract long currentVersion();
     
-    public boolean createYapClass(ClassMetadata a_yapClass, ReflectClass a_class, ClassMetadata a_superYapClass) {
-        return a_yapClass.init(_this, a_superYapClass, a_class);
+    public boolean createClassMetadata(ClassMetadata classMeta, ReflectClass clazz, ClassMetadata superClassMeta) {
+        return classMeta.init(_this, superClassMeta, clazz);
     }
 
     /**
@@ -549,7 +549,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
         ClassMetadata yc = yo.getYapClass();
         final FieldMetadata[] field = new FieldMetadata[]{null};
-        yc.forEachYapField(new Visitor4() {
+        yc.forEachFieldMetadata(new Visitor4() {
             public void visit(Object yf) {
                 FieldMetadata yapField = (FieldMetadata)yf;
                 if(yapField.canAddToQuery(fieldName)){
@@ -837,7 +837,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return i_trans;
     }
     
-    public final ClassMetadata getYapClass(ReflectClass claxx){
+    public final ClassMetadata classMetadataForReflectClass(ReflectClass claxx){
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
@@ -845,12 +845,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (yc != null) {
             return yc;
         }
-        return _classCollection.getYapClass(claxx);
+        return _classCollection.classMetadataForReflectClass(claxx);
     }
     
     // TODO: Some ReflectClass implementations could hold a 
     // reference to YapClass to improve lookup performance here.
-    public final ClassMetadata produceYapClass(ReflectClass claxx) {
+    public final ClassMetadata produceClassMetadata(ReflectClass claxx) {
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
@@ -859,7 +859,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return yc;
         }
         
-        return _classCollection.produceYapClass(claxx);
+        return _classCollection.produceClassMetadata(claxx);
     }
     
     /**
@@ -872,7 +872,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      * In this call we only return active YapClasses, initialization
      * is not done on purpose
      */
-    final ClassMetadata getActiveYapClass(ReflectClass claxx) {
+    final ClassMetadata getActiveClassMetadata(ReflectClass claxx) {
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
@@ -893,7 +893,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return false;
     }
 
-    public ClassMetadata getYapClass(int id) {
+    public ClassMetadata classMetadataForId(int id) {
     	if(DTrace.enabled){
     		DTrace.YAPCLASS_BY_ID.log(id);
     	}
@@ -1012,7 +1012,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     void initializeEssentialClasses(){
         for (int i = 0; i < Const4.ESSENTIAL_CLASSES.length; i++) {
-            produceYapClass(reflector().forClass(Const4.ESSENTIAL_CLASSES[i]));    
+            produceClassMetadata(reflector().forClass(Const4.ESSENTIAL_CLASSES[i]));    
         }
     }
 
@@ -1098,7 +1098,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (i_handlers.isSystemHandler(id)) {
             return i_handlers.getHandler(id);
         } 
-        return getYapClass(id);
+        return classMetadataForId(id);
     }
 
     public Object lock() {
@@ -1127,7 +1127,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         MemoryFile memoryFile = new MemoryFile();
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
-        produceYapClass(reflector().forObject(obj));
+        produceClassMetadata(reflector().forObject(obj));
         TransportObjectContainer carrier = new TransportObjectContainer(config(),_this, memoryFile);
         carrier.i_showInternalClasses = i_showInternalClasses;
         carrier.set(obj);
@@ -1633,10 +1633,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 return 0;
             }
             
-            yc = getActiveYapClass(claxx);
+            yc = getActiveClassMetadata(claxx);
             
             if (yc == null) {
-                yc = produceYapClass(claxx);
+                yc = produceClassMetadata(claxx);
                 if ( yc == null){
                     notStorable(claxx, obj);
                     return 0;
@@ -1776,7 +1776,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             } else {
                 if (forceUnknownDeactivate) {
                     // Special handling to deactivate Top-Level unknown objects only.
-                    ClassMetadata yc = getYapClass(reflector().forObject(obj));
+                    ClassMetadata yc = classMetadataForReflectClass(reflector().forObject(obj));
                     if (yc != null) {
                         yc.deactivate(i_trans, obj, depth);
                     }
@@ -1832,7 +1832,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if (claxx == null) {
             	return null;
             }
-            return getYapClass(claxx);
+            return classMetadataForReflectClass(claxx);
         }
     }
 

@@ -77,7 +77,7 @@ public abstract class ClassMarshaller {
     }
 
     public void read(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) {
-        clazz.i_ancestor = stream.getYapClass(reader.readInt());
+        clazz.i_ancestor = stream.classMetadataForId(reader.readInt());
         
         if(clazz.i_dontCallConstructors){
             // The logic further down checks the ancestor YapClass, whether

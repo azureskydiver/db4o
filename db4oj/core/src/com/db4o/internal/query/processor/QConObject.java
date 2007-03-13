@@ -72,12 +72,12 @@ public class QConObject extends QCon {
             
         } else {
             i_yapClass = a_trans.stream()
-                .produceYapClass(a_trans.reflector().forObject(a_object));
+                .produceClassMetadata(a_trans.reflector().forObject(a_object));
             if (i_yapClass != null) {
                 i_object = i_yapClass.getComparableObject(a_object);
                 if (a_object != i_object) {
                     i_attributeProvider = i_yapClass.config().queryAttributeProvider();
-                    i_yapClass = a_trans.stream().produceYapClass(a_trans.reflector().forObject(i_object));
+                    i_yapClass = a_trans.stream().produceClassMetadata(a_trans.reflector().forObject(i_object));
                 }
                 if (i_yapClass != null) {
                     i_yapClass.collectConstraints(a_trans, this, i_object,
@@ -325,7 +325,7 @@ public class QConObject extends QCon {
                 i_comparator = Null.INSTANCE;
             }
             if (i_yapClassID != 0) {
-                i_yapClass = a_trans.stream().getYapClass(i_yapClassID);
+                i_yapClass = a_trans.stream().classMetadataForId(i_yapClassID);
             }
             if (i_field != null) {
                 i_field.unmarshall(a_trans);

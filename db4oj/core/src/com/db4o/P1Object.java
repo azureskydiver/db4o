@@ -157,7 +157,7 @@ public class P1Object implements Db4oTypeImpl{
         i_trans = a_trans;
     }
 
-    public void setYapObject(ObjectReference a_yapObject) {
+    public void setObjectReference(ObjectReference a_yapObject) {
         i_yapObject = a_yapObject;
     }
     

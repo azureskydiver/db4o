@@ -14,7 +14,7 @@ final class MClassNameForID extends MsgD{
         int id = _payLoad.readInt();
         String name = "";
         synchronized (streamLock()) {
-			ClassMetadata yapClass = stream().getYapClass(id);
+			ClassMetadata yapClass = stream().classMetadataForId(id);
 			if (yapClass != null) {
 				name = yapClass.getName();
 			}

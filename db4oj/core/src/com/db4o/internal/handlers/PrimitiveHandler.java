@@ -62,7 +62,7 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
         return Const4.TYPE_SIMPLE;
     }
 
-    public ClassMetadata getYapClass(ObjectContainerBase a_stream) {
+    public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
         return a_stream.i_handlers.primitiveClassById(getID());
     }
 

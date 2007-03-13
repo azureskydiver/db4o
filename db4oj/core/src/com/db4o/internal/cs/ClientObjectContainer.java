@@ -218,7 +218,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return new ClientTransaction(this, parentTransaction);
 	}
 
-	public boolean createYapClass(ClassMetadata a_yapClass, ReflectClass a_class,
+	public boolean createClassMetadata(ClassMetadata a_yapClass, ReflectClass a_class,
 			ClassMetadata a_superYapClass) {
 		writeMsg(Msg.CREATE_CLASS.getWriterForString(i_systemTrans, a_class
 				.getName()), true);
@@ -249,7 +249,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			return false;
 		}
 		bytes.setTransaction(getSystemTransaction());
-		if (!super.createYapClass(a_yapClass, a_class, a_superYapClass)) {
+		if (!super.createClassMetadata(a_yapClass, a_class, a_superYapClass)) {
 			return false;
 		}
 		a_yapClass.setID(message.getId());
@@ -391,11 +391,11 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return null;
 	}
 
-	public ClassMetadata getYapClass(int a_id) {
+	public ClassMetadata classMetadataForId(int a_id) {
 		if(a_id == 0) {
 			return null;
 		}
-		ClassMetadata yc = super.getYapClass(a_id);
+		ClassMetadata yc = super.classMetadataForId(a_id);
 		if (yc != null) {
 			return yc;
 		}
@@ -406,7 +406,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		if (className != null && className.length() > 0) {
 			ReflectClass claxx = reflector().forName(className);
 			if (claxx != null) {
-				return produceYapClass(claxx);
+				return produceClassMetadata(claxx);
 			}
 			// TODO inform client class not present
 		}

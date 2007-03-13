@@ -174,7 +174,7 @@ public abstract class Transaction {
         // If objects are deleted and rewritten during a cascade
         // on delete, we dont want them to be gone.        
         checkSynchronization();
-        ClassMetadata yapClass = stream().getYapClass(a_yapClassID);
+        ClassMetadata yapClass = stream().classMetadataForId(a_yapClassID);
         yapClass.index().add(this, a_id);
     }    
     

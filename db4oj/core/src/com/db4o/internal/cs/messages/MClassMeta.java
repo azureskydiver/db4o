@@ -18,7 +18,7 @@ public class MClassMeta extends MsgObject {
 				synchronized (streamLock()) {
 					Transaction trans = stream.getSystemTransaction();
 	
-					ClassMetadata yapClass = stream.produceYapClass(genericClass);
+					ClassMetadata yapClass = stream.produceClassMetadata(genericClass);
 					if (yapClass != null) {
 						stream.checkStillToSet();
 						yapClass.setStateDirty();
