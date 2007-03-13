@@ -13,4 +13,8 @@ public class EventRecord {
 		e = e_;
 		args = args_;
 	}
+	
+	public String toString() {
+		return "EventRecord(" + e + ", " + args + ")";
+	}
 }

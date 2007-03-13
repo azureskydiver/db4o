@@ -9,12 +9,11 @@ import com.db4o.internal.*;
 import com.db4o.query.Query;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.OptOutCS;
 
 /**
  * @exclude
  */
-public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase {
+public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
 
@@ -22,9 +21,8 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommitTimeCallbacksForLocalTestCase().runSolo();
+		new CommitTimeCallbacksTestCase().runClientServer();
 	}
-
 	
 	public static final class Item {
 		public int id;
@@ -45,6 +43,7 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase {
 	
 	protected void configure(Configuration config) {
 		indexField(config, Item.class, "id");
+		config.clientServer().batchMessages(false);
 	}
 	
 	protected void store() throws Exception {
@@ -58,8 +57,11 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase {
 		committing().addListener(_eventRecorder);
 	}
 	
+	protected void db4oCustomTearDown() throws Exception {
+		committing().removeListener(_eventRecorder);
+	}
+	
 	public void testCommittingAdded() {
-		
 		Item item4 = new Item(4);
 		Item item5 = new Item(5);
 		db().set(item4);
@@ -76,7 +78,6 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testCommittingAddedDeleted() {
-		
 		Item item4 = new Item(4);
 		Item item1 = getItem(1);
 		Item item2 = getItem(2);
@@ -89,6 +90,8 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase {
 		db().delete(item2);
 		
 		ObjectInfo info4 = getInfo(4);
+		
+		assertNoEvents();
 		
 		db().commit();
 		assertCommittingEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1, info2 }, NONE);
@@ -108,6 +111,8 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase {
 		
 		ObjectInfo info4 = getInfo(4);
 		
+		assertNoEvents();
+		
 		db().commit();
 		assertCommittingEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1 }, new ObjectInfo[] { info2 });
 	}
@@ -116,13 +121,16 @@ public class CommitTimeCallbacksForLocalTestCase extends AbstractDb4oTestCase {
 		Item item1 = getItem(1);
 		ObjectInfo info1 = getInfo(1);
 		
+		assertNoEvents();
+		
 		db().delete(item1);
+		
 		db().commit();
 		
 		assertCommittingEvent(NONE, new ObjectInfo[] { info1 }, NONE);
 	}
 	
-	public void _testObjectSetTwiceShouldStillAppearAsAdded() {
+	public void testObjectSetTwiceShouldStillAppearAsAdded() {
 		final Item item4 = new Item(4);
 		db().set(item4);
 		db().set(item4);

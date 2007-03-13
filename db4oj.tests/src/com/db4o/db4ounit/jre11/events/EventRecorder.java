@@ -20,6 +20,10 @@ public class EventRecorder implements EventListener4 {
 		_lock = lock_;
 	}
 	
+	public String toString() {
+		return _events.toString();
+	}
+	
 	public void onEvent(Event4 e, EventArgs args) {
 		synchronized(_lock){
 			if (_cancel && args instanceof CancellableEventArgs) {
@@ -50,7 +54,6 @@ public class EventRecorder implements EventListener4 {
 	
 	public void waitForEventCount(int count){
 		synchronized(_lock){
-			// System.out.println(size());
 			long startTime = System.currentTimeMillis();
 			while(size() < count){
 				try {
