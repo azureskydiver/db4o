@@ -43,6 +43,7 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 
     public void close() throws Exception {
         _server.close();
+        _server = null;
     }
 
     public void open() throws Exception {
