@@ -1,0 +1,46 @@
+<project name="objectmanager-api" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	<import file="../build-1.1/common-1.1.xml"/>
+	
+	<dirname property="objectmanager-api.basedir" file="${ant.file}"/>	
+	<echo>XXXX ${drs.basedir}</echo>
+	
+	<property file="${objectmanager-api.basedir}/build-1.1.properties" />
+	
+	<target name="clean">
+  	<cleanIvyDir/>
+	</target>
+	
+	<target name="init" depends="clean">
+		<tstamp />
+		<initIvyDir/>		
+	</target>
+	
+	 <target name="configure" depends="init">
+        <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+   </target>
+   
+   <target name="resolve" depends="configure">
+        <ivy:resolve file="${objectmanager-api.basedir}/ivy.xml"/>   
+   		  <ivy:retrieve pattern="${ivy.retrieve.pattern}" conf="${ivy.configurations}" />
+    </target>
+   
+   <target name="publish" depends="jar">
+			<publishToIvy/>
+	</target>
+	
+	<target name="jar" depends="resolve">
+		<path id="lib.path.id">
+			<fileset dir="${ivy.lib.dir}" includes="*.jar"/>
+		</path>
+		<buildjar 
+			srcDir="${objectmanager-api.basedir}/src"
+			jarPath="${jarPath}" 
+			fork="yes"
+			classPathRefId="lib.path.id"
+			target="1.5"
+			source="1.5"
+		/>
+	</target>
+
+	
+</project>
