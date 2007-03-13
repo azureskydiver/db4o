@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
@@ -104,7 +105,7 @@ public class JDK {
 		
 	}
 	
-	synchronized void lockFile(String path,Object file) {
+	synchronized void lockFile(String path,Object file) throws IOException {
 	}
 	
     /**

@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import java.io.*;
 import java.net.*;
 import java.util.Date;
 
@@ -449,7 +450,7 @@ public final class Platform4 {
     }
 
     // FIXME: functionality should really be in IoAdapter
-    public static final void lockFile(String path,Object file) {
+    public static final void lockFile(String path,Object file) throws IOException {
         if (!hasNio()) {
             return;
         }
