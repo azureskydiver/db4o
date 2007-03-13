@@ -20,7 +20,11 @@ final class ClientTransaction extends Transaction {
     public void commit() {
     	commitTransactionListeners();
         clearAll();
-        i_client.writeMsg(Msg.COMMIT, true); 
+        if(isSystemTransaction()){
+        	i_client.writeMsg(Msg.COMMIT_SYSTEMTRANS, true);
+        }else{
+        	i_client.writeMsg(Msg.COMMIT, true);
+        }
     }
     
     protected void clearAll() {
