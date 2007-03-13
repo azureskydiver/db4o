@@ -34,7 +34,7 @@ public class InsideDb4o {
 		}
 
 		try{
-			return index(yapClass(name)).size(trans());
+			return index(classMetadataForName(name)).size(trans());
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -45,8 +45,8 @@ public class InsideDb4o {
     	return _stream;
     }
 
-    private ClassMetadata yapClass(String name){
-    	return stream().getYapClass(reflectClass(name));
+    private ClassMetadata classMetadataForName(String name){
+    	return stream().classMetadataForReflectClass(reflectClass(name));
     }
 
     private ReflectClass reflectClass(String name){
