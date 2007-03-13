@@ -10,14 +10,12 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.reflect.*;
 
-
 /**
  * configures a field of a class to allow unique values only.
  */
-public class UniqueFieldValueConstraint implements ConfigurationItem {
+public class UniqueFieldValueConstraint implements Constraint, ConfigurationItem {
 	
 	private final Object _clazz;
-	
 	private final String _fieldName;
 	
 	/**
@@ -25,7 +23,7 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 	 * @param clazz can be a class (Java) / Type (.NET) / instance of the class / fully qualified class name
 	 * @param fieldName the name of the field that is to be unique. 
 	 */
-	public UniqueFieldValueConstraint(Object clazz, String fieldName){
+	public UniqueFieldValueConstraint(Object clazz, String fieldName) {
 		_clazz = clazz;
 		_fieldName = fieldName;
 	}
@@ -34,55 +32,61 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 	 * internal method, public for implementation reasons.
 	 */
 	public void apply(final ObjectContainerBase objectContainer) {
-		
-		EventListener4 listener = new EventListener4() {
-			
-			private FieldMetadata _fieldMetaData;
-			
-			public void onEvent(Event4 e, EventArgs args) {
-				CommitEventArgs commitEventArgs = (CommitEventArgs) args;
-				ensureSingleOccurence(commitEventArgs.added());
-				ensureSingleOccurence(commitEventArgs.updated());
-			}
-			
-			private void ensureSingleOccurence(ObjectInfoCollection col){
-				Iterator4 i = col.iterator();
-				while(i.moveNext()){
-					ObjectInfo info = (ObjectInfo) i.current();
-					int id = (int)info.getInternalID();
-					HardObjectReference ref = HardObjectReference.peekPersisted(transaction(), id, 1);
-					Object fieldValue = fieldMetadata().getOn(transaction(), ref._object);
-					if(fieldValue == null){
-						continue;
-					}
-					BTreeRange range = fieldMetadata().search(transaction(), fieldValue);
-					if(range.size() > 1){
-						throw new UniqueFieldValueConstraintViolationException(classMetadata().getName(), fieldMetadata().getName()); 
-					}
-				}
-			}
-			
-			private FieldMetadata fieldMetadata(){
-				if(_fieldMetaData != null){
-					return _fieldMetaData;
-				}
-				_fieldMetaData = classMetadata().fieldMetadataForName(_fieldName);
-				return _fieldMetaData;
-			}
-			
-			private ClassMetadata classMetadata(){
-				ReflectClass reflectClass = ReflectorUtils.reflectClassFor(objectContainer.reflector(), _clazz);
-				return objectContainer.classMetadataForReflectClass(reflectClass); 
-			}
-			
-			private final Transaction transaction(){
-				return objectContainer.getTransaction();
-			}
-			
-			
-		};
-		
-		EventRegistryFactory.forObjectContainer(objectContainer).committing().addListener(listener);
+		ConstraintPlatform.addCommittingConstraint(objectContainer, this);	
 	}
 	
+	private class Checker {
+		
+		private FieldMetadata _fieldMetaData;
+		private ObjectContainerBase _objectContainer;
+		private CommitEventArgs _commitEventArgs;
+		
+		public Checker(ObjectContainerBase objectContainer, CommitEventArgs cea) {
+			this._objectContainer = objectContainer;
+			this._commitEventArgs = cea;
+		}
+		
+		public void check() {
+			ensureSingleOccurence(_commitEventArgs.added());
+			ensureSingleOccurence(_commitEventArgs.updated());
+		}
+		
+		private void ensureSingleOccurence(ObjectInfoCollection col){
+			Iterator4 i = col.iterator();
+			while(i.moveNext()){
+				ObjectInfo info = (ObjectInfo) i.current();
+				int id = (int)info.getInternalID();
+				HardObjectReference ref = HardObjectReference.peekPersisted(transaction(), id, 1);
+				Object fieldValue = fieldMetadata().getOn(transaction(), ref._object);
+				if(fieldValue == null){
+					continue;
+				}
+				BTreeRange range = fieldMetadata().search(transaction(), fieldValue);
+				if(range.size() > 1){
+					throw new UniqueFieldValueConstraintViolationException(classMetadata().getName(), fieldMetadata().getName()); 
+				}
+			}
+		}
+		
+		private FieldMetadata fieldMetadata() {
+			if(_fieldMetaData != null){
+				return _fieldMetaData;
+			}
+			_fieldMetaData = classMetadata().fieldMetadataForName(_fieldName);
+			return _fieldMetaData;
+		}
+		
+		private ClassMetadata classMetadata() {
+			ReflectClass reflectClass = ReflectorUtils.reflectClassFor(_objectContainer.reflector(), _clazz);
+			return _objectContainer.classMetadataForReflectClass(reflectClass); 
+		}
+		
+		private final Transaction transaction() {
+			return _objectContainer.getTransaction();
+		}
+	}
+
+	public void check(ObjectContainerBase objectContainer, EventArgs ea) {
+		new Checker(objectContainer, (CommitEventArgs) ea).check();
+	}
 }
