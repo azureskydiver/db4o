@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.query.Query;
 
+import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
 
 /**
@@ -21,7 +22,7 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommitTimeCallbacksTestCase().runClientServer();
+		new CommitTimeCallbacksTestCase().runSoloAndClientServer();
 	}
 	
 	public static final class Item {
@@ -59,6 +60,26 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	protected void db4oCustomTearDown() throws Exception {
 		committing().removeListener(_eventRecorder);
+	}
+	
+	static final class ObjectByRef {
+		public Object value;
+	}
+	
+	public void testLocalTransactionIsAvailableToEventListener() {
+		if (isClientServer()) {
+			return;
+		}
+		
+		final Transaction transaction = stream().getTransaction();
+		final ObjectByRef objectByRef = new ObjectByRef();
+		eventRegistry().committing().addListener(new EventListener4() {
+			public void onEvent(Event4 e, EventArgs args) {
+				objectByRef.value = ((CommitEventArgs)args).transaction();
+			}
+		});
+		db().commit();
+		Assert.areSame(transaction, objectByRef.value);
 	}
 	
 	public void testCommittingAdded() {
@@ -152,7 +173,6 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 		int internalId = (int) db().getID(item);
 		return new LazyObjectReference((ObjectContainerBase) db(), internalId );
 	}
-	
 
 	private void assertCommittingEvent(
 			final ObjectInfo[] expectedAdded,
