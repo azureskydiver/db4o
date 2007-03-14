@@ -40,29 +40,31 @@ public class QConEvaluation extends QCon {
 
     void marshall() {
         super.marshall();
-		int[] id = {0};
 		if(Deploy.csharp){
-		    i_marshalledEvaluation = i_trans.stream().marshall(Platform4.wrapEvaluation(i_evaluation), id);
+			marshallUsingDb4oFormat();
 		}else{
 		    try{
-		        // try serialisation. If it fails, store as db4o.
 		        i_marshalledEvaluation = Platform4.serialize(i_evaluation);
 		    }catch (Exception e){
-		        i_marshalledEvaluation = i_trans.stream().marshall(i_evaluation, id);
+		    	marshallUsingDb4oFormat();
 		    }
-		    
 		}
-		i_marshalledID = id[0];
 	}
+    
+    private void marshallUsingDb4oFormat(){
+    	SerializedGraph serialized = Serializer.marshall(container(), i_evaluation);
+    	i_marshalledEvaluation = serialized._bytes;
+    	i_marshalledID = serialized._id;
+    }
 
     void unmarshall(Transaction a_trans) {
         if (i_trans == null) {
             super.unmarshall(a_trans);
             if(Deploy.csharp){
-                i_evaluation = i_trans.stream().unmarshall(i_marshalledEvaluation, i_marshalledID);
+            	i_evaluation = Serializer.unmarshall(container(), i_marshalledEvaluation, i_marshalledID);
             }else{
                 if(i_marshalledID > 0){
-                    i_evaluation = i_trans.stream().unmarshall(i_marshalledEvaluation, i_marshalledID);
+                	i_evaluation = Serializer.unmarshall(container(), i_marshalledEvaluation, i_marshalledID);
                 }else{
                     i_evaluation = Platform4.deserialize(i_marshalledEvaluation);
                 }

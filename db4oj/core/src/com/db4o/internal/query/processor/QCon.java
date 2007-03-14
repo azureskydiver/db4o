@@ -69,6 +69,10 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return a_child;
     }
     
+    public ObjectContainerBase container(){
+    	return transaction().stream();
+    }
+    
     public Transaction transaction() {
     	return i_trans;
     }

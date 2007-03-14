@@ -12,7 +12,7 @@ public class MClassMeta extends MsgObject {
 		ObjectContainerBase stream = stream();
 		unmarshall();
 		try{
-			ClassInfo classMeta = (ClassInfo) stream().unmarshall(_payLoad);
+			ClassInfo classMeta = (ClassInfo) readObjectFromPayLoad();
 			GenericClass genericClass = stream.getClassMetaHelper().classMetaToGenericClass(stream().reflector(), classMeta);
 			if (genericClass != null) {
 				synchronized (streamLock()) {
