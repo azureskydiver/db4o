@@ -101,7 +101,7 @@ public abstract class FreespaceManager {
     
     public abstract byte systemType();
     
-    public abstract int write(boolean shuttingDown);
+    public abstract int shutdown();
 
     public boolean requiresMigration(byte configuredSystem, byte readSystem) {
         return (configuredSystem != 0 || readSystem == FM_LEGACY_RAM ) && (systemType() != configuredSystem);

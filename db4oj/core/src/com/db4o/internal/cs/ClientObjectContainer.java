@@ -145,7 +145,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
     protected void close2() {
 		if (_readerThread == null || _readerThread.isClosed()) {
-			super.close2();
+			shutdownObjectContainer();
 			return;
 		}
 		try {
@@ -172,7 +172,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
 		
-		super.close2();
+		shutdownObjectContainer();
 		if (Debug.fakeServer) {
 			DebugCS.serverStream.close();
 		}
@@ -676,7 +676,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return "Client Connection " + userName;
 	}
 
-	public void write(boolean shuttingDown) {
+	public void shutdown() {
 		// do nothing
 	}
 

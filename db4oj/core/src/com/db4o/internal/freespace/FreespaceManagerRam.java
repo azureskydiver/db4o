@@ -238,10 +238,7 @@ public class FreespaceManagerRam extends FreespaceManager {
         return _file.getSystemTransaction();
     }
 
-    public int write(boolean shuttingDown){
-        if(! shuttingDown){
-            return 0;
-        }
+    public int shutdown(){
         int freeBySizeID = 0;
         int length = TreeInt.byteCount((TreeInt)_freeBySize);
         

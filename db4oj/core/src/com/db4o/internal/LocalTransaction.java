@@ -75,7 +75,7 @@ public class LocalTransaction extends Transaction {
 	}
     
     private void commit3Stream(){
-        stream().checkNeededUpdates();
+        stream().processPendingClassUpdates();
         stream().writeDirty();
         stream().classCollection().write(stream().getSystemTransaction());
     }
