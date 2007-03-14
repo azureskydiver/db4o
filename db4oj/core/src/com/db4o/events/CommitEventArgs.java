@@ -14,11 +14,22 @@ public class CommitEventArgs extends EventArgs {
 	private final ObjectInfoCollection _added;
 	private final ObjectInfoCollection _deleted;
 	private final ObjectInfoCollection _updated;
+	private final Object _transaction;
 
-	public CommitEventArgs(ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
+	public CommitEventArgs(Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
+		_transaction = transaction;
 		_added = added;
 		_deleted = deleted;
 		_updated = updated;
+	}
+	
+	/**
+	 * The transaction being committed.
+	 * 
+	 * @sharpen.property
+	 */
+	public Object transaction() {
+		return _transaction;
 	}
 
 	/**
