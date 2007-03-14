@@ -632,7 +632,7 @@ public final class Platform4 {
     }
 
 	public static Object wrapEvaluation(Object evaluation) {
-		throw Exceptions4.virtualException();
+		return evaluation;
 	}
 
 	public static boolean isTransient(ReflectClass a_class) {

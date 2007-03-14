@@ -261,7 +261,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	private void sendClassMeta(ReflectClass reflectClass) {
 		ClassInfo classMeta = _classMetaHelper.getClassMeta(reflectClass);
-		writeMsg(Msg.CLASS_META.getWriter(marshall(i_systemTrans, classMeta)), true);
+		writeMsg(Msg.CLASS_META.getWriter(Serializer.marshall(i_systemTrans,classMeta)), true);
 	}
 	
 	public long currentVersion() {
@@ -619,7 +619,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	public void send(Object obj) {
 		synchronized (i_lock) {
 			if (obj != null) {
-				writeMsg(Msg.USER_MESSAGE.getWriter(marshall(i_trans, obj)), true);
+				writeMsg(Msg.USER_MESSAGE.getWriter(Serializer.marshall(i_trans,obj)), true);
 			}
 		}
 	}
@@ -796,7 +796,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
     	Transaction trans = query.getTransaction();
     	query.evaluationMode(config().queryEvaluationMode());
         query.marshall();
-		MsgD msg = Msg.QUERY_EXECUTE.getWriter(marshall(trans,query));
+		MsgD msg = Msg.QUERY_EXECUTE.getWriter(Serializer.marshall(trans,query));
 		writeMsg(msg, true);
 		return readQueryResult(trans);
     }

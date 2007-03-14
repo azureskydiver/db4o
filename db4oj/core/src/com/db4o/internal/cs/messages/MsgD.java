@@ -124,6 +124,10 @@ public class MsgD extends Msg{
 	public final boolean readBoolean() {
 		return _payLoad.readByte() != 0;
 	}
+	
+	public Object readObjectFromPayLoad(){
+		return Serializer.unmarshall(stream(),_payLoad);
+	}
 
 	final Msg readPayLoad(Transaction a_trans, Socket4 sock, Buffer reader)
 		throws IOException {

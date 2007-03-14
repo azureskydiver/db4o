@@ -20,8 +20,9 @@ import com.db4o.types.*;
  */
 public class TransportObjectContainer extends InMemoryObjectContainer {
 	
-	TransportObjectContainer (Configuration config,ObjectContainerBase a_callingStream, MemoryFile memoryFile) {
-	    super(config,a_callingStream, memoryFile);
+	public TransportObjectContainer (ObjectContainerBase serviceProvider, MemoryFile memoryFile) {
+	    super(serviceProvider.config(),serviceProvider, memoryFile);
+	    i_showInternalClasses = serviceProvider.i_showInternalClasses;
 	}
 	
 	protected void initialize1(Configuration config){

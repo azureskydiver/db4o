@@ -25,7 +25,7 @@ public final class MQueryExecute extends MsgQuery {
             // synchronisation block for better performance but
             // produced inconsistent results, cause unknown.
 
-            QQuery query = (QQuery) stream().unmarshall(_payLoad);
+            QQuery query = (QQuery) readObjectFromPayLoad();
             query.unmarshall(transaction());
             
             _evaluationMode = query.evaluationMode();

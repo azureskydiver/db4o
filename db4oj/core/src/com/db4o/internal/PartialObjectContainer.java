@@ -1149,29 +1149,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return true;
     }
 
-    protected StatefulBuffer marshall(Transaction ta, Object obj) {
-        // TODO: How about reuse of the MemoryFile here?
-        int[] id = { 0};
-        byte[] bytes = marshall(obj, id);
-        StatefulBuffer yapBytes = new StatefulBuffer(ta, bytes.length);
-        yapBytes.append(bytes);
-        yapBytes.useSlot(id[0], 0, bytes.length);
-        return yapBytes;
-    }
-
-    public byte[] marshall(Object obj, int[] id) {
-        MemoryFile memoryFile = new MemoryFile();
-        memoryFile.setInitialSize(223);
-        memoryFile.setIncrementSizeBy(300);
-        produceClassMetadata(reflector().forObject(obj));
-        TransportObjectContainer carrier = new TransportObjectContainer(config(),_this, memoryFile);
-        carrier.i_showInternalClasses = i_showInternalClasses;
-        carrier.set(obj);
-        id[0] = (int) carrier.getID(obj);
-        carrier.close();
-        return memoryFile.getBytes();
-    }
-
     void message(String msg) {
         new Message(_this, msg);
     }
@@ -1931,19 +1908,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public void topLevelCallId(int id){
     	_topLevelCallId = id;
-    }
-
-    public Object unmarshall(StatefulBuffer yapBytes) {
-        return unmarshall(yapBytes._buffer, yapBytes.getID());
-    }
-
-    public Object unmarshall(byte[] bytes, int id) {
-        MemoryFile memoryFile = new MemoryFile(bytes);
-        TransportObjectContainer carrier = new TransportObjectContainer(configure(),_this, memoryFile);
-        Object obj = carrier.getByID(id);
-        carrier.activate(obj, Integer.MAX_VALUE);
-        carrier.close();
-        return obj;
     }
 
     public long version(){
