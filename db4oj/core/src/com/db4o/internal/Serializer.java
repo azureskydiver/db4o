@@ -33,6 +33,10 @@ public class Serializer {
     public static Object unmarshall(ObjectContainerBase serviceProvider, StatefulBuffer yapBytes) {
         return unmarshall(serviceProvider, yapBytes._buffer, yapBytes.getID());
     }
+    
+    public static Object unmarshall(ObjectContainerBase serviceProvider, SerializedGraph serialized) {
+    	return unmarshall(serviceProvider, serialized._bytes, serialized._id);
+    }
 
     public static Object unmarshall(ObjectContainerBase serviceProvider, byte[] bytes, int id) {
         MemoryFile memoryFile = new MemoryFile(bytes);

@@ -90,7 +90,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     // in cylic links, stores only YapClass objects
     private List4           _pendingClassUpdates;
 
-    //  the parent ObjectContainer for YapObjectCarrier or this for all
+    //  the parent ObjectContainer for TransportObjectContainer or this for all
     //  others. Allows identifying the responsible Objectcontainer for IDs
     final ObjectContainerBase         i_parent;
 

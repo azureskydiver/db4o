@@ -43,12 +43,18 @@ public class MsgD extends Msg{
 		_payLoad = writer;
 	}
 	
-	public final MsgD getWriterForLength(Transaction a_trans, int length) {
-		MsgD message = (MsgD)clone(a_trans);
-		message._payLoad = new StatefulBuffer(a_trans, length + Const4.MESSAGE_LENGTH);
+	public final MsgD getWriterForByte(Transaction trans, byte b) {
+		MsgD msg = getWriterForLength(trans, 1);
+		msg._payLoad.append(b);
+		return msg;
+	}
+	
+	public final MsgD getWriterForLength(Transaction trans, int length) {
+		MsgD message = (MsgD)clone(trans);
+		message._payLoad = new StatefulBuffer(trans, length + Const4.MESSAGE_LENGTH);
 		message.writeInt(_msgID);
 		message.writeInt(length);
-		if(a_trans.parentTransaction() == null){
+		if(trans.parentTransaction() == null){
 		    message._payLoad.append(Const4.SYSTEM_TRANS);
 		}else{
 		    message._payLoad.append(Const4.USER_TRANS);
@@ -56,12 +62,12 @@ public class MsgD extends Msg{
 		return message;
 	}
 	
-	public final MsgD getWriter(Transaction a_trans){
-		return getWriterForLength(a_trans, 0);
+	public final MsgD getWriter(Transaction trans){
+		return getWriterForLength(trans, 0);
 	}
 	
-	public final MsgD getWriterForInts(Transaction a_trans, int[] ints) {
-        MsgD message = getWriterForLength(a_trans, Const4.INT_LENGTH * ints.length);
+	public final MsgD getWriterForInts(Transaction trans, int[] ints) {
+        MsgD message = getWriterForLength(trans, Const4.INT_LENGTH * ints.length);
         for (int i = 0; i < ints.length; i++) {
             message.writeInt(ints[i]);
         }

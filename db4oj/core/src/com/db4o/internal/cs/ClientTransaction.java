@@ -2,6 +2,7 @@
 
 package com.db4o.internal.cs;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.messages.*;
@@ -24,6 +25,11 @@ final class ClientTransaction extends Transaction {
         	i_client.writeMsg(Msg.COMMIT_SYSTEMTRANS, true);
         }else{
         	i_client.writeMsg(Msg.COMMIT, true);
+        	MCommitResponse message = (MCommitResponse)i_client.expectedResponse(Msg.COMMIT_RESPONSE);
+        	Db4oException exc = message.readException();
+        	if(exc != null){
+        		throw exc;
+        	}
         }
     }
     

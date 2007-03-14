@@ -75,8 +75,8 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		EventPlatform.triggerObjectEvent(_deactivated, obj);
 	}
 	
-	public void commitOnStarted(ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
-		EventPlatform.triggerCommitEvent(_committing, added, deleted, updated);
+	public void commitOnStarted(Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
+		EventPlatform.triggerCommitEvent(_committing, transaction, added, deleted, updated);
 	}
 
 	public Event4 queryFinished() {

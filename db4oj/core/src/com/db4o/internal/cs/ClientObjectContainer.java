@@ -149,8 +149,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			return;
 		}
 		try {
-			writeMsg(Msg.COMMIT_OK, true);
-			expectedResponse(Msg.OK);
+			commit1();
 		} catch (Exception e) {
 			Exceptions4.catchAllExceptDb4oException(e);
 		}

@@ -24,7 +24,7 @@ public class Msg implements Cloneable {
 	public static final MsgD CLASS_NAME_FOR_ID = new MClassNameForID();
 	public static final Msg CLOSE = new Msg("CLOSE");
     public static final Msg COMMIT = new MCommit();
-    public static final Msg COMMIT_OK = new MCommitOK();
+    public static final MsgD COMMIT_RESPONSE = new MCommitResponse();
     public static final Msg COMMIT_SYSTEMTRANS = new MCommitSystemTransaction();
 	public static final MsgD CREATE_CLASS = new MCreateClass();
 	public static final MsgObject CLASS_META = new MClassMeta();

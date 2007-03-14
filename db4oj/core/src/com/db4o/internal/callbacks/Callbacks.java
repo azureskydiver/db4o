@@ -22,6 +22,6 @@ public interface Callbacks {
 	void onQueryStarted(Query query);
 	void onQueryFinished(Query query);
 	
-	void commitOnStarted(ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated);
+	void commitOnStarted(Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated);
 	boolean caresAboutCommit();
 }
