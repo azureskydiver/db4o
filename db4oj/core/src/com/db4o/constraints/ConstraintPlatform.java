@@ -10,11 +10,11 @@ import com.db4o.internal.*;
  */
 class ConstraintPlatform {
 
-	public static void addCommittingConstraint(final ObjectContainerBase container, final Constraint constraint) {
+	public static void addCommittingHandler(final ObjectContainerBase container, final CommitHandler handler) {
 		EventRegistryFactory.forObjectContainer(container).committing().addListener(new EventListener4() {
 
 			public void onEvent(Event4 e, EventArgs args) {
-				constraint.check(container, args);
+				handler.handle(container, (CommitEventArgs)args);
 			}
 		});
 	}

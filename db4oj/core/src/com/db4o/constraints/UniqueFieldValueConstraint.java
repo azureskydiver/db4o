@@ -13,7 +13,7 @@ import com.db4o.reflect.*;
 /**
  * configures a field of a class to allow unique values only.
  */
-public class UniqueFieldValueConstraint implements Constraint, ConfigurationItem {
+public class UniqueFieldValueConstraint implements ConfigurationItem {
 	
 	private final Object _clazz;
 	private final String _fieldName;
@@ -32,23 +32,16 @@ public class UniqueFieldValueConstraint implements Constraint, ConfigurationItem
 	 * internal method, public for implementation reasons.
 	 */
 	public void apply(final ObjectContainerBase objectContainer) {
-		ConstraintPlatform.addCommittingConstraint(objectContainer, this);	
+		ConstraintPlatform.addCommittingHandler(objectContainer, new Checker(objectContainer));	
 	}
 	
-	private class Checker {
+	private class Checker implements CommitHandler {
 		
 		private FieldMetadata _fieldMetaData;
-		private ObjectContainerBase _objectContainer;
-		private CommitEventArgs _commitEventArgs;
+		private final ObjectContainerBase _objectContainer;
 		
-		public Checker(ObjectContainerBase objectContainer, CommitEventArgs cea) {
-			this._objectContainer = objectContainer;
-			this._commitEventArgs = cea;
-		}
-		
-		public void check() {
-			ensureSingleOccurence(_commitEventArgs.added());
-			ensureSingleOccurence(_commitEventArgs.updated());
+		public Checker(ObjectContainerBase objectContainer) {
+			_objectContainer = objectContainer;
 		}
 		
 		private void ensureSingleOccurence(ObjectInfoCollection col){
@@ -68,6 +61,10 @@ public class UniqueFieldValueConstraint implements Constraint, ConfigurationItem
 			}
 		}
 		
+		private Transaction transaction() {
+			return _objectContainer.getTransaction();
+		}
+
 		private FieldMetadata fieldMetadata() {
 			if(_fieldMetaData != null){
 				return _fieldMetaData;
@@ -80,13 +77,12 @@ public class UniqueFieldValueConstraint implements Constraint, ConfigurationItem
 			ReflectClass reflectClass = ReflectorUtils.reflectClassFor(_objectContainer.reflector(), _clazz);
 			return _objectContainer.classMetadataForReflectClass(reflectClass); 
 		}
-		
-		private final Transaction transaction() {
-			return _objectContainer.getTransaction();
-		}
-	}
 
-	public void check(ObjectContainerBase objectContainer, EventArgs ea) {
-		new Checker(objectContainer, (CommitEventArgs) ea).check();
+		public void handle(ObjectContainerBase container, EventArgs args) {
+			CommitEventArgs commitEventArgs = (CommitEventArgs) args;
+			ensureSingleOccurence(commitEventArgs.added());
+			ensureSingleOccurence(commitEventArgs.updated());
+			
+		}
 	}
 }
