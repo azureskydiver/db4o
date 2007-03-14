@@ -68,7 +68,7 @@ public class FreespaceManagerForDebug extends FreespaceManager {
         return FM_DEBUG;
     }
 
-    public int write(boolean shuttingDown) {
+    public int shutdown() {
         return 0;
     }
 

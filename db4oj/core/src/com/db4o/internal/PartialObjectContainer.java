@@ -20,7 +20,6 @@ import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oException;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.ext.MemoryFile;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.ext.ObjectNotStorableException;
 import com.db4o.ext.StoredClass;
@@ -43,7 +42,6 @@ import com.db4o.internal.query.result.AbstractQueryResult;
 import com.db4o.internal.query.result.QueryResult;
 import com.db4o.internal.replication.Db4oReplicationReferenceProvider;
 import com.db4o.internal.replication.MigrationConnection;
-import com.db4o.io.UncheckedIOException;
 import com.db4o.query.Predicate;
 import com.db4o.query.Query;
 import com.db4o.query.QueryComparator;
@@ -90,7 +88,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     // currently used to resolve self-linking concurrency problems
     // in cylic links, stores only YapClass objects
-    private List4           i_needsUpdate;
+    private List4           _pendingClassUpdates;
 
     //  the parent ObjectContainer for YapObjectCarrier or this for all
     //  others. Allows identifying the responsible Objectcontainer for IDs
@@ -279,17 +277,18 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    final void checkNeededUpdates() {
-        if (i_needsUpdate != null) {
-            Iterator4 i = new Iterator4Impl(i_needsUpdate);
-            while (i.moveNext()) {
-                ClassMetadata yapClass = (ClassMetadata) i.current();
-                yapClass.setStateDirty();
-                yapClass.write(i_systemTrans);
-            }
-            i_needsUpdate = null;
-        }
-    }
+    final void processPendingClassUpdates() {
+		if (_pendingClassUpdates == null) {
+			return;
+		}
+		Iterator4 i = new Iterator4Impl(_pendingClassUpdates);
+		while (i.moveNext()) {
+			ClassMetadata yapClass = (ClassMetadata) i.current();
+			yapClass.setStateDirty();
+			yapClass.write(i_systemTrans);
+		}
+		_pendingClassUpdates = null;
+	}
 
     public final Transaction checkTransaction(Transaction ta) {
         checkClosed();
@@ -299,31 +298,38 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return getTransaction();
     }
 
-    public boolean close() {
+    final public boolean close() {
 		synchronized (i_lock) {
 			try {
 				close1();
 			} catch (Exception e) {
-				fatalException(e);
+				handleExceptionOnClose(e);
 			}
 			return true;
 		}
 	}
+    
+    protected void handleExceptionOnClose(Exception exc) {
+		fatalException(exc);
+    }
 
     final void close1() {
+   
         // this is set to null in close2 and is therefore our check for down.
         if (_classCollection == null) {
             return;
         }
         Platform4.preClose(_this);
-        checkNeededUpdates();
+        processPendingClassUpdates();
         if (stateMessages()) {
             logMsg(2, toString());
         }
         close2();
     }
 
-    protected void close2() {
+    protected abstract void close2();
+    
+    final protected void shutdownObjectContainer() {
     	stopSession();
         i_systemTrans = null;
         i_trans = null;
@@ -1173,7 +1179,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public final void needsUpdate(ClassMetadata a_yapClass) {
-        i_needsUpdate = new List4(i_needsUpdate, a_yapClass);
+        _pendingClassUpdates = new List4(_pendingClassUpdates, a_yapClass);
     }
     
     public long generateTimeStampId() {
@@ -1700,7 +1706,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 }
             }
         }
-        checkNeededUpdates();
+        processPendingClassUpdates();
         return ref.getID();
     }
 
@@ -1916,7 +1922,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	}
     }
 
-    public abstract void write(boolean shuttingDown);
+    public abstract void shutdown();
 
     public abstract void writeDirty();
 

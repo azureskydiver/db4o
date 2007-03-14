@@ -99,10 +99,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         return (byte) _file.blockSize();
     }
 
-    protected void close2() {
+    protected void freeInternalResources() {
 		freePrefetchedPointers();
-		write(true);
-		super.close2();
+    }
+
+    protected void shutdownDataStorage() {
 		synchronized (_fileLock) {
 			try {
 				_file.close();
@@ -232,7 +233,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                     if (configImpl().reservedStorageSpace() > 0) {
                         reserve(configImpl().reservedStorageSpace());
                     }
-                    write(false);
+                    commitTransaction();
                     writeHeader(true, false);
                 } else {
                     readThis();

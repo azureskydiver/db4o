@@ -61,14 +61,14 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
         return Converter.VERSION;
     }
 		
-    public boolean close() {
-        synchronized (i_lock) {
-            close1();
-            i_config = null;
-        }
-        return true;
+    protected void dropReferences() {
+        i_config = null;
     }
-	
+    
+    protected void handleExceptionOnClose(Exception exc) {
+    	// do nothing here
+    }
+
 	final public Transaction newTransaction(Transaction parentTransaction) {
 		if (null != parentTransaction) {
 			return parentTransaction;
@@ -125,8 +125,8 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 		return false; // overridden to do nothing in YapObjectCarrier
 	}
     
-	public void write(boolean shuttingDown) {
-		checkNeededUpdates();
+	public void shutdown() {
+		processPendingClassUpdates();
 		writeDirty();
 		getTransaction().commit();
 	}

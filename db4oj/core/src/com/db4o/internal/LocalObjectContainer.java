@@ -22,7 +22,9 @@ import com.db4o.internal.slots.*;
  */
 public abstract class LocalObjectContainer extends ObjectContainerBase {
     
-    protected FileHeader       _fileHeader;
+    private static final int DEFAULT_FREESPACE_ID = 0;
+
+	protected FileHeader       _fileHeader;
     
     private Collection4         i_dirty;
     
@@ -66,14 +68,22 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         _blockEndAddress = blocksFor(address);
     }
     
-    protected void close2() {
-        super.close2();
+    final protected void close2() {
+    	freeInternalResources();
+    	commitTransaction();
+		shutdown();
+        shutdownObjectContainer();
         i_dirty = null;
+        shutdownDataStorage();
     }
 
+    protected abstract void freeInternalResources();
+    
+    protected abstract void shutdownDataStorage();
+    
     public void commit1() {
         try {
-            write(false);
+        	commitTransaction();
         } catch (Db4oException exc) {
             throw exc;
         } catch (Throwable t) {
@@ -669,7 +679,15 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return fileName();
     }
 
-    public void write(boolean shuttingDown) {
+    public void shutdown() {
+    	if(i_config.isReadOnly()) {
+    		// TODO: throw exception instead of returning silently
+    		return;
+    	}
+        writeHeader(false, true);
+    }
+    
+    public void commitTransaction() {
     	if(i_config.isReadOnly()) {
     		// TODO: throw exception instead of returning silently
     		return;
@@ -677,10 +695,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         // This will also commit the System Transaction,
         // since it is the parent or the same object.
         i_trans.commit();
-
-        if (shuttingDown) {
-            writeHeader(false, true);
-        }
     }
 
     public abstract void writeBytes(Buffer a_Bytes, int address, int addressOffset);
@@ -723,14 +737,14 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
     void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
         
-        int freespaceID = _freespaceManager.write(shuttingDown);
-        
+        int freespaceID=DEFAULT_FREESPACE_ID;
         if(shuttingDown){
+            freespaceID = _freespaceManager.shutdown();
             _freespaceManager = null;
         }
         
         if(Debug.freespace && Debug.freespaceChecker){
-            freespaceID = _fmChecker.write(shuttingDown);
+            freespaceID = _fmChecker.shutdown();
         }
         
         // FIXME: blocksize should be already valid in FileHeader

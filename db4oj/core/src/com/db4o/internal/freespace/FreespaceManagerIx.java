@@ -8,7 +8,6 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.ix.*;
-import com.db4o.io.UncheckedIOException;
 
 
 public class FreespaceManagerIx extends FreespaceManager{
@@ -250,7 +249,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         return FM_IX;
     }
 
-    public int write(boolean shuttingDown) {
+    public int shutdown() {
         return 0;  // no special ID, FreespaceIX information is stored in fileheader variable part 
     }
 

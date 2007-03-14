@@ -41,16 +41,23 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
         // do nothing, blocksize is always 1
     }
 
-    protected void close2() {
-		write(true);
-		super.close2();
+    protected void freeInternalResources() {
+    	// nothing to do here
+    }
+
+    protected void shutdownDataStorage() {
 		if (!_closed) {
 			byte[] temp = new byte[_length];
 			System.arraycopy(_memoryFile.getBytes(), 0, temp, 0, _length);
 			_memoryFile.setBytes(temp);
 		}
 		_closed = true;
+		dropReferences();
 	}
+    
+    protected void dropReferences() {
+    	// do nothing
+    }
 
 	public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {
 		int fullNewAddress = newAddress + newAddressOffset;
@@ -85,7 +92,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
         if (bytes == null || bytes.length == 0) {
             _memoryFile.setBytes(new byte[_memoryFile.getInitialSize()]);
             configureNewFile();
-            write(false);
+            commitTransaction();
             writeHeader(false, false);
         } else {
             _length = bytes.length;
