@@ -570,7 +570,7 @@ public class LocalTransaction extends Transaction {
 			return;
 		}
 		ObjectInfoCollection[] collections = partitionSlotChangesInAddedDeletedUpdated();
-		callbacks.commitOnStarted(collections[0], collections[1], collections[2]);
+		callbacks.commitOnStarted(this, collections[0], collections[1], collections[2]);
 	}
 
 	private static final class ObjectInfoCollectionImpl implements ObjectInfoCollection {

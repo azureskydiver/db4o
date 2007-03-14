@@ -44,27 +44,23 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 			_objectContainer = objectContainer;
 		}
 		
-		private void ensureSingleOccurence(ObjectInfoCollection col){
+		private void ensureSingleOccurence(Transaction trans, ObjectInfoCollection col){
 			Iterator4 i = col.iterator();
 			while(i.moveNext()){
 				ObjectInfo info = (ObjectInfo) i.current();
 				int id = (int)info.getInternalID();
-				HardObjectReference ref = HardObjectReference.peekPersisted(transaction(), id, 1);
-				Object fieldValue = fieldMetadata().getOn(transaction(), ref._object);
+				HardObjectReference ref = HardObjectReference.peekPersisted(trans, id, 1);
+				Object fieldValue = fieldMetadata().getOn(trans, ref._object);
 				if(fieldValue == null){
 					continue;
 				}
-				BTreeRange range = fieldMetadata().search(transaction(), fieldValue);
+				BTreeRange range = fieldMetadata().search(trans, fieldValue);
 				if(range.size() > 1){
 					throw new UniqueFieldValueConstraintViolationException(classMetadata().getName(), fieldMetadata().getName()); 
 				}
 			}
 		}
 		
-		private Transaction transaction() {
-			return _objectContainer.getTransaction();
-		}
-
 		private FieldMetadata fieldMetadata() {
 			if(_fieldMetaData != null){
 				return _fieldMetaData;
@@ -80,9 +76,9 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 
 		public void handle(ObjectContainerBase container, EventArgs args) {
 			CommitEventArgs commitEventArgs = (CommitEventArgs) args;
-			ensureSingleOccurence(commitEventArgs.added());
-			ensureSingleOccurence(commitEventArgs.updated());
-			
+			Transaction trans = (Transaction) commitEventArgs.transaction();
+			ensureSingleOccurence(trans, commitEventArgs.added());
+			ensureSingleOccurence(trans, commitEventArgs.updated());
 		}
 	}
 }

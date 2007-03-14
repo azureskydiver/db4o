@@ -53,6 +53,10 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
         return false;
     }
     
+    public ClassMetadata classMetadataForId(int id) {
+    	return i_parent.classMetadataForId(id);
+    }
+    
 	void configureNewFile() {
 	    // do nothing
 	}

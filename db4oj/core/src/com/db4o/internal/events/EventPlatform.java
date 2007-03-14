@@ -27,8 +27,8 @@ class EventPlatform {
 		e.trigger(new ObjectEventArgs(o));
 	}
 
-	public static void triggerCommitEvent(Event4Impl committing, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
-		committing.trigger(new CommitEventArgs(added, deleted, updated));
+	public static void triggerCommitEvent(Event4Impl committing, Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
+		committing.trigger(new CommitEventArgs(transaction, added, deleted, updated));
 	}
 
 	public static boolean hasListeners(Event4Impl e) {

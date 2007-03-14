@@ -48,7 +48,7 @@ public class NullCallbacks implements Callbacks {
 	public void objectOnDeactivate(Object obj) {	
 	}
 
-	public void commitOnStarted(ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
+	public void commitOnStarted(Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
 	}
 
 	public boolean caresAboutCommit() {
