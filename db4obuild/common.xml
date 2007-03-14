@@ -90,8 +90,6 @@
 				<arg value="-application" />
 				<arg value="javatocsharp.core.application" />
 				<arg value="@{resource}" />
-				<arg value="-threads" />
-				<arg value="${sharpen.threads}" />
 				
 				<args />
 					
