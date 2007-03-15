@@ -66,8 +66,6 @@ import com.db4o.types.TransientClass;
  */
 public abstract class PartialObjectContainer implements TransientClass, Internal4, ObjectContainerSpec {
 
-    private boolean         i_amDuringFatalExit   = false;
-
     // Collection of all classes
     // if (i_classCollection == null) the engine is down.
     protected ClassMetadataRepository      _classCollection;
@@ -334,8 +332,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 			DTrace.CLOSE.log();
 		}
 		logMsg(3, toString());
-		stopSession();
-		shutdownDataStorage();
+		synchronized (i_lock) {
+			stopSession();
+			shutdownDataStorage();
+		}
 	}
 
 	protected abstract void shutdownDataStorage();
@@ -645,17 +645,17 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return _this;
     }
 
-    void failedToShutDown() {
-		if (_classCollection == null) {
-			return;
-		}
-		if (i_amDuringFatalExit) {
+    /*
+	 * This method will be exuected on finalization, and vm exit if it's enabled
+	 * by configuration.
+	 */
+    final void shutdownHook() {
+		if(isClosed()) {
 			return;
 		}
 		if (_stackDepth == 0) {
 			Messages.logErr(configImpl(), 50, toString(), null);
-			while (!close()) {
-			}
+			close();
 		} else {
 			shutdownObjectContainer();
 			if (_stackDepth > 0) {
@@ -668,23 +668,23 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		fatalException(null,msgID);
     }
 
-	void fatalException(Throwable t) {
+	final void fatalException(Throwable t) {
 		fatalException(t,Messages.FATAL_MSG_ID);
     }
 
-    void fatalException(Throwable t, int msgID) {
-        if (!i_amDuringFatalExit) {
-            i_amDuringFatalExit = true;
-            shutdownObjectContainer();
-            Messages.logErr(configImpl(), (msgID==Messages.FATAL_MSG_ID ? 18 : msgID), null, t);
-        }
-        throw new RuntimeException(Messages.get(msgID));
-    }
+    final void fatalException(Throwable t, int msgID) {
+		Messages.logErr(configImpl(), (msgID == Messages.FATAL_MSG_ID ? 18
+				: msgID), null, t);
+		if (!isClosed()) {
+			shutdownObjectContainer();
+		}
+		throw new RuntimeException(Messages.get(msgID));
+	}
 
 	
     protected void finalize() {
 		if (doFinalize() && (configImpl() == null || configImpl().automaticShutDown())) {
-			failedToShutDown();
+			shutdownHook();
 		}
 	}
 
