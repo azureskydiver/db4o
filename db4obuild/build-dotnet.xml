@@ -326,7 +326,6 @@
 		-->
 		<property name="dir.bin" location="${dir.dist.net.build}/bin" />
 		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />
-		<copy-bin-set suffix="-legacy" srcdir="${dir.dist.dll}/legacy" />
 		
 	</target>
 	
@@ -409,7 +408,7 @@
 	<target name="build-net1" depends="configure-net1, build-all">
 	</target>
 	
-	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-tutorial, build-legacy">
+	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-tutorial">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -503,62 +502,6 @@
 
 	<target name="build-tutorial" depends="build-tools">
 		<ant antfile="build-dotnet-tutorial.xml">
-		</ant>
-	</target>
-	
-	<target name="build-legacy" depends="init, sharpen-legacy">
-		<fileset
-			id="legacy.core.sources"
-			dir="${dir.n.core}">			
-			<include name="**/*.cs" />			
-		</fileset>
-		
-		<csc-all
-				assemblyName="db4o"
-				sources="legacy.core.sources"
-				
-				netOutputDir="${dir.dist.dll.legacy.net}"
-				netConfiguration="Legacy .NET"
-				
-				compactOutputDir="${dir.dist.dll.legacy.compact}"
-				compactConfiguration="Legacy CompactFramework">
-		</csc-all>
-		
-		<fileset
-			id="legacy.tools.sources"
-			dir="${dir.n.tools}">			
-			<include name="**/*.cs" />
-			<exclude name="compact*/**" />
-			<exclude name="**/templates/**" />
-			<exclude name="**/Cecil.FlowAnalysis.Tests/**" />
-			<exclude name="**/Cecil.FlowAnalysis/AssemblyInfo.cs" />
-			<exclude name="**/Mono.Cecil/AssemblyInfo.cs" />
-		</fileset>
-		
-		<csc-all
-			assemblyName="Db4oTools"
-			sources="legacy.tools.sources"
-			netOutputDir="${dir.dist.dll.legacy.net}"
-			netConfiguration="Legacy .NET"
-				
-			compactOutputDir="${dir.dist.dll.legacy.compact}"
-			compactConfiguration="Legacy CompactFramework">			
-			
-			<references>
-				<reference dir="${dir.dist.dll.legacy.net}">
-					<include name="db4o.dll" />
-				</reference>
-			</references>
-			
-			<compact-args>
-				<arg value="/r:${dir.dist.dll.legacy.compact}/db4o.dll" />
-			</compact-args>
-		</csc-all>		
-		
-	</target>
-	
-	<target name="sharpen-legacy">
-		<ant antfile="build.xml" target="sharpen-core">
 		</ant>
 	</target>
 	
