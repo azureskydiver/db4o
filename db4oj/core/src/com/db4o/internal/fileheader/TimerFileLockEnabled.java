@@ -52,7 +52,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
 		} catch (IOException e) {
 			
 		}
-		throw new DatabaseFileLockedException();
+		throw new DatabaseFileLockedException(_timerFile.toString());
     }
     
     public void checkOpenTime() {
@@ -64,7 +64,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
 		} catch (IOException e) {
 			
 		}
-		throw new DatabaseFileLockedException();
+		throw new DatabaseFileLockedException(_timerFile.toString());
     }
     
     public void close() throws IOException {

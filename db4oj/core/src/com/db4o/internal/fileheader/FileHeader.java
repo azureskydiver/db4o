@@ -8,7 +8,6 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.io.UncheckedIOException;
 
 
 /**
@@ -133,7 +132,7 @@ public abstract class FileHeader {
 		long currentAccessTime = reader.readLong();
 		
 		if((currentAccessTime > lastAccessTime) ){
-			throw new DatabaseFileLockedException();
+			throw new DatabaseFileLockedException(container.toString());
 		}
 	}
 

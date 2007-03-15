@@ -2,6 +2,8 @@
 
 package com.db4o.foundation;
 
+import java.io.*;
+
 
 /**
  * @sharpen.ignore
@@ -16,11 +18,7 @@ public abstract class ChainedRuntimeException extends RuntimeException {
 	}
 	
 	public ChainedRuntimeException(String msg) {
-		this(msg, null);
-	}
-	
-	public ChainedRuntimeException(Throwable cause) {
-		_cause=cause;
+		this(msg,null);
 	}
 	
 	public ChainedRuntimeException(String msg, Throwable cause) {
@@ -33,5 +31,21 @@ public abstract class ChainedRuntimeException extends RuntimeException {
 	 */
 	public final Throwable getCause() {
 		return _cause;
+	}
+	
+	public void printStackTrace() {
+		printStackTrace(System.err);
+	}
+	
+	public void printStackTrace(PrintStream s) {
+		printStackTrace(new PrintWriter(s));
+	}
+	
+	public void printStackTrace(PrintWriter s) {
+		super.printStackTrace(s);
+		if(_cause!=null) {
+			s.println("Nested cause:");
+			_cause.printStackTrace(s);
+		}
 	}
 }

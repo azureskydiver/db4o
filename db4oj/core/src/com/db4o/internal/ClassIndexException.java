@@ -5,28 +5,34 @@ import com.db4o.foundation.ChainedRuntimeException;
 
 public class ClassIndexException extends ChainedRuntimeException {
 
-	ClassMetadata _class;
+	private ClassMetadata _class;
 	
 	public ClassIndexException(ClassMetadata clazz) {
-		_class=clazz;
+		this(null,null,clazz);
 	}
 
 	public ClassIndexException(String msg,ClassMetadata clazz) {
-		super(msg);
-		_class=clazz;
+		this(msg,null,clazz);
 	}
 
 	public ClassIndexException(Throwable cause,ClassMetadata clazz) {
-		super(cause);
-		_class=clazz;
+		this(null,cause,clazz);
 	}
 
 	public ClassIndexException(String msg, Throwable cause,ClassMetadata clazz) {
-		super(msg, cause);
+		super(enhancedMessage(msg,clazz), cause);
 		_class=clazz;
 	}
 
 	public ClassMetadata clazz() {
 		return _class;
+	}
+	
+	private static String enhancedMessage(String msg,ClassMetadata clazz) {
+		String enhancedMessage="Class index for "+clazz.getName();
+		if(msg!=null) {
+			enhancedMessage+=": "+msg;
+		}
+		return enhancedMessage;
 	}
 }
