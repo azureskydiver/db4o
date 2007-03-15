@@ -51,7 +51,7 @@ public class Unobfuscated {
 	}
 	
 	static void shutDownHookCallback(Object a_stream){
-		((ObjectContainerBase)a_stream).failedToShutDown();
+		((ObjectContainerBase)a_stream).shutdownHook();
 	}
 
 
