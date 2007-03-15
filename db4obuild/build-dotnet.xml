@@ -449,6 +449,9 @@
 	</target>
 	
 	<target name="build-db4ounit" depends="sharpen-db4ounit">
+		<ant antfile="build-new-db4ounit.xml" target="compilenet" inheritall="false">
+			<property name="csc.executable" value="${csc.executable}" />
+		</ant>
 	</target>
 	
 	<target name="build-tools" depends="build-core">

@@ -43,7 +43,11 @@
 		
 	</target>
 		
-	<target name="buildnet" depends="update-csharp-projects">		
+	<target name="buildnet" depends="update-csharp-projects, compilenet">		
+		
+	</target>
+	
+	<target name="compilenet">
 		<property name="assembly" location="${dir.dist.dll.net}/${projectName}.dll" />		
 		<csc outputfile="${assembly}"
 			targettype="library"
