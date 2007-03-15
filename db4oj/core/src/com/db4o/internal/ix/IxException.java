@@ -10,27 +10,21 @@ public class IxException extends ChainedRuntimeException {
 
 	
 	public IxException(int address, int addressOffset) {
-		addressInfo(address, addressOffset);
-	}
-
-	private void addressInfo(int address, int addressOffset) {
-		_address = address;
-		_addressOffset = addressOffset;
+		this(null,null,address,addressOffset);
 	}
 
 	public IxException(String msg, int address, int addressOffset) {
-		super(msg);
-		addressInfo(address, addressOffset);
+		this(msg,null,address,addressOffset);
 	}
 
 	public IxException(Throwable cause, int address, int addressOffset) {
-		super(cause);
-		addressInfo(address, addressOffset);
+		this(null,cause,address,addressOffset);
 	}
 
 	public IxException(String msg, Throwable cause, int address, int addressOffset) {
-		super(msg, cause);
-		addressInfo(address, addressOffset);
+		super(enhancedMessage(msg, address, addressOffset), cause);
+		_address=address;
+		_addressOffset=addressOffset;
 	}
 
 	public int address() {
@@ -39,5 +33,13 @@ public class IxException extends ChainedRuntimeException {
 	
 	public int addressOffset() {
 		return _addressOffset;
+	}
+
+	private static String enhancedMessage(String msg,int address,int addressOffset) {
+		String enhancedMessage="Ix "+address+","+addressOffset;
+		if(msg!=null) {
+			enhancedMessage+=": "+msg;
+		}
+		return enhancedMessage;
 	}
 }

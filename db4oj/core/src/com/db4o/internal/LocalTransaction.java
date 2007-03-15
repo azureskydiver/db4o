@@ -247,10 +247,10 @@ public class LocalTransaction extends Transaction {
         try {
         	i_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
         }
-        catch(RuntimeException exc) {
+        catch(IOException exc) {
         	throw new SlotRetrievalException(exc,id);
         }
-        catch(IOException exc) {
+        catch(RuntimeException exc) {
         	throw new SlotRetrievalException(exc,id);
         }
         int address = (_pointerBuffer[3] & 255)

@@ -25,12 +25,12 @@ class JDK_1_4 extends JDK_1_3 {
 			fileLocks = new Hashtable();
 		}
 		if(fileLocks.containsKey(canonicalPath)) {
-			throw new DatabaseFileLockedException();
+			throw new DatabaseFileLockedException(canonicalPath);
 		}
 		Object channel = invoke(file, "getChannel", null, null);
 		Object fl = invoke(channel, "tryLock", null, null); 
 		if(fl == null){
-			throw new DatabaseFileLockedException();
+			throw new DatabaseFileLockedException(canonicalPath);
 		}
 		fileLocks.put(canonicalPath, fl);
 	}

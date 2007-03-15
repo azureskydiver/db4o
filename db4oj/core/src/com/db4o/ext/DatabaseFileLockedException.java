@@ -10,10 +10,23 @@ import com.db4o.foundation.ChainedRuntimeException;
  * @see com.db4o.Db4o#openFile
  */
 public class DatabaseFileLockedException extends ChainedRuntimeException {
-	public DatabaseFileLockedException() {
+	
+	private String _databaseDescription;
+	
+	public DatabaseFileLockedException(String databaseDescription) {
+		this(databaseDescription,null);
+	}
+
+	public DatabaseFileLockedException(String databaseDescription,Exception cause) {
+		super(message(databaseDescription),cause);
+		_databaseDescription=databaseDescription;
+	}
+
+	public String databaseDescription() {
+		return _databaseDescription;
 	}
 	
-	public DatabaseFileLockedException(Exception cause) {
-		super(cause.getMessage(), cause);
+	private static String message(String databaseDescription) {
+		return "Database locked: '"+databaseDescription+"'";
 	}
 }
