@@ -15,6 +15,8 @@ public interface Event4 {
 	
 	/**
 	 * Adds a new listener to the notification list..
+	 * 
+	 * @sharpen.event.add
 	 */
 	public void addListener(EventListener4 listener);
 	

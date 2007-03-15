@@ -32,53 +32,48 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 	 * internal method, public for implementation reasons.
 	 */
 	public void apply(final ObjectContainerBase objectContainer) {
-		ConstraintPlatform.addCommittingHandler(objectContainer, new Checker(objectContainer));	
-	}
-	
-	private class Checker implements CommitHandler {
 		
-		private FieldMetadata _fieldMetaData;
-		private final ObjectContainerBase _objectContainer;
-		
-		public Checker(ObjectContainerBase objectContainer) {
-			_objectContainer = objectContainer;
-		}
-		
-		private void ensureSingleOccurence(Transaction trans, ObjectInfoCollection col){
-			Iterator4 i = col.iterator();
-			while(i.moveNext()){
-				ObjectInfo info = (ObjectInfo) i.current();
-				int id = (int)info.getInternalID();
-				HardObjectReference ref = HardObjectReference.peekPersisted(trans, id, 1);
-				Object fieldValue = fieldMetadata().getOn(trans, ref._object);
-				if(fieldValue == null){
-					continue;
-				}
-				BTreeRange range = fieldMetadata().search(trans, fieldValue);
-				if(range.size() > 1){
-					throw new UniqueFieldValueConstraintViolationException(classMetadata().getName(), fieldMetadata().getName()); 
+		EventRegistryFactory.forObjectContainer(objectContainer).committing().addListener(
+				new EventListener4() {
+
+			private FieldMetadata _fieldMetaData;
+			
+			private void ensureSingleOccurence(Transaction trans, ObjectInfoCollection col){
+				Iterator4 i = col.iterator();
+				while(i.moveNext()){
+					ObjectInfo info = (ObjectInfo) i.current();
+					int id = (int)info.getInternalID();
+					HardObjectReference ref = HardObjectReference.peekPersisted(trans, id, 1);
+					Object fieldValue = fieldMetadata().getOn(trans, ref._object);
+					if(fieldValue == null){
+						continue;
+					}
+					BTreeRange range = fieldMetadata().search(trans, fieldValue);
+					if(range.size() > 1){
+						throw new UniqueFieldValueConstraintViolationException(classMetadata().getName(), fieldMetadata().getName()); 
+					}
 				}
 			}
-		}
-		
-		private FieldMetadata fieldMetadata() {
-			if(_fieldMetaData != null){
+			
+			private FieldMetadata fieldMetadata() {
+				if(_fieldMetaData != null){
+					return _fieldMetaData;
+				}
+				_fieldMetaData = classMetadata().fieldMetadataForName(_fieldName);
 				return _fieldMetaData;
 			}
-			_fieldMetaData = classMetadata().fieldMetadataForName(_fieldName);
-			return _fieldMetaData;
-		}
-		
-		private ClassMetadata classMetadata() {
-			ReflectClass reflectClass = ReflectorUtils.reflectClassFor(_objectContainer.reflector(), _clazz);
-			return _objectContainer.classMetadataForReflectClass(reflectClass); 
-		}
-
-		public void handle(ObjectContainerBase container, EventArgs args) {
-			CommitEventArgs commitEventArgs = (CommitEventArgs) args;
-			Transaction trans = (Transaction) commitEventArgs.transaction();
-			ensureSingleOccurence(trans, commitEventArgs.added());
-			ensureSingleOccurence(trans, commitEventArgs.updated());
-		}
+			
+			private ClassMetadata classMetadata() {
+				ReflectClass reflectClass = ReflectorUtils.reflectClassFor(objectContainer.reflector(), _clazz);
+				return objectContainer.classMetadataForReflectClass(reflectClass); 
+			}
+	
+			public void onEvent(Event4 e, EventArgs args) {
+				CommitEventArgs commitEventArgs = (CommitEventArgs) args;
+				Transaction trans = (Transaction) commitEventArgs.transaction();
+				ensureSingleOccurence(trans, commitEventArgs.added());
+				ensureSingleOccurence(trans, commitEventArgs.updated());
+			}
+		});
 	}
 }
