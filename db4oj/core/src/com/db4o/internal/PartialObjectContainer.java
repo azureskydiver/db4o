@@ -313,8 +313,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		fatalException(exc);
     }
 
-    final void close1() {
-   
+    private void close1() {
         // this is set to null in close2 and is therefore our check for down.
         if (_classCollection == null) {
             return;
@@ -326,10 +325,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
         close2();
     }
-
-    protected abstract void close2();
     
-    final protected void shutdownObjectContainer() {
+    protected abstract void close2();
+    protected abstract void shutdownDataStorage();
+    
+    protected final void shutdownObjectContainer() {
     	stopSession();
         i_systemTrans = null;
         i_trans = null;
@@ -340,7 +340,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             DTrace.CLOSE.log();
         }
     }
-
+    
     public Db4oCollections collections() {
         synchronized (i_lock) {
             if (i_handlers.i_collections == null) {
@@ -642,8 +642,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	return true;
     }
     
-    void emergencyClose() {
+    private void emergencyClose() {
     	stopSession();
+    	shutdownDataStorage();
     }
 
     public ExtObjectContainer ext() {

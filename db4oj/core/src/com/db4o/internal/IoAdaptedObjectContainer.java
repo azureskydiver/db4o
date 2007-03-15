@@ -105,16 +105,53 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     protected void shutdownDataStorage() {
 		synchronized (_fileLock) {
-			try {
-				_file.close();
-				_file = null;
-				_fileHeader.close();
-				closeTimerFile();
-			} catch (Exception e) {
-				_file = null;
-				Exceptions4.throwRuntimeException(11, e);
-			}
+			closeDatabaseFile();
+			closeFileHeader();
+			closeTimerFile();
+		}
+	}
+
+	 /*
+     * This method swallows IOException,
+     * because it should not affect other close precedures.
+     */
+	private void closeDatabaseFile() {
+		try {
+			_file.close();
+		} catch (IOException e) {
+			// ignore
+		} finally {
 			_file = null;
+		}
+	}
+    
+    /*
+     * This method swallows IOException,
+     * because it should not affect other close precedures.
+     */
+	private void closeFileHeader() {
+		try {
+			_fileHeader.close();
+		} catch (IOException e) {
+			// ignore
+		} finally {
+			_fileHeader = null;
+		}
+	}
+	
+	/*
+     * This method swallows IOException,
+     * because it should not affect other close precedures.
+     */
+    private void closeTimerFile() {
+		try {
+			if (_timerFile != null) {
+				_timerFile.close();
+			}
+		} catch (IOException e) {
+			// ignore
+		} finally {
+			_timerFile = null;
 		}
 	}
     
@@ -172,15 +209,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 e.printStackTrace();
             }
         }
-    }
-
-    void emergencyClose() {
-        super.emergencyClose();
-        try {
-            _file.close();
-        } catch (Exception e) {
-        }
-        _file = null;
     }
 
     public long fileLength() {
@@ -325,16 +353,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     private boolean needsTimerFile() {
         return needsLockFileThread() && Debug.lockFile;
-    }
-
-    private void closeTimerFile() throws IOException{
-        if(_timerFile == null){
-            return;
-        }
-        _timerFile.close();
-        _timerFile = null;
-    }
-    
+    }    
 
     public void writeBytes(Buffer bytes, int address, int addressOffset) {
         if (configImpl().isReadOnly()) {
