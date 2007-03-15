@@ -79,8 +79,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
     protected abstract void freeInternalResources();
     
-    protected abstract void shutdownDataStorage();
-    
     public void commit1() {
         try {
         	commitTransaction();

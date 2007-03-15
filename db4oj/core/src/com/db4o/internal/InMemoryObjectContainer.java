@@ -66,11 +66,6 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		System.arraycopy(bytes, oldAddress + oldAddressOffset, bytes, fullNewAddress, length);
 	}
 
-	void emergencyClose() {
-        super.emergencyClose();
-        _closed = true;
-    }
-
     public long fileLength() {
         return _length;
     }

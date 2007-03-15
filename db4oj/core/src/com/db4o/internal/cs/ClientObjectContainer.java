@@ -847,4 +847,8 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return i_socket instanceof LoopbackSocket;
 	}
 
+	protected void shutdownDataStorage() {
+		// do nothing here
+	}
+
 }
