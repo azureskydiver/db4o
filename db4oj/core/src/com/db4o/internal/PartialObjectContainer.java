@@ -327,19 +327,18 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     protected abstract void close2();
-    protected abstract void shutdownDataStorage();
     
-    protected final void shutdownObjectContainer() {
-    	stopSession();
-        i_systemTrans = null;
-        i_trans = null;
-        if (stateMessages()) {
-            logMsg(3, toString());
-        }
-        if(DTrace.enabled){
-            DTrace.CLOSE.log();
-        }
-    }
+
+	protected final void shutdownObjectContainer() {
+		if (DTrace.enabled) {
+			DTrace.CLOSE.log();
+		}
+		logMsg(3, toString());
+		stopSession();
+		shutdownDataStorage();
+	}
+
+	protected abstract void shutdownDataStorage();
     
     public Db4oCollections collections() {
         synchronized (i_lock) {
@@ -641,11 +640,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     protected boolean doFinalize() {
     	return true;
     }
-    
-    private void emergencyClose() {
-    	stopSession();
-    	shutdownDataStorage();
-    }
 
     public ExtObjectContainer ext() {
         return _this;
@@ -663,7 +657,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 			while (!close()) {
 			}
 		} else {
-			emergencyClose();
+			shutdownObjectContainer();
 			if (_stackDepth > 0) {
 				Messages.logErr(configImpl(), 24, null, null);
 			}
@@ -681,8 +675,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     void fatalException(Throwable t, int msgID) {
         if (!i_amDuringFatalExit) {
             i_amDuringFatalExit = true;
-            emergencyClose();
-			
+            shutdownObjectContainer();
             Messages.logErr(configImpl(), (msgID==Messages.FATAL_MSG_ID ? 18 : msgID), null, t);
         }
         throw new RuntimeException(Messages.get(msgID));
@@ -1841,6 +1834,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
         _classCollection = null;
         i_references.stopTimer();
+        i_systemTrans = null;
+        i_trans = null;
     }
 
     public StoredClass storedClass(Object clazz) {

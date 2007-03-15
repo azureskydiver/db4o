@@ -73,8 +73,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     	commitTransaction();
 		shutdown();
         shutdownObjectContainer();
-        i_dirty = null;
-        shutdownDataStorage();
     }
 
     protected abstract void freeInternalResources();
