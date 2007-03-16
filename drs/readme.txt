@@ -14,10 +14,6 @@ available in different formats in the following folder:
 You will need Apache Ant to run the examples and regression tests.
 http://ant.apache.org/
 
-To run the Ant task, adjust machine.properties to point to your
-workspace (the folder where you unzipped dRS-X.x.zip)
-
-
 About this software
 ----------------------------------
 
