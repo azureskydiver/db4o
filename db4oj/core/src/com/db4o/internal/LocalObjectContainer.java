@@ -78,13 +78,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     protected abstract void freeInternalResources();
     
     public void commit1() {
-        try {
-        	commitTransaction();
-        } catch (Db4oException exc) {
-            throw exc;
-        } catch (Throwable t) {
-            fatalException(t);
-        }
+        commitTransaction();
     }
 
     void configureNewFile() throws IOException{
