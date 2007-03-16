@@ -2,12 +2,10 @@
 
 package com.db4o.internal;
 
-import java.io.*;
+import java.io.IOException;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.*;
-import com.db4o.io.UncheckedIOException;
 
 /**
  * public for .NET conversion reasons
@@ -208,20 +206,6 @@ public final class StatefulBuffer extends Buffer {
 
     public void read() throws IOException {
         stream().readBytes(_buffer, i_address,_addressOffset, i_length);
-    }
-
-    public final boolean read(Socket4 sock) throws IOException {
-        int offset = 0;
-        int length = i_length;
-        while (length > 0) {
-            int read = sock.read(_buffer, offset, length);
-			if(read<0) {
-				return false;
-			}
-            offset += read;
-            length -= read;
-        }
-		return true;
     }
 
     public final StatefulBuffer readEmbeddedObject() throws IOException {

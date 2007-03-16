@@ -3,6 +3,7 @@
 package com.db4o.internal.cs.messages;
 
 import java.io.*;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
@@ -169,23 +170,41 @@ public class Msg implements Cloneable {
 		serverThread.write(Msg.FAILED);
 		return true;
 	}
+	
+    protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4 sock) throws IOException {
+		return readMessageBuffer(trans, sock, Const4.MESSAGE_LENGTH);
+    }
 
-	public static final Msg readMessage(Transaction a_trans, Socket4 sock) throws IOException {
-		StatefulBuffer reader = new StatefulBuffer(a_trans, Const4.MESSAGE_LENGTH);
-		if(!reader.read(sock)) {
+	protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4 sock, int length) throws IOException {
+		StatefulBuffer buffer = new StatefulBuffer(trans, length);		
+        int offset = 0;
+        while (length > 0) {
+            int read = sock.read(buffer._buffer, offset, length);
+			if(read<0) {
+				return null;
+			}
+            offset += read;
+            length -= read;
+        }
+		return buffer;
+	}
+
+
+	public static final Msg readMessage(Transaction trans, Socket4 sock) throws IOException {
+		StatefulBuffer reader = readMessageBuffer(trans, sock);
+		if (null == reader) {
 			return null;
 		}
-		Msg message = _messages[reader.readInt()].readPayLoad(a_trans, sock, reader);
+		Msg message = _messages[reader.readInt()].readPayLoad(trans, sock, reader);
 		if (Debug.messages) {
-			System.out.println(message + " arrived at " + a_trans.stream());
+			System.out.println(message + " arrived at " + trans.stream());
 		}
 		return message;
 	}
 
 	Msg readPayLoad(Transaction a_trans, Socket4 sock, Buffer reader)
 		throws IOException {
-	    a_trans = checkParentTransaction(a_trans, reader);
-	    return clone(a_trans);
+	    return clone(checkParentTransaction(a_trans, reader));
 	}
 
 	protected Transaction checkParentTransaction(Transaction a_trans, Buffer reader) {
