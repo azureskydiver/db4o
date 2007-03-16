@@ -97,7 +97,6 @@ public class AllTestsConfAll extends TestSuite{
 	        TestHashTable.class,
 	        TwoClients.class,
             UuidAware.class,
-	        XTEAEncryption.class
         };
     }
     
