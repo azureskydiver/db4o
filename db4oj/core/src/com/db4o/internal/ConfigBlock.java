@@ -2,13 +2,12 @@
 
 package com.db4o.internal;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.db4o.*;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
+import com.db4o.ext.OldFormatException;
+import com.db4o.foundation.Cool;
 import com.db4o.internal.fileheader.*;
-import com.db4o.internal.handlers.*;
+import com.db4o.internal.handlers.IntHandler;
 
 
 /**
