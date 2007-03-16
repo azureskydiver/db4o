@@ -1558,10 +1558,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             throw e;
         } catch (Db4oException exc) {
             throw exc;
-        } catch (Throwable t) {
-            fatalException(t);
-            return 0;
-        }
+        } 
     }
     
     public final void setByNewReplication(Db4oReplicationReferenceProvider referenceProvider, Object obj){
