@@ -142,8 +142,7 @@ public class MsgD extends Msg{
 		a_trans = checkParentTransaction(a_trans, reader);
 		
 		final MsgD command = (MsgD)clone(a_trans);
-		command._payLoad = new StatefulBuffer(a_trans, length);
-		command._payLoad.read(sock);
+		command._payLoad = readMessageBuffer(a_trans, sock, length);
 		return command;
 	}
 
