@@ -4,6 +4,9 @@ package com.db4o.db4ounit.common;
 
 import db4ounit.extensions.Db4oTestSuite;
 
+/**
+ * Carl testing commit notifications yet again.
+ */
 public class AllTests extends Db4oTestSuite {
 	
 	/**
