@@ -331,7 +331,7 @@ public class QConObject extends QCon {
                 i_field.unmarshall(a_trans);
             }
             
-            if(i_objectID != 0){
+            if(i_objectID > 0){
                 Object obj = a_trans.stream().getByID(i_objectID);
                 if(obj != null){
                     i_object = obj;

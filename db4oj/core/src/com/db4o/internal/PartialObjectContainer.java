@@ -729,6 +729,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract AbstractQueryResult getAll(Transaction ta);
 
     public Object getByID(long id) {
+    	if (id <= 0) {
+    		throw new IllegalArgumentException("id must be greater than 0");
+		}
         synchronized (i_lock) {
             return getByID1(null, id);
         }
@@ -736,33 +739,27 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public final Object getByID1(Transaction ta, long id) {
         ta = checkTransaction(ta);
+        beginTopLevelCall();
         try {
-            return getByID2(ta, (int) id);
-        } catch (Exception e) {
-            return null;
+            Object obj = getByID2(ta, (int) id);
+            completeTopLevelCall();
+            return obj;
+        } finally {
+        	endTopLevelCall();
         }
     }
     
-    final Object getByID2(Transaction ta, int a_id) {
-        if (a_id > 0) {
-            Object obj = objectForIdFromCache(a_id);
-            if(obj != null){
-                
-                // Take care about handling the returned candidate reference.
-                // If you loose the reference, weak reference management might also.
-                return obj;
-                
-            }
-            try {
-                return new ObjectReference(a_id).read(ta, 0,Const4.ADD_TO_ID_TREE, true);
-            } catch (Throwable t) {
-                if (Debug.atHome) {
-                    t.printStackTrace();
-                }
-            }
-        }
-        return null;
-    }
+    final Object getByID2(Transaction ta, int id) {
+		Object obj = objectForIdFromCache(id);
+		if (obj != null) {
+			// Take care about handling the returned candidate reference.
+			// If you loose the reference, weak reference management might
+			// also.
+			return obj;
+
+		}
+		return new ObjectReference(id).read(ta, 0, Const4.ADD_TO_ID_TREE, true);
+	}
     
     public final Object getActivatedObjectFromCache(Transaction ta, int id){
         Object obj = objectForIdFromCache(id);
