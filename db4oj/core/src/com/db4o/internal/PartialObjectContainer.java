@@ -139,6 +139,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     private IntIdGenerator _topLevelCallIdGenerator = new IntIdGenerator();
 
+	private boolean _topLevelCallCompleted;
+
     protected PartialObjectContainer(Configuration config,ObjectContainerBase a_parent) {
     	_this = cast(this);
         i_parent = a_parent == null ? _this : a_parent;
@@ -166,9 +168,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         try {
             stillToActivate(a_activate, a_depth);
             activate3CheckStill(ta);
-        } catch (Throwable t) {
-            fatalException(t);
-    	}finally{
+            completeTopLevelCall();
+        } finally{
     		endTopLevelCall();
     	}
     }
@@ -362,7 +363,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             try{            	
             	commit1();
             	_referenceSystem.commit();
-            }finally{
+            	completeTopLevelCall();
+            } catch(Db4oException e){
+            	completeTopLevelCall();
+            	throw e;
+            } finally{
             	endTopLevelCall();
             }
         }
@@ -430,9 +435,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	beginTopLevelCall();
         	try{
         		deactivate1(a_deactivate, a_depth);
-        	}catch (Throwable t) {
-        		fatalException(t);
-        	}finally{
+        		completeTopLevelCall();
+        	} finally{
         		endTopLevelCall();
         	}
         }
@@ -482,15 +486,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	return;
         }
         
-        if (Deploy.debug) {
-            delete2(trans, ref, obj, 0, userCall);
-            return;
-        } 
-        
         try {
+        	beginTopLevelCall();
         	delete2(trans, ref, obj, 0, userCall);
-        } catch (Throwable t) {
-            fatalException(t);
+        	completeTopLevelCall();
+        } finally {
+        	endTopLevelCall();
         }
     }
     
@@ -701,16 +702,18 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     private ObjectSetFacade get1(Transaction ta, Object template) {
         ta = checkTransaction(ta);
         QueryResult res = null;
-        if (Deploy.debug) {
-            res = get2(ta, template);
-        } else {
-            try {
-                res = get2(ta, template);
-            } catch (Throwable t) {
-            	Exceptions4.catchAllExceptDb4oException(t);
-                fatalException(t);
-            }
-        }
+		try {
+			beginTopLevelCall();
+			res = get2(ta, template);
+			completeTopLevelCall();
+		} catch (Db4oException e) {
+			completeTopLevelCall();
+			if (Deploy.debug) {
+				throw e;
+			}
+		} finally {
+			endTopLevelCall();
+		}
         return new ObjectSetFacade(res);
     }
 
@@ -775,6 +778,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	beginTopLevelCall();
         try {
             obj = new ObjectReference(id).read(ta, configImpl().activationDepth(),Const4.ADD_TO_ID_TREE, true);
+            completeTopLevelCall();
         } finally{
         	endTopLevelCall();
         }
@@ -1198,6 +1202,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                     cloned = peekPersisted(ta, yo.getID(), depth);
                 }
                 i_justPeeked = null;
+                completeTopLevelCall();
                 return cloned;
             }finally{
                 endTopLevelCall();
@@ -1526,7 +1531,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	            }
 	            return id;
 	        }
-	        return setAfterReplication(trans, obj, depth, checkJustSet);
+	        id = setAfterReplication(trans, obj, depth, checkJustSet);
+	        completeTopLevelSet();
+			return id;
     	}finally{
     		endTopLevelSet(trans);
     	}
@@ -1862,25 +1869,45 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract SystemInfo systemInfo();
     
-    public final void beginTopLevelCall(){
+    private final void beginTopLevelCall(){
     	if(DTrace.enabled){
     		DTrace.BEGIN_TOP_LEVEL_CALL.log();
     	}
     	checkClosed();
     	generateCallIDOnTopLevel();
     	_stackDepth++;
+    	_topLevelCallCompleted = false;
     }
     
     public final void beginTopLevelSet(){
     	beginTopLevelCall();
     }
     
-    public final void endTopLevelCall(){
+    /*
+	 * This method has to be invoked in the end of top level call to indicate
+	 * it's ended as expected
+	 */
+    private final void completeTopLevelCall() {
+    	_topLevelCallCompleted = true;
+    }
+    
+    /*
+	 * This method has to be invoked in the end of top level of set call to
+	 * indicate it's ended as expected
+	 */
+    public final void completeTopLevelSet() {
+    	completeTopLevelCall();
+    }
+    
+    private final void endTopLevelCall(){
     	if(DTrace.enabled){
     		DTrace.END_TOP_LEVEL_CALL.log();
     	}
     	_stackDepth--;
     	generateCallIDOnTopLevel();
+    	if(!_topLevelCallCompleted) {
+    		shutdownObjectContainer();
+    	}
     }
     
     public final void endTopLevelSet(Transaction trans){

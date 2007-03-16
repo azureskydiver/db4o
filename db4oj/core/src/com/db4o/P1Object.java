@@ -205,6 +205,7 @@ public class P1Object implements Db4oTypeImpl{
             try{
 	            i_yapObject.writeUpdate(i_trans, depth);
 	            stream().checkStillToSet();
+	            stream().completeTopLevelSet();
             } finally{
             	stream().endTopLevelSet(i_trans);
             }
