@@ -56,7 +56,7 @@
 				<fileset dir="${ivy.lib.dir}"					includes="*.jar"/>
 			</path>
 			<buildjar srcDir="@{srcDir}" jarPath="@{jarPath}" classPathRefId="compile.class.path" 			
-				fork="yes" target="1.5" source="1.5" />
+				fork="yes" target="1.5" source="1.5" exclude="log4j.xml"/>
 		</sequential>
 	</macrodef>
 	
