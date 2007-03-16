@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
-
 import com.db4o.foundation.*;
 import com.db4o.internal.query.processor.*;
 
