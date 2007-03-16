@@ -341,11 +341,6 @@ namespace com.db4o.config
 		/// </param>
 		/// <seealso cref="com.db4o.config.Configuration.Password">com.db4o.config.Configuration.Password
 		/// 	</seealso>
-		/// <deprecated>
-		/// Please use:
-		/// Db4o.configure().io(new XTeaEncryptionFileAdapter(password)) or any of the
-		/// other XTeaEncryptionFileAdapter constructors.
-		/// </deprecated>
 		void Encrypt(bool flag);
 
 		/// <summary>configures whether Exceptions are to be thrown, if objects can not be stored.
@@ -590,11 +585,6 @@ namespace com.db4o.config
 		/// to read the database file without knowing the password.<br /><br />
 		/// </remarks>
 		/// <param name="pass">the password to be used.</param>
-		/// <deprecated>
-		/// Please use:
-		/// Db4o.configure().io(new XTeaEncryptionFileAdapter(password)) or any of the
-		/// other XTeaEncryptionFileAdapter constructors.
-		/// </deprecated>
 		void Password(string pass);
 
 		/// <summary>returns the Query configuration interface.</summary>
