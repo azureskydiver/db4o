@@ -10,7 +10,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-public class CascadedDeleteReaddTestCase extends AbstractDb4oTestCase{
+public class CascadedDeleteReadTestCase extends AbstractDb4oTestCase{
 
 	
 	public static class Item {
@@ -39,7 +39,7 @@ public class CascadedDeleteReaddTestCase extends AbstractDb4oTestCase{
 	
 
 	public static void main(String[] args) {
-		new CascadedDeleteReaddTestCase().runSoloAndClientServer();
+		new CascadedDeleteReadTestCase().runSoloAndClientServer();
 	}
 	
 	protected void configure(Configuration config) {
