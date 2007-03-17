@@ -8,8 +8,11 @@
 	<property name="db4ounit.jar.dir" location="${dir.j}/lib" />
 	
 	<property name="db4ounit.net.dir" location="${dir.n.v6}/${projectName}" />
-	<property name="db4ounit.net.src.dir" location="${db4ounit.net.dir}" />
+	<property name="db4ounit.net.src.dir" location="${db4ounit.net.dir}/Db4oUnit" />
 	<property name="conversion.workspace.dir" location="${dir.dist}/${projectName}/workspace" />
+	
+	<property name="tmp.db4ounit.net.dir" location="${tempDir}/${projectName}" />
+	<property name="tmp.db4ounit.net.src.dir" location="${tmp.db4ounit.net.dir}/Db4oUnit" />
 	
 	<macrodef name="updateAssemblyInfoFiles">
 		<attribute name="srcdir" />
@@ -22,41 +25,14 @@
 		</sequential>
 	</macrodef>
 	
-	<target name="build" depends="buildjava, buildnet">
-	</target>
-	
-	<target name="buildjava" depends="init">
-		<delete>
-			<fileset dir="${db4ounit.bin.dir}">
-				<include name="**/*.class"/>
-			</fileset>
-		</delete>
-		<javac compiler="classic"
-			fork="yes"
-			executable="${file.compiler.jdk1.3}"
-			srcdir="${db4ounit.src.dir}"
-			destdir="${db4ounit.bin.dir}"
-			debug="off"
-			encoding="UTF-8">
-			<compilerarg line="${file.compiler.jdk1.3.args}"/>
-			<compilerarg line="${file.compiler.jdk1.3.args.optional}" />
-		</javac>
-		
-		<!--
-		<jar destfile="${db4ounit.jar}">
-			<fileset dir="${db4ounit.bin.dir}">
-				<include name="**/*.class" />
-			</fileset>
-		</jar>
-		-->
-		
+	<target name="build" depends="buildnet, updateSvnLocalCopy">
 	</target>
 		
 	<target name="buildnet" depends="update-csharp-projects">		
 		<property name="assembly" location="${dir.dist.dll.net}/${projectName}.dll" />		
 		<csc outputfile="${assembly}"
 			targettype="library"
-			srcdir="${db4ounit.net.src.dir}"
+			srcdir="${tmp.db4ounit.net.dir}"
 			executable="${csc.executable}"
 			debug="true">
 		</csc>
@@ -71,38 +47,41 @@
 	</target>
 		
 	<target name="update-csharp-projects" depends="sharpen">
-		<delete dir="${db4ounit.net.src.dir}/Db4oUnit">
-			<include name="**/*.cs" />
-			<exclude name="**/.svn/**" />
-		</delete>
-		<mkdir dir="${db4ounit.net.src.dir}" />
-		<copy todir="${db4ounit.net.src.dir}">
+		<resetDir dir="${tmp.db4ounit.net.src.dir}" />
+		
+		<copy todir="${tmp.db4ounit.net.dir}">
 			<fileset dir="${conversion.workspace.dir}/db4ounitcsharp/src">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
 		
-		<fileset id="db4ounit.files" dir="${db4ounit.net.dir}">
+		<copy todir="${tmp.db4ounit.net.dir}">
+			<fileset dir="${db4ounit.net.dir}">
+				<exclude name="Db4oUnit/**" />
+			</fileset>
+		</copy>
+		
+		<fileset id="db4ounit.files" dir="${tmp.db4ounit.net.dir}">
 			<include name="**/*.cs" />
 		</fileset>
 
-		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-2005.csproj">
+		<updatecsharpproject projectfile="${tmp.db4ounit.net.dir}/${projectName}-2005.csproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-2003.csproj">
+		<updatecsharpproject projectfile="${tmp.db4ounit.net.dir}/${projectName}-2003.csproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 
-		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-CF-2005.csproj">
+		<updatecsharpproject projectfile="${tmp.db4ounit.net.dir}/${projectName}-CF-2005.csproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-CF-2003.csdproj">
+		<updatecsharpproject projectfile="${tmp.db4ounit.net.dir}/${projectName}-CF-2003.csdproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 		
-		<updateAssemblyInfoFiles srcdir="${db4ounit.net.src.dir}" />
+		<updateAssemblyInfoFiles srcdir="${tmp.db4ounit.net.src.dir}" />
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
@@ -119,5 +98,16 @@
 	
 	<target name="init">
 		<mkdir dir="${db4ounit.jar.dir}" />
+	</target>
+	<target name="updateSvnLocalCopy" if="updateSvnLocalCopy" >		
+		<delete failonerror="false">
+			<fileset dir="${db4ounit.net.src.dir}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${db4ounit.net.src.dir}" overwrite="true">
+			<fileset dir="${tmp.db4ounit.net.src.dir}" />
+		</copy>
 	</target>
 </project>

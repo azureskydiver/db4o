@@ -465,7 +465,7 @@
 		<csc
 			destfile="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe"
 			targettype="exe"
-			srcdir="${dir.n.v6}/Db4objects.Db4o.Tests"
+			srcdir="${tmp.dir.n.v6.tests}"
 			mainclass="Db4objects.Db4o.Tests.AllTests"
 			definitions="${csharp.definitions}"
 			debug="true"
@@ -484,7 +484,7 @@
 		<csc
 			destfile="${dir.dist.dll.net}/Db4oUnit.Extensions.dll"
 			targettype="library"
-			srcdir="${dir.n.v6}/Db4oUnit.Extensions"
+			srcdir="${tmp.dir.n.v6.extensions}"
 			debug="true"
 			executable="${csc.executable}">
 			<reference dir="${dir.dist.dll.net}">
@@ -593,8 +593,7 @@
 				<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
 			</fileset>
 		</copy>
-		
-		<echo> dir.n.in.java ${dir.n.in.java}</echo>
+
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
 			<fileset dir="${dir.n.in.java}">
 				<include name="**/*.java" />
@@ -630,9 +629,7 @@
 		
 		<copy todir="${tmp.dir.n.v6.core}">
 			<fileset dir="${dir.n.v6.core}">
-				<include name="native/**" />
-				<include name="Properties/**" />
-				<include name="*.cs*proj" />
+				<exclude name="Db4objects.Db4o/**" />
 			</fileset>
 		</copy>
 		
@@ -660,27 +657,21 @@
 	</target>
 	
 	<target name="sharpen-db4ounit">
-		<ant antfile="${build.db4o.net.basedir}/build-new-db4ounit.xml" target="buildnet" inheritall="false">
+		<ant antfile="${build.db4o.net.basedir}/build-new-db4ounit.xml" target="build" inheritall="false">
 			<property name="csc.executable" value="${csc.executable}" />
 		</ant>
 	</target>
 		
 	<target name="sharpen-db4ounit-extensions">		
-		
-		<property name="target.dir" value="${dir.sharpen}" />
-		
-		<delete dir="${target.dir}" />
-		<mkdir dir="${target.dir}" />
-		
-		<mkdir dir="${target.dir}/lib" />
+		<resetDir dir="${dir.sharpen}/lib" />
 
-		<copy todir="${target.dir}/db4ounit.extensions/src">
+		<copy todir="${dir.sharpen}/db4ounit.extensions/src">
 			<fileset dir="${dir.db4ounit.extensions.src}">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
 		
-		<sharpen workspace="${target.dir}" resource="db4ounit.extensions/src">
+		<sharpen workspace="${dir.sharpen}" resource="db4ounit.extensions/src">
 			<args>
 				<arg value="-cp" />
 				<arg path="${ivy.lib.dir}/db4o-java1.1.jar" />
@@ -692,50 +683,41 @@
 			</args>
 		</sharpen>
 		
-		<property name="dir.n.v6.extensions" location="${dir.n.v6}/Db4oUnit.Extensions" />
-		
-		<delete failonerror="false">
-			<fileset dir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
-				<include name="**/*.cs" />
-				<exclude name="**/.svn/**" />
-			</fileset>
-		</delete>
-		
-		<copy todir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
-			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src/Db4oUnit/Extensions">
+		<copy todir="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions">
+			<fileset dir="${dir.sharpen}/db4ounit.extensionscsharp/src/Db4oUnit/Extensions">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
 		
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2003.csproj">
-			<sources dir="${dir.n.v6.extensions}">
-				<include name="**/*.cs" />
-			</sources>
+		<copy todir="${tmp.dir.n.v6.extensions}">
+			<fileset dir="${dir.n.v6.extensions}">
+				<exclude name="Db4oUnit.Extensions/**" />
+			</fileset>
+		</copy>
+		
+		<fileset id="db4ounit.extensions.files" dir="${dir.n.v6.extensions}">
+			<include name="**/*.cs" />
+		</fileset>
+		
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions-2003.csproj">
+			<sources refid="db4ounit.extensions.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2005.csproj">
-			<sources dir="${dir.n.v6.extensions}">
-				<include name="**/*.cs" />
-			</sources>
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions-2005.csproj">
+			<sources refid="db4ounit.extensions.files" />
 		</updatecsharpproject>
 
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2003.csdproj">
-			<sources dir="${dir.n.v6.extensions}">
-				<include name="**/*.cs" />
-			</sources>
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2003.csdproj">
+			<sources refid="db4ounit.extensions.files" />
 		</updatecsharpproject>
 
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2005.csproj">
-			<sources dir="${dir.n.v6.extensions}">
-				<include name="**/*.cs" />
-			</sources>
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2005.csproj">
+			<sources refid="db4ounit.extensions.files" />
 		</updatecsharpproject>
 	</target>		
 	
-	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions">
-		
-		<property name="target.dir" location="${dir.sharpen}" />
-		
+	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions">		
+		<property name="target.dir" location="${dir.sharpen}" />		
 		<copy todir="${target.dir}/db4oj.tests/src">
 			<fileset dir="${dir.j.tests.src}">
 				<include name="**/db4ounit/common/**/*.java" />
@@ -755,44 +737,36 @@
 			</args>
 		</sharpen>
 		
-		<property name="dir.n.v6.tests" location="${dir.n.v6}/Db4objects.Db4o.Tests" />
-		<property name="dir.n.v6.tests.src" location="${dir.n.v6.tests}/Db4objects.Db4o.Tests" />
-		
-		<delete failonerror="false">
-			<fileset dir="${dir.n.v6.tests.src}/Common">
-				<include name="**/*.cs" />
-				<exclude name="**/.svn/**" />
-			</fileset>
-		</delete>
-		
-		<copy todir="${dir.n.v6.tests.src}">
+		<copy todir="${tmp.dir.n.v6.tests.src}">
 			<fileset dir="${target.dir}/db4oj.testscsharp/src/Db4objects/Db4o/Tests">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
+		
+		<copy todir="${tmp.dir.n.v6.tests}">
+			<fileset dir="${dir.n.v6.tests}">
+				<exclude name="Db4objects.Db4o.Tests/**" />
+			</fileset>
+		</copy>
 
-		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2003.csdproj">
-			<sources dir="${dir.n.v6.tests}">
-				<include name="**/*.cs" />
-			</sources>
+		<fileset id="tests.files" dir="${tmp.dir.n.v6.tests}">
+			<include name="**/*.cs" />
+		</fileset>
+		
+		<updatecsharpproject projectfile="${tmp.dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2003.csdproj">
+			<sources refid="tests.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.csproj">
-			<sources dir="${dir.n.v6.tests}">
-				<include name="**/*.cs" />
-			</sources>
+		<updatecsharpproject projectfile="${tmp.dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.csproj">
+			<sources refid="tests.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-2005.csproj">
-			<sources dir="${dir.n.v6.tests}">
-				<include name="**/*.cs" />
-			</sources>
+		<updatecsharpproject projectfile="${tmp.dir.n.v6.tests}/Db4objects.Db4o.Tests-2005.csproj">
+			<sources refid="tests.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-2003.csproj">
-			<sources dir="${dir.n.v6.tests}">
-				<include name="**/*.cs" />
-			</sources>
+		<updatecsharpproject projectfile="${tmp.dir.n.v6.tests}/Db4objects.Db4o.Tests-2003.csproj">
+			<sources refid="tests.files" />
 		</updatecsharpproject>
 	</target>
 	
@@ -992,5 +966,27 @@
 		<copy todir="${dir.n.v6.core}" overwrite="true">
 			<fileset dir="${tmp.dir.n.v6.core}" />
 		</copy>
-	</target>
+		
+		<!--Db4oUnit.Extensions-->
+		<delete failonerror="false">
+			<fileset dir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${dir.n.v6.extensions}">
+			<fileset dir="${tmp.dir.n.v6.extensions}"/>
+		</copy>
+		
+		<!--Db4objects.Db4o.Tests-->
+		<delete failonerror="false">
+			<fileset dir="${dir.n.v6.tests.src}/Common">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${dir.n.v6.tests}">
+			<fileset dir="${tmp.dir.n.v6.tests}"/>
+		</copy>
+	</target>	
 </project>
