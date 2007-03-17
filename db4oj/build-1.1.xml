@@ -1,15 +1,8 @@
-<project name="db4o-java1.1" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="db4o-java1.1" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	
 	<import file="../build-1.1/common-1.1.xml"/>
 	
 	<property file="${dir.j}/build-1.1.properties" />
-	
-	<!--
-	TODO 
-	filehead
-	
-	<property name="bona" value="tempClassesDir" />
-		-->
 	
 	<target name="echo" >
 		<echo message="${tempOne}"/>
@@ -24,19 +17,31 @@
 		<initIvyDir/>
 	</target>
 	
-	<target name="jar" depends="init">
-		<property name="file.compiler.jdk1.3.args.optional" value="" />
-		
+	<target name="jar" depends="init">		
 		<resetDir dir="${tempOne}"/>
 		
+		<copyjava1.1 destDir="${tempSrcDir}" />		
+		
+		<versioninfo 
+			path="${tempSrcDir}/com/db4o" 
+			java="true" 
+			version="${db4o.version.full}" 
+			major="${db4o.version.major}" 
+			minor="${db4o.version.minor}" 
+		/>
+		
 		<javac fork="yes" executable="${file.compiler.jdk1.3}"
-			srcdir="${coreSrcDir}" destdir="${tempOne}" debug="off">
+			srcdir="${tempSrcDir}" destdir="${tempOne}" debug="off">
 			<compilerarg line="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}"/>
 		</javac>
 		
 		<jar jarfile="${coreJarPath}" basedir="${tempOne}" />
 		
-		<delete dir="${tempOne}" failonerror="true"/>
+		<antcall target="updateDb4oVersion" />
+	</target>
+	
+	<target name="updateDb4oVersion" if="updateSvnLocalCopy" >
+		<copy file="${tempSrcDir}/com/db4o/Db4oVersion.java" tofile="${dir.j.core.src}/com/db4o/Db4oVersion.java" overwrite="true"/>
 	</target>
 	
 	 <target name="configure" depends="init">
