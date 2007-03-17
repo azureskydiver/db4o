@@ -12,10 +12,17 @@
 		</sequential>
 	</macrodef>
 	
-	<macrodef name="copyjava1.2" description="Prepare java1.2 sources"> 
+	<macrodef name="copyjava1.1" description="Prepare java1.1 sources"> 
 		<attribute name="destDir"/>
 		<sequential>
 			<copySrcDir srcDir="${dir.j.core.src}"				destDir="@{destDir}" />
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="copyjava1.2" description="Prepare java1.2 sources"> 
+		<attribute name="destDir"/>
+		<sequential>
+			<copyjava1.1 destDir="@{destDir}" />	
 			<copySrcDir srcDir="${dir.j.jdk1.2.core.src}"	destDir="@{destDir}" />
 		</sequential>
 	</macrodef>
