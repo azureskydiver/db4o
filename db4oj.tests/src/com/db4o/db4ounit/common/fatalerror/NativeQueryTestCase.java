@@ -30,7 +30,7 @@ public class NativeQueryTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static class FatalErrorPredicate extends Predicate {
-		public boolean match(Item item) {
+		public boolean match(Object item) {
 			throw new NQError("nq error!");
 		}
 	}
