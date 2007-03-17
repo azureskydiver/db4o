@@ -14,9 +14,7 @@
 	</copy>	
     
   <target name="publish" depends="publish-mono, publish-net">
-    <!--<publishToIvy/>
-    <antcall target="clean" />
-    -->
+  	<antcall target="restore-db4o.net" />
   </target>
   
   <macrodef name="publishToIvyDotNet" description="Selectively publish either net2 or mono2 distros">
@@ -979,5 +977,19 @@
 		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
 		<ivy:resolve file="${build.db4o.net.basedir}/ivy.xml"/>
 		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]" conf="${ivy.configurations}" />
+		
+		<antcall target="preserve-db4o.net" />
+	</target>
+	
+	<target name="preserve-db4o.net" unless="updateSvnLocalCopy" >
+		<copy todir="${tempDb4oNetDir}">
+			<fileset dir="${dir.n.v6}" defaultexcludes="no" />
+		</copy>
+	</target>
+	<target name="restore-db4o.net" unless="updateSvnLocalCopy" >
+		<delete dir="${dir.n.v6}"/>
+		<copy todir="${dir.n.v6}">
+			<fileset dir="${tempDb4oNetDir}" defaultexcludes="no" />
+		</copy>
 	</target>
 </project>
