@@ -19,6 +19,7 @@ public class NativeQueryTestCase extends AbstractDb4oTestCase {
 		store(new Item("hello"));
 	}
 
+	/*
 	public void _test() {
 		Assert.expect(NQError.class, new CodeBlock() {
 			public void run() throws Exception {
@@ -40,4 +41,5 @@ public class NativeQueryTestCase extends AbstractDb4oTestCase {
 			super(msg);
 		}
 	}
+	*/
 }
