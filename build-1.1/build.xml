@@ -31,8 +31,9 @@
 			
 			<fileset dir="../javatocsharp/javatocsharp.core"	includes="build-1.1.xml"/>
 			
+			<!--
 			<fileset dir="db4o.net"	includes="build.xml"/>
-			
+			-->
     </ivy:buildlist>
   </target>
   
