@@ -9,7 +9,9 @@ font.pdf.base = C:/WINDOWS/Fonts/VERDANA.TTF
 # Optional - directory to contain all the builds, e.g. db4o-java.zip dRS.zip 
 # repository.dir = c:/repository
 
-# Optional - Copy newly generated .cs and Db4oVersion.java to svn-controlled directories. Default is false.
+# Optional - Copy newly generated .cs and Db4oVersion.java to svn-controlled directories. 
+# ** Note - the value does not matter, regardless you set the property "updateSvnLocalCopy", 
+# ** to "abc", "true" or "false", it means true
 # updateSvnLocalCopy = true
 
 # Optional - path to JDK1.3 compatible javac executable (default: "javac")

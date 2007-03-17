@@ -14,7 +14,7 @@
 	</copy>	
     
   <target name="publish" depends="publish-mono, publish-net">
-  	<antcall target="restore-db4o.net" />
+  	<antcall target="updateSvnLocalCopy" />		
   </target>
   
   <macrodef name="publishToIvyDotNet" description="Selectively publish either net2 or mono2 distros">
@@ -518,9 +518,8 @@
 		</csc-all>
 	</target>
 		
-	<target name="build-core" depends="init, check-dependencies, sharpen">
-	
-		<fileset id="core.sources" dir="${dir.n.v6.core}">
+	<target name="build-core" depends="init, configure, check-dependencies, sharpen">	
+		<fileset id="core.sources" dir="${tmp.dir.n.v6.core}">
 			<include name="**/*.cs" />
 		</fileset>
 		
@@ -603,58 +602,61 @@
 		</copy>
 	</target>
 	
-	<target name="copy-sharpened-files">
+	<macrodef name="copySharpenedFiles">
+		<attribute name="src.dir"/>
+		<attribute name="target.dir"/>
 		
-		<copy todir="${target.dir}">
-			<fileset dir="${src.dir}/Db4objects/Db4o">
-				<include name="**/*.cs" />
-				<exclude name="JDK_*.cs" />
-				<exclude name="JDKReflect*.cs" />
-				<exclude name="Reflect/Jdk/**/*.*" />
-				<exclude name="Reflect/Self/*.*" />
-			</fileset>
-		</copy>
-	</target>	
+		<sequential>		
+			<copy todir="@{target.dir}">
+				<fileset dir="@{src.dir}/Db4objects/Db4o">
+					<include name="**/*.cs" />
+					<exclude name="JDK_*.cs" />
+					<exclude name="JDKReflect*.cs" />
+					<exclude name="Reflect/Jdk/**/*.*" />
+					<exclude name="Reflect/Self/*.*" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>	
 
 	<target name="sharpen-core" depends="prepare-conversion-workspace" unless="csharp.uptodate">
-
 		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
 			<args>
 				<arg value="@sharpen-new-core-mapping" />
 			</args>
 		</sharpen>
 		
-		<delete failonerror="false">
-			<fileset dir="${dir.n.v6.core.src}">
-				<include name="**/*.cs" />
-				<exclude name="**/.svn/**" />
-			</fileset>
-		</delete>
-		<antcall target="copy-sharpened-files">
-			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
-			<param name="target.dir" value="${dir.n.v6.core.src}" />
-		</antcall>
+		<resetDir dir="${tmp.dir.n.v6.core.src}"/>
 		
-		<fileset id="core.net.files" dir="${dir.n.v6.core}">
+		<copy todir="${tmp.dir.n.v6.core}">
+			<fileset dir="${dir.n.v6.core}">
+				<include name="native/**" />
+				<include name="Properties/**" />
+				<include name="*.cs*proj" />
+			</fileset>
+		</copy>
+		
+		<copySharpenedFiles src.dir="${dir.sharpen}/db4ojcsharp/src" target.dir="${tmp.dir.n.v6.core.src}"/>
+		
+		<fileset id="core.net.files" dir="${tmp.dir.n.v6.core}">
 			<include name="**/*.cs" />
 		</fileset>
 			
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2005.csproj">
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.core}/Db4objects.Db4o-2005.csproj">
 			<sources refid="core.net.files" />
 		</updatecsharpproject>		
 		
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2003.csproj">
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.core}/Db4objects.Db4o-2003.csproj">
 			<sources refid="core.net.files" />
 		</updatecsharpproject>
 
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2003.csdproj">
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.core}/Db4objects.Db4o-CF-2003.csdproj">
 			<sources refid="core.net.files" />
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2005.csproj">
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.core}/Db4objects.Db4o-CF-2005.csproj">
 			<sources refid="core.net.files" />
 		</updatecsharpproject>
-
 	</target>
 	
 	<target name="sharpen-db4ounit">
@@ -977,19 +979,18 @@
 		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
 		<ivy:resolve file="${build.db4o.net.basedir}/ivy.xml"/>
 		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]" conf="${ivy.configurations}" />
-		
-		<antcall target="preserve-db4o.net" />
 	</target>
 	
-	<target name="preserve-db4o.net" unless="updateSvnLocalCopy" >
-		<copy todir="${tempDb4oNetDir}">
-			<fileset dir="${dir.n.v6}" defaultexcludes="no" />
-		</copy>
-	</target>
-	<target name="restore-db4o.net" unless="updateSvnLocalCopy" >
-		<delete dir="${dir.n.v6}"/>
-		<copy todir="${dir.n.v6}">
-			<fileset dir="${tempDb4oNetDir}" defaultexcludes="no" />
+	<target name="updateSvnLocalCopy" if="updateSvnLocalCopy" >
+		<!-- Db4o Core-->
+		<delete failonerror="false">
+			<fileset dir="${dir.n.v6.core.src}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${dir.n.v6.core}" overwrite="true">
+			<fileset dir="${tmp.dir.n.v6.core}" />
 		</copy>
 	</target>
 </project>
