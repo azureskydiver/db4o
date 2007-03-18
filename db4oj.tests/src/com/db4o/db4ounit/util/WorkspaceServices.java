@@ -10,11 +10,18 @@ import com.db4o.foundation.io.Path4;
 public class WorkspaceServices {
 	
 	public static String workspacePath(String fname) {
-		return "../" + fname;
+		return Path4.combine(workspaceRoot(), fname);
 	}
 	
 	public static String workspaceTestFilePath(String fname) {
 		return Path4.combine(WorkspaceLocations.TEST_FOLDER, fname);
+	}
+	
+	/**
+	 * @sharpen.property
+	 */
+	public static String workspaceRoot() {
+		return "..";
 	}
 
 }

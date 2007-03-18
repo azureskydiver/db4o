@@ -15,6 +15,10 @@ import db4ounit.*;
 public class COR234TestCase implements TestCase {
 
 	public void test() {
+		if (WorkspaceServices.workspaceRoot() == null) {
+			System.err.println("Build environment not available. Skipping test case...");
+			return;
+		}
 		Db4o.configure().allowVersionUpdates(false);
 		
 		Assert.expect(OldFormatException.class, new CodeBlock() {
