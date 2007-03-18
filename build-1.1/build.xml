@@ -29,7 +29,10 @@
 			<fileset dir="db4o-java"					includes="build.xml"/>
 			<fileset dir="${dir.objectmanager-api}"		includes="build-1.1.xml"/>
 			<fileset dir="${dir.objectmanager-swing}"	includes="build-1.1.xml"/>
-			<fileset dir="../drs"						includes="build-1.1.xml"/>			
+			<fileset dir="../drs"						includes="build-1.1.xml"/>	
+
+			<fileset dir="../javatocsharp/javatocsharp.core"	includes="build-1.1.xml"/>
+			<fileset dir="db4o.net"	includes="build.xml"/>
 		</ivy:buildlist>
 		<subant target="publish" buildpathref="buildPath" inheritAll="false" inheritRefs="false"/>
 		<delete dir="${tempDir}" failonerror="true"/>
@@ -58,8 +61,6 @@
 			<fileset dir="db4o-java"					includes="build.xml"/>
 			<fileset dir="${dir.objectmanager-api}"		includes="build-1.1.xml"/>
 			<fileset dir="${dir.objectmanager-swing}"	includes="build-1.1.xml"/>
-
-			<!-- dRS.zip projects -->
 			<fileset dir="../drs"						includes="build-1.1.xml"/>
 		</ivy:buildlist>
 		<subant target="publish" buildpathref="buildPath" inheritAll="false" inheritRefs="false"/>

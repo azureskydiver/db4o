@@ -79,7 +79,7 @@
 			<group title="Types" packages="com.db4o.types" />
 		</javadoc>
 		
-		<copy file="${javadoc.stylesheet}" todir="doc/api" overwrite="true" />
+		<copy file="${javadoc.stylesheet}" todir="${tempDocDir}/api" overwrite="true" />
 		
 		<delete dir="${tempOne}" failonerror="true"/>
 	</target>  
