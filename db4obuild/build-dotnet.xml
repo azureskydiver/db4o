@@ -806,7 +806,9 @@
 		</echo>
 	</target>
 	
-	<target name="run-sandcastle" depends="prepare-sandcastle-output" if="sandcastle.available">
+	<target name="run-sandcastle" if="sandcastle.available">
+	
+		<antcall target="prepare-sandcastle-output" />
 		
 		<exec executable="${dir.build}/lib/boo/booi">
 			<arg file="src/sandcastle/MRefConfigGenerator.boo" />
