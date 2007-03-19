@@ -6,6 +6,7 @@ import com.db4o.cs.server.Session;
 import com.db4o.cs.client.query.ClientQuery;
 import com.db4o.cs.common.util.Log;
 import com.db4o.cs.common.util.StopWatch;
+import com.db4o.cs.common.query.QueryConverter;
 import com.db4o.ObjectContainer;
 import com.db4o.query.Query;
 import com.db4o.query.Constraint;
@@ -32,7 +33,7 @@ public class QueryOperationHandler implements OperationHandler {
         ObjectContainer oc = session.getObjectContainer();
 		Query q = oc.query();
 		// now apply all the constraints
-		applyConstraints(oc, q, query);
+		QueryConverter.applyConstraints(q, query);
 		/*
 		// what the heck?  this hangs db4o, never makes it to the next sys out
 		q.constrain(className);
@@ -53,31 +54,5 @@ public class QueryOperationHandler implements OperationHandler {
 		return results.size();
 	}
 
-	private void applyConstraints(ObjectContainer oc, Query q, ClientQuery query) {
-		List<Constraint> constraints = query.getConstraints();
-		for (int i = 0; i < constraints.size(); i++) {
-			Constraint constraint = constraints.get(i);
-			//System.out.println("applying constraint: " + constraint.getObject());
-			q.constrain(constraint.getObject());
-			/*
-			// todo: use this when not using Serialization for constrain by class
-			ReflectClass rc = oc.ext().reflector().forName(classname);
-			if(rc == null){
-				// todo: should send error back to client.
-			} else {
-				q.constrain()
-			}*/
-		}
-		// now recurse through children
-		Map<String, ClientQuery> children = query.getChildren();
-		Iterator iter = children.keySet().iterator();
-		while (iter.hasNext()) {
-			String key = (String) iter.next();
-			System.out.println("descending into: " + key);
-			ClientQuery qc2 = children.get(key);
-			Query q2 = q.descend(key);
-			applyConstraints(oc, q2, qc2);
-		}
 
-	}
 }

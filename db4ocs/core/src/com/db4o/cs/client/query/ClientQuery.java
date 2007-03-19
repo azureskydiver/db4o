@@ -4,10 +4,13 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.db4o.ObjectSet;
+import com.db4o.ObjectContainer;
 import com.db4o.cs.client.*;
+import com.db4o.cs.common.query.QueryConverter;
 import com.db4o.query.*;
 
 /**
+ *
  * User: treeder
  * Date: Nov 25, 2006
  * Time: 4:10:46 PM
@@ -21,9 +24,14 @@ public class ClientQuery implements Query, Serializable {
 	private int order = 0;
 	private static final int ASC = 1;
 	private static final int DESC = -1;
-	private transient Db4oClient client;
+	private transient ObjectContainer client;
 
-	public ClientQuery(Db4oClient client, String fieldName) {
+	/**
+	 * This can accept a normal db4o ObjectContainer or a Db4oClient.
+	 * @param client
+	 * @param fieldName
+	 */
+	public ClientQuery(ObjectContainer client, String fieldName) {
 		this.client = client;
 		this.fieldName = fieldName;
 	}
@@ -33,14 +41,15 @@ public class ClientQuery implements Query, Serializable {
 	 * You should create a query, then call client.execute(query);, not query.execute();
 	 * @param client
 	 */
-	public ClientQuery(Db4oClient client) {
-
+	public ClientQuery(ObjectContainer client){
 		this.client = client;
 	}
 
 	public ClientQuery() {
 
 	}
+
+
 
 	public Constraint constrain(Object constraint) {
 		// todo: if it's a Class, then send special format or just className since class might not be on server
@@ -69,7 +78,14 @@ public class ClientQuery implements Query, Serializable {
 
 	public ObjectSet execute() {
 		try {
-			return new ObjectSetListWrapper(client.execute(this));
+			if(client instanceof Db4oClient){
+				Db4oClient c = (Db4oClient) client;
+				return new ObjectSetListWrapper(c.execute(this));
+			} else {
+				Query q = client.query();
+				QueryConverter.applyConstraints(q, this);
+				return q.execute();
+			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

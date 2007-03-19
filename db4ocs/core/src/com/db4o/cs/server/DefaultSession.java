@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.io.IOException;
 
 /**
+ * This holds information about a specific client connection.
+ *
  * User: treeder
  * Date: Oct 31, 2006
  * Time: 1:50:11 AM
