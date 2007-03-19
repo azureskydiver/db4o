@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
 <project name="Db4objects.Db4o" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+		<!--
+	The following properties should be specified in machine.properties:
+	
+		dir.lib.sandcastle=<path to sandcastle installation>
+	-->
+
 	<import file="../common-1.1.xml"/>
 	<dirname property="build.db4o.net.basedir" file="${ant.file}"/>	
 	
@@ -495,6 +501,9 @@
 	</target>
 	
 	<target name="build-db4ounit" depends="sharpen-db4ounit">
+		<ant antfile="build-new-db4ounit.xml" target="compilenet" inheritall="false">
+			<property name="csc.executable" value="${csc.executable}" />
+		</ant>
 	</target>
 	
 	<target name="build-tools" depends="build-core">
@@ -595,7 +604,7 @@
 		</copy>
 
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
-			<fileset dir="${dir.n.in.java}">
+			<fileset dir="${dir.n.v6}/sharpen/">
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
@@ -657,8 +666,7 @@
 	</target>
 	
 	<target name="sharpen-db4ounit">
-		<ant antfile="${build.db4o.net.basedir}/build-new-db4ounit.xml" target="build" inheritall="false">
-			<property name="csc.executable" value="${csc.executable}" />
+		<ant antfile="build-new-db4ounit.xml" target="update-csharp-projects" inheritall="false">
 		</ant>
 	</target>
 		
@@ -800,9 +808,27 @@
 	</target>
 	
 	<property name="sandcastle.tools" location="${dir.lib.sandcastle}/ProductionTools" />
-	<property name="XslTransform" location="${sandcastle.tools}/XslTransform" />
+	<property name="XslTransform" location="${sandcastle.tools}/XslTransform" />	
+	<available file="${sandcastle.tools}/MRefBuilder.exe" property="sandcastle.available" />
 	
-	<target name="sandcastle" depends="prepare-sandcastle-output">
+	<target name="sandcastle" depends="run-sandcastle, warn-about-sandcastle">
+	</target>
+	
+	<target name="warn-about-sandcastle" unless="sandcastle.available">
+		<echo>
+	The build could not find sandcastle in your system, sandcastle is required if you want
+	to generate the .net documentation.
+	
+	Download and install it from:
+	http://www.microsoft.com/downloads/details.aspx?FamilyID=E82EA71D-DA89-42EE-A715-696E3A4873B2&amp;displaylang=en
+	
+	Then set the dir.lib.sandcastle property pointing to the root of the installation.
+		</echo>
+	</target>
+	
+	<target name="run-sandcastle" if="sandcastle.available">
+	
+		<antcall target="prepare-sandcastle-output" />
 		
 		<exec executable="${dir.build}/lib/boo/booi">
 			<arg file="${dir.build}/src/sandcastle/MRefConfigGenerator.boo" />
@@ -867,24 +893,32 @@
 	</target>
 	
 	<target name="generate-sandcastle-chm">
+	
+		<property name="dir.transforms" location="${dir.lib.sandcastle}/ProductionTransforms" />
+	
 		<!-- Generate HTML help project -->
 		<exec executable="${XslTransform}">
-			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToChmProject.xsl" />
+			<arg value="/xsl:${dir.transforms}/ReflectionToChmProject.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhp" />
 		</exec>	 
 	
 		<!--  Generate table of contents for HTML help project -->
 		<exec executable="${XslTransform}">
-			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToChmContents.xsl" />
+			<arg value="/xsl:${dir.transforms}/createvstoc.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
-			<arg value="/arg:html=${dir.dist.ndoc}/Output/html" />
+			<arg value="/out:${dir.dist.ndoc}/toc.xml" />
+		</exec>
+
+		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}">
+			<arg value="/xsl:${dir.transforms}/TocToChmContents.xsl" />
+			<arg value="${dir.dist.ndoc}/toc.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhc" />
 		</exec>
 	
 		<!-- Generate Index information -->
 		<exec executable="${XslTransform}">
-			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToChmIndex.xsl" />
+			<arg value="/xsl:${dir.transforms}/ReflectionToChmIndex.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhk" />
 		</exec>
