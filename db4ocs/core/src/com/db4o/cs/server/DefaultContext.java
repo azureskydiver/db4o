@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Iterator;
 
 /**
+ * This is the Server context for the entire server. Anything that is shared
+ * between client connections is here.
+ *
  * User: treeder
  * Date: Oct 31, 2006
  * Time: 12:34:06 AM
