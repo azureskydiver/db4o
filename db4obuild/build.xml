@@ -82,7 +82,6 @@
 				<include name="*.yap" />
 			</fileset>
 		</delete>
-		<ant dir="${dir.n.tutorial}" target="clean"/>
 	</target>
 	
 	<target name="filehead" depends="init" description="Add copyright header to all input sources">
