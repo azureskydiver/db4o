@@ -872,24 +872,32 @@
 	</target>
 	
 	<target name="generate-sandcastle-chm">
+	
+		<property name="dir.transforms" location="${dir.lib.sandcastle}/ProductionTransforms" />
+	
 		<!-- Generate HTML help project -->
 		<exec executable="${XslTransform}">
-			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToChmProject.xsl" />
+			<arg value="/xsl:${dir.transforms}/ReflectionToChmProject.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhp" />
 		</exec>	 
 	
 		<!--  Generate table of contents for HTML help project -->
 		<exec executable="${XslTransform}">
-			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToChmContents.xsl" />
+			<arg value="/xsl:${dir.transforms}/createvstoc.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
-			<arg value="/arg:html=${dir.dist.ndoc}/Output/html" />
+			<arg value="/out:${dir.dist.ndoc}/toc.xml" />
+		</exec>
+
+		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}">
+			<arg value="/xsl:${dir.transforms}/TocToChmContents.xsl" />
+			<arg value="${dir.dist.ndoc}/toc.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhc" />
 		</exec>
 	
 		<!-- Generate Index information -->
 		<exec executable="${XslTransform}">
-			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToChmIndex.xsl" />
+			<arg value="/xsl:${dir.transforms}/ReflectionToChmIndex.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhk" />
 		</exec>
