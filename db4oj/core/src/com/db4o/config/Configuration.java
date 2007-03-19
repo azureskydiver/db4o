@@ -412,9 +412,10 @@ public interface Configuration {
      * allows to configure db4o to use a customized byte IO adapter.
      * <br><br>Derive from the abstract class {@link IoAdapter} to
      * write your own. Possible usecases could be improved performance
-     * with a native library, mirrored write to two files or 
-     * read-on-write fail-safety control.<br><br>Sample IoAdapters
-     * are supplied with the distribution as source code.
+     * with a native library, mirrored write to two files, encryption or 
+     * read-on-write fail-safety control.<br><br>An example of a custom
+     * io adapter can be found in xtea_db4o community project:<br>
+     * http://developer.db4o.com/ProjectSpaces/view.aspx/XTEA
      * @param adapter - the IoAdapter
      */
     public void io(IoAdapter adapter);
