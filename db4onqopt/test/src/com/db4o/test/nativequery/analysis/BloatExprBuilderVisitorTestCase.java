@@ -468,12 +468,12 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		assertInvalid("sampleFieldStringEndsWithWrongWay");
 	}
 
-	// TODO: inconsistently fails on Windows, depending on test suite order?!? see COR-264
+	// TODO: inconsistently fails on Windows and Linux, depending on test suite order?!? see COR-264
 	boolean sampleFieldStringToLowerCaseStartsWith(Data data) throws Exception {
 		return data.getName().toLowerCase().startsWith(STRING_CMPVAL);
 	}
 
-	public void testFieldStringToLowerCaseStartsWith() throws Exception {
+	public void _testFieldStringToLowerCaseStartsWith() throws Exception {
 		assertInvalid("sampleFieldStringToLowerCaseStartsWith");
 	}
 
