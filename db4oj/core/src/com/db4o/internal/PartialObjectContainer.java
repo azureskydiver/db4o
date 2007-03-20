@@ -690,11 +690,17 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		throw new RuntimeException(Messages.get(msgID));
 	}
 
-	
+    /**
+     * @sharpen.ignore
+     */
     protected void finalize() {
-		if (doFinalize() && (configImpl() == null || configImpl().automaticShutDown())) {
+		if (doFinalize() && configuredForAutomaticShutDown()) {
 			shutdownHook();
 		}
+	}
+
+	private boolean configuredForAutomaticShutDown() {
+		return (configImpl() == null || configImpl().automaticShutDown());
 	}
 
     void gc() {
@@ -1009,7 +1015,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         i_references = new WeakReferenceCollector(_this);
 
         if (hasShutDownHook()) {
-            Platform4.addShutDownHook(this, i_lock);
+            Platform4.addShutDownHook(this);
         }
         i_handlers.initEncryption(configImpl());
         initialize2();
@@ -1839,7 +1845,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     protected void stopSession() {
         if (hasShutDownHook()) {
-            Platform4.removeShutDownHook(this, i_lock);
+            Platform4.removeShutDownHook(this);
         }
         _classCollection = null;
         i_references.stopTimer();

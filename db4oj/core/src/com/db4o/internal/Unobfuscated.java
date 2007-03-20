@@ -49,10 +49,4 @@ public class Unobfuscated {
         }
         return ((java.util.Random)random).nextLong();
 	}
-	
-	static void shutDownHookCallback(Object a_stream){
-		((ObjectContainerBase)a_stream).shutdownHook();
-	}
-
-
 }

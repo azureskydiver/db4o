@@ -141,7 +141,7 @@ public final class ConfigBlock {
         	// a readonly decorator, issue a  notification and continue?
             if(! _container.configImpl().isReadOnly()  && ! _container.configImpl().allowVersionUpdates()){
             	if(_container.configImpl().automaticShutDown()) {
-            		Platform4.removeShutDownHook(_container, _container.i_lock);
+            		Platform4.removeShutDownHook(_container);
             	}
                 throw new OldFormatException();
             }

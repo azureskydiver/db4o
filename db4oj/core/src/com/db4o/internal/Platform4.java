@@ -67,16 +67,16 @@ public final class Platform4 {
 	};
 
 
-    static final void addShutDownHook(Object a_stream, Object a_lock) {
-        synchronized (a_lock) {
-            if (hasShutDownHook()) {
-                if (shutDownThread == null) {
-                    shutDownRunnable = new ShutDownRunnable();
-                    shutDownThread = jdk().addShutdownHook(shutDownRunnable);
-                }
-                shutDownRunnable.ensure(a_stream);
-            }
+    synchronized static final void addShutDownHook(PartialObjectContainer container) {
+        if (!hasShutDownHook()) {
+        	return;
         }
+        
+        if (shutDownThread == null) {
+            shutDownRunnable = new ShutDownRunnable();
+            shutDownThread = jdk().addShutdownHook(shutDownRunnable);
+        }
+        shutDownRunnable.ensure(container);
     }
 
     public static final boolean canSetAccessible() {
@@ -545,25 +545,23 @@ public final class Platform4 {
 	}
 
 
-    static final void removeShutDownHook(Object a_stream, Object a_lock) {
-        synchronized (a_lock) {
-            if (hasShutDownHook()) {
-                if (shutDownRunnable != null) {
-                    shutDownRunnable.remove(a_stream);
-                    if (shutDownRunnable.size() == 0) {
-                        if (!shutDownRunnable.dontRemove) {
-                            try {
-                                jdk().removeShutdownHook(shutDownThread);
-                            } catch (Exception e) {
-                                // this is safer than attempting perfect
-                                // synchronisation
-                            }
-                        }
-                        shutDownThread = null;
-                        shutDownRunnable = null;
-                    }
+    synchronized static final void removeShutDownHook(PartialObjectContainer container) {
+        if (!hasShutDownHook() || shutDownRunnable == null) {
+        	return;
+        }
+        
+        shutDownRunnable.remove(container);
+        if (shutDownRunnable.size() == 0) {
+            if (!shutDownRunnable.dontRemove) {
+                try {
+                    jdk().removeShutdownHook(shutDownThread);
+                } catch (Exception e) {
+                    // this is safer than attempting perfect
+                    // synchronisation
                 }
             }
+            shutDownThread = null;
+            shutDownRunnable = null;
         }
     }
     
