@@ -5,7 +5,7 @@ public final class Assert {
 	public static void expect(Class exception, CodeBlock block) {
 		try {
 			block.run();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			if (exception.isInstance(e)) return;
 			fail("Expecting '" + exception.getName() + "' but got '" + e.getClass().getName() + "'");
 		}
