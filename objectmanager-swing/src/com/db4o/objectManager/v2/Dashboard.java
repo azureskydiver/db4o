@@ -36,7 +36,7 @@ public class Dashboard {
 
 	public static final String COPYRIGHT =
 			"\u00a9 2007 db4objects Inc. All Rights Reserved.";
-	public static final String VERSION = "6.1";
+	public static final String VERSION = "6.2";
 	public static final String TITLE = "ObjectManager " + VERSION;
 
 	private JFrame frame;

@@ -3,8 +3,8 @@
         ObjectManager build file
     </description>
 	<!-- set the appropriate db4o jar file to use -->
-	<property name="db4o.version" value="db4o-6.1-java5.jar"/>
-	<property name="dist.version" value="objectmanager-6.1"/>
+	<property name="db4o.version" value="db4o-6.2-java5.jar"/>
+	<property name="dist.version" value="objectmanager-6.2"/>
 
 	<!-- set global properties for this build -->
 	<property name="src" location="src"/>
