@@ -1,0 +1,114 @@
+<project name="Db4objects.Drs" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	<import file="../../build-1.1/common-1.1.xml"/>
+	<property file="build.properties" />
+	
+	<copy todir="${dir.dRS.net}">
+		<fileset dir="${dir.old.build}">
+			<include name="sharpen*" />
+		</fileset>
+	</copy>
+	
+	<condition property="mono" value="1">
+		<os family="unix" />
+	</condition>
+	
+	<target name="clean">
+	<cleanIvyDir/>
+		<delete dir="doc/out"	failonerror="true"/>
+	</target>
+	<target name="init" depends="clean">
+		<tstamp />
+		<initIvyDir/>	
+	</target>
+	<target name="configure" depends="init">
+		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+	</target>
+	<target name="resolve" depends="configure">
+		<ivy:resolve file="ivy.xml"/>   
+		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]" conf="${ivy.configurations}" />
+	</target>	
+	<target name="zip" depends="sharpen-drs">
+	
+	</target>
+	<target name="publish" depends="zip">
+		<!--
+		<publishToIvy/>
+		<antcall target="clean" />
+		-->
+	</target>
+	
+	<target name="prepare-conversion-workspace" depends="resolve">
+		<copy todir="${drs.src.filtered}">
+			<fileset dir="${dir.dRS.src}">
+				<include name="core/**/*.java" />
+				
+				<include name="test/**/test/Db4oClientServerDrsFixture.java" />
+				<include name="test/**/test/ByteArrayTest.java" />
+				<include name="test/**/test/IByteArrayHolder.java" />
+				<include name="test/**/test/ByteArrayHolder.java" />
+				<include name="test/**/test/Db4oDrsFixture.java" />
+				<include name="test/**/test/Db4oTests.java" />
+				<include name="test/**/test/DrsFixture.java" />				
+				<include name="test/**/test/DrsTestCase.java" />
+				<include name="test/**/test/DrsTestSuite.java" />
+				<include name="test/**/test/DrsTestSuiteBuilder.java" />					
+				<include name="test/**/test/ReplicationProviderTest.java" />
+				<include name="test/**/test/GetByUUID.java" />
+				<include name="test/**/test/TheSimplest.java" />
+				<include name="test/**/test/SPCChild.java" />
+				<include name="test/**/test/SPCParent.java" />
+				<include name="test/**/test/Pilot.java" />
+				<include name="test/**/test/Car.java" />
+				<include name="test/**/test/SimpleParentChild.java" />
+				<include name="test/**/test/ReplicationEventTest.java" />
+				<include name="test/**/test/ReplicationAfterDeletionTest.java" />
+				<include name="test/**/test/SimpleArrayTest.java" />
+				<include name="test/**/test/SimpleArrayHolder.java" />
+				<include name="test/**/test/SimpleArrayContent.java" />
+				<include name="test/**/test/ListTest.java" />
+				<include name="test/**/test/ListHolder.java" />
+				<include name="test/**/test/ListContent.java" />					
+				<include name="test/**/test/Db4oListTest.java" />					
+				<include name="test/**/test/R0to4Runner.java" />
+				<include name="test/**/test/R0.java" />
+				<include name="test/**/test/R0Linker.java" />
+				<include name="test/**/test/R1.java" />
+				<include name="test/**/test/R2.java" />
+				<include name="test/**/test/R3.java" />
+				<include name="test/**/test/R4.java" />
+				<include name="test/**/test/ReplicationFeaturesMain.java" />
+				<include name="test/**/test/Replicated.java" />				
+				<include name="test/**/test/Person.java" />				
+				<include name="test/**/test/Student.java" />				
+		
+				<include name="test/**/test/CollectionHolder.java" />
+				<include name="test/**/test/MapHolder.java" />
+				<include name="test/**/test/MapContent.java" />				
+				
+				<exclude name="**/hibernate/**" />
+				<exclude name="**/CollectionHandlerImplTest.java" />
+				<exclude name="**/ReplicationTraversalTest.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="sharpen-drs" depends="prepare-conversion-workspace">
+		<sharpen resource="drs/core" workspace="${drs.conversion.workspace.dir}">
+			<args>
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4o-java5.jar" />
+				<arg value="@sharpen-dRS-options" />
+			</args>
+		</sharpen>
+		<sharpen resource="drs/test" workspace="${drs.conversion.workspace.dir}">
+			<args>
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4o-java5.jar" />
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4ounit.jar" />	
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/dRS.jar" />				
+				<arg value="@sharpen-dRS-options" />
+			</args>
+		</sharpen>
+	</target>
+</project>
