@@ -39,7 +39,8 @@ public class GenericObjectConverter implements Converter {
 	public void marshal(Object value, HierarchicalStreamWriter writer,
 						MarshallingContext context) {
 		GenericObject ob = (GenericObject) value;
-		GenericClass genericClass = ob.getGenericClass();
+		// todo: check in GenericObject change:
+        /*GenericClass genericClass = ob.getGenericClass();
 		ReflectField[] fields = genericClass.getDeclaredFields();
 		for(int i = 0; i < fields.length; i++) {
 			ReflectField field = fields[i];
@@ -49,6 +50,7 @@ public class GenericObjectConverter implements Converter {
 //			writer.setValue(String.valueOf(field.get(ob)));
 			writer.endNode();
 		}
+		*/
 	}
 
 	public Object unmarshal(HierarchicalStreamReader reader,
