@@ -46,7 +46,6 @@ public class ObjectTreeModel implements TreeModel {
 		ReflectClass reflectClass = reflector.forObject(parentObject);
 		
 		if (reflectClass.isArray()) {
-			//System.out.println("is array"); this wasn't returning properly for generic arrays??
 			return makeArrayNode(parentObject, parentNode, index, reflector);
 		} else if (reflector.isCollection(reflectClass)) {
 			// reflector.isCollection returns true for Maps too
@@ -137,12 +136,12 @@ public class ObjectTreeModel implements TreeModel {
 
 	public void valueForPathChanged(TreePath path, Object newValue) {
 		ObjectTreeNode aNode = (ObjectTreeNode) path.getLastPathComponent();
-		System.out.println("new value: " + newValue + " " + newValue.getClass() + " old ob: " + aNode.getObject() + " " + aNode.getObject().getClass());
+//		System.out.println("new value: " + newValue + " " + newValue.getClass() + " old ob: " + aNode.getObject() + " " + aNode.getObject().getClass());
 		try {
 			Object oldOb = aNode.getObject();
 			Class c = aNode.getObject().getClass();
-			System.out.println("class: " + c);
-			System.out.println("isBoolean: " + (Boolean.class.isAssignableFrom(c)));
+//			System.out.println("class: " + c);
+//			System.out.println("isBoolean: " + (Boolean.class.isAssignableFrom(c)));
 			Object newOb = convertToObject(c, (String) newValue);
 			ObjectTreeNode parentNode = aNode.getParentNode();
 			int index = aNode.getIndex();

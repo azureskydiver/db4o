@@ -78,14 +78,19 @@ public class DashboardMenuBar extends BaseMenuBar {
 		pd.setString("Creating demo database...");
 		// kick off defrag thread
 		final com.db4o.objectManager.v2.uiHelper.SwingWorker worker = new com.db4o.objectManager.v2.uiHelper.SwingWorker() {
-			boolean successful = true;
+			boolean successful = false;
+			String filename;
 
 			public Object construct() {
-				dashboard.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));				
+				dashboard.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 				try {
-					new DemoDbTask(dashboard);
-				} catch (Exception e1) {
-					successful = false;
+					DemoDbTask task = new DemoDbTask();
+					task.run();
+					System.out.println("done making demo db.");
+					DemoPopulator populator = task.getPopulator();
+					filename = populator.getFileName();
+					successful = true;
+				} catch(Exception e1) {
 					OptionPaneHelper.showErrorMessage(dashboard.getFrame(), "Error creating model database!" + "\n\n" + e1.getMessage(), "Error During Defragment");
 					Log.addException(e1);
 					e1.printStackTrace();
@@ -98,8 +103,8 @@ public class DashboardMenuBar extends BaseMenuBar {
 				super.finished();
 				pd.dispose();
 				dashboard.getFrame().setCursor(null);
-				if (successful) {
-					dashboard.connectToFile(DemoPopulator.getDataFile());
+				if(successful) {
+					dashboard.connectToFile(filename);
 				}
 			}
 		};
