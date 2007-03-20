@@ -7,10 +7,7 @@
 	-->
 
 	<import file="../common-1.1.xml"/>
-	<dirname property="build.db4o.net.basedir" file="${ant.file}"/>	
-	
-	<echo>basedir ${basedir}</echo>
-	
+		
 	<property environment="env" />
 	
 	<copy todir="${build.db4o.net.basedir}">
@@ -58,33 +55,7 @@
 		<include name="db4oj/core/src/**/*.java" />
 	</fileset>
 	
-	<macrodef name="sharpen">
-		<attribute name="workspace" />
-		<attribute name="resource" />
-		
-		<element name="args" optional="yes" />
-		
-		<sequential>
-			<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main"
-				fork="yes"
-				failonerror="true"
-				timeout="1800000"
-				maxmemory="512M">
-				<classpath>
-					<pathelement location="${eclipse.home}/startup.jar" />
-				</classpath>
-					
-				<arg value="-data" />
-				<arg file="@{workspace}" />
-				<arg value="-application" />
-				<arg value="javatocsharp.core.application" />
-				<arg value="@{resource}" />
-				
-				<args />
-					
-			</java>
-		</sequential>
-	</macrodef>
+	
 	
 	<macrodef name="copy-bin">
 		<attribute name="srcdir" />
