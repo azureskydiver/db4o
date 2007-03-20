@@ -654,15 +654,23 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		if(isClosed()) {
 			return;
 		}
-		if (_stackDepth == 0) {
+		if (allOperationsCompleted()) {
 			Messages.logErr(configImpl(), 50, toString(), null);
 			close();
 		} else {
 			shutdownObjectContainer();
-			if (_stackDepth > 0) {
+			if (operationIsProcessing()) {
 				Messages.logErr(configImpl(), 24, null, null);
 			}
 		}
+	}
+
+	private boolean operationIsProcessing() {
+		return _stackDepth > 0;
+	}
+
+	private boolean allOperationsCompleted() {
+		return _stackDepth == 0;
 	}
 
     void fatalException(int msgID) {
@@ -1869,8 +1877,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	}
     	checkClosed();
     	generateCallIDOnTopLevel();
+    	if(_stackDepth == 0){
+    		_topLevelCallCompleted = false;
+    	}
     	_stackDepth++;
-    	_topLevelCallCompleted = false;
     }
     
     public final void beginTopLevelSet(){
@@ -1882,7 +1892,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	 * it's ended as expected
 	 */
     private final void completeTopLevelCall() {
-    	_topLevelCallCompleted = true;
+    	if(_stackDepth == 1){
+    		_topLevelCallCompleted = true;
+    	}
     }
     
     /*
@@ -1899,14 +1911,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	}
     	_stackDepth--;
     	generateCallIDOnTopLevel();
-    	if(!_topLevelCallCompleted) {
-    		shutdownObjectContainer();
+    	if(_stackDepth == 0){
+	    	if(!_topLevelCallCompleted) {
+	    		shutdownObjectContainer();
+	    	}
     	}
     }
     
     public final void endTopLevelSet(Transaction trans){
     	endTopLevelCall();
-    	if(_stackDepth == 0){
+    	if(_stackDepth == 0 && _topLevelCallCompleted){
     		trans.processDeletes();
     	}
     }
