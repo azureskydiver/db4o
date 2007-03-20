@@ -15,15 +15,15 @@ import db4ounit.extensions.AbstractDb4oTestCase;
  * @exclude
  */
 public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
-
-	private static final ObjectInfo[] NONE = new ObjectInfo[0];
-
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		new CommitTimeCallbacksTestCase().runSoloAndClientServer();
 	}
+
+	private static final ObjectInfo[] NONE = new ObjectInfo[0];
 	
 	public static final class Item {
 		public int id;
