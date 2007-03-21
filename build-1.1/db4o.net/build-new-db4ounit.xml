@@ -40,6 +40,7 @@
 			executable="${csc.executable}"
 			debug="true">
 		</csc>
+		<copy file="${assembly}" tofile="${defaultArtifactDir}/${projectName}.dll"/>
 	</target>
 	
 	<target name="sharpen" depends="prepare-conversion-workspace">
