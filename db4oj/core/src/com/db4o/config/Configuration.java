@@ -300,6 +300,9 @@ public interface Configuration {
      * <br><br>If encryption is set to true,
      * you need to supply a password to seed the encryption mechanism.<br><br>
      * db4o database files keep their encryption format after creation.<br><br>
+     * 
+     * @deprecated use a custom encrypting {@link IoAdapter} instead
+
      * @param flag true for turning encryption on, false for turning encryption 
      * off.
      * @see #password
@@ -510,6 +513,9 @@ public interface Configuration {
      * the file, are required to set the same password.<br><br>The password
      * is used to seed the encryption mechanism, which makes it impossible
      * to read the database file without knowing the password.<br><br>
+     * 
+     * @deprecated use a custom encrypting {@link IoAdapter} instead
+     * 
      * @param pass the password to be used.
      */
     public void password(String pass);
