@@ -26,7 +26,7 @@ public class FieldMetadata implements StoredField {
     //  position in YapClass i_fields
     private int              i_arrayPosition;
 
-    protected String         i_name;
+    private String         i_name;
 
     private boolean          i_isArray;
 

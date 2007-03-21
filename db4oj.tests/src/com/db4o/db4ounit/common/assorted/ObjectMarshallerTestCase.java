@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.assorted;
 
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 
@@ -86,7 +87,7 @@ public class ObjectMarshallerTestCase extends AbstractDb4oTestCase {
 		Assert.isTrue(marshaller.writeCalled);
 	}
 	
-	public void test() throws Exception{
+	public void testReadWrite() throws Exception{
 		Item item = assertRetrieve();
 		Assert.isTrue(marshaller.readCalled);
 		
@@ -99,13 +100,24 @@ public class ObjectMarshallerTestCase extends AbstractDb4oTestCase {
 		assertRetrieve();
 	}
 	
+	public void testQueryByExample() throws Exception{
+		ObjectSet os = db().get(new Item());
+		Assert.areEqual(1, os.size());
+		Item item = (Item) os.next();
+		assertItem(item);
+	}
+	
 	private Item assertRetrieve(){
 		marshaller.reset();
 		Item item = (Item) retrieveOnlyInstance(Item.class);
+		assertItem(item);
+		return item;
+	}
+
+	private void assertItem(Item item) {
 		Assert.areEqual(Integer.MAX_VALUE, item._one);
 		Assert.areEqual(Long.MAX_VALUE, item._two);
 		Assert.areEqual(1, item._three);
-		return item;
 	}
 	
 }
