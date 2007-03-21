@@ -1,16 +1,16 @@
 <ivy-module version="1.0">
 	<info organisation="db4o" module="${ant.project.name}"/>
 	<configurations>
-    	<conf name="net2" />
-    	<conf name="mono2" />
+    	
   </configurations>
   <publications>
-  	<artifact name="db4o-net2"  		conf="net2"  type="zip" ext="zip"/>
-  	<artifact name="db4o-net2"			conf="net2"  type="msi" ext="msi"/>
-	<artifact name="Db4objects.Db4o"  	conf="net2"  type="dll" ext="dll"/>
-	<artifact name="Db4oUnit"  			conf="net2"  type="dll" ext="dll"/>
+	<artifact name="Db4objects.Db4o"    	type="dll" ext="dll"/>
+	<artifact name="Db4oUnit"  				type="dll" ext="dll"/>
+	
+  	<artifact name="db4o-net2"  		  type="zip" ext="zip"/>
+  	<artifact name="db4o-net2"			 type="msi" ext="msi"/>
   	
-  	<artifact name="db4o-mono2" conf="mono2" type="zip" ext="zip"/>
+  	<artifact name="db4o-mono" 		 type="zip" ext="zip"/>
   </publications>
 	<dependencies>
 		<dependency name="javatocsharp" rev="latest.integration" />
