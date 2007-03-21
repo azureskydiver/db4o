@@ -722,9 +722,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 			completeTopLevelCall();
 		} catch (Db4oException e) {
 			completeTopLevelCall();
-			if (Deploy.debug) {
-				throw e;
-			}
+			throw e;
 		} finally {
 			endTopLevelCall();
 		}
@@ -1537,6 +1535,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	try{
 	        int id = oldReplicationHandles(obj); 
 	        if (id != 0){
+	        	completeTopLevelSet();
 	            if(id < 0){
 	                return 0;
 	            }
@@ -1545,7 +1544,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	        id = setAfterReplication(trans, obj, depth, checkJustSet);
 	        completeTopLevelSet();
 			return id;
-    	}finally{
+    	} finally{
     		endTopLevelSet(trans);
     	}
     }
