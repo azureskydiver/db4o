@@ -36,6 +36,10 @@ final class CustomMarshallerFieldMetadata extends FieldMetadata {
 		return false;
 	}
 	
+	public Object getOn(Transaction a_trans, Object obj) {
+		return obj;
+	}
+	 
 	public Object getOrCreate(Transaction trans, Object onObject) {
 		return onObject;
 	}

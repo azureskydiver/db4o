@@ -22,7 +22,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 
     UUIDFieldMetadata(ObjectContainerBase stream) {
         super();
-        i_name = Const4.VIRTUAL_FIELD_PREFIX + "uuid";
+        setName(Const4.VIRTUAL_FIELD_PREFIX + "uuid");
         i_handler = new LongHandler(stream);
     }
     

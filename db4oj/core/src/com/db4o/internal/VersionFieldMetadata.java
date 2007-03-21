@@ -15,7 +15,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
 
     VersionFieldMetadata(ObjectContainerBase stream) {
         super();
-        i_name = VirtualField.VERSION;
+        setName(VirtualField.VERSION);
         i_handler = new LongHandler(stream);
     }
     
