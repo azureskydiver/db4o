@@ -16,31 +16,17 @@
 		</fileset>
 	</copy>	
     
-  <target name="publish" depends="publish-mono, publish-net">
-  	<antcall target="updateSvnLocalCopy" />		
-  </target>
+	<target name="publish" depends="create-dummy-zip-mono, create-dummy-zip-net">
+		<publishToIvy/>
+		<antcall target="updateSvnLocalCopy" />		
+	</target>
   
-  <macrodef name="publishToIvyDotNet" description="Selectively publish either net2 or mono2 distros">
-		<attribute name="conf"/>
-		
-		<sequential>
-			<delete file="${defaultArtifactDir}/ivy.xml"/>
-			<ivy:publish 
-				artifactspattern="${artifactsPattern}" 
-				pubrevision="${db4o.version.dotted}" 
-				resolver="projects"				
-				status="release"
-				conf="@{conf}"
-			/>
-		</sequential>
-	</macrodef>
-  
-  <target name="publish-mono" depends="package" if="mono" >
-		<publishToIvyDotNet conf="mono2"/>
+	<target name="create-dummy-zip-mono" depends="package" if="mono" >
+		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-net2.zip"/>
 	</target>
 	
-	<target name="publish-net" depends="package" unless="mono">
-		<publishToIvyDotNet conf="net2"/>
+	<target name="create-dummy-zip-net" depends="package" unless="mono">
+		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-mono.zip"/>
 	</target>
 	
 	<target name="clean">
@@ -412,12 +398,10 @@
 		
 	</target>
 	
-	<target name="build-zip" depends="prepare-package-structure">
-	
+	<target name="build-zip" depends="prepare-package-structure">	
 		<zip destfile="${defaultArtifactDir}/db4o-${installer.package.suffix}.zip">
 			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
-		</zip>			
-		
+		</zip>
 	</target>
 	
 	<target name="build-net-installer"  depends="prepare-package-structure" unless="mono">
