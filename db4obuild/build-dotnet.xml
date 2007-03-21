@@ -22,6 +22,13 @@
 		<include name="db4oj/core/src/**/*.java" />
 	</fileset>
 	
+	<fileset id="db4onqopt.srcfiles" dir="../db4onqopt">
+		<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
+		<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
+		<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
+		<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
+	</fileset>
+	
 	<macrodef name="reset-dir">
 		<attribute name="dir" />
 		<sequential>
@@ -550,12 +557,7 @@
 		</copy>
 
 		<copy todir="${dir.sharpen}/db4oj">
-			<fileset dir="../db4onqopt">
-				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
-				<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
-				<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
-				<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
-			</fileset>
+			<fileset refid="db4onqopt.srcfiles" />
 		</copy>
 		
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
@@ -709,11 +711,23 @@
 			</fileset>
 		</copy>
 		
+		<copy todir="${target.dir}/db4oj.tests/core">
+			<fileset dir="../db4oj/core/src">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		
 		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
 			<args>
 				<arg value="-cp" />
+				<!--
+				<arg path="/home/rodrigob/workspaces/db4o/db4obuild/dist/sharpen/lib/dependencies.jar" />
+				-->
 				<arg path="${dependencies.jar}" />	
 				<arg value="@sharpen-tests-options" />
+				
+				<arg value="-srcfolder" />
+				<arg value="core" />
 			</args>
 		</sharpen>
 		
