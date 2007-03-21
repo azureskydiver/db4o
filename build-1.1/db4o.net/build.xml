@@ -135,6 +135,8 @@
 				<references />
 			</csc>
 			
+			<copy file="@{netOutputDir}/@{assemblyName}.dll" tofile="${defaultArtifactDir}/@{assemblyName}.dll"/>
+			
 			<if>
 			<equals arg1="${mono}" arg2="true" />
 			<then>
