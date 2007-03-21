@@ -2,7 +2,7 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.foundation.Db4oRuntimeException;
+import com.db4o.ext.Db4oException;
 import com.db4o.internal.ClassMetadata;
 import com.db4o.internal.ObjectContainerBase;
 import com.db4o.internal.StatefulBuffer;
@@ -34,7 +34,7 @@ public final class MCreateClass extends MsgD {
 						yapClass.getID());
 				MsgD createdClass = Msg.OBJECT_TO_CLIENT.getWriter(returnBytes);
 				serverThread.write(createdClass);
-			} catch (Db4oRuntimeException e) {
+			} catch (Db4oException e) {
 				writeFailedMessage(serverThread);
 			}
 		}
