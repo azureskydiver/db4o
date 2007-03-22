@@ -179,10 +179,15 @@ public class Db4o {
 			System.out.println("db4o Debug is ON");
 		}
 	    
-		ObjectContainer oc = new InMemoryObjectContainer(config,memoryFile);
-	    Platform4.postOpen(oc);
-		Messages.logMsg(i_config, 5, "Memory File");
-		return oc;
+		try {
+			ObjectContainer oc = new InMemoryObjectContainer(config,memoryFile);
+			Platform4.postOpen(oc);
+			Messages.logMsg(i_config, 5, "Memory File");
+			return oc;
+		} catch (IOException exc) {
+			Exceptions4.shouldNeverHappen();
+			return null; // unreachable, just to make the compiler happy
+		}
 	}
 	
 	

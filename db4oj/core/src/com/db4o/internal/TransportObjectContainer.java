@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.*;
+
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.convert.*;
@@ -20,7 +22,7 @@ import com.db4o.types.*;
  */
 public class TransportObjectContainer extends InMemoryObjectContainer {
 	
-	public TransportObjectContainer (ObjectContainerBase serviceProvider, MemoryFile memoryFile) {
+	public TransportObjectContainer (ObjectContainerBase serviceProvider, MemoryFile memoryFile) throws IOException {
 	    super(serviceProvider.config(),serviceProvider, memoryFile);
 	    i_showInternalClasses = serviceProvider.i_showInternalClasses;
 	}

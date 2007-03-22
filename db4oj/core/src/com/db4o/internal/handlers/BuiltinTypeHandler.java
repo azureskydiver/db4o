@@ -2,6 +2,8 @@
 
 package com.db4o.internal.handlers;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -56,7 +58,7 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
         return false;
     }
 	
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException{
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, IOException {
         return read(mf, a_writer, true);
     }
 	

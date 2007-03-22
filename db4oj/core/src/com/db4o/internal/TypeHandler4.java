@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.ix.*;
@@ -62,7 +64,7 @@ public interface TypeHandler4 extends Indexable4
 	
 	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException;
     
-	Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException;
+	Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, IOException;
 	
 	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException;
 	

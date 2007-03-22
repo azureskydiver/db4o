@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ix.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
@@ -43,20 +44,8 @@ public final class StringHandler extends BuiltinTypeHandler {
     	return _stream.i_handlers.ICLASS_STRING;
     }
 
-    public Object comparableObject(Transaction a_trans, Object a_object) throws UncheckedIOException {
-        if(a_object == null){
-            return null;
-        }
-        if(a_object instanceof Buffer){
-            return a_object;    
-        }
-        Slot s = (Slot) a_object;
-        try {
-			return a_trans.stream().bufferByAddress(s._address, s._length);
-		} catch (IOException e) {
-			// FIXME: WE'LL DO A BIG SESSION NEXT TIME TO FIX IT!!!
-			throw new UncheckedIOException(e);
-		}
+    public Object comparableObject(Transaction trans, Object obj) throws ComparableConversionException {
+    	return val(obj,trans.stream());
     }
     
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes){
@@ -139,14 +128,11 @@ public final class StringHandler extends BuiltinTypeHandler {
     /**
      * This readIndexEntry method reads from the parent slot.
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
+     * @throws IOException 
+     * @throws  
      */
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, UncheckedIOException {
-        try {
-			return mf._string.readIndexEntry(a_writer);
-		} catch (IOException e) {
-			// FIXME: WILL BE HANDLED IN NEXT SESSION.
-			throw new UncheckedIOException(e);
-		}
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, IOException {
+		return mf._string.readIndexEntry(a_writer);
     }
 
     /**
@@ -235,7 +221,11 @@ public final class StringHandler extends BuiltinTypeHandler {
 
     private Buffer i_compareTo;
 
-    private Buffer val(Object obj) throws UncheckedIOException {
+    private Buffer val(Object obj) throws ComparableConversionException {
+    	return val(obj,_stream);
+    }
+
+    private Buffer val(Object obj,ObjectContainerBase oc) throws ComparableConversionException {
         if(obj instanceof Buffer) {
             return (Buffer)obj;
         }
@@ -247,16 +237,15 @@ public final class StringHandler extends BuiltinTypeHandler {
 			Slot s = (Slot) obj;
 
 			try {
-				return _stream.bufferByAddress(s._address, s._length);
+				return oc.bufferByAddress(s._address, s._length);
 			} catch (IOException e) {
-				// FIXME: WE'LL DO A BIG SESSION NEXT TIME TO FIX IT!!!
-				throw new UncheckedIOException(e);
+				throw new ComparableConversionException(s,e);
 			}
 		}
         
 		return null;
     }
-    
+
 	public void prepareComparison(Transaction a_trans, Object obj) {
 	    i_compareTo = (Buffer)obj;    
 	}
