@@ -9,12 +9,13 @@
 	</target>
 	
 	<target name="clean">
-  	<cleanIvyDir/>
+		<cleanIvyDir/>
 	</target>
 	
 	<target name="init">
 		<tstamp />
 		<initIvyDir/>
+		<buildDb4oDevTool/>
 	</target>
 	
 	<target name="jar" depends="init">		
