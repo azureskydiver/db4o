@@ -11,6 +11,7 @@
 	<target name="init" depends="">
 		<tstamp />
 		<initIvyDir/>
+		<buildDb4oDevTool/>
 	</target>
 	
 	 <target name="configure" depends="init">

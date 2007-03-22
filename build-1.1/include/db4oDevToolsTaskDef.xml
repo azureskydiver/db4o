@@ -5,4 +5,23 @@
 	
 	<!--For tasks like If Task-->
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"  classpathref="lib.path"/>
+	
+	<macrodef name="buildDb4oDevTool" description="">		
+		<sequential>
+			<path id="devtools.compile.lib.path">
+				<fileset dir="${dir.old.build}/lib" includes="*.jar"/>
+			</path>
+			<buildjar
+					srcDir="${dir.old.build}/src"
+					jarPath="${db4o-devtools.jar}"
+					classPathRefId="devtools.compile.lib.path"
+					target="1.5"
+					source="1.5"
+			/>
+			<path id="devtools.runtime.lib.path">
+				<fileset dir="${temp-build-1.1-internal}" includes="*.jar"/>
+			</path>
+			<taskdef resource="com/db4o/devtools/ant/antlib.xml" classpathref="devtools.runtime.lib.path"/>
+		</sequential>
+	</macrodef>
 </project>

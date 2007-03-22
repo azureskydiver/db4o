@@ -941,6 +941,7 @@
 	
 	<target name="init" depends="clean">
 		<initIvyDir/>
+		<buildDb4oDevTool/>
 		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
 		<ivy:resolve file="${build.db4o.net.basedir}/ivy.xml"/>
 		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]" conf="${ivy.configurations}" />
