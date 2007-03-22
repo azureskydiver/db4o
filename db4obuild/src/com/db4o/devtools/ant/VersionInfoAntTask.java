@@ -87,14 +87,14 @@ public class VersionInfoAntTask extends Task {
                 pr.println("    public static final int MAJOR = " + major + ";");
                 pr.println("    public static final int MINOR = " + minor + ";");
 	            pr.println("}");
-	        }else{
+	        }else{ /* Deprecated in build-1.1. .net Assembly are now updated using UpdateAssemblyInfoTask */
 		        pr.println("using System.Reflection;");
 		        pr.println("using System.Runtime.CompilerServices;");
 		        pr.println("[assembly: AssemblyTitle(\"db4o - database for objects\")]");
 		        pr.println("[assembly: AssemblyDescription(\"db4o " + version + " " +  distributionNames[distribution] + "\")]");
 		        pr.println("[assembly: AssemblyConfiguration(\"" + distributionNames[distribution] + "\")]");
 		        pr.println("[assembly: AssemblyCompany(\""+ AssemblyInfo.COMPANY + "\")]");
-		        pr.println("[assembly: AssemblyProduct(\"" + AssemblyInfo.PRODUCT + "\")]");
+		        pr.println("[assembly: AssemblyProduct(\"" + AssemblyInfo.DB4O.product() + "\")]");
 		        pr.println("[assembly: AssemblyCopyright(\"" + AssemblyInfo.COPYRIGHT + "\")]");
 		        pr.println("[assembly: AssemblyTrademark(\"\")]");
 		        pr.println("[assembly: AssemblyCulture(\"\")]	");
