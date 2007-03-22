@@ -277,31 +277,25 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         }
     }
 
-    public void readBytes(byte[] bytes, int address, int length) throws UncheckedIOException {
+    public void readBytes(byte[] bytes, int address, int length) throws IOException {
         readBytes(bytes, address, 0, length);
     }
 
     public void readBytes(byte[] bytes, int address, int addressOffset,
-			int length) throws UncheckedIOException {
+			int length) throws IOException {
 
 		if (DTrace.enabled) {
 			DTrace.READ_BYTES.logLength(address + addressOffset, length);
 		}
-
-		try {
-			_file.blockSeek(address, addressOffset);
-			int bytesRead = _file.read(bytes, length);
-			assertRead(bytesRead, length);
-		} catch (IOException ioex) {
-			throw new UncheckedIOException(ioex);
-		}
+		_file.blockSeek(address, addressOffset);
+		int bytesRead = _file.read(bytes, length);
+		assertRead(bytesRead, length);
 	}
 
-	private void assertRead(int bytesRead, int expected)
-			throws UncheckedIOException {
+	private void assertRead(int bytesRead, int expected) throws IOException {
 		if (bytesRead != expected) {
-			throw new UncheckedIOException("expected = " + expected
-					+ ", read = " + bytesRead);
+			throw new IOException("expected read bytes = " + expected
+					+ ", but read = " + bytesRead + "bytes");
 		}
 	}
 	
