@@ -50,7 +50,7 @@ public class DTrace {
     }
     
     private static final void init() {
-		if (enabled) {
+		if (!enabled) {
 			return;
 		}
 		ADD_TO_CLASS_INDEX = new DTrace(true, true, "add to class index tree",
