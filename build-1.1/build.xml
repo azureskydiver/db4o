@@ -1,10 +1,30 @@
 <project name="build-1.1" default="buildAll" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<import file="common-1.1.xml" />
 	
+	<!--Begin Dynamically building db4o-devtools-->
+	<resetDir dir="${temp-build-1.1-internal}"/>
+	<path id="devtools.compile.lib.path">
+		<fileset dir="${dir.old.build}/lib" includes="*.jar"/>
+	</path>
+	<buildjar
+			srcDir="${dir.old.build}/src"
+			jarPath="${db4o-devtools.jar}"
+			classPathRefId="devtools.compile.lib.path"
+			target="1.5"
+			source="1.5"
+	/>
+	<path id="devtools.runtime.lib.path">
+		<fileset dir="${temp-build-1.1-internal}" includes="*.jar"/>
+	</path>
+	<taskdef resource="com/db4o/devtools/ant/antlib.xml" classpathref="devtools.runtime.lib.path"/>
+	<!--End Dynamically building db4o-devtools-->
+	
 	<target name="clean" description="clean the repo and cache">
 		<delete dir="${tempDir}" failonerror="true"/>
 		<delete dir="${ivy.cache.dir}" failonerror="true"/>
 		<delete dir="${repository.dir}" failonerror="true"/>
+		<delete dir="${temp-build-1.1-internal}" failonerror="true"/>
+		
 		<ant antfile="build.xml" dir="run-java-tests" target="clean" inheritAll="false" inheritRefs="false"/>
 	</target>
   
@@ -37,7 +57,8 @@
 		</ivy:buildlist>
 		<subant target="publish" buildpathref="buildPath" inheritAll="false" inheritRefs="false"/>
 		<delete dir="${tempDir}" failonerror="true"/>
-		<delete dir="${ivy.cache.dir}" failonerror="true"/>  	
+		<delete dir="${ivy.cache.dir}" failonerror="true"/> 
+		<delete dir="${temp-build-1.1-internal}" failonerror="true"/>
 		<echo message="Produced jars, dlls and zips at ${repository.dir}."/>
 	</target>
   
@@ -66,7 +87,8 @@
 		</ivy:buildlist>
 		<subant target="publish" buildpathref="buildPath" inheritAll="false" inheritRefs="false"/>
 		<delete dir="${tempDir}" failonerror="true"/>
-		<delete dir="${ivy.cache.dir}" failonerror="true"/>  	
+		<delete dir="${ivy.cache.dir}" failonerror="true"/>  
+		<delete dir="${temp-build-1.1-internal}" failonerror="true"/>		
 		<echo message="Produced jars, dlls and zips at ${repository.dir}."/>
 	</target>
 	
@@ -91,7 +113,8 @@
 		</ivy:buildlist>
 		<subant target="publish" buildpathref="buildPath" inheritAll="false" inheritRefs="false"/>
 		<delete dir="${tempDir}" failonerror="true"/>
-		<delete dir="${ivy.cache.dir}" failonerror="true"/>  	
+		<delete dir="${ivy.cache.dir}" failonerror="true"/>  
+		<delete dir="${temp-build-1.1-internal}" failonerror="true"/>		
 		<echo message="Produced jars, dlls and zips at ${repository.dir}."/>
 	</target>
   
