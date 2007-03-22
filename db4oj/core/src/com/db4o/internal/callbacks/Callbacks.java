@@ -19,9 +19,9 @@ public interface Callbacks {
 	void objectOnDelete(Object obj);
 	void objectOnDeactivate(Object obj);
 	
-	void onQueryStarted(Query query);
-	void onQueryFinished(Query query);
+	void queryOnStarted(Query query);
+	void queryOnFinished(Query query);
 	
-	void commitOnStarted(Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated);
 	boolean caresAboutCommit();
+	void commitOnStarted(Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated);
 }

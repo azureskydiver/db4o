@@ -649,7 +649,7 @@ public final class BTreeNode extends PersistentBase{
             return null;
         }
         
-        Buffer reader = trans.i_file.readReaderByID(trans.systemTransaction(), getID());
+        Buffer reader = ((LocalTransaction)trans).file().readReaderByID(trans.systemTransaction(), getID());
         
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());

@@ -26,7 +26,7 @@ public class Index4 {
     
     final boolean                   _nullHandling;  
 
-    public Index4(Transaction systemTrans, Indexable4 handler, MetaIndex metaIndex, boolean nullHandling) {
+    public Index4(LocalTransaction systemTrans, Indexable4 handler, MetaIndex metaIndex, boolean nullHandling) {
         _metaIndex = metaIndex;
         _handler = handler;
         _globalIndexTransaction = new IndexTransaction(systemTrans, this);
@@ -34,7 +34,7 @@ public class Index4 {
         createGlobalFileRange();
     }
 
-    public IndexTransaction dirtyIndexTransaction(Transaction a_trans) {
+    public IndexTransaction dirtyIndexTransaction(LocalTransaction a_trans) {
         IndexTransaction ift = new IndexTransaction(a_trans, this);
         if (_indexTransactions == null) {
             _indexTransactions = new Collection4();
@@ -55,7 +55,7 @@ public class Index4 {
         return _globalIndexTransaction;
     }
 
-    public IndexTransaction indexTransactionFor(Transaction a_trans) {
+    public IndexTransaction indexTransactionFor(LocalTransaction a_trans) {
         if (_indexTransactions != null) {
             IndexTransaction ift = new IndexTransaction(a_trans, this);
             ift = (IndexTransaction) _indexTransactions.get(ift);
@@ -263,12 +263,12 @@ public class Index4 {
         return sb.toString();
     }
     
-    private Transaction trans(){
+    private LocalTransaction trans(){
         return _globalIndexTransaction.i_trans;
     }
     
     private LocalObjectContainer file(){
-        return trans().i_file;
+        return trans().file();
     }
     
     private int getSlot(int length){

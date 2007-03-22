@@ -10,12 +10,12 @@ import com.db4o.ext.*;
  */
 public class LazyObjectReference implements ObjectInfo{
 	
-	private final ObjectContainerBase _container;
+	private final Transaction _transaction;
 	
-	private final int _id;
+	private final int _id;	
 	
-	public LazyObjectReference(ObjectContainerBase container, int id){
-		_container = container;
+	public LazyObjectReference(Transaction transaction, int id){
+		_transaction = transaction;
 		_id = id;
 	}
 
@@ -35,12 +35,9 @@ public class LazyObjectReference implements ObjectInfo{
 		return reference().getVersion();
 	}
 	
-	private ObjectReference reference(){
-		HardObjectReference hardReference = _container.getHardObjectReferenceById(_id);
-		if(hardReference == null){
-			return null;
-		}
-		return hardReference._reference;
+	private ObjectReference reference() {
+		final HardObjectReference hardRef = _transaction.stream().getHardObjectReferenceById(_transaction, _id);
+		return hardRef._reference;
 	}
 
 }

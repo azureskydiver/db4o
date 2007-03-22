@@ -17,7 +17,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		TraverseFieldCommand command = new TraverseFieldCommand() {
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
 				if (isNull) {
-					field.addIndexEntry(writer.getTransaction(), writer.getID(), null);
+					field.addIndexEntry((LocalTransaction) writer.getTransaction(), writer.getID(), null);
 				} 
 				else {
 					field.addFieldIndex(_family, yc, writer, oldSlot);
@@ -157,10 +157,10 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
             0, 
             attributes.objectLength());
         
-        if(trans.i_file != null){
+        if(trans instanceof LocalTransaction){
             // Running in single mode or on server.
             // We need the slot now, so indexes can adjust to address.
-            trans.i_file.getSlotForUpdate(writer);
+            ((LocalTransaction)trans).file().getSlotForUpdate(writer);
         }
         
         marshall(yo, obj, attributes, writer, false);

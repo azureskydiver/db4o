@@ -937,7 +937,7 @@ public class FieldMetadata implements StoredField {
 	protected void rebuildIndexForWriter(LocalObjectContainer stream, StatefulBuffer writer, final int objectId) {
 		ObjectHeader oh = new ObjectHeader(stream, writer);
 		Object obj = readIndexEntryForRebuild(writer, oh);
-		addIndexEntry(stream.getSystemTransaction(), objectId, obj);
+		addIndexEntry((LocalTransaction) stream.getSystemTransaction(), objectId, obj);
 	}
 
 	private Object readIndexEntryForRebuild(StatefulBuffer writer, ObjectHeader oh) {

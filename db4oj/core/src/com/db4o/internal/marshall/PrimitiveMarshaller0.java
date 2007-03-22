@@ -28,7 +28,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             int address = -1;
             int length = objectLength(handler);
             if(! stream.isClient()){
-                address = trans.i_file.getSlot(length); 
+                address = ((LocalTransaction)trans).file().getSlot(length); 
             }
             trans.setPointer(id, address, length);
             

@@ -120,7 +120,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 			if (null == data) {
 				return;
 			}
-			addIndexEntry(stream.getSystemTransaction(), objectId, new Long(data.uuid));
+			addIndexEntry(stream.getLocalSystemTransaction(), objectId, new Long(data.uuid));
 		} catch (SlotRetrievalException exc) {
 			throw new FieldIndexException(exc,this);
 		} catch (IOException exc) {

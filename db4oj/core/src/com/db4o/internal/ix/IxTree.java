@@ -107,10 +107,10 @@ public abstract class IxTree extends Tree implements Visitor4{
     }
     
     final LocalObjectContainer stream(){
-        return trans().i_file;
+        return trans().file();
     }
     
-    final Transaction trans(){
+    final LocalTransaction trans(){
         return _fieldTransaction.i_trans;
     }
     

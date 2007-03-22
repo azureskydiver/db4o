@@ -14,27 +14,24 @@ import com.db4o.reflect.Reflector;
 public abstract class Transaction {
 	
     // contains DeleteInfo nodes
-    public Tree          i_delete;
+    public Tree i_delete;
 
-    private List4           i_dirtyFieldIndexes;
+    private List4 i_dirtyFieldIndexes;
     
-    public final LocalObjectContainer           i_file;
-
-    final Transaction       i_parentTransaction;
+    protected final Transaction _parentTransaction;
 
     protected final StatefulBuffer i_pointerIo;    
 
-    private final ObjectContainerBase         i_stream;
+    private final ObjectContainerBase _container;
     
-    private List4           i_transactionListeners;
+    private List4 i_transactionListeners;
     
     // TODO: join _dirtyBTree and _enlistedIndices
     private final Collection4 _participants = new Collection4(); 
 
-    public Transaction(ObjectContainerBase a_stream, Transaction a_parent) {
-        i_stream = a_stream;
-        i_file = (a_stream instanceof LocalObjectContainer) ? (LocalObjectContainer) a_stream : null;
-        i_parentTransaction = a_parent;
+    public Transaction(ObjectContainerBase container, Transaction parent) {
+        _container = container;
+        _parentTransaction = parent;
         i_pointerIo = new StatefulBuffer(this, Const4.POINTER_LENGTH);
     }
 
@@ -94,8 +91,8 @@ public abstract class Transaction {
 	}
     
     protected void commitParticipants() {
-        if (i_parentTransaction != null) {
-            i_parentTransaction.commitParticipants();
+        if (_parentTransaction != null) {
+            _parentTransaction.commitParticipants();
         }
         
         Iterator4 iterator = _participants.iterator();
@@ -105,8 +102,8 @@ public abstract class Transaction {
     }
     
     protected void commit4FieldIndexes(){
-        if(i_parentTransaction != null){
-            i_parentTransaction.commit4FieldIndexes();
+        if(_parentTransaction != null){
+            _parentTransaction.commit4FieldIndexes();
         }
         if (i_dirtyFieldIndexes != null) {
             Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
@@ -131,14 +128,14 @@ public abstract class Transaction {
     public abstract boolean isDeleted(int id);
     
 	protected boolean isSystemTransaction() {
-		return i_parentTransaction == null;
+		return _parentTransaction == null;
 	}
 
     public boolean delete(ObjectReference ref, int id, int cascade) {
         checkSynchronization();
         
         if(ref != null){
-	        if(! i_stream.flagForDelete(ref)){
+	        if(! _container.flagForDelete(ref)){
 	        	return false;
 	        }
         }
@@ -265,8 +262,8 @@ public abstract class Transaction {
     }
     
     public Transaction systemTransaction(){
-        if(i_parentTransaction != null){
-            return i_parentTransaction;
+        if(_parentTransaction != null){
+            return _parentTransaction;
         }
         return this;
     }
@@ -300,7 +297,7 @@ public abstract class Transaction {
     public abstract void writeUpdateDeleteMembers(int id, ClassMetadata clazz, int typeInfo, int cascade);
 
     public final ObjectContainerBase stream() {
-        return i_stream;
+        return _container;
     }
 
 	public void enlist(TransactionParticipant participant) {
@@ -314,7 +311,7 @@ public abstract class Transaction {
 	}
     
     public Transaction parentTransaction() {
-		return i_parentTransaction;
+		return _parentTransaction;
 	}
 
 }
