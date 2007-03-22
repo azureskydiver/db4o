@@ -45,7 +45,7 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         _systemData.converterVersion(reader.readInt());
         _systemData.freespaceSystem(reader.readByte());
         _systemData.freespaceAddress(reader.readInt());
-        readIdentity(trans, reader.readInt());
+        readIdentity((LocalTransaction) trans, reader.readInt());
         _systemData.lastTimeStampID(reader.readLong());
         _systemData.uuidIndexId(reader.readInt());
     }
@@ -59,8 +59,8 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         writer.writeInt(_systemData.uuidIndexId());
     }
     
-    private void readIdentity(Transaction trans, int identityID) {
-        LocalObjectContainer file = trans.i_file;
+    private void readIdentity(LocalTransaction trans, int identityID) {
+        LocalObjectContainer file = trans.file();
         Db4oDatabase identity = (Db4oDatabase) file.getByID1(trans, identityID);
         file.activate1(trans, identity, 2);
         _systemData.identity(identity);

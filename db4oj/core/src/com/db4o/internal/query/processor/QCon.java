@@ -195,7 +195,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
                 return;
             }
         }
-        i_candidates = new QCandidates(i_trans, getYapClass(), getField());
+        i_candidates = new QCandidates((LocalTransaction) i_trans, getYapClass(), getField());
         i_candidates.addConstraint(this);
         a_candidateCollection.add(i_candidates);
     }

@@ -178,7 +178,7 @@ public final class StatefulBuffer extends Buffer {
     }
     
     public LocalObjectContainer file(){
-        return i_trans.i_file;
+        return ((LocalTransaction)i_trans).file();
     }
 
     public Transaction getTransaction() {

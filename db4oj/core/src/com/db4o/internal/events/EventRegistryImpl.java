@@ -27,11 +27,11 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _committing = new Event4Impl();
 
 	// Callbacks implementation
-	public void onQueryFinished(Query query) {
+	public void queryOnFinished(Query query) {
 		EventPlatform.triggerQueryEvent(_queryFinished, query);
 	}
 
-	public void onQueryStarted(Query query) {
+	public void queryOnStarted(Query query) {
 		EventPlatform.triggerQueryEvent(_queryStarted, query);
 	}
 	

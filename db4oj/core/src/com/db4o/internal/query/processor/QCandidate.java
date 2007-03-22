@@ -397,10 +397,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	}
 
 	private LocalObjectContainer getStream() {
-		return getTransaction().i_file;
+		return getTransaction().file();
 	}
 
-	private Transaction getTransaction() {
+	private LocalTransaction getTransaction() {
 		return _candidates.i_trans;
 	}
 

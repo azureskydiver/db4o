@@ -171,7 +171,7 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 	private ObjectInfo getInfo(int itemId) {
 		Item item = getItem(itemId);
 		int internalId = (int) db().getID(item);
-		return new LazyObjectReference((ObjectContainerBase) db(), internalId );
+		return new LazyObjectReference(trans(), internalId );
 	}
 
 	private void assertCommittingEvent(

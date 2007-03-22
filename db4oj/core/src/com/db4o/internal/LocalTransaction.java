@@ -24,8 +24,15 @@ public class LocalTransaction extends Transaction {
 	
     private Tree _writtenUpdateDeletedMembers;
 
-	public LocalTransaction(ObjectContainerBase a_stream, Transaction a_parent) {
-		super(a_stream, a_parent);
+	private final LocalObjectContainer _file;
+
+	public LocalTransaction(ObjectContainerBase container, Transaction parent) {
+		super(container, parent);
+		_file = (LocalObjectContainer) container;
+	}
+	
+	public LocalObjectContainer file() {
+		return _file;
 	}
 	
     public void commit() {
@@ -33,17 +40,16 @@ public class LocalTransaction extends Transaction {
         	if(! isSystemTransaction()){
         		triggerCommitOnStarted();
         	}
-            i_file.freeSpaceBeginCommit();
+            _file.freeSpaceBeginCommit();
             commitExceptForFreespace();
-            i_file.freeSpaceEndCommit();
+            _file.freeSpaceEndCommit();
         }
     }
     
 	private void commitExceptForFreespace(){
         
         if(DTrace.enabled){
-            boolean systemTrans = (i_parentTransaction == null);
-            DTrace.TRANS_COMMIT.logInfo( "server == " + stream().isServer() + ", systemtrans == " +  systemTrans);
+            DTrace.TRANS_COMMIT.logInfo( "server == " + stream().isServer() + ", systemtrans == " +  isSystemTransaction());
         }
         
         commit2Listeners();
@@ -69,7 +75,7 @@ public class LocalTransaction extends Transaction {
     }
 
 	private void commitParentListeners() {
-		if (i_parentTransaction != null) {
+		if (_parentTransaction != null) {
             parentLocalTransaction().commit2Listeners();
         }
 	}
@@ -81,7 +87,7 @@ public class LocalTransaction extends Transaction {
     }
     
 	private LocalTransaction parentLocalTransaction() {
-		return (LocalTransaction) i_parentTransaction;
+		return (LocalTransaction) _parentTransaction;
 	}
     
 	private void commit7ClearAll(){
@@ -90,7 +96,7 @@ public class LocalTransaction extends Transaction {
     }
 
 	private void commit7ParentClearAll() {
-		if(i_parentTransaction != null){
+		if(_parentTransaction != null){
             parentLocalTransaction().commit7ClearAll();
         }
 	}
@@ -105,7 +111,7 @@ public class LocalTransaction extends Transaction {
 		if(_slotChanges != null) {
 			_slotChanges.traverse(new Visitor4() {
 				public void visit(Object a_object) {
-					((SlotChange)a_object).rollback(i_file);
+					((SlotChange)a_object).rollback(_file);
 				}
 			});
 		}
@@ -122,7 +128,7 @@ public class LocalTransaction extends Transaction {
         
         if (slotSetPointerCount > 0) {
             int length = (((slotSetPointerCount * 3) + 2) * Const4.INT_LENGTH);
-            int address = i_file.getSlot(length);
+            int address = _file.getSlot(length);
             final StatefulBuffer bytes = new StatefulBuffer(this, address, length);
             bytes.writeInt(length);
             bytes.writeInt(slotSetPointerCount);
@@ -142,7 +148,7 @@ public class LocalTransaction extends Transaction {
             stream().writeTransactionPointer(0);
             flushFile();
             
-            i_file.free(address, length);
+            _file.free(address, length);
         }
     }
 	
@@ -152,7 +158,7 @@ public class LocalTransaction extends Transaction {
         
         boolean ret = false;
         
-        if(i_parentTransaction != null){
+        if(_parentTransaction != null){
             if(parentLocalTransaction().writeSlots()){
                 ret = true;
             }
@@ -174,8 +180,8 @@ public class LocalTransaction extends Transaction {
         if(DTrace.enabled){
             DTrace.TRANS_FLUSH.log();
         }
-        if(i_file.configImpl().flushFileBuffers()){
-            i_file.syncFiles();
+        if(_file.configImpl().flushFileBuffers()){
+            _file.syncFiles();
         }
     }
     
@@ -206,7 +212,7 @@ public class LocalTransaction extends Transaction {
             }
         }
         
-        if (i_parentTransaction != null) {
+        if (_parentTransaction != null) {
             Slot parentSlot = parentLocalTransaction().getCurrentSlotOfID(id); 
             if (parentSlot != null) {
                 return parentSlot;
@@ -228,7 +234,7 @@ public class LocalTransaction extends Transaction {
             }
         }
         
-        if (i_parentTransaction != null) {
+        if (_parentTransaction != null) {
             Slot parentSlot = parentLocalTransaction().getCommittedSlotOfID(id); 
             if (parentSlot != null) {
                 return parentSlot;
@@ -245,7 +251,7 @@ public class LocalTransaction extends Transaction {
         // a class collection in a new yap file that already has its ID assigned but hasn't been
         // written yet. Should be fixed in the YapClassCollection logic.
         try {
-        	i_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
+        	_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
         }
         catch(IOException exc) {
         	throw new SlotRetrievalException(exc,id);
@@ -290,7 +296,7 @@ public class LocalTransaction extends Transaction {
         if (slot != null) {
             return slot.isDeleted();
         }
-        if (i_parentTransaction != null) {
+        if (_parentTransaction != null) {
             return parentLocalTransaction().slotChangeIsFlaggedDeleted(id);
         }
         return false;
@@ -301,7 +307,7 @@ public class LocalTransaction extends Transaction {
 	        
 	        int count = 0;
 	        
-	        if(i_parentTransaction != null){
+	        if(_parentTransaction != null){
 	            count += parentLocalTransaction().countSlotChanges();
 	        }
 	        
@@ -346,13 +352,13 @@ public class LocalTransaction extends Transaction {
 	
 	protected final void freeOnCommit() {
         checkSynchronization();
-        if(i_parentTransaction != null){
+        if(_parentTransaction != null){
         	parentLocalTransaction().freeOnCommit();
         }
         if(_slotChanges != null){
             _slotChanges.traverse(new Visitor4() {
                 public void visit(Object obj) {
-                    ((SlotChange)obj).freeDuringCommit(i_file);
+                    ((SlotChange)obj).freeDuringCommit(_file);
                 }
             });
         }
@@ -360,7 +366,7 @@ public class LocalTransaction extends Transaction {
 	
 	private void appendSlotChanges(final Buffer writer){
         
-        if(i_parentTransaction != null){
+        if(_parentTransaction != null){
         	parentLocalTransaction().appendSlotChanges(writer);
         }
         
@@ -382,7 +388,7 @@ public class LocalTransaction extends Transaction {
             return;
         }
         SlotChange slot = produceSlotChange(a_id);
-        slot.freeOnCommit(i_file, new Slot(a_address, a_length));
+        slot.freeOnCommit(_file, new Slot(a_address, a_length));
         slot.setPointer(0, 0);
     }
 	
@@ -402,7 +408,7 @@ public class LocalTransaction extends Transaction {
         if (a_id == 0) {
             return;
         }
-        produceSlotChange(a_id).freeOnCommit(i_file, new Slot(a_address, a_length));
+        produceSlotChange(a_id).freeOnCommit(_file, new Slot(a_address, a_length));
     }
 
     public void slotFreeOnRollback(int a_id, int a_address, int a_length) {
@@ -432,7 +438,7 @@ public class LocalTransaction extends Transaction {
         
         SlotChange change = produceSlotChange(a_id);
         change.freeOnRollbackSetPointer(newAddress, newLength);
-        change.freeOnCommit(i_file, slot);
+        change.freeOnCommit(_file, slot);
     }
 
     void produceUpdateSlotChange(int a_id, int a_address, int a_length) {
@@ -602,7 +608,7 @@ public class LocalTransaction extends Transaction {
 		_slotChanges.traverse(new Visitor4() {
 			public void visit(Object obj) {
 				SlotChange slotChange = ((SlotChange)obj);
-				LazyObjectReference lazyRef = new LazyObjectReference(stream(), slotChange._key);
+				LazyObjectReference lazyRef = new LazyObjectReference(LocalTransaction.this, slotChange._key);
 				if (slotChange.isDeleted()) {					
 					deleted.add(lazyRef);
 				} else if (slotChange.isNew()) {

@@ -21,7 +21,7 @@ import com.db4o.internal.marshall.*;
 public final class QCandidates implements Visitor4 {
 
     // Transaction necessary as reference to stream
-    public final Transaction i_trans;
+    public final LocalTransaction i_trans;
 
     // root of the QCandidate tree
     public Tree i_root;
@@ -46,7 +46,7 @@ public final class QCandidates implements Visitor4 {
     
     private IDGenerator _idGenerator;
 
-    QCandidates(Transaction a_trans, ClassMetadata a_yapClass, QField a_field) {
+    QCandidates(LocalTransaction a_trans, ClassMetadata a_yapClass, QField a_field) {
     	i_trans = a_trans;
     	i_yapClass = a_yapClass;
     	i_field = a_field;

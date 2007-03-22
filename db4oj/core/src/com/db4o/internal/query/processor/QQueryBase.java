@@ -289,9 +289,9 @@ public abstract class QQueryBase implements Unversioned {
 
     public ObjectSet execute() {
 		Callbacks callbacks = stream().callbacks();
-		callbacks.onQueryStarted(cast(this));
+		callbacks.queryOnStarted(cast(this));
 	    QueryResult qresult = getQueryResult();
-	    callbacks.onQueryFinished(cast(this));
+	    callbacks.queryOnFinished(cast(this));
 		return new ObjectSetFacade(qresult);
 	}
 
@@ -554,7 +554,7 @@ public abstract class QQueryBase implements Unversioned {
 		    }
 		}
 		
-		QCandidates candidates = new QCandidates(i_trans, qcon.getYapClass(), null);
+		QCandidates candidates = new QCandidates((LocalTransaction) i_trans, qcon.getYapClass(), null);
 		candidates.addConstraint(qcon);
 		return new List4(candidateCollection, candidates);
 	}

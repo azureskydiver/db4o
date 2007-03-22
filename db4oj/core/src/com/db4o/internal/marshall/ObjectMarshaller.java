@@ -63,8 +63,8 @@ public abstract class ObjectMarshaller {
         int id = yo.getID();
         int address = -1;
         
-        if(! trans.stream().isClient()){
-            address = trans.i_file.getSlot(length);
+        if(trans instanceof LocalTransaction){
+            address = ((LocalTransaction)trans).file().getSlot(length);
             trans.slotFreeOnRollback(id, address, length);
         }
         trans.setPointer(id, address, length);

@@ -835,4 +835,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     	queryResult.loadFromQuery(query);
     	return queryResult;
     }
+
+	public LocalTransaction getLocalSystemTransaction() {
+		return (LocalTransaction)getSystemTransaction();
+	}
 }

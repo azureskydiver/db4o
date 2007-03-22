@@ -44,7 +44,7 @@ public class LazyObjectReferenceTestCase extends AbstractDb4oTestCase{
 		
 		for (int i = 0; i < items.length; i++) {
 			items[i] = (Item) db().getByID(ids[i]);
-			infos[i] = new LazyObjectReference(stream(), (int)ids[i]);
+			infos[i] = new LazyObjectReference(trans(), (int)ids[i]);
 		}
 		
 		assertInfosAreConsistent(ids, infos);

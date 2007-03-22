@@ -12,11 +12,11 @@ import com.db4o.internal.*;
 public class IndexTransaction implements Visitor4{
 	
     final Index4 i_index;
-	final Transaction i_trans;
+	final LocalTransaction i_trans;
 	int i_version;
 	private Tree i_root;
 	
-	IndexTransaction(Transaction a_trans, Index4 a_index){
+	IndexTransaction(LocalTransaction a_trans, Index4 a_index){
 	    i_trans = a_trans;
 	    i_index = a_index;
 	}

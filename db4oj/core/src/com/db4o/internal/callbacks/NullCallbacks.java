@@ -7,10 +7,10 @@ import com.db4o.query.Query;
 
 public class NullCallbacks implements Callbacks {
 
-	public void onQueryFinished(Query query) {
+	public void queryOnFinished(Query query) {
 	}
 
-	public void onQueryStarted(Query query) {
+	public void queryOnStarted(Query query) {
 	}
 
 	public boolean objectCanNew(Object obj) {
