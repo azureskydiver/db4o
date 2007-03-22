@@ -8,6 +8,7 @@
 	
 	<macrodef name="buildDb4oDevTool" description="">		
 		<sequential>
+			<mkdir dir="${temp-build-1.1-internal}"/>
 			<path id="devtools.compile.lib.path">
 				<fileset dir="${dir.old.build}/lib" includes="*.jar"/>
 			</path>
