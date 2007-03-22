@@ -31,8 +31,10 @@ public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
 	}
 
 	public void close() throws Exception {
-		_objectContainer.close();
-		_objectContainer = null;
+		if (null != _objectContainer) {
+			_objectContainer.close();
+			_objectContainer = null;
+		}
 		super.close();
 	}
 
