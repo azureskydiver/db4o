@@ -10,22 +10,7 @@
 		<ant antfile="build.xml" dir="run-java-tests" target="clean" inheritAll="false" inheritRefs="false"/>
 	</target>
 	
-	<target name="init" description="Dynamically building db4o-devtools">
-		<resetDir dir="${temp-build-1.1-internal}"/>
-		<path id="devtools.compile.lib.path">
-			<fileset dir="${dir.old.build}/lib" includes="*.jar"/>
-		</path>
-		<buildjar
-				srcDir="${dir.old.build}/src"
-				jarPath="${db4o-devtools.jar}"
-				classPathRefId="devtools.compile.lib.path"
-				target="1.5"
-				source="1.5"
-		/>
-		<path id="devtools.runtime.lib.path">
-			<fileset dir="${temp-build-1.1-internal}" includes="*.jar"/>
-		</path>
-	<taskdef resource="com/db4o/devtools/ant/antlib.xml" classpathref="devtools.runtime.lib.path"/>
+	<target name="init" description="">
 	</target>
   
 	<target name="buildAll" description="Produce all db4o, dRS, java, .net, mono distributions." depends="clean, init"> 
