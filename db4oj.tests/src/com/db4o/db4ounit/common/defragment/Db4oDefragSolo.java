@@ -42,7 +42,7 @@ public class Db4oDefragSolo extends Db4oSolo {
 		}
 		
 		public boolean accept(Class clazz) {
-			return !OptOutDefragSolo.class.isAssignableFrom(clazz);
+			return super.accept(clazz)&&!OptOutDefragSolo.class.isAssignableFrom(clazz);
 		}
 		
 //		public void clean() {
