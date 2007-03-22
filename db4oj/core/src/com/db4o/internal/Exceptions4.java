@@ -50,8 +50,8 @@ public class Exceptions4 {
         throw new RuntimeException();
      }
 
-    public static RuntimeException shouldNeverHappen(){
-        throw new RuntimeException();
+    public static void shouldNeverHappen(){
+        throw new Error();
      }
 
     public static RuntimeException virtualException(){

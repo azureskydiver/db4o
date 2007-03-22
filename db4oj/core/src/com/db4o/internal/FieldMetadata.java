@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.config.ObjectMarshaller;
@@ -101,7 +103,13 @@ public class FieldMetadata implements StoredField {
             return;
         }
         
-        addIndexEntry(writer, readIndexEntry(mf, writer));
+        try {
+			addIndexEntry(writer, readIndexEntry(mf, writer));
+		} catch (CorruptionException exc) {
+			throw new FieldIndexException(exc,this);
+		} catch (IOException exc) {
+			throw new FieldIndexException(exc,this);
+		}
     }
 
     protected void addIndexEntry(StatefulBuffer a_bytes, Object indexEntry) {
@@ -138,12 +146,8 @@ public class FieldMetadata implements StoredField {
     }
     
     // alive() checked
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer){
-        try {
-            return i_handler.readIndexEntry(mf, writer);
-        } catch (CorruptionException e) {
-        }
-        return null;
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, IOException{
+    	return i_handler.readIndexEntry(mf, writer);
     }
     
     public void removeIndexEntry(Transaction trans, int parentID, Object indexEntry){
@@ -352,13 +356,19 @@ public class FieldMetadata implements StoredField {
 		}
     }
 
-    public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) {
+    public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) throws FieldIndexException {
         if (! alive()) {
             incrementOffset(a_bytes);
             return;
         }
         
-        removeIndexEntry(mf, a_bytes);
+        try {
+			removeIndexEntry(mf, a_bytes);
+		} catch (CorruptionException exc) {
+			throw new FieldIndexException(exc,this);
+		} catch (IOException exc) {
+			throw new FieldIndexException(exc,this);
+		}
         
         boolean dotnetValueType = false;
         if(Deploy.csharp){
@@ -381,19 +391,12 @@ public class FieldMetadata implements StoredField {
         }
     }
 
-    private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer a_bytes) {
+    private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, IOException {
         if(! hasIndex()){
             return;
         }
         int offset = a_bytes._offset;
-        Object obj = null;
-        try {
-            obj = i_handler.readIndexEntry(mf, a_bytes);
-        } catch (CorruptionException e) {
-            if(Debug.atHome){
-                e.printStackTrace();
-            }
-        }
+        Object obj = i_handler.readIndexEntry(mf, a_bytes);
         removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
         a_bytes._offset = offset;
     }

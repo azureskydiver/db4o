@@ -2,6 +2,8 @@
 
 package com.db4o.internal.marshall;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
@@ -174,16 +176,22 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return null;
     }
 
-    public Object readIndexEntry(ClassMetadata yc, ObjectHeaderAttributes attributes, FieldMetadata yf, StatefulBuffer reader) {
-        if(yc == null){
+    public Object readIndexEntry(ClassMetadata clazz, ObjectHeaderAttributes attributes, FieldMetadata field, StatefulBuffer reader) throws FieldIndexException {
+        if(clazz == null){
             return null;
         }
         
-        if(! findOffset(yc, attributes, reader, yf)){
+        if(! findOffset(clazz, attributes, reader, field)){
             return null;
         }
         
-        return yf.readIndexEntry(_family, reader);
+        try {
+			return field.readIndexEntry(_family, reader);
+		} catch (CorruptionException exc) {
+			throw new FieldIndexException(exc,field);
+		} catch (IOException exc) {
+			throw new FieldIndexException(exc,field);
+		}
     }
     
     public void readVirtualAttributes(final Transaction trans,  ClassMetadata yc, final ObjectReference yo, ObjectHeaderAttributes attributes, final Buffer reader){
