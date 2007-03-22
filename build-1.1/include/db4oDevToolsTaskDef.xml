@@ -1,8 +1,8 @@
-<project name="db4o-devtools" basedir="." default="">	
+<project name="db4o-devtools">	
 	<path id="lib.path">
-  	<fileset dir="${common.build.dir}/lib" includes="*.jar"/>
-  </path>
-  <taskdef resource="com/db4o/devtools/ant/antlib.xml" classpathref="lib.path"/>
-
+		<fileset dir="${common.build.dir}/lib" includes="*.jar"/>
+	</path>
+	
+	<!--For tasks like If Task-->
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties"  classpathref="lib.path"/>
 </project>
