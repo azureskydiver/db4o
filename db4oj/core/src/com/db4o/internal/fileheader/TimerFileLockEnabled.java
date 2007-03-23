@@ -75,36 +75,17 @@ public class TimerFileLockEnabled extends TimerFileLock{
     	}
 		long waitTime = Const4.LOCK_TIME_INTERVAL * 5;
 		long currentTime = System.currentTimeMillis();
+		
 		// If someone changes the system clock here, he is out of luck.
 		while (System.currentTimeMillis() < currentTime + waitTime) {
 			Cool.sleepIgnoringInterruption(waitTime);
 		}
-
-		Buffer buffer = new Buffer(Const4.LONG_LENGTH * 2);
-		_timerFile.blockSeek(address, offset);
-		_timerFile.read(buffer._buffer, Const4.LONG_LENGTH * 2);
-		buffer.readLong();
-		long currentAccessTime = buffer.readLong();
+		
+		long currentAccessTime = readLong(address, offset);
 		if ((currentAccessTime > lastAccessTime)) {
 			throw new DatabaseFileLockedException(container.toString());
 		}
 	}
-    
-//    private long readLong(int address, int offset) throws IOException {
-//    	synchronized (_timerLock) {
-//            if(_timerFile == null){
-//                return 0;
-//            }
-//            _timerFile.blockSeek(address, offset);
-//            if (Deploy.debug) {
-//                Buffer lockBytes = new Buffer(Const4.LONG_LENGTH);
-//                _timerFile.read(lockBytes._buffer, Const4.LONG_LENGTH);
-//                return lockBytes.readLong();
-//            }
-//            _timerFile.read(_longBytes);
-//            return PrimitiveCodec.readLong(_longBytes, 0);
-//    	}
-//    }
     
     public void close() throws IOException {
         writeAccessTime(true);
