@@ -3,7 +3,7 @@
 package com.db4o.drs.test;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.db4o.ObjectSet;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
@@ -62,8 +62,9 @@ public class ListTest extends DrsTestCase {
 		ListHolder lh = (ListHolder) getOneInstance(b(), ListHolder.class);
 
 		lh.setName("h2");
-		ListContent lc1 = (ListContent) lh.getList().get(0);
-		ListContent lc2 = (ListContent) lh.getList().get(1);
+		Iterator itor = lh.getList().iterator();
+		ListContent lc1 = (ListContent) itor.next();
+		ListContent lc2 = (ListContent) itor.next();
 		lc1.setName("co1");
 		lc2.setName("co2");
 
@@ -115,18 +116,19 @@ public class ListTest extends DrsTestCase {
 		//	ensureInstanceCount(provider, ArrayList.class, holderCount);
 
 		int i = 0;
-		ObjectSet objectSet = fixture.provider().getStoredObjects(ListHolder.class);
+		Iterator objectSet = fixture.provider().getStoredObjects(ListHolder.class).iterator();
 		while (objectSet.hasNext()) {
 			ListHolder lh = (ListHolder) objectSet.next();
 			Assert.areEqual(holderNames[i], lh.getName());
 
-			List list = lh.getList();
-			for (int j = 0; j < contentNames.length; j++) {
-				ListContent lc = (ListContent) list.get(j);
-				final String name = lc.getName();
-				Assert.areEqual(contentNames[j], name);
+			Iterator itor = lh.getList().iterator();
+			//FIXME
+			
+			int idx = 0;
+			while (itor.hasNext()){
+				Assert.areEqual(contentNames[idx], ((ListContent) itor.next()).getName());
+				idx++;
 			}
 		}
 	}
-
 }
