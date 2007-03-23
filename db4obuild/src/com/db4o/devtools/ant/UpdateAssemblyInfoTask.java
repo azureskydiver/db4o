@@ -37,6 +37,7 @@ public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 	
 	@Override
 	protected String updateAttributes(String contents) {
+		contents = updateAttribute(contents, "AssemblyTitle", assemblyType.title());
 		contents = updateAttribute(contents, "AssemblyVersion", _version);
 		contents = updateAttribute(contents, "AssemblyProduct", assemblyType.product());
 		contents = updateAttribute(contents, "AssemblyCompany", AssemblyInfo.COMPANY);
@@ -46,7 +47,7 @@ public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 		}
 		if (null != _configuration) {
 			contents = updateAttribute(contents, "AssemblyConfiguration", _configuration);
-			contents = updateAttribute(contents, "AssemblyDescription", "db4o " + _version + " (" + _configuration + ")");
+			contents = updateAttribute(contents, "AssemblyDescription", assemblyType.title() + " " + _version + " (" + _configuration + ")");
 		}
 		return contents;
 	}
