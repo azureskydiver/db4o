@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
 			 */
 			
 			LazyQueryDeleteTestCase.class,
+			SODAClassTypeDescend.class,
 			
 		};
 	}
