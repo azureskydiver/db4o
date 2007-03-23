@@ -37,4 +37,6 @@ public abstract class TimerFileLock implements Runnable{
 
     public abstract void close() throws IOException;
 
+    public abstract void checkIfOtherSessionAlive(LocalObjectContainer container, int address,
+		int offset, long lastAccessTime) throws IOException;
 }

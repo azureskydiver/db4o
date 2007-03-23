@@ -147,6 +147,7 @@ public class FileHeader0 extends FileHeader {
             writer.setID(Const4.IGNORE_ID);
         }
         writer.write();
+        file.syncFiles();
     }
     
     public void writeVariablePart(LocalObjectContainer file, int part) {

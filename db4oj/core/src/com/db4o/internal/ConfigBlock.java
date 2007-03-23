@@ -209,7 +209,7 @@ public final class ConfigBlock {
         _container.ensureFreespaceSlot();
         
 		if(FileHeader.lockedByOtherSession(_container, lastAccessTime)){
-			FileHeader.checkIfOtherSessionAlive(_container, _address, OPEN_TIME_OFFSET, lastAccessTime);
+			_timerFileLock.checkIfOtherSessionAlive(_container, _address, OPEN_TIME_OFFSET, lastAccessTime);
 		}
 		
 		if(_container.needsLockFileThread()){
@@ -247,6 +247,7 @@ public final class ConfigBlock {
         IntHandler.writeInt(systemData().uuidIndexId(), writer);
 		writer.write();
 		writePointer();
+		_container.syncFiles();
 	}
     
     private void addressChanged(int address){

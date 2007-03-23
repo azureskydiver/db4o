@@ -223,6 +223,10 @@ public class CachedIoAdapter extends IoAdapter {
 		_io.close();
 	}
 
+	public IoAdapter delegatedIoAdapter() {
+		return _io.delegatedIoAdapter();
+	}
+	
 	private Page getPage(long startAddress, boolean load) throws IOException {
 		Page page;
 		page = getPageFromCache(startAddress);
@@ -375,4 +379,5 @@ public class CachedIoAdapter extends IoAdapter {
 			return startPosition == -1;
 		}
 	}
+
 }

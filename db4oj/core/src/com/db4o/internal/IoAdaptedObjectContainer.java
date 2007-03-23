@@ -249,10 +249,10 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                         && (!configImpl().isReadOnly());
                     _file = ioAdapter.open(fileName(), lockFile, 0);
                     if (needsTimerFile()) {
-                        _timerFile = ioAdapter.open(fileName(), false, 0);
+                        _timerFile = ioAdapter.delegatedIoAdapter().open(fileName(), false, 0);
                     }
                 } catch (DatabaseFileLockedException de) {
-                    throw de;
+                	throw de;
                 } catch (Exception e) {
                     Exceptions4.throwRuntimeException(12, fileName(), e);
                 }
