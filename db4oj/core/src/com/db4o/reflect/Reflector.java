@@ -20,7 +20,7 @@ public interface Reflector extends DeepClone{
 	
 	
 	/**
-	 * returns an IArray object, the equivalent to java.lang.reflect.Array.
+	 * returns an ReflectArray object, the equivalent to java.lang.reflect.Array.
 	 */
 	public ReflectArray array();
 	
@@ -33,18 +33,18 @@ public interface Reflector extends DeepClone{
 	public boolean constructorCallsSupported();
 	
 	/**
-	 * returns an IClass for a Class
+	 * returns an ReflectClass for a Class
 	 */
 	public ReflectClass forClass(Class clazz);
 	
 	/**
-	 * returns an IClass class reflector for a class name or null
+	 * returns an ReflectClass class reflector for a class name or null
 	 * if no such class is found
 	 */
 	public ReflectClass forName(String className);
 	
 	/**
-	 * returns an IClass for an object or null if the passed object is null.
+	 * returns an ReflectClass for an object or null if the passed object is null.
 	 */
 	public ReflectClass forObject(Object a_object);
 	
