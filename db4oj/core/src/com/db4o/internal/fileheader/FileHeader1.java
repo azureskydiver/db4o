@@ -4,6 +4,7 @@ package com.db4o.internal.fileheader;
 
 import java.io.*;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 
@@ -91,10 +92,10 @@ public class FileHeader1 extends FileHeader {
     	/*long lastOpenTime = */reader.readLong();
     	long lastAccessTime = reader.readLong();
 		if(FileHeader.lockedByOtherSession(container, lastAccessTime)){
-			FileHeader.checkIfOtherSessionAlive(container, 0, OPEN_TIME_OFFSET, lastAccessTime);
+			_timerFileLock.checkIfOtherSessionAlive(container, 0, OPEN_TIME_OFFSET, lastAccessTime);
 		}
 	}
-
+    
 	private void commonTasksForNewAndRead(LocalObjectContainer file){
         newTimerFileLock(file);
         file.i_handlers.oldEncryptionOff();
@@ -119,6 +120,7 @@ public class FileHeader1 extends FileHeader {
         writer.writeInt(_variablePart.getID());
         writer.noXByteCheck();
         writer.write();
+        file.syncFiles();
         if(startFileLockingThread){
         	try {
 				_timerFileLock.start();

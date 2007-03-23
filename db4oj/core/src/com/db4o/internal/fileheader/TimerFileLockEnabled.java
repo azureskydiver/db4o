@@ -57,7 +57,8 @@ public class TimerFileLockEnabled extends TimerFileLock{
     
     public void checkOpenTime() {
     	try {
-			if(_opentime == readLong(_baseAddress, _openTimeOffset)){
+			long readOpenTime = readLong(_baseAddress, _openTimeOffset);
+			if(_opentime == readOpenTime){
 				writeOpenTime();
 				return;
 			}
@@ -66,6 +67,44 @@ public class TimerFileLockEnabled extends TimerFileLock{
 		}
 		throw new DatabaseFileLockedException(_timerFile.toString());
     }
+    
+    public void checkIfOtherSessionAlive(LocalObjectContainer container, int address, int offset,
+		long lastAccessTime) throws IOException {
+    	if(_timerFile == null) { // need to check? 
+    		return;
+    	}
+		long waitTime = Const4.LOCK_TIME_INTERVAL * 5;
+		long currentTime = System.currentTimeMillis();
+		// If someone changes the system clock here, he is out of luck.
+		while (System.currentTimeMillis() < currentTime + waitTime) {
+			Cool.sleepIgnoringInterruption(waitTime);
+		}
+
+		Buffer buffer = new Buffer(Const4.LONG_LENGTH * 2);
+		_timerFile.blockSeek(address, offset);
+		_timerFile.read(buffer._buffer, Const4.LONG_LENGTH * 2);
+		buffer.readLong();
+		long currentAccessTime = buffer.readLong();
+		if ((currentAccessTime > lastAccessTime)) {
+			throw new DatabaseFileLockedException(container.toString());
+		}
+	}
+    
+//    private long readLong(int address, int offset) throws IOException {
+//    	synchronized (_timerLock) {
+//            if(_timerFile == null){
+//                return 0;
+//            }
+//            _timerFile.blockSeek(address, offset);
+//            if (Deploy.debug) {
+//                Buffer lockBytes = new Buffer(Const4.LONG_LENGTH);
+//                _timerFile.read(lockBytes._buffer, Const4.LONG_LENGTH);
+//                return lockBytes.readLong();
+//            }
+//            _timerFile.read(_longBytes);
+//            return PrimitiveCodec.readLong(_longBytes, 0);
+//    	}
+//    }
     
     public void close() throws IOException {
         writeAccessTime(true);

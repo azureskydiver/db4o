@@ -112,28 +112,5 @@ public abstract class FileHeader {
 		return container.needsLockFileThread() && ( lastAccessTime != 0);
 	}
 
-	public static void checkIfOtherSessionAlive(LocalObjectContainer container, int address, int offset, long lastAccessTime) throws IOException {
-		StatefulBuffer reader;
-		container.logMsg(Messages.FAILED_TO_SHUTDOWN, null);
-		long waitTime = Const4.LOCK_TIME_INTERVAL * 5;
-		long currentTime = System.currentTimeMillis();
-	
-		// If someone changes the system clock here,
-		// he is out of luck.
-		while(System.currentTimeMillis() < currentTime + waitTime){
-			Cool.sleepIgnoringInterruption(waitTime);
-		}
-		reader = container.getWriter(container.getSystemTransaction(), address, Const4.LONG_LENGTH * 2);
-		reader.moveForward(offset);
-		reader.read();
-		
-		reader.readLong();  // open time
-		
-		long currentAccessTime = reader.readLong();
-		
-		if((currentAccessTime > lastAccessTime) ){
-			throw new DatabaseFileLockedException(container.toString());
-		}
-	}
 
 }
