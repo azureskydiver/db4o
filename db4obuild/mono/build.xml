@@ -51,6 +51,11 @@
 				<include name="db4o.spec" />
 			</fileset>
 		</copy>
+		<copy todir="${dir.mono.zip}/${db4o.name.short}">
+			<fileset dir="${dir.build}/build/mono">				
+				<include name="*.txt" />
+			</fileset>
+		</copy>
 		<exec executable="tar" dir="${dir.mono.zip}">
 			<arg line="-czvf ${dir.mono.rpmbuild}/SOURCES/${db4o.name.full}.tar.gz ${db4o.name.short}"/>
 		</exec>
