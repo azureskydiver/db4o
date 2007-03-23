@@ -16,11 +16,13 @@ the keyword search functionality on the  .l http://developer.db4o.com/Resources/
 .b Links ..
 Here are some further links on developer.db4o.com that ._
 you may find useful:
-.l http://files.db4o.com All Downloads ..
+.l http://download.db4o.com All Downloads ..
 .l http://developer.db4o.com/blogs/product_news/default.aspx Release Note Blog ..
-.l http://developer.db4o.com/Docs/SourceCodeAccess.aspx SVN Access ..
-.l http://developer.db4o.com/ProjectSpaces/view.aspx/ProjectSpaces Design Wiki ..
+.l http://developer.db4o.com/Resources/view.aspx/Working_With_Source_Code SVN Access ..
+.l http://developer.db4o.com/ProjectSpaces/view.aspx/Db4o_Product_Design Design Wiki ..
 .l http://developer.db4o.com/ProjectSpaces/default.aspx Community Projects ..
+
+
 
 .n
 .< DownloadContents ..
