@@ -4,6 +4,7 @@ package com.db4o.drs.test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectSet;
@@ -23,10 +24,10 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 
 	static {
 		mappings = new Class[]{
-				CollectionHolder.class, Replicated.class,
+				Replicated.class,
 				SPCParent.class, SPCChild.class,
 				ListHolder.class, ListContent.class,
-				MapHolder.class, MapContent.class,
+				MapContent.class,
 				SimpleArrayContent.class, SimpleArrayHolder.class,
 				R0.class, Pilot.class, Car.class, Student.class, Person.class};
 	}
@@ -116,18 +117,23 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	}
 
 	protected Object getOneInstance(DrsFixture fixture, Class clazz) {
-		ObjectSet objectSet = fixture.provider().getStoredObjects(clazz);
-
-		if (1 != objectSet.size())
-			throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + fixture);
-
-		return objectSet.next();
+		Iterator objectSet = fixture.provider().getStoredObjects(clazz).iterator();
+		
+		Object candidate = null;
+		if (objectSet.hasNext()) {
+			candidate = objectSet.next();
+			
+			if (objectSet.hasNext())
+				 throw new RuntimeException("Found more than one instance of + " + clazz + " in provider = " + fixture);	 
+		}
+		
+		return candidate;
 	}
 
 	protected void replicateAll(TestableReplicationProviderInside providerFrom, TestableReplicationProviderInside providerTo) {
 		//System.out.println("from = " + providerFrom + ", to = " + providerTo);
 		ReplicationSession replication = Replication.begin(providerFrom, providerTo);
-		ObjectSet allObjects = providerFrom.objectsChangedSinceLastReplication();
+		Iterator allObjects = providerFrom.objectsChangedSinceLastReplication().iterator();
 
 		if (!allObjects.hasNext())
 			throw new RuntimeException("Can't find any objects to replicate");
@@ -144,7 +150,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 			TestableReplicationProviderInside from, TestableReplicationProviderInside to, ReplicationEventListener listener) {
 		ReplicationSession replication = Replication.begin(from, to, listener);
 
-		ObjectSet allObjects = from.objectsChangedSinceLastReplication();
+		Iterator allObjects = from.objectsChangedSinceLastReplication().iterator();
 		while (allObjects.hasNext()) {
 			Object changed = allObjects.next();
 			//System.out.println("changed = " + changed);
@@ -167,7 +173,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 	protected void replicateClass(TestableReplicationProviderInside providerA, TestableReplicationProviderInside providerB, Class clazz) {
 		//System.out.println("ReplicationTestcase.replicateClass");
 		ReplicationSession replication = Replication.begin(providerA, providerB);
-		ObjectSet allObjects = providerA.objectsChangedSinceLastReplication(clazz);
+		Iterator allObjects = providerA.objectsChangedSinceLastReplication(clazz).iterator();
 		while (allObjects.hasNext()) {
 			final Object obj = allObjects.next();
 			//System.out.println("obj = " + obj);
@@ -180,7 +186,7 @@ public abstract class DrsTestCase implements TestCase, TestLifeCycle {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e.toString());
 		}
 	}
 

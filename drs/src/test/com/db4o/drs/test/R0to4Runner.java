@@ -4,7 +4,7 @@ package com.db4o.drs.test;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import com.db4o.ObjectSet;
 import com.db4o.drs.Replication;
@@ -34,9 +34,9 @@ public class R0to4Runner extends DrsTestCase {
 	}
 
 	protected void delete(TestableReplicationProviderInside provider) {
-		Set toDelete = new HashSet();
+		ArrayList toDelete = new ArrayList();
 
-		ObjectSet rr = provider.getStoredObjects(R0.class);
+		Iterator rr = provider.getStoredObjects(R0.class).iterator();
 		while (rr.hasNext()) {
 			Object o = rr.next();
 
@@ -56,11 +56,11 @@ public class R0to4Runner extends DrsTestCase {
 	}
 
 	private void compareR4(TestableReplicationProviderInside a, TestableReplicationProviderInside b, boolean isSameExpected) {
-		ObjectSet it = a.getStoredObjects(R4.class);
+		Iterator it = a.getStoredObjects(R4.class).iterator();
 		while (it.hasNext()) {
 			String name = ((R4) it.next()).name;
 
-			ObjectSet it2 = b.getStoredObjects(R4.class);
+			Iterator it2 = b.getStoredObjects(R4.class).iterator();
 			boolean found = false;
 			while (it2.hasNext()) {
 				String name2 = ((R4) it2.next()).name;
@@ -83,10 +83,10 @@ public class R0to4Runner extends DrsTestCase {
 	}
 
 	private void ensureCount(TestableReplicationProviderInside provider, Class clazz, int count) {
-		ObjectSet instances = provider.getStoredObjects(clazz);
+		Iterator instances = provider.getStoredObjects(clazz).iterator();
 		int i = count;
 		while (instances.hasNext()) {
-			instances.next();
+			Object o = instances.next();
 			i--;
 		}
 		Assert.isTrue(i == 0);
@@ -126,7 +126,7 @@ public class R0to4Runner extends DrsTestCase {
 	}
 
 	private void modifyR4(TestableReplicationProviderInside provider) {
-		ObjectSet it = provider.getStoredObjects(R4.class);
+		Iterator it = provider.getStoredObjects(R4.class).iterator();
 		while (it.hasNext()) {
 			R4 r4 = (R4) it.next();
 			r4.name = r4.name + "_";
@@ -142,9 +142,9 @@ public class R0to4Runner extends DrsTestCase {
 	private int replicateAll(TestableReplicationProviderInside peerA, TestableReplicationProviderInside peerB, boolean modifiedOnly) {
 		ReplicationSession replication = Replication.begin(peerA, peerB);
 
-		ObjectSet it = modifiedOnly
-				? peerA.objectsChangedSinceLastReplication(R0.class)
-				: peerA.getStoredObjects(R0.class);
+		Iterator it = modifiedOnly
+				? peerA.objectsChangedSinceLastReplication(R0.class).iterator()
+				: peerA.getStoredObjects(R0.class).iterator();
 
 		int replicated = 0;
 		while (it.hasNext()) {
