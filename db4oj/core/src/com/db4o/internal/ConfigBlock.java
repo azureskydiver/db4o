@@ -209,7 +209,7 @@ public final class ConfigBlock {
         _container.ensureFreespaceSlot();
         
 		if(FileHeader.lockedByOtherSession(_container, lastAccessTime)){
-			_timerFileLock.checkIfOtherSessionAlive(_container, _address, OPEN_TIME_OFFSET, lastAccessTime);
+			_timerFileLock.checkIfOtherSessionAlive(_container, _address, ACCESS_TIME_OFFSET, lastAccessTime);
 		}
 		
 		if(_container.needsLockFileThread()){
