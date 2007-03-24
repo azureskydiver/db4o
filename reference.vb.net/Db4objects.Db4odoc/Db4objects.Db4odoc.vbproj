@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Db4objects.Db4odoc.Concurrency.ConcurrencyExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.SelectivePersistence.MarkTransientExample</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>
@@ -34,6 +34,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -56,6 +58,8 @@
     <Compile Include="Blobs\BlobExample.vb" />
     <Compile Include="Blobs\Car.vb" />
     <Compile Include="Blobs\CarImage.vb" />
+    <Compile Include="CachedIO\CachedIoExample.vb" />
+    <Compile Include="CachedIO\Pilot.vb" />
     <Compile Include="Callbacks\AutoIncExample.vb" />
     <Compile Include="Callbacks\CallbacksExample.vb" />
     <Compile Include="Callbacks\Car.vb" />
@@ -63,6 +67,14 @@
     <Compile Include="Callbacks\IncrementedId.vb" />
     <Compile Include="Callbacks\Pilot.vb" />
     <Compile Include="Callbacks\TestObject.vb" />
+    <Compile Include="ClassMapping\MappingExample.vb" />
+    <Compile Include="ClassMapping\PilotReplacement.vb" />
+    <Compile Include="ClassMapping\Pilot.vb" />
+    <Compile Include="ClassNameFormat\ClassNameExample1.vb" />
+    <Compile Include="ClassNameFormat\ClassNameExample2.vb" />
+    <Compile Include="ClassNameFormat\Test.vb" />
+    <Compile Include="Clientserver\BatchMode\BatchExample.vb" />
+    <Compile Include="Clientserver\BatchMode\Pilot.vb" />
     <Compile Include="Clientserver\Car.vb" />
     <Compile Include="Clientserver\ClientServerExample.vb" />
     <Compile Include="Clientserver\DeepExample.vb" />
@@ -75,6 +87,9 @@
     <Compile Include="Clientserver\StopServer.vb" />
     <Compile Include="Clientserver\TemperatureSensorReadout.vb" />
     <Compile Include="Clientserver\TransactionExample.vb" />
+    <Compile Include="Comparing\CompareExample.vb" />
+    <Compile Include="Comparing\MyString.vb" />
+    <Compile Include="Comparing\Record.vb" />
     <Compile Include="Concurrency\ConcurrencyExample.vb" />
     <Compile Include="Concurrency\OptimisticThread.vb" />
     <Compile Include="Concurrency\PessimisticThread.vb" />
@@ -83,6 +98,9 @@
     <Compile Include="Constructors\C2.vb" />
     <Compile Include="Constructors\C3.vb" />
     <Compile Include="Constructors\C4.vb" />
+    <Compile Include="ListDeleting\DataObject.vb" />
+    <Compile Include="ListDeleting\ListObject.vb" />
+    <Compile Include="ListDeleting\ListDeletingExample.vb" />
     <Compile Include="Debugging\Car.vb" />
     <Compile Include="Debugging\DebugExample.vb" />
     <Compile Include="Defragmentation\DefragmentExample.vb" />
@@ -122,11 +140,17 @@
     <Compile Include="IOs\IOExample.vb" />
     <Compile Include="IOs\LoggingAdapter.vb" />
     <Compile Include="IOs\Pilot.vb" />
+    <Compile Include="ListOperations\DataObject.vb" />
+    <Compile Include="ListOperations\ListObject.vb" />
+    <Compile Include="ListOperations\ListOperationsExample.vb" />
     <Compile Include="Lists\CollectionExample.vb" />
     <Compile Include="Lists\CollectionFactory.vb" />
     <Compile Include="Lists\Pilot.vb" />
     <Compile Include="Lists\Team.vb" />
     <Compile Include="Lists\VerboseList.vb" />
+    <Compile Include="Marshal\CustomMarshallerExample.vb" />
+    <Compile Include="Marshal\Item.vb" />
+    <Compile Include="Marshal\ItemMarshaller.vb" />
     <Compile Include="Messaging\MessagingExample.vb" />
     <Compile Include="Messaging\MyClientServerMessage.vb" />
     <Compile Include="Metainfo\Car.vb" />
@@ -162,8 +186,12 @@
     <Compile Include="Replication\ReplicationExample.vb" />
     <Compile Include="SelectivePersistence\FieldTransient.vb" />
     <Compile Include="SelectivePersistence\MarkTransientExample.vb" />
+    <Compile Include="SelectivePersistence\NotStorable.vb" />
     <Compile Include="SelectivePersistence\Test.vb" />
+    <Compile Include="SelectivePersistence\Test1.vb" />
+    <Compile Include="SelectivePersistence\Test2.vb" />
     <Compile Include="SelectivePersistence\TestCustomized.vb" />
+    <Compile Include="SelectivePersistence\TransientClassExample.vb" />
     <Compile Include="Semaphores\ConnectedUser.vb" />
     <Compile Include="Semaphores\LimitLogins.vb" />
     <Compile Include="Semaphores\LockManager.vb" />
@@ -171,6 +199,8 @@
     <Compile Include="Serializing\Car.vb" />
     <Compile Include="Serializing\Pilot.vb" />
     <Compile Include="Serializing\SerializeExample.vb" />
+    <Compile Include="Sorting\Pilot.vb" />
+    <Compile Include="Sorting\SortingExample.vb" />
     <Compile Include="StaticFields\Car.vb" />
     <Compile Include="StaticFields\Pilot.vb" />
     <Compile Include="StaticFields\PilotCategories.vb" />
@@ -189,10 +219,6 @@
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
       <Name>Db4objects.Db4o-2005</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\drs.net\Db4objects.Drs.csproj">
-      <Project>{C2C8AA20-E12B-444F-A736-75EE0FC6EA2B}</Project>
-      <Name>Db4objects.Drs</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

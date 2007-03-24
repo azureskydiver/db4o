@@ -29,23 +29,23 @@ Namespace Db4objects.Db4odoc.Replicating
         ' end configureForExisting
 
         Public Shared Sub Replicate()
-            Dim desktop As IObjectContainer = Db4oFactory.OpenFile(DtFileName)
-            Dim handheld As IObjectContainer = Db4oFactory.OpenFile(HhFileName)
-            Dim replic As IReplicationSession = Replication.Begin(handheld, desktop) '
-            ' 			 * There is no need to replicate all the objects each time. 
-            ' 			 * ObjectsChangedSinceLastReplication methods gives us 
-            ' 			 * a list of modified objects
-            ' 			 */
-            Dim provider As IReplicationProvider = replic.ProviderA()
-            Dim changed As IObjectSet = provider.ObjectsChangedSinceLastReplication()
-            'Iterate changed objects, replicate them
-            While changed.HasNext()
-                Dim p As Pilot = CType(changed.Next, Pilot)
-                If p.Name.StartsWith("S") Then
-                    replic.Replicate(p)
-                End If
-            End While
-            replic.Commit()
+            'Dim desktop As IObjectContainer = Db4oFactory.OpenFile(DtFileName)
+            'Dim handheld As IObjectContainer = Db4oFactory.OpenFile(HhFileName)
+            'Dim replic As IReplicationSession = Replication.Begin(handheld, desktop) '
+            '' 			 * There is no need to replicate all the objects each time. 
+            '' 			 * ObjectsChangedSinceLastReplication methods gives us 
+            '' 			 * a list of modified objects
+            '' 			 */
+            'Dim provider As IReplicationProvider = replic.ProviderA()
+            'Dim changed As IObjectSet = provider.ObjectsChangedSinceLastReplication()
+            ''Iterate changed objects, replicate them
+            'While changed.HasNext()
+            '    Dim p As Pilot = CType(changed.Next, Pilot)
+            '    If p.Name.StartsWith("S") Then
+            '        replic.Replicate(p)
+            '    End If
+            'End While
+            'replic.Commit()
         End Sub
         ' end replicate	
     End Class

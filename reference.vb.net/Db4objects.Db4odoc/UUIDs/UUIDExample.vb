@@ -5,7 +5,7 @@ Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Query
 Imports Db4objects.Db4o.Foundation
 Imports Db4objects.Db4o.Ext
-
+Imports Db4objects.Db4o.Internal
 
 
 Namespace Db4objects.Db4odoc.UUIDs
@@ -40,7 +40,7 @@ Namespace Db4objects.Db4odoc.UUIDs
                 db = oc.Ext().Identity()
                 oldSignature = db.GetSignature()
                 Console.WriteLine("oldSignature: " + PrintSignature(oldSignature))
-                Dim yf As YapFile = DirectCast(oc, YapFile)
+                Dim yf As LocalObjectContainer = DirectCast(oc, LocalObjectContainer)
                 yf.GenerateNewIdentity()
             Finally
                 oc.Close()
