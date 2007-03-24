@@ -30,9 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Db4objects.Drs.Test\ByteArrayHolder.cs" />
+    <Compile Include="Db4objects.Drs.Test\ByteArrayTest.cs" />
     <Compile Include="Db4objects.Drs.Test\Car.cs" />
-    <Compile Include="Db4objects.Drs.Test\CollectionHandlerImplTest.cs" />
-    <Compile Include="Db4objects.Drs.Test\CollectionHolder.cs" />
     <Compile Include="Db4objects.Drs.Test\Db4oClientServerDrsFixture.cs" />
     <Compile Include="Db4objects.Drs.Test\Db4oDrsFixture.cs" />
     <Compile Include="Db4objects.Drs.Test\Db4oListTest.cs" />
@@ -41,6 +41,7 @@
     <Compile Include="Db4objects.Drs.Test\DrsTestSuite.cs" />
     <Compile Include="Db4objects.Drs.Test\DrsTestSuiteBuilder.cs" />
     <Compile Include="Db4objects.Drs.Test\IDrsFixture.cs" />
+    <Compile Include="Db4objects.Drs.Test\IIByteArrayHolder.cs" />
     <Compile Include="Db4objects.Drs.Test\ListContent.cs" />
     <Compile Include="Db4objects.Drs.Test\ListHolder.cs" />
     <Compile Include="Db4objects.Drs.Test\ListTest.cs" />
@@ -59,14 +60,12 @@
     <Compile Include="Db4objects.Drs.Test\ReplicationEventTest.cs" />
     <Compile Include="Db4objects.Drs.Test\ReplicationFeaturesMain.cs" />
     <Compile Include="Db4objects.Drs.Test\ReplicationProviderTest.cs" />
-    <Compile Include="Db4objects.Drs.Test\ReplicationTraversalTest.cs" />
+    <Compile Include="Db4objects.Drs.Test\SPCChild.cs" />
+    <Compile Include="Db4objects.Drs.Test\SPCParent.cs" />
     <Compile Include="Db4objects.Drs.Test\SimpleArrayContent.cs" />
     <Compile Include="Db4objects.Drs.Test\SimpleArrayHolder.cs" />
     <Compile Include="Db4objects.Drs.Test\SimpleArrayTest.cs" />
     <Compile Include="Db4objects.Drs.Test\SimpleParentChild.cs" />
-    <Compile Include="Db4objects.Drs.Test\SingleTypeCollectionReplicationTest.cs" />
-    <Compile Include="Db4objects.Drs.Test\SPCChild.cs" />
-    <Compile Include="Db4objects.Drs.Test\SPCParent.cs" />
     <Compile Include="Db4objects.Drs.Test\Student.cs" />
     <Compile Include="Db4objects.Drs.Test\TheSimplest.cs" />
   </ItemGroup>
@@ -77,13 +76,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Db4objects.Db4o, Version=6.2.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o, Version=6.2.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\Db4objects.Db4o.dll</HintPath>
+      <HintPath>..\bin\Db4objects.Db4o.dll</HintPath>
     </Reference>
-    <Reference Include="Db4oUnit, Version=6.1.300.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Db4oUnit, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\Db4oUnit.dll</HintPath>
+      <HintPath>..\bin\Db4oUnit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

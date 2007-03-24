@@ -31,36 +31,25 @@
 	<target name="configure" depends="init">
 		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
 	</target>
-	<target name="resolve" depends="configure">   
-		<ivy:retrieve/>
+	<target name="resolve" depends="configure">
+		<ivy:resolve file="ivy.xml"/>   
+		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]"/>
 	</target>	
-	<target name="zip" depends="update-drs-project, update-test-project">
-		<copy todir="${tempdll}">
-			<fileset dir="${defaultArtifactDir}">
-				<include name="*.dll"/>
-			</fileset>
-		</copy>
-		<renameDll srcJarDir="${tempdll}"/>
-		<!--
+	<target name="zip" depends="update-drs-project, update-test-project, tutorial">		
 		<zip destfile="${zipPath}">
-			<zipfileset dir="${ivy.lib.dir}" prefix="${zipDir}/lib"/>
-			<zipfileset dir="${tempJar}" prefix="${zipDir}/lib"/>
-			<zipfileset dir="." prefix="${zipDir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
-			<zipfileset dir="${drsLibDir}" prefix="${zipDir}/lib" includes="*.jar, *.txt" />
-					
-			<zipfileset dir="${drs.basedir}/doc/out" prefix="${zipDir}/doc/tutorial" />		
-			<zipfileset dir="${tempApi}" prefix="${zipDir}/doc/api" />
-			<zipfileset file="${tempSrcZipPath}" prefix="${zipDir}"/>	
-		</zip>	
-		
-		<delete dir="${tempSrcDir}" failonerror="true"/>
-		-->
+			<zipfileset dir="${dir.dRS.net.dist}" includes="*.txt" prefix="${zipDir}"/>
+			<zipfileset dir="${dir.dRS.net.dist}/Solution" includes="*.sln, *.suo QuickStart/**" prefix="${zipDir}"/>
+			<zipfileset dir="${ivy.lib.dir}"		includes="*.dll" prefix="${zipDir}/bin"/>
+			<zipfileset dir="${defaultArtifactDir}"	includes="*.dll" prefix="${zipDir}/bin"/>
+			<zipfileset dir="${doc.out}" prefix="${zipDir}/tutorial"/>
+			<zipfileset dir="${tmp.Db4objects.Drs.dir}" prefix="${zipDir}/Db4objects.Drs"/>
+			<zipfileset dir="${tmp.Db4objects.Drs.Test.dir}" prefix="${zipDir}/Db4objects.Drs.Test"/>			
+		</zip>
+		<delete dir="${doc.out}"/>
 	</target>
 	<target name="publish" depends="zip">
-		<!--
 		<publishToIvy/>
 		<antcall target="clean" />
-		-->
 		<delete>
 			<fileset dir="." includes="sharpen*"/>
 		</delete>
@@ -124,7 +113,7 @@
 		<sharpen resource="drs/core" workspace="${drs.conversion.workspace.dir}">
 			<args>
 				<arg value="-cp" />
-				<arg path="${ivy.lib.dir}/db4o-java5-${db4o.version.dotted}.jar" />
+				<arg path="${ivy.lib.dir}/db4o-java5.jar" />
 				<arg value="@sharpen-dRS-options" />
 			</args>
 		</sharpen>
@@ -156,7 +145,7 @@
 			targettype="library"
 			srcdir="${tmp.Db4objects.Drs.dir}">
 			<reference dir="${ivy.lib.dir}">
-				<include name="Db4objects.Db4o-${db4o.version.dotted}.dll" />
+				<include name="Db4objects.Db4o.dll" />
 			</reference>
 		</csc>
 	</target>
@@ -172,11 +161,11 @@
 		<sharpen resource="drs/test" workspace="${drs.conversion.workspace.dir}">
 			<args>
 				<arg value="-cp" />
-				<arg path="${ivy.lib.dir}/db4o-java5-${db4o.version.dotted}.jar" />
+				<arg path="${ivy.lib.dir}/db4o-java5.jar" />
 				<arg value="-cp" />
-				<arg path="${ivy.lib.dir}/db4ounit-${db4o.version.dotted}.jar" />	
+				<arg path="${ivy.lib.dir}/db4ounit.jar" />	
 				<arg value="-cp" />
-				<arg path="${ivy.lib.dir}/dRS-${db4o.version.dotted}.jar" />				
+				<arg path="${ivy.lib.dir}/dRS.jar" />				
 				<arg value="@sharpen-dRS-options" />
 			</args>
 		</sharpen>
@@ -190,8 +179,8 @@
 			targettype="library"
 			srcdir="${tmp.Db4objects.Drs.Test.dir}">
 			<reference dir="${ivy.lib.dir}">
-				<include name="Db4objects.Db4o-${db4o.version.dotted}.dll" />
-				<include name="Db4oUnit-${db4o.version.dotted}.dll" />
+				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4oUnit.dll" />
 			</reference>
 			<reference dir="${defaultArtifactDir}">
 				<include name="${Db4objects.Drs.dll}" />
@@ -208,7 +197,7 @@
 	</target>
 	
 	<target name="tutorial" depends="resolve">
-		<delete dir="tutorial/out" />
+		<delete dir="${doc.out}" />
 		<java classname="com.yetac.doctor.Doctor">
 			<arg line="tutorial ${font.pdf.base}" />
 			<classpath>
@@ -220,6 +209,6 @@
 				</fileset>
 			</classpath>
 		</java>
-		<move file="tutorial/out/doctor.pdf" tofile="tutorial/out/dRS.net-tutorial.pdf"/>
+		<move file="${doc.out}/doctor.pdf" tofile="${doc.out}/dRS.net-tutorial.pdf"/>
 	</target>
 </project>
