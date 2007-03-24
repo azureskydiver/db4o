@@ -21,6 +21,11 @@ Namespace Db4objects.Db4odoc.SelectivePersistence
         End Sub
         ' end ConfigureTransient
 
+        Public Shared Sub ConfigureSaveTransient()
+            Db4oFactory.Configure().ObjectClass(GetType(Test)).StoreTransientFields(True)
+        End Sub
+        ' end ConfigureSaveTransient
+
         Public Shared Sub SaveObjects()
             File.Delete(YapFileName)
             Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)

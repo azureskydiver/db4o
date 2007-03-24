@@ -101,10 +101,10 @@ Namespace Db4objects.Db4odoc.StaticFields
                         db.Set(pilot)
                     End If
                 Next
+                PrintCategories(db)
             Finally
                 db.Close()
             End Try
-            PrintCategories()
         End Sub
         ' end UpdatePilots
 
@@ -121,10 +121,10 @@ Namespace Db4objects.Db4odoc.StaticFields
                         db.Set(pc)
                     End If
                 Next
+                PrintCategories(db)
             Finally
                 db.Close()
             End Try
-            PrintCategories()
         End Sub
         ' end UpdatePilotCategories
 
@@ -139,49 +139,44 @@ Namespace Db4objects.Db4odoc.StaticFields
                     Dim pilot As Pilot = CType(result(x), Pilot)
                     db.Delete(pilot)
                 Next
-                PrintCategories()
+                PrintCategories(db)
                 Console.WriteLine("Deleting PilotCategories :")
                 result = db.Get(GetType(PilotCategories))
                 For x = 0 To result.Count - 1 Step x + 1
                     db.Delete(result(x))
                 Next
-                PrintCategories()
+                PrintCategories(db)
             Finally
                 db.Close()
             End Try
         End Sub
         ' end DeleteTest
 
-        Public Shared Sub PrintCategories()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
-            Try
-                Dim result As IObjectSet = db.Get(GetType(PilotCategories))
-                Console.WriteLine("Stored categories: " + (result.Count).ToString())
-                Dim x As Integer
-                For x = 0 To result.Count - 1 Step x + 1
-                    Dim pc As PilotCategories = CType(result(x), PilotCategories)
-                    Console.WriteLine("Category: " + pc.ToString())
-                Next
-            Finally
-                db.Close()
-            End Try
+        Public Shared Sub PrintCategories(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(GetType(PilotCategories))
+            Console.WriteLine("Stored categories: " + (result.Count).ToString())
+            Dim x As Integer
+            For x = 0 To result.Count - 1 Step x + 1
+                Dim pc As PilotCategories = CType(result(x), PilotCategories)
+                Console.WriteLine("Category: " + pc.ToString())
+            Next
         End Sub
         ' end PrintCategories
 
         Public Shared Sub DeletePilotCategories()
-            PrintCategories()
             Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
             Try
+                PrintCategories(db)
                 Dim result As IObjectSet = db.Get(GetType(PilotCategories))
                 Dim x As Integer
                 For x = 0 To result.Count - 1 Step x + 1
                     Dim pc As PilotCategories = CType(result(x), PilotCategories)
                     db.Delete(pc)
                 Next
+                PrintCategories(db)
             Finally
                 db.Close()
             End Try
-            PrintCategories()
         End Sub
         ' end DeletePilotCategories
     End Class
