@@ -5,6 +5,7 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Query;
 using Db4objects.Db4o.Foundation;
+using Db4objects.Db4o.Internal;
 
 namespace Db4objects.Db4odoc.UUIDs
 {
@@ -42,8 +43,8 @@ namespace Db4objects.Db4odoc.UUIDs
 			{
 				db = oc.Ext().Identity();
 				oldSignature = db.GetSignature();
-				Console.WriteLine("oldSignature: " + PrintSignature(oldSignature));	
-				((YapFile)oc).GenerateNewIdentity();
+				Console.WriteLine("oldSignature: " + PrintSignature(oldSignature));
+                ((LocalObjectContainer)oc).GenerateNewIdentity();
 			} 
 			finally 
 			{

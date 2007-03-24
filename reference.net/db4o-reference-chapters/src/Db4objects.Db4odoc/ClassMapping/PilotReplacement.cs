@@ -1,12 +1,12 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
-namespace Db4objects.Db4odoc.ClientServer
+namespace Db4objects.Db4odoc.ClassMapping
 {
-    public class Pilot
+    public class PilotReplacement
     {
         string _name;
         int _points;
-        
-        public Pilot(string name, int points)
+
+        public PilotReplacement(string name, int points)
         {
             _name = name;
             _points = points;

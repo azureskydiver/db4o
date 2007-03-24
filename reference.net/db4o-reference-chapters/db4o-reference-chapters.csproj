@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.Debugging.DebugExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.SelectivePersistence.MarkTransientExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -110,6 +110,7 @@
     <Compile Include="src\Db4objects.Db4odoc\blobs\CarImage.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\CachedIo\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Callbacks\AutoIncExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Callbacks\CallbacksExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Callbacks\Car.cs" />
@@ -117,6 +118,14 @@
     <Compile Include="src\Db4objects.Db4odoc\Callbacks\IncrementedId.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Callbacks\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Callbacks\TestObject.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ClassMapping\MappingExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ClassMapping\PilotReplacement.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ClassMapping\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ClassNameFormat\ClassNameExample1.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ClassNameFormat\ClassNameExample2.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ClassNameFormat\Test.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\clientserver\BatchMode\BatchExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\clientserver\BatchMode\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\clientserver\Car.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -153,6 +162,9 @@
     <Compile Include="src\Db4objects.Db4odoc\clientserver\TransactionExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\Comparing\CompareExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Comparing\MyString.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Comparing\Record.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Concurrency\ConcurrencyExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Concurrency\OptimisticThread.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Concurrency\PessimisticThread.cs" />
@@ -169,6 +181,9 @@
     <Compile Include="src\Db4objects.Db4odoc\constructors\C4.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\ListDeleting\DataObject.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ListDeleting\ListObject.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ListDeleting\ListDeletingExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\debugging\Car.cs" />
     <Compile Include="src\Db4objects.Db4odoc\debugging\DebugExample.cs">
       <SubType>Code</SubType>
@@ -274,6 +289,7 @@
     <Compile Include="src\Db4objects.Db4odoc\indexes\Pilot.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\CachedIo\CachedIoExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\ios\IOExample.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -289,13 +305,19 @@
     <Compile Include="src\Db4objects.Db4odoc\lists\CollectionFactory.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\ListOperations\DataObject.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ListOperations\ListObject.cs" />
     <Compile Include="src\Db4objects.Db4odoc\lists\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ListOperations\ListOperationsExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\lists\Team.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\Db4objects.Db4odoc\lists\VerboseList.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\marshal\CustomMarshallerExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\marshal\Item.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\marshal\ItemMarshaller.cs" />
     <Compile Include="src\Db4objects.Db4odoc\messaging\MessagingExample.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -372,12 +394,16 @@
     <Compile Include="src\Db4objects.Db4odoc\selectivepersistence\MarkTransientExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\selectivepersistence\NotStorable.cs" />
     <Compile Include="src\Db4objects.Db4odoc\selectivepersistence\Test.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\selectivepersistence\Test1.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\selectivepersistence\Test2.cs" />
     <Compile Include="src\Db4objects.Db4odoc\selectivepersistence\TestCustomized.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\selectivepersistence\TransientClassExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\semaphores\ConnectedUser.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -399,6 +425,8 @@
     <Compile Include="src\Db4objects.Db4odoc\serializing\SerializeExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\Sorting\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Sorting\SortingExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\staticfields\Car.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -437,10 +465,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\install\dRS-6.0\Db4objects.Drs-6.0\Db4objects.Drs\Db4objects.Drs.csproj">
-      <Project>{F00EE21B-A68A-46D7-97CC-634C7628308B}</Project>
-      <Name>Db4objects.Drs</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o.Tools\Db4objects.Db4o.Tools-2005.csproj">
       <Project>{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}</Project>
       <Name>Db4objects.Db4o.Tools-2005</Name>
@@ -449,6 +473,9 @@
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
       <Name>Db4objects.Db4o-2005</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
