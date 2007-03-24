@@ -3,7 +3,7 @@
 .0 License ..
 
 .l http://www.db4o.com db4objects Inc. ..  supplies the object database ._
-engine db4o under a dual licensing regime:
+engine db4o under a triple licensing regime:
 
 .1 General Public License (GPL) ..
 db4o is free to be used:
@@ -18,6 +18,20 @@ If you have questions about when a commercial license is required, please
 read our GPL Interpretation policy for further detail, available at:
 
 http://www.db4o.com/about/company/legalpolicies/gplinterpretation.aspx
+
+.1 Opensource Compatibility license (dOCL) ..
+db4o Opensource Compatibility license (dOCL) was issued for free/open ._
+source projects that want to embed db4o but do not want to (or are not able to) ._
+license their derivative work under the GPL in its entirety. This initiative aims ._
+to proliferate db4o into many more open source projects by providing compatibility ._
+for projects licensed under Apache, LGPL, BSD, EPL, and others, as required by ._
+our users. 
+In order to receive the benefits from this licensing option, you simply need to ._
+register your open source project in the ProjectSpaces by mailing to ._
+community@db4o.com. 
+db4o Opensource Compatibility license  is available on db4o ._
+website:  .l http://www.db4o.com/about/company/legalpolicies/docl.aspx  "dOCL" agreement.  .. 
+
 
 .1 Commercial License ..
 For incorporation into own commercial products and for use together with ._
