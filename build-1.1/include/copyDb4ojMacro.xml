@@ -1,4 +1,4 @@
-<project name="copyDb4ojMacro" basedir="." default="">
+<project name="copyDb4ojMacro" default="">
 	
 	<macrodef name="copySrcDir" description="copy .java from one dir to another"> 
 		<attribute name="srcDir"/>

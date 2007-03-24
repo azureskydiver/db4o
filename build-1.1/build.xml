@@ -38,7 +38,7 @@
 
 			<fileset dir="../javatocsharp/javatocsharp.core"	includes="build-1.1.xml"/>
 			<fileset dir="db4o.net"			includes="build.xml"/>
-			<fileset dir="${dir.dRS.net}"	includes="build.xml"/>	
+			<fileset dir="${dir.dRS.net.build}"	includes="build.xml"/>
 		</ivy:buildlist>
 		<subant target="publish" buildpathref="buildPath" inheritAll="false" inheritRefs="false"/>
 		<delete dir="${tempDir}" failonerror="true"/>
@@ -92,7 +92,7 @@
 			
 			<fileset dir="${dir.j.jdk5}"	includes="build-1.1.xml"/>
 			<fileset dir="../drs"			includes="build-1.1.xml"/>
-			<fileset dir="${dir.dRS.net}"	includes="build.xml"/>			
+			<fileset dir="${dir.dRS.net.build}"	includes="build.xml"/>
 		</ivy:buildlist>
 		<subant target="publish" buildpathref="buildPath" inheritAll="false" inheritRefs="false"/>
 		<delete dir="${tempDir}" failonerror="true"/>
