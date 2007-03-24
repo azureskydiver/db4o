@@ -1,4 +1,4 @@
-<project name="common-1.1" basedir="." default="">
+<project name="common-1.1" default="">
 	
 	<!--
 		This file is imported by other build file, 

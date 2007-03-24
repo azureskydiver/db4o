@@ -1,4 +1,4 @@
-<project name="signJarMacro" basedir="." default="">
+<project name="signJarMacro" default="">
 	<macrodef name="db4oSignJar" description="sign jar">
 		<attribute name="jar"/>
 		

@@ -1,4 +1,4 @@
-<project name="buildJarMacro" basedir="." default="">
+<project name="buildJarMacro" default="">
 	<macrodef name="resetDir">
 		<attribute name="dir" />
 		<sequential>

@@ -1,4 +1,4 @@
-<project name="ivyTaskDef" basedir="." default=""  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="ivyTaskDef" default=""  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<path id="ivy.lib.path">
   	<fileset dir="${common.build.dir}/lib" includes="*.jar"/>
   </path>

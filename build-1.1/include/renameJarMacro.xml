@@ -1,4 +1,4 @@
-<project name="renameJarMacro" basedir="." default="">
+<project name="renameJarMacro" default="">
 	<macrodef name="renameJar" description="rename jars to carry the current ${db4o.version.dotted} version number">
 		<attribute name="srcJarDir"/>
 		<attribute name="destJarDir"	default="@{srcJarDir}"/>

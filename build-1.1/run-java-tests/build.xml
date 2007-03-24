@@ -1,4 +1,4 @@
-<project name="run-java-tests" basedir="." default="run-tests"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="run-java-tests" default="run-tests"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	
 	<import file="../common-1.1.xml"/>
 	
