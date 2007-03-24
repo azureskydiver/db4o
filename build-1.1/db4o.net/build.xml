@@ -19,6 +19,9 @@
 	<target name="publish" depends="create-dummy-zip-mono, create-dummy-zip-net">
 		<publishToIvy/>
 		<antcall target="updateSvnLocalCopy" />		
+		<delete>
+			<fileset dir="${build.db4o.net.basedir}" includes="sharpen-*"/>
+		</delete>
 	</target>
   
 	<target name="create-dummy-zip-mono" depends="package" if="mono" >
