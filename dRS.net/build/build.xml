@@ -1,13 +1,7 @@
 <project name="Db4objects.Drs" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<import file="../../build-1.1/common-1.1.xml"/>
 	<property file="build.properties" />
-	
-	<copy todir="${dir.dRS.net.build}">
-		<fileset dir="${dir.old.build}">
-			<include name="sharpen*" />
-		</fileset>
-	</copy>
-	
+
 	<condition property="mono" value="1">
 		<os family="unix" />
 	</condition>
@@ -19,6 +13,11 @@
 		<tstamp />
 		<initIvyDir/>
 		<buildDb4oDevTool/>		
+		<copy todir="${dir.dRS.net.build}">
+			<fileset dir="${dir.old.build}">
+				<include name="sharpen*" />
+			</fileset>
+		</copy>
 	</target>
 	<target name="select-db4o-assembly" depends="select-mono-assembly, select-dotnet-assembly">
 	</target>
@@ -48,11 +47,12 @@
 		<delete dir="${doc.out}"/>
 	</target>
 	<target name="publish" depends="zip">
-		<publishToIvy/>
-		<antcall target="clean" />
+		<publishToIvy/>		
 		<delete>
-			<fileset dir="." includes="sharpen*"/>
+			<fileset dir="${dir.dRS.net.build}" includes="sharpen-*"/>
 		</delete>
+		<antcall target="updateSvnLocalCopy" />	
+		<antcall target="clean" />
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="resolve">
@@ -210,5 +210,26 @@
 			</classpath>
 		</java>
 		<move file="${doc.out}/doctor.pdf" tofile="${doc.out}/dRS.net-tutorial.pdf"/>
+	</target>
+	<target name="updateSvnLocalCopy" if="updateSvnLocalCopy" >
+		<delete failonerror="true">
+			<fileset dir="${Db4objects.Drs.src.dir}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${Db4objects.Drs.src.dir}" overwrite="true">
+			<fileset dir="${tmp.Db4objects.Drs.src.dir}" />
+		</copy>
+		
+		<delete failonerror="true">
+			<fileset dir="${Db4objects.Drs.Test.src.dir}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${Db4objects.Drs.Test.src.dir}" overwrite="true">
+			<fileset dir="${tmp.Db4objects.Drs.Test.src.dir}" />
+		</copy>
 	</target>
 </project>

@@ -79,8 +79,6 @@ namespace Db4objects.Drs.Inside
 
 		void SyncVersionWithPeer(long maxVersion);
 
-		void UpdateCounterpart(object updated);
-
 		/// <summary>Visits the object of each cached ReplicationReference.</summary>
 		/// <remarks>Visits the object of each cached ReplicationReference.</remarks>
 		/// <param name="visitor">implements the visit functions, including copying of object states, and storing of changed objects

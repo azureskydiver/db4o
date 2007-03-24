@@ -183,7 +183,7 @@ namespace Db4objects.Drs.Inside
 			int[] dimensions = _reflector.ArrayDimensions(original);
 			object result = _reflector.NewArrayInstance(componentType, dimensions);
 			object[] flatContents = _reflector.ArrayContents(original);
-			if (!claxx.IsSecondClass())
+			if (!(claxx.IsSecondClass() || componentType.IsSecondClass()))
 			{
 				ReplaceWithCounterparts(flatContents, sourceProvider);
 			}

@@ -50,7 +50,7 @@ namespace Db4objects.Drs.Test
 		public virtual void Open()
 		{
 			_db = Db4objects.Db4o.Db4oFactory.OpenFile(testFile.GetPath()).Ext();
-			_provider = new Db4objects.Drs.Db4o.Db4oReplicationProvider(_db, _name);
+			_provider = Db4objects.Drs.Db4o.Db4oProviderFactory.NewInstance(_db, _name);
 		}
 	}
 }
