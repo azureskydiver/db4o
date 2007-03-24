@@ -4,8 +4,8 @@
 		<attribute name="destJarDir"	default="@{srcJarDir}"/>
 		<attribute name="includes"		default="*.jar"/>
 		<attribute name="excludes"		default=""/>
-		<attribute name="ext"					default="jar"/>
-		<attribute name="ver"					default="${db4o.version.dotted}"/>
+		<attribute name="ext"			default="jar"/>
+		<attribute name="ver"			default="${db4o.version.dotted}"/>
 		
 		<sequential>
 			<move todir="@{destJarDir}">
@@ -15,6 +15,12 @@
 	    	/>
     		<mapper type="glob" from="*.@{ext}" to="*-@{ver}.@{ext}"/>
   		</move>
+		</sequential>
+	</macrodef>
+	<macrodef name="renameDll" description="rename dlls to carry the current ${db4o.version.dotted} version number">
+		<attribute name="srcJarDir"/>
+		<sequential>
+			<renameJar srcJarDir="@{srcJarDir}" includes="*.dll" ext="dll"/>
 		</sequential>
 	</macrodef>
 </project>
