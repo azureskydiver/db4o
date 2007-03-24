@@ -8,11 +8,13 @@ import java.io.PrintStream;
 import java.io.RandomAccessFile;
 
 import com.db4o.DTrace;
+import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.internal.*;
 import com.db4o.io.IoAdapter;
 
 public class LoggingAdapter extends IoAdapter {
 
+	private String _path;
 	private RandomAccessFile _delegate;
 	private PrintStream _out = System.out;
 	 
@@ -20,13 +22,19 @@ public class LoggingAdapter extends IoAdapter {
 	 }
 	 
     protected LoggingAdapter(String path, boolean lockFile, long initialLength) throws IOException {
+    	_path=new File(path).getCanonicalPath();
         _delegate = new RandomAccessFile(path, "rw");
         if(initialLength>0) {
 	        _delegate.seek(initialLength - 1);
 	        _delegate.write(new byte[] {0});
         }
         if(lockFile){
-            Platform4.lockFile(_delegate);
+        	try {
+				Platform4.lockFile(_path, _delegate);
+			} catch (DatabaseFileLockedException e) {
+				_delegate.close();
+				throw e;
+			}
         }
     }
     
@@ -37,7 +45,7 @@ public class LoggingAdapter extends IoAdapter {
 	public void close() throws IOException {
 		_out.println("Closing file");
         try {
-            Platform4.unlockFile(_delegate);
+            Platform4.unlockFile(_path,_delegate);
         } catch (Exception e) {
         }
         _delegate.close();

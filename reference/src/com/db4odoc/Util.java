@@ -1,7 +1,7 @@
 package com.db4odoc;
 
 import com.db4o.*;
-
+///
 
 public class Util {
     public final static String YAPFILENAME="formula1.yap";
