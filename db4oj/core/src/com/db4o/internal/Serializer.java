@@ -46,6 +46,9 @@ public class Serializer {
     }
 
     public static Object unmarshall(ObjectContainerBase serviceProvider, byte[] bytes, int id) {
+		if(id <= 0){
+			return null;
+		}
         MemoryFile memoryFile = new MemoryFile(bytes);
         try {
 			TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
