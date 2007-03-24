@@ -37,7 +37,7 @@ namespace Db4objects.Drs.Test
 			{
 				throw new System.Exception(e.Message, e);
 			}
-			_provider = new Db4objects.Drs.Db4o.Db4oReplicationProvider(_db, _name);
+			_provider = Db4objects.Drs.Db4o.Db4oProviderFactory.NewInstance(_db, _name);
 		}
 	}
 }

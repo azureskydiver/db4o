@@ -30,12 +30,12 @@ namespace Db4objects.Drs.Test
 			EnsureNotExist(A().Provider(), typeof(Db4objects.Drs.Test.SPCParent));
 		}
 
-		private void EnsureNames(Db4objects.Drs.Inside.ITestableReplicationProviderInside
-			 provider, string parentName, string childName)
+		private void EnsureNames(Db4objects.Drs.Test.IDrsFixture fixture, string parentName
+			, string childName)
 		{
-			EnsureOneInstanceOfParentAndChild(provider);
+			EnsureOneInstanceOfParentAndChild(fixture);
 			Db4objects.Drs.Test.SPCParent parent = (Db4objects.Drs.Test.SPCParent)GetOneInstance
-				(provider, typeof(Db4objects.Drs.Test.SPCParent));
+				(fixture, typeof(Db4objects.Drs.Test.SPCParent));
 			if (!parent.GetName().Equals(parentName))
 			{
 				Sharpen.Runtime.Out.WriteLine("expected = " + parentName);
@@ -52,44 +52,44 @@ namespace Db4objects.Drs.Test
 				));
 		}
 
-		private void EnsureOneInstanceOfParentAndChild(Db4objects.Drs.Inside.ITestableReplicationProviderInside
-			 provider)
+		private void EnsureOneInstanceOfParentAndChild(Db4objects.Drs.Test.IDrsFixture fixture
+			)
 		{
-			EnsureOneInstance(provider, typeof(Db4objects.Drs.Test.SPCParent));
-			EnsureOneInstance(provider, typeof(Db4objects.Drs.Test.SPCChild));
+			EnsureOneInstance(fixture, typeof(Db4objects.Drs.Test.SPCParent));
+			EnsureOneInstance(fixture, typeof(Db4objects.Drs.Test.SPCChild));
 		}
 
 		private void ModifyInProviderA()
 		{
 			Db4objects.Drs.Test.SPCParent parent = (Db4objects.Drs.Test.SPCParent)GetOneInstance
-				(A().Provider(), typeof(Db4objects.Drs.Test.SPCParent));
+				(A(), typeof(Db4objects.Drs.Test.SPCParent));
 			parent.SetName(MODIFIED_IN_A);
 			Db4objects.Drs.Test.SPCChild child = parent.GetChild();
 			child.SetName(MODIFIED_IN_A);
 			A().Provider().Update(parent);
 			A().Provider().Update(child);
 			A().Provider().Commit();
-			EnsureNames(A().Provider(), MODIFIED_IN_A, MODIFIED_IN_A);
+			EnsureNames(A(), MODIFIED_IN_A, MODIFIED_IN_A);
 		}
 
 		private void ModifyInProviderB()
 		{
 			Db4objects.Drs.Test.SPCParent parent = (Db4objects.Drs.Test.SPCParent)GetOneInstance
-				(B().Provider(), typeof(Db4objects.Drs.Test.SPCParent));
+				(B(), typeof(Db4objects.Drs.Test.SPCParent));
 			parent.SetName(MODIFIED_IN_B);
 			Db4objects.Drs.Test.SPCChild child = parent.GetChild();
 			child.SetName(MODIFIED_IN_B);
 			B().Provider().Update(parent);
 			B().Provider().Update(child);
 			B().Provider().Commit();
-			EnsureNames(B().Provider(), MODIFIED_IN_B, MODIFIED_IN_B);
+			EnsureNames(B(), MODIFIED_IN_B, MODIFIED_IN_B);
 		}
 
 		private void ReplicateAllToProviderBFirstTime()
 		{
 			ReplicateAll(A().Provider(), B().Provider());
-			EnsureNames(A().Provider(), IN_A, IN_A);
-			EnsureNames(B().Provider(), IN_A, IN_A);
+			EnsureNames(A(), IN_A, IN_A);
+			EnsureNames(B(), IN_A, IN_A);
 		}
 
 		private void StoreParentAndChildToProviderA()
@@ -99,7 +99,7 @@ namespace Db4objects.Drs.Test
 				);
 			A().Provider().StoreNew(parent);
 			A().Provider().Commit();
-			EnsureNames(A().Provider(), IN_A, IN_A);
+			EnsureNames(A(), IN_A, IN_A);
 		}
 
 		private void TstNewObject()
@@ -111,7 +111,7 @@ namespace Db4objects.Drs.Test
 				, invoked);
 			ReplicateAll(A().Provider(), B().Provider(), listener);
 			Db4oUnit.Assert.IsTrue(invoked.GetValue());
-			EnsureNames(A().Provider(), IN_A, IN_A);
+			EnsureNames(A(), IN_A, IN_A);
 			EnsureNotExist(B().Provider(), typeof(Db4objects.Drs.Test.SPCParent));
 			EnsureNotExist(B().Provider(), typeof(Db4objects.Drs.Test.SPCChild));
 		}
@@ -150,8 +150,8 @@ namespace Db4objects.Drs.Test
 			Db4objects.Drs.IReplicationEventListener listener = new _AnonymousInnerClass252(this
 				);
 			ReplicateAll(B().Provider(), A().Provider(), listener);
-			EnsureNames(A().Provider(), MODIFIED_IN_B, MODIFIED_IN_B);
-			EnsureNames(B().Provider(), MODIFIED_IN_B, MODIFIED_IN_B);
+			EnsureNames(A(), MODIFIED_IN_B, MODIFIED_IN_B);
+			EnsureNames(B(), MODIFIED_IN_B, MODIFIED_IN_B);
 		}
 
 		private sealed class _AnonymousInnerClass252 : Db4objects.Drs.IReplicationEventListener
@@ -177,8 +177,8 @@ namespace Db4objects.Drs.Test
 			Db4objects.Drs.IReplicationEventListener listener = new _AnonymousInnerClass272(this
 				);
 			ReplicateAll(A().Provider(), B().Provider(), listener);
-			EnsureNames(A().Provider(), MODIFIED_IN_B, MODIFIED_IN_B);
-			EnsureNames(B().Provider(), MODIFIED_IN_B, MODIFIED_IN_B);
+			EnsureNames(A(), MODIFIED_IN_B, MODIFIED_IN_B);
+			EnsureNames(B(), MODIFIED_IN_B, MODIFIED_IN_B);
 		}
 
 		private sealed class _AnonymousInnerClass272 : Db4objects.Drs.IReplicationEventListener
@@ -208,8 +208,8 @@ namespace Db4objects.Drs.Test
 			Db4objects.Drs.IReplicationEventListener listener = new _AnonymousInnerClass292(this
 				);
 			ReplicateAll(B().Provider(), A().Provider(), listener);
-			EnsureNames(A().Provider(), IN_A, IN_A);
-			EnsureNames(B().Provider(), IN_A, IN_A);
+			EnsureNames(A(), IN_A, IN_A);
+			EnsureNames(B(), IN_A, IN_A);
 		}
 
 		private sealed class _AnonymousInnerClass292 : Db4objects.Drs.IReplicationEventListener
@@ -237,8 +237,8 @@ namespace Db4objects.Drs.Test
 			Db4objects.Drs.IReplicationEventListener listener = new _AnonymousInnerClass313(this
 				);
 			ReplicateAll(A().Provider(), B().Provider(), listener);
-			EnsureNames(A().Provider(), MODIFIED_IN_A, MODIFIED_IN_A);
-			EnsureNames(B().Provider(), MODIFIED_IN_B, MODIFIED_IN_B);
+			EnsureNames(A(), MODIFIED_IN_A, MODIFIED_IN_A);
+			EnsureNames(B(), MODIFIED_IN_B, MODIFIED_IN_B);
 		}
 
 		private sealed class _AnonymousInnerClass313 : Db4objects.Drs.IReplicationEventListener

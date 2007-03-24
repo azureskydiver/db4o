@@ -30,20 +30,20 @@ namespace Db4objects.Drs.Test
 			sah.Add(sac2);
 			A().Provider().StoreNew(sah);
 			A().Provider().Commit();
-			EnsureContent(A().Provider(), new string[] { "h1" }, new string[] { "c1", "c2" });
+			EnsureContent(A(), new string[] { "h1" }, new string[] { "c1", "c2" });
 		}
 
 		private void ReplicateAllToProviderBFirstTime()
 		{
 			ReplicateAll(A().Provider(), B().Provider());
-			EnsureContent(A().Provider(), new string[] { "h1" }, new string[] { "c1", "c2" });
-			EnsureContent(B().Provider(), new string[] { "h1" }, new string[] { "c1", "c2" });
+			EnsureContent(A(), new string[] { "h1" }, new string[] { "c1", "c2" });
+			EnsureContent(B(), new string[] { "h1" }, new string[] { "c1", "c2" });
 		}
 
 		private void ModifyInProviderB()
 		{
 			Db4objects.Drs.Test.SimpleArrayHolder sah = (Db4objects.Drs.Test.SimpleArrayHolder
-				)GetOneInstance(B().Provider(), typeof(Db4objects.Drs.Test.SimpleArrayHolder));
+				)GetOneInstance(B(), typeof(Db4objects.Drs.Test.SimpleArrayHolder));
 			sah.SetName("h2");
 			Db4objects.Drs.Test.SimpleArrayContent sac1 = sah.GetArr()[0];
 			Db4objects.Drs.Test.SimpleArrayContent sac2 = sah.GetArr()[1];
@@ -53,23 +53,20 @@ namespace Db4objects.Drs.Test
 			B().Provider().Update(sac2);
 			B().Provider().Update(sah);
 			B().Provider().Commit();
-			EnsureContent(B().Provider(), new string[] { "h2" }, new string[] { "co1", "co2" }
-				);
+			EnsureContent(B(), new string[] { "h2" }, new string[] { "co1", "co2" });
 		}
 
 		private void ReplicateAllStep2()
 		{
 			ReplicateAll(B().Provider(), A().Provider());
-			EnsureContent(B().Provider(), new string[] { "h2" }, new string[] { "co1", "co2" }
-				);
-			EnsureContent(A().Provider(), new string[] { "h2" }, new string[] { "co1", "co2" }
-				);
+			EnsureContent(B(), new string[] { "h2" }, new string[] { "co1", "co2" });
+			EnsureContent(A(), new string[] { "h2" }, new string[] { "co1", "co2" });
 		}
 
 		private void AddElementInProviderA()
 		{
 			Db4objects.Drs.Test.SimpleArrayHolder sah = (Db4objects.Drs.Test.SimpleArrayHolder
-				)GetOneInstance(A().Provider(), typeof(Db4objects.Drs.Test.SimpleArrayHolder));
+				)GetOneInstance(A(), typeof(Db4objects.Drs.Test.SimpleArrayHolder));
 			sah.SetName("h3");
 			Db4objects.Drs.Test.SimpleArrayContent lc3 = new Db4objects.Drs.Test.SimpleArrayContent
 				("co3");
@@ -77,31 +74,28 @@ namespace Db4objects.Drs.Test
 			sah.Add(lc3);
 			A().Provider().Update(sah);
 			A().Provider().Commit();
-			EnsureContent(A().Provider(), new string[] { "h3" }, new string[] { "co1", "co2", 
-				"co3" });
+			EnsureContent(A(), new string[] { "h3" }, new string[] { "co1", "co2", "co3" });
 		}
 
 		private void ReplicateHolderStep3()
 		{
 			ReplicateClass(A().Provider(), B().Provider(), typeof(Db4objects.Drs.Test.SimpleArrayHolder)
 				);
-			EnsureContent(A().Provider(), new string[] { "h3" }, new string[] { "co1", "co2", 
-				"co3" });
-			EnsureContent(B().Provider(), new string[] { "h3" }, new string[] { "co1", "co2", 
-				"co3" });
+			EnsureContent(A(), new string[] { "h3" }, new string[] { "co1", "co2", "co3" });
+			EnsureContent(B(), new string[] { "h3" }, new string[] { "co1", "co2", "co3" });
 		}
 
-		private void EnsureContent(Db4objects.Drs.Inside.ITestableReplicationProviderInside
-			 provider, string[] holderNames, string[] contentNames)
+		private void EnsureContent(Db4objects.Drs.Test.IDrsFixture fixture, string[] holderNames
+			, string[] contentNames)
 		{
 			int holderCount = holderNames.Length;
 			int contentCount = contentNames.Length;
-			EnsureInstanceCount(provider, typeof(Db4objects.Drs.Test.SimpleArrayHolder), holderCount
+			EnsureInstanceCount(fixture, typeof(Db4objects.Drs.Test.SimpleArrayHolder), holderCount
 				);
-			EnsureInstanceCount(provider, typeof(Db4objects.Drs.Test.SimpleArrayContent), contentCount
+			EnsureInstanceCount(fixture, typeof(Db4objects.Drs.Test.SimpleArrayContent), contentCount
 				);
 			int i = 0;
-			Db4objects.Db4o.IObjectSet objectSet = provider.GetStoredObjects(typeof(Db4objects.Drs.Test.SimpleArrayHolder)
+			Db4objects.Db4o.IObjectSet objectSet = fixture.Provider().GetStoredObjects(typeof(Db4objects.Drs.Test.SimpleArrayHolder)
 				);
 			System.Collections.IEnumerator iterator = objectSet.GetEnumerator();
 			while (iterator.MoveNext())

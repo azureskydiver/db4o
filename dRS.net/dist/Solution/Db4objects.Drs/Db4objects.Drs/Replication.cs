@@ -62,8 +62,8 @@ namespace Db4objects.Drs
 			 oc1, Db4objects.Db4o.IObjectContainer oc2, Db4objects.Drs.IReplicationEventListener
 			 listener)
 		{
-			return Begin(new Db4objects.Drs.Db4o.Db4oReplicationProvider(oc1), new Db4objects.Drs.Db4o.Db4oReplicationProvider
-				(oc2), listener);
+			return Begin(Db4objects.Drs.Db4o.Db4oProviderFactory.NewInstance(oc1), Db4objects.Drs.Db4o.Db4oProviderFactory
+				.NewInstance(oc2), listener);
 		}
 	}
 }

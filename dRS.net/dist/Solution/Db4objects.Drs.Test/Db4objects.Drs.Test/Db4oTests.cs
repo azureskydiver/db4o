@@ -4,6 +4,7 @@ namespace Db4objects.Drs.Test
 	{
 		public static void Main(string[] args)
 		{
+			new Db4objects.Drs.Test.Db4oTests().Rundb4oCS();
 			new Db4objects.Drs.Test.Db4oTests().RunCSCS();
 		}
 
@@ -41,7 +42,7 @@ namespace Db4objects.Drs.Test
 
 		protected virtual System.Type[] One()
 		{
-			return new System.Type[] { typeof(Db4objects.Drs.Test.TheSimplest) };
+			return new System.Type[] { typeof(Db4objects.Drs.Test.ByteArrayTest) };
 		}
 	}
 }

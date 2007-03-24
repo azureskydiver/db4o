@@ -1,17 +1,16 @@
 namespace Db4objects.Drs.Db4o
 {
-	public class Db4oReplicationProvider : Db4objects.Drs.Inside.ITestableReplicationProvider
-		, Db4objects.Db4o.Internal.Replication.IDb4oReplicationReferenceProvider, Db4objects.Drs.Inside.ITestableReplicationProviderInside
+	internal class FileReplicationProvider : Db4objects.Drs.Db4o.IDb4oReplicationProvider
 	{
 		private Db4objects.Drs.Inside.IReadonlyReplicationProviderSignature _mySignature;
 
-		private readonly Db4objects.Db4o.Internal.ObjectContainerBase _stream;
+		protected readonly Db4objects.Db4o.Internal.ObjectContainerBase _stream;
 
 		private readonly Db4objects.Db4o.Reflect.IReflector _reflector;
 
 		private Db4objects.Db4o.ReplicationRecord _replicationRecord;
 
-		private Db4objects.Drs.Db4o.Db4oReplicationReferenceImpl _referencesByObject;
+		internal Db4objects.Drs.Db4o.Db4oReplicationReferenceImpl _referencesByObject;
 
 		private Db4objects.Drs.Db4o.Db4oSignatureMap _signatureMap;
 
@@ -19,12 +18,12 @@ namespace Db4objects.Drs.Db4o
 
 		private readonly string _name;
 
-		public Db4oReplicationProvider(Db4objects.Db4o.IObjectContainer objectContainer) : 
+		public FileReplicationProvider(Db4objects.Db4o.IObjectContainer objectContainer) : 
 			this(objectContainer, "null")
 		{
 		}
 
-		public Db4oReplicationProvider(Db4objects.Db4o.IObjectContainer objectContainer, 
+		public FileReplicationProvider(Db4objects.Db4o.IObjectContainer objectContainer, 
 			string name)
 		{
 			Db4objects.Db4o.Config.IConfiguration cfg = objectContainer.Ext().Configure();
@@ -34,11 +33,6 @@ namespace Db4objects.Drs.Db4o
 			_stream = (Db4objects.Db4o.Internal.ObjectContainerBase)objectContainer;
 			_reflector = _stream.Reflector();
 			_signatureMap = new Db4objects.Drs.Db4o.Db4oSignatureMap(_stream);
-		}
-
-		public virtual Db4objects.Db4o.IObjectContainer ObjectContainer()
-		{
-			return _stream;
 		}
 
 		public virtual Db4objects.Drs.Inside.IReadonlyReplicationProviderSignature GetSignature
@@ -195,12 +189,8 @@ namespace Db4objects.Drs.Db4o
 			return newNode;
 		}
 
-		private void Refresh(object obj)
+		protected virtual void Refresh(object obj)
 		{
-			if (_stream is Db4objects.Db4o.Internal.CS.ClientObjectContainer)
-			{
-				_stream.Refresh(obj, 1);
-			}
 		}
 
 		private void AddReference(Db4objects.Drs.Db4o.Db4oReplicationReferenceImpl newNode
@@ -259,13 +249,13 @@ namespace Db4objects.Drs.Db4o
 		{
 			if (_referencesByObject != null)
 			{
-				_referencesByObject.Traverse(new _AnonymousInnerClass260(this, visitor));
+				_referencesByObject.Traverse(new _AnonymousInnerClass265(this, visitor));
 			}
 		}
 
-		private sealed class _AnonymousInnerClass260 : Db4objects.Db4o.Foundation.IVisitor4
+		private sealed class _AnonymousInnerClass265 : Db4objects.Db4o.Foundation.IVisitor4
 		{
-			public _AnonymousInnerClass260(Db4oReplicationProvider _enclosing, Db4objects.Db4o.Foundation.IVisitor4
+			public _AnonymousInnerClass265(FileReplicationProvider _enclosing, Db4objects.Db4o.Foundation.IVisitor4
 				 visitor)
 			{
 				this._enclosing = _enclosing;
@@ -279,7 +269,7 @@ namespace Db4objects.Drs.Db4o
 				visitor.Visit(node);
 			}
 
-			private readonly Db4oReplicationProvider _enclosing;
+			private readonly FileReplicationProvider _enclosing;
 
 			private readonly Db4objects.Db4o.Foundation.IVisitor4 visitor;
 		}
@@ -306,14 +296,14 @@ namespace Db4objects.Drs.Db4o
 		}
 
 		/// <summary>
-		/// adds a constraint to the passed Query to query only for objects that
-		/// were modified since the last replication process between this and the
-		/// other ObjectContainer involved in the current replication process.
+		/// adds a constraint to the passed Query to query only for objects that were
+		/// modified since the last replication process between this and the other
+		/// ObjectContainer involved in the current replication process.
 		/// </summary>
 		/// <remarks>
-		/// adds a constraint to the passed Query to query only for objects that
-		/// were modified since the last replication process between this and the
-		/// other ObjectContainer involved in the current replication process.
+		/// adds a constraint to the passed Query to query only for objects that were
+		/// modified since the last replication process between this and the other
+		/// ObjectContainer involved in the current replication process.
 		/// </remarks>
 		/// <param name="query">the Query to be constrained</param>
 		public virtual void WhereModified(Db4objects.Db4o.Query.IQuery query)
@@ -342,11 +332,6 @@ namespace Db4objects.Drs.Db4o
 		public virtual string GetName()
 		{
 			return _name;
-		}
-
-		public virtual void UpdateCounterpart(object updated)
-		{
-			throw new System.Exception("TODO");
 		}
 
 		public virtual void Destroy()

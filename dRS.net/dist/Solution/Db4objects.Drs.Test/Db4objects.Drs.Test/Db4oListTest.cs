@@ -4,7 +4,7 @@ namespace Db4objects.Drs.Test
 	{
 		public override void Test()
 		{
-			if (!(A().Provider() is Db4objects.Drs.Db4o.Db4oReplicationProvider))
+			if (!(A().Provider() is Db4objects.Drs.Db4o.IDb4oReplicationProvider))
 			{
 				return;
 			}
@@ -14,7 +14,7 @@ namespace Db4objects.Drs.Test
 		protected override Db4objects.Drs.Test.ListHolder CreateHolder()
 		{
 			Db4objects.Drs.Test.ListHolder lh = new Db4objects.Drs.Test.ListHolder("h1");
-			Db4objects.Db4o.Types.IDb4oList list = ((Db4objects.Drs.Db4o.Db4oReplicationProvider
+			Db4objects.Db4o.Types.IDb4oList list = ((Db4objects.Drs.Db4o.IDb4oReplicationProvider
 				)A().Provider()).GetObjectContainer().Collections().NewLinkedList();
 			lh.SetList(list);
 			return lh;

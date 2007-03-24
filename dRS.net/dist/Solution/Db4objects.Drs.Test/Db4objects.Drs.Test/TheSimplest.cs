@@ -16,24 +16,24 @@ namespace Db4objects.Drs.Test
 		{
 			ReplicateClass(A().Provider(), B().Provider(), typeof(Db4objects.Drs.Test.SPCChild)
 				);
-			EnsureNames(A().Provider(), "c3");
-			EnsureNames(B().Provider(), "c3");
+			EnsureNames(A(), "c3");
+			EnsureNames(B(), "c3");
 		}
 
 		private void ModifyInA()
 		{
-			Db4objects.Drs.Test.SPCChild child = GetTheObject(A().Provider());
+			Db4objects.Drs.Test.SPCChild child = GetTheObject(A());
 			child.SetName("c3");
 			A().Provider().Update(child);
 			A().Provider().Commit();
-			EnsureNames(A().Provider(), "c3");
+			EnsureNames(A(), "c3");
 		}
 
 		private void Replicate2()
 		{
 			ReplicateAll(B().Provider(), A().Provider());
-			EnsureNames(A().Provider(), "c2");
-			EnsureNames(B().Provider(), "c2");
+			EnsureNames(A(), "c2");
+			EnsureNames(B(), "c2");
 		}
 
 		private void StoreInA()
@@ -41,37 +41,37 @@ namespace Db4objects.Drs.Test
 			Db4objects.Drs.Test.SPCChild child = new Db4objects.Drs.Test.SPCChild("c1");
 			A().Provider().StoreNew(child);
 			A().Provider().Commit();
-			EnsureNames(A().Provider(), "c1");
+			EnsureNames(A(), "c1");
 		}
 
 		private void Replicate()
 		{
 			ReplicateAll(A().Provider(), B().Provider());
-			EnsureNames(A().Provider(), "c1");
-			EnsureNames(B().Provider(), "c1");
+			EnsureNames(A(), "c1");
+			EnsureNames(B(), "c1");
 		}
 
 		private void ModifyInB()
 		{
-			Db4objects.Drs.Test.SPCChild child = GetTheObject(B().Provider());
+			Db4objects.Drs.Test.SPCChild child = GetTheObject(B());
 			child.SetName("c2");
 			B().Provider().Update(child);
 			B().Provider().Commit();
-			EnsureNames(B().Provider(), "c2");
+			EnsureNames(B(), "c2");
 		}
 
-		private void EnsureNames(Db4objects.Drs.Inside.ITestableReplicationProviderInside
-			 provider, string childName)
+		private void EnsureNames(Db4objects.Drs.Test.IDrsFixture fixture, string childName
+			)
 		{
-			EnsureOneInstance(provider, typeof(Db4objects.Drs.Test.SPCChild));
-			Db4objects.Drs.Test.SPCChild child = GetTheObject(provider);
+			EnsureOneInstance(fixture, typeof(Db4objects.Drs.Test.SPCChild));
+			Db4objects.Drs.Test.SPCChild child = GetTheObject(fixture);
 			Db4oUnit.Assert.AreEqual(childName, child.GetName());
 		}
 
-		private Db4objects.Drs.Test.SPCChild GetTheObject(Db4objects.Drs.Inside.ITestableReplicationProviderInside
-			 provider)
+		private Db4objects.Drs.Test.SPCChild GetTheObject(Db4objects.Drs.Test.IDrsFixture
+			 fixture)
 		{
-			return (Db4objects.Drs.Test.SPCChild)GetOneInstance(provider, typeof(Db4objects.Drs.Test.SPCChild)
+			return (Db4objects.Drs.Test.SPCChild)GetOneInstance(fixture, typeof(Db4objects.Drs.Test.SPCChild)
 				);
 		}
 

@@ -12,12 +12,12 @@ namespace Db4objects.Drs.Test
 			ReplicateParentClassStep3();
 		}
 
-		private void EnsureNames(Db4objects.Drs.Inside.ITestableReplicationProviderInside
-			 provider, string parentName, string childName)
+		private void EnsureNames(Db4objects.Drs.Test.IDrsFixture fixture, string parentName
+			, string childName)
 		{
-			EnsureOneInstanceOfParentAndChild(provider);
+			EnsureOneInstanceOfParentAndChild(fixture);
 			Db4objects.Drs.Test.SPCParent parent = (Db4objects.Drs.Test.SPCParent)GetOneInstance
-				(provider, typeof(Db4objects.Drs.Test.SPCParent));
+				(fixture, typeof(Db4objects.Drs.Test.SPCParent));
 			if (!parent.GetName().Equals(parentName))
 			{
 				Sharpen.Runtime.Out.WriteLine("expected = " + parentName);
@@ -27,56 +27,56 @@ namespace Db4objects.Drs.Test
 			Db4oUnit.Assert.AreEqual(parent.GetChild().GetName(), childName);
 		}
 
-		private void EnsureOneInstanceOfParentAndChild(Db4objects.Drs.Inside.ITestableReplicationProviderInside
-			 provider)
+		private void EnsureOneInstanceOfParentAndChild(Db4objects.Drs.Test.IDrsFixture fixture
+			)
 		{
-			EnsureOneInstance(provider, typeof(Db4objects.Drs.Test.SPCParent));
-			EnsureOneInstance(provider, typeof(Db4objects.Drs.Test.SPCChild));
+			EnsureOneInstance(fixture, typeof(Db4objects.Drs.Test.SPCParent));
+			EnsureOneInstance(fixture, typeof(Db4objects.Drs.Test.SPCChild));
 		}
 
 		private void ModifyParentAndChildInProviderA()
 		{
 			Db4objects.Drs.Test.SPCParent parent = (Db4objects.Drs.Test.SPCParent)GetOneInstance
-				(A().Provider(), typeof(Db4objects.Drs.Test.SPCParent));
+				(A(), typeof(Db4objects.Drs.Test.SPCParent));
 			parent.SetName("p3");
 			Db4objects.Drs.Test.SPCChild child = parent.GetChild();
 			child.SetName("c3");
 			A().Provider().Update(parent);
 			A().Provider().Update(child);
 			A().Provider().Commit();
-			EnsureNames(A().Provider(), "p3", "c3");
+			EnsureNames(A(), "p3", "c3");
 		}
 
 		private void ModifyParentInProviderB()
 		{
 			Db4objects.Drs.Test.SPCParent parent = (Db4objects.Drs.Test.SPCParent)GetOneInstance
-				(B().Provider(), typeof(Db4objects.Drs.Test.SPCParent));
+				(B(), typeof(Db4objects.Drs.Test.SPCParent));
 			parent.SetName("p2");
 			B().Provider().Update(parent);
 			B().Provider().Commit();
-			EnsureNames(B().Provider(), "p2", "c1");
+			EnsureNames(B(), "p2", "c1");
 		}
 
 		private void ReplicateAllStep2()
 		{
 			ReplicateAll(B().Provider(), A().Provider());
-			EnsureNames(A().Provider(), "p2", "c1");
-			EnsureNames(B().Provider(), "p2", "c1");
+			EnsureNames(A(), "p2", "c1");
+			EnsureNames(B(), "p2", "c1");
 		}
 
 		private void ReplicateAllToProviderBFirstTime()
 		{
 			ReplicateAll(A().Provider(), B().Provider());
-			EnsureNames(A().Provider(), "p1", "c1");
-			EnsureNames(B().Provider(), "p1", "c1");
+			EnsureNames(A(), "p1", "c1");
+			EnsureNames(B(), "p1", "c1");
 		}
 
 		private void ReplicateParentClassStep3()
 		{
 			ReplicateClass(A().Provider(), B().Provider(), typeof(Db4objects.Drs.Test.SPCParent)
 				);
-			EnsureNames(A().Provider(), "p3", "c3");
-			EnsureNames(B().Provider(), "p3", "c3");
+			EnsureNames(A(), "p3", "c3");
+			EnsureNames(B(), "p3", "c3");
 		}
 
 		private void StoreParentAndChildToProviderA()
@@ -86,7 +86,7 @@ namespace Db4objects.Drs.Test
 				);
 			A().Provider().StoreNew(parent);
 			A().Provider().Commit();
-			EnsureNames(A().Provider(), "p1", "c1");
+			EnsureNames(A(), "p1", "c1");
 		}
 	}
 }
