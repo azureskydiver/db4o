@@ -22,8 +22,15 @@ namespace Db4objects.Db4odoc.SelectivePersistence
 		public static void ConfigureTransient()
 		{
 			Db4oFactory.Configure().MarkTransient("Db4objects.Db4odoc.SelectivePersistence.FieldTransient");
+            Db4oFactory.Configure().ObjectClass(typeof(Test)).StoreTransientFields(true);
 		}
 		// end ConfigureTransient
+
+        public static void ConfigureSaveTransient()
+        {
+            Db4oFactory.Configure().ObjectClass(typeof(Test)).StoreTransientFields(true);
+        }
+        // end ConfigureSaveTransient
 
 		public static void SaveObjects()
 		{

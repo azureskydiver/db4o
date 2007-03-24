@@ -32,26 +32,26 @@ namespace Db4objects.Db4odoc.Replication
 
         public static void Replicate()
         {
-            IObjectContainer desktop = Db4oFactory.OpenFile(DtFileName);
-            IObjectContainer handheld = Db4oFactory.OpenFile(HhFileName);
-            Db4objects.Drs.IReplicationSession replication = Db4objects.Drs.Replication.Begin(handheld, desktop);
-            /*
-             * There is no need to replicate all the objects each time. 
-             * ObjectsChangedSinceLastReplication methods gives us 
-             * a list of modified objects
-             */
-            IObjectSet changed = replication.ProviderA().ObjectsChangedSinceLastReplication();
-            //Iterate changed objects, replicate them
-            while (changed.HasNext())
-            {
-                Pilot p = (Pilot)changed
-                    .Next();
-                if (p.Name.StartsWith("S"))
-                {
-                    replication.Replicate(p);
-                }
-            }
-            replication.Commit();
+        //    IObjectContainer desktop = Db4oFactory.OpenFile(DtFileName);
+        //    IObjectContainer handheld = Db4oFactory.OpenFile(HhFileName);
+        //    Db4objects.Drs.IReplicationSession replication = Db4objects.Drs.Replication.Begin(handheld, desktop);
+        //    /*
+        //     * There is no need to replicate all the objects each time. 
+        //     * ObjectsChangedSinceLastReplication methods gives us 
+        //     * a list of modified objects
+        //     */
+        //    IObjectSet changed = replication.ProviderA().ObjectsChangedSinceLastReplication();
+        //    //Iterate changed objects, replicate them
+        //    while (changed.HasNext())
+        //    {
+        //        Pilot p = (Pilot)changed
+        //            .Next();
+        //        if (p.Name.StartsWith("S"))
+        //        {
+        //            replication.Replicate(p);
+        //        }
+        //    }
+        //    replication.Commit();
         }
         // end replicate	
     }

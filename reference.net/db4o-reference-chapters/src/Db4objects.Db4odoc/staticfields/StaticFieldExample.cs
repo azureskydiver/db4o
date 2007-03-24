@@ -126,12 +126,12 @@ namespace Db4objects.Db4odoc.StaticFields
 						db.Set(pilot);
 					}
 				}
+                PrintCategories(db);
 			} 
 			finally 
 			{
 				db.Close();
 			}
-			PrintCategories();
 		}
 		// end UpdatePilots
 	
@@ -151,12 +151,12 @@ namespace Db4objects.Db4odoc.StaticFields
 						db.Set(pc);
 					}
 				}
+                PrintCategories(db);
 			} 
 			finally 
 			{
 				db.Close();
 			}
-			PrintCategories();
 		}
 		// end UpdatePilotCategories
 	
@@ -173,14 +173,14 @@ namespace Db4objects.Db4odoc.StaticFields
 					Pilot pilot = (Pilot )result[x];
 					db.Delete(pilot);
 				}
-				PrintCategories();
+				PrintCategories(db);
 				Console.WriteLine("Deleting PilotCategories :");
 				result = db.Get(typeof(PilotCategories));
 				for(int x = 0; x < result.Count; x++)
 				{
 					db.Delete(result[x]);
 				}
-				PrintCategories();
+				PrintCategories(db);
 			} 
 			finally 
 			{
@@ -189,44 +189,36 @@ namespace Db4objects.Db4odoc.StaticFields
 		}
 		// end DeleteTest
 	
-		public static void PrintCategories()
+		public static void PrintCategories(IObjectContainer db)
 		{
-			IObjectContainer db=Db4oFactory.OpenFile(YapFileName);
-			try 
+			IObjectSet  result = db.Get(typeof(PilotCategories));
+			Console.WriteLine("Stored categories: " + result.Count);
+			for(int x = 0; x < result.Count; x++)
 			{
-				IObjectSet  result = db.Get(typeof(PilotCategories));
-				Console.WriteLine("Stored categories: " + result.Count);
-				for(int x = 0; x < result.Count; x++)
-				{
-					PilotCategories pc = (PilotCategories)result[x];
-					Console.WriteLine("Category: "+pc);
-				}
-			} 
-			finally 
-			{
-				db.Close();
+				PilotCategories pc = (PilotCategories)result[x];
+				Console.WriteLine("Category: "+pc);
 			}
 		}
 		// end PrintCategories
 	
 		public static void DeletePilotCategories()
 		{
-			PrintCategories();
 			IObjectContainer db=Db4oFactory.OpenFile(YapFileName);
 			try 
 			{
+                PrintCategories(db);
 				IObjectSet  result = db.Get(typeof(PilotCategories));
 				for(int x = 0; x < result.Count; x++)
 				{
 					PilotCategories pc = (PilotCategories)result[x];
 					db.Delete(pc);
 				}
+                PrintCategories(db);
 			} 
 			finally 
 			{
 				db.Close();
 			}
-			PrintCategories();
 		}
 		// end DeletePilotCategories
 	}
