@@ -3,7 +3,10 @@
 	<configurations>
 	</configurations>
 	<publications>
-		<artifact name="Db4objects.Db4o.Drs" type="zip" ext="zip"/>
+		<artifact name="Db4objects.Drs"			type="dll" ext="dll"/>
+		<artifact name="Db4objects.Drs.Test"	type="dll" ext="dll"/>
+		
+		<artifact name="Db4objects.Drs" type="zip" ext="zip"/>
 	</publications>
 	<dependencies>
 		<dependency name="javatocsharp" rev="latest.integration" />

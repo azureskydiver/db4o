@@ -29,10 +29,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Db4objects.Db4o, Version=6.2.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+    <Reference Include="Db4objects.Db4o, Version=6.2.2.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\Db4objects.Db4o.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\bin\Db4objects.Db4o.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
