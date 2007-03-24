@@ -1,4 +1,4 @@
-<project name="db4o-nqopt" basedir="." default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+<project name="db4o-nqopt" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	
 	<import file="../build-1.1/common-1.1.xml"/>
 	
