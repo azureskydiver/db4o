@@ -1,33 +1,17 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("ytutu")]
-[assembly: AssemblyDescription("fghfgh")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("hghg")]
-[assembly: AssemblyProduct("Db4objects.Drs.Properties")]
-[assembly: AssemblyCopyright("Copyright © sd 2007")]
+[assembly: AssemblyTitle("db4o - database for objects")]
+[assembly: AssemblyCompany("db4objects Inc., San Mateo, CA, USA")]
+[assembly: AssemblyProduct("db4o - database for objects")]
+[assembly: AssemblyCopyright("db4o 2004 - 2006")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: AssemblyDelaySign(false)]
+[assembly: AssemblyKeyName("")]
 
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8c24adb0-1a2b-4b10-8d36-4a57278beeb9")]
-
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+// attributes are automatically set by the build
+[assembly: AssemblyVersion("6.0.001")]
+[assembly: AssemblyKeyFile("")]
+[assembly: AssemblyConfiguration(".NET")]
+[assembly: AssemblyDescription("db4o 6.0.001 .NET")]
