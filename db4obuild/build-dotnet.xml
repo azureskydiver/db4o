@@ -4,6 +4,9 @@
 	The following properties should be specified in machine.properties:
 	
 		dir.lib.sandcastle=<path to sandcastle installation>
+		
+	Notice however that the build will overwrite a few files in the sandcastle installation,
+	if you don't want this, copy your sandcastle installation to a different folder.
 	-->
 		
 	<import file="common.xml" />
@@ -808,6 +811,9 @@
 	<target name="sandcastle" depends="run-sandcastle, warn-about-sandcastle">
 	</target>
 	
+	<target name="sandcastle-standalone" depends="configure-net2, sandcastle">
+	</target>
+	
 	<target name="warn-about-sandcastle" unless="sandcastle.available">
 		<echo>
 	The build could not find sandcastle in your system, sandcastle is required if you want
@@ -823,6 +829,12 @@
 	<target name="run-sandcastle" if="sandcastle.available">
 	
 		<antcall target="prepare-sandcastle-output" />
+		
+		<copy todir="${dir.lib.sandcastle}/Presentation">
+			<fileset dir="config/sandcastle/Presentation">
+				<include name="**/*.xml" />
+			</fileset>
+		</copy>
 		
 		<exec executable="${dir.build}/lib/boo/booi">
 			<arg file="src/sandcastle/MRefConfigGenerator.boo" />
