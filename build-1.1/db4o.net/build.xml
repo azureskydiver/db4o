@@ -8,33 +8,37 @@
 
 	<import file="../common-1.1.xml"/>
 		
-	<property environment="env" />
+	<property environment="env" />		
 	
-	<copy todir="${build.db4o.net.basedir}">
-		<fileset dir="${dir.old.build}">
-			<include name="sharpen*" />
-		</fileset>
-	</copy>	
-    
-	<target name="publish" depends="create-dummy-zip-mono, create-dummy-zip-net">
-		<publishToIvy/>
-		<antcall target="updateSvnLocalCopy" />		
+	<target name="clean">
+		<cleanIvyDir/>
 		<delete>
 			<fileset dir="${build.db4o.net.basedir}" includes="sharpen-*"/>
 		</delete>
 	</target>
+    
+	<target name="publish" depends="clean, configure-ivy">
+		<antcall target="package-net1" />
+		<antcall target="package" />
+		<publishToIvy/>
+		<antcall target="updateSvnLocalCopy" />		
+		<antcall target="clean" />
+	</target>
+	
+	<target name="package" depends="build, ndoc, meta-package, create-dummy-zip-mono, create-dummy-zip-net" description="Builds the complete set of .net 2 distros">
+	</target>
+	
+	<target name="package-net1" depends="build-net1, vsdoc, meta-package" description="Builds the complete set of .net 1 distros">
+	</target>
   
-	<target name="create-dummy-zip-mono" depends="package" if="mono" >
+	<target name="create-dummy-zip-mono" depends="" if="mono" >
 		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-net2.zip"/>
+		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-net1.zip"/>
 	</target>
 	
-	<target name="create-dummy-zip-net" depends="package" unless="mono">
+	<target name="create-dummy-zip-net" depends="" unless="mono">
 		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-mono.zip"/>
-	</target>
-	
-	<target name="clean">
-  	<cleanIvyDir/>
-	</target>
+	</target>	
 	
 	<condition property="mono" value="true">
 		<os family="unix" />
@@ -206,7 +210,7 @@
 		<property name="csharp.definitions" value="NET_1_1" />
 		<property name="csharp.definitions.cf" value="CF_1_0" />
 		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-1.1" />
-		<property name="dir.dll.cf" location="${dir.compactframework}v1.0/WindowsCE/" />
+		<property name="dir.dll.cf" location="${dir.compactframework}v2.0/WindowsCE/" />
 		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-1.0" />
 		<property name="csc.tests.extraoptions" value="" />
 	
@@ -256,11 +260,7 @@
 		</exec>
 	</target>
 	
-	<target name="package" depends="build, ndoc, meta-package" description="Builds the complete set of .net 2 distros">
-	</target>
 	
-	<target name="package-net1" depends="build-net1, vsdoc, meta-package" description="Builds the complete set of .net 1 distros">
-	</target>
 	
 	<target name="meta-package" depends="build-zip, build-net-installer">
 	
@@ -415,7 +415,7 @@
 		</ant>
 	</target>
 	
-	<target name="build" depends="init, configure, build-all">
+	<target name="build" depends="resolve, configure, build-all">
 	</target>
 	
 	<target name="build-net1" depends="configure-net1, build-all">
@@ -487,7 +487,7 @@
 		</csc-all>
 	</target>
 		
-	<target name="build-core" depends="init, configure, check-dependencies, sharpen">	
+	<target name="build-core" depends="resolve, configure, check-dependencies, sharpen">	
 		<fileset id="core.sources" dir="${tmp.dir.n.v6.core}">
 			<include name="**/*.cs" />
 		</fileset>
@@ -547,7 +547,7 @@
 		unless="csharp.uptodate">
 	</target>
 	
-	<target name="prepare-conversion-workspace" depends="init">
+	<target name="prepare-conversion-workspace" depends="resolve">
 		<resetDir dir="${dir.sharpen}" />
 		
 		<copy todir="${dir.sharpen}">
@@ -739,8 +739,8 @@
 	</target>
 	
 	<target name="preparendoc">
-		<property name="db4o-namespace-summaries.xml" location="config/db4o-namespace-summaries.xml" />		
-		<property name="ndoc.home" location="lib/ndoc" />
+		<property name="db4o-namespace-summaries.xml" location="${dir.old.build}/config/db4o-namespace-summaries.xml" />		
+		<property name="ndoc.home" location="${dir.old.build}/lib/ndoc" />
 				
 		<delete dir="${dir.dist.ndoc}" failonerror="false" />
 		<mkdir dir="${dir.dist.ndoc}" />
@@ -942,13 +942,24 @@
 		</exec>
 	</target>
 	
-	<target name="init" depends="clean">
+	<target name="init" depends="">
 		<initIvyDir/>
 		<buildDb4oDevTool/>
-		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
-		<ivy:resolve file="${build.db4o.net.basedir}/ivy.xml"/>
-		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]" conf="${ivy.configurations}" />
+		<copy todir="${build.db4o.net.basedir}">
+			<fileset dir="${dir.old.build}">
+				<include name="sharpen*" />
+			</fileset>
+		</copy>		
 	</target>
+	
+	<target name="configure-ivy" depends="init">
+        <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+		<ivy:resolve file="${build.db4o.net.basedir}/ivy.xml"/>
+	</target>
+   
+   <target name="resolve" depends="configure-ivy">        
+		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]" conf="${ivy.configurations}" />
+    </target>
 	
 	<target name="updateSvnLocalCopy" if="updateSvnLocalCopy" >
 		<!-- Db4o Core-->
