@@ -57,7 +57,7 @@ public class UniqueConstraintExample {
 				// commit will fail
 				client1.commit();
 			} catch (UniqueFieldValueConstraintViolationException ex){
-				System.out.println("Unique constraint violation client1 saving: " + pilot2);
+				System.out.println("Unique constraint violation in client1 saving: " + pilot2);
 				client1.rollback();
 			} finally {
 				client1.close();
