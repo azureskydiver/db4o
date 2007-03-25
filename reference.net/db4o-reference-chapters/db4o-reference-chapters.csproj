@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.SelectivePersistence.MarkTransientExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.UniqueConstraint.UniqueConstraintExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -448,6 +448,8 @@
     <Compile Include="src\Db4objects.Db4odoc\structured\StructuredExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\UniqueConstraint\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\UniqueConstraint\UniqueConstraintExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\utility\SensorPanel.cs">
       <SubType>Code</SubType>
     </Compile>
