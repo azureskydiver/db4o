@@ -199,7 +199,7 @@
 	<target name="tutorial" depends="resolve">
 		<delete dir="${doc.out}" />
 		<java classname="com.yetac.doctor.Doctor">
-			<arg line="tutorial ${font.pdf.base}" />
+			<arg line="${dir.dRS.net.build}/tutorial ${font.pdf.base}" />
 			<classpath>
 				<fileset dir="${ivy.lib.dir}">
 					<include name="*.jar" />
