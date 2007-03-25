@@ -25,6 +25,7 @@ public class AllTests extends Db4oTestSuite {
             com.db4o.db4ounit.common.config.AllTests.class,
             com.db4o.db4ounit.common.constraints.AllTests.class,
 			com.db4o.db4ounit.common.defragment.AllTests.class,
+			com.db4o.db4ounit.common.ext.AllTests.class,
             com.db4o.db4ounit.common.fieldindex.AllTests.class,
             com.db4o.db4ounit.common.fatalerror.AllTests.class,
             com.db4o.db4ounit.common.foundation.AllTests.class,

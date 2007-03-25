@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.util.Random;
+
 import com.db4o.Deploy;
 
 
@@ -10,7 +12,7 @@ import com.db4o.Deploy;
  */
 public class Unobfuscated {
     
-    static Object random;
+    private static final Random _random = new Random();
     
 	public static boolean createDb4oList(Object a_stream){
 	    ((ObjectContainerBase)a_stream).checkClosed();
@@ -40,9 +42,6 @@ public class Unobfuscated {
 	}
 	
 	public static long randomLong() {
-        if(random == null){
-            random = new java.util.Random();
-        }
-        return ((java.util.Random)random).nextLong();
+        return _random.nextLong();
 	}
 }
