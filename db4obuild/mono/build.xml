@@ -51,8 +51,12 @@
 				<include name="db4o.spec" />
 			</fileset>
 		</copy>
-		<copy todir="${dir.mono.zip}/${db4o.name.short}">
+		<mkdir dir="${dir.mono.zip}/${db4o.name.short}/licenses" />
+		<copy todir="${dir.mono.zip}/${db4o.name.short}/licenses">
 			<fileset dir="${dir.build}/build/mono">				
+				<include name="*.txt" />
+			</fileset>
+			<fileset dir="${dir.workspace}/db4o.net/Libs">				
 				<include name="*.txt" />
 			</fileset>
 		</copy>

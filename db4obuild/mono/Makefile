@@ -26,6 +26,7 @@ MCS=mcs
 buildall:
 	make -C $(DIR_SRC)
 	mv $(DIR_SRC)/bin  $(DIR_BIN)
+	cp $(DIR_HOME)/licenses/* $(DIR_BIN)
 
 clean:
 	rm -rf $(DIR_BIN)
