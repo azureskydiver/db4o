@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Db4objects.Db4odoc.SelectivePersistence.MarkTransientExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.UniqueConstraint.UniqueConstraintExample</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>
@@ -208,6 +208,8 @@
     <Compile Include="Structured\Car.vb" />
     <Compile Include="Structured\Pilot.vb" />
     <Compile Include="Structured\StructuredExample.vb" />
+    <Compile Include="UniqueConstraint\Pilot.vb" />
+    <Compile Include="UniqueConstraint\UniqueConstraintExample.vb" />
     <Compile Include="Utility\SensorPanel.vb" />
     <Compile Include="Utility\UtilityExample.vb" />
     <Compile Include="UUIDs\Car.vb" />
