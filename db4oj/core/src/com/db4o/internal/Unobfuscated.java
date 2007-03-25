@@ -40,10 +40,6 @@ public class Unobfuscated {
 	}
 	
 	public static long randomLong() {
-	    if(Deploy.csharp) {
-	        // TODO: route to .NET implementation
-	        return System.currentTimeMillis();
-	    }
         if(random == null){
             random = new java.util.Random();
         }
