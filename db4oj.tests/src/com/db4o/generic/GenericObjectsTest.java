@@ -1,21 +1,17 @@
 package com.db4o.generic;
 
+import java.util.Date;
+
 import com.db4o.ObjectSet;
 import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Query;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.generic.GenericArrayClass;
-import com.db4o.reflect.generic.GenericClass;
-import com.db4o.reflect.generic.GenericField;
-import com.db4o.reflect.generic.GenericReflector;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 import com.db4o.reflect.jdk.JdkReflector;
-import db4ounit.Assert;
-import db4ounit.TestRunner;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.Db4oTestSuiteBuilder;
+
+import db4ounit.*;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.Db4oSolo;
-import java.util.Date;
 
 /**
  * 
@@ -50,10 +46,10 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 		GenericClass personClass = initGenericClass();
 		ReflectField surname = personClass.getDeclaredField("surname");
 		ReflectField birthdate = personClass.getDeclaredField("birthdate");
-		ReflectField nArray = personClass.getDeclaredField("nArray");
+		//ReflectField nArray = personClass.getDeclaredField("nArray");
 		Object person = personClass.newInstance();
 		surname.set(person, "John");
-		int[][] arrayData = new int[2][2];
+//		/int[][] arrayData = new int[2][2];
 		// todo: FIXME: nArray doesn't work
 		// nArray.set(person, arrayData);
 		birthdate.set(person, new Date());
@@ -125,8 +121,8 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 		Query q = oc.query();
 		q.constrain(rc);
 		ObjectSet results = q.execute();
-		for (int i = 0; i < results.size(); i++) {
-			Object o = results.get(i);
+		while (results.hasNext()) {
+			Object o = results.next();
 			oc.delete(o);
 		}
 		oc.commit();
@@ -142,7 +138,7 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 	private ReflectClass getReflectClass(ExtObjectContainer oc, String className) {
 		// FIXME: If GenericReflector#knownClasses is not called, the test will
 		// fail.
-		ReflectClass[] classes = oc.reflector().knownClasses();
+		/*ReflectClass[] classes = */ oc.reflector().knownClasses();
 		return oc.reflector().forName(className);
 	}
 
