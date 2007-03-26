@@ -1,8 +1,5 @@
 package com.db4o.objectmanager.api;
 
-import com.db4o.ReplicationRecord;
-import com.db4o.MetaClass;
-
 import java.util.List;
 
 /**
