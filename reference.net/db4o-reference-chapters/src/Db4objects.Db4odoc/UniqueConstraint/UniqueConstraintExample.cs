@@ -8,7 +8,7 @@ namespace Db4objects.Db4odoc.UniqueConstraint
 {
     class UniqueConstraintExample
     {
-        private const string FILENAME = "test.db"; 
+        private const string FileName = "test.db"; 
 
 	public static void Main(string[] args) {
 		Configure();
@@ -25,8 +25,8 @@ namespace Db4objects.Db4odoc.UniqueConstraint
 	// end Configure
 	
 	private static void StoreObjects(){
-		File.Delete(FILENAME);
-		IObjectServer server = Db4oFactory.OpenServer(Configure(), FILENAME, 0);
+		File.Delete(FileName);
+		IObjectServer server = Db4oFactory.OpenServer(Configure(), FileName, 0);
 		Pilot pilot1 = null;
 		Pilot pilot2 = null;
 		try {
@@ -43,7 +43,7 @@ namespace Db4objects.Db4odoc.UniqueConstraint
 					// commit the changes
 					client2.Commit();
 				} catch (UniqueFieldValueConstraintViolationException ex){
-					System.Console.WriteLine("Unique constraint violation in client2 saving: " + pilot1);
+					System.Console.WriteLine("Unique constraint violation in client2 saving: " + pilot2);
 					client2.Rollback();
 				} finally {
 					client2.Close();
@@ -52,7 +52,7 @@ namespace Db4objects.Db4odoc.UniqueConstraint
 				// commit will fail
 				client1.Commit();
 			} catch (UniqueFieldValueConstraintViolationException ex){
-                System.Console.WriteLine("Unique constraint violation in client1 saving: " + pilot2);
+                System.Console.WriteLine("Unique constraint violation in client1 saving: " + pilot1);
 				client1.Rollback();
 			} finally {
                 client1.Close();
