@@ -7,6 +7,9 @@
 	<artifact name="Db4objects.Db4o"    	type="dll" ext="dll"/>
 	<artifact name="Db4oUnit"  				type="dll" ext="dll"/>
 	
+	<artifact name="db4o-net1"  		  type="zip" ext="zip"/>
+	<artifact name="db4o-net1"			 type="msi" ext="msi"/>
+	
   	<artifact name="db4o-net2"  		  type="zip" ext="zip"/>
   	<artifact name="db4o-net2"			 type="msi" ext="msi"/>
   	
