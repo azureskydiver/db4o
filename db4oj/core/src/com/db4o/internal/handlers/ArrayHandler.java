@@ -201,7 +201,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		return i_handler.primitiveClassReflector();
 	}
 	
-    public final Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException{
+    public final Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
         return mf._array.read(this, a_bytes);
     }
     
@@ -234,7 +234,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		return ret;
 	}
 
-    public Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException{
+    public Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException, IOException {
         
         if (Deploy.debug) {
             reader.readBegin(identifier());

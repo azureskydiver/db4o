@@ -64,17 +64,8 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         return a_object;
     }
     
-    public Object read(ArrayHandler arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException, UncheckedIOException {
-        StatefulBuffer bytes = null;
-		try {
-			bytes = a_bytes.readEmbeddedObject();
-		} catch (IOException e) {
-			// FIXME: WILL BE HANDLED IN NEXT SESSION.
-			throw new UncheckedIOException(e);
-		}
-        if (bytes == null) {
-            return null;
-        }
+    public Object read(ArrayHandler arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException, IOException {
+        StatefulBuffer bytes = a_bytes.readEmbeddedObject();
         return arrayHandler.read1(_family, bytes);
     }
     

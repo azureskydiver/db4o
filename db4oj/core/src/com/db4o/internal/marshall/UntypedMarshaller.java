@@ -19,7 +19,7 @@ public abstract class UntypedMarshaller {
     
     public abstract Object writeNew(Object obj, boolean restoreLinkOffset, StatefulBuffer writer);
 
-    public abstract Object read(StatefulBuffer reader) throws CorruptionException;
+    public abstract Object read(StatefulBuffer reader) throws CorruptionException, IOException;
     
     public abstract TypeHandler4 readArrayHandler(Transaction a_trans, Buffer[] a_bytes);
 

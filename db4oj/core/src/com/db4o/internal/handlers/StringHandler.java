@@ -2,7 +2,7 @@
 
 package com.db4o.internal.handlers;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
@@ -11,7 +11,6 @@ import com.db4o.internal.ix.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
-import com.db4o.io.UncheckedIOException;
 import com.db4o.reflect.*;
 
 
@@ -95,7 +94,7 @@ public final class StringHandler extends BuiltinTypeHandler {
         MarshallerFamily.current()._string.calculateLengths(trans, header, topLevel, obj, withIndirection);
     }
 
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException {
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
         return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes, redirect);
     }
     
@@ -109,6 +108,7 @@ public final class StringHandler extends BuiltinTypeHandler {
     }
     
     public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
+    	// FIXME catchall
         try {
             Object obj = null;
             if(withIndirection){
@@ -119,8 +119,11 @@ public final class StringHandler extends BuiltinTypeHandler {
             if(obj != null){
                 return new QCandidate(candidates, obj, 0, true);
             }
-        } catch (CorruptionException e) {
+        } 
+        catch (CorruptionException e) {
         }
+	    catch (IOException e) {
+	    }
         return null;
     } 
 
@@ -151,21 +154,13 @@ public final class StringHandler extends BuiltinTypeHandler {
 		return (slot._address == 0) && (slot._length == 0);
 	}
     
-	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, UncheckedIOException {
+	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, IOException {
         if(! withRedirection){
             return mf._string.read(a_trans.stream(), a_reader);
         }
-	    Buffer reader;
-		try {
-			reader = mf._string.readSlotFromParentSlot(a_trans.stream(), a_reader);
-		} catch (IOException e) {
-			// FIXME: !!!!
-			throw new UncheckedIOException(e);
-		}
+	    Buffer reader = mf._string.readSlotFromParentSlot(a_trans.stream(), a_reader);
 	    if(a_toArray) {
-	        if(reader != null) {
-                return mf._string.readFromOwnSlot(a_trans.stream(), reader);
-	        }
+	    	return mf._string.readFromOwnSlot(a_trans.stream(), reader);
 	    }
 	    return reader;
 	}

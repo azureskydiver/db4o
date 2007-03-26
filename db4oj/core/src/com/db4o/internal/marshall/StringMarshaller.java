@@ -2,11 +2,10 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.io.UncheckedIOException;
 
 
 public abstract class StringMarshaller {
@@ -47,16 +46,11 @@ public abstract class StringMarshaller {
         return "";
     }
     
-    public String readFromParentSlot(ObjectContainerBase stream, Buffer reader, boolean redirect) throws CorruptionException, UncheckedIOException {
-        if(! redirect){
-            return read(stream, reader);
+    public String readFromParentSlot(ObjectContainerBase stream, Buffer reader, boolean redirect) throws CorruptionException, IOException {
+        if(redirect){
+    		return read(stream, readSlotFromParentSlot(stream, reader));
         }
-        try {
-			return read(stream, readSlotFromParentSlot(stream, reader));
-		} catch (IOException e) {
-			// FIXME: !!!!
-			throw new UncheckedIOException(e);
-		}
+        return read(stream, reader);
     }
     
     public abstract Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, IllegalArgumentException, IOException;

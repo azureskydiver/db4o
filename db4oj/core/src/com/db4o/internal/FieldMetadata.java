@@ -434,12 +434,19 @@ public class FieldMetadata implements StoredField {
                                 writer._offset = 0;
                                 ObjectHeader oh = new ObjectHeader(stream, i_yapClass, writer);
                                 if(oh.objectMarshaller().findOffset(i_yapClass,oh._headerAttributes, writer, this)){
+                                	// FIXME catchall
                                     try {
                                         return read(oh._marshallerFamily, writer);
-                                    } catch (CorruptionException e) {
+                                    } 
+                                    catch (CorruptionException e) {
                                         if (Debug.atHome) {
                                             e.printStackTrace();
-                                        }
+                                    }
+                                    }
+                                    catch(IOException exc) {
+                                        if (Debug.atHome) {
+                                            exc.printStackTrace();
+                                    }
                                     }
                                 }
                             }
@@ -565,20 +572,14 @@ public class FieldMetadata implements StoredField {
         }
     }
 
-    public void instantiate(MarshallerFamily mf, ObjectReference ref, Object onObject, StatefulBuffer buffer)
-        throws CorruptionException {
+    public void instantiate(MarshallerFamily mf, ObjectReference ref, Object onObject, StatefulBuffer buffer) throws IOException, CorruptionException {
         
         if (! alive()) {
             incrementOffset(buffer);
             return;
         }
             
-        Object toSet = null;
-        try {
-            toSet = read(mf, buffer);
-        } catch (Exception e) {
-            throw new CorruptionException();
-        }
+        Object toSet = read(mf, buffer);
         if (i_db4oType != null) {
             if (toSet != null) {
                 ((Db4oTypeImpl) toSet).setTrans(buffer.getTransaction());
@@ -712,7 +713,7 @@ public class FieldMetadata implements StoredField {
         return new QField(a_trans, i_name, this, yapClassID, i_arrayPosition);
     }
 
-    Object read(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException {
+    Object read(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, IOException {
         if (!alive()) {
             incrementOffset(a_bytes);
             return null;
@@ -937,7 +938,7 @@ public class FieldMetadata implements StoredField {
 	protected void rebuildIndexForWriter(LocalObjectContainer stream, StatefulBuffer writer, final int objectId) {
 		ObjectHeader oh = new ObjectHeader(stream, writer);
 		Object obj = readIndexEntryForRebuild(writer, oh);
-		addIndexEntry((LocalTransaction) stream.getSystemTransaction(), objectId, obj);
+		addIndexEntry(stream.getSystemTransaction(), objectId, obj);
 	}
 
 	private Object readIndexEntryForRebuild(StatefulBuffer writer, ObjectHeader oh) {

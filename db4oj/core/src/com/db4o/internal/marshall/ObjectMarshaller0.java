@@ -71,7 +71,11 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
                 try {
 					field.instantiate(_family, yapObject, onObject, writer);
-				} catch (CorruptionException e) {
+				}
+                catch (CorruptionException e) {
+					cancel();
+				}
+                catch (IOException e) {
 					cancel();
 				}
 			}

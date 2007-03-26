@@ -62,7 +62,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException{
+    public Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, IOException {
         int linkOffSet = reader.preparePayloadRead();
         Object array = arrayHandler.read1(_family, reader);
         reader._offset = linkOffSet;
