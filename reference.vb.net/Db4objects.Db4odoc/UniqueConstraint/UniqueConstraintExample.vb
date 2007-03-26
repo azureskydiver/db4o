@@ -41,7 +41,7 @@ Namespace Db4objects.Db4odoc.UniqueConstraint
                         ' end commit the changes
                         client2.Commit()
                     Catch ex As UniqueFieldValueConstraintViolationException
-                        System.Console.WriteLine("Unique constraint violation in client2 saving: " + pilot1.ToString())
+                        System.Console.WriteLine("Unique constraint violation in client2 saving: " + pilot2.ToString())
                         client2.Rollback()
                     Finally
                         client2.Close()
@@ -50,7 +50,7 @@ Namespace Db4objects.Db4odoc.UniqueConstraint
                     ' commit will fail
                     client1.Commit()
                 Catch ex As UniqueFieldValueConstraintViolationException
-                    System.Console.WriteLine("Unique constraint violation in client1 saving: " + pilot2.ToString())
+                    System.Console.WriteLine("Unique constraint violation in client1 saving: " + pilot1.ToString())
                     client1.Rollback()
                 Finally
                     client1.Close()
