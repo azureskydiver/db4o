@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 
 import db4ounit.Assert;
@@ -9,8 +9,8 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 public class ObjectVersionTest extends AbstractDb4oTestCase {
 	
 	protected void configure(Configuration config) {
-		config.generateUUIDs(Integer.MAX_VALUE);
-		config.generateVersionNumbers(Integer.MAX_VALUE);
+		config.generateUUIDs(ConfigScope.GLOBALLY);
+		config.generateVersionNumbers(ConfigScope.GLOBALLY);
 	}
 
 	public void test() {

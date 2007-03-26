@@ -2,10 +2,8 @@
 
 package com.db4o.db4ounit.common.fieldindex;
 
-import com.db4o.*;
 import com.db4o.config.Configuration;
 import com.db4o.ext.ExtObjectContainer;
-import com.db4o.internal.*;
 
 import db4ounit.Assert;
 
