@@ -1344,7 +1344,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return null;
     }
     
-    public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException{
+    public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, IOException {
         try {
             return a_trans.stream().getByID2(a_trans, a_reader.readInt());
         } catch (Exception e) {

@@ -99,19 +99,9 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     }
 
     
-    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, UncheckedIOException {
-        Buffer bytes = null;
-		try {
-			bytes = reader.readEmbeddedObject(trans);
-		} catch (IOException e) {
-			// FIXME: WILL BE HANDLED IN NEXT SESSION.
-			throw new UncheckedIOException(e);
-		}
-        if (bytes == null) {
-            return null;
-        }
-        Object array = arrayHandler.read1Query(trans,_family, bytes);
-        return array;
+    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, IOException {
+        Buffer bytes = reader.readEmbeddedObject(trans);
+        return arrayHandler.read1Query(trans,_family, bytes);
     }
     
     protected Buffer prepareIDReader(Transaction trans,Buffer reader) throws UncheckedIOException {

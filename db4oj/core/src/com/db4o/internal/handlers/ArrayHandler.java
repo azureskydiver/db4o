@@ -2,6 +2,8 @@
 
 package com.db4o.internal.handlers;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -208,11 +210,11 @@ public class ArrayHandler extends BuiltinTypeHandler {
         throw Exceptions4.virtualException();
     }
     
-	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException{
+	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, IOException {
         return mf._array.readQuery(this, a_trans, a_reader);
 	}
 	
-	public Object read1Query(Transaction a_trans, MarshallerFamily mf, Buffer a_reader) throws CorruptionException{
+	public Object read1Query(Transaction a_trans, MarshallerFamily mf, Buffer a_reader) throws CorruptionException, IOException {
 
         if(Deploy.debug){
             a_reader.readBegin(identifier());
