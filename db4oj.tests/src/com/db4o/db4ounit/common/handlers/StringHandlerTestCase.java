@@ -1,12 +1,11 @@
 package com.db4o.db4ounit.common.handlers;
 
-import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
-import com.db4o.internal.slots.*;
+import com.db4o.internal.handlers.StringHandler;
+import com.db4o.internal.slots.Slot;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.Assert;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class StringHandlerTestCase extends AbstractDb4oTestCase {
 
