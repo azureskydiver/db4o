@@ -613,10 +613,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if(mf == null){
                 return null;
             }
+            // FIXME catchall
             try {
                 child = field[0].readQuery(trans, mf, reader);
-            } catch (CorruptionException e) {
+            } 
+            catch (CorruptionException e) {
             }
+	        catch (IOException e) {
+	        }
         }
         if(path.length == 1){
             return child;

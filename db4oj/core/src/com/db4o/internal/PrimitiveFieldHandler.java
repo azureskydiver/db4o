@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
@@ -197,7 +199,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return null;
     }
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException{
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, IOException {
         if(mf._primitive.useNormalClassRead()){
             return super.readQuery(trans, mf, withRedirection, reader, toArray);
         }

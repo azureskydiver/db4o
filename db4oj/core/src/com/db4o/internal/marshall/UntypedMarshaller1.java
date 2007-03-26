@@ -2,6 +2,8 @@
 
 package com.db4o.internal.marshall;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.query.processor.*;
@@ -53,7 +55,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return ret;
     }
     
-    public Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException{
+    public Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException, IOException {
         
         Object ret = null;
         

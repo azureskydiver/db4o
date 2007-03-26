@@ -2,6 +2,8 @@
 
 package com.db4o.internal.marshall;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
@@ -72,7 +74,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         arrayHandler.read1Candidates(_family, reader, candidates);
     }
     
-    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException{
+    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, IOException {
         reader._offset = reader.readInt();
         return arrayHandler.read1Query(trans,_family, reader);
     }

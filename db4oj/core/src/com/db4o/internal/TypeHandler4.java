@@ -66,7 +66,7 @@ public interface TypeHandler4 extends Indexable4
     
 	Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, IOException;
 	
-	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException;
+	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, IOException;
 	
 	boolean supportsIndex();
 	

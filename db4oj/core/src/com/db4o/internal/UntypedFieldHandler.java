@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.marshall.*;
@@ -87,7 +89,7 @@ public final class UntypedFieldHandler extends ClassMetadata {
         return mf._untyped.readArrayHandler(a_trans, a_bytes);
 	}
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException{
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, IOException {
         if(mf._untyped.useNormalClassRead()){
             return super.readQuery(trans, mf, withRedirection, reader, toArray);
         }

@@ -721,7 +721,7 @@ public class FieldMetadata implements StoredField {
     }
 
     public Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader)
-        throws CorruptionException {
+        throws CorruptionException, IOException {
         return i_handler.readQuery(a_trans, mf, true, a_reader, false);
     }
     
