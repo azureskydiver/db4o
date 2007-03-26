@@ -42,7 +42,7 @@ public class CommitTimeCallbacksForClientServerTestCase extends AbstractDb4oTest
 	
 	private ObjectInfo infoFor(Object obj){
 		int id = (int) db().getID(obj);
-		return new LazyObjectReference(trans(), id);
+		return new LazyObjectReference(fileSession().getTransaction(), id);
 	}
 
 	private EventRegistry serverRegistry() {
