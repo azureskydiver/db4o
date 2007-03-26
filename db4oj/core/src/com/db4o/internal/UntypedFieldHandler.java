@@ -78,7 +78,7 @@ public final class UntypedFieldHandler extends ClassMetadata {
         yc.calculateLengths(trans, header, false, obj, false);
     }
     
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException{
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
         if(mf._untyped.useNormalClassRead()){
             return super.read(mf, a_bytes, redirect);
         }

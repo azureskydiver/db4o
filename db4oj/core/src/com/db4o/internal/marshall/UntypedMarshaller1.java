@@ -31,7 +31,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         }
     }
     
-    public Object read(StatefulBuffer reader) throws CorruptionException{
+    public Object read(StatefulBuffer reader) throws CorruptionException, IOException {
         
         Object ret = null;
         

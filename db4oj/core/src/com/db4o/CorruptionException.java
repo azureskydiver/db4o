@@ -6,5 +6,5 @@ package com.db4o;
  * @exclude
  */
 public class CorruptionException extends Exception{
-
+	// TODO implement exception basics (message, etc.)
 }

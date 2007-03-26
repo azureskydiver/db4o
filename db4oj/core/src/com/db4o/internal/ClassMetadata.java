@@ -1286,7 +1286,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         //       indexes here
     }
 
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException{
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
         try {
             int id = a_bytes.readInt();
             int depth = a_bytes.getInstantiationDepth() - 1;

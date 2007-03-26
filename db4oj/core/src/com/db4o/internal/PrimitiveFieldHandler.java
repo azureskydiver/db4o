@@ -125,10 +125,15 @@ public class PrimitiveFieldHandler extends ClassMetadata{
 
     Object instantiate(ObjectReference a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, boolean a_addToIDTree) {
         if (a_object == null) {
+        	// FIXME catchall
             try {
                 a_object = i_handler.read(mf, a_bytes, true);
-            } catch (CorruptionException ce) {
+            } 
+            catch (CorruptionException ce) {
                 return null;
+            }
+            catch (IOException exc) {
+            	return null;
             }
             a_yapObject.setObjectWeak(a_bytes.getStream(), a_object);
         }
@@ -137,19 +142,27 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
     
     Object instantiateTransient(ObjectReference a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
+    	// FIXME catchall
         try {
             return i_handler.read(mf, a_bytes, true);
-        } catch (CorruptionException ce) {
+        }
+        catch (CorruptionException ce) {
+            return null;
+        }
+        catch (IOException exc) {
             return null;
         }
     }
 
     void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         Object obj = null;
+        // FIXME catchall
         try {
             obj = i_handler.read(mf, a_bytes, true);
-        } catch (CorruptionException ce) {
-            
+        }
+        catch (CorruptionException ce) {
+        }
+        catch (IOException exc) {
         }
         if (obj != null) {
             i_handler.copyValue(obj, a_onObject);
@@ -185,7 +198,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return i_handler.primitiveClassReflector();
     }
     
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException{
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
         if(mf._primitive.useNormalClassRead()){
             return super.read(mf, a_bytes, redirect);
         }

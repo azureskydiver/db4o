@@ -62,7 +62,7 @@ public interface TypeHandler4 extends Indexable4
 	
 	ReflectClass primitiveClassReflector();
 	
-	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException;
+	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException, IOException;
     
 	Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, IOException;
 	

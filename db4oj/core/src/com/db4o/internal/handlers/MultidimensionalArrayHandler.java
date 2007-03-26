@@ -58,7 +58,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
             + (Const4.INT_LENGTH * (2 + dim.length));
     }
 
-    public final Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException {
+    public final Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException, IOException {
         
         if (Deploy.debug) {
             reader.readBegin(identifier());
