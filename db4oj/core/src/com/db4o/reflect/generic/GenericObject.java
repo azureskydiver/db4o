@@ -27,7 +27,12 @@ public class GenericObject {
     	_values[index]=value;
     }
 
-    public Object get(int index) {
+	/**
+	 *
+	 * @param index
+	 * @return the value of the field at index, based on the fields obtained GenericClass.getDeclaredFields
+	 */
+	public Object get(int index) {
     	ensureValuesInitialized();
     	return _values[index];
     }
@@ -38,4 +43,8 @@ public class GenericObject {
         }
         return _class.toString(this);
     }
+
+	public GenericClass getGenericClass(){
+		return _class;
+	}
 }
