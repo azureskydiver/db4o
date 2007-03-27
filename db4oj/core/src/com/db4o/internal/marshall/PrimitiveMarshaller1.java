@@ -26,11 +26,11 @@ public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
 		return new Date(LongHandler.readLong(bytes));
 	}
     
-    public Integer readInteger(Buffer bytes) {
+    public Object readInteger(Buffer bytes) {
     	return new Integer(bytes.readInt());
     }
     
-    public Float readFloat(Buffer bytes) {
+    public Object readFloat(Buffer bytes) {
     	return PrimitiveMarshaller0.unmarshallFloat(bytes);
     }
 
