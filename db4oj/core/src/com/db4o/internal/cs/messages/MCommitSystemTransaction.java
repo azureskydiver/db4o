@@ -8,9 +8,9 @@ import com.db4o.internal.cs.*;
 /**
  * @exclude
  */
-public class MCommitSystemTransaction extends Msg {
+public class MCommitSystemTransaction extends Msg implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		transaction().systemTransaction().commit();
 		return true;
 	}

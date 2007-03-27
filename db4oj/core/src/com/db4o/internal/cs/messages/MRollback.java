@@ -2,11 +2,10 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.internal.cs.*;
 
-public final class MRollback extends Msg {
+public final class MRollback extends Msg implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		transaction().rollback();
 		return true;
 	}

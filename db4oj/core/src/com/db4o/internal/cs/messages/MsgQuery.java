@@ -14,7 +14,7 @@ public abstract class MsgQuery extends MsgObject {
 	
 	private static int nextID;
 	
-	protected final void writeQueryResult(AbstractQueryResult queryResult, ServerMessageDispatcher serverThread, QueryEvaluationMode evaluationMode) {
+	protected final void writeQueryResult(AbstractQueryResult queryResult, QueryEvaluationMode evaluationMode) {
 		
 		int queryResultId = 0;
 		int maxCount = 0;
@@ -35,10 +35,11 @@ public abstract class MsgQuery extends MsgObject {
     	writer.writeIDs(idIterator, maxCount);
         
         if(queryResultId > 0){
+        	ServerMessageDispatcher serverThread = serverMessageDispatcher();
 			serverThread.mapQueryResultToID(new LazyClientObjectSetStub(queryResult, idIterator), queryResultId);
         }
         
-		serverThread.write(message);
+		write(message);
 	}
 
 	private int bufferLength(int maxCount) {

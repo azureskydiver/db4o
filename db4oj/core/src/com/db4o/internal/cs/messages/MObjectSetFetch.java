@@ -10,16 +10,16 @@ import com.db4o.internal.cs.*;
 /**
  * @exclude
  */
-public class MObjectSetFetch extends MObjectSet {
+public class MObjectSetFetch extends MObjectSet implements ServerSideMessage {
 	
-	public boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public boolean processAtServer() {
 		int queryResultID = readInt();
 		int fetchSize = readInt();
-		IntIterator4 idIterator = stub(serverThread, queryResultID).idIterator();
+		IntIterator4 idIterator = stub(queryResultID).idIterator();
 		MsgD message = ID_LIST.getWriterForLength(transaction(), bufferLength(fetchSize));
 		StatefulBuffer writer = message.payLoad();
     	writer.writeIDs(idIterator, fetchSize);
-		serverThread.write(message);
+		write(message);
 		return true;
 	}
 

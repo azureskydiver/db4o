@@ -48,12 +48,12 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(container.getTransaction(),
 					idsToGet, toGet);
 			container.writeMsg(msg, true);
-			MsgD message = (MsgD) container.expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
-			int embeddedMessageCount = message.readInt();
+			MsgD response = (MsgD) container.expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
+			int embeddedMessageCount = response.readInt();
 			for (int i = 0; i < embeddedMessageCount; i++) {
-				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT
-						.clone(container.getTransaction());
-				mso.payLoad(message.payLoad().readYapBytes());
+				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.publicClone();
+				mso.setTransaction(container.getTransaction());
+				mso.payLoad(response.payLoad().readYapBytes());
 				if (mso.payLoad() != null) {
 					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
 					StatefulBuffer reader = mso.unmarshall(Const4.MESSAGE_LENGTH);

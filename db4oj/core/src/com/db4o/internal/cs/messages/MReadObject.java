@@ -4,11 +4,10 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
-public final class MReadObject extends MsgD {
+public final class MReadObject extends MsgD implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		StatefulBuffer bytes = null;
 
 		// readObjectByID may fail in certain cases
@@ -26,7 +25,7 @@ public final class MReadObject extends MsgD {
 		if (bytes == null) {
 			bytes = new StatefulBuffer(transaction(), 0, 0);
 		}
-		serverThread.write(Msg.OBJECT_TO_CLIENT.getWriter(bytes));
+		write(Msg.OBJECT_TO_CLIENT.getWriter(bytes));
 		return true;
 	}
 }

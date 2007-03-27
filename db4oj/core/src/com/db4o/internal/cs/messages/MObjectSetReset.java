@@ -2,16 +2,15 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.internal.cs.*;
 
 
 /**
  * @exclude
  */
-public class MObjectSetReset extends MObjectSet {
+public class MObjectSetReset extends MObjectSet implements ServerSideMessage {
 	
-	public boolean processAtServer(ServerMessageDispatcher serverThread) {
-		stub(serverThread, readInt()).reset();
+	public boolean processAtServer() {
+		stub(readInt()).reset();
 		return true;
 	}
 

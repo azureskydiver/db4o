@@ -3,18 +3,17 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.ext.*;
-import com.db4o.internal.cs.*;
 
-final class MCommit extends Msg {
+final class MCommit extends Msg implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		try{
 			transaction().commit();
 		}catch(Db4oException db4oException){
-			serverThread.write(MCommitResponse.createWithException(transaction(), db4oException));
+			write(MCommitResponse.createWithException(transaction(), db4oException));
 			return true;
 		}
-		serverThread.write(MCommitResponse.createWithoutException(transaction()));
+		write(MCommitResponse.createWithoutException(transaction()));
 		return true;
 	}
 	

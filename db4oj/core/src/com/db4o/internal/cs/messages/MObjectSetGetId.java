@@ -2,19 +2,18 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.internal.cs.*;
 import com.db4o.internal.query.result.*;
 
 
 /**
  * @exclude
  */
-public class MObjectSetGetId extends MObjectSet {
+public class MObjectSetGetId extends MObjectSet implements ServerSideMessage {
 	
-	public boolean processAtServer(ServerMessageDispatcher serverThread) {
-		AbstractQueryResult queryResult = queryResult(serverThread, readInt());
+	public boolean processAtServer() {
+		AbstractQueryResult queryResult = queryResult(readInt());
 		int id = queryResult.getId(readInt()); 
-		serverThread.write(Msg.OBJECTSET_GET_ID.getWriterForInt(transaction(), id));
+		write(Msg.OBJECTSET_GET_ID.getWriterForInt(transaction(), id));
 		return true;
 	}
 

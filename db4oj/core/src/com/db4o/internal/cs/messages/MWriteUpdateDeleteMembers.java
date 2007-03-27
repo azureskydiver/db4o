@@ -2,18 +2,13 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.internal.cs.*;
 
-public final class MWriteUpdateDeleteMembers extends MsgD {
+public final class MWriteUpdateDeleteMembers extends MsgD implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		synchronized (streamLock()) {
-			transaction().writeUpdateDeleteMembers(
-			    readInt(),
-				stream().classMetadataForId(readInt()),
-				readInt(),
-				readInt()
-                );
+			transaction().writeUpdateDeleteMembers(readInt(),
+				stream().classMetadataForId(readInt()), readInt(), readInt());
 		}
 		return true;
 	}

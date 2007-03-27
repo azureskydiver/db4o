@@ -6,8 +6,8 @@ import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
 
-public final class MGetClasses extends MsgD {
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+public final class MGetClasses extends MsgD implements ServerSideMessage {
+	public final boolean processAtServer() {
 	    ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {
 			try {
@@ -27,7 +27,7 @@ public final class MGetClasses extends MsgD {
 		Buffer writer = message.payLoad();
 		writer.writeInt(stream.classCollection().getID());
 		writer.append(stream.stringIO().encodingByte());
-		serverThread.write(message);
+		write(message);
 		return true;
 	}
 }

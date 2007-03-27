@@ -3,22 +3,20 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
-public final class MPrefetchIDs extends MsgD {
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+public final class MPrefetchIDs extends MsgD implements ServerSideMessage {
+
+	public final boolean processAtServer() {
 		int prefetchIDCount = readInt();
-		MsgD reply =
-			Msg.ID_LIST.getWriterForLength(
-				transaction(),
-				Const4.INT_LENGTH * prefetchIDCount);
+		MsgD reply = Msg.ID_LIST.getWriterForLength(transaction(), Const4.INT_LENGTH
+			* prefetchIDCount);
 
 		synchronized (streamLock()) {
 			for (int i = 0; i < prefetchIDCount; i++) {
-				reply.writeInt(((LocalObjectContainer)stream()).prefetchID());
+				reply.writeInt(((LocalObjectContainer) stream()).prefetchID());
 			}
 		}
-		serverThread.write(reply);
+		write(reply);
 		return true;
 	}
 }

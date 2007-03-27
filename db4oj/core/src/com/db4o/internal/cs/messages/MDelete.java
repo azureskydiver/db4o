@@ -4,10 +4,9 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
-public final class MDelete extends MsgD {
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+public final class MDelete extends MsgD implements ServerSideMessage {
+	public final boolean processAtServer() {
 		Buffer bytes = this.getByteLoad();
 		ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {

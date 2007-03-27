@@ -45,7 +45,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	}
 	
 	private int askServer(MsgD message, int param){
-		_client.writeMsg(message.getWriterForInts(_transaction, new int[]{_queryResultID, param}));
+		_client.write(message.getWriterForInts(_transaction, new int[]{_queryResultID, param}));
 		return ((MsgD)_client.expectedResponse(message)).readInt();
 	}
 
@@ -59,14 +59,14 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 
 	public int size() {
 		if(_size == SIZE_NOT_SET){
-			_client.writeMsg(Msg.OBJECTSET_SIZE.getWriterForInt(_transaction, _queryResultID));
+			_client.write(Msg.OBJECTSET_SIZE.getWriterForInt(_transaction, _queryResultID));
 			_size = ((MsgD)_client.expectedResponse(Msg.OBJECTSET_SIZE)).readInt();
 		}
 		return _size;
 	}
 
 	protected void finalize() {
-		_client.writeMsg(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _queryResultID));
+		_client.write(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _queryResultID));
 	}
 	
 	public void loadFromIdReader(Buffer reader) {
@@ -74,11 +74,11 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 	}
 
 	public void reset() {
-		_client.writeMsg(Msg.OBJECTSET_RESET.getWriterForInt(_transaction, _queryResultID));
+		_client.write(Msg.OBJECTSET_RESET.getWriterForInt(_transaction, _queryResultID));
 	}
 
 	public void fetchIDs(int batchSize) {
-		_client.writeMsg(Msg.OBJECTSET_FETCH.getWriterForInts(_transaction, new int[]{_queryResultID, batchSize }));
+		_client.write(Msg.OBJECTSET_FETCH.getWriterForInts(_transaction, new int[]{_queryResultID, batchSize }));
 		Buffer reader = _client.expectedByteResponse(Msg.ID_LIST);
 		loadFromIdReader(reader);
 	}

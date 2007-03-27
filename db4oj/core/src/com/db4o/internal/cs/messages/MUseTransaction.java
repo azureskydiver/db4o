@@ -2,11 +2,14 @@
 
 package com.db4o.internal.cs.messages;
 
+import com.db4o.internal.cs.*;
 
-final class MUseTransaction extends MsgD {
-	// handling in YapServerThread
 
-	public MUseTransaction() {
-		super();
+public final class MUseTransaction extends MsgD implements ServerSideMessage {
+
+	public boolean processAtServer() {
+		ServerMessageDispatcher serverThread = serverMessageDispatcher();
+		serverThread.useTransaction(this);
+		return true;
 	}
 }

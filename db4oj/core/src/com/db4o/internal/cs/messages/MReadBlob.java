@@ -2,19 +2,16 @@
 
 package com.db4o.internal.cs.messages;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.ext.Status;
-import com.db4o.foundation.network.Socket4;
+import com.db4o.ext.*;
+import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
 
-public class MReadBlob extends MsgBlob {
+public class MReadBlob extends MsgBlob implements ServerSideMessage {
 	public void processClient(Socket4 sock) throws IOException {
-        Msg message = Msg.readMessage(transaction(), sock);
+        Msg message = Msg.readMessage(messageDispatcher(), transaction(), sock);
         if (message.equals(Msg.LENGTH)) {
             try {
                 _currentByte = 0;
@@ -22,7 +19,7 @@ public class MReadBlob extends MsgBlob {
                 _blob.getStatusFrom(this);
                 _blob.setStatus(Status.PROCESSING);
                 copy(sock,this._blob.getClientOutputStream(),_length,true);
-                message = Msg.readMessage(transaction(), sock);
+                message = Msg.readMessage(messageDispatcher(), transaction(), sock);
                 if (message.equals(Msg.OK)) {
                     this._blob.setStatus(Status.COMPLETED);
                 } else {
@@ -35,7 +32,7 @@ public class MReadBlob extends MsgBlob {
         }
 
     }
-    public boolean processAtServer(ServerMessageDispatcher serverThread) {
+    public boolean processAtServer() {
         ObjectContainerBase stream = stream();
         try {
             BlobImpl blobImpl = this.serverGetBlobImpl();
@@ -43,7 +40,7 @@ public class MReadBlob extends MsgBlob {
                 blobImpl.setTrans(transaction());
                 File file = blobImpl.serverFile(null, false);
                 int length = (int) file.length();
-                Socket4 sock = serverThread.socket();
+                Socket4 sock = serverMessageDispatcher().socket();
                 Msg.LENGTH.getWriterForInt(transaction(), length).write(stream, sock);
                 FileInputStream fin = new FileInputStream(file);
                 copy(fin,sock,false);
@@ -51,7 +48,7 @@ public class MReadBlob extends MsgBlob {
                 Msg.OK.write(stream, sock);
             }
         } catch (Exception e) {
-        	serverThread.write(Msg.ERROR);
+        	write(Msg.ERROR);
         }
         return true;
     }

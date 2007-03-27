@@ -19,7 +19,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class ClientObjectContainer extends ObjectContainerBase implements ExtClient, BlobTransport {
+public class ClientObjectContainer extends ObjectContainerBase implements ExtClient, BlobTransport, ClientMessageDispatcher {
 	
 	final Object blobLock = new Object();
 
@@ -35,7 +35,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	int[] _prefetchedIDs;
 
-	private ClientMessageDispatcher _readerThread;
+	ClientMessageDispatcher _messageDispatcher;
 
 	int remainingIDs;
 
@@ -125,10 +125,10 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	private void startReaderThread(Socket4 socket, String user) {
-		_readerThread = new ClientMessageDispatcher(this, socket, messageQueue,
+		_messageDispatcher = new ClientMessageDispatcherImpl(this, socket, messageQueue,
 				messageQueueLock);
-		_readerThread.setName("db4o message client for user " + user);
-		_readerThread.start();
+		_messageDispatcher.setDispatcherName(user);
+		_messageDispatcher.startDispatcher();
 	}
 
 	public void backup(String path) throws IOException {
@@ -144,7 +144,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
     }
 
     protected void close2() {
-		if (_readerThread == null || _readerThread.isClosed()) {
+		if (_messageDispatcher == null || !_messageDispatcher.isMessageDispatcherAlive()) {
 			shutdownObjectContainer();
 			return;
 		}
@@ -160,7 +160,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		}
 		try {
 			if (!_singleThreaded) {
-				_readerThread.close();
+				_messageDispatcher.close();
 			}
 		} catch (Exception e) {
 			Exceptions4.catchAllExceptDb4oException(e);
@@ -200,7 +200,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			MsgD message = Msg.SWITCH_TO_FILE.getWriterForString(i_systemTrans,
 					switchedToFile);
 			message.write(this, sock);
-			if (!(Msg.OK.equals(Msg.readMessage(i_systemTrans, sock)))) {
+			if (!(Msg.OK.equals(Msg.readMessage(this, i_systemTrans, sock)))) {
 				throw new IOException(Messages.get(42));
 			}
 		}
@@ -322,7 +322,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	 * should ideally be able to trigger some sort of state listener (connection
 	 * dead) on the client.
 	 */
-	Msg getResponse() {
+	private Msg getResponse() {
 		return _singleThreaded ? getResponseSingleThreaded()
 				: getResponseMultiThreaded();
 	}
@@ -344,7 +344,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				}
 
 				private void throwOnClosed() {
-					if (_readerThread.isClosed()) {
+					if (!_messageDispatcher.isMessageDispatcherAlive()) {
 						_doFinalize=false;
 						throw new Db4oException(Messages.get(Messages.CLOSED_OR_OPEN_FAILED));
 					}
@@ -372,22 +372,23 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	private Msg getResponseSingleThreaded() {
-		while (i_socket != null) {
+		while (isMessageDispatcherAlive()) {
 			try {
-				final Msg message = Msg.readMessage(i_trans, i_socket);
-				if (Msg.PING.equals(message)) {
-					writeMsg(Msg.OK, true);
-				} else if (Msg.CLOSE.equals(message)) {
-					logMsg(35, toString());
-					close();
-					return null;
-				} else if (message != null) {
-					return message;
+				final Msg message = Msg.readMessage(this, i_trans, i_socket);
+				if(message instanceof ClientSideMessage) {
+					if(((ClientSideMessage)message).processAtClient()){
+						continue;
+					}
 				}
+				return message;
 			} catch (Exception e) {
 			}
 		}
 		return null;
+	}
+
+	public boolean isMessageDispatcherAlive() {
+		return i_socket != null;
 	}
 
 	public ClassMetadata classMetadataForId(int a_id) {
@@ -449,7 +450,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			message.writeString(userName);
 			message.writeString(password);
 			message.write(this, a_socket);
-            Msg msg = Msg.readMessage(i_systemTrans, a_socket);
+            Msg msg = Msg.readMessage(this, i_systemTrans, a_socket);
 			if (!Msg.LOGIN_OK.equals(msg)) {
 				throw new IOException(Messages.get(42));
 			}
@@ -538,12 +539,13 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		try {
 			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(a_ta, ids, ids.length);
 			writeMsg(msg, true);
-			MsgD message = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
-			int count = message.readInt();
+			MsgD response = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
+			int count = response.readInt();
 			StatefulBuffer[] yapWriters = new StatefulBuffer[count];
 			for (int i = 0; i < count; i++) {
-				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.clone(getTransaction());
-				mso.payLoad(message.payLoad().readYapBytes());
+				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.publicClone();
+				mso.setTransaction(getTransaction());
+				mso.payLoad(response.payLoad().readYapBytes());
 				if (mso.payLoad() != null) {
 					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
 					yapWriters[i] = mso.unmarshall(Const4.MESSAGE_LENGTH);
@@ -687,15 +689,15 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		a_parent.addEmbedded(a_child);
 	}
 
-	final void writeMsg(Msg a_message) {
-		a_message.write(this, i_socket);
+	public final void write(Msg msg) {
+		msg.write(this, i_socket);
 	}
 	
 	public final void writeMsg(Msg a_message, boolean flush) {
 		if(i_config.batchMessages()) {
 			if(flush && _batchedMessages.isEmpty()) {
 				// if there's nothing batched, just send this message directly
-				writeMsg(a_message);
+				write(a_message);
 			} else {
 				addToBatch(a_message);
 				if(flush || _batchedQueueLength > i_config.maxBatchQueueSize()) {
@@ -703,7 +705,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				}
 			}
 		} else {
-			writeMsg(a_message);
+			write(a_message);
 		}
 	}
 
@@ -819,7 +821,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				multibytes.payLoad().append(msg.payLoad()._buffer);
 			}
 		}
-		writeMsg(multibytes);
+		write(multibytes);
 		clearBatchedObjects();
 	}
 
@@ -836,7 +838,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		_batchedQueueLength = Const4.INT_LENGTH;
 	}
 
-	private int timeout() {
+	int timeout() {
 		return isEmbeddedClient()
 			// TODO: make CLIENT_EMBEDDED_TIMEOUT configurable
 			? Const4.CLIENT_EMBEDDED_TIMEOUT
@@ -851,4 +853,16 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		// do nothing here
 	}
 
+	public void setDispatcherName(String name) {
+		// do nothing here		
+	}
+
+	public void startDispatcher() {
+		// do nothing here for single thread, ClientObjectContainer is already running
+	}
+	
+	public ClientMessageDispatcher messageDispatcher() {
+		return _singleThreaded ? this : _messageDispatcher;
+	}
+	
 }
