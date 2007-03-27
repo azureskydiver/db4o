@@ -29,5 +29,9 @@ public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
     public Integer readInteger(Buffer bytes) {
     	return new Integer(bytes.readInt());
     }
+    
+    public Float readFloat(Buffer bytes) {
+    	return PrimitiveMarshaller0.unmarshallFloat(bytes);
+    }
 
 }

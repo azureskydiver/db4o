@@ -18,6 +18,8 @@ public abstract class PrimitiveMarshaller {
     public abstract Date readDate(Buffer bytes);
     
     public abstract Integer readInteger(Buffer bytes);
+
+	public abstract Float readFloat(Buffer bytes);
     
     protected final int objectLength(TypeHandler4 handler){
         return handler.linkLength() + Const4.OBJECT_LENGTH + Const4.ID_LENGTH;
