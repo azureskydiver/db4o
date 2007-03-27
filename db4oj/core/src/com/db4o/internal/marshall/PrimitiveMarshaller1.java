@@ -25,6 +25,9 @@ public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
     public Date readDate(Buffer bytes){
 		return new Date(LongHandler.readLong(bytes));
 	}
-	
+    
+    public Integer readInteger(Buffer bytes) {
+    	return new Integer(bytes.readInt());
+    }
 
 }

@@ -2,8 +2,10 @@
 
 package com.db4o.internal.handlers;
 
+import com.db4o.CorruptionException;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -35,6 +37,10 @@ public final class FloatHandler extends IntHandler {
 	public Object primitiveNull() {
 		return i_primitive;
 	}
+	
+	public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException {
+    	return read1(writer);
+    }
 
 	Object read1(Buffer a_bytes) {
 		return new Float(Float.intBitsToFloat(a_bytes.readInt()));

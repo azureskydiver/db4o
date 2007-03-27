@@ -2,7 +2,7 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.*;
+import com.db4o.CorruptionException;
 import com.db4o.internal.*;
 
 
@@ -68,7 +68,7 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
     public Object primitiveNull() {
         return defaultValue();
     }
-
+    
     public abstract Object read(byte[] bytes, int offset);
     
     Object read1(Buffer a_bytes) throws CorruptionException {

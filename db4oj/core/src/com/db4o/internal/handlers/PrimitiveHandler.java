@@ -113,7 +113,7 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
     }
 
     public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException {
-        return read1(writer);
+    	return read1(writer);
     }
 
     abstract Object read1(Buffer reader) throws CorruptionException;
