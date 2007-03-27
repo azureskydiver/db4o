@@ -18,11 +18,15 @@
 	</target>
     
 	<target name="publish" depends="clean, configure-ivy">
-		<antcall target="package-net1" />
+		<antcall target="publish-net1" />
 		<antcall target="package" />
 		<publishToIvy/>
 		<antcall target="updateSvnLocalCopy" />		
 		<antcall target="clean" />
+	</target>
+	
+	<target name="publish-net1" unless="mono">
+		<antcall target="package-net1" />
 	</target>
 	
 	<target name="package" depends="build, ndoc, meta-package, create-dummy-zip-mono, create-dummy-zip-net" description="Builds the complete set of .net 2 distros">
@@ -34,6 +38,7 @@
 	<target name="create-dummy-zip-mono" depends="" if="mono" >
 		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-net2.zip"/>
 		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-net1.zip"/>
+		<ant antfile="${build.db4o.mono.basedir}/build-mono-packages.xml"></ant>
 	</target>
 	
 	<target name="create-dummy-zip-net" depends="" unless="mono">
@@ -913,7 +918,7 @@
 		-->
 	</target>
 	
-	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs">
+	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs" unless="mono">
 		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
 			<arg value="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
 			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
