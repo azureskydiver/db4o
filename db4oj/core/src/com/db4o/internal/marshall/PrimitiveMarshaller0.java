@@ -68,5 +68,18 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return new Integer(value);
 	}
 
+	public Float readFloat(Buffer bytes) {
+		Float value = unmarshallFloat(bytes);
+		if (value.isNaN()) {
+			return null;
+		}
+		return value;
+	}
+	
+	public static Float unmarshallFloat(Buffer buffer) {
+		return new Float(Float.intBitsToFloat(buffer.readInt()));
+	}
+
+
 
 }

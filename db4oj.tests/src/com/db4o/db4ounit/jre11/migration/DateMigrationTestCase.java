@@ -8,15 +8,14 @@ import db4ounit.TestRunner;
 
 public class DateMigrationTestCase extends MigrationTestCaseBase {
 	
-	public static class Item implements MigrationItem {
-		public String name;
+	public static class Item extends MigrationItem {
 		public Date date;
 		
 		public Item() {
 		}
 		
 		public Item(String name_, Date date_) {
-			name = name_;
+			super(name_);
 			date = date_;
 		}
 		
@@ -28,7 +27,11 @@ public class DateMigrationTestCase extends MigrationTestCaseBase {
 			date = (Date)value;
 		}
 	}
-
+	
+	protected MigrationItem newItem(String name, Object value) {
+		return new Item(name, (Date)value);
+	}
+	
 	protected Object getMinValue() {
 		return new Date(0);
 	}
@@ -50,25 +53,10 @@ public class DateMigrationTestCase extends MigrationTestCaseBase {
 	}
 	
 	public static void main(String[] args) {
+		// reference db4o 5.2 and uncomment the line below
+		// if you ever need to regenerate the file
+		// new DateMigrationTestCase().generateFile();
+
 		new TestRunner(DateMigrationTestCase.class).run();
-		// reference db4o 5.2 and call generateFile if
-		// you ever need to regenerate the file again
-		// generateFile();
 	}
-
-
-//	private static void generateFile() {
-//		final String fname = "dates.db4o";
-//		new java.io.File(fname).delete();
-//		final ObjectContainer container = Db4o.openFile(fname);
-//		try {
-//			container.set(new Item(NULL, null));
-//			container.set(new Item(MAX_VALUE, MAX_VALUE_DATE));
-//			container.set(new Item(MIN_VALUE, MIN_VALUE_DATE));
-//			container.set(new Item(REGULAR, REGULAR_DATE));
-//		} finally {
-//			container.close();
-//		}
-//	}
-
 }

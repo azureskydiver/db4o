@@ -103,6 +103,21 @@ public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle {
 		}
 	}
 	
+	public void generateFile() {
+		new java.io.File(getDatabaseFileName()).delete();
+		final ObjectContainer container = Db4o.openFile(getDatabaseFileName());
+		try {
+			container.set(newItem(NULL_NAME, null));
+			container.set(newItem(MAX_VALUE_NAME, getMaxValue()));
+			container.set(newItem(MIN_VALUE_NAME, getMinValue()));
+			container.set(newItem(ORDINARY_NAME, getOrdinaryValue()));
+		} finally {
+			container.close();
+		}
+	}
+	
+	protected abstract MigrationItem newItem(String name, Object value);
+
 	protected abstract String getDatabaseFileName();
 
 	protected abstract Object getMinValue();

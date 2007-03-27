@@ -39,12 +39,13 @@ public final class FloatHandler extends IntHandler {
 	}
 	
 	public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException {
-    	return read1(writer);
+    	return mf._primitive.readFloat(writer);
     }
 
 	Object read1(Buffer a_bytes) {
-		return new Float(Float.intBitsToFloat(a_bytes.readInt()));
+		return MarshallerFamily.current()._primitive.readFloat(a_bytes);
 	}
+
 
 	public void write(Object a_object, Buffer a_bytes) {
 		writeInt(
