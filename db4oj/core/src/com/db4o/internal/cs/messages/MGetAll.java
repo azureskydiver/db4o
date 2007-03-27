@@ -7,11 +7,11 @@ import com.db4o.config.*;
 import com.db4o.internal.cs.*;
 import com.db4o.internal.query.result.*;
 
-public final class MGetAll extends MsgQuery {
+public final class MGetAll extends MsgQuery implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		QueryEvaluationMode evaluationMode = QueryEvaluationMode.fromInt(readInt());
-		writeQueryResult(getAll(evaluationMode), serverThread, evaluationMode);
+		writeQueryResult(getAll(evaluationMode), evaluationMode);
 		return true;
 	}
 

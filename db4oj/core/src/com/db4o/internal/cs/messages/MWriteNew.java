@@ -3,11 +3,10 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
-public final class MWriteNew extends MsgObject {
+public final class MWriteNew extends MsgObject implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
         int yapClassId = _payLoad.readInt();
         LocalObjectContainer stream = (LocalObjectContainer)stream();
         unmarshall(_payLoad._offset);

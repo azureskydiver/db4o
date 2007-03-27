@@ -3,9 +3,8 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
-public final class MReadBytes extends MsgD {
+public final class MReadBytes extends MsgD implements ServerSideMessage {
 	
 	public final Buffer getByteLoad() {
 		int address = _payLoad.readInt();
@@ -22,7 +21,7 @@ public final class MReadBytes extends MsgD {
 		return message;
 	}
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		int address = readInt();
 		int length = readInt();
 		synchronized (streamLock()) {
@@ -30,10 +29,10 @@ public final class MReadBytes extends MsgD {
 				new StatefulBuffer(this.transaction(), address, length);
 			try {
 				stream().readBytes(bytes._buffer, address, length);
-				serverThread.write(getWriter(bytes));
+				write(getWriter(bytes));
 			} catch (Exception e) {
 				// TODO: not nicely handled on the client side yet
-				serverThread.write(Msg.NULL);
+				write(Msg.NULL);
 			}
 		}
 		return true;

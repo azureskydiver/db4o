@@ -1105,7 +1105,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return false;
     }
 
-    public boolean isClosed() {
+    public final boolean isClosed() {
         synchronized (i_lock) {
             return _classCollection == null;
         }

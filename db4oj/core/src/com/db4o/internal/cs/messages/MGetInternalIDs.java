@@ -5,8 +5,8 @@ package com.db4o.internal.cs.messages;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
 
-public final class MGetInternalIDs extends MsgD {
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+public final class MGetInternalIDs extends MsgD implements ServerSideMessage {
+	public final boolean processAtServer() {
 		Buffer bytes = this.getByteLoad();
 		long[] ids;
 		synchronized (streamLock()) {
@@ -23,7 +23,7 @@ public final class MGetInternalIDs extends MsgD {
 		for (int i = 0; i < size; i++) {
 			writer.writeInt((int) ids[i]);
 		}
-		serverThread.write(message);
+		write(message);
 		return true;
 	}
 }

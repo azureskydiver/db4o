@@ -2,12 +2,11 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.internal.cs.*;
 import com.db4o.messaging.*;
 
-public final class MUserMessage extends MsgObject {
+public final class MUserMessage extends MsgObject implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		if (messageRecipient() != null) {
 			unmarshall();
 			messageRecipient().processMessage(stream(), readObjectFromPayLoad());

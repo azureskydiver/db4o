@@ -22,9 +22,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	private int i_threadIDGen = 1;
 
-	private final Collection4 _threads = new Collection4();
+	private final Collection4 _dispatchers = new Collection4();
 
-	private LocalObjectContainer _container;
+	LocalObjectContainer _container;
 
 	private final Object _startupLock=new Object();
 	
@@ -136,7 +136,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private void closeMessageDispatchers() {
-		Iterator4 i = iterateThreads();
+		Iterator4 i = iterateDispatchers();
 		while (i.moveNext()) {
 			try {
 				((ServerMessageDispatcher) i.current()).close();
@@ -146,9 +146,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		}
 	}
 
-	private Iterator4 iterateThreads() {
-		synchronized (_threads) {
-			return new Collection4(_threads).iterator();
+	public Iterator4 iterateDispatchers() {
+		synchronized (_dispatchers) {
+			return new Collection4(_dispatchers).iterator();
 		}
 	}
 
@@ -174,11 +174,11 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		return this;
 	}
 
-	ServerMessageDispatcher findThread(int a_threadID) {
-		synchronized (_threads) {
-			Iterator4 i = _threads.iterator();
+	ServerMessageDispatcherImpl findThread(int a_threadID) {
+		synchronized (_dispatchers) {
+			Iterator4 i = _dispatchers.iterator();
 			while (i.moveNext()) {
-				ServerMessageDispatcher serverThread = (ServerMessageDispatcher) i.current();
+				ServerMessageDispatcherImpl serverThread = (ServerMessageDispatcherImpl) i.current();
 				if (serverThread.i_threadID == a_threadID) {
 					return serverThread;
 				}
@@ -209,7 +209,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		_container.set(existing);
 	}
 
-	User getUser(String userName) {
+	public User getUser(String userName) {
 		final ObjectSet result = queryUsers(userName);
 		if (!result.hasNext()) {
 			return null;
@@ -253,10 +253,10 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		LoopbackSocket clientFake = new LoopbackSocket(this, timeout);
 		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
 		try {
-			ServerMessageDispatcher thread = new ServerMessageDispatcher(this, _container,
+			ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, _container,
 					serverFake, newThreadId(), true);
-			addThread(thread);
-			thread.start();
+			addServerMessageDispatcher(messageDispatcher);
+			messageDispatcher.startDispatcher();
 			return clientFake;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -265,9 +265,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	}
 
-	void removeThread(ServerMessageDispatcher aThread) {
-		synchronized (_threads) {
-			_threads.remove(aThread);
+	void removeThread(ServerMessageDispatcherImpl aThread) {
+		synchronized (_dispatchers) {
+			_dispatchers.remove(aThread);
 		}
 	}
 
@@ -300,10 +300,10 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private void socketServerLoop() {
 		while (_serverSocket != null) {
 			try {
-				ServerMessageDispatcher thread = new ServerMessageDispatcher(this, _container,
+				ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, _container,
 						_serverSocket.accept(), newThreadId(), false);
-				addThread(thread);
-				thread.start();
+				addServerMessageDispatcher(messageDispatcher);
+				messageDispatcher.startDispatcher();
 			} catch (Exception e) {
 			}
 		}
@@ -323,9 +323,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		return i_threadIDGen++;
 	}
 
-	private void addThread(ServerMessageDispatcher thread) {
-		synchronized (_threads) {
-			_threads.add(thread);
+	private void addServerMessageDispatcher(ServerMessageDispatcher thread) {
+		synchronized (_dispatchers) {
+			_dispatchers.add(thread);
 		}
 	}
 }

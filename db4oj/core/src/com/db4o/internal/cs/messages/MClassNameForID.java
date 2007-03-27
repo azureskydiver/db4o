@@ -3,14 +3,14 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.ClassMetadata;
-import com.db4o.internal.cs.ServerMessageDispatcher;
+import com.db4o.internal.cs.ServerMessageDispatcherImpl;
 
 
 /**
  * get the classname for an internal ID
  */
-final class MClassNameForID extends MsgD{
-    public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+final class MClassNameForID extends MsgD implements ServerSideMessage{
+    public final boolean processAtServer() {
         int id = _payLoad.readInt();
         String name = "";
         synchronized (streamLock()) {
@@ -19,7 +19,7 @@ final class MClassNameForID extends MsgD{
 				name = yapClass.getName();
 			}
 		}
-        serverThread.write(Msg.CLASS_NAME_FOR_ID.getWriterForString(transaction(), name));
+        write(Msg.CLASS_NAME_FOR_ID.getWriterForString(transaction(), name));
         return true;
     }
 }

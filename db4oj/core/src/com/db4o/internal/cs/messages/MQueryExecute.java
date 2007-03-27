@@ -3,17 +3,16 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.config.*;
-import com.db4o.internal.cs.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 
-public final class MQueryExecute extends MsgQuery {
+public final class MQueryExecute extends MsgQuery implements ServerSideMessage {
 	
 	private QueryEvaluationMode _evaluationMode;
 	
-	public boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public boolean processAtServer() {
 		unmarshall(_payLoad._offset);
-        writeQueryResult(execute(), serverThread, _evaluationMode);
+        writeQueryResult(execute(), _evaluationMode);
 		return true;
 	}
 

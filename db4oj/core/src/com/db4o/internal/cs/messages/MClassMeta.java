@@ -7,8 +7,8 @@ import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
 import com.db4o.reflect.generic.GenericClass;
 
-public class MClassMeta extends MsgObject {
-	public boolean processAtServer(ServerMessageDispatcher serverThread) {
+public class MClassMeta extends MsgObject implements ServerSideMessage {
+	public boolean processAtServer() {
 		ObjectContainerBase stream = stream();
 		unmarshall();
 		try{
@@ -26,7 +26,7 @@ public class MClassMeta extends MsgObject {
 						trans.commit();
 						StatefulBuffer returnBytes = stream
 								.readWriterByID(trans, yapClass.getID());
-						serverThread.write(Msg.OBJECT_TO_CLIENT.getWriter(returnBytes));
+						write(Msg.OBJECT_TO_CLIENT.getWriter(returnBytes));
 						return true;
 					}
 				}
@@ -36,7 +36,7 @@ public class MClassMeta extends MsgObject {
 				e.printStackTrace();
 			}
 		}
-		serverThread.write(Msg.FAILED);
+		write(Msg.FAILED);
 		return true;
 	}
 

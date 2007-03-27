@@ -3,30 +3,27 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
-public class MWriteBatchedMessages extends MsgD {
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+public class MWriteBatchedMessages extends MsgD implements ServerSideMessage {
+	public final boolean processAtServer() {
 		int count = readInt();
 		Transaction ta = transaction();
 		for (int i = 0; i < count; i++) {
 			StatefulBuffer writer = _payLoad.readYapBytes();
 			int messageId = writer.readInt();
 			Msg message = Msg.getMessage(messageId);
-			Msg clonedMessage = message.clone(ta);
+			Msg clonedMessage = message.publicClone();
+			clonedMessage.setTransaction(ta);
 			if (clonedMessage instanceof MsgD) {
 				MsgD mso = (MsgD) clonedMessage;
 				mso.payLoad(writer);
 				if (mso.payLoad() != null) {
 					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH - Const4.INT_LENGTH);
 					mso.payLoad().setTransaction(ta);
-					mso.processAtServer(serverThread);
+					((ServerSideMessage)mso).processAtServer();
 				}
-			} else { // Msg
-				 if(!clonedMessage.processAtServer(serverThread)) {
-					 // if the message is not processed in Msg.processAtServer
-					 serverThread.processSpecialMsg(clonedMessage);
-				 }
+			} else {
+				((ServerSideMessage)clonedMessage).processAtServer();
 			}
 		}
 		return true;

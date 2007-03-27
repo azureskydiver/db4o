@@ -3,12 +3,11 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 import com.db4o.internal.slots.*;
 
-public final class MWriteUpdate extends MsgObject {
+public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 	    int yapClassId = _payLoad.readInt();
 	    LocalObjectContainer stream = (LocalObjectContainer)stream();
 	    unmarshall(_payLoad._offset);
@@ -17,7 +16,7 @@ public final class MWriteUpdate extends MsgObject {
 			_payLoad.writeEmbedded();
 			int id = _payLoad.getID();
 			transaction().dontDelete(id);
-            Slot oldSlot = ((LocalTransaction)_trans).getCommittedSlotOfID(id);
+            Slot oldSlot = ((LocalTransaction)transaction()).getCommittedSlotOfID(id);
             stream.getSlotForUpdate(_payLoad);
 			yc.addFieldIndices(_payLoad, oldSlot);
             _payLoad.writeEncrypt();

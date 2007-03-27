@@ -4,11 +4,10 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
-public final class MReadMultipleObjects extends MsgD {
+public final class MReadMultipleObjects extends MsgD implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		int size = readInt();
 		MsgD[] ret = new MsgD[size];
 		int length = (1 + size) * Const4.INT_LENGTH;
@@ -39,7 +38,7 @@ public final class MReadMultipleObjects extends MsgD {
 				multibytes._payLoad.append(ret[i]._payLoad._buffer);
 			}
 		}
-		serverThread.write(multibytes);
+		write(multibytes);
 		return true;
 	}
 }

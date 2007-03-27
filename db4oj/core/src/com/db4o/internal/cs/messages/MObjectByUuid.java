@@ -10,8 +10,8 @@ import com.db4o.internal.cs.*;
 /**
  * 
  */
-public class MObjectByUuid extends MsgD {
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+public class MObjectByUuid extends MsgD implements ServerSideMessage {
+	public final boolean processAtServer() {
 		long uuid = readLong();
 		byte[] signature = readBytes();
 		int id = 0;
@@ -28,7 +28,7 @@ public class MObjectByUuid extends MsgD {
 			    }
 			}
 		}
-		serverThread.write(Msg.OBJECT_BY_UUID.getWriterForInt(trans, id));
+		write(Msg.OBJECT_BY_UUID.getWriterForInt(trans, id));
 		return true;
 	}
 }

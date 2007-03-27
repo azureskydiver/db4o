@@ -2,21 +2,17 @@
 
 package com.db4o.internal.cs.messages;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.ext.Status;
-import com.db4o.foundation.network.Socket4;
+import com.db4o.ext.*;
+import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
 
-public class MWriteBlob extends MsgBlob {
+public class MWriteBlob extends MsgBlob implements ServerSideMessage {
 	
 	public void processClient(Socket4 sock) throws IOException {
-        Msg message = Msg.readMessage(transaction(), sock);
+        Msg message = Msg.readMessage(messageDispatcher(), transaction(), sock);
         if (message.equals(Msg.OK)) {
             try {
                 _currentByte = 0;
@@ -27,7 +23,7 @@ public class MWriteBlob extends MsgBlob {
                 copy(inBlob,sock,true);
                 sock.flush();
                 ObjectContainerBase stream = stream();
-                message = Msg.readMessage(transaction(), sock);
+                message = Msg.readMessage(messageDispatcher(), transaction(), sock);
                 if (message.equals(Msg.OK)) {
 
                     // make sure to load the filename to i_blob
@@ -46,14 +42,14 @@ public class MWriteBlob extends MsgBlob {
         }
     }
 
-	public boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public boolean processAtServer() {
         try {
             ObjectContainerBase stream = stream();
             BlobImpl blobImpl = this.serverGetBlobImpl();
             if (blobImpl != null) {
                 blobImpl.setTrans(transaction());
                 File file = blobImpl.serverFile(null, true);
-                Socket4 sock = serverThread.socket();
+                Socket4 sock = serverMessageDispatcher().socket();
                 Msg.OK.write(stream, sock);
                 FileOutputStream fout = new FileOutputStream(file);
                 copy(sock,fout,blobImpl.getLength(),false);

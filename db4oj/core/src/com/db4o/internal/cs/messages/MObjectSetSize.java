@@ -2,15 +2,14 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.internal.cs.*;
 import com.db4o.internal.query.result.*;
 
 
-public class MObjectSetSize extends MObjectSet {
+public class MObjectSetSize extends MObjectSet implements ServerSideMessage {
 	
-	public boolean processAtServer(ServerMessageDispatcher serverThread) {
-		AbstractQueryResult queryResult = queryResult(serverThread, readInt());
-		serverThread.write(Msg.OBJECTSET_SIZE.getWriterForInt(transaction(), queryResult.size()));
+	public boolean processAtServer() {
+		AbstractQueryResult queryResult = queryResult(readInt());
+		write(Msg.OBJECTSET_SIZE.getWriterForInt(transaction(), queryResult.size()));
 		return true;
 	}
 	

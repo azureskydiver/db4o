@@ -50,7 +50,8 @@ public class MsgD extends Msg{
 	}
 	
 	public final MsgD getWriterForLength(Transaction trans, int length) {
-		MsgD message = (MsgD)clone(trans);
+		MsgD message = (MsgD)publicClone();
+		message.setTransaction(trans);
 		message._payLoad = new StatefulBuffer(trans, length + Const4.MESSAGE_LENGTH);
 		message.writeInt(_msgID);
 		message.writeInt(length);
@@ -135,13 +136,15 @@ public class MsgD extends Msg{
 		return Serializer.unmarshall(stream(),_payLoad);
 	}
 
-	final Msg readPayLoad(Transaction a_trans, Socket4 sock, Buffer reader)
+	final Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, Buffer reader)
 		throws IOException {
 		int length = reader.readInt();
 		
 		a_trans = checkParentTransaction(a_trans, reader);
 		
-		final MsgD command = (MsgD)clone(a_trans);
+		final MsgD command = (MsgD)publicClone();
+		command.setTransaction(a_trans);
+		command.setMessageDispatcher(messageDispatcher);
 		command._payLoad = readMessageBuffer(a_trans, sock, length);
 		return command;
 	}

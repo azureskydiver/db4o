@@ -2,12 +2,11 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.internal.cs.*;
 
 
-public class MProcessDeletes extends Msg {
+public class MProcessDeletes extends Msg implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 	    synchronized (streamLock()) {
 	        transaction().processDeletes();
 	        return true;

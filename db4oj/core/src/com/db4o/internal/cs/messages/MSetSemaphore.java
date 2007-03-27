@@ -2,21 +2,25 @@
 
 package com.db4o.internal.cs.messages;
 
+import java.io.*;
+
+import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
 
-public final class MSetSemaphore extends MsgD {
+public final class MSetSemaphore extends MsgD implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 		int timeout = readInt();
 		String name = readString();
 		LocalObjectContainer stream = (LocalObjectContainer)stream();
 		boolean res = stream.setSemaphore(transaction(), name, timeout);
 		if(res){
-			serverThread.write(Msg.SUCCESS);
+			write(Msg.SUCCESS);
 		}else{
-			serverThread.write(Msg.FAILED);
+			write(Msg.FAILED);
 		}
 		return true;
 	}
+
 }

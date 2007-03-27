@@ -13,51 +13,53 @@ import com.db4o.internal.cs.*;
 /**
  * Messages for Client/Server Communication
  */
-public class Msg implements Cloneable {
+public abstract class Msg implements Cloneable {
 
 	static int _idGenerator = 1;
 	private static Msg[] _messages = new Msg[60];
 
 	int _msgID;
 	String _name;
-	Transaction _trans;
+	private Transaction _trans;
+	private MessageDispatcher _messageDispatcher;
+	
 
 	public static final MsgD CLASS_NAME_FOR_ID = new MClassNameForID();
-	public static final Msg CLOSE = new Msg("CLOSE");
+	public static final Msg CLOSE = new MClose();
     public static final Msg COMMIT = new MCommit();
     public static final MsgD COMMIT_RESPONSE = new MCommitResponse();
     public static final Msg COMMIT_SYSTEMTRANS = new MCommitSystemTransaction();
 	public static final MsgD CREATE_CLASS = new MCreateClass();
 	public static final MsgObject CLASS_META = new MClassMeta();
-	public static final Msg CURRENT_VERSION = new Msg("VERSION");
+	public static final Msg CURRENT_VERSION = new MVersion();
 	public static final MsgD DELETE = new MDelete();
-	public static final Msg ERROR = new Msg("ERROR");
-	public static final Msg FAILED = new Msg("FAILED");
+	public static final Msg ERROR = new MError();
+	public static final Msg FAILED = new MFailed();
 	public static final MsgD GET_ALL = new MGetAll();
 	public static final MsgD GET_CLASSES = new MGetClasses();
 	public static final MsgD GET_INTERNAL_IDS = new MGetInternalIDs();
-	public static final Msg GET_THREAD_ID = new Msg("GET_THREAD_ID");
-	public static final MsgD ID_LIST = new MsgD("ID_LIST");
-	public static final Msg IDENTITY = new Msg("IDENTITY");
-	public static final MsgD LENGTH = new MsgD("LENGTH");
-    public static final MsgD LOGIN = new MsgD("LOGIN");
-    public static final MsgD LOGIN_OK = new MsgD("LOGIN_OK");
-	public static final Msg NULL = new Msg("NULL");
+	public static final Msg GET_THREAD_ID = new MGetThreadID();
+	public static final MsgD ID_LIST = new MIDList();
+	public static final Msg IDENTITY = new MIdentity();
+	public static final MsgD LENGTH = new MLength();
+    public static final MsgD LOGIN = new MLogin();
+    public static final MsgD LOGIN_OK = new MLoginOK();
+	public static final Msg NULL = new MNull();
 	public static final MsgD OBJECT_BY_UUID = new MObjectByUuid();
 	public static final MsgObject OBJECT_TO_CLIENT = new MsgObject();
 	public static final MsgD OBJECTSET_FETCH = new MObjectSetFetch();
-	public static final MsgD OBJECTSET_FINALIZED = new MsgD("OBJECTSET_FINALIZED");
+	public static final MsgD OBJECTSET_FINALIZED = new MObjectSetFinalized();
 	public static final MsgD OBJECTSET_GET_ID = new MObjectSetGetId();
 	public static final MsgD OBJECTSET_INDEXOF = new MObjectSetIndexOf();
 	public static final MsgD OBJECTSET_RESET = new MObjectSetReset();
 	public static final MsgD OBJECTSET_SIZE = new MObjectSetSize();
-	public static final Msg OK = new Msg("OK");
-	public static final Msg PING = new Msg("PING");
+	public static final Msg OK = new MOK();
+	public static final Msg PING = new MPing();
 	public static final MsgD PREFETCH_IDS = new MPrefetchIDs();
 	public static final Msg PROCESS_DELETES = new MProcessDeletes();
 	public static final MsgObject QUERY_EXECUTE = new MQueryExecute();
 	public static final MsgD QUERY_RESULT = new MsgD("QUERY_RESULT");
-	public static final MsgD RAISE_VERSION = new MsgD("RAISE_VERSION");
+	public static final MsgD RAISE_VERSION = new MRaiseVersion();
 	public static final MsgBlob READ_BLOB = new MReadBlob();
 	public static final MsgD READ_BYTES = new MReadBytes();
 	public static final MsgD READ_MULTIPLE_OBJECTS = new MReadMultipleObjects();
@@ -65,9 +67,9 @@ public class Msg implements Cloneable {
 	public static final MsgD RELEASE_SEMAPHORE = new MReleaseSemaphore();
 	public static final Msg ROLLBACK = new MRollback();
 	public static final MsgD SET_SEMAPHORE = new MSetSemaphore();
-	public static final Msg SUCCESS = new Msg("SUCCESS");
-	public static final MsgD SWITCH_TO_FILE = new MsgD("SWITCH_F");
-	public static final Msg SWITCH_TO_MAIN_FILE = new Msg("SWITCH_M");
+	public static final Msg SUCCESS = new MSuccess();
+	public static final MsgD SWITCH_TO_FILE = new MSwitchToFile();
+	public static final Msg SWITCH_TO_MAIN_FILE = new MSwitchToMainFile();
 	public static final MsgD TA_DELETE = new MTaDelete();
 	public static final MsgD TA_IS_DELETED = new MTaIsDeleted();
 	public static final MsgD USER_MESSAGE = new MUserMessage();
@@ -92,15 +94,13 @@ public class Msg implements Cloneable {
 		return _messages[id];
 	}
 	
-	public final Msg clone(Transaction a_trans) {
-		Msg msg = null;
+	public final Msg publicClone() {
 		try {
-			msg=(Msg) clone();
-			msg._trans = a_trans;
+			return (Msg)clone();
 		} catch (CloneNotSupportedException e) {
-			// shouldn't happen
+			Exceptions4.shouldNeverHappen();
+			return null;
 		}
-		return msg;
 	}
 	
 	public final boolean equals(Object obj) {
@@ -156,20 +156,6 @@ public class Msg implements Cloneable {
 	protected Config4Impl config(){
 		return stream().config();
 	}
-
-	/**
-	 * server side execution
-	 * @param serverThread TODO
-	 */
-	public boolean processAtServer(ServerMessageDispatcher serverThread) {
-		// default: do nothing
-		return false; // since not processed
-	}
-	
-	public boolean writeFailedMessage(ServerMessageDispatcher serverThread) {
-		serverThread.write(Msg.FAILED);
-		return true;
-	}
 	
     protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4 sock) throws IOException {
 		return readMessageBuffer(trans, sock, Const4.MESSAGE_LENGTH);
@@ -190,31 +176,34 @@ public class Msg implements Cloneable {
 	}
 
 
-	public static final Msg readMessage(Transaction trans, Socket4 sock) throws IOException {
+	public static final Msg readMessage(MessageDispatcher messageDispatcher, Transaction trans, Socket4 sock) throws IOException {
 		StatefulBuffer reader = readMessageBuffer(trans, sock);
 		if (null == reader) {
 			return null;
 		}
-		Msg message = _messages[reader.readInt()].readPayLoad(trans, sock, reader);
+		Msg message = _messages[reader.readInt()].readPayLoad(messageDispatcher, trans, sock, reader);
 		if (Debug.messages) {
 			System.out.println(message + " arrived at " + trans.stream());
 		}
 		return message;
 	}
 
-	Msg readPayLoad(Transaction a_trans, Socket4 sock, Buffer reader)
+	Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, Buffer reader)
 		throws IOException {
-	    return clone(checkParentTransaction(a_trans, reader));
+		Msg msg = publicClone();
+		msg.setMessageDispatcher(messageDispatcher);
+		msg.setTransaction(checkParentTransaction(a_trans, reader));
+	    return msg;
 	}
 
-	protected Transaction checkParentTransaction(Transaction a_trans, Buffer reader) {
+	protected final Transaction checkParentTransaction(Transaction a_trans, Buffer reader) {
 		if(reader.readByte() == Const4.SYSTEM_TRANS && a_trans.parentTransaction() != null){
 	        return a_trans.parentTransaction();
 	    }
 		return a_trans;
 	}
 
-	final void setTransaction(Transaction aTrans) {
+	public final void setTransaction(Transaction aTrans) {
 		_trans = aTrans;
 	}
 
@@ -223,6 +212,14 @@ public class Msg implements Cloneable {
 	}
 	
 
+	public void write(Msg msg) {
+		_messageDispatcher.write(msg);
+	}
+	
+	public void respondInt(int response){
+    	write(Msg.ID_LIST.getWriterForInt(transaction(), response));
+    }
+	
 	public final void write(ObjectContainerBase stream, Socket4 sock) {
 		if (null == stream) {
 			throw new ArgumentNullException();
@@ -254,7 +251,7 @@ public class Msg implements Cloneable {
                     
                 }
 			} else {
-				processAtServer(null);
+				((ServerSideMessage)this).processAtServer();
 			}
 		} else {
 			synchronized (sock) {
@@ -282,6 +279,33 @@ public class Msg implements Cloneable {
 		StatefulBuffer writer = new StatefulBuffer(transaction(), Const4.MESSAGE_LENGTH);
 		writer.writeInt(_msgID);
 		return writer;
+	}
+
+	
+	public MessageDispatcher messageDispatcher() {
+		return _messageDispatcher;
+	}
+	
+	public ServerMessageDispatcher serverMessageDispatcher() {
+		if(_messageDispatcher instanceof ServerMessageDispatcher) {
+			return (ServerMessageDispatcher) _messageDispatcher;	
+		}
+		throw new IllegalStateException();
+	}
+
+	public ClientMessageDispatcher clientMessageDispatcher() {
+		if(_messageDispatcher instanceof ClientMessageDispatcher) {
+			return (ClientMessageDispatcher) _messageDispatcher;	
+		}
+		throw new IllegalStateException();
+	}
+	
+	public void setMessageDispatcher(MessageDispatcher messageDispatcher) {
+		_messageDispatcher = messageDispatcher;
+	}
+	
+	public void logMsg(int msgCode, String msg) {
+		stream().logMsg(msgCode, msg);
 	}
 
 }

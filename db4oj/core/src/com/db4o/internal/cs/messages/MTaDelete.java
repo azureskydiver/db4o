@@ -3,11 +3,10 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
-public class MTaDelete extends MsgD {
+public class MTaDelete extends MsgD implements ServerSideMessage {
 	
-	public final boolean processAtServer(ServerMessageDispatcher serverThread) {
+	public final boolean processAtServer() {
 	    int id = _payLoad.readInt();
 	    int cascade = _payLoad.readInt();
 	    Transaction trans = transaction();
