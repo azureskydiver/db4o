@@ -7,66 +7,79 @@ import com.db4o.foundation.*;
 
 public class SetSemaphore {
 
-    public void test() {
+    public void test() throws InterruptedException {
+    	
+    	final ExtObjectContainer[] clients = new ExtObjectContainer[5];
 
-        final ExtObjectContainer client1 = Test.objectContainer();
+        clients[0] = Test.objectContainer();
 
-        Test.ensure(client1.setSemaphore("hi", 0));
-        Test.ensure(client1.setSemaphore("hi", 0));
+        Test.ensure(clients[0].setSemaphore("hi", 0));
+        Test.ensure(clients[0].setSemaphore("hi", 0));
 
         if (Test.clientServer) {
-            final ExtObjectContainer client2 = Test.open();
-            final ExtObjectContainer client3 = Test.open();
-            final ExtObjectContainer client4 = Test.open();
-            final ExtObjectContainer client5 = Test.open();
+        	for (int i = 1; i < clients.length; i++) {
+				clients[i] = Test.open();
+			}
+        	
 
-            Test.ensure(!client2.setSemaphore("hi", 0));
-            client1.releaseSemaphore("hi");
-            Test.ensure(client2.setSemaphore("hi", 50));
-            Test.ensure(!client1.setSemaphore("hi", 0));
-            Test.ensure(!client3.setSemaphore("hi", 0));
+            Test.ensure(!clients[1].setSemaphore("hi", 0));
+            clients[0].releaseSemaphore("hi");
+            Test.ensure(clients[1].setSemaphore("hi", 50));
+            Test.ensure(!clients[0].setSemaphore("hi", 0));
+            Test.ensure(!clients[2].setSemaphore("hi", 0));
             
-            new GetAndRelease(client3);
-            new GetAndRelease(client2);
-            new GetAndRelease(client1);
-            new GetAndRelease(client4);
-            new GetAndRelease(client5);
             
-            Cool.sleepIgnoringInterruption(1000);
-            Test.ensure(client1.setSemaphore("hi", 0));
-            client1.close();
+            Thread[] threads = new Thread[clients.length];
             
-            new GetAndRelease(client3);
-            new GetAndRelease(client2);
-            Cool.sleepIgnoringInterruption(1000);
+            for (int i = 0; i < clients.length; i++) {
+            	threads[i] = startGetAndReleaseThread(clients[i]);
+			}
             
-            client2.close(); 
-            client3.close(); // the last one opened remains
-            client4.close(); // open for other tests
+            for (int i = 0; i < threads.length; i++) {
+            	threads[i].join();
+			}
+
+            Test.ensure(clients[0].setSemaphore("hi", 0));
+            clients[0].close();
             
-            client5.setSemaphore("hi", 1000);
+            threads[2] = startGetAndReleaseThread(clients[2]);
+            threads[1] = startGetAndReleaseThread(clients[1]);
+            
+            threads[1].join();
+            threads[2].join();
+            
+            for (int i = 1; i < 4; i++) {
+            	clients[i].close();	
+			}
+            
+            clients[4].setSemaphore("hi", 1000);
         }
 
+    }
+    
+    private Thread startGetAndReleaseThread(ExtObjectContainer client) {
+    	Thread t = new Thread(new GetAndRelease(client));
+    	t.start();
+    	return t;
     }
 
     static class GetAndRelease implements Runnable {
 
-        ExtObjectContainer client;
+        ExtObjectContainer _client;
 
         public GetAndRelease(ExtObjectContainer client) {
-            this.client = client;
-            new Thread(this).start();
+            this._client = client;
         }
 
         public void run() {
             long time = System.currentTimeMillis();
-            Test.ensure(client.setSemaphore("hi", 50000));
+            Test.ensure(_client.setSemaphore("hi", 50000));
             time = System.currentTimeMillis() - time;
             // System.out.println("Time to get semaphore: " + time);
             Cool.sleepIgnoringInterruption(50);
 
             // System.out.println("About to release semaphore.");
-            client.releaseSemaphore("hi");
+            _client.releaseSemaphore("hi");
         }
     }
 
