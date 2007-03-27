@@ -137,7 +137,19 @@ public class Buffer implements SlotReader {
 
     public final int readInt() {
         if (Deploy.debug) {
-            return IntHandler.readInt(this);
+			int ret = 0;
+            readBegin(Const4.YAPINTEGER);
+            if (Deploy.debugLong) {
+                ret =
+                    Integer.valueOf(new LatinStringIO().read(this, Const4.INTEGER_BYTES).trim())
+                        .intValue();
+            } else {
+                for (int i = 0; i < Const4.INTEGER_BYTES; i++) {
+                    ret = (ret << 8) + (_buffer[_offset++] & 0xff);
+                }
+            }
+            readEnd();
+			return ret;
         }
             
         // if (YapConst.INTEGER_BYTES == 4) {

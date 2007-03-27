@@ -2,9 +2,16 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.*;
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
+import com.db4o.CorruptionException;
+import com.db4o.Deploy;
+import com.db4o.foundation.Coercion4;
+import com.db4o.internal.Buffer;
+import com.db4o.internal.Const4;
+import com.db4o.internal.LatinStringIO;
+import com.db4o.internal.ObjectContainerBase;
+import com.db4o.internal.ReaderPair;
+import com.db4o.internal.StatefulBuffer;
+import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.reflect.ReflectClass;
 
 /**
@@ -41,29 +48,14 @@ public class IntHandler extends PrimitiveHandler {
     public Object primitiveNull() {
         return i_primitive;
     }
+    
+    public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException {
+        return mf._primitive.readInteger(writer);
+    }
 
     Object read1(Buffer a_bytes) {
         return new Integer(a_bytes.readInt());
-    }
-
-    public static final int readInt(Buffer a_bytes) {
-        if (Deploy.debug) {
-			int ret = 0;
-            a_bytes.readBegin(Const4.YAPINTEGER);
-            if (Deploy.debugLong) {
-                ret =
-                    Integer.valueOf(new LatinStringIO().read(a_bytes, Const4.INTEGER_BYTES).trim())
-                        .intValue();
-            } else {
-                for (int i = 0; i < Const4.INTEGER_BYTES; i++) {
-                    ret = (ret << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
-                }
-            }
-            a_bytes.readEnd();
-			return ret;
-        }
-        return a_bytes.readInt();
-    }
+    }    
 
     public void write(Object obj, Buffer writer) {
         write(((Integer) obj).intValue(), writer);

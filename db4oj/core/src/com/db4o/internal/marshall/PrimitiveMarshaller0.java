@@ -52,12 +52,20 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
         return id;
     }
     
-    public Date readDate(Buffer a_bytes) {
-		final long longValue = LongHandler.readLong(a_bytes);
-		if (longValue == Long.MAX_VALUE) {
+    public Date readDate(Buffer bytes) {
+		final long value = LongHandler.readLong(bytes);
+		if (value == Long.MAX_VALUE) {
 			return null;
 		}
-		return new Date(longValue);
+		return new Date(value);
+	}
+    
+    public Integer readInteger(Buffer bytes) {
+		final int value = bytes.readInt();
+		if (value == Integer.MAX_VALUE) {
+			return null;
+		}
+		return new Integer(value);
 	}
 
 
