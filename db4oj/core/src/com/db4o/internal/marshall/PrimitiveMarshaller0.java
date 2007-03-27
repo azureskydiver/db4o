@@ -60,7 +60,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return new Date(value);
 	}
     
-    public Integer readInteger(Buffer bytes) {
+    public Object readInteger(Buffer bytes) {
 		final int value = bytes.readInt();
 		if (value == Integer.MAX_VALUE) {
 			return null;
@@ -68,7 +68,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return new Integer(value);
 	}
 
-	public Float readFloat(Buffer bytes) {
+	public Object readFloat(Buffer bytes) {
 		Float value = unmarshallFloat(bytes);
 		if (value.isNaN()) {
 			return null;
