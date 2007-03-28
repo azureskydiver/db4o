@@ -3,7 +3,6 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
 public final class MGetInternalIDs extends MsgD implements ServerSideMessage {
 	public final boolean processAtServer() {

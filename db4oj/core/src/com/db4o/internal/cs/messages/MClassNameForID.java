@@ -3,7 +3,6 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.ClassMetadata;
-import com.db4o.internal.cs.ServerMessageDispatcherImpl;
 
 
 /**

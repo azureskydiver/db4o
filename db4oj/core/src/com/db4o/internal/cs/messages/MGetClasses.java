@@ -2,9 +2,8 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.*;
+import com.db4o.Deploy;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.*;
 
 public final class MGetClasses extends MsgD implements ServerSideMessage {
 	public final boolean processAtServer() {
