@@ -4,8 +4,6 @@ package com.db4o.db4ounit.common.cs;
 
 
 
-import com.db4o.db4ounit.common.assorted.*;
-
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
