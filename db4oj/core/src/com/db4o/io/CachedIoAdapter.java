@@ -185,13 +185,9 @@ public class CachedIoAdapter extends IoAdapter {
 		int bytesToWrite = length;
 		int bufferOffset = 0;
 		while (bytesToWrite > 0) {
-//			writtenLength = (int) (_pageSize - startAddress % _pageSize);
-//			writtenLength = Math.min(writtenLength, length);
-//			writtenLength = Math.min(buffer.length - bufferOffset, writtenLength);
-//			// writtenLength == pageSize means it doesn't need to reload the
-//			// page from disk since the whole page will be written immediately.
-//			boolean load = writtenLength != _pageSize;
-			page = getPage(startAddress, true);
+			// page doesn't need to loadFromDisk if the whole page is dirty
+			boolean loadFromDisk = (length < _pageSize) || (startAddress % _pageSize != 0);
+			page = getPage(startAddress, loadFromDisk);
 			writtenBytes = page.write(buffer, bufferOffset, startAddress, bytesToWrite);
 			movePageToHead(page);
 			bytesToWrite -= writtenBytes;
