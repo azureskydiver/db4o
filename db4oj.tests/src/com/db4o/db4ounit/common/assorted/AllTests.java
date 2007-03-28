@@ -3,6 +3,8 @@
 package com.db4o.db4ounit.common.assorted;
 
 
+import com.db4o.db4ounit.common.cs.*;
+
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
@@ -20,7 +22,6 @@ public class AllTests extends Db4oTestSuite {
             CascadedDeleteReadTestCase.class,
             ChangeIdentity.class,
             ClassMetadataTestCase.class,
-            ClientServerPingTestCase.class,
             CloseUnlocksFileTestCase.class,
             ComparatorSortTestCase.class,
             DatabaseUnicityTest.class,
@@ -44,7 +45,6 @@ public class AllTests extends Db4oTestSuite {
             ReferenceSystemTestCase.class,
             RollbackTestCase.class,
             SimplestPossibleTestCase.class,
-            ServerRevokeAccessTestCase.class,
             SystemInfoTestCase.class,
 		};
 	}
