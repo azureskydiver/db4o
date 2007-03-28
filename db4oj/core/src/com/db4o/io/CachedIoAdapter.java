@@ -283,7 +283,7 @@ public class CachedIoAdapter extends IoAdapter {
 			return;
 		}
 		ioSeek(page.startAddress());
-		writePage(page);
+		writePageToDisk(page);
 		return;
 	}
 
@@ -291,15 +291,17 @@ public class CachedIoAdapter extends IoAdapter {
 		long startAddress = pos - pos % _pageSize;
 		page.startAddress(startAddress);
 		ioSeek(page._startAddress);
-		int readCount = _io.read(page.buffer);
-		long endAddress = startAddress + readCount;
-		if (readCount >= 0) {
-			_filePointer = endAddress;
-			page.endAddress(endAddress);
-		} else {
-			page.endAddress(page._startAddress);
-		}
+		ioRead(page);
 		// _posPageMap.put(new Long(page.startPosition / PAGE_SIZE), page);
+	}
+
+	private int ioRead(Page page) throws IOException {
+		int count = _io.read(page.buffer);
+		count = count < 0 ? 0 : count;
+		long endAddress = page._startAddress + count;
+		_filePointer = endAddress;
+		page.endAddress(endAddress);
+		return count;
 	}
 
 	private void movePageToHead(Page page) {
@@ -324,7 +326,7 @@ public class CachedIoAdapter extends IoAdapter {
 		}
 	}
 
-	private void writePage(Page page) throws IOException {
+	private void writePageToDisk(Page page) throws IOException {
 		_io.write(page.buffer, page.size());
 		_filePointer = page.endAddress();
 		page.dirty = false;
