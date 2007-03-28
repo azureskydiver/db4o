@@ -7,10 +7,6 @@ package com.db4o.internal;
  */
 public interface Persistent {
 
-	/**
-	 * @moveto new com.db4o.internal.Persistent interface
-	 * all four of the following abstract methods  
-	 */
 	byte getIdentifier();
 
 	int ownLength();
