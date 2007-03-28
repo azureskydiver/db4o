@@ -44,7 +44,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
 			return field;
 		}
 		if (spec.indexID() != 0) {
-			actualField.initIndex(stream.getSystemTransaction(), spec.indexID());
+			actualField.initIndex(stream.systemTransaction(), spec.indexID());
 		}
 		return actualField;
 	}

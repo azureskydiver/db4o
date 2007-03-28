@@ -14,25 +14,19 @@ import com.db4o.reflect.Reflector;
 public abstract class Transaction {
 	
     // contains DeleteInfo nodes
-    public Tree i_delete;
+    protected Tree i_delete;
 
     private List4 i_dirtyFieldIndexes;
     
-    protected final Transaction _parentTransaction;
-
-    protected final StatefulBuffer i_pointerIo;    
+    protected final Transaction _systemTransaction;
 
     private final ObjectContainerBase _container;
     
     private List4 i_transactionListeners;
-    
-    // TODO: join _dirtyBTree and _enlistedIndices
-    private final Collection4 _participants = new Collection4(); 
 
-    public Transaction(ObjectContainerBase container, Transaction parent) {
+    public Transaction(ObjectContainerBase container, Transaction systemTransaction) {
         _container = container;
-        _parentTransaction = parent;
-        i_pointerIo = new StatefulBuffer(this, Const4.POINTER_LENGTH);
+        _systemTransaction = systemTransaction;
     }
 
     public void addDirtyFieldIndex(IndexTransaction a_xft) {
@@ -49,19 +43,13 @@ public abstract class Transaction {
         i_transactionListeners = new List4(i_transactionListeners, a_listener);
     }
     
-    protected void clearAll() {
+    protected final void clearAll() {
+        clear();
         i_dirtyFieldIndexes = null;
         i_transactionListeners = null;
-        disposeParticipants();
-        _participants.clear();
     }
-
-	private void disposeParticipants() {
-		Iterator4 iterator = _participants.iterator();
-        while (iterator.moveNext()) {
-        	((TransactionParticipant)iterator.current()).dispose(this);
-        }
-	}
+    
+    protected abstract void clear(); 
 
     public void close(boolean a_rollbackOnClose) {
         try {
@@ -90,20 +78,9 @@ public abstract class Transaction {
     protected void freeOnCommit() {
 	}
     
-    protected void commitParticipants() {
-        if (_parentTransaction != null) {
-            _parentTransaction.commitParticipants();
-        }
-        
-        Iterator4 iterator = _participants.iterator();
-		while (iterator.moveNext()) {
-			((TransactionParticipant)iterator.current()).commit(this);
-		}
-    }
-    
     protected void commit4FieldIndexes(){
-        if(_parentTransaction != null){
-            _parentTransaction.commit4FieldIndexes();
+        if(_systemTransaction != null){
+            _systemTransaction.commit4FieldIndexes();
         }
         if (i_dirtyFieldIndexes != null) {
             Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
@@ -128,7 +105,7 @@ public abstract class Transaction {
     public abstract boolean isDeleted(int id);
     
 	protected boolean isSystemTransaction() {
-		return _parentTransaction == null;
+		return _systemTransaction == null;
 	}
 
     public boolean delete(ObjectReference ref, int id, int cascade) {
@@ -185,26 +162,10 @@ public abstract class Transaction {
     public Reflector reflector(){
     	return stream().reflector();
     }
+    
+    public abstract void rollback();
 
-    public void rollback() {
-        synchronized (stream().i_lock) {
-            
-            rollbackParticipants();
-            
-            rollbackFieldIndexes();
-            
-            rollbackSlotChanges();
-            
-            rollBackTransactionListeners();
-            
-            clearAll();
-        }
-    }
-
-	protected void rollbackSlotChanges() {
-	}
-
-	private void rollbackFieldIndexes() {
+	protected void rollbackFieldIndexes() {
 		if (i_dirtyFieldIndexes != null) {
 		    Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
 		    while (i.moveNext()) {
@@ -213,13 +174,6 @@ public abstract class Transaction {
 		}
 	}
     
-    private void rollbackParticipants() {
-    	Iterator4 iterator = _participants.iterator();
-		while (iterator.moveNext()) {
-			((TransactionParticipant)iterator.current()).rollback(this);
-		}
-	}
-
 	protected void rollBackTransactionListeners() {
         checkSynchronization();
         if (i_transactionListeners != null) {
@@ -262,8 +216,8 @@ public abstract class Transaction {
     }
     
     public Transaction systemTransaction(){
-        if(_parentTransaction != null){
-            return _parentTransaction;
+        if(_systemTransaction != null){
+            return _systemTransaction;
         }
         return this;
     }
@@ -273,45 +227,14 @@ public abstract class Transaction {
     }
     
 
-    public void writePointer(int a_id, int a_address, int a_length) {
-        if(DTrace.enabled){
-            DTrace.WRITE_POINTER.log(a_id);
-            DTrace.WRITE_POINTER.logLength(a_address, a_length);
-        }
-        checkSynchronization();
-        i_pointerIo.useSlot(a_id);
-        if (Deploy.debug) {
-            i_pointerIo.writeBegin(Const4.YAPPOINTER);
-        }
-        i_pointerIo.writeInt(a_address);
-        i_pointerIo.writeInt(a_length);
-        if (Deploy.debug) {
-            i_pointerIo.writeEnd();
-        }
-        if (Debug.xbytes && Deploy.overwrite) {
-            i_pointerIo.setID(Const4.IGNORE_ID);
-        }
-        i_pointerIo.write();
-    }
-    
     public abstract void writeUpdateDeleteMembers(int id, ClassMetadata clazz, int typeInfo, int cascade);
 
     public final ObjectContainerBase stream() {
         return _container;
     }
 
-	public void enlist(TransactionParticipant participant) {
-		if (null == participant) {
-			throw new ArgumentNullException("participant");
-		}
-		checkSynchronization();	
-		if (!_participants.containsByIdentity(participant)) {
-			_participants.add(participant);
-		}
-	}
-    
     public Transaction parentTransaction() {
-		return _parentTransaction;
+		return _systemTransaction;
 	}
 
 }

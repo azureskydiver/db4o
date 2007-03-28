@@ -95,7 +95,7 @@ public class FileHeader0 extends FileHeader {
 	private Object getBootRecord(LocalObjectContainer file) {
 		file.showInternalClasses(true);
 		try {
-			return file.getByID1(file.getSystemTransaction(), _configBlock._bootRecordID);
+			return file.getByID1(file.systemTransaction(), _configBlock._bootRecordID);
 		} finally {
 			file.showInternalClasses(false);
 		}
@@ -111,7 +111,7 @@ public class FileHeader0 extends FileHeader {
         file.showInternalClasses(true);
         try {
 	        _bootRecord = new PBootRecord();
-	        file.setInternal(file.getSystemTransaction(), _bootRecord, false);
+	        file.setInternal(file.systemTransaction(), _bootRecord, false);
 	        
 	        _configBlock._bootRecordID = file.getID1(_bootRecord);
 	        writeVariablePart(file, 1);

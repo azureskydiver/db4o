@@ -134,7 +134,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 			if (null == context) {
 				context = new TransactionState();
 				_perTransaction.put(transaction, context);
-				transaction.enlist(this);
+				((LocalTransaction)transaction).enlist(this);
 			}
 			return context;
 		}

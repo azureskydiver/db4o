@@ -33,9 +33,8 @@ final class ClientTransaction extends Transaction {
         }
     }
     
-    protected void clearAll() {
+    protected void clear() {
     	removeYapObjectReferences();
-    	super.clearAll();
     }
 
 	private void removeYapObjectReferences() {

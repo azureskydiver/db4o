@@ -365,7 +365,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
                 if (_reflector != null) {
                     addMembers(i_stream);
                     if (!i_stream.isClient()) {
-                        write(i_stream.getSystemTransaction());
+                        write(i_stream.systemTransaction());
                     }
                 }
             }
@@ -1501,7 +1501,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             setStateOK();
             i_name = newName;
             setStateDirty();
-            write(i_stream.getSystemTransaction());
+            write(i_stream.systemTransaction());
             i_state = tempState;
         }else{
             Exceptions4.throwRuntimeException(58);

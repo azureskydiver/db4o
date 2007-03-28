@@ -54,7 +54,7 @@ public abstract class FreespaceManager {
     }
     
     static void slotEntryToZeroes(LocalObjectContainer file, int address){
-        StatefulBuffer writer = new StatefulBuffer(file.getSystemTransaction(), address, slotLength());
+        StatefulBuffer writer = new StatefulBuffer(file.systemTransaction(), address, slotLength());
         for (int i = 0; i < INTS_IN_SLOT; i++) {
             writer.writeInt(0);
         }

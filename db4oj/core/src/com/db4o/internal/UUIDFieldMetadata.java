@@ -116,7 +116,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     
     protected void rebuildIndexForObject(LocalObjectContainer stream, ClassMetadata yapClass, int objectId) throws FieldIndexException {
     	try {
-			DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, ((LocalTransaction)stream.getSystemTransaction()).getCurrentSlotOfID(objectId), true);
+			DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, ((LocalTransaction)stream.systemTransaction()).getCurrentSlotOfID(objectId), true);
 			if (null == data) {
 				return;
 			}

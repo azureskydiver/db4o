@@ -103,7 +103,7 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 				sum[0]++;
 			}
 		};
-		btree().traverseKeys(fileSession().getSystemTransaction(),visitor);
+		btree().traverseKeys(fileSession().systemTransaction(),visitor);
 		Assert.areEqual(expectedCount,sum[0]);
 	}
 

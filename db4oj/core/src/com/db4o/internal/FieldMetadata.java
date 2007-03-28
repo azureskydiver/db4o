@@ -747,7 +747,7 @@ public class FieldMetadata implements StoredField {
         if (! stream.isClient()) {
             i_name = newName;
             i_yapClass.setStateDirty();
-            i_yapClass.write(stream.getSystemTransaction());
+            i_yapClass.write(stream.systemTransaction());
         } else {
             Exceptions4.throwRuntimeException(58);
         }
@@ -925,7 +925,7 @@ public class FieldMetadata implements StoredField {
 	}
 
 	protected void rebuildIndexForObject(LocalObjectContainer stream, final ClassMetadata yapClass, final int objectId) throws FieldIndexException {
-		StatefulBuffer writer = stream.readWriterByID(stream.getSystemTransaction(), objectId);
+		StatefulBuffer writer = stream.readWriterByID(stream.systemTransaction(), objectId);
 		if (writer != null) {
 		    rebuildIndexForWriter(stream, writer, objectId);
 		} else {
@@ -938,7 +938,7 @@ public class FieldMetadata implements StoredField {
 	protected void rebuildIndexForWriter(LocalObjectContainer stream, StatefulBuffer writer, final int objectId) {
 		ObjectHeader oh = new ObjectHeader(stream, writer);
 		Object obj = readIndexEntryForRebuild(writer, oh);
-		addIndexEntry(stream.getSystemTransaction(), objectId, obj);
+		addIndexEntry(stream.systemTransaction(), objectId, obj);
 	}
 
 	private Object readIndexEntryForRebuild(StatefulBuffer writer, ObjectHeader oh) {

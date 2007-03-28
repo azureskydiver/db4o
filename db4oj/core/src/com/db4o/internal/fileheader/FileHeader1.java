@@ -100,7 +100,7 @@ public class FileHeader1 extends FileHeader {
     }
     
     public void readVariablePart(LocalObjectContainer file) {
-        _variablePart.read(file.getSystemTransaction());
+        _variablePart.read(file.systemTransaction());
     }
     
     public void writeFixedPart(
@@ -134,7 +134,7 @@ public class FileHeader1 extends FileHeader {
 
     public void writeVariablePart(LocalObjectContainer file, int part) {
     	_variablePart.setStateDirty();
-        _variablePart.write(file.getSystemTransaction());
+        _variablePart.write(file.systemTransaction());
     }
 
 }

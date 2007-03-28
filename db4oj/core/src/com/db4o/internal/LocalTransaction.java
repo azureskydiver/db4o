@@ -18,17 +18,22 @@ public class LocalTransaction extends Transaction {
 
     private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
     
+    protected final StatefulBuffer i_pointerIo;    
+    
     private int i_address;	// only used to pass address to Thread
 	
+    private final Collection4 _participants = new Collection4(); 
+
 	private Tree _slotChanges;
 	
     private Tree _writtenUpdateDeletedMembers;
-
+    
 	private final LocalObjectContainer _file;
 
 	public LocalTransaction(ObjectContainerBase container, Transaction parent) {
 		super(container, parent);
 		_file = (LocalObjectContainer) container;
+        i_pointerIo = new StatefulBuffer(this, Const4.POINTER_LENGTH);
 	}
 	
 	public LocalObjectContainer file() {
@@ -42,10 +47,30 @@ public class LocalTransaction extends Transaction {
         	}
             _file.freeSpaceBeginCommit();
             commitExceptForFreespace();
+        	if(! isSystemTransaction()){
+        		triggerCommitOnCompleted();
+        	}
+            commitClearAll();
             _file.freeSpaceEndCommit();
         }
     }
     
+	public void enlist(TransactionParticipant participant) {
+		if (null == participant) {
+			throw new ArgumentNullException("participant");
+		}
+		checkSynchronization();	
+		if (!_participants.containsByIdentity(participant)) {
+			_participants.add(participant);
+		}
+	}
+
+    
+	private void triggerCommitOnCompleted() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void commitExceptForFreespace(){
         
         if(DTrace.enabled){
@@ -66,7 +91,6 @@ public class LocalTransaction extends Transaction {
         
         freeOnCommit();
         
-        commit7ClearAll();
     }
 	
 	private void commit2Listeners(){
@@ -75,36 +99,73 @@ public class LocalTransaction extends Transaction {
     }
 
 	private void commitParentListeners() {
-		if (_parentTransaction != null) {
+		if (_systemTransaction != null) {
             parentLocalTransaction().commit2Listeners();
         }
 	}
+	
+    private void commitParticipants() {
+        if (parentLocalTransaction() != null) {
+        	parentLocalTransaction().commitParticipants();
+        }
+        
+        Iterator4 iterator = _participants.iterator();
+		while (iterator.moveNext()) {
+			((TransactionParticipant)iterator.current()).commit(this);
+		}
+    }
     
     private void commit3Stream(){
         stream().processPendingClassUpdates();
         stream().writeDirty();
-        stream().classCollection().write(stream().getSystemTransaction());
+        stream().classCollection().write(stream().systemTransaction());
     }
     
 	private LocalTransaction parentLocalTransaction() {
-		return (LocalTransaction) _parentTransaction;
+		return (LocalTransaction) _systemTransaction;
 	}
     
-	private void commit7ClearAll(){
-        commit7ParentClearAll();
+	private void commitClearAll(){
+		if(_systemTransaction != null){
+            parentLocalTransaction().commitClearAll();
+        }
         clearAll();
     }
 
-	private void commit7ParentClearAll() {
-		if(_parentTransaction != null){
-            parentLocalTransaction().commit7ClearAll();
+	
+	protected void clear() {
+		_slotChanges = null;
+		disposeParticipants();
+        _participants.clear();
+	}
+	
+	private void disposeParticipants() {
+		Iterator4 iterator = _participants.iterator();
+        while (iterator.moveNext()) {
+        	((TransactionParticipant)iterator.current()).dispose(this);
         }
 	}
-
 	
-	protected void clearAll() {
-		_slotChanges = null;
-		super.clearAll();
+    public void rollback() {
+        synchronized (stream().i_lock) {
+            
+            rollbackParticipants();
+            
+            rollbackFieldIndexes();
+            
+            rollbackSlotChanges();
+            
+            rollBackTransactionListeners();
+            
+            clearAll();
+        }
+    }
+    
+    private void rollbackParticipants() {
+    	Iterator4 iterator = _participants.iterator();
+		while (iterator.moveNext()) {
+			((TransactionParticipant)iterator.current()).rollback(this);
+		}
 	}
 	
 	protected void rollbackSlotChanges() {
@@ -152,13 +213,36 @@ public class LocalTransaction extends Transaction {
         }
     }
 	
+    public void writePointer(int a_id, int a_address, int a_length) {
+        if(DTrace.enabled){
+            DTrace.WRITE_POINTER.log(a_id);
+            DTrace.WRITE_POINTER.logLength(a_address, a_length);
+        }
+        checkSynchronization();
+        i_pointerIo.useSlot(a_id);
+        if (Deploy.debug) {
+            i_pointerIo.writeBegin(Const4.YAPPOINTER);
+        }
+        i_pointerIo.writeInt(a_address);
+        i_pointerIo.writeInt(a_length);
+        if (Deploy.debug) {
+            i_pointerIo.writeEnd();
+        }
+        if (Debug.xbytes && Deploy.overwrite) {
+            i_pointerIo.setID(Const4.IGNORE_ID);
+        }
+        i_pointerIo.write();
+    }
+    
+
+	
     private boolean writeSlots() {
         
         checkSynchronization();
         
         boolean ret = false;
         
-        if(_parentTransaction != null){
+        if(_systemTransaction != null){
             if(parentLocalTransaction().writeSlots()){
                 ret = true;
             }
@@ -212,7 +296,7 @@ public class LocalTransaction extends Transaction {
             }
         }
         
-        if (_parentTransaction != null) {
+        if (_systemTransaction != null) {
             Slot parentSlot = parentLocalTransaction().getCurrentSlotOfID(id); 
             if (parentSlot != null) {
                 return parentSlot;
@@ -234,7 +318,7 @@ public class LocalTransaction extends Transaction {
             }
         }
         
-        if (_parentTransaction != null) {
+        if (_systemTransaction != null) {
             Slot parentSlot = parentLocalTransaction().getCommittedSlotOfID(id); 
             if (parentSlot != null) {
                 return parentSlot;
@@ -247,16 +331,10 @@ public class LocalTransaction extends Transaction {
         if (Deploy.debug) {
             return debugReadCommittedSlotOfID(id);
         }
-        // FIXME: This shouldn't be silently swallowed. Currently this situation can occur for
-        // a class collection in a new yap file that already has its ID assigned but hasn't been
-        // written yet. Should be fixed in the YapClassCollection logic.
         try {
         	_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
         }
         catch(IOException exc) {
-        	throw new SlotRetrievalException(exc,id);
-        }
-        catch(RuntimeException exc) {
         	throw new SlotRetrievalException(exc,id);
         }
         int address = (_pointerBuffer[3] & 255)
@@ -296,7 +374,7 @@ public class LocalTransaction extends Transaction {
         if (slot != null) {
             return slot.isDeleted();
         }
-        if (_parentTransaction != null) {
+        if (_systemTransaction != null) {
             return parentLocalTransaction().slotChangeIsFlaggedDeleted(id);
         }
         return false;
@@ -307,7 +385,7 @@ public class LocalTransaction extends Transaction {
 	        
 	        int count = 0;
 	        
-	        if(_parentTransaction != null){
+	        if(_systemTransaction != null){
 	            count += parentLocalTransaction().countSlotChanges();
 	        }
 	        
@@ -352,7 +430,7 @@ public class LocalTransaction extends Transaction {
 	
 	protected final void freeOnCommit() {
         checkSynchronization();
-        if(_parentTransaction != null){
+        if(_systemTransaction != null){
         	parentLocalTransaction().freeOnCommit();
         }
         if(_slotChanges != null){
@@ -366,7 +444,7 @@ public class LocalTransaction extends Transaction {
 	
 	private void appendSlotChanges(final Buffer writer){
         
-        if(_parentTransaction != null){
+        if(_systemTransaction != null){
         	parentLocalTransaction().appendSlotChanges(writer);
         }
         

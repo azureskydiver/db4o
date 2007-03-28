@@ -136,6 +136,10 @@ public abstract class Msg implements Cloneable {
 		}
 		return _name;
 	}
+	
+	protected LocalTransaction serverTransaction(){
+		return (LocalTransaction)_trans;
+	}
 
 	protected Transaction transaction() {
 		return _trans;

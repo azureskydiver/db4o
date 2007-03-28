@@ -82,13 +82,11 @@ public abstract class PersistentBase implements Persistent {
 		}
 		try {
 			Buffer reader = trans.stream().readReaderByID(trans, getID());
-			if (reader != null) {
-				if (Deploy.debug) {
-					reader.readBegin(getIdentifier());
-				}
-				readThis(trans, reader);
-				setStateOnRead(reader);
+			if (Deploy.debug) {
+				reader.readBegin(getIdentifier());
 			}
+			readThis(trans, reader);
+			setStateOnRead(reader);
 		} finally {
 			endProcessing();
 		}

@@ -29,7 +29,7 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
                 yc.addFieldIndices(_payLoad,null);
             }
             stream.writeNew(yc, _payLoad);
-            transaction().writePointer( id, address, length);
+            serverTransaction().writePointer( id, address, length);
         }
         return true;
     }

@@ -234,8 +234,8 @@ public class FreespaceManagerRam extends FreespaceManager {
         return FM_RAM;
     }
     
-    private final Transaction trans(){
-        return _file.getSystemTransaction();
+    private final LocalTransaction trans(){
+        return (LocalTransaction)_file.systemTransaction();
     }
 
     public int shutdown(){

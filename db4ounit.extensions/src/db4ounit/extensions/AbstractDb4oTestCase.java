@@ -147,7 +147,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 
 	protected Transaction systemTrans() {
-	    return stream().getSystemTransaction();
+	    return stream().systemTransaction();
 	}
 	
 	protected Query newQuery(Transaction transaction, Class clazz) {
