@@ -5,7 +5,6 @@ package com.db4o.internal.marshall;
 import java.util.Date;
 
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 
 
 public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
@@ -23,7 +22,7 @@ public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
     }
     
     public Date readDate(Buffer bytes){
-		return new Date(LongHandler.readLong(bytes));
+		return new Date(bytes.readLong());
 	}
     
     public Object readInteger(Buffer bytes) {
@@ -33,5 +32,17 @@ public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
     public Object readFloat(Buffer bytes) {
     	return PrimitiveMarshaller0.unmarshallFloat(bytes);
     }
+
+	public Object readDouble(Buffer buffer) {
+		return PrimitiveMarshaller0.unmarshalDouble(buffer);
+	}
+
+	public Object readLong(Buffer buffer) {
+		return new Long(buffer.readLong());
+	}
+
+	public Object readShort(Buffer buffer) {
+		return new Short(PrimitiveMarshaller0.unmarshallShort(buffer));
+	}
 
 }

@@ -112,8 +112,8 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
         return read1(reader);
     }
 
-    public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException {
-    	return read1(writer);
+    public Object read(MarshallerFamily mf, StatefulBuffer buffer, boolean redirect) throws CorruptionException {
+    	return read1(buffer);
     }
 
     abstract Object read1(Buffer reader) throws CorruptionException;
@@ -274,4 +274,8 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
 			Exceptions4.virtualException();
 		}
     }
+
+	protected PrimitiveMarshaller primitiveMarshaller() {
+		return MarshallerFamily.current()._primitive;
+	}
 }

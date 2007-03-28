@@ -172,7 +172,22 @@ public class Buffer implements SlotReader {
     }
     
     public long readLong() {
-        return LongHandler.readLong(this);
+        long ret = 0;
+		if (Deploy.debug){
+			this.readBegin(Const4.YAPLONG);
+			if(Deploy.debugLong){
+				ret = Long.parseLong(new LatinStringIO().read(this, Const4.LONG_BYTES).trim()); 
+			}else{
+				for (int i = 0; i < Const4.LONG_BYTES; i++){
+					ret = (ret << 8) + (this._buffer[this._offset++] & 0xff);
+				}
+			}
+			this.readEnd();
+		}else{
+			ret = PrimitiveCodec.readLong(this._buffer, this._offset);
+			this.incrementOffset(Const4.LONG_BYTES);
+		}
+		return ret;
     }
     
     public Buffer readPayloadReader(int offset, int length){

@@ -4,9 +4,8 @@ package com.db4o.internal.marshall;
 
 import java.util.Date;
 
-import com.db4o.*;
+import com.db4o.Deploy;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 
 
 public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
@@ -53,7 +52,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
     }
     
     public Date readDate(Buffer bytes) {
-		final long value = LongHandler.readLong(bytes);
+		final long value = bytes.readLong();
 		if (value == Long.MAX_VALUE) {
 			return null;
 		}
@@ -76,10 +75,49 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return value;
 	}
 	
-	public static Float unmarshallFloat(Buffer buffer) {
-		return new Float(Float.intBitsToFloat(buffer.readInt()));
+	public Object readDouble(Buffer buffer) {
+		Double value = unmarshalDouble(buffer);
+		if (value.isNaN()) {
+			return null;
+		}
+		return value;
+	}	
+
+	public Object readLong(Buffer buffer) {
+		long value = buffer.readLong();
+		if (value == Long.MAX_VALUE) {
+			return null;
+		}
+		return new Long(value);
+	}
+	
+	public Object readShort(Buffer buffer) {
+		short value = unmarshallShort(buffer);
+		if (value == Short.MAX_VALUE) {
+			return null;
+		}
+		return new Short(value);
+	}
+	
+	public static Double unmarshalDouble(Buffer buffer) {
+		return new Double(Platform4.longToDouble(buffer.readLong()));
 	}
 
-
-
+	public static Float unmarshallFloat(Buffer buffer) {
+		return new Float(Float.intBitsToFloat(buffer.readInt()));
+	}	
+	
+	public static short unmarshallShort(Buffer buffer){
+		int ret = 0;
+		if (Deploy.debug){
+			buffer.readBegin(Const4.YAPSHORT);
+		}
+		for (int i = 0; i < Const4.SHORT_BYTES; i++){
+			ret = (ret << 8) + (buffer._buffer[buffer._offset++] & 0xff);
+		}
+		if (Deploy.debug){
+			buffer.readEnd();
+		}
+		return (short)ret;
+	}
 }

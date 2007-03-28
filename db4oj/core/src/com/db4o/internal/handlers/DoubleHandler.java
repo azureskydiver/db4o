@@ -2,8 +2,10 @@
 
 package com.db4o.internal.handlers;
 
+import com.db4o.CorruptionException;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.reflect.*;
 
 /**
@@ -37,8 +39,13 @@ public final class DoubleHandler extends LongHandler {
 		return DEFAULT_VALUE;
 	}
 	
-	Object read1(Buffer a_bytes){
-		return new Double(Platform4.longToDouble(readLong(a_bytes)));
+	public Object read(MarshallerFamily mf, StatefulBuffer buffer,
+			boolean redirect) throws CorruptionException {
+		return mf._primitive.readDouble(buffer);
+	}
+	
+	Object read1(Buffer buffer){
+		return primitiveMarshaller().readDouble(buffer);
 	}
 	
 	public void write(Object a_object, Buffer a_bytes){

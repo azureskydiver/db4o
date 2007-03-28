@@ -5,6 +5,7 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -44,29 +45,15 @@ public class LongHandler extends PrimitiveHandler {
 		return i_primitive;
 	}
 	
-	Object read1(Buffer a_bytes){
-		return new Long(readLong(a_bytes));
+	public Object read(MarshallerFamily mf, StatefulBuffer buffer,
+			boolean redirect) throws CorruptionException {
+		return mf._primitive.readLong(buffer);
 	}
 	
-	public static final long readLong(Buffer bytes){
-		long ret = 0;
-		if (Deploy.debug){
-			bytes.readBegin(Const4.YAPLONG);
-			if(Deploy.debugLong){
-				ret = Long.parseLong(new LatinStringIO().read(bytes, Const4.LONG_BYTES).trim()); 
-			}else{
-				for (int i = 0; i < Const4.LONG_BYTES; i++){
-					ret = (ret << 8) + (bytes._buffer[bytes._offset++] & 0xff);
-				}
-			}
-			bytes.readEnd();
-		}else{
-			ret = PrimitiveCodec.readLong(bytes._buffer, bytes._offset);
-			incrementOffset(bytes);
-		}
-		return ret;
+	Object read1(Buffer a_bytes){
+		return new Long(a_bytes.readLong());
 	}
-
+	
 	public void write(Object obj, Buffer buffer){
 	    writeLong(((Long)obj).longValue(), buffer);
 	}

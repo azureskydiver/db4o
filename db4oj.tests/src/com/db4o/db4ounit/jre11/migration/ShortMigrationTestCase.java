@@ -2,15 +2,15 @@ package com.db4o.db4ounit.jre11.migration;
 
 import db4ounit.TestRunner;
 
-public class FloatMigrationTestCase extends MigrationTestCaseBase {
+public class ShortMigrationTestCase extends MigrationTestCaseBase {
 	
 	public static class Item extends MigrationItem {
-		public Float value;
+		public Short value;
 		
 		public Item() {
 		}
 		
-		public Item(String name_, Float value_) {
+		public Item(String name_, Short value_) {
 			super(name_);
 			value = value_;
 		}
@@ -20,38 +20,38 @@ public class FloatMigrationTestCase extends MigrationTestCaseBase {
 		}
 
 		public void setValue(Object value_) {
-			value = (Float) value_;
+			value = (Short) value_;
 		}
 	}
 	
 	protected MigrationItem newItem(String name, Object value) {
-		return new Item(name, (Float)value);
+		return new Item(name, (Short)value);
 	}
 	
 	protected String getDatabaseFileName() {
-		return "floats.db4o";
+		return "shorts.db4o";
 	}
 	
 	protected Object getMinValue() {
-		return new Float(Float.MIN_VALUE);
+		return new Short(Short.MIN_VALUE);
 	}
 
 	protected Object getMaxValue() {
-		return new Float(Float.MAX_VALUE-1);
+		return new Short((short)(Short.MAX_VALUE-1));
 	}
 
 	protected Object getOrdinaryValue() {
-		return new Float(41.9999);
+		return new Short((short)42);
 	}
 	
 	protected Object getUpdateValue() {
-		return new Float(Float.NaN);
+		return new Short((short)360);
 	}
 	
 	public static void main(String[] args) {
 		// reference db4o 5.2 and uncomment the line below
 		// if you ever need to regenerate the file
-//		new FloatMigrationTestCase().generateFile();
-		new TestRunner(IntegerMigrationTestCase.class).run();
+		// new ShortMigrationTestCase().generateFile();
+		new TestRunner(ShortMigrationTestCase.class).run();
 	}
 }
