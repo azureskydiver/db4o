@@ -1,6 +1,6 @@
 <project name="db4o-tutorial" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
 	<import file="../build-1.1/common-1.1.xml"/>
-	<property file="build.properties" />
+	<property file="${dir.j.tutorial}/build.properties" />
 	
 	<target name="clean">
 		<cleanIvyDir/>
@@ -10,7 +10,7 @@
 		<tstamp />
 		<initIvyDir/>
 		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
-		<ivy:resolve file="ivy.xml"/>
+		<ivy:resolve file="${dir.j.tutorial}/ivy.xml"/>
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]"/>
 	</target>
 	
