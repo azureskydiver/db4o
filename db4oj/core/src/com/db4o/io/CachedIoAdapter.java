@@ -349,15 +349,15 @@ public class CachedIoAdapter extends IoAdapter {
 
 	private static class Page {
 
-		private byte[] buffer;
+		byte[] buffer;
 
-		private long _startAddress = -1;
+		long _startAddress = -1;
 		
-		private long _endAddress;
+		long _endAddress;
 
-		private int bufferSize;
+		int bufferSize;
 
-		private boolean dirty;
+		boolean dirty;
 
 		Page prev;
 
@@ -368,27 +368,27 @@ public class CachedIoAdapter extends IoAdapter {
 			buffer = new byte[bufferSize];
 		}
 
-		private long endAddress() {
+		long endAddress() {
 			return _endAddress;
 		}
 
-		private void startAddress(long address) {
+		void startAddress(long address) {
 			_startAddress = address;
 		}
 		
-		private long startAddress() {
+		long startAddress() {
 			return _startAddress;
 		}
 		
-		private void endAddress(long address) {
+		void endAddress(long address) {
 			_endAddress = address;
 		}
 		
-		private int size() {
+		int size() {
 			return (int)(_endAddress - _startAddress);
 		}
 		
-		private int read(byte[] out, int outOffset, long startAddress, int length) {
+		int read(byte[] out, int outOffset, long startAddress, int length) {
 			int bufferOffset = (int) (startAddress - _startAddress);
 			int pageAvailbeDataSize = (int)(_endAddress - startAddress);
 			int readBytes = Math.min(pageAvailbeDataSize, length);
@@ -396,7 +396,7 @@ public class CachedIoAdapter extends IoAdapter {
 			return readBytes;
 		}
 
-		public int write(byte[] data, int dataOffset, long startAddress, int length) { 
+		int write(byte[] data, int dataOffset, long startAddress, int length) { 
 			int bufferOffset = (int) (startAddress - _startAddress);
 			int pageAvailabeBufferSize = (int) (bufferSize - bufferOffset);
 			int writtenBytes = Math.min(pageAvailabeBufferSize, length);
@@ -409,7 +409,7 @@ public class CachedIoAdapter extends IoAdapter {
 			return writtenBytes;
 		}
 
-		public boolean contains(long address) {
+		boolean contains(long address) {
 			if (_startAddress != -1 && address >= _startAddress
 					&& address < _startAddress + bufferSize) {
 				return true;
@@ -417,7 +417,7 @@ public class CachedIoAdapter extends IoAdapter {
 			return false;
 		}
 
-		public boolean isFree() {
+		boolean isFree() {
 			return _startAddress == -1;
 		}
 	}
