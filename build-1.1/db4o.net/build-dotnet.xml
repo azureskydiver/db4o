@@ -1,0 +1,1003 @@
+<?xml version="1.0"?>
+<project name="Db4objects.Db4o" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+		<!--
+	The following properties should be specified in machine.properties:
+	
+		dir.lib.sandcastle=<path to sandcastle installation>
+	-->
+
+	<import file="../common-1.1.xml"/>
+		
+	<property environment="env" />		
+	
+	<target name="clean">
+		<cleanIvyDir/>
+		<delete>
+			<fileset dir="${build.db4o.net.basedir}" includes="sharpen-*"/>
+		</delete>
+	</target>
+    
+	<target name="publish" depends="clean, configure-ivy">
+		<antcall target="publish-net1" />
+		<antcall target="package" />
+		<publishToIvy/>
+		<antcall target="updateSvnLocalCopy" />		
+		<antcall target="clean" />
+	</target>
+	
+	<target name="publish-net1" unless="mono">
+		<antcall target="package-net1" />
+	</target>
+	
+	<target name="package" depends="build, ndoc, meta-package, create-dummy-zip-mono, create-dummy-zip-net" description="Builds the complete set of .net 2 distros">
+	</target>
+	
+	<target name="package-net1" depends="build-net1, vsdoc, meta-package" description="Builds the complete set of .net 1 distros">
+	</target>
+  
+	<target name="create-dummy-zip-mono" depends="" if="mono" >
+		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-net2.zip"/>
+		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-net1.zip"/>
+		<ant antfile="${build.db4o.mono.basedir}/build-mono-packages.xml"></ant>
+	</target>
+	
+	<target name="create-dummy-zip-net" depends="" unless="mono">
+		<copy file="ivy.xml" tofile="${defaultArtifactDir}/db4o-mono.zip"/>
+	</target>	
+	
+	<condition property="mono" value="true">
+		<os family="unix" />
+	</condition>
+	
+	<fileset id="db4oj.srcfiles" dir="${dir.workspace}">
+		<include name="db4oj/core/src/**/*.java" />
+	</fileset>
+	
+	
+	
+	<macrodef name="copy-bin">
+		<attribute name="srcdir" />
+		<attribute name="name" />
+		<sequential>
+			<copy todir="${dir.dist.net.build}/bin/@{name}">
+				<fileset dir="@{srcdir}">
+					<include name="*.dll" />
+					<include name="*.exe" />
+					<include name="*.xml" />
+					<exclude name="*Tests*" />
+					<exclude name="*Db4oUnit*" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="copy-bin-set">
+		<attribute name="suffix" default="" />
+		<attribute name="srcdir" />
+		<sequential>
+			<copy-bin srcdir="@{srcdir}" name="net-${target.framework.version}@{suffix}" />
+			<copy-bin srcdir="@{srcdir}/compact" name="compact-${target.framework.version}@{suffix}" />
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="prepare-assemblyInfo">
+		<attribute name="configuration" />
+		<sequential>
+			<updateAssemblyInfo
+				keyfile="${filename.keyfile}"
+				version="${db4o.version.full}"
+				configuration="@{configuration} ${target.framework.version}">
+				<fileset dir="${dir.dist.net.compile}">
+					<include name="**/AssemblyInfo.cs" />
+				</fileset>
+			</updateAssemblyInfo>
+		</sequential>
+	</macrodef>
+	
+	<macrodef name="csc-all">
+		<attribute name="assemblyName" />		
+		<attribute name="sources" description="sources fileset id" />
+		
+		<attribute name="netOutputDir" default="${dir.dist.dll.net}" />
+		<attribute name="netConfiguration" default=".NET" />
+		
+		<attribute name="compactOutputDir" default="${dir.dist.dll.compact}" />
+		<attribute name="compactConfiguration" default=".NET CompactFramework" />
+		
+		<element name="references" optional="yes" />
+		<element name="compact-args" optional="yes" />
+		
+		<sequential>
+			<mkdir dir="@{netOutputDir}" />
+			<mkdir dir="@{compactOutputDir}" />
+			
+			<resetDir dir="${dir.dist.net.compile}" />
+			<copy todir="${dir.dist.net.compile}">
+				<fileset refid="@{sources}" />
+			</copy>			
+			<prepare-assemblyInfo configuration="@{netConfiguration}" />
+				
+			<csc
+				destfile="@{netOutputDir}/@{assemblyName}.dll"
+				docfile="@{netOutputDir}/@{assemblyName}.xml"
+				targettype="library"
+				definitions="${csharp.definitions}"
+				executable="${csc.executable}"
+				debug="${debug}"
+				optimize="true"
+				warnlevel="0"
+				srcdir="${dir.dist.net.compile}">
+				
+				<include name="**/*.cs" />
+				
+				<references />
+			</csc>
+			
+			<copy file="@{netOutputDir}/@{assemblyName}.dll" tofile="${defaultArtifactDir}/@{assemblyName}.dll"/>
+			
+			<if>
+			<equals arg1="${mono}" arg2="true" />
+			<then>
+				<echo>skipping CompactFramework build</echo>
+			</then>
+			<else>
+				<prepare-assemblyInfo configuration="@{compactConfiguration}" />
+				
+				<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
+					<arg value="/optimize" />
+					<arg value="/debug-" />
+					<arg value="/define:${csharp.definitions.cf}" />
+					<arg value="/out:@{compactOutputDir}/@{assemblyName}.dll" />
+					<arg value="/target:library" />
+					<arg value="/warn:0" />
+					<arg value="/noconfig" />
+					<arg value="/nostdlib" />
+					<arg value="/r:${dir.dll.cf}/mscorlib.dll" />
+					<arg value="/r:${dir.dll.cf}/System.dll" />
+					<arg value="/doc:@{compactOutputDir}/@{assemblyName}.xml" />
+					<compact-args />
+					<arg value="/recurse:*.cs" />
+				</exec>
+			</else>
+			</if>
+		</sequential>
+	</macrodef>
+	
+	<target name="check-dependencies">
+		<copy todir="${dir.dist.dll.net}">
+			<fileset dir="${dir.libs.net}">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+		<if>
+			<not>
+				<equals arg1="${mono}" arg2="true" />
+			</not>
+			<then>
+				<copy todir="${dir.dist.dll.compact}">
+					<fileset dir="${dir.libs.cf}">
+						<include name="*.*" />
+					</fileset>
+				</copy>
+			</then>
+		</if>
+		<uptodate
+			property="csharp.uptodate"
+			targetfile="${dir.n.v6.core.src}/Transaction.cs">
+			<srcfiles refid="db4oj.srcfiles">
+			</srcfiles>
+		</uptodate>
+	</target>
+	
+	<target name="configure-mono" if="mono">
+		<echo>Configuring mono build.</echo>
+		
+		<property name="target.framework.version" value="2.0" />
+		<property name="csharp.definitions" value="MONO,NET_2_0" />
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
+		<property name="csc.executable" value="gmcs" />
+		<property name="installer.package.suffix" value="mono2" />
+	
+		<property name="csc.tests.extraoptions" value="-r:System.Drawing" />
+
+	</target>
+
+	<target name="configure-net1" unless="mono">
+		<echo>Configuring .net 1 build.</echo>
+		
+		<!-- don't build Db4oAdmin for .net 1.1 -->
+		<property name="skip.admin" value="true" />
+		
+		<property name="target.framework.version" value="1.1" />
+		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
+		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
+	
+		<property name="csharp.definitions" value="NET_1_1" />
+		<property name="csharp.definitions.cf" value="CF_1_0" />
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-1.1" />
+		<property name="dir.dll.cf" location="${dir.compactframework}v2.0/WindowsCE/" />
+		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-1.0" />
+		<property name="csc.tests.extraoptions" value="" />
+	
+		<property name="installer.package.suffix" value="net1" />
+		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
+		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
+	</target>
+	
+	<target name="configure-net2" unless="mono">
+		<echo>Configuring .net 2 build.</echo>
+		
+		<property name="target.framework.version" value="2.0" />
+		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
+	
+		<property name="csharp.definitions" value="NET_2_0" />
+		<property name="csharp.definitions.cf" value="CF_2_0" />		
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
+		<property name="dir.dll.cf" location="${dir.compactframework}v2.0/WindowsCE/" />
+		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-2.0" />
+		<property name="csc.tests.extraoptions" value="" />
+	
+		<property name="installer.package.suffix" value="net2" />
+		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
+		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
+	</target>
+	
+	<target name="configure" depends="configure-net2, configure-mono">
+		<property name="debug" value="true" />
+	</target>
+	
+	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
+	</target>
+		
+	<target name="run-tests-net1" depends="configure-net1, run-tests-net">
+	</target>
+	
+	<target name="run-tests-net" depends="build-tests" unless="mono">
+		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true">
+		</exec>
+	</target>
+	
+	<target name="run-tests-mono" depends="build-tests" if="mono">
+		<exec executable="mono" failonerror="true">
+			<arg value="--debug" />
+			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" />
+		</exec>
+	</target>
+	
+	
+	
+	<target name="meta-package" depends="build-zip, build-net-installer">
+	
+	</target>
+	
+	<target name="prepare-package-structure" depends="package-sources, package-binaries, package-docs">
+	
+		<if>
+			<equals arg1="${mono}" arg2="true" />
+			<then>
+				<copy todir="${dir.dist.net.build}">			
+					<fileset dir="${dir.config}/mono">
+						<include name="COPYING" />
+						<include name="README" />
+					</fileset>
+				</copy>
+			</then>
+			<else>
+				<copy todir="${dir.dist.net.build}">			
+					<fileset dir="${dir.config}/net">
+						<include name="db4o.license.txt" />
+						<include name="README.txt" />
+					</fileset>
+				</copy>
+			</else>
+		</if>
+		
+		<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />		
+		<filehead beforePattern="using|namespace|#if" header="${content.gplheader}" >
+			<sources dir="${dir.dist.net.build.src}">
+				<include name="**/*.cs" />
+				<exclude name="**/Libs/**" />
+			</sources>
+		</filehead>
+		
+	</target>
+	
+	<target name="package-sources">
+
+		<mkdir dir="${dir.dist.net.build}" />
+		<mkdir dir="${dir.dist.net.build}/src" />
+	
+		<copy todir="${dir.dist.net.build}/src">
+			<fileset dir="${dir.n.v6}">
+				<include name="**/*.cs" />
+				<include name="**/*.csproj" />
+				<include name="**/*.csdproj" />
+				<include name="**/*.sln" />
+				<include name="**/*.txt" />
+				
+				<include name="Libs/**/*" />
+				
+				<!-- tutorial files -->
+				<include name="**/*.resources" />
+				<include name="**/*.resx" />
+				<include name="**/*.ico" />
+				<include name="**/*.PNG" />
+				
+				<include name="db4objects.snk" />
+				
+				<include name="include.mk" />
+				<include name="**/Makefile" />				
+				
+				<!-- Mono.Cecil and family files -->
+				<include name="**/configure" />
+				<include name="**/*.in" />
+				<include name="**/*.sources" />				
+				<include name="**/AUTHORS" />
+				<include name="**/README" />
+				<include name="**/ChangeLog" />
+				<include name="**/*.build" />
+				<include name="**/*.inc" />
+				
+				<exclude name="**/obj/**" />	
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="package-binaries">
+		<!--
+			
+			/bin/compact-2.0/
+			/bin/compact-2.0-legacy/
+			/bin/net-2.0/
+			/bin/net-2.0-legacy/
+			
+		-->
+		<property name="dir.bin" location="${dir.dist.net.build}/bin" />
+		<copy-bin-set suffix="" srcdir="${dir.dist.dll}"  />		
+	</target>
+	
+	<target name="package-tutorial">
+		<copy todir="${dir.dist.net.build.tutorial}">
+			<fileset dir="${dir.n.tutorial.bin}">
+				<include name="**/**" />
+				<exclude name="**/*.pdb" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="package-api" depends="package-api-net, package-api-mono">
+	</target>
+	
+	<target name="package-api-net" unless="mono">
+		<mkdir dir="${dir.dist.net.build}/doc/api" />
+		<copy todir="${dir.dist.net.build}/doc/api">
+			<fileset dir="${dir.dist.ndoc}">
+				<include name="db4o.chm" />
+				<include name="db4o.HxS" />
+				<include name="db4oCollection.*" />
+				<include name="db4oCollection.h2reg.ini" />
+			</fileset>
+			<fileset dir="${dir.build}/lib/h2reg">
+				<include name="*.exe" />
+				<include name="*.ini" />
+			</fileset>
+		</copy>		
+	</target>
+	
+	<target name="package-api-mono" if="mono">
+		<mkdir dir="${dir.dist.net.build}/doc/api" />		
+		<copy todir="${dir.dist.net.build}/doc/api">
+			<fileset dir="${dir.dist.ndoc}" includes="**/**" />
+		</copy>
+	</target>
+	
+	<target name="package-docs" depends="package-tutorial, package-api, package-reference">
+	</target>
+	
+	<target name="package-reference">
+	
+		<mkdir dir="${dir.dist.net.build}/doc/reference" />
+		<copy todir="${dir.dist.net.build}/doc/reference">
+			<fileset dir="${dir.docwiki}/net/">
+				<include name="**/**" />
+			</fileset>
+		</copy>
+		
+	</target>
+	
+	<target name="build-zip" depends="prepare-package-structure">	
+		<zip destfile="${defaultArtifactDir}/db4o-${installer.package.suffix}.zip">
+			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
+		</zip>
+	</target>
+	
+	<target name="build-net-installer"  depends="prepare-package-structure" unless="mono">
+		<ant antfile="build-net-installer.xml">
+			<property name="installer.package.guid" value="${installer.package.guid}" />
+			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
+			<property name="target.framework.version" value="${target.framework.version}" />
+		</ant>
+	</target>
+	
+	<target name="build" depends="resolve, configure, build-all">
+	</target>
+	
+	<target name="build-net1" depends="configure-net1, build-all">
+	</target>
+	
+	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-tutorial">
+	</target>
+	
+	<target name="rebuild" depends="clean, build">
+	</target>
+	
+	<target name="build-tests" depends="build-tools, build-db4ounit-extensions">
+		<csc
+			destfile="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe"
+			targettype="exe"
+			srcdir="${tmp.dir.n.v6.tests}"
+			mainclass="Db4objects.Db4o.Tests.AllTests"
+			definitions="${csharp.definitions}"
+			debug="true"
+			executable="${csc.executable}"
+			extraoptions="${csc.tests.extraoptions}">
+			<reference dir="${dir.dist.dll.net}">
+				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4objects.Db4o.Tools.dll" />
+				<include name="Db4oUnit.dll" />
+				<include name="Db4oUnit.Extensions.dll" />
+			</reference>
+		</csc>
+	</target>
+		
+	<target name="build-db4ounit-extensions" depends="build-core, build-db4ounit"> 
+		<csc
+			destfile="${dir.dist.dll.net}/Db4oUnit.Extensions.dll"
+			targettype="library"
+			srcdir="${tmp.dir.n.v6.extensions}"
+			debug="true"
+			executable="${csc.executable}">
+			<reference dir="${dir.dist.dll.net}">
+				<include name="Db4oUnit.dll" />
+				<include name="Db4objects.Db4o.dll" />
+			</reference>
+		</csc>
+	</target>
+	
+	<target name="build-db4ounit" depends="sharpen-db4ounit">
+		<ant antfile="build-new-db4ounit.xml" target="compilenet" inheritall="false">
+			<property name="csc.executable" value="${csc.executable}" />
+		</ant>
+	</target>
+	
+	<target name="build-tools" depends="build-core">
+		<csc-all
+			assemblyName="Db4objects.Db4o.Tools"
+			sources="tools.sources">			
+			
+			<references>
+				<reference dir="${dir.dist.dll.net}">
+					<include name="Db4objects.Db4o.dll" />
+					<include name="Mono.Cecil.dll" />
+					<include name="Cecil.FlowAnalysis.dll" />
+				</reference>
+			</references>
+			
+			<compact-args>
+				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
+				<arg value="/r:${dir.dist.dll.compact}/Mono.Cecil.dll" />
+				<arg value="/r:${dir.dist.dll.compact}/Cecil.FlowAnalysis.dll" />
+			</compact-args>
+		</csc-all>
+	</target>
+		
+	<target name="build-core" depends="resolve, configure, check-dependencies, sharpen">	
+		<fileset id="core.sources" dir="${tmp.dir.n.v6.core}">
+			<include name="**/*.cs" />
+		</fileset>
+		
+		<csc-all
+				assemblyName="Db4objects.Db4o"
+				sources="core.sources">
+		</csc-all>		
+	</target>
+	
+	<target name="build-admin" depends="build-tools" unless="skip.admin">
+		<csc outputfile="${dir.dist.dll.net}/Db4oAdmin.exe"
+			targettype="exe"
+			debug="true"
+			executable="${csc.executable}">
+			<src dir="${dir.n.v6}/Db4oAdmin/Db4oAdmin">
+				<include name="**/*.cs" />
+			</src>
+			<reference dir="${dir.dist.dll.net}">
+				<include name="*.dll" />
+			</reference>
+		</csc>
+	</target>
+
+	<target name="build-tutorial" depends="build-tools">
+		<ant antfile="build-dotnet-tutorial.xml"/>
+	</target>
+	
+	<target name="sharpen-tools">
+		<fileset id="tools.sources" dir="${dir.n.v6.tools}">
+			<include name="**/*.cs" />
+			<exclude name="Libs/**/AssemblyInfo.cs" />
+			<exclude name="Libs/Mono.Cecil/CodeGen/**/*.*" />
+			<exclude name="Libs/Cecil.FlowAnalysis/codegen/**/*.*" />
+			<exclude name="Libs/Cecil.FlowAnalysis/Cecil.FlowAnalysis.Tests/**/*.*" />
+		</fileset>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-CF-2003.csdproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-CF-2005.csproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-2005.csproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-2003.csproj">
+			<sources refid="tools.sources"/>
+		</updatecsharpproject>
+	</target>
+	
+	<target name="sharpen"
+		depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests"
+		unless="csharp.uptodate">
+	</target>
+	
+	<target name="prepare-conversion-workspace" depends="resolve">
+		<resetDir dir="${dir.sharpen}" />
+		
+		<copy todir="${dir.sharpen}">
+			<fileset refid="db4oj.srcfiles" />
+		</copy>
+
+		<copy todir="${dir.sharpen}/db4oj">
+			<fileset dir="${dir.j.nqopt}">
+				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
+				<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
+			</fileset>
+		</copy>
+
+		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
+			<fileset dir="${dir.n.v6}/sharpen/">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<macrodef name="copySharpenedFiles">
+		<attribute name="src.dir"/>
+		<attribute name="target.dir"/>
+		
+		<sequential>		
+			<copy todir="@{target.dir}">
+				<fileset dir="@{src.dir}/Db4objects/Db4o">
+					<include name="**/*.cs" />
+					<exclude name="JDK_*.cs" />
+					<exclude name="JDKReflect*.cs" />
+					<exclude name="Reflect/Jdk/**/*.*" />
+					<exclude name="Reflect/Self/*.*" />
+				</fileset>
+			</copy>
+		</sequential>
+	</macrodef>	
+
+	<target name="sharpen-core" depends="prepare-conversion-workspace" unless="csharp.uptodate">
+		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
+			<args>
+				<arg value="@sharpen-new-core-mapping" />
+			</args>
+		</sharpen>
+		
+		<resetDir dir="${tmp.dir.n.v6.core.src}"/>
+		
+		<copy todir="${tmp.dir.n.v6.core}">
+			<fileset dir="${dir.n.v6.core}">
+				<exclude name="Db4objects.Db4o/**" />
+			</fileset>
+		</copy>
+		
+		<copySharpenedFiles src.dir="${dir.sharpen}/db4ojcsharp/src" target.dir="${tmp.dir.n.v6.core.src}"/>
+		
+		<fileset id="core.net.files" dir="${tmp.dir.n.v6.core}">
+			<include name="**/*.cs" />
+		</fileset>
+			
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.core}/Db4objects.Db4o-2005.csproj">
+			<sources refid="core.net.files" />
+		</updatecsharpproject>		
+		
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.core}/Db4objects.Db4o-2003.csproj">
+			<sources refid="core.net.files" />
+		</updatecsharpproject>
+
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.core}/Db4objects.Db4o-CF-2003.csdproj">
+			<sources refid="core.net.files" />
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.core}/Db4objects.Db4o-CF-2005.csproj">
+			<sources refid="core.net.files" />
+		</updatecsharpproject>
+	</target>
+	
+	<target name="sharpen-db4ounit">
+		<ant antfile="build-new-db4ounit.xml" target="update-csharp-projects" inheritall="false">
+		</ant>
+	</target>
+		
+	<target name="sharpen-db4ounit-extensions">		
+		<resetDir dir="${dir.sharpen}/lib" />
+
+		<copy todir="${dir.sharpen}/db4ounit.extensions/src">
+			<fileset dir="${dir.db4ounit.extensions.src}">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		
+		<sharpen workspace="${dir.sharpen}" resource="db4ounit.extensions/src">
+			<args>
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4o-java1.1.jar" />
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4ounit.jar" />
+				
+				<arg value="@sharpen-db4ounit-options" />
+				<arg value="@sharpen-new-core-mapping" />
+			</args>
+		</sharpen>
+		
+		<copy todir="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions">
+			<fileset dir="${dir.sharpen}/db4ounit.extensionscsharp/src/Db4oUnit/Extensions">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${tmp.dir.n.v6.extensions}">
+			<fileset dir="${dir.n.v6.extensions}">
+				<exclude name="Db4oUnit.Extensions/**" />
+			</fileset>
+		</copy>
+		
+		<fileset id="db4ounit.extensions.files" dir="${dir.n.v6.extensions}">
+			<include name="**/*.cs" />
+		</fileset>
+		
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions-2003.csproj">
+			<sources refid="db4ounit.extensions.files" />
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions-2005.csproj">
+			<sources refid="db4ounit.extensions.files" />
+		</updatecsharpproject>
+
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2003.csdproj">
+			<sources refid="db4ounit.extensions.files" />
+		</updatecsharpproject>
+
+		<updatecsharpproject projectFile="${tmp.dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2005.csproj">
+			<sources refid="db4ounit.extensions.files" />
+		</updatecsharpproject>
+	</target>		
+	
+	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions">		
+		<property name="target.dir" location="${dir.sharpen}" />		
+		<copy todir="${target.dir}/db4oj.tests/src">
+			<fileset dir="${dir.j.tests.src}">
+				<include name="**/db4ounit/common/**/*.java" />
+				<include name="**/db4ounit/util/**/*.java" />
+			</fileset>
+		</copy>
+		
+		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
+			<args>
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4o-java1.1.jar" />
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4ounit.jar" />
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4o-test-java1.1.jar" />
+				<arg value="@sharpen-tests-options" />
+			</args>
+		</sharpen>
+		
+		<copy todir="${tmp.dir.n.v6.tests.src}">
+			<fileset dir="${target.dir}/db4oj.testscsharp/src/Db4objects/Db4o/Tests">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${tmp.dir.n.v6.tests}">
+			<fileset dir="${dir.n.v6.tests}">
+				<exclude name="Db4objects.Db4o.Tests/**" />
+			</fileset>
+		</copy>
+
+		<fileset id="tests.files" dir="${tmp.dir.n.v6.tests}">
+			<include name="**/*.cs" />
+		</fileset>
+		
+		<updatecsharpproject projectfile="${tmp.dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2003.csdproj">
+			<sources refid="tests.files" />
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${tmp.dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.csproj">
+			<sources refid="tests.files" />
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${tmp.dir.n.v6.tests}/Db4objects.Db4o.Tests-2005.csproj">
+			<sources refid="tests.files" />
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${tmp.dir.n.v6.tests}/Db4objects.Db4o.Tests-2003.csproj">
+			<sources refid="tests.files" />
+		</updatecsharpproject>
+	</target>
+	
+	<target name="preparendoc">
+		<property name="db4o-namespace-summaries.xml" location="${dir.old.build}/config/db4o-namespace-summaries.xml" />		
+		<property name="ndoc.home" location="${dir.old.build}/lib/ndoc" />
+				
+		<delete dir="${dir.dist.ndoc}" failonerror="false" />
+		<mkdir dir="${dir.dist.ndoc}" />
+	</target>
+	
+	<target name="ndoc" depends="preparendoc, ndoc-mono, ndoc-net" description="Build public .net docs">
+	</target>
+	
+	<target name="ndoc-mono" if="mono">
+		<exec executable="mono" failonerror="true">
+			<arg file="${ndoc.home}/bin/mono/2.0/NDocConsole.exe" />
+			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
+			<arg value="-documenter=MSDN" />
+			<arg value="-OutputTarget=Web" />
+			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
+			<arg value="-Title=db4o" />
+			<arg value="-SkipNamespacesWithoutSummaries=True" />
+			<arg value="-SdkLinksOnWeb=False" />
+            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2006  db4objects Inc." />
+            <arg value="-CopyrightHref=http://www.db4o.com/" />
+			<arg value="-CleanIntermediates=True" />
+		</exec>
+	</target>
+	
+	<property name="sandcastle.tools" location="${dir.lib.sandcastle}/ProductionTools" />
+	<property name="XslTransform" location="${sandcastle.tools}/XslTransform" />	
+	<available file="${sandcastle.tools}/MRefBuilder.exe" property="sandcastle.available" />
+	
+	<target name="sandcastle" depends="run-sandcastle, warn-about-sandcastle">
+	</target>
+	
+	<target name="warn-about-sandcastle" unless="sandcastle.available">
+		<echo>
+	The build could not find sandcastle in your system, sandcastle is required if you want
+	to generate the .net documentation.
+	
+	Download and install it from:
+	http://www.microsoft.com/downloads/details.aspx?FamilyID=E82EA71D-DA89-42EE-A715-696E3A4873B2&amp;displaylang=en
+	
+	Then set the dir.lib.sandcastle property pointing to the root of the installation.
+		</echo>
+	</target>
+	
+	<target name="run-sandcastle" if="sandcastle.available">
+	
+		<antcall target="prepare-sandcastle-output" />
+		
+		<exec executable="${dir.build}/lib/boo/booi">
+			<arg file="${dir.build}/src/sandcastle/MRefConfigGenerator.boo" />
+			<arg path="${dir.build}/config" />
+			<arg path="${dir.dist}" />
+		</exec>
+		
+		<exec executable="${sandcastle.tools}/MRefBuilder">
+			<arg value="/config:${dir.dist.ndoc}/Output/MRefBuilder.config" />
+			<arg file="${dir.dist.dll}/Db4objects.Db4o.dll" />
+			<arg value="/out:${dir.dist.ndoc}/sandcastle" />
+			<arg value="/internal-" />
+		</exec>	
+	
+		<exec executable="${XslTransform}">
+			<!--
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddOverloads.xsl" />
+			-->
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ApplyVSDocModel.xsl" />
+			<arg value="${dir.dist.ndoc}/sandcastle" />
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddFriendlyFilenames.xsl" />
+			<arg value="/out:${dir.dist.ndoc}/reflection.xml" />
+		</exec>
+	
+		<exec executable="${XslTransform}">
+			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToManifest.xsl" />
+			<arg value="${dir.dist.ndoc}/reflection.xml" />
+			<arg value="/out:${dir.dist.ndoc}/manifest.xml" />
+		</exec>
+	
+		<exec executable="${sandcastle.tools}/BuildAssembler"
+			dir="${dir.dist.ndoc}">
+			<arg value="/config:${dir.build}/config/sandcastle/sandcastle.config" />
+			<arg file="${dir.dist.ndoc}/manifest.xml" />
+	
+			<env key="XMLDOC" value="${dir.dist.dll}/Db4objects.Db4o.xml" />
+			<env key="DXROOT" value="${dir.lib.sandcastle}" />			
+		</exec>
+	
+		<antcall target="generate-sandcastle-chm" />
+
+	</target>
+	
+	<target name="prepare-sandcastle-output">
+	
+		<!-- adapted from ${dir.lib.sandcastle}/Presentation/vs2005/copyOutput.bat"  -->
+		<mkdir dir="${dir.dist.ndoc}/Output" />
+		<mkdir dir="${dir.dist.ndoc}/Output/html" />
+		<mkdir dir="${dir.dist.ndoc}/Output/icons" />
+		<mkdir dir="${dir.dist.ndoc}/Output/scripts" />
+		<mkdir dir="${dir.dist.ndoc}/Output/styles" />
+		<mkdir dir="${dir.dist.ndoc}/Output/media" />
+		<copy todir="${dir.dist.ndoc}/Output">
+			<fileset dir="${dir.lib.sandcastle}/Presentation/vs2005">
+				<include name="Icons/**" />
+				<include name="Scripts/**" />
+				<include name="Styles/**" />
+			</fileset>
+		</copy>
+		<mkdir dir="${dir.dist.ndoc}/Intellisense" />
+
+	</target>
+	
+	<target name="generate-sandcastle-chm">
+	
+		<property name="dir.transforms" location="${dir.lib.sandcastle}/ProductionTransforms" />
+	
+		<!-- Generate HTML help project -->
+		<exec executable="${XslTransform}">
+			<arg value="/xsl:${dir.transforms}/ReflectionToChmProject.xsl" />
+			<arg value="${dir.dist.ndoc}/reflection.xml" />
+			<arg value="/out:${dir.dist.ndoc}/Output/test.hhp" />
+		</exec>	 
+	
+		<!--  Generate table of contents for HTML help project -->
+		<exec executable="${XslTransform}">
+			<arg value="/xsl:${dir.transforms}/createvstoc.xsl" />
+			<arg value="${dir.dist.ndoc}/reflection.xml" />
+			<arg value="/out:${dir.dist.ndoc}/toc.xml" />
+		</exec>
+
+		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}">
+			<arg value="/xsl:${dir.transforms}/TocToChmContents.xsl" />
+			<arg value="${dir.dist.ndoc}/toc.xml" />
+			<arg value="/out:${dir.dist.ndoc}/Output/test.hhc" />
+		</exec>
+	
+		<!-- Generate Index information -->
+		<exec executable="${XslTransform}">
+			<arg value="/xsl:${dir.transforms}/ReflectionToChmIndex.xsl" />
+			<arg value="${dir.dist.ndoc}/reflection.xml" />
+			<arg value="/out:${dir.dist.ndoc}/Output/test.hhk" />
+		</exec>
+	
+		<property name="hhc.home" location="${env.ProgramFiles}/HTML Help Workshop" />
+		<exec executable="${hhc.home}/hhc.exe" dir="${dir.dist.ndoc}/Output">
+			<arg value="test.hhp" />
+		</exec>
+	
+		<copy file="${dir.dist.ndoc}/Output/test.chm" tofile="${dir.dist.ndoc}/db4o.chm" />
+	</target>	
+		
+	<target name="ndoc-net" unless="mono">
+	
+		<antcall target="sandcastle" />
+	
+		<!--
+		<exec executable="${ndoc.home}/bin/net/2.0/NDocConsole.exe">
+			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
+			<arg value="-documenter=MSDN 2003" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
+			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
+			<arg value="-HtmlHelpName=db4o" />
+			<arg value="-Title=db4o" />
+			<arg value="-SkipNamespacesWithoutSummaries=True" />
+			<arg value="-SdkLinksOnWeb=False" />
+            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2006  db4objects Inc." />
+            <arg value="-CopyrightHref=http://www.db4o.com/" />
+			<arg value="-IncludeFavorites=True" />			
+		</exec>
+		-->
+	</target>
+	
+	<target name="vsdoc" depends="ndoc" description="Build VS.NET 2003 integrated docs" unless="mono">
+		<exec executable="${ndoc.home}/bin/net/1.1/NDocConsole.exe">
+			<arg value="${dir.dist.dll.net}/Db4objects.Db4o.dll" />
+			<arg value="-namespacesummaries=${db4o-namespace-summaries.xml}" />
+			<arg value="-documenter=VS.NET 2003" />
+			<arg value="-OutputDirectory=${dir.dist.ndoc}" />
+			<arg value="-BuildSeparateIndexFile=false" />
+			<arg value="-CollectionNamespace=com.db4o" />
+			<arg value="-CreateFullTextIndex=true" />
+			<arg value="-GenerateCollectionFiles=true" />
+			<arg value="-HtmlHelpName=db4o" />
+			<arg value="-IncludeDefaultStopWordList=true" />
+			<arg value="-LinkToSdkDocVersion=1.1" />
+			<arg value="-PlugInNamespace=ms.vscc" />
+			<arg value="-RegisterTitleWithNamespace=true" />
+			<arg value="-Title=db4o" />
+			<arg value="-SkipNamespacesWithoutSummaries=True" />
+			<arg value="-SdkLinksOnWeb=False" />
+            <arg value="-AssemblyVersionInfo=AssemblyVersion" />
+			<arg value="-CopyrightText=Copyright (C) 2004 - 2006  db4objects Inc." />
+            <arg value="-CopyrightHref=http://www.db4o.com/" />
+			<arg value="-IncludeFavorites=True" />
+			<!--
+            <property name="Preliminary" value="True" />
+            <property name="CleanIntermediates" value="True" />
+            -->
+		</exec>
+	</target>
+	
+	<target name="init" depends="">
+		<initIvyDir/>
+		<buildDb4oDevTool/>
+		<copy todir="${build.db4o.net.basedir}">
+			<fileset dir="${dir.old.build}">
+				<include name="sharpen*" />
+			</fileset>
+		</copy>		
+	</target>
+	
+	<target name="configure-ivy" depends="init">
+        <ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+		<ivy:resolve file="${build.db4o.net.basedir}/ivy.xml"/>
+	</target>
+   
+   <target name="resolve" depends="configure-ivy">        
+		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]" conf="${ivy.configurations}" />
+    </target>
+	
+	<target name="updateSvnLocalCopy" if="updateSvnLocalCopy" >
+		<!-- Db4o Core-->
+		<delete failonerror="false">
+			<fileset dir="${dir.n.v6.core.src}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${dir.n.v6.core}" overwrite="true">
+			<fileset dir="${tmp.dir.n.v6.core}" />
+		</copy>
+		
+		<!--Db4oUnit.Extensions-->
+		<delete failonerror="false">
+			<fileset dir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${dir.n.v6.extensions}">
+			<fileset dir="${tmp.dir.n.v6.extensions}"/>
+		</copy>
+		
+		<!--Db4objects.Db4o.Tests-->
+		<delete failonerror="false">
+			<fileset dir="${dir.n.v6.tests.src}/Common">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${dir.n.v6.tests}">
+			<fileset dir="${tmp.dir.n.v6.tests}"/>
+		</copy>
+	</target>	
+</project>
