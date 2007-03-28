@@ -9,9 +9,14 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			// Apparently db4o 5.2 didn't support null Byte references
+			//ByteMigrationTestCase.class,
 			DateMigrationTestCase.class,
+			DoubleMigrationTestCase.class,
 			FloatMigrationTestCase.class,
 			IntegerMigrationTestCase.class,
+			LongMigrationTestCase.class,
+			ShortMigrationTestCase.class,
 		};
 	}
 

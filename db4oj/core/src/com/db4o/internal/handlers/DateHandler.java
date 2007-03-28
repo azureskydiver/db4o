@@ -58,10 +58,6 @@ public final class DateHandler extends LongHandler {
 		return primitiveMarshaller().readDate(a_bytes);
 	}
 
-	private PrimitiveMarshaller primitiveMarshaller() {
-		return MarshallerFamily.current()._primitive;
-	}
-
 	public void write(Object a_object, Buffer a_bytes){
         // TODO: This is a temporary fix to prevent exceptions with
         // Marshaller.LEGACY.  

@@ -5,12 +5,11 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.reflect.ReflectClass;
 
-
-
-public final class ShortHandler extends PrimitiveHandler
-{
+public final class ShortHandler extends PrimitiveHandler {
+	
     static final int LENGTH = Const4.SHORT_BYTES + Const4.ADDED_LENGTH;
 	
 	private static final Short i_primitive = new Short((short)0);
@@ -42,22 +41,14 @@ public final class ShortHandler extends PrimitiveHandler
 		return i_primitive;
 	}
 	
-	Object read1(Buffer a_bytes){
-		return new Short(readShort(a_bytes));
+	public Object read(MarshallerFamily mf, StatefulBuffer buffer,
+			boolean redirect) throws CorruptionException {
+
+		return mf._primitive.readShort(buffer);
 	}
 	
-	static final short readShort(Buffer a_bytes){
-		int ret = 0;
-		if (Deploy.debug){
-			a_bytes.readBegin(Const4.YAPSHORT);
-		}
-		for (int i = 0; i < Const4.SHORT_BYTES; i++){
-			ret = (ret << 8) + (a_bytes._buffer[a_bytes._offset++] & 0xff);
-		}
-		if (Deploy.debug){
-			a_bytes.readEnd();
-		}
-		return (short)ret;
+	Object read1(Buffer buffer){
+		return primitiveMarshaller().readShort(buffer);
 	}
 
 	public void write(Object a_object, Buffer a_bytes){

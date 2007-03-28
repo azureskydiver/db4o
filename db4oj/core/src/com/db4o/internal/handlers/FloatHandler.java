@@ -43,7 +43,7 @@ public final class FloatHandler extends IntHandler {
     }
 
 	Object read1(Buffer a_bytes) {
-		return MarshallerFamily.current()._primitive.readFloat(a_bytes);
+		return primitiveMarshaller().readFloat(a_bytes);
 	}
 
 
