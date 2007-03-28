@@ -105,9 +105,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     private List4           i_stillToSet;
 
-    // used for YapClass and YapClassCollection
+    // used for ClassMetadata and ClassMetadataRepository
     // may be parent or equal to i_trans
-    protected Transaction             i_systemTrans;
+    private Transaction             i_systemTrans;
 
     // used for Objects
     protected Transaction             i_trans;
@@ -882,7 +882,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return new StatefulBuffer(a_trans, a_address, a_length);
     }
 
-    public final Transaction getSystemTransaction() {
+    public final Transaction systemTransaction() {
         return i_systemTrans;
     }
 
@@ -1027,7 +1027,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	private Config4Impl initializeConfig(Configuration config) {
 		Config4Impl impl=((Config4Impl)config);
 		impl.stream(_this);
-		impl.reflector().setTransaction(getSystemTransaction());
+		impl.reflector().setTransaction(systemTransaction());
 		return impl;
 	}
 

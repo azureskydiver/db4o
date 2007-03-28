@@ -114,7 +114,7 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 	}
 
 	private Transaction trans() {
-		return _mappingDb.getSystemTransaction();
+		return _mappingDb.systemTransaction();
 	}
 	
 	private static class BTreeSpec {

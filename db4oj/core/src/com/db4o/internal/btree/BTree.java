@@ -238,7 +238,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     
     private void ensureDirty(Transaction trans){
         ensureActive(trans);
-        trans.enlist(this);
+        ((LocalTransaction)trans).enlist(this);
         setStateDirty();
     }
     

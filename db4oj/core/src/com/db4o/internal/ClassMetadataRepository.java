@@ -226,7 +226,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         
         int id = yapClass.getID();
         if(id == 0){
-            yapClass.write(stream().getSystemTransaction());
+            yapClass.write(stream().systemTransaction());
             id = yapClass.getID();
         }
         
@@ -428,7 +428,7 @@ public final class ClassMetadataRepository extends PersistentBase {
     public void refreshClasses() {
         ClassMetadataRepository rereader = new ClassMetadataRepository(_systemTransaction);
         rereader.i_id = i_id;
-        rereader.read(stream().getSystemTransaction());
+        rereader.read(stream().systemTransaction());
         Iterator4 i = rereader.i_classes.iterator();
         while (i.moveNext()) {
             ClassMetadata yc = (ClassMetadata)i.current();

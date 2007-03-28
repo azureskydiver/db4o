@@ -26,7 +26,7 @@ public class DefragContextImpl implements DefragContext {
 		abstract LocalObjectContainer db(DefragContextImpl context);
 
 		Transaction transaction(DefragContextImpl context) {
-			return db(context).getSystemTransaction();
+			return db(context).systemTransaction();
 		}
 	}
 	

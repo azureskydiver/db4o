@@ -255,7 +255,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
         // write a zero pointer first
         // to prevent delete interaction trouble
-        i_systemTrans.writePointer(id, 0, 0);
+        ((LocalTransaction)systemTransaction()).writePointer(id, 0, 0);
         
         
         // We have to make sure that object IDs do not collide
@@ -348,7 +348,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         if (!Debug.xbytes){
             if(Deploy.overwrite){
                 if(_blockEndAddress > blocksFor(fileLength())){
-                    StatefulBuffer writer = getWriter(i_systemTrans, _blockEndAddress - 1, blockSize());
+                    StatefulBuffer writer = getWriter(systemTransaction(), _blockEndAddress - 1, blockSize());
                     writer.write();
                 }
             }
@@ -506,7 +506,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         createStringIO(_systemData.stringEncoding());
         
         classCollection().setID(_systemData.classCollectionID());
-        classCollection().read(i_systemTrans);
+        classCollection().read(systemTransaction());
         
         Converter.convert(new ConversionStage.ClassCollectionAvailableStage(this));
         
@@ -698,7 +698,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 		Iterator4 i = i_dirty.iterator();
         while (i.moveNext()) {
         	PersistentBase dirty = (PersistentBase) i.current();
-            dirty.write(i_systemTrans);
+            dirty.write(systemTransaction());
             dirty.notCachedDirty();
         }
         i_dirty.clear();
@@ -738,7 +738,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         }
         
         // FIXME: blocksize should be already valid in FileHeader
-        StatefulBuffer writer = getWriter(i_systemTrans, 0, _fileHeader.length());
+        StatefulBuffer writer = getWriter(systemTransaction(), 0, _fileHeader.length());
         
         _fileHeader.writeFixedPart(this, startFileLockingThread, shuttingDown, writer, blockSize(), freespaceID);
         
@@ -765,7 +765,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     public abstract void overwriteDeletedBytes(int a_address, int a_length);
 
     public final void writeTransactionPointer(int address) {
-        _fileHeader.writeTransactionPointer(getSystemTransaction(), address);
+        _fileHeader.writeTransactionPointer(systemTransaction(), address);
     }
     
     public final void getSlotForUpdate(StatefulBuffer forWriter){
@@ -837,6 +837,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
 	public LocalTransaction getLocalSystemTransaction() {
-		return (LocalTransaction)getSystemTransaction();
+		return (LocalTransaction)systemTransaction();
 	}
 }

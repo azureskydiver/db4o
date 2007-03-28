@@ -10,7 +10,7 @@ public final class MCreateClass extends MsgD implements ServerSideMessage {
 
 	public final boolean processAtServer() {
 		ObjectContainerBase stream = stream();
-		Transaction trans = stream.getSystemTransaction();
+		Transaction trans = stream.systemTransaction();
 		ReflectClass claxx = trans.reflector().forName(readString());
 		boolean ok = false;
 		try {

@@ -187,7 +187,7 @@ public class SlotChange extends TreeInt {
 		}
 	}
 
-	public void writePointer(Transaction trans) {
+	public final void writePointer(LocalTransaction trans) {
 		if (isSetPointer()) {
 			trans.writePointer(_key, _newSlot._address, _newSlot._length);
 		}

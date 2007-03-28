@@ -62,7 +62,7 @@ public class FreespaceManagerIx extends FreespaceManager{
 
         _addressIx._index.commitFreeSpace(_lengthIx._index);
         
-        StatefulBuffer writer = new StatefulBuffer(_file.getSystemTransaction(), _slotAddress, slotLength());
+        StatefulBuffer writer = new StatefulBuffer(_file.systemTransaction(), _slotAddress, slotLength());
         _addressIx._index._metaIndex.write(writer);
         _lengthIx._index._metaIndex.write(writer);
         if (_overwriteDeletedSlots) {
