@@ -1,0 +1,22 @@
+/* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
+
+package com.db4o.db4ounit.common.cs;
+
+import com.db4o.internal.cs.messages.*;
+
+import db4ounit.*;
+
+
+public class SendMessageToClientTestCase extends ClientServerTestCaseBase {
+
+	public static void main(String[] args) {
+		new SendMessageToClientTestCase().runClientServer();
+	}
+	
+	public void test(){
+		serverDispatcher().write(Msg.OK);
+		Msg msg = client().getResponse();
+		Assert.areEqual(Msg.OK, msg);
+	}
+
+}

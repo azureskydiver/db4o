@@ -8,13 +8,11 @@ import com.db4o.internal.cs.*;
 import com.db4o.internal.cs.messages.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
  */
-public class ClientServerPingTestCase extends AbstractDb4oTestCase implements OptOutSolo {
+public class ClientServerPingTestCase extends ClientServerTestCaseBase {
 
 	private static final int	ITEM_COUNT	= 100;
 
@@ -27,11 +25,7 @@ public class ClientServerPingTestCase extends AbstractDb4oTestCase implements Op
 	}
 
 	public void test() throws Exception {
-		AbstractClientServerDb4oFixture fixture = (AbstractClientServerDb4oFixture) fixture();
-		ObjectServerImpl serverImpl = (ObjectServerImpl) fixture.server();
-		Iterator4 iter = serverImpl.iterateDispatchers();
-		iter.moveNext();
-		ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) iter.current();
+		ServerMessageDispatcher dispatcher = serverDispatcher();
 		PingThread pingThread = new PingThread(dispatcher);
 		pingThread.start();
 		for (int i = 0; i < ITEM_COUNT; i++) {

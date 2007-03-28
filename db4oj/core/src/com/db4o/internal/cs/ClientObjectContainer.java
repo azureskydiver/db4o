@@ -322,7 +322,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	 * should ideally be able to trigger some sort of state listener (connection
 	 * dead) on the client.
 	 */
-	private Msg getResponse() {
+	public Msg getResponse() {
 		return _singleThreaded ? getResponseSingleThreaded()
 				: getResponseMultiThreaded();
 	}
