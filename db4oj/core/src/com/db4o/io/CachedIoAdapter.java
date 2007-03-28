@@ -194,7 +194,7 @@ public class CachedIoAdapter extends IoAdapter {
 			startAddress += writtenBytes;
 			bufferOffset += writtenBytes;
 		}
-		long endAddress = startAddress + length;
+		long endAddress = startAddress;
 		_position = endAddress;
 		_fileLength = Math.max(endAddress, _fileLength);
 	}

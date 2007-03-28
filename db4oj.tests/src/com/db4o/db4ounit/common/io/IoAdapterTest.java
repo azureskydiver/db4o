@@ -23,12 +23,16 @@ public class IoAdapterTest implements TestCase, TestLifeCycle {
 
 	public void setUp() throws Exception {
 		deleteAllTestFiles();
-		_adapters = new IoAdapter[] { initCachedRandomAccessAdapter(),
-				initRandomAccessAdapter() };
+		initAdapters();
+	}
+
+	private void initAdapters() throws Exception {
+		_adapters = new IoAdapter[] { initRandomAccessAdapter(),
+				initCachedRandomAccessAdapter(), };
 	}
 
 	public void tearDown() throws Exception {
-		closeAllAdapters();
+		closeAdapters();
 		deleteAllTestFiles();
 	}
 
@@ -60,6 +64,33 @@ public class IoAdapterTest implements TestCase, TestLifeCycle {
 		}
 	}
 
+	public void testReadWriteBytes() throws Exception {
+		String[] strs = {
+				"short string",
+				"this is a really long string, just to make sure that all IoAdapters work correctly. " };
+		for (int i = 0; i < _adapters.length; i++) {
+			for(int j = 0; j < strs.length; j++)
+			assertReadWriteString(_adapters[i], strs[j]);
+		}
+	}
+	
+	private void assertReadWriteString(IoAdapter adapter, String str) throws Exception {
+		byte[] data = str.getBytes();
+		byte[] read = new byte[2048];
+		adapter.seek(0);
+		adapter.write(data);
+		adapter.seek(0);
+		adapter.read(read);
+		Assert.areEqual(str, new String(read, 0, data.length));
+	}
+	
+	public void testReopen() throws Exception {
+		testReadWrite();
+		closeAdapters();
+		initAdapters();
+		testReadWrite();
+	}
+	
 	private void assertSeek(IoAdapter adapter) throws Exception {
 		int count = 1024 * 2 + 10;
 		byte[] data = new byte[count];
@@ -110,7 +141,7 @@ public class IoAdapterTest implements TestCase, TestLifeCycle {
 		new File(_randomAccessFileAdapterFile).delete();
 	}
 
-	private void closeAllAdapters() {
+	private void closeAdapters() {
 		for (int i = 0; i < _adapters.length; ++i) {
 			try {
 				_adapters[i].close();
