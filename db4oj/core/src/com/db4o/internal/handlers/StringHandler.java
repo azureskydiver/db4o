@@ -132,7 +132,7 @@ public final class StringHandler extends BuiltinTypeHandler {
      * This readIndexEntry method reads from the parent slot.
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
      * @throws IOException 
-     * @throws  
+     * @throws CorruptionException
      */
     public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, IOException {
 		return mf._string.readIndexEntry(a_writer);
