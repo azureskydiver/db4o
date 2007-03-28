@@ -152,22 +152,23 @@ public class CachedIoAdapter extends IoAdapter {
 	 */
 	public int read(byte[] buffer, int length) throws IOException {
 		long startAddress = _position;
-		long endAddress = startAddress + length;
 		Page page;
-		int readLength;
+		int readBytes;
+		int bytesToRead = length;
 		int bufferOffset = 0;
-		while (startAddress < endAddress) {
+		while (bytesToRead > 0) {
 			page = getPage(startAddress, true);
-			readLength = (int) (_pageSize - startAddress % _pageSize);
-			readLength = Math.min(buffer.length - bufferOffset, readLength);
-			readLength = Math.min(length, readLength);
-			page.read(buffer, bufferOffset, startAddress, readLength);
+			readBytes = page.read(buffer, bufferOffset, startAddress, bytesToRead);
 			movePageToHead(page);
-			startAddress += readLength;
-			bufferOffset += readLength;
+			if(readBytes == 0) {
+				break;
+			}
+			bytesToRead -= readBytes;
+			startAddress += readBytes;
+			bufferOffset += readBytes;
 		}
-		_position = endAddress;
-		return length;
+		_position = startAddress + bufferOffset;
+		return bufferOffset;
 	}
 
 	/**
@@ -179,25 +180,27 @@ public class CachedIoAdapter extends IoAdapter {
 	 */
 	public void write(byte[] buffer, int length) throws IOException {
 		long startAddress = _position;
-		long endAddress = startAddress + length;
 		Page page = null;
-		int writtenLength;
+		int writtenBytes;
+		int bytesToWrite = length;
 		int bufferOffset = 0;
-		while (startAddress < endAddress) {
-			writtenLength = (int) (_pageSize - startAddress % _pageSize);
-			writtenLength = Math.min(writtenLength, length);
-			writtenLength = Math.min(buffer.length - bufferOffset, writtenLength);
-			// writtenLength == pageSize means it doesn't need to reload the
-			// page from disk since the whole page will be written immediately.
-			boolean load = writtenLength != _pageSize;
-			page = getPage(startAddress, load);
-			page.write(buffer, bufferOffset, startAddress, writtenLength);
+		while (bytesToWrite > 0) {
+//			writtenLength = (int) (_pageSize - startAddress % _pageSize);
+//			writtenLength = Math.min(writtenLength, length);
+//			writtenLength = Math.min(buffer.length - bufferOffset, writtenLength);
+//			// writtenLength == pageSize means it doesn't need to reload the
+//			// page from disk since the whole page will be written immediately.
+//			boolean load = writtenLength != _pageSize;
+			page = getPage(startAddress, true);
+			writtenBytes = page.write(buffer, bufferOffset, startAddress, bytesToWrite);
 			movePageToHead(page);
-			startAddress += writtenLength;
-			bufferOffset += writtenLength;
+			bytesToWrite -= writtenBytes;
+			startAddress += writtenBytes;
+			bufferOffset += writtenBytes;
 		}
+		long endAddress = startAddress + length;
 		_position = endAddress;
-		_fileLength = Math.max(page.startPosition + _pageSize, _fileLength);
+		_fileLength = Math.max(endAddress, _fileLength);
 	}
 
 	/**
@@ -227,21 +230,30 @@ public class CachedIoAdapter extends IoAdapter {
 		return _io.delegatedIoAdapter();
 	}
 	
-	private Page getPage(long startAddress, boolean load) throws IOException {
+	private Page getPage(long startAddress, boolean loadFromDisk)
+			throws IOException {
 		Page page;
 		page = getPageFromCache(startAddress);
-		if (page == null) {
-			page = getFreePage();
-			if (load) {
-				loadPage(page, startAddress);
-			} else {
-				page.startPosition = startAddress;
-			}
+		if (page != null) {
+			return page;
 		}
+		// in case that page is not found in the cache
+		page = getFreePageFromCache();
+		if (loadFromDisk) {
+			getPageFromDisk(page, startAddress);
+		} else {
+			resetPageAddress(page, startAddress);
+		}
+
 		return page;
 	}
 
-	private Page getFreePage() throws IOException {
+	private void resetPageAddress(Page page, long startAddress) {
+		page.startAddress(startAddress);
+		page.endAddress(startAddress);
+	}
+
+	private Page getFreePageFromCache() throws IOException {
 		if (!_tail.isFree()) {
 			flushPage(_tail);
 			// _posPageMap.remove(new Long(tail.startPosition / PAGE_SIZE));
@@ -274,17 +286,22 @@ public class CachedIoAdapter extends IoAdapter {
 		if (!page.dirty) {
 			return;
 		}
-		ioSeek(page.startPosition);
+		ioSeek(page.startAddress());
 		writePage(page);
 		return;
 	}
 
-	private void loadPage(Page page, long pos) throws IOException {
-		page.startPosition = pos - pos % _pageSize;
-		ioSeek(page.startPosition);
+	private void getPageFromDisk(Page page, long pos) throws IOException {
+		long startAddress = pos - pos % _pageSize;
+		page.startAddress(startAddress);
+		ioSeek(page._startAddress);
 		int readCount = _io.read(page.buffer);
-		if (readCount > 0) {
-			_filePointer += readCount;
+		long endAddress = startAddress + readCount;
+		if (readCount >= 0) {
+			_filePointer = endAddress;
+			page.endAddress(endAddress);
+		} else {
+			page.endAddress(page._startAddress);
 		}
 		// _posPageMap.put(new Long(page.startPosition / PAGE_SIZE), page);
 	}
@@ -312,8 +329,8 @@ public class CachedIoAdapter extends IoAdapter {
 	}
 
 	private void writePage(Page page) throws IOException {
-		_io.write(page.buffer);
-		_filePointer += _pageSize;
+		_io.write(page.buffer, page.size());
+		_filePointer = page.endAddress();
 		page.dirty = false;
 	}
 
@@ -324,8 +341,7 @@ public class CachedIoAdapter extends IoAdapter {
 	 */
 	public void seek(long pos) throws IOException {
 		_position = pos;
-		long endAddress = pos - pos % _pageSize + _pageSize;
-		_fileLength = Math.max(_fileLength, endAddress);
+		_fileLength = Math.max(_fileLength, pos);
 	}
 
 	private void ioSeek(long pos) throws IOException {
@@ -337,46 +353,76 @@ public class CachedIoAdapter extends IoAdapter {
 
 	private static class Page {
 
-		public byte[] buffer;
+		private byte[] buffer;
 
-		public long startPosition = -1;
+		private long _startAddress = -1;
+		
+		private long _endAddress;
 
-		public int size;
+		private int bufferSize;
 
-		public boolean dirty;
+		private boolean dirty;
 
 		Page prev;
 
 		Page next;
 
 		public Page(int size) {
-			buffer = new byte[size];
-			this.size = size;
+			bufferSize = size;
+			buffer = new byte[bufferSize];
 		}
 
-		public void read(byte[] out, int outOffset, long startPosition,
-				int length) {
-			int bufferOffset = (int) (startPosition - this.startPosition);
-			System.arraycopy(buffer, bufferOffset, out, outOffset, length);
+		private long endAddress() {
+			return _endAddress;
 		}
 
-		public void write(byte[] data, int dataOffset, long startPosition,
-				int length) {
-			int bufferOffset = (int) (startPosition - this.startPosition);
-			System.arraycopy(data, dataOffset, buffer, bufferOffset, length);
+		private void startAddress(long address) {
+			_startAddress = address;
+		}
+		
+		private long startAddress() {
+			return _startAddress;
+		}
+		
+		private void endAddress(long address) {
+			_endAddress = address;
+		}
+		
+		private int size() {
+			return (int)(_endAddress - _startAddress);
+		}
+		
+		private int read(byte[] out, int outOffset, long startAddress, int length) {
+			int bufferOffset = (int) (startAddress - _startAddress);
+			int pageAvailbeDataSize = (int)(_endAddress - startAddress);
+			int readBytes = Math.min(pageAvailbeDataSize, length);
+			System.arraycopy(buffer, bufferOffset, out, outOffset, readBytes);
+			return readBytes;
+		}
+
+		public int write(byte[] data, int dataOffset, long startAddress, int length) { 
+			int bufferOffset = (int) (startAddress - _startAddress);
+			int pageAvailabeBufferSize = (int) (bufferSize - bufferOffset);
+			int writtenBytes = Math.min(pageAvailabeBufferSize, length);
+			System.arraycopy(data, dataOffset, buffer, bufferOffset, writtenBytes);
+			long endAddress = startAddress + writtenBytes;
+			if(endAddress > _endAddress) {
+				_endAddress = endAddress;
+			}
 			dirty = true;
+			return writtenBytes;
 		}
 
 		public boolean contains(long address) {
-			if (startPosition != -1 && address >= startPosition
-					&& address < startPosition + size) {
+			if (_startAddress != -1 && address >= _startAddress
+					&& address < _startAddress + bufferSize) {
 				return true;
 			}
 			return false;
 		}
 
 		public boolean isFree() {
-			return startPosition == -1;
+			return _startAddress == -1;
 		}
 	}
 
