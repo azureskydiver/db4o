@@ -163,7 +163,12 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 							candidates.addConstraint(qcon);
 
 							qcon.setCandidates(candidates);
-							arrayHandler.readCandidates(_marshallerFamily,arrayBytes[0], candidates);
+							try {
+								arrayHandler.readCandidates(_marshallerFamily,arrayBytes[0], candidates);
+							} catch (IOException e) {
+								// TODO: review this exception handling
+								return false;
+							}
 							arrayBytes[0]._offset = offset;
 
 							final boolean isNot = qcon.isNot();

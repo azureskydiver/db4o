@@ -81,7 +81,7 @@ public interface TypeHandler4 extends Indexable4
      */
     boolean readArray(Object array, Buffer reader);
 	
-	void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates);
+	void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws IOException;
 	
 	TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes);
 	

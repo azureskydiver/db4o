@@ -2,21 +2,40 @@
 
 package com.db4o.internal;
 
-import java.io.*;
+import java.io.IOException;
 
-import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.CorruptionException;
+import com.db4o.Debug;
+import com.db4o.Deploy;
 import com.db4o.config.ObjectMarshaller;
-import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.internal.btree.*;
-import com.db4o.internal.handlers.*;
-import com.db4o.internal.ix.*;
-import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
-import com.db4o.internal.slots.*;
-import com.db4o.reflect.*;
-import com.db4o.reflect.generic.*;
+import com.db4o.config.ObjectTranslator;
+import com.db4o.ext.StoredField;
+import com.db4o.foundation.Collection4;
+import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.No4;
+import com.db4o.foundation.Tree;
+import com.db4o.foundation.Visitor4;
+import com.db4o.internal.btree.BTree;
+import com.db4o.internal.btree.BTreeNodeSearchResult;
+import com.db4o.internal.btree.BTreeRange;
+import com.db4o.internal.btree.FieldIndexKey;
+import com.db4o.internal.btree.FieldIndexKeyHandler;
+import com.db4o.internal.btree.SearchTarget;
+import com.db4o.internal.handlers.ArrayHandler;
+import com.db4o.internal.handlers.MultidimensionalArrayHandler;
+import com.db4o.internal.handlers.PrimitiveHandler;
+import com.db4o.internal.ix.Indexable4;
+import com.db4o.internal.marshall.MarshallerFamily;
+import com.db4o.internal.marshall.ObjectHeader;
+import com.db4o.internal.marshall.ObjectHeaderAttributes;
+import com.db4o.internal.query.processor.QConObject;
+import com.db4o.internal.query.processor.QField;
+import com.db4o.internal.slots.Slot;
+import com.db4o.reflect.ReflectArray;
+import com.db4o.reflect.ReflectClass;
+import com.db4o.reflect.ReflectField;
+import com.db4o.reflect.generic.GenericField;
+import com.db4o.reflect.generic.GenericReflector;
 
 /**
  * @exclude
@@ -305,17 +324,21 @@ public class FieldMetadata implements StoredField {
         }
     }
 
-    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer a_bytes) {
-        if (alive()) {
-            if (i_handler instanceof ClassMetadata) {
-                tree = (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
-            } else if (i_handler instanceof ArrayHandler) {
-                tree = ((ArrayHandler) i_handler).collectIDs(mf, tree, a_bytes);
-            }
-        }
-        return tree;
-
-    }
+    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree,
+			StatefulBuffer a_bytes)  throws FieldIndexException {
+		if (alive()) {
+			if (i_handler instanceof ClassMetadata) {
+				tree = (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
+			} else if (i_handler instanceof ArrayHandler) {
+				try {
+					tree = ((ArrayHandler) i_handler).collectIDs(mf, tree, a_bytes);
+				} catch (IOException e) {
+					throw new FieldIndexException(e, this);
+				}
+			}
+		}
+		return tree;
+	}
 
     void configure(ReflectClass a_class, boolean isPrimitive) {
         i_isPrimitive = isPrimitive | a_class.isPrimitive();
