@@ -431,7 +431,12 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     public StatefulBuffer[] readWritersByIDs(Transaction a_ta, int ids[]) {
 		StatefulBuffer[] yapWriters = new StatefulBuffer[ids.length];
 		for (int i = 0; i < ids.length; ++i) {
-			yapWriters[i] = (StatefulBuffer)readReaderOrWriterByID(a_ta, ids[i], false);
+			if (ids[i] == 0) {
+				yapWriters[i] = null;
+			} else {
+				yapWriters[i] = (StatefulBuffer) readReaderOrWriterByID(a_ta,
+						ids[i], false);
+			}
 		}
 		return yapWriters;
 	}
@@ -441,8 +446,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     private final Buffer readReaderOrWriterByID(Transaction a_ta, int a_id, boolean useReader) {
-        if (a_id == 0) {
-            return null;
+        if (a_id <= 0) {
+            throw new IllegalArgumentException("id must be greater than 0");
         }
         
         if(DTrace.enabled){
