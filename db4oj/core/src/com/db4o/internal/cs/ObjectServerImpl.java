@@ -14,6 +14,8 @@ import com.db4o.internal.*;
 public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable,
 		LoopbackSocketServer {
 	
+	private static final int START_THREAD_WAIT_TIMEOUT = 1000;
+
 	private final String _name;
 
 	private ServerSocket4 _serverSocket;
@@ -51,15 +53,28 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 			return;
 		}
 		
-		startServerSocket();
-		startServerThread();
-		waitForThreadStart();
+		synchronized(_startupLock) {
+			startServerSocket();
+			startServerThread();
+			boolean started=false;
+			while(!started) {
+				try {
+					_startupLock.wait();
+					started=true;
+				}
+				// not specialized to InterruptException for .NET conversion
+				catch (Exception exc) {
+				}
+			}
+		}
 	}
 
 	private void startServerThread() {
-		final Thread thread = new Thread(this);
-		thread.setDaemon(true);
-		thread.start();
+		synchronized(_startupLock) {
+			final Thread thread = new Thread(this);
+			thread.setDaemon(true);
+			thread.start();
+		}
 	}
 
 	private void startServerSocket() {
@@ -73,17 +88,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	private boolean isEmbeddedServer() {
 		return _port <= 0;
-	}
-
-	private void waitForThreadStart() {
-		synchronized (_startupLock) {
-			try {
-				_startupLock.wait(1000);
-				// Give the thread some time to get up.
-				// We will get notified.
-			} catch (Exception e) {
-			}
-		}
 	}
 
 	private void ensureLoadStaticClass() {
