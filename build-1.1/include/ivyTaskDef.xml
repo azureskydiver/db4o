@@ -18,6 +18,7 @@
 	
 	<macrodef name="cleanIvyDir" description="">
 		<sequential>
+			<delete dir="${tempDir}" failonerror="false"/>
 			<delete dir="${tempDir}" failonerror="true"/>
 		</sequential>
 	</macrodef>
