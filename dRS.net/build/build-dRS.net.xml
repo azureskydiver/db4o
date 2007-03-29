@@ -1,0 +1,235 @@
+<project name="Db4objects.Drs" default="publish"  xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	<import file="../../build-1.1/common-1.1.xml"/>
+	<property file="${dir.dRS.net.build}/build.properties" />
+
+	<condition property="mono" value="1">
+		<os family="unix" />
+	</condition>
+	
+	<target name="clean">
+		<cleanIvyDir/>
+	</target>
+	<target name="init" depends="clean, select-db4o-assembly">
+		<tstamp />
+		<initIvyDir/>
+		<buildDb4oDevTool/>		
+		<copy todir="${dir.dRS.net.build}">
+			<fileset dir="${dir.old.build}">
+				<include name="sharpen*" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="select-db4o-assembly" depends="select-mono-assembly, select-dotnet-assembly">
+	</target>
+	<target name="select-dotnet-assembly" unless="mono">
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
+	</target>
+	<target name="select-mono-assembly" if="mono">	
+		<property name="csc.executable" value="gmcs" />
+	</target>
+	<target name="configure" depends="init">
+		<ivy:configure file="${ivy.conf.dir}/ivyconf.xml" />
+	</target>
+	<target name="resolve" depends="configure">
+		<ivy:resolve file="${dir.dRS.net.build}/ivy.xml"/>   
+		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]"/>
+	</target>	
+	<target name="zip" depends="update-drs-project, update-test-project, tutorial">		
+		<zip destfile="${zipPath}">
+			<zipfileset dir="${dir.dRS.net.dist}" includes="*.txt" prefix="${zipDir}"/>
+			<zipfileset dir="${dir.dRS.net.dist}/Solution" includes="*.sln, *.suo QuickStart/**" prefix="${zipDir}"/>
+			<zipfileset dir="${ivy.lib.dir}"		includes="*.dll" prefix="${zipDir}/bin"/>
+			<zipfileset dir="${defaultArtifactDir}"	includes="*.dll" prefix="${zipDir}/bin"/>
+			<zipfileset dir="${doc.out}" prefix="${zipDir}/tutorial"/>
+			<zipfileset dir="${tmp.Db4objects.Drs.dir}" prefix="${zipDir}/Db4objects.Drs"/>
+			<zipfileset dir="${tmp.Db4objects.Drs.Test.dir}" prefix="${zipDir}/Db4objects.Drs.Test"/>			
+		</zip>
+		<delete dir="${doc.out}"/>
+	</target>
+	<target name="publish" depends="zip">
+		<publishToIvy/>		
+		<delete>
+			<fileset dir="${dir.dRS.net.build}" includes="sharpen-*"/>
+		</delete>
+		<antcall target="updateSvnLocalCopy" />	
+		<antcall target="clean" />
+	</target>
+	
+	<target name="prepare-conversion-workspace" depends="resolve">
+		<copy todir="${drs.src.filtered}">
+			<fileset dir="${dir.dRS.src}">
+				<include name="core/**/*.java" />
+				
+				<include name="test/**/test/Db4oClientServerDrsFixture.java" />
+				<include name="test/**/test/ByteArrayTest.java" />
+				<include name="test/**/test/IByteArrayHolder.java" />
+				<include name="test/**/test/ByteArrayHolder.java" />
+				<include name="test/**/test/Db4oDrsFixture.java" />
+				<include name="test/**/test/Db4oTests.java" />
+				<include name="test/**/test/DrsFixture.java" />				
+				<include name="test/**/test/DrsTestCase.java" />
+				<include name="test/**/test/DrsTestSuite.java" />
+				<include name="test/**/test/DrsTestSuiteBuilder.java" />					
+				<include name="test/**/test/ReplicationProviderTest.java" />
+				<include name="test/**/test/GetByUUID.java" />
+				<include name="test/**/test/TheSimplest.java" />
+				<include name="test/**/test/SPCChild.java" />
+				<include name="test/**/test/SPCParent.java" />
+				<include name="test/**/test/Pilot.java" />
+				<include name="test/**/test/Car.java" />
+				<include name="test/**/test/SimpleParentChild.java" />
+				<include name="test/**/test/ReplicationEventTest.java" />
+				<include name="test/**/test/ReplicationAfterDeletionTest.java" />
+				<include name="test/**/test/SimpleArrayTest.java" />
+				<include name="test/**/test/SimpleArrayHolder.java" />
+				<include name="test/**/test/SimpleArrayContent.java" />
+				<include name="test/**/test/ListTest.java" />
+				<include name="test/**/test/ListHolder.java" />
+				<include name="test/**/test/ListContent.java" />					
+				<include name="test/**/test/Db4oListTest.java" />					
+				<include name="test/**/test/R0to4Runner.java" />
+				<include name="test/**/test/R0.java" />
+				<include name="test/**/test/R0Linker.java" />
+				<include name="test/**/test/R1.java" />
+				<include name="test/**/test/R2.java" />
+				<include name="test/**/test/R3.java" />
+				<include name="test/**/test/R4.java" />
+				<include name="test/**/test/ReplicationFeaturesMain.java" />
+				<include name="test/**/test/Replicated.java" />				
+				<include name="test/**/test/Person.java" />				
+				<include name="test/**/test/Student.java" />				
+		
+				<include name="test/**/test/CollectionHolder.java" />
+				<include name="test/**/test/MapHolder.java" />
+				<include name="test/**/test/MapContent.java" />				
+				
+				<exclude name="**/hibernate/**" />
+				<exclude name="**/CollectionHandlerImplTest.java" />
+				<exclude name="**/ReplicationTraversalTest.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="sharpen-drs" depends="prepare-conversion-workspace">
+		<sharpen resource="drs/core" workspace="${drs.conversion.workspace.dir}">
+			<args>
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4o-java5.jar" />
+				<arg value="@sharpen-dRS-options" />
+			</args>
+		</sharpen>
+	</target>
+	<target name="build-drs" depends="sharpen-drs">
+		<copy todir="${tmp.Db4objects.Drs.src.dir}">
+			<fileset dir="${drs.conversion.workspace.dir}/drscsharp/src/Db4objects/Drs">
+				<exclude name="**/ObjectSetAbstractFacade.cs" />
+				<exclude name="**/ObjectSetCollection4Facade.cs" />
+				<exclude name="**/ReplicationPlatform.cs" />			
+			</fileset>
+		</copy>
+		<copy todir="${tmp.Db4objects.Drs.dir}/native">
+			<fileset dir="${Db4objects.Drs.dir}/native"/>
+		</copy>
+		<copy todir="${tmp.Db4objects.Drs.dir}/Properties">
+			<fileset dir="${Db4objects.Drs.dir}/Properties"/>
+		</copy>
+		<updateAssemblyInfo
+			drs="true"
+			version="${db4o.version.full}"
+			configuration=".Net 2.0">
+			<fileset dir="${tmp.Db4objects.Drs.dir}/Properties">
+			<include name="AssemblyInfo.cs" />
+		</fileset>
+		</updateAssemblyInfo>
+		<csc outputfile="${Db4objects.Drs.dll.path}"
+			executable="${csc.executable}"
+			targettype="library"
+			srcdir="${tmp.Db4objects.Drs.dir}">
+			<reference dir="${ivy.lib.dir}">
+				<include name="Db4objects.Db4o.dll" />
+			</reference>
+		</csc>
+	</target>
+	<target name="update-drs-project" depends="build-drs">
+		<copy todir="${tmp.Db4objects.Drs.dir}" file="${Db4objects.Drs.dir}/Db4objects.Drs.csproj"/>
+		<updatecsharpproject projectfile="${tmp.Db4objects.Drs.dir}/Db4objects.Drs.csproj">
+			<sources dir="${tmp.Db4objects.Drs.dir}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+	</target>
+	<target name="sharpen-test" depends="build-drs">		
+		<sharpen resource="drs/test" workspace="${drs.conversion.workspace.dir}">
+			<args>
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4o-java5.jar" />
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/db4ounit.jar" />	
+				<arg value="-cp" />
+				<arg path="${ivy.lib.dir}/dRS.jar" />				
+				<arg value="@sharpen-dRS-options" />
+			</args>
+		</sharpen>
+	</target>
+	<target name="build-test" depends="sharpen-test">
+		<copy todir="${tmp.Db4objects.Drs.Test.src.dir}">
+			<fileset dir="${drs.conversion.workspace.dir}/drscsharp/src/Db4objects/Drs/Test"/>
+		</copy>
+		<csc outputfile="${Db4objects.Drs.Test.dll.path}"
+			executable="${csc.executable}"
+			targettype="library"
+			srcdir="${tmp.Db4objects.Drs.Test.dir}">
+			<reference dir="${ivy.lib.dir}">
+				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4oUnit.dll" />
+			</reference>
+			<reference dir="${defaultArtifactDir}">
+				<include name="${Db4objects.Drs.dll}" />
+			</reference>
+		</csc>
+	</target>
+	<target name="update-test-project" depends="build-test">
+		<copy todir="${tmp.Db4objects.Drs.Test.dir}" file="${Db4objects.Drs.Test.dir}/Db4objects.Drs.Test.csproj"/>
+		<updatecsharpproject projectfile="${tmp.Db4objects.Drs.Test.dir}/Db4objects.Drs.Test.csproj">
+			<sources dir="${tmp.Db4objects.Drs.Test.dir}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+	</target>
+	
+	<target name="tutorial" depends="resolve">
+		<delete dir="${doc.out}" />
+		<java classname="com.yetac.doctor.Doctor">
+			<arg line="${dir.dRS.net.build}/tutorial ${font.pdf.base}" />
+			<classpath>
+				<fileset dir="${ivy.lib.dir}">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${dir.dRS}/lib/doctor">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<move file="${doc.out}/doctor.pdf" tofile="${doc.out}/dRS.net-tutorial.pdf"/>
+	</target>
+	<target name="updateSvnLocalCopy" if="updateSvnLocalCopy" >
+		<delete failonerror="true">
+			<fileset dir="${Db4objects.Drs.src.dir}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${Db4objects.Drs.src.dir}" overwrite="true">
+			<fileset dir="${tmp.Db4objects.Drs.src.dir}" />
+		</copy>
+		
+		<delete failonerror="true">
+			<fileset dir="${Db4objects.Drs.Test.src.dir}">
+				<include name="**/*.cs" />
+				<exclude name="**/.svn/**" />
+			</fileset>
+		</delete>
+		<copy todir="${Db4objects.Drs.Test.src.dir}" overwrite="true">
+			<fileset dir="${tmp.Db4objects.Drs.Test.src.dir}" />
+		</copy>
+	</target>
+</project>
