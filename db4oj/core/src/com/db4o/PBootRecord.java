@@ -19,7 +19,7 @@ import com.db4o.internal.*;
  * @exclude
  * @persistent
  */
-public class PBootRecord extends P1Object implements Db4oTypeImpl, Internal4{
+public class PBootRecord extends P1Object implements Internal4{
 
     public Db4oDatabase       i_db;
 

@@ -130,7 +130,6 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		System.arraycopy(bytes, 0, newBytes, 0, bytes.length);
 		_memoryFile.setBytes(newBytes);
 		_length = newBytes.length;
-		bytes = null; // hey, GC, kick me hard!
 	}
 
     public void overwriteDeletedBytes(int a_address, int a_length) {

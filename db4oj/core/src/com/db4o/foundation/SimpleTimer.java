@@ -6,7 +6,7 @@ package com.db4o.foundation;
  * @sharpen.ignore
  * @exclude
  */
-public class SimpleTimer implements Runnable {
+public final class SimpleTimer implements Runnable {
 	
 	private final Runnable _runnable;
 	private final int _interval;

@@ -6,7 +6,6 @@ package com.db4o.internal;
 final class Session
 {
 	final String			i_fileName;
-	ObjectContainerBase				i_stream;
 	private int				i_openCount;
 	
 	Session(String a_fileName){
@@ -44,15 +43,5 @@ final class Session
 	String fileName(){
 		return i_fileName;
 	}
-	
-	ObjectContainerBase subSequentOpen(){
-		if( i_stream.isClosed()){
-			return null;
-		}
-		i_openCount ++;
-		return i_stream;
-	}
-	
-
 	
 }

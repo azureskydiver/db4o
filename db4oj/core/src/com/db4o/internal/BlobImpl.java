@@ -53,15 +53,23 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
     private void copy(File from, File to) throws IOException {
         to.delete();
         BufferedInputStream in = new BufferedInputStream(new FileInputStream(from));
-        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(to));
-        byte[] buffer=new byte[COPYBUFFER_LENGTH];
-        int bytesread=-1;
-        while ((bytesread=in.read(buffer))>=0) {
-            out.write(buffer,0,bytesread);
+        try {
+	        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(to));
+	        try {
+		        byte[] buffer=new byte[COPYBUFFER_LENGTH];
+		        int bytesread=-1;
+		        while ((bytesread=in.read(buffer))>=0) {
+		            out.write(buffer,0,bytesread);
+		        }
+		        out.flush();
+	        }
+	        finally {
+	        	out.close();
+	        }
         }
-        out.flush();
-        out.close();
-        in.close();
+        finally {
+        	in.close();
+        }
     }
 
     public Object createDefault(Transaction a_trans) {

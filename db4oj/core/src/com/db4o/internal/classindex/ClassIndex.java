@@ -70,7 +70,7 @@ import com.db4o.internal.slots.Slot;
         try {
 			reader.readEncrypt(ta.stream(), slot._address);
 		} catch (IOException exc) {
-			throw new ClassIndexException(exc, _clazz);
+			throw new ClassIndexException(exc, _clazz.getName());
 		}
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
