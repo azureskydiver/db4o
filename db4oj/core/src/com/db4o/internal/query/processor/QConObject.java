@@ -175,6 +175,10 @@ public class QConObject extends QCon {
     }
 
     void evaluateSimpleExec(QCandidates a_candidates) {
+    	
+    	// TODO: The following can be skipped if we used the index on
+    	//       this field to load the objects, if hasOrdering() is false
+    	
     	if (i_field.isSimple() || isNullConstraint()) {
         	a_candidates.traverse(i_field);
             prepareComparison(i_field);
