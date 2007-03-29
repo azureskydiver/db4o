@@ -231,9 +231,9 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 		if (beginProcessing()) {
 		    
 		    ObjectContainerBase stream = ta.stream();
-
-			if (a_reader == null) {
-				a_reader = stream.readWriterByID(ta, getID());
+		    int id = getID();
+			if (a_reader == null && id > 0) {
+				a_reader = stream.readWriterByID(ta, id);
 			}
 			if (a_reader != null) {
                 
