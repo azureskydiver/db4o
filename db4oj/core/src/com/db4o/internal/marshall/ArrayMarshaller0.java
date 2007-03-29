@@ -15,7 +15,6 @@ import com.db4o.internal.Transaction;
 import com.db4o.internal.handlers.ArrayHandler;
 import com.db4o.internal.query.processor.QCandidate;
 import com.db4o.internal.query.processor.QCandidates;
-import com.db4o.io.UncheckedIOException;
 
 
 class ArrayMarshaller0  extends ArrayMarshaller{
@@ -67,18 +66,9 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         return arrayHandler.read1(_family, bytes);
     }
     
-    public void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) {
-        Buffer bytes = null;
-		try {
-			bytes = reader.readEmbeddedObject(candidates.i_trans);
-		} catch (IOException e) {
-			// FIXME: WILL BE HANDLED IN NEXT SESSION.
-			throw new UncheckedIOException(e);
-		}
-        if (bytes == null) {
-            return;
-        }
-        if(Deploy.debug){
+    public void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) throws IOException {
+        Buffer bytes = reader.readEmbeddedObject(candidates.i_trans);
+		if(Deploy.debug){
             bytes.readBegin(arrayHandler.identifier());
         }
         int count = arrayHandler.elementCount(candidates.i_trans, bytes);
@@ -93,13 +83,8 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         return arrayHandler.read1Query(trans,_family, bytes);
     }
     
-    protected Buffer prepareIDReader(Transaction trans,Buffer reader) throws UncheckedIOException {
-    	try {
-			return reader.readEmbeddedObject(trans);
-		} catch (IOException e) {
-			// FIXME: WILL BE HANDLED IN NEXT SESSION.
-			throw new UncheckedIOException(e);
-		}
+    protected Buffer prepareIDReader(Transaction trans,Buffer reader) throws IOException {
+    	return reader.readEmbeddedObject(trans);
     }
     
     public void defragIDs(ArrayHandler arrayHandler,ReaderPair readers) {

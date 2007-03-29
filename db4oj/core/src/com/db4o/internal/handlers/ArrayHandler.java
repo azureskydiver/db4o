@@ -67,7 +67,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
     	return i_handler.classReflector();
     }
 
-    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader){
+    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader) throws IOException{
         return mf._array.collectIDs(this, tree, reader);
     }
     
@@ -274,7 +274,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return this;
     }
 
-    public void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) {
+    public void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws IOException {
         mf._array.readCandidates(this, reader, candidates);
     }
     

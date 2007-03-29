@@ -18,7 +18,7 @@ public abstract class ArrayMarshaller {
     
     public abstract void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws IOException;
     
-    public final TreeInt collectIDs(ArrayHandler arrayHandler, TreeInt tree, StatefulBuffer reader){
+    public final TreeInt collectIDs(ArrayHandler arrayHandler, TreeInt tree, StatefulBuffer reader) throws IOException{
         Transaction trans = reader.getTransaction();
         return arrayHandler.collectIDs1(trans, tree, prepareIDReader(trans,reader));
     }
@@ -29,11 +29,11 @@ public abstract class ArrayMarshaller {
     
     public abstract Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, IOException;
     
-    public abstract void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates);
+    public abstract void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) throws IOException;
     
     public abstract Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, IOException;
     
     public abstract Object writeNew(ArrayHandler arrayHandler, Object obj, boolean topLevel, StatefulBuffer writer);
 
-    protected abstract Buffer prepareIDReader(Transaction trans,Buffer reader);
+    protected abstract Buffer prepareIDReader(Transaction trans,Buffer reader) throws IOException;
 }
