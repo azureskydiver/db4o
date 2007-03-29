@@ -16,7 +16,7 @@ public abstract class ArrayMarshaller {
     
     public MarshallerFamily _family;
     
-    public abstract void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader);
+    public abstract void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws IOException;
     
     public final TreeInt collectIDs(ArrayHandler arrayHandler, TreeInt tree, StatefulBuffer reader){
         Transaction trans = reader.getTransaction();

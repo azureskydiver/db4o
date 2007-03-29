@@ -32,7 +32,7 @@ public final class UntypedFieldHandler extends ClassMetadata {
 		}
 	}
     
-	public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer reader) {
+	public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer reader) throws IOException {
         mf._untyped.deleteEmbedded(reader);
 	}
 	

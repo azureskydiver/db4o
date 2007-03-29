@@ -4,43 +4,41 @@ package com.db4o.internal.marshall;
 
 import java.io.IOException;
 
-import com.db4o.*;
-import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
-import com.db4o.internal.query.processor.*;
+import com.db4o.CorruptionException;
+import com.db4o.Deploy;
+import com.db4o.internal.Buffer;
+import com.db4o.internal.ClassMetadata;
+import com.db4o.internal.Const4;
+import com.db4o.internal.ReaderPair;
+import com.db4o.internal.StatefulBuffer;
+import com.db4o.internal.Transaction;
+import com.db4o.internal.handlers.ArrayHandler;
+import com.db4o.internal.query.processor.QCandidate;
+import com.db4o.internal.query.processor.QCandidates;
 import com.db4o.io.UncheckedIOException;
 
 
 class ArrayMarshaller0  extends ArrayMarshaller{
     
-    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader)  throws UncheckedIOException {
+    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws IOException {
         int address = reader.readInt();
         int length = reader.readInt();
         if (address <= 0) {
             return;
         }
         Transaction trans = reader.getTransaction();
-        if (reader.cascadeDeletes() > 0 && arrayHandler.i_handler instanceof ClassMetadata) {
-            StatefulBuffer bytes;
-			try {
-				bytes = reader.getStream().readWriterByAddress(
-                    trans,
-                    address,
-                    length);
-			} catch (IOException e) {
-				// FIXME: WILL BE HANDLED IN NEXT SESSION.
-				throw new UncheckedIOException(e);
+        if (reader.cascadeDeletes() > 0
+				&& arrayHandler.i_handler instanceof ClassMetadata) {
+			StatefulBuffer bytes = reader.getStream().readWriterByAddress(
+					trans, address, length);
+			if (Deploy.debug) {
+				bytes.readBegin(arrayHandler.identifier());
 			}
-            if (bytes != null) {
-                if (Deploy.debug) {
-                    bytes.readBegin(arrayHandler.identifier());
-                }
-                bytes.setCascadeDeletes(reader.cascadeDeletes());
-                for (int i = arrayHandler.elementCount(trans, bytes); i > 0; i--) {
-                    arrayHandler.i_handler.deleteEmbedded(_family, bytes);
-                }
-            }
-        }
+			bytes.setCascadeDeletes(reader.cascadeDeletes());
+			for (int i = arrayHandler.elementCount(trans, bytes); i > 0; i--) {
+				arrayHandler.i_handler.deleteEmbedded(_family, bytes);
+			}
+		}
         trans.slotFreeOnCommit(address, address, length);
     }
     

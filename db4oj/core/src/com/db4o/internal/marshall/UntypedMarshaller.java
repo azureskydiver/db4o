@@ -15,7 +15,7 @@ public abstract class UntypedMarshaller {
     
     MarshallerFamily _family;
     
-    public abstract void deleteEmbedded(StatefulBuffer reader);
+    public abstract void deleteEmbedded(StatefulBuffer reader) throws IOException;
     
     public abstract Object writeNew(Object obj, boolean restoreLinkOffset, StatefulBuffer writer);
 

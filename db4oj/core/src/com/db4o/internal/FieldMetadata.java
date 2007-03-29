@@ -364,31 +364,33 @@ public class FieldMetadata implements StoredField {
         
         try {
 			removeIndexEntry(mf, a_bytes);
+			boolean dotnetValueType = false;
+			if (Deploy.csharp) {
+				dotnetValueType = Platform4.isValueType(i_handler
+						.classReflector());
+			}
+			if ((i_config != null && i_config.cascadeOnDelete().definiteYes())
+					|| dotnetValueType) {
+				int preserveCascade = a_bytes.cascadeDeletes();
+				a_bytes.setCascadeDeletes(1);
+				i_handler.deleteEmbedded(mf, a_bytes);
+				a_bytes.setCascadeDeletes(preserveCascade);
+			} else if (i_config != null
+					&& i_config.cascadeOnDelete().definiteNo()) {
+				int preserveCascade = a_bytes.cascadeDeletes();
+				a_bytes.setCascadeDeletes(0);
+				i_handler.deleteEmbedded(mf, a_bytes);
+				a_bytes.setCascadeDeletes(preserveCascade);
+			} else {
+				i_handler.deleteEmbedded(mf, a_bytes);
+			}
 		} catch (CorruptionException exc) {
-			throw new FieldIndexException(exc,this);
+			throw new FieldIndexException(exc, this);
 		} catch (IOException exc) {
-			throw new FieldIndexException(exc,this);
+			throw new FieldIndexException(exc, this);
 		}
         
-        boolean dotnetValueType = false;
-        if(Deploy.csharp){
-            dotnetValueType = Platform4.isValueType(i_handler.classReflector());    
-        }
-        
-        if ((i_config != null && i_config.cascadeOnDelete().definiteYes())
-            || dotnetValueType) {
-            int preserveCascade = a_bytes.cascadeDeletes();
-            a_bytes.setCascadeDeletes(1);
-            i_handler.deleteEmbedded(mf, a_bytes);
-            a_bytes.setCascadeDeletes(preserveCascade);
-        }else if(i_config != null && i_config.cascadeOnDelete().definiteNo()){
-            int preserveCascade = a_bytes.cascadeDeletes();
-            a_bytes.setCascadeDeletes(0);
-            i_handler.deleteEmbedded(mf, a_bytes);
-            a_bytes.setCascadeDeletes(preserveCascade);
-        } else {
-            i_handler.deleteEmbedded(mf, a_bytes);
-        }
+
     }
 
     private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, IOException {

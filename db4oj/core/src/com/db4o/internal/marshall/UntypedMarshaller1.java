@@ -17,7 +17,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return false;
     }
     
-    public void deleteEmbedded(StatefulBuffer reader) {
+    public void deleteEmbedded(StatefulBuffer reader) throws IOException {
         int payLoadOffset = reader.readInt();
         if (payLoadOffset > 0) {
             int linkOffset = reader._offset;
