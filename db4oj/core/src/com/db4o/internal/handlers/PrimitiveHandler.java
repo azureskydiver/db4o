@@ -54,7 +54,7 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
         a_bytes.incrementOffset(linkLength());
     }
 
-    public boolean equals(TypeHandler4 a_dataType) {
+    public boolean isEqual(TypeHandler4 a_dataType) {
         return (this == a_dataType);
     }
     

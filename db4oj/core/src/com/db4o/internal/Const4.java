@@ -13,8 +13,6 @@ import com.db4o.*;
  */
 public final class Const4
 {
-	public static final Object initMe = init();
-
 	public static final byte   YAPFILEVERSION		= 4;
 
 	public static final byte	YAPBEGIN			= (byte)'{';
@@ -115,17 +113,17 @@ public final class Const4
 	public static final int MAXIMUM_ARRAY_ENTRIES = 7000000; // 7 Million 
 	public static final int MAXIMUM_ARRAY_ENTRIES_PRIMITIVE = MAXIMUM_ARRAY_ENTRIES * 100; // 70 MB for byte arrays
 	
-	public static Class CLASS_COMPARE;
-	public static Class CLASS_DB4OTYPE;
-	public static Class CLASS_DB4OTYPEIMPL;
-	public static Class CLASS_INTERNAL;
-	public static Class CLASS_UNVERSIONED;
-	public static Class CLASS_OBJECT;
-	public static Class CLASS_OBJECTCONTAINER;
-    public static Class CLASS_REPLICATIONRECORD; 
-	public static Class CLASS_STATICFIELD;
-	public static Class CLASS_STATICCLASS;
-	public static Class CLASS_TRANSIENTCLASS;
+	public final static Class CLASS_COMPARE = com.db4o.config.Compare.class;
+	public final static Class CLASS_DB4OTYPE = com.db4o.types.Db4oType.class;
+	public final static Class CLASS_DB4OTYPEIMPL = Db4oTypeImpl.class;
+	public final static Class CLASS_INTERNAL = Internal4.class;
+	public final static Class CLASS_UNVERSIONED = com.db4o.types.Unversioned.class;
+	public final static Class CLASS_OBJECT = new Object().getClass();
+	public final static Class CLASS_OBJECTCONTAINER = ObjectContainer.class;
+    public final static Class CLASS_REPLICATIONRECORD = new ReplicationRecord().getClass(); 
+	public final static Class CLASS_STATICFIELD = new StaticField().getClass();
+	public final static Class CLASS_STATICCLASS = new StaticClass().getClass();
+	public final static Class CLASS_TRANSIENTCLASS = com.db4o.types.TransientClass.class;
     
 	public static final String EMBEDDED_CLIENT_USER = "embedded client";
 	
@@ -147,22 +145,6 @@ public final class Const4
     
 	public static final UnicodeStringIO stringIO = new UnicodeStringIO();
 	
-	private static final Object init(){
-        CLASS_OBJECT = new Object().getClass();
-        CLASS_COMPARE = com.db4o.config.Compare.class;
-        CLASS_DB4OTYPE = com.db4o.types.Db4oType.class; 
-        CLASS_DB4OTYPEIMPL = Db4oTypeImpl.class;
-        CLASS_INTERNAL = Internal4.class;
-        CLASS_UNVERSIONED = com.db4o.types.Unversioned.class;
-        CLASS_OBJECTCONTAINER = ObjectContainer.class;
-        CLASS_REPLICATIONRECORD = new ReplicationRecord().getClass();
-        CLASS_STATICFIELD = new StaticField().getClass();
-        CLASS_STATICCLASS = new StaticClass().getClass();
-        CLASS_TRANSIENTCLASS = com.db4o.types.TransientClass.class;
-		
-	    return null;
-	}
-    
 	// system classes that need to get loaded first
 	public static final Class[] ESSENTIAL_CLASSES = {
 	// StaticClass should load Staticfield

@@ -153,8 +153,8 @@ public class FreespaceManagerIx extends FreespaceManager{
         }
         int address = getSlot1(length);
         
-        if(address != 0){
-            if(DTrace.enabled){
+        if(DTrace.enabled){
+        	if(address != 0){
                 DTrace.GET_FREESPACE.logLength(address, length);
             }
         }
