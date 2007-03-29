@@ -105,7 +105,11 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			LocalObjectContainer stream = getStream();
 			_yapClass = stream.classMetadataForReflectClass(stream.reflector().forObject(_member));
 			_key = (int) stream.getID(_member);
-            setBytes(stream.readReaderByID(getTransaction(), _key));
+			if (_key == 0) {
+				setBytes(null);
+			} else {
+				setBytes(stream.readReaderByID(getTransaction(), _key));
+			}
 		}
 	}
 
