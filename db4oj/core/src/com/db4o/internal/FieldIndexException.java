@@ -5,7 +5,8 @@ import com.db4o.foundation.ChainedRuntimeException;
 
 public class FieldIndexException extends ChainedRuntimeException {
 
-	private FieldMetadata _field;
+	private String _className;
+	private String _fieldName;
 	
 	public FieldIndexException(FieldMetadata field) {
 		this(null,null,field);
@@ -20,16 +21,25 @@ public class FieldIndexException extends ChainedRuntimeException {
 	}
 
 	public FieldIndexException(String msg, Throwable cause,FieldMetadata field) {
-		super(enhancedMessage(msg, field), cause);
-		_field=field;
+		this(msg,cause,field.getParentYapClass().getName(),field.getName());
 	}
 
-	public FieldMetadata field() {
-		return _field;
+	public FieldIndexException(String msg, Throwable cause,String className,String fieldName) {
+		super(enhancedMessage(msg,className, fieldName), cause);
+		_className=className;
+		_fieldName=fieldName;
+	}
+
+	public String className() {
+		return _className;
 	}
 	
-	private static String enhancedMessage(String msg,FieldMetadata field) {
-		String enhancedMessage="Field index for "+field.getParentYapClass().getName()+"#"+field.getName();
+	public String fieldName() {
+		return _fieldName;
+	}
+	
+	private static String enhancedMessage(String msg,String className,String fieldName) {
+		String enhancedMessage="Field index for "+className+"#"+fieldName;
 		if(msg!=null) {
 			enhancedMessage+=": "+msg;
 		}

@@ -134,14 +134,14 @@ class JDKReflect extends JDK {
 
     public Reflector createReflector(Object classLoader) {
     	if(classLoader==null) {
-            classLoader=getContextClassLoader();
             
             // FIXME: The new reflector does not like the ContextCloader at all.
             //        Resolve hierarchies.
+            // classLoader=getContextClassLoader();
             
             // if (cl == null || classloaderName.indexOf("eclipse") >= 0) {
                 classLoader= Db4o.class.getClassLoader();
-            // }
+            // 
     	}
     	return new JdkReflector((ClassLoader)classLoader);
     }

@@ -1167,13 +1167,13 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
 
-        obj = instantiateObject(buffer, mf);
-        if (obj == null) {
+        Object instantiated = instantiateObject(buffer, mf);
+        if (instantiated == null) {
         	return null;
         }
-        buffer.getStream().peeked(yapObject.getID(), obj);
-        instantiateFields(yapObject, obj, mf, attributes, buffer);
-        return obj;
+        buffer.getStream().peeked(yapObject.getID(), instantiated);
+        instantiateFields(yapObject, instantiated, mf, attributes, buffer);
+        return instantiated;
     }
 
     void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
