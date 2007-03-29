@@ -130,13 +130,13 @@ public class CachedIoAdapter extends IoAdapter {
 
 	private void initCache() {
 		_head = new Page(_pageSize);
-		_head.prev = null;
+		_head._prev = null;
 		Page page = _head;
 		Page next = _head;
 		for (int i = 0; i < _pageCount - 1; ++i) {
 			next = new Page(_pageSize);
-			page.next = next;
-			next.prev = page;
+			page._next = next;
+			next._prev = page;
 			page = next;
 		}
 		_tail = next;
@@ -158,9 +158,10 @@ public class CachedIoAdapter extends IoAdapter {
 		int bufferOffset = 0;
 		while (bytesToRead > 0) {
 			page = getPage(startAddress, true);
+			page.ensureEndAddress(getLength());
 			readBytes = page.read(buffer, bufferOffset, startAddress, bytesToRead);
 			movePageToHead(page);
-			if(readBytes == 0) {
+			if(readBytes <= 0) {
 				break;
 			}
 			bytesToRead -= readBytes;
@@ -168,7 +169,7 @@ public class CachedIoAdapter extends IoAdapter {
 			bufferOffset += readBytes;
 		}
 		_position = startAddress + bufferOffset;
-		return bufferOffset;
+		return bufferOffset == 0 ? -1 : bufferOffset;
 	}
 
 	/**
@@ -188,6 +189,7 @@ public class CachedIoAdapter extends IoAdapter {
 			// page doesn't need to loadFromDisk if the whole page is dirty
 			boolean loadFromDisk = (length < _pageSize) || (startAddress % _pageSize != 0);
 			page = getPage(startAddress, loadFromDisk);
+			page.ensureEndAddress(getLength());
 			writtenBytes = page.write(buffer, bufferOffset, startAddress, bytesToWrite);
 			movePageToHead(page);
 			bytesToWrite -= writtenBytes;
@@ -263,7 +265,7 @@ public class CachedIoAdapter extends IoAdapter {
 			if (page.contains(pos)) {
 				return page;
 			}
-			page = page.next;
+			page = page._next;
 		}
 		return null;
 		// Page page = (Page) _posPageMap.get(new Long(pos/PAGE_SIZE));
@@ -274,12 +276,12 @@ public class CachedIoAdapter extends IoAdapter {
 		Page node = _head;
 		while (node != null) {
 			flushPage(node);
-			node = node.next;
+			node = node._next;
 		}
 	}
 
 	private void flushPage(Page page) throws IOException {
-		if (!page.dirty) {
+		if (!page._dirty) {
 			return;
 		}
 		ioSeek(page.startAddress());
@@ -296,11 +298,12 @@ public class CachedIoAdapter extends IoAdapter {
 	}
 
 	private int ioRead(Page page) throws IOException {
-		int count = _io.read(page.buffer);
-		count = count < 0 ? 0 : count;
-		long endAddress = page._startAddress + count;
-		_filePointer = endAddress;
-		page.endAddress(endAddress);
+		int count = _io.read(page._buffer);
+		if (count > 0) {
+			long endAddress = page._startAddress + count;
+			_filePointer = endAddress;
+			page.endAddress(endAddress);
+		}
 		return count;
 	}
 
@@ -309,27 +312,27 @@ public class CachedIoAdapter extends IoAdapter {
 			return;
 		}
 		if (page == _tail) {
-			Page tempTail = _tail.prev;
-			tempTail.next = null;
-			_tail.next = _head;
-			_tail.prev = null;
-			_head.prev = page;
+			Page tempTail = _tail._prev;
+			tempTail._next = null;
+			_tail._next = _head;
+			_tail._prev = null;
+			_head._prev = page;
 			_head = _tail;
 			_tail = tempTail;
 		} else {
-			page.prev.next = page.next;
-			page.next.prev = page.prev;
-			page.next = _head;
-			_head.prev = page;
-			page.prev = null;
+			page._prev._next = page._next;
+			page._next._prev = page._prev;
+			page._next = _head;
+			_head._prev = page;
+			page._prev = null;
 			_head = page;
 		}
 	}
 
 	private void writePageToDisk(Page page) throws IOException {
-		_io.write(page.buffer, page.size());
+		_io.write(page._buffer, page.size());
 		_filePointer = page.endAddress();
-		page.dirty = false;
+		page._dirty = false;
 	}
 
 	/**
@@ -339,7 +342,6 @@ public class CachedIoAdapter extends IoAdapter {
 	 */
 	public void seek(long pos) throws IOException {
 		_position = pos;
-		_fileLength = Math.max(_fileLength, pos);
 	}
 
 	private void ioSeek(long pos) throws IOException {
@@ -351,23 +353,42 @@ public class CachedIoAdapter extends IoAdapter {
 
 	private static class Page {
 
-		byte[] buffer;
+		byte[] _buffer;
 
 		long _startAddress = -1;
 		
 		long _endAddress;
 
-		int bufferSize;
+		int _bufferSize;
 
-		boolean dirty;
+		boolean _dirty;
 
-		Page prev;
+		Page _prev;
 
-		Page next;
+		Page _next;
+		
+		public static byte [] zeroBytes;
 
 		public Page(int size) {
-			bufferSize = size;
-			buffer = new byte[bufferSize];
+			_bufferSize = size;
+			_buffer = new byte[_bufferSize];
+		}
+
+		/*
+		 * This method must be invoked before page.write, because
+		 * seek and write may write ahead the end of file.
+		 */
+		void ensureEndAddress(long fileLength) {
+			long bufferEndAddress = _startAddress + _bufferSize;
+			if (_endAddress < bufferEndAddress && fileLength > bufferEndAddress) {
+				if (zeroBytes == null) {
+					zeroBytes = new byte[_bufferSize];
+				}
+				System.arraycopy(zeroBytes, 0, _buffer,
+						(int) (_endAddress - _startAddress),
+						(int) (bufferEndAddress - _endAddress));
+				_endAddress = bufferEndAddress;
+			}
 		}
 
 		long endAddress() {
@@ -394,29 +415,29 @@ public class CachedIoAdapter extends IoAdapter {
 			int bufferOffset = (int) (startAddress - _startAddress);
 			int pageAvailbeDataSize = (int)(_endAddress - startAddress);
 			int readBytes = Math.min(pageAvailbeDataSize, length);
-			System.arraycopy(buffer, bufferOffset, out, outOffset, readBytes);
+			if(readBytes <= 0) { // meaning reach EOF
+				return -1;
+			}
+			System.arraycopy(_buffer, bufferOffset, out, outOffset, readBytes);
 			return readBytes;
 		}
 
 		int write(byte[] data, int dataOffset, long startAddress, int length) { 
 			int bufferOffset = (int) (startAddress - _startAddress);
-			int pageAvailabeBufferSize = (int) (bufferSize - bufferOffset);
+			int pageAvailabeBufferSize = (int) (_bufferSize - bufferOffset);
 			int writtenBytes = Math.min(pageAvailabeBufferSize, length);
-			System.arraycopy(data, dataOffset, buffer, bufferOffset, writtenBytes);
+			System.arraycopy(data, dataOffset, _buffer, bufferOffset, writtenBytes);
 			long endAddress = startAddress + writtenBytes;
 			if(endAddress > _endAddress) {
 				_endAddress = endAddress;
 			}
-			dirty = true;
+			_dirty = true;
 			return writtenBytes;
 		}
 
 		boolean contains(long address) {
-			if (_startAddress != -1 && address >= _startAddress
-					&& address < _startAddress + bufferSize) {
-				return true;
-			}
-			return false;
+			return (_startAddress != -1 && address >= _startAddress
+					&& address < _startAddress + _bufferSize);
 		}
 
 		boolean isFree() {

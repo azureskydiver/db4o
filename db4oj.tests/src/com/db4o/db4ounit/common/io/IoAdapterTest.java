@@ -10,6 +10,7 @@ import com.db4o.io.IoAdapter;
 import com.db4o.io.RandomAccessFileAdapter;
 
 import db4ounit.Assert;
+import db4ounit.CodeBlock;
 import db4ounit.TestCase;
 import db4ounit.TestLifeCycle;
 
@@ -84,6 +85,68 @@ public class IoAdapterTest implements TestCase, TestLifeCycle {
 		Assert.areEqual(str, new String(read, 0, data.length));
 	}
 	
+	public void testReadWriteAheadFileEnd() throws Exception {
+		String str = "this is a really long string, just to make sure that all IoAdapters work correctly. ";
+		for (int i = 0; i < _adapters.length; i++) {
+			assertReadWriteAheadFileEnd(_adapters[i], str);
+		}
+	}
+	
+	private void assertReadWriteAheadFileEnd(IoAdapter adapter, String str) throws Exception {
+		byte[] data = str.getBytes();
+		byte[] read = new byte[2048];
+		adapter.seek(10);
+		int readBytes = adapter.read(data);
+		Assert.areEqual(-1, readBytes);
+		Assert.areEqual(0, adapter.getLength());
+		adapter.seek(0);
+		readBytes = adapter.read(data);
+		Assert.areEqual(-1, readBytes);
+		Assert.areEqual(0, adapter.getLength());
+		
+		adapter.seek(10);
+		adapter.write(data);
+		Assert.areEqual(10 + data.length, adapter.getLength());
+		
+		
+		adapter.seek(0);
+		readBytes = adapter.read(read);
+		Assert.areEqual(10 + data.length, readBytes);
+		
+		adapter.seek(20 + data.length);
+		readBytes = adapter.read(read);
+		Assert.areEqual(-1, readBytes);
+		
+		adapter.seek(1024 + data.length);
+		readBytes = adapter.read(read);
+		Assert.areEqual(-1, readBytes);
+		
+		adapter.seek(1200);
+		adapter.write(data);
+		adapter.seek(0);
+		readBytes = adapter.read(read);
+		Assert.areEqual(1200 + data.length, readBytes);		
+	}
+
+	public void testReadTooMuch() throws Exception {
+		for (int i = 0; i < _adapters.length; i++) {
+			assertReadTooMuch(_adapters[i]);
+		}
+	}
+	
+	private void assertReadTooMuch(final IoAdapter adapter) throws Exception {
+		final byte[] data = "hello".getBytes();
+		final byte[] read = new byte[1];
+		adapter.seek(0);
+		adapter.write(data);
+		adapter.seek(0);
+		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock () {
+			public void run() throws Exception {
+				adapter.read(read, data.length);
+			}
+		});
+	}
+
 	public void testReopen() throws Exception {
 		testReadWrite();
 		closeAdapters();
