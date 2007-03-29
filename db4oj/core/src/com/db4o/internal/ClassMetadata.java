@@ -564,7 +564,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().stream().i_handlers.arrayType(a_object), false);
     }
 
-    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
+    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws IOException {
         if (a_bytes.cascadeDeletes() > 0) {
             int id = a_bytes.readInt();
             if (id > 0) {
@@ -575,7 +575,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         }
     }
 
-    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) {
+    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws IOException {
         if (a_bytes.cascadeDeletes() > 0) {
         	
         	ObjectContainerBase stream = a_bytes.getStream();

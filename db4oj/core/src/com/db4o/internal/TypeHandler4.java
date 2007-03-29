@@ -29,7 +29,7 @@ public interface TypeHandler4 extends Indexable4
 	// special construct for deriving from simple types
 	void copyValue(Object a_from, Object a_to);
 	
-	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes);
+	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws IOException;
 	
 	int getID();
 	

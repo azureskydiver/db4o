@@ -33,7 +33,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) {
+    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws IOException {
         
         int address = reader.readInt();
         reader.readInt();  // length

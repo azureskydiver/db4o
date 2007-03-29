@@ -90,7 +90,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
         throw Exceptions4.virtualException();
     }
 
-    public final void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
+    public final void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws IOException {
         mf._array.deleteEmbedded(this, a_bytes);
     }
 

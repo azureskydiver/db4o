@@ -34,8 +34,6 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
 		// do nothing
 	}
     
-    public abstract void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes);
-    
     public boolean hasFixedLength(){
         return false;
     }

@@ -54,7 +54,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     	return i_handler.classReflector();
     }
     
-    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
+    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws IOException {
         if(mf._primitive.useNormalClassRead()){
             super.deleteEmbedded(mf, a_bytes);
             return;
@@ -65,7 +65,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     
-    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) {
+    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws IOException  {
         
         if(i_handler instanceof ArrayHandler){
             ArrayHandler ya = (ArrayHandler)i_handler;
