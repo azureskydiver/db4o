@@ -33,7 +33,7 @@ public interface TypeHandler4 extends Indexable4
 	
 	int getID();
 	
-	boolean equals(TypeHandler4 a_dataType); // needed for YapField.equals
+	boolean isEqual(TypeHandler4 a_dataType); // needed for YapField.equals
 	
     boolean hasFixedLength();
     

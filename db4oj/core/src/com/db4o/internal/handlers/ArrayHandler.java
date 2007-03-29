@@ -139,7 +139,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return reader.readInt();
     }
 
-    public final boolean equals(TypeHandler4 a_dataType) {
+    public final boolean isEqual(TypeHandler4 a_dataType) {
         if (a_dataType instanceof ArrayHandler) {
             if (((ArrayHandler) a_dataType).identifier() == identifier()) {
                 return (i_handler.equals(((ArrayHandler) a_dataType).i_handler));

@@ -37,8 +37,6 @@ public class QConObject extends QCon {
 
     private transient boolean     i_selfComparison = false;
 
-    private transient boolean     i_loadedFromIndex;
-
     public QConObject() {
         // C/S only
     }
@@ -117,13 +115,6 @@ public class QConObject extends QCon {
         return i_field.i_yapField.canLoadByIndex();
     }
 
-    void createCandidates(Collection4 a_candidateCollection) {
-        if (i_loadedFromIndex && ! hasChildren()) {
-            return;
-        }
-        super.createCandidates(a_candidateCollection);
-    }
-
     boolean evaluate(QCandidate a_candidate) {
         try {
             return a_candidate.evaluate(this, i_evaluator);
@@ -184,13 +175,11 @@ public class QConObject extends QCon {
     }
 
     void evaluateSimpleExec(QCandidates a_candidates) {
-        if (hasOrdering() || !i_loadedFromIndex) {
-            if (i_field.isSimple() || isNullConstraint()) {
-                a_candidates.traverse(i_field);
-                prepareComparison(i_field);
-                a_candidates.filter(this);
-            }
-        }
+    	if (i_field.isSimple() || isNullConstraint()) {
+        	a_candidates.traverse(i_field);
+            prepareComparison(i_field);
+            a_candidates.filter(this);
+    	}
     }
     
     Comparable4 getComparator(QCandidate a_candidate) {

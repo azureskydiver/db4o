@@ -57,7 +57,7 @@ public final class StringHandler extends BuiltinTypeHandler {
         }
     }
     
-    public boolean equals(TypeHandler4 a_dataType) {
+    public boolean isEqual(TypeHandler4 a_dataType) {
         return (this == a_dataType);
     }
 

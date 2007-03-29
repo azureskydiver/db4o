@@ -145,9 +145,8 @@ public class FreespaceManagerRam extends FreespaceManager {
     public int getSlot(int length) {
         int address = getSlot1(length);
         
-        if(address != 0){
-            
-            if(DTrace.enabled){
+        if(DTrace.enabled){
+        	if(address != 0){
                 DTrace.GET_FREESPACE_RAM.logLength(address, length);
             }
         }
