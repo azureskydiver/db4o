@@ -14,7 +14,7 @@ import com.db4o.internal.*;
 public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable,
 		LoopbackSocketServer {
 	
-	private static final int START_THREAD_WAIT_TIMEOUT = 1000;
+	private static final int START_THREAD_WAIT_TIMEOUT = 5000;
 
 	private final String _name;
 
@@ -59,7 +59,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 			boolean started=false;
 			while(!started) {
 				try {
-					_startupLock.wait();
+					_startupLock.wait(START_THREAD_WAIT_TIMEOUT);
 					started=true;
 				}
 				// not specialized to InterruptException for .NET conversion
