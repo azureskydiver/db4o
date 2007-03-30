@@ -222,7 +222,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     }
     
     private void processAllNodes(){
-        _processing = new Queue4();
+        _processing = new NonblockingQueue();
         _nodes.traverse(new Visitor4() {
             public void visit(Object obj) {
                 _processing.add(((TreeIntObject)obj).getObject());

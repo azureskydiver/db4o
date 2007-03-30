@@ -14,6 +14,5 @@ public class DebugCS {
 	public static ClientObjectContainer clientStream;
 	public static LocalObjectContainer serverStream;
 	public static Queue4 clientMessageQueue;
-	public static Lock4 clientMessageQueueLock;
 
 }

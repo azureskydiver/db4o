@@ -27,9 +27,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	private Socket4 i_socket;
 
-	Queue4 messageQueue = new Queue4();
-
-	final Lock4 messageQueueLock = new Lock4();
+	private Queue4 _messageQueue = new BlockingQueue();
 
 	private String password; // null denotes password not necessary
 
@@ -71,8 +69,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			if (Debug.fakeServer) {
 				DebugCS.serverStream = (LocalObjectContainer) Db4o.openFile(fakeServerFile);
 				DebugCS.clientStream = this;
-				DebugCS.clientMessageQueue = messageQueue;
-				DebugCS.clientMessageQueueLock = messageQueueLock;
+				DebugCS.clientMessageQueue = _messageQueue;
 				readThis();
 			} else {
 				throw new RuntimeException(
@@ -125,8 +122,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	private void startReaderThread(Socket4 socket, String user) {
-		_messageDispatcher = new ClientMessageDispatcherImpl(this, socket, messageQueue,
-				messageQueueLock);
+		_messageDispatcher = new ClientMessageDispatcherImpl(this, socket, _messageQueue);
 		_messageDispatcher.setDispatcherName(user);
 		_messageDispatcher.startDispatcher();
 	}
@@ -328,49 +324,19 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	private Msg getResponseMultiThreaded() {
-		try {
-
-			return (Msg) messageQueueLock.run(new Closure4() {
-				public Object run() {
-					Msg message = retrieveMessage();
-					if (message != null) {
-						return message;
-					}
-
-					throwOnClosed();
-					messageQueueLock.snooze(timeout());
-					throwOnClosed();
-					return retrieveMessage();
-				}
-
-				private void throwOnClosed() {
-					if (!_messageDispatcher.isMessageDispatcherAlive()) {
-						_doFinalize=false;
-						throw new Db4oException(Messages.get(Messages.CLOSED_OR_OPEN_FAILED));
-					}
-				}
-
-				private Msg retrieveMessage() {
-					Msg message = null;
-					message = (Msg) messageQueue.next();
-					if (message != null) {
-						if (Debug.messages) {
-							System.out
-									.println(message + " processed at client");
-						}
-						if (Msg.ERROR.equals(message)) {
-							throw new Db4oException("Client connection error");
-						}
-					}
-					return message;
-				}
-			});
-		} catch (Exception ex) {
-			Exceptions4.catchAllExceptDb4oException(ex);
-			return null;
+		Msg msg = (Msg)_messageQueue.next();
+		if(msg == Msg.ERROR) {	
+			onMsgError();
 		}
+		return msg;
+	}
+	
+	private void onMsgError() {
+		close();
+		throw new Db4oException(Messages.get(Messages.CLOSED_OR_OPEN_FAILED));
 	}
 
+	
 	private Msg getResponseSingleThreaded() {
 		while (isMessageDispatcherAlive()) {
 			try {

@@ -10,6 +10,7 @@ import com.db4o.foundation.Debug4;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.foundation.MappingIterator;
+import com.db4o.foundation.NonblockingQueue;
 import com.db4o.foundation.Queue4;
 import com.db4o.foundation.Visitor4;
 import com.db4o.reflect.ReflectClass;
@@ -37,7 +38,7 @@ public final class ClassMetadataRepository extends PersistentBase {
 
     ClassMetadataRepository(Transaction systemTransaction) {
         _systemTransaction = systemTransaction;
-        i_initYapClassesOnUp = new Queue4();
+        i_initYapClassesOnUp = new NonblockingQueue();
 		_classInits = new PendingClassInits(_systemTransaction);
     }
 

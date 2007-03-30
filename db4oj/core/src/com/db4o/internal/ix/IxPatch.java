@@ -32,7 +32,7 @@ public abstract class IxPatch extends IxTree {
                 Queue4 queue = _queue;
 
                 if (queue == null) {
-                    queue = new Queue4();
+                    queue = new NonblockingQueue();
                     queue.add(this);
                 }
 
