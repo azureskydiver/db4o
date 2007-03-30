@@ -8,7 +8,7 @@ final class MCommit extends Msg implements ServerSideMessage {
 	
 	public final boolean processAtServer() {
 		try{
-			transaction().commit();
+			serverTransaction().commit(serverMessageDispatcher());
 		}catch(Db4oException db4oException){
 			write(MCommitResponse.createWithException(transaction(), db4oException));
 			return true;

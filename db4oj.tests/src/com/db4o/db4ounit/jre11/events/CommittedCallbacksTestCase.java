@@ -14,13 +14,13 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 /**
  * @exclude
  */
-public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
+public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommitTimeCallbacksTestCase().runSoloAndClientServer();
+		new CommittedCallbacksTestCase().runSoloAndClientServer();
 	}
 
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
@@ -44,7 +44,6 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	protected void configure(Configuration config) {
 		indexField(config, Item.class, "id");
-		config.clientServer().batchMessages(false);
 	}
 	
 	protected void store() throws Exception {
@@ -55,11 +54,11 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	protected void db4oSetupAfterStore() throws Exception {
 		_eventRecorder = new EventRecorder(fileSession().lock());
-		committing().addListener(_eventRecorder);
+		committed().addListener(_eventRecorder);
 	}
 	
 	protected void db4oCustomTearDown() throws Exception {
-		committing().removeListener(_eventRecorder);
+		committed().removeListener(_eventRecorder);
 	}
 	
 	static final class ObjectByRef {
@@ -73,7 +72,7 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 		
 		final Transaction transaction = stream().getTransaction();
 		final ObjectByRef objectByRef = new ObjectByRef();
-		eventRegistry().committing().addListener(new EventListener4() {
+		eventRegistry().committed().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				objectByRef.value = ((CommitEventArgs)args).transaction();
 			}
@@ -179,15 +178,15 @@ public class CommitTimeCallbacksTestCase extends AbstractDb4oTestCase {
 			final ObjectInfo[] expectedDeleted,
 			final ObjectInfo[] expectedUpdated) {
 		
-		EventAssert.assertCommitEvent(_eventRecorder, committing(), expectedAdded, expectedDeleted, expectedUpdated);
+		EventAssert.assertCommitEvent(_eventRecorder, committed(), expectedAdded, expectedDeleted, expectedUpdated);
 	}
 
 	private void assertNoEvents() {
 		EventAssert.assertNoEvents(_eventRecorder);
 	}
 
-	private Event4 committing() {
-		return eventRegistry().committing();
+	private Event4 committed() {
+		return eventRegistry().committed();
 	}
 
 	private EventRegistry eventRegistry() {
