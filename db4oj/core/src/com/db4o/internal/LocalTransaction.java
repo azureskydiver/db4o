@@ -45,16 +45,15 @@ public class LocalTransaction extends Transaction {
     }
     
     public void commit(ServerMessageDispatcher dispatcher) {
-    	
     	CallbackObjectInfoCollections committedInfo = null;
         synchronized (stream().i_lock) {
         	if(doCommittingCallbacks()){
-        		callbacks().commitOnStarted(this, collectCallbackObjectInfos());
+        		callbacks().commitOnStarted(this, collectCallbackObjectInfos(dispatcher));
         	}
             _file.freeSpaceBeginCommit();
             commitExceptForFreespace();
         	if(doCommittedCallbacks()){
-        		committedInfo = collectCallbackObjectInfos();
+        		committedInfo = collectCallbackObjectInfos(dispatcher);
         	}
             commitClearAll();
             _file.freeSpaceEndCommit();
@@ -63,7 +62,8 @@ public class LocalTransaction extends Transaction {
 	        if(dispatcher == null){
 	        	callbacks().commitOnCompleted(this, committedInfo);
 	        }else{
-	        	dispatcher.server().commitOnCompleted(dispatcher, committedInfo);
+	        	ObjectServerImpl server = dispatcher.server();
+	        	server.commitOnCompleted(dispatcher, committedInfo);
 	        }
         }
     }
@@ -667,7 +667,7 @@ public class LocalTransaction extends Transaction {
 		return stream().callbacks();
 	}
 
-	private CallbackObjectInfoCollections collectCallbackObjectInfos() {
+	private CallbackObjectInfoCollections collectCallbackObjectInfos(ServerMessageDispatcher serverMessageDispatcher) {
 		if (null == _slotChanges) {
 			return CallbackObjectInfoCollections.EMTPY;
 		}
@@ -687,7 +687,7 @@ public class LocalTransaction extends Transaction {
 				}
 			}
 		});
-		return new CallbackObjectInfoCollections (new ObjectInfoCollectionImpl(added), new ObjectInfoCollectionImpl(updated), new ObjectInfoCollectionImpl(deleted));
+		return new CallbackObjectInfoCollections (serverMessageDispatcher, new ObjectInfoCollectionImpl(added), new ObjectInfoCollectionImpl(updated), new ObjectInfoCollectionImpl(deleted));
 	}
 	
     private void setAddress(int a_address) {
