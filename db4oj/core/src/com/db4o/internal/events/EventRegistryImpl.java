@@ -3,7 +3,7 @@
 package com.db4o.internal.events;
 
 import com.db4o.events.*;
-import com.db4o.ext.ObjectInfoCollection;
+import com.db4o.internal.*;
 import com.db4o.internal.callbacks.Callbacks;
 import com.db4o.query.Query;
 
@@ -25,6 +25,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _deleted = new Event4Impl();
 	protected final Event4Impl _deactivated = new Event4Impl();
 	protected final Event4Impl _committing = new Event4Impl();
+	protected final Event4Impl _committed = new Event4Impl();
 
 	// Callbacks implementation
 	public void queryOnFinished(Query query) {
@@ -75,8 +76,12 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		EventPlatform.triggerObjectEvent(_deactivated, obj);
 	}
 	
-	public void commitOnStarted(Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
-		EventPlatform.triggerCommitEvent(_committing, transaction, added, deleted, updated);
+	public void commitOnStarted(Object transaction, CallbackObjectInfoCollections objectInfoCollections) {
+		EventPlatform.triggerCommitEvent(_committing, transaction, objectInfoCollections);
+	}
+	
+	public void commitOnCompleted(Object transaction, CallbackObjectInfoCollections objectInfoCollections) {
+		EventPlatform.triggerCommitEvent(_committed, transaction, objectInfoCollections);
 	}
 
 	public Event4 queryFinished() {
@@ -130,8 +135,16 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	public Event4 committing() {
 		return _committing;
 	}
+	
+	public Event4 committed() {
+		return _committed;
+	}
 
-	public boolean caresAboutCommit() {
+	public boolean caresAboutCommitting() {
 		return EventPlatform.hasListeners(_committing);
+	}
+
+	public boolean caresAboutCommitted() {
+		return EventPlatform.hasListeners(_committed);
 	}
 }

@@ -3,6 +3,7 @@
 package com.db4o.events;
 
 import com.db4o.ext.ObjectInfoCollection;
+import com.db4o.internal.*;
 
 /**
  * Arguments for commit time related events.
@@ -11,16 +12,12 @@ import com.db4o.ext.ObjectInfoCollection;
  */
 public class CommitEventArgs extends EventArgs {
 	
-	private final ObjectInfoCollection _added;
-	private final ObjectInfoCollection _deleted;
-	private final ObjectInfoCollection _updated;
+	private final CallbackObjectInfoCollections _collections;
 	private final Object _transaction;
 
-	public CommitEventArgs(Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated) {
+	public CommitEventArgs(Object transaction, CallbackObjectInfoCollections collections) {
 		_transaction = transaction;
-		_added = added;
-		_deleted = deleted;
-		_updated = updated;
+		_collections = collections;
 	}
 	
 	/**
@@ -38,20 +35,20 @@ public class CommitEventArgs extends EventArgs {
 	 * @sharpen.property
 	 */
 	public ObjectInfoCollection added() {
-		return _added;
+		return _collections.added;
 	}
 	
 	/**
 	 * @sharpen.property
 	 */
 	public ObjectInfoCollection deleted() {
-		return _deleted;
+		return _collections.deleted;
 	}
 
 	/**
 	 * @sharpen.property
 	 */
 	public ObjectInfoCollection updated() {
-		return _updated;
+		return _collections.updated;
 	}
 }

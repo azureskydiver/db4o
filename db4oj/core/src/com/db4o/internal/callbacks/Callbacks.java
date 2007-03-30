@@ -2,7 +2,7 @@
 
 package com.db4o.internal.callbacks;
 
-import com.db4o.ext.ObjectInfoCollection;
+import com.db4o.internal.*;
 import com.db4o.query.Query;
 
 public interface Callbacks {
@@ -22,6 +22,11 @@ public interface Callbacks {
 	void queryOnStarted(Query query);
 	void queryOnFinished(Query query);
 	
-	boolean caresAboutCommit();
-	void commitOnStarted(Object transaction, ObjectInfoCollection added, ObjectInfoCollection deleted, ObjectInfoCollection updated);
+	boolean caresAboutCommitting();
+	boolean caresAboutCommitted();
+	
+	
+	void commitOnStarted(Object transaction, CallbackObjectInfoCollections objectInfoCollections);
+	
+	void commitOnCompleted(Object transaction, CallbackObjectInfoCollections objectInfoCollections);
 }

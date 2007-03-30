@@ -5,7 +5,6 @@ package com.db4o.internal;
 import java.io.IOException;
 
 import com.db4o.*;
-import com.db4o.ext.ObjectInfoCollection;
 import com.db4o.foundation.*;
 import com.db4o.internal.callbacks.Callbacks;
 import com.db4o.internal.marshall.ObjectHeader;
@@ -41,17 +40,26 @@ public class LocalTransaction extends Transaction {
 	}
 	
     public void commit() {
+    	
+    	boolean doCommittingCallbacks = ! isSystemTransaction() && callbacks().caresAboutCommitting(); 
+    	boolean doCommittedCallbacks = ! isSystemTransaction() && callbacks().caresAboutCommitted();
+    	
+    	CallbackObjectInfoCollections callbackInfos = null;
         synchronized (stream().i_lock) {
-        	if(! isSystemTransaction()){
-        		triggerCommitOnStarted();
+        	if(doCommittingCallbacks){
+        		callbackInfos = collectCallbackObjectInfos();
+        		callbacks().commitOnStarted(this, callbackInfos);
         	}
             _file.freeSpaceBeginCommit();
             commitExceptForFreespace();
-        	if(! isSystemTransaction()){
-        		triggerCommitOnCompleted();
+        	if(doCommittedCallbacks){
+        		callbackInfos = collectCallbackObjectInfos();
         	}
             commitClearAll();
             _file.freeSpaceEndCommit();
+        }
+        if(doCommittedCallbacks){
+        	callbacks().commitOnCompleted(this, callbackInfos);	
         }
     }
     
@@ -63,12 +71,6 @@ public class LocalTransaction extends Transaction {
 		if (!_participants.containsByIdentity(participant)) {
 			_participants.add(participant);
 		}
-	}
-
-    
-	private void triggerCommitOnCompleted() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private void commitExceptForFreespace(){
@@ -648,37 +650,13 @@ public class LocalTransaction extends Transaction {
         slotFreeOnCommit(id, new Slot(objectBytes.getAddress(), objectBytes.getLength()));
     }
     
-	private void triggerCommitOnStarted() {
-		final Callbacks callbacks = stream().callbacks();
-		if (!callbacks.caresAboutCommit()) {
-			return;
-		}
-		ObjectInfoCollection[] collections = partitionSlotChangesInAddedDeletedUpdated();
-		callbacks.commitOnStarted(this, collections[0], collections[1], collections[2]);
+	private Callbacks callbacks(){
+		return stream().callbacks();
 	}
 
-	private static final class ObjectInfoCollectionImpl implements ObjectInfoCollection {
-		
-		public static final ObjectInfoCollection EMPTY = new ObjectInfoCollectionImpl(Iterators.EMPTY_ITERABLE);
-		
-		private final Iterable4 _collection;
-
-		public ObjectInfoCollectionImpl(Iterable4 collection) {
-			_collection = collection;
-		}
-
-		public Iterator4 iterator() {
-			return _collection.iterator();
-		}
-	}
-
-	private ObjectInfoCollection[] partitionSlotChangesInAddedDeletedUpdated() {
+	private CallbackObjectInfoCollections collectCallbackObjectInfos() {
 		if (null == _slotChanges) {
-			return new ObjectInfoCollection[] { 
-				ObjectInfoCollectionImpl.EMPTY,
-				ObjectInfoCollectionImpl.EMPTY,
-				ObjectInfoCollectionImpl.EMPTY
-			};
+			return CallbackObjectInfoCollections.EMTPY;
 		}
 		final Collection4 added = new Collection4();
 		final Collection4 deleted = new Collection4();
@@ -696,12 +674,7 @@ public class LocalTransaction extends Transaction {
 				}
 			}
 		});
-		
-		return new ObjectInfoCollection[] {
-			new ObjectInfoCollectionImpl(added),
-			new ObjectInfoCollectionImpl(deleted),
-			new ObjectInfoCollectionImpl(updated),
-		};
+		return new CallbackObjectInfoCollections (new ObjectInfoCollectionImpl(added), new ObjectInfoCollectionImpl(updated), new ObjectInfoCollectionImpl(deleted));
 	}
 	
     private void setAddress(int a_address) {
