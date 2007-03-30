@@ -20,26 +20,47 @@ public class BloatUtil {
 	}
 	
 	public FlowGraph flowGraph(String className, String methodName) throws ClassNotFoundException {
+		return flowGraph(className, methodName, null);
+	}
+	
+	public FlowGraph flowGraph(String className, String methodName,Type[] argTypes) throws ClassNotFoundException {
 		ClassEditor classEdit = classEditor(className);
-		return flowGraph(classEdit, methodName);
+		return flowGraph(classEdit, methodName, argTypes);
 	}
 
-	// FIXME handle overloaded
-	public FlowGraph flowGraph(ClassEditor classEdit, String methodName) throws ClassNotFoundException {
+	public FlowGraph flowGraph(ClassEditor classEdit, String methodName,Type[] argTypes) throws ClassNotFoundException {
 		MethodInfo[] methods = classEdit.methods();
 		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
 			MethodInfo methodInfo=methods[methodIdx];
 			MethodEditor methodEdit = new MethodEditor(classEdit, methodInfo);
-			if (methodEdit.name().equals(methodName)) {
+			if (methodEdit.name().equals(methodName)&&signatureMatchesTypes(argTypes, methodEdit)) {
 				// methodEdit.print(System.out);
 				return new FlowGraph(methodEdit);
 			}
 		}
 		Type superType = classEdit.superclass();
 		if(superType!=null) {
-			return flowGraph(normalizedClassName(superType),methodName);
+			return flowGraph(normalizedClassName(superType),methodName,argTypes);
 		}
 		return null;
+	}
+
+	private boolean signatureMatchesTypes(Type[] argTypes,
+			MethodEditor methodEdit) {
+		if(argTypes==null) {
+			return true;
+		}
+		Type[] sigTypes=methodEdit.paramTypes();
+		int sigOffset=(methodEdit.isStatic()||methodEdit.isConstructor() ? 0 : 1);
+		if(argTypes.length!=(sigTypes.length-sigOffset)) {
+			return false;
+		}
+		for (int idx = 0; idx < argTypes.length; idx++) {
+			if(!argTypes[idx].className().equals(sigTypes[idx+sigOffset].className())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public ClassEditor classEditor(String className) throws ClassNotFoundException {

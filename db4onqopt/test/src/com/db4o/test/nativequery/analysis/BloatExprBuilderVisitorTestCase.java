@@ -35,6 +35,7 @@ class Base {
 class Data extends Base {
 	boolean bool;
 	float value;
+	float otherValue;
 	String name;
 	Data next;
 	int[] intArray;
@@ -47,6 +48,9 @@ class Data extends Base {
 	
 	public float getValue() {
 		return value;
+	}
+	public float getValue(int times) {
+		return otherValue;
 	}
 	public String getName() {
 		return name;
@@ -70,6 +74,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	private static final String BOOLEAN_WRAPPED_FIELDNAME = "boolWrapper";
 	private static final String INT_FIELDNAME = "id";
 	private static final String FLOAT_FIELDNAME = "value";
+	private static final String OTHER_FLOAT_FIELDNAME = "otherValue";
 	private static final String DATA_FIELDNAME="next";
 	private static final String STRING_FIELDNAME = "name";
 	private final static boolean BOOLEAN_CMPVAL=false;
@@ -924,6 +929,16 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		assertComparison("sampleTwoParamMethodCall",INT_FIELDNAME,new MethodCallValue(PredicateFieldRoot.INSTANCE,"sum",new Class[]{Integer.TYPE,Integer.TYPE},new ComparisonOperand[]{new FieldValue(PredicateFieldRoot.INSTANCE,"intMember","I"),new ConstValue(new Integer(0))}),ComparisonOperator.EQUALS,false);
 	}
 
+	// multiple methods with the same name
+	
+	boolean sampleTimesValueMethodEqualsComp(Data data) {
+		return data.getValue(INT_CMPVAL)==floatMember;
+	}
+
+	public void testTimesValueMethodEqualsComp() throws Exception {
+		assertComparison("sampleTimesValueMethodEqualsComp",new String[]{OTHER_FLOAT_FIELDNAME},new FieldValue(PredicateFieldRoot.INSTANCE,"floatMember","F"),ComparisonOperator.EQUALS,false);
+	}
+	
 	// not applicable
 	
 	// TODO: definitely applicable - fix!

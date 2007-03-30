@@ -15,11 +15,11 @@ public class NativeQueryEnhancer {
 	
 	private static SODABloatMethodBuilder BLOAT_BUILDER=new SODABloatMethodBuilder();
 	
-	public void enhance(BloatUtil bloatUtil,ClassEditor classEditor,String methodName,ClassLoader classLoader) throws Exception {
+	public void enhance(BloatUtil bloatUtil,ClassEditor classEditor,String methodName,Type[] argTypes,ClassLoader classLoader) throws Exception {
 		if(NQDebug.LOG) {
 			System.err.println("Enhancing "+classEditor.name());
 		}
-		Expression expr = analyze(bloatUtil, classEditor, methodName);
+		Expression expr = analyze(bloatUtil, classEditor, methodName, argTypes);
 		if(expr==null) {
 			return;
 		}
@@ -31,11 +31,15 @@ public class NativeQueryEnhancer {
 		methodEditor.commit();
 		classEditor.commit();
 	}
-
+	
 	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName) {
+		return analyze(bloatUtil, classEditor, methodName,null);
+	}
+	
+	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName, Type[] argTypes) {
 		FlowGraph flowGraph=null;
 		try {
-			flowGraph=bloatUtil.flowGraph(classEditor,methodName);
+			flowGraph=bloatUtil.flowGraph(classEditor,methodName, argTypes);
 		} catch (ClassNotFoundException e) {
 			return null;
 		}

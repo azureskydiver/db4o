@@ -39,7 +39,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 
 	private Expression analyzeInternal(Predicate filter) throws ClassNotFoundException {
 		ClassEditor classEditor=new ClassEditor(context,loader.loadClass(filter.getClass().getName()));
-		Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME);
+		Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,null);
 		return expr;
 	}
 	
