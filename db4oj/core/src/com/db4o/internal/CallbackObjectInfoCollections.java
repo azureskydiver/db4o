@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.ext.*;
+import com.db4o.internal.cs.*;
 
 
 /**
@@ -16,17 +17,20 @@ public class CallbackObjectInfoCollections {
 	
 	public final ObjectInfoCollection deleted;
 	
+	public final ServerMessageDispatcher serverMessageDispatcher;
+	
 	public static final CallbackObjectInfoCollections EMTPY = empty(); 
 		
-	public CallbackObjectInfoCollections(ObjectInfoCollection added_, ObjectInfoCollection updated_,
+	public CallbackObjectInfoCollections(ServerMessageDispatcher serverMessageDispatcher_, ObjectInfoCollection added_, ObjectInfoCollection updated_,
 		ObjectInfoCollection deleted_) {
 		added = added_;
 		updated = updated_;
 		deleted = deleted_;
+		serverMessageDispatcher = serverMessageDispatcher_;
 	}
 	
 	private static final CallbackObjectInfoCollections empty(){
-		return new CallbackObjectInfoCollections(ObjectInfoCollectionImpl.EMPTY, ObjectInfoCollectionImpl.EMPTY, ObjectInfoCollectionImpl.EMPTY); 
+		return new CallbackObjectInfoCollections(null, ObjectInfoCollectionImpl.EMPTY, ObjectInfoCollectionImpl.EMPTY, ObjectInfoCollectionImpl.EMPTY); 
 	}
 
 }

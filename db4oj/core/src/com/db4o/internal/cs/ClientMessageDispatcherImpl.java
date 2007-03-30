@@ -12,9 +12,9 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 	
 	private ClientObjectContainer i_stream;
 	private Socket4 i_socket;
-	private final Queue4 _messageQueue;
+	private final BlockingQueue _messageQueue;
 	
-	ClientMessageDispatcherImpl(ClientObjectContainer client, Socket4 a_socket, Queue4 messageQueue_){
+	ClientMessageDispatcherImpl(ClientObjectContainer client, Socket4 a_socket, BlockingQueue messageQueue_){
 		i_stream = client;
 		_messageQueue = messageQueue_;
 		i_socket = a_socket;

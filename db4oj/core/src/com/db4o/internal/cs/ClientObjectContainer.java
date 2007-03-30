@@ -27,7 +27,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	private Socket4 i_socket;
 
-	private Queue4 _messageQueue = new BlockingQueue();
+	private BlockingQueue _messageQueue = new BlockingQueue();
 
 	private String password; // null denotes password not necessary
 

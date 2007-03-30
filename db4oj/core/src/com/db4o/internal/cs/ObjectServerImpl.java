@@ -32,6 +32,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	
 	private Config4Impl _config;
 	
+	private BlockingQueue _committedInfosQueue = new BlockingQueue();
+	
 	public ObjectServerImpl(final LocalObjectContainer container, int port) {
 		_container = container;
 		_port = port;
@@ -294,14 +296,23 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		setThreadName();
 		logListeningOnPort();
 		notifyThreadStarted();
-		socketServerLoop();
+		startPushedUpdatesThread(_committedInfosQueue);
+		listen();
+	}
+
+	
+
+	private void startPushedUpdatesThread(BlockingQueue committedInfosQueue) {
+		PushedUpdatesThread thread = new PushedUpdatesThread(committedInfosQueue);
+		thread.setDaemon(true);
+		thread.start();
 	}
 
 	private void setThreadName() {
 		Thread.currentThread().setName(_name);
 	}
 
-	private void socketServerLoop() {
+	private void listen() {
 		while (_serverSocket != null) {
 			try {
 				ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, _container,
@@ -335,7 +346,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	public void commitOnCompleted(ServerMessageDispatcher dispatcher,
 		CallbackObjectInfoCollections callbackInfos) {
-		// TODO Auto-generated method stub
-		
+		_committedInfosQueue.add(callbackInfos);		
 	}
 }
