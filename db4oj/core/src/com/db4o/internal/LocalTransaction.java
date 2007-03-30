@@ -41,27 +41,31 @@ public class LocalTransaction extends Transaction {
 	
     public void commit() {
     	
-    	boolean doCommittingCallbacks = ! isSystemTransaction() && callbacks().caresAboutCommitting(); 
-    	boolean doCommittedCallbacks = ! isSystemTransaction() && callbacks().caresAboutCommitted();
-    	
-    	CallbackObjectInfoCollections callbackInfos = null;
+    	CallbackObjectInfoCollections committedInfo = null;
         synchronized (stream().i_lock) {
-        	if(doCommittingCallbacks){
-        		callbackInfos = collectCallbackObjectInfos();
-        		callbacks().commitOnStarted(this, callbackInfos);
+        	if(doCommittingCallbacks()){
+        		callbacks().commitOnStarted(this, collectCallbackObjectInfos());
         	}
             _file.freeSpaceBeginCommit();
             commitExceptForFreespace();
-        	if(doCommittedCallbacks){
-        		callbackInfos = collectCallbackObjectInfos();
+        	if(doCommittedCallbacks()){
+        		committedInfo = collectCallbackObjectInfos();
         	}
             commitClearAll();
             _file.freeSpaceEndCommit();
         }
-        if(doCommittedCallbacks){
-        	callbacks().commitOnCompleted(this, callbackInfos);	
+        if(null != committedInfo){
+        	callbacks().commitOnCompleted(this, committedInfo);	
         }
     }
+
+	private boolean doCommittedCallbacks() {
+		return ! isSystemTransaction() && callbacks().caresAboutCommitted();
+	}
+
+	private boolean doCommittingCallbacks() {
+		return ! isSystemTransaction() && callbacks().caresAboutCommitting();
+	}
     
 	public void enlist(TransactionParticipant participant) {
 		if (null == participant) {
