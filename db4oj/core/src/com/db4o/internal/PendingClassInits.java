@@ -11,10 +11,10 @@ class PendingClassInits {
 	
 	private Collection4 _pending = new Collection4();
 
-	private Queue4 _members = new Queue4();
-	private Queue4 _statics = new Queue4();
-    private Queue4 _writes = new Queue4();
-    private Queue4 _inits = new Queue4();
+	private Queue4 _members = new NonblockingQueue();
+	private Queue4 _statics = new NonblockingQueue();
+    private Queue4 _writes = new NonblockingQueue();
+    private Queue4 _inits = new NonblockingQueue();
 	
 	private boolean _running = false;
 	

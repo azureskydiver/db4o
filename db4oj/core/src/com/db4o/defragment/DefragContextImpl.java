@@ -48,7 +48,7 @@ public class DefragContextImpl implements DefragContext {
 	final LocalObjectContainer _targetDb;
 	private final ContextIDMapping _mapping;
 	private DefragmentListener _listener;
-	private Queue4 _unindexed=new Queue4();
+	private Queue4 _unindexed=new NonblockingQueue();
 	
 
 	public DefragContextImpl(DefragmentConfig defragConfig,DefragmentListener listener) {

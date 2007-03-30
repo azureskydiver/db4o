@@ -9,7 +9,7 @@ import com.db4o.internal.cs.messages.*;
 class BlobProcessor extends Thread{
 	
 	private ClientObjectContainer			stream;
-	private Queue4 				queue = new Queue4();
+	private Queue4 				queue = new NonblockingQueue();
 	private boolean				terminated = false;
 	
 	BlobProcessor(ClientObjectContainer aStream){

@@ -241,19 +241,7 @@ public abstract class Msg implements Cloneable {
 			setTransaction(i_stream.getTransaction());
 			fakePayLoad(i_stream.getTransaction());
 			if (stream == DebugCS.serverStream) {
-				final Object finalThis = this;
-                try{
-    				DebugCS.clientMessageQueueLock.run(new Closure4() {
-                        public Object run() {
-    						DebugCS.clientMessageQueue.add(finalThis);
-                            return null;
-                        }
-                    });
-                }catch(Exception ex){
-                    
-                    // TODO: notify client app about problems and try to fix here
-                    
-                }
+                DebugCS.clientMessageQueue.add(this);
 			} else {
 				((ServerSideMessage)this).processAtServer();
 			}
