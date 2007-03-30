@@ -62,7 +62,7 @@ public class Db4oFileEnhancer {
 				if(filterClass.isAssignableFrom(clazz)&&filterClass!=clazz) {
 					System.err.println("Processing "+className);
 					ClassEditor classEditor=bloatUtil.classEditor(className);
-					enhancer.enhance(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,classLoader);
+					enhancer.enhance(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,new Type[]{Type.OBJECT},classLoader);
 				}
 				else {
 					copyFile(source,target);

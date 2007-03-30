@@ -339,8 +339,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				return;
 			}
 
-			FlowGraph flowGraph = bloatUtil.flowGraph(methodRef
-					.declaringClass().className(), methodRef.name());
+			FlowGraph flowGraph = bloatUtil.flowGraph(methodRef.declaringClass().className(), methodRef.name(),methodRef.type().paramTypes());
 			if (flowGraph == null) {
 				return;
 			}
