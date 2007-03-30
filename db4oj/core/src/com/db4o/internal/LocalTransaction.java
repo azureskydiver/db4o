@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.callbacks.Callbacks;
+import com.db4o.internal.cs.*;
 import com.db4o.internal.marshall.ObjectHeader;
 import com.db4o.internal.slots.*;
 
@@ -40,6 +41,10 @@ public class LocalTransaction extends Transaction {
 	}
 	
     public void commit() {
+    	commit(null);
+    }
+    
+    public void commit(ServerMessageDispatcher dispatcher) {
     	
     	CallbackObjectInfoCollections committedInfo = null;
         synchronized (stream().i_lock) {
@@ -54,8 +59,12 @@ public class LocalTransaction extends Transaction {
             commitClearAll();
             _file.freeSpaceEndCommit();
         }
-        if(null != committedInfo){
-        	callbacks().commitOnCompleted(this, committedInfo);	
+        if(doCommittedCallbacks()){
+	        if(dispatcher == null){
+	        	callbacks().commitOnCompleted(this, committedInfo);
+	        }else{
+	        	dispatcher.server().commitOnCompleted(dispatcher, committedInfo);
+	        }
         }
     }
 

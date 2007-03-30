@@ -332,4 +332,10 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 			_dispatchers.add(thread);
 		}
 	}
+
+	public void commitOnCompleted(ServerMessageDispatcher dispatcher,
+		CallbackObjectInfoCollections callbackInfos) {
+		// TODO Auto-generated method stub
+		
+	}
 }
