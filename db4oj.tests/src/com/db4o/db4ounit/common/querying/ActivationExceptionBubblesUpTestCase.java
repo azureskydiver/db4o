@@ -2,19 +2,20 @@
 
 package com.db4o.db4ounit.common.querying;
 
-import com.db4o.ObjectContainer;
+import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.internal.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.fixtures.OptOutCS;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
-public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new ActivationExceptionBubblesUpTestCase().runSoloAndClientServer();
+		new ActivationExceptionBubblesUpTestCase().runClientServer();
 	}
 	
 	public static final class ItemException extends RuntimeException {
@@ -53,14 +54,18 @@ public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase i
 	public void test() {
 		Assert.expect(ItemException.class, new CodeBlock() {
 			public void run() throws Exception {
-				final Query q = db().query();
-				q.constrain(Item.class);
-				q.constrain(new Evaluation() {
-					public void evaluate(Candidate candidate) {
-						candidate.include(true);
-					}
-				});
-				q.execute().next();
+				try {
+					final Query q = db().query();
+					q.constrain(Item.class);
+					q.constrain(new Evaluation() {
+						public void evaluate(Candidate candidate) {
+							candidate.include(true);
+						}
+					});
+					q.execute().next();
+				} catch (Db4oUserException e) {
+					throw (Exception) e.getTarget();
+				}
 			}
 		});
 	}

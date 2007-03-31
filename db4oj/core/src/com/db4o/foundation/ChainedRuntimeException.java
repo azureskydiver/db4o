@@ -12,7 +12,7 @@ import java.io.*;
  */
 public abstract class ChainedRuntimeException extends RuntimeException {
 	
-	private Throwable _cause;
+	public Throwable _cause;
 	
 	public ChainedRuntimeException() {
 	}

@@ -25,8 +25,7 @@ final class ClientTransaction extends Transaction {
         	i_client.writeMsg(Msg.COMMIT_SYSTEMTRANS, true);
         }else{
         	i_client.writeMsg(Msg.COMMIT, true);
-        	Msg msg = i_client.expectedResponse(Msg.OK);
-        	checkDb4oExceptionMessage(msg);
+        	i_client.expectedResponse(Msg.OK);
         }
     }
     
@@ -114,10 +113,5 @@ final class ClientTransaction extends Transaction {
 	public void setPointer(int a_id, int a_address, int a_length) {
 	}
 	
-	private void checkDb4oExceptionMessage(Msg msg) {
-		if(msg instanceof MDb4oException) {
-			throw ((MDb4oException)msg).exception();
-		}
-	}
 
 }

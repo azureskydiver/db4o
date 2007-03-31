@@ -5,6 +5,7 @@ package com.db4o.internal.cs.messages;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
@@ -220,8 +221,12 @@ public abstract class Msg implements Cloneable {
 		_messageDispatcher.write(msg);
 	}
 	
+	public void writeException(Db4oException e) {
+		write(DB4OEXCEPTION.clone(transaction(), e));
+	}
+	
 	public void respondInt(int response){
-    	write(Msg.ID_LIST.getWriterForInt(transaction(), response));
+    	write(ID_LIST.getWriterForInt(transaction(), response));
     }
 	
 	public final void write(ObjectContainerBase stream, Socket4 sock) {

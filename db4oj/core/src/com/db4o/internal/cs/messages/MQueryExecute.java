@@ -3,6 +3,7 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 
@@ -11,8 +12,12 @@ public final class MQueryExecute extends MsgQuery implements ServerSideMessage {
 	private QueryEvaluationMode _evaluationMode;
 	
 	public boolean processAtServer() {
-		unmarshall(_payLoad._offset);
-        writeQueryResult(execute(), _evaluationMode);
+		try {
+			unmarshall(_payLoad._offset);
+			writeQueryResult(execute(), _evaluationMode);
+		} catch (Db4oException e) {
+			writeException(e);
+		}
 		return true;
 	}
 
@@ -35,13 +40,9 @@ public final class MQueryExecute extends MsgQuery implements ServerSideMessage {
 	}
 
 	private AbstractQueryResult executeFully(QQuery query) {
-		try {
-			AbstractQueryResult qr = newQueryResult(query.evaluationMode());
-			qr.loadFromQuery(query);
-			return qr;
-		} catch (Exception e) {
-			return newQueryResult(query.evaluationMode()); 
-		}
+		AbstractQueryResult qr = newQueryResult(query.evaluationMode());
+		qr.loadFromQuery(query);
+		return qr;
 	}
 	
 }
