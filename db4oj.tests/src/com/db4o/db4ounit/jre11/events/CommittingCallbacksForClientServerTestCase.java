@@ -11,13 +11,13 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.fixtures.*;
 
 
-public class CommitTimeCallbacksForClientServerTestCase extends AbstractDb4oTestCase implements OptOutSolo {
+public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTestCase implements OptOutSolo {
 	
 	public static final class Item {
 	}
 	
 	public static void main(String[] arguments) {
-		new CommitTimeCallbacksForClientServerTestCase().runClientServer();
+		new CommittingCallbacksForClientServerTestCase().runClientServer();
 	}
 
 	public void testCommittingIsTriggeredOnServer() {
