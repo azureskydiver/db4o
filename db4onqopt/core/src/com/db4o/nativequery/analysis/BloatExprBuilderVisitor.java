@@ -339,7 +339,16 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				return;
 			}
 
-			FlowGraph flowGraph = bloatUtil.flowGraph(methodRef.declaringClass().className(), methodRef.name(),methodRef.type().paramTypes());
+			Type declaringClass = methodRef.declaringClass();
+			// Nice try, but doesn't help, since the receiver's type always seems to be reported as java.lang.Object.
+			if(expr instanceof CallMethodExpr) {
+				Expr receiverExpr=((CallMethodExpr)expr).receiver();
+				Type receiverType=receiverExpr.type();
+				if(isSuperType(declaringClass,receiverType)) {
+					declaringClass=receiverType;
+				}
+			}
+			FlowGraph flowGraph = bloatUtil.flowGraph(declaringClass.className(), methodRef.name(),methodRef.type().paramTypes());
 			if (flowGraph == null) {
 				return;
 			}
@@ -363,6 +372,32 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 						+ methodRef + " , pop=" + last);
 			}
 		}
+	}
+
+	private boolean isSuperType(Type declaringClass, Type receiverType) throws ClassNotFoundException {
+		if(declaringClass.className().equals(receiverType.className())) {
+			return false;
+		}
+		ClassEditor receiverEditor=bloatUtil.classEditor(receiverType.className());
+		Type superClass = receiverEditor.superclass();
+		if(superClass!=null) {
+			if(superClass.className().equals(declaringClass.className())) {
+				return true;
+			}
+			if(isSuperType(declaringClass,superClass)) {
+				return true;
+			}
+		}
+		Type[] interfaces=receiverEditor.interfaces();
+		for (int interfaceIdx = 0; interfaceIdx < interfaces.length; interfaceIdx++) {
+			if(interfaces[interfaceIdx].className().equals(declaringClass.className())) {
+				return true;
+			}
+			if(isSuperType(declaringClass, interfaces[interfaceIdx])) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean applyPrimitiveWrapperHandling(CallExpr expr,ComparisonOperandAnchor rcvRetval) {
