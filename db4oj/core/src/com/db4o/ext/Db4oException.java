@@ -14,14 +14,18 @@ import com.db4o.internal.*;
 public class Db4oException extends ChainedRuntimeException {
 	
 	public Db4oException(String msg) {
-		super(msg);
+		this(msg, null);
 	}
 
 	public Db4oException(Exception cause) {
-		super(cause.getMessage(), cause);
+		this(cause.getMessage(), cause);
 	}
 	
 	public Db4oException(int messageConstant){
 		this(Messages.get(messageConstant));
+	}
+	
+	public Db4oException(String msg, Throwable cause) {
+		super(msg, cause);
 	}
 }

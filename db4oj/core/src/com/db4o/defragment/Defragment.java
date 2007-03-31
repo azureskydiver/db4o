@@ -152,7 +152,7 @@ public class Defragment {
 		}
 	}
 
-	private static void upgradeFile(DefragmentConfig config) {
+	private static void upgradeFile(DefragmentConfig config) throws IOException {
 		File4.copy(config.backupPath(),config.tempPath());
 		Configuration db4oConfig=(Configuration)((Config4Impl)config.db4oConfig()).deepClone(null);
 		db4oConfig.allowVersionUpdates(true);

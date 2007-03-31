@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.regression;
 
+import java.io.*;
+
 import com.db4o.Db4o;
 import com.db4o.db4ounit.util.*;
 import com.db4o.ext.OldFormatException;
@@ -28,7 +30,7 @@ public class COR234TestCase implements TestCase {
 		});
 	}
 
-	protected String oldDatabaseFilePath() {
+	protected String oldDatabaseFilePath() throws IOException {
 		final String oldFile = IOServices.buildTempPath("old_db.yap");
 		File4.copy(WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_3.0.3"), oldFile);
 		return oldFile;

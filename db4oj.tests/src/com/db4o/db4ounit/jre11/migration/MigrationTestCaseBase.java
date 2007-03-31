@@ -1,5 +1,7 @@
 package com.db4o.db4ounit.jre11.migration;
 
+import java.io.*;
+
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.db4ounit.util.IOServices;
@@ -35,7 +37,7 @@ public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle {
 		return _container;
 	}
 
-	private void prepareDatabaseFile() {
+	private void prepareDatabaseFile() throws IOException {
 		_databaseFile = IOServices.buildTempPath(getDatabaseFileName());
 		File4.copy(WorkspaceServices.workspaceTestFilePath("migration/" + getDatabaseFileName()), _databaseFile);
 	}

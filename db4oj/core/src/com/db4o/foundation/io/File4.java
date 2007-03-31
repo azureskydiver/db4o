@@ -15,25 +15,19 @@ public class File4 {
 		}
 	}
 	
-    public static void copy(String source, String target) {
-        try {
-        	java.io.File sourceFile = new java.io.File(source);
-        	
-            java.io.File targetFile = new java.io.File(target);
-			targetFile.mkdirs();
-            targetFile.delete();
-            
-            if (sourceFile.isDirectory()) {
-                copyDirectory(sourceFile, targetFile);
-            } else {
-                copyFile(sourceFile, targetFile);
-            }
-        } catch (Exception e) {
-            System.out.println("File.copy failed.");
-            e.printStackTrace();
-            throw new RuntimeException();
-        }
-    }
+    public static void copy(String source, String target) throws IOException {
+		java.io.File sourceFile = new java.io.File(source);
+
+		java.io.File targetFile = new java.io.File(target);
+		targetFile.mkdirs();
+		targetFile.delete();
+
+		if (sourceFile.isDirectory()) {
+			copyDirectory(sourceFile, targetFile);
+		} else {
+			copyFile(sourceFile, targetFile);
+		}
+	}
 
 	public static void copyFile(File source, File target) throws IOException {
 		final int bufferSize = 64000;
@@ -54,7 +48,7 @@ public class File4 {
 		rafOut.close();
 	}
 
-	private static void copyDirectory(File source, File target) {
+	private static void copyDirectory(File source, File target) throws IOException {
 		String[] files = source.list();
 		if (files != null) {
 		    for (int i = 0; i < files.length; i++) {
