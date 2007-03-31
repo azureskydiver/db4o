@@ -2,6 +2,7 @@
 
 package com.db4o;
 
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.replication.*;
 
@@ -201,13 +202,16 @@ public class P1Object implements Db4oTypeImpl{
     
     void update(int depth){
         if(validYapObject()){
-            stream().beginTopLevelSet();
+            ObjectContainerBase stream = stream();
+            stream.beginTopLevelSet();
             try{
 	            i_yapObject.writeUpdate(i_trans, depth);
-	            stream().checkStillToSet();
-	            stream().completeTopLevelSet();
+	            stream.checkStillToSet();
+	            stream.completeTopLevelSet();
+            } catch(Db4oException e) {
+            	stream.completeTopLevelSet(e);
             } finally{
-            	stream().endTopLevelSet(i_trans);
+            	stream.endTopLevelSet(i_trans);
             }
         }
     }

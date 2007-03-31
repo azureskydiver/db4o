@@ -11,7 +11,7 @@ final class MCommit extends Msg implements ServerSideMessage {
 			serverTransaction().commit(serverMessageDispatcher());
 			write(Msg.OK);
 		}catch(Db4oException e){
-			write(Msg.DB4OEXCEPTION.clone(transaction(), e));
+			writeException(e);
 		}
 		return true;
 	}

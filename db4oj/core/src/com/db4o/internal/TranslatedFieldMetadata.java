@@ -56,8 +56,13 @@ final class TranslatedFieldMetadata extends FieldMetadata
 	    // do nothing
 	}
 	
-	private void setOn(ObjectContainerBase a_stream, Object a_onObject, Object toSet){
-		i_translator.onActivate(a_stream, a_onObject, toSet);
+	private void setOn(ObjectContainerBase a_stream, Object a_onObject, Object toSet) {
+		try {
+			i_translator.onActivate(a_stream, a_onObject, toSet);
+		} catch (RuntimeException e) {
+			// RuntimeException may be thrown from user code
+			throw new Db4oUserException("onActivate", e);
+		}
 	}
 	
 	protected Object indexEntryFor(Object indexEntry) {

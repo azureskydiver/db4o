@@ -169,12 +169,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             stillToActivate(a_activate, a_depth);
             activate3CheckStill(ta);
             completeTopLevelCall();
+        } catch(Db4oException e){
+        	completeTopLevelCall(e);
         } finally{
     		endTopLevelCall();
     	}
     }
-    
-    final void activate3CheckStill(Transaction ta){
+
+	final void activate3CheckStill(Transaction ta){
         while (i_stillToActivate != null) {
 
             // TODO: Optimize!  A lightweight int array would be faster.
@@ -365,8 +367,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             	_referenceSystem.commit();
             	completeTopLevelCall();
             } catch(Db4oException e){
-            	completeTopLevelCall();
-            	throw e;
+            	completeTopLevelCall(e);
             } finally{
             	endTopLevelCall();
             }
@@ -436,6 +437,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	try{
         		deactivate1(a_deactivate, a_depth);
         		completeTopLevelCall();
+        	} catch(Db4oException e){
+        		completeTopLevelCall(e);
         	} finally{
         		endTopLevelCall();
         	}
@@ -490,6 +493,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	beginTopLevelCall();
         	delete2(trans, ref, obj, 0, userCall);
         	completeTopLevelCall();
+        } catch(Db4oException e) {
+        	completeTopLevelCall(e);
         } finally {
         	endTopLevelCall();
         }
@@ -725,8 +730,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 			res = get2(ta, template);
 			completeTopLevelCall();
 		} catch (Db4oException e) {
-			completeTopLevelCall();
-			throw e;
+			completeTopLevelCall(e);
 		} finally {
 			endTopLevelCall();
 		}
@@ -760,6 +764,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             Object obj = getByID2(ta, (int) id);
             completeTopLevelCall();
             return obj;
+        } catch(Db4oException e) {
+        	completeTopLevelCall(e);
+        	return null;
         } finally {
         	endTopLevelCall();
         }
@@ -792,6 +799,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         try {
             obj = new ObjectReference(id).read(ta, configImpl().activationDepth(),Const4.ADD_TO_ID_TREE, true);
             completeTopLevelCall();
+        } catch(Db4oException e) {
+        	completeTopLevelCall(e);
         } finally{
         	endTopLevelCall();
         }
@@ -1217,7 +1226,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 i_justPeeked = null;
                 completeTopLevelCall();
                 return cloned;
-            }finally{
+            } catch(Db4oException e) {
+            	completeTopLevelCall(e);
+            	return null;
+            } finally{
                 endTopLevelCall();
             }
         }
@@ -1548,6 +1560,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	        id = setAfterReplication(trans, obj, depth, checkJustSet);
 	        completeTopLevelSet();
 			return id;
+    	} catch(Db4oException e) {
+    		completeTopLevelSet(e);
+    		return 0;
     	} finally{
     		endTopLevelSet(trans);
     	}
@@ -1905,6 +1920,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     		_topLevelCallCompleted = true;
     	}
     }
+
+    private void completeTopLevelCall(Db4oException e) throws Db4oException {
+    	completeTopLevelCall();
+		throw e;
+	}
     
     /*
 	 * This method has to be invoked in the end of top level of set call to
@@ -1912,6 +1932,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	 */
     public final void completeTopLevelSet() {
     	completeTopLevelCall();
+    }
+    
+    public final void completeTopLevelSet(Db4oException e) {
+    	completeTopLevelCall();
+    	throw e;
     }
     
     private final void endTopLevelCall(){
