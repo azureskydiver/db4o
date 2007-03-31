@@ -12,13 +12,13 @@ public class LoopbackSocket implements Socket4 {
 	private final LoopbackSocketServer _server;
 
     private LoopbackSocket _affiliate;
-    private ByteBuffer4 _uploadBuffer;
-    private ByteBuffer4 _downloadBuffer;
+    private BlockingByteChannel _uploadBuffer;
+    private BlockingByteChannel _downloadBuffer;
 
     public LoopbackSocket(LoopbackSocketServer a_server, int timeout) {
     	_server = a_server;
-        _uploadBuffer = new ByteBuffer4(timeout);
-        _downloadBuffer = new ByteBuffer4(timeout);
+        _uploadBuffer = new BlockingByteChannel(timeout);
+        _downloadBuffer = new BlockingByteChannel(timeout);
     }
 
     public LoopbackSocket(LoopbackSocketServer a_server, int timeout, LoopbackSocket affiliate) {

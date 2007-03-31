@@ -12,7 +12,7 @@ import com.db4o.internal.*;
  * Transport buffer for C/S mode to simulate a
  * socket connection in memory.
  */
-class ByteBuffer4 {
+class BlockingByteChannel {
 
     private final static int DISCARD_BUFFER_SIZE = 500;
     private byte[] i_cache;
@@ -22,7 +22,7 @@ class ByteBuffer4 {
     private int i_writeOffset;
     private final Lock4 i_lock = new Lock4();
 
-    public ByteBuffer4(int timeout) {
+    public BlockingByteChannel(int timeout) {
         i_timeout = timeout;
     }
 
