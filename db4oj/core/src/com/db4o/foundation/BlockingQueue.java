@@ -1,6 +1,8 @@
 /* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4o.foundation;
 
+import com.db4o.ext.*;
+
 /**
  * @exclude
  */
@@ -10,42 +12,30 @@ public class BlockingQueue implements Queue4 {
 	private Lock4 _lock = new Lock4();
 
 	public void add(final Object obj) {
-		try {
-			_lock.run(new Closure4() {
-				public Object run() throws Exception {
-					_queue.add(obj);
-					_lock.awake();
-					return null;
-				}
-			});
-		} catch (Exception e) {
-			throw new IllegalStateException();
-		}
+		_lock.run(new SafeClosure4() {
+			public Object run() {
+				_queue.add(obj);
+				_lock.awake();
+				return null;
+			}
+		});
 	}
 
 	public boolean hasNext() {
-		try {
-			Boolean hasNext = (Boolean) _lock.run(new Closure4() {
-				public Object run() throws Exception {
-					return new Boolean(_queue.hasNext());
-				}
-			});
-			return hasNext.booleanValue();
-		} catch (Exception e) {
-			throw new IllegalStateException();
-		}
+		Boolean hasNext = (Boolean) _lock.run(new SafeClosure4() {
+			public Object run() {
+				return new Boolean(_queue.hasNext());
+			}
+		});
+		return hasNext.booleanValue();
 	}
 
 	public Iterator4 iterator() {
-		try {
-			return (Iterator4) _lock.run(new Closure4() {
-				public Object run() throws Exception {
-					return _queue.iterator();
-				}
-			});
-		} catch (Exception e) {
-			throw new IllegalStateException();
-		}
+		return (Iterator4) _lock.run(new SafeClosure4() {
+			public Object run() {
+				return _queue.iterator();
+			}
+		});
 	}
 
 	public Object next() {
@@ -60,7 +50,7 @@ public class BlockingQueue implements Queue4 {
 				}
 			});
 		} catch (Exception e) {
-			throw new IllegalStateException();
+			throw new Db4oUnexpectedException(e);
 		}
 	}
 }

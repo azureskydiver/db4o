@@ -13,6 +13,11 @@ public class Lock4 {
     	}
     }
 
+    public Object run(SafeClosure4 closure) {
+    	synchronized(this){
+    		return closure.run();
+    	}
+	}
     public void snooze(long timeout) {
     	try {
             this.wait(timeout);

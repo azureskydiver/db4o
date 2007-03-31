@@ -17,7 +17,7 @@ public class Db4oException extends ChainedRuntimeException {
 		this(msg, null);
 	}
 
-	public Db4oException(Exception cause) {
+	public Db4oException(Throwable cause) {
 		this(cause.getMessage(), cause);
 	}
 	
