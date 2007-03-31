@@ -746,7 +746,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public Object getByID(long id) {
     	if (id <= 0) {
-    		throw new IllegalArgumentException("id must be greater than 0");
+    		throw new IllegalArgumentException();
 		}
         synchronized (i_lock) {
             return getByID1(null, id);

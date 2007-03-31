@@ -4,6 +4,7 @@ package com.db4o.foundation.network;
 
 import java.io.*;
 
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
@@ -79,11 +80,9 @@ class ByteBuffer4 {
             return ret.intValue();
         }catch(IOException iex){
             throw iex;
-        }catch(Exception bex){
-            // TODO: lots is caught here, be more exact
-//        	bex.printStackTrace();
+        }catch(Exception e){
+            throw new Db4oUnexpectedException(e);
         }
-        return -1;
     }
 
     public int read(final  byte[] a_bytes, final int a_offset, final int a_length) throws IOException {
@@ -101,23 +100,20 @@ class ByteBuffer4 {
                     checkDiscardCache();
                     return new Integer(avail);
                 }
-            
             });
             return ret.intValue();
         }catch(IOException iex){
             throw iex;
-        }catch(Exception bex){
-            // TODO: lots is caught here, be more exact
-//        	bex.printStackTrace();
+        }catch(Exception e){
+            throw new Db4oUnexpectedException(e);
         }
-        return -1;
     }
 
     public void setTimeout(int timeout) {
         i_timeout = timeout;
     }
 
-    protected void waitForAvailable() throws IOException {
+    private void waitForAvailable() throws IOException {
         while (available() == 0) {
         	if (i_closed) {
                 throw new IOException(Messages.get(35));
@@ -135,39 +131,25 @@ class ByteBuffer4 {
     }
     
 	public void write(final byte[] bytes, final int off, final int len) {
-        try {
-            i_lock.run(new Closure4() {
-                public Object run() throws Exception {
-                    makefit(len);
-                    System.arraycopy(bytes, off, i_cache, i_writeOffset, len);
-                    i_writeOffset += len;
-                    i_lock.awake();
-                    return null;
-                }
-            });
-        } catch (Exception e) {
-            
-            // TODO: delegate up
-//        	e.printStackTrace();
-         
-        }
+		i_lock.run(new SafeClosure4() {
+			public Object run() {
+				makefit(len);
+				System.arraycopy(bytes, off, i_cache, i_writeOffset, len);
+				i_writeOffset += len;
+				i_lock.awake();
+				return null;
+			}
+		});
 	}
 
     public void write(final int i) {
-        try {
-            i_lock.run(new Closure4() {
-                public Object run() throws Exception {
-                    makefit(1);
-                    i_cache[i_writeOffset++] = (byte) i;
-                    i_lock.awake();
-                    return null;
-                }
-            });
-        } catch (Exception e) {
-            
-            // TODO: delegate up
-//        	e.printStackTrace();
-         
-        }
-    }
+		i_lock.run(new SafeClosure4() {
+			public Object run() {
+				makefit(1);
+				i_cache[i_writeOffset++] = (byte) i;
+				i_lock.awake();
+				return null;
+			}
+		});
+	}
 }
