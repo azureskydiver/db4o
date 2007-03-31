@@ -60,21 +60,21 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	/**
-	 * Single-Threaded Client-Server Debug Mode
+	 * Single-Threaded Client-Server Debug Mode, this constructor is only for
+	 * fake server
 	 */
 	public ClientObjectContainer(String fakeServerFile) {
 		this(Db4o.cloneConfiguration());
+		if (!Debug.fakeServer) {
+			throw new IllegalStateException();
+		}
 		synchronized (lock()) {
 			_singleThreaded = configImpl().singleThreadedClient();
-			if (Debug.fakeServer) {
-				DebugCS.serverStream = (LocalObjectContainer) Db4o.openFile(fakeServerFile);
-				DebugCS.clientStream = this;
-				DebugCS.clientMessageQueue = _messageQueue;
-				readThis();
-			} else {
-				throw new RuntimeException(
-						"This constructor is for Debug.fakeServer use only.");
-			}
+			DebugCS.serverStream = (LocalObjectContainer) Db4o
+					.openFile(fakeServerFile);
+			DebugCS.clientStream = this;
+			DebugCS.clientMessageQueue = _messageQueue;
+			readThis();
 			initializePostOpen();
 			Platform4.postOpen(this);
 		}
