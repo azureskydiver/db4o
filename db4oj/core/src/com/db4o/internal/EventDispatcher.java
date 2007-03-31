@@ -45,14 +45,11 @@ public final class EventDispatcher {
 			int stackDepth = stream.stackDepth();
 			int topLevelCallId = stream.topLevelCallId();
 			stream.stackDepth(0);
-			try{
+			try {
 				Object res = methods[eventID].invoke(obj,parameters);
 				if(res != null && res instanceof Boolean){
 				    return ((Boolean)res).booleanValue();
 				}
-			}catch(Exception e){
-				// TODO: Exceptions in callbacks should be wrapped and thrown up.
-				
 			} finally {
 				stream.stackDepth(stackDepth);
 				stream.topLevelCallId(topLevelCallId);
