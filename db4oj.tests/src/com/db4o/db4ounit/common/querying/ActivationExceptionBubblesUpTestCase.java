@@ -4,7 +4,7 @@ package com.db4o.db4ounit.common.querying;
 
 import com.db4o.ObjectContainer;
 import com.db4o.config.*;
-import com.db4o.query.Predicate;
+import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -12,6 +12,10 @@ import db4ounit.extensions.fixtures.OptOutCS;
 
 
 public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase implements OptOutCS {
+	
+	public static void main(String[] args) {
+		new ActivationExceptionBubblesUpTestCase().runSoloAndClientServer();
+	}
 	
 	public static final class ItemException extends RuntimeException {
 	}
@@ -49,11 +53,14 @@ public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase i
 	public void test() {
 		Assert.expect(ItemException.class, new CodeBlock() {
 			public void run() throws Exception {
-				db().query(new Predicate() {
-					public boolean match(Item candidate) {
-						return candidate.getClass() == Item.class;
+				final Query q = db().query();
+				q.constrain(Item.class);
+				q.constrain(new Evaluation() {
+					public void evaluate(Candidate candidate) {
+						candidate.include(true);
 					}
-				}).hasNext();
+				});
+				q.execute().next();
 			}
 		});
 	}
