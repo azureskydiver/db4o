@@ -290,7 +290,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	public final Msg expectedResponse(Msg expectedMessage) {
 		Msg message = getResponse();
-		if (expectedMessage.equals(message)) {
+		if (expectedMessage.equals(message) || isDb4oExceptionMessage(message)) {
 			return message;
 		}
 		if (Deploy.debug) {
@@ -306,6 +306,13 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return null;
 	}
 
+	private boolean isDb4oExceptionMessage(Msg msg) {
+		if(msg instanceof MDb4oException) {
+			return true;
+		}
+		return false;
+	}
+		
 	public AbstractQueryResult getAll(Transaction trans) {
 		int mode = config().queryEvaluationMode().asInt();
 		MsgD msg = Msg.GET_ALL.getWriterForInt(trans, mode);
