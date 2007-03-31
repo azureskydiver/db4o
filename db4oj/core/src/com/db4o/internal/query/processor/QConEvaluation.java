@@ -74,17 +74,25 @@ public class QConEvaluation extends QCon {
 
 	public void visit(Object obj) {
 		QCandidate candidate = (QCandidate) obj;
+		
+		// force activation outside the try block
+		// so any activation errors bubble up
+		forceActivation(candidate); 
+		
 		try {
 			Platform4.evaluationEvaluate(i_evaluation, candidate);
-			if (!candidate._include) {
-				doNotInclude(candidate.getRoot());
-			}
 		} catch (Exception e) {
 			candidate.include(false);
-			doNotInclude(candidate.getRoot());
 			// TODO: implement Exception callback for the user coder
 			// at least for test cases
 		}
+		if (!candidate._include) {
+			doNotInclude(candidate.getRoot());
+		}
+	}
+
+	private void forceActivation(QCandidate candidate) {
+		candidate.getObject();
 	}
 
 	boolean supportsIndex() {
