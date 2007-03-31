@@ -53,7 +53,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	}
 	
 	protected void db4oSetupAfterStore() throws Exception {
-		_eventRecorder = new EventRecorder(fileSession().lock());
+		_eventRecorder = new EventRecorder(db().lock());
 		committed().addListener(_eventRecorder);
 	}
 	
@@ -81,7 +81,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		Assert.areSame(transaction, objectByRef.value);
 	}
 	
-	public void testCommittingAdded() {
+	public void testCommittedAdded() {
 		Item item4 = new Item(4);
 		Item item5 = new Item(5);
 		db().set(item4);
@@ -94,10 +94,10 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		
 		db().commit();
 		
-		assertCommittingEvent(new ObjectInfo[] { info4, info5 }, NONE, NONE);
+		assertCommittedEvent(new ObjectInfo[] { info4, info5 }, NONE, NONE);
 	}
 	
-	public void testCommittingAddedDeleted() {
+	public void testCommittedAddedDeleted() {
 		Item item4 = new Item(4);
 		Item item1 = getItem(1);
 		Item item2 = getItem(2);
@@ -114,10 +114,10 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		assertNoEvents();
 		
 		db().commit();
-		assertCommittingEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1, info2 }, NONE);
+		assertCommittedEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1, info2 }, NONE);
 	}
 	
-	public void testCommittingAddedUpdatedDeleted() {
+	public void testCommittedAddedUpdatedDeleted() {
 		Item item1 = getItem(1);
 		Item item2 = getItem(2);
 		
@@ -134,10 +134,10 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		assertNoEvents();
 		
 		db().commit();
-		assertCommittingEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1 }, new ObjectInfo[] { info2 });
+		assertCommittedEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1 }, new ObjectInfo[] { info2 });
 	}
 	
-	public void testCommittingDeleted(){
+	public void testCommittedDeleted(){
 		Item item1 = getItem(1);
 		ObjectInfo info1 = getInfo(1);
 		
@@ -147,7 +147,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		
 		db().commit();
 		
-		assertCommittingEvent(NONE, new ObjectInfo[] { info1 }, NONE);
+		assertCommittedEvent(NONE, new ObjectInfo[] { info1 }, NONE);
 	}
 	
 	public void testObjectSetTwiceShouldStillAppearAsAdded() {
@@ -158,7 +158,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		ObjectInfo info4 = getInfo(4);
 		
 		db().commit();
-		assertCommittingEvent(new ObjectInfo[] { info4 }, NONE, NONE);
+		assertCommittedEvent(new ObjectInfo[] { info4 }, NONE, NONE);
 	}
 	
 	private Item getItem(int id) {
@@ -173,7 +173,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		return new LazyObjectReference(trans(), internalId );
 	}
 
-	private void assertCommittingEvent(
+	private void assertCommittedEvent(
 			final ObjectInfo[] expectedAdded,
 			final ObjectInfo[] expectedDeleted,
 			final ObjectInfo[] expectedUpdated) {
@@ -190,6 +190,6 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	}
 
 	private EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(fixture().fileSession());
+		return EventRegistryFactory.forObjectContainer(db());
 	}
 }
