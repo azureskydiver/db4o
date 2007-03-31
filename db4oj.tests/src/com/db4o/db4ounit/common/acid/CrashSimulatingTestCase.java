@@ -158,7 +158,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         return true;
     }
     
-    private void createFile(String fileName){
+    private void createFile(String fileName) throws IOException{
         ObjectContainer oc = Db4o.openFile(fileName);
         for (int i = 0; i < 10; i++) {
             oc.set(new SimplestPossibleItem("delme"));

@@ -9,7 +9,7 @@ import com.db4o.foundation.ChainedRuntimeException;
  * if the database file is locked by another process.
  * @see com.db4o.Db4o#openFile
  */
-public class DatabaseFileLockedException extends ChainedRuntimeException {
+public class DatabaseFileLockedException extends Db4oException {
 	
 	private String _databaseDescription;
 	
@@ -17,7 +17,7 @@ public class DatabaseFileLockedException extends ChainedRuntimeException {
 		this(databaseDescription,null);
 	}
 
-	public DatabaseFileLockedException(String databaseDescription,Exception cause) {
+	public DatabaseFileLockedException(String databaseDescription, Throwable cause) {
 		super(message(databaseDescription),cause);
 		_databaseDescription=databaseDescription;
 	}

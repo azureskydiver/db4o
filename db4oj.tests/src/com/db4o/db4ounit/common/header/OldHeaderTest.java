@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.header;
 
+import java.io.*;
+
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.db4ounit.util.*;
@@ -15,7 +17,7 @@ public class OldHeaderTest implements TestCase {
     
     private static final String DB_FILE = WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2.yap");   
     
-    public void test() {
+    public void test() throws IOException {
     	
     	if(! File4.exists(ORIGINAL_FILE)){
     		TestPlatform.emitWarning(ORIGINAL_FILE + " does not exist. Can not run " + getClass().getName());

@@ -65,7 +65,7 @@ public class UpdatingDb4oVersions {
         objectContainer.close();
     }
 
-    public void test(){
+    public void test() throws IOException{
         if(Test.isClientServer()){
             return;
         }
