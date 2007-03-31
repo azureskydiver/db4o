@@ -15,7 +15,7 @@ import com.db4o.internal.cs.*;
  */
 public abstract class Msg implements Cloneable {
 
-	static int _idGenerator = 1;
+	static int _messageIdGenerator = 1;
 	private static Msg[] _messages = new Msg[60];
 
 	int _msgID;
@@ -27,7 +27,6 @@ public abstract class Msg implements Cloneable {
 	public static final MsgD CLASS_NAME_FOR_ID = new MClassNameForID();
 	public static final Msg CLOSE = new MClose();
     public static final Msg COMMIT = new MCommit();
-    public static final MsgD COMMIT_RESPONSE = new MCommitResponse();
     public static final Msg COMMIT_SYSTEMTRANS = new MCommitSystemTransaction();
 	public static final MsgD CREATE_CLASS = new MCreateClass();
 	public static final MsgObject CLASS_META = new MClassMeta();
@@ -79,9 +78,10 @@ public abstract class Msg implements Cloneable {
 	public static final MsgObject WRITE_UPDATE = new MWriteUpdate();
 	public static final MsgD WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
 	public static final MWriteBatchedMessages WRITE_BATCHED_MESSAGES = new MWriteBatchedMessages();
+	public static final MDb4oException DB4OEXCEPTION = new MDb4oException();
 
 	Msg() {
-		_msgID = _idGenerator++;
+		_msgID = _messageIdGenerator++;
 		_messages[_msgID] = this;
 	}
 
