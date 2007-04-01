@@ -18,7 +18,7 @@ public class Iterable4AdaptorTestCase implements TestCase {
 		Assert.isFalse(adaptor.hasNext());
 		
 		Assert.expect(IllegalStateException.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				adaptor.next();
 			}
 		});

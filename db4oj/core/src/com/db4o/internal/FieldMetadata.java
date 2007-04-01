@@ -88,8 +88,16 @@ public class FieldMetadata implements StoredField {
         i_state = AVAILABLE;
         ObjectContainerBase stream =getStream(); 
         i_handler = stream.i_handlers.handlerForClass(
-            stream, stream.reflector().forClass(a_translator.storedClass()));
+            stream, stream.reflector().forClass(translatorStoredClass(a_translator)));
     }
+
+	protected final Class translatorStoredClass(ObjectTranslator translator) {
+		try {
+			return translator.storedClass();
+		} catch (RuntimeException e) {
+			throw new Db4oUserException(e);
+		}
+	}
 
     FieldMetadata(ClassMetadata containingClass, ObjectMarshaller marshaller) {
         // for CustomMarshallerFieldMetadata only
