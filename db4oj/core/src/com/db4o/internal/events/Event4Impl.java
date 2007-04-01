@@ -47,11 +47,7 @@ public class Event4Impl implements Event4 {
 	}
 	
 	private void onEvent(EventListener4 listener, Event4 e, EventArgs args) {
-		try {
-			listener.onEvent(e, args);
-		} catch (RuntimeException exc) {
-			throw new Db4oUserException(exc);
-		}
+		listener.onEvent(e, args);
 	}
 	
 	private void validateListener(EventListener4 listener) {

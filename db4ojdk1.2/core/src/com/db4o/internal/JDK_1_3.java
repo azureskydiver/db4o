@@ -6,12 +6,20 @@ class JDK_1_3 extends JDK_1_2{
 
 	Thread addShutdownHook(Runnable a_runnable){
 		Thread thread = new Thread(a_runnable);
-		invoke(Runtime.getRuntime(), "addShutdownHook", new Class[]{Thread.class}, new Object[]{thread});
+		try {
+			invoke(Runtime.getRuntime(), "addShutdownHook", new Class[]{Thread.class}, new Object[]{thread});
+		} catch (Throwable e) {
+			Exceptions4.shouldNeverHappen();
+		}
 		return thread;
 	}
 	
 	void removeShutdownHook(Thread a_thread){
-		invoke(Runtime.getRuntime(), "removeShutdownHook", new Class[]{Thread.class}, new Object[]{a_thread});
+		try {
+			invoke(Runtime.getRuntime(), "removeShutdownHook", new Class[]{Thread.class}, new Object[]{a_thread});
+		} catch (Throwable e) {
+			Exceptions4.shouldNeverHappen();
+		}
 	}
 	
 	public int ver(){

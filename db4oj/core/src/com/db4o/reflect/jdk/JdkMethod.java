@@ -4,6 +4,7 @@ package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
+import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 public class JdkMethod implements ReflectMethod{
@@ -16,13 +17,9 @@ public class JdkMethod implements ReflectMethod{
         reflector = reflector_;
 	}
 	
-	public Object invoke(Object onObject, Object[] parameters){
-		try {
-			return method.invoke(onObject, parameters);
-		} catch (Exception e) {
-			return null;
-		} 
-	}
+	public Object invoke(Object onObject, Object[] params) throws Throwable {
+		return JDKReflect.invoke(params, onObject, method);
+	} 
 
     public ReflectClass getReturnType() {
         return reflector.forClass(method.getReturnType());

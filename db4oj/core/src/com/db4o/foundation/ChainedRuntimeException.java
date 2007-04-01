@@ -42,10 +42,16 @@ public abstract class ChainedRuntimeException extends RuntimeException {
 	}
 	
 	public void printStackTrace(PrintWriter s) {
-		super.printStackTrace(s);
-		if(_cause!=null) {
+		printStackTraceWithoutCause(s);
+		if (_cause != null) {
 			s.println("Nested cause:");
 			_cause.printStackTrace(s);
 		}
+	}
+
+	private void printStackTraceWithoutCause(PrintWriter s) {
+		StackTraceElement[] trace = getStackTrace();
+		for (int i = 0; i < trace.length; i++)
+			s.println("\tat " + trace[i]);
 	}
 }

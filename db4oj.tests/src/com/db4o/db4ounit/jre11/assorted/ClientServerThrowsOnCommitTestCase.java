@@ -30,7 +30,7 @@ public class ClientServerThrowsOnCommitTestCase extends AbstractDb4oTestCase imp
 			}
 		};
 		EventRegistryFactory.forObjectContainer(fileSession()).committing().addListener(listener);
-		Assert.expect(Db4oUserException.class, ExpectedException.class, new CodeBlock() {
+		Assert.expect(ExpectedException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				db().commit();
 			}

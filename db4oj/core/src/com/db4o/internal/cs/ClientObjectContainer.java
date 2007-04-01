@@ -294,17 +294,8 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			return message;
 		}
 		checkDb4oExceptionMessage(message);
-		if (Deploy.debug) {
-			new RuntimeException().printStackTrace();
-			if (message == null) {
-				System.out.println("Message was null");
-			}
-			if (!expectedMessage.equals(message)) {
-				System.out.println("Unexpected Message:" + message
-						+ "  Expected:" + expectedMessage);
-			}
-		}
-		return null;
+		throw new IllegalStateException("Unexpected Message:" + message
+				+ "  Expected:" + expectedMessage);
 	}
 
 	private void checkDb4oExceptionMessage(Msg msg) {

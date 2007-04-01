@@ -342,7 +342,11 @@ public final class Platform4 {
                     shutDownHookCheck = TernaryBool.YES;
                     return true;
                 } 
-                JDKReflect.invoke(System.class, RUNFINALIZERSONEXIT, new Class[] {boolean.class}, new Object[]{new Boolean(true)});
+                try {
+					JDKReflect.invoke(System.class, RUNFINALIZERSONEXIT, new Class[] {boolean.class}, new Object[]{new Boolean(true)});
+				} catch (Throwable e) {
+					Exceptions4.shouldNeverHappen();
+				}
             }
             shutDownHookCheck = TernaryBool.NO;
         }
