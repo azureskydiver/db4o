@@ -140,7 +140,7 @@ public class IoAdapterTest implements TestCase, TestLifeCycle {
 		adapter.seek(0);
 		adapter.write(data);
 		adapter.seek(0);
-		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock () {
+		Assert.expect(Exception.class, new CodeBlock () {
 			public void run() throws Throwable {
 				adapter.read(read, data.length);
 			}
