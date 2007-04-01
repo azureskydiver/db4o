@@ -10,7 +10,7 @@ public class BTreeNullKeyTestCase extends BTreeTestCaseBase {
 	public void testKeysCantBeNull() {
 		final Integer value = null;
 		Assert.expect(ArgumentNullException.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				add(value);
 			}
 		});

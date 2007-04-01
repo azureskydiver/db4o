@@ -44,7 +44,7 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 	public void testNewViolates(){
 		store(new Item("2"));
 		Assert.expect(UniqueFieldValueConstraintViolationException.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				db().commit();
 			}
 		});
@@ -58,7 +58,7 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 		item._str = "3";
 		store(item);
 		Assert.expect(UniqueFieldValueConstraintViolationException.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				db().commit();
 			}
 		});

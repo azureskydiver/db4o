@@ -5,6 +5,10 @@ import com.db4o.ext.*;
 
 public class Db4oUserException extends Db4oException {
 
+	public Db4oUserException(Throwable cause) {
+		super(cause);
+	}
+	
 	public Db4oUserException(String msg, Throwable cause) {
 		super(msg, cause);
 	}

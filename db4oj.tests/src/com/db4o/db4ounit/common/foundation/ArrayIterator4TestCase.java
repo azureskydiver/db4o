@@ -27,7 +27,7 @@ public class ArrayIterator4TestCase implements TestCase {
 	private void assertExhausted(final ArrayIterator4 i) {
 		Assert.isFalse(i.moveNext());		
 		Assert.expect(ArrayIndexOutOfBoundsException.class, new CodeBlock(){
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				System.out.println(i.current());
 			}
 		});

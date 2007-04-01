@@ -41,13 +41,19 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		_name = "db4o ServerSocket FILE: " + container.toString() + "  PORT:"+ _port;
 		
 		_container.setServer(true);	
-		
 		configureObjectServer();
-
-		ensureLoadStaticClass();
-		ensureLoadConfiguredClasses();
-
-		startServer();
+		
+		boolean ok = false;
+		try {
+			ensureLoadStaticClass();
+			ensureLoadConfiguredClasses();
+			startServer();
+			ok = true;
+		} finally {
+			if(!ok) {
+				close();
+			}
+		}
 	}
 
 	private void startServer() {

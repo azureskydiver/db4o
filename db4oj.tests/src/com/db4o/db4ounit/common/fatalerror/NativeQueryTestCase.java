@@ -28,7 +28,7 @@ public class NativeQueryTestCase extends AbstractDb4oTestCase {
 
 	public void _test() {
 		Assert.expect(NQError.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				Predicate fatalErrorPredicate = new FatalErrorPredicate();
 				db().query(fatalErrorPredicate);
 			}

@@ -18,7 +18,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 	    super(containingClass, translator);
 		i_translator = translator;
 		ObjectContainerBase stream = containingClass.getStream();
-		configure(stream.reflector().forClass(translator.storedClass()), false);
+		configure(stream.reflector().forClass(translatorStoredClass(translator)), false);
 	}
     
     public boolean canUseNullBitmap(){
@@ -32,8 +32,12 @@ final class TranslatedFieldMetadata extends FieldMetadata
 		setOn(a_trans.stream(), a_onObject, null);
 	}
 
-	public Object getOn(Transaction a_trans, Object a_OnObject){
-		return i_translator.onStore(a_trans.stream(), a_OnObject);
+	public Object getOn(Transaction a_trans, Object a_OnObject) {
+		try {
+			return i_translator.onStore(a_trans.stream(), a_OnObject);
+		} catch (RuntimeException e) {
+			throw new Db4oUserException("onStore", e);
+		}
 	}
 	
 	public Object getOrCreate(Transaction a_trans, Object a_OnObject) {

@@ -26,7 +26,7 @@ public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 		final ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(NonTestFixture.class);
 		
 		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				builder.build();
 			}
 		});

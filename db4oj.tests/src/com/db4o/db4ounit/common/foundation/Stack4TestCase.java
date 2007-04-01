@@ -33,7 +33,7 @@ public class Stack4TestCase implements TestCase {
 		Assert.isTrue(stack.isEmpty());
 		Assert.isNull(stack.peek());
 		Assert.expect(IllegalStateException.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				stack.pop();
 			}
 		});

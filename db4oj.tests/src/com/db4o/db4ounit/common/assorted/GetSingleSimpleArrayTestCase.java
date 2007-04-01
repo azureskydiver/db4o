@@ -15,7 +15,7 @@ public class GetSingleSimpleArrayTestCase extends AbstractDb4oTestCase{
         Assert.isFalse(result.hasNext());
         Assert.isFalse(result.hasNext());
         Assert.expect(IllegalStateException.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				result.next();		
 			}
 		});

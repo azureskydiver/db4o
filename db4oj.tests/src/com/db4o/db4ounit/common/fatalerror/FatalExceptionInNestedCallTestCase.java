@@ -60,7 +60,7 @@ public class FatalExceptionInNestedCallTestCase extends AbstractDb4oTestCase{
 		ObjectSet objectSet = q.execute();
 		final Item parentItem = (Item) objectSet.next();
 		Assert.expect(FatalError.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				db().set(parentItem, 3);
 			}
 		});

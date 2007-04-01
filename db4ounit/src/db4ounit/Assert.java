@@ -3,13 +3,32 @@ package db4ounit;
 public final class Assert {
 	
 	public static void expect(Class exception, CodeBlock block) {
+		Throwable e = getThrowable(block);
+		assertThrowable(exception, e);
+	}
+
+	public static void expect(Class exception, Class cause, CodeBlock block) {
+		Throwable e = getThrowable(block);
+		assertThrowable(exception, e);
+		assertThrowable(cause, e.getCause());
+	}
+	
+	private static void assertThrowable(Class exception, Throwable e) {
+		if(e == null) {
+			fail("Exception '" + exception.getName() + "' expected");
+		} 
+		if (exception.isInstance(e)) 
+			return;
+		fail("Expecting '" + exception.getName() + "' but got '" + e.getClass().getName() + "'");
+	}
+	
+	private static Throwable getThrowable(CodeBlock block) {
 		try {
 			block.run();
 		} catch (Throwable e) {
-			if (exception.isInstance(e)) return;
-			fail("Expecting '" + exception.getName() + "' but got '" + e.getClass().getName() + "'");
+			return e;
 		}
-		fail("Exception '" + exception.getName() + "' expected");
+		return null;
 	}
 	
 	public static void fail() {

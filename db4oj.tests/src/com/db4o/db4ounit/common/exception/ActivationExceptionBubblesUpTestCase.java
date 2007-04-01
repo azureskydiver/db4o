@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4o.db4ounit.common.querying;
+package com.db4o.db4ounit.common.exception;
 
 import com.db4o.*;
 import com.db4o.config.*;
@@ -9,19 +9,12 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 
 public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
 		new ActivationExceptionBubblesUpTestCase().runClientServer();
-	}
-	
-	public static final class ItemException extends RuntimeException {
-	}
-	
-	public static final class Item {
 	}
 	
 	public static final class ItemTranslator implements ObjectTranslator {
@@ -52,22 +45,19 @@ public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void test() {
-		Assert.expect(ItemException.class, new CodeBlock() {
-			public void run() throws Exception {
-				try {
-					final Query q = db().query();
-					q.constrain(Item.class);
-					q.constrain(new Evaluation() {
-						public void evaluate(Candidate candidate) {
-							candidate.include(true);
-						}
-					});
-					q.execute().next();
-				} catch (Db4oUserException e) {
-					throw (Exception) e.getTarget();
-				}
-			}
-		});
+		Assert.expect(Db4oUserException.class, ItemException.class,
+				new CodeBlock() {
+					public void run() throws Throwable {
+						final Query q = db().query();
+						q.constrain(Item.class);
+						q.constrain(new Evaluation() {
+							public void evaluate(Candidate candidate) {
+								candidate.include(true);
+							}
+						});
+						q.execute().next();
+					}
+				});
 	}
 
 }

@@ -24,7 +24,7 @@ public class COR234TestCase implements TestCase {
 		Db4o.configure().allowVersionUpdates(false);
 		
 		Assert.expect(OldFormatException.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				Db4o.openFile(oldDatabaseFilePath());
 			}
 		});

@@ -12,22 +12,22 @@ public class AssertTestCase implements TestCase {
 		Assert.areEqual(new Integer(42), new Integer(42));
 		Assert.areEqual(null, null);
 		expectFailure(new CodeBlock() {
-			public void run() {
+			public void run() throws Throwable {
 				Assert.areEqual(true, false);
 			}
 		});
 		expectFailure(new CodeBlock() {
-			public void run() {
+			public void run() throws Throwable {
 				Assert.areEqual(42, 43);
 			}
 		});
 		expectFailure(new CodeBlock() {
-			public void run() {
+			public void run() throws Throwable {
 				Assert.areEqual(new Object(), new Object());
 			}
 		});
 		expectFailure(new CodeBlock() {
-			public void run() {
+			public void run() throws Throwable {
 				Assert.areEqual(null, new Object());
 			}
 		});
@@ -35,7 +35,7 @@ public class AssertTestCase implements TestCase {
 	
 	public void testAreSame() {
 		expectFailure(new CodeBlock() {
-			public void run() {
+			public void run() throws Throwable {
 				Assert.areSame(new Object(), new Object());
 			}
 		});

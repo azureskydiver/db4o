@@ -35,7 +35,7 @@ public class ServerRevokeAccessTestCase implements TestCase {
 			server.ext().revokeAccess(user);
 			
 			Assert.expect(Exception.class, new CodeBlock() {
-				public void run() throws Exception {
+				public void run() throws Throwable {
 					Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, user, password);
 				}
 			});

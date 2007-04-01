@@ -58,7 +58,7 @@ public class Collection4TestCase implements TestCase {
 		Assert.isTrue(i.moveNext());
 		c.add("3");
 		Assert.expect(InvalidIteratorException.class, new CodeBlock() {
-			public void run() throws Exception {
+			public void run() throws Throwable {
 				System.out.println(i.current());
 			}
 		});
