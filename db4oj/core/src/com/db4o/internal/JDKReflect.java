@@ -26,7 +26,7 @@ import com.db4o.reflect.jdk.JdkReflector;
  * TODO: may need to use this on instead of JDK on .NET. Check!
  * @sharpen.ignore
  */
-class JDKReflect extends JDK {
+public class JDKReflect extends JDK {
     Class constructorClass(){
         return Constructor.class;
     }
@@ -56,7 +56,7 @@ class JDKReflect extends JDK {
 		return getMethod(className, methodName, params) != null;
 	}
     
-    public static Object invoke (Class clazz, String methodName, Class[] paramClasses, Object[] params){
+    public static Object invoke (Class clazz, String methodName, Class[] paramClasses, Object[] params) throws Throwable{
         return invoke(clazz.getName(), methodName, paramClasses, params, null);
     }
     
@@ -64,37 +64,32 @@ class JDKReflect extends JDK {
     /**
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
+     * @throws Throwable 
      */
-    public static Object invoke (Object obj, String methodName, Class[] paramClasses, Object[] params){
+    public static Object invoke (Object obj, String methodName, Class[] paramClasses, Object[] params) throws Throwable{
         return invoke(obj.getClass().getName(), methodName, paramClasses, params, obj );
     }
     
     /**
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
+     * @throws Throwable 
      */
     public static Object invoke(String className, String methodName,
-			Class[] paramClasses, Object[] params, Object onObject) {
+			Class[] paramClasses, Object[] params, Object onObject) throws Throwable {
 		Method method = getMethod(className, methodName, paramClasses);
 		return invoke(params, onObject, method);
 	}
 
-	public static Object invoke(Object[] params, Object onObject, Method method) {
+	public static Object invoke(Object[] params, Object onObject, Method method) throws Throwable {
 		if(method == null) {
 			return null;
 		}
 		try {
 			return method.invoke(onObject, params);
-		} catch (IllegalArgumentException e) {
-			// e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// e.printStackTrace();
-		} catch (ExceptionInInitializerError e) {
-			// e.printStackTrace();
-		}
-		return null;
+			throw e.getCause();
+		} 
 	}
 
     /**

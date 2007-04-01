@@ -27,49 +27,61 @@ class JDK_1_4 extends JDK_1_3 {
 		if(fileLocks.containsKey(canonicalPath)) {
 			throw new DatabaseFileLockedException(canonicalPath);
 		}
-		Object channel = invoke(file, "getChannel", null, null);
-		Object fl = invoke(channel, "tryLock", null, null); 
-		if(fl == null){
+		
+		Object lock = null;
+		try {
+			Object channel = invoke(file, "getChannel", null, null);
+			lock = invoke(channel, "tryLock", null, null);
+		} catch (Throwable t) {
+			Exceptions4.shouldNeverHappen();
+		}
+		if(lock == null){
 			throw new DatabaseFileLockedException(canonicalPath);
 		}
-		fileLocks.put(canonicalPath, fl);
+		fileLocks.put(canonicalPath, lock);
 	}
 	
-	synchronized void unlockFile(String path,Object file) {
-		if(fileLocks != null){
-			Object fl = fileLocks.get(path);
-			if(fl != null){
-			    invoke(fl, "release", null, null); 
-				fileLocks.remove(path);
+	synchronized void unlockFile(String path, Object file) {
+		if (fileLocks == null) {
+			return;
+		}
+		Object fl = fileLocks.get(path);
+		if (fl == null) {
+			return;
+		}
+		try {
+			invoke(fl, "release", null, null);
+		} catch (Throwable e) {
+			Exceptions4.shouldNeverHappen();
+		}
+		fileLocks.remove(path);
+	}
+	
+	public Constructor serializableConstructor(Class clazz) {
+		if (reflectionFactory == null) {
+			try {
+				initSerializableConstructor();
+			} catch (Throwable t) {
+				Platform4.callConstructorCheck = TernaryBool.YES;
+				return null;
 			}
+		}
+		try {
+			return (Constructor) invoke(
+					new Object[] { clazz, objectConstructor },
+					reflectionFactory, factoryMethod);
+		} catch (Throwable e) {
+			return null;
 		}
 	}
 	
-	public Constructor serializableConstructor(Class clazz){
-	    if(reflectionFactory == null){
-	        if(! initSerializableConstructor()){
-	            Platform4.callConstructorCheck = TernaryBool.YES;
-	            return null;
-	        }
-	    }
-	    return (Constructor) invoke(new Object[]{clazz, objectConstructor}, reflectionFactory, factoryMethod);
-	}
-	
-	boolean initSerializableConstructor(){
+	void initSerializableConstructor() throws Throwable  {
         reflectionFactory = invoke(Platform4.REFLECTIONFACTORY, "getReflectionFactory", null,null, null);
-        if(reflectionFactory == null){
-            return false;
-        }
         factoryMethod = getMethod(Platform4.REFLECTIONFACTORY, "newConstructorForSerialization", new Class[]{Class.class, Constructor.class});
         if(factoryMethod == null){
-            return false;
+            throw new NoSuchMethodException();
         }
-        try{
-            objectConstructor = Object.class.getDeclaredConstructor((Class[])null);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return true;
+        Object.class.getDeclaredConstructor((Class[])null);
 	}
 	
 	

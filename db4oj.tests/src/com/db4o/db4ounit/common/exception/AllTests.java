@@ -13,6 +13,9 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] { 
 			ActivationExceptionBubblesUpTestCase.class,
+			ObjectCanDeleteExceptionTestCase.class,
+			ObjectOnDeleteExceptionTestCase.class,
+			ObjectCanNewExceptionTestCase.class,
 			StoreExceptionBubblesUpTestCase.class, 
 			StoredClassExceptionBubblesUpTestCase.class,
 		};
