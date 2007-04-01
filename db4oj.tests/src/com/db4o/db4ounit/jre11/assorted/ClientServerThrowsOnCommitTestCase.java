@@ -4,6 +4,7 @@ package com.db4o.db4ounit.jre11.assorted;
 
 import com.db4o.events.*;
 import com.db4o.ext.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -29,7 +30,7 @@ public class ClientServerThrowsOnCommitTestCase extends AbstractDb4oTestCase imp
 			}
 		};
 		EventRegistryFactory.forObjectContainer(fileSession()).committing().addListener(listener);
-		Assert.expect(ExpectedException.class, new CodeBlock() {
+		Assert.expect(Db4oUserException.class, ExpectedException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				db().commit();
 			}

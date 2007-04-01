@@ -4,6 +4,7 @@ package com.db4o.internal.events;
 
 import com.db4o.events.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 /**
  * @exclude
@@ -40,7 +41,16 @@ public class Event4Impl implements Event4 {
 		
 		Iterator4 iterator = _listeners.iterator();
 		while (iterator.moveNext()) {
-			((EventListener4)iterator.current()).onEvent(this, args);
+			EventListener4 listener = (EventListener4)iterator.current();
+			onEvent(listener, this, args);
+		}
+	}
+	
+	private void onEvent(EventListener4 listener, Event4 e, EventArgs args) {
+		try {
+			listener.onEvent(e, args);
+		} catch (RuntimeException exc) {
+			throw new Db4oUserException(exc);
 		}
 	}
 	
