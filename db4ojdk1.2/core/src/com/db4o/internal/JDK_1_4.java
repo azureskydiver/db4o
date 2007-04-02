@@ -29,12 +29,8 @@ class JDK_1_4 extends JDK_1_3 {
 		}
 		
 		Object lock = null;
-		try {
-			Object channel = invoke(file, "getChannel", null, null);
-			lock = invoke(channel, "tryLock", null, null);
-		} catch (Throwable t) {
-			Exceptions4.shouldNeverHappen();
-		}
+		Object channel = invoke(file, "getChannel", null, null);
+		lock = invoke(channel, "tryLock", null, null);
 		if(lock == null){
 			throw new DatabaseFileLockedException(canonicalPath);
 		}
@@ -49,11 +45,7 @@ class JDK_1_4 extends JDK_1_3 {
 		if (fl == null) {
 			return;
 		}
-		try {
-			invoke(fl, "release", null, null);
-		} catch (Throwable e) {
-			Exceptions4.shouldNeverHappen();
-		}
+		invoke(fl, "release", null, null);
 		fileLocks.remove(path);
 	}
 	
@@ -84,10 +76,12 @@ class JDK_1_4 extends JDK_1_3 {
         Object.class.getDeclaredConstructor((Class[])null);
 	}
 	
-	
-	
 	public int ver(){
 	    return 4;
 	}
 	
+	public void printStackTrace(ChainedRuntimeException exception, PrintWriter s) {
+		invoke(exception, "printStackTrace", new Class[] { PrintWriter.class },
+				new Object[] { s });
+	}	
 }
