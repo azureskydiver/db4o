@@ -88,7 +88,7 @@ public class JDKReflect extends JDK {
 		try {
 			return method.invoke(onObject, params);
 		} catch (InvocationTargetException e) {
-			throw e.getCause();
+			throw e.getTargetException();
 		} 
 	}
 
