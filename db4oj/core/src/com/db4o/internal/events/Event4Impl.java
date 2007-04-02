@@ -4,7 +4,6 @@ package com.db4o.internal.events;
 
 import com.db4o.events.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 
 /**
  * @exclude
