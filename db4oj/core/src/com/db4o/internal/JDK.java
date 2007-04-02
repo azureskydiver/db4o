@@ -153,13 +153,4 @@ public class JDK {
     public Reflector createReflector(Object classLoader) {
     	return null;
     }
-    
-	public void printStackTrace(ChainedRuntimeException exception, PrintWriter s) {
-		exception.superPrintStackTrace(s);
-		Throwable cause = exception.getCause();
-		if (cause != null) {
-			s.println("Nested cause:");
-			cause.printStackTrace();
-		}
-	}
 }
