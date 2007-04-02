@@ -5,10 +5,10 @@ import com.db4o.foundation.*;
 
 public class PushedUpdatesThread extends Thread {
 	
-	private final BlockingQueue _committedInfosQueue;
+//	private final BlockingQueue _committedInfosQueue;
 
 	public PushedUpdatesThread(BlockingQueue committedInfosQueue) {
-		_committedInfosQueue = committedInfosQueue;
+//		_committedInfosQueue = committedInfosQueue;
 	}
 	
 	public void run () {
