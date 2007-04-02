@@ -79,9 +79,5 @@ class JDK_1_4 extends JDK_1_3 {
 	public int ver(){
 	    return 4;
 	}
-	
-	public void printStackTrace(ChainedRuntimeException exception, PrintWriter s) {
-		invoke(exception, "printStackTrace", new Class[] { PrintWriter.class },
-				new Object[] { s });
-	}	
+		
 }
