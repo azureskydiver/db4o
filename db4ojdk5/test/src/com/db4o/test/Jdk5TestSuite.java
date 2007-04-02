@@ -2,7 +2,6 @@
 
 package com.db4o.test;
 
-import com.db4o.test.*;
 import com.db4o.test.jdk5.*;
 
 public class Jdk5TestSuite extends TestSuite{   
