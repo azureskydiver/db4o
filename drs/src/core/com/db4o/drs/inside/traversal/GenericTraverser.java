@@ -1,17 +1,13 @@
 package com.db4o.drs.inside.traversal;
 
-import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.Queue4;
-import com.db4o.reflect.ReflectArray;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 public class GenericTraverser implements Traverser {
 	protected final Reflector _reflector;
 	private final ReflectArray _arrayReflector;
 	protected final CollectionFlattener _collectionFlattener;
-	protected final Queue4 _queue = new Queue4();
+	protected final Queue4 _queue = new BlockingQueue();
 
 	public GenericTraverser(Reflector reflector, CollectionFlattener collectionFlattener) {
 		_reflector = reflector;
