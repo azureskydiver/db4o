@@ -56,7 +56,7 @@ public class JDKReflect extends JDK {
 		return getMethod(className, methodName, params) != null;
 	}
     
-    public static Object invoke (Class clazz, String methodName, Class[] paramClasses, Object[] params) throws Throwable{
+    public static Object invoke (Class clazz, String methodName, Class[] paramClasses, Object[] params) throws ReflectException {
         return invoke(clazz.getName(), methodName, paramClasses, params, null);
     }
     
@@ -64,31 +64,35 @@ public class JDKReflect extends JDK {
     /**
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
-     * @throws Throwable 
+     * @throws ReflectException 
      */
-    public static Object invoke (Object obj, String methodName, Class[] paramClasses, Object[] params) throws Throwable{
+    public static Object invoke (Object obj, String methodName, Class[] paramClasses, Object[] params) throws ReflectException {
         return invoke(obj.getClass().getName(), methodName, paramClasses, params, obj );
     }
     
     /**
      * use for system classes only, since not ClassLoader
      * or Reflector-aware
-     * @throws Throwable 
+     * @throws ReflectException 
      */
     public static Object invoke(String className, String methodName,
-			Class[] paramClasses, Object[] params, Object onObject) throws Throwable {
+			Class[] paramClasses, Object[] params, Object onObject) throws ReflectException {
 		Method method = getMethod(className, methodName, paramClasses);
 		return invoke(params, onObject, method);
 	}
 
-	public static Object invoke(Object[] params, Object onObject, Method method) throws Throwable {
+	public static Object invoke(Object[] params, Object onObject, Method method) throws ReflectException {
 		if(method == null) {
 			return null;
 		}
 		try {
 			return method.invoke(onObject, params);
 		} catch (InvocationTargetException e) {
-			throw e.getTargetException();
+			throw new ReflectException(e.getTargetException());
+		} catch (IllegalArgumentException e) {
+			throw new ReflectException(e);
+		} catch (IllegalAccessException e) {
+			throw new ReflectException(e);			
 		} 
 	}
 
