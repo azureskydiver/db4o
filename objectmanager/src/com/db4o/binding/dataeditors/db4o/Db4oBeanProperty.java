@@ -95,7 +95,7 @@ public class Db4oBeanProperty implements InvocationHandler {
     	return name;
     }
 
-    private Object get() {
+    private Object get() throws Throwable {
         if (getter != null) {
             return getter.invoke(receiver, new Object[] {});
         }
@@ -105,7 +105,7 @@ public class Db4oBeanProperty implements InvocationHandler {
             return null;
     }
     
-    private void set(Object[] args) {
+    private void set(Object[] args) throws Throwable {
         if (setter != null) {
             setter.invoke(receiver, args);
             return;
