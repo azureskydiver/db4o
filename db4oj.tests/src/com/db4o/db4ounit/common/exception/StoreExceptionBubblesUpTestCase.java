@@ -45,7 +45,7 @@ public class StoreExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 						store(new Item());
 					}
 				};
-		Assert.expect(Db4oUserException.class, exception);
+		Assert.expect(ReflectException.class, exception);
 	}
 
 }

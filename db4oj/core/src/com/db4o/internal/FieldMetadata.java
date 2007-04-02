@@ -95,7 +95,7 @@ public class FieldMetadata implements StoredField {
 		try {
 			return translator.storedClass();
 		} catch (RuntimeException e) {
-			throw new Db4oUserException(e);
+			throw new ReflectException(e);
 		}
 	}
 

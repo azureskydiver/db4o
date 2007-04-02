@@ -8,26 +8,25 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class ObjectOnDeleteExceptionTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class ObjectCanActiviateExceptionTestCase extends AbstractDb4oTestCase {
 
 	public static void main(String[] args) {
-		new ObjectOnDeleteExceptionTestCase().runSolo();
+		new ObjectCanActiviateExceptionTestCase().runSoloAndClientServer();
 	}
 
 	public static class Item {
-		public boolean objectOnDelete(ObjectContainer container) {
+		public boolean objectCanActivate(ObjectContainer container) {
 			throw new ItemException();
 		}
 	}
 
 	public void test() {
-		final Item item = new Item();
-		store(item);
+		store(new Item());
 		Assert.expect(ReflectException.class, ItemException.class,
 				new CodeBlock() {
 					public void run() throws Throwable {
-						db().delete(item);
-						db().commit();
+						ObjectSet os = db().get(null);
+						os.next();
 					}
 				});
 	}

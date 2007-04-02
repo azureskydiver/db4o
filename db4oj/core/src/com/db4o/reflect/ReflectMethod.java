@@ -2,6 +2,8 @@
 
 package com.db4o.reflect;
 
+import com.db4o.internal.*;
+
 /** 
  * representation for java.lang.reflect.Method.
  * <br><br>See the respective documentation in the JDK API.
@@ -9,7 +11,7 @@ package com.db4o.reflect;
  */
 public interface ReflectMethod {
 	
-	public Object invoke(Object onObject, Object[] parameters) throws Throwable;
+	public Object invoke(Object onObject, Object[] parameters) throws ReflectException;
     
     public ReflectClass getReturnType();
 	
