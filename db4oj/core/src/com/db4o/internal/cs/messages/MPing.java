@@ -14,7 +14,7 @@ public class MPing extends Msg implements ServerSideMessage, ClientSideMessage {
 	}
 	
 	public boolean processAtClient() {
-		write(Msg.OK);
+//		write(Msg.OK);
 		return true;
 	}
 }

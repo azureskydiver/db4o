@@ -293,16 +293,19 @@ public class CachedIoAdapter extends IoAdapter {
 		long startAddress = pos - pos % _pageSize;
 		page.startAddress(startAddress);
 		ioSeek(page._startAddress);
-		ioRead(page);
+		int count = ioRead(page);
+		if (count > 0) {
+			page.endAddress(startAddress + count);
+		} else {
+			page.endAddress(startAddress);
+		}
 		// _posPageMap.put(new Long(page.startPosition / PAGE_SIZE), page);
 	}
 
 	private int ioRead(Page page) throws IOException {
 		int count = _io.read(page._buffer);
 		if (count > 0) {
-			long endAddress = page._startAddress + count;
-			_filePointer = endAddress;
-			page.endAddress(endAddress);
+			_filePointer = page._startAddress + count;
 		}
 		return count;
 	}
