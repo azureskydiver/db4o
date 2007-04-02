@@ -2,6 +2,10 @@
 
 package com.db4o.foundation;
 
+import java.io.*;
+
+import com.db4o.internal.*;
+
 
 
 /**
@@ -32,25 +36,19 @@ public abstract class ChainedRuntimeException extends RuntimeException {
 		return _cause;
 	}
 	
-//	public void printStackTrace() {
-//		printStackTrace(System.err);
-//	}
-//	
-//	public void printStackTrace(PrintStream s) {
-//		printStackTrace(new PrintWriter(s));
-//	}
-//	
-//	public void printStackTrace(PrintWriter s) {
-//		printStackTraceWithoutCause(s);
-//		if (_cause != null) {
-//			s.println("Nested cause:");
-//			_cause.printStackTrace(s);
-//		}
-//	}
-//
-//	private void printStackTraceWithoutCause(PrintWriter s) {
-//		StackTraceElement[] trace = getStackTrace();
-//		for (int i = 0; i < trace.length; i++)
-//			s.println("\tat " + trace[i]);
-//	}
+	public void printStackTrace() {
+		printStackTrace(System.err);
+	}
+	
+	public void printStackTrace(PrintStream ps) {
+		printStackTrace(new PrintWriter(ps, true));
+	}
+
+	public void printStackTrace(PrintWriter pw) {
+		Platform4.jdk().printStackTrace(this, pw);
+	}
+
+	public void superPrintStackTrace(PrintWriter s) {
+		super.printStackTrace(s);
+	}
 }
