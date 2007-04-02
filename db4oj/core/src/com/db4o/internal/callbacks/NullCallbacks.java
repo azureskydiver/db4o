@@ -2,8 +2,7 @@
 
 package com.db4o.internal.callbacks;
 
-import com.db4o.ext.*;
-import com.db4o.internal.*;
+import com.db4o.internal.CallbackObjectInfoCollections;
 import com.db4o.query.Query;
 
 public class NullCallbacks implements Callbacks {

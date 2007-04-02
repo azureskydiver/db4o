@@ -2,7 +2,6 @@
 
 package com.db4o.ext;
 
-import com.db4o.foundation.ChainedRuntimeException;
 
 /**
  * this Exception is thrown during any of the db4o open calls
