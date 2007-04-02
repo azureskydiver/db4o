@@ -20,7 +20,7 @@ public class ObjectCanNewExceptionTestCase extends AbstractDb4oTestCase {
 	}
 
 	public void test() {
-		Assert.expect(Db4oUserException.class, ItemException.class,
+		Assert.expect(ReflectException.class, ItemException.class,
 				new CodeBlock() {
 					public void run() throws Throwable {
 						store(new Item());

@@ -23,7 +23,7 @@ public class ObjectCanDeleteExceptionTestCase extends AbstractDb4oTestCase imple
 	public void test() {
 		final Item item = new Item();
 		store(item);
-		Assert.expect(Db4oUserException.class, ItemException.class,
+		Assert.expect(ReflectException.class, ItemException.class,
 				new CodeBlock() {
 					public void run() throws Throwable {
 						db().delete(item);

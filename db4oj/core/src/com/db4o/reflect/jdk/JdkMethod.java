@@ -17,7 +17,7 @@ public class JdkMethod implements ReflectMethod{
         reflector = reflector_;
 	}
 	
-	public Object invoke(Object onObject, Object[] params) throws Throwable {
+	public Object invoke(Object onObject, Object[] params) throws ReflectException {
 		return JDKReflect.invoke(params, onObject, method);
 	} 
 

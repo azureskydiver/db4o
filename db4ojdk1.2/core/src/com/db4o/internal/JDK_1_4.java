@@ -70,7 +70,7 @@ class JDK_1_4 extends JDK_1_3 {
 			return (Constructor) invoke(
 					new Object[] { clazz, objectConstructor },
 					reflectionFactory, factoryMethod);
-		} catch (Throwable e) {
+		} catch (ReflectException e) {
 			return null;
 		}
 	}

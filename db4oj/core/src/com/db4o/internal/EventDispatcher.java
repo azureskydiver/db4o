@@ -52,10 +52,7 @@ public final class EventDispatcher {
 			if (res instanceof Boolean) {
 				return ((Boolean) res).booleanValue();
 			}
-		} catch (Throwable t) {
-			// Throwable from user code by reflection.
-			throw new Db4oUserException(t);
-		} finally {
+		}  finally {
 			stream.stackDepth(stackDepth);
 			stream.topLevelCallId(topLevelCallId);
 		}
