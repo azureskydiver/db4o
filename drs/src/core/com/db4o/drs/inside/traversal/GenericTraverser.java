@@ -7,7 +7,7 @@ public class GenericTraverser implements Traverser {
 	protected final Reflector _reflector;
 	private final ReflectArray _arrayReflector;
 	protected final CollectionFlattener _collectionFlattener;
-	protected final Queue4 _queue = new BlockingQueue();
+	protected final Queue4 _queue = new NonblockingQueue();
 
 	public GenericTraverser(Reflector reflector, CollectionFlattener collectionFlattener) {
 		_reflector = reflector;
