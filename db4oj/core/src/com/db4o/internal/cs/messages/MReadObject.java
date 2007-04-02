@@ -17,7 +17,7 @@ public final class MReadObject extends MsgD implements ServerSideMessage {
 			try {
 				bytes = stream().readWriterByID(transaction(), _payLoad.readInt());
 			} catch (Exception e) {
-				if (Deploy.debug) {
+				if (Debug.atHome) {
 					System.out.println("MsD.ReadObject:: readObjectByID failed");
 				}
 			}
