@@ -93,7 +93,7 @@ public class MapFieldNode extends FieldNode {
         Set set;
         try {
             set = (Set) _keySetMethod.invoke(value, new Object[] {});
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Logger.log().error(e, "Unable to invoke 'keySet'");
             throw new IllegalStateException();
         }
@@ -104,7 +104,7 @@ public class MapFieldNode extends FieldNode {
 		Object result;
 		try {
 			result = _getMethod.invoke(value, new Object[] {key});
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Logger.log().error(e, "Unable ot invoke 'get'");
 			throw new IllegalStateException();
 		}
