@@ -37,38 +37,18 @@ public abstract class ChainedRuntimeException extends RuntimeException {
 	}
 	
 	public void printStackTrace() {
-		if(jdkVersion() >= 4) {
-			super.printStackTrace();
-			return;
-		}
 		printStackTrace(System.err);
 	}
 	
 	public void printStackTrace(PrintStream ps) {
-		if(jdkVersion() >= 4) {
-			super.printStackTrace(ps);
-			return;
-		}
 		printStackTrace(new PrintWriter(ps, true));
 	}
 
 	public void printStackTrace(PrintWriter pw) {
-		if(jdkVersion() >= 4) {
-			super.printStackTrace(pw);
-			return;
-		}
 		super.printStackTrace(pw);
 		if (_cause != null) {
 			pw.println("Nested cause:");
 			_cause.printStackTrace(pw);
 		}
-	}
-
-	private int jdkVersion() {
-		return Platform4.jdk().ver();
-	}
-
-	public void superPrintStackTrace(PrintWriter s) {
-		super.printStackTrace(s);
 	}
 }
