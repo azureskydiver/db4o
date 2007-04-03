@@ -6,6 +6,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
@@ -13,9 +14,9 @@ class JDK_1_4 extends JDK_1_3 {
 	
 	private Hashtable fileLocks;
 	
-	private Object reflectionFactory;
-	private Constructor objectConstructor;
-	private Method factoryMethod;
+	private Object _reflectionFactory;
+	private Constructor _objectConstructor;
+	private Method _factoryMethod;
 	
 	synchronized void lockFile(String path,Object file) throws IOException {
 		// Conversion to canonical is already done by RandomAccessFileAdapter, but it's probably
@@ -49,31 +50,41 @@ class JDK_1_4 extends JDK_1_3 {
 		fileLocks.remove(path);
 	}
 	
-	public Constructor serializableConstructor(Class clazz) {
-		if (reflectionFactory == null) {
-			try {
-				initSerializableConstructor();
-			} catch (Throwable t) {
-				Platform4.callConstructorCheck = TernaryBool.YES;
-				return null;
-			}
-		}
-		try {
-			return (Constructor) invoke(
-					new Object[] { clazz, objectConstructor },
-					reflectionFactory, factoryMethod);
-		} catch (ReflectException e) {
-			return null;
-		}
+	public Constructor serializableConstructor(Class clazz){
+	    if(_reflectionFactory == null){
+	        if(! initSerializableConstructor()){
+	            Platform4.callConstructorCheck = TernaryBool.YES;
+	            return null;
+	        }
+	    }
+	    return (Constructor) invoke(new Object[]{clazz, _objectConstructor}, _reflectionFactory, _factoryMethod);
 	}
 	
-	void initSerializableConstructor() throws Throwable  {
-        reflectionFactory = invoke(Platform4.REFLECTIONFACTORY, "getReflectionFactory", null,null, null);
-        factoryMethod = getMethod(Platform4.REFLECTIONFACTORY, "newConstructorForSerialization", new Class[]{Class.class, Constructor.class});
-        if(factoryMethod == null){
-            throw new NoSuchMethodException();
-        }
-        Object.class.getDeclaredConstructor((Class[])null);
+	
+	private boolean initSerializableConstructor(){
+		try {
+			_reflectionFactory = invoke(Platform4.REFLECTIONFACTORY,
+					"getReflectionFactory", null, null, null);
+			_factoryMethod = getMethod(Platform4.REFLECTIONFACTORY,
+					"newConstructorForSerialization", new Class[] { Class.class,
+							Constructor.class });
+			if (_factoryMethod == null) {
+				return false;
+			}
+		} catch (ReflectException e) {
+			return false;
+		}
+		
+		try {
+			_objectConstructor = Object.class
+					.getDeclaredConstructor((Class[]) null);
+			return true;
+		} catch (Exception e) {
+			if (Debug.atHome) {
+				e.printStackTrace();
+			}
+			return false;
+		}
 	}
 	
 	public int ver(){
