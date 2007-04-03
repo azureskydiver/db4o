@@ -36,7 +36,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 		try {
 			return i_translator.onStore(a_trans.stream(), a_OnObject);
 		} catch (RuntimeException e) {
-			throw new ReflectException("onStore", e);
+			throw new ReflectException(e);
 		}
 	}
 	
@@ -64,8 +64,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 		try {
 			i_translator.onActivate(a_stream, a_onObject, toSet);
 		} catch (RuntimeException e) {
-			// RuntimeException may be thrown from user code
-			throw new ReflectException("onActivate", e);
+			throw new ReflectException(e);
 		}
 	}
 	
