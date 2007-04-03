@@ -25,61 +25,61 @@ public abstract class Msg implements Cloneable {
 	private MessageDispatcher _messageDispatcher;
 	
 
-	public static final MsgD CLASS_NAME_FOR_ID = new MClassNameForID();
-	public static final Msg CLOSE = new MClose();
-    public static final Msg COMMIT = new MCommit();
-    public static final Msg COMMIT_SYSTEMTRANS = new MCommitSystemTransaction();
-	public static final MsgD CREATE_CLASS = new MCreateClass();
-	public static final MsgObject CLASS_META = new MClassMeta();
-	public static final Msg CURRENT_VERSION = new MVersion();
-	public static final MsgD DELETE = new MDelete();
-	public static final Msg ERROR = new MError();
-	public static final Msg FAILED = new MFailed();
-	public static final MsgD GET_ALL = new MGetAll();
-	public static final MsgD GET_CLASSES = new MGetClasses();
-	public static final MsgD GET_INTERNAL_IDS = new MGetInternalIDs();
-	public static final Msg GET_THREAD_ID = new MGetThreadID();
-	public static final MsgD ID_LIST = new MIDList();
-	public static final Msg IDENTITY = new MIdentity();
-	public static final MsgD LENGTH = new MLength();
-    public static final MsgD LOGIN = new MLogin();
-    public static final MsgD LOGIN_OK = new MLoginOK();
-	public static final Msg NULL = new MNull();
-	public static final MsgD OBJECT_BY_UUID = new MObjectByUuid();
+	public static final MClassNameForID CLASS_NAME_FOR_ID = new MClassNameForID();
+	public static final MClose CLOSE = new MClose();
+    public static final MCommit COMMIT = new MCommit();
+    public static final MCommitSystemTransaction COMMIT_SYSTEMTRANS = new MCommitSystemTransaction();
+	public static final MCreateClass CREATE_CLASS = new MCreateClass();
+	public static final MClassMeta CLASS_META = new MClassMeta();
+	public static final MVersion CURRENT_VERSION = new MVersion();
+	public static final MDelete DELETE = new MDelete();
+	public static final MError ERROR = new MError();
+	public static final MFailed FAILED = new MFailed();
+	public static final MGetAll GET_ALL = new MGetAll();
+	public static final MGetClasses GET_CLASSES = new MGetClasses();
+	public static final MGetInternalIDs GET_INTERNAL_IDS = new MGetInternalIDs();
+	public static final MGetThreadID GET_THREAD_ID = new MGetThreadID();
+	public static final MIDList ID_LIST = new MIDList();
+	public static final MIdentity IDENTITY = new MIdentity();
+	public static final MLength LENGTH = new MLength();
+    public static final MLogin LOGIN = new MLogin();
+    public static final MLoginOK LOGIN_OK = new MLoginOK();
+	public static final MNull NULL = new MNull();
+	public static final MObjectByUuid OBJECT_BY_UUID = new MObjectByUuid();
 	public static final MsgObject OBJECT_TO_CLIENT = new MsgObject();
-	public static final MsgD OBJECTSET_FETCH = new MObjectSetFetch();
-	public static final MsgD OBJECTSET_FINALIZED = new MObjectSetFinalized();
-	public static final MsgD OBJECTSET_GET_ID = new MObjectSetGetId();
-	public static final MsgD OBJECTSET_INDEXOF = new MObjectSetIndexOf();
-	public static final MsgD OBJECTSET_RESET = new MObjectSetReset();
-	public static final MsgD OBJECTSET_SIZE = new MObjectSetSize();
-	public static final Msg OK = new MOK();
-	public static final Msg PING = new MPing();
-	public static final MsgD PREFETCH_IDS = new MPrefetchIDs();
-	public static final Msg PROCESS_DELETES = new MProcessDeletes();
-	public static final MsgObject QUERY_EXECUTE = new MQueryExecute();
-	public static final MsgD QUERY_RESULT = new MsgD("QUERY_RESULT");
-	public static final MsgD RAISE_VERSION = new MRaiseVersion();
-	public static final MsgBlob READ_BLOB = new MReadBlob();
-	public static final MsgD READ_BYTES = new MReadBytes();
-	public static final MsgD READ_MULTIPLE_OBJECTS = new MReadMultipleObjects();
-	public static final MsgD READ_OBJECT = new MReadObject();
-	public static final MsgD RELEASE_SEMAPHORE = new MReleaseSemaphore();
-	public static final Msg ROLLBACK = new MRollback();
-	public static final MsgD SET_SEMAPHORE = new MSetSemaphore();
-	public static final Msg SUCCESS = new MSuccess();
-	public static final MsgD SWITCH_TO_FILE = new MSwitchToFile();
-	public static final Msg SWITCH_TO_MAIN_FILE = new MSwitchToMainFile();
-	public static final MsgD TA_DELETE = new MTaDelete();
-	public static final MsgD TA_IS_DELETED = new MTaIsDeleted();
-	public static final MsgD USER_MESSAGE = new MUserMessage();
-	public static final MsgD USE_TRANSACTION = new MUseTransaction();
-	public static final MsgBlob WRITE_BLOB = new MWriteBlob();
+	public static final MObjectSetFetch OBJECTSET_FETCH = new MObjectSetFetch();
+	public static final MObjectSetFinalized OBJECTSET_FINALIZED = new MObjectSetFinalized();
+	public static final MObjectSetGetId OBJECTSET_GET_ID = new MObjectSetGetId();
+	public static final MObjectSetIndexOf OBJECTSET_INDEXOF = new MObjectSetIndexOf();
+	public static final MObjectSetReset OBJECTSET_RESET = new MObjectSetReset();
+	public static final MObjectSetSize OBJECTSET_SIZE = new MObjectSetSize();
+	public static final MOK OK = new MOK();
+	public static final MPing PING = new MPing();
+	public static final MPrefetchIDs PREFETCH_IDS = new MPrefetchIDs();
+	public static final MProcessDeletes PROCESS_DELETES = new MProcessDeletes();
+	public static final MQueryExecute QUERY_EXECUTE = new MQueryExecute();
+	public static final MQueryResult QUERY_RESULT = new MQueryResult();
+	public static final MRaiseVersion RAISE_VERSION = new MRaiseVersion();
+	public static final MReadBlob READ_BLOB = new MReadBlob();
+	public static final MReadBytes READ_BYTES = new MReadBytes();
+	public static final MReadMultipleObjects READ_MULTIPLE_OBJECTS = new MReadMultipleObjects();
+	public static final MReadObject READ_OBJECT = new MReadObject();
+	public static final MReleaseSemaphore RELEASE_SEMAPHORE = new MReleaseSemaphore();
+	public static final MRollback ROLLBACK = new MRollback();
+	public static final MSetSemaphore SET_SEMAPHORE = new MSetSemaphore();
+	public static final MSuccess SUCCESS = new MSuccess();
+	public static final MSwitchToFile SWITCH_TO_FILE = new MSwitchToFile();
+	public static final MSwitchToMainFile SWITCH_TO_MAIN_FILE = new MSwitchToMainFile();
+	public static final MTaDelete TA_DELETE = new MTaDelete();
+	public static final MTaIsDeleted TA_IS_DELETED = new MTaIsDeleted();
+	public static final MUserMessage USER_MESSAGE = new MUserMessage();
+	public static final MUseTransaction USE_TRANSACTION = new MUseTransaction();
+	public static final MWriteBlob WRITE_BLOB = new MWriteBlob();
 	public static final MWriteNew WRITE_NEW = new MWriteNew();
-	public static final MsgObject WRITE_UPDATE = new MWriteUpdate();
-	public static final MsgD WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
+	public static final MWriteUpdate WRITE_UPDATE = new MWriteUpdate();
+	public static final MWriteUpdateDeleteMembers WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
 	public static final MWriteBatchedMessages WRITE_BATCHED_MESSAGES = new MWriteBatchedMessages();
-	public static final MDb4oException DB4OEXCEPTION = new MDb4oException();
+	public static final MDb4oException DB4O_EXCEPTION = new MDb4oException();
 
 	Msg() {
 		_msgID = _messageIdGenerator++;
@@ -222,7 +222,7 @@ public abstract class Msg implements Cloneable {
 	}
 	
 	public void writeException(Db4oException e) {
-		write(DB4OEXCEPTION.clone(transaction(), e));
+		write(DB4O_EXCEPTION.clone(transaction(), e));
 	}
 	
 	public void respondInt(int response){
