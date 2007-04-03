@@ -19,7 +19,7 @@ Native Queries are available for all platforms supported by db4o.
 The concept of native queries is taken from the following two papers:
 
 -  .l http://www.cs.utexas.edu/users/wcook/papers/NativeQueries/NativeQueries8-23-05.pdf Cook/Rosenberger, Native Queries for Persistent Objects, A Design White Paper ..l
--  .l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
+-  .l http://www.cs.utexas.edu/users/wcook/papers/SafeQuery05/SafeQueryFinal.pdf Cook/Rai, Safe Query Objects: Statically Typed Objects as Remotely Executable Queries ..l
 
 .2 Principle ..
 Native Queries provide the ability to run one or more lines ._
