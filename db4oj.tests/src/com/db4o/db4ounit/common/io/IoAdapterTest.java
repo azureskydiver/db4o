@@ -128,21 +128,26 @@ public class IoAdapterTest implements TestCase, TestLifeCycle {
 		Assert.areEqual(1200 + data.length, readBytes);		
 	}
 
-	public void testReadTooMuch() throws Exception {
+	public void testReadWriteTooMuch() throws Exception {
 		for (int i = 0; i < _adapters.length; i++) {
-			assertReadTooMuch(_adapters[i]);
+			assertReadWriteTooMuch(_adapters[i]);
 		}
 	}
 	
-	private void assertReadTooMuch(final IoAdapter adapter) throws Exception {
+	private void assertReadWriteTooMuch(final IoAdapter adapter) throws Exception {
 		final byte[] data = "hello".getBytes();
-		final byte[] read = new byte[1];
+		final byte[] buffer = new byte[1];
 		adapter.seek(0);
 		adapter.write(data);
 		adapter.seek(0);
 		Assert.expect(Exception.class, new CodeBlock () {
 			public void run() throws Throwable {
-				adapter.read(read, data.length);
+				adapter.read(buffer, buffer.length+1);
+			}
+		});
+		Assert.expect(Exception.class, new CodeBlock () {
+			public void run() throws Throwable {
+				adapter.write(buffer, buffer.length+1);
 			}
 		});
 	}
