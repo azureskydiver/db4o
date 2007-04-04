@@ -4,7 +4,7 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.ext.*;
 
-final class MCommit extends Msg implements ServerSideMessage {
+public final class MCommit extends Msg implements ServerSideMessage {
 	
 	public final boolean processAtServer() {
 		try{
