@@ -77,7 +77,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
         return false;
     }
 
-    private void open() throws IOException {
+    protected void open() throws IOException {
         byte[] bytes = _memoryFile.getBytes();
         if (bytes == null || bytes.length == 0) {
             _memoryFile.setBytes(new byte[_memoryFile.getInitialSize()]);

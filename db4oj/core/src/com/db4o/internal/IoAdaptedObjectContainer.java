@@ -6,7 +6,6 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.ext.*;
 import com.db4o.io.*;
 
 
@@ -31,18 +30,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
             _fileLock = new Object();
             _fileName = fileName;
             _freespaceFiller=createFreespaceFiller();
-            if (Deploy.debug) {
-                // intentionally no Exception handling
-                // to find and debug errors
-                open();
-            } else {
-                try {
-                    open();
-                } catch (DatabaseFileLockedException e) {
-                    stopSession();
-                    throw e;
-                }
-            }
+            open();
             initializePostOpen();
         }
     }
@@ -223,57 +211,35 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         return _fileName;
     }
 
-    private void open() throws Exception {
-        boolean isNew = false;
-        IoAdapter ioAdapter = configImpl().ioAdapter();
-        if (Deploy.debug) {
-            if (Deploy.deleteFile) {
-                System.out.println("Debug option set to DELETE file.");
-                try {
-                    ioAdapter.delete(_fileName);
-                } catch (Exception e) {
-                }
-            }
-        }
+    protected void open() throws IOException {
+        boolean ok = false;
         try {
-            if (fileName().length() > 0) {
-                                
-                if(! ioAdapter.exists(fileName())){
-                    isNew = true;
-                    logMsg(14, fileName());
-                    i_handlers.oldEncryptionOff();
+            IoAdapter ioAdapter = configImpl().ioAdapter();
+        	boolean isNew = ! ioAdapter.exists(fileName()); 
+            if(isNew){
+                logMsg(14, fileName());
+                i_handlers.oldEncryptionOff();
+            }
+            boolean lockFile = Debug.lockFile && configImpl().lockFile() && (!configImpl().isReadOnly());
+            _file = ioAdapter.open(fileName(), lockFile, 0);
+            if (needsTimerFile()) {
+                _timerFile = ioAdapter.delegatedIoAdapter().open(fileName(), false, 0);
+            }
+            if (isNew) {
+                configureNewFile();
+                if (configImpl().reservedStorageSpace() > 0) {
+                    reserve(configImpl().reservedStorageSpace());
                 }
-                
-                try {
-                    boolean lockFile = Debug.lockFile && configImpl().lockFile()
-                        && (!configImpl().isReadOnly());
-                    _file = ioAdapter.open(fileName(), lockFile, 0);
-                    if (needsTimerFile()) {
-                        _timerFile = ioAdapter.delegatedIoAdapter().open(fileName(), false, 0);
-                    }
-                } catch (DatabaseFileLockedException de) {
-                	throw de;
-                } catch (Exception e) {
-                    Exceptions4.throwRuntimeException(12, fileName(), e);
-                }
-                if (isNew) {
-                    configureNewFile();
-                    if (configImpl().reservedStorageSpace() > 0) {
-                        reserve(configImpl().reservedStorageSpace());
-                    }
-                    commitTransaction();
-                    writeHeader(true, false);
-                } else {
-                    readThis();
-                }
+                commitTransaction();
+                writeHeader(true, false);
             } else {
-                Exceptions4.throwRuntimeException(21);
+                readThis();
             }
-        } catch (Exception exc) {
-            if (i_references != null) {
-                i_references.stopTimer();
+            ok = true;
+        } finally  {
+        	if(! ok ) {
+        		stopSession();
             }
-            throw exc;
         }
     }
 

@@ -1056,13 +1056,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         i_references.startTimer();
     }
 
-    protected final void initializePostOpen() {
+    protected final void initializePostOpen() throws IOException {
         i_showInternalClasses = 100000;
         initializePostOpenExcludingTransportObjectContainer();
         i_showInternalClasses = 0;
     }
     
-    protected void initializePostOpenExcludingTransportObjectContainer() {
+    protected void initializePostOpenExcludingTransportObjectContainer() throws IOException{
         initializeEssentialClasses();
         rename(configImpl());
         _classCollection.initOnUp(i_systemTrans);
@@ -1357,14 +1357,19 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids);
 
-    private void reboot() {
+    private void reboot() throws IOException{
         commit();
-        int ccID = _classCollection.getID();
-        i_references.stopTimer();
-        initialize2();
-        _classCollection.setID(ccID);
-        _classCollection.read(i_systemTrans);
+        close();
+        // TODO: This is duplicate knowledge of how to open.
+        //       Revise opening to have one open method only
+        //       that does all of the tasks below.
+        initializeTransactions();
+        initialize1(i_config);
+        open();
+        initializePostOpen();
     }
+    
+    protected abstract void open() throws IOException;
     
 	public ReferenceSystem referenceSystem() {
 		return _referenceSystem;
@@ -1410,14 +1415,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract void releaseSemaphores(Transaction ta);
 
-    void rename(Config4Impl config) {
+    void rename(Config4Impl config) throws IOException{
         boolean renamedOne = false;
         if (config.rename() != null) {
             renamedOne = rename1(config);
         }
         _classCollection.checkChanges();
         if (renamedOne) {
-            reboot();
+        	reboot();
         }
     }
 
@@ -1861,12 +1866,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         i_stillToSet = new List4(i_stillToSet, new Integer(a_updateDepth));
     }
 
-    protected void stopSession() {
+    protected final void stopSession() {
         if (hasShutDownHook()) {
             Platform4.removeShutDownHook(this);
         }
         _classCollection = null;
-        i_references.stopTimer();
+        if(i_references != null){
+        	i_references.stopTimer();
+        }
         i_systemTrans = null;
         i_trans = null;
     }
