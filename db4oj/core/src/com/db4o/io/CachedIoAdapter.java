@@ -158,7 +158,6 @@ public class CachedIoAdapter extends IoAdapter {
 		int bufferOffset = 0;
 		while (bytesToRead > 0) {
 			page = getPage(startAddress, true);
-			page.ensureEndAddress(getLength());
 			readBytes = page.read(buffer, bufferOffset, startAddress, bytesToRead);
 			movePageToHead(page);
 			if(readBytes <= 0) {
@@ -187,7 +186,7 @@ public class CachedIoAdapter extends IoAdapter {
 		int bufferOffset = 0;
 		while (bytesToWrite > 0) {
 			// page doesn't need to loadFromDisk if the whole page is dirty
-			boolean loadFromDisk = (length < _pageSize) || (startAddress % _pageSize != 0);
+			boolean loadFromDisk = (bytesToWrite < _pageSize) || (startAddress % _pageSize != 0);
 			page = getPage(startAddress, loadFromDisk);
 			page.ensureEndAddress(getLength());
 			writtenBytes = page.write(buffer, bufferOffset, startAddress, bytesToWrite);
@@ -230,9 +229,9 @@ public class CachedIoAdapter extends IoAdapter {
 	
 	private Page getPage(long startAddress, boolean loadFromDisk)
 			throws IOException {
-		Page page;
-		page = getPageFromCache(startAddress);
+		Page page = getPageFromCache(startAddress);
 		if (page != null) {
+			page.ensureEndAddress(_fileLength);
 			return page;
 		}
 		// in case that page is not found in the cache
@@ -248,7 +247,7 @@ public class CachedIoAdapter extends IoAdapter {
 
 	private void resetPageAddress(Page page, long startAddress) {
 		page.startAddress(startAddress);
-		page.endAddress(startAddress);
+		page.endAddress(startAddress + _pageSize);
 	}
 
 	private Page getFreePageFromCache() throws IOException {
@@ -378,19 +377,20 @@ public class CachedIoAdapter extends IoAdapter {
 		}
 
 		/*
-		 * This method must be invoked before page.write, because
+		 * This method must be invoked before page.write/read, because
 		 * seek and write may write ahead the end of file.
 		 */
 		void ensureEndAddress(long fileLength) {
 			long bufferEndAddress = _startAddress + _bufferSize;
-			if (_endAddress < bufferEndAddress && fileLength > bufferEndAddress) {
+			if (_endAddress < bufferEndAddress && fileLength > _endAddress) {
+				long newEndAddress = Math.min(fileLength, bufferEndAddress);
 				if (zeroBytes == null) {
 					zeroBytes = new byte[_bufferSize];
 				}
 				System.arraycopy(zeroBytes, 0, _buffer,
 						(int) (_endAddress - _startAddress),
-						(int) (bufferEndAddress - _endAddress));
-				_endAddress = bufferEndAddress;
+						(int) (newEndAddress - _endAddress));
+				_endAddress = newEndAddress;
 			}
 		}
 
