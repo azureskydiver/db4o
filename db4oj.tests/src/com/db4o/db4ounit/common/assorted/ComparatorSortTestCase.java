@@ -42,8 +42,8 @@ public class ComparatorSortTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static class SmallerThanThreePredicate extends Predicate {
-		public boolean match(Object candidate) {
-			return ((Item)candidate)._id<3;
+		public boolean match(Item candidate) {
+			return candidate._id<3;
 		}
 	}
 	
