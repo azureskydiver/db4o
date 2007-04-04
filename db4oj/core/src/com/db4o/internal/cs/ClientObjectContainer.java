@@ -83,6 +83,9 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password_, boolean login)
 			throws IOException {
 		this(config);
+		if (password_ == null) {
+			throw new ArgumentNullException(Messages.get(56));
+		}
 		synchronized (lock()) {
 			_singleThreaded = configImpl().singleThreadedClient();
 
@@ -91,25 +94,20 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			// socket.setTcpNoDelay(true);
 			// System.out.println(socket.getSendBufferSize());
 
-			if (password_ == null) {
-				throw new ArgumentNullException(Messages.get(56));
-			}
-			if (!login) {
-				password_ = null;
-			}
-
 			userName = user;
 			password = password_;
 			i_socket = socket;
 			try {
-				loginToServer(socket);
+				if (login) {
+					loginToServer(socket);
+				}
 			} catch (IOException e) {
 				stopSession();
 				throw e;
 			}
 
 			if (!_singleThreaded) {
-				startReaderThread(socket, user);
+				startDispatcherThread(socket, user);
 			}
 
 			logMsg(36, toString());
@@ -121,14 +119,14 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		}
 	}
 
-	private void startReaderThread(Socket4 socket, String user) {
+	private void startDispatcherThread(Socket4 socket, String user) {
 		_messageDispatcher = new ClientMessageDispatcherImpl(this, socket, _messageQueue);
 		_messageDispatcher.setDispatcherName(user);
 		_messageDispatcher.startDispatcher();
 	}
 
 	public void backup(String path) throws IOException {
-		Exceptions4.throwRuntimeException(60);
+		throw new UnsupportedOperationException();
 	}
     
     public void blockSize(int blockSize){
@@ -404,27 +402,22 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return true;
 	}
 
-	void loginToServer(Socket4 a_socket) throws IOException {
-		if (password != null) {
-			UnicodeStringIO stringWriter = new UnicodeStringIO();
-			int length = stringWriter.length(userName)
-					+ stringWriter.length(password);
-
-			MsgD message = Msg.LOGIN.getWriterForLength(systemTransaction(), length);
-			message.writeString(userName);
-			message.writeString(password);
-			message.write(this, a_socket);
-            Msg msg = Msg.readMessage(this, systemTransaction(), a_socket);
-			if (!Msg.LOGIN_OK.equals(msg)) {
-				throw new IOException(Messages.get(42));
-			}
-            Buffer payLoad = msg.payLoad();
-            _blockSize = payLoad.readInt();
-            int doEncrypt = payLoad.readInt();
-            if(doEncrypt == 0){
-                i_handlers.oldEncryptionOff();
-            }
-            
+	private void loginToServer(Socket4 a_socket) throws IOException {
+		UnicodeStringIO stringWriter = new UnicodeStringIO();
+		int length = stringWriter.length(userName) + stringWriter.length(password);
+		MsgD message = Msg.LOGIN.getWriterForLength(systemTransaction(), length);
+		message.writeString(userName);
+		message.writeString(password);
+		message.write(this, a_socket);
+		Msg msg = Msg.readMessage(this, systemTransaction(), a_socket);
+		if (!Msg.LOGIN_OK.equals(msg)) {
+			throw new IOException(Messages.get(42));
+		}
+		Buffer payLoad = msg.payLoad();
+		_blockSize = payLoad.readInt();
+		int doEncrypt = payLoad.readInt();
+		if (doEncrypt == 0) {
+			i_handlers.oldEncryptionOff();
 		}
 	}
 
