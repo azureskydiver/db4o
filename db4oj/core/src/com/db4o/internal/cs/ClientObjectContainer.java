@@ -63,7 +63,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	 * Single-Threaded Client-Server Debug Mode, this constructor is only for
 	 * fake server
 	 */
-	public ClientObjectContainer(String fakeServerFile) {
+	public ClientObjectContainer(String fakeServerFile) throws IOException {
 		this(Db4o.cloneConfiguration());
 		if (!Debug.fakeServer) {
 			throw new IllegalStateException();
@@ -820,6 +820,11 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	
 	public ClientMessageDispatcher messageDispatcher() {
 		return _singleThreaded ? this : _messageDispatcher;
+	}
+
+	protected void open() throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

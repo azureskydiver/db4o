@@ -32,6 +32,7 @@ public abstract class Msg implements Cloneable {
 	public static final MCreateClass CREATE_CLASS = new MCreateClass();
 	public static final MClassMeta CLASS_META = new MClassMeta();
 	public static final MVersion CURRENT_VERSION = new MVersion();
+	public static final MDb4oException DB4O_EXCEPTION = new MDb4oException();
 	public static final MDelete DELETE = new MDelete();
 	public static final MError ERROR = new MError();
 	public static final MFailed FAILED = new MFailed();
@@ -55,6 +56,7 @@ public abstract class Msg implements Cloneable {
 	public static final MObjectSetSize OBJECTSET_SIZE = new MObjectSetSize();
 	public static final MOK OK = new MOK();
 	public static final MPing PING = new MPing();
+	public static final MPong PONG = new MPong();
 	public static final MPrefetchIDs PREFETCH_IDS = new MPrefetchIDs();
 	public static final MProcessDeletes PROCESS_DELETES = new MProcessDeletes();
 	public static final MQueryExecute QUERY_EXECUTE = new MQueryExecute();
@@ -79,7 +81,6 @@ public abstract class Msg implements Cloneable {
 	public static final MWriteUpdate WRITE_UPDATE = new MWriteUpdate();
 	public static final MWriteUpdateDeleteMembers WRITE_UPDATE_DELETE_MEMBERS = new MWriteUpdateDeleteMembers();
 	public static final MWriteBatchedMessages WRITE_BATCHED_MESSAGES = new MWriteBatchedMessages();
-	public static final MDb4oException DB4O_EXCEPTION = new MDb4oException();
 
 	Msg() {
 		_msgID = _messageIdGenerator++;
