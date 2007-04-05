@@ -390,8 +390,12 @@ public class QConObject extends QCon {
     public Constraint identity() {
         synchronized (streamLock()) {
 
+        	if(i_object==null) {
+        		return this;
+        	}
+        	
             int id = getObjectID();
-            if(! (id > 0)){
+            if(id <= 0){
                 i_objectID = 0;
                 Exceptions4.throwRuntimeException(51);
             }
