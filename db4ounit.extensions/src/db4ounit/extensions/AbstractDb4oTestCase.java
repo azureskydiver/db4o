@@ -76,6 +76,18 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		return new Class[] { getClass() };
 	}
 	
+	public int runAll() {
+		return runAll(true);
+	}
+	
+	private int runAll(final boolean independentConfig) {
+		return new TestRunner(new TestSuite(new Test[] {
+				soloSuite(independentConfig).build(),
+				clientServerSuite(independentConfig).build(),
+				embeddedClientServerSuite(independentConfig).build(),
+		})).run();
+	}
+	
 	public int runSoloAndClientServer() {
 		return runSoloAndClientServer(true);
 	}

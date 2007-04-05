@@ -181,7 +181,6 @@ public class Db4o {
 	    
 		try {
 			ObjectContainer oc = new InMemoryObjectContainer(config,memoryFile);
-			Platform4.postOpen(oc);
 			Messages.logMsg(i_config, 5, "Memory File");
 			return oc;
 		} catch (IOException exc) {

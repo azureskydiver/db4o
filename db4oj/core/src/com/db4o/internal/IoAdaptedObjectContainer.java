@@ -24,17 +24,44 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     
     private final FreespaceFiller _freespaceFiller;
 
-    IoAdaptedObjectContainer(Configuration config, String fileName) throws Exception {
+    IoAdaptedObjectContainer(Configuration config, String fileName) {
         super(config,null);
-        synchronized (i_lock) {
-            _fileLock = new Object();
-            _fileName = fileName;
-            _freespaceFiller=createFreespaceFiller();
-            open();
-            initializePostOpen();
-        }
+        _fileLock = new Object();
+        _fileName = fileName;
+        open();
+        _freespaceFiller=createFreespaceFiller();
     }
 
+    protected final void openImpl() throws OpenDatabaseException {
+		IoAdapter ioAdapter = configImpl().ioAdapter();
+		boolean isNew = !ioAdapter.exists(fileName());
+		if (isNew) {
+			logMsg(14, fileName());
+			i_handlers.oldEncryptionOff();
+		}
+		boolean lockFile = Debug.lockFile && configImpl().lockFile()
+				&& (!configImpl().isReadOnly());
+		try {
+			_file = ioAdapter.open(fileName(), lockFile, 0);
+			if (needsTimerFile()) {
+				_timerFile = ioAdapter.delegatedIoAdapter().open(fileName(),
+						false, 0);
+			}
+			if (isNew) {
+				configureNewFile();
+				if (configImpl().reservedStorageSpace() > 0) {
+					reserve(configImpl().reservedStorageSpace());
+				}
+				commitTransaction();
+				writeHeader(true, false);
+			} else {
+				readThis();
+			}
+		} catch (IOException e) {
+			throw new OpenDatabaseException(e);
+		}
+	}
+    
     public void backup(String path) throws IOException {
         synchronized (i_lock) {
             checkClosed();
@@ -211,37 +238,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         return _fileName;
     }
 
-    protected void open() throws IOException {
-        boolean ok = false;
-        try {
-            IoAdapter ioAdapter = configImpl().ioAdapter();
-        	boolean isNew = ! ioAdapter.exists(fileName()); 
-            if(isNew){
-                logMsg(14, fileName());
-                i_handlers.oldEncryptionOff();
-            }
-            boolean lockFile = Debug.lockFile && configImpl().lockFile() && (!configImpl().isReadOnly());
-            _file = ioAdapter.open(fileName(), lockFile, 0);
-            if (needsTimerFile()) {
-                _timerFile = ioAdapter.delegatedIoAdapter().open(fileName(), false, 0);
-            }
-            if (isNew) {
-                configureNewFile();
-                if (configImpl().reservedStorageSpace() > 0) {
-                    reserve(configImpl().reservedStorageSpace());
-                }
-                commitTransaction();
-                writeHeader(true, false);
-            } else {
-                readThis();
-            }
-            ok = true;
-        } finally  {
-        	if(! ok ) {
-        		stopSession();
-            }
-        }
-    }
 
     public void readBytes(byte[] bytes, int address, int length) throws IOException {
         readBytes(bytes, address, 0, length);

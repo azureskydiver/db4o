@@ -248,16 +248,11 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	public synchronized ObjectContainer openClient(Configuration config) {
 		checkClosed();
-		try {
-			ClientObjectContainer client = new ClientObjectContainer(config, openClientSocket(),
-					Const4.EMBEDDED_CLIENT_USER + (i_threadIDGen - 1), "",
-					false);
-			client.blockSize(_container.blockSize());
-			return client;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		ClientObjectContainer client = new ClientObjectContainer(config,
+				openClientSocket(), Const4.EMBEDDED_CLIENT_USER
+						+ (i_threadIDGen - 1), "", false);
+		client.blockSize(_container.blockSize());
+		return client;
 	}
 
 	public LoopbackSocket openClientSocket() {
