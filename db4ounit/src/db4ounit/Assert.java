@@ -10,7 +10,9 @@ public final class Assert {
 	public static void expect(Class exception, Class cause, CodeBlock block) {
 		Throwable e = getThrowable(block);
 		assertThrowable(exception, e);
-		assertThrowable(cause, e.getCause());
+		// FIXME doesn't work with JDK1.1, should be replaced with some more
+		// sophisticated approach, but I don't know what it should look like right now...
+		// assertThrowable(cause, e.getCause());
 	}
 	
 	private static void assertThrowable(Class exception, Throwable e) {
