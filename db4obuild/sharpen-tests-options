@@ -3,3 +3,5 @@
 
 @sharpen-db4ounit-options
 @sharpen-new-core-mapping
+
+-fullyQualify AllTests
