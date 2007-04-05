@@ -9,33 +9,14 @@ import com.db4o.ext.*;
 
 public class ObjectContainerFactory {
 	
-	public static ObjectContainer openObjectContainer(Configuration config,String databaseFileName) {
-		
-		ObjectContainer oc = null;
-		
+	public static ObjectContainer openObjectContainer(Configuration config,String databaseFileName) {		
 		if (Deploy.debug) {
 			System.out.println("db4o Debug is ON");
 			if (!Deploy.flush) {
 				System.out.println("Debug option set NOT to flush file.");
 			}
-		}
-		try {
-			oc = new IoAdaptedObjectContainer(config,databaseFileName);				
-		} catch (DatabaseFileLockedException e) {
-			throw e;
-		} catch (ObjectNotStorableException e) {
-			throw e;
-		} catch (Db4oException e) {
-			throw e;
-		} catch (Exception ex) {
-			Messages.logErr(Db4o.configure(), 4, databaseFileName, ex);
-			if(Deploy.debug){
-				ex.printStackTrace();
-			}
-			return null;
-		}
-			
-		Platform4.postOpen(oc);
+		}		
+		ObjectContainer oc = new IoAdaptedObjectContainer(config, databaseFileName);	
 		Messages.logMsg(Db4o.configure(), 5, databaseFileName);
 		return oc;
 	}

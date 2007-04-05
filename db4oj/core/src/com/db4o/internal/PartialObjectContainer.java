@@ -141,15 +141,34 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	private boolean _topLevelCallCompleted;
 
-    protected PartialObjectContainer(Configuration config,ObjectContainerBase a_parent) {
+	protected PartialObjectContainer(Configuration config, ObjectContainerBase parent) {
     	_this = cast(this);
-        i_parent = a_parent == null ? _this : a_parent;
-        i_lock = a_parent == null ? new Object() : a_parent.i_lock;
-        initializeTransactions();
-        initialize1(config);
+    	i_parent = parent == null ? _this : parent;
+    	i_lock = parent == null ? new Object() : parent.i_lock;
+    	i_config = (Config4Impl)config;
     }
 
-    public void activate(Object a_activate, int a_depth) {
+	public final void open() throws OpenDatabaseException {
+		boolean ok = false;
+		synchronized (i_lock) {
+			try {
+	        	initializeTransactions();
+	            initialize1(i_config);
+	        	openImpl();
+				initializePostOpen();
+				Platform4.postOpen(_this);
+				ok = true;
+			} finally {
+				if(!ok) {
+					stopSession();
+				}
+			}
+		}
+	}
+
+	protected abstract void openImpl() throws OpenDatabaseException;
+    
+	public void activate(Object a_activate, int a_depth) {
         synchronized (i_lock) {
         	activate1(null, a_activate, a_depth);
         }
@@ -1014,8 +1033,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     protected void initialize1(Configuration config) {
-
-        i_config = initializeConfig(config);
+        initializeConfig(i_config);
         i_handlers = new HandlerRegistry(_this, configImpl().encoding(), configImpl().reflector());
         
         if (i_references != null) {
@@ -1056,20 +1074,24 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         i_references.startTimer();
     }
 
-    protected final void initializePostOpen() throws IOException {
+    private void initializePostOpen() throws OpenDatabaseException {
         i_showInternalClasses = 100000;
         initializePostOpenExcludingTransportObjectContainer();
         i_showInternalClasses = 0;
     }
     
-    protected void initializePostOpenExcludingTransportObjectContainer() throws IOException{
+    protected void initializePostOpenExcludingTransportObjectContainer() throws OpenDatabaseException {
         initializeEssentialClasses();
-        rename(configImpl());
-        _classCollection.initOnUp(i_systemTrans);
-        if (configImpl().detectSchemaChanges()) {
-            i_systemTrans.commit();
-        }
-        configImpl().applyConfigurationItems(_this);
+        try {
+			rename(configImpl());
+			_classCollection.initOnUp(i_systemTrans);
+	        if (configImpl().detectSchemaChanges()) {
+	            i_systemTrans.commit();
+	        }
+	        configImpl().applyConfigurationItems(_this);
+		} catch (IOException e) {
+			throw new OpenDatabaseException(e);
+		}
     }
 
     void initializeEssentialClasses(){
@@ -1360,16 +1382,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     private void reboot() throws IOException{
         commit();
         close();
-        // TODO: This is duplicate knowledge of how to open.
-        //       Revise opening to have one open method only
-        //       that does all of the tasks below.
-        initializeTransactions();
-        initialize1(i_config);
         open();
-        initializePostOpen();
     }
-    
-    protected abstract void open() throws IOException;
     
 	public ReferenceSystem referenceSystem() {
 		return _referenceSystem;

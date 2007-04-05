@@ -2,10 +2,10 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.config.Configuration;
-import com.db4o.ext.MemoryFile;
+import com.db4o.config.*;
+import com.db4o.ext.*;
 
 
 /**
@@ -21,11 +21,27 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		super(config, parent);
 		_memoryFile = memoryFile;
 		open();
-		initializePostOpen();
 	}
 
     public InMemoryObjectContainer(Configuration config, MemoryFile memoryFile) throws IOException {
         this(config, null, memoryFile);
+    }
+    
+    protected final void openImpl() throws OpenDatabaseException {
+        byte[] bytes = _memoryFile.getBytes();
+		try {
+			if (bytes == null || bytes.length == 0) {
+				_memoryFile.setBytes(new byte[_memoryFile.getInitialSize()]);
+				configureNewFile();
+				commitTransaction();
+				writeHeader(false, false);
+			} else {
+				_length = bytes.length;
+				readThis();
+			}
+		} catch (IOException e) {
+			throw new OpenDatabaseException(e);
+		}
     }
     
     public void backup(String path) throws IOException{
@@ -75,19 +91,6 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 
     public final boolean needsLockFileThread() {
         return false;
-    }
-
-    protected void open() throws IOException {
-        byte[] bytes = _memoryFile.getBytes();
-        if (bytes == null || bytes.length == 0) {
-            _memoryFile.setBytes(new byte[_memoryFile.getInitialSize()]);
-            configureNewFile();
-            commitTransaction();
-            writeHeader(false, false);
-        } else {
-            _length = bytes.length;
-            readThis();
-        }
     }
 
 	public void readBytes(byte[] bytes, int address, int length) {

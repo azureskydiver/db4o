@@ -55,70 +55,58 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	// used for to write the number of messages.
 	private int _batchedQueueLength = Const4.INT_LENGTH;
 
-	private ClientObjectContainer(Configuration config) {
-		super(config,null);
-	}
+	private String _fakeServerFile;
+
+	private boolean _login;
 
 	/**
 	 * Single-Threaded Client-Server Debug Mode, this constructor is only for
 	 * fake server
 	 */
-	public ClientObjectContainer(String fakeServerFile) throws IOException {
-		this(Db4o.cloneConfiguration());
+	public ClientObjectContainer(String fakeServerFile) {
+		super(Db4o.cloneConfiguration(), null);
 		if (!Debug.fakeServer) {
 			throw new IllegalStateException();
 		}
-		synchronized (lock()) {
-			_singleThreaded = configImpl().singleThreadedClient();
+		_fakeServerFile = fakeServerFile;
+		open();
+	}
+
+	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password_, boolean login) {
+		super(config, null);
+		if (password_ == null) {
+			throw new InvalidPasswordException();
+		}
+		userName = user;
+		password = password_;
+		i_socket = socket;
+		_login = login;
+		open();
+	}
+
+	protected final void openImpl() throws OpenDatabaseException {
+		_singleThreaded = configImpl().singleThreadedClient();
+		// TODO: Experiment with packetsize and noDelay
+		// socket.setSendBufferSize(100);
+		// socket.setTcpNoDelay(true);
+		// System.out.println(socket.getSendBufferSize());
+		if (Debug.fakeServer) {
 			DebugCS.serverStream = (LocalObjectContainer) Db4o
-					.openFile(fakeServerFile);
+					.openFile(_fakeServerFile);
 			DebugCS.clientStream = this;
 			DebugCS.clientMessageQueue = _messageQueue;
-			readThis();
-			initializePostOpen();
-			Platform4.postOpen(this);
-		}
-	}
-
-	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password_, boolean login)
-			throws IOException {
-		this(config);
-		if (password_ == null) {
-			throw new ArgumentNullException(Messages.get(56));
-		}
-		synchronized (lock()) {
-			_singleThreaded = configImpl().singleThreadedClient();
-
-			// TODO: Experiment with packetsize and noDelay
-			// socket.setSendBufferSize(100);
-			// socket.setTcpNoDelay(true);
-			// System.out.println(socket.getSendBufferSize());
-
-			userName = user;
-			password = password_;
-			i_socket = socket;
-			try {
-				if (login) {
-					loginToServer(socket);
-				}
-			} catch (IOException e) {
-				stopSession();
-				throw e;
+		} else {
+			if (_login) {
+				loginToServer(i_socket);
 			}
-
 			if (!_singleThreaded) {
-				startDispatcherThread(socket, user);
+				startDispatcherThread(i_socket, userName);
 			}
-
 			logMsg(36, toString());
-
 			readThis();
-
-			initializePostOpen();
-			Platform4.postOpen(this);
 		}
 	}
-
+	
 	private void startDispatcherThread(Socket4 socket, String user) {
 		_messageDispatcher = new ClientMessageDispatcherImpl(this, socket, _messageQueue);
 		_messageDispatcher.setDispatcherName(user);
@@ -402,22 +390,29 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return true;
 	}
 
-	private void loginToServer(Socket4 a_socket) throws IOException {
+	private void loginToServer(Socket4 a_socket)
+			throws OpenDatabaseException,InvalidPasswordException {
 		UnicodeStringIO stringWriter = new UnicodeStringIO();
-		int length = stringWriter.length(userName) + stringWriter.length(password);
-		MsgD message = Msg.LOGIN.getWriterForLength(systemTransaction(), length);
+		int length = stringWriter.length(userName)
+				+ stringWriter.length(password);
+		MsgD message = Msg.LOGIN
+				.getWriterForLength(systemTransaction(), length);
 		message.writeString(userName);
 		message.writeString(password);
 		message.write(this, a_socket);
-		Msg msg = Msg.readMessage(this, systemTransaction(), a_socket);
-		if (!Msg.LOGIN_OK.equals(msg)) {
-			throw new IOException(Messages.get(42));
-		}
-		Buffer payLoad = msg.payLoad();
-		_blockSize = payLoad.readInt();
-		int doEncrypt = payLoad.readInt();
-		if (doEncrypt == 0) {
-			i_handlers.oldEncryptionOff();
+		try {
+			Msg msg = Msg.readMessage(this, systemTransaction(), a_socket);
+			if (!Msg.LOGIN_OK.equals(msg)) {
+				throw new InvalidPasswordException();
+			}
+			Buffer payLoad = msg.payLoad();
+			_blockSize = payLoad.readInt();
+			int doEncrypt = payLoad.readInt();
+			if (doEncrypt == 0) {
+				i_handlers.oldEncryptionOff();
+			}
+		} catch (IOException e) {
+			throw new OpenDatabaseException(e);
 		}
 	}
 
@@ -813,11 +808,6 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	
 	public ClientMessageDispatcher messageDispatcher() {
 		return _singleThreaded ? this : _messageDispatcher;
-	}
-
-	protected void open() throws IOException {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }
