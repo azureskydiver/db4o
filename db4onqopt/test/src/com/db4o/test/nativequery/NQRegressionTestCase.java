@@ -11,11 +11,8 @@ import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.query.*;
-import com.db4o.test.*;
-import com.db4o.test.nativequery.expr.*;
 
 import db4ounit.*;
-import db4ounit.TestSuite;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
@@ -115,6 +112,9 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		}
 
 		public abstract int expected();
+		
+		public void prepare(ObjectContainer db) {
+		}
 		
 		public String toString() {
 			return _name;

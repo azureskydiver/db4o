@@ -38,34 +38,46 @@ public class SODAQueryBuilder {
 		}
 
 		public void visit(ComparisonExpression expression) {
-			Query subQuery=_query;
+			Query subQuery = _query;
 			Iterator4 fieldNameIterator = fieldNames(expression.left());
-			while(fieldNameIterator.moveNext()) {
-				subQuery=subQuery.descend((String)fieldNameIterator.current());
+			while (fieldNameIterator.moveNext()) {
+				subQuery = subQuery.descend((String) fieldNameIterator
+						.current());
 			}
-			ComparisonQueryGeneratingVisitor visitor = new ComparisonQueryGeneratingVisitor(_predicate);
+			ComparisonQueryGeneratingVisitor visitor = new ComparisonQueryGeneratingVisitor(
+					_predicate);
 			expression.right().accept(visitor);
-			_constraint=subQuery.constrain(visitor.value());
-			if(!expression.op().equals(ComparisonOperator.EQUALS)) {
-				if(expression.op().equals(ComparisonOperator.GREATER)) {
-					_constraint.greater();
-				}
-				else if(expression.op().equals(ComparisonOperator.SMALLER)) {
-					_constraint.smaller();
-				}
-				else if(expression.op().equals(ComparisonOperator.CONTAINS)) {
-					_constraint.contains();
-				}
-				else if(expression.op().equals(ComparisonOperator.STARTSWITH)) {
-					_constraint.startsWith(true);
-				}
-				else if(expression.op().equals(ComparisonOperator.ENDSWITH)) {
-					_constraint.endsWith(true);
-				}
-				else {
-					throw new RuntimeException("Can't handle constraint: "+expression.op());
-				}
+			_constraint = subQuery.constrain(visitor.value());
+			ComparisonOperator op = expression.op();
+			if (op.equals(ComparisonOperator.EQUALS)) {
+				return;
 			}
+			if (op.equals(ComparisonOperator.IDENTITY)) {
+				_constraint.identity();
+				return;
+			}
+			if (op.equals(ComparisonOperator.GREATER)) {
+				_constraint.greater();
+				return;
+			}
+			if (op.equals(ComparisonOperator.SMALLER)) {
+				_constraint.smaller();
+				return;
+			} 
+			if (op.equals(ComparisonOperator.CONTAINS)) {
+				_constraint.contains();
+				return;
+			}
+			if (op.equals(ComparisonOperator.STARTSWITH)) {
+				_constraint.startsWith(true);
+				return;
+			}
+			if (op.equals(ComparisonOperator.ENDSWITH)) {
+				_constraint.endsWith(true);
+				return;
+			}
+			throw new RuntimeException("Can't handle constraint: "
+					+ op);
 		}
 
 		public void visit(NotExpression expression) {

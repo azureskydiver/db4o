@@ -26,6 +26,7 @@ public class SODABloatMethodBuilder {
 	private MemberRef notRef;
 	private MemberRef andRef;
 	private MemberRef orRef;
+	private MemberRef identityRef;
 	private Type queryType;
 
 	private class SODABloatMethodVisitor implements ExpressionVisitor {
@@ -55,36 +56,58 @@ public class SODABloatMethodBuilder {
 		}
 
 		public void visit(final ComparisonExpression expression) {
-			methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable("query",queryType,1));
+			methodEditor.addInstruction(Opcode.opc_aload, new LocalVariable(
+					"query", queryType, 1));
 			Iterator4 fieldNames = fieldNames(expression.left());
-			while(fieldNames.moveNext()) {
-				methodEditor.addInstruction(Opcode.opc_ldc,(String)fieldNames.current());
-				methodEditor.addInstruction(Opcode.opc_invokeinterface,descendRef);
+			while (fieldNames.moveNext()) {
+				methodEditor.addInstruction(Opcode.opc_ldc, (String) fieldNames
+						.current());
+				methodEditor.addInstruction(Opcode.opc_invokeinterface,
+						descendRef);
 			}
-			expression.right().accept(new ComparisonBytecodeGeneratingVisitor(methodEditor,predicateClass,candidateClass));
-			methodEditor.addInstruction(Opcode.opc_invokeinterface,constrainRef);
-			if(!expression.op().equals(ComparisonOperator.EQUALS)) {
-				if(expression.op().equals(ComparisonOperator.GREATER)) {
-					methodEditor.addInstruction(Opcode.opc_invokeinterface,greaterRef);
-				}
-				else if(expression.op().equals(ComparisonOperator.SMALLER)) {
-					methodEditor.addInstruction(Opcode.opc_invokeinterface,smallerRef);
-				}
-				else if(expression.op().equals(ComparisonOperator.CONTAINS)) {
-					methodEditor.addInstruction(Opcode.opc_invokeinterface,containsRef);
-				}
-				else if(expression.op().equals(ComparisonOperator.STARTSWITH)) {
-					methodEditor.addInstruction(Opcode.opc_ldc, new Integer(1));
-					methodEditor.addInstruction(Opcode.opc_invokeinterface,startsWithRef);
-				}
-				else if(expression.op().equals(ComparisonOperator.ENDSWITH)) {
-					methodEditor.addInstruction(Opcode.opc_ldc, new Integer(1));
-					methodEditor.addInstruction(Opcode.opc_invokeinterface,endsWithRef);
-				}
-				else {
-					throw new RuntimeException("Cannot interpret constraint: "+expression.op());
-				}
+			expression.right().accept(
+					new ComparisonBytecodeGeneratingVisitor(methodEditor,
+							predicateClass, candidateClass));
+			methodEditor.addInstruction(Opcode.opc_invokeinterface,
+					constrainRef);
+			ComparisonOperator op = expression.op();
+			if (op.equals(ComparisonOperator.EQUALS)) {
+				return;
 			}
+			if (op.equals(ComparisonOperator.IDENTITY)) {
+				methodEditor.addInstruction(Opcode.opc_invokeinterface,
+						identityRef);
+				return;
+			}
+			if (op.equals(ComparisonOperator.GREATER)) {
+				methodEditor.addInstruction(Opcode.opc_invokeinterface,
+						greaterRef);
+				return;
+			}
+			if (op.equals(ComparisonOperator.SMALLER)) {
+				methodEditor.addInstruction(Opcode.opc_invokeinterface,
+						smallerRef);
+				return;
+			}
+			if (op.equals(ComparisonOperator.CONTAINS)) {
+				methodEditor.addInstruction(Opcode.opc_invokeinterface,
+						containsRef);
+				return;
+			}
+			if (op.equals(ComparisonOperator.STARTSWITH)) {
+				methodEditor.addInstruction(Opcode.opc_ldc, new Integer(1));
+				methodEditor.addInstruction(Opcode.opc_invokeinterface,
+						startsWithRef);
+				return;
+			}
+			if (op.equals(ComparisonOperator.ENDSWITH)) {
+				methodEditor.addInstruction(Opcode.opc_ldc, new Integer(1));
+				methodEditor.addInstruction(Opcode.opc_invokeinterface,
+						endsWithRef);
+				return;
+			}
+			throw new RuntimeException("Cannot interpret constraint: "
+					+ op);
 		}
 
 		public void visit(NotExpression expression) {
@@ -140,6 +163,7 @@ public class SODABloatMethodBuilder {
 		notRef=createMethodReference(Constraint.class,"not",new Class[]{},Constraint.class);
 		andRef=createMethodReference(Constraint.class,"and",new Class[]{Constraint.class},Constraint.class);
 		orRef=createMethodReference(Constraint.class,"or",new Class[]{Constraint.class},Constraint.class);
+		identityRef=createMethodReference(Constraint.class,"identity",new Class[]{},Constraint.class);
 	}
 	
 	private MemberRef createMethodReference(Class parent,String name,Class[] args,Class ret) {

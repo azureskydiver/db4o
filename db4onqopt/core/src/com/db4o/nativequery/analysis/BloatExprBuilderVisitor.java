@@ -61,19 +61,60 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 	}
 
+	private static class BuilderSpec {
+		private int _op;
+		private boolean _primitive;
+
+		public BuilderSpec(int op, boolean primitive) {
+			this._op = op;
+			this._primitive = primitive;
+		}
+
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + _op;
+			result = prime * result + (_primitive ? 1231 : 1237);
+			return result;
+		}
+
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			final BuilderSpec other = (BuilderSpec) obj;
+			if (_op != other._op)
+				return false;
+			if (_primitive != other._primitive)
+				return false;
+			return true;
+		}		
+	}
+	
 	static {
-		BUILDERS.put(new Integer(IfStmt.EQ), new ComparisonBuilder(
+		BUILDERS.put(new BuilderSpec(IfStmt.EQ,false), new ComparisonBuilder(
+				ComparisonOperator.IDENTITY));
+		BUILDERS.put(new BuilderSpec(IfStmt.EQ,true), new ComparisonBuilder(
 				ComparisonOperator.EQUALS));
-		BUILDERS.put(new Integer(IfStmt.NE), new NegateComparisonBuilder(
+		BUILDERS.put(new BuilderSpec(IfStmt.NE,false), new NegateComparisonBuilder(
+				ComparisonOperator.IDENTITY));
+		BUILDERS.put(new BuilderSpec(IfStmt.NE,true), new NegateComparisonBuilder(
 				ComparisonOperator.EQUALS));
-		BUILDERS.put(new Integer(IfStmt.LT), new ComparisonBuilder(
+		BUILDERS.put(new BuilderSpec(IfStmt.LT,false), new ComparisonBuilder(
 				ComparisonOperator.SMALLER));
-		BUILDERS.put(new Integer(IfStmt.GT), new ComparisonBuilder(
+		BUILDERS.put(new BuilderSpec(IfStmt.LT,true),builder(IfStmt.LT,false));
+		BUILDERS.put(new BuilderSpec(IfStmt.GT,false), new ComparisonBuilder(
 				ComparisonOperator.GREATER));
-		BUILDERS.put(new Integer(IfStmt.LE), new NegateComparisonBuilder(
+		BUILDERS.put(new BuilderSpec(IfStmt.GT,true),builder(IfStmt.GT,false));
+		BUILDERS.put(new BuilderSpec(IfStmt.LE,false), new NegateComparisonBuilder(
 				ComparisonOperator.GREATER));
-		BUILDERS.put(new Integer(IfStmt.GE), new NegateComparisonBuilder(
+		BUILDERS.put(new BuilderSpec(IfStmt.LE,true),builder(IfStmt.LE,false));
+		BUILDERS.put(new BuilderSpec(IfStmt.GE,false), new NegateComparisonBuilder(
 				ComparisonOperator.SMALLER));
+		BUILDERS.put(new BuilderSpec(IfStmt.GE,true),builder(IfStmt.GE,false));
 
 		OP_SYMMETRY.put(new Integer(IfStmt.EQ), new Integer(IfStmt.EQ));
 		OP_SYMMETRY.put(new Integer(IfStmt.NE), new Integer(IfStmt.NE));
@@ -120,8 +161,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		this.retval = expr;
 	}
 
-	private ComparisonBuilder builder(int op) {
-		return (ComparisonBuilder) BUILDERS.get(new Integer(op));
+    private static ComparisonBuilder builder(int op, boolean primitive) {
+		return (ComparisonBuilder) BUILDERS.get(new BuilderSpec(op,primitive));
 	}
 
 	public Expression expression() {
@@ -247,8 +288,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		FieldValue fieldExpr = (FieldValue) left;
 		ComparisonOperand valueExpr = (ComparisonOperand) right;
 
-		Expression cmp = buildComparison(stmt, builder(op).buildComparison(
-				fieldExpr, valueExpr));
+        boolean isPrimitive = isPrimitiveExpr(stmt.left());
+        Expression cmp = buildComparison(stmt, builder(op,isPrimitive).buildComparison(fieldExpr, valueExpr));
 		expression(cmp);
 	}
 
@@ -256,16 +297,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		super.visitExprStmt(stmt);
 	}
 
-	private boolean isPrimitiveWrapper(Type type) {
-		String typeName=bloatUtil.normalizedClassName(type);
-		for (int idx = 0; idx < PRIMITIVE_WRAPPER_NAMES.length; idx++) {
-			if(typeName.equals(PRIMITIVE_WRAPPER_NAMES[idx])) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 	public void visitCallExpr(CallExpr expr) {
 		boolean isStatic = (expr instanceof CallStaticExpr);
 		if (!isStatic && expr.method().name().equals("<init>")) {
@@ -274,7 +305,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		if (!isStatic && expr.method().name().equals("equals")) {
 			CallMethodExpr call = (CallMethodExpr) expr;
-			if (isPrimitive(call.receiver().type())) {
+			if (isPrimitiveWrapper(call.receiver().type())) {
 				processEqualsCall(call, ComparisonOperator.EQUALS);
 			}
 			return;
@@ -466,9 +497,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		PRIMITIVE_CLASSES.put("D", Double.TYPE);
 	}
 
-	private boolean isPrimitive(Type type) {
+	private boolean isPrimitiveWrapper(Type type) {
 		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,
 				bloatUtil.normalizedClassName(type)) >= 0;
+	}
+	
+	private boolean isPrimitiveExpr(Expr expr) {
+		return expr.type().isPrimitive();
 	}
 
 	private void processEqualsCall(CallMethodExpr expr, ComparisonOperator op) {
