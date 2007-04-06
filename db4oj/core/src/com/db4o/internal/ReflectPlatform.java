@@ -40,4 +40,8 @@ public class ReflectPlatform {
 		}
 		return null;
 	}
+
+	public static String fullyQualifiedName(Class clazz) {
+		return clazz.getName();
+	}
 }
