@@ -7,6 +7,16 @@ import java.lang.reflect.*;
  * @sharpen.ignore
  */
 public class TestPlatform {
+	
+	public static Throwable getExceptionCause(Throwable e) {
+		try {
+			Method method = e.getClass().getMethod("getCause", new Class[0]);
+			return (Throwable) method.invoke(e, new Object[0]);
+		} catch (Exception exc) {
+			return null;
+		}
+	}
+	
 	public static void printStackTrace(Writer writer, Throwable t) {
 		java.io.PrintWriter printWriter = new java.io.PrintWriter(writer);
 		t.printStackTrace(printWriter);
