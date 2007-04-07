@@ -1,5 +1,7 @@
 package db4ounit;
 
+import java.lang.reflect.*;
+
 public final class Assert {
 	
 	public static void expect(Class exception, CodeBlock block) {
@@ -10,9 +12,16 @@ public final class Assert {
 	public static void expect(Class exception, Class cause, CodeBlock block) {
 		Throwable e = getThrowable(block);
 		assertThrowable(exception, e);
-		// FIXME doesn't work with JDK1.1, should be replaced with some more
-		// sophisticated approach, but I don't know what it should look like right now...
-		// assertThrowable(cause, e.getCause());
+		assertThrowable(cause, getExceptionCause(e));
+	}
+
+	private static Throwable getExceptionCause(Throwable e) {
+		try {
+			Method method = e.getClass().getMethod("getCause", new Class[0]);
+			return (Throwable) method.invoke(e, new Object[0]);
+		} catch (Exception exc) {
+			return null;
+		}
 	}
 	
 	private static void assertThrowable(Class exception, Throwable e) {
