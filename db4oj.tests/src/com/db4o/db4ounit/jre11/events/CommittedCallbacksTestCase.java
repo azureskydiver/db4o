@@ -2,14 +2,14 @@
 
 package com.db4o.db4ounit.jre11.events;
 
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 /**
  * @exclude
@@ -20,9 +20,9 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommittedCallbacksTestCase().runSoloAndClientServer();
+		new CommittedCallbacksTestCase().runAll();
 	}
-
+	
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
 	
 	public static final class Item {
