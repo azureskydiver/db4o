@@ -23,6 +23,10 @@ public class TestPlatform {
 		printWriter.flush();
 	}
 
+	public static void printStackTrace(Throwable t) {
+		printStackTrace(getStdOut(), t);
+	}
+
 	public static Writer getStdOut() {
 		return new PrintWriter(System.err);
 	}
