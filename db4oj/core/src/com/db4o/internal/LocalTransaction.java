@@ -63,13 +63,15 @@ public class LocalTransaction extends Transaction {
 	        	callbacks().commitOnCompleted(this, committedInfo);
 	        }else{
 	        	ObjectServerImpl server = dispatcher.server();
-	        	server.commitOnCompleted(dispatcher, committedInfo);
+	        	server.addCommittedInfo(committedInfo);
 	        }
         }
     }
 
 	private boolean doCommittedCallbacks() {
-		return ! isSystemTransaction() && callbacks().caresAboutCommitted();
+		return ! isSystemTransaction(); 
+		// TODO: #COR-433 adjust
+		// return ! isSystemTransaction() && callbacks().caresAboutCommitted();
 	}
 
 	private boolean doCommittingCallbacks() {

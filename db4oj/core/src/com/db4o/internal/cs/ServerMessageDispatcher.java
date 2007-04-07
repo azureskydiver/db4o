@@ -35,4 +35,8 @@ public interface ServerMessageDispatcher extends MessageDispatcher {
 
 	public boolean close();
 	
+	public boolean caresAboutCommitted();
+	
+	public void writeIfAlive(Msg msg);
+	
 }

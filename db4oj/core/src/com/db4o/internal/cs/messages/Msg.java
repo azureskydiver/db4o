@@ -28,6 +28,7 @@ public abstract class Msg implements Cloneable {
 	public static final MClassNameForID CLASS_NAME_FOR_ID = new MClassNameForID();
 	public static final MClose CLOSE = new MClose();
     public static final MCommit COMMIT = new MCommit();
+    public static final MCommittedInfo COMMITTED_INFO = new MCommittedInfo();
     public static final MCommitSystemTransaction COMMIT_SYSTEMTRANS = new MCommitSystemTransaction();
 	public static final MCreateClass CREATE_CLASS = new MCreateClass();
 	public static final MClassMeta CLASS_META = new MClassMeta();
@@ -223,7 +224,7 @@ public abstract class Msg implements Cloneable {
 	}
 	
 	public void writeException(Db4oException e) {
-		write(DB4O_EXCEPTION.clone(transaction(), e));
+		write(DB4O_EXCEPTION.getWriterForSingleObject(transaction(), e));
 	}
 	
 	public void respondInt(int response){

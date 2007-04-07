@@ -930,8 +930,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     // TODO: Some ReflectClass implementations could hold a 
-    // reference to YapClass to improve lookup performance here.
-    public final ClassMetadata produceClassMetadata(ReflectClass claxx) {
+    // reference to ClassMetadata to improve lookup performance here.
+    public ClassMetadata produceClassMetadata(ReflectClass claxx) {
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}

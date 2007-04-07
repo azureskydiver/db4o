@@ -8,11 +8,11 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-final class ObjectInfoCollectionImpl implements ObjectInfoCollection {
+public final class ObjectInfoCollectionImpl implements ObjectInfoCollection {
 	
 	public static final ObjectInfoCollection EMPTY = new ObjectInfoCollectionImpl(Iterators.EMPTY_ITERABLE);
 	
-	private final Iterable4 _collection;
+	public Iterable4 _collection;
 
 	public ObjectInfoCollectionImpl(Iterable4 collection) {
 		_collection = collection;

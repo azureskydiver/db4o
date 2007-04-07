@@ -5,6 +5,7 @@ package com.db4o.internal.cs.messages;
 import java.io.IOException;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.network.Socket4;
 import com.db4o.internal.*;
 
@@ -103,6 +104,12 @@ public class MsgD extends Msg{
 		return message;
 	}
 	
+	public MsgD getWriterForSingleObject(Transaction trans, Object obj) {
+		SerializedGraph serialized = Serializer.marshall(trans.stream(), obj);
+		MsgD msg = getWriterForLength(trans, serialized.marshalledLength());
+		serialized.write(msg._payLoad);
+		return msg;
+	}
 
 	public final MsgD getWriterForString(Transaction a_trans, String str) {
 		MsgD message = getWriterForLength(a_trans, Const4.stringIO.length(str) + Const4.INT_LENGTH);
@@ -152,6 +159,10 @@ public class MsgD extends Msg{
 	public final String readString() {
 		int length = readInt();
 		return Const4.stringIO.read(_payLoad, length);
+	}
+	
+	public Object readSingleObject() {
+		return Serializer.unmarshall(stream(), SerializedGraph.read(_payLoad));
 	}
 	
 	public final void writeBytes(byte[] aBytes){

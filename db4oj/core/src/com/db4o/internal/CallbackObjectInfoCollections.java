@@ -11,13 +11,13 @@ import com.db4o.internal.cs.*;
  */
 public class CallbackObjectInfoCollections {
 	
-	public final ObjectInfoCollection added;
+	public ObjectInfoCollection added;
 	
-	public final ObjectInfoCollection updated;
+	public ObjectInfoCollection updated;
 	
-	public final ObjectInfoCollection deleted;
+	public ObjectInfoCollection deleted;
 	
-	public final ServerMessageDispatcher serverMessageDispatcher;
+	public transient ServerMessageDispatcher serverMessageDispatcher;
 	
 	public static final CallbackObjectInfoCollections EMTPY = empty(); 
 		
