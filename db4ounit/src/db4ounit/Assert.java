@@ -1,13 +1,11 @@
 package db4ounit;
 
-import db4ounit.util.*;
-
 public final class Assert {
 	
 	public static void expect(Class exception, CodeBlock block) {
 		Throwable e = getThrowable(block);
 		assertThrowable(exception, e);
-		e.printStackTrace();
+		TestPlatform.printStackTrace(e);
 	}
 
 	public static void expect(Class exception, Class cause, CodeBlock block) {
