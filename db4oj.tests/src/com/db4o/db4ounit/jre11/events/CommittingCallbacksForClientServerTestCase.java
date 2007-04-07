@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.jre11.events;
 
+import com.db4o.config.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.Cool;
@@ -19,7 +20,12 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 	public static void main(String[] arguments) {
 		new CommittingCallbacksForClientServerTestCase().runClientServer();
 	}
+	
 
+	protected void configure(Configuration config) {
+		config.lockDatabaseFile(false);
+	}
+	
 	public void testCommittingIsTriggeredOnServer() {
 		
 		final EventRecorder clientRecorder = new EventRecorder(fixture().db().lock());
