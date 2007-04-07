@@ -13,7 +13,7 @@ public final class Assert {
 	public static void expect(Class exception, Class cause, CodeBlock block) {
 		Throwable e = getThrowable(block);
 		assertThrowable(exception, e);
-		assertThrowable(cause, ExceptionUtil.getExceptionCause(e));
+		assertThrowable(cause, TestPlatform.getExceptionCause(e));
 	}
 	
 	private static void assertThrowable(Class exception, Throwable e) {
