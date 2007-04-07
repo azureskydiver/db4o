@@ -286,7 +286,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	private void checkDb4oExceptionMessage(Msg msg) {
 		if(msg instanceof MDb4oException) {
-			throw ((MDb4oException)msg).exception();
+			throw (Db4oException)((MDb4oException)msg).readSingleObject();
 		}
 	}
 		

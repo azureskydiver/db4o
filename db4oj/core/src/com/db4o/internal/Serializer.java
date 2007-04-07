@@ -24,9 +24,9 @@ public class Serializer {
         MemoryFile memoryFile = new MemoryFile();
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
-        serviceProvider.produceClassMetadata(serviceProvider.reflector().forObject(obj));
         try {
         	TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
+        	carrier.produceClassMetadata(carrier.reflector().forObject(obj));
 			carrier.set(obj);
 			int id = (int)carrier.getID(obj);
 			carrier.close();

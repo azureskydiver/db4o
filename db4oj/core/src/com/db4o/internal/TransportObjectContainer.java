@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.convert.*;
+import com.db4o.reflect.*;
 import com.db4o.types.*;
 
 
@@ -117,6 +118,10 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	
 	void message(String msg){
 		// do nothing
+	}
+	
+	public ClassMetadata produceClassMetadata(ReflectClass claxx) {
+		return i_parent.produceClassMetadata(claxx);
 	}
 	
 	public void raiseVersion(long a_minimumVersion){

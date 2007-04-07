@@ -10,6 +10,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
+import com.db4o.internal.cs.messages.*;
 
 public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable,
 		LoopbackSocketServer {
@@ -34,6 +35,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	
 	private BlockingQueue _committedInfosQueue = new BlockingQueue();
 	
+	private CommittedCallbacksDispatcher _committedCallbacksDispatcher;
+	
 	public ObjectServerImpl(final LocalObjectContainer container, int port) {
 		_container = container;
 		_port = port;
@@ -47,6 +50,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		try {
 			ensureLoadStaticClass();
 			ensureLoadConfiguredClasses();
+			startCommittedCallbackThread(_committedInfosQueue);
 			startServer();
 			ok = true;
 		} finally {
@@ -56,7 +60,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		}
 	}
 
-	private void startServer() {
+	private void startServer() {		
 		if (isEmbeddedServer()) {
 			return;
 		}
@@ -133,18 +137,23 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	public synchronized boolean close() {
 		closeServerSocket();
-		boolean isClosed = closeFile();
+		stopCommittedCallbacksDispatcher();
 		closeMessageDispatchers();
-		return isClosed;
+		return closeFile();
+	}
+
+	private void stopCommittedCallbacksDispatcher() {
+		if(_committedCallbacksDispatcher != null){
+			_committedCallbacksDispatcher.stop();
+		}
 	}
 
 	private boolean closeFile() {
-		if (_container == null) {
-			return true;
+		if (_container != null) {
+			_container.close();
+			_container = null;
 		}
-		boolean isClosed = _container.close();
-		_container = null;
-		return isClosed;
+		return true;
 	}
 
 	private void closeMessageDispatchers() {
@@ -297,14 +306,14 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		setThreadName();
 		logListeningOnPort();
 		notifyThreadStarted();
-		startPushedUpdatesThread(_committedInfosQueue);
 		listen();
 	}
 
 	
 
-	private void startPushedUpdatesThread(BlockingQueue committedInfosQueue) {
-		PushedUpdatesThread thread = new PushedUpdatesThread(committedInfosQueue);
+	private void startCommittedCallbackThread(BlockingQueue committedInfosQueue) {
+		_committedCallbacksDispatcher = new CommittedCallbacksDispatcher(this, committedInfosQueue);
+		Thread thread = new Thread(_committedCallbacksDispatcher);
 		thread.setDaemon(true);
 		thread.start();
 	}
@@ -345,8 +354,24 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		}
 	}
 
-	public void commitOnCompleted(ServerMessageDispatcher dispatcher,
-		CallbackObjectInfoCollections callbackInfos) {
+	public void addCommittedInfo(CallbackObjectInfoCollections callbackInfos) {
 		_committedInfosQueue.add(callbackInfos);		
 	}
+	
+	public void sendCommittedInfo(CallbackObjectInfoCollections callbackInfos) {
+		
+		// TODO: COR-433 comment in
+		
+//		Msg.COMMITTED_INFO.setTransaction(_container.getTransaction());
+//		MsgD message = Msg.COMMITTED_INFO.encode(callbackInfos);
+//		
+//		Iterator4 i = iterateDispatchers();
+//		while(i.moveNext()){
+//			ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) i.current();
+//			if(dispatcher.caresAboutCommitted()){
+//				dispatcher.writeIfAlive(message);
+//			}
+//		}
+	}
+
 }

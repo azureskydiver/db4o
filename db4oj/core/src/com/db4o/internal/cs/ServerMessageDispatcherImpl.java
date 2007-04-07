@@ -167,8 +167,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                 if (i_mainStream == null || i_mainStream.isClosed()) {
                     break;
                 }
-                if(! i_socket.isConnected()){
-                    break;
+                if(i_socket == null ||  ! i_socket.isConnected()){
+                	break;
                 }
                 if (Debug.atHome) {
                     e.printStackTrace();
@@ -269,9 +269,14 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         }
     }
     
-    
     public void write(Msg msg){
     	msg.write(getStream(), i_socket);
+    }
+    
+    public synchronized void writeIfAlive(Msg msg){
+    	if(isMessageDispatcherAlive()){
+        	write(msg);
+    	}
     }
     
     public Socket4 socket(){
@@ -298,5 +303,15 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
 	public void startDispatcher() {
 		start();
+	}
+
+	public boolean caresAboutCommitted() {
+		// TODO: COR-433 The return value should only be true, if a client
+		// committed listener is present or registered.
+		
+		// TODO: COR-433 turn on with the following line
+		// return i_loggedin;
+		
+		return false;
 	}
 }
