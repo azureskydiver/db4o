@@ -1,27 +1,19 @@
 package db4ounit;
 
-import java.lang.reflect.*;
+import db4ounit.util.*;
 
 public final class Assert {
 	
 	public static void expect(Class exception, CodeBlock block) {
 		Throwable e = getThrowable(block);
 		assertThrowable(exception, e);
+		e.printStackTrace();
 	}
 
 	public static void expect(Class exception, Class cause, CodeBlock block) {
 		Throwable e = getThrowable(block);
 		assertThrowable(exception, e);
-		assertThrowable(cause, getExceptionCause(e));
-	}
-
-	private static Throwable getExceptionCause(Throwable e) {
-		try {
-			Method method = e.getClass().getMethod("getCause", new Class[0]);
-			return (Throwable) method.invoke(e, new Object[0]);
-		} catch (Exception exc) {
-			return null;
-		}
+		assertThrowable(cause, ExceptionUtil.getExceptionCause(e));
 	}
 	
 	private static void assertThrowable(Class exception, Throwable e) {
