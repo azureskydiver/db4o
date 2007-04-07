@@ -42,8 +42,8 @@ public class ComparatorSortTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static class SmallerThanThreePredicate extends Predicate {
-		public boolean match(Object candidate) {
-			return ((Item)candidate)._id<3;
+		public boolean match(Item candidate) {
+			return candidate._id<3;
 		}
 	}
 	
@@ -143,7 +143,7 @@ public class ComparatorSortTestCase extends AbstractDb4oTestCase {
 	private void assertIdOrder(Query query,QueryComparator comparator,int[] ids) {
 		query.sortBy(comparator);
 		ObjectSet result=query.execute();
-		assertIdOrder(result,ids);
+		assertIdOrder(result,ids); 
 	}
 
 	private void assertIdOrder(ObjectSet result,int[] ids) {
