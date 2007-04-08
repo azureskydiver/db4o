@@ -242,7 +242,7 @@
 	</target>
 	
 	<target name="run-tests-mono" depends="build-tests" if="mono">
-		<exec executable="mono" failonerror="true">
+		<exec executable="${mono.vm.executable}" failonerror="true">
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" />
 		</exec>
