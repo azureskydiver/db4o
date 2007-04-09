@@ -121,4 +121,12 @@ public interface EventRegistry {
 	 */
 	public Event4 committed();
 
+	/**
+	 * Receives {@link ObjectEventArgs}
+	 * 
+	 * @sharpen.event com.db4o.events.ObjectEventArgs
+	 * @return
+	 */
+	public Event4 instantiated();
+
 }
