@@ -354,24 +354,18 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		}
 	}
 
-	public void addCommittedInfo(CallbackObjectInfoCollections callbackInfos) {
-		_committedInfosQueue.add(callbackInfos);		
+	public void addCommittedInfoMsg(MCommittedInfo message) {
+		_committedInfosQueue.add(message);			
 	}
 	
-	public void sendCommittedInfo(CallbackObjectInfoCollections callbackInfos) {
-		
-		// TODO: COR-433 comment in
-		
-//		Msg.COMMITTED_INFO.setTransaction(_container.getTransaction());
-//		MsgD message = Msg.COMMITTED_INFO.encode(callbackInfos);
-//		
-//		Iterator4 i = iterateDispatchers();
-//		while(i.moveNext()){
-//			ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) i.current();
-//			if(dispatcher.caresAboutCommitted()){
-//				dispatcher.writeIfAlive(message);
-//			}
-//		}
+	public void sendCommittedInfoMsg(MCommittedInfo message) {		
+		Iterator4 i = iterateDispatchers();
+		while(i.moveNext()){
+			ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) i.current();
+			if(dispatcher.caresAboutCommitted()){
+				dispatcher.writeIfAlive(message);
+			}
+		}
 	}
 
 }
