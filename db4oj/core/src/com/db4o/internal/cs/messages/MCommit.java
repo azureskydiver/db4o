@@ -4,6 +4,7 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.cs.*;
 
 public final class MCommit extends Msg implements ServerSideMessage {
 	
@@ -12,9 +13,10 @@ public final class MCommit extends Msg implements ServerSideMessage {
 			try {
 				CallbackObjectInfoCollections committedInfo = null;
 				LocalTransaction serverTransaction = serverTransaction();
-				serverTransaction.commit(serverMessageDispatcher());
+				ServerMessageDispatcher dispatcher = serverMessageDispatcher();
+				serverTransaction.commit(dispatcher);
 				write(Msg.OK);
-				committedInfo = serverTransaction.committedInfo();
+				committedInfo = dispatcher.committedInfo();
 				if (committedInfo != null) {
 					addCommittedInfoMsg(committedInfo);
 				}
