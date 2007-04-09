@@ -205,7 +205,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     	_config.put(MINIMUM_ACTIVATION_DEPTH,depth);
     }
     
-    int minimumActivationDepth() {
+    public int minimumActivationDepth() {
     	return _config.getAsInt(MINIMUM_ACTIVATION_DEPTH);
     }
     

@@ -14,8 +14,8 @@ public interface ConfigurationItem {
 	/**
 	 * Implement this interface to to apply a configuration item 
 	 * to an ObjectContainerBase after it is opened.
-	 * @param objectContainer the ObjectContainerBase
+	 * @param container the ObjectContainerBase
 	 */
-	public void apply(ObjectContainerBase objectContainer);
+	public void apply(ObjectContainerBase container);
 	
 }

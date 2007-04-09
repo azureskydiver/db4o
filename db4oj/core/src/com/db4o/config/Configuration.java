@@ -61,6 +61,13 @@ public interface Configuration {
     public void activationDepth(int depth);
     
     /**
+     * gets the configured activation depth.
+     * 
+     * @return the configured activation depth.
+     */
+    public int activationDepth();
+    
+    /**
      * adds ConfigurationItems to be applied when
      * an ObjectContainer or ObjectServer is opened. 
      * @param configurationItem the ConfigurationItem
