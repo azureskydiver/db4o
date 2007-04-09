@@ -2,7 +2,7 @@
 package com.db4o.internal.cs;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
+import com.db4o.internal.cs.messages.*;
 
 public class CommittedCallbacksDispatcher implements Runnable {
 	
@@ -19,9 +19,8 @@ public class CommittedCallbacksDispatcher implements Runnable {
 	
 	public void run () {
 		while(! _stopped){
-			CallbackObjectInfoCollections committedInfos =  (CallbackObjectInfoCollections) _committedInfosQueue.next();
-			_server.sendCommittedInfo(committedInfos);
-			Cool.sleepIgnoringInterruption(1);
+			MCommittedInfo committedInfos =   (MCommittedInfo) _committedInfosQueue.next();
+			_server.sendCommittedInfoMsg(committedInfos);
 		}
 	}
 	

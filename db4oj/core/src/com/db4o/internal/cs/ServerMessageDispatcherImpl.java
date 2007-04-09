@@ -308,10 +308,6 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	public boolean caresAboutCommitted() {
 		// TODO: COR-433 The return value should only be true, if a client
 		// committed listener is present or registered.
-		
-		// TODO: COR-433 turn on with the following line
-		// return i_loggedin;
-		
-		return false;
+		return i_loggedin;
 	}
 }
