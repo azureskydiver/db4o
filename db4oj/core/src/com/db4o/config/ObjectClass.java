@@ -207,6 +207,13 @@ public interface ObjectClass {
 	 * @see ObjectClass#cascadeOnActivate
      */
     public void minimumActivationDepth (int depth);
+    
+    /**
+     * gets the configured minimum activation depth.
+     * 
+     * @return the configured minimum activation depth.
+     */
+    public int minimumActivationDepth();
 
 
     /**
