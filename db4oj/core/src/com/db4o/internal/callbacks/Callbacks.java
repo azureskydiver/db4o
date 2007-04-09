@@ -25,8 +25,6 @@ public interface Callbacks {
 	boolean caresAboutCommitting();
 	boolean caresAboutCommitted();
 	
-	
 	void commitOnStarted(Object transaction, CallbackObjectInfoCollections objectInfoCollections);
-	
 	void commitOnCompleted(Object transaction, CallbackObjectInfoCollections objectInfoCollections);
 }

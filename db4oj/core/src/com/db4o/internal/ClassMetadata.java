@@ -1060,30 +1060,40 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		// when there's a ObjectConstructor configured for a type
 		// the type is marshalled through a lone virtual field
 		// of type YapFieldTranslator which should take care of everything		
-		//final boolean instantiatedByTranslator = instantiating && configInstantiates();
-		final boolean doFields = buffer.getInstantiationDepth() > 0 || cascadeOnActivate();
-		if (doFields && !activatingAlreadyActiveObject(instantiating, stream, ref) /* && !instantiatedByTranslator*/) {
-			if(objectCanActivate(stream, obj)){
-				ref.setStateClean();
-				instantiateFields(ref, obj, mf, attributes, buffer);
-				objectOnActivate(stream, obj);
-			} else if (instantiating) {
+		//final boolean instantiatedByTranslator = instantiating && configInstantiates();	
+		
+		if (instantiating) {
+			if (buffer.getInstantiationDepth() == 0) {
 				ref.setStateDeactivated();
+			} else {
+				activate(stream, buffer, mf, attributes, ref, obj);
 			}
 		} else {
-			if (instantiating) {
-                ref.setStateDeactivated();
-            } else {
-                if (buffer.getInstantiationDepth() > 1) {
+			if (activatingActiveObject(stream, ref)) {
+				if (buffer.getInstantiationDepth() > 1) {
                     activateFields(buffer.getTransaction(), obj, buffer.getInstantiationDepth() - 1);
                 }
-            }
-        }
+			} else {
+				activate(stream, buffer, mf, attributes, ref, obj);
+			}
+		}
         return obj;
     }
 
-	private boolean activatingAlreadyActiveObject(final boolean instantiating, final ObjectContainerBase stream, ObjectReference yapObject) {
-		return !instantiating && !stream.i_refreshInsteadOfActivate && yapObject.isActive();
+	private boolean activatingActiveObject(final ObjectContainerBase stream, ObjectReference ref) {
+		return !stream.i_refreshInsteadOfActivate && ref.isActive();
+	}
+
+	private void activate(final ObjectContainerBase stream, StatefulBuffer buffer, MarshallerFamily mf, ObjectHeaderAttributes attributes, ObjectReference ref, Object obj) {
+		if(objectCanActivate(stream, obj)){
+			ref.setStateClean();
+			if (buffer.getInstantiationDepth() > 0 || cascadeOnActivate()) {
+				instantiateFields(ref, obj, mf, attributes, buffer);
+			}
+			objectOnActivate(stream, obj);
+		} else {
+			ref.setStateDeactivated();
+		}
 	}
 	
 	private Object instantiateObject(StatefulBuffer a_bytes, MarshallerFamily mf) {
