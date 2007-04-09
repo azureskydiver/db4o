@@ -26,6 +26,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _deactivated = new Event4Impl();
 	protected final Event4Impl _committing = new Event4Impl();
 	protected final Event4Impl _committed = new Event4Impl();
+	protected final Event4Impl _instantiated = new Event4Impl();
 
 	// Callbacks implementation
 	public void queryOnFinished(Query query) {
@@ -74,6 +75,10 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 
 	public void objectOnDeactivate(Object obj) {
 		EventPlatform.triggerObjectEvent(_deactivated, obj);
+	}
+	
+	public void objectOnInstantiate(Object obj) {
+		EventPlatform.triggerObjectEvent(_instantiated, obj);
 	}
 	
 	public void commitOnStarted(Object transaction, CallbackObjectInfoCollections objectInfoCollections) {
@@ -139,6 +144,10 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	public Event4 committed() {
 		return _committed;
 	}
+	
+	public Event4 instantiated() {
+		return _instantiated;
+	}
 
 	public boolean caresAboutCommitting() {
 		return EventPlatform.hasListeners(_committing);
@@ -147,4 +156,5 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	public boolean caresAboutCommitted() {
 		return EventPlatform.hasListeners(_committed);
 	}
+
 }

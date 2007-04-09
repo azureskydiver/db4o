@@ -1096,14 +1096,19 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		}
 	}
 	
-	private Object instantiateObject(StatefulBuffer a_bytes, MarshallerFamily mf) {
+	private Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
 		Object instance = null;
 		if (configInstantiates()) {
-			instance = instantiateFromConfig(a_bytes.getStream(), a_bytes, mf);            	
+			instance = instantiateFromConfig(buffer.getStream(), buffer, mf);            	
 		} else {
-			instance = instantiateFromReflector(a_bytes.getStream());
+			instance = instantiateFromReflector(buffer.getStream());
 		}
+		objectOnInstantiate(buffer.getStream(), instance);
 		return instance;
+	}
+
+	private void objectOnInstantiate(ObjectContainerBase container, Object instance) {
+		container.callbacks().objectOnInstantiate(instance);
 	}
 
 	private Object instantiateFromReflector(ObjectContainerBase stream) {

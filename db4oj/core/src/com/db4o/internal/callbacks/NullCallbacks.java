@@ -48,6 +48,9 @@ public class NullCallbacks implements Callbacks {
 	public void objectOnDeactivate(Object obj) {	
 	}
 
+	public void objectOnInstantiate(Object obj) {
+	}
+
 	public void commitOnStarted(Object transaction, CallbackObjectInfoCollections objectInfoCollections) {
 	}
 	

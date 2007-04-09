@@ -18,7 +18,8 @@ public interface Callbacks {
 	void objectOnUpdate(Object obj);
 	void objectOnDelete(Object obj);
 	void objectOnDeactivate(Object obj);
-	
+	void objectOnInstantiate(Object obj);
+
 	void queryOnStarted(Query query);
 	void queryOnFinished(Query query);
 	
