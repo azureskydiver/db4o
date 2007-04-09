@@ -35,6 +35,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
     final int i_threadID;
 
+	private CallbackObjectInfoCollections _committedInfo;
+    
+
     ServerMessageDispatcherImpl(
         ObjectServerImpl aServer,
         LocalObjectContainer aStream,
@@ -309,5 +312,13 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 		// TODO: COR-433 The return value should only be true, if a client
 		// committed listener is present or registered.
 		return i_loggedin;
+	}
+
+	public CallbackObjectInfoCollections committedInfo() {
+		return _committedInfo;
+	}
+
+	public void committedInfo(CallbackObjectInfoCollections committedInfo) {
+		_committedInfo = committedInfo;
 	}
 }

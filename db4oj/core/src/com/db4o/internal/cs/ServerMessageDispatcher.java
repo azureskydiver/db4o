@@ -3,6 +3,7 @@
 package com.db4o.internal.cs;
 
 import com.db4o.foundation.network.*;
+import com.db4o.internal.*;
 import com.db4o.internal.cs.messages.*;
 
 
@@ -38,5 +39,9 @@ public interface ServerMessageDispatcher extends MessageDispatcher {
 	public boolean caresAboutCommitted();
 	
 	public void writeIfAlive(Msg msg);
+
+	public CallbackObjectInfoCollections committedInfo();
+	
+	public void  committedInfo(CallbackObjectInfoCollections committedInfo);
 	
 }

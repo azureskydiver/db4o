@@ -30,8 +30,6 @@ public class LocalTransaction extends Transaction {
     
 	private final LocalObjectContainer _file;
 
-	private CallbackObjectInfoCollections _committedInfo;
-
 	public LocalTransaction(ObjectContainerBase container, Transaction parent) {
 		super(container, parent);
 		_file = (LocalObjectContainer) container;
@@ -53,25 +51,23 @@ public class LocalTransaction extends Transaction {
         	}
             _file.freeSpaceBeginCommit();
             commitExceptForFreespace();
-            _committedInfo = null;
+            CallbackObjectInfoCollections committedInfo = null;
         	if(doCommittedCallbacks()){
-        		_committedInfo = collectCallbackObjectInfos(dispatcher);
+        		committedInfo = collectCallbackObjectInfos(dispatcher);
         	} 
             commitClearAll();
             _file.freeSpaceEndCommit();
             if(doCommittedCallbacks()){
     	        if(dispatcher == null){
-    	        	callbacks().commitOnCompleted(this, _committedInfo);
+    	        	callbacks().commitOnCompleted(this, committedInfo);
+    	        } else {
+    	        	dispatcher.committedInfo(committedInfo);
     	        }
             } 
         }
     }
 
-    public CallbackObjectInfoCollections committedInfo() {
-		return _committedInfo;
-	}
-    
-	private boolean doCommittedCallbacks() {
+    private boolean doCommittedCallbacks() {
 		return ! isSystemTransaction(); 
 		// TODO: #COR-433 adjust
 		// return ! isSystemTransaction() && callbacks().caresAboutCommitted();
