@@ -1,0 +1,1 @@
+package com.db4o.ta;import com.db4o.ObjectContainer;public interface Activatable {	void bind(ObjectContainer container);}
