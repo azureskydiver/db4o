@@ -11,11 +11,7 @@ import java.lang.reflect.*;
  */
 public class Db4oUnitPlatform {
 
-	public static boolean storeableField(Field a_field) {
-		return isStoreableField(a_field);
-	}
-
-	public static boolean isStoreableField(Field a_field) {
+	public static boolean isUserField(Field a_field) {
 	    return (!Modifier.isStatic(a_field.getModifiers()))
 	        && (!Modifier.isTransient(a_field.getModifiers())
 	            & !(a_field.getName().indexOf("$") > -1));

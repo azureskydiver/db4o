@@ -54,7 +54,7 @@ public class TCompare {
         Field fields[] = a_compare.getClass().getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
-			if (Db4oUnitPlatform.isStoreableField(field)) {
+			if (Db4oUnitPlatform.isUserField(field)) {
                 Platform4.setAccessible(field);
                 try {
                     if (!isFieldEqual(field, a_compare, a_with, path, a_list)) {
