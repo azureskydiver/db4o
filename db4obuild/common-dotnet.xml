@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<project name="common-dotnet">
+
+	<import file="common.xml" />
+	
+	<property name="dir.n.v6" location="../db4o.net" />	
+	<property name="dir.n.v6.core" location="../db4o.net/Db4objects.Db4o" />	
+	<property name="dir.n.v6.core.src" location="${dir.n.v6.core}/Db4objects.Db4o/" />	
+	<property name="dir.n.v6.tools" location="${dir.n.v6}/Db4objects.Db4o.Tools/" />
+	<property name="dir.n.v6.libs" location="${dir.n.v6}/Libs/" />
+	
+	<condition property="mono" value="true">
+		<os family="unix" />
+	</condition>
+	
+	<target name="configure-mono" if="mono">
+		<echo>Configuring mono build.</echo>
+		
+		<property name="target.framework.version" value="2.0" />
+		<property name="csharp.definitions" value="MONO,NET_2_0" />
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
+		<property name="csc.executable" value="gmcs" />
+		<property name="installer.package.suffix" value="mono2" />
+	
+		<property name="csc.tests.extraoptions" value="-r:System.Drawing" />
+
+	</target>
+
+	<target name="configure-net1" unless="mono">
+		<echo>Configuring .net 1 build.</echo>
+		
+		<!-- don't build Db4oAdmin for .net 1.1 -->
+		<property name="skip.admin" value="true" />
+		
+		<property name="target.framework.version" value="1.1" />
+		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
+		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
+	
+		<property name="csharp.definitions" value="NET_1_1" />
+		<property name="csharp.definitions.cf" value="CF_1_0" />
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-1.1" />
+		<property name="dir.dll.cf" location="${dir.compactframework}v1.0/WindowsCE/" />
+		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-1.0" />
+		<property name="csc.tests.extraoptions" value="" />
+	
+		<property name="installer.package.suffix" value="net1" />
+		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
+		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
+	</target>
+	
+	<target name="configure-net2" unless="mono">
+		<echo>Configuring .net 2 build.</echo>
+		
+		<property name="target.framework.version" value="2.0" />
+		<property name="csc.executable.path.net2" location="${env.SystemRoot}/Microsoft.NET/Framework/v2.0.50727" />
+		<property name="csc.executable" location="${csc.executable.path.net2}/csc.exe" />
+	
+		<property name="csharp.definitions" value="NET_2_0" />
+		<property name="csharp.definitions.cf" value="CF_2_0" />		
+		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-2.0" />
+		<property name="dir.dll.cf" location="${dir.compactframework}v2.0/WindowsCE/" />
+		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-2.0" />
+		<property name="csc.tests.extraoptions" value="" />
+	
+		<property name="installer.package.suffix" value="net2" />
+		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
+		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
+	</target>
+	
+	<target name="configure" depends="configure-net2, configure-mono">
+		<property name="debug" value="true" />
+	</target>
+	
+	<target name="compiletestsjava">
+		<ant antfile="build.xml" target="compiletestsjava" />
+	</target>
+
+	
+</project>
