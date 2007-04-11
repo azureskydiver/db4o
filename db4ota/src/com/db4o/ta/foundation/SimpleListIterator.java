@@ -2,6 +2,9 @@ package com.db4o.ta.foundation;
 
 import java.util.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class SimpleListIterator implements Iterator {
 	
 	private List _list;

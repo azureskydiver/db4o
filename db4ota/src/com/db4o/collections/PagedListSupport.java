@@ -15,7 +15,7 @@ import com.db4o.internal.*;
 public class PagedListSupport implements ConfigurationItem {
 
 	public void apply(ObjectContainerBase db) {
-		updating(db).addListener(new EventListener4() {
+		eventRegistry(db).updating().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				CancellableObjectEventArgs cancellable = (CancellableObjectEventArgs) args;
 				if (cancellable.object() instanceof Page) {
@@ -28,10 +28,6 @@ public class PagedListSupport implements ConfigurationItem {
 		});
 	}
 	
-	private static Event4 updating(ObjectContainer db) {
-		return eventRegistry(db).updating();
-	}
-
 	private static EventRegistry eventRegistry(ObjectContainer db) {
 		return EventRegistryFactory.forObjectContainer(db);
 	}

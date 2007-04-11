@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<project name="Db4objects.Db4o.TA" default="build">
+		
+	<import file="common-dotnet.xml" />
+	
+	<target name="build" depends="sharpen, compile">
+	</target>
+	
+	<target name="compile" depends="sharpen">
+	</target>
+
+	<property name="dependencies.jar" location="${dir.sharpen}/lib/dependencies.jar" />
+		
+	<target name="create-dependencies-jar" depends="compiletestsjava">
+		<mkdir dir="${dir.sharpen}/lib" />
+		<jar destfile="${dependencies.jar}">			
+			<fileset dir="${dir.dist.classes.java1.1}" />
+			<fileset dir="${dir.dist.classes.db4ounit}" />
+			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
+		</jar>
+	</target>
+			
+	<target name="sharpen" depends="install-javatocsharp-plugin, prepare-conversion-workspace">
+		<sharpen workspace="${dir.sharpen}/db4ota" resource="db4ota/src">
+			<args>
+				<arg value="-cp" />
+				<arg path="${dependencies.jar}" />	
+				<arg value="@sharpen-tests-options" />
+				
+				<arg value="-srcfolder" />
+				<arg value="test" />
+			</args>
+		</sharpen>
+	
+		<property name="dir.n.v6.ta" location="${dir.n.v6}/Db4objects.Db4o.TA" />
+
+		<reset-dir dir="${dir.n.v6.ta}/Db4objects" />
+
+		<copy todir="${dir.n.v6.ta}">
+			<fileset dir="${dir.sharpen}/db4ota/db4otacsharp/src">
+				<include name="**/*.cs" />
+				<exclude name="**/Tests/**" />
+				<exclude name="**/Events/**" />
+			</fileset>
+		</copy>
+
+	
+		<property name="dir.n.v6.ta.tests" location="${dir.n.v6}/Db4objects.Db4o.TA.Tests" />
+
+		<reset-dir dir="${dir.n.v6.ta.tests}/Db4objects" />
+
+		<copy todir="${dir.n.v6.ta.tests}">
+			<fileset dir="${dir.sharpen}/db4ota/db4otacsharp/src">
+				<include name="**/Tests/**" />
+			</fileset>
+		</copy>
+
+		<updatecsharpproject projectfile="${dir.n.v6.ta}/Db4objects.Db4o.TA-2005.csproj">
+			<sources dir="${dir.n.v6.ta}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests-2005.csproj">
+			<sources dir="${dir.n.v6.ta.tests}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		
+	</target>
+	
+	<target name="prepare-conversion-workspace" depends="init">
+	
+		<property name="target.dir" location="${dir.sharpen}/db4ota" />
+	
+		<reset-dir dir="${target.dir}" />
+		
+		<copy todir="${target.dir}/db4ota" overwrite="true">
+			<fileset dir="${dir.workspace}/db4ota">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+	
+		<!--
+			event definitions are required to be visible in source
+			code form by the converter
+		-->
+		<copy todir="${target.dir}/db4ota/src">
+			<fileset dir="${dir.j.core.src}">
+				<include name="**/Event4.java" />
+				<include name="**/EventListener4.java" />
+				<include name="**/EventArgs.java" />
+				<include name="**/EventRegistry.java" />
+				<include name="**/ObjectEventArgs.java" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="init">
+	</target>
+
+	
+</project>

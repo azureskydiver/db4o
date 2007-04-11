@@ -152,5 +152,13 @@
 			<property name="compiledll.debug.symbol" value="-" />
 		</else>
 	</if>
-
+	
+	<macrodef name="reset-dir">
+		<attribute name="dir" />
+		<sequential>
+			<delete dir="@{dir}" />
+			<mkdir dir="@{dir}" />
+		</sequential>
+	</macrodef>
+		
 </project>
