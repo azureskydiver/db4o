@@ -35,6 +35,8 @@ final class TranslatedFieldMetadata extends FieldMetadata
 	public Object getOn(Transaction a_trans, Object a_OnObject) {
 		try {
 			return i_translator.onStore(a_trans.stream(), a_OnObject);
+		} catch(ReflectException e) {
+			throw e;
 		} catch (RuntimeException e) {
 			throw new ReflectException(e);
 		}

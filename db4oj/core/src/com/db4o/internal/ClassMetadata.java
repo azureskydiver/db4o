@@ -1136,10 +1136,14 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		// Field length is always 1
 		try {
 		    return i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));                      
-		} catch (Exception e) {
+		} catch (IOException e) {
 		    Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
 		    return null;
-		} finally {
+		} catch (CorruptionException e) {
+			Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
+		    return null;
+		} 
+		finally {
 			a_bytes._offset = bytesOffset;
 		}
 	}
