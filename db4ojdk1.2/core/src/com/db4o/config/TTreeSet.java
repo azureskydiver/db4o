@@ -21,12 +21,9 @@ public class TTreeSet implements ObjectConstructor {
 	}
 
 	public Object onInstantiate(ObjectContainer container, Object storedObject){
-		try{
-			Comparator comp = (Comparator)storedObject;
-			if(comp != null){
-				return new TreeSet(comp);
-			}
-		}catch(Exception e){}
+		if(storedObject instanceof Comparator) {
+			return new TreeSet((Comparator)storedObject);
+		}
 		return new TreeSet();
 	}
 

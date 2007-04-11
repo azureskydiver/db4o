@@ -21,12 +21,9 @@ public class TTreeMap implements ObjectConstructor {
 	}
 
 	public Object onInstantiate(ObjectContainer container, Object storedObject){
-		try{
-			Comparator comp = (Comparator)storedObject;
-			if(comp != null){
-				return new TreeMap(comp);
-			}
-		}catch(Exception e){}
+		if(storedObject instanceof Comparator) {
+			return new TreeMap((Comparator)storedObject);
+		}
 		return new TreeMap();
 	}
 
