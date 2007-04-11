@@ -10,6 +10,10 @@ import com.db4o.internal.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
+/**
+ * @sharpen.ignore
+ */
+
 public class TSerializableOnInstantiateIOExceptionTestCase extends
 		AbstractDb4oTestCase {
 
@@ -25,10 +29,6 @@ public class TSerializableOnInstantiateIOExceptionTestCase extends
 		}
 	}
 
-	/**
-	 * @sharpen.if !CF_1_0 && !CF_2_0
-	 */
-
 	protected void configure(Configuration config) {
 		config.objectClass(SerializableItem.class).translate(
 				new TSerializable());
@@ -38,9 +38,6 @@ public class TSerializableOnInstantiateIOExceptionTestCase extends
 		store(new SerializableItem());
 	}
 
-	/**
-	 * @sharpen.if !CF_1_0 && !CF_2_0
-	 */
 	public void testOnInstantiateException() {
 		Assert.expect(ReflectException.class, IOException.class,
 				new CodeBlock() {
