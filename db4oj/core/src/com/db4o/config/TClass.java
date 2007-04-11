@@ -21,10 +21,7 @@ public class TClass implements ObjectConstructor
 	}
 
 	public Object onInstantiate(ObjectContainer oc, Object storedObject){
-		try{
-		    return JdkReflector.toNative(oc.ext().reflector().forName((String)storedObject));
-		}catch(Exception e){}
-		return null;
+		return JdkReflector.toNative(oc.ext().reflector().forName((String)storedObject));
 	}
 
 	public Class storedClass(){
