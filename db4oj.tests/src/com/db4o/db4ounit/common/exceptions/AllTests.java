@@ -20,6 +20,9 @@ public class AllTests extends Db4oTestSuite {
 			ObjectCanNewExceptionTestCase.class,
 			StoreExceptionBubblesUpTestCase.class, 
 			StoredClassExceptionBubblesUpTestCase.class,
+			TSerializableOnInstantiateCNFExceptionTestCase.class,
+			TSerializableOnInstantiateIOExceptionTestCase.class,
+			TSerializableOnStoreExceptionTestCase.class,
 		};
 	}
 }
