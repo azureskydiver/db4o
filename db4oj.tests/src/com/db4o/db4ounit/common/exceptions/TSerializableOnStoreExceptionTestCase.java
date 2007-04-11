@@ -10,9 +10,6 @@ import com.db4o.internal.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-/**
- * @sharpen.ignore
- */
 
 public class TSerializableOnStoreExceptionTestCase extends AbstractDb4oTestCase {
 
@@ -20,17 +17,26 @@ public class TSerializableOnStoreExceptionTestCase extends AbstractDb4oTestCase 
 		new TSerializableOnStoreExceptionTestCase().runAll();
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public static class SerializableItem implements Serializable {
-		private void writeObject(java.io.ObjectOutputStream out)
+		private void writeObject(ObjectOutputStream out)
 				throws IOException {
 			throw new IOException();
 		}
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	protected void configure(Configuration config) {
 		config.objectClass(SerializableItem.class).translate(new TSerializable());
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public void testOnStoreException() {
 		Assert.expect(ReflectException.class, IOException.class,
 				new CodeBlock() {

@@ -10,9 +10,6 @@ import com.db4o.internal.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-/**
- * @sharpen.ignore
- */
 
 public class TSerializableOnInstantiateCNFExceptionTestCase extends
 		AbstractDb4oTestCase {
@@ -21,23 +18,35 @@ public class TSerializableOnInstantiateCNFExceptionTestCase extends
 		new TSerializableOnInstantiateCNFExceptionTestCase().runAll();
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
+	
 	public static class SerializableItem implements Serializable {
-
-		private void readObject(java.io.ObjectInputStream in)
+		private void readObject(ObjectInputStream in)
 				throws IOException, ClassNotFoundException {
 			throw new ClassNotFoundException();
 		}
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	protected void configure(Configuration config) {
 		config.objectClass(SerializableItem.class).translate(
 				new TSerializable());
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	protected void store() throws Exception {
 		store(new SerializableItem());
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public void testOnInstantiateException() {
 		Assert.expect(ReflectException.class, ClassNotFoundException.class,
 				new CodeBlock() {
