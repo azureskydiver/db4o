@@ -10,30 +10,43 @@ import com.db4o.foundation.*;
  * @sharpen.ignore
  */
 public class Event4Impl implements Event4 {
-
 	private Collection4 _listeners;
 	
-	public void addListener(EventListener4 listener) {
+	public Event4Impl() {
+	}
+	
+	public final void addListener(EventListener4 listener) {
 		validateListener(listener);
 		
 		if (null == _listeners) {
 			_listeners = new Collection4();
 		}
 		_listeners.add(listener);
+		onListenerAdded();
 	}	
 
-	public void removeListener(EventListener4 listener) {
+	/**
+	 * Might be overriden whenever specific events need
+	 * to know when listeners subscribe to the event.
+	 */
+	protected void onListenerAdded() {
+	}
+
+	public final void removeListener(EventListener4 listener) {
 		validateListener(listener);
 		
 		if (null != _listeners) {
-			_listeners.remove(listener);
+			Object removed = _listeners.remove(listener);
+			if (null == removed) {
+				return;
+			}
 			if (0 == _listeners.size()) {
 				_listeners = null;
 			}
 		}
 	}
 	
-	public void trigger(EventArgs args) {
+	public final void trigger(EventArgs args) {
 		if (null == _listeners) {
 			return;
 		}
