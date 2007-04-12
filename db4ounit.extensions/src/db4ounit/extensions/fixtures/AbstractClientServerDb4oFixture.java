@@ -2,12 +2,14 @@
 
 package db4ounit.extensions.fixtures;
 
-import java.io.File;
+import java.io.*;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.ext.ExtObjectContainer;
+import com.db4o.foundation.*;
+import com.db4o.foundation.network.*;
 import com.db4o.internal.LocalObjectContainer;
 
 import db4ounit.extensions.Db4oTestCase;
@@ -15,12 +17,12 @@ import db4ounit.extensions.Db4oTestCase;
 
 public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixture{
     
-    protected static final String FILE = "Db4oClientServer.yap";
+    private static final int	DEFAULT_PORT	= 0xdb40;
+
+	protected static final String FILE = "Db4oClientServer.yap";
     
     protected static final String HOST = "localhost";
 
-    protected static final int PORT = 0xdb40;
-    
     protected static final String USERNAME = "db4o";
 
     protected static final String PASSWORD = USERNAME;
@@ -29,16 +31,16 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 
     private final File _yap;
     
-    protected final int _port;
+    protected static final int _port = findFreePort();
     
-    public AbstractClientServerDb4oFixture(ConfigurationSource configSource,String fileName, int port) {
+    
+    public AbstractClientServerDb4oFixture(ConfigurationSource configSource,String fileName) {
     	super(configSource);
         _yap = new File(fileName);
-        _port = port;
     }
     
     public AbstractClientServerDb4oFixture(ConfigurationSource configSource){
-        this(configSource,FILE, PORT);
+        this(configSource,FILE);
     }
 
     public void close() throws Exception {
@@ -46,6 +48,32 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 	        _server.close();
 	        _server = null;
     	}
+    }
+    
+    private static int findFreePort() {
+    	
+		try {
+			return findFreePort(DEFAULT_PORT);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			return findFreePort(0);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		throw new IllegalStateException("Could not allocate a usable port");
+    }
+    
+    private static int findFreePort(int port) throws IOException{
+		ServerSocket4 server = new ServerSocket4(port);
+		port = server.getLocalPort();
+		server.close();
+    	Cool.sleepIgnoringInterruption(3);
+    	System.out.println("Port is " + port);
+    	return port; 
     }
 
     public void open() throws Exception {

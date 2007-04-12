@@ -22,7 +22,7 @@ public class Db4oMultiClient extends AbstractClientServerDb4oFixture{
 
 	public ExtObjectContainer db() {
         try {
-            return Db4o.openClient(config(),HOST, PORT, USERNAME, PASSWORD).ext();
+            return Db4o.openClient(config(),HOST, _port, USERNAME, PASSWORD).ext();
         } catch (IOException e) {
             e.printStackTrace();
             throw new TestException(e);
