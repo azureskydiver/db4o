@@ -16,24 +16,24 @@ public class EventRegistryFactory {
 	/**
 	 * Returns an {@link EventRegistry} for registering events with the specified container.
 	 */
-	public static EventRegistry forObjectContainer(ObjectContainer container) {
-		if (null == container) {
-			throw new ArgumentNullException("container");
+	public static EventRegistry forObjectContainer(ObjectContainer objectContainer) {
+		if (null == objectContainer) {
+			throw new ArgumentNullException();
 		}
 		
-		ObjectContainerBase stream = ((ObjectContainerBase)container);
-		Callbacks callbacks = stream.callbacks();
+		ObjectContainerBase container = ((ObjectContainerBase)objectContainer);
+		Callbacks callbacks = container.callbacks();
 		if (callbacks instanceof EventRegistry) {
 			return (EventRegistry)callbacks;
 		}		
 		if (callbacks instanceof NullCallbacks) {
-			EventRegistryImpl impl = new EventRegistryImpl();
-			stream.callbacks(impl);
+			EventRegistryImpl impl = new EventRegistryImpl(container);
+			container.callbacks(impl);
 			return impl;
 		}
 		
 		// TODO: create a MulticastingCallbacks and register both
 		// the current one and the new one
-		throw new IllegalArgumentException("container callbacks already in use");
+		throw new IllegalArgumentException();
 	}
 }

@@ -12,6 +12,8 @@ import com.db4o.query.Query;
  */
 public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	
+	private final ObjectContainerBase _container;
+	
 	protected final Event4Impl _queryStarted = new Event4Impl();
 	protected final Event4Impl _queryFinished = new Event4Impl();
 	protected final Event4Impl _creating = new Event4Impl();
@@ -27,6 +29,10 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _committing = new Event4Impl();
 	protected final Event4Impl _committed = new Event4Impl();
 	protected final Event4Impl _instantiated = new Event4Impl();
+
+	public EventRegistryImpl(ObjectContainerBase container) {
+		_container = container;
+	}
 
 	// Callbacks implementation
 	public void queryOnFinished(Query query) {
@@ -155,6 +161,6 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 
 	public boolean caresAboutCommitted() {
 		return EventPlatform.hasListeners(_committed);
-	}
+	}	
 
 }

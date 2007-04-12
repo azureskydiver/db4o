@@ -9,26 +9,26 @@ import com.db4o.internal.cs.*;
 public final class MCommit extends Msg implements ServerSideMessage {
 	
 	public final boolean processAtServer() {
-		synchronized (streamLock()) {
-			try {
-				CallbackObjectInfoCollections committedInfo = null;
-				LocalTransaction serverTransaction = serverTransaction();
-				ServerMessageDispatcher dispatcher = serverMessageDispatcher();
+		try {
+			CallbackObjectInfoCollections committedInfo = null;
+			LocalTransaction serverTransaction = serverTransaction();
+			ServerMessageDispatcher dispatcher = serverMessageDispatcher();
+			synchronized (streamLock()) {
 				serverTransaction.commit(dispatcher);
-				write(Msg.OK);
 				committedInfo = dispatcher.committedInfo();
-				if (committedInfo != null) {
-					addCommittedInfoMsg(committedInfo);
-				}
-			} catch (Db4oException e) {
-				writeException(e);
 			}
+			write(Msg.OK);
+			if (committedInfo != null) {
+				addCommittedInfoMsg(committedInfo, serverTransaction);
+			}
+		} catch (Db4oException e) {
+			writeException(e);
 		}
 		return true;
 	}
 
-	private void addCommittedInfoMsg(CallbackObjectInfoCollections committedInfo) {
-		Msg.COMMITTED_INFO.setTransaction(serverTransaction());
+	private void addCommittedInfoMsg(CallbackObjectInfoCollections committedInfo, LocalTransaction serverTransaction) {
+		Msg.COMMITTED_INFO.setTransaction(serverTransaction);
 		MCommittedInfo message = Msg.COMMITTED_INFO.encode(committedInfo);
 		serverMessageDispatcher().server().addCommittedInfoMsg(message);
 	}
