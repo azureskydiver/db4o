@@ -63,7 +63,6 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
             indexed(false);
         }
         
-    	LocalObjectContainer stream = (LocalObjectContainer)anyStream;
         TernaryBool indexedFlag=_config.getAsTernaryBool(INDEXED);        
         if (indexedFlag.definiteNo()) {
             yapField.dropIndex(systemTrans);
@@ -78,27 +77,11 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
         	return;
         }
         
-        createIndex(systemTrans, yapField, stream);
+        yapField.createIndex();
     }
 
 	private boolean useExistingIndex(Transaction systemTrans, FieldMetadata yapField) {
 	    return yapField.getIndex(systemTrans) != null;
-	}
-
-	private void createIndex(Transaction systemTrans, FieldMetadata yapField, LocalObjectContainer stream) {
-        if (stream.configImpl().messageLevel() > Const4.NONE) {
-            stream.message("creating index " + yapField.toString());
-        }
-	    yapField.initIndex(systemTrans);
-	    stream.setDirtyInSystemTransaction(yapField.getParentYapClass());
-        reindex(systemTrans, yapField, stream);
-	}
-
-	private void reindex(Transaction systemTrans, FieldMetadata yapField, LocalObjectContainer stream) {
-		ClassMetadata yapClass = yapField.getParentYapClass();		
-		if (yapField.rebuildIndexForClass(stream, yapClass)) {
-		    systemTrans.commit();
-		}
 	}
 	
 	boolean queryEvaluation() {

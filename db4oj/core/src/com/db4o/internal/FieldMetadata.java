@@ -42,7 +42,7 @@ import com.db4o.reflect.generic.GenericReflector;
  */
 public class FieldMetadata implements StoredField {
 
-    private ClassMetadata         i_yapClass;
+    private ClassMetadata         _clazz;
 
     //  position in YapClass i_fields
     private int              i_arrayPosition;
@@ -78,7 +78,7 @@ public class FieldMetadata implements StoredField {
     static final FieldMetadata[]  EMPTY_ARRAY = new FieldMetadata[0];
 
     public FieldMetadata(ClassMetadata a_yapClass) {
-        i_yapClass = a_yapClass;
+        _clazz = a_yapClass;
     }
 
     FieldMetadata(ClassMetadata a_yapClass, ObjectTranslator a_translator) {
@@ -371,7 +371,7 @@ public class FieldMetadata implements StoredField {
         if (!alive()) {
             return;
         }
-        boolean isEnumClass = i_yapClass.isEnum();
+        boolean isEnumClass = _clazz.isEnum();
 		if (i_isPrimitive && !i_isArray) {
 			if (!isEnumClass) {
 				i_javaField.set(a_onObject, ((PrimitiveHandler) i_handler)
@@ -451,8 +451,8 @@ public class FieldMetadata implements StoredField {
     }
     
     public Object get(Object a_onObject) {
-        if (i_yapClass != null) {
-            ObjectContainerBase stream = i_yapClass.getStream();
+        if (_clazz != null) {
+            ObjectContainerBase stream = _clazz.getStream();
             if (stream != null) {
                 synchronized (stream.i_lock) {
                     stream.checkClosed();
@@ -465,8 +465,8 @@ public class FieldMetadata implements StoredField {
                             if (writer != null) {
                                 
                                 writer._offset = 0;
-                                ObjectHeader oh = new ObjectHeader(stream, i_yapClass, writer);
-                                if(oh.objectMarshaller().findOffset(i_yapClass,oh._headerAttributes, writer, this)){
+                                ObjectHeader oh = new ObjectHeader(stream, _clazz, writer);
+                                if(oh.objectMarshaller().findOffset(_clazz,oh._headerAttributes, writer, this)){
                                 	// FIXME catchall
                                     try {
                                         return read(oh._marshallerFamily, writer);
@@ -536,7 +536,7 @@ public class FieldMetadata implements StoredField {
 
     public ClassMetadata getParentYapClass() {
         // alive needs to be checked by all callers: Done
-        return i_yapClass;
+        return _clazz;
     }
 
     public ReflectClass getStoredType() {
@@ -552,10 +552,10 @@ public class FieldMetadata implements StoredField {
     }
     
     public ObjectContainerBase getStream(){
-        if(i_yapClass == null){
+        if(_clazz == null){
             return null;
         }
-        return i_yapClass.getStream();
+        return _clazz.getStream();
     }
     
     public boolean hasConfig() {
@@ -572,7 +572,7 @@ public class FieldMetadata implements StoredField {
     }
 
     public final void init(ClassMetadata a_yapClass, String a_name) {
-        i_yapClass = a_yapClass;
+        _clazz = a_yapClass;
         i_name = a_name;
         initIndex(a_yapClass, a_name);
     }
@@ -665,7 +665,7 @@ public class FieldMetadata implements StoredField {
 
     private TypeHandler4 loadJavaField1() {
         try {
-            ReflectClass claxx = i_yapClass.classReflector();
+            ReflectClass claxx = _clazz.classReflector();
             if(claxx == null){
                 return null;
             }
@@ -675,7 +675,7 @@ public class FieldMetadata implements StoredField {
             }
             i_javaField.setAccessible();
             
-            ObjectContainerBase stream = i_yapClass.getStream();
+            ObjectContainerBase stream = _clazz.getStream();
             stream.showInternalClasses(true);
             try {
 	            return stream.i_handlers.handlerForClass(stream,
@@ -706,8 +706,8 @@ public class FieldMetadata implements StoredField {
         if (obj != null
             && ((config != null && (config.cascadeOnUpdate().definiteYes())) || (i_config != null && (i_config.cascadeOnUpdate().definiteYes())))) {
             int min = 1;
-            if (i_yapClass.isCollection(obj)) {
-                GenericReflector reflector = i_yapClass.reflector();
+            if (_clazz.isCollection(obj)) {
+                GenericReflector reflector = _clazz.reflector();
                 min = reflector.collectionUpdateDepth(reflector.forObject(obj));
             }
             int updateDepth = writer.getUpdateDepth();
@@ -740,8 +740,8 @@ public class FieldMetadata implements StoredField {
     
     public QField qField(Transaction a_trans) {
         int yapClassID = 0;
-        if(i_yapClass != null){
-            yapClassID = i_yapClass.getID();
+        if(_clazz != null){
+            yapClassID = _clazz.getID();
         }
         return new QField(a_trans, i_name, this, yapClassID, i_arrayPosition);
     }
@@ -776,11 +776,11 @@ public class FieldMetadata implements StoredField {
     }
 
     public void rename(String newName) {
-        ObjectContainerBase stream = i_yapClass.getStream();
+        ObjectContainerBase stream = _clazz.getStream();
         if (! stream.isClient()) {
             i_name = newName;
-            i_yapClass.setStateDirty();
-            i_yapClass.write(stream.systemTransaction());
+            _clazz.setStateDirty();
+            _clazz.write(stream.systemTransaction());
         } else {
             Exceptions4.throwRuntimeException(58);
         }
@@ -811,7 +811,7 @@ public class FieldMetadata implements StoredField {
         
         assertHasIndex();
         
-        ObjectContainerBase stream = i_yapClass.getStream();
+        ObjectContainerBase stream = _clazz.getStream();
         if(stream.isClient()){
             Exceptions4.throwRuntimeException(Messages.CLIENT_SERVER_UNSUPPORTED);
         }
@@ -847,8 +847,8 @@ public class FieldMetadata implements StoredField {
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        if (i_yapClass != null) {
-            sb.append(i_yapClass.getName());
+        if (_clazz != null) {
+            sb.append(_clazz.getName());
             sb.append(".");
             sb.append(getName());
         }
@@ -875,7 +875,7 @@ public class FieldMetadata implements StoredField {
         return str;
     }
 
-    public void initIndex(Transaction systemTrans) {        
+    private void initIndex(Transaction systemTrans) {        
         initIndex(systemTrans, 0);
     }
 
@@ -994,4 +994,23 @@ public class FieldMetadata implements StoredField {
     public void defragField(MarshallerFamily mf,ReaderPair readers) {
     	getHandler().defrag(mf, readers, true);
     }
+    
+    
+	public void createIndex() {
+		LocalObjectContainer container=(LocalObjectContainer) _clazz.getStream();
+        if (container.configImpl().messageLevel() > Const4.NONE) {
+            container.message("creating index " + toString());
+        }
+	    initIndex(container.systemTransaction());
+	    container.setDirtyInSystemTransaction(getParentYapClass());
+        reindex(container);
+	}
+
+	private void reindex(LocalObjectContainer container) {
+		ClassMetadata clazz = getParentYapClass();		
+		if (rebuildIndexForClass(container, clazz)) {
+		    container.systemTransaction().commit();
+		}
+	}
+
 }
