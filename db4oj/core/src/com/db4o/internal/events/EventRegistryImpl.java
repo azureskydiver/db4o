@@ -27,8 +27,17 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _deleted = new Event4Impl();
 	protected final Event4Impl _deactivated = new Event4Impl();
 	protected final Event4Impl _committing = new Event4Impl();
-	protected final Event4Impl _committed = new Event4Impl();
+	protected final Event4Impl _committed = new CommittedEvent();
 	protected final Event4Impl _instantiated = new Event4Impl();
+	
+	/**
+	 * @sharpen.ignore
+	 */
+	private class CommittedEvent extends Event4Impl {
+		protected void onListenerAdded() {
+			onCommittedListener();
+		}
+	};
 
 	public EventRegistryImpl(ObjectContainerBase container) {
 		_container = container;
@@ -147,12 +156,20 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		return _committing;
 	}
 	
+	/**
+	 * @sharpen.event.onAdd onCommittedListener
+	 */
 	public Event4 committed() {
 		return _committed;
 	}
 	
 	public Event4 instantiated() {
 		return _instantiated;
+	}
+	
+	private void onCommittedListener() {
+		// TODO: notify the server that we are interested in 
+		// committed callbacks
 	}
 
 	public boolean caresAboutCommitting() {
@@ -162,5 +179,4 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	public boolean caresAboutCommitted() {
 		return EventPlatform.hasListeners(_committed);
 	}	
-
 }
