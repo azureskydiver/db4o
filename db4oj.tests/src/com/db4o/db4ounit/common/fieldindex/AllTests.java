@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
 		};
 		Class[] neutral={
 				DoubleFieldIndexTestCase.class,
+				RuntimeFieldIndexTestCase.class,
 	            StringIndexTestCase.class,
 	            StringIndexCorruptionTestCase.class,
 		};
