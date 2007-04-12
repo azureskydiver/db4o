@@ -12,14 +12,12 @@ import db4ounit.TestException;
 public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
 
 	private ExtObjectContainer _objectContainer;
-
-	public Db4oSingleClient(ConfigurationSource config, String fileName,
-			int port) {
-		super(config, fileName, port);
-	}
 	
-	public Db4oSingleClient(ConfigurationSource config, int port) {
-		super(config, FILE, port);
+	private boolean _embeddedClient = false;
+	
+	public Db4oSingleClient(ConfigurationSource config, boolean embeddedClient) {
+		super(config, FILE);
+		_embeddedClient = embeddedClient; 
 	}
 
 	public Db4oSingleClient(ConfigurationSource config) {
@@ -41,7 +39,7 @@ public class Db4oSingleClient extends AbstractClientServerDb4oFixture {
 	public void open() throws Exception {
 		super.open();
 		try {
-			_objectContainer = _port == 0
+			_objectContainer = _embeddedClient
 				? openEmbeddedClient().ext()
 				: Db4o.openClient(config(), HOST, _port, USERNAME, PASSWORD).ext();
 		} catch (IOException e) {

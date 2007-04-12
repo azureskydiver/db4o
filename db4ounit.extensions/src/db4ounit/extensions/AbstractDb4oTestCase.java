@@ -138,7 +138,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	
 	private Db4oTestSuiteBuilder embeddedClientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
-		        new Db4oSingleClient(configSource(independentConfig), 0), 
+		        new Db4oSingleClient(configSource(independentConfig), true), 
 		        testCases());
 	}
 
