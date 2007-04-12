@@ -72,7 +72,6 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 		port = server.getLocalPort();
 		server.close();
     	Cool.sleepIgnoringInterruption(3);
-    	System.out.println("Port is " + port);
     	return port; 
     }
 
