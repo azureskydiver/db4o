@@ -2,12 +2,11 @@
 
 package com.db4o.test.mixed;
 
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.test.persistent.SimpleObject;
+import com.db4o.cs.common.util.*;
+import com.db4o.ext.*;
+import com.db4o.test.persistent.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
-import db4ounit.extensions.Db4oUtil;
+import db4ounit.*;
 
 public class DeleteUpdate extends ClientServerTestCase {
 	public void store(ExtObjectContainer oc) {

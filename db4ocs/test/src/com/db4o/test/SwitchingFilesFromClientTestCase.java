@@ -2,15 +2,12 @@
 
 package com.db4o.test;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.ext.ExtClient;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.test.config.TestConfigure;
-import com.db4o.test.persistent.SimpleObject;
-
-import db4ounit.extensions.ClientServerTestCase;
-import db4ounit.extensions.Db4oUtil;
+import com.db4o.cs.common.util.*;
+import com.db4o.ext.*;
+import com.db4o.test.config.*;
+import com.db4o.test.persistent.*;
 
 public class SwitchingFilesFromClientTestCase extends ClientServerTestCase {
 

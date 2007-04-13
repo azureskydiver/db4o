@@ -2,11 +2,14 @@
 
 package com.db4o.test;
 
-import db4ounit.extensions.CSTestSuite;
-import db4ounit.extensions.Timer;
+import db4ounit.extensions.*;
 
-public class AllTests extends CSTestSuite {
+public class AllTests extends Db4oTestSuite {
 
+	public static void main(String[] args) {
+		new AllTests().runConcurrency();
+	}
+	
 	protected Class[] testCases() {
 		return new Class [] { SwitchingFilesFromClientTestCase.class } ;
 		// return passedTestCases();
@@ -81,11 +84,4 @@ public class AllTests extends CSTestSuite {
 		};
 	}
 	
-	public static void main(String[] args) {
-		Timer timer = new Timer();
-		timer.start();
-		new AllTests().run();
-		timer.stop();
-		System.out.println("Time elapsed: "+ timer.elapsed()+"ms");
-	}
 }

@@ -2,16 +2,15 @@
 
 package com.db4o.test;
 
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.ext.Db4oException;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.internal.cs.ClientObjectContainer;
+import com.db4o.ext.*;
+import com.db4o.internal.cs.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class ClientDisconnect extends ClientServerTestCase {
+public class ClientDisconnect extends AbstractDb4oTestCase {
 	
 	public static void main(String[] arguments) {
 		new ClientDisconnect().runClientServer();

@@ -2,16 +2,11 @@
 
 package com.db4o.test;
 
-import java.io.Serializable;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
-import com.db4o.ObjectSet;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Candidate;
-import com.db4o.query.Evaluation;
-import com.db4o.query.Query;
-
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.*;
 
 /**
  * 

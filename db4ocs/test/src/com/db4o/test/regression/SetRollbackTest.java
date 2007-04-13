@@ -2,12 +2,11 @@
 
 package com.db4o.test.regression;
 
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.test.config.TestConfigure;
-import com.db4o.test.persistent.SimpleObject;
+import com.db4o.ext.*;
+import com.db4o.test.config.*;
+import com.db4o.test.persistent.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.*;
 
 public class SetRollbackTest extends ClientServerTestCase {
 

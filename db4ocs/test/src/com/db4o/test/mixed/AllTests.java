@@ -2,35 +2,29 @@
 
 package com.db4o.test.mixed;
 
-import db4ounit.extensions.CSTestSuite;
+import db4ounit.extensions.*;
 
-public class AllTests extends CSTestSuite {
+public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return passedTestCases();
 	}
 
 	protected Class[] passedTestCases() {
-		return new Class [] {
+		return new Class[] { 
 				DeleteUpdateIndexed.class,
-//				RollbackUpdate.class,
-//				RollbackUpdateCascade.class,
-//				RollbackUpdateCascadeIndexed.class,
-		};
+				RollbackUpdate.class,
+				RollbackUpdateCascade.class,
+				RollbackUpdateCascadeIndexed.class, };
 	}
-	
+
 	protected Class[] failedTestCases() {
-		return new Class [] {
-				DeleteUpdate.class,
-				RollbackDelete.class,
-				RollbackDeleteIndexedAll.class,
-				RollbackDeleteIndexedI.class,
-				RollbackDeleteIndexedS.class,
-				RollbackUpdateIndexed.class,
-		};
+		return new Class[] { DeleteUpdate.class, RollbackDelete.class,
+				RollbackDeleteIndexedAll.class, RollbackDeleteIndexedI.class,
+				RollbackDeleteIndexedS.class, RollbackUpdateIndexed.class, };
 	}
-	
+
 	public static void main(String[] args) {
-		new AllTests().run();
+		new AllTests().runConcurrency();
 	}
 }

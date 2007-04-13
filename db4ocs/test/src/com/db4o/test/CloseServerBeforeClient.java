@@ -2,18 +2,16 @@
 
 package com.db4o.test;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
+import com.db4o.*;
 
-import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.extensions.*;
 
-public class CloseServerBeforeClient extends ClientServerTestCase {
+public class CloseServerBeforeClient extends AbstractDb4oTestCase {
 	
 	public static void main(String[] arguments) {
-		new CloseServerBeforeClient().runClientServer();
+		new CloseServerBeforeClient().runConcurrency();
 	}
 	
 	public void test() throws Exception {

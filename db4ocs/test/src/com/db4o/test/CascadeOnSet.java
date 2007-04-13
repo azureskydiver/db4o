@@ -2,15 +2,15 @@
 
 package com.db4o.test;
 
-import com.db4o.ObjectSet;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
-import com.db4o.test.config.TestConfigure;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
+import com.db4o.test.config.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class CascadeOnSet extends ClientServerTestCase {
+public class CascadeOnSet extends AbstractDb4oTestCase {
 
 	public String name;
 

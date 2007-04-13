@@ -2,12 +2,11 @@
 
 package com.db4o.test;
 
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
+import com.db4o.cs.common.util.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
-import db4ounit.extensions.Db4oUtil;
+import db4ounit.*;
 
 public class QueryNonExistant extends ClientServerTestCase {
 	

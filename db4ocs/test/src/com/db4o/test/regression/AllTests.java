@@ -2,15 +2,17 @@
 
 package com.db4o.test.regression;
 
-import db4ounit.extensions.CSTestSuite;
+import db4ounit.extensions.*;
 
-public class AllTests extends CSTestSuite {
+public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
-		return new Class[] { SetRollbackTest.class, };
+		return new Class[] { 
+				SetRollbackTest.class, 
+		};
 	}
 
 	public static void main(String[] args) {
-		new AllTests().run();
+		new AllTests().runConcurrency();
 	}
 }
