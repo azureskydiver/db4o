@@ -2,13 +2,13 @@
 
 package com.db4o.test.mixed;
 
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
-import com.db4o.test.persistent.Atom;
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
+import com.db4o.test.persistent.*;
+
+import db4ounit.*;
 
 public class RollbackUpdateCascadeIndexed extends ClientServerTestCase {
 	public void configure(Configuration config) {

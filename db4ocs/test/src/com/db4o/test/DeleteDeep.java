@@ -1,15 +1,15 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 package com.db4o.test;
 
-import com.db4o.ObjectSet;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.cs.common.util.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
-import db4ounit.extensions.Db4oUtil;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class DeleteDeep extends ClientServerTestCase {
+public class DeleteDeep extends AbstractDb4oTestCase {
 
 	public String name;
 

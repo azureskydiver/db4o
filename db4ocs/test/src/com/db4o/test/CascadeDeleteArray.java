@@ -2,17 +2,17 @@
 
 package com.db4o.test;
 
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.test.config.TestConfigure;
-import com.db4o.test.persistent.SimpleObject;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.cs.common.util.*;
+import com.db4o.ext.*;
+import com.db4o.test.config.*;
+import com.db4o.test.persistent.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
-import db4ounit.extensions.Db4oUtil;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class CascadeDeleteArray extends ClientServerTestCase {
+public class CascadeDeleteArray extends AbstractDb4oTestCase {
 
 	private SimpleObject[] elements;
 

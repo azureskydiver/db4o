@@ -2,12 +2,12 @@
 
 package com.db4o.test;
 
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.ext.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class ExtMethods extends ClientServerTestCase {
+public class ExtMethods extends AbstractDb4oTestCase {
 
 	public void conc(ExtObjectContainer oc) {
 

@@ -2,20 +2,18 @@
 
 package com.db4o.test;
 
-import java.io.Serializable;
+import java.io.*;
 
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Candidate;
-import com.db4o.query.Evaluation;
-import com.db4o.query.Query;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 /**
  * demonstrates a case-insensitive query using an Evaluation
  */
-public class CaseInsensitive extends ClientServerTestCase implements
+public class CaseInsensitive extends AbstractDb4oTestCase implements
 		Serializable {
 
 	public String name;

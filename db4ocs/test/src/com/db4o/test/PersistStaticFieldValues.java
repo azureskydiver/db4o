@@ -2,12 +2,10 @@
 
 package com.db4o.test;
 
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.config.*;
+import com.db4o.ext.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
-import db4ounit.extensions.Db4oUtil;
+import db4ounit.*;
 
 public class PersistStaticFieldValues extends ClientServerTestCase {
     
@@ -33,7 +31,7 @@ public class PersistStaticFieldValues extends ClientServerTestCase {
     }
     
     public void conc(ExtObjectContainer oc){
-        PersistStaticFieldValues psfv = (PersistStaticFieldValues)Db4oUtil.getOne(oc,PersistStaticFieldValues.class);
+        PersistStaticFieldValues psfv = (PersistStaticFieldValues)com.db4o.cs.common.util.Db4oUtil.getOne(oc,PersistStaticFieldValues.class);
         Assert.areSame(ONE, psfv.one);
         Assert.areSame(TWO, psfv.two);
         Assert.areSame(THREE, psfv.three);

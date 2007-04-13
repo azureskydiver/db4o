@@ -2,6 +2,7 @@ package com.db4o.cs.server;
 
 import com.db4o.ObjectServer;
 import com.db4o.ObjectContainer;
+import com.db4o.config.*;
 import com.db4o.ext.ExtObjectServer;
 
 import java.io.IOException;
@@ -76,5 +77,9 @@ public class Db4oServer implements ObjectServer {
 			throw new RuntimeException(e);
 		}
 		return true;
+	}
+
+	public ObjectContainer openClient(Configuration config) {
+		throw new UnsupportedOperationException();
 	}
 }

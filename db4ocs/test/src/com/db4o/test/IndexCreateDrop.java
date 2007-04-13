@@ -2,16 +2,16 @@
 
 package com.db4o.test;
 
-import java.util.Date;
+import java.util.*;
 
-import com.db4o.config.ObjectClass;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class IndexCreateDrop extends ClientServerTestCase {
+public class IndexCreateDrop extends AbstractDb4oTestCase {
 
 	public int myInt;
 

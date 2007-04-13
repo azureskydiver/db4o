@@ -2,15 +2,15 @@
 
 package com.db4o.test;
 
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.cs.common.util.*;
+import com.db4o.ext.*;
 
-import db4ounit.extensions.ClientServerTestCase;
-import db4ounit.extensions.Db4oUtil;
+import db4ounit.extensions.*;
 
 /**
  * 
  */
-public class Circular1 extends ClientServerTestCase {
+public class Circular1 extends AbstractDb4oTestCase {
 
 	public void store(ExtObjectContainer oc) {
 		oc.set(new C1C());

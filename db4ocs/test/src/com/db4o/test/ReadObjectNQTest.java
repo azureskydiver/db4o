@@ -2,15 +2,14 @@
 
 package com.db4o.test;
 
-import java.util.List;
+import java.util.*;
 
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Predicate;
-import com.db4o.test.config.TestConfigure;
-import com.db4o.test.persistent.SimpleObject;
+import com.db4o.ext.*;
+import com.db4o.query.*;
+import com.db4o.test.config.*;
+import com.db4o.test.persistent.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
+import db4ounit.*;
 
 public class ReadObjectNQTest extends ClientServerTestCase {
 

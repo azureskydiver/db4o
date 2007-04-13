@@ -2,16 +2,19 @@
 
 package com.db4o.test.all;
 
-import db4ounit.extensions.Timer;
+import db4ounit.extensions.*;
 
-public class AllTests {
+public class AllTests extends Db4oTestSuite {
 	public static void main(String[] args) {
-		Timer timer = new Timer();
-		timer.start();
-		new com.db4o.test.AllTests().run();
-		new com.db4o.test.mixed.AllTests().run();
-		new com.db4o.test.regression.AllTests().run();
-		timer.stop();
-		System.out.println("Time elapsed: " + timer.elapsed() + "ms");
+		new AllTests().runConcurrency();
 	}
+
+	protected Class[] testCases() {
+		return new Class[] { 
+				com.db4o.test.AllTests.class,
+				com.db4o.test.mixed.AllTests.class,
+				com.db4o.test.regression.AllTests.class, 
+		};
+	}
+
 }

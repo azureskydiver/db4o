@@ -2,17 +2,17 @@
 
 package com.db4o.test;
 
-import java.util.Vector;
+import java.util.*;
 
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.test.persistent.Atom;
+import com.db4o.config.*;
+import com.db4o.cs.common.util.*;
+import com.db4o.ext.*;
+import com.db4o.test.persistent.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
-import db4ounit.extensions.Db4oUtil;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class CascadeToExistingVectorMember extends ClientServerTestCase {
+public class CascadeToExistingVectorMember extends AbstractDb4oTestCase {
 
 	public Vector vec;
 

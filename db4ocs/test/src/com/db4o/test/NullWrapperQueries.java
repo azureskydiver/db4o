@@ -9,7 +9,6 @@ import com.db4o.ext.ExtObjectContainer;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
-import db4ounit.extensions.ClientServerTestCase;
 
 
 /**
