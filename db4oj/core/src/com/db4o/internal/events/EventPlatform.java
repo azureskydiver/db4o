@@ -16,7 +16,11 @@ class EventPlatform {
 	public static void triggerQueryEvent(Event4Impl e, Query q) {
 		e.trigger(new QueryEventArgs(q));
 	}
-	
+
+	public static void triggerClassEvent(Event4Impl e, ClassMetadata clazz) {
+		e.trigger(new ClassEventArgs(clazz));
+	}
+
 	public static boolean triggerCancellableObjectEventArgs(Event4Impl e, Object o) {
 		CancellableObjectEventArgs args = new CancellableObjectEventArgs(o);
 		e.trigger(args);

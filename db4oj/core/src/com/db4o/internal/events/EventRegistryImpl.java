@@ -29,6 +29,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _committing = new Event4Impl();
 	protected final Event4Impl _committed = new CommittedEvent();
 	protected final Event4Impl _instantiated = new Event4Impl();
+	protected final Event4Impl _classRegistered = new Event4Impl();	
 	
 	/**
 	 * @sharpen.ignore
@@ -86,6 +87,10 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	
 	public void objectOnDelete(Object obj) {
 		EventPlatform.triggerObjectEvent(_deleted, obj);		
+	}	
+
+	public void classOnRegistered(ClassMetadata clazz) {
+		EventPlatform.triggerClassEvent(_classRegistered, clazz);		
 	}	
 
 	public void objectOnDeactivate(Object obj) {
@@ -162,7 +167,11 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	public Event4 committed() {
 		return _committed;
 	}
-	
+
+	public Event4 classRegistered() {
+		return _classRegistered;
+	}
+
 	public Event4 instantiated() {
 		return _instantiated;
 	}
