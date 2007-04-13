@@ -129,4 +129,12 @@ public interface EventRegistry {
 	 */
 	public Event4 instantiated();
 
+	/**
+	 * Receives {@link ObjectEventArgs}
+	 * 
+	 * @sharpen.event com.db4o.events.ObjectEventArgs
+	 * @return
+	 */
+	public Event4 classRegistered();
+
 }

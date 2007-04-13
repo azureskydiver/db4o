@@ -9,7 +9,7 @@ public class EventsTestCaseBase extends AbstractDb4oTestCase {
 	public static final class Item {	
 	}
 	
-	public static final class EventLog {
+	protected static final class EventLog {
 		public boolean xing;
 		public boolean xed;
 	}

@@ -169,6 +169,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
                 i_fields = new FieldMetadata[0];
             }
         }
+        i_stream.callbacks().classOnRegistered(this);
         setStateOK();
     }
 

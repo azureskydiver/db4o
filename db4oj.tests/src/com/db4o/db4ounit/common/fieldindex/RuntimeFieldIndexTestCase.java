@@ -1,6 +1,8 @@
 package com.db4o.db4ounit.common.fieldindex;
 
+import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -12,10 +14,18 @@ public class RuntimeFieldIndexTestCase extends AbstractDb4oTestCase implements O
 
 	public static class Data {
 		public int _id;
+
+		public Data(int id) {
+			_id = id;
+		}
+		
+		
 	}
 	
 	protected void store() throws Exception {
-		store(new Data());
+		for(int i=1; i <= 3; i++) {
+			store(new Data(i));
+		}
 	}
 	
 	public void testCreateIndexAtRuntime() {
@@ -23,6 +33,10 @@ public class RuntimeFieldIndexTestCase extends AbstractDb4oTestCase implements O
 		Assert.isFalse(field.hasIndex());
 		field.createIndex();
 		Assert.isTrue(field.hasIndex());
+		Query query = newQuery(Data.class);
+		query.descend(FIELDNAME).constrain(new Integer(2));
+		ObjectSet result = query.execute();
+		Assert.areEqual(1, result.size());
 	}
 
 }
