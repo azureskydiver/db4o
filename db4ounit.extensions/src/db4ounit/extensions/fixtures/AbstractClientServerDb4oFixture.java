@@ -4,15 +4,14 @@ package db4ounit.extensions.fixtures;
 
 import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
-import com.db4o.internal.LocalObjectContainer;
+import com.db4o.internal.*;
 
-import db4ounit.extensions.Db4oTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 
 public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixture{
@@ -30,24 +29,22 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
     private ObjectServer _server;
 
     private final File _yap;
+
+	private boolean _embeddedClient;
+
+	private ExtObjectContainer _objectContainer;
     
     protected static final int _port = findFreePort();
     
     
-    public AbstractClientServerDb4oFixture(ConfigurationSource configSource,String fileName) {
+    public AbstractClientServerDb4oFixture(ConfigurationSource configSource,String fileName, boolean embeddedClient) {
     	super(configSource);
         _yap = new File(fileName);
+        _embeddedClient = embeddedClient;
     }
     
-    public AbstractClientServerDb4oFixture(ConfigurationSource configSource){
-        this(configSource,FILE);
-    }
-
-    public void close() throws Exception {
-    	if (null != _server) {
-	        _server.close();
-	        _server = null;
-    	}
+    public AbstractClientServerDb4oFixture(ConfigurationSource configSource, boolean embeddedClient){
+        this(configSource,FILE, embeddedClient);
     }
     
     private static int findFreePort() {
@@ -76,11 +73,41 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
     }
 
     public void open() throws Exception {
+		openServer();
+		try {
+			_objectContainer = _embeddedClient
+				? openEmbeddedClient().ext()
+				: Db4o.openClient(config(), HOST, _port, USERNAME, PASSWORD).ext();
+		} catch (IOException e) {
+			throw new TestException(e);
+		}
+	}
+
+    private void openServer() throws Exception {
         _server = Db4o.openServer(config(),_yap.getAbsolutePath(), _port);
         _server.grantAccess(USERNAME, PASSWORD);
     }
+    
+    public void close() throws Exception {
+		if (null != _objectContainer) {
+			_objectContainer.close();
+			_objectContainer = null;
+		}
+		closeServer();
+	}
 
-    public abstract ExtObjectContainer db();
+    private void closeServer() throws Exception {
+    	if (null != _server) {
+	        _server.close();
+	        _server = null;
+    	}
+    }
+
+	
+
+	public ExtObjectContainer db() {
+		return _objectContainer;
+	}
     
     protected void doClean() {
         _yap.delete();
@@ -99,7 +126,7 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 	 */
 	public boolean accept(Class clazz) {
 		if ((OptOutCS.class.isAssignableFrom(clazz))
-				|| !Db4oTestCase.class.isAssignableFrom(clazz)) {
+				|| !AbstractDb4oTestCase.class.isAssignableFrom(clazz)) {
 			return false;
 		}
 		return true;

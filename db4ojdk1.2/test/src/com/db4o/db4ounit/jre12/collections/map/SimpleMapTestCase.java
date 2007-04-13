@@ -1,13 +1,10 @@
 package com.db4o.db4ounit.jre12.collections.map;
 
 import com.db4o.config.*;
-import com.db4o.ext.Db4oUUID;
+import com.db4o.ext.*;
 
-import db4ounit.Assert;
-import db4ounit.TestRunner;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.Db4oTestSuiteBuilder;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class SimpleMapTestCase extends AbstractDb4oTestCase{
 	
@@ -16,15 +13,7 @@ public class SimpleMapTestCase extends AbstractDb4oTestCase{
 	}
 
 	public static void main(String[] args) {
-        new TestRunner(
-                new Db4oTestSuiteBuilder(
-                        new Db4oInMemory(),
-                        SimpleMapTestCase.class)).run();
-        
-        new TestRunner(
-                new Db4oTestSuiteBuilder(
-                        new Db4oSingleClient(),
-                        SimpleMapTestCase.class)).run();
+        new SimpleMapTestCase().runClientServer();
     }
 	
 	public void testGetByUUID() {

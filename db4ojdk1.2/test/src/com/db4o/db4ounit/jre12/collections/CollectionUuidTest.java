@@ -6,7 +6,6 @@ import com.db4o.config.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 public class CollectionUuidTest extends AbstractDb4oTestCase {	
 	
@@ -21,14 +20,6 @@ public class CollectionUuidTest extends AbstractDb4oTestCase {
 	}
 	
 	public static void main(String[] args) {
-        new TestRunner(
-                new Db4oTestSuiteBuilder(
-                        new Db4oInMemory(),
-                        CollectionUuidTest.class)).run();
-        
-        new TestRunner(
-                new Db4oTestSuiteBuilder(
-                        new Db4oSingleClient(),
-                        CollectionUuidTest.class)).run();
+        new CollectionUuidTest().runClientServer();
     }
 }
