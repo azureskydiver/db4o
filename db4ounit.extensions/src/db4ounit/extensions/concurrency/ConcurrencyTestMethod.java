@@ -17,7 +17,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 	private Exception[] failures = new Exception[ConcurrenyConst.CONCURRENCY_THREAD_COUNT];
 
 	public ConcurrencyTestMethod(Object instance, Method method) {
-		super(instance, method, Db4oLabelProvider.DEFAULT_FIXTURE_LABEL);
+		super(instance, method, Db4oFixtureLabelProvider.DEFAULT);
 	}
 
 	/*

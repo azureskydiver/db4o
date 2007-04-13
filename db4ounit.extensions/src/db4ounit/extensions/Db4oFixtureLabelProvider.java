@@ -3,9 +3,9 @@ package db4ounit.extensions;
 
 import db4ounit.*;
 
-public final class Db4oLabelProvider {
+public final class Db4oFixtureLabelProvider {
 
-	public static final LabelProvider DEFAULT_FIXTURE_LABEL = new LabelProvider() {
+	public static final LabelProvider DEFAULT = new LabelProvider() {
 
 		public String getLabel(TestMethod method) {
 			return "[" + fixtureLabel(method) + "] "
