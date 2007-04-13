@@ -44,7 +44,7 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
 	protected Test createTest(Object instance, Method method) {
 		if (instance instanceof AbstractDb4oTestCase) {
-			return new TestMethod(instance, method, Db4oLabelProvider.DEFAULT_FIXTURE_LABEL); 
+			return new TestMethod(instance, method, Db4oFixtureLabelProvider.DEFAULT); 
 		}
 		return super.createTest(instance, method);
 	}
