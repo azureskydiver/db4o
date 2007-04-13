@@ -87,7 +87,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 		}
 	}
 
-	class ConcurrencyThread extends Thread {
+	static class ConcurrencyThread extends Thread {
 		private AbstractDb4oTestCase toTest;
 
 		private Method method;
@@ -96,9 +96,9 @@ public class ConcurrencyTestMethod extends TestMethod {
 
 		private boolean hasSequenceParameter = false;
 
-		private boolean fail = true;
+		boolean fail = true;
 
-		private Exception exc;
+		Exception exc;
 
 		ConcurrencyThread(AbstractDb4oTestCase toTest, Method method) {
 			this.toTest = toTest;
@@ -135,7 +135,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 		}
 	}
 	
-	private ExtObjectContainer openNewClient(AbstractDb4oTestCase toTest) {
+	private static ExtObjectContainer openNewClient(AbstractDb4oTestCase toTest) {
 		return ((Db4oMultiClient)toTest.fixture()).openNewClient();
 	}
 
