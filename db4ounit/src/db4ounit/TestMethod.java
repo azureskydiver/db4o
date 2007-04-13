@@ -1,16 +1,12 @@
 package db4ounit;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 /**
  * Reflection based db4ounit.Test implementation.
  */
 public class TestMethod implements Test {
 	
-	public interface LabelProvider {
-		String getLabel(TestMethod method);
-	}
 	
 	public static LabelProvider DEFAULT_LABEL_PROVIDER = new LabelProvider() {
 		public String getLabel(TestMethod method) {

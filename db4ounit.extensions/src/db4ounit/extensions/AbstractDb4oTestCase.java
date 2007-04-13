@@ -3,17 +3,18 @@
 package db4ounit.extensions;
 
 import com.db4o.*;
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectContainer;
+import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 import com.db4o.reflect.*;
 
 import db4ounit.*;
+import db4ounit.extensions.concurrency.*;
 import db4ounit.extensions.fixtures.*;
 
-public class AbstractDb4oTestCase implements Db4oTestCase {
+public class AbstractDb4oTestCase implements TestCase, TestLifeCycle {
     
 	private transient Db4oFixture _fixture;
 	
@@ -116,6 +117,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
     	return runEmbeddedClientServer(true);
     }
 
+    public int runConcurrency() {
+    	return runConcurrency(true);
+    }
+
     private int runEmbeddedClientServer(boolean independentConfig) {
 		return new TestRunner(embeddedClientServerSuite(independentConfig)).run();
 	}
@@ -124,7 +129,11 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
         return new TestRunner(
                     clientServerSuite(independentConfig)).run();
     }
-    
+
+	private int runConcurrency(boolean independentConfig) {
+    	return new TestRunner(concurrenyClientServerSuite(independentConfig)).run();
+	}
+
     private Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
 				new Db4oSolo(configSource(independentConfig)), testCases());
@@ -132,7 +141,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 
 	private Db4oTestSuiteBuilder clientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
-		        new Db4oSingleClient(configSource(independentConfig)), 
+		        new Db4oSingleClient(configSource(independentConfig), false), 
 		        testCases());
 	}
 	
@@ -142,6 +151,12 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		        testCases());
 	}
 
+	private Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean independentConfig) {
+		return new Db4oConcurrencyTestSuiteBuilder(
+		        new Db4oMultiClient(configSource(independentConfig), true), 
+		        testCases());
+	}
+	
     private ConfigurationSource configSource(boolean independentConfig) {
         return (independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
     }

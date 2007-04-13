@@ -12,20 +12,7 @@ import com.db4o.foundation.ArgumentNullException;
 import db4ounit.*;
 
 public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
-	
-	private static final class Db4oLabelProvider implements TestMethod.LabelProvider {
 		
-		public static final TestMethod.LabelProvider DEFAULT = new Db4oLabelProvider();
-		
-		public String getLabel(TestMethod method) {
-			return "[" + fixtureLabel(method) + "] " + TestMethod.DEFAULT_LABEL_PROVIDER.getLabel(method);
-		}
-
-		private String fixtureLabel(TestMethod method) {
-			return ((AbstractDb4oTestCase)method.getSubject()).fixture().getLabel();
-		}
-	}	
-	
 	private Db4oFixture _fixture;
     
 	public Db4oTestSuiteBuilder(Db4oFixture fixture, Class clazz) {		
@@ -57,7 +44,7 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	
 	protected Test createTest(Object instance, Method method) {
 		if (instance instanceof AbstractDb4oTestCase) {
-			return new TestMethod(instance, method, Db4oLabelProvider.DEFAULT); 
+			return new TestMethod(instance, method, Db4oLabelProvider.DEFAULT_FIXTURE_LABEL); 
 		}
 		return super.createTest(instance, method);
 	}
