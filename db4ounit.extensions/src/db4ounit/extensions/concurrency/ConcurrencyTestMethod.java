@@ -12,7 +12,9 @@ import db4ounit.extensions.fixtures.*;
 
 public class ConcurrencyTestMethod extends TestMethod {
 
-	private static ConcurrencyThread[] threads = new ConcurrencyThread[ConcurrenyConst.CONCURRENCY_THREAD_COUNT];
+	private static Thread[] threads = new Thread[ConcurrenyConst.CONCURRENCY_THREAD_COUNT];
+	
+	private Exception[] failures = new Exception[ConcurrenyConst.CONCURRENCY_THREAD_COUNT];
 
 	public ConcurrencyTestMethod(Object instance, Method method) {
 		super(instance, method, Db4oLabelProvider.DEFAULT_FIXTURE_LABEL);
@@ -38,11 +40,8 @@ public class ConcurrencyTestMethod extends TestMethod {
 			hasSequenceParameter = true;
 
 		for (int i = 0; i < ConcurrenyConst.CONCURRENCY_THREAD_COUNT; ++i) {
-			if (hasSequenceParameter) {
-				threads[i] = new ConcurrencyThread(toTest, method, i);
-			} else {
-				threads[i] = new ConcurrencyThread(toTest, method);
-			}
+			threads[i] = new Thread(new RunnableTestMethod(toTest, method, i,hasSequenceParameter));
+			failures[i] = null;
 		}
 		// start threads simultaneously
 		for (int i = 0; i < ConcurrenyConst.CONCURRENCY_THREAD_COUNT; ++i) {
@@ -54,8 +53,9 @@ public class ConcurrencyTestMethod extends TestMethod {
 		}
 		// check if any of the threads ended abnormally
 		for (int i = 0; i < ConcurrenyConst.CONCURRENCY_THREAD_COUNT; ++i) {
-			if (threads[i].fail) {
-				throw threads[i].exc;
+			if (failures[i] != null) {
+				// TODO: show all failures by throwing another kind of exception.
+				throw failures[i];
 			}
 		}
 		// check test result
@@ -87,28 +87,25 @@ public class ConcurrencyTestMethod extends TestMethod {
 		}
 	}
 
-	static class ConcurrencyThread extends Thread {
+	class RunnableTestMethod implements Runnable {
 		private AbstractDb4oTestCase toTest;
 
 		private Method method;
 
 		private int seq;
 
-		private boolean hasSequenceParameter = false;
+		private boolean showSeq;
 
-		boolean fail = true;
-
-		Exception exc;
-
-		ConcurrencyThread(AbstractDb4oTestCase toTest, Method method) {
+		RunnableTestMethod(AbstractDb4oTestCase toTest, Method method) {
 			this.toTest = toTest;
 			this.method = method;
 		}
 
-		ConcurrencyThread(AbstractDb4oTestCase toTest, Method method, int seq) {
-			this(toTest, method);
+		RunnableTestMethod(AbstractDb4oTestCase toTest, Method method, int seq, boolean showSeq) {
+			this.toTest = toTest;
+			this.method = method;
 			this.seq = seq;
-			hasSequenceParameter = true;
+			this.showSeq = showSeq;
 		}
 
 		public void run() {
@@ -116,7 +113,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 			try {
 				oc = openNewClient(toTest);
 				Object[] args;
-				if (hasSequenceParameter) {
+				if (showSeq) {
 					args = new Object[2];
 					args[0] = oc;
 					args[1] = new Integer(seq);
@@ -125,9 +122,8 @@ public class ConcurrencyTestMethod extends TestMethod {
 					args[0] = oc;
 				}
 				method.invoke(toTest, (Object[]) args);
-				fail = false;
 			} catch (Exception e) {
-				exc = e;
+				failures[seq] = e;
 			} finally {
 				if (oc != null)
 					oc.close();
@@ -135,7 +131,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 		}
 	}
 	
-	private static ExtObjectContainer openNewClient(AbstractDb4oTestCase toTest) {
+	private ExtObjectContainer openNewClient(AbstractDb4oTestCase toTest) {
 		return ((Db4oMultiClient)toTest.fixture()).openNewClient();
 	}
 
