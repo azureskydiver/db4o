@@ -88,7 +88,7 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
         onDiagnostic(new NativeQueryNotOptimized(predicate));
     }
 
-    private void onDiagnostic(Diagnostic d) {
+    public void onDiagnostic(Diagnostic d) {
         if(_listeners == null){
             return;
         }
