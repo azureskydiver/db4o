@@ -1,4 +1,4 @@
-package com.db4o.ta.tests;
+package com.db4o.ta.test;
 
 import java.util.*;
 
