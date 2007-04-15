@@ -3,12 +3,13 @@ package com.db4o.ta.test;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.diagnostic.*;
+import com.db4o.internal.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class TransparentActivationsDiagnosticsTestCase extends AbstractDb4oTestCase {
+public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCase {
 
 	public static class SomeTAAwareData {
 		public int _id;
@@ -48,6 +49,7 @@ public class TransparentActivationsDiagnosticsTestCase extends AbstractDb4oTestC
 		config.diagnostic().addListener(new DiagnosticListener() {
 			public void onDiagnostic(Diagnostic diagnostic) {
 				NotTransparentActivationEnabled taDiagnostic=(NotTransparentActivationEnabled)diagnostic;
+				Assert.areEqual(NotTAAwareData.class.getName(), ((ClassMetadata)taDiagnostic.reason()).getName());
 				_registered._registeredCount++;
 			}
 		});
@@ -63,6 +65,6 @@ public class TransparentActivationsDiagnosticsTestCase extends AbstractDb4oTestC
 	}
 	
 	public static void main(String[] args) {
-		new TransparentActivationsDiagnosticsTestCase().runSolo();
+		new TransparentActivationDiagnosticsTestCase().runSolo();
 	}
 }

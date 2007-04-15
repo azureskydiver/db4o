@@ -1,19 +1,25 @@
 package com.db4o.ta;
 
 import com.db4o.diagnostic.*;
+import com.db4o.internal.*;
 
 public class NotTransparentActivationEnabled extends DiagnosticBase {
 
+	private ClassMetadata _class;
+	
+	public NotTransparentActivationEnabled(ClassMetadata clazz) {
+		_class = clazz;
+	}
+
 	public String problem() {
-		return null;
+		return "An object of class "+_class+" was stored. Instances of this class very likely are not subject to transparent activation.";
 	}
 
 	public Object reason() {
-		return null;
+		return _class;
 	}
 
 	public String solution() {
-		return null;
+		return "Use a TA aware class with equivalent functionality or ensure that this class provides a sensible implementation of the Activatable interface and the implicit TA hooks, either manually or by applying instrumentation.";
 	}
-
 }
