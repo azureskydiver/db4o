@@ -52,4 +52,8 @@ public class AllTests implements TestCase {
 	private SimpleDb4oTestCase getTestSubject(TestSuite suite) {
 		return ((SimpleDb4oTestCase)((TestMethod)suite.getTests()[0]).getSubject());
 	}
+	
+	public void testInterfaceIsAvailable() {
+		Assert.isTrue(Db4oTestCase.class.isAssignableFrom(AbstractDb4oTestCase.class));
+	}
 }

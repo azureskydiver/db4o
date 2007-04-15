@@ -14,7 +14,7 @@ import db4ounit.*;
 import db4ounit.extensions.concurrency.*;
 import db4ounit.extensions.fixtures.*;
 
-public class AbstractDb4oTestCase implements TestCase, TestLifeCycle {
+public class AbstractDb4oTestCase implements Db4oTestCase {
     
 	private transient Db4oFixture _fixture;
 	
