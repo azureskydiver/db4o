@@ -997,6 +997,9 @@ public class FieldMetadata implements StoredField {
     
     
 	public void createIndex() {
+		if(hasIndex()) {
+			return;
+		}
 		LocalObjectContainer container=(LocalObjectContainer) _clazz.getStream();
         if (container.configImpl().messageLevel() > Const4.NONE) {
             container.message("creating index " + toString());

@@ -17,9 +17,7 @@ public class RuntimeFieldIndexTestCase extends AbstractDb4oTestCase implements O
 
 		public Data(int id) {
 			_id = id;
-		}
-		
-		
+		}		
 	}
 	
 	protected void store() throws Exception {
@@ -37,6 +35,7 @@ public class RuntimeFieldIndexTestCase extends AbstractDb4oTestCase implements O
 		query.descend(FIELDNAME).constrain(new Integer(2));
 		ObjectSet result = query.execute();
 		Assert.areEqual(1, result.size());
+		field.createIndex(); // ensure that second call is ignored
 	}
 
 }
