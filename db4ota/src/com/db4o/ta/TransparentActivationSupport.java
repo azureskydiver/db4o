@@ -46,7 +46,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			if(hasOnlyPrimitiveFields(reflectClass)) {
 				return;
 			}
-			NotTransparentActivationEnabled diagnostic = new NotTransparentActivationEnabled();
+			NotTransparentActivationEnabled diagnostic = new NotTransparentActivationEnabled(clazz);
 			DiagnosticProcessor processor = _container.handlers()._diagnosticProcessor;
 			processor.onDiagnostic(diagnostic);
 		}
