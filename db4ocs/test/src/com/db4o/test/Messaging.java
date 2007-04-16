@@ -9,7 +9,6 @@ import com.db4o.test.config.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 public class Messaging extends AbstractDb4oTestCase {
 
@@ -20,7 +19,7 @@ public class Messaging extends AbstractDb4oTestCase {
 	TestMessageRecipient recipient1 = new TestMessageRecipient();
 	
 	public void conc(ExtObjectContainer oc, int seq) {
-		((Db4oMultiClient)fixture()).server().ext().configure().clientServer().setMessageRecipient(recipient1);
+		((Db4oClientServerFixture)fixture()).server().ext().configure().clientServer().setMessageRecipient(recipient1);
 		MessageSender sender = oc.configure().clientServer().getMessageSender();
 		this.messageString = MSG;
 		// FIXME: it throws NPE sometimes
