@@ -8,7 +8,6 @@ import com.db4o.internal.cs.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
@@ -26,7 +25,7 @@ public class ServerTimeoutTestCase extends ClientServerTestCaseBase {
 	}
 
 	public void _test() throws Exception {
-		AbstractClientServerDb4oFixture fixture = (AbstractClientServerDb4oFixture) fixture();
+		Db4oClientServerFixture fixture = (Db4oClientServerFixture) fixture();
 		ObjectServerImpl serverImpl = (ObjectServerImpl) fixture.server();
 		Iterator4 iter = serverImpl.iterateDispatchers();
 		iter.moveNext();

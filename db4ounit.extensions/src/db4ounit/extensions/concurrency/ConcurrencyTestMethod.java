@@ -8,7 +8,6 @@ import com.db4o.ext.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 public class ConcurrencyTestMethod extends TestMethod {
 
@@ -132,7 +131,7 @@ public class ConcurrencyTestMethod extends TestMethod {
 	}
 	
 	private ExtObjectContainer openNewClient(AbstractDb4oTestCase toTest) {
-		return ((Db4oMultiClient)toTest.fixture()).openNewClient();
+		return ((Db4oClientServerFixture)toTest.fixture()).openNewClient();
 	}
 
 }
