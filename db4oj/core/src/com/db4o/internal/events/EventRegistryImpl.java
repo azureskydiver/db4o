@@ -179,6 +179,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	private void onCommittedListener() {
 		// TODO: notify the server that we are interested in 
 		// committed callbacks
+		_container.onCommittedListener();
 	}
 
 	public boolean caresAboutCommitting() {

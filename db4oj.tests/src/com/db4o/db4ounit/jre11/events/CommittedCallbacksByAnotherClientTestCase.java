@@ -1,0 +1,185 @@
+/* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
+
+package com.db4o.db4ounit.jre11.events;
+
+import com.db4o.config.*;
+import com.db4o.events.*;
+import com.db4o.ext.*;
+import com.db4o.internal.*;
+import com.db4o.query.*;
+
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
+
+/**
+ * @exclude
+ */
+public class CommittedCallbacksByAnotherClientTestCase extends AbstractDb4oTestCase implements OptOutSolo {
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		new CommittedCallbacksByAnotherClientTestCase().runEmbeddedClientServer();
+	}
+	
+	private static final ObjectInfo[] NONE = new ObjectInfo[0];
+	
+	public static final class Item {
+		public int id;
+		
+		public Item() {
+		}
+		
+		public Item(int id_) {
+			id = id_;
+		}
+		
+		public String toString() {
+			return "Item(" + id + ")";
+		}
+	}
+
+	private EventRecorder _eventRecorder;
+	private ExtObjectContainer _anotherClient;	
+	
+	protected void configure(Configuration config) {
+		indexField(config, Item.class, "id");
+	}
+	
+	protected void store() throws Exception {
+		for (int i=0; i<3; ++i) {
+			store(new Item(i));
+		}
+	}
+	
+	protected void db4oSetupAfterStore() throws Exception {
+		_eventRecorder = new EventRecorder(db().lock());
+		committed().addListener(_eventRecorder);
+		_anotherClient = ((Db4oClientServerFixture)fixture()).openNewClient();
+	}
+	
+	protected void db4oCustomTearDown() throws Exception {
+		committed().removeListener(_eventRecorder);
+		if(_anotherClient != null) {
+			_anotherClient.close();
+		}
+	}
+	
+	static final class ObjectByRef {
+		public Object value;
+	}
+	
+	public void testCommittedAdded() {
+		Item item4 = new Item(4);
+		Item item5 = new Item(5);
+		_anotherClient.set(item4);
+		_anotherClient.set(item5);
+		
+		ObjectInfo info4 = getInfo(_anotherClient, 4);
+		ObjectInfo info5 = getInfo(_anotherClient, 5);
+		
+		assertNoEvents();
+		
+		_anotherClient.commit();
+	
+		assertCommittedEvent(new ObjectInfo[] { info4, info5 }, NONE, NONE);
+	}
+	
+	public void testCommittedAddedDeleted() {
+		Item item4 = new Item(4);
+		Item item1 = getItem(_anotherClient, 1);
+		Item item2 = getItem(_anotherClient, 2);
+		
+		ObjectInfo info1 = getInfo(_anotherClient, 1);
+		ObjectInfo info2 = getInfo(_anotherClient, 2);
+		
+		_anotherClient.set(item4);
+		_anotherClient.delete(item1);
+		_anotherClient.delete(item2);
+		
+		ObjectInfo info4 = getInfo(_anotherClient, 4);
+		
+		assertNoEvents();
+		
+		_anotherClient.commit();
+		assertCommittedEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1, info2 }, NONE);
+	}
+	
+	public void testCommittedAddedUpdatedDeleted() {
+		Item item1 = getItem(_anotherClient, 1);
+		Item item2 = getItem(_anotherClient, 2);
+		
+		ObjectInfo info1 = getInfo(_anotherClient, 1);
+		ObjectInfo info2 = getInfo(_anotherClient, 2);
+		
+		Item item4 = new Item(4);
+		_anotherClient.set(item4);
+		_anotherClient.set(item2);
+		_anotherClient.delete(item1);
+		
+		ObjectInfo info4 = getInfo(_anotherClient, 4);
+		
+		assertNoEvents();
+		
+		_anotherClient.commit();
+		assertCommittedEvent(new ObjectInfo[] { info4 }, new ObjectInfo[] { info1 }, new ObjectInfo[] { info2 });
+	}
+	
+	public void testCommittedDeleted(){
+		Item item1 = getItem(_anotherClient, 1);
+		ObjectInfo info1 = getInfo(_anotherClient, 1);
+		
+		assertNoEvents();
+		
+		_anotherClient.delete(item1);
+		
+		_anotherClient.commit();
+		
+		assertCommittedEvent(NONE, new ObjectInfo[] { info1 }, NONE);
+	}
+	
+	public void testObjectSetTwiceShouldStillAppearAsAdded() {
+		final Item item4 = new Item(4);
+		_anotherClient.set(item4);
+		_anotherClient.set(item4);
+		
+		ObjectInfo info4 = getInfo(_anotherClient, 4);
+		
+		_anotherClient.commit();
+		assertCommittedEvent(new ObjectInfo[] { info4 }, NONE, NONE);
+	}
+	
+	private Item getItem(ExtObjectContainer oc, int id) {
+		Query query = oc.query();
+		query.constrain(Item.class);
+		query.descend("id").constrain(new Integer(id));
+		return (Item)query.execute().next();
+	}
+	
+	private ObjectInfo getInfo(ExtObjectContainer oc, int itemId) {
+		Item item = getItem(oc, itemId);
+		int internalId = (int) oc.getID(item);
+		return new LazyObjectReference(null, internalId );
+	}
+
+	private void assertCommittedEvent(
+			final ObjectInfo[] expectedAdded,
+			final ObjectInfo[] expectedDeleted,
+			final ObjectInfo[] expectedUpdated) {
+		
+		EventAssert.assertCommitEvent(_eventRecorder, committed(), expectedAdded, expectedDeleted, expectedUpdated);
+	}
+
+	private void assertNoEvents() {
+		EventAssert.assertNoEvents(_eventRecorder);
+	}
+
+	private Event4 committed() {
+		return eventRegistry().committed();
+	}
+
+	private EventRegistry eventRegistry() {
+		return EventRegistryFactory.forObjectContainer(db());
+	}
+}

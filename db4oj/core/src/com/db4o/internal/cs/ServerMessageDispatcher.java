@@ -38,6 +38,8 @@ public interface ServerMessageDispatcher extends MessageDispatcher {
 	
 	public boolean caresAboutCommitted();
 	
+	public void caresAboutCommitted(boolean care);
+	
 	public void writeIfAlive(Msg msg);
 
 	public CallbackObjectInfoCollections committedInfo();

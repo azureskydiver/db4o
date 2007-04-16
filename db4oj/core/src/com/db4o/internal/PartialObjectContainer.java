@@ -2076,5 +2076,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		_replicationCallState = state;
 	}
 
+	public abstract void onCommittedListener();
 
 }

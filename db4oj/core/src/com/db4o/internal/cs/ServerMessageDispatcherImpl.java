@@ -36,6 +36,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     final int i_threadID;
 
 	private CallbackObjectInfoCollections _committedInfo;
+
+	private boolean _caresAboutCommitted;
     
 
     ServerMessageDispatcherImpl(
@@ -309,9 +311,11 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	}
 
 	public boolean caresAboutCommitted() {
-		// TODO: COR-433 The return value should only be true, if a client
-		// committed listener is present or registered.
-		return i_loggedin;
+		return _caresAboutCommitted;
+	}
+
+	public void caresAboutCommitted(boolean care) {
+		_caresAboutCommitted = true;
 	}
 
 	public CallbackObjectInfoCollections committedInfo() {
@@ -321,4 +325,5 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	public void committedInfo(CallbackObjectInfoCollections committedInfo) {
 		_committedInfo = committedInfo;
 	}
+
 }

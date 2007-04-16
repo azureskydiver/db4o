@@ -158,6 +158,6 @@ public class Db4oClientServer extends
 	}
 
 	public String getLabel() {
-		return "C/S" + (_embeddedClient ? "Embedded" : "");
+		return "C/S" + (_embeddedClient ? " Embedded" : "");
 	}
 }
