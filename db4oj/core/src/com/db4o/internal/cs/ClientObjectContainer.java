@@ -635,14 +635,14 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	public final void write(Msg msg) {
-		msg.write(this, i_socket);
+		writeMsg(msg, true);
 	}
 	
 	public final void writeMsg(Msg a_message, boolean flush) {
 		if(i_config.batchMessages()) {
 			if(flush && _batchedMessages.isEmpty()) {
 				// if there's nothing batched, just send this message directly
-				write(a_message);
+				writeImpl(a_message);
 			} else {
 				addToBatch(a_message);
 				if(flush || _batchedQueueLength > i_config.maxBatchQueueSize()) {
@@ -650,10 +650,14 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				}
 			}
 		} else {
-			write(a_message);
+			writeImpl(a_message);
 		}
 	}
 
+	private void writeImpl(Msg msg) {
+		msg.write(this, i_socket);
+	}
+	
 	public final void writeNew(ClassMetadata a_yapClass, StatefulBuffer aWriter) {
 		MsgD msg = Msg.WRITE_NEW.getWriter(a_yapClass, aWriter);
 		writeMsg(msg, false);
@@ -670,7 +674,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	public boolean isAlive() {
 		try {
-			writeMsg(Msg.PING, true);
+			write(Msg.PING);
 			return expectedResponse(Msg.OK) != null;
 		} catch (Db4oException exc) {
 			return false;
@@ -766,7 +770,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				multibytes.payLoad().append(msg.payLoad()._buffer);
 			}
 		}
-		write(multibytes);
+		writeImpl(multibytes);
 		clearBatchedObjects();
 	}
 
@@ -808,6 +812,13 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	
 	public ClientMessageDispatcher messageDispatcher() {
 		return _singleThreaded ? this : _messageDispatcher;
+	}
+
+	public void onCommittedListener() {
+		if(_singleThreaded) {
+			return;
+		}
+		write(Msg.COMMITTED_CALLBACK_REGISTER);
 	}
 	
 }
