@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
         return new Class[] {
         	CommittingCallbacksForClientServerTestCase.class,
         	CommittingCallbacksTestCase.class,
+        	CommittedCallbacksByAnotherClientTestCase.class,
         	CommittedCallbacksTestCase.class,
             EventRegistryTestCase.class,
             GlobalLifecycleEventsTestCase.class,
