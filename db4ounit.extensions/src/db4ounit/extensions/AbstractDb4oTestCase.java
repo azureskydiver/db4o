@@ -121,6 +121,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
     	return runConcurrency(true);
     }
 
+    public int runEmbeddedConcurrency() {
+    	return runEmbeddedConcurrency(true);
+    }
+    
     private int runEmbeddedClientServer(boolean independentConfig) {
 		return new TestRunner(embeddedClientServerSuite(independentConfig)).run();
 	}
@@ -131,7 +135,11 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
     }
 
 	private int runConcurrency(boolean independentConfig) {
-    	return new TestRunner(concurrenyClientServerSuite(independentConfig)).run();
+    	return new TestRunner(concurrenyClientServerSuite(independentConfig, false)).run();
+	}
+	
+	private int runEmbeddedConcurrency(boolean independentConfig) {
+    	return new TestRunner(concurrenyClientServerSuite(independentConfig, true)).run();
 	}
 
     private Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
@@ -151,9 +159,9 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		        testCases());
 	}
 
-	private Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean independentConfig) {
+	private Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean independentConfig, boolean embedded) {
 		return new Db4oConcurrencyTestSuiteBuilder(
-		        new Db4oClientServer(configSource(independentConfig), true), 
+		        new Db4oClientServer(configSource(independentConfig), embedded), 
 		        testCases());
 	}
 	
