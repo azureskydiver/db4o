@@ -33,7 +33,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 	
 	public boolean isClientServer() {
-		return fixture() instanceof AbstractClientServerDb4oFixture;
+		return fixture() instanceof Db4oClientServerFixture;
 	}
     
     protected void reopen() throws Exception{
@@ -141,19 +141,19 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 
 	private Db4oTestSuiteBuilder clientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
-		        new Db4oSingleClient(configSource(independentConfig), false), 
+		        new Db4oClientServer(configSource(independentConfig), false), 
 		        testCases());
 	}
 	
 	private Db4oTestSuiteBuilder embeddedClientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
-		        new Db4oSingleClient(configSource(independentConfig), true), 
+		        new Db4oClientServer(configSource(independentConfig), true), 
 		        testCases());
 	}
 
 	private Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean independentConfig) {
 		return new Db4oConcurrencyTestSuiteBuilder(
-		        new Db4oMultiClient(configSource(independentConfig), true), 
+		        new Db4oClientServer(configSource(independentConfig), true), 
 		        testCases());
 	}
 	

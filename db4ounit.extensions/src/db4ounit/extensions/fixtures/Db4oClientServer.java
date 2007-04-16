@@ -14,7 +14,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 
-public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixture{
+public class Db4oClientServer extends
+		AbstractDb4oFixture implements Db4oClientServerFixture {
     
     private static final int	DEFAULT_PORT	= 0xdb40;
 
@@ -37,13 +38,13 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
     protected static final int _port = findFreePort();
     
     
-    public AbstractClientServerDb4oFixture(ConfigurationSource configSource,String fileName, boolean embeddedClient) {
+    public Db4oClientServer(ConfigurationSource configSource,String fileName, boolean embeddedClient) {
     	super(configSource);
         _yap = new File(fileName);
         _embeddedClient = embeddedClient;
     }
     
-    public AbstractClientServerDb4oFixture(ConfigurationSource configSource, boolean embeddedClient){
+    public Db4oClientServer(ConfigurationSource configSource, boolean embeddedClient){
         this(configSource,FILE, embeddedClient);
     }
     
@@ -78,6 +79,14 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 			_objectContainer = _embeddedClient
 				? openEmbeddedClient().ext()
 				: Db4o.openClient(config(), HOST, _port, USERNAME, PASSWORD).ext();
+		} catch (IOException e) {
+			throw new TestException(e);
+		}
+	}
+
+	public ExtObjectContainer openNewClient() {
+		try {
+			return _embeddedClient ? openEmbeddedClient().ext() : Db4o.openClient(cloneDb4oConfiguration((Config4Impl) config()), HOST, _port, USERNAME,PASSWORD).ext();
 		} catch (IOException e) {
 			throw new TestException(e);
 		}
@@ -140,8 +149,15 @@ public abstract class AbstractClientServerDb4oFixture extends AbstractDb4oFixtur
 		defragment(FILE);
 	}
 	
-	protected ObjectContainer openEmbeddedClient() {
+	private ObjectContainer openEmbeddedClient() {
 		return _server.openClient(config());
 	}
+	
+	private Config4Impl cloneDb4oConfiguration(Config4Impl config) {
+		return (Config4Impl) config.deepClone(this);
+	}
 
+	public String getLabel() {
+		return "C/S" + (_embeddedClient ? "Embedded" : "");
+	}
 }
