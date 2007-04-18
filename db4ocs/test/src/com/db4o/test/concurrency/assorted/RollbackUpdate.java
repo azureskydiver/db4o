@@ -1,29 +1,19 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.test.mixed;
+package com.db4o.test.concurrency.assorted;
 
-import com.db4o.config.*;
 import com.db4o.cs.common.util.*;
 import com.db4o.ext.*;
 import com.db4o.test.persistent.*;
 
 import db4ounit.*;
 
-public class RollbackUpdateIndexed extends ClientServerTestCase {
-
-	public void configure(Configuration config) {
-		// FIXME: if _s or _i is indexed, the test fails
-		config.objectClass(SimpleObject.class).objectField("_s").indexed(true);
-		config.objectClass(SimpleObject.class).objectField("_i").indexed(true);
-	}
+public class RollbackUpdate extends ClientServerTestCase {
 
 	public void store(ExtObjectContainer oc) {
 		oc.set(new SimpleObject("hello", 1));
 	}
-	
-	/*
-	 * set - rollback - commit - set - commit
-	 */
+
 	public void test() {
 		ExtObjectContainer oc1 = db();
 		ExtObjectContainer oc2 = db();
@@ -48,8 +38,8 @@ public class RollbackUpdateIndexed extends ClientServerTestCase {
 
 			oc1.set(o1);
 			oc1.commit();
-			o2 = (SimpleObject) Db4oUtil.getOne(oc2, SimpleObject.class);
 			oc2.refresh(o2, Integer.MAX_VALUE);
+			o2 = (SimpleObject) Db4oUtil.getOne(oc2, SimpleObject.class);
 			Assert.areEqual("o1", o2.getS());
 			
 			SimpleObject o3 = (SimpleObject) Db4oUtil.getOne(oc3, SimpleObject.class);
@@ -60,4 +50,5 @@ public class RollbackUpdateIndexed extends ClientServerTestCase {
 			oc3.close();
 		}
 	}
+
 }
