@@ -1,6 +1,6 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.test.mixed;
+package com.db4o.test.concurrency.assorted;
 
 import com.db4o.config.*;
 import com.db4o.cs.common.util.*;
@@ -9,10 +9,11 @@ import com.db4o.test.persistent.*;
 
 import db4ounit.*;
 
-public class RollbackDeleteIndexedS extends ClientServerTestCase {
+public class RollbackDeleteIndexedI extends ClientServerTestCase {
 
 	public void configure(Configuration config) {
-		config.objectClass(SimpleObject.class).objectField("_s").indexed(true);
+		config.objectClass(SimpleObject.class).objectField("_i").indexed(true);
+		config.objectClass(SimpleObject.class).objectField("_s").indexed(false);
 	}
 
 	public void store(ExtObjectContainer oc) {
@@ -48,7 +49,7 @@ public class RollbackDeleteIndexedS extends ClientServerTestCase {
 			oc1.delete(o1);
 			oc1.commit();
 
-			// FIXME: the following assertion randomly fails
+			// FIXME: the following assertion fails randomly
 			Db4oUtil.assertOccurrences(oc3, SimpleObject.class, 0);
 			Db4oUtil.assertOccurrences(oc2, SimpleObject.class, 0);
 
