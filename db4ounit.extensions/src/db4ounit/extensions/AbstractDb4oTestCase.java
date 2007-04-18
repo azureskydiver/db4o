@@ -249,7 +249,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		return result.size();
 	}
 	
-	protected void assertOccurences(ExtObjectContainer oc, Class clazz, int expected) {
+	protected void assertOccurrences(ExtObjectContainer oc, Class clazz, int expected) {
 		Assert.areEqual(expected, countOccurences(oc, clazz));
 	}
 	

@@ -55,11 +55,11 @@ public class MultiDeleteTestCase extends Db4oClientServerTestCase {
 		Thread.sleep(1000);
 		MultiDeleteTestCase md = (MultiDeleteTestCase) objectSet.next();
 		oc.delete(md);
-		assertOccurences(oc, MultiDeleteTestCase.class, 0);
+		assertOccurrences(oc, MultiDeleteTestCase.class, 0);
 	}
 
 	public void check(ExtObjectContainer oc) {
-		assertOccurences(oc, MultiDeleteTestCase.class, 0);
+		assertOccurrences(oc, MultiDeleteTestCase.class, 0);
 	}
 
 	private void setMembers() {

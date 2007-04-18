@@ -53,11 +53,11 @@ public class DeleteDeepTestCase extends Db4oClientServerTestCase {
 		oc.delete(root);
 		// FIXME: the following assertion fails, but the same assertion in the
 		// check method could pass
-		assertOccurences(oc, DeleteDeepTestCase.class, 0);
+		assertOccurrences(oc, DeleteDeepTestCase.class, 0);
 	}
 
 	public void check(ExtObjectContainer oc) {
-		assertOccurences(oc, DeleteDeepTestCase.class, 0);
+		assertOccurrences(oc, DeleteDeepTestCase.class, 0);
 	}
 
 }

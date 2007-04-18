@@ -64,6 +64,6 @@ public class CascadeToHashtableTestCase extends AbstractDb4oTestCase {
 
 	public void checkDelete(ExtObjectContainer oc) {
 		// Cascade-On-Delete Test: We only want one atom to remain.
-		assertOccurences(oc, Atom.class, 1);
+		assertOccurrences(oc, Atom.class, 1);
 	}
 }

@@ -1,0 +1,95 @@
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
+
+package com.db4o.test.concurrency.assorted;
+
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.test.persistent.*;
+
+import db4ounit.*;
+import db4ounit.extensions.*;
+
+public class DeleteUpdateTestCase extends Db4oClientServerTestCase {
+
+	public static void main(String[] args) {
+		new DeleteUpdateTestCase().runClientServer();
+	}
+
+	public void store() {
+		store(new SimpleObject("hello", 1));
+	}
+
+	/*
+	 * delete - set - commit delete - commit set
+	 */
+	public void testDS() {
+		ExtObjectContainer oc1 = openNewClient();
+		ExtObjectContainer oc2 = openNewClient();
+		ExtObjectContainer oc3 = openNewClient();
+		try {
+			SimpleObject o1 = (SimpleObject) retrieveOnlyInstance(oc1,
+					SimpleObject.class);
+			oc1.delete(o1);
+			SimpleObject o2 = (SimpleObject) retrieveOnlyInstance(oc2,
+					SimpleObject.class);
+			Assert.areEqual("hello", o2.getS());
+			o2.setS("o2");
+			oc2.set(o2);
+
+			oc1.commit();
+			oc2.commit();
+
+			o1 = (SimpleObject) retrieveOnlyInstance(oc1, SimpleObject.class);
+			oc1.refresh(o1, Integer.MAX_VALUE);
+			Assert.areEqual("o2", o1.getS());
+
+			o2 = (SimpleObject) retrieveOnlyInstance(oc2, SimpleObject.class);
+			oc2.refresh(o2, Integer.MAX_VALUE);
+			Assert.areEqual("o2", o2.getS());
+
+			SimpleObject o3 = (SimpleObject) retrieveOnlyInstance(oc3,
+					SimpleObject.class);
+			oc1.refresh(o1, Integer.MAX_VALUE);
+			Assert.areEqual("o2", o3.getS());
+
+		} finally {
+			oc1.close();
+			oc2.close();
+			oc3.close();
+		}
+
+	}
+
+	/*
+	 * delete - set - commit set - commit delete
+	 */
+	public void testSD() {
+		ExtObjectContainer oc1 = openNewClient();
+		ExtObjectContainer oc2 = openNewClient();
+		ExtObjectContainer oc3 = openNewClient();
+		try {
+			SimpleObject o1 = (SimpleObject) retrieveOnlyInstance(oc1,
+					SimpleObject.class);
+			oc1.delete(o1);
+			SimpleObject o2 = (SimpleObject) retrieveOnlyInstance(oc2,
+					SimpleObject.class);
+			Assert.areEqual("hello", o2.getS());
+			o2.setS("o2");
+			oc2.set(o2);
+
+			oc2.commit();
+			oc1.commit();
+
+			assertOccurrences(oc1, SimpleObject.class, 0);
+			assertOccurrences(oc2, SimpleObject.class, 0);
+			assertOccurrences(oc3, SimpleObject.class, 0);
+
+		} finally {
+			oc1.close();
+			oc2.close();
+			oc3.close();
+		}
+
+	}
+
+}
