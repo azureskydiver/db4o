@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -9,7 +9,11 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class GreaterOrEqual extends AbstractDb4oTestCase {
+public class GreaterOrEqual extends Db4oClientServerTestCase {
+
+	public static void main(String[] args) {
+		new GreaterOrEqual().runConcurrency();
+	}
 
 	public int val;
 
@@ -21,12 +25,12 @@ public class GreaterOrEqual extends AbstractDb4oTestCase {
 		this.val = val;
 	}
 
-	public void store(ExtObjectContainer oc) {
-		oc.set(new GreaterOrEqual(1));
-		oc.set(new GreaterOrEqual(2));
-		oc.set(new GreaterOrEqual(3));
-		oc.set(new GreaterOrEqual(4));
-		oc.set(new GreaterOrEqual(5));
+	public void store() {
+		store(new GreaterOrEqual(1));
+		store(new GreaterOrEqual(2));
+		store(new GreaterOrEqual(3));
+		store(new GreaterOrEqual(4));
+		store(new GreaterOrEqual(5));
 	}
 
 	public void conc(ExtObjectContainer oc) {
