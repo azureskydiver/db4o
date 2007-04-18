@@ -51,16 +51,16 @@ public class CascadeDeleteArrayTestCase extends Db4oClientServerTestCase {
 
 			container = openNewClient();
 
-			assertCountOccurences(container, SimpleObject.class, ELEMENT_COUNT);
+			assertOccurences(container, SimpleObject.class, ELEMENT_COUNT);
 			// ocs[0] deletes all SimpleObject
 			containers[0].commit();
 			containers[0].close();
 			// FIXME: the following assertion fails
-			assertCountOccurences(container, SimpleObject.class, 0);
+			assertOccurences(container, SimpleObject.class, 0);
 			for (int i = 1; i < total; i++) {
 				containers[i].close();
 			}
-			assertCountOccurences(container, SimpleObject.class, 0);
+			assertOccurences(container, SimpleObject.class, 0);
 		} finally {
 			if(container != null) {
 				container.close();
@@ -91,11 +91,11 @@ public class CascadeDeleteArrayTestCase extends Db4oClientServerTestCase {
 		Thread.sleep(500);
 		oc.delete(item);
 		// FIXME: the following assertion fails
-		assertCountOccurences(oc, SimpleObject.class, 0);
+		assertOccurences(oc, SimpleObject.class, 0);
 	}
 
 	public void checkDelete(ExtObjectContainer oc) {
-		assertCountOccurences(oc, SimpleObject.class, 0);
+		assertOccurences(oc, SimpleObject.class, 0);
 	}
 
 }

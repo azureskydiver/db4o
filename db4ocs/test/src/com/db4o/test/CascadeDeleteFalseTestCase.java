@@ -41,13 +41,13 @@ public class CascadeDeleteFalseTestCase extends Db4oClientServerTestCase {
 		// sleep 1000 ms, waiting for other threads.
 		Thread.sleep(1000);
 		oc.delete(cdf);
-		assertCountOccurences(oc, CascadeDeleteFalseTestCase.class, 0);
-		assertCountOccurences(oc, CascadeDeleteFalseHelper.class, 1);
+		assertOccurences(oc, CascadeDeleteFalseTestCase.class, 0);
+		assertOccurences(oc, CascadeDeleteFalseHelper.class, 1);
 	}
 
 	public void checkDelete(ExtObjectContainer oc) {
-		assertCountOccurences(oc, CascadeDeleteFalseTestCase.class, 0);
-		assertCountOccurences(oc, CascadeDeleteFalseHelper.class, 1);
+		assertOccurences(oc, CascadeDeleteFalseTestCase.class, 0);
+		assertOccurences(oc, CascadeDeleteFalseHelper.class, 1);
 	}
 
 	public static class CascadeDeleteFalseHelper {

@@ -93,23 +93,23 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 		try {
 			for (int i = 0; i < total; i++) {
 				containers[i] = openNewClient();
-				assertCountOccurences(containers[i], CddMember.class,
+				assertOccurences(containers[i], CddMember.class,
 						CDD_MEMBER_COUNT);
 			}
 			for (int i = 0; i < total; i++) {
 				deleteAll(containers[i], CddMember.class);
 			}
 			oc = openNewClient();
-			assertCountOccurences(oc, CddMember.class, CDD_MEMBER_COUNT);
+			assertOccurences(oc, CddMember.class, CDD_MEMBER_COUNT);
 			// ocs[0] deleted all CddMember objects, and committed the change
 			containers[0].commit();
 			containers[0].close();
 			// FIXME: following assertion fails
-			assertCountOccurences(oc, CddMember.class, 0);
+			assertOccurences(oc, CddMember.class, 0);
 			for (int i = 1; i < total; i++) {
 				containers[i].close();
 			}
-			assertCountOccurences(oc, CddMember.class, 0);
+			assertOccurences(oc, CddMember.class, 0);
 		} finally {
 			if (oc != null) {
 				oc.close();

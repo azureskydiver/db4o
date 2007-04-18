@@ -52,6 +52,10 @@ public class AllTests extends Db4oTestSuite {
 				NullWrapperQueriesTestCase.class,
 				ObjectSetIDsTestCase.class,
 				ParameterizedEvaluationTestCase.class,
+				PeekPersistedTestCase.class,
+				PersistStaticFieldValuesTestCase.class,
+				QueryForUnknownFieldTestCase.class,
+				
 		};
 	}
 
