@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -10,23 +10,28 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class ComparatorSort extends AbstractDb4oTestCase {
+public class ComparatorSortTestCase extends Db4oClientServerTestCase {
+	
+	public static void main(String[] args) {
+		new ComparatorSortTestCase().runConcurrency();
+	}
+	
 	public static class AscendingIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
-			return ((ComparatorSort) first)._id - ((ComparatorSort) second)._id;
+			return ((ComparatorSortTestCase) first)._id - ((ComparatorSortTestCase) second)._id;
 		}
 	}
 
 	public static class DescendingIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
-			return ((ComparatorSort) second)._id - ((ComparatorSort) first)._id;
+			return ((ComparatorSortTestCase) second)._id - ((ComparatorSortTestCase) first)._id;
 		}
 	}
 
 	public static class OddEvenIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
-			int idA = ((ComparatorSort) first)._id;
-			int idB = ((ComparatorSort) second)._id;
+			int idA = ((ComparatorSortTestCase) first)._id;
+			int idB = ((ComparatorSortTestCase) second)._id;
 			int modA = idA % 2;
 			int modB = idB % 2;
 			if (modA != modB) {
@@ -38,14 +43,14 @@ public class ComparatorSort extends AbstractDb4oTestCase {
 
 	public static class AscendingNameComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
-			return ((ComparatorSort) first)._name
-					.compareTo(((ComparatorSort) second)._name);
+			return ((ComparatorSortTestCase) first)._name
+					.compareTo(((ComparatorSortTestCase) second)._name);
 		}
 	}
 
 	public static class SmallerThanThirtyPredicate extends
-			Predicate<ComparatorSort> {
-		public boolean match(ComparatorSort candidate) {
+			Predicate<ComparatorSortTestCase> {
+		public boolean match(ComparatorSortTestCase candidate) {
 			return candidate._id < 30;
 		}
 	}
@@ -54,11 +59,11 @@ public class ComparatorSort extends AbstractDb4oTestCase {
 
 	public String _name;
 
-	public ComparatorSort() {
+	public ComparatorSortTestCase() {
 		this(0, null);
 	}
 
-	public ComparatorSort(int id, String name) {
+	public ComparatorSortTestCase(int id, String name) {
 		this._id = id;
 		this._name = name;
 	}
@@ -67,10 +72,10 @@ public class ComparatorSort extends AbstractDb4oTestCase {
 		config.exceptionsOnNotStorable(true);
 	}
 
-	public void store(ExtObjectContainer oc) {
+	public void store() {
 		for (int i = 30; i >= 0; --i) {
 			String name = i < 10 ? "0" + i : String.valueOf(i);
-			oc.set(new ComparatorSort(i, name));
+			store(new ComparatorSortTestCase(i, name));
 		}
 	}
 
@@ -223,7 +228,7 @@ public class ComparatorSort extends AbstractDb4oTestCase {
 	private void assertIdOrder(ExtObjectContainer oc,
 			QueryComparator comparator, int[] ids) {
 		Query query = oc.query();
-		query.constrain(ComparatorSort.class);
+		query.constrain(ComparatorSortTestCase.class);
 		assertIdOrder(query, comparator, ids);
 	}
 
@@ -237,7 +242,7 @@ public class ComparatorSort extends AbstractDb4oTestCase {
 	private void assertIdOrder(ObjectSet result, int[] ids) {
 		Assert.areEqual(ids.length, result.size());
 		for (int idx = 0; idx < ids.length; idx++) {
-			Assert.areEqual(ids[idx], ((ComparatorSort) result.next())._id);
+			Assert.areEqual(ids[idx], ((ComparatorSortTestCase) result.next())._id);
 		}
 	}
 }
