@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -7,37 +7,38 @@ import com.db4o.ext.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-/**
- * 
- */
-public class DeepSet extends AbstractDb4oTestCase {
+public class DeepSetTestCase extends Db4oClientServerTestCase {
 
-	public DeepSet child;
+	public static void main(String[] args) {
+		new DeepSetTestCase().runConcurrency();
+	}
+	
+	public DeepSetTestCase child;
 
 	public String name;
 
-	public void store(ExtObjectContainer oc) {
+	public void store() {
 		name = "1";
-		child = new DeepSet();
+		child = new DeepSetTestCase();
 		child.name = "2";
-		child.child = new DeepSet();
+		child.child = new DeepSetTestCase();
 		child.child.name = "3";
-		oc.set(this, 3);
+		store(this);
 	}
 
 	public void test() {
-		ExtObjectContainer oc1 = db();
-		ExtObjectContainer oc2 = db();
-		ExtObjectContainer oc3 = db();
+		ExtObjectContainer oc1 = openNewClient();
+		ExtObjectContainer oc2 = openNewClient();
+		ExtObjectContainer oc3 = openNewClient();
 		try {
-			DeepSet example = new DeepSet();
+			DeepSetTestCase example = new DeepSetTestCase();
 			example.name = "1";
-			DeepSet ds1 = (DeepSet) oc1.get(example).next();
+			DeepSetTestCase ds1 = (DeepSetTestCase) oc1.get(example).next();
 			Assert.areEqual("1", ds1.name);
 			Assert.areEqual("2", ds1.child.name);
 			Assert.areEqual("3", ds1.child.child.name);
 
-			DeepSet ds2 = (DeepSet) oc1.get(example).next();
+			DeepSetTestCase ds2 = (DeepSetTestCase) oc1.get(example).next();
 			Assert.areEqual("1", ds2.name);
 			Assert.areEqual("2", ds2.child.name);
 			Assert.areEqual("3", ds2.child.child.name);
@@ -48,17 +49,17 @@ public class DeepSet extends AbstractDb4oTestCase {
 			oc1.commit();
 
 			// check result
-			DeepSet ds = (DeepSet) oc1.get(example).next();
+			DeepSetTestCase ds = (DeepSetTestCase) oc1.get(example).next();
 			Assert.areEqual("1", ds.name);
 			Assert.areEqual("12", ds.child.name);
 			Assert.areEqual("13", ds.child.child.name);
 
-			ds = (DeepSet) oc2.get(example).next();
+			ds = (DeepSetTestCase) oc2.get(example).next();
 			Assert.areEqual("1", ds.name);
 			Assert.areEqual("12", ds.child.name);
 			Assert.areEqual("3", ds.child.child.name);
 
-			ds = (DeepSet) oc3.get(example).next();
+			ds = (DeepSetTestCase) oc3.get(example).next();
 			Assert.areEqual("1", ds.name);
 			Assert.areEqual("12", ds.child.name);
 			Assert.areEqual("3", ds.child.child.name);
@@ -70,9 +71,9 @@ public class DeepSet extends AbstractDb4oTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc, int seq) {
-		DeepSet example = new DeepSet();
+		DeepSetTestCase example = new DeepSetTestCase();
 		example.name = "1";
-		DeepSet ds = (DeepSet) oc.get(example).next();
+		DeepSetTestCase ds = (DeepSetTestCase) oc.get(example).next();
 		Assert.areEqual("1", ds.name);
 		Assert.areEqual("3", ds.child.child.name);
 		ds.name = "1";
@@ -82,9 +83,9 @@ public class DeepSet extends AbstractDb4oTestCase {
 	}
 
 	public void check(ExtObjectContainer oc) {
-		DeepSet example = new DeepSet();
+		DeepSetTestCase example = new DeepSetTestCase();
 		example.name = "1";
-		DeepSet ds = (DeepSet) oc.get(example).next();
+		DeepSetTestCase ds = (DeepSetTestCase) oc.get(example).next();
 		Assert.isTrue(ds.child.name.startsWith("12"));
 		Assert.isTrue(ds.child.name.length() > "12".length());
 		Assert.areEqual("3", ds.child.child.name);

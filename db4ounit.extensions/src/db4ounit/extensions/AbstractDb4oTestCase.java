@@ -271,6 +271,16 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		});
 	}
 	
+	protected final void deleteObjectSet(ObjectSet os) {
+		deleteObjectSet(db(), os);
+	}
+	
+	protected final void deleteObjectSet(ObjectContainer oc, ObjectSet os) {
+		while (os.hasNext()) {
+			oc.delete(os.next());
+		}
+	}
+	
 	protected final void store(Object obj) {
 		db().set(obj);
 	}
