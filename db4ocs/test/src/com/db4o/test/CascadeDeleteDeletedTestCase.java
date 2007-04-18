@@ -1,36 +1,40 @@
-/* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.test;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.cs.common.util.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class CascadeDeleteDeleted extends AbstractDb4oTestCase {
+public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 
 	public String name;
 
 	public Object untypedMember;
 
 	public CddMember typedMember;
-
-	public CascadeDeleteDeleted() {
+	
+	public static void main(String[] args) {
+		new CascadeDeleteDeletedTestCase().runClientServer();
 	}
 
-	public CascadeDeleteDeleted(String name) {
+	public CascadeDeleteDeletedTestCase() {
+	}
+
+	public CascadeDeleteDeletedTestCase(String name) {
 		this.name = name;
 	}
-	
-	protected void configure(Configuration config){
+
+	protected void configure(Configuration config) {
 		config.objectClass(this).cascadeOnDelete(true);
 	}
 
-	public void store(ExtObjectContainer oc) {
+	public void store() {
+		ExtObjectContainer oc = db();
 		membersFirst(oc, "membersFirst commit");
 		membersFirst(oc, "membersFirst");
 		twoRef(oc, "twoRef");
@@ -40,17 +44,17 @@ public class CascadeDeleteDeleted extends AbstractDb4oTestCase {
 	}
 
 	private void membersFirst(ExtObjectContainer oc, String name) {
-		CascadeDeleteDeleted cdd = new CascadeDeleteDeleted(name);
+		CascadeDeleteDeletedTestCase cdd = new CascadeDeleteDeletedTestCase(name);
 		cdd.untypedMember = new CddMember();
 		cdd.typedMember = new CddMember();
 		oc.set(cdd);
 	}
 
 	private void twoRef(ExtObjectContainer oc, String name) {
-		CascadeDeleteDeleted cdd = new CascadeDeleteDeleted(name);
+		CascadeDeleteDeletedTestCase cdd = new CascadeDeleteDeletedTestCase(name);
 		cdd.untypedMember = new CddMember();
 		cdd.typedMember = new CddMember();
-		CascadeDeleteDeleted cdd2 = new CascadeDeleteDeleted(name);
+		CascadeDeleteDeletedTestCase cdd2 = new CascadeDeleteDeletedTestCase(name);
 		cdd2.untypedMember = cdd.untypedMember;
 		cdd2.typedMember = cdd.typedMember;
 		oc.set(cdd);
@@ -74,61 +78,63 @@ public class CascadeDeleteDeleted extends AbstractDb4oTestCase {
 	}
 
 	public void check(ExtObjectContainer oc) {
-		Db4oUtil.assertOccurrences(oc, CddMember.class, 0);
+		Assert.areEqual(0, countOccurences(oc, CddMember.class));
 	}
-	
-	public void testDeleteDeleted() {
+
+	public void testDeleteDeleted() throws Exception {
 		int total = 10;
 		final int CDD_MEMBER_COUNT = 12;
-		ExtObjectContainer[] ocs = new ExtObjectContainer[total]; 
-		ObjectSet[] oss = new ObjectSet[total];
-		for (int i = 0; i < total; i++) {
-			ocs[i] = db();
-			oss[i] = ocs[i].query(CddMember.class);
-			Assert.areEqual(CDD_MEMBER_COUNT, oss[i].size());
-		}
-		for (int i = 0; i < total; i++) {
-			Db4oUtil.deleteObjectSet(ocs[i], oss[i]);
-		}
-		ExtObjectContainer oc = db();
+		ExtObjectContainer[] containers = new ExtObjectContainer[total];
+		ExtObjectContainer oc = null;
 		try {
-			Db4oUtil.assertOccurrences(oc, CddMember.class, CDD_MEMBER_COUNT);
-			// ocs[0] deleted all CddMember objects, and committed the change
-			ocs[0].commit();
-			ocs[0].close();
-			// FIXME: following assertion fails
-			Db4oUtil.assertOccurrences(oc, CddMember.class, 0);
-			for (int i = 1; i < total; i++) {
-				ocs[i].close();
+			for (int i = 0; i < total; i++) {
+				containers[i] = openNewClient();
+				assertCountOccurences(containers[i], CddMember.class,
+						CDD_MEMBER_COUNT);
 			}
-			Db4oUtil.assertOccurrences(oc, CddMember.class, 0);
+			for (int i = 0; i < total; i++) {
+				deleteAll(containers[i], CddMember.class);
+			}
+			oc = openNewClient();
+			assertCountOccurences(oc, CddMember.class, CDD_MEMBER_COUNT);
+			// ocs[0] deleted all CddMember objects, and committed the change
+			containers[0].commit();
+			containers[0].close();
+			// FIXME: following assertion fails
+			assertCountOccurences(oc, CddMember.class, 0);
+			for (int i = 1; i < total; i++) {
+				containers[i].close();
+			}
+			assertCountOccurences(oc, CddMember.class, 0);
 		} finally {
-			oc.close();
-			for(int i = 0; i < total; i++) {
-				if(!ocs[i].isClosed()){
-					ocs[i].close();
+			if (oc != null) {
+				oc.close();
+			}
+			for (int i = 0; i < total; i++) {
+				if (containers[i] != null) {
+					containers[i].close();
 				}
 			}
 		}
-		
+
 	}
 
 	private void tMembersFirst(ExtObjectContainer oc, String name) {
 		boolean commit = name.indexOf("commit") > 1;
 		Query q = oc.query();
-		q.constrain(CascadeDeleteDeleted.class);
+		q.constrain(CascadeDeleteDeletedTestCase.class);
 		q.descend("name").constrain(name);
 		ObjectSet objectSet = q.execute();
-		CascadeDeleteDeleted cdd = (CascadeDeleteDeleted) objectSet.next();
+		CascadeDeleteDeletedTestCase cdd = (CascadeDeleteDeletedTestCase) objectSet.next();
 		oc.delete(cdd.untypedMember);
 		oc.delete(cdd.typedMember);
-		if(commit){
-            oc.commit();
-        }
-        oc.delete(cdd);
-        if(!commit){
-            oc.commit();
-        }
+		if (commit) {
+			oc.commit();
+		}
+		oc.delete(cdd);
+		if (!commit) {
+			oc.commit();
+		}
 	}
 
 	private void tTwoRef(ExtObjectContainer oc, String name) {
@@ -139,8 +145,8 @@ public class CascadeDeleteDeleted extends AbstractDb4oTestCase {
 		q.constrain(this.getClass());
 		q.descend("name").constrain(name);
 		ObjectSet objectSet = q.execute();
-		CascadeDeleteDeleted cdd = (CascadeDeleteDeleted) objectSet.next();
-		CascadeDeleteDeleted cdd2 = (CascadeDeleteDeleted) objectSet.next();
+		CascadeDeleteDeletedTestCase cdd = (CascadeDeleteDeletedTestCase) objectSet.next();
+		CascadeDeleteDeletedTestCase cdd2 = (CascadeDeleteDeletedTestCase) objectSet.next();
 		if (delete) {
 			oc.delete(cdd.untypedMember);
 			oc.delete(cdd.typedMember);
