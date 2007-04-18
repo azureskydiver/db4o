@@ -19,7 +19,11 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 	public CddMember typedMember;
 	
 	public static void main(String[] args) {
-		new CascadeDeleteDeletedTestCase().runClientServer();
+		new CascadeDeleteDeletedTestCase().runConcurrency();
+	}
+	
+	protected void db4oSetupBeforeStore() throws Exception {
+		configureThreadCount(10);
 	}
 
 	public CascadeDeleteDeletedTestCase() {

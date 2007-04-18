@@ -15,7 +15,7 @@ public class MessagingTestCase extends Db4oClientServerTestCase {
 		new MessagingTestCase().runConcurrency();
 	}
 
-	TestMessageRecipient recipient = new TestMessageRecipient();
+	TestMessageRecipient recipient = new TestMessageRecipient(threadCount());
 
 	public void conc(ExtObjectContainer oc, int seq) {
 		clientServerFixture().server().ext().configure().clientServer()
@@ -31,9 +31,13 @@ public class MessagingTestCase extends Db4oClientServerTestCase {
 
 	static class TestMessageRecipient implements MessageRecipient {
 		public int seq;
-		
-		private boolean [] processed = new boolean [threadCount()];
-		
+
+		private boolean[] processed;
+
+		public TestMessageRecipient(int threadCount) {
+			processed = new boolean[threadCount];
+		}
+
 		public void processMessage(ObjectContainer con, Object message) {
 			Assert.isTrue(message instanceof Data);
 			int value = ((Data) message).value;
