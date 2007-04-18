@@ -19,7 +19,7 @@ public class Circular1TestCase extends AbstractDb4oTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc) {
-		assertOccurences(oc, C1C.class, 1);
+		assertOccurrences(oc, C1C.class, 1);
 	}
 
 	public static class C1P {

@@ -34,7 +34,7 @@ public class IsStoredTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void check(ExtObjectContainer oc) {
-		assertOccurences(oc, IsStoredTestCase.class, 0);
+		assertOccurrences(oc, IsStoredTestCase.class, 0);
 	}
 
 }

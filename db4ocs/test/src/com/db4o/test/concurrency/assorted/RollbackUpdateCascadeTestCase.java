@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.test.concurrency.assorted;
 
@@ -9,24 +9,30 @@ import com.db4o.query.*;
 import com.db4o.test.persistent.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class RollbackUpdateCascade extends ClientServerTestCase {
+public class RollbackUpdateCascadeTestCase extends Db4oClientServerTestCase {
+	
+	public static void main(String[] args) {
+		new RollbackUpdateCascadeTestCase().runClientServer();
+	}
+	
 	public void configure(Configuration config) {
 		config.objectClass(Atom.class).cascadeOnUpdate(true);
 		config.objectClass(Atom.class).cascadeOnDelete(true);
 	}
 
-	public void store(ExtObjectContainer oc) {
+	public void store() {
 		Atom atom = new Atom("root");
 		atom.child = new Atom("child");
 		atom.child.child = new Atom("child.child");
-		oc.set(atom);
+		store(atom);
 	}
 
 	public void test() {
-		ExtObjectContainer oc1 = db();
-		ExtObjectContainer oc2 = db();
-		ExtObjectContainer oc3 = db();
+		ExtObjectContainer oc1 = openNewClient();
+		ExtObjectContainer oc2 = openNewClient();
+		ExtObjectContainer oc3 = openNewClient();
 		try {			
 			Query query1 = oc1.query();
 			query1.descend("name").constrain("root");
