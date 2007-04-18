@@ -9,38 +9,38 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class GreaterOrEqual extends Db4oClientServerTestCase {
+public class GreaterOrEqualTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new GreaterOrEqual().runConcurrency();
+		new GreaterOrEqualTestCase().runConcurrency();
 	}
 
 	public int val;
 
-	public GreaterOrEqual() {
+	public GreaterOrEqualTestCase() {
 
 	}
 
-	public GreaterOrEqual(int val) {
+	public GreaterOrEqualTestCase(int val) {
 		this.val = val;
 	}
 
 	public void store() {
-		store(new GreaterOrEqual(1));
-		store(new GreaterOrEqual(2));
-		store(new GreaterOrEqual(3));
-		store(new GreaterOrEqual(4));
-		store(new GreaterOrEqual(5));
+		store(new GreaterOrEqualTestCase(1));
+		store(new GreaterOrEqualTestCase(2));
+		store(new GreaterOrEqualTestCase(3));
+		store(new GreaterOrEqualTestCase(4));
+		store(new GreaterOrEqualTestCase(5));
 	}
 
 	public void conc(ExtObjectContainer oc) {
 		int[] expect = { 3, 4, 5 };
 		Query q = oc.query();
-		q.constrain(GreaterOrEqual.class);
+		q.constrain(GreaterOrEqualTestCase.class);
 		q.descend("val").constrain(new Integer(3)).greater().equal();
 		ObjectSet res = q.execute();
 		while (res.hasNext()) {
-			GreaterOrEqual r = (GreaterOrEqual) res.next();
+			GreaterOrEqualTestCase r = (GreaterOrEqualTestCase) res.next();
 			for (int i = 0; i < expect.length; i++) {
 				if (expect[i] == r.val) {
 					expect[i] = 0;
