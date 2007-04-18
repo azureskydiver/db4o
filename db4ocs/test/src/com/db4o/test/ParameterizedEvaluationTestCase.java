@@ -7,8 +7,9 @@ import com.db4o.ext.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class ParameterizedEvaluationTestCase extends ClientServerTestCase {
+public class ParameterizedEvaluationTestCase extends Db4oClientServerTestCase {
 	
 	public static void main(String[] args) {
 		new ParameterizedEvaluationTestCase().runConcurrency();
