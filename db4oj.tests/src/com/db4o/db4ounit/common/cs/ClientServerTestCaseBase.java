@@ -9,11 +9,10 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class ClientServerTestCaseBase extends AbstractDb4oTestCase implements OptOutSolo{
+public class ClientServerTestCaseBase extends Db4oClientServerTestCase {
 
 	protected ServerMessageDispatcher serverDispatcher() {
-		Db4oClientServerFixture fixture = (Db4oClientServerFixture) fixture();
-		ObjectServerImpl serverImpl = (ObjectServerImpl) fixture.server();
+		ObjectServerImpl serverImpl = (ObjectServerImpl) clientServerFixture().server();
 		Iterator4 iter = serverImpl.iterateDispatchers();
 		iter.moveNext();
 		ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) iter.current();

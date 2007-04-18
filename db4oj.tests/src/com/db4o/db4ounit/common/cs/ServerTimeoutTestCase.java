@@ -25,8 +25,7 @@ public class ServerTimeoutTestCase extends ClientServerTestCaseBase {
 	}
 
 	public void _test() throws Exception {
-		Db4oClientServerFixture fixture = (Db4oClientServerFixture) fixture();
-		ObjectServerImpl serverImpl = (ObjectServerImpl) fixture.server();
+		ObjectServerImpl serverImpl = (ObjectServerImpl) clientServerFixture().server();
 		Iterator4 iter = serverImpl.iterateDispatchers();
 		iter.moveNext();
 		ServerMessageDispatcher serverDispatcher = (ServerMessageDispatcher) iter.current();

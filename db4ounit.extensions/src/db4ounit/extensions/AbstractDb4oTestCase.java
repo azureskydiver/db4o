@@ -196,9 +196,23 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
     
     protected Query newQuery(){
-        return db().query();
+        return newQuery(db());
     }
     
+    protected Query newQuery(ExtObjectContainer oc){
+        return oc.query();
+    }
+    
+	protected Query newQuery(Class clazz) {
+		return newQuery(db(), clazz);
+	}
+	
+	protected Query newQuery(ExtObjectContainer oc, Class clazz) {
+		final Query query = newQuery(oc);
+		query.constrain(clazz);
+		return query;
+	}
+	
     protected Reflector reflector(){
         return stream().reflector();
     }
@@ -209,12 +223,6 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 
 	protected Transaction newTransaction() {
 		return stream().newTransaction();
-	}
-
-	protected Query newQuery(Class clazz) {
-		final Query query = newQuery();
-		query.constrain(clazz);
-		return query;
 	}
 	
 	protected Object retrieveOnlyInstance(Class clazz) {
@@ -228,6 +236,11 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		return result.size();
 	}
 	
+	protected int countOccurences(ExtObjectContainer oc, Class clazz) {
+		ObjectSet result = newQuery(oc, clazz).execute();
+		return result.size();
+	}
+	
 	protected void foreach(Class clazz, Visitor4 visitor) {
         ExtObjectContainer oc = db();
         oc.deactivate(clazz, Integer.MAX_VALUE);
@@ -237,10 +250,14 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
         }
 	}
 	
-	protected void deleteAll(Class clazz) {
+	protected final void deleteAll(Class clazz) {
+		deleteAll(db(), clazz);
+	}
+	
+	protected final void deleteAll(final ExtObjectContainer oc, Class clazz) {
 		foreach(clazz, new Visitor4() {
 			public void visit(Object obj) {
-				db().delete(obj);
+				oc.delete(obj);
 			}
 		});
 	}
