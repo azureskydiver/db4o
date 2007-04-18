@@ -1,17 +1,17 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.test;
 
-import com.db4o.cs.common.util.*;
 import com.db4o.ext.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-/**
- * 
- */
-public class CustomActivationDepth extends AbstractDb4oTestCase {
+public class CustomActivationDepthTestCase extends Db4oClientServerTestCase {
+
+	public static void main(String[] args) {
+		new CustomActivationDepthTestCase().runConcurrency();
+	}
 
 	int myInt;
 
@@ -33,7 +33,7 @@ public class CustomActivationDepth extends AbstractDb4oTestCase {
 
 	CA3[] ca3s;
 
-	public void store(ExtObjectContainer oc) {
+	public void store() {
 		myInt = 7;
 		myString = "seven";
 		ints = new int[] { 77 };
@@ -45,16 +45,15 @@ public class CustomActivationDepth extends AbstractDb4oTestCase {
 		ca1s = new CA1[] { new CA1("1arr1"), new CA1("1arr2") };
 		ca2s = new CA2[] { new CA2("2arr1"), new CA2("2arr2") };
 		ca3s = new CA3[] { new CA3("3arr1"), new CA3("3arr2") };
-
-		oc.set(this);
+		store(this);
 	}
 
 	public void conc(ExtObjectContainer oc, int seq) {
-		oc.configure().objectClass(CustomActivationDepth.class)
+		oc.configure().objectClass(CustomActivationDepthTestCase.class)
 				.maximumActivationDepth(seq);
 		oc.configure().objectClass(CA1.class).maximumActivationDepth(1);
-		CustomActivationDepth cad = (CustomActivationDepth) Db4oUtil.getOne(oc,
-				CustomActivationDepth.class);
+		CustomActivationDepthTestCase cad = (CustomActivationDepthTestCase) retrieveOnlyInstance(
+				oc, CustomActivationDepthTestCase.class);
 		oc.activate(cad, seq);
 		oc.activate(cad.ca1, 10);
 		Assert.isNull(cad.ca1.ca2.name);
