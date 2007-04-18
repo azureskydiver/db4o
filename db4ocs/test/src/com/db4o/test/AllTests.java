@@ -55,7 +55,17 @@ public class AllTests extends Db4oTestSuite {
 				PeekPersistedTestCase.class,
 				PersistStaticFieldValuesTestCase.class,
 				QueryForUnknownFieldTestCase.class,
-				
+				QueryNonExistantTestCase.class,
+				ReadCollectionNQTestCase.class,
+				ReadCollectionQBETestCase.class,
+				ReadCollectionSODATestCase.class,
+				ReadObjectNQTestCase.class,
+				ReadObjectQBETestCase.class,
+				ReadObjectSODATestCase.class,
+				RefreshTestCase.class,
+				SwitchingFilesFromClientTestCase.class,
+				UpdateCollectionTestCase.class,
+				UpdateObjectTestCase.class,
 		};
 	}
 

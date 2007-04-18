@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -6,23 +6,27 @@ import java.util.*;
 
 import com.db4o.ext.*;
 import com.db4o.query.*;
-import com.db4o.test.config.*;
 import com.db4o.test.persistent.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class ReadObjectNQTest extends ClientServerTestCase {
+public class ReadObjectNQTestCase extends Db4oClientServerTestCase {
 
+	public static void main(String[] args) {
+		new ReadObjectNQTestCase().runConcurrency();
+	}
+	
 	private static String testString = "simple test string";
 
-	protected void store(ExtObjectContainer oc) throws Exception {
-		for (int i = 0; i < TestConfigure.CONCURRENCY_THREAD_COUNT; i++) {
-			oc.set(new SimpleObject(testString + i, i));
+	protected void store() throws Exception {
+		for (int i = 0; i < threadCount(); i++) {
+			store(new SimpleObject(testString + i, i));
 		}
 	}
 
 	public void concReadSameObject(ExtObjectContainer oc) throws Exception {
-		int mid = TestConfigure.CONCURRENCY_THREAD_COUNT / 2;
+		int mid = threadCount() / 2;
 		final SimpleObject expected = new SimpleObject(testString + mid, mid);
 		List<SimpleObject> result = oc.query(new MyPredicate(expected));
 		Assert.areEqual(1, result.size());

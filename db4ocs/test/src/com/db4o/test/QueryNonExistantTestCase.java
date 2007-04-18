@@ -8,19 +8,19 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class QueryNonExistant extends Db4oClientServerTestCase {
+public class QueryNonExistantTestCase extends Db4oClientServerTestCase {
 	
 	public static void main(String[] args) {
-		new QueryNonExistant().runConcurrency();
+		new QueryNonExistantTestCase().runConcurrency();
 	}
 
 	QueryNonExistant1 member;
 
-	public QueryNonExistant() {
+	public QueryNonExistantTestCase() {
 		// db4o constructor
 	}
 
-	public QueryNonExistant(boolean createMembers) {
+	public QueryNonExistantTestCase(boolean createMembers) {
 		member = new QueryNonExistant1();
 		member.member = new QueryNonExistant2();
 		member.member.member = this;
@@ -28,10 +28,10 @@ public class QueryNonExistant extends Db4oClientServerTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc) {
-		oc.get((new QueryNonExistant(true)));
-		assertOccurences(oc, QueryNonExistant.class, 0);
+		oc.get((new QueryNonExistantTestCase(true)));
+		assertOccurences(oc, QueryNonExistantTestCase.class, 0);
 		Query q = oc.query();
-		q.constrain(new QueryNonExistant(true));
+		q.constrain(new QueryNonExistantTestCase(true));
 		Assert.areEqual(0, q.execute().size());
 	}
 
@@ -40,7 +40,7 @@ public class QueryNonExistant extends Db4oClientServerTestCase {
 	}
 
 	public static class QueryNonExistant2 extends QueryNonExistant1 {
-		QueryNonExistant member;
+		QueryNonExistantTestCase member;
 	}
 
 }
