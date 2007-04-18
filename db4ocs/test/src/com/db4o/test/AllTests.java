@@ -41,6 +41,13 @@ public class AllTests extends Db4oTestSuite {
 				GreaterOrEqualTestCase.class,
 				HashtableModifiedUpdateDepthTestCase.class,
 				IndexedByIdentityTestCase.class,
+				IndexedUpdatesWithNullTestCase.class,
+				InternStringsTestCase.class,
+				InvalidUUIDTestCase.class,
+				IsStoredTestCase.class,
+				MessagingTestCase.class,
+				MultiDeleteTestCase.class,
+				MultiLevelIndexTestCase.class,
 		};
 	}
 

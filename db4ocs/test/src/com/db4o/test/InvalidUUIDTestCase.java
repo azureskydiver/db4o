@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -9,7 +9,11 @@ import com.db4o.ext.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class InvalidUUID extends AbstractDb4oTestCase {
+public class InvalidUUIDTestCase extends Db4oClientServerTestCase {
+
+	public static void main(String[] args) {
+		new InvalidUUIDTestCase().runConcurrency();
+	}
 
 	public String name;
 
@@ -17,18 +21,18 @@ public class InvalidUUID extends AbstractDb4oTestCase {
 		config.objectClass(this.getClass()).generateUUIDs(true);
 	}
 
-	public void store(ExtObjectContainer oc) {
+	public void store() {
 		name = "theOne";
-		oc.set(this);
+		store(this);
 	}
 
-	public void conc(ExtObjectContainer oc) {
-		ObjectSet os = oc.query(InvalidUUID.class);
+	public void conc(ExtObjectContainer oc) throws Exception {
+		ObjectSet os = oc.query(InvalidUUIDTestCase.class);
 		if (os.size() == 0) { // already deleted by other threads
 			return;
 		}
 		Assert.areEqual(1, os.size());
-		InvalidUUID iu = (InvalidUUID) os.next();
+		InvalidUUIDTestCase iu = (InvalidUUIDTestCase) os.next();
 		Db4oUUID myUuid = oc.getObjectInfo(iu).getUUID();
 		Assert.isNotNull(myUuid);
 
@@ -48,12 +52,7 @@ public class InvalidUUID extends AbstractDb4oTestCase {
 
 		Assert.isNull(oc.getByUUID(unknownLongPart));
 
-		// wait for other threads
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-
-		}
+		Thread.sleep(500);
 		oc.delete(iu);
 		oc.commit();
 		Assert.isNull(oc.getByUUID(myUuid));

@@ -16,7 +16,7 @@ public class Db4oClientServerTestCase extends AbstractDb4oTestCase implements Op
 		return clientServerFixture().openNewClient();
 	}
 	
-	public int threadCount() {
+	public static int threadCount() {
 		return ConcurrenyConst.CONCURRENCY_THREAD_COUNT;
 	}
 }
