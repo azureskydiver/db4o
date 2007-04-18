@@ -32,6 +32,10 @@ public class AllTests extends Db4oTestSuite {
 				ComparatorSortTestCase.class,
 				CreateIndexInheritedTestCase.class,
 				CustomActivationDepthTestCase.class,
+				DeepSetTestCase.class,
+				DeleteDeepTestCase.class,
+				DifferentAccessPathsTestCase.class,
+				DualDeleteTestCase.class,
 		};
 	}
 
