@@ -27,7 +27,7 @@ public class AllTests extends Db4oTestSuite {
 				CaseInsensitiveTestCase.class,
 				Circular1TestCase.class,
 				Circular2TestCase.class,
-				ClientDisconnectTestCase1.class,
+				ClientDisconnectTestCase.class,
 		};
 	}
 
