@@ -4,10 +4,10 @@ package com.db4o.test.concurrency.assorted;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oConcurrenyTestSuite {
+public class AllTestsSingle extends Db4oTestSuite {
 
 	public static void main(String[] args) {
-		new AllTests().runConcurrency();
+		new AllTestsSingle().runClientServer();
 	}
 
 	protected Class[] testCases() {
