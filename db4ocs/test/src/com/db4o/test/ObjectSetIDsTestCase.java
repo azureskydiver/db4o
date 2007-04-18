@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -8,13 +8,17 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 
-public class ObjectSetIDs extends ClientServerTestCase {
+public class ObjectSetIDsTestCase extends ClientServerTestCase {
+	
+	public static void main(String[] args) {
+		new ObjectSetIDsTestCase().runConcurrency();
+	}
 	
 	static final int COUNT = 11;
 	
-	public void store(ExtObjectContainer oc){
+	public void store(){
 		for (int i = 0; i < COUNT; i++) {
-			oc.set(new ObjectSetIDs());
+			store(new ObjectSetIDsTestCase());
         }
 	}
 	

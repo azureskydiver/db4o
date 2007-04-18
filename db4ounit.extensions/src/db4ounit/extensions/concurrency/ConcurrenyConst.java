@@ -5,6 +5,5 @@ public class ConcurrenyConst {
 
 	public static final String COCURRENCY_TEST_PREFIX = "conc";
 	public static final String COCURRENCY_CHECK_PREFIX = "check";
-	public static final int CONCURRENCY_THREAD_COUNT = 10;
 
 }

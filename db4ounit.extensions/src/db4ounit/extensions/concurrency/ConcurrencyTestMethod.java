@@ -11,9 +11,9 @@ import db4ounit.extensions.*;
 
 public class ConcurrencyTestMethod extends TestMethod {
 
-	private static Thread[] threads = new Thread[ConcurrenyConst.CONCURRENCY_THREAD_COUNT];
+	private Thread[] threads;
 	
-	private Exception[] failures = new Exception[ConcurrenyConst.CONCURRENCY_THREAD_COUNT];
+	private Exception[] failures;
 
 	public ConcurrencyTestMethod(Object instance, Method method) {
 		super(instance, method, Db4oFixtureLabelProvider.DEFAULT);
@@ -38,20 +38,24 @@ public class ConcurrencyTestMethod extends TestMethod {
 		if (parameters.length == 2) // ExtObjectContainer, seq
 			hasSequenceParameter = true;
 
-		for (int i = 0; i < ConcurrenyConst.CONCURRENCY_THREAD_COUNT; ++i) {
+		int threadCount = toTest.threadCount();
+		
+		threads = new Thread[threadCount];
+		failures = new Exception[threadCount];
+		
+		for (int i = 0; i < threadCount; ++i) {
 			threads[i] = new Thread(new RunnableTestMethod(toTest, method, i,hasSequenceParameter));
-			failures[i] = null;
 		}
 		// start threads simultaneously
-		for (int i = 0; i < ConcurrenyConst.CONCURRENCY_THREAD_COUNT; ++i) {
+		for (int i = 0; i < threadCount; ++i) {
 			threads[i].start();
 		}
 		// wait for the threads to end
-		for (int i = 0; i < ConcurrenyConst.CONCURRENCY_THREAD_COUNT; ++i) {
+		for (int i = 0; i < threadCount; ++i) {
 			threads[i].join();
 		}
 		// check if any of the threads ended abnormally
-		for (int i = 0; i < ConcurrenyConst.CONCURRENCY_THREAD_COUNT; ++i) {
+		for (int i = 0; i < threadCount; ++i) {
 			if (failures[i] != null) {
 				// TODO: show all failures by throwing another kind of exception.
 				throw failures[i];

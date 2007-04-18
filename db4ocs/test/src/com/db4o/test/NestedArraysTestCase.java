@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -6,8 +6,13 @@ import com.db4o.cs.common.util.*;
 import com.db4o.ext.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class NestedArrays extends ClientServerTestCase {
+public class NestedArraysTestCase extends Db4oClientServerTestCase {
+
+	public static void main(String[] args) {
+		new NestedArraysTestCase().runConcurrency();
+	}
 
 	public Object _object;
 
@@ -17,17 +22,17 @@ public class NestedArrays extends ClientServerTestCase {
 
 	private static final int ELEMENTS = 3;
 
-	public NestedArrays() {
+	public NestedArraysTestCase() {
 
 	}
 
-	public void store(ExtObjectContainer oc) {
+	public void store() {
 		_object = new Object[ELEMENTS];
 		fill((Object[]) _object, DEPTH);
 
 		_objectArray = new Object[ELEMENTS];
 		fill(_objectArray, DEPTH);
-		oc.set(this);
+		store(this);
 	}
 
 	private void fill(Object[] arr, int depth) {
@@ -47,8 +52,8 @@ public class NestedArrays extends ClientServerTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc) {
-		NestedArrays nr = (NestedArrays) Db4oUtil
-				.getOne(oc, NestedArrays.class);
+		NestedArraysTestCase nr = (NestedArraysTestCase) Db4oUtil
+				.getOne(oc, NestedArraysTestCase.class);
 		check((Object[]) nr._object, DEPTH);
 		check((Object[]) nr._objectArray, DEPTH);
 	}

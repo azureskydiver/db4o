@@ -48,6 +48,10 @@ public class AllTests extends Db4oTestSuite {
 				MessagingTestCase.class,
 				MultiDeleteTestCase.class,
 				MultiLevelIndexTestCase.class,
+				NestedArraysTestCase.class,
+				NullWrapperQueriesTestCase.class,
+				ObjectSetIDsTestCase.class,
+				ParameterizedEvaluationTestCase.class,
 		};
 	}
 
