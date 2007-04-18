@@ -226,7 +226,11 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 	
 	protected Object retrieveOnlyInstance(Class clazz) {
-		ObjectSet result=newQuery(clazz).execute();
+		return retrieveOnlyInstance(db(), clazz);
+	}
+	
+	protected Object retrieveOnlyInstance(ExtObjectContainer oc, Class clazz) {
+		ObjectSet result=newQuery(oc, clazz).execute();
 		Assert.areEqual(1,result.size());
 		return result.next();
 	}

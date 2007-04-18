@@ -6,15 +6,18 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.cs.common.util.*;
 import com.db4o.ext.*;
 import com.db4o.test.persistent.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class CascadeToHashtable extends AbstractDb4oTestCase {
+public class CascadeToHashtableTestCase extends AbstractDb4oTestCase {
 
+	public static void main(String[] args) {
+		new CascadeToHashtableTestCase().runConcurrency();
+	}
+	
 	public Hashtable ht;
 
 	public void configure(Configuration config) {
@@ -23,16 +26,16 @@ public class CascadeToHashtable extends AbstractDb4oTestCase {
 		config.objectClass(Atom.class).cascadeOnDelete(false);
 	}
 
-	public void store(ExtObjectContainer oc) {
-		CascadeToHashtable cth = new CascadeToHashtable();
+	public void store() {
+		CascadeToHashtableTestCase cth = new CascadeToHashtableTestCase();
 		cth.ht = new Hashtable();
 		cth.ht.put("key1", new Atom("stored1"));
 		cth.ht.put("key2", new Atom(new Atom("storedChild1"), "stored2"));
-		oc.set(cth);
+		store(cth);
 	}
 
 	public void conc(ExtObjectContainer oc) {
-		CascadeToHashtable cth = (CascadeToHashtable) Db4oUtil.getOne(oc, this);
+		CascadeToHashtableTestCase cth = (CascadeToHashtableTestCase) retrieveOnlyInstance(oc, CascadeToHashtableTestCase.class);
 		cth.ht.put("key1", new Atom("updated1"));
 		Atom atom = (Atom) cth.ht.get("key2");
 		atom.name = "updated2";
@@ -40,7 +43,7 @@ public class CascadeToHashtable extends AbstractDb4oTestCase {
 	}
 
 	public void check(ExtObjectContainer oc) {
-		CascadeToHashtable cth = (CascadeToHashtable) Db4oUtil.getOne(oc, this);
+		CascadeToHashtableTestCase cth = (CascadeToHashtableTestCase) retrieveOnlyInstance(oc, CascadeToHashtableTestCase.class);
 		Atom atom = (Atom) cth.ht.get("key1");
 		Assert.areEqual("updated1", atom.name);
 		atom = (Atom) cth.ht.get("key2");
@@ -48,12 +51,12 @@ public class CascadeToHashtable extends AbstractDb4oTestCase {
 	}
 
 	public void concDelete(ExtObjectContainer oc, int seq) throws Exception {
-		ObjectSet os = oc.query(CascadeToHashtable.class);
+		ObjectSet os = oc.query(CascadeToHashtableTestCase.class);
 		if (os.size() == 0) { // already deleted
 			return;
 		}
 		Assert.areEqual(1, os.size());
-		CascadeToHashtable cth = (CascadeToHashtable) os.next();
+		CascadeToHashtableTestCase cth = (CascadeToHashtableTestCase) os.next();
 		// wait for other threads
 		Thread.sleep(500);
 		oc.delete(cth);
@@ -61,6 +64,6 @@ public class CascadeToHashtable extends AbstractDb4oTestCase {
 
 	public void checkDelete(ExtObjectContainer oc) {
 		// Cascade-On-Delete Test: We only want one atom to remain.
-		Db4oUtil.assertOccurrences(oc, Atom.class, 1);
+		assertCountOccurences(oc, Atom.class, 1);
 	}
 }

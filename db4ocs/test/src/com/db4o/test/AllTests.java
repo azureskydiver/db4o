@@ -21,6 +21,13 @@ public class AllTests extends Db4oTestSuite {
 				CascadeOnSetTestCase.class,
 				CascadeOnUpdateTestCase.class,
 				CascadeOnUpdate2TestCase.class,
+				CascadeToExistingVectorMemberTestCase.class,
+				CascadeToHashtableTestCase.class,
+				CascadeToVectorTestCase.class,
+				CaseInsensitiveTestCase.class,
+				Circular1TestCase.class,
+				Circular2TestCase.class,
+				ClientDisconnectTestCase.class,
 		};
 	}
 

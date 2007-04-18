@@ -2,8 +2,6 @@
 
 package com.db4o.test;
 
-import java.io.*;
-
 import com.db4o.ext.*;
 import com.db4o.query.*;
 
@@ -13,25 +11,28 @@ import db4ounit.extensions.*;
 /**
  * demonstrates a case-insensitive query using an Evaluation
  */
-public class CaseInsensitive extends AbstractDb4oTestCase implements
-		Serializable {
+public class CaseInsensitiveTestCase extends Db4oClientServerTestCase {
+
+	public static void main(String[] args) {
+		new CaseInsensitiveTestCase().runConcurrency();
+	}
 
 	public String name;
 
-	public CaseInsensitive() {
+	public CaseInsensitiveTestCase() {
 	}
 
-	public CaseInsensitive(String name) {
+	public CaseInsensitiveTestCase(String name) {
 		this.name = name;
 	}
 
-	public void store(ExtObjectContainer oc) {
-		oc.set(new CaseInsensitive("HelloWorld"));
+	public void store() {
+		store(new CaseInsensitiveTestCase("HelloWorld"));
 	}
 
 	public void concQueryCaseInsenstive(ExtObjectContainer oc) {
 		Query q = oc.query();
-		q.constrain(CaseInsensitive.class);
+		q.constrain(CaseInsensitiveTestCase.class);
 		q.constrain(new CaseInsensitiveEvaluation("helloworld"));
 		Assert.areEqual(1, q.execute().size());
 	}
@@ -46,7 +47,7 @@ class CaseInsensitiveEvaluation implements Evaluation {
 	}
 
 	public void evaluate(Candidate candidate) {
-		CaseInsensitive ci = (CaseInsensitive) candidate.getObject();
+		CaseInsensitiveTestCase ci = (CaseInsensitiveTestCase) candidate.getObject();
 		candidate.include(ci.name.toLowerCase().equals(name.toLowerCase()));
 	}
 
