@@ -77,6 +77,6 @@ public class CascadeToVectorTestCase extends Db4oClientServerTestCase {
 
 	public void checkDelete(ExtObjectContainer oc) {
 		// Cascade-On-Delete Test: We only want one atom to remain.
-		assertCountOccurences(oc, Atom.class, 1);
+		assertOccurences(oc, Atom.class, 1);
 	}
 }

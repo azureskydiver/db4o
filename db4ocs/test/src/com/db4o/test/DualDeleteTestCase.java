@@ -38,21 +38,21 @@ public class DualDeleteTestCase extends Db4oClientServerTestCase {
 			ObjectSet os1 = oc1.query(DualDeleteTestCase.class);
 			ObjectSet os2 = oc2.query(DualDeleteTestCase.class);
 			deleteObjectSet(oc1, os1);
-			assertCountOccurences(oc1, Atom.class, 0);
-			assertCountOccurences(oc2, Atom.class, 1);
+			assertOccurences(oc1, Atom.class, 0);
+			assertOccurences(oc2, Atom.class, 1);
 			deleteObjectSet(oc2, os2);
-			assertCountOccurences(oc1, Atom.class, 0);
-			assertCountOccurences(oc2, Atom.class, 0);
+			assertOccurences(oc1, Atom.class, 0);
+			assertOccurences(oc2, Atom.class, 0);
 			oc1.rollback();
-			assertCountOccurences(oc1, Atom.class, 1);
-			assertCountOccurences(oc2, Atom.class, 0);
+			assertOccurences(oc1, Atom.class, 1);
+			assertOccurences(oc2, Atom.class, 0);
 			oc1.commit();
-			assertCountOccurences(oc1, Atom.class, 1);
-			assertCountOccurences(oc2, Atom.class, 1);
+			assertOccurences(oc1, Atom.class, 1);
+			assertOccurences(oc2, Atom.class, 1);
 			deleteAll(oc2, DualDeleteTestCase.class);
 			oc2.commit();
-			assertCountOccurences(oc1, Atom.class, 0);
-			assertCountOccurences(oc2, Atom.class, 0);
+			assertOccurences(oc1, Atom.class, 0);
+			assertOccurences(oc2, Atom.class, 0);
 		} finally {
 			oc1.close();
 			oc2.close();
@@ -67,18 +67,18 @@ public class DualDeleteTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void check1(ExtObjectContainer oc) throws Exception {
-		assertCountOccurences(oc, Atom.class, 1);
+		assertOccurences(oc, Atom.class, 1);
 	}
 
 	public void conc2(ExtObjectContainer oc) throws Exception {
 		ObjectSet os = oc.query(DualDeleteTestCase.class);
 		Thread.sleep(500);
 		deleteObjectSet(oc, os);
-		assertCountOccurences(oc, Atom.class, 0);
+		assertOccurences(oc, Atom.class, 0);
 	}
 
 	public void check2(ExtObjectContainer oc) throws Exception {
-		assertCountOccurences(oc, Atom.class, 0);
+		assertOccurences(oc, Atom.class, 0);
 	}
 
 }
