@@ -12,8 +12,12 @@ import com.db4o.test.persistent.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class CascadeToExistingVectorMember extends AbstractDb4oTestCase {
+public class CascadeToExistingVectorMemberTestCase extends Db4oClientServerTestCase {
 
+	public static void main(String[] args) {
+		new CascadeToExistingVectorMemberTestCase().runConcurrency();
+	}
+	
 	public Vector vec;
 
 	public void configure(Configuration config) {
@@ -21,17 +25,17 @@ public class CascadeToExistingVectorMember extends AbstractDb4oTestCase {
 		config.objectClass(Atom.class).cascadeOnUpdate(false);
 	}
 
-	public void store(ExtObjectContainer oc) {
-		CascadeToExistingVectorMember cev = new CascadeToExistingVectorMember();
+	public void store() {
+		CascadeToExistingVectorMemberTestCase cev = new CascadeToExistingVectorMemberTestCase();
 		cev.vec = new Vector();
 		Atom atom = new Atom("one");
-		oc.set(atom);
+		store(atom);
 		cev.vec.addElement(atom);
-		oc.set(cev);
+		store(cev);
 	}
 
 	public void conc(final ExtObjectContainer oc, final int seq) {
-		CascadeToExistingVectorMember cev = (CascadeToExistingVectorMember) Db4oUtil
+		CascadeToExistingVectorMemberTestCase cev = (CascadeToExistingVectorMemberTestCase) Db4oUtil
 				.getOne(oc, this);
 		Atom atom = (Atom) cev.vec.elementAt(0);
 		atom.name = "two" + seq;
@@ -41,8 +45,7 @@ public class CascadeToExistingVectorMember extends AbstractDb4oTestCase {
 	}
 
 	public void check(final ExtObjectContainer oc) {
-		CascadeToExistingVectorMember cev = (CascadeToExistingVectorMember) Db4oUtil
-				.getOne(oc, this);
+		CascadeToExistingVectorMemberTestCase cev = (CascadeToExistingVectorMemberTestCase) retrieveOnlyInstance(oc, CascadeToExistingVectorMemberTestCase.class);
 		Atom atom = (Atom) cev.vec.elementAt(0);
 		Assert.isTrue(atom.name.startsWith("three"));
 		Assert.isTrue(atom.name.length() > "three".length());	
