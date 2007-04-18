@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -11,10 +11,10 @@ import com.db4o.test.persistent.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-/**
- * 
- */
-public class IndexedByIdentity extends AbstractDb4oTestCase {
+public class IndexedByIdentityTestCase extends Db4oClientServerTestCase {
+	public static void main(String[] args) {
+		new IndexedByIdentityTestCase().runConcurrency();
+	}
 
 	public Atom atom;
 
@@ -24,11 +24,11 @@ public class IndexedByIdentity extends AbstractDb4oTestCase {
 		config.objectClass(this).objectField("atom").indexed(true);
 	}
 
-	public void store(ExtObjectContainer oc) {
+	public void store() {
 		for (int i = 0; i < COUNT; i++) {
-			IndexedByIdentity ibi = new IndexedByIdentity();
+			IndexedByIdentityTestCase ibi = new IndexedByIdentityTestCase();
 			ibi.atom = new Atom("ibi" + i);
-			oc.set(ibi);
+			store(ibi);
 		}
 	}
 
@@ -41,42 +41,39 @@ public class IndexedByIdentity extends AbstractDb4oTestCase {
 			Assert.areEqual(1, objectSet.size());
 			Atom child = (Atom) objectSet.next();
 			q = oc.query();
-			q.constrain(IndexedByIdentity.class);
+			q.constrain(IndexedByIdentityTestCase.class);
 			q.descend("atom").constrain(child).identity();
 			objectSet = q.execute();
 			Assert.areEqual(1, objectSet.size());
-			IndexedByIdentity ibi = (IndexedByIdentity) objectSet.next();
+			IndexedByIdentityTestCase ibi = (IndexedByIdentityTestCase) objectSet.next();
 			Assert.areSame(child, ibi.atom);
 		}
 
 	}
 
-	public void concUpdate(ExtObjectContainer oc, int seq) {
-		oc.configure().objectClass(IndexedByIdentity.class).cascadeOnUpdate(true);
+	public void concUpdate(ExtObjectContainer oc, int seq) throws Exception {
+		oc.configure().objectClass(IndexedByIdentityTestCase.class).cascadeOnUpdate(
+				true);
 		Query q = oc.query();
-		q.constrain(IndexedByIdentity.class);
+		q.constrain(IndexedByIdentityTestCase.class);
 		ObjectSet os = q.execute();
 		Assert.areEqual(COUNT, os.size());
 		while (os.hasNext()) {
-			IndexedByIdentity idi = (IndexedByIdentity) os.next();
+			IndexedByIdentityTestCase idi = (IndexedByIdentityTestCase) os.next();
 			idi.atom.name = "updated" + seq;
 			oc.set(idi);
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				
-			}
+			Thread.sleep(100);
 		}
 	}
 
 	public void checkUpdate(ExtObjectContainer oc) {
 		Query q = oc.query();
-		q.constrain(IndexedByIdentity.class);
+		q.constrain(IndexedByIdentityTestCase.class);
 		ObjectSet os = q.execute();
 		Assert.areEqual(COUNT, os.size());
 		String expected = null;
 		while (os.hasNext()) {
-			IndexedByIdentity idi = (IndexedByIdentity) os.next();
+			IndexedByIdentityTestCase idi = (IndexedByIdentityTestCase) os.next();
 			if (expected == null) {
 				expected = idi.atom.name;
 				Assert.isTrue(expected.startsWith("updated"));

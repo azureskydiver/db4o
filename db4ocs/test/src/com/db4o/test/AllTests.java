@@ -38,7 +38,9 @@ public class AllTests extends Db4oTestSuite {
 				DualDeleteTestCase.class,
 				ExtMethodsTestCase.class,
 				GetAllTestCase.class,
+				GreaterOrEqualTestCase.class,
 				HashtableModifiedUpdateDepthTestCase.class,
+				IndexedByIdentityTestCase.class,
 		};
 	}
 
