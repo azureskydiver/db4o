@@ -3,6 +3,7 @@ package db4ounit.extensions;
 
 import com.db4o.ext.*;
 
+import db4ounit.extensions.concurrency.*;
 import db4ounit.extensions.fixtures.*;
 
 public class Db4oClientServerTestCase extends AbstractDb4oTestCase implements OptOutSolo {
@@ -13,5 +14,9 @@ public class Db4oClientServerTestCase extends AbstractDb4oTestCase implements Op
 	
 	public ExtObjectContainer openNewClient() {
 		return clientServerFixture().openNewClient();
+	}
+	
+	public int threadCount() {
+		return ConcurrenyConst.CONCURRENCY_THREAD_COUNT;
 	}
 }

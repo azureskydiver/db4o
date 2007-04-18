@@ -16,6 +16,11 @@ public class AllTests extends Db4oTestSuite {
 				ByteArrayTestCase.class,
 				CascadeDeleteArrayTestCase.class,
 				CascadeDeleteDeletedTestCase.class,
+				CascadeDeleteFalseTestCase.class,
+				CascadeOnActivateTestCase.class,
+				CascadeOnSetTestCase.class,
+				CascadeOnUpdateTestCase.class,
+				CascadeOnUpdate2TestCase.class,
 		};
 	}
 

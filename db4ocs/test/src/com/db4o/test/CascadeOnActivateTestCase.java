@@ -10,43 +10,40 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class CascadeOnActivate extends AbstractDb4oTestCase {
+public class CascadeOnActivateTestCase extends AbstractDb4oTestCase {
 
+	public static void main(String[] args) {
+		new CascadeOnActivateTestCase().runConcurrency();
+	}
+	
 	public String name;
 
-	public CascadeOnActivate child;
+	public CascadeOnActivateTestCase child;
 
 	protected void configure(Configuration config) {
 		config.objectClass(this).cascadeOnActivate(true);
 	}
 
-	public void store(ExtObjectContainer oc) {
+	public void store() {
 		name = "1";
-		child = new CascadeOnActivate();
+		child = new CascadeOnActivateTestCase();
 		child.name = "2";
-		child.child = new CascadeOnActivate();
+		child.child = new CascadeOnActivateTestCase();
 		child.child.name = "3";
-		oc.set(this);
+		store(this);
 	}
 
 	public void conc(ExtObjectContainer oc) {
 		Query q = oc.query();
-		q.constrain(CascadeOnActivate.class);
+		q.constrain(CascadeOnActivateTestCase.class);
 		q.descend("name").constrain("1");
 		ObjectSet os = q.execute();
-		CascadeOnActivate coa = (CascadeOnActivate) os.next();
-		CascadeOnActivate coa3 = coa.child.child;
+		CascadeOnActivateTestCase coa = (CascadeOnActivateTestCase) os.next();
+		CascadeOnActivateTestCase coa3 = coa.child.child;
 		Assert.areEqual("3", coa3.name);
 		oc.deactivate(coa, Integer.MAX_VALUE);
 		Assert.isNull(coa3.name);
 		oc.activate(coa, 1);
 		Assert.areEqual("3", coa3.name);
 	}
-
-	public void concIndexed(ExtObjectContainer oc) {
-		oc.configure().objectClass(CascadeOnActivate.class).objectField("name")
-				.indexed(true);
-		conc(oc);
-	}
-
 }

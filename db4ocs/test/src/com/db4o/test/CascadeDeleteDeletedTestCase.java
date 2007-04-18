@@ -62,17 +62,17 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc, int seq) {
-		if (seq == 1) {
+		if (seq == 0) {
 			tMembersFirst(oc, "membersFirst commit");
-		} else if (seq == 2) {
+		} else if (seq == 1) {
 			tMembersFirst(oc, "membersFirst");
-		} else if (seq == 3) {
+		} else if (seq == 2) {
 			tTwoRef(oc, "twoRef");
-		} else if (seq == 4) {
+		} else if (seq == 3) {
 			tTwoRef(oc, "twoRef commit");
-		} else if (seq == 5) {
+		} else if (seq == 4) {
 			tTwoRef(oc, "twoRef delete");
-		} else if (seq == 6) {
+		} else if (seq == 5) {
 			tTwoRef(oc, "twoRef delete commit");
 		}
 	}
