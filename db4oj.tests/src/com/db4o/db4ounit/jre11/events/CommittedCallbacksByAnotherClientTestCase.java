@@ -14,7 +14,7 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-public class CommittedCallbacksByAnotherClientTestCase extends AbstractDb4oTestCase implements OptOutSolo {
+public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerTestCase {
 	
 	/**
 	 * @param args
@@ -56,7 +56,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends AbstractDb4oTestC
 	protected void db4oSetupAfterStore() throws Exception {
 		_eventRecorder = new EventRecorder(db().lock());
 		committed().addListener(_eventRecorder);
-		_anotherClient = ((Db4oClientServerFixture)fixture()).openNewClient();
+		_anotherClient = clientServerFixture().openNewClient();
 	}
 	
 	protected void db4oCustomTearDown() throws Exception {
