@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -11,7 +11,7 @@ import com.db4o.test.persistent.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class ByteArrayTestCase extends AbstractDb4oTestCase {
+public class ByteArrayTestCase extends Db4oClientServerTestCase {
 
 	static final int ITERATIONS = 15;
 

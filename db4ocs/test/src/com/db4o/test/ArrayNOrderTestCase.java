@@ -7,7 +7,8 @@ import com.db4o.ext.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class ArrayNOrderTestCase extends AbstractDb4oTestCase {
+public class ArrayNOrderTestCase extends Db4oClientServerTestCase {
+	
 	public static void main(String[] args) {
 		new ArrayNOrderTestCase().runConcurrency();
 	}
