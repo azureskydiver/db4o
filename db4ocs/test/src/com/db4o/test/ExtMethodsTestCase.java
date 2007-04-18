@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.test;
 
@@ -7,11 +7,15 @@ import com.db4o.ext.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class ExtMethods extends AbstractDb4oTestCase {
+public class ExtMethodsTestCase extends Db4oClientServerTestCase {
 
+	public static void main(String[] args) {
+		new ExtMethodsTestCase().runConcurrency();
+	}
+	
 	public void conc(ExtObjectContainer oc) {
 
-		ExtMethods em = new ExtMethods();
+		ExtMethodsTestCase em = new ExtMethodsTestCase();
 		oc.set(em);
 		Assert.isFalse(oc.isClosed());
 
@@ -37,7 +41,7 @@ public class ExtMethods extends AbstractDb4oTestCase {
 		Assert.isTrue(oc.isStored(em));
 		Assert.isTrue(oc.isActive(em));
 
-		ExtMethods em2 = (ExtMethods) oc.getByID(id);
+		ExtMethodsTestCase em2 = (ExtMethodsTestCase) oc.getByID(id);
 		Assert.areSame(em, em2);
 
 		// Purge all and try again
@@ -47,7 +51,7 @@ public class ExtMethods extends AbstractDb4oTestCase {
 		Assert.isTrue(oc.isStored(em));
 		Assert.isTrue(oc.isActive(em));
 
-		em2 = (ExtMethods) oc.getByID(id);
+		em2 = (ExtMethodsTestCase) oc.getByID(id);
 		Assert.areSame(em, em2);
 
 		oc.delete(em2);
