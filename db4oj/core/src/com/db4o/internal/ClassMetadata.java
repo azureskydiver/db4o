@@ -977,7 +977,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             DTrace.YAPCLASS_INIT.log(getID());
         }
         
-        i_ancestor = a_ancestor;
+        setAncestor(a_ancestor);
         
         Config4Impl config = a_stream.configImpl();
         String className = claxx.getName();		
@@ -2044,5 +2044,12 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 
 	public final void defragIndexEntry(ReaderPair readers) {
 		readers.copyID();
+	}
+	
+	public void setAncestor(ClassMetadata ancestor){
+		if(ancestor == this){
+			throw new IllegalStateException();
+		}
+		i_ancestor = ancestor;
 	}
 }
