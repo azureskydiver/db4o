@@ -595,25 +595,29 @@ public class LocalTransaction extends Transaction {
 					if (isDeleted(info._key)) {
 						return;
 					}
-					Object obj = null;
+					
+					// We need to hold a hard reference here, otherwise we can get 
+					// intermediate garbage collection kicking in.
+					Object obj = null;  
+					
 					if (info._reference != null) {
 						obj = info._reference.getObject();
 					}
-					if (obj == null) {
+					if (obj == null || info._reference.getID() < 0) {
 
 						// This means the object was gc'd.
 
 						// Let's try to read it again, but this may fail in
-						// CS mode
-						// if another transaction has deleted it. We are
-						// taking care
-						// of possible nulls in #delete4().
+						// CS mode if another transaction has deleted it. 
 
 						HardObjectReference hardRef = stream().getHardObjectReferenceById(
-								LocalTransaction.this, info._key);
+							LocalTransaction.this, info._key);
+						if(hardRef == HardObjectReference.INVALID){
+							return;
+						}
 						info._reference = hardRef._reference;
-						info._reference
-								.flagForDelete(stream().topLevelCallId());
+						info._reference.flagForDelete(stream().topLevelCallId());
+						obj = info._reference.getObject();
 					}
 					stream().delete3(LocalTransaction.this, info._reference,
 							info._cascade, false);

@@ -10,8 +10,8 @@ public final class MReadObject extends MsgD implements ServerSideMessage {
 	public final boolean processAtServer() {
 		StatefulBuffer bytes = null;
 
-		// readObjectByID may fail in certain cases
-		// we should look for the cause at some time in the future
+		// readObjectByID may fail in certain cases, for instance if
+		// and object was deleted by another client
 
 		synchronized (streamLock()) {
 			try {

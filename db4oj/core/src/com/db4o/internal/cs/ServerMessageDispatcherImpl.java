@@ -169,14 +169,14 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                     break;
                 }
             } catch (Exception e) {
+                if (Debug.atHome) {
+                    e.printStackTrace();
+                }
                 if (i_mainStream == null || i_mainStream.isClosed()) {
                     break;
                 }
                 if(i_socket == null ||  ! i_socket.isConnected()){
                 	break;
-                }
-                if (Debug.atHome) {
-                    e.printStackTrace();
                 }
             }
             

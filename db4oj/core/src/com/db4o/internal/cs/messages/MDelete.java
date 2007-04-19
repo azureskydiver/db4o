@@ -16,8 +16,8 @@ public final class MDelete extends MsgD implements ServerSideMessage {
 				try {
 				    stream.delete1(transaction(), obj, userCall);
 				} catch (Exception e) {
-					if (Deploy.debug) {
-						System.out.println("MsgD.Delete failed.");
+					if (Debug.atHome) {
+						e.printStackTrace();
 					}
 				}
 			}
