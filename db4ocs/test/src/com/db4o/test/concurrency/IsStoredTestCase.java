@@ -2,7 +2,6 @@
 
 package com.db4o.test.concurrency;
 
-import com.db4o.cs.common.util.*;
 import com.db4o.ext.*;
 
 import db4ounit.*;
@@ -14,21 +13,20 @@ public class IsStoredTestCase extends Db4oClientServerTestCase {
 		new IsStoredTestCase().runConcurrency();
 	}
 
-	String myString;
-
+	public String myString;
+	
 	public void conc(ExtObjectContainer oc) {
 		IsStoredTestCase isStored = new IsStoredTestCase();
 		isStored.myString = "isStored";
 		oc.set(isStored);
 		Assert.isTrue(oc.isStored(isStored));
-		Db4oUtil.assertOccurrences(oc, IsStoredTestCase.class, 1);
+		oc.commit();
 		oc.delete(isStored);
 		Assert.isFalse(oc.isStored(isStored));
 		oc.rollback();
 		Assert.isTrue(oc.isStored(isStored));
 		oc.delete(isStored);
 		Assert.isFalse(oc.isStored(isStored));
-		Db4oUtil.assertOccurrences(oc, IsStoredTestCase.class, 0);
 		oc.commit();
 		Assert.isFalse(oc.isStored(isStored));
 	}

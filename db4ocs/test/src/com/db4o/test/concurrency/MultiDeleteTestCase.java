@@ -53,6 +53,10 @@ public class MultiDeleteTestCase extends Db4oClientServerTestCase {
 		
 		Assert.areEqual(1, objectSet.size());
 		Thread.sleep(1000);
+		if(!objectSet.hasNext()){
+			return;
+		}
+		
 		MultiDeleteTestCase md = (MultiDeleteTestCase) objectSet.next();
 		oc.delete(md);
 		assertOccurrences(oc, MultiDeleteTestCase.class, 0);
