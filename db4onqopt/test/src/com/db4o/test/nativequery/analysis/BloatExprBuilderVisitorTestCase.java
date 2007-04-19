@@ -142,6 +142,14 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return !data.bool;
 	}
 
+	boolean sampleFieldBooleanConstantEqualsComp(Data data) {
+		return data.bool==true;
+	}
+
+	public void testFieldBooleanConstantEqualsComp() throws Exception {
+		assertComparison("sampleFieldBooleanConstantEqualsComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
+	}
+
 	public void testFieldBooleanNotComp() throws Exception {
 		assertComparison("sampleFieldBooleanNotComp",BOOLEAN_FIELDNAME,Boolean.FALSE,ComparisonOperator.EQUALS,false);
 	}
@@ -948,6 +956,24 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testInvalidOtherMemberEqualsComp() throws Exception {
 		assertInvalid("sampleInvalidOtherMemberEqualsComp");
+	}
+
+	boolean sampleInvalidLocalVarComp(Data data) {
+		Data next=data.next;
+		return next.bool;
+	}
+	
+	public void testInvalidLocalVarComp() throws Exception {
+		assertInvalid("sampleInvalidLocalVarComp");
+	}
+
+	boolean sampleInvalidLocalVarCombinedComp(Data data) {
+		Data next=data.next;
+		return next.bool && data.bool;
+	}
+	
+	public void testInvalidLocalVarCombinedComp() throws Exception {
+		assertInvalid("sampleInvalidLocalVarCombinedComp");
 	}
 
 	boolean sampleInvalidOtherMemberSameComp(Data data) {
