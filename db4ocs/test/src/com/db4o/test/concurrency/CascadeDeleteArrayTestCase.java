@@ -11,6 +11,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class CascadeDeleteArrayTestCase extends Db4oClientServerTestCase {
+	
 	public static void main(String[] args) {
 		new CascadeDeleteArrayTestCase().runConcurrency();
 	}
@@ -90,7 +91,9 @@ public class CascadeDeleteArrayTestCase extends Db4oClientServerTestCase {
 		// waits for other threads
 		Thread.sleep(500);
 		oc.delete(item);
-		// FIXME: the following assertion fails
+		
+		oc.commit();
+		
 		assertOccurrences(oc, SimpleObject.class, 0);
 	}
 

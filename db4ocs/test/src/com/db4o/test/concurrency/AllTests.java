@@ -63,7 +63,6 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 				ReadObjectQBETestCase.class,
 				ReadObjectSODATestCase.class,
 				RefreshTestCase.class,
-				SwitchingFilesFromClientTestCase.class,
 				UpdateCollectionTestCase.class,
 				UpdateObjectTestCase.class,
 		};
