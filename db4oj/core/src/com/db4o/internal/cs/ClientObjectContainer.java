@@ -476,7 +476,9 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		writeMsg(msg, true);
 		StatefulBuffer bytes = ((MsgObject) expectedResponse(Msg.OBJECT_TO_CLIENT))
 				.unmarshall();
-		bytes.setTransaction(a_ta);
+		if(bytes != null){
+			bytes.setTransaction(a_ta);
+		}
 		return bytes;
 	}
 
