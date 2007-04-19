@@ -481,10 +481,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public void delete(Object a_object) {
-    	synchronized (i_lock) {
-	    	generateCallIDOnTopLevel();
-	        delete(null, a_object);
-    	}
+    	delete(null, a_object);
     }
     
     public void delete(Transaction trans, Object obj) {
@@ -507,7 +504,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(ref == null){
         	return;
         }
-        
+        if(userCall){
+        	generateCallIDOnTopLevel();
+        }
         try {
         	beginTopLevelCall();
         	delete2(trans, ref, obj, 0, userCall);
