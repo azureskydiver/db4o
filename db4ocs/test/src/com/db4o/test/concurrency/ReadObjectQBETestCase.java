@@ -17,12 +17,12 @@ public class ReadObjectQBETestCase extends Db4oClientServerTestCase {
 
 	private static String testString = "simple test string";
 
-	protected void store(ExtObjectContainer oc) {
+	protected void store() {
 		for (int i = 0; i < threadCount(); i++) {
-			oc.set(new SimpleObject(testString + i, i));
+			store(new SimpleObject(testString + i, i));
 		}
 	}
-
+	
 	public void concReadSameObject(ExtObjectContainer oc) throws Exception {
 		int mid = threadCount() / 2;
 		SimpleObject example = new SimpleObject(testString + mid, mid);
@@ -33,12 +33,10 @@ public class ReadObjectQBETestCase extends Db4oClientServerTestCase {
 
 	public void concReadDifferentObject(ExtObjectContainer oc, int seq)
 			throws Exception {
-
 		SimpleObject example = new SimpleObject(testString + seq, seq);
 		ObjectSet result = oc.get(example);
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(example, result.next());
-
 	}
 
 }

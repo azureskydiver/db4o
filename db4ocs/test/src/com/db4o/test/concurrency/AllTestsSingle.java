@@ -63,7 +63,6 @@ public class AllTestsSingle extends Db4oTestSuite {
 				ReadObjectQBETestCase.class,
 				ReadObjectSODATestCase.class,
 				RefreshTestCase.class,
-				SwitchingFilesFromClientTestCase.class,
 				UpdateCollectionTestCase.class,
 				UpdateObjectTestCase.class,
 		};

@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.test.concurrency;
+package com.db4o.test.concurrency.staging;
 
 import java.io.*;
 
@@ -27,6 +27,7 @@ public class SwitchingFilesFromClientTestCase extends Db4oClientServerTestCase {
 		ExtClient client = (ExtClient) oc;
 		client.switchToFile(DB_FILE);
 		client.switchToMainFile();
-		oc.set(new SimpleObject("hello", 1));
+		client.set(new SimpleObject("hello", 1));
 	}
+
 }

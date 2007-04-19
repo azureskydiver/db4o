@@ -7,9 +7,9 @@ package com.db4o.test.persistent;
  */
 public class SimpleObject {
 
-	private String _s;
+	public String _s;
 
-	private int _i;
+	public int _i;
 	
 	public SimpleObject(String s, int i) {
 		_s = s;
