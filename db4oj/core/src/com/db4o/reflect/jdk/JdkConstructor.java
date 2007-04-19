@@ -36,6 +36,8 @@ public class JdkConstructor implements ReflectConstructor{
 			if (DTrace.enabled) {
 				DTrace.NEW_INSTANCE.log(System.identityHashCode(obj));
 			}
+		} catch (LinkageError e) {
+			// e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			// e.printStackTrace();
 		} catch (InstantiationException e) {
