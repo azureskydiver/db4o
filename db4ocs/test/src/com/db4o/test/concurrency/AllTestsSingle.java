@@ -31,7 +31,6 @@ public class AllTestsSingle extends Db4oTestSuite {
 				CloseServerBeforeClientTestCase.class,
 				ComparatorSortTestCase.class,
 				CreateIndexInheritedTestCase.class,
-				CustomActivationDepthTestCase.class,
 				DeepSetTestCase.class,
 				DeleteDeepTestCase.class,
 				DifferentAccessPathsTestCase.class,
