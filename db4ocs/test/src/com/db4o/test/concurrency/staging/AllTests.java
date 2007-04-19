@@ -11,8 +11,9 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 	}
 
 	protected Class[] testCases() {
-		return new Class[] { 
-				SwitchingFilesFromClientTestCase.class,
+		return new Class[] {
+			CustomActivationDepthTestCase.class,
+			SwitchingFilesFromClientTestCase.class,
 		};
 	}
 
