@@ -37,7 +37,7 @@ public class TestResult extends Printable {
 		if (failure == null) {
 			print("\t!");
 		} else {
-			print("\t! " + failure.getMessage());
+			print("\t! " + failure);
 		}
 	}
 
