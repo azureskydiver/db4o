@@ -48,7 +48,7 @@ public class DualDeleteTestCase extends Db4oClientServerTestCase {
 			assertOccurrences(oc2, Atom.class, 0);
 			oc1.commit();
 			assertOccurrences(oc1, Atom.class, 1);
-			assertOccurrences(oc2, Atom.class, 1);
+			assertOccurrences(oc2, Atom.class, 0);
 			deleteAll(oc2, DualDeleteTestCase.class);
 			oc2.commit();
 			assertOccurrences(oc1, Atom.class, 0);
