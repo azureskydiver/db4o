@@ -2,25 +2,21 @@
 
 package com.db4o.db4ounit.common.io;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-import com.db4o.io.CachedIoAdapter;
-import com.db4o.io.IoAdapter;
-import com.db4o.io.RandomAccessFileAdapter;
+import com.db4o.io.*;
 
-import db4ounit.Assert;
-import db4ounit.CodeBlock;
-import db4ounit.TestCase;
-import db4ounit.TestLifeCycle;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class IoAdapterTest implements TestCase, TestLifeCycle {
+public class IoAdapterTest implements Db4oTestCase {
 
 	private String _cachedIoAdapterFile = "CachedIoAdapter.dat";
 
 	private String _randomAccessFileAdapterFile = "_randomAccessFileAdapter.dat";
 
 	private IoAdapter[] _adapters;
+
 
 	public void setUp() throws Exception {
 		deleteAllTestFiles();
@@ -127,31 +123,7 @@ public class IoAdapterTest implements TestCase, TestLifeCycle {
 		readBytes = adapter.read(read);
 		Assert.areEqual(1200 + data.length, readBytes);		
 	}
-
-	public void testReadWriteTooMuch() throws Exception {
-		for (int i = 0; i < _adapters.length; i++) {
-			assertReadWriteTooMuch(_adapters[i]);
-		}
-	}
 	
-	private void assertReadWriteTooMuch(final IoAdapter adapter) throws Exception {
-		final byte[] data = "hello".getBytes();
-		final byte[] buffer = new byte[1];
-		adapter.seek(0);
-		adapter.write(data);
-		adapter.seek(0);
-		Assert.expect(Exception.class, new CodeBlock () {
-			public void run() throws Throwable {
-				adapter.read(buffer, buffer.length+1);
-			}
-		});
-		Assert.expect(Exception.class, new CodeBlock () {
-			public void run() throws Throwable {
-				adapter.write(buffer, buffer.length+1);
-			}
-		});
-	}
-
 	public void testReopen() throws Exception {
 		testReadWrite();
 		closeAdapters();
