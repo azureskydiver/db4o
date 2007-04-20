@@ -45,7 +45,7 @@ public class JdkReflector implements Reflector{
 		try {
 			return classLoader == null ? Class.forName(className) : Class
 					.forName(className, true, classLoader);
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			// e.printStackTrace();
 		} catch (LinkageError e) {
 			// e.printStackTrace();
