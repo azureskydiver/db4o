@@ -971,9 +971,17 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		Data next=data.next;
 		return next.bool && data.bool;
 	}
-	
+		
 	public void testInvalidLocalVarCombinedComp() throws Exception {
 		assertInvalid("sampleInvalidLocalVarCombinedComp");
+	}
+	
+	boolean sampleInvalidNotOptimizableMethodCallCombined(Data data) {
+		return data.getName().indexOf(STRING_CMPVAL)>=0&&data.bool;
+	}
+	
+	public void testInvalidNotOptimizableMethodCallCombined() throws Exception {
+		assertInvalid("sampleInvalidNotOptimizableMethodCallCombined");
 	}
 
 	boolean sampleInvalidOtherMemberSameComp(Data data) {
