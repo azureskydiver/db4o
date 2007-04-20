@@ -300,8 +300,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	public void visitCallExpr(CallExpr expr) {
 		boolean isStatic = (expr instanceof CallStaticExpr);
 		if (!isStatic && expr.method().name().equals("<init>")) {
-			retval(null);
-			return;
+			throw new EarlyExitException();
 		}
 		if (!isStatic && expr.method().name().equals("equals")) {
 			CallMethodExpr call = (CallMethodExpr) expr;
@@ -327,7 +326,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		MemberRef methodRef = expr.method();
 		if (methodStack.contains(methodRef) || methodStack.size() > MAX_DEPTH) {
-			return;
+			throw new EarlyExitException();
 		}
 		methodStack.addLast(methodRef);
 		boolean addedLocals=false;
@@ -339,8 +338,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				ComparisonOperand curparam = (ComparisonOperand) purgeReturnValue();
 				if ((curparam instanceof ComparisonOperandAnchor)
 						&& (((ComparisonOperandAnchor) curparam).root() == CandidateFieldRoot.INSTANCE)) {
-					retval(null);
-					return;
+					throw new EarlyExitException();
 				}
 				params.add(curparam);
 			}
@@ -381,7 +379,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 			FlowGraph flowGraph = bloatUtil.flowGraph(declaringClass.className(), methodRef.name(),methodRef.type().paramTypes());
 			if (flowGraph == null) {
-				return;
+				throw new EarlyExitException();
 			}
 			if (NQDebug.LOG) {
 				System.out
@@ -390,6 +388,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 			flowGraph.visit(this);
 			Object methodRetval = purgeReturnValue();
+			if(methodRetval==null) {
+				throw new EarlyExitException();
+			}
 			retval(methodRetval);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
