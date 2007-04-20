@@ -15,7 +15,7 @@ public class ReflectPlatform {
 	public static Class forName(String className) {
 		try {
 			return Class.forName(className);
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			// e.printStackTrace();
 		} catch (LinkageError e) {
 			// e.printStackTrace();
