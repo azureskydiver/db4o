@@ -30,21 +30,7 @@ public class HashtableModifiedUpdateDepthTestCase extends Db4oClientServerTestCa
 		store(this);
 	}
 
-	public void test1() {
-		ExtObjectContainer oc = openNewClient();
-		try {
-			Hashtable ht1 = (Hashtable) oc.query(Hashtable.class).next();
-			ht1.put("hi", "updated");
-			Hashtable ht2 = (Hashtable) oc.query(Hashtable.class).next();
-			// FIXME: do we have to refresh ? 
-			// oc.refresh(ht2, Integer.MAX_VALUE);
-			Assert.areEqual("five", ht2.get("hi"));
-		} finally {
-			oc.close();
-		}
-	}
-
-	public void test2() {
+	public void test() {
 		ExtObjectContainer oc1 = openNewClient();
 		ExtObjectContainer oc2 = openNewClient();
 		try {
