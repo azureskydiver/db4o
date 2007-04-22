@@ -37,7 +37,11 @@ public class TransactionalReferenceSystem implements ReferenceSystem{
 	public void commit(){
 		traveseNewReferences(new Visitor4() {
 			public void visit(Object obj) {
-				_committedReferences.addExistingReference((ObjectReference)obj);
+				ObjectReference oref = (ObjectReference)obj;
+				Object referent = oref.getObject();
+				if(referent != null){
+					_committedReferences.addExistingReference(oref);
+				}
 			}
 		});
 		createNewReferences();
