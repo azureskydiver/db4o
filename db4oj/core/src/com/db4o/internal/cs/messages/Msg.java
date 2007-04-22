@@ -262,13 +262,8 @@ public abstract class Msg implements Cloneable {
 					sock.write(payLoad()._buffer);
 					sock.flush();
 				} catch (Exception e) {
-                    
-                    // Note: It is not sufficient to catch IoException only
-                    // here. .NET will throw different exceptions if a socket
-                    // is disconnected.
-                    
-					// TODO: handle more softly in YapClient, maybe
-					// try to reconnect
+                    // TODO: .NET convert SocketException to IOException
+					// and let IOException bubble up.
                     
 				}
 			}

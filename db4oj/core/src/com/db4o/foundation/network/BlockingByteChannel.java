@@ -126,11 +126,12 @@ class BlockingByteChannel {
         }
     }
 
-    public void write(byte[] bytes) {
+    public void write(byte[] bytes) throws IOException {
     	write(bytes, 0, bytes.length);
     }
     
-	public void write(final byte[] bytes, final int off, final int len) {
+	public void write(final byte[] bytes, final int off, final int len) throws IOException {
+		checkClosed();
 		i_lock.run(new SafeClosure4() {
 			public Object run() {
 				makefit(len);
@@ -142,7 +143,8 @@ class BlockingByteChannel {
 		});
 	}
 
-    public void write(final int i) {
+    public void write(final int i) throws IOException {
+    	checkClosed();
 		i_lock.run(new SafeClosure4() {
 			public Object run() {
 				makefit(1);
@@ -151,5 +153,11 @@ class BlockingByteChannel {
 				return null;
 			}
 		});
+	}
+
+	private void checkClosed() throws IOException {
+		if(i_closed) {
+			throw new IOException();
+		}		
 	}
 }

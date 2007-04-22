@@ -47,7 +47,7 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 		if (toGet > 0) {
 			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(container.getTransaction(),
 					idsToGet, toGet);
-			container.writeMsg(msg, true);
+			container.write(msg);
 			MsgD response = (MsgD) container.expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
 			int embeddedMessageCount = response.readInt();
 			for (int i = 0; i < embeddedMessageCount; i++) {

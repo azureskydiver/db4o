@@ -21,9 +21,9 @@ final class ClientTransaction extends Transaction {
     	commitTransactionListeners();
         clearAll();
         if(isSystemTransaction()){
-        	i_client.writeMsg(Msg.COMMIT_SYSTEMTRANS, true);
+        	i_client.write(Msg.COMMIT_SYSTEMTRANS);
         }else{
-        	i_client.writeMsg(Msg.COMMIT, true);
+        	i_client.write(Msg.COMMIT);
         	i_client.expectedResponse(Msg.OK);
         }
     }
@@ -49,7 +49,7 @@ final class ClientTransaction extends Transaction {
         	return false;
         }
         MsgD msg = Msg.TA_DELETE.getWriterForInts(this, new int[] {id, cascade});
-        i_client.writeMsg(msg, false);
+        i_client.writeBatchedMessage(msg);
         return true;
     }
 
@@ -61,7 +61,7 @@ final class ClientTransaction extends Transaction {
 
         // We need a better strategy for C/S concurrency behaviour.
         MsgD msg = Msg.TA_IS_DELETED.getWriterForInt(this, a_id);
-		i_client.writeMsg(msg, true);
+		i_client.write(msg);
         int res = i_client.expectedByteResponse(Msg.TA_IS_DELETED).readInt();
         return res == 1;
     }
@@ -93,7 +93,7 @@ final class ClientTransaction extends Transaction {
             });
         }
         i_delete = null;
-		i_client.writeMsg(Msg.PROCESS_DELETES, false);
+		i_client.writeBatchedMessage(Msg.PROCESS_DELETES);
     }
     
     public void rollback() {
@@ -106,7 +106,7 @@ final class ClientTransaction extends Transaction {
         int a_cascade) {
     	MsgD msg = Msg.WRITE_UPDATE_DELETE_MEMBERS.getWriterForInts(this,
 				new int[] { a_id, a_yc.getID(), a_type, a_cascade });
-		i_client.writeMsg(msg, false);
+		i_client.writeBatchedMessage(msg);
     }
 
 	public void setPointer(int a_id, int a_address, int a_length) {
