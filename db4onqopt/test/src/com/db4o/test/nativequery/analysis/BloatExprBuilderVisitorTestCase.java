@@ -1163,7 +1163,21 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void testNotApplicableIfStringAppendCondition() throws Exception {
 		assertInvalid("sampleNotApplicableIfStringAppendCondition");
 	}
-	
+
+	boolean sampleNotApplicableSideEffectIfThenBranch(Data data) {
+		if(data.getName().equals("foo")) {
+			intMember+=data.getId();
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void testNotApplicableSideEffectIfThenBranch() throws Exception {
+		assertInvalid("sampleNotApplicableSideEffectIfThenBranch");
+	}
+
 	// internal
 	
 	private void assertComparison(String methodName, String fieldName,Object value, ComparisonOperator op,boolean negated) {

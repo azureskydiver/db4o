@@ -223,8 +223,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			return;
 		}
 		if (!(retval instanceof ThreeWayComparison)) {
-			expression(null);
-			return;
+			throw new EarlyExitException();
 		}
 		ThreeWayComparison cmp = (ThreeWayComparison) retval;
 		Expression expr = null;
@@ -282,8 +281,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		if (!(left instanceof FieldValue)
 				|| !(right instanceof ComparisonOperand)) {
-			expression(null);
-			return;
+			throw new EarlyExitException();
 		}
 		FieldValue fieldExpr = (FieldValue) left;
 		ComparisonOperand valueExpr = (ComparisonOperand) right;
@@ -516,8 +514,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		left.visit(this);
 		Object leftObj = purgeReturnValue();
 		if (!(leftObj instanceof ComparisonOperand)) {
-			expression(null);
-			return;
+			throw new EarlyExitException();
 		}
 		ComparisonOperand leftOp = (ComparisonOperand) leftObj;
 		right.visit(this);
@@ -647,13 +644,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		expr.left().visit(this);
 		Object leftObj = purgeReturnValue();
 		if (!(leftObj instanceof ComparisonOperand)) {
-			return;
+			throw new EarlyExitException();
 		}
 		ComparisonOperand left = (ComparisonOperand) leftObj;
 		expr.right().visit(this);
 		Object rightObj = purgeReturnValue();
 		if (!(rightObj instanceof ComparisonOperand)) {
-			return;
+			throw new EarlyExitException();
 		}
 		ComparisonOperand right = (ComparisonOperand) rightObj;
 		boolean swapped = false;
@@ -699,8 +696,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		ComparisonOperand idxOp = (ComparisonOperand) purgeReturnValue();
 		if (arrayOp == null || idxOp == null
 				|| arrayOp.root() == CandidateFieldRoot.INSTANCE) {
-			retval(null);
-			return;
+			throw new EarlyExitException();
 		}
 		retval(new ArrayAccessValue(arrayOp, idxOp));
 	}
@@ -756,6 +752,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 		}
 		return null;
+	}
+	
+	public void visitStoreExpr(StoreExpr expr) {
+		if(!(expr.target() instanceof StackExpr)) {
+			throw new EarlyExitException();
+		}
+		super.visitStoreExpr(expr);
 	}
 	
 	private static class EarlyExitException extends RuntimeException {
