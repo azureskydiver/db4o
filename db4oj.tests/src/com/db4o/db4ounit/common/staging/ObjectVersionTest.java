@@ -1,6 +1,7 @@
-package com.db4o.db4ounit.common.assorted;
+package com.db4o.db4ounit.common.staging;
 
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.ext.*;
 
 import db4ounit.Assert;

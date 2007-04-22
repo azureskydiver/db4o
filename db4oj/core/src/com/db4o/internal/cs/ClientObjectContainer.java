@@ -136,7 +136,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
 		try {
-			writeMsg(Msg.CLOSE, true);
+			write(Msg.CLOSE);
 		} catch (Exception e) {
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
@@ -168,7 +168,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
     }
 	
 	Socket4 createParalellSocket() throws IOException {
-		writeMsg(Msg.GET_THREAD_ID, true);
+		write(Msg.GET_THREAD_ID);
 		
 		int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
 
@@ -201,8 +201,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	public boolean createClassMetadata(ClassMetadata a_yapClass, ReflectClass a_class,
 			ClassMetadata a_superYapClass) {
-		writeMsg(Msg.CREATE_CLASS.getWriterForString(systemTransaction(), a_class
-				.getName()), true);
+		write(Msg.CREATE_CLASS.getWriterForString(systemTransaction(), a_class.getName()));
 		Msg resp = getResponse();
 		if (resp == null) {
 			return false;
@@ -242,17 +241,17 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	private void sendClassMeta(ReflectClass reflectClass) {
 		ClassInfo classMeta = _classMetaHelper.getClassMeta(reflectClass);
-		writeMsg(Msg.CLASS_META.getWriter(Serializer.marshall(systemTransaction(),classMeta)), true);
+		write(Msg.CLASS_META.getWriter(Serializer.marshall(systemTransaction(),classMeta)));
 	}
 	
 	public long currentVersion() {
-		writeMsg(Msg.CURRENT_VERSION, true);
+		write(Msg.CURRENT_VERSION);
 		return ((MsgD) expectedResponse(Msg.ID_LIST)).readLong();
 	}
 
 	public final boolean delete4(Transaction ta, ObjectReference yo, int a_cascade, boolean userCall) {
 		MsgD msg = Msg.DELETE.getWriterForInts(i_trans, new int[] { yo.getID(), userCall ? 1 : 0 });
-		writeMsg(msg, false);
+		writeBatchedMessage(msg);
 		return true;
 	}
 
@@ -293,7 +292,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	public AbstractQueryResult getAll(Transaction trans) {
 		int mode = config().queryEvaluationMode().asInt();
 		MsgD msg = Msg.GET_ALL.getWriterForInt(trans, mode);
-		writeMsg(msg, true);
+		write(msg);
 		return readQueryResult(trans);
 	}
 
@@ -350,7 +349,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			return yc;
 		}
 		MsgD msg = Msg.CLASS_NAME_FOR_ID.getWriterForInt(systemTransaction(), a_id);
-		writeMsg(msg, true);
+		write(msg);
 		MsgD message = (MsgD) expectedResponse(Msg.CLASS_NAME_FOR_ID);
 		String className = message.readString();
 		if (className != null && className.length() > 0) {
@@ -373,7 +372,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	public Db4oDatabase identity() {
 		if (i_db == null) {
-			writeMsg(Msg.IDENTITY, true);
+			write(Msg.IDENTITY);
 			Buffer reader = expectedByteResponse(Msg.ID_LIST);
 			showInternalClasses(true);
 			try {
@@ -426,7 +425,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		Buffer reader = null;
 		if (remainingIDs < 1) {
 			MsgD msg = Msg.PREFETCH_IDS.getWriterForInt(i_trans, prefetchIDCount);
-			writeMsg(msg, true);
+			write(msg);
 			reader = expectedByteResponse(Msg.ID_LIST);
 			for (int i = prefetchIDCount - 1; i >= 0; i--) {
 				_prefetchedIDs[i] = reader.readInt();
@@ -451,7 +450,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	public void raiseVersion(long a_minimumVersion) {
-		writeMsg(Msg.RAISE_VERSION.getWriterForLong(i_trans, a_minimumVersion), true);
+		write(Msg.RAISE_VERSION.getWriterForLong(i_trans, a_minimumVersion));
 	}
 
 	public void readBytes(byte[] bytes, int address, int addressOffset, int length) {
@@ -461,7 +460,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	public void readBytes(byte[] a_bytes, int a_address, int a_length) {
 		MsgD msg = Msg.READ_BYTES.getWriterForInts(i_trans, new int[] {
 				a_address, a_length });
-		writeMsg(msg, true);
+		write(msg);
 		Buffer reader = expectedByteResponse(Msg.READ_BYTES);
 		System.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
 	}
@@ -473,7 +472,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	public final StatefulBuffer readWriterByID(Transaction a_ta, int a_id) {
 		MsgD msg = Msg.READ_OBJECT.getWriterForInt(a_ta, a_id);
-		writeMsg(msg, true);
+		write(msg);
 		StatefulBuffer bytes = ((MsgObject) expectedResponse(Msg.OBJECT_TO_CLIENT))
 				.unmarshall();
 		if(bytes != null){
@@ -485,7 +484,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	public final StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids) {
 		try {
 			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(a_ta, ids, ids.length);
-			writeMsg(msg, true);
+			write(msg);
 			MsgD response = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
 			int count = response.readInt();
 			StatefulBuffer[] yapWriters = new StatefulBuffer[count];
@@ -527,7 +526,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	void readThis() {
-		writeMsg(Msg.GET_CLASSES.getWriter(systemTransaction()), true);
+		write(Msg.GET_CLASSES.getWriter(systemTransaction()));
 		Buffer bytes = expectedByteResponse(Msg.GET_CLASSES);
 		classCollection().setID(bytes.readInt());
 		createStringIO(bytes.readByte());
@@ -541,7 +540,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			if (name == null) {
 				throw new NullPointerException();
 			}
-			writeMsg(Msg.RELEASE_SEMAPHORE.getWriterForString(i_trans, name), true);
+			write(Msg.RELEASE_SEMAPHORE.getWriterForString(i_trans, name));
 		}
 	}
 
@@ -560,14 +559,14 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		if (i_config.batchMessages()) {
 			clearBatchedObjects();
 		} 
-		writeMsg(Msg.ROLLBACK, true);
+		write(Msg.ROLLBACK);
 		i_trans.rollback();
 	}
 
 	public void send(Object obj) {
 		synchronized (i_lock) {
 			if (obj != null) {
-				writeMsg(Msg.USER_MESSAGE.getWriter(Serializer.marshall(i_trans,obj)), true);
+				write(Msg.USER_MESSAGE.getWriter(Serializer.marshall(i_trans,obj)));
 			}
 		}
 	}
@@ -584,7 +583,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			}
 			MsgD msg = Msg.SET_SEMAPHORE.getWriterForIntString(i_trans,
 					timeout, name);
-			writeMsg(msg, true);
+			write(msg);
 			Msg message = getResponse();
 			return (message.equals(Msg.SUCCESS));
 		}
@@ -594,7 +593,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		synchronized (i_lock) {
 			commit();
 			MsgD msg = Msg.SWITCH_TO_FILE.getWriterForString(i_trans, fileName);
-			writeMsg(msg, true);
+			write(msg);
 			expectedResponse(Msg.OK);
 			// FIXME NSC
 			reReadAll(Db4o.cloneConfiguration());
@@ -605,7 +604,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	public void switchToMainFile() {
 		synchronized (i_lock) {
 			commit();
-			writeMsg(Msg.SWITCH_TO_MAIN_FILE, true);
+			write(Msg.SWITCH_TO_MAIN_FILE);
 			expectedResponse(Msg.OK);
 			// FIXME NSC
 			reReadAll(Db4o.cloneConfiguration());
@@ -640,7 +639,11 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		writeMsg(msg, true);
 	}
 	
-	public final void writeMsg(Msg a_message, boolean flush) {
+	public final void writeBatchedMessage(Msg msg) {
+		writeMsg(msg, false);
+	}
+	
+	private final void writeMsg(Msg a_message, boolean flush) {
 		if(i_config.batchMessages()) {
 			if(flush && _batchedMessages.isEmpty()) {
 				// if there's nothing batched, just send this message directly
@@ -662,7 +665,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	
 	public final void writeNew(ClassMetadata a_yapClass, StatefulBuffer aWriter) {
 		MsgD msg = Msg.WRITE_NEW.getWriter(a_yapClass, aWriter);
-		writeMsg(msg, false);
+		writeBatchedMessage(msg);
 	}
     
 	public final void writeTransactionPointer(int a_address) {
@@ -671,7 +674,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	public final void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes) {
 		MsgD msg = Msg.WRITE_UPDATE.getWriter(a_yapClass, a_bytes);
-		writeMsg(msg, false);
+		writeBatchedMessage(msg);
 	}
 
 	public boolean isAlive() {
@@ -725,7 +728,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
     
     public long[] getIDsForClass(Transaction trans, ClassMetadata clazz){
     	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInt(trans, clazz.getID());
-    	writeMsg(msg, true);
+    	write(msg);
     	Buffer reader = expectedByteResponse(Msg.ID_LIST);
     	int size = reader.readInt();
     	final long[] ids = new long[size];
@@ -749,7 +752,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
     	query.evaluationMode(config().queryEvaluationMode());
         query.marshall();
 		MsgD msg = Msg.QUERY_EXECUTE.getWriter(Serializer.marshall(trans,query));
-		writeMsg(msg, true);
+		write(msg);
 		return readQueryResult(trans);
     }
 

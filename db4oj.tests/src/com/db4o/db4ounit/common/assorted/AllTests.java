@@ -3,8 +3,6 @@
 package com.db4o.db4ounit.common.assorted;
 
 
-import com.db4o.db4ounit.common.cs.*;
-
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
@@ -38,7 +36,6 @@ public class AllTests extends Db4oTestSuite {
             MultiDeleteTestCase.class,
             NakedObjectTestCase.class,
             ObjectMarshallerTestCase.class,
-            ObjectVersionTest.class,
             PersistStaticFieldValuesTestCase.class,
             PersistTypeTestCase.class,
             PreventMultipleOpenTestCase.class,
