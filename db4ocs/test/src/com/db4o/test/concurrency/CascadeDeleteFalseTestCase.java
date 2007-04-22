@@ -37,10 +37,15 @@ public class CascadeDeleteFalseTestCase extends Db4oClientServerTestCase {
 		if (os.size() == 0) { // the object has been deleted
 			return;
 		}
+		if(! os.hasNext()){
+			// object can be deleted after query 
+			return;
+		}
 		CascadeDeleteFalseTestCase cdf = (CascadeDeleteFalseTestCase) os.next();
 		// sleep 1000 ms, waiting for other threads.
-		Thread.sleep(1000);
+		// Thread.sleep(500);
 		oc.delete(cdf);
+		oc.commit();
 		assertOccurrences(oc, CascadeDeleteFalseTestCase.class, 0);
 		assertOccurrences(oc, CascadeDeleteFalseHelper.class, 1);
 	}
