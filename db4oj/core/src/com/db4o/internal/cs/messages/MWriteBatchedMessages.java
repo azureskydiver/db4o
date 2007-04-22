@@ -16,12 +16,13 @@ public class MWriteBatchedMessages extends MsgD implements ServerSideMessage {
 			clonedMessage.setMessageDispatcher(messageDispatcher());
 			clonedMessage.setTransaction(ta);
 			if (clonedMessage instanceof MsgD) {
-				MsgD mso = (MsgD) clonedMessage;
-				mso.payLoad(writer);
-				if (mso.payLoad() != null) {
-					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH - Const4.INT_LENGTH);
-					mso.payLoad().setTransaction(ta);
-					((ServerSideMessage)mso).processAtServer();
+				MsgD msgd = (MsgD) clonedMessage;
+				msgd.payLoad(writer);
+				if (msgd.payLoad() != null) {
+					msgd.payLoad().incrementOffset(Const4.INT_LENGTH);
+					Transaction t = checkParentTransaction(ta, msgd.payLoad());
+					msgd.setTransaction(t);
+					((ServerSideMessage)msgd).processAtServer();
 				}
 			} else {
 				((ServerSideMessage)clonedMessage).processAtServer();

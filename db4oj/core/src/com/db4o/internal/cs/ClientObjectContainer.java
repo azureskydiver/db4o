@@ -490,7 +490,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			StatefulBuffer[] yapWriters = new StatefulBuffer[count];
 			for (int i = 0; i < count; i++) {
 				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.publicClone();
-				mso.setTransaction(getTransaction());
+				mso.setTransaction(a_ta);
 				mso.payLoad(response.payLoad().readYapBytes());
 				if (mso.payLoad() != null) {
 					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
