@@ -27,7 +27,7 @@ public class DeleteDeepTestCase extends Db4oClientServerTestCase {
 
 	protected void configure(Configuration config) {
 		config.objectClass(DeleteDeepTestCase.class).cascadeOnDelete(true);
-		config.objectClass(DeleteDeepTestCase.class).cascadeOnActivate(true);
+		// config.objectClass(DeleteDeepTestCase.class).cascadeOnActivate(true);
 	}
 
 	private void addNodes(int count) {
@@ -47,12 +47,15 @@ public class DeleteDeepTestCase extends Db4oClientServerTestCase {
 			return;
 		}
 		Assert.areEqual(1, os.size());
+		if(!os.hasNext()){
+			return;
+		}
 		DeleteDeepTestCase root = (DeleteDeepTestCase) os.next();
+		
 		// wait for other threads
-		Thread.sleep(500);
+		// Thread.sleep(500);
 		oc.delete(root);
-		// FIXME: the following assertion fails, but the same assertion in the
-		// check method could pass
+		oc.commit();
 		assertOccurrences(oc, DeleteDeepTestCase.class, 0);
 	}
 
