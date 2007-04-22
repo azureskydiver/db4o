@@ -28,8 +28,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         super(config,null);
         _fileLock = new Object();
         _fileName = fileName;
-        open();
         _freespaceFiller=createFreespaceFiller();
+        open();
     }
 
     protected final void openImpl() throws OpenDatabaseException {
