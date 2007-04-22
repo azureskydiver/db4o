@@ -35,25 +35,32 @@ public class TransientClone {
     public void testOne(){
         ExtObjectContainer oc = Test.objectContainer();
         oc.activate(this, Integer.MAX_VALUE);
-        TransientClone originalValues = cmp(this, false);
+        TransientClone originalValues = peekPersisted(false);
+        cmp(this, originalValues);
         oc.deactivate(this, Integer.MAX_VALUE);
-        TransientClone modified = cmp(originalValues, false);
+        TransientClone modified = peekPersisted(false);
+        cmp(originalValues, modified);
         oc.activate(this, Integer.MAX_VALUE);
+        
         modified.str = "changed";
         modified.molecules[0].name = "changed";
         str = "changed";
         molecules[0].name = "changed";
         oc.set(molecules[0]);
         oc.set(this);
-        cmp(originalValues, true);
-        cmp(modified, false);
+
+        TransientClone tc = peekPersisted(true);
+        cmp(originalValues, tc);
+        
+        tc = peekPersisted(false);
+        cmp(modified, tc);
+        
         oc.commit();
-        cmp(modified, true);
+        tc = peekPersisted(true);
+        cmp(modified, tc);
     }
     
-    private TransientClone cmp(TransientClone to, boolean committed){
-        ExtObjectContainer oc = Test.objectContainer();
-        TransientClone tc = (TransientClone)oc.peekPersisted(this, Integer.MAX_VALUE, committed);
+    private TransientClone cmp(TransientClone to, TransientClone tc){
         Test.ensure(tc != to);
         Test.ensure(tc.list != to);
         Test.ensure(tc.list.size() == to.list.size());
@@ -84,4 +91,10 @@ public class TransientClone {
         Test.ensure(tcm.child.name.equals(tom.child.name));
         return tc;
     }
+
+	private TransientClone peekPersisted(boolean committed) {
+		ExtObjectContainer oc = Test.objectContainer();
+        TransientClone tc = (TransientClone)oc.peekPersisted(this, Integer.MAX_VALUE, committed);
+		return tc;
+	}
 }
