@@ -13,6 +13,7 @@ public class MWriteBatchedMessages extends MsgD implements ServerSideMessage {
 			int messageId = writer.readInt();
 			Msg message = Msg.getMessage(messageId);
 			Msg clonedMessage = message.publicClone();
+			clonedMessage.setMessageDispatcher(messageDispatcher());
 			clonedMessage.setTransaction(ta);
 			if (clonedMessage instanceof MsgD) {
 				MsgD mso = (MsgD) clonedMessage;
