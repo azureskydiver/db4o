@@ -362,10 +362,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		Iterator4 i = iterateDispatchers();
 		while(i.moveNext()){
 			ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) i.current();
-			if(message.serverMessageDispatcher() != dispatcher){
-				if(dispatcher.caresAboutCommitted()){
-					dispatcher.writeIfAlive(message);
-				}
+			if(dispatcher.caresAboutCommitted()){
+				dispatcher.writeIfAlive(message);
 			}
 		}
 	}
