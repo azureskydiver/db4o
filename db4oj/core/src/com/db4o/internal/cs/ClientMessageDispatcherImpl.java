@@ -4,6 +4,7 @@ package com.db4o.internal.cs;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.cs.messages.*;
@@ -42,6 +43,9 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 					}
 				}
 			} catch (IOException exc) {
+//				if(Debug.atHome){
+//					exc.printStackTrace();
+//				}
 				close();
 				message = Msg.ERROR;
 			}
