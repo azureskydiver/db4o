@@ -1,5 +1,6 @@
 package com.db4o.db4ounit.common.events;
 
+import com.db4o.db4ounit.util.CrossPlatformServices;
 import com.db4o.events.*;
 
 import db4ounit.*;
@@ -21,7 +22,10 @@ public class ClassRegistrationEventsTestCase extends AbstractDb4oTestCase {
 		registry.classRegistered().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				ClassEventArgs classEventArgs = (ClassEventArgs) args;
-				Assert.areEqual(Data.class.getName(), classEventArgs.classMetadata().getName());
+				Assert.areEqual(
+						Data.class.getName(),
+						CrossPlatformServices.simpleName(
+								classEventArgs.classMetadata().getName()));
 				eventFlag._eventOccurred = true;
 			}
 		});

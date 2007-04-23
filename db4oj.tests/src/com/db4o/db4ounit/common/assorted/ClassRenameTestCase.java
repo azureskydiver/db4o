@@ -2,10 +2,11 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.config.*;
+import com.db4o.config.ObjectClass;
+import com.db4o.db4ounit.util.CrossPlatformServices;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.Assert;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 
 public class ClassRenameTestCase extends AbstractDb4oTestCase{
@@ -50,7 +51,9 @@ public class ClassRenameTestCase extends AbstractDb4oTestCase{
 
         // allways rename fields first
         oc.objectField("originalName").rename("changedName");
-        oc.rename(Changed.class.getName());
+        // we must use ReflectPlatform here as the string must include
+        // the assembly name in .net
+        oc.rename(CrossPlatformServices.fullyQualifiedName(Changed.class));
 
         reopen();
         
