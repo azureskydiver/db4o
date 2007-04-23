@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.stored;
 
+import com.db4o.db4ounit.util.CrossPlatformServices;
 import com.db4o.ext.*;
 
 import db4ounit.*;
@@ -49,12 +50,6 @@ public class ArrayStoredTypeTestCase extends AbstractDb4oTestCase {
 				type.getName(),
 				// getName() also contains the assembly name in .net
 				// so we better remove it for comparison
-				simpleName(field.getStoredType().getName()));
-	}
-
-	private String simpleName(String name) {
-		int index = name.indexOf(',');
-		if (index < 0) return name;
-		return name.substring(0, index);
+				CrossPlatformServices.simpleName(field.getStoredType().getName()));
 	}
 }
