@@ -87,6 +87,9 @@ public class MCommittedInfo extends MsgD implements ClientSideMessage {
 		final CallbackObjectInfoCollections callbackInfos = decode();
 		new Thread(new Runnable() {
 			public void run() {
+				if(stream().isClosed()){
+					return;
+				}
 				stream().callbacks().commitOnCompleted(transaction(), callbackInfos);
 			}
 		}).start();
