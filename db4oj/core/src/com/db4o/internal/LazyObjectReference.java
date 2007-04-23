@@ -24,20 +24,31 @@ public class LazyObjectReference implements ObjectInfo{
 	}
 
 	public Object getObject() {
-		return reference().getObject();
+		synchronized(containerLock()){
+			return reference().getObject();
+		}
 	}
 
 	public Db4oUUID getUUID() {
-		return reference().getUUID();
+		synchronized(containerLock()){
+			return reference().getUUID();
+		}
 	}
 
 	public long getVersion() {
-		return reference().getVersion();
+		synchronized(containerLock()){
+			return reference().getVersion();
+		}
 	}
 	
 	private ObjectReference reference() {
 		final HardObjectReference hardRef = _transaction.stream().getHardObjectReferenceById(_transaction, _id);
 		return hardRef._reference;
+	}
+	
+	private Object containerLock(){
+		_transaction.stream().checkClosed();
+		return _transaction.stream().lock();
 	}
 
 }
