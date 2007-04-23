@@ -76,15 +76,11 @@
 		<element name="args" optional="yes" />
 		
 		<sequential>
-			<java jvm="${file.jvm.jdk1.5}" classname="org.eclipse.core.launcher.Main"
-				fork="yes"
-				failonerror="true"
-				timeout="1800000"
-				maxmemory="512M">
-				<classpath>
-					<pathelement location="${eclipse.home}/startup.jar" />
-				</classpath>
-				
+			<exec executable="${file.jvm.jdk1.5}" failonerror="true" timeout="1800000">
+				<arg value="-Xmx512m" />
+				<arg value="-cp" />
+				<arg value="${eclipse.home}/startup.jar" />
+				<arg value="org.eclipse.core.launcher.Main" />
 				<arg value="-data" />
 				<arg file="@{workspace}" />
 				<arg value="-application" />
@@ -92,8 +88,8 @@
 				<arg value="@{resource}" />
 				
 				<args />
-					
-			</java>
+				
+			</exec>
 		</sequential>
 	</macrodef>
 	
