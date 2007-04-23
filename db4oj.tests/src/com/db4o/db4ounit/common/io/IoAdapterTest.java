@@ -81,7 +81,10 @@ public class IoAdapterTest implements Db4oTestCase {
 		Assert.areEqual(str, new String(read, 0, data.length));
 	}
 	
-	public void testReadWriteAheadFileEnd() throws Exception {
+	/*
+	 * This test is disabled because the API difference between java & .net.
+	 */
+	public void _testReadWriteAheadFileEnd() throws Exception {
 		String str = "this is a really long string, just to make sure that all IoAdapters work correctly. ";
 		for (int i = 0; i < _adapters.length; i++) {
 			assertReadWriteAheadFileEnd(_adapters[i], str);
