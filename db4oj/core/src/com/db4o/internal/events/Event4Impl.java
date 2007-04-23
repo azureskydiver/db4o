@@ -10,6 +10,7 @@ import com.db4o.foundation.*;
  * @sharpen.ignore
  */
 public class Event4Impl implements Event4 {
+	
 	private Collection4 _listeners;
 	
 	public Event4Impl() {
@@ -18,12 +19,24 @@ public class Event4Impl implements Event4 {
 	public final void addListener(EventListener4 listener) {
 		validateListener(listener);
 		
-		if (null == _listeners) {
-			_listeners = new Collection4();
-		}
-		_listeners.add(listener);
+		Collection4 listeners = new Collection4();
+		listeners.add(listener);
+		addExistingListenersTo(listeners);
+		_listeners = listeners;
+		
 		onListenerAdded();
-	}	
+	}
+	
+	private void addExistingListenersTo(Collection4 newListeners){
+		if(_listeners == null){
+			return;
+		}
+		Iterator4 i = _listeners.iterator();
+		while(i.moveNext()){
+			newListeners.add(i.current());
+		}
+		
+	}
 
 	/**
 	 * Might be overriden whenever specific events need
@@ -35,22 +48,21 @@ public class Event4Impl implements Event4 {
 	public final void removeListener(EventListener4 listener) {
 		validateListener(listener);
 		
-		if (null != _listeners) {
-			Object removed = _listeners.remove(listener);
-			if (null == removed) {
-				return;
-			}
-			if (0 == _listeners.size()) {
-				_listeners = null;
-			}
+		if (null == _listeners) {
+			return;
 		}
+		
+		Collection4 listeners = new Collection4();
+		addExistingListenersTo(listeners);
+		listeners.remove(listener);
+		
+		_listeners = listeners;
 	}
 	
 	public final void trigger(EventArgs args) {
 		if (null == _listeners) {
 			return;
 		}
-		
 		Iterator4 iterator = _listeners.iterator();
 		while (iterator.moveNext()) {
 			EventListener4 listener = (EventListener4)iterator.current();
@@ -64,7 +76,7 @@ public class Event4Impl implements Event4 {
 	
 	private void validateListener(EventListener4 listener) {
 		if (null == listener) {
-			throw new ArgumentNullException("listener");
+			throw new ArgumentNullException();
 		}
 	}
 
