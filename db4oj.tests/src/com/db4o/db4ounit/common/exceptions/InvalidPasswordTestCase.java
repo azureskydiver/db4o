@@ -1,12 +1,11 @@
 /* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.exceptions;
 
-import com.db4o.Db4o;
-import com.db4o.internal.cs.InvalidPasswordException;
+import com.db4o.*;
+import com.db4o.internal.cs.*;
 
-import db4ounit.Assert;
-import db4ounit.CodeBlock;
-import db4ounit.extensions.Db4oClientServerTestCase;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 public class InvalidPasswordTestCase extends Db4oClientServerTestCase {
 
