@@ -8,6 +8,8 @@ public interface Db4oClientServerFixture extends Db4oFixture {
 	
 	public ObjectServer server();
 	
+	public int serverPort();
+	
 	public ExtObjectContainer openNewClient();
 
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2006 - 2007 db4objects Inc.  http://www.db4o.com */
 
 package db4ounit.extensions.fixtures;
 
@@ -159,5 +159,9 @@ public class Db4oClientServer extends
 
 	public String getLabel() {
 		return "C/S" + (_embeddedClient ? " Embedded" : "");
+	}
+
+	public int serverPort() {
+		return _port;
 	}
 }
