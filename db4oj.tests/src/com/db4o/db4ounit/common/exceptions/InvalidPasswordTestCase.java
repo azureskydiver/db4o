@@ -1,60 +1,47 @@
 /* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.exceptions;
 
-import java.io.*;
+import com.db4o.Db4o;
+import com.db4o.internal.cs.InvalidPasswordException;
 
-import com.db4o.*;
-import com.db4o.internal.cs.*;
+import db4ounit.Assert;
+import db4ounit.CodeBlock;
+import db4ounit.extensions.Db4oClientServerTestCase;
 
-import db4ounit.*;
+public class InvalidPasswordTestCase extends Db4oClientServerTestCase {
 
-public class InvalidPasswordTestCase implements TestCase, TestLifeCycle {
-
-	private static final String DB_FILE = "server.db4o";
-
-	private static final int PORT = 0xdb40;
-
-	private static final String USER = "db4o";
-
-	private static final String PASSWORD = "db4o";
-
-	private ObjectServer _server;
-
-	public void setUp() throws Exception {
-		new File(DB_FILE).delete();
-		_server = Db4o.openServer(DB_FILE, PORT);
-		_server.grantAccess(USER, PASSWORD);
+	public static void main(String[] args) {
+		new InvalidPasswordTestCase().runClientServer();
 	}
-
-	public void tearDown() throws Exception {
-		_server.close();
-	}
-
+	
 	public void testInvalidPassword() {
+		final int port = clientServerFixture().serverPort();
 		Assert.expect(InvalidPasswordException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4o.openClient("127.0.0.1", PORT, "hello", "invalid");
+				Db4o.openClient("127.0.0.1", port, "strangeusername",
+						"invalidPassword");
 			}
 
 		});
 	}
 	
 	public void testEmptyPassword() {
+		final int port = clientServerFixture().serverPort();
 		Assert.expect(InvalidPasswordException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4o.openClient("127.0.0.1", PORT, "", "");
+				Db4o.openClient("127.0.0.1", port, "", "");
 			}
 		});
 		
 		Assert.expect(InvalidPasswordException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4o.openClient("127.0.0.1", PORT, "", null);
+				Db4o.openClient("127.0.0.1", port, "", null);
 			}
 		});
 		
 		Assert.expect(InvalidPasswordException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4o.openClient("127.0.0.1", PORT, null, null);
+				Db4o.openClient("127.0.0.1", port, null, null);
 			}
 		});
 	}
