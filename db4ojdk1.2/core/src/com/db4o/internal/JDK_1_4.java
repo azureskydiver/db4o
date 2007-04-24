@@ -46,7 +46,7 @@ class JDK_1_4 extends JDK_1_3 {
 		if (fl == null) {
 			return;
 		}
-		invoke(fl, "release", null, null);
+		invoke("java.nio.channels.FileLock", "release", null, null, fl);
 		fileLocks.remove(path);
 	}
 	
