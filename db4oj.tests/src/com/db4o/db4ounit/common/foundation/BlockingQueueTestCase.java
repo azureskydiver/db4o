@@ -41,6 +41,21 @@ public class BlockingQueueTestCase extends Queue4TestCaseBase {
 		Assert.isGreater(500, end - start);
 	}
 
+	public void testStop() {
+		final BlockingQueue queue = new BlockingQueue();
+		String[] data = { "a", "b", "c", "d" };
+		queue.add(data[0]);
+		Assert.areSame(data[0], queue.next());
+
+		StopThread notifyThread = new StopThread(queue);
+		notifyThread.start();
+		Assert.expect(BlockingQueueStoppedException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				queue.next();
+			}
+		});		
+	}
+
 	private static class NotifyThread extends Thread {
 		private Queue4 _queue;
 
@@ -60,4 +75,22 @@ public class BlockingQueueTestCase extends Queue4TestCaseBase {
 			_queue.add(_data);
 		}
 	}
+	
+	private static class StopThread extends Thread {
+		private BlockingQueue _queue;
+
+		StopThread(BlockingQueue queue) {
+			_queue = queue;
+		}
+
+		public void run() {
+			try {
+				Thread.sleep(1000);
+			} catch (Exception e) {
+			
+			}
+			_queue.stop();
+		}
+	}
+
 }
