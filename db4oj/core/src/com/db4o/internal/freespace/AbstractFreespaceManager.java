@@ -90,7 +90,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     
     public abstract int totalFreespace();
     
-    protected abstract void freeSelf();
+    public abstract void freeSelf();
     
     public abstract int getSlot(int length);
     
