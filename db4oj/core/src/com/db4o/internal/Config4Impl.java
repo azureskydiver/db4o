@@ -73,7 +73,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec FREESPACE_FILLER=new KeySpec(null);
 
-	private final static KeySpec FREESPACE_SYSTEM=new KeySpec(FreespaceManager.FM_DEFAULT);
+	private final static KeySpec FREESPACE_SYSTEM=new KeySpec(AbstractFreespaceManager.FM_DEFAULT);
     
 	private final static KeySpec GENERATE_UUIDS=new KeySpec(ConfigScope.INDIVIDUALLY);
     
@@ -562,11 +562,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void useRamSystem() {
-        _config.put(FREESPACE_SYSTEM,FreespaceManager.FM_RAM);
+        _config.put(FREESPACE_SYSTEM,AbstractFreespaceManager.FM_RAM);
     }
 
     public void useIndexSystem() {
-        _config.put(FREESPACE_SYSTEM,FreespaceManager.FM_IX);
+        _config.put(FREESPACE_SYSTEM,AbstractFreespaceManager.FM_IX);
     }
     
     public void weakReferenceCollectionInterval(int milliseconds) {

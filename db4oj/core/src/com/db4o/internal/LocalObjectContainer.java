@@ -28,7 +28,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     private Collection4         i_dirty;
     
-    private FreespaceManager _freespaceManager;
+    private AbstractFreespaceManager _freespaceManager;
     
     // can be used to check freespace system
     private FreespaceManager _fmChecker;
@@ -89,7 +89,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         generateNewIdentity();
         
-        _freespaceManager = FreespaceManager.createNew(this);
+        _freespaceManager = AbstractFreespaceManager.createNew(this);
         
         if(Debug.freespaceChecker){
             _fmChecker = new FreespaceManagerRam(this);
@@ -202,9 +202,9 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             // is up, during conversion.
            return;
         }
-        _freespaceManager.free(a_address, a_length);
+        _freespaceManager.free(new Slot(a_address, a_length));
         if(Debug.freespace && Debug.freespaceChecker){
-            _fmChecker.free(a_address, a_length);
+            _fmChecker.free(new Slot(a_address, a_length));
         }
     }
 
@@ -303,7 +303,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
                     Iterator4 i = wrongOnes.iterator();
                     while(i.moveNext()){
                         int[] adrLength = (int[])i.current();
-                        _fmChecker.free(adrLength[0], adrLength[1]);
+                        _fmChecker.free(new Slot(adrLength[0], adrLength[1]) );
                     }
                     if(freeCheck == 0){
                         _freespaceManager.debug();
@@ -503,7 +503,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
     void readThis() throws IOException {
         
-        newSystemData(FreespaceManager.FM_LEGACY_RAM);
+        newSystemData(AbstractFreespaceManager.FM_LEGACY_RAM);
         blockSizeReadFromFile(1);
         
         _fileHeader = FileHeader.readFixedPart(this);
@@ -517,7 +517,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         readHeaderVariablePart();
         
-        _freespaceManager = FreespaceManager.createNew(this, _systemData.freespaceSystem());
+        _freespaceManager = AbstractFreespaceManager.createNew(this, _systemData.freespaceSystem());
         _freespaceManager.read(_systemData.freespaceID());
        
         if(Debug.freespace){
@@ -532,11 +532,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         }
         
         if(_freespaceManager.requiresMigration(configImpl().freespaceSystem(), _systemData.freespaceSystem())){
-        	FreespaceManager oldFreespaceManager = _freespaceManager;
-        	_freespaceManager = FreespaceManager.createNew(this, _systemData.freespaceSystem());
-        	_freespaceManager.start(newFreespaceSlot(_systemData.freespaceSystem()));
-        	FreespaceManager.migrate(oldFreespaceManager, _freespaceManager);
-            _fileHeader.writeVariablePart(this, 1);
+        	migrateFreespace();
         }
         
         writeHeader(true, false);
@@ -557,20 +553,28 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
     }
 
+	private void migrateFreespace() throws IOException {
+		AbstractFreespaceManager oldFreespaceManager = _freespaceManager;
+		_freespaceManager = AbstractFreespaceManager.createNew(this, _systemData.freespaceSystem());
+		_freespaceManager.start(createFreespaceSlot(_systemData.freespaceSystem()));
+		AbstractFreespaceManager.migrate(oldFreespaceManager, _freespaceManager);
+		_fileHeader.writeVariablePart(this, 1);
+	}
+
 	private void readHeaderVariablePart() {
 		_fileHeader.readVariablePart(this);
         setNextTimeStampId(systemData().lastTimeStampID());
 	}
     
-    public int newFreespaceSlot(byte freespaceSystem){
-        _systemData.freespaceAddress(FreespaceManager.initSlot(this));
+    public final int createFreespaceSlot(byte freespaceSystem){
+        _systemData.freespaceAddress(AbstractFreespaceManager.initSlot(this));
         _systemData.freespaceSystem(freespaceSystem);
         return _systemData.freespaceAddress();
     }
     
     public void ensureFreespaceSlot(){
         if(systemData().freespaceAddress() == 0){
-            newFreespaceSlot(systemData().freespaceSystem());
+            createFreespaceSlot(systemData().freespaceSystem());
         }
     }
 
@@ -802,7 +806,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 		return _fileHeader;
 	}
 
-    public void installDebugFreespaceManager(FreespaceManager manager) {
+    public void installDebugFreespaceManager(AbstractFreespaceManager manager) {
         _freespaceManager = manager;
     }
 

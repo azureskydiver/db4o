@@ -38,19 +38,28 @@ public class BlockingQueue implements Queue4 {
 		});
 	}
 
-	public Object next() {
-		try {
-			return _lock.run(new Closure4() {
-				public Object run() throws Exception {
-					if (_queue.hasNext()) {
-						return _queue.next();
-					}
-					_lock.snooze(Integer.MAX_VALUE);
+	public Object next() throws BlockingQueueStoppedException {
+		return _lock.run(new SafeClosure4() {
+			public Object run() {
+				if (_queue.hasNext()) {
 					return _queue.next();
 				}
-			});
-		} catch (Exception e) {
-			throw new Db4oUnexpectedException(e);
-		}
+				_lock.snooze(Integer.MAX_VALUE);
+				Object obj = _queue.next();
+				if(obj == null){
+					throw new BlockingQueueStoppedException();
+				}
+				return obj;
+			}
+		});
+	}
+	
+	public void stop(){
+		_lock.run(new SafeClosure4() {
+			public Object run() {
+				_lock.awake();
+				return null;
+			}
+		});
 	}
 }

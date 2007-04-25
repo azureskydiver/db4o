@@ -34,14 +34,6 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
 	}
 
 	private void freeOldUUIDMetaIndex(LocalObjectContainer file) {
-        FileHeader fh = file.getFileHeader();
-        if(! (fh instanceof FileHeader0)){
-            return;
-        }
-		final MetaIndex metaIndex = ((FileHeader0)fh).getUUIDMetaIndex();
-        if(metaIndex == null){
-            return;
-        }
-        file.free(metaIndex.indexAddress, metaIndex.indexLength);
+		// updating removed here to allow removing MetaIndex class
 	}
 }

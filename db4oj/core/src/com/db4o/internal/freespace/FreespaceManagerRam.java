@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
 
-public class FreespaceManagerRam extends FreespaceManager {
+public class FreespaceManagerRam extends AbstractFreespaceManager {
     
     private final TreeIntObject _finder   = new TreeIntObject(0);
 
@@ -68,10 +68,16 @@ public class FreespaceManagerRam extends FreespaceManager {
         // do nothing
     }
     
-    public void free(int address, int length) {
+    public void free(Slot slot) {
+    	
+    	int address = slot._address;
+    	int length = slot._length;
         
         if (address <= 0) {
-            return;
+        	return;
+        	
+        	// TODO: FB change to this:
+        	// throw new IllegalStateException();
         }
         
         if (length <= discardLimit()) {
@@ -131,7 +137,7 @@ public class FreespaceManagerRam extends FreespaceManager {
         // The RAM manager frees itself on reading.
     }
     
-    public int freeSize() {
+    public int totalFreespace() {
         final MutableInt mint = new MutableInt();
         Tree.traverse(_freeBySize, new Visitor4() {
             public void visit(Object obj) {
@@ -181,7 +187,7 @@ public class FreespaceManagerRam extends FreespaceManager {
                     FreeSlotNode fsn = (FreeSlotNode)a_object;
                     int address = fsn._key;
                     int length = fsn._peer._key;
-                    newFM.free(address, length);
+                    newFM.free(new Slot(address, length));
                 }
             });
         }

@@ -7,7 +7,7 @@ import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
 
-public class FreespaceManagerForDebug extends FreespaceManager {
+public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 
     private final SlotListener _listener;
 
@@ -32,15 +32,15 @@ public class FreespaceManagerForDebug extends FreespaceManager {
         return 0;
     }
 
-    public void free(int address, int length) {
-        _listener.onFree(new Slot(address, length));
+    public void free(Slot slot) {
+        _listener.onFree(slot);
     }
 
     public void freeSelf() {
 
     }
 
-    public int freeSize() {
+    public int totalFreespace() {
         return 0;
     }
 
