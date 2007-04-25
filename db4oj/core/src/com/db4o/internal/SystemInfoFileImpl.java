@@ -37,7 +37,7 @@ public class SystemInfoFileImpl implements SystemInfo{
             return 0;
         }
         long blockSize = _file.blockSize();
-        long blockedSize = freespaceManager().freeSize();
+        long blockedSize = freespaceManager().totalFreespace();
         return blockSize * blockedSize;
     }
 

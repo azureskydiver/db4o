@@ -8,9 +8,10 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.ix.*;
+import com.db4o.internal.slots.*;
 
 
-public class FreespaceManagerIx extends FreespaceManager{
+public class FreespaceManagerIx extends AbstractFreespaceManager{
     
     private int _slotAddress;
     
@@ -87,7 +88,10 @@ public class FreespaceManagerIx extends FreespaceManager{
         return _addressIx.entryCount();
     }
     
-    public void free(int address, int length) {
+    public void free(Slot slot) {
+    	
+    	int address = slot._address;
+    	int length = slot._length;
         
         if(! started()){
             return;
@@ -143,7 +147,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         _lengthIx._index._metaIndex.free(_file);
     }
     
-    public int freeSize() {
+    public int totalFreespace() {
         return _addressIx.freeSize();
     }
 
@@ -194,7 +198,7 @@ public class FreespaceManagerIx extends FreespaceManager{
         }
         final IntObjectVisitor addToNewFM = new IntObjectVisitor(){
             public void visit(int length, Object address) {
-                newFM.free(((Integer)address).intValue(), length);
+                newFM.free(new Slot(((Integer)address).intValue(), length));
             }
         };
         Tree.traverse(_addressIx._indexTrans.getRoot(), new Visitor4() {

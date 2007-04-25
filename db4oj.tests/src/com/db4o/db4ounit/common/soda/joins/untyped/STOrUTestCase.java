@@ -5,6 +5,10 @@ import com.db4o.query.*;
 
 
 public class STOrUTestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseTestCase {
+	
+	public static void main(String[] arguments) {
+		new STOrUTestCase().runAll();
+	}
 
 	public Object orInt;
 	public Object orString;

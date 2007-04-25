@@ -19,12 +19,18 @@ public class CommittedCallbacksDispatcher implements Runnable {
 	
 	public void run () {
 		while(! _stopped){
-			MCommittedInfo committedInfos =   (MCommittedInfo) _committedInfosQueue.next();
+			MCommittedInfo committedInfos;
+			try {
+				committedInfos = (MCommittedInfo) _committedInfosQueue.next();
+			} catch (BlockingQueueStoppedException e) {
+				break;
+			}
 			_server.sendCommittedInfoMsg(committedInfos);
 		}
 	}
 	
 	public void stop(){
+		_committedInfosQueue.stop();
 		_stopped = true;
 	}
 

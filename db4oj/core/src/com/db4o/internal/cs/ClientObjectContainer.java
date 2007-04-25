@@ -147,6 +147,9 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		} catch (Exception e) {
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
+		
+		_messageQueue.stop();
+		
 		try {
 			i_socket.close();
 		} catch (Exception e) {
@@ -307,7 +310,12 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	private Msg getResponseMultiThreaded() {
-		Msg msg = (Msg)_messageQueue.next();
+		Msg msg;
+		try {
+			msg = (Msg)_messageQueue.next();
+		} catch (BlockingQueueStoppedException e) {
+			msg = Msg.ERROR;
+		}
 		if(msg == Msg.ERROR) {	
 			onMsgError();
 		}
@@ -318,7 +326,6 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		close();
 		throw new Db4oException(Messages.get(Messages.CLOSED_OR_OPEN_FAILED));
 	}
-
 	
 	private Msg getResponseSingleThreaded() {
 		while (isMessageDispatcherAlive()) {
