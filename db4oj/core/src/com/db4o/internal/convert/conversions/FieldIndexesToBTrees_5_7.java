@@ -2,11 +2,9 @@
 
 package com.db4o.internal.convert.conversions;
 
-import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.convert.ConversionStage.*;
-import com.db4o.internal.fileheader.*;
 
 
 /**
