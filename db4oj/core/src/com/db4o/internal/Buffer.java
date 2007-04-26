@@ -201,22 +201,15 @@ public class Buffer implements SlotReader {
     }
     
     public String toString() {
-        try {
-            String str = "";
-            for (int i = 0; i < _buffer.length; i++) {
-                if(i > 0){
-                   str += " , ";
-                }
-                str += _buffer[i];
-            }
-            return str;
-        } catch (Exception e) {
-            if(Deploy.debug || Debug.atHome) {
-                e.printStackTrace();
-            }
-        }
-        return "";
-    }
+		String str = "";
+		for (int i = 0; i < _buffer.length; i++) {
+			if (i > 0) {
+				str += " , ";
+			}
+			str += _buffer[i];
+		}
+		return str;
+	}
     
     public void writeBegin(byte a_identifier) {
         if (Deploy.debug) {
