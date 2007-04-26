@@ -183,7 +183,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         return 0;
     }
 
-    public void migrate(final FreespaceManager newFM) {
+    public void migrateTo(final FreespaceManager newFM) {
         if(! started()){
             return;
         }
@@ -244,7 +244,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         return FM_IX;
     }
 
-    public int shutdown() {
+    public int write() {
         return 0;  // no special ID, FreespaceIX information is stored in fileheader variable part 
     }
 

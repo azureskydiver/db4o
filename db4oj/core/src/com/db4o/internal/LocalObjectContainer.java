@@ -530,7 +530,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             _fmChecker.start(0);
         }
         
-        if(_freespaceManager.requiresMigration(configImpl().freespaceSystem(), _systemData.freespaceSystem())){
+        if(needFreespaceMigration()){
         	migrateFreespace();
         }
         
@@ -551,6 +551,13 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         }
         
     }
+    
+    private boolean needFreespaceMigration() {
+		byte readSystem = _systemData.freespaceSystem();
+		byte configuredSystem = configImpl().freespaceSystem();
+		return (configuredSystem != 0 || readSystem == AbstractFreespaceManager.FM_LEGACY_RAM)
+			&& (_freespaceManager.systemType() != configuredSystem);
+	}
 
 	private void migrateFreespace() throws IOException {
 		AbstractFreespaceManager oldFreespaceManager = _freespaceManager;
@@ -737,12 +744,12 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         int freespaceID=DEFAULT_FREESPACE_ID;
         if(shuttingDown){
-            freespaceID = _freespaceManager.shutdown();
+            freespaceID = _freespaceManager.write();
             _freespaceManager = null;
         }
         
         if(Debug.freespace && Debug.freespaceChecker){
-            freespaceID = _fmChecker.shutdown();
+            freespaceID = _fmChecker.write();
         }
         
         // FIXME: blocksize should be already valid in FileHeader

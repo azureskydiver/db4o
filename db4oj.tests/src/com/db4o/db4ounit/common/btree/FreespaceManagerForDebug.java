@@ -44,7 +44,7 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
         return null;
     }
 
-    public void migrate(FreespaceManager newFM) {
+    public void migrateTo(FreespaceManager newFM) {
 
     }
 
@@ -64,7 +64,7 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
         return FM_DEBUG;
     }
 
-    public int shutdown() {
+    public int write() {
         return 0;
     }
 

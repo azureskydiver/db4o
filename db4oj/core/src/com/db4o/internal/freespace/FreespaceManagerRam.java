@@ -179,7 +179,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
     }
     
 
-    public void migrate(final FreespaceManager newFM) {
+    public void migrateTo(final FreespaceManager newFM) {
         if(_freeByAddress != null){
             _freeByAddress.traverse(new Visitor4() {
                 public void visit(Object a_object) {
@@ -242,7 +242,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         return (LocalTransaction)_file.systemTransaction();
     }
 
-    public int shutdown(){
+    public int write(){
         int freeBySizeID = 0;
         int length = TreeInt.byteCount((TreeInt)_freeBySize);
         
