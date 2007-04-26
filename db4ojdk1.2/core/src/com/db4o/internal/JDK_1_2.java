@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.internal;
 
@@ -106,8 +106,13 @@ class JDK_1_2 extends JDKReflect {
 	}
 
     void setAccessible(Object a_accessible) {
-        ((java.lang.reflect.AccessibleObject) a_accessible).setAccessible(true);
-    }
+		try {
+			((java.lang.reflect.AccessibleObject) a_accessible)
+					.setAccessible(true);
+		} catch (SecurityException e) {
+
+		}
+	}
     
     public Object weakReferenceTarget(Object weakRef){
         if(weakRef instanceof WeakReference){
