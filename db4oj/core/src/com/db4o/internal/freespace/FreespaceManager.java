@@ -32,16 +32,15 @@ public interface FreespaceManager {
 
 	public Slot getSlot(int length);
 
-	public void migrate(FreespaceManager newFM);
+	public void migrateTo(FreespaceManager fm);
 
-	public void read(int freeSlotsID);
+	public void read(int freeSpaceID);
 
+//	 TODO: FB delete method when FreespaceManagerIx is removed
 	public void start(int slotAddress) throws IOException;
 
 	public byte systemType();
 
-	public int shutdown();
-
-	public boolean requiresMigration(byte configuredSystem, byte readSystem);
+	public int write();
 
 }

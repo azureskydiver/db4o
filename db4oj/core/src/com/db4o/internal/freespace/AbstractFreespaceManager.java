@@ -2,11 +2,8 @@
 
 package com.db4o.internal.freespace;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.slots.*;
 
 public abstract class AbstractFreespaceManager implements FreespaceManager {
     
@@ -80,12 +77,8 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return _file.configImpl().discardFreeSpace();
     }
     
-    public boolean requiresMigration(byte configuredSystem, byte readSystem) {
-        return (configuredSystem != 0 || readSystem == FM_LEGACY_RAM ) && (systemType() != configuredSystem);
-    }
-
     public static void migrate(FreespaceManager oldFM, FreespaceManager newFM) {
-    	oldFM.migrate(newFM);
+    	oldFM.migrateTo(newFM);
     	oldFM.freeSelf();
     	newFM.beginCommit();
     	newFM.endCommit();
