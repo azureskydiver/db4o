@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.internal;
 
@@ -664,32 +664,22 @@ public class FieldMetadata implements StoredField {
     }
 
     private TypeHandler4 loadJavaField1() {
-        try {
-            ReflectClass claxx = _clazz.classReflector();
-            if(claxx == null){
-                return null;
-            }
-            i_javaField = claxx.getDeclaredField(i_name);
-            if (i_javaField == null) {
-                return null;
-            }
-            i_javaField.setAccessible();
-            
-            ObjectContainerBase stream = _clazz.getStream();
-            stream.showInternalClasses(true);
-            try {
-	            return stream.i_handlers.handlerForClass(stream,
-	                i_javaField.getFieldType());
-            } finally {
-            	stream.showInternalClasses(false);
-            }
-        } catch (Exception e) {
-            if (Debug.atHome) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
+		ReflectClass claxx = _clazz.classReflector();
+		if (claxx == null) {
+			return null;
+		}
+		i_javaField = claxx.getDeclaredField(i_name);
+		if (i_javaField == null) {
+			return null;
+		}
+		i_javaField.setAccessible();
+		ObjectContainerBase stream = _clazz.getStream();
+		stream.showInternalClasses(true);
+		TypeHandler4 handlerForClass = stream.i_handlers.handlerForClass(
+				stream, i_javaField.getFieldType());
+		stream.showInternalClasses(false);
+		return handlerForClass;
+	}
 
     public void marshall(
             ObjectReference yo, 
