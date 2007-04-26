@@ -28,7 +28,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     private Collection4         i_dirty;
     
-    private AbstractFreespaceManager _freespaceManager;
+    private FreespaceManager _freespaceManager;
     
     // can be used to check freespace system
     private FreespaceManager _fmChecker;
@@ -560,7 +560,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 	}
 
 	private void migrateFreespace() throws IOException {
-		AbstractFreespaceManager oldFreespaceManager = _freespaceManager;
+		FreespaceManager oldFreespaceManager = _freespaceManager;
 		_freespaceManager = AbstractFreespaceManager.createNew(this, _systemData.freespaceSystem());
 		_freespaceManager.start(createFreespaceSlot(_systemData.freespaceSystem()));
 		AbstractFreespaceManager.migrate(oldFreespaceManager, _freespaceManager);
@@ -578,10 +578,12 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return _systemData.freespaceAddress();
     }
     
-    public void ensureFreespaceSlot(){
-        if(systemData().freespaceAddress() == 0){
-            createFreespaceSlot(systemData().freespaceSystem());
+    public int ensureFreespaceSlot(){
+        int address = systemData().freespaceAddress();
+		if(address == 0){
+            return createFreespaceSlot(systemData().freespaceSystem());
         }
+        return address;
     }
 
     public void releaseSemaphore(String name) {

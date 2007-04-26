@@ -192,8 +192,9 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         }
     }
     
-    public void onNew(LocalObjectContainer file) {
+    public int onNew(LocalObjectContainer file) {
 		// do nothing
+    	return 0;
 	}
     
     public void read(int freeSlotsID) {

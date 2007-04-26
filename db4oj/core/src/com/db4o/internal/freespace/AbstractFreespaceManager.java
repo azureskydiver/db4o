@@ -32,7 +32,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return createNew(file, file.systemData().freespaceSystem());
     }
     
-	public abstract void onNew(LocalObjectContainer file);
+	public abstract int onNew(LocalObjectContainer file);
     
     public static AbstractFreespaceManager createNew(LocalObjectContainer file, byte systemType){
         systemType = checkType(systemType);

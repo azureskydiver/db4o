@@ -24,7 +24,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
 
     private final boolean _overwriteDeletedSlots;
     
-    FreespaceManagerIx(LocalObjectContainer file){
+    public FreespaceManagerIx(LocalObjectContainer file){
         super(file);
         _overwriteDeletedSlots=Debug.xbytes||file.config().freespaceFiller()!=null;
     }
@@ -200,8 +200,8 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         });
     }
     
-	public void onNew(LocalObjectContainer file) {
-		file.ensureFreespaceSlot();
+	public int onNew(LocalObjectContainer file) {
+		return file.ensureFreespaceSlot();
 	}
     
     public void read(int freespaceID) {
