@@ -77,8 +77,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
             }
         }
         long pos = 0;
-        int bufferlength = 8192;
-        byte[] buffer = new byte[bufferlength];
+        byte[] buffer = new byte[8192];
         while(true){
             synchronized (i_lock) {
                 _file.seek(pos);
@@ -89,11 +88,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 _backupFile.seek(pos);
                 _backupFile.write(buffer, read);
                 pos += read;
-            }
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                
             }
         }
 

@@ -650,12 +650,10 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             long waitTime = timeout;
             while (waitTime > 0) {
                 try {
-                    i_semaphores.wait(waitTime);
-                } catch (Exception e) {
-                    if (Debug.atHome) {
-                        e.printStackTrace();
-                    }
-                }
+					i_semaphores.wait(waitTime);
+				} catch (InterruptedException e) {
+					// ignore
+				}
                 if (classCollection() == null) {
                     return false;
                 }
