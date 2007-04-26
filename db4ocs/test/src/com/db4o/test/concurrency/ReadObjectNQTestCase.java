@@ -2,8 +2,7 @@
 
 package com.db4o.test.concurrency;
 
-import java.util.*;
-
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.test.persistent.*;
@@ -28,7 +27,7 @@ public class ReadObjectNQTestCase extends Db4oClientServerTestCase {
 	public void concReadSameObject(ExtObjectContainer oc) throws Exception {
 		int mid = threadCount() / 2;
 		final SimpleObject expected = new SimpleObject(testString + mid, mid);
-		List<SimpleObject> result = oc.query(new MyPredicate(expected));
+		ObjectSet<SimpleObject> result = oc.query(new MyPredicate(expected));
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(expected, result.get(0));
 	}
@@ -36,7 +35,7 @@ public class ReadObjectNQTestCase extends Db4oClientServerTestCase {
 	public void concReadDifferentObject(ExtObjectContainer oc, int seq)
 			throws Exception {
 		final SimpleObject expected = new SimpleObject(testString + seq, seq);
-		List<SimpleObject> result = oc.query(new MyPredicate(expected));
+		ObjectSet<SimpleObject> result = oc.query(new MyPredicate(expected));
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(expected, result.get(0));
 	}
