@@ -261,17 +261,11 @@ public final class HandlerRegistry {
 
 		// sort constructors by parameter count
 		for (int i = 0; i < constructors.length; i++) {
-			try {
-				constructors[i].setAccessible();
-				int parameterCount = constructors[i].getParameterTypes().length;
-				sortedConstructors = Tree.add(sortedConstructors,
-						new TreeIntObject(i + constructors.length
-								* parameterCount, constructors[i]));
-			} catch (SecurityException e) {
-				if (Debug.atHome) {
-					e.printStackTrace();
-				}
-			}
+			constructors[i].setAccessible();
+			int parameterCount = constructors[i].getParameterTypes().length;
+			sortedConstructors = Tree.add(sortedConstructors,
+					new TreeIntObject(i + constructors.length * parameterCount,
+							constructors[i]));
 		}
 		return sortedConstructors;
 	}
