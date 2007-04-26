@@ -42,26 +42,25 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         // do nothing
     }
     
-    public void debug(){
-        if(Debug.freespace){
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println("Dumping RAM based address index");
-            _freeByAddress.traverse(new Visitor4() {
-            
-                public void visit(Object a_object) {
-                    System.out.println(a_object);
-                }
-            
-            });
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println("Dumping RAM based length index");
-            _freeBySize.traverse(new Visitor4() {
-                  public void visit(Object a_object) {
-                      System.out.println(a_object);
-                  }
-              });
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-        }
+    public String toString(){
+    	final StringBuffer sb = new StringBuffer();
+    	sb.append("RAM FreespaceManager\n");
+    	sb.append("Address Index\n");
+        _freeByAddress.traverse(new Visitor4() {
+            public void visit(Object obj) {
+            	sb.append(obj);
+            	sb.append("\n");
+            }
+        
+        });
+        sb.append("Length Index\n");
+        _freeBySize.traverse(new Visitor4() {
+              public void visit(Object obj) {
+                  sb.append(obj);
+                  sb.append("\n");
+              }
+          });
+        return sb.toString();
     }
     
     public void endCommit() {
@@ -74,10 +73,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
     	int length = slot._length;
         
         if (address <= 0) {
-        	return;
-        	
-        	// TODO: FB change to this:
-        	// throw new IllegalStateException();
+        	throw new IllegalArgumentException();
         }
         
         if (length <= discardLimit()) {
@@ -148,7 +144,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         return mint.value();
     }
     
-    public int getSlot(int length) {
+    public Slot getSlot(int length) {
         int address = getSlot1(length);
         
         if(DTrace.enabled){
@@ -156,7 +152,10 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
                 DTrace.GET_FREESPACE_RAM.logLength(address, length);
             }
         }
-        return address;
+        if(address == 0){
+        	return null;
+        }
+        return new Slot(address, length);
     }
     
     public int getSlot1(int length) {
@@ -257,10 +256,8 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         return freeBySizeID;
     }
 
-    public int entryCount() {
+    public int slotCount() {
         return Tree.size(_freeByAddress);
     }
-
-
 
 }

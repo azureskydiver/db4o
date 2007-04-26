@@ -76,39 +76,15 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return _file.blockSize();
     }
     
-    public abstract void debug();
-    
     final int discardLimit(){
         return _file.configImpl().discardFreeSpace();
     }
     
-    public abstract void endCommit();
-    
-    public abstract int entryCount();
-
-    public abstract void free(Slot slot);
-    
-    public abstract int totalFreespace();
-    
-    public abstract void freeSelf();
-    
-    public abstract int getSlot(int length);
-    
-    public abstract void migrate(FreespaceManager newFM);
-    
-    public abstract void read(int freeSlotsID);
-    
-    public abstract void start(int slotAddress) throws IOException;
-    
-    public abstract byte systemType();
-    
-    public abstract int shutdown();
-
     public boolean requiresMigration(byte configuredSystem, byte readSystem) {
         return (configuredSystem != 0 || readSystem == FM_LEGACY_RAM ) && (systemType() != configuredSystem);
     }
 
-    public static void migrate(AbstractFreespaceManager oldFM, FreespaceManager newFM) {
+    public static void migrate(FreespaceManager oldFM, FreespaceManager newFM) {
     	oldFM.migrate(newFM);
     	oldFM.freeSelf();
     	newFM.beginCommit();

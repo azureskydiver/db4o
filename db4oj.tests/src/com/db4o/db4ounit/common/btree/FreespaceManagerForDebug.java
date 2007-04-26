@@ -20,15 +20,11 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 
     }
 
-    public void debug() {
-        
-    }
-
     public void endCommit() {
 
     }
 
-    public int entryCount() {
+    public int slotCount() {
         return 0;
     }
 
@@ -44,8 +40,8 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
         return 0;
     }
 
-    public int getSlot(int length) {
-        return 0;
+    public Slot getSlot(int length) {
+        return null;
     }
 
     public void migrate(FreespaceManager newFM) {

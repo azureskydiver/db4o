@@ -13,33 +13,35 @@ import com.db4o.internal.slots.*;
 public interface FreespaceManager {
 	
 	
-	// TODO: FB delete method
-	public abstract void onNew(LocalObjectContainer file);
+	// TODO: FB delete method when FreespaceManagerIx is removed
+	public void onNew(LocalObjectContainer file);
 
-	public abstract void beginCommit();
+	// TODO: FB delete method when FreespaceManagerIx is removed
+	public void beginCommit();
 
-	public abstract void debug();
+	// TODO: FB delete method when FreespaceManagerIx is removed
+	public void endCommit();
+	
+	public int slotCount();
 
-	public abstract void endCommit();
+	public void free(Slot slot);
+	
+    public void freeSelf();
 
-	public abstract int entryCount();
+	public int totalFreespace();
 
-	public abstract void free(Slot slot);
+	public Slot getSlot(int length);
 
-	public abstract int totalFreespace();
+	public void migrate(FreespaceManager newFM);
 
-	public abstract int getSlot(int length);
+	public void read(int freeSlotsID);
 
-	public abstract void migrate(FreespaceManager newFM);
+	public void start(int slotAddress) throws IOException;
 
-	public abstract void read(int freeSlotsID);
+	public byte systemType();
 
-	public abstract void start(int slotAddress) throws IOException;
+	public int shutdown();
 
-	public abstract byte systemType();
-
-	public abstract int shutdown();
-
-	public abstract boolean requiresMigration(byte configuredSystem, byte readSystem);
+	public boolean requiresMigration(byte configuredSystem, byte readSystem);
 
 }

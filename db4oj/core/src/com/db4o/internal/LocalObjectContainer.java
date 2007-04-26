@@ -280,24 +280,23 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
     private final int getSlot1(int bytes) {
         
-        if(Deploy.debug){
-            if(bytes <= 0){
-                throw new RuntimeException("Who wants invalid zero or smaller slots ?");
-            }
+        if(bytes <= 0){
+        	throw new IllegalArgumentException();
         }
         
         if(_freespaceManager != null){
             
-            int freeAddress = _freespaceManager.getSlot(bytes);
+        	Slot slot = _freespaceManager.getSlot(bytes);
             
             if(Debug.freespace && Debug.freespaceChecker){
-                if(freeAddress > 0){
+                if(slot != null){
+                	int freeAddress = slot._address;
                     Collection4 wrongOnes = new Collection4();
-                    int freeCheck = _fmChecker.getSlot(bytes);
+                    Slot freeCheck = _fmChecker.getSlot(bytes);
                     
-                    while(freeCheck != freeAddress  && freeCheck > 0){
+                    while(freeCheck != null && freeCheck._address != freeAddress ){
                         // System.out.println("Freecheck alternative found: "  + freeCheck);
-                        wrongOnes.add(new int[]{freeCheck,bytes});
+                        wrongOnes.add(new int[]{freeCheck._address, bytes});
                         freeCheck = _fmChecker.getSlot(bytes);
                     }
                     Iterator4 i = wrongOnes.iterator();
@@ -305,15 +304,15 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
                         int[] adrLength = (int[])i.current();
                         _fmChecker.free(new Slot(adrLength[0], adrLength[1]) );
                     }
-                    if(freeCheck == 0){
-                        _freespaceManager.debug();
-                        _fmChecker.debug();
+                    if(freeCheck == null){
+                    	System.out.println(_freespaceManager);
+                    	System.out.println(_fmChecker);
                     }
                 }
             }
             
-            if(freeAddress > 0){
-                return freeAddress;
+            if(slot != null){
+                return slot._address;
             }
         }
         
