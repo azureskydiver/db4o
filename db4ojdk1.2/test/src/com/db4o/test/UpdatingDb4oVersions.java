@@ -26,8 +26,8 @@ public class UpdatingDb4oVersions {
         "db4o_4.0.004", 
         "db4o_4.1.001", 
         "db4o_4.6.003",
-        "db4o_4.6.004", 
-        "db4o_5.0.007", 
+        "db4o_4.6.004",
+        "db4o_5.0.007",
         "db4o_5.1.001",
         "db4o_5.2.001", 
         "db4o_5.2.003",
@@ -35,7 +35,9 @@ public class UpdatingDb4oVersions {
         "db4o_5.3.001", 
         "db4o_5.4.004",
         "db4o_5.5.2",
-        "db4o_5.6.2"
+        "db4o_5.6.2",
+        "db4o_6.2.001",
+        "db4o_6.2.301"
     };
 
     List list;

@@ -20,7 +20,7 @@ public class SystemInfoFileImpl implements SystemInfo{
         if(! hasFreespaceManager()){
             return 0;
         }
-        return freespaceManager().entryCount();
+        return freespaceManager().slotCount();
     }
 
     private boolean hasFreespaceManager() {

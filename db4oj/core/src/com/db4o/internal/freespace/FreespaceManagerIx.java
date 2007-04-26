@@ -41,18 +41,6 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         slotEntryToZeroes(_file, _slotAddress);
     }
     
-    public void debug(){
-        if(Debug.freespace){
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println("Dumping file based address index");
-            _addressIx.debug();
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            System.out.println("Dumping file based length index");
-            _lengthIx.debug();
-            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-        }
-    }
-    
     public void endCommit() {
         if( ! started()){
             return;
@@ -84,7 +72,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         }
     }
     
-    public int entryCount() {
+    public int slotCount() {
         return _addressIx.entryCount();
     }
     
@@ -151,9 +139,9 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         return _addressIx.freeSize();
     }
 
-    public int getSlot(int length) {
+    public Slot getSlot(int length) {
         if(! started()){
-            return 0;
+            return null;
         }
         int address = getSlot1(length);
         
@@ -162,7 +150,10 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
                 DTrace.GET_FREESPACE.logLength(address, length);
             }
         }
-        return address;
+        if(address == 0){
+        	return null;
+        }
+        return new Slot(address,length);
     }
 
     private int getSlot1(int length) {
