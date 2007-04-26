@@ -51,27 +51,15 @@ public abstract class Transaction {
     
     protected abstract void clear(); 
 
-    public void close(boolean a_rollbackOnClose) {
-        try {
-            if (stream() != null) {
-                checkSynchronization();
-                stream().releaseSemaphores(this);
-            }
-        } catch (Exception e) {
-            if (Debug.atHome) {
-                e.printStackTrace();
-            }
-        }
-        if (a_rollbackOnClose) {
-            try {
-                rollback();
-            } catch (Exception e) {
-                if (Debug.atHome) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
+    public void close(boolean rollbackOnClose) {
+		if (stream() != null) {
+			checkSynchronization();
+			stream().releaseSemaphores(this);
+		}
+		if (rollbackOnClose) {
+			rollback();
+		}
+	}
     
     public abstract void commit();    
     
