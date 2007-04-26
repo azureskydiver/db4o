@@ -14,7 +14,7 @@ public interface FreespaceManager {
 	
 	
 	// TODO: FB delete method when FreespaceManagerIx is removed
-	public void onNew(LocalObjectContainer file);
+	public int onNew(LocalObjectContainer file);
 
 	// TODO: FB delete method when FreespaceManagerIx is removed
 	public void beginCommit();
