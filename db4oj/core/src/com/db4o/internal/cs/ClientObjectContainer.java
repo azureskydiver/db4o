@@ -489,29 +489,22 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	public final StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids) {
-		try {
-			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(a_ta, ids, ids.length);
-			write(msg);
-			MsgD response = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
-			int count = response.readInt();
-			StatefulBuffer[] yapWriters = new StatefulBuffer[count];
-			for (int i = 0; i < count; i++) {
-				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.publicClone();
-				mso.setTransaction(a_ta);
-				mso.payLoad(response.payLoad().readYapBytes());
-				if (mso.payLoad() != null) {
-					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
-					yapWriters[i] = mso.unmarshall(Const4.MESSAGE_LENGTH);
-					yapWriters[i].setTransaction(a_ta);
-				}
-			}
-			return yapWriters;
-		} catch (Exception e) {
-			if(Debug.atHome) {
-				e.printStackTrace();
+		MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(a_ta, ids, ids.length);
+		write(msg);
+		MsgD response = (MsgD) expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
+		int count = response.readInt();
+		StatefulBuffer[] yapWriters = new StatefulBuffer[count];
+		for (int i = 0; i < count; i++) {
+			MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.publicClone();
+			mso.setTransaction(a_ta);
+			mso.payLoad(response.payLoad().readYapBytes());
+			if (mso.payLoad() != null) {
+				mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
+				yapWriters[i] = mso.unmarshall(Const4.MESSAGE_LENGTH);
+				yapWriters[i].setTransaction(a_ta);
 			}
 		}
-		return null;
+		return yapWriters;
 	}
 
 	public final Buffer readReaderByID(Transaction a_ta, int a_id) {
