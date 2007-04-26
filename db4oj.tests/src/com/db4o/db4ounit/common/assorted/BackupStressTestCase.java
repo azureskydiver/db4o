@@ -153,7 +153,7 @@ public class BackupStressTestCase implements TestLifeCycle {
             }
             stdout("Backup OK");
         }
-        System.out.println("BackupStressTest " + _backups + " files OK.");
+        stdout("BackupStressTest " + _backups + " files OK.");
         for (int i = 1; i <= _backups; i++) {
             deleteFile(backupFile(i));
         }

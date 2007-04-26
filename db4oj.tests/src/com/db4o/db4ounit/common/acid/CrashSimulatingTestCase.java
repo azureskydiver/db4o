@@ -98,8 +98,9 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 
         checkFiles(fileName, "R", adapterFactory.batch.numSyncs());
         checkFiles(fileName, "W", count);
-                
-        System.out.println("Total versions: " + count);        
+		if (LOG) {
+			System.out.println("Total versions: " + count);
+		}
     }
 
 	private void checkFiles(String fileName, String infix,int count) {
