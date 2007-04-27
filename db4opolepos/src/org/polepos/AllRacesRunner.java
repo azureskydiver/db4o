@@ -20,8 +20,16 @@ MA  02111-1307, USA. */
 package org.polepos;
 
 
+import org.polepos.circuits.bahrain.*;
+import org.polepos.circuits.barcelona.*;
 import org.polepos.circuits.collection.*;
+import org.polepos.circuits.imola.*;
 import org.polepos.circuits.indianapolis.*;
+import org.polepos.circuits.melbourne.*;
+import org.polepos.circuits.monaco.*;
+import org.polepos.circuits.montreal.*;
+import org.polepos.circuits.nurburgring.*;
+import org.polepos.circuits.sepang.*;
 import org.polepos.db4o.*;
 import org.polepos.framework.*;
 import org.polepos.teams.db4o.*;
@@ -50,13 +58,29 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 	public Circuit[] circuits() {
 		return new Circuit[] { 
-				new Collection(), 
-				new Indianapolis(), 
+				 new Melbourne(),
+				 new Sepang(),
+				 new Bahrain(),
+				 new Imola(),
+				 new Barcelona(),
+				 new Monaco(),
+				 new Nurburgring(),
+				 new Montreal(),
+				 new Collection(),
+				 new Indianapolis(), 
 		};
 	}
 
 	public Driver[] drivers() {
 		return new Driver [] {
+				new MelbourneDb4o(),
+		        new SepangDb4o(),
+		        new BahrainDb4o(),
+		        new ImolaDb4o(),
+		        new BarcelonaDb4o(),
+		        new MonacoDb4o(),
+		        new NurburgringDb4o(),
+		        new MontrealDb4o(),
 				new CollectionDriverImpl(),
 				new IndianapolisDb4o(),
 		};
