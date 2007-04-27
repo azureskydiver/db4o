@@ -13,9 +13,9 @@ public interface Indexable4 extends Comparable4{
 
     int linkLength();
     
-    Object readIndexEntry(Buffer a_reader);
+    Object readIndexEntry(Buffer reader);
     
-    void writeIndexEntry(Buffer a_writer, Object a_object);
+    void writeIndexEntry(Buffer writer, Object obj);
     
 	void defragIndexEntry(ReaderPair readers);
 }

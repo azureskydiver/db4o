@@ -3,7 +3,9 @@
 package com.db4o.internal.freespace;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.slots.*;
 
 public abstract class AbstractFreespaceManager implements FreespaceManager {
     
@@ -51,6 +53,14 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return address;
     }
     
+    public void migrateTo(final FreespaceManager fm) {
+    	traverse(new Visitor4() {
+			public void visit(Object obj) {
+				fm.free((Slot) obj);
+			}
+		});
+    }
+    
     static void slotEntryToZeroes(LocalObjectContainer file, int address){
         StatefulBuffer writer = new StatefulBuffer(file.systemTransaction(), address, slotLength());
         for (int i = 0; i < INTS_IN_SLOT; i++) {
@@ -65,6 +75,17 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     
     final static int slotLength(){
         return Const4.INT_LENGTH * INTS_IN_SLOT;
+    }
+    
+    public final int totalFreespace() {
+        final MutableInt mint = new MutableInt();
+        traverse(new Visitor4() {
+            public void visit(Object obj) {
+                Slot slot = (Slot) obj;
+                mint.add(slot._length);
+            }
+        });
+        return mint.value();
     }
     
     public abstract void beginCommit();

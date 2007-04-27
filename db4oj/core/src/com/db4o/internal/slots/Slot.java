@@ -2,6 +2,8 @@
 
 package com.db4o.internal.slots;
 
+import com.db4o.internal.*;
+
 /**
  * @exclude
  */
@@ -42,5 +44,19 @@ public class Slot {
     public String toString() {
     	return "[A:"+_address+",L:"+_length+"]";
     }
+    
+    public static int MARSHALLED_LENGTH = Const4.INT_LENGTH * 2;
+
+	public int compareByAddress(Slot slot) {
+		return slot._address - _address;
+	}
+	
+	public int compareByLength(Slot slot) {
+		int res = slot._length - _length;
+		if(res != 0){
+			return res;
+		}
+		return compareByAddress(slot);
+	}
     
 }

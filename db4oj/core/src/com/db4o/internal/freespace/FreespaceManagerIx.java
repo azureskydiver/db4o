@@ -135,10 +135,6 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         _lengthIx._index._metaIndex.free(_file);
     }
     
-    public int totalFreespace() {
-        return _addressIx.freeSize();
-    }
-
     public Slot getSlot(int length) {
         if(! started()){
             return null;
@@ -183,22 +179,29 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         return 0;
     }
 
-    public void migrateTo(final FreespaceManager newFM) {
+    public void migrateTo(FreespaceManager fm) {
         if(! started()){
             return;
         }
-        final IntObjectVisitor addToNewFM = new IntObjectVisitor(){
+        super.migrateTo(fm);
+    }
+    
+	public void traverse(final Visitor4 visitor) {
+        if(! started()){
+            return;
+        }
+        final IntObjectVisitor dispatcher = new IntObjectVisitor(){
             public void visit(int length, Object address) {
-                newFM.free(new Slot(((Integer)address).intValue(), length));
+            	visitor.visit(new Slot(((Integer)address).intValue(), length));
             }
         };
         Tree.traverse(_addressIx._indexTrans.getRoot(), new Visitor4() {
             public void visit(Object a_object) {
                 IxTree ixTree = (IxTree)a_object;
-                ixTree.visitAll(addToNewFM);
+                ixTree.visitAll(dispatcher);
             }
         });
-    }
+	}
     
 	public int onNew(LocalObjectContainer file) {
 		return file.ensureFreespaceSlot();
