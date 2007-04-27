@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.foundation.*;
 import com.db4o.io.*;
 
 
@@ -89,6 +90,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 _backupFile.write(buffer, read);
                 pos += read;
             }
+            Cool.sleepIgnoringInterruption(1);
         }
 
         synchronized (i_lock) {
