@@ -21,9 +21,6 @@ package org.polepos.circuits.indianapolis;
 
 import org.polepos.framework.*;
 
-import com.db4o.*;
-import com.db4o.query.*;
-
 
 public class Indianapolis extends Circuit {
 
