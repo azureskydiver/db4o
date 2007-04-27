@@ -28,7 +28,8 @@ public class FreespaceManagerTestCase extends AbstractDb4oTestCase implements Op
 		
 		fm = new FreespaceManager[]{
 			new FreespaceManagerRam(container),
-			fmIx
+			fmIx,
+			// new BTreeFreespaceManager(container)
 		};
 	}
 	

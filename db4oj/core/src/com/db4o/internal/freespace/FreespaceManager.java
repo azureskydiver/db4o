@@ -4,6 +4,7 @@ package com.db4o.internal.freespace;
 
 import java.io.*;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
@@ -40,6 +41,8 @@ public interface FreespaceManager {
 	public void start(int slotAddress) throws IOException;
 
 	public byte systemType();
+	
+	public void traverse(Visitor4 visitor);
 
 	public int write();
 

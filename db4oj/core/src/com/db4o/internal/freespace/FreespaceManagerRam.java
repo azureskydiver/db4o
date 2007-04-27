@@ -133,17 +133,6 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         // The RAM manager frees itself on reading.
     }
     
-    public int totalFreespace() {
-        final MutableInt mint = new MutableInt();
-        Tree.traverse(_freeBySize, new Visitor4() {
-            public void visit(Object obj) {
-                FreeSlotNode node = (FreeSlotNode) obj;
-                mint.add(node._key);
-            }
-        });
-        return mint.value();
-    }
-    
     public Slot getSlot(int length) {
         int address = getSlot1(length);
         
@@ -178,20 +167,21 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         return address;
     }
     
-
-    public void migrateTo(final FreespaceManager newFM) {
-        if(_freeByAddress != null){
-            _freeByAddress.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    FreeSlotNode fsn = (FreeSlotNode)a_object;
-                    int address = fsn._key;
-                    int length = fsn._peer._key;
-                    newFM.free(new Slot(address, length));
-                }
-            });
-        }
-    }
     
+    public void traverse(final Visitor4 visitor) {
+		if (_freeByAddress == null) {
+			return;
+		}
+		_freeByAddress.traverse(new Visitor4() {
+			public void visit(Object a_object) {
+				FreeSlotNode fsn = (FreeSlotNode) a_object;
+				int address = fsn._key;
+				int length = fsn._peer._key;
+				visitor.visit(new Slot(address, length));
+			}
+		});
+	}
+
     public int onNew(LocalObjectContainer file) {
 		// do nothing
     	return 0;

@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.btree;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
@@ -36,16 +37,8 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 
     }
 
-    public int totalFreespace() {
-        return 0;
-    }
-
     public Slot getSlot(int length) {
         return null;
-    }
-
-    public void migrateTo(FreespaceManager newFM) {
-
     }
 
 	public int onNew(LocalObjectContainer file) {
@@ -64,6 +57,10 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
         return FM_DEBUG;
     }
 
+	public void traverse(Visitor4 visitor) {
+		
+	}
+	
     public int write() {
         return 0;
     }
