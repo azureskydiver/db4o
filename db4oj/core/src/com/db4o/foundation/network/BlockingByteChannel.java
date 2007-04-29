@@ -40,6 +40,12 @@ class BlockingByteChannel {
 
     void close() {
         i_closed = true;
+        i_lock.run(new SafeClosure4() {
+            public Object run() {
+            	i_lock.awake();
+            	return null;
+            }
+        });
     }
 
     protected void makefit(int length) {
@@ -118,11 +124,7 @@ class BlockingByteChannel {
         	if (i_closed) {
                 throw new IOException(Messages.get(35));
             }
-            try {
-                i_lock.snooze(i_timeout);
-            } catch (Exception e) {
-                throw new IOException(Messages.get(55));
-            }
+            i_lock.snooze(i_timeout);
         }
     }
 
