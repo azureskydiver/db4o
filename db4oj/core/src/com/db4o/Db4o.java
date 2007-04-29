@@ -122,7 +122,7 @@ public class Db4o {
      * @see ObjectServer#grantAccess
 	 */
 	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
-			throws IOException {
+			throws IOException, InvalidPasswordException {
 			return new ClientObjectContainer(config,new NetworkSocket(hostName, port), user, password, true);
 	}
 

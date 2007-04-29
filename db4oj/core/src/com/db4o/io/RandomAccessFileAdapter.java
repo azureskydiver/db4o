@@ -2,13 +2,10 @@
 
 package com.db4o.io;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 
-import com.db4o.DTrace;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.internal.Platform4;
+import com.db4o.*;
+import com.db4o.internal.*;
 
 /**
  * IO adapter for random access files.
