@@ -34,11 +34,12 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         open();
     }
 
-    protected final void openImpl() throws OpenDatabaseException, OldFormatException {
+    protected final void openImpl() throws OpenDatabaseException, OldFormatException, DatabaseReadOnlyException {
 		IoAdapter ioAdapter = configImpl().ioAdapter();
 		boolean isNew = !ioAdapter.exists(fileName());
 		if (isNew) {
 			logMsg(14, fileName());
+			checkReadOnly();
 			i_handlers.oldEncryptionOff();
 		}
 		boolean lockFile = Debug.lockFile && configImpl().lockFile()

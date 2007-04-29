@@ -96,9 +96,11 @@ public class Db4o {
 	 * @return an open {@link ObjectContainer ObjectContainer}
      * @see ObjectServer#grantAccess
 	 */
-	public static ObjectContainer openClient(String hostName, int port, String user, String password)
-		throws IOException {
-		return openClient(Db4o.cloneConfiguration(),hostName,port,user,password);
+	public static ObjectContainer openClient(String hostName, int port,
+			String user, String password) throws OpenDatabaseException,
+			OldFormatException, InvalidPasswordException {
+		return openClient(Db4o.cloneConfiguration(), hostName, port, user,
+				password);
 	}
 
     /**
@@ -152,7 +154,7 @@ public class Db4o {
 	 */
 	public static final ObjectContainer openFile(String databaseFileName)
 			throws OpenDatabaseException, DatabaseFileLockedException,
-			OldFormatException {
+			OldFormatException, DatabaseReadOnlyException {
 		return openFile(cloneConfiguration(),databaseFileName);
 	}
 
@@ -175,8 +177,10 @@ public class Db4o {
 	 */
 	public static final ObjectContainer openFile(Configuration config,
 			String databaseFileName) throws OpenDatabaseException,
-			DatabaseFileLockedException, OldFormatException {
-		return ObjectContainerFactory.openObjectContainer(config,databaseFileName);
+			DatabaseFileLockedException, OldFormatException,
+			DatabaseReadOnlyException {
+		return ObjectContainerFactory.openObjectContainer(config,
+				databaseFileName);
 	}
 
 	protected static final ObjectContainer openMemoryFile1(
@@ -223,7 +227,7 @@ public class Db4o {
 	 */
 	public static final ObjectServer openServer(String databaseFileName,
 			int port) throws OpenDatabaseException, OldFormatException,
-			DatabaseFileLockedException {
+			DatabaseFileLockedException, DatabaseReadOnlyException {
 		return openServer(cloneConfiguration(),databaseFileName,port);
 	}
 
@@ -246,7 +250,8 @@ public class Db4o {
 	 */
 	public static final ObjectServer openServer(Configuration config,
 			String databaseFileName, int port) throws OpenDatabaseException,
-			OldFormatException, DatabaseFileLockedException {
+			OldFormatException, DatabaseFileLockedException,
+			DatabaseReadOnlyException {
 		LocalObjectContainer stream = (LocalObjectContainer)openFile(config,databaseFileName);
         if(stream == null){
             return null;
