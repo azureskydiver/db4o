@@ -685,10 +685,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
     public void shutdown() {
-    	if(i_config.isReadOnly()) {
-    		// TODO: throw exception instead of returning silently
-    		return;
-    	}
         writeHeader(false, true);
     }
     

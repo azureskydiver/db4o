@@ -258,7 +258,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 	}
 	
-    void reserve(int byteCount) {
+    public void reserve(int byteCount) throws DatabaseReadOnlyException {
+    	checkReadOnly();
         synchronized (i_lock) {
             int address = getSlot(byteCount);
             zeroReservedStorage(address, byteCount);
@@ -267,9 +268,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
     private void zeroReservedStorage(int address, int length) {
-        if (configImpl().isReadOnly()) {
-            return;
-        }
         try {
         	zeroFile(_file, address, length);
         	zeroFile(_backupFile, address, length);
@@ -347,7 +345,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
     public void overwriteDeletedBytes(int address, int length) {
 		if (Deploy.flush) {
-		    if (!configImpl().isReadOnly()&&_freespaceFiller!=null) {
+		    if (_freespaceFiller!=null) {
 		        if(address > 0 && length > 0){
 	                if(DTrace.enabled){
 	                    DTrace.WRITE_XBYTES.logLength(address, length);

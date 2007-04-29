@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.replication.*;
@@ -34,7 +35,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * if concurrent execution with normal database access is desired.<br><br>
      * @param path a fully qualified path
      */
-    public void backup(String path) throws IOException;
+    public void backup(String path) throws IOException, NotSupportedException;
 
 
     /**

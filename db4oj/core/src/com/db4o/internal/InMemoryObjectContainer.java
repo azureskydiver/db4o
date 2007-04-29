@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 
 
 /**
@@ -47,7 +48,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
     }
     
     public void backup(String path) throws IOException{
-        Exceptions4.throwRuntimeException(60);
+        throw new NotSupportedException();
     }
     
     public void blockSize(int size){
@@ -139,4 +140,8 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 
     public void overwriteDeletedBytes(int a_address, int a_length) {
     }
+
+	public void reserve(int byteCount) {
+		throw new NotSupportedException();
+	}
 }

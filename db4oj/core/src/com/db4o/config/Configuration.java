@@ -5,7 +5,9 @@ package com.db4o.config;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import com.db4o.*;
 import com.db4o.diagnostic.DiagnosticConfiguration;
+import com.db4o.foundation.*;
 import com.db4o.io.IoAdapter;
 import com.db4o.reflect.Reflector;
 
@@ -588,7 +590,7 @@ public interface Configuration {
      * <br><br> Default configuration: 0<br><br> 
      * @param byteCount the number of bytes to reserve
      */
-    public void reserveStorageSpace(long byteCount);
+    public void reserveStorageSpace(long byteCount) throws DatabaseReadOnlyException, NotSupportedException;
 
     /**
      * configures the path to be used to store and read 
