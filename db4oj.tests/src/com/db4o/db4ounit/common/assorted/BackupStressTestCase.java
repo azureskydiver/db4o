@@ -2,16 +2,16 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import java.io.*;
-
 import com.db4o.*;
+import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 
-public class BackupStressTestCase implements TestLifeCycle {
+public class BackupStressTestCase implements Db4oTestCase {
     
     private static boolean verbose = false;
     
@@ -42,15 +42,21 @@ public class BackupStressTestCase implements TestLifeCycle {
         runOnOldJDK = true;
         
         BackupStressTestCase stressTest = new BackupStressTestCase();
-        stressTest.setUp();
-        stressTest.test();
+        try {
+			stressTest.setUp();
+			stressTest.test();
+		} finally {
+			stressTest.tearDown();
+		}
     }
     
     public void setUp(){
+    	deleteFile(FILE);
         Db4o.configure().objectClass(BackupStressItem.class).objectField("_iteration").indexed(true);
     }
     
     public void tearDown() {
+    	deleteFile(FILE);
     }
 
     public void test() throws Exception {
@@ -95,13 +101,9 @@ public class BackupStressTestCase implements TestLifeCycle {
 		            _backups ++;
 		            String fileName = backupFile(_backups);
 		            deleteFile(fileName);
-		            try {
-		                _inBackup = true;
-		                _objectContainer.ext().backup(fileName);
-		                _inBackup = false;
-		            } catch (IOException e) {
-		                e.printStackTrace();
-		            }
+					_inBackup = true;
+					_objectContainer.ext().backup(fileName);
+					_inBackup = false;		            
 		        }
 		    }
 		}).start();
@@ -157,11 +159,10 @@ public class BackupStressTestCase implements TestLifeCycle {
         for (int i = 1; i <= _backups; i++) {
             deleteFile(backupFile(i));
         }
-        deleteFile(FILE);
     }
 
-	private boolean deleteFile(String fname) {
-		return new File(fname).delete();
+	private void deleteFile(String fname) {
+		File4.delete(fname);
 	}
     
     private boolean isOldJDK(){

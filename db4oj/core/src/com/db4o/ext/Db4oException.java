@@ -13,6 +13,10 @@ import com.db4o.internal.*;
  */
 public class Db4oException extends ChainedRuntimeException {
 	
+	public Db4oException() {
+		this(null, null);
+	}
+	
 	public Db4oException(String msg) {
 		this(msg, null);
 	}
