@@ -47,7 +47,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		} 
     }
     
-    public void backup(String path) throws IOException{
+    public void backup(String path) throws NotSupportedException {
         throw new NotSupportedException();
     }
     

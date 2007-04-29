@@ -29,11 +29,7 @@ public class Backup {
 	        q.constrain(Atom.class);
 	        q.descend("name").constrain(NAME);
 	        specialAtomCount = q.execute().size();
-	        try {
-	            Test.objectContainer().ext().backup(FILE);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
+	        Test.objectContainer().ext().backup(FILE);
         }
     }
     

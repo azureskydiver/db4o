@@ -64,40 +64,49 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 	}
     
-    public void backup(String path) throws IOException {
+    public void backup(String path) throws DatabaseClosedException, BackupException {
         synchronized (i_lock) {
-            checkClosed();
-            if (_backupFile != null) {
-                Exceptions4.throwRuntimeException(61);
-            }
-            try {
-                _backupFile = configImpl().ioAdapter().open(path, true, _file.getLength());
-                _backupFile.blockSize(blockSize());
-            } catch (Exception e) {
-                _backupFile = null;
-                Exceptions4.throwRuntimeException(12, path);
-            }
-        }
+			checkClosed();
+			if (_backupFile != null) {
+				throw new BackupInProgressException();
+			}
+			try {
+				_backupFile = configImpl().ioAdapter().open(path, true,
+						_file.getLength());
+			} catch (IOException e) {
+				throw new BackupException(e);
+			}
+			_backupFile.blockSize(blockSize());
+		}
         long pos = 0;
         byte[] buffer = new byte[8192];
         while(true){
             synchronized (i_lock) {
-                _file.seek(pos);
-                int read = _file.read(buffer);
-                if(read <= 0 ){
-                    break;
-                }
-                _backupFile.seek(pos);
-                _backupFile.write(buffer, read);
-                pos += read;
-            }
+				try {
+					_file.seek(pos);
+					int read = _file.read(buffer);
+					if (read <= 0) {
+						break;
+					}
+					_backupFile.seek(pos);
+					_backupFile.write(buffer, read);
+					pos += read;
+				} catch (IOException e) {
+					_backupFile = null;
+					throw new BackupException(e);
+				}
+			}
             Cool.sleepIgnoringInterruption(1);
         }
 
         synchronized (i_lock) {
-            _backupFile.close();
-            _backupFile = null;
-        }
+			try {
+				_backupFile.close();
+			} catch (IOException e) {
+				throw new BackupException(e);
+			}
+			_backupFile = null;
+		}
     }
     
     public void blockSize(int size){

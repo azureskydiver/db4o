@@ -113,7 +113,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		_messageDispatcher.startDispatcher();
 	}
 
-	public void backup(String path) throws IOException {
+	public void backup(String path) throws NotSupportedException {
 		throw new NotSupportedException();
 	}
 	

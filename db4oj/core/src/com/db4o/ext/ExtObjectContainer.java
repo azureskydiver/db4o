@@ -35,7 +35,8 @@ public interface ExtObjectContainer extends ObjectContainer {
      * if concurrent execution with normal database access is desired.<br><br>
      * @param path a fully qualified path
      */
-    public void backup(String path) throws IOException, NotSupportedException;
+    public void backup(String path) throws BackupException,
+			DatabaseClosedException, NotSupportedException;
 
 
     /**
