@@ -27,6 +27,9 @@ public class BackupExceptionTestCase extends AbstractDb4oTestCase implements
 		File4.delete(BACKUP_FILE);
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public void testBackupException() {
 		Assert.expect(BackupException.class, IOException.class,
 				new CodeBlock() {
