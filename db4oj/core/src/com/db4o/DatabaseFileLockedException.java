@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o;
 
@@ -12,22 +12,12 @@ import com.db4o.ext.*;
  */
 public class DatabaseFileLockedException extends Db4oException {
 	
-	private String _databaseDescription;
-	
 	public DatabaseFileLockedException(String databaseDescription) {
 		this(databaseDescription,null);
 	}
 
 	public DatabaseFileLockedException(String databaseDescription, Throwable cause) {
-		super(message(databaseDescription),cause);
-		_databaseDescription=databaseDescription;
-	}
-
-	public String databaseDescription() {
-		return _databaseDescription;
+		super(databaseDescription,cause);
 	}
 	
-	private static String message(String databaseDescription) {
-		return "Database locked: '"+databaseDescription+"'";
-	}
 }

@@ -4,7 +4,5 @@ package com.db4o;
 import com.db4o.ext.*;
 
 public class DatabaseClosedException extends Db4oException {
-	public DatabaseClosedException() {
-		super((String) null);
-	}
+
 }

@@ -5,8 +5,4 @@ import com.db4o.ext.*;
 
 public class InvalidPasswordException extends Db4oException {
 
-	public InvalidPasswordException() {
-		super((String)null);
-	}
-
 }

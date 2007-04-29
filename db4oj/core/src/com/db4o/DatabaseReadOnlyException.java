@@ -4,7 +4,5 @@ package com.db4o;
 import com.db4o.ext.*;
 
 public class DatabaseReadOnlyException extends Db4oException {
-	public DatabaseReadOnlyException() {
-		super((String) null);
-	}
+
 }
