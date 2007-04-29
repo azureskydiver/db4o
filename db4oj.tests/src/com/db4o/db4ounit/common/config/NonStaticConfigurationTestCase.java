@@ -32,9 +32,16 @@ public class NonStaticConfigurationTestCase implements Db4oTestCase {
 	private static final String FILENAME = "nonstaticcfg.yap";
 
 	public void testOpenWithNonStaticConfiguration() {
-		Configuration cfg = Db4o.newConfiguration();
-		cfg.readOnly(true);
-		final ObjectContainer db1 = Db4o.openFile(cfg, FILENAME);
+		final Configuration config1 = Db4o.newConfiguration();
+		config1.readOnly(true);
+		Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				Db4o.openFile(config1, FILENAME);
+			}
+		});
+		config1.readOnly(false);
+		final ObjectContainer db1 = Db4o.openFile(config1, FILENAME);
+		config1.readOnly(true);
 		try {
 			Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {
 				public void run() throws Throwable {
@@ -45,8 +52,8 @@ public class NonStaticConfigurationTestCase implements Db4oTestCase {
 			db1.close();
 		}
 
-		cfg = Db4o.newConfiguration();
-		ObjectContainer db2 = Db4o.openFile(cfg, FILENAME);
+		Configuration config2 = Db4o.newConfiguration();
+		ObjectContainer db2 = Db4o.openFile(config2, FILENAME);
 		try {
 			db2.set(new Data(2));
 			Assert.areEqual(1, db2.query(Data.class).size());
