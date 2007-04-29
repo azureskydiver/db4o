@@ -486,7 +486,7 @@ public final class Config4Impl implements Configuration, DeepClone,
         renameCollection.add(a_rename);
     }
 
-    public void reserveStorageSpace(long byteCount) {
+    public void reserveStorageSpace(long byteCount) throws DatabaseReadOnlyException {
         int reservedStorageSpace = (int) byteCount;
         if (reservedStorageSpace < 0) {
             reservedStorageSpace = 0;

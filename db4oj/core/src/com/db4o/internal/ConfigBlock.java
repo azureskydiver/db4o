@@ -99,8 +99,8 @@ public final class ConfigBlock {
     
 	private byte[] passwordToken() {
         byte[] pwdtoken=new byte[ENCRYPTION_PASSWORD_LENGTH];
-        String fullpwd=_container.configImpl().password();
-        if(_container.configImpl().encrypt() && fullpwd!=null) {
+        String fullpwd=configImpl().password();
+        if(configImpl().encrypt() && fullpwd!=null) {
             try {
                 byte[] pwdbytes=new LatinStringIO().write(fullpwd);
                 Buffer encwriter=new StatefulBuffer(_container.getTransaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
@@ -139,8 +139,8 @@ public final class ConfigBlock {
         if(oldLength != LENGTH){
         	// TODO: instead of bailing out, somehow trigger wrapping the stream's io adapter in
         	// a readonly decorator, issue a  notification and continue?
-            if(! _container.configImpl().isReadOnly()  && ! _container.configImpl().allowVersionUpdates()){
-            	if(_container.configImpl().automaticShutDown()) {
+            if(!allowVersionUpdate()){
+            	if(allowAutomaticShutdown()) {
             		Platform4.removeShutDownHook(_container);
             	}
                 throw new OldFormatException();
@@ -222,6 +222,19 @@ public final class ConfigBlock {
 		if(oldLength < LENGTH){
 			write();
 		}
+	}
+
+	private boolean allowAutomaticShutdown() {
+		return configImpl().automaticShutDown();
+	}
+
+	private boolean allowVersionUpdate() {
+		Config4Impl configImpl = configImpl();
+		return !configImpl.isReadOnly()  && configImpl.allowVersionUpdates();
+	}
+
+	private Config4Impl configImpl() {
+		return _container.configImpl();
 	}
 
 	public void write() {

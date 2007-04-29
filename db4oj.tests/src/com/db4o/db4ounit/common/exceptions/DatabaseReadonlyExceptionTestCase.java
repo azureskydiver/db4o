@@ -2,6 +2,7 @@
 package com.db4o.db4ounit.common.exceptions;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -48,6 +49,17 @@ public class DatabaseReadonlyExceptionTestCase extends AbstractDb4oTestCase {
 		});
 	}
 
+	public void testReserveStorage() {
+		configReadOnly();
+		Class exceptionType = isClientServer() ? NotSupportedException.class
+				: DatabaseReadOnlyException.class;
+		Assert.expect(exceptionType, new CodeBlock() {
+			public void run() throws Throwable {
+				db().configure().reserveStorageSpace(1);
+			}
+		});
+	}
+	
 	private void configReadOnly() {
 		db().configure().readOnly(true);
 	}

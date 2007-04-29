@@ -265,7 +265,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-	private void checkReadOnly() throws DatabaseReadOnlyException {
+	protected final void checkReadOnly() throws DatabaseReadOnlyException {
 		if(i_config.isReadOnly()) {
     		throw new DatabaseReadOnlyException();
     	}
@@ -1493,10 +1493,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	return ref.isFlaggedAsHandled(_topLevelCallId);
     }
 
-    void reserve(int byteCount) {
-        // virtual: do nothing
-    }
-
+    public abstract void reserve(int byteCount);
+    
     public void rollback() {
         synchronized (i_lock) {
         	checkClosed();

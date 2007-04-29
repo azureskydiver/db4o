@@ -114,7 +114,11 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	public void backup(String path) throws IOException {
-		throw new UnsupportedOperationException();
+		throw new NotSupportedException();
+	}
+	
+	public void reserve(int byteCount) {
+		throw new NotSupportedException();
 	}
     
     public void blockSize(int blockSize){
