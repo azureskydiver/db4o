@@ -5,6 +5,7 @@ package com.db4o.internal.fileheader;
 import java.io.IOException;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 
@@ -26,7 +27,7 @@ public abstract class FileHeader {
         return length;
     }
 
-    public static FileHeader readFixedPart(LocalObjectContainer file) throws IOException{
+    public static FileHeader readFixedPart(LocalObjectContainer file) throws IOException, OldFormatException {
         Buffer reader = prepareFileHeaderReader(file);
         FileHeader header = detectFileHeader(file, reader);
         if(header == null){

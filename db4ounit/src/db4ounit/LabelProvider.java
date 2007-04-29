@@ -2,8 +2,6 @@
 
 package db4ounit;
 
-import db4ounit.*;
-
 public interface LabelProvider {
 	String getLabel(TestMethod method);
 }

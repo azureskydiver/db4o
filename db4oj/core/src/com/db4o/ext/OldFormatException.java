@@ -4,6 +4,8 @@ package com.db4o.ext;
 
 import com.db4o.internal.*;
 
+
+
 /**
  * An old file was detected and could not be open.
  */

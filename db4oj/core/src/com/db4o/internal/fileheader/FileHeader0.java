@@ -5,6 +5,7 @@ package com.db4o.internal.fileheader;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 /**
@@ -63,7 +64,7 @@ public class FileHeader0 extends FileHeader {
     }
 
     
-    protected void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException {
+    protected void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException, OldFormatException {
         _configBlock = ConfigBlock.forExistingFile(file, reader.readInt());
         skipConfigurationLockTime(reader);
         readClassCollectionAndFreeSpace(file, reader);
