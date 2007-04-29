@@ -268,7 +268,7 @@ public class Db4oClient implements ObjectContainer2 {
 	}
 
 	
-	public void backup(String path) throws IOException {
+	public void backup(String path) {
 		throw new UnsupportedOperationException("Not yet...");
 		
 	}
