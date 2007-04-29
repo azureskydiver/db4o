@@ -101,13 +101,8 @@ public class SimplePerformanceBenchmark {
         	String password = user;
             objectServer = Db4o.openServer(FILE, port);
             objectServer.grantAccess(user, password);
-            try {
-				objectContainer = TCP ? 
-					Db4o.openClient("localhost", port, user, password)  : 
-					objectServer.openClient();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            objectContainer = TCP ? Db4o.openClient("localhost", port, user,
+					password) : objectServer.openClient();
         } else{
             objectContainer = Db4o.openFile(FILE);
         }
