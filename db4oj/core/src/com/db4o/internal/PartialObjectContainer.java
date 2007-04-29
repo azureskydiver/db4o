@@ -135,8 +135,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	protected abstract void openImpl() throws OpenDatabaseException;
     
-	public void activate(Object a_activate, int a_depth) {
+	public void activate(Object a_activate, int a_depth) throws DatabaseClosedException {
         synchronized (i_lock) {
+        	checkClosed();
         	activate1(null, a_activate, a_depth);
         }
     }
@@ -258,11 +259,17 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return true;
     }
 
-    public final void checkClosed() {
+    public final void checkClosed() throws DatabaseClosedException {
         if (_classCollection == null) {
             throw new DatabaseClosedException();
         }
     }
+    
+	private void checkReadOnly() throws DatabaseReadOnlyException {
+		if(i_config.isReadOnly()) {
+    		throw new DatabaseReadOnlyException();
+    	}
+	}
 
     final void processPendingClassUpdates() {
 		if (_pendingClassUpdates == null) {
@@ -338,15 +345,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    public void commit() {
-    	if(i_config.isReadOnly()) {
-    		// TODO: throws ReadOnlyException after exception handling.
-    		return;
-    	}
+    public void commit() throws DatabaseReadOnlyException, DatabaseClosedException {
         synchronized (i_lock) {
             if(DTrace.enabled){
                 DTrace.COMMIT.log();
             }
+            checkClosed();
+            checkReadOnly();
             beginTopLevelCall();
             try{            	
             	commit1();
@@ -417,8 +422,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    public void deactivate(Object a_deactivate, int a_depth) {
+    public void deactivate(Object a_deactivate, int a_depth) throws DatabaseClosedException {
         synchronized (i_lock) {
+        	checkClosed();
         	beginTopLevelCall();
         	try{
         		deactivate1(a_deactivate, a_depth);
@@ -451,12 +457,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	delete(null, a_object);
     }
     
-    public void delete(Transaction trans, Object obj) {
-    	if(i_config.isReadOnly()) {
-    		// TODO: throws ReadOnlyException after exception handling.
-    		return;
-    	}
+    public void delete(Transaction trans, Object obj) throws DatabaseReadOnlyException, DatabaseClosedException {
         synchronized (i_lock) {
+        	checkClosed();
+        	checkReadOnly();
         	trans = checkTransaction(trans);
             delete1(trans, obj, true);
             trans.processDeletes();
@@ -701,8 +705,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         i_references.pollReferenceQueue();
     }
 
-	public ObjectSet get(Object template) {
+	public ObjectSet get(Object template) throws DatabaseClosedException {
 	    synchronized (i_lock) {
+	    	checkClosed();
 	    	return get1(null, template);
 	    }
 	}
@@ -733,11 +738,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract AbstractQueryResult getAll(Transaction ta);
 
-    public Object getByID(long id) {
+    public Object getByID(long id) throws DatabaseClosedException {
     	if (id <= 0) {
     		throw new IllegalArgumentException();
 		}
         synchronized (i_lock) {
+        	checkClosed();
             return getByID1(null, id);
         }
     }
@@ -1196,11 +1202,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract int newUserObject();
 
-    public Object peekPersisted(Object obj, int depth, boolean committed) {
+    public Object peekPersisted(Object obj, int depth, boolean committed) throws DatabaseClosedException {
     	
     	// TODO: peekPersisted is not stack overflow safe, if depth is too high. 
     	
         synchronized (i_lock) {
+        	checkClosed();
             beginTopLevelCall();
             try{
                 i_justPeeked = null;
@@ -1493,6 +1500,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public void rollback() {
         synchronized (i_lock) {
         	checkClosed();
+        	checkReadOnly();
         	rollback1();
         	_referenceSystem.rollback();
         }
@@ -1505,34 +1513,39 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         // so far this only works from YapClient
     }
 
-    public void set(Object a_object) {
+    public void set(Object a_object) throws DatabaseClosedException,
+			DatabaseReadOnlyException {
         set(a_object, Const4.UNSPECIFIED);
     }
     
-    public final void set(Transaction trans, Object obj) {
+    public final void set(Transaction trans, Object obj)
+			throws DatabaseClosedException, DatabaseReadOnlyException {
     	set(trans, obj, Const4.UNSPECIFIED);
     }    
     
-    public final void set(Object obj, int depth) {
+    public final void set(Object obj, int depth)
+			throws DatabaseClosedException, DatabaseReadOnlyException {
         set(i_trans, obj, depth);
     }
 
-	public void set(Transaction trans, Object obj, int depth) {
+	public void set(Transaction trans, Object obj, int depth)
+			throws DatabaseClosedException, DatabaseReadOnlyException {
 		synchronized (i_lock) {
             setInternal(trans, obj, depth, true);
         }
 	}
     
-    public final int setInternal(Transaction trans, Object obj, boolean checkJustSet) {
+    public final int setInternal(Transaction trans, Object obj,
+			boolean checkJustSet) throws DatabaseClosedException,
+			DatabaseReadOnlyException {
        return setInternal(trans, obj, Const4.UNSPECIFIED, checkJustSet);
     }
     
-    public final int setInternal(Transaction trans, Object obj, int depth,  boolean checkJustSet) {
-    	if(i_config.isReadOnly()) {
-    		// TODO: throws ReadOnlyException after exception handling.
-    		return 0;
-    	}
-    	
+    public final int setInternal(Transaction trans, Object obj, int depth,
+			boolean checkJustSet) throws DatabaseClosedException,
+			DatabaseReadOnlyException {
+    	checkClosed();
+    	checkReadOnly();
     	beginTopLevelSet();
     	try{
 	        int id = oldReplicationHandles(obj); 
@@ -1887,7 +1900,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if(DTrace.enabled){
     		DTrace.BEGIN_TOP_LEVEL_CALL.log();
     	}
-    	checkClosed();
     	generateCallIDOnTopLevel();
     	if(_stackDepth == 0){
     		_topLevelCallCompleted = false;
