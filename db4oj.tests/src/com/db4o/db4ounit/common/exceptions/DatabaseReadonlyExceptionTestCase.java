@@ -48,6 +48,17 @@ public class DatabaseReadonlyExceptionTestCase extends AbstractDb4oTestCase {
 			}
 		});
 	}
+	
+	public void testNewFile() {
+		Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				fixture().close();
+				fixture().clean();
+				fixture().config().readOnly(true);
+				fixture().open();
+			}
+		});
+	}
 
 	public void testReserveStorage() {
 		configReadOnly();
