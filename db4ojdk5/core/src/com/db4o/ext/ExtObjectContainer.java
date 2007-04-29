@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.replication.*;
@@ -32,7 +33,8 @@ public interface ExtObjectContainer extends ObjectContainer {
      * If a file already exists at the specified path, it will be overwritten.<br><br>
      * @param path a fully qualified path
      */
-    public void backup(String path) throws IOException;
+    public void backup(String path) throws BackupException,
+			DatabaseClosedException, NotSupportedException;
 
 
     /**
