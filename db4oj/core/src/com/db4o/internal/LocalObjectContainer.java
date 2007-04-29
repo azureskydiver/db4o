@@ -500,7 +500,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     	return _fileHeader != null;
     }
 
-    void readThis() throws IOException {
+    void readThis() throws IOException, OldFormatException {
         
         newSystemData(AbstractFreespaceManager.FM_LEGACY_RAM);
         blockSizeReadFromFile(1);
@@ -693,10 +693,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     public void commitTransaction() {
-    	if(i_config.isReadOnly()) {
-    		// TODO: throw exception instead of returning silently
-    		return;
-    	}
         // This will also commit the System Transaction,
         // since it is the parent or the same object.
         i_trans.commit();

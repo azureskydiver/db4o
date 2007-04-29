@@ -71,11 +71,11 @@ public final class ConfigBlock {
         return new ConfigBlock(file, true, 0);
     }
     
-    public static ConfigBlock forExistingFile(LocalObjectContainer file, int address) throws IOException{
+    public static ConfigBlock forExistingFile(LocalObjectContainer file, int address) throws IOException, OldFormatException {
         return new ConfigBlock(file, false, address);
     }
     
-	private ConfigBlock(LocalObjectContainer stream, boolean isNew, int address) throws IOException{
+	private ConfigBlock(LocalObjectContainer stream, boolean isNew, int address) throws IOException, OldFormatException {
 		_container = stream;
         _timerFileLock = TimerFileLock.forFile(stream);
         timerFileLock().writeHeaderLock();
@@ -123,7 +123,7 @@ public final class ConfigBlock {
         return _container.systemData();
     }
 	
-	private void read(int address) throws IOException {
+	private void read(int address) throws IOException, OldFormatException {
         addressChanged(address);
 		timerFileLock().writeOpenTime();
 		StatefulBuffer reader = _container.getWriter(_container.systemTransaction(), _address, LENGTH);

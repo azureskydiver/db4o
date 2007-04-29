@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
 
@@ -25,7 +26,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     
     private final FreespaceFiller _freespaceFiller;
 
-    IoAdaptedObjectContainer(Configuration config, String fileName) {
+    IoAdaptedObjectContainer(Configuration config, String fileName) throws OpenDatabaseException, OldFormatException {
         super(config,null);
         _fileLock = new Object();
         _fileName = fileName;
@@ -33,7 +34,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         open();
     }
 
-    protected final void openImpl() throws OpenDatabaseException {
+    protected final void openImpl() throws OpenDatabaseException, OldFormatException {
 		IoAdapter ioAdapter = configImpl().ioAdapter();
 		boolean isNew = !ioAdapter.exists(fileName());
 		if (isNew) {
@@ -308,9 +309,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }    
 
     public void writeBytes(Buffer bytes, int address, int addressOffset) {
-        if (configImpl().isReadOnly()) {
-            return;
-        }
         if (Deploy.debug && !Deploy.flush) {
             return;
         }

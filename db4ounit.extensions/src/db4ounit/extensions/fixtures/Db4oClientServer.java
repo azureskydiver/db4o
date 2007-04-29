@@ -10,7 +10,6 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
-import db4ounit.*;
 import db4ounit.extensions.*;
 
 
@@ -75,21 +74,14 @@ public class Db4oClientServer extends
 
     public void open() throws Exception {
 		openServer();
-		try {
-			_objectContainer = _embeddedClient
-				? openEmbeddedClient().ext()
-				: Db4o.openClient(config(), HOST, _port, USERNAME, PASSWORD).ext();
-		} catch (IOException e) {
-			throw new TestException(e);
-		}
+		_objectContainer = _embeddedClient ? openEmbeddedClient().ext() : Db4o
+				.openClient(config(), HOST, _port, USERNAME, PASSWORD).ext();
 	}
 
 	public ExtObjectContainer openNewClient() {
-		try {
-			return _embeddedClient ? openEmbeddedClient().ext() : Db4o.openClient(cloneDb4oConfiguration((Config4Impl) config()), HOST, _port, USERNAME,PASSWORD).ext();
-		} catch (IOException e) {
-			throw new TestException(e);
-		}
+		return _embeddedClient ? openEmbeddedClient().ext() : Db4o.openClient(
+				cloneDb4oConfiguration((Config4Impl) config()), HOST, _port,
+				USERNAME, PASSWORD).ext();
 	}
 
     private void openServer() throws Exception {

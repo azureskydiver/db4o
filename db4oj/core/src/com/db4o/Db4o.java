@@ -122,8 +122,13 @@ public class Db4o {
      * @see ObjectServer#grantAccess
 	 */
 	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
-			throws IOException, InvalidPasswordException {
-			return new ClientObjectContainer(config,new NetworkSocket(hostName, port), user, password, true);
+			throws OpenDatabaseException, OldFormatException, InvalidPasswordException {
+			try {
+				NetworkSocket networkSocket = new NetworkSocket(hostName, port);
+				return new ClientObjectContainer(config,networkSocket, user, password, true);
+			} catch (IOException e) {
+				throw new OpenDatabaseException(e);
+			}
 	}
 
     /**
@@ -145,7 +150,9 @@ public class Db4o {
      * @see Configuration#encrypt
      * @see Configuration#password
 	 */
-	public static final ObjectContainer openFile(String databaseFileName) throws DatabaseFileLockedException {
+	public static final ObjectContainer openFile(String databaseFileName)
+			throws OpenDatabaseException, DatabaseFileLockedException,
+			OldFormatException {
 		return openFile(cloneConfiguration(),databaseFileName);
 	}
 
@@ -166,11 +173,16 @@ public class Db4o {
      * @see Configuration#encrypt
      * @see Configuration#password
 	 */
-	public static final ObjectContainer openFile(Configuration config,String databaseFileName) throws DatabaseFileLockedException {
+	public static final ObjectContainer openFile(Configuration config,
+			String databaseFileName) throws OpenDatabaseException,
+			DatabaseFileLockedException, OldFormatException {
 		return ObjectContainerFactory.openObjectContainer(config,databaseFileName);
 	}
 
-	protected static final ObjectContainer openMemoryFile1(Configuration config,MemoryFile memoryFile) {
+	protected static final ObjectContainer openMemoryFile1(
+			Configuration config, MemoryFile memoryFile)
+			throws OpenDatabaseException, DatabaseFileLockedException,
+			OldFormatException {
 		if(memoryFile == null){
 			memoryFile = new MemoryFile();
 		}
@@ -209,7 +221,9 @@ public class Db4o {
      * @see Configuration#encrypt
      * @see Configuration#password
 	 */
-	public static final ObjectServer openServer(String databaseFileName, int port) throws DatabaseFileLockedException {
+	public static final ObjectServer openServer(String databaseFileName,
+			int port) throws OpenDatabaseException, OldFormatException,
+			DatabaseFileLockedException {
 		return openServer(cloneConfiguration(),databaseFileName,port);
 	}
 
@@ -230,7 +244,9 @@ public class Db4o {
      * @see Configuration#encrypt
      * @see Configuration#password
 	 */
-	public static final ObjectServer openServer(Configuration config,String databaseFileName, int port) throws DatabaseFileLockedException {
+	public static final ObjectServer openServer(Configuration config,
+			String databaseFileName, int port) throws OpenDatabaseException,
+			OldFormatException, DatabaseFileLockedException {
 		LocalObjectContainer stream = (LocalObjectContainer)openFile(config,databaseFileName);
         if(stream == null){
             return null;

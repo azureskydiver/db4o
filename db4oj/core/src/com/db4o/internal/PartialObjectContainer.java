@@ -115,7 +115,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	i_config = (Config4Impl)config;
     }
 
-	public final void open() throws OpenDatabaseException {
+	public final void open() throws OpenDatabaseException, OldFormatException {
 		boolean ok = false;
 		synchronized (i_lock) {
 			try {
@@ -1352,7 +1352,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids);
 
-    private void reboot() throws IOException{
+    private void reboot() throws OpenDatabaseException {
         commit();
         close();
         open();

@@ -17,7 +17,9 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 	private final MemoryFile _memoryFile;
 	private int _length = 0;
 
-	protected InMemoryObjectContainer(Configuration config, ObjectContainerBase parent, MemoryFile memoryFile) throws IOException {
+	protected InMemoryObjectContainer(Configuration config,
+			ObjectContainerBase parent, MemoryFile memoryFile)
+			throws OpenDatabaseException, OldFormatException {
 		super(config, parent);
 		_memoryFile = memoryFile;
 		open();
@@ -27,7 +29,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
         this(config, null, memoryFile);
     }
     
-    protected final void openImpl() throws OpenDatabaseException {
+    protected final void openImpl() throws OpenDatabaseException, OldFormatException {
         byte[] bytes = _memoryFile.getBytes();
 		try {
 			if (bytes == null || bytes.length == 0) {
@@ -41,7 +43,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 			}
 		} catch (IOException e) {
 			throw new OpenDatabaseException(e);
-		}
+		} 
     }
     
     public void backup(String path) throws IOException{
