@@ -555,6 +555,10 @@ public final class Config4Impl implements Configuration, DeepClone,
         }
     	_config.put(UPDATE_DEPTH,depth);
     }
+    
+    public void useBTreeSystem() {
+        _config.put(FREESPACE_SYSTEM,AbstractFreespaceManager.FM_BTREE);
+    }
 
     public void useRamSystem() {
         _config.put(FREESPACE_SYSTEM,AbstractFreespaceManager.FM_RAM);

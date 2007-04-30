@@ -42,6 +42,17 @@ public interface FreespaceConfiguration {
     public void freespaceFiller(FreespaceFiller freespaceFiller);
     
     /**
+     * configures db4o to use a BTree-based freespace system.
+     * <br><br><b>Advantages</b><br>
+     * - ACID, no freespace is lost on abnormal system termination<br>
+     * - low memory consumption<br>
+     * <br><b>Disadvantages</b><br>
+     * - slower than the RAM-based system, since freespace information
+     * is written during every commit<br>
+     */
+    public void useBTreeSystem(); 
+    
+    /**
      * configures db4o to use an index-based freespace system.
      * <br><br><b>Advantages</b><br>
      * - ACID, no freespace is lost on abnormal system termination<br>

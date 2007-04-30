@@ -19,15 +19,19 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	private BTree _slotsByAddress;
 	
 	private BTree _slotsByLength;
-
+	
+	private PersistentIntegerArray _btreeIDs;
+	
 	
 	public BTreeFreespaceManager(LocalObjectContainer file) {
 		super(file);
-		_slotsByAddress = new BTree(transaction(), 0, new AddressKeySlotHandler());
-		_slotsByLength = new BTree(transaction(), 0, new LengthKeySlotHandler());
 	}
 
 	public void free(Slot slot) {
+		
+		if(! started()){
+			return;
+		}
 		
         if(DTrace.enabled){
             DTrace.FREE.logLength(slot._address, slot._length);
@@ -78,6 +82,11 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public Slot getSlot (int length) {
+		
+		if(! started()){
+			return null;
+		}
+		
 		int requiredLength = _file.blocksFor(length);
 		
 		
@@ -113,11 +122,6 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		_slotsByAddress.remove(transaction(), slot);
 	}
 
-	public void read(int freeSpaceID) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public int slotCount() {
 		return _slotsByAddress.size(transaction());
 	}
@@ -131,8 +135,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public int write() {
-		// TODO Auto-generated method stub
-		return 0;
+		return _btreeIDs.getID();
 	}
 	
 	private Transaction transaction(){
@@ -140,12 +143,31 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 	
 	public void start(int slotAddress) throws IOException {
-		// TODO: FB remove
+		if(slotAddress == 0){
+			createBTrees(new int[]{0 , 0});
+			_slotsByAddress.write(transaction());
+			_slotsByLength.write(transaction());
+			int[] ids = new int[] {_slotsByAddress.getID(), _slotsByLength.getID()};
+			_btreeIDs = new PersistentIntegerArray(ids);
+			_btreeIDs.write(transaction());
+			return;
+		}
+		_btreeIDs = new PersistentIntegerArray(slotAddress);
+		_btreeIDs.read(transaction());
+		createBTrees(_btreeIDs.array());
+	}
+
+	private void createBTrees(int[] ids) {
+		_slotsByAddress = new BTree(transaction(), ids[0], new AddressKeySlotHandler());
+		_slotsByLength = new BTree(transaction(), ids[1], new LengthKeySlotHandler());
+	}
+
+	private boolean started(){
+		return _btreeIDs != null;
 	}
 
 	public void beginCommit() {
 		// TODO: FB remove
-
 	}
 
 	public int onNew(LocalObjectContainer file) {
@@ -154,6 +176,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public void endCommit() {
+		// TODO: FB remove
+	}
+
+	public void read(int freeSpaceID) {
 		// TODO: FB remove
 	}
 
