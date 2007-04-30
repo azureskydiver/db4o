@@ -11,7 +11,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     
     final LocalObjectContainer     _file;
 
-    public static final byte FM_DEBUG = -1;
+    public static final byte FM_DEBUG = 127;
     public static final byte FM_DEFAULT = 0;
     public static final byte FM_LEGACY_RAM = 1;
     public static final byte FM_RAM = 2;
