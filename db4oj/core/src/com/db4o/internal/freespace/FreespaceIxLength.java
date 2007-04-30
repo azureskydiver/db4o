@@ -29,5 +29,9 @@ class FreespaceIxLength extends FreespaceIx{
         _index._handler.prepareComparison(new Integer(length));
         _indexTrans.remove(address, new Integer(length));
     }
+    
+    public String toString() {
+    	return _indexTrans.toString();
+    }
 
 }

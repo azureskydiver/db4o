@@ -128,9 +128,6 @@ public class IndexTransaction implements Visitor4{
     }
     
     public String toString(){
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
         final StringBuffer sb = new StringBuffer();
         sb.append("IxFieldTransaction ");
         sb.append(System.identityHashCode(this));
@@ -146,8 +143,5 @@ public class IndexTransaction implements Visitor4{
         }
         return sb.toString();
     }
-
-	
-	
 	
 }

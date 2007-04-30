@@ -28,8 +28,8 @@ public class FreespaceManagerTestCase extends AbstractDb4oTestCase implements Op
 		
 		fm = new FreespaceManager[]{
 			new FreespaceManagerRam(container),
-			fmIx,
-			// new BTreeFreespaceManager(container)
+			// fmIx,
+			new BTreeFreespaceManager(container)
 		};
 	}
 	
@@ -121,8 +121,13 @@ public class FreespaceManagerTestCase extends AbstractDb4oTestCase implements Op
 		}
 	}
 	
-	private void clear(FreespaceManager fm){
-		while(fm.getSlot(1) != null);
+	private void clear(FreespaceManager freespaceManager){
+		Slot slot = null;
+		do{
+			slot = freespaceManager.getSlot(1);
+		}while(slot != null);
+		Assert.areEqual(0, freespaceManager.slotCount());
+		Assert.areEqual(0, freespaceManager.totalFreespace());
 	}
 	
 	private void assertSame(FreespaceManager fm1, FreespaceManager fm2 ){

@@ -356,25 +356,26 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
     public void overwriteDeletedBytes(int address, int length) {
-		if (Deploy.flush) {
-		    if (_freespaceFiller!=null) {
-		        if(address > 0 && length > 0){
-	                if(DTrace.enabled){
-	                    DTrace.WRITE_XBYTES.logLength(address, length);
-	                }
-	                IoAdapterWindow window = new IoAdapterWindow(_file,address,length);
-		            try {
-						createFreespaceFiller().fill(window);
-		                
-		            } catch (Exception e) {
-		                e.printStackTrace();
-		            }
-		            finally {
-						window.disable();
-		            }
-		        }
-		    }
+		if (!Deploy.flush) {
+			return;
 		}
+		if (_freespaceFiller == null) {
+			return;
+		}
+		if (address > 0 && length > 0) {
+			if (DTrace.enabled) {
+				DTrace.WRITE_XBYTES.logLength(address, length);
+			}
+			IoAdapterWindow window = new IoAdapterWindow(_file, address, length);
+			try {
+				createFreespaceFiller().fill(window);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				window.disable();
+			}
+		}
+
 	}
 
 	public IoAdapter timerFile() {

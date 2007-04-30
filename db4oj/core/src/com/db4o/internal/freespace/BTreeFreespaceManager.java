@@ -4,6 +4,7 @@ package com.db4o.internal.freespace;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
@@ -27,18 +28,89 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public void free(Slot slot) {
-		_slotsByAddress.add(transaction(), slot);
-		_slotsByLength.add(transaction(), slot);
+		
+        if(DTrace.enabled){
+            DTrace.FREE.logLength(slot._address, slot._length);
+        }
+        
+        if (slot._length <= discardLimit()) {
+            return;
+        }
+
+        Slot newFreeSlot = toBlocked(slot);
+        int blockedLength = newFreeSlot._length;
+        
+		BTreeNodeSearchResult searchResult = 
+			_slotsByAddress.searchLeaf(transaction(), slot, SearchTarget.LOWEST);
+		BTreePointer pointer = searchResult.firstValidPointer();
+		if(pointer != null){
+			BTreePointer previousPointer = pointer.previous();
+			if(previousPointer != null){
+				Slot previousSlot = (Slot) previousPointer.key();
+				if(previousSlot.isDirectlyPreceding(newFreeSlot)){
+					removeSlot(previousSlot);
+					newFreeSlot = previousSlot.append(newFreeSlot);
+				}
+			}
+		}
+        
+		searchResult = 
+			_slotsByAddress.searchLeaf(transaction(), slot, SearchTarget.HIGHEST);
+		pointer = searchResult.firstValidPointer();
+		if(pointer != null){
+			Slot nextSlot = (Slot) pointer.key();
+			if(newFreeSlot.isDirectlyPreceding(nextSlot)){
+				removeSlot(nextSlot);
+				newFreeSlot = newFreeSlot.append(nextSlot);
+			}
+		}
+		addSlot(newFreeSlot);
+	    if(! Debug.freespaceChecker){
+	    	_file.overwriteDeletedBytes(slot._address, blockedLength * blockSize());
+	    }
+
 	}
+
 
 	public void freeSelf() {
 		// TODO Auto-generated method stub
 
 	}
 
-	public Slot getSlot(int length) {
-		// TODO Auto-generated method stub
-		return null;
+	public Slot getSlot (int length) {
+		int requiredLength = _file.blocksFor(length);
+		
+		
+		BTreeNodeSearchResult searchResult = 
+			_slotsByLength.searchLeaf(transaction(), new Slot(0, requiredLength), SearchTarget.HIGHEST);
+		
+		BTreePointer pointer = searchResult.firstValidPointer();
+		
+		if(pointer == null){
+			return null;
+		}
+		
+		Slot slot = (Slot) pointer.key();
+		
+		removeSlot(slot);
+		
+		if(slot._length == requiredLength){
+			return toNonBlocked(slot);
+		}
+		
+		addSlot(slot.subSlot(requiredLength));
+		
+		return toNonBlocked(slot.truncate(requiredLength)); 
+	}
+	
+	private void addSlot(Slot slot) {
+		_slotsByLength.add(transaction(), slot);
+		_slotsByAddress.add(transaction(), slot);
+	}
+
+	private void removeSlot(Slot slot) {
+		_slotsByLength.remove(transaction(), slot);
+		_slotsByAddress.remove(transaction(), slot);
 	}
 
 	public void read(int freeSpaceID) {
@@ -51,8 +123,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public byte systemType() {
-		// TODO Auto-generated method stub
-		return 0;
+		return FM_BTREE;
 	}
 
 	public void traverse(final Visitor4 visitor) {

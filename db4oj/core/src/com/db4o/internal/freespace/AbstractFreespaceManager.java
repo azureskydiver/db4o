@@ -11,11 +11,12 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     
     final LocalObjectContainer     _file;
 
+    public static final byte FM_DEBUG = -1;
     public static final byte FM_DEFAULT = 0;
     public static final byte FM_LEGACY_RAM = 1;
     public static final byte FM_RAM = 2;
     public static final byte FM_IX = 3;
-    public static final byte FM_DEBUG = 4;
+    public static final byte FM_BTREE = 4;
     
     private static final int INTS_IN_SLOT = 12;
     
@@ -76,6 +77,14 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     final static int slotLength(){
         return Const4.INT_LENGTH * INTS_IN_SLOT;
     }
+    
+	protected Slot toBlocked(Slot slot){
+		return new Slot(slot._address, _file.blocksFor(slot._length));
+	}
+	
+	protected Slot toNonBlocked(Slot slot){
+		return new Slot(slot._address, slot._length * blockSize());
+	}
     
     public final int totalFreespace() {
         final MutableInt mint = new MutableInt();
