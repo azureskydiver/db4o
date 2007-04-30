@@ -153,7 +153,9 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
      */
 	private void closeFileHeader() {
 		try {
-			_fileHeader.close();
+			if (_fileHeader != null) {
+				_fileHeader.close();
+			}
 		} catch (IOException e) {
 			// ignore
 		} finally {
@@ -258,11 +260,12 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 		_file.blockSeek(address, addressOffset);
 		int bytesRead = _file.read(bytes, length);
-		assertReadCount(bytesRead, length);
+		checkReadCount(bytesRead, length);
 	}
 
-	private void assertReadCount(int bytesRead, int expected) {
+	private void checkReadCount(int bytesRead, int expected) {
 		if (bytesRead != expected) {
+			shutdownObjectContainer();
 			throw new IncompatibleFileFormatException();
 		}
 	}
