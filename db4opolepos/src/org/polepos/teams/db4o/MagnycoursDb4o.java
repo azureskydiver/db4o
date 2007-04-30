@@ -4,35 +4,35 @@ package org.polepos.teams.db4o;
 
 import java.util.*;
 
-import org.polepos.circuits.collection.*;
+import org.polepos.circuits.magnycours.*;
 
 import com.db4o.*;
 
-public class CollectionDriverImpl extends Db4oDriver implements
-		CollectionDriver {
+public class MagnycoursDb4o extends Db4oDriver implements
+		MagnycoursDriver {
 
 	private List _list;
 
 	public void getAllElements() {
 		List list = retrieveList();
 		for (int i = 0; i < list.size(); ++i) {
-			list.get(i);
+			getListElement(list, i);
 		}
 	}
-
+	
 	public void getFirstElement() {
 		List list = retrieveList();
-		list.get(0);
+		getListElement(list, 0);
 	}
 
 	public void getLastElement() {
 		List list = retrieveList();
-		list.get(setup().getObjectCount() - 1);
+		getListElement(list, setup().getObjectCount() - 1);
 	}
 
 	public void getMiddleElement() {
 		List list = retrieveList();
-		list.get(setup().getObjectCount() / 2);
+		getListElement(list, setup().getObjectCount() / 2);
 	}
 
 	public void store() {
@@ -47,14 +47,19 @@ public class CollectionDriverImpl extends Db4oDriver implements
 		return (List) os.next();
 	}
 
+	private void getListElement(List list, int index){
+		MagnycoursItem item = (MagnycoursItem) list.get(index);
+		addToCheckSum(item.checkSum());
+	}
+
 	private void generateList() {
 		if (isP1FastCollection()) {
 			_list = db().collections().newLinkedList();
 		} else {
-			_list = new ArrayList<CollectionItem>();
+			_list = new ArrayList<MagnycoursItem>();
 		}
 		for (int i = 0; i < setup().getObjectCount(); ++i) {
-			_list.add(new CollectionItem());
+			_list.add(new MagnycoursItem(i));
 		}
 	}
 

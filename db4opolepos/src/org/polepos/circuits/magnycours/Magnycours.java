@@ -1,11 +1,11 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 
-package org.polepos.circuits.collection;
+package org.polepos.circuits.magnycours;
 
 import org.polepos.framework.*;
 
 
-public class Collection extends Circuit {
+public class Magnycours extends Circuit {
 
     @Override
     public String description() {
@@ -14,7 +14,7 @@ public class Collection extends Circuit {
 
     @Override
     public Class requiredDriver() {
-        return CollectionDriver.class;
+        return MagnycoursDriver.class;
     }
 
     @Override
