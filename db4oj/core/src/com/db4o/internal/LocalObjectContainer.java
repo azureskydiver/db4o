@@ -279,15 +279,12 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
     private final Slot getSlot1(int bytes) {
-        
         if(bytes <= 0){
         	throw new IllegalArgumentException();
         }
-        
+        Slot slot;
         if(_freespaceManager != null){
-            
-        	Slot slot = _freespaceManager.getSlot(bytes);
-            
+        	slot = _freespaceManager.getSlot(bytes);
             if(Debug.freespace && Debug.freespaceChecker){
                 if(slot != null){
                 	int freeAddress = slot._address;
@@ -318,7 +315,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         int blocksNeeded = blocksFor(bytes);
         int address = appendBlocks(blocksNeeded);
-        Slot slot = new Slot(address, bytes);
+        slot = new Slot(address, bytes);
         if (Debug.xbytes && Deploy.overwrite) {
             overwriteDeletedSlot(slot);
         }
