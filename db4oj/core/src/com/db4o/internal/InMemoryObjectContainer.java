@@ -144,4 +144,8 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 	public void reserve(int byteCount) {
 		throw new NotSupportedException();
 	}
+
+	public byte blockSize() {
+		return 1;
+	}
 }
