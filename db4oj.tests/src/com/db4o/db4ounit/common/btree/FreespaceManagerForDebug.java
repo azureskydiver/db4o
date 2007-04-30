@@ -37,9 +37,9 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 
     }
 
-    public Slot getSlot(int length) {
-        return null;
-    }
+	public Slot getSlot(int length) {
+		return null;
+	}
 
 	public int onNew(LocalObjectContainer file) {
 		return 0;

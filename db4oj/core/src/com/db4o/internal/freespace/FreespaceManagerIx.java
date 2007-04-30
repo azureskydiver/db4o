@@ -136,48 +136,37 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     }
     
     public Slot getSlot(int length) {
-        if(! started()){
-            return null;
-        }
-        int address = getSlot1(length);
-        
-        if(DTrace.enabled){
-        	if(address != 0){
-                DTrace.GET_FREESPACE.logLength(address, length);
-            }
-        }
-        if(address == 0){
-        	return null;
-        }
-        return new Slot(address,length);
-    }
 
-    private int getSlot1(int length) {
-        
-        if(! started()){
-            return 0;
-        }
-        
-        length = _file.blocksFor(length);
-        
-        _lengthIx.find(length);
-        
-        if(_lengthIx.match()){
-            remove(_lengthIx.address(), _lengthIx.length());
-            return _lengthIx.address();
-        }
-        
-        if(_lengthIx.subsequent()){
-            
-            int lengthRemainder = _lengthIx.length() - length;
-            int addressRemainder = _lengthIx.address() + length; 
-            remove(_lengthIx.address(), _lengthIx.length());
-            add(addressRemainder, lengthRemainder);
-            return _lengthIx.address();
-        }
-        
-        return 0;
-    }
+		if (!started()) {
+			return null;
+		}
+		
+		int requiredLength = _file.blocksFor(length);
+
+		int address = 0;
+
+		_lengthIx.find(requiredLength);
+
+		if (_lengthIx.match()) {
+			remove(_lengthIx.address(), _lengthIx.length());
+			address = _lengthIx.address();
+		} else if (_lengthIx.subsequent()) {
+			int lengthRemainder = _lengthIx.length() - requiredLength;
+			int addressRemainder = _lengthIx.address() + requiredLength;
+			remove(_lengthIx.address(), _lengthIx.length());
+			add(addressRemainder, lengthRemainder);
+			address = _lengthIx.address();
+		}
+
+		if (address == 0) {
+			return null;
+		}
+
+		if (DTrace.enabled) {
+			DTrace.GET_FREESPACE.logLength(address, length);
+		}
+		return new Slot(address, length);
+	}
 
     public void migrateTo(FreespaceManager fm) {
         if(! started()){
@@ -260,6 +249,11 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
                 _xBytes.add(new int[] {address, length});
             }
         }
+    }
+    
+    public String toString() {
+    	String str = "FreespaceManagerIx\n" + _lengthIx.toString(); 
+    	return str;
     }
 
 }

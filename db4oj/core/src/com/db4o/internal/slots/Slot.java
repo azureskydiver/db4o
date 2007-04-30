@@ -41,9 +41,17 @@ public class Slot {
         return _address ^ _length;
     }
     
+	public Slot subSlot(int requiredLength) {
+		return new Slot(_address + requiredLength, _length - requiredLength);
+	}
+
     public String toString() {
     	return "[A:"+_address+",L:"+_length+"]";
     }
+    
+	public Slot truncate(int requiredLength) {
+		return new Slot(_address, requiredLength);
+	}
     
     public static int MARSHALLED_LENGTH = Const4.INT_LENGTH * 2;
 
@@ -58,5 +66,13 @@ public class Slot {
 		}
 		return compareByAddress(slot);
 	}
-    
+
+	public boolean isDirectlyPreceding(Slot other) {
+		return _address + _length == other._address;
+	}
+
+	public Slot append(Slot slot) {
+		return new Slot(_address, _length + slot._length);
+	}
+	
 }

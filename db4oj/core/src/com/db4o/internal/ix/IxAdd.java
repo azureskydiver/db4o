@@ -42,9 +42,6 @@ public class IxAdd extends IxPatch {
     }
     
     public String toString(){
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
         String str = "IxAdd "  + _parentID + "\n " + handler().comparableObject(trans(), _value);
         return str;
     }

@@ -134,39 +134,31 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
     }
     
     public Slot getSlot(int length) {
-        int address = getSlot1(length);
-        
-        if(DTrace.enabled){
-        	if(address != 0){
-                DTrace.GET_FREESPACE_RAM.logLength(address, length);
-            }
-        }
-        if(address == 0){
-        	return null;
-        }
-        return new Slot(address, length);
-    }
-    
-    public int getSlot1(int length) {
-        length = _file.blocksFor(length);
-        _finder._key = length;
+    	
+    	int requiredLength = _file.blocksFor(length);
+
+        _finder._key = requiredLength;
         _finder._object = null;
         _freeBySize = FreeSlotNode.removeGreaterOrEqual((FreeSlotNode) _freeBySize, _finder);
 
         if (_finder._object == null) {
-            return 0;
+            return null;
         }
             
         FreeSlotNode node = (FreeSlotNode) _finder._object;
         int blocksFound = node._key;
         int address = node._peer._key;
         _freeByAddress = _freeByAddress.removeNode(node._peer);
-        if (blocksFound > length) {
-            addFreeSlotNodes(address + length, blocksFound - length);
+        if (blocksFound > requiredLength) {
+            addFreeSlotNodes(address + requiredLength, blocksFound - requiredLength);
         }
-        return address;
+        
+        if(DTrace.enabled){
+        	DTrace.GET_FREESPACE.logLength(address, requiredLength);
+        }
+
+        return new Slot(address, length);
     }
-    
     
     public void traverse(final Visitor4 visitor) {
 		if (_freeByAddress == null) {

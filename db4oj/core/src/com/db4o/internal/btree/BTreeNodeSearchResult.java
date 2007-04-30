@@ -60,7 +60,7 @@ public class BTreeNodeSearchResult {
         return new BTreeRangeSingle(_transaction, _btree, firstPointer, endPointer);
     }
 
-	private BTreePointer firstValidPointer() {
+	public BTreePointer firstValidPointer() {
 		if (null == _pointer) {
 			return null;
 		}
