@@ -193,13 +193,9 @@ public final class Config4Impl implements Configuration, DeepClone,
     
     public void blockSize(int bytes){
        if (bytes < 1 || bytes > 127) {
-           Exceptions4.throwRuntimeException(1);
-       }
-       
-       if (i_stream != null) {
-           Exceptions4.throwRuntimeException(46);   // see readable message for code in Messages.java
-       }
-       
+           throw new IllegalArgumentException();
+       } 
+       globalSettingOnly();       
        _config.put(BLOCKSIZE,(byte)bytes);
     }
     
@@ -360,8 +356,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 
     private void globalSettingOnly() {
         if (i_stream != null) {
-            new Exception().printStackTrace();
-            Exceptions4.throwRuntimeException(46);
+           throw new GlobalOnlyConfigException();
         }
     }
     

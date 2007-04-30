@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import java.io.IOException;
 
+import com.db4o.*;
 import com.db4o.ext.OldFormatException;
 import com.db4o.foundation.Cool;
 import com.db4o.internal.fileheader.*;
@@ -127,14 +128,10 @@ public final class ConfigBlock {
         addressChanged(address);
 		timerFileLock().writeOpenTime();
 		StatefulBuffer reader = _container.getWriter(_container.systemTransaction(), _address, LENGTH);
-		try{
-			_container.readBytes(reader._buffer, _address, LENGTH);
-		}catch(RuntimeException e){
-			// TODO: Exception handling
-		}
+		_container.readBytes(reader._buffer, _address, LENGTH);
 		int oldLength = reader.readInt();
 		if(oldLength > LENGTH  || oldLength < MINIMUM_LENGTH){
-			Exceptions4.throwRuntimeException(Messages.INCOMPATIBLE_FORMAT);
+			throw new IncompatibleFileFormatException();
 		}
         if(oldLength != LENGTH){
         	// TODO: instead of bailing out, somehow trigger wrapping the stream's io adapter in

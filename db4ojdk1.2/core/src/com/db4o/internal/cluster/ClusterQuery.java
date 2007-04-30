@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.cluster.Cluster;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.query.*;
 import com.db4o.query.*;
@@ -61,24 +62,20 @@ public class ClusterQuery implements Query{
     }
 
     public Query orderAscending() {
-        Exceptions4.notSupported();
-        return this;
+        throw new NotSupportedException();
     }
 
     public Query orderDescending() {
-        Exceptions4.notSupported();        
-        return this;
+    	throw new NotSupportedException();
     }
 
 	public Query sortBy(QueryComparator comparator) {
 		// FIXME
-		Exceptions4.notSupported();
-		return this;
+		throw new NotSupportedException();
 	}
 
 	public Query sortBy(Comparator comparator) {
 		// FIXME
-		Exceptions4.notSupported();
-		return this;
+		throw new NotSupportedException();
 	}
 }
