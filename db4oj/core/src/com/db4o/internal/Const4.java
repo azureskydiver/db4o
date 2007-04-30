@@ -37,9 +37,10 @@ public final class Const4
 	public static final byte	YAPFLOAT			= (byte)'f';
 	public static final byte	YAPEND				= (byte)'}';
 	public static final byte	YAPNULL				= (byte)'0';
-    public static final byte   BTREE               = (byte)'T';               
-    public static final byte   BTREE_NODE          = (byte)'B';               
-    public static final byte   HEADER          = (byte)'H';               
+    public static final byte	BTREE				= (byte)'T';               
+    public static final byte	BTREE_NODE			= (byte)'B';               
+    public static final byte	HEADER				= (byte)'H';
+    public static final byte    INTEGER_LIST		= (byte)'I';
 	
 	public static final int	IDENTIFIER_LENGTH	= (Deploy.debug && Deploy.identifiers)?1:0;
 	public static final int	BRACKETS_BYTES		= (Deploy.debug && Deploy.brackets)?1:0;
