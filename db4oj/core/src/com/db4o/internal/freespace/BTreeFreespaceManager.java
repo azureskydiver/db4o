@@ -42,9 +42,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
         }
 
         Slot newFreeSlot = toBlocked(slot);
-        int blockedLength = newFreeSlot._length;
-        
-		BTreeNodeSearchResult searchResult = 
+        BTreeNodeSearchResult searchResult = 
 			_slotsByAddress.searchLeaf(transaction(), slot, SearchTarget.LOWEST);
 		BTreePointer pointer = searchResult.firstValidPointer();
 		if(pointer != null){
@@ -70,7 +68,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		}
 		addSlot(newFreeSlot);
 	    if(! Debug.freespaceChecker){
-	    	_file.overwriteDeletedBytes(slot._address, blockedLength * blockSize());
+	    	_file.overwriteDeletedSlot(slot);
 	    }
 
 	}

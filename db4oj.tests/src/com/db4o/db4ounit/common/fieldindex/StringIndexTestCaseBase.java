@@ -58,7 +58,7 @@ public abstract class StringIndexTestCaseBase extends AbstractDb4oTestCase {
 		fm.traverseFreeSlots(new Visitor4() {
 			public void visit(Object obj) {
 				Slot slot = (Slot) obj;
-				file.overwriteDeletedBytes(slot.getAddress(), slot.getLength());
+				file.overwriteDeletedSlot(slot);
 			}
 		});
 	}

@@ -236,10 +236,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public int blocksFor(long bytes) {
-        int blockLen = blockSize();
-        int result = (int)(bytes / blockLen);
-        if (bytes % blockLen != 0) result++;
-        return result;
+    	int blockLen = blockSize();
+    	return (int) ((bytes + blockLen -1 )/ blockLen);
+    }
+    
+    public final int blockAligned(int bytes) {
+    	return blocksFor(bytes) * blockSize();
     }
     
     private final boolean breakDeleteForEnum(ObjectReference reference, boolean userCall){
