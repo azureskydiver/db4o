@@ -20,7 +20,7 @@ public class PersistentIntegerArray extends PersistentBase {
 	}
 
 	public byte getIdentifier() {
-		return Const4.INTEGER_LIST;
+		return Const4.INTEGER_ARRAY;
 	}
 
 	public int ownLength() {
