@@ -267,18 +267,18 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return id;
     }
     
-    public int getSlot(int a_length){
+    public int getSlot(int length){
         
         if(! DTrace.enabled){
-            return getSlot1(a_length);
+            return getSlot1(length)._address;
         }
         
-        int address = getSlot1(a_length);
-        DTrace.GET_SLOT.logLength(address, a_length);
+        int address = getSlot1(length)._address;
+        DTrace.GET_SLOT.logLength(address, length);
         return address;
     }
 
-    private final int getSlot1(int bytes) {
+    private final Slot getSlot1(int bytes) {
         
         if(bytes <= 0){
         	throw new IllegalArgumentException();
@@ -312,15 +312,17 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             }
             
             if(slot != null){
-                return slot._address;
+                return slot;
             }
         }
         
         int blocksNeeded = blocksFor(bytes);
+        int address = appendBlocks(blocksNeeded);
+        Slot slot = new Slot(address, bytes);
         if (Debug.xbytes && Deploy.overwrite) {
-            overwriteDeletedBytes(_blockEndAddress, blocksNeeded * blockSize());
+            overwriteDeletedSlot(slot);
         }
-        return appendBlocks(blocksNeeded);
+		return slot;
     }
     
     protected int appendBlocks(int blockCount){
@@ -768,7 +770,11 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     // This is a reroute of writeBytes to write the free blocks
     // unchecked.
 
-    public abstract void overwriteDeletedBytes(int a_address, int a_length);
+    public abstract void overwriteDeletedBytes(int address, int length);
+    
+    public void overwriteDeletedSlot(Slot slot) {
+    	overwriteDeletedBytes(slot._address, blockAligned(slot._length));	
+    }
 
     public final void writeTransactionPointer(int address) {
         _fileHeader.writeTransactionPointer(systemTransaction(), address);

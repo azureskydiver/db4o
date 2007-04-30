@@ -67,7 +67,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         // do nothing
     }
     
-    public void free(Slot slot) {
+    public void free(final Slot slot) {
     	
     	int address = slot._address;
     	int length = slot._length;
@@ -124,7 +124,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
             }
         }
         if(! Debug.freespaceChecker){
-        	_file.overwriteDeletedBytes(address, length * blockSize());
+        	_file.overwriteDeletedSlot(slot);
         }
     }
     
