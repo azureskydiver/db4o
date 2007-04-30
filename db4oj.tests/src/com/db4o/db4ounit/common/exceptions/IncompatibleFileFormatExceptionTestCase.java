@@ -33,9 +33,7 @@ public class IncompatibleFileFormatExceptionTestCase implements Db4oTestCase {
 			public void run() throws Throwable {
 				Db4o.openFile(INCOMPATIBLE_FILE_FORMAT);
 			}
-
 		});
-
 	}
 
 }
