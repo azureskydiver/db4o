@@ -2,19 +2,19 @@
 
 package org.polepos;
 
-import org.polepos.circuits.collection.*;
+import org.polepos.circuits.magnycours.*;
 import org.polepos.db4o.*;
 import org.polepos.framework.*;
 import org.polepos.teams.db4o.*;
 
-public class CollectionRunner extends AbstractDb4oVersionsRaceRunner {
+public class MagnycoursRunner extends AbstractDb4oVersionsRaceRunner {
 	public static void main(String[] arguments) {
-        new CollectionRunner().run();
+        new MagnycoursRunner().run();
     }
 	
 	public Circuit[] circuits() {
 		return new Circuit[] { 
-				new Collection(),  
+				new Magnycours(),  
 		};
 	}
 	
@@ -29,7 +29,7 @@ public class CollectionRunner extends AbstractDb4oVersionsRaceRunner {
 
 	public Driver[] drivers() {
 		return new Driver [] {
-				new CollectionDriverImpl(),
+				new MagnycoursDb4o(),
 		};
 	}
 	

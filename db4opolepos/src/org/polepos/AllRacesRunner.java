@@ -22,9 +22,9 @@ package org.polepos;
 
 import org.polepos.circuits.bahrain.*;
 import org.polepos.circuits.barcelona.*;
-import org.polepos.circuits.collection.*;
 import org.polepos.circuits.imola.*;
 import org.polepos.circuits.indianapolis.*;
+import org.polepos.circuits.magnycours.*;
 import org.polepos.circuits.melbourne.*;
 import org.polepos.circuits.monaco.*;
 import org.polepos.circuits.montreal.*;
@@ -66,8 +66,8 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 				 new Monaco(),
 				 new Nurburgring(),
 				 new Montreal(),
-				 new Collection(),
-				 new Indianapolis(), 
+				 new Indianapolis(),
+				 new Magnycours(),
 		};
 	}
 
@@ -81,7 +81,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 		        new MonacoDb4o(),
 		        new NurburgringDb4o(),
 		        new MontrealDb4o(),
-				new CollectionDriverImpl(),
+				new MagnycoursDb4o(),
 				new IndianapolisDb4o(),
 		};
 	}
