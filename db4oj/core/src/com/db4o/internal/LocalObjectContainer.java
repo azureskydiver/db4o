@@ -333,9 +333,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     private void checkBlockedAddress(int blockedAddress) {
     	if(blockedAddress < 0) {
-    		rollback1();
     		switchToReadOnlyMode();
-    		Exceptions4.throwRuntimeException(69);
+    		throw new DatabaseMaximumSizeReachedException();
     	}
     }
 

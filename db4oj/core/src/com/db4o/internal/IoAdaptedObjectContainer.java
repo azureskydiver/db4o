@@ -258,13 +258,12 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 		_file.blockSeek(address, addressOffset);
 		int bytesRead = _file.read(bytes, length);
-		assertRead(bytesRead, length);
+		assertReadCount(bytesRead, length);
 	}
 
-	private void assertRead(int bytesRead, int expected) throws IOException {
+	private void assertReadCount(int bytesRead, int expected) {
 		if (bytesRead != expected) {
-			throw new IOException("expected read bytes = " + expected
-					+ ", but read = " + bytesRead + "bytes");
+			throw new IncompatibleFileFormatException();
 		}
 	}
 	

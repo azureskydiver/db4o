@@ -13,6 +13,10 @@ import db4ounit.extensions.*;
 
 public class NonStaticConfigurationTestCase implements Db4oTestCase {
 
+	public static void main(String[] args) {
+		new TestRunner(NonStaticConfigurationTestCase.class).run();
+	}
+	
 	public void setUp() throws Exception {
 		new File(FILENAME).delete();
 	}

@@ -176,7 +176,7 @@ public interface Configuration {
      * internal pointers have this length.
      * @param bytes the size in bytes from 1 to 127
      */
-    public void blockSize(int bytes);
+    public void blockSize(int bytes) throws GlobalOnlyConfigException;
     
     
     /**
@@ -316,7 +316,7 @@ public interface Configuration {
      * off.
      * @see #password
      */
-    public void encrypt(boolean flag);
+    public void encrypt(boolean flag) throws GlobalOnlyConfigException;
     
     
     /**
@@ -430,7 +430,7 @@ public interface Configuration {
      * http://developer.db4o.com/ProjectSpaces/view.aspx/XTEA
      * @param adapter - the IoAdapter
      */
-    public void io(IoAdapter adapter);
+    public void io(IoAdapter adapter) throws GlobalOnlyConfigException;
     
     /**
      * allows to mark fields as transient with custom attributes.
@@ -527,7 +527,7 @@ public interface Configuration {
      * 
      * @param pass the password to be used.
      */
-    public void password(String pass);
+    public void password(String pass) throws GlobalOnlyConfigException;
 
     
     /**
