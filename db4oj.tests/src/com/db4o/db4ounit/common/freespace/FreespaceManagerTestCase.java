@@ -26,10 +26,13 @@ public class FreespaceManagerTestCase extends AbstractDb4oTestCase implements Op
 		int address = fmIx.onNew(container);
 		fmIx.start(address);
 		
+		BTreeFreespaceManager btreeFm = new BTreeFreespaceManager(container);
+		btreeFm.start(0);
+		
 		fm = new FreespaceManager[]{
 			new FreespaceManagerRam(container),
 			// fmIx,
-			new BTreeFreespaceManager(container)
+			btreeFm,
 		};
 	}
 	

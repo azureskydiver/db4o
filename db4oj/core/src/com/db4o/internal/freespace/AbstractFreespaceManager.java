@@ -42,9 +42,10 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         switch(systemType){
         	case FM_IX:
         		return new FreespaceManagerIx(file);
+        	case FM_BTREE:
+        		return new BTreeFreespaceManager(file);
             default:
                 return new FreespaceManagerRam(file);
-                
         }
     }
     
