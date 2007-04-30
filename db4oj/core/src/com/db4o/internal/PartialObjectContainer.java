@@ -231,10 +231,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         _referenceSystem.addExistingReference(ref);
     }
     
-    public byte blockSize() {
-        return 1;
-    }
-
+    public abstract byte blockSize();
+     
     public int blocksFor(long bytes) {
     	int blockLen = blockSize();
     	return (int) ((bytes + blockLen -1 )/ blockLen);
