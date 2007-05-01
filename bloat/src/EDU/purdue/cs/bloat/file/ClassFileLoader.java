@@ -23,6 +23,7 @@ package EDU.purdue.cs.bloat.file;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
+import java.net.URL;
 
 import EDU.purdue.cs.bloat.reflect.*;
 
@@ -196,7 +197,28 @@ public class ClassFileLoader implements ClassInfoLoader {
 				interfaceIndexes, constants, this);
 	}
 
-	/**
+    /**
+     * Thhis method tries to load a Class by its ressource.
+     * @param name the Name of the Class
+     * @return the ClassInfo
+     */
+    private ClassInfo loadClassFromRessource(String name){
+        name = name.replaceAll("/",".");
+        try {
+            Class clazz = Class.forName(name);
+            int i = name.lastIndexOf('.');
+            if (i >= 0 && i < name.length()){
+                name = name.substring(i+1);
+            }
+            URL url = clazz.getResource(name + ".class");
+            if (url != null){
+                return loadClassFromStream(new File(url.getFile()), url.openStream());
+            }
+        } catch (Exception e) {}
+        return null;
+    }
+
+    /**
 	 * Loads the class with the given name. Searches the class path, including
 	 * zip files, for the class and then returns a data stream for the class
 	 * file.
@@ -227,7 +249,12 @@ public class ClassFileLoader implements ClassInfoLoader {
 			}
 		}
 
-		// Otherwise, we have a (possibly fully-specified) class name.
+        if  ((file = loadClassFromRessource(name)) != null){
+            addToCache(file);
+            return file;
+        }
+
+        // Otherwise, we have a (possibly fully-specified) class name.
 		name = name.replace('.', '/');
 
 		// Check the cache for the class file.
@@ -377,6 +404,12 @@ public class ClassFileLoader implements ClassInfoLoader {
 			throw new ClassNotFoundException(name);
 		}
 
+		addToCache(file);
+
+		return file;
+	}
+
+	private void addToCache(ClassInfo file) {
 		// If we've reached the cache size limit, remove the oldest file
 		// in the cache. Then add the new file.
 		if (cache.size() == ClassFileLoader.CACHE_LIMIT) {
@@ -384,10 +417,9 @@ public class ClassFileLoader implements ClassInfoLoader {
 		}
 
 		cache.addFirst(file);
-
-		return file;
 	}
-
+	
+	
 	/**
 	 * Set the directory into which commited class files should be written.
 	 * 
