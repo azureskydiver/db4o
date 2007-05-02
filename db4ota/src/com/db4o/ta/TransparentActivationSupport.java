@@ -23,6 +23,10 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			});
 		factory.classRegistered().addListener(new TAClassRegistrationListener(container));
 	}
+	
+	public void prepare(Configuration configuration) {
+		// Nothing to do...
+	}
 
 	private static final class TAClassRegistrationListener implements EventListener4 {
 		private final ObjectContainerBase _container;

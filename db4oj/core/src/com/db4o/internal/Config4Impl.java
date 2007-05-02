@@ -158,12 +158,17 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
     
 	public void add(ConfigurationItem item) {
+		item.prepare(this);
+		safeConfigurationItems().put(item, item);
+	}
+
+	private Hashtable4 safeConfigurationItems() {
 		Hashtable4 items = configurationItems();
 		if(items==null) {
 			items=new Hashtable4(16);
 			_config.put(CONFIGURATION_ITEMS,items);
 		}
-		items.put(item, item);
+		return items;
 	}
 	
     public void allowVersionUpdates(boolean flag){

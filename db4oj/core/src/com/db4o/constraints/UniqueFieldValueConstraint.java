@@ -28,6 +28,10 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 		_fieldName = fieldName;
 	}
 	
+	public void prepare(Configuration configuration) {
+		// Nothing to do...
+	}
+	
 	/**
 	 * internal method, public for implementation reasons.
 	 */
@@ -75,5 +79,6 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 				ensureSingleOccurence(trans, commitEventArgs.updated());
 			}
 		});
+		
 	}
 }
