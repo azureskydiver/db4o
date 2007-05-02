@@ -102,7 +102,7 @@ public class ConnectedMenuBar extends BaseMenuBar {
 					try {
 						frame.getObjectContainer().ext().backup(f.getAbsolutePath()); // todo: change this to use UISession.getObjectContainer
 						OptionPaneHelper.showSuccessDialog(frame, "Backup completed successfully.", "Backup Successful");
-					} catch (IOException e1) {
+					} catch (Exception e1) {
 						e1.printStackTrace();
 						OptionPaneHelper.showErrorMessage(frame, "Error during backup! " + e1.getMessage(), "Error during backup");
 					}
