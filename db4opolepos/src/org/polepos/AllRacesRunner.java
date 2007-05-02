@@ -48,11 +48,11 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 
 		return new Team[] {
 				db4oTeam(Db4oVersions.JAR604, null),
-				db4oTeam(Db4oVersions.JAR603, null),
-				db4oTeam(Db4oVersions.JAR60, null),
+				db4oTeam(Db4oVersions.JAR61, null),
+				db4oTeam(Db4oVersions.JAR62, null),
 				db4oTeam(Db4oVersions.JAR604, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
-				db4oTeam(Db4oVersions.JAR603, new int[] {Db4oOptions.CLIENT_SERVER,Db4oOptions.CLIENT_SERVER_TCP }),
-				db4oTeam(Db4oVersions.JAR60, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+				db4oTeam(Db4oVersions.JAR61, new int[] {Db4oOptions.CLIENT_SERVER,Db4oOptions.CLIENT_SERVER_TCP }),
+				db4oTeam(Db4oVersions.JAR62, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
 		};
 	}
 
