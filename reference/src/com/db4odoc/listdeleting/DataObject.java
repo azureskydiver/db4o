@@ -2,7 +2,6 @@
 
 package com.db4odoc.listdeleting;
 
-
 public class DataObject {
         String _name;
         String _data;

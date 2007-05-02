@@ -9,19 +9,18 @@ import com.db4o.reflect.jdk.JdkClass;
 
 public class LoggingReflector implements Reflector {
 	private ReflectArray _array;
-	
+
 	private Reflector _parent;
 
-
 	public LoggingReflector() {
-	
+
 	}
-	
+
 	public ReflectArray array() {
-		 if(_array == null){
-	            _array = new LoggingArray(_parent);
-	        }
-		 return _array;
+		if (_array == null) {
+			_array = new LoggingArray(_parent);
+		}
+		return _array;
 	}
 
 	public boolean constructorCallsSupported() {
@@ -29,8 +28,9 @@ public class LoggingReflector implements Reflector {
 	}
 
 	public ReflectClass forClass(Class clazz) {
-		ReflectClass rc = new JdkClass(_parent, clazz); 
-		System.out.println("forClass: " + clazz+" -> "+(rc== null ? "" : rc.getName()));    
+		ReflectClass rc = new JdkClass(_parent, clazz);
+		System.out.println("forClass: " + clazz + " -> "
+				+ (rc == null ? "" : rc.getName()));
 		return rc;
 	}
 
@@ -38,7 +38,8 @@ public class LoggingReflector implements Reflector {
 		try {
 			Class clazz = Class.forName(className);
 			ReflectClass rc = forClass(clazz);
-			System.out.println("forName: " + className+" -> "+(rc== null ? "" : rc.getName()));
+			System.out.println("forName: " + className + " -> "
+					+ (rc == null ? "" : rc.getName()));
 			return rc;
 		} catch (ClassNotFoundException e) {
 			return null;
@@ -49,8 +50,9 @@ public class LoggingReflector implements Reflector {
 		if (a_object == null) {
 			return null;
 		}
-		ReflectClass rc = _parent.forClass(a_object.getClass()); 
-		System.out.println("forObject:" + a_object+" -> "+(rc== null ? "" : rc.getName()));
+		ReflectClass rc = _parent.forClass(a_object.getClass());
+		System.out.println("forObject:" + a_object + " -> "
+				+ (rc == null ? "" : rc.getName()));
 		return rc;
 	}
 

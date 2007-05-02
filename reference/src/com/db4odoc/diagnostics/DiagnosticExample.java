@@ -1,3 +1,4 @@
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.diagnostics;
 
 import java.io.File;
@@ -5,12 +6,13 @@ import java.io.File;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
+import com.db4o.diagnostic.DiagnosticToConsole;
 import com.db4o.query.Query;
-import com.db4o.diagnostic.*;
 
 
 public class DiagnosticExample{
-	public final static String YAPFILENAME="formula1.yap";
+	private final static String DB4O_FILE_NAME="reference.db4o";
 	
 	public static void main(String[] args){
 		testEmpty();
@@ -19,75 +21,78 @@ public class DiagnosticExample{
         testTranslatorDiagnostics();
 	}
 	// end main
-    public static void testEmpty() {
-    	Db4o.configure().diagnostic().addListener(new DiagnosticToConsole());
-        new File(YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	
+	private static void testEmpty() {
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.diagnostic().addListener(new DiagnosticToConsole());
+        new File(DB4O_FILE_NAME).delete();
+        ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
         try {
-        	setEmptyObject(db);
+        	setEmptyObject(container);
         }
         finally {
-            db.close();
-            Db4o.configure().diagnostic().removeAllListeners();
+            container.close();
         }
     }
     // end testEmpty
     
-    private static void setEmptyObject(ObjectContainer db){
+    private static void setEmptyObject(ObjectContainer container){
     	Empty empty = new Empty();
-        db.set(empty);
+        container.set(empty);
     }
     // end setEmptyObject
     	
-    public static void testArbitrary() {
-    	Db4o.configure().diagnostic().addListener(new DiagnosticToConsole());
-    	new File(YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(YAPFILENAME);
+    private static void testArbitrary() {
+    	Configuration configuration = Db4o.newConfiguration();
+    	configuration.diagnostic().addListener(new DiagnosticToConsole());
+    	new File(DB4O_FILE_NAME).delete();
+        ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
         try {
         	Pilot pilot = new Pilot("Rubens Barrichello",99);
-        	db.set(pilot);
-        	queryPilot(db);
+        	container.set(pilot);
+        	queryPilot(container);
         }
         finally {
-            db.close();
-            Db4o.configure().diagnostic().removeAllListeners();
+            container.close();
         }
     }
     // end testArbitrary
 	
-    private static void queryPilot(ObjectContainer db){
+    private static void queryPilot(ObjectContainer container){
     	int[]  i = new int[]{19,100};
-    	ObjectSet result = db.query(new ArbitraryQuery(i));
+    	ObjectSet result = container.query(new ArbitraryQuery(i));
     	listResult(result);
     }
     // end queryPilot
     
-    public static void testIndexDiagnostics() {
-    	Db4o.configure().diagnostic().addListener(new IndexDiagListener());
-    	Db4o.configure().updateDepth(3);
-        new File(YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(YAPFILENAME);
+    private static void testIndexDiagnostics() {
+    	new File(DB4O_FILE_NAME).delete();
+    	
+    	Configuration configuration = Db4o.newConfiguration();
+    	configuration.diagnostic().addListener(new IndexDiagListener());
+    	configuration.updateDepth(3);
+        
+        ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
         try {
         	Pilot pilot1 = new Pilot("Rubens Barrichello",99);
-        	db.set(pilot1);
+        	container.set(pilot1);
         	Pilot pilot2 = new Pilot("Michael Schumacher",100);
-        	db.set(pilot2);
-        	queryPilot(db);
-        	setEmptyObject(db);
-        	Query query = db.query();
+        	container.set(pilot2);
+        	queryPilot(container);
+        	setEmptyObject(container);
+        	Query query = container.query();
         	query.constrain(Pilot.class);
 			query.descend("points").constrain(new Integer(99));
 			ObjectSet  result = query.execute();
 			listResult(result);
         }
         finally {
-            db.close();
-            Db4o.configure().diagnostic().removeAllListeners();
+            container.close();
         }
     }
     // end testIndexDiagnostics
      
-    public static void testTranslatorDiagnostics() {
+    private static void testTranslatorDiagnostics() {
     	storeTranslatedCars();
     	retrieveTranslatedCars();
     	retrieveTranslatedCarsNQ();
@@ -96,99 +101,100 @@ public class DiagnosticExample{
     }
     // end testTranslatorDiagnostics
     
-    public static void storeTranslatedCars() {
-    	Db4o.configure().exceptionsOnNotStorable(true);
-    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
-    	Db4o.configure().objectClass(Car.class).callConstructor(true);
-    	new File(YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+    private static void storeTranslatedCars() {
+    	new File(DB4O_FILE_NAME).delete();
+    	
+    	Configuration configuration = Db4o.newConfiguration();
+    	configuration.exceptionsOnNotStorable(true);
+    	configuration.objectClass(Car.class).translate(new CarTranslator());
+    	configuration.objectClass(Car.class).callConstructor(true);
+    	
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Car car1 = new Car("BMW");
 			System.out.println("ORIGINAL: " + car1);
-			db.set(car1);
+			container.set(car1);
 			Car car2 = new Car("Ferrari");
 			System.out.println("ORIGINAL: " + car2);
-			db.set(car2);
+			container.set(car2);
 		} catch (Exception exc) {
 			System.out.println(exc.toString());
 			return;
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
     // end storeTranslatedCars
 
-    public static void retrieveTranslatedCars() {
-    	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
-    	Db4o.configure().exceptionsOnNotStorable(true);
-    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
-    	Db4o.configure().objectClass(Car.class).callConstructor(true);
-    	ObjectContainer db = Db4o.openFile(YAPFILENAME);
+    private static void retrieveTranslatedCars() {
+    	Configuration configuration = Db4o.newConfiguration();
+    	configuration.diagnostic().addListener(new TranslatorDiagListener());
+    	configuration.exceptionsOnNotStorable(true);
+    	configuration.objectClass(Car.class).translate(new CarTranslator());
+    	configuration.objectClass(Car.class).callConstructor(true);
+    	ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			ObjectSet  result = db.query(Car.class);
+			ObjectSet  result = container.query(Car.class);
 			listResult(result);
 		} finally {
-			db.close();
-			Db4o.configure().diagnostic().removeAllListeners();
+			container.close();
 		}
 	}
     // end retrieveTranslatedCars
 
-    public static void retrieveTranslatedCarsNQ() {
-    	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
-    	Db4o.configure().exceptionsOnNotStorable(true);
-    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
-    	Db4o.configure().objectClass(Car.class).callConstructor(true);
-    	ObjectContainer db = Db4o.openFile(YAPFILENAME);
+    private static void retrieveTranslatedCarsNQ() {
+    	Configuration configuration = Db4o.newConfiguration();
+    	configuration.diagnostic().addListener(new TranslatorDiagListener());
+    	configuration.exceptionsOnNotStorable(true);
+    	configuration.objectClass(Car.class).translate(new CarTranslator());
+    	configuration.objectClass(Car.class).callConstructor(true);
+    	ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			ObjectSet  result = db.query(new NewCarModel());
+			ObjectSet  result = container.query(new NewCarModel());
 			listResult(result);
 		} finally {
-			db.close();
-			Db4o.configure().diagnostic().removeAllListeners();
+			container.close();
 		}
 	}
     // end retrieveTranslatedCarsNQ
     
-    public static void retrieveTranslatedCarsNQUnopt() {
-    	Db4o.configure().optimizeNativeQueries(false);
-    	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
-    	Db4o.configure().exceptionsOnNotStorable(true);
-    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
-    	Db4o.configure().objectClass(Car.class).callConstructor(true);
-    	ObjectContainer db = Db4o.openFile(YAPFILENAME);
+    private static void retrieveTranslatedCarsNQUnopt() {
+    	Configuration configuration = Db4o.newConfiguration();
+    	configuration.optimizeNativeQueries(false);
+    	configuration.diagnostic().addListener(new TranslatorDiagListener());
+    	configuration.exceptionsOnNotStorable(true);
+    	configuration.objectClass(Car.class).translate(new CarTranslator());
+    	configuration.objectClass(Car.class).callConstructor(true);
+    	ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			ObjectSet  result = db.query(new NewCarModel());
+			ObjectSet  result = container.query(new NewCarModel());
 			listResult(result);
 		} finally {
-			Db4o.configure().optimizeNativeQueries(true);
-			db.close();
-			Db4o.configure().diagnostic().removeAllListeners();
+			container.close();
 		}
 	}
     // end retrieveTranslatedCarsNQUnopt
 
-    public static void retrieveTranslatedCarsSODAEv() {
-    	Db4o.configure().diagnostic().addListener(new TranslatorDiagListener());
-    	Db4o.configure().exceptionsOnNotStorable(true);
-    	Db4o.configure().objectClass(Car.class).translate(new CarTranslator());
-    	Db4o.configure().objectClass(Car.class).callConstructor(true);
-    	ObjectContainer db = Db4o.openFile(YAPFILENAME);
+    private static void retrieveTranslatedCarsSODAEv() {
+    	Configuration configuration = Db4o.newConfiguration();
+    	configuration.diagnostic().addListener(new TranslatorDiagListener());
+    	configuration.exceptionsOnNotStorable(true);
+    	configuration.objectClass(Car.class).translate(new CarTranslator());
+    	configuration.objectClass(Car.class).callConstructor(true);
+    	ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			Query query = db.query();
+			Query query = container.query();
 			query.constrain(Car.class);
 			query.constrain(new CarEvaluation());
 			ObjectSet  result = query.execute();
 			listResult(result);
 		} finally {
-			db.close();
-			Db4o.configure().diagnostic().removeAllListeners();
-			Db4o.configure().objectClass(Car.class).translate(null);
+			container.close();
 		}
 	}
     // end retrieveTranslatedCarsSODAEv
     
-    public static void listResult(ObjectSet result) {
+    private static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {
             System.out.println(result.next());

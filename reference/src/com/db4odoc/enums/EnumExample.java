@@ -1,18 +1,18 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.enums;
 
-import java.awt.Color;
 import java.io.File;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.query.Query;
 
 
 public class EnumExample {
-	public final static String YAPFILENAME="formula1.yap";
+	private final static String DB4O_FILE_NAME="reference.db4o";
 	public static void main(String[] args) {
         setPilots();
         checkPilots();
@@ -26,22 +26,22 @@ public class EnumExample {
 	
 	
 	
-	public static void setPilots(){
-		new File(YAPFILENAME).delete();
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	private static void setPilots(){
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			db.set(new Pilot("Michael Schumacher",Qualification.WINNER));
-			db.set(new Pilot("Rubens Barrichello",Qualification.PROFESSIONAL));
+			container.set(new Pilot("Michael Schumacher",Qualification.WINNER));
+			container.set(new Pilot("Rubens Barrichello",Qualification.PROFESSIONAL));
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end setPilots
 	
-	public static void checkPilots(){
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	private static void checkPilots(){
+		ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
-	        ObjectSet result = db.query(Pilot.class);
+	        ObjectSet result = container.query(Pilot.class);
 	        System.out.println("Saved pilots: " + result.size());
 	        for(int x = 0; x < result.size(); x++){
 	        	Pilot pilot = (Pilot )result.get(x);
@@ -54,78 +54,80 @@ public class EnumExample {
 	        	}
 	        }
 		} finally {
-			db.close();
+			container.close();
 		}
     }
 	// end checkPilots
 	
-	public static void updateQualification(){
+	private static void updateQualification(){
 		System.out.println("Updating WINNER qualification constant");
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+		ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			Query query = db.query();
+			Query query = container.query();
 			query.constrain(Qualification.class);
 			query.descend("qualification").constrain("WINNER");
 	        ObjectSet result = query.execute();
 	        for(int x = 0; x < result.size(); x++){
 	        	Qualification qualification = (Qualification)result.get(x);
 	        	qualification.testChange("WINNER2006");
-	        	db.set(qualification);
+	        	container.set(qualification);
 	        }
 		} finally {
-			db.close();
+			container.close();
 		}
 		printQualification();
     }
 	// end updateQualification
 	
-	public static void deletePilots(){
+	private static void deletePilots(){
 		System.out.println("Qualification enum before delete Pilots");
 		printQualification();
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
-		db.ext().configure() .objectClass(Pilot.class).objectField("qualification").cascadeOnDelete(true);
+		Configuration configuration = Db4o.newConfiguration();
+		configuration .objectClass(Pilot.class).objectField("qualification").cascadeOnDelete(true);
+		ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
 
 		try {
-	        ObjectSet result = db.query(Pilot.class);
+	        ObjectSet result = container.query(Pilot.class);
 	        for(int x = 0; x < result.size(); x++){
 	        	Pilot pilot = (Pilot )result.get(x);
-	        	db.delete(pilot);
+	        	container.delete(pilot);
 	        }
 		} finally {
-			db.close();
+			container.close();
 		}
 		System.out.println("Qualification enum after delete Pilots");
 		printQualification();
     }
 	// end deletePilots
 	
-	public static void printQualification(){
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	private static void printQualification(){
+		ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet  result = db.query(Qualification.class);
+			ObjectSet  result = container.query(Qualification.class);
 			System.out.println("results: " + result.size());
 	        for(int x = 0; x < result.size(); x++){
 	        	Qualification pq = (Qualification)result.get(x);
 	        	System.out.println("Category: "+pq);
 	        }
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end printQualification
 	
-	public static void deleteQualification(){
+	private static void deleteQualification(){
 		System.out.println("Explicit delete of Qualification enum");
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
-		db.ext().configure() .objectClass(Qualification.class).cascadeOnDelete(true);
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.objectClass(Qualification.class).cascadeOnDelete(true);
+		ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			ObjectSet  result = db.query(Qualification.class);
+			ObjectSet  result = container.query(Qualification.class);
 	        for(int x = 0; x < result.size(); x++){
 	        	Qualification pq = (Qualification)result.get(x);
-	        	db.delete(pq);
+	        	container.delete(pq);
 	        }
 		} finally {
-			db.close();
+			container.close();
 		}
 		printQualification();
     }

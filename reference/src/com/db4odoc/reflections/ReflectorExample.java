@@ -1,7 +1,6 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.reflections;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +8,7 @@ import java.io.IOException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.query.Query;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectConstructor;
@@ -17,7 +17,9 @@ import com.db4o.reflect.ReflectMethod;
 import com.db4o.reflect.generic.GenericReflector;
 
 public class ReflectorExample  {
-	public final static String YAPFILENAME="formula1.yap";
+	
+	private final static String DB4O_FILE_NAME="reference.db4o";
+	
 	public static void main(String[] args) throws IOException {
 		setCars();
 		getReflectorInfo();
@@ -26,50 +28,50 @@ public class ReflectorExample  {
 	}
 	// end main
 	
-	public static void setCars()
+	private static void setCars()
 	{
-		 new File(YAPFILENAME).delete();
-		 ObjectContainer db=Db4o.openFile(YAPFILENAME);
+		 new File(DB4O_FILE_NAME).delete();
+		 ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Car car1 = new Car("BMW");
-			db.set(car1);
+			container.set(car1);
 			Car car2 = new Car("Ferrari");
-			db.set(car2);
+			container.set(car2);
 			
 			System.out.println("Saved:");
-			Query query = db.query();
+			Query query = container.query();
 			query.constrain(Car.class);
 			ObjectSet results = query.execute();
 			listResult(results);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end setCars
 	
-	public static void getCars()
+	private static void getCars()
 	{
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+		ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			GenericReflector reflector = new GenericReflector(null,db.ext().reflector());
+			GenericReflector reflector = new GenericReflector(null,container.ext().reflector());
 			ReflectClass carClass = reflector.forName(Car.class.getName());
 			System.out.println("Reflected class "+carClass);
 			System.out.println("Retrieved with reflector:");
-			Query query = db.query();
+			Query query = container.query();
 			query.constrain(carClass);
 			ObjectSet results = query.execute();
 			listResult(results);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end getCars
 	
-	public static void getCarInfo()
+	private static void getCarInfo()
 	{
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+		ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			GenericReflector reflector = new GenericReflector(null,db.ext().reflector());
+			GenericReflector reflector = new GenericReflector(null,container.ext().reflector());
 			ReflectClass carClass = reflector.forName(Car.class.getName());
 			System.out.println("Reflected class "+carClass);
 			 // public fields
@@ -90,44 +92,45 @@ public class ReflectorExample  {
 			System.out.println(method.getClass());
 
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end getCarInfo
 	
-	public static void getReflectorInfo()
+	private static void getReflectorInfo()
 	{
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+		ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			System.out.println("Reflector in use: " + db.ext().reflector());
-			System.out.println("Reflector delegate" +db.ext().reflector().getDelegate());
-			ReflectClass[] knownClasses = db.ext().reflector().knownClasses();
+			System.out.println("Reflector in use: " + container.ext().reflector());
+			System.out.println("Reflector delegate" +container.ext().reflector().getDelegate());
+			ReflectClass[] knownClasses = container.ext().reflector().knownClasses();
 			int count = knownClasses.length;
 			System.out.println("Known classes: " + count);
 			for (int i=0; i <knownClasses.length; i++){
 				System.out.println(knownClasses[i]);
 			}
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end getReflectorInfo
 	
-	public static void testReflector()
+	private static void testReflector()
 	{
 		LoggingReflector logger = new LoggingReflector();
-		Db4o.configure().reflectWith(logger);
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.reflectWith(logger);
+		ObjectContainer container=Db4o.openFile(configuration , DB4O_FILE_NAME);
 		try {
-			ReflectClass rc  = db.ext().reflector().forName(Car.class.getName());
+			ReflectClass rc  = container.ext().reflector().forName(Car.class.getName());
 			System.out.println("Reflected class: " + rc);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end testReflector
 	
-    public static void listResult(ObjectSet result) {
+	private static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {
             System.out.println(result.next());

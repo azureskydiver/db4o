@@ -7,33 +7,37 @@ import java.io.File;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 
 public class CustomMarshallerExample  {
 
-	private static final String DBFILE = "test.db";
+	private static final String DB4O_FILE_NAME = "reference.db4o";
 	private static ItemMarshaller marshaller = null;
 	
 	public static void main(String[] args) {
+		Configuration configuration = Db4o.newConfiguration();
 		// store objects using standard mashaller
-		storeObjects();
+		storeObjects(configuration);
 		// retrieve objects using standard marshaller
-		retrieveObjects();
+		retrieveObjects(configuration);
 		// store and retrieve objects using the customized Item class marshaller
-		configureMarshaller();
-		storeObjects();
-		retrieveObjects();
+		configuration = configureMarshaller();
+		storeObjects(configuration);
+		retrieveObjects(configuration);
 	}
 	// end main
 	
-	private static void configureMarshaller(){
+	private static Configuration configureMarshaller(){
+		Configuration configuration = Db4o.newConfiguration();
 		marshaller = new ItemMarshaller();
-		Db4o.configure().objectClass(Item.class).marshallWith(marshaller);
+		configuration.objectClass(Item.class).marshallWith(marshaller);
+		return configuration;
 	}
 	// end configureMarshaller
 	
-	private static void storeObjects(){
-		new File(DBFILE).delete();
-		ObjectContainer container = Db4o.openFile(DBFILE);
+	private static void storeObjects(Configuration configuration){
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Item item;
 			long t1 = System.currentTimeMillis();
@@ -50,8 +54,8 @@ public class CustomMarshallerExample  {
 	}
 	// end storeObjects
 		
-	private static void retrieveObjects(){
-		ObjectContainer container = Db4o.openFile(DBFILE);
+	private static void retrieveObjects(Configuration configuration){
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			long t1 = System.currentTimeMillis();
 			ObjectSet result = container.get(new Item());

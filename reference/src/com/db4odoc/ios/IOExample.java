@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.ios;
 
@@ -9,11 +9,12 @@ import java.io.RandomAccessFile;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.io.MemoryIoAdapter;
 import com.db4o.io.RandomAccessFileAdapter;
 
 public class IOExample  {
-	public final static String YAPFILENAME="formula1.yap";
+	private final static String DB4O_FILE_NAME="reference.db4o";
 	
 	public static void main(String[] args) {
 		setObjects();
@@ -23,95 +24,96 @@ public class IOExample  {
 	}
 	// end main
 	
-	public static void setObjects(){
-		new File(YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void setObjects(){
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Pilot pilot = new Pilot("Rubens Barrichello");
-			db.set(pilot);
+			container.set(pilot);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end setObjects
 	
-	public static void getObjectsInMem(){
+	private static void getObjectsInMem(){
 		System.out.println("Setting up in-memory database");
 		MemoryIoAdapter adapter = new MemoryIoAdapter();
 		try {
-			RandomAccessFile raf = new RandomAccessFile(YAPFILENAME,"r"); 
+			RandomAccessFile raf = new RandomAccessFile(DB4O_FILE_NAME,"r"); 
 			adapter.growBy(100);
 			
 			int len = (int)raf.length();
 			byte[] b = new byte[len];
 			raf.read(b,0,len);
-			adapter.put(YAPFILENAME, b);
+			adapter.put(DB4O_FILE_NAME, b);
 			raf.close();
 		} catch (Exception ex){
 			System.out.println("Exception: " + ex.getMessage());
 		}
 		
-		Db4o.configure().io(adapter);
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.io(adapter);
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			 ObjectSet result=db.get(Pilot.class);
+			 ObjectSet result=container.get(Pilot.class);
 			 System.out.println("Read stored results through memory file");
 		     listResult(result);
 		     Pilot pilotNew = new Pilot("Michael Schumacher");
-		     db.set(pilotNew);
+		     container.set(pilotNew);
 		     System.out.println("New pilot added");
 		} finally {
-			db.close();
+			container.close();
 		}
 		System.out.println("Writing the database back to disc");
-		byte[] dbstream = adapter.get(YAPFILENAME);
+		byte[] dbstream = adapter.get(DB4O_FILE_NAME);
 		try {
-			RandomAccessFile file = new RandomAccessFile(YAPFILENAME,"rw");
+			RandomAccessFile file = new RandomAccessFile(DB4O_FILE_NAME,"rw");
 			file.write(dbstream);
 			file.close();
 		} catch (IOException ioex) {
 			System.out.println("Exception: " + ioex.getMessage());
 		} 
-		Db4o.configure().io(new RandomAccessFileAdapter());
 	}
 	// end getObjectsInMem
 	
-	public static void getObjects(){
-		Db4o.configure().io(new RandomAccessFileAdapter());
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void getObjects(){
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.io(new RandomAccessFileAdapter());
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			 ObjectSet result=db.get(Pilot.class);
+			 ObjectSet result=container.get(Pilot.class);
 			 System.out.println("Read stored results through disc file");
 		     listResult(result);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end getObjects
 
-	public static void testLoggingAdapter(){
-		Db4o.configure().io(new LoggingAdapter());
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void testLoggingAdapter(){
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.io(new LoggingAdapter());
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 		     Pilot pilot = new Pilot("Michael Schumacher");
-		     db.set(pilot);
+		     container.set(pilot);
 		     System.out.println("New pilot added");
 		} finally {
-			db.close();
+			container.close();
 		}
 	
-		db = Db4o.openFile(YAPFILENAME);
+		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			 ObjectSet result=db.get(Pilot.class);
+			 ObjectSet result=container.get(Pilot.class);
 			 listResult(result);
 		} finally {
-			db.close();
+			container.close();
 		}
-		Db4o.configure().io(new RandomAccessFileAdapter());
 	}
 	// end testLoggingAdapter
 
-    public static void listResult(ObjectSet result) {
+	private static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {
             System.out.println(result.next());

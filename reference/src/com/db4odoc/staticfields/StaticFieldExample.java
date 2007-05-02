@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.staticfields;
 
@@ -8,9 +8,10 @@ import java.io.File;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 
 public class StaticFieldExample {
-	public final static String YAPFILENAME = "formula1.yap";
+	private final static String DB4O_FILE_NAME = "reference.db4o";
 
 	public static void main(String[] args) {
 		setPilotsSimple();
@@ -28,57 +29,62 @@ public class StaticFieldExample {
 
 	// end main
 
-	public static void setCar() {
-		new File(YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void setCar() {
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Car car = new Car();
 			car.color = Color.GREEN;
-			db.set(car);
+			container.set(car);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
 	// end setCar
 
-	public static void setPilotsSimple() {
+	private static void setPilotsSimple() {
 		System.out
 				.println("In the default setting, static constants are not continously stored and updated.");
-		new File(YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			db.set(new Pilot("Michael Schumacher", PilotCategories.WINNER));
-			db.set(new Pilot("Rubens Barrichello", PilotCategories.TALENTED));
+			container.set(new Pilot("Michael Schumacher",
+					PilotCategories.WINNER));
+			container.set(new Pilot("Rubens Barrichello",
+					PilotCategories.TALENTED));
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
 	// end setPilotsSimple
 
-	public static void setPilotsStatic() {
-		System.out
-				.println("The feature can be turned on for individual classes.");
-		Db4o.configure().objectClass(
+	private static void setPilotsStatic() {
+		System.out.println("The feature can be turned on for individual classes.");
+		new File(DB4O_FILE_NAME).delete();
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.objectClass(
 				"com.db4odoc.f1.staticfields.PilotCategories")
 				.persistStaticFieldValues();
-		new File(YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			db.set(new Pilot("Michael Schumacher", PilotCategories.WINNER));
-			db.set(new Pilot("Rubens Barrichello", PilotCategories.TALENTED));
+			container.set(new Pilot("Michael Schumacher",
+					PilotCategories.WINNER));
+			container.set(new Pilot("Rubens Barrichello",
+					PilotCategories.TALENTED));
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
 	// end setPilotsStatic
 
-	public static void checkPilots() {
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void checkPilots() {
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet result = db.query(Pilot.class);
+			ObjectSet result = container.query(Pilot.class);
 			for (int x = 0; x < result.size(); x++) {
 				Pilot pilot = (Pilot) result.get(x);
 				if (pilot.getCategory() == PilotCategories.WINNER) {
@@ -86,99 +92,102 @@ public class StaticFieldExample {
 				} else if (pilot.getCategory() == PilotCategories.TALENTED) {
 					System.out.println("Talented pilot: " + pilot);
 				} else {
-					System.out.println("Uncategorized pilot: " + pilot);
+					System.out.println("Uncategorized pilot: "
+							+ pilot);
 				}
 			}
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
 	// end checkPilots
 
-	public static void updatePilots() {
-		System.out.println("Updating PilotCategory in pilot reference:");
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void updatePilots() {
+		System.out
+				.println("Updating PilotCategory in pilot reference:");
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet result = db.query(Pilot.class);
+			ObjectSet result = container.query(Pilot.class);
 			for (int x = 0; x < result.size(); x++) {
 				Pilot pilot = (Pilot) result.get(x);
 				if (pilot.getCategory() == PilotCategories.WINNER) {
 					System.out.println("Winner pilot: " + pilot);
 					PilotCategories pc = pilot.getCategory();
 					pc.testChange("WINNER2006");
-					db.set(pilot);
+					container.set(pilot);
 				}
 			}
-			printCategories(db);
+			printCategories(container);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
 	// end updatePilots
 
-	public static void updatePilotCategories() {
+	private static void updatePilotCategories() {
 		System.out.println("Updating PilotCategories explicitly:");
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet result = db.query(PilotCategories.class);
+			ObjectSet result = container.query(PilotCategories.class);
 			for (int x = 0; x < result.size(); x++) {
 				PilotCategories pc = (PilotCategories) result.get(x);
 				if (pc == PilotCategories.WINNER) {
 					pc.testChange("WINNER2006");
-					db.set(pc);
+					container.set(pc);
 				}
 			}
-			printCategories(db);
+			printCategories(container);
 		} finally {
-			db.close();
+			container.close();
 		}
 		System.out.println("Change the value back:");
-		db = Db4o.openFile(YAPFILENAME);
+		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet result = db.query(PilotCategories.class);
+			ObjectSet result = container.query(PilotCategories.class);
 			for (int x = 0; x < result.size(); x++) {
 				PilotCategories pc = (PilotCategories) result.get(x);
 				if (pc == PilotCategories.WINNER) {
 					pc.testChange("WINNER");
-					db.set(pc);
+					container.set(pc);
 				}
 			}
-			printCategories(db);
+			printCategories(container);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
 	// end updatePilotCategories
 
-	public static void deleteTest() {
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
-		db.ext().configure().objectClass(Pilot.class).cascadeOnDelete(true);
+	private static void deleteTest() {
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.objectClass(Pilot.class).cascadeOnDelete(true);
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			System.out.println("Deleting Pilots :");
-			ObjectSet result = db.query(Pilot.class);
+			ObjectSet result = container.query(Pilot.class);
 			for (int x = 0; x < result.size(); x++) {
 				Pilot pilot = (Pilot) result.get(x);
-				db.delete(pilot);
+				container.delete(pilot);
 			}
-			printCategories(db);
+			printCategories(container);
 			System.out.println("Deleting PilotCategories :");
-			result = db.query(PilotCategories.class);
+			result = container.query(PilotCategories.class);
 			for (int x = 0; x < result.size(); x++) {
-				db.delete(result.get(x));
+				container.delete(result.get(x));
 			}
-			printCategories(db);
+			printCategories(container);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
 	// end deleteTest
 
-	public static void printCategories(ObjectContainer db) {
-		ObjectSet result = db.query(PilotCategories.class);
+	private static void printCategories(ObjectContainer container) {
+		ObjectSet result = container.query(PilotCategories.class);
 		System.out.println("Stored categories: " + result.size());
 		for (int x = 0; x < result.size(); x++) {
 			PilotCategories pc = (PilotCategories) result.get(x);
@@ -188,18 +197,18 @@ public class StaticFieldExample {
 
 	// end printCategories
 
-	public static void deletePilotCategories() {
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void deletePilotCategories() {
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			printCategories(db);
-			ObjectSet result = db.query(PilotCategories.class);
+			printCategories(container);
+			ObjectSet result = container.query(PilotCategories.class);
 			for (int x = 0; x < result.size(); x++) {
 				PilotCategories pc = (PilotCategories) result.get(x);
-				db.delete(pc);
+				container.delete(pc);
 			}
-			printCategories(db);
+			printCategories(container);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
@@ -207,7 +216,7 @@ public class StaticFieldExample {
 
 	private static void checkDatabaseFileSize() {
 		System.out.println("Database file size: "
-				+ new File(YAPFILENAME).length() + "\n");
+				+ new File(DB4O_FILE_NAME).length() + "\n");
 	}
 	// end checkDatabaseFileSize
 }

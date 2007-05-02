@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.refactoring.newclasses;
 
@@ -11,25 +11,29 @@ import com.db4o.query.Query;
 
 
 public class RefactoringExample {
-	public final static String YAPFILENAME="formula1.yap";
+
+	private final static String DB4O_FILE_NAME="reference.db4o";
+	
 	public static void main(String[] args) {
-
+		reopenDB();
+		transferValues();
 	}
+	// end main
 
-	public static void reopenDB(){
-		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
-		oc.close();
+	private static void reopenDB(){
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+		container.close();
 	}
 	// end reopenDB
 	
-	public static void transferValues(){
-		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
+	private static void transferValues(){
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			StoredClass sc = oc.ext().storedClass("com.db4odoc.f1.refactoring.oldclasses.Pilot");
+			StoredClass sc = container.ext().storedClass("com.db4odoc.f1.refactoring.oldclasses.Pilot");
 			System.out.println("Stored class:  "+ sc.toString());
 			StoredField sfOld = sc.storedField("name",String.class);
 			System.out.println("Old field:  "+ sfOld.toString()+";"+sfOld.getStoredType());
-			Query q = oc.query();
+			Query q = container.query();
 			q.constrain(Pilot.class);
 			ObjectSet result = q.execute();
 			for (int i = 0; i< result.size(); i++){
@@ -37,11 +41,11 @@ public class RefactoringExample {
 				System.out.println("Pilot="+ pilot);
 				pilot.setName(new Identity(sfOld.get(pilot).toString(),""));
 				System.out.println("Pilot="+ pilot);
-				oc.set(pilot);
+				container.set(pilot);
 			}
 			
 		} finally {
-			oc.close();
+			container.close();
 		}
 	}
 	// end transferValues

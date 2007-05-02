@@ -7,23 +7,25 @@ import java.io.File;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.config.ObjectAttribute;
 import com.db4o.query.Query;
 
 
 public class CompareExample {
 	
-	private static final String FILENAME = "example.db";
+	private static final String DB4O_FILE_NAME = "reference.db4o";
 
 	public static void main(String[] args) {
-		configure();
-		storeRecords();
-		checkRecords();
+		Configuration configuration = configure();
+		storeRecords(configuration);
+		checkRecords(configuration);
 	}
 	// end main
 
-	public static void configure(){
-		Db4o.configure().objectClass(MyString.class).compare(new ObjectAttribute() {
+	private static Configuration configure(){
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.objectClass(MyString.class).compare(new ObjectAttribute() {
             public Object attribute(Object original) {
                 if (original instanceof MyString) {
                     return ((MyString) original).toString();
@@ -31,12 +33,13 @@ public class CompareExample {
                 return original;
             }
         });
+		return configuration;
 	}
 	// end configure
 	
-	public static void storeRecords(){
-		new File(FILENAME).delete();
-		ObjectContainer container = Db4o.openFile(FILENAME);
+	private static void storeRecords(Configuration configuration){
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Record record = new Record("Michael Schumacher, points: 100");
 			container.set(record);
@@ -50,8 +53,8 @@ public class CompareExample {
 	}
 	// end storeRecords
 	
-	public static void checkRecords(){
-		ObjectContainer container = Db4o.openFile(FILENAME);
+	private static void checkRecords(Configuration configuration){
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Query q = container.query();
 			q.constrain(new Record("Rubens"));
@@ -64,7 +67,7 @@ public class CompareExample {
 	}
 	// end checkRecords
 	
-    public static void listResult(ObjectSet result) {
+	private static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {
             System.out.println(result.next());

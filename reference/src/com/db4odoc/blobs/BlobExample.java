@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.blobs;
 
@@ -9,33 +9,31 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.query.Query;
 
-
-
 public class BlobExample {
-	public final static String YAPFILENAME="formula1.yap";
+	private final static String DB4O_FILE_NAME="reference.db4o";
 	public static void main(String[] args) {
 		storeCars();
 	    retrieveCars();
 	}
 	// end main
 		
-	  public static void storeCars() {
-		  new File(YAPFILENAME).delete();
-		  ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	  private static void storeCars() {
+		  new File(DB4O_FILE_NAME).delete();
+		  ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		   try {
 			    Car car1=new Car("Ferrari");
-			    db.set(car1);
+			    container.set(car1);
 			    storeImage(car1);
 			    Car car2=new Car("BMW");
-			    db.set(car2);
+			    container.set(car2);
 			    storeImage(car2);
 		   }  finally {
-		      db.close();
+		      container.close();
 		    } 
 	  }
 	  // end storeCars
 	  
-	  public static void storeImage(Car car) {
+	  private static void storeImage(Car car) {
 		CarImage img = car.getImage();
 		try {
 			img.readFile();
@@ -46,15 +44,15 @@ public class BlobExample {
 
 	// end storeImage
 	  
-	  public static void retrieveCars() {
-		  ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	  private static void retrieveCars() {
+		  ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		   try {
-			   Query query = db.query();
+			   Query query = container.query();
 			   query.constrain(Car.class);
 			   ObjectSet result = query.execute();
 			   getImages(result);
 		   }  finally {
-		      db.close();
+		      container.close();
 		    } 
 	  }
 	  // end retrieveCars

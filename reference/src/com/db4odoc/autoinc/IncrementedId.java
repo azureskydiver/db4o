@@ -1,9 +1,9 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 /*
  * Singleton class used to keep auotincrement information 
  * and give the next available ID on request
  */
-package com.db4odoc.callbacks;
+package com.db4odoc.autoinc;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
@@ -18,20 +18,20 @@ public class IncrementedId {
 
 	// end IncrementedId
 
-	public int getNextID(ObjectContainer db) {
+	public int getNextID(ObjectContainer container) {
 		no++;
-		db.set(this);
+		container.set(this);
 		return no;
 	}
 
 	// end increment
 
-	public static IncrementedId getIdObject(ObjectContainer db) {
+	public static IncrementedId getIdObject(ObjectContainer container) {
 		// if ref is not assigned yet:
 		if (ref == null) {
 			// check if there is a stored instance from the previous 
 			// session in the database
-			ObjectSet os = db.get(IncrementedId.class);
+			ObjectSet os = container.get(IncrementedId.class);
 			if (os.size() > 0)
 				ref = (IncrementedId) os.next();
 		}
@@ -40,7 +40,7 @@ public class IncrementedId {
 			// create new instance and store it
 			System.out.println("Id object is created");
 			ref = new IncrementedId();
-			db.set(ref);
+			container.set(ref);
 		}
 		return ref;
 	}

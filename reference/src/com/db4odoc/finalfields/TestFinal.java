@@ -1,3 +1,4 @@
+/* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.finalfields;
 import java.io.File;
 
@@ -7,6 +8,7 @@ import com.db4o.ObjectSet;
 
 public class TestFinal
 {
+	private static final String DB4O_FILE_NAME = "reference.db4o";
 	// non-final fields
 	public int    _i;
 	public String _s;
@@ -16,22 +18,22 @@ public class TestFinal
 	
    public static void main(String[] args)
    {
-      new File("test.yap").delete();
-      ObjectContainer db = Db4o.openFile("test.yap");
+      new File(DB4O_FILE_NAME).delete();
+      ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
       try {
     	  TestFinal test = new TestFinal(1,"test");
-    	  db.set(test);
+    	  container.set(test);
     	  System.out.println("Added: " + test);
       } finally {
     	  // Close does implicit commit and refreshes the reference cache
-    	  db.close();
+    	  container.close();
       }
-      db = Db4o.openFile("test.yap");
+      container = Db4o.openFile(DB4O_FILE_NAME);
       try {
-    	  ObjectSet result = db.get(null);
+    	  ObjectSet result = container.get(null);
     	  listResult(result);
       } finally { 
-    	  db.close();
+    	  container.close();
       }
    }
    // end main
@@ -52,10 +54,10 @@ public class TestFinal
    }
    // end toString
    
-   public static void listResult(ObjectSet result)
+   private static void listResult(ObjectSet result)
    {
       while(result.hasNext()) {
-         System.err.println(result.next());
+         System.out.println(result.next());
      }
    }
    // end listResult

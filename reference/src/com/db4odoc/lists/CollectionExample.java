@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.lists;
 
@@ -10,9 +10,8 @@ import com.db4o.ObjectSet;
 import com.db4o.query.Query;
 import java.util.List;
 
-
 public class CollectionExample {
-	public final static String YAPFILENAME="formula1.yap";
+	private final static String DB4O_FILE_NAME="reference.db4o";
 
 	public static void main(String[] args) {
 		setTeam();
@@ -20,9 +19,9 @@ public class CollectionExample {
 	}
 	// end main
 	
-	public static void setTeam(){
-		 new File(YAPFILENAME).delete();
-		  ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	private static void setTeam(){
+		 new File(DB4O_FILE_NAME).delete();
+		  ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		   try {
 			   Team ferrariTeam = new Team();
 			   ferrariTeam.setName("Ferrari");
@@ -32,20 +31,20 @@ public class CollectionExample {
 			   Pilot pilot2 = new Pilot("David Schumacher", 98);
 			   ferrariTeam.addPilot(pilot2);
 				
-			   db.set(ferrariTeam);
+			   container.set(ferrariTeam);
 			   List protoList = CollectionFactory.newList();
-			   ObjectSet result = db.get(protoList);
+			   ObjectSet result = container.get(protoList);
 			   listResult(result);
 		   }  finally {
-		      db.close();
+		      container.close();
 		    } 
 	}
 	// end setTeam
 
-	public static void updateTeam(){
-		ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	private static void updateTeam(){
+		ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		 try {
-			 Query query =db.query(); 
+			 Query query =container.query(); 
 			 query.constrain(Team.class);
 			 query.descend("name").constrain("Ferrari");
 			 ObjectSet result = query.execute();
@@ -55,18 +54,18 @@ public class CollectionExample {
 				 Pilot pilot = new Pilot("David Schumacher", 100);
 				 ferrariTeam.updatePilot(1,pilot);
 					
-				 db.set(ferrariTeam);
+				 container.set(ferrariTeam);
 			 }
 			 List protoList = CollectionFactory.newList();
-			 result = db.get(protoList);
+			 result = container.get(protoList);
 			 listResult(result);
 		}  finally {
-			db.close();
+			container.close();
 		} 
 	}
 	// end updateTeam
 	
-    public static void listResult(ObjectSet result) {
+	private static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {
             System.out.println(result.next());

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.clientserver;
 
@@ -13,18 +13,18 @@ import com.db4o.ext.ExtClient;
 
 public class ExtClientExample  {
 
-	public final static String EXTFILENAME="formula1e.yap";
-	 public final static String YAPFILENAME="formula1.yap";
+	private final static String EXTFILENAME="reference_e.db4o";
+	 private final static String DB4O_FILE_NAME="reference.db4o";
 	
 	public static void main(String[] args) {
 		switchExtClients();
 	}
 	// end main
 
-    public static void switchExtClients() {
-    	new File(YAPFILENAME).delete();
+	private static void switchExtClients() {
+    	new File(DB4O_FILE_NAME).delete();
     	new File(EXTFILENAME).delete();
-        ObjectServer server=Db4o.openServer(YAPFILENAME,0);
+        ObjectServer server=Db4o.openServer(DB4O_FILE_NAME,0);
         try {
             ObjectContainer client=server.openClient();
             deleteAll(client); // added to solve sticking objects in doctor 
@@ -50,21 +50,21 @@ public class ExtClientExample  {
     }
     // end switchExtClients
     
-    public static void retrieveAll(ObjectContainer db){
-        ObjectSet result=db.get(new Object());
+	private static void retrieveAll(ObjectContainer container){
+        ObjectSet result=container.get(new Object());
         listResult(result);
     }
     // end retrieveAll
     
-    public static void deleteAll(ObjectContainer db) {
-        ObjectSet result=db.get(new Object());
+	private static void deleteAll(ObjectContainer container) {
+        ObjectSet result=container.get(new Object());
         while(result.hasNext()) {
-            db.delete(result.next());
+            container.delete(result.next());
         }
     }
     // end deleteAll
     
-    public static void listResult(ObjectSet result) {
+	private static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {
             System.out.println(result.next());

@@ -4,7 +4,7 @@ import com.db4o.*;
 ///
 
 public class Util {
-    public final static String YAPFILENAME="formula1.yap";
+    private final static String DB4O_FILE_NAME="reference.db4o";
 
     public static void listResult(ObjectSet result) {
         System.out.println(result.size());
@@ -28,15 +28,15 @@ public class Util {
         }
     }
     
-    public static void retrieveAll(ObjectContainer db){
-        ObjectSet result=db.get(new Object());
+    public static void retrieveAll(ObjectContainer container){
+        ObjectSet result=container.get(new Object());
         listResult(result);
     }
     
-    public static void deleteAll(ObjectContainer db) {
-        ObjectSet result=db.get(new Object());
+    public static void deleteAll(ObjectContainer container) {
+        ObjectSet result=container.get(new Object());
         while(result.hasNext()) {
-            db.delete(result.next());
+            container.delete(result.next());
         }
     }
 }
