@@ -21,7 +21,7 @@ import com.db4o.foundation.Iterator4;
 
 public class CommitCallbackExample {
 	
-	private static final String FILENAME = "test.db";
+	private static final String FILENAME = "reference.db4o";
 	private static ObjectContainer _container;
 	
 	public static void main(String[] args) {

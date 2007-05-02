@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.serialize;
 
@@ -12,99 +12,98 @@ import com.db4o.ObjectSet;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
+public class SerializeExample {
+	private final static String DB4O_FILE_NAME = "reference.db4o";
 
-public class SerializeExample  {
-	public final static String YAPFILENAME="formula1.yap";
-	public static String XMLFILENAME = "formula1.xml";
-	
+	private final static String XMLXML_FILE_NAME = "reference.xml";
+
 	public static void main(String[] args) {
 		setObjects();
 		exportToXml();
 		importFromXml();
 	}
+
 	// end main
-	
-	public static void setObjects(){
-		new File(YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+
+	private static void setObjects() {
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
-			db.set(car);
+			container.set(car);
 			car = new Car("Ferrari", new Pilot("Michael Schumacher"));
-			db.set(car);
+			container.set(car);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
+
 	// end setObjects
-	
-	public static void exportToXml()
-	{
+
+	private static void exportToXml() {
 		XStream xstream = new XStream(new DomDriver());
 		try {
-			FileWriter xmlFile = new FileWriter(XMLFILENAME);
-			ObjectContainer db = Db4o.openFile(YAPFILENAME);
-			try 
-			{
-				ObjectSet result = db.query(Car.class);
+			FileWriter xmlFile = new FileWriter(XMLXML_FILE_NAME);
+			ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+			try {
+				ObjectSet result = container.query(Car.class);
 				Car[] cars = new Car[result.size()];
-				for (int i = 0; i < result.size(); i++)
-				{
-					Car car = (Car)result.next();
+				for (int i = 0; i < result.size(); i++) {
+					Car car = (Car) result.next();
 					cars[i] = car;
 				}
 				String xml = xstream.toXML(cars);
-				xmlFile.write("<?xml version=\"1.0\"?>\n"+xml);
+				xmlFile.write("<?xml version=\"1.0\"?>\n" + xml);
 				xmlFile.close();
+			} finally {
+				container.close();
 			}
-			finally
-			{
-				db.close();
-			}
-		} catch (Exception ex){
+		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
 	}
+
 	// end exportToXml
-	
-	public static void importFromXml() {
-		new File(YAPFILENAME).delete();
+
+	private static void importFromXml() {
+		new File(DB4O_FILE_NAME).delete();
 		XStream xstream = new XStream(new DomDriver());
 		try {
-			FileReader xmlReader = new FileReader(XMLFILENAME);
+			FileReader xmlReader = new FileReader(XMLXML_FILE_NAME);
 			Car[] cars = (Car[]) xstream.fromXML(xmlReader);
-			ObjectContainer db;
+			ObjectContainer container;
 			for (int i = 0; i < cars.length; i++) {
-				db = Db4o.openFile(YAPFILENAME);
+				container = Db4o.openFile(DB4O_FILE_NAME);
 				try {
 					Car car = (Car) cars[i];
-					db.set(car);
+					container.set(car);
 				} finally {
-					db.close();
+					container.close();
 				}
 			}
-			db = Db4o.openFile(YAPFILENAME);
+			container = Db4o.openFile(DB4O_FILE_NAME);
 			try {
-				ObjectSet result = db.query(Pilot.class);
+				ObjectSet result = container.query(Pilot.class);
 				listResult(result);
-				result = db.query(Car.class);
+				result = container.query(Car.class);
 				listResult(result);
 			} finally {
-				db.close();
+				container.close();
 			}
 			xmlReader.close();
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
 	}
+
 	// end importFromXml
-    
-	public static void listResult(ObjectSet result) {
-        System.out.println(result.size());
-        while(result.hasNext()) {
-            System.out.println(result.next());
-        }
-    }
-    // end listResult
-	
+
+	private static void listResult(ObjectSet result) {
+		System.out.println(result.size());
+		while (result.hasNext()) {
+			System.out.println(result.next());
+		}
+	}
+	// end listResult
+
 }

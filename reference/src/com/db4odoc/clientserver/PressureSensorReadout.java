@@ -1,7 +1,7 @@
+/* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.clientserver;
 
 import java.util.*;
-
 
 public class PressureSensorReadout extends SensorReadout {
     private double pressure;

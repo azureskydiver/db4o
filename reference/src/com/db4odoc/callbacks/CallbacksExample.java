@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.callbacks;
 
@@ -19,7 +19,7 @@ import com.db4o.query.Query;
 
 public class CallbacksExample {
 
-	private final static String YAPFILENAME="formula1.yap";
+	private final static String DB4O_FILE_NAME="reference.db4o";
 	
 	public static void main(String[] args) {
 		testCreated();
@@ -28,11 +28,11 @@ public class CallbacksExample {
 	}
 	// end main
 
-	public static void testCreated(){
-		new File(YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void testCreated(){
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			EventRegistry registry =  EventRegistryFactory.forObjectContainer(db);
+			EventRegistry registry =  EventRegistryFactory.forObjectContainer(container);
 			// register an event handler, which will print all the car objects, that have been created
 			registry.created().addListener(new EventListener4() {
 				public void onEvent(Event4 e, EventArgs args) {
@@ -45,72 +45,72 @@ public class CallbacksExample {
 			});
 
 			Car car = new Car("BMW",new Pilot("Rubens Barrichello"));
-			db.set(car);
+			container.set(car);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end testCreated
 	
-	public static void fillDB(){
-		new File(YAPFILENAME).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void fillDB(){
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Car car = new Car("BMW",new Pilot("Rubens Barrichello"));
-			db.set(car);
+			container.set(car);
 			car = new Car("Ferrari",new Pilot("Kimi Raikkonen"));
-			db.set(car);
+			container.set(car);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end fillDB
 	
-	public static void testCascadedDelete(){
+	private static void testCascadedDelete(){
 		fillDB();
-		final ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		final ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			// check the contents of the database
-			ObjectSet result = db.get(null);
+			ObjectSet result = container.get(null);
 			listResult(result);
 			
-			EventRegistry registry =  EventRegistryFactory.forObjectContainer(db);
+			EventRegistry registry =  EventRegistryFactory.forObjectContainer(container);
 			// register an event handler, which will delete the pilot when his car is deleted 
 			registry.deleted().addListener(new EventListener4() {
 				public void onEvent(Event4 e, EventArgs args) {
 					ObjectEventArgs queryArgs = ((ObjectEventArgs) args);
 					Object obj = queryArgs.object();
 					if (obj instanceof Car){
-						db.delete(((Car)obj).getPilot());
+						container.delete(((Car)obj).getPilot());
 					}
 				}
 			});
 			// delete all the cars
-			result = db.query(Car.class);
+			result = container.query(Car.class);
 			while(result.hasNext()) {
-	            db.delete(result.next());
+	            container.delete(result.next());
 	        }
 			// check if the database is empty
-			result = db.get(null);
+			result = container.get(null);
 			listResult(result);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end testCascadedDelete
 	
-	public static void testIntegrityCheck(){
+	private static void testIntegrityCheck(){
 		fillDB();
-		final ObjectContainer db = Db4o.openFile(YAPFILENAME);
+		final ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			EventRegistry registry =  EventRegistryFactory.forObjectContainer(db);
+			EventRegistry registry =  EventRegistryFactory.forObjectContainer(container);
 			// register an event handler, which will stop deleting a pilot when it is referenced from a car 
 			registry.deleting().addListener(new EventListener4() {
 				public void onEvent(Event4 e, EventArgs args) {
 					CancellableObjectEventArgs cancellableArgs = ((CancellableObjectEventArgs) args);
 					Object obj = cancellableArgs.object();
 					if (obj instanceof Pilot){
-						Query q = db.query();
+						Query q = container.query();
 						q.constrain(Car.class);
 						q.descend("pilot").constrain(obj);
 						ObjectSet result = q.execute();
@@ -123,24 +123,24 @@ public class CallbacksExample {
 			});
 			
 			// check the contents of the database
-			ObjectSet result = db.get(null);
+			ObjectSet result = container.get(null);
 			listResult(result);
 			
 			// try to delete all the pilots
-			result = db.query(Pilot.class);
+			result = container.query(Pilot.class);
 			while(result.hasNext()) {
-	            db.delete(result.next());
+	            container.delete(result.next());
 	        }
 			// check if any of the objects were deleted
-			result = db.get(null);
+			result = container.get(null);
 			listResult(result);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end testIntegrityCheck
 	
-    public static void listResult(ObjectSet result) {
+	private static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {
             System.out.println(result.next());

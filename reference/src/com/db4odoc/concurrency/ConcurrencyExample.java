@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.concurrency;
 
@@ -7,10 +7,12 @@ import java.io.File;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
+import com.db4o.config.ConfigScope;
+import com.db4o.config.Configuration;
 
 public class ConcurrencyExample {
 
-	private final static String YAPFILENAME="formula1.yap";
+	private final static String DB4O_FILE_NAME="reference.db4o";
 	private static ObjectServer _server;
 	
 	public static void main(String[] args) {
@@ -25,36 +27,37 @@ public class ConcurrencyExample {
 	}
 	// end main
 
-	public static void connect(){
+	private static void connect(){
 		if (_server == null){
-			new File(YAPFILENAME).delete();
-			Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
-			_server =  Db4o.openServer(YAPFILENAME,0);
+			new File(DB4O_FILE_NAME).delete();
+			Configuration configuration = Db4o.newConfiguration();
+			configuration.generateVersionNumbers(ConfigScope.GLOBALLY);
+			_server =  Db4o.openServer(configuration, DB4O_FILE_NAME,0);
 		}
 	}
 	// end connect
 	
-	public static void disconnect(){
+	private static void disconnect(){
 		_server.close();
 	}
 	// end disconnect
 	
-	public static void savePilots(){
-		ObjectContainer db = _server.openClient();
+	private static void savePilots(){
+		ObjectContainer container = _server.openClient();
 		try {
 			Pilot pilot = new Pilot("Kimi Raikkonnen",0);
-			db.set(pilot);
+			container.set(pilot);
 			pilot = new Pilot("David Barrichello",0);
-			db.set(pilot);
+			container.set(pilot);
 			pilot = new Pilot("David Coulthard",0);
-			db.set(pilot);
+			container.set(pilot);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end savePilots
 	
-	public static void modifyPilotsOptimistic(){
+	private static void modifyPilotsOptimistic(){
 		System.out.println("Optimistic locking example");
 		// create threads for concurrent modifications
 		OptimisticThread t1 = new OptimisticThread("t1: ", _server);
@@ -62,7 +65,7 @@ public class ConcurrencyExample {
         runThreads(t1,t2);
 	}
 	
-	public static void modifyPilotsPessimistic(){
+	private static void modifyPilotsPessimistic(){
 		System.out.println();
 		System.out.println("Pessimistic locking example");
 		// create threads for concurrent modifications
@@ -71,7 +74,7 @@ public class ConcurrencyExample {
         runThreads(t1,t2);
 	}
 	
-	public static void runThreads(Thread t1, Thread t2){
+	private static void runThreads(Thread t1, Thread t2){
         t1.start();
         t2.start();
         

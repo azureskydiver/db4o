@@ -1,28 +1,29 @@
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.reflections;
 
 public class Car {
-    private String model;
-    private Pilot pilot;
+	private String model;
 
-    
-    public Car(String model) {
-        this.model=model;
-        this.pilot=null;
-    }
+	private Pilot pilot;
 
-    public Pilot getPilot() {
-        return pilot;
-    }
+	public Car(String model) {
+		this.model = model;
+		this.pilot = null;
+	}
 
-    public void setPilot(Pilot pilot) {
-        this.pilot=pilot;
-    }
+	public Pilot getPilot() {
+		return pilot;
+	}
 
-    public String getModel() {
-        return model;
-    }
-    
-    public String toString() {
-        return model+"["+pilot+"]";
-    }
+	public void setPilot(Pilot pilot) {
+		this.pilot = pilot;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public String toString() {
+		return model + "[" + pilot + "]";
+	}
 }

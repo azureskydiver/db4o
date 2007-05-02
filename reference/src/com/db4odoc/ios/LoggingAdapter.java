@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.ios;
 
@@ -8,8 +8,8 @@ import java.io.PrintStream;
 import java.io.RandomAccessFile;
 
 import com.db4o.DTrace;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.internal.*;
+import com.db4o.DatabaseFileLockedException;
+import com.db4o.internal.Platform4;
 import com.db4o.io.IoAdapter;
 
 public class LoggingAdapter extends IoAdapter {

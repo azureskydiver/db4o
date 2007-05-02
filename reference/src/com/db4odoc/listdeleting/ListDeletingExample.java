@@ -9,9 +9,10 @@ import java.util.List;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.config.Configuration;
 
 public class ListDeletingExample {
-	public final static String DBFILE = "Test.db";
+	private final static String DB4O_FILE_NAME = "reference.db4o";
 
 	public static void main(String[] args) {
 		fillUpDb(1);
@@ -23,50 +24,51 @@ public class ListDeletingExample {
 	}
 
 	private static void removeTest() {
-		ObjectContainer db = Db4o.openFile(DBFILE);
+		//	set update depth to 1 as we only
+		// modify List field
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.objectClass(ListObject.class).updateDepth(1);
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			// set update depth to 1 as we only
-			// modify List field
-			db.ext().configure().objectClass(ListObject.class).updateDepth(1);
-			List<ListObject> result = db.<ListObject> query(ListObject.class);
+			List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				// retrieve a ListObject
 				ListObject lo1 = result.get(0);
 				// remove all the objects from the list
 				lo1.getData().removeAll(lo1.getData());
-				db.set(lo1);
+				container.set(lo1);
 			}
 		} finally {
-			db.close();
+			container.close();
 		}
 		// check DataObjects in the list
 		// and DataObjects in the database
-		db = Db4o.openFile(DBFILE);
+		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			List<ListObject> result = db.<ListObject> query(ListObject.class);
+			List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				ListObject lo1 = result.get(0);
 				System.out.println("DataObjects in the list:  "
 						+ lo1.getData().size());
 			}
-			List<DataObject> removedObjects = db
+			List<DataObject> removedObjects = container
 					.<DataObject> query(DataObject.class);
 			System.out.println("DataObjects in the database: "
 					+ removedObjects.size());
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
 	// end removeTest
 
 	private static void removeAndDeleteTest() {
-		ObjectContainer db = Db4o.openFile(DBFILE);
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			// set update depth to 1 as we only
 			// modify List field
-			db.ext().configure().objectClass(ListObject.class).updateDepth(1);
-			List<ListObject> result = db.<ListObject> query(ListObject.class);
+			container.ext().configure().objectClass(ListObject.class).updateDepth(1);
+			List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				// retrieve a ListObject
 				ListObject lo1 = result.get(0);
@@ -78,64 +80,64 @@ public class ListDeletingExample {
 				// and delete them from the database
 				Iterator<DataObject> it = tempList.iterator();
 				while (it.hasNext()) {
-					db.delete(it.next());
+					container.delete(it.next());
 				}
 
-				db.set(lo1);
+				container.set(lo1);
 			}
 		} finally {
-			db.close();
+			container.close();
 		}
 		// check DataObjects in the list
 		// and DataObjects in the database
-		db = Db4o.openFile(DBFILE);
+		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			List<ListObject> result = db.<ListObject> query(ListObject.class);
+			List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				ListObject lo1 = result.get(0);
 				System.out.println("DataObjects in the list:  "
 						+ lo1.getData().size());
 			}
-			List<DataObject> removedObjects = db
+			List<DataObject> removedObjects = container
 					.<DataObject> query(DataObject.class);
 			System.out.println("DataObjects in the database: "
 					+ removedObjects.size());
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
 	// end removeAndDeleteTest
 
 	private static void deleteTest() {
-		ObjectContainer db = Db4o.openFile(DBFILE);
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			// set cascadeOnDelete in order to delete member objects
-			db.ext().configure().objectClass(ListObject.class).cascadeOnDelete(
+			container.ext().configure().objectClass(ListObject.class).cascadeOnDelete(
 					true);
-			List<ListObject> result = db.<ListObject> query(ListObject.class);
+			List<ListObject> result = container.<ListObject> query(ListObject.class);
 			if (result.size() > 0) {
 				// retrieve a ListObject
 				ListObject lo1 = result.get(0);
 				// delete the ListObject with all the field objects
-				db.delete(lo1);
+				container.delete(lo1);
 			}
 		} finally {
-			db.close();
+			container.close();
 		}
 		// check ListObjects and DataObjects in the database
-		db = Db4o.openFile(DBFILE);
+		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			List<ListObject> listObjects = db
+			List<ListObject> listObjects = container
 					.<ListObject> query(ListObject.class);
 			System.out.println("ListObjects in the database:  "
 					+ listObjects.size());
-			List<DataObject> dataObjects = db
+			List<DataObject> dataObjects = container
 					.<DataObject> query(DataObject.class);
 			System.out.println("DataObjects in the database: "
 					+ dataObjects.size());
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 
@@ -144,8 +146,8 @@ public class ListDeletingExample {
 	private static void fillUpDb(int listCount) {
 		int dataCount = 50;
 		long elapsedTime = 0;
-		new File(DBFILE).delete();
-		ObjectContainer db = Db4o.openFile(DBFILE);
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			long t1 = System.currentTimeMillis();
 
@@ -159,12 +161,12 @@ public class ListDeletingExample {
 							+ " ---- Data Object " + String.format("%5d", j));
 					lo.getData().add(dataObject);
 				}
-				db.set(lo);
+				container.set(lo);
 			}
 			long t2 = System.currentTimeMillis();
 			elapsedTime = t2 - t1;
 		} finally {
-			db.close();
+			container.close();
 		}
 		System.out.println("Completed " + listCount + " lists of " + dataCount
 				+ " objects each.");

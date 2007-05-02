@@ -1,3 +1,4 @@
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.evaluations;
 
 import java.io.*;
@@ -5,51 +6,50 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.query.*;
 
-
 public class EvaluationExample {
-	public final static String YAPFILENAME="formula1.yap";
-  public static void main(String[] args) {
-    new File(YAPFILENAME).delete();
-    ObjectContainer db=Db4o.openFile(YAPFILENAME);
-    try {
-      storeCars(db);
-      queryWithEvaluation(db);
-    }
-    finally {
-      db.close();
-    }
-  }
-  // end main
-	
-  public static void storeCars(ObjectContainer db) {
-    Pilot pilot1=new Pilot("Michael Schumacher",100);
-    Car car1=new Car("Ferrari");
-    car1.setPilot(pilot1);
-    car1.snapshot();
-    db.set(car1);
-    Pilot pilot2=new Pilot("Rubens Barrichello",99);
-    Car car2=new Car("BMW");
-    car2.setPilot(pilot2);
-    car2.snapshot();
-    car2.snapshot();
-    db.set(car2);
-  }
-  // end storeCars
-	
-  public static void queryWithEvaluation(ObjectContainer db) {
-    Query query=db.query();
-    query.constrain(Car.class);
-    query.constrain(new EvenHistoryEvaluation());
-    ObjectSet result=query.execute();
-    listResult(result);
-  }
-  // end queryWithEvaluation
-  
-  public static void listResult(ObjectSet result) {
-      System.out.println(result.size());
-      while(result.hasNext()) {
-          System.out.println(result.next());
-      }
-  }
-  // end listResult
+	private final static String DB4O_FILE_NAME = "reference.db4o";
+
+	public static void main(String[] args) {
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+		try {
+			storeCars(container);
+			queryWithEvaluation(container);
+		} finally {
+			container.close();
+		}
+	}
+	// end main
+
+	private static void storeCars(ObjectContainer container) {
+		Pilot pilot1 = new Pilot("Michael Schumacher", 100);
+		Car car1 = new Car("Ferrari");
+		car1.setPilot(pilot1);
+		car1.snapshot();
+		container.set(car1);
+		Pilot pilot2 = new Pilot("Rubens Barrichello", 99);
+		Car car2 = new Car("BMW");
+		car2.setPilot(pilot2);
+		car2.snapshot();
+		car2.snapshot();
+		container.set(car2);
+	}
+	// end storeCars
+
+	private static void queryWithEvaluation(ObjectContainer container) {
+		Query query = container.query();
+		query.constrain(Car.class);
+		query.constrain(new EvenHistoryEvaluation());
+		ObjectSet result = query.execute();
+		listResult(result);
+	}
+	// end queryWithEvaluation
+
+	private static void listResult(ObjectSet result) {
+		System.out.println(result.size());
+		while (result.hasNext()) {
+			System.out.println(result.next());
+		}
+	}
+	// end listResult
 }

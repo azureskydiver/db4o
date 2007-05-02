@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.replication;
 
@@ -7,17 +7,20 @@ import java.io.IOException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.ConfigScope;
+import com.db4o.config.Configuration;
 import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationSession;
 
 
 public class ReplicationExample {
-	public final static String DTFILENAME="formula1.yap";
-	public final static String HHFILENAME="handheld.yap";
+	
+	private final static String DTFILENAME="reference.db4o";
+	private final static String HHFILENAME="handheld.db4o";
 	
 	public static void configureReplication(){
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE); 
-		Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+		Db4o.configure().generateUUIDs(ConfigScope.GLOBALLY); 
+		Db4o.configure().generateVersionNumbers(ConfigScope.GLOBALLY);
 	}
 	// end configureReplication
 	
@@ -30,7 +33,7 @@ public class ReplicationExample {
 	public static void configureForExisting(){
 		Db4o.configure().objectClass(Pilot.class).enableReplication(true); 
 		try {
-			com.db4o.defragment.Defragment.defrag("sample.yap");
+			com.db4o.defragment.Defragment.defrag("sample.db4o");
 		} catch (IOException ex){
 			System.out .println(ex.toString());
 		}

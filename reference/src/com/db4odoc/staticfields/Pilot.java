@@ -1,26 +1,26 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.staticfields;
 
-
 public class Pilot {
 	private String name;
-    private PilotCategories category;
 
-    public Pilot(String name,PilotCategories category) {
-        this.name=name;
-        this.category=category;
-    }
+	private PilotCategories category;
 
-    public PilotCategories getCategory() {
-        return category;
-    }
+	public Pilot(String name, PilotCategories category) {
+		this.name = name;
+		this.category = category;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public PilotCategories getCategory() {
+		return category;
+	}
 
-    public String toString() {
-        return name+"/"+category;
-    }
+	public String getName() {
+		return name;
+	}
+
+	public String toString() {
+		return name + "/" + category;
+	}
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.aliases;
 
@@ -7,93 +7,96 @@ import java.io.File;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.config.TypeAlias;
 import com.db4o.config.WildcardAlias;
 
 public class AliasExample {
-	private static final String YAPFILENAME = "formula1.yap";
+	private static final String DB4O_FILE_NAME = "reference.db4o";
 	private static TypeAlias tAlias;
 
 	public static void main(String args[]) 
 	{ 
-		configureClassAlias();
-		saveDrivers();
-		removeClassAlias();
-		getPilots();
-		savePilots();
-		configureAlias();
-		getObjectsWithAlias();
+		Configuration configuration = configureClassAlias();
+		saveDrivers(configuration);
+		removeClassAlias(configuration);
+		getPilots(configuration);
+		savePilots(configuration);
+		configuration = configureAlias();
+		getObjectsWithAlias(configuration);
 	}
 	// end main
 	
-	public static void configureClassAlias(){
+	private static Configuration configureClassAlias(){
 		// create a new alias
 		tAlias = new TypeAlias("com.db4odoc.aliases.Pilot","com.db4odoc.aliases.Driver");
-		// add the alias to the db4o configuration 
-		Db4o.configure().addAlias(tAlias);
+		// add the alias to the db4o configuration
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.addAlias(tAlias);
 		// check how does the alias resolve
 		System.out.println("Stored name for com.db4odoc.aliases.Driver: "+tAlias.resolveRuntimeName("com.db4odoc.aliases.Driver"));
 		System.out.println("Runtime name for com.db4odoc.aliases.Pilot: "+tAlias.resolveStoredName("com.db4odoc.aliases.Pilot"));
+		return configuration;
 	}
 	// end configureClassAlias
 	
 	
-	public static void removeClassAlias(){
-		Db4o.configure().removeAlias(tAlias);
+	private static void removeClassAlias(Configuration configuration){
+		configuration.removeAlias(tAlias);
 	}
 	// end removeClassAlias
 	
-	public static void saveDrivers(){
-		new File(YAPFILENAME ).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void saveDrivers(Configuration configuration){
+		new File(DB4O_FILE_NAME ).delete();
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Driver driver = new Driver("David Barrichello",99);
-			db.set(driver);
+			container.set(driver);
 			driver = new Driver("Kimi Raikkonen",100);
-			db.set(driver);
+			container.set(driver);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end saveDrivers
 	
-	public static void savePilots(){
-		new File(YAPFILENAME ).delete();
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void savePilots(Configuration configuration){
+		new File(DB4O_FILE_NAME ).delete();
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Pilot pilot = new Pilot("David Barrichello",99);
-			db.set(pilot);
+			container.set(pilot);
 			pilot = new Pilot("Kimi Raikkonen",100);
-			db.set(pilot);
+			container.set(pilot);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end savePilots
 	
-	public static void getPilots(){
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void getPilots(Configuration configuration){
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			ObjectSet result = db.query(com.db4odoc.aliases.Pilot.class);
+			ObjectSet result = container.query(com.db4odoc.aliases.Pilot.class);
 			listResult(result);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end getPilots
 	
-	public static void getObjectsWithAlias(){
-		ObjectContainer db = Db4o.openFile(YAPFILENAME);
+	private static void getObjectsWithAlias(Configuration configuration){
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			ObjectSet result = db.query(com.db4odoc.aliases.newalias.Pilot.class);
+			ObjectSet result = container.query(com.db4odoc.aliases.newalias.Pilot.class);
 			listResult(result);
 		} finally {
-			db.close();
+			container.close();
 		}
 	}
 	// end getObjectsWithAlias
 
-    public static void listResult(ObjectSet result) {
+	private static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {
             System.out.println(result.next());
@@ -101,13 +104,16 @@ public class AliasExample {
     }
     // end listResult
 	
-    public static void configureAlias() {
+	private static Configuration configureAlias() {
     	// com.db4odoc.aliases.* - package for the classes saved in the database
     	// com.db4odoc.aliases.newalias.* - runtime package
 		WildcardAlias wAlias = new WildcardAlias("com.db4odoc.aliases.*","com.db4odoc.aliases.newalias.*");
-		Db4o.configure().addAlias(wAlias);
+		// add the alias to the configuration
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.addAlias(wAlias);
 		System.out.println("Stored name for com.db4odoc.aliases.newalias.Pilot: "+wAlias.resolveRuntimeName("com.db4odoc.aliases.newalias.Pilot"));
 		System.out.println("Runtime name for com.db4odoc.aliases.Pilot: "+wAlias.resolveStoredName("com.db4odoc.aliases.Pilot"));
+		return configuration;
     }
     // end configureAlias
 }

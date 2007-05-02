@@ -1,71 +1,79 @@
+/* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.clientserver;
 
-import java.io.*;
-import com.db4o.*;
+import java.io.File;
+
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 
 
 public class DeepExample {
-	public final static String YAPFILENAME="formula1.yap";
-    public static void main(String[] args) {
-        new File(YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	private final static String DB4O_FILE_NAME="reference.db4o";
+    
+	public static void main(String[] args) {
+        new File(DB4O_FILE_NAME).delete();
+        ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
         try {
-            storeCar(db);
-            db.close();
-            setCascadeOnUpdate();
-            db=Db4o.openFile(YAPFILENAME);
-            takeManySnapshots(db);
-            db.close();
-            db=Db4o.openFile(YAPFILENAME);            
-            retrieveAllSnapshots(db);
-            db.close();
-            db=Db4o.openFile(YAPFILENAME);
-            retrieveSnapshotsSequentially(db);
-            retrieveSnapshotsSequentiallyImproved(db);
-            db.close();
-            setActivationDepth();
-            db=Db4o.openFile(YAPFILENAME);
-            retrieveSnapshotsSequentially(db);
+            storeCar(container);
+            container.close();
+            Configuration configuration = setCascadeOnUpdate();
+            container=Db4o.openFile(configuration, DB4O_FILE_NAME);
+            takeManySnapshots(container);
+            container.close();
+            container=Db4o.openFile(configuration, DB4O_FILE_NAME);            
+            retrieveAllSnapshots(container);
+            container.close();
+            container=Db4o.openFile(configuration, DB4O_FILE_NAME);
+            retrieveSnapshotsSequentially(container);
+            retrieveSnapshotsSequentiallyImproved(container);
+            container.close();
+            configuration = setActivationDepth();
+            container=Db4o.openFile(configuration, DB4O_FILE_NAME);
+            retrieveSnapshotsSequentially(container);
         }
         finally {
-            db.close();
+            container.close();
         }
     }
     // end main
 
-    public static void storeCar(ObjectContainer db) {
+    private static void storeCar(ObjectContainer container) {
         Pilot pilot=new Pilot("Rubens Barrichello",99);
         Car car=new Car("BMW");
         car.setPilot(pilot);
-        db.set(car);
+        container.set(car);
     }
     // end storeCar
 
-    public static void setCascadeOnUpdate() {
-        Db4o.configure().objectClass(Car.class).cascadeOnUpdate(true);
+    private static Configuration setCascadeOnUpdate() {
+    	Configuration configuration = Db4o.newConfiguration();
+    	configuration.objectClass(Car.class).cascadeOnUpdate(true);
+    	return configuration;
     }
     // end setCascadeOnUpdate
     
-    public static void takeManySnapshots(ObjectContainer db) {
-        ObjectSet result=db.get(Car.class);
+    private static void takeManySnapshots(ObjectContainer container) {
+        ObjectSet result=container.get(Car.class);
         Car car=(Car)result.next();
         for(int i=0;i<5;i++) {
             car.snapshot();
         }
-        db.set(car);
+        container.set(car);
     }
     // end takeManySnapshots
     
-    public static void retrieveAllSnapshots(ObjectContainer db) {
-        ObjectSet result=db.get(SensorReadout.class);
+    private static void retrieveAllSnapshots(ObjectContainer container) {
+        ObjectSet result=container.get(SensorReadout.class);
         while(result.hasNext()) {
             System.out.println(result.next());
         }
     }
     // end retrieveAllSnapshots
 
-    public static void retrieveSnapshotsSequentially(ObjectContainer db) {
-        ObjectSet result=db.get(Car.class);
+    private static void retrieveSnapshotsSequentially(ObjectContainer container) {
+        ObjectSet result=container.get(Car.class);
         Car car=(Car)result.next();
         SensorReadout readout=car.getHistory();
         while(readout!=null) {
@@ -75,21 +83,23 @@ public class DeepExample {
     }
     // end retrieveSnapshotsSequentially
     
-    public static void retrieveSnapshotsSequentiallyImproved(ObjectContainer db) {
-        ObjectSet result=db.get(Car.class);
+    private static void retrieveSnapshotsSequentiallyImproved(ObjectContainer container) {
+        ObjectSet result=container.get(Car.class);
         Car car=(Car)result.next();
         SensorReadout readout=car.getHistory();
         while(readout!=null) {
-            db.activate(readout,1);
+            container.activate(readout,1);
             System.out.println(readout);
             readout=readout.getNext();
         }
     }
     // end retrieveSnapshotsSequentiallyImproved
     
-    public static void setActivationDepth() {
-        Db4o.configure().objectClass(TemperatureSensorReadout.class)
+    private static Configuration setActivationDepth() {
+    	Configuration configuration = Db4o.newConfiguration();
+    	configuration.objectClass(TemperatureSensorReadout.class)
         		.cascadeOnActivate(true);
+    	return configuration;
     }
     // end setActivationDepth
 }

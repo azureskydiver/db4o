@@ -3,16 +3,14 @@
 package com.db4odoc.listoperations;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
-
+import com.db4o.config.Configuration;
 
 public class ListOperationsExample {
-        public final static String DBFILE = "Test.db";
+        private final static String DB4O_FILE_NAME = "reference.db4o";
 
         public static void main(String[] args)
         {
@@ -27,8 +25,8 @@ public class ListOperationsExample {
         {
             int dataCount = 50000;
             long elapsedTime = 0;
-            new File(DBFILE).delete();
-            ObjectContainer db = Db4o.openFile(DBFILE);
+            new File(DB4O_FILE_NAME).delete();
+            ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
             try
             {
             	long t1 = System.currentTimeMillis();
@@ -44,14 +42,14 @@ public class ListOperationsExample {
                         dataObject.setData( System.currentTimeMillis() + " ---- Data Object " + String.format("%5d", j));
                         lo.getData().add(dataObject);
                     }
-                    db.set(lo);
+                    container.set(lo);
                 }
                 long t2 = System.currentTimeMillis();
                 elapsedTime = t2 - t1;
             }
             finally
             {
-                db.close();
+                container.close();
             }
             System.out.println("Completed " + listCount + " lists of " + dataCount + " objects each.");
             System.out.println("Elapsed time: " + elapsedTime + " ms.");
@@ -60,17 +58,18 @@ public class ListOperationsExample {
 
         private static void checkResults()
         {
-            ObjectContainer db = Db4o.openFile(DBFILE);
+        	// activation depth should be enough to activate 
+        	// ListObject, DataObject and its list members
+            int activationDepth = 3;
+            Configuration configuration = Db4o.newConfiguration();
+            configuration.activationDepth(activationDepth);
+            ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
             try
             {
-                List<ListObject> result = db.<ListObject>query(ListObject.class);
+                List<ListObject> result = container.<ListObject>query(ListObject.class);
                 if (result.size() > 0)
                 {
-                	// activation depth should be enough to activate 
-                	// ListObject, DataObject and its list members
-                    int activationDepth = 3;
-                    db.ext().configure().activationDepth(activationDepth);
-                    System.out.println("Result count was " + result.size()+ " looping with activation depth" +  activationDepth);
+                	System.out.println("Result count was " + result.size()+ " looping with activation depth" +  activationDepth);
                     for (int i = 0; i < result.size(); i++){
                     	ListObject lo = (ListObject)result.get(i);
                         System.out.println("ListObj " + lo.getName() + " has " + ((lo.getData() == null) ? "<null>" : lo.getData().size()) +" objects");
@@ -81,7 +80,7 @@ public class ListOperationsExample {
             }
             finally
             {
-                db.close();
+                container.close();
             }
         }
         // end checkResults
@@ -89,13 +88,14 @@ public class ListOperationsExample {
 
         private static void removeInsert()
         {
-            ObjectContainer db = Db4o.openFile(DBFILE);
+        	// set update depth to 1 for the quickest execution
+        	Configuration configuration = Db4o.newConfiguration();
+        	configuration.updateDepth(1);
+            ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
             long timeElapsed = 0;
             try
             {
-                // set update depth to 1 for the quickest execution
-                db.ext().configure().updateDepth(1);
-                List<ListObject> result = db.<ListObject>query(ListObject.class);
+                List<ListObject> result = container.<ListObject>query(ListObject.class);
                 if (result.size() == 2)
                 {
                 	// retrieve 2 ListObjects
@@ -112,16 +112,16 @@ public class ListOperationsExample {
                     long t1 = System.currentTimeMillis();
                     // save ListObjects. UpdateDepth = 1 will ensure that 
                     // the DataObject list is saved as well
-                    db.set(lo1);
-                    db.set(lo2);
-                    db.commit();
+                    container.set(lo1);
+                    container.set(lo2);
+                    container.commit();
                     long t2 = System.currentTimeMillis();
                     timeElapsed = t2 - t1;
                 }
             }
             finally
             {
-                db.close();
+                container.close();
             }
             System.out.println("Storing took: " + timeElapsed + " ms.");
         }
@@ -130,14 +130,14 @@ public class ListOperationsExample {
         private static void updateObject()
         {
             long timeElapsed = 0;
-
-            ObjectContainer db = Db4o.openFile(DBFILE);
+            // we can set update depth to 0 
+            // as we update only the current object
+            Configuration configuration = Db4o.newConfiguration();
+            configuration.updateDepth(0);
+            ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
             try
             {
-                // we can set update depth to 0 
-                // as we update only the current object
-                db.ext().configure().updateDepth(0);
-                List<ListObject> result = db.<ListObject>query(ListObject.class);
+                List<ListObject> result = container.<ListObject>query(ListObject.class);
                 if (result.size() == 2)
                 {
                     ListObject lo1 = result.get(0);
@@ -150,15 +150,15 @@ public class ListOperationsExample {
                     long t1 = System.currentTimeMillis();
                     // save only the DataObject. List of DataObjects will
                     // automatically include the new value
-                    db.set(dataobject);
-                    db.commit();
+                    container.set(dataobject);
+                    container.commit();
                     long t2 = System.currentTimeMillis();
                     timeElapsed = t2 -t1;
                 }
             }
             finally
             {
-                db.close();
+                container.close();
             }
             System.out.println("Storing took: " + timeElapsed +" ms.") ;
         }

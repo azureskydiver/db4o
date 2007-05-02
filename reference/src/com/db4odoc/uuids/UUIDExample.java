@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4odoc.uuids;
 
@@ -8,110 +8,124 @@ import java.util.Date;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.ext.Db4oDatabase;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.internal.*;
+import com.db4o.internal.LocalObjectContainer;
 import com.db4o.query.Query;
 
-
 public class UUIDExample {
-	public final static String YAPFILENAME="formula1.yap";
+	private final static String DB4O_FILE_NAME = "reference.db4o";
 
 	public static void main(String[] args) {
 		testChangeIdentity();
 		setObjects();
 		testGenerateUUID();
 	}
+
 	// end main
-	
-	private static String printSignature(byte[] signature){
+
+	private static String printSignature(byte[] signature) {
 		String str = "";
-		 for (int i = 0; i < signature.length; i++) {
-	            str = str + signature[i];
-	     }
-	     return str;
-	} 
+		for (int i = 0; i < signature.length; i++) {
+			str = str + signature[i];
+		}
+		return str;
+	}
+
 	// end printSignature
-	
-	public static void testChangeIdentity(){
-		new File(YAPFILENAME).delete();
-		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
+
+	private static void testChangeIdentity() {
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		Db4oDatabase db;
 		byte[] oldSignature;
 		byte[] newSignature;
-        try {
-	        db = oc.ext().identity();
-	        oldSignature = db.getSignature();
-	        System.out.println("oldSignature: " + printSignature(oldSignature));	
-	        ((LocalObjectContainer)oc).generateNewIdentity();
-        } finally {
-        	oc.close();
-        }        
-        oc = Db4o.openFile(YAPFILENAME);
-        try {
-	        db = oc.ext().identity();
-	        newSignature = db.getSignature();
-	        System.out.println("newSignature: " + printSignature(newSignature));
-        } finally {
-        	oc.close();
-        }
-        
-        boolean same = true;
-        
-        for (int i = 0; i < oldSignature.length; i++) {
-            if(oldSignature[i] != newSignature[i]){
-                same =false;
-            }
-        }
-        
-        if (same){
-        	System.out.println("Database signatures are identical");
-        } else {
-        	System.out.println("Database signatures are different");
-        }
-	}
-	// end testChangeIdentity
-
-	public static void setObjects(){
-		Db4o.configure().objectClass(Pilot.class).generateUUIDs(true);
-		new File(YAPFILENAME).delete();
-		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
 		try {
-			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
-			oc.set(car);
+			db = container.ext().identity();
+			oldSignature = db.getSignature();
+			System.out.println("oldSignature: "
+					+ printSignature(oldSignature));
+			((LocalObjectContainer) container).generateNewIdentity();
 		} finally {
-			oc.close();
+			container.close();
+		}
+		container = Db4o.openFile(DB4O_FILE_NAME);
+		try {
+			db = container.ext().identity();
+			newSignature = db.getSignature();
+			System.out.println("newSignature: "
+					+ printSignature(newSignature));
+		} finally {
+			container.close();
+		}
+
+		boolean same = true;
+
+		for (int i = 0; i < oldSignature.length; i++) {
+			if (oldSignature[i] != newSignature[i]) {
+				same = false;
+			}
+		}
+
+		if (same) {
+			System.out.println("Database signatures are identical");
+		} else {
+			System.out.println("Database signatures are different");
 		}
 	}
-	// end setObjects
-	
-	public static void testGenerateUUID(){
-		ObjectContainer oc = Db4o.openFile(YAPFILENAME);
+
+	// end testChangeIdentity
+
+	private static void setObjects() {
+		new File(DB4O_FILE_NAME).delete();
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.objectClass(Pilot.class).generateUUIDs(true);
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			Query query = oc.query();
+			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
+			container.set(car);
+		} finally {
+			container.close();
+		}
+	}
+
+	// end setObjects
+
+	private static void testGenerateUUID() {
+		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+		try {
+			Query query = container.query();
 			query.constrain(Car.class);
 			ObjectSet result = query.execute();
-			Car car = (Car)result.get(0);
-			ObjectInfo carInfo = oc.ext().getObjectInfo(car);
+			Car car = (Car) result.get(0);
+			ObjectInfo carInfo = container.ext().getObjectInfo(car);
 			Db4oUUID carUUID = carInfo.getUUID();
-			System.out.println("UUID for Car class are not generated:");
+			System.out
+					.println("UUID for Car class are not generated:");
 			System.out.println("Car UUID: " + carUUID);
-			
+
 			Pilot pilot = car.getPilot();
-			ObjectInfo pilotInfo = oc.ext().getObjectInfo(pilot);
+			ObjectInfo pilotInfo = container.ext().getObjectInfo(
+					pilot);
 			Db4oUUID pilotUUID = pilotInfo.getUUID();
 			System.out.println("UUID for Pilot:");
 			System.out.println("Pilot UUID: " + pilotUUID);
-			System.out.println("long part: " + pilotUUID.getLongPart() +"; signature: " + printSignature(pilotUUID.getSignaturePart()));
-			long ms = TimeStampIdGenerator.idToMilliseconds(pilotUUID.getLongPart());
-			System.out.println("Pilot object was created: " + (new Date(ms)).toString());
-			Pilot pilotReturned = (Pilot) oc.ext().getByUUID(pilotUUID);
-			System.out.println("Pilot from UUID: " + pilotReturned);	
-        } finally {
-        	oc.close();
-        }        
+			System.out.println("long part: "
+					+ pilotUUID.getLongPart() + "; signature: "
+					+ printSignature(pilotUUID.getSignaturePart()));
+			long ms = TimeStampIdGenerator.idToMilliseconds(pilotUUID
+					.getLongPart());
+			System.out.println("Pilot object was created: "
+					+ (new Date(ms)).toString());
+			Pilot pilotReturned = (Pilot) container.ext().getByUUID(
+					pilotUUID);
+			System.out.println("Pilot from UUID: " + pilotReturned);
+		} finally {
+			container.close();
+		}
 	}
 	// end testGenerateUUID
 }

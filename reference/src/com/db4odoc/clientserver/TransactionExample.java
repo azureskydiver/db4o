@@ -1,78 +1,80 @@
+/* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.clientserver;
 
 import java.io.*;
 import com.db4o.*;
 
-
 public class TransactionExample {
-	public final static String YAPFILENAME="formula1.yap";
-    public static void main(String[] args) {
-        new File(YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(YAPFILENAME);
+	
+	private final static String DB4O_FILE_NAME="reference.db4o";
+
+	public static void main(String[] args) {
+        new File(DB4O_FILE_NAME).delete();
+        ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
         try {
-            storeCarCommit(db);
-            db.close();
-            db=Db4o.openFile(YAPFILENAME);
-            listAllCars(db);
-            storeCarRollback(db);
-            db.close();
-            db=Db4o.openFile(YAPFILENAME);
-            listAllCars(db);
-            carSnapshotRollback(db);
-            carSnapshotRollbackRefresh(db);
+            storeCarCommit(container);
+            container.close();
+            container=Db4o.openFile(DB4O_FILE_NAME);
+            listAllCars(container);
+            storeCarRollback(container);
+            container.close();
+            container=Db4o.openFile(DB4O_FILE_NAME);
+            listAllCars(container);
+            carSnapshotRollback(container);
+            carSnapshotRollbackRefresh(container);
         }
         finally {
-            db.close();
+            container.close();
         }
     }
     // end main
     
-    public static void storeCarCommit(ObjectContainer db) {
+	private static void storeCarCommit(ObjectContainer container) {
         Pilot pilot=new Pilot("Rubens Barrichello",99);
         Car car=new Car("BMW");
         car.setPilot(pilot);
-        db.set(car);
-        db.commit();
+        container.set(car);
+        container.commit();
     }
     // end storeCarCommit
 
-    public static void listAllCars(ObjectContainer db) {
-        ObjectSet result=db.get(Car.class);
+	private static void listAllCars(ObjectContainer container) {
+        ObjectSet result=container.get(Car.class);
         listResult(result);
     }
     // end listAllCars
     
-    public static void storeCarRollback(ObjectContainer db) {
+	private static void storeCarRollback(ObjectContainer container) {
         Pilot pilot=new Pilot("Michael Schumacher",100);
         Car car=new Car("Ferrari");
         car.setPilot(pilot);
-        db.set(car);
-        db.rollback();
+        container.set(car);
+        container.rollback();
     }
     // end storeCarRollback
 
-    public static void carSnapshotRollback(ObjectContainer db) {
-        ObjectSet result=db.get(new Car("BMW"));
+	private static void carSnapshotRollback(ObjectContainer container) {
+        ObjectSet result=container.get(new Car("BMW"));
         Car car=(Car)result.next();
         car.snapshot();
-        db.set(car);
-        db.rollback();
+        container.set(car);
+        container.rollback();
         System.out.println(car);
     }
     // end carSnapshotRollback
 
-    public static void carSnapshotRollbackRefresh(ObjectContainer db) {
-        ObjectSet result=db.get(new Car("BMW"));
+	private static void carSnapshotRollbackRefresh(ObjectContainer container) {
+        ObjectSet result=container.get(new Car("BMW"));
         Car car=(Car)result.next();
         car.snapshot();
-        db.set(car);
-        db.rollback();
-        db.ext().refresh(car,Integer.MAX_VALUE);
+        container.set(car);
+        container.rollback();
+        container.ext().refresh(car,Integer.MAX_VALUE);
         System.out.println(car);
     }
     // end carSnapshotRollbackRefresh
     
-    public static void listResult(ObjectSet result) {
+	private static void listResult(ObjectSet result) {
         System.out.println(result.size());
         while(result.hasNext()) {
             System.out.println(result.next());

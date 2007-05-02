@@ -1,3 +1,4 @@
+/* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4odoc.clientserver;
 
 /**
@@ -15,7 +16,7 @@ public interface ServerConfiguration {
   /**
    * the database file to be used by the server.
    */
-  public String   FILE = "formula1.yap";
+  public String   FILE = "reference.db4o";
   
   /**
    * the port to be used by the server.
