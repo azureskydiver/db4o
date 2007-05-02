@@ -22,4 +22,6 @@ public class Db4oVersions {
 	public static String JAR604 = "db4o-6.004-java5.jar";
 	
 	public static String JAR61 = "db4o-6.1-java5.jar";
+	
+	public static String JAR62 = "db4o-6.2-java5.jar";
 }
