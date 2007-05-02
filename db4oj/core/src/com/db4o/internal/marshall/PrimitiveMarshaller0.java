@@ -6,6 +6,7 @@ import java.util.Date;
 
 import com.db4o.Deploy;
 import com.db4o.internal.*;
+import com.db4o.internal.slots.*;
 
 
 public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
@@ -24,15 +25,14 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
         
             ObjectContainerBase stream = trans.stream();
             id = stream.newUserObject();
-            int address = -1;
-            int length = objectLength(handler);
+            Slot slot = new Slot(-1, objectLength(handler));
             if(! stream.isClient()){
-                address = ((LocalTransaction)trans).file().getSlot(length); 
+                slot = ((LocalTransaction)trans).file().getSlot(slot._length); 
             }
-            trans.setPointer(id, address, length);
+            trans.setPointer(id, slot._address, slot._length);
             
-            StatefulBuffer writer = new StatefulBuffer(trans, length);
-            writer.useSlot(id, address, length);
+            StatefulBuffer writer = new StatefulBuffer(trans, slot._length);
+            writer.useSlot(id, slot);
             if (Deploy.debug) {
                 writer.writeBegin(Const4.YAPOBJECT);
             }

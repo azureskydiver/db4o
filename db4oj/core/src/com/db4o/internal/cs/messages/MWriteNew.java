@@ -3,6 +3,7 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
+import com.db4o.internal.slots.*;
 
 public final class MWriteNew extends MsgObject implements ServerSideMessage {
 	
@@ -15,21 +16,19 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             _payLoad.writeEmbedded();
             
             int id = _payLoad.getID();
-            int length = _payLoad.getLength();
-            
             stream.prefetchedIDConsumed(id);
             transaction().slotFreePointerOnRollback(id);
             
-            int address = stream.getSlot(length);
-            _payLoad.address(address);
+            Slot slot = stream.getSlot(_payLoad.getLength());
+            _payLoad.address(slot._address);
             
-            transaction().slotFreeOnRollback(id, address, length);
+            transaction().slotFreeOnRollback(id, slot._address, slot._length);
             
             if(yc != null){
                 yc.addFieldIndices(_payLoad,null);
             }
             stream.writeNew(yc, _payLoad);
-            serverTransaction().writePointer( id, address, length);
+            serverTransaction().writePointer( id, slot._address, slot._length);
         }
         return true;
     }

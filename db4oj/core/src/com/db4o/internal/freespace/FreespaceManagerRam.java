@@ -31,9 +31,12 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
 		});
     }
     
-    private void addFreeSlotNodes(int a_address, int a_length) {
-        FreeSlotNode addressNode = new FreeSlotNode(a_address);
-        addressNode.createPeer(a_length);
+    private void addFreeSlotNodes(int address, int length) {
+        if (canDiscard(length)) {
+            return;
+        }
+        FreeSlotNode addressNode = new FreeSlotNode(address);
+        addressNode.createPeer(length);
         _freeByAddress = Tree.add(_freeByAddress, addressNode);
         _freeBySize = Tree.add(_freeBySize, addressNode._peer);
     }
@@ -76,7 +79,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         	throw new IllegalArgumentException();
         }
         
-        if (length <= discardLimit()) {
+        if (canDiscard(length)) {
             return;
         }
         

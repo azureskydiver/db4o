@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.slots.*;
 import com.db4o.io.*;
 
 
@@ -273,28 +274,28 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     public void reserve(int byteCount) throws DatabaseReadOnlyException {
     	checkReadOnly();
         synchronized (i_lock) {
-            int address = getSlot(byteCount);
-            zeroReservedStorage(address, byteCount);
-            free(address, byteCount);
+        	Slot slot = getSlot(byteCount);
+            zeroReservedSlot(slot);
+            free(slot);
         }
     }
 
-    private void zeroReservedStorage(int address, int length) {
+    private void zeroReservedSlot(Slot slot) {
         try {
-        	zeroFile(_file, address, length);
-        	zeroFile(_backupFile, address, length);
+        	zeroFile(_file, slot);
+        	zeroFile(_backupFile, slot);
         } catch (IOException e) {
             Exceptions4.throwRuntimeException(16, e);
         }
     }
     
-    private void zeroFile(IoAdapter io, int address, int length) throws IOException {
+    private void zeroFile(IoAdapter io, Slot slot) throws IOException {
     	if(io == null) {
     		return;
     	}
     	byte[] zeroBytes = new byte[1024];
-        int left = length;
-        io.blockSeek(address, 0);
+        int left = slot._length;
+        io.blockSeek(slot._address, 0);
         while (left > zeroBytes.length) {
 			io.write(zeroBytes, zeroBytes.length);
 			left -= zeroBytes.length;

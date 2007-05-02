@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.slots.*;
 
 /**
  * public for .NET conversion reasons
@@ -48,10 +49,10 @@ public final class StatefulBuffer extends Buffer {
         i_length = a_initialBufferSize;
         _buffer = new byte[i_length];
     }
-
-    public StatefulBuffer(Transaction a_trans, int a_address, int a_initialBufferSize) {
-        this(a_trans, a_initialBufferSize);
-        i_address = a_address;
+    
+    public StatefulBuffer(Transaction a_trans, int address, int length) {
+        this(a_trans, length);
+        i_address = address;
     }
 
     public StatefulBuffer(StatefulBuffer parent, StatefulBuffer[] previousRead, int previousCount) {
@@ -290,18 +291,29 @@ public final class StatefulBuffer extends Buffer {
         _offset = 0;
     }
 
-    public void useSlot(int a_adress, int a_length) {
-        i_address = a_adress;
+    // FIXME: FB remove
+    public void useSlot(int address, int length) {
+    	useSlot(new Slot(address, length));
+    }
+    
+    public void useSlot(Slot slot) {
+        i_address = slot._address;
         _offset = 0;
-        if (a_length > _buffer.length) {
-            _buffer = new byte[a_length];
+        if (slot._length > _buffer.length) {
+            _buffer = new byte[slot._length];
         }
-        i_length = a_length;
+        i_length = slot._length;
     }
 
+    // FIXME: FB remove
     public void useSlot(int a_id, int a_adress, int a_length) {
         i_id = a_id;
         useSlot(a_adress, a_length);
+    }
+    
+    public void useSlot(int a_id, Slot slot) {
+        i_id = a_id;
+        useSlot(slot);
     }
 
     public void write() {
@@ -356,7 +368,7 @@ public final class StatefulBuffer extends Buffer {
             _payloadOffset = _offset + (Const4.INT_LENGTH * 2);
         }
         if(alignToBlockSize){
-            _payloadOffset = stream().alignToBlockSize(_payloadOffset);
+            _payloadOffset = stream().blockAligned(_payloadOffset);
         }
         writeInt(_payloadOffset);
         

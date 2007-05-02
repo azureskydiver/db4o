@@ -140,7 +140,7 @@ public class DefragContextImpl implements DefragContext {
 		return _targetDb.readWriterByAddress(TARGETDB.transaction(this),address,length);
 	}
 	
-	public int allocateTargetSlot(int length) {
+	public Slot allocateTargetSlot(int length) {
 		return _targetDb.getSlot(length);
 	}
 
