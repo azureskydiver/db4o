@@ -25,7 +25,9 @@ public interface ClassIndexStrategy {
 	void dontDelete(Transaction transaction, int id);
 	
 	Iterator4 allSlotIDs(Transaction trans);
+	// FIXME: Why is this never called?
 	void defragReference(ClassMetadata yapClass,ReaderPair readers,int classIndexID);
 	int id();
+	// FIXME: Why is this never called?
 	void defragIndex(ReaderPair readers);
 }
