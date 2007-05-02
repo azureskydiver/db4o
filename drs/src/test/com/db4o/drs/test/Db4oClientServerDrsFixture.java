@@ -32,11 +32,8 @@ public class Db4oClientServerDrsFixture extends Db4oDrsFixture {
 		
 		_server = Db4o.openServer(testFile.getPath(), _port);
 		_server.grantAccess(USERNAME, PASSWORD);
-		try {
-			_db = (ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD);
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
+		_db = (ExtObjectContainer) Db4o.openClient(HOST, _port, USERNAME, PASSWORD);
+		
 		_provider = Db4oProviderFactory.newInstance(_db, _name);
 	}
 }
