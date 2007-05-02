@@ -3,39 +3,45 @@ Imports System
 Imports System.IO
 Imports Db4objects.Db4o.IO
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.CachedIO
 
     Public Class CachedIOExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
-            SetObjects()
-            GetObjects()
-            ConfigureCache()
-            SetObjects()
-            GetObjects()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            SetObjects(configuration)
+            GetObjects(configuration)
+            configuration = ConfigureCache()
+            SetObjects(configuration)
+            GetObjects(configuration)
         End Sub
         ' end Main
 
-        Public Shared Sub ConfigureCache()
+        Private Shared Function ConfigureCache() As IConfiguration
             System.Console.WriteLine("Setting up cached io adapter")
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             ' new cached IO adapter with 256 pages 1024 bytes each
             Dim adapter As CachedIoAdapter = New CachedIoAdapter(New RandomAccessFileAdapter, 1024, 256)
-            Db4oFactory.Configure.Io(adapter)
-        End Sub
+            configuration.Io(adapter)
+            Return configuration
+        End Function
         ' end ConfigureCache
 
-        Public Shared Sub ConfigureRandomAccessAdapter()
+        Private Shared Function ConfigureRandomAccessAdapter() As IConfiguration
             System.Console.WriteLine("Setting up random access io adapter")
-            Db4oFactory.Configure.Io(New RandomAccessFileAdapter)
-        End Sub
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.Io(New RandomAccessFileAdapter)
+            Return configuration
+        End Function
         ' end ConfigureRandomAccessAdapter
 
-        Public Shared Sub SetObjects()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub SetObjects(ByVal configuration As IConfiguration)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow
                 Dim i As Integer = 0
@@ -59,9 +65,8 @@ Namespace Db4objects.Db4odoc.CachedIO
         End Sub
         ' end SetObjects
 
-        Public Shared Sub GetObjects()
-            Db4oFactory.Configure.Io(New RandomAccessFileAdapter)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub GetObjects(ByVal configuration As IConfiguration)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow
                 Dim result As IObjectSet = db.Get(Nothing)

@@ -1,4 +1,4 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 
 Namespace Db4objects.Db4odoc.Refactoring.Newclasses
@@ -21,7 +21,7 @@ Namespace Db4objects.Db4odoc.Refactoring.Newclasses
         End Property
 
 
-        Public Function toString() As String
+        Public Overloads Overrides Function ToString() As String
             Return String.Format("{0}[{1}]", _name, _id)
         End Function
     End Class

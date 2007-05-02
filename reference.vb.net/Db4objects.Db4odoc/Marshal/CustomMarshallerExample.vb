@@ -2,33 +2,38 @@
 Imports System
 Imports System.IO
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
+
 Namespace Db4objects.Db4odoc.marshal
 
     Class CustomMarshallerExample
-        Private Const DbFile As String = "test.db"
+        Private Const Db4oFileName As String = "reference.db4o"
         Private Shared marshaller As ItemMarshaller = Nothing
 
         Public Shared Sub Main(ByVal args As String())
             ' store objects using standard mashaller
-            StoreObjects()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            StoreObjects(configuration)
             ' retrieve objects using standard marshaller
-            RetrieveObjects()
+            RetrieveObjects(configuration)
             ' store and retrieve objects using the customized Item class marshaller
-            ConfigureMarshaller()
-            StoreObjects()
-            RetrieveObjects()
+            configuration = ConfigureMarshaller()
+            StoreObjects(configuration)
+            RetrieveObjects(configuration)
         End Sub
         ' end Main
 
-        Private Shared Sub ConfigureMarshaller()
+        Private Shared Function ConfigureMarshaller() As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             marshaller = New ItemMarshaller
-            Db4oFactory.Configure.ObjectClass(GetType(Item)).MarshallWith(marshaller)
-        End Sub
+            configuration.ObjectClass(GetType(Item)).MarshallWith(marshaller)
+            Return configuration
+        End Function
         ' end ConfigureMarshaller
 
-        Private Shared Sub StoreObjects()
-            File.Delete(DbFile)
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+        Private Shared Sub StoreObjects(ByVal configuration As IConfiguration)
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim item As Item
                 Dim dt1 As DateTime = DateTime.UtcNow
@@ -47,8 +52,8 @@ Namespace Db4objects.Db4odoc.marshal
         End Sub
         ' end StoreObjects
 
-        Private Shared Sub RetrieveObjects()
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+        Private Shared Sub RetrieveObjects(ByVal configuration As IConfiguration)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow
                 Dim result As IObjectSet = container.Get(GetType(Item))

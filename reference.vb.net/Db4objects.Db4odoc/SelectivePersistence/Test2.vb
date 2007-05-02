@@ -1,8 +1,6 @@
-Imports System
-Imports System.Collections.Generic
-Imports System.Text
-Namespace Db4objects.Db4odoc.SelectivePersistence
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 
+Namespace Db4objects.Db4odoc.SelectivePersistence
     Class Test2
         Private test1 As Test1
         Private name As String

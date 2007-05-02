@@ -1,14 +1,15 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.Threading
 Imports System.Collections
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Events
+
 Namespace Db4objects.Db4odoc.Concurrency
 
     Public Class OptimisticThread
         Private _server As IObjectServer
-        Private _db As IObjectContainer
+        Private _container As IObjectContainer
         Private _id As String
         Private _updateSuccess As Boolean = False
         Private _idVersions As Hashtable
@@ -16,7 +17,7 @@ Namespace Db4objects.Db4odoc.Concurrency
         Public Sub New(ByVal id As String, ByVal server As IObjectServer)
             _id = id
             Me._server = server
-            _db = _server.OpenClient
+            _container = _server.OpenClient
             RegisterCallbacks()
             _idVersions = New Hashtable
         End Sub
@@ -43,8 +44,8 @@ Namespace Db4objects.Db4odoc.Concurrency
         Private Sub OnUpdating(ByVal sender As Object, ByVal args As CancellableObjectEventArgs)
             Dim obj As Object = args.Object
             ' retrieve the object version from the database
-            Dim currentVersion As Long = _db.Ext.GetObjectInfo(obj).GetVersion
-            Dim id As Long = _db.Ext.GetID(obj)
+            Dim currentVersion As Long = _container.Ext.GetObjectInfo(obj).GetVersion
+            Dim id As Long = _container.Ext.GetID(obj)
             ' get the version saved at the object retrieval
             Dim i As IEnumerator = _idVersions.GetEnumerator
             Dim initialVersion As Long = CType(_idVersions(id), Long)
@@ -59,8 +60,8 @@ Namespace Db4objects.Db4odoc.Concurrency
         End Sub
         ' end OnUpdating
 
-        Public Sub RegisterCallbacks()
-            Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(_db)
+        Private Sub RegisterCallbacks()
+            Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(_container)
             ' register an event handler to check collisions on update
             AddHandler registry.Updating, AddressOf OnUpdating
         End Sub
@@ -68,7 +69,7 @@ Namespace Db4objects.Db4odoc.Concurrency
 
         Public Sub Run()
             Try
-                Dim result As IObjectSet = _db.Get(GetType(Pilot))
+                Dim result As IObjectSet = _container.Get(GetType(Pilot))
                 While result.HasNext
                     Dim pilot As Pilot = CType(result.Next, Pilot)
                     ' We will need to set a lock to make sure that the 
@@ -76,32 +77,32 @@ Namespace Db4objects.Db4odoc.Concurrency
                     ' (Prevent other client committing changes
                     ' at the time between object retrieval and version
                     ' retrieval )
-    			    If Not _db.Ext.SetSemaphore("LOCK_" + _db.Ext.GetID(pilot).ToString(), 3000) Then
+                    If Not _container.Ext.SetSemaphore("LOCK_" + _container.Ext.GetID(pilot).ToString(), 3000) Then
                         Console.WriteLine("Error. The object is locked")
                         Continue While
                     End If
-                    Dim objVersion As Long = _db.Ext.GetObjectInfo(pilot).GetVersion
-                    _db.Ext.Refresh(pilot, Int32.MaxValue)
-                    _db.Ext.ReleaseSemaphore("LOCK_" + _db.Ext.GetID(pilot).ToString())
+                    Dim objVersion As Long = _container.Ext.GetObjectInfo(pilot).GetVersion
+                    _container.Ext.Refresh(pilot, Int32.MaxValue)
+                    _container.Ext.ReleaseSemaphore("LOCK_" + _container.Ext.GetID(pilot).ToString())
                     ' save object version into _idVersions collection
                     ' This will be needed to make sure that the version
                     ' originally retrieved is the same in the database 
                     ' at the time of modification
-                    Dim id As Long = _db.Ext.GetID(pilot)
+                    Dim id As Long = _container.Ext.GetID(pilot)
                     _idVersions.Add(id, objVersion)
                     Console.WriteLine(Name + "Updating pilot: " + pilot.ToString() + " version: " + objVersion.ToString())
                     pilot.AddPoints(1)
                     _updateSuccess = False
                     RandomWait()
-                    If Not _db.Ext.SetSemaphore("LOCK_" + _db.Ext.GetID(pilot).ToString(), 3000) Then
+                    If Not _container.Ext.SetSemaphore("LOCK_" + _container.Ext.GetID(pilot).ToString(), 3000) Then
                         Console.WriteLine("Error. The object is locked")
                         Continue While
                     End If
-                    _db.Set(pilot)
+                    _container.Set(pilot)
                     ' The changes should be committed to be 
                     ' visible to the other clients
-                    _db.Commit()
-                    _db.Ext.ReleaseSemaphore("LOCK_" + _db.Ext.GetID(pilot).ToString())
+                    _container.Commit()
+                    _container.Ext.ReleaseSemaphore("LOCK_" + _container.Ext.GetID(pilot).ToString())
                     If _updateSuccess Then
                         Console.WriteLine(Name + "Updated pilot: " + pilot.ToString())
                     End If
@@ -111,7 +112,7 @@ Namespace Db4objects.Db4odoc.Concurrency
                     _idVersions.Remove(id)
                 End While
             Finally
-                _db.Close()
+                _container.Close()
             End Try
         End Sub
         ' end Run

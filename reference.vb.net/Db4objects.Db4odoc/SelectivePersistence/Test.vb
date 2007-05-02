@@ -1,10 +1,12 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports Db4objects.Db4o
 
 Namespace Db4objects.Db4odoc.SelectivePersistence
     Public Class Test
         <Transient()> Dim _transientField As String
+        ' You can also use <NonSerialized()> Dim _transientField As String
+        ' and mark the class <Serializable()>
         Dim _persistentField As String
 
         Public Sub New(ByVal transientField As String, ByVal persistentField As String)

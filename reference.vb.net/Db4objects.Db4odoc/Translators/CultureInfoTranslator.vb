@@ -1,8 +1,9 @@
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System.Globalization
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 
-Namespace Db4objects.Db4odoc.Evaluations
+Namespace Db4objects.Db4odoc.Translators
     Public Class CultureInfoTranslator
         Implements IObjectConstructor
         Public Function OnStore(ByVal container As IObjectContainer, ByVal applicationObject As Object) As Object Implements IObjectConstructor.OnStore

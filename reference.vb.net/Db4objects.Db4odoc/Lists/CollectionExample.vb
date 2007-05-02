@@ -1,4 +1,4 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 
 Imports System.IO
 
@@ -8,7 +8,7 @@ Imports Db4objects.Db4o.Query
 Namespace Db4objects.Db4odoc.Lists
 
     Public Class CollectionExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             SetTeam()
@@ -17,8 +17,8 @@ Namespace Db4objects.Db4odoc.Lists
         ' end Main
 
         Public Shared Sub SetTeam()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim ferrariTeam As Team = New Team()
                 ferrariTeam.Name = "Ferrari"
@@ -40,7 +40,7 @@ Namespace Db4objects.Db4odoc.Lists
 
 
         Public Shared Sub UpdateTeam()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Team))

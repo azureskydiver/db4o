@@ -1,11 +1,14 @@
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.Indexes
     Public Class IndexedExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             FillUpDB()
@@ -16,8 +19,8 @@ Namespace Db4objects.Db4odoc.Indexes
         End Sub
         ' end Main
 
-        Public Shared Sub NoIndex()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub NoIndex()
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
@@ -35,9 +38,9 @@ Namespace Db4objects.Db4odoc.Indexes
         End Sub
         ' end NoIndex
 
-        Public Shared Sub FillUpDB()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub FillUpDB()
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 For i As Integer = 0 To 10000
                     AddCar(db, i)
@@ -48,10 +51,11 @@ Namespace Db4objects.Db4odoc.Indexes
         End Sub
         ' end FillUpDB
 
-        Public Shared Sub PilotIndex()
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(True)
-            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(False)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub PilotIndex()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(True)
+            configuration.ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(False)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
@@ -69,10 +73,11 @@ Namespace Db4objects.Db4odoc.Indexes
         End Sub
         ' end PilotIndex
 
-        Public Shared Sub PointsIndex()
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(False)
-            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(True)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub PointsIndex()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(False)
+            configuration.ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(True)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
@@ -91,10 +96,11 @@ Namespace Db4objects.Db4odoc.Indexes
         ' end PointsIndex
 
 
-        Public Shared Sub FullIndex()
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(True)
-            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(True)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub FullIndex()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(Car)).ObjectField("_pilot").Indexed(True)
+            configuration.ObjectClass(GetType(Pilot)).ObjectField("_points").Indexed(True)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
@@ -113,15 +119,15 @@ Namespace Db4objects.Db4odoc.Indexes
         ' end FullIndex
 
 
-        Public Shared Sub AddCar(ByVal db As IObjectContainer, ByVal points As Integer)
+        Private Shared Sub AddCar(ByVal db As IObjectContainer, ByVal points As Integer)
             Dim car As Car = New Car("BMW")
             Dim pilot As Pilot = New Pilot("Tester", points)
             car.Pilot = pilot
-            db.[Set](car)
+            db.Set(car)
         End Sub
         ' end AddCar
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             For Each item As Object In result
                 Console.WriteLine(item)

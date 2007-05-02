@@ -5,31 +5,33 @@ Imports System.Diagnostics
 Imports System.IO
 
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Ext
 Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.ListDeleting
 
     Class ListDeletingExample
-        Public Const DbFile As String = "Test.db"
+        Public Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             FillUpDb(1)
             DeleteTest()
-            'FillUpDb(1)
-            'RemoveAndDeleteTest()
-            'FillUpDb(1)
-            'RemoveTest()
+            FillUpDb(1)
+            RemoveAndDeleteTest()
+            FillUpDb(1)
+            RemoveTest()
         End Sub
         ' end Main
 
 
         Private Shared Sub RemoveAndDeleteTest()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            ' set update depth to 1 as we only 
+            ' modify List field
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(ListObject)).UpdateDepth(1)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                ' set update depth to 1 as we only 
-                ' modify List field
-                db.Ext.Configure.ObjectClass(GetType(ListObject)).UpdateDepth(1)
                 Dim result As IList(Of ListObject) = db.Query(Of ListObject)(GetType(ListObject))
                 If result.Count > 0 Then
                     ' retrieve a ListObject
@@ -53,7 +55,7 @@ Namespace Db4objects.Db4odoc.ListDeleting
             End Try
             ' check DataObjects in the list
             ' and DataObjects in the database
-            db = Db4oFactory.OpenFile(DbFile)
+            db = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim result As IList(Of ListObject) = db.Query(Of ListObject)(GetType(ListObject))
                 If result.Count > 0 Then
@@ -69,11 +71,12 @@ Namespace Db4objects.Db4odoc.ListDeleting
         ' end RemoveAndDeleteTest
 
         Private Shared Sub RemoveTest()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            ' set update depth to 1 as we only 
+            ' modify List field
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(ListObject)).UpdateDepth(1)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                ' set update depth to 1 as we only 
-                ' modify List field
-                db.Ext.Configure.ObjectClass(GetType(ListObject)).UpdateDepth(1)
                 Dim result As IList(Of ListObject) = db.Query(Of ListObject)(GetType(ListObject))
                 If result.Count > 0 Then
                     ' retrieve a ListObject
@@ -87,7 +90,7 @@ Namespace Db4objects.Db4odoc.ListDeleting
             End Try
             ' check DataObjects in the list
             ' and DataObjects in the database
-            db = Db4oFactory.OpenFile(DbFile)
+            db = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim result As IList(Of ListObject) = db.Query(Of ListObject)(GetType(ListObject))
                 If result.Count > 0 Then
@@ -103,10 +106,11 @@ Namespace Db4objects.Db4odoc.ListDeleting
         ' end RemoveTest
 
         Private Shared Sub DeleteTest()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            ' set cascadeOnDelete in order to delete member objects
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(ListObject)).CascadeOnDelete(True)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                ' set cascadeOnDelete in order to delete member objects
-                db.Ext.Configure.ObjectClass(GetType(ListObject)).CascadeOnDelete(True)
                 Dim result As IList(Of ListObject) = db.Query(Of ListObject)(GetType(ListObject))
                 If result.Count > 0 Then
                     ' retrieve a ListObject
@@ -118,7 +122,7 @@ Namespace Db4objects.Db4odoc.ListDeleting
                 db.Close()
             End Try
             ' check ListObjects and DataObjects in the database
-            db = Db4oFactory.OpenFile(DbFile)
+            db = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim listObjects As IList(Of ListObject) = db.Query(Of ListObject)(GetType(ListObject))
                 Console.WriteLine("ListObjects in the database: " + listObjects.Count.ToString())
@@ -133,8 +137,8 @@ Namespace Db4objects.Db4odoc.ListDeleting
         Private Shared Sub FillUpDb(ByVal listCount As Integer)
             Dim dataCount As Integer = 50
             Dim sw As Stopwatch = New Stopwatch
-            File.Delete(DbFile)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 sw.Start()
                 Dim i As Integer = 0

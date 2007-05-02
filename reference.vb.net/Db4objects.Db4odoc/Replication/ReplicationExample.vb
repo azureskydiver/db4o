@@ -1,5 +1,6 @@
 Imports System
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 Imports Db4oTools
 Imports Db4objects.Drs
@@ -7,12 +8,12 @@ Imports Db4objects.Drs
 
 Namespace Db4objects.Db4odoc.Replicating
     Public Class ReplicationExample
-        Public Shared ReadOnly DtFileName As String = "formula1.yap"
-        Public Shared ReadOnly HhFileName As String = "handheld.yap"
+        Public Shared ReadOnly DtFileName As String = "reference.db4o"
+        Public Shared ReadOnly HhFileName As String = "handheld.db4o"
 
         Public Shared Sub ConfigureReplication()
-            Db4oFactory.Configure().GenerateUUIDs(Int32.MaxValue)
-            Db4oFactory.Configure().GenerateVersionNumbers(Int32.MaxValue)
+            Db4oFactory.Configure().GenerateUUIDs(ConfigScope.GLOBALLY)
+            Db4oFactory.Configure().GenerateVersionNumbers(ConfigScope.GLOBALLY)
         End Sub
         ' end configureReplication
 

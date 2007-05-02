@@ -1,4 +1,4 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 Imports Db4objects.Db4o
@@ -10,18 +10,18 @@ Namespace Db4objects.Db4odoc.Semaphores
     ' 	
     Public Class LimitLogins
 
-        Shared ReadOnly HOST As String = "localhost"
-        Shared ReadOnly PORT As Integer = 4455
-        Shared ReadOnly USER As String = "db4o"
-        Shared ReadOnly PASSWORD As String = "db4o"
+        Shared ReadOnly Host As String = "localhost"
+        Shared ReadOnly Port As Integer = 4455
+        Shared ReadOnly User As String = "db4o"
+        Shared ReadOnly Password As String = "db4o"
 
-        Shared ReadOnly MAXIMUM_USERS As Integer = 10
+        Shared ReadOnly MaximumUsers As Integer = 10
 
         Public Shared Function Login() As IObjectContainer
 
             Dim objectContainer As IObjectContainer
             Try
-                objectContainer = Db4oFactory.OpenClient(HOST, PORT, USER, PASSWORD)
+                objectContainer = Db4oFactory.OpenClient(Host, Port, User, Password)
             Catch e As IOException
                 Return Nothing
             End Try
@@ -29,7 +29,7 @@ Namespace Db4objects.Db4odoc.Semaphores
             Dim allowedToLogin As Boolean = False
 
             Dim i As Integer
-            For i = 0 To MAXIMUM_USERS - 1 Step i + 1
+            For i = 0 To MaximumUsers - 1 Step i + 1
                 If objectContainer.Ext().SetSemaphore("max_user_check_" + i.ToString(), 0) Then
                     allowedToLogin = True
                     Exit For

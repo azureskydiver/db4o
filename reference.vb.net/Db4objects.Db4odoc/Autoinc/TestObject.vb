@@ -1,5 +1,5 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
-Namespace Db4objects.Db4odoc.Callbacks
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
+Namespace Db4objects.Db4odoc.Autoinc
 
     Class TestObject
         Inherits CountedObject

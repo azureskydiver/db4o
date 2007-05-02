@@ -1,4 +1,4 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com
 Imports System
 Imports System.IO
 Imports Db4objects.Db4o
@@ -7,7 +7,7 @@ Imports Db4objects.Db4o.Ext
 Namespace Db4objects.Db4odoc.Exceptions
 
     Class ExceptionExample
-        Private Const FileName As String = "test.db"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             Dim db As IObjectContainer = OpenDatabase()
@@ -17,10 +17,10 @@ Namespace Db4objects.Db4odoc.Exceptions
         End Sub
         ' end Main
 
-        Public Shared Function OpenDatabase() As IObjectContainer
+        Private Shared Function OpenDatabase() As IObjectContainer
             Dim db As IObjectContainer = Nothing
             Try
-                db = Db4oFactory.OpenFile(FileName)
+                db = Db4oFactory.OpenFile(Db4oFileName)
             Catch ex As DatabaseFileLockedException
                 ' System.Console.WriteLine(ex.Message)
                 ' ask the user for a new filename, print
@@ -33,7 +33,7 @@ Namespace Db4objects.Db4odoc.Exceptions
         End Function
         ' end OpenDatabase
 
-        Public Shared Function OpenClient() As IObjectContainer
+        Private Shared Function OpenClient() As IObjectContainer
             Dim db As IObjectContainer = Nothing
             Try
                 db = Db4oFactory.OpenClient("host", 40, "user", "password")
@@ -49,7 +49,7 @@ Namespace Db4objects.Db4odoc.Exceptions
         End Function
         ' end OpenClient
 
-        Public Shared Sub Work()
+        Private Shared Sub Work()
             Dim db As IObjectContainer = OpenDatabase()
             Try
                 ' do some work with db4o

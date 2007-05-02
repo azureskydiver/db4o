@@ -1,4 +1,4 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 
 Imports System
 Imports System.IO
@@ -7,7 +7,7 @@ Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.Identity
     Public Class IdentityExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             CheckUniqueness()
@@ -19,9 +19,9 @@ Namespace Db4objects.Db4odoc.Identity
         End Sub
         ' end Main
 
-        Public Shared Sub SetObjects()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub SetObjects()
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
                 db.Set(car)
@@ -33,9 +33,9 @@ Namespace Db4objects.Db4odoc.Identity
         End Sub
         ' end SetObjects
 
-        Public Shared Sub CheckUniqueness()
+        Private Shared Sub CheckUniqueness()
             SetObjects()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim cars As IObjectSet = db.Get(GetType(Car))
                 Dim car As Car = CType(cars(0), Car)
@@ -49,9 +49,9 @@ Namespace Db4objects.Db4odoc.Identity
         End Sub
         ' end CheckUniqueness
 
-        Public Shared Sub CheckReferenceCache()
+        Private Shared Sub CheckReferenceCache()
             SetObjects()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim pilots As IObjectSet = db.Get(GetType(Pilot))
                 Dim pilot As Pilot = CType(pilots(0), Pilot)
@@ -66,9 +66,9 @@ Namespace Db4objects.Db4odoc.Identity
         End Sub
         ' end CheckReferenceCache
 
-        Public Shared Sub CheckReferenceCacheWithPurge()
+        Private Shared Sub CheckReferenceCacheWithPurge()
             SetObjects()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim pilots As IObjectSet = db.Get(GetType(Pilot))
                 Dim pilot As Pilot = CType(pilots(0), Pilot)
@@ -87,9 +87,9 @@ Namespace Db4objects.Db4odoc.Identity
         End Sub
         ' end CheckReferenceCacheWithPurge
 
-        Public Shared Sub TestCopyingWithPurge()
+        Private Shared Sub TestCopyingWithPurge()
             SetObjects()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim pilots As IObjectSet = db.Get(GetType(Pilot))
                 Dim pilot As Pilot = CType(pilots(0), Pilot)
@@ -103,9 +103,9 @@ Namespace Db4objects.Db4odoc.Identity
         End Sub
         ' end TestCopyingWithPurge
 
-        Public Shared Sub TestBind()
+        Private Shared Sub TestBind()
             SetObjects()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim q As IQuery = db.Query()
                 q.Constrain(GetType(Car))
@@ -125,7 +125,7 @@ Namespace Db4objects.Db4odoc.Identity
         End Sub
         ' end TestBind
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             For Each item As Object In result
                 Console.WriteLine(item)

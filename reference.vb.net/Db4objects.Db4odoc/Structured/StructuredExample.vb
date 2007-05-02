@@ -1,16 +1,18 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.Structured
     Public Class StructuredExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 StoreFirstCar(db)
                 StoreSecondCar(db)
@@ -24,19 +26,19 @@ Namespace Db4objects.Db4odoc.Structured
                 UpdatePilotSingleSession(db)
                 UpdatePilotSeparateSessionsPart1(db)
                 db.Close()
-                db = Db4oFactory.OpenFile(YapFileName)
+                db = Db4oFactory.OpenFile(Db4oFileName)
                 UpdatePilotSeparateSessionsPart2(db)
                 db.Close()
-                UpdatePilotSeparateSessionsImprovedPart1(db)
-                db = Db4oFactory.OpenFile(YapFileName)
+                Dim configuration As IConfiguration = UpdatePilotSeparateSessionsImprovedPart1(db)
+                db = Db4oFactory.OpenFile(configuration, Db4oFileName)
                 UpdatePilotSeparateSessionsImprovedPart2(db)
                 db.Close()
-                db = Db4oFactory.OpenFile(YapFileName)
+                db = Db4oFactory.OpenFile(configuration, Db4oFileName)
                 UpdatePilotSeparateSessionsImprovedPart3(db)
                 DeleteFlat(db)
                 db.Close()
-                DeleteDeepPart1(db)
-                db = Db4oFactory.OpenFile(YapFileName)
+                configuration = DeleteDeepPart1(db)
+                db = Db4oFactory.OpenFile(configuration, Db4oFileName)
                 DeleteDeepPart2(db)
                 DeleteDeepRevisited(db)
             Finally
@@ -45,47 +47,47 @@ Namespace Db4objects.Db4odoc.Structured
         End Sub
 	' end Main
 
-        Public Shared Sub StoreFirstCar(ByVal db As IObjectContainer)
+        Private Shared Sub StoreFirstCar(ByVal db As IObjectContainer)
             Dim car1 As Car = New Car("Ferrari")
             Dim pilot1 As Pilot = New Pilot("Michael Schumacher", 100)
             car1.Pilot = pilot1
-            db.[Set](car1)
+            db.Set(car1)
         End Sub
 	' end StoreFirstCar
 
-        Public Shared Sub StoreSecondCar(ByVal db As IObjectContainer)
+        Private Shared Sub StoreSecondCar(ByVal db As IObjectContainer)
             Dim pilot2 As Pilot = New Pilot("Rubens Barrichello", 99)
-            db.[Set](pilot2)
+            db.Set(pilot2)
             Dim car2 As Car = New Car("BMW")
             car2.Pilot = pilot2
-            db.[Set](car2)
+            db.Set(car2)
         End Sub
 	' end StoreSecondCar
 
-        Public Shared Sub RetrieveAllCarsQBE(ByVal db As IObjectContainer)
+        Private Shared Sub RetrieveAllCarsQBE(ByVal db As IObjectContainer)
             Dim proto As Car = New Car(Nothing)
-            Dim result As IObjectSet = db.[Get](proto)
+            Dim result As IObjectSet = db.Get(proto)
             ListResult(result)
         End Sub
 	' end RetrieveAllCarsQBE
 
-        Public Shared Sub RetrieveAllPilotsQBE(ByVal db As IObjectContainer)
+        Private Shared Sub RetrieveAllPilotsQBE(ByVal db As IObjectContainer)
             Dim proto As Pilot = New Pilot(Nothing, 0)
-            Dim result As IObjectSet = db.[Get](proto)
+            Dim result As IObjectSet = db.Get(proto)
             ListResult(result)
         End Sub
 	' end RetrieveAllPilotsQBE
 
-        Public Shared Sub RetrieveCarByPilotQBE(ByVal db As IObjectContainer)
+        Private Shared Sub RetrieveCarByPilotQBE(ByVal db As IObjectContainer)
             Dim pilotproto As Pilot = New Pilot("Rubens Barrichello", 0)
             Dim carproto As Car = New Car(Nothing)
             carproto.Pilot = pilotproto
-            Dim result As IObjectSet = db.[Get](carproto)
+            Dim result As IObjectSet = db.Get(carproto)
             ListResult(result)
         End Sub
 	' end RetrieveCarByPilotQBE
 
-        Public Shared Sub RetrieveCarByPilotNameQuery(ByVal db As IObjectContainer)
+        Private Shared Sub RetrieveCarByPilotNameQuery(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Car))
             query.Descend("_pilot").Descend("_name").Constrain("Rubens Barrichello")
@@ -94,7 +96,7 @@ Namespace Db4objects.Db4odoc.Structured
         End Sub
 	' end RetrieveCarByPilotNameQuery
 
-        Public Shared Sub RetrieveCarByPilotProtoQuery(ByVal db As IObjectContainer)
+        Private Shared Sub RetrieveCarByPilotProtoQuery(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Car))
             Dim proto As Pilot = New Pilot("Rubens Barrichello", 0)
@@ -104,7 +106,7 @@ Namespace Db4objects.Db4odoc.Structured
         End Sub
 	' end RetrieveCarByPilotProtoQuery
 
-        Public Shared Sub RetrievePilotByCarModelQuery(ByVal db As IObjectContainer)
+        Private Shared Sub RetrievePilotByCarModelQuery(ByVal db As IObjectContainer)
             Dim carQuery As IQuery = db.Query()
             carQuery.Constrain(GetType(Car))
             carQuery.Descend("_model").Constrain("Ferrari")
@@ -114,14 +116,14 @@ Namespace Db4objects.Db4odoc.Structured
         End Sub
 	' end RetrievePilotByCarModelQuery
 
-        Public Shared Sub RetrieveAllPilots(ByVal db As IObjectContainer)
-            Dim results As IObjectSet = db.[Get](GetType(Pilot))
+        Private Shared Sub RetrieveAllPilots(ByVal db As IObjectContainer)
+            Dim results As IObjectSet = db.Get(GetType(Pilot))
             ListResult(results)
         End Sub
 	' end RetrieveAllPilots
 
-        Public Shared Sub RetrieveAllCars(ByVal db As IObjectContainer)
-            Dim results As IObjectSet = db.[Get](GetType(Car))
+        Private Shared Sub RetrieveAllCars(ByVal db As IObjectContainer)
+            Dim results As IObjectSet = db.Get(GetType(Car))
             ListResult(results)
         End Sub
 	' end RetrieveAllCars
@@ -140,105 +142,109 @@ Namespace Db4objects.Db4odoc.Structured
         End Class
         ' end RetrieveCarsByPilotNamePredicate
 
-        Public Shared Sub RetrieveCarsByPilotNameNative(ByVal db As IObjectContainer)
+        Private Shared Sub RetrieveCarsByPilotNameNative(ByVal db As IObjectContainer)
             Dim pilotName As String = "Rubens Barrichello"
             Dim results As IObjectSet = db.Query(New RetrieveCarsByPilotNamePredicate(pilotName))
             ListResult(results)
         End Sub
 	' end RetrieveCarsByPilotNameNative
 
-        Public Shared Sub UpdateCar(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](New Car("Ferrari"))
-            Dim found As Car = DirectCast(result.[Next](), Car)
+        Private Shared Sub UpdateCar(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
+            Dim found As Car = DirectCast(result.Next(), Car)
             found.Pilot = New Pilot("Somebody else", 0)
-            db.[Set](found)
-            result = db.[Get](New Car("Ferrari"))
+            db.Set(found)
+            result = db.Get(New Car("Ferrari"))
             ListResult(result)
         End Sub
 	' end UpdateCar
 
-        Public Shared Sub UpdatePilotSingleSession(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](New Car("Ferrari"))
-            Dim found As Car = DirectCast(result.[Next](), Car)
+        Private Shared Sub UpdatePilotSingleSession(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
+            Dim found As Car = DirectCast(result.Next(), Car)
             found.Pilot.AddPoints(1)
-            db.[Set](found)
-            result = db.[Get](New Car("Ferrari"))
+            db.Set(found)
+            result = db.Get(New Car("Ferrari"))
             ListResult(result)
         End Sub
 	' end UpdatePilotSingleSession
 
-        Public Shared Sub UpdatePilotSeparateSessionsPart1(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](New Car("Ferrari"))
-            Dim found As Car = DirectCast(result.[Next](), Car)
+        Private Shared Sub UpdatePilotSeparateSessionsPart1(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
+            Dim found As Car = DirectCast(result.Next(), Car)
             found.Pilot.AddPoints(1)
-            db.[Set](found)
+            db.Set(found)
         End Sub
 	' end UpdatePilotSeparateSessionsPart1
 
-        Public Shared Sub UpdatePilotSeparateSessionsPart2(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](New Car("Ferrari"))
+        Private Shared Sub UpdatePilotSeparateSessionsPart2(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
             ListResult(result)
         End Sub
 	' end UpdatePilotSeparateSessionsPart2
 
-        Public Shared Sub UpdatePilotSeparateSessionsImprovedPart1(ByVal db As IObjectContainer)
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).CascadeOnUpdate(True)
-        End Sub
+        Private Shared Function UpdatePilotSeparateSessionsImprovedPart1(ByVal db As IObjectContainer) As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(Car)).CascadeOnUpdate(True)
+            Return configuration
+        End Function
 	' end UpdatePilotSeparateSessionsImprovedPart1
 
-        Public Shared Sub UpdatePilotSeparateSessionsImprovedPart2(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](New Car("Ferrari"))
-            Dim found As Car = DirectCast(result.[Next](), Car)
+        Private Shared Sub UpdatePilotSeparateSessionsImprovedPart2(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
+            Dim found As Car = DirectCast(result.Next(), Car)
             found.Pilot.AddPoints(1)
-            db.[Set](found)
+            db.Set(found)
         End Sub
 	' end UpdatePilotSeparateSessionsImprovedPart2
 
-        Public Shared Sub UpdatePilotSeparateSessionsImprovedPart3(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](New Car("Ferrari"))
+        Private Shared Sub UpdatePilotSeparateSessionsImprovedPart3(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
             ListResult(result)
         End Sub
 	' end UpdatePilotSeparateSessionsImprovedPart3
 
-        Public Shared Sub DeleteFlat(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](New Car("Ferrari"))
-            Dim found As Car = DirectCast(result.[Next](), Car)
+        Private Shared Sub DeleteFlat(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("Ferrari"))
+            Dim found As Car = DirectCast(result.Next(), Car)
             db.Delete(found)
-            result = db.[Get](New Car(Nothing))
+            result = db.Get(New Car(Nothing))
             ListResult(result)
         End Sub
 	' end DeleteFlat
 
-        Public Shared Sub DeleteDeepPart1(ByVal db As IObjectContainer)
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).CascadeOnDelete(True)
-        End Sub
+        Private Shared Function DeleteDeepPart1(ByVal db As IObjectContainer) As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(Car)).CascadeOnDelete(True)
+            Return configuration
+        End Function
 	' end DeleteDeepPart1
 
-        Public Shared Sub DeleteDeepPart2(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](New Car("BMW"))
-            Dim found As Car = DirectCast(result.[Next](), Car)
+        Private Shared Sub DeleteDeepPart2(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Car("BMW"))
+            Dim found As Car = DirectCast(result.Next(), Car)
             db.Delete(found)
-            result = db.[Get](New Car(Nothing))
+            result = db.Get(New Car(Nothing))
             ListResult(result)
         End Sub
 	' end DeleteDeepPart2
 
-        Public Shared Sub DeleteDeepRevisited(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](New Pilot("Michael Schumacher", 0))
-            Dim pilot As Pilot = DirectCast(result.[Next](), Pilot)
+        Private Shared Sub DeleteDeepRevisited(ByVal db As IObjectContainer)
+            Dim result As IObjectSet = db.Get(New Pilot("Michael Schumacher", 0))
+            Dim pilot As Pilot = DirectCast(result.Next(), Pilot)
             Dim car1 As Car = New Car("Ferrari")
             Dim car2 As Car = New Car("BMW")
             car1.Pilot = pilot
             car2.Pilot = pilot
-            db.[Set](car1)
-            db.[Set](car2)
+            db.Set(car1)
+            db.Set(car2)
             db.Delete(car2)
-            result = db.[Get](New Car(Nothing))
+            result = db.Get(New Car(Nothing))
             ListResult(result)
         End Sub
 	' end DeleteDeepRevisited
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             For Each item As Object In result
                 Console.WriteLine(item)

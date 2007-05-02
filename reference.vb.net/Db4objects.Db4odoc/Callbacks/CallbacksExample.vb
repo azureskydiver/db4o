@@ -1,3 +1,4 @@
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 Imports Db4objects.Db4o
@@ -7,7 +8,7 @@ Imports Db4objects.Db4o.Events
 Namespace Db4objects.Db4odoc.Callbacks
 
     Class CallbacksExample
-        Private Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
         Private Shared _container As IObjectContainer
 
         Public Shared Sub Main(ByVal args As String())
@@ -19,7 +20,7 @@ Namespace Db4objects.Db4odoc.Callbacks
 
         Private Shared Function OpenContainer() As IObjectContainer
             If _container Is Nothing Then
-                _container = Db4oFactory.OpenFile(YapFileName)
+                _container = Db4oFactory.OpenFile(Db4oFileName)
             End If
             Return _container
         End Function
@@ -41,8 +42,8 @@ Namespace Db4objects.Db4odoc.Callbacks
         End Sub
         ' end OnCreated
 
-        Public Shared Sub TestCreated()
-            File.Delete(YapFileName)
+        Private Shared Sub TestCreated()
+            File.Delete(Db4oFileName)
             Dim container As IObjectContainer = OpenContainer
             Try
                 Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(container)
@@ -57,7 +58,7 @@ Namespace Db4objects.Db4odoc.Callbacks
         ' end TestCreated
 
         Private Shared Sub FillContainer()
-            File.Delete(YapFileName)
+            File.Delete(Db4oFileName)
             Dim container As IObjectContainer = OpenContainer()
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
@@ -78,7 +79,7 @@ Namespace Db4objects.Db4odoc.Callbacks
         End Sub
         ' end OnDeleted
 
-        Public Shared Sub TestCascadedDelete()
+        Private Shared Sub TestCascadedDelete()
             FillContainer()
             Dim container As IObjectContainer = OpenContainer
             Try
@@ -119,9 +120,9 @@ Namespace Db4objects.Db4odoc.Callbacks
         End Sub
         ' end OnDeleting
 
-        Public Shared Sub TestIntegrityCheck()
+        Private Shared Sub TestIntegrityCheck()
             FillContainer()
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim registry As IEventRegistry = EventRegistryFactory.ForObjectContainer(container)
                 ' register an event handler, which will stop Deleting a pilot when it is referenced from a car 

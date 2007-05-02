@@ -1,5 +1,4 @@
-Imports System
-
+' Copyright (C) 2007 db4objects Inc. http://www.db4o.com
 Namespace Db4objects.Db4odoc.ClientServer
     Public Class Car
         Private _model As String

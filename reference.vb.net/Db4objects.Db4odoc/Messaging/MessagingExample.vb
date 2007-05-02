@@ -1,21 +1,24 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Messaging
 
 
 Namespace Db4objects.Db4odoc.Messaging
 
     Public Class MessagingExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub ConfigureServer()
-            Dim objectServer As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
-            objectServer.Ext().Configure().ClientServer.SetMessageRecipient(New SimpleMessageRecipient())
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ClientServer.SetMessageRecipient(New SimpleMessageRecipient())
+            Dim objectServer As IObjectServer = Db4oFactory.OpenServer(configuration, Db4oFileName, 0)
             Try
-                Dim clientObjectContainer As IObjectContainer = objectServer.OpenClient()
                 ' Here is what we would do on the client to send the message
-                Dim sender As IMessageSender = clientObjectContainer.Ext().Configure()
+                Dim clientConfiguration As IConfiguration = Db4oFactory.NewConfiguration()
+                Dim sender As IMessageSender = clientConfiguration.ClientServer().GetMessageSender()
+                Dim clientObjectContainer As IObjectContainer = objectServer.OpenClient(clientConfiguration)
                 sender.Send(New MyClientServerMessage("Hello from client."))
                 clientObjectContainer.Close()
             Finally

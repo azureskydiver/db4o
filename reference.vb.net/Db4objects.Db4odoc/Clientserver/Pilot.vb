@@ -1,7 +1,7 @@
+' Copyright (C) 2007 db4objects Inc. http://www.db4o.com
 Namespace Db4objects.Db4odoc.ClientServer
     Public Class Pilot
         Private _name As String
-
         Private _points As Integer
 
         Public Sub New(ByVal name As String, ByVal points As Integer)

@@ -11,20 +11,21 @@ Namespace Db4objects.Db4odoc.Comparing
         Private Const FileName As String = "example.db"
 
         Public Shared Sub Main(ByVal args As String())
-            Configure()
-            StoreRecords()
-            CheckRecords()
+            StoreRecords(Configure())
+            CheckRecords(Configure())
         End Sub
         ' end Main
 
-        Public Shared Sub Configure()
-            Db4oFactory.Configure.ObjectClass(GetType(MyString)).Compare(New MyStringAttribute)
-        End Sub
+        Public Shared Function Configure() As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(MyString)).Compare(New MyStringAttribute)
+            Return configuration
+        End Function
         ' end Configure
 
-        Public Shared Sub StoreRecords()
+        Public Shared Sub StoreRecords(ByVal configuration As IConfiguration)
             File.Delete(FileName)
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(FileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, FileName)
             Try
                 Dim record As Record = New Record("Michael Schumacher, points: 100")
                 container.Set(record)
@@ -38,8 +39,8 @@ Namespace Db4objects.Db4odoc.Comparing
         End Sub
         ' end StoreRecords
 
-        Public Shared Sub CheckRecords()
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(FileName)
+        Public Shared Sub CheckRecords(ByVal configuration As IConfiguration)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, FileName)
             Try
                 Dim q As IQuery = container.Query
                 q.Constrain(New Record("Rubens"))

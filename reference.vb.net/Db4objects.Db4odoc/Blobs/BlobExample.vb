@@ -1,5 +1,4 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
-
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System.IO
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Query
@@ -7,7 +6,7 @@ Imports Db4objects.Db4o.Query
 Namespace Db4objects.Db4odoc.Blobs
 
     Public Class BlobExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             StoreCars()
@@ -15,9 +14,9 @@ Namespace Db4objects.Db4odoc.Blobs
         End Sub
         ' end Main
 
-        Public Shared Sub StoreCars()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub StoreCars()
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim car1 As Car = New Car("Ferrari")
                 db.Set(car1)
@@ -31,7 +30,7 @@ Namespace Db4objects.Db4odoc.Blobs
         End Sub
         ' end StoreCars
 
-        Public Shared Sub StoreImage(ByVal car As Car)
+        Private Shared Sub StoreImage(ByVal car As Car)
             Dim img As CarImage = car.CarImage
             Try
                 img.ReadFile()
@@ -41,8 +40,8 @@ Namespace Db4objects.Db4odoc.Blobs
         End Sub
         ' end StoreImage
 
-        Public Shared Sub RetrieveCars()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub RetrieveCars()
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))

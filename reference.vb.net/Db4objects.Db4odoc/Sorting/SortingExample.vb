@@ -4,10 +4,11 @@ Imports System.IO
 Imports System.Collections
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Query
+
 Namespace Db4objects.Db4odoc.Sorting
 
     Class SortingExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             Db4oFactory.Configure.ObjectClass(GetType(Pilot)).ObjectField("_name").Indexed(True)
@@ -19,9 +20,9 @@ Namespace Db4objects.Db4odoc.Sorting
         End Sub
         ' end Main
 
-        Public Shared Sub SetObjects()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub SetObjects()
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim i As Integer = 0
                 While i < 10
@@ -39,7 +40,7 @@ Namespace Db4objects.Db4odoc.Sorting
         End Sub
         ' end SetObjects
 
-        Public Class PilotComparer
+        Private Class PilotComparer
             Implements IComparer
             Public Function Compare(ByVal p1 As Object, ByVal p2 As Object) As Integer Implements IComparer.Compare
                 If TypeOf p1 Is Pilot AndAlso TypeOf p2 Is Pilot Then
@@ -52,7 +53,7 @@ Namespace Db4objects.Db4odoc.Sorting
         End Class
         ' end PilotComparer
 
-        Public Class PilotEvaluation
+        Private Class PilotEvaluation
             Implements IEvaluation
 
             Public Sub Evaluate(ByVal candidate As ICandidate) Implements IEvaluation.Evaluate
@@ -62,8 +63,8 @@ Namespace Db4objects.Db4odoc.Sorting
         End Class
         ' end PilotEvaluation
 
-        Public Shared Sub GetObjectsEval()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub GetObjectsEval()
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow
                 Dim query As IQuery = db.Query
@@ -81,8 +82,8 @@ Namespace Db4objects.Db4odoc.Sorting
         End Sub
         ' end GetObjectsEval
 
-        Public Shared Sub GetObjectsSODA()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub GetObjectsSODA()
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim query As IQuery = db.Query
                 query.Constrain(GetType(Pilot))
@@ -100,7 +101,7 @@ Namespace Db4objects.Db4odoc.Sorting
         End Sub
         ' end GetObjectsSODA
 
-        Public Class PilotQueryComparer
+        Private Class PilotQueryComparer
             Implements IQueryComparator
 
             Public Function Compare(ByVal p1 As Object, ByVal p2 As Object) As Integer Implements IQueryComparator.Compare
@@ -119,7 +120,7 @@ Namespace Db4objects.Db4odoc.Sorting
         End Class
         ' end PilotQueryComparer
 
-        Public Class AllPilots
+        Private Class AllPilots
             Inherits Predicate
             Public Function Match(ByVal pilot As Pilot) As Boolean
                 Return True
@@ -127,8 +128,8 @@ Namespace Db4objects.Db4odoc.Sorting
         End Class
         ' end AllPilots
 
-        Public Shared Sub GetObjectsNQ()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub GetObjectsNQ()
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim dt1 As DateTime = DateTime.UtcNow
                 Dim result As IObjectSet = db.Query(New AllPilots, New PilotQueryComparer)
@@ -142,7 +143,7 @@ Namespace Db4objects.Db4odoc.Sorting
         End Sub
         ' end GetObjectsNQ
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             While result.HasNext
                 Console.WriteLine(result.Next)
@@ -150,7 +151,7 @@ Namespace Db4objects.Db4odoc.Sorting
         End Sub
         ' end ListResult
 
-        Public Shared Sub ListResult(ByVal result As ArrayList)
+        Private Shared Sub ListResult(ByVal result As ArrayList)
             Console.WriteLine(result.Count)
             Dim i As Integer = 0
             While i < result.Count

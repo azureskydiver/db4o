@@ -1,4 +1,4 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.Collections
 Imports Db4objects.Db4o
@@ -18,10 +18,10 @@ Namespace Db4objects.Db4odoc.Semaphores
     ' 	 
     Public Class ConnectedUser
 
-        Public Shared ReadOnly SEMAPHORE_CONNECTED As String = "ConnectedUser_"
-        Public Shared ReadOnly SEMAPHORE_LOCK_ACCESS As String = "ConnectedUser_Lock_"
+        Public Shared ReadOnly SemaphoreConnected As String = "ConnectedUser_"
+        Public Shared ReadOnly SemaphoreLockAccess As String = "ConnectedUser_Lock_"
 
-        Public Shared ReadOnly TIMEOUT As Integer = 10000  ' concurrent access timeout 10 seconds
+        Public Shared ReadOnly Timeout As Integer = 10000  ' concurrent access timeout 10 seconds
 
         Dim userName As String
         Dim ipAddress As String
@@ -42,7 +42,7 @@ Namespace Db4objects.Db4odoc.Semaphores
         ' call this on the client to ensure to have a ConnectedUser record 
         ' in the database file and the semaphore set
         Public Shared Sub Login(ByVal client As IObjectContainer, ByVal userName As String, ByVal ipAddress As String)
-            If Not client.Ext().SetSemaphore(SEMAPHORE_LOCK_ACCESS, TIMEOUT) Then
+            If Not client.Ext().SetSemaphore(SemaphoreLockAccess, Timeout) Then
                 Throw New Exception("Timeout Trying to get access to ConnectedUser lock")
             End If
             Dim q As IQuery = client.Query()
@@ -53,9 +53,9 @@ Namespace Db4objects.Db4odoc.Semaphores
                 client.Set(New ConnectedUser(userName, ipAddress))
                 client.Commit()
             End If
-            Dim connectedSemaphoreName As String = SEMAPHORE_CONNECTED + userName + ipAddress
+            Dim connectedSemaphoreName As String = SemaphoreConnected + userName + ipAddress
             Dim unique As Boolean = client.Ext().SetSemaphore(connectedSemaphoreName, 0)
-            client.Ext().ReleaseSemaphore(SEMAPHORE_LOCK_ACCESS)
+            client.Ext().ReleaseSemaphore(SemaphoreLockAccess)
             If Not unique Then
                 Throw New Exception("Two clients with same userName and ipAddress")
             End If
@@ -64,7 +64,7 @@ Namespace Db4objects.Db4odoc.Semaphores
         ' here is your list of all connected users, callable on the server
         Public Shared Function ConnectedUsers(ByVal server As IObjectServer) As IList
             Dim serverObjectContainer As IExtObjectContainer = server.Ext().ObjectContainer().Ext()
-            If serverObjectContainer.SetSemaphore(SEMAPHORE_LOCK_ACCESS, TIMEOUT) Then
+            If serverObjectContainer.SetSemaphore(SemaphoreLockAccess, TIMEOUT) Then
                 Throw New Exception("Timeout Trying to get access to ConnectedUser lock")
             End If
             Dim list As IList = New ArrayList()
@@ -73,7 +73,7 @@ Namespace Db4objects.Db4odoc.Semaphores
             Dim objectSet As IObjectSet = q.Execute()
             While objectSet.HasNext()
                 Dim connectedUser As ConnectedUser = CType(objectSet.Next(), ConnectedUser)
-                Dim connectedSemaphoreName As String = SEMAPHORE_CONNECTED + connectedUser.userName + connectedUser.ipAddress
+                Dim connectedSemaphoreName As String = SemaphoreConnected + connectedUser.userName + connectedUser.ipAddress
                 If serverObjectContainer.SetSemaphore(connectedSemaphoreName, TIMEOUT) Then
                     serverObjectContainer.Delete(connectedUser)
                 Else
@@ -81,7 +81,7 @@ Namespace Db4objects.Db4odoc.Semaphores
                 End If
             End While
             serverObjectContainer.Commit()
-            serverObjectContainer.ReleaseSemaphore(SEMAPHORE_LOCK_ACCESS)
+            serverObjectContainer.ReleaseSemaphore(SemaphoreLockAccess)
             Return list
         End Function
     End Class

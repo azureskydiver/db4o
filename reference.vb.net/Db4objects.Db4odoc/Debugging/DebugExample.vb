@@ -1,12 +1,13 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.Debugging
     Public Class DebugExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             SetCars()
@@ -14,12 +15,13 @@ Namespace Db4objects.Db4odoc.Debugging
         End Sub
         ' end Main
 
-        Public Shared Sub SetCars()
+        Private Shared Sub SetCars()
             ' Set the debug message levet to the maximum
-            Db4oFactory.Configure().MessageLevel(3)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.MessageLevel(3)
             ' Do some db4o operations
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim car1 As Car = New Car("BMW")
                 db.Set(car1)
@@ -33,11 +35,10 @@ Namespace Db4objects.Db4odoc.Debugging
             Finally
                 db.Close()
             End Try
-            Db4oFactory.Configure().MessageLevel(0)
         End Sub
         ' end SetCars
 
-        Public Shared Sub SetCarsWithFileOutput()
+        Private Shared Sub SetCarsWithFileOutput()
             ' Create StreamWriter for a file
             Dim f As FileInfo = New FileInfo("Debug.txt")
             Dim debugWriter As StreamWriter = f.CreateText()
@@ -48,8 +49,8 @@ Namespace Db4objects.Db4odoc.Debugging
             ' Set the debug message levet to the maximum
             Db4oFactory.Configure().MessageLevel(3)
             ' Do some db4o operations
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim car1 As Car = New Car("BMW")
                 db.Set(car1)
@@ -68,7 +69,7 @@ Namespace Db4objects.Db4odoc.Debugging
         End Sub
         ' end SetCarsWithFileOutput
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             For Each item As Object In result
                 Console.WriteLine(item)

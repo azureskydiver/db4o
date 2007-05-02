@@ -1,14 +1,15 @@
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System.IO
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.Evaluations
     Public Class EvaluationExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 StoreCars(db)
                 QueryWithEvaluation(db)
@@ -18,22 +19,22 @@ Namespace Db4objects.Db4odoc.Evaluations
         End Sub
         ' end Main
 
-        Public Shared Sub StoreCars(ByVal db As IObjectContainer)
+        Private Shared Sub StoreCars(ByVal db As IObjectContainer)
             Dim pilot1 As Pilot = New Pilot("Michael Schumacher", 100)
             Dim car1 As Car = New Car("Ferrari")
             car1.Pilot = pilot1
             car1.Snapshot()
-            db.[Set](car1)
+            db.Set(car1)
             Dim pilot2 As Pilot = New Pilot("Rubens Barrichello", 99)
             Dim car2 As Car = New Car("BMW")
             car2.Pilot = pilot2
             car2.Snapshot()
             car2.Snapshot()
-            db.[Set](car2)
+            db.Set(car2)
         End Sub
         ' end StoreCars
 
-        Public Shared Sub QueryWithEvaluation(ByVal db As IObjectContainer)
+        Private Shared Sub QueryWithEvaluation(ByVal db As IObjectContainer)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Car))
             query.Constrain(New EvenHistoryEvaluation())
@@ -42,7 +43,7 @@ Namespace Db4objects.Db4odoc.Evaluations
         End Sub
         ' end QueryWithEvaluation
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             For Each item As Object In result
                 Console.WriteLine(item)

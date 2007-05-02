@@ -1,9 +1,11 @@
+' Copyright (C) 2007 db4objects Inc. http://www.db4o.com
 Imports System.IO
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 
 Namespace Db4objects.Db4odoc.ClientServer
     Public Class ClientServerExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared ReadOnly ServerPort As Integer = 56128
 
@@ -12,18 +14,18 @@ Namespace Db4objects.Db4odoc.ClientServer
         Public Shared ReadOnly ServerPassword As String = "password"
 
         Public Shared Sub Main(ByVal args As String())
-            File.Delete(YapFileName)
+            File.Delete(Db4oFileName)
             AccessLocalServer()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 SetFirstCar(db)
                 SetSecondCar(db)
             Finally
                 db.Close()
             End Try
-            ConfigureDb4o()
-            Dim server As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
+
+            Dim server As IObjectServer = Db4oFactory.OpenServer(ConfigureDb4o(), Db4oFileName, 0)
             Try
                 QueryLocalServer(server)
                 DemonstrateLocalReadCommitted(server)
@@ -32,7 +34,7 @@ Namespace Db4objects.Db4odoc.ClientServer
                 server.Close()
             End Try
             AccessRemoteServer()
-            server = Db4oFactory.OpenServer(YapFileName, ServerPort)
+            server = Db4oFactory.OpenServer(ConfigureDb4o(), Db4oFileName, ServerPort)
             server.GrantAccess(ServerUser, ServerPassword)
             Try
                 QueryRemoteServer(ServerPort, ServerUser, ServerPassword)
@@ -48,7 +50,7 @@ Namespace Db4objects.Db4odoc.ClientServer
             Dim pilot As Pilot = New Pilot("Rubens Barrichello", 99)
             Dim car As Car = New Car("BMW")
             car.Pilot = pilot
-            db.[Set](car)
+            db.Set(car)
         End Sub
         ' end SetFirstCar
 
@@ -56,12 +58,12 @@ Namespace Db4objects.Db4odoc.ClientServer
             Dim pilot As Pilot = New Pilot("Michael Schumacher", 100)
             Dim car As Car = New Car("Ferrari")
             car.Pilot = pilot
-            db.[Set](car)
+            db.Set(car)
         End Sub
         ' end SetSecondCar
 
         Public Shared Sub AccessLocalServer()
-            Dim server As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
+            Dim server As IObjectServer = Db4oFactory.OpenServer(Db4oFileName, 0)
             Try
                 Dim client As IObjectContainer = server.OpenClient()
                 ' Do something with this client, or open more clients
@@ -74,29 +76,31 @@ Namespace Db4objects.Db4odoc.ClientServer
 
         Public Shared Sub QueryLocalServer(ByVal server As IObjectServer)
             Dim client As IObjectContainer = server.OpenClient()
-            ListResult(client.[Get](New Car(Nothing)))
+            ListResult(client.Get(New Car(Nothing)))
             client.Close()
         End Sub
         ' end QueryLocalServer
 
-        Public Shared Sub ConfigureDb4o()
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).UpdateDepth(3)
-        End Sub
+        Public Shared Function ConfigureDb4o() As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(Car)).UpdateDepth(3)
+            Return configuration
+        End Function
         ' end ConfigureDb4o
 
         Public Shared Sub DemonstrateLocalReadCommitted(ByVal server As IObjectServer)
             Dim client1 As IObjectContainer = server.OpenClient()
             Dim client2 As IObjectContainer = server.OpenClient()
             Dim pilot As Pilot = New Pilot("David Coulthard", 98)
-            Dim result As IObjectSet = client1.[Get](New Car("BMW"))
-            Dim car As Car = DirectCast(result.[Next](), Car)
+            Dim result As IObjectSet = client1.Get(New Car("BMW"))
+            Dim car As Car = DirectCast(result.Next(), Car)
             car.Pilot = pilot
-            client1.[Set](car)
-            ListResult(client1.[Get](New Car(Nothing)))
-            ListResult(client2.[Get](New Car(Nothing)))
+            client1.Set(car)
+            ListResult(client1.Get(New Car(Nothing)))
+            ListResult(client2.Get(New Car(Nothing)))
             client1.Commit()
-            ListResult(client1.[Get](GetType(Car)))
-            ListRefreshedResult(client2, client2.[Get](GetType(Car)), 2)
+            ListResult(client1.Get(GetType(Car)))
+            ListRefreshedResult(client2, client2.Get(GetType(Car)), 2)
             client1.Close()
             client2.Close()
         End Sub
@@ -105,23 +109,23 @@ Namespace Db4objects.Db4odoc.ClientServer
         Public Shared Sub DemonstrateLocalRollback(ByVal server As IObjectServer)
             Dim client1 As IObjectContainer = server.OpenClient()
             Dim client2 As IObjectContainer = server.OpenClient()
-            Dim result As IObjectSet = client1.[Get](New Car("BMW"))
-            Dim car As Car = DirectCast(result.[Next](), Car)
+            Dim result As IObjectSet = client1.Get(New Car("BMW"))
+            Dim car As Car = DirectCast(result.Next(), Car)
             car.Pilot = New Pilot("Someone else", 0)
-            client1.[Set](car)
-            ListResult(client1.[Get](New Car(Nothing)))
-            ListResult(client2.[Get](New Car(Nothing)))
+            client1.Set(car)
+            ListResult(client1.Get(New Car(Nothing)))
+            ListResult(client2.Get(New Car(Nothing)))
             client1.Rollback()
             client1.Ext().Refresh(car, 2)
-            ListResult(client1.[Get](New Car(Nothing)))
-            ListResult(client2.[Get](New Car(Nothing)))
+            ListResult(client1.Get(New Car(Nothing)))
+            ListResult(client2.Get(New Car(Nothing)))
             client1.Close()
             client2.Close()
         End Sub
         ' end DemonstrateLocalRollback
 
         Public Shared Sub AccessRemoteServer()
-            Dim server As IObjectServer = Db4oFactory.OpenServer(YapFileName, ServerPort)
+            Dim server As IObjectServer = Db4oFactory.OpenServer(Db4oFileName, ServerPort)
             server.GrantAccess(ServerUser, ServerPassword)
             Try
                 Dim client As IObjectContainer = Db4oFactory.OpenClient("localhost", ServerPort, ServerUser, ServerPassword)
@@ -135,7 +139,7 @@ Namespace Db4objects.Db4odoc.ClientServer
 
         Public Shared Sub QueryRemoteServer(ByVal port As Integer, ByVal user As String, ByVal password As String)
             Dim client As IObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
-            ListResult(client.[Get](New Car(Nothing)))
+            ListResult(client.Get(New Car(Nothing)))
             client.Close()
         End Sub
         ' end QueryRemoteServer
@@ -144,15 +148,15 @@ Namespace Db4objects.Db4odoc.ClientServer
             Dim client1 As IObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
             Dim client2 As IObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
             Dim pilot As Pilot = New Pilot("Jenson Button", 97)
-            Dim result As IObjectSet = client1.[Get](New Car(Nothing))
-            Dim car As Car = DirectCast(result.[Next](), Car)
+            Dim result As IObjectSet = client1.Get(New Car(Nothing))
+            Dim car As Car = DirectCast(result.Next(), Car)
             car.Pilot = pilot
-            client1.[Set](car)
-            ListResult(client1.[Get](New Car(Nothing)))
-            ListResult(client2.[Get](New Car(Nothing)))
+            client1.Set(car)
+            ListResult(client1.Get(New Car(Nothing)))
+            ListResult(client2.Get(New Car(Nothing)))
             client1.Commit()
-            ListResult(client1.[Get](New Car(Nothing)))
-            ListResult(client2.[Get](New Car(Nothing)))
+            ListResult(client1.Get(New Car(Nothing)))
+            ListResult(client2.Get(New Car(Nothing)))
             client1.Close()
             client2.Close()
         End Sub
@@ -161,16 +165,16 @@ Namespace Db4objects.Db4odoc.ClientServer
         Public Shared Sub DemonstrateRemoteRollback(ByVal port As Integer, ByVal user As String, ByVal password As String)
             Dim client1 As IObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
             Dim client2 As IObjectContainer = Db4oFactory.OpenClient("localhost", port, user, password)
-            Dim result As IObjectSet = client1.[Get](New Car(Nothing))
-            Dim car As Car = DirectCast(result.[Next](), Car)
+            Dim result As IObjectSet = client1.Get(New Car(Nothing))
+            Dim car As Car = DirectCast(result.Next(), Car)
             car.Pilot = New Pilot("Someone else", 0)
-            client1.[Set](car)
-            ListResult(client1.[Get](New Car(Nothing)))
-            ListResult(client2.[Get](New Car(Nothing)))
+            client1.Set(car)
+            ListResult(client1.Get(New Car(Nothing)))
+            ListResult(client2.Get(New Car(Nothing)))
             client1.Rollback()
             client1.Ext().Refresh(car, 2)
-            ListResult(client1.[Get](New Car(Nothing)))
-            ListResult(client2.[Get](New Car(Nothing)))
+            ListResult(client1.Get(New Car(Nothing)))
+            ListResult(client2.Get(New Car(Nothing)))
             client1.Close()
             client2.Close()
         End Sub
