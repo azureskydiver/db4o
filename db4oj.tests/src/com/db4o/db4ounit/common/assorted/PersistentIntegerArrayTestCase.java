@@ -12,7 +12,7 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-public class PersistentIntegerArrayTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class PersistentIntegerArrayTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo {
 	
 	public static void main(String[] arguments) {
 		new PersistentIntegerArrayTestCase().runSolo();
