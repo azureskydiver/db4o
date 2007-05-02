@@ -72,6 +72,8 @@ public class TransparentActivationClassLoader extends BloatingClassLoader {
 		ce.addInterface(Activatable.class);
 		createActivatorField(ce);
 		createBindMethod(ce);
+		createActivateMethod(ce);
+		instrumentNonPrivateMethods(ce);
 	}
 
 	private void createActivatorField(ClassEditor ce) {
@@ -85,17 +87,88 @@ public class TransparentActivationClassLoader extends BloatingClassLoader {
 		String methodName = TransparentActivationInstrumentationConstants.BIND_METHOD_NAME;
 		Type[] paramTypes = { objectContainerType };
 		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID, methodName, paramTypes, new Type[] {});
-		methodEditor.addLabel(new Label(0,true));
-		methodEditor.addInstruction(Opcode.opc_aload, new LocalVariable(0));
+		Label startLabel = new Label(0);
+		Label setActivatorLabel = new Label(1);
+		LocalVariable thisLocal = new LocalVariable(0);
+		LocalVariable objectContainerArgLocal = new LocalVariable(1);
+		
+		methodEditor.addLabel(startLabel);
+
+		// if (null != _activator) 
+		methodEditor.addInstruction(Opcode.opc_aload, thisLocal);
+		methodEditor.addInstruction(Opcode.opc_getfield, createFieldReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME, activatorType));
+		methodEditor.addInstruction(Opcode.opc_ifnull, setActivatorLabel);
+		
+		// { _activator.assertCompatible(container); return; }
+		methodEditor.addInstruction(Opcode.opc_aload, thisLocal);
+		methodEditor.addInstruction(Opcode.opc_getfield, createFieldReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME, activatorType));
+		methodEditor.addInstruction(Opcode.opc_aload, objectContainerArgLocal);
+		methodEditor.addInstruction(Opcode.opc_invokevirtual, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.ASSERT_COMPATIBLE_METHOD_NAME, new Type[] { objectContainerType }, Type.VOID));
+		methodEditor.addInstruction(Opcode.opc_return);
+		
+		// _activator = new Activator(container, this);
+		methodEditor.addLabel(setActivatorLabel);	
+		methodEditor.addInstruction(Opcode.opc_aload, thisLocal);
 		methodEditor.addInstruction(Opcode.opc_new,activatorType);
 		methodEditor.addInstruction(Opcode.opc_dup);
-		methodEditor.addInstruction(Opcode.opc_aload, new LocalVariable(1));
-		methodEditor.addInstruction(Opcode.opc_aload, new LocalVariable(0));
-		methodEditor.addInstruction(Opcode.opc_invokespecial, createMethodReference(activatorType, "<init>", new Type[] { objectContainerType, Type.OBJECT }, Type.VOID));
-		methodEditor.addInstruction(Opcode.opc_putfield, createFieldReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME, activatorType));
-		
+		methodEditor.addInstruction(Opcode.opc_aload, objectContainerArgLocal);
+		methodEditor.addInstruction(Opcode.opc_aload, thisLocal);
+		methodEditor.addInstruction(Opcode.opc_invokespecial, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.INIT_METHOD_NAME, new Type[] { objectContainerType, Type.OBJECT }, Type.VOID));
+		methodEditor.addInstruction(Opcode.opc_putfield, createFieldReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME, activatorType));		
 		methodEditor.addInstruction(Opcode.opc_return);
+		
 		methodEditor.commit();
+	}
+
+	private void createActivateMethod(ClassEditor ce) {
+		final Type activatorType = Type.getType(Activator.class);
+
+		String methodName = TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME;
+		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PROTECTED, Type.VOID, methodName, new Type[] { }, new Type[] {});
+		Label startLabel = new Label(0);
+		Label activateLabel = new Label(1);
+		LocalVariable thisLocal = new LocalVariable(0);
+
+		methodEditor.addLabel(startLabel);
+		methodEditor.addInstruction(Opcode.opc_aload, thisLocal);
+		methodEditor.addInstruction(Opcode.opc_getfield, createFieldReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME, activatorType));
+		methodEditor.addInstruction(Opcode.opc_ifnonnull, activateLabel);
+		methodEditor.addInstruction(Opcode.opc_return);
+		
+		methodEditor.addLabel(activateLabel);
+		methodEditor.addInstruction(Opcode.opc_aload, thisLocal);
+		methodEditor.addInstruction(Opcode.opc_getfield, createFieldReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME, activatorType));
+		methodEditor.addInstruction(Opcode.opc_invokevirtual, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.ACTIVATOR_ACTIVATE_METHOD_NAME, new Type[] { }, Type.VOID));
+		methodEditor.addInstruction(Opcode.opc_return);
+		
+		methodEditor.commit();
+	}
+
+	private void instrumentNonPrivateMethods(final ClassEditor ce) {
+		final MemberRef activateMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID);
+		final MemberRef bindMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Type[]{ Type.getType(ObjectContainer.class) }, Type.VOID);
+		ce.visit(new EditorVisitor() {
+
+			public void visitClassEditor(ClassEditor editor) {
+			}
+
+			public void visitFieldEditor(FieldEditor editor) {
+			}
+
+			public void visitMethodEditor(MethodEditor editor) {
+				if(editor.isConstructor() || editor.isPrivate()) {
+					return;
+				}
+				MemberRef methodRef = editor.memberRef();
+				if(methodRef.equals(activateMethod) || methodRef.equals(bindMethod)) {
+					return;
+				}
+				editor.insertCodeAt(new Instruction(Opcode.opc_aload, new LocalVariable(0)), 1);
+				editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID)), 2);
+				editor.commit();
+			}
+			
+		});
 	}
 
 	private MemberRef createMethodReference(Type parent, String name, Type[] args, Type ret) {
