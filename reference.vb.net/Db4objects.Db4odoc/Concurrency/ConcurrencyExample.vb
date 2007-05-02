@@ -1,12 +1,15 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 Imports System.Threading
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
+
 Namespace Db4objects.Db4odoc.Concurrency
 
     Class ConcurrencyExample
-        Private Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
         Private Shared _server As IObjectServer
 
         Public Shared Sub Main(ByVal args As String())
@@ -21,21 +24,22 @@ Namespace Db4objects.Db4odoc.Concurrency
         End Sub
         ' end Main
 
-        Public Shared Sub Connect()
+        Private Shared Sub Connect()
             If _server Is Nothing Then
-                File.Delete(YapFileName)
-                Db4oFactory.Configure.GenerateVersionNumbers(Int32.MaxValue)
-                _server = Db4oFactory.OpenServer(YapFileName, 0)
+                File.Delete(Db4oFileName)
+                Dim configuration As IConfiguration = Db4oFactory.NewConfiguration
+                configuration.GenerateVersionNumbers(ConfigScope.GLOBALLY)
+                _server = Db4oFactory.OpenServer(configuration, Db4oFileName, 0)
             End If
         End Sub
         ' end Connect
 
-        Public Shared Sub Disconnect()
+        Private Shared Sub Disconnect()
             _server.Close()
         End Sub
         ' end Disconnect
 
-        Public Shared Sub SavePilots()
+        Private Shared Sub SavePilots()
             Dim db As IObjectContainer = _server.OpenClient
             Try
                 Dim pilot As Pilot = New Pilot("Kimi Raikkonnen", 0)
@@ -50,7 +54,7 @@ Namespace Db4objects.Db4odoc.Concurrency
         End Sub
         ' end SavePilots
 
-        Public Shared Sub ModifyPilotsOptimistic()
+        Private Shared Sub ModifyPilotsOptimistic()
             Console.WriteLine("Optimistic locking example")
             ' create threads for concurrent modifications
             Dim t1 As OptimisticThread = New OptimisticThread("t1: ", _server)
@@ -61,7 +65,7 @@ Namespace Db4objects.Db4odoc.Concurrency
         End Sub
         ' end ModifyPilotsOptimistic
 
-        Public Shared Sub ModifyPilotsPessimistic()
+        Private Shared Sub ModifyPilotsPessimistic()
             Console.WriteLine()
             Console.WriteLine("Pessimistic locking example")
             ' create threads for concurrent modifications
@@ -73,7 +77,7 @@ Namespace Db4objects.Db4odoc.Concurrency
         End Sub
         ' end ModifyPilotsPessimistic
 
-        Public Shared Sub RunThreads(ByVal thread1 As Thread, ByVal thread2 As Thread)
+        Private Shared Sub RunThreads(ByVal thread1 As Thread, ByVal thread2 As Thread)
             thread1.Start()
             thread2.Start()
             Dim thread1IsAlive As Boolean = True

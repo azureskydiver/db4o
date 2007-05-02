@@ -1,12 +1,12 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
-Imports System
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System.IO
-Imports Db4objects.Db4o
 
+Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 
 Namespace Db4objects.Db4odoc.Utility
     Public Class UtilityExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             TestDescend()
@@ -16,8 +16,8 @@ Namespace Db4objects.Db4odoc.Utility
         ' end Main
 
         Public Shared Sub StoreSensorPanel()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 ' create a linked list with length 10
                 Dim list As SensorPanel = New SensorPanel().CreateList(10)
@@ -31,9 +31,10 @@ Namespace Db4objects.Db4odoc.Utility
 
         Public Shared Sub TestDescend()
             StoreSensorPanel()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ActivationDepth(1)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                db.Ext().Configure().ActivationDepth(1)
                 System.Console.WriteLine("Object container activation depth = 1")
                 Dim result As IObjectSet = db.Get(New SensorPanel(1))
                 Dim spParent As SensorPanel = CType(result(0), SensorPanel)
@@ -49,9 +50,10 @@ Namespace Db4objects.Db4odoc.Utility
 
         Public Shared Sub CheckActive()
             StoreSensorPanel()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ActivationDepth(2)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                db.Ext().Configure().ActivationDepth(2)
                 System.Console.WriteLine("Object container activation depth = 2")
                 Dim result As IObjectSet = db.Get(New SensorPanel(1))
                 Dim sensor As SensorPanel = CType(result(0), SensorPanel)
@@ -69,8 +71,8 @@ Namespace Db4objects.Db4odoc.Utility
         Public Shared Sub CheckStored()
             ' create a linked list with length 10
             Dim list As SensorPanel = New SensorPanel().CreateList(10)
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 ' store all elements with one statement, since all elements are new		
                 db.Set(list)

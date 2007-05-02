@@ -3,7 +3,6 @@ Namespace Db4objects.Db4odoc.ClassMapping
 
     Public Class PilotReplacement
         Private _name As String
-
         Private _points As Integer
 
         Public Sub New(ByVal name As String, ByVal points As Integer)

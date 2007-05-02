@@ -1,12 +1,13 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System.IO
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 Imports Db4objects.Db4o.Messaging
 
 Namespace Db4objects.Db4odoc.Remote
     Public Class RemoteExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             SetObjects()
@@ -16,9 +17,9 @@ Namespace Db4objects.Db4odoc.Remote
         End Sub
         ' end Main
 
-        Public Shared Sub SetObjects()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub SetObjects()
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim i As Integer
                 For i = 0 To 5 - 1 Step i + 1
@@ -34,10 +35,10 @@ Namespace Db4objects.Db4odoc.Remote
         ' end SetObjects
 
 
-        Public Shared Sub UpdateCars()
+        Private Shared Sub UpdateCars()
             ' triggering mass updates with a singleton
             ' complete server-side execution
-            Dim server As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
+            Dim server As IObjectServer = Db4oFactory.OpenServer(Db4oFileName, 0)
             Try
                 Dim client As IObjectContainer = server.OpenClient()
                 Dim q As IQuery = client.Query()
@@ -53,7 +54,7 @@ Namespace Db4objects.Db4odoc.Remote
         ' end UpdateCars
 
         Private Shared Sub CheckCars()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim q As IQuery = db.Query()
                 q.Constrain(GetType(Car))
@@ -65,14 +66,16 @@ Namespace Db4objects.Db4odoc.Remote
         End Sub
         ' end CheckCars
 
-        Public Shared Sub UpdateCarsWithMessage()
-            Dim server As IObjectServer = Db4oFactory.OpenServer(YapFileName, 0)
+        Private Shared Sub UpdateCarsWithMessage()
             ' create message handler on the server
-            server.Ext().Configure().ClientServer.SetMessageRecipient(New UpdateMessageRecipient())
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ClientServer.SetMessageRecipient(New UpdateMessageRecipient())
+            Dim server As IObjectServer = Db4oFactory.OpenServer(configuration, Db4oFileName, 0)
             Try
-                Dim client As IObjectContainer = server.OpenClient()
+                Dim clientConfiguration As IConfiguration = Db4oFactory.NewConfiguration()
+                Dim sender As IMessageSender = clientConfiguration.ClientServer().GetMessageSender()
+                Dim client As IObjectContainer = server.OpenClient(clientConfiguration)
                 ' send message object to the server
-                Dim sender As IMessageSender = client.Ext().Configure().ClientServer().GetMessageSender()
                 sender.Send(New UpdateServer())
                 client.Close()
             Finally
@@ -82,7 +85,7 @@ Namespace Db4objects.Db4odoc.Remote
         End Sub
         ' end UpdateCarsWithMessage
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             For Each item As Object In result
                 Console.WriteLine(item)

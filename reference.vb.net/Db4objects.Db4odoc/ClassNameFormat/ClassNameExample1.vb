@@ -5,16 +5,16 @@ Imports Db4objects.Db4o
 Namespace Db4objects.Db4odoc.ClassNameFormat
 
     Class ClassNameExample1
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             StoreObjects()
         End Sub
         ' end Main
 
-        Public Shared Sub StoreObjects()
-            File.Delete(YapFileName)
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub StoreObjects()
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 ' Store a simple class to the database
                 Dim test As Test = New Test

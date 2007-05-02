@@ -1,11 +1,13 @@
-Imports System
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System.IO
 Imports System.Collections
+
 Imports Db4objects.Db4o
+
 Namespace Db4objects.Db4odoc.SelectivePersistence
 
     Class TransientClassExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             SaveObjects()
@@ -14,29 +16,29 @@ Namespace Db4objects.Db4odoc.SelectivePersistence
         ' end Main
 
         Public Shared Sub SaveObjects()
-            File.Delete(YapFileName)
-            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 ' Save Test1 object with a NotStorable class field
                 Dim test1 As Test1 = New Test1("Test1", New NotStorable)
-                oc.Set(test1)
+                container.Set(test1)
                 ' Save Test2 object with a NotStorable class field
                 Dim test2 As Test2 = New Test2("Test2", New NotStorable, test1)
-                oc.Set(test2)
+                container.Set(test2)
             Finally
-                oc.Close()
+                container.Close()
             End Try
         End Sub
         ' end SaveObjects
 
         Public Shared Sub RetrieveObjects()
-            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 ' retrieve the results and check if the NotStorable instances were saved
-                Dim result As IList = oc.Get(Nothing)
+                Dim result As IList = container.Get(Nothing)
                 ListResult(result)
             Finally
-                oc.Close()
+                container.Close()
             End Try
         End Sub
         ' end RetrieveObjects

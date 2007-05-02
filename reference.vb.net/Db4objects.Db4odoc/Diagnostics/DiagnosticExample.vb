@@ -1,14 +1,15 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
-
-Imports Db4objects.Db4o
-Imports Db4objects.Db4o.Query
-Imports Db4objects.Db4o.Diagnostic
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 
+Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
+Imports Db4objects.Db4o.Query
+Imports Db4objects.Db4o.Diagnostic
+
 Namespace Db4objects.Db4odoc.Diagnostics
     Public Class DiagnosticExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             TestEmpty()
@@ -18,10 +19,12 @@ Namespace Db4objects.Db4odoc.Diagnostics
         End Sub
         ' end Main
 
-        Public Shared Sub TestEmpty()
-            Db4oFactory.Configure().Diagnostic().AddListener(New DiagnosticToConsole())
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub TestEmpty()
+            File.Delete(Db4oFileName)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.Diagnostic().AddListener(New DiagnosticToConsole())
+
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 SetEmptyObject(db)
             Finally
@@ -36,10 +39,11 @@ Namespace Db4objects.Db4odoc.Diagnostics
         End Sub
         ' end SetEmptyObject
 
-        Public Shared Sub TestArbitrary()
-            Db4oFactory.Configure().Diagnostic().AddListener(New DiagnosticToConsole())
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub TestArbitrary()
+            File.Delete(Db4oFileName)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.Diagnostic().AddListener(New DiagnosticToConsole())
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Rubens Barrichello", 99)
                 db.Set(pilot)
@@ -58,12 +62,13 @@ Namespace Db4objects.Db4odoc.Diagnostics
         End Sub
         ' end QueryPilot
 
-        Public Shared Sub TestIndexDiagnostics()
-            Db4oFactory.Configure().Diagnostic().RemoveAllListeners()
-            Db4oFactory.Configure().Diagnostic().AddListener(New IndexDiagListener())
-            Db4oFactory.Configure().UpdateDepth(3)
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub TestIndexDiagnostics()
+            File.Delete(Db4oFileName)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.Diagnostic().RemoveAllListeners()
+            configuration.Diagnostic().AddListener(New IndexDiagListener())
+            configuration.UpdateDepth(3)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim pilot1 As Pilot = New Pilot("Rubens Barrichello", 99)
                 db.Set(pilot1)
@@ -82,7 +87,7 @@ Namespace Db4objects.Db4odoc.Diagnostics
         End Sub
         ' end TestIndexDiagnostics
 
-        Public Shared Sub TestTranslatorDiagnostics()
+        Private Shared Sub TestTranslatorDiagnostics()
             StoreTranslatedCars()
             RetrieveTranslatedCars()
             RetrieveTranslatedCarsNQ()
@@ -91,12 +96,13 @@ Namespace Db4objects.Db4odoc.Diagnostics
         End Sub
         ' end TestTranslatorDiagnostics
 
-        Public Shared Sub StoreTranslatedCars()
-            Db4oFactory.Configure().ExceptionsOnNotStorable(True)
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).Translate(New CarTranslator())
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).CallConstructor(True)
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub StoreTranslatedCars()
+            File.Delete(Db4oFileName)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ExceptionsOnNotStorable(True)
+            configuration.ObjectClass(GetType(Car)).Translate(New CarTranslator())
+            configuration.ObjectClass(GetType(Car)).CallConstructor(True)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim car1 As Car = New Car("BMW")
                 System.Diagnostics.Trace.WriteLine("ORIGINAL: " + car1.ToString())
@@ -113,13 +119,14 @@ Namespace Db4objects.Db4odoc.Diagnostics
         End Sub
         ' end StoreTranslatedCars
 
-        Public Shared Sub RetrieveTranslatedCars()
-            Db4oFactory.Configure().Diagnostic().RemoveAllListeners()
-            Db4oFactory.Configure().Diagnostic().AddListener(New TranslatorDiagListener())
-            Db4oFactory.Configure().ExceptionsOnNotStorable(True)
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).Translate(New CarTranslator())
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).CallConstructor(True)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub RetrieveTranslatedCars()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.Diagnostic().RemoveAllListeners()
+            configuration.Diagnostic().AddListener(New TranslatorDiagListener())
+            configuration.ExceptionsOnNotStorable(True)
+            configuration.ObjectClass(GetType(Car)).Translate(New CarTranslator())
+            configuration.ObjectClass(GetType(Car)).CallConstructor(True)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
@@ -131,13 +138,14 @@ Namespace Db4objects.Db4odoc.Diagnostics
         End Sub
         ' end RetrieveTranslatedCars
 
-        Public Shared Sub RetrieveTranslatedCarsNQ()
-            Db4oFactory.Configure().Diagnostic().RemoveAllListeners()
-            Db4oFactory.Configure().Diagnostic().AddListener(New TranslatorDiagListener())
-            Db4oFactory.Configure().ExceptionsOnNotStorable(True)
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).Translate(New CarTranslator())
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).CallConstructor(True)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub RetrieveTranslatedCarsNQ()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.Diagnostic().RemoveAllListeners()
+            configuration.Diagnostic().AddListener(New TranslatorDiagListener())
+            configuration.ExceptionsOnNotStorable(True)
+            configuration.ObjectClass(GetType(Car)).Translate(New CarTranslator())
+            configuration.ObjectClass(GetType(Car)).CallConstructor(True)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim result As IObjectSet = db.Query(New NewCarModel())
                 ListResult(result)
@@ -147,31 +155,32 @@ Namespace Db4objects.Db4odoc.Diagnostics
         End Sub
         ' end RetrieveTranslatedCarsNQ
 
-        Public Shared Sub RetrieveTranslatedCarsNQUnopt()
-            Db4oFactory.Configure().OptimizeNativeQueries(False)
-            Db4oFactory.Configure().Diagnostic().RemoveAllListeners()
-            Db4oFactory.Configure().Diagnostic().AddListener(New TranslatorDiagListener())
-            Db4oFactory.Configure().ExceptionsOnNotStorable(True)
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).Translate(New CarTranslator())
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).CallConstructor(True)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub RetrieveTranslatedCarsNQUnopt()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.OptimizeNativeQueries(False)
+            configuration.Diagnostic().RemoveAllListeners()
+            configuration.Diagnostic().AddListener(New TranslatorDiagListener())
+            configuration.ExceptionsOnNotStorable(True)
+            configuration.ObjectClass(GetType(Car)).Translate(New CarTranslator())
+            configuration.ObjectClass(GetType(Car)).CallConstructor(True)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim result As IObjectSet = db.Query(New NewCarModel())
                 ListResult(result)
             Finally
-                Db4oFactory.Configure().OptimizeNativeQueries(True)
                 db.Close()
             End Try
         End Sub
         ' end RetrieveTranslatedCarsNQUnopt
 
-        Public Shared Sub RetrieveTranslatedCarsSODAEv()
-            Db4oFactory.Configure().Diagnostic().RemoveAllListeners()
-            Db4oFactory.Configure().Diagnostic().AddListener(New TranslatorDiagListener())
-            Db4oFactory.Configure().ExceptionsOnNotStorable(True)
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).Translate(New CarTranslator())
-            Db4oFactory.Configure().ObjectClass(GetType(Car)).CallConstructor(True)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub RetrieveTranslatedCarsSODAEv()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.Diagnostic().RemoveAllListeners()
+            configuration.Diagnostic().AddListener(New TranslatorDiagListener())
+            configuration.ExceptionsOnNotStorable(True)
+            configuration.ObjectClass(GetType(Car)).Translate(New CarTranslator())
+            configuration.ObjectClass(GetType(Car)).CallConstructor(True)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
@@ -184,7 +193,7 @@ Namespace Db4objects.Db4odoc.Diagnostics
         End Sub
         ' end RetrieveTranslatedCarsSODAEv
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             For Each item As Object In result
                 Console.WriteLine(item)

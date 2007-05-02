@@ -5,13 +5,14 @@ Imports System.Diagnostics
 Imports System.IO
 
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Ext
 Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.ListOperations
 
     Class ListOperationsExample
-        Public Const DbFile As String = "Test.db"
+        Public Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             FillUpDb(2)
@@ -25,8 +26,8 @@ Namespace Db4objects.Db4odoc.ListOperations
         Private Shared Sub FillUpDb(ByVal listCount As Integer)
             Dim dataCount As Integer = 50000
             Dim sw As Stopwatch = New Stopwatch
-            File.Delete(DbFile)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 sw.Start()
                 Dim i As Integer = 0
@@ -55,14 +56,16 @@ Namespace Db4objects.Db4odoc.ListOperations
 
         Private Shared Sub CheckResults()
             Dim sw As Stopwatch = New Stopwatch
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            ' activation depth should be enough to activate 
+            ' ListObject, DataObject and its list members
+            Dim activationDepth As Integer = 3
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ActivationDepth(activationDepth)
+
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim result As IList(Of ListObject) = db.Query(Of ListObject)()
                 If result.Count > 0 Then
-                    ' activation depth should be enough to activate 
-                    ' ListObject, DataObject and its list members
-                    Dim activationDepth As Integer = 3
-                    db.Ext.Configure.ActivationDepth(activationDepth)
                     Console.WriteLine("Result count was {0}, looping with activation depth {1}", result.Count, activationDepth)
                     sw.Start()
                     For Each lo As ListObject In result
@@ -80,10 +83,11 @@ Namespace Db4objects.Db4odoc.ListOperations
 
         Private Shared Sub RemoveInsert()
             Dim sw As Stopwatch = New Stopwatch
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            ' set update depth to 1 for the quickest execution
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.UpdateDepth(1)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                ' set update depth to 1 for the quickest execution
-                db.Ext.Configure.UpdateDepth(1)
                 Dim result As IList(Of ListObject) = db.Query(Of ListObject)()
                 If result.Count = 2 Then
                     ' retrieve 2 ListObjects
@@ -111,11 +115,12 @@ Namespace Db4objects.Db4odoc.ListOperations
 
         Private Shared Sub UpdateObject()
             Dim sw As Stopwatch = New Stopwatch
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(DbFile)
+            ' we can set update depth to 0 
+            ' as we update only the current object
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.UpdateDepth(0)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                ' we can set update depth to 0 
-                ' as we update only the current object
-                db.Ext.Configure.UpdateDepth(0)
                 Dim result As IList(Of ListObject) = db.Query(Of ListObject)()
                 If result.Count = 2 Then
                     Dim lo1 As ListObject = result(0)

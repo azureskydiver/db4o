@@ -1,13 +1,15 @@
 ' Copyright (C) 2007 db4objects Inc. http://www.db4o.com
 Imports System
 Imports System.IO
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.ClassMapping
 
     Class MappingExample
-        Private Const FileName As String = "test.db"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             StoreObjects()
@@ -16,8 +18,8 @@ Namespace Db4objects.Db4odoc.ClassMapping
         ' end Main
 
         Private Shared Sub StoreObjects()
-            File.Delete(FileName)
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(FileName)
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Michael Schumacher", 100)
                 container.Set(pilot)
@@ -30,8 +32,9 @@ Namespace Db4objects.Db4odoc.ClassMapping
         ' end StoreObjects
 
         Private Shared Sub RetrieveObjects()
-            Db4oFactory.Configure.ObjectClass(GetType(Pilot)).ReadAs(GetType(PilotReplacement))
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(FileName)
+            Dim configuration As IConfiguration
+            configuration.ObjectClass(GetType(Pilot)).ReadAs(GetType(PilotReplacement))
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim query As IQuery = container.Query
                 query.Constrain(GetType(PilotReplacement))
@@ -43,7 +46,7 @@ Namespace Db4objects.Db4odoc.ClassMapping
         End Sub
         ' end RetrieveObjects
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             While result.HasNext
                 Console.WriteLine(result.Next)

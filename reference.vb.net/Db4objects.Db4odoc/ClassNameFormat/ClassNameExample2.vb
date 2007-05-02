@@ -5,15 +5,15 @@ Imports Db4objects.Db4o.Ext
 Namespace Db4objects.Db4odoc.ClassNameFormat
 
     Class ClassNameExample2
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             CheckDatabase()
         End Sub
         ' end Main
 
-        Public Shared Sub CheckDatabase()
-            Dim container As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub CheckDatabase()
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 ' Read db4o contents from another application
                 Dim result As IObjectSet = container.Get(GetType(Test))
@@ -31,7 +31,7 @@ Namespace Db4objects.Db4odoc.ClassNameFormat
         End Sub
         ' end CheckDatabase
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             System.Console.WriteLine("Objects found: " + result.Size.ToString())
             While result.HasNext
                 System.Console.WriteLine(result.Next)

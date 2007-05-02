@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Db4objects.Db4odoc.UniqueConstraint.UniqueConstraintExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.NQSyntax.NQSyntaxExamples</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>
@@ -60,13 +60,13 @@
     <Compile Include="Blobs\CarImage.vb" />
     <Compile Include="CachedIO\CachedIoExample.vb" />
     <Compile Include="CachedIO\Pilot.vb" />
-    <Compile Include="Callbacks\AutoIncExample.vb" />
+    <Compile Include="Autoinc\AutoIncExample.vb" />
     <Compile Include="Callbacks\CallbacksExample.vb" />
     <Compile Include="Callbacks\Car.vb" />
-    <Compile Include="Callbacks\CountedObject.vb" />
-    <Compile Include="Callbacks\IncrementedId.vb" />
+    <Compile Include="Autoinc\CountedObject.vb" />
+    <Compile Include="Autoinc\IncrementedId.vb" />
     <Compile Include="Callbacks\Pilot.vb" />
-    <Compile Include="Callbacks\TestObject.vb" />
+    <Compile Include="Autoinc\TestObject.vb" />
     <Compile Include="ClassMapping\MappingExample.vb" />
     <Compile Include="ClassMapping\PilotReplacement.vb" />
     <Compile Include="ClassMapping\Pilot.vb" />
@@ -86,7 +86,12 @@
     <Compile Include="Clientserver\StartServer.vb" />
     <Compile Include="Clientserver\StopServer.vb" />
     <Compile Include="Clientserver\TemperatureSensorReadout.vb" />
-    <Compile Include="Clientserver\TransactionExample.vb" />
+    <Compile Include="CommitCallbacks\Car.vb" />
+    <Compile Include="CommitCallbacks\CommitCallbackExample.vb" />
+    <Compile Include="CommitCallbacks\CommittedEventHandler.vb" />
+    <Compile Include="CommitCallbacks\Item.vb" />
+    <Compile Include="CommitCallbacks\Pilot.vb" />
+    <Compile Include="CommitCallbacks\PushedUpdatesExample.vb" />
     <Compile Include="Comparing\CompareExample.vb" />
     <Compile Include="Comparing\MyString.vb" />
     <Compile Include="Comparing\Record.vb" />
@@ -98,6 +103,7 @@
     <Compile Include="Constructors\C2.vb" />
     <Compile Include="Constructors\C3.vb" />
     <Compile Include="Constructors\C4.vb" />
+    <Compile Include="Exceptions\ExceptionExample.vb" />
     <Compile Include="ListDeleting\DataObject.vb" />
     <Compile Include="ListDeleting\ListObject.vb" />
     <Compile Include="ListDeleting\ListDeletingExample.vb" />
@@ -123,14 +129,31 @@
     <Compile Include="Enums\EnumExample.vb" />
     <Compile Include="Enums\EnumSODAExample.vb" />
     <Compile Include="Evaluations\Car.vb" />
-    <Compile Include="Evaluations\CarTranslator.vb" />
-    <Compile Include="Evaluations\CultureInfoTranslator.vb" />
+    <Compile Include="NQCollection\CalculationExamples.vb" />
+    <Compile Include="NQCollection\Car.vb" />
+    <Compile Include="NQCollection\MultiExamples.vb" />
+    <Compile Include="NQCollection\ParameterizedExamples.vb" />
+    <Compile Include="NQCollection\Person.vb" />
+    <Compile Include="NQCollection\Pilot.vb" />
+    <Compile Include="NQCollection\SimpleExamples.vb" />
+    <Compile Include="NQCollection\Trainee.vb" />
+    <Compile Include="NQSyntax\NQSyntaxExamples.vb" />
+    <Compile Include="NQSyntax\Pilot.vb" />
+    <Compile Include="Transactions\Car.vb" />
+    <Compile Include="Transactions\Pilot.vb" />
+    <Compile Include="Transactions\PressureSensorReadout.vb" />
+    <Compile Include="Transactions\SensorReadout.vb" />
+    <Compile Include="Transactions\TemperatureSensorReadout.vb" />
+    <Compile Include="Transactions\TransactionExample.vb" />
+    <Compile Include="Translators\Car.vb" />
+    <Compile Include="Translators\CarTranslator.vb" />
+    <Compile Include="Translators\CultureInfoTranslator.vb" />
     <Compile Include="Evaluations\EvaluationExample.vb" />
     <Compile Include="Evaluations\EvenHistoryEvaluation.vb" />
-    <Compile Include="Evaluations\LocalizedItemList.vb" />
+    <Compile Include="Translators\LocalizedItemList.vb" />
     <Compile Include="Evaluations\Pilot.vb" />
     <Compile Include="Evaluations\SensorReadout.vb" />
-    <Compile Include="Evaluations\TranslatorExample.vb" />
+    <Compile Include="Translators\TranslatorExample.vb" />
     <Compile Include="Identity\Car.vb" />
     <Compile Include="Identity\IdentityExample.vb" />
     <Compile Include="Identity\Pilot.vb" />

@@ -1,4 +1,4 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 Imports Db4objects.Db4o
@@ -6,14 +6,14 @@ Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.Queries
     Public Class QueryExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args As String())
             StorePilot()
             UpdatePilotWrong()
             UpdatePilot()
             DeletePilot()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 RetrievePilotByName(db)
                 RetrievePilotByExactPoints(db)
@@ -31,8 +31,8 @@ Namespace Db4objects.Db4odoc.Queries
         ' end Main
 
         Public Shared Sub StorePilot()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim pilot As Pilot = New Pilot("Michael Schumacher", 0)
                 db.Set(pilot)
@@ -50,7 +50,7 @@ Namespace Db4objects.Db4odoc.Queries
 
         Public Shared Sub UpdatePilotWrong()
             StorePilot()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 'Even completely identical Pilot object
                 ' won't work for update of the saved pilot
@@ -67,7 +67,7 @@ Namespace Db4objects.Db4odoc.Queries
 
         Public Shared Sub UpdatePilot()
             StorePilot()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 'first retrieve the object from the database
                 Dim result As IObjectSet = db.Get(New Pilot("Michael Schumacher", 10))
@@ -84,7 +84,7 @@ Namespace Db4objects.Db4odoc.Queries
 
         Public Shared Sub DeletePilot()
             StorePilot()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 'first retrieve the object from the database
                 Dim result As IObjectSet = db.Get(New Pilot("Michael Schumacher", 10))
@@ -99,7 +99,7 @@ Namespace Db4objects.Db4odoc.Queries
         ' end DeletePilot
 
         Public Shared Sub RetrieveAllPilots()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Pilot))
@@ -142,7 +142,7 @@ Namespace Db4objects.Db4odoc.Queries
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))
             Dim constr As Constraint = query.Descend("_name").Constrain("Michael Schumacher")
-            query.Descend("_points").Constrain(99).[And](constr)
+            query.Descend("_points").Constrain(99).Or(constr)
             Dim result As IObjectSet = query.Execute()
             ListResult(result)
         End Sub
@@ -152,7 +152,7 @@ Namespace Db4objects.Db4odoc.Queries
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))
             Dim constr As Constraint = query.Descend("_name").Constrain("Michael Schumacher")
-            query.Descend("_points").Constrain(99).[Or](constr)
+            query.Descend("_points").Constrain(99).Or(constr)
             Dim result As IObjectSet = query.Execute()
             ListResult(result)
         End Sub
@@ -169,7 +169,7 @@ Namespace Db4objects.Db4odoc.Queries
 
         Public Shared Sub RetrieveByDefaultFieldValue(ByVal db As IObjectContainer)
             Dim somebody As Pilot = New Pilot("Somebody else", 0)
-            db.[Set](somebody)
+            db.Set(somebody)
             Dim query As IQuery = db.Query()
             query.Constrain(GetType(Pilot))
             query.Descend("_points").Constrain(0)
@@ -192,7 +192,7 @@ Namespace Db4objects.Db4odoc.Queries
         ' end RetrieveSorted
 
         Public Shared Sub ClearDatabase(ByVal db As IObjectContainer)
-            Dim result As IObjectSet = db.[Get](GetType(Pilot))
+            Dim result As IObjectSet = db.Get(GetType(Pilot))
             For Each item As Object In result
                 db.Delete(item)
             Next

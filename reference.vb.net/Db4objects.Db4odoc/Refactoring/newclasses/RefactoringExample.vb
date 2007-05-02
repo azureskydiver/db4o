@@ -1,14 +1,16 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 Imports Db4objects.Db4o.Ext
 
 
 Namespace Db4objects.Db4odoc.Refactoring.Newclasses
     Public Class RefactoringExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             ReopenDB()
@@ -16,21 +18,22 @@ Namespace Db4objects.Db4odoc.Refactoring.Newclasses
         End Sub
         ' end Main
 
-        Public Shared Sub ReopenDB()
-            Db4oFactory.Configure().DetectSchemaChanges(False)
-            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
-            oc.Close()
+        Private Shared Sub ReopenDB()
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.DetectSchemaChanges(False)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
+            container.Close()
         End Sub
         ' end ReopenDB
 
-        Public Shared Sub TransferValues()
-            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub TransferValues()
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim sc As IStoredClass = oc.Ext().StoredClass(GetType(Pilot))
+                Dim sc As IStoredClass = container.Ext().StoredClass(GetType(Pilot))
                 System.Console.WriteLine("Stored class:  " + sc.GetName())
                 Dim sfOld As IStoredField = sc.StoredField("_name", GetType(String))
                 System.Console.WriteLine("Old field:  " + sfOld.GetName() + ";" + sfOld.GetStoredType().GetName())
-                Dim q As IQuery = oc.Query()
+                Dim q As IQuery = container.Query()
                 q.Constrain(GetType(Pilot))
                 Dim result As IObjectSet = q.Execute()
                 Dim i As Integer
@@ -38,10 +41,10 @@ Namespace Db4objects.Db4odoc.Refactoring.Newclasses
                     Dim pilot As Pilot = CType(result(i), Pilot)
                     pilot.Name = New Identity(sfOld.Get(pilot).ToString(), "")
                     System.Console.WriteLine("Pilot=" + pilot.ToString())
-                    oc.Set(pilot)
+                    container.Set(pilot)
                 Next
             Finally
-                oc.Close()
+                container.Close()
             End Try
         End Sub
         ' end TransferValues

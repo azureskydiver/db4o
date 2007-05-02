@@ -1,54 +1,60 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 Imports System.Collections
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.SelectivePersistence
     Public Class MarkTransientExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
-            ConfigureTransient()
-            SaveObjects()
+            Dim configuration As IConfiguration = ConfigureTransient()
+            SaveObjects(configuration)
             RetrieveObjects()
         End Sub
         ' end Main
 
-        Public Shared Sub ConfigureTransient()
-            Db4oFactory.Configure().MarkTransient("Db4objects.Db4odoc.SelectivePersistence.FieldTransient")
-        End Sub
+        Public Shared Function ConfigureTransient() As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.MarkTransient("Db4objects.Db4odoc.SelectivePersistence.FieldTransient")
+            Return configuration
+        End Function
         ' end ConfigureTransient
 
-        Public Shared Sub ConfigureSaveTransient()
-            Db4oFactory.Configure().ObjectClass(GetType(Test)).StoreTransientFields(True)
-        End Sub
+        Public Shared Function ConfigureSaveTransient() As IConfiguration
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ObjectClass(GetType(Test)).StoreTransientFields(True)
+            Return configuration
+        End Function
         ' end ConfigureSaveTransient
 
-        Public Shared Sub SaveObjects()
-            File.Delete(YapFileName)
-            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Public Shared Sub SaveObjects(ByVal configuration As IConfiguration)
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim test As Test = New Test("Transient string", "Persistent string")
-                oc.Set(test)
+                container.Set(test)
                 Dim testc As TestCusomized = New TestCusomized("Transient string", "Persistent string")
-                oc.Set(testc)
+                container.Set(testc)
             Finally
-                oc.Close()
+                container.Close()
             End Try
         End Sub
         ' end SaveObjects
 
         Public Shared Sub RetrieveObjects()
-            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim query As IQuery = oc.Query()
+                Dim query As IQuery = container.Query()
                 query.Constrain(GetType(Object))
                 Dim result As IList = query.Execute()
                 ListResult(result)
             Finally
-                oc.Close()
+                container.Close()
             End Try
         End Sub
         ' end RetrieveObjects

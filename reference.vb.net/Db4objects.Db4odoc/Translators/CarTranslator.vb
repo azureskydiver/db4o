@@ -1,9 +1,9 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Config
 
-Namespace Db4objects.Db4odoc.Evaluations
+Namespace Db4objects.Db4odoc.Translators
 
     Public Class CarTranslator
         Implements IObjectConstructor

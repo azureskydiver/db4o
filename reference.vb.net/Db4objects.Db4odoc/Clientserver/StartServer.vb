@@ -1,6 +1,9 @@
-﻿Imports System
+﻿' Copyright (C) 2007 db4objects Inc. http://www.db4o.com
+Imports System
 Imports System.Threading
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Messaging
 
 Namespace Db4objects.Db4odoc.ClientServer
@@ -11,7 +14,7 @@ Namespace Db4objects.Db4odoc.ClientServer
     ''' StopServer. The StartServer instance is used as a MessageRecipient 
     ''' and reacts to receiving an instance of a StopServer object.
     ''' Note that all user classes need to be present on the server side
-    ''' and that all possible Db4oFactory.Configure() calls to alter the db4o
+    ''' and that all possible calls to alter the db4o
     ''' configuration need to be executed on the client and on the server.
     ''' </summary>
     Public Class StartServer
@@ -37,12 +40,13 @@ Namespace Db4objects.Db4odoc.ClientServer
         ''' or a StopServer message is being received.
         ''' </summary>
         Public Sub RunServer()
+            ' Using the messaging functionality to redirect all
+            ' messages to this.processMessage
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ClientServer().SetMessageRecipient(Me)
             SyncLock Me
-                Dim db4oServer As IObjectServer = Db4oFactory.OpenServer(FILE, PORT)
-                db4oServer.GrantAccess(User, PASS)
-                ' Using the messaging functionality to redirect all
-                ' messages to this.processMessage
-                db4oServer.Ext().Configure().ClientServer().SetMessageRecipient(Me)
+                Dim db4oServer As IObjectServer = Db4oFactory.OpenServer(configuration, File, Port)
+                db4oServer.GrantAccess(User, Password)
                 Try
                     If Not [stop] Then
                         ' wait forever until Close will change stop variable

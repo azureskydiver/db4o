@@ -1,7 +1,9 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 Imports Db4objects.Db4o.Foundation
 Imports Db4objects.Db4o.Ext
@@ -10,7 +12,7 @@ Imports Db4objects.Db4o.Internal
 
 Namespace Db4objects.Db4odoc.UUIDs
     Public Class UUIDExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             TestChangeIdentity()
@@ -31,27 +33,27 @@ Namespace Db4objects.Db4odoc.UUIDs
 
         Public Shared Sub TestChangeIdentity()
 
-            File.Delete(YapFileName)
-            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Dim db As Db4oDatabase
             Dim oldSignature() As Byte
             Dim NewSignature() As Byte
             Try
-                db = oc.Ext().Identity()
+                db = container.Ext().Identity()
                 oldSignature = db.GetSignature()
                 Console.WriteLine("oldSignature: " + PrintSignature(oldSignature))
-                Dim yf As LocalObjectContainer = DirectCast(oc, LocalObjectContainer)
+                Dim yf As LocalObjectContainer = DirectCast(container, LocalObjectContainer)
                 yf.GenerateNewIdentity()
             Finally
-                oc.Close()
+                container.Close()
             End Try
-            oc = Db4oFactory.OpenFile(YapFileName)
+            container = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                db = oc.Ext().Identity()
+                db = container.Ext().Identity()
                 NewSignature = db.GetSignature()
                 Console.WriteLine("newSignature: " + PrintSignature(NewSignature))
             Finally
-                oc.Close()
+                container.Close()
             End Try
 
             Dim same As Boolean = True
@@ -73,26 +75,27 @@ Namespace Db4objects.Db4odoc.UUIDs
         ' end TestChangeIdentity
 
         Public Shared Sub SetObjects()
-            Db4oFactory.Configure().ObjectClass(GetType(Pilot)).GenerateUUIDs(True)
-            File.Delete(YapFileName)
-            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration
+            configuration.ObjectClass(GetType(Pilot)).GenerateUUIDs(True)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim car As Car = New Car("BMW", New Pilot("Rubens Barrichello"))
-                oc.Set(car)
+                container.Set(car)
             Finally
-                oc.Close()
+                container.Close()
             End Try
         End Sub
         ' end SetObjects
 
         Public Shared Sub TestGenerateUUID()
-            Dim oc As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
-                Dim query As IQuery = oc.Query()
+                Dim query As IQuery = container.Query()
                 query.Constrain(GetType(car))
                 Dim result As IObjectSet = query.Execute()
                 Dim car As Car = CType(result(0), Car)
-                Dim carInfo As IObjectInfo = oc.Ext().GetObjectInfo(car)
+                Dim carInfo As IObjectInfo = container.Ext().GetObjectInfo(car)
                 Dim carUUID As Db4oUUID = carInfo.GetUUID()
                 Console.WriteLine("UUID for Car class are not generated:")
                 If carUUID Is Nothing Then
@@ -103,7 +106,7 @@ Namespace Db4objects.Db4odoc.UUIDs
 
 
                 Dim pilot As Pilot = car.Pilot
-                Dim pilotInfo As IObjectInfo = oc.Ext().GetObjectInfo(pilot)
+                Dim pilotInfo As IObjectInfo = container.Ext().GetObjectInfo(pilot)
                 Dim pilotUUID As Db4oUUID = pilotInfo.GetUUID()
                 Console.WriteLine("UUID for Car class are not generated:")
                 If pilotUUID Is Nothing Then
@@ -115,10 +118,10 @@ Namespace Db4objects.Db4odoc.UUIDs
                 Console.WriteLine("long part: " + pilotUUID.GetLongPart().ToString() + "; signature: " + PrintSignature(pilotUUID.GetSignaturePart()))
                 Dim ms As Long = TimeStampIdGenerator.IdToMilliseconds(pilotUUID.GetLongPart())
                 Console.WriteLine("Pilot object was created: " + (New DateTime(1970, 1, 1)).AddMilliseconds(ms).ToString())
-                Dim pilotReturned As Pilot = CType(oc.Ext().GetByUUID(pilotUUID), Pilot)
+                Dim pilotReturned As Pilot = CType(container.Ext().GetByUUID(pilotUUID), Pilot)
                 Console.WriteLine("Pilot from UUID: " + pilotReturned.ToString())
             Finally
-                oc.Close()
+                container.Close()
             End Try
         End Sub
         ' end TestGenerateUUID

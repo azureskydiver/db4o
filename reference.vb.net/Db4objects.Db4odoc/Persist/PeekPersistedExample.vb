@@ -1,4 +1,4 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 Imports System.Threading
@@ -6,16 +6,16 @@ Imports Db4objects.Db4o
 
 Namespace Db4objects.Db4odoc.Persist
     Public Class PeekPersistedExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             MeasureCarTemperature()
         End Sub
         ' end Main
 
-        Public Shared Sub SetObjects()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub SetObjects()
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim car As Car = New Car("BMW")
                 db.Set(car)
@@ -25,9 +25,9 @@ Namespace Db4objects.Db4odoc.Persist
         End Sub
         ' end SetObjects
 
-        Public Shared Sub MeasureCarTemperature()
+        Private Shared Sub MeasureCarTemperature()
             SetObjects()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim result As IObjectSet = db.Get(GetType(Car))
                 If result.Size() > 0 Then
@@ -57,8 +57,8 @@ Namespace Db4objects.Db4odoc.Persist
         End Sub
         ' end MeasureCarTemperature
 
-        Public Shared Sub ÑheckCar()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub ÑheckCar()
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim result As IObjectSet = db.Get(GetType(Car))
                 ListResult(result)
@@ -68,7 +68,7 @@ Namespace Db4objects.Db4odoc.Persist
         End Sub
         ' end ÑheckCar
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             For Each item As Object In result
                 Console.WriteLine(item)

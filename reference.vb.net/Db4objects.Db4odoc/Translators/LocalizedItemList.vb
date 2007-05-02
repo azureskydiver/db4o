@@ -1,6 +1,7 @@
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System.Globalization
 
-Namespace Db4objects.Db4odoc.Evaluations
+Namespace Db4objects.Db4odoc.Translators
     ''' <summary>
     ''' A CultureInfo aware list of objects.
     ''' CultureInfo objects hold a native pointer to 

@@ -3,6 +3,7 @@ Imports System.IO
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Events
 Imports Db4objects.Db4o.Ext
+
 Namespace Db4objects.Db4odoc.CommitCallbacks
 
     Class CommitCallbackExample

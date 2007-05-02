@@ -1,15 +1,17 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
 Imports System.IO
 Imports System.Collections
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 Imports Db4objects.Db4o.Types
 
 Namespace Db4objects.Db4odoc.Activating
 
     Public Class ActivationExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Public Const Db4oFileName As String = "reference.db4o"
 
         Public Shared Sub Main(ByVal args() As String)
             TestActivationDefault()
@@ -23,9 +25,9 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end Main
 
-        Public Shared Sub StoreSensorPanel()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub StoreSensorPanel()
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 ' create a linked list with length 10
                 Dim list As SensorPanel = New SensorPanel().CreateList(10)
@@ -37,11 +39,12 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end StoreSensorPanel
 
-        Public Shared Sub TestActivationConfig()
+        Private Shared Sub TestActivationConfig()
             StoreSensorPanel()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ActivationDepth(1)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
-                db.Ext().Configure().ActivationDepth(1)
                 Console.WriteLine("Object container activation depth = 1")
                 Dim result As IObjectSet = db.Get(New SensorPanel(1))
                 ListResult(result)
@@ -59,9 +62,9 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end TestActivationConfig
 
-        Public Shared Sub TestActivationDefault()
+        Private Shared Sub TestActivationDefault()
             StoreSensorPanel()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Console.WriteLine("Default activation depth")
                 Dim result As IObjectSet = db.Get(New SensorPanel(1))
@@ -80,9 +83,9 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end TestActivationDefault
 
-        Public Shared Sub TestCascadeActivate()
+        Private Shared Sub TestCascadeActivate()
             StoreSensorPanel()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             db.Ext().Configure().ObjectClass(GetType(SensorPanel)).CascadeOnActivate(True)
             Try
                 Console.WriteLine("Cascade activation")
@@ -102,13 +105,13 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end TestCascadeActivate
 
-        Public Shared Sub TestMinActivate()
+        Private Shared Sub TestMinActivate()
             StoreSensorPanel()
             ' note that the minimum applies for *all* instances in the hierarchy
             ' the system ensures that every instantiated List object will have it's 
             ' members set to a depth of 1
             Db4oFactory.Configure().ObjectClass(GetType(SensorPanel)).MinimumActivationDepth(1)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Console.WriteLine("Minimum activation depth = 1")
                 Dim result As IObjectSet = db.Get(New SensorPanel(1))
@@ -128,13 +131,13 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end TestMinActivate
 
-        Public Shared Sub TestMaxActivate()
+        Private Shared Sub TestMaxActivate()
             StoreSensorPanel()
             ' note that the maximum is applied to the retrieved root object and limits activation
             ' further down the hierarchy
             Db4oFactory.Configure().ObjectClass(GetType(SensorPanel)).MaximumActivationDepth(2)
 
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Console.WriteLine("Maximum activation depth = 2 (default = 5)")
                 Dim result As IObjectSet = db.Get(New SensorPanel(1))
@@ -154,9 +157,9 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end TestMaxActivate
 
-        Public Shared Sub TestActivateDeactivate()
+        Private Shared Sub TestActivateDeactivate()
             StoreSensorPanel()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             db.Ext().Configure().ActivationDepth(0)
             Try
                 Console.WriteLine("Object container activation depth = 0")
@@ -193,7 +196,7 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end TestActivateDeactivate
 
-        Public Shared Sub TestActivated(ByVal sensor As SensorPanel)
+        Private Shared Sub TestActivated(ByVal sensor As SensorPanel)
             Dim nextSensor As SensorPanel = sensor
             Do
                 nextSensor = nextSensor.NextSensor
@@ -202,9 +205,9 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end TestActivated
 
-        Public Shared Sub StoreCollection()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+        Private Shared Sub StoreCollection()
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim list As IList = db.Ext().Collections().NewLinkedList()
                 Dim i As Integer
@@ -219,9 +222,9 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end StoreCollection
 
-        Public Shared Sub TestCollectionDef()
+        Private Shared Sub TestCollectionDef()
             StoreCollection()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             db.Ext().Configure().ActivationDepth(5)
             Try
                 Dim result As IObjectSet = db.Get(GetType(IList))
@@ -238,9 +241,9 @@ Namespace Db4objects.Db4odoc.Activating
         ' end TestCollectionDef
 
 
-        Public Shared Sub TestCollectionActivation()
+        Private Shared Sub TestCollectionActivation()
             StoreCollection()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             db.Ext().Configure().ActivationDepth(0)
             Try
                 Dim result As IObjectSet = db.Get(GetType(IList))
@@ -259,7 +262,7 @@ Namespace Db4objects.Db4odoc.Activating
         End Sub
         ' end TestCollectionActivation
 
-        Public Shared Sub ListResult(ByVal result As IObjectSet)
+        Private Shared Sub ListResult(ByVal result As IObjectSet)
             Console.WriteLine(result.Count)
             For Each item As Object In result
                 Console.WriteLine(item)

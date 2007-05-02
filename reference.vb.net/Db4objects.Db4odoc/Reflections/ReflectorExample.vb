@@ -1,17 +1,19 @@
-' Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com 
-
+' Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com 
 Imports System
+Imports System.IO
+
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Reflect
 Imports Db4objects.Db4o.Reflect.Net
 Imports Db4objects.Db4o.Reflect.Generic
 Imports Db4objects.Db4o.Query
-Imports System.IO
+
 
 
 Namespace Db4objects.Db4odoc.Reflections
     Public Class ReflectorExample
-        Public Shared ReadOnly YapFileName As String = "formula1.yap"
+        Private Const Db4oFileName As String = "reference.db4o"
 
         Public Sub New()
 
@@ -26,8 +28,8 @@ Namespace Db4objects.Db4odoc.Reflections
         ' end Main
 
         Public Shared Sub SetCars()
-            File.Delete(YapFileName)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            File.Delete(Db4oFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim car1 As Car = New Car("BMW")
                 db.Set(car1)
@@ -46,7 +48,7 @@ Namespace Db4objects.Db4odoc.Reflections
         ' end SetCars
 
         Public Shared Sub GetCars()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim query As IQuery = db.Query()
                 query.Constrain(GetType(Car))
@@ -63,7 +65,7 @@ Namespace Db4objects.Db4odoc.Reflections
         ' end GetCars
 
         Public Shared Sub GetCarInfo()
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim result As IObjectSet = db.Get(New Car("BMW"))
                 If result.Size() < 1 Then
@@ -101,7 +103,7 @@ Namespace Db4objects.Db4odoc.Reflections
 
         Public Shared Sub GetReflectorInfo()
 
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim ref As IReflector
                 ref = db.Ext().Reflector()
@@ -125,8 +127,9 @@ Namespace Db4objects.Db4odoc.Reflections
 
         Public Shared Sub TestReflector()
             Dim logger As LoggingReflector = New LoggingReflector()
-            Db4oFactory.Configure().ReflectWith(logger)
-            Dim db As IObjectContainer = Db4oFactory.OpenFile(YapFileName)
+            Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
+            configuration.ReflectWith(logger)
+            Dim db As IObjectContainer = Db4oFactory.OpenFile(configuration, Db4oFileName)
             Try
                 Dim car As Car = New Car("BMW")
                 Dim rc As IReflectClass
