@@ -1739,8 +1739,9 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     }
 
 	private boolean shouldStoreStaticFields(Transaction trans) {
-		return staticFieldValuesArePersisted()
-        			|| Platform4.storeStaticFieldValues(trans.reflector(), classReflector());
+		return !trans.stream().config().isReadOnly() 
+					&&  (staticFieldValuesArePersisted()
+        			|| Platform4.storeStaticFieldValues(trans.reflector(), classReflector()));
 	}
 
 	private void updateStaticClass(final Transaction trans, final StaticClass sc) {
