@@ -15,6 +15,7 @@ import com.db4o.objectManager.v2.custom.*;
 import com.db4o.objectManager.v2.maint.*;
 import com.db4o.objectManager.v2.resources.*;
 import com.db4o.objectManager.v2.uiHelper.*;
+import com.db4o.objectManager.v2.uiHelper.SwingWorker;
 import com.db4o.objectManager.v2.util.*;
 import com.db4o.objectmanager.api.prefs.*;
 import com.db4o.objectmanager.model.*;
