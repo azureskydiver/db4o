@@ -32,4 +32,7 @@ public class PagedListSupport implements ConfigurationItem {
 		return EventRegistryFactory.forObjectContainer(db);
 	}
 
+	public void prepare(Configuration configuration) {
+		// Nothing to do...
+	}
 }
