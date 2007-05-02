@@ -849,7 +849,7 @@
 				<include name="test/db4oVersions/**/*" />
 			</fileset>
 		</copy>
-		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.AllTests" failonerror="false" timeout="1200000">
+		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.AllTests" failonerror="true" timeout="1200000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.1}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.1}" />
@@ -858,7 +858,7 @@
 				<path path="${path.classpath.jdk1.1}" />
 			</classpath>
 		</java>
-		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" failonerror="false" timeout="1200000">
+		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" failonerror="true" timeout="1200000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.2}" />
@@ -866,7 +866,7 @@
 				<path path="${path.classpath.full}" />
 			</classpath>
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="false" timeout="1200000">
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="1200000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
@@ -874,7 +874,7 @@
 				<path path="${path.classpath.full}" />
 			</classpath>
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5CS" failonerror="false" timeout="4800000">
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5CS" failonerror="true" timeout="4800000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
@@ -882,7 +882,7 @@
 				<path path="${path.classpath.full}" />
 			</classpath>
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="false" timeout="320000">
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="320000">
 			<classpath>
 				<pathelement path="${file.db4ounit.jar}" />
 				<dirset dir="${dir.dist.classes.java1.2}" />
@@ -893,7 +893,7 @@
 				<path path="${path.classpath.full}" />
 			</classpath>
 		</java>
-		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.test.AllTests" failonerror="false" timeout="1200000">
+		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.test.AllTests" failonerror="true" timeout="1200000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.1}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.1}" />
@@ -903,7 +903,7 @@
 			</classpath>
 			<arg value="-withExceptions" />
 		</java>
-		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.test.AllTestsJdk1_2" failonerror="false" timeout="3600000">
+		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.test.AllTestsJdk1_2" failonerror="true" timeout="3600000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.2}" />
@@ -912,7 +912,7 @@
 			</classpath>
 			<arg value="-withExceptions" />
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="false" timeout="3600000">
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" timeout="3600000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
@@ -921,7 +921,7 @@
 			</classpath>
 			<arg value="-withExceptions" />
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.defrag.RunTestsDefrag" failonerror="false" timeout="3000000">
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.defrag.RunTestsDefrag" failonerror="true" timeout="3000000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
@@ -929,7 +929,7 @@
 				<path path="${path.classpath.full}" />
 			</classpath>
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsLegacy" failonerror="false" timeout="3600000">
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsLegacy" failonerror="true" timeout="3600000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
