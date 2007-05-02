@@ -1,18 +1,12 @@
 package com.db4o.objectManager.v2.connections;
 
-import com.db4o.objectmanager.model.Db4oConnectionSpec;
-import com.db4o.objectmanager.model.Db4oFileConnectionSpec;
-import com.db4o.objectmanager.model.Db4oSocketConnectionSpec;
-import com.db4o.ObjectContainer;
-import com.db4o.Db4o;
-import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ext.Db4oException;
+import java.awt.*;
+import java.io.*;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.awt.Component;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.objectManager.v2.uiHelper.*;
+import com.db4o.objectmanager.model.*;
 
 /**
  * User: treeder

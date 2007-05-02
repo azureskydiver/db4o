@@ -115,7 +115,7 @@ public class Preferences {
         logger.info("Backing up database to " + backupFile);
 		try {
 			db.ext().backup(backupFile);
-		} catch (IOException e) {
+		} catch (RuntimeException e) {
             logger.info("Couldn't create backup file.");
 			e.printStackTrace();
 		}

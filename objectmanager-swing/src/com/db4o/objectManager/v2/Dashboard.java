@@ -1,31 +1,24 @@
 package com.db4o.objectManager.v2;
 
-import com.jgoodies.looks.*;
-import com.db4o.objectManager.v2.custom.BackgroundPanel;
-import com.db4o.objectManager.v2.custom.ProgressDialog;
-import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
-import com.db4o.objectManager.v2.uiHelper.SwingWorker;
-import com.db4o.objectManager.v2.maint.DefragTask;
-import com.db4o.objectManager.v2.util.Log;
-import com.db4o.objectManager.v2.connections.DashboardWindowListener;
-import com.db4o.objectManager.v2.connections.DashboardMenuBar;
-import com.db4o.objectManager.v2.connections.ConnectionForm;
-import com.db4o.objectManager.v2.resources.ResourceManager;
-import com.db4o.objectmanager.api.prefs.Preferences;
-import com.db4o.objectmanager.model.Db4oConnectionSpec;
-import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ObjectContainer;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Properties;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.border.*;
+
+import com.db4o.*;
+import com.db4o.objectManager.v2.connections.*;
+import com.db4o.objectManager.v2.custom.*;
+import com.db4o.objectManager.v2.maint.*;
+import com.db4o.objectManager.v2.resources.*;
+import com.db4o.objectManager.v2.uiHelper.*;
+import com.db4o.objectManager.v2.util.*;
+import com.db4o.objectmanager.api.prefs.*;
+import com.db4o.objectmanager.model.*;
+import com.jgoodies.looks.*;
 
 /**
  * User: treeder
@@ -54,7 +47,7 @@ public class Dashboard {
 		// try to open preferences file right away so we can show message and exit
 		try {
 			Preferences pref = Preferences.getDefault();
-		} catch (DatabaseFileLockedException e) {
+		} catch (com.db4o.DatabaseFileLockedException e) {
 			OptionPaneHelper.showErrorMessage(null, "Another instance of ObjectManager is currently open. Only one instance can be open at a time. " +
 					"You can connect to multiple databases through the same instance.", "Error Opening Database");
 			return;
