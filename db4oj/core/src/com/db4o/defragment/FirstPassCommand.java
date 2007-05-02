@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.slots.*;
 		
 /**
  * First step in the defragmenting process: Allocates pointer slots in the target file for
@@ -71,7 +72,8 @@ final class FirstPassCommand implements PassCommand {
 			blocksPerPointer++;
 		}
 		int batchSize = _ids.size()*blockLength;
-		int pointerAddress=context.allocateTargetSlot(batchSize);
+		Slot pointerSlot = context.allocateTargetSlot(batchSize);
+		int pointerAddress=pointerSlot._address;
 		Iterator4 idIter=new TreeKeyIterator(_ids);
 		while(idIter.moveNext()) {
 			int objectID=((Integer)idIter.current()).intValue();

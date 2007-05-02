@@ -30,6 +30,9 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     }
     
     private void add(int address, int length){
+        if (length <= discardLimit()) {
+            return;
+        }
         _addressIx.add(address, length);
         _lengthIx.add(address, length);
     }

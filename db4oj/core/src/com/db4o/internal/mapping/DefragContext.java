@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.slots.*;
 
 /**
  * Encapsulates services involving source and target database files during defragmenting.
@@ -20,7 +21,7 @@ public interface DefragContext extends IDMapping {
 
 	Buffer sourceReaderByID(int sourceID) throws IOException;
 
-	int allocateTargetSlot(int targetLength);
+	Slot allocateTargetSlot(int targetLength);
 
 	void targetWriteBytes(Buffer targetPointerReader, int targetID);
 

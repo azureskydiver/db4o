@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.convert.*;
+import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
 import com.db4o.types.*;
 
@@ -104,7 +105,11 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 		// do nothing
 	}
 	
-	public int getSlot(int length){
+	public final void free(Slot slot){
+		// do nothing
+	}
+	
+	public Slot getSlot(int length){
         return appendBlocks(length);
 	}
 	

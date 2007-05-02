@@ -205,9 +205,9 @@ public class LocalTransaction extends Transaction {
         
         if (slotSetPointerCount > 0) {
             int length = (((slotSetPointerCount * 3) + 2) * Const4.INT_LENGTH);
-            int address = _file.getSlot(length);
-            final StatefulBuffer bytes = new StatefulBuffer(this, address, length);
-            bytes.writeInt(length);
+            Slot slot = _file.getSlot(length);
+            final StatefulBuffer bytes = new StatefulBuffer(this, slot._address, slot._length);
+            bytes.writeInt(slot._length);
             bytes.writeInt(slotSetPointerCount);
             
             appendSlotChanges(bytes);
@@ -215,7 +215,7 @@ public class LocalTransaction extends Transaction {
             bytes.write();
             flushFile();
             
-            stream().writeTransactionPointer(address);
+            stream().writeTransactionPointer(slot._address);
             flushFile();
             
             if(writeSlots()){
@@ -225,7 +225,7 @@ public class LocalTransaction extends Transaction {
             stream().writeTransactionPointer(0);
             flushFile();
             
-            _file.free(address, length);
+            _file.free(slot);
         }
     }
 	

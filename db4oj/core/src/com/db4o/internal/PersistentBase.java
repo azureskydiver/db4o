@@ -137,20 +137,21 @@ public abstract class PersistentBase implements Persistent {
             
         LocalObjectContainer stream = (LocalObjectContainer)trans.stream();
         
-        int address = 0;
         int length = ownLength();
         
         Buffer writer = new Buffer(length);
         
+        Slot slot;
+        
         if(isNew()){
             Pointer4 ptr = stream.newSlot(trans, length);
             setID(ptr._id);
-            address = ptr._address;
+            slot = new Slot(ptr._address, length);
             
             // FIXME: Free everything on rollback here ?
         }else{
-            address = stream.getSlot(length);
-            trans.slotFreeOnRollbackCommitSetPointer(i_id, address, length);
+            slot = stream.getSlot(length);
+            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot._address, slot._length);
         }
         
         if (Deploy.debug) {
@@ -163,7 +164,7 @@ public abstract class PersistentBase implements Persistent {
             writer.writeEnd();
         }
 
-        writer.writeEncrypt(stream, address, 0);
+        writer.writeEncrypt(stream, slot._address, 0);
 
         if (isActive()) {
             setStateClean();

@@ -22,12 +22,18 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	
 	private PersistentIntegerArray _btreeIDs;
 	
+	private boolean _committing;
+	
 	
 	public BTreeFreespaceManager(LocalObjectContainer file) {
 		super(file);
 	}
 
 	public void free(Slot slot) {
+		
+		if(_committing){
+			return;
+		}
 		
 		if(! started()){
 			return;
@@ -81,6 +87,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 
 	public Slot getSlot (int length) {
 		
+		if(_committing){
+			return null;
+		}
+		
 		if(! started()){
 			return null;
 		}
@@ -111,6 +121,9 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 	
 	private void addSlot(Slot slot) {
+        if (slot._length <= discardLimit()) {
+            return;
+        }
 		_slotsByLength.add(transaction(), slot);
 		_slotsByAddress.add(transaction(), slot);
 	}
@@ -148,11 +161,14 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 			int[] ids = new int[] {_slotsByAddress.getID(), _slotsByLength.getID()};
 			_btreeIDs = new PersistentIntegerArray(ids);
 			_btreeIDs.write(transaction());
+			_file.systemData().freespaceAddress(_btreeIDs.getID());
 			return;
 		}
 		_btreeIDs = new PersistentIntegerArray(slotAddress);
 		_btreeIDs.read(transaction());
 		createBTrees(_btreeIDs.array());
+		_slotsByAddress.read(transaction());
+		_slotsByLength.read(transaction());
 	}
 
 	private void createBTrees(int[] ids) {
@@ -165,6 +181,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public void beginCommit() {
+		_committing = true;
+		_slotsByAddress.commit(transaction());
+		_slotsByLength.commit(transaction());
+		
 		// TODO: FB remove
 	}
 
@@ -174,6 +194,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public void endCommit() {
+		_committing = false;
 		// TODO: FB remove
 	}
 

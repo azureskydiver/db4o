@@ -185,27 +185,28 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     public void free(Slot slot) {
         if(slot == null){
-            return;
+        	throw new IllegalArgumentException();
         }
         if(slot._address == 0){
-            return;
+            throw new IllegalArgumentException();
         }
-        free(slot._address, slot._length);
-    }
-
-    public void free(int a_address, int a_length) {
         if(DTrace.enabled){
-            DTrace.FILE_FREE.logLength(a_address, a_length);
+            DTrace.FILE_FREE.logLength(slot._address, slot._length);
         }
         if(_freespaceManager == null){
             // Can happen on early free before freespacemanager
             // is up, during conversion.
            return;
         }
-        _freespaceManager.free(new Slot(a_address, a_length));
+        _freespaceManager.free(slot);
         if(Debug.freespace && Debug.freespaceChecker){
-            _fmChecker.free(new Slot(a_address, a_length));
+            _fmChecker.free(slot);
         }
+
+    }
+
+    public void free(int a_address, int a_length) {
+        free(new Slot(a_address, a_length));
     }
 
     final void freePrefetchedPointers() {
@@ -251,7 +252,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
     final int getPointerSlot() {
-        int id = getSlot(Const4.POINTER_LENGTH);
+        int id = getSlot(Const4.POINTER_LENGTH)._address;
 
         // write a zero pointer first
         // to prevent delete interaction trouble
@@ -267,15 +268,13 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return id;
     }
     
-    public int getSlot(int length){
-        
-        if(! DTrace.enabled){
-            return getSlot1(length)._address;
+    public Slot getSlot(int length){
+        if(DTrace.enabled){
+            Slot slot = getSlot1(length);
+            DTrace.GET_SLOT.logLength(slot._address, slot._length);
+            return slot;
         }
-        
-        int address = getSlot1(length)._address;
-        DTrace.GET_SLOT.logLength(address, length);
-        return address;
+        return getSlot1(length);
     }
 
     private final Slot getSlot1(int bytes) {
@@ -314,20 +313,19 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         }
         
         int blocksNeeded = blocksFor(bytes);
-        int address = appendBlocks(blocksNeeded);
-        slot = new Slot(address, bytes);
+        slot = appendBlocks(blocksNeeded);
         if (Debug.xbytes && Deploy.overwrite) {
             overwriteDeletedSlot(slot);
         }
 		return slot;
     }
     
-    protected int appendBlocks(int blockCount){
+    protected final Slot appendBlocks(int blockCount){
     	int blockedStartAddress = _blockEndAddress;
         int blockedEndAddress = _blockEndAddress + blockCount;
         checkBlockedAddress(blockedEndAddress);
         _blockEndAddress = blockedEndAddress;
-        return blockedStartAddress;
+        return new Slot(blockedStartAddress, blockCount * blockSize());
     }
     
     private void checkBlockedAddress(int blockedAddress) {
@@ -374,11 +372,11 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return i_isServer;
     }
 
-    public final Pointer4 newSlot(Transaction a_trans, int a_length) {
+    public final Pointer4 newSlot(Transaction trans, int length) {
         int id = getPointerSlot();
-        int address = getSlot(a_length);
-        a_trans.setPointer(id, address, a_length);
-        return new Pointer4(id, address);
+        Slot slot = getSlot(length);
+        trans.setPointer(id, slot._address, slot._length);
+        return new Pointer4(id, slot._address);
     }
 
     public final int newUserObject() {
@@ -719,14 +717,13 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     public final void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child) {
-        int length = a_child.getLength();
-        int address = getSlot(length);
-        a_child.getTransaction().slotFreeOnRollback(address, address, length);
-        a_child.address(address);
+        Slot slot = getSlot(a_child.getLength());
+        a_child.getTransaction().slotFreeOnRollback(slot._address, slot._address, slot._length);
+        a_child.address(slot._address);
         a_child.writeEncrypt();
         int offsetBackup = a_parent._offset;
         a_parent._offset = a_child.getID();
-        a_parent.writeInt(address);
+        a_parent.writeInt(slot._address);
         a_parent._offset = offsetBackup;
     }
 
@@ -777,13 +774,12 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         _fileHeader.writeTransactionPointer(systemTransaction(), address);
     }
     
-    public final void getSlotForUpdate(StatefulBuffer forWriter){
-        Transaction trans = forWriter.getTransaction();
-        int id = forWriter.getID();
-        int length = forWriter.getLength();
-        int address = getSlot(length);
-        forWriter.address(address);
-        trans.produceUpdateSlotChange(id, address, length);
+    public final void getSlotForUpdate(StatefulBuffer buffer){
+        Transaction trans = buffer.getTransaction();
+        int id = buffer.getID();
+        Slot slot = getSlot(buffer.getLength());
+        buffer.address(slot._address);
+        trans.produceUpdateSlotChange(id, slot._address, slot._length);
     }
 
     public final void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes) {

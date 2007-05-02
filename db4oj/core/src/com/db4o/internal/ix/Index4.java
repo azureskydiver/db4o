@@ -272,7 +272,7 @@ public class Index4 {
     }
     
     private int getSlot(int length){
-        return file().getSlot(length);
+        return file().getSlot(length)._address;
     }
     
     private Tree getRoot(){

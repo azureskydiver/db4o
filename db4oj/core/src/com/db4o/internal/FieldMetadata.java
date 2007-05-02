@@ -985,7 +985,6 @@ public class FieldMetadata implements StoredField {
     	getHandler().defrag(mf, readers, true);
     }
     
-    
 	public void createIndex() {
 		if(hasIndex()) {
 			return;

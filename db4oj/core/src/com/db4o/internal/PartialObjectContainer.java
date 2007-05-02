@@ -187,10 +187,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public int alignToBlockSize(int length){
-        return blocksFor(length) * blockSize();
-    }
-
     public void bind(Object obj, long id) {
         synchronized (i_lock) {
             bind1(null, obj, id);

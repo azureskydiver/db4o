@@ -61,14 +61,14 @@ public abstract class ObjectMarshaller {
             int length) {
         
         int id = yo.getID();
-        int address = -1;
+        Slot slot = new Slot(-1, length);
         
         if(trans instanceof LocalTransaction){
-            address = ((LocalTransaction)trans).file().getSlot(length);
-            trans.slotFreeOnRollback(id, address, length);
+            slot = ((LocalTransaction)trans).file().getSlot(length);
+            trans.slotFreeOnRollback(id, slot._address, slot._length);
         }
-        trans.setPointer(id, address, length);
-        return createWriterForUpdate(trans, updateDepth, id, address, length);
+        trans.setPointer(id, slot._address, slot._length);
+        return createWriterForUpdate(trans, updateDepth, id, slot._address, slot._length);
     }
 
     protected StatefulBuffer createWriterForUpdate(

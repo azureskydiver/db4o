@@ -50,7 +50,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     }
     
     public static int initSlot(LocalObjectContainer file){
-        int address = file.getSlot(slotLength());
+        int address = file.getSlot(slotLength())._address;
         slotEntryToZeroes(file, address);
         return address;
     }
@@ -107,6 +107,10 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     final int discardLimit(){
         return _file.configImpl().discardFreeSpace();
     }
+    
+    final boolean canDiscard(int length) {
+		return length < discardLimit();
+	}
     
     public static void migrate(FreespaceManager oldFM, FreespaceManager newFM) {
     	oldFM.migrateTo(newFM);

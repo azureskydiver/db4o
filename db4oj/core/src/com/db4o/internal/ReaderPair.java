@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.slots.*;
 
 
 /**
@@ -51,7 +52,7 @@ public final class ReaderPair implements SlotReader {
 		try {
 			mapped=_mapping.mappedID(orig);
 		} catch (MappingNotFoundException exc) {
-			mapped=_mapping.allocateTargetSlot(Const4.POINTER_LENGTH);
+			mapped=_mapping.allocateTargetSlot(Const4.POINTER_LENGTH)._address;
 			_mapping.mapIDs(orig,mapped, false);
 			_mapping.registerUnindexed(orig);
 		}
@@ -155,20 +156,19 @@ public final class ReaderPair implements SlotReader {
 					: context.sourceReaderByID(sourceID));
 		int targetID=context.mappedID(sourceID);
 	
-		int targetLength = sourceReader.getLength();
-		int targetAddress=context.allocateTargetSlot(targetLength);
+		Slot targetSlot = context.allocateTargetSlot(sourceReader.getLength());
 		
 		if(registerAddressMapping) {
 			int sourceAddress=((StatefulBuffer)sourceReader).getAddress();
-			context.mapIDs(sourceAddress, targetAddress, false);
+			context.mapIDs(sourceAddress, targetSlot._address, false);
 		}
 		
 		Buffer targetPointerReader=new Buffer(Const4.POINTER_LENGTH);
 		if(Deploy.debug) {
 			targetPointerReader.writeBegin(Const4.YAPPOINTER);
 		}
-		targetPointerReader.writeInt(targetAddress);
-		targetPointerReader.writeInt(targetLength);
+		targetPointerReader.writeInt(targetSlot._address);
+		targetPointerReader.writeInt(targetSlot._length);
 		if(Deploy.debug) {
 			targetPointerReader.writeEnd();
 		}
@@ -176,7 +176,7 @@ public final class ReaderPair implements SlotReader {
 		
 		ReaderPair readers=new ReaderPair(sourceReader,context,context.systemTrans());
 		command.processCopy(readers);
-		context.targetWriteBytes(readers,targetAddress);
+		context.targetWriteBytes(readers,targetSlot._address);
 	}
 
 	public void append(byte value) {
