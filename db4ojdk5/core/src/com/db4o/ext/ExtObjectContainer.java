@@ -33,7 +33,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * If a file already exists at the specified path, it will be overwritten.<br><br>
      * @param path a fully qualified path
      */
-    public void backup(String path) throws BackupException,
+    public void backup(String path) throws Db4oIOException,
 			DatabaseClosedException, NotSupportedException;
 
 

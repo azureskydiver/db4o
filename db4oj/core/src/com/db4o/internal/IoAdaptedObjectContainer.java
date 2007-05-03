@@ -66,7 +66,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 	}
     
-    public void backup(String path) throws DatabaseClosedException, BackupException {
+    public void backup(String path) throws DatabaseClosedException, Db4oIOException {
         synchronized (i_lock) {
 			checkClosed();
 			if (_backupFile != null) {
@@ -76,7 +76,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 				_backupFile = configImpl().ioAdapter().open(path, true,
 						_file.getLength());
 			} catch (IOException e) {
-				throw new BackupException(e);
+				throw new Db4oIOException(e);
 			}
 			_backupFile.blockSize(blockSize());
 		}
@@ -95,7 +95,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 					pos += read;
 				} catch (IOException e) {
 					_backupFile = null;
-					throw new BackupException(e);
+					throw new Db4oIOException(e);
 				}
 			}
             Cool.sleepIgnoringInterruption(1);
@@ -105,7 +105,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			try {
 				_backupFile.close();
 			} catch (IOException e) {
-				throw new BackupException(e);
+				throw new Db4oIOException(e);
 			}
 			_backupFile = null;
 		}
