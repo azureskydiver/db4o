@@ -3,6 +3,7 @@ package com.db4o.db4ounit.common.exceptions;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
@@ -35,7 +36,7 @@ public class BackupExceptionTestCase extends AbstractDb4oTestCase implements
 	}
 	
 	public void testBackupException() {
-		Assert.expect(BackupException.class, IOException.class,
+		Assert.expect(Db4oIOException.class, IOException.class,
 				new CodeBlock() {
 					public void run() throws Throwable {
 						ExceptionIOAdapter.exception = true;
