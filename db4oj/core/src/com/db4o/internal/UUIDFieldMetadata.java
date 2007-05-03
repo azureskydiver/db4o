@@ -75,9 +75,9 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     // FIXME probably always should throw in exceptional circumstances?
 	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, ClassMetadata yapClass, Slot oldSlot, boolean checkClass) throws IOException {
         if(DTrace.enabled){
-            DTrace.REREAD_OLD_UUID.logLength(oldSlot.getAddress(), oldSlot.getLength());
+            DTrace.REREAD_OLD_UUID.logLength(oldSlot.address(), oldSlot.length());
         }
-		Buffer reader = stream.bufferByAddress(oldSlot.getAddress(), oldSlot.getLength());
+		Buffer reader = stream.bufferByAddress(oldSlot.address(), oldSlot.length());
 		if(checkClass){
             ClassMetadata realClass = ClassMetadata.readClass(stream,reader);
             if(realClass != yapClass){

@@ -33,8 +33,8 @@ public abstract class SlotHandler implements Indexable4{
 
 	public void writeIndexEntry(Buffer writer, Object obj) {
 		Slot slot = (Slot) obj;
-		writer.writeInt(slot._address);
-		writer.writeInt(slot._length);
+		writer.writeInt(slot.address());
+		writer.writeInt(slot.length());
 	}
 
 	public Object current() {

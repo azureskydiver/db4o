@@ -42,7 +42,7 @@ import com.db4o.internal.slots.Slot;
 		i_root = TreeInt.add(i_root, a_id);
 	}
 
-    public final int byteCount() {
+    public final int marshalledLength() {
     	return Const4.INT_LENGTH * (Tree.size(i_root) + 1);
     }
 
@@ -68,7 +68,7 @@ import com.db4o.internal.slots.Slot;
         }
         Buffer reader = new Buffer(length);
         try {
-			reader.readEncrypt(ta.stream(), slot._address);
+			reader.readEncrypt(ta.stream(), slot.address());
 		} catch (IOException exc) {
 			throw new ClassIndexException(exc, _clazz.getName());
 		}
@@ -87,7 +87,7 @@ import com.db4o.internal.slots.Slot;
     }
     
     public final int ownLength() {
-        return Const4.OBJECT_LENGTH + byteCount();
+        return Const4.OBJECT_LENGTH + marshalledLength();
     }
 
     public final Object read(Buffer a_reader) {

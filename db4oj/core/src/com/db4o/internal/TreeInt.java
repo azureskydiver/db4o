@@ -139,22 +139,22 @@ public class TreeInt extends Tree implements ReadWriteable {
 		return shallowCloneInternal(treeint);
 	}
 	
-	public static int byteCount(TreeInt a_tree){
+	public static int marshalledLength(TreeInt a_tree){
 		if(a_tree == null){
 			return Const4.INT_LENGTH;
 		}
-		return a_tree.byteCount();
+		return a_tree.marshalledLength();
 	}
 	
-	public final int byteCount(){
+	public final int marshalledLength(){
 		if(variableLength()){
-			final int[] length = new int[]{Const4.INT_LENGTH};
+			final MutableInt mint = new MutableInt(Const4.INT_LENGTH);
 			traverse(new Visitor4(){
 				public void visit(Object obj){
-					length[0] += ((TreeInt)obj).ownLength();
+					mint.add(((TreeInt)obj).ownLength());
 				}
 			});
-			return length[0];
+			return mint.value();
 		}
 		return Const4.INT_LENGTH + (size() * ownLength());
 	}

@@ -23,8 +23,6 @@ public abstract class Debug extends Debug4 {
     // overrides any configured freespace filler
     public static final boolean xbytes = freespace;
     
-    public static final boolean freespaceChecker = false;
-    
     public static final boolean checkSychronization = false;
     
     public static final boolean configureAllClasses = indexAllFields;

@@ -20,15 +20,15 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             transaction().slotFreePointerOnRollback(id);
             
             Slot slot = stream.getSlot(_payLoad.getLength());
-            _payLoad.address(slot._address);
+            _payLoad.address(slot.address());
             
-            transaction().slotFreeOnRollback(id, slot._address, slot._length);
+            transaction().slotFreeOnRollback(id, slot.address(), slot.length());
             
             if(yc != null){
                 yc.addFieldIndices(_payLoad,null);
             }
             stream.writeNew(yc, _payLoad);
-            serverTransaction().writePointer( id, slot._address, slot._length);
+            serverTransaction().writePointer( id, slot.address(), slot.length());
         }
         return true;
     }

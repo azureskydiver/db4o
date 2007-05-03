@@ -30,9 +30,6 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     }
     
     private void add(int address, int length){
-        if (length <= discardLimit()) {
-            return;
-        }
         _addressIx.add(address, length);
         _lengthIx.add(address, length);
     }
@@ -69,8 +66,8 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
             Iterator4 i = _xBytes.iterator();
             _xBytes = null;
             while(i.moveNext()){
-                int[] addressLength = (int[])i.current();
-                overwriteDeletedSlots(addressLength[0], addressLength[1]);
+            	Slot slot = (Slot) i.current();
+                overwriteDeletedSlot(slot);
             }
         }
     }
@@ -81,8 +78,8 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     
     public void free(Slot slot) {
     	
-    	int address = slot._address;
-    	int length = slot._length;
+    	int address = slot.address();
+    	int length = slot.length();
         
         if(! started()){
             return;
@@ -92,15 +89,13 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
             return;
         }
         
-        if (length <= discardLimit()) {
+        if (canDiscard(length)) {
             return;
         }
         
         if(DTrace.enabled){
             DTrace.FREE.logLength(address, length);
         }
-        
-        length = _file.blocksFor(length);
         
         int freedAddress = address;
         int freedLength = length;
@@ -126,7 +121,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         add(address, length);
         
         if (_overwriteDeletedSlots) {
-            overwriteDeletedSlots(freedAddress, freedLength);
+            overwriteDeletedSlot(new Slot(freedAddress, freedLength));
         }
     }
     
@@ -143,19 +138,17 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
 		if (!started()) {
 			return null;
 		}
-		
-		int requiredLength = _file.blocksFor(length);
 
 		int address = 0;
 
-		_lengthIx.find(requiredLength);
+		_lengthIx.find(length);
 
 		if (_lengthIx.match()) {
 			remove(_lengthIx.address(), _lengthIx.length());
 			address = _lengthIx.address();
 		} else if (_lengthIx.subsequent()) {
-			int lengthRemainder = _lengthIx.length() - requiredLength;
-			int addressRemainder = _lengthIx.address() + requiredLength;
+			int lengthRemainder = _lengthIx.length() - length;
+			int addressRemainder = _lengthIx.address() + length;
 			remove(_lengthIx.address(), _lengthIx.length());
 			add(addressRemainder, lengthRemainder);
 			address = _lengthIx.address();
@@ -243,13 +236,12 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         return 0;  // no special ID, FreespaceIX information is stored in fileheader variable part 
     }
 
-    private void overwriteDeletedSlots(int address, int length){
+    private void overwriteDeletedSlot(Slot slot){
         if (_overwriteDeletedSlots) {
             if(_xBytes == null){
-                length = length * blockSize();
-                _file.overwriteDeletedBytes(address, length);
+                _file.overwriteDeletedBlockedSlot(slot);
             }else{
-                _xBytes.add(new int[] {address, length});
+                _xBytes.add(slot);
             }
         }
     }

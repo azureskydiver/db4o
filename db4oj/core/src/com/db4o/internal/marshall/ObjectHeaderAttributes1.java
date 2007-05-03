@@ -47,7 +47,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
         Transaction trans = yo.getTrans();
         Object obj = yo.getObject();
         calculateLengths(trans, yc, obj, 0);
-        _baseLength = yo.getStream().blockAligned(_baseLength);        
+        _baseLength = yo.getStream().blockAlignedBytes(_baseLength);        
     }
     
     private void calculateLengths(Transaction trans, ClassMetadata yc, Object obj, int fieldIndex) {
@@ -89,7 +89,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     }
     
     public void prepareIndexedPayLoadEntry(Transaction trans){
-        _payLoadLength =  trans.stream().blockAligned(_payLoadLength);
+        _payLoadLength =  trans.stream().blockAlignedBytes(_payLoadLength);
     }
     
     public void write(StatefulBuffer writer){

@@ -116,12 +116,12 @@ public class DefragContextImpl implements DefragContext {
 	
 	public Buffer readerByID(DbSelector selector,int id) throws IOException {
 		Slot slot=readPointer(selector, id);
-		return readerByAddress(selector,slot._address,slot._length);
+		return readerByAddress(selector,slot.address(),slot.length());
 	}
 
 	public StatefulBuffer sourceWriterByID(int id) throws IOException {
 		Slot slot=readPointer(SOURCEDB, id);
-		return _sourceDb.readWriterByAddress(SOURCEDB.transaction(this),slot._address,slot._length);
+		return _sourceDb.readWriterByAddress(SOURCEDB.transaction(this),slot.address(),slot.length());
 	}
 
 	public Buffer sourceReaderByAddress(int address,int length) throws IOException {

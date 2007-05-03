@@ -281,6 +281,9 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void discardFreeSpace(int bytes) {
+    	if(bytes < 0){
+    		throw new IllegalArgumentException();
+    	}
         _config.put(DISCARD_FREESPACE,bytes);
     }
     

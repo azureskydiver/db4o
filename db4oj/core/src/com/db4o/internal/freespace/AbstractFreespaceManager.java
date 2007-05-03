@@ -45,12 +45,12 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         	case FM_BTREE:
         		return new BTreeFreespaceManager(file);
             default:
-                return new FreespaceManagerRam(file);
+                return new RamFreespaceManager(file);
         }
     }
     
     public static int initSlot(LocalObjectContainer file){
-        int address = file.getSlot(slotLength())._address;
+        int address = file.getSlot(slotLength()).address();
         slotEntryToZeroes(file, address);
         return address;
     }
@@ -79,20 +79,12 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return Const4.INT_LENGTH * INTS_IN_SLOT;
     }
     
-	protected Slot toBlocked(Slot slot){
-		return new Slot(slot._address, _file.blocksFor(slot._length));
-	}
-	
-	protected Slot toNonBlocked(Slot slot){
-		return new Slot(slot._address, slot._length * blockSize());
-	}
-    
     public final int totalFreespace() {
         final MutableInt mint = new MutableInt();
         traverse(new Visitor4() {
             public void visit(Object obj) {
                 Slot slot = (Slot) obj;
-                mint.add(slot._length);
+                mint.add(slot.length());
             }
         });
         return mint.value();
@@ -100,16 +92,16 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     
     public abstract void beginCommit();
     
-    final int blockSize(){
-        return _file.blockSize();
+    protected final int blockedDiscardLimit(){
+        return _file.blocksToBytes(discardLimit());
     }
+
+	protected int discardLimit() {
+		return _file.configImpl().discardFreeSpace();
+	}
     
-    final int discardLimit(){
-        return _file.configImpl().discardFreeSpace();
-    }
-    
-    final boolean canDiscard(int length) {
-		return length < discardLimit();
+    final boolean canDiscard(int blocks) {
+		return blocks == 0 || blocks < blockedDiscardLimit();
 	}
     
     public static void migrate(FreespaceManager oldFM, FreespaceManager newFM) {

@@ -297,12 +297,12 @@ public final class StatefulBuffer extends Buffer {
     }
     
     public void useSlot(Slot slot) {
-        i_address = slot._address;
+        i_address = slot.address();
         _offset = 0;
-        if (slot._length > _buffer.length) {
-            _buffer = new byte[slot._length];
+        if (slot.length() > _buffer.length) {
+            _buffer = new byte[slot.length()];
         }
-        i_length = slot._length;
+        i_length = slot.length();
     }
 
     // FIXME: FB remove
@@ -368,7 +368,7 @@ public final class StatefulBuffer extends Buffer {
             _payloadOffset = _offset + (Const4.INT_LENGTH * 2);
         }
         if(alignToBlockSize){
-            _payloadOffset = stream().blockAligned(_payloadOffset);
+            _payloadOffset = stream().blockAlignedBytes(_payloadOffset);
         }
         writeInt(_payloadOffset);
         

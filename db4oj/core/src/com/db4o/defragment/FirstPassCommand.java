@@ -73,7 +73,7 @@ final class FirstPassCommand implements PassCommand {
 		}
 		int batchSize = _ids.size()*blockLength;
 		Slot pointerSlot = context.allocateTargetSlot(batchSize);
-		int pointerAddress=pointerSlot._address;
+		int pointerAddress=pointerSlot.address();
 		Iterator4 idIter=new TreeKeyIterator(_ids);
 		while(idIter.moveNext()) {
 			int objectID=((Integer)idIter.current()).intValue();
