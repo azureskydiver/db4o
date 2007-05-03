@@ -31,15 +31,15 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
             allSlots.add(slot);
         }
         
-        LocalObjectContainer yapFile = (LocalObjectContainer)stream();
+        final LocalObjectContainer container = (LocalObjectContainer)stream();
         
         
         final Collection4 freedSlots = new Collection4();
         
-        yapFile.installDebugFreespaceManager(
-            new FreespaceManagerForDebug(yapFile, new SlotListener() {
+        container.installDebugFreespaceManager(
+            new FreespaceManagerForDebug(container, new SlotListener() {
                 public void onFree(Slot slot) {
-                    freedSlots.add(slot);
+                    freedSlots.add(container.toNonBlockedLength(slot));
                 }
         }));
         

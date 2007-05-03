@@ -191,11 +191,11 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     private Slot toBlockedLength(Slot slot){
-    	return new Slot(slot.address(), blocksToBytes(slot.length()));
+    	return new Slot(slot.address(), bytesToBlocks(slot.length()));
     }
     
-    private Slot toNonBlockedLength(Slot slot){
-    	return new Slot(slot.address(), bytesToBlocks(slot.length()));
+    public Slot toNonBlockedLength(Slot slot){
+    	return new Slot(slot.address(), blocksToBytes(slot.length()));
     }
 
     public void free(int address, int a_length) {
