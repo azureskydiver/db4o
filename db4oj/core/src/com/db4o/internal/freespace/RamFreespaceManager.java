@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
 
-public class FreespaceManagerRam extends AbstractFreespaceManager {
+public class RamFreespaceManager extends AbstractFreespaceManager {
     
     private final TreeIntObject _finder   = new TreeIntObject(0);
 
@@ -16,7 +16,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
     
     private Tree _freeBySize;
     
-    public FreespaceManagerRam(LocalObjectContainer file){
+    public RamFreespaceManager(LocalObjectContainer file){
         super(file);
     }
     
@@ -32,9 +32,6 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
     }
     
     private void addFreeSlotNodes(int address, int length) {
-        if (canDiscard(length)) {
-            return;
-        }
         FreeSlotNode addressNode = new FreeSlotNode(address);
         addressNode.createPeer(length);
         _freeByAddress = Tree.add(_freeByAddress, addressNode);
@@ -72,22 +69,17 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
     
     public void free(final Slot slot) {
     	
-    	int address = slot._address;
-    	int length = slot._length;
+    	int address = slot.address();
+    	int length = slot.length();
         
         if (address <= 0) {
         	throw new IllegalArgumentException();
-        }
-        
-        if (canDiscard(length)) {
-            return;
         }
         
         if(DTrace.enabled){
             DTrace.FREE_RAM.logLength(address, length);
         }
         
-        length = _file.blocksFor(length);
         _finder._key = address;
         FreeSlotNode sizeNode;
         FreeSlotNode addressnode = (FreeSlotNode) Tree.findSmaller(_freeByAddress, _finder);
@@ -123,12 +115,13 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
                 _freeByAddress = Tree.add(_freeByAddress, addressnode);
                 _freeBySize = Tree.add(_freeBySize, sizeNode);
             } else {
+                if (canDiscard(length)) {
+                    return;
+                }
                 addFreeSlotNodes(address, length);
             }
         }
-        if(! Debug.freespaceChecker){
-        	_file.overwriteDeletedSlot(slot);
-        }
+        _file.overwriteDeletedBlockedSlot(slot);
     }
     
     public void freeSelf() {
@@ -138,9 +131,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
     
     public Slot getSlot(int length) {
     	
-    	int requiredLength = _file.blocksFor(length);
-
-        _finder._key = requiredLength;
+        _finder._key = length;
         _finder._object = null;
         _freeBySize = FreeSlotNode.removeGreaterOrEqual((FreeSlotNode) _freeBySize, _finder);
 
@@ -152,14 +143,17 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
         int blocksFound = node._key;
         int address = node._peer._key;
         _freeByAddress = _freeByAddress.removeNode(node._peer);
-        if (blocksFound > requiredLength) {
-            addFreeSlotNodes(address + requiredLength, blocksFound - requiredLength);
-        }
+        int remainingBlocks = blocksFound - length;
+    	if(canDiscard(remainingBlocks)){
+    		length = blocksFound;
+    	}else{
+    		addFreeSlotNodes(address + length, remainingBlocks);	
+    	}
         
         if(DTrace.enabled){
-        	DTrace.GET_FREESPACE.logLength(address, requiredLength);
+        	DTrace.GET_FREESPACE.logLength(address, length);
         }
-
+        
         return new Slot(address, length);
     }
     
@@ -194,7 +188,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
             return;
         }
 
-        FreeSlotNode.sizeLimit = discardLimit();
+        FreeSlotNode.sizeLimit = blockedDiscardLimit();
 
         _freeBySize = new TreeReader(reader, new FreeSlotNode(0), true).read();
 
@@ -230,7 +224,7 @@ public class FreespaceManagerRam extends AbstractFreespaceManager {
 
     public int write(){
         int freeBySizeID = 0;
-        int length = TreeInt.byteCount((TreeInt)_freeBySize);
+        int length = TreeInt.marshalledLength((TreeInt)_freeBySize);
         
         Pointer4 ptr = _file.newSlot(trans(), length); 
         freeBySizeID = ptr._id;

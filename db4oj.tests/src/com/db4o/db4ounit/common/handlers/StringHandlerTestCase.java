@@ -17,8 +17,8 @@ public class StringHandlerTestCase extends AbstractDb4oTestCase {
 		handler.writeIndexEntry(reader,original);
 		reader._offset=0;
 		Slot retrieved = (Slot) handler.readIndexEntry(reader);
-		Assert.areEqual(original._address, retrieved._address);
-		Assert.areEqual(original._length, retrieved._length);
+		Assert.areEqual(original.address(), retrieved.address());
+		Assert.areEqual(original.length(), retrieved.length());
 	}
 	
 }

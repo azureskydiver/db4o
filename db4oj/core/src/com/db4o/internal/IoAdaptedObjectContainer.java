@@ -294,8 +294,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     		return;
     	}
     	byte[] zeroBytes = new byte[1024];
-        int left = slot._length;
-        io.blockSeek(slot._address, 0);
+        int left = slot.length();
+        io.blockSeek(slot.address(), 0);
         while (left > zeroBytes.length) {
 			io.write(zeroBytes, zeroBytes.length);
 			left -= zeroBytes.length;

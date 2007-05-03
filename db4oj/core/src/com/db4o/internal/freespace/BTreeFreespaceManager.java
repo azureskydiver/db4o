@@ -40,14 +40,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		}
 		
         if(DTrace.enabled){
-            DTrace.FREE.logLength(slot._address, slot._length);
-        }
-        
-        if (slot._length <= discardLimit()) {
-            return;
+            DTrace.FREE.logLength(slot.address(), slot.length());
         }
 
-        Slot newFreeSlot = toBlocked(slot);
+        Slot newFreeSlot = slot;
         BTreeNodeSearchResult searchResult = 
 			_slotsByAddress.searchLeaf(transaction(), slot, SearchTarget.LOWEST);
 		BTreePointer pointer = searchResult.firstValidPointer();
@@ -72,13 +68,14 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 				newFreeSlot = newFreeSlot.append(nextSlot);
 			}
 		}
-		addSlot(newFreeSlot);
-	    if(! Debug.freespaceChecker){
-	    	_file.overwriteDeletedSlot(slot);
-	    }
+		
+		if(! canDiscard(newFreeSlot.length())){
+			addSlot(newFreeSlot);
+		}
+		
+		_file.overwriteDeletedBlockedSlot(slot);
 
 	}
-
 
 	public void freeSelf() {
 		// TODO Auto-generated method stub
@@ -95,11 +92,8 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 			return null;
 		}
 		
-		int requiredLength = _file.blocksFor(length);
-		
-		
 		BTreeNodeSearchResult searchResult = 
-			_slotsByLength.searchLeaf(transaction(), new Slot(0, requiredLength), SearchTarget.HIGHEST);
+			_slotsByLength.searchLeaf(transaction(), new Slot(0, length), SearchTarget.HIGHEST);
 		
 		BTreePointer pointer = searchResult.firstValidPointer();
 		
@@ -111,19 +105,20 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		
 		removeSlot(slot);
 		
-		if(slot._length == requiredLength){
-			return toNonBlocked(slot);
+		int remainingLength = slot.length() - length;
+		
+		if(canDiscard(remainingLength)){
+			return slot;
 		}
 		
-		addSlot(slot.subSlot(requiredLength));
+		addSlot(slot.subSlot(length));
 		
-		return toNonBlocked(slot.truncate(requiredLength)); 
+		slot.truncate(length);
+		
+		return slot; 
 	}
 	
 	private void addSlot(Slot slot) {
-        if (slot._length <= discardLimit()) {
-            return;
-        }
 		_slotsByLength.add(transaction(), slot);
 		_slotsByAddress.add(transaction(), slot);
 	}

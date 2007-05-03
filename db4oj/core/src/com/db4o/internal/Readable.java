@@ -9,5 +9,5 @@ package com.db4o.internal;
  */
 public interface Readable {
 	Object read(Buffer a_reader);
-	int byteCount();
+	int marshalledLength();
 }

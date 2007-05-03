@@ -67,7 +67,7 @@ public class TreeIntObject extends TreeInt {
 		if (_object == null) {
 			return Const4.INT_LENGTH * 2;
 		} 
-		return Const4.INT_LENGTH + ((Readable) _object).byteCount();
+		return Const4.INT_LENGTH + ((Readable) _object).marshalledLength();
 	}
 
 	boolean variableLength() {

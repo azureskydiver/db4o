@@ -151,7 +151,7 @@ public final class StringHandler extends BuiltinTypeHandler {
     }
 
 	private boolean isInvalidSlot(Slot slot) {
-		return (slot._address == 0) && (slot._length == 0);
+		return (slot.address() == 0) && (slot.length() == 0);
 	}
     
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, IOException {
@@ -187,8 +187,8 @@ public final class StringHandler extends BuiltinTypeHandler {
          }
          if(entry instanceof Slot){
              Slot s = (Slot) entry;
-             writer.writeInt(s._address);
-             writer.writeInt(s._length);
+             writer.writeInt(s.address());
+             writer.writeInt(s.length());
              return;
          }
          throw new IllegalArgumentException();
@@ -232,7 +232,7 @@ public final class StringHandler extends BuiltinTypeHandler {
 			Slot s = (Slot) obj;
 
 			try {
-				return oc.bufferByAddress(s._address, s._length);
+				return oc.bufferByAddress(s.address(), s.length());
 			} catch (IOException e) {
 				throw new ComparableConversionException(s,e);
 			}

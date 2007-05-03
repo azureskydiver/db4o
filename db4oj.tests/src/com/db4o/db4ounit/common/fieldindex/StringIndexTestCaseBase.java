@@ -7,7 +7,7 @@ import com.db4o.config.Configuration;
 import com.db4o.db4ounit.common.btree.ExpectingVisitor;
 import com.db4o.foundation.Visitor4;
 import com.db4o.internal.*;
-import com.db4o.internal.freespace.FreespaceManagerRam;
+import com.db4o.internal.freespace.RamFreespaceManager;
 import com.db4o.internal.slots.Slot;
 import com.db4o.query.Query;
 
@@ -54,11 +54,11 @@ public abstract class StringIndexTestCaseBase extends AbstractDb4oTestCase {
 
 	protected void grafittiFreeSpace() {
 		final IoAdaptedObjectContainer file = ((IoAdaptedObjectContainer)db());
-		final FreespaceManagerRam fm = (FreespaceManagerRam) file.freespaceManager();
+		final RamFreespaceManager fm = (RamFreespaceManager) file.freespaceManager();
 		fm.traverseFreeSlots(new Visitor4() {
 			public void visit(Object obj) {
 				Slot slot = (Slot) obj;
-				file.overwriteDeletedSlot(slot);
+				file.overwriteDeletedBlockedSlot(slot);
 			}
 		});
 	}

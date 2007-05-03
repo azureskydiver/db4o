@@ -52,7 +52,7 @@ public final class ReaderPair implements SlotReader {
 		try {
 			mapped=_mapping.mappedID(orig);
 		} catch (MappingNotFoundException exc) {
-			mapped=_mapping.allocateTargetSlot(Const4.POINTER_LENGTH)._address;
+			mapped=_mapping.allocateTargetSlot(Const4.POINTER_LENGTH).address();
 			_mapping.mapIDs(orig,mapped, false);
 			_mapping.registerUnindexed(orig);
 		}
@@ -160,15 +160,15 @@ public final class ReaderPair implements SlotReader {
 		
 		if(registerAddressMapping) {
 			int sourceAddress=((StatefulBuffer)sourceReader).getAddress();
-			context.mapIDs(sourceAddress, targetSlot._address, false);
+			context.mapIDs(sourceAddress, targetSlot.address(), false);
 		}
 		
 		Buffer targetPointerReader=new Buffer(Const4.POINTER_LENGTH);
 		if(Deploy.debug) {
 			targetPointerReader.writeBegin(Const4.YAPPOINTER);
 		}
-		targetPointerReader.writeInt(targetSlot._address);
-		targetPointerReader.writeInt(targetSlot._length);
+		targetPointerReader.writeInt(targetSlot.address());
+		targetPointerReader.writeInt(targetSlot.length());
 		if(Deploy.debug) {
 			targetPointerReader.writeEnd();
 		}
@@ -176,7 +176,7 @@ public final class ReaderPair implements SlotReader {
 		
 		ReaderPair readers=new ReaderPair(sourceReader,context,context.systemTrans());
 		command.processCopy(readers);
-		context.targetWriteBytes(readers,targetSlot._address);
+		context.targetWriteBytes(readers,targetSlot.address());
 	}
 
 	public void append(byte value) {

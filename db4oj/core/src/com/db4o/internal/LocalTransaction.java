@@ -206,8 +206,8 @@ public class LocalTransaction extends Transaction {
         if (slotSetPointerCount > 0) {
             int length = (((slotSetPointerCount * 3) + 2) * Const4.INT_LENGTH);
             Slot slot = _file.getSlot(length);
-            final StatefulBuffer bytes = new StatefulBuffer(this, slot._address, slot._length);
-            bytes.writeInt(slot._length);
+            final StatefulBuffer bytes = new StatefulBuffer(this, slot.address(), slot.length());
+            bytes.writeInt(slot.length());
             bytes.writeInt(slotSetPointerCount);
             
             appendSlotChanges(bytes);
@@ -215,7 +215,7 @@ public class LocalTransaction extends Transaction {
             bytes.write();
             flushFile();
             
-            stream().writeTransactionPointer(slot._address);
+            stream().writeTransactionPointer(slot.address());
             flushFile();
             
             if(writeSlots()){
@@ -490,7 +490,7 @@ public class LocalTransaction extends Transaction {
     	if(slot == null){
     		return;
     	}
-    	slotFreeOnCommit(id, slot.getAddress(), slot.getLength());    	
+    	slotFreeOnCommit(id, slot.address(), slot.length());    	
     }
 
     public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
@@ -527,7 +527,7 @@ public class LocalTransaction extends Transaction {
             DTrace.FREE_ON_ROLLBACK.log(a_id);
             DTrace.FREE_ON_ROLLBACK.logLength(newAddress, newLength);
             DTrace.FREE_ON_COMMIT.log(a_id);
-            DTrace.FREE_ON_COMMIT.logLength(slot._address, slot._length);
+            DTrace.FREE_ON_COMMIT.logLength(slot.address(), slot.length());
         }
         
         SlotChange change = produceSlotChange(a_id);
@@ -559,7 +559,7 @@ public class LocalTransaction extends Transaction {
         //        Looking at references, this method is only called from freed
         //        BTree nodes. Indeed it should be checked what happens here.
         
-        slotFreeOnCommit(a_id, slot._address, slot._length);
+        slotFreeOnCommit(a_id, slot.address(), slot.length());
     }
     
     void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {

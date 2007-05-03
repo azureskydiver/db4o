@@ -151,7 +151,7 @@ public abstract class PersistentBase implements Persistent {
             // FIXME: Free everything on rollback here ?
         }else{
             slot = stream.getSlot(length);
-            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot._address, slot._length);
+            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot.address(), slot.length());
         }
         
         if (Deploy.debug) {
@@ -164,7 +164,7 @@ public abstract class PersistentBase implements Persistent {
             writer.writeEnd();
         }
 
-        writer.writeEncrypt(stream, slot._address, 0);
+        writer.writeEncrypt(stream, slot.address(), 0);
 
         if (isActive()) {
             setStateClean();

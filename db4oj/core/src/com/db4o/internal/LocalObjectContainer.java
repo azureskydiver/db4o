@@ -30,9 +30,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     private FreespaceManager _freespaceManager;
     
-    // can be used to check freespace system
-    private FreespaceManager _fmChecker;
-
     private boolean             i_isServer = false;
 
     private Tree                i_prefetchedIDs;
@@ -65,7 +62,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     public void setRegularEndAddress(long address){
-        _blockEndAddress = blocksFor(address);
+        _blockEndAddress = blocksToBytes(address);
     }
     
     final protected void close2() {
@@ -91,10 +88,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         _freespaceManager = AbstractFreespaceManager.createNew(this);
         
-        if(Debug.freespaceChecker){
-            _fmChecker = new FreespaceManagerRam(this);
-        }        
-        
         blockSize(configImpl().blockSize());
         
         _fileHeader = new FileHeader1();
@@ -108,10 +101,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         _freespaceManager.onNew(this);
         _freespaceManager.start(_systemData.freespaceAddress());
-        
-        if(Debug.freespace  && Debug.freespaceChecker){
-            _fmChecker.start(0);
-        }
     }
     
     private void newSystemData(byte freespaceSystem){
@@ -184,29 +173,33 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     public abstract String fileName();
     
     public void free(Slot slot) {
-        if(slot == null){
-        	throw new IllegalArgumentException();
-        }
-        if(slot._address == 0){
+        if(slot.address() == 0){
             throw new IllegalArgumentException();
         }
         if(DTrace.enabled){
-            DTrace.FILE_FREE.logLength(slot._address, slot._length);
+            DTrace.FILE_FREE.logLength(slot.address(), slot.length());
         }
         if(_freespaceManager == null){
             // Can happen on early free before freespacemanager
             // is up, during conversion.
            return;
         }
-        _freespaceManager.free(slot);
-        if(Debug.freespace && Debug.freespaceChecker){
-            _fmChecker.free(slot);
-        }
+        Slot blockedSlot = toBlockedLength(slot);
+        
+        _freespaceManager.free(blockedSlot);
 
     }
+    
+    private Slot toBlockedLength(Slot slot){
+    	return new Slot(slot.address(), blocksToBytes(slot.length()));
+    }
+    
+    private Slot toNonBlockedLength(Slot slot){
+    	return new Slot(slot.address(), bytesToBlocks(slot.length()));
+    }
 
-    public void free(int a_address, int a_length) {
-        free(new Slot(a_address, a_length));
+    public void free(int address, int a_length) {
+        free(new Slot(address, a_length));
     }
 
     final void freePrefetchedPointers() {
@@ -252,7 +245,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
     final int getPointerSlot() {
-        int id = getSlot(Const4.POINTER_LENGTH)._address;
+        int id = getSlot(Const4.POINTER_LENGTH).address();
 
         // write a zero pointer first
         // to prevent delete interaction trouble
@@ -269,53 +262,29 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     public Slot getSlot(int length){
+    	int blocks = bytesToBlocks(length);
+    	Slot slot = getBlockedSlot(blocks);
         if(DTrace.enabled){
-            Slot slot = getSlot1(length);
-            DTrace.GET_SLOT.logLength(slot._address, slot._length);
-            return slot;
+            DTrace.GET_SLOT.logLength(slot.address(), slot.length());
         }
-        return getSlot1(length);
+        return toNonBlockedLength(slot);
     }
 
-    private final Slot getSlot1(int bytes) {
-        if(bytes <= 0){
+    private final Slot getBlockedSlot(int blocks) {
+        if(blocks <= 0){
         	throw new IllegalArgumentException();
         }
         Slot slot;
         if(_freespaceManager != null){
-        	slot = _freespaceManager.getSlot(bytes);
-            if(Debug.freespace && Debug.freespaceChecker){
-                if(slot != null){
-                	int freeAddress = slot._address;
-                    Collection4 wrongOnes = new Collection4();
-                    Slot freeCheck = _fmChecker.getSlot(bytes);
-                    
-                    while(freeCheck != null && freeCheck._address != freeAddress ){
-                        // System.out.println("Freecheck alternative found: "  + freeCheck);
-                        wrongOnes.add(new int[]{freeCheck._address, bytes});
-                        freeCheck = _fmChecker.getSlot(bytes);
-                    }
-                    Iterator4 i = wrongOnes.iterator();
-                    while(i.moveNext()){
-                        int[] adrLength = (int[])i.current();
-                        _fmChecker.free(new Slot(adrLength[0], adrLength[1]) );
-                    }
-                    if(freeCheck == null){
-                    	System.out.println(_freespaceManager);
-                    	System.out.println(_fmChecker);
-                    }
-                }
-            }
-            
+        	slot = _freespaceManager.getSlot(blocks);
             if(slot != null){
                 return slot;
             }
         }
         
-        int blocksNeeded = blocksFor(bytes);
-        slot = appendBlocks(blocksNeeded);
+        slot = appendBlocks(blocks);
         if (Debug.xbytes && Deploy.overwrite) {
-            overwriteDeletedSlot(slot);
+            overwriteDeletedBlockedSlot(slot);
         }
 		return slot;
     }
@@ -325,7 +294,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         int blockedEndAddress = _blockEndAddress + blockCount;
         checkBlockedAddress(blockedEndAddress);
         _blockEndAddress = blockedEndAddress;
-        return new Slot(blockedStartAddress, blockCount * blockSize());
+        return new Slot(blockedStartAddress, blockCount);
     }
     
     private void checkBlockedAddress(int blockedAddress) {
@@ -342,7 +311,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     void ensureLastSlotWritten(){
         if (!Debug.xbytes){
             if(Deploy.overwrite){
-                if(_blockEndAddress > blocksFor(fileLength())){
+                if(_blockEndAddress > blocksToBytes(fileLength())){
                     StatefulBuffer writer = getWriter(systemTransaction(), _blockEndAddress - 1, blockSize());
                     writer.write();
                 }
@@ -375,8 +344,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     public final Pointer4 newSlot(Transaction trans, int length) {
         int id = getPointerSlot();
         Slot slot = getSlot(length);
-        trans.setPointer(id, slot._address, slot._length);
-        return new Pointer4(id, slot._address);
+        trans.setPointer(id, slot.address(), slot.length());
+        return new Pointer4(id, slot.address());
     }
 
     public final int newUserObject() {
@@ -455,23 +424,23 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
                 return null;
             }
             
-            if (slot._address == 0) {
+            if (slot.address() == 0) {
                 return null;
             }
             
             if(DTrace.enabled){
-                DTrace.READ_SLOT.logLength(slot._address, slot._length);
+                DTrace.READ_SLOT.logLength(slot.address(), slot.length());
             }
             
             Buffer reader = null;
             if(useReader){
-                reader = new Buffer(slot._length);
+                reader = new Buffer(slot.length());
             }else{
-                reader = getWriter(a_ta, slot._address, slot._length);
+                reader = getWriter(a_ta, slot.address(), slot.length());
                 ((StatefulBuffer)reader).setID(a_id);
             }
 
-            reader.readEncrypt(this, slot._address);
+            reader.readEncrypt(this, slot.address());
             return reader;
             
         } catch (Exception e) {
@@ -515,16 +484,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         _freespaceManager = AbstractFreespaceManager.createNew(this, _systemData.freespaceSystem());
         _freespaceManager.read(_systemData.freespaceID());
        
-        if(Debug.freespace){
-            _fmChecker = new FreespaceManagerRam(this);
-            _fmChecker.read(_systemData.freespaceID());
-        }
-        
         _freespaceManager.start(_systemData.freespaceAddress());
-        
-        if(Debug.freespace){
-            _fmChecker.start(0);
-        }
         
         if(needFreespaceMigration()){
         	migrateFreespace();
@@ -718,12 +678,12 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     public final void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child) {
         Slot slot = getSlot(a_child.getLength());
-        a_child.getTransaction().slotFreeOnRollback(slot._address, slot._address, slot._length);
-        a_child.address(slot._address);
+        a_child.getTransaction().slotFreeOnRollback(slot.address(), slot.address(), slot.length());
+        a_child.address(slot.address());
         a_child.writeEncrypt();
         int offsetBackup = a_parent._offset;
         a_parent._offset = a_child.getID();
-        a_parent.writeInt(slot._address);
+        a_parent.writeInt(slot.address());
         a_parent._offset = offsetBackup;
     }
 
@@ -735,11 +695,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             _freespaceManager = null;
         }
         
-        if(Debug.freespace && Debug.freespaceChecker){
-            freespaceID = _fmChecker.write();
-        }
-        
-        // FIXME: blocksize should be already valid in FileHeader
         StatefulBuffer writer = getWriter(systemTransaction(), 0, _fileHeader.length());
         
         _fileHeader.writeFixedPart(this, startFileLockingThread, shuttingDown, writer, blockSize(), freespaceID);
@@ -766,8 +721,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
     public abstract void overwriteDeletedBytes(int address, int length);
     
-    public void overwriteDeletedSlot(Slot slot) {
-    	overwriteDeletedBytes(slot._address, blockAligned(slot._length));	
+    public void overwriteDeletedBlockedSlot(Slot slot) {
+    	overwriteDeletedBytes(slot.address(), blocksToBytes(slot.length()));	
     }
 
     public final void writeTransactionPointer(int address) {
@@ -778,8 +733,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         Transaction trans = buffer.getTransaction();
         int id = buffer.getID();
         Slot slot = getSlot(buffer.getLength());
-        buffer.address(slot._address);
-        trans.produceUpdateSlotChange(id, slot._address, slot._length);
+        buffer.address(slot.address());
+        trans.produceUpdateSlotChange(id, slot.address(), slot.length());
     }
 
     public final void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes) {

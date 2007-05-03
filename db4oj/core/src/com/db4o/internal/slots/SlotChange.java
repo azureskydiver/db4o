@@ -109,7 +109,7 @@ public class SlotChange extends TreeInt {
 	}
 
 	public boolean isDeleted() {
-		return isSetPointer() && (_newSlot._address == 0);
+		return isSetPointer() && (_newSlot.address() == 0);
 	}
 	
 	public boolean isNew() {
@@ -182,14 +182,14 @@ public class SlotChange extends TreeInt {
 	public void write(Buffer writer) {
 		if (isSetPointer()) {
 			writer.writeInt(_key);
-			writer.writeInt(_newSlot._address);
-			writer.writeInt(_newSlot._length);
+			writer.writeInt(_newSlot.address());
+			writer.writeInt(_newSlot.length());
 		}
 	}
 
 	public final void writePointer(LocalTransaction trans) {
 		if (isSetPointer()) {
-			trans.writePointer(_key, _newSlot._address, _newSlot._length);
+			trans.writePointer(_key, _newSlot.address(), _newSlot.length());
 		}
 	}
 }
