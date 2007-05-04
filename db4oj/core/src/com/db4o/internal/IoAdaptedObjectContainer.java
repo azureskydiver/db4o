@@ -27,7 +27,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     
     private final FreespaceFiller _freespaceFiller;
 
-    IoAdaptedObjectContainer(Configuration config, String fileName) throws OpenDatabaseException, OldFormatException {
+    IoAdaptedObjectContainer(Configuration config, String fileName) throws OldFormatException {
         super(config,null);
         _fileLock = new Object();
         _fileName = fileName;
@@ -35,7 +35,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         open();
     }
 
-    protected final void openImpl() throws OpenDatabaseException, OldFormatException, DatabaseReadOnlyException {
+    protected final void openImpl() throws OldFormatException, DatabaseReadOnlyException {
 		IoAdapter ioAdapter = configImpl().ioAdapter();
 		boolean isNew = !ioAdapter.exists(fileName());
 		if (isNew) {
@@ -62,7 +62,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 				readThis();
 			}
 		} catch (IOException e) {
-			throw new OpenDatabaseException(e);
+			throw new Db4oIOException(e);
 		}
 	}
     
@@ -140,7 +140,9 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
      */
 	private void closeDatabaseFile() {
 		try {
-			_file.close();
+			if (_file != null) {
+				_file.close();
+			}
 		} catch (IOException e) {
 			// ignore
 		} finally {
@@ -266,7 +268,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 
 	private void checkReadCount(int bytesRead, int expected) {
 		if (bytesRead != expected) {
-			shutdownObjectContainer();
 			throw new IncompatibleFileFormatException();
 		}
 	}

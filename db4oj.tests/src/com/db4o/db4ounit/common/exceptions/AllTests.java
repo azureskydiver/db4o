@@ -7,7 +7,7 @@ import db4ounit.extensions.*;
 public class AllTests extends Db4oTestSuite {
 
 	public static void main(String[] args) {
-		new AllTests().runSoloAndClientServer();
+		new AllTests().runAll();
 	}
 
 	protected Class[] testCases() {
@@ -19,6 +19,7 @@ public class AllTests extends Db4oTestSuite {
 			DatabaseReadonlyExceptionTestCase.class,
 			GlobalOnlyConfigExceptionTestCase.class,
 			IncompatibleFileFormatExceptionTestCase.class,
+			InvalidIDExceptionTestCase.class,
 			InvalidPasswordTestCase.class,
 			ObjectCanActiviateExceptionTestCase.class,
 			ObjectCanDeleteExceptionTestCase.class,

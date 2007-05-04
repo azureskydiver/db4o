@@ -409,57 +409,44 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return readReaderOrWriterByID(a_ta, a_id, true);
     }
     
-    private final Buffer readReaderOrWriterByID(Transaction a_ta, int a_id, boolean useReader) {
-        if (a_id <= 0) {
-            throw new IllegalArgumentException("id must be greater than 0");
-        }
-        
-        if(DTrace.enabled){
-            DTrace.READ_ID.log(a_id);
-        }
-        
-        try {
-            Slot slot = ((LocalTransaction)a_ta).getCurrentSlotOfID(a_id);
-            if (slot == null) {
-                return null;
-            }
-            
-            if (slot.address() == 0) {
-                return null;
-            }
-            
-            if(DTrace.enabled){
-                DTrace.READ_SLOT.logLength(slot.address(), slot.length());
-            }
-            
-            Buffer reader = null;
-            if(useReader){
-                reader = new Buffer(slot.length());
-            }else{
-                reader = getWriter(a_ta, slot.address(), slot.length());
-                ((StatefulBuffer)reader).setID(a_id);
-            }
+    private final Buffer readReaderOrWriterByID(Transaction a_ta, int a_id,
+			boolean useReader) {
+		if (a_id <= 0) {
+			throw new IllegalArgumentException();
+		}
 
-            reader.readEncrypt(this, slot.address());
-            return reader;
-            
-        } catch (Exception e) {
-            
-            // This is a tough catch-all block, but it does make sense:
-            // A call for getById() could accidentally find something
-            // that looks like a slot and try to use it.
-            
-            // TODO: For debug purposes analyse the caller stack and
-            // differentiate here in debug mode.
+		if (DTrace.enabled) {
+			DTrace.READ_ID.log(a_id);
+		}
 
-            if (Debug.atHome) {
-                System.out.println("YapFile.readReaderOrWriterByID failed for ID: " + a_id);
-                e.printStackTrace();
-            }
-        }
-        return null;        
-        
-    }
+		Slot slot = ((LocalTransaction) a_ta).getCurrentSlotOfID(a_id);
+		if (slot == null) {
+			return null;
+		}
+
+		if (slot.address() == 0) {
+			return null;
+		}
+
+		if (DTrace.enabled) {
+			DTrace.READ_SLOT.logLength(slot.address(), slot.length());
+		}
+
+		Buffer reader = null;
+		if (useReader) {
+			reader = new Buffer(slot.length());
+		} else {
+			reader = getWriter(a_ta, slot.address(), slot.length());
+			((StatefulBuffer) reader).setID(a_id);
+		}
+
+		try {
+			reader.readEncrypt(this, slot.address());
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+		return reader;
+	}
     
     protected boolean doFinalize() {
     	return _fileHeader != null;

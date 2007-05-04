@@ -84,7 +84,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		open();
 	}
 
-	protected final void openImpl() throws OpenDatabaseException {
+	protected final void openImpl() {
 		_singleThreaded = configImpl().singleThreadedClient();
 		// TODO: Experiment with packetsize and noDelay
 		// socket.setSendBufferSize(100);
@@ -285,14 +285,14 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		if (expectedMessage.equals(message)) {
 			return message;
 		}
-		checkDb4oExceptionMessage(message);
+		checkExceptionMessage(message);
 		throw new IllegalStateException("Unexpected Message:" + message
 				+ "  Expected:" + expectedMessage);
 	}
 
-	private void checkDb4oExceptionMessage(Msg msg) {
-		if(msg instanceof MDb4oException) {
-			throw (Db4oException)((MDb4oException)msg).readSingleObject();
+	private void checkExceptionMessage(Msg msg) {
+		if(msg instanceof MChainedRuntimeException) {
+			throw (ChainedRuntimeException)((MChainedRuntimeException)msg).readSingleObject();
 		}
 	}
 		
@@ -401,7 +401,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	private void loginToServer(Socket4 a_socket)
-			throws OpenDatabaseException,InvalidPasswordException {
+			throws InvalidPasswordException {
 		UnicodeStringIO stringWriter = new UnicodeStringIO();
 		int length = stringWriter.length(userName)
 				+ stringWriter.length(password);
@@ -422,7 +422,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				i_handlers.oldEncryptionOff();
 			}
 		} catch (IOException e) {
-			throw new OpenDatabaseException(e);
+			throw new Db4oIOException(e);
 		}
 	}
 

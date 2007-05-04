@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -20,7 +21,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 
 	protected InMemoryObjectContainer(Configuration config,
 			ObjectContainerBase parent, MemoryFile memoryFile)
-			throws OpenDatabaseException, OldFormatException {
+			throws OldFormatException {
 		super(config, parent);
 		_memoryFile = memoryFile;
 		open();
@@ -30,7 +31,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
         this(config, null, memoryFile);
     }
     
-    protected final void openImpl() throws OpenDatabaseException, OldFormatException {
+    protected final void openImpl() throws OldFormatException {
         byte[] bytes = _memoryFile.getBytes();
 		try {
 			if (bytes == null || bytes.length == 0) {
@@ -43,7 +44,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 				readThis();
 			}
 		} catch (IOException e) {
-			throw new OpenDatabaseException(e);
+			throw new Db4oIOException(e);
 		} 
     }
     
