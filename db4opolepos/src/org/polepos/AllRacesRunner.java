@@ -30,8 +30,8 @@ import org.polepos.circuits.monaco.*;
 import org.polepos.circuits.montreal.*;
 import org.polepos.circuits.nurburgring.*;
 import org.polepos.circuits.sepang.*;
-import org.polepos.db4o.*;
 import org.polepos.framework.*;
+import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
 /**

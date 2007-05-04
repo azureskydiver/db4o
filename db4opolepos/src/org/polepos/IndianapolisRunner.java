@@ -3,8 +3,8 @@
 package org.polepos;
 
 import org.polepos.circuits.indianapolis.*;
-import org.polepos.db4o.*;
 import org.polepos.framework.*;
+import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
 public class IndianapolisRunner extends AbstractDb4oVersionsRaceRunner {
