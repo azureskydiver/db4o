@@ -2,7 +2,7 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 public final class MReadObject extends MsgD implements ServerSideMessage {
@@ -12,14 +12,12 @@ public final class MReadObject extends MsgD implements ServerSideMessage {
 
 		// readObjectByID may fail in certain cases, for instance if
 		// and object was deleted by another client
-
 		synchronized (streamLock()) {
 			try {
 				bytes = stream().readWriterByID(transaction(), _payLoad.readInt());
-			} catch (Exception e) {
-				if (Debug.atHome) {
-					System.out.println("MsD.ReadObject:: readObjectByID failed");
-				}
+			} catch (Db4oException e) {
+				writeException(e);
+				return true;
 			}
 		}
 		if (bytes == null) {

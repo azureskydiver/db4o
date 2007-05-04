@@ -97,7 +97,7 @@ public class Db4o {
      * @see ObjectServer#grantAccess
 	 */
 	public static ObjectContainer openClient(String hostName, int port,
-			String user, String password) throws OpenDatabaseException,
+			String user, String password) throws Db4oIOException,
 			OldFormatException, InvalidPasswordException {
 		return openClient(Db4o.cloneConfiguration(), hostName, port, user,
 				password);
@@ -124,12 +124,12 @@ public class Db4o {
      * @see ObjectServer#grantAccess
 	 */
 	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
-			throws OpenDatabaseException, OldFormatException, InvalidPasswordException {
+			throws Db4oIOException, OldFormatException, InvalidPasswordException {
 			try {
 				NetworkSocket networkSocket = new NetworkSocket(hostName, port);
 				return new ClientObjectContainer(config,networkSocket, user, password, true);
 			} catch (IOException e) {
-				throw new OpenDatabaseException(e);
+				throw new Db4oIOException(e);
 			}
 	}
 
@@ -153,7 +153,7 @@ public class Db4o {
      * @see Configuration#password
 	 */
 	public static final ObjectContainer openFile(String databaseFileName)
-			throws OpenDatabaseException, DatabaseFileLockedException,
+			throws Db4oIOException, DatabaseFileLockedException,
 			IncompatibleFileFormatException, OldFormatException, DatabaseReadOnlyException {
 		return openFile(cloneConfiguration(),databaseFileName);
 	}
@@ -176,7 +176,7 @@ public class Db4o {
      * @see Configuration#password
 	 */
 	public static final ObjectContainer openFile(Configuration config,
-			String databaseFileName) throws OpenDatabaseException,
+			String databaseFileName) throws Db4oIOException,
 			DatabaseFileLockedException, IncompatibleFileFormatException,
 			OldFormatException, DatabaseReadOnlyException {
 		return ObjectContainerFactory.openObjectContainer(config,
@@ -185,7 +185,7 @@ public class Db4o {
 
 	protected static final ObjectContainer openMemoryFile1(
 			Configuration config, MemoryFile memoryFile)
-			throws OpenDatabaseException, DatabaseFileLockedException,
+			throws Db4oIOException, DatabaseFileLockedException,
 			OldFormatException {
 		if(memoryFile == null){
 			memoryFile = new MemoryFile();
@@ -226,9 +226,9 @@ public class Db4o {
      * @see Configuration#password
 	 */
 	public static final ObjectServer openServer(String databaseFileName,
-			int port) throws OpenDatabaseException,
-			IncompatibleFileFormatException, OldFormatException,
-			DatabaseFileLockedException, DatabaseReadOnlyException {
+			int port) throws Db4oIOException, IncompatibleFileFormatException,
+			OldFormatException, DatabaseFileLockedException,
+			DatabaseReadOnlyException {
 		return openServer(cloneConfiguration(),databaseFileName,port);
 	}
 
@@ -250,7 +250,7 @@ public class Db4o {
      * @see Configuration#password
 	 */
 	public static final ObjectServer openServer(Configuration config,
-			String databaseFileName, int port) throws OpenDatabaseException,
+			String databaseFileName, int port) throws Db4oIOException,
 			IncompatibleFileFormatException, OldFormatException,
 			DatabaseFileLockedException, DatabaseReadOnlyException {
 		LocalObjectContainer stream = (LocalObjectContainer)openFile(config,databaseFileName);

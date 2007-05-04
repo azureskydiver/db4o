@@ -5,7 +5,6 @@ package com.db4o.internal.cs.messages;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
@@ -24,7 +23,7 @@ public abstract class Msg implements Cloneable {
 	private Transaction _trans;
 	private MessageDispatcher _messageDispatcher;
 	
-
+	public static final MChainedRuntimeException CHAINED_RUNTIME_EXCEPTION = new MChainedRuntimeException();
 	public static final MClassNameForID CLASS_NAME_FOR_ID = new MClassNameForID();
 	public static final MClose CLOSE = new MClose();
     public static final MCommit COMMIT = new MCommit();
@@ -34,7 +33,6 @@ public abstract class Msg implements Cloneable {
 	public static final MCreateClass CREATE_CLASS = new MCreateClass();
 	public static final MClassMeta CLASS_META = new MClassMeta();
 	public static final MVersion CURRENT_VERSION = new MVersion();
-	public static final MDb4oException DB4O_EXCEPTION = new MDb4oException();
 	public static final MDelete DELETE = new MDelete();
 	public static final MError ERROR = new MError();
 	public static final MFailed FAILED = new MFailed();
@@ -224,8 +222,8 @@ public abstract class Msg implements Cloneable {
 		_messageDispatcher.write(msg);
 	}
 	
-	public void writeException(Db4oException e) {
-		write(DB4O_EXCEPTION.getWriterForSingleObject(transaction(), e));
+	public void writeException(ChainedRuntimeException e) {
+		write(CHAINED_RUNTIME_EXCEPTION.getWriterForSingleObject(transaction(), e));
 	}
 	
 	public void respondInt(int response){

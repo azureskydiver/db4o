@@ -10,8 +10,7 @@ import com.db4o.ext.*;
 public class ObjectContainerFactory {
 	
 	public static ObjectContainer openObjectContainer(Configuration config,
-			String databaseFileName) throws OpenDatabaseException,
-			OldFormatException {		
+			String databaseFileName) throws OldFormatException {		
 		if (Deploy.debug) {
 			System.out.println("db4o Debug is ON");
 			if (!Deploy.flush) {

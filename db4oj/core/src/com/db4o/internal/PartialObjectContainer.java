@@ -115,7 +115,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	i_config = (Config4Impl)config;
     }
 
-	public final void open() throws OpenDatabaseException, OldFormatException {
+	public final void open() throws OldFormatException {
 		boolean ok = false;
 		synchronized (i_lock) {
 			try {
@@ -127,13 +127,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 				ok = true;
 			} finally {
 				if(!ok) {
-					stopSession();
+					shutdownObjectContainer();
 				}
 			}
 		}
 	}
 
-	protected abstract void openImpl() throws OpenDatabaseException;
+	protected abstract void openImpl() throws Db4oIOException;
     
 	public void activate(Object a_activate, int a_depth) throws DatabaseClosedException {
         synchronized (i_lock) {
@@ -738,7 +738,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract AbstractQueryResult getAll(Transaction ta);
 
-    public Object getByID(long id) throws DatabaseClosedException {
+    public Object getByID(long id) throws DatabaseClosedException, InvalidIDException  {
     	if (id <= 0) {
     		throw new IllegalArgumentException();
 		}
@@ -748,7 +748,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    public final Object getByID1(Transaction ta, long id) {
+    public final Object getByID1(Transaction ta, long id) throws InvalidIDException {
         ta = checkTransaction(ta);
         beginTopLevelCall();
         try {
@@ -756,11 +756,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             completeTopLevelCall();
             return obj;
         } catch(Db4oException e) {
-        	completeTopLevelCall(e);
-        	return null;
+        	completeTopLevelCall(new InvalidIDException(e));
         } finally {
         	endTopLevelCall();
         }
+        // only to make the compiler happy
+        return null;
     }
     
     final Object getByID2(Transaction ta, int id) {
@@ -1046,13 +1047,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         i_references.startTimer();
     }
 
-    private void initializePostOpen() throws OpenDatabaseException {
+    private void initializePostOpen() {
         i_showInternalClasses = 100000;
         initializePostOpenExcludingTransportObjectContainer();
         i_showInternalClasses = 0;
     }
     
-    protected void initializePostOpenExcludingTransportObjectContainer() throws OpenDatabaseException {
+    protected void initializePostOpenExcludingTransportObjectContainer() {
         initializeEssentialClasses();
         try {
 			rename(configImpl());
@@ -1062,7 +1063,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	        }
 	        configImpl().applyConfigurationItems(_this);
 		} catch (IOException e) {
-			throw new OpenDatabaseException(e);
+			throw new Db4oIOException(e);
 		}
     }
 
@@ -1352,7 +1353,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids);
 
-    private void reboot() throws OpenDatabaseException {
+    private void reboot() {
         commit();
         close();
         open();

@@ -107,7 +107,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * if no object is associated with this ID in this <code>ObjectContainer</code>.
      * @see com.db4o.config.Configuration#activationDepth Why activation?
      */
-    public Object getByID(long ID);
+    public Object getByID(long ID) throws DatabaseClosedException, InvalidIDException;
     
     /**
      * returns a stored object for a {@link Db4oUUID}.
