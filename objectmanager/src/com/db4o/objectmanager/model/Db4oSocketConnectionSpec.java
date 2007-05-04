@@ -1,10 +1,8 @@
 package com.db4o.objectmanager.model;
 
-import java.io.IOException;
-
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.swtworkbench.community.xswt.metalogger.Logger;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.swtworkbench.community.xswt.metalogger.*;
 
 public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
 
@@ -28,7 +26,7 @@ public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
 	protected ObjectContainer connectInternal() {
 		try {
 			return Db4o.openClient(host, port, user, password);
-		} catch (IOException exc) {
+		} catch (Db4oException exc) {
 			Logger.log().error(exc,"Could not connect to: "+path()+" as user "+user);
 			return null;
 		}

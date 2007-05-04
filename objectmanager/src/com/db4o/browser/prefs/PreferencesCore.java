@@ -3,24 +3,19 @@
  */
 package com.db4o.browser.prefs;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
 
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ve.sweet.metalogger.Logger;
+import org.eclipse.jface.resource.*;
+import org.eclipse.ve.sweet.metalogger.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.browser.prefs.activation.ActivationPreferencePage;
-import com.db4o.browser.prefs.activation.ActivationPreferences;
-import com.db4o.browser.prefs.classpath.ClasspathPreferencePage;
-import com.db4o.browser.prefs.classpath.ClasspathPreferences;
-import com.db4o.browser.prefs.constructor.ConstructorPreferencePage;
-import com.db4o.browser.prefs.constructor.ConstructorPreferences;
-import com.db4o.config.ObjectClass;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.browser.prefs.activation.*;
+import com.db4o.browser.prefs.classpath.*;
+import com.db4o.browser.prefs.constructor.*;
+import com.db4o.config.*;
+import com.db4o.ext.*;
+import com.db4o.query.*;
 
 public class PreferencesCore {
 	private static PreferencesCore prefs = null;
@@ -118,7 +113,7 @@ public class PreferencesCore {
         Logger.log().message("Backing up database to " + backupFile);
 		try {
 			db.ext().backup(backupFile);
-		} catch (IOException e) {
+		} catch (Db4oException e) {
             Logger.log().message("Couldn't create backup file.");
 			e.printStackTrace();
 		}
