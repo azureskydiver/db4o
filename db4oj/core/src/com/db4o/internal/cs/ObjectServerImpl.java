@@ -108,12 +108,12 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	
 	private void ensureLoadConfiguredClasses() {
 		// make sure all configured YapClasses are up in the repository
-		_config.exceptionalClasses().forEachValue(new Visitor4() {
-			public void visit(Object a_object) {
-				_container.produceClassMetadata(_container.reflector().forName(
-						((Config4Class) a_object).getName()));
-			}
-		});
+		Iterator4 i = _config.exceptionalClasses().iterator();
+		while(i.moveNext()){
+			Entry4 entry = (Entry4) i.current();
+			_container.produceClassMetadata(_container.reflector().forName(
+				((Config4Class) entry.value()).getName()));
+		}
 	}
 
 	private void configureObjectServer() {

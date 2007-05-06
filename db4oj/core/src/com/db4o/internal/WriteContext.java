@@ -43,26 +43,28 @@ public class WriteContext {
 	
 	public boolean checkParticipants() {
 		final MutableBoolean checkFailed = new MutableBoolean();
-		_participants.forEachKey(new Visitor4() {
-			public void visit(Object obj) {
-				PersistentBase participant = (PersistentBase) obj;
-				participant.traverseChildren(new Visitor4() {
-					public void visit(Object child) {
-						if(! _participants.containsKey(child)){
-							checkFailed.setTrue();
-						}
+		
+		Iterator4 i = _participants.iterator();
+		while(i.moveNext()){
+			Entry4 entry = (Entry4) i.current();
+			PersistentBase participant = (PersistentBase) entry.key();
+			WriteContextInfo info = (WriteContextInfo)entry.value();
+			participant.traverseChildren(new Visitor4() {
+				public void visit(Object child) {
+					if(! _participants.containsKey(child)){
+						checkFailed.setTrue();
 					}
-				});
-				WriteContextInfo info = (WriteContextInfo) _participants.get(participant);
-				Slot slot = info.slot();
-				if(participant.ownLength() <= slot.length()){
-					return;
 				}
-				container().free(slot);
-				info.slot(container().getSlot(participant.ownLength()));
-				checkFailed.setTrue();
+			});
+			
+			Slot slot = info.slot();
+			if(participant.ownLength() <= slot.length()){
+				continue;
 			}
-		});
+			container().free(slot);
+			info.slot(container().getSlot(participant.ownLength()));
+			checkFailed.setTrue();
+		}
 		return ! checkFailed.isTrue();
 	}
 

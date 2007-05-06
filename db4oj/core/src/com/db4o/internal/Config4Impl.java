@@ -184,12 +184,12 @@ public final class Config4Impl implements Configuration, DeepClone,
 		if(items == null){
 			return;
 		}
-		items.forEachValue(new Visitor4() {
-			public void visit(Object obj) {
-				ConfigurationItem item = (ConfigurationItem) obj;
-				item.apply(container);
-			}
-		});
+		Iterator4 i = items.iterator();
+		while(i.moveNext()){
+			Entry4 entry = (Entry4) i.current();
+			ConfigurationItem item = (ConfigurationItem) entry.value();
+			item.apply(container);
+		}
 	}
 
     public void automaticShutDown(boolean flag) {

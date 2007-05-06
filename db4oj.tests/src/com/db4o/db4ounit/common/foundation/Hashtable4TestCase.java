@@ -130,13 +130,12 @@ public class Hashtable4TestCase implements TestCase {
 	}
 
 	private int countKeys(Hashtable4 table) {
-		final KeyCount count = new KeyCount();
-		table.forEachKey(new Visitor4() {
-			public void visit(Object key) {
-				++count.keys;
-			}
-		});
-		return count.keys;
+		int count = 0;
+		Iterator4 i = table.iterator();
+		while(i.moveNext()){
+			count++;
+		}
+		return count;
 	}
 	
 	public void assertIsIteratable(Object[] objects){

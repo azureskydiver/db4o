@@ -561,11 +561,10 @@ class Set4 {
 	}
 	
 	public void addAll(Set4 other) {
-		other._table.forEachKey(new Visitor4() {
-			public void visit(Object element) {
-				add(element);
-			}
-		});
+		Iterator4 i = other._table.iterator();
+		while(i.moveNext()){
+			add(((Entry4)i.current()).key());			
+		}
 	}
 	
 	public boolean isEmpty() {
@@ -590,11 +589,10 @@ class Set4 {
 	
 	public Iterator4 iterator() {
 		final Collection4 elements = new Collection4();
-		_table.forEachKey(new Visitor4() {
-			public void visit(Object element) {
-				elements.add(element);
-			}
-		});
+		Iterator4 i = _table.iterator();
+		while(i.moveNext()){
+			elements.add(((Entry4)i.current()).key());
+		}
 		return elements.iterator();
 	}
 	

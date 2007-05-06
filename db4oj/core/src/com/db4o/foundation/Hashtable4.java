@@ -46,16 +46,6 @@ public class Hashtable4 implements DeepClone {
 		return deepCloneInternal(new Hashtable4((DeepClone)null), obj);
 	}
 
-	public void forEachKey(Visitor4 visitor) {
-		for (int i = 0; i < _table.length; i++) {
-			HashtableIntEntry entry = _table[i];
-			while (entry != null) {
-				visitor.visit(entry.key());
-				entry = entry._next;
-			}
-		}
-	}
-
 	public void forEachKeyForIdentity(Visitor4 visitor, Object obj) {
 		for (int i = 0; i < _table.length; i++) {
 			HashtableIntEntry entry = _table[i];
@@ -63,16 +53,6 @@ public class Hashtable4 implements DeepClone {
 				if (entry._object == obj) {
 					visitor.visit(entry.key());
 				}
-				entry = entry._next;
-			}
-		}
-	}
-
-	public void forEachValue(Visitor4 visitor) {
-		for (int i = 0; i < _table.length; i++) {
-			HashtableIntEntry entry = _table[i];
-			while (entry != null) {
-				visitor.visit(entry._object);
 				entry = entry._next;
 			}
 		}
