@@ -4,15 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.ext.StoredClass;
-import com.db4o.foundation.ArrayIterator4;
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Debug4;
-import com.db4o.foundation.Hashtable4;
-import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.MappingIterator;
-import com.db4o.foundation.NonblockingQueue;
-import com.db4o.foundation.Queue4;
-import com.db4o.foundation.Visitor4;
+import com.db4o.foundation.*;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -385,24 +377,24 @@ public final class ClassMetadataRepository extends PersistentBase {
     }
     
     private void applyReadAs(){
-        final Hashtable4 readAs = stream().configImpl().readAs(); 
-        readAs.forEachKey(new Visitor4() {
-            public void visit(Object a_object) {
-                String dbName = (String)a_object;
-                byte[] dbbytes = getNameBytes(dbName);
-                String useName = (String)readAs.get(dbName);
-                byte[] useBytes = getNameBytes(useName);
-                if(classByBytes().get(useBytes) == null){
-                    ClassMetadata yc = (ClassMetadata)classByBytes().get(dbbytes);
-                    if(yc != null){
-                        yc.i_nameBytes = useBytes;
-                        yc.setConfig(stream().configImpl().configClass(dbName));
-                        classByBytes().put(dbbytes, null);
-                        classByBytes().put(useBytes, yc);
-                    }
+        final Hashtable4 readAs = stream().configImpl().readAs();
+        Iterator4 i = readAs.iterator();
+        while(i.moveNext()){
+        	Entry4 entry = (Entry4) i.current();
+            String dbName = (String)entry.key();
+            String useName = (String)entry.value();
+            byte[] dbbytes = getNameBytes(dbName);
+            byte[] useBytes = getNameBytes(useName);
+            if(classByBytes().get(useBytes) == null){
+                ClassMetadata yc = (ClassMetadata)classByBytes().get(dbbytes);
+                if(yc != null){
+                    yc.i_nameBytes = useBytes;
+                    yc.setConfig(stream().configImpl().configClass(dbName));
+                    classByBytes().put(dbbytes, null);
+                    classByBytes().put(useBytes, yc);
                 }
             }
-        });
+        }
     }
 
     public ClassMetadata readYapClass(ClassMetadata yapClass, ReflectClass a_class) {
