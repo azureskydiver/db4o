@@ -5,6 +5,7 @@ import java.net.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.instrumentation.*;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
 import com.db4o.ta.internal.*;
@@ -113,7 +114,7 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		ClassLoader baseLoader = ORIG_CLASS.getClassLoader();
 		URL[] urls = {};
 		ClassFilter filter = new ByNameClassFilter(CLASS_NAME);
-		_loader = new TransparentActivationClassLoader(urls, baseLoader, filter);
+		_loader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit());
 	}
 
 	public void tearDown() throws Exception {
