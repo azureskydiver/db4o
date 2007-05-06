@@ -22,7 +22,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	
 	private PersistentIntegerArray _btreeIDs;
 	
-	private boolean _committing;
+	private boolean _writing;
 	
 	
 	public BTreeFreespaceManager(LocalObjectContainer file) {
@@ -31,8 +31,8 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 
 	public void free(Slot slot) {
 		
-		if(_committing){
-			return;
+		if(_writing){
+			throw new IllegalStateException();
 		}
 		
 		if(! started()){
@@ -84,8 +84,8 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 
 	public Slot getSlot (int length) {
 		
-		if(_committing){
-			return null;
+		if(_writing){
+			throw new IllegalStateException();
 		}
 		
 		if(! started()){
@@ -108,13 +108,22 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		int remainingLength = slot.length() - length;
 		
 		if(canDiscard(remainingLength)){
+			
+	        if(DTrace.enabled){
+	        	DTrace.GET_FREESPACE.logLength(slot.address(), slot.length());
+	        }
+
 			return slot;
 		}
 		
 		addSlot(slot.subSlot(length));
 		
-		slot.truncate(length);
-		
+		slot = slot.truncate(length);
+
+        if(DTrace.enabled){
+        	DTrace.GET_FREESPACE.logLength(slot.address(), slot.length());
+        }
+
 		return slot; 
 	}
 	
@@ -176,10 +185,6 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public void beginCommit() {
-		_committing = true;
-		_slotsByAddress.commit(transaction());
-		_slotsByLength.commit(transaction());
-		
 		// TODO: FB remove
 	}
 
@@ -189,12 +194,40 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public void endCommit() {
-		_committing = false;
 		// TODO: FB remove
 	}
 
 	public void read(int freeSpaceID) {
 		// TODO: FB remove
+	}
+	
+	private boolean commitSequence(WriteContext context){
+		_slotsByAddress.commitNodes(transaction());
+		_slotsByLength.commitNodes(transaction());
+		context.registerParticipant(_slotsByAddress);
+		context.registerParticipant(_slotsByLength);
+		if(! context.checkParticipants()){
+			return false;
+		}
+		if(! context.freeParticipants()){
+			return false;
+		}
+		if(! context.checkParticipants()){
+			return false;
+		}
+		return true;
+	}
+
+	public void commit() {
+		
+		WriteContext context = new WriteContext(transaction());
+		
+		while(! commitSequence(context));
+		
+		_writing = true;
+		_slotsByAddress.write(transaction());
+		_slotsByLength.write(transaction());
+		_writing = false;
 	}
 
 }

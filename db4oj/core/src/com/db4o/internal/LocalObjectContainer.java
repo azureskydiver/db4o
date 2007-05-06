@@ -221,6 +221,13 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         _freespaceManager.beginCommit();
     }
     
+    final void freeSpaceCommit(){
+        if(_freespaceManager == null){
+            return;
+        }
+        _freespaceManager.commit();
+    }
+    
     final void freeSpaceEndCommit(){
         if(_freespaceManager == null){
             return;
