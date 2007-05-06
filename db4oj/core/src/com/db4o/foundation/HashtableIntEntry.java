@@ -5,24 +5,28 @@ package com.db4o.foundation;
 /**
  * 
  */
-class HashtableIntEntry implements DeepClone {
+class HashtableIntEntry implements Entry4, DeepClone  {
 
-	int i_key;
+	int _key;
 
-	Object i_object;
+	Object _object;
 
-	HashtableIntEntry i_next;
+	HashtableIntEntry _next;
 
 	HashtableIntEntry(int a_hash, Object a_object) {
-		i_key = a_hash;
-		i_object = a_object;
+		_key = a_hash;
+		_object = a_object;
 	}
 
 	protected HashtableIntEntry() {
 	}
 
-	public void acceptKeyVisitor(Visitor4 visitor) {
-		visitor.visit(new Integer(i_key));
+	public Object key() {
+		return new Integer(_key);
+	}
+	
+	public Object value(){
+		return _object;
 	}
 
 	public Object deepClone(Object obj) {
@@ -30,19 +34,19 @@ class HashtableIntEntry implements DeepClone {
 	}
 
 	public boolean sameKeyAs(HashtableIntEntry other) {
-		return i_key == other.i_key;
+		return _key == other._key;
 	}
 
 	protected HashtableIntEntry deepCloneInternal(HashtableIntEntry entry, Object obj) {
-		entry.i_key = i_key;
-		entry.i_next = i_next;
-		if (i_object instanceof DeepClone) {
-			entry.i_object = ((DeepClone) i_object).deepClone(obj);
+		entry._key = _key;
+		entry._next = _next;
+		if (_object instanceof DeepClone) {
+			entry._object = ((DeepClone) _object).deepClone(obj);
 		} else {
-			entry.i_object = i_object;
+			entry._object = _object;
 		}
-		if (i_next != null) {
-			entry.i_next = (HashtableIntEntry) i_next.deepClone(obj);
+		if (_next != null) {
+			entry._next = (HashtableIntEntry) _next.deepClone(obj);
 		}
 		return entry;
 	}

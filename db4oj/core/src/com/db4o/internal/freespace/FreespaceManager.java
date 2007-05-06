@@ -46,4 +46,6 @@ public interface FreespaceManager {
 
 	public int write();
 
+	public void commit();
+
 }

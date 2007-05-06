@@ -91,7 +91,8 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         }
     }
 
-    public void remove(Transaction trans, Object key){
+    // FIXME: Change the signature to return true, if object could be removed.
+	public void remove(Transaction trans, Object key){
     	keyCantBeNull(key);
     	
         final Iterator4 pointers = search(trans, key).pointers();
@@ -144,21 +145,25 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         _sizesByTransaction.remove(trans);
         
         if(_nodes != null){
-            
-            processAllNodes();
-            while(_processing.hasNext()){
-                ((BTreeNode)_processing.next()).commit(trans);
-            }
-            _processing = null;
-            
+        	commitNodes(trans);
             writeAllNodes(systemTransaction);
-            
         }
         
         setStateDirty();
         write(systemTransaction);
         
         purge();
+    }
+    
+    public void commitNodes(Transaction trans){
+        if(_nodes == null){
+        	return;
+        }
+        processAllNodes();
+        while(_processing.hasNext()){
+        	((BTreeNode)_processing.next()).commit(trans);
+        }
+        _processing = null;
     }
     
     public void rollback(final Transaction trans){
@@ -449,7 +454,21 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 	public BTreeRange asRange(Transaction trans){
 		return new BTreeRangeSingle(trans, this, firstPointer(trans), null);
 	}
-
 	
+    private void traverseAllNodes(final Visitor4 visitor){
+    	if(_nodes == null){
+    		return;
+    	}
+    	_nodes.traverse(new Visitor4() {
+			public void visit(Object obj) {
+				visitor.visit(((TreeIntObject)obj).getObject());
+			}
+		});
+    }
+
+    public void traverseChildren(Visitor4 visitor){
+    	traverseAllNodes(visitor);
+    }
+    
 }
 

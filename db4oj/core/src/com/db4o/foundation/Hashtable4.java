@@ -10,25 +10,25 @@ public class Hashtable4 implements DeepClone {
 
 	private static final float FILL = 0.5F;
 
-	private int i_tableSize;
+	private int _tableSize;
 
-	private int i_mask;
+	private int _mask;
 
-	private int i_maximumSize;
+	private int _maximumSize;
 
-	private int i_size;
+	private int _size;
 
-	private HashtableIntEntry[] i_table;
+	private HashtableIntEntry[] _table;
 
-	public Hashtable4(int a_size) {
-		a_size = newSize(a_size); // legacy for .NET conversion
-		i_tableSize = 1;
-		while (i_tableSize < a_size) {
-			i_tableSize = i_tableSize << 1;
+	public Hashtable4(int size) {
+		size = newSize(size); // legacy for .NET conversion
+		_tableSize = 1;
+		while (_tableSize < size) {
+			_tableSize = _tableSize << 1;
 		}
-		i_mask = i_tableSize - 1;
-		i_maximumSize = (int) (i_tableSize * FILL);
-		i_table = new HashtableIntEntry[i_tableSize];
+		_mask = _tableSize - 1;
+		_maximumSize = (int) (_tableSize * FILL);
+		_table = new HashtableIntEntry[_tableSize];
 	}
 
 	public Hashtable4() {
@@ -39,7 +39,7 @@ public class Hashtable4 implements DeepClone {
 	}
 	
 	public int size() {
-		return i_size;
+		return _size;
 	}
 
 	public Object deepClone(Object obj) {
@@ -47,33 +47,33 @@ public class Hashtable4 implements DeepClone {
 	}
 
 	public void forEachKey(Visitor4 visitor) {
-		for (int i = 0; i < i_table.length; i++) {
-			HashtableIntEntry entry = i_table[i];
+		for (int i = 0; i < _table.length; i++) {
+			HashtableIntEntry entry = _table[i];
 			while (entry != null) {
-				entry.acceptKeyVisitor(visitor);
-				entry = entry.i_next;
+				visitor.visit(entry.key());
+				entry = entry._next;
 			}
 		}
 	}
 
-	public void forEachKeyForIdentity(Visitor4 visitor, Object a_identity) {
-		for (int i = 0; i < i_table.length; i++) {
-			HashtableIntEntry entry = i_table[i];
+	public void forEachKeyForIdentity(Visitor4 visitor, Object obj) {
+		for (int i = 0; i < _table.length; i++) {
+			HashtableIntEntry entry = _table[i];
 			while (entry != null) {
-				if (entry.i_object == a_identity) {
-					entry.acceptKeyVisitor(visitor);
+				if (entry._object == obj) {
+					visitor.visit(entry.key());
 				}
-				entry = entry.i_next;
+				entry = entry._next;
 			}
 		}
 	}
 
 	public void forEachValue(Visitor4 visitor) {
-		for (int i = 0; i < i_table.length; i++) {
-			HashtableIntEntry entry = i_table[i];
+		for (int i = 0; i < _table.length; i++) {
+			HashtableIntEntry entry = _table[i];
 			while (entry != null) {
-				visitor.visit(entry.i_object);
-				entry = entry.i_next;
+				visitor.visit(entry._object);
+				entry = entry._next;
 			}
 		}
 	}
@@ -84,12 +84,12 @@ public class Hashtable4 implements DeepClone {
 	}
 
 	public Object get(int key) {
-		HashtableIntEntry entry = i_table[key & i_mask];
+		HashtableIntEntry entry = _table[key & _mask];
 		while (entry != null) {
-			if (entry.i_key == key) {
-				return entry.i_object;
+			if (entry._key == key) {
+				return entry._object;
 			}
-			entry = entry.i_next;
+			entry = entry._next;
 		}
 		return null;
 	}
@@ -99,6 +99,10 @@ public class Hashtable4 implements DeepClone {
 			return null;
 		}
 		return getFromObjectEntry(key.hashCode(), key);
+	}
+	
+	public Iterator4 iterator(){
+		return new HashtableIterator(_table);
 	}
 	
 	public boolean containsKey(Object key) {
@@ -125,16 +129,16 @@ public class Hashtable4 implements DeepClone {
 		return removeObjectEntry(intKey, key);
 	}
 
-	public void remove(int a_key) {
-		HashtableIntEntry entry = i_table[a_key & i_mask];
+	public void remove(int key) {
+		HashtableIntEntry entry = _table[key & _mask];
 		HashtableIntEntry predecessor = null;
 		while (entry != null) {
-			if (entry.i_key == a_key) {
+			if (entry._key == key) {
 				removeEntry(predecessor, entry);
 				return;
 			}
 			predecessor = entry;
-			entry = entry.i_next;
+			entry = entry._next;
 		}
 	}
 
@@ -144,73 +148,73 @@ public class Hashtable4 implements DeepClone {
 	}
 
 	protected Hashtable4 deepCloneInternal(Hashtable4 ret, Object obj) {
-		ret.i_mask = i_mask;
-		ret.i_maximumSize = i_maximumSize;
-		ret.i_size = i_size;
-		ret.i_tableSize = i_tableSize;
-		ret.i_table = new HashtableIntEntry[i_tableSize];
-		for (int i = 0; i < i_tableSize; i++) {
-			if (i_table[i] != null) {
-				ret.i_table[i] = (HashtableIntEntry) i_table[i].deepClone(obj);
+		ret._mask = _mask;
+		ret._maximumSize = _maximumSize;
+		ret._size = _size;
+		ret._tableSize = _tableSize;
+		ret._table = new HashtableIntEntry[_tableSize];
+		for (int i = 0; i < _tableSize; i++) {
+			if (_table[i] != null) {
+				ret._table[i] = (HashtableIntEntry) _table[i].deepClone(obj);
 			}
 		}
 		return ret;
 	}
 
 	private int entryIndex(HashtableIntEntry entry) {
-		return entry.i_key & i_mask;
+		return entry._key & _mask;
 	}
 
 	private HashtableIntEntry findWithSameKey(HashtableIntEntry newEntry) {
-		HashtableIntEntry existing = i_table[entryIndex(newEntry)];
+		HashtableIntEntry existing = _table[entryIndex(newEntry)];
 		while (null != existing) {
 			if (existing.sameKeyAs(newEntry)) {
 				return existing;
 			}
-			existing = existing.i_next;
+			existing = existing._next;
 		}
 		return null;
 	}
 
 	private Object getFromObjectEntry(int intKey, Object objectKey) {
 		final HashtableObjectEntry entry = getObjectEntry(intKey, objectKey);		
-		return entry == null ? null : entry.i_object;
+		return entry == null ? null : entry._object;
 	}
 
 	private HashtableObjectEntry getObjectEntry(int intKey, Object objectKey) {
-		HashtableObjectEntry entry = (HashtableObjectEntry) i_table[intKey & i_mask];
+		HashtableObjectEntry entry = (HashtableObjectEntry) _table[intKey & _mask];
 		while (entry != null) {
-			if (entry.i_key == intKey && entry.hasKey(objectKey)) {
+			if (entry._key == intKey && entry.hasKey(objectKey)) {
 				return entry;
 			}
-			entry = (HashtableObjectEntry) entry.i_next;
+			entry = (HashtableObjectEntry) entry._next;
 		}
 		return null;
 	}
 
 	private void increaseSize() {
-		i_tableSize = i_tableSize << 1;
-		i_maximumSize = i_maximumSize << 1;
-		i_mask = i_tableSize - 1;
-		HashtableIntEntry[] temp = i_table;
-		i_table = new HashtableIntEntry[i_tableSize];
+		_tableSize = _tableSize << 1;
+		_maximumSize = _maximumSize << 1;
+		_mask = _tableSize - 1;
+		HashtableIntEntry[] temp = _table;
+		_table = new HashtableIntEntry[_tableSize];
 		for (int i = 0; i < temp.length; i++) {
 			reposition(temp[i]);
 		}
 	}
 
 	private void insert(HashtableIntEntry newEntry) {
-		i_size++;
-		if (i_size > i_maximumSize) {
+		_size++;
+		if (_size > _maximumSize) {
 			increaseSize();
 		}
 		int index = entryIndex(newEntry);
-		newEntry.i_next = i_table[index];
-		i_table[index] = newEntry;
+		newEntry._next = _table[index];
+		_table[index] = newEntry;
 	}
 
-	private final int newSize(int a_size) {
-		return (int) (a_size / FILL);
+	private final int newSize(int size) {
+		return (int) (size / FILL);
 	}
 
 	private void putEntry(HashtableIntEntry newEntry) {
@@ -224,45 +228,45 @@ public class Hashtable4 implements DeepClone {
 
 	private void removeEntry(HashtableIntEntry predecessor, HashtableIntEntry entry) {
 		if (predecessor != null) {
-			predecessor.i_next = entry.i_next;
+			predecessor._next = entry._next;
 		} else {
-			i_table[entryIndex(entry)] = entry.i_next;
+			_table[entryIndex(entry)] = entry._next;
 		}
-		i_size--;
+		_size--;
 	}
 
 	private Object removeObjectEntry(int intKey, Object objectKey) {
-		HashtableObjectEntry entry = (HashtableObjectEntry) i_table[intKey & i_mask];
+		HashtableObjectEntry entry = (HashtableObjectEntry) _table[intKey & _mask];
 		HashtableObjectEntry predecessor = null;
 		while (entry != null) {
-			if (entry.i_key == intKey && entry.hasKey(objectKey)) {
+			if (entry._key == intKey && entry.hasKey(objectKey)) {
 				removeEntry(predecessor, entry);
-				return entry.i_object;
+				return entry._object;
 			}
 			predecessor = entry;
-			entry = (HashtableObjectEntry) entry.i_next;
+			entry = (HashtableObjectEntry) entry._next;
 		}
 		return null;
 	}
 
 	private void replace(HashtableIntEntry existing, HashtableIntEntry newEntry) {
-		newEntry.i_next = existing.i_next;
-		HashtableIntEntry entry = i_table[entryIndex(existing)];
+		newEntry._next = existing._next;
+		HashtableIntEntry entry = _table[entryIndex(existing)];
 		if (entry == existing) {
-			i_table[entryIndex(existing)] = newEntry;
+			_table[entryIndex(existing)] = newEntry;
 		} else {
-			while (entry.i_next != existing) {
-				entry = entry.i_next;
+			while (entry._next != existing) {
+				entry = entry._next;
 			}
-			entry.i_next = newEntry;
+			entry._next = newEntry;
 		}
 	}
 
-	private void reposition(HashtableIntEntry a_entry) {
-		if (a_entry != null) {
-			reposition(a_entry.i_next);
-			a_entry.i_next = i_table[entryIndex(a_entry)];
-			i_table[entryIndex(a_entry)] = a_entry;
+	private void reposition(HashtableIntEntry entry) {
+		if (entry != null) {
+			reposition(entry._next);
+			entry._next = _table[entryIndex(entry)];
+			_table[entryIndex(entry)] = entry;
 		}
 	}
 }

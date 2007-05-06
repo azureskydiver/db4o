@@ -24,7 +24,7 @@ public class PersistentIntegerArray extends PersistentBase {
 	}
 
 	public int ownLength() {
-		return Const4.INT_LENGTH * (size() + 1);
+		return (Const4.INT_LENGTH * (size() + 1)) + Const4.ADDED_LENGTH;
 	}
 
 	public void readThis(Transaction trans, Buffer reader) {

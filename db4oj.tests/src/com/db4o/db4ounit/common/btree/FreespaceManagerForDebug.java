@@ -21,6 +21,10 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 
     }
 
+	public void commit() {
+		
+	}
+	
     public void endCommit() {
 
     }

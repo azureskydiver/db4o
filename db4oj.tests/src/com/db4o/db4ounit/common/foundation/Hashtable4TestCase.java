@@ -2,8 +2,7 @@
 
 package com.db4o.db4ounit.common.foundation;
 
-import com.db4o.foundation.Hashtable4;
-import com.db4o.foundation.Visitor4;
+import com.db4o.foundation.*;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;
@@ -57,6 +56,27 @@ public class Hashtable4TestCase implements TestCase {
 		Assert.areEqual(0, table.size());
 	}
 	
+	public void testIterator(){
+		assertIsIteratable(new Object[]{
+			new Integer(1),
+			new Integer(3),
+			new Integer(2),
+		});
+		
+		assertIsIteratable(new Object[]{
+			"one",
+			"three",
+			"two",
+		});
+		
+		assertIsIteratable(new Object[]{
+			new Key(1),
+			new Key(3),
+			new Key(2),
+		});
+
+	}
+	
 	public void testSameKeyTwice() {
 		
 		Integer key = new Integer(1);
@@ -67,18 +87,6 @@ public class Hashtable4TestCase implements TestCase {
 		
 		Assert.areEqual("bar", table.get(key));		
 		Assert.areEqual(1, countKeys(table));
-	}
-	
-	static class Key {
-		private int _hashCode;
-		
-		public Key(int hashCode) {
-			_hashCode = hashCode;
-		}
-		
-		public int hashCode() {
-			return _hashCode;
-		}
 	}
 	
 	public void testDifferentKeysSameHashCode() {
@@ -130,4 +138,45 @@ public class Hashtable4TestCase implements TestCase {
 		});
 		return count.keys;
 	}
+	
+	public void assertIsIteratable(Object[] objects){
+		Hashtable4 ht = new Hashtable4();
+		for (int i = 0; i < objects.length; i++) {
+			ht.put(objects[i], objects[i]);
+		}
+		Iterator4 i = ht.iterator();
+		while(i.moveNext()){
+			Entry4 entry = (Entry4) i.current();
+			boolean found = false;
+			for (int j = 0; j < objects.length; j++) {
+				if(objects[j] == null){
+					continue;
+				}
+				if(objects[j].equals(entry.key())){
+					Assert.areEqual(objects[j], entry.value());
+					objects[j] = null;
+					found = true;
+					break;
+				}
+			}
+			Assert.isTrue(found);
+		}
+		for (int j = 0; j < objects.length; j++) {
+			Assert.isNull(objects[j]);
+		}
+	}
+	
+	static class Key {
+		private int _hashCode;
+		
+		public Key(int hashCode) {
+			_hashCode = hashCode;
+		}
+		
+		public int hashCode() {
+			return _hashCode;
+		}
+		
+	}
+
 }

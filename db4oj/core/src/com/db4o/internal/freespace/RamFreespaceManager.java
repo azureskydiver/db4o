@@ -42,26 +42,9 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         // do nothing
     }
     
-    public String toString(){
-    	final StringBuffer sb = new StringBuffer();
-    	sb.append("RAM FreespaceManager\n");
-    	sb.append("Address Index\n");
-        _freeByAddress.traverse(new Visitor4() {
-            public void visit(Object obj) {
-            	sb.append(obj);
-            	sb.append("\n");
-            }
-        
-        });
-        sb.append("Length Index\n");
-        _freeBySize.traverse(new Visitor4() {
-              public void visit(Object obj) {
-                  sb.append(obj);
-                  sb.append("\n");
-              }
-          });
-        return sb.toString();
-    }
+	public void commit() {
+		// do nothing
+	}
     
     public void endCommit() {
         // do nothing
@@ -155,6 +138,27 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         }
         
         return new Slot(address, length);
+    }
+    
+    public String toString(){
+    	final StringBuffer sb = new StringBuffer();
+    	sb.append("RAM FreespaceManager\n");
+    	sb.append("Address Index\n");
+        _freeByAddress.traverse(new Visitor4() {
+            public void visit(Object obj) {
+            	sb.append(obj);
+            	sb.append("\n");
+            }
+        
+        });
+        sb.append("Length Index\n");
+        _freeBySize.traverse(new Visitor4() {
+              public void visit(Object obj) {
+                  sb.append(obj);
+                  sb.append("\n");
+              }
+          });
+        return sb.toString();
     }
     
     public void traverse(final Visitor4 visitor) {

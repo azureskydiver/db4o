@@ -21,7 +21,7 @@ class HashtableByteArrayEntry extends HashtableObjectEntry {
 
 	public boolean hasKey(Object key) {
 		if (key instanceof byte[]) {
-			return areEqual((byte[]) i_objectKey, (byte[]) key);
+			return areEqual((byte[]) key(), (byte[]) key);
 		}
 		return false;
 	}

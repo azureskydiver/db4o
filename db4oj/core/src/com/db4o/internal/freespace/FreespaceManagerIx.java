@@ -251,4 +251,8 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     	return str;
     }
 
+	public void commit() {
+		// do nothing
+	}
+
 }

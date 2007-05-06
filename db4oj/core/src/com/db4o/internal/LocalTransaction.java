@@ -50,7 +50,7 @@ public class LocalTransaction extends Transaction {
         		callbacks().commitOnStarted(this, collectCallbackObjectInfos(dispatcher));
         	}
             _file.freeSpaceBeginCommit();
-            commitExceptForFreespace();
+            commitImpl();
             CallbackObjectInfoCollections committedInfo = null;
         	if(doCommittedCallbacks()){
         		committedInfo = collectCallbackObjectInfos(dispatcher);
@@ -79,7 +79,7 @@ public class LocalTransaction extends Transaction {
     
 	public void enlist(TransactionParticipant participant) {
 		if (null == participant) {
-			throw new ArgumentNullException("participant");
+			throw new ArgumentNullException();
 		}
 		checkSynchronization();	
 		if (!_participants.containsByIdentity(participant)) {
@@ -87,7 +87,7 @@ public class LocalTransaction extends Transaction {
 		}
 	}
 
-	private void commitExceptForFreespace(){
+	private void commitImpl(){
         
         if(DTrace.enabled){
             DTrace.TRANS_COMMIT.logInfo( "server == " + stream().isServer() + ", systemtrans == " +  isSystemTransaction());
@@ -103,12 +103,18 @@ public class LocalTransaction extends Transaction {
         
         stream().writeDirty();
         
+        commitFreespace();
+        
         commit6WriteChanges();
         
         freeOnCommit();
         
     }
 	
+	private void commitFreespace() {
+		_file.freeSpaceCommit();
+	}
+
 	private void commit2Listeners(){
         commitParentListeners(); 
         commitTransactionListeners();

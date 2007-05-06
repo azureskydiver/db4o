@@ -11,7 +11,7 @@ public class Slot {
     
     private final int _address;
     
-    private int _length;
+    private final int _length;
 
     public Slot(int address, int length){
         _address = address;
@@ -49,8 +49,8 @@ public class Slot {
     	return "[A:"+_address+",L:"+length()+"]";
     }
     
-	public void truncate(int requiredLength) {
-		_length = requiredLength;
+	public Slot truncate(int requiredLength) {
+		return new Slot(_address, requiredLength);
 	}
     
     public static int MARSHALLED_LENGTH = Const4.INT_LENGTH * 2;
@@ -72,9 +72,7 @@ public class Slot {
 	}
 
 	public Slot append(Slot slot) {
-		_length += slot.length();
-		return this;
+		return new Slot(address(), _length + slot.length());
 	}
-
 	
 }

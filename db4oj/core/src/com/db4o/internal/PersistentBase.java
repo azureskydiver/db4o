@@ -130,46 +130,48 @@ public abstract class PersistentBase implements Persistent {
         if (! writeObjectBegin()) {
             return;
         }
-        
-        if(DTrace.enabled){
-        	DTrace.YAPMETA_WRITE.log(getID());
+        try {
+	        if(DTrace.enabled){
+	        	DTrace.YAPMETA_WRITE.log(getID());
+	        }
+	            
+	        LocalObjectContainer stream = (LocalObjectContainer)trans.stream();
+	        
+	        int length = ownLength();
+	        
+	        Buffer writer = new Buffer(length);
+	        
+	        Slot slot;
+	        
+	        if(isNew()){
+	            Pointer4 ptr = stream.newSlot(trans, length);
+	            setID(ptr._id);
+	            slot = new Slot(ptr._address, length);
+	            
+	            // FIXME: Free everything on rollback here ?
+	        }else{
+	            slot = stream.getSlot(length);
+	            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot.address(), slot.length());
+	        }
+	        
+	        if (Deploy.debug) {
+	            writer.writeBegin(getIdentifier());
+	        }
+	
+	        writeThis(trans, writer);
+	
+	        if (Deploy.debug) {
+	            writer.writeEnd();
+	        }
+	
+	        writer.writeEncrypt(stream, slot.address(), 0);
+	
+	        if (isActive()) {
+	            setStateClean();
+	        }
+        }finally{
+        	endProcessing();
         }
-            
-        LocalObjectContainer stream = (LocalObjectContainer)trans.stream();
-        
-        int length = ownLength();
-        
-        Buffer writer = new Buffer(length);
-        
-        Slot slot;
-        
-        if(isNew()){
-            Pointer4 ptr = stream.newSlot(trans, length);
-            setID(ptr._id);
-            slot = new Slot(ptr._address, length);
-            
-            // FIXME: Free everything on rollback here ?
-        }else{
-            slot = stream.getSlot(length);
-            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot.address(), slot.length());
-        }
-        
-        if (Deploy.debug) {
-            writer.writeBegin(getIdentifier());
-        }
-
-        writeThis(trans, writer);
-
-        if (Deploy.debug) {
-            writer.writeEnd();
-        }
-
-        writer.writeEncrypt(stream, slot.address(), 0);
-
-        if (isActive()) {
-            setStateClean();
-        }
-        endProcessing();
 
     }
 
@@ -184,6 +186,16 @@ public abstract class PersistentBase implements Persistent {
         write(trans);
         writer.writeInt(getID());
     }
-
+    
+    public int hashCode() {
+    	if(isNew()){
+    		throw new IllegalStateException();
+    	}
+    	return getID();
+    }
+    
+    public void traverseChildren(Visitor4 visitor){
+    	throw new NotImplementedException();
+    }
 
 }
