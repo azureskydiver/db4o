@@ -6,5 +6,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ota"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4oj"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

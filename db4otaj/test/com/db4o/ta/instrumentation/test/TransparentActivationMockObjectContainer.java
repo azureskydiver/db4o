@@ -84,8 +84,7 @@ public class TransparentActivationMockObjectContainer implements ExtObjectContai
 		Assert.isFalse(_expected.moveNext());
 	}
 
-	public void backup(String path) throws BackupException,
-			DatabaseClosedException, NotSupportedException {
+	public void backup(String path) throws Db4oIOException, DatabaseClosedException, NotSupportedException {
 		throw new UnsupportedOperationException();
 	}
 
