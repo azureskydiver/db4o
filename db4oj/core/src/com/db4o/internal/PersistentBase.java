@@ -131,9 +131,6 @@ public abstract class PersistentBase implements Persistent {
             return;
         }
         try {
-	        if(DTrace.enabled){
-	        	DTrace.YAPMETA_WRITE.log(getID());
-	        }
 	            
 	        LocalObjectContainer stream = (LocalObjectContainer)trans.stream();
 	        
@@ -154,26 +151,37 @@ public abstract class PersistentBase implements Persistent {
 	            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot.address(), slot.length());
 	        }
 	        
-	        if (Deploy.debug) {
-	            writer.writeBegin(getIdentifier());
-	        }
-	
-	        writeThis(trans, writer);
-	
-	        if (Deploy.debug) {
-	            writer.writeEnd();
-	        }
-	
-	        writer.writeEncrypt(stream, slot.address(), 0);
-	
-	        if (isActive()) {
-	            setStateClean();
-	        }
+	        writeToFile(trans, writer, slot);
         }finally{
         	endProcessing();
         }
 
     }
+
+	public void writeToFile(Transaction trans, Buffer writer, Slot slot) {
+		
+        if(DTrace.enabled){
+        	DTrace.YAPMETA_WRITE.log(getID());
+        }
+		
+		LocalObjectContainer container = (LocalObjectContainer)trans.stream();
+		
+		if (Deploy.debug) {
+		    writer.writeBegin(getIdentifier());
+		}
+
+		writeThis(trans, writer);
+
+		if (Deploy.debug) {
+		    writer.writeEnd();
+		}
+
+		writer.writeEncrypt(container, slot.address(), 0);
+
+		if (isActive()) {
+		    setStateClean();
+		}
+	}
 
     public boolean writeObjectBegin() {
         if (isDirty()) {

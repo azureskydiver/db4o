@@ -278,13 +278,21 @@ public class Buffer implements SlotReader {
         writeInt(((Integer)obj).intValue());
     }
     
-    public void writeIDOf(Transaction trans, PersistentBase yapMeta) {
-        if(yapMeta == null){
+    public void writeIDOf(Transaction trans, PersistentBase persistent) {
+        if(persistent == null){
             writeInt(0);
             return;
         }
-        yapMeta.writeOwnID(trans, this);
+        if(canWritePersistentBase()){
+        	persistent.writeOwnID(trans, this);
+        }else{
+        	writeInt(persistent.getID());
+        }
     }
+    
+	protected boolean canWritePersistentBase(){
+		return true;
+	}
     
     public void writeShortString(Transaction trans, String a_string) {
         trans.stream().i_handlers.i_stringHandler.writeShort(a_string, this);

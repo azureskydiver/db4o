@@ -67,15 +67,46 @@ public class WriteContext {
 		}
 		return ! checkFailed.isTrue();
 	}
-
 	
-	LocalObjectContainer container(){
-		return (LocalObjectContainer) _transaction.stream();
+	public void freeParticipants() {
+		Iterator4 i = _participants.iterator();
+		while(i.moveNext()){
+			Entry4 entry = (Entry4) i.current();
+			WriteContextInfo info = (WriteContextInfo)entry.value();
+			if(! info._isNew){
+				PersistentBase participant = (PersistentBase) entry.key();
+				int id = participant.getID();
+				Slot slot = info.slot();
+				_transaction.slotFreeOnRollbackCommitSetPointer(id, slot.address(), slot.length());
+			}
+		}
 	}
-
-	public boolean freeParticipants() {
-		throw new NotImplementedException();
-		// return false;
+	
+	public void write(){
+		Iterator4 i = _participants.iterator();
+		while(i.moveNext()){
+			Entry4 entry = (Entry4) i.current();
+			PersistentBase participant = (PersistentBase) entry.key();
+			WriteContextInfo info = (WriteContextInfo)entry.value();
+			Slot slot = info.slot();
+			writeToFile(participant, slot);
+		}
+	}
+	
+	private void writeToFile(PersistentBase participant, Slot slot){
+        if (! participant.writeObjectBegin()) {
+            return;
+        }
+        try {
+	        WriteContextBuffer writer = new WriteContextBuffer(slot.length());
+	        participant.writeToFile(_transaction, writer, slot);
+        }finally{
+        	participant.endProcessing();
+        }
+	}
+	
+	private LocalObjectContainer container(){
+		return (LocalObjectContainer) _transaction.stream();
 	}
 
 }
