@@ -5,7 +5,7 @@ package com.db4o.foundation;
 /**
  * 
  */
-class HashtableIntEntry implements Entry4, DeepClone  {
+public class HashtableIntEntry implements Entry4, DeepClone  {
 
 	int _key;
 
