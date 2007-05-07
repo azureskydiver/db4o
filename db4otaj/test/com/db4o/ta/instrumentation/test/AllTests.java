@@ -1,17 +1,16 @@
 package com.db4o.ta.instrumentation.test;
 
-import db4ounit.*;
+import com.db4o.ta.instrumentation.test.integration.*;
 
-public class AllTests implements TestSuiteBuilder {
+import db4ounit.extensions.*;
 
-	public TestSuite build() {
-		return new ReflectionTestSuiteBuilder(new Class[] {
+public class AllTests extends Db4oTestSuite {
+
+	protected Class[] testCases() {
+		return new Class[] {
 				TransparentActivationClassLoaderTestCase.class,
-		}).build();	
-	}
-
-	public static void main(String[] args) {
-		new TestRunner(AllTests.class).run();
+				TransparentActivationInstrumentationIntegrationTestCase.class,
+		};
 	}
 
 }

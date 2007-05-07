@@ -1,5 +1,6 @@
 package com.db4o.ta.instrumentation.test.integration;
 
+import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
 
@@ -15,24 +16,40 @@ import db4ounit.extensions.*;
 
 public class TransparentActivationInstrumentationIntegrationTestCase extends AbstractDb4oTestCase {
 
+	private ClassLoader _classLoader;
+	
 	protected void configure(Configuration config) {
-		config.add(new PagedListSupport());
-		config.add(new TransparentActivationSupport());
 		ClassLoader baseLoader = TransparentActivationInstrumentationIntegrationTestCase.class.getClassLoader();
 		URL[] urls = {};
 		ClassFilter filter = new ByNameClassFilter(new String[] { Project.class.getName() , UnitOfWork.class.getName() });
-		ClassLoader cl = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit());
-		config.reflectWith(new JdkReflector(cl));
+		_classLoader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit());
+		config.add(new PagedListSupport());
+		config.add(new TransparentActivationSupport());
+		config.reflectWith(new JdkReflector(_classLoader));
 	}
 	
 	protected void store() throws Exception {
-		Project project = new Project("db4o");
-		project.logWorkDone(new UnitOfWork("ta kick-off", new Date(1000), new Date(2000)));
+		Class unitOfWorkClass = _classLoader.loadClass(UnitOfWork.class.getName());
+		Constructor unitOfWorkConstructor = unitOfWorkClass.getConstructor(new Class[]{ String.class, Date.class, Date.class });
+		unitOfWorkConstructor.setAccessible(true);
+		Object unitOfWork = unitOfWorkConstructor.newInstance(new Object[]{ "ta kick-off", new Date(1000), new Date(2000) });
+
+		Class projectClass = _classLoader.loadClass(Project.class.getName());
+		Constructor projectConstructor = projectClass.getConstructor(new Class[]{ String.class });
+		projectConstructor.setAccessible(true);		
+		Object project = projectConstructor.newInstance(new Object[]{ "db4o" });
+
+		Method logWorkDoneMethod = projectClass.getDeclaredMethod("logWorkDone", new Class[]{ unitOfWorkClass });
+		logWorkDoneMethod.setAccessible(true);
+		logWorkDoneMethod.invoke(project, new Object[]{ unitOfWork });
 		store(project);
 	}
 	
-	public void test() {
-		final Project project = (Project) retrieveOnlyInstance(Project.class);
-		Assert.areEqual(1000, project.totalTimeSpent());
+	public void test() throws Exception {
+		final Object project = retrieveOnlyInstance(Project.class);
+		Method totalTimeSpentMethod = project.getClass().getDeclaredMethod("totalTimeSpent", new Class[]{});
+		totalTimeSpentMethod.setAccessible(true);
+		Long totalTimeSpent = (Long) totalTimeSpentMethod.invoke(project, new Object[]{});
+		Assert.areEqual(1000, totalTimeSpent.intValue());
 	}
 }
