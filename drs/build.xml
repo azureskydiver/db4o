@@ -1,32 +1,179 @@
-<project name="dRS" default="run-example">
+<project name="dRS" default="dist" basedir=".">
 	<!--
 	
-	Mar 16, 2007
+	Jan 1, 2007
 	
-	This build file is only used to run tests and example.
+	This build file is obsoleted, please use /build-1.1/build-1.1.bat
+
+	But if you still use it, copy db4o-6.1-db4ounit.jar and db4o-6.1-java5.jar to /drs/lib. 
+	Then ant "dist". It will work.
 	
-	To build dRS, please use db4o Build System v1.1 (dBS) -
-	Refer to ../build-1.1/readme.txt in svn for details
-	http://developer.db4o.com/ProjectSpaces/view.aspx/Db4o_Product_Design/Build-1.1
+	Albert
 	
 	-->
-	<description>dRS build file for running tests and example</description>
+	<description>dRS build file</description>
+	<!--
+		To execute the "dist" target, which is to build the dRS release, 
+		you need to create a "drs.machine.properties" with this line:
+		
+	    font.pdf.base=C:/WINDOWS/Fonts/VERDANA.TTF
+	    
+	    OR wherever the location of the font is if you are on Linux
+	-->	
+	<property file="drs.machine.properties" />
+    	
+	<property file="ant.properties" />
 
 	<path id="class.path" description="universal classpath for all targets">
 		<fileset dir="lib">
 			<include name="*.jar" />
 		</fileset>
+		
+		<fileset dir="${drs.dir.dist.lib}">
+			<include name="*.jar" />
+		</fileset>
+		
+		<pathelement location="${drs.dir.dist.classes}" />
 	</path>
 
-	<target name="run-example" depends="">
+	<target name="init" depends="">
+		<tstamp />
+		<mkdir dir="${drs.dir.dist.lib}" />
+		<mkdir dir="${drs.dir.dist.api}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${drs.dir.dist}" />
+		<delete dir="${drs.dir.test}/temp" />
+	</target>
+
+	<macrodef name="buildjar" description="compile, jar classes for various src folders">
+		<attribute name="srcdir" />
+		<attribute name="classpathrefid" />
+		<attribute name="include" />
+		<attribute name="exclude" />
+		<attribute name="jar" />
+
+		<sequential>
+			<property name="temp.dir" value="${drs.dir.dist.classes}" />
+			<delete dir="${temp.dir}" />
+			<mkdir dir="${temp.dir}" />
+
+			<javac srcdir="@{srcdir}" destdir="${temp.dir}">
+				<classpath refid="@{classpathrefid}" />
+			</javac>
+			<copy todir="${temp.dir}">
+				<fileset dir="@{srcdir}">
+					<exclude name="@{exclude}" />
+					<include name="@{include}" />
+				</fileset>
+			</copy>
+			<jar jarfile="@{jar}" basedir="${temp.dir}" />
+			<delete dir="${temp.dir}" />
+		</sequential>
+	</macrodef>
+
+	<target name="build-core" depends="" description="jar the core src of drs">
+		<buildjar srcdir="${drs.dir.src.core}" classpathrefid="class.path" jar="${file.drs.core.jar}" exclude="log4j.xml" include="**/*.xml" />
+	</target>
+
+	<target name="build-example" depends="" description="jar the example src of drs">
+		<buildjar srcdir="${drs.dir.src.tutorial}" classpathrefid="class.path" jar="${file.drs.tutorial.jar}" exclude="log4j.xml" include="**/*.xml" />
+	</target>
+
+	<target name="build-regression" depends="" description="jar the test src of drs">
+		<buildjar srcdir="${drs.dir.src.test}" classpathrefid="class.path" jar="${file.drs.test.jar}" exclude="log4j.xml" include="**/*.xml" />
+	</target>
+
+	<target name="build-all" depends="clean, init">
+		<antcall target="build-core" />
+		<antcall target="build-example" />
+		<antcall target="build-regression" />
+	</target>
+
+	<target name="javadoc">
+		<javadoc destdir="${drs.dir.dist.api}" author="true" version="true" use="true" windowtitle="dRS" classpathref="class.path">
+			<fileset dir="${drs.dir.src.core}" defaultexcludes="yes">
+				<include name="com/db4o/drs/**/*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<target name="doctor" depends="">
+		<!--TODO Use the Doctor Ant Task-->
+		
+		<property environment="env" />
+		<delete dir="${dir.doc}/out" />
+		
+		<java fork="true" classname="com.yetac.doctor.Doctor">
+			<!--TODO ${basedir} is needed for db4occ to run correctly-->
+			<arg line="${basedir}/${dir.doc} ${font.pdf.base}" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="lib/doctor">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<move file="${dir.doc}/out/doctor.pdf" tofile="${dir.doc}/out/dRS-tutorial.pdf"/>
+	</target>
+
+	<target name="doctordrsnet" depends="">
+		<delete dir="drs.net/doc/out" />
+		<java fork="true" classname="com.yetac.doctor.Doctor">
+			<arg line="drs.net/doc C:/WINDOWS/Fonts/VERDANA.TTF" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="lib/doctor">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<move file="drs.net/doc/out/doctor.pdf" tofile="drs.net/doc/out/dRS-tutorial.pdf"/>
+	</target>
+
+	<target name="dist" depends="build-all, javadoc, doctor, javadoc">
+		<property name="zipbasedir" value="drs-${drs.version.dotted}" />
+		
+		<zip destfile="${file.drs.zip}">
+			<zipfileset dir="." prefix="${zipbasedir}" includes="machine.properties, ant.properties, build.xml, *.txt" />
+
+			<zipfileset dir="lib" prefix="${zipbasedir}/lib" includes="*.jar, *.txt" />
+			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc" />
+
+			<zipfileset dir="doc/out" prefix="${zipbasedir}/doc/tutorial" />
+			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
+
+			<zipfileset file="${file.drs.core.jar}" fullpath="${zipbasedir}/lib/${filename.drs.core.jar}" />
+			<zipfileset file="${file.drs.tutorial.jar}" fullpath="${zipbasedir}/lib/${filename.drs.tutorial.jar}" />
+			<zipfileset file="${file.drs.test.jar}" fullpath="${zipbasedir}/lib/${filename.drs.test.jar}" />
+			
+		</zip>
+		
+		<!--unzip the dist, rename it to "unzipped" for cruisecontol to run tests-->
+		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}" />
+		<move file="${drs.dir.dist}/${zipbasedir}" tofile="${drs.dir.dist}/unzipped"/> 
+	</target>
+
+	<target name="copyLog4j">
+		<mkdir dir="${drs.dir.dist.classes}" />
+		<copy file="${drs.dir.src.core}/log4j.xml" todir="${drs.dir.dist.classes}" />
+	</target>
+
+	<target name="run-example" depends="init">
 		<java fork="true" classname="f1.stepbystep.StepByStepExample">
 			<classpath refid="class.path" />
 		</java>
 	</target>
 	
-	<target name="run-regression" depends="">
+	<target name="run-regression" depends="init">
 		<java fork="true" classname="com.db4o.drs.test.all.AllDrsTests">
 			<classpath refid="class.path" />
 		</java>
 	</target>
 </project>
+
