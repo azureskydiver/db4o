@@ -16,9 +16,9 @@ import com.db4o.internal.slots.*;
  */
 public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	
-	private BTree _slotsByAddress;
+	private FreespaceBTree _slotsByAddress;
 	
-	private BTree _slotsByLength;
+	private FreespaceBTree _slotsByLength;
 	
 	private PersistentIntegerArray _btreeIDs;
 	
@@ -176,8 +176,8 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	private void createBTrees(int[] ids) {
-		_slotsByAddress = new BTree(transaction(), ids[0], new AddressKeySlotHandler());
-		_slotsByLength = new BTree(transaction(), ids[1], new LengthKeySlotHandler());
+		_slotsByAddress = new FreespaceBTree(transaction(), ids[0], new AddressKeySlotHandler());
+		_slotsByLength = new FreespaceBTree(transaction(), ids[1], new LengthKeySlotHandler());
 	}
 
 	private boolean started(){
@@ -209,9 +209,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		if(! context.checkParticipants()){
 			return false;
 		}
-		if(! context.freeParticipants()){
-			return false;
-		}
+		context.freeParticipants();
 		if(! context.checkParticipants()){
 			return false;
 		}
@@ -225,8 +223,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		while(! commitSequence(context));
 		
 		_writing = true;
-		_slotsByAddress.write(transaction());
-		_slotsByLength.write(transaction());
+		context.write();
 		_writing = false;
 	}
 

@@ -5,7 +5,7 @@ package com.db4o.foundation;
 /**
  * 
  */
-class HashtableObjectEntry extends HashtableIntEntry {
+public class HashtableObjectEntry extends HashtableIntEntry {
 
 	private Object _objectKey;
 

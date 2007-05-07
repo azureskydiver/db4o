@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 	
 	public static void main(String[] arguments) {
-		new UniqueFieldIndexTestCase().runClientServer();
+		new UniqueFieldIndexTestCase().runAll();
 	}
 	
 	public static class Item {
