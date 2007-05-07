@@ -143,9 +143,9 @@ public class Hashtable4TestCase implements TestCase {
 		for (int i = 0; i < objects.length; i++) {
 			ht.put(objects[i], objects[i]);
 		}
-		Iterator4 i = ht.iterator();
-		while(i.moveNext()){
-			Entry4 entry = (Entry4) i.current();
+		Iterator4 iter = ht.iterator();
+		while(iter.moveNext()){
+			Entry4 entry = (Entry4) iter.current();
 			boolean found = false;
 			for (int j = 0; j < objects.length; j++) {
 				if(objects[j] == null){
