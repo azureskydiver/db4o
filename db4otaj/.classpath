@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/1.2"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4ota"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4oj"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry path="src" kind="src"/>
+	<classpathentry path="test" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/1.2" kind="con"/>
+	<classpathentry path="/bloat" combineaccessrules="false" kind="src"/>
+	<classpathentry path="/db4ota" combineaccessrules="false" kind="src"/>
+	<classpathentry path="/db4ounit" combineaccessrules="false" kind="src"/>
+	<classpathentry path="/db4oj" combineaccessrules="false" kind="src"/>
+	<classpathentry path="/db4ounit.extensions" combineaccessrules="false" kind="src"/>
+	<classpathentry path="bin" kind="output"/>
 </classpath>
