@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.db4ounit.common.types.arrays;
 
@@ -13,6 +13,10 @@ import db4ounit.extensions.*;
 
 public class ByteArrayTestCase extends AbstractDb4oTestCase {
 
+	public static void main(String[] args) {
+		new ByteArrayTestCase().runAll();
+	}
+	
 	public static interface IByteArrayHolder {
 		byte[] getBytes();
 	}
@@ -46,7 +50,7 @@ public class ByteArrayTestCase extends AbstractDb4oTestCase {
 	}
 
 	static final int INSTANCES = 2;
-	static final int ARRAY_LENGTH = 1024*512;
+	static final int ARRAY_LENGTH = 1024;
 	
 	/**
 	 * @sharpen.if !CF_1_0 && !CF_2_0
