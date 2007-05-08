@@ -19,6 +19,9 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 
 	protected Class[] shared() {
 		return new Class[] {
+				
+				com.db4o.drs.test.foundation.AllTests.class,
+				
 				// Simple
 				TheSimplest.class, 
 				ReplicationEventTest.class,

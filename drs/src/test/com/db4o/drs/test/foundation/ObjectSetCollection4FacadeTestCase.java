@@ -26,15 +26,15 @@ public class ObjectSetCollection4FacadeTestCase implements TestCase {
 		
 		ObjectSetCollection4Facade facade = new ObjectSetCollection4Facade(collection);
 		Assert.isTrue(facade.hasNext());
-		Assert.areEqual("foo", facade.next());
-		Assert.isTrue(facade.hasNext());
 		Assert.areEqual("bar", facade.next());
+		Assert.isTrue(facade.hasNext());
+		Assert.areEqual("foo", facade.next());
 		Assert.isFalse(facade.hasNext());
 		
 		facade.reset();
 		
-		Assert.areEqual("foo", facade.next());
 		Assert.areEqual("bar", facade.next());
+		Assert.areEqual("foo", facade.next());
 		Assert.isFalse(facade.hasNext());
 	}
 
