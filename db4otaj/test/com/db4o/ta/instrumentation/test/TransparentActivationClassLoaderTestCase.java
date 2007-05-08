@@ -16,6 +16,8 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 
 	private static final Class ORIG_CLASS = ToBeInstrumented.class;
 	private static final String CLASS_NAME = ORIG_CLASS.getName();
+	private static final Class SUB_CLASS = ToBeInstrumentedSub.class;
+	private static final String SUB_CLASS_NAME = SUB_CLASS.getName();
 
 	private ClassLoader _loader;
 
@@ -33,6 +35,19 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		assertMethodInstrumentation(clazz, "boo", false);
 	}
 
+	public void testSubClassIsInstrumented() throws Exception {
+		Class clazz = _loader.loadClass(SUB_CLASS_NAME);
+		Assert.areEqual(SUB_CLASS_NAME, clazz.getName());
+		Assert.areNotSame(SUB_CLASS, clazz);
+		assertNoActivatorField(clazz);
+		assertNoMethod(clazz, TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Class[]{ ObjectContainer.class });
+		assertNoMethod(clazz, TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Class[]{});
+		assertMethodInstrumentation(clazz, "fooSub", true);
+		assertMethodInstrumentation(clazz, "barSub", true);
+		assertMethodInstrumentation(clazz, "bazSub", true);
+		assertMethodInstrumentation(clazz, "booSub", false);
+	}
+
 	private void assertActivatableInterface(Class clazz) {
 		Assert.isTrue(Activatable.class.isAssignableFrom(clazz));
 	}
@@ -42,6 +57,14 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		Assert.areEqual(Activator.class, activatorField.getType());
 		assertFieldModifier(activatorField, Modifier.PRIVATE);
 		assertFieldModifier(activatorField, Modifier.TRANSIENT);
+	}
+
+	private void assertNoActivatorField(final Class clazz) {
+		Assert.expect(NoSuchFieldException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				clazz.getDeclaredField(TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME);
+			}
+		});
 	}
 
 	private void assertBindMethod(Class clazz) throws Exception {
@@ -75,6 +98,14 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		otherOc.validate();
 	}
 
+	private void assertNoMethod(final Class clazz,final String methodName,final Class[] paramTypes) throws Exception {
+		Assert.expect(NoSuchMethodException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				clazz.getDeclaredMethod(methodName, paramTypes);
+			}
+		});
+	}
+	
 	private void assertActivateMethod(Class clazz) throws Exception {
 		final Method activateMethod = clazz.getDeclaredMethod(TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Class[]{});
 		activateMethod.setAccessible(true);
@@ -113,8 +144,8 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	public void setUp() throws Exception {
 		ClassLoader baseLoader = ORIG_CLASS.getClassLoader();
 		URL[] urls = {};
-		ClassFilter filter = new ByNameClassFilter(CLASS_NAME);
-		_loader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit());
+		ClassFilter filter = new ByNameClassFilter(new String[]{ CLASS_NAME, SUB_CLASS_NAME });
+		_loader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit(filter));
 	}
 
 	public void tearDown() throws Exception {
