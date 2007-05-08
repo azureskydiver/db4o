@@ -138,16 +138,16 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		assertComparison("sampleFieldBooleanComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
 	}
 
-	boolean sampleFieldBooleanNotComp(Data data) {
-		return !data.bool;
-	}
-
 	boolean sampleFieldBooleanConstantEqualsComp(Data data) {
 		return data.bool==true;
 	}
 
 	public void testFieldBooleanConstantEqualsComp() throws Exception {
 		assertComparison("sampleFieldBooleanConstantEqualsComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleFieldBooleanNotComp(Data data) {
+		return !data.bool;
 	}
 
 	public void testFieldBooleanNotComp() throws Exception {
@@ -481,12 +481,11 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		assertInvalid("sampleFieldStringEndsWithWrongWay");
 	}
 
-	// TODO: inconsistently fails on Windows and Linux, depending on test suite order?!? see COR-264
 	boolean sampleFieldStringToLowerCaseStartsWith(Data data) throws Exception {
 		return data.getName().toLowerCase().startsWith(STRING_CMPVAL);
 	}
 
-	public void _testFieldStringToLowerCaseStartsWith() throws Exception {
+	public void testFieldStringToLowerCaseStartsWith() throws Exception {
 		assertInvalid("sampleFieldStringToLowerCaseStartsWith");
 	}
 
