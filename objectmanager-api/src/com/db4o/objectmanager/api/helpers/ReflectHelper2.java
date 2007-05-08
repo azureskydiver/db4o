@@ -42,7 +42,7 @@ public class ReflectHelper2 {
 				"com.db4o.config",
 				"com.db4o.StaticClass",
 				"com.db4o.StaticField",*/
-				"Db4objects.Db4o",
+//				"Db4objects.Db4o",
 		};
 
 		// Get the known classes
