@@ -10,13 +10,21 @@ import com.db4o.ta.internal.*;
 
 public class InjectTransparentActivationEdit implements BloatClassEdit {
 
-	private LocalVariable THIS_VAR = new LocalVariable(0);
+	private final LocalVariable THIS_VAR = new LocalVariable(0);
+	private final ClassFilter _instrumentedClassesFilter;
+	
+	public InjectTransparentActivationEdit(ClassFilter instrumentedClassesFilter) {
+		_instrumentedClassesFilter = instrumentedClassesFilter;
+	}
 	
 	public void bloat(ClassEditor ce) {
-		ce.addInterface(Activatable.class);
-		createActivatorField(ce);
-		createBindMethod(ce);
-		createActivateMethod(ce);
+		String superClassName = normalizeClassName(ce.superclass().className());
+		if(!(_instrumentedClassesFilter.accept(superClassName))) {
+			ce.addInterface(Activatable.class);
+			createActivatorField(ce);
+			createBindMethod(ce);
+			createActivateMethod(ce);
+		}
 		instrumentNonPrivateMethods(ce);
 	}
 
@@ -134,4 +142,7 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 		return new MemberRef(parent, nameAndType);
 	}
 
+	private String normalizeClassName(String className) {
+		return className.replace('/', '.');
+	}
 }

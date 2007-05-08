@@ -16,13 +16,14 @@ import db4ounit.extensions.*;
 
 public class TransparentActivationInstrumentationIntegrationTestCase extends AbstractDb4oTestCase {
 
+	private static final int PRIORITY = 42;
 	private ClassLoader _classLoader;
 	
 	protected void configure(Configuration config) {
 		ClassLoader baseLoader = TransparentActivationInstrumentationIntegrationTestCase.class.getClassLoader();
 		URL[] urls = {};
-		ClassFilter filter = new ByNameClassFilter(new String[] { Project.class.getName() , UnitOfWork.class.getName() });
-		_classLoader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit());
+		ClassFilter filter = new ByNameClassFilter(new String[] { Project.class.getName() , UnitOfWork.class.getName(), PrioritizedProject.class.getName() });
+		_classLoader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit(filter));
 		config.add(new PagedListSupport());
 		config.add(new TransparentActivationSupport());
 		config.reflectWith(new JdkReflector(_classLoader));
@@ -34,12 +35,12 @@ public class TransparentActivationInstrumentationIntegrationTestCase extends Abs
 		unitOfWorkConstructor.setAccessible(true);
 		Object unitOfWork = unitOfWorkConstructor.newInstance(new Object[]{ "ta kick-off", new Date(1000), new Date(2000) });
 
-		Class projectClass = _classLoader.loadClass(Project.class.getName());
-		Constructor projectConstructor = projectClass.getConstructor(new Class[]{ String.class });
+		Class projectClass = _classLoader.loadClass(PrioritizedProject.class.getName());
+		Constructor projectConstructor = projectClass.getConstructor(new Class[]{ String.class, Integer.TYPE });
 		projectConstructor.setAccessible(true);		
-		Object project = projectConstructor.newInstance(new Object[]{ "db4o" });
+		Object project = projectConstructor.newInstance(new Object[]{ "db4o", new Integer(PRIORITY) });
 
-		Method logWorkDoneMethod = projectClass.getDeclaredMethod("logWorkDone", new Class[]{ unitOfWorkClass });
+		Method logWorkDoneMethod = projectClass.getMethod("logWorkDone", new Class[]{ unitOfWorkClass });
 		logWorkDoneMethod.setAccessible(true);
 		logWorkDoneMethod.invoke(project, new Object[]{ unitOfWork });
 		store(project);
@@ -47,7 +48,13 @@ public class TransparentActivationInstrumentationIntegrationTestCase extends Abs
 	
 	public void test() throws Exception {
 		final Object project = retrieveOnlyInstance(Project.class);
-		Method totalTimeSpentMethod = project.getClass().getDeclaredMethod("totalTimeSpent", new Class[]{});
+
+		Method getPriorityMethod = project.getClass().getDeclaredMethod("getPriority", new Class[]{});
+		getPriorityMethod.setAccessible(true);
+		Integer priority = (Integer) getPriorityMethod.invoke(project, new Object[]{});
+		Assert.areEqual(PRIORITY, priority.intValue());
+
+		Method totalTimeSpentMethod = project.getClass().getMethod("totalTimeSpent", new Class[]{});
 		totalTimeSpentMethod.setAccessible(true);
 		Long totalTimeSpent = (Long) totalTimeSpentMethod.invoke(project, new Object[]{});
 		Assert.areEqual(1000, totalTimeSpent.intValue());

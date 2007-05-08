@@ -12,9 +12,9 @@ public class ByNameClassFilter implements ClassFilter {
 		_fullyQualifiedNames = fullyQualifiedNames;		
 	}
 
-	public boolean accept(Class clazz) {
+	public boolean accept(String className) {
 		for (int idx = 0; idx < _fullyQualifiedNames.length; idx++) {
-			if(_fullyQualifiedNames[idx].equals(clazz.getName())) {
+			if(_fullyQualifiedNames[idx].equals(className)) {
 				return true;
 			}
 		}
