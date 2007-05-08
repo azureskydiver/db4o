@@ -843,7 +843,7 @@
 		<copy file="${javadoc.stylesheet}" todir="${dir.dist.doc.api}" overwrite="true" />
 	</target>
 
-	<target name="runtestsjava" depends="" description="Run db4o AllTests">
+	<target name="runtestsjava" depends="compiletestsjava" description="Run db4o AllTests">
 		<copy todir=".">
 			<fileset dir="${dir.j.jdk1.2}">
 				<include name="test/db4oVersions/**/*" />
