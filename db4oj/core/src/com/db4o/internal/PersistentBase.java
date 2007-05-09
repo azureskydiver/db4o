@@ -158,7 +158,7 @@ public abstract class PersistentBase implements Persistent {
 
     }
 
-	public void writeToFile(Transaction trans, Buffer writer, Slot slot) {
+	private final void writeToFile(Transaction trans, Buffer writer, Slot slot) {
 		
         if(DTrace.enabled){
         	DTrace.YAPMETA_WRITE.log(getID());
@@ -202,8 +202,4 @@ public abstract class PersistentBase implements Persistent {
     	return getID();
     }
     
-    public void traverseChildren(Visitor4 visitor){
-    	throw new NotImplementedException();
-    }
-
 }

@@ -228,7 +228,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
                 for (int i = 0; i < checkXBytes.length; i++) {
                     if (checkXBytes[i] != Const4.XBYTE) {
                         String msg = "XByte corruption adress:" + newAddress + " length:"
-                            + length;
+                            + length + " starting:" + i;
                         throw new RuntimeException(msg);
                     }
                 }
