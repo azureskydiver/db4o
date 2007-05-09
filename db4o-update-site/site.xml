@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/db4o_OSGi_Edition_1.0.0.jar" id="db4o_OSGi_Edition" version="1.0.0"/>
+   <feature url="features/db4o_OSGi_Edition_1.0.0.jar" id="db4o_OSGi_Edition" version="1.0.0">
+      <category name="db4o OSGi Edition"/>
+   </feature>
+   <category-def name="db4o OSGi Edition" label="db4o OSGi Edition"/>
 </site>
