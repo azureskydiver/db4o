@@ -54,7 +54,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @param obj the object that is to be bound
      * @param id the internal id the object is to be bound to
      */
-    public void bind(Object obj, long id);
+    public void bind(Object obj, long id) throws InvalidIDException, DatabaseClosedException;
     
     
     /**
@@ -119,7 +119,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @return the object for the UUID
      * @see com.db4o.config.Configuration#activationDepth Why activation?
      */
-    public Object getByUUID(Db4oUUID uuid);
+    public Object getByUUID(Db4oUUID uuid) throws DatabaseClosedException, Db4oIOException;
 
     /**
      * returns the internal unique object ID.
@@ -182,7 +182,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @param obj to be tested<br><br>
      * @return <code>true</code> if the passed object is stored.
      */
-    public boolean isStored(Object obj);
+    public boolean isStored(Object obj) throws DatabaseClosedException;
     
     /**
      * returns all class representations that are known to this

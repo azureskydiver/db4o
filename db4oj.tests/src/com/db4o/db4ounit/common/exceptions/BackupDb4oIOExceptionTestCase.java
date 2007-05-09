@@ -15,12 +15,12 @@ public class BackupDb4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 	private static final String BACKUP_FILE = "backup.db4o";
 
 	protected void db4oSetupBeforeStore() throws Exception {
-		ExceptionIOAdapter.exception = false;
+		super.db4oSetupBeforeStore();
 		File4.delete(BACKUP_FILE);
 	}
 
 	protected void db4oCustomTearDown() throws Exception {
-		ExceptionIOAdapter.exception = false;
+		super.db4oCustomTearDown();
 		File4.delete(BACKUP_FILE);
 	}
 	

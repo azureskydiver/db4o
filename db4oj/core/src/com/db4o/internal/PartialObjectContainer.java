@@ -294,11 +294,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     final public boolean close() {
 		synchronized (i_lock) {
-			try {
-				close1();
-			} catch (Exception e) {
-				handleExceptionOnClose(e);
-			}
+			close1();
 			return true;
 		}
 	}

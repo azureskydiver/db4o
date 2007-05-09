@@ -2,6 +2,7 @@
 package com.db4o.db4ounit.common.exceptions;
 
 import com.db4o.config.*;
+import com.db4o.foundation.io.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
@@ -14,4 +15,11 @@ public class Db4oIOExceptionTestCaseBase extends AbstractDb4oTestCase implements
 		config.io(new ExceptionIOAdapter());
 	}
 	
+	protected void db4oSetupBeforeStore() throws Exception {
+		ExceptionIOAdapter.exception = false;
+	}
+
+	protected void db4oCustomTearDown() throws Exception {
+		ExceptionIOAdapter.exception = false;
+	}
 }
