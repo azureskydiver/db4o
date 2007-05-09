@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import com.db4o.*;
 import com.db4o.db4ounit.common.assorted.SimplestPossibleItem;
+import com.db4o.foundation.Collection4;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.io.RandomAccessFileAdapter;
@@ -133,29 +134,13 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     }
     
     private boolean expect(ObjectContainer oc, String[] names){
+    	Collection4 expected = new Collection4(names);
         ObjectSet objectSet = oc.query(CrashSimulatingTestCase.class);
-        if(objectSet.size()!=names.length) {
-            return false;
-        }
         while(objectSet.hasNext()){
             CrashSimulatingTestCase cst = (CrashSimulatingTestCase)objectSet.next();
-            boolean found = false;
-            for (int i = 0; i < names.length; i++) {
-                if(cst._name.equals(names[i])){
-                    names[i] = null;
-                    found = true;
-                    break;
-                }
-            }
-            if(! found){
-                return false;
-            }
+            Assert.isNotNull(expected.remove(cst._name), cst._name);
         }
-        for (int i = 0; i < names.length; i++) {
-            if(names[i] != null){
-                return false;
-            }
-        }
+        Assert.isTrue(expected.isEmpty(), expected.toString());
         return true;
     }
     
