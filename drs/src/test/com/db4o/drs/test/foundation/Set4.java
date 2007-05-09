@@ -7,9 +7,14 @@ import com.db4o.foundation.Iterator4;
 import com.db4o.foundation.Iterators;
 
 public class Set4 {
+	
 	public static final Set4 EMPTY_SET = new Set4(0);
 	
-	Hashtable4 _table;
+	private final Hashtable4 _table;
+	
+	public Set4() {
+		_table = new Hashtable4();
+	}
 	
 	public Set4(int size) {
 		_table = new Hashtable4(size);
