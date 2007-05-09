@@ -1152,8 +1152,4 @@ public final class BTreeNode extends PersistentBase{
         }
     }
     
-    public void traverseChildren(Visitor4 visitor) {
-    	// no children, do nothing
-    }
-    
 }

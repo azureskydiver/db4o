@@ -471,10 +471,6 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 			}
 		});
     }
-
-    public void traverseChildren(Visitor4 visitor){
-    	traverseAllNodes(visitor);
-    }
     
 }
 

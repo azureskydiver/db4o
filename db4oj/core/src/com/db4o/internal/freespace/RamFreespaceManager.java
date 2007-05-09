@@ -20,17 +20,6 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         super(file);
     }
     
-    public void traverseFreeSlots(final Visitor4 visitor) {
-    	Tree.traverse(_freeByAddress, new Visitor4() {
-			public void visit(Object obj) {
-				FreeSlotNode node = (FreeSlotNode) obj;
-				int address = node._key;
-				int length = node._peer._key;
-				visitor.visit(new Slot(address, length));
-			}
-		});
-    }
-    
     private void addFreeSlotNodes(int address, int length) {
         FreeSlotNode addressNode = new FreeSlotNode(address);
         addressNode.createPeer(length);
