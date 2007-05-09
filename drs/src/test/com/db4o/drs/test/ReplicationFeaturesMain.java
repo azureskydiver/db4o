@@ -71,9 +71,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	}
 	
 	private String firstContainerWithDeletedObjects() {
-		Iterator4 i = _containersWithDeletedObjects.iterator();
-		i.moveNext();
-		return (String)i.current();
+		return first(_containersWithDeletedObjects.iterator());
 	}
 
 	private boolean isDefaultReplicationBehaviorAllowed() {
@@ -436,9 +434,11 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 	}
 	
 	private String first(Set4 containerSet) {
-		Iterator4 i = containerSet.iterator();
-		i.moveNext();
-		return (String) i.current();
+		return first(containerSet.iterator());
+	}
+
+	private String first(Iterator4 iterator) {
+		return (String)Iterators.next(iterator);
 	}
 
 	private void printCombination() {
@@ -530,8 +530,7 @@ public class ReplicationFeaturesMain extends DrsTestCase {
 
 	private void tstWithContainerStateToPrevail(Set4 containers) {
 		_containerStateToPrevail = containers;
-// FIXME: enable this test case by uncommenting the next line
-//		runCurrentCombination();
+		runCurrentCombination();
 	}
 
 	private boolean wasConflictWhileReplicatingModificationsQueryingFrom(String container) {
