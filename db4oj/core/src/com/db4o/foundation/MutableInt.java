@@ -22,6 +22,10 @@ public class MutableInt {
         _value += addVal;
     }
     
+    public void increment(){
+    	_value++;
+    }
+
     public void substract(int substractVal){
         _value -= substractVal;
     }

@@ -10,12 +10,12 @@ public class MutableBoolean {
 	
 	private boolean _value;
 	
-	public boolean isTrue(){
+	public boolean value(){
 		return _value;
 	}
 	
-	public void setTrue(){
-		_value = true;
+	public void set(boolean val){
+		_value = val;
 	}
 
 }
