@@ -13,71 +13,102 @@ import com.db4o.internal.*;
 public class RandomAccessFileAdapter extends IoAdapter {
 
 	private String _path;
-    private RandomAccessFile _delegate;
 
-    public RandomAccessFileAdapter(){
-    }
+	private RandomAccessFile _delegate;
 
-    protected RandomAccessFileAdapter(String path, boolean lockFile, long initialLength) throws IOException {
-    	_path=new File(path).getCanonicalPath();
-        _delegate = new RandomAccessFile(_path, "rw");
-        if(initialLength>0) {
-	        _delegate.seek(initialLength - 1);
-	        _delegate.write(new byte[] {0});
-        }
-        if(lockFile){
-        	try {
-				Platform4.lockFile(_path, _delegate);
-			} catch (DatabaseFileLockedException e) {
-				_delegate.close();
-				throw e;
+	public RandomAccessFileAdapter() {
+	}
+
+	protected RandomAccessFileAdapter(String path, boolean lockFile,
+			long initialLength) throws Db4oIOException {
+		boolean ok = false;
+		try {
+			_path = new File(path).getCanonicalPath();
+			_delegate = new RandomAccessFile(_path, "rw");
+			if (initialLength > 0) {
+				_delegate.seek(initialLength - 1);
+				_delegate.write(new byte[] { 0 });
 			}
-        }
-    }
+			if (lockFile) {
+				Platform4.lockFile(_path, _delegate);
+			} 
+			ok = true;
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		} finally {
+			if(!ok) {
+				close();
+			}
+		}
+	}
 
-    public void close() throws IOException {
-        try {
-            Platform4.unlockFile(_path,_delegate);
-        } catch (Exception e) {
-        }
-        _delegate.close();
-    }
-    
+	public void close() throws Db4oIOException {
+		Platform4.unlockFile(_path, _delegate);
+		try {
+			if (_delegate != null) {
+				_delegate.close();
+			}
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+	}
+
 	public void delete(String path) {
 		new File(path).delete();
 	}
 
-    public boolean exists(String path){
-        File existingFile = new File(path);
-        return  existingFile.exists() && existingFile.length() > 0;
-    }
+	public boolean exists(String path) {
+		File existingFile = new File(path);
+		return existingFile.exists() && existingFile.length() > 0;
+	}
 
-    public long getLength() throws IOException {
-        return _delegate.length();
-    }
+	public long getLength() throws Db4oIOException {
+		try {
+			return _delegate.length();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+	}
 
-    public IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException {
-        return new RandomAccessFileAdapter(path, lockFile, initialLength);
-    }
+	public IoAdapter open(String path, boolean lockFile, long initialLength)
+			throws Db4oIOException {
+		return new RandomAccessFileAdapter(path, lockFile, initialLength);
+	}
 
-    public int read(byte[] bytes, int length) throws IOException {
-        return _delegate.read(bytes, 0, length);
-    }
+	public int read(byte[] bytes, int length) throws Db4oIOException {
+		try {
+			return _delegate.read(bytes, 0, length);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+	}
 
-    public void seek(long pos) throws IOException {
+	public void seek(long pos) throws Db4oIOException {
 
-        if(DTrace.enabled){
-            DTrace.REGULAR_SEEK.log(pos);
-        }
-        _delegate.seek(pos);
+		if (DTrace.enabled) {
+			DTrace.REGULAR_SEEK.log(pos);
+		}
+		try {
+			_delegate.seek(pos);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
 
-    }
+	}
 
-    public void sync() throws IOException {
-        _delegate.getFD().sync();
-    }
+	public void sync() throws Db4oIOException {
+		try {
+			_delegate.getFD().sync();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+	}
 
-    public void write(byte[] buffer, int length) throws IOException {
-        _delegate.write(buffer, 0, length);
-    }
+	public void write(byte[] buffer, int length) throws Db4oIOException {
+		try {
+			_delegate.write(buffer, 0, length);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+	}
 }

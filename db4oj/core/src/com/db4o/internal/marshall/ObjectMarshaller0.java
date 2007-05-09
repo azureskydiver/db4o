@@ -2,8 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
@@ -69,14 +67,16 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     public void instantiateFields(ClassMetadata yc, ObjectHeaderAttributes attributes, final ObjectReference yapObject, final Object onObject, final StatefulBuffer writer) {
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+				boolean ok = false;
                 try {
 					field.instantiate(_family, yapObject, onObject, writer);
-				}
-                catch (CorruptionException e) {
-					cancel();
-				}
-                catch (IOException e) {
-					cancel();
+					ok = true;
+				} catch (CorruptionException e) {
+					// FIXME: CorruptionException SHOULD BE IGNORED?
+				} finally {
+					if (!ok) {
+						cancel();
+					}
 				}
 			}
     	};
@@ -192,8 +192,6 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         try {
 			return field.readIndexEntry(_family, reader);
 		} catch (CorruptionException exc) {
-			throw new FieldIndexException(exc,field);
-		} catch (IOException exc) {
 			throw new FieldIndexException(exc,field);
 		}
     }

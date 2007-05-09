@@ -2,8 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
@@ -33,7 +31,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws IOException {
+    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws Db4oIOException {
         
         int address = reader.readInt();
         reader.readInt();  // length
@@ -62,7 +60,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, IOException {
+    public Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, Db4oIOException {
         int linkOffSet = reader.preparePayloadRead();
         Object array = arrayHandler.read1(_family, reader);
         reader._offset = linkOffSet;
@@ -74,7 +72,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         arrayHandler.read1Candidates(_family, reader, candidates);
     }
     
-    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, IOException {
+    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, Db4oIOException {
         reader._offset = reader.readInt();
         return arrayHandler.read1Query(trans,_family, reader);
     }

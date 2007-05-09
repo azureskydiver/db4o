@@ -2,8 +2,7 @@
 
 package com.db4o.db4ounit.common.acid;
 
-import java.io.*;
-
+import com.db4o.*;
 import com.db4o.io.*;
 
 
@@ -18,28 +17,28 @@ public class CrashSimulatingIoAdapter extends VanillaIoAdapter{
         batch = new CrashSimulatingBatch();
     }
     
-    private CrashSimulatingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, CrashSimulatingBatch batch) throws IOException {
+    private CrashSimulatingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, CrashSimulatingBatch batch) throws Db4oIOException {
         super(delegateAdapter.open(path, lockFile, initialLength));
         this.batch = batch;
     }
     
-    public IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException {
+    public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
         return new CrashSimulatingIoAdapter(_delegate, path, lockFile, initialLength, batch);
     }
 
-    public void seek(long pos) throws IOException {
+    public void seek(long pos) throws Db4oIOException {
         curPos=pos;
         super.seek(pos);
     }
     
-    public void write(byte[] buffer, int length) throws IOException {
+    public void write(byte[] buffer, int length) throws Db4oIOException {
         super.write(buffer, length);
         byte[] copy=new byte[buffer.length];
         System.arraycopy(buffer, 0, copy, 0, buffer.length);
         batch.add(copy, curPos, length);
     }
     
-    public void sync() throws IOException {
+    public void sync() throws Db4oIOException {
         super.sync();
         batch.sync();
     }

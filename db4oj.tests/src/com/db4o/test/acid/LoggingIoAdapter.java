@@ -4,6 +4,7 @@ package com.db4o.test.acid;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.io.*;
 
 public class LoggingIoAdapter extends VanillaIoAdapter {
@@ -25,37 +26,37 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
         _config=config;
     }
 
-    private LoggingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, PrintStream out,int config) throws IOException {
+    private LoggingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, PrintStream out,int config) throws Db4oIOException {
         super(delegateAdapter.open(path, lockFile, initialLength));
         _out=out;
         _config=config;
         _curpos=0;
     }
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException {
+	public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
 		return new LoggingIoAdapter(_delegate,path,lockFile,initialLength,_out,_config);
 	}
 
-    public int read(byte[] bytes, int length) throws IOException {
+    public int read(byte[] bytes, int length) throws Db4oIOException {
     	if(config(READ)) {
     		_out.println("READ "+_curpos+","+length);
     	}
         return _delegate.read(bytes, length);
     }
 
-    public void seek(long pos) throws IOException {
+    public void seek(long pos) throws Db4oIOException {
     	_curpos=pos;
         _delegate.seek(pos);
     }
 
-    public void sync() throws IOException {
+    public void sync() throws Db4oIOException {
     	if(config(SYNC)) {
     		_out.println("SYNC");
     	}
         _delegate.sync();
     }
 
-    public void write(byte[] buffer, int length) throws IOException {
+    public void write(byte[] buffer, int length) throws Db4oIOException {
     	if(config(WRITE)) {
     		_out.println("WRITE "+_curpos+","+length);
     	}

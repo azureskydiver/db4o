@@ -2,8 +2,6 @@
 
 package com.db4o.internal.freespace;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.foundation.Tree;
 import com.db4o.internal.*;
@@ -91,17 +89,13 @@ public final class FreeSlotNode extends TreeInt {
 		}
 		StatefulBuffer checker = trans.stream().getWriter(trans,
 				node._peer._key, node._key);
-		try {
-			checker.read();
-			for (int i = 0; i < node._key; i++) {
-				if (checker.readByte() != (byte) 'X') {
-					System.out.println("!!! Free space corruption at:"
-							+ node._peer._key);
-					break;
-				}
+		checker.read();
+		for (int i = 0; i < node._key; i++) {
+			if (checker.readByte() != (byte) 'X') {
+				System.out.println("!!! Free space corruption at:"
+						+ node._peer._key);
+				break;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	

@@ -118,11 +118,11 @@ public class Buffer implements SlotReader {
 	    _offset += length;
 	}
     
-	public final Buffer readEmbeddedObject(Transaction trans) throws IOException {
+	public final Buffer readEmbeddedObject(Transaction trans) throws Db4oIOException {
 		return trans.stream().bufferByAddress(readInt(), readInt());
 	}
 	
-	public void readEncrypt(ObjectContainerBase stream, int address) throws  IOException {
+	public void readEncrypt(ObjectContainerBase stream, int address) throws Db4oIOException {
 		stream.readBytes(_buffer, address, getLength());
 		stream.i_handlers.decrypt(this);
 	}

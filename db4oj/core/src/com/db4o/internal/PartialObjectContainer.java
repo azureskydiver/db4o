@@ -613,8 +613,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             } 
             catch (CorruptionException e) {
             }
-	        catch (IOException e) {
-	        }
         }
         if(path.length == 1){
             return child;
@@ -1318,12 +1316,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void raiseVersion(long a_minimumVersion);
 
-    public abstract void readBytes(byte[] a_bytes, int a_address, int a_length) throws IOException;
+    public abstract void readBytes(byte[] a_bytes, int a_address, int a_length) throws Db4oIOException;
 
-    public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length) throws IOException;
+    public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length) throws Db4oIOException;
 
     public final Buffer bufferByAddress(int address, int length)
-			throws IOException {
+			throws Db4oIOException {
 		checkAddress(address);
 
 		Buffer reader = new Buffer(length);
@@ -1340,7 +1338,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	}
 
     public final StatefulBuffer readWriterByAddress(Transaction a_trans,
-        int address, int length) throws IOException,IllegalArgumentException {
+        int address, int length) throws Db4oIOException {
     	checkAddress(address);
         StatefulBuffer reader = getWriter(a_trans, address, length);
         reader.readEncrypt(_this, address);

@@ -2,8 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.query.processor.*;
@@ -14,7 +12,7 @@ import com.db4o.internal.query.processor.*;
  */
 public class UntypedMarshaller0 extends UntypedMarshaller {
     
-    public void deleteEmbedded(StatefulBuffer parentBytes) throws IOException {
+    public void deleteEmbedded(StatefulBuffer parentBytes) throws Db4oIOException {
         int objectID = parentBytes.readInt();
         if (objectID > 0) {
             StatefulBuffer reader =

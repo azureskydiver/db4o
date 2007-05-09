@@ -4,6 +4,7 @@ package com.db4o.test.performance;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.io.*;
 
 /**
@@ -31,55 +32,68 @@ public class RecordingIoAdapter extends VanillaIoAdapter {
 	}
 
 	protected RecordingIoAdapter(IoAdapter adapter, String logPath,
-			String file, boolean append, long initialLength) throws IOException {
+			String file, boolean append, long initialLength) throws Db4oIOException {
 		super(adapter, file, append, initialLength);
-		_writer = new RandomAccessFile(logPath, "rw");
+		try {
+			_writer = new RandomAccessFile(logPath, "rw");
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
 		_runs=0;
 	}
 
-	public void close() throws IOException {
+	public void close() throws Db4oIOException {
 		super.close();
 		writeLogChar('q');
 		//System.err.println(_runs);
 	}
 
 	public IoAdapter open(String path, boolean lockFile, long initialLength)
-			throws IOException {
+			throws Db4oIOException {
 		_runningId++;
 		return new RecordingIoAdapter(_delegate, _logPath+"."+_runningId, path, lockFile,
 				initialLength);
 	}
 
-	public int read(byte[] buffer, int length) throws IOException {
+	public int read(byte[] buffer, int length) throws Db4oIOException {
 		writeLog('r',_pos,length);
 		return super.read(buffer,length);
 
 	}
 
-	public void seek(long pos) throws IOException {
+	public void seek(long pos) throws Db4oIOException {
 		_pos = pos;
 		super.seek(pos);
 	}
 
-	public void write(byte[] buffer, int length) throws IOException {
+	public void write(byte[] buffer, int length) throws Db4oIOException {
 		writeLog('w',_pos,length);
 		super.write(buffer,length);
 	}
 	
-	public void sync() throws IOException {
+	public void sync() throws Db4oIOException {
 		writeLogChar('f');
 		super.sync();
 	}
 	
-	private void writeLog(char type,long pos,int length) throws IOException {
-		_writer.writeChar(type);
-		_writer.writeLong(pos);
-		_writer.writeInt(length);
+	private void writeLog(char type, long pos, int length)
+			throws Db4oIOException {
+		try {
+			_writer.writeChar(type);
+			_writer.writeLong(pos);
+			_writer.writeInt(length);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
 		_runs++;
 	}
 	
-	private void writeLogChar(char c) throws IOException {
-		_writer.writeChar(c);
+	private void writeLogChar(char c) throws Db4oIOException {
+		try {
+			_writer.writeChar(c);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
 		_runs++;
 	}
 }

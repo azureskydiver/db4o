@@ -2,8 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.internal.*;
 
@@ -40,11 +38,11 @@ public class StringMarshaller0 extends StringMarshaller {
         return bytes;
     }
     
-    public Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, IllegalArgumentException, IOException{
+    public Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, Db4oIOException{
         return parentSlot.getStream().readWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
     }
     
-    public Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException, IOException {
+    public Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException, Db4oIOException {
         return reader.readEmbeddedObject(stream.getTransaction());
     }
 

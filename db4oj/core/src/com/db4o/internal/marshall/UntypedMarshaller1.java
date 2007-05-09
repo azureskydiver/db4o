@@ -2,8 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.query.processor.*;
@@ -17,7 +15,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return false;
     }
     
-    public void deleteEmbedded(StatefulBuffer reader) throws IOException {
+    public void deleteEmbedded(StatefulBuffer reader) throws Db4oIOException {
         int payLoadOffset = reader.readInt();
         if (payLoadOffset > 0) {
             int linkOffset = reader._offset;
@@ -31,7 +29,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         }
     }
     
-    public Object read(StatefulBuffer reader) throws CorruptionException, IOException {
+    public Object read(StatefulBuffer reader) throws CorruptionException, Db4oIOException {
         
         Object ret = null;
         
@@ -55,7 +53,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return ret;
     }
     
-    public Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException, IOException {
+    public Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException {
         
         Object ret = null;
         

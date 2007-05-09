@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.slots.*;
@@ -205,11 +203,11 @@ public final class StatefulBuffer extends Buffer {
         return linkOffSet;
     }
 
-    public void read() throws IOException {
+    public void read() throws Db4oIOException {
         stream().readBytes(_buffer, i_address,_addressOffset, i_length);
     }
 
-    public final StatefulBuffer readEmbeddedObject() throws IOException {
+    public final StatefulBuffer readEmbeddedObject() throws Db4oIOException {
         int id = readInt();
         int length = readInt();
         StatefulBuffer bytes = null;

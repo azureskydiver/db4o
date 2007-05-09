@@ -5,7 +5,6 @@ package com.db4o.internal.fileheader;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.io.*;
@@ -56,20 +55,15 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
     
     public void checkOpenTime() {
-    	try {
-			long readOpenTime = readLong(_baseAddress, _openTimeOffset);
-			if(_opentime == readOpenTime){
-				writeOpenTime();
-				return;
-			}
-		} catch (IOException e) {
-			
+		long readOpenTime = readLong(_baseAddress, _openTimeOffset);
+		if (_opentime != readOpenTime) {
+			throw new DatabaseFileLockedException(_timerFile.toString());
 		}
-		throw new DatabaseFileLockedException(_timerFile.toString());
-    }
+		writeOpenTime();		
+	}
     
     public void checkIfOtherSessionAlive(LocalObjectContainer container, int address, int offset,
-		long lastAccessTime) throws IOException {
+		long lastAccessTime) throws Db4oIOException {
     	if(_timerFile == null) { // need to check? 
     		return;
     	}
@@ -87,7 +81,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
 		}
 	}
     
-    public void close() throws IOException {
+    public void close() throws Db4oIOException {
         writeAccessTime(true);
         _closed = true;
     }
@@ -100,19 +94,16 @@ public class TimerFileLockEnabled extends TimerFileLock{
         return _opentime;
     }
 
-    public void run(){
-        Thread t = Thread.currentThread();
-        t.setName("db4o file lock");
-        try{
-            while(writeAccessTime(false)){
-                Cool.sleepIgnoringInterruption(Const4.LOCK_TIME_INTERVAL);
-                if(_closed){
-                    break;
-                }
-            }
-        }catch(IOException e){
-        }
-    }
+    public void run() {
+		Thread t = Thread.currentThread();
+		t.setName("db4o file lock");
+		while (writeAccessTime(false)) {
+			Cool.sleepIgnoringInterruption(Const4.LOCK_TIME_INTERVAL);
+			if (_closed) {
+				break;
+			}
+		}
+	}
 
     public void setAddresses(int baseAddress, int openTimeOffset, int accessTimeOffset){
         _baseAddress = baseAddress;
@@ -120,7 +111,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
         _accessTimeOffset = accessTimeOffset;
     }
     
-    public void start() throws IOException{
+    public void start() throws Db4oIOException{
         writeAccessTime(false);
         _timerFile.sync();
         checkOpenTime();
@@ -134,7 +125,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
         // to other processes. 
     }
     
-    private boolean writeAccessTime(boolean closing) throws IOException{
+    private boolean writeAccessTime(boolean closing) throws Db4oIOException {
         if(noAddressSet()){
             return true;
         }
@@ -158,15 +149,11 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
 
     public void writeOpenTime() {
-    	try {
-			writeLong(_baseAddress, _openTimeOffset, _opentime);
-			sync();
-		} catch (IOException e) {
-			
-		}
+    	writeLong(_baseAddress, _openTimeOffset, _opentime);
+		sync();
     }
     
-    private boolean writeLong(int address, int offset, long time) throws IOException {
+    private boolean writeLong(int address, int offset, long time) throws Db4oIOException {
     	synchronized (_timerLock) {
             if(_timerFile == null){
                 return false;
@@ -184,7 +171,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     	}
     }
     
-    private long readLong(int address, int offset) throws IOException {
+    private long readLong(int address, int offset) throws Db4oIOException {
     	synchronized (_timerLock) {
             if(_timerFile == null){
                 return 0;
@@ -234,7 +221,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     	}
     }
     
-    private void sync() throws IOException{
+    private void sync() throws Db4oIOException {
     	_timerFile.sync();
     }
     

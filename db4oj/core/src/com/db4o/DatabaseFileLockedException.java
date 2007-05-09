@@ -13,7 +13,7 @@ import com.db4o.ext.*;
 public class DatabaseFileLockedException extends Db4oException {
 	
 	public DatabaseFileLockedException(String databaseDescription) {
-		this(databaseDescription,null);
+		super(databaseDescription);
 	}
 
 	public DatabaseFileLockedException(String databaseDescription, Throwable cause) {

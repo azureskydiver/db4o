@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.marshall.*;
@@ -32,7 +30,7 @@ public final class UntypedFieldHandler extends ClassMetadata {
 		}
 	}
     
-	public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer reader) throws IOException {
+	public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer reader) throws Db4oIOException {
         mf._untyped.deleteEmbedded(reader);
 	}
 	
@@ -78,7 +76,7 @@ public final class UntypedFieldHandler extends ClassMetadata {
         yc.calculateLengths(trans, header, false, obj, false);
     }
     
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
         if(mf._untyped.useNormalClassRead()){
             return super.read(mf, a_bytes, redirect);
         }
@@ -89,7 +87,7 @@ public final class UntypedFieldHandler extends ClassMetadata {
         return mf._untyped.readArrayHandler(a_trans, a_bytes);
 	}
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, IOException {
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException {
         if(mf._untyped.useNormalClassRead()){
             return super.readQuery(trans, mf, withRedirection, reader, toArray);
         }

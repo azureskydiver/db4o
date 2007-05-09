@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.io;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -188,7 +189,7 @@ public class IoAdapterTest implements Db4oTestCase {
 		for (int i = 0; i < _adapters.length; ++i) {
 			try {
 				_adapters[i].close();
-			} catch (IOException e) {
+			} catch (Db4oIOException e) {
 				// ignore
 			}
 		}

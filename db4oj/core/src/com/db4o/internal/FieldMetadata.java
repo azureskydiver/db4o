@@ -2,40 +2,19 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
-
-import com.db4o.CorruptionException;
-import com.db4o.Debug;
-import com.db4o.Deploy;
+import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.config.ObjectMarshaller;
-import com.db4o.config.ObjectTranslator;
-import com.db4o.ext.StoredField;
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.No4;
-import com.db4o.foundation.Tree;
-import com.db4o.foundation.Visitor4;
-import com.db4o.internal.btree.BTree;
-import com.db4o.internal.btree.BTreeNodeSearchResult;
-import com.db4o.internal.btree.BTreeRange;
-import com.db4o.internal.btree.FieldIndexKey;
-import com.db4o.internal.btree.FieldIndexKeyHandler;
-import com.db4o.internal.btree.SearchTarget;
-import com.db4o.internal.handlers.ArrayHandler;
-import com.db4o.internal.handlers.MultidimensionalArrayHandler;
-import com.db4o.internal.handlers.PrimitiveHandler;
-import com.db4o.internal.ix.Indexable4;
-import com.db4o.internal.marshall.MarshallerFamily;
-import com.db4o.internal.marshall.ObjectHeader;
-import com.db4o.internal.marshall.ObjectHeaderAttributes;
-import com.db4o.internal.query.processor.QConObject;
-import com.db4o.internal.query.processor.QField;
-import com.db4o.internal.slots.Slot;
-import com.db4o.reflect.ReflectArray;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.generic.GenericField;
-import com.db4o.reflect.generic.GenericReflector;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.btree.*;
+import com.db4o.internal.handlers.*;
+import com.db4o.internal.ix.*;
+import com.db4o.internal.marshall.*;
+import com.db4o.internal.query.processor.*;
+import com.db4o.internal.slots.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 /**
  * @exclude
@@ -134,9 +113,7 @@ public class FieldMetadata implements StoredField {
 			addIndexEntry(writer, readIndexEntry(mf, writer));
 		} catch (CorruptionException exc) {
 			throw new FieldIndexException(exc,this);
-		} catch (IOException exc) {
-			throw new FieldIndexException(exc,this);
-		}
+		} 
     }
 
     protected void addIndexEntry(StatefulBuffer a_bytes, Object indexEntry) {
@@ -173,7 +150,7 @@ public class FieldMetadata implements StoredField {
     }
     
     // alive() checked
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, IOException{
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException {
     	return i_handler.readIndexEntry(mf, writer);
     }
     
@@ -338,11 +315,7 @@ public class FieldMetadata implements StoredField {
 			if (i_handler instanceof ClassMetadata) {
 				tree = (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
 			} else if (i_handler instanceof ArrayHandler) {
-				try {
-					tree = ((ArrayHandler) i_handler).collectIDs(mf, tree, a_bytes);
-				} catch (IOException e) {
-					throw new FieldIndexException(e, this);
-				}
+				tree = ((ArrayHandler) i_handler).collectIDs(mf, tree, a_bytes);
 			}
 		}
 		return tree;
@@ -417,14 +390,10 @@ public class FieldMetadata implements StoredField {
 			}
 		} catch (CorruptionException exc) {
 			throw new FieldIndexException(exc, this);
-		} catch (IOException exc) {
-			throw new FieldIndexException(exc, this);
 		}
-        
-
     }
 
-    private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, IOException {
+    private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
         if(! hasIndex()){
             return;
         }
@@ -451,45 +420,47 @@ public class FieldMetadata implements StoredField {
     }
     
     public Object get(Object a_onObject) {
-        if (_clazz != null) {
-            ObjectContainerBase stream = _clazz.getStream();
-            if (stream != null) {
-                synchronized (stream.i_lock) {
-                    stream.checkClosed();
-                    ObjectReference yo = stream.referenceForObject(a_onObject);
-                    if (yo != null) {
-                        int id = yo.getID();
-                        if (id > 0) {
-                            StatefulBuffer writer = stream.readWriterByID(stream
-                                .getTransaction(), id);
-                            if (writer != null) {
-                                
-                                writer._offset = 0;
-                                ObjectHeader oh = new ObjectHeader(stream, _clazz, writer);
-                                if(oh.objectMarshaller().findOffset(_clazz,oh._headerAttributes, writer, this)){
-                                	// FIXME catchall
-                                    try {
-                                        return read(oh._marshallerFamily, writer);
-                                    } 
-                                    catch (CorruptionException e) {
-                                        if (Debug.atHome) {
-                                            e.printStackTrace();
-                                    }
-                                    }
-                                    catch(IOException exc) {
-                                        if (Debug.atHome) {
-                                            exc.printStackTrace();
-                                    }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
+		if (_clazz == null) {
+			return null;
+		}
+		ObjectContainerBase stream = _clazz.getStream();
+		if (stream == null) {
+			return null;
+		}
+		synchronized (stream.i_lock) {
+			stream.checkClosed();
+			ObjectReference yo = stream.referenceForObject(a_onObject);
+			if (yo == null) {
+				return null;
+			}
+			int id = yo.getID();
+			if (id <= 0) {
+				return null;
+			}
+
+			StatefulBuffer writer = stream.readWriterByID(stream
+					.getTransaction(), id);
+			if (writer == null) {
+				return null;
+			}
+			writer._offset = 0;
+			ObjectHeader oh = new ObjectHeader(stream, _clazz, writer);
+			boolean findOffset = oh.objectMarshaller().findOffset(_clazz,
+					oh._headerAttributes, writer, this);
+			if (!findOffset) {
+				return null;
+			}
+			try {
+				return read(oh._marshallerFamily, writer);
+			} catch (CorruptionException e) {
+				// FIXME: SHOULD CorruptionException BE IGNORED?
+				if (Debug.atHome) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
 
     public String getName() {
         return i_name;
@@ -605,7 +576,7 @@ public class FieldMetadata implements StoredField {
         }
     }
 
-    public void instantiate(MarshallerFamily mf, ObjectReference ref, Object onObject, StatefulBuffer buffer) throws IOException, CorruptionException {
+    public void instantiate(MarshallerFamily mf, ObjectReference ref, Object onObject, StatefulBuffer buffer) throws Db4oIOException, CorruptionException {
         
         if (! alive()) {
             incrementOffset(buffer);
@@ -736,7 +707,7 @@ public class FieldMetadata implements StoredField {
         return new QField(a_trans, i_name, this, yapClassID, i_arrayPosition);
     }
 
-    Object read(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, IOException {
+    Object read(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
         if (!alive()) {
             incrementOffset(a_bytes);
             return null;
@@ -745,7 +716,7 @@ public class FieldMetadata implements StoredField {
     }
 
     public Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader)
-        throws CorruptionException, IOException {
+        throws CorruptionException, Db4oIOException {
         return i_handler.readQuery(a_trans, mf, true, a_reader, false);
     }
     

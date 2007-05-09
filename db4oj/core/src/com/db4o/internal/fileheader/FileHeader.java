@@ -55,9 +55,9 @@ public abstract class FileHeader {
 		return null;
 	}
 
-    public abstract void close() throws IOException;
+    public abstract void close() throws Db4oIOException;
 
-    public abstract void initNew(LocalObjectContainer file) throws IOException;
+    public abstract void initNew(LocalObjectContainer file) throws Db4oIOException;
 
     public abstract Transaction interruptedTransaction();
 

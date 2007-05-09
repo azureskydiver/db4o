@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
@@ -54,7 +52,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     	return i_handler.classReflector();
     }
     
-    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws IOException {
+    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
         if(mf._primitive.useNormalClassRead()){
             super.deleteEmbedded(mf, a_bytes);
             return;
@@ -65,7 +63,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     
-    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws IOException  {
+    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws Db4oIOException  {
         
         if(i_handler instanceof ArrayHandler){
             ArrayHandler ya = (ArrayHandler)i_handler;
@@ -132,9 +130,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
             catch (CorruptionException ce) {
                 return null;
             }
-            catch (IOException exc) {
-            	return null;
-            }
             a_yapObject.setObjectWeak(a_bytes.getStream(), a_object);
         }
         a_yapObject.setStateClean();
@@ -149,9 +144,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         catch (CorruptionException ce) {
             return null;
         }
-        catch (IOException exc) {
-            return null;
-        }
     }
 
     void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
@@ -161,8 +153,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
             obj = i_handler.read(mf, a_bytes, true);
         }
         catch (CorruptionException ce) {
-        }
-        catch (IOException exc) {
         }
         if (obj != null) {
             i_handler.copyValue(obj, a_onObject);
@@ -198,7 +188,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return i_handler.primitiveClassReflector();
     }
     
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
         if(mf._primitive.useNormalClassRead()){
             return super.read(mf, a_bytes, redirect);
         }
@@ -212,7 +202,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return null;
     }
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, IOException {
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException {
         if(mf._primitive.useNormalClassRead()){
             return super.readQuery(trans, mf, withRedirection, reader, toArray);
         }

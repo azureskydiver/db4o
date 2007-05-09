@@ -44,7 +44,7 @@ public class FileHeader0 extends FileHeader {
     private PBootRecord _bootRecord;
     
 
-    public void close() throws IOException {
+    public void close() throws Db4oIOException {
         _configBlock.close();
     }
     
@@ -102,7 +102,7 @@ public class FileHeader0 extends FileHeader {
 		}
 	}
 
-    public void initNew(LocalObjectContainer file) throws IOException {
+    public void initNew(LocalObjectContainer file) throws Db4oIOException {
         _configBlock = ConfigBlock.forNewFile(file);
         initBootRecord(file);
     }
