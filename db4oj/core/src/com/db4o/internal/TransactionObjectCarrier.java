@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.slots.*;
+
 
 /**
  * TODO: Check if all time-consuming stuff is overridden! 
@@ -16,23 +18,23 @@ class TransactionObjectCarrier extends LocalTransaction{
 		// do nothing
 	}
 	
-    public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
+    public void slotFreeOnCommit(int id, Slot slot) {
 //      do nothing
     }
     
-    public void slotFreeOnRollback(int a_id, int a_address, int a_length) {
+    public void slotFreeOnRollback(int id, Slot slot) {
 //      do nothing
     }
     
-    void produceUpdateSlotChange(int a_id, int a_address, int a_length) {
-        setPointer(a_id, a_address, a_length);
+    void produceUpdateSlotChange(int id, Slot slot) {
+        setPointer(id, slot);
     }
     
-    void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
-        setPointer(a_id, newAddress, newLength);
+    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot, boolean freeImmediately) {
+        setPointer(id, slot);
     }
     
-    void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
+    void slotFreePointerOnCommit(int a_id, Slot slot) {
 //      do nothing
     }
     
@@ -40,8 +42,8 @@ class TransactionObjectCarrier extends LocalTransaction{
     	// do nothing
     }
 	
-	public void setPointer(int a_id, int a_address, int a_length) {
-		writePointer(a_id, a_address, a_length);
+	public void setPointer(int a_id, Slot slot) {
+		writePointer(a_id, slot);
 	}
     
     boolean supportsVirtualFields(){

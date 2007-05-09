@@ -103,12 +103,18 @@ public class LocalTransaction extends Transaction {
         
         stream().writeDirty();
         
+        
+        // _file.freeSpaceBeginCommit();
+        
+        // Slot slot = 
+        
+        // From here on we are in the substitute freespace manager
+        
         commitFreespace();
         
         commit6WriteChanges();
         
         freeOnCommit();
-        
     }
 	
 	private void commitFreespace() {
@@ -235,18 +241,17 @@ public class LocalTransaction extends Transaction {
         }
     }
 	
-    public void writePointer(int a_id, int a_address, int a_length) {
+    public void writePointer(int id, Slot slot) {
         if(DTrace.enabled){
-            DTrace.WRITE_POINTER.log(a_id);
-            DTrace.WRITE_POINTER.logLength(a_address, a_length);
+            DTrace.WRITE_POINTER.log(id);
+            DTrace.WRITE_POINTER.logLength(slot);
         }
         checkSynchronization();
-        i_pointerIo.useSlot(a_id);
+        i_pointerIo.useSlot(id);
         if (Deploy.debug) {
             i_pointerIo.writeBegin(Const4.YAPPOINTER);
         }
-        i_pointerIo.writeInt(a_address);
-        i_pointerIo.writeInt(a_length);
+        i_pointerIo.writeSlot(slot);
         if (Deploy.debug) {
             i_pointerIo.writeEnd();
         }
@@ -374,13 +379,13 @@ public class LocalTransaction extends Transaction {
 		return new Slot(debugAddress, debugLength);
 	}
     
-    public void setPointer(int a_id, int a_address, int a_length) {
+    public void setPointer(int a_id, Slot slot) {
         if(DTrace.enabled){
             DTrace.SLOT_SET_POINTER.log(a_id);
-            DTrace.SLOT_SET_POINTER.logLength(a_address, a_length);
+            DTrace.SLOT_SET_POINTER.logLength(slot);
         }
         checkSynchronization();
-        produceSlotChange(a_id).setPointer(a_address, a_length);
+        produceSlotChange(a_id).setPointer(slot);
     }
     
     private boolean slotChangeIsFlaggedDeleted(int id){
@@ -470,78 +475,71 @@ public class LocalTransaction extends Transaction {
         
     }
 	
-	public void slotDelete(int a_id, int a_address, int a_length) {
+	public void slotDelete(int id, Slot slot) {
         checkSynchronization();
         if(DTrace.enabled){
-            DTrace.SLOT_DELETE.log(a_id);
-            DTrace.SLOT_DELETE.logLength(a_address, a_length);
+            DTrace.SLOT_DELETE.log(id);
+            DTrace.SLOT_DELETE.logLength(slot);
         }
-        if (a_id == 0) {
+        if (id == 0) {
             return;
         }
-        SlotChange slot = produceSlotChange(a_id);
-        slot.freeOnCommit(_file, new Slot(a_address, a_length));
-        slot.setPointer(0, 0);
+        SlotChange slotChange = produceSlotChange(id);
+        slotChange.freeOnCommit(_file, slot);
+        slotChange.setPointer(Slot.ZERO);
     }
 	
-    private void slotFreeOnCommit(int id, Slot slot){
-    	if(slot == null){
-    		return;
-    	}
-    	slotFreeOnCommit(id, slot.address(), slot.length());    	
-    }
-
-    public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
+    public void slotFreeOnCommit(int id, Slot slot) {
         checkSynchronization();
         if(DTrace.enabled){
-            DTrace.SLOT_FREE_ON_COMMIT.log(a_id);
-            DTrace.SLOT_FREE_ON_COMMIT.logLength(a_address, a_length);
+            DTrace.SLOT_FREE_ON_COMMIT.log(id);
+            DTrace.SLOT_FREE_ON_COMMIT.logLength(slot);
         }
-        if (a_id == 0) {
+        if (id == 0) {
             return;
         }
-        produceSlotChange(a_id).freeOnCommit(_file, new Slot(a_address, a_length));
+        produceSlotChange(id).freeOnCommit(_file, slot);
     }
 
-    public void slotFreeOnRollback(int a_id, int a_address, int a_length) {
+    public void slotFreeOnRollback(int id, Slot slot) {
         checkSynchronization();
         if(DTrace.enabled){
-            DTrace.SLOT_FREE_ON_ROLLBACK_ID.log(a_id);
-            DTrace.SLOT_FREE_ON_ROLLBACK_ADDRESS.logLength(a_address, a_length);
+            DTrace.SLOT_FREE_ON_ROLLBACK_ID.log(id);
+            DTrace.SLOT_FREE_ON_ROLLBACK_ADDRESS.logLength(slot);
         }
-        produceSlotChange(a_id).freeOnRollback(a_address, a_length);
+        produceSlotChange(id).freeOnRollback(slot);
     }
 
-    void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
+    void slotFreeOnRollbackCommitSetPointer(int id, Slot newSlot, boolean freeImmediately) {
         
-        Slot slot = getCurrentSlotOfID(a_id);
-        if(slot==null) {
+        Slot oldSlot = getCurrentSlotOfID(id);
+        if(oldSlot==null) {
         	return;
         }
         
         checkSynchronization();
         
         if(DTrace.enabled){
-            DTrace.FREE_ON_ROLLBACK.log(a_id);
-            DTrace.FREE_ON_ROLLBACK.logLength(newAddress, newLength);
-            DTrace.FREE_ON_COMMIT.log(a_id);
-            DTrace.FREE_ON_COMMIT.logLength(slot.address(), slot.length());
+            DTrace.FREE_ON_ROLLBACK.log(id);
+            DTrace.FREE_ON_ROLLBACK.logLength(newSlot);
+            DTrace.FREE_ON_COMMIT.log(id);
+            DTrace.FREE_ON_COMMIT.logLength(oldSlot);
         }
         
-        SlotChange change = produceSlotChange(a_id);
-        change.freeOnRollbackSetPointer(newAddress, newLength);
-        change.freeOnCommit(_file, slot);
+        SlotChange change = produceSlotChange(id);
+        change.freeOnRollbackSetPointer(newSlot);
+        change.freeOnCommit(_file, oldSlot);
     }
 
-    void produceUpdateSlotChange(int a_id, int a_address, int a_length) {
+    void produceUpdateSlotChange(int id, Slot slot) {
         checkSynchronization();
         if(DTrace.enabled){
-            DTrace.FREE_ON_ROLLBACK.log(a_id);
-            DTrace.FREE_ON_ROLLBACK.logLength(a_address, a_length);
+            DTrace.FREE_ON_ROLLBACK.log(id);
+            DTrace.FREE_ON_ROLLBACK.logLength(slot);
         }
         
-        final SlotChange slotChange = produceSlotChange(a_id);
-        slotChange.freeOnRollbackSetPointer(a_address, a_length);
+        final SlotChange slotChange = produceSlotChange(id);
+        slotChange.freeOnRollbackSetPointer(slot);
     }
     
     public void slotFreePointerOnCommit(int a_id) {
@@ -557,15 +555,15 @@ public class LocalTransaction extends Transaction {
         //        Looking at references, this method is only called from freed
         //        BTree nodes. Indeed it should be checked what happens here.
         
-        slotFreeOnCommit(a_id, slot.address(), slot.length());
+        slotFreeOnCommit(a_id, slot);
     }
     
-    void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
+    void slotFreePointerOnCommit(int a_id, Slot slot) {
         checkSynchronization();
-        slotFreeOnCommit(a_address, a_address, a_length);
+        slotFreeOnCommit(slot.address(), slot);
         
         // FIXME: This does not look nice
-        slotFreeOnCommit(a_id, a_id, Const4.POINTER_LENGTH);
+        slotFreeOnCommit(a_id, slot);
         
         // FIXME: It should rather work like this:
         // produceSlotChange(a_id).freePointerOnCommit();

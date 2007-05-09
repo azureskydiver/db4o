@@ -6,14 +6,14 @@ package com.db4o.internal.slots;
  * @exclude
  */
 public class Pointer4 {
+	
+	public final int _id;
+	
+	public final Slot _slot;
     
-    public final int _id;
-    
-    public final int _address;
-    
-    public Pointer4(int id, int address){
-        _id = id;
-        _address = address;
+    public Pointer4(int id, Slot slot){
+    	_id = id;
+    	_slot = slot;
     }
     
 }

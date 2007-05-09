@@ -2,6 +2,8 @@
 
 package com.db4o;
 
+import com.db4o.internal.slots.*;
+
 
 /**
  * @exclude 
@@ -247,6 +249,12 @@ public class DTrace {
         if(enabled){
             logEnd(start, start + length - 1);
         }
+    }
+    
+    public void logLength(Slot slot){
+    	if(enabled){
+    		logLength(slot.address(), slot.length());
+    	}
     }
     
     public void logEnd(long start, long end){

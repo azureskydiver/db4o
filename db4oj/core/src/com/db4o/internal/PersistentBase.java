@@ -141,14 +141,14 @@ public abstract class PersistentBase implements Persistent {
 	        Slot slot;
 	        
 	        if(isNew()){
-	            Pointer4 ptr = stream.newSlot(trans, length);
-	            setID(ptr._id);
-	            slot = new Slot(ptr._address, length);
+	            Pointer4 pointer = stream.newSlot(trans, length);
+	            setID(pointer._id);
+	            slot = pointer._slot;
 	            
 	            // FIXME: Free everything on rollback here ?
 	        }else{
 	            slot = stream.getSlot(length);
-	            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot.address(), slot.length());
+	            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot,true);
 	        }
 	        
 	        writeToFile(trans, writer, slot);
@@ -157,7 +157,7 @@ public abstract class PersistentBase implements Persistent {
         }
 
     }
-
+    
 	private final void writeToFile(Transaction trans, Buffer writer, Slot slot) {
 		
         if(DTrace.enabled){

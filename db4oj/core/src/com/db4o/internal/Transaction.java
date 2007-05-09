@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.ix.IndexTransaction;
+import com.db4o.internal.slots.*;
 import com.db4o.reflect.Reflector;
 
 
@@ -173,27 +174,27 @@ public abstract class Transaction {
         }
     }	
 
-    public abstract void setPointer(int a_id, int a_address, int a_length);
+    public abstract void setPointer(int a_id, Slot slot);
     
-    public void slotDelete(int a_id, int a_address, int a_length) {
+    public void slotDelete(int id, Slot slot) {
     }
 
-    public void slotFreeOnCommit(int a_id, int a_address, int a_length) {
+    public void slotFreeOnCommit(int id, Slot slot) {
     }
 
-    public void slotFreeOnRollback(int a_id, int a_address, int a_length) {
+    public void slotFreeOnRollback(int id, Slot slot) {
     }
 
-    void slotFreeOnRollbackCommitSetPointer(int a_id, int newAddress, int newLength) {
+    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot, boolean freeImmediately) {
     }
 
-    void produceUpdateSlotChange(int a_id, int a_address, int a_length) {
+    void produceUpdateSlotChange(int id, Slot slot) {
     }
     
     public void slotFreePointerOnCommit(int a_id) {
     }
     
-    void slotFreePointerOnCommit(int a_id, int a_address, int a_length) {
+    void slotFreePointerOnCommit(int a_id, Slot slot) {
     }
     
     public void slotFreePointerOnRollback(int a_id) {
