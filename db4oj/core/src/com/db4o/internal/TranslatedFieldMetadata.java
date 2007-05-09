@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.internal.ix.*;
@@ -46,7 +44,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 		return getOn(a_trans, a_OnObject);
 	}
 
-	public void instantiate(MarshallerFamily mf,  ObjectReference a_yapObject, Object a_onObject, StatefulBuffer a_bytes) throws CorruptionException, IOException {
+	public void instantiate(MarshallerFamily mf,  ObjectReference a_yapObject, Object a_onObject, StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
 		Object toSet = read(mf, a_bytes);
 
 		// Activation of members is necessary on purpose here.

@@ -2,8 +2,7 @@
 
 package com.db4o.internal.fileheader;
 
-import java.io.*;
-
+import com.db4o.*;
 import com.db4o.internal.*;
 
 
@@ -45,7 +44,7 @@ public class TimerFileLockDisabled  extends TimerFileLock{
     }
 
 	public void checkIfOtherSessionAlive(LocalObjectContainer container, int address, int offset,
-		long lastAccessTime) throws IOException {		
+		long lastAccessTime) throws Db4oIOException {		
 	}
 
 

@@ -2,8 +2,7 @@
 
 package com.db4o.internal.fileheader;
 
-import java.io.*;
-
+import com.db4o.*;
 import com.db4o.internal.*;
 
 
@@ -29,14 +28,14 @@ public abstract class TimerFileLock implements Runnable{
 
     public abstract void setAddresses(int baseAddress, int openTimeOffset, int accessTimeOffset);
 
-    public abstract void start() throws IOException;
+    public abstract void start() throws Db4oIOException;
 
     public abstract void writeHeaderLock();
 
     public abstract void writeOpenTime();
 
-    public abstract void close() throws IOException;
+    public abstract void close() throws Db4oIOException;
 
     public abstract void checkIfOtherSessionAlive(LocalObjectContainer container, int address,
-		int offset, long lastAccessTime) throws IOException;
+		int offset, long lastAccessTime) throws Db4oIOException;
 }

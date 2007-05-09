@@ -2,8 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
@@ -16,9 +14,9 @@ public abstract class ArrayMarshaller {
     
     public MarshallerFamily _family;
     
-    public abstract void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws IOException;
+    public abstract void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws Db4oIOException;
     
-    public final TreeInt collectIDs(ArrayHandler arrayHandler, TreeInt tree, StatefulBuffer reader) throws IOException{
+    public final TreeInt collectIDs(ArrayHandler arrayHandler, TreeInt tree, StatefulBuffer reader) throws Db4oIOException{
         Transaction trans = reader.getTransaction();
         return arrayHandler.collectIDs1(trans, tree, prepareIDReader(trans,reader));
     }
@@ -27,13 +25,13 @@ public abstract class ArrayMarshaller {
     
     public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, ArrayHandler handler, Object obj, boolean topLevel);
     
-    public abstract Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, IOException;
+    public abstract Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, Db4oIOException;
     
-    public abstract void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) throws IOException;
+    public abstract void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) throws Db4oIOException;
     
-    public abstract Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, IOException;
+    public abstract Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, Db4oIOException;
     
     public abstract Object writeNew(ArrayHandler arrayHandler, Object obj, boolean topLevel, StatefulBuffer writer);
 
-    protected abstract Buffer prepareIDReader(Transaction trans,Buffer reader) throws IOException;
+    protected abstract Buffer prepareIDReader(Transaction trans,Buffer reader) throws Db4oIOException;
 }

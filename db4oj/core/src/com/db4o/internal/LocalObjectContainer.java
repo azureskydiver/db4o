@@ -447,11 +447,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 			((StatefulBuffer) reader).setID(a_id);
 		}
 
-		try {
-			reader.readEncrypt(this, slot.address());
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
-		}
+		reader.readEncrypt(this, slot.address());
 		return reader;
 	}
     

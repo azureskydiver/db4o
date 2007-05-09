@@ -2,8 +2,6 @@
 
 package com.db4o.internal.handlers;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
@@ -58,7 +56,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
             + (Const4.INT_LENGTH * (2 + dim.length));
     }
 
-    public final Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException, IOException {
+    public final Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException, Db4oIOException {
         
         if (Deploy.debug) {
             reader.readBegin(identifier());
@@ -112,7 +110,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         }
     }
     
-	public final Object read1Query(Transaction a_trans, MarshallerFamily mf, Buffer a_bytes) throws CorruptionException, IOException {
+	public final Object read1Query(Transaction a_trans, MarshallerFamily mf, Buffer a_bytes) throws CorruptionException, Db4oIOException {
         
         if(Deploy.debug){
             a_bytes.readBegin(identifier());

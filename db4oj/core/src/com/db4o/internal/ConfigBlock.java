@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.ext.OldFormatException;
 import com.db4o.foundation.Cool;
@@ -68,15 +66,15 @@ public final class ConfigBlock {
         + 1;
     
     
-    public static ConfigBlock forNewFile(LocalObjectContainer file) throws IOException{
+    public static ConfigBlock forNewFile(LocalObjectContainer file) throws Db4oIOException {
         return new ConfigBlock(file, true, 0);
     }
     
-    public static ConfigBlock forExistingFile(LocalObjectContainer file, int address) throws IOException, OldFormatException {
+    public static ConfigBlock forExistingFile(LocalObjectContainer file, int address) throws Db4oIOException, OldFormatException {
         return new ConfigBlock(file, false, address);
     }
     
-	private ConfigBlock(LocalObjectContainer stream, boolean isNew, int address) throws IOException, OldFormatException {
+	private ConfigBlock(LocalObjectContainer stream, boolean isNew, int address) throws Db4oIOException, OldFormatException {
 		_container = stream;
         _timerFileLock = TimerFileLock.forFile(stream);
         timerFileLock().writeHeaderLock();
@@ -124,7 +122,7 @@ public final class ConfigBlock {
         return _container.systemData();
     }
 	
-	private void read(int address) throws IOException, OldFormatException {
+	private void read(int address) throws Db4oIOException, OldFormatException {
         addressChanged(address);
 		timerFileLock().writeOpenTime();
 		StatefulBuffer reader = _container.getWriter(_container.systemTransaction(), _address, LENGTH);
@@ -279,7 +277,7 @@ public final class ConfigBlock {
         return _address;
     }
 
-    public void close() throws IOException {
+    public void close() throws Db4oIOException {
         timerFileLock().close();
     }
 	

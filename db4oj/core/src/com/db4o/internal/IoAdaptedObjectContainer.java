@@ -72,41 +72,29 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (_backupFile != null) {
 				throw new BackupInProgressException();
 			}
-			try {
-				_backupFile = configImpl().ioAdapter().open(path, true,
-						_file.getLength());
-			} catch (IOException e) {
-				throw new Db4oIOException(e);
-			}
+			_backupFile = configImpl().ioAdapter().open(path, true,
+					_file.getLength());
 			_backupFile.blockSize(blockSize());
 		}
         long pos = 0;
         byte[] buffer = new byte[8192];
-        while(true){
-            synchronized (i_lock) {
-				try {
-					_file.seek(pos);
-					int read = _file.read(buffer);
-					if (read <= 0) {
-						break;
-					}
-					_backupFile.seek(pos);
-					_backupFile.write(buffer, read);
-					pos += read;
-				} catch (IOException e) {
-					_backupFile = null;
-					throw new Db4oIOException(e);
+        while (true) {
+			synchronized (i_lock) {
+				_file.seek(pos);
+				int read = _file.read(buffer);
+				if (read <= 0) {
+					break;
 				}
+				_backupFile.seek(pos);
+				_backupFile.write(buffer, read);
+				pos += read;
 			}
-            Cool.sleepIgnoringInterruption(1);
-        }
+		}
+        
+		Cool.sleepIgnoringInterruption(1);
 
         synchronized (i_lock) {
-			try {
-				_backupFile.close();
-			} catch (IOException e) {
-				throw new Db4oIOException(e);
-			}
+			_backupFile.close();
 			_backupFile = null;
 		}
     }
@@ -143,8 +131,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (_file != null) {
 				_file.close();
 			}
-		} catch (IOException e) {
-			// ignore
 		} finally {
 			_file = null;
 		}
@@ -159,8 +145,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (_fileHeader != null) {
 				_fileHeader.close();
 			}
-		} catch (IOException e) {
-			// ignore
 		} finally {
 			_fileHeader = null;
 		}
@@ -175,8 +159,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			if (_timerFile != null) {
 				_timerFile.close();
 			}
-		} catch (IOException e) {
-			// ignore
 		} finally {
 			_timerFile = null;
 		}
@@ -251,12 +233,12 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
 
-    public void readBytes(byte[] bytes, int address, int length) throws IOException {
+    public void readBytes(byte[] bytes, int address, int length) throws Db4oIOException {
         readBytes(bytes, address, 0, length);
     }
 
     public void readBytes(byte[] bytes, int address, int addressOffset,
-			int length) throws IOException {
+			int length) throws Db4oIOException {
 
 		if (DTrace.enabled) {
 			DTrace.READ_BYTES.logLength(address + addressOffset, length);

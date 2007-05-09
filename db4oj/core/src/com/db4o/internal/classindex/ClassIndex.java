@@ -2,24 +2,10 @@
 
 package com.db4o.internal.classindex;
 
-import java.io.IOException;
-
-import com.db4o.Deploy;
-import com.db4o.foundation.Debug4;
-import com.db4o.foundation.Tree;
-import com.db4o.internal.Buffer;
-import com.db4o.internal.ClassIndexException;
-import com.db4o.internal.ClassMetadata;
-import com.db4o.internal.Const4;
-import com.db4o.internal.Exceptions4;
-import com.db4o.internal.LocalTransaction;
-import com.db4o.internal.ObjectContainerBase;
-import com.db4o.internal.PersistentBase;
-import com.db4o.internal.ReadWriteable;
-import com.db4o.internal.Transaction;
-import com.db4o.internal.TreeInt;
-import com.db4o.internal.TreeReader;
-import com.db4o.internal.slots.Slot;
+import com.db4o.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.*;
+import com.db4o.internal.slots.*;
 
 /**
  * representation to collect and hold all IDs of one class
@@ -67,11 +53,7 @@ import com.db4o.internal.slots.Slot;
             length += Const4.LEADING_LENGTH;
         }
         Buffer reader = new Buffer(length);
-        try {
-			reader.readEncrypt(ta.stream(), slot.address());
-		} catch (IOException exc) {
-			throw new ClassIndexException(exc, _clazz.getName());
-		}
+        reader.readEncrypt(ta.stream(), slot.address());
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
         }

@@ -565,7 +565,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().stream().i_handlers.arrayType(a_object), false);
     }
 
-    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws IOException {
+    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
         if (a_bytes.cascadeDeletes() > 0) {
             int id = a_bytes.readInt();
             if (id > 0) {
@@ -576,7 +576,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         }
     }
 
-    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws IOException {
+    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws Db4oIOException {
         if (a_bytes.cascadeDeletes() > 0) {
         	
         	ObjectContainerBase stream = a_bytes.getStream();
@@ -1137,9 +1137,6 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		// Field length is always 1
 		try {
 		    return i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));                      
-		} catch (IOException e) {
-		    Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
-		    return null;
 		} catch (CorruptionException e) {
 			Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
 		    return null;
@@ -1306,7 +1303,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         //       indexes here
     }
 
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
         try {
             int id = a_bytes.readInt();
             int depth = a_bytes.getInstantiationDepth() - 1;
@@ -1364,10 +1361,11 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return null;
     }
     
-    public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, IOException {
+    public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
         try {
             return a_trans.stream().getByID2(a_trans, a_reader.readInt());
         } catch (Exception e) {
+        	// FIXME: DO WE NEED TO CATCH IT HERE?
             if (Debug.atHome) {
                 e.printStackTrace();
             }

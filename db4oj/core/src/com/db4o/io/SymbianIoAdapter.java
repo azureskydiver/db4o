@@ -4,6 +4,8 @@ package com.db4o.io;
 
 import java.io.*;
 
+import com.db4o.*;
+
 /**
  * Workaround for two I/O bugs in Symbian JDK versions:<br>
  * - seek() cannot move beyond the current file length.<br>
@@ -27,24 +29,33 @@ public class SymbianIoAdapter extends RandomAccessFileAdapter {
     private long _pos;
     private long _length;
     
-	protected SymbianIoAdapter(String path, boolean lockFile, long initialLength) throws IOException {
+	protected SymbianIoAdapter(String path, boolean lockFile, long initialLength) throws Db4oIOException {
 		super(path, lockFile, initialLength);		
 		_path=path;
 		_pos=0;
 		setLength();
 	}
 	
-	private void setLength() throws IOException {
+	private void setLength() throws Db4oIOException {
 		_length=retrieveLength();
 	}
 
 		
-	private long retrieveLength() throws IOException {
-		RandomAccessFile file=new RandomAccessFile(_path,"r");
+	private long retrieveLength() throws Db4oIOException {
+		RandomAccessFile file = null;
 		try {
+			file = new RandomAccessFile(_path, "r");
 			return file.length();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
 		} finally {
-			file.close();
+			try {
+				if (file != null) {
+					file.close();
+				}
+			} catch (IOException e) {
+				throw new Db4oIOException(e);
+			}
 		}
 	}
 	
@@ -53,22 +64,22 @@ public class SymbianIoAdapter extends RandomAccessFileAdapter {
 		super();
 	}
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException {
+	public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
 		return new SymbianIoAdapter(path,lockFile,initialLength);
 	}
 
-	public long getLength() throws IOException {
+	public long getLength() throws Db4oIOException {
 		setLength();
 		return _length;
 	}
 	
-	public int read(byte[] bytes, int length) throws IOException {
+	public int read(byte[] bytes, int length) throws Db4oIOException {
 		int ret=super.read(bytes, length);
 		_pos+=ret;
 		return ret;
 	}
 	
-	public void write(byte[] buffer, int length) throws IOException {
+	public void write(byte[] buffer, int length) throws Db4oIOException {
 		super.write(buffer, length);		
 		_pos+=length;
 		if(_pos>_length) {
@@ -76,7 +87,7 @@ public class SymbianIoAdapter extends RandomAccessFileAdapter {
 		}
 	}
 	
-	public void seek(long pos) throws IOException {
+	public void seek(long pos) throws Db4oIOException {
 		if (pos > _length) {
 			setLength();
 		}

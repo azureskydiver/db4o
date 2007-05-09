@@ -2,8 +2,6 @@
 
 package com.db4o.internal.handlers;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -94,7 +92,7 @@ public final class StringHandler extends BuiltinTypeHandler {
         MarshallerFamily.current()._string.calculateLengths(trans, header, topLevel, obj, withIndirection);
     }
 
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
+    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
         return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes, redirect);
     }
     
@@ -119,11 +117,9 @@ public final class StringHandler extends BuiltinTypeHandler {
             if(obj != null){
                 return new QCandidate(candidates, obj, 0, true);
             }
-        } 
-        catch (CorruptionException e) {
+        } catch (CorruptionException e) {
+        	// FIXME: should it be ignored?
         }
-	    catch (IOException e) {
-	    }
         return null;
     } 
 
@@ -131,10 +127,9 @@ public final class StringHandler extends BuiltinTypeHandler {
     /**
      * This readIndexEntry method reads from the parent slot.
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
-     * @throws IOException 
      * @throws CorruptionException
      */
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, IOException {
+    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, Db4oIOException {
 		return mf._string.readIndexEntry(a_writer);
     }
 
@@ -154,7 +149,7 @@ public final class StringHandler extends BuiltinTypeHandler {
 		return (slot.address() == 0) && (slot.length() == 0);
 	}
     
-	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, IOException {
+	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
         if(! withRedirection){
             return mf._string.read(a_trans.stream(), a_reader);
         }
@@ -230,12 +225,7 @@ public final class StringHandler extends BuiltinTypeHandler {
 
         if (obj instanceof Slot) {
 			Slot s = (Slot) obj;
-
-			try {
-				return oc.bufferByAddress(s.address(), s.length());
-			} catch (IOException e) {
-				throw new ComparableConversionException(s,e);
-			}
+			return oc.bufferByAddress(s.address(), s.length());
 		}
         
 		return null;

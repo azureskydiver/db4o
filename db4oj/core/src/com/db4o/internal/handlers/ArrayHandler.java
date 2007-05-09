@@ -2,8 +2,6 @@
 
 package com.db4o.internal.handlers;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -67,7 +65,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
     	return i_handler.classReflector();
     }
 
-    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader) throws IOException{
+    public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader) throws Db4oIOException{
         return mf._array.collectIDs(this, tree, reader);
     }
     
@@ -90,7 +88,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
         throw Exceptions4.virtualException();
     }
 
-    public final void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws IOException {
+    public final void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
         mf._array.deleteEmbedded(this, a_bytes);
     }
 
@@ -201,7 +199,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		return i_handler.primitiveClassReflector();
 	}
 	
-    public final Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, IOException {
+    public final Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
         return mf._array.read(this, a_bytes);
     }
     
@@ -210,11 +208,11 @@ public class ArrayHandler extends BuiltinTypeHandler {
         throw Exceptions4.virtualException();
     }
     
-	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, IOException {
+	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
         return mf._array.readQuery(this, a_trans, a_reader);
 	}
 	
-	public Object read1Query(Transaction a_trans, MarshallerFamily mf, Buffer a_reader) throws CorruptionException, IOException {
+	public Object read1Query(Transaction a_trans, MarshallerFamily mf, Buffer a_reader) throws CorruptionException, Db4oIOException {
 
         if(Deploy.debug){
             a_reader.readBegin(identifier());
@@ -234,7 +232,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		return ret;
 	}
 
-    public Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException, IOException {
+    public Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException, Db4oIOException {
         
         if (Deploy.debug) {
             reader.readBegin(identifier());
@@ -274,7 +272,7 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return this;
     }
 
-    public void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws IOException {
+    public void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws Db4oIOException {
         mf._array.readCandidates(this, reader, candidates);
     }
     

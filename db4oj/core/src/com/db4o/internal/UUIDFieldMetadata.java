@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -37,15 +35,13 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         
         LocalObjectContainer yf = (LocalObjectContainer)writer.getStream();
         
-        if( (uuid == 0 || db4oDatabaseIdentityID == 0) && writer.getID() > 0 && ! isnew){
-        	try {
-				DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(yf, yapClass, oldSlot, false);            
-				db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
-				uuid = identityAndUUID.uuid;
-			} catch (IOException exc) {
-				throw new FieldIndexException(exc,this);
-			}
-        }
+        if ((uuid == 0 || db4oDatabaseIdentityID == 0) && writer.getID() > 0
+				&& !isnew) {
+			DatabaseIdentityIDAndUUID identityAndUUID = readDatabaseIdentityIDAndUUID(
+					yf, yapClass, oldSlot, false);
+			db4oDatabaseIdentityID = identityAndUUID.databaseIdentityID;
+			uuid = identityAndUUID.uuid;
+		}
         
         if(db4oDatabaseIdentityID == 0){
             db4oDatabaseIdentityID = yf.identity().getID(writer.getTransaction());
@@ -72,8 +68,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 		}
     }
 
-    // FIXME probably always should throw in exceptional circumstances?
-	private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, ClassMetadata yapClass, Slot oldSlot, boolean checkClass) throws IOException {
+   private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, ClassMetadata yapClass, Slot oldSlot, boolean checkClass) throws Db4oIOException {
         if(DTrace.enabled){
             DTrace.REREAD_OLD_UUID.logLength(oldSlot.address(), oldSlot.length());
         }
@@ -114,19 +109,17 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	return super.getIndex(transaction);
     }
     
-    protected void rebuildIndexForObject(LocalObjectContainer stream, ClassMetadata yapClass, int objectId) throws FieldIndexException {
-    	try {
-			DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream, yapClass, ((LocalTransaction)stream.systemTransaction()).getCurrentSlotOfID(objectId), true);
-			if (null == data) {
-				return;
-			}
-			addIndexEntry(stream.getLocalSystemTransaction(), objectId, new Long(data.uuid));
-		} catch (SlotRetrievalException exc) {
-			throw new FieldIndexException(exc,this);
-		} catch (IOException exc) {
-			throw new FieldIndexException(exc,this);
+    protected void rebuildIndexForObject(LocalObjectContainer stream,
+			ClassMetadata yapClass, int objectId) throws FieldIndexException {
+		DatabaseIdentityIDAndUUID data = readDatabaseIdentityIDAndUUID(stream,
+				yapClass, ((LocalTransaction) stream.systemTransaction())
+						.getCurrentSlotOfID(objectId), true);
+		if (null == data) {
+			return;
 		}
-    }
+		addIndexEntry(stream.getLocalSystemTransaction(), objectId, new Long(
+				data.uuid));
+	}
     
 	private void ensureIndex(Transaction transaction) {
 		if (null == transaction) {

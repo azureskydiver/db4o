@@ -14,7 +14,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] { 
 			ActivationExceptionBubblesUpTestCase.class,
 			BackupCSExceptionTestCase.class,
-			BackupExceptionTestCase.class,
+			BackupDb4oIOExceptionTestCase.class,
 			DatabaseClosedExceptionTestCase.class,
 			DatabaseReadonlyExceptionTestCase.class,
 			GlobalOnlyConfigExceptionTestCase.class,

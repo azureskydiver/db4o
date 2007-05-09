@@ -2,24 +2,15 @@
 
 package com.db4o.internal.marshall;
 
-import java.io.IOException;
-
-import com.db4o.CorruptionException;
-import com.db4o.Deploy;
-import com.db4o.internal.Buffer;
-import com.db4o.internal.ClassMetadata;
-import com.db4o.internal.Const4;
-import com.db4o.internal.ReaderPair;
-import com.db4o.internal.StatefulBuffer;
-import com.db4o.internal.Transaction;
-import com.db4o.internal.handlers.ArrayHandler;
-import com.db4o.internal.query.processor.QCandidate;
-import com.db4o.internal.query.processor.QCandidates;
+import com.db4o.*;
+import com.db4o.internal.*;
+import com.db4o.internal.handlers.*;
+import com.db4o.internal.query.processor.*;
 
 
 class ArrayMarshaller0  extends ArrayMarshaller{
     
-    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws IOException {
+    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws Db4oIOException {
         int address = reader.readInt();
         int length = reader.readInt();
         if (address <= 0) {
@@ -61,12 +52,12 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         return a_object;
     }
     
-    public Object read(ArrayHandler arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException, IOException {
+    public Object read(ArrayHandler arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
         StatefulBuffer bytes = a_bytes.readEmbeddedObject();
         return arrayHandler.read1(_family, bytes);
     }
     
-    public void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) throws IOException {
+    public void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) throws Db4oIOException {
         Buffer bytes = reader.readEmbeddedObject(candidates.i_trans);
 		if(Deploy.debug){
             bytes.readBegin(arrayHandler.identifier());
@@ -78,12 +69,12 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     }
 
     
-    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, IOException {
+    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, Db4oIOException {
         Buffer bytes = reader.readEmbeddedObject(trans);
         return arrayHandler.read1Query(trans,_family, bytes);
     }
     
-    protected Buffer prepareIDReader(Transaction trans,Buffer reader) throws IOException {
+    protected Buffer prepareIDReader(Transaction trans,Buffer reader) throws Db4oIOException {
     	return reader.readEmbeddedObject(trans);
     }
     

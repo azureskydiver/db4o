@@ -2,13 +2,13 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.callbacks.Callbacks;
+import com.db4o.internal.callbacks.*;
 import com.db4o.internal.cs.*;
-import com.db4o.internal.marshall.ObjectHeader;
+import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -306,7 +306,7 @@ public class LocalTransaction extends Transaction {
         return (SlotChange)TreeInt.find(_slotChanges, a_id);
     }    
 
-    public Slot getCurrentSlotOfID(int id) throws SlotRetrievalException {
+    public Slot getCurrentSlotOfID(int id) {
         checkSynchronization();
         if (id == 0) {
             return null;
@@ -328,7 +328,7 @@ public class LocalTransaction extends Transaction {
 		
     }
     
-    public Slot getCommittedSlotOfID(int id) throws SlotRetrievalException {
+    public Slot getCommittedSlotOfID(int id) {
         if (id == 0) {
             return null;
         }
@@ -349,16 +349,12 @@ public class LocalTransaction extends Transaction {
 		return readCommittedSlotOfID(id);
     }
 
-    private Slot readCommittedSlotOfID(int id) throws SlotRetrievalException {
+    private Slot readCommittedSlotOfID(int id) {
         if (Deploy.debug) {
             return debugReadCommittedSlotOfID(id);
         }
-        try {
-        	_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
-        }
-        catch(IOException exc) {
-        	throw new SlotRetrievalException(exc,id);
-        }
+       	_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
+
         int address = (_pointerBuffer[3] & 255)
             | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
             | _pointerBuffer[0] << 24;
@@ -368,18 +364,14 @@ public class LocalTransaction extends Transaction {
         return new Slot(address, length);
     }
 
-	private Slot debugReadCommittedSlotOfID(int id) throws SlotRetrievalException {
-		try {
-			i_pointerIo.useSlot(id);
-			i_pointerIo.read();
-			i_pointerIo.readBegin(Const4.YAPPOINTER);
-			int debugAddress = i_pointerIo.readInt();
-			int debugLength = i_pointerIo.readInt();
-			i_pointerIo.readEnd();
-			return new Slot(debugAddress, debugLength);
-		} catch (IOException exc) {
-			throw new SlotRetrievalException(exc,id);
-		}
+	private Slot debugReadCommittedSlotOfID(int id) {
+		i_pointerIo.useSlot(id);
+		i_pointerIo.read();
+		i_pointerIo.readBegin(Const4.YAPPOINTER);
+		int debugAddress = i_pointerIo.readInt();
+		int debugLength = i_pointerIo.readInt();
+		i_pointerIo.readEnd();
+		return new Slot(debugAddress, debugLength);
 	}
     
     public void setPointer(int a_id, int a_address, int a_length) {

@@ -2,8 +2,9 @@
 
 package com.db4o.internal.fileheader;
 
-import java.io.IOException;
+import java.io.*;
 
+import com.db4o.*;
 import com.db4o.internal.*;
 
 
@@ -46,11 +47,11 @@ public class FileHeader1 extends FileHeader {
 
     private FileHeaderVariablePart1 _variablePart;
     
-    public void close() throws IOException {
+    public void close() throws Db4oIOException {
         _timerFileLock.close();
     }
 
-    public void initNew(LocalObjectContainer file) throws IOException {
+    public void initNew(LocalObjectContainer file) throws Db4oIOException {
         commonTasksForNewAndRead(file);
         _variablePart = new FileHeaderVariablePart1(0, file.systemData());
         writeVariablePart(file, 0);
@@ -120,11 +121,7 @@ public class FileHeader1 extends FileHeader {
         writer.write();
         file.syncFiles();
         if(startFileLockingThread){
-        	try {
-				_timerFileLock.start();
-			} catch (IOException e) {
-				// TODO: throw
-			}
+        	_timerFileLock.start();
         }
     }
 

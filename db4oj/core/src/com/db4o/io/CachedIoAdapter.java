@@ -2,11 +2,11 @@
 
 package com.db4o.io;
 
-import java.io.IOException;
+import com.db4o.*;
 
 /**
- * CachedIoAdapter is an IOAdapter for random access files, which caches data for IO access.
- * Its functionality is similar to OS cache.<br>
+ * CachedIoAdapter is an IOAdapter for random access files, which caches data
+ * for IO access. Its functionality is similar to OS cache.<br>
  * Example:<br>
  * <code>delegateAdapter = new RandomAccessFileAdapter();</code><br>
  * <code>Db4o.configure().io(new CachedIoAdapter(delegateAdapter));</code><br>
@@ -28,32 +28,34 @@ public class CachedIoAdapter extends IoAdapter {
 	private long _filePointer;
 
 	private IoAdapter _io;
-	
+
 	private static int DEFAULT_PAGE_SIZE = 1024;
-	
+
 	private static int DEFAULT_PAGE_COUNT = 64;
 
 	// private Hashtable4 _posPageMap = new Hashtable4(PAGE_COUNT);
 
 	/**
-	 * Creates an instance of CachedIoAdapter with the default 
-	 * page size and page count.  
+	 * Creates an instance of CachedIoAdapter with the default page size and
+	 * page count.
+	 * 
 	 * @param IoAdapter
-	 *                               delegate IO adapter (RandomAccessFileAdapter by default)
+	 *            delegate IO adapter (RandomAccessFileAdapter by default)
 	 */
 	public CachedIoAdapter(IoAdapter ioAdapter) {
 		this(ioAdapter, DEFAULT_PAGE_SIZE, DEFAULT_PAGE_COUNT);
 	}
 
 	/**
-	 * Creates an instance of CachedIoAdapter with a custom
-	 * page size and page count.<br>
-	 *  @param IoAdapter
-	 *                               delegate IO adapter (RandomAccessFileAdapter by default)
-	 *  @param pageSize 
-	 *                               cache page size
-	 *  @param pageCount
-	 *                               allocated amount of pages  
+	 * Creates an instance of CachedIoAdapter with a custom page size and page
+	 * count.<br>
+	 * 
+	 * @param IoAdapter
+	 *            delegate IO adapter (RandomAccessFileAdapter by default)
+	 * @param pageSize
+	 *            cache page size
+	 * @param pageCount
+	 *            allocated amount of pages
 	 */
 	public CachedIoAdapter(IoAdapter ioAdapter, int pageSize, int pageCount) {
 		_io = ioAdapter;
@@ -63,27 +65,27 @@ public class CachedIoAdapter extends IoAdapter {
 
 	/**
 	 * Creates an instance of CachedIoAdapter with extended parameters.<br>
-	 *  @param path
-	 *                              database file path
-	 *  @param lockFile
-	 *                              determines if the file should be locked 
-	 *  @param initialLength
-	 *                              initial file length, new writes will start from this point
-	 *  @param IoAdapter 
-	 *                              delegate IO adapter (RandomAccessFileAdapter by default)
-	 *  @param pageSize
-	 *                              cache page size
-	 *  @param pageCount
-	 *                              allocated amount of pages 
+	 * 
+	 * @param path
+	 *            database file path
+	 * @param lockFile
+	 *            determines if the file should be locked
+	 * @param initialLength
+	 *            initial file length, new writes will start from this point
+	 * @param IoAdapter
+	 *            delegate IO adapter (RandomAccessFileAdapter by default)
+	 * @param pageSize
+	 *            cache page size
+	 * @param pageCount
+	 *            allocated amount of pages
 	 */
 	public CachedIoAdapter(String path, boolean lockFile, long initialLength,
-			IoAdapter io, int pageSize, int pageCount) throws IOException {
-		_io = io;
+			IoAdapter io, int pageSize, int pageCount) throws Db4oIOException {
 		_pageSize = pageSize;
 		_pageCount = pageCount;
 
 		initCache();
-		initIOAdaptor(path, lockFile, initialLength);
+		initIOAdaptor(path, lockFile, initialLength, io);
 
 		_position = initialLength;
 		_filePointer = initialLength;
@@ -92,23 +94,25 @@ public class CachedIoAdapter extends IoAdapter {
 
 	/**
 	 * Creates and returns a new CachedIoAdapter <br>
-	 *  @param path
-	 *                              database file path
-	 *  @param lockFile
-	 *                              determines if the file should be locked 
-	 *  @param initialLength
-	 *                              initial file length, new writes will start from this point
+	 * 
+	 * @param path
+	 *            database file path
+	 * @param lockFile
+	 *            determines if the file should be locked
+	 * @param initialLength
+	 *            initial file length, new writes will start from this point
 	 */
 	public IoAdapter open(String path, boolean lockFile, long initialLength)
-			throws IOException {
+			throws Db4oIOException {
 		return new CachedIoAdapter(path, lockFile, initialLength, _io,
 				_pageSize, _pageCount);
 	}
 
 	/**
 	 * Deletes the database file
+	 * 
 	 * @param path
-	 *                              file path
+	 *            file path
 	 */
 	public void delete(String path) {
 		_io.delete(path);
@@ -116,16 +120,17 @@ public class CachedIoAdapter extends IoAdapter {
 
 	/**
 	 * Checks if the file exists
+	 * 
 	 * @param path
-	 *                              file path
+	 *            file path
 	 */
 	public boolean exists(String path) {
 		return _io.exists(path);
 	}
 
-	private void initIOAdaptor(String path, boolean lockFile, long initialLength)
-			throws IOException {
-		_io = _io.open(path, lockFile, initialLength);
+	private void initIOAdaptor(String path, boolean lockFile, long initialLength, IoAdapter io)
+			throws Db4oIOException {
+		_io = io.open(path, lockFile, initialLength);
 	}
 
 	private void initCache() {
@@ -143,14 +148,15 @@ public class CachedIoAdapter extends IoAdapter {
 	}
 
 	/**
-	 * Reads the file into the buffer using pages from cache. 
-	 * If the next page is not cached it will be read from the file.
+	 * Reads the file into the buffer using pages from cache. If the next page
+	 * is not cached it will be read from the file.
+	 * 
 	 * @param buffer
-	 *                              destination buffer
+	 *            destination buffer
 	 * @param length
-	 *                              how many bytes to read
+	 *            how many bytes to read
 	 */
-	public int read(byte[] buffer, int length) throws IOException {
+	public int read(byte[] buffer, int length) throws Db4oIOException {
 		long startAddress = _position;
 		Page page;
 		int readBytes;
@@ -158,9 +164,10 @@ public class CachedIoAdapter extends IoAdapter {
 		int bufferOffset = 0;
 		while (bytesToRead > 0) {
 			page = getPage(startAddress, true);
-			readBytes = page.read(buffer, bufferOffset, startAddress, bytesToRead);
+			readBytes = page.read(buffer, bufferOffset, startAddress,
+					bytesToRead);
 			movePageToHead(page);
-			if(readBytes <= 0) {
+			if (readBytes <= 0) {
 				break;
 			}
 			bytesToRead -= readBytes;
@@ -173,12 +180,13 @@ public class CachedIoAdapter extends IoAdapter {
 
 	/**
 	 * Writes the buffer to cache using pages
+	 * 
 	 * @param buffer
-	 *                              source buffer
+	 *            source buffer
 	 * @param length
-	 *                              how many bytes to write
+	 *            how many bytes to write
 	 */
-	public void write(byte[] buffer, int length) throws IOException {
+	public void write(byte[] buffer, int length) throws Db4oIOException {
 		long startAddress = _position;
 		Page page = null;
 		int writtenBytes;
@@ -186,10 +194,12 @@ public class CachedIoAdapter extends IoAdapter {
 		int bufferOffset = 0;
 		while (bytesToWrite > 0) {
 			// page doesn't need to loadFromDisk if the whole page is dirty
-			boolean loadFromDisk = (bytesToWrite < _pageSize) || (startAddress % _pageSize != 0);
+			boolean loadFromDisk = (bytesToWrite < _pageSize)
+					|| (startAddress % _pageSize != 0);
 			page = getPage(startAddress, loadFromDisk);
 			page.ensureEndAddress(getLength());
-			writtenBytes = page.write(buffer, bufferOffset, startAddress, bytesToWrite);
+			writtenBytes = page.write(buffer, bufferOffset, startAddress,
+					bytesToWrite);
 			movePageToHead(page);
 			bytesToWrite -= writtenBytes;
 			startAddress += writtenBytes;
@@ -203,7 +213,7 @@ public class CachedIoAdapter extends IoAdapter {
 	/**
 	 * Flushes cache to a physical storage
 	 */
-	public void sync() throws IOException {
+	public void sync() throws Db4oIOException {
 		flushAllPages();
 		_io.sync();
 	}
@@ -211,14 +221,14 @@ public class CachedIoAdapter extends IoAdapter {
 	/**
 	 * Returns the file length
 	 */
-	public long getLength() throws IOException {
+	public long getLength() throws Db4oIOException {
 		return _fileLength;
 	}
 
 	/**
 	 * Flushes and closes the file
 	 */
-	public void close() throws IOException {
+	public void close() throws Db4oIOException {
 		flushAllPages();
 		_io.close();
 	}
@@ -226,9 +236,9 @@ public class CachedIoAdapter extends IoAdapter {
 	public IoAdapter delegatedIoAdapter() {
 		return _io.delegatedIoAdapter();
 	}
-	
+
 	private Page getPage(long startAddress, boolean loadFromDisk)
-			throws IOException {
+			throws Db4oIOException {
 		Page page = getPageFromCache(startAddress);
 		if (page != null) {
 			page.ensureEndAddress(_fileLength);
@@ -250,7 +260,7 @@ public class CachedIoAdapter extends IoAdapter {
 		page.endAddress(startAddress + _pageSize);
 	}
 
-	private Page getFreePageFromCache() throws IOException {
+	private Page getFreePageFromCache() throws Db4oIOException {
 		if (!_tail.isFree()) {
 			flushPage(_tail);
 			// _posPageMap.remove(new Long(tail.startPosition / PAGE_SIZE));
@@ -258,7 +268,7 @@ public class CachedIoAdapter extends IoAdapter {
 		return _tail;
 	}
 
-	private Page getPageFromCache(long pos) throws IOException {
+	private Page getPageFromCache(long pos) throws Db4oIOException {
 		Page page = _head;
 		while (page != null) {
 			if (page.contains(pos)) {
@@ -271,7 +281,7 @@ public class CachedIoAdapter extends IoAdapter {
 		// return page;
 	}
 
-	private void flushAllPages() throws IOException {
+	private void flushAllPages() throws Db4oIOException {
 		Page node = _head;
 		while (node != null) {
 			flushPage(node);
@@ -279,7 +289,7 @@ public class CachedIoAdapter extends IoAdapter {
 		}
 	}
 
-	private void flushPage(Page page) throws IOException {
+	private void flushPage(Page page) throws Db4oIOException {
 		if (!page._dirty) {
 			return;
 		}
@@ -288,7 +298,7 @@ public class CachedIoAdapter extends IoAdapter {
 		return;
 	}
 
-	private void getPageFromDisk(Page page, long pos) throws IOException {
+	private void getPageFromDisk(Page page, long pos) throws Db4oIOException {
 		long startAddress = pos - pos % _pageSize;
 		page.startAddress(startAddress);
 		ioSeek(page._startAddress);
@@ -301,7 +311,7 @@ public class CachedIoAdapter extends IoAdapter {
 		// _posPageMap.put(new Long(page.startPosition / PAGE_SIZE), page);
 	}
 
-	private int ioRead(Page page) throws IOException {
+	private int ioRead(Page page) throws Db4oIOException {
 		int count = _io.read(page._buffer);
 		if (count > 0) {
 			_filePointer = page._startAddress + count;
@@ -331,7 +341,7 @@ public class CachedIoAdapter extends IoAdapter {
 		}
 	}
 
-	private void writePageToDisk(Page page) throws IOException {
+	private void writePageToDisk(Page page) throws Db4oIOException {
 		_io.write(page._buffer, page.size());
 		_filePointer = page.endAddress();
 		page._dirty = false;
@@ -339,14 +349,15 @@ public class CachedIoAdapter extends IoAdapter {
 
 	/**
 	 * Moves the pointer to the specified file position
+	 * 
 	 * @param pos
-	 *                              position within the file								 
+	 *            position within the file
 	 */
-	public void seek(long pos) throws IOException {
+	public void seek(long pos) throws Db4oIOException {
 		_position = pos;
 	}
 
-	private void ioSeek(long pos) throws IOException {
+	private void ioSeek(long pos) throws Db4oIOException {
 		if (_filePointer != pos) {
 			_io.seek(pos);
 			_filePointer = pos;
@@ -358,7 +369,7 @@ public class CachedIoAdapter extends IoAdapter {
 		byte[] _buffer;
 
 		long _startAddress = -1;
-		
+
 		long _endAddress;
 
 		int _bufferSize;
@@ -368,8 +379,8 @@ public class CachedIoAdapter extends IoAdapter {
 		Page _prev;
 
 		Page _next;
-		
-		public static byte [] zeroBytes;
+
+		public static byte[] zeroBytes;
 
 		public Page(int size) {
 			_bufferSize = size;
@@ -377,8 +388,8 @@ public class CachedIoAdapter extends IoAdapter {
 		}
 
 		/*
-		 * This method must be invoked before page.write/read, because
-		 * seek and write may write ahead the end of file.
+		 * This method must be invoked before page.write/read, because seek and
+		 * write may write ahead the end of file.
 		 */
 		void ensureEndAddress(long fileLength) {
 			long bufferEndAddress = _startAddress + _bufferSize;
@@ -401,37 +412,38 @@ public class CachedIoAdapter extends IoAdapter {
 		void startAddress(long address) {
 			_startAddress = address;
 		}
-		
+
 		long startAddress() {
 			return _startAddress;
 		}
-		
+
 		void endAddress(long address) {
 			_endAddress = address;
 		}
-		
+
 		int size() {
-			return (int)(_endAddress - _startAddress);
+			return (int) (_endAddress - _startAddress);
 		}
-		
+
 		int read(byte[] out, int outOffset, long startAddress, int length) {
 			int bufferOffset = (int) (startAddress - _startAddress);
-			int pageAvailbeDataSize = (int)(_endAddress - startAddress);
+			int pageAvailbeDataSize = (int) (_endAddress - startAddress);
 			int readBytes = Math.min(pageAvailbeDataSize, length);
-			if(readBytes <= 0) { // meaning reach EOF
+			if (readBytes <= 0) { // meaning reach EOF
 				return -1;
 			}
 			System.arraycopy(_buffer, bufferOffset, out, outOffset, readBytes);
 			return readBytes;
 		}
 
-		int write(byte[] data, int dataOffset, long startAddress, int length) { 
+		int write(byte[] data, int dataOffset, long startAddress, int length) {
 			int bufferOffset = (int) (startAddress - _startAddress);
 			int pageAvailabeBufferSize = (int) (_bufferSize - bufferOffset);
 			int writtenBytes = Math.min(pageAvailabeBufferSize, length);
-			System.arraycopy(data, dataOffset, _buffer, bufferOffset, writtenBytes);
+			System.arraycopy(data, dataOffset, _buffer, bufferOffset,
+					writtenBytes);
 			long endAddress = startAddress + writtenBytes;
-			if(endAddress > _endAddress) {
+			if (endAddress > _endAddress) {
 				_endAddress = endAddress;
 			}
 			_dirty = true;
@@ -439,8 +451,8 @@ public class CachedIoAdapter extends IoAdapter {
 		}
 
 		boolean contains(long address) {
-			return (_startAddress != -1 && address >= _startAddress
-					&& address < _startAddress + _bufferSize);
+			return (_startAddress != -1 && address >= _startAddress && address < _startAddress
+					+ _bufferSize);
 		}
 
 		boolean isFree() {

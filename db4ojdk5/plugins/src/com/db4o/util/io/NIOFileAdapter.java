@@ -8,9 +8,10 @@ import java.nio.*;
 import java.nio.channels.*;
 import java.util.*;
 
-import com.db4o.io.*;
-
 import sun.nio.ch.*;
+
+import com.db4o.*;
+import com.db4o.io.*;
 
 public class NIOFileAdapter extends IoAdapter {
 	private int hits=0;
@@ -33,11 +34,15 @@ public class NIOFileAdapter extends IoAdapter {
 		_lruLimit=lruLimit;
 	}
 
-	private NIOFileAdapter(String filename,boolean lockFile,long initialLength,int pageSize,int lruLimit) throws IOException {
+	private NIOFileAdapter(String filename,boolean lockFile,long initialLength,int pageSize,int lruLimit) throws Db4oIOException {
 		_pageSize=pageSize;
-		_file=new RandomAccessFile(filename, "rw");
-		_channel=_file.getChannel();
-		_size=_channel.size();
+		try {
+			_file = new RandomAccessFile(filename, "rw");
+			_channel = _file.getChannel();
+			_size = _channel.size();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
 		_page=null;
 		_pageId=0;
 		_position=0;
@@ -47,21 +52,26 @@ public class NIOFileAdapter extends IoAdapter {
 		_lruLimit=lruLimit;
 	}
 
-	public void seek(long position) throws IOException {
+	public void seek(long position) throws Db4oIOException {
 		_position=position;
 	}
 
-	public void close() throws IOException {
-		for (Iterator pageiter = _id2Page.values().iterator(); pageiter.hasNext();) {
+	public void close() throws Db4oIOException {
+		for (Iterator pageiter = _id2Page.values().iterator(); pageiter
+				.hasNext();) {
 			MappedByteBuffer curpage = (MappedByteBuffer) pageiter.next();
 			closePage(curpage);
 		}
 		_id2Page.clear();
 		_lruPages.clear();
-		_page=null;
-		_channel.close();
-		_file.close();
-		//System.err.println("Hits: "+hits+", Misses: "+misses);
+		_page = null;
+		try {
+			_channel.close();
+			_file.close();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+		// System.err.println("Hits: "+hits+", Misses: "+misses);
 	}
 
 	public void delete(String path) {
@@ -73,11 +83,11 @@ public class NIOFileAdapter extends IoAdapter {
         return  existingFile.exists() && existingFile.length() > 0;
     }
 
-	public long getLength() throws IOException {
+	public long getLength() throws Db4oIOException {
 		return _size;
 	}
 
-	public int read(byte[] bytes, int length) throws IOException {
+	public int read(byte[] bytes, int length) throws Db4oIOException {
 		if(length<=0) {
 			return 0;
 		}
@@ -103,7 +113,7 @@ public class NIOFileAdapter extends IoAdapter {
 		return (alreadyRead>0 ? alreadyRead : -1);
 	}
 
-	public void write(byte[] bytes, int length) throws IOException {	
+	public void write(byte[] bytes, int length) throws Db4oIOException {	
 		if(length<=0) {
 			return;
 		}
@@ -126,7 +136,7 @@ public class NIOFileAdapter extends IoAdapter {
 		}
 	}
 
-	public void sync() throws IOException {
+	public void sync() throws Db4oIOException {
 		// FIXME internalSync(_page);
 	}
 
@@ -143,8 +153,13 @@ public class NIOFileAdapter extends IoAdapter {
 	public void lock() {
 	}
 
-	private MappedByteBuffer page(int pageId) throws IOException {
-		MappedByteBuffer page=_channel.map(FileChannel.MapMode.READ_WRITE,pagePosition(pageId),_pageSize);
+	private MappedByteBuffer page(int pageId) throws Db4oIOException {
+		MappedByteBuffer page;
+		try {
+			page = _channel.map(FileChannel.MapMode.READ_WRITE,pagePosition(pageId),_pageSize);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
 		page.limit(pageSize(pageId));
 		return page;
 	}
@@ -153,12 +168,12 @@ public class NIOFileAdapter extends IoAdapter {
 		return (long)pageId*_pageSize;
 	}
 
-	private int pageSize(int pageId) throws IOException {
+	private int pageSize(int pageId) throws Db4oIOException {
 		long sizeLeft=_size-pagePosition(pageId);
 		return (sizeLeft>_pageSize ? _pageSize : (int)sizeLeft);
 	}
 
-	private void forcePage() throws IOException {
+	private void forcePage() throws Db4oIOException {
 		int pageId=pageId(_position);
 		int pageOffset=pageOffset(_position);
 		Integer pageIdKey=new Integer(pageId);
@@ -190,18 +205,18 @@ public class NIOFileAdapter extends IoAdapter {
 		misses++;
 	}
 	
-	private void closePage() throws IOException {
+	private void closePage() throws Db4oIOException {
 		closePage(_page);
 		_page=null;
 	}
 
-	private void closePage(MappedByteBuffer page) throws IOException {
+	private void closePage(MappedByteBuffer page) throws Db4oIOException {
 		if(page!=null) {
 			internalSync(page);
 		}
 	}
 
-	private void loadPage(int pageId,int pageOffset) throws IOException {
+	private void loadPage(int pageId,int pageOffset) throws Db4oIOException {
 		_page=page(pageId);
 		_pageId=pageId;
 		_dirty=false;
@@ -223,7 +238,7 @@ public class NIOFileAdapter extends IoAdapter {
 		return (a<b ? b : a);
 	}
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException {
+	public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
 		return new NIOFileAdapter(path,lockFile,initialLength,_pageSize,_lruLimit);
 	}
 }

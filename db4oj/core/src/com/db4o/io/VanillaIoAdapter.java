@@ -2,7 +2,7 @@
 
 package com.db4o.io;
 
-import java.io.*;
+import com.db4o.*;
 
 /**
  * base class for IoAdapters that delegate to other IoAdapters (decorator pattern)
@@ -15,11 +15,11 @@ public abstract class VanillaIoAdapter extends IoAdapter {
         _delegate = delegateAdapter;
     }
     
-    protected VanillaIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength) throws IOException {
+    protected VanillaIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength) throws Db4oIOException {
         _delegate = delegateAdapter.open(path, lockFile, initialLength);
     }
 
-    public void close() throws IOException {
+    public void close() throws Db4oIOException {
         _delegate.close();
     }
 
@@ -31,23 +31,23 @@ public abstract class VanillaIoAdapter extends IoAdapter {
     	return _delegate.exists(path);
     }
     
-    public long getLength() throws IOException {
+    public long getLength() throws Db4oIOException {
         return _delegate.getLength();
     }
 
-    public int read(byte[] bytes, int length) throws IOException {
+    public int read(byte[] bytes, int length) throws Db4oIOException {
         return _delegate.read(bytes, length);
     }
 
-    public void seek(long pos) throws IOException {
+    public void seek(long pos) throws Db4oIOException {
         _delegate.seek(pos);
     }
 
-    public void sync() throws IOException {
+    public void sync() throws Db4oIOException {
         _delegate.sync();
     }
 
-    public void write(byte[] buffer, int length) throws IOException {
+    public void write(byte[] buffer, int length) throws Db4oIOException {
         _delegate.write(buffer, length);
     }
 

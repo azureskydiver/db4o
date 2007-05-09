@@ -2,7 +2,7 @@
 
 package com.db4o.io;
 
-import java.io.*;
+import com.db4o.*;
 
 /**
  * @exclude
@@ -18,15 +18,15 @@ public class DebugIoAdapter extends VanillaIoAdapter{
         super(delegateAdapter);
     }
     
-    protected DebugIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength) throws IOException {
+    protected DebugIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength) throws Db4oIOException {
         super(delegateAdapter.open(path, lockFile, initialLength));
     }
 
-    public IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException {
+    public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
         return new DebugIoAdapter(new RandomAccessFileAdapter(),  path, lockFile, initialLength);
     }
     
-    public void seek(long pos) throws IOException {
+    public void seek(long pos) throws Db4oIOException {
         if(pos >= RANGE_OF_INTEREST[0] && pos <= RANGE_OF_INTEREST[1]){
             counter ++;
             System.out.println("seek: " + pos + "  counter: " + counter);

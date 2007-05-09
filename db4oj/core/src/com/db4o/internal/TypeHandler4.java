@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.ix.*;
@@ -29,7 +27,7 @@ public interface TypeHandler4 extends Indexable4
 	// special construct for deriving from simple types
 	void copyValue(Object a_from, Object a_to);
 	
-	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws IOException;
+	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException;
 	
 	int getID();
 	
@@ -62,11 +60,11 @@ public interface TypeHandler4 extends Indexable4
 	
 	ReflectClass primitiveClassReflector();
 	
-	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException, IOException;
+	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException, Db4oIOException;
     
-	Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, IOException;
+	Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException;
 	
-	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, IOException;
+	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException;
 	
 	boolean supportsIndex();
 	
@@ -81,7 +79,7 @@ public interface TypeHandler4 extends Indexable4
      */
     boolean readArray(Object array, Buffer reader);
 	
-	void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws IOException;
+	void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws Db4oIOException;
 	
 	TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes);
 	

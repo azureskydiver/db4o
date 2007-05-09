@@ -2,8 +2,6 @@
 
 package com.db4o.internal.query.processor;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
@@ -163,12 +161,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 							candidates.addConstraint(qcon);
 
 							qcon.setCandidates(candidates);
-							try {
-								arrayHandler.readCandidates(_marshallerFamily,arrayBytes[0], candidates);
-							} catch (IOException e) {
-								// TODO: review this exception handling
-								return false;
-							}
+							arrayHandler.readCandidates(_marshallerFamily,arrayBytes[0], candidates);
 							arrayBytes[0]._offset = offset;
 
 							final boolean isNot = qcon.isNot();
@@ -634,14 +627,16 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				// FIXME: Should _bytes ever be null here?
 				int offset = _bytes._offset;
 				// FIXME catchall
+				boolean ok = false;
 				try {
-					_member = _yapField.readQuery(getTransaction(),_marshallerFamily, _bytes);
-				} 
-				catch (CorruptionException ce) {
-					_member = null;
-				}
-				catch(IOException exc) {
-					_member = null;
+					_member = _yapField.readQuery(getTransaction(),
+							_marshallerFamily, _bytes);
+					ok = true;
+				} catch (CorruptionException ce) {
+				} finally {
+					if (!ok) {
+						_member = null;
+					}
 				}
 				_bytes._offset = offset;
 				checkInstanceOfCompare();
