@@ -111,13 +111,15 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
             }
             String versionedFileName = fileName + infix + i;
             ObjectContainer oc = Db4o.openFile(versionedFileName);
-            
-            if(! stateBeforeCommit(oc)){
-                if(! stateAfterFirstCommit(oc)){
-                    Assert.isTrue(stateAfterSecondCommit(oc));
-                }
+	        try {
+	            if(! stateBeforeCommit(oc)){
+	                if(! stateAfterFirstCommit(oc)){
+	                    Assert.isTrue(stateAfterSecondCommit(oc));
+	                }
+	            }
+            } finally {
+            	oc.close();
             }
-            oc.close();
         }
     }
     
