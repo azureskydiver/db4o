@@ -138,10 +138,11 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         ObjectSet objectSet = oc.query(CrashSimulatingTestCase.class);
         while(objectSet.hasNext()){
             CrashSimulatingTestCase cst = (CrashSimulatingTestCase)objectSet.next();
-            Assert.isNotNull(expected.remove(cst._name), cst._name);
+            if (null == expected.remove(cst._name)) {
+            	return false;
+            }
         }
-        Assert.isTrue(expected.isEmpty(), expected.toString());
-        return true;
+        return expected.isEmpty();
     }
     
     private void createFile(String fileName) throws IOException{
