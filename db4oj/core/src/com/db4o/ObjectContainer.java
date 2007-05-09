@@ -55,7 +55,7 @@ public interface ObjectContainer {
 	 * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth}
 	 *  to which activate is to cascade.
      */
-    public void activate (Object obj, int depth) throws DatabaseClosedException;
+    public void activate (Object obj, int depth) throws Db4oIOException, DatabaseClosedException;
     
     /**
      * closes this ObjectContainer.
@@ -67,14 +67,14 @@ public interface ObjectContainer {
      * @return success - true denotes that the last used instance of this container
      * and the database file were closed.
      */
-	public boolean close ();
+	public boolean close ()throws Db4oIOException;
 
     /**
      * commits the running transaction.
      * <br><br>Transactions are back-to-back. A call to commit will starts
      * a new transaction immedidately.
      */
-    public void commit () throws DatabaseClosedException, DatabaseReadOnlyException;
+    public void commit () throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
     
 
     /**
@@ -121,7 +121,7 @@ public interface ObjectContainer {
      * @param obj the object to be deleted from the
      * <code>ObjectContainer</code>.<br>
      */
-    public void delete (Object obj) throws DatabaseClosedException, DatabaseReadOnlyException;
+    public void delete (Object obj) throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
     
     /**
      * returns an ObjectContainer with extended functionality.
@@ -170,7 +170,7 @@ public interface ObjectContainer {
 	 * @see com.db4o.config.Configuration#activationDepth Why activation?
 	 * @see ObjectCallbacks Using callbacks
 	 */
-    public ObjectSet get (Object template) throws DatabaseClosedException;
+    public ObjectSet get (Object template) throws Db4oIOException, DatabaseClosedException;
     
     /**
      * creates a new SODA {@link Query Query}.
@@ -188,7 +188,7 @@ public interface ObjectContainer {
      * @param clazz the class to query for.
      * @return the {@link ObjectSet} returned by the query.
      */
-    public ObjectSet query(Class clazz) throws DatabaseClosedException;
+    public ObjectSet query(Class clazz) throws Db4oIOException, DatabaseClosedException;
 
     
     /**
@@ -269,7 +269,7 @@ public interface ObjectContainer {
      * @param predicate the {@link Predicate} containing the native query expression.
      * @return the {@link ObjectSet} returned by the query.
      */
-    public ObjectSet query(Predicate predicate) throws DatabaseClosedException;
+    public ObjectSet query(Predicate predicate) throws Db4oIOException, DatabaseClosedException;
 
     /**
      * Native Query Interface. Queries as with {@link com.db4o.ObjectContainer#query(com.db4o.query.Predicate)},
@@ -279,7 +279,7 @@ public interface ObjectContainer {
      * @param comparator the {@link QueryComparator} specifiying the sort order of the result
      * @return the {@link ObjectSet} returned by the query.
      */
-    public ObjectSet query(Predicate predicate,QueryComparator comparator) throws DatabaseClosedException;
+    public ObjectSet query(Predicate predicate,QueryComparator comparator) throws Db4oIOException, DatabaseClosedException;
 
     /**
      * rolls back the running transaction.
@@ -289,7 +289,7 @@ public interface ObjectContainer {
      * can be refreshed from the database by calling 
      * {@link ExtObjectContainer#refresh(Object, int)}.
      */
-    public void rollback() throws DatabaseClosedException, DatabaseReadOnlyException;
+    public void rollback() throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
     
     /**
      * newly stores objects or updates stored objects.

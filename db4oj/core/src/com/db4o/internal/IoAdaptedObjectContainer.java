@@ -303,41 +303,36 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }    
 
     public void writeBytes(Buffer bytes, int address, int addressOffset) {
-        if (Deploy.debug && !Deploy.flush) {
-            return;
-        }
+		if (Deploy.debug && !Deploy.flush) {
+			return;
+		}
 
-        try {
+		if (Debug.xbytes && Deploy.overwrite) {
 
-            if (Debug.xbytes && Deploy.overwrite) {
-                
-                boolean doCheck = true;
-                if(bytes instanceof StatefulBuffer){
-                    StatefulBuffer writer = (StatefulBuffer)bytes;
-                    if(writer.getID() == Const4.IGNORE_ID){
-                        doCheck = false;
-                    }
-                }
-                if (doCheck) {
-                    checkXBytes(address, addressOffset, bytes.getLength());
-                }
-            }
+			boolean doCheck = true;
+			if (bytes instanceof StatefulBuffer) {
+				StatefulBuffer writer = (StatefulBuffer) bytes;
+				if (writer.getID() == Const4.IGNORE_ID) {
+					doCheck = false;
+				}
+			}
+			if (doCheck) {
+				checkXBytes(address, addressOffset, bytes.getLength());
+			}
+		}
 
-            if (DTrace.enabled) {
-                DTrace.WRITE_BYTES.logLength(address + addressOffset,bytes.getLength());
-            }
+		if (DTrace.enabled) {
+			DTrace.WRITE_BYTES.logLength(address + addressOffset, bytes
+					.getLength());
+		}
 
-            _file.blockSeek(address, addressOffset);
-            _file.write(bytes._buffer, bytes.getLength());
-            if (_backupFile != null) {
-                _backupFile.blockSeek(address, addressOffset);
-                _backupFile.write(bytes._buffer, bytes.getLength());
-            }
-
-        } catch (Exception e) {
-            Exceptions4.throwRuntimeException(16, e);
-        }
-    }
+		_file.blockSeek(address, addressOffset);
+		_file.write(bytes._buffer, bytes.getLength());
+		if (_backupFile != null) {
+			_backupFile.blockSeek(address, addressOffset);
+			_backupFile.write(bytes._buffer, bytes.getLength());
+		}
+	}
 
     public void overwriteDeletedBytes(int address, int length) {
 		if (!Deploy.flush) {
