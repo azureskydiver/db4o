@@ -110,11 +110,13 @@ public class LocalTransaction extends Transaction {
         
         // From here on we are in the substitute freespace manager
         
+        freeOnCommit();
+        
         commitFreespace();
         
         commit6WriteChanges();
         
-        freeOnCommit();
+        
     }
 	
 	private void commitFreespace() {
@@ -197,13 +199,11 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	protected void rollbackSlotChanges() {
-		if(_slotChanges != null) {
-			_slotChanges.traverse(new Visitor4() {
+		Tree.traverse(_slotChanges, new Visitor4() {
 				public void visit(Object a_object) {
 					((SlotChange)a_object).rollback(_file);
 				}
 			});
-		}
 	}
 
 	public boolean isDeleted(int id) {
@@ -264,27 +264,14 @@ public class LocalTransaction extends Transaction {
 
 	
     private boolean writeSlots() {
-        
-        checkSynchronization();
-        
-        boolean ret = false;
-        
-        if(_systemTransaction != null){
-            if(parentLocalTransaction().writeSlots()){
-                ret = true;
-            }
-        }
-        
-        if(_slotChanges != null){
-            _slotChanges.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    ((SlotChange)a_object).writePointer(LocalTransaction.this);
-                }
-            });
-            ret = true;
-        }
-        
-        return ret;
+        final MutableBoolean ret = new MutableBoolean();
+        traverseSlotChanges(new Visitor4() {
+			public void visit(Object obj) {
+				((SlotChange)obj).writePointer(LocalTransaction.this);
+				ret.set(true);
+			}
+		});
+        return ret.value();
     }
 	
     protected void flushFile(){
@@ -398,31 +385,19 @@ public class LocalTransaction extends Transaction {
         }
         return false;
     }
-
 	
-	 private int countSlotChanges(){
-	        
-	        int count = 0;
-	        
-	        if(_systemTransaction != null){
-	            count += parentLocalTransaction().countSlotChanges();
-	        }
-	        
-	        final int slotSetPointerCount[]  = {count};
-	        
-	        if(_slotChanges != null){
-	            _slotChanges.traverse(new Visitor4() {
-	                public void visit(Object obj) {
-	                    SlotChange slot = (SlotChange)obj;
-	                    if(slot.isSetPointer()){
-	                        slotSetPointerCount[0] ++;
-	                    }
-	                }
-	            });
-	        }
-	        
-	        return slotSetPointerCount[0];
-	    }
+	private int countSlotChanges(){
+        final MutableInt count = new MutableInt();
+        traverseSlotChanges(new Visitor4() {
+			public void visit(Object obj) {
+                    SlotChange slot = (SlotChange)obj;
+                    if(slot.isSetPointer()){
+                        count.increment();
+                    }
+			}
+		});
+        return count.value();
+	}
 	
 	void writeOld() throws IOException {
         synchronized (stream().i_lock) {
@@ -449,31 +424,27 @@ public class LocalTransaction extends Transaction {
 	
 	protected final void freeOnCommit() {
         checkSynchronization();
-        if(_systemTransaction != null){
-        	parentLocalTransaction().freeOnCommit();
-        }
-        if(_slotChanges != null){
-            _slotChanges.traverse(new Visitor4() {
-                public void visit(Object obj) {
-                    ((SlotChange)obj).freeDuringCommit(_file);
-                }
-            });
-        }
+        traverseSlotChanges(new Visitor4() {
+			public void visit(Object obj) {
+				((SlotChange)obj).freeDuringCommit(_file);
+			}
+		});
     }
 	
 	private void appendSlotChanges(final Buffer writer){
-        
-        if(_systemTransaction != null){
-        	parentLocalTransaction().appendSlotChanges(writer);
-        }
-        
-        Tree.traverse(_slotChanges, new Visitor4() {
-            public void visit(Object obj) {
-                ((TreeInt)obj).write(writer);
-            }
-        });
-        
+		traverseSlotChanges(new Visitor4() {
+			public void visit(Object obj) {
+				((TreeInt)obj).write(writer);
+			}
+		});
     }
+	
+	private void traverseSlotChanges(Visitor4 visitor){
+        if(_systemTransaction != null){
+        	parentLocalTransaction().traverseSlotChanges(visitor);
+        }
+        Tree.traverse(_slotChanges, visitor);
+	}
 	
 	public void slotDelete(int id, Slot slot) {
         checkSynchronization();
