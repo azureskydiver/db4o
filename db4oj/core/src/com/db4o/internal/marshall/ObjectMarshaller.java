@@ -65,9 +65,9 @@ public abstract class ObjectMarshaller {
         
         if(trans instanceof LocalTransaction){
             slot = ((LocalTransaction)trans).file().getSlot(length);
-            trans.slotFreeOnRollback(id, slot.address(), slot.length());
+            trans.slotFreeOnRollback(id, slot);
         }
-        trans.setPointer(id, slot.address(), slot.length());
+        trans.setPointer(id, slot);
         return createWriterForUpdate(trans, updateDepth, id, slot.address(), slot.length());
     }
 

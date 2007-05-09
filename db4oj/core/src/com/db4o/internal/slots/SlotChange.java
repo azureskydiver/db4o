@@ -86,14 +86,14 @@ public class SlotChange extends TreeInt {
 		_shared = refSlot;
 	}
 	
-	public void freeOnRollback(int address, int length) {
+	public void freeOnRollback(Slot slot) {
 		doFreeOnRollback();
-		_newSlot = new Slot(address, length);
+		_newSlot = slot;
 	}
 
-	public void freeOnRollbackSetPointer(int address, int length) {
+	public void freeOnRollbackSetPointer(Slot slot) {
 		doSetPointer();
-		freeOnRollback(address, length);
+		freeOnRollback(slot);
 	}
 
 	public void freePointerOnCommit() {
@@ -174,9 +174,9 @@ public class SlotChange extends TreeInt {
 		_action |= (1 << bitPos);
 	}
 
-	public void setPointer(int address, int length) {
+	public void setPointer(Slot slot) {
 		doSetPointer();
-		_newSlot = new Slot(address, length);
+		_newSlot = slot;
 	}
 
 	public void write(Buffer writer) {
@@ -189,7 +189,7 @@ public class SlotChange extends TreeInt {
 
 	public final void writePointer(LocalTransaction trans) {
 		if (isSetPointer()) {
-			trans.writePointer(_key, _newSlot.address(), _newSlot.length());
+			trans.writePointer(_key, _newSlot);
 		}
 	}
 }

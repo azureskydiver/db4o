@@ -12,6 +12,8 @@ public class Slot {
     private final int _address;
     
     private final int _length;
+    
+    public static final Slot ZERO = new Slot(0, 0);
 
     public Slot(int address, int length){
         _address = address;

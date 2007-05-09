@@ -174,7 +174,11 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     public void free(Slot slot) {
         if(slot.address() == 0){
-            throw new IllegalArgumentException();
+        	return;
+        	
+        	// TODO: This should really be an IllegalArgumentException but old database files 
+        	//       with index-based FreespaceManagers appear to deliver zeroed slots.
+            // throw new IllegalArgumentException();
         }
         if(DTrace.enabled){
             DTrace.FILE_FREE.logLength(slot.address(), slot.length());
@@ -256,7 +260,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
         // write a zero pointer first
         // to prevent delete interaction trouble
-        ((LocalTransaction)systemTransaction()).writePointer(id, 0, 0);
+        ((LocalTransaction)systemTransaction()).writePointer(id, Slot.ZERO);
         
         
         // We have to make sure that object IDs do not collide
@@ -351,8 +355,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     public final Pointer4 newSlot(Transaction trans, int length) {
         int id = getPointerSlot();
         Slot slot = getSlot(length);
-        trans.setPointer(id, slot.address(), slot.length());
-        return new Pointer4(id, slot.address());
+        trans.setPointer(id, slot);
+        return new Pointer4(id, slot);
     }
 
     public final int newUserObject() {
@@ -668,7 +672,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     public final void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child) {
         Slot slot = getSlot(a_child.getLength());
-        a_child.getTransaction().slotFreeOnRollback(slot.address(), slot.address(), slot.length());
+        a_child.getTransaction().slotFreeOnRollback(slot.address(), slot);
         a_child.address(slot.address());
         a_child.writeEncrypt();
         int offsetBackup = a_parent._offset;
@@ -724,7 +728,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         int id = buffer.getID();
         Slot slot = getSlot(buffer.getLength());
         buffer.address(slot.address());
-        trans.produceUpdateSlotChange(id, slot.address(), slot.length());
+        trans.produceUpdateSlotChange(id, slot);
     }
 
     public final void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes) {

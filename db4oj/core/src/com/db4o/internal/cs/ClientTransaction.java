@@ -5,6 +5,7 @@ package com.db4o.internal.cs;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.messages.*;
+import com.db4o.internal.slots.*;
 
 final class ClientTransaction extends Transaction {
 
@@ -109,7 +110,7 @@ final class ClientTransaction extends Transaction {
 		i_client.writeBatchedMessage(msg);
     }
 
-	public void setPointer(int a_id, int a_address, int a_length) {
+	public void setPointer(int a_id, Slot slot) {
 	}
 	
 

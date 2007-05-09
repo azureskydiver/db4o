@@ -274,7 +274,7 @@ public final class StatefulBuffer extends Buffer {
     }
 
     public void slotDelete() {
-        i_trans.slotDelete(i_id, i_address, i_length);
+        i_trans.slotDelete(i_id, slot());
     }
     
     public void trim4(int a_offset, int a_length) {
@@ -444,6 +444,10 @@ public final class StatefulBuffer extends Buffer {
         _offset = savedOffset;
         writeInt(actualCount);
         _offset = secondSavedOffset;
+	}
+	
+	public Slot slot(){
+		return new Slot(i_address, i_length);
 	}
 
 }

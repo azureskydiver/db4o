@@ -45,13 +45,10 @@ public final class StringHandler extends BuiltinTypeHandler {
     	return val(obj,trans.stream());
     }
     
-    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes){
-        
-        int address = a_bytes.readInt();
-        int length = a_bytes.readInt();
-        
-        if(address > 0  && ! mf._string.inlinedStrings()){
-            a_bytes.getTransaction().slotFreeOnCommit(address, address, length);
+    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer){
+    	Slot slot = buffer.readSlot();
+        if(slot.address() > 0  && ! mf._string.inlinedStrings()){
+            buffer.getTransaction().slotFreeOnCommit(slot.address(), slot);
         }
     }
     

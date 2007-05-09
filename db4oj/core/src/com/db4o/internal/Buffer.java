@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.slots.*;
 
 /**
  * 
@@ -196,6 +197,10 @@ public class Buffer implements SlotReader {
         return payLoad;
     }
 
+    public Slot readSlot(){
+    	return new Slot(readInt(), readInt());
+    }
+    
     void replaceWith(byte[] a_bytes) {
         System.arraycopy(a_bytes, 0, _buffer, 0, getLength());
     }
@@ -288,6 +293,11 @@ public class Buffer implements SlotReader {
         }else{
         	writeInt(persistent.getID());
         }
+    }
+    
+    public final void writeSlot(Slot slot){
+    	writeInt(slot.address());
+    	writeInt(slot.length());
     }
     
 	protected boolean canWritePersistentBase(){

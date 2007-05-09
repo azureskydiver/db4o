@@ -22,13 +22,13 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             Slot slot = stream.getSlot(_payLoad.getLength());
             _payLoad.address(slot.address());
             
-            transaction().slotFreeOnRollback(id, slot.address(), slot.length());
+            transaction().slotFreeOnRollback(id, slot);
             
             if(yc != null){
                 yc.addFieldIndices(_payLoad,null);
             }
             stream.writeNew(yc, _payLoad);
-            serverTransaction().writePointer( id, slot.address(), slot.length());
+            serverTransaction().writePointer( id, slot);
         }
         return true;
     }
