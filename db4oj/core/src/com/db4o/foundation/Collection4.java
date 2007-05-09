@@ -41,6 +41,10 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 
 	public Collection4() {
 	}
+	
+	public Collection4(Object[] elements) {
+		addAll(elements);
+	}
 
 	public Collection4(Iterable4 other) {
 		addAll(other);

@@ -6,8 +6,13 @@ import com.db4o.foundation.*;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;
+import db4ounit.TestRunner;
 
 public class Hashtable4TestCase implements TestCase {
+	
+	public static void main(String[] args) {
+		new TestRunner(Hashtable4TestCase.class).run();
+	}
 	
 	public void testContainsKey() {
 		Hashtable4 table = new Hashtable4();
@@ -57,6 +62,8 @@ public class Hashtable4TestCase implements TestCase {
 	}
 	
 	public void testIterator(){
+		assertIsIteratable(new Object[0]);
+		assertIsIteratable(new Object[] { "one" });
 		assertIsIteratable(new Object[]{
 			new Integer(1),
 			new Integer(3),
@@ -89,6 +96,24 @@ public class Hashtable4TestCase implements TestCase {
 		Assert.areEqual(1, countKeys(table));
 	}
 	
+	public void testSameHashCodeIterator() {
+		Key[] keys = createKeys(1, 5);
+		assertIsIteratable(keys);
+	}
+	
+	private Key[] createKeys(int begin, int end) {
+		final int factor = 10;
+		int count = (end-begin);
+		Key[] keys = new Key[count*factor];
+		for (int i=0; i<count; ++i) {
+			final int baseIndex = i*factor;
+			for (int j=0; j<factor; ++j) {
+				keys[baseIndex + j] = new Key(begin+i);
+			}
+		}
+		return keys;
+	}
+
 	public void testDifferentKeysSameHashCode() {
 		Key key1 = new Key(1);
 		Key key2 = new Key(1);
@@ -138,31 +163,23 @@ public class Hashtable4TestCase implements TestCase {
 		return count;
 	}
 	
-	public void assertIsIteratable(Object[] objects){
-		Hashtable4 ht = new Hashtable4();
-		for (int i = 0; i < objects.length; i++) {
-			ht.put(objects[i], objects[i]);
-		}
-		Iterator4 iter = ht.iterator();
-		while(iter.moveNext()){
+	public void assertIsIteratable(Object[] keys){
+		Collection4 expected = new Collection4(keys);
+		Iterator4 iter = tableFromKeys(keys).iterator();
+		while (iter.moveNext()){
 			Entry4 entry = (Entry4) iter.current();
-			boolean found = false;
-			for (int j = 0; j < objects.length; j++) {
-				if(objects[j] == null){
-					continue;
-				}
-				if(objects[j].equals(entry.key())){
-					Assert.areEqual(objects[j], entry.value());
-					objects[j] = null;
-					found = true;
-					break;
-				}
-			}
-			Assert.isTrue(found);
+			Object removed = expected.remove(entry.key());
+			Assert.isNotNull(removed);
 		}
-		for (int j = 0; j < objects.length; j++) {
-			Assert.isNull(objects[j]);
+		Assert.isTrue(expected.isEmpty(), expected.toString());
+	}
+
+	private Hashtable4 tableFromKeys(Object[] keys) {
+		Hashtable4 ht = new Hashtable4();
+		for (int i = 0; i < keys.length; i++) {
+			ht.put(keys[i], keys[i]);
 		}
+		return ht;
 	}
 	
 	static class Key {

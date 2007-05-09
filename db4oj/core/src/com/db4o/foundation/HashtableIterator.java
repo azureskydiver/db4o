@@ -10,13 +10,13 @@ public class HashtableIterator implements Iterator4 {
 	
 	private final HashtableIntEntry[] _table;
 	
-	HashtableIntEntry _currentEntry;
+	private HashtableIntEntry _currentEntry;
 	
-	int _currentIndex;
+	private int _currentIndex;
 	
 	public HashtableIterator(HashtableIntEntry[] table) {
 		_table = table;
-		checkInvalidTable();
+		reset();
 	}
 	
 	private void checkInvalidTable(){
@@ -40,12 +40,11 @@ public class HashtableIterator implements Iterator4 {
 			_currentEntry = _currentEntry._next;
 		}
 		while(_currentEntry == null){
-			_currentIndex++;
 			if(_currentIndex >= _table.length){
 				positionBeyondLast();
 				return false;
 			}
-			_currentEntry = _table[_currentIndex];
+			_currentEntry = _table[_currentIndex++];
 		}
 		return true;
 	}

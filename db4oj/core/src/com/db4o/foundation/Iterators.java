@@ -47,6 +47,13 @@ public class Iterators {
 	public static int size(Iterable4 iterable) {
 		return size(iterable.iterator());
 	}
+	
+	public static Object next(Iterator4 iterator) {
+		if (!iterator.moveNext()) {
+			throw new IllegalStateException();
+		}
+		return iterator.current();
+	}
 
 	private static int size(Iterator4 iterator) {
 		int count=0;
