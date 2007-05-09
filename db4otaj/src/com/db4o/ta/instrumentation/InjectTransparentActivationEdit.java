@@ -25,7 +25,7 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 			createBindMethod(ce);
 			createActivateMethod(ce);
 		}
-		instrumentNonPrivateMethods(ce);
+		instrumentAllMethods(ce);
 	}
 
 	private void createActivatorField(ClassEditor ce) {
@@ -72,7 +72,7 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 	}
 
 	private void createActivateMethod(ClassEditor ce) {
-		// private void activate()
+		// protected void activate()
 		final Type activatorType = Type.getType(Activator.class);
 		String methodName = TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME;
 		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PROTECTED, Type.VOID, methodName, new Type[] { }, new Type[] {});
@@ -94,7 +94,7 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 		methodEditor.commit();
 	}
 
-	private void instrumentNonPrivateMethods(final ClassEditor ce) {
+	private void instrumentAllMethods(final ClassEditor ce) {
 		final MemberRef activateMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID);
 		final MemberRef bindMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Type[]{ Type.getType(ObjectContainer.class) }, Type.VOID);
 		ce.visit(new EditorVisitor() {
@@ -106,7 +106,7 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 			}
 
 			public void visitMethodEditor(MethodEditor editor) {
-				if(editor.isConstructor() || editor.isPrivate()) {
+				if(editor.isConstructor()) {
 					return;
 				}
 				MemberRef methodRef = editor.memberRef();

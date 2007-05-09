@@ -32,7 +32,7 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		assertMethodInstrumentation(clazz, "foo", true);
 		assertMethodInstrumentation(clazz, "bar", true);
 		assertMethodInstrumentation(clazz, "baz", true);
-		assertMethodInstrumentation(clazz, "boo", false);
+		assertMethodInstrumentation(clazz, "boo", true);
 	}
 
 	public void testSubClassIsInstrumented() throws Exception {
@@ -45,7 +45,7 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		assertMethodInstrumentation(clazz, "fooSub", true);
 		assertMethodInstrumentation(clazz, "barSub", true);
 		assertMethodInstrumentation(clazz, "bazSub", true);
-		assertMethodInstrumentation(clazz, "booSub", false);
+		assertMethodInstrumentation(clazz, "booSub", true);
 	}
 
 	private void assertActivatableInterface(Class clazz) {
