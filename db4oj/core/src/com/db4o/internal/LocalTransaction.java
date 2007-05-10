@@ -106,11 +106,11 @@ public class LocalTransaction extends Transaction {
         
         Slot reservedSlot = allocateTransactionLogSlot(false);
         
+        freeOnCommit();
+        
         commitFreespace();
         
         commit6WriteChanges(reservedSlot);
-        
-        freeOnCommit();
     }
 	
 	private void commit2Listeners(){
