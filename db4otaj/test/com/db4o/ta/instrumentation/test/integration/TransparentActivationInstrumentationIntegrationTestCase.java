@@ -4,12 +4,12 @@ import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
 
-import com.db4o.collections.*;
 import com.db4o.config.*;
 import com.db4o.instrumentation.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
+import com.db4o.ta.test.collections.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
