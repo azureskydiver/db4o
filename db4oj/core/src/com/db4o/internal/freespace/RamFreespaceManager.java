@@ -26,6 +26,15 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         _freeByAddress = Tree.add(_freeByAddress, addressNode);
         _freeBySize = Tree.add(_freeBySize, addressNode._peer);
     }
+    
+	public Slot allocateTransactionLogSlot(int length) {
+		FreeSlotNode sizeNode = (FreeSlotNode) Tree.last(_freeBySize);
+		if(sizeNode == null || sizeNode._key < length){
+			return null;
+		}
+		removeFromBothTrees(sizeNode);
+		return new Slot(sizeNode._peer._key, sizeNode._key);
+	}
 
     public void beginCommit() {
         // do nothing
@@ -65,10 +74,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
             if ((secondAddressNode != null)
                 && (address + length == secondAddressNode._key)) {
                 sizeNode._key += secondAddressNode._peer._key;
-                _freeBySize = _freeBySize
-                    .removeNode(secondAddressNode._peer);
-                _freeByAddress = _freeByAddress
-                    .removeNode(secondAddressNode);
+                removeFromBothTrees(secondAddressNode._peer);
             }
             sizeNode.removeChildren();
             _freeBySize = Tree.add(_freeBySize, sizeNode);
@@ -78,8 +84,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
             if ((addressnode != null)
                 && (address + length == addressnode._key)) {
                 sizeNode = addressnode._peer;
-                _freeByAddress = _freeByAddress.removeNode(addressnode);
-                _freeBySize = _freeBySize.removeNode(sizeNode);
+                removeFromBothTrees(sizeNode);
                 sizeNode._key += length;
                 addressnode._key = address;
                 addressnode.removeChildren();
@@ -231,6 +236,11 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
 
     public int slotCount() {
         return Tree.size(_freeByAddress);
+    }
+    
+    private void removeFromBothTrees(FreeSlotNode sizeNode){
+        _freeBySize = _freeBySize.removeNode(sizeNode);
+        _freeByAddress = _freeByAddress.removeNode(sizeNode._peer);
     }
 
 }

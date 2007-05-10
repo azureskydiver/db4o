@@ -52,6 +52,10 @@ public final class StatefulBuffer extends Buffer {
         this(a_trans, length);
         i_address = address;
     }
+    
+    public StatefulBuffer(Transaction trans, Slot slot){
+    	this(trans, slot.address(), slot.length());
+    }
 
     public StatefulBuffer(StatefulBuffer parent, StatefulBuffer[] previousRead, int previousCount) {
         previousRead[previousCount++] = this;
