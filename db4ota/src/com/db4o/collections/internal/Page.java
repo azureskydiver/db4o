@@ -43,21 +43,21 @@ public class Page /* TA BEGIN */ implements Activatable /* TA END */ {
 		// TA BEGIN
 		activate();
 		// TA END
-		System.out.println("got from page: " + _pageIndex);
+//		System.out.println("got from page: " + _pageIndex);
 		_dirty = true; // just to be safe, we'll mark things as dirty if they are used.
 		return _data[indexInPage];
 	}
 
 	public boolean isDirty() {
 		// TA BEGIN
-		activate();
+//		activate();
 		// TA END
 		return _dirty;
 	}
 
 	public void setDirty(boolean dirty) {
 		// TA BEGIN
-		activate();
+//		activate();
 		// TA END
 		_dirty = dirty;
 	}
@@ -70,10 +70,7 @@ public class Page /* TA BEGIN */ implements Activatable /* TA END */ {
 	}
 
 	public boolean atCapacity() {
-		// TA BEGIN
-		activate();
-		// TA END
-		return size() == Page.PAGESIZE;
+		return capacity() == 0;
 	}
 	
 	public int capacity() {
