@@ -34,24 +34,23 @@
 	
 		<property name="dir.n.v6.ta" location="${dir.n.v6}/Db4objects.Db4o.TA" />
 
-		<reset-dir dir="${dir.n.v6.ta}/Db4objects" />
+		<reset-dir dir="${dir.n.v6.ta}/Db4objects.Db4o.TA" />
 
-		<copy todir="${dir.n.v6.ta}">
-			<fileset dir="${dir.sharpen}/db4ota/db4otacsharp/src">
+		<copy todir="${dir.n.v6.ta}/Db4objects.Db4o.TA">
+			<fileset dir="${dir.sharpen}/db4ota/db4otacsharp/src/Db4objects/Db4o/TA">
 				<include name="**/*.cs" />
 				<exclude name="**/Tests/**" />
 				<exclude name="**/Events/**" />
 			</fileset>
 		</copy>
-
 	
 		<property name="dir.n.v6.ta.tests" location="${dir.n.v6}/Db4objects.Db4o.TA.Tests" />
 
-		<reset-dir dir="${dir.n.v6.ta.tests}/Db4objects" />
+		<reset-dir dir="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests" />
 
-		<copy todir="${dir.n.v6.ta.tests}">
-			<fileset dir="${dir.sharpen}/db4ota/db4otacsharp/src">
-				<include name="**/Tests/**" />
+		<copy todir="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests">
+			<fileset dir="${dir.sharpen}/db4ota/db4otacsharp/src/Db4objects/Db4o/TA/Tests">
+				<include name="**/*.cs" />
 			</fileset>
 		</copy>
 
