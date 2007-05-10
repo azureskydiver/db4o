@@ -264,19 +264,13 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         if(blocks <= 0){
         	throw new IllegalArgumentException();
         }
-        Slot slot;
         if(_freespaceManager != null){
-        	slot = _freespaceManager.getSlot(blocks);
+        	Slot slot = _freespaceManager.getSlot(blocks);
             if(slot != null){
                 return slot;
             }
         }
-        
-        slot = appendBlocks(blocks);
-        if (Debug.xbytes && Deploy.overwrite) {
-            overwriteDeletedBlockedSlot(slot);
-        }
-		return slot;
+		return appendBlocks(blocks);
     }
     
     protected final Slot appendBlocks(int blockCount){
@@ -284,7 +278,11 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         int blockedEndAddress = _blockEndAddress + blockCount;
         checkBlockedAddress(blockedEndAddress);
         _blockEndAddress = blockedEndAddress;
-        return new Slot(blockedStartAddress, blockCount);
+        Slot slot = new Slot(blockedStartAddress, blockCount);
+        if (Debug.xbytes && Deploy.overwrite) {
+            overwriteDeletedBlockedSlot(slot);
+        }
+        return slot; 
     }
     
     final Slot appendSlot(int length){

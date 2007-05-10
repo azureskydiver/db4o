@@ -202,9 +202,11 @@ public class LocalTransaction extends Transaction {
 	
     private Slot allocateTransactionLogSlot(boolean appendToFile){
     	if(freespaceManager() != null){
-    		Slot slot = freespaceManager().allocateTransactionLogSlot(transactionLogSlotLength());
+    		int nonBlockedLength = transactionLogSlotLength();
+    		int blockedLength = _file.bytesToBlocks(nonBlockedLength);
+    		Slot slot = freespaceManager().allocateTransactionLogSlot(blockedLength);
     		if(slot != null){
-    			return slot;
+    			return _file.toNonBlockedLength(slot);
     		}
     	}
     	if(! appendToFile){
@@ -257,12 +259,17 @@ public class LocalTransaction extends Transaction {
 				_file.free(transactionLogSlot);
 			}
 		}
-        if(reservedSlot != null){
-        	_file.free(reservedSlot);
-        }
+        freeTransactionLogSlot(reservedSlot);
     }
 	
-    public void writePointer(int id, Slot slot) {
+    private void freeTransactionLogSlot(Slot slot) {
+    	if(slot == null){
+    		return;
+    	}
+    	freespaceManager().freeTransactionLogSlot(_file.toNonBlockedLength(slot));
+	}
+
+	public void writePointer(int id, Slot slot) {
         if(DTrace.enabled){
             DTrace.WRITE_POINTER.log(id);
             DTrace.WRITE_POINTER.logLength(slot);

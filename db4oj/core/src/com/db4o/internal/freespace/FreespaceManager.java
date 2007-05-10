@@ -50,4 +50,6 @@ public interface FreespaceManager {
 
 	public Slot allocateTransactionLogSlot(int length);
 
+	public void freeTransactionLogSlot(Slot slot);
+
 }

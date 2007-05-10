@@ -33,6 +33,9 @@ public class Test extends AllTests {
     public static final boolean COMPARE_INTERNAL_OK = false;
 
     public static boolean canCheckFileSize() {
+    	if(Deploy.debug){
+    		return false;
+    	}
         if (currentRunner != null) {
             if(!MEMORY_FILE) {
                 return !clientServer || !currentRunner.REMOTE_SERVER;    
