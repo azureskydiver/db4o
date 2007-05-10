@@ -2,9 +2,9 @@ package com.db4o.ta.test;
 
 import java.util.*;
 
-import com.db4o.collections.*;
 import com.db4o.config.*;
 import com.db4o.ta.*;
+import com.db4o.ta.test.collections.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;

@@ -1,4 +1,4 @@
-package com.db4o.collections.internal;
+package com.db4o.ta.test.collections.internal;
 
 import com.db4o.*;
 import com.db4o.ta.*;
