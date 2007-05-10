@@ -228,7 +228,6 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 
 	public void endCommit() {
 		// TODO: FB remove
-		_recursion--;
 	}
 
 	public void read(int freeSpaceID) {
@@ -236,9 +235,13 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 	
 	public void commit() {
-		_recursion++;
-		_slotsByAddress.commit(transaction());
-		_slotsByLength.commit(transaction());
+		try{
+			_recursion++;
+			_slotsByAddress.commit(transaction());
+			_slotsByLength.commit(transaction());
+		} finally{
+			_recursion--;
+		}
 	}
 
 }

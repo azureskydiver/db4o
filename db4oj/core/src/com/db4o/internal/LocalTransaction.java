@@ -302,7 +302,7 @@ public class LocalTransaction extends Transaction {
         return ret.value();
     }
 	
-    protected void flushFile(){
+    public void flushFile(){
         if(DTrace.enabled){
             DTrace.TRANS_FLUSH.log();
         }
