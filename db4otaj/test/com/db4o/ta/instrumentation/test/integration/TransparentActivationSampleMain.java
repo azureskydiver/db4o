@@ -4,10 +4,10 @@ import java.io.*;
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.collections.*;
 import com.db4o.config.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.ta.*;
+import com.db4o.ta.test.collections.*;
 
 import db4ounit.extensions.*;
 
