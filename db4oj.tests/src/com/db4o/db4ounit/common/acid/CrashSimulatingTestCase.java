@@ -135,12 +135,12 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         return expect(oc, new String[] {"10", "13"});
     }
     
-    private boolean expect(ObjectContainer oc, String[] names){
+    private boolean expect(ObjectContainer container, String[] names){
     	Collection4 expected = new Collection4(names);
-        ObjectSet objectSet = oc.query(CrashSimulatingTestCase.class);
-        while(objectSet.hasNext()){
-            CrashSimulatingTestCase cst = (CrashSimulatingTestCase)objectSet.next();
-            if (null == expected.remove(cst._name)) {
+        ObjectSet actual = container.query(CrashSimulatingTestCase.class);
+        while (actual.hasNext()){
+            CrashSimulatingTestCase current = (CrashSimulatingTestCase)actual.next();
+            if (null == expected.remove(current._name)) {
             	return false;
             }
         }
@@ -149,23 +149,30 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     
     private void createFile(String fileName) throws IOException{
         ObjectContainer oc = Db4o.openFile(fileName);
-        for (int i = 0; i < 10; i++) {
-            oc.set(new SimplestPossibleItem("delme"));
+        try {
+        	populate(oc);
+        } finally {
+        	oc.close();
+        }
+        File4.copy(fileName, fileName + "0");
+    }
+
+	private void populate(ObjectContainer container) {
+		for (int i = 0; i < 10; i++) {
+            container.set(new SimplestPossibleItem("delme"));
         }
         CrashSimulatingTestCase one = new CrashSimulatingTestCase(null, "one");
         CrashSimulatingTestCase two = new CrashSimulatingTestCase(one, "two");
         CrashSimulatingTestCase three = new CrashSimulatingTestCase(one, "three");
-        oc.set(one);
-        oc.set(two);
-        oc.set(three);
-        oc.commit();
-        ObjectSet objectSet = oc.query(SimplestPossibleItem.class);
+        container.set(one);
+        container.set(two);
+        container.set(three);
+        container.commit();
+        ObjectSet objectSet = container.query(SimplestPossibleItem.class);
         while(objectSet.hasNext()){
-            oc.delete(objectSet.next());
+            container.delete(objectSet.next());
         }
-        oc.close();
-        File4.copy(fileName, fileName + "0");
-    }
+	}
     
 	public String toString() {
 		return _name+" -> "+_next;
