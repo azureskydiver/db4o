@@ -1,4 +1,4 @@
-package com.db4o.db4ounit.util;
+package db4ounit.extensions.util;
 
 import com.db4o.internal.ReflectPlatform;
 

@@ -3,11 +3,11 @@
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.config.ObjectClass;
-import com.db4o.db4ounit.util.CrossPlatformServices;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.util.CrossPlatformServices;
 
 
 public class ClassRenameTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
