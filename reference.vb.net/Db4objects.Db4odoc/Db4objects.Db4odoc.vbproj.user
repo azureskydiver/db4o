@@ -14,4 +14,7 @@
     <VerifyUploadedFiles>true</VerifyUploadedFiles>
     <ReferencePath>D:\svntest\db4o.net\Db4objects.Db4o\Db4objects.Db4o\</ReferencePath>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartArguments>reference.db4o</StartArguments>
+  </PropertyGroup>
 </Project>
