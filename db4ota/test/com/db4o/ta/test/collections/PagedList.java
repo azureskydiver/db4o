@@ -1,14 +1,14 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4o.collections;
+package com.db4o.ta.test.collections;
 
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.collections.internal.*;
 import com.db4o.ta.*;
 import com.db4o.ta.foundation.*;
 import com.db4o.ta.internal.*;
+import com.db4o.ta.test.collections.internal.*;
 
 /**
  * Platform specific façade.
