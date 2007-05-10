@@ -8,6 +8,7 @@ import com.db4o.ta.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.util.CrossPlatformServices;
 
 public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCase {
 
@@ -48,8 +49,11 @@ public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCa
 		config.add(new TransparentActivationSupport());
 		config.diagnostic().addListener(new DiagnosticListener() {
 			public void onDiagnostic(Diagnostic diagnostic) {
+				if (!(diagnostic instanceof NotTransparentActivationEnabled)) {
+					return;
+				}
 				NotTransparentActivationEnabled taDiagnostic=(NotTransparentActivationEnabled)diagnostic;
-				Assert.areEqual(NotTAAwareData.class.getName(), ((ClassMetadata)taDiagnostic.reason()).getName());
+				Assert.areEqual(CrossPlatformServices.fullyQualifiedName(NotTAAwareData.class), ((ClassMetadata)taDiagnostic.reason()).getName());
 				_registered._registeredCount++;
 			}
 		});
