@@ -1,4 +1,4 @@
-package com.db4o.ta.foundation;
+package com.db4o.ta.tests.collections;
 
 import java.util.*;
 
