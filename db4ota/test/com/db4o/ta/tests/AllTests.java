@@ -1,4 +1,4 @@
-package com.db4o.ta.test;
+package com.db4o.ta.tests;
 
 import db4ounit.extensions.*;
 
