@@ -40,9 +40,9 @@ public class TransparentActivationSupport implements ConfigurationItem {
 		public void onEvent(Event4 e, EventArgs args) {
 			ClassEventArgs cea = (ClassEventArgs) args;
 			ClassMetadata clazz = cea.classMetadata();
-			if(Platform4.isDb4oClass(clazz.getName())) {
-				return;
-			}
+//			if(Platform4.isDb4oClass(clazz.getName())) {
+//				return;
+//			}
 			ReflectClass reflectClass = clazz.classReflector();
 			if(_activatableClass.isAssignableFrom(reflectClass)) {
 				return;
