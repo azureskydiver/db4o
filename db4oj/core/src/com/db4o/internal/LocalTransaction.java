@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.cs.*;
+import com.db4o.internal.freespace.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 
@@ -49,14 +50,14 @@ public class LocalTransaction extends Transaction {
         	if(doCommittingCallbacks()){
         		callbacks().commitOnStarted(this, collectCallbackObjectInfos(dispatcher));
         	}
-            _file.freeSpaceBeginCommit();
+            freespaceBeginCommit();
             commitImpl();
             CallbackObjectInfoCollections committedInfo = null;
         	if(doCommittedCallbacks()){
         		committedInfo = collectCallbackObjectInfos(dispatcher);
         	} 
             commitClearAll();
-            _file.freeSpaceEndCommit();
+            freespaceEndCommit();
             if(doCommittedCallbacks()){
     	        if(dispatcher == null){
     	        	callbacks().commitOnCompleted(this, committedInfo);
@@ -103,26 +104,20 @@ public class LocalTransaction extends Transaction {
         
         stream().writeDirty();
         
-        
         // _file.freeSpaceBeginCommit();
         
-        // Slot slot = 
+        // Slot slot =  
         
         // From here on we are in the substitute freespace manager
-        
-        freeOnCommit();
         
         commitFreespace();
         
         commit6WriteChanges();
         
+        freeOnCommit();
         
     }
 	
-	private void commitFreespace() {
-		_file.freeSpaceCommit();
-	}
-
 	private void commit2Listeners(){
         commitParentListeners(); 
         commitTransactionListeners();
@@ -676,6 +671,34 @@ public class LocalTransaction extends Transaction {
 	    }
 	    return null;
 	}
-
-
+	
+	private FreespaceManager freespaceManager(){
+		return _file.freespaceManager();
+	}
+	
+    private void freespaceBeginCommit(){
+        if(freespaceManager() == null){
+            return;
+        }
+        freespaceManager().beginCommit();
+    }
+    
+    private void freespaceEndCommit(){
+        if(freespaceManager() == null){
+            return;
+        }
+        freespaceManager().endCommit();
+    }
+    
+    private void commitFreespace(){
+        if(freespaceManager() == null){
+            return;
+        }
+        freespaceManager().commit();
+    }
+    
+    private Slot transactionLogSlot(){
+    	return null;
+    }
+    
 }

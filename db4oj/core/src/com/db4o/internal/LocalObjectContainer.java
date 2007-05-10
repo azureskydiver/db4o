@@ -218,27 +218,6 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         i_prefetchedIDs = null;
     }
     
-    final void freeSpaceBeginCommit(){
-        if(_freespaceManager == null){
-            return;
-        }
-        _freespaceManager.beginCommit();
-    }
-    
-    final void freeSpaceCommit(){
-        if(_freespaceManager == null){
-            return;
-        }
-        _freespaceManager.commit();
-    }
-    
-    final void freeSpaceEndCommit(){
-        if(_freespaceManager == null){
-            return;
-        }
-        _freespaceManager.endCommit();
-    }
-    
     public void generateNewIdentity(){
     	synchronized(i_lock){
     		setIdentity(Db4oDatabase.generate());
