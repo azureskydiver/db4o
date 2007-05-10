@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Db4objects.Db4odoc.NQSyntax.NQSyntaxExamples</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.VersionUpdate.UpdateExample</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>
@@ -239,6 +239,7 @@
     <Compile Include="UUIDs\Pilot.vb" />
     <Compile Include="UUIDs\UUIDExample.vb" />
     <Compile Include="Program.vb" />
+    <Compile Include="VersionUpdate\UpdateExample.vb" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
