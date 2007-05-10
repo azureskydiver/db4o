@@ -2,7 +2,7 @@
 
 package com.db4o.ta.tests;
 
-public class PrioritizedProject extends Project {
+class PrioritizedProject extends Project {
 
 	private int _priority;
 	
