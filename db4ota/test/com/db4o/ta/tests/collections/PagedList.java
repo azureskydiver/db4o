@@ -2,13 +2,15 @@
 
 package com.db4o.ta.tests.collections;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
-import com.db4o.*;
-import com.db4o.ta.*;
-import com.db4o.ta.foundation.*;
-import com.db4o.ta.internal.*;
-import com.db4o.ta.tests.collections.internal.*;
+import com.db4o.ObjectContainer;
+import com.db4o.ta.Activatable;
+import com.db4o.ta.internal.Activator;
+import com.db4o.ta.tests.collections.internal.PagedBackingStore;
 
 /**
  * Platform specific façade.
