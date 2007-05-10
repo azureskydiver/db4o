@@ -16,6 +16,10 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
         super(file);
         _listener = listener;
     }
+    
+	public Slot allocateTransactionLogSlot(int length) {
+		return null;
+	}
 
     public void beginCommit() {
 

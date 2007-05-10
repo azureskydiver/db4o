@@ -287,6 +287,11 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return new Slot(blockedStartAddress, blockCount);
     }
     
+    final Slot appendSlot(int length){
+    	Slot slot = appendBlocks(bytesToBlocks(length));
+    	return toNonBlockedLength(slot);
+    }
+    
     private void checkBlockedAddress(int blockedAddress) {
     	if(blockedAddress < 0) {
     		switchToReadOnlyMode();

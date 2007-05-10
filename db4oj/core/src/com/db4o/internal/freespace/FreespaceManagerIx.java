@@ -34,6 +34,10 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         _lengthIx.add(address, length);
     }
     
+	public Slot allocateTransactionLogSlot(int length) {
+		return null;
+	}
+    
     public void beginCommit() {
         if(! started()){
             return;
@@ -254,5 +258,6 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
 	public void commit() {
 		// do nothing
 	}
+
 
 }

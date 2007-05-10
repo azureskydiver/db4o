@@ -104,18 +104,13 @@ public class LocalTransaction extends Transaction {
         
         stream().writeDirty();
         
-        // _file.freeSpaceBeginCommit();
-        
-        // Slot slot =  
-        
-        // From here on we are in the substitute freespace manager
+        Slot reservedSlot = allocateTransactionLogSlot(false);
         
         commitFreespace();
         
-        commit6WriteChanges();
+        commit6WriteChanges(reservedSlot);
         
         freeOnCommit();
-        
     }
 	
 	private void commit2Listeners(){
@@ -205,34 +200,65 @@ public class LocalTransaction extends Transaction {
     	return slotChangeIsFlaggedDeleted(id);
     }
 	
-	protected void commit6WriteChanges() {
+    private Slot allocateTransactionLogSlot(boolean appendToFile){
+    	if(freespaceManager() != null){
+    		Slot slot = freespaceManager().allocateTransactionLogSlot(transactionLogSlotLength());
+    		if(slot != null){
+    			return slot;
+    		}
+    	}
+    	if(! appendToFile){
+    		return null;
+    	}
+    	return _file.appendSlot(transactionLogSlotLength());
+    }
+    
+    private int transactionLogSlotLength(){
+    	// slotchanges * 3 for ID, address, length
+    	// 2 ints for slotlength and count
+    	return ((countSlotChanges() * 3) + 2) * Const4.INT_LENGTH;
+    }
+    
+    private boolean slotLongEnoughForLog(Slot slot){
+    	return slot != null  &&  slot.length() >= transactionLogSlotLength();
+    }
+    
+
+	protected void commit6WriteChanges(Slot reservedSlot) {
         checkSynchronization();
             
-        final int slotSetPointerCount = countSlotChanges();
+        int slotChangeCount = countSlotChanges();
         
-        if (slotSetPointerCount > 0) {
-            int length = (((slotSetPointerCount * 3) + 2) * Const4.INT_LENGTH);
-            Slot slot = _file.getSlot(length);
-            final StatefulBuffer bytes = new StatefulBuffer(this, slot.address(), slot.length());
-            bytes.writeInt(slot.length());
-            bytes.writeInt(slotSetPointerCount);
-            
-            appendSlotChanges(bytes);
-            
-            bytes.write();
-            flushFile();
-            
-            stream().writeTransactionPointer(slot.address());
-            flushFile();
-            
-            if(writeSlots()){
-                flushFile();
-            }
-            
-            stream().writeTransactionPointer(0);
-            flushFile();
-            
-            _file.free(slot);
+        if (slotChangeCount > 0) {
+
+			Slot transactionLogSlot = slotLongEnoughForLog(reservedSlot) ? reservedSlot
+				: allocateTransactionLogSlot(true);
+
+			final StatefulBuffer buffer = new StatefulBuffer(this, transactionLogSlot);
+			buffer.writeInt(transactionLogSlot.length());
+			buffer.writeInt(slotChangeCount);
+
+			appendSlotChanges(buffer);
+
+			buffer.write();
+			flushFile();
+
+			stream().writeTransactionPointer(transactionLogSlot.address());
+			flushFile();
+
+			if (writeSlots()) {
+				flushFile();
+			}
+
+			stream().writeTransactionPointer(0);
+			flushFile();
+			
+			if (transactionLogSlot != reservedSlot) {
+				_file.free(transactionLogSlot);
+			}
+		}
+        if(reservedSlot != null){
+        	_file.free(reservedSlot);
         }
     }
 	
@@ -385,10 +411,10 @@ public class LocalTransaction extends Transaction {
         final MutableInt count = new MutableInt();
         traverseSlotChanges(new Visitor4() {
 			public void visit(Object obj) {
-                    SlotChange slot = (SlotChange)obj;
-                    if(slot.isSetPointer()){
-                        count.increment();
-                    }
+                SlotChange slot = (SlotChange)obj;
+                if(slot.isSetPointer()){
+                    count.increment();
+                }
 			}
 		});
         return count.value();
@@ -429,7 +455,7 @@ public class LocalTransaction extends Transaction {
 	private void appendSlotChanges(final Buffer writer){
 		traverseSlotChanges(new Visitor4() {
 			public void visit(Object obj) {
-				((TreeInt)obj).write(writer);
+				((SlotChange)obj).write(writer);
 			}
 		});
     }
@@ -695,10 +721,6 @@ public class LocalTransaction extends Transaction {
             return;
         }
         freespaceManager().commit();
-    }
-    
-    private Slot transactionLogSlot(){
-    	return null;
     }
     
 }

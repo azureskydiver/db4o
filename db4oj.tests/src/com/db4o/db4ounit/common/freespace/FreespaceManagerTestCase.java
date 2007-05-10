@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.freespace;
 
+import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
 import db4ounit.*;
@@ -11,6 +12,27 @@ public class FreespaceManagerTestCase extends FreespaceManagerTestCaseBase{
 	
 	public static void main(String[] args) {
 		new FreespaceManagerTestCase().runSolo();
+	}
+	
+	public void testAllocateTransactionLogSlot(){
+		for (int i = 0; i < fm.length; i++) {
+			if(fm[i].systemType() == AbstractFreespaceManager.FM_RAM){
+				Slot slot = fm[i].allocateTransactionLogSlot(1);
+				Assert.isNull(slot);
+				
+				fm[i].free(new Slot(5, 10));
+				fm[i].free(new Slot(100, 5));
+				fm[i].free(new Slot(140, 27));
+				
+				slot = fm[i].allocateTransactionLogSlot(28);
+				Assert.isNull(slot);
+				Assert.areEqual(3, fm[i].slotCount());
+				
+				slot = fm[i].allocateTransactionLogSlot(27);
+				Assert.areEqual(2, fm[i].slotCount());
+				Assert.areEqual(new Slot(140, 27), slot);
+			}
+		}
 	}
 	
 	public void testConstructor() {

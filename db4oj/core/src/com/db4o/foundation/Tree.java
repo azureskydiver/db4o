@@ -241,6 +241,20 @@ public abstract class Tree implements ShallowClone , DeepClone{
         return _preceding.first();
     }
     
+    public static Tree last(Tree tree){
+    	if(tree == null){
+    		return null;
+    	}
+    	return tree.last();
+    }
+    
+    public final Tree last(){
+        if(_subsequent == null){
+            return this;
+        }
+        return _subsequent.last();
+    }
+    
 	public void onAttemptToAddDuplicate(Tree a_tree){
 		_size = 0;
         _preceding = a_tree;

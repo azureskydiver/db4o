@@ -48,4 +48,6 @@ public interface FreespaceManager {
 
 	public void commit();
 
+	public Slot allocateTransactionLogSlot(int length);
+
 }
