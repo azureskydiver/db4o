@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.CommitCallbacks.PushedUpdatesExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.Translators.TranslatorExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -491,6 +491,7 @@
     <Compile Include="src\Db4objects.Db4odoc\Uuids\UUIDExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\VersionUpdate\UpdateExample.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\install\db4o-6.2\src\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
