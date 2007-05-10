@@ -1,10 +1,10 @@
 package com.db4o.db4ounit.common.events;
 
-import com.db4o.db4ounit.util.CrossPlatformServices;
 import com.db4o.events.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.util.CrossPlatformServices;
 
 public class ClassRegistrationEventsTestCase extends AbstractDb4oTestCase {
 
