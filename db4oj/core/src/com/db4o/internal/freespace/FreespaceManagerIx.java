@@ -35,7 +35,11 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     }
     
 	public Slot allocateTransactionLogSlot(int length) {
-		return null;
+		return getSlot(length);
+	}
+	
+	public void freeTransactionLogSlot(Slot slot) {
+		free(slot);
 	}
     
     public void beginCommit() {

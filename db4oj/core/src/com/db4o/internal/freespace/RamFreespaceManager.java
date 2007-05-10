@@ -35,6 +35,10 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
 		removeFromBothTrees(sizeNode);
 		return new Slot(sizeNode._peer._key, sizeNode._key);
 	}
+	
+	public void freeTransactionLogSlot(Slot slot) {
+		free(slot);
+	}
 
     public void beginCommit() {
         // do nothing
@@ -242,5 +246,6 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         _freeBySize = _freeBySize.removeNode(sizeNode);
         _freeByAddress = _freeByAddress.removeNode(sizeNode._peer);
     }
+
 
 }

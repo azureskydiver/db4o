@@ -34,6 +34,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	public Slot allocateTransactionLogSlot(int length) {
 		return _delegate.allocateTransactionLogSlot(length);
 	}
+	
+	public void freeTransactionLogSlot(Slot slot) {
+		_delegate.freeTransactionLogSlot(slot);
+	}
 
 	public void free(Slot slot) {
 		

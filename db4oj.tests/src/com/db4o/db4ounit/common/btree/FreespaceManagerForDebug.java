@@ -21,6 +21,10 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 		return null;
 	}
 
+	public void freeTransactionLogSlot(Slot slot) {
+		
+	}
+	
     public void beginCommit() {
 
     }
@@ -72,5 +76,6 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
     public int write() {
         return 0;
     }
+
 
 }

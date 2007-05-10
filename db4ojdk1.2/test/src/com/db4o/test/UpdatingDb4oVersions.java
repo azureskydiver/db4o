@@ -50,9 +50,9 @@ public class UpdatingDb4oVersions {
     }
 
     public void store(){
-        if(Test.isClientServer()){
-            return;
-        }
+    	if(debugModeOrClientServer()){
+    		return;
+    	}
         String file = PATH + fileName();
         new File(file).mkdirs();
         new File(file).delete();
@@ -66,9 +66,9 @@ public class UpdatingDb4oVersions {
         udv.map.put("check","check");
         objectContainer.close();
     }
-
+    
     public void test() throws IOException{
-        if(Test.isClientServer()){
+        if(debugModeOrClientServer()){
             return;
         }
         for(int i = 0; i < VERSIONS.length; i ++){
@@ -93,6 +93,10 @@ public class UpdatingDb4oVersions {
                 System.err.println(oldFile);
             }
         }
+    }
+    
+    private boolean debugModeOrClientServer(){
+    	return Deploy.debug || Test.isClientServer();  
     }
 
     private void checkDatabaseFile(String testFile) {
