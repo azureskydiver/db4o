@@ -3,6 +3,16 @@
 		
 	<import file="common-dotnet.xml" />
 	
+	<macrodef name="reset-src-dir">
+		<attribute name="dir" />
+		<sequential>
+			<delete dir="@{dir}">
+				<include name="**/*.cs" />
+			</delete>
+			<mkdir dir="@{dir}" />
+		</sequential>
+	</macrodef>
+	
 	<target name="build" depends="sharpen, compile">
 	</target>
 	
@@ -34,7 +44,7 @@
 	
 		<property name="dir.n.v6.ta" location="${dir.n.v6}/Db4objects.Db4o.TA" />
 
-		<reset-dir dir="${dir.n.v6.ta}/Db4objects.Db4o.TA" />
+		<reset-src-dir dir="${dir.n.v6.ta}/Db4objects.Db4o.TA" />
 
 		<copy todir="${dir.n.v6.ta}/Db4objects.Db4o.TA">
 			<fileset dir="${dir.sharpen}/db4ota/db4otacsharp/src/Db4objects/Db4o/TA">
@@ -46,7 +56,7 @@
 	
 		<property name="dir.n.v6.ta.tests" location="${dir.n.v6}/Db4objects.Db4o.TA.Tests" />
 
-		<reset-dir dir="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests" />
+		<reset-src-dir dir="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests" />
 
 		<copy todir="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests">
 			<fileset dir="${dir.sharpen}/db4ota/db4otacsharp/src/Db4objects/Db4o/TA/Tests">
