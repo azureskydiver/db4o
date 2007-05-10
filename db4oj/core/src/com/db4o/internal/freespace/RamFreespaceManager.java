@@ -227,13 +227,13 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     public int write(){
         int freeBySizeID = 0;
         int length = TreeInt.marshalledLength((TreeInt)_freeBySize);
-        
         Pointer4 pointer = _file.newSlot(trans(), length); 
         freeBySizeID = pointer._id;
         StatefulBuffer sdwriter = new StatefulBuffer(trans(), length);
         sdwriter.useSlot(freeBySizeID, pointer._slot);
         TreeInt.write(sdwriter, (TreeInt)_freeBySize);
         sdwriter.writeEncrypt();
+        trans().flushFile();
         trans().writePointer(pointer._id, pointer._slot);
         return freeBySizeID;
     }
