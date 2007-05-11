@@ -19,9 +19,9 @@ public class Db4oIOException extends Db4oException {
 
 	/**
 	 * Constructor allowing to specify the causing exception
-	 * @param e exception cause 
+	 * @param cause exception cause 
 	 */
-	public Db4oIOException(Throwable e) {
-		super(e.getMessage(), e);
+	public Db4oIOException(Throwable cause) {
+		super(cause.getMessage(), cause);
 	}
 }

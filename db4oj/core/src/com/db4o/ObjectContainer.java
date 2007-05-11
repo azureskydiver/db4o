@@ -54,6 +54,8 @@ public interface ObjectContainer {
      * @param obj the object to be activated.
 	 * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth}
 	 *  to which activate is to cascade.
+	 *  @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+	 *  @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
     public void activate (Object obj, int depth) throws Db4oIOException, DatabaseClosedException;
     
@@ -66,13 +68,17 @@ public interface ObjectContainer {
      * Use <code>while(!close()){}</code> to kill all sessions using this container.<br><br>
      * @return success - true denotes that the last used instance of this container
      * and the database file were closed.
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      */
-	public boolean close ()throws Db4oIOException;
+	public boolean close() throws Db4oIOException;
 
     /**
      * commits the running transaction.
      * <br><br>Transactions are back-to-back. A call to commit will starts
      * a new transaction immedidately.
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @throws DatabaseReadOnlyException database was configured as read-only.
      */
     public void commit () throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
     
@@ -95,6 +101,7 @@ public interface ObjectContainer {
      * @param obj the object to be deactivated.
 	 * @param depth the member {@link com.db4o.config.Configuration#activationDepth depth} 
 	 * to which deactivate is to cascade.
+	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
 	*/
     public void deactivate (Object obj, int depth) throws DatabaseClosedException;
 
@@ -120,6 +127,9 @@ public interface ObjectContainer {
 	 * @see ObjectCallbacks Using callbacks
      * @param obj the object to be deleted from the
      * <code>ObjectContainer</code>.<br>
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @throws DatabaseReadOnlyException database was configured as read-only.
      */
     public void delete (Object obj) throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
     
@@ -169,6 +179,8 @@ public interface ObjectContainer {
      * @return {@link ObjectSet ObjectSet} containing all found objects.<br><br>
 	 * @see com.db4o.config.Configuration#activationDepth Why activation?
 	 * @see ObjectCallbacks Using callbacks
+	 * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
 	 */
     public ObjectSet get (Object template) throws Db4oIOException, DatabaseClosedException;
     
@@ -180,6 +192,7 @@ public interface ObjectContainer {
      * interface. 
      * <br><br>
      * @return a new Query object
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
     public Query query () throws DatabaseClosedException;
     
@@ -187,6 +200,8 @@ public interface ObjectContainer {
      * queries for all instances of a class.
      * @param clazz the class to query for.
      * @return the {@link ObjectSet} returned by the query.
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
     public ObjectSet query(Class clazz) throws Db4oIOException, DatabaseClosedException;
 
@@ -268,6 +283,8 @@ public interface ObjectContainer {
      *   
      * @param predicate the {@link Predicate} containing the native query expression.
      * @return the {@link ObjectSet} returned by the query.
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
     public ObjectSet query(Predicate predicate) throws Db4oIOException, DatabaseClosedException;
 
@@ -278,6 +295,8 @@ public interface ObjectContainer {
      * @param predicate the {@link Predicate} containing the native query expression.
      * @param comparator the {@link QueryComparator} specifiying the sort order of the result
      * @return the {@link ObjectSet} returned by the query.
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
     public ObjectSet query(Predicate predicate,QueryComparator comparator) throws Db4oIOException, DatabaseClosedException;
 
@@ -288,6 +307,9 @@ public interface ObjectContainer {
      * <br><br>rollback will not restore modified objects in memory. They
      * can be refreshed from the database by calling 
      * {@link ExtObjectContainer#refresh(Object, int)}.
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @throws DatabaseReadOnlyException database was configured as read-only.
      */
     public void rollback() throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
     
@@ -323,6 +345,8 @@ public interface ObjectContainer {
 	 * @see com.db4o.config.ObjectClass#cascadeOnUpdate
 	 * @see com.db4o.config.ObjectField#cascadeOnUpdate
 	 * @see ObjectCallbacks Using callbacks
+	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
+	 * @throws DatabaseReadOnlyException database was configured as read-only.
      */
     public void set (Object obj) throws DatabaseClosedException, DatabaseReadOnlyException;
     
