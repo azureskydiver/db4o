@@ -90,8 +90,6 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
 
     public void run() {
-		Thread t = Thread.currentThread();
-		t.setName("db4o file lock");
 		while (true) {
 			synchronized (_timerLock) {
 				if (_closed) {
@@ -114,7 +112,9 @@ public class TimerFileLockEnabled extends TimerFileLock{
         _timerFile.sync();
         checkOpenTime();
         // TODO: Thread could be a daemon.
-        new Thread(this).start(); 
+        Thread thread = new Thread(this);
+        thread.setName("db4o file lock");
+        thread.start(); 
     }
     
     private long uniqueOpenTime(){
