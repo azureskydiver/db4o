@@ -232,6 +232,10 @@ public class CachedIoAdapter extends IoAdapter {
 		flushAllPages();
 		_io.close();
 	}
+	
+	public IoAdapter delegatedIoAdapter() {
+		return _io.delegatedIoAdapter();
+	}
 
 	private Page getPage(long startAddress, boolean loadFromDisk)
 			throws Db4oIOException {
