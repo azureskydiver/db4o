@@ -2,8 +2,9 @@
 
 package com.db4o.foundation;
 
-
 /**
+ * @exclude
+ *
  * Just delegates to the platform chaining mechanism.
  */
 public abstract class ChainedRuntimeException extends RuntimeException {
