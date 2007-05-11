@@ -3,6 +3,11 @@ package com.db4o;
 
 import com.db4o.ext.*;
 
+/**
+ * db4o-specific exception.<br><br>
+ * This exception is thrown when the database file format
+ * is not compatible with the applied configuration.
+ */
 public class IncompatibleFileFormatException extends Db4oException {
 
 }

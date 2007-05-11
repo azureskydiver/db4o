@@ -4,12 +4,16 @@ package com.db4o.constraints;
 
 import com.db4o.ext.*;
 
-
 /**
- * base class for all constraint exceptions.
+ * Base class for all constraint exceptions.
  */
 public abstract class ConstraintViolationException extends Db4oException{
 
+	/**
+	 * ConstraintViolationException constructor with a specific 
+	 * message.
+	 * @param msg exception message
+	 */
 	public ConstraintViolationException(String msg) {
 		super(msg);
 	}
