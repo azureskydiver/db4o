@@ -2,8 +2,6 @@
 
 package com.db4o.internal.fileheader;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -43,15 +41,10 @@ public class TimerFileLockEnabled extends TimerFileLock{
     }
     
     public void checkHeaderLock() {
-    	try {
-			if( ((int)_opentime) == readInt(0, _headerLockOffset)){
-				writeHeaderLock();
-				return;
-			}
-		} catch (IOException e) {
-			
-		}
-		throw new DatabaseFileLockedException(_timerFile.toString());
+    	if( ((int)_opentime) != readInt(0, _headerLockOffset)){
+    		throw new DatabaseFileLockedException(_timerFile.toString());	
+    	}
+		writeHeaderLock();
     }
     
     public void checkOpenTime() {
@@ -83,7 +76,9 @@ public class TimerFileLockEnabled extends TimerFileLock{
     
     public void close() throws Db4oIOException {
         writeAccessTime(true);
-        _closed = true;
+        synchronized (_timerLock) {
+			_closed = true;
+		}
     }
     
     public boolean lockFile() {
@@ -97,11 +92,14 @@ public class TimerFileLockEnabled extends TimerFileLock{
     public void run() {
 		Thread t = Thread.currentThread();
 		t.setName("db4o file lock");
-		while (writeAccessTime(false)) {
-			Cool.sleepIgnoringInterruption(Const4.LOCK_TIME_INTERVAL);
-			if (_closed) {
-				break;
+		while (true) {
+			synchronized (_timerLock) {
+				if (_closed) {
+					return;
+				}
+				writeAccessTime(false);
 			}
+			Cool.sleepIgnoringInterruption(Const4.LOCK_TIME_INTERVAL);
 		}
 	}
 
@@ -140,12 +138,8 @@ public class TimerFileLockEnabled extends TimerFileLock{
 	}
 
     public void writeHeaderLock(){
-    	try {
-			writeInt(0, _headerLockOffset, (int)_opentime);
-			sync();
-		} catch (IOException e) {
-			
-		}
+    	writeInt(0, _headerLockOffset, (int)_opentime);
+		sync();
     }
 
     public void writeOpenTime() {
@@ -187,7 +181,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     	}
     }
     
-    private boolean writeInt(int address, int offset, int time) throws IOException {
+    private boolean writeInt(int address, int offset, int time) {
     	synchronized (_timerLock) {
             if(_timerFile == null){
                 return false;
@@ -205,7 +199,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
     	}
     }
     
-    private long readInt(int address, int offset) throws IOException {
+    private long readInt(int address, int offset)  {
     	synchronized (_timerLock) {
             if(_timerFile == null){
                 return 0;
