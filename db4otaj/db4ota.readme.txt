@@ -1,0 +1,106 @@
+The code you find in the db4ota and db4otaj source modules and/or in
+the db4ota jar are the humble beginnings of an implementation of
+transparent activation for db4o. This is just a minimalist first
+step. To fill in the gaps and to guide further development, we depend
+on your feedback. Please report issues and post proposals or other
+comments in the db4o Product Developer Forum at
+http://developer.db4o.com/
+
+1. Transparent Activation
+
+db4o currently relies on the developer to explicitly take care of the
+activation depth of his/her persistent object graphs, either by
+programmatic activation, or by configuration. (If you are not familiar
+with the term "activation" in the context of db4o, please refer to
+the db4o reference documentation.) Transparent activation is meant to
+relieve the developer from this burden by activating objects under
+the hood as needed by the client application.
+
+2. API, hooks and creating TA aware classes
+
+The basic idea for this initial TA implementation is very simple:
+Objects have an activation depth of 0, i.e. by default they are
+not activated at all. Whenever a method is called on such an object,
+the first thing to do before actually executing the method body is
+to activate the object to level 1, i.e. populating its direct
+members.
+
+The basic sequence of actions to get this scheme to work is the
+following:
+
+- Whenever an object is instantiated from db4o, the database registers
+itself with this object. To enable this, the object has to implement
+the Activatable interface and provide the according bind(ObjectContainer)
+method. The default implementation of the bind method will create an
+Activator object that maps object and container and keeps track of the
+activation status of the object as well.
+- The first action in every method body of an activatable object should
+be a call to the corresponding Activator's activate() method. (Note that
+this is not enforced by any interface, it is rather a convention, and
+other implementations are possible.)
+- The activate() method will check whether the object is already activated.
+If this is not the case, it will request the container to activate the
+object to level 1 and set the activated flag accordingly.
+
+To instruct db4o to actually use these hooks (i.e. to register the
+database when instantiating an object), TransparentActivationSupport
+has to be registered with the db4o configuration.
+
+This basic implementation may still be subject to changes. For example,
+the "one activator per object" policy could be dropped in favor of a
+(probably Map based) per-container registry of activatable objects.
+
+The most serious issue with this approach is that it doesn't cover
+direct field access from the outside - this scenario could not be handled
+from within the persistent classes exclusively, it would rather be the
+clients accessing those fields that would have to take responsibility
+for correct activation upon field access.
+
+Please refer to the minimalist Project class model in db4ota/test. The
+code demonstrates what is required to manually create TA aware classes.
+Everything TA specific is annotated with comments. Please note that the
+PagedList class is just an example for a TA aware collection class - it
+is not likely to become part of the official API, but there will be
+other, official TA aware collection implementations.
+
+3. Injecting TA awareness via bytecode instrumentation
+
+An alternative to requiring developers to manually implement TA aware
+classes is to inject TA awareness in their original, "unaware" code.
+In our scenario this basically means: Generate the Activatable interface
+declaration, the bind(ObjectContainer) method implementation, a field
+to keep a reference to the corresponding Activator instance, and the
+activate() call at the beginning of every method. This is accomplished
+via a classloader that injects this code into the persistent classes
+when they are loaded. (Currently persistent classes have to be "tagged"
+by providing an appropriate ClassFilter instance.)
+
+Please refer to RunTASampleInstrumented in the db4otaj/test module for
+an example of the (currently very awkward) setup of the instrumenting
+classloader. Please note that, in addition to this classloading wrapper,
+db4o also explicitly needs to be configured to use the (instrumenting)
+classloader of the  persistent classes, as shown in
+TransparentActivationSampleMain in the same package.   
+
+Even more than the basic API/implementation conventions, the
+instrumentation API/configuration will be subject to changes. In
+particular, we will provide a unified framework for any kind of
+bytecode instrumentation, with plugins for features like Native
+Queries and Transparent Activation.
+
+4. Future development
+
+As already mentioned at the beginning of this text, future development
+will mainly be driven by you - please provide feedback! The following
+is a (certainly non-exhaustive) ad hoc list of possible additions,
+features and modifications.
+
+- More convenient configuration for TA support
+- More performant registry for activatable objects
+- Performant TA aware collection implementation(s)
+- Drop-in replacement of default platform collections for TA aware custom implementations
+- Instrumentation of default platform classes
+- Unified bytecode instrumentation framework
+- Partial activation
+- Fine-grained configuration for TA strategies
+- Handle external access to fields
