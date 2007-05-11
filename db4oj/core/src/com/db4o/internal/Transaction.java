@@ -185,7 +185,7 @@ public abstract class Transaction {
     public void slotFreeOnRollback(int id, Slot slot) {
     }
 
-    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot, boolean freeImmediately) {
+    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot) {
     }
 
     void produceUpdateSlotChange(int id, Slot slot) {

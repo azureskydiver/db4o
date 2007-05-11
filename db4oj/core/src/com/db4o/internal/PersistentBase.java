@@ -148,7 +148,7 @@ public abstract class PersistentBase implements Persistent {
 	            // FIXME: Free everything on rollback here ?
 	        }else{
 	            slot = stream.getSlot(length);
-	            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot,true);
+	            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot);
 	        }
 	        
 	        writeToFile(trans, writer, slot);

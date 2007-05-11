@@ -30,7 +30,7 @@ class TransactionObjectCarrier extends LocalTransaction{
         setPointer(id, slot);
     }
     
-    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot, boolean freeImmediately) {
+    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot) {
         setPointer(id, slot);
     }
     
