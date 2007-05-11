@@ -48,7 +48,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		try {
 			_file = ioAdapter.open(fileName(), lockFile, 0);
 			if (needsTimerFile()) {
-				_timerFile = ioAdapter.open(fileName(), false, 0);
+				_timerFile = ioAdapter.delegatedIoAdapter().open(fileName(),
+						false, 0);
 			}
 			if (isNew) {
 				configureNewFile();
