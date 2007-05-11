@@ -32,6 +32,10 @@ public interface ExtObjectContainer extends ObjectContainer {
      * The backup call may be started in a seperated thread by the application,
      * if concurrent execution with normal database access is desired.<br><br>
      * @param path a fully qualified path
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @throws NotSupportedException is thrown when the operation is not supported in current 
+     * configuration/environment
      */
     public void backup(String path) throws Db4oIOException,
 			DatabaseClosedException, NotSupportedException;
@@ -53,6 +57,9 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @see #getID(java.lang.Object)
      * @param obj the object that is to be bound
      * @param id the internal id the object is to be bound to
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @throws InvalidIDException when the provided id is outside the scope of the 
+     * database IDs.
      */
     public void bind(Object obj, long id) throws InvalidIDException, DatabaseClosedException;
     
@@ -104,6 +111,8 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @return the object associated with the passed ID or <code>null</code>, 
      * if no object is associated with this ID in this <code>ObjectContainer</code>.
      * @see com.db4o.config.Configuration#activationDepth Why activation?
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
+     * @throws InvalidIDException when the provided id is outside the scope of the
      */
     public Object getByID(long ID) throws DatabaseClosedException, InvalidIDException;
     
@@ -118,6 +127,8 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @param uuid the UUID
      * @return the object for the UUID
      * @see com.db4o.config.Configuration#activationDepth Why activation?
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
     public Object getByUUID(Db4oUUID uuid) throws DatabaseClosedException, Db4oIOException;
 
@@ -181,6 +192,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * <br><br>
      * @param obj to be tested<br><br>
      * @return <code>true</code> if the passed object is stored.
+     * @throws DatabaseClosedException db4o database file was closed or failed to open.
      */
     public boolean isStored(Object obj) throws DatabaseClosedException;
     
@@ -289,6 +301,8 @@ public interface ExtObjectContainer extends ObjectContainer {
     public void releaseSemaphore(String name);
     
     /**
+     * @deprecated Since db4o-5.2. Use db4o Replication System (dRS)
+     * instead.<br><br>
      * prepares for replication with another {@link ObjectContainer}.
      * <br><br>An {@link ObjectContainer} can only be involved in a replication 
      * process with one other {@link ObjectContainer} at the same time.<br><br>

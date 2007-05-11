@@ -95,6 +95,12 @@ public class Db4o {
      * @param password the user password
 	 * @return an open {@link ObjectContainer ObjectContainer}
      * @see ObjectServer#grantAccess
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws InvalidPasswordException password supplied for the connection is
+     * invalid.
 	 */
 	public static ObjectContainer openClient(String hostName, int port,
 			String user, String password) throws Db4oIOException,
@@ -122,6 +128,12 @@ public class Db4o {
      * @param password the user password
 	 * @return an open {@link ObjectContainer ObjectContainer}
      * @see ObjectServer#grantAccess
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws InvalidPasswordException password supplied for the connection is
+     * invalid.
 	 */
 	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
 			throws Db4oIOException, OldFormatException, InvalidPasswordException {
@@ -151,6 +163,16 @@ public class Db4o {
      * @see Configuration#readOnly
      * @see Configuration#encrypt
      * @see Configuration#password
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseFileLockedException the required database file is locked by 
+     * another process.
+     * @throws IncompatibleFileFormatException runtime 
+     * {@link com.db4o.config.Configuration configuration} is not compatible
+     * with the configuration of the database file. 
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws DatabaseReadOnlyException database was configured as read-only.
 	 */
 	public static final ObjectContainer openFile(String databaseFileName)
 			throws Db4oIOException, DatabaseFileLockedException,
@@ -174,6 +196,16 @@ public class Db4o {
      * @see Configuration#readOnly
      * @see Configuration#encrypt
      * @see Configuration#password
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseFileLockedException the required database file is locked by 
+     * another process.
+     * @throws IncompatibleFileFormatException runtime 
+     * {@link com.db4o.config.Configuration configuration} is not compatible
+     * with the configuration of the database file. 
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws DatabaseReadOnlyException database was configured as read-only.
 	 */
 	public static final ObjectContainer openFile(Configuration config,
 			String databaseFileName) throws Db4oIOException,
@@ -224,6 +256,16 @@ public class Db4o {
      * @see Configuration#readOnly
      * @see Configuration#encrypt
      * @see Configuration#password
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseFileLockedException the required database file is locked by 
+     * another process.
+     * @throws IncompatibleFileFormatException runtime 
+     * {@link com.db4o.config.Configuration configuration} is not compatible
+     * with the configuration of the database file. 
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws DatabaseReadOnlyException database was configured as read-only.
 	 */
 	public static final ObjectServer openServer(String databaseFileName,
 			int port) throws Db4oIOException, IncompatibleFileFormatException,
@@ -248,6 +290,16 @@ public class Db4o {
      * @see Configuration#readOnly
      * @see Configuration#encrypt
      * @see Configuration#password
+     * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+     * @throws DatabaseFileLockedException the required database file is locked by 
+     * another process.
+     * @throws IncompatibleFileFormatException runtime 
+     * {@link com.db4o.config.Configuration configuration} is not compatible
+     * with the configuration of the database file. 
+     * @throws OldFormatException open operation failed because the database file
+     * is in old format and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)} 
+     * is set to false.
+     * @throws DatabaseReadOnlyException database was configured as read-only.
 	 */
 	public static final ObjectServer openServer(Configuration config,
 			String databaseFileName, int port) throws Db4oIOException,

@@ -9,7 +9,8 @@ import com.db4o.internal.*;
 /**
  * db4o-specific exception.<br><br>
  * This exception is thrown when an old file format was detected 
- * and could not be open.
+ * and {@link com.db4o.config.Configuration#allowVersionUpdates(boolean)}
+ * is set to false.
  */
 public class OldFormatException extends Db4oException {
 	
