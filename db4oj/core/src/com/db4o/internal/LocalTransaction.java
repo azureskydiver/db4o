@@ -256,7 +256,7 @@ public class LocalTransaction extends Transaction {
 			flushFile();
 			
 			if (transactionLogSlot != reservedSlot) {
-				_file.free(transactionLogSlot);
+				freeTransactionLogSlot(transactionLogSlot);
 			}
 		}
         freeTransactionLogSlot(reservedSlot);
@@ -509,7 +509,7 @@ public class LocalTransaction extends Transaction {
         produceSlotChange(id).freeOnRollback(slot);
     }
 
-    void slotFreeOnRollbackCommitSetPointer(int id, Slot newSlot, boolean freeImmediately) {
+    void slotFreeOnRollbackCommitSetPointer(int id, Slot newSlot) {
         
         Slot oldSlot = getCurrentSlotOfID(id);
         if(oldSlot==null) {
