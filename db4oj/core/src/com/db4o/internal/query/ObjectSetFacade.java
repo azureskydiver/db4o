@@ -6,6 +6,7 @@ import com.db4o.ext.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.query.*;
 
+// TODO implement basic object methods (equals,..) for consistency with jdk1.2 version inheriting from AbstractList
 /**
  * @exclude 
  * @sharpen.ignore
