@@ -26,6 +26,8 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	public final static Integer INTWRAPPER=new Integer(1);
 	private final static Integer PRIVATE_INTWRAPPER=new Integer(1);
 	
+	private static Data _prevData=null;
+	
 	private static abstract class Base {
 		int id;
 		Integer idWrap;
@@ -97,6 +99,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		db.set(c);
 		db.set(cc);
 		db.set(new Other());
+		_prevData=a;
 	}
 	
 	private abstract static class ExpectingPredicate extends Predicate {
@@ -340,6 +343,12 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 			public int expected() { return 0;}
 			public boolean match(Data candidate) {
 				return candidate.getPrev()!=null&&candidate.getPrev().getName().equals("");
+			}
+		},
+		new ExpectingPredicate("getPrev()==_dataPrev") {
+			public int expected() { return 1;}
+			public boolean match(Data candidate) {
+				return candidate.getPrev()==_prevData;
 			}
 		},
 		// getter comparisons
