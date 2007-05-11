@@ -3,6 +3,12 @@ package com.db4o;
 
 import com.db4o.ext.*;
 
+/**
+ * db4o-specific exception.<br><br>
+ * This exception is thrown when a write operation is attempted 
+ * on a database in a read-only mode.
+ * @see com.db4o.config.Configuration#readOnly(boolean) 
+ */
 public class DatabaseReadOnlyException extends Db4oException {
 
 }

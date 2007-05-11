@@ -13,22 +13,43 @@ import com.db4o.internal.*;
  */
 public class Db4oException extends ChainedRuntimeException {
 	
+	/**
+	 * Simple constructor
+	 */
 	public Db4oException() {
 		this(null, null);
 	}
 	
+	/**
+	 * Constructor with an exception message specified 
+	 * @param msg exception message 
+	 */
 	public Db4oException(String msg) {
 		this(msg, null);
 	}
 
+	/**
+	 * Constructor with an exception cause specified
+	 * @param cause exception cause
+	 */
 	public Db4oException(Throwable cause) {
 		this(cause.getMessage(), cause);
 	}
 	
+	/**
+	 * Constructor with an exception message selected
+	 * from the internal message collection. 
+	 * @param messageConstant internal db4o message number
+	 */
 	public Db4oException(int messageConstant){
 		this(Messages.get(messageConstant));
 	}
 	
+	/**
+	 * Constructor with an exception message and cause specified
+	 * @param msg exception message
+	 * @param cause exception cause
+	 */
 	public Db4oException(String msg, Throwable cause) {
 		super(msg, cause);
 	}

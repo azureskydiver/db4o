@@ -7,9 +7,15 @@ import com.db4o.internal.*;
 
 
 /**
- * An old file was detected and could not be open.
+ * db4o-specific exception.<br><br>
+ * This exception is thrown when an old file format was detected 
+ * and could not be open.
  */
 public class OldFormatException extends Db4oException {
+	
+	/**
+	 * Constructor with the default message. 
+	 */
 	public OldFormatException() {
 		super(Messages.OLD_DATABASE_FORMAT);
 	}

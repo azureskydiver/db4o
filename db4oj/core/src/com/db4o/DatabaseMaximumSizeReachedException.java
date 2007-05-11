@@ -3,6 +3,15 @@ package com.db4o;
 
 import com.db4o.ext.*;
 
+/**
+ * db4o-specific exception.<br><br>
+ * This exception is thrown when the database file reaches the
+ * maximum allowed size. Upon throwing the exception the database is
+ * switched to the read-only mode. <br>
+ * The maximum database size is configurable 
+ * and can reach up to 254GB.
+ *@see com.db4o.config.Configuration#blockSize(int)
+ */
 public class DatabaseMaximumSizeReachedException extends Db4oException {
 
 }
