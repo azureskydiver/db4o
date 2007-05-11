@@ -218,6 +218,32 @@
 				<attribute name="Class-Path" value="${filename.bloat.jar} ${filename.ant.jar} ${filename.java1.2.jar}"/>
 			</manifest>
 		</jar>
+
+		<mkdir dir="${dir.dist.classes.taj}" />
+		<delete>
+			<fileset dir="${dir.dist.classes.taj}">
+				<include name="**/*"/>
+			</fileset>
+		</delete>
+		<javac srcdir="${dir.ta.src}" fork="true" destdir="${dir.dist.classes.taj}" debug="off" target="1.2" source="1.2" encoding="UTF-8">
+			<classpath>
+				<pathelement path="${file.java1.2.jar}"/>
+			</classpath>
+		</javac>
+		<javac srcdir="${dir.taj.src}" fork="true" destdir="${dir.dist.classes.taj}" debug="off" target="1.2" source="1.2" encoding="UTF-8">
+			<classpath>
+				<pathelement path="${file.java1.2.jar}"/>
+				<pathelement path="${file.bloat.jar}"/>
+			</classpath>
+		</javac>
+		<jar destfile="${file.ta.jar}">
+			<fileset dir="${dir.dist.classes.taj}" />
+			<manifest>
+				<attribute name="Class-Path" value="${filename.bloat.jar} ${filename.java1.2.jar}"/>
+			</manifest>
+		</jar>
+	
+		
 		<copy file="${file.bloat.jar}" todir="${dir.dist.jars}" />
 		<copy file="${file.ant.jar}" todir="${dir.dist.jars}" />
 		<copy file="${file.bloat.license}" todir="${dir.dist.jars}" />
@@ -1009,6 +1035,20 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<!-- include name="build.xml" / -->
+				<include name="**/src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.src}/${name.project.ta}">
+			<fileset dir="${dir.ta}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="**/src/**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.src}/${name.project.taj}">
+			<fileset dir="${dir.taj}">
+				<include name=".project" />
+				<include name=".classpath" />
 				<include name="**/src/**/*.java" />
 			</fileset>
 		</copy>
