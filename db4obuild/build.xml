@@ -51,10 +51,6 @@
 		<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
 		<loadfile property="content.copyrightheader" srcfile="${file.copyrightheader}" encoding="iso-8859-1" />
 		<versioninfo path="${dir.j.core.src}/com/db4o" java="true" version="${db4o.version.full}" major="${db4o.version.major}" minor="${db4o.version.minor}" />
-		<!--
-		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}" minor="${db4o.version.minor}"/>
-		<versioninfo path="${dir.n.core.src}/compact" compact="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
-		-->
 		<property name="file.compiler.jdk1.3.args.optional" value="" />
 	</target>
 
@@ -75,9 +71,6 @@
 			<fileset dir="${dir.j.tutorial.out.mono}">
 				<include name="**/*" />
 			</fileset>
-			<fileset dir="${dir.n.core.src}">
-				<include name="**/*.cs" />
-			</fileset>
 			<fileset dir="${dir.build}">
 				<include name="*.yap" />
 			</fileset>
@@ -93,32 +86,6 @@
 		<filehead beforePattern="package" header="${content.copyrightheader}" >
 			<sources dir="${dir.doctor.src}">
 				<include name="**/*.java" />
-			</sources>
-		</filehead>
-		<filehead beforePattern="package" header="${content.copyrightheader}" >
-			<sources dir="${dir.n.in.java}">
-				<include name="**/*.java" />
-			</sources>
-		</filehead>
-		<filehead beforePattern="using|namespace"  header="${content.copyrightheader}" >
-			<sources dir="${dir.n.in.sharp}">
-				<include name="**/*.cs" />
-			</sources>
-		</filehead>
-		<filehead beforePattern="using|namespace"  header="${content.copyrightheader}" >
-			<sources dir="${dir.n.core}">
-				<include name="**/*.cs" />
-			</sources>
-		</filehead>
-		<filehead beforePattern="using|namespace"  header="${content.copyrightheader}" >
-			<sources dir="${dir.n.test}">
-				<include name="**/*.cs" />
-			</sources>
-		</filehead>
-		<filehead beforePattern="using|namespace"  header="${content.copyrightheader}" >
-			<sources dir="${dir.n.tools}">
-				<include name="**/*.cs" />
-				<exclude name="Libs/**/*.*" />
 			</sources>
 		</filehead>
 	</target>
@@ -364,178 +331,15 @@
 			<fileset dir="${dir.build.src}" includes="**/*.properties"/>
 		</copy>
 	</target>
-	
-	<target name="compilecoredll-net">
-		<versioninfo path="${dir.n.core.src}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
-		<csc
-			srcdir="${dir.n.core.src}"
-			targettype="library"
-			destfile="${file.dll.net}"
-			docfile="${file.xml.net}"
-			debug="${compiledll.debug}"
-			warnlevel="0"
-			optimize="true"
-			failonerror="true"
-			definitions="${csharp.defines}"
-			executable="${csc.executable}">
-			
-			<include name="*.cs" />
-			<exclude name="compact/**" />
-		</csc>
-	</target>
-	
 
-	
-	<target name="compilecoredll-compact">
-		<delete dir="${dir.dist.net.compile}" />
-		<copy todir="${dir.dist.net.compile}">
-			<fileset dir="${dir.n.core.src}">
-				<include name="**/*.cs" />
-				<exclude name="net/**" />
-			</fileset>
-		</copy>
-		<versioninfo path="${dir.dist.net.compile}/compact" compact="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
-		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />		
-		<mkdir dir="${dir.dist.dll.compact}" />
-		<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
-			<arg value="/optimize" />
-			<arg value="/debug${compiledll.debug.symbol}" />
-			<arg value="/define:${csharp.defines.cf}" />
-			<arg value="/out:${file.dll.compact}" />
-			<arg value="/doc:${file.xml.compact}" />
-			<arg value="/target:library" />
-			<arg value="/warn:1" />
-			<arg value="/noconfig" />
-			<arg value="/nostdlib" />
-			<arg value="/r:${dir.dll.wince}mscorlib.dll" />
-			<arg value="/r:${dir.dll.wince}System.dll" />
-			<arg value="/recurse:*.cs" />
-		</exec>
-	</target>
-	
-	<target name="compiletools-net" depends="copy-tools-sources">		
-		<csc srcdir="${dir.dist.net.compile}"
-			targettype="library"
-			destfile="${file.dll.tools.net}"
-			debug="${compiledll.debug}"
-			executable="${csc.executable}"
-			definitions="NET">
-			
-			<reference dir="${dir.dist.dll.net}">
-				<include name="${file.name.dll}" />
-			</reference>
-		</csc>
-	</target>
-		
-	<target name="compiletools-compact" depends="copy-tools-sources">
-		<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
-			<arg value="/optimize" />
-			<arg value="/debug${compiledll.debug.symbol}" />
-			<arg value="/define:${csharp.defines.cf}" />
-			<arg value="/out:${file.dll.tools.compact}" />
-			<arg value="/target:library" />
-			<arg value="/warn:1" />
-			<arg value="/noconfig" />
-			<arg value="/nostdlib" />
-			<arg value="/r:${dir.dll.wince}mscorlib.dll" />
-			<arg value="/r:${dir.dll.wince}System.dll" />
-			<arg value="/r:${file.dll.compact}" />
-			<arg value="/recurse:*.cs" />
-		</exec>
-	</target>
-
-	<target name="compiledllnetstandard" depends="init, sharpen">
-		<antcall target="compilecoredll-net">
-			<param name="src.dir" value="${dir.n.core.src}" />
-		</antcall>
-		<antcall target="compiletools-net" />
-	</target>
-
-	<target name="compiledllnet" depends="init, sharpen, compiledllnetstandard">
-		<antcall target="compilecoredll-compact">
-			<param name="src.dir" value="${dir.n.core.src}" />
-		</antcall>
-		<!-- <antcall target="compiletools-compact" /> -->
-	</target>
-	
-	<target name="copy-tools-sources">
-		<delete dir="${dir.dist.net.compile}" />
-		<copy todir="${dir.dist.net.compile}">
-			<fileset dir="${dir.n.tools}">
-				<include name="**/*.cs" />
-				<exclude name="Libs/**/AssemblyInfo.cs" />
-				<exclude name="Libs/Mono.Cecil/CodeGen/**/*.*" />
-				<exclude name="Libs/Cecil.FlowAnalysis/codegen/**/*.*" />
-				<exclude name="Libs/Cecil.FlowAnalysis/Cecil.FlowAnalysis.Tests/**/*.*" />
-			</fileset>
-		</copy>
-		<copy file="${file.keypair}" todir="${dir.dist.net.compile}" />
-		<assemblykey keyfile="${dir.dist.net.compile}/${filename.keyfile}" assemblyinfo="${dir.dist.net.compile}/AssemblyInfo.cs" />
-		<updateAssemblyInfoFiles srcdir="${dir.dist.net.compile}" />
-	</target>
-	
-	<target name="old-runtestsnet" depends="configure-net1.1, compiletestsnet" description="sharpen and run db4o AllTests for net1.1">
-		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}">
-		</exec>
-	</target>
-	
 	<target name="runtestsnet">
 		<ant antfile="build-dotnet.xml" target="run-tests-net1" />
-	</target>
-	
-	<target name="old-runtestsnet2" depends="configure-net2, compiletestsnet" description="sharpen and run db4o AllTests for net2">
-		<exec executable="${dir.dist.dll.net}/db4o-net-test.exe" dir="${dir.dist.dll.net}" failonerror="true" failifexecutionfails="true">
-		</exec>
 	</target>
 	
 	<target name="runtestsnet2">
 		<ant antfile="build-dotnet.xml" target="run-tests" />
 	</target>
-	
-	<target name="compile-db4ounit-libs">
-		<csc srcdir="${dir.n}/Db4oUnit/src"
-				targettype="library"
-				executable="${csc.executable}"
-				destfile="${output.dir}/Db4oUnit.dll">
-		</csc>
-				
-		<csc srcdir="${dir.n}/Db4oUnit.Extensions/src"
-			targettype="library"
-			executable="${csc.executable}"
-			destfile="${output.dir}/Db4oUnit.Extensions.dll">
-			<reference dir="${output.dir}/">
-				<include name="${file.name.dll}" />
-				<include name="Db4oUnit.dll" />
-				<exclude name="Db4oUnit.Extensions.dll" />
-			</reference>
-		</csc>
-	</target>
-	
-	<target name="compiletestsnet" depends="compiledllnetstandard">	
-		
-		<antcall target="compile-db4ounit-libs">
-			<param name="output.dir" value="${dir.dist.dll.net}" />
-		</antcall>
-		
-		<csc srcdir="${dir.n.test}/src"
-			targettype="exe"
-			destfile="${dir.dist.dll.net}/db4o-net-test.exe"
-			debug="true"
-			mainclass="com.db4o.test.AllTests"
-			definitions="${csharp.defines}">
-			
-			<exclude name="compact*/**" />
-			
-			<reference dir="${dir.dist.dll.net}">
-				<include name="${file.name.dll}" />
-				<include name="${file.name.tools.dll}" />
-				<include name="Db4oUnit.dll" />
-				<include name="Db4oUnit.Extensions.dll" />
-				<include name="System.Drawing.dll" />
-			</reference>
-		</csc>
-	</target>
-	
+
 	<target name="do-compiletoolsmono">
 		<updateAssemblyInfo version="${db4o.version.full}">
 			<fileset dir="${src.dir}">
@@ -590,14 +394,7 @@
 			</reference>
 		</csc>
 	</target>
-	
-	<target name="old-runtestsmono" depends="configure-mono2, compiletestsmono" description="sharpen and run db4o AllTests for mono2">
-		<exec executable="mono" dir="${dir.dist.dll.mono}" failifexecutionfails="true" failonerror="true" timeout="300000">
-			<arg value="--debug" />
-			<arg file="${dir.dist.dll.mono}/${file.name.exe.tests.mono}" />
-		</exec>
-	</target>
-	
+
 	<target name="runtestsmono">
 		<ant antfile="build-dotnet.xml" target="run-tests" />
 	</target>
@@ -617,24 +414,6 @@
 			<exclude name="compact*/**" />
 		</csc>
 		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
-	</target>
-
-	<target name="compiledllmono" depends="init, sharpen">
-		<antcall target="do-compiledllmono">
-			<param name="src.dir" location="${dir.n.core.src}" />
-		</antcall>
-	</target>
-
-	<target name="compiletoolsmono">
-		<antcall target="do-compiletoolsmono">
-			<param name="src.dir" location="${dir.n.tools.src}" />
-		</antcall>
-	</target>
-
-	<target name="compiletestsmono" >
-		<antcall target="do-compiletestsmono">
-			<param name="src.dir" location="${dir.n.test.src}" />
-		</antcall>
 	</target>
 
 	<target name="compiledb4ounitjava" depends="compilecorejava" description="Compile db4o test framework">
@@ -739,12 +518,6 @@
 		<javac fork="true" srcdir="${dir.j.tutorial.src}" destdir="${dir.dist.classes.tutorial}" classpath="${dir.dist.classes.tutorial}" target="1.3" source="1.3" debug="on" encoding="UTF-8" />
 	</target>
 	
-	<target name="compilentutorial" depends="compiledllnet">
-		<ant dir="${dir.n.tutorial}">
-			<property name="csc.executable" value="${csc.executable}" />
-		</ant>
-	</target>
-
 	<target name="preparendoc">
 		<property name="db4o-namespace-summaries.xml" location="config/db4o-namespace-summaries.xml" />		
 		<property name="ndoc.home" location="lib/ndoc" />
@@ -1108,12 +881,6 @@
 		</zip>
 	</target>
 
-	<target name="zipnet" depends="init, configure-net1.1, compilenet-all, vsdoc, do-zipnet-pascalcase">
-	</target>
-	
-	<target name="zipnet2" depends="init, configure-net2, compilenet-all, ndoc, net2-instrumentation, do-zipnet-pascalcase">
-	</target>
-	
 	<target name="configure-net1.1">
 
 		<property name="target.framework.version" value="1.1" />
@@ -1151,19 +918,7 @@
 		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
-	
-	<target name="do-zipnet-pascalcase">
-		<antcall target="doctor">
-		</antcall>
-		
-		<antcall target="create-zipnet">
-			<param name="dir.core" value="${dir.n.core}" />
-			<param name="dir.tools" value="${dir.n.tools}" />
-			<param name="dir.test" value="${dir.n.test}" />
-			<param name="dir.tutorial" value="${dir.n.tutorial}" />
-		</antcall>
-	</target>
-		
+
 	<target name="create-zipnet">
 		<mkdir dir="${dir.dist.net.src.core}" />
 		<copy todir="${dir.dist.net.src.core}">
@@ -1203,11 +958,6 @@
 				<include name="vb/**/*.vbproj" />
 				<include name="vb/**/*.sln" />
 				<exclude name="db4o-tutorial/**/*.*" />
-			</fileset>
-			<fileset dir="${dir.n.tutorial.bin}">
-				<include name="**/*.dll" />
-				<include name="**/*.exe" />
-				<include name="**/*.config" />
 			</fileset>
 		</copy>
 		
@@ -1257,129 +1007,6 @@
 		</ant>
 	</target>
 	
-	<target name="do-zipmono-pascalcase">
-		<mkdir dir="${dir.dist.mono.src.core}" />
-		
-		<antcall target="sharpen">
-		</antcall>
-			
-		<antcall target="do-compiledllmono">
-			<param name="src.dir" location="${dir.n.core.src}" />
-		</antcall>
-		<antcall target="do-compiletoolsmono">
-			<param name="src.dir" location="${dir.n.tools.src}" />
-		</antcall>
-		<antcall target="do-compiletestsmono">
-			<param name="src.dir" location="${dir.n.test.src}" />
-		</antcall>
-		
-		<antcall target="ndocmono">
-		</antcall>
-		
-		<antcall target="doctor">
-		</antcall>
-		
-		<antcall target="prepare-mono-distro">
-		</antcall>
-	</target>
-	
-	<target name="configure-mono1.1">
-		<property name="mono.definitions" value="MONO" />
-		<property name="mono.executable" value="${mono.mcs.executable}" />
-		<property name="mono.ndoc.executable" value="mono/1.0/NDocConsole.exe" />
-	</target>
-	
-	<target name="configure-mono2">
-		<property name="mono.definitions" value="MONO;NET_2_0" />
-		<property name="mono.executable" value="${mono.gmcs.executable}" />
-		<property name="csc.executable" value="${mono.gmcs.executable}" />
-		<property name="mono.ndoc.executable" value="net/2.0/NDocConsole.exe" />
-	</target>
-	
-	<target name="zipmono-pascalcase" depends="init, configure-mono1.1"  description="Zip Mono PascalCase distribution">
-		<antcall target="do-zipmono-pascalcase">
-		</antcall>
-	</target>
-
-	<target name="zipmono2-pascalcase" depends="init, configure-mono2"  description="Zip Mono with generics PascalCase distribution">
-		<antcall target="do-zipmono-pascalcase">
-		</antcall>
-	</target>
-	
-	<target name="zipmono" depends="init, compiledllmono, ndocmono" description="Zip Mono distribution">
-		<antcall target="prepare-mono-distro" />
-	</target>
-		
-	<target name="prepare-mono-distro">
-		<mkdir dir="${dir.dist.mono.src.core}" />
-		<copy todir="${dir.dist.mono.src.core}">
-			<fileset dir="${dir.n.core}">
-				<include name="**/*.cs" />
-				<include name="**/*.csproj" />
-				<include name="**/*.sln" />				
-				<include name="**/*.mdp" />				
-				<include name="**/*.mds" />
-				<exclude name="**/compact*/**"/>
-			</fileset>
-		</copy>
-		<versioninfo path="${dir.dist.mono.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
-		<mkdir dir="${dir.dist.mono.src.tools}" />
-		<copy todir="${dir.dist.mono.src.tools}">
-			<fileset dir="${dir.n.tools}">
-				<include name="**/*.cs" />
-				<include name="**/*.csproj" />
-				<include name="**/*.sln" />				
-				<include name="**/*.mdp" />
-				<include name="**/*.mds" />
-			</fileset>
-		</copy>
-		<mkdir dir="${dir.dist.mono.src.test}" />
-		<copy todir="${dir.dist.mono.src.test}">
-			<fileset dir="${dir.n.test}">
-				<include name="**/*.cs" />
-				<exclude name="**/compact/**"/>
-				<exclude name="**/CsImage.cs" />
-				<include name="**/*.csproj" />
-				<include name="**/*.sln" />				
-				<include name="**/*.mdp" />
-				<include name="**/*.mds" />
-			</fileset>
-		</copy>
-		<mkdir dir="${dir.dist.mono.build.tutorial}" />
-		<copy todir="${dir.dist.mono.build.tutorial}">
-			<fileset dir="${dir.n.tutorial}">
-				<include name="**/*.cs" />
-				<exclude name="db4o-tutorial/**/*.*" />
-			</fileset>
-		</copy>
-		<copy todir="${dir.dist.mono.build.tutorial}">
-			<fileset dir="${dir.j.tutorial.out.mono}">
-				<include name="**/**" />
-			</fileset>
-		</copy>
-		<mkdir dir="${dir.dist.mono.build.tutorial}/vb" />
-		<copy todir="${dir.dist.mono.build.tutorial}/vb">
-			<fileset dir="${dir.j.tutorial.out.vb}">
-				<include name="**/**" />
-			</fileset>
-		</copy>
-
-		<filehead beforePattern="using|namespace|#if" header="${content.gplheader}" >
-			<sources dir="${dir.dist.mono.build.src}">
-				<include name="**/*.cs" />
-			</sources>
-		</filehead>
-		<copy todir="${dir.dist.mono.build}">
-			<fileset dir="${dir.dist.mono}" includes="dll/**/**" />
-			<fileset dir="${dir.j}" includes="GPL.txt" />
-			<fileset dir="${dir.config}" includes="README.txt" />
-		</copy>
-		<mkdir dir="${dir.dist.mono}/doc/api" />
-		<copy todir="${dir.dist.mono}/doc/api">
-			<fileset dir="${dir.dist.ndoc}" includes="**/**" />
-		</copy>
-	</target>	
-		
 	<target name="prepare-conversion-workspace" depends="init">
 		<delete dir="${target.dir}" />
 		<mkdir dir="${target.dir}" />
@@ -1406,96 +1033,7 @@
 			</fileset>
 		</copy>
 	</target>
-	
-	<target name="net2-instrumentation" depends="compilenet-all">
-		
-		<property name="dir.n.instrumentation" location="../db4on/instrumentation" />
-		
-		<ant antfile="build-net-instrumentation.xml"
-			target="rebuild"
-			inheritall="false">
-			<property name="csc.executable" value="${csc.executable}"></property>
-		</ant>
-		
-		<copy todir="${dir.dist.net.instrumentation}">
-			<fileset dir="${dir.n.instrumentation}">
-				<include name="bin/*.dll" />
-				<include name="bin/*.exe" />
-				<exclude name="bin/Db4oUnit.dll" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${dir.dist.net.instrumentation}/src/instrumentation">				
-			<fileset dir="${dir.n.instrumentation}">
-				<include name="Db4oAdmin/**/*.cs" />
-				<include name="Db4oAdmin/**/*.csproj" />
-				<include name="Db4oAdmin/**/*.sln" />
-				
-				<include name="Db4oAdmin.Tests/**/*.cs" />
-				<include name="Db4oAdmin.Tests/**/*.csproj" />
-				<include name="Db4oAdmin.Tests/**/*.sln" />
-				
-				<include name="Db4oAdmin.Example/**/*.cs" />
-				<include name="Db4oAdmin.Example/**/*.csproj" />
-				<include name="Db4oAdmin.Example/**/*.sln" />
-			</fileset>
-		</copy>
-		
-		<updateAssemblyHintPath to="../../../dll/net/${file.name.dll}">
-			<projectFiles dir="${dir.dist.net.instrumentation}">
-				<include name="**/*.csproj" />
-				<exclude name="**/*.Example.csproj" />
-			</projectFiles>
-		</updateAssemblyHintPath>
-		
-		<updateAssemblyHintPath to="../../../dll/compact/${file.name.dll}">
-			<projectFiles dir="${dir.dist.net.instrumentation}">
-				<include name="**/*.Example.csproj" />
-			</projectFiles>
-		</updateAssemblyHintPath>
-	</target>
-	
-	<target name="compiledb4ounit-net">		
-		<csc srcdir="${dir.n}/Db4oUnit/src"
-			targettype="library"
-			destfile="${dir.dist.db4ounit.dll}/Db4oUnit.dll"
-			executable="${csc.executable}">
-		</csc>
 
-		<csc srcdir="${dir.n}/Db4oUnit.Extensions/src"
-			targettype="library"
-			destfile="${dir.dist.db4ounit.dll}/Db4oUnit.Extensions.dll"
-			executable="${csc.executable}">
-			<reference dir="${dir.dist.db4ounit.dll}">
-				<include name="Db4oUnit.dll" />
-			</reference>
-			<reference file="${file.dll.net}" />
-		</csc>
-	</target>
-	
-	<target name="compilenet-all" depends="sharpen">
-		
-		<antcall target="compilecoredll-compact">
-		</antcall>
-		
-		<antcall target="compiletools-compact">
-		</antcall>
-
-		<antcall target="compilecoredll-net">
-		</antcall>
-		
-		<antcall target="compiletools-net">
-		</antcall>
-		
-		<antcall target="compiledb4ounit-net">
-		</antcall>
-		
-		<ant dir="${dir.n.tutorial}">
-			<property name="dir.db4obuild" location="." />
-		</ant>
-		
-	</target>
-	
 	<target name="copy-sharpened-files">
 		<copy todir="${target.dir}">
 			<fileset dir="${src.dir}">
@@ -1513,241 +1051,22 @@
 		<ant antfile="build-db4ounit.xml" target="buildnet" inheritall="false">
 			<property name="csc.executable" value="${csc.executable}" />
 		</ant>
-	</target>
-	
-	<target name="sharpen-db4ounit-extensions" depends="compiletestsjava,install-javatocsharp-plugin">		
-		
-		<property name="target.dir" value="${dir.sharpen}" />
-		
-		<delete dir="${target.dir}" />
-		<mkdir dir="${target.dir}" />
-		
-		<mkdir dir="${target.dir}/lib" />
-		<property name="dependencies.jar" location="${target.dir}/lib/dependencies.jar" />
-		<jar destfile="${dependencies.jar}">			
-			<fileset dir="${dir.dist.classes.java1.1}" />
-			<fileset dir="${dir.dist.classes.db4ounit}" />
-			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
-		</jar>
+	</target>	
 
-		<copy todir="${target.dir}/db4ounit.extensions/src">
-			<fileset dir="${dir.db4ounit.extensions.src}">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-		
-		<sharpen workspace="${target.dir}" resource="db4ounit.extensions/src">
-			<args>
-				<arg value="-cp" />
-				<arg path="${dependencies.jar}" />
-				<arg value="@sharpen-legacy-tests-options" />
-			</args>
-		</sharpen>
-		
-		<delete failonerror="false">
-			<fileset dir="${dir.n}/Db4oUnit.Extensions/Db4oUnit">
-				<include name="**/*.cs" />
-				<exclude name="**/.svn/**" />
-			</fileset>
-		</delete>
-		
-		<copy todir="${dir.n}/Db4oUnit.Extensions/src">
-			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src">
-				<include name="Db4oUnit/**/*.cs" />
-			</fileset>
-		</copy>
-		
-		<updatecsharpproject projectFile="${dir.n}/Db4oUnit.Extensions/Db4oUnit.Extensions.csproj">
-			<sources dir="${dir.n}/Db4oUnit.Extensions">
-				<include name="**/*.cs" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectFile="${dir.n}/Db4oUnit.Extensions/Db4oUnit.Extensions-2005.csproj">
-			<sources dir="${dir.n}/Db4oUnit.Extensions">
-				<include name="**/*.cs" />
-			</sources>
-		</updatecsharpproject>
-
-		
-		<!--
-		2) Compile to make sure conversion works
-		-->
-	</target>
-	
-	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions">
-		
-		<property name="target.dir" location="${dir.sharpen}" />
-		
-		<copy todir="${target.dir}/db4oj.tests/src">
-			<fileset dir="${dir.j.tests.src}">
-				<include name="**/db4ounit/common/**/*.java" />
-				<include name="**/db4ounit/util/**/*.java" />
-			</fileset>
-		</copy>
-		
-		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
-			<args>
-				<arg value="-cp" />
-				<arg path="${dependencies.jar}" />
-				<arg value="@sharpen-legacy-tests-options" />
-			</args>
-		</sharpen>
-		
-		<delete>
-			<fileset dir="${dir.n.test.src}/com/db4o/db4ounit/common">
-				<include name="**/*.cs" />
-				<exclude name="**/.svn/**" />
-			</fileset>
-		</delete>
-		
-		<copy todir="${dir.n.test.src}">
-			<fileset dir="${target.dir}/db4oj.testscsharp/src">
-				<include name="**/*.cs" />
-			</fileset>
-		</copy>
-
-		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test.csdproj">
-			<sources dir="${dir.n.test}">
-				<include name="**/*.cs" />
-				<exclude name="**/compact-2005/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.test}/db4o-compact-test-2005.csproj">
-			<sources dir="${dir.n.test}">
-				<include name="**/*.cs" />
-				<exclude name="**/compact/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.test}/db4o-net2-test.csproj">
-			<sources dir="${dir.n.test}">
-				<include name="**/*.cs" />
-				<exclude name="**/compact*/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.test}/db4o-net-test.csproj">
-			<sources dir="${dir.n.test}">
-				<include name="**/*.cs" />
-				<exclude name="**/compact*/**" />
-			</sources>
-		</updatecsharpproject>
-	</target>
-	
-	<target name="standalone-sharpen" depends="init, configure-net2, sharpen">
-	</target>
-	
-	<target name="sharpen" description="create .NET sources" depends="sharpen-core, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests" unless="skip.conversion">
-	</target>
-	
-	<target name="sharpen-core" depends="install-javatocsharp-plugin">
-
-		<property name="sharpen.src.dir" location="${dir.sharpen}" />
-		
-		<antcall target="prepare-conversion-workspace">
-			<param name="target.dir" value="${sharpen.src.dir}" />
-		</antcall>
-		
-		<sharpen workspace="${sharpen.src.dir}" resource="db4oj/core/src">
-			<args>
-				<arg value="@sharpen-core-options" />
-			</args>
-		</sharpen>
-		
-		<antcall target="copy-sharpened-files">
-			<param name="src.dir" value="${sharpen.src.dir}/db4ojcsharp/src" />
-			<param name="target.dir" value="${dir.n.core.src}/core" />
-		</antcall>
-		
-		<copy todir="${dir.n.core.src}" overwrite="true">
-			<fileset dir="${dir.n.in.sharp}">
-				<include name="**/*.cs" />
-			</fileset>
-		</copy>
-			
-		<updatecsharpproject projectFile="${dir.n.core}/db4o-net.csproj">
-			<sources dir="${dir.n.core}">
-				<include name="**/*.cs" />
-				<exclude name="src/compact*/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectFile="${dir.n.core}/db4o-net2.csproj">
-			<sources dir="${dir.n.core}">
-				<include name="**/*.cs" />
-				<exclude name="src/compact*/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectFile="${dir.n.core}/db4o-compact.csdproj">
-			<sources dir="${dir.n.core}">
-				<include name="**/*.cs" />
-				<exclude name="src/net/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectFile="${dir.n.core}/db4o-compact-2005.csproj">
-			<sources dir="${dir.n.core}">
-				<include name="**/*.cs" />
-				<exclude name="src/net/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectFile="${dir.n.core}/db4o-mono.mdp">
-			<sources dir="${dir.n.core}">
-				<include name="**/*.cs" />
-				<exclude name="src/compact*/**" />
-			</sources>
-		</updatecsharpproject>
-		
-		<fileset id="tools.sources" dir="${dir.n.tools}">
-			<include name="**/*.cs" />
-			<exclude name="Libs/**/AssemblyInfo.cs" />
-			<exclude name="Libs/Mono.Cecil/CodeGen/**/*.*" />
-			<exclude name="Libs/Cecil.FlowAnalysis/codegen/**/*.*" />
-			<exclude name="Libs/Cecil.FlowAnalysis/Cecil.FlowAnalysis.Tests/**/*.*" />
-		</fileset>
-		
-		<updatecsharpproject projectfile="${dir.n.tools}/db4o-compact-tools.csdproj">
-			<sources refid="tools.sources"/>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.tools}/db4o-compact-tools-2005.csproj">
-			<sources refid="tools.sources"/>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.tools}/db4o-net2-tools.csproj">
-			<sources refid="tools.sources"/>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.tools}/db4o-net-tools.csproj">
-			<sources refid="tools.sources"/>
-		</updatecsharpproject>
-		
-	</target>
-	
 	<target name="doctor" depends="init, compilecorejava, compilejtutorial" description="Run all doctor tasks">
 		<ant antfile="run-doctor.xml" />
 	</target>
 
 	<target name="buildjava" depends="doctor, zipjava" description="Full java build" />
 
-	<target name="old-buildnet" depends="zipnet" description="Full PascalCase NET build" />
-	
 	<target name="buildnet">
 		<ant antfile="build-dotnet.xml" target="package-net1" />
 	</target>
-	
-	<target name="old-buildnet2" depends="zipnet2" description="Full PascalCase NET 2.0 build" />
-	
+
 	<target name="buildnet2">
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>	
-	
-	<target name="old-buildmono2" depends="zipmono2-pascalcase" description="Full Mono build with generics (now PascalCase)" />
-	
+
 	<target name="buildmono2" depends="clean, buildjava">
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>
