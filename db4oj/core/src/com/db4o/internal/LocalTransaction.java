@@ -25,7 +25,7 @@ public class LocalTransaction extends Transaction {
 	
     private final Collection4 _participants = new Collection4(); 
 
-	private Tree _slotChanges;
+    private final LockedTree _slotChanges = new LockedTree();
 	
     private Tree _writtenUpdateDeletedMembers;
     
@@ -106,11 +106,23 @@ public class LocalTransaction extends Transaction {
         
         Slot reservedSlot = allocateTransactionLogSlot(false);
         
-        freeOnCommit();
+        freeSlotChanges();
         
         commitFreespace();
         
+        if(_systemTransaction != null){
+        	((LocalTransaction)_systemTransaction).freeSlotChanges();
+        }
+        
         commit6WriteChanges(reservedSlot);
+    }
+	
+	private final void freeSlotChanges() {
+        _slotChanges.traverse(new Visitor4() {
+			public void visit(Object obj) {
+				((SlotChange)obj).freeDuringCommit(_file);
+			}
+		});
     }
 	
 	private void commit2Listeners(){
@@ -154,7 +166,7 @@ public class LocalTransaction extends Transaction {
 
 	
 	protected void clear() {
-		_slotChanges = null;
+		_slotChanges.clear();
 		disposeParticipants();
         _participants.clear();
 	}
@@ -189,11 +201,11 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	protected void rollbackSlotChanges() {
-		Tree.traverse(_slotChanges, new Visitor4() {
-				public void visit(Object a_object) {
-					((SlotChange)a_object).rollback(_file);
-				}
-			});
+		_slotChanges.traverse(new Visitor4() {
+            public void visit(Object a_object) {
+                ((SlotChange) a_object).rollback(_file);
+            }
+        });
 	}
 
 	public boolean isDeleted(int id) {
@@ -316,14 +328,14 @@ public class LocalTransaction extends Transaction {
     		DTrace.PRODUCE_SLOT_CHANGE.log(id);
     	}
         SlotChange slot = new SlotChange(id);
-        _slotChanges = Tree.add(_slotChanges, slot);
+        _slotChanges.add(slot);
         return (SlotChange)slot.addedOrExisting();
     }
     
     
     private final SlotChange findSlotChange(int a_id) {
         checkSynchronization();
-        return (SlotChange)TreeInt.find(_slotChanges, a_id);
+        return (SlotChange)_slotChanges.find(a_id);
     }    
 
     public Slot getCurrentSlotOfID(int id) {
@@ -427,7 +439,7 @@ public class LocalTransaction extends Transaction {
         return count.value();
 	}
 	
-	void writeOld() throws IOException {
+	final void writeOld() {
         synchronized (stream().i_lock) {
             i_pointerIo.useSlot(i_address);
             i_pointerIo.read();
@@ -436,27 +448,18 @@ public class LocalTransaction extends Transaction {
                 StatefulBuffer bytes = new StatefulBuffer(this, i_address, length);
                 bytes.read();
                 bytes.incrementOffset(Const4.INT_LENGTH);
-                _slotChanges = new TreeReader(bytes, new SlotChange(0)).read();
+                _slotChanges.read(bytes, new SlotChange(0));
                 if(writeSlots()){
                     flushFile();
                 }
                 stream().writeTransactionPointer(0);
                 flushFile();
-                freeOnCommit();
+                freeSlotChanges();
             } else {
                 stream().writeTransactionPointer(0);
                 flushFile();
             }
         }
-    }
-	
-	protected final void freeOnCommit() {
-        checkSynchronization();
-        traverseSlotChanges(new Visitor4() {
-			public void visit(Object obj) {
-				((SlotChange)obj).freeDuringCommit(_file);
-			}
-		});
     }
 	
 	private void appendSlotChanges(final Buffer writer){
@@ -471,7 +474,7 @@ public class LocalTransaction extends Transaction {
         if(_systemTransaction != null){
         	parentLocalTransaction().traverseSlotChanges(visitor);
         }
-        Tree.traverse(_slotChanges, visitor);
+        _slotChanges.traverse(visitor);
 	}
 	
 	public void slotDelete(int id, Slot slot) {
