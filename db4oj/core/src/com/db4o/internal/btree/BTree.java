@@ -472,5 +472,19 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 		});
     }
     
+    public String toString() {
+    	final StringBuffer sb = new StringBuffer();
+    	sb.append("BTree ");
+    	sb.append(getID());
+    	sb.append(" Active Nodes: \n");
+    	traverseAllNodes(new Visitor4() {
+			public void visit(Object obj) {
+				sb.append(obj);
+				sb.append("\n");
+			}
+		});
+    	return sb.toString();
+    }
+    
 }
 
