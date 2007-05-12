@@ -64,9 +64,6 @@ public abstract class Transaction {
     
     public abstract void commit();    
     
-    protected void freeOnCommit() {
-	}
-    
     protected void commit4FieldIndexes(){
         if(_systemTransaction != null){
             _systemTransaction.commit4FieldIndexes();
