@@ -35,6 +35,7 @@ public class LockedTree {
     public void read(Buffer buffer, Readable template) {
         clear();
         _tree = new TreeReader(buffer, template).read();
+        changed();
     }
 
     public void traverse(Visitor4 visitor) {

@@ -31,6 +31,7 @@ public class AllTests extends Db4oTestSuite {
             HandlerRegistryTestCase.class,
             IndexCreateDropTestCase.class,
             LazyObjectReferenceTestCase.class,
+            LockedTreeTestCase.class,
             LongLinkedListTestCase.class,
             MaximumActivationDepthTestCase.class,
             MultiDeleteTestCase.class,
