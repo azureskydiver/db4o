@@ -144,6 +144,25 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 		assertSingleElement(trans(), element);
 		assertSingleElement(systemTrans(), element);
 	}
+    
+    public void testMultipleConcurrentRemoves(){
+        int count = 100;
+        for (int i = 0; i < count; i++) {
+            add(trans(), i);
+        }
+        db().commit();
+        Transaction secondTransaction = newTransaction();
+        for (int i = 1; i < count; i++) {
+            if(i % 2 == 0){
+                remove(trans(), i);
+            }else{
+                remove(secondTransaction, i);
+            }
+        }
+        secondTransaction.commit();
+        db().commit();
+        assertSize(1);
+    }
 	
 	public static void main(String[] args) {
 		new BTreeAddRemoveTestCase().runSolo();
