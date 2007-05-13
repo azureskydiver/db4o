@@ -868,6 +868,19 @@
 			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
 			<fileset dir="${dir.config}" includes="README.txt" />
 		</copy>
+		<!-- readme's in distribution folders-->
+		<copy file="${dir.config}/java_doc_readme.txt" tofile="${dir.dist.java.build}/doc/readme.txt" />
+		<copy file="${dir.config}/java_src_readme.txt" tofile="${dir.dist.java.build}/src/readme.txt" />
+		<copy file="${dir.config}/java_lib_readme.txt" tofile="${dir.dist.java.build}/lib/readme.txt" >
+		        <filterchain>
+		           <striplinecomments>
+		              <comment value="!"/>
+		           </striplinecomments>
+		           <replacetokens>
+		                <token key="db4o.version.dotted" value="${db4o.version.dotted}"/>
+		            </replacetokens>
+		        </filterchain>
+		    </copy>
 		
 		<mkdir dir="${dir.dist.java.build}/doc/reference" />
 		<copy todir="${dir.dist.java.build}/doc/reference">
