@@ -20,7 +20,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new CommittedCallbacksTestCase().runAll();
+		new CommittedCallbacksTestCase().runClientServer();
 	}
 	
 	private static final ObjectInfo[] NONE = new ObjectInfo[0];
