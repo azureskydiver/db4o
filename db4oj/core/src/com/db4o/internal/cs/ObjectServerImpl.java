@@ -375,17 +375,17 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
     }
     
     public void checkCaresAboutCommitted(){
-        boolean newValue = false;
+        _caresAboutCommitted = anyDispatcherCaresAboutCommitted();
+    }
+
+	private boolean anyDispatcherCaresAboutCommitted() {
         Iterator4 i = iterateDispatchers();
         while(i.moveNext()){
             ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) i.current();
             if(dispatcher.caresAboutCommitted()){
-                newValue = true;
+                return true;
             }
         }
-        _caresAboutCommitted = newValue;
-    }
-    
-    
-
+		return false;
+	}
 }
