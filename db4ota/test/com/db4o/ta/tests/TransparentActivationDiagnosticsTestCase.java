@@ -1,13 +1,16 @@
 package com.db4o.ta.tests;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.diagnostic.*;
-import com.db4o.internal.*;
-import com.db4o.ta.*;
+import com.db4o.activation.Activator;
+import com.db4o.config.Configuration;
+import com.db4o.diagnostic.Diagnostic;
+import com.db4o.diagnostic.DiagnosticListener;
+import com.db4o.internal.ClassMetadata;
+import com.db4o.ta.Activatable;
+import com.db4o.ta.NotTransparentActivationEnabled;
+import com.db4o.ta.TransparentActivationSupport;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.Assert;
+import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.util.CrossPlatformServices;
 
 public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCase {
@@ -23,7 +26,7 @@ public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCa
 	public static class SomeOtherTAAwareData implements Activatable {		
 		public SomeTAAwareData _data;
 		
-		public void bind(ObjectContainer container) {
+		public void bind(Activator activator) {
 		}
 
 		public SomeOtherTAAwareData(SomeTAAwareData data) {

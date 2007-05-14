@@ -1,8 +1,7 @@
 package com.db4o.ta.tests.collections.internal;
 
-import com.db4o.*;
-import com.db4o.ta.*;
-import com.db4o.ta.internal.*;
+import com.db4o.activation.Activator;
+import com.db4o.ta.Activatable;
 
 /**
  * Shared implementation for a paged collection.
@@ -93,12 +92,11 @@ class PagedBackingStore /* TA BEGIN */ implements Activatable /* TA END */ {
 	}
 	
 	// TA BEGIN
-	public void bind(ObjectContainer container) {
+	public void bind(Activator activator) {
 		if (null != _activator) {
-			_activator.assertCompatible(container);
-			return;
+			throw new IllegalStateException();
 		}
-		_activator = new Activator(container, this);
+		_activator = activator;
 	}
 	
 	private void activate() {

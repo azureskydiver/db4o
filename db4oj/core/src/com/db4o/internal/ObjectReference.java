@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.activation.Activator;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.marshall.*;
@@ -10,10 +11,9 @@ import com.db4o.reflect.*;
 
 
 /**
- * @renameto ObjectReference
  * @exclude
  */
-public class ObjectReference extends PersistentBase implements ObjectInfo{
+public class ObjectReference extends PersistentBase implements ObjectInfo, Activator {
     
 	private ClassMetadata _class;
 	private Object _object;
@@ -40,6 +40,17 @@ public class ObjectReference extends PersistentBase implements ObjectInfo{
 	ObjectReference(ClassMetadata a_yapClass, int a_id) {
 		_class = a_yapClass;
 		i_id = a_id;
+	}
+	
+	public void activate() {
+		if (isActive()) {
+			return;
+		}
+		activate(stream().getTransaction(), getObject(), 1, false);
+	}
+
+	private ObjectContainerBase stream() {
+		return _class.stream();
 	}
 	
 	public void activate(Transaction ta, Object a_object, int a_depth, boolean a_refresh) {

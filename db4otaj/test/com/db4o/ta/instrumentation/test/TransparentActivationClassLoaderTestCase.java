@@ -1,16 +1,23 @@
 package com.db4o.ta.instrumentation.test;
 
-import java.lang.reflect.*;
-import java.net.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.URL;
 
-import com.db4o.*;
-import com.db4o.foundation.*;
-import com.db4o.instrumentation.*;
-import com.db4o.ta.*;
-import com.db4o.ta.instrumentation.*;
-import com.db4o.ta.internal.*;
+import com.db4o.ObjectContainer;
+import com.db4o.activation.Activator;
+import com.db4o.instrumentation.BloatInstrumentingClassLoader;
+import com.db4o.instrumentation.ByNameClassFilter;
+import com.db4o.instrumentation.ClassFilter;
+import com.db4o.ta.Activatable;
+import com.db4o.ta.instrumentation.InjectTransparentActivationEdit;
+import com.db4o.ta.instrumentation.TransparentActivationInstrumentationConstants;
 
-import db4ounit.*;
+import db4ounit.Assert;
+import db4ounit.CodeBlock;
+import db4ounit.TestLifeCycle;
 
 public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 
@@ -69,23 +76,28 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 
 	private void assertBindMethod(Class clazz) throws Exception {
 		final Field activatorField = clazz.getDeclaredField(TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME);
-		final Method bindMethod = clazz.getDeclaredMethod(TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Class[]{ObjectContainer.class});
+		final Method bindMethod = clazz.getDeclaredMethod(TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Class[]{Activator.class});
 		Assert.isTrue((bindMethod.getModifiers() & Modifier.PUBLIC) > 0);
 		
 		activatorField.setAccessible(true);
 		final Object obj = clazz.newInstance();
 		Assert.isNull(activatorField.get(obj));
 		
-		TransparentActivationMockObjectContainer oc = new TransparentActivationMockObjectContainer(new Iterator4Impl(null)); 
+		MockActivator oc = new MockActivator(); 
+		Assert.areEqual(0, oc.count());
+		
 		bindMethod.invoke(obj, new Object[]{ oc });
 		Object activator = activatorField.get(obj);
 		Assert.isNotNull(activator);
-		bindMethod.invoke(obj, new Object[]{ oc });
-		Assert.areSame(activator, activatorField.get(obj));
-		((Activatable)obj).bind(oc);
-		Assert.areSame(activator, activatorField.get(obj));
 		
-		TransparentActivationMockObjectContainer otherOc = new TransparentActivationMockObjectContainer(new Iterator4Impl(null));
+		try {
+			bindMethod.invoke(obj, new Object[]{ oc });
+			Assert.fail();
+		} catch (InvocationTargetException x) {
+			Assert.isInstanceOf(IllegalStateException.class, x.getTargetException());
+		}
+		
+		MockActivator otherOc = new MockActivator();
 		try {
 			bindMethod.invoke(obj, new Object[]{ otherOc });
 			Assert.fail();
@@ -93,9 +105,8 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		catch(InvocationTargetException exc) {
 			Assert.isInstanceOf(IllegalStateException.class, exc.getTargetException());
 		}
-		
-		oc.validate();
-		otherOc.validate();
+		Assert.areEqual(0, oc.count());
+		Assert.areEqual(0, otherOc.count());
 	}
 
 	private void assertNoMethod(final Class clazz,final String methodName,final Class[] paramTypes) throws Exception {
@@ -111,22 +122,25 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		activateMethod.setAccessible(true);
 		Assert.isTrue((activateMethod.getModifiers() & Modifier.PROTECTED) > 0);
 		final Activatable obj = (Activatable) clazz.newInstance();
-		TransparentActivationMockObjectContainer oc = new TransparentActivationMockObjectContainer(new Iterator4Impl(new List4(obj)));
-		obj.bind(oc);
+		MockActivator activator = new MockActivator();
+		obj.bind(activator);
 		activateMethod.invoke(obj, new Object[]{});
 		activateMethod.invoke(obj, new Object[]{});
-		oc.validate();
+		Assert.areEqual(2, activator.count());
 	}
 
 	private void assertMethodInstrumentation(Class clazz,String methodName,boolean expectInstrumentation) throws Exception {
 		final Activatable obj = (Activatable) clazz.newInstance();
-		List4 expected = (expectInstrumentation ? new List4(obj) : null);
-		TransparentActivationMockObjectContainer oc = new TransparentActivationMockObjectContainer(new Iterator4Impl(expected));
+		MockActivator oc = new MockActivator();
 		obj.bind(oc);
 		final Method method = clazz.getDeclaredMethod(methodName, new Class[]{});
 		method.setAccessible(true);
 		method.invoke(obj, new Object[]{});
-		oc.validate();
+		if (expectInstrumentation) {
+			Assert.areEqual(1, oc.count());
+		} else {
+			Assert.areEqual(0, oc.count());
+		}
 	}
 
 	private void assertFieldModifier(Field activatorField, int modifier) {

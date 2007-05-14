@@ -7,9 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.db4o.ObjectContainer;
+import com.db4o.activation.Activator;
 import com.db4o.ta.Activatable;
-import com.db4o.ta.internal.Activator;
 import com.db4o.ta.tests.collections.internal.PagedBackingStore;
 
 /**
@@ -137,12 +136,11 @@ public class PagedList implements List, /* TA BEGIN */ Activatable /* TA END */ 
 	}
 
 	// TA BEGIN
-	public void bind(ObjectContainer container) {
+	public void bind(Activator activator) {
 		if (null != _activator) {
-			_activator.assertCompatible(container);
-			return;
+			throw new IllegalStateException();
 		}
-		_activator = new Activator(container, this);
+		_activator = activator;
 	}
 	
 	private void activate() {
