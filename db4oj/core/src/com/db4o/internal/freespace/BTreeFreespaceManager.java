@@ -1,3 +1,4 @@
+
 /* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.internal.freespace;
@@ -22,137 +23,15 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	
 	private FreespaceBTree _slotsByLength;
 	
-	private PersistentIntegerArray _btreeIDs;
+	private PersistentIntegerArray _idArray;
+    
+    private int _delegateIndirectionID;
 	
-	private int _recursion;
+	private int _delegationRequests;
 	
 	public BTreeFreespaceManager(LocalObjectContainer file) {
 		super(file);
 		_delegate = new RamFreespaceManager(file);
-	}
-	
-	public Slot allocateTransactionLogSlot(int length) {
-		return _delegate.allocateTransactionLogSlot(length);
-	}
-	
-	public void freeTransactionLogSlot(Slot slot) {
-		_delegate.freeTransactionLogSlot(slot);
-	}
-
-	public void free(Slot slot) {
-		
-		if(! started()){
-			return;
-		}
-		
-		if(recursiveCall()){
-			_delegate.free(slot);
-			return;
-		}
-		
-		try{
-		
-			_recursion++;
-		
-	        if(DTrace.enabled){
-	            DTrace.FREE.logLength(slot.address(), slot.length());
-	        }
-	        
-	        Slot newFreeSlot = slot;
-	        BTreeNodeSearchResult searchResult = 
-				_slotsByAddress.searchLeaf(transaction(), slot, SearchTarget.LOWEST);
-			BTreePointer pointer = searchResult.firstValidPointer();
-			if(pointer != null){
-				BTreePointer previousPointer = pointer.previous();
-				if(previousPointer != null){
-					Slot previousSlot = (Slot) previousPointer.key();
-					if(previousSlot.isDirectlyPreceding(newFreeSlot)){
-						removeSlot(previousSlot);
-						newFreeSlot = previousSlot.append(newFreeSlot);
-					}
-				}
-			}
-	        
-			searchResult = 
-				_slotsByAddress.searchLeaf(transaction(), slot, SearchTarget.HIGHEST);
-			pointer = searchResult.firstValidPointer();
-			if(pointer != null){
-				Slot nextSlot = (Slot) pointer.key();
-				if(newFreeSlot.isDirectlyPreceding(nextSlot)){
-					removeSlot(nextSlot);
-					newFreeSlot = newFreeSlot.append(nextSlot);
-				}
-			}
-			
-			if(! canDiscard(newFreeSlot.length())){
-				addSlot(newFreeSlot);
-			}
-			
-			_file.overwriteDeletedBlockedSlot(newFreeSlot);
-		} finally{
-			_recursion--;
-		}
-
-	}
-
-	public void freeSelf() {
-		// TODO Auto-generated method stub
-
-	}
-	
-	private boolean recursiveCall(){
-		return _recursion > 0;
-	}
-
-	public Slot getSlot (int length) {
-		
-		if(! started()){
-			return null;
-		}
-		
-		if(recursiveCall()){
-			return _delegate.getSlot(length);
-		}
-		
-		try{
-			_recursion++;
-		
-			BTreeNodeSearchResult searchResult = 
-				_slotsByLength.searchLeaf(transaction(), new Slot(0, length), SearchTarget.HIGHEST);
-			
-			BTreePointer pointer = searchResult.firstValidPointer();
-			
-			if(pointer == null){
-				return null;
-			}
-			
-			Slot slot = (Slot) pointer.key();
-			
-			removeSlot(slot);
-			
-			int remainingLength = slot.length() - length;
-			
-			if(canDiscard(remainingLength)){
-				
-		        if(DTrace.enabled){
-		        	DTrace.GET_FREESPACE.logLength(slot.address(), slot.length());
-		        }
-	
-				return slot;
-			}
-			
-			addSlot(slot.subSlot(length));
-			
-			slot = slot.truncate(length);
-	
-	        if(DTrace.enabled){
-	        	DTrace.GET_FREESPACE.logLength(slot.address(), slot.length());
-	        }
-	
-			return slot;
-		} finally{
-			_recursion--;
-		}
 	}
 	
 	private void addSlot(Slot slot) {
@@ -160,89 +39,212 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		_slotsByAddress.add(transaction(), slot);
 	}
 	
-	private void removeSlot(Slot slot) {
-		_slotsByLength.remove(transaction(), slot);
-		_slotsByAddress.remove(transaction(), slot);
-	}
-
-	public int slotCount() {
-		return _slotsByAddress.size(transaction());
-	}
-
-	public byte systemType() {
-		return FM_BTREE;
-	}
-
-	public void traverse(final Visitor4 visitor) {
-		_slotsByAddress.traverseKeys(transaction(), visitor);
-	}
-
-	public int write() {
-		return _btreeIDs.getID();
-	}
-	
-	private Transaction transaction(){
-		return _file.systemTransaction();
-	}
-	
-	public void start(int slotAddress) throws IOException {
-		try{
-			_recursion++;
-			if(slotAddress == 0){
-				createBTrees(new int[]{0 , 0});
-				_slotsByAddress.write(transaction());
-				_slotsByLength.write(transaction());
-				int[] ids = new int[] {_slotsByAddress.getID(), _slotsByLength.getID()};
-				_btreeIDs = new PersistentIntegerArray(ids);
-				_btreeIDs.write(transaction());
-				_file.systemData().freespaceAddress(_btreeIDs.getID());
-				return;
-			}
-			_btreeIDs = new PersistentIntegerArray(slotAddress);
-			_btreeIDs.read(transaction());
-			createBTrees(_btreeIDs.array());
-			_slotsByAddress.read(transaction());
-			_slotsByLength.read(transaction());
-		}finally{
-			_recursion --;
-		}
-	}
-
-	private void createBTrees(int[] ids) {
-		_slotsByAddress = new FreespaceBTree(transaction(), ids[0], new AddressKeySlotHandler());
-		_slotsByLength = new FreespaceBTree(transaction(), ids[1], new LengthKeySlotHandler());
-	}
-
-	private boolean started(){
-		return _btreeIDs != null;
+	public Slot allocateTransactionLogSlot(int length) {
+		return _delegate.allocateTransactionLogSlot(length);
 	}
 
 	public void beginCommit() {
 		// TODO: FB remove
 	}
 
-	public int onNew(LocalObjectContainer file) {
+	private void beginDelegation(){
+        _delegationRequests++;
+    }
+	
+	public void commit() {
+		beginDelegation();
+		_slotsByAddress.commit(transaction());
+		_slotsByLength.commit(transaction());
+	}
+
+	private void createBTrees(int addressID, int lengthID) {
+		_slotsByAddress = new FreespaceBTree(transaction(), addressID, new AddressKeySlotHandler());
+		_slotsByLength = new FreespaceBTree(transaction(), lengthID, new LengthKeySlotHandler());
+	}
+	
+	public void endCommit() {
+        endDelegation();
+	}
+	
+	private void endDelegation(){
+        _delegationRequests--;        
+    }
+
+	public void free(Slot slot) {
+		if(! started()){
+			return;
+		}
+		if(isDelegating()){
+			_delegate.free(slot);
+			return;
+		}
+		try{
+            beginDelegation();
+	        if(DTrace.enabled){
+	            DTrace.FREE.logLength(slot.address(), slot.length());
+	        }
+            Slot remove[] = new Slot[2];
+	        Slot newFreeSlot = slot;
+	        BTreePointer pointer = searchBTree(_slotsByAddress, slot, SearchTarget.LOWEST);
+			BTreePointer previousPointer = pointer != null ? pointer.previous() : _slotsByAddress.lastPointer(transaction()); 
+			if(previousPointer != null){
+				Slot previousSlot = (Slot) previousPointer.key();
+				if(previousSlot.isDirectlyPreceding(newFreeSlot)){
+                    remove[0] = previousSlot;
+					newFreeSlot = previousSlot.append(newFreeSlot);
+				}
+			}
+			if(pointer != null){
+				Slot nextSlot = (Slot) pointer.key();
+				if(newFreeSlot.isDirectlyPreceding(nextSlot)){
+                    remove[1] = nextSlot;
+					newFreeSlot = newFreeSlot.append(nextSlot);
+				}
+			}
+            for (int i = 0; i < remove.length; i++) {
+                if(remove[i] != null){
+                    removeSlot(remove[i]);   
+                }
+            }
+			if(! canDiscard(newFreeSlot.length())){
+				addSlot(newFreeSlot);
+			}
+			_file.overwriteDeletedBlockedSlot(slot);
+		} finally{
+            endDelegation();
+		}
+	}
+
+    public void freeSelf() {
+		// TODO Auto-generated method stub
+	}
+
+	public void freeTransactionLogSlot(Slot slot) {
+		_delegate.freeTransactionLogSlot(slot);
+	}
+
+	public Slot getSlot (int length) {
+		if(! started()){
+			return null;
+		}
+		if(isDelegating()){
+			return _delegate.getSlot(length);
+		}
+		try{
+            beginDelegation();
+            BTreePointer pointer = searchBTree(_slotsByLength, new Slot(0, length), SearchTarget.HIGHEST);
+			if(pointer == null){
+				return null;
+			}
+			Slot slot = (Slot) pointer.key();
+			removeSlot(slot);
+			int remainingLength = slot.length() - length;
+			if(! canDiscard(remainingLength)){
+                addSlot(slot.subSlot(length));
+                slot = slot.truncate(length);
+			}
+	        if(DTrace.enabled){
+	        	DTrace.GET_FREESPACE.logLength(slot.address(), slot.length());
+	        }
+			return slot;
+		} finally{
+            endDelegation();
+		}
+	}
+
+	private void initializeExisting(int slotAddress) {
+        _idArray = new PersistentIntegerArray(slotAddress);
+        _idArray.read(transaction());
+        int[] ids = _idArray.array();
+        int addressId = ids[0];
+        int lengthID = ids[1];
+        _delegateIndirectionID = ids[2];
+        createBTrees(addressId, lengthID);
+        _slotsByAddress.read(transaction());
+        _slotsByLength.read(transaction());
+        Pointer4 delegatePointer = transaction().readPointer(_delegateIndirectionID);
+        transaction().writeZeroPointer(_delegateIndirectionID);
+        transaction().flushFile();
+        _delegate.read(delegatePointer._slot);
+    }
+	
+	private void initializeNew() {
+        createBTrees(0 , 0);
+        _slotsByAddress.write(transaction());
+        _slotsByLength.write(transaction());
+        _delegateIndirectionID = _file.getPointerSlot();
+        int[] ids = new int[] { _slotsByAddress.getID(), _slotsByLength.getID(), _delegateIndirectionID};
+        _idArray = new PersistentIntegerArray(ids);
+        _idArray.write(transaction());
+        _file.systemData().freespaceAddress(_idArray.getID());
+    }
+	
+	private boolean isDelegating(){
+		return _delegationRequests > 0;
+	}
+
+    public int onNew(LocalObjectContainer file) {
 		// TODO: FB remove
 		return 0;
 	}
 
-	public void endCommit() {
-		// TODO: FB remove
-		_recursion--;
+    public void read(int freeSpaceID) {
+        // do nothing
 	}
 
-	public void read(int freeSpaceID) {
-		// TODO: FB remove
+	private void removeSlot(Slot slot) {
+		_slotsByLength.remove(transaction(), slot);
+		_slotsByAddress.remove(transaction(), slot);
 	}
-	
-	public void commit() {
-		_recursion++;
-		_slotsByAddress.commit(transaction());
-		_slotsByLength.commit(transaction());
+
+	private BTreePointer searchBTree(BTree bTree, Slot slot, SearchTarget target) {
+        BTreeNodeSearchResult searchResult = bTree.searchLeaf(transaction(), slot, target);
+        return searchResult.firstValidPointer();
+    }
+
+	public int slotCount() {
+		return _slotsByAddress.size(transaction());
+	}
+
+	public void start(int slotAddress) throws IOException {
+		try{
+            beginDelegation();
+			if(slotAddress == 0){
+				initializeNew();
+			}else{
+			    initializeExisting(slotAddress);
+            }
+		}finally{
+            endDelegation();
+		}
+	}
+
+	private boolean started(){
+		return _idArray != null;
+	}
+
+	public byte systemType() {
+		return FM_BTREE;
 	}
 	
 	public String toString() {
 		return _slotsByLength.toString();
+	}
+	
+    public void traverse(final Visitor4 visitor) {
+		_slotsByAddress.traverseKeys(transaction(), visitor);
+	}
+    
+    public int write() {
+        try{
+            beginDelegation();
+            Slot slot = _file.getSlot(_delegate.marshalledLength());
+            Pointer4 pointer = new Pointer4(_delegateIndirectionID, slot);
+            _delegate.write(pointer);
+    		return _idArray.getID();
+        }finally{
+            endDelegation();
+        }
 	}
 
 }

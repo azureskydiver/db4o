@@ -316,6 +316,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
 	public void caresAboutCommitted(boolean care) {
 		_caresAboutCommitted = true;
+        server().checkCaresAboutCommitted();
 	}
 
 	public CallbackObjectInfoCollections committedInfo() {

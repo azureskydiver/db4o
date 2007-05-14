@@ -16,13 +16,10 @@ public final class MCreateClass extends MsgD implements ServerSideMessage {
 		try {
 			if (claxx != null) {
 				synchronized (streamLock()) {
-					ClassMetadata yapClass = stream.produceClassMetadata(claxx);
-					if (yapClass != null) {
+					ClassMetadata classMetadata = stream.produceClassMetadata(claxx);
+					if (classMetadata != null) {
 						stream.checkStillToSet();
-						yapClass.setStateDirty();
-						yapClass.write(trans);
-						trans.commit();
-						StatefulBuffer returnBytes = stream.readWriterByID(trans, yapClass.getID());
+						StatefulBuffer returnBytes = stream.readWriterByID(trans, classMetadata.getID());
 						MsgD createdClass = Msg.OBJECT_TO_CLIENT.getWriter(returnBytes);
 						write(createdClass);
 						ok = true;

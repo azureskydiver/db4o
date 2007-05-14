@@ -110,6 +110,12 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         // The RAM manager frees itself on reading.
     }
     
+    private void freeReader(StatefulBuffer reader) {
+        if(! Debug.freespace){
+            _file.free(reader.getAddress(), reader.getLength());
+        }
+    }
+    
     public Slot getSlot(int length) {
     	
         _finder._key = length;
@@ -138,14 +144,91 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         return new Slot(address, length);
     }
     
+    int marshalledLength() {
+        return TreeInt.marshalledLength((TreeInt)_freeBySize);
+    }
+
+    public int onNew(LocalObjectContainer file) {
+		// do nothing
+    	return 0;
+	}
+    
+    public void read(int freeSlotsID) {
+        readById(freeSlotsID);
+    }
+
+    private void read(StatefulBuffer reader) {
+        FreeSlotNode.sizeLimit = blockedDiscardLimit();
+        _freeBySize = new TreeReader(reader, new FreeSlotNode(0), true).read();
+        final Tree.ByRef addressTree = new Tree.ByRef();
+        if (_freeBySize != null) {
+            _freeBySize.traverse(new Visitor4() {
+                public void visit(Object a_object) {
+                    FreeSlotNode node = ((FreeSlotNode) a_object)._peer;
+                    addressTree.value = Tree.add(addressTree.value, node);
+                }
+            });
+        }
+        _freeByAddress = addressTree.value;
+    }
+    
+    void read(Slot slot){
+        if(slot.address() == 0){
+            return;
+        }
+        StatefulBuffer reader = _file.readWriterByAddress(transaction(), slot.address(), slot.length());
+        if (reader == null) {
+            return;
+        }
+        read(reader);
+        freeReader(reader);
+    }
+    
+    private void readById(int freeSlotsID){
+        if (freeSlotsID <= 0){
+            return;
+        }
+        if(discardLimit() == Integer.MAX_VALUE){
+            return;
+        }
+        StatefulBuffer reader = _file.readWriterByID(transaction(), freeSlotsID);
+        if (reader == null) {
+            return;
+        }
+        
+        read(reader);
+        
+        if(! Debug.freespace){
+          _file.free(freeSlotsID, Const4.POINTER_LENGTH);
+          freeReader(reader);
+        }
+    }
+
+    private void removeFromBothTrees(FreeSlotNode sizeNode){
+        _freeBySize = _freeBySize.removeNode(sizeNode);
+        _freeByAddress = _freeByAddress.removeNode(sizeNode._peer);
+    }
+    
+    public int slotCount() {
+        return Tree.size(_freeByAddress);
+    }
+    
+    public void start(int slotAddress) {
+        // this is done in read(), nothing to do here
+    }
+    
+    public byte systemType() {
+        return FM_RAM;
+    }
+    
     public String toString(){
-    	final StringBuffer sb = new StringBuffer();
-    	sb.append("RAM FreespaceManager\n");
-    	sb.append("Address Index\n");
+        final StringBuffer sb = new StringBuffer();
+        sb.append("RAM FreespaceManager\n");
+        sb.append("Address Index\n");
         _freeByAddress.traverse(new Visitor4() {
             public void visit(Object obj) {
-            	sb.append(obj);
-            	sb.append("\n");
+                sb.append(obj);
+                sb.append("\n");
             }
         
         });
@@ -160,92 +243,31 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     }
     
     public void traverse(final Visitor4 visitor) {
-		if (_freeByAddress == null) {
-			return;
-		}
-		_freeByAddress.traverse(new Visitor4() {
-			public void visit(Object a_object) {
-				FreeSlotNode fsn = (FreeSlotNode) a_object;
-				int address = fsn._key;
-				int length = fsn._peer._key;
-				visitor.visit(new Slot(address, length));
-			}
-		});
-	}
-
-    public int onNew(LocalObjectContainer file) {
-		// do nothing
-    	return 0;
-	}
-    
-    public void read(int freeSlotsID) {
-        if (freeSlotsID <= 0){
+        if (_freeByAddress == null) {
             return;
         }
-        if(discardLimit() == Integer.MAX_VALUE){
-            return;
-        }
-        StatefulBuffer reader = _file.readWriterByID(trans(), freeSlotsID);
-        if (reader == null) {
-            return;
-        }
-
-        FreeSlotNode.sizeLimit = blockedDiscardLimit();
-
-        _freeBySize = new TreeReader(reader, new FreeSlotNode(0), true).read();
-
-        final Tree.ByRef addressTree = new Tree.ByRef();
-        if (_freeBySize != null) {
-            _freeBySize.traverse(new Visitor4() {
-
-                public void visit(Object a_object) {
-                    FreeSlotNode node = ((FreeSlotNode) a_object)._peer;
-                    addressTree.value = Tree.add(addressTree.value, node);
-                }
-            });
-        }
-        _freeByAddress = addressTree.value;
-        
-        if(! Debug.freespace){
-          _file.free(freeSlotsID, Const4.POINTER_LENGTH);
-          _file.free(reader.getAddress(), reader.getLength());
-        }
-    }
-    
-    public void start(int slotAddress) {
-        // this is done in read(), nothing to do here
-    }
-    
-    public byte systemType() {
-        return FM_RAM;
-    }
-    
-    private final LocalTransaction trans(){
-        return (LocalTransaction)_file.systemTransaction();
+        _freeByAddress.traverse(new Visitor4() {
+            public void visit(Object a_object) {
+                FreeSlotNode fsn = (FreeSlotNode) a_object;
+                int address = fsn._key;
+                int length = fsn._peer._key;
+                visitor.visit(new Slot(address, length));
+            }
+        });
     }
 
     public int write(){
-        int freeBySizeID = 0;
-        int length = TreeInt.marshalledLength((TreeInt)_freeBySize);
-        Pointer4 pointer = _file.newSlot(trans(), length); 
-        freeBySizeID = pointer._id;
-        StatefulBuffer sdwriter = new StatefulBuffer(trans(), length);
-        sdwriter.useSlot(freeBySizeID, pointer._slot);
-        TreeInt.write(sdwriter, (TreeInt)_freeBySize);
-        sdwriter.writeEncrypt();
-        trans().flushFile();
-        trans().writePointer(pointer._id, pointer._slot);
-        return freeBySizeID;
+        Pointer4 pointer = _file.newSlot(transaction(), marshalledLength()); 
+        write(pointer);
+        return pointer._id;
     }
 
-    public int slotCount() {
-        return Tree.size(_freeByAddress);
+    void write(Pointer4 pointer) {
+        StatefulBuffer buffer = new StatefulBuffer(transaction(), pointer);
+        TreeInt.write(buffer, (TreeInt)_freeBySize);
+        buffer.writeEncrypt();
+        transaction().flushFile();
+        transaction().writePointer(pointer);
     }
-    
-    private void removeFromBothTrees(FreeSlotNode sizeNode){
-        _freeBySize = _freeBySize.removeNode(sizeNode);
-        _freeByAddress = _freeByAddress.removeNode(sizeNode._peer);
-    }
-
 
 }

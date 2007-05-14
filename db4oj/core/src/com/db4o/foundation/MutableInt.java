@@ -33,5 +33,9 @@ public class MutableInt {
     public int value(){
         return _value;
     }
+    
+    public void value(int val){
+        _value = val;
+    }
 
 }
