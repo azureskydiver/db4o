@@ -1,5 +1,6 @@
 package com.db4o.ta;
 
+import com.db4o.activation.Activator;
 import com.db4o.config.*;
 import com.db4o.events.*;
 import com.db4o.internal.*;
@@ -21,9 +22,15 @@ public class TransparentActivationSupport implements ConfigurationItem {
 		factory.instantiated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				ObjectEventArgs oea = (ObjectEventArgs) args;
-				if (oea.object() instanceof Activatable) {
-					((Activatable) oea.object()).bind(container);
+				Object obj = oea.object();
+				if (obj instanceof Activatable) {
+					((Activatable) obj).bind(activatorForObject(container, obj));
 				}
+			}
+
+			private Activator activatorForObject(
+					final ObjectContainerBase container, Object obj) {
+				return (Activator) container.referenceForObject(obj);
 			}
 		});
 

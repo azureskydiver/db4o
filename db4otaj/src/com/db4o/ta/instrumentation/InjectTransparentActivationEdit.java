@@ -1,12 +1,22 @@
 package com.db4o.ta.instrumentation;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.reflect.*;
+import EDU.purdue.cs.bloat.editor.ClassEditor;
+import EDU.purdue.cs.bloat.editor.EditorVisitor;
+import EDU.purdue.cs.bloat.editor.FieldEditor;
+import EDU.purdue.cs.bloat.editor.Instruction;
+import EDU.purdue.cs.bloat.editor.Label;
+import EDU.purdue.cs.bloat.editor.LocalVariable;
+import EDU.purdue.cs.bloat.editor.MemberRef;
+import EDU.purdue.cs.bloat.editor.MethodEditor;
+import EDU.purdue.cs.bloat.editor.NameAndType;
+import EDU.purdue.cs.bloat.editor.Opcode;
+import EDU.purdue.cs.bloat.editor.Type;
+import EDU.purdue.cs.bloat.reflect.Modifiers;
 
-import com.db4o.*;
-import com.db4o.instrumentation.*;
-import com.db4o.ta.*;
-import com.db4o.ta.internal.*;
+import com.db4o.activation.Activator;
+import com.db4o.instrumentation.BloatClassEdit;
+import com.db4o.instrumentation.ClassFilter;
+import com.db4o.ta.Activatable;
 
 public class InjectTransparentActivationEdit implements BloatClassEdit {
 
@@ -35,15 +45,14 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 	}
 
 	private void createBindMethod(ClassEditor ce) {
-		// public void bind(ObjectContainer container)
+		// public void bind(Activator activator)
 		final Type activatorType = Type.getType(Activator.class);
-		final Type objectContainerType = Type.getType(ObjectContainer.class);
 		String methodName = TransparentActivationInstrumentationConstants.BIND_METHOD_NAME;
-		Type[] paramTypes = { objectContainerType };
+		Type[] paramTypes = { activatorType };
 		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID, methodName, paramTypes, new Type[] {});
 		Label startLabel = new Label(0);
 		Label setActivatorLabel = new Label(1);
-		LocalVariable objectContainerArgLocal = new LocalVariable(1);
+		LocalVariable activatorArg = new LocalVariable(1);
 		
 		methodEditor.addLabel(startLabel);
 
@@ -51,24 +60,27 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 		loadActivatorFieldOnStack(methodEditor);
 		methodEditor.addInstruction(Opcode.opc_ifnull, setActivatorLabel);
 		
-		// { _activator.assertCompatible(container); return; }
-		loadActivatorFieldOnStack(methodEditor);
-		methodEditor.addInstruction(Opcode.opc_aload, objectContainerArgLocal);
-		methodEditor.addInstruction(Opcode.opc_invokevirtual, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.ASSERT_COMPATIBLE_METHOD_NAME, new Type[] { objectContainerType }, Type.VOID));
-		methodEditor.addInstruction(Opcode.opc_return);
+		// throw new IllegalStateException();
+		throwException(methodEditor, IllegalStateException.class);
 		
-		// _activator = new Activator(container, this);
-		methodEditor.addLabel(setActivatorLabel);	
+		methodEditor.addLabel(setActivatorLabel);
+		
+		// _activator = activator;
 		loadThisOnStack(methodEditor);
-		methodEditor.addInstruction(Opcode.opc_new,activatorType);
-		methodEditor.addInstruction(Opcode.opc_dup);
-		methodEditor.addInstruction(Opcode.opc_aload, objectContainerArgLocal);
-		loadThisOnStack(methodEditor);
-		methodEditor.addInstruction(Opcode.opc_invokespecial, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.INIT_METHOD_NAME, new Type[] { objectContainerType, Type.OBJECT }, Type.VOID));
+		methodEditor.addInstruction(Opcode.opc_aload, activatorArg);
 		methodEditor.addInstruction(Opcode.opc_putfield, createFieldReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME, activatorType));		
 		methodEditor.addInstruction(Opcode.opc_return);
 		
 		methodEditor.commit();
+	}
+
+	private void throwException(MethodEditor methodEditor, Class exceptionType) {
+		Type illegalStateExceptionType = Type.getType(exceptionType);
+		methodEditor.addInstruction(Opcode.opc_new, illegalStateExceptionType);
+		methodEditor.addInstruction(Opcode.opc_dup);
+		methodEditor.addInstruction(Opcode.opc_invokespecial, createMethodReference(illegalStateExceptionType, TransparentActivationInstrumentationConstants.INIT_METHOD_NAME, new Type[0], Type.VOID));
+
+		methodEditor.addInstruction(Opcode.opcx_athrow);
 	}
 
 	private void createActivateMethod(ClassEditor ce) {
@@ -88,7 +100,7 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 		// _activator.activate();
 		methodEditor.addLabel(activateLabel);
 		loadActivatorFieldOnStack(methodEditor);
-		methodEditor.addInstruction(Opcode.opc_invokevirtual, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.ACTIVATOR_ACTIVATE_METHOD_NAME, new Type[] { }, Type.VOID));
+		methodEditor.addInstruction(Opcode.opc_invokeinterface, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.ACTIVATOR_ACTIVATE_METHOD_NAME, new Type[] { }, Type.VOID));
 		methodEditor.addInstruction(Opcode.opc_return);
 		
 		methodEditor.commit();
@@ -96,7 +108,7 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 
 	private void instrumentAllMethods(final ClassEditor ce) {
 		final MemberRef activateMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID);
-		final MemberRef bindMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Type[]{ Type.getType(ObjectContainer.class) }, Type.VOID);
+		final MemberRef bindMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Type[]{ Type.getType(Activator.class) }, Type.VOID);
 		ce.visit(new EditorVisitor() {
 
 			public void visitClassEditor(ClassEditor editor) {

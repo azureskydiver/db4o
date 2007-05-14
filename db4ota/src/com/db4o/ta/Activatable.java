@@ -1,1 +1,1 @@
-package com.db4o.ta;import com.db4o.ObjectContainer;public interface Activatable {	void bind(ObjectContainer container);}
+package com.db4o.ta;import com.db4o.activation.Activator;public interface Activatable {	void bind(Activator activator);}
