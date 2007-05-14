@@ -594,7 +594,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				}
 			}
 		} catch (EarlyExitException exc) {
-			expr=null;
+			expression(null);
 		}
 	}
 

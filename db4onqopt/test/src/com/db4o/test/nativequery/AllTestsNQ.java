@@ -19,6 +19,7 @@ public class AllTestsNQ {
 						ExpressionBuilderTestCase.class,
 						BloatExprBuilderVisitorTestCase.class,
 						ExpressionTestCase.class,
+						BooleanReturnValueTestCase.class,
 				}
 		).build();
 		TestSuite db4oTests=new Db4oTestSuiteBuilder(new Db4oSolo(),

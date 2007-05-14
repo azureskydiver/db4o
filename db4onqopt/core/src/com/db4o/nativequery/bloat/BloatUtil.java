@@ -70,4 +70,8 @@ public class BloatUtil {
 	public String normalizedClassName(Type type) {
 		return type.className().replace('/', '.');
 	}
+	
+	public ClassEditor classEditor(int modifiers, String className, Type superClass, Type[] interfaces) {
+		return new ClassEditor(context, modifiers, className, superClass, interfaces);
+	}
 }

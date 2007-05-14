@@ -15,58 +15,6 @@ import com.db4o.nativequery.expr.cmp.field.*;
 
 import db4ounit.*;
 
-class Base {
-	int id;
-	Integer idWrap;
-
-	public int getId() {
-		return id;
-	}
-
-	public Integer getIdWrapped() {
-		return idWrap;
-	}
-
-	public int getIdPlusOne() {
-		return id+1;
-	}
-}
-
-class Data extends Base {
-	boolean bool;
-	float value;
-	float otherValue;
-	String name;
-	Data next;
-	int[] intArray;
-	Data[] objArray;
-	Boolean boolWrapper;
-	
-	public boolean getBool() {
-		return bool;
-	}
-	
-	public float getValue() {
-		return value;
-	}
-	public float getValue(int times) {
-		return otherValue;
-	}
-	public String getName() {
-		return name;
-	}
-	public Data getNext() {
-		return next;
-	}
-	
-	public boolean hasNext() {
-		return getNext()!=null;
-	}
-	
-	public void someMethod() {
-		System.out.println();
-	}
-}
 
 public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {	
 	private static final String INT_WRAPPED_FIELDNAME = "idWrap";
@@ -144,6 +92,17 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testFieldBooleanConstantEqualsComp() throws Exception {
 		assertComparison("sampleFieldBooleanConstantEqualsComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
+	}
+
+	boolean sampleUnnecessarilyComplicatedFieldBooleanConstantEqualsComp(Data data) {
+		if(data.bool) {
+			return true;
+		}
+		return false;
+	}
+
+	public void _testUnnecessarilyComplicatedFieldBooleanConstantEqualsComp() throws Exception {
+		assertComparison("sampleUnnecessarilyComplicatedFieldBooleanConstantEqualsComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleFieldBooleanNotComp(Data data) {
@@ -790,8 +749,8 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	
 	public void testBoolBoolAnd() throws Exception {
 		AndExpression expr = (AndExpression) expression("sampleBoolBoolAnd");
-		assertComparison(expr.left(),new String[]{BOOLEAN_FIELDNAME},Boolean.FALSE,ComparisonOperator.EQUALS,false);
-		assertComparison(expr.right(),new String[]{BOOLEAN_FIELDNAME},Boolean.TRUE,ComparisonOperator.EQUALS,false);
+		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{BOOLEAN_FIELDNAME},Boolean.FALSE,ComparisonOperator.EQUALS,false);
+		NQOptimizationAssertUtil.assertComparison(expr.right(),new String[]{BOOLEAN_FIELDNAME},Boolean.TRUE,ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleIntIntAnd(Data data) {
@@ -800,8 +759,8 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	
 	public void testIntIntAnd() throws Exception {
 		AndExpression expr = (AndExpression) expression("sampleIntIntAnd");
-		assertComparison(expr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.GREATER,false);
-		assertComparison(expr.right(),new String[]{"id"},new Integer(100),ComparisonOperator.SMALLER,false);
+		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.GREATER,false);
+		NQOptimizationAssertUtil.assertComparison(expr.right(),new String[]{"id"},new Integer(100),ComparisonOperator.SMALLER,false);
 	}
 
 	boolean sampleStringIntOr(Data data) {
@@ -810,9 +769,9 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testStringIntOr() throws Exception {
 		OrExpression expr = (OrExpression)expression("sampleStringIntOr");
-		assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,false);
+		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,false);
 		ComparisonExpression right=(ComparisonExpression)expr.right();
-		assertComparison(right,new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,false);
+		NQOptimizationAssertUtil.assertComparison(right,new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleIntStringNotOr(Data data) {
@@ -821,8 +780,8 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testIntStringNotOr() throws Exception {
 		AndExpression expr = (AndExpression)expression("sampleIntStringNotOr");
-		assertComparison(expr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,true);
-		assertComparison(expr.right(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,true);
+		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,true);
+		NQOptimizationAssertUtil.assertComparison(expr.right(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,true);
 	}
 
 	boolean sampleOuterOrInnerAnd(Data data) {
@@ -831,10 +790,10 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testOuterOrInnerAnd() throws Exception {
 		OrExpression expr = (OrExpression)expression("sampleOuterOrInnerAnd");
-		assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,false);
+		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"name"},"Foo",ComparisonOperator.EQUALS,false);
 		AndExpression andExpr=(AndExpression)expr.right();
-		assertComparison(andExpr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,false);
-		assertComparison(andExpr.right(),new String[]{"name"},"Bar",ComparisonOperator.EQUALS,false);
+		NQOptimizationAssertUtil.assertComparison(andExpr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.EQUALS,false);
+		NQOptimizationAssertUtil.assertComparison(andExpr.right(),new String[]{"name"},"Bar",ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleOuterAndInnerOr(Data data) {
@@ -843,10 +802,10 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	public void testOuterAndInnerOr() throws Exception {
 		AndExpression expr = (AndExpression)expression("sampleOuterAndInnerOr");
-		assertComparison(expr.left(),new String[]{"id"},new Integer(10),ComparisonOperator.GREATER,false);
+		NQOptimizationAssertUtil.assertComparison(expr.left(),new String[]{"id"},new Integer(10),ComparisonOperator.GREATER,false);
 		OrExpression orExpr=(OrExpression)expr.right();
-		assertComparison(orExpr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.SMALLER,false);
-		assertComparison(orExpr.right(),new String[]{"name"},"Bar",ComparisonOperator.EQUALS,false);
+		NQOptimizationAssertUtil.assertComparison(orExpr.left(),new String[]{"id"},new Integer(42),ComparisonOperator.SMALLER,false);
+		NQOptimizationAssertUtil.assertComparison(orExpr.right(),new String[]{"name"},"Bar",ComparisonOperator.EQUALS,false);
 	}
 
 	// arithmetic
@@ -1186,32 +1145,10 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	private void assertComparison(String methodName, String[] fieldNames,Object value, ComparisonOperator op,boolean negated) {
 		try {
 			Expression expr = expression(methodName);
-			assertComparison(expr, fieldNames, value, op, negated);
+			NQOptimizationAssertUtil.assertComparison(expr, fieldNames, value, op, negated);
 		} catch (ClassNotFoundException e) {
 			Assert.fail(e.getMessage());
 		}
-	}
-
-	private void assertComparison(Expression expr, String[] fieldNames, Object value, ComparisonOperator op, boolean negated) {
-		if(negated) {
-			NotExpression notExpr=(NotExpression)expr;
-			expr=notExpr.expr();
-		}
-		ComparisonExpression cmpExpr=(ComparisonExpression)expr;
-		Assert.areEqual(op, cmpExpr.op());
-		ComparisonOperand curop=cmpExpr.left();
-		for(int foundFieldIdx=fieldNames.length-1;foundFieldIdx>=0;foundFieldIdx--) {
-			FieldValue fieldValue=(FieldValue)curop;
-			Assert.areEqual(fieldNames[foundFieldIdx], fieldValue.fieldName());
-			curop=fieldValue.parent();
-		}
-		Assert.areEqual(CandidateFieldRoot.INSTANCE,curop);
-		ComparisonOperand right = cmpExpr.right();
-		if(right instanceof ConstValue) {
-			Assert.areEqual(value, ((ConstValue) right).value());
-			return;
-		}
-		Assert.areEqual(value,right);
 	}
 
 	private void assertInvalid(String methodName) throws ClassNotFoundException {
