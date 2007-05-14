@@ -46,6 +46,16 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 		public Expression buildComparison(FieldValue fieldValue,
 				ComparisonOperand valueExpr) {
+			if(isBooleanField(fieldValue)) {
+				if(valueExpr instanceof ConstValue) {
+					ConstValue constValue = (ConstValue) valueExpr;
+					if(constValue.value() instanceof Integer) {
+						Integer intValue = (Integer) constValue.value();
+						Boolean boolValue = (intValue.intValue()==0 ? Boolean.FALSE : Boolean.TRUE);
+						valueExpr = new ConstValue(boolValue);
+					}
+				}
+			}
 			return new ComparisonExpression(fieldValue, valueExpr, op);
 		}
 	}
@@ -628,7 +638,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				ComparisonOperator.EQUALS);
 	}
 
-	private boolean isBooleanField(FieldValue fieldVal) {
+	private static boolean isBooleanField(FieldValue fieldVal) {
 		return isFieldType(fieldVal, "Z")||isFieldType(fieldVal, Boolean.class.getName());
 	}
 
@@ -636,7 +646,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		return isFieldType(fieldVal, "I");
 	}
 
-	private boolean isFieldType(FieldValue fieldVal, String expType) {
+	private static boolean isFieldType(FieldValue fieldVal, String expType) {
 		return expType.equals(fieldVal.tag());
 	}
 
