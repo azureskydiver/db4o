@@ -42,21 +42,19 @@ The basic sequence of actions to get the above scheme to work is the
 following:
 
 - Whenever an object is instantiated from db4o, the database registers
-itself with this object. To enable this, the object has to implement
-the Activatable interface and provide the according bind(ObjectContainer)
-method. The default implementation of the bind method will create an
-Activator object that maps object and container and keeps track of the
-activation status of the object as well.
+an activator for this object. To enable this, the object has to implement
+the Activatable interface and provide the according bind(Activator)
+method. The default implementation of the bind method will simply store
+the given activator reference for later use.
 
 public class Item implements Activatable {
   transient Activator _activator;
 
-  public void bind(ObjectContainer container) {
+  public void bind(Activator activator) {
     if (null != _activator) {
-      _activator.assertCompatible(container);
-      return;
+      throw new IllegalStateException();
     }
-    _activator = new Activator(container, this);
+    _activator = activator;
   }
   
   // ...
@@ -108,7 +106,7 @@ API, but there will be other, official TA aware collection implementations.
 An alternative to requiring developers to manually implement TA aware
 classes is to inject TA awareness in their original, "unaware" code.
 In our scenario this basically means: Generate the Activatable interface
-declaration, the bind(ObjectContainer) method implementation, a field
+declaration, the bind(Activator) method implementation, a field
 to keep a reference to the corresponding Activator instance, and the
 activate() call at the beginning of every method. This is accomplished
 via a classloader that injects this code into the persistent classes
