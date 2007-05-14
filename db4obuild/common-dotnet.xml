@@ -74,6 +74,15 @@
 	<target name="compiletestsjava">
 		<ant antfile="build.xml" target="compiletestsjava" />
 	</target>
-
+	
+	<macrodef name="reset-src-dir">
+		<attribute name="dir" />
+		<sequential>
+			<delete dir="@{dir}">
+				<include name="**/*.cs" />
+			</delete>
+			<mkdir dir="@{dir}" />
+		</sequential>
+	</macrodef>
 	
 </project>
