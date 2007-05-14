@@ -354,10 +354,30 @@
 	<target name="build-net1" depends="configure-net1, build-all">
 	</target>
 	
-	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-tutorial">
+	<target name="build-all" depends="build-core, build-tools, build-tests, build-ta, build-admin, build-tutorial">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
+	</target>
+	
+	<target name="build-ta" depends="build-db4ounit-extensions">
+		<fileset id="ta.sources" dir="${dir.n.v6}/Db4objects.Db4o.TA">
+			<include name="**/*.cs" />
+		</fileset>
+		<csc-all
+			assemblyName="Db4objects.Db4o.TA"
+			sources="ta.sources">			
+			
+			<references>
+				<reference dir="${dir.dist.dll.net}">
+					<include name="Db4objects.Db4o.dll" />
+				</reference>
+			</references>
+			
+			<compact-args>
+				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
+			</compact-args>
+		</csc-all>
 	</target>
 	
 	<target name="build-tests" depends="build-tools, build-db4ounit-extensions">
@@ -478,7 +498,7 @@
 	</target>
 	
 	<target name="sharpen"
-		depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests"
+		depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests, sharpen-ta"
 		unless="csharp.uptodate">
 	</target>
 	
@@ -569,14 +589,87 @@
 			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
 		</jar>
 	</target>
-			
-	<target name="sharpen-db4ounit-extensions" depends="install-javatocsharp-plugin">		
+	
+	<property name="dir.sharpen.ta" location="${dir.sharpen}/db4ota" />
+	
+	<target name="sharpen-ta" depends="install-javatocsharp-plugin, prepare-ta-conversion-workspace, create-dependencies-jar">
+		<sharpen workspace="${dir.sharpen.ta}" resource="db4ota/src">
+			<args>
+				<arg value="-cp" />
+				<arg path="${dependencies.jar}" />	
+				<arg value="@sharpen-tests-options" />
+				
+				<arg value="-srcfolder" />
+				<arg value="test" />
+			</args>
+		</sharpen>
+	
+		<property name="dir.n.v6.ta" location="${dir.n.v6}/Db4objects.Db4o.TA" />
+
+		<reset-src-dir dir="${dir.n.v6.ta}/Db4objects.Db4o.TA" />
+
+		<copy todir="${dir.n.v6.ta}/Db4objects.Db4o.TA">
+			<fileset dir="${dir.sharpen.ta}/db4otacsharp/src/Db4objects/Db4o/TA">
+				<include name="**/*.cs" />
+				<exclude name="**/Tests/**" />
+				<exclude name="**/Events/**" />
+			</fileset>
+		</copy>
+	
+		<property name="dir.n.v6.ta.tests" location="${dir.n.v6}/Db4objects.Db4o.TA.Tests" />
+
+		<reset-src-dir dir="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests" />
+
+		<copy todir="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests">
+			<fileset dir="${dir.sharpen.ta}/db4otacsharp/src/Db4objects/Db4o/TA/Tests">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+
+		<updatecsharpproject projectfile="${dir.n.v6.ta}/Db4objects.Db4o.TA-2005.csproj">
+			<sources dir="${dir.n.v6.ta}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
 		
-		<property name="target.dir" value="${dir.sharpen}" />
+		<updatecsharpproject projectfile="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests-2005.csproj">
+			<sources dir="${dir.n.v6.ta.tests}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		
+	</target>
+	
+	<target name="prepare-ta-conversion-workspace">	
+	
+		<reset-dir dir="${dir.sharpen.ta}" />
+		
+		<copy todir="${dir.sharpen.ta}/db4ota" overwrite="true">
+			<fileset dir="${dir.workspace}/db4ota">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+	
+		<!--
+			event definitions are required to be visible in source
+			code form by the converter
+		-->
+		<copy todir="${dir.sharpen.ta}/db4ota/src">
+			<fileset dir="${dir.j.core.src}">
+				<include name="**/Event4.java" />
+				<include name="**/EventListener4.java" />
+				<include name="**/EventArgs.java" />
+				<include name="**/EventRegistry.java" />
+				<include name="**/ObjectEventArgs.java" />
+			</fileset>
+		</copy>
+	</target>
+			
+	<target name="sharpen-db4ounit-extensions" depends="install-javatocsharp-plugin, create-dependencies-jar">		
+		
+		<property name="target.dir" value="${dir.sharpen}/db4ounit-extensions" />
 		
 		<reset-dir dir="${target.dir}" />
-	
-		<antcall target="create-dependencies-jar" />
 		
 		<copy todir="${target.dir}/db4ounit.extensions/src">
 			<fileset dir="${dir.db4ounit.extensions.src}">
