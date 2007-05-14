@@ -18,9 +18,9 @@ public abstract class FreespaceManagerTestCaseBase extends AbstractDb4oTestCase 
 	protected void db4oSetupAfterStore() throws Exception {
 		LocalObjectContainer container = (LocalObjectContainer) db();
 		
-		FreespaceManagerIx fmIx = new FreespaceManagerIx(container);
-		int address = fmIx.onNew(container);
-		fmIx.start(address);
+//		FreespaceManagerIx fmIx = new FreespaceManagerIx(container);
+//		int address = fmIx.onNew(container);
+//		fmIx.start(address);
 		
 		BTreeFreespaceManager btreeFm = new BTreeFreespaceManager(container);
 		btreeFm.start(0);

@@ -13,7 +13,7 @@ import db4ounit.extensions.*;
 public class ObjectMarshallerTestCase extends AbstractDb4oTestCase {
 
 	public static void main(String[] args) {
-		new ObjectMarshallerTestCase().runSoloAndClientServer();
+		new ObjectMarshallerTestCase().runSolo();
 	}
 	
 	public static class Item{
