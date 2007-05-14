@@ -169,7 +169,11 @@ public abstract class Transaction {
             }
             i_transactionListeners = null;
         }
-    }	
+    }
+    
+    public void setPointer(Pointer4 pointer){
+        setPointer(pointer._id, pointer._slot);
+    }
 
     public abstract void setPointer(int a_id, Slot slot);
     

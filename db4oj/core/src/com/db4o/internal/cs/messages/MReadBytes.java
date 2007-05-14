@@ -3,14 +3,16 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
+import com.db4o.internal.slots.*;
 
 public final class MReadBytes extends MsgD implements ServerSideMessage {
 	
 	public final Buffer getByteLoad() {
 		int address = _payLoad.readInt();
 		int length = _payLoad.getLength() - (Const4.INT_LENGTH);
+        Slot slot = new Slot(address, length);
 		_payLoad.removeFirstBytes(Const4.INT_LENGTH);
-		_payLoad.useSlot(address, length);
+		_payLoad.useSlot(slot);
 		return this._payLoad;
 	}
 

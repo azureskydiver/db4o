@@ -58,7 +58,11 @@ public class Slot {
     public static int MARSHALLED_LENGTH = Const4.INT_LENGTH * 2;
 
 	public int compareByAddress(Slot slot) {
-		return slot._address - _address;
+        int res = slot._address - _address;
+        if(res != 0){
+            return res;
+        }
+        return slot.length() - length();
 	}
 	
 	public int compareByLength(Slot slot) {
@@ -66,7 +70,7 @@ public class Slot {
 		if(res != 0){
 			return res;
 		}
-		return compareByAddress(slot);
+		return slot._address - _address;
 	}
 
 	public boolean isDirectlyPreceding(Slot other) {

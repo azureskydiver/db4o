@@ -54,7 +54,12 @@ public final class StatefulBuffer extends Buffer {
     }
     
     public StatefulBuffer(Transaction trans, Slot slot){
-    	this(trans, slot.address(), slot.length());
+        this(trans, slot.address(), slot.length());
+    }
+
+    public StatefulBuffer(Transaction trans, Pointer4 pointer){
+        this(trans, pointer._slot);
+        i_id = pointer._id;
     }
 
     public StatefulBuffer(StatefulBuffer parent, StatefulBuffer[] previousRead, int previousCount) {
@@ -313,11 +318,6 @@ public final class StatefulBuffer extends Buffer {
         useSlot(a_adress, a_length);
     }
     
-    public void useSlot(int a_id, Slot slot) {
-        i_id = a_id;
-        useSlot(slot);
-    }
-
     public void write() {
         if (Debug.xbytes) {
             debugCheckBytes();

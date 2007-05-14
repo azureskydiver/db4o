@@ -284,8 +284,14 @@ public class DefragContextImpl implements DefragContext {
 
 	private Slot readPointer(DbSelector selector,int id) throws IOException {
 		Buffer reader=readerByAddress(selector, id, Const4.POINTER_LENGTH);
+        if(Deploy.debug){
+            reader.readBegin(Const4.YAPPOINTER);    
+        }
 		int address=reader.readInt();
 		int length=reader.readInt();
+        if(Deploy.debug){
+            reader.readEnd();
+        }
 		return new Slot(address,length);
 	}
 

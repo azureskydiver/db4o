@@ -29,10 +29,10 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
             if(! stream.isClient()){
                 slot = ((LocalTransaction)trans).file().getSlot(slot.length()); 
             }
-            trans.setPointer(id, slot);
+            Pointer4 pointer = new Pointer4(id, slot);
+            trans.setPointer(pointer);
             
-            StatefulBuffer writer = new StatefulBuffer(trans, slot.length());
-            writer.useSlot(id, slot);
+            StatefulBuffer writer = new StatefulBuffer(trans, pointer);
             if (Deploy.debug) {
                 writer.writeBegin(Const4.YAPOBJECT);
             }

@@ -36,6 +36,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private BlockingQueue _committedInfosQueue = new BlockingQueue();
 	
 	private CommittedCallbacksDispatcher _committedCallbacksDispatcher;
+    
+    private boolean _caresAboutCommitted;
 	
 	public ObjectServerImpl(final LocalObjectContainer container, int port) {
 		_container = container;
@@ -281,9 +283,10 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	}
 
-	void removeThread(ServerMessageDispatcherImpl aThread) {
+	void removeThread(ServerMessageDispatcherImpl dispatcher) {
 		synchronized (_dispatchers) {
-			_dispatchers.remove(aThread);
+			_dispatchers.remove(dispatcher);
+            checkCaresAboutCommitted();
 		}
 	}
 
@@ -308,8 +311,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		notifyThreadStarted();
 		listen();
 	}
-
-	
 
 	private void startCommittedCallbackThread(BlockingQueue committedInfosQueue) {
 		_committedCallbacksDispatcher = new CommittedCallbacksDispatcher(this, committedInfosQueue);
@@ -351,6 +352,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private void addServerMessageDispatcher(ServerMessageDispatcher thread) {
 		synchronized (_dispatchers) {
 			_dispatchers.add(thread);
+            checkCaresAboutCommitted();
 		}
 	}
 
@@ -367,5 +369,23 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 			}
 		}
 	}
+    
+    public boolean caresAboutCommitted(){
+        return _caresAboutCommitted;
+    }
+    
+    public void checkCaresAboutCommitted(){
+        boolean newValue = false;
+        Iterator4 i = iterateDispatchers();
+        while(i.moveNext()){
+            ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) i.current();
+            if(dispatcher.caresAboutCommitted()){
+                newValue = true;
+            }
+        }
+        _caresAboutCommitted = newValue;
+    }
+    
+    
 
 }

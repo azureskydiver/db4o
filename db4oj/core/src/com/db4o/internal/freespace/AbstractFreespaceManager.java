@@ -111,4 +111,25 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     	newFM.endCommit();
     }
     
+    public void debugCheckIntegrity(){
+        final MutableInt lastStart = new MutableInt();
+        final MutableInt lastEnd = new MutableInt();
+        traverse(new Visitor4() {
+            public void visit(Object obj) {
+                Slot slot = (Slot) obj;
+                if(slot.address() <= lastEnd.value()){
+                    throw new IllegalStateException();
+                }
+                lastStart.value(slot.address());
+                lastEnd.value(slot.address() + slot.length());
+            }
+        });
+        
+    }
+    
+    protected final LocalTransaction transaction(){
+        return (LocalTransaction)_file.systemTransaction();
+    }
+
+    
 }

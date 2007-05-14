@@ -234,13 +234,12 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return queryResult;
     }
 
-    final int getPointerSlot() {
+    public final int getPointerSlot() {
         int id = getSlot(Const4.POINTER_LENGTH).address();
 
         // write a zero pointer first
         // to prevent delete interaction trouble
-        ((LocalTransaction)systemTransaction()).writePointer(id, Slot.ZERO);
-        
+        ((LocalTransaction)systemTransaction()).writeZeroPointer(id);
         
         // We have to make sure that object IDs do not collide
         // with built-in type IDs.

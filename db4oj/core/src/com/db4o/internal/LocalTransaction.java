@@ -53,12 +53,12 @@ public class LocalTransaction extends Transaction {
             freespaceBeginCommit();
             commitImpl();
             CallbackObjectInfoCollections committedInfo = null;
-        	if(doCommittedCallbacks()){
+        	if(doCommittedCallbacks(dispatcher)){
         		committedInfo = collectCallbackObjectInfos(dispatcher);
         	} 
             commitClearAll();
             freespaceEndCommit();
-            if(doCommittedCallbacks()){
+            if(doCommittedCallbacks(dispatcher)){
     	        if(dispatcher == null){
     	        	callbacks().commitOnCompleted(this, committedInfo);
     	        } else {
@@ -68,10 +68,14 @@ public class LocalTransaction extends Transaction {
         }
     }
 
-    private boolean doCommittedCallbacks() {
-		return ! isSystemTransaction(); 
-		// TODO: #COR-433 adjust
-		// return ! isSystemTransaction() && callbacks().caresAboutCommitted();
+    private boolean doCommittedCallbacks(ServerMessageDispatcher dispatcher) {
+        if (isSystemTransaction()){
+            return false;
+        }
+        if(dispatcher != null){
+            return dispatcher.server().caresAboutCommitted();
+        }
+		return callbacks().caresAboutCommitted();
 	}
 
 	private boolean doCommittingCallbacks() {
@@ -106,12 +110,16 @@ public class LocalTransaction extends Transaction {
         
         Slot reservedSlot = allocateTransactionLogSlot(false);
         
-        freeSlotChanges();
+        if(! isSystemTransaction()){
+            freeSlotChanges();
+        }
         
         commitFreespace();
         
-        if(_systemTransaction != null){
-        	((LocalTransaction)_systemTransaction).freeSlotChanges();
+        if(isSystemTransaction()){
+            freeSlotChanges();
+        }else{
+        	((LocalTransaction)systemTransaction()).freeSlotChanges();
         }
         
         commit6WriteChanges(reservedSlot);
@@ -280,6 +288,14 @@ public class LocalTransaction extends Transaction {
     	}
     	freespaceManager().freeTransactionLogSlot(_file.toNonBlockedLength(slot));
 	}
+    
+    public void writeZeroPointer(int id){
+        writePointer(id, Slot.ZERO);   
+    }
+    
+    public void writePointer(Pointer4 pointer) {
+        writePointer(pointer._id, pointer._slot);
+    }
 
 	public void writePointer(int id, Slot slot) {
         if(DTrace.enabled){
@@ -300,8 +316,6 @@ public class LocalTransaction extends Transaction {
         }
         i_pointerIo.write();
     }
-    
-
 	
     private boolean writeSlots() {
         final MutableBoolean ret = new MutableBoolean();
@@ -356,8 +370,7 @@ public class LocalTransaction extends Transaction {
                 return parentSlot;
             }
         }
-        return readCommittedSlotOfID(id);
-		
+        return readPointer(id)._slot;
     }
     
     public Slot getCommittedSlotOfID(int id) {
@@ -378,32 +391,34 @@ public class LocalTransaction extends Transaction {
                 return parentSlot;
             }
         }
-		return readCommittedSlotOfID(id);
+		return readPointer(id)._slot;
     }
 
-    private Slot readCommittedSlotOfID(int id) {
+    public Pointer4 readPointer(int id) {
         if (Deploy.debug) {
-            return debugReadCommittedSlotOfID(id);
+            return debugReadPointer(id);
         }
        	_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
-
         int address = (_pointerBuffer[3] & 255)
             | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
             | _pointerBuffer[0] << 24;
         int length = (_pointerBuffer[7] & 255)
             | (_pointerBuffer[6] & 255) << 8 | (_pointerBuffer[5] & 255) << 16
             | _pointerBuffer[4] << 24;
-        return new Slot(address, length);
+        return new Pointer4(id, new Slot(address, length));
     }
 
-	private Slot debugReadCommittedSlotOfID(int id) {
-		i_pointerIo.useSlot(id);
-		i_pointerIo.read();
-		i_pointerIo.readBegin(Const4.YAPPOINTER);
-		int debugAddress = i_pointerIo.readInt();
-		int debugLength = i_pointerIo.readInt();
-		i_pointerIo.readEnd();
-		return new Slot(debugAddress, debugLength);
+	private Pointer4 debugReadPointer(int id) {
+        if (Deploy.debug) {
+    		i_pointerIo.useSlot(id);
+    		i_pointerIo.read();
+    		i_pointerIo.readBegin(Const4.YAPPOINTER);
+    		int debugAddress = i_pointerIo.readInt();
+    		int debugLength = i_pointerIo.readInt();
+    		i_pointerIo.readEnd();
+    		return new Pointer4(id, new Slot(debugAddress, debugLength));
+        }
+        return null;
 	}
     
     public void setPointer(int a_id, Slot slot) {
