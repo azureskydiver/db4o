@@ -141,14 +141,16 @@ public abstract class PersistentBase implements Persistent {
 	        Slot slot;
 	        
 	        if(isNew()){
-	            Pointer4 pointer = stream.newSlot(trans, length);
+	            Pointer4 pointer = stream.newSlot(length);
 	            setID(pointer._id);
 	            slot = pointer._slot;
-	            
-	            // FIXME: Free everything on rollback here ?
+                
+                trans.setPointer(pointer);
+	            // FIXME: Free everything on rollback here too?
+                
 	        }else{
 	            slot = stream.getSlot(length);
-	            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot);
+	            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot, isFreespaceComponent());
 	        }
 	        
 	        writeToFile(trans, writer, slot);
@@ -156,6 +158,10 @@ public abstract class PersistentBase implements Persistent {
         	endProcessing();
         }
 
+    }
+    
+    public boolean isFreespaceComponent(){
+        return false;
     }
     
 	private final void writeToFile(Transaction trans, Buffer writer, Slot slot) {

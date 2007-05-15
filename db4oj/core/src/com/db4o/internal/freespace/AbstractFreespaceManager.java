@@ -79,7 +79,7 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return Const4.INT_LENGTH * INTS_IN_SLOT;
     }
     
-    public final int totalFreespace() {
+    public int totalFreespace() {
         final MutableInt mint = new MutableInt();
         traverse(new Visitor4() {
             public void visit(Object obj) {

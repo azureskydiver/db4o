@@ -23,8 +23,10 @@ public class SlotChange extends TreeInt {
 	
 	private static final int FREE_POINTER_ON_COMMIT_BIT = 4;
 	
-	private static final int FREE_POINTER_ON_ROLLBACK_BIT = 5; 
-	
+    private static final int FREE_POINTER_ON_ROLLBACK_BIT = 5; 
+    
+    private static final int FREESPACE_BIT = 6; 
+    
 	public SlotChange(int id) {
 		super(id);
 	}
@@ -57,10 +59,10 @@ public class SlotChange extends TreeInt {
 		setBit(SET_POINTER_BIT);
 	}
 
-	public void freeDuringCommit(LocalObjectContainer file) {
-		if (isFreeOnCommit()) {
-			file.freeDuringCommit(_shared, _newSlot);
-		}
+	public void freeDuringCommit(LocalObjectContainer file, boolean forFreespace) {
+        if (isFreeOnCommit() && (isForFreeSpace() == forFreespace)) {
+            file.freeDuringCommit(_shared, _newSlot);
+        }
 	}
 
 	public void freeOnCommit(LocalObjectContainer file, Slot slot) {
@@ -115,7 +117,11 @@ public class SlotChange extends TreeInt {
 	public boolean isNew() {
 		return isFreePointerOnRollback();
 	}
-
+    
+    private final boolean isForFreeSpace() {
+        return isBitSet(FREESPACE_BIT);
+    }
+    
 	private final boolean isFreeOnCommit() {
 		return isBitSet(FREE_ON_COMMIT_BIT);
 	}
@@ -192,4 +198,10 @@ public class SlotChange extends TreeInt {
 			trans.writePointer(_key, _newSlot);
 		}
 	}
+
+    public void forFreespace(boolean flag) {
+        if(flag){
+            setBit(FREESPACE_BIT);
+        }
+    }
 }

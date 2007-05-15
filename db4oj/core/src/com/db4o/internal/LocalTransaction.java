@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.callbacks.*;
@@ -110,27 +108,29 @@ public class LocalTransaction extends Transaction {
         
         Slot reservedSlot = allocateTransactionLogSlot(false);
         
-        if(! isSystemTransaction()){
-            freeSlotChanges();
-        }
+        freeSlotChanges(false);
         
         commitFreespace();
         
-        if(isSystemTransaction()){
-            freeSlotChanges();
-        }else{
-        	((LocalTransaction)systemTransaction()).freeSlotChanges();
-        }
+        freeSlotChanges(true);
         
         commit6WriteChanges(reservedSlot);
     }
 	
-	private final void freeSlotChanges() {
-        _slotChanges.traverse(new Visitor4() {
-			public void visit(Object obj) {
-				((SlotChange)obj).freeDuringCommit(_file);
-			}
-		});
+	private final void freeSlotChanges(final boolean forFreespace) {
+        Visitor4 visitor = new Visitor4() {
+            public void visit(Object obj) {
+                ((SlotChange)obj).freeDuringCommit(_file, forFreespace);
+            }
+        };
+        if(isSystemTransaction()){
+            _slotChanges.traverseMutable(visitor);
+            return;
+        }
+        _slotChanges.traverseLocked(visitor);
+        if(_systemTransaction != null){
+            parentLocalTransaction().freeSlotChanges(forFreespace);
+        }
     }
 	
 	private void commit2Listeners(){
@@ -209,7 +209,7 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	protected void rollbackSlotChanges() {
-		_slotChanges.traverse(new Visitor4() {
+		_slotChanges.traverseLocked(new Visitor4() {
             public void visit(Object a_object) {
                 ((SlotChange) a_object).rollback(_file);
             }
@@ -469,7 +469,7 @@ public class LocalTransaction extends Transaction {
                 }
                 stream().writeTransactionPointer(0);
                 flushFile();
-                freeSlotChanges();
+                freeSlotChanges(false);
             } else {
                 stream().writeTransactionPointer(0);
                 flushFile();
@@ -489,7 +489,7 @@ public class LocalTransaction extends Transaction {
         if(_systemTransaction != null){
         	parentLocalTransaction().traverseSlotChanges(visitor);
         }
-        _slotChanges.traverse(visitor);
+        _slotChanges.traverseLocked(visitor);
 	}
 	
 	public void slotDelete(int id, Slot slot) {
@@ -527,7 +527,7 @@ public class LocalTransaction extends Transaction {
         produceSlotChange(id).freeOnRollback(slot);
     }
 
-    void slotFreeOnRollbackCommitSetPointer(int id, Slot newSlot) {
+    void slotFreeOnRollbackCommitSetPointer(int id, Slot newSlot, boolean forFreespace) {
         
         Slot oldSlot = getCurrentSlotOfID(id);
         if(oldSlot==null) {
@@ -546,6 +546,7 @@ public class LocalTransaction extends Transaction {
         SlotChange change = produceSlotChange(id);
         change.freeOnRollbackSetPointer(newSlot);
         change.freeOnCommit(_file, oldSlot);
+        change.forFreespace(forFreespace);
     }
 
     void produceUpdateSlotChange(int id, Slot slot) {
@@ -692,7 +693,7 @@ public class LocalTransaction extends Transaction {
 		final Collection4 added = new Collection4();
 		final Collection4 deleted = new Collection4();
 		final Collection4 updated = new Collection4();
-		_slotChanges.traverse(new Visitor4() {
+		_slotChanges.traverseLocked(new Visitor4() {
 			public void visit(Object obj) {
 				SlotChange slotChange = ((SlotChange)obj);
 				LazyObjectReference lazyRef = new LazyObjectReference(LocalTransaction.this, slotChange._key);

@@ -110,8 +110,4 @@ final class ClientTransaction extends Transaction {
 		i_client.writeBatchedMessage(msg);
     }
 
-	public void setPointer(int a_id, Slot slot) {
-	}
-	
-
 }

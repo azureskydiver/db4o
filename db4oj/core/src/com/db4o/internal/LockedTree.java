@@ -38,11 +38,24 @@ public class LockedTree {
         changed();
     }
 
-    public void traverse(Visitor4 visitor) {
+    public void traverseLocked(Visitor4 visitor) {
         int currentVersion = _version;
         Tree.traverse(_tree, visitor);
         if(_version != currentVersion){
             throw new IllegalStateException();
+        }
+    }
+    
+    public void traverseMutable(Visitor4 visitor){
+        final Collection4 currentContent = new Collection4();
+        traverseLocked(new Visitor4() {
+            public void visit(Object obj) {
+                currentContent.add(obj);
+            }
+        });
+        Iterator4 i = currentContent.iterator();
+        while(i.moveNext()){
+            visitor.visit(i.current());
         }
     }
 

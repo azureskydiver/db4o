@@ -32,6 +32,14 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
 		if(sizeNode == null || sizeNode._key < length){
 			return null;
 		}
+
+        // We can just be appending to the end of the file, using one
+        // really big contigous slot that keeps growing. Let's limit.
+        int limit = length + 100; 
+        if(sizeNode._key > limit){
+            return getSlot(limit);
+        }
+        
 		removeFromBothTrees(sizeNode);
 		return new Slot(sizeNode._peer._key, sizeNode._key);
 	}
@@ -257,7 +265,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     }
 
     public int write(){
-        Pointer4 pointer = _file.newSlot(transaction(), marshalledLength()); 
+        Pointer4 pointer = _file.newSlot(marshalledLength()); 
         write(pointer);
         return pointer._id;
     }
