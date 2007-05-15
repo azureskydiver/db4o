@@ -1,5 +1,4 @@
-﻿/* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
-
+/* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.internal.freespace;
 
 import java.io.*;
@@ -9,7 +8,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.slots.*;
-
 
 /**
  * @exclude
