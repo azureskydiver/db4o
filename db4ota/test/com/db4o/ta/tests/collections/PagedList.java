@@ -12,7 +12,7 @@ import com.db4o.ta.Activatable;
 import com.db4o.ta.tests.collections.internal.PagedBackingStore;
 
 /**
- * Platform specific faÃ§ade.
+ * Platform specific façade.
  * 
  * @param 
  * 
