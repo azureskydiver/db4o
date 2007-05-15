@@ -203,7 +203,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
     }
 
 	public int slotCount() {
-		return _slotsByAddress.size(transaction());
+		return _slotsByAddress.size(transaction()) + _delegate.slotCount();
 	}
 
 	public void start(int slotAddress) throws IOException {
@@ -230,6 +230,10 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	public String toString() {
 		return _slotsByLength.toString();
 	}
+    
+    public int totalFreespace() {
+        return super.totalFreespace() + _delegate.totalFreespace();
+    }
 	
     public void traverse(final Visitor4 visitor) {
 		_slotsByAddress.traverseKeys(transaction(), visitor);

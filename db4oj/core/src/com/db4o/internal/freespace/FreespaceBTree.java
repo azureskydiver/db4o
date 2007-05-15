@@ -19,5 +19,9 @@ public class FreespaceBTree extends BTree{
     protected boolean canEnlistWithTransaction(){
     	return false;
     }
+    
+    public boolean isFreespaceComponent() {
+        return true;
+    }
 
 }

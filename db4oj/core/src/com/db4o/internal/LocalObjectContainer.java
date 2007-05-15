@@ -333,11 +333,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return i_isServer;
     }
 
-    public final Pointer4 newSlot(Transaction trans, int length) {
-        int id = getPointerSlot();
-        Slot slot = getSlot(length);
-        trans.setPointer(id, slot);
-        return new Pointer4(id, slot);
+    public final Pointer4 newSlot(int length) {
+        return new Pointer4(getPointerSlot(), getSlot(length));
     }
 
     public final int newUserObject() {

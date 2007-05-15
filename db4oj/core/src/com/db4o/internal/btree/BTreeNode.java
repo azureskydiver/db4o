@@ -1136,6 +1136,10 @@ public final class BTreeNode extends PersistentBase{
         }
 	}
 
+    public boolean isFreespaceComponent() {
+        return _btree.isFreespaceComponent();
+    }
+    
     public boolean isLeaf() {
         return _isLeaf;
     }

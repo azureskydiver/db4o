@@ -208,7 +208,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 ObjectReference yo = referenceForId(intID);
                 if (yo != null) {
                     if (ta.reflector().forObject(obj) == yo.getYapClass().classReflector()) {
-                        bind2(yo, obj);
+                        ObjectReference newRef = bind2(yo, obj);
+                        newRef.virtualAttributes(ta);
                     } else {
                         throw new RuntimeException(Messages.get(57));
                     }
@@ -217,14 +218,15 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public final void bind2(ObjectReference ref, Object obj){
-        int id = ref.getID();
-        removeReference(ref);
-        ref = new ObjectReference(classMetadataForReflectClass(reflector().forObject(obj)),
+    public final ObjectReference bind2(ObjectReference oldRef, Object obj){
+        int id = oldRef.getID();
+        removeReference(oldRef);
+        ObjectReference newRef = new ObjectReference(classMetadataForReflectClass(reflector().forObject(obj)),
             id);
-        ref.setObjectWeak(_this, obj);
-        ref.setStateDirty();
-        _referenceSystem.addExistingReference(ref);
+        newRef.setObjectWeak(_this, obj);
+        newRef.setStateDirty();
+        _referenceSystem.addExistingReference(newRef);
+        return newRef;
     }
     
     public abstract byte blockSize();

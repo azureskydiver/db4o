@@ -171,11 +171,12 @@ public abstract class Transaction {
         }
     }
     
-    public void setPointer(Pointer4 pointer){
+    public final void setPointer(Pointer4 pointer){
         setPointer(pointer._id, pointer._slot);
     }
 
-    public abstract void setPointer(int a_id, Slot slot);
+    public void setPointer(int a_id, Slot slot){
+    }
     
     public void slotDelete(int id, Slot slot) {
     }
@@ -186,7 +187,7 @@ public abstract class Transaction {
     public void slotFreeOnRollback(int id, Slot slot) {
     }
 
-    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot) {
+    void slotFreeOnRollbackCommitSetPointer(int id, Slot slot, boolean forFreespace) {
     }
 
     void produceUpdateSlotChange(int id, Slot slot) {
