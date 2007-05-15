@@ -10,68 +10,85 @@ public class FileSizeTestCase extends FileSizeTestCaseBase {
     private static final int ITERATIONS = 100;
 
 	public static void main(String[] args) {
-		new FileSizeTestCase().runSolo();
+		new FileSizeTestCase().runEmbeddedClientServer();
 	}
 	
 	public void testConsistentSizeOnRollback(){
-		
 		storeSomeItems();
 		produceSomeFreeSpace();
-		
-		int originalFileSize = fileSize();
-		for (int i = 0; i < ITERATIONS; i++) {
-			store(new Item());
-			db().rollback();
-			Assert.areEqual(originalFileSize, fileSize());
-		}
+        assertConsistentSize(new Runnable() {
+            public void run() {
+                store(new Item());
+                db().rollback();
+            }
+        });
 	}
     
     public void testConsistentSizeOnCommit(){
         storeSomeItems();
         db().commit();
-        int originalFileSize = fileSize();
-        for (int i = 0; i < ITERATIONS; i++) {
-            db().commit();
-            Assert.areEqual(originalFileSize, fileSize());
-        }
+        assertConsistentSize(new Runnable() {
+            public void run() {
+                db().commit();
+            }
+        });
     }
     
     public void testConsistentSizeOnUpdate(){
         storeSomeItems();
         produceSomeFreeSpace();
-        Item item = new Item(); 
+        final Item item = new Item(); 
         store(item);
         db().commit();
-        int originalFileSize = fileSize();
-        for (int i = 0; i < ITERATIONS; i++) {
-            store(item);
-            db().commit();
-        }
-        Assert.areEqual(originalFileSize, fileSize());
+        assertConsistentSize(new Runnable() {
+            public void run() {
+                store(item);
+                db().commit();
+            }
+        });
     }
     
     public void testConsistentSizeOnReopen() throws Exception{
         db().commit();
         reopen();
-        int originalFileSize = fileSize();
-        for (int i = 0; i < ITERATIONS; i++) {
-            reopen();
-        }
-        Assert.areEqual(originalFileSize, fileSize());
+        assertConsistentSize(new Runnable() {
+            public void run() {
+                try {
+                    reopen();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
     
     public void testConsistentSizeOnUpdateAndReopen() throws Exception{
         produceSomeFreeSpace();
         store(new Item());
         db().commit();
+        assertConsistentSize(new Runnable() {
+            public void run() {
+                store(retrieveOnlyInstance(Item.class));
+                db().commit();
+                try {
+                    reopen();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    
+    public void assertConsistentSize(Runnable runnable){
+        for (int i = 0; i < 10; i++) {
+            runnable.run();
+        }
         int originalFileSize = fileSize();
         for (int i = 0; i < ITERATIONS; i++) {
-            store(retrieveOnlyInstance(Item.class));
-            db().commit();
-            reopen();
+            runnable.run();
         }
         Assert.areEqual(originalFileSize, fileSize());
+        System.out.println(fileSize());
     }
-
 
 }

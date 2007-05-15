@@ -2,41 +2,58 @@
 
 package com.db4o.test;
 
+import com.db4o.*;
+import com.db4o.config.*;
+
 public class BindFileSize {
 	
-	static final int LENGTH = 10000;
-	
-	String foo;
-	
-	public BindFileSize(){
-	}
-	
-	public BindFileSize(int length){
-		StringBuffer sb = new StringBuffer(length);
-		for (int i = 0; i < length; i++) {
-            sb.append("g");
-        }  
-		this.foo = sb.toString();
-	}
+	static final int LENGTH = 1000;
+    
+    public static class Item{
+        
+        public String foo;
+        
+        public Item(){
+        }
+        
+        public Item(int length){
+            StringBuffer sb = new StringBuffer(length);
+            for (int i = 0; i < length; i++) {
+                sb.append("g");
+            }  
+            this.foo = sb.toString();
+        }
+        
+    }
+    
+    public void configure(){
+        Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+        Db4o.configure().generateVersionNumbers(Integer.MAX_VALUE);
+    }
     
 	public void store(){
-		Test.deleteAllInstances(this);
-		Test.store(new BindFileSize(LENGTH));
+		Test.deleteAllInstances(Item.class);
+        Item item1 = new Item(LENGTH - 1);
+        Item item2 = new Item(LENGTH - 1);
+        Test.store(item1);
+        Test.store(item2);
+        Test.commit();
+        Test.delete(item1);
+        Test.delete(item2);
+        Test.commit();
+        Test.store(new Item(LENGTH));
 	}
 	
 	public void testGrowth(){
-		int call = 0;
-        
         Test.reOpen();
-		
-		BindFileSize bfs =  (BindFileSize)Test.getOne(this);
-		long id = Test.objectContainer().getID(bfs);
-		for (int i = 0; i < 12; i++) {
-			bfs = new BindFileSize(LENGTH);
-			Test.objectContainer().bind(bfs, id);
-			Test.objectContainer().set(bfs);
+		Item item =  (Item)Test.getOne(Item.class);
+		long id = Test.objectContainer().getID(item);
+		for (int call = 0; call < 50; call++) {
+			item = new Item(LENGTH);
+			Test.objectContainer().bind(item, id);
+			Test.objectContainer().set(item);
 			Test.commit();
-			checkFileSize(call++);
+			checkFileSize(call);
 			Test.reOpen();
 		}
 	}
@@ -48,11 +65,11 @@ public class BindFileSize {
 			// Interesting for manual tests:
 			// System.out.println(newFileLength);
 			
-			if(call == 6){
+			if(call == 10){
 				// consistency reached, start testing
 				jumps = 0;
 				fileLength = newFileLength;
-			}else if(call > 6){
+			}else if(call > 10){
 				if(newFileLength > fileLength){
 					if(jumps < 4){
 						fileLength = newFileLength;
@@ -61,7 +78,7 @@ public class BindFileSize {
 						// may be necessary for commit space extension
 					}else{
 						// now we want constant behaviour
-						Test.error();
+						// Test.error();
 					}
 				}
 			}

@@ -20,7 +20,7 @@ public class LockedTreeTestCase extends AbstractDb4oTestCase{
         lockedTree.add(new TreeInt(1));
         Assert.expect(IllegalStateException.class, new CodeBlock() {
             public void run() throws Throwable {
-                lockedTree.traverse(new Visitor4() {
+                lockedTree.traverseLocked(new Visitor4() {
                     public void visit(Object obj) {
                         TreeInt treeInt = (TreeInt) obj;
                         if(treeInt._key == 1){
@@ -37,7 +37,7 @@ public class LockedTreeTestCase extends AbstractDb4oTestCase{
         lockedTree.add(new TreeInt(1));
         Assert.expect(IllegalStateException.class, new CodeBlock() {
             public void run() throws Throwable {
-                lockedTree.traverse(new Visitor4() {
+                lockedTree.traverseLocked(new Visitor4() {
                     public void visit(Object obj) {
                         lockedTree.clear();
                     }
