@@ -126,7 +126,7 @@
 			interactive="false" 
 			showcodeexecutionresults="true"
 			workspace="${dir.workspace}" 
-			inputsource="${dir.n.tutorial.src.vb}/" 
+			inputsource="${dir.n.v6.tutorial.src.vb}/" 
 			sourceextension="vb" 
 			outputfile="${db4o.file}tutorial" 
 			outputpath="${dir.j.tutorial.out.vb}" 

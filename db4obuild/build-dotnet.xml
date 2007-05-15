@@ -277,7 +277,7 @@
 	
 	<target name="package-tutorial">
 		<copy todir="${dir.dist.net.build.tutorial}">
-			<fileset dir="${dir.n.tutorial.bin}">
+			<fileset dir="${dir.n.v6.tutorial.bin}">
 				<include name="**/**" />
 				<exclude name="**/*.pdb" />
 			</fileset>
