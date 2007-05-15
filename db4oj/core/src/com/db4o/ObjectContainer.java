@@ -2,6 +2,7 @@
 
 package  com.db4o;
 
+import com.db4o.constraints.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 
@@ -79,8 +80,11 @@ public interface ObjectContainer {
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws DatabaseReadOnlyException database was configured as read-only.
+     * @throws UniqueFieldValueConstraintViolationException 
      */
-    public void commit () throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
+    public void commit() throws Db4oIOException, DatabaseClosedException,
+			DatabaseReadOnlyException,
+			UniqueFieldValueConstraintViolationException;
     
 
     /**
