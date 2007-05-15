@@ -85,6 +85,8 @@
 				<arg file="@{workspace}" />
 				<arg value="-application" />
 				<arg value="javatocsharp.core.application" />
+				<arg value="-header" />
+				<arg file="${dir.config}/copyright_comment.txt" />
 				<arg value="@{resource}" />
 				
 				<args />
