@@ -39,7 +39,7 @@ public class IndexedByIdentity {
             q.descend("name").constrain(atomName + i);
             ObjectSet objectSet = q.execute();
             Atom child = (Atom)objectSet.next();
-            // child.name = "rünzelbrünft";
+            // child.name = "rnzelbrnft";
             q = Test.query();
             q.constrain(IndexedByIdentity.class);
             q.descend("atom").constrain(child).identity();
