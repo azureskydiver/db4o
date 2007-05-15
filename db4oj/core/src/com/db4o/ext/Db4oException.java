@@ -9,7 +9,7 @@ import com.db4o.internal.*;
  * db4o exception wrapper: Exceptions occurring during internal processing
  * will be proliferated to the client calling code encapsulated in an exception
  * of this type. The original exception, if any, is available through
- * {@link Db4oException#cause()}.
+ * {@link Db4oException#getCause()}.
  */
 public class Db4oException extends ChainedRuntimeException {
 	
