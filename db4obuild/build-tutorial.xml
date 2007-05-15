@@ -45,7 +45,7 @@
 			home="${dir.j.tutorial}" 
 			interactive="true" 
 			workspace="${dir.workspace}" 
-			inputsource="${dir.n.tutorial.src}/" 
+			inputsource="${dir.n.v6.tutorial.src}/" 
 			sourceextension="cs" 
 			outputfile="${db4o.file}tutorial" 
 			outputpath="${dir.j.tutorial.out.net}" 

@@ -28,7 +28,7 @@
 	</target>
 	
 	<target name="update-doc-net" depends="build" unless="mono">
-		<copy todir="${dir.n.tutorial.bin}">
+		<copy todir="${dir.n.v6.tutorial.bin}">
 			<fileset dir="${dir.j.tutorial.out.net}">
 				<include name="**/**" />
 			</fileset>
@@ -37,19 +37,19 @@
 	
 	<target name="build" depends="init" unless="mono">
 		<csc targetType="library"
-			destFile="${dir.n.tutorial.bin}/bin/${project.name}.Chapters.dll"
+			destFile="${dir.n.v6.tutorial.bin}/bin/${project.name}.Chapters.dll"
 			srcdir="${base.project.dir}.Chapters"
 			executable="${csc.executable}">
 			
 			<include name="**/*.cs" />
 			
-			<reference dir="${dir.n.tutorial.bin}/bin">			
+			<reference dir="${dir.n.v6.tutorial.bin}/bin">			
 				<include name="${file.name.dll}" />
 			</reference>
 		</csc>
 		
 		<csc targetType="winexe"
-			destFile="${dir.n.tutorial.bin}/${exe.name}"
+			destFile="${dir.n.v6.tutorial.bin}/${exe.name}"
 			win32icon="${base.project.dir}/Resources/db4o.ico"
 			srcdir="${base.project.dir}"
 			executable="${csc.executable}">
@@ -62,7 +62,7 @@
 			<resource
 				file="${base.project.dir}/${project.name}.TutorialOutlineViewControl.resources" embed="true" />			
 			
-			<reference dir="${dir.n.tutorial.bin}/bin">
+			<reference dir="${dir.n.v6.tutorial.bin}/bin">
 				<include name="${file.name.dll}" />
 				<include name="${project.name}.Chapters.dll" />
 				<include name="WeifenLuo.WinFormsUI.dll" />
@@ -72,24 +72,24 @@
 			</reference>			
 		</csc>
 		
-		<copy tofile="${dir.n.tutorial.bin}/${exe.name}.config" file="${base.project.dir}/App.config" />
+		<copy tofile="${dir.n.v6.tutorial.bin}/${exe.name}.config" file="${base.project.dir}/App.config" />
 
 	</target>
 		
 	<target name="run" depends="update-doc">
-		<exec dir="${dir.n.tutorial.bin}" executable="${dir.n.tutorial.bin}/${exe.name}">
+		<exec dir="${dir.n.v6.tutorial.bin}" executable="${dir.n.v6.tutorial.bin}/${exe.name}">
 		</exec>
 	</target>
 
 	<target name="init">
-		<mkdir dir="${dir.n.tutorial.bin}" />
-		<mkdir dir="${dir.n.tutorial.bin}/bin" />
-		<copy todir="${dir.n.tutorial.bin}/bin">
+		<mkdir dir="${dir.n.v6.tutorial.bin}" />
+		<mkdir dir="${dir.n.v6.tutorial.bin}/bin" />
+		<copy todir="${dir.n.v6.tutorial.bin}/bin">
 			<fileset dir="${dir.dist.dll.net}">
 				<include name="*.dll" />
 			</fileset>
 		</copy>
-		<copy todir="${dir.n.tutorial.bin}/bin">
+		<copy todir="${dir.n.v6.tutorial.bin}/bin">
 			<fileset dir="${dir.n.v6.tutorial}/Libs">
 				<include name="*.dll" />
 			</fileset>
@@ -97,6 +97,6 @@
 	</target>
 	
 	<target name="clean">
-		<delete dir="${dir.n.tutorial.bin}" />
+		<delete dir="${dir.n.v6.tutorial.bin}" />
 	</target>
 </project>
