@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.freespace;
 
+import java.io.*;
+
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
@@ -49,4 +51,41 @@ public abstract class FreespaceManagerTestCaseBase extends AbstractDb4oTestCase 
 	protected void assertSlot(Slot expected, Slot actual){
 		Assert.areEqual(expected, actual);
 	}
+    
+    protected void produceSomeFreeSpace() {
+        FreespaceManager fm = currentFreespaceManager();
+        int length = 300;
+        Slot slot = container().getSlot(length);
+        Buffer buffer = new Buffer(length);
+        container().writeBytes(buffer, slot.address(), 0);
+        fm.free(slot);
+    }
+
+    protected FreespaceManager currentFreespaceManager() {
+        return container().freespaceManager();
+    }
+    
+    public static class Item{
+        public int _int; 
+    }
+
+     protected int fileSize() {
+        LocalObjectContainer localContainer = fixture().fileSession();
+        IoAdaptedObjectContainer container = (IoAdaptedObjectContainer) localContainer;
+        container.syncFiles();
+        long length = new File(container.fileName()).length();
+        return (int)length;
+    }
+
+    protected void storeSomeItems() {
+        for (int i = 0; i < 3; i++) {
+            store(new Item());
+        }
+        db().commit();
+    }
+    
+    protected LocalObjectContainer container() {
+        return fixture().fileSession();
+    }
+
 }

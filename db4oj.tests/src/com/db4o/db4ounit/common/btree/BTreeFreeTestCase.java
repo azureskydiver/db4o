@@ -26,10 +26,13 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
         Collection4 allSlots = new Collection4();
         
         while(allSlotIDs.moveNext()){
-            Integer slotID = (Integer)allSlotIDs.current();
-            Slot slot = fileTransaction().getCurrentSlotOfID(slotID.intValue());
+            int slotID = ((Integer)allSlotIDs.current()).intValue();
+            Slot slot = getSlotForID(slotID);
             allSlots.add(slot);
         }
+        
+        Slot bTreeSlot = getSlotForID(_btree.getID());
+        allSlots.add(bTreeSlot);
         
         final LocalObjectContainer container = (LocalObjectContainer)stream();
         
@@ -49,6 +52,10 @@ public class BTreeFreeTestCase extends BTreeTestCaseBase {
         
         Assert.isTrue(freedSlots.containsAll(allSlots.iterator()));
         
+    }
+
+    private Slot getSlotForID(int slotID) {
+        return fileTransaction().getCurrentSlotOfID(slotID);
     }
 
 	private LocalTransaction fileTransaction() {

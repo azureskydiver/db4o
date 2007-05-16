@@ -438,6 +438,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 
     public void free(Transaction systemTrans) {
         freeAllNodeIds(systemTrans, allNodeIds(systemTrans));
+        super.free(systemTrans);
     }
 
 	private void freeAllNodeIds(Transaction systemTrans, final Iterator4 allNodeIDs) {

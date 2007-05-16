@@ -51,6 +51,10 @@ public abstract class PersistentBase implements Persistent {
     public void endProcessing() {
         bitFalse(Const4.PROCESSING);
     }
+    
+    public void free(Transaction trans){
+        trans.systemTransaction().slotFreePointerOnCommit(getID());
+    }
 
     public int getID() {
         return i_id;

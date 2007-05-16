@@ -112,13 +112,14 @@ public class FreespaceManagerTestCase extends FreespaceManagerTestCaseBase{
 					clear(fm[from]);
 					clear(fm[to]);
 					
-					fm[from].migrateTo(fm[to]);
+                    AbstractFreespaceManager.migrate(fm[from], fm[to]);
+                    
 					assertSame(fm[from], fm[to]);
 					
 					fm[from].free(new Slot(5, 10));
 					fm[from].free(new Slot(100, 5));
 					fm[from].free(new Slot(140, 27));
-					fm[from].migrateTo(fm[to]);
+                    AbstractFreespaceManager.migrate(fm[from], fm[to]);
 					
 					assertSame(fm[from], fm[to]);
 				}

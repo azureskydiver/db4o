@@ -392,7 +392,7 @@ public final class BTreeNode extends PersistentBase{
     	return getID();
     }
     
-    private void free(Transaction trans){
+    public void free(Transaction trans){
         _dead = true;
         if(! isRoot()){
             BTreeNode parent = _btree.produceNode(_parentID);
@@ -400,7 +400,7 @@ public final class BTreeNode extends PersistentBase{
         }
         pointPreviousTo(trans, _nextID);
         pointNextTo(trans, _previousID);
-        trans.systemTransaction().slotFreePointerOnCommit(getID());
+        super.free(trans);
         _btree.removeNode(this);
     }
     

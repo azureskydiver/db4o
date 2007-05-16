@@ -113,7 +113,8 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
     public void freeSelf() {
-		// TODO Auto-generated method stub
+        _slotsByAddress.free(transaction());
+        _slotsByLength.free(transaction());
 	}
 
 	public void freeTransactionLogSlot(Slot slot) {
@@ -181,7 +182,6 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
     public int onNew(LocalObjectContainer file) {
-		// TODO: FB remove
 		return 0;
 	}
 
