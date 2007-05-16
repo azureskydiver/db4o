@@ -12,11 +12,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.query.*;
-import com.db4o.test.lib.*;
 
-/**
- * 
- */
 public class UpdatingDb4oVersions {
     
     static final String PATH = "./test/db4oVersions/";
@@ -57,14 +53,17 @@ public class UpdatingDb4oVersions {
         new File(file).mkdirs();
         new File(file).delete();
         ExtObjectContainer objectContainer = Db4o.openFile(file).ext();
-        UpdatingDb4oVersions udv = new UpdatingDb4oVersions();
-        udv.name = "check";
-        udv.list = objectContainer.collections().newLinkedList();
-        udv.map = objectContainer.collections().newHashMap(1);
-        objectContainer.set(udv);
-        udv.list.add("check");
-        udv.map.put("check","check");
-        objectContainer.close();
+        try {
+	        UpdatingDb4oVersions udv = new UpdatingDb4oVersions();
+	        udv.name = "check";
+	        udv.list = objectContainer.collections().newLinkedList();
+	        udv.map = objectContainer.collections().newHashMap(1);
+	        objectContainer.set(udv);
+	        udv.list.add("check");
+	        udv.map.put("check","check");
+        } finally {
+        	objectContainer.close();
+        }
     }
     
     public void test() throws IOException{
@@ -101,9 +100,12 @@ public class UpdatingDb4oVersions {
 
     private void checkDatabaseFile(String testFile) {
         ExtObjectContainer objectContainer = Db4o.openFile(testFile).ext();
-        checkStoredObjectsArePresent(objectContainer);
-        checkBTreeSize(objectContainer);
-        objectContainer.close();
+        try {
+	        checkStoredObjectsArePresent(objectContainer);
+	        checkBTreeSize(objectContainer);
+        } finally {
+        	objectContainer.close();
+        }
     }
 
     private void checkBTreeSize(ExtObjectContainer objectContainer) {
