@@ -60,4 +60,5 @@
 		<buildjar srcDir="${dir.j.nqopt.test.src}" jarPath="${testJarPath}" classPathRefId="compile.class.path" 			
 			fork="yes" target="1.4" source="1.4" />
 	</target>
+	
 </project>
