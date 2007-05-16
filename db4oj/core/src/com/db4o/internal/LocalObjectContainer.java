@@ -489,8 +489,10 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
 	private void migrateFreespace() throws IOException {
 		FreespaceManager oldFreespaceManager = _freespaceManager;
-		_freespaceManager = AbstractFreespaceManager.createNew(this, _systemData.freespaceSystem());
-		_freespaceManager.start(createFreespaceSlot(_systemData.freespaceSystem()));
+		_freespaceManager = AbstractFreespaceManager.createNew(this, configImpl().freespaceSystem());
+        systemData().freespaceAddress(0);
+        systemData().freespaceSystem(configImpl().freespaceSystem());
+		_freespaceManager.start(_freespaceManager.onNew(this));
 		AbstractFreespaceManager.migrate(oldFreespaceManager, _freespaceManager);
 		_fileHeader.writeVariablePart(this, 1);
 	}
