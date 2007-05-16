@@ -1,0 +1,422 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Db4ounit Methods</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Db4ounit Methods</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#AbstractDb4oTestCase">AbstractDb4oTestCase</a><ul><li><a href ="#Methods for working with a database:">Methods for working with a database:</a></li><li><a href ="#Various methods to work with persistent objects:">Various methods to work with persistent objects:</a></li><li><a href ="#Methods for running tests:">Methods for running tests:</a></li></ul></li><li><a href ="#Db4ounit.Assert">Db4ounit.Assert</a></li><li><a href ="#FrameworkTestCase">FrameworkTestCase</a></li></ul></li></ul></div></div></div>
+
+<p>Let's
+look through the basic API , which will help you to build your own test. This
+document is not a complete API reference and its intention is to give you a
+general idea of the methods usage and availability.</p>
+
+<a name="AbstractDb4oTestCase"></a><h2>AbstractDb4oTestCase</h2>
+
+<p>AbstractDb4oTestCase is a base class for creating test
+cases.</p>
+
+<p>private transient Db4oFixture _fixture; - determines an
+environment for the test execution and gives an access to the test database.
+The environment can be local (derived from AbstractSoloDb4oFixture) or
+client/server (AbstractClientServerDb4oFixture). </p>
+
+<p>You can always access the fixture from your test class using</p>
+
+
+
+<span class="net"></p>
+
+<p>.NET: </p>
+
+<p><code>public virtual void
+Fixture(IDb4oFixture fixture)
+</code></p>
+
+<p></span>
+
+<a name="Methods for working with a database:"></a><h3>Methods for working with a database:</h3>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>public virtual Db4objects.Db4o.Ext.IExtObjectContainer Db()</code></p>
+
+<p></span>
+
+<p>Returns an instanse of object container for the current
+environment.</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual void Reopen()</code></p>
+
+<p></span>
+
+<p>This function will close the database and open it again. It
+also performs an implicit commit on close.</p>
+<br>
+
+
+
+
+
+
+
+
+<span class="net"></p>
+<p>.NET:</p>
+<p><code>protected virtual Db4objects.Db4o.Reflect.IReflector
+Reflector()</code></p>
+<p></span>
+
+<p>Returns current reflector.</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual Db4objects.Db4o.Transaction Trans()</code></p>
+
+<p><code>protected virtual Db4objects.Db4o.Transaction SystemTrans()</code></p>
+
+<p><code>protected virtual Db4objects.Db4o.Transaction
+NewTransaction()</code></p>
+
+<p></span>
+
+<p>Methods to get transaction object for the current environment.</p>
+
+<a name="Various methods to work with persistent objects:"></a><h3>Various methods to work with persistent objects:</h3>
+
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual Db4objects.Db4o.Query.IQuery NewQuery()</code></p>
+
+<p><code>protected virtual Db4objects.Db4o.Query.IQuery
+NewQuery(System.Type clazz)</code></p>
+
+
+<p><code>protected virtual Db4objects.Db4o.Query.IQuery
+NewQuery(Db4objects.Db4o.Transaction transaction, System.Type clazz)</code></p>
+
+
+<p><code>protected virtual Db4objects.Db4o.Query.IQuery
+NewQuery(Db4objects.Db4o.Transaction transaction)</code></p>
+<p></span>
+
+<p>Create a new query object.</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual object RetrieveOnlyInstance(System.Type
+clazz)</code></p>
+
+<p></span>
+
+<p>Checks if only one object of a class is stored in the
+database</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual int CountOccurences(System.Type clazz)</code></p>
+
+<p></span>
+
+<p>Returns the amount of objects of the specified class in the
+database.</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual void Foreach(System.Type clazz,
+Db4objects.Db4o.Foundation.IVisitor4 visitor)</code></p>
+
+<p></span>
+
+<p>This method goes through the ObjectSet of the specified
+class objects in the database calling Visitor4.visit() method. Visitor4 is an
+interface specifiing a visit method:</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>void Visit(object obj);</code></p>
+
+<p></span>
+
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual void DeleteAll(System.Type clazz)</code></p>
+
+<p></span>
+
+<p>Deletes all the instances of the specified class in the
+database.</p>
+
+<br>
+
+
+<p>Returns a ReflectClass instance for the specified class.</p>
+
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual void
+IndexField(Db4objects.Db4o.Config.IConfiguration config, System.Type clazz, string fieldName)</code></p>
+
+<p></span>
+
+<p>Adds field index into specified configuration.</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET</p>
+
+<p><code>public void SetUp()</code></p>
+
+<p></span>
+
+<p>This method:</p>
+
+<ul>
+<li>deletes
+     the used database;</li>
+
+<li>configures
+     and opens a new one (see Configure method). </li>
+
+<li>Calls
+     db4oSetupBeforeStore</li>
+
+<li>Calls
+     store()</li>
+
+<li>Commits
+     and reopens the database</li>
+
+<li>Calls
+     db4oSetupAfterStore</li>
+</ul>
+
+<br>
+<p>More details about the mentioned above methods:</p>
+
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual void
+Configure(Db4objects.Db4o.Config.IConfiguration config)</code></p>
+
+<p></span>
+
+<p>Use this method to create your custom configuration for a
+test. Config parameter is the current default test configuration, which can be
+modified.</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual void Db4oSetupBeforeStore()</code></p>
+
+<p></span>
+
+<p>This method is a placeholder for any custom setup actions
+that need to be taken before filling up the database with objects.</p>
+
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual void Store()</code></p>
+
+<p></span>
+
+<p>This method is supplied for creating and storing the
+objects, which you are going to use for your test.</p>
+
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>protected virtual void Db4oSetupAfterStore()</code></p>
+
+<p></span>
+
+<p>This method is a placeholder for any custom setup actions
+that need to be taken after the database is filled up with objects.</p>
+
+<br>
+<a name="Methods for running tests:"></a><h3>Methods for running tests:</h3>
+
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>public virtual int RunSoloAndClientServer()</code></p>
+
+<p></span>
+
+<p>Will run the test in both modes</p>
+
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>public virtual int RunSolo()</code></p>
+
+<p></span>
+
+<p>Only local mode.</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>public virtual int RunClientServer()</code></p>
+
+<p></span>
+
+<a name="Db4ounit.Assert"></a><h2>Db4ounit.Assert</h2>
+
+<p>Db4ounit.Assert
+class - provides a variety of methods for controlling code execution. Some of
+the methods are presented below. For more information please refer to the
+source code.</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>public
+static void Expect(System.Type exception, Db4oUnit.ICodeBlock block)</code></p>
+
+<p></span>
+
+<p>This method
+runs a specified method (block parameter) and throws an exception if the block
+runs without any exception.</p>
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>public
+static void IsTrue(bool condition)</code></p>
+
+<p><code>public
+static void IsTrue(bool condition, string msg)</code></p>
+
+<p></span>
+
+<p>This method
+checks the condition and throws an exception if the condition is false. Msg
+parameter can be used to customize exception message.</p>
+
+<br>
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>public
+static void AreEqual(object expected, object actual)</code></p>
+
+<p></span>
+
+<p>Checks if
+the supplied parameters are equal and throws an exception otherwise.</p>
+
+<p>Similar methods are provided for null, lesser, greater and
+other checkings, please refer to Assert class code for full information.</p>
+<br>
+<a name="FrameworkTestCase"></a><h2>FrameworkTestCase</h2>
+
+<p>FrameworkTestCase class provides methods to run your test
+suite and check if its results.</p>
+
+
+
+<span class="net"></p>
+
+<p>.NET:</p>
+
+<p><code>public static void RunTestAndExpect(Db4oUnit.ITest test, int
+expFailures)</code></p>
+
+<p></span>
+
+<p>This method will run the test specified and throw an
+exception if the number of expected failures (expFailures parameter) is not
+equal to the number of experienced failures.</p>
+
+<br>
+<p>For more information please refer to the source code of FrameworkTestCase class.</p></div>
+    </div>
+    <div id="footer">
+					This revision (11) was last Modified 2007-01-29T18:30:55 by Tetyana.
+				</div>
+  </body>
+</html>

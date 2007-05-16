@@ -1,0 +1,26 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ObjectConstructor</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>ObjectConstructor</h1>
+
+<p>However, this will only work if the application object's class provides sufficient setters to recreate its state from the information contained in the stored object, which is not the case for our example class.</p>
+<p>For these cases db4o provides an extension to the ObjectTranslator interface, ObjectConstructor, which declares one additional method:</p>
+<span class="java"></p>
+<p>Java:</p>
+<p><code>public Object onInstantiate(ObjectContainer container,Object storedObject);</code></p>
+<p></span>
+
+<p>If db4o detects a configured translator to be an ObjectConstructor implementation, it will pass the stored class instance to the onInstantiate() method and use the result as a blank application object to be processed by onActivate().</p>
+<p>Note that, while in general configured translators are applied to subclasses, too, ObjectConstructor application object instantiation will not be used for subclasses (which wouldn't make much sense, anyway), so ObjectConstructors have to be configured for the concrete classes.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2006-11-13T15:59:36 by Tetyana.
+				</div>
+  </body>
+</html>
