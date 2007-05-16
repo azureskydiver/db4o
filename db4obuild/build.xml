@@ -823,6 +823,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="**/src/**/*.java" />
+				<include name="*.txt" />
 			</fileset>
 		</copy>
 		<filehead beforePattern="package" header="${content.gplheader}" >
@@ -881,6 +882,7 @@
 		            </replacetokens>
 		        </filterchain>
 		    </copy>
+		<copy file="${dir.taj}/db4ota.readme.txt" todir="${dir.dist.java.build}/lib" />
 		
 		<mkdir dir="${dir.dist.java.build}/doc/reference" />
 		<copy todir="${dir.dist.java.build}/doc/reference">
