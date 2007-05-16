@@ -3,6 +3,7 @@
 package com.db4o.io;
 
 import com.db4o.*;
+import com.db4o.internal.fileheader.*;
 
 /**
  * CachedIoAdapter is an IOAdapter for random access files, which caches data
@@ -161,10 +162,10 @@ public class CachedIoAdapter extends IoAdapter {
 		Page page;
 		int readBytes;
 		int bytesToRead = length;
-		int bufferOffset = 0;
+		int totalRead = 0;
 		while (bytesToRead > 0) {
 			page = getPage(startAddress, true);
-			readBytes = page.read(buffer, bufferOffset, startAddress,
+			readBytes = page.read(buffer, totalRead, startAddress,
 					bytesToRead);
 			movePageToHead(page);
 			if (readBytes <= 0) {
@@ -172,10 +173,10 @@ public class CachedIoAdapter extends IoAdapter {
 			}
 			bytesToRead -= readBytes;
 			startAddress += readBytes;
-			bufferOffset += readBytes;
+			totalRead += readBytes;
 		}
-		_position = startAddress + bufferOffset;
-		return bufferOffset == 0 ? -1 : bufferOffset;
+		_position = startAddress;
+		return totalRead == 0 ? -1 : totalRead;
 	}
 
 	/**
@@ -200,6 +201,9 @@ public class CachedIoAdapter extends IoAdapter {
 			page.ensureEndAddress(getLength());
 			writtenBytes = page.write(buffer, bufferOffset, startAddress,
 					bytesToWrite);
+			if(containsHeaderBlock(page)) {
+				flushPage(page);
+			}
 			movePageToHead(page);
 			bytesToWrite -= writtenBytes;
 			startAddress += writtenBytes;
@@ -241,6 +245,9 @@ public class CachedIoAdapter extends IoAdapter {
 			throws Db4oIOException {
 		Page page = getPageFromCache(startAddress);
 		if (page != null) {
+			if (containsHeaderBlock(page)) {
+				getPageFromDisk(page, startAddress);
+			}
 			page.ensureEndAddress(_fileLength);
 			return page;
 		}
@@ -253,6 +260,10 @@ public class CachedIoAdapter extends IoAdapter {
 		}
 
 		return page;
+	}
+
+	private boolean containsHeaderBlock(Page page) {
+		return page.startAddress() <= FileHeader1.LENGTH;
 	}
 
 	private void resetPageAddress(Page page, long startAddress) {
