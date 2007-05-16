@@ -120,6 +120,7 @@
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="net" />
 		</doctor>
+		<!--
 		<doctor 
 			name="f1" 
 			home="${dir.j.tutorial}" 
@@ -140,6 +141,7 @@
 			<ignoreinputfolder name="java" />
 			<ignoreinputfolder name="mono" />
 		</doctor> 
+		-->
 	</target>
 
 	<target name="testdoctor">
