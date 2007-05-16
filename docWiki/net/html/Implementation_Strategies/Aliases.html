@@ -1,0 +1,52 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Aliases</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Aliases</h1>
+
+<p>Db4o Alias/IAlias
+interface gives you an opportunity to have different names for your persistent
+classes in the runtime and in the database. The functionality is pretty simple:
+before class is saved to/retrieved from the database an alias collection is
+checked for the presence of an alias for the specified class name. If the alias
+exists, it is used for saving or retrieving instead of the original name.</p>
+
+<p>Db4o provides 2
+types of aliases:</p>
+
+<ul>
+<li><i>TypeAlias</i> is used
+to alias specific class name to another class name</li>
+
+<li><i>WildcardAlias</i> allows to alias a package, namespace or multiple similar named classes.</li>
+</ul>
+
+
+<p>Aliases should be
+added or removed before a database file is opened.</p>
+
+
+
+<span class="net"></p>
+<p>.NET:&nbsp;</p>
+
+<p><code>IConfiguration. AddAlias(alias)<br>
+IConfiguration. RemoveAlias(alias)</code></p>
+
+<p></span><p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="Aliases/TypeAlias.html" class="wikiLink">TypeAlias</a></p></li>
+<li><p><a href="Aliases/WildcardAlias.html" class="wikiLink">WildcardAlias</a></p></li>
+<li><p><a href="Aliases/Cross-Platform_Aliasing.html" class="wikiLink">Cross-Platform Aliasing</a></p></li>
+</ul></div>
+&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2006-12-14T11:18:46 by Tetyana.
+				</div>
+  </body>
+</html>

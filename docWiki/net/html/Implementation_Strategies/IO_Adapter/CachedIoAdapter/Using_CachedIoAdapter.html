@@ -1,0 +1,78 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Using CachedIoAdapter</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Using CachedIoAdapter</h1><p>CachedIoAdapter can be set up using the following code:</p>
+
+
+
+<span class="cs"></p><p>c#:&nbsp;</p>
+
+<p><code>delegateAdapter = new
+RandomAccessFileAdapter();</code></p>
+
+<p><code>Db4oFactory.Configure().Io(new
+CachedIoAdapter(delegateAdapter));</code></p>
+
+<p></span>
+
+<span class="vb"></p>
+<p>VB:&nbsp;</p>
+
+
+<p><code>Dim delegateAdapter As RandomAccessFileAdapter = new
+RandomAccessFileAdapter();</code></p>
+
+
+<p><code>Db4oFactory.Configure().Io(new
+CachedIoAdapter(delegateAdapter));</code></p>
+
+
+<p></span>
+
+
+<p>This will create 64 pages in memory of 1024 bytes each, resulting
+in 64 kB of memory available for caching. </p>
+
+<p>You can customize the amount of available memory using:</p>
+
+
+
+<span class="cs"></p><p>c#:&nbsp;</p>
+
+<p><code>Db4oFactory.Configure().Io(new
+CachedIoAdapter(delegateAdapter, page_size, page_count));</code></p>
+
+<p></span>
+
+<span class="vb"></p><p>VB:&nbsp;</p>
+
+<p><code>Db4oFactory.Configure().Io(new
+CachedIoAdapter(delegateAdapter, page_size, page_count));</code></p>
+
+<p></span>
+
+<p>Optimal cache size depends on many factors (application design, system resources etc) and will show
+different results for different disc access operations (read/write). The best
+way to find an optimal solution is to experiment with different page sizes and
+counts. Too little cache memory will result in decrease of performance, too
+much of it will unnecessary occupy your system resources. Note that all the
+caching pages are allocated in the memory on CachedIoAdapter creation and are
+not released while CachedIoAdapter is in use. Effectively, you can only release
+this memory closing the database file and switching back to the default
+RandomAccessFileAdapter.</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-02-01T20:28:19 by Tetyana.
+				</div>
+  </body>
+</html>
