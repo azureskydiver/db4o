@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE jasperReport
+  PUBLIC "-//JasperReports//DTD Report Design//EN"
+  "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+
+<jasperReport name="Pilots_Report" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="50" bottomMargin="50">
+  <style name="Arial_Normal" isDefault="true" fontName="Arial" fontSize="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+  <style name="Arial_Bold" isDefault="false" fontName="Arial" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+
+  <parameter name="Title" class="java.lang.String"> </parameter>
+  
+  <field name="Name" class="java.lang.String"/>
+  <field name="Points" class="java.lang.Integer"/>
+
+  <title>
+    <band height="70">
+
+      <line>
+        <reportElement x="0" y="0" width="515" height="1"/>
+        <graphicElement/>
+      </line>
+
+      <textField isBlankWhenNull="true" bookmarkLevel="1">
+        <reportElement x="0" y="10" width="515" height="30" style="Arial_Normal"/>
+
+        <textElement textAlignment="Center">
+          <font size="22"/>
+        </textElement>
+        <textFieldExpression class="java.lang.String">$P{Title}</textFieldExpression>
+        <anchorNameExpression>"Title"</anchorNameExpression>
+      </textField>
+    </band>
+  </title>
+
+  <pageHeader>
+
+    <band height="20">
+
+      <rectangle>
+        <reportElement x="150" y="5" width="225" height="15" forecolor="#333333" backcolor="#333333"/>
+        <graphicElement/>
+      </rectangle>
+
+      <staticText>
+        <reportElement mode="Opaque" x="150" y="5" width="175" height="15" forecolor="#ffffff" backcolor="#333333" style="Arial_Bold"/>
+        <textElement textAlignment="Center"/>
+        <text>Name</text>
+      </staticText>
+
+      <staticText>
+        <reportElement mode="Opaque" x="325" y="5" width="50" height="15" forecolor="#ffffff" backcolor="#333333" style="Arial_Bold"/>
+        <textElement textAlignment="Center"/>
+        <text>Points</text>
+      </staticText>
+
+    </band>
+  </pageHeader>
+  
+ <detail>
+	<band height="15">
+
+    <textField bookmarkLevel="2">
+      <reportElement x="150" y="0" width="175" height="15"/>
+      <box leftBorder="Thin" bottomBorder="Thin" leftPadding="10" rightPadding="10"/>
+      <textElement textAlignment="Left"/>
+      <textFieldExpression class="java.lang.String">$F{Name}</textFieldExpression>
+      <anchorNameExpression>$F{Name} + " (" + $F{Points} + ")"</anchorNameExpression>
+    </textField>
+
+    <textField isStretchWithOverflow="true">
+      <reportElement positionType="Float" x="325" y="0" width="50" height="15"/>
+      <box leftBorder="Thin" bottomBorder="Thin" rightBorder="Thin" leftPadding="10" rightPadding="10"/>
+      <textElement textAlignment="Right"/>
+      <textFieldExpression class="java.lang.Integer">$F{Points}</textFieldExpression>
+    </textField>
+
+	</band>
+
+  </detail>
+</jasperReport>
