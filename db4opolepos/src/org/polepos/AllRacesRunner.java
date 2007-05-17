@@ -30,13 +30,14 @@ import org.polepos.circuits.monaco.*;
 import org.polepos.circuits.montreal.*;
 import org.polepos.circuits.nurburgring.*;
 import org.polepos.circuits.sepang.*;
+import org.polepos.circuits.silverstone.*;
+import org.polepos.db4o.*;
 import org.polepos.framework.*;
 import org.polepos.runner.db4o.*;
 import org.polepos.teams.db4o.*;
 
 /**
  * Please read the README file in the home directory first.
- * 
  */
 public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     
@@ -47,12 +48,12 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     public Team[] teams() {
 
 		return new Team[] {
-				db4oTeam(Db4oVersions.JAR604, null),
-				db4oTeam(Db4oVersions.JAR61, null),
+                db4oTeam(Db4oVersions.JAR63, null),
 				db4oTeam(Db4oVersions.JAR62, null),
-				db4oTeam(Db4oVersions.JAR604, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
-				db4oTeam(Db4oVersions.JAR61, new int[] {Db4oOptions.CLIENT_SERVER,Db4oOptions.CLIENT_SERVER_TCP }),
-				db4oTeam(Db4oVersions.JAR62, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+				db4oTeam(Db4oVersions.JAR61, null),
+				db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+				db4oTeam(Db4oVersions.JAR62, new int[] {Db4oOptions.CLIENT_SERVER,Db4oOptions.CLIENT_SERVER_TCP }),
+				db4oTeam(Db4oVersions.JAR61, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
 		};
 	}
 
@@ -68,6 +69,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 				 new Montreal(),
 				 new Indianapolis(),
 				 new Magnycours(),
+                 new Silverstone(),
 		};
 	}
 
@@ -83,6 +85,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
 		        new MontrealDb4o(),
 				new MagnycoursDb4o(),
 				new IndianapolisDb4o(),
+                new SilverstoneDb4o(),
 		};
 	}
     
