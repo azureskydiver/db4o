@@ -240,6 +240,8 @@
 		<copy todir="${drs.conversion.workspace.dir}/drs">
 			<fileset dir="${drs.src.dir}">
 				<include name="core/**/*.java" />
+				<include name="test/**/test/ByteArrayTest.java" />
+				<include name="test/**/test/ByteArrayHolder.java" />
 				<include name="test/**/test/Db4oClientServerDrsFixture.java" />
 				<include name="test/**/test/Db4oDrsFixture.java" />
 				<include name="test/**/test/Db4oTests.java" />
@@ -247,6 +249,7 @@
 				<include name="test/**/test/DrsTestCase.java" />
 				<include name="test/**/test/DrsTestSuite.java" />
 				<include name="test/**/test/DrsTestSuiteBuilder.java" />					
+				<include name="test/**/test/IByteArrayHolder.java" />
 				<include name="test/**/test/ReplicationProviderTest.java" />
 				<include name="test/**/test/GetByUUID.java" />
 				<include name="test/**/test/TheSimplest.java" />
@@ -279,6 +282,8 @@
 				<include name="test/**/test/CollectionHolder.java" />
 				<include name="test/**/test/MapHolder.java" />
 				<include name="test/**/test/MapContent.java" />				
+			
+				<include name="test/**/test/foundation/*.java" />				
 				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/CollectionHandlerImplTest.java" />
