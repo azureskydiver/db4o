@@ -8,7 +8,6 @@ public class AllTests extends ReflectionTestSuite {
 		new AllTests().run();
 	}
 
-	@Override
 	protected Class[] testCases() {
 		return new Class[] { 
 			ObjectSetCollection4FacadeTestCase.class,
