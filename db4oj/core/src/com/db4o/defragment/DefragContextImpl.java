@@ -114,7 +114,7 @@ public class DefragContextImpl implements DefragContext {
 		_mapping.close();
 	}
 	
-	public Buffer readerByID(DbSelector selector,int id) throws IOException {
+	public Buffer readerByID(DbSelector selector,int id) {
 		Slot slot=readPointer(selector, id);
 		return readerByAddress(selector,slot.address(),slot.length());
 	}
@@ -132,11 +132,11 @@ public class DefragContextImpl implements DefragContext {
 		return readerByAddress(TARGETDB, address, length);
 	}
 
-	public Buffer readerByAddress(DbSelector selector,int address,int length) throws IOException {
+	public Buffer readerByAddress(DbSelector selector,int address,int length) {
 		return selector.db(this).bufferByAddress(address,length);
 	}
 
-	public StatefulBuffer targetWriterByAddress(int address,int length) throws IllegalArgumentException, IOException {
+	public StatefulBuffer targetWriterByAddress(int address,int length) throws IllegalArgumentException {
 		return _targetDb.readWriterByAddress(TARGETDB.transaction(this),address,length);
 	}
 	
@@ -282,7 +282,7 @@ public class DefragContextImpl implements DefragContext {
 		return _unindexed.iterator();
 	}
 
-	private Slot readPointer(DbSelector selector,int id) throws IOException {
+	private Slot readPointer(DbSelector selector,int id) {
 		Buffer reader=readerByAddress(selector, id, Const4.POINTER_LENGTH);
         if(Deploy.debug){
             reader.readBegin(Const4.YAPPOINTER);    

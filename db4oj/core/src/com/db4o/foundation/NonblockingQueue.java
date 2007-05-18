@@ -10,9 +10,11 @@ package com.db4o.foundation;
  * @exclude
  */
 public class NonblockingQueue implements Queue4 {
-	private final class Queue4Iterator implements Iterator4 {
-		private boolean _active=false;
-		private List4 _current=null;
+    
+	protected final class Queue4Iterator implements Iterator4 {
+	    
+		protected boolean _active=false;
+		protected List4 _current=null;
 		
 		public Object current() {
 			return _current._element;
@@ -38,7 +40,7 @@ public class NonblockingQueue implements Queue4 {
 	}
 
 	private List4 _first;
-	private List4 _last;
+	protected List4 _last;
 	
     /* (non-Javadoc)
 	 * @see com.db4o.foundation.Queue4#add(java.lang.Object)

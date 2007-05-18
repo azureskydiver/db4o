@@ -159,7 +159,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
 
-	private ObjectTranslator newTranslatorFromPlatform(String translatorName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	private ObjectTranslator newTranslatorFromPlatform(String translatorName) throws InstantiationException, IllegalAccessException{
 		return (ObjectTranslator) ReflectPlatform.forName(translatorName).newInstance();
 	}
    

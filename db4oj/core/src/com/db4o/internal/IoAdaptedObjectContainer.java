@@ -264,15 +264,11 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
     }
 
     private void zeroReservedSlot(Slot slot) {
-        try {
-        	zeroFile(_file, slot);
-        	zeroFile(_backupFile, slot);
-        } catch (IOException e) {
-            Exceptions4.throwRuntimeException(16, e);
-        }
+    	zeroFile(_file, slot);
+    	zeroFile(_backupFile, slot);
     }
     
-    private void zeroFile(IoAdapter io, Slot slot) throws IOException {
+    private void zeroFile(IoAdapter io, Slot slot) {
     	if(io == null) {
     		return;
     	}
