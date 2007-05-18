@@ -10,9 +10,9 @@ public class StoredTransientFieldsConfigurator extends Db4oConfigurator {
 
 	private boolean _value;
 
-	public StoredTransientFieldsConfigurator(String name, boolean _value) {
+	public StoredTransientFieldsConfigurator(String name, boolean value_) {
 		_className = name;
-		this._value = _value;
+		_value = value_;
 	}
 
 	@Override

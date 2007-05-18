@@ -234,10 +234,6 @@ public class NIOFileAdapter extends IoAdapter {
 		return (a>b ? b : a);
 	}
 
-	private long max(long a,long b) {
-		return (a<b ? b : a);
-	}
-
 	public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
 		return new NIOFileAdapter(path,lockFile,initialLength,_pageSize,_lruLimit);
 	}

@@ -3,7 +3,6 @@
 package com.db4o.config.annotations.reflect;
 
 import com.db4o.config.*;
-import com.db4o.internal.*;
 
 /**
  * @exclude
@@ -22,7 +21,7 @@ public abstract class Db4oConfigurator {
 
 	protected ObjectClass objectClass(String className) {
 		if (_objectClass == null) {
-			_objectClass = (Config4Class) _config.objectClass(className);
+			_objectClass = _config.objectClass(className);
 		}
 		return _objectClass;
 	}
