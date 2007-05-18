@@ -579,7 +579,8 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             a_bytes.incrementOffset(linkLength());
         }
     }
-
+    
+    /** @param mf */
     public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws Db4oIOException {
         if (a_bytes.cascadeDeletes() > 0) {
         	
@@ -946,11 +947,12 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return true;
     }
 
-    public boolean hasField(ObjectContainerBase a_stream, String a_field) {
+    /** @param container */
+    public boolean hasField(ObjectContainerBase container, String fieldName) {
     	if(classReflector().isCollection()){
             return true;
         }
-        return fieldMetadataForName(a_field) != null;
+        return fieldMetadataForName(fieldName) != null;
     }
     
     boolean hasVirtualAttributes(){
@@ -1184,6 +1186,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 			&& dispatchEvent(stream, obj, EventDispatcher.CAN_ACTIVATE);
 	}
 
+	/** @param obj */
     Object instantiateTransient(ObjectReference yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer) {
 
         // overridden in YapClassPrimitive
@@ -1789,7 +1792,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 			});
 	}
 
-	private StaticField toStaticField(final ReflectField reflectField) {
+	protected StaticField toStaticField(final ReflectField reflectField) {
 		return new StaticField(reflectField.getName(), staticReflectFieldValue(reflectField));
 	}
 
@@ -1823,7 +1826,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		return classReflector().getDeclaredFields();
 	}
 
-	private void updateExistingStaticField(Transaction trans, StaticField existingField, final ReflectField reflectField) {
+	protected void updateExistingStaticField(Transaction trans, StaticField existingField, final ReflectField reflectField) {
 		final ObjectContainerBase stream = trans.stream();
 		final Object newValue = staticReflectFieldValue(reflectField);
 		
@@ -1867,7 +1870,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		return (i_config != null && i_config.staticFieldValuesArePersisted());
 	}
 
-	private StaticField fieldByName(StaticField[] fields, final String fieldName) {
+	protected StaticField fieldByName(StaticField[] fields, final String fieldName) {
 		for (int i = 0; i < fields.length; i++) {
 		    final StaticField field = fields[i];
 			if (fieldName.equals(field.name)) {

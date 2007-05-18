@@ -18,8 +18,8 @@ import com.db4o.internal.btree.*;
  */
 final class SecondPassCommand implements PassCommand {
 
-	private final int _objectCommitFrequency;
-	private int _objectCount=0;
+	protected final int _objectCommitFrequency;
+	protected int _objectCount=0;
 	
 	
 	

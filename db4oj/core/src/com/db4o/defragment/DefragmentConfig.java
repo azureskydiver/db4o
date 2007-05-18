@@ -177,7 +177,7 @@ public class DefragmentConfig {
 		return ((Config4Impl)db4oConfig()).blockSize();
 	}
 	
-	private static class NullFilter implements StoredClassFilter {
+	protected static class NullFilter implements StoredClassFilter {
 		public boolean accept(StoredClass storedClass) {
 			return true;
 		}

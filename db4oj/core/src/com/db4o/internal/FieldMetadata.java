@@ -102,8 +102,12 @@ public class FieldMetadata implements StoredField {
         checkDb4oType();
         i_state = AVAILABLE;
     }
-
-    public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot)  throws FieldIndexException {
+    
+    /**
+     * @param classMetadata
+     * @param oldSlot 
+     */
+    public void addFieldIndex(MarshallerFamily mf, ClassMetadata classMetadata, StatefulBuffer writer, Slot oldSlot)  throws FieldIndexException {
         if (! hasIndex()) {
             writer.incrementOffset(linkLength());
             return;
@@ -115,7 +119,7 @@ public class FieldMetadata implements StoredField {
 			throw new FieldIndexException(exc,this);
 		} 
     }
-
+    
     protected void addIndexEntry(StatefulBuffer a_bytes, Object indexEntry) {
         addIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), indexEntry);
     }
@@ -360,6 +364,7 @@ public class FieldMetadata implements StoredField {
 		}
     }
 
+    /** @param isUpdate */
     public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) throws FieldIndexException {
         if (! alive()) {
             incrementOffset(a_bytes);
@@ -480,9 +485,10 @@ public class FieldMetadata implements StoredField {
         return i_handlerID;
     }
 
-    public Object getOn(Transaction a_trans, Object a_OnObject) {
+    /** @param trans */
+    public Object getOn(Transaction trans, Object onObject) {
 		if (alive()) {
-			return i_javaField.get(a_OnObject);
+			return i_javaField.get(onObject);
 		}
 		return null;
 	}
@@ -576,6 +582,7 @@ public class FieldMetadata implements StoredField {
         }
     }
 
+    /** @param ref */
     public void instantiate(MarshallerFamily mf, ObjectReference ref, Object onObject, StatefulBuffer buffer) throws Db4oIOException, CorruptionException {
         
         if (! alive()) {
@@ -652,8 +659,12 @@ public class FieldMetadata implements StoredField {
 		return handlerForClass;
 	}
 
+    /** 
+     * @param ref
+     * @param isNew
+     */
     public void marshall(
-            ObjectReference yo, 
+            ObjectReference ref, 
             Object obj, 
             MarshallerFamily mf,
             StatefulBuffer writer,
@@ -720,8 +731,12 @@ public class FieldMetadata implements StoredField {
         return i_handler.readQuery(a_trans, mf, true, a_reader, false);
     }
     
-    public void readVirtualAttribute(Transaction a_trans, Buffer a_reader, ObjectReference a_yapObject) {
-        a_reader.incrementOffset(i_handler.linkLength());
+    /**
+     * @param trans
+     * @param ref
+     */
+    public void readVirtualAttribute(Transaction trans, Buffer buffer, ObjectReference ref) {
+        buffer.incrementOffset(i_handler.linkLength());
     }
 
     void refresh() {
@@ -878,7 +893,8 @@ public class FieldMetadata implements StoredField {
 		return indexHandler;
 	}
     
-	public BTree getIndex(Transaction transaction){
+	/** @param trans */
+	public BTree getIndex(Transaction trans){
         return _index;
     }
 
@@ -918,7 +934,8 @@ public class FieldMetadata implements StoredField {
 		return ids.length > 0;
 	}
 
-	protected void rebuildIndexForObject(LocalObjectContainer stream, final ClassMetadata yapClass, final int objectId) throws FieldIndexException {
+	/** @param classMetadata */
+	protected void rebuildIndexForObject(LocalObjectContainer stream, final ClassMetadata classMetadata, final int objectId) throws FieldIndexException {
 		StatefulBuffer writer = stream.readWriterByID(stream.systemTransaction(), objectId);
 		if (writer != null) {
 		    rebuildIndexForWriter(stream, writer, objectId);

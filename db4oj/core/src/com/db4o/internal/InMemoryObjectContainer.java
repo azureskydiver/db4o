@@ -27,7 +27,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 		open();
 	}
 
-    public InMemoryObjectContainer(Configuration config, MemoryFile memoryFile) throws IOException {
+    public InMemoryObjectContainer(Configuration config, MemoryFile memoryFile) {
         this(config, null, memoryFile);
     }
     

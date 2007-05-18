@@ -35,6 +35,7 @@ public class Hashtable4 implements DeepClone {
 		this(1);
 	}
 	
+    /** @param cloneOnlyCtor */
 	protected Hashtable4(DeepClone cloneOnlyCtor) {
 	}
 	

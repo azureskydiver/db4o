@@ -43,11 +43,7 @@ class IxFileRangeReader {
         Transaction trans = fileRange.trans();
         while (true) {
         	int offset = _baseAddressOffset + _addressOffset;
-            try {
-				_reader.read(yf, _baseAddress, offset);
-			} catch (IOException e) {
-				throw new IxException(e, _baseAddress, offset);
-			}
+			_reader.read(yf, _baseAddress, offset);
             _reader._offset = 0;
 
             int cmp = compare(trans);
@@ -133,11 +129,7 @@ class IxFileRangeReader {
 
         while (true) {
         	int offset = _baseAddressOffset + _addressOffset; 
-        	try {
-				_reader.read(yf, _baseAddress, offset);
-			} catch (IOException e) {
-				throw new IxException(e, _baseAddress, offset);
-			}
+			_reader.read(yf, _baseAddress, offset);
             _reader._offset = 0;
             int cmp = compare(trans);
             if (cmp > 0) {
@@ -173,11 +165,7 @@ class IxFileRangeReader {
         adjustCursor();
         while (true) {
         	int offset = _baseAddressOffset + _addressOffset;
-            try {
-				_reader.read(yf, _baseAddress, offset);
-			} catch (IOException e) {
-				throw new IxException(e, _baseAddress, offset);
-			}
+			_reader.read(yf, _baseAddress, offset);
             _reader._offset = 0;
             int cmp = compare(trans);
             if (cmp == 0) {
@@ -202,11 +190,7 @@ class IxFileRangeReader {
         adjustCursor();
         while (true) {
         	int offset = _baseAddressOffset + _addressOffset;
-            try {
-				_reader.read(yf, _baseAddress, offset);
-			} catch (IOException e) {
-				throw new IxException(e, _baseAddress, offset);
-			}
+			_reader.read(yf, _baseAddress, offset);
             _reader._offset = 0;
             int cmp = compare(trans);
             if (cmp == 0) {

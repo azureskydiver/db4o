@@ -88,11 +88,7 @@ class IxFileRange extends IxTree{
         if (count > 0) {
             Buffer fileReader = new Buffer(count * frr._slotLength);
 			int offset = _addressOffset + (lowerUpper[0] * frr._slotLength);
-			try {
-				fileReader.read(stream(), _address, offset);
-			} catch (IOException e) {
-				throw new IxException(e, _address, offset);
-			}
+			fileReader.read(stream(), _address, offset);
             for (int i = lowerUpper[0]; i <= lowerUpper[1]; i++) {
                 fileReader.incrementOffset(frr._linkLegth);
                 visitor.visit(new Integer(fileReader.readInt()));
@@ -114,12 +110,7 @@ class IxFileRange extends IxTree{
 		Buffer fileReader = new Buffer(slotLength());
 		for (int i = 0; i < _entries; i++) {
 			int address = _address + (i * slotLength());
-			try {
-
-				fileReader.read(yf, address, _addressOffset);
-			} catch (IOException e) {
-				throw new IxException(e, address, _addressOffset);
-			}
+			fileReader.read(yf, address, _addressOffset);
 			fileReader._offset = 0;
 			Object obj = handler().comparableObject(transaction,
 					handler().readIndexEntry(fileReader));
@@ -151,11 +142,7 @@ class IxFileRange extends IxTree{
     public void freespaceVisit(FreespaceVisitor visitor, int index){
         IxFileRangeReader frr = reader();
         Buffer fileReader = new Buffer(frr._slotLength);
-        try {
-			fileReader.read(stream(), _address, _addressOffset + (index * frr._slotLength));
-		} catch (IOException e) {
-			throw new IxException(e, _address, _addressOffset);
-		}
+		fileReader.read(stream(), _address, _addressOffset + (index * frr._slotLength));
         int val = fileReader.readInt();
         int parentID = fileReader.readInt();
         visitor.visit(parentID, val);

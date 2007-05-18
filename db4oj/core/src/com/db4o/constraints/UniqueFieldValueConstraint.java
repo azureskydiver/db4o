@@ -15,8 +15,8 @@ import com.db4o.reflect.*;
  */
 public class UniqueFieldValueConstraint implements ConfigurationItem {
 	
-	private final Object _clazz;
-	private final String _fieldName;
+	protected final Object _clazz;
+	protected final String _fieldName;
 	
 	/**
 	 * constructor to create a UniqueFieldValueConstraint. 

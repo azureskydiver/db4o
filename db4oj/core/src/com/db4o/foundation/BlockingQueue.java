@@ -5,9 +5,10 @@ package com.db4o.foundation;
  * @exclude
  */
 public class BlockingQueue implements Queue4 {
-	private NonblockingQueue _queue = new NonblockingQueue();
+    
+	protected NonblockingQueue _queue = new NonblockingQueue();
 
-	private Lock4 _lock = new Lock4();
+	protected Lock4 _lock = new Lock4();
 
 	public void add(final Object obj) {
 		_lock.run(new SafeClosure4() {

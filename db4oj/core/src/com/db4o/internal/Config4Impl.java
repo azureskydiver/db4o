@@ -280,6 +280,9 @@ public final class Config4Impl implements Configuration, DeepClone,
         _config.put(DISABLE_COMMIT_RECOVERY,true);
     }
 
+    /**
+     * @deprecated
+     */
     public void discardFreeSpace(int bytes) {
     	if(bytes < 0){
     		throw new IllegalArgumentException();
@@ -291,6 +294,9 @@ public final class Config4Impl implements Configuration, DeepClone,
         discardFreeSpace(byteCount);
     }
 
+    /**
+     * @deprecated
+     */
     public void encrypt(boolean flag) {
         globalSettingOnly();
         _config.put(ENCRYPT,flag);
@@ -432,6 +438,9 @@ public final class Config4Impl implements Configuration, DeepClone,
         return outStream == null ? System.out : outStream;
     }
 
+    /**
+     * @deprecated
+     */
     public void password(String pw) {
         globalSettingOnly();
         _config.put(PASSWORD,pw);
@@ -514,6 +523,9 @@ public final class Config4Impl implements Configuration, DeepClone,
         _config.put(BLOBPATH,path);
     }
 
+    /**
+     * @deprecated
+     */
     public void setClassLoader(Object classLoader) {
         reflectWith(Platform4.createReflector(classLoader));
     }
