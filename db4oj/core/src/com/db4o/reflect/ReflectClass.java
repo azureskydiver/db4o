@@ -51,9 +51,10 @@ public interface ReflectClass {
      * respective class 
      * @param flag true to try to install a special constructor, false if
      * such a constructor is to be removed if present
+     * @param testConstructor true, if the special constructor shall be tested, false if it shall be set without testing
      * @return true if the special constructor is in place after the call
      */
-    public boolean skipConstructor(boolean flag);
+    public boolean skipConstructor(boolean flag, boolean testConstructor);
 	
     public void useConstructor(ReflectConstructor constructor, Object[] params);
 	

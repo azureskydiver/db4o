@@ -295,9 +295,9 @@ public class GenericClass implements ReflectClass, DeepClone {
         _isSecondClass = true;
     }
     
-    public boolean skipConstructor(boolean flag){
+    public boolean skipConstructor(boolean flag, boolean testConstructor){
         if(_delegate != null){
-            return _delegate.skipConstructor(flag);
+            return _delegate.skipConstructor(flag, testConstructor);
         }
         return false;
     }

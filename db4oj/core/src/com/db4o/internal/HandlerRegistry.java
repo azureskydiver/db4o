@@ -201,7 +201,7 @@ public final class HandlerRegistry {
         }
         
         if(! Platform4.callConstructor()){
-            if(claxx.skipConstructor(skipConstructor)){
+            if(claxx.skipConstructor(skipConstructor, _masterStream.config().testConstructors())){
                 return true;
             }
         }
