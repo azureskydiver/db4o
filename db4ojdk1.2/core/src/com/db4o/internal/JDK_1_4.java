@@ -7,7 +7,6 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 class JDK_1_4 extends JDK_1_3 {
@@ -18,10 +17,17 @@ class JDK_1_4 extends JDK_1_3 {
 	private Constructor _objectConstructor;
 	private Method _factoryMethod;
 	
-	synchronized void lockFile(String path,Object file) throws IOException {
+	synchronized void lockFile(String path,Object file) {
 		// Conversion to canonical is already done by RandomAccessFileAdapter, but it's probably
 		// not safe to rely on that for other file-based adapters.
-		String canonicalPath=new File(path).getCanonicalPath();
+	    
+		String canonicalPath;
+        try {
+            canonicalPath = new File(path).getCanonicalPath();
+        } catch (IOException e) {
+            throw new Db4oIOException(e);
+        }
+        
 		if(fileLocks == null){
 			fileLocks = new Hashtable();
 		}
