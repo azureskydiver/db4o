@@ -142,8 +142,7 @@ public class MsgD extends Msg{
 		return Serializer.unmarshall(stream(),_payLoad);
 	}
 
-	final Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, Buffer reader)
-		throws IOException {
+	final Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, Buffer reader){
 		int length = reader.readInt();
 		
 		a_trans = checkParentTransaction(a_trans, reader);
@@ -151,7 +150,11 @@ public class MsgD extends Msg{
 		final MsgD command = (MsgD)publicClone();
 		command.setTransaction(a_trans);
 		command.setMessageDispatcher(messageDispatcher);
-		command._payLoad = readMessageBuffer(a_trans, sock, length);
+		try {
+            command._payLoad = readMessageBuffer(a_trans, sock, length);
+        } catch (IOException e) {
+            throw new Db4oIOException(e);
+        }
 		return command;
 	}
 

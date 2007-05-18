@@ -114,6 +114,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 		throw new NotImplementedException();
 	}
 	
+    /** @param i */
 	public int getId(int i) {
 		throw new NotImplementedException();
 	}
@@ -122,18 +123,22 @@ public abstract class AbstractQueryResult implements QueryResult {
 		throw new NotImplementedException();
 	}
 
+    /** @param c */
 	public void loadFromClassIndex(ClassMetadata c) {
 		throw new NotImplementedException();
 	}
 
+    /** @param i */
 	public void loadFromClassIndexes(ClassMetadataIterator i) {
 		throw new NotImplementedException();
 	}
 
+    /** @param r */
 	public void loadFromIdReader(Buffer r) {
 		throw new NotImplementedException();
 	}
 
+    /** @param q */
 	public void loadFromQuery(QQuery q) {
 		throw new NotImplementedException();
 	}

@@ -2,8 +2,6 @@
 
 package com.db4o.io;
 
-import java.io.*;
-
 /**
  * Bounded handle into an IoAdapter: Can only access a restricted area.
  */
@@ -37,7 +35,7 @@ public class IoAdapterWindow {
 	 * @param off Offset in bytes relative to the window start
 	 * @param data Data to write into the window starting from the given offset
 	 */
-	public void write(int off,byte[] data) throws IllegalArgumentException, IllegalStateException, IOException {
+	public void write(int off,byte[] data) throws IllegalArgumentException, IllegalStateException{
 		checkBounds(off, data);
 		_io.blockSeek(_blockOff+off);
 		_io.write(data);
@@ -47,7 +45,7 @@ public class IoAdapterWindow {
 	 * @param off Offset in bytes relative to the window start
 	 * @param data Data buffer to read from the window starting from the given offset
 	 */
-	public int read(int off,byte[] data) throws IllegalArgumentException, IllegalStateException, IOException {
+	public int read(int off,byte[] data) throws IllegalArgumentException, IllegalStateException {
 		checkBounds(off, data);
 		_io.blockSeek(_blockOff+off);
 		return _io.read(data);
@@ -57,7 +55,7 @@ public class IoAdapterWindow {
 		_disabled=true;
 	}
 	
-	public void flush() throws IOException {
+	public void flush()  {
 		if(!_disabled) {
 			_io.sync();
 		}

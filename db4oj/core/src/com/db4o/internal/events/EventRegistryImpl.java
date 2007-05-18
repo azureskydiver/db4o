@@ -34,7 +34,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	/**
 	 * @sharpen.ignore
 	 */
-	private class CommittedEvent extends Event4Impl {
+	protected class CommittedEvent extends Event4Impl {
 		protected void onListenerAdded() {
 			onCommittedListener();
 		}
@@ -176,7 +176,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		return _instantiated;
 	}
 	
-	private void onCommittedListener() {
+	protected void onCommittedListener() {
 		// TODO: notify the server that we are interested in 
 		// committed callbacks
 		_container.onCommittedListener();

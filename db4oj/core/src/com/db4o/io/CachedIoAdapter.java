@@ -449,7 +449,7 @@ public class CachedIoAdapter extends IoAdapter {
 
 		int write(byte[] data, int dataOffset, long startAddress, int length) {
 			int bufferOffset = (int) (startAddress - _startAddress);
-			int pageAvailabeBufferSize = (int) (_bufferSize - bufferOffset);
+			int pageAvailabeBufferSize = _bufferSize - bufferOffset;
 			int writtenBytes = Math.min(pageAvailabeBufferSize, length);
 			System.arraycopy(data, dataOffset, _buffer, bufferOffset,
 					writtenBytes);

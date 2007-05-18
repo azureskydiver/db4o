@@ -194,8 +194,8 @@ public abstract class Msg implements Cloneable {
 		return message;
 	}
 
-	Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, Buffer reader)
-		throws IOException {
+	/** @param sock */
+	Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, Buffer reader){
 		Msg msg = publicClone();
 		msg.setMessageDispatcher(messageDispatcher);
 		msg.setTransaction(checkParentTransaction(a_trans, reader));

@@ -175,31 +175,62 @@ public abstract class Transaction {
         setPointer(pointer._id, pointer._slot);
     }
 
-    public void setPointer(int a_id, Slot slot){
+    /**
+     * @param id
+     * @param slot
+     */
+    public void setPointer(int id, Slot slot){
     }
     
+    /**
+     * @param id
+     * @param slot
+     */
     public void slotDelete(int id, Slot slot) {
     }
 
+    /**
+     * @param id
+     * @param slot
+     */
     public void slotFreeOnCommit(int id, Slot slot) {
     }
 
+    /**
+     * @param id
+     * @param slot
+     */
     public void slotFreeOnRollback(int id, Slot slot) {
     }
 
+    /**
+     * @param id
+     * @param slot
+     * @param forFreespace
+     */
     void slotFreeOnRollbackCommitSetPointer(int id, Slot slot, boolean forFreespace) {
     }
 
+    /**
+     * @param id
+     * @param slot
+     */
     void produceUpdateSlotChange(int id, Slot slot) {
     }
     
-    public void slotFreePointerOnCommit(int a_id) {
+    /** @param id */
+    public void slotFreePointerOnCommit(int id) {
     }
     
-    void slotFreePointerOnCommit(int a_id, Slot slot) {
+    /**
+     * @param id
+     * @param slot
+     */
+    void slotFreePointerOnCommit(int id, Slot slot) {
     }
     
-    public void slotFreePointerOnRollback(int a_id) {
+    /** @param id */
+    public void slotFreePointerOnRollback(int id) {
     }
 
     boolean supportsVirtualFields(){

@@ -113,7 +113,7 @@ public class Statistics {
 					long[] newIDs = ((StoredClass)node._object).getIDs();
 					for (int j = 0; j < newIDs.length; j++) {
 						if (ids.value.find(new TreeInt((int) newIDs[j])) == null) {
-							ids.value = (TreeInt) ids.value.add(new TreeInt((int) newIDs[j]));
+							ids.value = ids.value.add(new TreeInt((int) newIDs[j]));
 						}
 					}
 					System.out.println(node._key + ": " + newIDs.length);

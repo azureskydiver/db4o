@@ -27,7 +27,7 @@ public class LocalTransaction extends Transaction {
 	
     private Tree _writtenUpdateDeletedMembers;
     
-	private final LocalObjectContainer _file;
+	protected final LocalObjectContainer _file;
 
 	public LocalTransaction(ObjectContainerBase container, Transaction parent) {
 		super(container, parent);

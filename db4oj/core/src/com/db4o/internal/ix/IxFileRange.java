@@ -2,8 +2,6 @@
 
 package com.db4o.internal.ix;
 
-import java.io.IOException;
-
 import com.db4o.foundation.Debug4;
 import com.db4o.foundation.IntObjectVisitor;
 import com.db4o.foundation.Tree;

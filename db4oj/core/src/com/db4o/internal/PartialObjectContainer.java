@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
@@ -1002,6 +1000,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     protected void initialize1(Configuration config) {
+        // FIXME: Why is the passed config not used here?
         initializeConfig(i_config);
         i_handlers = new HandlerRegistry(_this, configImpl().encoding(), configImpl().reflector());
         
@@ -1051,16 +1050,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     protected void initializePostOpenExcludingTransportObjectContainer() {
         initializeEssentialClasses();
-        try {
-			rename(configImpl());
-			_classCollection.initOnUp(i_systemTrans);
-	        if (configImpl().detectSchemaChanges()) {
-	            i_systemTrans.commit();
-	        }
-	        configImpl().applyConfigurationItems(_this);
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
-		}
+		rename(configImpl());
+		_classCollection.initOnUp(i_systemTrans);
+        if (configImpl().detectSchemaChanges()) {
+            i_systemTrans.commit();
+        }
+        configImpl().applyConfigurationItems(_this);
     }
 
     void initializeEssentialClasses(){
@@ -1399,7 +1394,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract void releaseSemaphores(Transaction ta);
 
-    void rename(Config4Impl config) throws IOException{
+    void rename(Config4Impl config) {
         boolean renamedOne = false;
         if (config.rename() != null) {
             renamedOne = rename1(config);
@@ -1503,6 +1498,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void rollback1();
 
+    /** @param obj */
     public void send(Object obj) {
         // TODO: implement
         // so far this only works from YapClient

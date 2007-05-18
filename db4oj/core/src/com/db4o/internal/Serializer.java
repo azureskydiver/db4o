@@ -2,8 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.*;
-
 import com.db4o.ext.*;
 
 
@@ -24,17 +22,12 @@ public class Serializer {
         MemoryFile memoryFile = new MemoryFile();
         memoryFile.setInitialSize(223);
         memoryFile.setIncrementSizeBy(300);
-        try {
-        	TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
-        	carrier.produceClassMetadata(carrier.reflector().forObject(obj));
-			carrier.set(obj);
-			int id = (int)carrier.getID(obj);
-			carrier.close();
-			return new SerializedGraph(id, memoryFile.getBytes());
-		} catch (IOException exc) {
-			Exceptions4.shouldNeverHappen();
-			return null; // unreachable, just to make the compiler happy
-		} 
+    	TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
+    	carrier.produceClassMetadata(carrier.reflector().forObject(obj));
+		carrier.set(obj);
+		int id = (int)carrier.getID(obj);
+		carrier.close();
+		return new SerializedGraph(id, memoryFile.getBytes());
     }
     
     public static Object unmarshall(ObjectContainerBase serviceProvider, StatefulBuffer yapBytes) {
@@ -50,16 +43,11 @@ public class Serializer {
 			return null;
 		}
         MemoryFile memoryFile = new MemoryFile(bytes);
-        try {
-			TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
-			Object obj = carrier.getByID(id);
-			carrier.activate(obj, Integer.MAX_VALUE);
-			carrier.close();
-			return obj;
-		} catch (IOException exc) {
-			Exceptions4.shouldNeverHappen();
-			return null; // unreachable, just to make the compiler happy
-		}
+		TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
+		Object obj = carrier.getByID(id);
+		carrier.activate(obj, Integer.MAX_VALUE);
+		carrier.close();
+		return obj;
     }
 
 }

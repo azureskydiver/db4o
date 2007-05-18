@@ -31,7 +31,8 @@ public class FieldIndexesToBTrees_5_7 extends Conversion{
 		}
 	}
 
-	private void freeOldUUIDMetaIndex(LocalObjectContainer file) {
+    /** @param file */
+    private void freeOldUUIDMetaIndex(LocalObjectContainer file) {
 		// updating removed here to allow removing MetaIndex class
 	}
 }
