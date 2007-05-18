@@ -173,7 +173,7 @@ public class SelfClass implements ReflectClass {
 		return null;
 	}
 
-	public boolean skipConstructor(boolean flag) {
+	public boolean skipConstructor(boolean flag, boolean testConstructor) {
 		// cannot skip constructors, only available for JDK1.4+
 		return false;
 	}

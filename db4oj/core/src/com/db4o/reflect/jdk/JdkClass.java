@@ -135,7 +135,7 @@ public class JdkClass implements ReflectClass{
         return _reflector;
     }
 	
-    public boolean skipConstructor(boolean skipConstructor) {
+    public boolean skipConstructor(boolean skipConstructor, boolean testConstructor) {
 		boolean useSerializableConstructor = false;
 		ReflectConstructor constructor = null;
 		if (skipConstructor) {
@@ -144,8 +144,12 @@ public class JdkClass implements ReflectClass{
 			if (serializableConstructor != null) {
 				JdkConstructor jdkConstructor = new JdkConstructor(_reflector,
 						serializableConstructor);
-				Object obj = jdkConstructor.newInstance((Object[]) null);
-				if (obj != null) {
+				boolean serializableIsOk = true;
+				if(testConstructor) {
+					Object obj = jdkConstructor.newInstance((Object[]) null);
+					serializableIsOk = (obj != null);
+				}
+				if (serializableIsOk) {
 					useSerializableConstructor = true;
 					constructor = jdkConstructor;
 				}
