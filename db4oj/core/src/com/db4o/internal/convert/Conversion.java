@@ -9,9 +9,11 @@ import com.db4o.internal.convert.ConversionStage.*;
  */
 public abstract class Conversion {
     
-	public void convert(ClassCollectionAvailableStage stage){
+    /** @param stage */
+    public void convert(ClassCollectionAvailableStage stage){
     }
     
+    /** @param stage */
 	public void convert(SystemUpStage stage){
     }
 }

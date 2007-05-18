@@ -99,6 +99,7 @@ public abstract class NetSimpleTypeHandler extends NetTypeHandler implements Gen
 		return toString((byte[])obj.get(0));
 	}
 	
+    /** @param bytes */
 	public String toString(byte[] bytes) {
 		return "";
 	}

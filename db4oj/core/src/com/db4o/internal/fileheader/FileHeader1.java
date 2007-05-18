@@ -87,7 +87,7 @@ public class FileHeader1 extends FileHeader {
         _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());
     }
     
-    private void checkThreadFileLock(LocalObjectContainer container, Buffer reader) throws IOException {
+    private void checkThreadFileLock(LocalObjectContainer container, Buffer reader) {
     	reader.seek(ACCESS_TIME_OFFSET);
     	long lastAccessTime = reader.readLong();
 		if(FileHeader.lockedByOtherSession(container, lastAccessTime)){

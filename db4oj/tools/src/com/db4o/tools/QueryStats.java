@@ -16,9 +16,9 @@ public class QueryStats {
 	
 	private EventRegistry _registry = null;
 	
-	private int _activationCount;
+	protected int _activationCount;
 	
-	private final StopWatch _watch = new StopWatch();
+	protected final StopWatch _watch = new StopWatch();
 	
 	private final EventListener4 _queryStarted = new EventListener4() {			
 		public void onEvent(Event4 e, EventArgs args) {

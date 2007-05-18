@@ -97,10 +97,10 @@ public class ArrayHandler extends BuiltinTypeHandler {
     //        new ArrayMarshaller was written.
     //        Apparently it only frees slots.
     //        For now the code simply returns without freeing.
+    /** @param classPrimitive */
     public final void deletePrimitiveEmbedded(
-        
         StatefulBuffer a_bytes,
-        PrimitiveFieldHandler a_classPrimitive) {
+        PrimitiveFieldHandler classPrimitive) {
         
 		a_bytes.readInt(); //int address = a_bytes.readInt();
 		a_bytes.readInt(); //int length = a_bytes.readInt();
@@ -129,7 +129,8 @@ public class ArrayHandler extends BuiltinTypeHandler {
 //        }
     }
 
-    public int elementCount(Transaction a_trans, SlotReader reader) {
+    /** @param trans */
+    public int elementCount(Transaction trans, SlotReader reader) {
         int typeOrLength = reader.readInt();
         if (typeOrLength >= 0) {
             return typeOrLength;
@@ -181,8 +182,8 @@ public class ArrayHandler extends BuiltinTypeHandler {
     public int objectLength(Object obj) {
         return ownLength(obj) + (_reflectArray.getLength(obj) * i_handler.linkLength());
     }
-
     
+    /** @param obj */
     public int ownLength(Object obj){
         return ownLength();
     }

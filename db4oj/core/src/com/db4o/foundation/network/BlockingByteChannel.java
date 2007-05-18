@@ -15,12 +15,12 @@ import com.db4o.internal.*;
 class BlockingByteChannel {
 
     private final static int DISCARD_BUFFER_SIZE = 500;
-    private byte[] i_cache;
+    protected byte[] i_cache;
     private boolean i_closed = false;
-    private int i_readOffset;
+    protected int i_readOffset;
     private int i_timeout;
-    private int i_writeOffset;
-    private final Lock4 i_lock = new Lock4();
+    protected int i_writeOffset;
+    protected final Lock4 i_lock = new Lock4();
 
     public BlockingByteChannel(int timeout) {
         i_timeout = timeout;
@@ -30,7 +30,7 @@ class BlockingByteChannel {
         return i_writeOffset - i_readOffset;
     }
 
-    private void checkDiscardCache() {
+    protected void checkDiscardCache() {
         if (i_readOffset == i_writeOffset && i_cache.length > DISCARD_BUFFER_SIZE) {
             i_cache = null;
             i_readOffset = 0;
@@ -119,7 +119,7 @@ class BlockingByteChannel {
         i_timeout = timeout;
     }
 
-    private void waitForAvailable() throws IOException {
+    protected void waitForAvailable() throws IOException {
         while (available() == 0) {
         	if (i_closed) {
                 throw new IOException(Messages.get(35));

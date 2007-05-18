@@ -5,13 +5,12 @@ package com.db4o.internal.cs;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.messages.*;
-import com.db4o.internal.slots.*;
 
 final class ClientTransaction extends Transaction {
 
     private final ClientObjectContainer i_client;
     
-    private Tree i_yapObjectsToGc;
+    protected Tree i_yapObjectsToGc;
     
     ClientTransaction(ClientObjectContainer a_stream, Transaction a_parent) {
         super(a_stream, a_parent);

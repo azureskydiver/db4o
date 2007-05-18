@@ -38,7 +38,7 @@ public abstract class FileHeader {
         return header;
     }
 
-	private static Buffer prepareFileHeaderReader(LocalObjectContainer file) throws IOException {
+	private static Buffer prepareFileHeaderReader(LocalObjectContainer file) {
 		Buffer reader = new Buffer(readerLength()); 
         reader.read(file, 0, 0);
 		return reader;

@@ -96,7 +96,8 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return length;
     }
     
-    protected int linkLength(FieldMetadata yf, ObjectReference yo){
+    /** @param ref */
+    protected int linkLength(FieldMetadata yf, ObjectReference ref){
         return yf.linkLength();
     }
     
@@ -128,6 +129,10 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	traverseFields(yapClass, writer, readHeaderAttributes(writer), command);
     }
     
+    /**
+     * @param yf
+     * @param yo
+     */
     protected int marshalledLength(FieldMetadata yf, ObjectReference yo){
         return 0;
     }

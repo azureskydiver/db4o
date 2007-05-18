@@ -2,7 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.*;
 import java.net.*;
 import java.util.Date;
 
@@ -367,6 +366,7 @@ public final class Platform4 {
         return weakReferenceCheck.definiteYes();
     }
     
+    /** @param obj */
     static final boolean ignoreAsConstraint(Object obj){
         return false;
     }
@@ -379,6 +379,7 @@ public final class Platform4 {
         return jdk().isConnected(socket);
     }   
     
+    /** @param claxx */
     public static final boolean isValueType(ReflectClass claxx){
     	return false;
     }
@@ -450,7 +451,7 @@ public final class Platform4 {
     }
 
     // FIXME: functionality should really be in IoAdapter
-    public static final void lockFile(String path,Object file) throws IOException {
+    public static final void lockFile(String path,Object file) {
         if (!hasNio()) {
             return;
         }
@@ -475,7 +476,8 @@ public final class Platform4 {
         return Double.longBitsToDouble(a_long);
     }
 
-    static void markTransient(String a_marker) {
+    /** @param marker */
+    static void markTransient(String marker) {
         // do nothing
     }
 
@@ -524,11 +526,13 @@ public final class Platform4 {
         jdk().pollReferenceQueue((ObjectContainerBase) a_stream, a_referenceQueue);
     }
 
-    public static void postOpen(ObjectContainer a_oc) {
+    /** @param oc */
+    public static void postOpen(ObjectContainer oc) {
         // do nothing 
-     }
+    }
     
-    static void preClose(ObjectContainer a_oc) {
+    /** @param oc */
+    static void preClose(ObjectContainer oc) {
         // do nothing 
     }
 
@@ -633,7 +637,8 @@ public final class Platform4 {
 		return evaluation;
 	}
 
-	public static boolean isTransient(ReflectClass a_class) {
+	/** @param claxx */
+	public static boolean isTransient(ReflectClass claxx) {
 		return false;
 	}
 

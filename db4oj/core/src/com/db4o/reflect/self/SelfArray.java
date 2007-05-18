@@ -8,6 +8,7 @@ public class SelfArray implements ReflectArray {
     
 	private final SelfReflectionRegistry _registry;
 
+    /** @param reflector */
 	SelfArray(Reflector reflector,SelfReflectionRegistry registry) {
 		_registry=registry;
 	}

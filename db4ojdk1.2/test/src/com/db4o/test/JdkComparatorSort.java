@@ -8,7 +8,8 @@ import com.db4o.*;
 import com.db4o.query.*;
 
 public class JdkComparatorSort {
-	private static class AscendingIdComparator implements Comparator {
+    
+	protected static class AscendingIdComparator implements Comparator {
 		public int compare(Object first, Object second) {
 			return ((JdkComparatorSort)first)._id-((JdkComparatorSort)second)._id;
 		}

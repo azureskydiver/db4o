@@ -178,7 +178,8 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         }
     }
 
-    void collect(QCandidates a_candidates) {
+    /** @param candidates */
+    void collect(QCandidates candidates) {
         // virtual
     }
 
@@ -219,7 +220,8 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         throw notSupported();
     }
 
-    boolean evaluate(QCandidate a_candidate) {
+    /** @param candidate */
+    boolean evaluate(QCandidate candidate) {
         throw Exceptions4.virtualException();
     }
 
@@ -255,7 +257,11 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
 		}
     }
 
-    void evaluateEvaluationsExec(QCandidates a_candidates, boolean rereadObject) {
+    /**
+     * @param candidates
+     * @param rereadObject
+     */
+    void evaluateEvaluationsExec(QCandidates candidates, boolean rereadObject) {
         // virtual
     }
 
@@ -284,7 +290,8 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     	i_candidates.setCurrentConstraint(null);
     }
 
-    void evaluateSimpleExec(QCandidates a_candidates) {
+    /** @param candidates */
+    void evaluateSimpleExec(QCandidates candidates) {
         // virtual
     }
 
@@ -580,6 +587,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         return new RuntimeException("Not supported.");
     }
     
+    /** @param other */
     public boolean onSameFieldAs(QCon other){
         return false;
     }
@@ -640,12 +648,21 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         i_parent = a_newParent;
     }
 
-    QCon shareParent(Object a_object, boolean[] removeExisting) {
+    
+    /**
+     * @param obj
+     * @param removeExisting
+     */
+    QCon shareParent(Object obj, boolean[] removeExisting) {
         // virtual
         return null;
     }
 
-    QConClass shareParentForClass(ReflectClass a_class, boolean[] removeExisting) {
+    /**
+     * @param claxx
+     * @param removeExisting
+     */
+    QConClass shareParentForClass(ReflectClass claxx, boolean[] removeExisting) {
         // virtual
         return null;
     }
@@ -703,7 +720,8 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         visit1(a_root, this, i_evaluator.not(res));
     }
 
-    void visit1(QCandidate a_root, QCon a_reason, boolean res) {
+    /** @param reason */
+    void visit1(QCandidate root, QCon reason, boolean res) {
 
         // The a_reason parameter makes it eays to distinguish
         // between calls from above (a_reason == this) and below.
@@ -712,11 +730,11 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
             // this should probably be on the Join
             Iterator4 i = iterateJoins();
             while (i.moveNext()) {
-                a_root.evaluate(new QPending((QConJoin) i.current(), this, res));
+                root.evaluate(new QPending((QConJoin) i.current(), this, res));
             }
         } else {
             if (!res) {
-                doNotInclude(a_root);
+                doNotInclude(root);
             }
         }
     }
