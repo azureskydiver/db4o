@@ -11,9 +11,9 @@ public class GeneratedUUIDsConfigurator extends Db4oConfigurator {
 
 	private boolean _value;
 
-	public GeneratedUUIDsConfigurator(String name, boolean _value) {
+	public GeneratedUUIDsConfigurator(String name, boolean value_) {
 		_className = name;
-		this._value = _value;
+		_value = value_;
 	}
 
 	@Override

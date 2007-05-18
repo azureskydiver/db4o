@@ -420,8 +420,8 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
 
 		private Object value;
 
-		public MapEntry(Object key) {
-			this.key = key;
+		public MapEntry(Object key_) {
+			key = key_;
 		}
 
 		public Object getKey() {
@@ -432,9 +432,9 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
 			return value;
 		}
 
-		public Object setValue(Object value) {
+		public Object setValue(Object value_) {
 			Object result = this.value;
-			this.value = value;
+			value = value_;
 			return result;
 		}
 
