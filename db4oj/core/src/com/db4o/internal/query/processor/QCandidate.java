@@ -58,11 +58,6 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		_candidates = qcandidates;
 	}
 
-	private QCandidate() {
-		this(null);
-		// dummy constructor to get "this" out of declaration for C#
-	}
-
 	public QCandidate(QCandidates candidates, Object obj, int id, boolean include) {
 		super(id);
 		if (DTrace.enabled) {
