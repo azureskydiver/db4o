@@ -69,7 +69,7 @@ public class BackupStressTestCase implements Db4oTestCase {
         checkBackups();
     }
 
-	private void runTestIterations() {
+	private void runTestIterations() throws Exception {
 		if(! runOnOldJDK && isOldJDK()) {
             System.out.println("BackupStressTest is too slow for regression testing on Java JDKs < 1.4");
             return;
@@ -78,7 +78,7 @@ public class BackupStressTestCase implements Db4oTestCase {
         BackupStressIteration iteration = new BackupStressIteration();
         _objectContainer.set(iteration);
         _objectContainer.commit();
-        startBackupThread();
+        Thread backupThread = startBackupThread();
         for (int i = 1; i <= ITERATIONS; i++) {
             for (int obj = 0; obj < OBJECTS; obj++) {
                 _objectContainer.set(new BackupStressItem("i" + obj, i));
@@ -92,21 +92,24 @@ public class BackupStressTestCase implements Db4oTestCase {
             _objectContainer.set(iteration);
             _objectContainer.commit();
         }
+        backupThread.join();
 	}
 
-	private void startBackupThread() {
-		new Thread(new Runnable() {
-			public void run() {
-		        while(!_noMoreBackups){
-		            _backups ++;
-		            String fileName = backupFile(_backups);
-		            deleteFile(fileName);
-					_inBackup = true;
-					_objectContainer.ext().backup(fileName);
-					_inBackup = false;		            
-		        }
-		    }
-		}).start();
+	private Thread startBackupThread() {
+		Thread thread = new Thread(new Runnable() {
+					public void run() {
+				        while(!_noMoreBackups){
+				            _backups ++;
+				            String fileName = backupFile(_backups);
+				            deleteFile(fileName);
+							_inBackup = true;
+							_objectContainer.ext().backup(fileName);
+							_inBackup = false;		            
+				        }
+				    }
+				});
+		thread.start();
+		return thread;
 	}
    
     private void openDatabase(){
