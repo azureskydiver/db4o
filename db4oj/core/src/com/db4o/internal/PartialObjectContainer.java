@@ -1000,8 +1000,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     protected void initialize1(Configuration config) {
-        // FIXME: Why is the passed config not used here?
-        initializeConfig(i_config);
+        i_config = initializeConfig(config);
         i_handlers = new HandlerRegistry(_this, configImpl().encoding(), configImpl().reflector());
         
         if (i_references != null) {
