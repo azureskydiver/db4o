@@ -92,6 +92,7 @@ public class BackupStressTestCase implements Db4oTestCase {
             _objectContainer.set(iteration);
             _objectContainer.commit();
         }
+        _noMoreBackups = true;
         backupThread.join();
 	}
 
@@ -118,7 +119,6 @@ public class BackupStressTestCase implements Db4oTestCase {
     }
     
     private void closeDatabase() throws InterruptedException{
-        _noMoreBackups = true;
         while(_inBackup){
             Thread.sleep(1000);
         }
