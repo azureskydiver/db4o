@@ -319,7 +319,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     protected abstract void close2();
     
 
-	protected final void shutdownObjectContainer() {
+	public final void shutdownObjectContainer() {
 		if (DTrace.enabled) {
 			DTrace.CLOSE.log();
 		}
