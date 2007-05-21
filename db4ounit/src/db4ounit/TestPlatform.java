@@ -28,9 +28,13 @@ public class TestPlatform {
 	}
 
 	public static Writer getStdOut() {
-		return new PrintWriter(System.err);
+		return new PrintWriter(System.out);
 	}
 	
+    public static Writer getStdErr() {
+        return new PrintWriter(System.err);
+    }
+    
 	public static boolean isStatic(Method method) {
 		return Modifier.isStatic(method.getModifiers());
 	}

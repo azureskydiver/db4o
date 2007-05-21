@@ -53,9 +53,9 @@ public class TestRunner {
 
 	private void report(TestResult result) {
 		try {
-			java.io.Writer stdout = TestPlatform.getStdOut();
-			result.print(stdout);
-			stdout.flush();
+			java.io.Writer stdErr = TestPlatform.getStdErr();
+			result.print(stdErr);
+			stdErr.flush();
 		} catch (IOException e) {
 		}
 	}
