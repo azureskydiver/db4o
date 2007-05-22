@@ -306,7 +306,7 @@ class InstanceReplicationPreparer implements Visitor {
 		if (_collectionHandler.canHandle(claxx)) {
 			return collectionClone(obj, claxx);
 		}
-		claxx.skipConstructor(true); // FIXME This is ridiculously slow to do every time. Should ALWAYS be done automatically in the reflector.
+		claxx.skipConstructor(true, true); // FIXME This is ridiculously slow to do every time. Should ALWAYS be done automatically in the reflector.
 		Object result = claxx.newInstance();
 		if (result == null)
 			throw new RuntimeException("Unable to create a new instance of " + obj.getClass()); //FIXME Use db4o's standard for throwing exceptions.
