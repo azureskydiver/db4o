@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.reflect.jdk.*;
 
 /**
  * @exclude
@@ -17,7 +18,8 @@ public class TSerializable implements ObjectConstructor {
 	public Object onStore(ObjectContainer con, Object object) {
 		try {
 			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-			new ObjectOutputStream(byteStream).writeObject(object);
+			ObjectOutputStream out = new ObjectOutputStream(byteStream);
+			out.writeObject(object);
 			return byteStream.toByteArray();
 		} catch (IOException e) {
 			throw new ReflectException(e);
@@ -28,10 +30,17 @@ public class TSerializable implements ObjectConstructor {
 		// do nothing
 	}
 
-	public Object onInstantiate(ObjectContainer con, Object storedObject) {
+	public Object onInstantiate(final ObjectContainer con, Object storedObject) {
 		try {
-			Object in = new ObjectInputStream(new ByteArrayInputStream(
-					(byte[]) storedObject)).readObject();
+			if(con instanceof ObjectContainerBase) {
+				ObjectContainerBase db = (ObjectContainerBase) con;
+			}
+			ObjectInputStream inStream = new ObjectInputStream(new ByteArrayInputStream((byte[]) storedObject)) {
+				protected Class resolveClass(ObjectStreamClass v) throws IOException, ClassNotFoundException {
+					return JdkReflector.toNative(con.ext().reflector().forName(v.getName()));
+				}
+			};
+			Object in = inStream.readObject();
 			return in;
 		} catch (IOException e) {
 			throw new ReflectException(e);
