@@ -1,10 +1,12 @@
-<project name="objectmanager" default="dist" basedir=".">
+<project name="objectmanager" default="zip" basedir=".">
     <description>
         ObjectManager build file
     </description>
 	<!-- set the appropriate db4o jar file to use -->
-	<property name="db4o.version" value="db4o-6.2-java5.jar"/>
-	<property name="dist.version" value="objectmanager-6.2"/>
+    <property name="dir.workspace" value=".." />
+    <property file="${dir.workspace}/db4obuild/ant.properties" />
+	<property name="db4o.version" value="${filename.java5.jar}"/>
+	<property name="dist.version" value="objectmanager-${db4o.version.dotted}"/>
 
 	<!-- set global properties for this build -->
 	<property name="src" location="src"/>
@@ -30,6 +32,12 @@
         <tstamp/>
         <!-- Create the build directory structure used by compile -->
         <mkdir dir="${build}"/>
+        <delete dir="${dist}" />
+        <delete dir="${lib}">
+            <include name="${filename.java5.jar}" />
+        </delete>
+        <delete file="${dist.version}.zip" />
+        <copy file="${dir.dist}/java/lib/${filename.java5.jar}" todir="${lib}" />
     </target>
 
     <target name="compile" depends="init"
