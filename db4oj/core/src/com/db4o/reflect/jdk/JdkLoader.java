@@ -5,5 +5,5 @@ package com.db4o.reflect.jdk;
 import com.db4o.foundation.*;
 
 public interface JdkLoader extends DeepClone {
-	Class loadClass(String className) throws ClassNotFoundException;
+	Class loadClass(String className);
 }

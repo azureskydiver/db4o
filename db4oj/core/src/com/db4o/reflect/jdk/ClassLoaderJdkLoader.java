@@ -10,8 +10,15 @@ public class ClassLoaderJdkLoader implements JdkLoader {
 		_loader = loader;
 	}
 
-	public Class loadClass(String className) throws ClassNotFoundException {
-		return _loader.loadClass(className);
+	public Class loadClass(String className) {
+		try {
+			return (_loader == null ? Class.forName(className) : Class.forName(className, true, _loader));
+		} catch (Exception e) {
+			// e.printStackTrace();
+		} catch (LinkageError e) {
+			// e.printStackTrace();
+		}
+		return null;
 	}
 
 	public Object deepClone(Object context) {

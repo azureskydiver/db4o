@@ -6,11 +6,15 @@ import com.db4o.reflect.*;
 
 public class JdkReflector implements Reflector{
 	
-    private final ClassLoader _classLoader;
+    private final JdkLoader _classLoader;
     private Reflector _parent;
     private ReflectArray _array;
     
 	public JdkReflector(ClassLoader classLoader){
+		this(new ClassLoaderJdkLoader(classLoader));
+	}
+	
+	public JdkReflector(JdkLoader classLoader){
 		_classLoader = classLoader;
 	}
 	
@@ -34,23 +38,11 @@ public class JdkReflector implements Reflector{
 	}
 	
 	public ReflectClass forName(String className) {
-		Class clazz = safeForName(_classLoader, className);
+		Class clazz = _classLoader.loadClass(className);
 		if (clazz == null) {
 			return null;
 		}
 		return new JdkClass(_parent, clazz);
-	}
-	
-	private static Class safeForName(ClassLoader classLoader, String className) {
-		try {
-			return classLoader == null ? Class.forName(className) : Class
-					.forName(className, true, classLoader);
-		} catch (Exception e) {
-			// e.printStackTrace();
-		} catch (LinkageError e) {
-			// e.printStackTrace();
-		}
-		return null;
 	}
 	
 	public ReflectClass forObject(Object a_object) {
