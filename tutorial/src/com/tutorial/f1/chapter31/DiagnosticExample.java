@@ -13,8 +13,8 @@ import com.db4o.diagnostic.*;
 public class DiagnosticExample extends Util {
     public static void testEmpty() {
     	Db4o.configure().diagnostic().addListener(new DiagnosticToConsole());
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(Util.DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
         	setEmptyObject(db);
         }
@@ -30,8 +30,8 @@ public class DiagnosticExample extends Util {
     	
     public static void testArbitrary() {
     	Db4o.configure().diagnostic().addListener(new DiagnosticToConsole());
-    	new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+    	new File(Util.DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
         	Pilot pilot = new Pilot("Rubens Barrichello",99);
         	db.set(pilot);
@@ -51,8 +51,8 @@ public class DiagnosticExample extends Util {
     	Db4o.configure().diagnostic().removeAllListeners();
     	Db4o.configure().diagnostic().addListener(new IndexDiagListener());
     	Db4o.configure().updateDepth(3);
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(Util.DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
         	Pilot pilot1 = new Pilot("Rubens Barrichello",99);
         	db.set(pilot1);

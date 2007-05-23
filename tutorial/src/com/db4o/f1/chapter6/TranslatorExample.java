@@ -31,7 +31,7 @@ public class TranslatorExample extends Util {
   }
 
   public static void tryStoreAndRetrieve() {
-    ObjectContainer db=Db4o.openFile(YAPFILENAME);
+    ObjectContainer db=Db4o.openFile(DB4OFILENAME);
     try {
       NotStorable notStorable = new NotStorable(42,"Test");
       System.out.println("ORIGINAL: "+notStorable);
@@ -44,7 +44,7 @@ public class TranslatorExample extends Util {
     finally {
       db.close();
     }
-    db=Db4o.openFile(YAPFILENAME);
+    db=Db4o.openFile(DB4OFILENAME);
     try {
       ObjectSet result=db.get(NotStorable.class);
       while(result.hasNext()) {

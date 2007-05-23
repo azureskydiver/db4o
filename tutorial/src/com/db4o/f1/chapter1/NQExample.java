@@ -7,7 +7,7 @@ import com.db4o.query.*;
 public class NQExample extends Util {
 	
     public static void main(String[] args) {
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
             storePilots(db);
             retrieveComplexSODA(db);

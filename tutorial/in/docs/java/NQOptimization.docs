@@ -154,7 +154,7 @@ Further options:
 This feature still is quite basic but it will soon be improved. ._
 Currently you can only attach a listener to the ObjectContainer:
 
-.c ((YapStream)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
+.c ((ObjectContainerBase)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
   public void notifyQueryExecuted(NQOptimizationInfo info) {
     System.err.println(info);
   }
@@ -164,12 +164,12 @@ The listener will be notified on each native query call and will be ._
 passed the Predicate object processed, the optimized expression tree (if
 successful) and the success status of the optimization run:
 
-YapStream.UNOPTIMIZED ("UNOPTIMIZED")
+NativeQueryHandler.UNOPTIMIZED ("UNOPTIMIZED")
   if the predicate could not be optimized and is run in unoptimized mode
 
-YapStream.PREOPTIMIZED ("PREOPTIMIZED")
+NativeQueryHandler.PREOPTIMIZED ("PREOPTIMIZED")
   if the predicate already was optimized (due to class file or load time
   instrumentation)
 
-YapStream.DYNOPTIMIZED ("DYNOPTIMIZED")
+NativeQueryHandler.DYNOPTIMIZED ("DYNOPTIMIZED")
   if the predicate was optimized at query execution time

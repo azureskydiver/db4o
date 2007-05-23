@@ -12,8 +12,8 @@ import com.db4o.query.Query;
 
 public class StructuredExample extends Util {
     public static void main(String[] args) {
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(Util.DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
             storeFirstCar(db);
             storeSecondCar(db);
@@ -27,19 +27,19 @@ public class StructuredExample extends Util {
             updatePilotSingleSession(db);
             updatePilotSeparateSessionsPart1(db);
             db.close();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             updatePilotSeparateSessionsPart2(db);
             db.close();
             updatePilotSeparateSessionsImprovedPart1();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             updatePilotSeparateSessionsImprovedPart2(db);
             db.close();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             updatePilotSeparateSessionsImprovedPart3(db);
             deleteFlat(db);
             db.close();
             deleteDeepPart1();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             deleteDeepPart2(db);
             deleteDeepRevisited(db);
         }

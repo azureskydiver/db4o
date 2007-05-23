@@ -61,7 +61,7 @@ This listener just has to be registered in the web.xml.
 .c 	
 <context-param>
   <param-name>db4oFileName</param-name>
-  <param-value>db4oweb.yap</param-value>
+  <param-value>db4oweb.db4o</param-value>
 </context-param>
 <listener>
   <listener-class>

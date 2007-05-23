@@ -7,16 +7,16 @@ import com.db4o.f1.*;
 
 public class TransactionExample extends Util {
     public static void main(String[] args) {
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(Util.DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
             storeCarCommit(db);
             db.close();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             listAllCars(db);
             storeCarRollback(db);
             db.close();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             listAllCars(db);
             carSnapshotRollback(db);
             carSnapshotRollbackRefresh(db);
