@@ -75,6 +75,7 @@
 			</fileset>
 			<fileset dir="${dir.build}">
 				<include name="*.yap" />
+				<include name="*.db4o" />
 			</fileset>
 		</delete>
 	</target>

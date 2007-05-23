@@ -36,3 +36,4 @@ db4oadmin.exe             - bytecode instrumentation tool, for a list of
                             options execute without parameters
 mono.getoptions.dll       - library used for parameter parsing in 
                             Db4oAdmin tool.
+db4objects.db4o.ta.dll    - transparent activation plus instrumentation (experimental)
