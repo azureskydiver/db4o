@@ -15,6 +15,7 @@ db4o-test-java1.2-@db4o.version.dotted@.jar - tests collection for JDK1.2-1.4
 db4o-test-java5-@db4o.version.dotted@.jar   - tests collection for JDK5
 db4ounit-@db4o.version.dotted@.jar          - testing framework for db4o needs 
                             (http://developer.db4o.com/Resources/view.aspx/Working_With_Source_Code/Testing_Db4o)
+db4o-ta-@db4o.version.dotted@.jar           - Transparent Activation add-on (experimental)
 
 
 USING DB4O LIBRARIES
