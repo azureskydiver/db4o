@@ -4,6 +4,11 @@ package com.db4o.ext;
 
 import com.db4o.foundation.Iterable4;
 
+/**
+ * Interface to an iterable collection {@link ObjectInfo} objects.<br><br>
+ * ObjectInfoCollection is used reference a number of stored objects. 
+ * @see ObjectInfo
+ */
 public interface ObjectInfoCollection extends Iterable4 {
 
 }

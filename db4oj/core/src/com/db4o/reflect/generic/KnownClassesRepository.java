@@ -7,6 +7,9 @@ import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.reflect.*;
 
+/**
+ * @exclude
+ */
 public class KnownClassesRepository {
 	
 	// FIXME very java-centric, what about .NET?

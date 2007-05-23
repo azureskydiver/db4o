@@ -51,10 +51,16 @@ public class IoAdapterWindow {
 		return _io.read(data);
 	}
 
+	/**
+	 * Disable IO Adapter Window
+	 */
 	public void disable() {
 		_disabled=true;
 	}
 	
+	/**
+	 * Flush IO Adapter Window
+	 */
 	public void flush()  {
 		if(!_disabled) {
 			_io.sync();

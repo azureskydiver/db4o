@@ -159,6 +159,10 @@ public abstract class IoAdapter {
 		return _blockSize;
 	}
 
+	/**
+	 * Delegated IO Adapter
+	 * @return reference to itself
+	 */
 	public IoAdapter delegatedIoAdapter() {
 		return this;
 	}
