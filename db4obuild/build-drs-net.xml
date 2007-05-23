@@ -76,19 +76,12 @@
 		<mkdir dir="${drs.conversion.workspace.dir}/lib" />
 		<property name="dependencies.jar" location="${drs.conversion.workspace.dir}/lib/dependencies.jar" />
 		<!--TODO FIXME -remove the /bin Eclipse dependencies-->
-		<jar destfile="${dependencies.jar}">			
-			<fileset dir="${dir.workspace}/db4oj/bin/">								
-			</fileset>
-			<fileset dir="${dir.workspace}/db4ojdk1.2/bin/">								
-			</fileset>
-			<fileset dir="${dir.workspace}/db4ojdk5/bin/">								
-			</fileset>
-			<fileset dir="${dir.workspace}/db4ounit/bin/">
-			</fileset>
-			<fileset dir="${dir.workspace}/db4ounit.extensions/bin/">
-			</fileset>
-			<fileset dir="${dir.workspace}/db4oj.tests/bin">
-			</fileset>
+		<jar destfile="${dependencies.jar}">
+            <fileset dir="${dir.dist.classes.java1.1}" />
+            <fileset dir="${dir.dist.classes.java1.2}" />
+            <fileset dir="${dir.dist.classes.java5}" />
+			<fileset dir="${dir.dist.classes.db4ounit}" />
+			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
 		</jar>
 	</target>
 
