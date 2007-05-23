@@ -9,10 +9,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * turns indexing on <br> <br>
- * Example:<br> the annotation {@code  @Indexed }is used without parameter   <br><br> 
- * {@code   public class Foo  <br> @Indexed <br> private String bar; ...}
- *
+ * {@code  @Indexed } annotation turns indexing on and can be applied to
+ * class fields. Its functionality is equivalent to {@link com.db4o.config.ObjectField#indexed(boolean)}. <br>
+ * {@code  @Indexed } annotation is used without any parameters and cannot
+ * be used to disable indexing.
+ *@see com.db4o.config.ObjectField#indexed(boolean)
  */
 @Documented
 @Target(ElementType.FIELD)
