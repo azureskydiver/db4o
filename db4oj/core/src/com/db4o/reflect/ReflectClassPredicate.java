@@ -2,9 +2,19 @@
 
 package com.db4o.reflect;
 
-
+/**
+ * Predicate representation.
+ * @see com.db4o.query.Predicate
+ *@see Reflecotr
+ */
 public interface ReflectClassPredicate {
     
+	/**
+	 * Match method definition. Used to select correct 
+	 * results from an object set.
+	 * @param item item to be matched to the criteria
+	 * @return true, if the requirements are met
+	 */
     public boolean match(ReflectClass item);
 
 }

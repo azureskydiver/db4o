@@ -5,6 +5,7 @@ package com.db4o.replication;
 import com.db4o.*;
 
 /**
+ * @deprecated
  * will be called by a {@link com.db4o.replication.ReplicationProcess}upon
  * replication conflicts. Conflicts occur whenever
  * {@link ReplicationProcess#replicate(Object)}is called with an object that

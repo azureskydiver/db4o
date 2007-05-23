@@ -7,6 +7,7 @@ import com.db4o.query.*;
 
 
 /**
+ * @deprecated
  * db4o replication interface.
  * 
  * @see com.db4o.ext.ExtObjectContainer#replicationBegin(ObjectContainer, ReplicationConflictHandler)
