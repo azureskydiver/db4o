@@ -134,7 +134,7 @@ MONITORING OPTIMIZATION
 This feature still is as basic as it can get and will soon be improved.
 Currently you can just attach a listener to the ObjectContainer:
 
-((YapStream)db).addListener(new Db4oQueryExecutionListener() {
+((NativeQueryHandler)db).addListener(new Db4oQueryExecutionListener() {
   public void notifyQueryExecuted(Predicate pred, String msg) {
     System.err.println(msg);
   }
@@ -144,10 +144,10 @@ The listener will be notified on each native query call and will be
 passed the Predicate object processed and the success status of the
 optimization run:
 
-YapStream.UNOPTIMIZED ("UNOPTIMIZED")
+NativeQueryHandler.UNOPTIMIZED ("UNOPTIMIZED")
   if the predicate could not be optimized and is run in unoptimized mode
-YapStream.PREOPTIMIZED ("PREOPTIMIZED")
+NativeQueryHandler.PREOPTIMIZED ("PREOPTIMIZED")
   if the predicate already was optimized (due to class file or load time
   instrumentation)
-YapStream.DYNOPTIMIZED ("DYNOPTIMIZED")
+NativeQueryHandler.DYNOPTIMIZED ("DYNOPTIMIZED")
   if the predicate was optimized at query execution time
