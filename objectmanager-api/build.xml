@@ -3,6 +3,10 @@
         ObjectManager build file
     </description>
     <!-- set global properties for this build -->
+    <property name="dir.workspace" value=".." />
+    
+    <property file="${dir.workspace}/db4obuild/ant.properties" />
+    
     <property name="src" location="src"/>
     <property name="lib" location="lib"/>
 	<property name="build.root" location="classes"/>
@@ -20,6 +24,11 @@
         <tstamp/>
         <!-- Create the build directory structure used by compile -->
         <mkdir dir="${build}"/>
+        <delete dir="${dist}" />
+        <delete dir="${lib}">
+            <include name="${filename.java5.jar}" />
+        </delete>
+        <copy file="${dir.dist}/java/lib/${filename.java5.jar}" todir="${lib}" />
     </target>
 
     <target name="compile" depends="init"
