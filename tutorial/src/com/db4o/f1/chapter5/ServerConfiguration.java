@@ -15,7 +15,7 @@ public interface ServerConfiguration {
   /**
    * the database file to be used by the server.
    */
-  public String   FILE = "formula1.yap";
+  public String   FILE = "formula1.db4o";
   
   /**
    * the port to be used by the server.

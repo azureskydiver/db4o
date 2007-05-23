@@ -9,8 +9,8 @@ import com.db4o.query.*;
 
 public class CollectionsExample extends Util {
     public static void main(String[] args) {
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(Util.DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
             storeFirstCar(db);
             storeSecondCar(db);
@@ -26,12 +26,12 @@ public class CollectionsExample extends Util {
             retrieveCarQuery(db);
             db.close();
             updateCarPart1();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             updateCarPart2(db);
             updateCollection(db);
             db.close();
             deleteAllPart1();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             deleteAllPart2(db);
         }
         finally {

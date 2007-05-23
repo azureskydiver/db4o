@@ -107,7 +107,7 @@ namespace CSDataBinding
 
         void OpenDataFile()
         {
-            string dataFile = Path.Combine(Application.UserAppDataPath, "data.yap");
+            string dataFile = Path.Combine(Application.UserAppDataPath, "data.db4o");
             _container = Db4o.openFile(dataFile);
         }
 

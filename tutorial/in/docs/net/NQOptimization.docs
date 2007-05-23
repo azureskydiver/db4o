@@ -78,7 +78,6 @@ does not support pre optimization of Native Queries expressed as delegates.
 This feature still is quite basic but it will soon be improved. ._
 Currently you can only attach event handlers to the ObjectContainer:
 
-.c NativeQueryHandler handler = ((YapStream)db).GetNativeQueryHandler();
-NativeQueryHandler handler = ((YapStream)container).GetNativeQueryHandler();
+.c NativeQueryHandler handler = ((ObjectContainerBase)container).GetNativeQueryHandler();
 handler.QueryExecution += OnQueryExecution;
 handler.QueryOptimizationFailure += OnQueryOptimizationFailure; ..c

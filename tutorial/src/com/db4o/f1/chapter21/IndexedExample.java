@@ -12,7 +12,7 @@ import com.db4o.query.Query;
 
 public class IndexedExample extends Util {
     public static void noIndex() {
-    	ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+    	ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
     		Query query = db.query();
 			query.constrain(Car.class);
@@ -32,8 +32,8 @@ public class IndexedExample extends Util {
     }
     
     public static void fillUpDB(){
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(Util.DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
         	for (int i=0; i<10000;i++){
     			AddCar(db,i);
@@ -47,7 +47,7 @@ public class IndexedExample extends Util {
     public static void pilotIndex() {
     	Db4o.configure().objectClass(Car.class).objectField("pilot").indexed(true);
     	Db4o.configure().objectClass(Pilot.class).objectField("points").indexed(false);
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
     		Query query = db.query();
 			query.constrain(Car.class);
@@ -69,7 +69,7 @@ public class IndexedExample extends Util {
     public static void pointsIndex() {
     	Db4o.configure().objectClass(Car.class).objectField("pilot").indexed(false);
     	Db4o.configure().objectClass(Pilot.class).objectField("points").indexed(true);
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
     		Query query = db.query();
 			query.constrain(Car.class);
@@ -92,7 +92,7 @@ public class IndexedExample extends Util {
     public static void fullIndex() {
     	Db4o.configure().objectClass(Car.class).objectField("pilot").indexed(true);
     	Db4o.configure().objectClass(Pilot.class).objectField("points").indexed(true);
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
     		Query query = db.query();
 			query.constrain(Car.class);

@@ -11,10 +11,10 @@ import com.db4o.f1.Util;
 
 public class FirstStepsExample extends Util {    
     public static void main(String[] args) {
-        new File(Util.YAPFILENAME).delete();
+        new File(Util.DB4OFILENAME).delete();
         accessDb4o();
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(Util.DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
             storeFirstPilot(db);
             storeSecondPilot(db);
@@ -31,7 +31,7 @@ public class FirstStepsExample extends Util {
     }
     
     public static void accessDb4o() {
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
             // do something with db4o
         }

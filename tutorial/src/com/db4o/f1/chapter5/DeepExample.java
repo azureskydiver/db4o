@@ -7,24 +7,24 @@ import com.db4o.f1.*;
 
 public class DeepExample extends Util {
     public static void main(String[] args) {
-        new File(Util.YAPFILENAME).delete();
-        ObjectContainer db=Db4o.openFile(Util.YAPFILENAME);
+        new File(Util.DB4OFILENAME).delete();
+        ObjectContainer db=Db4o.openFile(Util.DB4OFILENAME);
         try {
             storeCar(db);
             db.close();
             setCascadeOnUpdate();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             takeManySnapshots(db);
             db.close();
-            db=Db4o.openFile(Util.YAPFILENAME);            
+            db=Db4o.openFile(Util.DB4OFILENAME);            
             retrieveAllSnapshots(db);
             db.close();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             retrieveSnapshotsSequentially(db);
             retrieveSnapshotsSequentiallyImproved(db);
             db.close();
             setActivationDepth();
-            db=Db4o.openFile(Util.YAPFILENAME);
+            db=Db4o.openFile(Util.DB4OFILENAME);
             retrieveSnapshotsSequentially(db);
         }
         finally {
