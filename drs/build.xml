@@ -93,8 +93,11 @@
 
 	<target name="javadoc">
 		<javadoc destdir="${drs.dir.dist.api}" author="true" version="true" use="true" windowtitle="dRS" classpathref="class.path">
+            <header><![CDATA[<b>db4o Replication System (dRS)</b>]]></header>
+            <doctitle><![CDATA[<h1>db4o Replication System (dRS)</h1><p align="left">This document is the API specification for db4o Replication System (dRS)]]></doctitle>
 			<fileset dir="${drs.dir.src.core}" defaultexcludes="yes">
-				<include name="com/db4o/drs/**/*.java" />
+				<include name="com/db4o/drs/*.java" />
+                <include name="com/db4o/drs/db4o/*.java" />
 			</fileset>
 		</javadoc>
 	</target>
