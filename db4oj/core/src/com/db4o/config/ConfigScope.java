@@ -5,7 +5,13 @@ package com.db4o.config;
 import java.io.*;
 
 /**
- * yes/no/dontknow data type
+ * Defines a scope of applicability of a config setting.<br><br>
+ * Some of the configuration settings can be either: <br><br>
+ * - enabled globally; <br>
+ * - enabled individually for a specified class; <br>
+ * - disabled.<br><br>
+ * @see com.db4o.config.Configuration#generateUUIDs(ConfigScope)
+ * @see com.db4o.config.Configuration#generateVersionNumbers(ConfigScope)
  */
 public final class ConfigScope implements Serializable {
 
@@ -40,6 +46,13 @@ public final class ConfigScope implements Serializable {
 		_name=name;
 	}
 
+	/**
+	 * Checks if the current configuration scope is globally
+	 * enabled or disabled. 
+	 * @param defaultValue - default result 
+	 * @return false if disabled, true if globally enabled, default 
+	 * value otherwise
+	 */
 	public boolean applyConfig(boolean defaultValue) {
 		switch(_value) {
 			case DISABLED_ID:
