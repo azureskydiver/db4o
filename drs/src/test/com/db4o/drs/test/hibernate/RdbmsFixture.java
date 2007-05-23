@@ -42,7 +42,8 @@ public abstract class RdbmsFixture implements DrsFixture {
 				ListHolder.class, ListContent.class,
 				MapHolder.class,  MapContent.class,
 				SimpleArrayContent.class, SimpleArrayHolder.class,
-				R0.class, Pilot.class, Car.class};
+				R0.class, Pilot.class, Car.class,
+                com.db4o.drs.test.regression.NewPilot.class};
 	}
 	
 	public static Configuration addAllMappings(Configuration cfg) {

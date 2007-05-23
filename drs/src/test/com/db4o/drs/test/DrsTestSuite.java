@@ -2,6 +2,8 @@
 
 package com.db4o.drs.test;
 
+import com.db4o.drs.test.regression.DRS42Test;
+
 import db4ounit.TestSuite;
 import db4ounit.TestSuiteBuilder;
 
@@ -48,6 +50,9 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 				//ArrayReplicationTest.class,
 				//SingleTypeCollectionReplicationTest.class,
 				//MixedTypesCollectionReplicationTest.class
+                
+                //regression
+                DRS42Test.class,
 		};
 	}
 }
