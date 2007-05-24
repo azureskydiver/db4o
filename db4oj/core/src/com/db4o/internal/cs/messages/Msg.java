@@ -16,7 +16,7 @@ import com.db4o.internal.cs.*;
 public abstract class Msg implements Cloneable {
 
 	static int _messageIdGenerator = 1;
-	private static Msg[] _messages = new Msg[60];
+	private static Msg[] _messages = new Msg[70];
 
 	int _msgID;
 	String _name;
@@ -24,6 +24,8 @@ public abstract class Msg implements Cloneable {
 	private MessageDispatcher _messageDispatcher;
 	
 	public static final MChainedRuntimeException CHAINED_RUNTIME_EXCEPTION = new MChainedRuntimeException();
+	public static final MClassID CLASS_ID = new MClassID();
+	public static final MClassMetadataIdForName CLASS_METADATA_ID_FOR_NAME = new MClassMetadataIdForName();
 	public static final MClassNameForID CLASS_NAME_FOR_ID = new MClassNameForID();
 	public static final MClose CLOSE = new MClose();
     public static final MCommit COMMIT = new MCommit();

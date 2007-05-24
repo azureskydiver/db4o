@@ -830,4 +830,11 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		write(Msg.COMMITTED_CALLBACK_REGISTER);
 	}
 	
+	public int classMetadataIdForName(String name) {
+        MsgD msg = Msg.CLASS_METADATA_ID_FOR_NAME.getWriterForString(systemTransaction(), name);
+        msg.write(this, i_socket);
+        MsgD response = (MsgD) expectedResponse(Msg.CLASS_ID);
+        return response.readInt();
+    }
+	
 }
