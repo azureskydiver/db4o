@@ -2,20 +2,24 @@
 
 package com.db4o.db4ounit.common.regression;
 
-import java.io.*;
+import java.io.IOException;
 
 import com.db4o.Db4o;
-import com.db4o.db4ounit.util.*;
+import com.db4o.db4ounit.util.IOServices;
+import com.db4o.db4ounit.util.WorkspaceServices;
 import com.db4o.ext.OldFormatException;
 import com.db4o.foundation.io.File4;
-import com.db4o.internal.*;
+import com.db4o.internal.Platform4;
 
-import db4ounit.*;
+import db4ounit.Assert;
+import db4ounit.CodeBlock;
+import db4ounit.TestCase;
+import db4ounit.extensions.fixtures.OptOutNoFileSystemData;
 
 /**
  * @exclude
  */
-public class COR234TestCase implements TestCase {
+public class COR234TestCase implements TestCase, OptOutNoFileSystemData {
 
 	public void test() {
 		if (WorkspaceServices.workspaceRoot() == null) {
