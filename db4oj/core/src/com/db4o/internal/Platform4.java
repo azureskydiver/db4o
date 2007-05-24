@@ -648,4 +648,8 @@ public final class Platform4 {
         }
 		return className.indexOf("com.db4o") == 0;
 	}
+
+	public static Reflector reflectorForType(Class clazz) {
+		return jdk().reflectorForType(clazz);
+	}
 }

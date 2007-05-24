@@ -8,6 +8,7 @@ import com.db4o.Db4o;
 import com.db4o.db4ounit.util.*;
 import com.db4o.ext.OldFormatException;
 import com.db4o.foundation.io.File4;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 
@@ -22,6 +23,7 @@ public class COR234TestCase implements TestCase {
 			return;
 		}
 		Db4o.configure().allowVersionUpdates(false);
+		Db4o.configure().reflectWith(Platform4.reflectorForType(COR234TestCase.class));
 		
 		Assert.expect(OldFormatException.class, new CodeBlock() {
 			public void run() throws Throwable {

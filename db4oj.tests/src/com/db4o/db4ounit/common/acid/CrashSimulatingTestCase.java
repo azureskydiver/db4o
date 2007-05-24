@@ -2,18 +2,18 @@
 
 package com.db4o.db4ounit.common.acid;
 
-import java.io.IOException;
+import java.io.*;
 
 import com.db4o.*;
-import com.db4o.db4ounit.common.assorted.SimplestPossibleItem;
-import com.db4o.foundation.Collection4;
+import com.db4o.db4ounit.common.assorted.*;
+import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
-import com.db4o.io.RandomAccessFileAdapter;
+import com.db4o.io.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.OptOutCS;
+import db4ounit.extensions.fixtures.*;
 
 
 public class CrashSimulatingTestCase implements TestCase, OptOutCS {	
@@ -53,6 +53,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     	File4.delete(fileName);
     	File4.mkdirs(path);
         
+    	Db4o.configure().reflectWith(Platform4.reflectorForType(CrashSimulatingTestCase.class));
         Db4o.configure().bTreeNodeSize(4);
 
         createFile(fileName);

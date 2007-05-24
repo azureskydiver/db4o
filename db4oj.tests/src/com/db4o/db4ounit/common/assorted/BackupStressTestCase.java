@@ -53,6 +53,7 @@ public class BackupStressTestCase implements Db4oTestCase {
     public void setUp(){
     	deleteFile(FILE);
         Db4o.configure().objectClass(BackupStressItem.class).objectField("_iteration").indexed(true);
+        Db4o.configure().reflectWith(Platform4.reflectorForType(BackupStressItem.class));
     }
     
     public void tearDown() {
