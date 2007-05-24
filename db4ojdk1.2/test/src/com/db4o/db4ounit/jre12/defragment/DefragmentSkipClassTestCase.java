@@ -23,14 +23,14 @@ public class DefragmentSkipClassTestCase implements TestLifeCycle {
 		SlotDefragmentFixture.assertDataClassKnown(true);
 
 		defragConfig = SlotDefragmentFixture.defragConfig(true);
-		defragConfig.storedClassFilter(new AvailableClassFilter());
+		defragConfig.storedClassFilter(new AvailableClassFilter(SlotDefragmentFixture.Data.class.getClassLoader()));
 		Defragment.defrag(defragConfig);
 		SlotDefragmentFixture.assertDataClassKnown(true);
 
 		defragConfig = SlotDefragmentFixture.defragConfig(true);
 		Collection4 excluded=new Collection4();
 		excluded.add(SlotDefragmentFixture.Data.class.getName());
-		ExcludingClassLoader loader=new ExcludingClassLoader(getClass().getClassLoader(),excluded);
+		ExcludingClassLoader loader=new ExcludingClassLoader(SlotDefragmentFixture.Data.class.getClassLoader(),excluded);
 		defragConfig.storedClassFilter(new AvailableClassFilter(loader));
 		Defragment.defrag(defragConfig);
 		SlotDefragmentFixture.assertDataClassKnown(false);
