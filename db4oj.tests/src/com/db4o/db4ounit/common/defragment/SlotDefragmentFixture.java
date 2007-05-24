@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.ext.*;
+import com.db4o.internal.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -36,12 +37,18 @@ public class SlotDefragmentFixture {
 	public static DefragmentConfig defragConfig(boolean forceBackupDelete) {
 		DefragmentConfig defragConfig = new DefragmentConfig(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
 		defragConfig.forceBackupDelete(forceBackupDelete);
+		defragConfig.db4oConfig(db4oConfig());
 		return defragConfig;
 	}
 
+	public static Configuration db4oConfig() {
+		Configuration db4oConfig = Db4o.newConfiguration();
+		db4oConfig.reflectWith(Platform4.reflectorForType(Data.class));
+		return db4oConfig;
+	}
+
 	public static void createFile(String fileName) {
-		Configuration config = Db4o.newConfiguration();
-		ObjectContainer db=Db4o.openFile(config,fileName);
+		ObjectContainer db=Db4o.openFile(db4oConfig(),fileName);
 		Data data=null;
 		for(int value=VALUE-1;value<=VALUE+1;value++) {
 			data=new Data(value,data);
@@ -51,7 +58,7 @@ public class SlotDefragmentFixture {
 	}
 
 	public static void forceIndex() {
-		Configuration config=Db4o.newConfiguration();
+		Configuration config=db4oConfig();
 		config.objectClass(Data.class).objectField(PRIMITIVE_FIELDNAME).indexed(true);
 		config.objectClass(Data.class).objectField(WRAPPER_FIELDNAME).indexed(true);
 		config.objectClass(Data.class).objectField(TYPEDOBJECT_FIELDNAME).indexed(true);
@@ -64,8 +71,10 @@ public class SlotDefragmentFixture {
 
 	public static void assertIndex(String fieldName) throws IOException {
 		forceIndex();
-		Defragment.defrag(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
-		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentTestConstants.FILENAME);
+		DefragmentConfig defragConfig = new DefragmentConfig(SlotDefragmentTestConstants.FILENAME,SlotDefragmentTestConstants.BACKUPFILENAME);
+		defragConfig.db4oConfig(db4oConfig());
+		Defragment.defrag(defragConfig);
+		ObjectContainer db=Db4o.openFile(db4oConfig(),SlotDefragmentTestConstants.FILENAME);
 		Query query=db.query();
 		query.constrain(Data.class);
 		query.descend(fieldName).constrain(new Integer(VALUE));
@@ -75,7 +84,7 @@ public class SlotDefragmentFixture {
 	}
 
 	public static void assertDataClassKnown(boolean expected) {
-		ObjectContainer db=Db4o.openFile(Db4o.newConfiguration(),SlotDefragmentTestConstants.FILENAME);
+		ObjectContainer db=Db4o.openFile(db4oConfig(),SlotDefragmentTestConstants.FILENAME);
 		try {
 			StoredClass storedClass=db.ext().storedClass(Data.class);
 			if(expected) {
