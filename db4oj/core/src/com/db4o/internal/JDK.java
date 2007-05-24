@@ -192,4 +192,8 @@ public class JDK {
     public Reflector createReflector(Object classLoader) {
     	return null;
     }
+
+	public Reflector reflectorForType(Class clazz) {
+		return null;
+	}
 }

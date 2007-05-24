@@ -144,4 +144,8 @@ public class JDKReflect extends JDK {
     	}
     	return new JdkReflector((ClassLoader)classLoader);
     }
+    
+    public Reflector reflectorForType(Class clazz) {
+    	return createReflector(clazz.getClassLoader());
+    }
 }
