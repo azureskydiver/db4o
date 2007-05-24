@@ -1,0 +1,43 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Atomicity</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Atomicity</h1>
+
+<p>Atomicity
+states the mode, in which either all or no modifications are written to the
+database. In this mode each transaction is said to be "atomic". If any part of
+the transaction fails, the whole transaction will fail too. For example, in a
+bank transfer transaction there are 2 parts: debit and credit. If the debit
+operation was successful, but the credit failed, the whole transaction should
+fail and the system should remain in the initial state. </p>
+
+<p>Some of
+the atomicity features:</p>
+
+<ul class="unIndentedList"><li>
+A transaction is a unit of operation - either all the
+transaction's actions are completed or none are</li><li>
+atomicity
+is maintained in the presence of deadlocks</li><li>
+atomicity
+is maintained in the presence of database software failures</li><li>
+atomicity
+is maintained in the presence of application software failures</li><li>
+atomicity
+is maintained in the presence of operation system failures</li><li>
+atomicity
+is maintained in the presence of CPU failures</li><li>
+atomicity is
+maintained in the presence of disk failures</li></ul></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-05-22T08:18:41 by Tetyana.
+				</div>
+  </body>
+</html>

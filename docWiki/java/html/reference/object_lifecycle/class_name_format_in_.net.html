@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Class Name Format In .NET</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Class Name Format In .NET</h1><p><font color="#990000">This topic applies to .NET version only</font>&nbsp;</p>
+<p>Db4o uses full class name to distinguish classes within the database file. In .NET full class name has the following format:</p>
+<p><code>Namespace.ClassName, AssemblyName</code></p>
+<p>Effectively that means that the same class definition within different assemblies (applications or libraries) will be recognized as two different classes by db4o. You should keep this in mind in the following cases:</p>
+<ul>
+<li>2 or more applications working with the same database file;</li>
+<li>client/server application with the classes deployed on both the client and the server;</li>
+<li><a href="../platform_specific_issues/asp.net.html" class="wikiLink">ASP.NET2</a> application with dynamic compilation</li></ul>
+<p>Let's use an example to see what happens in these cases. We will create 2 applications Test1.exe and Test2.exe. Both will have a simplest class definition:</p>
+
+
+<p>Test1 application will store one object of Test class to the database:</p>
+
+
+<p>Another application (Test2) will try to read this object from the same database file. To check how&nbsp; the Test object was actually stored in the database we will use StoredClass API:</p>
+
+
+<p>From the example we can see that though the class has been stored to the database, it cannot be retrieved from the Test2 application, as the assembly name is different from the original.</p>
+<p>In order to make your classes readable from another assembly you should use one of the existing workarounds:</p>
+<ul>
+<li>keep your persistent classes in a separate class library, which should be available for your application assemblies (for the example above compile the Test class into Persistent.dll);</li>
+<li>use db4o <a href="../implementation_strategies/aliases.html" class="wikiLink">Aliases</a>.</li></ul></div>
+    </div>
+    <div id="footer">
+					This revision (16) was last Modified 2007-05-07T07:37:38 by Tetyana.
+				</div>
+  </body>
+</html>
