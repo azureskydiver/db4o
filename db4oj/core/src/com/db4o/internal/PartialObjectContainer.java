@@ -940,6 +940,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
         return false;
     }
+    
+    public int classMetadataIdForName(String name) {
+        ClassMetadata classMetadata = _classCollection.getYapClass(name);
+        if(classMetadata != null){
+            return classMetadata.getID();
+        }
+        return 0;
+    }
 
     public ClassMetadata classMetadataForId(int id) {
     	if(DTrace.enabled){

@@ -76,7 +76,7 @@ public class KnownClassesRepository {
         }
         
         if(_stream.classCollection() != null){
-            int classID = _stream.classCollection().getYapClassID(className);
+            int classID = _stream.classMetadataIdForName(className);
             if(classID > 0){
                 clazz = ensureClassInitialised(classID);
                 _classByName.put(className, clazz);
