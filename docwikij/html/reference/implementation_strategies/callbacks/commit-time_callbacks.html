@@ -1,0 +1,52 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Commit-Time Callbacks</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Commit-Time Callbacks</h1><p>Commit-time callbacks were introduced in db4o version 6.2.</p>
+
+<p>Commit-time callbacks allow a user to add some specific
+behavior just before and just after a transaction is committed. </p>
+
+<p>Typical use-cases for commit-time callbacks:</p>
+
+<ul><li>add constraint-violation checking before commit;</li><li>check application-specific conditions before commit is done;</li><li>start synchronization or backup after commit;</li><li>notify other clients/applications about
+successful/unsuccessful commit.</li></ul>
+
+
+
+
+
+
+
+<p>Commit-time callbacks can be triggered by the following 2 events:<b></b></p><ul><li><b>Committing</b>: event
+     subscribers are notified before the container starts any meaningful commit
+     work and are allowed to cancel the entire operation by throwing an
+     exception; the ObjectContainer instance is completely blocked while
+     subscribers are being notified which is both a blessing because
+     subscribers can count on a stable and safe environment and a curse because
+     it prevents any parallelism with the container;</li><li><b>Committed</b>:
+event subscribers are notified in a separate thread after the container has completely
+finished the commit operation; exceptions if any will be ignored.
+
+</li></ul>
+
+
+
+<p>&nbsp;<div class="childTopicList">More Reading:<ul>
+<li><p><a href="commit-time_callbacks/how_to_use_commit-time_callbacks.html" class="wikiLink">How To Use Commit-Time Callbacks</a></p></li>
+<li><p><a href="commit-time_callbacks/committing_event_example.html" class="wikiLink">Committing Event Example</a></p></li>
+<li><p><a href="commit-time_callbacks/committed_event_example.html" class="wikiLink">Committed Event Example</a></p></li>
+<li><p><a href="commit-time_callbacks/car.html" class="wikiLink">Car</a></p></li>
+</ul></div>
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-05-02T15:36:25 by Tetyana.
+				</div>
+  </body>
+</html>
