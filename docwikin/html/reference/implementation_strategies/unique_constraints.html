@@ -1,0 +1,34 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unique Constraints</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Unique Constraints</h1><p>Unique Constraints feature was first introduced in db4o 6.2.</p>
+
+<p>Unique Constraints allow a user&nbsp;to&nbsp;define a field
+to be unique across all the objects of a particular Class stored to db4o. This
+means that you cannot save an object&nbsp;where a previously committed object
+has the same&nbsp;field value for fields marked as unique.<br>
+&nbsp; <br>
+A Unique Constraint is checked at commit-time and a constraint violation will
+cause a UniqueFieldValueConstraintViolationException&nbsp;to be thrown. This
+functionality is based on <a href="callbacks/commit-time_callbacks.html" class="wikiLink">Commit-Time Callbacks</a> feature. </p>
+
+Multiple constraints can be&nbsp;defined on the
+same&nbsp;class if required.&nbsp;
+
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="unique_constraints/how_to_use_unique_constraints.html" class="wikiLink">How To Use Unique Constraints</a></p></li>
+<li><p><a href="unique_constraints/unique_constraints_example.html" class="wikiLink">Unique Constraints Example</a></p></li>
+</ul></div>
+&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-05-07T10:04:49 by Tetyana.
+				</div>
+  </body>
+</html>

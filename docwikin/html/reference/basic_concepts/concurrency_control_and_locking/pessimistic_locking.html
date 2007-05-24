@@ -1,0 +1,31 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Pessimistic Locking</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Pessimistic Locking</h1>
+
+<p>In pessimistic locking
+approach an entity is locked for the entire time the entity is in application
+memory (often in the form of an object). A read lock indicates that the object
+can be read but not modified or deleted by the other transactions. A write lock
+indicates that the object is locked exclusively and only the current
+transaction can read, modify or delete the object. </p>
+
+<p><b>Advantage</b>: pessimistic
+locking is easy to implement and guarantees that your changes to the database
+are made consistently and safely. </p>
+
+<p><b>Disadvantage</b>: pessimistic
+locking is not scalable; in systems with many users or long-running
+transactions, the waiting time for a lock to be released can be too long.</p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-05-22T11:46:16 by Tetyana.
+				</div>
+  </body>
+</html>
