@@ -243,21 +243,37 @@ public final class ClassMetadataRepository extends PersistentBase {
         return readYapClass((ClassMetadata)i_yapClassByID.get(id), null);
     }
 	
+	public int classMetadataIdForName(String name) {
+	    ClassMetadata classMetadata = (ClassMetadata)i_yapClassByBytes.get(getNameBytes(name));
+	    if(classMetadata == null){
+	        classMetadata = findInitializedClassByName(name);
+	    }
+	    if(classMetadata != null){
+	        return classMetadata.getID();
+	    }
+	    return 0;
+	}
+	
     public ClassMetadata getYapClass(String a_name) {
-        ClassMetadata yapClass = (ClassMetadata)i_yapClassByBytes.remove(getNameBytes(a_name));
-        readYapClass(yapClass, null);
-        if (yapClass == null) {
-            ClassMetadataIterator i = iterator();
-            while (i.moveNext()) {
-                yapClass = (ClassMetadata)i.current();
-                if (a_name.equals(yapClass.getName())) {
-                    readYapClass(yapClass, null);
-                    return yapClass;
-                }
-            }
-            return null;
+        ClassMetadata classMetadata = (ClassMetadata)i_yapClassByBytes.remove(getNameBytes(a_name));
+        if (classMetadata == null) {
+            classMetadata = findInitializedClassByName(a_name);
         }
-        return yapClass;
+        if(classMetadata != null){
+            readYapClass(classMetadata, null);
+        }
+        return classMetadata;
+    }
+    
+    private ClassMetadata findInitializedClassByName(String name){
+        ClassMetadataIterator i = iterator();
+        while (i.moveNext()) {
+            ClassMetadata classMetadata = (ClassMetadata)i.current();
+            if (name.equals(classMetadata.getName())) {
+                return classMetadata;
+            }
+        }
+        return null;
     }
     
     public int getYapClassID(String name){
