@@ -13,8 +13,9 @@ import com.db4o.query.Query;
 import db4ounit.Assert;
 import db4ounit.TestCase;
 import db4ounit.TestLifeCycle;
+import db4ounit.extensions.fixtures.*;
 
-public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle {
+public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle, OptOutNoFileSystemData {
 	
 	private static final String NULL_NAME = "NULL";
 	

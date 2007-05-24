@@ -11,11 +11,12 @@ import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
  */
-public class UUIDMigrationTestCase implements TestCase {
+public class UUIDMigrationTestCase implements TestCase, OptOutNoFileSystemData {
 	
 	public static void main(String[] args) {
 		new TestRunner(UUIDMigrationTestCase.class).run();
