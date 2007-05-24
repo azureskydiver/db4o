@@ -871,12 +871,12 @@
 			<fileset dir="${dir.dist.java}" includes="lib/**" />
 			<fileset dir="${dir.dist.java}" includes="src/**" />
 			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
-			<fileset dir="${dir.config}" includes="README.txt" />
+			<fileset dir="${dir.config}" includes="readme.html" />
 		</copy>
 		<!-- readme's in distribution folders-->
-		<copy file="${dir.config}/java_doc_readme.txt" tofile="${dir.dist.java.build}/doc/readme.txt" />
-		<copy file="${dir.config}/java_src_readme.txt" tofile="${dir.dist.java.build}/src/readme.txt" />
-		<copy file="${dir.config}/java_lib_readme.txt" tofile="${dir.dist.java.build}/lib/readme.txt" >
+		<copy file="${dir.config}/java_doc_readme.html" tofile="${dir.dist.java.build}/doc/readme.html" />
+		<copy file="${dir.config}/java_src_readme.html" tofile="${dir.dist.java.build}/src/readme.html" />
+		<copy file="${dir.config}/java_lib_readme.html" tofile="${dir.dist.java.build}/lib/readme.html" >
 		        <filterchain>
 		           <striplinecomments>
 		              <comment value="!"/>
@@ -886,7 +886,7 @@
 		            </replacetokens>
 		        </filterchain>
 		    </copy>
-		<copy file="${dir.taj}/db4ota.readme.txt" todir="${dir.dist.java.build}/lib" />
+		<copy file="${dir.taj}/db4ota.readme.html" todir="${dir.dist.java.build}/lib" />
 		
 		<mkdir dir="${dir.dist.java.build}/doc/reference" />
 		<copy todir="${dir.dist.java.build}/doc/reference">

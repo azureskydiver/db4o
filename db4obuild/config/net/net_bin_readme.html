@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>Readme</title>
+<Style>
+BODY, P, TD { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #666666 }
+H2,H3,H4,H5 { color: black; font-weight: bold; }
+H2 { font-size: 13pt; }
+H3 { font-size: 12pt; }
+H4 { font-size: 10pt; color: black; }
+</style>
+</head>
+<body bgcolor="#FFFFFF" color=#000000>
+    This folder contains binary release files in the following folders:
+    <br />
+    <ul>
+        <li>compact-1.1 </li>
+        <li>compact-2.0 </li>
+        <li>net-1.1 </li>
+        <li>net-2.0 </li>
+    </ul>
+    <br />
+    (This list might be not full for your distribution depending on the selected version.)
+    <br />
+    <br />
+    compact-1.1, compact-2.0 and net-1.1 contain the following files:
+    <br />
+    <br />
+    <table>
+        <tr>
+            <td style="width: 100px">
+                db4objects.db4o.dll</td>
+            <td style="width: 400px">
+                db4o database library. Include it in your project references to get access to the
+                db4o functionality</td>
+        </tr>
+        <tr>
+            <td style="width: 100px">
+                db4objects.db4o.xml</td>
+            <td style="width: 400px">
+                assembly documentation file</td>
+        </tr>
+        <tr>
+            <td style="width: 100px">
+                db4objects.db4o.tools.dll</td>
+            <td style="width: 400px">
+                db4o tools package, used for Native Query optimization, contains defragment and
+                statistics tools. Include this library in your project references to enable Native
+                Query optimization</td>
+        </tr>
+        <tr>
+            <td style="width: 100px">
+                db4objects.db4o.tools.xml</td>
+            <td style="width: 400px">
+                assembly documentation file</td>
+        </tr>
+        <tr>
+            <td style="width: 100px">
+                cecil.flowanalysis.dll and mono.cecil.dll</td>
+            <td style="width: 400px">
+                bytecode analyzing libraries, used for Native Query Optimization. (http://www.mono-project.com/Cecil)
+                Include this library in your project references to enable Native Query optimization</td>
+        </tr>
+    </table>
+    <br />
+    net-2.0 in addition to the above mentioned files also includes:
+    <br />
+    <br />
+    <table>
+        <tr>
+            <td style="width: 174px">
+                db4oadmin.exe</td>
+            <td style="width: 358px">
+                bytecode instrumentation tool, for a list of options execute without parameters
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 174px">
+                mono.getoptions.dll</td>
+            <td style="width: 358px">
+                library used for parameter parsing in Db4oAdmin tool</td>
+        </tr>
+        <tr>
+            <td style="width: 174px">
+                db4objects.db4o.ta.dll</td>
+            <td style="width: 358px">
+                transparent activation plus instrumentation (experimental)</td>
+        </tr>
+    </table>
+</body>
+</html>

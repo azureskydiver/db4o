@@ -190,22 +190,22 @@
 			<then>
 				<copy todir="${dir.dist.net.build}">			
 					<fileset dir="${dir.config}/mono">
-						<include name="COPYING" />
-						<include name="README" />
+						<include name="copying.html" />
+						<include name="readme.html" />
 					</fileset>
 				</copy>
 			</then>
 			<else>
 				<copy todir="${dir.dist.net.build}">			
 					<fileset dir="${dir.config}/net">
-						<include name="db4o.license.txt" />
-						<include name="README.txt" />
+						<include name="db4o.license.html" />
+						<include name="readme.html" />
 					</fileset>
 				</copy>
 				<!-- readme's in distribution folders-->
-				<copy file="${dir.config}/net/net_doc_readme.txt" tofile="${dir.dist.net.build}/doc/readme.txt" />
-				<copy file="${dir.config}/net/net_src_readme.txt" tofile="${dir.dist.net.build}/src/readme.txt" />
-				<copy file="${dir.config}/net/net_bin_readme.txt" tofile="${dir.dist.net.build}/bin/readme.txt" />
+				<copy file="${dir.config}/net/net_doc_readme.html" tofile="${dir.dist.net.build}/doc/readme.html" />
+				<copy file="${dir.config}/net/net_src_readme.html" tofile="${dir.dist.net.build}/src/readme.html" />
+				<copy file="${dir.config}/net/net_bin_readme.html" tofile="${dir.dist.net.build}/bin/readme.html" />
 			
 			</else>
 		</if>
