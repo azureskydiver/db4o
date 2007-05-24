@@ -1,0 +1,84 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Storing MarshalByRef Objects</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Storing MarshalByRef Objects</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Problem&nbsp;">Problem&nbsp;</a></li><li><a href ="#Reason">Reason</a></li><li><a href ="#Solution">Solution</a></li></ul></li></ul></div></div></div><p><font color="#990000">This topic applies to .NET version only</font><br></p><a name="Problem&nbsp;"></a><h2>Problem&nbsp;</h2>
+
+
+
+
+
+<p>MarshalByRef objects from .NET Remoting can not be stored by
+db4o.<br></p>
+
+<a name="Reason"></a><h2>Reason</h2>
+
+<p>MarshalByRef objects are not really objects. They are proxy
+objects to instances, which live on another machine. There are 2 cases to
+distinguish:</p>
+
+<ol><li>if the
+     object instance is local, then the object is storable without an exception
+     unless a remote client has a lifetime lease on the object instance;</li><li>if the
+     object instance is remote, then you're actually dealing with a DCOM proxy,
+     which cannot be safely stored in db4o, since the remote object lifetime
+     would expire as soon as the object was garbage collected. </li></ol>
+
+
+
+<a name="Solution"></a><h2>Solution<br></h2>
+
+<p>
+1. Use marshal by value technology for the persistent object. In this case the
+object implements ISerializable interface and can be stored by db4o without any
+problems. The object is created on the client and is passed to the server using
+MarshalByRef proxy. </p>
+
+<p>In the example, TestValue class should be stored to db4o.
+TestValue implements ISerializable. In order to make TestValue class available
+to the server and to the client it is declared in a separate class library
+RemotingClasses. </p>
+
+<p>TestValueServer class extends MarshalByRefObject and plays
+the role of a carrier between the client and the server. TestValue instance is
+created on the client and passed to the TestValueServer, which runs as a
+service on the server. TestValueServer then stores TestValue object to the
+database and retrieves its value on request.</p>
+
+<p>Download the example solution: <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Usage_Pitfalls/Storing_MarshalByRef_Objects/RemotingExampleValue.zip">c#</a>, <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Usage_Pitfalls/Storing_MarshalByRef_Objects/RemotingExampleValueVB.zip">VB</a></p>
+
+
+
+<p>2. If using MarshalByRef object is mandatory for you, use
+the following configuration:</p><p><code>configuration.ObjectClass("System.Runtime.Remoting.ServerIdentity,
+mscorlib").Translate(new TTransient()); </code><br>
+<code>configuration.ObjectClass("System.Threading.TimerCallback,
+mscorlib").Translate(new TTransient()); </code><br>
+<br>
+The TTransient translator will prevent instances of ServerIdentity and
+TimerCallback from being stored within a db4o database. These classes are
+protected internal classes within the .NET Framework. When retrieving your
+MarshalByRef objects from db4o, you will need to re-marshal them.</p>
+
+<p>In the following example Test object extends
+MarshalByRefObject. Test object lives on the server and can store itself to
+db4o when a request is received from the client. The configuration above is
+used to make it storable with db4o.</p>
+
+<p>Download the example solution: <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Usage_Pitfalls/Storing_MarshalByRef_Objects/RemotingExampleRef.zip">c#</a>, <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Usage_Pitfalls/Storing_MarshalByRef_Objects/RemotingExampleRefVB.zip">VB</a>.</p>
+
+
+
+Note: in many cases using <a href="../client-server.html" class="wikiLink">db4o
+client-server</a> version can be a better option for a remote persistence.</div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2007-05-23T09:52:55 by Tetyana.
+				</div>
+  </body>
+</html>
