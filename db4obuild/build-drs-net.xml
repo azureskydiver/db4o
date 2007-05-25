@@ -26,6 +26,11 @@
     
     <target name="package" depends="rebuild, doctor, run-tests">
         <mkdir dir="${drs.dir}/dist" />
+        <copy todir="${drs.net.dir}" >
+            <fileset dir="${drs.dir}" >
+                <include name="*.html" />
+            </fileset>
+        </copy>
         
         <zip destfile="${drs.dir}/dist/dRS-net-${db4o.version.major}.${db4o.version.minor}.zip">
             <fileset dir="${drs.net.dir}" />
@@ -254,9 +259,7 @@
 		<java fork="true" classname="com.yetac.doctor.Doctor">
 			<arg line="${drs.net.dir}/docs ${font.pdf.base}" />
 			<classpath>
-				<fileset dir="${drs.dir}/lib">
-					<include name="*.jar" />
-				</fileset>
+				<pathelement location="${dependencies.jar}" />
 				<fileset dir="${drs.dir}/lib/doctor">
 					<include name="*.jar" />
 				</fileset>
