@@ -26,11 +26,19 @@
     
     <target name="package" depends="rebuild, doctor, run-tests">
         <mkdir dir="${drs.dir}/dist" />
-        <copy todir="${drs.net.dir}" >
-            <fileset dir="${drs.dir}" >
-                <include name="*.html" />
-            </fileset>
-        </copy>
+		<copy file="${drs.dir}/drs.license.html" todir="${drs.net.dir}"/>		
+		<copy file="${drs.dir}/db4o.license.html" todir="${drs.net.bin.dir}"/>		
+		<copy file="${drs.dir}/readme.net.html" tofile="${drs.net.dir}/readme.html"/>		
+		<copy file="${drs.dir}/compatibility.net.html" tofile="${drs.net.dir}/compatibility.html" >
+				        <filterchain>
+				           <striplinecomments>
+				              <comment value="!"/>
+				           </striplinecomments>
+				           <replacetokens>
+				                <token key="db4o.version.dotted" value="${db4o.version.dotted}"/>
+				            </replacetokens>
+				        </filterchain>
+				    </copy>
         
         <zip destfile="${drs.dir}/dist/dRS-net-${db4o.version.major}.${db4o.version.minor}.zip">
             <fileset dir="${drs.net.dir}" />
