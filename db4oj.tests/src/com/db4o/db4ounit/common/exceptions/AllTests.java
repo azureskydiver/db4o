@@ -25,6 +25,7 @@ public class AllTests extends Db4oTestSuite {
 			ObjectCanDeleteExceptionTestCase.class,
 			ObjectOnDeleteExceptionTestCase.class,
 			ObjectCanNewExceptionTestCase.class,
+			OldFormatExceptionTestCase.class,
 			StoreExceptionBubblesUpTestCase.class, 
 			StoredClassExceptionBubblesUpTestCase.class,
 			TSerializableOnInstantiateCNFExceptionTestCase.class,
