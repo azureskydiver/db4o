@@ -1,0 +1,26 @@
+.n
+.a Roadmap ..
+.0 Roadmap ..
+
+This section describes the features supported in current release and features planned in
+._ upcoming releases.
+
+.1 Supported Features ..
+- db4o to db4o replication
+
+- Array Replication
+- Inheritance hierarchies
+- Standard Primitive Types
+- One-To-One Relations
+- One-To-Many Relations 
+- Many-To-One Relations
+
+- Queries for changed objects
+- Parent-to-Child traversal along changed objects
+- Collection Replication
+- Replication Event System
+- Replication of deleted objects
+
+.1 Planned Features ..
+- NHibernate replication
+- Instant replication
