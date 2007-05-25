@@ -24,7 +24,7 @@
 		<os family="unix" />
 	</condition>
     
-    <target name="package" depends="rebuild, run-tests">
+    <target name="package" depends="rebuild, doctor, run-tests">
         <mkdir dir="${drs.dir}/dist" />
         
         <zip destfile="${drs.dir}/dist/dRS-net-${db4o.version.major}.${db4o.version.minor}.zip">
@@ -233,11 +233,6 @@
 		<mkdir dir="${drs.net.bin.dir}" />
 		<copy file="${db4o.dll}" todir="${drs.net.bin.dir}" />
 		<copy file="${db4ounit.dll}" todir="${drs.net.bin.dir}" />
-		
-		<copy file="${db4o.dll}" todir="${drsqs.net.bin.dir}" />
-		<copy file="${db4ounit.dll}" todir="${drsqs.net.bin.dir}" />
-		<mkdir dir="${drsqs.net.dir}" />
-		<mkdir dir="${drsqs.net.bin.dir}" />
         
         <copy file="${drs.overlay.dir}/drs.sln" todir="${drs.net.dir}"/>
         <copy file="${drs.overlay.dir}/drs.suo" todir="${drs.net.dir}"/>
@@ -251,4 +246,28 @@
         </copy>
         
     </target>
+    
+    <target name="doctor" >
+		<copy todir="${drs.net.dir}">
+            <fileset dir="${drs.overlay.dir}/tutorial" />
+        </copy>
+		<java fork="true" classname="com.yetac.doctor.Doctor">
+			<arg line="${drs.net.dir}/docs ${font.pdf.base}" />
+			<classpath>
+				<fileset dir="${drs.dir}/lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${drs.dir}/lib/doctor">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<move file="${drs.net.dir}/docs/out/doctor.pdf" tofile="${drs.net.dir}/docs/out/dRS-tutorial.pdf"/>
+        
+        <move todir="${drs.net.dir}/docs">
+            <fileset dir="${drs.net.dir}/docs/out" />
+        </move>
+        <delete dir="${drs.net.dir}/docs/in" />
+	</target>
+    
 </project>
