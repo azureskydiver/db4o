@@ -5,11 +5,11 @@
 	<namespace name="Db4objects.Db4o.Constraints">Constraints package.</namespace>
 	<namespace name="Db4objects.Db4o.Diagnostic">Diagnostics functionality.</namespace>
 	<namespace name="Db4objects.Db4o.Events">Events package.</namespace>
+	<namespace name="Db4objects.Db4o.Ext">Advanced API package.</namespace>
 	<namespace name="Db4objects.Db4o.IO">Input/Output abstraction layer.</namespace>
 	<namespace name="Db4objects.Db4o.IO.Crypt">Cryptographic IO support.</namespace>
-	<namespace name="Db4objects.Db4o.Query">Query package.</namespace>
-	<namespace name="Db4objects.Db4o.Ext">Advanced API package.</namespace>
 	<namespace name="Db4objects.Db4o.Messaging">Messaging package.</namespace>
+	<namespace name="Db4objects.Db4o.Query">Query package.</namespace>
 	<namespace name="Db4objects.Db4o.Reflect">Reflection support package.</namespace>
 	<namespace name="Db4objects.Db4o.Reflect.Generic">Generic reflection support (makes it possible to query database files when the original classes are not available).</namespace>
 	<namespace name="Db4objects.Db4o.Reflect.Net">.NET reflection support.</namespace>
