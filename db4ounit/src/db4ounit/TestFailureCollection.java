@@ -33,7 +33,7 @@ public class TestFailureCollection extends Printable {
 			writer.write(String.valueOf(index));
 			writer.write(") ");
 			writer.write(((TestFailure)e.nextElement()).getTest().getLabel());
-			writer.write("\n");
+			writer.write(TestPlatform.NEWLINE);
 			++index;
 		}
 	}
@@ -42,11 +42,11 @@ public class TestFailureCollection extends Printable {
 		int index = 1;
 		Enumeration e = iterator();
 		while (e.hasMoreElements()) {
-			writer.write("\n");
+			writer.write(TestPlatform.NEWLINE);
 			writer.write(String.valueOf(index));
 			writer.write(") ");
 			((Printable)e.nextElement()).print(writer);
-			writer.write("\n");
+			writer.write(TestPlatform.NEWLINE);
 			++index;
 		}
 	}
