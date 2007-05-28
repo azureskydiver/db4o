@@ -1,7 +1,6 @@
 package db4ounit;
 
 import java.io.IOException;
-import java.io.Writer;
 
 public class TestRunner {
 	
@@ -47,16 +46,37 @@ public class TestRunner {
 	}
 
 	private void report(Exception x) {
-		Writer stdout = TestPlatform.getStdOut();
-		TestPlatform.printStackTrace(stdout, x);
+		TestPlatform.printStackTrace(TestPlatform.getStdOut(), x);
 	}
 
 	private void report(TestResult result) {
+		reportToTextFile(result);
+		reportToStdErr(result);
+	}
+
+	private void reportToTextFile(TestResult result) {
 		try {
-			java.io.Writer stdErr = TestPlatform.getStdErr();
-			result.print(stdErr);
-			stdErr.flush();
+			java.io.Writer writer = TestPlatform.openTextFile("db4ounit.log");
+			try {
+				report(writer, result);
+			} finally {
+				writer.close();
+			}
 		} catch (IOException e) {
+			report(e);
+		}
+	}
+
+	private void reportToStdErr(TestResult result) {
+		report(TestPlatform.getStdErr(), result);
+	}
+
+	private void report(java.io.Writer writer, TestResult result) {
+		try {
+			result.print(writer);
+			writer.flush();
+		} catch (IOException e) {
+			report(e);
 		}
 	}
 }

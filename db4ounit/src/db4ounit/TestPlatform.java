@@ -8,6 +8,8 @@ import java.lang.reflect.*;
  */
 public class TestPlatform {
 	
+	public static String NEWLINE = System.getProperty("line.separator");
+	
 	public static Throwable getExceptionCause(Throwable e) {
 		try {
 			Method method = e.getClass().getMethod("getCause", new Class[0]);
@@ -49,5 +51,9 @@ public class TestPlatform {
 
 	public static void emitWarning(String warning) {
 		System.err.println(warning);
+	}
+
+	public static Writer openTextFile(String fname) throws IOException {
+		return new java.io.FileWriter(fname);
 	}
 }
