@@ -81,7 +81,7 @@ public abstract class ClassMarshaller {
     public void read(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) {
         clazz.setAncestor(stream.classMetadataForId(reader.readInt()));
         
-        if(clazz.i_dontCallConstructors){
+        if(clazz.callConstructor()){
             // The logic further down checks the ancestor YapClass, whether
             // or not it is allowed, not to call constructors. The ancestor
             // YapClass may possibly have not been loaded yet.
