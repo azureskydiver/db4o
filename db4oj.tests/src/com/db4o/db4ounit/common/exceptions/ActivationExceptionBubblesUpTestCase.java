@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4o.db4ounit.common.exceptions;
 
@@ -14,7 +14,7 @@ import db4ounit.extensions.*;
 public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new ActivationExceptionBubblesUpTestCase().runEmbeddedClientServer();
+		new ActivationExceptionBubblesUpTestCase().runAll();
 	}
 	
 	public static final class ItemTranslator implements ObjectTranslator {
