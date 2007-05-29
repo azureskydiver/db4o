@@ -2,17 +2,15 @@
 
 package com.db4o.internal;
 
-import java.io.IOException;
-
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.btree.BTree;
+import com.db4o.internal.btree.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.fileheader.*;
 import com.db4o.internal.freespace.*;
-import com.db4o.internal.query.processor.QQuery;
+import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.slots.*;
 
@@ -78,7 +76,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         commitTransaction();
     }
 
-    void configureNewFile() throws IOException{
+    void configureNewFile() {
         
         newSystemData(configImpl().freespaceSystem());
         systemData().converterVersion(Converter.VERSION);
@@ -437,7 +435,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     	return _fileHeader != null;
     }
 
-    void readThis() throws IOException, OldFormatException {
+    void readThis() throws OldFormatException {
         
         newSystemData(AbstractFreespaceManager.FM_LEGACY_RAM);
         blockSizeReadFromFile(1);
@@ -487,7 +485,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 			&& (_freespaceManager.systemType() != configuredSystem);
 	}
 
-	private void migrateFreespace() throws IOException {
+	private void migrateFreespace() {
 		FreespaceManager oldFreespaceManager = _freespaceManager;
 		_freespaceManager = AbstractFreespaceManager.createNew(this, configImpl().freespaceSystem());
         systemData().freespaceAddress(0);

@@ -203,7 +203,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		return _slotsByAddress.size(transaction()) + _delegate.slotCount();
 	}
 
-	public void start(int slotAddress) throws IOException {
+	public void start(int slotAddress) {
 		try{
             beginDelegation();
 			if(slotAddress == 0){

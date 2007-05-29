@@ -35,7 +35,8 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         open();
     }
 
-    protected final void openImpl() throws OldFormatException, DatabaseReadOnlyException {
+    protected final void openImpl() throws OldFormatException,
+			DatabaseReadOnlyException {
 		IoAdapter ioAdapter = configImpl().ioAdapter();
 		boolean isNew = !ioAdapter.exists(fileName());
 		if (isNew) {
@@ -45,24 +46,20 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 		boolean lockFile = Debug.lockFile && configImpl().lockFile()
 				&& (!configImpl().isReadOnly());
-		try {
-			_file = ioAdapter.open(fileName(), lockFile, 0);
-			if (needsTimerFile()) {
-				_timerFile = ioAdapter.delegatedIoAdapter().open(fileName(),
-						false, 0);
+		_file = ioAdapter.open(fileName(), lockFile, 0);
+		if (needsTimerFile()) {
+			_timerFile = ioAdapter.delegatedIoAdapter().open(fileName(), false,
+					0);
+		}
+		if (isNew) {
+			configureNewFile();
+			if (configImpl().reservedStorageSpace() > 0) {
+				reserve(configImpl().reservedStorageSpace());
 			}
-			if (isNew) {
-				configureNewFile();
-				if (configImpl().reservedStorageSpace() > 0) {
-					reserve(configImpl().reservedStorageSpace());
-				}
-				commitTransaction();
-				writeHeader(true, false);
-			} else {
-				readThis();
-			}
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
+			commitTransaction();
+			writeHeader(true, false);
+		} else {
+			readThis();
 		}
 	}
     

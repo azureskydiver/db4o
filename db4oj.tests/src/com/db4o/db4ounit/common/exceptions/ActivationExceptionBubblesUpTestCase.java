@@ -14,7 +14,7 @@ import db4ounit.extensions.*;
 public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 	
 	public static void main(String[] args) {
-		new ActivationExceptionBubblesUpTestCase().runClientServer();
+		new ActivationExceptionBubblesUpTestCase().runEmbeddedClientServer();
 	}
 	
 	public static final class ItemTranslator implements ObjectTranslator {

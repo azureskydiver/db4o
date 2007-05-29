@@ -77,7 +77,7 @@ public class FileHeader1 extends FileHeader {
         return LENGTH;
     }
 
-    protected void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException {
+    protected void readFixedPart(LocalObjectContainer file, Buffer reader) {
         commonTasksForNewAndRead(file);
         checkThreadFileLock(file, reader);
         reader.seek(TRANSACTION_POINTER_OFFSET);
