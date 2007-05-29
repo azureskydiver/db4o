@@ -51,7 +51,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		boolean ok = false;
 		try {
 			ensureLoadStaticClass();
-			ensureLoadConfiguredClasses();
 			startCommittedCallbackThread(_committedInfosQueue);
 			startServer();
 			ok = true;
@@ -106,16 +105,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	private void ensureLoadStaticClass() {
 		_container.produceClassMetadata(_container.i_handlers.ICLASS_STATICCLASS);
-	}
-	
-	private void ensureLoadConfiguredClasses() {
-		// make sure all configured YapClasses are up in the repository
-		Iterator4 i = _config.exceptionalClasses().iterator();
-		while(i.moveNext()){
-			Entry4 entry = (Entry4) i.current();
-			_container.produceClassMetadata(_container.reflector().forName(
-				((Config4Class) entry.value()).getName()));
-		}
 	}
 
 	private void configureObjectServer() {

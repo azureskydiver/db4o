@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.cs;
 
-
-
 import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
@@ -18,6 +16,7 @@ public class AllTests extends Db4oTestSuite {
             SendMessageToClientTestCase.class,
             ServerRevokeAccessTestCase.class,
             ServerTimeoutTestCase.class,
+            CallConstructorsConfigTestCase.class,
 		};
 	}
 }

@@ -43,10 +43,19 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 			private FieldMetadata _fieldMetaData;
 			
 			private void ensureSingleOccurence(Transaction trans, ObjectInfoCollection col){
+				final ClassMetadata classMeta = classMetadata();
+				if (null == classMeta) {
+					// system is not ready for us yet
+					return;
+				}
 				Iterator4 i = col.iterator();
 				while(i.moveNext()){
 					ObjectInfo info = (ObjectInfo) i.current();
 					int id = (int)info.getInternalID();
+					
+					// TODO: check if the object is of the appropriate
+					// type before going further?
+					
 					HardObjectReference ref = HardObjectReference.peekPersisted(trans, id, 1);
 					Object fieldValue = fieldMetadata().getOn(trans, ref._object);
 					if(fieldValue == null){
@@ -54,7 +63,7 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 					}
 					BTreeRange range = fieldMetadata().search(trans, fieldValue);
 					if(range.size() > 1){
-						throw new UniqueFieldValueConstraintViolationException(classMetadata().getName(), fieldMetadata().getName()); 
+						throw new UniqueFieldValueConstraintViolationException(classMeta.getName(), fieldMetadata().getName()); 
 					}
 				}
 			}
@@ -68,8 +77,11 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 			}
 			
 			private ClassMetadata classMetadata() {
-				ReflectClass reflectClass = ReflectorUtils.reflectClassFor(objectContainer.reflector(), _clazz);
-				return objectContainer.classMetadataForReflectClass(reflectClass); 
+				return objectContainer.classMetadataForReflectClass(reflectClass()); 
+			}
+
+			private ReflectClass reflectClass() {
+				return ReflectorUtils.reflectClassFor(objectContainer.reflector(), _clazz);
 			}
 	
 			public void onEvent(Event4 e, EventArgs args) {
