@@ -682,7 +682,8 @@
 				<path path="${path.classpath.full}" />
 			</classpath>
 		</java>
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5CS" failonerror="true" timeout="4800000">
+        <!-- AllTestsDb4oUnitJdk5CS is not necessary. Will remove it later -->
+		<!--<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5CS" failonerror="true" timeout="4800000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java5}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
@@ -690,7 +691,7 @@
 				<path path="${path.classpath.full}" />
 			</classpath>
 		</java>
-
+                    -->
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="320000">
 			<classpath>
 				<pathelement location="${file.db4ounit.jar}" />
