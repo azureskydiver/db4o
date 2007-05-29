@@ -33,7 +33,7 @@ public class Db4oException extends ChainedRuntimeException {
 	 * @param cause exception cause
 	 */
 	public Db4oException(Throwable cause) {
-		this(cause.getMessage(), cause);
+		this(null, cause);
 	}
 	
 	/**
