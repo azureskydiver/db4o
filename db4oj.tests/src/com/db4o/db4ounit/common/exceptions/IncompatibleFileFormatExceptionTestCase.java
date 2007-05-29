@@ -34,6 +34,9 @@ public class IncompatibleFileFormatExceptionTestCase implements Db4oTestCase {
 				Db4o.openFile(INCOMPATIBLE_FILE_FORMAT);
 			}
 		});
+		File4.delete(INCOMPATIBLE_FILE_FORMAT);
+		IoAdapter adapter = new RandomAccessFileAdapter();
+		Assert.isFalse(adapter.exists(INCOMPATIBLE_FILE_FORMAT));
 	}
 
 }
