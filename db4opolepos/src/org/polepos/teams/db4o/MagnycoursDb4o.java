@@ -24,6 +24,7 @@ import java.util.*;
 import org.polepos.circuits.magnycours.*;
 
 import com.db4o.*;
+import com.db4o.query.*;
 
 public class MagnycoursDb4o extends Db4oDriver implements
 		MagnycoursDriver {
@@ -60,7 +61,9 @@ public class MagnycoursDb4o extends Db4oDriver implements
 	}
 
 	private List retrieveList() {
-		ObjectSet os = db().query(_list.getClass());
+	    Query q = db().query();
+	    q.constrain(_list.getClass());
+		ObjectSet os = q.execute();
 		return (List) os.next();
 	}
 
