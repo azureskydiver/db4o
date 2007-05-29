@@ -43,11 +43,6 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 			private FieldMetadata _fieldMetaData;
 			
 			private void ensureSingleOccurence(Transaction trans, ObjectInfoCollection col){
-				final ClassMetadata classMeta = classMetadata();
-				if (null == classMeta) {
-					// system is not ready for us yet
-					return;
-				}
 				Iterator4 i = col.iterator();
 				while(i.moveNext()){
 					ObjectInfo info = (ObjectInfo) i.current();
@@ -63,9 +58,13 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 					}
 					BTreeRange range = fieldMetadata().search(trans, fieldValue);
 					if(range.size() > 1){
-						throw new UniqueFieldValueConstraintViolationException(classMeta.getName(), fieldMetadata().getName()); 
+						throw new UniqueFieldValueConstraintViolationException(classMetadata().getName(), fieldMetadata().getName()); 
 					}
 				}
+			}
+
+			private boolean isClassMetadataAvailable() {
+				return null != classMetadata();
 			}
 			
 			private FieldMetadata fieldMetadata() {
@@ -85,6 +84,9 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 			}
 	
 			public void onEvent(Event4 e, EventArgs args) {
+				if (!isClassMetadataAvailable()) {
+					return;
+				}
 				CommitEventArgs commitEventArgs = (CommitEventArgs) args;
 				Transaction trans = (Transaction) commitEventArgs.transaction();
 				ensureSingleOccurence(trans, commitEventArgs.added());
