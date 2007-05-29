@@ -44,8 +44,8 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     private boolean _classIndexed;
     
     private ReflectClass _reflector;
+    
     private boolean _isEnum;
-    public boolean i_dontCallConstructors;
     
     private EventDispatcher _eventDispatcher;
     
@@ -1266,18 +1266,13 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return _stream.configImpl().resolveAliasRuntimeName(i_name);
     }
     
-    final boolean callConstructor() {
-        i_dontCallConstructors = ! callConstructor1();
-        return ! i_dontCallConstructors;
-    }
-    
-    private final boolean callConstructor1() {
-        TernaryBool res = callConstructorSpecialized();
-        // FIXME: If specified, return yes?!?
-        if(!res.unspecified()){
-            return res == TernaryBool.YES;
-        }
-        return _stream.configImpl().callConstructors().definiteYes();
+    public final boolean callConstructor() {
+        TernaryBool specialized = callConstructorSpecialized();
+		// FIXME: If specified, return yes?!?
+		if(!specialized.unspecified()){
+		    return specialized.definiteYes();
+		}
+		return _stream.configImpl().callConstructors().definiteYes();
     }
     
     private final TernaryBool callConstructorSpecialized(){
