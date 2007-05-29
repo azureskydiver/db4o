@@ -140,8 +140,7 @@ public final class ConfigBlock {
             	}
             	// close container before throwing the exception, otherwise, no
 				// one can shutdown the container.
-				_container.shutdownObjectContainer();
-                throw new OldFormatException();
+				throw new OldFormatException();
             }
         }
         
