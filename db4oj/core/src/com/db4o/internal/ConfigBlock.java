@@ -138,9 +138,7 @@ public final class ConfigBlock {
             	if(allowAutomaticShutdown()) {
             		Platform4.removeShutDownHook(_container);
             	}
-            	// close container before throwing the exception, otherwise, no
-				// one can shutdown the container.
-				throw new OldFormatException();
+            	throw new OldFormatException();
             }
         }
         
