@@ -209,7 +209,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         _lengthIx.remove(address, length);
     }
     
-    public void start(int slotAddress) throws IOException {
+    public void start(int slotAddress) {
         
         if(started()){
             return;

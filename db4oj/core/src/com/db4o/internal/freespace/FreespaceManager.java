@@ -2,8 +2,6 @@
 
 package com.db4o.internal.freespace;
 
-import java.io.*;
-
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
@@ -38,7 +36,7 @@ public interface FreespaceManager {
 	public void read(int freeSpaceID);
 
 //	 TODO: FB delete method when FreespaceManagerIx is removed
-	public void start(int slotAddress) throws IOException;
+	public void start(int slotAddress);
 
 	public byte systemType();
 	

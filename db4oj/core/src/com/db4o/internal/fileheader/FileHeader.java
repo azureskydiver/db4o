@@ -27,7 +27,7 @@ public abstract class FileHeader {
         return length;
     }
 
-    public static FileHeader readFixedPart(LocalObjectContainer file) throws IOException, OldFormatException {
+    public static FileHeader readFixedPart(LocalObjectContainer file) throws OldFormatException {
         Buffer reader = prepareFileHeaderReader(file);
         FileHeader header = detectFileHeader(file, reader);
         if(header == null){
@@ -69,7 +69,7 @@ public abstract class FileHeader {
     	return shuttingDown ? 0 : time;
     }
 
-    protected abstract void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException;
+    protected abstract void readFixedPart(LocalObjectContainer file, Buffer reader);
 
     public abstract void readVariablePart(LocalObjectContainer file);
     

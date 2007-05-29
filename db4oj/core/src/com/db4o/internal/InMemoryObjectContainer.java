@@ -2,9 +2,6 @@
 
 package com.db4o.internal;
 
-import java.io.*;
-
-import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -32,21 +29,17 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
     }
     
     protected final void openImpl() throws OldFormatException {
-        byte[] bytes = _memoryFile.getBytes();
-		try {
-			if (bytes == null || bytes.length == 0) {
-				_memoryFile.setBytes(new byte[_memoryFile.getInitialSize()]);
-				configureNewFile();
-				commitTransaction();
-				writeHeader(false, false);
-			} else {
-				_length = bytes.length;
-				readThis();
-			}
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
-		} 
-    }
+		byte[] bytes = _memoryFile.getBytes();
+		if (bytes == null || bytes.length == 0) {
+			_memoryFile.setBytes(new byte[_memoryFile.getInitialSize()]);
+			configureNewFile();
+			commitTransaction();
+			writeHeader(false, false);
+		} else {
+			_length = bytes.length;
+			readThis();
+		}
+	}
     
     public void backup(String path) throws NotSupportedException {
         throw new NotSupportedException();

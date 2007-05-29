@@ -64,7 +64,7 @@ public class FileHeader0 extends FileHeader {
     }
 
     
-    protected void readFixedPart(LocalObjectContainer file, Buffer reader) throws IOException, OldFormatException {
+    protected void readFixedPart(LocalObjectContainer file, Buffer reader) throws OldFormatException {
         _configBlock = ConfigBlock.forExistingFile(file, reader.readInt());
         skipConfigurationLockTime(reader);
         readClassCollectionAndFreeSpace(file, reader);
