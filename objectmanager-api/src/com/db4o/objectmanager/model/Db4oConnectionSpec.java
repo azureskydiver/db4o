@@ -11,6 +11,8 @@ import java.util.logging.Level;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.config.Configuration;
+import com.db4o.config.DotnetSupport;
 import com.db4o.objectmanager.api.prefs.ActivationPreferences;
 import com.db4o.objectmanager.api.prefs.ClasspathPreferences;
 import com.db4o.objectmanager.api.prefs.ConstructorPreferences;
@@ -99,4 +101,14 @@ public abstract class Db4oConnectionSpec {
 	//protected abstract ObjectContainer connectInternal();
 
 	public abstract boolean isRemote();
+	
+	public Configuration newConfiguration() {
+		//Db4o.configure().allowVersionUpdates(true);
+		//Db4o.configure().readOnly(readOnly);
+		Configuration config = Db4o.newConfiguration();
+		config.activationDepth(10);
+		config.updateDepth(10);
+		config.add(new DotnetSupport());
+		return config;
+	}
 }
