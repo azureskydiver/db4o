@@ -24,6 +24,6 @@ public class ClassMetadataIterator extends MappingIterator {
     }
     
 	protected Object map(Object current) {
-		return i_collection.readYapClass((ClassMetadata)current, null);
+		return i_collection.readClassMetadata((ClassMetadata)current, null);
 	}
 }

@@ -242,7 +242,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		a_yapClass.setID(message.getId());
 		a_yapClass.readName1(systemTransaction(), bytes);
 		classCollection().addYapClass(a_yapClass);
-		classCollection().readYapClass(a_yapClass, a_class);
+		classCollection().readClassMetadata(a_yapClass, a_class);
 		return true;
 	}
 

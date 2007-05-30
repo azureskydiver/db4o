@@ -27,7 +27,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 
     public ClassMetadata i_ancestor;
 
-    Config4Class i_config;
+    private Config4Class i_config;
     public int _metaClassID;
     
     public FieldMetadata[] i_fields;
@@ -90,8 +90,8 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		return new BTreeClassIndexStrategy(this);
 	}
 
-    ClassMetadata(ObjectContainerBase stream, ReflectClass reflector){
-    	_stream = stream;
+    ClassMetadata(ObjectContainerBase container, ReflectClass reflector){
+    	_stream = container;
         _reflector = reflector;
         _index = createIndexStrategy();
         _classIndexed = true;
@@ -1529,28 +1529,32 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         }
     }
 
-    void createConfigAndConstructor(
+    final void createConfigAndConstructor(
         Hashtable4 a_byteHashTable,
-        ObjectContainerBase a_stream,
-        ReflectClass a_class) {
-        if (a_class == null) {
-            if (i_nameBytes != null) {
-            	String name = a_stream.stringIO().read(i_nameBytes);
-            	i_name = a_stream.configImpl().resolveAliasStoredName(name);
-            }
-        } else {
-            i_name = a_class.getName();
-        }
+        ReflectClass claxx,
+        String name) {
+        i_name = name;
         setConfig(_stream.configImpl().configClass(i_name));
-        if (a_class == null) {
-            createConstructor(a_stream, i_name);
+        if (claxx == null) {
+            createConstructor(_stream, i_name);
         } else {
-            createConstructor(a_stream, a_class, i_name, true);
+            createConstructor(_stream, claxx, i_name, true);
         }
         if (i_nameBytes != null) {
             a_byteHashTable.remove(i_nameBytes);
             i_nameBytes = null;
         }
+    }
+
+    String resolveName(ReflectClass claxx) {
+        if (claxx != null) {
+            return claxx.getName();
+        }
+        if (i_nameBytes != null) {
+        	String name = _stream.stringIO().read(i_nameBytes);
+        	return _stream.configImpl().resolveAliasStoredName(name);
+        }
+        throw new IllegalStateException();
     }
 
     boolean readThis() {
