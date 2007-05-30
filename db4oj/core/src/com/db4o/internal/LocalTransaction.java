@@ -286,6 +286,9 @@ public class LocalTransaction extends Transaction {
     	if(slot == null){
     		return;
     	}
+    	if(freespaceManager() == null){
+    	    return;
+    	}
     	freespaceManager().freeTransactionLogSlot(_file.toNonBlockedLength(slot));
 	}
     
