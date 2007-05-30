@@ -37,8 +37,6 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 */
 	public int _version;
 	
-	private static final Object NOT_FOUND = new Object();
-
 	public Collection4() {
 	}
 	
@@ -123,7 +121,7 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	}
 
 	public final boolean contains(Object element) {		
-		return getInternal(element) != NOT_FOUND;
+		return find(element) != null;
 	}
 
 	public boolean containsAll(Iterator4 iter) {
@@ -149,37 +147,28 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 		}
 		return false;
 	}
+	
+    private List4 find(Object obj){
+        List4 current = _first;
+        while (current != null) {
+            if (current.holds(obj)) {
+                return current;
+            }
+            current = current._next;
+        }
+        return null;
+    }
+
 
 	/**
 	 * returns the first object found in the Collections that equals() the
 	 * passed object
 	 */
 	public final Object get(Object element) {
-		Object obj = getInternal(element);
-		if(obj == NOT_FOUND){
-			return null;
-		}
-		return obj;
+	    List4 holder = find(element);
+	    return holder == null ? null : holder._element;
 	}
 	
-	private final Object getInternal(Object element){
-		if (element == null) {
-			return containsNull() ? null : NOT_FOUND;
-		}
-		Iterator4 i = internalIterator();
-		while (i.moveNext()) {
-			Object current = i.current();
-			if (element.equals(current)) {
-				return current;
-			}
-		}
-		return NOT_FOUND;
-	}
-	
-	private final boolean containsNull(){
-		return containsByIdentity(null);
-	}
-
 	public Object deepClone(Object newParent) {
 		Collection4 col = new Collection4();
 		Object element = null;
@@ -199,12 +188,12 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	 * makes sure the passed object is in the Collection. equals() comparison.
 	 */
 	public final Object ensure(Object element) {
-		Object existing = getInternal(element);
-		if(existing == NOT_FOUND){
+		List4 list = find(element);
+		if(list == null){
 			add(element);
 			return element;
 		}
-		return existing;
+		return list._element;
 	}
 
 	/**
@@ -238,7 +227,14 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 		}
 		return null;
 	}
-
+	
+    public void replace(Object oldObject, Object newObject) {
+        List4 list = find(oldObject);
+        if(list != null){
+            list._element = newObject;
+        }
+    }
+    
 	private void adjustOnRemoval(List4 previous, List4 removed) {
 		if (removed == _first) {
 			_first = removed._next;
@@ -303,4 +299,5 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	private Iterator4 internalIterator() {
 		return new Iterator4Impl(_first);
 	}
+
 }

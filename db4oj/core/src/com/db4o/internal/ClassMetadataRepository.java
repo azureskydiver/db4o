@@ -441,9 +441,7 @@ public final class ClassMetadataRepository extends PersistentBase {
             customClassMetadata.setID(id);
             customClassMetadata.setConfig(classMetadata.config());
             
-            
-            i_classes.remove(classMetadata);
-            i_classes.add(customClassMetadata);
+            i_classes.replace(classMetadata, customClassMetadata);
             i_yapClassByID.put(id, customClassMetadata);
             
             classMetadata = customClassMetadata; 

@@ -12,6 +12,19 @@ public class Collection4TestCase implements TestCase {
 		new TestRunner(Collection4TestCase.class).run();
 	}
 	
+	public void testReplace(){
+        final Collection4 c = new Collection4();
+        c.replace("one", "two");
+        c.add("one");
+        c.add("two");
+        c.add("three");
+        c.replace("two", "two.half");
+        assertCollection(new String[] {"one", "two.half", "three"}, c);
+        c.replace("two.half", "one");
+        c.replace("one", "half");
+        assertCollection(new String[] {"half", "one", "three"}, c);
+	}
+	
 	public void testNulls(){
 		final Collection4 c = new Collection4();
 		c.add("one");
