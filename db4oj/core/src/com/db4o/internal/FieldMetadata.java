@@ -555,12 +555,11 @@ public class FieldMetadata implements StoredField {
     }
 
 	final void initIndex(ClassMetadata a_yapClass, String a_name) {
-		if (a_yapClass.i_config != null) {
-            i_config = a_yapClass.i_config.configField(a_name);
+		if (a_yapClass.config() != null) {
+            i_config = a_yapClass.config().configField(a_name);
             if (Debug.configureAllFields) {
                 if (i_config == null) {
-                    i_config = (Config4Field) a_yapClass.i_config
-                        .objectField(i_name);
+                    i_config = (Config4Field) a_yapClass.config().objectField(i_name);
                 }
             }
         }

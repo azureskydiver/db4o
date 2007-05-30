@@ -70,8 +70,8 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 				if (isActive()) {
 					if (a_object != null) {
 						if (a_depth > 1) {
-					        if (_class.i_config != null) {
-					            a_depth = _class.i_config.adjustActivationDepth(a_depth);
+					        if (_class.config() != null) {
+					            a_depth = _class.config().adjustActivationDepth(a_depth);
 					        }
 							_class.activateFields(ta, a_object, a_depth);
 						}

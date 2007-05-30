@@ -3,12 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.Rename;
-import com.db4o.config.ObjectAttribute;
-import com.db4o.config.ObjectClass;
-import com.db4o.config.ObjectConstructor;
-import com.db4o.config.ObjectField;
-import com.db4o.config.ObjectMarshaller;
-import com.db4o.config.ObjectTranslator;
+import com.db4o.config.*;
 import com.db4o.ext.Db4oException;
 import com.db4o.foundation.DeepClone;
 import com.db4o.foundation.Hashtable4;
@@ -29,6 +24,8 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	private final static KeySpec CALL_CONSTRUCTOR=new KeySpec(TernaryBool.UNSPECIFIED);
 	
 	private final static KeySpec CLASS_INDEXED = new KeySpec(true);
+	
+	private final static KeySpec CUSTOM_HANDLER=new KeySpec(null);
 
 	private final static KeySpec EXCEPTIONAL_FIELDS=new KeySpec(null);
 
@@ -116,6 +113,10 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         }
         return (Config4Field) exceptionalFields.get(fieldName);
     }
+    
+    public CustomClassHandler customHandler(){
+        return (CustomClassHandler) _config.get(CUSTOM_HANDLER);
+    }
 
     public Object deepClone(Object param){
         return new Config4Class((Config4Impl)param,_config);
@@ -133,7 +134,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     public void generateVersionNumbers(boolean setting) {
     	_config.put(GENERATE_VERSION_NUMBERS, setting);
     }
-
+    
     public ObjectTranslator getTranslator() {
     	ObjectTranslator translator = (ObjectTranslator) _config
 				.get(TRANSLATOR);
@@ -175,6 +176,10 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	public boolean indexed() {
 		return _config.getAsBoolean(CLASS_INDEXED);
 	}
+	
+    public void installCustomHandler(CustomClassHandler customClassHandler) {
+        _config.put(CUSTOM_HANDLER, customClassHandler);
+    }
 
     Object instantiate(ObjectContainerBase a_stream, Object a_toTranslate) {
         return ((ObjectConstructor) _config.get(TRANSLATOR)).onInstantiate(a_stream,
@@ -325,6 +330,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	String writeAs() {
 		return _config.getAsString(WRITE_AS);
 	}
+
 
 
 }
