@@ -26,14 +26,14 @@ public class ConnectionHelper {
 	}
 
 	private static ObjectContainer connectToServer(Db4oSocketConnectionSpec spec) {
-		return Db4o.openClient(newConfiguration(), spec.getHost(), spec.getPort(), spec.getUser(), spec.getPassword());
+		return Db4o.openClient(spec.newConfiguration(), spec.getHost(), spec.getPort(), spec.getUser(), spec.getPassword());
 	}
 
 	private static ObjectContainer connectToFile(Component frame,
 			Db4oConnectionSpec connectionSpec) throws Exception {
 		try {
 			assertFileExists(connectionSpec.getFullPath());
-			return Db4o.openFile(newConfiguration(), connectionSpec.getFullPath());
+			return Db4o.openFile(connectionSpec.newConfiguration(), connectionSpec.getFullPath());
 		} catch (DatabaseFileLockedException e) {
 			OptionPaneHelper.showErrorMessage(frame, "Database file is locked. Another process must be using it.", "Database File Locked");
 			throw e;
@@ -60,13 +60,5 @@ public class ConnectionHelper {
 		}
 	}
 
-	private static Configuration newConfiguration() {
-		//Db4o.configure().allowVersionUpdates(true);
-		//Db4o.configure().readOnly(readOnly);
-		Configuration config = Db4o.newConfiguration();
-		config.activationDepth(10);
-		config.updateDepth(10);
-		config.add(new DotnetSupport());
-		return config;
-	}
+	
 }
