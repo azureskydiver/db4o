@@ -109,6 +109,9 @@ public class P1Object implements Db4oTypeImpl{
         // virtual, do nothing
     }
 	
+    /**
+	 * @deprecated
+	 */
     protected Object replicate(Transaction fromTrans, Transaction toTrans) {
         
         ObjectContainerBase fromStream = fromTrans.stream();

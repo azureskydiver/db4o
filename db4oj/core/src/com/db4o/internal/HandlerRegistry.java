@@ -63,6 +63,9 @@ public final class HandlerRegistry {
     
     SharedIndexedFields              		i_indexes;
     
+    /**
+	 * @deprecated
+	 */
     ReplicationImpl				    i_replication;
     
     MigrationConnection             i_migration;
@@ -429,10 +432,16 @@ public final class HandlerRegistry {
 		return i_migration;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void replication(ReplicationImpl impl) {
 		i_replication = impl;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public ReplicationImpl replication(){
 		return i_replication;
 	}

@@ -1455,10 +1455,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		return renamedOne;
 	}
 
+    /**
+     * @deprecated see {@link ReplicationProcess}
+     */
     public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
         return new ReplicationImpl(_this, peerB,conflictHandler);
     }
     
+    /**
+	 * @deprecated
+	 */
     public final int oldReplicationHandles(Object obj){
         
         // The double check on i_migrateFrom is necessary:

@@ -10,6 +10,7 @@ import com.db4o.replication.*;
 
 /**
  * @exclude
+ * @deprecated
  */
 public class ReplicationImpl implements ReplicationProcess {
 

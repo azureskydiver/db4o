@@ -2,9 +2,7 @@
 
 package com.db4o.internal.fileheader;
 
-import java.io.*;
-
-import com.db4o.*;
+import com.db4o.Db4oIOException;
 import com.db4o.internal.*;
 
 

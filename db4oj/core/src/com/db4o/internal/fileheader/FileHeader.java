@@ -2,10 +2,8 @@
 
 package com.db4o.internal.fileheader;
 
-import java.io.IOException;
-
 import com.db4o.*;
-import com.db4o.ext.*;
+import com.db4o.ext.OldFormatException;
 import com.db4o.internal.*;
 
 
