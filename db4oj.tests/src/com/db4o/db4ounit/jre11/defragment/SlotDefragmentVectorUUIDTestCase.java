@@ -54,7 +54,7 @@ public class SlotDefragmentVectorUUIDTestCase implements TestCase {
 
 	private ObjectContainer openDatabase() {
 		Configuration config = Db4o.newConfiguration();
-		config.generateUUIDs(Integer.MAX_VALUE);
+		config.generateUUIDs(ConfigScope.GLOBALLY);
 		return Db4o.openFile(config,SlotDefragmentTestConstants.FILENAME);
 	}
 }

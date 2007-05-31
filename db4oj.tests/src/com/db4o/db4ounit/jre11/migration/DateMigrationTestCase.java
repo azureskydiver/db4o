@@ -44,6 +44,9 @@ public class DateMigrationTestCase extends MigrationTestCaseBase {
 		return new Date(1166839200000L);
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	protected Object getUpdateValue() {
 		return new Date(28, 5, 14);
 	}

@@ -12,6 +12,9 @@ import db4ounit.extensions.fixtures.OptOutCS;
 public class ConfigurationSettingsTestCase extends AbstractDb4oTestCase
 		implements OptOutCS {
 
+	/**
+	 * @deprecated
+	 */
 	public void testChangingUuidSettings() throws Exception {
 
 		fixture().config().generateUUIDs(0);

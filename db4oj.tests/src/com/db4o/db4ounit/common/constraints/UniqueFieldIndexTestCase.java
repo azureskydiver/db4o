@@ -52,9 +52,7 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 	}
 	
 	public void testUpdateViolates(){
-		Query q = newQuery(Item.class);
-		q.descend("_str").constrain("2");
-		Item item = (Item) q.execute().next();
+		Item item = queryItem("2");
 		item._str = "3";
 		store(item);
 		Assert.expect(UniqueFieldValueConstraintViolationException.class, new CodeBlock() {
@@ -64,11 +62,15 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 		});
 		db().rollback();
 	}
+
+	private Item queryItem(String str) {
+		Query q = newQuery(Item.class);
+		q.descend("_str").constrain(str);
+		return (Item) q.execute().next();
+	}
 	
 	public void testUpdateDoesNotViolate(){
-		Query q = newQuery(Item.class);
-		q.descend("_str").constrain("2");
-		Item item = (Item) q.execute().next();
+		Item item = queryItem("2");
 		item._str = "4";
 		store(item);
 		db().commit();

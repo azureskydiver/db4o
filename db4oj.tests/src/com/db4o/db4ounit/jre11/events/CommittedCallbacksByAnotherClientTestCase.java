@@ -2,14 +2,13 @@
 
 package com.db4o.db4ounit.jre11.events;
 
-import com.db4o.config.*;
+import com.db4o.config.Configuration;
 import com.db4o.events.*;
 import com.db4o.ext.*;
-import com.db4o.internal.*;
-import com.db4o.query.*;
+import com.db4o.internal.LazyObjectReference;
+import com.db4o.query.Query;
 
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.Db4oClientServerTestCase;
 
 /**
  * @exclude

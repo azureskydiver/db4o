@@ -113,7 +113,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 	}
 
 	public void testGetByUUID() throws Exception {
-		fixture().config().generateUUIDs(ConfigScope.GLOBALLY_ID);
+		fixture().config().generateUUIDs(ConfigScope.GLOBALLY);
 		fixture().reopen();
 		Item item = new Item(1);
 		store(item);

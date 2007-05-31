@@ -2,11 +2,10 @@
 
 package com.db4o.db4ounit.common.cs;
 
-import com.db4o.foundation.*;
+import com.db4o.foundation.Iterator4;
 import com.db4o.internal.cs.*;
 
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.Db4oClientServerTestCase;
 
 
 public class ClientServerTestCaseBase extends Db4oClientServerTestCase {
