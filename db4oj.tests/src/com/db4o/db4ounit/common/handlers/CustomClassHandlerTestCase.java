@@ -26,7 +26,7 @@ public class CustomClassHandlerTestCase extends AbstractDb4oTestCase implements 
         config.objectClass(Item.class).installCustomHandler( new CustomClassHandler() {});
     }
     
-    public void store(){
+    protected void store(){
         store(new Item());
     }
     
