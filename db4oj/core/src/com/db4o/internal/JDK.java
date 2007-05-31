@@ -193,7 +193,8 @@ public class JDK {
     	return null;
     }
 
-	public Reflector reflectorForType(Class clazz) {
+	/** @param clazz */
+    public Reflector reflectorForType(Class clazz) {
 		return null;
 	}
 }
