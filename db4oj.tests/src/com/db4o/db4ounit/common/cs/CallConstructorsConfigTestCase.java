@@ -11,6 +11,8 @@ import db4ounit.*;
 
 public class CallConstructorsConfigTestCase implements TestCase {
 	
+	private static final int PORT = 0xdb40;
+
 	public static final class Item {
 	}
 	
@@ -19,7 +21,7 @@ public class CallConstructorsConfigTestCase implements TestCase {
 		config.callConstructors(true);
 		config.exceptionsOnNotStorable(true);
 		
-		final ObjectServer server = Db4o.openServer(config, databaseFile(), 1022);
+		final ObjectServer server = Db4o.openServer(config, databaseFile(), PORT);
 		try {
 			server.grantAccess("db4o", "db4o");
 			
@@ -50,7 +52,7 @@ public class CallConstructorsConfigTestCase implements TestCase {
 	}
 
 	private void withClient(ClientBlock block) {
-		final ObjectContainer client = Db4o.openClient("localhost", 1022, "db4o", "db4o");
+		final ObjectContainer client = Db4o.openClient("localhost", PORT, "db4o", "db4o");
 		try {
 			block.run(client);			
 		} finally {
