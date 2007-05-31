@@ -11,8 +11,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			// FIXME: This test failed when in defrag mode. 
-		    // CustomClassHandlerTestCase.class,
+		    CustomClassHandlerTestCase.class,
 			StringHandlerTestCase.class,
 			DoubleHandlerTestCase.class,
 		};
