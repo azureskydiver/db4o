@@ -147,25 +147,25 @@ public class TLogger {
 		log(a_property + ": " + a_value);
 	}
 
-	private static void log(Exception e, Object obj, String msg) {
-		String l_msg;
-		if (e != null) {
-			l_msg = "!!! " + e.getClass().getName();
-			String l_exMsg = e.getMessage();
-			if (l_exMsg != null) {
-				l_msg += sp + l_exMsg;
-			}
-		} else {
-			l_msg = "!!!Exception log";
-		}
-		if (obj != null) {
-			l_msg += " in " + obj.getClass().getName();
-		}
-		if (msg != null) {
-			l_msg += sp + msg;
-		}
-		log(l_msg);
-	}
+//	private static void log(Exception e, Object obj, String msg) {
+//		String l_msg;
+//		if (e != null) {
+//			l_msg = "!!! " + e.getClass().getName();
+//			String l_exMsg = e.getMessage();
+//			if (l_exMsg != null) {
+//				l_msg += sp + l_exMsg;
+//			}
+//		} else {
+//			l_msg = "!!!Exception log";
+//		}
+//		if (obj != null) {
+//			l_msg += " in " + obj.getClass().getName();
+//		}
+//		if (msg != null) {
+//			l_msg += sp + msg;
+//		}
+//		log(l_msg);
+//	}
 
 	private static Class[] getClassHierarchy(Object a_object) {
 		Class[] classes = new Class[] { a_object.getClass()};
