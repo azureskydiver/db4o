@@ -2,11 +2,10 @@
 package com.db4o.db4ounit.common.exceptions;
 
 import com.db4o.*;
-import com.db4o.internal.*;
+import com.db4o.internal.ReflectException;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class ObjectCanActiviateExceptionTestCase extends AbstractDb4oTestCase {
 

@@ -2,12 +2,7 @@
 
 package com.db4o.db4ounit.common.fatalerror;
 
-import com.db4o.*;
-import com.db4o.events.*;
-import com.db4o.query.*;
-
-import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 
 public class FatalExceptionInNestedCallTestCase extends AbstractDb4oTestCase{
@@ -68,9 +63,9 @@ public class FatalExceptionInNestedCallTestCase extends AbstractDb4oTestCase{
 		*/
 	}
 	
-	private EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(db());
-	}
+//	private EventRegistry eventRegistry() {
+//		return EventRegistryFactory.forObjectContainer(db());
+//	}
 
 
 }

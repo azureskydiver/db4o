@@ -5,6 +5,7 @@ package com.db4o.db4ounit.jre11.assorted;
 import java.io.IOException;
 
 import com.db4o.*;
+import com.db4o.config.ConfigScope;
 import com.db4o.db4ounit.common.assorted.UUIDTestItem;
 import com.db4o.db4ounit.util.WorkspaceServices;
 import com.db4o.foundation.Hashtable4;
@@ -54,11 +55,11 @@ public class UUIDMigrationTestCase implements TestCase, OptOutNoFileSystemData {
 
 	private void restoreConfiguration() {
 		Db4o.configure().allowVersionUpdates(false);
-		Db4o.configure().generateUUIDs(-1);
+		Db4o.configure().generateUUIDs(ConfigScope.DISABLED);
 	}
 
 	private void configure() {
 		Db4o.configure().allowVersionUpdates(true);
-		Db4o.configure().generateUUIDs(Integer.MAX_VALUE);
+		Db4o.configure().generateUUIDs(ConfigScope.GLOBALLY);
 	}
 }
