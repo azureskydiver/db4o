@@ -477,6 +477,13 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     public void copyValue(Object a_from, Object a_to) {
         // do nothing
     }
+    
+    public void copyFrom(ClassMetadata other){
+        i_id = other.i_id;
+        i_config = other.i_config;
+        i_state = other.i_state;
+        i_reader = other.i_reader;
+    }
 
     private boolean createConstructor(ObjectContainerBase container, String className) {
         ReflectClass claxx = container.reflector().forName(className);
@@ -2058,4 +2065,5 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		}
 		i_ancestor = ancestor;
 	}
+
 }
