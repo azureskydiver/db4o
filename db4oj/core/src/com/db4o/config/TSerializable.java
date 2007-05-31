@@ -4,9 +4,9 @@ package com.db4o.config;
 
 import java.io.*;
 
-import com.db4o.*;
-import com.db4o.internal.*;
-import com.db4o.reflect.jdk.*;
+import com.db4o.ObjectContainer;
+import com.db4o.internal.ReflectException;
+import com.db4o.reflect.jdk.JdkReflector;
 
 /**
  * @exclude
@@ -32,9 +32,6 @@ public class TSerializable implements ObjectConstructor {
 
 	public Object onInstantiate(final ObjectContainer con, Object storedObject) {
 		try {
-			if(con instanceof ObjectContainerBase) {
-				ObjectContainerBase db = (ObjectContainerBase) con;
-			}
 			ObjectInputStream inStream = new ObjectInputStream(new ByteArrayInputStream((byte[]) storedObject)) {
 				protected Class resolveClass(ObjectStreamClass v) throws IOException, ClassNotFoundException {
 					return JdkReflector.toNative(con.ext().reflector().forName(v.getName()));
