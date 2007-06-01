@@ -258,13 +258,13 @@ public class ArrayHandler extends BuiltinTypeHandler {
     }
 
 	private Object readCreate(Transaction a_trans, Buffer a_reader, IntByRef a_elements) {
-		ReflectClass[] clazz = new ReflectClass[1];
+		ReflectClassByRef clazz = new ReflectClassByRef();
 		a_elements.value = readElementsAndClass(a_trans, a_reader, clazz);
 		if (i_isPrimitive) {
 			return _reflectArray.newInstance(i_handler.primitiveClassReflector(), a_elements.value);
 		} 
-		if (clazz[0] != null) {
-			return _reflectArray.newInstance(clazz[0], a_elements.value);	
+		if (clazz.value != null) {
+			return _reflectArray.newInstance(clazz.value, a_elements.value);	
 		}
 		return null;
 	}
@@ -305,14 +305,14 @@ public class ArrayHandler extends BuiltinTypeHandler {
         
     }
     
-    final int readElementsAndClass(Transaction a_trans, Buffer a_bytes, ReflectClass[] clazz){
+    final int readElementsAndClass(Transaction a_trans, Buffer a_bytes, ReflectClassByRef clazz){
         int elements = a_bytes.readInt();
         if (elements < 0) {
-            clazz[0]=reflectClassFromElementsEntry(a_trans, elements);
+            clazz.value =reflectClassFromElementsEntry(a_trans, elements);
             elements = a_bytes.readInt();
         }
         else {
-    		clazz[0]=i_handler.classReflector();
+    		clazz.value =i_handler.classReflector();
         }
         if(Debug.exceedsMaximumArrayEntries(elements, i_isPrimitive)){
             return 0;
