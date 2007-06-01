@@ -21,17 +21,21 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
     }
 
     public final Object[] allElements(Object a_array) {
-        int[] dim = _reflectArray.dimensions(a_array);
-        Object[] flat = new Object[elementCount(dim)];
-        _reflectArray.flatten(a_array, dim, 0, flat, 0);
-        return flat;
+		return allElements(_reflectArray, a_array);
     }
+
+	public static Object[] allElements(final ReflectArray reflectArray, Object array) {
+		int[] dim = reflectArray.dimensions(array);
+        Object[] flat = new Object[elementCount(dim)];
+        reflectArray.flatten(array, dim, 0, flat, 0);
+        return flat;
+	}
 
     public final int elementCount(Transaction a_trans, Buffer a_bytes) {
         return elementCount(readDimensions(a_trans, a_bytes, ReflectClassByRef.IGNORED));
     }
 
-    private final int elementCount(int[] a_dim) {
+    private static final int elementCount(int[] a_dim) {
         int elements = a_dim[0];
         for (int i = 1; i < a_dim.length; i++) {
             elements = elements * a_dim[i];
