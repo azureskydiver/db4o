@@ -219,10 +219,10 @@ public class ArrayHandler extends BuiltinTypeHandler {
             a_reader.readBegin(identifier());
         }
 
-		int[] elements = new int[1];
+        IntByRef elements = new IntByRef();
         Object ret = readCreate(a_trans, a_reader, elements);
 		if(ret != null){
-			for (int i = 0; i < elements[0]; i++) {
+			for (int i = 0; i < elements.value; i++) {
                 _reflectArray.set(ret, i, i_handler.readQuery(a_trans, mf, true, a_reader, true));
 			}
 		}
@@ -239,13 +239,13 @@ public class ArrayHandler extends BuiltinTypeHandler {
             reader.readBegin(identifier());
         }
 
-		int[] elements = new int[1];
+		IntByRef elements = new IntByRef();
 		Object ret = readCreate(reader.getTransaction(), reader, elements);
 		if (ret != null){
             if(i_handler.readArray(ret, reader)){
                 return ret;
             }
-			for (int i = 0; i < elements[0]; i++) {
+			for (int i = 0; i < elements.value; i++) {
 				_reflectArray.set(ret, i, i_handler.read(mf, reader, true));
 			}	
 		}
@@ -257,14 +257,14 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return ret;
     }
 
-	private Object readCreate(Transaction a_trans, Buffer a_reader, int[] a_elements) {
+	private Object readCreate(Transaction a_trans, Buffer a_reader, IntByRef a_elements) {
 		ReflectClass[] clazz = new ReflectClass[1];
-		a_elements[0] = readElementsAndClass(a_trans, a_reader, clazz);
+		a_elements.value = readElementsAndClass(a_trans, a_reader, clazz);
 		if (i_isPrimitive) {
-			return _reflectArray.newInstance(i_handler.primitiveClassReflector(), a_elements[0]);
+			return _reflectArray.newInstance(i_handler.primitiveClassReflector(), a_elements.value);
 		} 
 		if (clazz[0] != null) {
-			return _reflectArray.newInstance(clazz[0], a_elements[0]);	
+			return _reflectArray.newInstance(clazz[0], a_elements.value);	
 		}
 		return null;
 	}
@@ -282,10 +282,10 @@ public class ArrayHandler extends BuiltinTypeHandler {
             reader.readBegin(identifier());
         }
         
-        int[] elements = new int[1];
+        IntByRef elements = new IntByRef();
         Object ret = readCreate(candidates.i_trans, reader, elements);
         if(ret != null){
-            for (int i = 0; i < elements[0]; i++) {
+            for (int i = 0; i < elements.value; i++) {
                 QCandidate qc = i_handler.readSubCandidate(mf, reader, candidates, true);
                 if(qc != null){
                     candidates.addByIdentity(qc);
