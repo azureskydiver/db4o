@@ -3,8 +3,6 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.config.*;
-import com.db4o.internal.*;
-import com.db4o.reflect.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -12,6 +10,8 @@ import db4ounit.extensions.fixtures.*;
 
 
 public class CustomClassHandlerTestCase extends AbstractDb4oTestCase implements OptOutCS{
+    
+    static boolean handlerCalled;
     
     public static void main(String[] arguments) {
         new CustomClassHandlerTestCase().runSolo();
@@ -23,7 +23,12 @@ public class CustomClassHandlerTestCase extends AbstractDb4oTestCase implements 
     
     protected void configure(Configuration config) {
         super.configure(config);
-        config.objectClass(Item.class).installCustomHandler( new CustomClassHandler() {});
+        config.objectClass(Item.class).installCustomHandler( new VanillaClassHandler() {
+            public boolean canNewInstance() {
+                handlerCalled = true;
+                return super.canNewInstance();
+            }
+        });
     }
     
     protected void store(){
@@ -31,16 +36,9 @@ public class CustomClassHandlerTestCase extends AbstractDb4oTestCase implements 
     }
     
     public void test(){
-        ClassMetadata classMetadata = container().classMetadataForReflectClass(itemClass());
-        Assert.isInstanceOf(CustomClassMetadata.class, classMetadata);
-    }
-    
-    private LocalObjectContainer container(){
-        return (LocalObjectContainer) db();
-    }
-    
-    private ReflectClass itemClass(){
-        return reflector().forClass(Item.class);
+        handlerCalled = false;
+        retrieveOnlyInstance(Item.class);
+        Assert.isTrue(handlerCalled);
     }
 
 }

@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.ext.StoredClass;
 import com.db4o.foundation.*;
 import com.db4o.reflect.ReflectClass;
@@ -181,8 +180,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         	return yapClass;
         }
         yapClass = (ClassMetadata)i_yapClassByBytes.remove(getNameBytes(a_class.getName()));
-        yapClass = readClassMetadata(yapClass, a_class);
-        return yapClass;
+        return readClassMetadata(yapClass, a_class);
     }
 
     ClassMetadata produceClassMetadata(ReflectClass claxx) {
@@ -199,12 +197,7 @@ public final class ClassMetadataRepository extends PersistentBase {
             return classMetadata;
         }
         
-        CustomClassMetadata customClassMetadata = createCustomClassMetadata(claxx, claxx.getName());
-        if(customClassMetadata != null){
-            classMetadata = customClassMetadata;
-        }else{
-            classMetadata = new ClassMetadata(stream(), claxx);    
-        }
+        classMetadata = new ClassMetadata(stream(), claxx);
         
         i_creating.put(claxx, classMetadata);
         
@@ -434,17 +427,6 @@ public final class ClassMetadataRepository extends PersistentBase {
         
         String name = classMetadata.resolveName(clazz);
         
-        CustomClassMetadata customClassMetadata = createCustomClassMetadata(clazz, name);
-        if(customClassMetadata != null){
-            
-            customClassMetadata.copyFrom(classMetadata);
-            
-            i_classes.replace(classMetadata, customClassMetadata);
-            i_yapClassByID.put(customClassMetadata.getID(), customClassMetadata);
-            
-            classMetadata = customClassMetadata; 
-        }
-        
         classMetadata.createConfigAndConstructor(i_yapClassByBytes, clazz, name);
         ReflectClass claxx = classMetadata.classReflector();
         if(claxx != null){
@@ -456,17 +438,6 @@ public final class ClassMetadataRepository extends PersistentBase {
         i_yapClassCreationDepth--;
         initYapClassesOnUp();
         return classMetadata;
-    }
-
-    private CustomClassMetadata createCustomClassMetadata(ReflectClass clazz, String name) {
-        Config4Class config = configClass(name);
-        if(config != null){
-            CustomClassHandler customHandler = config.customHandler();
-            if(customHandler != null){
-                return new CustomClassMetadata(stream(),clazz);
-            }
-        }
-        return null;
     }
 
     public void refreshClasses() {

@@ -7,6 +7,7 @@ import db4ounit.extensions.*;
 public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
+		    ArrayListTestCase.class,
 			CollectionUuidTest.class,
 			SetCollectionOnUpdateTestCase.class,
 			com.db4o.db4ounit.jre12.collections.custom.AllTests.class,
