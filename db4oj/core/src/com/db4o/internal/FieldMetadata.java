@@ -325,22 +325,19 @@ public class FieldMetadata implements StoredField {
 		return tree;
 	}
 
-    void configure(ReflectClass a_class, boolean isPrimitive) {
-        i_isPrimitive = isPrimitive | a_class.isPrimitive();
-        i_isArray = a_class.isArray();
+    void configure(ReflectClass clazz, boolean isPrimitive) {
+        i_isArray = clazz.isArray();
         if (i_isArray) {
             ReflectArray reflectArray = getStream().reflector().array();
-            i_isNArray = reflectArray.isNDimensional(a_class);
-            a_class = reflectArray.getComponentType(a_class);
-            if (Deploy.csharp) {
-            } else {
-                i_isPrimitive = a_class.isPrimitive();
-            }
+            i_isNArray = reflectArray.isNDimensional(clazz);
+            i_isPrimitive = reflectArray.getComponentType(clazz).isPrimitive();
             if (i_isNArray) {
                 i_handler = new MultidimensionalArrayHandler(getStream(), i_handler, i_isPrimitive);
             } else {
                 i_handler = new ArrayHandler(getStream(), i_handler, i_isPrimitive);
             }
+        } else {
+        	i_isPrimitive = isPrimitive | clazz.isPrimitive();
         }
     }
 

@@ -9,6 +9,7 @@ import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.generic.GenericReflector;
 
 /**
  * @exclude
@@ -27,12 +28,16 @@ public class ArrayHandler extends BuiltinTypeHandler {
     }
 
     public Object[] allElements(Object a_object) {
-        Object[] all = new Object[_reflectArray.getLength(a_object)];
+		return allElements(_reflectArray, a_object);
+    }
+
+	public static Object[] allElements(final ReflectArray reflectArray, Object array) {
+		Object[] all = new Object[reflectArray.getLength(array)];
         for (int i = all.length - 1; i >= 0; i--) {
-            all[i] = _reflectArray.get(a_object, i);
+            all[i] = reflectArray.get(array, i);
         }
         return all;
-    }
+	}
 
     public boolean canHold(ReflectClass claxx) {
         return i_handler.canHold(claxx);
@@ -257,14 +262,14 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return ret;
     }
 
-	private Object readCreate(Transaction a_trans, Buffer a_reader, IntByRef a_elements) {
+	private Object readCreate(Transaction trans, Buffer buffer, IntByRef elements) {
 		ReflectClassByRef clazz = new ReflectClassByRef();
-		a_elements.value = readElementsAndClass(a_trans, a_reader, clazz);
+		elements.value = readElementsAndClass(trans, buffer, clazz);
 		if (i_isPrimitive) {
-			return _reflectArray.newInstance(i_handler.primitiveClassReflector(), a_elements.value);
+			return _reflectArray.newInstance(i_handler.primitiveClassReflector(), elements.value);
 		} 
 		if (clazz.value != null) {
-			return _reflectArray.newInstance(clazz.value, a_elements.value);	
+			return _reflectArray.newInstance(clazz.value, elements.value);	
 		}
 		return null;
 	}
@@ -305,11 +310,11 @@ public class ArrayHandler extends BuiltinTypeHandler {
         
     }
     
-    final int readElementsAndClass(Transaction a_trans, Buffer a_bytes, ReflectClassByRef clazz){
-        int elements = a_bytes.readInt();
+    final int readElementsAndClass(Transaction trans, Buffer buffer, ReflectClassByRef clazz){
+        int elements = buffer.readInt();
         if (elements < 0) {
-            clazz.value =reflectClassFromElementsEntry(a_trans, elements);
-            elements = a_bytes.readInt();
+            clazz.value =reflectClassFromElementsEntry(trans, elements);
+            elements = buffer.readInt();
         }
         else {
     		clazz.value =i_handler.classReflector();
@@ -359,23 +364,17 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		return i_handler.classReflector();
 	}
     
-    public static Object[] toArray(ObjectContainerBase a_stream, Object a_object) {
-        if (a_object != null) {
-        	ReflectClass claxx = a_stream.reflector().forObject(a_object);
-            if (claxx.isArray()) {
-                ArrayHandler ya;
-                if(a_stream.reflector().array().isNDimensional(claxx)){
-                    ya = new MultidimensionalArrayHandler(a_stream, null, false);
-                } else {
-                    ya = new ArrayHandler(a_stream, null, false);
-                }
-                return ya.allElements(a_object);
-            }
-        }
-        return new Object[0];
+    public static Object[] toArray(ObjectContainerBase stream, Object obj) {
+    	final GenericReflector reflector = stream.reflector();
+		ReflectClass claxx = reflector.forObject(obj);
+		ReflectArray reflectArray = reflector.array();
+        if(reflectArray.isNDimensional(claxx)) {
+		    return MultidimensionalArrayHandler.allElements(reflectArray, obj);
+		}
+		return ArrayHandler.allElements(reflectArray, obj);
     }
 
-    void writeClass(Object a_object, StatefulBuffer a_bytes){
+	void writeClass(Object a_object, StatefulBuffer a_bytes){
         int yapClassID = 0;
         
         Reflector reflector = a_bytes.getTransaction().reflector();
