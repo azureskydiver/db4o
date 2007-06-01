@@ -25,7 +25,7 @@ public class ClassHandler {
         return config() != null && config().instantiates();
     }
     
-    protected Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
+    public Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
         if (configInstantiates()) {
             return _classMetadata.instantiateFromConfig(buffer.getStream(), buffer, mf);
         }
