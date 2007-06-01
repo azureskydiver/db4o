@@ -5,6 +5,7 @@ package com.db4o.db4ounit.jre12.collections;
 import java.util.*;
 
 import com.db4o.collections.facades.*;
+import com.db4o.config.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -23,6 +24,19 @@ public class ArrayListTestCase extends AbstractDb4oTestCase{
         public Item() {
         }
         
+    }
+    
+    protected void configure(Configuration config) {
+        super.configure(config);
+        config.objectClass(ArrayList.class).installCustomHandler(new VanillaClassHandler(){
+            public boolean canNewInstance() {
+                return true;
+            }
+            
+            public Object newInstance() {
+                return new ArrayListFacade();
+            }
+        });
     }
     
     public void testReplacement() throws Exception{

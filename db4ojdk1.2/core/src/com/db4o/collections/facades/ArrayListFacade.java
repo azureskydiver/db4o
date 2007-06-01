@@ -14,9 +14,6 @@ public class ArrayListFacade extends ArrayList{
     
     private PersistentList _delegate;
     
-    public ArrayListFacade(PersistentList delegate_){
-        _delegate = delegate_;
-    }
     
     
     

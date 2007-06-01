@@ -24,6 +24,8 @@ import com.db4o.reflect.generic.*;
  * @exclude
  */
 public class ClassMetadata extends PersistentBase implements TypeHandler4, StoredClass {
+    
+    private ClassHandler _classHandler;
 
     public ClassMetadata i_ancestor;
 
@@ -95,6 +97,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         _reflector = reflector;
         _index = createIndexStrategy();
         _classIndexed = true;
+        _classHandler = new ClassHandler(this);
     }
     
     void activateFields(Transaction a_trans, Object a_object, int a_depth) {
@@ -456,8 +459,8 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return mf._object.collectFieldIDs(tree, this, attributes, a_bytes, name);
     }
 
-    public final boolean configInstantiates(){
-        return i_config != null && i_config.instantiates();
+    public boolean customizedNewInstance(){
+        return _classHandler.customizedNewInstance();
     }
     
     public Config4Class config() {
@@ -478,13 +481,6 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         // do nothing
     }
     
-    public void copyFrom(ClassMetadata other){
-        i_id = other.i_id;
-        i_config = other.i_config;
-        i_state = other.i_state;
-        i_reader = other.i_reader;
-    }
-
     private boolean createConstructor(ObjectContainerBase container, String className) {
         ReflectClass claxx = container.reflector().forName(className);
         return createConstructor(container, claxx , className, true);
@@ -502,7 +498,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             }
         }
         
-        if(configInstantiates()){
+        if(customizedNewInstance()){
             return true;
         }
         
@@ -1112,21 +1108,15 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		}
 	}
 	
-	private Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
-		Object instance = null;
-		if (configInstantiates()) {
-			instance = instantiateFromConfig(buffer.getStream(), buffer, mf);            	
-		} else {
-			instance = instantiateFromReflector(buffer.getStream());
-		}
-		return instance;
+	Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
+	    return _classHandler.instantiateObject(buffer, mf);
 	}
 
 	private void objectOnInstantiate(ObjectContainerBase container, Object instance) {
 		container.callbacks().objectOnInstantiate(instance);
 	}
 
-	private Object instantiateFromReflector(ObjectContainerBase stream) {
+	Object instantiateFromReflector(ObjectContainerBase stream) {
 		if (_reflector == null) {
 		    return null;
 		}
@@ -1145,7 +1135,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 		}
 	}
 
-	private Object instantiateFromConfig(ObjectContainerBase stream, StatefulBuffer a_bytes, MarshallerFamily mf) {
+	Object instantiateFromConfig(ObjectContainerBase stream, StatefulBuffer a_bytes, MarshallerFamily mf) {
 		int bytesOffset = a_bytes._offset;
 		a_bytes.incrementOffset(Const4.INT_LENGTH);
 		// Field length is always 1
@@ -1636,11 +1626,20 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
     }
     
     void setConfig(Config4Class config){
+        
+        if(config == null){
+            return;
+        }
+            
         // The configuration can be set by a ObjectClass#readAs setting
         // from YapClassCollection, right after reading the meta information
         // for the first time. In that case we never change the setting
         if(i_config == null){
             i_config = config;
+            CustomClassHandler customHandler = config.customHandler();
+            if(customHandler != null){
+                _classHandler = new CustomizedClassHandler(this, customHandler);
+            }
         }
     }
 
@@ -1648,7 +1647,7 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         i_name = a_name;
     }
 
-    private final void setStateDead() {
+    final void setStateDead() {
         bitTrue(Const4.DEAD);
         bitFalse(Const4.CONTINUE);
     }

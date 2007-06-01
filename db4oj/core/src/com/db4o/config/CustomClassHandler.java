@@ -8,5 +8,18 @@ package com.db4o.config;
  * marshalling and querying behaviour for special classes.
  */
 public interface CustomClassHandler {
+    
+    /**
+     * implement to create a new instance of an object.
+     * @return the new Object
+     */
+    public Object newInstance();
+    
+    /**
+     * implement and return true, if this CustomClassHandler creates
+     * object instances on calls to {@link #newInstance()}. 
+     * @return true, if this CustomClassHandler creates new instances.
+     */
+    public boolean canNewInstance();
 
 }
