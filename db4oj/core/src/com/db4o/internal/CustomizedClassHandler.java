@@ -22,7 +22,7 @@ public class CustomizedClassHandler extends ClassHandler {
         return _customHandler.canNewInstance();
     }
     
-    protected Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
+    public Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
         if (customizedNewInstance()) {
             return _customHandler.newInstance();
         }
