@@ -148,13 +148,13 @@ public class TreeInt extends Tree implements ReadWriteable {
 	
 	public final int marshalledLength(){
 		if(variableLength()){
-			final MutableInt mint = new MutableInt(Const4.INT_LENGTH);
+			final IntByRef mint = new IntByRef(Const4.INT_LENGTH);
 			traverse(new Visitor4(){
 				public void visit(Object obj){
-					mint.add(((TreeInt)obj).ownLength());
+					mint.value += ((TreeInt)obj).ownLength();
 				}
 			});
-			return mint.value();
+			return mint.value;
 		}
 		return Const4.INT_LENGTH + (size() * ownLength());
 	}

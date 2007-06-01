@@ -65,10 +65,6 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		}
 	}
 	
-	static final class ObjectByRef {
-		public Object value;
-	}
-	
 	public void testCommittedAdded() {
 		Item item4 = new Item(4);
 		Item item5 = new Item(5);
