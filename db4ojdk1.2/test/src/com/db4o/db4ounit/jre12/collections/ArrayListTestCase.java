@@ -52,7 +52,8 @@ public class ArrayListTestCase extends AbstractDb4oTestCase{
         ArrayList retrievedArrayList = retrievedItem.arrayList;
         Assert.isInstanceOf(ArrayListFacade.class, retrievedArrayList);
         
+        String str = (String) retrievedArrayList.get(0);
+        Assert.areEqual("One", str);
     }
-    
 
 }
