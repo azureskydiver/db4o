@@ -321,14 +321,14 @@ public class LocalTransaction extends Transaction {
     }
 	
     private boolean writeSlots() {
-        final MutableBoolean ret = new MutableBoolean();
+        final BooleanByRef ret = new BooleanByRef();
         traverseSlotChanges(new Visitor4() {
 			public void visit(Object obj) {
 				((SlotChange)obj).writePointer(LocalTransaction.this);
-				ret.set(true);
+				ret.value = true;
 			}
 		});
-        return ret.value();
+        return ret.value;
     }
 	
     public void flushFile(){
@@ -445,16 +445,16 @@ public class LocalTransaction extends Transaction {
     }
 	
 	private int countSlotChanges(){
-        final MutableInt count = new MutableInt();
+        final IntByRef count = new IntByRef();
         traverseSlotChanges(new Visitor4() {
 			public void visit(Object obj) {
                 SlotChange slot = (SlotChange)obj;
                 if(slot.isSetPointer()){
-                    count.increment();
+                    count.value++;
                 }
 			}
 		});
-        return count.value();
+        return count.value;
 	}
 	
 	final void writeOld() {

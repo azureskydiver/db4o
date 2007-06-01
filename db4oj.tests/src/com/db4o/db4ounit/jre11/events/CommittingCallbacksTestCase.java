@@ -4,7 +4,8 @@ package com.db4o.db4ounit.jre11.events;
 
 import com.db4o.config.Configuration;
 import com.db4o.events.*;
-import com.db4o.ext.*;
+import com.db4o.ext.ObjectInfo;
+import com.db4o.foundation.ObjectByRef;
 import com.db4o.internal.*;
 import com.db4o.query.Query;
 
@@ -60,10 +61,6 @@ public class CommittingCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	protected void db4oCustomTearDown() throws Exception {
 		committing().removeListener(_eventRecorder);
-	}
-	
-	static final class ObjectByRef {
-		public Object value;
 	}
 	
 	public void testLocalTransactionIsAvailableToEventListener() {
