@@ -28,7 +28,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
     }
 
     public final int elementCount(Transaction a_trans, Buffer a_bytes) {
-        return elementCount(readDimensions(a_trans, a_bytes, new ReflectClass[1]));
+        return elementCount(readDimensions(a_trans, a_bytes, ReflectClassByRef.IGNORED));
     }
 
     private final int elementCount(int[] a_dim) {
@@ -134,19 +134,19 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
 	}
 
     private int[] read1Create(Transaction a_trans, Buffer a_bytes, Object[] obj) {
-		ReflectClass[] clazz = new ReflectClass[1];
+		ReflectClassByRef clazz = new ReflectClassByRef();
 		int[] dim = readDimensions(a_trans, a_bytes, clazz);
         if (i_isPrimitive) {
         	obj[0] = a_trans.reflector().array().newInstance(i_handler.primitiveClassReflector(), dim);
         } else {
-        	if (clazz[0] != null) {
-				obj[0] = a_trans.reflector().array().newInstance(clazz[0], dim);
+        	if (clazz.value != null) {
+				obj[0] = a_trans.reflector().array().newInstance(clazz.value, dim);
         	}
         }
         return dim;
     }
 
-    private final int[] readDimensions(Transaction a_trans, Buffer a_bytes, ReflectClass[] clazz) {
+    private final int[] readDimensions(Transaction a_trans, Buffer a_bytes, ReflectClassByRef clazz) {
         int[] dim = new int[readElementsAndClass(a_trans, a_bytes, clazz)];
         for (int i = 0; i < dim.length; i++) {
             dim[i] = a_bytes.readInt();
