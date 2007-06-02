@@ -7,14 +7,11 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
-
-
-public final class ByteHandler extends PrimitiveHandler
-{
+public final class ByteHandler extends PrimitiveHandler {
 
     static final int LENGTH = 1 + Const4.ADDED_LENGTH;
 	
-	private static final Byte i_primitive = new Byte((byte)0);
+	private static final Byte DEFAULT_VALUE = new Byte((byte)0);
 	
     public ByteHandler(ObjectContainerBase stream) {
         super(stream);
@@ -29,7 +26,7 @@ public final class ByteHandler extends PrimitiveHandler
 	}
 	
 	public Object defaultValue(){
-		return i_primitive;
+		return DEFAULT_VALUE;
 	}
 	
 	public int linkLength(){
@@ -41,7 +38,7 @@ public final class ByteHandler extends PrimitiveHandler
 	}
 	
 	public Object primitiveNull(){
-		return i_primitive;
+		return DEFAULT_VALUE;
 	}
 	
 	Object read1(Buffer a_bytes){
