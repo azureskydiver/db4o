@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<project name="drs.net" default="package">
+	<import file="common.xml" />
+    
+    <property name="db4o.dll" value="${file.dll.net}" />
+    <property name="db4ounit.dll" value="${file.dll.net.db4ounit}" />
+        
+    <property name="drs.dir" location="${dir.workspace}/drs" />
+    <property name="drs.src.dir" location="${drs.dir}/src" />
+    <property name="drs.net.dir" location="${drs.dir}/drs.net" />
+    <property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />
+    <property name="drs.net.src.dir" location="${drs.net.dir}/src" />
+    <property name="drs.overlay.dir" location="${drs.dir}/overlay" />
+    
+    <property name="drs.sharpen.workspace.dir" location="${dir.dist}/drs.net/workspace" />
+    
+    <taskdef resource="org/apache/ant/dotnet/antlib.xml" />
+    
+    <target name="init">
+        <condition property="isUnix">
+            <os family="unix"/>
+        </condition>
+        
+        <fail message="The script should be used on Windows platform. For Mono build, please use build-drs-net.xml." 
+            if="isUnix"/>
+        
+		<mkdir dir="${drs.net.dir}" />
+		<mkdir dir="${drs.net.bin.dir}" />
+        <mkdir dir="${drs.net.src.dir}" />
+        
+        <mkdir dir="${drs.sharpen.workspace.dir}" />
+    </target>
+    
+    <target name="clean">
+        <delete dir="${drs.net.dir}" />
+        <delete dir="${drs.sharpen.workspace.dir}" />
+        <delete dir="${drs.dir}/dist" />
+    </target>
+    
+    <target name="package" depends="clean, init, build, doctor, run-tests">
+        <mkdir dir="${drs.dir}/dist" />
+		<copy file="${drs.dir}/drs.license.html" todir="${drs.net.dir}"/>		
+		<copy file="${drs.dir}/db4o.license.html" todir="${drs.net.bin.dir}"/>		
+		<copy file="${drs.dir}/readme.net.html" tofile="${drs.net.dir}/readme.html"/>		
+		<copy file="${drs.dir}/compatibility.net.html" tofile="${drs.net.dir}/compatibility.html" >
+				        <filterchain>
+				           <striplinecomments>
+				              <comment value="!"/>
+				           </striplinecomments>
+				           <replacetokens>
+				                <token key="db4o.version.dotted" value="${db4o.version.dotted}"/>
+				            </replacetokens>
+				        </filterchain>
+				    </copy>
+        
+        <zip destfile="${drs.dir}/dist/dRS-net-${db4o.version.major}.${db4o.version.minor}.zip">
+            <fileset dir="${drs.net.dir}" />
+        </zip>
+    </target>
+    
+    <target name="build" depends="init, prepare-dotnet-solution">
+        <msbuild buildfile="${drs.net.src.dir}/drs.sln">
+            <target name="rebuild" />
+            <property name="Configuration" value="Release" />
+            <property name="OutputPath" value="${drs.net.dir}/bin" />
+        </msbuild>
+    </target>
+    
+    <target name="prepare-dotnet-solution" depends="sharpen-drs">
+        <!-- .NET: drs -->
+		<copy todir="${drs.net.src.dir}/drs/src">
+			<fileset dir="${drs.sharpen.workspace.dir}/drscsharp/src">
+				<include name="**/*.cs" />
+				<exclude name="**/Test/**" />
+			</fileset>
+		</copy>
+        <copy todir="${drs.net.src.dir}/drs" overwrite="true">
+			<fileset dir="${drs.overlay.dir}/drs">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+        <!--.NET: drs.tests -->
+        <copy todir="${drs.net.src.dir}/drs.tests/src">
+			<fileset dir="${drs.sharpen.workspace.dir}/drscsharp/src">
+				<include name="**/Test/**" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${drs.net.src.dir}/drs.tests/" overwrite="true">
+			<fileset dir="${drs.overlay.dir}/drs.tests">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+        <!--.NET: QuickStart -->
+        <copy todir="${drs.net.src.dir}/QuickStart">
+            <fileset dir="${drs.overlay.dir}/QuickStart" />
+        </copy>
+        <!--.NET solution files -->
+        <copy file="${drs.overlay.dir}/drs.sln" todir="${drs.net.src.dir}"/>
+        <copy file="${drs.overlay.dir}/drs.suo" todir="${drs.net.src.dir}"/>
+        <!--.NET: reference dlls -->
+        <copy file="${db4o.dll}" todir="${drs.net.bin.dir}" />
+		<copy file="${db4ounit.dll}" todir="${drs.net.bin.dir}" />
+    </target>
+    
+    <target name="sharpen-drs" depends="prepare-sharpen-workspace, install-javatocsharp-plugin">
+		<sharpen resource="drs/core" workspace="${drs.sharpen.workspace.dir}">
+			<args>
+				<arg value="-cp" />
+				<arg value="${dependencies.jar}" />
+				<arg value="-srcfolder" />
+				<arg value="test" />
+				<arg value="@sharpen-dRS-options" />
+			</args>
+		</sharpen>
+	</target>
+    
+    <target name="prepare-sharpen-workspace">
+        <mkdir dir="${drs.sharpen.workspace.dir}/lib" />
+		<property name="dependencies.jar" location="${drs.sharpen.workspace.dir}/lib/dependencies.jar" />
+		
+		<jar destfile="${dependencies.jar}">
+            <fileset dir="${dir.dist.classes.java1.1}" />
+            <fileset dir="${dir.dist.classes.java1.2}" />
+            <fileset dir="${dir.dist.classes.java5}" />
+			<fileset dir="${dir.dist.classes.db4ounit}" />
+			<fileset dir="${dir.dist.classes.test.jdk1.1}" />
+		</jar>
+        
+		<copy todir="${drs.sharpen.workspace.dir}/drs">
+			<fileset dir="${drs.src.dir}">
+				<include name="core/**/*.java" />
+				<include name="test/**/test/ByteArrayTest.java" />
+				<include name="test/**/test/ByteArrayHolder.java" />
+				<include name="test/**/test/Db4oClientServerDrsFixture.java" />
+				<include name="test/**/test/Db4oDrsFixture.java" />
+				<include name="test/**/test/Db4oTests.java" />
+				<include name="test/**/test/DrsFixture.java" />				
+				<include name="test/**/test/DrsTestCase.java" />
+				<include name="test/**/test/DrsTestSuite.java" />
+				<include name="test/**/test/DrsTestSuiteBuilder.java" />					
+				<include name="test/**/test/IByteArrayHolder.java" />
+				<include name="test/**/test/ReplicationProviderTest.java" />
+				<include name="test/**/test/GetByUUID.java" />
+				<include name="test/**/test/TheSimplest.java" />
+				<include name="test/**/test/SPCChild.java" />
+				<include name="test/**/test/SPCParent.java" />
+				<include name="test/**/test/Pilot.java" />
+				<include name="test/**/test/Car.java" />
+				<include name="test/**/test/SimpleParentChild.java" />
+				<include name="test/**/test/ReplicationEventTest.java" />
+				<include name="test/**/test/ReplicationAfterDeletionTest.java" />
+				<include name="test/**/test/SimpleArrayTest.java" />
+				<include name="test/**/test/SimpleArrayHolder.java" />
+				<include name="test/**/test/SimpleArrayContent.java" />
+				<include name="test/**/test/ListTest.java" />
+				<include name="test/**/test/ListHolder.java" />
+				<include name="test/**/test/ListContent.java" />					
+				<include name="test/**/test/Db4oListTest.java" />					
+				<include name="test/**/test/R0to4Runner.java" />
+				<include name="test/**/test/R0.java" />
+				<include name="test/**/test/R0Linker.java" />
+				<include name="test/**/test/R1.java" />
+				<include name="test/**/test/R2.java" />
+				<include name="test/**/test/R3.java" />
+				<include name="test/**/test/R4.java" />
+				<include name="test/**/test/ReplicationFeaturesMain.java" />
+				<include name="test/**/test/Replicated.java" />				
+				<include name="test/**/test/Person.java" />				
+				<include name="test/**/test/Student.java" />				
+		
+				<include name="test/**/test/CollectionHolder.java" />
+				<include name="test/**/test/MapHolder.java" />
+				<include name="test/**/test/MapContent.java" />				
+			
+				<include name="test/**/test/foundation/*.java" />
+                <include name="test/**/test/regression/*.java" />
+				
+				<exclude name="**/hibernate/**" />
+				<exclude name="**/CollectionHandlerImplTest.java" />
+				<exclude name="**/ReplicationTraversalTest.java" />
+			</fileset>
+		</copy>
+	</target>
+
+    <target name="run-tests" depends="build">
+        <exec executable="${drs.net.bin.dir}/drs.test.exe" failonerror="true" />
+    </target>
+    
+    <target name="doctor" >
+		<copy todir="${drs.net.dir}">
+            <fileset dir="${drs.overlay.dir}/tutorial" />
+        </copy>
+		<java fork="true" classname="com.yetac.doctor.Doctor">
+			<arg line="${drs.net.dir}/docs ${font.pdf.base}" />
+			<classpath>
+				<pathelement location="${dependencies.jar}" />
+				<fileset dir="${drs.dir}/lib/doctor">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<move file="${drs.net.dir}/docs/out/doctor.pdf" tofile="${drs.net.dir}/docs/out/dRS-tutorial.pdf"/>
+        
+        <move todir="${drs.net.dir}/docs">
+            <fileset dir="${drs.net.dir}/docs/out" />
+        </move>
+        <delete dir="${drs.net.dir}/docs/in" />
+	</target>
+</project>
