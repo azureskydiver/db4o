@@ -82,7 +82,7 @@
   <ItemGroup>
     <Reference Include="Db4objects.Db4o, Version=6.3.1.0, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\bin\Db4objects.Db4o.dll</HintPath>
+      <HintPath>..\..\bin\Db4objects.Db4o.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>
