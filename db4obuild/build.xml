@@ -433,6 +433,73 @@
 			<fileset dir="${dir.dist.classes.db4ounit}" />
 		</jar>
 	</target>
+	
+	<target name="compileosgijava"> <!--depends="compilecorejava" -->
+		<delete dir="${dir.dist.classes.osgi}"/>
+		<delete dir="${dir.dist.classes.osgi.lib}"/>
+		<mkdir dir="${dir.dist.classes.osgi}"/>
+		<mkdir dir="${dir.dist.classes.osgi.lib}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}">
+			<fileset dir="${dir.osgi.lib}">
+				<exclude name="**/${filename.osgi.framework}"/>
+			</fileset>
+		</copy>
+		<javac destdir="${dir.dist.classes.osgi}" fork="true" debug="on" encoding="UTF-8">
+			<classpath>
+				<fileset dir="${dir.osgi.lib}" id="id">
+				    <include name="*.jar"/>
+				</fileset>
+			</classpath>
+			<src path="${dir.osgi.src}"/>
+		</javac>
+		<copy tofile="${dir.dist.classes.osgi}/build.properties" file="${dir.osgi}/build.properties"/>
+		<jar destfile="${file.osgi.jar}" manifest="${file.osgi.manifest}">
+			<fileset dir="${dir.dist.classes.osgi}"></fileset>
+		</jar>
+	</target>
+	
+	<target name="compiletestosgi" depends="compileosgijava">
+	<delete dir="${dir.dist.classes.osgi.test}"/>
+	<mkdir dir="${dir.dist.classes.osgi.test}"/>
+	<mkdir dir="${dir.dist.classes.osgi.test.lib}"/>
+	<copy todir="${dir.dist.classes.osgi.test.lib}">
+		<fileset dir="${dir.osgi.test.lib}">
+			<exclude name="**/${filename.osgi.framework}"/>
+		</fileset>
+	</copy>
+	<javac destdir="${dir.dist.classes.osgi.test}" fork="true" debug="on" encoding="UTF-8">
+		<classpath>
+			<fileset dir="${dir.osgi.test.lib}" id="id">
+			    <include name="*.jar"/>
+			</fileset>
+			<fileset dir="${dir.osgi.lib}" id="id">
+			    <include name="*.jar"/>
+			</fileset>
+			<pathelement path="${file.osgi.jar}" />
+		</classpath>
+		<src path="${dir.osgi.test.src}"/>
+	</javac>
+	<copy tofile="${dir.dist.classes.osgi.test}/build.properties" file="${dir.osgi.test}/build.properties"/>
+	<jar destfile="${file.osgi.test.jar}" manifest="${file.osgi.test.manifest}">
+		<fileset dir="${dir.dist.classes.osgi.test}"></fileset>
+	</jar>
+	</target>
+	
+	<target name="runosgitests" >
+		<delete dir="${dir.test.osgi}"/>
+		<mkdir dir="${dir.test.osgi}"/>
+		<mkdir dir="${dir.test.osgi.conf}"/>
+		<copy tofile="${file.test.osgi.conf}" file="${file.osgi}"/>
+		<copy tofile="${dir.test.osgi}/db4o-osgi-test.jar" file="${file.osgi.test.jar}"/>
+		<copy tofile="${dir.test.osgi}/db4o-osgi-edition.jar" file="${file.osgi.jar}"/>
+		<copy tofile="${dir.test.osgi}/${filename.equinox.framework}" file="${file.equinox.framework}"/>
+	<java jar="${dir.test.osgi}/${filename.equinox.framework}" 
+		failonerror="true" timeout="1200000" 
+		fork="true" dir="${dir.test.osgi}">
+		<arg line="-console"/>
+	</java>
+	
+	</target>
 
 	<target name="compiletestsjava" depends="compiledb4ounitjava" description="Compile db4o test sources">
 		<delete dir="${dir.dist.classes.test.jdk1.1}" />
