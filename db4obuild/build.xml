@@ -828,7 +828,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="**/src/**/*.java" />
-				<include name="*.txt" />
+				<include name="*.html" />
 			</fileset>
 		</copy>
 		<filehead beforePattern="package" header="${content.gplheader}" >
