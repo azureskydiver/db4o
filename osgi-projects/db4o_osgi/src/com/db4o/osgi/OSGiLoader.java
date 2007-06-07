@@ -15,11 +15,15 @@ public class OSGiLoader implements JdkLoader {
 	}
 
 	public Class loadClass(String className) {
+		Class clazz = _loader.loadClass(className);
+		if (clazz != null) {
+			return clazz;
+		}
 		try {
 			return _bundle.loadClass(className);
 		} 
 		catch (ClassNotFoundException exc) {
-			return _loader.loadClass(className);
+			return null;
 		}
 	}
 
