@@ -2,4 +2,4 @@ output.. = bin/
 source.. = src/
 bin.includes = META-INF/,\
                .,\
-               lib/db4o-6.3-java1.2.jar
+               lib/db4o-@db4o.version.dotted@-java1.2.jar
