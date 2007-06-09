@@ -10,6 +10,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
@@ -197,4 +198,9 @@ public class JDK {
     public Reflector reflectorForType(Class clazz) {
 		return null;
 	}
+
+    /** @param container */
+    public NetTypeHandler[] types(ObjectContainerBase container) {
+        return new NetTypeHandler[]{};
+    }
 }

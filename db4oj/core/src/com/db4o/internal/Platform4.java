@@ -9,7 +9,6 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
-import com.db4o.internal.handlers.net.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
@@ -613,15 +612,8 @@ public final class Platform4 {
         translate(config, UTIL + className, "TNull");
     }
 
-    static final NetTypeHandler[] types(ObjectContainerBase stream) {
-        return new NetTypeHandler[] {
-        		new NetDateTime(stream),
-        		new NetDecimal(stream),
-        		new NetSByte(stream),
-        		new NetUInt(stream),
-        		new NetULong(stream),
-        		new NetUShort(stream)
-        };
+    static final NetTypeHandler[] types(ObjectContainerBase container) {
+        return jdk().types(container);
     }
     
     public static byte[] updateClassName(byte[] bytes) {
