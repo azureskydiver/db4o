@@ -3,7 +3,7 @@ Bundle-Name: db4o OSGi test
 Created-By: 1.5.0-beta2 (Sun Microsystems Inc.)
 Bundle-Activator: com.db4o.osgi.test.Db4oTestActivator
 Import-Package: org.osgi.framework
-Bundle-Vendor: ProSyst
+Bundle-Vendor: db4objects, Inc.
 Bundle-Category: db
 Bundle-Version: @db4o.version.dotted@
 Bundle-SymbolicName: db4o_osgi_test
