@@ -199,7 +199,6 @@
 				<copy todir="${dir.dist.net.build}">			
 					<fileset dir="${dir.config}/net">
 						<include name="db4o.license.html" />
-						<include name="readme.html" />
 					</fileset>
 				</copy>
 				<copy todir="${dir.dist.net.build}/bin">			
@@ -210,6 +209,16 @@
 					</fileset>
 				</copy>
 				<!-- readme's in distribution folders-->
+				<copy file="${dir.config}/net/readme.html" tofile="${dir.dist.net.build}/readme.html" >
+			        <filterchain>	
+			           <striplinecomments>
+			              <comment value="!"/>
+			           </striplinecomments>
+			           <replacetokens>
+			                <token key="db4o.version.dotted" value="${db4o.version.dotted}"/>
+			            </replacetokens>
+			        </filterchain>
+			    </copy>
 				<copy file="${dir.config}/net/net_doc_readme.html" tofile="${dir.dist.net.build}/doc/readme.html" />
 				<copy file="${dir.config}/net/net_src_readme.html" tofile="${dir.dist.net.build}/src/readme.html" />
 				<copy file="${dir.config}/net/net_bin_readme.html" tofile="${dir.dist.net.build}/bin/readme.html" />
