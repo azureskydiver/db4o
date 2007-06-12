@@ -864,6 +864,7 @@
 				<include name=".classpath" />
 				<include name="src/**/*.java" />
 				<include name="src/**/*.yap" />
+				<include name="test/db4oVersions/*.*" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.jdk1.2}">
@@ -873,6 +874,7 @@
 				<!-- include name="build.xml" / -->
 				<include name="**/src/**/*.java" />
 				<include name="**/src/**/*.yap" />
+				<include name="test/db4oVersions/*.*" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.jdk5}">
@@ -882,6 +884,7 @@
 				<!-- include name="build.xml" / -->
 				<include name="**/src/**/*.java" />
 				<include name="**/src/**/*.yap" />
+				<include name="test/db4oVersions/*.*" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.bloat}">
@@ -906,6 +909,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="**/src/**/*.java" />
+				<include name="**/test/**/*.java" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.taj}">
@@ -913,6 +917,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="**/src/**/*.java" />
+				<include name="**/test/**/*.java" />
 				<include name="*.html" />
 			</fileset>
 		</copy>
