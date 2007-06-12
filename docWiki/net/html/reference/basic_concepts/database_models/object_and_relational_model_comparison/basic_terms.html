@@ -1,0 +1,138 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Basic Terms</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Basic Terms</h1>
+
+<p>While relational and object databases use different sets of
+terms, it is possible to draw parallels between some of the terms:</p>
+
+
+
+<table border="1" cellpadding="0" cellspacing="0">
+ <tr>
+  <td valign="top">
+  <p>OODBMS</p>
+  </td>
+  <td valign="top">
+  <p>RDBMS</p>
+  </td>
+  <td valign="top">
+  <p>Similar</p>
+  </td>
+  <td valign="top">
+  <p>Different</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>Class</p>
+  </td>
+  <td valign="top">
+  <p>Table</p>
+  </td>
+  <td valign="top">
+  <p>Define an entity data structure.</p>
+  </td>
+  <td valign="top">
+  <p>Class can define fields (static data) and methods, while
+  table can only define static data.</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>Object instance</p>
+  </td>
+  <td valign="top">
+  <p>Tuple</p>
+  </td>
+  <td valign="top">
+  <p>Represent an instance of data defined in a class or a
+  table.</p>
+  </td>
+  <td valign="top">
+  <p>Object can hold data of different visibility and
+  references to other objects. Tuple consists of system type data. </p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>Attribute</p>
+  </td>
+  <td valign="top">
+  <p>Column</p>
+  </td>
+  <td valign="top">
+  <p>Define one of the fields in the data definition.</p>
+  </td>
+  <td valign="top">
+  <p>RDBMS has a preset collection of types, which can be used
+  to define the type of the data in the column. OODBMS can use user-defined
+  types.</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>Method</p>
+  </td>
+  <td valign="top">
+  <p>Stored Procedure</p>
+  </td>
+  <td valign="top">
+  <p>Define a piece of functionality.</p>
+  </td>
+  <td valign="top">
+  <p>Method is a characteristic of a class. Stored procedure is
+  a separate object in RDBMS.</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>Identity</p>
+  </td>
+  <td valign="top">
+  <p>Key</p>
+  </td>
+  <td valign="top">
+  <p>Identify a single object or tuple.</p>
+  </td>
+  <td valign="top">
+  <p>Object identity makes any object unique independently of
+  the object content. Key imposes a uniqueness of a database object based on
+  the uniqueness of the column values.</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>Reference</p>
+  </td>
+  <td valign="top">
+  <p>Relation</p>
+  </td>
+  <td valign="top">
+  <p>Link different objects within a database.</p>
+  </td>
+  <td valign="top">
+  <p>In OODBMS direct object links are used. In RDBMS objects
+  are linked through foreign keys, i.e. identical values in different rows.</p>
+  </td>
+ </tr>
+</table>
+
+
+
+<p>Note, that the above-mentioned terms are similar only to a
+certain degree; there are some fundamental differences between them.</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-06-02T20:16:26 by Tetyana.
+				</div>
+  </body>
+</html>
