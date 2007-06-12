@@ -6,7 +6,7 @@ import org.osgi.framework.*;
 
 import com.db4o.reflect.jdk.*;
 
-public class OSGiLoader implements JdkLoader {
+class OSGiLoader implements JdkLoader {
 	
 	private final Bundle _bundle;
 	private JdkLoader _loader;
