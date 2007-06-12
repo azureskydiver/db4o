@@ -202,6 +202,13 @@
 						<include name="readme.html" />
 					</fileset>
 				</copy>
+				<copy todir="${dir.dist.net.build}/bin">			
+					<fileset dir="${dir.config}/net">
+						<include name="Cecil.FlowAnalysis.license.html" />
+						<include name="Mono.Cecil.license.html" />
+						<include name="Mono.GetOptions.license.html" />
+					</fileset>
+				</copy>
 				<!-- readme's in distribution folders-->
 				<copy file="${dir.config}/net/net_doc_readme.html" tofile="${dir.dist.net.build}/doc/readme.html" />
 				<copy file="${dir.config}/net/net_src_readme.html" tofile="${dir.dist.net.build}/src/readme.html" />
@@ -231,7 +238,7 @@
 				<include name="**/*.csproj" />
 				<include name="**/*.csdproj" />
 				<include name="**/*.sln" />
-				<include name="**/*.txt" />
+				<include name="**/*.html" />
 				
 				<include name="Libs/**/*" />
 				
