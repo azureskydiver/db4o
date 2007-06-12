@@ -38,6 +38,7 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Db4objects\Drs\Test\ByteArrayHolder.cs" />
     <Compile Include="src\Db4objects\Drs\Test\ByteArrayTest.cs" />
     <Compile Include="src\Db4objects\Drs\Test\Car.cs" />
@@ -92,6 +93,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Db4oUnit.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\drs\drs.csproj">
