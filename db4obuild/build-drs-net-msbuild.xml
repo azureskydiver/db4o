@@ -51,10 +51,16 @@
 				                <token key="db4o.version.dotted" value="${db4o.version.dotted}"/>
 				            </replacetokens>
 				        </filterchain>
-				    </copy>
+		</copy>
+        
+        <delete>
+            <fileset dir="${drs.net.bin.dir}">
+                <include name="*.pdb" />
+            </fileset>
+        </delete>
         
         <zip destfile="${drs.dir}/dist/dRS-net-${db4o.version.major}.${db4o.version.minor}.zip">
-            <fileset dir="${drs.net.dir}" />
+            <zipfileset dir="${drs.net.dir}" prefix="dRS-net-${db4o.version.major}.${db4o.version.minor}"/>
         </zip>
     </target>
     
