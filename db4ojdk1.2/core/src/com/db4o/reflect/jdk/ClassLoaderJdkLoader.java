@@ -12,7 +12,7 @@ public class ClassLoaderJdkLoader implements JdkLoader {
 
 	public Class loadClass(String className) {
 		try {
-			return (_loader == null ? Class.forName(className) : _loader.loadClass(className));
+			return (_loader == null ? Class.forName(className) : Class.forName(className, true, _loader));
 		} catch (Exception e) {
 			// e.printStackTrace();
 		} catch (LinkageError e) {
