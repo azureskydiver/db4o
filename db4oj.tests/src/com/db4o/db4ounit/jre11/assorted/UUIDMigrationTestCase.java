@@ -46,7 +46,7 @@ public class UUIDMigrationTestCase implements TestCase, OptOutNoFileSystemData {
 	}
 	
 	private String getUUIDMigrationSourcePath() throws IOException {
-		final String fname = "UUIDMigrationSource-db4o-5.5.yap";
+		final String fname = "uuid/UUIDMigrationSource-db4o-5.5.yap";
 		final String resource = WorkspaceServices.workspaceTestFilePath(fname);
 		String targetFile = Path4.combine(Path4.getTempPath(), fname);
 		File4.copy(resource, targetFile);
