@@ -89,7 +89,7 @@ public class FileSizeTestCase extends FreespaceManagerTestCaseBase {
             runnable.run();
         }
         Assert.areEqual(originalFileSize, fileSize());
-        System.out.println(fileSize());
+        // System.out.println(fileSize());
     }
 
 }
