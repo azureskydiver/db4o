@@ -865,6 +865,9 @@
 				<include name="src/**/*.java" />
 				<include name="src/**/*.yap" />
 				<include name="test/db4oVersions/*.*" />
+				<include name="test/migration/*.*" />
+				<include name="test/net/*.*" />
+				<include name="test/uuid/*.*" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.jdk1.2}">
