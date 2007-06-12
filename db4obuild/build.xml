@@ -709,6 +709,7 @@
 					<contains text="* @exclude" />
 				</not>
 			</fileset>
+			<fileset dir="${dir.osgi.src}" includes="com/db4o/**/*.java"/>
 			<group title="Core Engine" packages="com.db4o" />
 			<group title="Query Functionality" packages="com.db4o.query" />
 			<group title="Configuration Features" packages="com.db4o.config" />
@@ -719,6 +720,13 @@
 			<group title="Types" packages="com.db4o.types" />
 		</javadoc>
 		<copy file="${javadoc.stylesheet}" todir="${dir.dist.doc.api}" overwrite="true" />
+	<javadoc classpath="" access="public" windowtitle="db4o - database for objects - documentation" header="db4o ${db4o.version.dotted}" destdir="${dir.dist.doc.osgi}">
+			
+		<fileset dir="${dir.osgi.src}" includes="com/db4o/**/*.java"/>
+		<group title="OSGi Services" packages="com.db4o.osgi" />
+	
+	</javadoc>
+	<copy file="${javadoc.stylesheet}" todir="${dir.dist.doc.osgi}" overwrite="true" />
 	</target>
 
 	<target name="runtestsjava" depends="compiletestsjava" description="Run db4o AllTests">
