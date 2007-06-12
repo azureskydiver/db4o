@@ -30,6 +30,11 @@ public class OldFormatExceptionTestCase implements TestCase, OptOutNoFileSystemD
 			System.err.println("Build environment not available. Skipping test case...");
 			return;
 		}
+	    if (!File4.exists(sourceFile())) {
+            System.err.println("Test source file " + sourceFile() + " not available. Skipping test case...");
+            return;
+        }
+
 		
 		Db4o.configure().reflectWith(Platform4.reflectorForType(OldFormatExceptionTestCase.class));
 		
@@ -55,7 +60,12 @@ public class OldFormatExceptionTestCase implements TestCase, OptOutNoFileSystemD
 
 	protected String oldDatabaseFilePath() throws IOException {
 		final String oldFile = IOServices.buildTempPath("old_db.yap");
-		File4.copy(WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_3.0.3"), oldFile);
+		File4.copy(sourceFile(), oldFile);
 		return oldFile;
 	}
+	
+	private String sourceFile(){
+        return WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_3.0.3");
+    }
+	
 }
