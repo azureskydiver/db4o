@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="Db4objects.Drs.Quickstart\Simple\Pilot.cs" />
     <Compile Include="Db4objects.Drs.Quickstart\Simple\Simple.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\drs\drs.csproj">
