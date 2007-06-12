@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Code Inside</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Code Inside</h1>
+
+<p>Native Query expression is dealt as a normal peace of code.
+Therefore, any language construction is legible inside:</p>
+
+<ul><li>variables;</li><li>temporary
+     objects created within a query;</li><li>static
+     calls;</li><li>exception
+     handling.</li></ul><p>However, some restrictions do apply:</p>
+
+<ul><li>NQ
+     should not be used to modify the database to prevent loops;</li><li>NQ
+     should not use threads, as NQ are expected to be triggered in large
+     numbers;</li><li>NQ
+     should be fast, therefore they should not interact with the GUI;</li><li>NQ
+     should follow security restrictions, as they are executed in the server
+     and potentially can create malicious behavior there.</li></ul>
+
+<p>In a case of uncaught exception within a Native Query a null
+result is returned.</p>
+
+For more info see <a href="../../implementation_strategies/native_query_collection.html" class="wikiLink">Native Query Collection</a></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-06-02T18:42:57 by Tetyana.
+				</div>
+  </body>
+</html>

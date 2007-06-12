@@ -1,0 +1,54 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>TA Implementation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TA Implementation</h1>
+
+<p>The basic idea for this initial TA
+implementation is very simple: </p>
+
+<ul>
+<li>objects
+have an activation depth of 0, i.e. by default they are not activated at all;</li>
+<li>whenever
+a method is called on such an object, the first thing to do before actually
+executing the method body is to activate the object to level 1,
+i.e. populating its direct members.</li>
+</ul>
+
+
+
+
+<p>The basic sequence of actions to get
+this scheme to work is the following:</p>
+<ol>
+<li>Whenever an object is instantiated
+from db4o, the database registers itself with this object. To enable this on
+the database level <code>TransparentActivationSupport</code> has to be
+registered with the db4o configuration.On the object level an object has to
+implement the <code>Activatable/IActivatable</code> interface and provide the according
+<code>bind(activator)</code> method. The default implementation of the
+bind method will simply store the given <code>activator</code> reference for later use.</li>
+<li>All methods that are supposed to
+require activated object fields should call <code>activate()/Activate()</code> at the
+beginning of the message body. The <code>activate()/Activate()</code> method will check
+whether the object is already activated. If this is not the case, it will
+request the container to activate the object to level 1 and set the activated
+flag accordingly.</li>
+</ol>
+
+
+
+<p>Please, remember that the current
+implementation is subject to change in the next versions.</p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-05-15T15:28:45 by Tetyana.
+				</div>
+  </body>
+</html>
