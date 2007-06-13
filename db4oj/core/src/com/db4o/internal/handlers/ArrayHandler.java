@@ -22,6 +22,8 @@ public class ArrayHandler extends BuiltinTypeHandler {
 
     public ArrayHandler(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream);
+        if (null == a_handler) throw new ArgumentNullException();
+        
         i_handler = a_handler;
         i_isPrimitive = a_isPrimitive;
         _reflectArray = stream.reflector().array();
