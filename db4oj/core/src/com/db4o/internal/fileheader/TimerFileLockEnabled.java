@@ -36,6 +36,11 @@ public class TimerFileLockEnabled extends TimerFileLock{
     
     public TimerFileLockEnabled(IoAdaptedObjectContainer file) {
         _timerLock = file.lock();
+        
+        // FIXME: No reason to sync over the big master lock.
+        //        A local lock should be OK.
+        // _timerLock = new Object();
+        
         _timerFile = file.timerFile();
         _opentime = uniqueOpenTime();
     }
