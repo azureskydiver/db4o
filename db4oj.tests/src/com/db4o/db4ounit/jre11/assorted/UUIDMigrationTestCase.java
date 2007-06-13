@@ -7,7 +7,7 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.config.ConfigScope;
 import com.db4o.db4ounit.common.assorted.UUIDTestItem;
-import com.db4o.db4ounit.util.WorkspaceServices;
+import com.db4o.db4ounit.util.*;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.io.*;
 
@@ -46,10 +46,10 @@ public class UUIDMigrationTestCase implements TestCase, OptOutNoFileSystemData {
 	}
 	
 	private String getUUIDMigrationSourcePath() throws IOException {
-		final String fname = "uuid/UUIDMigrationSource-db4o-5.5.yap";
-		final String resource = WorkspaceServices.workspaceTestFilePath(fname);
-		String targetFile = Path4.combine(Path4.getTempPath(), fname);
-		File4.copy(resource, targetFile);
+		final String fileName = "UUIDMigrationSource-db4o-5.5.yap";
+		final String sourceFile  = WorkspaceServices.workspaceTestFilePath("uuid/" +  fileName);
+		String targetFile = IOServices.buildTempPath(fileName); 
+		File4.copy(sourceFile, targetFile);
 		return targetFile;
 	}
 
