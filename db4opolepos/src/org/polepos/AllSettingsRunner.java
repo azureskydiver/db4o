@@ -38,22 +38,23 @@ import org.polepos.teams.db4o.*;
 /**
  * Please read the README file in the home directory first.
  */
-public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
+public class AllSettingsRunner extends AbstractDb4oVersionsRaceRunner{
     
     public static void main(String[] arguments) {
-        new AllRacesRunner().run();
+        new AllSettingsRunner().run();
     }
     
     public Team[] teams() {
+        
+        String jar = Db4oVersions.JAR63;
 
 		return new Team[] {
-                db4oTeam(Db4oVersions.JAR45, null),
-                db4oTeam(Db4oVersions.JAR57, null),
-                db4oTeam(Db4oVersions.JAR61, null),
-                db4oTeam(Db4oVersions.JAR63, null),
-                db4oTeam(Db4oVersions.JAR57, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
-                db4oTeam(Db4oVersions.JAR61, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
-                db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+                db4oTeam(jar, null),
+                db4oTeam(jar, new int[] {Db4oOptions.NO_FLUSH}),
+                db4oTeam(jar, new int[] {Db4oOptions.BTREE_FREESPACE}),
+                db4oTeam(jar, new int[] {Db4oOptions.MEMORY_IO}),
+                db4oTeam(jar, new int[] {Db4oOptions.SNAPSHOT_QUERIES}),
+                db4oTeam(jar, new int[] {Db4oOptions.LAZY_QUERIES}),
 		};
 	}
 
