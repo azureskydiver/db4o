@@ -2,21 +2,43 @@
 
 package com.db4o.db4ounit.common.reflect;
 
-import db4ounit.Assert;
+import com.db4o.reflect.*;
+
+import db4ounit.*;
 import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class ReflectArrayTestCase extends AbstractDb4oTestCase {
 	
 	public void testNewInstance() {
-		String[][] a23 = (String[][])newInstance(String.class, new int[] { 2, 3 });
+		String[][] a23 = newStringMatrix(2, 3);
 		Assert.areEqual(2, a23.length);
 		for (int i=0; i<a23.length; ++i) {
 			Assert.areEqual(3, a23[i].length);
 		}
 	}
 
+	private String[][] newStringMatrix(final int x, final int y) {
+		return (String[][])newInstance(String.class, new int[] { x, y });
+	}
+	
+	public void testIsNDimensional() {
+		ReflectClass klass = reflectClass(String[][].class);
+		Assert.isTrue(klass.isArray());
+		Assert.areSame(reflectClass(String[].class), klass.getComponentType());
+		Assert.isTrue(arrayReflector().isNDimensional(klass));
+	}
+
+	public void testDimensions() {
+		String[][] array = newStringMatrix(3, 4);
+		ArrayAssert.areEqual(new int[] { 3, 4 }, arrayReflector().dimensions(array));
+	}
+
 	private Object newInstance(Class elementType, int[] dimensions) {
-		return reflector().array().newInstance(reflector().forClass(elementType), dimensions);
+		return arrayReflector().newInstance(reflectClass(elementType), dimensions);
+	}
+
+	private ReflectArray arrayReflector() {
+		return reflector().array();
 	}
 
 }
