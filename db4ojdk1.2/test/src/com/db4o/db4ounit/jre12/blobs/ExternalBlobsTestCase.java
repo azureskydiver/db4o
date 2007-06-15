@@ -10,8 +10,9 @@ import com.db4o.types.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.OptOutDefragSolo;
 
-public class ExternalBlobsTestCase extends AbstractDb4oTestCase {
+public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 
 	private static final String BLOB_PATH = "test/TEMP/db4oTestBlobs";
 	private static final String BLOB_FILE_IN = BLOB_PATH + "/regressionBlobIn.txt"; 
