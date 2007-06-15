@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 
 import com.db4o.internal.marshall.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -35,5 +36,15 @@ public class ClassHandler {
     public Config4Class config() {
         return _classMetadata.config();
     }
+    
+    public ReflectClass classSubstitute(){
+        return null;
+    }
+    
+    public boolean ignoreAncestor() {
+        return false;
+    }
+
+
 
 }

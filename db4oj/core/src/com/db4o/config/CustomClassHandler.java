@@ -2,6 +2,8 @@
 
 package com.db4o.config;
 
+import com.db4o.reflect.*;
+
 
 /**
  * Custom class handler to provide modified instantiation, 
@@ -21,5 +23,10 @@ public interface CustomClassHandler {
      * @return true, if this CustomClassHandler creates new instances.
      */
     public boolean canNewInstance();
+
+    public ReflectClass classSubstitute();
+    
+    public boolean ignoreAncestor();
+
 
 }

@@ -12,7 +12,7 @@ import com.db4o.internal.collections.*;
  */
 public class ArrayListFacade extends ArrayList{
     
-    private PersistentList _delegate;
+    public PersistentList _delegate;
 
     public void add(int index, Object element) {
         // TODO Auto-generated method stub

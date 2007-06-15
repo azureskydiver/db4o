@@ -1633,7 +1633,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         i_stillToSet = postponedStillToSet;
     }
     
-    private void notStorable(ReflectClass claxx, Object obj){
+    void notStorable(ReflectClass claxx, Object obj){
         if(! configImpl().exceptionsOnNotStorable()){
             return;
         }
@@ -1665,49 +1665,20 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             ((Db4oTypeImpl) obj).storedTo(trans);
         }
         
-        ClassMetadata yc = null;
-        ObjectReference ref = referenceForObject(obj);
-        if (ref == null) {
-        	
-            ReflectClass claxx = reflector().forObject(obj);
-            
-            if(claxx == null){
-                notStorable(claxx, obj);
-                return 0;
-            }
-            
-            yc = getActiveClassMetadata(claxx);
-            
-            if (yc == null) {
-                yc = produceClassMetadata(claxx);
-                if ( yc == null){
-                    notStorable(claxx, obj);
-                    return 0;
-                }
-                
-                // The following may return a reference if the object is held
-                // in a static variable somewhere ( often: Enums) that gets
-                // stored or associated on initialization of the YapClass.
-                
-                ref = referenceForObject(obj);
-                
-            }
-            
-        } else {
-            yc = ref.getYapClass();
-        }
-        
-        if (isPlainObjectOrPrimitive(yc) ) {
-            notStorable(yc.classReflector(), obj);
+        ObjectAnalyzer analyzer = new ObjectAnalyzer(this, obj);
+        if(analyzer.notStorable()){
             return 0;
         }
         
+        ObjectReference ref = analyzer.objectReference();
+        
         if (ref == null) {
-            if (!objectCanNew(yc, obj)) {
+            ClassMetadata classMetadata = analyzer.classMetadata();
+            if (!objectCanNew(classMetadata, obj)) {
                 return 0;
             }
             ref = new ObjectReference();
-            ref.store(trans, yc, obj);
+            ref.store(trans, classMetadata, obj);
             _referenceSystem.addNewReference(ref);
 			if(obj instanceof Db4oTypeImpl){
 			    ((Db4oTypeImpl)obj).setTrans(trans);
@@ -1738,10 +1709,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     private final boolean updateDepthSufficient(int updateDepth){
     	return (updateDepth == Const4.UNSPECIFIED) || (updateDepth > 0);
-    }
-
-    private final boolean isPlainObjectOrPrimitive(ClassMetadata yc) {
-        return yc.getID() == HandlerRegistry.ANY_ID  || yc.isPrimitive();
     }
 
 	private boolean objectCanNew(ClassMetadata yc, Object a_object) {
