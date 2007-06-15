@@ -1639,6 +1639,9 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
             CustomClassHandler customHandler = config.customHandler();
             if(customHandler != null){
                 _classHandler = new CustomizedClassHandler(this, customHandler);
+                if(_classHandler.ignoreAncestor()){
+                    i_ancestor = null;
+                }
             }
         }
     }
@@ -2063,6 +2066,13 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 			throw new IllegalStateException();
 		}
 		i_ancestor = ancestor;
+        if(_classHandler.ignoreAncestor()){
+            i_ancestor = null;
+        }
 	}
+
+    public ReflectClass classSubstitute() {
+        return _classHandler.classSubstitute();
+    }
 
 }

@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.config.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -27,6 +28,14 @@ public class CustomizedClassHandler extends ClassHandler {
             return _customHandler.newInstance();
         }
         return  super.instantiateObject(buffer, mf);
+    }
+    
+    public ReflectClass classSubstitute(){
+        return _customHandler.classSubstitute();
+    }
+    
+    public boolean ignoreAncestor() {
+        return _customHandler.ignoreAncestor();
     }
 
 }
