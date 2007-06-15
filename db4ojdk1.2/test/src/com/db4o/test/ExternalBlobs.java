@@ -18,6 +18,7 @@ public class ExternalBlobs {
 	void configure(){
 		try{
 			Db4o.configure().setBlobPath(Test.BLOB_PATH);
+			deleteFiles();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -31,8 +32,7 @@ public class ExternalBlobs {
 		if(new File(Test.BLOB_PATH).exists()){
 			try{
 				char[] chout = new char[]{'H', 'i', ' ', 'f','o', 'l', 'k','s'};
-				new File(BLOB_FILE_IN).delete();
-				new File(BLOB_FILE_OUT).delete();
+				deleteFiles();
 				FileWriter fw = new FileWriter(BLOB_FILE_IN);
 				fw.write(chout);
 				fw.flush();
@@ -67,6 +67,11 @@ public class ExternalBlobs {
 			}
 		}
 		
+	}
+
+	private void deleteFiles() {
+		new File(BLOB_FILE_IN).delete();
+		new File(BLOB_FILE_OUT).delete();
 	}
 
 }

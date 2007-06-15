@@ -42,7 +42,7 @@ public class CascadedDeleteReadTestCase extends AbstractDb4oTestCase{
 		new CascadedDeleteReadTestCase().runSoloAndClientServer();
 	}
 	
-	protected void configure(Configuration config) {
+	protected void configure(Configuration config) throws Exception {
 		super.configure(config);
 		config.objectClass(Item.class).objectField("_child1").cascadeOnDelete(true);
 		config.objectClass(Item.class).objectField("_child2").cascadeOnDelete(true);

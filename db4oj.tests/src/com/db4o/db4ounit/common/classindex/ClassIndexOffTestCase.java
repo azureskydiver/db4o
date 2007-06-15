@@ -25,7 +25,7 @@ public class ClassIndexOffTestCase extends AbstractDb4oTestCase implements OptOu
 		new ClassIndexOffTestCase().runSolo();
 	}
 	
-	protected void configure(Configuration config) {
+	protected void configure(Configuration config) throws Exception {
 		super.configure(config);
 		config.objectClass(Item.class).indexed(false);
 	}

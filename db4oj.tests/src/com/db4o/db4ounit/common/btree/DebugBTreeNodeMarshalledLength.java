@@ -21,7 +21,7 @@ public class DebugBTreeNodeMarshalledLength extends AbstractDb4oTestCase{
 		new DebugBTreeNodeMarshalledLength().runSolo();
 	}
 	
-	protected void configure(Configuration config) {
+	protected void configure(Configuration config) throws Exception {
 		super.configure(config);
 		config.objectClass(Item.class).objectField("_int").indexed(true);
 		config.objectClass(Item.class).objectField("_string").indexed(true);

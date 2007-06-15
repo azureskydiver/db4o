@@ -59,6 +59,15 @@ public class ArrayAssert {
 	        Assert.areEqual(expected[i], actual[i], indexMessage(i));
 	    }
 	}
+
+	public static void areEqual(char[] expected, char[] actual) {
+		if (expected == actual) return;
+		if (expected == null || actual == null) Assert.areSame(expected, actual);
+		Assert.areEqual(expected.length, actual.length);
+	    for (int i = 0; i < expected.length; i++) {
+	        Assert.areEqual(expected[i], actual[i], indexMessage(i));
+	    }
+	}
 	
 	private static int indexOf(long[] array, long expected) {
 		for (int i = 0; i < array.length; ++i) {				
