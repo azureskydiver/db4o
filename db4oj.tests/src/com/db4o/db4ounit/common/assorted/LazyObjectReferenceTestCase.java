@@ -22,7 +22,7 @@ public class LazyObjectReferenceTestCase extends AbstractDb4oTestCase{
 		
 	}
 	
-	protected void configure(Configuration config) {
+	protected void configure(Configuration config) throws Exception {
 		super.configure(config);
 		config.objectClass(Item.class).generateUUIDs(true);
 	}

@@ -26,7 +26,7 @@ public class ArrayListTestCase extends AbstractDb4oTestCase{
         
     }
     
-    protected void configure(Configuration config) {
+    protected void configure(Configuration config) throws Exception {
         super.configure(config);
         config.objectClass(ArrayList.class).installCustomHandler(new VanillaClassHandler(){
             public boolean canNewInstance() {

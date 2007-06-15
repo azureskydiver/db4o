@@ -66,7 +66,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	protected void db4oSetupAfterStore() throws Exception {}
 	protected void db4oCustomTearDown() throws Exception {}
 
-	protected void configure(Configuration config) {}
+	protected void configure(Configuration config) throws Exception {}
 	
 	protected void store() throws Exception {}
 

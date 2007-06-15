@@ -17,7 +17,7 @@ public class FreespaceMigrationTestCase extends FreespaceManagerTestCaseBase imp
         new FreespaceMigrationTestCase().runSolo();
     }
     
-    protected void configure(Configuration config) {
+    protected void configure(Configuration config) throws Exception {
         super.configure(config);
         config.freespace().useBTreeSystem();
         configuration = config;

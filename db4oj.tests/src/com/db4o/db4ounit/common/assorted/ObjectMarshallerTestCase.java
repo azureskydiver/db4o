@@ -76,7 +76,7 @@ public class ObjectMarshallerTestCase extends AbstractDb4oTestCase {
 	public static final ItemMarshaller marshaller = new ItemMarshaller();
 	
 	
-	protected void configure(Configuration config) {
+	protected void configure(Configuration config) throws Exception {
 		super.configure(config);
 		config.objectClass(Item.class).marshallWith(marshaller);
 	}

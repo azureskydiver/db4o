@@ -29,7 +29,7 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 		
 	}
 	
-	protected void configure(Configuration config) {
+	protected void configure(Configuration config) throws Exception {
 		super.configure(config);
 		config.objectClass(Item.class).objectField("_str").indexed(true);
 		config.add(new UniqueFieldValueConstraint(Item.class, "_str"));

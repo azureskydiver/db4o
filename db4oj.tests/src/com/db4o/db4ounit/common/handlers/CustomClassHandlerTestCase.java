@@ -21,7 +21,7 @@ public class CustomClassHandlerTestCase extends AbstractDb4oTestCase implements 
         
     }
     
-    protected void configure(Configuration config) {
+    protected void configure(Configuration config) throws Exception {
         super.configure(config);
         config.objectClass(Item.class).installCustomHandler( new VanillaClassHandler() {
             public boolean canNewInstance() {
