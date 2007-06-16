@@ -6,11 +6,12 @@ import java.io.*;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.io.*;
 import com.db4o.types.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.OptOutDefragSolo;
+import db4ounit.extensions.fixtures.*;
 
 public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 
@@ -34,6 +35,10 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOu
 		deleteFiles();
 	}
 	
+	protected void db4oCustomTearDown() throws Exception {
+		deleteFiles();
+	}
+	
 	protected void configure(Configuration config) throws IOException {
 		config.setBlobPath(BLOB_PATH);
 	}
@@ -46,7 +51,6 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOu
 		Data data = (Data) retrieveOnlyInstance(Data.class);
 		Assert.isTrue(new File(BLOB_PATH).exists());
 		char[] chout = new char[] { 'H', 'i', ' ', 'f', 'o', 'l', 'k', 's' };
-		deleteFiles();
 		FileWriter fw = new FileWriter(BLOB_FILE_IN);
 		fw.write(chout);
 		fw.flush();
@@ -74,9 +78,8 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOu
 		ArrayAssert.areEqual(chout, chin);
 	}
 
-	private void deleteFiles() {
-		new File(BLOB_FILE_IN).delete();
-		new File(BLOB_FILE_OUT).delete();
+	private void deleteFiles() throws IOException {
+		File4.deleteDir(BLOB_PATH);
 	}
 
 }

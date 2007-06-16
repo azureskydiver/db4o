@@ -58,6 +58,21 @@ public class File4 {
 		}
 	}
 	
+	/**
+	 * Deletes all files under this directory.
+	 * It doesn't delete the directory itself and all files in the sub-directory.
+	 * @param path
+	 * @throws IOException 
+	 */
+	public static void deleteDir(String dir) throws IOException {
+		File source = new File(dir);
+		String sourceAbsolutePath = source.getCanonicalPath();
+		String[] files = source.list();
+		for (int i = 0; i < files.length; i++) {
+			delete(Path4.combine(sourceAbsolutePath, files[i]));
+		}
+	}
+	
     public static void delete(String fname) {
 		new File(fname).delete();
 	}
