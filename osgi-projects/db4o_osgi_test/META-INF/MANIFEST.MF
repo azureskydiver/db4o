@@ -9,6 +9,7 @@ Bundle-Version: 1.0.0
 Bundle-SymbolicName: db4o_osgi_test
 Require-Bundle: db4o_osgi
 Bundle-ClassPath: .,
- lib/db4o-6.3-db4ounit.jar
+ lib/db4o-6.3-db4ounit.jar,
+ lib/db4o-tests.jar
 Provide-Package: com.db4o.osgi.test
 

@@ -442,7 +442,9 @@
 		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.java1.2.jar}" file="${file.java1.2.jar}"/>
 		<javac destdir="${dir.dist.classes.osgi}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
-				<pathelement location="${file.osgi.framework}"/>
+				<fileset dir="${dir.build.lib}">
+					<include name="*.jar" />
+				</fileset>
 				<pathelement location="${file.java1.2.jar}"/>
 			</classpath>
 			<src path="${dir.osgi.src}"/>
@@ -467,18 +469,23 @@
 		<mkdir dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test.lib}"/>
 		<copy tofile="${dir.dist.classes.osgi.test.lib}/${filename.db4ounit.jar}" file="${file.db4ounit.jar}"/>
+		<jar destfile="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}">
+			<fileset dir="${dir.dist.classes.test.jdk1.2}">
+				<include name="**/*" />
+			</fileset>
+		</jar>
 		<javac destdir="${dir.dist.classes.osgi.test}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
 				<pathelement path="${file.db4ounit.jar}" />
 				<pathelement path="${file.java1.2.jar}" />
-				<pathelement path="${file.osgi.framework}" />
 				<pathelement path="${file.osgi.jar}" />
+				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}" />
+				<fileset dir="${dir.build.lib}">
+					<include name="*.jar" />
+				</fileset>
 			</classpath>
 			<src path="${dir.osgi.test.src}"/>
 		</javac>
-		<copy todir="${dir.dist.classes.osgi.test}">
-			<fileset dir="${dir.dist.classes.test.jdk1.2}"></fileset>
-		</copy>
 		<copy tofile="${dir.dist.classes.osgi.test}/build.properties" file="${dir.osgi.test}/build.properties.TM">
 			<filterset>
 				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
