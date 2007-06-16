@@ -6,7 +6,7 @@ import java.io.*;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.test.lib.*;
+import com.db4o.test.util.*;
 import com.db4o.types.*;
 
 import db4ounit.*;
