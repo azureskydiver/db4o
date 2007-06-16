@@ -1,9 +1,10 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007   db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.internal.cs;
 
 import java.io.*;
 
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.cs.messages.*;
@@ -13,6 +14,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 	private ClientObjectContainer i_stream;
 	private Socket4 i_socket;
 	private final BlockingQueue _messageQueue;
+	private boolean _isClosed;
 	
 	ClientMessageDispatcherImpl(ClientObjectContainer client, Socket4 a_socket, BlockingQueue messageQueue_){
 		i_stream = client;
@@ -20,13 +22,21 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 		i_socket = a_socket;
 	}
 	
-	public synchronized boolean isMessageDispatcherAlive(){
-		return i_socket != null;
+	public synchronized boolean isMessageDispatcherAlive() {
+		return !_isClosed;
 	}
-	
-	public synchronized boolean close(){
-		i_stream = null;
-		i_socket = null;
+
+	public synchronized boolean close() {
+		if(_isClosed) {
+			return true;
+		}
+		
+		try {
+			i_socket.close();
+		} catch (IOException e) {
+
+		}
+		_isClosed = true;
 		return true;
 	}
 	
@@ -34,22 +44,22 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 		while (isMessageDispatcherAlive()) {
 			Msg message = null;
 			try {
-				message = Msg.readMessage(this, i_stream.getTransaction(),
-						i_socket);
-				if (message instanceof ClientSideMessage) {
+				message = Msg.readMessage(this, i_stream.getTransaction(), i_socket);
+				if (isClientSideMessage(message)) {
 					if (((ClientSideMessage) message).processAtClient()) {
 						continue;
 					}
 				}
 			} catch (IOException exc) {
-//				if(Debug.atHome){
-//					exc.printStackTrace();
-//				}
 				close();
 				message = Msg.ERROR;
 			}
 			_messageQueue.add(message);
 		}
+	}
+
+	private boolean isClientSideMessage(Msg message) {
+		return message instanceof ClientSideMessage;
 	}
 	
 	public void write(Msg msg) {
@@ -57,7 +67,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 	}
 
 	public void setDispatcherName(String name) {
-		setName("db4o message client for user " + name);
+		setName("db4o client side message dispather for " + name);
 	}
 
 	public void startDispatcher() {

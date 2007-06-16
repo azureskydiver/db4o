@@ -73,17 +73,19 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         }
     }
 
-    public synchronized boolean close() {
-    	if (!isMessageDispatcherAlive()) { 
-    		return true;
-    	}    	
-        closeSubstituteStream();
-        sendCloseMessage();
-        rollbackMainTransaction();
-        closeSocket();
-        removeFromServer();
-        return true;
-    }
+    public boolean close() {
+		synchronized (i_mainStream.lock()) {
+			if (!isMessageDispatcherAlive()) {
+				return true;
+			}
+			closeSubstituteStream();
+			sendCloseMessage();
+			rollbackMainTransaction();
+			closeSocket();
+			removeFromServer();
+		}
+		return true;
+	}
 
 	public void sendCloseMessage() {
 		try {
@@ -168,9 +170,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                 if(! messageProcessor()){
                     break;
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 if (Debug.atHome) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
                 if (i_mainStream == null || i_mainStream.isClosed()) {
                     break;
