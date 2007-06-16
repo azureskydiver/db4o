@@ -24,7 +24,7 @@ import com.db4o.test.legacy.soda.joins.untyped.*;
 import com.db4o.test.legacy.soda.ordered.*;
 import com.db4o.test.legacy.soda.wrapper.typed.*;
 import com.db4o.test.legacy.soda.wrapper.untyped.*;
-import com.db4o.test.lib.*;
+import com.db4o.test.util.*;
 
 
 public class SodaTest {

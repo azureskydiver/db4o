@@ -7,7 +7,7 @@ import java.util.*;
 import com.db4o.query.*;
 import com.db4o.test.legacy.soda.*;
 import com.db4o.test.legacy.soda.collections.*;
-import com.db4o.test.lib.*;
+import com.db4o.test.util.*;
 
 public class STOwnCollectionW implements STClass {
 
