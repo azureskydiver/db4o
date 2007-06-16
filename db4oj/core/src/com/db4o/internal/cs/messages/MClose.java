@@ -12,8 +12,8 @@ public class MClose extends Msg implements ServerSideMessage, ClientSideMessage 
 		if (stream().isClosed()) {
 			return true;
 		}
-		logMsg(35, serverMessageDispatcher().name());
 		transaction().commit();
+		logMsg(35, serverMessageDispatcher().name());
 		serverMessageDispatcher().close();
 		return true;
 	}

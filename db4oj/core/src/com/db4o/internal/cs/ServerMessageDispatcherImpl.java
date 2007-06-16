@@ -38,6 +38,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	private CallbackObjectInfoCollections _committedInfo;
 
 	private boolean _caresAboutCommitted;
+	
+	private boolean _isClosed;
     
 
     ServerMessageDispatcherImpl(
@@ -73,17 +75,16 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         }
     }
 
-    public boolean close() {
-		synchronized (i_mainStream.lock()) {
-			if (!isMessageDispatcherAlive()) {
-				return true;
-			}
-			closeSubstituteStream();
-			sendCloseMessage();
-			rollbackMainTransaction();
-			closeSocket();
-			removeFromServer();
+    public synchronized boolean close() {
+		if (!isMessageDispatcherAlive()) {
+			return true;
 		}
+		closeSubstituteStream();
+		sendCloseMessage();
+		rollbackMainTransaction();
+		closeSocket();
+		removeFromServer();
+		_isClosed = true;
 		return true;
 	}
 
@@ -119,17 +120,18 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
 	private void closeSocket() {
 		try {
-            i_socket.close();
-        } catch (Exception e) {
+			if(i_socket != null) {
+				i_socket.close();
+			}
+        } catch (IOException e) {
             if (Debug.atHome) {
                 e.printStackTrace();
             }
         }
-        i_socket = null;
 	}
 
-    public boolean isMessageDispatcherAlive() {
-		return i_socket != null;
+    public synchronized boolean isMessageDispatcherAlive() {
+		return !_isClosed;
 	}
 
 	private void closeSubstituteStream() {
