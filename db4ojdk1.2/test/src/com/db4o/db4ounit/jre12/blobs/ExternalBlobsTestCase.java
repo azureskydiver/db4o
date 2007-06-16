@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.db4ounit.jre12.blobs;
 
@@ -6,7 +6,7 @@ import java.io.*;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.io.*;
+import com.db4o.test.lib.*;
 import com.db4o.types.*;
 
 import db4ounit.*;
@@ -15,6 +15,10 @@ import db4ounit.extensions.fixtures.*;
 
 public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 
+	public static void main(String[] args) {
+		new ExternalBlobsTestCase().runSolo();
+	}
+	
 	private static final String BLOB_PATH = "test/TEMP/db4oTestBlobs";
 	private static final String BLOB_FILE_IN = BLOB_PATH + "/regressionBlobIn.txt"; 
 	private static final String BLOB_FILE_OUT = BLOB_PATH + "/regressionBlobOut.txt"; 
@@ -79,7 +83,6 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOu
 	}
 
 	private void deleteFiles() throws IOException {
-		File4.deleteDir(BLOB_PATH);
+		IOUtil.deleteDir(BLOB_PATH);
 	}
-
 }
