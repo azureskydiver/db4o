@@ -16,7 +16,7 @@ import db4ounit.extensions.fixtures.*;
 public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 
 	public static void main(String[] args) {
-		new ExternalBlobsTestCase().runSolo();
+		new ExternalBlobsTestCase().runClientServer();
 	}
 	
 	private static final String BLOB_PATH = "test/TEMP/db4oTestBlobs";
@@ -80,6 +80,10 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOu
 		fr.read(chin);
 		fr.close();
 		ArrayAssert.areEqual(chout, chin);
+		
+		Assert.areEqual(Status.COMPLETED, data.blob().getStatus());
+		data.blob().deleteFile();
+		Assert.areEqual(Status.UNUSED, data.blob().getStatus());
 	}
 
 	private void deleteFiles() throws IOException {

@@ -6,6 +6,7 @@ import java.io.*;
 import com.db4o.foundation.io.*;
 
 public class IOUtil {
+	// TODO move to File4 and provide .NET implementation
 	/**
 	 * Deletes all files under this directory. It doesn't delete the directory
 	 * itself and all files in the sub-directory.

@@ -36,7 +36,7 @@ public class QueryStats {
 	private final EventListener4 _activated = new EventListener4() {
 		public void onEvent(Event4 e, EventArgs args) {
 			++_activationCount;
-		};
+		}
 	};
 	
 	/**

@@ -95,4 +95,11 @@ public interface Blob extends Db4oType {
      */
     public void writeTo(File file) throws IOException;
 
+    /**
+     * Deletes the current file stored in this BLOB.
+     *
+     * @throws IOException in case of errors and in case no
+     * data was stored
+     */
+    public void deleteFile() throws IOException;
 }

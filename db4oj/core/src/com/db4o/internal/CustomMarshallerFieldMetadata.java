@@ -5,7 +5,7 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.internal.marshall.MarshallerFamily;
-import com.db4o.internal.marshall.ObjectHeaderAttributes;;
+import com.db4o.internal.marshall.ObjectHeaderAttributes;
 
 
 /**
