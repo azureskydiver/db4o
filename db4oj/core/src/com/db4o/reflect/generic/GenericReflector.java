@@ -52,7 +52,6 @@ public class GenericReflector implements Reflector, DeepClone {
 	 * @param trans transaction
 	 * @param delegateReflector delegate reflector, 
 	 * providing specific reflector functionality. For example 
-	 * {@link com.db4o.reflect.jdk.JdkReflector}
 	 */
 	public GenericReflector(Transaction trans, Reflector delegateReflector){
 		_repository=new KnownClassesRepository(new GenericClassBuilder(this,delegateReflector));
