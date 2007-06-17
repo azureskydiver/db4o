@@ -12,8 +12,10 @@ import com.db4o.internal.*;
  */
 public interface BlobTransport {
 
-	public void writeBlobTo(Transaction trans, BlobImpl blob, File file) throws IOException;
+	void writeBlobTo(Transaction trans, BlobImpl blob, File file) throws IOException;
 
-	public void readBlobFrom(Transaction trans, BlobImpl blob, File file) throws IOException;
+	void readBlobFrom(Transaction trans, BlobImpl blob, File file) throws IOException;
 
+	void deleteBlobFile(Transaction trans, BlobImpl blob);
+	
 }

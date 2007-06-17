@@ -38,7 +38,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		protected void onListenerAdded() {
 			onCommittedListener();
 		}
-	};
+	}
 
 	public EventRegistryImpl(ObjectContainerBase container) {
 		_container = container;

@@ -1,23 +1,25 @@
 /* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.test;
+package com.db4o.test.legacy;
 
 import java.io.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.test.*;
+import com.db4o.test.util.*;
 import com.db4o.types.*;
 
 public class ExternalBlobs {
 	
-	static final String BLOB_FILE_IN = Test.BLOB_PATH + "/regressionBlobIn.txt"; 
-	static final String BLOB_FILE_OUT = Test.BLOB_PATH + "/regressionBlobOut.txt"; 
+	static final String BLOB_FILE_IN = AllTestsConfAll.BLOB_PATH + "/regressionBlobIn.txt"; 
+	static final String BLOB_FILE_OUT = AllTestsConfAll.BLOB_PATH + "/regressionBlobOut.txt"; 
 	
 	public Blob blob;
 	
 	void configure(){
 		try{
-			Db4o.configure().setBlobPath(Test.BLOB_PATH);
+			Db4o.configure().setBlobPath(AllTestsConfAll.BLOB_PATH);
 			deleteFiles();
 		}catch(Exception e){
 			e.printStackTrace();
@@ -29,7 +31,7 @@ public class ExternalBlobs {
 	
 	public void testOne(){
 		
-		if(new File(Test.BLOB_PATH).exists()){
+		if(new File(AllTestsConfAll.BLOB_PATH).exists()){
 			try{
 				char[] chout = new char[]{'H', 'i', ' ', 'f','o', 'l', 'k','s'};
 				deleteFiles();
@@ -69,9 +71,8 @@ public class ExternalBlobs {
 		
 	}
 
-	private void deleteFiles() {
-		new File(BLOB_FILE_IN).delete();
-		new File(BLOB_FILE_OUT).delete();
+	private void deleteFiles() throws IOException {
+		IOUtil.deleteDir(AllTestsConfAll.BLOB_PATH);
 	}
 
 }

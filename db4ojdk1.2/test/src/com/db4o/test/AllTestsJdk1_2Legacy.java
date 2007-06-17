@@ -3,8 +3,6 @@
 package com.db4o.test;
 
 import com.db4o.test.legacy.*;
-import com.db4o.test.nativequery.*;
-import com.db4o.test.replication.old.*;
 
 public class AllTestsJdk1_2Legacy extends AllTestsLegacy {
 	
@@ -24,6 +22,7 @@ public class AllTestsJdk1_2Legacy extends AllTestsLegacy {
 			            Db4oLinkedList.class,
 			            Db4oHashMap.class,
 			            Db4oHashMapDeletedKey.class,
+			            ExternalBlobs.class,
 			            PCollectionReferencedTwice.class,
 				};
 			}

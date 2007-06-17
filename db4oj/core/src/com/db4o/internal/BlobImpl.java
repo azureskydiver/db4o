@@ -246,5 +246,22 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         // not necessary
     }
 
- 
+    public void deleteFile() throws IOException {
+        if (getStatus() == Status.UNUSED) {
+            throw new IOException(Messages.get(43));
+        }
+        if (i_stream.isClient()) {
+            ((BlobTransport)i_stream).deleteBlobFile(i_trans, this);
+        } else {
+            serverFile(null, false).delete();
+        }
+        fileName = null;
+        i_ext = null;
+        i_length = 0;
+        setStatus(Status.UNUSED);
+        synchronized (i_stream.i_lock) {
+            i_stream.setInternal(i_trans, this, false);
+        }
+    } 
+
 }

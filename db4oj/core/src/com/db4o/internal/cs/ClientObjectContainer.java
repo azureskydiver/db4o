@@ -730,6 +730,11 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
         processBlobMessage(msg);
     }
     
+    public void deleteBlobFile(Transaction trans, BlobImpl blob){
+        MDeleteBlobFile msg = (MDeleteBlobFile) Msg.DELETE_BLOB_FILE.getWriterForInt(trans, (int) getID(blob));
+		writeMsg(msg, false);
+    }
+
     public long[] getIDsForClass(Transaction trans, ClassMetadata clazz){
     	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInt(trans, clazz.getID());
     	write(msg);
