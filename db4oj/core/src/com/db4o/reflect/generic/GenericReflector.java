@@ -7,7 +7,27 @@ import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
 /**
- * @exclude
+ * db4o provides GenericReflector as a wrapper around specific 
+ * reflector (delegate). GenericReflector is set when an 
+ * ObjectContainer is opened. All subsequent reflector 
+ * calls are routed through this interface.<br><br>
+ * An instance of GenericReflector can be obtained through
+ * {@link com.db4o.ext.ExtObjectContainer#reflector()}.<br><br>
+ * GenericReflector keeps list of known classes in memory. 
+ * When the GenericReflector is called, it first checks its list of 
+ * known classes. If the class cannot be found, the task is 
+ * transferred to the delegate reflector. If the delegate fails as 
+ * well, generic objects are created, which hold simulated 
+ * "field values" in an array of objects.<br><br>
+ * Generic reflector makes possible the following usecases:<ul>
+ * <li>running a db4o server without deploying application classes;</li>
+ * <li>running db4o on Java dialects without reflection (J2ME CLDC, MIDP);</li>
+ * <li>easier access to stored objects where classes or fields are not available;</li>
+ * <li>running refactorings in the reflector;</li>
+ * <li>building interfaces to db4o from any programming language.</li></ul>
+ * <br><br>
+ * One of the live usecases is ObjectManager, which uses GenericReflector 
+ * to read C# objects from Java.
  */
 public class GenericReflector implements Reflector, DeepClone {
 	
@@ -27,6 +47,13 @@ public class GenericReflector implements Reflector, DeepClone {
 	private Transaction _trans;
 	private ObjectContainerBase _stream;
 	
+	/**
+	 * Creates an instance of GenericReflector
+	 * @param trans transaction
+	 * @param delegateReflector delegate reflector, 
+	 * providing specific reflector functionality. For example 
+	 * {@link com.db4o.reflect.jdk.JdkReflector}
+	 */
 	public GenericReflector(Transaction trans, Reflector delegateReflector){
 		_repository=new KnownClassesRepository(new GenericClassBuilder(this,delegateReflector));
 		setTransaction(trans);
@@ -36,6 +63,11 @@ public class GenericReflector implements Reflector, DeepClone {
         }
 	}
 	
+	/**
+	 * Creates a clone of provided object
+	 * @param obj object to copy
+	 * @return copy of the submitted object
+	 */
 	public Object deepClone(Object obj)  {
         GenericReflector myClone = new GenericReflector(null, (Reflector)_delegate.deepClone(this));
         myClone._collectionPredicates = (Collection4)_collectionPredicates.deepClone(myClone);
@@ -62,10 +94,18 @@ public class GenericReflector implements Reflector, DeepClone {
 		return _stream;
 	}
 
+	/**
+	 * If there is a transaction assosiated with the current refector.
+	 * @return true if there is a transaction assosiated with the current refector.
+	 */
 	public boolean hasTransaction(){
 		return _trans != null;
 	}
 	
+	/**
+	 * Associated a transaction with the current reflector.
+	 * @param trans
+	 */
 	public void setTransaction(Transaction trans){
 		if(trans != null){
 			_trans = trans;
@@ -74,6 +114,9 @@ public class GenericReflector implements Reflector, DeepClone {
 		_repository.setTransaction(trans);
 	}
 
+	/**
+	 * @return generic reflect array instance.
+	 */
     public ReflectArray array() {
         if(_array == null){
             _array = new GenericArrayReflector(this);
@@ -81,6 +124,11 @@ public class GenericReflector implements Reflector, DeepClone {
         return _array;
     }
 
+    /**
+     * Determines collection update depth for the specified class
+     * @param candidate candidate class  
+     * @return collection update depth for the specified class
+     */
     public int collectionUpdateDepth(ReflectClass candidate) {
         Iterator4 i = _collectionUpdateDepths.iterator();
         while(i.moveNext()){
@@ -94,6 +142,11 @@ public class GenericReflector implements Reflector, DeepClone {
         //TODO: will need knowledge for .NET collections here
     }
 
+    /**
+     * Defines if constructor calls are supported.
+     * @return true if constructor calls are supported.
+     * @see com.db4o.config.Configuration#callbacks(boolean)
+     */
     public boolean constructorCallsSupported() {
         return _delegate.constructorCallsSupported();
     }
@@ -123,6 +176,12 @@ public class GenericReflector implements Reflector, DeepClone {
 		return ret;
 	}
 
+	/**
+	 * Returns a ReflectClass instance for the specified class
+	 * @param clazz class
+	 * @return a ReflectClass instance for the specified class
+	 * @see com.db4o.reflect.ReflectClass
+	 */
 	public ReflectClass forClass(Class clazz) {
         if(clazz == null){
             return null;
@@ -145,7 +204,12 @@ public class GenericReflector implements Reflector, DeepClone {
         return claxx;
     }
     
-
+	 /**
+	  * Returns a ReflectClass instance for the specified class name
+	 * @param className  class name
+	 * @return a ReflectClass instance for the specified class name
+	 * @see com.db4o.reflect.ReflectClass
+	 */
     public ReflectClass forName(String className) {
         ReflectClass clazz = _repository.lookupByName(className);
         if(clazz != null){
@@ -158,6 +222,12 @@ public class GenericReflector implements Reflector, DeepClone {
     	return _repository.forName(className);
     }
 
+    /**
+	  * Returns a ReflectClass instance for the specified class object
+	 * @param obj class object
+	 * @return a ReflectClass instance for the specified class object
+	 * @see com.db4o.reflect.ReflectClass
+	 */
     public ReflectClass forObject(Object obj) {
         if (obj instanceof GenericObject){
 			return forGenericObject((GenericObject)obj);
@@ -189,10 +259,19 @@ public class GenericReflector implements Reflector, DeepClone {
 		return claxx;
 	}
     
+	/**
+	 * Returns delegate reflector
+	 * @return delegate reflector
+	 */
     public Reflector getDelegate(){
         return _delegate;
     }
 
+    /**
+     * Determines if a candidate ReflectClass is a collection
+     * @param candidate candidate ReflectClass 
+     * @return true  if a candidate ReflectClass is a collection.
+     */
     public boolean isCollection(ReflectClass candidate) {
         //candidate = candidate.getDelegate(); 
         Iterator4 i = _collectionPredicates.iterator();
@@ -207,11 +286,19 @@ public class GenericReflector implements Reflector, DeepClone {
         // possibility: call registercollection with strings
     }
 
+    /**
+     * Register a class as a collection 
+     * @param clazz class to be registered
+     */
     public void registerCollection(Class clazz) {
 		registerCollection(classPredicate(clazz));
     }
 
-	public void registerCollection(ReflectClassPredicate predicate) {
+    /**
+     * Register a predicate as a collection 
+     * @param predicate predicate to be registered
+     */
+    	public void registerCollection(ReflectClassPredicate predicate) {
 		_collectionPredicates.add(predicate);
 	}
 
@@ -225,14 +312,28 @@ public class GenericReflector implements Reflector, DeepClone {
 		return predicate;
 	}
 
+	/**
+	 * Register update depth for a collection class
+	 * @param clazz class
+	 * @param depth update depth
+	 */
     public void registerCollectionUpdateDepth(Class clazz, int depth) {
 		registerCollectionUpdateDepth(classPredicate(clazz), depth);
     }
 
+    /**
+     * Register update depth for a collection class
+     * @param predicate class predicate
+     * @param depth update depth
+     */
 	public void registerCollectionUpdateDepth(ReflectClassPredicate predicate, int depth) {
         _collectionUpdateDepths.add(new CollectionUpdateDepthEntry(predicate, depth));
 	}
     
+	/**
+	 * Register a class
+	 * @param clazz class
+	 */
     public void register(GenericClass clazz) {
     	String name = clazz.getName();
     	if(_repository.lookupByName(name) == null){
@@ -240,6 +341,10 @@ public class GenericReflector implements Reflector, DeepClone {
     	}
     }
     
+    /**
+     * Returns an array of classes known to the reflector
+     * @return an array of classes known to the reflector
+     */
 	public ReflectClass[] knownClasses() {
         Collection4 classes = new Collection4();
 		collectKnownClasses(classes);
@@ -260,6 +365,12 @@ public class GenericReflector implements Reflector, DeepClone {
 		}
 	}
 	
+	/**
+	 * Registers primitive class
+	 * @param id class id
+	 * @param name class name
+	 * @param converter class converter
+	 */
 	public void registerPrimitiveClass(int id, String name, GenericConverter converter) {
         GenericClass existing = (GenericClass)_repository.lookupByID(id);
 		if (existing != null) {
@@ -286,6 +397,9 @@ public class GenericReflector implements Reflector, DeepClone {
 	    _repository.register(id,claxx);
 	}
 
+	/**
+	 * method stub: generic reflector does not have a parent
+	 */
     public void setParent(Reflector reflector) {
         // do nothing, the generic reflector does not have a parant
     }
