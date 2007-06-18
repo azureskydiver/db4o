@@ -96,7 +96,7 @@ public class Collection4TestCase implements TestCase {
 	
 	private void assertCollection(String[] expected, Collection4 c) {
 		Assert.areEqual(expected.length, c.size());
-		assertIterator(expected, c.iterator());
+		Iterator4Assert.areEqual(expected, c.iterator());
 	}
 	
 	private void assertContainsNull(Collection4 c) {
@@ -120,23 +120,13 @@ public class Collection4TestCase implements TestCase {
 	public void testIterator() {
 		String[] expected = new String[] { "1", "2", "3" };
 		Collection4 c = newCollection(expected);		
-		assertIterator(expected, c.iterator());
+		Iterator4Assert.areEqual(expected, c.iterator());
 	}	
 	
 	private Collection4 newCollection(String[] expected) {
 		Collection4 c = new Collection4();		
 		c.addAll(expected);
 		return c;
-	}
-
-	private void assertIterator(String[] expected, Iterator4 iterator) {
-		Assert.isNotNull(iterator);
-		
-		for (int i=0; i<expected.length; ++i) {
-			Assert.isTrue(iterator.moveNext());
-			Assert.areEqual(expected[i], iterator.current());
-		}
-		Assert.isFalse(iterator.moveNext());
 	}
 	
 	public void testToString() {

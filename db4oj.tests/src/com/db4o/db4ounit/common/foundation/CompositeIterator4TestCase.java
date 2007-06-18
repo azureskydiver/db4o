@@ -19,7 +19,7 @@ public class CompositeIterator4TestCase implements TestCase {
 	}
 
 	private void assertIterator(final CompositeIterator4 iterator) {
-		IteratorAssert.areEqual(IntArrays4.newIterator(new int[] { 1, 2, 3, 4, 5, 6 }), iterator);
+		Iterator4Assert.areEqual(IntArrays4.newIterator(new int[] { 1, 2, 3, 4, 5, 6 }), iterator);
 	}
 
 	private CompositeIterator4 newIterator() {
