@@ -5,11 +5,12 @@ import com.db4o.foundation.*;
 
 import db4ounit.Assert;
 
-public class IteratorAssert {
+public class Iterator4Assert {
 
 	public static void areEqual(Iterator4 expected, Iterator4 actual) {
 		if (null == expected) {
 			Assert.isNull(actual);
+			return;
 		}
 		Assert.isNotNull(actual);		
 		while (expected.moveNext()) {

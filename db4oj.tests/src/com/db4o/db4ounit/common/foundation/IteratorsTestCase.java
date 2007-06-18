@@ -40,7 +40,7 @@ public class IteratorsTestCase implements TestCase {
 	}
 
 	private void assertFilter(String[] expected, String[] actual, Predicate4 filter) {
-		IteratorAssert.areEqual(expected, Iterators.filter(actual, filter));
+		Iterator4Assert.areEqual(expected, Iterators.filter(actual, filter));
 	}
 
 	public void testMap() {
