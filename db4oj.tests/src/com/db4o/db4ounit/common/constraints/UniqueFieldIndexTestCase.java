@@ -26,35 +26,58 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 		public Item(String str){
 			_str = str;
 		}
-		
 	}
 	
 	protected void configure(Configuration config) throws Exception {
 		super.configure(config);
-		config.objectClass(Item.class).objectField("_str").indexed(true);
+		indexField(config, Item.class, "_str");
 		config.add(new UniqueFieldValueConstraint(Item.class, "_str"));
 	}
 	
 	protected void store() throws Exception {
-		store(new Item("1"));
-		store(new Item("2"));
-		store(new Item("3"));
+		addItem("1");
+		addItem("2");
+		addItem("3");
 	}
 	
 	public void testNewViolates(){
-		store(new Item("2"));
-		Assert.expect(UniqueFieldValueConstraintViolationException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				db().commit();
-			}
-		});
-		db().rollback();
-	}
+		addItem("2");
+		commitExpectingViolation();
+	}	
 	
 	public void testUpdateViolates(){
-		Item item = queryItem("2");
-		item._str = "3";
-		store(item);
+		updateItem("2", "3");
+		commitExpectingViolation();
+	}
+	
+	public void testUpdateDoesNotViolate(){
+		updateItem("2", "4");
+		db().commit();
+	}
+
+	public void testUpdatingSameObjectDoesNotViolate() {
+		updateItem("2", "2");
+		db().commit();
+	}
+	
+	public void testNewAfterDeleteDoesNotViolate() {
+		deleteItem("2");
+		addItem("2");
+		db().commit();
+	}
+	
+	public void testDeleteAfterNewDoesNotViolate() {
+		Item existing = queryItem("2");
+		addItem("2");
+		db().delete(existing);
+		db().commit();
+	}
+
+	private void deleteItem(String value) {
+		db().delete(queryItem(value));
+	}
+	
+	private void commitExpectingViolation() {
 		Assert.expect(UniqueFieldValueConstraintViolationException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				db().commit();
@@ -69,10 +92,13 @@ public class UniqueFieldIndexTestCase extends AbstractDb4oTestCase{
 		return (Item) q.execute().next();
 	}
 	
-	public void testUpdateDoesNotViolate(){
-		Item item = queryItem("2");
-		item._str = "4";
-		store(item);
-		db().commit();
+	private void addItem(String value) {
+		store(new Item(value));
 	}
+	
+	private void updateItem(String existing, String newValue) {
+		Item item = queryItem(existing);
+		item._str = newValue;
+		store(item);
+	}	
 }
