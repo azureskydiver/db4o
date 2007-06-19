@@ -11,7 +11,7 @@ import db4ounit.*;
 
 public class FastListTestCase implements TestLifeCycle {
 
-	public List _list;
+	public FastList _list;
 
 	private static int CAPACITY = 100;
 
@@ -21,8 +21,6 @@ public class FastListTestCase implements TestLifeCycle {
 
 	public void setUp() throws Exception {
 		_list = new FastList(new MockPersistentList());
-		// TODO: remove this line. 
-		_list = new Vector();
 		for (int i = 0; i < CAPACITY; i++) {
 			_list.add(new Integer(i));
 		}
@@ -83,7 +81,6 @@ public class FastListTestCase implements TestLifeCycle {
 
 	public void testAddAll_LCollection() throws Exception {
 		final Vector v = new Vector();
-
 		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				_list.addAll(-1, v);
