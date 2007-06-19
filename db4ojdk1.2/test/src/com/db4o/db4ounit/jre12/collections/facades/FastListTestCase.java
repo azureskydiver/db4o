@@ -11,7 +11,7 @@ import db4ounit.*;
 
 public class FastListTestCase implements TestLifeCycle {
 
-	public List _list;
+	public FastList _list;
 
 	private static int CAPACITY = 100;
 
@@ -21,7 +21,6 @@ public class FastListTestCase implements TestLifeCycle {
 
 	public void setUp() throws Exception {
 		_list = new FastList(new MockPersistentList());
-		 _list = new Vector();
 		for (int i = 0; i < CAPACITY; i++) {
 			_list.add(new Integer(i));
 		}
@@ -134,33 +133,127 @@ public class FastListTestCase implements TestLifeCycle {
 		// e==null : o.equals(e)).
 		Assert.isFalse(_list.contains(null));
 	}
-	
+
 	public void testContainsAll() throws Exception {
 		Vector v = new Vector();
-		
+
 		v.add(new Integer(0));
 		Assert.isTrue(_list.containsAll(v));
-		
+
 		v.add(new Integer(0));
 		Assert.isTrue(_list.containsAll(v));
-		
+
 		v.add(new Integer(CAPACITY / 2));
 		Assert.isTrue(_list.containsAll(v));
-		
+
 		v.add(new Integer(CAPACITY / 3));
 		Assert.isTrue(_list.containsAll(v));
-		
+
 		v.add(new Integer(CAPACITY / 4));
 		Assert.isTrue(_list.containsAll(v));
-		
+
 		v.add(new Integer(CAPACITY));
-		Assert.isFalse(_list.containsAll(v));		
+		Assert.isFalse(_list.containsAll(v));
 	}
-	
+
 	public void testGet() throws Exception {
 		for (int i = 0; i < CAPACITY; ++i) {
 			Assert.areEqual(new Integer(i), _list.get(i));
 		}
 	}
 
+	public void testIndexOf() throws Exception {
+		Assert.areEqual(0, _list.indexOf(new Integer(0)));
+		Assert.areEqual(CAPACITY / 2, _list.indexOf(new Integer(CAPACITY / 2)));
+		Assert.areEqual(CAPACITY / 3, _list.indexOf(new Integer(CAPACITY / 3)));
+		Assert.areEqual(CAPACITY / 4, _list.indexOf(new Integer(CAPACITY / 4)));
+
+		Assert.areEqual(-1, _list.indexOf(new Integer(-1)));
+		Assert.areEqual(-1, _list.indexOf(new Integer(CAPACITY)));
+
+		// returns false because current data doesn't contain null.
+		// Quotes from j.u.List spec: More formally, returns the lowest index i
+		// such that (o==null ? get(i)==null : o.equals(get(i))), or -1 if there
+		// is no such index.
+		Assert.areEqual(-1, _list.indexOf(null));
+	}
+	
+	public void testIsEmpty() throws Exception {
+		Assert.isFalse(_list.isEmpty());
+		_list.clear();
+		Assert.isTrue(_list.isEmpty());
+	}
+	
+	public void testIterator() throws Exception {
+		Iterator iter = _list.iterator();
+		int count = 0;
+		while(iter.hasNext()) {
+			Integer i = (Integer) iter.next();
+			Assert.areEqual(count, i.intValue());
+			++count;
+		}
+		Assert.areEqual(CAPACITY, count);
+		
+		_list.clear();
+		iter = _list.iterator();
+		Assert.isFalse(iter.hasNext());
+	}
+	
+	public void testLastIndexOf() throws Exception {
+		Assert.areEqual(0, _list.indexOf(new Integer(0)));
+		Assert.areEqual(CAPACITY / 2, _list.lastIndexOf(new Integer(CAPACITY / 2)));
+		Assert.areEqual(CAPACITY / 3, _list.lastIndexOf(new Integer(CAPACITY / 3)));
+		Assert.areEqual(CAPACITY / 4, _list.lastIndexOf(new Integer(CAPACITY / 4)));
+
+		Assert.areEqual(-1, _list.lastIndexOf(new Integer(-1)));
+		Assert.areEqual(-1, _list.lastIndexOf(new Integer(CAPACITY)));
+
+		// returns false because current data doesn't contain null.
+		// Quotes from j.u.List spec: More formally, returns the lowest index i
+		// such that (o==null ? get(i)==null : o.equals(get(i))), or -1 if there
+		// is no such index.
+		Assert.areEqual(-1, _list.lastIndexOf(null));
+		
+		_list.add(new Integer(0));
+		_list.add(new Integer(CAPACITY/2));
+		_list.add(new Integer(CAPACITY/3));
+		_list.add(new Integer(CAPACITY/4));
+		
+		Assert.areEqual(CAPACITY , _list.lastIndexOf(new Integer(0)));
+		Assert.areEqual(CAPACITY + 1, _list.lastIndexOf(new Integer(CAPACITY / 2)));
+		Assert.areEqual(CAPACITY + 2, _list.lastIndexOf(new Integer(CAPACITY / 3)));
+		Assert.areEqual(CAPACITY + 3, _list.lastIndexOf(new Integer(CAPACITY / 4)));
+
+		Assert.areEqual(-1, _list.lastIndexOf(new Integer(-1)));
+		Assert.areEqual(-1, _list.lastIndexOf(new Integer(CAPACITY)));
+
+		// returns false because current data doesn't contain null.
+		// Quotes from j.u.List spec: More formally, returns the lowest index i
+		// such that (o==null ? get(i)==null : o.equals(get(i))), or -1 if there
+		// is no such index.
+		Assert.areEqual(-1, _list.lastIndexOf(null));		
+	}
+	
+	public void testRemove_Object() throws Exception {
+		_list.remove(0);
+		Assert.areEqual(new Integer(1), _list.get(0));
+		
+		_list.remove(42);
+		Assert.areEqual(new Integer(44), _list.get(42));
+		Assert.areEqual(new Integer(42), _list.get(41));
+		
+	}
+	
+	public void testRemove_I() throws Exception {
+		_list.remove(0);
+		Assert.areEqual(new Integer(1), _list.get(0));
+		Assert.isFalse(_list.contains(new Integer(0)));
+		
+		_list.remove(42);
+		Assert.areEqual(new Integer(44), _list.get(42));
+		Assert.areEqual(new Integer(42), _list.get(41));
+		Assert.isFalse(_list.contains(new Integer(43)));
+		
+		
+	}
 }
