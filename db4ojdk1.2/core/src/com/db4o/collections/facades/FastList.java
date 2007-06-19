@@ -24,6 +24,7 @@ public class FastList implements java.util.List{
     }
 
     public void add(int index, Object element) {
+    	validateIndex(index);
         _persistentList.add(index, element);
     }
 
@@ -32,6 +33,7 @@ public class FastList implements java.util.List{
     }
 
     public boolean addAll(int index, Collection c) {
+    	validateIndex(index);
         return _persistentList.addAll(index, new JdkCollectionIterable4(c));
     }
 
@@ -92,6 +94,7 @@ public class FastList implements java.util.List{
     }
 
     public Object set(int index, Object element) {
+    	validateIndex(index);
         return _persistentList.set(index, element);
     }
 
@@ -110,5 +113,11 @@ public class FastList implements java.util.List{
     public Object[] toArray(Object[] a) {
         return _persistentList.toArray(a);
     }
+    
+    private void validateIndex(int index) {
+		if(index < 0 || index > size()) {
+    		throw new IndexOutOfBoundsException();
+    	}
+	}
 
 }

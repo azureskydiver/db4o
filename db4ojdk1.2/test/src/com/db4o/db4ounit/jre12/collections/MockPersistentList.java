@@ -93,21 +93,28 @@ public class MockPersistentList implements PersistentList{
         return result;
     }
 
-    public boolean retainAll(Iterable4 i) {
-        Collection4 contained = new Collection4();
-        boolean result = false;
-        Iterator4 iterator = i.iterator();
-        while(iterator.moveNext()){
-            Object current = iterator.current();
-            if(contains(current)){
-                contained.add(current);
-                result = true;
-            }
-        }
-        clear();
-        addAll(contained);
-        return result;
+    public boolean retainAll(Iterable4 retained) {
+    	boolean result = false;
+		Iterator iter = _vector.iterator();
+		while (iter.hasNext()) {
+			if (!contains(retained, iter.next())) {
+				iter.remove();
+				result = true;
+			}
+		}
+		return result;
     }
+    
+    private boolean contains(Iterable4 iter, Object element) {
+		Iterator4 i = iter.iterator();
+		while (i.moveNext()) {
+			Object current = i.current();
+			if ((current == null && element == null) || current.equals(element)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
     public Object set(int index, Object element) {
         return _vector.set(index, element);
