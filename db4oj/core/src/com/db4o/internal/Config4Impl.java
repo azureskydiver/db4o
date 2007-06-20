@@ -555,7 +555,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     	_config.put(TIMEOUT_CLIENT_SOCKET,milliseconds);
     }
 
-    public void timeoutPingClients(int milliseconds) {
+    public void pingInterval(int milliseconds) {
     	_config.put(TIMEOUT_PING_CLIENTS,milliseconds);
     }
 
