@@ -4,6 +4,14 @@ package com.db4o.osgi.test;
 
 import org.osgi.framework.*;
 
+import com.db4o.db4ounit.common.acid.CrashSimulatingTestCase;
+import com.db4o.test.nativequery.NQRegressionTestCase;
+import com.db4o.test.nativequery.analysis.BloatExprBuilderVisitorTestCase;
+import com.db4o.test.nativequery.analysis.BooleanReturnValueTestCase;
+import com.db4o.test.nativequery.cats.NQCatConsistencyTestCase;
+import com.db4o.test.nativequery.expr.ExpressionTestCase;
+import com.db4o.test.nativequery.expr.build.ExpressionBuilderTestCase;
+
 import db4ounit.*;
 import db4ounit.extensions.*;
 
@@ -17,9 +25,16 @@ class Db4oTestServiceImpl implements Db4oTestService {
 
 	public int runTests(String databaseFilePath) throws Exception {
 		Db4oOSGiBundleFixture fixture = new Db4oOSGiBundleFixture(_context, databaseFilePath);
-		Class testClass = 
-				com.db4o.db4ounit.jre12.AllTestsJdk1_2.class;
-		TestSuite suite = new Db4oTestSuiteBuilder(fixture, testClass).build();
+		TestSuite suite = new Db4oTestSuiteBuilder(fixture, 
+				new Class[] {
+				ExpressionBuilderTestCase.class,
+				BloatExprBuilderVisitorTestCase.class,
+				ExpressionTestCase.class,
+				BooleanReturnValueTestCase.class,
+				NQRegressionTestCase.class,
+				NQCatConsistencyTestCase.class,
+				com.db4o.db4ounit.jre12.AllTestsJdk1_2.class
+			}).build();
 		return new TestRunner(suite).run();
 	}
 
