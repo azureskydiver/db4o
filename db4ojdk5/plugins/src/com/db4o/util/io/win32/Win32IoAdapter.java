@@ -18,7 +18,7 @@ public class Win32IoAdapter extends IoAdapter {
 	
 	private long _handle;
 
-	public Win32IoAdapter(String path, boolean lockFile, long initialLength) {
+	public Win32IoAdapter(String path, boolean lockFile, long initialLength, boolean readOnly) {
 		try {
 			_handle = openFile(path, lockFile, initialLength);
 		} catch (IOException e) {
@@ -55,9 +55,9 @@ public class Win32IoAdapter extends IoAdapter {
 		}
 	}
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength)
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly)
 			throws Db4oIOException {
-		return new Win32IoAdapter(path, lockFile, initialLength);
+		return new Win32IoAdapter(path, lockFile, initialLength, readOnly);
 	}
 
 	public int read(byte[] bytes, int length) throws Db4oIOException {

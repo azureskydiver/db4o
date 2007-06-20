@@ -64,9 +64,11 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     final protected void close2() {
-    	freeInternalResources();
-    	commitTransaction();
-		shutdown();
+    	if (!i_config.isReadOnly()) {
+			freeInternalResources();
+			commitTransaction();
+			shutdown();
+		}
         shutdownObjectContainer();
     }
 
@@ -458,6 +460,10 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         if(needFreespaceMigration()){
         	migrateFreespace();
+        }
+        
+        if(i_config.isReadOnly()) {
+        	return;
         }
         
         writeHeader(true, false);

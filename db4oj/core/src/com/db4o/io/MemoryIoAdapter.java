@@ -132,7 +132,7 @@ public class MemoryIoAdapter extends IoAdapter {
 	/**
 	 * for internal processing only.
 	 */
-	public IoAdapter open(String path, boolean lockFile, long initialLength)
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly)
 			throws Db4oIOException {
 		MemoryIoAdapter mia = (MemoryIoAdapter) _memoryFiles.get(path);
 		if (mia == null) {

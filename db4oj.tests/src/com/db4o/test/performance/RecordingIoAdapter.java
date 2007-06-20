@@ -32,8 +32,8 @@ public class RecordingIoAdapter extends VanillaIoAdapter {
 	}
 
 	protected RecordingIoAdapter(IoAdapter adapter, String logPath,
-			String file, boolean append, long initialLength) throws Db4oIOException {
-		super(adapter, file, append, initialLength);
+			String file, boolean append, long initialLength, boolean readOnly) throws Db4oIOException {
+		super(adapter, file, append, initialLength, readOnly);
 		try {
 			_writer = new RandomAccessFile(logPath, "rw");
 		} catch (IOException e) {
@@ -48,11 +48,11 @@ public class RecordingIoAdapter extends VanillaIoAdapter {
 		//System.err.println(_runs);
 	}
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength)
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly)
 			throws Db4oIOException {
 		_runningId++;
 		return new RecordingIoAdapter(_delegate, _logPath+"."+_runningId, path, lockFile,
-				initialLength);
+				initialLength, readOnly);
 	}
 
 	public int read(byte[] buffer, int length) throws Db4oIOException {

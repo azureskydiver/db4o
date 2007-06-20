@@ -20,11 +20,11 @@ public class RandomAccessFileAdapter extends IoAdapter {
 	}
 
 	protected RandomAccessFileAdapter(String path, boolean lockFile,
-			long initialLength) throws Db4oIOException {
+			long initialLength, boolean readOnly) throws Db4oIOException {
 		boolean ok = false;
 		try {
 			_path = new File(path).getCanonicalPath();
-			_delegate = new RandomAccessFile(_path, "rw");
+			_delegate = new RandomAccessFile(_path, readOnly ? "r" : "rw");
 			if (initialLength > 0) {
 				_delegate.seek(initialLength - 1);
 				_delegate.write(new byte[] { 0 });
@@ -70,9 +70,9 @@ public class RandomAccessFileAdapter extends IoAdapter {
 		}
 	}
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength)
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly)
 			throws Db4oIOException {
-		return new RandomAccessFileAdapter(path, lockFile, initialLength);
+		return new RandomAccessFileAdapter(path, lockFile, initialLength, readOnly);
 	}
 
 	public int read(byte[] bytes, int length) throws Db4oIOException {

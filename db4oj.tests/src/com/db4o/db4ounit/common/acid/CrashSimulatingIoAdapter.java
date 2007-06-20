@@ -17,13 +17,13 @@ public class CrashSimulatingIoAdapter extends VanillaIoAdapter{
         batch = new CrashSimulatingBatch();
     }
     
-    private CrashSimulatingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, CrashSimulatingBatch batch) throws Db4oIOException {
-        super(delegateAdapter.open(path, lockFile, initialLength));
+    private CrashSimulatingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, boolean readOnly, CrashSimulatingBatch batch) throws Db4oIOException {
+        super(delegateAdapter.open(path, lockFile, initialLength, readOnly));
         this.batch = batch;
     }
     
-    public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
-        return new CrashSimulatingIoAdapter(_delegate, path, lockFile, initialLength, batch);
+    public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+        return new CrashSimulatingIoAdapter(_delegate, path, lockFile, initialLength, readOnly, batch);
     }
 
     public void seek(long pos) throws Db4oIOException {

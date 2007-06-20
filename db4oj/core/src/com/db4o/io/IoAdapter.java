@@ -113,7 +113,7 @@ public abstract class IoAdapter {
 	 * implement to open the file
 	 */
 	public abstract IoAdapter open(String path, boolean lockFile,
-			long initialLength) throws Db4oIOException;
+			long initialLength, boolean readOnly) throws Db4oIOException;
 
 	/**
 	 * reads a buffer at the seeked address

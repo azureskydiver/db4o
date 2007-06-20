@@ -34,10 +34,10 @@ public class NIOFileAdapter extends IoAdapter {
 		_lruLimit=lruLimit;
 	}
 
-	private NIOFileAdapter(String filename,boolean lockFile,long initialLength,int pageSize,int lruLimit) throws Db4oIOException {
+	private NIOFileAdapter(String filename,boolean lockFile, long initialLength, boolean readOnly, int pageSize, int lruLimit) throws Db4oIOException {
 		_pageSize=pageSize;
 		try {
-			_file = new RandomAccessFile(filename, "rw");
+			_file = new RandomAccessFile(filename, readOnly ? "r" : "rw");
 			_channel = _file.getChannel();
 			_size = _channel.size();
 		} catch (IOException e) {
@@ -234,7 +234,7 @@ public class NIOFileAdapter extends IoAdapter {
 		return (a>b ? b : a);
 	}
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
-		return new NIOFileAdapter(path,lockFile,initialLength,_pageSize,_lruLimit);
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+		return new NIOFileAdapter(path,lockFile,initialLength, readOnly, _pageSize,_lruLimit);
 	}
 }

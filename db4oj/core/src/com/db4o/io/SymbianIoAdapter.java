@@ -29,8 +29,8 @@ public class SymbianIoAdapter extends RandomAccessFileAdapter {
     private long _pos;
     private long _length;
     
-	protected SymbianIoAdapter(String path, boolean lockFile, long initialLength) throws Db4oIOException {
-		super(path, lockFile, initialLength);		
+	protected SymbianIoAdapter(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+		super(path, lockFile, initialLength, readOnly);		
 		_path=path;
 		_pos=0;
 		setLength();
@@ -64,8 +64,8 @@ public class SymbianIoAdapter extends RandomAccessFileAdapter {
 		super();
 	}
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
-		return new SymbianIoAdapter(path,lockFile,initialLength);
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+		return new SymbianIoAdapter(path,lockFile,initialLength, readOnly);
 	}
 
 	public long getLength() throws Db4oIOException {

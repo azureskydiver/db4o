@@ -8,10 +8,13 @@ import com.db4o.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 
-public class IoAdapterTest implements Db4oTestCase {
-
+public class IoAdapterTest implements TestLifeCycle {
+	
+	public static void main(String[] args) {
+		new TestRunner(IoAdapterTest.class).run();
+	}
+	
 	private String _cachedIoAdapterFile = "CachedIoAdapter.dat";
 
 	private String _randomAccessFileAdapterFile = "_randomAccessFileAdapter.dat";
@@ -21,12 +24,12 @@ public class IoAdapterTest implements Db4oTestCase {
 
 	public void setUp() throws Exception {
 		deleteAllTestFiles();
-		initAdapters();
+		initAdapters(false);
 	}
 
-	private void initAdapters() throws Exception {
-		_adapters = new IoAdapter[] { initRandomAccessAdapter(),
-				initCachedRandomAccessAdapter(), };
+	private void initAdapters(boolean readOnly) throws Exception {
+		_adapters = new IoAdapter[] { initRandomAccessAdapter(readOnly),
+				initCachedRandomAccessAdapter(readOnly), };
 	}
 
 	public void tearDown() throws Exception {
@@ -82,6 +85,22 @@ public class IoAdapterTest implements Db4oTestCase {
 		Assert.areEqual(str, new String(read, 0, data.length));
 	}
 	
+	public void testReadOnly() throws Exception {
+		closeAdapters();
+		initAdapters(true);
+		for (int i = 0; i < _adapters.length; i++) {
+			assertReadOnly(_adapters[i]);
+		}
+	}
+	
+	private void assertReadOnly(final IoAdapter adapter) {
+		Assert.expect(Db4oIOException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				adapter.write(new byte[] {0});
+			}
+		});
+	}
+
 	/*
 	 * This test is disabled because the API difference between java & .net.
 	 */
@@ -131,7 +150,7 @@ public class IoAdapterTest implements Db4oTestCase {
 	public void testReopen() throws Exception {
 		testReadWrite();
 		closeAdapters();
-		initAdapters();
+		initAdapters(false);
 		testReadWrite();
 	}
 	
@@ -168,15 +187,15 @@ public class IoAdapterTest implements Db4oTestCase {
 		}
 	}
 
-	private IoAdapter initCachedRandomAccessAdapter() throws Exception {
+	private IoAdapter initCachedRandomAccessAdapter(boolean readOnly) throws Exception {
 		IoAdapter adapter = new CachedIoAdapter(new RandomAccessFileAdapter());
-		adapter = adapter.open(_cachedIoAdapterFile, false, 0);
+		adapter = adapter.open(_cachedIoAdapterFile, false, 0, readOnly);
 		return adapter;
 	}
 
-	private IoAdapter initRandomAccessAdapter() throws Exception {
+	private IoAdapter initRandomAccessAdapter(boolean readOnly) throws Exception {
 		IoAdapter adapter = new RandomAccessFileAdapter();
-		adapter = adapter.open(_randomAccessFileAdapterFile, false, 0);
+		adapter = adapter.open(_randomAccessFileAdapterFile, false, 0, readOnly);
 		return adapter;
 	}
 
