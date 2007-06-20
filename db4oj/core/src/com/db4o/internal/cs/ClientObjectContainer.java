@@ -79,9 +79,14 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		}
 		userName = user;
 		password = password_;
-		i_socket = socket;
 		_login = login;
+		setAndConfigSocket(socket);
 		open();
+	}
+
+	private void setAndConfigSocket(Socket4 socket) {
+		i_socket = socket;
+		i_socket.setSoTimeout(i_config.timeoutClientSocket());
 	}
 
 	protected final void openImpl() {
@@ -684,7 +689,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	public boolean isAlive() {
 		try {
 			write(Msg.PING);
-			return expectedResponse(Msg.OK) != null;
+			return expectedResponse(Msg.PONG) != null;
 		} catch (Db4oException exc) {
 			return false;
 		}

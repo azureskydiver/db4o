@@ -11,14 +11,15 @@ import com.db4o.messaging.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class ClientTimeOutTestCase extends Db4oClientServerTestCase {
+public class PingTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new ClientTimeOutTestCase().runAll();
+		new PingTestCase().runAll();
 	}
 
 	protected void configure(Configuration config) {
 		config.clientServer().timeoutClientSocket(1000);
+		config.clientServer().timeoutPingClients(50);
 	}
 
 	TestMessageRecipient recipient = new TestMessageRecipient();
@@ -31,16 +32,13 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase {
 		MessageSender sender = client.configure().clientServer()
 				.getMessageSender();
 		sender.send(new Data());
-		
+
 		// The following query will be block by the sender
-		Assert.expect(Db4oException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				ObjectSet os = client.get(null);
-				while (os.hasNext()) {
-					os.next();
-				}
-			}
-		});
+		ObjectSet os = client.get(null);
+		while (os.hasNext()) {
+			os.next();
+		}
+		Assert.isFalse(client.isClosed());
 	}
 
 	public static class TestMessageRecipient implements MessageRecipient {

@@ -38,6 +38,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private CommittedCallbacksDispatcher _committedCallbacksDispatcher;
     
     private boolean _caresAboutCommitted;
+
+	private SimpleTimer _houseKeepingTimer;
 	
 	public ObjectServerImpl(final LocalObjectContainer container, int port) {
 		_container = container;
@@ -52,6 +54,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		try {
 			ensureLoadStaticClass();
 			startCommittedCallbackThread(_committedInfosQueue);
+			startHouseKeepingTimer();
 			startServer();
 			ok = true;
 		} finally {
@@ -59,6 +62,11 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 				close();
 			}
 		}
+	}
+
+	private void startHouseKeepingTimer() {
+		_houseKeepingTimer = new SimpleTimer(new HouseKeepingTask(this), 1, "HouseKeeping"); //$NON-NLS-1$
+		_houseKeepingTimer.start();
 	}
 
 	private void startServer() {		
@@ -129,6 +137,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	public synchronized boolean close() {
 		closeServerSocket();
 		stopCommittedCallbacksDispatcher();
+		stopHouseKeepingTimer();
 		closeMessageDispatchers();
 		return closeFile();
 	}
@@ -139,6 +148,12 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		}
 	}
 
+	private void stopHouseKeepingTimer() {
+		if(_houseKeepingTimer != null ) {
+			_houseKeepingTimer.stop();
+		}
+	}
+	
 	private boolean closeFile() {
 		if (_container != null) {
 			_container.close();
@@ -349,12 +364,12 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		_committedInfosQueue.add(message);			
 	}
 	
-	public void sendCommittedInfoMsg(MCommittedInfo message) {		
+	public void broadcastMsg(Msg message, BroadcastFilter filter) {		
 		Iterator4 i = iterateDispatchers();
 		while(i.moveNext()){
 			ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) i.current();
-			if(dispatcher.caresAboutCommitted()){
-				dispatcher.writeIfAlive(message);
+			if(filter.accept(dispatcher)) {
+				dispatcher.writeIfAlive((Msg)message);
 			}
 		}
 	}

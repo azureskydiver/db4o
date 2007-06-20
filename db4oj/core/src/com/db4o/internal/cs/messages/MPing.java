@@ -9,7 +9,7 @@ package com.db4o.internal.cs.messages;
 public class MPing extends Msg implements ServerSideMessage, ClientSideMessage {
 
 	public boolean processAtServer() {
-		write(Msg.OK);
+		write(Msg.PONG);
 		return true;
 	}
 	

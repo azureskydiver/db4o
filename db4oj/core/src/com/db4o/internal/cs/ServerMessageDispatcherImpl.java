@@ -15,11 +15,10 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     private String i_clientName;
 
     private boolean i_loggedin;
-    private long _lastClientMessageTime;
+    private long _lastActiveTime;
     private final LocalObjectContainer i_mainStream;
 
     private Transaction i_mainTrans;
-    private int i_pingAttempts = 0;
     private boolean i_rollbackOnClose = true;
     private boolean i_sendCloseMessage = true;
 
@@ -54,7 +53,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         	
         i_loggedin = loggedIn;
          
-        _lastClientMessageTime = System.currentTimeMillis(); // don't start pinging from the start
+        updateLastActiveTime(); 
         i_server = aServer;
 		i_config = (Config4Impl)i_server.configure();
         i_mainStream = aStream;
@@ -183,25 +182,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                 	break;
                 }
             }
-            
-            if (pingClientTimeoutReached()) {
-                if (i_pingAttempts > 5) {
-                    getStream().logMsg(33, i_clientName);
-                    break;
-                }
-                if (isMessageDispatcherAlive()) {
-					write(Msg.PING);
-					i_pingAttempts++;
-				}
-            }
         }
         close();
     }
-
-	private boolean pingClientTimeoutReached() {
-		return (System.currentTimeMillis() - _lastClientMessageTime > i_config.timeoutPingClients());
-	}
-
     
     private boolean messageProcessor() throws IOException{
         
@@ -209,14 +192,16 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         if(message == null){
             return true;
         }
-        
-        _lastClientMessageTime = System.currentTimeMillis();
-        i_pingAttempts = 0;
+        updateLastActiveTime();
         if(!i_loggedin && !Msg.LOGIN.equals(message)) {
         	return true;
         }
         return ((ServerSideMessage)message).processAtServer();
     }
+
+	private void updateLastActiveTime() {
+		_lastActiveTime = System.currentTimeMillis();
+	}
 
     public ObjectServerImpl server() {
     	return i_server;
@@ -280,6 +265,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     
     public void write(Msg msg){
     	msg.write(getStream(), i_socket);
+    	updateLastActiveTime();
     }
     
     public synchronized void writeIfAlive(Msg msg){
@@ -329,6 +315,10 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
 	public void committedInfo(CallbackObjectInfoCollections committedInfo) {
 		_committedInfo = committedInfo;
+	}
+
+	public boolean isPingTimeout() {
+		return (System.currentTimeMillis() - _lastActiveTime > i_config.timeoutPingClients());
 	}
 
 }
