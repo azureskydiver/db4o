@@ -263,7 +263,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         }
     }
     
-    public void write(Msg msg){
+    public synchronized void write(Msg msg){
     	msg.write(getStream(), i_socket);
     	updateLastActiveTime();
     }
