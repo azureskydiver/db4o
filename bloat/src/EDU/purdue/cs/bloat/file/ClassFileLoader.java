@@ -55,13 +55,10 @@ public class ClassFileLoader implements ClassInfoLoader {
 	private boolean verbose;
 
 	private static final int CACHE_LIMIT = 10;
+	
+	private ClassSource _classSource;
 
-	/**
-	 * Constructor. The classpath initially consists of the contents of the
-	 * <tt>java.class.path</tt> and <tt>sun.boot.class.path</tt> system
-	 * properties.
-	 */
-	public ClassFileLoader() {
+	public ClassFileLoader(ClassSource classSource) {
 		outputDir = new File(".");
 		classpath = System.getProperty("java.class.path");
 		classpath += File.pathSeparator
@@ -73,6 +70,15 @@ public class ClassFileLoader implements ClassInfoLoader {
 		openZipFiles = new HashMap();
 		cache = new LinkedList();
 		verbose = false;
+		_classSource = classSource;
+	}
+	/**
+	 * Constructor. The classpath initially consists of the contents of the
+	 * <tt>java.class.path</tt> and <tt>sun.boot.class.path</tt> system
+	 * properties.
+	 */
+	public ClassFileLoader() {
+		this(new DefaultClassSource());
 	}
 
 	public void setVerbose(final boolean verbose) {
@@ -205,7 +211,7 @@ public class ClassFileLoader implements ClassInfoLoader {
     private ClassInfo loadClassFromRessource(String name){
         name = name.replaceAll("/",".");
         try {
-            Class clazz = Class.forName(name);
+            Class clazz = _classSource.loadClass(name);
             int i = name.lastIndexOf('.');
             if (i >= 0 && i < name.length()){
                 name = name.substring(i+1);
