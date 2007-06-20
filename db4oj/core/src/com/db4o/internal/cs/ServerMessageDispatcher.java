@@ -46,4 +46,6 @@ public interface ServerMessageDispatcher extends MessageDispatcher {
 	
 	public void  committedInfo(CallbackObjectInfoCollections committedInfo);
 	
+	public boolean isPingTimeout();
+	
 }

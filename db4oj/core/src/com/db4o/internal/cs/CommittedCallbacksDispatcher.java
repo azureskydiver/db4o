@@ -25,7 +25,11 @@ public class CommittedCallbacksDispatcher implements Runnable {
 			} catch (BlockingQueueStoppedException e) {
 				break;
 			}
-			_server.sendCommittedInfoMsg(committedInfos);
+			_server.broadcastMsg(committedInfos, new BroadcastFilter() {
+				public boolean accept(ServerMessageDispatcher dispatcher) {
+					return dispatcher.caresAboutCommitted();
+				}
+			});
 		}
 	}
 	

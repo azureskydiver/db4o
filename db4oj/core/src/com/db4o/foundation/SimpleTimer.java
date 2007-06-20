@@ -10,17 +10,21 @@ public final class SimpleTimer implements Runnable {
 	
 	private final Runnable _runnable;
 	private final int _interval;
+	private final String _name;
 	
 	public volatile boolean stopped = false;
 	
 	public SimpleTimer(Runnable runnable, int interval, String name){
 		_runnable = runnable;
 		_interval = interval;
+		_name = name;
+	}
+	
+	public void start() {
 		Thread thread = new Thread(this);
 		thread.setDaemon(true);
-		thread.setName(name);
+		thread.setName(_name);
 		thread.start();
-        // TODO: thread.setDaemon(true) but follow up on .NET 
 	}
 	
 	public void stop(){

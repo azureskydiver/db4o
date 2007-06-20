@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
             ClientServerPingTestCase.class,
             ClientTimeOutTestCase.class,
+            PingTestCase.class,
             SendMessageToClientTestCase.class,
             ServerPortUsedTestCase.class,
             ServerRevokeAccessTestCase.class,

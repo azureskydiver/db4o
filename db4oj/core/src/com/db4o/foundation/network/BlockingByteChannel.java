@@ -80,8 +80,7 @@ class BlockingByteChannel {
                     int retVal = i_cache[i_readOffset++];
                     checkDiscardCache();
                     return new Integer(retVal);
-                }
-            
+                } 
             });
             return ret.intValue();
         }catch(IOException iex){
@@ -120,13 +119,21 @@ class BlockingByteChannel {
     }
 
     protected void waitForAvailable() throws IOException {
+    	long beginTime = System.currentTimeMillis();
         while (available() == 0) {
         	if (i_closed) {
                 throw new IOException(Messages.get(35));
             }
             i_lock.snooze(i_timeout);
+            if(isTimeout(beginTime)) {
+            	throw new IOException();
+            }
         }
     }
+
+	private boolean isTimeout(long start) {
+		return System.currentTimeMillis() - start >= i_timeout;
+	}
 
     public void write(byte[] bytes) throws IOException {
     	write(bytes, 0, bytes.length);
