@@ -440,6 +440,8 @@
 		<mkdir dir="${dir.dist.classes.osgi}"/>
 		<mkdir dir="${dir.dist.classes.osgi.lib}"/>
 		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.java1.2.jar}" file="${file.java1.2.jar}"/>
+		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.nqopt.jar}" file="${file.nqopt.jar}"/>
+		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.bloat.jar}" file="${file.bloat.jar}"/>
 		<javac destdir="${dir.dist.classes.osgi}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
 				<fileset dir="${dir.build.lib}">
@@ -474,12 +476,17 @@
 				<include name="**/*" />
 			</fileset>
 		</jar>
+		<jar destfile="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testnqlib.jar}">
+			<fileset dir="${dir.dist.classes.test.nq}"></fileset>
+		</jar>
+	
 		<javac destdir="${dir.dist.classes.osgi.test}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
 				<pathelement path="${file.db4ounit.jar}" />
 				<pathelement path="${file.java1.2.jar}" />
 				<pathelement path="${file.osgi.jar}" />
 				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}" />
+				<pathelement path="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testnqlib.jar}" />
 				<fileset dir="${dir.build.lib}">
 					<include name="*.jar" />
 				</fileset>
