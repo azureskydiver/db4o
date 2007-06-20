@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Name: db4o OSGi test
 Created-By: 1.5.0-beta2 (Sun Microsystems Inc.)
-Bundle-Activator: com.db4o.osgi.test.Db4oTestActivator
+Bundle-Activator: @bundle.activator@
 Import-Package: org.osgi.framework
 Bundle-Vendor: db4objects, Inc.
 Bundle-Category: db
