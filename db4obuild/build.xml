@@ -494,6 +494,7 @@
 		<copy tofile="${dir.dist.classes.osgi.test}/META-INF/MANIFEST.MF" file="${file.osgi.test.manifest}.TM">
 			<filterset>
 				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+				<filter token="bundle.activator" value="com.db4o.osgi.test.Db4oTestActivator"/>
 			</filterset>
 		</copy>
 		<jar destfile="${file.osgi.test.jar}" manifest="${dir.dist.classes.osgi.test}/META-INF/MANIFEST.MF">
@@ -501,7 +502,7 @@
 		</jar>
 	</target>
 	
-	<target name="runosgitests" depends="compiletestsosgi" >
+	<target name="runosgitests" depends="compiletestsosgi">
 		<delete dir="${dir.test.osgi}"/>
 		<mkdir dir="${dir.test.osgi}"/>
 		<mkdir dir="${dir.test.osgi.conf}"/>
@@ -858,7 +859,7 @@
 		<antcall target="runosgitests"></antcall>
 	</target>
 
-	<target name="zipjavasrc" depends="javadoc,compilecorejava,compileosgijava,compiletestsjava">
+	<target name="zipjavasrc" depends="javadoc,compilecorejava,compileosgijava,compiletestsjava,compiletestsosgi">
 		<copy todir="${dir.dist.java.src}/${name.project.db4ounit}">
 			<fileset dir="${dir.db4ounit}">
 				<include name=".project" />
@@ -951,11 +952,43 @@
 			<fileset dir="${dir.osgi}">
 				<include name=".project" />
 				<include name=".classpath" />
-				<include name="**/build.properties" />
 				<include name="**/src/**/*.java" />
-				<include name="**/lib/**/*.jar" />
-				<include name="**/META-INF/**/*.MF" />
 			</fileset>
+			<fileset dir="${dir.dist.classes.osgi}">
+				<include name="**/lib/**/*.jar" /> 
+		  	</fileset>
+		</copy>
+		<copy tofile="${dir.dist.java.src}/${name.project.osgi}/build.properties" file="${dir.osgi}/build.properties.TM">
+			<filterset>
+				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+			</filterset>
+		</copy>
+		<copy tofile="${dir.dist.java.src}/${name.project.osgi}/META-INF/MANIFEST.MF" file="${file.osgi.manifest}.TM">
+			<filterset>
+				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+			</filterset>
+		</copy>
+	
+		<copy todir="${dir.dist.java.src}/${name.project.osgi.test}">
+			<fileset dir="${dir.osgi.test}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="**/src/**/*.java" />
+			</fileset>
+			<fileset dir="${dir.dist.classes.osgi.test}">
+				<include name="**/lib/**/*.jar" /> 
+		  	</fileset>
+		</copy>
+		<copy tofile="${dir.dist.java.src}/${name.project.osgi.test}/build.properties" file="${dir.osgi.test}/build.properties.TM">
+			<filterset>
+				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+			</filterset>
+		</copy>
+		<copy tofile="${dir.dist.java.src}/${name.project.osgi.test}/META-INF/MANIFEST.MF" file="${file.osgi.test.manifest}.TM">
+			<filterset>
+				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+				<filter token="bundle.activator" value="com.db4o.osgi.test.Db4oWorkspaceActivator"/>
+			</filterset>
 		</copy>
 		<filehead beforePattern="package" header="${content.gplheader}" >
 			<sources dir="${dir.dist.java.src}">
