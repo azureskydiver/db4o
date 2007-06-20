@@ -30,6 +30,8 @@ public class CachedIoAdapter extends IoAdapter {
 
 	private IoAdapter _io;
 
+	private boolean _readOnly;
+
 	private static int DEFAULT_PAGE_SIZE = 1024;
 
 	private static int DEFAULT_PAGE_COUNT = 64;
@@ -83,6 +85,7 @@ public class CachedIoAdapter extends IoAdapter {
 	public CachedIoAdapter(String path, boolean lockFile, long initialLength,
 			boolean readOnly, IoAdapter io, int pageSize, int pageCount)
 			throws Db4oIOException {
+		_readOnly = readOnly;
 		_pageSize = pageSize;
 		_pageCount = pageCount;
 
@@ -189,6 +192,7 @@ public class CachedIoAdapter extends IoAdapter {
 	 *            how many bytes to write
 	 */
 	public void write(byte[] buffer, int length) throws Db4oIOException {
+		validateReadOnly();
 		long startAddress = _position;
 		Page page = null;
 		int writtenBytes;
@@ -215,10 +219,17 @@ public class CachedIoAdapter extends IoAdapter {
 		_fileLength = Math.max(endAddress, _fileLength);
 	}
 
+	private void validateReadOnly() {
+		if(_readOnly) {
+			throw new Db4oIOException();
+		}
+	}
+
 	/**
 	 * Flushes cache to a physical storage
 	 */
 	public void sync() throws Db4oIOException {
+		validateReadOnly();
 		flushAllPages();
 		_io.sync();
 	}
