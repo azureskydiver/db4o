@@ -12,12 +12,30 @@ import com.db4o.internal.query.*;
 import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.query.*;
+import com.db4o.reflect.Reflector;
+import com.db4o.reflect.jdk.JdkLoader;
 
 // only introduced to keep Db4oListFacade clean of Bloat references
 public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
-	private transient ClassFileLoader loader=new ClassFileLoader();
-	private transient BloatUtil bloatUtil=new BloatUtil(loader);
-	private transient EditorContext context=new CachingBloatContext(loader,new ArrayList(),false);
+	private transient ClassFileLoader loader;
+	private transient BloatUtil bloatUtil;
+	private transient EditorContext context;
+	private Reflector reflector;
+	
+	public Db4oOnTheFlyEnhancer() {
+		this(new ClassFileLoader());
+	}
+	
+	public Db4oOnTheFlyEnhancer(Reflector reflector) {
+		this(new ClassFileLoader(new Db4oClassSource(reflector)));
+		this.reflector = reflector;
+	}
+	
+	private Db4oOnTheFlyEnhancer(ClassFileLoader loader) {
+		this.loader = loader;
+		this.bloatUtil =new BloatUtil(loader);
+		this.context=new CachingBloatContext(loader,new ArrayList(),false);
+	}
 	
 	public Object optimize(Query query,Predicate filter) {
 		try {
@@ -29,7 +47,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 				throw new RuntimeException("Could not analyze "+filter);
 			}
 			//start=System.currentTimeMillis();
-			new SODAQueryBuilder().optimizeQuery(expr,query,filter);
+			new SODAQueryBuilder().optimizeQuery(expr,query,filter,new Db4oClassSource(reflector));
 			//System.err.println((System.currentTimeMillis()-start)+" ms");
 			return expr;
 		} catch (ClassNotFoundException exc) {
@@ -39,7 +57,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 
 	private Expression analyzeInternal(Predicate filter) throws ClassNotFoundException {
 		ClassEditor classEditor=new ClassEditor(context,loader.loadClass(filter.getClass().getName()));
-		Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,null);
+		Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,null,new Db4oClassSource(reflector));
 		return expr;
 	}
 	

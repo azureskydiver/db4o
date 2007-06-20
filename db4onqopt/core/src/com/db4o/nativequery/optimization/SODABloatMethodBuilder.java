@@ -3,6 +3,7 @@
 package com.db4o.nativequery.optimization;
 
 import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.file.ClassSource;
 import EDU.purdue.cs.bloat.reflect.*;
 
 import com.db4o.foundation.*;
@@ -10,6 +11,7 @@ import com.db4o.internal.query.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.query.*;
+import com.db4o.reflect.Reflector;
 
 public class SODABloatMethodBuilder {	
 	private final static boolean LOG_BYTECODE=false;
@@ -33,9 +35,11 @@ public class SODABloatMethodBuilder {
 
 		private Class predicateClass;
 		private Class candidateClass;
+		private ClassSource classSource;
 		
-		public SODABloatMethodVisitor(Class predicateClass, ClassLoader classLoader) {
+		public SODABloatMethodVisitor(Class predicateClass, ClassLoader classLoader, ClassSource classSource) {
 			this.predicateClass=predicateClass;
+			this.classSource = classSource;
 		}
 		
 		public void visit(AndExpression expression) {
@@ -67,7 +71,7 @@ public class SODABloatMethodBuilder {
 			}
 			expression.right().accept(
 					new ComparisonBytecodeGeneratingVisitor(methodEditor,
-							predicateClass, candidateClass));
+							predicateClass, candidateClass, classSource));
 			methodEditor.addInstruction(Opcode.opc_invokeinterface,
 					constrainRef);
 			ComparisonOperator op = expression.op();
@@ -131,13 +135,13 @@ public class SODABloatMethodBuilder {
 		buildMethodReferences();
 	}
 	
-	public MethodEditor injectOptimization(Expression expr, ClassEditor classEditor,ClassLoader classLoader) {
+	public MethodEditor injectOptimization(Expression expr, ClassEditor classEditor,ClassLoader classLoader, ClassSource classSource) {
 		classEditor.addInterface(Db4oEnhancedFilter.class);
 		methodEditor=new MethodEditor(classEditor,Modifiers.PUBLIC,Void.TYPE,"optimizeQuery",new Class[]{Query.class},new Class[]{});
 		methodEditor.addLabel(new Label(0,true));
 		try {
 			Class predicateClass = classLoader.loadClass(classEditor.name().replace('/','.'));
-			expr.accept(new SODABloatMethodVisitor(predicateClass,classLoader));
+			expr.accept(new SODABloatMethodVisitor(predicateClass,classLoader,classSource));
 			methodEditor.addInstruction(Opcode.opc_pop);
 			methodEditor.addLabel(new Label(1,false));
 			methodEditor.addInstruction(Opcode.opc_return);

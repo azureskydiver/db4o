@@ -68,7 +68,7 @@ public class Db4oEnhancingClassloader extends BloatingClassLoader {
 			Type type=ce.superclass();
 			while(type!=null) {
 				if(type.className().equals(Predicate.class.getName().replace('.','/'))) {
-					enhancer.enhance(bloatUtil,ce,Predicate.PREDICATEMETHOD_NAME,new Type[]{Type.OBJECT},this.getParent());
+					enhancer.enhance(bloatUtil,ce,Predicate.PREDICATEMETHOD_NAME,new Type[]{Type.OBJECT},this.getParent(), new DefaultClassSource());
 					return;
 				}
 				ClassInfo classInfo=getClassInfoLoader().loadClass(type.className());

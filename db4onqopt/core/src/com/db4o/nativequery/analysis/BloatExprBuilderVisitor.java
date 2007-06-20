@@ -6,6 +6,7 @@ import java.util.*;
 
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.file.ClassSource;
 import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.nativequery.*;
@@ -14,6 +15,7 @@ import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.build.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.field.*;
+import com.db4o.reflect.Reflector;
 
 public class BloatExprBuilderVisitor extends TreeVisitor {
 
@@ -149,9 +151,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	private int retCount = 0;
 
 	private int blockCount = 0;
+	
+	private ClassSource classSource;
 
-	public BloatExprBuilderVisitor(BloatUtil bloatUtil) {
+	public BloatExprBuilderVisitor(BloatUtil bloatUtil, ClassSource classSource) {
 		this.bloatUtil = bloatUtil;
+		this.classSource = classSource;
 		localStack.addLast(new ComparisonOperand[] {
 				PredicateFieldRoot.INSTANCE, CandidateFieldRoot.INSTANCE });
 	}

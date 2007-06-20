@@ -7,13 +7,19 @@ package com.db4o.nativequery.optimization;
 
 import java.lang.reflect.*;
 
+import EDU.purdue.cs.bloat.file.ClassSource;
+
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.field.*;
+import com.db4o.reflect.Reflector;
+import com.db4o.reflect.jdk.JdkReflector;
 
 final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor {
 	private Object _predicate;
 	
 	private Object _value=null;
+	
+	private ClassSource classSource;
 
 	public Object value() {
 		return _value;
@@ -116,7 +122,7 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 
 	public void visit(StaticFieldRoot root) {
 		try {
-			_value=Class.forName(root.className());
+			_value=classSource.loadClass(root.className());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -151,9 +157,10 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 		}
 	}
 
-	public ComparisonQueryGeneratingVisitor(Object predicate) {
+	public ComparisonQueryGeneratingVisitor(Object predicate, ClassSource classSource) {
 		super();
 		this._predicate = predicate;
+		this.classSource = classSource;
 	}
 	
 }

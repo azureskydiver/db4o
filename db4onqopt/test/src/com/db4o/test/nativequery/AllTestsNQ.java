@@ -16,16 +16,16 @@ public class AllTestsNQ {
 	public static void main(String[] args) {
 		TestSuite plainTests=new ReflectionTestSuiteBuilder(
 				new Class[] {
-						ExpressionBuilderTestCase.class,
-						BloatExprBuilderVisitorTestCase.class,
-						ExpressionTestCase.class,
-						BooleanReturnValueTestCase.class,
+//						ExpressionBuilderTestCase.class,
+//						BloatExprBuilderVisitorTestCase.class,
+//						ExpressionTestCase.class,
+//						BooleanReturnValueTestCase.class,
 				}
 		).build();
 		TestSuite db4oTests=new Db4oTestSuiteBuilder(new Db4oSolo(),
 					new Class[] {
 						NQRegressionTestCase.class,
-						NQCatConsistencyTestCase.class,
+//						NQCatConsistencyTestCase.class,
 					}
 		).build();
 		TestSuite allTests=new TestSuite("All native query tests",
