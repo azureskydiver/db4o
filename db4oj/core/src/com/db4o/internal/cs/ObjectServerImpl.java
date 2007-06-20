@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.internal.cs;
 
@@ -93,10 +93,10 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private void startServerSocket() {
 		try {
 			_serverSocket = new ServerSocket4(_port);
-			_serverSocket.setSoTimeout(_config.timeoutServerSocket());
 		} catch (IOException e) {
-			Exceptions4.throwRuntimeException(Messages.COULD_NOT_OPEN_PORT, "" + _port);
+			throw new Db4oIOException(e);
 		}
+		_serverSocket.setSoTimeout(_config.timeoutServerSocket());
 	}
 
 	private boolean isEmbeddedServer() {

@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 20067 db4objects Inc. http://www.db4o.com */
 
 package com.db4o.db4ounit.common.cs;
 
@@ -15,6 +15,7 @@ public class AllTests extends Db4oTestSuite {
             ClientServerPingTestCase.class,
             ClientTimeOutTestCase.class,
             SendMessageToClientTestCase.class,
+            ServerPortUsedTestCase.class,
             ServerRevokeAccessTestCase.class,
             ServerTimeoutTestCase.class,
             CallConstructorsConfigTestCase.class,
