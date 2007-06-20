@@ -81,12 +81,13 @@ public class CachedIoAdapter extends IoAdapter {
 	 *            allocated amount of pages
 	 */
 	public CachedIoAdapter(String path, boolean lockFile, long initialLength,
-			IoAdapter io, int pageSize, int pageCount) throws Db4oIOException {
+			boolean readOnly, IoAdapter io, int pageSize, int pageCount)
+			throws Db4oIOException {
 		_pageSize = pageSize;
 		_pageCount = pageCount;
 
 		initCache();
-		initIOAdaptor(path, lockFile, initialLength, io);
+		initIOAdaptor(path, lockFile, initialLength, readOnly, io);
 
 		_position = initialLength;
 		_filePointer = initialLength;
@@ -103,9 +104,9 @@ public class CachedIoAdapter extends IoAdapter {
 	 * @param initialLength
 	 *            initial file length, new writes will start from this point
 	 */
-	public IoAdapter open(String path, boolean lockFile, long initialLength)
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly)
 			throws Db4oIOException {
-		return new CachedIoAdapter(path, lockFile, initialLength, _io,
+		return new CachedIoAdapter(path, lockFile, initialLength, readOnly, _io,
 				_pageSize, _pageCount);
 	}
 
@@ -129,9 +130,9 @@ public class CachedIoAdapter extends IoAdapter {
 		return _io.exists(path);
 	}
 
-	private void initIOAdaptor(String path, boolean lockFile, long initialLength, IoAdapter io)
+	private void initIOAdaptor(String path, boolean lockFile, long initialLength, boolean readOnly, IoAdapter io)
 			throws Db4oIOException {
-		_io = io.open(path, lockFile, initialLength);
+		_io = io.open(path, lockFile, initialLength, readOnly);
 	}
 
 	private void initCache() {

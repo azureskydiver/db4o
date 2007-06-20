@@ -19,7 +19,7 @@ public class IncompatibleFileFormatExceptionTestCase implements Db4oTestCase {
 	public void setUp() throws Exception {
 		File4.delete(INCOMPATIBLE_FILE_FORMAT);
 		IoAdapter adapter = new RandomAccessFileAdapter();
-		adapter = adapter.open(INCOMPATIBLE_FILE_FORMAT, false, 0);
+		adapter = adapter.open(INCOMPATIBLE_FILE_FORMAT, false, 0, false);
 		adapter.write(new byte[] { 1, 2, 3 }, 3);
 		adapter.close();
 	}

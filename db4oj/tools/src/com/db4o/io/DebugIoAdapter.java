@@ -18,12 +18,12 @@ public class DebugIoAdapter extends VanillaIoAdapter{
         super(delegateAdapter);
     }
     
-    protected DebugIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength) throws Db4oIOException {
-        super(delegateAdapter.open(path, lockFile, initialLength));
+    protected DebugIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+        super(delegateAdapter.open(path, lockFile, initialLength, readOnly));
     }
 
-    public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
-        return new DebugIoAdapter(new RandomAccessFileAdapter(),  path, lockFile, initialLength);
+    public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+        return new DebugIoAdapter(new RandomAccessFileAdapter(),  path, lockFile, initialLength, readOnly);
     }
     
     public void seek(long pos) throws Db4oIOException {

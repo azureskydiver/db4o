@@ -27,13 +27,13 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
     }
 
     private LoggingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, PrintStream out,int config) throws Db4oIOException {
-        super(delegateAdapter.open(path, lockFile, initialLength));
+        super(delegateAdapter.open(path, lockFile, initialLength, false));
         _out=out;
         _config=config;
         _curpos=0;
     }
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength) throws Db4oIOException {
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 		return new LoggingIoAdapter(_delegate,path,lockFile,initialLength,_out,_config);
 	}
 

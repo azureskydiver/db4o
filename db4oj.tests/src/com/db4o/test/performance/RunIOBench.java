@@ -16,7 +16,7 @@ public class RunIOBench {
 		RandomAccessFile recordedIn = new RandomAccessFile(Util.BENCHFILE+".1", "rw");
 		new File(Util.DBFILE).delete();
 		IoAdapter testadapt = new RandomAccessFileAdapter().open(Util.DBFILE,
-				false, 1024);
+				false, 1024, false);
 
 		// IoAdapter testadapt = new MemoryIoAdapter().open(Util.DBFILE, false,
 		// 1024);

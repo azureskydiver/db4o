@@ -44,12 +44,12 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 			checkReadOnly();
 			i_handlers.oldEncryptionOff();
 		}
+		boolean readOnly = configImpl().isReadOnly();
 		boolean lockFile = Debug.lockFile && configImpl().lockFile()
-				&& (!configImpl().isReadOnly());
-		_file = ioAdapter.open(fileName(), lockFile, 0);
-		if (needsTimerFile()) {
-			_timerFile = ioAdapter.delegatedIoAdapter().open(fileName(), false,
-					0);
+				&& (!readOnly);
+		_file = ioAdapter.open(fileName(), lockFile, 0, readOnly);
+		if (needsLockFileThread()) {
+			_timerFile = ioAdapter.delegatedIoAdapter().open(fileName(), false,	0, false);
 		}
 		if (isNew) {
 			configureNewFile();
@@ -70,7 +70,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 				throw new BackupInProgressException();
 			}
 			_backupFile = configImpl().ioAdapter().open(path, true,
-					_file.getLength());
+					_file.getLength(), false);
 			_backupFile.blockSize(blockSize());
 		}
         long pos = 0;
@@ -290,10 +290,6 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         } catch (Exception e) {
         }
     }
-
-    private boolean needsTimerFile() {
-        return needsLockFileThread() && Debug.lockFile;
-    }    
 
     public void writeBytes(Buffer bytes, int address, int addressOffset) {
 		if (Deploy.debug && !Deploy.flush) {

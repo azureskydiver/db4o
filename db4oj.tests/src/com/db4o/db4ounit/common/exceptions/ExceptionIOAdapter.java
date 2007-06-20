@@ -17,8 +17,7 @@ public class ExceptionIOAdapter extends IoAdapter {
 	
 	protected ExceptionIOAdapter(String path, boolean lockFile,
 			long initialLength) throws Db4oIOException {
-		_delegate = _delegate.open(path, lockFile,
-				initialLength);
+		_delegate = _delegate.open(path, lockFile, initialLength, false);
 	}
 	
 	public void close() throws Db4oIOException {
@@ -53,7 +52,7 @@ public class ExceptionIOAdapter extends IoAdapter {
 		}
 	}
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength)
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly)
 			throws Db4oIOException {
 		return new ExceptionIOAdapter(path, lockFile, initialLength);
 	}
