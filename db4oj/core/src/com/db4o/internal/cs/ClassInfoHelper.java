@@ -125,6 +125,7 @@ public class ClassInfoHelper {
 
 	private void registerGenericClass(String className, GenericClass classMeta) {
 		_genericClassTable.put(className, classMeta);
+		((GenericReflector)classMeta.reflector()).register(classMeta);
 	}
 
 }
