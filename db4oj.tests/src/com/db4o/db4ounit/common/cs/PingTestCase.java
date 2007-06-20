@@ -19,7 +19,7 @@ public class PingTestCase extends Db4oClientServerTestCase {
 
 	protected void configure(Configuration config) {
 		config.clientServer().timeoutClientSocket(1000);
-		config.clientServer().timeoutPingClients(50);
+		config.clientServer().pingInterval(50);
 	}
 
 	TestMessageRecipient recipient = new TestMessageRecipient();
