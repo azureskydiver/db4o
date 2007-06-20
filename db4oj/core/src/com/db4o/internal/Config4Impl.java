@@ -117,7 +117,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec TIMEOUT_CLIENT_SOCKET=new KeySpec(Const4.CLIENT_SOCKET_TIMEOUT);
     
-	private final static KeySpec TIMEOUT_PING_CLIENTS=new KeySpec(Const4.CONNECTION_TIMEOUT);
+	private final static KeySpec PING_INTERVAL=new KeySpec(Const4.PING_INTERVAL);
     
 	private final static KeySpec TIMEOUT_SERVER_SOCKET=new KeySpec(Const4.SERVER_SOCKET_TIMEOUT);
     
@@ -556,7 +556,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void pingInterval(int milliseconds) {
-    	_config.put(TIMEOUT_PING_CLIENTS,milliseconds);
+    	_config.put(PING_INTERVAL,milliseconds);
     }
 
     public void timeoutServerSocket(int milliseconds) {
@@ -828,8 +828,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 		return _config.getAsInt(TIMEOUT_CLIENT_SOCKET);
 	}
 
-	public int timeoutPingClients() {
-		return _config.getAsInt(TIMEOUT_PING_CLIENTS);
+	public int pingInterval() {
+		return _config.getAsInt(PING_INTERVAL);
 	}
 
 	public int timeoutServerSocket() {

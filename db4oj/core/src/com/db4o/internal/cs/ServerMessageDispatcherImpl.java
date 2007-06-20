@@ -318,7 +318,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	}
 
 	public boolean isPingTimeout() {
-		return (System.currentTimeMillis() - _lastActiveTime > i_config.timeoutPingClients());
+		return (System.currentTimeMillis() - _lastActiveTime > i_config.pingInterval());
 	}
 
 }

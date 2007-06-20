@@ -175,8 +175,8 @@ public abstract class Msg implements Cloneable {
         int offset = 0;
         while (length > 0) {
             int read = sock.read(buffer._buffer, offset, length);
-			if(read<0) {
-				return null;
+			if(read < 0) {
+				throw new IOException();
 			}
             offset += read;
             length -= read;
@@ -187,9 +187,6 @@ public abstract class Msg implements Cloneable {
 
 	public static final Msg readMessage(MessageDispatcher messageDispatcher, Transaction trans, Socket4 sock) throws IOException {
 		StatefulBuffer reader = readMessageBuffer(trans, sock);
-		if (null == reader) {
-			return null;
-		}
 		Msg message = _messages[reader.readInt()].readPayLoad(messageDispatcher, trans, sock, reader);
 		if (Debug.messages) {
 			System.out.println(message + " arrived at " + trans.stream());
