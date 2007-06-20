@@ -2,14 +2,33 @@
 
 package com.db4o.nativequery.optimization;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
-import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.editor.Instruction;
+import EDU.purdue.cs.bloat.editor.LocalVariable;
+import EDU.purdue.cs.bloat.editor.MemberRef;
+import EDU.purdue.cs.bloat.editor.MethodEditor;
+import EDU.purdue.cs.bloat.editor.NameAndType;
+import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
+import EDU.purdue.cs.bloat.file.ClassSource;
 
-import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.nativequery.expr.cmp.field.*;
+import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
+import com.db4o.nativequery.expr.cmp.ArithmeticOperator;
+import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
+import com.db4o.nativequery.expr.cmp.ComparisonOperand;
+import com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor;
+import com.db4o.nativequery.expr.cmp.ConstValue;
+import com.db4o.nativequery.expr.cmp.FieldValue;
+import com.db4o.nativequery.expr.cmp.MethodCallValue;
+import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
+import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
+import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
+import com.db4o.reflect.Reflector;
+import com.db4o.reflect.jdk.JdkReflector;
 
 class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	private MethodEditor methodEditor;
@@ -20,11 +39,13 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	private boolean inArithmetic=false;
 	private Class opClass=null;
 	private Class staticRoot=null;
+	private ClassSource classSource;
 
-	public ComparisonBytecodeGeneratingVisitor(MethodEditor methodEditor,Class predicateClass,Class candidateClass) {
+	public ComparisonBytecodeGeneratingVisitor(MethodEditor methodEditor,Class predicateClass,Class candidateClass, ClassSource classSource) {
 		this.methodEditor = methodEditor;
 		this.predicateClass=predicateClass;
 		this.candidateClass=candidateClass;
+		this.classSource=classSource;
 		buildConversions();
 	}
 
@@ -73,7 +94,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 
 	public void visit(StaticFieldRoot root) {
 		try {
-			staticRoot=Class.forName(root.className());
+			staticRoot=classSource.loadClass((root.className()));
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -206,7 +227,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	}
 
 	private Class deduceFieldClass(ComparisonOperand fieldValue) {
-		TypeDeducingVisitor visitor=new TypeDeducingVisitor(predicateClass,candidateClass);
+		TypeDeducingVisitor visitor=new TypeDeducingVisitor(predicateClass,candidateClass,classSource);
 		fieldValue.accept(visitor);
 		return visitor.operandClass();
 	}
