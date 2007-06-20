@@ -75,8 +75,7 @@ public interface ClientServerConfiguration {
 	 * <br>
 	 * If no client messages are received by the server for the configured
 	 * interval, the server sends a "PING" message to the client and wait's for
-	 * an "OK" response. After 5 unsuccessful attempts, the client connection is
-	 * closed. <br>
+	 * an "PONG" response. <br>
 	 * <br>
 	 * This value may need to be increased for single-threaded clients, since
 	 * they can't respond instantaneously. <br>
@@ -88,7 +87,7 @@ public interface ClientServerConfiguration {
 	 *            time in milliseconds
 	 * @see #singleThreadedClient
 	 */
-	public void timeoutPingClients(int milliseconds);
+	public void pingInterval(int milliseconds);
 	
 	/**
      * configures the client messaging system to be single threaded 
