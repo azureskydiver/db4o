@@ -5,42 +5,39 @@ package com.db4o.db4ounit.common.cs;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class ServerRevokeAccessTestCase implements TestCase {
-	
-	static final String FILE = "ServerRevokeAccessTest.yap";
-	
-	static final int SERVER_PORT = 0xdb42;
-	
-	static final String SERVER_HOSTNAME = "localhost";
+public class ServerRevokeAccessTestCase extends Db4oClientServerTestCase {
+
+	private static final String SERVER_HOSTNAME = "127.0.0.1";
+
+	public static void main(String[] args) {
+		new ServerRevokeAccessTestCase().runAll();
+	}
 
 	/**
 	 * @sharpen.if !CF_1_0 && !CF_2_0
 	 */
 	public void test() throws IOException {
-		File4.delete(FILE);		
-		ObjectServer server = Db4o.openServer(FILE, SERVER_PORT);
-		try {	
-			final String user = "hohohi";
-			final String password = "hohoho";
-			server.grantAccess(user, password);
-		
-			ObjectContainer con = Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, user, password);
-			Assert.isNotNull(con);
-			con.close();
-			
-			server.ext().revokeAccess(user);
-			
-			Assert.expect(Exception.class, new CodeBlock() {
-				public void run() throws Throwable {
-					Db4o.openClient(SERVER_HOSTNAME, SERVER_PORT, user, password);
-				}
-			});
-		} finally {
-			server.close();
-		}
-	}	
+		final String user = "hohohi";
+		final String password = "hohoho";
+		ObjectServer server = clientServerFixture().server();
+		server.grantAccess(user, password);
+
+		ObjectContainer con = Db4o.openClient(SERVER_HOSTNAME,
+				clientServerFixture().serverPort(), user, password);
+		Assert.isNotNull(con);
+		con.close();
+
+		server.ext().revokeAccess(user);
+
+		Assert.expect(Exception.class, new CodeBlock() {
+			public void run() throws Throwable {
+				Db4o.openClient(SERVER_HOSTNAME, clientServerFixture()
+						.serverPort(), user, password);
+			}
+		});
+	}
 }
