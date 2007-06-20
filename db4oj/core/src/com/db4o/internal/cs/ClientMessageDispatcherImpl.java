@@ -26,15 +26,6 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 	}
 
 	public synchronized boolean close() {
-		if(_isClosed) {
-			return true;
-		}
-		
-		try {
-			i_socket.close();
-		} catch (IOException e) {
-
-		}
 		_isClosed = true;
 		return true;
 	}
@@ -55,6 +46,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 			}
 			_messageQueue.add(message);
 		}
+		i_stream.close();
 	}
 
 	private boolean isClientSideMessage(Msg message) {
