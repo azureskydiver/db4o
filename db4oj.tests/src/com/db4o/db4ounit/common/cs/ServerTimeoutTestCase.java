@@ -18,7 +18,7 @@ public class ServerTimeoutTestCase extends ClientServerTestCaseBase {
 	}
 
 	protected void configure(Configuration config) {
-		config.clientServer().timeoutPingClients(1);
+		config.clientServer().pingInterval(1);
 		config.clientServer().timeoutClientSocket(1);
 		config.clientServer().timeoutServerSocket(1);
 	}
