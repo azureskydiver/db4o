@@ -11,7 +11,7 @@ public class Db4oActivator implements BundleActivator {
 	
 	public void start(BundleContext context) throws Exception {
 		context.registerService(
-				Db4oService.class.getName(), 
+				Db4oService.class.getName(),
 				new Db4oServiceFactory(), 
 				new Hashtable());		
 	}
