@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4o.db4ounit.common.cs;
 
@@ -7,11 +7,12 @@ import com.db4o.config.Configuration;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 
 public class CallConstructorsConfigTestCase implements TestCase {
 	
-	private static final int PORT = 0xdb40;
+	private static final int PORT = Db4oClientServer.findFreePort();
 
 	public static final class Item {
 	}
