@@ -473,10 +473,6 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return null;
     }
 
-    public void copyValue(Object a_from, Object a_to) {
-        // do nothing
-    }
-    
     private boolean createConstructor(ObjectContainerBase container, String className) {
         ReflectClass claxx = container.reflector().forName(className);
         return createConstructor(container, claxx , className, true);

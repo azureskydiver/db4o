@@ -150,8 +150,8 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         }
         catch (CorruptionException ce) {
         }
-        if (obj != null) {
-            i_handler.copyValue(obj, a_onObject);
+        if (obj != null  &&  (i_handler instanceof DateHandler)) {
+            ((DateHandler)i_handler).copyValue(obj, a_onObject);
         }
     }
 
