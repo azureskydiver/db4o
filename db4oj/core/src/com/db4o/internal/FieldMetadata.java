@@ -245,7 +245,15 @@ public class FieldMetadata implements StoredField {
         if (claxx == null || obj == null) {
             return i_isPrimitive ? No4.INSTANCE : obj;
         }
-        return i_handler.coerce(claxx, obj);
+        if(! i_handler.canHold(claxx)){
+            return No4.INSTANCE;
+        }
+        
+        if(i_handler instanceof PrimitiveHandler){
+            return ((PrimitiveHandler)i_handler).coerce(claxx, obj);
+        }
+        
+        return obj;
     }
 
     public final boolean canLoadByIndex() {
