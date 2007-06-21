@@ -27,6 +27,13 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 
 	public synchronized boolean close() {
 		_isClosed = true;
+		if(i_socket != null) {
+			try {
+				i_socket.close();
+			} catch (IOException e) {
+				
+			}
+		}
 		return true;
 	}
 	
