@@ -26,7 +26,7 @@ public class TestPlatform {
 	}
 
 	public static void printStackTrace(Throwable t) {
-		printStackTrace(getStdOut(), t);
+		printStackTrace(getStdErr(), t);
 	}
 
 	public static Writer getStdOut() {

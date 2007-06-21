@@ -16,7 +16,7 @@ public class TestResult extends Printable {
 	private final Writer _stdout;
 	
 	public TestResult(boolean printLabels) {
-		_stdout = printLabels ? TestPlatform.getStdOut() : null;
+		_stdout = printLabels ? TestPlatform.getStdErr() : null;
 	}
 	
 	public TestResult() {

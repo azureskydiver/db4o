@@ -46,7 +46,7 @@ public class TestRunner {
 	}
 
 	private void report(Exception x) {
-		TestPlatform.printStackTrace(TestPlatform.getStdOut(), x);
+		TestPlatform.printStackTrace(TestPlatform.getStdErr(), x);
 	}
 
 	private void report(TestResult result) {

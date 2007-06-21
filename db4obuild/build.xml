@@ -775,8 +775,8 @@
 			</classpath>
 		</java>
         
-        <echo message="Running com.db4o.db4ounit.jre12.AllTestsJdk1_2 on jvm ${file.jvm.jdk1.3}" />
-		<java jvm="${file.jvm.jdk1.3}" fork="true" classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" failonerror="true" timeout="1200000">
+        <echo message="Running com.db4o.db4ounit.jre12.AllTestsJdk1_2 on jvm ${file.jvm.jdk1.2}" />
+		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" failonerror="true" timeout="1200000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.2}" />
@@ -827,7 +827,7 @@
 			</classpath>
 			<arg value="-withExceptions" />
 		</java>
-		<java jvm="${file.jvm.jdk1.3}" fork="true" classname="com.db4o.test.AllTestsJdk1_2" failonerror="true" timeout="3600000">
+		<java jvm="${file.jvm.jdk1.2}" fork="true" classname="com.db4o.test.AllTestsJdk1_2" failonerror="true" timeout="3600000">
 			<classpath>
 				<dirset dir="${dir.dist.classes.java1.2}" />
 				<dirset dir="${dir.dist.classes.test.jdk1.2}" />
