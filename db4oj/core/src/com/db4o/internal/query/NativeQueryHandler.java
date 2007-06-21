@@ -17,7 +17,6 @@ import com.db4o.query.Predicate;
 import com.db4o.query.Query;
 import com.db4o.query.QueryComparator;
 import com.db4o.reflect.Reflector;
-import com.db4o.reflect.jdk.JdkLoader;
 
 /**
  * @sharpen.ignore

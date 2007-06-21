@@ -436,10 +436,6 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return depth;
     }
 
-    public Object coerce(ReflectClass claxx, Object obj) {
-        return canHold(claxx) ? obj : No4.INSTANCE;
-    }
-
     public void collectConstraints(
         Transaction a_trans,
         QConObject a_parent,

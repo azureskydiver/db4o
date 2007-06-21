@@ -22,8 +22,6 @@ public interface TypeHandler4 extends Indexable4
 	
 	ReflectClass classReflector();
     
-    Object coerce(ReflectClass claxx, Object obj);
-	
 	// special construct for deriving from simple types
 	void copyValue(Object a_from, Object a_to);
 	

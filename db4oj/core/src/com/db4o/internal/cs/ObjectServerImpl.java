@@ -369,7 +369,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		while(i.moveNext()){
 			ServerMessageDispatcher dispatcher = (ServerMessageDispatcher) i.current();
 			if(filter.accept(dispatcher)) {
-				dispatcher.writeIfAlive((Msg)message);
+				dispatcher.writeIfAlive(message);
 			}
 		}
 	}
