@@ -1,6 +1,7 @@
 /* Copyright (C) 2007 db4objects Inc. http://www.db4o.com */
 package com.db4o.db4ounit.common.cs;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.cs.*;
@@ -14,7 +15,7 @@ public class ServerClosedTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void test() throws Exception {
-		ExtObjectContainer db = fixture().db();
+		final ExtObjectContainer db = fixture().db();
 		ObjectServerImpl serverImpl = (ObjectServerImpl) clientServerFixture()
 				.server();
 		try {
@@ -24,6 +25,11 @@ public class ServerClosedTestCase extends Db4oClientServerTestCase {
 					.current();
 			serverDispatcher.socket().close();
 			Cool.sleepIgnoringInterruption(1000);
+			Assert.expect(DatabaseClosedException.class, new CodeBlock() {
+				public void run() throws Throwable {
+					db.get(null);
+				}
+			});
 			Assert.isTrue(db.isClosed());
 		} finally {
 			serverImpl.close();
