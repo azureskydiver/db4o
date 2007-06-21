@@ -47,7 +47,7 @@ public class Db4oClientServer extends
         this(configSource,FILE, embeddedClient);
     }
     
-    private static int findFreePort() {
+    public static int findFreePort() {
     	
 		try {
 			return findFreePort(DEFAULT_PORT);
