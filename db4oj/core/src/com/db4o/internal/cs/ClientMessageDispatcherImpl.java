@@ -40,13 +40,12 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 						continue;
 					}
 				}
+				_messageQueue.add(message);
 			} catch (IOException exc) {
 				close();
-				message = Msg.ERROR;
+				_messageQueue.add(Msg.ERROR);
 			}
-			_messageQueue.add(message);
 		}
-		i_stream.close();
 	}
 
 	private boolean isClientSideMessage(Msg message) {

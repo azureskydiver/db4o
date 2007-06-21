@@ -333,7 +333,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	
 	private void onMsgError() {
 		close();
-		throw new Db4oException(Messages.get(Messages.CLOSED_OR_OPEN_FAILED));
+		throw new DatabaseClosedException();
 	}
 	
 	private Msg getResponseSingleThreaded() {

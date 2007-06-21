@@ -33,7 +33,7 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase {
 		sender.send(new Data());
 		
 		// The following query will be block by the sender
-		Assert.expect(Db4oException.class, new CodeBlock() {
+		Assert.expect(DatabaseClosedException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				ObjectSet os = client.get(null);
 				while (os.hasNext()) {
