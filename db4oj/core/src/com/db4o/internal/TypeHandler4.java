@@ -22,9 +22,6 @@ public interface TypeHandler4 extends Indexable4
 	
 	ReflectClass classReflector();
     
-	// special construct for deriving from simple types
-	void copyValue(Object a_from, Object a_to);
-	
 	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException;
 	
 	int getID();

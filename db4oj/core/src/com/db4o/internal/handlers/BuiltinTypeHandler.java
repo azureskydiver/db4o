@@ -22,11 +22,6 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
         _stream = stream;
     }
     
-    
-	public final void copyValue(Object a_from, Object a_to){
-		// do nothing
-	}
-    
     public boolean hasFixedLength(){
         return false;
     }

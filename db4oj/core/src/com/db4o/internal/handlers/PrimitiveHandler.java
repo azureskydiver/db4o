@@ -44,10 +44,6 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
         return a_object;
     }
 
-    public void copyValue(Object a_from, Object a_to) {
-        // do nothing
-    }
-
     public abstract Object defaultValue();
 
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
