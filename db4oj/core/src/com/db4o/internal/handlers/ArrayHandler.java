@@ -226,21 +226,23 @@ public class ArrayHandler extends BuiltinTypeHandler {
         }
 
 		IntByRef elements = new IntByRef();
-		Object ret = readCreate(reader.getTransaction(), reader, elements);
-		if (ret != null){
-            if(i_handler.readArray(ret, reader)){
-                return ret;
-            }
-			for (int i = 0; i < elements.value; i++) {
-				_reflectArray.set(ret, i, i_handler.read(mf, reader, true));
-			}	
+		Object array = readCreate(reader.getTransaction(), reader, elements);
+		
+		if (array != null){
+	        if(array instanceof byte[]){
+	            reader.readBytes((byte[])array);
+	        } else{
+    			for (int i = 0; i < elements.value; i++) {
+    				_reflectArray.set(array, i, i_handler.read(mf, reader, true));
+    			}
+	        }
 		}
         
         if (Deploy.debug) {
             reader.readEnd();
         }
 
-        return ret;
+        return array;
     }
 
 	private Object readCreate(Transaction trans, Buffer buffer, IntByRef elements) {

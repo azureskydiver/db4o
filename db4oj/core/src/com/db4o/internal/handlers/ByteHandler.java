@@ -61,16 +61,6 @@ public final class ByteHandler extends PrimitiveHandler {
 			a_bytes.writeEnd();
 		}
 	}
-	
-	public boolean readArray(Object array, Buffer reader) {
-        if(array instanceof byte[]){
-            reader.readBytes((byte[])array);
-            return true;
-        }
-        
-        return false;
-	}
-
 					
 	// Comparison_______________________
 	

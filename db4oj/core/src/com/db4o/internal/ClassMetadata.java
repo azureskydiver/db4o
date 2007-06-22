@@ -1558,10 +1558,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         bitFalse(Const4.READING);
     }	
 
-    public boolean readArray(Object array, Buffer reader) {
-        return false;
-    }
-
     public void readThis(Transaction a_trans, Buffer a_reader) {
         throw Exceptions4.virtualException();
     }
