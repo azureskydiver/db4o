@@ -403,7 +403,7 @@ public class CachedIoAdapter extends IoAdapter {
 
 		Page _next;
 
-		public static byte[] zeroBytes;
+		private byte[] zeroBytes;
 
 		public Page(int size) {
 			_bufferSize = size;
