@@ -654,11 +654,13 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 			while(raw.hasNext()) {
 				System.out.println(raw.next());
 			}
+			raw.reset();
 			System.out.println("OPT");
 			optimized.reset();
 			while(optimized.hasNext()) {
 				System.out.println(optimized.next());
 			}
+			optimized.reset();
 		}
 		Assert.areEqual(raw,optimized,predicateId);
 		Assert.areEqual(predicate.expected(),raw.size(),predicateId);
