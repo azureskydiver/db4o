@@ -214,10 +214,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         // do nothing
     }
     
-    public boolean supportsIndex() {
-        return true;
-    }
-
     public final boolean writeObjectBegin() {
         return false;
     }

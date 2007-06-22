@@ -101,10 +101,6 @@ public final class UntypedFieldHandler extends ClassMetadata {
         return mf._untyped.readSubCandidate(reader, candidates, withIndirection);
     } 
 	
-    public boolean supportsIndex() {
-        return false;
-    }
-    
     public Object writeNew(MarshallerFamily mf, Object obj, boolean topLevel, StatefulBuffer writer, boolean withIndirection, boolean restoreLinkeOffset) {
         return mf._untyped.writeNew(obj, restoreLinkeOffset, writer);
     }

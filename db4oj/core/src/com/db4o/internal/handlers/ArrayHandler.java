@@ -207,11 +207,6 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return mf._array.read(this, a_bytes);
     }
     
-    public Object readIndexEntry(Buffer a_reader) {
-        // TODO: implement
-        throw Exceptions4.virtualException();
-    }
-    
 	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
         return mf._array.readQuery(this, a_trans, a_reader);
 	}
@@ -409,11 +404,6 @@ public class ArrayHandler extends BuiltinTypeHandler {
         a_bytes.writeInt(- yapClassID);
     }
     
-    public void writeIndexEntry(Buffer a_writer, Object a_object) {
-        // TODO: implement
-        throw Exceptions4.virtualException();
-    }
-    
     public final Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         return mf._array.writeNew(this, a_object, restoreLinkOffset, a_bytes);
     }
@@ -492,10 +482,6 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return false;
     }
 
-    public boolean supportsIndex() {
-        return false;
-    }
-    
     public final void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
     	if(!(i_handler.isSecondClass()==TernaryBool.YES)) {
     		mf._array.defragIDs(this, readers);
@@ -525,10 +511,6 @@ public class ArrayHandler extends BuiltinTypeHandler {
             elements = readers.readInt();
         }
 		return elements;
-	}
-
-	public void defragIndexEntry(ReaderPair readers) {
-        throw Exceptions4.virtualException();
 	}
 
 }

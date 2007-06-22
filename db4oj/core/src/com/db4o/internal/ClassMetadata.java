@@ -18,12 +18,13 @@ import com.db4o.internal.slots.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.internal.ix.Indexable4;
 
 
 /**
  * @exclude
  */
-public class ClassMetadata extends PersistentBase implements TypeHandler4, StoredClass {
+public class ClassMetadata extends PersistentBase implements Indexable4, TypeHandler4, StoredClass {
     
     private ClassHandler _classHandler;
 
@@ -1881,10 +1882,6 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 			? (StaticClass)os.next()
 			: null;
 	}
-
-    public boolean supportsIndex() {
-        return true;
-    }
 
     public String toString() {
     	if(i_name!=null) {
