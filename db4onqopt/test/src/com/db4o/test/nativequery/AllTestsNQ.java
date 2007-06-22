@@ -2,14 +2,12 @@
 
 package com.db4o.test.nativequery;
 
-import com.db4o.test.nativequery.analysis.*;
-import com.db4o.test.nativequery.cats.*;
-import com.db4o.test.nativequery.expr.*;
-import com.db4o.test.nativequery.expr.build.*;
-
-import db4ounit.*;
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.ReflectionTestSuiteBuilder;
+import db4ounit.Test;
+import db4ounit.TestRunner;
+import db4ounit.TestSuite;
+import db4ounit.extensions.Db4oTestSuiteBuilder;
+import db4ounit.extensions.fixtures.Db4oSolo;
 
 public class AllTestsNQ {
 	

@@ -2,10 +2,10 @@
 
 package com.db4o.nativequery.optimization;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
-import com.db4o.*;
-import com.db4o.internal.*;
+import com.db4o.internal.Platform4;
 
 public class ReflectUtil {
 	public static Method methodFor(Class clazz, String methodName, Class[] paramTypes) {

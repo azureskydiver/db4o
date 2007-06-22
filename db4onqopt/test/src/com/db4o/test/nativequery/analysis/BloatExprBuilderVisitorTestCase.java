@@ -1181,7 +1181,7 @@ public class BloatExprBuilderVisitorTestCase extends AbstractDb4oTestCase {
 	}
 	
 	private Expression expression(String methodName) throws ClassNotFoundException {
-		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(bloatUtil, new Db4oClassSource(db().reflector()));	
+		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(bloatUtil);	
 		FlowGraph flowGraph=bloatUtil.flowGraph(getClass().getName(),methodName);
 		if(NQDebug.LOG) {
 			flowGraph.visit(new PrintVisitor());

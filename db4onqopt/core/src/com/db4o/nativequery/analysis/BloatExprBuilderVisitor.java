@@ -2,20 +2,59 @@
 
 package com.db4o.nativequery.analysis;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.file.ClassSource;
-import EDU.purdue.cs.bloat.tree.*;
+import EDU.purdue.cs.bloat.cfg.Block;
+import EDU.purdue.cs.bloat.cfg.FlowGraph;
+import EDU.purdue.cs.bloat.editor.ClassEditor;
+import EDU.purdue.cs.bloat.editor.MemberRef;
+import EDU.purdue.cs.bloat.editor.Type;
+import EDU.purdue.cs.bloat.tree.ArithExpr;
+import EDU.purdue.cs.bloat.tree.ArrayRefExpr;
+import EDU.purdue.cs.bloat.tree.CallExpr;
+import EDU.purdue.cs.bloat.tree.CallMethodExpr;
+import EDU.purdue.cs.bloat.tree.CallStaticExpr;
+import EDU.purdue.cs.bloat.tree.ConstantExpr;
+import EDU.purdue.cs.bloat.tree.Expr;
+import EDU.purdue.cs.bloat.tree.ExprStmt;
+import EDU.purdue.cs.bloat.tree.FieldExpr;
+import EDU.purdue.cs.bloat.tree.IfCmpStmt;
+import EDU.purdue.cs.bloat.tree.IfStmt;
+import EDU.purdue.cs.bloat.tree.IfZeroStmt;
+import EDU.purdue.cs.bloat.tree.LocalExpr;
+import EDU.purdue.cs.bloat.tree.PrintVisitor;
+import EDU.purdue.cs.bloat.tree.ReturnExprStmt;
+import EDU.purdue.cs.bloat.tree.StackExpr;
+import EDU.purdue.cs.bloat.tree.StaticFieldExpr;
+import EDU.purdue.cs.bloat.tree.StoreExpr;
+import EDU.purdue.cs.bloat.tree.TreeVisitor;
 
-import com.db4o.nativequery.*;
-import com.db4o.nativequery.bloat.*;
-import com.db4o.nativequery.expr.*;
-import com.db4o.nativequery.expr.build.*;
-import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.nativequery.expr.cmp.field.*;
-import com.db4o.reflect.Reflector;
+import com.db4o.nativequery.NQDebug;
+import com.db4o.nativequery.bloat.BloatUtil;
+import com.db4o.nativequery.expr.BoolConstExpression;
+import com.db4o.nativequery.expr.ComparisonExpression;
+import com.db4o.nativequery.expr.Expression;
+import com.db4o.nativequery.expr.ExpressionVisitor;
+import com.db4o.nativequery.expr.TraversingExpressionVisitor;
+import com.db4o.nativequery.expr.build.ExpressionBuilder;
+import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
+import com.db4o.nativequery.expr.cmp.ArithmeticOperator;
+import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
+import com.db4o.nativequery.expr.cmp.ComparisonOperand;
+import com.db4o.nativequery.expr.cmp.ComparisonOperandAnchor;
+import com.db4o.nativequery.expr.cmp.ComparisonOperator;
+import com.db4o.nativequery.expr.cmp.ConstValue;
+import com.db4o.nativequery.expr.cmp.FieldValue;
+import com.db4o.nativequery.expr.cmp.MethodCallValue;
+import com.db4o.nativequery.expr.cmp.ThreeWayComparison;
+import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
+import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
+import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
 
 public class BloatExprBuilderVisitor extends TreeVisitor {
 
@@ -151,12 +190,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	private int retCount = 0;
 
 	private int blockCount = 0;
-	
-	private ClassSource classSource;
 
-	public BloatExprBuilderVisitor(BloatUtil bloatUtil, ClassSource classSource) {
+	public BloatExprBuilderVisitor(BloatUtil bloatUtil) {
 		this.bloatUtil = bloatUtil;
-		this.classSource = classSource;
 		localStack.addLast(new ComparisonOperand[] {
 				PredicateFieldRoot.INSTANCE, CandidateFieldRoot.INSTANCE });
 	}

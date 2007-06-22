@@ -33,7 +33,7 @@ public abstract class NQOptimizationByteCodeTestCaseBase implements TestCase {
 		clazz.commit();
 		
 		FlowGraph flowGraph = new FlowGraph(method);
-		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(bloatUtil, new DefaultClassSource());
+		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(bloatUtil);
 		flowGraph.visit(visitor);
 		Expression expression = visitor.expression();
 		assertOptimization(expression);

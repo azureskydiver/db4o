@@ -2,13 +2,21 @@
 
 package com.db4o.test.nativequery.expr.build;
 
-import com.db4o.nativequery.expr.*;
-import com.db4o.nativequery.expr.build.*;
-import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.nativequery.expr.cmp.field.*;
-import com.db4o.test.nativequery.expr.*;
+import com.db4o.nativequery.expr.AndExpression;
+import com.db4o.nativequery.expr.BoolConstExpression;
+import com.db4o.nativequery.expr.ComparisonExpression;
+import com.db4o.nativequery.expr.Expression;
+import com.db4o.nativequery.expr.NotExpression;
+import com.db4o.nativequery.expr.OrExpression;
+import com.db4o.nativequery.expr.build.ExpressionBuilder;
+import com.db4o.nativequery.expr.cmp.ComparisonOperator;
+import com.db4o.nativequery.expr.cmp.ConstValue;
+import com.db4o.nativequery.expr.cmp.FieldValue;
+import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
 
-import db4ounit.*;
+import db4ounit.Assert;
+import db4ounit.TestCase;
+import db4ounit.TestLifeCycle;
 
 public class ExpressionBuilderTestCase implements TestCase, TestLifeCycle {
 	private MockComparisonExpressionBuilder mockBuilder;
