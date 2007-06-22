@@ -78,10 +78,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
     
     public abstract Object primitiveNull();
     
-    public boolean readArray(Object array, Buffer reader) {
-        return false;
-    }
-
     public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         // virtual and do nothing
         return null;

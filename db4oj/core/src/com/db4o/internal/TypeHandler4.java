@@ -60,11 +60,6 @@ public interface TypeHandler4 extends Comparable4
 	
 	ClassMetadata getClassMetadata(ObjectContainerBase a_stream);
     
-    /**
-     * performance optimized read (only used for byte[] so far) 
-     */
-    boolean readArray(Object array, Buffer reader);
-	
 	void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws Db4oIOException;
 	
 	TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes);

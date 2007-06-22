@@ -40,10 +40,6 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
 		return null;
 	}
     
-    public boolean readArray(Object array, Buffer reader) {
-        return false;
-    }
-	
     public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, Db4oIOException {
         return read(mf, a_writer, true);
     }
