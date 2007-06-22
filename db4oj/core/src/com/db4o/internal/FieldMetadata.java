@@ -419,7 +419,7 @@ public class FieldMetadata implements StoredField {
             yapField.alive();
             alive();
             return yapField.i_isPrimitive == i_isPrimitive
-                && yapField.i_handler.isEqual(i_handler)
+                && yapField.i_handler.equals(i_handler)
                 && yapField.i_name.equals(i_name);
         }
         return false;
@@ -639,7 +639,7 @@ public class FieldMetadata implements StoredField {
 
     private void loadJavaField() {
         TypeHandler4 handler = loadJavaField1();
-        if (handler == null || (!handler.isEqual(i_handler))) {
+        if (handler == null || (!handler.equals(i_handler))) {
             i_javaField = null;
             i_state = UNAVAILABLE;
         }
@@ -747,7 +747,7 @@ public class FieldMetadata implements StoredField {
         TypeHandler4 handler = loadJavaField1();
         if (handler != null) {
             handler = wrapHandlerToArrays(getStream(), handler);
-            if (handler.isEqual(i_handler)) {
+            if (handler.equals(i_handler)) {
                 return;
             }
         }

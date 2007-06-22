@@ -49,10 +49,6 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
         a_bytes.incrementOffset(linkLength());
     }
-
-    public boolean isEqual(TypeHandler4 a_dataType) {
-        return (this == a_dataType);
-    }
     
     public int getTypeID() {
         return Const4.TYPE_SIMPLE;
