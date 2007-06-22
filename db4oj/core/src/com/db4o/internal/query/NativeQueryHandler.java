@@ -3,10 +3,10 @@
 package com.db4o.internal.query;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.diagnostic.NativeQueryOptimizerNotLoaded;
 import com.db4o.foundation.Iterator4;
 import com.db4o.foundation.Iterator4Impl;
 import com.db4o.foundation.List4;
@@ -94,12 +94,17 @@ public class NativeQueryHandler {
 	
 	private void loadQueryOptimizer() {
 		Class clazz = ReflectPlatform.forName(NativeQueryHandler.OPTIMIZER_IMPL_NAME);
-		Constructor constructor;
+		DiagnosticProcessor dp = ((ObjectContainerBase)_container).i_handlers._diagnosticProcessor;
 		
-		if(clazz == null)
+		if(clazz == null){
+            if(dp.enabled()){
+                dp.nativeQueryOptimizerNotLoaded(NativeQueryOptimizerNotLoaded.NQ_NOT_PRESENT);
+            }
 			return;
+		}
 		
 		try {
+			Constructor constructor;
 			constructor = clazz.getConstructor(new Class[]{
 													Reflector.class
 													});
@@ -110,18 +115,10 @@ public class NativeQueryHandler {
 			_enhancer = (Db4oNQOptimizer) constructor.newInstance(new Object[]{
 												this._container.ext().reflector()
 												}); 
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+            if(dp.enabled()){
+                dp.nativeQueryOptimizerNotLoaded(NativeQueryOptimizerNotLoaded.NQ_CONSTRUCTION_FAILED);
+            }
 		}
 		
 	}
