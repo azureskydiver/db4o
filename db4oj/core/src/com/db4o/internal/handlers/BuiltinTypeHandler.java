@@ -48,10 +48,6 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
         return read(mf, a_writer, true);
     }
 	
-    public boolean writeArray(Object array, Buffer reader) {
-        return false;
-    }
-    
     // redundant, only added to make Sun JDK 1.2's java happy :(
     public abstract boolean isGreater(Object obj);	
     public abstract Comparable4 prepareComparison(Object obj);

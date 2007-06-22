@@ -1908,10 +1908,6 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
 	    return stringIO.read(i_nameBytes);
     }
     
-    public boolean writeArray(Object array, Buffer reader) {
-        return false;
-    }
-
     public boolean writeObjectBegin() {
         if (!stateOK()) {
             return false;

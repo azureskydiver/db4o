@@ -78,11 +78,6 @@ public interface TypeHandler4 extends Indexable4
 	
 	TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes);
 	
-    /**
-     * performance optimized write (only used for byte[] so far) 
-     */
-    boolean writeArray(Object array, Buffer reader);
-
     QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection);
 
 	void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);

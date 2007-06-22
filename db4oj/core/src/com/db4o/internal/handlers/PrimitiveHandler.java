@@ -168,10 +168,6 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
 
     public abstract void write(Object a_object, Buffer a_bytes);
     
-    public boolean writeArray(Object array, Buffer reader) {
-        return false;
-    }
-
     public void writeIndexEntry(Buffer a_writer, Object a_object) {
         if (a_object == null) {
             a_object = primitiveNull();
