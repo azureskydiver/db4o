@@ -638,10 +638,6 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         return _eventDispatcher.dispatch(stream, obj, message);
     }
     
-    public final boolean isEqual(TypeHandler4 a_dataType) {
-        return (this == a_dataType);
-    }
-    
     public final int fieldCount(){
         int count = i_fields.length;
         

@@ -52,10 +52,6 @@ public final class StringHandler extends BuiltinTypeHandler {
         }
     }
     
-    public boolean isEqual(TypeHandler4 a_dataType) {
-        return (this == a_dataType);
-    }
-
     public int getID() {
         return 9;
     }

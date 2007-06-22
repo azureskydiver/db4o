@@ -143,14 +143,16 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return reader.readInt();
     }
 
-    public final boolean isEqual(TypeHandler4 a_dataType) {
-        if (a_dataType instanceof ArrayHandler) {
-            if (((ArrayHandler) a_dataType).identifier() == identifier()) {
-                return (i_handler.equals(((ArrayHandler) a_dataType).i_handler));
-            }
+    public boolean equals(Object obj) {
+        if (! (obj instanceof ArrayHandler)) {
+            return false;
         }
-        return false;
+        if (((ArrayHandler) obj).identifier() != identifier()) {
+            return false;
+        }
+        return (i_handler.equals(((ArrayHandler) obj).i_handler));
     }
+
 
     public final int getID() {
         return i_handler.getID();
