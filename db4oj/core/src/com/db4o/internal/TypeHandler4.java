@@ -50,8 +50,6 @@ public interface TypeHandler4 extends Comparable4
 	
 	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException, Db4oIOException;
     
-	Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException;
-	
 	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException;
 	
     Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset);

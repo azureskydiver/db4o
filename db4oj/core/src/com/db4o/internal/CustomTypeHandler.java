@@ -98,12 +98,6 @@ public class CustomTypeHandler implements TypeHandler4{
         
     }
 
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer)
-        throws CorruptionException, Db4oIOException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection,
         Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException {
         // TODO Auto-generated method stub
