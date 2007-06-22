@@ -2,7 +2,6 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.reflect.*;
@@ -40,10 +39,6 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
 		return null;
 	}
     
-    public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer a_writer) throws CorruptionException, Db4oIOException {
-        return read(mf, a_writer, true);
-    }
-	
     // redundant, only added to make Sun JDK 1.2's java happy :(
     public abstract boolean isGreater(Object obj);	
     public abstract Comparable4 prepareComparison(Object obj);

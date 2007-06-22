@@ -154,7 +154,7 @@ public class FieldMetadata implements StoredField {
     
     // alive() checked
     public Object readIndexEntry(MarshallerFamily mf, StatefulBuffer writer) throws CorruptionException, Db4oIOException {
-    	return i_handler.readIndexEntry(mf, writer);
+    	return ((IndexableTypeHandler)i_handler).readIndexEntry(mf, writer);
     }
     
     public void removeIndexEntry(Transaction trans, int parentID, Object indexEntry){
@@ -408,7 +408,7 @@ public class FieldMetadata implements StoredField {
             return;
         }
         int offset = a_bytes._offset;
-        Object obj = i_handler.readIndexEntry(mf, a_bytes);
+        Object obj = readIndexEntry(mf, a_bytes);
         removeIndexEntry(a_bytes.getTransaction(), a_bytes.getID(), obj);
         a_bytes._offset = offset;
     }
