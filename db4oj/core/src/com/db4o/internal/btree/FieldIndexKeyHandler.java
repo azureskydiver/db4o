@@ -22,10 +22,6 @@ public class FieldIndexKeyHandler implements Indexable4{
         _valueHandler = delegate_;
     }
 
-    public Object comparableObject(Transaction trans, Object indexEntry) {
-        throw new NotImplementedException();
-    }
-
     public int linkLength() {
         return _valueHandler.linkLength() + Const4.INT_LENGTH;
     }

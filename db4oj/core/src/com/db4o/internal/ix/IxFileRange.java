@@ -110,8 +110,7 @@ class IxFileRange extends IxTree{
 			int address = _address + (i * slotLength());
 			fileReader.read(yf, address, _addressOffset);
 			fileReader._offset = 0;
-			Object obj = handler().comparableObject(transaction,
-					handler().readIndexEntry(fileReader));
+			Object obj = IxDeprecationHelper.comparableObject(handler(), transaction, handler().readIndexEntry(fileReader));
 			visitor.visit(fileReader.readInt(), obj);
 		}
 

@@ -41,10 +41,6 @@ public final class StringHandler extends BuiltinTypeHandler {
     	return _stream.i_handlers.ICLASS_STRING;
     }
 
-    public Object comparableObject(Transaction trans, Object obj) throws ComparableConversionException {
-    	return val(obj,trans.stream());
-    }
-    
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer){
     	Slot slot = buffer.readSlot();
         if(slot.address() > 0  && ! mf._string.inlinedStrings()){
@@ -208,7 +204,7 @@ public final class StringHandler extends BuiltinTypeHandler {
     	return val(obj,_stream);
     }
 
-    private Buffer val(Object obj,ObjectContainerBase oc) throws ComparableConversionException {
+    public Buffer val(Object obj,ObjectContainerBase oc) throws ComparableConversionException {
         if(obj instanceof Buffer) {
             return (Buffer)obj;
         }

@@ -89,10 +89,6 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		return tree;
 	}
     
-    public Object comparableObject(Transaction a_trans, Object a_object){
-        throw Exceptions4.virtualException();
-    }
-
     public final void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
         mf._array.deleteEmbedded(this, a_bytes);
     }

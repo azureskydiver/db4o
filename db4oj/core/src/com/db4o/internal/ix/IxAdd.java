@@ -19,7 +19,7 @@ public class IxAdd extends IxPatch {
     
     void beginMerge(){
         super.beginMerge();
-        handler().prepareComparison( handler().comparableObject(trans(), _value));
+        handler().prepareComparison( IxDeprecationHelper.comparableObject(handler(), trans(), _value));
     }
     
     public void visit(Object obj){
@@ -42,12 +42,12 @@ public class IxAdd extends IxPatch {
     }
     
     public String toString(){
-        String str = "IxAdd "  + _parentID + "\n " + handler().comparableObject(trans(), _value);
+        String str = "IxAdd "  + _parentID + "\n " + IxDeprecationHelper.comparableObject(handler(), trans(), _value);
         return str;
     }
 
     public void visitAll(IntObjectVisitor visitor) {
-        visitor.visit(_parentID, handler().comparableObject(trans(), _value));
+        visitor.visit(_parentID, IxDeprecationHelper.comparableObject(handler(), trans(), _value));
     }
 
     public Object shallowClone() {

@@ -964,10 +964,6 @@ public class ClassMetadata extends PersistentBase implements TypeHandler4, Store
         }
     }
 
-    public Object comparableObject(Transaction a_trans, Object a_object) {
-        return a_object;
-    }
-    
     final boolean init( ObjectContainerBase a_stream, ClassMetadata a_ancestor,ReflectClass claxx) {
         
         if(DTrace.enabled){

@@ -12,10 +12,6 @@ public class Null implements Indexable4{
     
     public static final Indexable4 INSTANCE = new Null();
 
-    public Object comparableObject(Transaction trans, Object indexEntry) {
-        return null;
-    }
-
     public int compareTo(Object a_obj) {
         if(a_obj == null) {
             return 0;

@@ -9,8 +9,6 @@ import com.db4o.internal.*;
  */
 public interface Indexable4 extends Comparable4{
     
-    Object comparableObject(Transaction trans, Object indexEntry);
-
     int linkLength();
     
     Object readIndexEntry(Buffer reader);
