@@ -78,11 +78,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
     
     public abstract Object primitiveNull();
     
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
-        // virtual and do nothing
-        return null;
-    }
-
     public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray)
         throws CorruptionException {
         return read1(reader);
