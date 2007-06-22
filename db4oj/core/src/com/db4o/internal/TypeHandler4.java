@@ -46,8 +46,6 @@ public interface TypeHandler4 extends Comparable4
      */
     void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
     
-	void prepareComparison(Transaction a_trans, Object obj);
-	
 	ReflectClass primitiveClassReflector();
 	
 	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException, Db4oIOException;

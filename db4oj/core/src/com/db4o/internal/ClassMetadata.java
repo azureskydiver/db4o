@@ -1932,10 +1932,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     private ReflectClass i_compareTo;
     
-	public void prepareComparison(Transaction a_trans, Object obj) {
-	    prepareComparison(obj);
-	}
-
     public Comparable4 prepareComparison(Object obj) {
         if (obj != null) {
             if(obj instanceof Integer){

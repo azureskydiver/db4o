@@ -76,11 +76,6 @@ public class CustomTypeHandler implements TypeHandler4{
         return 0;
     }
 
-    public void prepareComparison(Transaction a_trans, Object obj) {
-        // TODO Auto-generated method stub
-        
-    }
-
     public ReflectClass primitiveClassReflector() {
         // TODO Auto-generated method stub
         return null;

@@ -211,10 +211,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
 		return null;
     }
 
-	public void prepareComparison(Transaction a_trans, Object obj) {
-	    i_compareTo = (Buffer)obj;    
-	}
-
     public Comparable4 prepareComparison(Object obj) {
         if (obj == null) {
             i_compareTo = null;

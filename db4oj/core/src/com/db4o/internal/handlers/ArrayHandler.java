@@ -187,10 +187,6 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		return Const4.OBJECT_LENGTH + Const4.INT_LENGTH * 2;
 	}
     
-	public void prepareComparison(Transaction a_trans, Object obj) {
-	    prepareComparison(obj);
-	}
-
 	public ReflectClass primitiveClassReflector() {
 		return i_handler.primitiveClassReflector();
 	}
