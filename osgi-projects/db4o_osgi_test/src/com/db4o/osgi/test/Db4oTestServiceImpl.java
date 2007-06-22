@@ -2,9 +2,8 @@
 
 package com.db4o.osgi.test;
 
-import org.osgi.framework.*;
+import org.osgi.framework.BundleContext;
 
-import com.db4o.db4ounit.common.acid.CrashSimulatingTestCase;
 import com.db4o.test.nativequery.NQRegressionTestCase;
 import com.db4o.test.nativequery.analysis.BloatExprBuilderVisitorTestCase;
 import com.db4o.test.nativequery.analysis.BooleanReturnValueTestCase;
@@ -12,8 +11,9 @@ import com.db4o.test.nativequery.cats.NQCatConsistencyTestCase;
 import com.db4o.test.nativequery.expr.ExpressionTestCase;
 import com.db4o.test.nativequery.expr.build.ExpressionBuilderTestCase;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.TestRunner;
+import db4ounit.TestSuite;
+import db4ounit.extensions.Db4oTestSuiteBuilder;
 
 class Db4oTestServiceImpl implements Db4oTestService {
 	
