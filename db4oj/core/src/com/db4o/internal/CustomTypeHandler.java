@@ -87,11 +87,6 @@ public class CustomTypeHandler implements TypeHandler4{
         return null;
     }
 
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates)
         throws Db4oIOException {
         // TODO Auto-generated method stub

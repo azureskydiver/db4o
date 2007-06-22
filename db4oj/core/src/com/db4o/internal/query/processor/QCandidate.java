@@ -127,11 +127,19 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			if (handler != null) {
 
 				final Buffer[] arrayBytes = { _bytes };
-                
-				final TypeHandler4 arrayHandler = handler.readArrayHandler(
-						getTransaction(), _marshallerFamily, arrayBytes);
+				
+				TypeHandler4 tempHandler = null;
+				
+				if(handler instanceof PossibleArrayHandlerProvider){
+				    tempHandler = ((PossibleArrayHandlerProvider)handler).readArrayHandler(
+                        getTransaction(), _marshallerFamily, arrayBytes);
+				    
+				}
 
-				if (arrayHandler != null) {
+				if (tempHandler != null) {
+				    
+	                final TypeHandler4 arrayHandler = tempHandler;
+
 
 					final int offset = arrayBytes[0]._offset;
 					boolean outerRes = true;

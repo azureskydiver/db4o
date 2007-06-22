@@ -80,11 +80,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes, redirect);
     }
     
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
-        // virtual and do nothing
-        return null;
-    }
-
     public void readCandidates(MarshallerFamily mf, Buffer a_bytes, QCandidates a_candidates) {
         // do nothing
     }
