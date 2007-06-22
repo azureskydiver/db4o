@@ -37,10 +37,6 @@ public final class DateHandler extends LongHandler {
 		return 10;
 	}
     
-    public boolean indexNullHandling() {
-        return true;
-    }
-	
 	protected Class primitiveJavaClass(){
 		return null;
 	}

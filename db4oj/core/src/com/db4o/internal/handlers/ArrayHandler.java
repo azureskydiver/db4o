@@ -166,14 +166,6 @@ public class ArrayHandler extends BuiltinTypeHandler {
         return Const4.YAPARRAY;
     }
     
-    public Object indexEntryToObject(Transaction trans, Object indexEntry){
-        return null; // not supported
-    }
-    
-    public boolean indexNullHandling() {
-        return i_handler.indexNullHandling();
-    }
-    
     public TernaryBool isSecondClass(){
         return i_handler.isSecondClass();
     }

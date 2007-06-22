@@ -803,7 +803,7 @@ public class FieldMetadata implements StoredField {
             _index.traverseKeys(trans, new Visitor4() {
                 public void visit(Object obj) {
                     FieldIndexKey key = (FieldIndexKey) obj;
-                    userVisitor.visit(i_handler.indexEntryToObject(trans, key.value()));
+                    userVisitor.visit(((IndexableTypeHandler)i_handler).indexEntryToObject(trans, key.value()));
                 }
             });
         }

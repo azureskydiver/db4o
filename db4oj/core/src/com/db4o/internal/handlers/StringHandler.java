@@ -5,7 +5,6 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.ix.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
@@ -16,7 +15,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public final class StringHandler extends BuiltinTypeHandler implements Indexable4{
+public final class StringHandler extends BuiltinTypeHandler implements IndexableTypeHandler{
     
     public LatinStringIO i_stringIo; 
     
@@ -69,10 +68,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         return null;
     }
 
-    public boolean indexNullHandling() {
-        return true;
-    }
-    
     public TernaryBool isSecondClass(){
         return TernaryBool.YES;
     }
@@ -196,11 +191,11 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
 
     private Buffer i_compareTo;
 
-    private Buffer val(Object obj) throws ComparableConversionException {
+    private Buffer val(Object obj) {
     	return val(obj,_stream);
     }
 
-    public Buffer val(Object obj,ObjectContainerBase oc) throws ComparableConversionException {
+    public Buffer val(Object obj,ObjectContainerBase oc) {
         if(obj instanceof Buffer) {
             return (Buffer)obj;
         }
