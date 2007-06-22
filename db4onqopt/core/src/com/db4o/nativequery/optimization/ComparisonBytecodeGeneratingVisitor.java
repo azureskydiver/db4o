@@ -27,8 +27,6 @@ import com.db4o.nativequery.expr.cmp.MethodCallValue;
 import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
 import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
 import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.jdk.JdkReflector;
 
 class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	private MethodEditor methodEditor;

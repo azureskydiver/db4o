@@ -2,16 +2,32 @@
 
 package com.db4o.nativequery.optimization;
 
-import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.editor.ClassEditor;
+import EDU.purdue.cs.bloat.editor.Label;
+import EDU.purdue.cs.bloat.editor.LocalVariable;
+import EDU.purdue.cs.bloat.editor.MemberRef;
+import EDU.purdue.cs.bloat.editor.MethodEditor;
+import EDU.purdue.cs.bloat.editor.NameAndType;
+import EDU.purdue.cs.bloat.editor.Opcode;
+import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.file.ClassSource;
-import EDU.purdue.cs.bloat.reflect.*;
+import EDU.purdue.cs.bloat.reflect.Modifiers;
 
-import com.db4o.foundation.*;
-import com.db4o.internal.query.*;
-import com.db4o.nativequery.expr.*;
-import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.query.*;
-import com.db4o.reflect.Reflector;
+import com.db4o.foundation.Collection4;
+import com.db4o.foundation.Iterator4;
+import com.db4o.internal.query.Db4oEnhancedFilter;
+import com.db4o.nativequery.expr.AndExpression;
+import com.db4o.nativequery.expr.BoolConstExpression;
+import com.db4o.nativequery.expr.ComparisonExpression;
+import com.db4o.nativequery.expr.Expression;
+import com.db4o.nativequery.expr.ExpressionVisitor;
+import com.db4o.nativequery.expr.NotExpression;
+import com.db4o.nativequery.expr.OrExpression;
+import com.db4o.nativequery.expr.cmp.ComparisonOperand;
+import com.db4o.nativequery.expr.cmp.ComparisonOperator;
+import com.db4o.nativequery.expr.cmp.FieldValue;
+import com.db4o.query.Constraint;
+import com.db4o.query.Query;
 
 public class SODABloatMethodBuilder {	
 	private final static boolean LOG_BYTECODE=false;

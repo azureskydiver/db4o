@@ -2,16 +2,17 @@
 
 package com.db4o.nativequery.optimization;
 
-import EDU.purdue.cs.bloat.cfg.*;
-import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.cfg.FlowGraph;
+import EDU.purdue.cs.bloat.editor.ClassEditor;
+import EDU.purdue.cs.bloat.editor.MethodEditor;
+import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.file.ClassSource;
-import EDU.purdue.cs.bloat.tree.*;
+import EDU.purdue.cs.bloat.tree.PrintVisitor;
 
-import com.db4o.nativequery.*;
-import com.db4o.nativequery.analysis.*;
-import com.db4o.nativequery.bloat.*;
-import com.db4o.nativequery.expr.*;
-import com.db4o.reflect.Reflector;
+import com.db4o.nativequery.NQDebug;
+import com.db4o.nativequery.analysis.BloatExprBuilderVisitor;
+import com.db4o.nativequery.bloat.BloatUtil;
+import com.db4o.nativequery.expr.Expression;
 
 public class NativeQueryEnhancer {
 	
@@ -21,7 +22,7 @@ public class NativeQueryEnhancer {
 		if(NQDebug.LOG) {
 			System.err.println("Enhancing "+classEditor.name());
 		}
-		Expression expr = analyze(bloatUtil, classEditor, methodName, argTypes,classSource);
+		Expression expr = analyze(bloatUtil, classEditor, methodName, argTypes);
 		if(expr==null) {
 			return;
 		}
@@ -34,11 +35,11 @@ public class NativeQueryEnhancer {
 		classEditor.commit();
 	}
 	
-	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName, ClassSource classSource) {
-		return analyze(bloatUtil, classEditor, methodName,null,classSource);
+	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName) {
+		return analyze(bloatUtil, classEditor, methodName,null);
 	}
 	
-	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName, Type[] argTypes, ClassSource classSource) {
+	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName, Type[] argTypes) {
 		FlowGraph flowGraph=null;
 		try {
 			flowGraph=bloatUtil.flowGraph(classEditor,methodName, argTypes);
@@ -46,7 +47,7 @@ public class NativeQueryEnhancer {
 			return null;
 		}
 		if(flowGraph!=null) {
-			BloatExprBuilderVisitor builder = new BloatExprBuilderVisitor(bloatUtil, classSource);
+			BloatExprBuilderVisitor builder = new BloatExprBuilderVisitor(bloatUtil);
 			if(NQDebug.LOG) {
 				System.out.println("FLOW GRAPH:");
 				flowGraph.visit(new PrintVisitor());

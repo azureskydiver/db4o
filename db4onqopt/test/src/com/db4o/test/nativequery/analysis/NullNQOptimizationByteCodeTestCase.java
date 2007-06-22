@@ -2,10 +2,10 @@
 
 package com.db4o.test.nativequery.analysis;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.tree.*;
+import EDU.purdue.cs.bloat.editor.MethodEditor;
+import EDU.purdue.cs.bloat.editor.Opcode;
 
-import com.db4o.nativequery.expr.*;
+import com.db4o.nativequery.expr.Expression;
 
 public class NullNQOptimizationByteCodeTestCase extends
 		NQOptimizationByteCodeTestCaseBase {

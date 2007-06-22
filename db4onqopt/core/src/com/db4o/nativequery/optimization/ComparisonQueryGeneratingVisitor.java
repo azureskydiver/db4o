@@ -5,14 +5,22 @@
  */
 package com.db4o.nativequery.optimization;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import EDU.purdue.cs.bloat.file.ClassSource;
 
-import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.nativequery.expr.cmp.field.*;
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
+import com.db4o.nativequery.expr.cmp.ArithmeticOperator;
+import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
+import com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor;
+import com.db4o.nativequery.expr.cmp.ConstValue;
+import com.db4o.nativequery.expr.cmp.FieldValue;
+import com.db4o.nativequery.expr.cmp.MethodCallValue;
+import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
+import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
+import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
 
 final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor {
 	private Object _predicate;

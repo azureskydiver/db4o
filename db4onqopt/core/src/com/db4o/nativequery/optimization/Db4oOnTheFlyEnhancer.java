@@ -2,18 +2,20 @@
 
 package com.db4o.nativequery.optimization;
 
-import java.util.*;
+import java.util.ArrayList;
 
-import EDU.purdue.cs.bloat.context.*;
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.file.*;
+import EDU.purdue.cs.bloat.context.CachingBloatContext;
+import EDU.purdue.cs.bloat.editor.ClassEditor;
+import EDU.purdue.cs.bloat.editor.EditorContext;
+import EDU.purdue.cs.bloat.file.ClassFileLoader;
 
-import com.db4o.internal.query.*;
-import com.db4o.nativequery.bloat.*;
-import com.db4o.nativequery.expr.*;
-import com.db4o.query.*;
+import com.db4o.internal.query.Db4oNQOptimizer;
+import com.db4o.nativequery.bloat.BloatUtil;
+import com.db4o.nativequery.bloat.Db4oClassSource;
+import com.db4o.nativequery.expr.Expression;
+import com.db4o.query.Predicate;
+import com.db4o.query.Query;
 import com.db4o.reflect.Reflector;
-import com.db4o.reflect.jdk.JdkLoader;
 
 // only introduced to keep Db4oListFacade clean of Bloat references
 public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
@@ -57,7 +59,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 
 	private Expression analyzeInternal(Predicate filter) throws ClassNotFoundException {
 		ClassEditor classEditor=new ClassEditor(context,loader.loadClass(filter.getClass().getName()));
-		Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,null,new Db4oClassSource(reflector));
+		Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,null);
 		return expr;
 	}
 	
