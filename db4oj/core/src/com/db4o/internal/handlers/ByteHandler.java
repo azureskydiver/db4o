@@ -71,15 +71,6 @@ public final class ByteHandler extends PrimitiveHandler {
         return false;
 	}
 
-    public boolean writeArray(Object array, Buffer writer) {
-        if(array instanceof byte[]){
-            writer.append((byte[])array);
-            return true;
-        }
-        return false;
-    }   
-    
-
 					
 	// Comparison_______________________
 	

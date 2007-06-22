@@ -431,7 +431,10 @@ public class ArrayHandler extends BuiltinTypeHandler {
 		int elements = _reflectArray.getLength(obj);
         writer.writeInt(elements);
         
-        if(! i_handler.writeArray(obj, writer)){
+        if(obj instanceof byte[]){
+            // byte[] performance optimisation
+            writer.append((byte[])obj);
+        }else{
             for (int i = 0; i < elements; i++) {
                 i_handler.writeNew(MarshallerFamily.current(), _reflectArray.get(obj, i), false, writer, true, true);
             }
