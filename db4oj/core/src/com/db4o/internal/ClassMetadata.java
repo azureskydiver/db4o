@@ -18,7 +18,6 @@ import com.db4o.internal.slots.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.internal.ix.Indexable4;
 
 
 /**

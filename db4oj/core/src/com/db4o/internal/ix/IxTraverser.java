@@ -3,6 +3,7 @@
 package com.db4o.internal.ix;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.query.processor.*;
 

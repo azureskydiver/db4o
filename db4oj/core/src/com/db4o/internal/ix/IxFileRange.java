@@ -6,10 +6,7 @@ import com.db4o.foundation.Debug4;
 import com.db4o.foundation.IntObjectVisitor;
 import com.db4o.foundation.Tree;
 import com.db4o.foundation.Visitor4;
-import com.db4o.internal.Buffer;
-import com.db4o.internal.LocalObjectContainer;
-import com.db4o.internal.StatefulBuffer;
-import com.db4o.internal.Transaction;
+import com.db4o.internal.*;
 import com.db4o.internal.freespace.FreespaceVisitor;
 
 /**
