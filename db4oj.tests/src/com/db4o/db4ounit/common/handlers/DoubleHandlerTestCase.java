@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.ix.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -13,7 +14,7 @@ import db4ounit.extensions.AbstractDb4oTestCase;
  */
 public class DoubleHandlerTestCase extends AbstractDb4oTestCase {
 	
-	private TypeHandler4 _handler;
+	private Indexable4 _handler;
 	
 	protected void db4oSetupBeforeStore() throws Exception {
 		_handler = new DoubleHandler(stream());

@@ -11,7 +11,6 @@ public class RunTestsDefrag extends AbstractDb4oDefragTestCase {
 	@Override
 	public Class testSuite() {
 		return com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5.class;
-//		return ByteArrayTestCase.class;
 	}
 
 	public static void main(String[] args) {

@@ -55,8 +55,5 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
     public abstract boolean isEqual(Object obj);
     public abstract boolean isSmaller(Object obj);
     
-    public abstract Object readIndexEntry(Buffer a_reader);
-    public abstract void writeIndexEntry(Buffer a_writer, Object a_object);
-    
     public abstract void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
 }

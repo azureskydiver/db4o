@@ -5,8 +5,6 @@ package com.db4o.internal;
 
 /**
  * @exclude
- * 
- * @renameto com.db4o.internal.Comparable4 
  */
 public interface Comparable4 {
 	

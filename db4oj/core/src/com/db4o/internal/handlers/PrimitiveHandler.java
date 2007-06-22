@@ -5,6 +5,7 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.ix.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.reflect.*;
@@ -13,7 +14,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public abstract class PrimitiveHandler implements TypeHandler4 {
+public abstract class PrimitiveHandler implements Indexable4, TypeHandler4 {
     
     protected final ObjectContainerBase _stream;
     
@@ -152,10 +153,6 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
      */
     public ReflectClass primitiveClassReflector(){
     	return _primitiveClassReflector;  
-    }
-
-    public boolean supportsIndex() {
-        return true;
     }
 
     public abstract void write(Object a_object, Buffer a_bytes);

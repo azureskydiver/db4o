@@ -16,7 +16,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public final class StringHandler extends BuiltinTypeHandler {
+public final class StringHandler extends BuiltinTypeHandler implements Indexable4{
     
     public LatinStringIO i_stringIo; 
     
@@ -153,10 +153,6 @@ public final class StringHandler extends BuiltinTypeHandler {
         i_stringIo = a_io;
     }
     
-    public boolean supportsIndex() {
-        return true;
-    }
-
     public void writeIndexEntry(Buffer writer, Object entry) {
         if(entry == null){
             writer.writeInt(0);

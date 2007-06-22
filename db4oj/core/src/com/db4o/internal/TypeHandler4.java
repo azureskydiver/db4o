@@ -4,7 +4,6 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.ix.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.reflect.*;
@@ -13,7 +12,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public interface TypeHandler4 extends Indexable4
+public interface TypeHandler4 extends Comparable4 
 {
 	
 	boolean canHold(ReflectClass claxx);
@@ -30,6 +29,8 @@ public interface TypeHandler4 extends Indexable4
     
     boolean indexNullHandling();
     
+    int linkLength();
+   
     TernaryBool isSecondClass();
     
     /**
@@ -59,8 +60,6 @@ public interface TypeHandler4 extends Indexable4
 	
 	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException;
 	
-	boolean supportsIndex();
-	
     Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset);
 	
 	public int getTypeID ();
@@ -79,4 +78,5 @@ public interface TypeHandler4 extends Indexable4
     QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection);
 
 	void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
+	
 }

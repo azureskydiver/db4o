@@ -245,12 +245,13 @@ public class FieldMetadata implements StoredField {
         if (claxx == null || obj == null) {
             return i_isPrimitive ? No4.INSTANCE : obj;
         }
-        if(! i_handler.canHold(claxx)){
-            return No4.INSTANCE;
-        }
         
         if(i_handler instanceof PrimitiveHandler){
             return ((PrimitiveHandler)i_handler).coerce(claxx, obj);
+        }
+
+        if(! i_handler.canHold(claxx)){
+            return No4.INSTANCE;
         }
         
         return obj;
@@ -781,7 +782,9 @@ public class FieldMetadata implements StoredField {
     }
 
     boolean supportsIndex() {
-        return alive() && i_handler.supportsIndex();
+        return alive() && 
+            (i_handler instanceof Indexable4)  && 
+            (! (i_handler instanceof UntypedFieldHandler));
     }
     
     public final void traverseValues(final Visitor4 userVisitor) {
@@ -886,11 +889,17 @@ public class FieldMetadata implements StoredField {
 		if(i_javaField!=null) {
 			indexType=i_javaField.indexType();
 		}
-		Indexable4 indexHandler = stream.i_handlers.handlerForClass(stream,indexType);
+		TypeHandler4 classHandler = stream.i_handlers.handlerForClass(stream,indexType);
+		if(! (classHandler instanceof Indexable4)){
+		    return null;
+		}
+		Indexable4 indexHandler = (Indexable4) classHandler; 
 		if(Debug.indexAllFields) {
 			// check for legacy case with uninitialized MetaIndex on old headers
 			if(indexHandler==null) {
-				indexHandler=i_handler;
+			    if(i_handler instanceof Indexable4){
+			        indexHandler=(Indexable4) i_handler;
+			    }
 				System.err.println("No index handler found for "+this);
 			}
 		}
