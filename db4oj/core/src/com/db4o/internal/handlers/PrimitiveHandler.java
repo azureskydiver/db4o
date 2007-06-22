@@ -74,10 +74,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
         }
     }
 
-    public void prepareComparison(Transaction a_trans, Object obj) {
-        prepareComparison(obj);
-    }
-
     protected abstract Class primitiveJavaClass();
     
     public abstract Object primitiveNull();
