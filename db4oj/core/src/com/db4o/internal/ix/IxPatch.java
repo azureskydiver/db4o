@@ -3,6 +3,7 @@
 package com.db4o.internal.ix;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 /**
  * Node for index tree, can be addition or removal node

@@ -1,8 +1,6 @@
-/* Copyright (C) 2004 - 2005  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.internal.ix;
-
-import com.db4o.internal.*;
+package com.db4o.internal;
 
 /**
  * @exclude
@@ -16,5 +14,6 @@ public interface Indexable4 extends Comparable4{
     void writeIndexEntry(Buffer writer, Object obj);
     
 	void defragIndexEntry(ReaderPair readers);
+	
 }
 

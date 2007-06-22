@@ -48,8 +48,6 @@ public interface TypeHandler4 extends Comparable4
      */
     void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
     
-    Object indexEntryToObject(Transaction trans, Object indexEntry);
-	
 	void prepareComparison(Transaction a_trans, Object obj);
 	
 	ReflectClass primitiveClassReflector();
@@ -78,5 +76,8 @@ public interface TypeHandler4 extends Comparable4
     QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection);
 
 	void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
+	
+    Object indexEntryToObject(Transaction trans, Object indexEntry);
+
 	
 }
