@@ -13,7 +13,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public abstract class PrimitiveHandler implements Indexable4, TypeHandler4 {
+public abstract class PrimitiveHandler implements IndexableTypeHandler {
     
     protected final ObjectContainerBase _stream;
     
@@ -60,10 +60,6 @@ public abstract class PrimitiveHandler implements Indexable4, TypeHandler4 {
     
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
         return indexEntry;
-    }
-    
-    public boolean indexNullHandling() {
-        return false;
     }
     
     public TernaryBool isSecondClass(){

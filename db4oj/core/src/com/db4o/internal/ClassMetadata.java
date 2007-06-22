@@ -23,7 +23,7 @@ import com.db4o.reflect.generic.*;
 /**
  * @exclude
  */
-public class ClassMetadata extends PersistentBase implements Indexable4, TypeHandler4, StoredClass {
+public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, StoredClass {
     
     private ClassHandler _classHandler;
 
@@ -1184,10 +1184,6 @@ public class ClassMetadata extends PersistentBase implements Indexable4, TypeHan
 
     void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         mf._object.instantiateFields(this, attributes, a_yapObject, a_onObject, a_bytes);
-    }
-
-    public boolean indexNullHandling() {
-        return true;
     }
 
     public boolean isArray() {

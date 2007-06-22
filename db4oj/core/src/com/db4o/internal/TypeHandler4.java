@@ -27,8 +27,6 @@ public interface TypeHandler4 extends Comparable4
 	
     boolean hasFixedLength();
     
-    boolean indexNullHandling();
-    
     int linkLength();
    
     TernaryBool isSecondClass();
@@ -76,8 +74,5 @@ public interface TypeHandler4 extends Comparable4
     QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection);
 
 	void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
-	
-    Object indexEntryToObject(Transaction trans, Object indexEntry);
-
 	
 }
