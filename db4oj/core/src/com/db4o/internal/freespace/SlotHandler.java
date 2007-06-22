@@ -15,10 +15,6 @@ public abstract class SlotHandler implements Indexable4{
 	
 	protected Slot _current;
 	
-	public Object comparableObject(Transaction trans, Object indexEntry) {
-        throw new NotImplementedException();
-	}
-
 	public void defragIndexEntry(ReaderPair readers) {
 		throw new NotImplementedException();
 	}

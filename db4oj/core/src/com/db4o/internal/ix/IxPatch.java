@@ -49,7 +49,7 @@ public abstract class IxPatch extends IxTree {
 
     public int compare(Tree a_to) {
         Indexable4 handler = _fieldTransaction.i_index._handler;
-        return handler.compareTo(handler.comparableObject(trans(), _value));
+        return handler.compareTo(IxDeprecationHelper.comparableObject(handler, trans(), _value));
     }
     
     public boolean hasQueue() {

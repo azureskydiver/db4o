@@ -209,8 +209,8 @@ class IxFileRangeReader {
     }
 
     private final int compare(Transaction trans) {
-        return _handler.compareTo(_handler
-            .comparableObject(trans, _handler.readIndexEntry(_reader)));
+        return _handler.compareTo(
+            IxDeprecationHelper.comparableObject(_handler, trans, _handler.readIndexEntry(_reader)));
     }
 
     private Tree insert(IxFileRange fileRange, Tree a_new, int a_cursor, int a_cmp) {

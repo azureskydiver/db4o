@@ -21,7 +21,8 @@ public class IxRemove extends IxPatch {
     }
 
     public String toString() {
-        String str = "IxRemove " + _parentID + "\n " + handler().comparableObject(trans(), _value);
+        String str = "IxRemove " + _parentID + "\n " + IxDeprecationHelper.comparableObject(handler(), trans(), _value);
+        
         return str;
     }
     

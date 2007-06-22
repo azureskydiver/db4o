@@ -101,7 +101,7 @@ public class IndexTransaction implements Visitor4{
 	private void addPatchToRoot(IxPatch tree){
 	    if(tree._version != i_version){
 	        tree.beginMerge();
-	        tree.handler().prepareComparison(tree.handler().comparableObject(i_trans, tree._value));
+	        tree.handler().prepareComparison(IxDeprecationHelper.comparableObject(tree.handler(), i_trans, tree._value));
 		    if(i_root == null){
 		        i_root = tree;
 		    } else{

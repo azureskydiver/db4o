@@ -40,10 +40,6 @@ public abstract class PrimitiveHandler implements TypeHandler4 {
         return canHold(claxx) ? obj : No4.INSTANCE;
     }
     
-    public Object comparableObject(Transaction a_trans, Object a_object) {
-        return a_object;
-    }
-
     public abstract Object defaultValue();
 
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {

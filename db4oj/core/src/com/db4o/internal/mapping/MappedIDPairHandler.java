@@ -20,10 +20,6 @@ public class MappedIDPairHandler implements Indexable4 {
 		_mappedHandler=new IntHandler(stream);
 	}
 
-	public Object comparableObject(Transaction trans, Object indexEntry) {
-        throw new NotImplementedException();
-	}
-
 	public void defragIndexEntry(ReaderPair readers) {
         throw new NotImplementedException();
 	}
