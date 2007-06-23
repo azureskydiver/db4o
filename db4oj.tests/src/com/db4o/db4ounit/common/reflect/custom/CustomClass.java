@@ -9,6 +9,9 @@ public class CustomClass implements ReflectClass {
 	public CustomClassRepository _repository;
 	public String _name;
 	public ReflectField[] _fields;
+	
+	public CustomClass() {
+	}
 
 	public CustomClass(CustomClassRepository repository, String name, String[] fieldNames,
 			Class[] fieldTypes) {
@@ -31,7 +34,7 @@ public class CustomClass implements ReflectClass {
 	}
 
 	public ReflectConstructor[] getDeclaredConstructors() {
-		throw new NotImplementedException();
+		return new ReflectConstructor[0];
 	}
 
 	public ReflectField getDeclaredField(String name) {

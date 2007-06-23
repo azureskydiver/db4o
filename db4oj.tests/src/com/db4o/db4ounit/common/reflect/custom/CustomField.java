@@ -10,6 +10,9 @@ public class CustomField implements ReflectField {
 	public int _index;
 	public String _name;
 	public Class _type;
+	
+	public CustomField() {
+	}
 
 	public CustomField(CustomClassRepository repository, int index, String name, Class type) {
 		_repository = repository;
