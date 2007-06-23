@@ -100,7 +100,7 @@ public class CustomClass implements ReflectClass {
 	}
 
 	public boolean skipConstructor(boolean flag, boolean testConstructor) {
-		throw new NotImplementedException();
+		return false;
 	}
 
 	public Object[] toArray(Object obj) {

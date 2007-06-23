@@ -16,7 +16,7 @@ public class CustomReflector implements Reflector {
 	}
 	
 	public void initialize(CustomClassRepository classRepository) {
-		classRepository.activate(this);
+		classRepository.initialize(this);
 		_classRepository = classRepository;
 	}
 

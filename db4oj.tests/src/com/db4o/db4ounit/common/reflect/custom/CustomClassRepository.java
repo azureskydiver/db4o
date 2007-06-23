@@ -55,7 +55,7 @@ public class CustomClassRepository {
 		}
 	}
 
-	public void activate(CustomReflector reflector) {
+	public void initialize(CustomReflector reflector) {
 		_reflector = reflector;
 	}
 
