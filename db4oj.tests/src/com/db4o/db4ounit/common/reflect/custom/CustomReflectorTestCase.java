@@ -132,8 +132,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private void shutdownProvider(boolean purge) {
-		_provider.closeContext(_context);
-		if (purge) _provider.purge(_context.url());
+		_provider.closeContext(_context, purge);
 		_provider = null;
 	}
 	
