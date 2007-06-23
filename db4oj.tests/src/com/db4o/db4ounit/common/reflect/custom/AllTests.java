@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006 db4objects Inc. http://www.db4o.com */
 
-package com.db4o.db4ounit.common.reflect;
+package com.db4o.db4ounit.common.reflect.custom;
 
 import db4ounit.extensions.Db4oTestSuite;
 
@@ -9,9 +9,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			GenericReflectorStateTest.class,
-			ReflectArrayTestCase.class,
-			com.db4o.db4ounit.common.reflect.custom.AllTests.class,
+			CustomReflectorTestCase.class,
 		};
 	}
 	

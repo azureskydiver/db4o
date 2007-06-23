@@ -46,9 +46,9 @@ public interface Reflector extends DeepClone{
 	/**
 	 * returns an ReflectClass for an object or null if the passed object is null.
 	 */
-	public ReflectClass forObject(Object a_object);
+	public ReflectClass forObject(Object obj);
 	
-	public boolean isCollection(ReflectClass claxx);
+	public boolean isCollection(ReflectClass clazz);
     
     public void setParent(Reflector reflector);
 	
