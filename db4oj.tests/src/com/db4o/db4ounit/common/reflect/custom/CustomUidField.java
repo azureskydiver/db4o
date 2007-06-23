@@ -6,6 +6,9 @@ import com.db4o.reflect.*;
 public class CustomUidField implements ReflectField {
 
 	public CustomClassRepository _repository;
+	
+	public CustomUidField() {
+	}
 
 	public CustomUidField(CustomClassRepository repository) {
 		_repository = repository;

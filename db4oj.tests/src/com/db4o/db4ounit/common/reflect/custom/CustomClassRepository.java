@@ -6,8 +6,12 @@ import com.db4o.reflect.*;
 public class CustomClassRepository {
 	
 	// fields must be public so test works on less capable runtimes
-	public Hashtable4 _classes = new Hashtable4();
+	public Hashtable4 _classes;
 	public transient CustomReflector _reflector;
+	
+	public CustomClassRepository() {
+		_classes = new Hashtable4();
+	}
 	
 	public CustomClass forName(String className) {
 		return (CustomClass)_classes.get(className);

@@ -11,6 +11,9 @@ public class PersistentEntry {
 	
 	public Object[] fieldValues;
 	
+	public PersistentEntry() {
+	}
+	
 	public PersistentEntry(String className, Object uid, Object[] fieldValues)
 	{
 		this.className = className;

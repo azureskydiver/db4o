@@ -39,7 +39,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 //		restartProvider();
 	}
 
-	public void testSelectAll() {
+	public void _testSelectAll() {
 		
 		Collection4 all = new Collection4(selectAll());
 		Assert.areEqual(ENTRIES.length, all.size());
@@ -67,7 +67,6 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	public void _testSelectByField() {
 		
 		PersistentEntry expected = ENTRIES[1];
-		
 		Iterator4 found = selectByField(FIELD_NAMES[0], expected.fieldValues[0]);
 		Assert.isTrue(found.moveNext(), "Expecting entry '" + expected + "'");		
 		PersistentEntry actual = (PersistentEntry)found.current();

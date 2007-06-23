@@ -27,6 +27,8 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 	
 	public void closeContext(PersistenceContext context, boolean purge) {
+		logMethodCall("closeContext", context, new Boolean(purge));
+		
 		closeContext(context);
 		if (purge) {
 			purge(context.url());
@@ -35,15 +37,13 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 
 	public void createEntryClass(PersistenceContext context, String className,
 			String[] fieldNames, String[] fieldTypes) {
-		
+		logMethodCall("createEntryClass", context, className);
 		repository(context).defineClass(className, fieldNames, fieldTypes);
 		updateRepository(context);
 	}
-
+	
 	public void createIndex(PersistenceContext context, String className,
 			String fieldName) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public int delete(PersistenceContext context, String className, Object uid) {
@@ -63,6 +63,8 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	public void initContext(PersistenceContext context) {
+		logMethodCall("initContext", context);
+		
 		ObjectContainer metadata = openMetadata(context.url());
 		CustomClassRepository repository = initializeClassRepository(metadata);
 		CustomReflector reflector = new CustomReflector(repository);
@@ -71,12 +73,16 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 	
 	public void insert(PersistenceContext context, PersistentEntry entry) {
+		logMethodCall("insert", context, entry);
+		
 		// clone the entry because clients are allowed to reuse
 		// entry objects
 		dataContainer(context).set(clone(entry));
 	}
 
 	public Iterator4 select(PersistenceContext context, PersistentEntryTemplate template) {
+		logMethodCall("select", context, template);
+		
 		Query query = queryFromTemplate(context, template);
 		return new ObjectSetIterator(query.execute());
 	}
@@ -85,7 +91,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	private void addClassConstraint(PersistenceContext context, Query query, PersistentEntryTemplate template) {
 		query.constrain(repository(context).forName(template.className));
 	}
@@ -110,6 +116,8 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private void closeContext(PersistenceContext context) {
+		logMethodCall("closeContext", context);
+		
 		CustomContext customContext = customContext(context);
 		if (null != customContext) {
 			customContext.metadata.close();
@@ -125,8 +133,6 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	private Configuration dataConfiguration(Reflector reflector) {
 		Configuration config = Db4o.newConfiguration();
 		config.reflectWith(reflector);
-		config.objectClass(CustomClassRepository.class).cascadeOnUpdate(true);
-		config.objectClass(CustomClassRepository.class).cascadeOnActivate(true);
 		return config;
 	}
 
@@ -144,10 +150,6 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 			log("Found existing class repository: " + repository);
 		}
 		return repository;
-	}
-
-	private void log(String message) {
-		Logger.log("Db4oPersistenceProvider: " + message);
 	}
 
 	private Configuration metaConfiguration() {
@@ -204,6 +206,18 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 
 	private void updateRepository(PersistenceContext context) {
 		store(metadataContainer(context), repository(context));
+	}
+	
+	private void log(String message) {
+		Logger.log("Db4oPersistenceProvider: " + message);
+	}
+	
+	private void logMethodCall(String methodName, Object arg) {
+		Logger.logMethodCall("Db4oPersistenceProvider", methodName, arg);
+	}
+	
+	private void logMethodCall(String methodName, Object arg1, Object arg2) {
+		Logger.logMethodCall("Db4oPersistenceProvider", methodName, arg1, arg2);
 	}
 
 }
