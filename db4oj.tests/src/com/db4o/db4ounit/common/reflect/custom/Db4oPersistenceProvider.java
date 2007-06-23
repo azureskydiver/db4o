@@ -33,11 +33,6 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		ObjectContainer data = openData(reflector, context.url());
 		context.setProviderContext(new CustomContext(repository, metadata, data));
 	}
-	
-	public void purge(String url) {
-		File4.delete(url);
-		File4.delete(metadataFileName(url));
-	}
 
 	private ObjectContainer openData(Reflector reflector, String fname) {
 		return Db4o.openFile(dataConfiguration(reflector), fname);
@@ -71,7 +66,19 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		return (CustomClassRepository)found.next();
 	}
 
-	public void closeContext(PersistenceContext context) {
+	public void closeContext(PersistenceContext context, boolean purge) {
+		closeContext(context);
+		if (purge) {
+			purge(context.url());
+		}
+	}
+	
+	private void purge(String url) {
+		File4.delete(url);
+		File4.delete(metadataFileName(url));
+	}
+
+	private void closeContext(PersistenceContext context) {
 		CustomContext customContext = customContext(context);
 		if (null != customContext) {
 			customContext.metadata.close();
