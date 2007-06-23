@@ -27,8 +27,11 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	private void initializeClassRepository(ObjectContainer container) {
 		_repository = queryClassRepository(container);
 		if (_repository == null) {
+			log("Initializing new class repository.");
 			_repository = new CustomClassRepository();
 			updateRepository(container);
+		} else {
+			log("Found existing class repository: " + _repository);
 		}
 		_reflector.initialize(_repository);
 	}
@@ -132,10 +135,16 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		// TODO Auto-generated method stub
 
 	}
+	
+	private void log(String message) {
+		Logger.log("Db4oPersistenceProvider: " + message);
+	}
 
 	private Configuration configuration() {
 		Configuration config = Db4o.newConfiguration();
 		config.reflectWith(_reflector);
+		config.objectClass(CustomClassRepository.class).cascadeOnUpdate(true);
+		config.objectClass(CustomClassRepository.class).cascadeOnActivate(true);
 		return config;
 	}
 

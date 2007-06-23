@@ -35,7 +35,13 @@ public class CustomClass implements ReflectClass {
 	}
 
 	public ReflectField getDeclaredField(String name) {
-		throw new NotImplementedException();
+		for (int i=0; i<_fields.length; ++i) {
+			ReflectField field = _fields[i];
+			if (field.getName().equals(name)) {
+				return field;
+			}
+		}
+		return null;
 	}
 
 	public ReflectField[] getDeclaredFields() {
