@@ -40,20 +40,25 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	public void testSelectAll() {
 		
 		Collection4 all = new Collection4(selectAll());
-		Assert.areEqual(ENTRIES.length, all.size());
 		for (int i=0; i<ENTRIES.length; ++i) {
-			Iterator4 iterator = all.iterator();
-			while (iterator.moveNext()) {
-				PersistentEntry e = (PersistentEntry)iterator.current();
-				if (e.uid.equals(ENTRIES[i].uid)) {
-					assertEqualEntries(ENTRIES[i], e);
-					all.remove(e);
-					break;
-				}
-				
-			}
+			PersistentEntry expected = ENTRIES[i];
+			PersistentEntry actual = entryByUid(all.iterator(), expected.uid);
+			if (actual != null) {
+				assertEqualEntries(expected, actual);
+				all.remove(actual);
+			}			
 		}
 		Assert.isTrue(all.isEmpty(), all.toString());
+	}
+
+	private PersistentEntry entryByUid(Iterator4 iterator, Object uid) {
+		while (iterator.moveNext()) {
+			PersistentEntry e = (PersistentEntry)iterator.current();
+			if (uid.equals(e.uid)) {
+				return e;
+			}
+		}
+		return null;
 	}
 	
 	public void _testSelectByField() {
@@ -61,7 +66,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		PersistentEntry expected = ENTRIES[1];
 		
 		Iterator4 found = selectByField(FIELD_NAMES[0], expected.fieldValues[0]);
-		Assert.isTrue(found.moveNext());		
+		Assert.isTrue(found.moveNext(), "Expecting entry '" + expected + "'");		
 		PersistentEntry actual = (PersistentEntry)found.current();
 		
 		assertEqualEntries(expected, actual);
