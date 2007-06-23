@@ -17,6 +17,8 @@ public interface PersistenceProvider {
 	
 	void closeContext(PersistenceContext context);
 	
+	void purge(String url);
+	
 	void createEntryClass(PersistenceContext context,
 			String className, String[] fieldNames, String[] fieldTypes);
 
