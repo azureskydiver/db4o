@@ -189,16 +189,14 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         synchronized (_transactionHandle.lock()) {
             String fileName = message.readString();
             try {
-            	System.err.println("SWITCH 1 " + fileName);
                 _transactionHandle.releaseTransaction();
-            	System.err.println("SWITCH 2 " + fileName);
             	_transactionHandle.acquireTransactionForFile(fileName);
                 write(Msg.OK);
             } catch (Exception e) {
-                //if (Debug.atHome) {
+                if (Debug.atHome) {
                     System.out.println("Msg.SWITCH_TO_FILE failed.");
                     e.printStackTrace();
-                //}
+                }
                 _transactionHandle.releaseTransaction();
                 write(Msg.ERROR);
             }
