@@ -16,17 +16,14 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
     private boolean i_loggedin;
     private long _lastActiveTime;
-    private final LocalObjectContainer i_mainStream;
 
-    private Transaction i_mainTrans;
-    private boolean i_rollbackOnClose = true;
     private boolean i_sendCloseMessage = true;
 
     private final ObjectServerImpl i_server;
 
     private Socket4 i_socket;
-    private LocalObjectContainer i_substituteStream;
-    private Transaction i_substituteTrans;
+
+    private ClientTransactionHandle _transactionHandle;
     
     private Hashtable4 _queryResults;
     
@@ -43,11 +40,13 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
     ServerMessageDispatcherImpl(
         ObjectServerImpl aServer,
-        LocalObjectContainer aStream,
+        ClientTransactionHandle transactionHandle,
         Socket4 aSocket,
         int aThreadID,
         boolean loggedIn)
         throws Exception {
+    	
+    	_transactionHandle = transactionHandle;
     	
     	setDaemon(true);
         	
@@ -56,10 +55,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         updateLastActiveTime(); 
         i_server = aServer;
 		i_config = (Config4Impl)i_server.configure();
-        i_mainStream = aStream;
         i_threadID = aThreadID;
         setDispatcherName("db4o message server " + aThreadID);
-        i_mainTrans = aStream.newTransaction();
         try {
             i_socket = aSocket;
             i_socket.setSoTimeout(((Config4Impl)aServer.configure()).timeoutServerSocket());
@@ -78,9 +75,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 		if (!isMessageDispatcherAlive()) {
 			return true;
 		}
-		closeSubstituteStream();
+		_transactionHandle.releaseTransaction();
 		sendCloseMessage();
-		rollbackMainTransaction();
+		_transactionHandle.close();
 		closeSocket();
 		removeFromServer();
 		_isClosed = true;
@@ -98,12 +95,6 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                 e.printStackTrace();
             }
 
-        }
-	}
-
-	private void rollbackMainTransaction() {
-		if (i_mainStream != null && i_mainTrans != null) {
-            i_mainTrans.close(i_rollbackOnClose);
         }
 	}
 
@@ -133,36 +124,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 		return !_isClosed;
 	}
 
-	private void closeSubstituteStream() {
-        if (i_substituteStream != null) {
-            if (i_substituteTrans != null) {
-                i_substituteTrans.close(i_rollbackOnClose);
-                i_substituteTrans = null;
-            }
-            try {
-                i_substituteStream.close();
-
-            } catch (Exception e) {
-                if (Debug.atHome) {
-                    e.printStackTrace();
-                }
-            }
-            i_substituteStream = null;
-        }
-    }
-
-    private final LocalObjectContainer getStream() {
-        if (i_substituteStream != null) {
-            return i_substituteStream;
-        }
-        return i_mainStream;
-    }
-
-    public Transaction getTransaction() {
-        if (i_substituteTrans != null) {
-            return i_substituteTrans;
-        }
-        return i_mainTrans;
+	public Transaction getTransaction() {
+    	return _transactionHandle.transaction();
     }
 
     public void run() {
@@ -173,9 +136,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                 }
             } catch (IOException e) {
                 if (Debug.atHome) {
-//                    e.printStackTrace();
+                    e.printStackTrace();
                 }
-                if (i_mainStream == null || i_mainStream.isClosed()) {
+                if (_transactionHandle.isClosed()) {
                     break;
                 }
                 if(i_socket == null ||  ! i_socket.isConnected()){
@@ -185,7 +148,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         }
         close();
     }
-    
+
     private boolean messageProcessor() throws IOException{
         
         Msg message = Msg.readMessage(this, getTransaction(), i_socket);
@@ -223,48 +186,40 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	}
 
 	public void switchToFile(MSwitchToFile message) {
-        synchronized (i_mainStream.i_lock) {
+        synchronized (_transactionHandle.lock()) {
             String fileName = message.readString();
             try {
-                closeSubstituteStream();
-                i_substituteStream = (LocalObjectContainer) Db4o.openFile(fileName);
-                i_substituteTrans = i_substituteStream.newTransaction();
-                i_substituteStream.configImpl().setMessageRecipient(i_mainStream.configImpl().messageRecipient());
+            	System.err.println("SWITCH 1 " + fileName);
+                _transactionHandle.releaseTransaction();
+            	System.err.println("SWITCH 2 " + fileName);
+            	_transactionHandle.acquireTransactionForFile(fileName);
                 write(Msg.OK);
             } catch (Exception e) {
-                if (Debug.atHome) {
+                //if (Debug.atHome) {
                     System.out.println("Msg.SWITCH_TO_FILE failed.");
                     e.printStackTrace();
-                }
-                closeSubstituteStream();
+                //}
+                _transactionHandle.releaseTransaction();
                 write(Msg.ERROR);
             }
         }
     }
 
     public void switchToMainFile() {
-        synchronized (i_mainStream.i_lock) {
-            closeSubstituteStream();
+        synchronized (_transactionHandle.lock()) {
+            _transactionHandle.releaseTransaction();
             write(Msg.OK);
         }
     }
 
     public void useTransaction(MUseTransaction message) {
         int threadID = message.readInt();
-        ServerMessageDispatcherImpl transactionThread = i_server.findThread(threadID);
-        if (transactionThread != null) {
-            Transaction transToUse = transactionThread.getTransaction();
-            if (i_substituteTrans != null) {
-                i_substituteTrans = transToUse;
-            } else {
-                i_mainTrans = transToUse;
-            }
-            i_rollbackOnClose = false;
-        }
+		Transaction transToUse = i_server.findTransaction(threadID);
+		_transactionHandle.transaction(transToUse);
     }
     
     public synchronized void write(Msg msg){
-    	msg.write(getStream(), i_socket);
+    	_transactionHandle.write(msg, i_socket);
     	updateLastActiveTime();
     }
     
