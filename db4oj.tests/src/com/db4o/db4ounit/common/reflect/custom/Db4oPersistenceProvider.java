@@ -117,7 +117,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		if (template.fieldNames.length == 0) {
 			return;
 		}
-		Constraint c = addFieldConstraint(query, template, 0);
+		/*Constraint c = */ addFieldConstraint(query, template, 0);
 //		for (int i=1; i<template.fieldNames.length; ++i) {
 //			c = c.and(addFieldConstraint(query, template, i));
 //		}

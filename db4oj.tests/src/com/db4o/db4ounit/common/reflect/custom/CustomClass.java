@@ -8,7 +8,7 @@ public class CustomClass implements ReflectClass {
 	// fields must be public so test works on less capable runtimes
 	public CustomClassRepository _repository;
 	public String _name;
-	public CustomField[] _fields;
+	public ReflectField[] _fields;
 
 	public CustomClass(CustomClassRepository repository, String name, String[] fieldNames,
 			Class[] fieldTypes) {
@@ -17,11 +17,12 @@ public class CustomClass implements ReflectClass {
 		_fields = createFields(fieldNames, fieldTypes);
 	}
 
-	private CustomField[] createFields(String[] fieldNames, Class[] fieldTypes) {
-		CustomField[] fields = new CustomField[fieldNames.length];
+	private ReflectField[] createFields(String[] fieldNames, Class[] fieldTypes) {
+		ReflectField[] fields = new ReflectField[fieldNames.length + 1];
 		for (int i=0; i<fieldNames.length; ++i) {
 			fields[i] = new CustomField(_repository, i, fieldNames[i], fieldTypes[i]);
 		}
+		fields[fields.length-1] = new CustomUidField(_repository);
 		return fields;
 	}
 
