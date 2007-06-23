@@ -17,6 +17,13 @@ public interface ReflectClass {
 	
 	public ReflectField getDeclaredField(String name);
     
+	/**
+	 * Returns the ReflectClass instance being delegated to.
+	 * 
+	 * If there's no delegation it should return this. 
+	 * 
+	 * @return delegate or this
+	 */
     public ReflectClass getDelegate();
 	
 	public ReflectMethod getMethod(String methodName, ReflectClass[] paramClasses);
