@@ -10,12 +10,9 @@ import com.db4o.reflect.*;
 public class CustomReflector implements Reflector {
 	 
 	private final Reflector _delegate = Platform4.reflectorForType(Object.class);
-	private CustomClassRepository _classRepository;
+	private final CustomClassRepository _classRepository;
 	
-	public CustomReflector() {
-	}
-	
-	public void initialize(CustomClassRepository classRepository) {
+	public CustomReflector(CustomClassRepository classRepository) {
 		classRepository.initialize(this);
 		_classRepository = classRepository;
 	}

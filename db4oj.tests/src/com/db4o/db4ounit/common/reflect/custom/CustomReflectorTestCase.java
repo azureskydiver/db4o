@@ -29,6 +29,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	
 	public void setUp() {
 		initializeContext();
+		initializeProvider();
 		createEntryClass(CLASS_NAME, FIELD_NAMES, FIELD_TYPES);		
 		createIndex(CLASS_NAME, FIELD_NAMES[0]);
 		insertEntries();
@@ -76,7 +77,6 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	
 	private void initializeContext() {
 		_context = new PersistenceContext(dataFile());
-		initializeProvider();
 	}
 
 	private void initializeProvider() {
@@ -127,22 +127,18 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	}
 	
 	public void tearDown() {
-		shutdownProvider();
-		shutdownContext();
-	}
-
-	private void shutdownContext() {
-		File4.delete(_context.url());
+		shutdownProvider(true);
 		_context = null;
 	}
 
-	private void shutdownProvider() {
+	private void shutdownProvider(boolean purge) {
 		_provider.closeContext(_context);
+		if (purge) _provider.purge(_context.url());
 		_provider = null;
 	}
 	
 	void restartProvider() {
-		shutdownProvider();
+		shutdownProvider(false);
 		initializeProvider();
 	}
 

@@ -3,41 +3,64 @@ package com.db4o.db4ounit.common.reflect.custom;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
+import com.db4o.foundation.io.*;
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 
 /**
  * Custom class information is stored to db4o itself as
  * a CustomClassRepository singleton.
  */
 public class Db4oPersistenceProvider implements PersistenceProvider {
+	
+	static class CustomContext {
 
-	private CustomReflector _reflector = new CustomReflector();
-	private CustomClassRepository _repository;
+		public final CustomClassRepository repository;
+		public final ObjectContainer metadata;
+		public final ObjectContainer data;	
+		
+		public CustomContext(CustomClassRepository repository, ObjectContainer metadata, ObjectContainer data) {
+			this.repository = repository;
+			this.metadata = metadata;
+			this.data = data;
+		}
+	}
 	
 	public void initContext(PersistenceContext context) {
-		ObjectContainer container = openFile(context.url());
-		initializeClassRepository(container);
-		context.setProviderContext(container);
+		ObjectContainer metadata = openMetadata(context.url());
+		CustomClassRepository repository = initializeClassRepository(metadata);
+		CustomReflector reflector = new CustomReflector(repository);
+		ObjectContainer data = openData(reflector, context.url());
+		context.setProviderContext(new CustomContext(repository, metadata, data));
+	}
+	
+	public void purge(String url) {
+		File4.delete(url);
+		File4.delete(metadataFileName(url));
 	}
 
-	private ObjectContainer openFile(String fname) {
-		return Db4o.openFile(configuration(), fname);
+	private ObjectContainer openData(Reflector reflector, String fname) {
+		return Db4o.openFile(dataConfiguration(reflector), fname);
 	}
 
-	private void initializeClassRepository(ObjectContainer container) {
-		_repository = queryClassRepository(container);
-		if (_repository == null) {
+	private ObjectContainer openMetadata(String fname) {
+		return Db4o.openFile(metaConfiguration(), metadataFileName(fname));
+	}
+
+	private String metadataFileName(String fname) {
+		return fname + ".metadata";
+	}
+
+	private CustomClassRepository initializeClassRepository(ObjectContainer container) {
+		CustomClassRepository repository = queryClassRepository(container);
+		if (repository == null) {
 			log("Initializing new class repository.");
-			_repository = new CustomClassRepository();
-			updateRepository(container);
+			repository = new CustomClassRepository();
+			store(container, repository);
 		} else {
-			log("Found existing class repository: " + _repository);
+			log("Found existing class repository: " + repository);
 		}
-		_reflector.initialize(_repository);
-	}
-
-	private void updateRepository(ObjectContainer container) {
-		store(container, _repository);
+		return repository;
 	}
 
 	private CustomClassRepository queryClassRepository(ObjectContainer container) {
@@ -49,9 +72,10 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	public void closeContext(PersistenceContext context) {
-		ObjectContainer container = container(context);
-		if (null != container) {
-			container.close();
+		CustomContext customContext = customContext(context);
+		if (null != customContext) {
+			customContext.metadata.close();
+			customContext.data.close();
 			context.setProviderContext(null);
 		}
 	}
@@ -59,14 +83,22 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	public void createEntryClass(PersistenceContext context, String className,
 			String[] fieldNames, String[] fieldTypes) {
 		
-		_repository.defineClass(className, fieldNames, fieldTypes);
+		repository(context).defineClass(className, fieldNames, fieldTypes);
 		updateRepository(context);
 	}
 
 	private void updateRepository(PersistenceContext context) {
-		updateRepository(container(context));
+		store(metadataContainer(context), repository(context));
 	}
 
+	private ObjectContainer metadataContainer(PersistenceContext context) {
+		return customContext(context).metadata;
+	}
+
+	private CustomClassRepository repository(PersistenceContext context) {
+		return customContext(context).repository;
+	}
+	
 	public void createIndex(PersistenceContext context, String className,
 			String fieldName) {
 		// TODO Auto-generated method stub
@@ -92,7 +124,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	public void insert(PersistenceContext context, PersistentEntry entry) {
 		// clone the entry because clients are allowed to reuse
 		// entry objects
-		container(context).set(clone(entry));
+		dataContainer(context).set(clone(entry));
 	}
 
 	private PersistentEntry clone(PersistentEntry entry) {
@@ -106,14 +138,14 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private Query queryFromTemplate(PersistenceContext context, PersistentEntryTemplate template) {
-		Query query = container(context).query();
-		addClassConstraint(query, template);
+		Query query = dataContainer(context).query();
+		addClassConstraint(context, query, template);
 		addFieldConstraints(query, template);
 		return query;
 	}
 
-	private void addClassConstraint(Query query, PersistentEntryTemplate template) {
-		query.constrain(_repository.forName(template.className));
+	private void addClassConstraint(PersistenceContext context, Query query, PersistentEntryTemplate template) {
+		query.constrain(repository(context).forName(template.className));
 	}
 
 	private void addFieldConstraints(Query query, PersistentEntryTemplate template) {
@@ -140,16 +172,27 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		Logger.log("Db4oPersistenceProvider: " + message);
 	}
 
-	private Configuration configuration() {
+	private Configuration dataConfiguration(Reflector reflector) {
 		Configuration config = Db4o.newConfiguration();
-		config.reflectWith(_reflector);
+		config.reflectWith(reflector);
+		config.objectClass(CustomClassRepository.class).cascadeOnUpdate(true);
+		config.objectClass(CustomClassRepository.class).cascadeOnActivate(true);
+		return config;
+	}
+	
+	private Configuration metaConfiguration() {
+		Configuration config = Db4o.newConfiguration();
 		config.objectClass(CustomClassRepository.class).cascadeOnUpdate(true);
 		config.objectClass(CustomClassRepository.class).cascadeOnActivate(true);
 		return config;
 	}
 
-	private ObjectContainer container(PersistenceContext context) {
-		return ((ObjectContainer) context.getProviderContext());
+	private ObjectContainer dataContainer(PersistenceContext context) {
+		return customContext(context).data;
+	}
+
+	private CustomContext customContext(PersistenceContext context) {
+		return ((CustomContext) context.getProviderContext());
 	}
 
 	private void store(ObjectContainer container, Object obj) {
