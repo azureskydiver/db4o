@@ -201,7 +201,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		return this;
 	}
 
-	ServerMessageDispatcherImpl findThread(int a_threadID) {
+	private ServerMessageDispatcherImpl findThread(int a_threadID) {
 		synchronized (_dispatchers) {
 			Iterator4 i = _dispatchers.iterator();
 			while (i.moveNext()) {
@@ -212,6 +212,11 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 			}
 		}
 		return null;
+	}
+
+	Transaction findTransaction(int threadID) {
+		ServerMessageDispatcherImpl dispatcher = findThread(threadID);
+		return (dispatcher == null ? null : dispatcher.getTransaction());
 	}
 
 	public synchronized void grantAccess(String userName, String password) {
@@ -275,7 +280,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		LoopbackSocket clientFake = new LoopbackSocket(this, timeout);
 		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
 		try {
-			ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, _container,
+			ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_container),
 					serverFake, newThreadId(), true);
 			addServerMessageDispatcher(messageDispatcher);
 			messageDispatcher.startDispatcher();
@@ -330,7 +335,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private void listen() {
 		while (_serverSocket != null) {
 			try {
-				ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, _container,
+				ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_container),
 						_serverSocket.accept(), newThreadId(), false);
 				addServerMessageDispatcher(messageDispatcher);
 				messageDispatcher.startDispatcher();
