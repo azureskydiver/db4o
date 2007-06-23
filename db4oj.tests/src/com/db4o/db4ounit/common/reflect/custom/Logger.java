@@ -3,7 +3,7 @@ package com.db4o.db4ounit.common.reflect.custom;
 public class Logger {
 	
 	public static void log(String s) {
-		//System.err.println(s);
+//		System.err.println(s);
 	}
 
 	public static void logMethodCall(Object target, String methodName) {

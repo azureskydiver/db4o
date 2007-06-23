@@ -28,18 +28,20 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	PersistenceProvider _provider;
 	
 	public void setUp() {
-		_context = new PersistenceContext(dataFile());
-		_provider = new Db4oPersistenceProvider();
-		_provider.initContext(_context);
-		
+		initializeContext();
 		createEntryClass(CLASS_NAME, FIELD_NAMES, FIELD_TYPES);		
 		createIndex(CLASS_NAME, FIELD_NAMES[0]);
 		insertEntries();
+		
+		// TODO: uncomment the line below
+		// to really test the provider
+//		restartProvider();
 	}
-	
+
 	public void testSelectAll() {
 		
 		Collection4 all = new Collection4(selectAll());
+		Assert.areEqual(ENTRIES.length, all.size());
 		for (int i=0; i<ENTRIES.length; ++i) {
 			PersistentEntry expected = ENTRIES[i];
 			PersistentEntry actual = entryByUid(all.iterator(), expected.uid);
@@ -71,6 +73,16 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		
 		assertEqualEntries(expected, actual);
 	}
+	
+	private void initializeContext() {
+		_context = new PersistenceContext(dataFile());
+		initializeProvider();
+	}
+
+	private void initializeProvider() {
+		_provider = new Db4oPersistenceProvider();
+		_provider.initContext(_context);
+	}
 
 	private void insertEntries() {
 		PersistentEntry entry = new PersistentEntry(CLASS_NAME, null, null);
@@ -97,7 +109,6 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		return select(new PersistentEntryTemplate(CLASS_NAME, new String[0], new Object[0]));
 	}
 
-
 	private Iterator4 select(PersistentEntryTemplate template) {
 		return _provider.select(_context, template);
 	}
@@ -116,15 +127,26 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	}
 	
 	public void tearDown() {
-		_provider.closeContext(_context);
-		_provider = null;
-		
+		shutdownProvider();
+		shutdownContext();
+	}
+
+	private void shutdownContext() {
 		File4.delete(_context.url());
 		_context = null;
+	}
+
+	private void shutdownProvider() {
+		_provider.closeContext(_context);
+		_provider = null;
+	}
+	
+	void restartProvider() {
+		shutdownProvider();
+		initializeProvider();
 	}
 
 	private String dataFile() {
 		return Path4.combine(Path4.getTempPath(), "CustomReflector.db4o");
 	}
-
 }
