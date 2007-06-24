@@ -2,28 +2,30 @@
 
 package com.db4o.test.nativequery;
 
-import db4ounit.ReflectionTestSuiteBuilder;
-import db4ounit.Test;
-import db4ounit.TestRunner;
-import db4ounit.TestSuite;
-import db4ounit.extensions.Db4oTestSuiteBuilder;
-import db4ounit.extensions.fixtures.Db4oSolo;
+import com.db4o.test.nativequery.analysis.*;
+import com.db4o.test.nativequery.cats.*;
+import com.db4o.test.nativequery.expr.*;
+import com.db4o.test.nativequery.expr.build.*;
+
+import db4ounit.*;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 public class AllTestsNQ {
 	
 	public static void main(String[] args) {
 		TestSuite plainTests=new ReflectionTestSuiteBuilder(
 				new Class[] {
-//						ExpressionBuilderTestCase.class,
-//						BloatExprBuilderVisitorTestCase.class,
-//						ExpressionTestCase.class,
-//						BooleanReturnValueTestCase.class,
+						ExpressionBuilderTestCase.class,
+						BloatExprBuilderVisitorTestCase.class,
+						ExpressionTestCase.class,
+						BooleanReturnValueTestCase.class,
 				}
 		).build();
 		TestSuite db4oTests=new Db4oTestSuiteBuilder(new Db4oSolo(),
 					new Class[] {
 						NQRegressionTestCase.class,
-//						NQCatConsistencyTestCase.class,
+						NQCatConsistencyTestCase.class,
 					}
 		).build();
 		TestSuite allTests=new TestSuite("All native query tests",

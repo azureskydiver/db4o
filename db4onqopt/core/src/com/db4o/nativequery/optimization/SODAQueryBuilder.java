@@ -2,9 +2,8 @@
 
 package com.db4o.nativequery.optimization;
 
-import EDU.purdue.cs.bloat.file.ClassSource;
-
 import com.db4o.foundation.*;
+import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.query.*;
@@ -14,9 +13,9 @@ public class SODAQueryBuilder {
 		private Object _predicate;
 		private Query _query;
 		private Constraint _constraint;
-		private ClassSource _classSource;
+		private NativeClassFactory _classSource;
 
-		SODAQueryVisitor(Query query, Object predicate, ClassSource classSource) {
+		SODAQueryVisitor(Query query, Object predicate, NativeClassFactory classSource) {
 			_query=query;
 			_predicate = predicate;
 			_classSource = classSource;
@@ -101,7 +100,7 @@ public class SODAQueryBuilder {
 		}
 	}
 		
-	public void optimizeQuery(Expression expr, Query query, Object predicate, ClassSource classSource) {
+	public void optimizeQuery(Expression expr, Query query, Object predicate, NativeClassFactory classSource) {
 		expr.accept(new SODAQueryVisitor(query, predicate, classSource));
 	}	
 }

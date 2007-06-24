@@ -5,29 +5,18 @@
  */
 package com.db4o.nativequery.optimization;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
-import EDU.purdue.cs.bloat.file.ClassSource;
-
-import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
-import com.db4o.nativequery.expr.cmp.ArithmeticOperator;
-import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
-import com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor;
-import com.db4o.nativequery.expr.cmp.ConstValue;
-import com.db4o.nativequery.expr.cmp.FieldValue;
-import com.db4o.nativequery.expr.cmp.MethodCallValue;
-import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
+import com.db4o.nativequery.*;
+import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 
 final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor {
 	private Object _predicate;
 	
 	private Object _value=null;
 	
-	private ClassSource classSource;
+	private NativeClassFactory classSource;
 
 	public Object value() {
 		return _value;
@@ -130,7 +119,7 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 
 	public void visit(StaticFieldRoot root) {
 		try {
-			_value=classSource.loadClass(root.className());
+			_value=classSource.forName(root.className());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -165,7 +154,7 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 		}
 	}
 
-	public ComparisonQueryGeneratingVisitor(Object predicate, ClassSource classSource) {
+	public ComparisonQueryGeneratingVisitor(Object predicate, NativeClassFactory classSource) {
 		super();
 		this._predicate = predicate;
 		this.classSource = classSource;

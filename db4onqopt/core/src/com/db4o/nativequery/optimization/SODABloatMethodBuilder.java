@@ -80,10 +80,8 @@ public class SODABloatMethodBuilder {
 					"query", queryType, 1));
 			Iterator4 fieldNames = fieldNames(expression.left());
 			while (fieldNames.moveNext()) {
-				methodEditor.addInstruction(Opcode.opc_ldc, (String) fieldNames
-						.current());
-				methodEditor.addInstruction(Opcode.opc_invokeinterface,
-						descendRef);
+				methodEditor.addInstruction(Opcode.opc_ldc, fieldNames.current());
+				methodEditor.addInstruction(Opcode.opc_invokeinterface, descendRef);
 			}
 			expression.right().accept(
 					new ComparisonBytecodeGeneratingVisitor(methodEditor,
