@@ -12,6 +12,9 @@ public class ClassMarshaller2 extends ClassMarshaller {
     
     protected void readIndex(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) {
         int indexID = reader.readInt();
+        if(indexID == 0) {
+        	return;
+        }
         clazz.index().read(stream, indexID);
     }
     
