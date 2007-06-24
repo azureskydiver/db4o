@@ -1220,6 +1220,9 @@
 		<copy todir="${target.dir}/db4oj">
 			<fileset dir="../db4onqopt">
 				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
+				<!-- TODO: move to dedicated package, create shared reference for call in build-dotnet.xml -->
+				<include name="core/src/com/db4o/nativequery/NativeClassFactory.java" />
+				<include name="core/src/com/db4o/nativequery/DefaultNativeClassFactory.java" />
 				<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
 				<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
 				<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
