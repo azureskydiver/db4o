@@ -14,9 +14,9 @@ We start by preparing our database in the familiar way.
 .1 Embedded server ..
 
 From the API side, there's no real difference between transactions ._
-executing concurrently within the same VM and transactions executed ._
+executing concurrently within the same  .? java  VM ..?  .? net runtime ..?  and transactions executed ._
 against a remote server. To use concurrent transactions within ._
-a single VM, we just open a db4o server on our database file, ._
+a single  .? java  VM ..?  .? net runtime ..? , we just open a db4o server on our database file, ._
 directing it to run on port 0, thereby declaring that no networking ._
 will take place.
 
@@ -130,14 +130,14 @@ That's it, folks. No, of course it isn't. There's much more to db4o ._
 we haven't covered yet: schema evolution, custom persistence for your classes, ._
 writing your own query objects, etc. A much more thorough documentation is ._
 provided in the reference that you should have also received with the ._
-download.
+download or  .l http://developer.db4o.com/resources/view.aspx/Reference online .. .
 
 We hope that this tutorial has helped to get you started with db4o. How ._
 should you continue now?
 
 - You could browse the remaining chapters. They are a selection of themes ._
 from the reference that very frequently come up as questions in ._
-our .l http://forums.db4o.com/forums/ .. .
+our  .l http://forums.db4o.com/forums/ .. .
 
 - .i (Interactive version only) .. While this tutorial is basically sequential in ._
 nature, try to switch back and forth between the chapters and execute the ._
@@ -151,7 +151,7 @@ in full source code. Feel free to experiment with it.
 - I you're stuck, see if the FAQ can solve your problem, browse the information ._
 on our  .l http://www.db4o.com/ web site .. , check if your problem is submitted ._
 to  .l http://tracker.db4o.com/jira/secure/Dashboard.jspa Jira ..  or visit our ._
-forums at .l http://forums.db4o.com/forums/ .. .
+forums at  .l http://forums.db4o.com/forums/ .. .
 
 
 .1 Full source ..
