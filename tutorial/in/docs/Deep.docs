@@ -62,7 +62,7 @@ query.
 This is absolutely undesirable in most situations, so ._
 db4o provides a mechanism to give the client fine-grained control ._
 over how much he wants to pull out of the database when asking for ._
-an object. This mechanism is called  .i activation depth .. and works ._
+an object. This mechanism is called  .i activation depth ..  and works ._
 quite similar to our familiar update depth.
 
 The default activation depth for any object is 5, so our example above ._
@@ -75,7 +75,7 @@ the database just as needed.
 .s com.db4o.f1.chapter5.DeepExample#retrieveSnapshotsSequentiallyImproved ..
 
 Note that 'cut' references may also influence the behavior of your ._
-objects: In this case the length of the list is calculated dynamically, ._
+objects: in this case the length of the list is calculated dynamically, ._
 and therefor constrained by activation depth.
 
 Instead of dynamically activating subgraph elements, you can configure ._
@@ -91,6 +91,11 @@ provides a wide range of configuration features to control activation ._
 depth at a very fine-grained level. You'll find those triggers ._
 in .x com.db4o.config.Configuration .. and the ._
 associated .x ObjectClass .. and .x ObjectField .. classes.
+
+The new Transparent Activation feature introduced in db4o-6.3 allows you to ._
+forget about all these worries providing activation on request. More information ._
+can be obtained from  .l http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Activation/Transparent_Activation_Framework Transparent Activation Framework ..l  article online or from ._
+the offline version of the Reference documentation.
 
 Don't forget to clean up the database.
 

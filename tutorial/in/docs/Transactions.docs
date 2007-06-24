@@ -54,7 +54,7 @@ Finally, we clean up again.
 
 We have seen how transactions work for a single client. In the ._
 .l ClientServer next chapter ..l  we will see how the transaction concept extends to multiple ._
-clients, whether they are located within the same VM or on a remote machine.
+clients, whether they are located within the same  .? java VM ..? .? net runtime ..? or on a remote machine.
 
 .1 Full source ..
 

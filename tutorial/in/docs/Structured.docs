@@ -119,7 +119,7 @@ grandchildren, etc. This poses a severe performance penalty and will ._
 not be necessary in most cases - sometimes, however, it will.
 
 So, in our previous update example, we were modifying the Pilot child of a Car ._
-object. When we saved the change, we told db4o to save our Car object and asumed ._
+object. When we saved the change, we told db4o to save our Car object and assumed ._
 that the modified Pilot would be updated. But we were modifying and saving in the ._
 same manner as we were in the first update sample, so why did it work before? The ._
 first time we made the modification, db4o never actually had to retreive the modified ._
