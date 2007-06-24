@@ -29,7 +29,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 	}
 	
 	public Db4oOnTheFlyEnhancer(Reflector reflector) {
-		this(new ClassFileLoader(new Db4oClassSource(reflector)));
+		this(new ClassFileLoader(new Db4oClassSource(new JdkReverseLookupClassFactory(reflector))));
 		this.reflector = reflector;
 	}
 	
@@ -49,7 +49,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 				throw new RuntimeException("Could not analyze "+filter);
 			}
 			//start=System.currentTimeMillis();
-			new SODAQueryBuilder().optimizeQuery(expr,query,filter,new Db4oClassSource(reflector));
+			new SODAQueryBuilder().optimizeQuery(expr,query,filter,new JdkReverseLookupClassFactory(reflector));
 			//System.err.println((System.currentTimeMillis()-start)+" ms");
 			return expr;
 		} catch (ClassNotFoundException exc) {

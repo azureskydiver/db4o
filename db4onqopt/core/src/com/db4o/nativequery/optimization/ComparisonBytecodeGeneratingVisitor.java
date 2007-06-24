@@ -2,31 +2,16 @@
 
 package com.db4o.nativequery.optimization;
 
+import java.lang.reflect.*;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import EDU.purdue.cs.bloat.editor.Instruction;
-import EDU.purdue.cs.bloat.editor.LocalVariable;
-import EDU.purdue.cs.bloat.editor.MemberRef;
-import EDU.purdue.cs.bloat.editor.MethodEditor;
-import EDU.purdue.cs.bloat.editor.NameAndType;
-import EDU.purdue.cs.bloat.editor.Opcode;
+import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.editor.Type;
-import EDU.purdue.cs.bloat.file.ClassSource;
+import EDU.purdue.cs.bloat.file.*;
 
-import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
-import com.db4o.nativequery.expr.cmp.ArithmeticOperator;
-import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
-import com.db4o.nativequery.expr.cmp.ComparisonOperand;
-import com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor;
-import com.db4o.nativequery.expr.cmp.ConstValue;
-import com.db4o.nativequery.expr.cmp.FieldValue;
-import com.db4o.nativequery.expr.cmp.MethodCallValue;
-import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
+import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 
 class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	private MethodEditor methodEditor;
@@ -242,7 +227,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		}
 		if (operand instanceof FieldValue) {
 			try {
-				return deduceFieldClass((FieldValue) operand);
+				return deduceFieldClass(operand);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;

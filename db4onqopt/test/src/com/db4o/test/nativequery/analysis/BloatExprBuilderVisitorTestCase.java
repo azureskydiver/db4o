@@ -2,39 +2,21 @@
 
 package com.db4o.test.nativequery.analysis;
 
-import EDU.purdue.cs.bloat.cfg.FlowGraph;
-import EDU.purdue.cs.bloat.file.ClassFileLoader;
-import EDU.purdue.cs.bloat.tree.PrintVisitor;
+import EDU.purdue.cs.bloat.cfg.*;
+import EDU.purdue.cs.bloat.file.*;
+import EDU.purdue.cs.bloat.tree.*;
 
-import com.db4o.nativequery.NQDebug;
-import com.db4o.nativequery.analysis.BloatExprBuilderVisitor;
-import com.db4o.nativequery.bloat.BloatUtil;
-import com.db4o.nativequery.bloat.Db4oClassSource;
-import com.db4o.nativequery.expr.AndExpression;
-import com.db4o.nativequery.expr.BoolConstExpression;
-import com.db4o.nativequery.expr.ComparisonExpression;
-import com.db4o.nativequery.expr.Expression;
-import com.db4o.nativequery.expr.OrExpression;
-import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
-import com.db4o.nativequery.expr.cmp.ArithmeticOperator;
-import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
-import com.db4o.nativequery.expr.cmp.ComparisonOperand;
-import com.db4o.nativequery.expr.cmp.ComparisonOperator;
-import com.db4o.nativequery.expr.cmp.ConstValue;
-import com.db4o.nativequery.expr.cmp.FieldValue;
-import com.db4o.nativequery.expr.cmp.MethodCallValue;
-import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
+import com.db4o.nativequery.*;
+import com.db4o.nativequery.analysis.*;
+import com.db4o.nativequery.bloat.*;
+import com.db4o.nativequery.expr.*;
+import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 
-import db4ounit.Assert;
-import db4ounit.Test;
-import db4ounit.TestMethod;
-import db4ounit.TestRunner;
-import db4ounit.TestSuite;
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.*;
 
 
-public class BloatExprBuilderVisitorTestCase extends AbstractDb4oTestCase {	
+public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {	
 	private static final String INT_WRAPPED_FIELDNAME = "idWrap";
 	private static final String BOOLEAN_FIELDNAME = "bool";
 	private static final String BOOLEAN_WRAPPED_FIELDNAME = "boolWrapper";
@@ -69,11 +51,8 @@ public class BloatExprBuilderVisitorTestCase extends AbstractDb4oTestCase {
 		return a+b;
 	}
 	
-	public void db4oSetupBeforeStore() throws Exception {
-
-		loader=new ClassFileLoader( 
-						new Db4oClassSource(db().ext().reflector())
-						);
+	public void setUp() throws Exception {
+		loader=new ClassFileLoader();
 		bloatUtil=new BloatUtil(loader);
 	}
 	
@@ -1193,6 +1172,9 @@ public class BloatExprBuilderVisitorTestCase extends AbstractDb4oTestCase {
 			System.out.println(expr);
 		}
 		return expr;		
+	}
+
+	public void tearDown() throws Exception {
 	}
 	
 	public static void main(String[] args) throws Exception {

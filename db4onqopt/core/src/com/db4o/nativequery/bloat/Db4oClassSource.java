@@ -1,20 +1,19 @@
 package com.db4o.nativequery.bloat;
 
-import EDU.purdue.cs.bloat.file.ClassSource;
+import EDU.purdue.cs.bloat.file.*;
 
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.nativequery.*;
 
 public class Db4oClassSource implements ClassSource {
 	
-	private Reflector _reflector;
+	private NativeClassFactory _classFactory;
 	
-	public Db4oClassSource(Reflector reflector) {
-		_reflector = reflector;
+	public Db4oClassSource(NativeClassFactory classFactory) {
+		_classFactory = classFactory;
 	}
 	
 	public Class loadClass(String name) throws ClassNotFoundException {
-		return JdkReflector.toNative(_reflector.forName(name));
+		return _classFactory.forName(name);
 	}
 
 }
