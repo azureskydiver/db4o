@@ -28,6 +28,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private final Collection4 _dispatchers = new Collection4();
 
 	LocalObjectContainer _container;
+	ClientTransactionPool _transactionPool;
 
 	private final Object _startupLock=new Object();
 	
@@ -43,6 +44,8 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	
 	public ObjectServerImpl(final LocalObjectContainer container, int port) {
 		_container = container;
+		// TODO check whether individual lock is appropriate
+		_transactionPool = new ClientTransactionPool(container, new Object());
 		_port = port;
 		_config = _container.configImpl();
 		_name = "db4o ServerSocket FILE: " + container.toString() + "  PORT:"+ _port;
@@ -156,7 +159,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	
 	private boolean closeFile() {
 		if (_container != null) {
-			_container.close();
+			_transactionPool.close();
 			_container = null;
 		}
 		return true;
@@ -280,7 +283,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		LoopbackSocket clientFake = new LoopbackSocket(this, timeout);
 		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
 		try {
-			ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_container),
+			ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_transactionPool),
 					serverFake, newThreadId(), true);
 			addServerMessageDispatcher(messageDispatcher);
 			messageDispatcher.startDispatcher();
@@ -335,7 +338,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private void listen() {
 		while (_serverSocket != null) {
 			try {
-				ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_container),
+				ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_transactionPool),
 						_serverSocket.accept(), newThreadId(), false);
 				addServerMessageDispatcher(messageDispatcher);
 				messageDispatcher.startDispatcher();
