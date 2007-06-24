@@ -4,13 +4,14 @@ package com.db4o.db4ounit.common.assorted;
 
 import java.util.Date;
 
-import com.db4o.config.ObjectClass;
+import com.db4o.config.*;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.fixtures.*;
 
-public class IndexCreateDropTestCase extends AbstractDb4oTestCase{
+public class IndexCreateDropTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
     
     public static class IndexCreateDropItem {
         
@@ -37,6 +38,11 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase{
     
     public static void main(String[] arguments) {
         new IndexCreateDropTestCase().runSolo();
+    }
+    
+    protected void configure(Configuration config) throws Exception {
+    	// TODO
+    	super.configure(config);
     }
     
     protected void store(){

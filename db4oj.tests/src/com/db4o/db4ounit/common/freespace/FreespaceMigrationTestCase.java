@@ -9,7 +9,7 @@ import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class FreespaceMigrationTestCase extends FreespaceManagerTestCaseBase implements OptOutCS{
+public class FreespaceMigrationTestCase extends FreespaceManagerTestCaseBase implements OptOutCS, OptOutDefragSolo {
     
     private Configuration configuration;
 
