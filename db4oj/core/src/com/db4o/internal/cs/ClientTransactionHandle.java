@@ -2,74 +2,65 @@
 
 package com.db4o.internal.cs;
 
-import com.db4o.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.messages.*;
 
-class ClientTransactionHandle {
-	private final LocalObjectContainer _mainStream;
+public class ClientTransactionHandle {
+    private final ClientTransactionPool _transactionPool;
     private Transaction _mainTransaction;
 	private LocalObjectContainer _stream;
     private Transaction _transaction;
     private boolean _rollbackOnClose;
 	
-	ClientTransactionHandle(LocalObjectContainer mainStream) {
-		_mainStream = mainStream;
-        _mainTransaction = mainStream.newTransaction();
+    public ClientTransactionHandle(ClientTransactionPool transactionPool) {
+		_transactionPool = transactionPool;
+        _mainTransaction = _transactionPool.acquireMain();
 		_rollbackOnClose = false;
 	}
 
-	void acquireTransactionForFile(String fileName) {
-		_stream = (LocalObjectContainer) Db4o.openFile(fileName);
-        _stream.configImpl().setMessageRecipient(_mainStream.configImpl().messageRecipient());
-        _transaction = _stream.newTransaction();
+    public void acquireTransactionForFile(String fileName) {
+        _transaction = _transactionPool.acquire(fileName);
 	}
 	
-	void releaseTransaction() {
-        if (_stream != null) {
-            if (_transaction != null) {
-                _transaction.close(_rollbackOnClose);
-                _transaction = null;
-            }
-            try {
-                _stream.close();
-
-            } catch (Exception e) {
-                if (Debug.atHome) {
-                    e.printStackTrace();
-                }
-            }
-            _stream = null;
-        }
+    public void releaseTransaction() {
+		if (_transaction != null) {
+			_transactionPool.release(_transaction, _rollbackOnClose);
+			_transaction = null;
+		}
 	}
 	
-	void write(Msg message, Socket4 socket) {
-    	message.write(stream(), socket);
+    public void write(Msg message, Socket4 socket) {
+    	if(_stream != null) {
+    		message.write(_stream, socket);
+    	}
+    	else {
+    		_transactionPool.write(message, socket);
+    	}
 	}
 
-	boolean isClosed() {
-		return _mainStream == null || _mainStream.isClosed();
+    public boolean isClosed() {
+		return _transactionPool.isClosed();
 	}
     
-	void close() {
-		if (_mainStream != null && _mainTransaction != null) {
+    public void close() {
+		if ((!_transactionPool.isClosed()) && (_mainTransaction != null)) {
             _mainTransaction.close(_rollbackOnClose);
         }
 	}
 	
-	Object lock() {
-		return _mainStream.lock();
+    public Object lock() {
+		return _transactionPool.streamLock();
 	}
 
-    Transaction transaction() {
+    public Transaction transaction() {
         if (_transaction != null) {
             return _transaction;
         }
         return _mainTransaction;
     }
 
-    void transaction(Transaction transaction) {
+    public void transaction(Transaction transaction) {
 		if (_transaction != null) {
 			_transaction = transaction;
 		} else {
@@ -77,11 +68,5 @@ class ClientTransactionHandle {
 		}
 		_rollbackOnClose = false;
     }
-    
-    private final LocalObjectContainer stream() {
-        if (_stream != null) {
-            return _stream;
-        }
-        return _mainStream;
-    }
+
 }
