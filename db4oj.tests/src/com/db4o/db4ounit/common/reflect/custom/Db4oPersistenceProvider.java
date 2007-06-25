@@ -13,13 +13,13 @@ import com.db4o.reflect.*;
  */
 public class Db4oPersistenceProvider implements PersistenceProvider {
 
-	static class CustomContext {
+	static class MyContext {
 
 		public final CustomClassRepository repository;
 		public final ObjectContainer metadata;
 		public final ObjectContainer data;
 
-		public CustomContext(CustomClassRepository repository, ObjectContainer metadata, ObjectContainer data) {
+		public MyContext(CustomClassRepository repository, ObjectContainer metadata, ObjectContainer data) {
 			this.repository = repository;
 			this.metadata = metadata;
 			this.data = data;
@@ -69,7 +69,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		CustomClassRepository repository = initializeClassRepository(metadata);
 		CustomReflector reflector = new CustomReflector(repository);
 		ObjectContainer data = openData(reflector, context.url());
-		context.setProviderContext(new CustomContext(repository, metadata, data));
+		context.setProviderContext(new MyContext(repository, metadata, data));
 	}
 
 	public void insert(PersistenceContext context, PersistentEntry entry) {
@@ -118,7 +118,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	private void closeContext(PersistenceContext context) {
 		logMethodCall("closeContext", context);
 
-		CustomContext customContext = customContext(context);
+		MyContext customContext = my(context);
 		if (null != customContext) {
 			customContext.metadata.close();
 			customContext.data.close();
@@ -126,8 +126,8 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		}
 	}
 
-	private CustomContext customContext(PersistenceContext context) {
-		return ((CustomContext) context.getProviderContext());
+	private MyContext my(PersistenceContext context) {
+		return ((MyContext) context.getProviderContext());
 	}
 
 	private Configuration dataConfiguration(Reflector reflector) {
@@ -137,7 +137,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private ObjectContainer dataContainer(PersistenceContext context) {
-		return customContext(context).data;
+		return my(context).data;
 	}
 
 	private CustomClassRepository initializeClassRepository(ObjectContainer container) {
@@ -160,7 +160,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private ObjectContainer metadataContainer(PersistenceContext context) {
-		return customContext(context).metadata;
+		return my(context).metadata;
 	}
 
 	private String metadataFile(String fname) {
@@ -196,7 +196,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private CustomClassRepository repository(PersistenceContext context) {
-		return customContext(context).repository;
+		return my(context).repository;
 	}
 
 	private void store(ObjectContainer container, Object obj) {
