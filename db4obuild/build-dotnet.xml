@@ -556,6 +556,8 @@
 		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
 			<args>
 				<arg value="@sharpen-new-core-mapping" />
+				<arg value="-xmldoc" />
+				<arg file="config/sharpen/core-doc-overlay.xml" />
 			</args>
 		</sharpen>
 		
