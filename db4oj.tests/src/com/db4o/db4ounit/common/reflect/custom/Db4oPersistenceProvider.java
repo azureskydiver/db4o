@@ -12,23 +12,23 @@ import com.db4o.reflect.*;
  * a CustomClassRepository singleton.
  */
 public class Db4oPersistenceProvider implements PersistenceProvider {
-	
+
 	static class CustomContext {
 
 		public final CustomClassRepository repository;
 		public final ObjectContainer metadata;
-		public final ObjectContainer data;	
-		
+		public final ObjectContainer data;
+
 		public CustomContext(CustomClassRepository repository, ObjectContainer metadata, ObjectContainer data) {
 			this.repository = repository;
 			this.metadata = metadata;
 			this.data = data;
 		}
 	}
-	
+
 	public void closeContext(PersistenceContext context, boolean purge) {
 		logMethodCall("closeContext", context, new Boolean(purge));
-		
+
 		closeContext(context);
 		if (purge) {
 			purge(context.url());
@@ -41,7 +41,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		repository(context).defineClass(className, fieldNames, fieldTypes);
 		updateRepository(context);
 	}
-	
+
 	public void createIndex(PersistenceContext context, String className,
 			String fieldName) {
 	}
@@ -64,17 +64,17 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 
 	public void initContext(PersistenceContext context) {
 		logMethodCall("initContext", context);
-		
+
 		ObjectContainer metadata = openMetadata(context.url());
 		CustomClassRepository repository = initializeClassRepository(metadata);
 		CustomReflector reflector = new CustomReflector(repository);
 		ObjectContainer data = openData(reflector, context.url());
 		context.setProviderContext(new CustomContext(repository, metadata, data));
 	}
-	
+
 	public void insert(PersistenceContext context, PersistentEntry entry) {
 		logMethodCall("insert", context, entry);
-		
+
 		// clone the entry because clients are allowed to reuse
 		// entry objects
 		dataContainer(context).set(clone(entry));
@@ -82,7 +82,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 
 	public Iterator4 select(PersistenceContext context, PersistentEntryTemplate template) {
 		logMethodCall("select", context, template);
-		
+
 		Query query = queryFromTemplate(context, template);
 		return new ObjectSetIterator(query.execute());
 	}
@@ -91,7 +91,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	private void addClassConstraint(PersistenceContext context, Query query, PersistentEntryTemplate template) {
 		query.constrain(repository(context).forName(template.className));
 	}
@@ -110,14 +110,14 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 //			c = c.and(addFieldConstraint(query, template, i));
 //		}
 	}
-	
+
 	private PersistentEntry clone(PersistentEntry entry) {
 		return new PersistentEntry(entry.className, entry.uid, entry.fieldValues);
 	}
 
 	private void closeContext(PersistenceContext context) {
 		logMethodCall("closeContext", context);
-		
+
 		CustomContext customContext = customContext(context);
 		if (null != customContext) {
 			customContext.metadata.close();
@@ -174,7 +174,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	private ObjectContainer openMetadata(String fname) {
 		return Db4o.openFile(metaConfiguration(), metadataFile(fname));
 	}
-	
+
 	private void purge(String url) {
 		File4.delete(url);
 		File4.delete(metadataFile(url));
@@ -187,7 +187,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		}
 		return (CustomClassRepository)found.next();
 	}
-	
+
 	private Query queryFromTemplate(PersistenceContext context, PersistentEntryTemplate template) {
 		Query query = dataContainer(context).query();
 		addClassConstraint(context, query, template);
@@ -207,15 +207,15 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	private void updateRepository(PersistenceContext context) {
 		store(metadataContainer(context), repository(context));
 	}
-	
+
 	private void log(String message) {
 		Logger.log("Db4oPersistenceProvider: " + message);
 	}
-	
+
 	private void logMethodCall(String methodName, Object arg) {
 		Logger.logMethodCall("Db4oPersistenceProvider", methodName, arg);
 	}
-	
+
 	private void logMethodCall(String methodName, Object arg1, Object arg2) {
 		Logger.logMethodCall("Db4oPersistenceProvider", methodName, arg1, arg2);
 	}

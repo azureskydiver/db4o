@@ -8,7 +8,7 @@ public class PersistenceContext {
 	public PersistenceContext(String url) {
 		_url = url;
 	}
-	
+
 	public String url() {
 		return _url;
 	}
@@ -16,7 +16,7 @@ public class PersistenceContext {
 	public void setProviderContext(Object context) {
 		_providerContext = context;
 	}
-	
+
 	public Object getProviderContext() {
 		return _providerContext;
 	}

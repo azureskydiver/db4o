@@ -4,7 +4,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 
 public class ObjectSetIterator implements Iterator4 {
-	
+
 	private final ObjectSet _set;
 	private Object _current;
 

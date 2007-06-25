@@ -6,7 +6,7 @@ import com.db4o.reflect.*;
 public class CustomUidField implements ReflectField {
 
 	public CustomClassRepository _repository;
-	
+
 	public CustomUidField() {
 	}
 
@@ -56,7 +56,7 @@ public class CustomUidField implements ReflectField {
 
 	public void setAccessible() {
 	}
-	
+
 	public String toString() {
 		return "CustomUidField()";
 	}

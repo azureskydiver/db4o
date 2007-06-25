@@ -10,7 +10,7 @@ public class CustomField implements ReflectField {
 	public int _index;
 	public String _name;
 	public Class _type;
-	
+
 	public CustomField() {
 	}
 
@@ -68,19 +68,19 @@ public class CustomField implements ReflectField {
 
 	public void setAccessible() {
 	}
-	
+
 	public String toString() {
 		return "CustomField(" + _index + ", " + _name + ", " + _type.getName() + ")";
 	}
-	
+
 	private void logMethodCall(String methodName) {
 		Logger.logMethodCall(this, methodName);
 	}
-	
+
 	private void logMethodCall(String methodName, Object arg) {
 		Logger.logMethodCall(this, methodName, arg);
 	}
-	
+
 	private void logMethodCall(String methodName, Object arg1, Object arg2) {
 		Logger.logMethodCall(this, methodName, arg1, arg2);
 	}

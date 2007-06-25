@@ -7,14 +7,14 @@ import db4ounit.*;
 
 /**
  * This test case serves two purposes:
- * 
+ *
  * 1) testing the reflector API
  * 2) documenting a common use case for the reflector API which is adapting an external
  * data model to db4o's internal OO based mechanism.
- * 
+ *
  */
 public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
-	
+
 	private static final String CLASS_NAME = "Cat";
 	private static final String[] FIELD_NAMES = new String[] { "name", "troubleMakingScore" };
 	private static final String[] FIELD_TYPES = new String[] { "string", "int" };
@@ -23,24 +23,24 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		new PersistentEntry(CLASS_NAME, "1", new Object[] { "Samira", new Integer(4) }),
 		new PersistentEntry(CLASS_NAME, "2", new Object[] { "Ivo", new Integer(2) }),
 	};
-	
+
 	PersistenceContext _context;
 	PersistenceProvider _provider;
-	
+
 	public void setUp() {
 		initializeContext();
 		initializeProvider();
-		createEntryClass(CLASS_NAME, FIELD_NAMES, FIELD_TYPES);		
+		createEntryClass(CLASS_NAME, FIELD_NAMES, FIELD_TYPES);
 		createIndex(CLASS_NAME, FIELD_NAMES[0]);
 		insertEntries();
-		
+
 		// TODO: uncomment the line below
 		// to really test the provider
 //		restartProvider();
 	}
 
 	public void _testSelectAll() {
-		
+
 		Collection4 all = new Collection4(selectAll());
 		Assert.areEqual(ENTRIES.length, all.size());
 		for (int i=0; i<ENTRIES.length; ++i) {
@@ -49,7 +49,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 			if (actual != null) {
 				assertEqualEntries(expected, actual);
 				all.remove(actual);
-			}			
+			}
 		}
 		Assert.isTrue(all.isEmpty(), all.toString());
 	}
@@ -63,17 +63,17 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		}
 		return null;
 	}
-	
+
 	public void _testSelectByField() {
-		
+
 		PersistentEntry expected = ENTRIES[1];
 		Iterator4 found = selectByField(FIELD_NAMES[0], expected.fieldValues[0]);
-		Assert.isTrue(found.moveNext(), "Expecting entry '" + expected + "'");		
+		Assert.isTrue(found.moveNext(), "Expecting entry '" + expected + "'");
 		PersistentEntry actual = (PersistentEntry)found.current();
-		
+
 		assertEqualEntries(expected, actual);
 	}
-	
+
 	private void initializeContext() {
 		_context = new PersistenceContext(dataFile());
 	}
@@ -103,7 +103,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	private Iterator4 selectByField(String fieldName, Object fieldValue) {
 		return select(new PersistentEntryTemplate(CLASS_NAME, new String[] { fieldName }, new Object[] { fieldValue }));
 	}
-	
+
 	private Iterator4 selectAll() {
 		return select(new PersistentEntryTemplate(CLASS_NAME, new String[0], new Object[0]));
 	}
@@ -124,7 +124,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 			String[] fieldTypes) {
 		_provider.createEntryClass(_context, className, fieldNames, fieldTypes);
 	}
-	
+
 	public void tearDown() {
 		shutdownProvider(true);
 		_context = null;
@@ -134,7 +134,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		_provider.closeContext(_context, purge);
 		_provider = null;
 	}
-	
+
 	void restartProvider() {
 		shutdownProvider(false);
 		initializeProvider();

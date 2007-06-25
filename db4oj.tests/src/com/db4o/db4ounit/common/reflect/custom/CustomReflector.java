@@ -8,10 +8,10 @@ import com.db4o.reflect.*;
  * Type information is handled by CustomClassRepository.
  */
 public class CustomReflector implements Reflector {
-	 
+	
 	private final Reflector _delegate = Platform4.reflectorForType(Object.class);
 	private final CustomClassRepository _classRepository;
-	
+
 	public CustomReflector(CustomClassRepository classRepository) {
 		classRepository.initialize(this);
 		_classRepository = classRepository;
@@ -31,7 +31,7 @@ public class CustomReflector implements Reflector {
 
 	public ReflectClass forName(String className) {
 		logMethodCall("forName", className);
-		
+
 		ReflectClass klass = repositoryForName(className);
 		if (null != klass) {
 			return klass;
@@ -48,7 +48,7 @@ public class CustomReflector implements Reflector {
 
 	public ReflectClass forObject(Object obj) {
 		logMethodCall("forObject", obj);
-		
+
 		ReflectClass klass = repositoryForObject(obj);
 		if (null != klass) {
 			return klass;
@@ -60,11 +60,11 @@ public class CustomReflector implements Reflector {
 		if (_classRepository == null) {
 			return null;
 		}
-		
+
 		if (!(obj instanceof PersistentEntry)) {
 			return null;
 		}
-		
+
 		PersistentEntry entry = (PersistentEntry) obj;
 		return _classRepository.forName(entry.className);
 	}
@@ -87,11 +87,11 @@ public class CustomReflector implements Reflector {
 			String[] fieldTypes) {
 		return _classRepository.defineClass(className, fieldNames, fieldTypes);
 	}
-	
+
 	public String toString() {
 		return "CustomReflector(" + _classRepository + ")";
 	}
-	
+
 	private void logMethodCall(String methodName, Object arg) {
 		Logger.logMethodCall(this, methodName, arg);
 	}
