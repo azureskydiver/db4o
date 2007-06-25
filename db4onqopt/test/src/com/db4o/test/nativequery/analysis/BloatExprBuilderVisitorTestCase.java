@@ -52,7 +52,8 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	}
 	
 	public void setUp() throws Exception {
-		loader=new ClassFileLoader();
+		ClassSource classSource = new Db4oClassSource(new ClassLoaderNativeClassFactory(Data.class.getClassLoader()));
+		loader=new ClassFileLoader(classSource);
 		bloatUtil=new BloatUtil(loader);
 	}
 	
