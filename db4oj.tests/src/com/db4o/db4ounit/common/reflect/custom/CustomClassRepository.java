@@ -4,22 +4,22 @@ import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 public class CustomClassRepository {
-	
+
 	// fields must be public so test works on less capable runtimes
 	public Hashtable4 _classes;
 	public transient CustomReflector _reflector;
-	
+
 	public CustomClassRepository() {
 		_classes = new Hashtable4();
 	}
-	
+
 	public CustomClass forName(String className) {
 		return (CustomClass)_classes.get(className);
 	}
 
 	public CustomClass defineClass(String className, String[] fieldNames,
 			String[] fieldTypes) {
-		
+
 		assertNotDefined(className);
 		CustomClass klass = createClass(className, fieldNames, fieldTypes);
 		return defineClass(klass);
@@ -66,7 +66,7 @@ public class CustomClassRepository {
 	public ReflectClass reflectClass(Class type) {
 		return _reflector.forClass(type);
 	}
-	
+
 	public String toString() {
 		return "CustomClassRepository(classes: " + _classes.size() + ")";
 	}

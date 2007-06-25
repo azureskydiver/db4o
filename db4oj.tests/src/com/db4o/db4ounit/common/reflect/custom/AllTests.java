@@ -12,7 +12,7 @@ public class AllTests extends Db4oTestSuite {
 			CustomReflectorTestCase.class,
 		};
 	}
-	
+
 	public static void main(String[] args) {
 		new AllTests().runSolo();
 	}
