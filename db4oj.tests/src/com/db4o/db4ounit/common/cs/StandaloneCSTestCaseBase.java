@@ -13,7 +13,7 @@ import db4ounit.extensions.fixtures.*;
 // TODO fix db4ounit call logic - this should actually be run in C/S mode
 public abstract class StandaloneCSTestCaseBase implements TestCase {
 
-	private static final int PORT = Db4oClientServer.findFreePort();
+	private final int _port = Db4oClientServer.findFreePort();
 
 	public static final class Item {
 	}
@@ -26,7 +26,7 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 		final Configuration config = Db4o.newConfiguration();
 		configure(config);
 		
-		final ObjectServer server = Db4o.openServer(config, databaseFile(), PORT);
+		final ObjectServer server = Db4o.openServer(config, databaseFile(), _port);
 		try {
 			server.grantAccess("db4o", "db4o");
 			
@@ -48,9 +48,13 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 	}
 
 	protected ClientObjectContainer openClient() {
-		return (ClientObjectContainer)Db4o.openClient("localhost", PORT, "db4o", "db4o");
+		return (ClientObjectContainer)Db4o.openClient("localhost", _port, "db4o", "db4o");
 	}
 
+	protected int port() {
+		return _port;
+	}
+	
 	protected abstract void runTest();
 
 	protected abstract void configure(Configuration config);
