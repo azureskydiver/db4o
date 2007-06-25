@@ -39,20 +39,8 @@ public class Buffer implements SlotReader {
     }
     
 	public final boolean containsTheSame(Buffer other) {
-	    if(other != null) {
-	        byte[] otherBytes = other._buffer;
-	        if(_buffer == null) {
-	            return otherBytes == null;
-	        }
-	        if(otherBytes != null && _buffer.length == otherBytes.length) {
-	            int len = _buffer.length;
-	            for (int i = 0; i < len; i++) {
-	                if(_buffer[i] != otherBytes[i]) {
-	                    return false;
-	                }
-	            }
-	            return true;
-	        }
+	    if (other != null) {
+	        return Arrays4.areEqual(_buffer, other._buffer);
 	    }
 	    return false;
 	}
