@@ -5,8 +5,9 @@ package com.db4o.db4ounit.jre12.collections;
 import com.db4o.types.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class NoP1ObjectIndexTestCase extends AbstractDb4oTestCase {
+public class NoP1ObjectIndexTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo {
 
 	public static class Data {
 		public Db4oList _list;
@@ -24,5 +25,9 @@ public class NoP1ObjectIndexTestCase extends AbstractDb4oTestCase {
 		fixture().config().readOnly(true);
 		reopen();
 		db().storedClasses();
+	}
+	
+	public static void main(String[] args) {
+		new NoP1ObjectIndexTestCase().runClientServer();
 	}
 }
