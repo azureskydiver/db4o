@@ -8,7 +8,7 @@ import com.db4o.internal.handlers.*;
 /**
  * @exclude
  */
-public class Handlers {
+public class Handlers4 {
     
     public static boolean handlesSimple(TypeHandler4 handler){
         if  ((handler instanceof PrimitiveHandler) ||  (handler instanceof StringHandler)){
@@ -29,7 +29,4 @@ public class Handlers {
         }
         return false;
     }
-
-    
-
 }
