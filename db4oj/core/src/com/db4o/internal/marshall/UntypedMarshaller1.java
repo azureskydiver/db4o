@@ -142,7 +142,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         writer.writeInt(yc.getID());
         
-        yc.writeNew(_family, obj, false, writer, false, false);
+        yc.write(_family, obj, false, writer, false, false);
         
         if(writer._payloadOffset < writer._offset){
             writer._payloadOffset = writer._offset;

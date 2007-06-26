@@ -79,7 +79,7 @@ public class CustomTypeHandler implements TypeHandler4{
         return null;
     }
 
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel,
+    public Object write(MarshallerFamily mf, Object a_object, boolean topLevel,
         StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         // TODO Auto-generated method stub
         return null;

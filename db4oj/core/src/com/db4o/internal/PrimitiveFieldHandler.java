@@ -204,7 +204,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return false;
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
+    public Object write(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         mf._primitive.writeNew(a_bytes.getTransaction(), this, a_object, topLevel, a_bytes, withIndirection, restoreLinkOffset);
         return a_object;
     }

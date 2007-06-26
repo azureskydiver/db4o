@@ -175,7 +175,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         MarshallerFamily mf = MarshallerFamily.current();
         
         for (int i = 0; i < objects.length; i++) {
-            i_handler.writeNew(mf, element(objects, i), false, writer, true, true);
+            i_handler.write(mf, element(objects, i), false, writer, true, true);
         }
         
         if (Deploy.debug) {

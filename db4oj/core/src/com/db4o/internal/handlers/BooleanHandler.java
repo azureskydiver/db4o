@@ -63,7 +63,7 @@ public final class BooleanHandler extends PrimitiveHandler {
 		return null;
 	}
 	
-	public Object writeNew(MarshallerFamily mf, Object obj,
+	public Object write(MarshallerFamily mf, Object obj,
 			boolean topLevel, StatefulBuffer buffer, boolean withIndirection,
 			boolean restoreLinkeOffset) {
 		

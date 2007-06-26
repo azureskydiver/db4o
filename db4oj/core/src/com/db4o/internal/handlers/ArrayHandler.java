@@ -378,7 +378,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
         a_bytes.writeInt(- yapClassID);
     }
     
-    public final Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
+    public final Object write(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         return mf._array.writeNew(this, a_object, restoreLinkOffset, a_bytes);
     }
 
@@ -398,7 +398,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
             writer.append((byte[])obj);
         }else{
             for (int i = 0; i < elements; i++) {
-                i_handler.writeNew(MarshallerFamily.current(), _reflectArray.get(obj, i), false, writer, true, true);
+                i_handler.write(MarshallerFamily.current(), _reflectArray.get(obj, i), false, writer, true, true);
             }
         }
         
