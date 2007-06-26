@@ -11,6 +11,24 @@ import com.db4o.reflect.*;
  */
 public class Handlers4 {
     
+    public static boolean handlerCanHold(TypeHandler4 handler, ReflectClass claxx){
+        TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
+        if(Handlers4.handlesSimple(baseTypeHandler)){
+            return claxx.equals(baseTypeHandler.classReflector());
+        }
+        
+        if(baseTypeHandler instanceof UntypedFieldHandler){
+            return true;
+        }
+        
+        ClassMetadata classMetadata = (ClassMetadata) baseTypeHandler;
+        ReflectClass classReflector = classMetadata.classReflector();
+        if(classReflector.isCollection()){
+            return true;
+        }
+        return classReflector.isAssignableFrom(claxx);
+    }
+    
     public static boolean handlesSimple(TypeHandler4 handler){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler); 
         return (baseTypeHandler instanceof PrimitiveHandler) ||  (baseTypeHandler instanceof StringHandler);

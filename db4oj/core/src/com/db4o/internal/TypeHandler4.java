@@ -11,16 +11,13 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public interface TypeHandler4 extends Comparable4 
-{
+public interface TypeHandler4 extends Comparable4 {
 	
-	boolean canHold(ReflectClass claxx);
-	
-	void cascadeActivation(Transaction a_trans, Object a_object, int a_depth, boolean a_activate);
+	void cascadeActivation(Transaction trans, Object obj, int depth, boolean activate);
 	
 	ReflectClass classReflector();
     
-	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException;
+	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer) throws Db4oIOException;
 	
 	int getID();
 	
@@ -43,15 +40,15 @@ public interface TypeHandler4 extends Comparable4
      */
     void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
     
-	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException, Db4oIOException;
+	Object read(MarshallerFamily mf, StatefulBuffer buffer, boolean redirect) throws CorruptionException, Db4oIOException;
     
-	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException;
+	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer buffer, boolean toArray) throws CorruptionException, Db4oIOException;
 	
-    Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset);
+    Object writeNew(MarshallerFamily mf, Object obj, boolean topLevel, StatefulBuffer buffer, boolean withIndirection, boolean restoreLinkOffset);
 	
-	void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws Db4oIOException;
+	void readCandidates(MarshallerFamily mf, Buffer buffer, QCandidates candidates) throws Db4oIOException;
 	
-    QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection);
+    QCandidate readSubCandidate(MarshallerFamily mf, Buffer buffer, QCandidates candidates, boolean withIndirection);
 
 	void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
 	

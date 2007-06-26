@@ -19,11 +19,6 @@ public class CustomTypeHandler implements TypeHandler4{
         
     }
 
-    public boolean canHold(ReflectClass claxx) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
     public void cascadeActivation(Transaction a_trans, Object a_object, int a_depth,
         boolean a_activate) {
         // TODO Auto-generated method stub

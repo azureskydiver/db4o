@@ -23,10 +23,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         i_stringIo = stringIO;
     }
     
-    public boolean canHold(ReflectClass claxx) {
-        return claxx.equals(classReflector());
-    }
-
     public void cascadeActivation(
         Transaction a_trans,
         Object a_object,

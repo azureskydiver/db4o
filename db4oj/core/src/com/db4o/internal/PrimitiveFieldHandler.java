@@ -42,12 +42,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         // do nothing
     }
 
-    public boolean canHold(ReflectClass claxx) {
-        // Do we need this at all???
-        // Check if this method is ever called
-        return i_handler.canHold(claxx);
-    }
-    
     public ReflectClass classReflector(){
     	return i_handler.classReflector();
     }

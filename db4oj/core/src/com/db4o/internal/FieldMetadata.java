@@ -235,7 +235,7 @@ public class FieldMetadata implements StoredField {
         if (claxx == null) {
             return !i_isPrimitive;
         }
-        return i_handler.canHold(claxx);
+        return Handlers4.handlerCanHold(i_handler, claxx);
     }
 
     public Object coerce(ReflectClass claxx, Object obj) {
@@ -249,7 +249,7 @@ public class FieldMetadata implements StoredField {
             return ((PrimitiveHandler)i_handler).coerce(claxx, obj);
         }
 
-        if(! i_handler.canHold(claxx)){
+        if(! canHold(claxx)){
             return No4.INSTANCE;
         }
         
@@ -478,11 +478,15 @@ public class FieldMetadata implements StoredField {
 
     public ClassMetadata getFieldYapClass(ObjectContainerBase container) {
         // alive needs to be checked by all callers: Done
-        TypeHandler4 handler = Handlers4.baseTypeHandler(i_handler);
+        TypeHandler4 handler = baseTypeHandler();
         if(Handlers4.handlesSimple(handler)){
             return container.i_handlers.primitiveClassById(handler.getID());
         }
         return (ClassMetadata)handler;
+    }
+
+    private TypeHandler4 baseTypeHandler() {
+        return Handlers4.baseTypeHandler(i_handler);
     }
     
     public TypeHandler4 getHandler() {

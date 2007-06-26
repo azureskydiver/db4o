@@ -19,7 +19,7 @@ public final class DateHandler extends LongHandler {
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-        return canHold(claxx) ? obj : No4.INSTANCE;
+        return Handlers4.handlerCanHold(this, claxx) ? obj : No4.INSTANCE;
     }
 
 	public void copyValue(Object a_from, Object a_to){
