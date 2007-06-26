@@ -913,10 +913,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return _stream;
     }
 
-    public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
-        return this;
-    }
-
     public FieldMetadata fieldMetadataForName(final String name) {
         final FieldMetadata[] yf = new FieldMetadata[1];
         forEachFieldMetadata(new Visitor4() {
@@ -1205,10 +1201,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return false;
     }
     
-    public TernaryBool isSecondClass(){
-        return TernaryBool.NO;
-    }
-
     /**
 	 * no any, primitive, array or other tricks. overriden in YapClassAny and
 	 * YapClassPrimitive
@@ -1268,10 +1260,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return MarshallerFamily.current()._class.marshalledLength(_stream, this);
     }
     
-	public ReflectClass primitiveClassReflector(){
-		return null;
-	}
-
     void purge() {
         _index.purge();
         

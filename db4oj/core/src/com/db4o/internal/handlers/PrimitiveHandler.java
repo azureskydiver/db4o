@@ -46,20 +46,12 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
         a_bytes.incrementOffset(linkLength());
     }
     
-    public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
-        return a_stream.i_handlers.primitiveClassById(getID());
-    }
-
     public boolean hasFixedLength(){
         return true;
     }
     
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
         return indexEntry;
-    }
-    
-    public TernaryBool isSecondClass(){
-        return TernaryBool.YES;
     }
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
@@ -69,7 +61,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
             header.addPayLoadLength(linkLength());
         }
     }
-
+    
     protected abstract Class primitiveJavaClass();
     
     public abstract Object primitiveNull();
@@ -126,7 +118,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
     }
     
     /** 
-     * 
      * classReflector() has to be called first, before this returns a value
      */
     public ReflectClass primitiveClassReflector(){

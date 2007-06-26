@@ -4,7 +4,6 @@ package com.db4o.internal.handlers;
 
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.reflect.*;
 
 
 
@@ -34,10 +33,6 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
         
         return Const4.INT_LENGTH + Const4.ID_LENGTH;
     }
-    
-	public ReflectClass primitiveClassReflector(){
-		return null;
-	}
     
     // redundant, only added to make Sun JDK 1.2's java happy :(
     public abstract boolean isGreater(Object obj);	

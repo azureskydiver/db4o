@@ -154,16 +154,8 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
         return i_handler.getID();
     }
 
-    public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
-        return i_handler.getClassMetadata(a_stream);
-    }
-
     public byte identifier() {
         return Const4.YAPARRAY;
-    }
-    
-    public TernaryBool isSecondClass(){
-        return i_handler.isSecondClass();
     }
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
@@ -184,7 +176,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
 	}
     
 	public ReflectClass primitiveClassReflector() {
-		return i_handler.primitiveClassReflector();
+		return Handlers4.primitiveClassReflector(i_handler);
 	}
 	
     public final Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
@@ -245,7 +237,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
 		ReflectClassByRef clazz = new ReflectClassByRef();
 		elements.value = readElementsAndClass(trans, buffer, clazz);
 		if (i_isPrimitive) {
-			return _reflectArray.newInstance(i_handler.primitiveClassReflector(), elements.value);
+			return _reflectArray.newInstance(primitiveClassReflector(), elements.value);
 		} 
 		if (clazz.value != null) {
 			return _reflectArray.newInstance(clazz.value, elements.value);	
@@ -335,9 +327,9 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
 		        }
 		    }
 		    int classID = - elements;
-			ClassMetadata yc = a_trans.stream().classMetadataForId(classID);
-		    if (yc != null) {
-		        return (primitive ? yc.primitiveClassReflector() : yc.classReflector());
+			ClassMetadata classMetadata = a_trans.stream().classMetadataForId(classID);
+		    if (classMetadata != null) {
+		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata) : classMetadata.classReflector());
 		    }
 		}
 		return i_handler.classReflector();
@@ -469,14 +461,13 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
     }
 
     public final void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
-    	if(!(i_handler.isSecondClass()==TernaryBool.YES)) {
-    		mf._array.defragIDs(this, readers);
-    	}
-    	else {
-    		readers.incrementOffset(linkLength());
-    	}
+        if(Handlers4.handlesSimple(i_handler)){
+            readers.incrementOffset(linkLength());
+        }else{
+            mf._array.defragIDs(this, readers);
+        }
     }
-
+    
     public void defrag1(MarshallerFamily mf,ReaderPair readers) {
 		if (Deploy.debug) {
 			readers.readBegin(identifier());

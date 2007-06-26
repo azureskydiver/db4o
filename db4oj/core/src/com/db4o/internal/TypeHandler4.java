@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.reflect.*;
@@ -29,8 +28,6 @@ public interface TypeHandler4 extends Comparable4
     
     int linkLength();
    
-    TernaryBool isSecondClass();
-    
     /**
      * The length calculation is different, depending from where we 
      * calculate. If we are still in the link area at the beginning of
@@ -46,16 +43,12 @@ public interface TypeHandler4 extends Comparable4
      */
     void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
     
-	ReflectClass primitiveClassReflector();
-	
 	Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect) throws CorruptionException, Db4oIOException;
     
 	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException;
 	
     Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset);
 	
-	ClassMetadata getClassMetadata(ObjectContainerBase a_stream);
-    
 	void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws Db4oIOException;
 	
     QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection);

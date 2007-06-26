@@ -163,10 +163,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return true;
     }
     
-    public TernaryBool isSecondClass(){
-        return TernaryBool.UNSPECIFIED;
-    }
-    
 	public boolean isStrongTyped(){
 		return false;
 	}
@@ -178,10 +174,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     public Comparable4 prepareComparison(Object a_constraint) {
         i_handler.prepareComparison(a_constraint);
         return i_handler;
-    }
-    
-    public final ReflectClass primitiveClassReflector(){
-        return i_handler.primitiveClassReflector();
     }
     
     public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {

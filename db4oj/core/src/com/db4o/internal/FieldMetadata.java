@@ -476,9 +476,13 @@ public class FieldMetadata implements StoredField {
         return i_name;
     }
 
-    public ClassMetadata getFieldYapClass(ObjectContainerBase a_stream) {
+    public ClassMetadata getFieldYapClass(ObjectContainerBase container) {
         // alive needs to be checked by all callers: Done
-        return i_handler.getClassMetadata(a_stream);
+        TypeHandler4 handler = Handlers4.baseTypeHandler(i_handler);
+        if(Handlers4.handlesSimple(handler)){
+            return container.i_handlers.primitiveClassById(handler.getID());
+        }
+        return (ClassMetadata)handler;
     }
     
     public TypeHandler4 getHandler() {
@@ -524,7 +528,7 @@ public class FieldMetadata implements StoredField {
     public ReflectClass getStoredType() {
         if (!Deploy.csharp) {
             if (i_isPrimitive) {
-                return i_handler.primitiveClassReflector();
+                return  Handlers4.primitiveClassReflector(i_handler);
             }
         }
         if(i_handler==null) {

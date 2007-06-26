@@ -3,7 +3,6 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -55,10 +54,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         return Const4.YAPSTRING;
     }
 
-    public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
-        return a_stream.i_handlers.primitiveClassById(getID());
-    }
-    
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
         try {
             return StringMarshaller.readShort(_stream, (Buffer)indexEntry);
@@ -68,10 +63,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         return null;
     }
 
-    public TernaryBool isSecondClass(){
-        return TernaryBool.YES;
-    }
-    
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection){
         MarshallerFamily.current()._string.calculateLengths(trans, header, topLevel, obj, withIndirection);
     }
