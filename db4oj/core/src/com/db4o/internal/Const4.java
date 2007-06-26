@@ -83,9 +83,7 @@ public final class Const4
     // TODO: get rid of magic numbers like this one
 	public static final int PRIMITIVE = -2000000000;
 	
-	// optimized type information
-	public static final int TYPE_SIMPLE 			= 1;
-	public static final int TYPE_CLASS 			= 2;
+	// array type information
 	public static final int TYPE_ARRAY 			= 3;
 	public static final int TYPE_NARRAY 			= 4;
 	

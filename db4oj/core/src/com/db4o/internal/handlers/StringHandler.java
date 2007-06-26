@@ -177,11 +177,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         }
     }
 
-    public int getTypeID() {
-        return Const4.TYPE_SIMPLE;
-    }
-
-
     // Comparison_______________________
 
     private Buffer i_compareTo;

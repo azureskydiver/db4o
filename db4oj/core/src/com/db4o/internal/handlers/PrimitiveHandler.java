@@ -46,10 +46,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
         a_bytes.incrementOffset(linkLength());
     }
     
-    public int getTypeID() {
-        return Const4.TYPE_SIMPLE;
-    }
-
     public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
         return a_stream.i_handlers.primitiveClassById(getID());
     }

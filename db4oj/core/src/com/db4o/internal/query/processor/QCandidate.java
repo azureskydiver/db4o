@@ -282,7 +282,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				// in the higher level simple evaluation. Evaluate these
 				// immediately.
 
-				if (handler.getTypeID() == Const4.TYPE_SIMPLE) {
+				if (Handlers.handlesSimple(handler)) {
 					a_candidates.i_currentConstraint.visit(this);
 					return true;
 				}
@@ -304,16 +304,15 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				&& a_candidates.i_yapClass.isStrongTyped()) {
 			if (_yapField != null) {
 				TypeHandler4 handler = _yapField.getHandler();
-				if (handler != null
-						&& (handler.getTypeID() == Const4.TYPE_CLASS)) {
-					ClassMetadata yc = (ClassMetadata) handler;
-					if (yc instanceof UntypedFieldHandler) {
-						yc = candidate.readYapClass();
+				if (handler instanceof ClassMetadata) {
+					ClassMetadata classMetadata = (ClassMetadata) handler;
+					if (classMetadata instanceof UntypedFieldHandler) {
+						classMetadata = candidate.readYapClass();
 					}
-                    if(yc == null){
+                    if(classMetadata == null){
                         return false;
                     }
-					if (!yc.canHold(a_candidates.i_yapClass.classReflector())) {
+					if (!classMetadata.canHold(a_candidates.i_yapClass.classReflector())) {
 						return false;
 					}
 				}

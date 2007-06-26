@@ -913,10 +913,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return _stream;
     }
 
-    public int getTypeID() {
-        return Const4.TYPE_CLASS;
-    }
-
     public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
         return this;
     }

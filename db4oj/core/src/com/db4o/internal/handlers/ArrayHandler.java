@@ -154,10 +154,6 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
         return i_handler.getID();
     }
 
-    public int getTypeID() {
-        return i_handler.getTypeID();
-    }
-
     public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
         return i_handler.getClassMetadata(a_stream);
     }

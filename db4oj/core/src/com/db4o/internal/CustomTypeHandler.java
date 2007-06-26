@@ -56,11 +56,6 @@ public class CustomTypeHandler implements TypeHandler4{
         return 0;
     }
 
-    public int getTypeID() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
     public boolean hasFixedLength() {
         // TODO Auto-generated method stub
         return false;
