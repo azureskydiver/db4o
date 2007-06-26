@@ -27,17 +27,13 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
 
     private boolean i_compareToIsNull;
 
-    public boolean canHold(ReflectClass claxx) {
-        return claxx.equals(classReflector());
-    }
-
     public void cascadeActivation(Transaction a_trans, Object a_object,
         int a_depth, boolean a_activate) {
         // do nothing
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {
-        return canHold(claxx) ? obj : No4.INSTANCE;
+        return Handlers4.handlerCanHold(this, claxx) ? obj : No4.INSTANCE;
     }
     
     public abstract Object defaultValue();

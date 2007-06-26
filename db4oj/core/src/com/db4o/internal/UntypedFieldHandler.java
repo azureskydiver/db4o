@@ -5,17 +5,12 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
-import com.db4o.reflect.*;
 
 
 public final class UntypedFieldHandler extends ClassMetadata {
     
 	public UntypedFieldHandler(ObjectContainerBase stream){
 		super(stream, stream.i_handlers.ICLASS_OBJECT);
-	}
-
-	public boolean canHold(ReflectClass claxx) {
-		return true;
 	}
 
 	public void cascadeActivation(

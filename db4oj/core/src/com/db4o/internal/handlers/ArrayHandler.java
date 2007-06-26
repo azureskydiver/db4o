@@ -39,10 +39,6 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
         return all;
 	}
 
-    public boolean canHold(ReflectClass claxx) {
-        return i_handler.canHold(claxx);
-    }
-
     public final void cascadeActivation(
         Transaction a_trans,
         Object a_object,

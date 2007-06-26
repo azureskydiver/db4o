@@ -323,19 +323,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return hasIndex();
     }
 
-    public boolean canHold(ReflectClass claxx) {
-        if (claxx == null) {
-            return true;
-        }
-        if (_reflector != null) {
-        	if(classReflector().isCollection()){
-                return true;
-            }
-            return classReflector().isAssignableFrom(claxx);
-        }
-        return false;
-    }
-    
     public void cascadeActivation(
         Transaction a_trans,
         Object a_object,
