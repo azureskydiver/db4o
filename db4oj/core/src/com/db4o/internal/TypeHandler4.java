@@ -1,4 +1,4 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.internal;
 
@@ -53,8 +53,6 @@ public interface TypeHandler4 extends Comparable4
 	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException;
 	
     Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset);
-	
-	public int getTypeID ();
 	
 	ClassMetadata getClassMetadata(ObjectContainerBase a_stream);
     
