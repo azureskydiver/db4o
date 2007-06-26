@@ -147,9 +147,13 @@ public final class HandlerRegistry {
             	reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName(), null);
             }
             if (!Deploy.csharp) {
-                if (i_handlers[i].primitiveClassReflector() != null) {
-                	i_classByClass.put(i_handlers[i].primitiveClassReflector(), i_yapClasses[i]);
-                }
+               if(i_handlers[i] instanceof PrimitiveHandler){
+                   PrimitiveHandler primitiveHandler = (PrimitiveHandler) i_handlers[i];
+                   ReflectClass primitiveClassReflector = primitiveHandler.primitiveClassReflector();
+                   if(primitiveClassReflector != null){
+                       i_classByClass.put(primitiveClassReflector, i_yapClasses[i]);
+                   }
+               }
             }
         }
         for (int i = 0; i < i_platformTypes.length; i++) {
@@ -250,7 +254,8 @@ public final class HandlerRegistry {
 
 	private Object nullValue(ReflectClass clazz) {
 		for (int k = 0; k < PRIMITIVECOUNT; k++) {
-			if (clazz.equals(i_handlers[k].primitiveClassReflector())) {
+		    PrimitiveHandler handler = (PrimitiveHandler) i_handlers[k]; 
+			if (clazz.equals(handler.primitiveClassReflector())) {
 				return ((PrimitiveHandler) i_handlers[k]).primitiveNull();
 			}
 		}

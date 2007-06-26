@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.internal.handlers.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -11,22 +12,29 @@ import com.db4o.internal.handlers.*;
 public class Handlers4 {
     
     public static boolean handlesSimple(TypeHandler4 handler){
-        if  ((handler instanceof PrimitiveHandler) ||  (handler instanceof StringHandler)){
-            return true;
-        }
-        if(handler instanceof ArrayHandler){
-            return handlesSimple( ((ArrayHandler)handler).i_handler);
-        }
-        return false;
+        TypeHandler4 baseTypeHandler = baseTypeHandler(handler); 
+        return (baseTypeHandler instanceof PrimitiveHandler) ||  (baseTypeHandler instanceof StringHandler);
     }
     
     public static boolean handlesClass(TypeHandler4 handler){
-        if  ((handler instanceof ClassMetadata)){
-            return true;
+        return baseTypeHandler(handler) instanceof ClassMetadata;
+    }
+    
+    public static ReflectClass primitiveClassReflector(TypeHandler4 handler){
+        TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
+        if(baseTypeHandler instanceof PrimitiveHandler){
+            return ((PrimitiveHandler)baseTypeHandler).primitiveClassReflector();
         }
+        return null;
+    }
+    
+    public static TypeHandler4 baseTypeHandler(TypeHandler4 handler){
         if(handler instanceof ArrayHandler){
-            return handlesClass(((ArrayHandler)handler).i_handler);
+            return ((ArrayHandler)handler).i_handler;
         }
-        return false;
+        if(handler instanceof PrimitiveFieldHandler){
+            return ((PrimitiveFieldHandler)handler).i_handler;
+        }
+        return handler;
     }
 }

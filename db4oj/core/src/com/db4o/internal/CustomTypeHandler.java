@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.reflect.*;
@@ -46,11 +45,6 @@ public class CustomTypeHandler implements TypeHandler4{
         
     }
 
-    public ClassMetadata getClassMetadata(ObjectContainerBase a_stream) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public int getID() {
         // TODO Auto-generated method stub
         return 0;
@@ -61,19 +55,9 @@ public class CustomTypeHandler implements TypeHandler4{
         return false;
     }
 
-    public TernaryBool isSecondClass() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public int linkLength() {
         // TODO Auto-generated method stub
         return 0;
-    }
-
-    public ReflectClass primitiveClassReflector() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect)

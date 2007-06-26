@@ -141,7 +141,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
 		ReflectClassByRef clazz = new ReflectClassByRef();
 		int[] dim = readDimensions(a_trans, a_bytes, clazz);
         if (i_isPrimitive) {
-        	obj[0] = a_trans.reflector().array().newInstance(i_handler.primitiveClassReflector(), dim);
+        	obj[0] = a_trans.reflector().array().newInstance(primitiveClassReflector(), dim);
         } else {
         	if (clazz.value != null) {
 				obj[0] = a_trans.reflector().array().newInstance(clazz.value, dim);
