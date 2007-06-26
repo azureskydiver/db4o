@@ -44,7 +44,7 @@ public interface TypeHandler4 extends Comparable4 {
     
 	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer buffer, boolean toArray) throws CorruptionException, Db4oIOException;
 	
-    Object writeNew(MarshallerFamily mf, Object obj, boolean topLevel, StatefulBuffer buffer, boolean withIndirection, boolean restoreLinkOffset);
+    Object write(MarshallerFamily mf, Object obj, boolean topLevel, StatefulBuffer buffer, boolean withIndirection, boolean restoreLinkOffset);
 	
 	void readCandidates(MarshallerFamily mf, Buffer buffer, QCandidates candidates) throws Db4oIOException;
 	

@@ -698,10 +698,10 @@ public class FieldMetadata implements StoredField {
             if (updateDepth < min) {
                 writer.setUpdateDepth(min);
             }
-            indexEntry = i_handler.writeNew(mf, obj, true, writer, true, true);
+            indexEntry = i_handler.write(mf, obj, true, writer, true, true);
             writer.setUpdateDepth(updateDepth);
         } else {
-            indexEntry = i_handler.writeNew(mf, obj, true, writer, true, true);
+            indexEntry = i_handler.write(mf, obj, true, writer, true, true);
         }
         addIndexEntry(writer, indexEntry);
     }

@@ -1876,7 +1876,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         a_writer.writeInt(((Integer)a_object).intValue());
     }
     
-    public Object writeNew(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
+    public Object write(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         if (a_object == null) {
             a_bytes.writeInt(0);
             return new Integer(0);
