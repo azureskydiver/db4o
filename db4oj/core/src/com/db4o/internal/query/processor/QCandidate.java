@@ -282,7 +282,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				// in the higher level simple evaluation. Evaluate these
 				// immediately.
 
-				if (Handlers.handlesSimple(handler)) {
+				if (Handlers4.handlesSimple(handler)) {
 					a_candidates.i_currentConstraint.visit(this);
 					return true;
 				}

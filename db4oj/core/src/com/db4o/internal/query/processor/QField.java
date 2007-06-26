@@ -90,11 +90,11 @@ public class QField implements Visitor4, Unversioned{
 	}
 	
 	boolean isClass(){
-		return i_yapField == null ||  Handlers.handlesClass(i_yapField.getHandler());
+		return i_yapField == null ||  Handlers4.handlesClass(i_yapField.getHandler());
 	}
 	
 	boolean isSimple(){
-		return i_yapField != null &&  Handlers.handlesSimple(i_yapField.getHandler());
+		return i_yapField != null &&  Handlers4.handlesSimple(i_yapField.getHandler());
 	}
 	
 	Comparable4 prepareComparison(Object obj){
