@@ -5,31 +5,23 @@ package com.db4o.db4ounit.jre12.collections.facades;
 import java.util.*;
 
 import com.db4o.collections.facades.*;
-import com.db4o.db4ounit.jre12.collections.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class FastListTestCase implements TestLifeCycle {
+public class FastListTestCaseBase extends AbstractDb4oTestCase {
 
 	public FastList _list;
 
 	private static int CAPACITY = 100;
 
-	public static void main(String[] args) {
-		new TestRunner(FastListTestCase.class).run();
-	}
-
-	public void setUp() throws Exception {
-		_list = new FastList(new MockPersistentList());
+	protected void init(FastList list) {
+		_list = list;
 		for (int i = 0; i < CAPACITY; i++) {
 			_list.add(new Integer(i));
 		}
 	}
-
-	public void tearDown() throws Exception {
-		// do nothing
-	}
-
+	
 	public void testAdd() throws Exception {
 		for (int i = 0; i < CAPACITY; ++i) {
 			_list.add(new Integer(CAPACITY + i));
