@@ -12,7 +12,8 @@ public class AllTests extends Db4oTestSuite {
     
 	protected Class[] testCases() {
 		return new Class[] {
-			FastListTestCase.class,
+			RawFastListTestCase.class,
+			StoredFastListTestCase.class,
 		};
 	}
 
