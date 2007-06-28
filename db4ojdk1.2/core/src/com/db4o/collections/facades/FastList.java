@@ -4,6 +4,7 @@ package com.db4o.collections.facades;
 
 import java.util.*;
 
+import com.db4o.collections.facades.FastListCache.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.collections.*;
 
@@ -13,47 +14,84 @@ import com.db4o.internal.collections.*;
  */
 public class FastList implements java.util.List{
     
-    public PersistentList _persistentList;
+    private PersistentList _persistentList;
+    
+    private transient FastListCache _cache;
     
     public FastList(PersistentList persistentList) {
     	_persistentList = persistentList;
+    	ensureInitFastListCache();
     }
     
+    private void ensureInitFastListCache() {
+		if(_cache == null) {
+			_cache = new FastListCache(size());
+		}
+	}
+    
     public boolean add(Object o) {
+    	ensureInitFastListCache();
+    	_cache.add(o);
         return _persistentList.add(o);
     }
-
-    public void add(int index, Object element) {
+    
+	public void add(int index, Object element) {
     	validateIndex(index);
+    	ensureInitFastListCache();
+    	_cache.add(index, element);
         _persistentList.add(index, element);
     }
 
-    public boolean addAll(final Collection c) {
+	public boolean addAll(final Collection c) {
+		ensureInitFastListCache();
+    	_cache.addAll(c);
         return _persistentList.addAll(new JdkCollectionIterable4(c));
     }
 
     public boolean addAll(int index, Collection c) {
     	validateIndex(index);
+    	ensureInitFastListCache();
+    	_cache.addAll(index, c);
         return _persistentList.addAll(index, new JdkCollectionIterable4(c));
     }
 
     public void clear() {
+    	ensureInitFastListCache();
+    	_cache.clear();
         _persistentList.clear();
     }
 
     public boolean contains(Object o) {
+    	ensureInitFastListCache();
+    	if(_cache.contains(o)) {
+    		return true;
+    	}
         return _persistentList.contains(o);
     }
 
     public boolean containsAll(Collection c) {
+    	ensureInitFastListCache();
+    	boolean ret = _cache.containsAll(c);
+    	if(ret) {
+    		return true;
+    	}
         return _persistentList.containsAll(new JdkCollectionIterable4(c));
     }
 
     public Object get(int index) {
+    	ensureInitFastListCache();
+    	CachedObject co = _cache.get(index);
+    	if(co != CachedObject.NONE) {
+    		return co.obj;
+    	}
         return _persistentList.get(index);
     }
 
     public int indexOf(Object o) {
+    	int index = _cache.indexOf(o);
+    	if(index != -1) {
+    		return index;
+    	}
         return _persistentList.indexOf(o);
     }
 
@@ -78,23 +116,33 @@ public class FastList implements java.util.List{
     }
 
     public boolean remove(Object o) {
+    	ensureInitFastListCache();
+    	_cache.remove(o);
         return _persistentList.remove(o);
     }
 
     public Object remove(int index) {
+    	ensureInitFastListCache();
+    	_cache.remove(index);
         return _persistentList.remove(index);
     }
 
     public boolean removeAll(Collection c) {
+    	ensureInitFastListCache();
+    	_cache.removeAll(c);
         return _persistentList.removeAll(new JdkCollectionIterable4(c));
     }
 
     public boolean retainAll(Collection c) {
+    	ensureInitFastListCache();
+    	_cache.retainAll(c);
         return _persistentList.retainAll(new JdkCollectionIterable4(c));
     }
 
     public Object set(int index, Object element) {
     	validateIndex(index);
+    	ensureInitFastListCache();
+    	_cache.set(index, element);
         return _persistentList.set(index, element);
     }
 
