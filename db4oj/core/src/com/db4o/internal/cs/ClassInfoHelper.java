@@ -92,6 +92,11 @@ public class ClassInfoHelper {
 			return genericClass;
 		}
 
+		ReflectClass reflectClass = reflector.forName(className);
+		if(reflectClass != null) {
+			return (GenericClass) reflectClass;
+		}
+		
 		GenericClass genericSuperClass = null;
 		ClassInfo superClassMeta = classMeta.getSuperClass();
 		if (superClassMeta != null) {
