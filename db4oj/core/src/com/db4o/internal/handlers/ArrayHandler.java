@@ -14,7 +14,7 @@ import com.db4o.reflect.generic.GenericReflector;
 /**
  * @exclude
  */
-public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHandlerProvider {
+public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandler {
 	
     public final TypeHandler4 i_handler;
     public final boolean i_isPrimitive;

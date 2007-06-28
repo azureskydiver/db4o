@@ -130,8 +130,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				
 				TypeHandler4 tempHandler = null;
 				
-				if(handler instanceof PossibleArrayHandlerProvider){
-				    tempHandler = ((PossibleArrayHandlerProvider)handler).readArrayHandler(
+				if(handler instanceof FirstClassHandler){
+				    tempHandler = ((FirstClassHandler)handler).readArrayHandler(
                         getTransaction(), _marshallerFamily, arrayBytes);
 				    
 				}
@@ -165,8 +165,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 							qcon.setCandidates(candidates);
 							
-							if(arrayHandler instanceof PossibleArrayHandlerProvider){
-							    ((PossibleArrayHandlerProvider)arrayHandler).readCandidates(_marshallerFamily,arrayBytes[0], candidates);
+							if(arrayHandler instanceof FirstClassHandler){
+							    ((FirstClassHandler)arrayHandler).readCandidates(_marshallerFamily,arrayBytes[0], candidates);
 							}
 							
 							arrayBytes[0]._offset = offset;
