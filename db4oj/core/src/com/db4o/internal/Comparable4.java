@@ -12,12 +12,6 @@ public interface Comparable4 {
 	
 	int compareTo(Object obj);
 	
-	boolean isEqual(Object obj);
-	
-	boolean isGreater(Object obj);
-	
-	boolean isSmaller(Object obj);
-    
     Object current();
     
 }

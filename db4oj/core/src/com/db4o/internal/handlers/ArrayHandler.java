@@ -436,7 +436,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         }
         Object[] compareWith = allElements(obj);
         for (int j = 0; j < compareWith.length; j++) {
-            if (i_handler.isEqual(compareWith[j])) {
+            if (i_handler.compareTo(compareWith[j]) == 0) {
                 return true;
             }
         }
@@ -446,7 +446,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     public boolean isGreater(Object obj) {
         Object[] compareWith = allElements(obj);
         for (int j = 0; j < compareWith.length; j++) {
-            if (i_handler.isGreater(compareWith[j])) {
+            if (i_handler.compareTo(compareWith[j]) > 0) {
                 return true;
             }
         }
@@ -456,7 +456,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     public boolean isSmaller(Object obj) {
         Object[] compareWith = allElements(obj);
         for (int j = 0; j < compareWith.length; j++) {
-            if (i_handler.isSmaller(compareWith[j])) {
+            if (i_handler.compareTo(compareWith[j]) < 0) {
                 return true;
             }
         }

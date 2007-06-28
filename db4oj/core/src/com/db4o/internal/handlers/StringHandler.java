@@ -207,31 +207,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         return compare(i_compareTo, val(obj));
     }
 
-    public boolean isEqual(Object obj) {
-        if(i_compareTo == null){
-            return obj == null;
-        }
-        return i_compareTo.containsTheSame(val(obj));
-    }
-
-    public boolean isGreater(Object obj) {
-        if(i_compareTo == null){
-            // this should be called for indexing only
-            // object is always greater
-            return obj != null;
-        }
-        return compare(i_compareTo, val(obj)) > 0;
-    }
-
-    public boolean isSmaller(Object obj) {
-        if(i_compareTo == null){
-            // this should be called for indexing only
-            // object is always greater
-            return false;
-        }
-        return compare(i_compareTo, val(obj)) < 0;
-    }
-
     /** 
      * returns: -x for left is greater and +x for right is greater 
      *

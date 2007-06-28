@@ -21,18 +21,6 @@ public class Null implements Indexable4{
         return null;
     }
     
-	public boolean isEqual(Object obj) {
-		return obj == null;
-	}
-
-	public boolean isGreater(Object obj) {
-		return false;
-	}
-
-	public boolean isSmaller(Object obj) {
-		return false;
-	}
-
     public int linkLength() {
         return 0;
     }

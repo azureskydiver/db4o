@@ -1,8 +1,9 @@
-/* Copyright (C) 2004   db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
 package com.db4o.internal.query.processor;
 
 import com.db4o.internal.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.types.Unversioned;
 
 
@@ -32,11 +33,15 @@ public class QE implements Unversioned {
         return true;
     }
 
-	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
-		if(a_value == null){
-			return a_constraint.getComparator(a_candidate) instanceof Null;
+	boolean evaluate(QConObject constraint, QCandidate candidate, Object obj){
+        Comparable4 comparator = constraint.getComparator(candidate);
+		if(obj == null){
+			return comparator instanceof Null;
 		}
-		return a_constraint.getComparator(a_candidate).isEqual(a_value);
+        if (comparator instanceof ArrayHandler) {
+            return ((ArrayHandler) comparator).isEqual(obj);
+        }
+        return comparator.compareTo(obj) == 0;
 	}
 	
 	public boolean equals(Object obj){

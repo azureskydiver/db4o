@@ -67,23 +67,15 @@ public class FieldIndexKeyHandler implements Indexable4{
     		throw new ArgumentNullException();
     	}
         FieldIndexKey composite = (FieldIndexKey)obj;
-        int delegateResult = _valueHandler.compareTo(composite.value());  
-        if(delegateResult != 0 ){
-            return delegateResult;
+        try{
+            int delegateResult = _valueHandler.compareTo(composite.value());  
+            if(delegateResult != 0 ){
+                return delegateResult;
+            }
+        }catch (IllegalComparisonException ex){
+            // can happen, is expected
         }
         return _parentIdHandler.compareTo(composite.parentID());
-    }
-
-    public boolean isEqual(Object obj) {
-    	throw new NotImplementedException();
-    }
-
-    public boolean isGreater(Object obj) {
-    	throw new NotImplementedException();
-    }
-
-    public boolean isSmaller(Object obj) {
-    	throw new NotImplementedException();
     }
 
     public Object current() {

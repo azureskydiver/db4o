@@ -47,18 +47,6 @@ public class MappedIDPairHandler implements Indexable4 {
 		return new MappedIDPair(_origHandler.currentInt(),_mappedHandler.currentInt());
 	}
 
-	public boolean isEqual(Object obj) {
-    	throw new NotImplementedException();
-	}
-
-	public boolean isGreater(Object obj) {
-    	throw new NotImplementedException();
-	}
-
-	public boolean isSmaller(Object obj) {
-    	throw new NotImplementedException();
-	}
-
 	public Comparable4 prepareComparison(Object obj) {
         MappedIDPair mappedIDs = (MappedIDPair)obj;
         _origHandler.prepareComparison(mappedIDs.orig());

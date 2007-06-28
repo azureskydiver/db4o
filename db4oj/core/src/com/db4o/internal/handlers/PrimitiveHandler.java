@@ -173,30 +173,9 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
         return -1;
     }
 
-    public boolean isEqual(Object obj) {
-        if (i_compareToIsNull) {
-            return obj == null;
-        }
-        return isEqual1(obj);
-    }
-
     abstract boolean isEqual1(Object obj);
 
-    public boolean isGreater(Object obj) {
-        if (i_compareToIsNull) {
-            return obj != null;
-        }
-        return isGreater1(obj);
-    }
-
     abstract boolean isGreater1(Object obj);
-
-    public boolean isSmaller(Object obj) {
-        if (i_compareToIsNull) {
-            return false;
-        }
-        return isSmaller1(obj);
-    }
 
     abstract boolean isSmaller1(Object obj);
 
