@@ -629,17 +629,21 @@ public final class Platform4 {
 		return evaluation;
 	}
 
-	/** @param claxx */
-	public static boolean isTransient(ReflectClass claxx) {
-		return false;
-	}
-
+    public static boolean isByteArray(Object obj){
+        return obj instanceof byte[];
+    }
+    
 	public static boolean isDb4oClass(String className) {
 		if (className.indexOf(".test.") > 0) {
             return false;
         }
 		return className.indexOf("com.db4o") == 0;
 	}
+
+    /** @param claxx */
+    public static boolean isTransient(ReflectClass claxx) {
+        return false;
+    }
 
 	public static Reflector reflectorForType(Class clazz) {
 		return jdk().reflectorForType(clazz);

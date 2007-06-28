@@ -213,7 +213,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
 		Object array = readCreate(reader.getTransaction(), reader, elements);
 		
 		if (array != null){
-	        if(array instanceof byte[]){
+	        if(Platform4.isByteArray(array)){
 	            reader.readBytes((byte[])array);
 	        } else{
     			for (int i = 0; i < elements.value; i++) {
@@ -393,7 +393,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
 		int elements = _reflectArray.getLength(obj);
         writer.writeInt(elements);
         
-        if(obj instanceof byte[]){
+        if(Platform4.isByteArray(obj)){
             // byte[] performance optimisation
             writer.append((byte[])obj);
         }else{
