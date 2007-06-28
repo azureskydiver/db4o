@@ -150,6 +150,13 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
         return i_handler.getID();
     }
 
+    private boolean handleAsByteArray(Object obj) {
+        if(Deploy.csharp){
+            return obj.getClass() ==  byte[].class;
+        }
+        return obj instanceof byte[];
+    }
+    
     public byte identifier() {
         return Const4.YAPARRAY;
     }
@@ -213,7 +220,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
 		Object array = readCreate(reader.getTransaction(), reader, elements);
 		
 		if (array != null){
-	        if(Platform4.isByteArray(array)){
+	        if(handleAsByteArray(array)){
 	            reader.readBytes((byte[])array);
 	        } else{
     			for (int i = 0; i < elements.value; i++) {
@@ -393,7 +400,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements PossibleArrayHan
 		int elements = _reflectArray.getLength(obj);
         writer.writeInt(elements);
         
-        if(Platform4.isByteArray(obj)){
+        if(handleAsByteArray(obj)){
             // byte[] performance optimisation
             writer.append((byte[])obj);
         }else{

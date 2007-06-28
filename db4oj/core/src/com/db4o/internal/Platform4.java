@@ -629,10 +629,6 @@ public final class Platform4 {
 		return evaluation;
 	}
 
-    public static boolean isByteArray(Object obj){
-        return obj instanceof byte[];
-    }
-    
 	public static boolean isDb4oClass(String className) {
 		if (className.indexOf(".test.") > 0) {
             return false;
