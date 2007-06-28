@@ -1921,31 +1921,24 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return new Integer(i_lastID);
     }
 
-    public int compareTo(Object a_obj) {
-        if(a_obj instanceof Integer){
-            return ((Integer)a_obj).intValue() - i_lastID;
+    public int compareTo(Object obj) {
+        if(obj instanceof Integer){
+            return ((Integer)obj).intValue() - i_lastID;
         }
-        if( (a_obj == null) && (i_compareTo == null)){
-            return 0;
+        if( obj == null ){
+            if (i_compareTo == null){
+                return 0;
+            }
+            return -1;
         }
-        return -1;
+        if(i_compareTo != null){
+            if (i_compareTo.isAssignableFrom(reflector().forObject(obj))){
+                return 0;
+            }
+        }
+        throw new IllegalComparisonException(); 
     }
     
-    public boolean isEqual(Object obj) {
-        if (obj == null) {
-            return i_compareTo == null;
-        }
-        return i_compareTo.isAssignableFrom(reflector().forObject(obj));
-    }
-
-    public boolean isGreater(Object obj) {
-        return false;
-    }
-
-    public boolean isSmaller(Object obj) {
-        return false;
-    }
-
     public String toString(MarshallerFamily mf, StatefulBuffer writer, ObjectReference yapObject, int depth, int maxDepth)  {
         int length = readFieldCount(writer);
         String str = "";

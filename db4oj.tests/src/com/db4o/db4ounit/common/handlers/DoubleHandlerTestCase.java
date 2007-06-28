@@ -1,10 +1,9 @@
-/* Copyright (C) 2006 db4objects Inc. http://www.db4o.com */
+/* Copyright (C) 2006 - 2007 db4objects Inc. http://www.db4o.com */
 
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
-import com.db4o.internal.ix.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -41,23 +40,5 @@ public class DoubleHandlerTestCase extends AbstractDb4oTestCase {
 		_handler.prepareComparison(new Double(prepareWith));		
 		final Double doubleCompareTo = new Double(compareTo);
 		Assert.areEqual(expected, _handler.compareTo(doubleCompareTo));
-		switch (expected) {
-		case 0:
-			Assert.isTrue(_handler.isEqual(doubleCompareTo));
-			Assert.isFalse(_handler.isGreater(doubleCompareTo));
-			Assert.isFalse(_handler.isSmaller(doubleCompareTo));
-			break;
-		case 1:
-			Assert.isFalse(_handler.isEqual(doubleCompareTo));
-			Assert.isTrue(_handler.isGreater(doubleCompareTo));
-			Assert.isFalse(_handler.isSmaller(doubleCompareTo));
-			break;
-		case -1:
-			Assert.isFalse(_handler.isEqual(doubleCompareTo));
-			Assert.isFalse(_handler.isGreater(doubleCompareTo));
-			Assert.isTrue(_handler.isSmaller(doubleCompareTo));
-			break;
-		}
-		
 	}
 }

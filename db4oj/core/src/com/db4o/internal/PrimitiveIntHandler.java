@@ -35,16 +35,4 @@ public class PrimitiveIntHandler extends IntHandler{
 		return _currentInteger;
 	}
 
-	public boolean isEqual(Object obj) {
-		return val(obj) == _currentInt;
-	}
-
-	public boolean isGreater(Object obj) {
-		return val(obj) > _currentInt;
-	}
-
-	public boolean isSmaller(Object obj) {
-		return val(obj) < _currentInt;
-	}
-	
 }

@@ -89,21 +89,6 @@ public class CustomTypeHandler implements TypeHandler4{
         return null;
     }
 
-    public boolean isEqual(Object obj) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public boolean isGreater(Object obj) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public boolean isSmaller(Object obj) {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
     public Comparable4 prepareComparison(Object obj) {
         // TODO Auto-generated method stub
         return null;

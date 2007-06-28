@@ -35,11 +35,8 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
     }
     
     // redundant, only added to make Sun JDK 1.2's java happy :(
-    public abstract boolean isGreater(Object obj);	
     public abstract Comparable4 prepareComparison(Object obj);
     public abstract int compareTo(Object obj);
-    public abstract boolean isEqual(Object obj);
-    public abstract boolean isSmaller(Object obj);
     
     public abstract void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
 }

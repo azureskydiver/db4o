@@ -36,18 +36,6 @@ public abstract class SlotHandler implements Indexable4{
 		return _current;
 	}
 
-	public boolean isEqual(Object obj) {
-		throw new NotImplementedException();
-	}
-
-	public boolean isGreater(Object obj) {
-		throw new NotImplementedException();
-	}
-
-	public boolean isSmaller(Object obj) {
-		throw new NotImplementedException();
-	}
-
 	public Comparable4 prepareComparison(Object obj) {
 		_current = (Slot)obj;
 		return this;
