@@ -42,7 +42,7 @@ public class CachedIoAdapter extends IoAdapter {
 	 * Creates an instance of CachedIoAdapter with the default page size and
 	 * page count.
 	 * 
-	 * @param IoAdapter
+	 * @param ioAdapter
 	 *            delegate IO adapter (RandomAccessFileAdapter by default)
 	 */
 	public CachedIoAdapter(IoAdapter ioAdapter) {
@@ -53,7 +53,7 @@ public class CachedIoAdapter extends IoAdapter {
 	 * Creates an instance of CachedIoAdapter with a custom page size and page
 	 * count.<br>
 	 * 
-	 * @param IoAdapter
+	 * @param ioAdapter
 	 *            delegate IO adapter (RandomAccessFileAdapter by default)
 	 * @param pageSize
 	 *            cache page size
@@ -75,7 +75,7 @@ public class CachedIoAdapter extends IoAdapter {
 	 *            determines if the file should be locked
 	 * @param initialLength
 	 *            initial file length, new writes will start from this point
-	 * @param IoAdapter
+	 * @param ioAdapter
 	 *            delegate IO adapter (RandomAccessFileAdapter by default)
 	 * @param pageSize
 	 *            cache page size
