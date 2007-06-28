@@ -46,8 +46,6 @@ public interface TypeHandler4 extends Comparable4 {
 	
     Object write(MarshallerFamily mf, Object obj, boolean topLevel, StatefulBuffer buffer, boolean withIndirection, boolean restoreLinkOffset);
 	
-	void readCandidates(MarshallerFamily mf, Buffer buffer, QCandidates candidates) throws Db4oIOException;
-	
     QCandidate readSubCandidate(MarshallerFamily mf, Buffer buffer, QCandidates candidates, boolean withIndirection);
 
 	void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);

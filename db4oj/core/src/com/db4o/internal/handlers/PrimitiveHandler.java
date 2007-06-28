@@ -73,10 +73,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
 
     abstract Object read1(Buffer reader) throws CorruptionException;
 
-    public void readCandidates(MarshallerFamily mf, Buffer a_bytes, QCandidates a_candidates) {
-        // do nothing
-    }
-    
     public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         try {
             Object obj = readQuery(candidates.i_trans, mf, withIndirection, reader, true);
