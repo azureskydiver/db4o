@@ -20,7 +20,7 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
         _stream = stream;
     }
     
-    public boolean hasFixedLength(){
+    public final boolean hasFixedLength(){
         return false;
     }
     

@@ -10,7 +10,7 @@ import com.db4o.internal.query.processor.*;
 /**
  * @exclude
  */
-public interface PossibleArrayHandlerProvider {
+public interface FirstClassHandler {
     
     void readCandidates(MarshallerFamily mf, Buffer buffer, QCandidates candidates) throws Db4oIOException;
     
