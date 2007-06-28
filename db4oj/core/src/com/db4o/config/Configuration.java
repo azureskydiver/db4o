@@ -126,7 +126,7 @@ public interface Configuration {
     public void addAlias(Alias alias);
     
     /**
-     * Removes an alias previously added with {@link addAlias}.
+     * Removes an alias previously added with {@link Configuration#addAlias(Alias)}.
      * 
      * @param alias the alias to remove
      */
@@ -391,7 +391,7 @@ public interface Configuration {
     /**
      * configures db4o to generate UUIDs for stored objects.
      * 
-     * @param the scope for UUID generation: disabled, generate for all classes, or configure individually
+     * @param setting the scope for UUID generation: disabled, generate for all classes, or configure individually
      */
     public void generateUUIDs(ConfigScope setting);
 
@@ -410,7 +410,7 @@ public interface Configuration {
     /**
      * configures db4o to generate version numbers for stored objects.
      * 
-     * @param the scope for version number generation: disabled, generate for all classes, or configure individually
+     * @param setting the scope for version number generation: disabled, generate for all classes, or configure individually
      */
     public void generateVersionNumbers(ConfigScope setting);
 
