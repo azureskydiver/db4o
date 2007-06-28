@@ -17,11 +17,11 @@
 	
 	<fileset id="db4onqopt.srcfiles" dir="../db4onqopt">
 		<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
-		<include name="core/src/com/db4o/nativequery/NativeClassFactory.java" />
-		<include name="core/src/com/db4o/nativequery/DefaultNativeClassFactory.java" />
 		<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
 		<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
 		<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
+		<include name="core/src/com/db4o/nativequery/NativeClassFactory.java" />
+		<include name="core/src/com/db4o/nativequery/DefaultNativeClassFactory.java" />
 	</fileset>
 	
 	<macrodef name="copy-bin">
@@ -556,8 +556,6 @@
 		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
 			<args>
 				<arg value="@sharpen-new-core-mapping" />
-				<arg value="-xmldoc" />
-				<arg file="config/sharpen/core-doc-overlay.xml" />
 			</args>
 		</sharpen>
 		
