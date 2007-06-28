@@ -67,10 +67,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes, redirect);
     }
     
-    public void readCandidates(MarshallerFamily mf, Buffer a_bytes, QCandidates a_candidates) {
-        // do nothing
-    }
-    
     public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
     	// FIXME catchall
         try {

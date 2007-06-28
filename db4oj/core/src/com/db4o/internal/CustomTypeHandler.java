@@ -61,12 +61,6 @@ public class CustomTypeHandler implements TypeHandler4{
         return null;
     }
 
-    public void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates)
-        throws Db4oIOException {
-        // TODO Auto-generated method stub
-        
-    }
-
     public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection,
         Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException {
         // TODO Auto-generated method stub
