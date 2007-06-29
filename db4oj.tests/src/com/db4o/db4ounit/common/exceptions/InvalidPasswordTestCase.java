@@ -19,7 +19,15 @@ public class InvalidPasswordTestCase extends Db4oClientServerTestCase {
 				Db4o.openClient("127.0.0.1", port, "strangeusername",
 						"invalidPassword");
 			}
-
+		});
+	}
+	
+	public void testEmptyUserPassword() {
+		final int port = clientServerFixture().serverPort();
+		Assert.expect(InvalidPasswordException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				Db4o.openClient("127.0.0.1", port, "", "");
+			}
 		});
 	}
 	
@@ -27,16 +35,13 @@ public class InvalidPasswordTestCase extends Db4oClientServerTestCase {
 		final int port = clientServerFixture().serverPort();
 		Assert.expect(InvalidPasswordException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4o.openClient("127.0.0.1", port, "", "");
-			}
-		});
-		
-		Assert.expect(InvalidPasswordException.class, new CodeBlock() {
-			public void run() throws Throwable {
 				Db4o.openClient("127.0.0.1", port, "", null);
 			}
 		});
-		
+	}
+	
+	public void testNullPassword() {
+		final int port = clientServerFixture().serverPort();
 		Assert.expect(InvalidPasswordException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				Db4o.openClient("127.0.0.1", port, null, null);
