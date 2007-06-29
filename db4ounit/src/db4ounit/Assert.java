@@ -19,7 +19,7 @@ public final class Assert {
 		} 
 		if (exception.isInstance(e)) 
 			return;
-		fail("Expecting '" + exception.getName() + "' but got '" + e.getClass().getName() + "'");
+		fail("Expecting '" + exception.getName() + "' but got '" + e.getClass().getName() + "'", e);
 	}
 	
 	private static Throwable getThrowable(CodeBlock block) {
@@ -37,6 +37,10 @@ public final class Assert {
 
 	public static void fail(String msg) {
 		throw new AssertionException(msg);
+	}
+	
+	public static void fail(String msg, Throwable cause) {
+		throw new AssertionException(msg, cause);
 	}
 	
 	public static void isTrue(boolean condition) {
