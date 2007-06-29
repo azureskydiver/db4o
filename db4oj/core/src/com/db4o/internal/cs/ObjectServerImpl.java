@@ -327,6 +327,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private void startCommittedCallbackThread(BlockingQueue committedInfosQueue) {
 		_committedCallbacksDispatcher = new CommittedCallbacksDispatcher(this, committedInfosQueue);
 		Thread thread = new Thread(_committedCallbacksDispatcher);
+		thread.setName("committed callback thread");
 		thread.setDaemon(true);
 		thread.start();
 	}
