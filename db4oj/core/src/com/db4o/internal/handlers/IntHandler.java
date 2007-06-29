@@ -104,10 +104,6 @@ public class IntHandler extends PrimitiveHandler {
         prepareComparison(val(obj));
     }
     
-    public Object current1(){
-        return new Integer(currentInt());
-    }
-    
     public int currentInt(){
         return i_compareTo;
     }

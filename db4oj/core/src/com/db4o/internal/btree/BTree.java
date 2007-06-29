@@ -82,7 +82,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     	keyCantBeNull(key);
         _keyHandler.prepareComparison(key);
         ensureDirty(trans);
-        BTreeNode rootOrSplit = _root.add(trans);
+        BTreeNode rootOrSplit = _root.add(trans, key);
         if(rootOrSplit != null && rootOrSplit != _root){
             _root = new BTreeNode(trans, _root, rootOrSplit);
             _root.write(trans.systemTransaction());
@@ -101,7 +101,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         BTreePointer first = (BTreePointer)pointers.current();
         ensureDirty(trans);
         BTreeNode node = first.node();
-        node.remove(trans, first.index());
+        node.remove(trans, key, first.index());
     }
     
     public BTreeRange search(Transaction trans, Object key) {

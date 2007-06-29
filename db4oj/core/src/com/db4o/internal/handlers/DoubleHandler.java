@@ -65,10 +65,6 @@ public final class DoubleHandler extends LongHandler {
 		i_compareToDouble = dval(obj);
 	}
     
-    public Object current1(){
-        return new Double(i_compareToDouble);
-    }
-	
 	boolean isEqual1(Object obj){
 		return obj instanceof Double && dval(obj) == i_compareToDouble;
 	}

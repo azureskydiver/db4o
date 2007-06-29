@@ -94,10 +94,6 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
 		i_compareTo = obj;
 	}
     
-    public Object current1(){
-        return i_compareTo;
-    }
-
 	boolean isEqual1(Object obj) {
 		return isEqual(i_compareTo, obj);
 	}

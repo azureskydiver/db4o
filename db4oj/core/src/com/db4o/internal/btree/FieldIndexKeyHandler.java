@@ -78,10 +78,6 @@ public class FieldIndexKeyHandler implements Indexable4{
         return _parentIdHandler.compareTo(composite.parentID());
     }
 
-    public Object current() {
-        return new FieldIndexKey(_parentIdHandler.currentInt(), _valueHandler.current());  
-    }
-
 	public void defragIndexEntry(ReaderPair readers) {
 		_parentIdHandler.defragIndexEntry(readers);
         _valueHandler.defragIndexEntry(readers);

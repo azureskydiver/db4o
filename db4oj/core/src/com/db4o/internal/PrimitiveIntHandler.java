@@ -31,8 +31,4 @@ public class PrimitiveIntHandler extends IntHandler{
 		return val(obj) - _currentInt;
 	}
 
-	public Object current() {
-		return _currentInteger;
-	}
-
 }

@@ -65,10 +65,6 @@ public final class FloatHandler extends IntHandler {
 		i_compareTo = valu(obj);
 	}
     
-    public Object current1(){
-        return new Float(i_compareTo);
-    }
-
 	boolean isEqual1(Object obj) {
 		return obj instanceof Float && valu(obj) == i_compareTo;
 	}

@@ -79,10 +79,6 @@ public final class ShortHandler extends PrimitiveHandler {
 		i_compareTo = val(obj);
 	}
     
-    public Object current1(){
-        return new Short(i_compareTo);
-    }
-	
 	boolean isEqual1(Object obj){
 		return obj instanceof Short && val(obj) == i_compareTo;
 	}

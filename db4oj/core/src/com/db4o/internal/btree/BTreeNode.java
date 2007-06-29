@@ -91,7 +91,7 @@ public final class BTreeNode extends PersistentBase{
      * @return the split node if this node is split
      * or this if the first key has changed
      */
-    public BTreeNode add(Transaction trans){
+    public BTreeNode add(Transaction trans, Object obj){
         
         Buffer reader = prepareRead(trans);        
         Searcher s = search(reader);
@@ -101,7 +101,7 @@ public final class BTreeNode extends PersistentBase{
             prepareWrite(trans);
             
             if (wasRemoved(trans, s)) {
-            	cancelRemoval(trans, s.cursor());
+            	cancelRemoval(trans, obj, s.cursor());
             	return null;
             }
             
@@ -110,11 +110,11 @@ public final class BTreeNode extends PersistentBase{
             }
             
             prepareInsert(s.cursor());
-            _keys[s.cursor()] = newAddPatch(trans);
+            _keys[s.cursor()] = newAddPatch(trans, obj);
         }else{
             
             BTreeNode childNode = child(reader, s.cursor());
-            BTreeNode childNodeOrSplit = childNode.add(trans);
+            BTreeNode childNodeOrSplit = childNode.add(trans, obj);
             if(childNodeOrSplit == null){
                 return null;
             }
@@ -143,24 +143,20 @@ public final class BTreeNode extends PersistentBase{
 		return _count >= _btree.nodeSize();
 	}
 
-    private BTreeAdd newAddPatch(Transaction trans) {
+    private BTreeAdd newAddPatch(Transaction trans, Object obj) {
         sizeIncrement(trans);
-        return new BTreeAdd(trans, currentKey());
+        return new BTreeAdd(trans, obj);
     }
 
-	private Object currentKey() {
-		return keyHandler().current();
-	}
-
-	private void cancelRemoval(Transaction trans, int index) {
+	private void cancelRemoval(Transaction trans, Object obj, int index) {
 		final BTreeUpdate patch = (BTreeUpdate)keyPatch(index);
         BTreeUpdate nextPatch = patch.removeFor(trans);
-        _keys[index] = newCancelledRemoval(trans, patch.getObject(), nextPatch);
+        _keys[index] = newCancelledRemoval(trans, patch.getObject(), obj, nextPatch);
         sizeIncrement(trans); 
 	}
 
-	private BTreePatch newCancelledRemoval(Transaction trans, Object originalObject, BTreeUpdate existingPatches) {
-		return new BTreeCancelledRemoval(trans, originalObject, currentKey(), existingPatches);
+	private BTreePatch newCancelledRemoval(Transaction trans, Object originalObject, Object currentObject, BTreeUpdate existingPatches) {
+		return new BTreeCancelledRemoval(trans, originalObject, currentObject, existingPatches);
 	}
 
 	private void sizeIncrement(Transaction trans) {
@@ -708,7 +704,7 @@ public final class BTreeNode extends PersistentBase{
         }
     }
     
-    public void remove(Transaction trans, int index){
+    public void remove(Transaction trans, Object obj, int index){
         if(!_isLeaf){
             throw new IllegalStateException();
         }
@@ -719,7 +715,7 @@ public final class BTreeNode extends PersistentBase{
         
         // no patch, no problem, can remove
         if(patch == null){
-            _keys[index] = newRemovePatch(trans);
+            _keys[index] = newRemovePatch(trans, obj);
             keyChanged(trans, index);
             return;
         }
@@ -731,7 +727,7 @@ public final class BTreeNode extends PersistentBase{
                 return;
             }
 			if(transPatch.isCancelledRemoval()){
-				BTreeRemove removePatch = newRemovePatch(trans, transPatch.getObject());
+				BTreeRemove removePatch = applyNewRemovePatch(trans, transPatch.getObject());
 				_keys[index] = ((BTreeUpdate)patch).replacePatch(transPatch, removePatch);
 				keyChanged(trans, index);
 				return;
@@ -740,7 +736,7 @@ public final class BTreeNode extends PersistentBase{
             // If the patch is a removal of a cancelled removal for another
             // transaction, we need one for this transaction also.
             if(! patch.isAdd()){
-                ((BTreeUpdate)patch).append(newRemovePatch(trans));
+                ((BTreeUpdate)patch).append(newRemovePatch(trans, obj));
                 return;
             }
         }
@@ -750,7 +746,7 @@ public final class BTreeNode extends PersistentBase{
             if(compareInWriteMode(index + 1 ) != 0){
                 return;
             }
-            remove(trans, index + 1);
+            remove(trans, obj, index + 1);
             return;
         }
         
@@ -766,7 +762,7 @@ public final class BTreeNode extends PersistentBase{
             return;
         }
         
-        node.remove(trans, 0);
+        node.remove(trans, obj, 0);
     }
 
 	private void cancelAdding(Transaction trans, int index) {
@@ -788,11 +784,11 @@ public final class BTreeNode extends PersistentBase{
 		return _count - 1;
 	}
 
-	private BTreeRemove newRemovePatch(Transaction trans) {
-		return newRemovePatch(trans, currentKey());
+	private BTreeRemove newRemovePatch(Transaction trans, Object obj) {
+		return applyNewRemovePatch(trans, obj);
 	}
 	
-	private BTreeRemove newRemovePatch(Transaction trans, Object key) {
+	private BTreeRemove applyNewRemovePatch(Transaction trans, Object key) {
         _btree.sizeChanged(trans, -1);
 		return new BTreeRemove(trans, key);
 	}

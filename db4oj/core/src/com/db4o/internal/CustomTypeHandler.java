@@ -84,11 +84,6 @@ public class CustomTypeHandler implements TypeHandler4{
         return 0;
     }
 
-    public Object current() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public Comparable4 prepareComparison(Object obj) {
         // TODO Auto-generated method stub
         return null;

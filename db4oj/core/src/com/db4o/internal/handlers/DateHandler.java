@@ -63,10 +63,6 @@ public final class DateHandler extends LongHandler {
 		a_bytes.writeLong(((Date)a_object).getTime());
 	}
     
-    public Object current1(){
-        return new Date(currentLong());
-    }
-	
 	public static String now(){
 		return Platform4.format(new Date(), true);
 	}

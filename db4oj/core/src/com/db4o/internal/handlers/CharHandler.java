@@ -74,10 +74,6 @@ public final class CharHandler extends PrimitiveHandler {
 		i_compareTo = val(obj);
 	}
     
-    public Object current1(){
-        return new Character(i_compareTo);
-    }
-
 	boolean isEqual1(Object obj) {
 		return obj instanceof Character && val(obj) == i_compareTo;
 	}
