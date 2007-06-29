@@ -59,7 +59,13 @@ public class File4 {
 	}
 	
     public static void delete(String fname) {
-		new File(fname).delete();
+		final File file = new File(fname);
+		if (!file.exists()) {
+			return;
+		}
+		if (!file.delete()) {
+			throw new RuntimeException("Could not delete '" + fname + "'.");
+		}
 	}
     
     public static boolean exists(String fname){
