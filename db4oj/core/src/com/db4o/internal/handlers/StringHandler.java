@@ -193,10 +193,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         return this;
     }
     
-    public Object current(){
-        return i_compareTo;
-    }
-    
     public int compareTo(Object obj) {
         if(i_compareTo == null) {
             if(obj == null) {

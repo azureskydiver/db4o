@@ -1914,13 +1914,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return this;
     }
     
-    public Object current(){
-        if(i_compareTo == null){
-            return null;
-        }
-        return new Integer(i_lastID);
-    }
-
     public int compareTo(Object obj) {
         if(obj instanceof Integer){
             return ((Integer)obj).intValue() - i_lastID;

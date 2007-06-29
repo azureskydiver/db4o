@@ -17,10 +17,6 @@ public class Null implements Indexable4{
         return -1;
     }
     
-    public Object current(){
-        return null;
-    }
-    
     public int linkLength() {
         return 0;
     }

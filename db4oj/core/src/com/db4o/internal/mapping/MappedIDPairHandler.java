@@ -43,10 +43,6 @@ public class MappedIDPairHandler implements Indexable4 {
         return _origHandler.compareTo(((MappedIDPair)obj).orig());
 	}
 
-	public Object current() {
-		return new MappedIDPair(_origHandler.currentInt(),_mappedHandler.currentInt());
-	}
-
 	public Comparable4 prepareComparison(Object obj) {
         MappedIDPair mappedIDs = (MappedIDPair)obj;
         _origHandler.prepareComparison(mappedIDs.orig());

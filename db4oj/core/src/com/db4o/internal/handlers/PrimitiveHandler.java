@@ -143,17 +143,8 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
         return this;
     }
     
-    public Object current(){
-        if (i_compareToIsNull){
-            return null;
-        }
-        return current1();
-    }
-
     abstract void prepareComparison1(Object obj);
     
-    public abstract Object current1();
-
     public int compareTo(Object obj) {
         if (i_compareToIsNull) {
             if (obj == null) {
