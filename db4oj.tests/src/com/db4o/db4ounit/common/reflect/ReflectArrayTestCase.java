@@ -22,10 +22,13 @@ public class ReflectArrayTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testIsNDimensional() {
-		ReflectClass klass = reflectClass(String[][].class);
-		Assert.isTrue(klass.isArray());
-		Assert.areSame(reflectClass(String[].class), klass.getComponentType());
-		Assert.isTrue(arrayReflector().isNDimensional(klass));
+		ReflectClass arrayOfArrayOfString = reflectClass(String[][].class);
+		Assert.isTrue(arrayOfArrayOfString.isArray());
+		
+		final ReflectClass arrayOfString = reflectClass(String[].class);
+		Assert.areSame(arrayOfString, arrayOfArrayOfString.getComponentType());
+		Assert.isTrue(arrayReflector().isNDimensional(arrayOfArrayOfString));		
+		Assert.isFalse(arrayReflector().isNDimensional(arrayOfString));
 	}
 
 	public void testDimensions() {
