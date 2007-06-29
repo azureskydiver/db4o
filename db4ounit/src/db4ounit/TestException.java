@@ -9,13 +9,18 @@ public class TestException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private final Exception _reason;
+	private final Throwable _reason;
+	
+	public TestException(String message, Throwable reason) {
+		super(message);
+		_reason = reason;
+	}	
 
-	public TestException(Exception reason) {
+	public TestException(Throwable reason) {
 		_reason = reason;
 	}
 	
-	public final Exception getReason() {
+	public final Throwable getReason() {
 		return _reason;
 	}
 	
