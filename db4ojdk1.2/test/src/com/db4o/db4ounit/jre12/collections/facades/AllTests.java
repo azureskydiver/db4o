@@ -1,4 +1,4 @@
-/* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2006 - 2007 db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.db4ounit.jre12.collections.facades;
 
@@ -13,6 +13,7 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			RawFastListTestCase.class,
+			StoredFastListTestCase.class,
 		};
 	}
 

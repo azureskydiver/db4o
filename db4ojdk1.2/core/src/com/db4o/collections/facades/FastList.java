@@ -4,7 +4,6 @@ package com.db4o.collections.facades;
 
 import java.util.*;
 
-import com.db4o.collections.facades.FastListCache.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.collections.*;
 
@@ -17,6 +16,10 @@ public class FastList implements java.util.List{
     private PersistentList _persistentList;
     
     private transient FastListCache _cache;
+    
+    public FastList() {
+    	
+    }
     
     public FastList(PersistentList persistentList) {
     	_persistentList = persistentList;
