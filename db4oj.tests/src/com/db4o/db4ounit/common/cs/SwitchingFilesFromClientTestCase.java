@@ -17,7 +17,7 @@ public class SwitchingFilesFromClientTestCase extends ClientServerTestCaseBase {
 		SwitchingFilesFromClientUtil.deleteFiles();
 	}
 
-	protected void db4oCustomTearDown() throws Exception {
+	protected void db4oTearDownAfterClean() throws Exception {
 		SwitchingFilesFromClientUtil.deleteFiles();
 	}
 }

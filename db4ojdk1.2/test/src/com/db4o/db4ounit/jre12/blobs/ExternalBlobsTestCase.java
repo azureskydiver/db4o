@@ -39,7 +39,7 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOu
 		deleteFiles();
 	}
 	
-	protected void db4oCustomTearDown() throws Exception {
+	protected void db4oTearDownBeforeClean() throws Exception {
 		deleteFiles();
 	}
 	

@@ -18,7 +18,7 @@ public class Db4oIOExceptionTestCaseBase extends AbstractDb4oTestCase implements
 		ExceptionIOAdapter.exception = false;
 	}
 
-	protected void db4oCustomTearDown() throws Exception {
+	protected void db4oTearDownBeforeClean() throws Exception {
 		ExceptionIOAdapter.exception = false;
 	}
 }

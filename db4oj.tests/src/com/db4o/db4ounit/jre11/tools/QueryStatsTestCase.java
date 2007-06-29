@@ -41,7 +41,7 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 		_stats.connect(db());
 	}
 
-	protected void db4oCustomTearDown() throws Exception {
+	protected void db4oTearDownBeforeClean() throws Exception {
 		_stats.disconnect();
 	}
 

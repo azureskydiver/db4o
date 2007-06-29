@@ -58,7 +58,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		_anotherClient = clientServerFixture().openNewClient();
 	}
 	
-	protected void db4oCustomTearDown() throws Exception {
+	protected void db4oTearDownBeforeClean() throws Exception {
 		committed().removeListener(_eventRecorder);
 		if(_anotherClient != null) {
 			_anotherClient.close();

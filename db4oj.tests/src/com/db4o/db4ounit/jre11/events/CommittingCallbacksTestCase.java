@@ -59,7 +59,7 @@ public class CommittingCallbacksTestCase extends AbstractDb4oTestCase {
 		committing().addListener(_eventRecorder);
 	}
 	
-	protected void db4oCustomTearDown() throws Exception {
+	protected void db4oTearDownBeforeClean() throws Exception {
 		committing().removeListener(_eventRecorder);
 	}
 	

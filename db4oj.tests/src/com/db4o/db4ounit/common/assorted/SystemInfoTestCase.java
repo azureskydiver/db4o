@@ -22,7 +22,7 @@ public class SystemInfoTestCase extends AbstractDb4oTestCase{
         new SystemInfoTestCase().runSolo();
     }
 
-    protected void db4oCustomTearDown() throws Exception {
+    protected void db4oTearDownBeforeClean() throws Exception {
         Db4o.configure().freespace().useRamSystem();
     }
     
