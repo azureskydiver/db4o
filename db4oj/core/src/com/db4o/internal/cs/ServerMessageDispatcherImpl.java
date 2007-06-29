@@ -36,40 +36,30 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	private boolean _caresAboutCommitted;
 	
 	private boolean _isClosed;
-    
 
-    ServerMessageDispatcherImpl(
-        ObjectServerImpl aServer,
-        ClientTransactionHandle transactionHandle,
-        Socket4 aSocket,
-        int aThreadID,
-        boolean loggedIn)
-        throws Exception {
-    	
-    	_transactionHandle = transactionHandle;
-    	
-    	setDaemon(true);
-        	
-        i_loggedin = loggedIn;
-         
-        updateLastActiveTime(); 
-        i_server = aServer;
-		i_config = (Config4Impl)i_server.configure();
-        i_threadID = aThreadID;
-        setDispatcherName("db4o message server " + aThreadID);
-        try {
-            i_socket = aSocket;
-            i_socket.setSoTimeout(((Config4Impl)aServer.configure()).timeoutServerSocket());
+    ServerMessageDispatcherImpl(ObjectServerImpl server,
+			ClientTransactionHandle transactionHandle, Socket4 socket,
+			int threadID, boolean loggedIn) throws Exception {
 
-            // TODO: Experiment with packetsize and noDelay
-            // i_socket.setSendBufferSize(100);
-            // i_socket.setTcpNoDelay(true);
+		_transactionHandle = transactionHandle;
 
-        } catch (Exception e) {
-            i_socket.close();
-            throw (e);
-        }
-    }
+		setDaemon(true);
+
+		i_loggedin = loggedIn;
+
+		updateLastActiveTime();
+		i_server = server;
+		i_config = (Config4Impl) i_server.configure();
+		i_threadID = threadID;
+		setDispatcherName("" + threadID);
+		i_socket = socket;
+		i_socket.setSoTimeout(((Config4Impl) server.configure())
+				.timeoutServerSocket());
+
+		// TODO: Experiment with packetsize and noDelay
+		// i_socket.setSendBufferSize(100);
+		// i_socket.setTcpNoDelay(true);
+	}
 
     public synchronized boolean close() {
 		if (!isMessageDispatcherAlive()) {
@@ -238,7 +228,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	public void setDispatcherName(String name) {
 		i_clientName = name;
 		// set thread name
-		setName("db4o server socket for client " + name);
+		setName("db4o server message dispatcher " + name);
 	}
     
     public int dispatcherID() {
