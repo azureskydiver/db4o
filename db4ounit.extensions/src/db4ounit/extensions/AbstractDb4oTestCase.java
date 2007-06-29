@@ -58,16 +58,18 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	
 	public final void tearDown() throws Exception {
 		try {
-			db4oCustomTearDown();
+			db4oTearDownBeforeClean();
 		} finally {
 			_fixture.close();
 	        _fixture.clean();
 		}
+		db4oTearDownAfterClean();
 	}
 	
 	protected void db4oSetupBeforeStore() throws Exception {}
 	protected void db4oSetupAfterStore() throws Exception {}
-	protected void db4oCustomTearDown() throws Exception {}
+	protected void db4oTearDownBeforeClean() throws Exception {}
+	protected void db4oTearDownAfterClean() throws Exception {}
 
 	protected void configure(Configuration config) throws Exception {}
 	

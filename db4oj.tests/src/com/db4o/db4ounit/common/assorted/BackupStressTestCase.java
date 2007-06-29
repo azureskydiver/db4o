@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.assorted;
 
+import java.io.IOException;
+
 import com.db4o.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
@@ -50,13 +52,13 @@ public class BackupStressTestCase implements Db4oTestCase {
 		}
     }
     
-    public void setUp(){
+    public void setUp() throws Exception{
     	deleteFile(FILE);
         Db4o.configure().objectClass(BackupStressItem.class).objectField("_iteration").indexed(true);
         Db4o.configure().reflectWith(Platform4.reflectorForType(BackupStressItem.class));
     }
     
-    public void tearDown() {
+    public void tearDown() throws IOException {
     	deleteFile(FILE);
     }
 
@@ -126,7 +128,7 @@ public class BackupStressTestCase implements Db4oTestCase {
         _objectContainer.close();
     }
     
-    private void checkBackups(){
+    private void checkBackups() throws IOException{
         stdout("BackupStressTest");
         stdout("Backups created: " + _backups);
         

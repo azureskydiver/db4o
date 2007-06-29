@@ -19,8 +19,8 @@ public class BackupDb4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		File4.delete(BACKUP_FILE);
 	}
 
-	protected void db4oCustomTearDown() throws Exception {
-		super.db4oCustomTearDown();
+	protected void db4oTearDownBeforeClean() throws Exception {
+		super.db4oTearDownBeforeClean();
 		File4.delete(BACKUP_FILE);
 	}
 	

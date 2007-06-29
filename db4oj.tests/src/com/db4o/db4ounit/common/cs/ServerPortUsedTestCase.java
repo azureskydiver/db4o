@@ -16,7 +16,7 @@ public class ServerPortUsedTestCase extends Db4oClientServerTestCase {
 		new ServerPortUsedTestCase().runAll();
 	}
 
-	protected void db4oCustomTearDown() throws Exception {
+	protected void db4oTearDownBeforeClean() throws Exception {
 		File4.delete(DB);
 
 	}
