@@ -1050,5 +1050,9 @@
             <property name="Configuration" value="Release" />
             <property name="OutputPath" value="${dir.dist.dll}/cf2.0" />
         </msbuild>
+        
+        <exec executable="${vdma_desktop.exe}" failonerror="true">
+            <arg line="&quot;\Storage Card\Db4objects.Db4o.Tests.exe run&quot;" />
+        </exec>
     </target>
 </project>
