@@ -135,14 +135,20 @@ public class Db4o {
      * @throws InvalidPasswordException password supplied for the connection is
      * invalid.
 	 */
-	public static ObjectContainer openClient(Configuration config,String hostName, int port, String user, String password)
-			throws Db4oIOException, OldFormatException, InvalidPasswordException {
-			try {
-				NetworkSocket networkSocket = new NetworkSocket(hostName, port);
-				return new ClientObjectContainer(config,networkSocket, user, password, true);
-			} catch (IOException e) {
-				throw new Db4oIOException(e);
-			}
+	public static ObjectContainer openClient(Configuration config,
+			String hostName, int port, String user, String password)
+			throws Db4oIOException, OldFormatException,
+			InvalidPasswordException {
+		if (user == null || password == null) {
+			throw new InvalidPasswordException();
+		}
+		try {
+			NetworkSocket networkSocket = new NetworkSocket(hostName, port);
+			return new ClientObjectContainer(config, networkSocket, user,
+					password, true);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
 	}
 
     /**

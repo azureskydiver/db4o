@@ -9,7 +9,7 @@ import db4ounit.extensions.*;
 public class InvalidPasswordTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
-		new InvalidPasswordTestCase().runClientServer();
+		new InvalidPasswordTestCase().runAll();
 	}
 	
 	public void testInvalidPassword() {
@@ -31,7 +31,7 @@ public class InvalidPasswordTestCase extends Db4oClientServerTestCase {
 		});
 	}
 	
-	public void testEmptyPassword() {
+	public void testEmptyUserNullPassword() {
 		final int port = clientServerFixture().serverPort();
 		Assert.expect(InvalidPasswordException.class, new CodeBlock() {
 			public void run() throws Throwable {
