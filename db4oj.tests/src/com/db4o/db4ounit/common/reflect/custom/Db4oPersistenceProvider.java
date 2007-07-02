@@ -26,15 +26,6 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		}
 	}
 
-	public void closeContext(PersistenceContext context, boolean purge) {
-		logMethodCall("closeContext", context, new Boolean(purge));
-
-		closeContext(context);
-		if (purge) {
-			purge(context.url());
-		}
-	}
-
 	public void createEntryClass(PersistenceContext context, String className,
 			String[] fieldNames, String[] fieldTypes) {
 		logMethodCall("createEntryClass", context, className);
@@ -115,7 +106,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		return new PersistentEntry(entry.className, entry.uid, entry.fieldValues);
 	}
 
-	private void closeContext(PersistenceContext context) {
+	public void closeContext(PersistenceContext context) {
 		logMethodCall("closeContext", context);
 
 		MyContext customContext = my(context);
@@ -154,9 +145,15 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 
 	private Configuration metaConfiguration() {
 		Configuration config = Db4o.newConfiguration();
-		config.objectClass(CustomClassRepository.class).cascadeOnUpdate(true);
-		config.objectClass(CustomClassRepository.class).cascadeOnActivate(true);
+		config.exceptionsOnNotStorable(true);
+		cascade(config, CustomClassRepository.class);
+//		cascade(config, Hashtable4.class);
 		return config;
+	}
+
+	private void cascade(Configuration config, Class klass) {
+		config.objectClass(klass).cascadeOnUpdate(true);
+		config.objectClass(klass).cascadeOnActivate(true);
 	}
 
 	private ObjectContainer metadataContainer(PersistenceContext context) {
@@ -175,7 +172,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		return Db4o.openFile(metaConfiguration(), metadataFile(fname));
 	}
 
-	private void purge(String url) {
+	public void purge(String url) {
 		File4.delete(url);
 		File4.delete(metadataFile(url));
 	}

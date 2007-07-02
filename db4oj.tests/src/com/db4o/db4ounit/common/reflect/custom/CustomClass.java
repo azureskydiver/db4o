@@ -102,7 +102,7 @@ public class CustomClass implements ReflectClass {
 	}
 
 	public Object newInstance() {
-		return new PersistentEntry(_name, null, new Object[_fields.length]);
+		return new PersistentEntry(_name, null, new Object[_fields.length-1 /* uid field is kept explicitly */]);
 	}
 
 	public Reflector reflector() {

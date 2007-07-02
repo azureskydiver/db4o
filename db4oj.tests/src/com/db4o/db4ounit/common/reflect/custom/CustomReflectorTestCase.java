@@ -28,18 +28,18 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	PersistenceProvider _provider;
 
 	public void setUp() {
+		purge();
+		
 		initializeContext();
 		initializeProvider();
 		createEntryClass(CLASS_NAME, FIELD_NAMES, FIELD_TYPES);
 		createIndex(CLASS_NAME, FIELD_NAMES[0]);
 		insertEntries();
 
-		// TODO: uncomment the line below
-		// to really test the provider
-//		restartProvider();
+		restartProvider();
 	}
 
-	public void _testSelectAll() {
+	public void testSelectAll() {
 
 		Collection4 all = new Collection4(selectAll());
 		Assert.areEqual(ENTRIES.length, all.size());
@@ -64,7 +64,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		return null;
 	}
 
-	public void _testSelectByField() {
+	public void testSelectByField() {
 
 		PersistentEntry expected = ENTRIES[1];
 		Iterator4 found = selectByField(FIELD_NAMES[0], expected.fieldValues[0]);
@@ -131,8 +131,13 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private void shutdownProvider(boolean purge) {
-		_provider.closeContext(_context, purge);
+		_provider.closeContext(_context);
+		if (purge) purge();
 		_provider = null;
+	}
+	
+	void purge() {
+		new Db4oPersistenceProvider().purge(dataFile());
 	}
 
 	void restartProvider() {

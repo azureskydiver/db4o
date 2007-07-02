@@ -32,7 +32,7 @@ public class CustomField implements ReflectField {
 
 	public ReflectClass getFieldType() {
 		logMethodCall("getFieldType");
-		return _repository.reflectClass(_type);
+		return _repository.forFieldType(_type);
 	}
 
 	public String getName() {

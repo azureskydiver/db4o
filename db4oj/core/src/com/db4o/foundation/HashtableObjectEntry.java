@@ -7,7 +7,9 @@ package com.db4o.foundation;
  */
 public class HashtableObjectEntry extends HashtableIntEntry {
 
-	private Object _objectKey;
+	// FIELDS ARE PUBLIC SO THEY CAN BE REFLECTED ON IN JDKs <= 1.1
+
+	public Object _objectKey;
 
 	HashtableObjectEntry(int a_hash, Object a_key, Object a_object) {
 		super(a_hash, a_object);
@@ -18,8 +20,8 @@ public class HashtableObjectEntry extends HashtableIntEntry {
 		super(a_key.hashCode(), a_object);
 		_objectKey = a_key;
 	}
-
-	protected HashtableObjectEntry() {
+	
+	public HashtableObjectEntry() {
 		super();
 	}
 	

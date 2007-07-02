@@ -11,6 +11,7 @@ public class CustomReflector implements Reflector {
 	
 	private final Reflector _delegate = Platform4.reflectorForType(Object.class);
 	private final CustomClassRepository _classRepository;
+	private Reflector _parent;
 
 	public CustomReflector(CustomClassRepository classRepository) {
 		classRepository.initialize(this);
@@ -75,6 +76,7 @@ public class CustomReflector implements Reflector {
 
 	public void setParent(Reflector reflector) {
 		logMethodCall("setParent", reflector);
+		_parent = reflector;
 		_delegate.setParent(reflector);
 	}
 
@@ -94,5 +96,9 @@ public class CustomReflector implements Reflector {
 
 	private void logMethodCall(String methodName, Object arg) {
 		Logger.logMethodCall(this, methodName, arg);
+	}
+
+	public ReflectClass forFieldType(Class type) {
+		return _parent.forClass(type);
 	}
 }
