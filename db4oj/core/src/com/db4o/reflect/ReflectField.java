@@ -13,6 +13,12 @@ public interface ReflectField {
 	
 	public String getName();
 	
+	/**
+	 * The ReflectClass returned by this method should have been
+	 * provided by the parent reflector.
+	 * 
+	 * @return the ReflectClass representing the field type as provided by the parent reflector
+	 */
 	public ReflectClass getFieldType();
 	
 	public boolean isPublic();
