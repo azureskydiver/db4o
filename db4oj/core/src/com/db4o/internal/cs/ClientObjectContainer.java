@@ -29,7 +29,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	private BlockingQueue _messageQueue = new BlockingQueue();
 
-	private String password; // null denotes password not necessary
+	private String _password; // null denotes password not necessary
 
 	int[] _prefetchedIDs;
 
@@ -41,7 +41,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 
 	private boolean _singleThreaded;
 
-	private String userName;
+	private String _userName;
 
 	private Db4oDatabase i_db;
 
@@ -72,13 +72,10 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		open();
 	}
 
-	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password_, boolean login) {
+	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password, boolean login) {
 		super(config, null);
-		if (password_ == null) {
-			throw new InvalidPasswordException();
-		}
-		userName = user;
-		password = password_;
+		_userName = user;
+		_password = password;
 		_login = login;
 		setAndConfigSocket(socket);
 		open();
@@ -105,7 +102,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				loginToServer(i_socket);
 			}
 			if (!_singleThreaded) {
-				startDispatcherThread(i_socket, userName);
+				startDispatcherThread(i_socket, _userName);
 			}
 			logMsg(36, toString());
 			readThis();
@@ -408,12 +405,12 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	private void loginToServer(Socket4 a_socket)
 			throws InvalidPasswordException {
 		UnicodeStringIO stringWriter = new UnicodeStringIO();
-		int length = stringWriter.length(userName)
-				+ stringWriter.length(password);
+		int length = stringWriter.length(_userName)
+				+ stringWriter.length(_password);
 		MsgD message = Msg.LOGIN
 				.getWriterForLength(systemTransaction(), length);
-		message.writeString(userName);
-		message.writeString(password);
+		message.writeString(_userName);
+		message.writeString(_password);
 		message.write(this, a_socket);
 		try {
 			Msg msg = Msg.readMessage(this, systemTransaction(), a_socket);
@@ -629,7 +626,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		// if(i_classCollection != null){
 		// return i_classCollection.toString();
 		// }
-		return "Client Connection " + userName;
+		return "Client Connection " + _userName;
 	}
 
 	public void shutdown() {
