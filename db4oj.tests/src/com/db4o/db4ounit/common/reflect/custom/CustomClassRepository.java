@@ -63,8 +63,8 @@ public class CustomClassRepository {
 		_reflector = reflector;
 	}
 
-	public ReflectClass reflectClass(Class type) {
-		return _reflector.forClass(type);
+	public ReflectClass forFieldType(Class type) {
+		return _reflector.forFieldType(type);
 	}
 
 	public String toString() {

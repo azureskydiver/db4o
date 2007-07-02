@@ -10,8 +10,8 @@ class HashtableByteArrayEntry extends HashtableObjectEntry {
 	public HashtableByteArrayEntry(byte[] bytes, Object value) {
 		super(hash(bytes), bytes, value);
 	}
-    
-    private HashtableByteArrayEntry(){
+
+    public HashtableByteArrayEntry(){
         super();
     }
     

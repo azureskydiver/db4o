@@ -9,16 +9,18 @@ package com.db4o.foundation;
 public class Hashtable4 implements DeepClone {
 
 	private static final float FILL = 0.5F;
+	
+	// FIELDS ARE PUBLIC SO THEY CAN BE REFLECTED ON IN JDKs <= 1.1
 
-	private int _tableSize;
+	public int _tableSize;
 
-	private int _mask;
+	public int _mask;
 
-	private int _maximumSize;
+	public int _maximumSize;
 
-	private int _size;
+	public int _size;
 
-	private HashtableIntEntry[] _table;
+	public HashtableIntEntry[] _table;
 
 	public Hashtable4(int size) {
 		size = newSize(size); // legacy for .NET conversion

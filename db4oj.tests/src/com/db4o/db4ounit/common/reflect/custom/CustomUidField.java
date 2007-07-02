@@ -23,7 +23,7 @@ public class CustomUidField implements ReflectField {
 	}
 
 	public ReflectClass getFieldType() {
-		return _repository.reflectClass(java.lang.Object.class);
+		return _repository.forFieldType(java.lang.Object.class);
 	}
 
 	public String getName() {

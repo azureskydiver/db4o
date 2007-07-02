@@ -7,18 +7,20 @@ package com.db4o.foundation;
  */
 public class HashtableIntEntry implements Entry4, DeepClone  {
 
-	int _key;
+	// FIELDS ARE PUBLIC SO THEY CAN BE REFLECTED ON IN JDKs <= 1.1
 
-	Object _object;
+	public int _key;
 
-	HashtableIntEntry _next;
+	public Object _object;
+
+	public HashtableIntEntry _next;
 
 	HashtableIntEntry(int a_hash, Object a_object) {
 		_key = a_hash;
 		_object = a_object;
 	}
 
-	protected HashtableIntEntry() {
+	public HashtableIntEntry() {
 	}
 
 	public Object key() {
