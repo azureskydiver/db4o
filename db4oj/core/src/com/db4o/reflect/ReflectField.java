@@ -31,6 +31,12 @@ public interface ReflectField {
 	
 	public void setAccessible();  //TODO Refactoring suggestion: Let the set(onObject, value) method take care of this.
 	
+	/**
+	 * The ReflectClass returned by this method should have been
+	 * provided by the parent reflector.
+	 * 
+	 * @return the ReflectClass representing the index type as provided by the parent reflector
+	 */
 	public ReflectClass indexType();
 	
 	public Object indexEntry(Object orig);

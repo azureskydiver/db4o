@@ -36,6 +36,10 @@ public class CustomClass implements ReflectClass {
 	public ReflectConstructor[] getDeclaredConstructors() {
 		throw new NotImplementedException();
 	}
+	
+	public CustomField customField(String name) {
+		return (CustomField)getDeclaredField(name);
+	}
 
 	public ReflectField getDeclaredField(String name) {
 		for (int i=0; i<_fields.length; ++i) {
@@ -121,4 +125,11 @@ public class CustomClass implements ReflectClass {
 		throw new NotImplementedException();
 	}
 
+	public Iterator4 customFields() {
+		return Iterators.filter(_fields, new Predicate4() {
+			public boolean match(Object candidate) {
+				return candidate instanceof CustomField;
+			}
+		});
+	}
 }

@@ -101,4 +101,8 @@ public class CustomReflector implements Reflector {
 	public ReflectClass forFieldType(Class type) {
 		return _parent.forClass(type);
 	}
+
+	public Iterator4 customClasses() {
+		return _classRepository.iterator();
+	}
 }

@@ -1,15 +1,15 @@
 package com.db4o.db4ounit.common.reflect.custom;
 
-import com.db4o.foundation.*;
 import com.db4o.reflect.*;
 
 public class CustomField implements ReflectField {
 
 	// fields must be public so test works on less capable runtimes
-	public CustomClassRepository _repository;
-	public int _index;
+	public CustomClassRepository _repository;	
 	public String _name;
 	public Class _type;
+	public int _index;
+	public boolean _indexed;
 
 	public CustomField() {
 	}
@@ -41,12 +41,12 @@ public class CustomField implements ReflectField {
 
 	public Object indexEntry(Object orig) {
 		logMethodCall("indexEntry", orig);
-		throw new NotImplementedException();
+		return orig;
 	}
 
 	public ReflectClass indexType() {
 		logMethodCall("indexType");
-		throw new NotImplementedException();
+		return getFieldType();
 	}
 
 	public boolean isPublic() {
@@ -67,6 +67,14 @@ public class CustomField implements ReflectField {
 	}
 
 	public void setAccessible() {
+	}
+
+	public void indexed(boolean value) {
+		_indexed = value;
+	}
+	
+	public boolean indexed() {
+		return _indexed;
 	}
 
 	public String toString() {
