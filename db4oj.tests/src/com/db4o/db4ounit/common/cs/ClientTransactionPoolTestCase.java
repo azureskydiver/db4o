@@ -16,7 +16,7 @@ public class ClientTransactionPoolTestCase implements TestLifeCycle {
 		Configuration config = Db4o.newConfiguration();
 		config.io(new MemoryIoAdapter());
 		final LocalObjectContainer db = (LocalObjectContainer) Db4o.openFile(config, SwitchingFilesFromClientUtil.MAINFILE_NAME);
-		final ClientTransactionPool pool = new ClientTransactionPool(db, new Object());
+		final ClientTransactionPool pool = new ClientTransactionPool(db);
 		try {
 			Assert.areEqual(1, pool.openFileCount());
 			Transaction trans1 = pool.acquire(SwitchingFilesFromClientUtil.MAINFILE_NAME);

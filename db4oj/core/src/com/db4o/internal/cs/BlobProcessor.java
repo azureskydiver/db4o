@@ -39,7 +39,7 @@ class BlobProcessor extends Thread{
 			}
 			
 			while(msg != null){
-				msg.write(stream, socket);
+				msg.write(socket);
 				msg.processClient(socket);
 				synchronized(stream.blobLock){
 					synchronized(queue){
@@ -47,7 +47,7 @@ class BlobProcessor extends Thread{
 					}
 					if(msg == null){
 						terminated = true;
-						Msg.CLOSE.write(stream, socket);
+						Msg.CLOSE.write(socket);
 						try{
 							socket.close();
 						}catch(Exception e){

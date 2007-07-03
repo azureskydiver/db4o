@@ -3,7 +3,7 @@
 package com.db4o.foundation;
 
 /**
- * 
+ * @exclude
  */
 public class HashtableObjectEntry extends HashtableIntEntry {
 

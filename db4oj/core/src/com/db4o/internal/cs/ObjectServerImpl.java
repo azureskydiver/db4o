@@ -44,8 +44,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	
 	public ObjectServerImpl(final LocalObjectContainer container, int port) {
 		_container = container;
-		// TODO check whether individual lock is appropriate
-		_transactionPool = new ClientTransactionPool(container, new Object());
+		_transactionPool = new ClientTransactionPool(container);
 		_port = port;
 		_config = _container.configImpl();
 		_name = "db4o ServerSocket FILE: " + container.toString() + "  PORT:"+ _port;
@@ -284,7 +283,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
 		try {
 			ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_transactionPool),
-					serverFake, newThreadId(), true);
+					serverFake, newThreadId(), true, _container.lock());
 			addServerMessageDispatcher(messageDispatcher);
 			messageDispatcher.startDispatcher();
 			return clientFake;
@@ -340,7 +339,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		while (_serverSocket != null) {
 			try {
 				ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_transactionPool),
-						_serverSocket.accept(), newThreadId(), false);
+						_serverSocket.accept(), newThreadId(), false, _container.lock());
 				addServerMessageDispatcher(messageDispatcher);
 				messageDispatcher.startDispatcher();
 			} catch (Exception e) {

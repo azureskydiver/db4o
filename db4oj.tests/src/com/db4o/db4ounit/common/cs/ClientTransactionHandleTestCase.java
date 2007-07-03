@@ -16,7 +16,7 @@ public class ClientTransactionHandleTestCase implements TestLifeCycle {
 		Configuration config = Db4o.newConfiguration();
 		config.io(new MemoryIoAdapter());
 		final LocalObjectContainer db = (LocalObjectContainer) Db4o.openFile(config, SwitchingFilesFromClientUtil.MAINFILE_NAME);
-		final ClientTransactionPool pool = new ClientTransactionPool(db, new Object());
+		final ClientTransactionPool pool = new ClientTransactionPool(db);
 		try {
 			ClientTransactionHandle handleA = new ClientTransactionHandle(pool);
 			Assert.areEqual(db, handleA.transaction().stream());

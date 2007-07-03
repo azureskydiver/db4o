@@ -4,25 +4,20 @@ package com.db4o.internal.cs;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.messages.*;
 
 public class ClientTransactionPool {
 
 	private Hashtable4 _transaction2Container; // Transaction -> ContainerCount
 	private Hashtable4 _fileName2Container; // String -> ContainerCount
 	private final LocalObjectContainer _mainContainer;
-	
-	private final Object _lock;
-	
-	public ClientTransactionPool(LocalObjectContainer mainContainer, Object lock) {
+		
+	public ClientTransactionPool(LocalObjectContainer mainContainer) {
 		ContainerCount mainEntry = new ContainerCount(mainContainer, 1);
 		_transaction2Container = new Hashtable4();
 		_fileName2Container = new Hashtable4();
 		_fileName2Container.put(mainContainer.fileName(), mainEntry);
 		_mainContainer = mainContainer;
-		_lock = lock;
 	}
 
 	public Transaction acquireMain() {
@@ -30,7 +25,7 @@ public class ClientTransactionPool {
 	}
 
 	public Transaction acquire(String fileName) {
-		synchronized(_lock) {
+		synchronized(_mainContainer.lock()) {
 			ContainerCount entry = (ContainerCount) _fileName2Container.get(fileName);
 			if (entry == null) {
 				LocalObjectContainer container = (LocalObjectContainer) Db4o.openFile(fileName);
@@ -46,7 +41,7 @@ public class ClientTransactionPool {
 	
 	public void release(Transaction transaction, boolean rollbackOnClose) {
 		transaction.close(rollbackOnClose);
-		synchronized(_lock) {
+		synchronized(_mainContainer.lock()) {
 			ContainerCount entry = (ContainerCount) _transaction2Container.get(transaction);
 			_transaction2Container.remove(transaction);
 			entry.release();
@@ -58,10 +53,10 @@ public class ClientTransactionPool {
 	}
 	
 	public void close() {
-		synchronized(_lock) {
+		synchronized(_mainContainer.lock()) {
 			Iterator4 entryIter = _fileName2Container.iterator();
 			while(entryIter.moveNext()) {
-				HashtableObjectEntry hashEntry = (HashtableObjectEntry) entryIter.current();
+				Entry4 hashEntry = (Entry4) entryIter.current();
 				((ContainerCount)hashEntry.value()).close();
 			}
 			_transaction2Container = null;
@@ -76,14 +71,6 @@ public class ClientTransactionPool {
 
     public boolean isClosed() {
 		return _mainContainer == null || _mainContainer.isClosed();
-	}
-    
-    public Object streamLock() {
-    	return _mainContainer.lock();
-    }
-    
-    public void write(Msg message, Socket4 socket) {
-    	message.write(_mainContainer, socket);
 	}
 
 	private static class ContainerCount {

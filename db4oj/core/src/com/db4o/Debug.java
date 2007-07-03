@@ -30,8 +30,6 @@ public abstract class Debug extends Debug4 {
     
     public static final boolean weakReferences = true;
 
-    public static final boolean fakeServer = false;
-    
     public static final boolean messages = false;
 
     public static final boolean nio = true;
