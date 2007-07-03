@@ -273,7 +273,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	}
 
 	public boolean isPingTimeout() {
-		return (System.currentTimeMillis() - _lastActiveTime > i_config.pingInterval());
+		long elapsed = System.currentTimeMillis() - _lastActiveTime;
+		return i_loggedin && ((elapsed > i_config.pingInterval()));
 	}
 
 }
