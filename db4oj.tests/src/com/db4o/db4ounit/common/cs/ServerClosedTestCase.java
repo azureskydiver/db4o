@@ -14,7 +14,7 @@ public class ServerClosedTestCase extends Db4oClientServerTestCase {
 		new ServerClosedTestCase().runAll();
 	}
 
-	public void test() throws Exception {
+	public void _test() throws Exception {
 		final ExtObjectContainer db = fixture().db();
 		ObjectServerImpl serverImpl = (ObjectServerImpl) clientServerFixture()
 				.server();
