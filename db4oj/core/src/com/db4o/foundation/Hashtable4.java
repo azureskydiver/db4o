@@ -84,8 +84,39 @@ public class Hashtable4 implements DeepClone {
 		return getFromObjectEntry(key.hashCode(), key);
 	}
 	
+	/**
+	 * Iterates through all the {@link Entry4 entries}.
+	 *   
+	 * @return {@link Entry4} iterator
+	 */
 	public Iterator4 iterator(){
 		return new HashtableIterator(_table);
+	}
+	
+	/**
+	 * Iterates through all the keys.
+	 * 
+	 * @return key iterator
+	 */
+	public Iterator4 keys() {
+		return Iterators.map(iterator(), new Function4() {
+			public Object apply(Object current) {
+				return ((Entry4)current).key();
+			}
+		});
+	}
+	
+	/**
+	 * Iterates through all the values.
+	 * 
+	 * @return value iterator
+	 */
+	public Iterator4 values() {
+		return Iterators.map(iterator(), new Function4() {
+			public Object apply(Object current) {
+				return ((Entry4)current).value();
+			}
+		});
 	}
 	
 	public boolean containsKey(Object key) {
@@ -251,5 +282,5 @@ public class Hashtable4 implements DeepClone {
 			entry._next = _table[entryIndex(entry)];
 			_table[entryIndex(entry)] = entry;
 		}
-	}
+	}	
 }

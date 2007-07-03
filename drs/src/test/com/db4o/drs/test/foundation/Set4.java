@@ -52,11 +52,7 @@ public class Set4 {
 	}
 	
 	public Iterator4 iterator() {
-		return Iterators.map(_table.iterator(), new Function4() {
-			public Object apply(Object current) {
-				return ((Entry4)current).key();
-			}
-		});
+		return _table.keys();
 	}
 	
 	public String toString() {
