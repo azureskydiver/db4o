@@ -70,4 +70,8 @@ public class CustomClassRepository {
 	public String toString() {
 		return "CustomClassRepository(classes: " + _classes.size() + ")";
 	}
+
+	public Iterator4 iterator() {
+		return _classes.values();
+	}
 }

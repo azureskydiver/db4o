@@ -1,7 +1,8 @@
 package com.db4o.db4ounit.common.reflect.custom;
 
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
+import com.db4o.foundation.io.Path4;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 
@@ -15,43 +16,63 @@ import db4ounit.*;
  */
 public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 
-	private static final String CLASS_NAME = "Cat";
-	private static final String[] FIELD_NAMES = new String[] { "name", "troubleMakingScore" };
-	private static final String[] FIELD_TYPES = new String[] { "string", "int" };
-	private static final PersistentEntry[] ENTRIES = {
-		new PersistentEntry(CLASS_NAME, "0", new Object[] { "Biro-Biro", new Integer(9) }),
-		new PersistentEntry(CLASS_NAME, "1", new Object[] { "Samira", new Integer(4) }),
-		new PersistentEntry(CLASS_NAME, "2", new Object[] { "Ivo", new Integer(2) }),
+	private static final String CAT_CLASS = "Cat";
+	private static final String[] CAT_FIELD_NAMES = new String[] { "name", "troubleMakingScore" };
+	private static final String[] CAT_FIELD_TYPES = new String[] { "string", "int" };
+	
+	private static final String PERSON_CLASS = "Person";
+	private static final String[] PERSON_FIELD_NAMES = new String[] { "name" };
+	private static final String[] PERSON_FIELD_TYPES = new String[] { "string" };
+	
+	private static final PersistentEntry[] CAT_ENTRIES = {
+		new PersistentEntry(CAT_CLASS, "0", new Object[] { "Biro-Biro", new Integer(9) }),
+		new PersistentEntry(CAT_CLASS, "1", new Object[] { "Samira", new Integer(4) }),
+		new PersistentEntry(CAT_CLASS, "2", new Object[] { "Ivo", new Integer(2) }),
+	};
+	
+	private static final PersistentEntry[] PERSON_ENTRIES = {
+		new PersistentEntry(PERSON_CLASS, "10", new Object[] { "Eric Idle" }),
+		new PersistentEntry(PERSON_CLASS, "11", new Object[] { "John Cleese" }),
 	};
 
 	PersistenceContext _context;
-	PersistenceProvider _provider;
+	Db4oPersistenceProvider _provider;
 
 	public void setUp() {
 		purge();
 		
 		initializeContext();
 		initializeProvider();
-		createEntryClass(CLASS_NAME, FIELD_NAMES, FIELD_TYPES);
-		createIndex(CLASS_NAME, FIELD_NAMES[0]);
-		insertEntries();
-
+		
+		createEntryClass(CAT_CLASS, CAT_FIELD_NAMES, CAT_FIELD_TYPES);
+		createIndex(CAT_CLASS, CAT_FIELD_NAMES[0]);
+		restartProvider();
+		
+		createEntryClass(PERSON_CLASS, PERSON_FIELD_NAMES, PERSON_FIELD_TYPES);
+		restartProvider();
+		
+		insertEntries();		
 		restartProvider();
 	}
-
+	
 	public void testSelectAll() {
 
-		Collection4 all = new Collection4(selectAll());
-		Assert.areEqual(ENTRIES.length, all.size());
-		for (int i=0; i<ENTRIES.length; ++i) {
-			PersistentEntry expected = ENTRIES[i];
-			PersistentEntry actual = entryByUid(all.iterator(), expected.uid);
-			if (actual != null) {
-				assertEqualEntries(expected, actual);
-				all.remove(actual);
+		assertEntries(PERSON_ENTRIES, selectAll(PERSON_CLASS));
+		assertEntries(CAT_ENTRIES, selectAll(CAT_CLASS));
+	}
+
+	private void assertEntries(PersistentEntry[] expected, Iterator4 actual) {
+		Collection4 checklist = new Collection4(actual);
+		Assert.areEqual(expected.length, checklist.size());
+		for (int i=0; i<expected.length; ++i) {
+			PersistentEntry e = expected[i];
+			PersistentEntry a = entryByUid(checklist.iterator(), e.uid);
+			if (a != null) {
+				assertEqualEntries(e, a);
+				checklist.remove(a);
 			}
 		}
-		Assert.isTrue(all.isEmpty(), all.toString());
+		Assert.isTrue(checklist.isEmpty(), checklist.toString());
 	}
 
 	private PersistentEntry entryByUid(Iterator4 iterator, Object uid) {
@@ -66,12 +87,43 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 
 	public void testSelectByField() {
 
-		PersistentEntry expected = ENTRIES[1];
-		Iterator4 found = selectByField(FIELD_NAMES[0], expected.fieldValues[0]);
-		Assert.isTrue(found.moveNext(), "Expecting entry '" + expected + "'");
-		PersistentEntry actual = (PersistentEntry)found.current();
+		exerciseSelectByField(CAT_ENTRIES, CAT_FIELD_NAMES);
+		exerciseSelectByField(PERSON_ENTRIES, PERSON_FIELD_NAMES);
+	}
+	
+	public void testFieldIndex() {
+		
+		// Look under db4o's hood to check if the index
+		// was properly created and it's sane
+		ClassMetadata meta = classMetadataForName(CAT_CLASS);
+		FieldMetadata field0 = meta.fieldMetadataForName(CAT_FIELD_NAMES[0]);
+		Assert.isTrue(field0.hasIndex());
+		
+		FieldMetadata field1 = meta.fieldMetadataForName(CAT_FIELD_NAMES[1]);
+		Assert.isFalse(field1.hasIndex());
+		
+	}
 
-		assertEqualEntries(expected, actual);
+	private ClassMetadata classMetadataForName(String className) {
+		ObjectContainerBase container = (ObjectContainerBase)_provider.dataContainer(_context);
+		return container.classMetadataForReflectClass(container.reflector().forName(className));
+	}
+
+
+	private void exerciseSelectByField(PersistentEntry[] entries, String[] fieldNames) {
+		for (int i=0; i<entries.length; ++i) { 
+			exerciseSelectByField(entries[i], fieldNames);
+		}
+	}
+
+	private void exerciseSelectByField(PersistentEntry expected, String[] fieldNames) {
+		for (int i=0; i<fieldNames.length; ++i) {
+			Iterator4 found = selectByField(expected.className, fieldNames[i], expected.fieldValues[i]);
+			Assert.isTrue(found.moveNext(), "Expecting entry '" + expected + "'");
+			PersistentEntry actual = (PersistentEntry)found.current();
+			assertEqualEntries(expected, actual);
+			Assert.isFalse(found.moveNext(), "Expecting only '" + expected + "'");
+		}
 	}
 
 	private void initializeContext() {
@@ -84,10 +136,16 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private void insertEntries() {
-		PersistentEntry entry = new PersistentEntry(CLASS_NAME, null, null);
-		for (int i=0; i<ENTRIES.length; ++i) {
-			entry.uid = ENTRIES[i].uid;
-			entry.fieldValues = ENTRIES[i].fieldValues;
+		insertEntries(CAT_ENTRIES);
+		insertEntries(PERSON_ENTRIES);
+	}
+
+	private void insertEntries(PersistentEntry[] entries) {
+		PersistentEntry entry = new PersistentEntry(null, null, null);
+		for (int i=0; i<entries.length; ++i) {
+			entry.className = entries[i].className;
+			entry.uid = entries[i].uid;
+			entry.fieldValues = entries[i].fieldValues;
 			// reuse entries so the provider cant assume
 			// anything about identity
 			insert(entry);
@@ -100,12 +158,12 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		ArrayAssert.areEqual(expected.fieldValues, actual.fieldValues);
 	}
 
-	private Iterator4 selectByField(String fieldName, Object fieldValue) {
-		return select(new PersistentEntryTemplate(CLASS_NAME, new String[] { fieldName }, new Object[] { fieldValue }));
+	private Iterator4 selectByField(String className, String fieldName, Object fieldValue) {
+		return select(new PersistentEntryTemplate(className, new String[] { fieldName }, new Object[] { fieldValue }));
 	}
 
-	private Iterator4 selectAll() {
-		return select(new PersistentEntryTemplate(CLASS_NAME, new String[0], new Object[0]));
+	private Iterator4 selectAll(String className) {
+		return select(new PersistentEntryTemplate(className, new String[0], new Object[0]));
 	}
 
 	private Iterator4 select(PersistentEntryTemplate template) {

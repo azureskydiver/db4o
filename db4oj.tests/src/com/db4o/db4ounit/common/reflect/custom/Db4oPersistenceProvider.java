@@ -1,11 +1,10 @@
 package com.db4o.db4ounit.common.reflect.custom;
 
 import com.db4o.*;
-import com.db4o.config.*;
+import com.db4o.config.Configuration;
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
+import com.db4o.foundation.io.File4;
 import com.db4o.query.*;
-import com.db4o.reflect.*;
 
 /**
  * Custom class information is stored to db4o itself as
@@ -29,12 +28,22 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	public void createEntryClass(PersistenceContext context, String className,
 			String[] fieldNames, String[] fieldTypes) {
 		logMethodCall("createEntryClass", context, className);
-		repository(context).defineClass(className, fieldNames, fieldTypes);
-		updateRepository(context);
+		
+		CustomClassRepository repository = repository(context);
+		repository.defineClass(className, fieldNames, fieldTypes);
+		updateMetadata(context, repository);
 	}
 
-	public void createIndex(PersistenceContext context, String className,
-			String fieldName) {
+	public void createIndex(PersistenceContext context, String className, String fieldName) {
+		CustomField field = customClass(context, className).customField(fieldName);
+		field.indexed(true);
+		updateMetadata(context, field);
+		restart(context);
+	}
+
+	private void restart(PersistenceContext context) {
+		closeContext(context);
+		initContext(context);
 	}
 
 	public int delete(PersistenceContext context, String className, Object uid) {
@@ -84,7 +93,11 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private void addClassConstraint(PersistenceContext context, Query query, PersistentEntryTemplate template) {
-		query.constrain(repository(context).forName(template.className));
+		query.constrain(customClass(context, template.className));
+	}
+
+	private CustomClass customClass(PersistenceContext context, String className) {
+		return repository(context).forName(className);
 	}
 
 	private Constraint addFieldConstraint(Query query, PersistentEntryTemplate template, int index) {
@@ -121,13 +134,30 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		return ((MyContext) context.getProviderContext());
 	}
 
-	private Configuration dataConfiguration(Reflector reflector) {
+	private Configuration dataConfiguration(CustomReflector reflector) {
 		Configuration config = Db4o.newConfiguration();
 		config.reflectWith(reflector);
+		configureCustomClasses(config, reflector);
 		return config;
 	}
 
-	private ObjectContainer dataContainer(PersistenceContext context) {
+	private void configureCustomClasses(Configuration config, CustomReflector reflector) {
+		Iterator4 classes = reflector.customClasses();
+		while (classes.moveNext()) {
+			CustomClass cc = (CustomClass)classes.current();
+			configureFields(config, cc);
+		}
+	}
+
+	private void configureFields(Configuration config, CustomClass cc) {
+		Iterator4 fields = cc.customFields();
+		while (fields.moveNext()) {
+			CustomField field = (CustomField)fields.current();
+			config.objectClass(cc).objectField(field.getName()).indexed(field.indexed());
+		}
+	}
+
+	public ObjectContainer dataContainer(PersistenceContext context) {
 		return my(context).data;
 	}
 
@@ -147,7 +177,10 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		Configuration config = Db4o.newConfiguration();
 		config.exceptionsOnNotStorable(true);
 		cascade(config, CustomClassRepository.class);
-//		cascade(config, Hashtable4.class);
+		cascade(config, Hashtable4.class);
+//		cascade(config, HashtableObjectEntry.class);
+//		cascade(config, CustomClass.class);
+//		cascade(config, CustomField.class);
 		return config;
 	}
 
@@ -164,7 +197,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		return fname + ".metadata";
 	}
 
-	private ObjectContainer openData(Reflector reflector, String fname) {
+	private ObjectContainer openData(CustomReflector reflector, String fname) {
 		return Db4o.openFile(dataConfiguration(reflector), fname);
 	}
 
@@ -201,8 +234,8 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		container.commit();
 	}
 
-	private void updateRepository(PersistenceContext context) {
-		store(metadataContainer(context), repository(context));
+	private void updateMetadata(PersistenceContext context, Object metadata) {
+		store(metadataContainer(context), metadata);
 	}
 
 	private void log(String message) {
@@ -218,3 +251,4 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 }
+
