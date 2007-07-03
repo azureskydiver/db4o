@@ -4,7 +4,9 @@ import com.db4o.*;
 import com.db4o.config.Configuration;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.File4;
+import com.db4o.internal.*;
 import com.db4o.query.*;
+import com.db4o.reflect.jdk.*;
 
 /**
  * Custom class information is stored to db4o itself as
@@ -176,6 +178,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	private Configuration metaConfiguration() {
 		Configuration config = Db4o.newConfiguration();
 		config.exceptionsOnNotStorable(true);
+		config.reflectWith(Platform4.reflectorForType(CustomClassRepository.class));
 		cascade(config, CustomClassRepository.class);
 		cascade(config, Hashtable4.class);
 //		cascade(config, HashtableObjectEntry.class);
