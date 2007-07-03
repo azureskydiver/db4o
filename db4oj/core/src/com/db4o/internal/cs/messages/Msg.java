@@ -119,12 +119,8 @@ public abstract class Msg implements Cloneable {
 	}
 	
 	public int hashCode() {
+		
 		return _msgID;
-	}
-
-	void fakePayLoad(Transaction a_trans) {
-	    _trans = a_trans;
-		// do nothing
 	}
 
 	/**
@@ -230,40 +226,21 @@ public abstract class Msg implements Cloneable {
     	write(ID_LIST.getWriterForInt(transaction(), response));
     }
 	
-	public final void write(ObjectContainerBase stream, Socket4 sock) {
-		if (null == stream) {
-			throw new ArgumentNullException();
-		}
+	public final void write(Socket4 sock) {
 		if (null == sock) {
 			throw new ArgumentNullException();
 		}
-		if (Debug.fakeServer) {
-		    ObjectContainerBase i_stream = null;
-			if (stream == DebugCS.serverStream) {
-				i_stream = DebugCS.clientStream;
-			} else {
-				i_stream = DebugCS.serverStream;
-			}
-			setTransaction(i_stream.getTransaction());
-			fakePayLoad(i_stream.getTransaction());
-			if (stream == DebugCS.serverStream) {
-                DebugCS.clientMessageQueue.add(this);
-			} else {
-				((ServerSideMessage)this).processAtServer();
-			}
-		} else {
-			synchronized (sock) {
-				try {
-					if (Debug.messages) {
-						System.out.println(this +" sent by " + stream);
-					}
-					sock.write(payLoad()._buffer);
-					sock.flush();
-				} catch (Exception e) {
-                    // TODO: .NET convert SocketException to IOException
-					// and let IOException bubble up.
-                    
+		synchronized (sock) {
+			try {
+				if (Debug.messages) {
+					System.out.println(this +" sent by " + Thread.currentThread().getName());
 				}
+				sock.write(payLoad()._buffer);
+				sock.flush();
+			} catch (Exception e) {
+                // TODO: .NET convert SocketException to IOException
+				// and let IOException bubble up.
+                
 			}
 		}
 	}

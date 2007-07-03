@@ -23,14 +23,6 @@ public class MsgD extends Msg{
 		super(aName);
 	}
 
-	void fakePayLoad(Transaction a_trans) {
-		if (Debug.fakeServer) {
-			_payLoad.removeFirstBytes(Const4.INT_LENGTH * 2);
-			_payLoad._offset = 0;
-			_payLoad.setTransaction(a_trans);
-		}
-	}
-
 	public Buffer getByteLoad() {
 		return _payLoad;
 	}

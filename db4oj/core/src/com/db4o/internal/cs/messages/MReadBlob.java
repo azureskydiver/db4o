@@ -33,7 +33,6 @@ public class MReadBlob extends MsgBlob implements ServerSideMessage {
 
     }
     public boolean processAtServer() {
-        ObjectContainerBase stream = stream();
         try {
             BlobImpl blobImpl = this.serverGetBlobImpl();
             if (blobImpl != null) {
@@ -41,11 +40,11 @@ public class MReadBlob extends MsgBlob implements ServerSideMessage {
                 File file = blobImpl.serverFile(null, false);
                 int length = (int) file.length();
                 Socket4 sock = serverMessageDispatcher().socket();
-                Msg.LENGTH.getWriterForInt(transaction(), length).write(stream, sock);
+                Msg.LENGTH.getWriterForInt(transaction(), length).write(sock);
                 FileInputStream fin = new FileInputStream(file);
                 copy(fin,sock,false);
                 sock.flush();
-                Msg.OK.write(stream, sock);
+                Msg.OK.write(sock);
             }
         } catch (Exception e) {
         	write(Msg.ERROR);

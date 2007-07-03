@@ -55,22 +55,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	// used for to write the number of messages.
 	private int _batchedQueueLength = Const4.INT_LENGTH;
 
-	private String _fakeServerFile;
-
 	private boolean _login;
-
-	/**
-	 * Single-Threaded Client-Server Debug Mode, this constructor is only for
-	 * fake server
-	 */
-	public ClientObjectContainer(String fakeServerFile) {
-		super(Db4o.cloneConfiguration(), null);
-		if (!Debug.fakeServer) {
-			throw new IllegalStateException();
-		}
-		_fakeServerFile = fakeServerFile;
-		open();
-	}
 
 	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password, boolean login) {
 		super(config, null);
@@ -92,21 +77,14 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		// socket.setSendBufferSize(100);
 		// socket.setTcpNoDelay(true);
 		// System.out.println(socket.getSendBufferSize());
-		if (Debug.fakeServer) {
-			DebugCS.serverStream = (LocalObjectContainer) Db4o
-					.openFile(_fakeServerFile);
-			DebugCS.clientStream = this;
-			DebugCS.clientMessageQueue = _messageQueue;
-		} else {
-			if (_login) {
-				loginToServer(i_socket);
-			}
-			if (!_singleThreaded) {
-				startDispatcherThread(i_socket, _userName);
-			}
-			logMsg(36, toString());
-			readThis();
+		if (_login) {
+			loginToServer(i_socket);
 		}
+		if (!_singleThreaded) {
+			startDispatcherThread(i_socket, _userName);
+		}
+		logMsg(36, toString());
+		readThis();
 	}
 	
 	private void startDispatcherThread(Socket4 socket, String user) {
@@ -163,9 +141,6 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		}
 		
 		shutdownObjectContainer();
-		if (Debug.fakeServer) {
-			DebugCS.serverStream.close();
-		}
 	}
 
 	public final void commit1() {
@@ -190,13 +165,13 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		if (switchedToFile != null) {
 			MsgD message = Msg.SWITCH_TO_FILE.getWriterForString(systemTransaction(),
 					switchedToFile);
-			message.write(this, sock);
+			message.write(sock);
 			if (!(Msg.OK.equals(Msg.readMessage(this, systemTransaction(), sock)))) {
 				throw new IOException(Messages.get(42));
 			}
 		}
 		Msg.USE_TRANSACTION.getWriterForInt(i_trans, serverThreadID).write(
-				this, sock);
+				sock);
 		return sock;
 	}
 
@@ -411,7 +386,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 				.getWriterForLength(systemTransaction(), length);
 		message.writeString(_userName);
 		message.writeString(_password);
-		message.write(this, a_socket);
+		message.write(a_socket);
 		try {
 			Msg msg = Msg.readMessage(this, systemTransaction(), a_socket);
 			if (!Msg.LOGIN_OK.equals(msg)) {
@@ -666,7 +641,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	private void writeImpl(Msg msg) {
-		msg.write(this, i_socket);
+		msg.write(i_socket);
 	}
 	
 	public final void writeNew(ClassMetadata a_yapClass, StatefulBuffer aWriter) {
@@ -839,7 +814,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	
 	public int classMetadataIdForName(String name) {
         MsgD msg = Msg.CLASS_METADATA_ID_FOR_NAME.getWriterForString(systemTransaction(), name);
-        msg.write(this, i_socket);
+        msg.write(i_socket);
         MsgD response = (MsgD) expectedResponse(Msg.CLASS_ID);
         return response.readInt();
     }

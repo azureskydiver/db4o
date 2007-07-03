@@ -2,21 +2,18 @@
 
 package com.db4o.internal.cs;
 
-import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.messages.*;
 
 public class ClientTransactionHandle {
     private final ClientTransactionPool _transactionPool;
     private Transaction _mainTransaction;
-	private LocalObjectContainer _stream;
     private Transaction _transaction;
     private boolean _rollbackOnClose;
 	
     public ClientTransactionHandle(ClientTransactionPool transactionPool) {
 		_transactionPool = transactionPool;
         _mainTransaction = _transactionPool.acquireMain();
-		_rollbackOnClose = false;
+		_rollbackOnClose = true;
 	}
 
     public void acquireTransactionForFile(String fileName) {
@@ -30,15 +27,6 @@ public class ClientTransactionHandle {
 		}
 	}
 	
-    public void write(Msg message, Socket4 socket) {
-    	if(_stream != null) {
-    		message.write(_stream, socket);
-    	}
-    	else {
-    		_transactionPool.write(message, socket);
-    	}
-	}
-
     public boolean isClosed() {
 		return _transactionPool.isClosed();
 	}
@@ -49,10 +37,6 @@ public class ClientTransactionHandle {
         }
 	}
 	
-    public Object lock() {
-		return _transactionPool.streamLock();
-	}
-
     public Transaction transaction() {
         if (_transaction != null) {
             return _transaction;

@@ -36,11 +36,15 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	private boolean _caresAboutCommitted;
 	
 	private boolean _isClosed;
+	
+	private final Object _lock = new Object();
+	private final Object _mainLock;
 
     ServerMessageDispatcherImpl(ObjectServerImpl server,
 			ClientTransactionHandle transactionHandle, Socket4 socket,
-			int threadID, boolean loggedIn) throws Exception {
+			int threadID, boolean loggedIn, Object mainLock) throws Exception {
 
+    	_mainLock = mainLock;
 		_transactionHandle = transactionHandle;
 
 		setDaemon(true);
@@ -61,17 +65,21 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 		// i_socket.setTcpNoDelay(true);
 	}
 
-    public synchronized boolean close() {
-		if (!isMessageDispatcherAlive()) {
-			return true;
-		}
-		_transactionHandle.releaseTransaction();
-		sendCloseMessage();
-		_transactionHandle.close();
-		closeSocket();
-		removeFromServer();
-		_isClosed = true;
-		return true;
+    public boolean close() {
+    	synchronized(_mainLock) {
+	    	synchronized(_lock) {
+				if (!isMessageDispatcherAlive()) {
+					return true;
+				}
+				_transactionHandle.releaseTransaction();
+				sendCloseMessage();
+				_transactionHandle.close();
+				closeSocket();
+				removeFromServer();
+				_isClosed = true;
+				return true;
+	    	}
+    	}
 	}
 
 	public void sendCloseMessage() {
@@ -176,7 +184,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	}
 
 	public void switchToFile(MSwitchToFile message) {
-        synchronized (_transactionHandle.lock()) {
+        synchronized (_mainLock) {
             String fileName = message.readString();
             try {
                 _transactionHandle.releaseTransaction();
@@ -194,7 +202,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     }
 
     public void switchToMainFile() {
-        synchronized (_transactionHandle.lock()) {
+        synchronized (_mainLock) {
             _transactionHandle.releaseTransaction();
             write(Msg.OK);
         }
@@ -206,14 +214,18 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 		_transactionHandle.transaction(transToUse);
     }
     
-    public synchronized void write(Msg msg){
-    	_transactionHandle.write(msg, i_socket);
-    	updateLastActiveTime();
+    public void write(Msg msg){
+    	synchronized(_lock) {
+    		msg.write(i_socket);
+	    	updateLastActiveTime();
+    	}
     }
     
-    public synchronized void writeIfAlive(Msg msg){
-    	if(isMessageDispatcherAlive()){
-        	write(msg);
+    public void writeIfAlive(Msg msg){
+    	synchronized(_lock) {
+	    	if(isMessageDispatcherAlive()){
+	        	write(msg);
+	    	}
     	}
     }
     

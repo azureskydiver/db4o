@@ -44,16 +44,15 @@ public class MWriteBlob extends MsgBlob implements ServerSideMessage {
 
 	public boolean processAtServer() {
         try {
-            ObjectContainerBase stream = stream();
             BlobImpl blobImpl = this.serverGetBlobImpl();
             if (blobImpl != null) {
                 blobImpl.setTrans(transaction());
                 File file = blobImpl.serverFile(null, true);
                 Socket4 sock = serverMessageDispatcher().socket();
-                Msg.OK.write(stream, sock);
+                Msg.OK.write(sock);
                 FileOutputStream fout = new FileOutputStream(file);
                 copy(sock,fout,blobImpl.getLength(),false);
-                Msg.OK.write(stream, sock);
+                Msg.OK.write(sock);
             }
         } catch (Exception e) {
         }
