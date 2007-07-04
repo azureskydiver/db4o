@@ -33,6 +33,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 				
 			}
 		}
+		_messageQueue.stop();
 		return true;
 	}
 	
@@ -49,7 +50,6 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 				_messageQueue.add(message);
 			} catch (Db4oIOException exc) {
 				close();
-				_messageQueue.add(Msg.ERROR);
 			}
 		}
 	}
