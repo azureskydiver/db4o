@@ -135,6 +135,9 @@ public class Hashtable4 implements DeepClone {
 	}
 
 	public void put(Object key, Object value) {
+		if (null == key) {
+			throw new ArgumentNullException();
+		}
 		putEntry(new HashtableObjectEntry(key, value));
 	}
 
