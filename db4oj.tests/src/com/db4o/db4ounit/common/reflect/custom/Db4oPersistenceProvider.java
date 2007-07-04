@@ -217,10 +217,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		
 		cascade(config, CustomClassRepository.class);
 		cascade(config, Hashtable4.class);
-		
-//		cascade(config, HashtableObjectEntry.class);
-//		cascade(config, CustomClass.class);
-//		cascade(config, CustomField.class);
+		cascade(config, CustomClass.class);
 		return config;
 	}
 
