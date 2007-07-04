@@ -36,8 +36,18 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	public void createIndex(PersistenceContext context, String className, String fieldName) {
+		markIndexedField(context, className, fieldName, true);
+	}
+	
+	public void dropIndex(PersistenceContext context, String className,
+			String fieldName) {
+		markIndexedField(context, className, fieldName, false);
+	}
+
+	private void markIndexedField(PersistenceContext context, String className,
+			String fieldName, boolean indexed) {
 		CustomField field = customClass(context, className).customField(fieldName);
-		field.indexed(true);
+		field.indexed(indexed);
 		updateMetadata(context, field);
 		restart(context);
 	}
@@ -57,20 +67,30 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 
 	}
 
-	public void dropIndex(PersistenceContext context, String className,
-			String fieldName) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void initContext(PersistenceContext context) {
 		logMethodCall("initContext", context);
 
 		ObjectContainer metadata = openMetadata(context.url());
-		CustomClassRepository repository = initializeClassRepository(metadata);
-		CustomReflector reflector = new CustomReflector(repository);
-		ObjectContainer data = openData(reflector, context.url());
-		context.setProviderContext(new MyContext(repository, metadata, data));
+		try {
+			CustomClassRepository repository = initializeClassRepository(metadata);
+			CustomReflector reflector = new CustomReflector(repository);
+			ObjectContainer data = openData(reflector, context.url());
+			context.setProviderContext(new MyContext(repository, metadata, data));
+		} catch (Exception e) {
+			// make sure metadata container is not left open
+			// in case something goes wrong with the setup
+			closeIgnoringExceptions(metadata);
+			
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void closeIgnoringExceptions(ObjectContainer container) {
+		try {
+			container.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void insert(PersistenceContext context, PersistentEntry entry) {
@@ -133,8 +153,8 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 
 		MyContext customContext = my(context);
 		if (null != customContext) {
-			customContext.metadata.close();
-			customContext.data.close();
+			closeIgnoringExceptions(customContext.metadata);
+			closeIgnoringExceptions(customContext.data);
 			context.setProviderContext(null);
 		}
 	}
