@@ -55,10 +55,32 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		restartProvider();
 	}
 	
+	public void testUpdate() {
+		PersistentEntry entry = new PersistentEntry(CAT_CLASS, CAT_ENTRIES[0].uid, new Object[] { "Birinho", new Integer(10) });
+		update(entry);
+		restartProvider();
+		
+		//exerciseSelectByField(entry, CAT_FIELD_NAMES);
+		
+		PersistentEntry[] expected = copy(CAT_ENTRIES);
+		expected[0] = entry;
+		assertEntries(expected, selectAll(CAT_CLASS));
+	}
+	
+	private PersistentEntry[] copy(PersistentEntry[] entries) {
+		PersistentEntry[] clone = new PersistentEntry[entries.length];
+		System.arraycopy(entries, 0, clone, 0, clone.length);
+		return clone;
+	}
+
 	public void testSelectAll() {
 
 		assertEntries(PERSON_ENTRIES, selectAll(PERSON_CLASS));
 		assertEntries(CAT_ENTRIES, selectAll(CAT_CLASS));
+	}
+	
+	private void update(PersistentEntry entry) {
+		_provider.update(_context, entry);
 	}
 
 	private void assertEntries(PersistentEntry[] expected, Iterator4 actual) {
