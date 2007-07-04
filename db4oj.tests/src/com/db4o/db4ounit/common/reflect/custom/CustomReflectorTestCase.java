@@ -66,17 +66,44 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		expected[0] = entry;
 		assertEntries(expected, selectAll(CAT_CLASS));
 	}
-	
-	private PersistentEntry[] copy(PersistentEntry[] entries) {
-		PersistentEntry[] clone = new PersistentEntry[entries.length];
-		System.arraycopy(entries, 0, clone, 0, clone.length);
-		return clone;
-	}
 
 	public void testSelectAll() {
 
 		assertEntries(PERSON_ENTRIES, selectAll(PERSON_CLASS));
 		assertEntries(CAT_ENTRIES, selectAll(CAT_CLASS));
+	}
+	
+	public void testSelectByField() {
+
+		exerciseSelectByField(CAT_ENTRIES, CAT_FIELD_NAMES);
+		exerciseSelectByField(PERSON_ENTRIES, PERSON_FIELD_NAMES);
+	}
+	
+	public void testSelectByFields() {
+		
+		PersistentEntry existing = CAT_ENTRIES[0];
+		PersistentEntry newEntry = new PersistentEntry(CAT_CLASS, existing.uid, new Object[] { existing.fieldValues[0], new Integer(10) });
+		insert(newEntry);
+		
+		Iterator4 found = selectByField(existing.className, CAT_FIELD_NAMES[0], existing.fieldValues[0]);
+		assertEntries(new PersistentEntry[] { existing, newEntry }, found);
+		
+		assertSingleEntry(existing, select(existing.className, CAT_FIELD_NAMES, existing.fieldValues));
+		assertSingleEntry(newEntry, select(newEntry.className, CAT_FIELD_NAMES, newEntry.fieldValues));
+		
+	}
+	
+	public void testFieldIndex() {
+		
+		// Look under db4o's hood to check if the index
+		// was properly created and it's sane
+		ClassMetadata meta = classMetadataForName(CAT_CLASS);
+		FieldMetadata field0 = meta.fieldMetadataForName(CAT_FIELD_NAMES[0]);
+		Assert.isTrue(field0.hasIndex());
+		
+		FieldMetadata field1 = meta.fieldMetadataForName(CAT_FIELD_NAMES[1]);
+		Assert.isFalse(field1.hasIndex());
+		
 	}
 	
 	private void update(PersistentEntry entry) {
@@ -107,25 +134,6 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		return null;
 	}
 
-	public void testSelectByField() {
-
-		exerciseSelectByField(CAT_ENTRIES, CAT_FIELD_NAMES);
-		exerciseSelectByField(PERSON_ENTRIES, PERSON_FIELD_NAMES);
-	}
-	
-	public void testFieldIndex() {
-		
-		// Look under db4o's hood to check if the index
-		// was properly created and it's sane
-		ClassMetadata meta = classMetadataForName(CAT_CLASS);
-		FieldMetadata field0 = meta.fieldMetadataForName(CAT_FIELD_NAMES[0]);
-		Assert.isTrue(field0.hasIndex());
-		
-		FieldMetadata field1 = meta.fieldMetadataForName(CAT_FIELD_NAMES[1]);
-		Assert.isFalse(field1.hasIndex());
-		
-	}
-
 	private ClassMetadata classMetadataForName(String className) {
 		ObjectContainerBase container = (ObjectContainerBase)_provider.dataContainer(_context);
 		return container.classMetadataForReflectClass(container.reflector().forName(className));
@@ -141,11 +149,15 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	private void exerciseSelectByField(PersistentEntry expected, String[] fieldNames) {
 		for (int i=0; i<fieldNames.length; ++i) {
 			Iterator4 found = selectByField(expected.className, fieldNames[i], expected.fieldValues[i]);
-			Assert.isTrue(found.moveNext(), "Expecting entry '" + expected + "'");
-			PersistentEntry actual = (PersistentEntry)found.current();
-			assertEqualEntries(expected, actual);
-			Assert.isFalse(found.moveNext(), "Expecting only '" + expected + "'");
+			assertSingleEntry(expected, found);
 		}
+	}
+
+	private void assertSingleEntry(PersistentEntry expected, Iterator4 found) {
+		Assert.isTrue(found.moveNext(), "Expecting entry '" + expected + "'");
+		PersistentEntry actual = (PersistentEntry)found.current();
+		assertEqualEntries(expected, actual);
+		Assert.isFalse(found.moveNext(), "Expecting only '" + expected + "'");
 	}
 
 	private void initializeContext() {
@@ -168,7 +180,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 			entry.className = entries[i].className;
 			entry.uid = entries[i].uid;
 			entry.fieldValues = entries[i].fieldValues;
-			// reuse entries so the provider cant assume
+			// reuse entries so the provider can't assume
 			// anything about identity
 			insert(entry);
 		}
@@ -181,11 +193,16 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private Iterator4 selectByField(String className, String fieldName, Object fieldValue) {
-		return select(new PersistentEntryTemplate(className, new String[] { fieldName }, new Object[] { fieldValue }));
+		return select(className, new String[] { fieldName }, new Object[] { fieldValue });
+	}
+
+	private Iterator4 select(String className, String[] fieldNames,
+			Object[] fieldValues) {
+		return select(new PersistentEntryTemplate(className, fieldNames, fieldValues));
 	}
 
 	private Iterator4 selectAll(String className) {
-		return select(new PersistentEntryTemplate(className, new String[0], new Object[0]));
+		return select(className, new String[0], new Object[0]);
 	}
 
 	private Iterator4 select(PersistentEntryTemplate template) {
@@ -228,4 +245,12 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	private String dataFile() {
 		return Path4.combine(Path4.getTempPath(), "CustomReflector.db4o");
 	}
+	
+	
+	private PersistentEntry[] copy(PersistentEntry[] entries) {
+		PersistentEntry[] clone = new PersistentEntry[entries.length];
+		System.arraycopy(entries, 0, clone, 0, clone.length);
+		return clone;
+	}
+
 }
