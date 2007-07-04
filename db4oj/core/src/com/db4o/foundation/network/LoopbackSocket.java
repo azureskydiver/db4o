@@ -2,7 +2,7 @@
 
 package com.db4o.foundation.network;
 
-import java.io.*;
+import com.db4o.*;
 
 /**
  * Fakes a socket connection for an embedded client.
@@ -29,12 +29,12 @@ public class LoopbackSocket implements Socket4 {
         _uploadBuffer = affiliate._downloadBuffer;
     }
 
-    public void close() throws IOException {
+    public void close() throws Db4oIOException {
         closeAffiliate();
         closeSocket();
     }
 
-	private void closeAffiliate() throws IOException {
+	private void closeAffiliate() throws Db4oIOException {
 		if (_affiliate != null) {
             LoopbackSocket temp = _affiliate;
             _affiliate = null;
@@ -55,11 +55,11 @@ public class LoopbackSocket implements Socket4 {
         return _affiliate != null;
     }
 
-    public int read() throws IOException {
+    public int read() throws Db4oIOException {
         return _downloadBuffer.read();
     }
 
-    public int read(byte[] a_bytes, int a_offset, int a_length) throws IOException {
+    public int read(byte[] a_bytes, int a_offset, int a_length) throws Db4oIOException {
         return _downloadBuffer.read(a_bytes, a_offset, a_length);
     }
 
@@ -68,19 +68,19 @@ public class LoopbackSocket implements Socket4 {
         _downloadBuffer.setTimeout(a_timeout);
     }
 
-    public void write(byte[] bytes) throws IOException {
+    public void write(byte[] bytes) throws Db4oIOException {
         _uploadBuffer.write(bytes);
     }
     
-    public void write(byte[] bytes,int off,int len) throws IOException {
+    public void write(byte[] bytes,int off,int len) throws Db4oIOException {
         _uploadBuffer.write(bytes, off, len);
     }
 
-    public void write(int i) throws IOException {
+    public void write(int i) throws Db4oIOException {
         _uploadBuffer.write(i);
     }
     
-    public Socket4 openParalellSocket() throws IOException {
+    public Socket4 openParalellSocket() throws Db4oIOException {
     	return _server.openClientSocket();
     }
 }

@@ -2,15 +2,13 @@
 
 package  com.db4o;
 
-import java.io.IOException;
-
-import com.db4o.config.Configuration;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.foundation.network.NetworkSocket;
+import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.*;
-import com.db4o.reflect.Reflector;
+import com.db4o.reflect.*;
 
 /**
  * factory class to start db4o database engines.
@@ -142,13 +140,8 @@ public class Db4o {
 		if (user == null || password == null) {
 			throw new InvalidPasswordException();
 		}
-		try {
-			NetworkSocket networkSocket = new NetworkSocket(hostName, port);
-			return new ClientObjectContainer(config, networkSocket, user,
-					password, true);
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
-		}
+		NetworkSocket networkSocket = new NetworkSocket(hostName, port);
+		return new ClientObjectContainer(config, networkSocket, user, password, true);
 	}
 
     /**

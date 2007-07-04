@@ -2,10 +2,7 @@
 
 package com.db4o.internal.cs.messages;
 
-import java.io.IOException;
-
-import com.db4o.*;
-import com.db4o.foundation.network.Socket4;
+import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
 /**
@@ -136,18 +133,12 @@ public class MsgD extends Msg{
 
 	final Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, Buffer reader){
 		int length = reader.readInt();
-		
 		a_trans = checkParentTransaction(a_trans, reader);
-		
 		final MsgD command = (MsgD)publicClone();
 		command.setTransaction(a_trans);
 		command.setMessageDispatcher(messageDispatcher);
-		try {
-            command._payLoad = readMessageBuffer(a_trans, sock, length);
-        } catch (IOException e) {
-            throw new Db4oIOException(e);
-        }
-		return command;
+		command._payLoad = readMessageBuffer(a_trans, sock, length);
+        return command;
 	}
 
 	public final String readString() {

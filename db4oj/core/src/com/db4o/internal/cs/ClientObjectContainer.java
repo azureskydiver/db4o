@@ -377,8 +377,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		return true;
 	}
 
-	private void loginToServer(Socket4 a_socket)
-			throws InvalidPasswordException {
+	private void loginToServer(Socket4 a_socket) throws InvalidPasswordException {
 		UnicodeStringIO stringWriter = new UnicodeStringIO();
 		int length = stringWriter.length(_userName)
 				+ stringWriter.length(_password);
@@ -387,19 +386,15 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		message.writeString(_userName);
 		message.writeString(_password);
 		message.write(a_socket);
-		try {
-			Msg msg = Msg.readMessage(this, systemTransaction(), a_socket);
-			if (!Msg.LOGIN_OK.equals(msg)) {
-				throw new InvalidPasswordException();
-			}
-			Buffer payLoad = msg.payLoad();
-			_blockSize = payLoad.readInt();
-			int doEncrypt = payLoad.readInt();
-			if (doEncrypt == 0) {
-				i_handlers.oldEncryptionOff();
-			}
-		} catch (IOException e) {
-			throw new Db4oIOException(e);
+		Msg msg = Msg.readMessage(this, systemTransaction(), a_socket);
+		if (!Msg.LOGIN_OK.equals(msg)) {
+			throw new InvalidPasswordException();
+		}
+		Buffer payLoad = msg.payLoad();
+		_blockSize = payLoad.readInt();
+		int doEncrypt = payLoad.readInt();
+		if (doEncrypt == 0) {
+			i_handlers.oldEncryptionOff();
 		}
 	}
 
