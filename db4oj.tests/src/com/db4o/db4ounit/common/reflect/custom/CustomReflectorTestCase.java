@@ -96,17 +96,27 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 		
 	}
 	
+	public void testDropIndex() {
+		
+		dropIndex(CAT_CLASS, CAT_FIELD_NAMES[0]);
+		
+		FieldMetadata field = fieldMetadata(CAT_CLASS, CAT_FIELD_NAMES[0]);
+		Assert.isFalse(field.hasIndex());
+	}
+
 	public void testFieldIndex() {
 		
-		// Look under db4o's hood to check if the index
-		// was properly created and it's sane
-		ClassMetadata meta = classMetadataForName(CAT_CLASS);
-		FieldMetadata field0 = meta.fieldMetadataForName(CAT_FIELD_NAMES[0]);
+		FieldMetadata field0 = fieldMetadata(CAT_CLASS, CAT_FIELD_NAMES[0]);
 		Assert.isTrue(field0.hasIndex());
 		
-		FieldMetadata field1 = meta.fieldMetadataForName(CAT_FIELD_NAMES[1]);
+		FieldMetadata field1 = fieldMetadata(CAT_CLASS, CAT_FIELD_NAMES[1]);
 		Assert.isFalse(field1.hasIndex());
-		
+	}
+
+	private FieldMetadata fieldMetadata(String className, String fieldName) {
+		ClassMetadata meta = classMetadataForName(className);
+		FieldMetadata field0 = meta.fieldMetadataForName(fieldName);
+		return field0;
 	}
 	
 	private void update(PersistentEntry entry) {
@@ -219,6 +229,10 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	private void createIndex(String className, String fieldName) {
 		_provider.createIndex(_context, className, fieldName);
 	}
+	
+	private void dropIndex(String className, String fieldName) {
+		_provider.dropIndex(_context, className, fieldName);
+	}
 
 	private void createEntryClass(String className, String[] fieldNames,
 			String[] fieldTypes) {
@@ -231,7 +245,7 @@ public class CustomReflectorTestCase implements TestCase, TestLifeCycle {
 	}
 
 	private void shutdownProvider(boolean purge) {
-		_provider.closeContext(_context);
+		if (_provider != null) _provider.closeContext(_context);
 		if (purge) purge();
 		_provider = null;
 	}
