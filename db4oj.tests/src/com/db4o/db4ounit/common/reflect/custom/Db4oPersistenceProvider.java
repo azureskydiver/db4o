@@ -77,11 +77,16 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 			ObjectContainer data = openData(reflector, context.url());
 			context.setProviderContext(new MyContext(repository, metadata, data));
 		} catch (Exception e) {
+			
+			e.printStackTrace();
+			
 			// make sure metadata container is not left open
 			// in case something goes wrong with the setup
 			closeIgnoringExceptions(metadata);
 			
-			throw new RuntimeException(e);
+			// cant use exception chaining here because the
+			// the must run in jdk 1.1
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
