@@ -453,10 +453,12 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         readHeaderVariablePart();
         
-        _freespaceManager = AbstractFreespaceManager.createNew(this, _systemData.freespaceSystem());
-        _freespaceManager.read(_systemData.freespaceID());
-       
-        _freespaceManager.start(_systemData.freespaceAddress());
+        if (!i_config.isReadOnly()) {
+			_freespaceManager = AbstractFreespaceManager.createNew(this,
+					_systemData.freespaceSystem());
+			_freespaceManager.read(_systemData.freespaceID());
+			_freespaceManager.start(_systemData.freespaceAddress());
+		}
         
         if(needFreespaceMigration()){
         	migrateFreespace();
