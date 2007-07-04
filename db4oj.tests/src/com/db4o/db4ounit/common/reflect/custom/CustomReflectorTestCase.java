@@ -12,6 +12,9 @@ import db4ounit.*;
  * 1) testing the reflector API
  * 2) documenting a common use case for the reflector API which is adapting an external
  * data model to db4o's internal OO based mechanism.
+ * 
+ * See CustomReflector, CustomClassRepository, CustomClass, CustomField and CustomUidField
+ * for details.
  *
  */
 public class CustomReflectorTestCase implements TestCase, TestLifeCycle {

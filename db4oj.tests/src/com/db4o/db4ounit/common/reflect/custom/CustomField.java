@@ -2,6 +2,11 @@ package com.db4o.db4ounit.common.reflect.custom;
 
 import com.db4o.reflect.*;
 
+/**
+ * One important thing to remember when implementing ReflectField
+ * is that getFieldType and getIndexType must always return ReflectClass
+ * instances given by the parent reflector.
+ */
 public class CustomField implements ReflectField {
 
 	// fields must be public so test works on less capable runtimes
