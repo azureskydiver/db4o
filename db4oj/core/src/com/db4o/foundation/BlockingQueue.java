@@ -9,6 +9,8 @@ public class BlockingQueue implements Queue4 {
 	protected NonblockingQueue _queue = new NonblockingQueue();
 
 	protected Lock4 _lock = new Lock4();
+	
+	protected boolean _stopped;
 
 	public void add(final Object obj) {
 		_lock.run(new SafeClosure4() {
@@ -43,6 +45,9 @@ public class BlockingQueue implements Queue4 {
 				if (_queue.hasNext()) {
 					return _queue.next();
 				}
+				if(_stopped) {
+					throw new BlockingQueueStoppedException();
+				}
 				_lock.snooze(Integer.MAX_VALUE);
 				Object obj = _queue.next();
 				if(obj == null){
@@ -56,6 +61,7 @@ public class BlockingQueue implements Queue4 {
 	public void stop(){
 		_lock.run(new SafeClosure4() {
 			public Object run() {
+				_stopped = true;
 				_lock.awake();
 				return null;
 			}
