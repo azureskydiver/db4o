@@ -89,12 +89,20 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	public void update(PersistenceContext context, PersistentEntry entry) {
-		// TODO Auto-generated method stub
-
+		PersistentEntry existing = selectByUid(context, entry.className, entry.uid);
+		existing.fieldValues = entry.fieldValues;
+		
+		dataContainer(context).set(existing);
 	}
 
-	private void addClassConstraint(PersistenceContext context, Query query, PersistentEntryTemplate template) {
-		query.constrain(customClass(context, template.className));
+	private PersistentEntry selectByUid(PersistenceContext context, String className, Object uid) {
+		Query query = newQuery(context, className);
+		query.descend("uid").constrain(uid);
+		return (PersistentEntry) query.execute().next();
+	}
+
+	private void addClassConstraint(PersistenceContext context, Query query, String className) {
+		query.constrain(customClass(context, className));
 	}
 
 	private CustomClass customClass(PersistenceContext context, String className) {
@@ -221,9 +229,14 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private Query queryFromTemplate(PersistenceContext context, PersistentEntryTemplate template) {
-		Query query = dataContainer(context).query();
-		addClassConstraint(context, query, template);
+		Query query = newQuery(context, template.className);
 		addFieldConstraints(query, template);
+		return query;
+	}
+
+	private Query newQuery(PersistenceContext context, String className) {
+		Query query = dataContainer(context).query();
+		addClassConstraint(context, query, className);
 		return query;
 	}
 
