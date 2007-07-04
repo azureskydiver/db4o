@@ -2,8 +2,6 @@
 
 package com.db4o.internal.cs;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
@@ -111,7 +109,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 			if(i_socket != null) {
 				i_socket.close();
 			}
-        } catch (IOException e) {
+        } catch (Db4oIOException e) {
             if (Debug.atHome) {
                 e.printStackTrace();
             }
@@ -132,7 +130,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                 if(! messageProcessor()){
                     break;
                 }
-            } catch (IOException e) {
+            } catch (Db4oIOException e) {
                 if (Debug.atHome) {
                     e.printStackTrace();
                 }
@@ -147,8 +145,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         close();
     }
 
-    private boolean messageProcessor() throws IOException{
-        
+    private boolean messageProcessor() throws Db4oIOException{
         Msg message = Msg.readMessage(this, getTransaction(), i_socket);
         if(message == null){
             return true;

@@ -2,8 +2,7 @@
 
 package com.db4o.internal.cs;
 
-import java.io.*;
-
+import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.cs.messages.*;
@@ -30,7 +29,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 		if(i_socket != null) {
 			try {
 				i_socket.close();
-			} catch (IOException e) {
+			} catch (Db4oIOException e) {
 				
 			}
 		}
@@ -48,7 +47,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 					}
 				}
 				_messageQueue.add(message);
-			} catch (IOException exc) {
+			} catch (Db4oIOException exc) {
 				close();
 				_messageQueue.add(Msg.ERROR);
 			}

@@ -2,8 +2,6 @@
 
 package com.db4o.internal.cs.messages;
 
-import java.io.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
@@ -162,17 +160,17 @@ public abstract class Msg implements Cloneable {
 		return stream().config();
 	}
 	
-    protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4 sock) throws IOException {
+    protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4 sock) throws Db4oIOException {
 		return readMessageBuffer(trans, sock, Const4.MESSAGE_LENGTH);
     }
 
-	protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4 sock, int length) throws IOException {
+	protected static StatefulBuffer readMessageBuffer(Transaction trans, Socket4 sock, int length) throws Db4oIOException {
 		StatefulBuffer buffer = new StatefulBuffer(trans, length);		
         int offset = 0;
         while (length > 0) {
             int read = sock.read(buffer._buffer, offset, length);
 			if(read < 0) {
-				throw new IOException();
+				throw new Db4oIOException();
 			}
             offset += read;
             length -= read;
@@ -181,7 +179,7 @@ public abstract class Msg implements Cloneable {
 	}
 
 
-	public static final Msg readMessage(MessageDispatcher messageDispatcher, Transaction trans, Socket4 sock) throws IOException {
+	public static final Msg readMessage(MessageDispatcher messageDispatcher, Transaction trans, Socket4 sock) throws Db4oIOException {
 		StatefulBuffer reader = readMessageBuffer(trans, sock);
 		Msg message = _messages[reader.readInt()].readPayLoad(messageDispatcher, trans, sock, reader);
 		if (Debug.messages) {
@@ -238,8 +236,8 @@ public abstract class Msg implements Cloneable {
 				sock.write(payLoad()._buffer);
 				sock.flush();
 			} catch (Exception e) {
-                // TODO: .NET convert SocketException to IOException
-				// and let IOException bubble up.
+                // TODO: .NET convert SocketException to Db4oIOException
+				// and let Db4oIOException bubble up.
                 
 			}
 		}

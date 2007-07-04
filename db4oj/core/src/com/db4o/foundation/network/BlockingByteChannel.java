@@ -2,11 +2,8 @@
 
 package com.db4o.foundation.network;
 
-import java.io.*;
-
-import com.db4o.ext.*;
+import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
 
 /**
  * Transport buffer for C/S mode to simulate a
@@ -39,7 +36,9 @@ class BlockingByteChannel {
     }
 
     void close() {
-        i_closed = true;
+    	synchronized (this) {
+    		i_closed = true;
+    	}
         i_lock.run(new SafeClosure4() {
             public Object run() {
             	i_lock.awake();
@@ -72,61 +71,50 @@ class BlockingByteChannel {
         }
     }
 
-    public int read() throws IOException {
-        try{
-            Integer ret = (Integer)i_lock.run(new Closure4() {
-                public Object run() throws Exception {
-                    waitForAvailable();
-                    int retVal = i_cache[i_readOffset++];
-                    checkDiscardCache();
-                    return new Integer(retVal);
-                } 
-            });
-            return ret.intValue();
-        }catch(IOException iex){
-            throw iex;
-        }catch(Exception e){
-            throw new Db4oUnexpectedException(e);
-        }
-    }
+    public int read() throws Db4oIOException {
+		Integer ret = (Integer) i_lock.run(new SafeClosure4() {
+			public Object run() {
+				waitForAvailable();
+				int retVal = i_cache[i_readOffset++];
+				checkDiscardCache();
+				return new Integer(retVal);
+			}
+		});
+		return ret.intValue();
 
-    public int read(final  byte[] a_bytes, final int a_offset, final int a_length) throws IOException {
-        try{
-            Integer ret = (Integer)i_lock.run(new Closure4() {
-                public Object run() throws Exception {
-                    waitForAvailable();
-                    int avail = available();
-                    int length = a_length;
-                    if (avail < a_length) {
-                        length = avail;
-                    }
-                    System.arraycopy(i_cache, i_readOffset, a_bytes, a_offset, length);
-                    i_readOffset += length;
-                    checkDiscardCache();
-                    return new Integer(avail);
-                }
-            });
-            return ret.intValue();
-        }catch(IOException iex){
-            throw iex;
-        }catch(Exception e){
-            throw new Db4oUnexpectedException(e);
-        }
-    }
+	}
+
+    public int read(final byte[] a_bytes, final int a_offset, final int a_length)
+			throws Db4oIOException {
+		Integer ret = (Integer) i_lock.run(new SafeClosure4() {
+			public Object run() {
+				waitForAvailable();
+				int avail = available();
+				int length = a_length;
+				if (avail < a_length) {
+					length = avail;
+				}
+				System.arraycopy(i_cache, i_readOffset, a_bytes, a_offset,
+						length);
+				i_readOffset += length;
+				checkDiscardCache();
+				return new Integer(avail);
+			}
+		});
+		return ret.intValue();
+	}
 
     public void setTimeout(int timeout) {
         i_timeout = timeout;
     }
 
-    protected void waitForAvailable() throws IOException {
+    protected void waitForAvailable()  {
     	long beginTime = System.currentTimeMillis();
         while (available() == 0) {
-        	if (i_closed) {
-                throw new IOException(Messages.get(35));
-            }
+        	checkClosed();
             i_lock.snooze(i_timeout);
             if(isTimeout(beginTime)) {
-            	throw new IOException();
+            	throw new Db4oIOException();
             }
         }
     }
@@ -135,14 +123,14 @@ class BlockingByteChannel {
 		return System.currentTimeMillis() - start >= i_timeout;
 	}
 
-    public void write(byte[] bytes) throws IOException {
+    public void write(byte[] bytes) throws Db4oIOException {
     	write(bytes, 0, bytes.length);
     }
     
-	public void write(final byte[] bytes, final int off, final int len) throws IOException {
-		checkClosed();
+	public void write(final byte[] bytes, final int off, final int len) throws Db4oIOException {
 		i_lock.run(new SafeClosure4() {
 			public Object run() {
+				checkClosed();
 				makefit(len);
 				System.arraycopy(bytes, off, i_cache, i_writeOffset, len);
 				i_writeOffset += len;
@@ -152,10 +140,10 @@ class BlockingByteChannel {
 		});
 	}
 
-    public void write(final int i) throws IOException {
-    	checkClosed();
+    public void write(final int i) throws Db4oIOException {
 		i_lock.run(new SafeClosure4() {
 			public Object run() {
+				checkClosed();
 				makefit(1);
 				i_cache[i_writeOffset++] = (byte) i;
 				i_lock.awake();
@@ -164,9 +152,9 @@ class BlockingByteChannel {
 		});
 	}
 
-	private void checkClosed() throws IOException {
-		if(i_closed) {
-			throw new IOException();
-		}		
+	private void checkClosed() {
+		if (i_closed) {
+			throw new Db4oIOException();
+		}
 	}
 }

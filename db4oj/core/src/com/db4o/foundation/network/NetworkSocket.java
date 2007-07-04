@@ -5,6 +5,7 @@ package com.db4o.foundation.network;
 import java.io.*;
 import java.net.*;
 
+import com.db4o.*;
 import com.db4o.internal.*;
 
 public class NetworkSocket implements Socket4 {
@@ -14,35 +15,60 @@ public class NetworkSocket implements Socket4 {
     private InputStream _in;
     private String _hostName;
     
-    public NetworkSocket(String hostName, int port) throws IOException {
-        this(new Socket(hostName, port));
+    public NetworkSocket(String hostName, int port) throws Db4oIOException {
+    	try {
+			Socket socket = new Socket(hostName, port);
+			initSocket(socket);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
         _hostName=hostName;
     }
 
     public NetworkSocket(Socket socket) throws IOException {
-    	_socket = socket;
+    	initSocket(socket);
+    }
+
+	private void initSocket(Socket socket) throws IOException {
+		_socket = socket;
     	_out = _socket.getOutputStream();
     	_in = _socket.getInputStream();
-    }
+	}
 
-    public void close() throws IOException {
-        _socket.close();
-    }
+    public void close() throws Db4oIOException {
+		try {
+			_socket.close();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+	}
 
-    public void flush() throws IOException {
-        _out.flush();
-    }
+    public void flush() throws Db4oIOException {
+		try {
+			_out.flush();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+	}
     
     public boolean isConnected() {
         return Platform4.isConnected(_socket);
     }
     
-    public int read() throws IOException {
-        return _in.read();
+    public int read() throws Db4oIOException {
+        try {
+        	return _in.read();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
     }
 
-    public int read(byte[] a_bytes, int a_offset, int a_length) throws IOException {
-        return _in.read(a_bytes, a_offset, a_length);
+    public int read(byte[] a_bytes, int a_offset, int a_length) throws Db4oIOException {
+        try {
+        	return _in.read(a_bytes, a_offset, a_length);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
     }
 
     public void setSoTimeout(int timeout) {
@@ -53,21 +79,33 @@ public class NetworkSocket implements Socket4 {
         }
     }
 
-	public void write(byte[] bytes) throws IOException {
-	    _out.write(bytes);
+	public void write(byte[] bytes) throws Db4oIOException {
+	    try {
+			_out.write(bytes);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
 	}
 
-    public void write(byte[] bytes,int off,int len) throws IOException {
-        _out.write(bytes,off,len);
+    public void write(byte[] bytes,int off,int len) throws Db4oIOException {
+        try {
+			_out.write(bytes,off,len);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
     }
 
-    public void write(int i) throws IOException {
-        _out.write(i);
+    public void write(int i) throws Db4oIOException {
+        try {
+			_out.write(i);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
     }
     
-	public Socket4 openParalellSocket() throws IOException {
+	public Socket4 openParalellSocket() throws Db4oIOException {
 		if(_hostName==null) {
-			throw new IOException("Cannot open parallel socket - invalid state.");
+			throw new IllegalStateException();
 		}
 		return new NetworkSocket(_hostName,_socket.getPort());
 	}
