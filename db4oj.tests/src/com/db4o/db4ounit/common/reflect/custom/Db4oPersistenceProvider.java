@@ -205,9 +205,14 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	private Configuration metaConfiguration() {
 		Configuration config = Db4o.newConfiguration();
 		config.exceptionsOnNotStorable(true);
+		
+		// the following line is only necessary for the tests to run
+		// in OSGi environment
 		config.reflectWith(Platform4.reflectorForType(CustomClassRepository.class));
+		
 		cascade(config, CustomClassRepository.class);
 		cascade(config, Hashtable4.class);
+		
 //		cascade(config, HashtableObjectEntry.class);
 //		cascade(config, CustomClass.class);
 //		cascade(config, CustomField.class);
