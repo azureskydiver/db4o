@@ -20,7 +20,7 @@ public class FileDeleteBenchmark {
             raf.close();
         }
         for (int i = 0; i < COUNT; i++) {
-            new File(FILE + 1).delete();
+            new File(FILE + i).delete();
         }
         
         long stop = System.currentTimeMillis();
