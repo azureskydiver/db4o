@@ -36,11 +36,9 @@ class BlockingByteChannel {
     }
 
     void close() {
-    	synchronized (this) {
-    		i_closed = true;
-    	}
         i_lock.run(new SafeClosure4() {
             public Object run() {
+            	i_closed = true;
             	i_lock.awake();
             	return null;
             }
