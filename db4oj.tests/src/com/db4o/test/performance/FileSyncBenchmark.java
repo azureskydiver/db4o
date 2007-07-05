@@ -23,6 +23,7 @@ public class FileSyncBenchmark {
         raf = new RandomAccessFile(FILE, "rw");
         long start = System.currentTimeMillis();
         for (int i = 0; i < COUNT; i++) {
+        	raf.write(1);
             raf.getFD().sync();
         }
         long stop = System.currentTimeMillis();
