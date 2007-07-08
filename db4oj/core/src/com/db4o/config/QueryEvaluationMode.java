@@ -11,8 +11,10 @@ package com.db4o.config;
  */
 public class QueryEvaluationMode {
 	
-	private QueryEvaluationMode(){
-		
+	private final String _id;
+	
+	private QueryEvaluationMode(String id){
+		_id = id;
 	}
 	
 	/**
@@ -21,7 +23,7 @@ public class QueryEvaluationMode {
 	 * <br><br><b>For detailed documentation please see 
 	 * {@link QueryConfiguration#evaluationMode(QueryEvaluationMode)}</b> 
 	 */
-	public static final QueryEvaluationMode IMMEDIATE = new QueryEvaluationMode();
+	public static final QueryEvaluationMode IMMEDIATE = new QueryEvaluationMode("IMMEDIATE");
 
 	/**
 	 * Constant for snapshot query evaluation. When Query#execute() is called,
@@ -32,7 +34,7 @@ public class QueryEvaluationMode {
 	 * <br><br><b>For detailed documentation please see 
 	 * {@link QueryConfiguration#evaluationMode(QueryEvaluationMode)}</b> 
 	 */
-	public static final QueryEvaluationMode SNAPSHOT = new QueryEvaluationMode();
+	public static final QueryEvaluationMode SNAPSHOT = new QueryEvaluationMode("SNAPSHOT");
 	
 	/**
 	 * Constant for lazy query evaluation. When Query#execute() is called, the
@@ -42,7 +44,7 @@ public class QueryEvaluationMode {
 	 * <br><br><b>For detailed documentation please see 
 	 * {@link QueryConfiguration#evaluationMode(QueryEvaluationMode)}</b> 
 	 */
-	public static final QueryEvaluationMode LAZY = new QueryEvaluationMode();
+	public static final QueryEvaluationMode LAZY = new QueryEvaluationMode("LAZY");
 	
 	
     private static final QueryEvaluationMode[] MODES = new QueryEvaluationMode[] {
@@ -70,4 +72,7 @@ public class QueryEvaluationMode {
     	return MODES[i];
     }
 
+    public String toString() {
+    	return _id;
+    }
 }
