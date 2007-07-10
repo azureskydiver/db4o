@@ -31,10 +31,30 @@ public class MagnycoursDb4o extends Db4oDriver implements
 
 	private List _list;
 
+	public void addFirstElement() {
+		List list = retrieveList();
+		list.add(0, new MagnycoursItem(0));
+		db().commit();
+	}
+
+	public void addLastElement() {
+		List list = retrieveList();
+		list.add(new MagnycoursItem(0));
+		db().commit();
+	}
+
+	public void addMiddleElement() {
+		List list = retrieveList();
+		list.add(setup().getObjectCount()/2, new MagnycoursItem(0));
+		db().commit();
+	}
+	
 	public void getAllElements() {
 		List list = retrieveList();
-		for (int i = 0; i < list.size(); ++i) {
-			getListElement(list, i);
+		Iterator iter = list.iterator();
+		while(iter.hasNext()) {
+			MagnycoursItem item = (MagnycoursItem) iter.next();
+			addToCheckSum(item.checkSum());
 		}
 	}
 	

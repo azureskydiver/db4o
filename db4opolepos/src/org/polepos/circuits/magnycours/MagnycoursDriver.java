@@ -31,4 +31,10 @@ public interface MagnycoursDriver {
 	public void getLastElement();
 
 	public void getAllElements();
+	
+	public void addFirstElement();
+
+	public void addMiddleElement();
+
+	public void addLastElement();
 }
