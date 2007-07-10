@@ -42,6 +42,9 @@ public class Magnycours extends Circuit {
         add(new Lap("getMiddleElement"));
         add(new Lap("getLastElement"));
         add(new Lap("getAllElements"));
+        add(new Lap("addFirstElement"));
+        add(new Lap("addMiddleElement"));
+        add(new Lap("addLastElement"));
     }
 
 }
