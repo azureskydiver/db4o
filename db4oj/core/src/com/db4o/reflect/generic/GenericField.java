@@ -13,17 +13,13 @@ public class GenericField implements ReflectField, DeepClone{
     private final String _name;
     private final GenericClass _type;
     private final boolean _primitive;
-    private final boolean _array;
-    private final boolean _nDimensionalArray;
 
     private int _index = -1;
 
-    public GenericField(String name, ReflectClass clazz, boolean primitive, boolean array, boolean nDimensionalArray) {
+    public GenericField(String name, ReflectClass clazz, boolean primitive) {
         _name = name;
         _type = (GenericClass)clazz;
         _primitive = primitive;
-        _array = array;
-        _nDimensionalArray = nDimensionalArray;
     }
 
     public Object deepClone(Object obj) {
@@ -32,7 +28,7 @@ public class GenericField implements ReflectField, DeepClone{
         if(_type != null){
             newReflectClass = reflector.forName(_type.getName());
         }
-        return new GenericField(_name, newReflectClass, _primitive, _array, _nDimensionalArray);
+        return new GenericField(_name, newReflectClass, _primitive);
     }
 
     public Object get(Object onObject) {
@@ -45,9 +41,6 @@ public class GenericField implements ReflectField, DeepClone{
     }
 
     public ReflectClass getFieldType() {
-        if(_array){
-            return _type.arrayClass();
-        }
         return _type;
     }
 

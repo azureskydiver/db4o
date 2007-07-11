@@ -231,6 +231,9 @@ public class GenericReflector implements Reflector, DeepClone {
         if (obj instanceof GenericObject){
 			return forGenericObject((GenericObject)obj);
         }
+        if (obj instanceof GenericArray){
+			return ((GenericArray)obj)._clazz;
+        }
         return _delegate.forObject(obj);
     }
 
@@ -388,7 +391,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		}else {
 	        claxx = new GenericClass(this, null, name, null);
 	        register(claxx);
-		    claxx.initFields(new GenericField[] {new GenericField(null, null, true, false, false)});
+		    claxx.initFields(new GenericField[] {new GenericField(null, null, true)});
 		    claxx.setConverter(converter);
 		}
 	    claxx.setSecondClass();

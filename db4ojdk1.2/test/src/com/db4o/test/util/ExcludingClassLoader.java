@@ -8,6 +8,10 @@ import com.db4o.foundation.*;
 
 public class ExcludingClassLoader extends URLClassLoader {
 	private Collection4 _excludedNames;
+
+	public ExcludingClassLoader(ClassLoader parent,Class[] excludedClasses) {
+		this(parent, collectNames(excludedClasses));
+	}
 	
 	public ExcludingClassLoader(ClassLoader parent,Collection4 excludedNames) {
 		super(new URL[]{},parent);
@@ -21,6 +25,14 @@ public class ExcludingClassLoader extends URLClassLoader {
 		return super.loadClass(name, resolve);
 	}
 	
+	private static Collection4 collectNames(Class[] classes) {
+		Collection4 names = new Collection4();
+		for (int classIdx = 0; classIdx < classes.length; classIdx++) {
+			names.add(classes[classIdx].getName());
+		}
+		return names;
+	}
+
 	public static void main(String[] args) throws Exception {
 		ClassLoader parent=ExcludingClassLoader.class.getClassLoader();
 		String excName=ExcludingClassLoader.class.getName();

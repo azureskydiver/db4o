@@ -117,7 +117,7 @@ public class ClassInfoHelper {
 			GenericClass genericFieldClass = classMetaToGenericClass(reflector,
 					fieldClassMeta);
 			genericFields[i] = new GenericField(fieldName, genericFieldClass,
-					fields[i]._isPrimitive, fields[i]._isArray, fields[i]._isNArray);
+					fields[i]._isPrimitive);
 		}
 
 		genericClass.initFields(genericFields);
