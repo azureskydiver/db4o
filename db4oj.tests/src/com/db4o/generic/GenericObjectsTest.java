@@ -79,12 +79,12 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 			GenericReflector reflector) {
 		return new GenericField[] {
 				new GenericField("surname", reflector.forClass(String.class),
-						false, false, false),
+						false),
 				new GenericField("birthdate", reflector.forClass(Date.class),
-						false, false, false),
-				new GenericField("bestFriend", personClass, false, false, false),
+						false),
+				new GenericField("bestFriend", personClass, false),
 				new GenericField("nArray", reflector.forClass(int[][].class),
-						true, true, true) };
+						true) };
 	}
 
 	public void testUpdate() {

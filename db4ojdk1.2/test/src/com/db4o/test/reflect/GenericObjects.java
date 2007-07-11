@@ -78,9 +78,9 @@ public class GenericObjects extends Test {
 
     private GenericField[] fields(ReflectClass personClass) {
         return new GenericField[] {
-                new GenericField("surname", _reflector.forClass(String.class), false, false, false),
-                new GenericField("birthdate", _reflector.forClass(Date.class), false, false, false),
-                new GenericField("bestFriend", personClass, false, false, false)
+                new GenericField("surname", _reflector.forClass(String.class), false),
+                new GenericField("birthdate", _reflector.forClass(Date.class), false),
+                new GenericField("bestFriend", personClass, false)
         };
     }
 
