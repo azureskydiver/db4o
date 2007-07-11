@@ -81,7 +81,7 @@ public class GenericObjectConverter implements Converter {
 	private ReflectField getOrCreateField(GenericClass gc, String nodeName) {
 		ReflectField rf = gc.getDeclaredField(nodeName);
 		if(rf == null) {
-			GenericField gf = new GenericField(nodeName, gc, false, false, false); // todo: set the booleans properly
+			GenericField gf = new GenericField(nodeName, gc, false); // todo: set the booleans properly
 			GenericField[] fieldsPrevious = (GenericField[]) gc.getDeclaredFields();
 			GenericField[] fieldsNew = new GenericField[fieldsPrevious.length + 1];
 			System.arraycopy(fieldsPrevious, 0, fieldsNew, 0, fieldsNew.length - 1);
