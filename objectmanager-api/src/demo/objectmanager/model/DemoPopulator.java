@@ -210,10 +210,10 @@ public class DemoPopulator {
 	private GenericField[] fields(Reflector reflector) {
 		return new GenericField[]{
 				new GenericField("name", reflector.forClass(String.class),
-						false, false, false),
+						false),
 				new GenericField("buildDate", reflector.forClass(Date.class),
-						false, false, false),
-				new GenericField("mpg", reflector.forClass(Integer.class), true, false, false),
+						false),
+				new GenericField("mpg", reflector.forClass(Integer.class), true),
 		};
 	}
 
