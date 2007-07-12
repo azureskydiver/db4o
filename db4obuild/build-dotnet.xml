@@ -1050,7 +1050,14 @@
             <property name="Configuration" value="Release" />
             <property name="OutputPath" value="${dir.dist.dll}/cf2.0" />
         </msbuild>
+        <copy todir="${emulator.sharefolder}">
+            <fileset dir="${dir.dist.dll}/cf2.0" >
+                <include name="*.dll" />
+                <include name="*.exe" />
+            </fileset>
+        </copy>
         
+        <echo message="Run test..." />
         <exec executable="${vdma_desktop.exe}" failonerror="true">
             <arg line="&quot;\Storage Card\Db4objects.Db4o.Tests.exe run&quot;" />
             <arg value="${dir.dist.dll}/cf2.0/db4ounit.log" />
