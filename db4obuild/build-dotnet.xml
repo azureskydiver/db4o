@@ -1050,6 +1050,10 @@
             <property name="Configuration" value="Release" />
             <property name="OutputPath" value="${dir.dist.dll}/cf2.0" />
         </msbuild>
+        
+        <delete dir="${emulator.sharefolder}" >
+            <include name="*" />
+        </delete>
         <copy todir="${emulator.sharefolder}">
             <fileset dir="${dir.dist.dll}/cf2.0" >
                 <include name="*.dll" />
