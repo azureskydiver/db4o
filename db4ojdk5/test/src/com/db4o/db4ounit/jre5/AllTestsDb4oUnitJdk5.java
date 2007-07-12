@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.jre5;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.extensions.*;
 
 public class AllTestsDb4oUnitJdk5 extends Db4oTestSuite {
 
@@ -15,7 +15,7 @@ public class AllTestsDb4oUnitJdk5 extends Db4oTestSuite {
 		return new Class[] {
 			com.db4o.db4ounit.jre5.enums.AllTests.class,
 			com.db4o.db4ounit.jre12.AllTestsJdk1_2.class,
-			IndexedAnnotationTestCase.class,
+			com.db4o.db4ounit.jre5.annotation.IndexedAnnotationTestCase.class,
 		};
 	}
 
