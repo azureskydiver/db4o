@@ -268,8 +268,8 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	private void checkExceptionMessage(Msg msg) {
-		if(msg instanceof MChainedRuntimeException) {
-			throw (ChainedRuntimeException)((MChainedRuntimeException)msg).readSingleObject();
+		if(msg instanceof MRuntimeException) {
+			((MRuntimeException)msg).throwPayload();
 		}
 	}
 		
