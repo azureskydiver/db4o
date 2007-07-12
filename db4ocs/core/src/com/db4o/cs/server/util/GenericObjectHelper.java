@@ -36,7 +36,7 @@ public class GenericObjectHelper {
 		for (int i = 0; i < fields.size(); i++) {
 			FieldMetaData fieldMetaData = (FieldMetaData) fields.get(i);
 			gFields[i] = new GenericField(fieldMetaData.getFieldName(), reflector.forName(fieldMetaData.getClassName()),
-					false, false, false);
+					false);
 		}
 		return gFields;
 	}
