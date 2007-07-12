@@ -1,6 +1,6 @@
 /* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.jre5;
+package com.db4o.db4ounit.jre5.annotation;
 
 import com.db4o.config.annotations.*;
 import com.db4o.ext.*;
