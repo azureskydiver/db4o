@@ -21,7 +21,7 @@ public abstract class Msg implements Cloneable {
 	private Transaction _trans;
 	private MessageDispatcher _messageDispatcher;
 	
-	public static final MChainedRuntimeException CHAINED_RUNTIME_EXCEPTION = new MChainedRuntimeException();
+	public static final MRuntimeException RUNTIME_EXCEPTION = new MRuntimeException();
 	public static final MClassID CLASS_ID = new MClassID();
 	public static final MClassMetadataIdForName CLASS_METADATA_ID_FOR_NAME = new MClassMetadataIdForName();
 	public static final MClassNameForID CLASS_NAME_FOR_ID = new MClassNameForID();
@@ -216,10 +216,10 @@ public abstract class Msg implements Cloneable {
 		_messageDispatcher.write(msg);
 	}
 	
-	public void writeException(ChainedRuntimeException e) {
-		write(CHAINED_RUNTIME_EXCEPTION.getWriterForSingleObject(transaction(), e));
+	public void writeException(RuntimeException e) {
+		write(RUNTIME_EXCEPTION.getWriterForSingleObject(transaction(), e));
 	}
-	
+
 	public void respondInt(int response){
     	write(ID_LIST.getWriterForInt(transaction(), response));
     }
