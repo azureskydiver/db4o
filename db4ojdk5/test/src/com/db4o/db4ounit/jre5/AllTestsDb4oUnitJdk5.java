@@ -14,8 +14,9 @@ public class AllTestsDb4oUnitJdk5 extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			com.db4o.db4ounit.jre5.enums.AllTests.class,
+			com.db4o.db4ounit.jre5.annotation.AllTests.class,
+			com.db4o.db4ounit.jre5.generic.AllTests.class,
 			com.db4o.db4ounit.jre12.AllTestsJdk1_2.class,
-			com.db4o.db4ounit.jre5.annotation.IndexedAnnotationTestCase.class,
 		};
 	}
 
