@@ -28,7 +28,7 @@ public class TestException extends RuntimeException {
 		if (null != _reason) {
 			_reason.printStackTrace(s);
 		} else {
-			super.printStackTrace();
+			super.printStackTrace(s);
 		}
 		
 	}
