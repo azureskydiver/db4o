@@ -1,12 +1,73 @@
-body{font-family:Verdana, Arial, Helvetica; font-size:10pt; color:black; background-color:white; font-weight:normal}
-p{font-family:Verdana, Arial, Helvetica; font-size:10pt; color:black; background-color:white; font-weight:normal}
-h1{font-family:Verdana, Arial, Helvetica; font-size:12pt; color:black; background-color:white; font-weight:bold}
-h2{font-family:Verdana, Arial, Helvetica; font-size:10pt; color:black; background-color:white; font-weight:bold}
-small{font-family:Verdana, Arial, Helvetica; font-size:5pt; color:black; background-color:white; font-weight:normal}
-code{font-family:Courier; font-size:10pt; color:black; background-color:#efefef; font-weight:normal}
-b{font-weight: bold}
-td{font-family:Verdana, Arial, Helvetica; font-size:10pt; color:black; background-color:white; font-weight:normal}
-.lg{background-color:#efefef} 
+body, p, td
+{
+	font-family: Arial, Helvetica, Verdana;
+	font-size: 10pt;
+	color: #666666;
+}
+H1
+{
+	color: #447744;
+	font-size: 180%;
+	font-weight: bold;
+}
+
+H2
+{
+	color: #447744;
+	font-size: 160%;
+	font-weight: bold;
+	border-bottom: double #CCC 3px;
+}
+
+H3
+{
+	color: #447744;
+	font-size: 140%;
+	font-weight: bold;
+	border-bottom: solid #CCC 1px;
+}
+
+H4
+{
+	color: #447744;
+	font-size: 130%;
+	font-weight: bold;
+}
+
+H5
+{
+	color: #447744;
+	font-size: 120%;
+	font-weight: bold;
+}
+
+H6
+{
+	color: #447744;
+	font-size: 100%;
+	font-weight: bold;
+}
+
+small
+{
+	margin-top: 2em;
+	padding: 0.5em;
+	font-size: 90%;
+	color: #CCCCCC;
+	background-color: #999;
+}
+
+
+code
+{
+	font-size: 100%;
+	color: black;
+	background-color: #F4F4F4;
+}
+
+
+
+.lg{background-color:#F4F4F4} 
 .co{background-color:#a0a0a0} 
 .console {
 	z-index:1;
