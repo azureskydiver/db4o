@@ -213,7 +213,7 @@
 	</target>
 
     <target name="run-tests" depends="build">
-<!--        <exec executable="${drs.net.bin.dir}/drs.test.exe" failonerror="true" />-->
+        <exec executable="${drs.net.bin.dir}/drs.test.exe" failonerror="true" />
     </target>
     
     <target name="doctor" >
