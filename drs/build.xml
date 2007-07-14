@@ -102,6 +102,7 @@
                 <include name="com/db4o/drs/db4o/*.java" />
 			</fileset>
 		</javadoc>
+		<copy file="${javadoc.stylesheet}" todir="${drs.dir.dist.api}" overwrite="true" />
 	</target>
 
 	<target name="doctor" depends="">
