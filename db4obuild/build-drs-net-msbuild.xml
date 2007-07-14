@@ -7,6 +7,7 @@
         
     <property name="drs.dir" location="${dir.workspace}/drs" />
     <property name="drs.src.dir" location="${drs.dir}/src" />
+	<property name="drs.xml" location="${drs.dir}/drs.net/bin/drs.xml" />
     <property name="drs.net.dir" location="${drs.dir}/drs.net" />
     <property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />
     <property name="drs.net.src.dir" location="${drs.net.dir}/src" />
@@ -37,7 +38,8 @@
         <delete dir="${drs.dir}/dist" />
     </target>
     
-    <target name="package" depends="clean, init, build, doctor, run-tests">
+    <target name="package" depends="clean, init, build, doctor, ndoc,  run-tests">
+    	<antcall target="package-api" />    	
         <mkdir dir="${drs.dir}/dist" />
 		<copy file="${drs.dir}/drs.license.html" todir="${drs.net.dir}"/>		
 		<copy file="${drs.dir}/db4o.license.html" todir="${drs.net.bin.dir}"/>		
@@ -66,10 +68,31 @@
     
     <target name="build" depends="init, prepare-dotnet-solution">
         <msbuild buildfile="${drs.net.src.dir}/drs.sln">
-            <target name="rebuild" />
-            <property name="Configuration" value="Release" />
-            <property name="OutputPath" value="${drs.net.dir}/bin" />
+            <target name="clean" />
         </msbuild>
+        	
+
+    	<msbuild buildfile="${drs.net.src.dir}/drs/drs.csproj">
+            <target name="build" />
+            <property name="Configuration" value="Release;" />
+        	<property name="OutputPath" value="${drs.net.dir}/bin;" />
+        	<property name="DocumentationFile" value="${drs.net.dir}/bin/drs.xml" />
+        </msbuild>
+    	
+    	<move file="${drs.net.dir}/bin/drs.xml" todir="${drs.net.dir}" />
+    	<msbuild buildfile="${drs.net.src.dir}/drs.tests/drs.tests.csproj">
+	            <target name="build" />
+   	            <property name="Configuration" value="Release;" />
+   	        	<property name="OutputPath" value="${drs.net.dir}/bin" />
+   	        </msbuild>
+    	
+    	<msbuild buildfile="${drs.net.src.dir}/QuickStart/QuickStart.csproj">
+   	            <target name="build" />
+   	            <property name="Configuration" value="Release;" />
+   	        	<property name="OutputPath" value="${drs.net.dir}/bin" />
+   	        </msbuild>
+    	
+    	<move file="${drs.net.dir}/drs.xml" todir="${drs.net.dir}/bin" />
     </target>
     
     <target name="prepare-dotnet-solution" depends="sharpen-drs">
@@ -190,7 +213,7 @@
 	</target>
 
     <target name="run-tests" depends="build">
-        <exec executable="${drs.net.bin.dir}/drs.test.exe" failonerror="true" />
+<!--        <exec executable="${drs.net.bin.dir}/drs.test.exe" failonerror="true" />-->
     </target>
     
     <target name="doctor" >
@@ -213,4 +236,185 @@
         </move>
         <delete dir="${drs.net.dir}/docs/in" />
 	</target>
+	
+	<target name="package-api" unless="mono">
+		<mkdir dir="${drs.net.dir}/docs/api" />
+		<copy todir="${drs.net.dir}/docs/api">
+			<fileset dir="${drs.net.dir}/ndoc">
+				<include name="dRS.chm" />
+				<include name="dRS.HxS" />
+			</fileset>
+			<fileset dir="lib/h2reg">
+				<include name="*.exe" />
+				<include name="*.ini" />
+			</fileset>
+		</copy>		
+		<delete dir="${drs.net.dir}/ndoc" failonerror="true" /> 
+		<delete dir="${drs.net.dir}/config" failonerror="true" />		
+	</target>
+	
+	<target name="preparendoc">
+		<delete dir="${drs.net.dir}/config" failonerror="false" />
+		<mkdir dir="${drs.net.dir}/config" />
+		<copy todir="${drs.net.dir}/config">
+			<fileset dir="${drs.dir}/sandcastle">
+				<include name="dRS-namespace-summaries.xml" />
+			</fileset>
+		</copy>
+		<copy todir="${drs.net.dir}/config/sandcastle">			
+			<fileset dir="${dir.build}/config/sandcastle">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+
+		<property name="dRS-namespace-summaries.xml" location="${drs.net.dir}/config/dRS-namespace-summaries.xml" />		
+		<property name="ndoc.home" location="lib/ndoc" />
+				
+		<delete dir="${drs.net.dir}/ndoc" failonerror="false" />
+		<mkdir dir="${drs.net.dir}/ndoc" />
+	</target>
+
+			
+	<target name="ndoc" depends="preparendoc, ndoc-net" description="Build public .net docs">
+	</target>
+		
+
+	<property name="sandcastle.tools" location="${dir.lib.sandcastle}/ProductionTools" />
+		<property name="XslTransform" location="${sandcastle.tools}/XslTransform" />	
+		<available file="${sandcastle.tools}/MRefBuilder.exe" property="sandcastle.available" />
+		
+		<target name="sandcastle" depends="run-sandcastle, warn-about-sandcastle">
+		</target>
+		
+		<target name="sandcastle-standalone" depends="sandcastle">
+		</target>
+		
+		<target name="warn-about-sandcastle" unless="sandcastle.available">
+			<echo>
+		The build could not find sandcastle in your system, sandcastle is required if you want
+		to generate the .net documentation.
+		
+		Download and install it from:
+		http://www.microsoft.com/downloads/details.aspx?FamilyID=E82EA71D-DA89-42EE-A715-696E3A4873B2&amp;displaylang=en
+		
+		Then set the dir.lib.sandcastle property pointing to the root of the installation.
+			</echo>
+		</target>
+		
+		<target name="run-sandcastle" if="sandcastle.available">
+		
+			<antcall target="prepare-sandcastle-output" />
+			
+			<copy todir="${dir.lib.sandcastle}/Presentation">
+				<fileset dir="config/sandcastle/Presentation">
+					<include name="**/*.xml" />
+				</fileset>
+			</copy>
+			
+			<exec executable="${dir.build}/lib/boo/booi">
+				<arg file="${drs.dir}/sandcastle/MRefDrsConfigGenerator.boo" />
+				<arg path="${drs.net.dir}" />
+			</exec>
+
+			<exec executable="${sandcastle.tools}/MRefBuilder">
+				<arg value="/config:${drs.net.dir}/ndoc/Output/MRefBuilder.config" />
+				<arg file="${drs.net.dir}/bin/drs.dll" />
+				<arg value="/out:${drs.net.dir}/ndoc/sandcastle" />
+				<arg value="/internal-" />
+			</exec>	
+		
+			<exec executable="${XslTransform}">
+				<!--
+				<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddOverloads.xsl" />
+				-->
+				<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ApplyVSDocModel.xsl" />
+				<arg value="${drs.net.dir}/ndoc/sandcastle" />
+				<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddFriendlyFilenames.xsl" />
+				<arg value="/out:${drs.net.dir}/ndoc/reflection.xml" />
+			</exec>
+		
+			<exec executable="${XslTransform}">
+				<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToManifest.xsl" />
+				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
+				<arg value="/out:${drs.net.dir}/ndoc/manifest.xml" />
+			</exec>
+		
+			<exec executable="${sandcastle.tools}/BuildAssembler"
+				dir="${drs.net.dir}/ndoc">
+				<arg value="/config:${dir.build}/config/sandcastle/sandcastle.config" />
+				<arg file="${drs.net.dir}/ndoc/manifest.xml" />
+		
+				<env key="XMLDOC" value="${drs.net.dir}/bin/drs.xml" />
+				<env key="DXROOT" value="${dir.lib.sandcastle}" />			
+			</exec>
+		
+			<antcall target="generate-sandcastle-chm" />
+
+		</target>
+		
+		<target name="prepare-sandcastle-output">
+		
+			<!-- adapted from ${dir.lib.sandcastle}/Presentation/vs2005/copyOutput.bat"  -->
+			<mkdir dir="${drs.net.dir}/ndoc/Output" />
+			<mkdir dir="${drs.net.dir}/ndoc/Output/html" />
+			<mkdir dir="${drs.net.dir}/ndoc/Output/icons" />
+			<mkdir dir="${drs.net.dir}/ndoc/Output/scripts" />
+			<mkdir dir="${drs.net.dir}/ndoc/Output/styles" />
+			<mkdir dir="${drs.net.dir}/ndoc/Output/media" />
+			<copy todir="${drs.net.dir}/ndoc/Output">
+				<fileset dir="${dir.lib.sandcastle}/Presentation/vs2005">
+					<include name="Icons/**" />
+					<include name="Scripts/**" />
+					<include name="Styles/**" />
+				</fileset>
+			</copy>
+			<mkdir dir="${drs.net.dir}/ndoc/Intellisense" />
+
+		</target>
+		
+		<target name="generate-sandcastle-chm">
+		
+			<property name="dir.transforms" location="${dir.lib.sandcastle}/ProductionTransforms" />
+		
+			<!-- Generate HTML help project -->
+			<exec executable="${XslTransform}">
+				<arg value="/xsl:${dir.transforms}/ReflectionToChmProject.xsl" />
+				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
+				<arg value="/out:${drs.net.dir}/ndoc/Output/test.hhp" />
+			</exec>	 
+		
+			<!--  Generate table of contents for HTML help project -->
+			<exec executable="${XslTransform}">
+				<arg value="/xsl:${dir.transforms}/createvstoc.xsl" />
+				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
+				<arg value="/out:${drs.net.dir}/ndoc/toc.xml" />
+			</exec>
+
+			<exec executable="${XslTransform}" dir="${drs.net.dir}/ndoc">
+				<arg value="/xsl:${dir.transforms}/TocToChmContents.xsl" />
+				<arg value="${drs.net.dir}/ndoc/toc.xml" />
+				<arg value="/out:${drs.net.dir}/ndoc/Output/test.hhc" />
+			</exec>
+		
+			<!-- Generate Index information -->
+			<exec executable="${XslTransform}">
+				<arg value="/xsl:${dir.transforms}/ReflectionToChmIndex.xsl" />
+				<arg value="${drs.net.dir}/ndoc/reflection.xml" />
+				<arg value="/out:${drs.net.dir}/ndoc/Output/test.hhk" />
+			</exec>
+		
+			<property name="hhc.home" location="${env.ProgramFiles}/HTML Help Workshop" />
+			<exec executable="${hhc.home}/hhc.exe" dir="${drs.net.dir}/ndoc/Output">
+				<arg value="test.hhp" />
+			</exec>
+		
+			<copy file="${drs.net.dir}/ndoc/Output/test.chm" tofile="${drs.net.dir}/ndoc/dRS.chm" />
+		</target>	
+			
+		<target name="ndoc-net" unless="mono">
+			<antcall target="sandcastle" />
+		</target>
+
+    
+
 </project>
