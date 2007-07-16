@@ -6,7 +6,7 @@ import com.db4o.reflect.*;
 
 /**
  * configuration interface for classes.
- * <br><br><b>Examples: ../com/db4o/samples/translators/Default.java.</b><br><br>
+ * <br><br>
  * Use the global Configuration object to configure db4o before opening an
  * {@link com.db4o.ObjectContainer ObjectContainer}.<br><br>
  * <b>Example:</b><br>
@@ -108,10 +108,7 @@ public interface ObjectClass {
 	 * registers an attribute provider for special query behavior.
 	 * <br><br>The query processor will compare the object returned by the
 	 * attribute provider instead of the actual object, both for the constraint
-	 * and the candidate persistent object.<br><br> Preinstalled attribute
-	 * providers are documented
-	 * in the sourcecode of 
-	 * com.db4o.samples.translators.Default.java#defaultConfiguration().<br><br>
+	 * and the candidate persistent object.<br><br> 
 	 * @param attributeProvider the attribute provider to be used
 	 */
 	public void compare(ObjectAttribute attributeProvider);
@@ -273,7 +270,7 @@ public interface ObjectClass {
     /**
 	 * renames a stored class.
 	 * <br><br>Use this method to refactor classes.
-     * <br><br><b>Examples: ../com/db4o/samples/rename.</b><br><br>
+     * <br><br>
      * @param newName the new fully qualified classname.
      */
     public void rename (String newName);
@@ -292,9 +289,6 @@ public interface ObjectClass {
     /**
 	 * registers a translator for this class.
      * <br><br>
-	 * Preinstalled translators are documented in the sourcecode of
-	 * com.db4o.samples.translators.Default.java#defaultConfiguration().
-	 * <br><br>Example translators can also be found in this folder.<br><br>
 	 * <br><br>The use of an {@link ObjectTranslator ObjectTranslator} is not
 	 * compatible with the use of an 
 	 * {@link ObjectMarshaller ObjectMarshaller}.<br><br>

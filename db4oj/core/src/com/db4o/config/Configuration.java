@@ -92,7 +92,7 @@ public interface Configuration {
      * own complex {@link Alias} constructs by creating own resolvers
      * that implement the {@link Alias} interface.
      * <br><br>
-     * Four examples of concrete usecases:
+     * Examples of concrete usecases:
      * <br><br>
      * <code>
      * <b>// Creating an Alias for a single class</b><br> 
@@ -102,14 +102,8 @@ public interface Configuration {
      * <b>// Accessing a .NET assembly from a Java package</b><br> 
      * Db4o.configure().addAlias(<br>
      * &#160;&#160;new WildcardAlias(<br>
-     * &#160;&#160;&#160;&#160;"com.f1.*, F1RaceAssembly",<br>
+     * &#160;&#160;&#160;&#160;"Tutorial.F1.*, Tutorial",<br>
      * &#160;&#160;&#160;&#160;"com.f1.*"));<br>
-     * <br><br>
-     * <b>// Using a different local .NET assembly</b><br> 
-     * Db4o.configure().addAlias(<br>
-     * &#160;&#160;new WildcardAlias(<br>
-     * &#160;&#160;&#160;&#160;"com.f1.*, F1RaceAssembly",<br>
-     * &#160;&#160;&#160;&#160;"com.f1.*, RaceClient"));<br>
      * <br><br>
      * <b>// Mapping a Java package onto another</b><br> 
      * Db4o.configure().addAlias(<br>
@@ -305,7 +299,7 @@ public interface Configuration {
      * configures the use of encryption.
      * <br><br>This method needs to be called <b>before</b> a database file
      * is created with the first 
-     * {@link com.db4o.Db4o#openFile(java.lang.String) Db4o.openFile()}.
+     * {@link com.db4o.Db4o#openFile(java.lang.String)}.
      * <br><br>If encryption is set to true,
      * you need to supply a password to seed the encryption mechanism.<br><br>
      * db4o database files keep their encryption format after creation.<br><br>
@@ -517,7 +511,7 @@ public interface Configuration {
      * protects the database file with a password.
      * <br><br>To set a password for a database file, this method needs to be 
      * called <b>before</b> a database file is created with the first 
-     * {@link com.db4o.Db4o#openFile Db4o.openFile()}.
+     * {@link com.db4o.Db4o#openFile}.
      * <br><br>All further attempts to open
      * the file, are required to set the same password.<br><br>The password
      * is used to seed the encryption mechanism, which makes it impossible
@@ -613,7 +607,7 @@ public interface Configuration {
      * Assigns a {@link java.io.PrintStream PrintStream} where db4o is to print its event messages.
      * <br><br>Messages are useful for debugging purposes and for learning
      * to understand, how db4o works. The message level can be raised with
-     * {@link Configuration#messageLevel Db4o.configure().messageLevel()}
+     * {@link Configuration#messageLevel(int)}
      * to produce more detailed messages.
      * <br><br>Use <code>setOut(System.out)</code> to print messages to the
      * console.<br><br>
@@ -637,7 +631,7 @@ public interface Configuration {
      * configures the storage format of Strings.
      * <br><br>This method needs to be called <b>before</b> a database file
      * is created with the first 
-     * {@link com.db4o.Db4o#openFile Db4o.openFile()}.
+     * {@link com.db4o.Db4o#openFile}.
      * db4o database files keep their string format after creation.<br><br>
      * Turning Unicode support off reduces the file storage space for strings 
      * by factor 2 and improves performance.<br><br>
@@ -650,11 +644,11 @@ public interface Configuration {
     /**
      * specifies the global updateDepth.
      * <br><br>see the documentation of
-     * {@link com.db4o.ObjectContainer#set ObjectContainer.set()}
+     * {@link com.db4o.ObjectContainer#set }
      * for further details.<br><br>
      * The value be may be overridden for individual classes.<br><br>
      * The default setting is 1: Only the object passed to
-     * {@link com.db4o.ObjectContainer#set ObjectContainer.set()}
+     * {@link com.db4o.ObjectContainer#set}
      * will be updated.<br><br>
      * @param depth the depth of the desired update.
      * @see ObjectClass#updateDepth

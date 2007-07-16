@@ -48,11 +48,11 @@ public interface ExtObjectContainer extends ObjectContainer {
      * reference with the object parameter. The method may be used to replace
      * objects or to reassociate an object with it's stored instance
      * after closing and opening a database file. A subsequent call to 
-     * {@link com.db4o.ObjectContainer#set set(Object)} is
+     * {@link com.db4o.ObjectContainer#set(Object)} is
      * necessary to update the stored object.<br><br>
      * <b>Requirements:</b><br>- The ID needs to be a valid internal object ID, 
      * previously retrieved with 
-     * {@link #getID getID(Object)}.<br>
+     * {@link #getID(Object)}.<br>
      * - The object parameter needs to be of the same class as the stored object.<br><br>
      * @see #getID(java.lang.Object)
      * @param obj the object that is to be bound
@@ -76,13 +76,13 @@ public interface ExtObjectContainer extends ObjectContainer {
      * returns the Configuration context for this ObjectContainer.
      * <br><br>
      * Upon opening an ObjectContainer with any of the factory methods in the
-     * {@link com.db4o.Db4o Db4o class}, the global 
+     * {@link com.db4o.Db4o} class, the global 
      * {@link com.db4o.config.Configuration Configuration} context
      * is copied into the ObjectContainer. The 
      * {@link com.db4o.config.Configuration Configuration}
      * can be modified individually for
      * each ObjectContainer without any effects on the global settings.<br><br>
-     * @return {@link com.db4o.config.Configuration Configuration} the Configuration
+     * @return {@link com.db4o.config.Configuration} the Configuration
      * context for this ObjectContainer
      * @see Db4o#configure
      */
@@ -104,7 +104,7 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * returns the stored object for an internal ID.
      * <br><br>This is the fastest method for direct access to objects. Internal
-     * IDs can be obtained with {@link #getID getID(Object)}.
+     * IDs can be obtained with {@link ExtObjectContainer#getID(Object)}.
      * Objects will not be activated by this method. They will be returned in the 
      * activation state they are currently in, in the local cache.<br><br>
      * @param ID the internal ID
@@ -138,7 +138,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * guaranteed to be unique within one <code>ObjectContainer</code>. 
      * An object carries the same ID in every db4o session. Internal IDs can 
      * be used to look up objects with the very fast 
-     * {@link #getByID getByID} method.<br><br>
+     * {@link #getByID(Object)} method.<br><br>
      * Internal IDs will change when a database is defragmented. Use 
      * {@link #getObjectInfo(Object)}, {@link ObjectInfo#getUUID()} and
      * {@link #getByUUID(Db4oUUID)} for long-term external references to
@@ -326,11 +326,11 @@ public interface ExtObjectContainer extends ObjectContainer {
     /**
      * deep update interface to store or update objects.
      * <br><br>In addition to the normal storage interface, 
-     * {@link com.db4o.ObjectContainer#set ObjectContainer#set(Object)},
+     * {@link com.db4o.ObjectContainer#set(Object)},
      * this method allows a manual specification of the depth, the passed object is to be updated.<br><br>
      * @param obj the object to be stored or updated.
      * @param depth the depth to which the object is to be updated
-     * @see com.db4o.ObjectContainer#set
+     * @see com.db4o.ObjectContainer#set(Object)
      */
     public void set (Object obj, int depth);
     
@@ -363,7 +363,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * A suggested name for the semaphore:  "SINGLETON_" + Object#getClass().getName().<br>  - lock
      * objects. A suggested name:   "LOCK_" + {@link #getID(java.lang.Object) getID(Object)}<br> -
      * generate a unique client ID. A suggested name:  "CLIENT_" +
-     * System.currentTimeMillis().<br><br>   
+     * currentTime.<br><br>   
      * 
      * @param name the name of the semaphore to be set
      * @param waitForAvailability the time in milliseconds to wait for other

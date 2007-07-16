@@ -27,7 +27,7 @@ public interface ReplicationProcess {
      * <br><br>Call this method after replication is completed to
      * write all changes back to the database files. This method
      * synchronizes both ObjectContainers by setting the transaction
-     * serial number (@link ExtObjectContainer#version()) on both 
+     * serial number {@link com.db4o.ext.ExtObjectContainer#version()} on both 
      * ObjectContainers to be equal 
      * to the higher version number among the two. A record with 
      * information about this replication task, including the 

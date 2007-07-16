@@ -3,7 +3,7 @@
 package  com.db4o.config;
 /**
  * configuration interface for fields of classes.
- * <br><br><b>Examples: ../com/db4o/samples/translators.</b><br><br>
+ * <br><br>
  * Use the global Configuration object to configure db4o before opening an
  * {@link com.db4o.ObjectContainer ObjectContainer}.<br><br>
  * <b>Example:</b><br>
@@ -40,13 +40,13 @@ public interface ObjectField {
 	 * Setting cascadeOnDelete to true will result in the deletion of
 	 * the object attribute stored in this field on the parent object
 	 * if the parent object is passed to 
-	 * {@link com.db4o.ObjectContainer#delete ObjectContainer#delete()}.
+	 * {@link com.db4o.ObjectContainer#delete}.
 	 * <br><br>
 	 * <b>Caution !</b><br>
 	 * This setting will also trigger deletion of the old member object, on
-	 * calls to {@link com.db4o.ObjectContainer#set ObjectContainer#set()}.
+	 * calls to {@link com.db4o.ObjectContainer#set }.
 	 * An example of the behaviour can be found in 
-	 * {@link ObjectClass#cascadeOnDelete ObjectClass#cascadeOnDelete()}
+	 * {@link ObjectClass#cascadeOnDelete}
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether deletes are to be cascaded to the member object.
@@ -63,7 +63,7 @@ public interface ObjectField {
 	 * Setting cascadeOnUpdate to true will result in the update
 	 * of the object attribute stored in this field if the parent object
 	 * is passed to
-	 * {@link com.db4o.ObjectContainer#set ObjectContainer#set()}.
+	 * {@link com.db4o.ObjectContainer#set}.
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * @param flag whether updates are to be cascaded to the member object.
@@ -94,7 +94,7 @@ public interface ObjectField {
     /**
 	 * renames a field of a stored class.
 	 * <br><br>Use this method to refactor classes.
-     * <br><br><b>Examples: ../com/db4o/samples/rename.</b><br><br>
+     * <br><br>
      * @param newName the new fieldname.
      */
     public void rename (String newName);

@@ -9,9 +9,6 @@ import com.db4o.foundation.*;
  * <br><br>The open reflection interface is supplied to allow to implement
  * reflection functionality on JDKs that do not come with the
  * java.lang.reflect.* package.<br><br>
- * See the code in com.db4o.samples.reflect for a reference implementation
- * that uses java.lang.reflect.*.
- * <br><br>
  * Use {@link com.db4o.config.Configuration#reflectWith Db4o.configure().reflectWith(IReflect reflector)}
  * to register the use of your implementation before opening database
  * files.

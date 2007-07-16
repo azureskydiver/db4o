@@ -6,7 +6,7 @@ import com.db4o.*;
 
 /**
  * translator interface to translate objects on storage and activation.
- * <br><br><b>Examples: ../com/db4o/samples/translators.</b><br><br>
+ * <br><br>
  * By writing classes that implement this interface, it is possible to
  * define how application classes are to be converted to be stored more efficiently.
  * <br><br>

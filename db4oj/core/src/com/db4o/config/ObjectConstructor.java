@@ -6,7 +6,7 @@ import com.db4o.*;
 
 /**
  * interface to allow instantiating objects by calling specific constructors.
- * <br><br><b>Examples: ../com/db4o/samples/translators.</b><br><br>
+ * <br><br>
  * By writing classes that implement this interface, it is possible to
  * define which constructor is to be used during the instantiation of a stored object.
  * <br><br>
