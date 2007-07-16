@@ -74,21 +74,21 @@
 
     	<msbuild buildfile="${drs.net.src.dir}/drs/drs.csproj">
             <target name="build" />
-            <property name="Configuration" value="Release;" />
-        	<property name="OutputPath" value="${drs.net.dir}/bin;" />
+            <property name="Configuration" value="Release" />
+        	<property name="OutputPath" value="${drs.net.dir}/bin" />
         	<property name="DocumentationFile" value="${drs.net.dir}/bin/drs.xml" />
         </msbuild>
     	
     	<move file="${drs.net.dir}/bin/drs.xml" todir="${drs.net.dir}" />
     	<msbuild buildfile="${drs.net.src.dir}/drs.tests/drs.tests.csproj">
 	            <target name="build" />
-   	            <property name="Configuration" value="Release;" />
+   	            <property name="Configuration" value="Release" />
    	        	<property name="OutputPath" value="${drs.net.dir}/bin" />
    	        </msbuild>
     	
     	<msbuild buildfile="${drs.net.src.dir}/QuickStart/QuickStart.csproj">
    	            <target name="build" />
-   	            <property name="Configuration" value="Release;" />
+   	            <property name="Configuration" value="Release" />
    	        	<property name="OutputPath" value="${drs.net.dir}/bin" />
    	        </msbuild>
     	
