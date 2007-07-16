@@ -64,8 +64,8 @@ public interface ObjectContainer {
      * closes this ObjectContainer.
      * <br><br>A call to close() automatically performs a 
      * {@link #commit commit()}.
-     * <br><br>Note that every session opened with Db4o.openFile() requires one
-     * close()call, even if the same filename was used multiple times.<br><br>
+     * <br><br>Note that every session opened with {@link com.db4o.Db4o#openFile(String)} requires one
+     * close() call, even if the same filename was used multiple times.<br><br>
      * Use <code>while(!close()){}</code> to kill all sessions using this container.<br><br>
      * @return success - true denotes that the last used instance of this container
      * and the database file were closed.
@@ -90,7 +90,7 @@ public interface ObjectContainer {
     /**
      * deactivates a stored object by setting all members to <code>NULL</code>.
      * <br>Primitive types will be set to their default values.
-     * <br><br><b>Examples: ../com/db4o/samples/activate.</b><br><br>
+     * <br><br>
      * Calls to this method save memory.
      * The method has no effect, if the passed object is not stored in the
      * <code>ObjectContainer</code>.<br><br>
@@ -273,9 +273,9 @@ public interface ObjectContainer {
      * - use the delegate notation for .NET 2.0.<br>
      * - extend the Predicate class for all other language dialects<br><br>
      * A class that extends Predicate is required to 
-     * implement the #match() / #Match() method, following the native query
+     * implement the #match() method, following the native query
      * conventions:<br>
-     * - The name of the method is "#match()" (Java) / "#Match()" (.NET).<br>
+     * - The name of the method is "#match()"<br>
      * - The method must be public public.<br>
      * - The method returns a boolean.<br>
      * - The method takes one parameter.<br>
@@ -335,7 +335,7 @@ public interface ObjectContainer {
      * update depth was configured or cascaded updates were 
      * {@link com.db4o.config.ObjectClass#cascadeOnUpdate defined in the class}
      * or in {@link com.db4o.config.ObjectField#cascadeOnUpdate one of the member fields}.
-     * <br><br><b>Examples: ../com/db4o/samples/update.</b><br><br>
+     * <br><br>
      * Depending if the passed object is newly stored or updated, the
      * callback method
      * {@link com.db4o.ext.ObjectCallbacks#objectOnNew objectOnNew} or

@@ -12,7 +12,7 @@ package com.db4o.activation;
 public interface Activator {
 	
 	/**
-	 * Method to be called to acivate the host object.
+	 * Method to be called to activate the host object.
 	 */
 	void activate();
 }

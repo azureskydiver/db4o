@@ -7,7 +7,7 @@ package  com.db4o.query;
  * {@link Query#execute() query execution}.
  * <br><br>
  * Constraints are constructed by calling 
- * {@link Query#constrain Query.constrain()}.
+ * {@link Query#constrain(Object)}.
  * <br><br>
  * Constraints can be joined with the methods {@link #and}
  * and {@link #or}.

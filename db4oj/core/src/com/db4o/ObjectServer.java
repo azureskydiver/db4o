@@ -18,7 +18,7 @@ import com.db4o.ext.*;
  */
 public interface ObjectServer {
     /**
-    * closes the <code>ObjectServer</code> and writes all cached data.
+    * closes the {@link ObjectServer } and writes all cached data.
     * <br><br>
     * @return true - denotes that the last instance connected to the
     * used database file was closed.
@@ -26,9 +26,9 @@ public interface ObjectServer {
     public boolean close();
 
     /**
-     * returns an ObjectServer with extended functionality.
+     * returns an  {@link ObjectServer } with extended functionality.
      * <br><br>Use this method as a convient accessor to extended methods. 
-     * Every ObjectServer can be casted to an ExtObjectServer.
+     * Every  {@link ObjectServer } can be casted to an {@link com.db4o.ext.ExtObjectServer}.
      * <br><br>The functionality is split to two interfaces to allow newcomers to
      * focus on the essential methods.
      */

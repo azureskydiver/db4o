@@ -29,14 +29,8 @@ package com.db4o.config;
  * <b>// Accessing a .NET assembly from a Java package</b><br> 
  * Db4o.configure().addAlias(<br>
  * &#160;&#160;new WildcardAlias(<br>
- * &#160;&#160;&#160;&#160;"com.f1.*, F1RaceAssembly",<br>
+ * &#160;&#160;&#160;&#160;"Tutorial.F1.*, Tutorial",<br>
  * &#160;&#160;&#160;&#160;"com.f1.*"));<br>
- * <br><br>
- * <b>// Using a different local .NET assembly</b><br> 
- * Db4o.configure().addAlias(<br>
- * &#160;&#160;new WildcardAlias(<br>
- * &#160;&#160;&#160;&#160;"com.f1.*, F1RaceAssembly",<br>
- * &#160;&#160;&#160;&#160;"com.f1.*, RaceClient"));<br>
  * <br><br>
  * <b>// Mapping a Java package onto another</b><br> 
  * Db4o.configure().addAlias(<br>

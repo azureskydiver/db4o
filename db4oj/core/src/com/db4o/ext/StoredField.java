@@ -30,7 +30,7 @@ public interface StoredField {
 	/**
 	 * returns the Class (Java) / Type (.NET) of the field.
 	 * <br><br>For array fields this method will return the type of the array.
-	 * Use {link #isArray()} to detect arrays.  
+	 * Use {@link #isArray()} to detect arrays.  
 	 */
 	public ReflectClass getStoredType();
 	

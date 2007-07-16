@@ -4,6 +4,7 @@ package com.db4o.config;
 
 
 /**
+ * @exclude
  * This class provides static constants for the query evaluation
  * modes that db4o supports. 
  * <br><br><b>For detailed documentation please see 
