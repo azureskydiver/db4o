@@ -335,9 +335,6 @@ public final class HandlerRegistry {
             return null;
         }
         
-        if(a_class.isInterface()) {
-        	a_class = _reflector.forClass(Object.class);
-        }
         ClassMetadata yc = getYapClassStatic(a_class);
         if (yc != null) {
             return ((PrimitiveFieldHandler) yc).i_handler;
