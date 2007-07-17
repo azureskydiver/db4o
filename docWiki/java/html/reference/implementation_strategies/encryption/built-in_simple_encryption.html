@@ -7,27 +7,18 @@
   <body>
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>Built-In Simple Encryption</h1>
+        <h1>Built-In Simple Encryption</h1> 
 
+<P>(This functionality is deprecated)</P>
+<P>The other encryption methods built-into db4o, is called simple encryption. To use it, the following two methods have to be called, before a database file is created:</P>
+<span class="java"></P>
+<P>Java: </P><code> Db4o.configure().encrypt(true); Db4o.configure().password("yourEncryptionPasswordHere"); </code> 
+<P></span>
 
-<p>(This functionality is depricated)</p>
-
-<p>The other encryption methods built-into db4o, is called simple encryption. To use it, the following two methods have to be called, before a database file is created:</p>
-
-<span class="java"></p>
-<p>Java: </p>
-<code>
-Db4o.configure().encrypt(true); 
-Db4o.configure().password("yourEncryptionPasswordHere");
-</code>
-<p></span>
-
-
-
-<p>The security standard of the built-in encryption functionality is not very high, not much more advanced than "substract 5 from every byte". This is great for systems with limited resources, or where the encryption needs to be done as quickly as possible.</p></div>
+<P>The security standard of the built-in encryption functionality is not very high, not much more advanced than "substract 5 from every byte". This is great for systems with limited resources, or where the encryption needs to be done as quickly as possible.</P></div>
     </div>
     <div id="footer">
-					This revision (6) was last Modified 2006-11-13T13:20:58 by Tetyana.
+					This revision (7) was last Modified 2007-07-05T03:18:33 by German Viscuso.
 				</div>
   </body>
 </html>

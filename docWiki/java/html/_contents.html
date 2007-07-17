@@ -16,11 +16,11 @@ background-color:#838383;
 				</style>
     <base target="content">
   </head>
-  <body><a href="http://www.db4o.com" target="_blank"><img src="db4objects1.jpg" border="0"></a><div style="font-size: 80%"><BR><a target="_self" href="javascript:ddtreemenu.flatten('refTree', 'expand')">Expand All</a> | 
-					<a target="_self" href="javascript:ddtreemenu.flatten('refTree', 'contact')">Collapse All</a></div>
+  <body><a href="http://www.db4o.com" target="_blank"><img src="db4objects1.jpg" border="0"></a><div><BR><input type="button" onClick="ddtreemenu.flatten('refTree', 'expand')" value="Expand All" style="font-size: 80%"> | 
+					<input type="button" onClick="ddtreemenu.flatten('refTree', 'contact')" value="Collapse All" style="font-size: 80%"></div>
     <div id="NavFrameTOC">
       <ul id="refTree" class="treeview">
-        <li><a target="content" href="reference.html">Reference</a><ul>
+        <li><a target="content" href="reference.html">Reference Documentation</a><ul>
             <li><a target="content" href="reference/navigation_guide.html">Navigation Guide</a></li>
             <li><a target="content" href="reference/using_sample_code.html">Using Sample Code</a></li>
             <li><a target="content" href="reference/getting_started.html">Getting Started</a></li>
@@ -519,7 +519,42 @@ background-color:#838383;
                 </li>
               </ul>
             </li>
-            <li><a target="content" href="reference/db4o_replication_system_drs.html">db4o Replication System (dRS)</a><ul></ul>
+            <li><a target="content" href="reference/db4o_replication_system_drs.html">db4o Replication System (dRS)</a><ul>
+                <li><a target="content" href="reference/db4o_replication_system_drs/getting_started.html">Getting Started</a></li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication.html">Db4o Databases Replication</a><ul>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication/initial_setup.html">Initial Setup</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication/simple_example.html">Simple Example</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication/bi-directional_replication.html">Bi-Directional Replication</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication/selective_replication.html">Selective Replication</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms.html">Replication With RDBMS</a><ul>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/configuration.html">Configuration</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/running_drs.html">Running DRS</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples.html">Replication Examples</a><ul>
+                        <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/simple_example.html">Simple Example</a></li>
+                        <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections.html">Collections</a><ul>
+                            <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/array.html">Array</a></li>
+                            <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/list.html">List</a></li>
+                            <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/set.html">Set</a></li>
+                            <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/map.html">Map</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/hibernate_replication_internals.html">Hibernate Replication Internals</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/advanced_replication_strategies.html">Advanced Replication Strategies</a><ul>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/advanced_replication_strategies/events.html">Events</a><ul>
+                        <li><a target="content" href="reference/db4o_replication_system_drs/advanced_replication_strategies/events/conflict_resolution.html">Conflict Resolution</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/advanced_replication_strategies/deleted_objects_replication.html">Deleted Objects Replication</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/license.html">License</a></li>
+              </ul>
             </li>
             <li><a target="content" href="reference/db4o_testing_framework.html">Db4o Testing Framework</a><ul>
                 <li><a target="content" href="reference/db4o_testing_framework/db4ounit_methods.html">Db4ounit Methods</a></li>
@@ -530,6 +565,20 @@ background-color:#838383;
             <li><a target="content" href="reference/object_manager_for_db4o.html">Object Manager For db4o</a><ul>
                 <li><a target="content" href="reference/object_manager_for_db4o/installation.html">Installation</a></li>
                 <li><a target="content" href="reference/object_manager_for_db4o/object_manager_tour.html">Object Manager Tour</a></li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/working_with_source_code.html">Working With Source Code</a><ul>
+                <li><a target="content" href="reference/working_with_source_code/using_the_sources_from_db4o_distribution.html">Using The Sources From Db4o Distribution</a></li>
+                <li><a target="content" href="reference/working_with_source_code/using_the_repository.html">Using The Repository</a></li>
+                <li><a target="content" href="reference/working_with_source_code/db4o_directory_structure.html">Db4o Directory Structure</a></li>
+                <li><a target="content" href="reference/working_with_source_code/configuring_java_system_libraries.html">Configuring Java System Libraries</a></li>
+                <li><a target="content" href="reference/working_with_source_code/building_java_version.html">Building Java Version</a></li>
+                <li><a target="content" href="reference/working_with_source_code/building_.net_version.html">Building .NET Version</a></li>
+                <li><a target="content" href="reference/working_with_source_code/testing_db4o.html">Testing Db4o</a></li>
+                <li><a target="content" href="reference/working_with_source_code/object_manager_sources.html">Object Manager Sources</a></li>
+                <li><a target="content" href="reference/working_with_source_code/patch_submission.html">Patch Submission</a></li>
+                <li><a target="content" href="reference/working_with_source_code/project_dependencies.html">Project Dependencies</a></li>
+                <li><a target="content" href="reference/working_with_source_code/coding_style.html">Coding Style</a></li>
               </ul>
             </li>
             <li><a target="content" href="reference/license.html">License</a></li>
