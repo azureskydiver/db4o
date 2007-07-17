@@ -38,7 +38,7 @@
         <delete dir="${drs.dir}/dist" />
     </target>
     
-    <target name="package" depends="clean, init, build, doctor, ndoc,  run-tests">
+    <target name="package" depends="clean, init, build, doctor, ndoc, run-tests">
     	<antcall target="package-api" />    	
         <mkdir dir="${drs.dir}/dist" />
 		<copy file="${drs.dir}/drs.license.html" todir="${drs.net.dir}"/>		
@@ -55,9 +55,17 @@
 				        </filterchain>
 		</copy>
         
+        <loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
+        <filehead beforePattern="using|namespace|#if" header="${content.gplheader}" >
+			<sources dir="${drs.net.src.dir}">
+				<include name="**/*.cs" />
+			</sources>
+		</filehead>
+        
         <delete>
             <fileset dir="${drs.net.bin.dir}">
                 <include name="*.pdb" />
+                <include name="*.yap" />
             </fileset>
         </delete>
         
