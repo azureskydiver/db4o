@@ -331,15 +331,18 @@ public final class HandlerRegistry {
     // TODO: Interfaces should be handled by the ANY handler but we
     // need to write the code to migrate from the old field handler to the new
     public final TypeHandler4 handlerForClass(ObjectContainerBase a_stream, ReflectClass a_class) {
-        if(a_class == null){
-            return null;
-        }
-        
-        ClassMetadata yc = getYapClassStatic(a_class);
-        if (yc != null) {
-            return ((PrimitiveFieldHandler) yc).i_handler;
-        }
-        return a_stream.produceClassMetadata(a_class);
+    	 if(a_class == null){
+             return null;
+         }
+    	 
+         if (a_class.isArray()) {
+             return handlerForClass(a_stream, a_class.getComponentType());
+         }
+         ClassMetadata yc = getYapClassStatic(a_class);
+         if (yc != null) {
+             return ((PrimitiveFieldHandler) yc).i_handler;
+         }
+         return a_stream.produceClassMetadata(a_class);
     }
 
 	public TypeHandler4 untypedHandler() {
