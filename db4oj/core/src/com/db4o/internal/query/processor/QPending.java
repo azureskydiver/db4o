@@ -36,9 +36,14 @@ class QPending extends Tree{
 	}
 
 	public Object shallowClone() {
+		QPending pending = internalClonePayload();
+		super.shallowCloneInternal(pending);
+		return pending;
+	}
+
+	QPending internalClonePayload() {
 		QPending pending = new QPending(_join, _constraint, false);
 		pending._result=_result;
-		super.shallowCloneInternal(pending);
 		return pending;
 	}
 	
