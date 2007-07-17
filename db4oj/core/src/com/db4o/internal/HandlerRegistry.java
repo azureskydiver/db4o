@@ -334,11 +334,9 @@ public final class HandlerRegistry {
         if(a_class == null){
             return null;
         }
-//        if (a_class.isInterface()) {
-//        	return anyObject();
-//        }
-        if (a_class.isArray()) {
-            return handlerForClass(a_stream, a_class.getComponentType());
+        
+        if(a_class.isInterface()) {
+        	a_class = _reflector.forClass(Object.class);
         }
         ClassMetadata yc = getYapClassStatic(a_class);
         if (yc != null) {
