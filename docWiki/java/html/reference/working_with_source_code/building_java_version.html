@@ -1,0 +1,129 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Building Java Version</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Building Java Version</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Building Jar Only&nbsp;">Building Jar Only&nbsp;</a></li><li><a href ="#Building db4o Java Distribution&nbsp;">Building db4o Java Distribution&nbsp;</a><ul><li><a href ="#Projects Required&nbsp;">Projects Required&nbsp;</a></li><li><a href ="#machine.properties">machine.properties</a></li><li><a href ="#build.xml">build.xml</a></li><li><a href ="#Running the Build">Running the Build</a></li></ul></li></ul></li></ul></div></div></div><p>
+
+</p><p><font color="#cc0033">This topic applies
+to Java version only</font> <br></p><span class="java"></p>
+
+
+
+
+
+<a name="Building Jar Only&nbsp;"></a><h2>Building Jar Only&nbsp;</h2><p>To work with the
+Java db4o sources you will need the following projects:</p>
+
+<p>db4oj</p>
+
+<p>db4ojdk1.2</p>
+
+<p>db4ojdk5</p>
+
+<p>db4ounit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+
+<p>db4ounit.extensions</p>
+
+<p>db4oj.tests</p>
+
+<p>These projects are
+available in the /src folder of the db4o distribution. They can also be checked
+out from the SVN repository.</p>
+
+<p>You can build the
+projects and assemble them into a *.jar file.</p>
+
+<a name="Building db4o Java Distribution&nbsp;"></a><h2>Building db4o Java Distribution&nbsp;</h2><a name="Projects Required&nbsp;"></a><h3>Projects Required&nbsp;</h3><p>Another option is to
+use build-1.1 project to create a full db4o java distribution. In this case,
+you will have to additionally check out the following projects.
+
+</p><p>build-1.1 - db4o
+build tool</p>
+
+<p>bloat - bytecode
+optimization library, required for db4o NQ optimizer</p>
+
+<p>db4onqopt - db4o NQ
+optimizer</p>
+
+<p>doctor -
+documentation generation tool, required for building interactive tutorial</p>
+
+<p>tutorial -
+interactive tutorial</p>
+
+<p>docWiki - db4o
+reference documentation</p>
+
+
+
+<a name="machine.properties"></a><h3>machine.properties</h3>
+
+<p>You will need to
+create machine.properties file in build-1.1 folder. The contents of the file
+can be copied from machine.properties.example.windows. Usually you will only
+need to modify <code>eclipse.home</code> variable (points to your eclipse
+installation directory). </p>
+
+<p>If you do not have a JDK 1.3 installed and you want to use
+JDK 5 to build db4o for Java 1.1, you will need this line:</p>
+
+<p><code>file.compiler.jdk1.3.args.optional=-source
+1.3</code></p>
+
+
+
+<a name="build.xml"></a><h3>build.xml</h3>
+
+<p>build.xml can be used to build several projects. In order to
+build java only distribution comment out projects other than "db4o java.zip projects" under ivy:buildlist
+tag:</p>
+
+<p><code>&lt;!-- .net projects --&gt;</code><br><code>
+&lt;!--</code><br><code>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;fileset
+dir="../javatocsharp/javatocsharp.core"&nbsp;&nbsp;&nbsp;
+includes="build-1.1.xml"/&gt;</code><br><code>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;fileset
+dir="build.net"&nbsp;&nbsp;&nbsp; includes="build.xml"/&gt;</code><br><code>
+--&gt;</code></p>
+
+<p>and</p>
+
+<p><code>&lt;!-- dRS.zip projects --&gt;</code></p>
+
+<p><code>&lt;!--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;fileset
+dir="../drs"</code></p>
+
+<p><code>includes="build-1.1.xml"/&gt;</code></p>
+
+<p><code>--&gt;</code></p>
+
+<p>and </p><p><code>&lt;!-- &nbsp;&nbsp;&nbsp;&nbsp; &lt;fileset dir="${dir.objectmanager-api}"&nbsp;&nbsp;&nbsp;&nbsp; includes="build-1.1.xml"/&gt; </code><br></p><code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;fileset
+dir="${dir.objectmanager-swing}" includes="build-1.1.xml"/&gt;&nbsp; --&gt;</code>
+
+
+
+<a name="Running the Build"></a><h3>Running the Build</h3>
+
+<p>You can start the build by right-clicking build.xml file and
+selecting "Run As/Ant Build". </p>
+
+<p>The ready distribution can be found in /builds folder in your workspace.</p>
+
+<p></span><p>Further reading:</p><p><a href="testing_db4o.html" class="wikiLink">Testing Db4o</a>&nbsp;</p>
+
+
+
+<p><a href="patch_submission.html" class="wikiLink">Patch Submission</a><br>&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2007-03-18T18:39:18 by Tetyana.
+				</div>
+  </body>
+</html>
