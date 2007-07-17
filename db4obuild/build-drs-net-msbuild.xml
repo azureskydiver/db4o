@@ -38,7 +38,12 @@
         <delete dir="${drs.dir}/dist" />
     </target>
     
-    <target name="package" depends="clean, init, build, doctor, ndoc, run-tests">
+	<target name="reference">
+        <mkdir dir="${drs.net.dir}/docs/reference" />
+    	<copydir dest="${drs.net.dir}/docs/reference" src="${drs.dir}/docWiki/net" />
+	</target>
+    
+	<target name="package" depends="clean, init, build, reference, ndoc, run-tests">
     	<antcall target="package-api" />    	
         <mkdir dir="${drs.dir}/dist" />
 		<copy file="${drs.dir}/drs.license.html" todir="${drs.net.dir}"/>		
@@ -224,28 +229,7 @@
         <exec executable="${drs.net.bin.dir}/drs.test.exe" failonerror="true" />
     </target>
     
-    <target name="doctor" >
-		<copy todir="${drs.net.dir}">
-            <fileset dir="${drs.overlay.dir}/tutorial" />
-        </copy>
-		<java fork="true" classname="com.yetac.doctor.Doctor">
-			<arg line="${drs.net.dir}/docs ${font.pdf.base}" />
-			<classpath>
-				<pathelement location="${dependencies.jar}" />
-				<fileset dir="${drs.dir}/lib/doctor">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</java>
-		<move file="${drs.net.dir}/docs/out/doctor.pdf" tofile="${drs.net.dir}/docs/out/dRS-tutorial.pdf"/>
-        
-        <move todir="${drs.net.dir}/docs">
-            <fileset dir="${drs.net.dir}/docs/out" />
-        </move>
-        <delete dir="${drs.net.dir}/docs/in" />
-	</target>
-	
-	<target name="package-api" unless="mono">
+    <target name="package-api" unless="mono">
 		<mkdir dir="${drs.net.dir}/docs/api" />
 		<copy todir="${drs.net.dir}/docs/api">
 			<fileset dir="${drs.net.dir}/ndoc">
