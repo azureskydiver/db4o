@@ -196,7 +196,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 												.traverse(new Visitor4() {
 													public void visit(
 															Object a_object) {
-														QPending newPending = (QPending) a_object;
+														QPending newPending = ((QPending) a_object).internalClonePayload();
 
 														// We need to change
 														// the
