@@ -3,9 +3,9 @@
 package com.db4o.db4ounit.jre12.assorted;
 
 import java.io.*;
-import java.util.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
@@ -44,13 +44,12 @@ public class UpdatingDb4oVersionsTestCase implements TestLifeCycle {
         "db4o_6.2.301"
     };
 
-    List list;
-    Map map;
-    String name;
-    
+	private Configuration _config;
+
     public void configure(){
-        Db4o.configure().allowVersionUpdates(true);
-        Db4o.configure().objectClass(UpdatingDb4oVersions.class).objectField("name").indexed(true);
+    	_config = Db4o.newConfiguration();
+        _config.allowVersionUpdates(true);
+        _config.objectClass(UpdatingDb4oVersions.class).objectField("name").indexed(true);
     }
 
     public void setUp() throws Exception {
@@ -58,7 +57,7 @@ public class UpdatingDb4oVersionsTestCase implements TestLifeCycle {
         String file = PATH + fileName();
         new File(file).mkdirs();
         new File(file).delete();
-        ExtObjectContainer objectContainer = Db4o.openFile(file).ext();
+        ExtObjectContainer objectContainer = Db4o.openFile(_config, file).ext();
         try {
 	        UpdatingDb4oVersions udv = new UpdatingDb4oVersions();
 	        udv.name = "check";
@@ -98,7 +97,7 @@ public class UpdatingDb4oVersionsTestCase implements TestLifeCycle {
     }
     
     private void checkDatabaseFile(String testFile) {
-        ExtObjectContainer objectContainer = Db4o.openFile(testFile).ext();
+        ExtObjectContainer objectContainer = Db4o.openFile(_config, testFile).ext();
         try {
 	        checkStoredObjectsArePresent(objectContainer);
 	        checkBTreeSize(objectContainer);
