@@ -26,7 +26,9 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 		final Configuration config = Db4o.newConfiguration();
 		configure(config);
 		
-		final ObjectServer server = Db4o.openServer(config, databaseFile(), _port);
+		String fileName = databaseFile();
+		File4.delete(fileName);
+		final ObjectServer server = Db4o.openServer(config, fileName, _port);
 		try {
 			server.grantAccess("db4o", "db4o");
 			
@@ -34,7 +36,7 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 			
 		} finally {
 			server.close();
-			File4.delete(databaseFile());
+			File4.delete(fileName);
 		}
 	}
 
