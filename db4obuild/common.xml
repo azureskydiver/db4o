@@ -69,6 +69,8 @@
 		</classpath>
 	</taskdef>
 	
+	<property name="eclipse.startup.jar" location="${eclipse.home}/startup.jar" />
+	
 	<macrodef name="sharpen">
 		<attribute name="workspace" />
 		<attribute name="resource" />
@@ -79,7 +81,7 @@
 			<exec executable="${file.jvm.jdk1.5}" failonerror="true" timeout="1800000">
 				<arg value="-Xmx512m" />
 				<arg value="-cp" />
-				<arg value="${eclipse.home}/startup.jar" />
+				<arg value="${eclipse.startup.jar}" />
 				<arg value="org.eclipse.core.launcher.Main" />
 				<arg value="-data" />
 				<arg file="@{workspace}" />
