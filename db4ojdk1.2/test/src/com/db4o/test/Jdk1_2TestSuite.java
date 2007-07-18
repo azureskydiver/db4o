@@ -41,7 +41,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             TestTreeSet.class,
             TransientClone.class,
             TreeSetCustomComparable.class,
-            UpdatingDb4oVersions.class
         };
     }
 }
