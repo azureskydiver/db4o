@@ -15,9 +15,9 @@ import com.db4o.query.*;
 
 public class UpdatingDb4oVersions {
     
-    static final String PATH = "./test/db4oVersions/";
+    public static final String PATH = "./test/db4oVersions/";
 
-    static final String[] VERSIONS = {
+    public static final String[] VERSIONS = {
         "db4o_3.0.3", 
         "db4o_4.0.004", 
         "db4o_4.1.001", 

@@ -22,27 +22,6 @@ public class UpdatingDb4oVersionsTestCase implements TestLifeCycle {
 	public static void main(String[] args) {
 		new TestRunner(UpdatingDb4oVersionsTestCase.class).run();
 	}
-	
-    static final String PATH = "./test/db4oVersions/";
-
-    static final String[] VERSIONS = {
-        "db4o_3.0.3", 
-        "db4o_4.0.004", 
-        "db4o_4.1.001", 
-        "db4o_4.6.003",
-        "db4o_4.6.004",
-        "db4o_5.0.007",
-        "db4o_5.1.001",
-        "db4o_5.2.001", 
-        "db4o_5.2.003",
-        "db4o_5.2.008",
-        "db4o_5.3.001", 
-        "db4o_5.4.004",
-        "db4o_5.5.2",
-        "db4o_5.6.2",
-        "db4o_6.2.001",
-        "db4o_6.2.301"
-    };
 
 	private Configuration _config;
 
@@ -54,7 +33,7 @@ public class UpdatingDb4oVersionsTestCase implements TestLifeCycle {
 
     public void setUp() throws Exception {
     	configure();
-        String file = PATH + fileName();
+        String file = UpdatingDb4oVersions.PATH + fileName();
         new File(file).mkdirs();
         new File(file).delete();
         ExtObjectContainer objectContainer = Db4o.openFile(_config, file).ext();
@@ -72,26 +51,18 @@ public class UpdatingDb4oVersionsTestCase implements TestLifeCycle {
     }
     
     public void test() throws IOException{
-        for(int i = 0; i < VERSIONS.length; i ++){
-            String oldFilePath = PATH + VERSIONS[i];
+        for(int i = 0; i < UpdatingDb4oVersions.VERSIONS.length; i ++){
+            String oldFilePath = UpdatingDb4oVersions.PATH + UpdatingDb4oVersions.VERSIONS[i];
             File oldFile = new File(oldFilePath);
             if(oldFile.exists()){
-                
-                String testFilePath = PATH + VERSIONS[i] + ".yap";
-                new File(testFilePath).delete();
-                
+                String testFilePath = oldFilePath + ".yap";
+                File4.delete(testFilePath);                
                 File4.copy(oldFilePath, testFilePath);
-                
-                
                 checkDatabaseFile(testFilePath);
-                
                 // Twice, to ensure everything is fine after opening, converting and closing.
                 checkDatabaseFile(testFilePath);
-                
-                
             }else{
-                System.err.println("Version upgrade check failed. File not found:");
-                System.err.println(oldFile);
+                Assert.fail("Version upgrade check failed. File not found:" + oldFile);
             }
         }
     }
