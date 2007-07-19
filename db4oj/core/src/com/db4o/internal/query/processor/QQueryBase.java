@@ -222,7 +222,7 @@ public abstract class QQueryBase implements Unversioned {
                 if (run[0] == 1) {
                     run[0] = 2;
                     if (!descend1(query, a_field, run)) {
-                        return null;
+                        new QConFalse(i_trans).attach(query, a_field);
                     }
                 }
             }
