@@ -67,7 +67,7 @@ public class QConPath extends QConClass {
         }
         Object obj = i_field.coerce(a_object);
         if(obj == No4.INSTANCE){
-        	QConObject falseConstraint = new QConFalse(i_trans, i_parent, i_field);
+        	QCon falseConstraint = new QConFalse(i_trans);
             morph(removeExisting, falseConstraint, reflectClassForObject(obj));
     		return falseConstraint;
         }
@@ -84,7 +84,7 @@ public class QConPath extends QConClass {
 	// so the parents are reachable.
 	// If we find a "real" constraint, we throw the QPath
 	// out and replace it with the other constraint. 
-    private void morph(boolean[] removeExisting, QConObject newConstraint, ReflectClass claxx) {
+    private void morph(boolean[] removeExisting, QCon newConstraint, ReflectClass claxx) {
         boolean mayMorph = true;
         if (claxx != null) {
         	ClassMetadata yc = i_trans.stream().produceClassMetadata(claxx);
