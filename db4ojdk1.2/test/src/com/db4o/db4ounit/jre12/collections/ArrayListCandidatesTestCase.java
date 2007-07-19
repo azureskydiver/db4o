@@ -2,12 +2,10 @@
 
 package com.db4o.db4ounit.jre12.collections;
 
-import java.io.*;
 import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.foundation.io.*;
 import com.db4o.io.*;
 import com.db4o.query.*;
 
@@ -21,6 +19,9 @@ public class ArrayListCandidatesTestCase implements TestCase {
 	private static class DataHolder {
 		public ArrayList _data;
 
+		private DataHolder() {
+		}
+		
 		public DataHolder(Object[] data) {
 			_data = new ArrayList(data.length);
 			for (int dataIdx = 0; dataIdx < data.length; dataIdx++) {
