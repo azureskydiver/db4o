@@ -3,6 +3,7 @@
 package com.db4o.test;
 
 import com.db4o.test.legacy.*;
+import com.db4o.test.legacy.soda.*;
 
 /**
  * This suite contains all the old style regression tests that have been converted to
@@ -34,6 +35,7 @@ public class AllTestsLegacy extends AllTests {
         		PersistStaticFieldValues.class,
         		SimpleTypeArrayInUntypedVariable.class,
     	    	Soda.class,
+    	    	SodaNumberCoercion.class,
         		TypedArrayInObject.class,
         		TypedDerivedArray.class,
         };

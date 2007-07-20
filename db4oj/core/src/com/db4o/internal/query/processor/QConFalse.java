@@ -9,9 +9,10 @@ import com.db4o.internal.*;
 /** 
  * @exclude
  */
-public class QConFalse extends QCon {
+// FIXME This certainly shouldn't extend QConPath.
+public class QConFalse extends QConPath {
 	public QConFalse(Transaction trans){
-		super(trans);
+		super(trans, null, new QField(trans, "", null, 0, 0));
 	}
 	
 	void createCandidates(Collection4 a_candidateCollection) {
