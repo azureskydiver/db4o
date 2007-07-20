@@ -5,6 +5,7 @@ package db4ounit.extensions.fixtures;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
@@ -65,7 +66,7 @@ public class Db4oClientServer extends
     }
     
     private static int findFreePort(int port) throws IOException{
-		ServerSocket4 server = new ServerSocket4(port);
+		ServerSocket4 server = new ServerSocket4(new PlainSocketFactory(), port);
 		port = server.getLocalPort();
 		server.close();
     	Cool.sleepIgnoringInterruption(3);
