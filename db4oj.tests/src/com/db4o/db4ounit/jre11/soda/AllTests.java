@@ -2,17 +2,18 @@
 
 package com.db4o.db4ounit.jre11.soda;
 
-import com.db4o.db4ounit.jre11.soda.classes.simple.STDateTestCase;
+import com.db4o.db4ounit.jre11.soda.classes.simple.*;
 import com.db4o.db4ounit.jre11.soda.wrapper.typed.*;
-import com.db4o.db4ounit.jre11.soda.wrapper.untyped.STDateUTestCase;
+import com.db4o.db4ounit.jre11.soda.wrapper.untyped.*;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.extensions.*;
 
 
 public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			SodaNumberCoercionTestCase.class,
 			STBooleanWTTestCase.class,
 			STByteWTTestCase.class,
 			STCharWTTestCase.class,

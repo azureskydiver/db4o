@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.test.soda;
+package com.db4o.test.legacy.soda;
 
 import com.db4o.query.*;
 import com.db4o.test.*;
