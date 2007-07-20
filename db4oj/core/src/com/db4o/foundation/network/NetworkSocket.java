@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.internal.*;
 
 public class NetworkSocket implements Socket4 {
@@ -14,10 +15,12 @@ public class NetworkSocket implements Socket4 {
     private OutputStream _out;
     private InputStream _in;
     private String _hostName;
+    private NativeSocketFactory _factory;
     
-    public NetworkSocket(String hostName, int port) throws Db4oIOException {
+    public NetworkSocket(NativeSocketFactory factory, String hostName, int port) throws Db4oIOException {
+    	_factory = factory;
     	try {
-			Socket socket = new Socket(hostName, port);
+			Socket socket = _factory.createSocket(hostName, port);
 			initSocket(socket);
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
@@ -25,7 +28,8 @@ public class NetworkSocket implements Socket4 {
         _hostName=hostName;
     }
 
-    public NetworkSocket(Socket socket) throws IOException {
+    public NetworkSocket(NativeSocketFactory factory, Socket socket) throws IOException {
+    	_factory = factory;
     	initSocket(socket);
     }
 
@@ -107,6 +111,6 @@ public class NetworkSocket implements Socket4 {
 		if(_hostName==null) {
 			throw new IllegalStateException();
 		}
-		return new NetworkSocket(_hostName,_socket.getPort());
+		return new NetworkSocket(_factory, _hostName,_socket.getPort());
 	}
 }
