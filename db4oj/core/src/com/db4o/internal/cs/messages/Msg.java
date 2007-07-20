@@ -238,7 +238,7 @@ public abstract class Msg implements Cloneable {
 			} catch (Exception e) {
                 // TODO: .NET convert SocketException to Db4oIOException
 				// and let Db4oIOException bubble up.
-                
+                //e.printStackTrace();
 			}
 		}
 	}

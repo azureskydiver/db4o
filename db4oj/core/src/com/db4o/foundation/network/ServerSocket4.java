@@ -5,12 +5,16 @@ package com.db4o.foundation.network;
 import java.io.*;
 import java.net.*;
 
+import com.db4o.config.*;
+
 public class ServerSocket4 {
 
     private ServerSocket _serverSocket;
+    private NativeSocketFactory _factory;
 
-    public ServerSocket4(int port) throws IOException {
-        _serverSocket = new ServerSocket(port);
+    public ServerSocket4(NativeSocketFactory factory, int port) throws IOException {
+        _factory = factory;
+        _serverSocket = _factory.createServerSocket(port);
     }
 
     public void setSoTimeout(int timeout) {
@@ -28,7 +32,7 @@ public class ServerSocket4 {
     public Socket4 accept() throws IOException {
         Socket sock = _serverSocket.accept();
         // TODO: check connection permissions here
-        return new NetworkSocket(sock);
+        return new NetworkSocket(_factory, sock);
     }
 	
 	public void close() throws IOException {

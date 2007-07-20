@@ -42,7 +42,10 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	private SimpleTimer _houseKeepingTimer;
 	
-	public ObjectServerImpl(final LocalObjectContainer container, int port) {
+	private final NativeSocketFactory _socketFactory;
+	
+	public ObjectServerImpl(final LocalObjectContainer container, int port, NativeSocketFactory socketFactory) {
+		_socketFactory = socketFactory;
 		_container = container;
 		_transactionPool = new ClientTransactionPool(container);
 		_port = port;
@@ -102,7 +105,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	private void startServerSocket() {
 		try {
-			_serverSocket = new ServerSocket4(_port);
+			_serverSocket = new ServerSocket4(_socketFactory, _port);
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
 		}
@@ -343,6 +346,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 				addServerMessageDispatcher(messageDispatcher);
 				messageDispatcher.startDispatcher();
 			} catch (Exception e) {
+//				e.printStackTrace();
 			}
 		}
 	}
