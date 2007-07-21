@@ -6,8 +6,11 @@ import java.awt.Color;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.lowagie.text.Annotation;
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Chunk;
 import com.lowagie.text.Document;
@@ -16,7 +19,6 @@ import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.HeaderFooter;
 import com.lowagie.text.Image;
-import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.Rectangle;
@@ -36,7 +38,6 @@ import com.yetac.doctor.cmd.NewPage;
 import com.yetac.doctor.cmd.Outline;
 import com.yetac.doctor.cmd.OutputConsole;
 import com.yetac.doctor.cmd.Source;
-import com.yetac.doctor.events.PageEvents;
 import com.yetac.doctor.workers.DocsFile;
 import com.yetac.doctor.workers.Files;
 
@@ -66,13 +67,10 @@ public class PDFWriter extends AbstractWriter {
         super.start(_files);
         files.task.setVariable("pdf", new Boolean(true));
 
-        document = new Document(PageSize.A4, 50, 50, 108, 50);
+        document = new Document();
         writer = PdfWriter.getInstance(document, new FileOutputStream(path()));
         writer.setViewerPreferences(PdfWriter.PageModeUseOutlines);
         
-        PageEvents events = new PageEvents(_files);
-		writer.setPageEvent(events);
-		
         outlineNodes = new PdfOutline[10];
         
         installRunner();
@@ -107,6 +105,25 @@ public class PDFWriter extends AbstractWriter {
         h2Font = new Font(baseFont, 10, Font.BOLD, Color.BLACK);
         smallFont = new Font(baseFont, 6, Font.BOLD, Color.BLACK);
         sourceFont = new Font(Font.COURIER, 10, Font.NORMAL, Color.BLACK);
+        
+		//PdfTemplate template = cb.createTemplate(600, 38);
+        try {
+        	Image jpg = Image.getInstance(_files.task.inputImages() + "/db4objects.gif");
+        	jpg.setAbsolutePosition(430, 750);
+        	jpg.setAnnotation(new Annotation(0, 0, 0, 0, "http://www.db4o.com"));
+        	document.add(jpg);
+        	//template.addImage(jpg);
+        } catch (MalformedURLException e) {
+        	_files.task.log("db4objects logo could not be found: " + e.toString());
+        } catch (IOException e) {
+        	_files.task.log("db4objects logo could not be found: " + e.toString());
+        } catch (DocumentException e) {
+        	_files.task.log("db4objects logo could not be added");
+        }
+        // unfortunately the next line does not work with the old version of iText
+		// template.setAction(new PdfAction("http://www.db4o.com"), 380, 750, 570, 795);
+		//cb.addTemplate(template, 0, 750);
+        
         Paragraph para = new Paragraph("www.db4o.com", smallFont);
         HeaderFooter footer = new HeaderFooter(para, false);
         footer.setAlignment(1);
