@@ -42,11 +42,25 @@
 		<tstamp />
 		<mkdir dir="${drs.dir.dist.lib}" />
 		<mkdir dir="${drs.dir.dist.api}" />
+        
+        <copy todir="lib" >
+            <fileset dir="../db4obuild/dist/java/lib" >
+                <include name="db4o-*-java5.jar" />
+                <include name="db4o-*-db4ounit.jar" />
+            </fileset>
+        </copy>
 	</target>
 
 	<target name="clean">
 		<delete dir="${drs.dir.dist}" />
 		<delete dir="${drs.dir.test}/temp" />
+        
+        <delete>
+            <fileset dir="lib" >
+                <include name="db4o-*-java5.jar" />
+                <include name="db4o-*-db4ounit.jar" />
+            </fileset>
+        </delete>
 	</target>
 
 	<macrodef name="buildjar" description="compile, jar classes for various src folders">
@@ -119,11 +133,13 @@
 					        </filterchain>
 					    </copy>
 		
+        <antcall target="add-gplheader" />
+        
 		<zip destfile="${file.drs.zip}">
 			<zipfileset dir="." prefix="${zipbasedir}" includes="drs.machine.properties, ant.properties, build.xml, compatibility.html, readme.html, drs.license.html" />
 
 			<zipfileset dir="lib" prefix="${zipbasedir}/lib" includes="*.jar, *.html" />
-			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc" />
+			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
 
 			<zipfileset dir="docWiki/java" prefix="${zipbasedir}/doc/reference" />
 			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
@@ -139,6 +155,21 @@
 		<move file="${drs.dir.dist}/${zipbasedir}" tofile="${drs.dir.dist}/unzipped"/> 
 	</target>
 
+    <target name="add-gplheader">
+        <taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
+            <classpath>
+                <pathelement location="../db4obuild/bin" />
+            </classpath>
+        </taskdef>
+        
+        <loadfile property="content.gplheader" srcfile="../db4obuild/config/gpl_comment.txt" encoding="iso-8859-1" />
+        <filehead beforePattern="package" header="${content.gplheader}" >
+			<sources dir="src">
+				<include name="**/*.java" />
+			</sources>
+		</filehead>
+    </target>
+    
 	<target name="copyLog4j">
 		<mkdir dir="${drs.dir.dist.classes}" />
 		<copy file="${drs.dir.src.core}/log4j.xml" todir="${drs.dir.dist.classes}" />
