@@ -11,6 +11,7 @@ import db4ounit.extensions.*;
 public class AllTests  extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[]{
+				HashtableModifiedUpdateDepthTestCase.class,
 				ObjectSetListAPITestCase.class,
 				STArrayListTTestCase.class,
 				STArrayListUTestCase.class,
