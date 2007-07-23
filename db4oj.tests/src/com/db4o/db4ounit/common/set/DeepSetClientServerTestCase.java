@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 public class DeepSetClientServerTestCase extends Db4oClientServerTestCase {
 	
 	public static void main(String[] args) {
-		new DeepSetClientServerTestCase().runClientServer();
+		new DeepSetClientServerTestCase().runAll();
 	}
 	
 	public class Item {
@@ -18,19 +18,17 @@ public class DeepSetClientServerTestCase extends Db4oClientServerTestCase {
 		public String name;
 	}
 
-	private Item _item;
-	
 	public void store() {
-		_item = new Item();
-		_item.name = "1";
-		_item.child = new Item();
-		_item.child.name = "2";
-		_item.child.child = new Item();
-		_item.child.child.name = "3";
-		store(_item);
+		Item item = new Item();
+		item.name = "1";
+		item.child = new Item();
+		item.child.name = "2";
+		item.child.child = new Item();
+		item.child.child.name = "3";
+		store(item);
 	}
 	
-	public void test() throws Exception {
+	public void _test() throws Exception {
 		ExtObjectContainer oc1 = openNewClient();
 		ExtObjectContainer oc2 = openNewClient();
 		ExtObjectContainer oc3 = openNewClient();
@@ -42,7 +40,7 @@ public class DeepSetClientServerTestCase extends Db4oClientServerTestCase {
 			Assert.areEqual("2", item1.child.name);
 			Assert.areEqual("3", item1.child.child.name);
 
-			Item item2 = (Item) oc2.get(_item).next();
+			Item item2 = (Item) oc2.get(example).next();
 			Assert.areEqual("1", item2.name);
 			Assert.areEqual("2", item2.child.name);
 			Assert.areEqual("3", item2.child.child.name);
