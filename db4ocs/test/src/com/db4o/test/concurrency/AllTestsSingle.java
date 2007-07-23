@@ -30,7 +30,6 @@ public class AllTestsSingle extends Db4oTestSuite {
 				DeepSetTestCase.class,
 				DeleteDeepTestCase.class,
 				DifferentAccessPathsTestCase.class,
-				DualDeleteTestCase.class,
 				ExtMethodsTestCase.class,
 				GetAllTestCase.class,
 				GreaterOrEqualTestCase.class,
