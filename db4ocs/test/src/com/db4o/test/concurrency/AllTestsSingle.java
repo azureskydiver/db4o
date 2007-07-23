@@ -25,7 +25,6 @@ public class AllTestsSingle extends Db4oTestSuite {
 				Circular1TestCase.class,
 				Circular2TestCase.class,
 				ClientDisconnectTestCase.class,
-				CloseServerBeforeClientTestCase.class,
 				ComparatorSortTestCase.class,
 				CreateIndexInheritedTestCase.class,
 				DeepSetTestCase.class,

@@ -13,10 +13,12 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 	        CallConstructorsConfigTestCase.class,
+	        ClientDisconnectTestCase.class,
             ClientServerPingTestCase.class,
             ClientTimeOutTestCase.class,
             ClientTransactionHandleTestCase.class,
             ClientTransactionPoolTestCase.class,
+            CloseServerBeforeClientTestCase.class,
             PingTestCase.class,
             SendMessageToClientTestCase.class,
             ServerClosedTestCase.class,
