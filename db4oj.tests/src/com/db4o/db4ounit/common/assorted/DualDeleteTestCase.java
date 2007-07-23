@@ -1,11 +1,11 @@
-/* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
+/* Copyright (C) 2007  db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.test.concurrency;
+package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.test.persistent.*;
+import com.db4o.test.*;
 
 import db4ounit.extensions.*;
 

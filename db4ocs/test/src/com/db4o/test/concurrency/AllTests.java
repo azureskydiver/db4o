@@ -30,7 +30,6 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 				DeepSetTestCase.class,
 				DeleteDeepTestCase.class,
 				DifferentAccessPathsTestCase.class,
-				DualDeleteTestCase.class,
 				ExtMethodsTestCase.class,
 				GetAllTestCase.class,
 				GreaterOrEqualTestCase.class,
