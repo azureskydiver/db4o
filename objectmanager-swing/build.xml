@@ -33,8 +33,10 @@
         <!-- Create the build directory structure used by compile -->
         <mkdir dir="${build}"/>
         <delete dir="${dist}" />
+        <delete file="${dist.version}.zip" />
         <delete dir="${lib}">
             <include name="${filename.java5.jar}" />
+            <include name="objectmanager-api.jar" />
         </delete>
         <delete file="${dist.version}.zip" />
         <copy file="${dir.dist}/java/lib/${filename.java5.jar}" todir="${lib}" />
