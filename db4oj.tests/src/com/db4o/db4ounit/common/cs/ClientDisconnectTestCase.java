@@ -16,7 +16,7 @@ public class ClientDisconnectTestCase extends Db4oClientServerTestCase {
 		new ClientDisconnectTestCase().runClientServer();
 	}
 	
-	public void testDisconnect() throws IOException {
+	public void _testDisconnect() throws IOException {
 		ExtObjectContainer oc1 = openNewClient();
 		ExtObjectContainer oc2 = openNewClient();
 		try {
