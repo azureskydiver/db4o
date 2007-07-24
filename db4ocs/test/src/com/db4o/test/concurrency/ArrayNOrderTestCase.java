@@ -19,7 +19,7 @@ public class ArrayNOrderTestCase extends Db4oClientServerTestCase {
 		public Object[][] o1;
 	}
 
-	public void store() {
+	protected void store() {
 		Item item = new Item();
 		item.s1 = new String[2][2][3];
 		item.s1[0][0][0] = "000";

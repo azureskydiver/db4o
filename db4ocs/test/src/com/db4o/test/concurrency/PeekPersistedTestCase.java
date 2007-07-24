@@ -19,7 +19,7 @@ public class PeekPersistedTestCase extends Db4oClientServerTestCase {
 
 	public PeekPersistedTestCase child;
 
-	public void store() {
+	protected void store() {
 		PeekPersistedTestCase current = this;
 		current.name = "1";
 		for (int i = 2; i < 11; i++) {

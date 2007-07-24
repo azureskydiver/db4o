@@ -25,7 +25,7 @@ public class GreaterOrEqualTestCase extends Db4oClientServerTestCase {
 		this.val = val;
 	}
 
-	public void store() {
+	protected void store() {
 		store(new GreaterOrEqualTestCase(1));
 		store(new GreaterOrEqualTestCase(2));
 		store(new GreaterOrEqualTestCase(3));

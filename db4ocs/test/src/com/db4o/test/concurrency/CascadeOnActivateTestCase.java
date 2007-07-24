@@ -24,7 +24,7 @@ public class CascadeOnActivateTestCase extends AbstractDb4oTestCase {
 		config.objectClass(this).cascadeOnActivate(true);
 	}
 
-	public void store() {
+	protected void store() {
 		name = "1";
 		child = new CascadeOnActivateTestCase();
 		child.name = "2";

@@ -20,12 +20,12 @@ public class CascadeOnUpdate2TestCase extends Db4oClientServerTestCase {
 
 	private Atom child[];
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this).cascadeOnUpdate(true);
 		config.objectClass(Atom.class).cascadeOnUpdate(false);
 	}
 
-	public void store() {
+	protected void store() {
 		CascadeOnUpdate2TestCase cou = new CascadeOnUpdate2TestCase();
 		cou.child = new Atom[ATOM_COUNT];
 		for (int i = 0; i < ATOM_COUNT; i++) {

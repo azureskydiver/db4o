@@ -68,11 +68,11 @@ public class ComparatorSortTestCase extends Db4oClientServerTestCase {
 		this._name = name;
 	}
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.exceptionsOnNotStorable(true);
 	}
 
-	public void store() {
+	protected void store() {
 		for (int i = 30; i >= 0; --i) {
 			String name = i < 10 ? "0" + i : String.valueOf(i);
 			store(new ComparatorSortTestCase(i, name));

@@ -21,12 +21,12 @@ public class MultiLevelIndexTestCase extends Db4oClientServerTestCase {
 
 	public int _level;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this).objectField("_child").indexed(true);
 		config.objectClass(this).objectField("_i").indexed(true);
 	}
 
-	public void store() {
+	protected void store() {
 		store(3);
 		store(2);
 		store(5);

@@ -23,7 +23,7 @@ public class QueryForUnknownFieldTestCase extends Db4oClientServerTestCase {
 		_name = name;
 	}
 
-	public void store() {
+	protected void store() {
 		_name = "name";
 		store(this);
 	}

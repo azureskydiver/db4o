@@ -26,11 +26,11 @@ public class InternStringsTestCase extends Db4oClientServerTestCase {
 		_name = name;
 	}
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.internStrings(true);
 	}
 
-	public void store() {
+	protected void store() {
 		String name = "Foo";
 		store(new InternStringsTestCase(name));
 		store(new InternStringsTestCase(name));

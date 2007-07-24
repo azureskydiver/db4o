@@ -12,7 +12,7 @@ public class GetAllTestCase extends Db4oClientServerTestCase {
 		new GetAllTestCase().runConcurrency();
 	}
 
-	public void store() {
+	protected void store() {
 		store(new GetAllTestCase());
 		store(new GetAllTestCase());
 	}

@@ -19,7 +19,7 @@ public class DeleteDeepTestCase extends Db4oClientServerTestCase {
 
 	public DeleteDeepTestCase child;
 
-	public void store() {
+	protected void store() {
 		addNodes(10);
 		name = "root";
 		store(this);

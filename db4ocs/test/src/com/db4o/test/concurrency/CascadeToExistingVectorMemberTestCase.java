@@ -20,12 +20,12 @@ public class CascadeToExistingVectorMemberTestCase extends Db4oClientServerTestC
 	
 	public Vector vec;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this).cascadeOnUpdate(true);
 		config.objectClass(Atom.class).cascadeOnUpdate(false);
 	}
 
-	public void store() {
+	protected void store() {
 		CascadeToExistingVectorMemberTestCase cev = new CascadeToExistingVectorMemberTestCase();
 		cev.vec = new Vector();
 		Atom atom = new Atom("one");

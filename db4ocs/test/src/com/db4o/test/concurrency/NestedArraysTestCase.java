@@ -26,7 +26,7 @@ public class NestedArraysTestCase extends Db4oClientServerTestCase {
 
 	}
 
-	public void store() {
+	protected void store() {
 		_object = new Object[ELEMENTS];
 		fill((Object[]) _object, DEPTH);
 

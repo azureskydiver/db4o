@@ -21,13 +21,13 @@ public class CascadeToVectorTestCase extends Db4oClientServerTestCase {
 
 	public Vector vec;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this).cascadeOnUpdate(true);
 		config.objectClass(this).cascadeOnDelete(true);
 		config.objectClass(Atom.class).cascadeOnDelete(false);
 	}
 
-	public void store() {
+	protected void store() {
 		CascadeToVectorTestCase ctv = new CascadeToVectorTestCase();
 		ctv.vec = new Vector();
 		ctv.vec.addElement(new Atom("stored1"));

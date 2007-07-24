@@ -29,7 +29,7 @@ public class ByteArrayTestCase extends Db4oClientServerTestCase {
 
 	}
 
-	public void store() {
+	protected void store() {
 		for (int i = 0; i < INSTANCES; ++i) {
 			store(new ByteArrayHolder(createByteArray()));
 			store(new SerializableByteArrayHolder(createByteArray()));

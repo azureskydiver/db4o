@@ -62,7 +62,7 @@ public class CommittedCallbackRefreshTestCase extends Db4oClientServerTestCase {
 	}
 	
 	
-	public void store() {
+	protected void store() {
 		for (int i = 0; i < COUNT; i++) {
 			String name = "original" + i;
 			store(new Item(name, new SubItem(name)));
