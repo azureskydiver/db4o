@@ -9,8 +9,10 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			Case1207TestCase.class,
 			COR57TestCase.class,
 			COR234TestCase.class,
+			SetRollbackTestCase.class,
 		};
 	}
 	

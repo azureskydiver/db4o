@@ -1,0 +1,147 @@
+/* Copyright (C) 2004 - 2007  db4objects Inc.  http://www.db4o.com */
+
+package com.db4o.db4ounit.common.assorted;
+
+import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
+import com.db4o.ext.ExtObjectContainer;
+import com.db4o.query.Query;
+
+import db4ounit.extensions.Db4oClientServerTestCase;
+
+public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
+
+	public String name;
+
+	public Object untypedMember;
+
+	public CddMember typedMember;
+	
+	public static void main(String[] args) {
+		new CascadeDeleteDeletedTestCase().runClientServer();
+	}
+	
+	public CascadeDeleteDeletedTestCase() {
+	}
+
+	public CascadeDeleteDeletedTestCase(String name) {
+		this.name = name;
+	}
+
+	protected void configure(Configuration config) {
+		config.objectClass(this).cascadeOnDelete(true);
+	}
+
+	public void store() {
+		ExtObjectContainer oc = db();
+		membersFirst(oc, "membersFirst commit");
+		membersFirst(oc, "membersFirst");
+		twoRef(oc, "twoRef");
+		twoRef(oc, "twoRef commit");
+		twoRef(oc, "twoRef delete");
+		twoRef(oc, "twoRef delete commit");
+	}
+
+	private void membersFirst(ExtObjectContainer oc, String name) {
+		CascadeDeleteDeletedTestCase cdd = new CascadeDeleteDeletedTestCase(name);
+		cdd.untypedMember = new CddMember();
+		cdd.typedMember = new CddMember();
+		oc.set(cdd);
+	}
+
+	private void twoRef(ExtObjectContainer oc, String name) {
+		CascadeDeleteDeletedTestCase cdd = new CascadeDeleteDeletedTestCase(name);
+		cdd.untypedMember = new CddMember();
+		cdd.typedMember = new CddMember();
+		CascadeDeleteDeletedTestCase cdd2 = new CascadeDeleteDeletedTestCase(name);
+		cdd2.untypedMember = cdd.untypedMember;
+		cdd2.typedMember = cdd.typedMember;
+		oc.set(cdd);
+		oc.set(cdd2);
+	}
+
+	public void _testDeleteDeleted() throws Exception {
+		int total = 10;
+		final int CDD_MEMBER_COUNT = 12;
+		ExtObjectContainer[] containers = new ExtObjectContainer[total];
+		ExtObjectContainer oc = null;
+		try {
+			for (int i = 0; i < total; i++) {
+				containers[i] = openNewClient();
+				assertOccurrences(containers[i], CddMember.class,
+						CDD_MEMBER_COUNT);
+			}
+			for (int i = 0; i < total; i++) {
+				deleteAll(containers[i], CddMember.class);
+			}
+			oc = openNewClient();
+			assertOccurrences(oc, CddMember.class, CDD_MEMBER_COUNT);
+			// ocs[0] deleted all CddMember objects, and committed the change
+			containers[0].commit();
+			containers[0].close();
+			// FIXME: following assertion fails
+			assertOccurrences(oc, CddMember.class, 0);
+			for (int i = 1; i < total; i++) {
+				containers[i].close();
+			}
+			assertOccurrences(oc, CddMember.class, 0);
+		} finally {
+			if (oc != null) {
+				oc.close();
+			}
+			for (int i = 0; i < total; i++) {
+				if (containers[i] != null) {
+					containers[i].close();
+				}
+			}
+		}
+
+	}
+
+	private void tMembersFirst(ExtObjectContainer oc, String name) {
+		boolean commit = name.indexOf("commit") > 1;
+		Query q = oc.query();
+		q.constrain(CascadeDeleteDeletedTestCase.class);
+		q.descend("name").constrain(name);
+		ObjectSet objectSet = q.execute();
+		CascadeDeleteDeletedTestCase cdd = (CascadeDeleteDeletedTestCase) objectSet.next();
+		oc.delete(cdd.untypedMember);
+		oc.delete(cdd.typedMember);
+		if (commit) {
+			oc.commit();
+		}
+		oc.delete(cdd);
+		if (!commit) {
+			oc.commit();
+		}
+	}
+
+	private void tTwoRef(ExtObjectContainer oc, String name) {
+		boolean commit = name.indexOf("commit") > 1;
+		boolean delete = name.indexOf("delete") > 1;
+
+		Query q = oc.query();
+		q.constrain(this.getClass());
+		q.descend("name").constrain(name);
+		ObjectSet objectSet = q.execute();
+		CascadeDeleteDeletedTestCase cdd = (CascadeDeleteDeletedTestCase) objectSet.next();
+		CascadeDeleteDeletedTestCase cdd2 = (CascadeDeleteDeletedTestCase) objectSet.next();
+		if (delete) {
+			oc.delete(cdd.untypedMember);
+			oc.delete(cdd.typedMember);
+		}
+		oc.delete(cdd);
+		if (commit) {
+			oc.commit();
+		}
+		oc.delete(cdd2);
+		if (!commit) {
+			oc.commit();
+		}
+	}
+
+	public static class CddMember {
+		public String name;
+	}
+
+}
