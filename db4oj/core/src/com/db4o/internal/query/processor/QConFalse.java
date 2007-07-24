@@ -2,23 +2,28 @@
 
 package com.db4o.internal.query.processor;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 
 /** 
  * @exclude
  */
-// FIXME This certainly shouldn't extend QConPath.
-public class QConFalse extends QConPath {
-	public QConFalse(Transaction trans){
-		super(trans, null, new QField(trans, "", null, 0, 0));
-	}
-	
-	void createCandidates(Collection4 a_candidateCollection) {
-	}
-	
+public class QConFalse extends QCon {
+
+    public QConFalse() {
+        // C/S only
+    }
+
+    public QConFalse(Transaction trans) {
+        super(trans);
+    }
+    
+    void evaluateSimpleExec(QCandidates a_candidates) {
+    	a_candidates.filter(this);
+    }
+
 	boolean evaluate(QCandidate a_candidate) {
 		return false;
 	}
+
 }
