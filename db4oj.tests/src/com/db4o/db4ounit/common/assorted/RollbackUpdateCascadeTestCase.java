@@ -16,12 +16,12 @@ public class RollbackUpdateCascadeTestCase extends Db4oClientServerTestCase {
 		new RollbackUpdateCascadeTestCase().runClientServer();
 	}
 	
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(Atom.class).cascadeOnUpdate(true);
 		config.objectClass(Atom.class).cascadeOnDelete(true);
 	}
 
-	public void store() {
+	protected void store() {
 		Atom atom = new Atom("root");
 		atom.child = new Atom("child");
 		atom.child.child = new Atom("child.child");

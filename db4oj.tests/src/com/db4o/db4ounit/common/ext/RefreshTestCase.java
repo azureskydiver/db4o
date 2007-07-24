@@ -29,7 +29,7 @@ public class RefreshTestCase extends Db4oClientServerTestCase {
 		this.child = child;
 	}
 
-	public void store() {
+	protected void store() {
 		RefreshTestCase r3 = new RefreshTestCase("o3", null);
 		RefreshTestCase r2 = new RefreshTestCase("o2", r3);
 		RefreshTestCase r1 = new RefreshTestCase("o1", r2);

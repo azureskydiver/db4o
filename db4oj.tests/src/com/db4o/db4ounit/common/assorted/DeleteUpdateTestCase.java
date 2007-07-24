@@ -13,7 +13,7 @@ public class DeleteUpdateTestCase extends Db4oClientServerTestCase {
 		new DeleteUpdateTestCase().runClientServer();
 	}
 
-	public void store() {
+	protected void store() {
 		store(new SimpleObject("hello", 1));
 	}
 

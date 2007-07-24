@@ -20,7 +20,7 @@ public class DeepSetTestCase extends AbstractDb4oTestCase {
 
 	private Item _item;
 	
-	public void store() {
+	protected void store() {
 		_item = new Item();
 		_item.name = "1";
 		_item.child = new Item();
