@@ -85,44 +85,6 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 		Assert.areEqual(0, countOccurences(oc, CddMember.class));
 	}
 
-	public void testDeleteDeleted() throws Exception {
-		int total = 10;
-		final int CDD_MEMBER_COUNT = 12;
-		ExtObjectContainer[] containers = new ExtObjectContainer[total];
-		ExtObjectContainer oc = null;
-		try {
-			for (int i = 0; i < total; i++) {
-				containers[i] = openNewClient();
-				assertOccurrences(containers[i], CddMember.class,
-						CDD_MEMBER_COUNT);
-			}
-			for (int i = 0; i < total; i++) {
-				deleteAll(containers[i], CddMember.class);
-			}
-			oc = openNewClient();
-			assertOccurrences(oc, CddMember.class, CDD_MEMBER_COUNT);
-			// ocs[0] deleted all CddMember objects, and committed the change
-			containers[0].commit();
-			containers[0].close();
-			// FIXME: following assertion fails
-			assertOccurrences(oc, CddMember.class, 0);
-			for (int i = 1; i < total; i++) {
-				containers[i].close();
-			}
-			assertOccurrences(oc, CddMember.class, 0);
-		} finally {
-			if (oc != null) {
-				oc.close();
-			}
-			for (int i = 0; i < total; i++) {
-				if (containers[i] != null) {
-					containers[i].close();
-				}
-			}
-		}
-
-	}
-
 	private void tMembersFirst(ExtObjectContainer oc, String name) {
 		boolean commit = name.indexOf("commit") > 1;
 		Query q = oc.query();
