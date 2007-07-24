@@ -2,14 +2,12 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-
-import db4ounit.extensions.*;
+import db4ounit.extensions.Db4oTestSuite;
 
 public class AllTests extends Db4oTestSuite {
 
 	public static void main(String[] args) {
 		new AllTests().runSolo();
-		// new AllTests().runClientServer();
     }
 
 	protected Class[] testCases() {
@@ -24,6 +22,7 @@ public class AllTests extends Db4oTestSuite {
             CloseUnlocksFileTestCase.class,
             ComparatorSortTestCase.class,
             DatabaseUnicityTest.class,
+            DeleteUpdateTestCase.class,
             DescendToNullFieldTestCase.class,
             DualDeleteTestCase.class,
             GetByUUIDTestCase.class,
@@ -43,7 +42,10 @@ public class AllTests extends Db4oTestSuite {
             PreventMultipleOpenTestCase.class,
             ReAddCascadedDeleteTestCase.class,
             ReferenceSystemTestCase.class,
+            RollbackDeleteTestCase.class,
             RollbackTestCase.class,
+			RollbackUpdateTestCase.class,
+			RollbackUpdateCascadeTestCase.class,
             SimplestPossibleTestCase.class,
             SystemInfoTestCase.class,
 		};

@@ -1,15 +1,14 @@
 /* Copyright (C) 2004 - 2007  db4objects Inc.   http://www.db4o.com */
 
-package com.db4o.test.concurrency.assorted;
+package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.*;
-import com.db4o.config.*;
-import com.db4o.ext.*;
-import com.db4o.query.*;
-import com.db4o.test.persistent.*;
+import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
+import com.db4o.ext.ExtObjectContainer;
+import com.db4o.query.Query;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
+import db4ounit.Assert;
+import db4ounit.extensions.Db4oClientServerTestCase;
 
 public class RollbackUpdateCascadeTestCase extends Db4oClientServerTestCase {
 	

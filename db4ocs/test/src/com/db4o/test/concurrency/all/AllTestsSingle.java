@@ -15,7 +15,6 @@ public class AllTestsSingle extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 				com.db4o.test.concurrency.AllTestsSingle.class,
-				com.db4o.test.concurrency.assorted.AllTestsSingle.class,
 				com.db4o.test.concurrency.regression.AllTestsSingle.class,
 		};
 	}
