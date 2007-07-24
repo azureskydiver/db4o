@@ -28,7 +28,7 @@ public class DeepSetClientServerTestCase extends Db4oClientServerTestCase {
 		store(item);
 	}
 	
-	public void _test() throws Exception {
+	public void test() throws Exception {
 		ExtObjectContainer oc1 = openNewClient();
 		ExtObjectContainer oc2 = openNewClient();
 		ExtObjectContainer oc3 = openNewClient();
