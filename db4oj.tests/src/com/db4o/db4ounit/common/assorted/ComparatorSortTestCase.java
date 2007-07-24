@@ -10,6 +10,11 @@ import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
 
 public class ComparatorSortTestCase extends AbstractDb4oTestCase {
+	
+	public static void main(String[] args) {
+		new ComparatorSortTestCase().runAll();
+	}
+	
 	public static class AscendingIdComparator implements QueryComparator {
 		public int compare(Object first, Object second) {
 			return ((Item)first)._id-((Item)second)._id;
@@ -42,6 +47,7 @@ public class ComparatorSortTestCase extends AbstractDb4oTestCase {
 	}
 
 	public static class SmallerThanThreePredicate extends Predicate {
+		// FIXME: #COR-736 The test fails if we use Object as the parameter type.
 		public boolean match(Item candidate) {
 			return candidate._id<3;
 		}
