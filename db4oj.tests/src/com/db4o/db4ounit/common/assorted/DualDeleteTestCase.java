@@ -17,12 +17,12 @@ public class DualDeleteTestCase extends Db4oClientServerTestCase {
 
 	public Atom atom;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this).cascadeOnDelete(true);
 		config.objectClass(this).cascadeOnUpdate(true);
 	}
 
-	public void store() {
+	protected void store() {
 		DualDeleteTestCase dd1 = new DualDeleteTestCase();
 		dd1.atom = new Atom("justone");
 		store(dd1);

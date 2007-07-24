@@ -13,7 +13,7 @@ public class RollbackDeleteTestCase extends Db4oClientServerTestCase {
 		new RollbackDeleteTestCase().runClientServer();
 	}
 
-	public void store() {
+	protected void store() {
 		store(new SimpleObject("hello", 1));
 	}
 

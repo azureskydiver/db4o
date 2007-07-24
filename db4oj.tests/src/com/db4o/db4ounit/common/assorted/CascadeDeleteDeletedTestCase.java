@@ -32,7 +32,7 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 		config.objectClass(this).cascadeOnDelete(true);
 	}
 
-	public void store() {
+	protected void store() {
 		ExtObjectContainer oc = db();
 		membersFirst(oc, "membersFirst commit");
 		membersFirst(oc, "membersFirst");

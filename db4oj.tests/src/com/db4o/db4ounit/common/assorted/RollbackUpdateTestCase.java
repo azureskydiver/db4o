@@ -13,7 +13,7 @@ public class RollbackUpdateTestCase extends Db4oClientServerTestCase {
 		new RollbackUpdateTestCase().runClientServer();
 	}
 
-	public void store() {
+	protected void store() {
 		store(new SimpleObject("hello", 1));
 	}
 

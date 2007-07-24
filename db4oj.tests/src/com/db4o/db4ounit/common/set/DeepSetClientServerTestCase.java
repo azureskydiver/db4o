@@ -18,7 +18,7 @@ public class DeepSetClientServerTestCase extends Db4oClientServerTestCase {
 		public String name;
 	}
 
-	public void store() {
+	protected void store() {
 		Item item = new Item();
 		item.name = "1";
 		item.child = new Item();
