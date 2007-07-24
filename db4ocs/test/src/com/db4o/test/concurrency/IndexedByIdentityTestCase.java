@@ -20,11 +20,11 @@ public class IndexedByIdentityTestCase extends Db4oClientServerTestCase {
 
 	static final int COUNT = 10;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this).objectField("atom").indexed(true);
 	}
 
-	public void store() {
+	protected void store() {
 		for (int i = 0; i < COUNT; i++) {
 			IndexedByIdentityTestCase ibi = new IndexedByIdentityTestCase();
 			ibi.atom = new Atom("ibi" + i);

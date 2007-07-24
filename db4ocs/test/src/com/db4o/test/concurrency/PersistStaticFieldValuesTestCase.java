@@ -26,12 +26,12 @@ public class PersistStaticFieldValuesTestCase extends Db4oClientServerTestCase {
 
 	public PsfvHelper three;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(PersistStaticFieldValuesTestCase.class)
 				.persistStaticFieldValues();
 	}
 
-	public void store() {
+	protected void store() {
 		PersistStaticFieldValuesTestCase psfv = new PersistStaticFieldValuesTestCase();
 		psfv.one = ONE;
 		psfv.two = TWO;

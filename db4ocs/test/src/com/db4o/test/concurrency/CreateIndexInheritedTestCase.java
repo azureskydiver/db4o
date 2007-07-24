@@ -25,7 +25,7 @@ public class CreateIndexInheritedTestCase extends Db4oClientServerTestCase {
 		i_int = a_int;
 	}
 
-	public void store() {
+	protected void store() {
 		store(new CreateIndexFor("a"));
 		store(new CreateIndexFor("c"));
 		store(new CreateIndexFor("b"));

@@ -20,11 +20,11 @@ public class HashtableModifiedUpdateDepthTestCase extends Db4oClientServerTestCa
 		public Hashtable ht;
 	}
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.updateDepth(Integer.MAX_VALUE);
 	}
 
-	public void store() {
+	protected void store() {
 		Item item = new Item();
 		item.ht = new Hashtable();
 		item.ht.put("hi", "five");

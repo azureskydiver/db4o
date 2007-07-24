@@ -17,7 +17,7 @@ public class ObjectSetIDsTestCase extends Db4oClientServerTestCase {
 	
 	static final int COUNT = 11;
 	
-	public void store(){
+	protected void store(){
 		for (int i = 0; i < COUNT; i++) {
 			store(new ObjectSetIDsTestCase());
         }

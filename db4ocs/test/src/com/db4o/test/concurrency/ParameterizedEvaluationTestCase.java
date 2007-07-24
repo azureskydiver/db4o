@@ -17,7 +17,7 @@ public class ParameterizedEvaluationTestCase extends Db4oClientServerTestCase {
 
 	public String str;
 
-	public void store() {
+	protected void store() {
 		store("one");
 		store("fun");
 		store("ton");

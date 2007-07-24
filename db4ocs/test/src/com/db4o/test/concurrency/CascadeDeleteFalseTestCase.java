@@ -25,7 +25,7 @@ public class CascadeDeleteFalseTestCase extends Db4oClientServerTestCase {
 		config.objectClass(this).objectField("h3").cascadeOnDelete(false);
 	}
 
-	public void store() {
+	protected void store() {
 		h1 = new CascadeDeleteFalseHelper();
 		h2 = new CascadeDeleteFalseHelper();
 		h3 = new CascadeDeleteFalseHelper();

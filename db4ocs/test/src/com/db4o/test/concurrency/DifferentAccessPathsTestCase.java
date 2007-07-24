@@ -17,7 +17,7 @@ public class DifferentAccessPathsTestCase extends Db4oClientServerTestCase {
 	
 	public String foo;
 
-	public void store() {
+	protected void store() {
 		DifferentAccessPathsTestCase dap = new DifferentAccessPathsTestCase();
 		dap.foo = "hi";
 		store(dap);

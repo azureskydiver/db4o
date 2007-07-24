@@ -28,12 +28,12 @@ public class MultiDeleteTestCase extends Db4oClientServerTestCase {
 
 	Long[] typedArr;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this).cascadeOnDelete(true);
 		config.objectClass(this).cascadeOnUpdate(true);
 	}
 
-	public void store() {
+	protected void store() {
 		MultiDeleteTestCase md = new MultiDeleteTestCase();
 		md.name = "killmefirst";
 		md.setMembers();

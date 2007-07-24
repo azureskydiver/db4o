@@ -26,7 +26,7 @@ public class CaseInsensitiveTestCase extends Db4oClientServerTestCase {
 		this.name = name;
 	}
 
-	public void store() {
+	protected void store() {
 		store(new CaseInsensitiveTestCase("HelloWorld"));
 	}
 

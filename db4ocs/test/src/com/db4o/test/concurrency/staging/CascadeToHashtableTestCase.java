@@ -20,13 +20,13 @@ public class CascadeToHashtableTestCase extends AbstractDb4oTestCase {
 	
 	public Hashtable ht;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this).cascadeOnUpdate(true);
 		config.objectClass(this).cascadeOnDelete(true);
 		config.objectClass(Atom.class).cascadeOnDelete(false);
 	}
 
-	public void store() {
+	protected void store() {
 		CascadeToHashtableTestCase cth = new CascadeToHashtableTestCase();
 		cth.ht = new Hashtable();
 		cth.ht.put("key1", new Atom("stored1"));

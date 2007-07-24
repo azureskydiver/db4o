@@ -25,11 +25,11 @@ public class IndexedUpdatesWithNullTestCase extends Db4oClientServerTestCase {
 		this.str = str;
 	}
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this).objectField("str").indexed(true);
 	}
 
-	public void store() {
+	protected void store() {
 		store(new IndexedUpdatesWithNullTestCase("one"));
 		store(new IndexedUpdatesWithNullTestCase("two"));
 		store(new IndexedUpdatesWithNullTestCase("three"));

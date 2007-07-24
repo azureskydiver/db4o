@@ -19,7 +19,7 @@ public class SwitchingFilesFromClientTestCase extends Db4oClientServerTestCase {
 
 	public String name;
 
-	public void store(ExtObjectContainer oc) {
+	protected void store(ExtObjectContainer oc) {
 		new File(DB_FILE).delete();
 	}
 

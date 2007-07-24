@@ -20,7 +20,7 @@ public class Circular2TestCase extends Db4oClientServerTestCase {
 		config.updateDepth(Integer.MAX_VALUE);
 	}
 
-	public void store() {
+	protected void store() {
 		ht = new Hashtable();
 		name = "parent";
 		C2C c2c = new C2C();

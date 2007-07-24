@@ -33,7 +33,7 @@ public class CustomActivationDepthTestCase extends Db4oClientServerTestCase {
 
 	CA3[] ca3s;
 
-	public void store() {
+	protected void store() {
 		myInt = 7;
 		myString = "seven";
 		ints = new int[] { 77 };

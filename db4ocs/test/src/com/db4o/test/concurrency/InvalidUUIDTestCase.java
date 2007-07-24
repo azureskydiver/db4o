@@ -17,11 +17,11 @@ public class InvalidUUIDTestCase extends Db4oClientServerTestCase {
 
 	public String name;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		config.objectClass(this.getClass()).generateUUIDs(true);
 	}
 
-	public void store() {
+	protected void store() {
 		name = "theOne";
 		store(this);
 	}

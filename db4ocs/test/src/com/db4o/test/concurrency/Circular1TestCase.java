@@ -14,7 +14,7 @@ public class Circular1TestCase extends AbstractDb4oTestCase {
 		new Circular1TestCase().runConcurrency();
 	}
 
-	public void store() {
+	protected void store() {
 		store(new C1C());
 	}
 

@@ -20,7 +20,7 @@ public class HashtableTestCase extends Db4oClientServerTestCase {
 	
 	private static int run;
 	
-	public void store() {
+	protected void store() {
 		Hashtable ht = new Hashtable();
 		ht.put("key1", "val1");
 		ht.put("key2", "val2");

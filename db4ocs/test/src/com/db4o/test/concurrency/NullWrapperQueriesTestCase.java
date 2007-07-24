@@ -37,14 +37,14 @@ public class NullWrapperQueriesTestCase extends Db4oClientServerTestCase {
 
 	public String m10;
 
-	public void configure(Configuration config) {
+	protected void configure(Configuration config) {
 		for (int i = 1; i < 11; i++) {
 			String desc = "m" + i;
 			config.objectClass(this).objectField(desc).indexed(true);
 		}
 	}
 
-	public void store() {
+	protected void store() {
 		NullWrapperQueriesTestCase nwq = new NullWrapperQueriesTestCase();
 		nwq.fill1();
 		store(nwq);

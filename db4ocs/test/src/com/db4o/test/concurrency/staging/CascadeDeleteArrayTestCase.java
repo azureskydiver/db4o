@@ -22,7 +22,7 @@ public class CascadeDeleteArrayTestCase extends Db4oClientServerTestCase {
 
 	private int ELEMENT_COUNT = 10;
 
-	public void store() {
+	protected void store() {
 		ArrayItem item = new ArrayItem();
 		item.elements = new SimpleObject[ELEMENT_COUNT];
 		for (int i = 0; i < ELEMENT_COUNT; ++i) {
