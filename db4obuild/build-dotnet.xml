@@ -568,7 +568,7 @@
 			</fileset>
 		</delete>
 		<antcall target="copy-sharpened-files">
-			<param name="src.dir" value="${dir.sharpen}/db4ojcsharp/src" />
+			<param name="src.dir" value="${dir.sharpen}/db4oj.net/src" />
 			<param name="target.dir" value="${dir.n.v6.core.src}" />
 		</antcall>
 		
@@ -629,7 +629,7 @@
 		<reset-src-dir dir="${dir.n.v6.ta}/Db4objects.Db4o.TA" />
 
 		<copy todir="${dir.n.v6.ta}/Db4objects.Db4o.TA">
-			<fileset dir="${dir.sharpen.ta}/db4otacsharp/src/Db4objects/Db4o/TA">
+			<fileset dir="${dir.sharpen.ta}/db4ota.net/src/Db4objects/Db4o/TA">
 				<include name="**/*.cs" />
 				<exclude name="**/Tests/**" />
 				<exclude name="**/Events/**" />
@@ -641,7 +641,7 @@
 		<reset-src-dir dir="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests" />
 
 		<copy todir="${dir.n.v6.ta.tests}/Db4objects.Db4o.TA.Tests">
-			<fileset dir="${dir.sharpen.ta}/db4otacsharp/src/Db4objects/Db4o/TA/Tests">
+			<fileset dir="${dir.sharpen.ta}/db4ota.net/src/Db4objects/Db4o/TA/Tests">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
@@ -716,7 +716,7 @@
 		</delete>
 		
 		<copy todir="${dir.n.v6.extensions}/Db4oUnit.Extensions">
-			<fileset dir="${target.dir}/db4ounit.extensionscsharp/src/Db4oUnit/Extensions">
+			<fileset dir="${target.dir}/db4ounit.extensions.net/src/Db4oUnit/Extensions">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
@@ -788,7 +788,7 @@
 		</delete>
 		
 		<copy todir="${dir.n.v6.tests.src}">
-			<fileset dir="${target.dir}/db4oj.testscsharp/src/Db4objects/Db4o/Tests">
+			<fileset dir="${target.dir}/db4oj.tests.net/src/Db4objects/Db4o/Tests">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>

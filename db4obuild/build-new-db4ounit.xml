@@ -72,7 +72,7 @@
 		</delete>
 		<mkdir dir="${db4ounit.net.src.dir}" />
 		<copy todir="${db4ounit.net.src.dir}">
-			<fileset dir="${conversion.workspace.dir}/db4ounitcsharp/src">
+			<fileset dir="${conversion.workspace.dir}/db4ounit.net/src">
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
