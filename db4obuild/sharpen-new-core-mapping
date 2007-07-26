@@ -22,3 +22,6 @@
 
 -propertyMapping java.lang.System.out Sharpen.Runtime.Out
 -propertyMapping java.lang.System.err Sharpen.Runtime.Err
+
+-typeMapping java.io.InputStream Sharpen.IO.IInputStream
+-typeMapping java.io.OutputStream Sharpen.IO.IOutputStream
