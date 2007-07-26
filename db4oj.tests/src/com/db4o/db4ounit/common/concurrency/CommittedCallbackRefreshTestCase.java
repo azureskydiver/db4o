@@ -3,7 +3,6 @@
 package com.db4o.db4ounit.common.concurrency;
 
 import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -72,7 +71,7 @@ public class CommittedCallbackRefreshTestCase extends Db4oClientServerTestCase {
 	
 	public void conc(final ExtObjectContainer oc, int seq) {
 		
-		EventListener4 listener = new EventListener4() {
+		eventRegistry(oc).committed().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				if(oc.isClosed()){
 					return;
@@ -85,9 +84,7 @@ public class CommittedCallbackRefreshTestCase extends Db4oClientServerTestCase {
 					oc.refresh(obj, 2);
 				}
 			}
-		};
-		
-		EventRegistryFactory.forObjectContainer(oc).committed().addListener(listener);
+		});
 		
 		Item[] items = new Item[COUNT];
 		ObjectSet objectSet = newQuery(Item.class).execute();
@@ -110,13 +107,7 @@ public class CommittedCallbackRefreshTestCase extends Db4oClientServerTestCase {
 			
 		}
 		
-		try {
-			Thread.currentThread().sleep(1000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+		Cool.sleepIgnoringInterruption(1000);
 		
 		for (int  i= 0; i < items.length; i++) {
 			synchronized(_lock){
@@ -124,16 +115,11 @@ public class CommittedCallbackRefreshTestCase extends Db4oClientServerTestCase {
 			}
 		}
 		
-		EventRegistryFactory.forObjectContainer(oc).committed().removeListener(listener);
-		
-		try {
-			Thread.currentThread().sleep(3000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+		Cool.sleepIgnoringInterruption(3000);
 	}
-	
 
+
+	private EventRegistry eventRegistry(final ExtObjectContainer oc) {
+		return EventRegistryFactory.forObjectContainer(oc);
+	}
 }
