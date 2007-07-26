@@ -1293,6 +1293,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		// they need to be instantiated fully before setting them
 		// on the parent object because the set call modifies identity.
 		
+		// We also have to instantiate structs completely every time.
+    	int newDepth = Math.max(1, depth);
+		
 		// TODO: Do we want value types in the ID tree?
 		// Shouldn't we treat them like strings and update
 		// them every time ???		
@@ -1302,13 +1305,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		    if(obj == null){
 		        stream.removeReference(yo);
 		    }else{
-				// We also have to instantiate structs completely every time.
-		    	int newDepth = Math.max(1, depth);
 		        yo.activate(trans, obj, newDepth, false);
 		        return yo.getObject();
 		    }
 		}
-		return new ObjectReference(id).read( trans, depth,Const4.ADD_TO_ID_TREE, false);
+		return new ObjectReference(id).read(trans, newDepth,Const4.ADD_TO_ID_TREE, false);
 	}
     
     public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
