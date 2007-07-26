@@ -15,18 +15,22 @@ public class MessagingTestCase extends Db4oClientServerTestCase {
 		new MessagingTestCase().runConcurrency();
 	}
 
-	public TestMessageRecipient recipient = new TestMessageRecipient(threadCount());
+	public TestMessageRecipient _recipient;
+	
+	public MessagingTestCase() {
+		_recipient = new TestMessageRecipient(threadCount());
+	}
 
 	public void conc(ExtObjectContainer oc, int seq) {
 		clientServerFixture().server().ext().configure().clientServer()
-				.setMessageRecipient(recipient);
+				.setMessageRecipient(_recipient);
 		MessageSender sender = oc.configure().clientServer().getMessageSender();
 		sender.send(new Data(seq));
 	}
 
 	public void check(ExtObjectContainer oc) throws Exception {
 		Thread.sleep(1000);
-		recipient.check();
+		_recipient.check();
 	}
 
 	public static class TestMessageRecipient implements MessageRecipient {
