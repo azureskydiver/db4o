@@ -33,7 +33,6 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 				ExtMethodsTestCase.class,
 				GetAllTestCase.class,
 				GreaterOrEqualTestCase.class,
-				HashtableModifiedUpdateDepthTestCase.class,
 				IndexedByIdentityTestCase.class,
 				IndexedUpdatesWithNullTestCase.class,
 				InternStringsTestCase.class,
