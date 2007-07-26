@@ -3,9 +3,7 @@
 package com.db4o.db4ounit.jre5;
 
 import com.db4o.db4ounit.common.concurrency.*;
-import com.db4o.db4ounit.common.concurrency.CascadeDeleteDeletedTestCase;
-import com.db4o.db4ounit.common.concurrency.MultiDeleteTestCase;
-import com.db4o.db4ounit.common.concurrency.PersistStaticFieldValuesTestCase;
+import com.db4o.db4ounit.jre11.concurrency.*;
 
 import db4ounit.extensions.*;
 
