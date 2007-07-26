@@ -17,7 +17,7 @@ public class CascadeOnUpdateTestCase extends Db4oClientServerTestCase {
 	
 	private static final int ATOM_COUNT = 10;
 
-	public Atom child[];
+	public Atom[] child;
 
 	protected void configure(Configuration config) {
 		config.objectClass(this).cascadeOnUpdate(true);
