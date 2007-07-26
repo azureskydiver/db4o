@@ -97,59 +97,52 @@ public class ComparatorSortTestCase extends Db4oClientServerTestCase {
 	}
 	
 	public void assertByIdAscending(ExtObjectContainer oc) {
-		int[] expected = new int[31];
-		for (int i = 0; i <= 30; ++i) {
-			expected[i] = i;
-		}
-		assertIdOrder(oc,new AscendingIdComparator(), expected);
+		assertIdOrder(oc,new AscendingIdComparator(), range(0, 31));
 	}
 
 	public void assertByIdAscendingConstrained(ExtObjectContainer oc) {
-		int[] expected = new int[30];
-		for (int i = 0; i < 30; ++i) {
-			expected[i] = i;
-		}
 		Query query = oc.query();
 		query.constrain(getClass());
 		query.descend("_id").constrain(new Integer(30)).smaller();
-		assertIdOrder(query, new AscendingIdComparator(), expected);
+		assertIdOrder(query, new AscendingIdComparator(), range(0, 30));
 	}
 
 	public void assertByIdAscendingNQ(ExtObjectContainer oc) {
 		ObjectSet result = oc.query(new SmallerThanThirtyPredicate(),
 				new AscendingIdComparator());
-		int[] expected = new int[30];
-		for (int i = 0; i < 30; ++i) {
-			expected[i] = i;
-		}
-		assertIdOrder(result, expected);
+		assertIdOrder(result, range(0, 30));
 	}
-	
 
 	public void assertByIdDescending(ExtObjectContainer oc) {
-		int[] expected = new int[31];
-		for (int i = 0; i <= 30; ++i) {
-			expected[i] = 30-i;
-		}
+		int[] expected = descendingRange(30);
 		assertIdOrder(oc, new DescendingIdComparator(), expected);
+	}
+	
+	private int[] range(final int begin, final int end) {
+		int[] expected = new int[end];
+		for (int i = begin; i < end; ++i) {
+			expected[i] = i;
+		}
+		return expected;
+	}
+
+	private int[] descendingRange(int begin) {
+		int[] range = new int[begin+1];
+		for (int i = 0; i <= begin; ++i) {
+			range[i] = begin-i;
+		}
+		return range;
 	}
 
 	public void asertByIdDescendingConstrained(ExtObjectContainer oc) {
-		int[] expected = new int[30];
-		for (int i = 0; i <= 29; ++i) {
-			expected[i] = 29-i;
-		}
 		Query query = oc.query();
 		query.constrain(getClass());
 		query.descend("_id").constrain(new Integer(30)).smaller();
-		assertIdOrder(query, new DescendingIdComparator(), expected);
+		assertIdOrder(query, new DescendingIdComparator(), descendingRange(29));
 	}
 
 	public void assertByIdDescendingNQ(ExtObjectContainer oc) {
-		int[] expected = new int[30];
-		for (int i = 0; i <= 29; ++i) {
-			expected[i] = 29-i;
-		}
+		int[] expected = descendingRange(29);
 		ObjectSet result = oc.query(new SmallerThanThirtyPredicate(),
 				new DescendingIdComparator());
 		assertIdOrder(result, expected);
@@ -197,31 +190,19 @@ public class ComparatorSortTestCase extends Db4oClientServerTestCase {
 	}
 	
 	public void assertByNameAscending(ExtObjectContainer oc) {
-		int[] expected = new int[31];
-		for (int i = 0; i <= 30; ++i) {
-			expected[i] = i;
-		}
-		assertIdOrder(oc, new AscendingNameComparator(), expected);
+		assertIdOrder(oc, new AscendingNameComparator(), range(0, 31));
 	}
 
 	public void assertByNameAscendingConstrained(ExtObjectContainer oc) {
-		int[] expected = new int[30];
-		for (int i = 0; i < 30; ++i) {
-			expected[i] = i;
-		}
 		Query query = oc.query();
 		query.constrain(getClass());
 		query.descend("_id").constrain(new Integer(30)).smaller();
-		assertIdOrder(query, new AscendingNameComparator(),expected);
+		assertIdOrder(query, new AscendingNameComparator(),range(0, 30));
 	}
 
 	public void assertByNameAscendingNQ(ExtObjectContainer oc) {
-		int[] expected = new int[30];
-		for (int i = 0; i < 30; ++i) {
-			expected[i] = i;
-		}
 		ObjectSet result = oc.query(new SmallerThanThirtyPredicate(),new AscendingNameComparator());
-		assertIdOrder(result, expected);
+		assertIdOrder(result, range(0, 30));
 	}
 
 	private void assertIdOrder(ExtObjectContainer oc,
