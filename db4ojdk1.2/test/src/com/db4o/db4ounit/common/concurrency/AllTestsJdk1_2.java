@@ -10,7 +10,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			com.db4o.db4ounit.common.concurrency.AllTests.class,
+			com.db4o.db4ounit.jre11.concurrency.AllTests.class,
 			ReadCollectionNQTestCase.class,
 			ReadCollectionQBETestCase.class,
 			ReadCollectionSODATestCase.class,
