@@ -116,7 +116,7 @@
 		<delete dir="${drs.net.src.dir}" />
 		<mkdir dir="${drs.net.src.dir}" />
 		<copy todir="${drs.net.src.dir}">
-			<fileset dir="${drs.conversion.workspace.dir}/drscsharp/src">
+			<fileset dir="${drs.conversion.workspace.dir}/drs.net/src">
 				<include name="**/*.cs" />
 				<exclude name="**/Test/**" />
 			</fileset>
@@ -137,7 +137,7 @@
 	
 	<target name="update-drs.tests-project" depends="sharpen-drs">
 		<copy todir="${drs.net.dir}/drs.tests/src">
-			<fileset dir="${drs.conversion.workspace.dir}/drscsharp/src">
+			<fileset dir="${drs.conversion.workspace.dir}/drs.net/src">
 				<include name="**/Test/**" />
 			</fileset>
 		</copy>
