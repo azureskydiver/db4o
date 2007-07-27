@@ -24,7 +24,6 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 				CaseInsensitiveTestCase.class,
 				Circular1TestCase.class,
 				ClientDisconnectTestCase.class,
-				ComparatorSortTestCase.class,
 				CreateIndexInheritedTestCase.class,
 				DeepSetTestCase.class,
 				DeleteDeepTestCase.class,
