@@ -17,38 +17,40 @@ public class CascadeOnUpdate2TestCase extends Db4oClientServerTestCase {
 	
 	private static final int ATOM_COUNT = 10;
 
-	public Atom[] child;
+	public static class Item {
+		public Atom[] child;
+	}
 
 	protected void configure(Configuration config) {
-		config.objectClass(this).cascadeOnUpdate(true);
+		config.objectClass(Item.class).cascadeOnUpdate(true);
 		config.objectClass(Atom.class).cascadeOnUpdate(false);
 	}
 
 	protected void store() {
-		CascadeOnUpdate2TestCase cou = new CascadeOnUpdate2TestCase();
-		cou.child = new Atom[ATOM_COUNT];
+		Item item = new Item();
+		item.child = new Atom[ATOM_COUNT];
 		for (int i = 0; i < ATOM_COUNT; i++) {
-			cou.child[i] = new Atom(new Atom("storedChild"), "stored");
+			item.child[i] = new Atom(new Atom("storedChild"), "stored");
 		}
-		store(cou);
+		store(item);
 	}
 
 	public void conc(ExtObjectContainer oc, int seq) {
-		CascadeOnUpdate2TestCase cou = (CascadeOnUpdate2TestCase) retrieveOnlyInstance(oc, this.getClass());
+		Item item = (Item) retrieveOnlyInstance(oc, Item.class);
 		for (int i = 0; i < ATOM_COUNT; i++) {
-			cou.child[i].name = "updated" + seq;
-			cou.child[i].child.name = "updated" + seq;
-			oc.set(cou);
+			item.child[i].name = "updated" + seq;
+			item.child[i].child.name = "updated" + seq;
+			oc.set(item);
 		}
 	}
 
 	public void check(ExtObjectContainer oc) {
-		CascadeOnUpdate2TestCase cou = (CascadeOnUpdate2TestCase) retrieveOnlyInstance(oc, this.getClass());
-		String name = cou.child[0].name;
+		Item item = (Item) retrieveOnlyInstance(oc, Item.class);
+		String name = item.child[0].name;
 		Assert.isTrue(name.startsWith("updated"));
 		for (int i = 0; i < ATOM_COUNT; i++) {
-			Assert.areEqual(name, cou.child[i].name);
-			Assert.areEqual("storedChild", cou.child[i].child.name);
+			Assert.areEqual(name, item.child[i].name);
+			Assert.areEqual("storedChild", item.child[i].child.name);
 		}
 	}
 }

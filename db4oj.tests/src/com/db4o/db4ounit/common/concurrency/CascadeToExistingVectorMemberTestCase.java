@@ -17,34 +17,36 @@ public class CascadeToExistingVectorMemberTestCase extends Db4oClientServerTestC
 		new CascadeToExistingVectorMemberTestCase().runConcurrency();
 	}
 	
-	public Vector vec;
+	public static class Item {
+		public Vector vec;
+	}
 
 	protected void configure(Configuration config) {
-		config.objectClass(this).cascadeOnUpdate(true);
+		config.objectClass(Item.class).cascadeOnUpdate(true);
 		config.objectClass(Atom.class).cascadeOnUpdate(false);
 	}
 
 	protected void store() {
-		CascadeToExistingVectorMemberTestCase cev = new CascadeToExistingVectorMemberTestCase();
-		cev.vec = new Vector();
+		Item item = new Item();
+		item.vec = new Vector();
 		Atom atom = new Atom("one");
 		store(atom);
-		cev.vec.addElement(atom);
-		store(cev);
+		item.vec.addElement(atom);
+		store(item);
 	}
 
 	public void conc(final ExtObjectContainer oc, final int seq) {
-		CascadeToExistingVectorMemberTestCase cev = (CascadeToExistingVectorMemberTestCase) retrieveOnlyInstance(oc, this.getClass());
-		Atom atom = (Atom) cev.vec.elementAt(0);
+		Item item = (Item) retrieveOnlyInstance(oc, Item.class);
+		Atom atom = (Atom) item.vec.elementAt(0);
 		atom.name = "two" + seq;
-		oc.set(cev);
+		oc.set(item);
 		atom.name = "three" + seq;
-		oc.set(cev);
+		oc.set(item);
 	}
 
 	public void check(final ExtObjectContainer oc) {
-		CascadeToExistingVectorMemberTestCase cev = (CascadeToExistingVectorMemberTestCase) retrieveOnlyInstance(oc, CascadeToExistingVectorMemberTestCase.class);
-		Atom atom = (Atom) cev.vec.elementAt(0);
+		Item item = (Item) retrieveOnlyInstance(oc, Item.class);
+		Atom atom = (Atom) item.vec.elementAt(0);
 		Assert.isTrue(atom.name.startsWith("three"));
 		Assert.isTrue(atom.name.length() > "three".length());	
 	}
