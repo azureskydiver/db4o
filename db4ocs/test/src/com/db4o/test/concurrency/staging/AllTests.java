@@ -14,6 +14,7 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 		return new Class[] {
 			CascadeDeleteArrayTestCase.class,
 			CascadeToHashtableTestCase.class,
+			ComparatorSortTestCase.class,
 			CustomActivationDepthTestCase.class,
 			HashtableTestCase.class,
 			SwitchingFilesFromClientTestCase.class,
