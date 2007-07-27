@@ -16,34 +16,37 @@ public class CascadeOnActivateTestCase extends AbstractDb4oTestCase {
 		new CascadeOnActivateTestCase().runConcurrency();
 	}
 	
-	public String name;
+	public static class Item {
+		public String name;
 
-	public CascadeOnActivateTestCase child;
+		public Item child;
+	}
 
 	protected void configure(Configuration config) {
-		config.objectClass(this).cascadeOnActivate(true);
+		config.objectClass(Item.class).cascadeOnActivate(true);
 	}
 
 	protected void store() {
-		name = "1";
-		child = new CascadeOnActivateTestCase();
-		child.name = "2";
-		child.child = new CascadeOnActivateTestCase();
-		child.child.name = "3";
-		store(this);
+		Item item = new Item();
+		item.name = "1";
+		item.child = new Item();
+		item.child.name = "2";
+		item.child.child = new Item();
+		item.child.child.name = "3";
+		store(item);
 	}
 
 	public void conc(ExtObjectContainer oc) {
 		Query q = oc.query();
-		q.constrain(CascadeOnActivateTestCase.class);
+		q.constrain(Item.class);
 		q.descend("name").constrain("1");
 		ObjectSet os = q.execute();
-		CascadeOnActivateTestCase coa = (CascadeOnActivateTestCase) os.next();
-		CascadeOnActivateTestCase coa3 = coa.child.child;
-		Assert.areEqual("3", coa3.name);
-		oc.deactivate(coa, Integer.MAX_VALUE);
-		Assert.isNull(coa3.name);
-		oc.activate(coa, 1);
-		Assert.areEqual("3", coa3.name);
+		Item item = (Item) os.next();
+		Item item3 = item.child.child;
+		Assert.areEqual("3", item3.name);
+		oc.deactivate(item, Integer.MAX_VALUE);
+		Assert.isNull(item3.name);
+		oc.activate(item, 1);
+		Assert.areEqual("3", item3.name);
 	}
 }
