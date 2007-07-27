@@ -9,7 +9,7 @@ import db4ounit.extensions.*;
 /**
  * 
  */
-public class Circular1TestCase extends AbstractDb4oTestCase {
+public class Circular1TestCase extends Db4oClientServerTestCase {
 	public static void main(String[] args) {
 		new Circular1TestCase().runConcurrency();
 	}
