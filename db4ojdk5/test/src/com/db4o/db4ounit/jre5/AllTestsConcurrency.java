@@ -7,10 +7,10 @@ import com.db4o.db4ounit.jre11.concurrency.*;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oConcurrenyTestSuite {
+public class AllTestsConcurrency extends Db4oConcurrenyTestSuite {
 	
 	public static void main(String[] args) {
-		new AllTests().runConcurrency();
+		new AllTestsConcurrency().runConcurrency();
 	}
 
 	protected Class[] testCases() {
@@ -28,7 +28,6 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 				Circular1TestCase.class,
 				Circular2TestCase.class,
 				ClientDisconnectTestCase.class,
-				ComparatorSortTestCase.class,
 				CreateIndexInheritedTestCase.class,
 				DeepSetTestCase.class,
 				DeleteDeepTestCase.class,
