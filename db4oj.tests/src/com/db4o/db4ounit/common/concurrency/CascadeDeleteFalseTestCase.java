@@ -14,26 +14,29 @@ public class CascadeDeleteFalseTestCase extends Db4oClientServerTestCase {
 		new CascadeDeleteFalseTestCase().runConcurrency();
 	}
 
-	public CascadeDeleteFalseHelper h1;
+	public static class Item {
+		public CascadeDeleteFalseHelper h1;
 
-	public CascadeDeleteFalseHelper h2;
+		public CascadeDeleteFalseHelper h2;
 
-	public CascadeDeleteFalseHelper h3;
+		public CascadeDeleteFalseHelper h3;
+	}
 
 	protected void configure(Configuration config) {
-		config.objectClass(this).cascadeOnDelete(true);
-		config.objectClass(this).objectField("h3").cascadeOnDelete(false);
+		config.objectClass(Item.class).cascadeOnDelete(true);
+		config.objectClass(Item.class).objectField("h3").cascadeOnDelete(false);
 	}
 
 	protected void store() {
-		h1 = new CascadeDeleteFalseHelper();
-		h2 = new CascadeDeleteFalseHelper();
-		h3 = new CascadeDeleteFalseHelper();
-		store(this);
+		Item item = new Item();
+		item.h1 = new CascadeDeleteFalseHelper();
+		item.h2 = new CascadeDeleteFalseHelper();
+		item.h3 = new CascadeDeleteFalseHelper();
+		store(item);
 	}
 
 	public void concDelete(ExtObjectContainer oc) throws Exception {
-		ObjectSet os = oc.query(CascadeDeleteFalseTestCase.class);
+		ObjectSet os = oc.query(Item.class);
 		if (os.size() == 0) { // the object has been deleted
 			return;
 		}
@@ -41,12 +44,12 @@ public class CascadeDeleteFalseTestCase extends Db4oClientServerTestCase {
 			// object can be deleted after query 
 			return;
 		}
-		CascadeDeleteFalseTestCase cdf = (CascadeDeleteFalseTestCase) os.next();
+		Item cdf = (Item) os.next();
 		// sleep 1000 ms, waiting for other threads.
 		// Thread.sleep(500);
 		oc.delete(cdf);
 		oc.commit();
-		assertOccurrences(oc, CascadeDeleteFalseTestCase.class, 0);
+		assertOccurrences(oc, Item.class, 0);
 		assertOccurrences(oc, CascadeDeleteFalseHelper.class, 1);
 	}
 
