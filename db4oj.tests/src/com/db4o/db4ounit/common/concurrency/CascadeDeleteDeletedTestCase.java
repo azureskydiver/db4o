@@ -12,11 +12,16 @@ import db4ounit.extensions.*;
 
 public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 
-	public String name;
+	public static class Item {
+		public Item(String name) {
+			this.name = name;
+		}
+		public String name;
 
-	public Object untypedMember;
+		public Object untypedMember;
 
-	public CddMember typedMember;
+		public CddMember typedMember;
+	}
 	
 	public static void main(String[] args) {
 		new CascadeDeleteDeletedTestCase().runConcurrency();
@@ -26,15 +31,8 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 		configureThreadCount(10);
 	}
 
-	public CascadeDeleteDeletedTestCase() {
-	}
-
-	public CascadeDeleteDeletedTestCase(String name) {
-		this.name = name;
-	}
-
 	protected void configure(Configuration config) {
-		config.objectClass(this).cascadeOnDelete(true);
+		config.objectClass(Item.class).cascadeOnDelete(true);
 	}
 
 	protected void store() {
@@ -48,21 +46,21 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 	}
 
 	private void membersFirst(ExtObjectContainer oc, String name) {
-		CascadeDeleteDeletedTestCase cdd = new CascadeDeleteDeletedTestCase(name);
-		cdd.untypedMember = new CddMember();
-		cdd.typedMember = new CddMember();
-		oc.set(cdd);
+		Item item = new Item(name);
+		item.untypedMember = new CddMember();
+		item.typedMember = new CddMember();
+		oc.set(item);
 	}
 
 	private void twoRef(ExtObjectContainer oc, String name) {
-		CascadeDeleteDeletedTestCase cdd = new CascadeDeleteDeletedTestCase(name);
-		cdd.untypedMember = new CddMember();
-		cdd.typedMember = new CddMember();
-		CascadeDeleteDeletedTestCase cdd2 = new CascadeDeleteDeletedTestCase(name);
-		cdd2.untypedMember = cdd.untypedMember;
-		cdd2.typedMember = cdd.typedMember;
-		oc.set(cdd);
-		oc.set(cdd2);
+		Item item1 = new Item(name);
+		item1.untypedMember = new CddMember();
+		item1.typedMember = new CddMember();
+		Item item2 = new Item(name);
+		item2.untypedMember = item1.untypedMember;
+		item2.typedMember = item1.typedMember;
+		oc.set(item1);
+		oc.set(item2);
 	}
 
 	public void conc(ExtObjectContainer oc, int seq) {
@@ -88,10 +86,10 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 	private void tMembersFirst(ExtObjectContainer oc, String name) {
 		boolean commit = name.indexOf("commit") > 1;
 		Query q = oc.query();
-		q.constrain(CascadeDeleteDeletedTestCase.class);
+		q.constrain(Item.class);
 		q.descend("name").constrain(name);
 		ObjectSet objectSet = q.execute();
-		CascadeDeleteDeletedTestCase cdd = (CascadeDeleteDeletedTestCase) objectSet.next();
+		Item cdd = (Item) objectSet.next();
 		oc.delete(cdd.untypedMember);
 		oc.delete(cdd.typedMember);
 		if (commit) {
@@ -108,20 +106,20 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 		boolean delete = name.indexOf("delete") > 1;
 
 		Query q = oc.query();
-		q.constrain(this.getClass());
+		q.constrain(Item.class);
 		q.descend("name").constrain(name);
 		ObjectSet objectSet = q.execute();
-		CascadeDeleteDeletedTestCase cdd = (CascadeDeleteDeletedTestCase) objectSet.next();
-		CascadeDeleteDeletedTestCase cdd2 = (CascadeDeleteDeletedTestCase) objectSet.next();
+		Item item1 = (Item) objectSet.next();
+		Item item2 = (Item) objectSet.next();
 		if (delete) {
-			oc.delete(cdd.untypedMember);
-			oc.delete(cdd.typedMember);
+			oc.delete(item1.untypedMember);
+			oc.delete(item1.typedMember);
 		}
-		oc.delete(cdd);
+		oc.delete(item1);
 		if (commit) {
 			oc.commit();
 		}
-		oc.delete(cdd2);
+		oc.delete(item2);
 		if (!commit) {
 			oc.commit();
 		}
