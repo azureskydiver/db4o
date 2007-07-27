@@ -10,7 +10,7 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class CascadeOnActivateTestCase extends AbstractDb4oTestCase {
+public class CascadeOnActivateTestCase extends Db4oClientServerTestCase {
 
 	public static void main(String[] args) {
 		new CascadeOnActivateTestCase().runConcurrency();
