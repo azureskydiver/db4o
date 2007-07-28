@@ -34,18 +34,21 @@ public class Db4oClientServer extends
 	private boolean _embeddedClient;
 
 	private ExtObjectContainer _objectContainer;
+	
+	private String _label;
     
     protected static final int _port = findFreePort();
     
     
-    public Db4oClientServer(ConfigurationSource configSource,String fileName, boolean embeddedClient) {
+    public Db4oClientServer(ConfigurationSource configSource,String fileName, boolean embeddedClient, String label) {
     	super(configSource);
         _yap = new File(fileName);
         _embeddedClient = embeddedClient;
+        _label = label;
     }
     
-    public Db4oClientServer(ConfigurationSource configSource, boolean embeddedClient){
-        this(configSource,FILE, embeddedClient);
+    public Db4oClientServer(ConfigurationSource configSource, boolean embeddedClient, String label){
+        this(configSource,FILE, embeddedClient, label);
     }
     
     public static int findFreePort() {
@@ -151,7 +154,7 @@ public class Db4oClientServer extends
 	}
 
 	public String getLabel() {
-		return "C/S" + (_embeddedClient ? " Embedded" : "");
+		return _label;
 	}
 
 	public int serverPort() {
