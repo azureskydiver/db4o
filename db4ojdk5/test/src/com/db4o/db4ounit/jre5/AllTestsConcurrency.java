@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 public class AllTestsConcurrency extends Db4oConcurrenyTestSuite {
 	
 	public static void main(String[] args) {
-		System.exit(new AllTestsConcurrency().runConcurrency());
+		System.exit(new AllTestsConcurrency().runConcurrencyAll());
 	}
 
 	protected Class[] testCases() {
