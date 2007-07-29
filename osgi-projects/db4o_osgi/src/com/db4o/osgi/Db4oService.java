@@ -11,7 +11,7 @@ import com.db4o.ext.*;
  * This API is registered as an OSGi service by the db4o_osgi bundle. It can be accessed like this:
  * 
  * ServiceReference serviceRef = _context.getServiceReference(Db4oService.class.getName());
- * Db4oService db4oService = (Db4oService)bundleContext.getService(serviceRef);
+ * Db4oService db4oService = (Db4oService)_context.getService(serviceRef);
  * Configuration config = db4oService.newConfiguration();
  * // ...
  * ObjectContainer database = db4oService.openFile(config,fileName);
