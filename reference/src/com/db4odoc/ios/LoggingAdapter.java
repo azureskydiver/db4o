@@ -9,10 +9,18 @@ import java.io.RandomAccessFile;
 
 import com.db4o.DTrace;
 import com.db4o.DatabaseFileLockedException;
+import com.db4o.Db4oIOException;
 import com.db4o.internal.Platform4;
 import com.db4o.io.IoAdapter;
 
 public class LoggingAdapter extends IoAdapter {
+
+	@Override
+	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+		_out.println("Opening file " + path);
+		return new LoggingAdapter(path, lockFile, initialLength, readOnly);
+	}
+
 
 	private String _path;
 	private RandomAccessFile _delegate;
@@ -21,34 +29,41 @@ public class LoggingAdapter extends IoAdapter {
 	 public LoggingAdapter(){
 	 }
 	 
-    protected LoggingAdapter(String path, boolean lockFile, long initialLength) throws IOException {
-    	_path=new File(path).getCanonicalPath();
-        _delegate = new RandomAccessFile(path, "rw");
-        if(initialLength>0) {
-	        _delegate.seek(initialLength - 1);
-	        _delegate.write(new byte[] {0});
-        }
-        if(lockFile){
-        	try {
-				Platform4.lockFile(_path, _delegate);
-			} catch (DatabaseFileLockedException e) {
-				_delegate.close();
-				throw e;
-			}
-        }
+    protected LoggingAdapter(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
+    	try {
+    		String mode = readOnly ? "r" : "rw";
+	    	_path=new File(path).getCanonicalPath();
+	        _delegate = new RandomAccessFile(path, mode);
+	        if(initialLength>0) {
+		        _delegate.seek(initialLength - 1);
+		        _delegate.write(new byte[] {0});
+	        }
+	        if(lockFile){
+	        	try {
+					Platform4.lockFile(_path, _delegate);
+				} catch (DatabaseFileLockedException e) {
+					_delegate.close();
+					throw e;
+				}
+	        }
+    	} catch (IOException e) {
+    		throw new Db4oIOException(e);
+    	}
     }
     
     public void setOut(PrintStream out){
     	_out = out;
     }
     
-	public void close() throws IOException {
+	public void close() throws Db4oIOException {
 		_out.println("Closing file");
         try {
             Platform4.unlockFile(_path,_delegate);
+            _delegate.close();
+        } catch (IOException e) {
+        	throw new Db4oIOException(e);
         } catch (Exception e) {
         }
-        _delegate.close();
     }
 
 
@@ -62,42 +77,60 @@ public class LoggingAdapter extends IoAdapter {
         return  existingFile.exists() && existingFile.length() > 0;
     }
 
-	public long getLength() throws IOException {
+	public long getLength() throws Db4oIOException {
+		long length;
+		try {
 		_out.println("File length:" + _delegate.length());
-		return _delegate.length();
+		length = _delegate.length();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+		return length;
 	}
 
-	public IoAdapter open(String path, boolean lockFile, long initialLength) throws IOException {
-		_out.println("Opening file " + path);
-        return new LoggingAdapter(path, lockFile, initialLength);
-    }
-
-
-	public int read(byte[] bytes, int length) throws IOException {
+	public int read(byte[] bytes, int length) throws Db4oIOException {
+		int readBytes;
+		try {
 		_out.println("Reading " + length + " bytes");
-        return _delegate.read(bytes, 0, length);
+		readBytes = _delegate.read(bytes, 0, length);
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
+		return readBytes;
 	}
 
 
-	public void seek(long pos) throws IOException {
+	public void seek(long pos) throws Db4oIOException {
 
         if(DTrace.enabled){
             DTrace.REGULAR_SEEK.log(pos);
         }
+        try {
         _out.println("Setting pointer position to  " + pos);
         _delegate.seek(pos);
+        } catch (IOException e) {
+        	throw new Db4oIOException(e);
+        }
 	}
 
 
-	public void sync() throws IOException {
+	public void sync() throws Db4oIOException {
 		_out.println("Synchronizing");
+		try {
 		_delegate.getFD().sync();
+		} catch (IOException e) {
+			throw new Db4oIOException(e);
+		}
 	}
 
 	
-	public void write(byte[] buffer, int length) throws IOException {
+	public void write(byte[] buffer, int length) throws Db4oIOException {
 		_out.println("Writing " + length + " bytes");
+		try {
         _delegate.write(buffer, 0, length);
+		} catch (IOException e) {
+			new Db4oIOException(e);
+		}
 		
 	}
 

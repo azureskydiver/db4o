@@ -17,13 +17,13 @@ public class ListOperationsExample {
             fillUpDb(2);
             removeInsert();
             checkResults();
-            updateObject();
-            checkResults();
+            //updateObject();
+            //checkResults();
         }
         
         private static void fillUpDb(int listCount)
         {
-            int dataCount = 50000;
+            int dataCount = 5;
             long elapsedTime = 0;
             new File(DB4O_FILE_NAME).delete();
             ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);

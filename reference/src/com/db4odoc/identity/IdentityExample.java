@@ -14,9 +14,9 @@ public class IdentityExample {
 
 	public static void main(String[] args) {
 		setObjects();
-		checkUniqueness();
-		checkReferenceCache();
-		checkReferenceCacheWithPurge();
+		//checkUniqueness();
+		//checkReferenceCache();
+		//checkReferenceCacheWithPurge();
 		testBind();
 		
 		testCopyingWithPurge();
@@ -118,7 +118,7 @@ public class IdentityExample {
 			Car car1 = (Car)result.get(0);
 			long IdCar1 = container.ext().getID(car1);
 			Car car2 = new Car("BMW", new Pilot("Rubens Barrichello"));
-			container.ext().bind(car2,IdCar1);
+			container.ext().bind(car2,289);
 			container.set(car2);
 
 			result = container.query(Car.class);

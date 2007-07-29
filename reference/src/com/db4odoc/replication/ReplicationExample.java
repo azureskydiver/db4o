@@ -8,7 +8,6 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.ConfigScope;
-import com.db4o.config.Configuration;
 import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationSession;
 
@@ -53,12 +52,50 @@ public class ReplicationExample {
 		 */
 		ObjectSet changed =	replication.providerA().objectsChangedSinceLastReplication();
 		
-		// Iterate changed objects, check if the name starts with "S" and replicate only those items
 		while (changed.hasNext()) {
 			replication.replicate(changed.next());
 		}
 		
 		replication.commit();
 	} 
-	// end replicate	
+	// end replicate
+	
+	public static void replicatePilots(){
+		ObjectContainer desktop=Db4o.openFile(DTFILENAME);
+		ObjectContainer handheld=Db4o.openFile(HHFILENAME);
+		ReplicationSession replication = Replication.begin(handheld, desktop);
+		ObjectSet changed =	replication.providerB().objectsChangedSinceLastReplication();
+		
+		/* Iterate through the changed objects,
+		 * check if the name starts with "S" and replicate only those items
+		 */
+		while (changed.hasNext()) {
+			if (changed instanceof Pilot) {
+				if (((Pilot)changed).getName().startsWith("S")){
+					replication.replicate(changed.next());
+				}
+			}
+		}
+		
+		replication.commit();
+	} 
+	// end replicatePilots	
+	
+	public static void replicateBiDirectional(){
+		ObjectContainer desktop=Db4o.openFile(DTFILENAME);
+		ObjectContainer handheld=Db4o.openFile(HHFILENAME);
+		ReplicationSession replication = Replication.begin(handheld, desktop);
+		ObjectSet changed =	replication.providerA().objectsChangedSinceLastReplication();
+		while (changed.hasNext()) {
+					replication.replicate(changed.next());
+		}
+		// Add one more loop for bi-directional replication
+		changed = replication.providerB().objectsChangedSinceLastReplication();
+		while(changed.hasNext()) {    
+			replication.replicate(changed.next());
+		}
+		
+		replication.commit();
+	} 
+	// end replicateBiDirectional
 }

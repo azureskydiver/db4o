@@ -3,11 +3,11 @@ package com.db4odoc.exceptions;
 
 import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
+import com.db4o.Db4oIOException;
 import com.db4o.InvalidPasswordException;
 import com.db4o.ObjectContainer;
 import com.db4o.ext.Db4oException;
 import com.db4o.ext.OldFormatException;
-import com.db4o.internal.OpenDatabaseException;
 
 
 public class ExceptionExample {
@@ -41,7 +41,7 @@ public class ExceptionExample {
 		ObjectContainer container = null;
 		try {
 			container = Db4o.openClient("host", 0xdb40, "user", "password");
-		} catch(OpenDatabaseException ex) {
+		} catch(Db4oIOException ex) {
 			//System.out.println(ex.getMessage());
 			// ask the user for new connection details, print
 			// or log the exception message
