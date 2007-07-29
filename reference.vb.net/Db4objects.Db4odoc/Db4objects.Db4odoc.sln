@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o-2005", "..\
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TestClient", "..\TestClient\TestClient.vbproj", "{C6F1C236-E5EC-4EA6-87A8-7ACC6EF9BEBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drs", "..\..\drs\drs.net\src\drs\drs.csproj", "{CD3E1D15-61A8-4F0E-9416-D4100E316239}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o.Tools-2005", "..\..\db4o.net\Db4objects.Db4o.Tools\Db4objects.Db4o.Tools-2005.csproj", "{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,14 @@ Global
 		{C6F1C236-E5EC-4EA6-87A8-7ACC6EF9BEBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6F1C236-E5EC-4EA6-87A8-7ACC6EF9BEBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6F1C236-E5EC-4EA6-87A8-7ACC6EF9BEBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
