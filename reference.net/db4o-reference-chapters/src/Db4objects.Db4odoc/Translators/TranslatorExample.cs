@@ -13,8 +13,8 @@ namespace Db4objects.Db4odoc.Translators
 
         public static void Main(string[] args)
         {
-            TryStoreWithCallConstructors();
-            TryStoreWithoutCallConstructors();
+          //  TryStoreWithCallConstructors();
+           // TryStoreWithoutCallConstructors();
             StoreWithTranslator();
         }
 		// end Main

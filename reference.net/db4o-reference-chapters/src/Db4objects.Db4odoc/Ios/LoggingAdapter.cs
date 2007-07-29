@@ -10,9 +10,10 @@ namespace Db4objects.Db4odoc.IOs
 		{
 		}
 
-		protected internal LoggingAdapter(string path, bool lockFile, long initialLength)
+		protected internal LoggingAdapter(string path, bool lockFile, long initialLength, bool readOnly)
 		{
-            _delegate = new Sharpen.IO.RandomAccessFile(path, "rw");
+            string mode = readOnly ? "r" : "rw";;
+            _delegate = new Sharpen.IO.RandomAccessFile(path, mode);
 			if (initialLength > 0)
 			{
 				_delegate.Seek(initialLength - 1);
@@ -49,10 +50,10 @@ namespace Db4objects.Db4odoc.IOs
 			return _delegate.Length();
 		}
 
-		public override Db4objects.Db4o .IO.IoAdapter  Open(string path, bool lockFile, long initialLength)
+		public override Db4objects.Db4o .IO.IoAdapter  Open(string path, bool lockFile, long initialLength, bool readOnly)
 		{
 			System.Console.WriteLine("Opening file " + path);
-			return new LoggingAdapter(path, lockFile, initialLength);
+            return new LoggingAdapter(path, lockFile, initialLength, readOnly);
 		}
 
 		public override int Read(byte[] bytes, int length)

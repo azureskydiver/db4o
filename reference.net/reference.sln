@@ -6,7 +6,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o.Tools-2005"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "TestClient\TestClient.csproj", "{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o-2005", "..\..\install\db4o-6.2\src\Db4objects.Db4o\Db4objects.Db4o-2005.csproj", "{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drs", "..\drs\drs.net\src\drs\drs.csproj", "{CD3E1D15-61A8-4F0E-9416-D4100E316239}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o-2005", "..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj", "{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
