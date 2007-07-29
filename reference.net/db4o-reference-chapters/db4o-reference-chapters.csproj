@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.Translators.TranslatorExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.IOs.IOExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -248,6 +248,7 @@
     <Compile Include="src\Db4objects.Db4odoc\Evaluations\Car.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\Lists\MapExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\NQCollection\CalculationExamples.cs" />
     <Compile Include="src\Db4objects.Db4odoc\NQCollection\Car.cs" />
     <Compile Include="src\Db4objects.Db4odoc\NQCollection\MultiExamples.cs" />
@@ -256,8 +257,11 @@
     <Compile Include="src\Db4objects.Db4odoc\NQCollection\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\NQCollection\SimpleExamples.cs" />
     <Compile Include="src\Db4objects.Db4odoc\NQCollection\Trainee.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\NQConcepts\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\NQSyntax\NQSyntaxExamples.cs" />
     <Compile Include="src\Db4objects.Db4odoc\NQSyntax\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ReplicationEvents\EventsExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\ReplicationEvents\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Transactions\Car.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Transactions\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Transactions\PressureSensorReadout.cs" />
@@ -494,17 +498,21 @@
     <Compile Include="src\Db4objects.Db4odoc\VersionUpdate\UpdateExample.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\install\db4o-6.2\src\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
-      <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
-      <Name>Db4objects.Db4o-2005</Name>
-    </ProjectReference>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o.Tools\Db4objects.Db4o.Tools-2005.csproj">
       <Project>{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}</Project>
       <Name>Db4objects.Db4o.Tools-2005</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
+    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
+      <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
+      <Name>Db4objects.Db4o-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\drs\drs.net\src\drs\drs.csproj">
+      <Project>{CD3E1D15-61A8-4F0E-9416-D4100E316239}</Project>
+      <Name>drs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
