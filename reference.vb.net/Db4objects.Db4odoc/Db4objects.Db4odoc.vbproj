@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Db4objects.Db4odoc.VersionUpdate.UpdateExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.IOs.IOExample</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>
@@ -139,6 +139,8 @@
     <Compile Include="NQCollection\Trainee.vb" />
     <Compile Include="NQSyntax\NQSyntaxExamples.vb" />
     <Compile Include="NQSyntax\Pilot.vb" />
+    <Compile Include="ReplicationEvents\EventsExample.vb" />
+    <Compile Include="ReplicationEvents\Pilot.vb" />
     <Compile Include="Transactions\Car.vb" />
     <Compile Include="Transactions\Pilot.vb" />
     <Compile Include="Transactions\PressureSensorReadout.vb" />
@@ -245,6 +247,10 @@
     <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
       <Name>Db4objects.Db4o-2005</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\drs\drs.net\src\drs\drs.csproj">
+      <Project>{CD3E1D15-61A8-4F0E-9416-D4100E316239}</Project>
+      <Name>drs</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

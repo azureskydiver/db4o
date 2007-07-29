@@ -11,14 +11,21 @@ Namespace Db4objects.Db4odoc.IOs
         Public Sub New()
         End Sub
 
-        Protected Friend Sub New(ByVal path As String, ByVal lockFile As Boolean, ByVal initialLength As Long)
-            _delegate = New Sharpen.IO.RandomAccessFile(path, "rw")
+        Protected Friend Sub New(ByVal path As String, ByVal lockFile As Boolean, ByVal initialLength As Long, ByVal rOnly As Boolean)
+            Dim mode As String
+            If rOnly = True Then
+                mode = "r"
+            Else
+                mode = "rw"
+            End If
+            _delegate = New Sharpen.IO.RandomAccessFile(path, mode)
             If initialLength > 0 Then
                 _delegate.Seek(initialLength - 1)
                 Dim b As Byte() = New Byte() {0}
                 _delegate.Write(b)
             End If
         End Sub
+
 
         Public Sub SetOut(ByVal outs As TextWriter)
             System.Console.SetOut(outs)
@@ -44,9 +51,9 @@ Namespace Db4objects.Db4odoc.IOs
             Return _delegate.Length()
         End Function
 
-        Public Overrides Function Open(ByVal path As String, ByVal lockFile As Boolean, ByVal initialLength As Long) As IoAdapter
+        Public Overrides Function Open(ByVal path As String, ByVal lockFile As Boolean, ByVal initialLength As Long, ByVal rOnly As Boolean) As IoAdapter
             System.Console.WriteLine("Opening file " + path)
-            Return New LoggingAdapter(path, lockFile, initialLength)
+            Return New LoggingAdapter(path, lockFile, initialLength, rOnly)
         End Function
 
         Public Overrides Function Read(ByVal bytes() As Byte, ByVal length As Integer) As Integer
