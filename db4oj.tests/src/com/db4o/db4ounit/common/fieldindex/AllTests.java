@@ -19,15 +19,14 @@ public class AllTests extends Db4oTestSuite {
 		Class[] neutral={
 				DoubleFieldIndexTestCase.class,
 				RuntimeFieldIndexTestCase.class,
+				SecondLevelIndexTestCase.class,
 	            StringIndexTestCase.class,
 	            StringIndexCorruptionTestCase.class,
 		};
-		Class[] tests=neutral;
-        
-    	tests=new Class[fieldBased.length+neutral.length];
+		
+		Class[] tests=new Class[fieldBased.length+neutral.length];
     	System.arraycopy(neutral, 0, tests, 0, neutral.length);
     	System.arraycopy(fieldBased, 0, tests, neutral.length, fieldBased.length);
-            
         return tests;
     }
 }
