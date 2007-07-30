@@ -20,9 +20,9 @@ public class IndexedPath extends IndexedNodeBase {
 		final FieldMetadata parentField = getYapField(parent);
 		if (null == parentField) return false;
 		final FieldMetadata conField = getYapField(con);
-		if (null == conField) return false;		
-		return parentField.hasIndex()
-			&& parentField.getParentYapClass().isAssignableFrom(conField.getParentYapClass());
+		if (null == conField) return false;
+		return parentField.hasIndex() &&
+		    parentField.getFieldYapClass().isAssignableFrom(conField.getParentYapClass());
 	}
 	
 	private static FieldMetadata getYapField(QCon con) {
