@@ -19,7 +19,6 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 				CascadeOnActivateTestCase.class,
 				CascadeOnUpdateTestCase.class,
 				CascadeOnUpdate2TestCase.class,
-				CascadeToExistingVectorMemberTestCase.class,
 				CascadeToVectorTestCase.class,
 				CaseInsensitiveTestCase.class,
 				Circular1TestCase.class,
