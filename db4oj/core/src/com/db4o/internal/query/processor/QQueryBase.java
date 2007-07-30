@@ -133,9 +133,10 @@ public abstract class QQueryBase implements Unversioned {
 
 	private Constraint addClassConstraint(ReflectClass claxx) {
 		if(claxx.equals(stream().i_handlers.ICLASS_OBJECT)){
-		    QCon trueConstr = new QConUnconditional(i_trans, true);
-			addConstraint(trueConstr);
-			return trueConstr;
+//		    QCon trueConstr = new QConUnconditional(i_trans, true);
+//			addConstraint(trueConstr);
+//			return trueConstr;
+			return null;
 		}
 		
 		Collection4 col = new Collection4();
