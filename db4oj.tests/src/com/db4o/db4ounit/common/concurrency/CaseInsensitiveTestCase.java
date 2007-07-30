@@ -37,18 +37,19 @@ public class CaseInsensitiveTestCase extends Db4oClientServerTestCase {
 		Assert.areEqual(1, q.execute().size());
 	}
 
-}
+	public static class CaseInsensitiveEvaluation implements Evaluation {
+		public String name;
 
-class CaseInsensitiveEvaluation implements Evaluation {
-	String name;
+		public CaseInsensitiveEvaluation(String name) {
+			this.name = name;
+		}
 
-	public CaseInsensitiveEvaluation(String name) {
-		this.name = name;
+		public void evaluate(Candidate candidate) {
+			CaseInsensitiveTestCase ci = (CaseInsensitiveTestCase) candidate.getObject();
+			candidate.include(ci.name.toLowerCase().equals(name.toLowerCase()));
+		}
+
 	}
 
-	public void evaluate(Candidate candidate) {
-		CaseInsensitiveTestCase ci = (CaseInsensitiveTestCase) candidate.getObject();
-		candidate.include(ci.name.toLowerCase().equals(name.toLowerCase()));
-	}
-
 }
+
