@@ -133,8 +133,9 @@ public abstract class QQueryBase implements Unversioned {
 
 	private Constraint addClassConstraint(ReflectClass claxx) {
 		if(claxx.equals(stream().i_handlers.ICLASS_OBJECT)){
-			// FIXME: should return valid Constraint object
-		    return null;
+		    QCon trueConstr = new QConUnconditional(i_trans, true);
+			addConstraint(trueConstr);
+			return trueConstr;
 		}
 		
 		Collection4 col = new Collection4();
@@ -222,7 +223,7 @@ public abstract class QQueryBase implements Unversioned {
                 if (run[0] == 1) {
                     run[0] = 2;
                     if (!descend1(query, a_field, run)) {
-                        new QConFalse(i_trans).attach(query, a_field);
+                        new QConUnconditional(i_trans, false).attach(query, a_field);
                     }
                 }
             }

@@ -8,14 +8,18 @@ import com.db4o.internal.*;
 /** 
  * @exclude
  */
-public class QConFalse extends QCon {
+public class QConUnconditional extends QCon {
 
-    public QConFalse() {
+	// cannot be final for C/S unmarshalling
+	private boolean _value;
+	
+    public QConUnconditional() {
         // C/S only
     }
 
-    public QConFalse(Transaction trans) {
+    public QConUnconditional(Transaction trans, boolean value) {
         super(trans);
+        _value = value;
     }
     
     void evaluateSimpleExec(QCandidates a_candidates) {
@@ -23,7 +27,7 @@ public class QConFalse extends QCon {
     }
 
 	boolean evaluate(QCandidate a_candidate) {
-		return false;
+		return _value;
 	}
 
 }
