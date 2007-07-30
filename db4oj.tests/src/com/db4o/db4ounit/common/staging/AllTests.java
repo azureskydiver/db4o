@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.staging;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
 
@@ -18,9 +18,7 @@ public class AllTests extends Db4oTestSuite {
 			 */
 			
 			LazyQueryDeleteTestCase.class,
-			SODAClassTypeDescend.class,
-			UntypedEvaluationTestCase.class, // COR-736
-			
+			SODAClassTypeDescend.class,			
 		};
 	}
 }

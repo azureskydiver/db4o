@@ -49,6 +49,7 @@ public class AllTests extends Db4oTestSuite {
 				STRUH1TestCase.class,
 				STTH1TestCase.class,
 				STUH1TestCase.class,
+				UntypedEvaluationTestCase.class,
 		};
 	}
 	
