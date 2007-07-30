@@ -17,8 +17,10 @@ public class SecondLevelIndexTestCase extends AbstractDb4oTestCase implements Di
         new SecondLevelIndexTestCase().runSolo();
     }
 	
-	public class ItemPair {        
+	public class ItemPair {
+	    
 	    public Item item1;
+	    
 	    public Item item2;
 	    
 	    public ItemPair() {            
@@ -31,7 +33,8 @@ public class SecondLevelIndexTestCase extends AbstractDb4oTestCase implements Di
 	}
 	
 
-	public static class Item {        
+	public static class Item {
+	    
 	    public String name;
 	    
 	    public Item() {            
@@ -55,30 +58,16 @@ public class SecondLevelIndexTestCase extends AbstractDb4oTestCase implements Di
     }
 	
 	public void test() {
-    	int nbItems = 1000;
-    	Item[] items = new Item[nbItems];
-    	for (int il = 0;il < nbItems;il++) {
-    		Item it = new Item("item" + il);
-    		store(it);
-    		items[il] = it;
-    	}
-    	Item foo = new Item("foo");
-		store(foo);
-    	for (int il = 0;il < nbItems-1;il++) {
-    		store(new ItemPair(items[il],items[il+1]));
-    	}
-    	Item theOne = items[30];
-		store(new ItemPair(theOne,foo));
-    	
-    	final Query query = newQuery(ItemPair.class);
-    	query.descend("item2").descend("name").constrain("foo");
+    	Item itemOne = new Item("one");
+    	Item itemTwo = new Item("two");
+		store(new ItemPair(itemOne,itemTwo));
+    	Query query = newQuery(ItemPair.class);
+    	query.descend("item2").descend("name").constrain("two");
         ObjectSet objectSet = query.execute();
-        Assert.areEqual(((ItemPair) objectSet.next()).item1 , theOne);
+        Assert.areEqual(((ItemPair) objectSet.next()).item1 , itemOne);
     }
 
-
 	public void onDiagnostic(Diagnostic d) {
-        System.out.println(d);
 	    Assert.isFalse(d instanceof LoadedFromClassIndex);
 	}
 	
