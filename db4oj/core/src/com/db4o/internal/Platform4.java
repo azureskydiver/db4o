@@ -630,7 +630,10 @@ public final class Platform4 {
 	}
 
 	public static boolean isDb4oClass(String className) {
-		if (className.indexOf(".test.") > 0) {
+        if (className.indexOf(".test.") > 0) {
+            return false;
+        }
+        if (className.indexOf(".db4ounit.") > 0) {
             return false;
         }
 		return className.indexOf("com.db4o") == 0;
