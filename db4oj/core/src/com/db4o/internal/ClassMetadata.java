@@ -1662,7 +1662,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	        if(i_fields != null){
 	            for (int i = 0; i < i_fields.length; i++) {
 	                if(i_fields[i].getName().equals(a_name)){
-	                    if(yc == null || yc == i_fields[i].getFieldYapClass()){
+	                    if(yc == null || yc == i_fields[i].getFieldYapClass(_stream)){
 	                        return (i_fields[i]);
 	                    }
 	                }

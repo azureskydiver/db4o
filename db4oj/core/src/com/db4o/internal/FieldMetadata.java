@@ -476,11 +476,11 @@ public class FieldMetadata implements StoredField {
         return i_name;
     }
 
-    public final ClassMetadata getFieldYapClass() {
+    public final ClassMetadata getFieldYapClass(ObjectContainerBase container) {
         // alive needs to be checked by all callers: Done
         TypeHandler4 handler = baseTypeHandler();
         if(Handlers4.handlesSimple(handler)){
-            return getStream().i_handlers.primitiveClassById(handler.getID());
+            return container.i_handlers.primitiveClassById(handler.getID());
         }
         return (ClassMetadata)handler;
     }

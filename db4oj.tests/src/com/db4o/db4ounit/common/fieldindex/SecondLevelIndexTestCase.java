@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.common.fieldindex;
 
-import com.db4o.ObjectSet;
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.diagnostic.Diagnostic;
 import com.db4o.diagnostic.DiagnosticListener;
@@ -49,6 +49,10 @@ public class SecondLevelIndexTestCase extends AbstractDb4oTestCase implements Di
         config.objectClass(ItemPair.class).objectField("item2").indexed(true);
 	    super.configure(config);
 	}
+	
+    protected void db4oTearDownBeforeClean() throws Exception {
+        Db4o.configure().diagnostic().removeAllListeners();
+    }
 	
 	public void test() {
     	int nbItems = 1000;
