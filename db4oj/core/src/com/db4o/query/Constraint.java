@@ -25,6 +25,10 @@ public interface Constraint {
 
     /**
 	 * links two Constraints for AND evaluation.
+	 * For example:<br>
+	 * <code>query.constrain(Pilot.class);</code><br>
+	 * <code>query.descend("points").constrain(101).smaller().and(query.descend("name").constrain("Test Pilot0"));	</code><br>
+	 * will retrieve all pilots with points less than 101 and name as "Test Pilot0"<br>
      * @param with the other {@link Constraint}
      * @return a new {@link Constraint}, that can be used for further calls
 	 * to {@link #and and()} and {@link #or or()}
@@ -34,6 +38,10 @@ public interface Constraint {
 
     /**
 	 * links two Constraints for OR evaluation.
+	 * For example:<br><br>
+	 * <code>query.constrain(Pilot.class);</code><br>
+	 * <code>query.descend("points").constrain(101).greater().or(query.descend("name").constrain("Test Pilot0"));</code><br>
+	 * will retrieve all pilots with points more than 101 or pilots with the name "Test Pilot0"<br>
      * @param with the other {@link Constraint}
      * @return a new {@link Constraint}, that can be used for further calls
      * to {@link #and and()} and {@link #or or()}
@@ -42,7 +50,12 @@ public interface Constraint {
 
 
     /**
-     * sets the evaluation mode to <code>==</code>.
+     * Used in conjunction with {@link smaller()} or {@link greater()} to create constraints
+     * like "smaller or equal", "greater or equal".
+     * For example:<br>
+     * <code>query.constrain(Pilot.class);</code><br>
+	 * <code>query.descend("points").constrain(101).smaller().equal();</code><br>
+	 * will return all pilots with points &lt;= 101.<br>
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
     public Constraint equal ();
@@ -50,27 +63,58 @@ public interface Constraint {
 
     /**
      * sets the evaluation mode to <code>&gt;</code>.
+     * For example:<br>
+     * <code>query.constrain(Pilot.class);</code><br>
+	 * <code>query.descend("points").constrain(101).greater()</code><br>
+	 * will return all pilots with points &gt; 101.<br>
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
     public Constraint greater ();
 
     /**
      * sets the evaluation mode to <code>&lt;</code>.
+     * For example:<br>
+     * <code>query.constrain(Pilot.class);</code><br>
+	 * <code>query.descend("points").constrain(101).smaller()</code><br>
+	 * will return all pilots with points &lt; 101.<br>
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
     public Constraint smaller ();
 
 
     /**
-     * sets the evaluation mode to identity comparison.
+     * sets the evaluation mode to identity comparison. In this case only 
+     * objects having the same database identity will be included in the result set.
+     * For example:<br>
+     * <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br>
+	 * <code>Car car = new Car("BMW", pilot);</code><br>
+	 * <code>container.set(car);</code><br>
+	 * <code>// Change the name, the pilot instance stays the same</code><br>
+	 * <code>pilot.setName("Test Pilot2");</code><br>
+	 * <code>// create a new car</code><br>
+	 * <code>car = new Car("Ferrari", pilot);</code><br>
+	 * <code>container.set(car);</code><br>
+	 * <code>Query query = container.query();</code><br>
+	 * <code>query.constrain(Car.class);</code><br>
+	 * <code>// All cars having pilot with the same database identity</code><br>
+	 * <code>// will be retrieved. As we only created Pilot object once</code><br>
+	 * <code>// it should mean all car objects</code><br>
+	 * <code>query.descend("_pilot").constrain(pilot).identity();</code><br><br>
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
     public Constraint identity ();
 	
 	
     /**
-     * sets the evaluation mode to "like" comparison.
-     * <br><br>Constraints are compared to the first characters of a field.<br><br> 
+     * sets the evaluation mode to "like" comparison. This mode will include 
+     * all objects having the constrain expression somewhere inside the string field.
+     * For example:<br>
+     * <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br>
+	 * <code>container.set(pilot);</code><br>
+	 * <code> ...</code><br>
+     * <code>query.constrain(Pilot.class);</code><br>
+	 * <code>// All pilots with the name containing "est" will be retrieved</code><br>
+	 * <code>query.descend("name").constrain("est").like();</code><br>
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
     public Constraint like ();
@@ -78,12 +122,30 @@ public interface Constraint {
 	
     /**
      * sets the evaluation mode to containment comparison.
+     * For example:<br> 
+     * <code>Pilot pilot1 = new Pilot("Test 1", 1);</code><br>
+	 * <code>list.add(pilot1);</code><br>
+     * <code>Pilot pilot2 = new Pilot("Test 2", 2);</code><br>
+     * <code>list.add(pilot2);</code><br>
+     * <code>Team team = new Team("Ferrari", list);</code><br>
+     * <code>container.set(team);</code><br>
+     * <code>Query query = container.query();</code><br>
+     * <code>query.constrain(Team.class);</code><br>
+     * <code>query.descend("pilots").constrain(pilot2).contains();</code><br>
+     * will return the Team object as it contains pilot2.<br>
+     * If applied to a String object, this constrain will behave as {@link like()}.
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
     public Constraint contains ();
 
     /**
      * sets the evaluation mode to string startsWith comparison.
+     * For example:<br>
+     * <code>Pilot pilot = new Pilot("Test Pilot0", 100);</code><br>
+     * <code>container.set(pilot);</code><br>
+	 * <code> ...</code><br>
+     * <code>query.constrain(Pilot.class);</code><br>
+	 * <code>query.descend("name").constrain("Test").startsWith(true);</code><br>
      * @param caseSensitive comparison will be case sensitive if true, case insensitive otherwise
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
@@ -91,6 +153,12 @@ public interface Constraint {
 
     /**
      * sets the evaluation mode to string endsWith comparison.
+     * For example:<br>
+     * <code>Pilot pilot = new Pilot("Test Pilot0", 100);</code><br>
+     * <code>container.set(pilot);</code><br>
+	 * <code> ...</code><br>
+     * <code>query.constrain(Pilot.class);</code><br>
+	 * <code>query.descend("name").constrain("T0").endsWith(false);</code><br>
      * @param caseSensitive comparison will be case sensitive if true, case insensitive otherwise
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
@@ -98,7 +166,13 @@ public interface Constraint {
 
 
     /**
-     * turns on not() comparison.
+     * turns on not() comparison. All objects not fullfilling the constrain condition will be returned.
+     *  For example:<br>
+     * <code>Pilot pilot = new Pilot("Test Pilot1", 100);</code><br>
+     * <code>container.set(pilot);</code><br>
+	 * <code> ...</code><br>
+     * <code>query.constrain(Pilot.class);</code><br>
+	 * <code>query.descend("name").constrain("t0").endsWith(true).not();</code><br>
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
     public Constraint not ();
