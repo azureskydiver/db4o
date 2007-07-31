@@ -123,19 +123,28 @@ public abstract class QQueryBase implements Unversioned {
     }
 
 	private Constraint addEvaluationToAllConstraints(QConEvaluation eval) {
+
+	    if(i_constraints.size() == 0){
+	        i_trans.stream().classCollection().iterateTopLevelClasses(new Visitor4() {
+                public void visit(Object obj) {
+                    ClassMetadata classMetadata = (ClassMetadata) obj;
+                    QConClass qcc = new QConClass(i_trans,classMetadata.classReflector());
+                    addConstraint(qcc);
+                }
+            });
+	    }
+	    
 		Iterator4 i = iterateConstraints();
 		while (i.moveNext()) {
 		    ((QCon)i.current()).addConstraint(eval);
 		}
+		
 		// FIXME: should return valid Constraint object
 		return null;
 	}
 
 	private Constraint addClassConstraint(ReflectClass claxx) {
 		if(claxx.equals(stream().i_handlers.ICLASS_OBJECT)){
-//		    QCon trueConstr = new QConUnconditional(i_trans, true);
-//			addConstraint(trueConstr);
-//			return trueConstr;
 			return null;
 		}
 		
@@ -159,7 +168,7 @@ public abstract class QQueryBase implements Unversioned {
 		    }
 		}
 		if (col.size() == 0) {
-		    QConClass qcc = new QConClass(i_trans, null, null, claxx);
+		    QConClass qcc = new QConClass(i_trans,claxx);
 		    addConstraint(qcc);
 		    return qcc;
 		}

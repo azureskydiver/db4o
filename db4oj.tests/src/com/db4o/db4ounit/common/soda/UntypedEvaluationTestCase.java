@@ -27,7 +27,6 @@ public class UntypedEvaluationTestCase extends AbstractDb4oTestCase {
 		}
 
 		public void evaluate(Candidate candidate) {
-			System.out.println("EVAL: " + candidate);
 			candidate.include(_value);
 		}
 	}
@@ -41,7 +40,7 @@ public class UntypedEvaluationTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(1, query.execute().size());
 	}
 
-	public void _testUntypedEvaluationNone() {
+	public void testUntypedEvaluationNone() {
 		Query query = newQuery(EXTENT);
 		query.constrain(new UntypedEvaluation(false));
 		Assert.areEqual(0, query.execute().size());
@@ -49,7 +48,7 @@ public class UntypedEvaluationTestCase extends AbstractDb4oTestCase {
 
 	public void testUntypedEvaluationAll() {
 		Query query = newQuery(EXTENT);
-		query.constrain(new UntypedEvaluation(false));
+		query.constrain(new UntypedEvaluation(true));
 		Assert.areEqual(1, query.execute().size());
 	}
 

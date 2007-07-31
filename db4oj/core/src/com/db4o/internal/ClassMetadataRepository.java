@@ -55,16 +55,28 @@ public final class ClassMetadataRepository extends PersistentBase {
     public void attachQueryNode(final String fieldName, final Visitor4 a_visitor) {
         ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
-            final ClassMetadata yc = i.currentClass();
-            if(! yc.isInternal()){
-                yc.forEachFieldMetadata(new Visitor4() {
+            final ClassMetadata classMetadata = i.currentClass();
+            if(! classMetadata.isInternal()){
+                classMetadata.forEachFieldMetadata(new Visitor4() {
                     public void visit(Object obj) {
                         FieldMetadata yf = (FieldMetadata)obj;
                         if(yf.canAddToQuery(fieldName)){
-                            a_visitor.visit(new Object[] {yc, yf});
+                            a_visitor.visit(new Object[] {classMetadata, yf});
                         }
                     }
                 });
+            }
+        }
+    }
+    
+    public void iterateTopLevelClasses(Visitor4 visitor){
+        ClassMetadataIterator i = iterator();
+        while (i.moveNext()) {
+            final ClassMetadata classMetadata = i.currentClass();
+            if(! classMetadata.isInternal()){
+                if(classMetadata.getAncestor() == null){
+                    visitor.visit(classMetadata);
+                }
             }
         }
     }
