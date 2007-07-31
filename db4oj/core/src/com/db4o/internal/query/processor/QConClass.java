@@ -35,6 +35,10 @@ public class QConClass extends QConObject{
 		}
 		_claxx = claxx;
 	}
+	
+	QConClass(Transaction trans, ReflectClass claxx){
+	    this(trans ,null, null, claxx);
+	}
     
     public boolean canBeIndexLeaf(){
         return false;
