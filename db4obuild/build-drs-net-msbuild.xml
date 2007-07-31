@@ -111,7 +111,7 @@
     <target name="prepare-dotnet-solution" depends="sharpen-drs">
         <!-- .NET: drs -->
 		<copy todir="${drs.net.src.dir}/drs/src">
-			<fileset dir="${drs.sharpen.workspace.dir}/drscsharp/src">
+			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src">
 				<include name="**/*.cs" />
 				<exclude name="**/Test/**" />
 			</fileset>
@@ -123,7 +123,7 @@
 		</copy>
         <!--.NET: drs.tests -->
         <copy todir="${drs.net.src.dir}/drs.tests/src">
-			<fileset dir="${drs.sharpen.workspace.dir}/drscsharp/src">
+			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src">
 				<include name="**/Test/**" />
 			</fileset>
 		</copy>
