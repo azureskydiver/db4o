@@ -22,6 +22,12 @@ public class CloseServerBeforeClientTestCase extends Db4oClientServerTestCase {
 			} catch(Db4oException e) {
 				// database may have been closed
 			}
+			
+			try{
+				fixture().close();
+			} catch(Db4oException e) {
+				// database may have been closed
+			}
 		}
 
 	}
