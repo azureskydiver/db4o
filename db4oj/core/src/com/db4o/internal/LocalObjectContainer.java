@@ -74,8 +74,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 
     protected abstract void freeInternalResources();
     
-    public void commit1() {
-        commitTransaction();
+    public void commit1(Transaction trans) {
+        trans.commit();
     }
 
     void configureNewFile() {
@@ -300,6 +300,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 		i_config.readOnly(true);
 	}
     
+	// Please comment why this is necessary.
     void ensureLastSlotWritten(){
         if (!Debug.xbytes){
             if(Deploy.overwrite){
@@ -624,9 +625,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         writeHeader(false, true);
     }
     
-    public void commitTransaction() {
-        // This will also commit the System Transaction,
-        // since it is the parent or the same object.
+    public final void commitTransaction() {
         i_trans.commit();
     }
 
