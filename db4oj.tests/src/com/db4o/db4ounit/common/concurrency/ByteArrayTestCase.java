@@ -24,6 +24,9 @@ public class ByteArrayTestCase extends Db4oClientServerTestCase {
 		new ByteArrayTestCase().runConcurrency();
 	}
 	
+	/**
+     * @sharpen.if !CF_1_0 && !CF_2_0
+     */
 	protected void configure(Configuration config) {
 		config.objectClass(SerializableByteArrayHolder.class).translate(
 				new TSerializable());
