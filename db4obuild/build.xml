@@ -765,7 +765,7 @@
 				<include name="test/db4oVersions/**/*" />
 			</fileset>
 		</copy>
-
+        
         <echo message="Running com.db4o.db4ounit.jre11.AllTests on jvm ${file.jvm.jdk1.1}" />
 		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.AllTests" failonerror="true" timeout="1200000">
 			<classpath>
@@ -788,7 +788,6 @@
 		</java>
         
         <echo message="Running com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5 on jvm ${file.jvm.jdk1.5}" />
-		<!-- TODO: Timeout was 3600000. Experimentally increased to check CC run. -->
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="7200000">
 			<jvmarg value="-Xmx512m"/>
 			<classpath>
@@ -798,17 +797,6 @@
 				<path path="${path.classpath.full}" />
 			</classpath>
 		</java>
-
-        <!-- AllTestsDb4oUnitJdk5CS is not necessary. Will remove it later -->
-		<!--<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5CS" failonerror="true" timeout="4800000">
-			<classpath>
-				<dirset dir="${dir.dist.classes.java5}" />
-				<dirset dir="${dir.dist.classes.test.jdk1.5}" />
-				<pathelement path="${file.db4ounit.jar}" />
-				<path path="${path.classpath.full}" />
-			</classpath>
-		</java>
-                    -->
 
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="320000">
 			<classpath>
@@ -868,7 +856,32 @@
 		</java>
 
 		<antcall target="runosgitests"></antcall>
+        
+        <antcall target="runconcurrencytests" />
 	</target>
+    
+    <target name="runconcurrencytests" >
+        <java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.concurrency.AllTests" failonerror="true" timeout="1200000">
+			<classpath>
+				<path path="${dir.dist.classes.java1.1}" />
+				<path path="${dir.dist.classes.test.jdk1.1}" />
+				<pathelement path="${file.db4ounit.jar}" />
+				<path path="${path.classpath.jdk1.1}" />
+			</classpath>
+            <jvmarg line="-ms32m -mx64m " />
+		</java>
+        
+        <java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsConcurrency" failonerror="true" timeout="3600000">
+			<classpath>
+				<path path="${dir.dist.classes.java5}" />
+				<path path="${dir.dist.classes.test.jdk1.5}" />
+				<pathelement path="${file.db4ounit.jar}" />
+				<path path="${path.classpath.full}" />
+			</classpath>
+			<arg value="-withExceptions" />
+		</java>
+        
+    </target>
 
 	<target name="zipjavasrc" depends="javadoc,compilecorejava,compileosgijava,compiletestsjava,compiletestsosgi">
 		<copy todir="${dir.dist.java.src}/${name.project.db4ounit}">
