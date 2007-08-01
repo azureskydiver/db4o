@@ -429,7 +429,11 @@ public class FieldMetadata implements StoredField {
     	return i_name.hashCode();
     }
     
-    public Object get(Object a_onObject) {
+    public final Object get(Object onObject) {
+        return get(null, onObject);
+    }
+    
+    public final Object get(Transaction trans, Object onObject) {
 		if (_clazz == null) {
 			return null;
 		}
@@ -438,8 +442,17 @@ public class FieldMetadata implements StoredField {
 			return null;
 		}
 		synchronized (stream.i_lock) {
+		    
+            // FIXME: The following is not really transactional.
+            //        This will work OK for normal C/S and for
+            //        single local mode but the transaction will
+            //        be wrong for MTOC.
+		    if(trans == null){
+		        trans = stream.getTransaction();
+		    }
+		    
 			stream.checkClosed();
-			ObjectReference yo = stream.referenceForObject(a_onObject);
+			ObjectReference yo = trans.referenceForObject(onObject);
 			if (yo == null) {
 				return null;
 			}

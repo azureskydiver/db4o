@@ -20,22 +20,22 @@ class ObjectAnalyzer {
     
     private boolean _notStorable;
     
-    ObjectAnalyzer(PartialObjectContainer container, Object obj){
+    ObjectAnalyzer(PartialObjectContainer container, Transaction trans, Object obj){
         _container = container;
         _obj = obj;
-        _ref = _container.referenceForObject(_obj);
+        _ref = trans.referenceForObject(_obj);
         if (_ref == null) {
             ReflectClass claxx = _container.reflector().forObject(_obj);
             if(claxx == null){
                 notStorable(_obj, claxx);
                 return;
             }
-            if(!detectClassMetadata(claxx)){
+            if(!detectClassMetadata(trans, claxx)){
                 return;
             }
             ReflectClass substituteClass = _classMetadata.classSubstitute();
             if(substituteClass != null){
-                if(!detectClassMetadata(substituteClass)){
+                if(!detectClassMetadata(trans, substituteClass)){
                     return;
                 }
             }
@@ -49,7 +49,7 @@ class ObjectAnalyzer {
         
     }
 
-    private boolean detectClassMetadata(ReflectClass claxx) {
+    private boolean detectClassMetadata(Transaction trans, ReflectClass claxx) {
         _classMetadata = _container.getActiveClassMetadata(claxx);
         if (_classMetadata == null) {
             _classMetadata = _container.produceClassMetadata(claxx);
@@ -62,7 +62,7 @@ class ObjectAnalyzer {
             // in a static variable somewhere ( often: Enums) that gets
             // stored or associated on initialization of the ClassMetadata.
             
-            _ref = _container.referenceForObject(_obj);
+            _ref = trans.referenceForObject(_obj);
         }
         return true;
     }

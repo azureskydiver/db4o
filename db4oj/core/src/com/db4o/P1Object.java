@@ -51,10 +51,11 @@ public class P1Object implements Db4oTypeImpl{
         	return;
         }
 	    if(i_yapObject == null){
-	        i_yapObject = stream().referenceForObject(this);
+	        
+	        i_yapObject = i_trans.referenceForObject(this);
 	        if(i_yapObject == null){
 	            stream().set(this);
-	            i_yapObject = stream().referenceForObject(this);
+	            i_yapObject = i_trans.referenceForObject(this);
 	        }
 	    }
 	    if(validYapObject()){
@@ -77,7 +78,7 @@ public class P1Object implements Db4oTypeImpl{
         	return;
         }
         if(i_yapObject == null){
-            i_yapObject = stream().referenceForObject(this);
+            i_yapObject = i_trans.referenceForObject(this);
         }
         if(validYapObject()){
             stream().delete2(i_trans,i_yapObject,this, 0, false);
@@ -121,7 +122,7 @@ public class P1Object implements Db4oTypeImpl{
         
         synchronized(fromStream.lock()){
             
-    		int id = toStream.oldReplicationHandles(this);
+    		int id = toStream.oldReplicationHandles(toTrans, this);
             
             if(id == -1){
                 // no action to be taken, already handled
@@ -189,10 +190,10 @@ public class P1Object implements Db4oTypeImpl{
         	return;
         }
         if(i_yapObject == null){
-            i_yapObject = i_trans.stream().referenceForObject(this);
+            i_yapObject = i_trans.referenceForObject(this);
             if(i_yapObject == null){
                 i_trans.stream().setInternal(i_trans, this, true);
-                i_yapObject = i_trans.stream().referenceForObject(this);
+                i_yapObject = i_trans.referenceForObject(this);
                 return;
             }
         }

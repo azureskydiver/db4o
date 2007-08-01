@@ -340,10 +340,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 if(isValueType()){
                     activateFields(a_trans, a_object, a_depth - 1);
                 }else{
-                    stream.stillToActivate(a_object, a_depth - 1);
+                    stream.stillToActivate(a_trans, a_object, a_depth - 1);
                 }
             } else {
-                stream.stillToDeactivate(a_object, a_depth - 1, false);
+                stream.stillToDeactivate(a_trans, a_object, a_depth - 1, false);
             }
         }
     }
@@ -569,7 +569,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         	ObjectContainerBase stream = a_bytes.getStream();
             
             // short-term reference to prevent WeakReference-gc to hit
-            Object obj = stream.getByID2(a_bytes.getTransaction(), a_id);
+            Transaction transaction = a_bytes.getTransaction();
+            Object obj = stream.getByID2(transaction, a_id);
 
             int cascade = a_bytes.cascadeDeletes() - 1;
             if (obj != null) {
@@ -578,9 +579,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 }
             }
 
-            ObjectReference yo = stream.referenceForId(a_id);
+            ObjectReference yo = transaction.referenceForId(a_id);
             if (yo != null) {
-                a_bytes.getStream().delete2(a_bytes.getTransaction(), yo, obj,cascade, false);
+                a_bytes.getStream().delete2(transaction, yo, obj,cascade, false);
             }
         }
     }
@@ -1012,24 +1013,27 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		adjustInstantiationDepth(buffer);
 
 		final ObjectContainerBase stream = buffer.getStream();
+		
+        Transaction transaction = buffer.getTransaction();
+
 		final boolean instantiating = (obj == null);
 		if (instantiating) {
 			obj = instantiateObject(buffer, mf);
 			if (obj == null) {
 				return null;
-			}  
-            
-			shareTransaction(obj, buffer.getTransaction());
+			}
+			
+			shareTransaction(obj, transaction);
 			shareObjectReference(obj, ref);
             
 			ref.setObjectWeak(stream, obj);
-			stream.referenceSystem().addExistingReferenceToObjectTree(ref);
+			transaction.referenceSystem().addExistingReferenceToObjectTree(ref);
 			
 			objectOnInstantiate(stream, obj);
 		}
         
 		if(addToIDTree){
-			ref.addExistingReferenceToIdTree(stream);
+			ref.addExistingReferenceToIdTree(transaction);
 		}
         
 		// when there's a ObjectConstructor configured for a type
@@ -1267,7 +1271,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
             
             if (isValueType()) {
-                return readValueType(stream, trans, id, depth);
+                return readValueType(trans, id, depth);
             } 
 
             Object ret = stream.getByID2(trans, id);
@@ -1278,7 +1282,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
             // this is OK for primitive YapAnys. They will not be added
             // to the list, since they will not be found in the ID tree.
-            stream.stillToActivate(ret, depth);
+            stream.stillToActivate(trans, ret, depth);
 
             return ret;
 
@@ -1287,8 +1291,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 //        return null;
     }
 
-	private Object readValueType(ObjectContainerBase stream, Transaction trans,
-			int id, int depth) {
+	private Object readValueType(Transaction trans, int id, int depth) {
 		// for C# value types only:
 		// they need to be instantiated fully before setting them
 		// on the parent object because the set call modifies identity.
@@ -1299,11 +1302,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		// TODO: Do we want value types in the ID tree?
 		// Shouldn't we treat them like strings and update
 		// them every time ???		
-		ObjectReference yo = stream.referenceForId(id);
+		ObjectReference yo = trans.referenceForId(id);
 		if (yo != null) {
 		    Object obj = yo.getObject();
 		    if(obj == null){
-		        stream.removeReference(yo);
+		        trans.removeReference(yo);
 		    }else{
 		        yo.activate(trans, obj, newDepth, false);
 		        return yo.getObject();
@@ -1788,7 +1791,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if (existingField.value != null
 	        && newValue != null
 	        && existingField.value.getClass() == newValue.getClass()) {
-	        long id = stream.getID1(existingField.value);
+	        long id = stream.getID1(trans, existingField.value);
 	        if (id > 0) {
 	            if (existingField.value != newValue) {
 	                

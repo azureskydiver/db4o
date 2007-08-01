@@ -32,7 +32,7 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 			}
 			int id = ids.currentInt();
 			if (id > 0) {
-                Object obj = container.objectForIdFromCache(id);
+                Object obj = container.getTransaction().objectForIdFromCache(id);
                 if(obj != null){
                     prefetched[count] = obj;
                 }else{
@@ -57,7 +57,7 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 				if (mso.payLoad() != null) {
 					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
 					StatefulBuffer reader = mso.unmarshall(Const4.MESSAGE_LENGTH);
-                    Object obj = container.objectForIdFromCache(idsToGet[i]);
+                    Object obj = container.getTransaction().objectForIdFromCache(idsToGet[i]);
                     if(obj != null){
                         prefetched[position[i]] = obj;
                     }else{

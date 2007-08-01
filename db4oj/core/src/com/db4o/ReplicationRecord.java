@@ -82,7 +82,7 @@ public class ReplicationRecord implements Internal4{
         if(rrA != rrB){
             peerB.showInternalClasses(true);
             try {
-	            int id = peerB.getID1(rrB);
+	            int id = peerB.getID1(transB, rrB);
 	            peerB.bind1(transB, rrA, id);
 	        } finally {
             	peerB.showInternalClasses(false);

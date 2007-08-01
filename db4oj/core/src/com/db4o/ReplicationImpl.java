@@ -81,7 +81,7 @@ public class ReplicationImpl implements ReplicationProcess {
                 return ref.getID();
             }
         }
-        peer.bind2(ref, sourceObject);
+        peer.bind2(trans, ref, sourceObject);
         return peer.setAfterReplication(trans, sourceObject, 1, true);
     }
 
@@ -209,9 +209,9 @@ public class ReplicationImpl implements ReplicationProcess {
         }
         
 		if(sourceReference == referenceA) {
-			_peerB.bind2(referenceB, objectA);
+			_peerB.bind2(_transB, referenceB, objectA);
 		}else {
-			_peerA.bind2(referenceA, objectB);
+			_peerA.bind2(_transA, referenceA, objectB);
 		}
 	}
 
@@ -265,8 +265,8 @@ public class ReplicationImpl implements ReplicationProcess {
 			Object objectA = obj;
 			Object objectB = obj;
 			
-			ObjectReference referenceA = _peerA.referenceForObject(obj);
-			ObjectReference referenceB = _peerB.referenceForObject(obj);
+			ObjectReference referenceA = _transA.referenceForObject(obj);
+			ObjectReference referenceB = _transB.referenceForObject(obj);
 			
 			VirtualAttributes attA = null;
 			VirtualAttributes attB = null;

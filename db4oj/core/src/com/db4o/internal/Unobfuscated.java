@@ -37,10 +37,6 @@ public class Unobfuscated {
         return writer.getWrittenBytes();
 	}
 	
-	static void purgeUnsychronized(Object a_stream, Object a_object){
-	    ((ObjectContainerBase)a_stream).purge1(a_object);
-	}
-	
 	public static long randomLong() {
         return _random.nextLong();
 	}

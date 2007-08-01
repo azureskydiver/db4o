@@ -94,9 +94,9 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		}
 	}
 
-	final void addExistingReferenceToIdTree(ObjectContainerBase a_stream) {
+	final void addExistingReferenceToIdTree(Transaction trans) {
 		if (!(_class instanceof PrimitiveFieldHandler)) {
-			a_stream.referenceSystem().addExistingReferenceToIdTree(this);
+			trans.referenceSystem().addExistingReferenceToIdTree(this);
 		}
 	}
 	
@@ -259,7 +259,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
                 if(checkIDTree){
                     // the typical side effect: static fields and enums
                     
-                    Object objectInCacheFromClassCreation = stream.objectForIdFromCache(getID());
+                    Object objectInCacheFromClassCreation = ta.objectForIdFromCache(getID());
                     if(objectInCacheFromClassCreation != null){
                         return objectInCacheFromClassCreation;
                     }
