@@ -12,6 +12,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 import com.db4o.test.*;
 
 import db4ounit.*;
@@ -78,13 +79,14 @@ public class UpdatingDb4oVersionsTestCase implements TestLifeCycle {
     }
 
     private void checkBTreeSize(ExtObjectContainer objectContainer) {
-        ObjectContainerBase yapStream = (ObjectContainerBase)objectContainer;
-        StoredClass storedClass = objectContainer.storedClass(UpdatingDb4oVersions.class.getName());
-        ClassMetadata yc = (ClassMetadata) storedClass;
+        ObjectContainerBase container = (ObjectContainerBase)objectContainer;
+        Reflector reflector = container.reflector();
+        ReflectClass claxx = reflector.forClass(UpdatingDb4oVersions.class);
+        ClassMetadata yc = container.classMetadataForReflectClass(claxx); 
         BTreeClassIndexStrategy btreeClassIndexStrategy = (BTreeClassIndexStrategy) yc.index();
         BTree btree = btreeClassIndexStrategy.btree();
         Assert.isNotNull(btree);
-        int size = btree.size(yapStream.getTransaction());
+        int size = btree.size(container.getTransaction());
         Assert.areEqual(1, size);
     }
 
