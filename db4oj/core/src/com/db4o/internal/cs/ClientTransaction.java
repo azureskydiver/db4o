@@ -12,9 +12,9 @@ final class ClientTransaction extends Transaction {
     
     protected Tree i_yapObjectsToGc;
     
-    ClientTransaction(ClientObjectContainer a_stream, Transaction a_parent) {
-        super(a_stream, a_parent);
-        i_client = a_stream;
+    ClientTransaction(ClientObjectContainer container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+        super(container, parentTransaction, referenceSystem);
+        i_client = container;
     }
     
     public void commit() {

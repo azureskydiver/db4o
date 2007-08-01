@@ -92,7 +92,7 @@ public class ClientTransactionPool {
 		
 		public Transaction newTransaction() {
 			_count++;
-			return _container.newTransaction();
+			return _container.newUserTransaction();
 		}
 		
 		public void release() {

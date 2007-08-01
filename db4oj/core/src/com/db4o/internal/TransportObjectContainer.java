@@ -75,11 +75,11 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
     	// do nothing here
     }
 
-	final public Transaction newTransaction(Transaction parentTransaction) {
+	final public Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
 		if (null != parentTransaction) {
 			return parentTransaction;
 		}
-		return new TransactionObjectCarrier(this, null);
+		return new TransactionObjectCarrier(this, null, referenceSystem);
 	}
 	
 	public long currentVersion(){

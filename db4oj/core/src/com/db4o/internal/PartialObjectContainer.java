@@ -43,9 +43,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     // Counts the number of toplevel calls into YapStream
     private int           _stackDepth;
 
-    private TransactionalReferenceSystem _referenceSystem;
-    
-    private ReferenceSystemRegistry _referenceSystemRegistry;
+    private final ReferenceSystemRegistry _referenceSystemRegistry = new ReferenceSystemRegistry();
     
     private Tree            i_justPeeked;
 
@@ -382,16 +380,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     final protected void initializeTransactions() {
-        i_systemTrans = newTransaction(null);
-        i_trans = newTransaction();
+        i_systemTrans = newTransaction(null, createReferenceSystem());
+        i_trans = newUserTransaction();
     }
 
-	public abstract Transaction newTransaction(Transaction parentTransaction);
+	public abstract Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem);
 	
-	public Transaction newTransaction() {
-		return newTransaction(i_systemTrans);
+	public Transaction newUserTransaction(){
+	    return newTransaction(systemTransaction(), null);
 	}
-
+	
     public abstract long currentVersion();
     
     public boolean createClassMetadata(ClassMetadata classMeta, ReflectClass clazz, ClassMetadata superClassMeta) {
@@ -1020,9 +1018,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      */
     void initialize2() {
         initialize2NObjectCarrier();
-        _referenceSystem = new TransactionalReferenceSystem();
-        _referenceSystemRegistry = new ReferenceSystemRegistry();
-        _referenceSystemRegistry.addReferenceSystem(_referenceSystem);
+    }
+
+    protected TransactionalReferenceSystem createReferenceSystem() {
+        TransactionalReferenceSystem referenceSystem = new TransactionalReferenceSystem();
+        _referenceSystemRegistry.addReferenceSystem(referenceSystem);
+        return referenceSystem;
     }
 
     /**
@@ -1337,10 +1338,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         close();
         open();
     }
-    
-	public ReferenceSystem referenceSystem() {
-		return _referenceSystem;
-	}
     
     public GenericReflector reflector(){
         return i_handlers._reflector;

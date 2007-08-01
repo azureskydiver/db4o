@@ -44,8 +44,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         super(config,a_parent);
     }
     
-    public Transaction newTransaction(Transaction parentTransaction) {
-		return new LocalTransaction(this, parentTransaction);
+    public Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+		return new LocalTransaction(this, parentTransaction, referenceSystem);
 	}
 
     public FreespaceManager freespaceManager() {

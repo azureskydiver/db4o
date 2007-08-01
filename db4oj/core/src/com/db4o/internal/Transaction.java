@@ -24,10 +24,13 @@ public abstract class Transaction {
     private final ObjectContainerBase _container;
     
     private List4 i_transactionListeners;
+    
+    private final TransactionalReferenceSystem _referenceSystem;
 
-    public Transaction(ObjectContainerBase container, Transaction systemTransaction) {
+    public Transaction(ObjectContainerBase container, Transaction systemTransaction, TransactionalReferenceSystem referenceSystem) {
         _container = container;
         _systemTransaction = systemTransaction;
+        _referenceSystem = referenceSystem;
     }
 
     public void addDirtyFieldIndex(IndexTransaction a_xft) {
@@ -146,7 +149,10 @@ public abstract class Transaction {
 	public abstract void processDeletes();
 	
     public ReferenceSystem referenceSystem() {
-        return stream().referenceSystem();
+        if(_referenceSystem != null){
+            return _referenceSystem;
+        }
+        return parentTransaction().referenceSystem();
     }
 	
     public Reflector reflector(){

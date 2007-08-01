@@ -243,7 +243,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 
 	protected Transaction newTransaction() {
-		return stream().newTransaction();
+		return stream().newUserTransaction();
 	}
 	
 	protected Object retrieveOnlyInstance(Class clazz) {
