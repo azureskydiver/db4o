@@ -10,8 +10,8 @@ import com.db4o.internal.slots.*;
  */
 class TransactionObjectCarrier extends LocalTransaction{
 	
-	TransactionObjectCarrier(ObjectContainerBase a_stream, Transaction a_parent) {
-		super(a_stream, a_parent);
+	TransactionObjectCarrier(ObjectContainerBase container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+		super(container, parentTransaction, referenceSystem);
 	}
 	
 	public void commit() {

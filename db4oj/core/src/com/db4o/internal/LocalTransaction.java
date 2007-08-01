@@ -29,8 +29,8 @@ public class LocalTransaction extends Transaction {
     
 	protected final LocalObjectContainer _file;
 
-	public LocalTransaction(ObjectContainerBase container, Transaction parent) {
-		super(container, parent);
+	public LocalTransaction(ObjectContainerBase container, Transaction parent, TransactionalReferenceSystem referenceSystem) {
+		super(container, parent, referenceSystem);
 		_file = (LocalObjectContainer) container;
         i_pointerIo = new StatefulBuffer(this, Const4.POINTER_LENGTH);
 	}
@@ -720,7 +720,7 @@ public class LocalTransaction extends Transaction {
 	    int transactionID1 = reader.readInt();
 	    int transactionID2 = reader.readInt();
 	    if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){
-	        LocalTransaction transaction = (LocalTransaction) file.newTransaction(null);
+	        LocalTransaction transaction = (LocalTransaction) file.newTransaction(null, null);
 	        transaction.setAddress(transactionID1);
 	        return transaction;
 	    }

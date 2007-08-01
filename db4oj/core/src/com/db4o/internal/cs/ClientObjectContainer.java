@@ -179,8 +179,8 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		throw new IllegalStateException();
 	}
 
-	final public Transaction newTransaction(Transaction parentTransaction) {
-		return new ClientTransaction(this, parentTransaction);
+	final public Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+		return new ClientTransaction(this, parentTransaction, referenceSystem);
 	}
 
 	public boolean createClassMetadata(ClassMetadata a_yapClass, ReflectClass a_class,
