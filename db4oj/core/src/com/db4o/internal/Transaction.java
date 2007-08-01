@@ -59,6 +59,9 @@ public abstract class Transaction {
 		if (stream() != null) {
 			checkSynchronization();
 			stream().releaseSemaphores(this);
+			if(_referenceSystem != null){
+			    stream().referenceSystemRegistry().removeReferenceSystem(_referenceSystem);
+			}
 		}
 		if (rollbackOnClose) {
 			rollback();

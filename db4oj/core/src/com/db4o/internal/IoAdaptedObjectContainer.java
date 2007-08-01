@@ -161,9 +161,9 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		}
 	}
     
-    public void commit1() {
+    public void commit1(Transaction trans) {
         ensureLastSlotWritten();
-        super.commit1();
+        super.commit1(trans);
     }
 
     public void copy(int oldAddress, int oldAddressOffset, int newAddress, int newAddressOffset, int length) {

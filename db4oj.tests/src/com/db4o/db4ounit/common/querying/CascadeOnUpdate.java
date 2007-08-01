@@ -9,6 +9,10 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class CascadeOnUpdate extends AbstractDb4oTestCase {
+    
+    public static void main(String[] arguments) {
+        new CascadeOnUpdate().runClientServer();
+    }
 	
 	public static class Atom {
 		

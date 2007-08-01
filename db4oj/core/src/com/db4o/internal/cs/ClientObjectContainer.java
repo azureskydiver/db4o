@@ -115,7 +115,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			return;
 		}
 		try {
-			commit1();
+			commit1(i_trans);
 		} catch (Exception e) {
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
@@ -143,8 +143,8 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		shutdownObjectContainer();
 	}
 
-	public final void commit1() {
-		i_trans.commit();
+	public final void commit1(Transaction trans) {
+		trans.commit();
 	}
     
     public int converterVersion() {

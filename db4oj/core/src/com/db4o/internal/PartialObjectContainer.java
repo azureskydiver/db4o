@@ -340,8 +340,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return i_handlers.i_collections;
         }
     }
+    
+    public final void commit() throws DatabaseReadOnlyException, DatabaseClosedException {
+        commit(i_trans);
+    }
 
-    public void commit() throws DatabaseReadOnlyException, DatabaseClosedException {
+    public final void commit(Transaction trans) throws DatabaseReadOnlyException, DatabaseClosedException {
         synchronized (i_lock) {
             if(DTrace.enabled){
                 DTrace.COMMIT.log();
@@ -350,8 +354,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             checkReadOnly();
             beginTopLevelCall();
             try{            	
-            	commit1();
-            	i_trans.commitReferenceSystem();
+            	commit1(trans);
+            	trans.commitReferenceSystem();
             	completeTopLevelCall();
             } catch(Db4oException e){
             	completeTopLevelCall(e);
@@ -360,8 +364,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             }
         }
     }
-
-	public abstract void commit1();
+    
+	public abstract void commit1(Transaction trans);
 
     public Configuration configure() {
         return configImpl();
@@ -1020,7 +1024,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         initialize2NObjectCarrier();
     }
 
-    protected TransactionalReferenceSystem createReferenceSystem() {
+    public final TransactionalReferenceSystem createReferenceSystem() {
         TransactionalReferenceSystem referenceSystem = new TransactionalReferenceSystem();
         _referenceSystemRegistry.addReferenceSystem(referenceSystem);
         return referenceSystem;
