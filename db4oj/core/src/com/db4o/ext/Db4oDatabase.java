@@ -165,14 +165,14 @@ public class Db4oDatabase implements Db4oType, Internal4{
         	return storeAndGetId(trans);
         }
         if(stored == this){
-            return stream.getID1(this);
+            return stream.getID1(trans, this);
         }
         if(i_uuid == 0){
             i_uuid = stored.i_uuid;
         }
         stream.showInternalClasses(true);
         try {
-	        int id = stream.getID1(stored);
+	        int id = stream.getID1(trans, stored);
 	        stream.bind(this, id);
 	        return id;
 	    } finally {
@@ -185,7 +185,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
 		stream.showInternalClasses(true);
 		try {
 		    stream.set3(trans,this, 2, false);
-		    return stream.getID1(this);
+		    return stream.getID1(trans, this);
 		} finally {
 			stream.showInternalClasses(false);
 		}

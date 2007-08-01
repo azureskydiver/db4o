@@ -143,7 +143,11 @@ public abstract class Transaction {
         return stream().getUUIDIndex().getHardObjectReferenceBySignature(this, a_uuid, a_signature);
     }
     
-	public abstract void processDeletes();    
+	public abstract void processDeletes();
+	
+    public ReferenceSystem referenceSystem() {
+        return stream().referenceSystem();
+    }
 	
     public Reflector reflector(){
     	return stream().reflector();
@@ -247,7 +251,6 @@ public abstract class Transaction {
     public String toString() {
         return stream().toString();
     }
-    
 
     public abstract void writeUpdateDeleteMembers(int id, ClassMetadata clazz, int typeInfo, int cascade);
 
@@ -258,5 +261,49 @@ public abstract class Transaction {
     public Transaction parentTransaction() {
 		return _systemTransaction;
 	}
+
+    public void rollbackReferenceSystem() {
+        referenceSystem().rollback();
+    }
+
+    public void commitReferenceSystem() {
+        referenceSystem().commit();
+    }
+
+    public void addNewReference(ObjectReference ref) {
+        referenceSystem().addNewReference(ref);
+    }
+    
+    public final Object objectForIdFromCache(int id){
+        ObjectReference ref = referenceForId(id);
+        if (ref == null) {
+            return null;
+        }
+        Object candidate = ref.getObject();
+        if(candidate == null){
+            removeReference(ref);
+        }
+        return candidate;
+    }
+
+    public final ObjectReference referenceForId(int id) {
+        return referenceSystem().referenceForId(id);
+    }
+
+    public final ObjectReference referenceForObject(Object obj) {
+        return referenceSystem().referenceForObject(obj);
+    }
+    
+    public final void removeReference(ObjectReference ref) {
+        
+        referenceSystem().removeReference(ref);
+
+        // setting the ID to minus 1 ensures that the
+        // gc mechanism does not kill the new YapObject
+        ref.setID(-1);
+        Platform4.killYapRef(ref.getObjectReference());
+    }
+    
+
 
 }

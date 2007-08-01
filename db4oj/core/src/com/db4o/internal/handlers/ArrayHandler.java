@@ -52,11 +52,11 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
             Object[] all = allElements(a_object);
             if (a_activate) {
                 for (int i = all.length - 1; i >= 0; i--) {
-                    _stream.stillToActivate(all[i], a_depth);
+                    _stream.stillToActivate(a_trans, all[i], a_depth);
                 }
             } else {
                 for (int i = all.length - 1; i >= 0; i--) {
-                  _stream.stillToDeactivate(all[i], a_depth, false);
+                  _stream.stillToDeactivate(a_trans, all[i], a_depth, false);
                 }
             }
         }

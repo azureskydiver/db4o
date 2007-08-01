@@ -20,7 +20,7 @@ public class InstantiationEventsTestCase extends EventsTestCaseBase {
 			public void onEvent(Event4 e, EventArgs args) {
 				instantiatedLog.xed = true;
 				Object obj = ((ObjectEventArgs)args).object();
-				Assert.isNotNull(stream().referenceSystem().referenceForObject(obj));
+				Assert.isNotNull(trans().referenceSystem().referenceForObject(obj));
 			}
 		});
 		

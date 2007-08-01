@@ -74,10 +74,9 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
         context.traverseRemoved(new Visitor4() {
             public void visit(Object a_object) {
                 int id = idFromValue(a_object);
-                final ObjectContainerBase stream = transaction.stream();
-				ObjectReference yo = stream.referenceForId(id);
+				ObjectReference yo = transaction.referenceForId(id);
                 if (yo != null) {
-                    stream.removeReference(yo);
+                    transaction.removeReference(yo);
                 }
                 index.remove(id);
             }
