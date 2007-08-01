@@ -37,7 +37,7 @@ public class CascadeToExistingVectorMemberTestCase extends Db4oClientServerTestC
 
 	public void conc(final ExtObjectContainer oc, final int seq) {
 		Item item = (Item) retrieveOnlyInstance(oc, Item.class);
-		Atom atom = (Atom) item.vec.get(0);
+		Atom atom = (Atom) item.vec.elementAt(0);
 		atom.name = "two" + seq;
 		oc.set(item);
 		atom.name = "three" + seq;
@@ -46,7 +46,7 @@ public class CascadeToExistingVectorMemberTestCase extends Db4oClientServerTestC
 
 	public void check(final ExtObjectContainer oc) {
 		Item item = (Item) retrieveOnlyInstance(oc, Item.class);
-		Atom atom = (Atom) item.vec.get(0);
+		Atom atom = (Atom) item.vec.elementAt(0);
 		Assert.isTrue(atom.name.startsWith("three"));
 		Assert.isTrue(atom.name.length() > "three".length());	
 	}
