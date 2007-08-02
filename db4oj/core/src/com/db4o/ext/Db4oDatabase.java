@@ -97,7 +97,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
 	 * @return the db4o ID for the ObjectContainer
 	 */
     public int getID(Transaction trans) {
-        ObjectContainerBase stream = trans.stream();
+        ObjectContainerBase stream = trans.container();
         if(stream != i_stream) {
             i_stream = stream;
             i_id = bind(trans);
@@ -159,7 +159,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
      * make sure this Db4oDatabase is stored. Return the ID.  
      */
     public int bind(Transaction trans){
-        ObjectContainerBase stream = trans.stream();
+        ObjectContainerBase stream = trans.container();
         Db4oDatabase stored = (Db4oDatabase)stream.db4oTypeStored(trans,this);
         if (stored == null) {
         	return storeAndGetId(trans);
@@ -181,7 +181,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
     }
 
 	private int storeAndGetId(Transaction trans) {
-		ObjectContainerBase stream = trans.stream();
+		ObjectContainerBase stream = trans.container();
 		stream.showInternalClasses(true);
 		try {
 		    stream.set3(trans,this, 2, false);
@@ -208,7 +208,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
     }
     
     private Db4oDatabase query(Transaction trans, boolean constrainByUUID){
-        ObjectContainerBase stream = trans.stream();
+        ObjectContainerBase stream = trans.container();
         Query q = stream.query(trans);
         q.constrain(getClass());
         if(constrainByUUID){

@@ -432,7 +432,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 		if (null == trans) {
 			throw new ArgumentNullException();
 		}
-		return trans.stream().configImpl();
+		return trans.container().configImpl();
 	}
 
     public void free(Transaction systemTrans) {

@@ -42,7 +42,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		if (isNew) {
 			logMsg(14, fileName());
 			checkReadOnly();
-			i_handlers.oldEncryptionOff();
+			_handlers.oldEncryptionOff();
 		}
 		boolean readOnly = configImpl().isReadOnly();
 		boolean lockFile = Debug.lockFile && configImpl().lockFile()

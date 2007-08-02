@@ -105,12 +105,12 @@ public class Buffer implements SlotReader {
 	}
     
 	public final Buffer readEmbeddedObject(Transaction trans) throws Db4oIOException {
-		return trans.stream().bufferByAddress(readInt(), readInt());
+		return trans.container().bufferByAddress(readInt(), readInt());
 	}
 	
 	public void readEncrypt(ObjectContainerBase stream, int address) throws Db4oIOException {
 		stream.readBytes(_buffer, address, getLength());
-		stream.i_handlers.decrypt(this);
+		stream._handlers.decrypt(this);
 	}
 
     public void readEnd() {
@@ -218,9 +218,9 @@ public class Buffer implements SlotReader {
     }
     
     public final void writeEncrypt(LocalObjectContainer file, int address, int addressOffset) {
-        file.i_handlers.encrypt(this);
+        file._handlers.encrypt(this);
         file.writeBytes(this, address, addressOffset);
-        file.i_handlers.decrypt(this);
+        file._handlers.decrypt(this);
     }
     
     public void writeEnd() {
@@ -290,7 +290,7 @@ public class Buffer implements SlotReader {
 	}
     
     public void writeShortString(Transaction trans, String a_string) {
-        trans.stream().i_handlers.i_stringHandler.writeShort(a_string, this);
+        trans.container()._handlers.i_stringHandler.writeShort(a_string, this);
     }
 
     public void writeLong(long l) {

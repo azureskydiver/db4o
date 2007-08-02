@@ -290,7 +290,7 @@ public final class QCandidates implements Visitor4 {
 	}
     
 	public ObjectContainerBase stream() {
-		return i_trans.stream();
+		return i_trans.container();
 	}
 
 	public int classIndexEntryCount() {
@@ -404,7 +404,7 @@ public final class QCandidates implements Visitor4 {
     
 		i_root = result.tree;
         
-        DiagnosticProcessor dp = i_trans.stream().i_handlers._diagnosticProcessor;
+        DiagnosticProcessor dp = i_trans.container()._handlers._diagnosticProcessor;
         if (dp.enabled()){
             dp.loadedFromClassIndex(i_yapClass);
         }

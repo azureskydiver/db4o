@@ -32,7 +32,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			private Activator activatorForObject(
 					final ObjectContainerBase container_, Object obj) {
 			    // FIXME: Using ObjectContainerBase here won't work for MTOC.
-				return container_.getTransaction().referenceForObject(obj);
+				return container_.transaction().referenceForObject(obj);
 			}
 		});
 

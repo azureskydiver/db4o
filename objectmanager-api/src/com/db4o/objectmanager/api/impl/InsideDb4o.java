@@ -63,7 +63,7 @@ public class InsideDb4o {
     }
     
     private Transaction trans(){
-    	return stream().getTransaction();
+    	return stream().transaction();
     }
 
 }

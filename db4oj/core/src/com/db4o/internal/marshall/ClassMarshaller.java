@@ -16,7 +16,7 @@ public abstract class ClassMarshaller {
     
     public RawClassSpec readSpec(Transaction trans,Buffer reader) {
 		byte[] nameBytes=readName(trans, reader);
-		String className=trans.stream().stringIO().read(nameBytes);
+		String className=trans.container().stringIO().read(nameBytes);
 		readMetaClassID(reader); // skip
 		int ancestorID=reader.readInt();
 		reader.incrementOffset(Const4.INT_LENGTH); // index ID
@@ -55,7 +55,7 @@ public abstract class ClassMarshaller {
     protected abstract int indexIDForWriting(int indexID);
 
     public byte[] readName(Transaction trans, Buffer reader) {
-        byte[] name = readName(trans.stream().stringIO(), reader);
+        byte[] name = readName(trans.container().stringIO(), reader);
         return name;
     }
     

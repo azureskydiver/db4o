@@ -115,7 +115,7 @@ public class UpdatingDb4oVersions {
         BTreeClassIndexStrategy btreeClassIndexStrategy = (BTreeClassIndexStrategy) yc.index();
         BTree btree = btreeClassIndexStrategy.btree();
         Test.ensure(btree != null);
-        int size = btree.size(yapStream.getTransaction());
+        int size = btree.size(yapStream.transaction());
         Test.ensure(size == 1);
     }
 

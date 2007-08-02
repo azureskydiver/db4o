@@ -41,7 +41,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 		while (isMessageDispatcherAlive()) {
 			Msg message = null;
 			try {
-				message = Msg.readMessage(this, i_stream.getTransaction(), i_socket);
+				message = Msg.readMessage(this, i_stream.transaction(), i_socket);
 				if (isClientSideMessage(message)) {
 					if (((ClientSideMessage) message).processAtClient()) {
 						continue;

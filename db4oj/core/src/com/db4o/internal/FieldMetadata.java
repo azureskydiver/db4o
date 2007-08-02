@@ -65,7 +65,7 @@ public class FieldMetadata implements StoredField {
         init(a_yapClass, a_translator.getClass().getName());
         i_state = AVAILABLE;
         ObjectContainerBase stream =container(); 
-        i_handler = stream.i_handlers.handlerForClass(
+        i_handler = stream._handlers.handlerForClass(
             stream, stream.reflector().forClass(translatorStoredClass(a_translator)));
     }
 
@@ -82,7 +82,7 @@ public class FieldMetadata implements StoredField {
     	this(containingClass);
         init(containingClass, marshaller.getClass().getName());
         i_state = AVAILABLE;
-        i_handler = container().i_handlers.untypedHandler();
+        i_handler = container()._handlers.untypedHandler();
     }
 
     FieldMetadata(ClassMetadata a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
@@ -282,7 +282,7 @@ public class FieldMetadata implements StoredField {
 
     private void checkDb4oType() {
         if (i_javaField != null) {
-            if (container().i_handlers.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getFieldType())) {
+            if (container()._handlers.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getFieldType())) {
                 i_db4oType = HandlerRegistry.getDb4oType(i_javaField.getFieldType());
             }
         }
@@ -292,7 +292,7 @@ public class FieldMetadata implements StoredField {
         Object a_template, Visitor4 a_visitor) {
         Object obj = getOn(a_trans, a_template);
         if (obj != null) {
-            Collection4 objs = Platform4.flattenCollection(a_trans.stream(), obj);
+            Collection4 objs = Platform4.flattenCollection(a_trans.container(), obj);
             Iterator4 j = objs.iterator();
             while (j.moveNext()) {
                 obj = j.current();
@@ -448,7 +448,7 @@ public class FieldMetadata implements StoredField {
             //        single local mode but the transaction will
             //        be wrong for MTOC.
 		    if(trans == null){
-		        trans = container.getTransaction();
+		        trans = container.transaction();
 		    }
 		    
 			container.checkClosed();
@@ -462,7 +462,7 @@ public class FieldMetadata implements StoredField {
 			}
 
 			StatefulBuffer writer = container.readWriterByID(container
-					.getTransaction(), id);
+					.transaction(), id);
 			if (writer == null) {
 				return null;
 			}
@@ -493,7 +493,7 @@ public class FieldMetadata implements StoredField {
         // alive needs to be checked by all callers: Done
         TypeHandler4 handler = baseTypeHandler();
         if(Handlers4.handlesSimple(handler)){
-            return container.i_handlers.primitiveClassById(handler.getID());
+            return container._handlers.primitiveClassById(handler.getID());
         }
         return (ClassMetadata)handler;
     }
@@ -678,7 +678,7 @@ public class FieldMetadata implements StoredField {
 		i_javaField.setAccessible();
 		ObjectContainerBase container = container();
 		container.showInternalClasses(true);
-		TypeHandler4 handlerForClass = container.i_handlers.handlerForClass(
+		TypeHandler4 handlerForClass = container._handlers.handlerForClass(
 				container, i_javaField.getFieldType());
 		container.showInternalClasses(false);
 		return handlerForClass;
@@ -812,7 +812,7 @@ public class FieldMetadata implements StoredField {
         if(! alive()){
             return;
         }
-        traverseValues(container().getTransaction(), userVisitor);
+        traverseValues(container().transaction(), userVisitor);
     }
     
     public final void traverseValues(final Transaction transaction, final Visitor4 userVisitor) {
@@ -820,7 +820,7 @@ public class FieldMetadata implements StoredField {
             return;
         }
         assertHasIndex();
-        ObjectContainerBase stream = transaction.stream();
+        ObjectContainerBase stream = transaction.container();
         if(stream.isClient()){
             Exceptions4.throwRuntimeException(Messages.CLIENT_SERVER_UNSUPPORTED);
         }
@@ -890,14 +890,14 @@ public class FieldMetadata implements StoredField {
     	if(_index != null){
     		throw new IllegalStateException();
         }
-        if(systemTrans.stream().isClient()){
+        if(systemTrans.container().isClient()){
             return;
         }
         _index = newBTree(systemTrans, id);
     }
 
 	protected final BTree newBTree(Transaction systemTrans, final int id) {
-		ObjectContainerBase stream = systemTrans.stream();
+		ObjectContainerBase stream = systemTrans.container();
 		Indexable4 indexHandler = indexHandler(stream);
 		if(indexHandler==null) {
 			if(Debug.atHome) {
@@ -913,7 +913,7 @@ public class FieldMetadata implements StoredField {
 		if(i_javaField!=null) {
 			indexType=i_javaField.indexType();
 		}
-		TypeHandler4 classHandler = stream.i_handlers.handlerForClass(stream,indexType);
+		TypeHandler4 classHandler = stream._handlers.handlerForClass(stream,indexType);
 		if(! (classHandler instanceof Indexable4)){
 		    return null;
 		}
@@ -997,7 +997,7 @@ public class FieldMetadata implements StoredField {
         if(_index == null){
             return;
         }
-        ObjectContainerBase stream = systemTrans.stream(); 
+        ObjectContainerBase stream = systemTrans.container(); 
         if (stream.configImpl().messageLevel() > Const4.NONE) {
             stream.message("dropping index " + toString());
         }

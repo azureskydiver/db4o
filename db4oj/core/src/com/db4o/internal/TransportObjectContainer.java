@@ -24,14 +24,14 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	
 	public TransportObjectContainer (ObjectContainerBase serviceProvider, MemoryFile memoryFile) {
 	    super(serviceProvider.config(),serviceProvider, memoryFile);
-	    i_showInternalClasses = serviceProvider.i_showInternalClasses;
+	    _showInternalClasses = serviceProvider._showInternalClasses;
 	}
 	
 	protected void initialize1(Configuration config){
-	    i_handlers = i_parent.i_handlers;
-        _classCollection = i_parent.classCollection();
-		i_config = i_parent.configImpl();
-		i_references = new WeakReferenceCollector(this);
+	    _handlers = _parent._handlers;
+        _classCollection = _parent.classCollection();
+		_config = _parent.configImpl();
+		_references = new WeakReferenceCollector(this);
 		initialize2();
 	}
 	
@@ -56,7 +56,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
     }
     
     public ClassMetadata classMetadataForId(int id) {
-    	return i_parent.classMetadataForId(id);
+    	return _parent.classMetadataForId(id);
     }
     
 	void configureNewFile() {
@@ -68,7 +68,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
     }
 		
     protected void dropReferences() {
-        i_config = null;
+        _config = null;
     }
     
     protected void handleExceptionOnClose(Exception exc) {
@@ -112,7 +112,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	}
 	
 	public Db4oDatabase identity() {
-	    return i_parent.identity();
+	    return _parent.identity();
 	}
 	
 	public boolean maintainsIndices(){
@@ -124,7 +124,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	}
 	
 	public ClassMetadata produceClassMetadata(ReflectClass claxx) {
-		return i_parent.produceClassMetadata(claxx);
+		return _parent.produceClassMetadata(claxx);
 	}
 	
 	public void raiseVersion(long a_minimumVersion){
@@ -142,7 +142,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	public void shutdown() {
 		processPendingClassUpdates();
 		writeDirty();
-		getTransaction().commit();
+		transaction().commit();
 	}
 	
 	final void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {

@@ -95,7 +95,7 @@ public class FileHeader1 extends FileHeader {
     
 	private void commonTasksForNewAndRead(LocalObjectContainer file){
         newTimerFileLock(file);
-        file.i_handlers.oldEncryptionOff();
+        file._handlers.oldEncryptionOff();
     }
     
     public void readVariablePart(LocalObjectContainer file) {

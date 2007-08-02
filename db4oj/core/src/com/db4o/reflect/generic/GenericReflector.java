@@ -108,7 +108,7 @@ public class GenericReflector implements Reflector, DeepClone {
 	public void setTransaction(Transaction trans){
 		if(trans != null){
 			_trans = trans;
-			_stream = trans.stream();
+			_stream = trans.container();
 		}
 		_repository.setTransaction(trans);
 	}
@@ -357,7 +357,7 @@ public class GenericReflector implements Reflector, DeepClone {
 		Iterator4 i = _repository.classes();
 		while(i.moveNext()){
             GenericClass clazz = (GenericClass)i.current();
-            if(! _stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(clazz)){
+            if(! _stream._handlers.ICLASS_INTERNAL.isAssignableFrom(clazz)){
                 if(! clazz.isSecondClass()){
 					if(! clazz.isArray()){
 						classes.add(clazz);

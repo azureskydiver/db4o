@@ -13,7 +13,7 @@ class IxDeprecationHelper {
     
     static Object comparableObject(Indexable4 handler, Transaction trans,  Object indexEntry ){
         if(handler instanceof StringHandler){
-            return ((StringHandler)handler).val(indexEntry,trans.stream());
+            return ((StringHandler)handler).val(indexEntry,trans.container());
         }
         return indexEntry; 
     }

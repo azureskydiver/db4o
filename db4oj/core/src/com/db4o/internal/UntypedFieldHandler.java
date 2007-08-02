@@ -10,7 +10,7 @@ import com.db4o.internal.query.processor.*;
 public final class UntypedFieldHandler extends ClassMetadata {
     
 	public UntypedFieldHandler(ObjectContainerBase stream){
-		super(stream, stream.i_handlers.ICLASS_OBJECT);
+		super(stream, stream._handlers.ICLASS_OBJECT);
 	}
 
 	public void cascadeActivation(

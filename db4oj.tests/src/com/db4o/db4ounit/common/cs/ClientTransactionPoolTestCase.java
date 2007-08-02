@@ -20,13 +20,13 @@ public class ClientTransactionPoolTestCase implements TestLifeCycle {
 		try {
 			Assert.areEqual(1, pool.openFileCount());
 			Transaction trans1 = pool.acquire(SwitchingFilesFromClientUtil.MAINFILE_NAME);
-			Assert.areEqual(db, trans1.stream());			
+			Assert.areEqual(db, trans1.container());			
 			Assert.areEqual(1, pool.openFileCount());
 			Transaction trans2 = pool.acquire(SwitchingFilesFromClientUtil.FILENAME_A);
-			Assert.areNotEqual(db, trans2.stream());			
+			Assert.areNotEqual(db, trans2.container());			
 			Assert.areEqual(2, pool.openFileCount());
 			Transaction trans3 = pool.acquire(SwitchingFilesFromClientUtil.FILENAME_A);
-			Assert.areEqual(trans2.stream(), trans3.stream());			
+			Assert.areEqual(trans2.container(), trans3.container());			
 			Assert.areEqual(2, pool.openFileCount());
 			pool.release(trans3, true);
 			Assert.areEqual(2, pool.openFileCount());

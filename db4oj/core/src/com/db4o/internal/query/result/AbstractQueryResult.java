@@ -41,7 +41,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 
 	public ObjectContainerBase stream() {
-		return _transaction.stream();
+		return _transaction.container();
 	}
 	
 	public Transaction transaction(){

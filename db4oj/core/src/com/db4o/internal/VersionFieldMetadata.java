@@ -32,7 +32,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
     }
 
     void marshall1(ObjectReference a_yapObject, StatefulBuffer a_bytes, boolean a_migrating, boolean a_new) {
-        ObjectContainerBase stream = a_bytes.getStream().i_parent;
+        ObjectContainerBase stream = a_bytes.getStream()._parent;
         VirtualAttributes va = a_yapObject.virtualAttributes();
         if (! a_migrating) {
             va.i_version = stream.generateTimeStampId();

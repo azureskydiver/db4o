@@ -124,7 +124,7 @@ public abstract class ObjectMarshaller {
         
         ClassMetadata yc = yo.getYapClass();
         
-        ObjectContainerBase stream = trans.stream();
+        ObjectContainerBase stream = trans.container();
         stream.writeUpdate(yc, writer);
         if (yo.isActive()) {
             yo.setStateClean();

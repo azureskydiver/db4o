@@ -178,11 +178,11 @@ public final class StatefulBuffer extends Buffer {
     }
 
     public ObjectContainerBase getStream() {
-        return i_trans.stream();
+        return i_trans.container();
     }
     
     public ObjectContainerBase stream(){
-        return i_trans.stream();
+        return i_trans.container();
     }
     
     public LocalObjectContainer file(){

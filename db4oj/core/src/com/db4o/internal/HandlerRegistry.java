@@ -93,7 +93,7 @@ public final class HandlerRegistry {
     HandlerRegistry(final ObjectContainerBase a_stream, byte stringEncoding, GenericReflector reflector) {
     	
     	_masterStream = a_stream;
-    	a_stream.i_handlers = this;
+    	a_stream._handlers = this;
         
         _reflector = reflector;
         _diagnosticProcessor = a_stream.configImpl().diagnosticProcessor();

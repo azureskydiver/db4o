@@ -52,7 +52,7 @@ class Config4Field extends Config4Abstract implements ObjectField, DeepClone {
 
     public void initOnUp(Transaction systemTrans, FieldMetadata yapField) {
     	
-        ObjectContainerBase anyStream = systemTrans.stream();
+        ObjectContainerBase anyStream = systemTrans.container();
         if (!anyStream.maintainsIndices()) {
         	return;
         }

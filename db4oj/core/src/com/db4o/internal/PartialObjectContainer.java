@@ -38,14 +38,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     protected ClassInfoHelper _classMetaHelper = new ClassInfoHelper();
 
     // the Configuration context for this ObjectContainer
-    protected Config4Impl             i_config;
+    protected Config4Impl             _config;
 
     // Counts the number of toplevel calls into YapStream
     private int           _stackDepth;
 
     private final ReferenceSystemRegistry _referenceSystemRegistry = new ReferenceSystemRegistry();
     
-    private Tree            i_justPeeked;
+    private Tree            _justPeeked;
 
     public final Object            _lock;
 
@@ -55,33 +55,33 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     //  the parent ObjectContainer for TransportObjectContainer or this for all
     //  others. Allows identifying the responsible Objectcontainer for IDs
-    final ObjectContainerBase         i_parent;
+    final ObjectContainerBase         _parent;
 
     //  allowed adding refresh with little code changes.
-    boolean                 i_refreshInsteadOfActivate;
+    boolean                 _refreshInsteadOfActivate;
 
     // a value greater than 0 indicates class implementing the
     // "Internal" interface are visible in queries and can
     // be used.
-    int                     i_showInternalClasses = 0;
+    int                     _showInternalClasses = 0;
     
-    private List4           i_stillToActivate;
-    private List4           i_stillToDeactivate;
+    private List4           _stillToActivate;
+    private List4           _stillToDeactivate;
 
-    private List4           i_stillToSet;
+    private List4           _stillToSet;
 
     // used for ClassMetadata and ClassMetadataRepository
     // may be parent or equal to i_trans
-    private Transaction             i_systemTrans;
+    private Transaction             _systemTransaction;
 
     // used for Objects
-    protected Transaction             i_trans;
+    protected Transaction             _transaction;
 
-    private boolean         i_instantiating;
+    private boolean         _instantiating;
 
     // all the per-YapStream references that we don't
     // want created in YapobjectCarrier
-    public HandlerRegistry             i_handlers;
+    public HandlerRegistry             _handlers;
 
     // One of three constants in ReplicationHandler: NONE, OLD, NEW
     // Detailed replication variables are stored in i_handlers.
@@ -90,7 +90,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     int                 _replicationCallState;  
 
     // weak reference management
-    WeakReferenceCollector           i_references;
+    WeakReferenceCollector           _references;
 
 	private NativeQueryHandler _nativeQueryHandler;
     
@@ -108,9 +108,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	protected PartialObjectContainer(Configuration config, ObjectContainerBase parent) {
     	_this = cast(this);
-    	i_parent = parent == null ? _this : parent;
+    	_parent = parent == null ? _this : parent;
     	_lock = parent == null ? new Object() : parent._lock;
-    	i_config = (Config4Impl)config;
+    	_config = (Config4Impl)config;
     }
 
 	public final void open() throws OldFormatException {
@@ -118,7 +118,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		synchronized (_lock) {
 			try {
 	        	initializeTransactions();
-	            initialize1(i_config);
+	            initialize1(_config);
 	        	openImpl();
 				initializePostOpen();
 				Platform4.postOpen(_this);
@@ -162,12 +162,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
 	final void activate3CheckStill(Transaction ta){
-        while (i_stillToActivate != null) {
+        while (_stillToActivate != null) {
 
             // TODO: Optimize!  A lightweight int array would be faster.
 
-            Iterator4 i = new Iterator4Impl(i_stillToActivate);
-            i_stillToActivate = null;
+            Iterator4 i = new Iterator4Impl(_stillToActivate);
+            _stillToActivate = null;
 
             while (i.moveNext()) {
                 ObjectReference yo = (ObjectReference) i.current();
@@ -179,7 +179,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 if (obj == null) {
                     ta.removeReference(yo);
                 } else {
-                    yo.activate1(ta, obj, depth, i_refreshInsteadOfActivate);
+                    yo.activate1(ta, obj, depth, _refreshInsteadOfActivate);
                 }
             }
         }
@@ -266,7 +266,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
 	protected final void checkReadOnly() throws DatabaseReadOnlyException {
-		if(i_config.isReadOnly()) {
+		if(_config.isReadOnly()) {
     		throw new DatabaseReadOnlyException();
     	}
 	}
@@ -279,7 +279,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		while (i.moveNext()) {
 			ClassMetadata yapClass = (ClassMetadata) i.current();
 			yapClass.setStateDirty();
-			yapClass.write(i_systemTrans);
+			yapClass.write(_systemTransaction);
 		}
 		_pendingClassUpdates = null;
 	}
@@ -293,7 +293,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (ta != null) {
             return ta;
         }
-        return getTransaction();
+        return transaction();
     }
 
     final public boolean close() {
@@ -347,7 +347,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final void commit() throws DatabaseReadOnlyException, DatabaseClosedException {
-        commit(i_trans);
+        commit(_transaction);
     }
 
     public final void commit(Transaction trans) throws DatabaseReadOnlyException, DatabaseClosedException {
@@ -389,8 +389,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     final protected void initializeTransactions() {
-        i_systemTrans = newTransaction(null, createReferenceSystem());
-        i_trans = newUserTransaction();
+        _systemTransaction = newTransaction(null, createReferenceSystem());
+        _transaction = newUserTransaction();
     }
 
 	public abstract Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem);
@@ -444,16 +444,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     private final void deactivate1(Transaction trans, Object a_activate, int a_depth) {
         stillToDeactivate(trans, a_activate, a_depth, true);
-        while (i_stillToDeactivate != null) {
-            Iterator4 i = new Iterator4Impl(i_stillToDeactivate);
-            i_stillToDeactivate = null;
+        while (_stillToDeactivate != null) {
+            Iterator4 i = new Iterator4Impl(_stillToDeactivate);
+            _stillToDeactivate = null;
             while (i.moveNext()) {
                 ObjectReference currentObject = (ObjectReference) i.current();
                 
                 i.moveNext();
 				Integer currentInteger = ((Integer) i.current());
 				
-				currentObject.deactivate(i_trans, currentInteger.intValue());
+				currentObject.deactivate(_transaction, currentInteger.intValue());
             }
         }
     }
@@ -705,7 +705,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	}
 
     void gc() {
-        i_references.pollReferenceQueue();
+        _references.pollReferenceQueue();
     }
 
 	public ObjectSet get(Object template) throws DatabaseClosedException {
@@ -848,7 +848,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final HardObjectReference getHardObjectReferenceById(int id) {
-    	return getHardObjectReferenceById(getTransaction(), id);
+    	return getHardObjectReferenceById(transaction(), id);
     }
 
     public final HardObjectReference getHardObjectReferenceById(Transaction trans, int id) {
@@ -892,18 +892,18 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public final Transaction systemTransaction() {
-        return i_systemTrans;
+        return _systemTransaction;
     }
 
-    public final Transaction getTransaction() {
-        return i_trans;
+    public final Transaction transaction() {
+        return _transaction;
     }
     
     public final ClassMetadata classMetadataForReflectClass(ReflectClass claxx){
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
-        ClassMetadata yc = i_handlers.getYapClassStatic(claxx);
+        ClassMetadata yc = _handlers.getYapClassStatic(claxx);
         if (yc != null) {
             return yc;
         }
@@ -916,7 +916,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
-        ClassMetadata yc = i_handlers.getYapClassStatic(claxx);
+        ClassMetadata yc = _handlers.getYapClassStatic(claxx);
         if (yc != null) {
             return yc;
         }
@@ -938,7 +938,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
-        ClassMetadata yc = i_handlers.getYapClassStatic(claxx);
+        ClassMetadata yc = _handlers.getYapClassStatic(claxx);
         if (yc != null) {
             return yc;
         }
@@ -949,7 +949,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (claxx == null) {
             return true;
         }
-        if ((!showInternalClasses()) && i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
+        if ((!showInternalClasses()) && _handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
             return true;
         }
         return false;
@@ -966,7 +966,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (id == 0) {
             return null;
         }
-        ClassMetadata yc = i_handlers.getYapClassStatic(id);
+        ClassMetadata yc = _handlers.getYapClassStatic(id);
         if (yc != null) {
             return yc;
         }
@@ -974,7 +974,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public HandlerRegistry handlers(){
-    	return i_handlers;
+    	return _handlers;
     }
 
     public boolean needsLockFileThread() {
@@ -998,22 +998,22 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     protected void initialize1(Configuration config) {
-        i_config = initializeConfig(config);
-        i_handlers = new HandlerRegistry(_this, configImpl().encoding(), configImpl().reflector());
+        _config = initializeConfig(config);
+        _handlers = new HandlerRegistry(_this, configImpl().encoding(), configImpl().reflector());
         
-        if (i_references != null) {
+        if (_references != null) {
             gc();
-            i_references.stopTimer();
+            _references.stopTimer();
         }
 
-        i_references = new WeakReferenceCollector(_this);
+        _references = new WeakReferenceCollector(_this);
 
         if (hasShutDownHook()) {
             Platform4.addShutDownHook(this);
         }
-        i_handlers.initEncryption(configImpl());
+        _handlers.initEncryption(configImpl());
         initialize2();
-        i_stillToSet = null;
+        _stillToSet = null;
     }
 
 	private Config4Impl initializeConfig(Configuration config) {
@@ -1040,22 +1040,22 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      * overridden in YapObjectCarrier
      */
     void initialize2NObjectCarrier() {
-        _classCollection = new ClassMetadataRepository(i_systemTrans);
-        i_references.startTimer();
+        _classCollection = new ClassMetadataRepository(_systemTransaction);
+        _references.startTimer();
     }
 
     private void initializePostOpen() {
-        i_showInternalClasses = 100000;
+        _showInternalClasses = 100000;
         initializePostOpenExcludingTransportObjectContainer();
-        i_showInternalClasses = 0;
+        _showInternalClasses = 0;
     }
     
     protected void initializePostOpenExcludingTransportObjectContainer() {
         initializeEssentialClasses();
 		rename(configImpl());
-		_classCollection.initOnUp(i_systemTrans);
+		_classCollection.initOnUp(_systemTransaction);
         if (configImpl().detectSchemaChanges()) {
-            i_systemTrans.commit();
+            _systemTransaction.commit();
         }
         configImpl().applyConfigurationItems(_this);
     }
@@ -1067,7 +1067,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     final void instantiating(boolean flag) {
-        i_instantiating = flag;
+        _instantiating = flag;
     }
 
     public boolean isActive(Object obj) {
@@ -1109,7 +1109,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     final boolean isInstantiating() {
-        return i_instantiating;
+        return _instantiating;
     }
 
     boolean isServer() {
@@ -1145,8 +1145,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (id < 1) {
             return null;
         }
-        if (i_handlers.isSystemHandler(id)) {
-            return i_handlers.getHandler(id);
+        if (_handlers.isSystemHandler(id)) {
+            return _handlers.getHandler(id);
         } 
         return classMetadataForId(id);
     }
@@ -1173,16 +1173,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 return;
             }
             _replicationCallState = Const4.NONE;
-            if(i_handlers.i_migration != null){
-                i_handlers.i_migration.terminate();
+            if(_handlers.i_migration != null){
+                _handlers.i_migration.terminate();
             }
-            i_handlers.i_migration = null;
+            _handlers.i_migration = null;
         }else{
             ObjectContainerBase peer = (ObjectContainerBase)objectContainer;
             _replicationCallState = Const4.OLD;
             peer._replicationCallState = Const4.OLD;
-            i_handlers.i_migration = new MigrationConnection(_this, (ObjectContainerBase)objectContainer);
-            peer.i_handlers.i_migration = i_handlers.i_migration;
+            _handlers.i_migration = new MigrationConnection(_this, (ObjectContainerBase)objectContainer);
+            peer._handlers.i_migration = _handlers.i_migration;
         }
     }
 
@@ -1204,15 +1204,15 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	checkClosed();
             beginTopLevelCall();
             try{
-                i_justPeeked = null;
-                Transaction ta = committed ? i_systemTrans
+                _justPeeked = null;
+                Transaction ta = committed ? _systemTransaction
                     : checkTransaction();
                 Object cloned = null;
                 ObjectReference yo = ta.referenceForObject(obj);
                 if (yo != null) {
                     cloned = peekPersisted(ta, yo.getID(), depth);
                 }
-                i_justPeeked = null;
+                _justPeeked = null;
                 completeTopLevelCall();
                 return cloned;
             } catch(Db4oException e) {
@@ -1229,7 +1229,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return null;
         }
         TreeInt ti = new TreeInt(id);
-        TreeIntObject tio = (TreeIntObject) Tree.find(i_justPeeked, ti);
+        TreeIntObject tio = (TreeIntObject) Tree.find(_justPeeked, ti);
         if (tio == null) {
         	return new ObjectReference(id).peekPersisted(trans, depth);
         } 
@@ -1237,8 +1237,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     void peeked(int a_id, Object a_object) {
-        i_justPeeked = Tree
-            .add(i_justPeeked, new TreeIntObject(a_id, a_object));
+        _justPeeked = Tree
+            .add(_justPeeked, new TreeIntObject(a_id, a_object));
     }
 
     public void purge() {
@@ -1318,7 +1318,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 		Buffer reader = new Buffer(length);
 		readBytes(reader._buffer, address, length);
-		i_handlers.decrypt(reader);
+		_handlers.decrypt(reader);
 		return reader;
 	}
 
@@ -1350,16 +1350,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public GenericReflector reflector(){
-        return i_handlers._reflector;
+        return _handlers._reflector;
     }
 
     public void refresh(Object a_refresh, int a_depth) {
         synchronized (_lock) {
-            i_refreshInsteadOfActivate = true;
+            _refreshInsteadOfActivate = true;
             try {
             	activate1(null, a_refresh, a_depth);
             } finally {
-            	i_refreshInsteadOfActivate = false;
+            	_refreshInsteadOfActivate = false;
             }
         }
     }
@@ -1466,7 +1466,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return 0;
         }
         
-        if(i_handlers.i_replication == null){
+        if(_handlers.i_replication == null){
             return 0;
         }
         
@@ -1479,7 +1479,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	return reference.getID();
         }
         
-        return i_handlers.i_replication.tryToHandle(_this, obj);        
+        return _handlers.i_replication.tryToHandle(_this, obj);        
     }
     
     public final boolean handledInCurrentTopLevelCall(ObjectReference ref){
@@ -1493,7 +1493,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	checkClosed();
         	checkReadOnly();
         	rollback1();
-        	i_trans.rollbackReferenceSystem();
+        	_transaction.rollbackReferenceSystem();
         }
     }
 
@@ -1517,7 +1517,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public final void set(Object obj, int depth)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
-        set(i_trans, obj, depth);
+        set(_transaction, obj, depth);
     }
 
 	public void set(Transaction trans, Object obj, int depth)
@@ -1584,12 +1584,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public final void setByNewReplication(Db4oReplicationReferenceProvider referenceProvider, Object obj){
         synchronized(_lock){
             _replicationCallState = Const4.NEW;
-            i_handlers._replicationReferenceProvider = referenceProvider;
+            _handlers._replicationReferenceProvider = referenceProvider;
             
             set2(checkTransaction(), obj, 1, false);
             
             _replicationCallState = Const4.NONE;
-            i_handlers._replicationReferenceProvider = null;
+            _handlers._replicationReferenceProvider = null;
         }
     }
     
@@ -1603,9 +1603,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public void checkStillToSet() {
         List4 postponedStillToSet = null;
-        while (i_stillToSet != null) {
-            Iterator4 i = new Iterator4Impl(i_stillToSet);
-            i_stillToSet = null;
+        while (_stillToSet != null) {
+            Iterator4 i = new Iterator4Impl(_stillToSet);
+            _stillToSet = null;
             while (i.moveNext()) {
                 Integer updateDepth = (Integer)i.current();
                 
@@ -1622,7 +1622,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 }
             }
         }
-        i_stillToSet = postponedStillToSet;
+        _stillToSet = postponedStillToSet;
     }
     
     void notStorable(ReflectClass claxx, Object obj){
@@ -1713,11 +1713,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract boolean setSemaphore(String name, int timeout);
 
     void setStringIo(LatinStringIO a_io) {
-        i_handlers.i_stringHandler.setStringIo(a_io);
+        _handlers.i_stringHandler.setStringIo(a_io);
     }
 
     final boolean showInternalClasses() {
-        return isServer() || i_showInternalClasses > 0;
+        return isServer() || _showInternalClasses > 0;
     }
 
     /**
@@ -1727,12 +1727,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      */
     public synchronized void showInternalClasses(boolean show) {
         if (show) {
-            i_showInternalClasses++;
+            _showInternalClasses++;
         } else {
-            i_showInternalClasses--;
+            _showInternalClasses--;
         }
-        if (i_showInternalClasses < 0) {
-            i_showInternalClasses = 0;
+        if (_showInternalClasses < 0) {
+            _showInternalClasses = 0;
         }
     }
     
@@ -1780,7 +1780,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                     // Special handling to deactivate Top-Level unknown objects only.
                     ClassMetadata yc = classMetadataForReflectClass(reflector().forObject(obj));
                     if (yc != null) {
-                        yc.deactivate(i_trans, obj, depth);
+                        yc.deactivate(_transaction, obj, depth);
                     }
                 }
             }
@@ -1797,7 +1797,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         //			Class clazz = a_object.getClass();
         //			if(! clazz.isPrimitive()){
 
-        i_stillToActivate = stillTo1(trans, i_stillToActivate, a_object, a_depth, false);
+        _stillToActivate = stillTo1(trans, _stillToActivate, a_object, a_depth, false);
 
         //			}
         //		}
@@ -1805,7 +1805,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public final void stillToDeactivate(Transaction trans, Object a_object, int a_depth,
         boolean a_forceUnknownDeactivate) {
-        i_stillToDeactivate = stillTo1(trans, i_stillToDeactivate, a_object, a_depth, a_forceUnknownDeactivate);
+        _stillToDeactivate = stillTo1(trans, _stillToDeactivate, a_object, a_depth, a_forceUnknownDeactivate);
     }
 
     void stillToSet(Transaction a_trans, ObjectReference a_yapObject, int a_updateDepth) {
@@ -1814,9 +1814,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 return;
             }
         }
-        i_stillToSet = new List4(i_stillToSet, a_trans);
-        i_stillToSet = new List4(i_stillToSet, a_yapObject);
-        i_stillToSet = new List4(i_stillToSet, new Integer(a_updateDepth));
+        _stillToSet = new List4(_stillToSet, a_trans);
+        _stillToSet = new List4(_stillToSet, a_yapObject);
+        _stillToSet = new List4(_stillToSet, new Integer(a_updateDepth));
     }
 
     protected final void stopSession() {
@@ -1824,11 +1824,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             Platform4.removeShutDownHook(this);
         }
         _classCollection = null;
-        if(i_references != null){
-        	i_references.stopTimer();
+        if(_references != null){
+        	_references.stopTimer();
         }
-        i_systemTrans = null;
-        i_trans = null;
+        _systemTransaction = null;
+        _transaction = null;
     }
     
     public final StoredClass storedClass(Object clazz) {
@@ -1860,7 +1860,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 		
     public LatinStringIO stringIO(){
-    	return i_handlers.i_stringHandler.i_stringIo;
+    	return _handlers.i_stringHandler.i_stringIo;
     }
     
     public abstract SystemInfo systemInfo();
@@ -1985,15 +1985,15 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public Config4Impl configImpl() {
-        return i_config;
+        return _config;
     }
     
 	public UUIDFieldMetadata getUUIDIndex() {
-		return i_handlers.i_indexes.i_fieldUUID;
+		return _handlers.i_indexes.i_fieldUUID;
 	}
 	
 	public VersionFieldMetadata getVersionIndex() {
-		return i_handlers.i_indexes.i_fieldVersion;
+		return _handlers.i_indexes.i_fieldVersion;
 	}
 
     public ClassMetadataRepository classCollection() {

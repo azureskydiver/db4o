@@ -43,7 +43,7 @@ public class P1HashElement extends P1ListElement {
         if(a_depth < 0){
             Transaction trans = getTrans();
             if(trans != null){
-                if(trans.stream().configImpl().activationDepth() < 1){
+                if(trans.container().configImpl().activationDepth() < 1){
                     a_depth = 1;
                 }
             }

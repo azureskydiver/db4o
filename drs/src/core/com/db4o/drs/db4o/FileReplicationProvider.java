@@ -79,7 +79,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 		synchronized (getMonitor()) {
 
-			Transaction trans = _stream.getTransaction();
+			Transaction trans = _stream.transaction();
 
 			Db4oDatabase myIdentity = _stream.identity();
 			_signatureMap.put(myIdentity);

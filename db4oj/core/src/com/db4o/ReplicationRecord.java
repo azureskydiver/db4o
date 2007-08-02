@@ -44,8 +44,8 @@ public class ReplicationRecord implements Internal4{
     
     public static ReplicationRecord beginReplication(Transaction transA, Transaction  transB){
         
-        ObjectContainerBase peerA = transA.stream();
-        ObjectContainerBase peerB = transB.stream();
+        ObjectContainerBase peerA = transA.container();
+        ObjectContainerBase peerB = transB.container();
         
         Db4oDatabase dbA = peerA.identity();
         Db4oDatabase dbB = peerB.identity();

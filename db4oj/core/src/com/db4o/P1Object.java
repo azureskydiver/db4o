@@ -115,10 +115,10 @@ public class P1Object implements Db4oTypeImpl{
 	 */
     protected Object replicate(Transaction fromTrans, Transaction toTrans) {
         
-        ObjectContainerBase fromStream = fromTrans.stream();
-        ObjectContainerBase toStream = toTrans.stream();
+        ObjectContainerBase fromStream = fromTrans.container();
+        ObjectContainerBase toStream = toTrans.container();
         
-        MigrationConnection mgc = fromStream.i_handlers.migrationConnection();
+        MigrationConnection mgc = fromStream._handlers.migrationConnection();
         
         synchronized(fromStream.lock()){
             
@@ -192,7 +192,7 @@ public class P1Object implements Db4oTypeImpl{
         if(i_yapObject == null){
             i_yapObject = i_trans.referenceForObject(this);
             if(i_yapObject == null){
-                i_trans.stream().setInternal(i_trans, this, true);
+                i_trans.container().setInternal(i_trans, this, true);
                 i_yapObject = i_trans.referenceForObject(this);
                 return;
             }
@@ -237,7 +237,7 @@ public class P1Object implements Db4oTypeImpl{
     }
     
     private ObjectContainerBase stream(){
-    	return i_trans.stream();
+    	return i_trans.container();
     }
     
 }

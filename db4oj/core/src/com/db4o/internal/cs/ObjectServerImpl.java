@@ -117,7 +117,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private void ensureLoadStaticClass() {
-		_container.produceClassMetadata(_container.i_handlers.ICLASS_STATICCLASS);
+		_container.produceClassMetadata(_container._handlers.ICLASS_STATICCLASS);
 	}
 
 	private void configureObjectServer() {

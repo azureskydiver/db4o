@@ -11,7 +11,7 @@ import com.db4o.ext.*;
 public class Serializer {
 	
     public static StatefulBuffer marshall(Transaction ta, Object obj) {
-        SerializedGraph serialized = marshall(ta.stream(), obj);
+        SerializedGraph serialized = marshall(ta.container(), obj);
         StatefulBuffer buffer = new StatefulBuffer(ta, serialized.length());
         buffer.append(serialized._bytes);
         buffer.useSlot(serialized._id, 0, serialized.length());

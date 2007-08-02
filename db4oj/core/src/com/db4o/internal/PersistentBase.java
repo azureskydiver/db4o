@@ -85,7 +85,7 @@ public abstract class PersistentBase implements Persistent {
 			return;
 		}
 		try {
-			Buffer reader = trans.stream().readReaderByID(trans, getID());
+			Buffer reader = trans.container().readReaderByID(trans, getID());
 			if (Deploy.debug) {
 				reader.readBegin(getIdentifier());
 			}
@@ -136,7 +136,7 @@ public abstract class PersistentBase implements Persistent {
         }
         try {
 	            
-	        LocalObjectContainer stream = (LocalObjectContainer)trans.stream();
+	        LocalObjectContainer stream = (LocalObjectContainer)trans.container();
 	        
 	        int length = ownLength();
 	        
@@ -174,7 +174,7 @@ public abstract class PersistentBase implements Persistent {
         	DTrace.YAPMETA_WRITE.log(getID());
         }
 		
-		LocalObjectContainer container = (LocalObjectContainer)trans.stream();
+		LocalObjectContainer container = (LocalObjectContainer)trans.container();
 		
 		if (Deploy.debug) {
 		    writer.writeBegin(getIdentifier());

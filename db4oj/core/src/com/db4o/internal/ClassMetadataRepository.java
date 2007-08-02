@@ -92,7 +92,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         i_yapClassCreationDepth++;
         ReflectClass superClass = a_class.getSuperclass();
         ClassMetadata superYapClass = null;
-        if (superClass != null && ! superClass.equals(stream().i_handlers.ICLASS_OBJECT)) {
+        if (superClass != null && ! superClass.equals(stream()._handlers.ICLASS_OBJECT)) {
             superYapClass = produceClassMetadata(superClass);
         }
         boolean ret = stream().createClassMetadata(a_yapClass, a_class, superYapClass);
@@ -305,14 +305,14 @@ public final class ClassMetadataRepository extends PersistentBase {
 
     void initOnUp(Transaction systemTrans) {
         i_yapClassCreationDepth++;
-        systemTrans.stream().showInternalClasses(true);
+        systemTrans.container().showInternalClasses(true);
         try {
 	        Iterator4 i = i_classes.iterator();
 	        while (i.moveNext()) {
 	            ((ClassMetadata)i.current()).initOnUp(systemTrans);
 	        }
         } finally {
-        	systemTrans.stream().showInternalClasses(false);
+        	systemTrans.container().showInternalClasses(false);
         }
         i_yapClassCreationDepth--;
         initYapClassesOnUp();
@@ -532,7 +532,7 @@ public final class ClassMetadataRepository extends PersistentBase {
 	}
 
     ObjectContainerBase stream() {
-        return _systemTransaction.stream();
+        return _systemTransaction.container();
     }
     
     public void setID(int a_id) {

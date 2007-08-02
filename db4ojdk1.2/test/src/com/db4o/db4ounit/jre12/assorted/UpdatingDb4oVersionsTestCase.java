@@ -86,7 +86,7 @@ public class UpdatingDb4oVersionsTestCase implements TestLifeCycle {
         BTreeClassIndexStrategy btreeClassIndexStrategy = (BTreeClassIndexStrategy) yc.index();
         BTree btree = btreeClassIndexStrategy.btree();
         Assert.isNotNull(btree);
-        int size = btree.size(container.getTransaction());
+        int size = btree.size(container.transaction());
         Assert.areEqual(1, size);
     }
 

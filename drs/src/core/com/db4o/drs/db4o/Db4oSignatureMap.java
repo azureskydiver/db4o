@@ -25,7 +25,7 @@ class Db4oSignatureMap {
             return db;
         }
         db = new Db4oDatabase(signature, creationTime);
-        db.bind(_stream.getTransaction());
+        db.bind(_stream.transaction());
         _identities.put(signature, db);
         return db;
     }

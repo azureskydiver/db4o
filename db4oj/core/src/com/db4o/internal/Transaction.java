@@ -15,15 +15,15 @@ import com.db4o.reflect.Reflector;
 public abstract class Transaction {
 	
     // contains DeleteInfo nodes
-    protected Tree i_delete;
+    protected Tree _delete;
 
-    private List4 i_dirtyFieldIndexes;
+    private List4 _dirtyFieldIndexes;
     
     protected final Transaction _systemTransaction;
 
     private final ObjectContainerBase _container;
     
-    private List4 i_transactionListeners;
+    private List4 _transactionListeners;
     
     private final TransactionalReferenceSystem _referenceSystem;
 
@@ -33,34 +33,34 @@ public abstract class Transaction {
         _referenceSystem = referenceSystem;
     }
 
-    public void addDirtyFieldIndex(IndexTransaction a_xft) {
-        i_dirtyFieldIndexes = new List4(i_dirtyFieldIndexes, a_xft);
+    public void addDirtyFieldIndex(IndexTransaction indexTransaction) {
+        _dirtyFieldIndexes = new List4(_dirtyFieldIndexes, indexTransaction);
     }
 
 	public final void checkSynchronization() {
 		if(Debug.checkSychronization){
-            stream()._lock.notify();
+            container()._lock.notify();
         }
 	}
 
-    public void addTransactionListener(TransactionListener a_listener) {
-        i_transactionListeners = new List4(i_transactionListeners, a_listener);
+    public void addTransactionListener(TransactionListener listener) {
+        _transactionListeners = new List4(_transactionListeners, listener);
     }
     
     protected final void clearAll() {
         clear();
-        i_dirtyFieldIndexes = null;
-        i_transactionListeners = null;
+        _dirtyFieldIndexes = null;
+        _transactionListeners = null;
     }
     
     protected abstract void clear(); 
 
     public void close(boolean rollbackOnClose) {
-		if (stream() != null) {
+		if (container() != null) {
 			checkSynchronization();
-			stream().releaseSemaphores(this);
+			container().releaseSemaphores(this);
 			if(_referenceSystem != null){
-			    stream().referenceSystemRegistry().removeReferenceSystem(_referenceSystem);
+			    container().referenceSystemRegistry().removeReferenceSystem(_referenceSystem);
 			}
 		}
 		if (rollbackOnClose) {
@@ -74,8 +74,8 @@ public abstract class Transaction {
         if(_systemTransaction != null){
             _systemTransaction.commit4FieldIndexes();
         }
-        if (i_dirtyFieldIndexes != null) {
-            Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
+        if (_dirtyFieldIndexes != null) {
+            Iterator4 i = new Iterator4Impl(_dirtyFieldIndexes);
             while (i.moveNext()) {
                 ((IndexTransaction) i.current()).commit();
             }
@@ -85,12 +85,12 @@ public abstract class Transaction {
     
     protected void commitTransactionListeners() {
         checkSynchronization();
-        if (i_transactionListeners != null) {
-            Iterator4 i = new Iterator4Impl(i_transactionListeners);
+        if (_transactionListeners != null) {
+            Iterator4 i = new Iterator4Impl(_transactionListeners);
             while (i.moveNext()) {
                 ((TransactionListener) i.current()).preCommit();
             }
-            i_transactionListeners = null;
+            _transactionListeners = null;
         }
     }   
     
@@ -113,10 +113,10 @@ public abstract class Transaction {
             DTrace.TRANS_DELETE.log(id);
         }
         
-        DeleteInfo info = (DeleteInfo) TreeInt.find(i_delete, id);
+        DeleteInfo info = (DeleteInfo) TreeInt.find(_delete, id);
         if(info == null){
             info = new DeleteInfo(id, ref, cascade);
-            i_delete = Tree.add(i_delete, info);
+            _delete = Tree.add(_delete, info);
             return true;
         }
         info._reference = ref;
@@ -130,23 +130,23 @@ public abstract class Transaction {
         if(DTrace.enabled){
             DTrace.TRANS_DONT_DELETE.log(a_id);
         }
-        if(i_delete == null){
+        if(_delete == null){
         	return;
         }
-        i_delete = TreeInt.removeLike((TreeInt)i_delete, a_id);
+        _delete = TreeInt.removeLike((TreeInt)_delete, a_id);
     }
     
     void dontRemoveFromClassIndex(int a_yapClassID, int a_id) {
         // If objects are deleted and rewritten during a cascade
         // on delete, we dont want them to be gone.        
         checkSynchronization();
-        ClassMetadata yapClass = stream().classMetadataForId(a_yapClassID);
+        ClassMetadata yapClass = container().classMetadataForId(a_yapClassID);
         yapClass.index().add(this, a_id);
     }    
     
     public HardObjectReference getHardReferenceBySignature(final long a_uuid, final byte[] a_signature) {
         checkSynchronization();  
-        return stream().getUUIDIndex().getHardObjectReferenceBySignature(this, a_uuid, a_signature);
+        return container().getUUIDIndex().getHardObjectReferenceBySignature(this, a_uuid, a_signature);
     }
     
 	public abstract void processDeletes();
@@ -159,14 +159,14 @@ public abstract class Transaction {
     }
 	
     public Reflector reflector(){
-    	return stream().reflector();
+    	return container().reflector();
     }
     
     public abstract void rollback();
 
 	protected void rollbackFieldIndexes() {
-		if (i_dirtyFieldIndexes != null) {
-		    Iterator4 i = new Iterator4Impl(i_dirtyFieldIndexes);
+		if (_dirtyFieldIndexes != null) {
+		    Iterator4 i = new Iterator4Impl(_dirtyFieldIndexes);
 		    while (i.moveNext()) {
 		        ((IndexTransaction) i.current()).rollback();
 		    }
@@ -175,12 +175,12 @@ public abstract class Transaction {
     
 	protected void rollBackTransactionListeners() {
         checkSynchronization();
-        if (i_transactionListeners != null) {
-            Iterator4 i = new Iterator4Impl(i_transactionListeners);
+        if (_transactionListeners != null) {
+            Iterator4 i = new Iterator4Impl(_transactionListeners);
             while (i.moveNext()) {
                 ((TransactionListener) i.current()).postRollback();
             }
-            i_transactionListeners = null;
+            _transactionListeners = null;
         }
     }
     
@@ -258,12 +258,12 @@ public abstract class Transaction {
     }
 
     public String toString() {
-        return stream().toString();
+        return container().toString();
     }
 
     public abstract void writeUpdateDeleteMembers(int id, ClassMetadata clazz, int typeInfo, int cascade);
 
-    public final ObjectContainerBase stream() {
+    public final ObjectContainerBase container() {
         return _container;
     }
 
