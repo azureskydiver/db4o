@@ -52,7 +52,6 @@ public class StoredClassTestCase extends AbstractDb4oTestCase{
     
     public void testGetIds(){
         StoredClass itemClass = itemStoredClass();
-        
         long[] ids = itemClass.getIDs();
         Assert.areEqual(1, ids.length);
         Assert.areEqual(_id, ids[0]);
@@ -60,13 +59,13 @@ public class StoredClassTestCase extends AbstractDb4oTestCase{
     
     public void testGetName(){
         StoredClass itemClass = itemStoredClass();
-        Assert.areEqual(Item.class.getName(), itemClass.getName());
+        Assert.areEqual(reflector().forClass(Item.class).getName(), itemClass.getName());
     }
     
     public void testGetParentStoredClass(){
         StoredClass itemClass = itemStoredClass();
         StoredClass parentStoredClass = itemClass.getParentStoredClass();
-        Assert.areEqual(ItemParent.class.getName(), parentStoredClass.getName());
+        Assert.areEqual(reflector().forClass(ItemParent.class).getName(), parentStoredClass.getName());
         Assert.areEqual(parentStoredClass, db().storedClass(ItemParent.class));
     }
     

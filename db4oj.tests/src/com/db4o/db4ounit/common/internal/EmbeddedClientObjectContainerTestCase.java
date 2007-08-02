@@ -9,6 +9,7 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
+import com.db4o.types.*;
 
 import db4ounit.*;
 
@@ -18,10 +19,15 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     
     private LocalObjectContainer _server;
 
-    private EmbeddedClientObjectContainer _client1;
+    protected EmbeddedClientObjectContainer _client1;
 
-    private EmbeddedClientObjectContainer _client2;
+    protected EmbeddedClientObjectContainer _client2;
+
+    private static final String ORIGINAL_NAME = "original";
     
+    private static final String CHANGED_NAME = "changed";
+
+
     public static class Item{
 
         public String _name;
@@ -39,31 +45,61 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         assertItemCount(_client2, 1);
     }
     
+    public void testBackup(){
+        Assert.expect(NotSupportedException.class, new CodeBlock() {
+            public void run() throws Throwable {
+                _client1.backup("");
+            }
+        });
+    }
+    
+    public void testGetID(){
+        Item storedItem = storeItemToClient1AndCommit();
+        long id = _client1.getID(storedItem);
+        Assert.isGreater(1, id);
+    }
+    
+    public void testGetByID(){
+        Item storedItem = storeItemToClient1AndCommit();
+        long id = _client1.getID(storedItem);
+        Assert.areSame(storedItem, _client1.getByID(id));
+    }
+    
+    public void testBindIsolation(){
+        Item storedItem = storeItemToClient1AndCommit();
+        long id = _client1.getID(storedItem);
+        
+        Item retrievedItem = retrieveItemFromClient2();
+        
+        Item boundItem = new Item(CHANGED_NAME);
+        _client1.bind(boundItem, id);
+        Assert.areSame(boundItem, _client1.getByID(id));
+        Assert.areSame(retrievedItem, _client2.getByID(id));
+    }
+    
+    public void testIsStored(){
+        Item storedItem = storeItemToClient1AndCommit();
+        Assert.isTrue(_client1.isStored(storedItem));
+        Assert.isFalse(_client2.isStored(storedItem));
+    }
+    
     public void testStoredFieldIsolation(){
-        Item storedItem = new Item("original");
-        _client1.set(storedItem);
-        _client1.commit();
-        
-        storedItem._name = "changed";
+        Item storedItem = storeItemToClient1AndCommit();
+        storedItem._name = CHANGED_NAME;
         _client1.set(storedItem);
         
-        
-        Query query = _client2.query();
-        query.constrain(Item.class);
-        ObjectSet objectSet = query.execute();
-        Item retrievedItem = (Item) objectSet.next();
+        Item retrievedItem = retrieveItemFromClient2();
         
         StoredClass storedClass = _client2.storedClass(Item.class);
         StoredField storedField = storedClass.storedField("_name", null);
         Object retrievedName = storedField.get(retrievedItem);
-        Assert.areEqual("original", retrievedName);
+        Assert.areEqual(ORIGINAL_NAME, retrievedName);
         
         _client1.commit();
         
         retrievedName = storedField.get(retrievedItem);
-        Assert.areEqual("changed", retrievedName);
+        Assert.areEqual(CHANGED_NAME, retrievedName);
     }
-    
 
     public void testClose() {
         final BooleanByRef closed = new BooleanByRef();
@@ -89,6 +125,21 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         query.constrain(Item.class);
         ObjectSet result = query.execute();
         Assert.areEqual(count, result.size());
+    }
+    
+    private Item storeItemToClient1AndCommit() {
+        Item storedItem = new Item(ORIGINAL_NAME);
+        _client1.set(storedItem);
+        _client1.commit();
+        return storedItem;
+    }
+
+    private Item retrieveItemFromClient2() {
+        Query query = _client2.query();
+        query.constrain(Item.class);
+        ObjectSet objectSet = query.execute();
+        Item retrievedItem = (Item) objectSet.next();
+        return retrievedItem;
     }
 
     public void setUp() throws Exception {

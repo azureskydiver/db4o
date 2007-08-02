@@ -28,8 +28,8 @@ class JDK_1_2 extends JDKReflect {
 	    new TTreeSet();
 	}
 
-    Db4oCollections collections(ObjectContainerBase a_stream){
-        return new P2Collections(a_stream);
+    Db4oCollections collections(Transaction transaction){
+        return new P2Collections(transaction);
     }
 
     Object createReferenceQueue() {

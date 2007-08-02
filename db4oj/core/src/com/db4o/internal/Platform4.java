@@ -106,8 +106,8 @@ public final class Platform4 {
     	return ReflectPlatform.forName(className) != null;
     }
     
-    static Db4oCollections collections(Object a_object){
-        return jdk().collections((ObjectContainerBase)a_object);
+    static Db4oCollections collections(Transaction transaction){
+        return jdk().collections(transaction);
     }
     
     static final Reflector createReflector(Object classLoader){

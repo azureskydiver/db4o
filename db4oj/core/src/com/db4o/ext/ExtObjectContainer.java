@@ -107,14 +107,14 @@ public interface ExtObjectContainer extends ObjectContainer {
      * IDs can be obtained with {@link ExtObjectContainer#getID(Object)}.
      * Objects will not be activated by this method. They will be returned in the 
      * activation state they are currently in, in the local cache.<br><br>
-     * @param ID the internal ID
+     * @param id the internal ID
      * @return the object associated with the passed ID or <code>null</code>, 
      * if no object is associated with this ID in this <code>ObjectContainer</code>.
      * @see com.db4o.config.Configuration#activationDepth Why activation?
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
      * @throws InvalidIDException when the provided id is outside the scope of the
      */
-    public Object getByID(long ID) throws DatabaseClosedException, InvalidIDException;
+    public Object getByID(long id) throws DatabaseClosedException, InvalidIDException;
     
     /**
      * returns a stored object for a {@link Db4oUUID}.

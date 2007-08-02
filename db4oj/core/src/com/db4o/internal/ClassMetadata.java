@@ -1375,7 +1375,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
         if (id != 0) {
             final Transaction trans = a_candidates.i_trans;
-            Object obj = trans.stream().getByID1(trans, id);
+            Object obj = trans.stream().getByID(trans, id);
             if (obj != null) {
 
                 a_candidates.i_trans.stream().activate1(trans, obj, 2);
@@ -1793,14 +1793,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if (existingField.value != null
 	        && newValue != null
 	        && existingField.value.getClass() == newValue.getClass()) {
-	        long id = stream.getID1(trans, existingField.value);
+	        long id = stream.getID(trans, existingField.value);
 	        if (id > 0) {
 	            if (existingField.value != newValue) {
 	                
 	                // This is the clue:
 	                // Bind the current static member to it's old database identity,
 	                // so constants and enums will work with '=='
-	                stream.bind1(trans, newValue, id);
+	                stream.bind(trans, newValue, id);
 	                
 	                // This may produce unwanted side effects if the static field object
 	                // was modified in the current session. TODO:Add documentation case.

@@ -11,17 +11,17 @@ import com.db4o.types.*;
  */
 public class P2Collections implements Db4oCollections{
     
-    final ObjectContainerBase i_stream;
+    private final Transaction _transaction;
     
-    public P2Collections(ObjectContainerBase a_stream){
-        i_stream = a_stream;
+    public P2Collections(Transaction transaction){
+        _transaction = transaction;
     }
 
     public Db4oList newLinkedList() {
-        synchronized(i_stream._lock) {
-	        if(Unobfuscated.createDb4oList(i_stream)){
+        synchronized(lock()) {
+	        if(Unobfuscated.createDb4oList(container())){
 	            Db4oList l = new P2LinkedList();
-	            i_stream.set(l);
+	            container().set(_transaction, l);
 	            return l;
 	        }
 	        return null;
@@ -29,8 +29,8 @@ public class P2Collections implements Db4oCollections{
     }
 
     public Db4oMap newHashMap(int a_size) {
-        synchronized(i_stream._lock) {
-	        if(Unobfuscated.createDb4oList(i_stream)){
+        synchronized(lock()) {
+	        if(Unobfuscated.createDb4oList(container())){
 	            return new P2HashMap(a_size);
 	        }
 	        return null;
@@ -38,15 +38,23 @@ public class P2Collections implements Db4oCollections{
     }
     
     public Db4oMap newIdentityHashMap(int a_size) {
-        synchronized(i_stream._lock) {
-	        if(Unobfuscated.createDb4oList(i_stream)){
+        synchronized(lock()) {
+	        if(Unobfuscated.createDb4oList(container())){
 	            P2HashMap m = new P2HashMap(a_size);
 	            m.i_type = 1;
-	            i_stream.set(m);
+	            container().set(_transaction, m);
 	            return m;
 	        }
 	        return null;
         }
+    }
+    
+    private Object lock(){
+        return container().lock();
+    }
+    
+    private ObjectContainerBase container(){
+        return _transaction.stream();
     }
 
 }

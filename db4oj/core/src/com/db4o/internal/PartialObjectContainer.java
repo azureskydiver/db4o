@@ -185,33 +185,33 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public void bind(Object obj, long id) {
-        synchronized (_lock) {
-            bind1(null, obj, id);
-        }
+    public final void bind(Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
+        bind(null, obj, id);
     }
 
-    /** TODO: This is not transactional yet. */
-    public final void bind1(Transaction ta, Object obj, long id) {
-        
-        if(DTrace.enabled){
-            DTrace.BIND.log(id, " ihc " + System.identityHashCode(obj));
-        }
-        
-        ta = checkTransaction(ta);
-        int intID = (int) id;
-        if (obj != null) {
+    public final void bind(Transaction ta, Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
+        synchronized (_lock) {
+            if(obj == null){
+                throw new ArgumentNullException();
+            }
+            if(DTrace.enabled){
+                DTrace.BIND.log(id, " ihc " + System.identityHashCode(obj));
+            }
+            ta = checkTransaction(ta);
+            int intID = (int) id;
             Object oldObject = getByID(id);
-            if (oldObject != null) {
-                ObjectReference yo = ta.referenceForId(intID);
-                if (yo != null) {
-                    if (ta.reflector().forObject(obj) == yo.getYapClass().classReflector()) {
-                        ObjectReference newRef = bind2(ta, yo, obj);
-                        newRef.virtualAttributes(ta);
-                    } else {
-                        throw new RuntimeException(Messages.get(57));
-                    }
-                }
+            if (oldObject == null) {
+                throw new IllegalArgumentException("id");
+            }
+            ObjectReference yo = ta.referenceForId(intID);
+            if(yo == null){
+                throw new IllegalArgumentException("obj");
+            }
+            if (ta.reflector().forObject(obj) == yo.getYapClass().classReflector()) {
+                ObjectReference newRef = bind2(ta, yo, obj);
+                newRef.virtualAttributes(ta);
+            } else {
+                throw new RuntimeException(Messages.get(57));
             }
         }
     }
@@ -335,13 +335,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	}
 
 	protected abstract void shutdownDataStorage();
+	
+	public Db4oCollections collections() {
+	    return collections(null);
+	}
     
-    public Db4oCollections collections() {
+    public Db4oCollections collections(Transaction trans) {
         synchronized (_lock) {
-            if (i_handlers.i_collections == null) {
-                i_handlers.i_collections = Platform4.collections(this);
-            }
-            return i_handlers.i_collections;
+            return Platform4.collections(checkTransaction(trans));
         }
     }
     
@@ -740,30 +741,30 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract AbstractQueryResult getAll(Transaction ta);
 
-    public Object getByID(long id) throws DatabaseClosedException, InvalidIDException  {
-    	if (id <= 0) {
-    		throw new IllegalArgumentException();
-		}
-        synchronized (_lock) {
-        	checkClosed();
-            return getByID1(null, id);
-        }
+    public final Object getByID(long id) throws DatabaseClosedException, InvalidIDException  {
+        return getByID(null, id);
     }
 
-    public final Object getByID1(Transaction ta, long id) throws InvalidIDException {
-        ta = checkTransaction(ta);
-        beginTopLevelCall();
-        try {
-            Object obj = getByID2(ta, (int) id);
-            completeTopLevelCall();
-            return obj;
-        } catch(Db4oException e) {
-        	completeTopLevelCall(new InvalidIDException(e));
-        } finally {
-        	endTopLevelCall();
+    public final Object getByID(Transaction ta, long id) throws DatabaseClosedException, InvalidIDException {
+        synchronized (_lock) {
+            if (id <= 0) {
+                throw new IllegalArgumentException();
+            }
+            checkClosed();
+            ta = checkTransaction(ta);
+            beginTopLevelCall();
+            try {
+                Object obj = getByID2(ta, (int) id);
+                completeTopLevelCall();
+                return obj;
+            } catch(Db4oException e) {
+            	completeTopLevelCall(new InvalidIDException(e));
+            } finally {
+            	endTopLevelCall();
+            }
+            // only to make the compiler happy
+            return null;
         }
-        // only to make the compiler happy
-        return null;
     }
     
     final Object getByID2(Transaction ta, int id) {
@@ -815,24 +816,25 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    public long getID(Object obj) {
-        synchronized (_lock) {
-            return getID1(checkTransaction(), obj);
-        }
+    public final long getID(Object obj) {
+        return getID(null, obj);
     }
 
-    public final int getID1(Transaction trans, Object obj) {
-        checkClosed();
-
-        if(obj == null){
+    public final int getID(Transaction trans, Object obj) {
+        synchronized (_lock) {
+            trans = checkTransaction(trans);
+            checkClosed();
+    
+            if(obj == null){
+                return 0;
+            }
+    
+            ObjectReference yo = trans.referenceForObject(obj);
+            if (yo != null) {
+                return yo.getID();
+            }
             return 0;
         }
-
-        ObjectReference yo = trans.referenceForObject(obj);
-        if (yo != null) {
-            return yo.getID();
-        }
-        return 0;
     }
     
     // FIXME: This method needs to be revisited for MTOC. Any
@@ -1115,21 +1117,21 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public boolean isStored(Object obj) {
-        synchronized (_lock) {
-            return isStored1(obj);
-        }
+        return isStored(null, obj);
     }
 
-    final boolean isStored1(Object obj) {
-        Transaction ta = checkTransaction();
-        if (obj == null) {
-            return false;
+    final boolean isStored(Transaction trans, Object obj) {
+        synchronized (_lock) {
+            trans = checkTransaction(trans);
+            if (obj == null) {
+                return false;
+            }
+            ObjectReference ref = trans.referenceForObject(obj);
+            if (ref == null) {
+                return false;
+            }
+            return !trans.isDeleted(ref.getID());
         }
-        ObjectReference yo = ta.referenceForObject(obj);
-        if (yo == null) {
-            return false;
-        }
-        return !ta.isDeleted(yo.getID());
     }
     
     public ReflectClass[] knownClasses(){
@@ -1562,7 +1564,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (obj instanceof Db4oType) {
             Db4oType db4oType = db4oTypeStored(trans, obj);
             if (db4oType != null) {
-                return getID1(trans, db4oType);
+                return getID(trans, db4oType);
             }
         }
         
