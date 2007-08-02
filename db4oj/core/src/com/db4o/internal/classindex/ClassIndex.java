@@ -53,7 +53,7 @@ import com.db4o.internal.slots.*;
             length += Const4.LEADING_LENGTH;
         }
         Buffer reader = new Buffer(length);
-        reader.readEncrypt(ta.stream(), slot.address());
+        reader.readEncrypt(ta.container(), slot.address());
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
         }

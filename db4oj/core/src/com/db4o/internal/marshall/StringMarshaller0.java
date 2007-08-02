@@ -43,7 +43,7 @@ public class StringMarshaller0 extends StringMarshaller {
     }
     
     public Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException, Db4oIOException {
-        return reader.readEmbeddedObject(stream.getTransaction());
+        return reader.readEmbeddedObject(stream.transaction());
     }
 
 	public void defrag(SlotReader reader) {

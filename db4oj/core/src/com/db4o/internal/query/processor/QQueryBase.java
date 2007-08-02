@@ -125,7 +125,7 @@ public abstract class QQueryBase implements Unversioned {
 	private Constraint addEvaluationToAllConstraints(QConEvaluation eval) {
 
 	    if(i_constraints.size() == 0){
-	        i_trans.stream().classCollection().iterateTopLevelClasses(new Visitor4() {
+	        i_trans.container().classCollection().iterateTopLevelClasses(new Visitor4() {
                 public void visit(Object obj) {
                     ClassMetadata classMetadata = (ClassMetadata) obj;
                     QConClass qcc = new QConClass(i_trans,classMetadata.classReflector());
@@ -144,7 +144,7 @@ public abstract class QQueryBase implements Unversioned {
 	}
 
 	private Constraint addClassConstraint(ReflectClass claxx) {
-		if(claxx.equals(stream().i_handlers.ICLASS_OBJECT)){
+		if(claxx.equals(stream()._handlers.ICLASS_OBJECT)){
 			return null;
 		}
 		
@@ -320,7 +320,7 @@ public abstract class QQueryBase implements Unversioned {
 	}
 
 	protected ObjectContainerBase stream() {
-		return i_trans.stream();
+		return i_trans.container();
 	}
 
 	private QueryResult classOnlyQuery() {

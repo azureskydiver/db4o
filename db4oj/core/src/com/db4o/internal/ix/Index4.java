@@ -132,7 +132,7 @@ public class Index4 {
     private void metaIndexStore(int entries, int length, int address){
         Transaction transact = trans();
         metaIndexSetMembers(entries, length, address);
-        transact.stream().setInternal(transact, _metaIndex, 1, false);
+        transact.container().setInternal(transact, _metaIndex, 1, false);
     }
     
     private void metaIndexSetMembers(int entries, int length, int address){

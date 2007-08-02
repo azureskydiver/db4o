@@ -61,7 +61,7 @@ class PendingClassInits {
 	}
 
     private ObjectContainerBase stream() {
-        return _systemTransaction.stream();
+        return _systemTransaction.container();
     }
 	
 	private void checkStatics() {

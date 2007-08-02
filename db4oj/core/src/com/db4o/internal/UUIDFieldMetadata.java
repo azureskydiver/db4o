@@ -128,7 +128,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	if (null != super.getIndex(transaction)) {
     		return;    		
     	}
-        LocalObjectContainer file = ((LocalObjectContainer)transaction.stream());
+        LocalObjectContainer file = ((LocalObjectContainer)transaction.container());
         SystemData sd = file.systemData();
         if(sd == null){
             // too early, in new file, try again later.
@@ -143,7 +143,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 
     void instantiate1(Transaction a_trans, ObjectReference a_yapObject, Buffer a_bytes) {
         int dbID = a_bytes.readInt();
-        ObjectContainerBase stream = a_trans.stream();
+        ObjectContainerBase stream = a_trans.container();
         stream.showInternalClasses(true);
         try {
 	        Db4oDatabase db = (Db4oDatabase)stream.getByID2(a_trans, dbID);
@@ -228,7 +228,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 	}
 
 	protected final HardObjectReference getHardObjectReferenceById(Transaction transaction, int parentId, byte[] signature) {
-		HardObjectReference hardRef = transaction.stream().getHardObjectReferenceById(transaction, parentId);
+		HardObjectReference hardRef = transaction.container().getHardObjectReferenceById(transaction, parentId);
         if (hardRef._reference == null) {
         	return null;
         }

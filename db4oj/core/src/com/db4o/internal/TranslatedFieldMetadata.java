@@ -26,12 +26,12 @@ final class TranslatedFieldMetadata extends FieldMetadata
 		if(a_depth > 0){
 			cascadeActivation(a_trans, a_onObject, a_depth, false);
 		}
-		setOn(a_trans.stream(), a_onObject, null);
+		setOn(a_trans.container(), a_onObject, null);
 	}
 
 	public Object getOn(Transaction a_trans, Object a_OnObject) {
 		try {
-			return i_translator.onStore(a_trans.stream(), a_OnObject);
+			return i_translator.onStore(a_trans.container(), a_OnObject);
 		} catch(ReflectException e) {
 			throw e;
 		} catch (RuntimeException e) {

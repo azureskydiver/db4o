@@ -44,7 +44,7 @@ public class LocalTransaction extends Transaction {
     }
     
     public void commit(ServerMessageDispatcher dispatcher) {
-        synchronized (stream()._lock) {
+        synchronized (container()._lock) {
         	if(doCommittingCallbacks()){
         		callbacks().commitOnStarted(this, collectCallbackObjectInfos(dispatcher));
         	}
@@ -93,7 +93,7 @@ public class LocalTransaction extends Transaction {
 	private void commitImpl(){
         
         if(DTrace.enabled){
-            DTrace.TRANS_COMMIT.logInfo( "server == " + stream().isServer() + ", systemtrans == " +  isSystemTransaction());
+            DTrace.TRANS_COMMIT.logInfo( "server == " + container().isServer() + ", systemtrans == " +  isSystemTransaction());
         }
         
         commit2Listeners();
@@ -104,7 +104,7 @@ public class LocalTransaction extends Transaction {
         
         commitParticipants();
         
-        stream().writeDirty();
+        container().writeDirty();
         
         Slot reservedSlot = allocateTransactionLogSlot(false);
         
@@ -156,9 +156,9 @@ public class LocalTransaction extends Transaction {
     }
     
     private void commit3Stream(){
-        stream().processPendingClassUpdates();
-        stream().writeDirty();
-        stream().classCollection().write(stream().systemTransaction());
+        container().processPendingClassUpdates();
+        container().writeDirty();
+        container().classCollection().write(container().systemTransaction());
     }
     
 	private LocalTransaction parentLocalTransaction() {
@@ -187,7 +187,7 @@ public class LocalTransaction extends Transaction {
 	}
 	
     public void rollback() {
-        synchronized (stream()._lock) {
+        synchronized (container()._lock) {
             
             rollbackParticipants();
             
@@ -265,14 +265,14 @@ public class LocalTransaction extends Transaction {
 			buffer.write();
 			flushFile();
 
-			stream().writeTransactionPointer(transactionLogSlot.address());
+			container().writeTransactionPointer(transactionLogSlot.address());
 			flushFile();
 
 			if (writeSlots()) {
 				flushFile();
 			}
 
-			stream().writeTransactionPointer(0);
+			container().writeTransactionPointer(0);
 			flushFile();
 			
 			if (transactionLogSlot != reservedSlot) {
@@ -458,7 +458,7 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	final void writeOld() {
-        synchronized (stream()._lock) {
+        synchronized (container()._lock) {
             i_pointerIo.useSlot(i_address);
             i_pointerIo.read();
             int length = i_pointerIo.readInt();
@@ -470,11 +470,11 @@ public class LocalTransaction extends Transaction {
                 if(writeSlots()){
                     flushFile();
                 }
-                stream().writeTransactionPointer(0);
+                container().writeTransactionPointer(0);
                 flushFile();
                 freeSlotChanges(false);
             } else {
-                stream().writeTransactionPointer(0);
+                container().writeTransactionPointer(0);
                 flushFile();
             }
         }
@@ -595,15 +595,15 @@ public class LocalTransaction extends Transaction {
     }
 	
 	public void processDeletes() {
-		if (i_delete == null) {
+		if (_delete == null) {
 			_writtenUpdateDeletedMembers = null;
 			return;
 		}
 
-		while (i_delete != null) {
+		while (_delete != null) {
 
-			Tree delete = i_delete;
-			i_delete = null;
+			Tree delete = _delete;
+			_delete = null;
 
 			delete.traverse(new Visitor4() {
 				public void visit(Object a_object) {
@@ -627,16 +627,16 @@ public class LocalTransaction extends Transaction {
 						// Let's try to read it again, but this may fail in
 						// CS mode if another transaction has deleted it. 
 
-						HardObjectReference hardRef = stream().getHardObjectReferenceById(
+						HardObjectReference hardRef = container().getHardObjectReferenceById(
 							LocalTransaction.this, info._key);
 						if(hardRef == HardObjectReference.INVALID){
 							return;
 						}
 						info._reference = hardRef._reference;
-						info._reference.flagForDelete(stream().topLevelCallId());
+						info._reference.flagForDelete(container().topLevelCallId());
 						obj = info._reference.getObject();
 					}
-					stream().delete3(LocalTransaction.this, info._reference,
+					container().delete3(LocalTransaction.this, info._reference,
 							info._cascade, false);
 				}
 			});
@@ -663,7 +663,7 @@ public class LocalTransaction extends Transaction {
         	return;
         }
         
-        StatefulBuffer objectBytes = stream().readWriterByID(this, id);
+        StatefulBuffer objectBytes = container().readWriterByID(this, id);
         if(objectBytes == null){
             if (clazz.hasClassIndex()) {
                  dontRemoveFromClassIndex(clazz.getID(), id);
@@ -671,9 +671,9 @@ public class LocalTransaction extends Transaction {
             return;
         }
         
-        ObjectHeader oh = new ObjectHeader(stream(), clazz, objectBytes);
+        ObjectHeader oh = new ObjectHeader(container(), clazz, objectBytes);
         
-        DeleteInfo info = (DeleteInfo)TreeInt.find(i_delete, id);
+        DeleteInfo info = (DeleteInfo)TreeInt.find(_delete, id);
         if(info != null){
             if(info._cascade > cascade){
                 cascade = info._cascade;
@@ -686,7 +686,7 @@ public class LocalTransaction extends Transaction {
     }
     
 	private Callbacks callbacks(){
-		return stream().callbacks();
+		return container().callbacks();
 	}
 
 	private CallbackObjectInfoCollections collectCallbackObjectInfos(ServerMessageDispatcher serverMessageDispatcher) {

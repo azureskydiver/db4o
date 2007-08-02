@@ -42,13 +42,13 @@ public class LazyObjectReference implements ObjectInfo{
 	}
 	
 	private ObjectReference reference() {
-		final HardObjectReference hardRef = _transaction.stream().getHardObjectReferenceById(_transaction, _id);
+		final HardObjectReference hardRef = _transaction.container().getHardObjectReferenceById(_transaction, _id);
 		return hardRef._reference;
 	}
 	
 	private Object containerLock(){
-		_transaction.stream().checkClosed();
-		return _transaction.stream().lock();
+		_transaction.container().checkClosed();
+		return _transaction.container().lock();
 	}
 
 }

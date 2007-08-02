@@ -48,7 +48,7 @@ public class KnownClassesRepository {
 	public void setTransaction(Transaction trans){
 		if(trans != null){
 			_trans = trans;
-			_stream = trans.stream();
+			_stream = trans.container();
 		}
 	}
     

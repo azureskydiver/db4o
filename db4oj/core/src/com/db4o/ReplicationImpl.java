@@ -56,12 +56,12 @@ public class ReplicationImpl implements ReplicationProcess {
 
 				MigrationConnection mgc = new MigrationConnection(_peerA, _peerB);
 
-				_peerA.i_handlers.migrationConnection(mgc);
-				_peerA.i_handlers.replication(this);
+				_peerA._handlers.migrationConnection(mgc);
+				_peerA._handlers.replication(this);
 				_peerA.replicationCallState(Const4.OLD);
 
-				_peerB.i_handlers.migrationConnection(mgc);
-				_peerB.i_handlers.replication(this);
+				_peerB._handlers.migrationConnection(mgc);
+				_peerB._handlers.replication(this);
                 _peerB.replicationCallState(Const4.OLD);
 
 				_conflictHandler = conflictHandler;
@@ -118,12 +118,12 @@ public class ReplicationImpl implements ReplicationProcess {
 	private void endReplication() {
         
 		_peerA.replicationCallState(Const4.NONE);
-        _peerA.i_handlers.migrationConnection(null);
-		_peerA.i_handlers.replication(null);
+        _peerA._handlers.migrationConnection(null);
+		_peerA._handlers.replication(null);
         
         _peerA.replicationCallState(Const4.NONE);
-        _peerB.i_handlers.migrationConnection(null);
-		_peerB.i_handlers.replication(null);
+        _peerB._handlers.migrationConnection(null);
+		_peerB._handlers.replication(null);
 	}
     
     private int idInCaller(ObjectContainerBase caller, ObjectReference referenceA, ObjectReference referenceB){

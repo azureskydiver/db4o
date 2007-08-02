@@ -87,12 +87,12 @@ public class QConPath extends QConClass {
     private void morph(boolean[] removeExisting, QCon newConstraint, ReflectClass claxx) {
         boolean mayMorph = true;
         if (claxx != null) {
-        	ClassMetadata yc = i_trans.stream().produceClassMetadata(claxx);
+        	ClassMetadata yc = i_trans.container().produceClassMetadata(claxx);
         	if (yc != null) {
         		Iterator4 i = iterateChildren();
         		while (i.moveNext()) {
         			QField qf = ((QCon) i.current()).getField();
-        			if (!yc.hasField(i_trans.stream(), qf.i_name)) {
+        			if (!yc.hasField(i_trans.container(), qf.i_name)) {
         				mayMorph = false;
         				break;
         			}

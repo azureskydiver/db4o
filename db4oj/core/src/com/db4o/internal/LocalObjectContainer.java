@@ -64,7 +64,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     final protected void close2() {
-    	if (!i_config.isReadOnly()) {
+    	if (!_config.isReadOnly()) {
 			freeInternalResources();
 			commitTransaction();
 			shutdown();
@@ -125,7 +125,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     public final BTree createBTreeClassIndex(int id){
-        return new BTree(i_trans, id, new IDHandler(this));
+        return new BTree(_transaction, id, new IDHandler(this));
     }
     
     public final AbstractQueryResult newQueryResult(Transaction trans) {
@@ -243,7 +243,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         // We have to make sure that object IDs do not collide
         // with built-in type IDs.
-        if(i_handlers.isSystemHandler(id)){
+        if(_handlers.isSystemHandler(id)){
             return getPointerSlot();
         }
             
@@ -297,7 +297,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
 	private void switchToReadOnlyMode() {
-		i_config.readOnly(true);
+		_config.readOnly(true);
 	}
     
 	// Please comment why this is necessary.
@@ -454,7 +454,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         
         readHeaderVariablePart();
         
-        if (!i_config.isReadOnly()) {
+        if (!_config.isReadOnly()) {
 			_freespaceManager = AbstractFreespaceManager.createNew(this,
 					_systemData.freespaceSystem());
 			_freespaceManager.read(_systemData.freespaceID());
@@ -465,7 +465,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         	migrateFreespace();
         }
         
-        if(i_config.isReadOnly()) {
+        if(_config.isReadOnly()) {
         	return;
         }
         
@@ -482,7 +482,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         if(Converter.convert(new ConversionStage.SystemUpStage(this))){
             _systemData.converterVersion(Converter.VERSION);
             _fileHeader.writeVariablePart(this, 1);
-            getTransaction().commit();
+            transaction().commit();
         }
         
     }
@@ -553,7 +553,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
     public final void rollback1() {
-        getTransaction().rollback();
+        transaction().rollback();
     }
 
     public final void setDirtyInSystemTransaction(PersistentBase a_object) {
@@ -626,7 +626,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     public final void commitTransaction() {
-        i_trans.commit();
+        _transaction.commit();
     }
 
     public abstract void writeBytes(Buffer a_Bytes, int address, int addressOffset);

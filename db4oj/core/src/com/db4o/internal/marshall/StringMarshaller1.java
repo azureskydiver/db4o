@@ -29,7 +29,7 @@ public class StringMarshaller1 extends StringMarshaller{
             return;
         }
         
-        header.addPayLoadLength(trans.stream().stringIO().length((String)obj));
+        header.addPayLoadLength(trans.container().stringIO().length((String)obj));
     }
     
     public Object writeNew(Object obj, boolean topLevel, StatefulBuffer writer, boolean redirect) {

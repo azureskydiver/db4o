@@ -199,7 +199,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 
 	protected Transaction trans() {
-	    return stream().getTransaction();
+	    return stream().transaction();
 	}
 
 	protected Transaction systemTrans() {

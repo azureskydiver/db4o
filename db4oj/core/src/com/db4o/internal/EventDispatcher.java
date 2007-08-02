@@ -73,7 +73,7 @@ public final class EventDispatcher {
 	        count = SERVER_COUNT;
 	    }
 	    if(count > 0){
-			ReflectClass[] parameterClasses = {a_stream.i_handlers.ICLASS_OBJECTCONTAINER};
+			ReflectClass[] parameterClasses = {a_stream._handlers.ICLASS_OBJECTCONTAINER};
 			ReflectMethod[] methods = new ReflectMethod[COUNT];
 			for (int i = COUNT - 1; i >= 0; i--) {
 				ReflectMethod method = classReflector.getMethod(events[i],

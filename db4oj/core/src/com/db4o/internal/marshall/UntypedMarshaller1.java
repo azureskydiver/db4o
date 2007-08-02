@@ -67,7 +67,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader.readInt();
         
-        ClassMetadata yc = trans.stream().classMetadataForId(yapClassID);
+        ClassMetadata yc = trans.container().classMetadataForId(yapClassID);
         if(yc != null){
             ret = yc.readQuery(trans, _family, false, reader, toArray);
         }
@@ -91,7 +91,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader[0].readInt();
         
-        ClassMetadata yc = trans.stream().classMetadataForId(yapClassID);
+        ClassMetadata yc = trans.container().classMetadataForId(yapClassID);
         if(yc != null){
             ret = yc.readArrayHandler(trans, _family, reader);
         }
@@ -111,7 +111,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         int yapClassID = reader.readInt();
         
-        ClassMetadata yc = candidates.i_trans.stream().classMetadataForId(yapClassID);
+        ClassMetadata yc = candidates.i_trans.container().classMetadataForId(yapClassID);
         if(yc != null){
             ret = yc.readSubCandidate(_family, reader, candidates, false);
         }

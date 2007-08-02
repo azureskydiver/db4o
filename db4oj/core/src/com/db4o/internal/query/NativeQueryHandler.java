@@ -73,7 +73,7 @@ public class NativeQueryHandler {
 		q.constrain(new PredicateEvaluation(predicate));
 		notifyListeners(predicate,NativeQueryHandler.UNOPTIMIZED,null);
         if(shouldOptimize()){
-            DiagnosticProcessor dp = ((ObjectContainerBase)_container).i_handlers._diagnosticProcessor;
+            DiagnosticProcessor dp = ((ObjectContainerBase)_container)._handlers._diagnosticProcessor;
             if(dp.enabled()){
                 dp.nativeQueryUnoptimized(predicate);
             }
@@ -94,7 +94,7 @@ public class NativeQueryHandler {
 	
 	private void loadQueryOptimizer() {
 		Class clazz = ReflectPlatform.forName(NativeQueryHandler.OPTIMIZER_IMPL_NAME);
-		DiagnosticProcessor dp = ((ObjectContainerBase)_container).i_handlers._diagnosticProcessor;
+		DiagnosticProcessor dp = ((ObjectContainerBase)_container)._handlers._diagnosticProcessor;
 		
 		if(clazz == null){
             if(dp.enabled()){

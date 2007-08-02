@@ -51,7 +51,7 @@ public abstract class AbstractLateQueryResult extends AbstractQueryResult {
 			return true;
 		}
 		ReflectClass claxx = yapClass.classReflector();
-		if (stream().i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)){
+		if (stream()._handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)){
 			return true; 
 		}
 		return false;

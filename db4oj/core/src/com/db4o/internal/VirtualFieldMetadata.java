@@ -96,8 +96,8 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
             return;
         }
         
-        ObjectContainerBase stream = trans.stream();
-        HandlerRegistry handlers = stream.i_handlers;
+        ObjectContainerBase stream = trans.container();
+        HandlerRegistry handlers = stream._handlers;
         boolean migrating = false;
         
         
@@ -115,7 +115,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
                         migrateYapObject = mgc.referenceFor(obj);
                         if(migrateYapObject == null){
                             ObjectContainerBase peer = mgc.peer(stream);
-                            migrateYapObject = peer.getTransaction().referenceForObject(obj);
+                            migrateYapObject = peer.transaction().referenceForObject(obj);
                         }
                     }
                     if (migrateYapObject != null){

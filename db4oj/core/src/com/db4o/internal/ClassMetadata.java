@@ -101,7 +101,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     void activateFields(Transaction a_trans, Object a_object, int a_depth) {
-        if(objectCanActivate(a_trans.stream(), a_object)){
+        if(objectCanActivate(a_trans.container(), a_object)){
             activateFields1(a_trans, a_object, a_depth);
         }
     }
@@ -166,7 +166,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 }
             }
             
-            DiagnosticProcessor dp = _container.i_handlers._diagnosticProcessor;
+            DiagnosticProcessor dp = _container._handlers._diagnosticProcessor;
             if(dp.enabled()){
                 dp.checkClassHasFields(this);
             }
@@ -185,7 +185,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		ReflectField[] fields = reflectFields();
 		for (int i = 0; i < fields.length; i++) {
 		    if (storeField(fields[i])) {
-		        TypeHandler4 wrapper = stream.i_handlers.handlerForClass(stream, fields[i].getFieldType());
+		        TypeHandler4 wrapper = stream._handlers.handlerForClass(stream, fields[i].getFieldType());
 		        if (wrapper == null) {
 		            continue;
 		        }
@@ -335,7 +335,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
         }
         if (a_depth > 0) {
-            ObjectContainerBase stream = a_trans.stream();
+            ObjectContainerBase stream = a_trans.container();
             if (a_activate) {
                 if(isValueType()){
                     activateFields(a_trans, a_object, a_depth - 1);
@@ -372,13 +372,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if (claxx == null){
             return;
         }
-        if (_container.i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
+        if (_container._handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
             _internal = true;
         }
-        if (_container.i_handlers.ICLASS_UNVERSIONED.isAssignableFrom(claxx)) {
+        if (_container._handlers.ICLASS_UNVERSIONED.isAssignableFrom(claxx)) {
             _unversioned = true;
         }        
-        if (_container.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
+        if (_container._handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
         	Db4oTypeImpl db4oTypeImpl = (Db4oTypeImpl) claxx.newInstance();
         	_classIndexed = (db4oTypeImpl == null || db4oTypeImpl.hasClassIndex());
 		} else if(i_config != null){
@@ -482,7 +482,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         
         if(a_class != null){
-            if(a_stream.i_handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)
+            if(a_stream._handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)
             	|| Platform4.isTransient(a_class)) {
                 a_class = null;
             }
@@ -497,7 +497,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return false;
         }
         
-        if(a_stream.i_handlers.createConstructor(a_class, ! callConstructor())){
+        if(a_stream._handlers.createConstructor(a_class, ! callConstructor())){
             return true;
         }
         
@@ -515,9 +515,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
 	public void deactivate(Transaction a_trans, Object a_object, int a_depth) {
-        if(objectCanDeactivate(a_trans.stream(), a_object)){
+        if(objectCanDeactivate(a_trans.container(), a_object)){
             deactivate1(a_trans, a_object, a_depth);
-            objectOnDeactivate(a_trans.stream(), a_object);
+            objectOnDeactivate(a_trans.container(), a_object);
         }
     }
 
@@ -548,7 +548,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     private final void delete1(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, Object a_object) {
         removeFromIndex(a_bytes.getTransaction(), a_bytes.getID());
-        deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().stream().i_handlers.arrayType(a_object), false);
+        deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().container()._handlers.arrayType(a_object), false);
     }
 
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
@@ -714,9 +714,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         	throw new ObjectNotStorableException(obj.toString());
         }
         if(allowCreation){
-        	return trans.stream().produceClassMetadata(reflectClass);
+        	return trans.container().produceClassMetadata(reflectClass);
         }
-        return trans.stream().classMetadataForReflectClass(reflectClass);
+        return trans.container().classMetadataForReflectClass(reflectClass);
     }
     
     public boolean generateUUIDs() {
@@ -804,7 +804,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	        if (! stateOK()) {
                 return new long[0];
             }
-	        return getIDs(_container.getTransaction());
+	        return getIDs(_container.transaction());
         }
     }
 
@@ -816,7 +816,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             if (! hasClassIndex()) {
                 return new long[0];
             }        
-            return trans.stream().getIDsForClass(trans, this);
+            return trans.container().getIDsForClass(trans, this);
         }
     }
 
@@ -1062,7 +1062,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
 	private boolean activatingActiveObject(final ObjectContainerBase stream, ObjectReference ref) {
-		return !stream.i_refreshInsteadOfActivate && ref.isActive();
+		return !stream._refreshInsteadOfActivate && ref.isActive();
 	}
 
 	private void activate(final ObjectContainerBase stream, StatefulBuffer buffer, MarshallerFamily mf, ObjectHeaderAttributes attributes, ObjectReference ref, Object obj) {
@@ -1266,7 +1266,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             int depth = a_bytes.getInstantiationDepth() - 1;
 
             Transaction trans = a_bytes.getTransaction();
-            ObjectContainerBase stream = trans.stream();
+            ObjectContainerBase stream = trans.container();
 
             if (a_bytes.getUpdateDepth() == Const4.TRANSIENT) {
                 return stream.peekPersisted(trans, id, depth);
@@ -1319,7 +1319,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
         try {
-            return a_trans.stream().getByID2(a_trans, a_reader.readInt());
+            return a_trans.container().getByID2(a_trans, a_reader.readInt());
         } catch (Exception e) {
         	// FIXME: DO WE NEED TO CATCH IT HERE?
             if (Debug.atHome) {
@@ -1375,13 +1375,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
         if (id != 0) {
             final Transaction trans = a_candidates.i_trans;
-            Object obj = trans.stream().getByID(trans, id);
+            Object obj = trans.container().getByID(trans, id);
             if (obj != null) {
 
-                a_candidates.i_trans.stream().activate1(trans, obj, 2);
+                a_candidates.i_trans.container().activate1(trans, obj, 2);
                 Platform4.forEachCollectionElement(obj, new Visitor4() {
                     public void visit(Object elem) {
-                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, (int)trans.stream().getID(elem), true));
+                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, (int)trans.container().getID(elem), true));
                     }
                 });
             }
@@ -1427,7 +1427,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     byte[] readName(Transaction a_trans) {
-        i_reader = a_trans.stream().readReaderByID(a_trans, getID());
+        i_reader = a_trans.container().readReaderByID(a_trans, getID());
         return readName1(a_trans, i_reader);
     }
 
@@ -1459,7 +1459,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject) {
         int id = a_yapObject.getID();
-        ObjectContainerBase stream = a_trans.stream();
+        ObjectContainerBase stream = a_trans.container();
         Buffer reader = stream.readReaderByID(a_trans, id);
         ObjectHeader oh = new ObjectHeader(stream, this, reader);
         oh.objectMarshaller().readVirtualAttributes(a_trans, this, a_yapObject, oh._headerAttributes, reader);
@@ -1690,7 +1690,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         	return;
         }
         
-        final ObjectContainerBase stream = trans.stream();
+        final ObjectContainerBase stream = trans.container();
         stream.showInternalClasses(true);
         try {
             StaticClass sc = queryStaticClass(trans);
@@ -1705,13 +1705,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
 	private boolean shouldStoreStaticFields(Transaction trans) {
-		return !trans.stream().config().isReadOnly() 
+		return !trans.container().config().isReadOnly() 
 					&&  (staticFieldValuesArePersisted()
         			|| Platform4.storeStaticFieldValues(trans.reflector(), classReflector()));
 	}
 
 	private void updateStaticClass(final Transaction trans, final StaticClass sc) {
-		final ObjectContainerBase stream = trans.stream();
+		final ObjectContainerBase stream = trans.container();
 		stream.activate1(trans, sc, 4);
 		
 		final StaticField[] existingFields = sc.fields;
@@ -1735,7 +1735,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
 	private void createStaticClass(Transaction trans) {
-		if (trans.stream().isClient()) {
+		if (trans.container().isClient()) {
 			return;
 		}
 		StaticClass sc = new StaticClass(i_name, toStaticFieldArray(staticReflectFieldsToStaticFields()));
@@ -1763,7 +1763,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 	private void setStaticClass(Transaction trans, StaticClass sc) {
 		// TODO: we should probably use a specific update depth here, 4?
-		trans.stream().setInternal(trans, sc, true);
+		trans.container().setInternal(trans, sc, true);
 	}
 
 	private StaticField[] toStaticFieldArray(Iterator4 iterator4) {
@@ -1787,7 +1787,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
 	protected void updateExistingStaticField(Transaction trans, StaticField existingField, final ReflectField reflectField) {
-		final ObjectContainerBase stream = trans.stream();
+		final ObjectContainerBase stream = trans.container();
 		final Object newValue = staticReflectFieldValue(reflectField);
 		
 		if (existingField.value != null
@@ -1841,7 +1841,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
 	private StaticClass queryStaticClass(Transaction trans) {
-		Query q = trans.stream().query(trans);
+		Query q = trans.container().query(trans);
 		q.constrain(Const4.CLASS_STATICCLASS);
 		q.descend("name").constrain(i_name);
 		ObjectSet os = q.execute();

@@ -213,7 +213,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
 
     public void setTrans(Transaction a_trans) {
         i_trans = a_trans;
-        i_stream = a_trans.stream();
+        i_stream = a_trans.container();
     }
 
     public void writeLocal(File file) throws IOException {

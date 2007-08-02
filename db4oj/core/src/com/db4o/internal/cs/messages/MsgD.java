@@ -93,7 +93,7 @@ public class MsgD extends Msg{
 	}
 	
 	public MsgD getWriterForSingleObject(Transaction trans, Object obj) {
-		SerializedGraph serialized = Serializer.marshall(trans.stream(), obj);
+		SerializedGraph serialized = Serializer.marshall(trans.container(), obj);
 		MsgD msg = getWriterForLength(trans, serialized.marshalledLength());
 		serialized.write(msg._payLoad);
 		return msg;

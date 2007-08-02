@@ -19,26 +19,26 @@ public class ClientTransactionHandleTestCase implements TestLifeCycle {
 		final ClientTransactionPool pool = new ClientTransactionPool(db);
 		try {
 			ClientTransactionHandle handleA = new ClientTransactionHandle(pool);
-			Assert.areEqual(db, handleA.transaction().stream());
+			Assert.areEqual(db, handleA.transaction().container());
 			ClientTransactionHandle handleB = new ClientTransactionHandle(pool);
 			Assert.areNotEqual(handleA.transaction(), handleB.transaction());
-			Assert.areEqual(db, handleB.transaction().stream());
+			Assert.areEqual(db, handleB.transaction().container());
 			Assert.areEqual(1, pool.openFileCount());
 			
 			handleA.acquireTransactionForFile(SwitchingFilesFromClientUtil.FILENAME_A);
 			Assert.areEqual(2, pool.openFileCount());
-			Assert.areNotEqual(db, handleA.transaction().stream());
+			Assert.areNotEqual(db, handleA.transaction().container());
 			handleB.acquireTransactionForFile(SwitchingFilesFromClientUtil.FILENAME_A);
 			Assert.areEqual(2, pool.openFileCount());
 			Assert.areNotEqual(handleA.transaction(), handleB.transaction());
-			Assert.areEqual(handleA.transaction().stream(), handleB.transaction().stream());
+			Assert.areEqual(handleA.transaction().container(), handleB.transaction().container());
 			
 			handleA.releaseTransaction();
-			Assert.areEqual(db, handleA.transaction().stream());
-			Assert.areNotEqual(db, handleB.transaction().stream());
+			Assert.areEqual(db, handleA.transaction().container());
+			Assert.areNotEqual(db, handleB.transaction().container());
 			Assert.areEqual(2, pool.openFileCount());
 			handleB.releaseTransaction();
-			Assert.areEqual(db, handleB.transaction().stream());
+			Assert.areEqual(db, handleB.transaction().container());
 			Assert.areEqual(1, pool.openFileCount());
 		}
 		finally {

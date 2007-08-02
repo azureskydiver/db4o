@@ -32,7 +32,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     }
 
     public ReflectClass classReflector(){
-    	return _stream.i_handlers.ICLASS_STRING;
+    	return _stream._handlers.ICLASS_STRING;
     }
 
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer){
@@ -117,11 +117,11 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
         if(! withRedirection){
-            return mf._string.read(a_trans.stream(), a_reader);
+            return mf._string.read(a_trans.container(), a_reader);
         }
-	    Buffer reader = mf._string.readSlotFromParentSlot(a_trans.stream(), a_reader);
+	    Buffer reader = mf._string.readSlotFromParentSlot(a_trans.container(), a_reader);
 	    if(a_toArray) {
-	    	return mf._string.readFromOwnSlot(a_trans.stream(), reader);
+	    	return mf._string.readFromOwnSlot(a_trans.container(), reader);
 	    }
 	    return reader;
 	}

@@ -46,7 +46,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		if (isActive()) {
 			return;
 		}
-		activate(stream().getTransaction(), getObject(), 1, false);
+		activate(stream().transaction(), getObject(), 1, false);
 	}
 
 	private ObjectContainerBase stream() {
@@ -55,7 +55,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	
 	public void activate(Transaction ta, Object a_object, int a_depth, boolean a_refresh) {
 	    activate1(ta, a_object, a_depth, a_refresh);
-		ta.stream().activate3CheckStill(ta);
+		ta.container().activate3CheckStill(ta);
 	}
 	
 	void activate1(Transaction ta, Object a_object, int a_depth, boolean a_refresh) {
@@ -63,7 +63,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	        a_depth = ((Db4oTypeImpl)a_object).adjustReadDepth(a_depth);
 	    }
 		if (a_depth > 0) {
-		    ObjectContainerBase stream = ta.stream();
+		    ObjectContainerBase stream = ta.container();
 		    if(a_refresh){
 				logActivation(stream, "refresh");
 		    }else{
@@ -115,14 +115,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
             
             StatefulBuffer writer = MarshallerFamily.current()._object.marshallNew(a_trans, this, a_updateDepth);
 
-            ObjectContainerBase stream = a_trans.stream();
+            ObjectContainerBase stream = a_trans.container();
 			stream.writeNew(_class, writer);
 
             Object obj = _object;
 			objectOnNew(stream, obj);
 			
             if(! _class.isPrimitive()){
-                _object = stream.i_references.createYapRef(this, obj);
+                _object = stream._references.createYapRef(this, obj);
             }
 			
 			setStateClean();
@@ -143,7 +143,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 			    if(obj instanceof Db4oTypeImpl){
 			        ((Db4oTypeImpl)obj).preDeactivate();
 			    }
-			    ObjectContainerBase stream = a_trans.stream();
+			    ObjectContainerBase stream = a_trans.container();
 				logActivation(stream, "deactivate");
 				setStateDeactivated();
 				_class.deactivate(a_trans, obj, a_depth);
@@ -183,7 +183,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     public Transaction getTrans(){
         ObjectContainerBase stream = getStream();
         if(stream != null){
-            return stream.getTransaction();
+            return stream.transaction();
         }
         return null;
     }
@@ -241,7 +241,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 
 		if (beginProcessing()) {
 		    
-		    ObjectContainerBase stream = ta.stream();
+		    ObjectContainerBase stream = ta.container();
 		    int id = getID();
 			if (a_reader == null && id > 0) {
 				a_reader = stream.readWriterByID(ta, id);
@@ -319,11 +319,11 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 
 	void setObjectWeak(ObjectContainerBase a_stream, Object a_object) {
-		if (a_stream.i_references._weak) {
+		if (a_stream._references._weak) {
 			if(_object != null){
 				Platform4.killYapRef(_object);
 			}
-			_object = Platform4.createYapRef(a_stream.i_references._queue, this, a_object);
+			_object = Platform4.createYapRef(a_stream._references._queue, this, a_object);
 		} else {
 			_object = a_object;
 		}
@@ -339,7 +339,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		
 		writeObjectBegin();
 		
-		int id = trans.stream().newUserObject();
+		int id = trans.container().newUserObject();
 		trans.slotFreePointerOnRollback(id);
 
         setID(id);
@@ -418,7 +418,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    
 		    Object obj = getObject();
 		    
-		    if(objectCanUpdate(a_trans.stream(), obj)){
+		    if(objectCanUpdate(a_trans.container(), obj)){
 				
 				if ((!isActive()) || obj == null) {
 					endProcessing();
@@ -437,12 +437,12 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 					}
 				}
 				
-				logEvent(a_trans.stream(), "update", Const4.STATE);
+				logEvent(a_trans.container(), "update", Const4.STATE);
 				
 				setStateClean();
 
 				a_trans.writeUpdateDeleteMembers(getID(), _class, a_trans
-						.stream().i_handlers.arrayType(obj), 0);
+						.container()._handlers.arrayType(obj), 0);
                 
                 MarshallerFamily.current()._object.marshallUpdate(a_trans, a_updatedepth, this, obj);
 				
@@ -812,7 +812,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    if(_class != null){
 		        ObjectContainerBase stream = _class.container();
 		        if(stream != null && id > 0){
-		            StatefulBuffer writer = stream.readWriterByID(stream.getTransaction(), id);
+		            StatefulBuffer writer = stream.readWriterByID(stream.transaction(), id);
 		            if(writer != null){
 		                str += "\nAddress=" + writer.getAddress();
 		            }

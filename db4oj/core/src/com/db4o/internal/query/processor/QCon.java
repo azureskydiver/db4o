@@ -70,7 +70,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
     
     public ObjectContainerBase container(){
-    	return transaction().stream();
+    	return transaction().container();
     }
     
     public Transaction transaction() {
@@ -127,7 +127,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     		final int[] count = { 0 };
     		final FieldMetadata[] yfs = { null };
     		
-    		i_trans.stream().classCollection().attachQueryNode(a_field, new Visitor4() {
+    		i_trans.container().classCollection().attachQueryNode(a_field, new Visitor4() {
     			public void visit(Object obj) {
     				yfs[0] = (FieldMetadata) ((Object[]) obj)[1];
     				count[0]++;
@@ -146,7 +146,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     		
     	} else {
 			if(yc.customizedNewInstance()) {
-				i_trans.stream().i_handlers._diagnosticProcessor.descendIntoTranslator(yc, a_field);
+				i_trans.container()._handlers._diagnosticProcessor.descendIntoTranslator(yc, a_field);
 			}
 			FieldMetadata yf = yc.fieldMetadataForName(a_field);
 			if (yf != null) {
@@ -672,7 +672,7 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     }
 
     protected Object streamLock() {
-        return i_trans.stream()._lock;
+        return i_trans.container()._lock;
     }
 
     boolean supportsOrdering() {

@@ -330,7 +330,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 		        }
 		    }
 		    int classID = - elements;
-			ClassMetadata classMetadata = a_trans.stream().classMetadataForId(classID);
+			ClassMetadata classMetadata = a_trans.container().classMetadataForId(classID);
 		    if (classMetadata != null) {
 		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata) : classMetadata.classReflector());
 		    }
@@ -363,7 +363,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         }
         ObjectContainerBase stream = a_bytes.getStream();
         if(primitive){
-            claxx = stream.i_handlers.handlerForClass(stream,claxx).classReflector();
+            claxx = stream._handlers.handlerForClass(stream,claxx).classReflector();
         }
         ClassMetadata yc = stream.produceClassMetadata(claxx);
         if (yc != null) {

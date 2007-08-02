@@ -102,10 +102,10 @@ public final class ConfigBlock {
         if(configImpl().encrypt() && fullpwd!=null) {
             try {
                 byte[] pwdbytes=new LatinStringIO().write(fullpwd);
-                Buffer encwriter=new StatefulBuffer(_container.getTransaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
+                Buffer encwriter=new StatefulBuffer(_container.transaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
                 encwriter.append(pwdbytes);
                 encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
-                _container.i_handlers.decrypt(encwriter);
+                _container._handlers.decrypt(encwriter);
                 System.arraycopy(encwriter._buffer, 0, pwdtoken, 0, ENCRYPTION_PASSWORD_LENGTH);                
             }
             catch(Exception exc) {
@@ -172,7 +172,7 @@ public final class ConfigBlock {
             }
             if(! nonZeroByte){
                 // no password in the databasefile, work without encryption
-                _container.i_handlers.oldEncryptionOff();
+                _container._handlers.oldEncryptionOff();
             }else{
     			byte[] storedpwd=passwordToken();
     			for (int idx = 0; idx < storedpwd.length; idx++) {
@@ -237,7 +237,7 @@ public final class ConfigBlock {
         timerFileLock().checkHeaderLock();
         addressChanged(_container.getSlot(LENGTH).address());
         
-		StatefulBuffer writer = _container.getWriter(_container.getTransaction(), _address,LENGTH);
+		StatefulBuffer writer = _container.getWriter(_container.transaction(), _address,LENGTH);
 		IntHandler.writeInt(LENGTH, writer);
         for (int i = 0; i < 2; i++) {
             writer.writeLong(timerFileLock().openTime());
@@ -265,7 +265,7 @@ public final class ConfigBlock {
 	
 	private void writePointer() {
         timerFileLock().checkHeaderLock();
-		StatefulBuffer writer = _container.getWriter(_container.getTransaction(), 0, Const4.ID_LENGTH);
+		StatefulBuffer writer = _container.getWriter(_container.transaction(), 0, Const4.ID_LENGTH);
 		writer.moveForward(2);
 		IntHandler.writeInt(_address, writer);
         writer.noXByteCheck();

@@ -84,10 +84,10 @@ public final class FreeSlotNode extends TreeInt {
 			return;
 		}
 		Transaction trans = ((StatefulBuffer) buffer).getTransaction();
-		if (!(trans.stream() instanceof IoAdaptedObjectContainer)) {
+		if (!(trans.container() instanceof IoAdaptedObjectContainer)) {
 			return;
 		}
-		StatefulBuffer checker = trans.stream().getWriter(trans,
+		StatefulBuffer checker = trans.container().getWriter(trans,
 				node._peer._key, node._key);
 		checker.read();
 		for (int i = 0; i < node._key; i++) {

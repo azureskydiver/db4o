@@ -75,15 +75,15 @@ final class ClientTransaction extends Transaction {
         message = (MsgD)i_client.expectedResponse(Msg.OBJECT_BY_UUID);
         int id = message.readInt();
         if(id > 0){
-            return stream().getHardObjectReferenceById(this, id);
+            return container().getHardObjectReferenceById(this, id);
         }
         return HardObjectReference.INVALID;
     }
     
     
     public void processDeletes() {
-        if (i_delete != null) {
-            i_delete.traverse(new Visitor4() {
+        if (_delete != null) {
+            _delete.traverse(new Visitor4() {
                 public void visit(Object a_object) {
                     DeleteInfo info = (DeleteInfo) a_object;
                     if (info._reference != null) {
@@ -92,7 +92,7 @@ final class ClientTransaction extends Transaction {
                 }
             });
         }
-        i_delete = null;
+        _delete = null;
 		i_client.writeBatchedMessage(Msg.PROCESS_DELETES);
     }
     

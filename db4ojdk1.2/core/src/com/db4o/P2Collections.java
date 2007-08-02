@@ -54,7 +54,7 @@ public class P2Collections implements Db4oCollections{
     }
     
     private ObjectContainerBase container(){
-        return _transaction.stream();
+        return _transaction.container();
     }
 
 }

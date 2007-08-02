@@ -149,7 +149,7 @@ public abstract class Msg implements Cloneable {
 	}
 	
 	protected ObjectContainerBase stream(){
-	    return transaction().stream();
+	    return transaction().container();
 	}
 	
 	protected Object streamLock(){
@@ -183,7 +183,7 @@ public abstract class Msg implements Cloneable {
 		StatefulBuffer reader = readMessageBuffer(trans, sock);
 		Msg message = _messages[reader.readInt()].readPayLoad(messageDispatcher, trans, sock, reader);
 		if (Debug.messages) {
-			System.out.println(message + " arrived at " + trans.stream());
+			System.out.println(message + " arrived at " + trans.container());
 		}
 		return message;
 	}

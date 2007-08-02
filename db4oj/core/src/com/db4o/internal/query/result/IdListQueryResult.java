@@ -110,7 +110,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 			if (yapClass.getName() != null) {
 				ReflectClass claxx = yapClass.classReflector();
 				if (claxx == null
-						|| !(stream().i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
+						|| !(stream()._handlers.ICLASS_INTERNAL.isAssignableFrom(claxx))) {
 					final ClassIndexStrategy index = yapClass.index();
 					index.traverseAll(_transaction, new Visitor4() {
 						public void visit(Object obj) {

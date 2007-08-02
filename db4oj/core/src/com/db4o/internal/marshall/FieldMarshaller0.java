@@ -36,7 +36,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         }
         
         if (name.indexOf(Const4.VIRTUAL_FIELD_PREFIX) == 0) {
-        	if(stream.i_handlers.virtualFieldByName(name)!=null) {
+        	if(stream._handlers.virtualFieldByName(name)!=null) {
                 return new RawFieldSpec(name);
         	}
         }
@@ -58,7 +58,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     	}
     	String name=spec.name();
         if (spec.isVirtual()) {
-        	return stream.i_handlers.virtualFieldByName(name);
+        	return stream._handlers.virtualFieldByName(name);
         }
         
         field.init(field.getParentYapClass(), name);
@@ -85,7 +85,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
             
             // TODO: ensure there is a test case, to make this happen 
             if (handler.getID() == 0) {
-                trans.stream().needsUpdate(clazz);
+                trans.container().needsUpdate(clazz);
             }
         }
         int handlerID = 0;

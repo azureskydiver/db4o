@@ -89,7 +89,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     }
     
     public void prepareIndexedPayLoadEntry(Transaction trans){
-        _payLoadLength =  trans.stream().blockAlignedBytes(_payLoadLength);
+        _payLoadLength =  trans.container().blockAlignedBytes(_payLoadLength);
     }
     
     public void write(StatefulBuffer writer){

@@ -32,7 +32,7 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 			}
 			int id = ids.currentInt();
 			if (id > 0) {
-                Object obj = container.getTransaction().objectForIdFromCache(id);
+                Object obj = container.transaction().objectForIdFromCache(id);
                 if(obj != null){
                     prefetched[count] = obj;
                 }else{
@@ -45,19 +45,19 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 		}
 
 		if (toGet > 0) {
-			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(container.getTransaction(),
+			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(container.transaction(),
 					idsToGet, toGet);
 			container.write(msg);
 			MsgD response = (MsgD) container.expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
 			int embeddedMessageCount = response.readInt();
 			for (int i = 0; i < embeddedMessageCount; i++) {
 				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.publicClone();
-				mso.setTransaction(container.getTransaction());
+				mso.setTransaction(container.transaction());
 				mso.payLoad(response.payLoad().readYapBytes());
 				if (mso.payLoad() != null) {
 					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
 					StatefulBuffer reader = mso.unmarshall(Const4.MESSAGE_LENGTH);
-                    Object obj = container.getTransaction().objectForIdFromCache(idsToGet[i]);
+                    Object obj = container.transaction().objectForIdFromCache(idsToGet[i]);
                     if(obj != null){
                         prefetched[position[i]] = obj;
                     }else{
