@@ -1,10 +1,9 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta.tests.collections.internal;
 
-import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
+import com.db4o.ta.tests.*;
 
-public class Page /* TA BEGIN */ implements Activatable /* TA END */ {
+public class Page extends ActivatableImpl {
 
 	public static final int PAGESIZE = 100;
 	
@@ -14,10 +13,6 @@ public class Page /* TA BEGIN */ implements Activatable /* TA END */ {
 	private int _pageIndex;
 
 	private transient boolean _dirty = false;
-
-	// TA BEGIN
-	transient Activator _activator;
-	// TA END
 
 	public Page(int pageIndex) {
 		_pageIndex = pageIndex;
@@ -79,19 +74,4 @@ public class Page /* TA BEGIN */ implements Activatable /* TA END */ {
 		// TA END
 		return Page.PAGESIZE - size();
 	}
-	
-	// TA BEGIN
-	public void bind(Activator activator) {
-		if (null != _activator) {
-			throw new IllegalStateException();
-		}
-		_activator = activator;
-	}
-	
-	private void activate() {
-		if (_activator == null) return;
-		_activator.activate();
-	}
-	// TA END
-
 }

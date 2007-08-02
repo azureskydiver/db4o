@@ -1,23 +1,18 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta.tests.collections.internal;
 
-import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
+import com.db4o.ta.tests.*;
 
 /**
  * Shared implementation for a paged collection.
  */
 public 
-class PagedBackingStore /* TA BEGIN */ implements Activatable /* TA END */ {
+class PagedBackingStore extends ActivatableImpl {
 
 	public final static int INITIAL_PAGE_COUNT = 16;	
 	
 	private Page[] _pages = new Page[INITIAL_PAGE_COUNT];
 	private int _top = 0;
-
-	// TA BEGIN
-	transient Activator _activator;
-	// TA END
 
 	public PagedBackingStore() {
 		addNewPage();
@@ -91,18 +86,4 @@ class PagedBackingStore /* TA BEGIN */ implements Activatable /* TA END */ {
 	private int indexInPage(int itemIndex) {
 		return itemIndex % Page.PAGESIZE;
 	}
-	
-	// TA BEGIN
-	public void bind(Activator activator) {
-		if (null != _activator) {
-			throw new IllegalStateException();
-		}
-		_activator = activator;
-	}
-	
-	private void activate() {
-		if (_activator == null) return;
-		_activator.activate();
-	}
-	// TA END
 }
