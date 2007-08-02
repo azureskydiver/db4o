@@ -61,7 +61,7 @@ public class FileHeaderVariablePart1 extends PersistentBase{
     
     private void readIdentity(LocalTransaction trans, int identityID) {
         LocalObjectContainer file = trans.file();
-        Db4oDatabase identity = (Db4oDatabase) file.getByID1(trans, identityID);
+        Db4oDatabase identity = (Db4oDatabase) file.getByID(trans, identityID);
         file.activate1(trans, identity, 2);
         _systemData.identity(identity);
     }

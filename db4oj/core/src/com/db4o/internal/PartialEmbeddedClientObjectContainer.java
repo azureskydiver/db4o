@@ -34,18 +34,15 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
 
     public void backup(String path) throws Db4oIOException, DatabaseClosedException,
         NotSupportedException {
-        // TODO Auto-generated method stub
-
+        throw new NotSupportedException();
     }
 
     public void bind(Object obj, long id) throws InvalidIDException, DatabaseClosedException {
-        // TODO Auto-generated method stub
-
+        _server.bind(_transaction, obj, id);
     }
 
     public Db4oCollections collections() {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.collections(_transaction);
     }
 
     public Configuration configure() {
@@ -58,9 +55,8 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
         return null;
     }
 
-    public Object getByID(long ID) throws DatabaseClosedException, InvalidIDException {
-        // TODO Auto-generated method stub
-        return null;
+    public Object getByID(long id) throws DatabaseClosedException, InvalidIDException {
+        return _server.getByID(_transaction, id);
     }
 
     public Object getByUUID(Db4oUUID uuid) throws DatabaseClosedException, Db4oIOException {
@@ -69,8 +65,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public long getID(Object obj) {
-        // TODO Auto-generated method stub
-        return 0;
+        return _server.getID(_transaction, obj);
     }
 
     public ObjectInfo getObjectInfo(Object obj) {
@@ -99,8 +94,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public boolean isStored(Object obj) throws DatabaseClosedException {
-        // TODO Auto-generated method stub
-        return false;
+        return _server.isStored(_transaction, obj);
     }
 
     public ReflectClass[] knownClasses() {

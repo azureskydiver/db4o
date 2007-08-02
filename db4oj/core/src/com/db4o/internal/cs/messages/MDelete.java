@@ -10,7 +10,7 @@ public final class MDelete extends MsgD implements ServerSideMessage {
 		Buffer bytes = this.getByteLoad();
 		ObjectContainerBase stream = stream();
 		synchronized (streamLock()) {
-			Object obj = stream.getByID1(transaction(), bytes.readInt());
+			Object obj = stream.getByID(transaction(), bytes.readInt());
             boolean userCall = bytes.readInt() == 1;
 			if (obj != null) {
 				try {

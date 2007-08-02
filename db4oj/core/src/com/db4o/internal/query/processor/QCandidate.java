@@ -533,7 +533,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		Transaction trans = getTransaction();
 		if (trans != null) {
 
-			_member = trans.stream().getByID1(trans, _key);
+			_member = trans.stream().getByID(trans, _key);
 
 			if (_member != null && (a_activate || _member instanceof Compare)) {
 				trans.stream().activate1(trans, _member);

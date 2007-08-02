@@ -26,8 +26,8 @@ public class JDK {
 		return null;
 	}
 	
-	/** @param session */
-	Db4oCollections collections(ObjectContainerBase session){
+	/** @param transaction TODO*/
+	Db4oCollections collections(Transaction transaction){
 	    return null;
 	}
     

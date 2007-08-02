@@ -59,8 +59,6 @@ public final class HandlerRegistry {
 
     private final Hashtable4        i_classByClass  = new Hashtable4(32);
     
-    Db4oCollections 				i_collections;
-    
     SharedIndexedFields              		i_indexes;
     
     /**
