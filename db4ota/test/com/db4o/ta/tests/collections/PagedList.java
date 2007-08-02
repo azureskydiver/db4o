@@ -2,30 +2,22 @@
 
 package com.db4o.ta.tests.collections;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
-import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
-import com.db4o.ta.tests.collections.internal.PagedBackingStore;
+import com.db4o.ta.tests.*;
+import com.db4o.ta.tests.collections.internal.*;
 
 /**
- * Platform specific façade.
+ * Platform specific facade.
  * 
  * @param 
  * 
  * @sharpen.ignore
  */
-public class PagedList implements List, /* TA BEGIN */ Activatable /* TA END */ {
+public class PagedList extends /* TA BEGIN */ ActivatableImpl /* TA END */ implements List {
 		
 	PagedBackingStore _store = new PagedBackingStore();
 	
-	// TA BEGIN
-	transient Activator _activator;
-	// TA END
-
 	public PagedList() {
 
 	}
@@ -134,18 +126,4 @@ public class PagedList implements List, /* TA BEGIN */ Activatable /* TA END */ 
 	public Object[] toArray(Object[] a) {
 		throw new com.db4o.foundation.NotImplementedException();
 	}
-
-	// TA BEGIN
-	public void bind(Activator activator) {
-		if (null != _activator) {
-			throw new IllegalStateException();
-		}
-		_activator = activator;
-	}
-	
-	private void activate() {
-		if (_activator == null) return;
-		_activator.activate();
-	}
-	// TA END
 }
