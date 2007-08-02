@@ -601,7 +601,7 @@
 	
 	<property name="dependencies.jar" location="${dir.sharpen}/lib/dependencies.jar" />
 	
-	<target name="create-dependencies-jar" depends="compiletestsjava">
+	<target name="create-dependencies-jar">
 		<mkdir dir="${dir.sharpen}/lib" />
 		<jar destfile="${dependencies.jar}">			
 			<fileset dir="${dir.dist.classes.java1.1}" />
@@ -1038,7 +1038,7 @@
 	<target name="clean" description="Delete all generated files">
 		<delete failonerror="false" includeemptydirs="true" description="Removing all generated files">
 			<fileset dir="${dir.dist}">
-				<include name="**/*" />
+				<exclude name="java/" />
 			</fileset>
 		</delete>
 	</target>
