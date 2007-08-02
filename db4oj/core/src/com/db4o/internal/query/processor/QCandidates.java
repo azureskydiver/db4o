@@ -271,7 +271,7 @@ public final class QCandidates implements Visitor4 {
                     	
                     ObjectHeader oh = new ObjectHeader(stream(), reader);
                     
-                    Tree idTree = oh.yapClass().collectFieldIDs(
+                    Tree idTree = oh.classMetadata().collectFieldIDs(
                             oh._marshallerFamily,
                             oh._headerAttributes,
                             null,

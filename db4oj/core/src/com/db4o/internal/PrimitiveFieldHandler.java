@@ -107,7 +107,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
           a_bytes.getTransaction().slotFreePointerOnCommit(a_id, a_bytes.slot());
 	}
     
-	public boolean hasIndex() {
+	public boolean hasClassIndex() {
 	    return false;
 	}
 

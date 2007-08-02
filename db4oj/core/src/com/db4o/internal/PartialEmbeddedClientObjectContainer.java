@@ -165,9 +165,8 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public StoredClass storedClass(Object clazz) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+        return _server.storedClass(_transaction, clazz);
+   }
 
     public StoredClass[] storedClasses() {
         // TODO Auto-generated method stub

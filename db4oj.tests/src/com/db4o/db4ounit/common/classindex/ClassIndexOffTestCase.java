@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.classindex;
 
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 
@@ -32,8 +33,8 @@ public class ClassIndexOffTestCase extends AbstractDb4oTestCase implements OptOu
 	
 	public void test(){
 		db().set(new Item("1"));
-		ClassMetadata yc = (ClassMetadata)db().storedClass(Item.class);
-		Assert.isFalse(yc.hasIndex());
+		StoredClass yc = db().storedClass(Item.class);
+		Assert.isFalse(yc.hasClassIndex());
 		
 		assertNoItemFound();
 		

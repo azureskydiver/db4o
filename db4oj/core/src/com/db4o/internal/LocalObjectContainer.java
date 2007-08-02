@@ -219,7 +219,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     public void generateNewIdentity(){
-    	synchronized(i_lock){
+    	synchronized(_lock){
     		setIdentity(Db4oDatabase.generate());
     	}
     }
@@ -524,7 +524,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
     public void releaseSemaphore(String name) {
-        releaseSemaphore(checkTransaction(null), name);
+        releaseSemaphore(checkTransaction(), name);
     }
 
     public void releaseSemaphore(Transaction ta, String name) {
@@ -562,14 +562,14 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
 
     public boolean setSemaphore(String name, int timeout) {
-        return setSemaphore(checkTransaction(null), name, timeout);
+        return setSemaphore(checkTransaction(), name, timeout);
     }
 
     public boolean setSemaphore(Transaction ta, String name, int timeout) {
         if (name == null) {
             throw new NullPointerException();
         }
-        synchronized (i_lock) {
+        synchronized (_lock) {
         	if (i_semaphores == null) {
             	i_semaphores = new Hashtable4(10);
             }
@@ -755,7 +755,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     }
     
     public QueryResult classOnlyQuery(Transaction trans, ClassMetadata clazz){
-        if (!clazz.hasIndex()) {
+        if (!clazz.hasClassIndex()) {
         	
         	// TODO: If the class does not have an index, we won't be
         	//       able to get objects for it, so why not return an

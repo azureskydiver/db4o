@@ -5,8 +5,7 @@ package com.db4o.ext;
 /**
  * the internal representation of a stored class.
  */
-public interface StoredClass
-{
+public interface StoredClass {
     
 	/**
 	 * returns the name of this stored class.
@@ -28,6 +27,11 @@ public interface StoredClass
 	 * returns all stored fields of this stored class.
 	 */
 	public StoredField[] getStoredFields();
+	
+	/**
+	 * returns true if this StoredClass has a class index.
+	 */
+	public boolean hasClassIndex();
 	
 	/**
 	 * renames this stored class.

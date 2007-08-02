@@ -156,7 +156,7 @@ public class DefragContextImpl implements DefragContext {
 		LocalObjectContainer db = selector.db(this);
 		db.showInternalClasses(true);
 		try {
-			return db.storedClasses();
+			return db.classCollection().storedClasses();
 		} finally {
 			db.showInternalClasses(false);
 		}
@@ -200,7 +200,7 @@ public class DefragContextImpl implements DefragContext {
 	}
 
 	public void traverseAll(ClassMetadata yapClass,Visitor4 command) {
-		if(!yapClass.hasIndex()) {
+		if(!yapClass.hasClassIndex()) {
 			return;
 		}
 		yapClass.index().traverseAll(SOURCEDB.transaction(this), command);

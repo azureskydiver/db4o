@@ -174,7 +174,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         if(_class == null){
             return null;
         }
-        return _class.getStream();
+        return _class.container();
     }
     
     // this method will only work client-side or on
@@ -250,7 +250,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
                 
                 ObjectHeader header = new ObjectHeader(stream, a_reader);
 			    
-				_class = header.yapClass();
+				_class = header.classMetadata();
 
 				if (_class == null) {
 					return null;
@@ -287,7 +287,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
             
             ObjectHeader header = new ObjectHeader(a_stream, a_reader);
 
-			_class = header.yapClass();
+			_class = header.classMetadata();
 
 			if (_class == null) {
 				return null;
@@ -810,14 +810,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    int id = getID();
 		    String str = "YapObject\nID=" + id;
 		    if(_class != null){
-		        ObjectContainerBase stream = _class.getStream();
+		        ObjectContainerBase stream = _class.container();
 		        if(stream != null && id > 0){
 		            StatefulBuffer writer = stream.readWriterByID(stream.getTransaction(), id);
 		            if(writer != null){
 		                str += "\nAddress=" + writer.getAddress();
 		            }
                     ObjectHeader oh = new ObjectHeader(stream, writer);
-		            ClassMetadata yc = oh.yapClass();
+		            ClassMetadata yc = oh.classMetadata();
 		            if(yc != _class){
 		                str += "\nYapClass corruption";
 		            }else{

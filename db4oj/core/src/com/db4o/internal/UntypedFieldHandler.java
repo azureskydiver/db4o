@@ -36,7 +36,7 @@ public final class UntypedFieldHandler extends ClassMetadata {
 		return a_stream.classCollection().fieldExists(a_path);
 	}
 	
-	public boolean hasIndex() {
+	public boolean hasClassIndex() {
 	    return false;
 	}
     

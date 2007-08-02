@@ -14,7 +14,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 	TranslatedFieldMetadata(ClassMetadata containingClass, ObjectTranslator translator){
 	    super(containingClass, translator);
 		i_translator = translator;
-		ObjectContainerBase stream = containingClass.getStream();
+		ObjectContainerBase stream = containingClass.container();
 		configure(stream.reflector().forClass(translatorStoredClass(translator)), false);
 	}
     

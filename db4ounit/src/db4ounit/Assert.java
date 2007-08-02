@@ -173,4 +173,14 @@ public final class Assert {
 		if (!objectsAreEqual(notExpected, actual)) return;
 		fail("Expecting not '" + notExpected + "'");
 	}
+
+    public static void equalsAndHashcode(Object obj, Object same, Object other) {
+        areEqual(obj, obj);
+        areEqual(obj, same);
+        areNotEqual(obj, other);
+        areEqual(obj.hashCode(), same.hashCode());
+        areEqual(same, obj);
+        areNotEqual(other, obj);
+        areNotEqual(obj, null);
+    }
 }

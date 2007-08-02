@@ -49,7 +49,7 @@ public class ReplicationImpl implements ReplicationProcess {
 			synchronized (peerB.ext().lock()) {
 
 				_peerA = peerA;
-				_transA = peerA.checkTransaction(null);
+				_transA = peerA.checkTransaction();
 
 				_peerB = (ObjectContainerBase) peerB;
 				_transB = _peerB.checkTransaction(null);
@@ -260,7 +260,7 @@ public class ReplicationImpl implements ReplicationProcess {
             }
         }
         
-		synchronized (other.i_lock) {
+		synchronized (other._lock) {
             
 			Object objectA = obj;
 			Object objectB = obj;

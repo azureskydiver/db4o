@@ -11,6 +11,11 @@ import com.db4o.reflect.*;
  */
 public interface StoredField {
     
+    /**
+     * creates an index on this field at runtime.
+     */
+    public void createIndex();
+    
 	/**
 	 * returns the field value on the passed object.
 	 * <br><br>This method will also work, if the field is not present in the current
@@ -67,6 +72,7 @@ public interface StoredField {
      * @return true if this field has an index.
      */
 	public boolean hasIndex();
+
 
 //  will need for replication. Requested for 3.0 
 //	

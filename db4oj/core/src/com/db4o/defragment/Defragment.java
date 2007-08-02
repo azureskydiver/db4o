@@ -246,7 +246,7 @@ public class Defragment {
 	private static boolean parentHasIndex(ClassMetadata curClass) {
 		ClassMetadata parentClass = curClass.i_ancestor;
 		while (parentClass != null) {
-			if (parentClass.hasIndex()) {
+			if (parentClass.hasClassIndex()) {
 				return true;
 			}
 			parentClass = parentClass.i_ancestor;
@@ -291,7 +291,7 @@ public class Defragment {
 			final PassCommand command) throws CorruptionException, IOException {
 		int sourceClassIndexID = 0;
 		int targetClassIndexID = 0;
-		if (curClass.hasIndex()) {
+		if (curClass.hasClassIndex()) {
 			sourceClassIndexID = curClass.index().id();
 			targetClassIndexID = context.mappedID(sourceClassIndexID, -1);
 		}
@@ -302,7 +302,7 @@ public class Defragment {
 	private static void processClassIndex(final DefragContextImpl context,
 			final ClassMetadata curClass, final PassCommand command)
 			throws CorruptionException, IOException {
-		if (curClass.hasIndex()) {
+		if (curClass.hasClassIndex()) {
 			BTreeClassIndexStrategy indexStrategy = (BTreeClassIndexStrategy) curClass
 					.index();
 			final BTree btree = indexStrategy.btree();

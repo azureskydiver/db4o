@@ -34,7 +34,7 @@ public class ReplicationRecord implements Internal4{
     public void store(ObjectContainerBase stream){
         stream.showInternalClasses(true);
         try {
-	        Transaction ta = stream.checkTransaction(null);
+	        Transaction ta = stream.checkTransaction();
 	        stream.setAfterReplication(ta, this, 1, false);
 	        stream.commit();
         } finally {

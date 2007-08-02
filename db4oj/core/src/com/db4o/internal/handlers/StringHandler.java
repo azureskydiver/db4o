@@ -51,6 +51,10 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     }
 
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
+        if(indexEntry instanceof Slot){
+            Slot slot = (Slot)indexEntry;
+            indexEntry = _stream.bufferByAddress(slot.address(), slot.length());
+        }
         try {
             return StringMarshaller.readShort(_stream, (Buffer)indexEntry);
         } catch (CorruptionException e) {
@@ -101,9 +105,9 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
      */
     public Object readIndexEntry(Buffer reader) {
     	Slot s = new Slot(reader.readInt(), reader.readInt());
-    	if (isInvalidSlot(s))
+    	if (isInvalidSlot(s)){
     		return null;
-    	
+    	}
     	return s; 
     }
 
