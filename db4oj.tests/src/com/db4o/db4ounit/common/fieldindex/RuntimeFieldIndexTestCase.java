@@ -2,6 +2,7 @@
 package com.db4o.db4ounit.common.fieldindex;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 
@@ -28,7 +29,7 @@ public class RuntimeFieldIndexTestCase extends AbstractDb4oTestCase implements O
 	}
 	
 	public void testCreateIndexAtRuntime() {
-		FieldMetadata field = (FieldMetadata) db().storedClass(Data.class).storedField(FIELDNAME,null);
+		StoredField field = db().storedClass(Data.class).storedField(FIELDNAME,null);
 		Assert.isFalse(field.hasIndex());
 		field.createIndex();
 		Assert.isTrue(field.hasIndex());

@@ -44,7 +44,7 @@ public class LocalTransaction extends Transaction {
     }
     
     public void commit(ServerMessageDispatcher dispatcher) {
-        synchronized (stream().i_lock) {
+        synchronized (stream()._lock) {
         	if(doCommittingCallbacks()){
         		callbacks().commitOnStarted(this, collectCallbackObjectInfos(dispatcher));
         	}
@@ -187,7 +187,7 @@ public class LocalTransaction extends Transaction {
 	}
 	
     public void rollback() {
-        synchronized (stream().i_lock) {
+        synchronized (stream()._lock) {
             
             rollbackParticipants();
             
@@ -458,7 +458,7 @@ public class LocalTransaction extends Transaction {
 	}
 	
 	final void writeOld() {
-        synchronized (stream().i_lock) {
+        synchronized (stream()._lock) {
             i_pointerIo.useSlot(i_address);
             i_pointerIo.read();
             int length = i_pointerIo.readInt();
@@ -665,7 +665,7 @@ public class LocalTransaction extends Transaction {
         
         StatefulBuffer objectBytes = stream().readWriterByID(this, id);
         if(objectBytes == null){
-            if (clazz.hasIndex()) {
+            if (clazz.hasClassIndex()) {
                  dontRemoveFromClassIndex(clazz.getID(), id);
             }
             return;

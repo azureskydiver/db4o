@@ -64,7 +64,7 @@ public class FieldMetadata implements StoredField {
     	this(a_yapClass);
         init(a_yapClass, a_translator.getClass().getName());
         i_state = AVAILABLE;
-        ObjectContainerBase stream =getStream(); 
+        ObjectContainerBase stream =container(); 
         i_handler = stream.i_handlers.handlerForClass(
             stream, stream.reflector().forClass(translatorStoredClass(a_translator)));
     }
@@ -82,7 +82,7 @@ public class FieldMetadata implements StoredField {
     	this(containingClass);
         init(containingClass, marshaller.getClass().getName());
         i_state = AVAILABLE;
-        i_handler = getStream().i_handlers.untypedHandler();
+        i_handler = container().i_handlers.untypedHandler();
     }
 
     FieldMetadata(ClassMetadata a_yapClass, ReflectField a_field, TypeHandler4 a_handler) {
@@ -213,7 +213,7 @@ public class FieldMetadata implements StoredField {
                 // If a schema evolution changes an array to a different variable,
                 // we are in trouble here.
 
-                i_handler = wrapHandlerToArrays(getStream(), i_handler);
+                i_handler = wrapHandlerToArrays(container(), i_handler);
 
                 i_state = AVAILABLE;
                 checkDb4oType();
@@ -282,7 +282,7 @@ public class FieldMetadata implements StoredField {
 
     private void checkDb4oType() {
         if (i_javaField != null) {
-            if (getStream().i_handlers.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getFieldType())) {
+            if (container().i_handlers.ICLASS_DB4OTYPE.isAssignableFrom(i_javaField.getFieldType())) {
                 i_db4oType = HandlerRegistry.getDb4oType(i_javaField.getFieldType());
             }
         }
@@ -336,13 +336,13 @@ public class FieldMetadata implements StoredField {
     void configure(ReflectClass clazz, boolean isPrimitive) {
         i_isArray = clazz.isArray();
         if (i_isArray) {
-            ReflectArray reflectArray = getStream().reflector().array();
+            ReflectArray reflectArray = container().reflector().array();
             i_isNArray = reflectArray.isNDimensional(clazz);
             i_isPrimitive = reflectArray.getComponentType(clazz).isPrimitive();
             if (i_isNArray) {
-                i_handler = new MultidimensionalArrayHandler(getStream(), i_handler, i_isPrimitive);
+                i_handler = new MultidimensionalArrayHandler(container(), i_handler, i_isPrimitive);
             } else {
-                i_handler = new ArrayHandler(getStream(), i_handler, i_isPrimitive);
+                i_handler = new ArrayHandler(container(), i_handler, i_isPrimitive);
             }
         } else {
         	i_isPrimitive = isPrimitive | clazz.isPrimitive();
@@ -437,21 +437,21 @@ public class FieldMetadata implements StoredField {
 		if (_clazz == null) {
 			return null;
 		}
-		ObjectContainerBase stream = _clazz.getStream();
-		if (stream == null) {
+		ObjectContainerBase container = container();
+		if (container == null) {
 			return null;
 		}
-		synchronized (stream.i_lock) {
+		synchronized (container._lock) {
 		    
             // FIXME: The following is not really transactional.
             //        This will work OK for normal C/S and for
             //        single local mode but the transaction will
             //        be wrong for MTOC.
 		    if(trans == null){
-		        trans = stream.getTransaction();
+		        trans = container.getTransaction();
 		    }
 		    
-			stream.checkClosed();
+			container.checkClosed();
 			ObjectReference yo = trans.referenceForObject(onObject);
 			if (yo == null) {
 				return null;
@@ -461,14 +461,14 @@ public class FieldMetadata implements StoredField {
 				return null;
 			}
 
-			StatefulBuffer writer = stream.readWriterByID(stream
+			StatefulBuffer writer = container.readWriterByID(container
 					.getTransaction(), id);
 			if (writer == null) {
 				return null;
 			}
 			writer._offset = 0;
-			ObjectHeader oh = new ObjectHeader(stream, _clazz, writer);
-			boolean findOffset = oh.objectMarshaller().findOffset(_clazz,
+			ObjectHeader oh = new ObjectHeader(container, writer);
+			boolean findOffset = oh.objectMarshaller().findOffset(oh.classMetadata(),
 					oh._headerAttributes, writer, this);
 			if (!findOffset) {
 				return null;
@@ -554,11 +554,11 @@ public class FieldMetadata implements StoredField {
         return i_handler.classReflector();
     }
     
-    public ObjectContainerBase getStream(){
+    public ObjectContainerBase container(){
         if(_clazz == null){
             return null;
         }
-        return _clazz.getStream();
+        return _clazz.container();
     }
     
     public boolean hasConfig() {
@@ -676,11 +676,11 @@ public class FieldMetadata implements StoredField {
 			return null;
 		}
 		i_javaField.setAccessible();
-		ObjectContainerBase stream = _clazz.getStream();
-		stream.showInternalClasses(true);
-		TypeHandler4 handlerForClass = stream.i_handlers.handlerForClass(
-				stream, i_javaField.getFieldType());
-		stream.showInternalClasses(false);
+		ObjectContainerBase container = container();
+		container.showInternalClasses(true);
+		TypeHandler4 handlerForClass = container.i_handlers.handlerForClass(
+				container, i_javaField.getFieldType());
+		container.showInternalClasses(false);
 		return handlerForClass;
 	}
 
@@ -767,7 +767,7 @@ public class FieldMetadata implements StoredField {
     void refresh() {
         TypeHandler4 handler = loadJavaField1();
         if (handler != null) {
-            handler = wrapHandlerToArrays(getStream(), handler);
+            handler = wrapHandlerToArrays(container(), handler);
             if (handler.equals(i_handler)) {
                 return;
             }
@@ -776,12 +776,13 @@ public class FieldMetadata implements StoredField {
         i_state = UNAVAILABLE;
     }
 
+    // FIXME: needs test case
     public void rename(String newName) {
-        ObjectContainerBase stream = _clazz.getStream();
-        if (! stream.isClient()) {
+        ObjectContainerBase container = container();
+        if (! container.isClient()) {
             i_name = newName;
             _clazz.setStateDirty();
-            _clazz.write(stream.systemTransaction());
+            _clazz.write(container.systemTransaction());
         } else {
             Exceptions4.throwRuntimeException(58);
         }
@@ -811,25 +812,28 @@ public class FieldMetadata implements StoredField {
         if(! alive()){
             return;
         }
-        
+        traverseValues(container().getTransaction(), userVisitor);
+    }
+    
+    public final void traverseValues(final Transaction transaction, final Visitor4 userVisitor) {
+        if(! alive()){
+            return;
+        }
         assertHasIndex();
-        
-        ObjectContainerBase stream = _clazz.getStream();
+        ObjectContainerBase stream = transaction.stream();
         if(stream.isClient()){
             Exceptions4.throwRuntimeException(Messages.CLIENT_SERVER_UNSUPPORTED);
         }
-        
         synchronized(stream.lock()){
-            final Transaction trans = stream.getTransaction();
-            _index.traverseKeys(trans, new Visitor4() {
+            _index.traverseKeys(transaction, new Visitor4() {
                 public void visit(Object obj) {
                     FieldIndexKey key = (FieldIndexKey) obj;
-                    userVisitor.visit(((IndexableTypeHandler)i_handler).indexEntryToObject(trans, key.value()));
+                    userVisitor.visit(((IndexableTypeHandler)i_handler).indexEntryToObject(transaction, key.value()));
                 }
             });
         }
     }
-
+    
 	private void assertHasIndex() {
 		if(! hasIndex()){
             Exceptions4.throwRuntimeException(Messages.ONLY_FOR_INDEXED_FIELDS);
@@ -986,7 +990,7 @@ public class FieldMetadata implements StoredField {
 	}
 
 	private Object readIndexEntryForRebuild(StatefulBuffer writer, ObjectHeader oh) {
-		return oh.objectMarshaller().readIndexEntry(oh.yapClass(), oh._headerAttributes, this, writer);
+		return oh.objectMarshaller().readIndexEntry(oh.classMetadata(), oh._headerAttributes, this, writer);
 	}
 
     public void dropIndex(Transaction systemTrans) {
@@ -1007,10 +1011,12 @@ public class FieldMetadata implements StoredField {
     }
     
 	public void createIndex() {
+	    
 		if(hasIndex()) {
 			return;
 		}
-		LocalObjectContainer container=(LocalObjectContainer) _clazz.getStream();
+		LocalObjectContainer container= (LocalObjectContainer) container();
+		
         if (container.configImpl().messageLevel() > Const4.NONE) {
             container.message("creating index " + toString());
         }

@@ -11,7 +11,7 @@ import com.db4o.internal.*;
  */
 public final class ObjectHeader {
     
-    private final ClassMetadata _yapClass;
+    private final ClassMetadata _classMetadata;
     
     public final MarshallerFamily _marshallerFamily;
     
@@ -38,15 +38,15 @@ public final class ObjectHeader {
         
         classID=normalizeID(classID);
 
-        _yapClass=(yc!=null ? yc : stream.classMetadataForId(classID));
+        _classMetadata=(yc!=null ? yc : stream.classMetadataForId(classID));
 
         if (Deploy.debug) {
         	// This check has been added to cope with defragment in debug mode: SlotDefragment#setIdentity()
         	// will trigger calling this constructor with a source db yap class and a target db stream,
         	// thus _yapClass==null. There may be a better solution, since this call is just meant to
         	// skip the object header.
-        	if(_yapClass!=null) {
-	        	int ycID = _yapClass.getID();
+        	if(_classMetadata!=null) {
+	        	int ycID = _classMetadata.getID();
 		        if (classID != ycID) {
 		        	System.out.println("ObjectHeader::init YapClass does not match. Expected ID: " + ycID + " Read ID: " + classID);
 		        }
@@ -59,7 +59,7 @@ public final class ObjectHeader {
     	Buffer source = readers.source();
     	Buffer target = readers.target();
 		ObjectHeader header=new ObjectHeader(readers.context().systemTrans().stream(),null,source);
-    	int newID =readers.mapping().mappedID(header.yapClass().getID());
+    	int newID =readers.mapping().mappedID(header.classMetadata().getID());
         if (Deploy.debug) {
             target.readBegin(Const4.YAPOBJECT);
         }
@@ -95,7 +95,7 @@ public final class ObjectHeader {
     	return (id<0 ? -id : id);
     }
 
-    public ClassMetadata yapClass() {
-        return _yapClass;
+    public ClassMetadata classMetadata() {
+        return _classMetadata;
     }
 }

@@ -38,7 +38,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     protected String i_name;
 
-    private final ObjectContainerBase _stream;
+    private final ObjectContainerBase _container;
 
     byte[] i_nameBytes;
     private Buffer i_reader;
@@ -62,7 +62,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private TernaryBool _canUpdateFast=TernaryBool.UNSPECIFIED;
     
     public final ObjectContainerBase stream() {
-    	return _stream;
+    	return _container;
     }
     
     public final boolean canUpdateFast(){
@@ -93,7 +93,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
     ClassMetadata(ObjectContainerBase container, ReflectClass reflector){
-    	_stream = container;
+    	_container = container;
         _reflector = reflector;
         _index = createIndexStrategy();
         _classIndexed = true;
@@ -116,8 +116,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public final void addFieldIndices(StatefulBuffer a_writer, Slot oldSlot) {
-        if(hasIndex() || hasVirtualAttributes()){
-            ObjectHeader oh = new ObjectHeader(_stream, this, a_writer);
+        if(hasClassIndex() || hasVirtualAttributes()){
+            ObjectHeader oh = new ObjectHeader(_container, this, a_writer);
             oh._marshallerFamily._object.addFieldIndices(this, oh._headerAttributes, a_writer, oldSlot);
         }
     }
@@ -154,7 +154,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
             dirty = collectReflectFields(ocb, members) | dirty;
             if (dirty) {
-                _stream.setDirtyInSystemTransaction(this);
+                _container.setDirtyInSystemTransaction(this);
                 i_fields = new FieldMetadata[members.size()];
                 members.toArray(i_fields);
                 for (int i = 0; i < i_fields.length; i++) {
@@ -166,7 +166,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 }
             }
             
-            DiagnosticProcessor dp = _stream.i_handlers._diagnosticProcessor;
+            DiagnosticProcessor dp = _container.i_handlers._diagnosticProcessor;
             if(dp.enabled()){
                 dp.checkClassHasFields(this);
             }
@@ -176,7 +176,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 i_fields = new FieldMetadata[0];
             }
         }
-        _stream.callbacks().classOnRegistered(this);
+        _container.callbacks().classOnRegistered(this);
         setStateOK();
     }
 
@@ -230,7 +230,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     		return false;
     	}
     	if (isNewTranslator(ot)) {
-    		_stream.setDirtyInSystemTransaction(this);
+    		_container.setDirtyInSystemTransaction(this);
     	}
         installCustomFieldMetadata(ocb, new TranslatedFieldMetadata(this, ot));
     	return true;
@@ -314,13 +314,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if (i_ancestor != null) {
             i_ancestor.addToIndex1(a_stream, a_trans, a_id);
         }
-        if (hasIndex()) {
+        if (hasClassIndex()) {
             _index.add(a_trans, a_id);
         }
     }
 
     boolean allowsQueries() {
-        return hasIndex();
+        return hasClassIndex();
     }
 
     public void cascadeActivation(
@@ -358,9 +358,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                     // correctly
                 }
                 if (_reflector != null) {
-                    addMembers(_stream);
-                    if (!_stream.isClient()) {
-                        write(_stream.systemTransaction());
+                    addMembers(_container);
+                    if (!_container.isClient()) {
+                        write(_container.systemTransaction());
                     }
                 }
             }
@@ -372,13 +372,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if (claxx == null){
             return;
         }
-        if (_stream.i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
+        if (_container.i_handlers.ICLASS_INTERNAL.isAssignableFrom(claxx)) {
             _internal = true;
         }
-        if (_stream.i_handlers.ICLASS_UNVERSIONED.isAssignableFrom(claxx)) {
+        if (_container.i_handlers.ICLASS_UNVERSIONED.isAssignableFrom(claxx)) {
             _unversioned = true;
         }        
-        if (_stream.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
+        if (_container.i_handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
         	Db4oTypeImpl db4oTypeImpl = (Db4oTypeImpl) claxx.newInstance();
         	_classIndexed = (db4oTypeImpl == null || db4oTypeImpl.hasClassIndex());
 		} else if(i_config != null){
@@ -542,7 +542,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     final void delete(StatefulBuffer a_bytes, Object a_object) {
-        ObjectHeader oh = new ObjectHeader(_stream, this, a_bytes);
+        ObjectHeader oh = new ObjectHeader(_container, this, a_bytes);
         delete1(oh._marshallerFamily, oh._headerAttributes, a_bytes, a_object);
     }
 
@@ -689,7 +689,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return null;
         }
         a_bytes._offset = 0;
-        ObjectHeader oh = new ObjectHeader(_stream, this, a_bytes);
+        ObjectHeader oh = new ObjectHeader(_container, this, a_bytes);
         boolean res = oh.objectMarshaller().findOffset(this, oh._headerAttributes, a_bytes, a_field);
         if(! res){
             return null;
@@ -724,7 +724,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return false;
         }
         boolean configValue = (i_config == null) ? false : i_config.generateUUIDs();
-        return generate1(_stream.config().generateUUIDs(), configValue); 
+        return generate1(_container.config().generateUUIDs(), configValue); 
     }
 
     private boolean generateVersionNumbers() {
@@ -732,7 +732,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return false;
         }
         boolean configValue = (i_config == null) ? false : i_config.generateVersionNumbers();
-        return generate1(_stream.config().generateVersionNumbers(), configValue); 
+        return generate1(_container.config().generateVersionNumbers(), configValue); 
     }
     
     private boolean generateVirtual(){
@@ -800,25 +800,27 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public long[] getIDs() {
-        synchronized(_stream.i_lock){
+        synchronized(_container._lock){
 	        if (! stateOK()) {
                 return new long[0];
             }
-	        return getIDs(_stream.getTransaction());
+	        return getIDs(_container.getTransaction());
         }
     }
 
     public long[] getIDs(Transaction trans) {
-        if (! stateOK()) {
-            return new long[0];
-        }        
-        if (! hasIndex()) {
-            return new long[0];
-        }        
-        return trans.stream().getIDsForClass(trans, this);
+        synchronized(_container._lock){
+            if (! stateOK()) {
+                return new long[0];
+            }        
+            if (! hasClassIndex()) {
+                return new long[0];
+            }        
+            return trans.stream().getIDsForClass(trans, this);
+        }
     }
 
-    public boolean hasIndex() {
+    public boolean hasClassIndex() {
         return _classIndexed;
     }
     
@@ -866,7 +868,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return null;
         }
         int id = ((Integer)indexEntry).intValue();
-        return getStream().getByID2(trans, id);
+        return container().getByID2(trans, id);
     }    
 
     public ReflectClass classReflector(){
@@ -887,9 +889,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public StoredField[] getStoredFields(){
-        synchronized(_stream.i_lock){
+        synchronized(_container._lock){
 	        if(i_fields == null){
-	            return null;
+	            return new StoredField[0];
 	        }
 	        StoredField[] fields = new StoredField[i_fields.length];
 	        System.arraycopy(i_fields, 0, fields, 0, i_fields.length);
@@ -897,8 +899,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-    ObjectContainerBase getStream() {
-        return _stream;
+    final ObjectContainerBase container() {
+        return _container;
     }
 
     public FieldMetadata fieldMetadataForName(final String name) {
@@ -972,7 +974,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     final void initConfigOnUp(Transaction systemTrans) {
-        Config4Class extendedConfig=Platform4.extendConfiguration(_reflector, _stream.configure(), i_config);
+        Config4Class extendedConfig=Platform4.extendConfiguration(_reflector, _container.configure(), i_config);
     	if(extendedConfig!=null) {
     		i_config=extendedConfig;
     	}
@@ -1219,7 +1221,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if(i_name == null){
             return "";
         }
-        return _stream.configImpl().resolveAliasRuntimeName(i_name);
+        return _container.configImpl().resolveAliasRuntimeName(i_name);
     }
     
     public final boolean callConstructor() {
@@ -1228,7 +1230,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if(!specialized.unspecified()){
 		    return specialized.definiteYes();
 		}
-		return _stream.configImpl().callConstructors().definiteYes();
+		return _container.configImpl().callConstructors().definiteYes();
     }
     
     private final TernaryBool callConstructorSpecialized(){
@@ -1248,7 +1250,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public int ownLength() {
-        return MarshallerFamily.current()._class.marshalledLength(_stream, this);
+        return MarshallerFamily.current()._class.marshalledLength(_container, this);
     }
     
     void purge() {
@@ -1343,7 +1345,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if (isArray()) {
             if (Platform4.isCollectionTranslator(this.i_config)) {
                 a_bytes[0].incrementOffset(Const4.INT_LENGTH);
-                return new ArrayHandler(_stream, null, false);
+                return new ArrayHandler(_container, null, false);
             }
             incrementFieldsOffset1(a_bytes[0]);
             if (i_ancestor != null) {
@@ -1464,16 +1466,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
 	GenericReflector reflector() {
-		return _stream.reflector();
+		return _container.reflector();
 	}
     
     public void rename(String newName){
-        if (!_stream.isClient()) {
+        if (!_container.isClient()) {
             int tempState = i_state;
             setStateOK();
             i_name = newName;
             setStateDirty();
-            write(_stream.systemTransaction());
+            write(_container.systemTransaction());
             i_state = tempState;
         }else{
             Exceptions4.throwRuntimeException(58);
@@ -1485,11 +1487,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         ReflectClass claxx,
         String name) {
         i_name = name;
-        setConfig(_stream.configImpl().configClass(i_name));
+        setConfig(_container.configImpl().configClass(i_name));
         if (claxx == null) {
-            createConstructor(_stream, i_name);
+            createConstructor(_container, i_name);
         } else {
-            createConstructor(_stream, claxx, i_name, true);
+            createConstructor(_container, claxx, i_name, true);
         }
         if (i_nameBytes != null) {
             a_byteHashTable.remove(i_nameBytes);
@@ -1502,8 +1504,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return claxx.getName();
         }
         if (i_nameBytes != null) {
-        	String name = _stream.stringIO().read(i_nameBytes);
-        	return _stream.configImpl().resolveAliasStoredName(name);
+        	String name = _container.stringIO().read(i_nameBytes);
+        	return _container.configImpl().resolveAliasStoredName(name);
         }
         throw new IllegalStateException();
     }
@@ -1525,7 +1527,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         
         bitTrue(Const4.READING);
         
-        MarshallerFamily.forConverterVersion(_stream.converterVersion())._class.read(_stream, this, i_reader);
+        MarshallerFamily.forConverterVersion(_container.converterVersion())._class.read(_container, this, i_reader);
        
         i_nameBytes = null;
         i_reader = null;
@@ -1538,7 +1540,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public void refresh() {
         if (!stateUnread()) {
-            createConstructor(_stream, i_name);
+            createConstructor(_container, i_name);
             bitFalse(Const4.CHECKED_CHANGES);
             checkChanges();
             if (i_fields != null) {
@@ -1550,7 +1552,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     void removeFromIndex(Transaction ta, int id) {
-        if (hasIndex()) {
+        if (hasClassIndex()) {
             _index.remove(ta, id);
         }
         if (i_ancestor != null) {
@@ -1562,7 +1564,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         boolean renamed = false;
         for (int i = 0; i < i_fields.length; i++) {
             if (i_fields[i].getName().equals(a_to)) {
-                _stream.logMsg(9, "class:" + getName() + " field:" + a_to);
+                _container.logMsg(9, "class:" + getName() + " field:" + a_to);
                 return false;
             }
         }
@@ -1658,14 +1660,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public StoredField storedField(String a_name, Object a_type) {
-        synchronized(_stream.i_lock){
+        synchronized(_container._lock){
         	
-            ClassMetadata yc = _stream.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), a_type)); 
+            ClassMetadata yc = _container.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), a_type)); 
     		
 	        if(i_fields != null){
 	            for (int i = 0; i < i_fields.length; i++) {
 	                if(i_fields[i].getName().equals(a_name)){
-	                    if(yc == null || yc == i_fields[i].getFieldYapClass(_stream)){
+	                    if(yc == null || yc == i_fields[i].getFieldYapClass(_container)){
 	                        return (i_fields[i]);
 	                    }
 	                }
@@ -1856,9 +1858,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return "*CLASS NAME UNKNOWN*";
         }
 	    LatinStringIO stringIO = 
-	    	_stream == null ? 
+	    	_container == null ? 
 	    			Const4.stringIO 
-	    			: _stream.stringIO();
+	    			: _container.stringIO();
 	    return stringIO.read(i_nameBytes);
     }
     
@@ -1907,7 +1909,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             if(obj instanceof Integer){
                 i_lastID = ((Integer)obj).intValue();
             }else{
-                i_lastID = (int)_stream.getID(obj);
+                i_lastID = (int)_container.getID(obj);
             }
             i_compareTo = reflector().forObject(obj);
         } else {
@@ -1950,14 +1952,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public static void defragObject(ReaderPair readers) {
     	ObjectHeader header=ObjectHeader.defrag(readers);
-    	header._marshallerFamily._object.defragFields(header.yapClass(),header,readers);
+    	header._marshallerFamily._object.defragFields(header.classMetadata(),header,readers);
         if (Deploy.debug) {
             readers.readEnd();
         }
     }	
 
 	public void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
-		if(hasIndex()) {
+		if(hasClassIndex()) {
 			readers.copyID();
 		}
 		else {
@@ -1969,12 +1971,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	
 	public void defragClass(ReaderPair readers, int classIndexID) throws CorruptionException, IOException {
 		MarshallerFamily mf = MarshallerFamily.current();
-		mf._class.defrag(this,_stream.stringIO(), readers, classIndexID);
+		mf._class.defrag(this,_container.stringIO(), readers, classIndexID);
 	}
 
     public static ClassMetadata readClass(ObjectContainerBase stream, Buffer reader) {
         ObjectHeader oh = new ObjectHeader(stream, reader);
-        return oh.yapClass();
+        return oh.classMetadata();
     }
 
 	public boolean isAssignableFrom(ClassMetadata other) {

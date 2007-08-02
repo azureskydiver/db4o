@@ -47,7 +47,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     private Tree            i_justPeeked;
 
-    public final Object            i_lock;
+    public final Object            _lock;
 
     // currently used to resolve self-linking concurrency problems
     // in cylic links, stores only YapClass objects
@@ -109,13 +109,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	protected PartialObjectContainer(Configuration config, ObjectContainerBase parent) {
     	_this = cast(this);
     	i_parent = parent == null ? _this : parent;
-    	i_lock = parent == null ? new Object() : parent.i_lock;
+    	_lock = parent == null ? new Object() : parent._lock;
     	i_config = (Config4Impl)config;
     }
 
 	public final void open() throws OldFormatException {
 		boolean ok = false;
-		synchronized (i_lock) {
+		synchronized (_lock) {
 			try {
 	        	initializeTransactions();
 	            initialize1(i_config);
@@ -134,7 +134,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	protected abstract void openImpl() throws Db4oIOException;
     
 	public void activate(Object a_activate, int a_depth) throws DatabaseClosedException {
-        synchronized (i_lock) {
+        synchronized (_lock) {
         	checkClosed();
         	activate1(null, a_activate, a_depth);
         }
@@ -186,7 +186,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public void bind(Object obj, long id) {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             bind1(null, obj, id);
         }
     }
@@ -283,6 +283,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		}
 		_pendingClassUpdates = null;
 	}
+    
+    public final Transaction checkTransaction() {
+        return checkTransaction(null);
+    }
 
     public final Transaction checkTransaction(Transaction ta) {
         checkClosed();
@@ -293,7 +297,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     final public boolean close() {
-		synchronized (i_lock) {
+		synchronized (_lock) {
 			close1();
 			return true;
 		}
@@ -324,7 +328,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 			DTrace.CLOSE.log();
 		}
 		logMsg(3, toString());
-		synchronized (i_lock) {
+		synchronized (_lock) {
 			stopSession();
 			shutdownDataStorage();
 		}
@@ -333,7 +337,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	protected abstract void shutdownDataStorage();
     
     public Db4oCollections collections() {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             if (i_handlers.i_collections == null) {
                 i_handlers.i_collections = Platform4.collections(this);
             }
@@ -346,7 +350,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public final void commit(Transaction trans) throws DatabaseReadOnlyException, DatabaseClosedException {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             if(DTrace.enabled){
                 DTrace.COMMIT.log();
             }
@@ -423,11 +427,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public final void deactivate(Object a_deactivate, int a_depth) throws DatabaseClosedException {
-        synchronized (i_lock) {
+        synchronized (_lock) {
         	checkClosed();
         	beginTopLevelCall();
         	try{
-        		deactivate1(checkTransaction(null), a_deactivate, a_depth);
+        		deactivate1(checkTransaction(), a_deactivate, a_depth);
         		completeTopLevelCall();
         	} catch(Db4oException e){
         		completeTopLevelCall(e);
@@ -458,7 +462,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public void delete(Transaction trans, Object obj) throws DatabaseReadOnlyException, DatabaseClosedException {
-        synchronized (i_lock) {
+        synchronized (_lock) {
         	checkClosed();
         	checkReadOnly();
         	trans = checkTransaction(trans);
@@ -566,8 +570,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract boolean delete4(Transaction ta, ObjectReference yapObject, int a_cascade, boolean userCall);
     
     public Object descend(Object obj, String[] path){
-        synchronized (i_lock) {
-            return descend1(checkTransaction(null), obj, path);
+        synchronized (_lock) {
+            return descend1(checkTransaction(), obj, path);
         }
     }
     
@@ -704,7 +708,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
 	public ObjectSet get(Object template) throws DatabaseClosedException {
-	    synchronized (i_lock) {
+	    synchronized (_lock) {
 	    	checkClosed();
 	    	return get1(null, template);
 	    }
@@ -740,7 +744,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if (id <= 0) {
     		throw new IllegalArgumentException();
 		}
-        synchronized (i_lock) {
+        synchronized (_lock) {
         	checkClosed();
             return getByID1(null, id);
         }
@@ -799,11 +803,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final Object getByUUID(Db4oUUID uuid){
-        synchronized (i_lock) {
+        synchronized (_lock) {
             if(uuid == null){
                 return null;
             }
-            Transaction ta = checkTransaction(null);
+            Transaction ta = checkTransaction();
             HardObjectReference hardRef = ta.getHardReferenceBySignature(
             					uuid.getLongPart(),
             					uuid.getSignaturePart());
@@ -812,8 +816,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public long getID(Object obj) {
-        synchronized (i_lock) {
-            return getID1(checkTransaction(null), obj);
+        synchronized (_lock) {
+            return getID1(checkTransaction(), obj);
         }
     }
 
@@ -835,8 +839,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     //       direct user of this method (dRS !) will not
     //       work correctly transactional with MTOC.
     public ObjectInfo getObjectInfo (Object obj){
-        synchronized(i_lock){
-            Transaction trans = checkTransaction(null);
+        synchronized(_lock){
+            Transaction trans = checkTransaction();
             return trans.referenceForObject(obj);
         }
     }
@@ -1065,8 +1069,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public boolean isActive(Object obj) {
-        synchronized (i_lock) {
-            return isActive1(checkTransaction(null), obj);
+        synchronized (_lock) {
+            return isActive1(checkTransaction(), obj);
         }
     }
 
@@ -1082,8 +1086,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public boolean isCached(long a_id) {
-        synchronized (i_lock) {
-            return checkTransaction(null).objectForIdFromCache((int)a_id) != null;
+        synchronized (_lock) {
+            return checkTransaction().objectForIdFromCache((int)a_id) != null;
         }
     }
 
@@ -1097,7 +1101,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public final boolean isClosed() {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             return _classCollection == null;
         }
     }
@@ -1111,13 +1115,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public boolean isStored(Object obj) {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             return isStored1(obj);
         }
     }
 
     final boolean isStored1(Object obj) {
-        Transaction ta = checkTransaction(null);
+        Transaction ta = checkTransaction();
         if (obj == null) {
             return false;
         }
@@ -1129,7 +1133,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public ReflectClass[] knownClasses(){
-        synchronized(i_lock){
+        synchronized(_lock){
             checkClosed();
             return reflector().knownClasses();
         }
@@ -1146,7 +1150,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public Object lock() {
-        return i_lock;
+        return _lock;
     }
 
     public final void logMsg(int code, String msg) {
@@ -1194,13 +1198,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	
     	// TODO: peekPersisted is not stack overflow safe, if depth is too high. 
     	
-        synchronized (i_lock) {
+        synchronized (_lock) {
         	checkClosed();
             beginTopLevelCall();
             try{
                 i_justPeeked = null;
                 Transaction ta = committed ? i_systemTrans
-                    : checkTransaction(null);
+                    : checkTransaction();
                 Object cloned = null;
                 ObjectReference yo = ta.referenceForObject(obj);
                 if (yo != null) {
@@ -1236,13 +1240,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public void purge() {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             purge1();
         }
     }
 
     public void purge(Object obj) {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             purge1(obj);
         }
     }
@@ -1281,13 +1285,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public final ObjectSet query(Predicate predicate,QueryComparator comparator){
-        synchronized (i_lock) {
+        synchronized (_lock) {
             return getNativeQueryHandler().execute(predicate,comparator);
         }
     }
 
 	public Query query() {
-		synchronized (i_lock) {
+		synchronized (_lock) {
 			return query((Transaction)null);
     	}
     }
@@ -1348,7 +1352,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public void refresh(Object a_refresh, int a_depth) {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             i_refreshInsteadOfActivate = true;
             try {
             	activate1(null, a_refresh, a_depth);
@@ -1359,7 +1363,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     final void refreshClasses() {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             _classCollection.refreshClasses();
         }
     }
@@ -1483,7 +1487,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract void reserve(int byteCount);
     
     public void rollback() {
-        synchronized (i_lock) {
+        synchronized (_lock) {
         	checkClosed();
         	checkReadOnly();
         	rollback1();
@@ -1516,7 +1520,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	public void set(Transaction trans, Object obj, int depth)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
-		synchronized (i_lock) {
+		synchronized (_lock) {
             setInternal(trans, obj, depth, true);
         }
 	}
@@ -1576,11 +1580,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final void setByNewReplication(Db4oReplicationReferenceProvider referenceProvider, Object obj){
-        synchronized(i_lock){
+        synchronized(_lock){
             _replicationCallState = Const4.NEW;
             i_handlers._replicationReferenceProvider = referenceProvider;
             
-            set2(checkTransaction(null), obj, 1, false);
+            set2(checkTransaction(), obj, 1, false);
             
             _replicationCallState = Const4.NONE;
             i_handlers._replicationReferenceProvider = null;
@@ -1824,20 +1828,30 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         i_systemTrans = null;
         i_trans = null;
     }
+    
+    public final StoredClass storedClass(Object clazz) {
+        synchronized (_lock) {
+            return storedClass(checkTransaction(), clazz);
+        }
+    }
 
-    public StoredClass storedClass(Object clazz) {
-        synchronized (i_lock) {
+    public final StoredClass storedClass(Transaction trans, Object clazz) {
+        synchronized (_lock) {
             checkClosed();
             ReflectClass claxx = ReflectorUtils.reflectClassFor(reflector(), clazz);
             if (claxx == null) {
             	return null;
             }
-            return classMetadataForReflectClass(claxx);
+            ClassMetadata classMetadata = classMetadataForReflectClass(claxx);
+            if(classMetadata == null){
+                return null;
+            }
+            return new StoredClassImpl(trans, classMetadata);
         }
     }
 
     public StoredClass[] storedClasses() {
-        synchronized (i_lock) {
+        synchronized (_lock) {
             checkClosed();
             return _classCollection.storedClasses();
         }
@@ -1935,7 +1949,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public long version(){
-    	synchronized(i_lock){
+    	synchronized(_lock){
     		return currentVersion();
     	}
     }

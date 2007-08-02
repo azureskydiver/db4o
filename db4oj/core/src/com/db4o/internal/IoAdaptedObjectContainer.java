@@ -64,7 +64,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	}
     
     public void backup(String path) throws DatabaseClosedException, Db4oIOException {
-        synchronized (i_lock) {
+        synchronized (_lock) {
 			checkClosed();
 			if (_backupFile != null) {
 				throw new BackupInProgressException();
@@ -76,7 +76,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         long pos = 0;
         byte[] buffer = new byte[8192];
         while (true) {
-			synchronized (i_lock) {
+			synchronized (_lock) {
 				_file.seek(pos);
 				int read = _file.read(buffer);
 				if (read <= 0) {
@@ -90,7 +90,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         
 		Cool.sleepIgnoringInterruption(1);
 
-        synchronized (i_lock) {
+        synchronized (_lock) {
 			_backupFile.close();
 			_backupFile = null;
 		}
@@ -253,7 +253,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 	
     public void reserve(int byteCount) throws DatabaseReadOnlyException {
     	checkReadOnly();
-        synchronized (i_lock) {
+        synchronized (_lock) {
         	Slot slot = getSlot(byteCount);
             zeroReservedSlot(slot);
             free(slot);

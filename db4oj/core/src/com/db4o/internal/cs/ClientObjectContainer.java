@@ -511,7 +511,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	public void releaseSemaphore(String name) {
-		synchronized (i_lock) {
+		synchronized (_lock) {
 			checkClosed();
 			if (name == null) {
 				throw new NullPointerException();
@@ -540,7 +540,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	public void send(Object obj) {
-		synchronized (i_lock) {
+		synchronized (_lock) {
 			if (obj != null) {
 				write(Msg.USER_MESSAGE.getWriter(Serializer.marshall(i_trans,obj)));
 			}
@@ -552,7 +552,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	public boolean setSemaphore(String name, int timeout) {
-		synchronized (i_lock) {
+		synchronized (_lock) {
 			checkClosed();
 			if (name == null) {
 				throw new NullPointerException();
@@ -566,7 +566,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	public void switchToFile(String fileName) {
-		synchronized (i_lock) {
+		synchronized (_lock) {
 			commit();
 			MsgD msg = Msg.SWITCH_TO_FILE.getWriterForString(i_trans, fileName);
 			write(msg);
@@ -578,7 +578,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 	}
 
 	public void switchToMainFile() {
-		synchronized (i_lock) {
+		synchronized (_lock) {
 			commit();
 			write(Msg.SWITCH_TO_MAIN_FILE);
 			expectedResponse(Msg.OK);

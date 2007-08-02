@@ -18,7 +18,7 @@ public class P2Collections implements Db4oCollections{
     }
 
     public Db4oList newLinkedList() {
-        synchronized(i_stream.i_lock) {
+        synchronized(i_stream._lock) {
 	        if(Unobfuscated.createDb4oList(i_stream)){
 	            Db4oList l = new P2LinkedList();
 	            i_stream.set(l);
@@ -29,7 +29,7 @@ public class P2Collections implements Db4oCollections{
     }
 
     public Db4oMap newHashMap(int a_size) {
-        synchronized(i_stream.i_lock) {
+        synchronized(i_stream._lock) {
 	        if(Unobfuscated.createDb4oList(i_stream)){
 	            return new P2HashMap(a_size);
 	        }
@@ -38,7 +38,7 @@ public class P2Collections implements Db4oCollections{
     }
     
     public Db4oMap newIdentityHashMap(int a_size) {
-        synchronized(i_stream.i_lock) {
+        synchronized(i_stream._lock) {
 	        if(Unobfuscated.createDb4oList(i_stream)){
 	            P2HashMap m = new P2HashMap(a_size);
 	            m.i_type = 1;

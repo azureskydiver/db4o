@@ -39,7 +39,7 @@ public abstract class Transaction {
 
 	public final void checkSynchronization() {
 		if(Debug.checkSychronization){
-            stream().i_lock.notify();
+            stream()._lock.notify();
         }
 	}
 
