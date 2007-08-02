@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.internal;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
@@ -15,6 +16,12 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
 
     private static final String FILENAME = "mtoc.db4o";
     
+    private LocalObjectContainer _server;
+
+    private EmbeddedClientObjectContainer _client1;
+
+    private EmbeddedClientObjectContainer _client2;
+    
     public static class Item{
 
         public String _name;
@@ -24,29 +31,39 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         }
     }
 
-    private LocalObjectContainer _server;
-    
-    public void testTwoClients() {
-        
-        EmbeddedClientObjectContainer client1 = new EmbeddedClientObjectContainer(_server);
-        EmbeddedClientObjectContainer client2 = new EmbeddedClientObjectContainer(_server);
-        
+    public void testSetAndCommitIsolation() {
         Item item = new Item("one");
-        client1.set(item);
-        
-        assertItemCount(client2, 0);
-        
-        client1.commit();
-        
-        assertItemCount(client2, 1);
-        
-        
-        client1.close();
-        
-        
-        client2.close();
-        
+        _client1.set(item);
+        assertItemCount(_client2, 0);
+        _client1.commit();
+        assertItemCount(_client2, 1);
     }
+    
+    public void testStoredFieldIsolation(){
+        Item storedItem = new Item("original");
+        _client1.set(storedItem);
+        _client1.commit();
+        
+        storedItem._name = "changed";
+        _client1.set(storedItem);
+        
+        
+        Query query = _client2.query();
+        query.constrain(Item.class);
+        ObjectSet objectSet = query.execute();
+        Item retrievedItem = (Item) objectSet.next();
+        
+        StoredClass storedClass = _client2.storedClass(Item.class);
+        StoredField storedField = storedClass.storedField("_name", null);
+        Object retrievedName = storedField.get(retrievedItem);
+        Assert.areEqual("original", retrievedName);
+        
+        _client1.commit();
+        
+        retrievedName = storedField.get(retrievedItem);
+        Assert.areEqual("changed", retrievedName);
+    }
+    
 
     public void testClose() {
         final BooleanByRef closed = new BooleanByRef();
@@ -82,9 +99,14 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         // EmbeddedClientObjectContainer container = server.openClient();
         
         _server = (LocalObjectContainer) Db4o.openFile(config, FILENAME);
+        _client1 = new EmbeddedClientObjectContainer(_server);
+        _client2 = new EmbeddedClientObjectContainer(_server);
+
     }
 
     public void tearDown() throws Exception {
+        _client1.close();
+        _client2.close();
         _server.close();
     }
     
