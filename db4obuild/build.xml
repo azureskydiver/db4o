@@ -712,7 +712,7 @@
 		</java>
         
         <echo message="Running com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5 on jvm ${file.jvm.jdk1.5}" />
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="7200000">
+		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="10000000">
 			<jvmarg value="-Xmx512m"/>
 			<classpath refid="tests.java5.cp" />
 		</java>
