@@ -123,29 +123,25 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public void refresh(Object obj, int depth) {
-        // TODO Auto-generated method stub
-
+        _server.refresh(_transaction, obj, depth);
     }
 
     public void releaseSemaphore(String name) {
-        // TODO Auto-generated method stub
+        _server.releaseSemaphore(_transaction, name);
 
     }
 
     public ReplicationProcess replicationBegin(ObjectContainer peerB,
         ReplicationConflictHandler conflictHandler) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotSupportedException();
     }
 
     public void set(Object obj, int depth) {
-        // TODO Auto-generated method stub
-
+        _server.set(_transaction, obj, depth);
     }
 
     public boolean setSemaphore(String name, int waitForAvailability) {
-        // TODO Auto-generated method stub
-        return false;
+        return _server.setSemaphore(_transaction, name, waitForAvailability);
     }
 
     public StoredClass storedClass(Object clazz) {
@@ -153,18 +149,15 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
    }
 
     public StoredClass[] storedClasses() {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.storedClasses(_transaction);
     }
 
     public SystemInfo systemInfo() {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.systemInfo();
     }
 
     public long version() {
-        // TODO Auto-generated method stub
-        return 0;
+        return _server.version();
     }
 
     public void activate(Object obj, int depth) throws Db4oIOException, DatabaseClosedException {
@@ -187,24 +180,20 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public void deactivate(Object obj, int depth) throws DatabaseClosedException {
-        // TODO Auto-generated method stub
-
+        _server.deactivate(_transaction, obj, depth);
     }
 
     public void delete(Object obj) throws Db4oIOException, DatabaseClosedException,
         DatabaseReadOnlyException {
-        // TODO Auto-generated method stub
-
+        _server.delete(_transaction, obj);
     }
 
     public ExtObjectContainer ext() {
-        // TODO Auto-generated method stub
-        return null;
+        return (ExtObjectContainer)this;
     }
 
     public ObjectSet get(Object template) throws Db4oIOException, DatabaseClosedException {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.get(_transaction, template);
     }
 
     public Query query() throws DatabaseClosedException {
@@ -235,6 +224,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public void set(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
         _server.set(_transaction, obj);
     }
+
 
 
 }

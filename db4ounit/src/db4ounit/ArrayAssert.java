@@ -10,7 +10,24 @@ public class ArrayAssert {
 			return;
 		}
 		Assert.fail("Expecting '" + expected + "'.");
-	}	
+	}
+	
+    public static void contains(Object[] array, Object[] expected){
+        for (int i = 0; i < expected.length; i++) {
+            if (-1 == indexOf(array, expected[i])) {
+                Assert.fail("Expecting contains '" + expected[i] + "'.");
+            }
+        }
+    }
+    
+    public static int indexOf(Object[] array, Object expected) {
+        for (int i = 0; i < array.length; ++i) {                
+            if (expected.equals(array[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
 	
 	public static void areEqual(Object[] expected, Object[] actual) {
 		if (expected == actual) return;
