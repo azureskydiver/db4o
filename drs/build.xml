@@ -1,18 +1,6 @@
 <!-- Copyright (C) 2007 db4objects Inc.  http://www.db4o.com -->
 
 <project name="dRS" default="dist" basedir=".">
-	<!--
-	
-	Jan 1, 2007
-	
-	This build file is obsoleted, please use /build-1.1/build-1.1.bat
-
-	But if you still use it, copy db4o-6.1-db4ounit.jar and db4o-6.1-java5.jar to /drs/lib. 
-	Then ant "dist". It will work.
-	
-	Albert
-	
-	-->
 	<description>dRS build file</description>
 	<!--
 		To execute the "dist" target, which is to build the dRS release, 
@@ -38,30 +26,41 @@
 		<pathelement location="${drs.dir.dist.classes}" />
 	</path>
 
-	<target name="init" depends="">
+    <available property="db4obuild.available" 
+        file="db4o-${db4o.version.dotted}-java5.jar" 
+        filepath="../db4obuild/dist/java/lib" />
+    
+	<target name="init">
 		<tstamp />
 		<mkdir dir="${drs.dir.dist.lib}" />
 		<mkdir dir="${drs.dir.dist.api}" />
         
-        <copy todir="lib" >
+        <antcall target="copy.db4o.jar" />
+	</target>
+    
+    <target name="copy.db4o.jar" if="db4obuild.available">
+        <copy todir="lib">
             <fileset dir="../db4obuild/dist/java/lib" >
                 <include name="db4o-*-java5.jar" />
                 <include name="db4o-*-db4ounit.jar" />
             </fileset>
         </copy>
-	</target>
+    </target>
 
 	<target name="clean">
 		<delete dir="${drs.dir.dist}" />
 		<delete dir="${drs.dir.test}/temp" />
-        
+        <antcall target="clean.db4o.jar" />
+	</target>
+    
+    <target name="clean.db4o.jar" if="db4obuild.available">
         <delete>
             <fileset dir="lib" >
                 <include name="db4o-*-java5.jar" />
                 <include name="db4o-*-db4ounit.jar" />
             </fileset>
         </delete>
-	</target>
+    </target>
 
 	<macrodef name="buildjar" description="compile, jar classes for various src folders">
 		<attribute name="srcdir" />
@@ -89,15 +88,15 @@
 		</sequential>
 	</macrodef>
 
-	<target name="build-core" depends="" description="jar the core src of drs">
+	<target name="build-core" description="jar the core src of drs">
 		<buildjar srcdir="${drs.dir.src.core}" classpathrefid="class.path" jar="${file.drs.core.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
-	<target name="build-example" depends="" description="jar the example src of drs">
+	<target name="build-example" description="jar the example src of drs">
 		<buildjar srcdir="${drs.dir.src.tutorial}" classpathrefid="class.path" jar="${file.drs.tutorial.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
-	<target name="build-regression" depends="" description="jar the test src of drs">
+	<target name="build-regression" description="jar the test src of drs">
 		<buildjar srcdir="${drs.dir.src.test}" classpathrefid="class.path" jar="${file.drs.test.jar}" exclude="log4j.xml" include="**/*.xml" />
 	</target>
 
@@ -107,7 +106,7 @@
 		<antcall target="build-regression" />
 	</target>
 
-	<target name="javadoc">
+	<target name="javadoc" if="db4obuild.available">
 		<javadoc destdir="${drs.dir.dist.api}" author="true" version="true" use="true" windowtitle="dRS" classpathref="class.path">
             <header><![CDATA[<b>db4o Replication System (dRS)</b>]]></header>
             <doctitle><![CDATA[<h1>db4o Replication System (dRS)</h1><p align="left">This document is the API specification for db4o Replication System (dRS)]]></doctitle>
@@ -119,7 +118,28 @@
 		<copy file="${javadoc.stylesheet}" todir="${drs.dir.dist.api}" overwrite="true" />
 	</target>
 
-	<target name="dist" depends="build-all, javadoc, javadoc">
+	<target name="doctor" if="db4obuild.available">
+		<!--TODO Use the Doctor Ant Task-->
+		
+		<property environment="env" />
+		<delete dir="${dir.doc}/out" />
+		
+		<java fork="true" classname="com.yetac.doctor.Doctor">
+			<!--TODO ${basedir} is needed for db4occ to run correctly-->
+			<arg line="${basedir}/${dir.doc} ${font.pdf.base}" />
+			<classpath>
+				<fileset dir="lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="lib/doctor">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</java>
+		<move file="${dir.doc}/out/doctor.pdf" tofile="${dir.doc}/out/dRS-tutorial.pdf"/>
+	</target>
+
+	<target name="dist" depends="build-all, javadoc, doctor, javadoc" if="db4obuild.available">
 		<property name="zipbasedir" value="drs-${drs.version.dotted}" />
 		
 		<copy file="compatibility.java.html" tofile="compatibility.html" overwrite="true">
@@ -141,21 +161,16 @@
 			<zipfileset dir="lib" prefix="${zipbasedir}/lib" includes="*.jar, *.html" />
 			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
 
-			<zipfileset dir="docWiki/java" prefix="${zipbasedir}/doc/reference" />
+			<zipfileset dir="doc/out" prefix="${zipbasedir}/doc/tutorial" />
 			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
 
 			<zipfileset file="${file.drs.core.jar}" fullpath="${zipbasedir}/lib/${filename.drs.core.jar}" />
 			<zipfileset file="${file.drs.tutorial.jar}" fullpath="${zipbasedir}/lib/${filename.drs.tutorial.jar}" />
 			<zipfileset file="${file.drs.test.jar}" fullpath="${zipbasedir}/lib/${filename.drs.test.jar}" />
-			
 		</zip>
-		
-		<!--unzip the dist, rename it to "unzipped" for cruisecontol to run tests-->
-		<unzip src="${file.drs.zip}" dest="${drs.dir.dist}" />
-		<move file="${drs.dir.dist}/${zipbasedir}" tofile="${drs.dir.dist}/unzipped"/> 
 	</target>
-
-    <target name="add-gplheader">
+    
+    <target name="add-gplheader" if="db4obuild.available">
         <taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
             <classpath>
                 <pathelement location="../db4obuild/bin" />
@@ -169,11 +184,6 @@
 			</sources>
 		</filehead>
     </target>
-    
-	<target name="copyLog4j">
-		<mkdir dir="${drs.dir.dist.classes}" />
-		<copy file="${drs.dir.src.core}/log4j.xml" todir="${drs.dir.dist.classes}" />
-	</target>
 
 	<target name="run-example" depends="init">
 		<java fork="true" classname="f1.stepbystep.StepByStepExample">

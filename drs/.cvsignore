@@ -1,8 +1,0 @@
-bin
-*.yap
-test
-build
-dist
-temp
-machine.properties
-drs.machine.properties
