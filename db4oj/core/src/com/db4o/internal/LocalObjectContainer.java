@@ -523,17 +523,21 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         return address;
     }
 
-    public void releaseSemaphore(String name) {
-        releaseSemaphore(checkTransaction(), name);
+    public final void releaseSemaphore(String name) {
+        releaseSemaphore(null, name);
     }
 
-    public void releaseSemaphore(Transaction ta, String name) {
-        if (i_semaphores != null) {
-            synchronized (i_semaphores) {
-                if (i_semaphores != null && ta == i_semaphores.get(name)) {
-                    i_semaphores.remove(name);
-                    i_semaphores.notifyAll();
-                }
+    public final void releaseSemaphore(Transaction trans, String name) {
+        synchronized(_lock){
+            if (i_semaphores == null) {
+                return;
+            }
+        }
+        synchronized (i_semaphores) {
+            trans = checkTransaction(trans);
+            if (i_semaphores != null && trans == i_semaphores.get(name)) {
+                i_semaphores.remove(name);
+                i_semaphores.notifyAll();
             }
         }
     }
@@ -561,11 +565,11 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         a_object.cacheDirty(i_dirty);
     }
 
-    public boolean setSemaphore(String name, int timeout) {
-        return setSemaphore(checkTransaction(), name, timeout);
+    public final boolean setSemaphore(String name, int timeout) {
+        return setSemaphore(null, name, timeout);
     }
 
-    public boolean setSemaphore(Transaction ta, String name, int timeout) {
+    public final boolean setSemaphore(Transaction trans, String name, int timeout) {
         if (name == null) {
             throw new NullPointerException();
         }
@@ -575,12 +579,13 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
             }
         }
         synchronized (i_semaphores) {
+            trans = checkTransaction(trans);
             Object obj = i_semaphores.get(name);
             if (obj == null) {
-                i_semaphores.put(name, ta);
+                i_semaphores.put(name, trans);
                 return true;
             }
-            if (ta == obj) {
+            if (trans == obj) {
                 return true;
             }
             long endtime = System.currentTimeMillis() + timeout;
@@ -598,7 +603,7 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
                 obj = i_semaphores.get(name);
 
                 if (obj == null) {
-                    i_semaphores.put(name, ta);
+                    i_semaphores.put(name, trans);
                     return true;
                 }
 

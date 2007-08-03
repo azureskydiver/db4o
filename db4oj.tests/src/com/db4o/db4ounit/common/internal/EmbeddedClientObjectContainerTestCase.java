@@ -30,10 +30,23 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     
     private static final String CHANGED_NAME = "changed";
 
+    public static class ItemHolder{
+        
+        public Item _item;
+        
+        public ItemHolder(Item item){
+            _item = item;
+        }
+        
+    }
 
     public static class Item{
 
         public String _name;
+        
+        public Item(){
+            
+        }
 
         public Item(String name) {
             _name = name;
@@ -48,12 +61,51 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         assertItemCount(_client2, 1);
     }
     
+    public void testActivate(){
+        Item storedItem = storeItemToClient1AndCommit();
+        long id = _client1.getID(storedItem);
+        
+        Item retrievedItem = (Item) _client2.getByID(id);
+        Assert.isNull(retrievedItem._name);
+        Assert.isFalse(_client2.isActive(retrievedItem));
+        
+        _client2.activate(retrievedItem, 1);
+        Assert.areEqual(ORIGINAL_NAME, retrievedItem._name);
+        Assert.isTrue(_client2.isActive(retrievedItem));
+    }
+    
     public void testBackup(){
         Assert.expect(NotSupportedException.class, new CodeBlock() {
             public void run() throws Throwable {
                 _client1.backup("");
             }
         });
+    }
+    
+    public void testDeactivate(){
+        Item item = storeItemToClient1AndCommit();
+        ItemHolder holder = new ItemHolder(item);
+        _client1.set(holder);
+        _client1.commit();
+        _client1.deactivate(holder, 1);
+        Assert.isNull(holder._item);
+    }
+    
+    public void testDelete(){
+        Item item = storeItemToClient1AndCommit();
+        Assert.isTrue(_client1.isStored(item));
+        _client1.delete(item);
+        Assert.isFalse(_client1.isStored(item));
+    }
+    
+    public void testExt(){
+        Assert.isInstanceOf(ExtObjectContainer.class, _client1.ext());
+    }
+    
+    public void testGet(){
+        Item storedItem = storeItemToClient1AndCommit();
+        Object retrievedItem = _client1.get(new Item()).next();
+        Assert.areSame(storedItem, retrievedItem);
     }
     
     public void testGetID(){
@@ -132,6 +184,27 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Assert.areSame(identity1, identity2);
     }
     
+    public void testIsCached(){
+        Item storedItem = storeItemToClient1AndCommit();
+        long id = _client1.getID(storedItem);
+        
+        Assert.isFalse(_client2.isCached(id));
+        
+        Item retrievedItem = (Item) _client2.getByID(id);
+        Assert.isTrue(_client2.isCached(id));
+    }
+    
+    public void testIsClosed(){
+        _client1.close();
+        Assert.isTrue(_client1.isClosed());
+    }
+    
+    public void testIsStored(){
+        Item storedItem = storeItemToClient1AndCommit();
+        Assert.isTrue(_client1.isStored(storedItem));
+        Assert.isFalse(_client2.isStored(storedItem));
+    }
+    
     public void testKnownClasses(){
         ReflectClass[] knownClasses = _client1.knownClasses();
         ReflectClass itemClass = _client1.reflector().forClass(Item.class);
@@ -175,38 +248,32 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Assert.isNotNull(_client1.reflector());
     }
     
-    public void testActivate(){
+    public void testRefresh(){
         Item storedItem = storeItemToClient1AndCommit();
-        long id = _client1.getID(storedItem);
-        
-        Item retrievedItem = (Item) _client2.getByID(id);
-        Assert.isNull(retrievedItem._name);
-        Assert.isFalse(_client2.isActive(retrievedItem));
-        
-        _client2.activate(retrievedItem, 1);
-        Assert.areEqual(ORIGINAL_NAME, retrievedItem._name);
-        Assert.isTrue(_client2.isActive(retrievedItem));
+        storedItem._name = CHANGED_NAME;
+        _client1.refresh(storedItem, 2);
+        Assert.areEqual(ORIGINAL_NAME, storedItem._name);
     }
     
-    public void testIsCached(){
-        Item storedItem = storeItemToClient1AndCommit();
-        long id = _client1.getID(storedItem);
-        
-        Assert.isFalse(_client2.isCached(id));
-        
-        Item retrievedItem = (Item) _client2.getByID(id);
-        Assert.isTrue(_client2.isCached(id));
+    public void testSetSemaphore(){
+        String semaphoreName = "sem";
+        Assert.isTrue(_client1.setSemaphore(semaphoreName, 0));
+        Assert.isFalse(_client2.setSemaphore(semaphoreName, 0));
+        _client1.releaseSemaphore(semaphoreName);
+        Assert.isTrue(_client2.setSemaphore(semaphoreName, 0));
+        _client2.close();
+        Assert.isTrue(_client1.setSemaphore(semaphoreName, 0));
     }
     
-    public void testIsClosed(){
-        _client1.close();
-        Assert.isTrue(_client1.isClosed());
-    }
-    
-    public void testIsStored(){
-        Item storedItem = storeItemToClient1AndCommit();
-        Assert.isTrue(_client1.isStored(storedItem));
-        Assert.isFalse(_client2.isStored(storedItem));
+    public void testSetWithDepth(){
+        Item item = storeItemToClient1AndCommit();
+        ItemHolder holder = new ItemHolder(item);
+        _client1.set(holder);
+        _client1.commit();
+        item._name = CHANGED_NAME;
+        _client1.set(holder, 3);
+        _client1.refresh(holder, 3);
+        Assert.areEqual(CHANGED_NAME, item._name);
     }
     
     public void testStoredFieldIsolation(){
@@ -225,6 +292,24 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         
         retrievedName = storedField.get(retrievedItem);
         Assert.areEqual(CHANGED_NAME, retrievedName);
+    }
+    
+    public void testStoredClasses(){
+        storeItemToClient1AndCommit();
+        StoredClass[] storedClasses = _client1.storedClasses();
+        StoredClass storedClass = _client1.storedClass(Item.class);
+        arrayAssertContains(storedClasses, new Object[]{storedClass});
+    }
+    
+    public void testSystemInfo(){
+        SystemInfo systemInfo = _client1.systemInfo();
+        Assert.isNotNull(systemInfo);
+        Assert.isGreater(1, systemInfo.totalSize());
+    }
+    
+    public void testVersion(){
+        storeItemToClient1AndCommit();
+        Assert.isGreater(1, _client1.version());
     }
 
     public void testClose() {

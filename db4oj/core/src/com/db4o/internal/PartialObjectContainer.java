@@ -422,13 +422,17 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	showInternalClasses(false);
         }
     }
+    
+    public final void deactivate(Object obj, int depth) throws DatabaseClosedException {
+        deactivate(null, obj, depth);
+    }
 
-    public final void deactivate(Object a_deactivate, int a_depth) throws DatabaseClosedException {
+    public final void deactivate(Transaction trans, Object obj, int depth) throws DatabaseClosedException {
         synchronized (_lock) {
-        	checkClosed();
+            trans = checkTransaction(trans);
         	beginTopLevelCall();
         	try{
-        		deactivate1(checkTransaction(), a_deactivate, a_depth);
+        		deactivateInternal(trans, obj, depth);
         		completeTopLevelCall();
         	} catch(Db4oException e){
         		completeTopLevelCall(e);
@@ -438,31 +442,29 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    private final void deactivate1(Transaction trans, Object a_activate, int a_depth) {
-        stillToDeactivate(trans, a_activate, a_depth, true);
+    private final void deactivateInternal(Transaction trans, Object obj, int depth) {
+        stillToDeactivate(trans, obj, depth, true);
         while (_stillToDeactivate != null) {
             Iterator4 i = new Iterator4Impl(_stillToDeactivate);
             _stillToDeactivate = null;
             while (i.moveNext()) {
                 ObjectReference currentObject = (ObjectReference) i.current();
-                
                 i.moveNext();
 				Integer currentInteger = ((Integer) i.current());
-				
 				currentObject.deactivate(_transaction, currentInteger.intValue());
             }
         }
+        
     }
 
-    public void delete(Object a_object) {
+    public final void delete(Object a_object) {
     	delete(null, a_object);
     }
     
-    public void delete(Transaction trans, Object obj) throws DatabaseReadOnlyException, DatabaseClosedException {
+    public final void delete(Transaction trans, Object obj) throws DatabaseReadOnlyException, DatabaseClosedException {
         synchronized (_lock) {
-        	checkClosed();
-        	checkReadOnly();
         	trans = checkTransaction(trans);
+        	checkReadOnly();
             delete1(trans, obj, true);
             trans.processDeletes();
         }
@@ -703,34 +705,33 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     void gc() {
         _references.pollReferenceQueue();
     }
-
-	public ObjectSet get(Object template) throws DatabaseClosedException {
-	    synchronized (_lock) {
-	    	checkClosed();
-	    	return get1(null, template);
-	    }
-	}
-
-    private ObjectSetFacade get1(Transaction ta, Object template) {
-        ta = checkTransaction(ta);
-        QueryResult res = null;
-		try {
-			beginTopLevelCall();
-			res = get2(ta, template);
-			completeTopLevelCall();
-		} catch (Db4oException e) {
-			completeTopLevelCall(e);
-		} finally {
-			endTopLevelCall();
-		}
-        return new ObjectSetFacade(res);
+    
+    public final ObjectSet get(Object template) throws DatabaseClosedException {
+        return get(null, template);
     }
 
-    private final QueryResult get2(Transaction ta, Object template) {
+    public final ObjectSet get(Transaction trans, Object template) {
+        synchronized (_lock) {
+            trans = checkTransaction(trans);
+            QueryResult res = null;
+    		try {
+    			beginTopLevelCall();
+    			res = getInternal(trans, template);
+    			completeTopLevelCall();
+    		} catch (Db4oException e) {
+    			completeTopLevelCall(e);
+    		} finally {
+    			endTopLevelCall();
+    		}
+            return new ObjectSetFacade(res);
+        }
+    }
+
+    private final QueryResult getInternal(Transaction trans, Object template) {
         if (template == null || template.getClass() == Const4.CLASS_OBJECT) {
-            return getAll(ta);
+            return getAll(trans);
         } 
-        Query q = query(ta);
+        Query q = query(trans);
         q.constrain(template);
         return executeQuery((QQuery)q);
     }
@@ -1362,12 +1363,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public GenericReflector reflector(){
         return _handlers._reflector;
     }
+    
+    public final void refresh(Object obj, int depth) {
+        refresh(null, obj, depth);
+    }
 
-    public void refresh(Object a_refresh, int a_depth) {
+    public final void refresh(Transaction trans, Object obj, int depth) {
         synchronized (_lock) {
             _refreshInsteadOfActivate = true;
             try {
-            	activate(null, a_refresh, a_depth);
+            	activate(trans, obj, depth);
             } finally {
             	_refreshInsteadOfActivate = false;
             }
@@ -1515,9 +1520,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         // so far this only works from YapClient
     }
 
-    public void set(Object a_object) throws DatabaseClosedException,
+    public void set(Object obj) throws DatabaseClosedException,
 			DatabaseReadOnlyException {
-        set(a_object, Const4.UNSPECIFIED);
+        set(obj, Const4.UNSPECIFIED);
     }
     
     public final void set(Transaction trans, Object obj)
@@ -1527,10 +1532,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public final void set(Object obj, int depth)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
-        set(_transaction, obj, depth);
+        set(null, obj, depth);
     }
 
-	public void set(Transaction trans, Object obj, int depth)
+	public final void set(Transaction trans, Object obj, int depth)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
 		synchronized (_lock) {
             setInternal(trans, obj, depth, true);
@@ -1546,7 +1551,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public final int setInternal(Transaction trans, Object obj, int depth,
 			boolean checkJustSet) throws DatabaseClosedException,
 			DatabaseReadOnlyException {
-    	checkClosed();
+    	trans = checkTransaction(trans);
     	checkReadOnly();
     	beginTopLevelSet();
     	try{
@@ -1861,11 +1866,20 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return new StoredClassImpl(trans, classMetadata);
         }
     }
-
+    
     public StoredClass[] storedClasses() {
+        return storedClasses(null);
+    }
+
+    public StoredClass[] storedClasses(Transaction trans) {
         synchronized (_lock) {
-            checkClosed();
-            return _classCollection.storedClasses();
+            trans = checkTransaction(trans);
+            StoredClass[] classMetadata = _classCollection.storedClasses();
+            StoredClass[] storedClasses = new StoredClass[classMetadata.length];
+            for (int i = 0; i < classMetadata.length; i++) {
+                storedClasses[i] = new StoredClassImpl(trans, (ClassMetadata)classMetadata[i]);
+            }
+            return storedClasses;
         }
     }
 		
