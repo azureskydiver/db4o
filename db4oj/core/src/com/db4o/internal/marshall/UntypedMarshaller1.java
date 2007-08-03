@@ -155,7 +155,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return obj;
     }
 
-	public void defrag(ReaderPair readers) {
+	public void defrag(BufferPair readers) {
         int payLoadOffSet = readers.readInt();
         if(payLoadOffSet == 0){
             return;

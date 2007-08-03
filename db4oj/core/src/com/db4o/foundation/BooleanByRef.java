@@ -9,4 +9,13 @@ package com.db4o.foundation;
 public class BooleanByRef {
 	
 	public boolean value;
+
+	public BooleanByRef() {
+		this(false);
+	}
+
+	public BooleanByRef(boolean value) {
+		this.value = value;
+	}
+	
 }

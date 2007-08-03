@@ -12,7 +12,7 @@ public class IDHandler extends PrimitiveIntHandler {
 		super(stream);
 	}
 
-    public void defragIndexEntry(ReaderPair readers) {
+    public void defragIndexEntry(BufferPair readers) {
     	readers.copyID(true,false);
     }
 

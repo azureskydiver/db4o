@@ -127,7 +127,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     }
 
     /** @param trans */
-    public int elementCount(Transaction trans, SlotReader reader) {
+    public int elementCount(Transaction trans, SlotBuffer reader) {
         int typeOrLength = reader.readInt();
         if (typeOrLength >= 0) {
             return typeOrLength;
@@ -459,7 +459,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         return false;
     }
 
-    public final void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
+    public final void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
         if(Handlers4.handlesSimple(i_handler)){
             readers.incrementOffset(linkLength());
         }else{
@@ -467,7 +467,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         }
     }
     
-    public void defrag1(MarshallerFamily mf,ReaderPair readers) {
+    public void defrag1(MarshallerFamily mf,BufferPair readers) {
 		if (Deploy.debug) {
 			readers.readBegin(identifier());
 		}
@@ -480,7 +480,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         }
     }
 
-	protected int readElementsDefrag(ReaderPair readers) {
+	protected int readElementsDefrag(BufferPair readers) {
         int elements = readers.source().readInt();
         readers.target().writeInt(mapElementsEntry(elements,readers.mapping()));
         if (elements < 0) {

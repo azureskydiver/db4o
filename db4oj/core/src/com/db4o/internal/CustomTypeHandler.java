@@ -30,7 +30,7 @@ public class CustomTypeHandler implements TypeHandler4{
         return null;
     }
 
-    public void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
+    public void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
         // TODO Auto-generated method stub
         
     }

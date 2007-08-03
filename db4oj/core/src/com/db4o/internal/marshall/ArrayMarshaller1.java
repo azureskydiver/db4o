@@ -96,7 +96,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         return reader;
     }
     
-    public void defragIDs(ArrayHandler arrayHandler,ReaderPair readers) {
+    public void defragIDs(ArrayHandler arrayHandler,BufferPair readers) {
     	int offset=readers.preparePayloadRead();
         arrayHandler.defrag1(_family, readers);
         readers.offset(offset);

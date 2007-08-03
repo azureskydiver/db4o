@@ -97,5 +97,5 @@ public abstract class StringMarshaller {
         }
     }
 
-	public abstract void defrag(SlotReader reader);
+	public abstract void defrag(SlotBuffer reader);
 }

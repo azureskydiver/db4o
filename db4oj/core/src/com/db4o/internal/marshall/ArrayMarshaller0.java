@@ -78,6 +78,6 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     	return reader.readEmbeddedObject(trans);
     }
     
-    public void defragIDs(ArrayHandler arrayHandler,ReaderPair readers) {
+    public void defragIDs(ArrayHandler arrayHandler,BufferPair readers) {
     }
 }

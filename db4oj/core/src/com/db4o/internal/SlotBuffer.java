@@ -8,7 +8,7 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public interface SlotReader {
+public interface SlotBuffer {
 
 	int offset();
 

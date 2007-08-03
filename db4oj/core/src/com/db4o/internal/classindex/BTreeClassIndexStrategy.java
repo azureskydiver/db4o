@@ -83,7 +83,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public void dontDelete(Transaction transaction, int id) {
 	}
 	
-	public void defragReference(ClassMetadata yapClass, ReaderPair readers,int classIndexID) {
+	public void defragReference(ClassMetadata yapClass, BufferPair readers,int classIndexID) {
 		int newID = -classIndexID;
 		readers.writeInt(newID);
 	}
@@ -96,7 +96,7 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         return _btreeIndex.allNodeIds(trans);
 	}
 
-	public void defragIndex(ReaderPair readers) {
+	public void defragIndex(BufferPair readers) {
 		_btreeIndex.defragIndex(readers);
 	}
 	

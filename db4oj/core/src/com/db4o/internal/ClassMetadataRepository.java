@@ -101,7 +101,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         return ret;
     }
 
-	public static void defrag(ReaderPair readers) {
+	public static void defrag(BufferPair readers) {
         if (Deploy.debug) {
             readers.readBegin(Const4.YAPCLASSCOLLECTION);
         }

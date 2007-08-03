@@ -173,12 +173,12 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
     // redundant, only added to make Sun JDK 1.2's java happy :(
     public abstract int linkLength();
     
-    public final void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
+    public final void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
     	int linkLength = linkLength();
     	readers.incrementOffset(linkLength);
     }
     
-    public void defragIndexEntry(ReaderPair readers) {
+    public void defragIndexEntry(BufferPair readers) {
     	try {
 			read1(readers.source());
 			read1(readers.target());

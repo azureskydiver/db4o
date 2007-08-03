@@ -1006,7 +1006,7 @@ public class FieldMetadata implements StoredField {
         _index = null;
     }    
     
-    public void defragField(MarshallerFamily mf,ReaderPair readers) {
+    public void defragField(MarshallerFamily mf,BufferPair readers) {
     	getHandler().defrag(mf, readers, true);
     }
     

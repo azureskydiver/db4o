@@ -207,7 +207,7 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
 		// nothing to do
 	}
 
-	public void defragReference(ClassMetadata yapClass, ReaderPair readers,int classIndexID) {
+	public void defragReference(ClassMetadata yapClass, BufferPair readers,int classIndexID) {
 	}
 
 	public int id() {
@@ -219,6 +219,6 @@ public class OldClassIndexStrategy extends AbstractClassIndexStrategy  implement
         throw new NotImplementedException();
 	}
 
-	public void defragIndex(ReaderPair readers) {
+	public void defragIndex(BufferPair readers) {
 	}
 }

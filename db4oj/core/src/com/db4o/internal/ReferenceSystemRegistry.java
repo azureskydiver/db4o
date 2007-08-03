@@ -12,33 +12,38 @@ public class ReferenceSystemRegistry {
     
     private final Collection4 _referenceSystems = new Collection4();
     
-    public void removeId(int id){
+    public void removeId(final int id){
+    	removeReference(new ReferenceSource() {
+			public ObjectReference referenceFrom(ReferenceSystem referenceSystem) {
+				return referenceSystem.referenceForId(id);
+			}
+    	});
+    }
+    
+    public void removeObject(final Object obj){
+    	removeReference(new ReferenceSource() {
+			public ObjectReference referenceFrom(ReferenceSystem referenceSystem) {
+				return referenceSystem.referenceForObject(obj);
+			}
+    	});
+    }
+    
+    public void removeReference(final ObjectReference reference) {
+    	removeReference(new ReferenceSource() {
+			public ObjectReference referenceFrom(ReferenceSystem referenceSystem) {
+				return reference;
+			}
+    	});
+    }
+
+    private void removeReference(ReferenceSource referenceSource) {
         Iterator4 i = _referenceSystems.iterator();
         while(i.moveNext()){
             ReferenceSystem referenceSystem = (ReferenceSystem) i.current();
-            ObjectReference reference = referenceSystem.referenceForId(id);
+            ObjectReference reference = referenceSource.referenceFrom(referenceSystem);
             if(reference != null){
                 referenceSystem.removeReference(reference);
             }
-        }
-    }
-    
-    public void removeObject(Object obj){
-        Iterator4 i = _referenceSystems.iterator();
-        while(i.moveNext()){
-            ReferenceSystem referenceSystem = (ReferenceSystem) i.current();
-            ObjectReference reference = referenceSystem.referenceForObject(obj);
-            if(reference != null){
-                referenceSystem.removeReference(reference);
-            }
-        }
-    }
-    
-    public void removeReference(ObjectReference reference) {
-        Iterator4 i = _referenceSystems.iterator();
-        while(i.moveNext()){
-            ReferenceSystem referenceSystem = (ReferenceSystem) i.current();
-            referenceSystem.removeReference(reference);
         }
     }
 
@@ -50,4 +55,7 @@ public class ReferenceSystemRegistry {
         _referenceSystems.remove(referenceSystem);
     }
 
+    private static interface ReferenceSource {
+    	ObjectReference referenceFrom(ReferenceSystem referenceSystem);
+    }
 }

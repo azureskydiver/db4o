@@ -11,7 +11,7 @@ import com.db4o.internal.slots.*;
  * 
  * @exclude
  */
-public class Buffer implements SlotReader {
+public class Buffer implements SlotBuffer {
 	
 	// for coding convenience, we allow objects to grab into the buffer
 	public byte[] _buffer;

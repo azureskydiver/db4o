@@ -21,7 +21,7 @@ public class StoredClassTestCase extends AbstractDb4oTestCase{
         public String[] _array;
     }
 
-    public static class Item extends ItemParent{
+    public static class Item extends ItemParent {
         
         public String _name;
         
@@ -39,7 +39,10 @@ public class StoredClassTestCase extends AbstractDb4oTestCase{
     protected void store() throws Exception {
         Item item = new Item(ITEM_NAME);
         store(item);
-        _id = db().getID(item);
+    }
+
+    protected void db4oSetupAfterStore() throws Exception {
+    	_id = db().getID(retrieveOnlyInstance(Item.class));
     }
     
     public void testUnknownStoredClass(){

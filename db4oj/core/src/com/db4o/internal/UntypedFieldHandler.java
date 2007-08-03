@@ -95,7 +95,7 @@ public final class UntypedFieldHandler extends ClassMetadata {
         return mf._untyped.writeNew(obj, restoreLinkeOffset, writer);
     }
 
-    public void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
+    public void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
         if(mf._untyped.useNormalClassRead()){
             super.defrag(mf,readers, redirect);
         }

@@ -207,7 +207,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     	return ((ObjectHeaderAttributes1)attributes).isNull(fieldIndex);
     }
 
-	public void defragFields(ClassMetadata yc,ObjectHeader header, final ReaderPair readers) {
+	public void defragFields(ClassMetadata yc,ObjectHeader header, final BufferPair readers) {
         TraverseFieldCommand command = new TraverseFieldCommand() {
         	
         	public int fieldCount(ClassMetadata yapClass, Buffer reader) {

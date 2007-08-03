@@ -113,7 +113,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,ReaderPair readers) throws CorruptionException, IOException {
+	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,BufferPair readers) throws CorruptionException, IOException {
 		readers.readShortString(sio);
         if (yapField.isVirtual()) {
         	return;

@@ -9,7 +9,7 @@ import com.db4o.internal.Buffer;
 import com.db4o.internal.Const4;
 import com.db4o.internal.LatinStringIO;
 import com.db4o.internal.ObjectContainerBase;
-import com.db4o.internal.ReaderPair;
+import com.db4o.internal.BufferPair;
 import com.db4o.internal.StatefulBuffer;
 import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.reflect.ReflectClass;
@@ -120,7 +120,7 @@ public class IntHandler extends PrimitiveHandler {
         return obj instanceof Integer && val(obj) < i_compareTo;
     }
 
-    public void defragIndexEntry(ReaderPair readers) {
+    public void defragIndexEntry(BufferPair readers) {
     	readers.incrementIntSize();
     }
 }

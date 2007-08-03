@@ -11,7 +11,9 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.internal.mapping.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -49,6 +51,7 @@ public class DefragContextImpl implements DefragContext {
 	private final ContextIDMapping _mapping;
 	private DefragmentListener _listener;
 	private Queue4 _unindexed=new NonblockingQueue();
+	private final Hashtable4 _hasFieldIndexCache = new Hashtable4();
 	
 
 	public DefragContextImpl(DefragmentConfig defragConfig,DefragmentListener listener) {
@@ -114,29 +117,24 @@ public class DefragContextImpl implements DefragContext {
 		_mapping.close();
 	}
 	
-	public Buffer readerByID(DbSelector selector,int id) {
+	public Buffer bufferByID(DbSelector selector,int id) {
 		Slot slot=readPointer(selector, id);
-		return readerByAddress(selector,slot.address(),slot.length());
+		return bufferByAddress(selector,slot.address(),slot.length());
 	}
 
-	public StatefulBuffer sourceWriterByID(int id) throws IOException {
-		Slot slot=readPointer(SOURCEDB, id);
-		return _sourceDb.readWriterByAddress(SOURCEDB.transaction(this),slot.address(),slot.length());
+	public Buffer sourceBufferByAddress(int address,int length) throws IOException {
+		return bufferByAddress(SOURCEDB, address, length);
 	}
 
-	public Buffer sourceReaderByAddress(int address,int length) throws IOException {
-		return readerByAddress(SOURCEDB, address, length);
+	public Buffer targetBufferByAddress(int address,int length) throws IOException {
+		return bufferByAddress(TARGETDB, address, length);
 	}
 
-	public Buffer targetReaderByAddress(int address,int length) throws IOException {
-		return readerByAddress(TARGETDB, address, length);
-	}
-
-	public Buffer readerByAddress(DbSelector selector,int address,int length) {
+	public Buffer bufferByAddress(DbSelector selector,int address,int length) {
 		return selector.db(this).bufferByAddress(address,length);
 	}
 
-	public StatefulBuffer targetWriterByAddress(int address,int length) throws IllegalArgumentException {
+	public StatefulBuffer targetStatefulBufferByAddress(int address,int length) throws IllegalArgumentException {
 		return _targetDb.readWriterByAddress(TARGETDB.transaction(this),address,length);
 	}
 	
@@ -144,7 +142,7 @@ public class DefragContextImpl implements DefragContext {
 		return _targetDb.getSlot(length);
 	}
 
-	public void targetWriteBytes(ReaderPair readers,int address) {
+	public void targetWriteBytes(BufferPair readers,int address) {
 		readers.write(_targetDb,address);
 	}
 
@@ -251,8 +249,8 @@ public class DefragContextImpl implements DefragContext {
 		_targetDb.systemData().classCollectionID(newClassCollectionID);
 	}
 
-	public Buffer sourceReaderByID(int sourceID) throws IOException {
-		return readerByID(SOURCEDB,sourceID);
+	public Buffer sourceBufferByID(int sourceID) throws IOException {
+		return bufferByID(SOURCEDB,sourceID);
 	}
 	
 	public BTree sourceUuidIndex() {
@@ -282,8 +280,12 @@ public class DefragContextImpl implements DefragContext {
 		return _unindexed.iterator();
 	}
 
+	public ObjectHeader sourceObjectHeader(Buffer buffer) {
+		return new ObjectHeader(_sourceDb, buffer);
+	}
+	
 	private Slot readPointer(DbSelector selector,int id) {
-		Buffer reader=readerByAddress(selector, id, Const4.POINTER_LENGTH);
+		Buffer reader=bufferByAddress(selector, id, Const4.POINTER_LENGTH);
         if(Deploy.debug){
             reader.readBegin(Const4.YAPPOINTER);    
         }
@@ -294,9 +296,33 @@ public class DefragContextImpl implements DefragContext {
         }
 		return new Slot(address,length);
 	}
+	
+	public boolean hasFieldIndex(ClassMetadata clazz) {
+		// actually only two states are used here, the third is implicit in null
+		TernaryBool cachedHasFieldIndex = ((TernaryBool) _hasFieldIndexCache.get(clazz));
+		if(cachedHasFieldIndex != null) {
+			return cachedHasFieldIndex.definiteYes();
+		}
+		boolean hasFieldIndex = false;
+		Iterator4 fieldIter = clazz.fields();
+		while (fieldIter.moveNext()) {
+			FieldMetadata curField = (FieldMetadata) fieldIter.current();
+			if (curField.hasIndex()
+					&& (curField.getHandler() instanceof StringHandler)) {
+				hasFieldIndex = true;
+				break;
+			}
+		}
+		_hasFieldIndexCache.put(clazz, TernaryBool.forBoolean(hasFieldIndex));
+		return hasFieldIndex;
+	}
 
 	public int blockSize() {
 		return _sourceDb.config().blockSize();
+	}
+
+	public int sourceAddressByID(int sourceID) {
+		return readPointer(SOURCEDB, sourceID).address();
 	}
 	
 }
