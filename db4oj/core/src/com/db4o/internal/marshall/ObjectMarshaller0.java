@@ -214,7 +214,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	return false;
     }
 
-	public void defragFields(ClassMetadata yapClass,ObjectHeader header, ReaderPair readers) {
+	public void defragFields(ClassMetadata yapClass,ObjectHeader header, BufferPair readers) {
 	}
 
 	public void writeObjectClassID(Buffer reader, int id) {

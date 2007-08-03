@@ -240,14 +240,14 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         return with.length - compare.length;
     }
 
-	public void defragIndexEntry(ReaderPair readers) {
+	public void defragIndexEntry(BufferPair readers) {
 		// address
 		readers.copyID(false,true);
 		// length
 		readers.incrementIntSize();
 	}
 
-    public void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
+    public void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
         if(! redirect){
         	readers.incrementOffset(linkLength());
         }

@@ -165,8 +165,8 @@ public class Defragment {
 		Iterator4 unindexedIDs = context.unindexedIDs();
 		while (unindexedIDs.moveNext()) {
 			final int origID = ((Integer) unindexedIDs.current()).intValue();
-			ReaderPair.processCopy(context, origID, new SlotCopyHandler() {
-				public void processCopy(ReaderPair readers)
+			BufferPair.processCopy(context, origID, new SlotCopyHandler() {
+				public void processCopy(BufferPair readers)
 						throws CorruptionException {
 					ClassMetadata.defragObject(readers);
 				}
@@ -257,14 +257,12 @@ public class Defragment {
 	private static void processObjectsForYapClass(
 			final DefragContextImpl context, final ClassMetadata curClass,
 			final PassCommand command) {
-		final boolean withStringIndex = withFieldIndex(curClass);
 		context.traverseAll(curClass, new Visitor4() {
 			public void visit(Object obj) {
 				int id = ((Integer) obj).intValue();
 				try {
 					// FIXME bubble up exceptions
-					command.processObjectSlot(context, curClass, id,
-							withStringIndex);
+					command.processObjectSlot(context, curClass, id);
 				} catch (CorruptionException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -272,18 +270,6 @@ public class Defragment {
 				}
 			}
 		});
-	}
-
-	private static boolean withFieldIndex(ClassMetadata clazz) {
-		Iterator4 fieldIter = clazz.fields();
-		while (fieldIter.moveNext()) {
-			FieldMetadata curField = (FieldMetadata) fieldIter.current();
-			if (curField.hasIndex()
-					&& (curField.getHandler() instanceof StringHandler)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private static void processYapClassAndFieldIndices(

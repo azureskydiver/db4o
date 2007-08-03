@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.marshall.*;
 
 /**
  * Second step in the defragmenting process: Fills in target file pointer slots, copies
@@ -31,17 +32,21 @@ final class SecondPassCommand implements PassCommand {
 		if(context.mappedID(id,-1)==-1) {
 			System.err.println("MAPPING NOT FOUND: "+id);
 		}
-		ReaderPair.processCopy(context, id, new SlotCopyHandler() {
-			public void processCopy(ReaderPair readers) throws CorruptionException, IOException {
+		BufferPair.processCopy(context, id, new SlotCopyHandler() {
+			public void processCopy(BufferPair readers) throws CorruptionException, IOException {
 				yapClass.defragClass(readers, classIndexID);
 			}
 		});
 	}
 
-	public void processObjectSlot(final DefragContextImpl context, final ClassMetadata yapClass, int id, boolean registerAddresses) throws CorruptionException, IOException {
-		ReaderPair.processCopy(context, id, new SlotCopyHandler() {
-			public void processCopy(ReaderPair readers) {
-				ClassMetadata.defragObject(readers);
+	public void processObjectSlot(final DefragContextImpl context, final ClassMetadata yapClass, int id) throws CorruptionException, IOException {
+		Buffer sourceBuffer = context.sourceBufferByID(id);
+		ObjectHeader objHead = context.sourceObjectHeader(sourceBuffer);
+		sourceBuffer._offset = 0;
+		boolean registerAddresses = context.hasFieldIndex(objHead.classMetadata());
+		BufferPair.processCopy(context, id, new SlotCopyHandler() {
+			public void processCopy(BufferPair buffers) {
+				ClassMetadata.defragObject(buffers);
 				if(_objectCommitFrequency>0) {
 					_objectCount++;
 					if(_objectCount==_objectCommitFrequency) {
@@ -50,12 +55,12 @@ final class SecondPassCommand implements PassCommand {
 					}
 				}
 			}
-		},registerAddresses);
+		},registerAddresses, sourceBuffer);
 	}
 
 	public void processClassCollection(DefragContextImpl context) throws CorruptionException, IOException {
-		ReaderPair.processCopy(context, context.sourceClassCollectionID(), new SlotCopyHandler() {
-			public void processCopy(ReaderPair readers) {
+		BufferPair.processCopy(context, context.sourceClassCollectionID(), new SlotCopyHandler() {
+			public void processCopy(BufferPair readers) {
 				ClassMetadataRepository.defrag(readers);
 			}
 		});

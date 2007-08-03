@@ -27,5 +27,5 @@ public abstract class UntypedMarshaller {
 
     public abstract QCandidate readSubCandidate(Buffer reader, QCandidates candidates, boolean withIndirection);
 
-	public abstract void defrag(ReaderPair readers);
+	public abstract void defrag(BufferPair readers);
 }

@@ -59,7 +59,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     }
 
     public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,
-    		final ReaderPair readers)
+    		final BufferPair readers)
     		throws CorruptionException, IOException {
     	super.defrag(yapClass, yapField, sio, readers);
     	if(yapField.isVirtual()) {

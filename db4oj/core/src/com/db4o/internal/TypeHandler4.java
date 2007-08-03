@@ -48,6 +48,6 @@ public interface TypeHandler4 extends Comparable4 {
 	
     QCandidate readSubCandidate(MarshallerFamily mf, Buffer buffer, QCandidates candidates, boolean withIndirection);
 
-	void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect);
+	void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
 	
 }

@@ -83,7 +83,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         return ret[0];
     }
     
-    protected int readElementsDefrag(ReaderPair readers) {
+    protected int readElementsDefrag(BufferPair readers) {
     	int numDimensions=super.readElementsDefrag(readers);        
     	int [] dimensions=new int[numDimensions];
 	    for (int i = 0; i < numDimensions; i++) {

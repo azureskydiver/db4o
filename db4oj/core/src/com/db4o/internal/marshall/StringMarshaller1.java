@@ -79,7 +79,7 @@ public class StringMarshaller1 extends StringMarshaller{
         return reader.readPayloadReader(payLoadOffSet, length);
     }
 
-	public void defrag(SlotReader reader) {
+	public void defrag(SlotBuffer reader) {
 		reader.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
 	}
 

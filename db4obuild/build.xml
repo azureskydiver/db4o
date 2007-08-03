@@ -1155,7 +1155,7 @@
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>	
 
-	<target name="buildmono2" depends="clean, buildjava">
+	<target name="buildmono2" depends="compile.java.all">
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>
 

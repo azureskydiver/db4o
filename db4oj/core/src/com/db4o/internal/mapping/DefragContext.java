@@ -16,10 +16,10 @@ import com.db4o.internal.slots.*;
  */
 public interface DefragContext extends IDMapping {
 	
-	Buffer sourceReaderByAddress(int address,int length) throws IOException;
-	Buffer targetReaderByAddress(int address,int length) throws IOException;
+	Buffer sourceBufferByAddress(int address,int length) throws IOException;
+	Buffer targetBufferByAddress(int address,int length) throws IOException;
 
-	Buffer sourceReaderByID(int sourceID) throws IOException;
+	Buffer sourceBufferByID(int sourceID) throws IOException;
 
 	Slot allocateTargetSlot(int targetLength);
 
@@ -27,17 +27,17 @@ public interface DefragContext extends IDMapping {
 
 	Transaction systemTrans();
 
-	void targetWriteBytes(ReaderPair readers, int targetAddress);
+	void targetWriteBytes(BufferPair readers, int targetAddress);
 
 	void traverseAllIndexSlots(BTree tree, Visitor4 visitor4);	
 	
 	ClassMetadata yapClass(int id);
 
-	StatefulBuffer sourceWriterByID(int sourceID) throws IOException;
-	
 	int mappedID(int id,boolean lenient);
 
 	void registerUnindexed(int id);
 	
 	Iterator4 unindexedIDs();
+	
+	int sourceAddressByID(int sourceID);
 }

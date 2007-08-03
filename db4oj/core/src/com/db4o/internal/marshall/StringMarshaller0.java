@@ -46,6 +46,6 @@ public class StringMarshaller0 extends StringMarshaller {
         return reader.readEmbeddedObject(stream.transaction());
     }
 
-	public void defrag(SlotReader reader) {
+	public void defrag(SlotBuffer reader) {
 	}
 }

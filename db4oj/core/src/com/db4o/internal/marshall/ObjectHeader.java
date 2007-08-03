@@ -55,7 +55,7 @@ public final class ObjectHeader {
         _headerAttributes = readAttributes(_marshallerFamily,reader);
     }
 
-    public static ObjectHeader defrag(ReaderPair readers) {
+    public static ObjectHeader defrag(BufferPair readers) {
     	Buffer source = readers.source();
     	Buffer target = readers.target();
 		ObjectHeader header=new ObjectHeader(readers.context().systemTrans().container(),null,source);

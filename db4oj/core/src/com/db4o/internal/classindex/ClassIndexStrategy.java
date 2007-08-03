@@ -26,8 +26,8 @@ public interface ClassIndexStrategy {
 	
 	Iterator4 allSlotIDs(Transaction trans);
 	// FIXME: Why is this never called?
-	void defragReference(ClassMetadata yapClass,ReaderPair readers,int classIndexID);
+	void defragReference(ClassMetadata yapClass,BufferPair readers,int classIndexID);
 	int id();
 	// FIXME: Why is this never called?
-	void defragIndex(ReaderPair readers);
+	void defragIndex(BufferPair readers);
 }

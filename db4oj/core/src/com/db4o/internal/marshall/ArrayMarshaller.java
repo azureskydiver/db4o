@@ -21,7 +21,7 @@ public abstract class ArrayMarshaller {
         return arrayHandler.collectIDs1(trans, tree, prepareIDReader(trans,reader));
     }
 
-    public abstract void defragIDs(ArrayHandler arrayHandler,ReaderPair readers);
+    public abstract void defragIDs(ArrayHandler arrayHandler,BufferPair readers);
     
     public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, ArrayHandler handler, Object obj, boolean topLevel);
     

@@ -1106,7 +1106,7 @@ public final class BTreeNode extends PersistentBase{
 		}
 	}
 
-	public static void defragIndex(ReaderPair readers,Indexable4 keyHandler) {
+	public static void defragIndex(BufferPair readers,Indexable4 keyHandler) {
         if (Deploy.debug) {
             readers.readBegin(Const4.BTREE_NODE);
         }

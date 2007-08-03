@@ -39,10 +39,9 @@ final class FirstPassCommand implements PassCommand {
 				processBTree(context,field.getIndex(context.systemTrans()));
 			}
 		}
-
 	}
 
-	public void processObjectSlot(DefragContextImpl context, ClassMetadata yapClass, int sourceID, boolean registerAddresses) {
+	public void processObjectSlot(DefragContextImpl context, ClassMetadata yapClass, int sourceID) {
 		process(context,sourceID, false);
 	}
 

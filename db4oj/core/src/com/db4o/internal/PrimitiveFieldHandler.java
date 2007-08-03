@@ -213,7 +213,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return "Wraps " + i_handler.toString() + " in YapClassPrimitive";
     }
 
-    public void defrag(MarshallerFamily mf, ReaderPair readers, boolean redirect) {
+    public void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
         if(mf._primitive.useNormalClassRead()){
             super.defrag(mf,readers, redirect);
         }

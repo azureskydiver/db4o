@@ -153,7 +153,7 @@ public abstract class ObjectMarshaller {
             ObjectHeaderAttributes attributes, 
             Buffer reader);
 
-	public abstract void defragFields(ClassMetadata yapClass,ObjectHeader header, ReaderPair readers);
+	public abstract void defragFields(ClassMetadata yapClass,ObjectHeader header, BufferPair readers);
  
 	public abstract void writeObjectClassID(Buffer reader,int id);
 	

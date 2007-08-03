@@ -14,13 +14,13 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public final class ReaderPair implements SlotReader {
+public final class BufferPair implements SlotBuffer {
 	private Buffer _source;
 	private Buffer _target;
 	private DefragContext _mapping;
 	private Transaction _systemTrans;
 	
-	public ReaderPair(Buffer source,DefragContext mapping,Transaction systemTrans) {
+	public BufferPair(Buffer source,DefragContext mapping,Transaction systemTrans) {
 		_source = source;
 		_mapping=mapping;
 		_target = new Buffer(source.getLength());
@@ -150,16 +150,17 @@ public final class ReaderPair implements SlotReader {
 	}
 
 	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException, IOException {
-		Buffer sourceReader=(
-				registerAddressMapping 
-					? context.sourceWriterByID(sourceID) 
-					: context.sourceReaderByID(sourceID));
+		Buffer sourceReader = context.sourceBufferByID(sourceID);
+		processCopy(context, sourceID, command, registerAddressMapping, sourceReader);
+	}
+
+	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, Buffer sourceReader) throws CorruptionException, IOException {
 		int targetID=context.mappedID(sourceID);
 	
 		Slot targetSlot = context.allocateTargetSlot(sourceReader.getLength());
 		
 		if(registerAddressMapping) {
-			int sourceAddress=((StatefulBuffer)sourceReader).getAddress();
+			int sourceAddress=context.sourceAddressByID(sourceID);
 			context.mapIDs(sourceAddress, targetSlot.address(), false);
 		}
 		
@@ -174,7 +175,7 @@ public final class ReaderPair implements SlotReader {
 		}
 		context.targetWriteBytes(targetPointerReader,targetID);
 		
-		ReaderPair readers=new ReaderPair(sourceReader,context,context.systemTrans());
+		BufferPair readers=new BufferPair(sourceReader,context,context.systemTrans());
 		command.processCopy(readers);
 		context.targetWriteBytes(readers,targetSlot.address());
 	}

@@ -5,7 +5,6 @@ package com.db4o.db4ounit.common.references;
 import com.db4o.internal.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 
 
 public class ReferenceSystemRegistryTestCase implements TestLifeCycle {
@@ -33,7 +32,11 @@ public class ReferenceSystemRegistryTestCase implements TestLifeCycle {
         _registry.removeId(TEST_ID);
         assertTestReferenceNotPresent();
     }
-    
+
+    public void testRemoveNull(){
+        _registry.removeObject(null);
+    }
+
     public void testRemoveObject(){
         ObjectReference testReference = addTestReference();
         _registry.removeObject(testReference.getObject());

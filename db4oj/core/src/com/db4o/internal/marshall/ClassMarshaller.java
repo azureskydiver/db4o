@@ -129,7 +129,7 @@ public abstract class ClassMarshaller {
         return len;
     }
 
-	public void defrag(ClassMetadata yapClass,LatinStringIO sio,ReaderPair readers, int classIndexID) throws CorruptionException, IOException {
+	public void defrag(ClassMetadata yapClass,LatinStringIO sio,BufferPair readers, int classIndexID) throws CorruptionException, IOException {
 		readName(sio, readers.source());
 		readName(sio, readers.target());
 		

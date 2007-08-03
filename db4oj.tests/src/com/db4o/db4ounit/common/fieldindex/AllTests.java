@@ -22,6 +22,7 @@ public class AllTests extends Db4oTestSuite {
 				SecondLevelIndexTestCase.class,
 	            StringIndexTestCase.class,
 	            StringIndexCorruptionTestCase.class,
+	            StringIndexWithSuperClassTestCase.class,
 		};
 		
 		Class[] tests=new Class[fieldBased.length+neutral.length];
