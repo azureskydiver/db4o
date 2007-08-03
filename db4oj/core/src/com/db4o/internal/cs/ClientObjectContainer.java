@@ -365,7 +365,7 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 			showInternalClasses(true);
 			try {
 				i_db = (Db4oDatabase) getByID(reader.readInt());
-				activate1(systemTransaction(), i_db, 3);
+				activate(systemTransaction(), i_db, 3);
 			} finally {
 				showInternalClasses(false);
 			}

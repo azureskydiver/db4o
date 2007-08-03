@@ -313,6 +313,11 @@ public abstract class Transaction {
         Platform4.killYapRef(ref.getObjectReference());
     }
     
-
+    public final void removeObjectFromReferenceSystem(Object obj){
+        ObjectReference ref = referenceForObject(obj);
+        if(ref != null){
+            removeReference(ref);
+        }
+    }
 
 }

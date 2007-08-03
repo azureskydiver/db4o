@@ -148,7 +148,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         try {
 	        Db4oDatabase db = (Db4oDatabase)stream.getByID2(a_trans, dbID);
 	        if(db != null && db.i_signature == null){
-	            stream.activate2(a_trans, db, 2);
+	            stream.activate(a_trans, db, 2);
 	        }
 	        VirtualAttributes va = a_yapObject.virtualAttributes();
 	        va.i_database = db; 

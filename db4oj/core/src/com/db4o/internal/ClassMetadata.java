@@ -1378,7 +1378,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             Object obj = trans.container().getByID(trans, id);
             if (obj != null) {
 
-                a_candidates.i_trans.container().activate1(trans, obj, 2);
+                a_candidates.i_trans.container().activate(trans, obj, 2);
                 Platform4.forEachCollectionElement(obj, new Visitor4() {
                     public void visit(Object elem) {
                         a_candidates.addByIdentity(new QCandidate(a_candidates, elem, (int)trans.container().getID(elem), true));
@@ -1712,7 +1712,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 	private void updateStaticClass(final Transaction trans, final StaticClass sc) {
 		final ObjectContainerBase stream = trans.container();
-		stream.activate1(trans, sc, 4);
+		stream.activate(trans, sc, 4);
 		
 		final StaticField[] existingFields = sc.fields;
 		final Iterator4 staticFields = Iterators.map(
