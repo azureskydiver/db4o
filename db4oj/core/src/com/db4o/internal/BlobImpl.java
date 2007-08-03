@@ -158,7 +158,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
 
     public File serverFile(String promptName, boolean writeToServer) throws IOException {
         synchronized (i_stream._lock) {
-            i_stream.activate1(i_trans, this, 2);
+            i_stream.activate(i_trans, this, 2);
         }
         String path = serverPath();
         i_stream.configImpl().ensureDirExists(path);

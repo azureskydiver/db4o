@@ -303,7 +303,7 @@ public class QConObject extends QCon {
 
     final Object translate(Object candidate) {
         if (i_attributeProvider != null) {
-            i_candidates.i_trans.container().activate1(i_candidates.i_trans,
+            i_candidates.i_trans.container().activateDefaultDepth(i_candidates.i_trans,
                 candidate);
             return i_attributeProvider.attribute(candidate);
         }

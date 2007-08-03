@@ -22,7 +22,7 @@ public interface ReferenceSystem {
 	public ObjectReference referenceForId(int id);
 
 	public ObjectReference referenceForObject(Object obj);
-
+	
 	public void removeReference(ObjectReference ref);
 	
 	public void rollback();

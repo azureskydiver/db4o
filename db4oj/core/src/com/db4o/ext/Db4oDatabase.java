@@ -217,7 +217,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
         ObjectSet objectSet = q.execute();
         while (objectSet.hasNext()) {
             Db4oDatabase storedDatabase = (Db4oDatabase) objectSet.next();
-            stream.activate1(null, storedDatabase, 4);
+            stream.activate(null, storedDatabase, 4);
             if (storedDatabase.equals(this)) {
                 return storedDatabase;
             }

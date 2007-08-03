@@ -28,9 +28,9 @@ public class P1Object implements Db4oTypeImpl{
         	return;
         }
         if(a_depth < 0){
-            stream().activate1(i_trans, a_obj);
+            stream().activateDefaultDepth(i_trans, a_obj);
         }else{
-            stream().activate1(i_trans, a_obj, a_depth);
+            stream().activate(i_trans, a_obj, a_depth);
         }
     }
     

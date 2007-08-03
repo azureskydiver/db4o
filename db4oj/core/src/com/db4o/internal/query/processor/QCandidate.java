@@ -536,7 +536,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			_member = trans.container().getByID(trans, _key);
 
 			if (_member != null && (a_activate || _member instanceof Compare)) {
-				trans.container().activate1(trans, _member);
+				trans.container().activateDefaultDepth(trans, _member);
 				checkInstanceOfCompare();
 			}
 		}

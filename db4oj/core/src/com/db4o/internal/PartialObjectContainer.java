@@ -133,32 +133,28 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	protected abstract void openImpl() throws Db4oIOException;
     
-	public void activate(Object a_activate, int a_depth) throws DatabaseClosedException {
+	public final void activate(Object obj, int depth) throws DatabaseClosedException {
+	    activate(null, obj, depth);
+    }
+
+    public final void activateDefaultDepth(Transaction trans, Object obj) {
+        activate(trans, obj, configImpl().activationDepth());
+    }
+
+    public final void activate(Transaction trans, Object obj, int depth) {
         synchronized (_lock) {
-        	checkClosed();
-        	activate1(null, a_activate, a_depth);
+            trans = checkTransaction(trans);
+        	beginTopLevelCall();
+            try {
+                stillToActivate(trans, obj, depth);
+                activate3CheckStill(trans);
+                completeTopLevelCall();
+            } catch(Db4oException e){
+            	completeTopLevelCall(e);
+            } finally{
+        		endTopLevelCall();
+        	}
         }
-    }
-
-    public final void activate1(Transaction ta, Object a_activate) {
-        activate1(ta, a_activate, configImpl().activationDepth());
-    }
-
-    public final void activate1(Transaction ta, Object a_activate, int a_depth) {
-        activate2(checkTransaction(ta), a_activate, a_depth);
-    }
-
-    final void activate2(Transaction ta, Object a_activate, int a_depth) {
-    	beginTopLevelCall();
-        try {
-            stillToActivate(ta, a_activate, a_depth);
-            activate3CheckStill(ta);
-            completeTopLevelCall();
-        } catch(Db4oException e){
-        	completeTopLevelCall(e);
-        } finally{
-    		endTopLevelCall();
-    	}
     }
 
 	final void activate3CheckStill(Transaction ta){
@@ -571,63 +567,63 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract boolean delete4(Transaction ta, ObjectReference yapObject, int a_cascade, boolean userCall);
     
     public Object descend(Object obj, String[] path){
-        synchronized (_lock) {
-            return descend1(checkTransaction(), obj, path);
-        }
+        return descend(checkTransaction(), obj, path);
     }
     
-    private Object descend1(Transaction trans, Object obj, String[] path){
-        ObjectReference yo = trans.referenceForObject(obj);
-        if(yo == null){
-            return null;
-        }
-        
-        Object child = null;
-        
-        final String fieldName = path[0];
-        if(fieldName == null){
-            return null;
-        }
-        ClassMetadata yc = yo.getYapClass();
-        final FieldMetadata[] field = new FieldMetadata[]{null};
-        yc.forEachFieldMetadata(new Visitor4() {
-            public void visit(Object yf) {
-                FieldMetadata yapField = (FieldMetadata)yf;
-                if(yapField.canAddToQuery(fieldName)){
-                    field[0] = yapField;
+    Object descend(Transaction trans, Object obj, String[] path){
+        synchronized (_lock) {
+            ObjectReference yo = trans.referenceForObject(obj);
+            if(yo == null){
+                return null;
+            }
+            
+            Object child = null;
+            
+            final String fieldName = path[0];
+            if(fieldName == null){
+                return null;
+            }
+            ClassMetadata yc = yo.getYapClass();
+            final FieldMetadata[] field = new FieldMetadata[]{null};
+            yc.forEachFieldMetadata(new Visitor4() {
+                public void visit(Object yf) {
+                    FieldMetadata yapField = (FieldMetadata)yf;
+                    if(yapField.canAddToQuery(fieldName)){
+                        field[0] = yapField;
+                    }
+                }
+            });
+            if(field[0] == null){
+                return null;
+            }
+            if(yo.isActive()){
+                child = field[0].get(trans, obj);
+            }else{
+                Buffer reader = readReaderByID(trans, yo.getID());
+                if(reader == null){
+                    return null;
+                }
+                MarshallerFamily mf = yc.findOffset(reader, field[0]);
+                if(mf == null){
+                    return null;
+                }
+                // FIXME catchall
+                try {
+                    child = field[0].readQuery(trans, mf, reader);
+                } 
+                catch (CorruptionException e) {
                 }
             }
-        });
-        if(field[0] == null){
-            return null;
-        }
-        if(yo.isActive()){
-            child = field[0].get(trans, obj);
-        }else{
-            Buffer reader = readReaderByID(trans, yo.getID());
-            if(reader == null){
+            if(path.length == 1){
+                return child;
+            }
+            if(child == null){
                 return null;
             }
-            MarshallerFamily mf = yc.findOffset(reader, field[0]);
-            if(mf == null){
-                return null;
-            }
-            // FIXME catchall
-            try {
-                child = field[0].readQuery(trans, mf, reader);
-            } 
-            catch (CorruptionException e) {
-            }
+            String[] subPath = new String[path.length - 1];
+            System.arraycopy(path, 1, subPath, 0, path.length - 1);
+            return descend(trans, child, subPath);
         }
-        if(path.length == 1){
-            return child;
-        }
-        if(child == null){
-            return null;
-        }
-        String[] subPath = new String[path.length - 1];
-        System.arraycopy(path, 1, subPath, 0, path.length - 1);
-        return descend1(trans, child, subPath);
     }
 
     public boolean detectSchemaChanges() {
@@ -784,7 +780,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(obj == null){
             return null;
         }
-        activate1(ta, obj, configImpl().activationDepth());
+        activate(ta, obj, configImpl().activationDepth());
         return obj;
     }
     
@@ -804,12 +800,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final Object getByUUID(Db4oUUID uuid){
+        return getByUUID(null, uuid);
+    }
+    
+    public final Object getByUUID(Transaction trans, Db4oUUID uuid){
         synchronized (_lock) {
             if(uuid == null){
                 return null;
             }
-            Transaction ta = checkTransaction();
-            HardObjectReference hardRef = ta.getHardReferenceBySignature(
+            trans = checkTransaction(trans);
+            HardObjectReference hardRef = trans.getHardReferenceBySignature(
             					uuid.getLongPart(),
             					uuid.getSignaturePart());
             return hardRef._object; 
@@ -837,12 +837,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    // FIXME: This method needs to be revisited for MTOC. Any
-    //       direct user of this method (dRS !) will not
-    //       work correctly transactional with MTOC.
-    public ObjectInfo getObjectInfo (Object obj){
+    public final ObjectInfo getObjectInfo (Object obj){
+        return getObjectInfo(null, obj);
+    }
+    
+    public final ObjectInfo getObjectInfo (Transaction trans, Object obj){
         synchronized(_lock){
-            Transaction trans = checkTransaction();
+            trans = checkTransaction(trans);
             return trans.referenceForObject(obj);
         }
     }
@@ -1071,25 +1072,30 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public boolean isActive(Object obj) {
-        synchronized (_lock) {
-            return isActive1(checkTransaction(), obj);
-        }
+        return isActive(null, obj);
     }
 
-    final boolean isActive1(Transaction trans, Object obj) {
-        checkClosed();
-        if (obj != null) {
-            ObjectReference yo = trans.referenceForObject(obj);
-            if (yo != null) {
-                return yo.isActive();
+    final boolean isActive(Transaction trans, Object obj) {
+        synchronized (_lock) {
+            trans = checkTransaction(trans);
+            if (obj != null) {
+                ObjectReference ref = trans.referenceForObject(obj);
+                if (ref != null) {
+                    return ref.isActive();
+                }
             }
+            return false;
         }
-        return false;
+    }
+    
+    public boolean isCached(long id) {
+        return isCached(null, id); 
     }
 
-    public boolean isCached(long a_id) {
+    public boolean isCached(Transaction trans, long id) {
         synchronized (_lock) {
-            return checkTransaction().objectForIdFromCache((int)a_id) != null;
+            trans = checkTransaction(trans);
+            return trans.objectForIdFromCache((int)id) != null;
         }
     }
 
@@ -1195,8 +1201,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public abstract int newUserObject();
+    
+    public final Object peekPersisted(Object obj, int depth, boolean committed) throws DatabaseClosedException {
+        return peekPersisted(null, obj, depth, committed);
+        
+    }
 
-    public Object peekPersisted(Object obj, int depth, boolean committed) throws DatabaseClosedException {
+    public final Object peekPersisted(Transaction trans, Object obj, int depth, boolean committed) throws DatabaseClosedException {
     	
     	// TODO: peekPersisted is not stack overflow safe, if depth is too high. 
     	
@@ -1205,12 +1216,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             beginTopLevelCall();
             try{
                 _justPeeked = null;
-                Transaction ta = committed ? _systemTransaction
-                    : checkTransaction();
+                trans = checkTransaction(trans);
+                ObjectReference ref = trans.referenceForObject(obj);
+                trans = committed ? _systemTransaction : trans;
                 Object cloned = null;
-                ObjectReference yo = ta.referenceForObject(obj);
-                if (yo != null) {
-                    cloned = peekPersisted(ta, yo.getID(), depth);
+                if (ref != null) {
+                    cloned = peekPersisted(trans, ref.getID(), depth);
                 }
                 _justPeeked = null;
                 completeTopLevelCall();
@@ -1243,35 +1254,34 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public void purge() {
         synchronized (_lock) {
-            purge1();
+            checkClosed();
+            System.gc();
+            System.runFinalization();
+            System.gc();
+            gc();
+            _classCollection.purge();
         }
     }
+    
+    public final void purge(Object obj) {
+        purge(null, obj);
+    }
 
-    public void purge(Object obj) {
+    public final void purge(Transaction trans, Object obj) {
         synchronized (_lock) {
-            purge1(obj);
+            trans = checkTransaction(trans);
+            trans.removeObjectFromReferenceSystem(obj);
         }
     }
 
-    final void purge1() {
-        checkClosed();
-        System.gc();
-        System.runFinalization();
-        System.gc();
-        gc();
-        _classCollection.purge();
-    }
-
-    final void purge1(Object obj) {
+    final void removeFromAllReferenceSystems(Object obj) {
         if (obj == null) {
         	return;
         }
-        
         if (obj instanceof ObjectReference) {
             _referenceSystemRegistry.removeReference((ObjectReference) obj);
             return;
         }
-        
         _referenceSystemRegistry.removeObject(obj);
     }
     
@@ -1357,7 +1367,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         synchronized (_lock) {
             _refreshInsteadOfActivate = true;
             try {
-            	activate1(null, a_refresh, a_depth);
+            	activate(null, a_refresh, a_depth);
             } finally {
             	_refreshInsteadOfActivate = false;
             }

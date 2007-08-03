@@ -34,7 +34,7 @@ public abstract class MsgBlob extends MsgD implements BlobStatus{
         ObjectContainerBase stream = stream();
         synchronized (stream._lock) {
             blobImpl = (BlobImpl) stream.getByID(transaction(), id);
-            stream.activate1(transaction(), blobImpl, 3);
+            stream.activate(transaction(), blobImpl, 3);
         }
         return blobImpl;
     }

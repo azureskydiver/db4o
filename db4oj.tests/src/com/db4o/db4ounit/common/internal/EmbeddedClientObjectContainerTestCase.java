@@ -9,11 +9,14 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
+import com.db4o.reflect.*;
 import com.db4o.types.*;
 
 import db4ounit.*;
 
 public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
+
+    private static final String FIELD_NAME = "_name";
 
     private static final String FILENAME = "mtoc.db4o";
     
@@ -77,6 +80,129 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Assert.areSame(retrievedItem, _client2.getByID(id));
     }
     
+    public void testConfigure(){
+        Assert.expect(NotSupportedException.class, new CodeBlock() {
+            public void run() throws Throwable {
+                _client1.configure();
+            }
+        });
+    }
+    
+    public void testDescendIsolation(){
+        Item storedItem = storeItemToClient1AndCommit();
+        storedItem._name = CHANGED_NAME;
+        _client1.set(storedItem);
+        
+        Item retrievedItem = retrieveItemFromClient2();
+        Object descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
+        Assert.areEqual(ORIGINAL_NAME, descendValue);
+        
+        _client1.commit();
+        
+        descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
+        Assert.areEqual(CHANGED_NAME, descendValue);
+    }
+    
+    public void testGetObjectInfo(){
+        Item storedItem = storeItemToClient1AndCommit();
+        ObjectInfo objectInfo = _client1.getObjectInfo(storedItem);
+        Assert.isNotNull(objectInfo);
+    }
+    
+    public void testGetByUUID(){
+        Item storedItem = storeItemToClient1AndCommit();
+        ObjectInfo objectInfo = _client1.getObjectInfo(storedItem);
+        
+        Object retrievedItem = _client1.getByUUID(objectInfo.getUUID());
+        Assert.areSame(storedItem, retrievedItem);
+        
+        retrievedItem = _client2.getByUUID(objectInfo.getUUID());
+        Assert.areNotSame(storedItem, retrievedItem);
+    }
+    
+    public void testIdenity(){
+        Db4oDatabase identity1 = _client1.identity();
+        Assert.isNotNull(identity1);
+        Db4oDatabase identity2 = _client2.identity();
+        Assert.isNotNull(identity2);
+        
+        // TODO: Db4oDatabase is shared between embedded clients.
+        // This should work, since there is an automatic bind
+        // replacement. Replication test cases will tell.
+        Assert.areSame(identity1, identity2);
+    }
+    
+    public void testKnownClasses(){
+        ReflectClass[] knownClasses = _client1.knownClasses();
+        ReflectClass itemClass = _client1.reflector().forClass(Item.class);
+        arrayAssertContains(knownClasses, new ReflectClass[]{itemClass});
+    }
+    
+    public void testLock(){
+        Assert.areSame(_server.lock(), _client1.lock());
+    }
+    
+    public void testPeekPersisted(){
+        Item storedItem = storeItemToClient1AndCommit();
+        storedItem._name = CHANGED_NAME;
+        _client1.set(storedItem);
+        
+        Item peekedItem = (Item) _client1.peekPersisted(storedItem, 2, true);
+        Assert.isNotNull(peekedItem);
+        Assert.areNotSame(peekedItem, storedItem);
+        Assert.areEqual(ORIGINAL_NAME, peekedItem._name);
+        
+        peekedItem = (Item) _client1.peekPersisted(storedItem, 2, false);
+        Assert.isNotNull(peekedItem);
+        Assert.areNotSame(peekedItem, storedItem);
+        Assert.areEqual(CHANGED_NAME, peekedItem._name);
+        
+        Item retrievedItem = retrieveItemFromClient2();
+        peekedItem = (Item) _client2.peekPersisted(retrievedItem, 2, false);
+        Assert.isNotNull(peekedItem);
+        Assert.areNotSame(peekedItem, retrievedItem);
+        Assert.areEqual(ORIGINAL_NAME, peekedItem._name);
+    }
+    
+    public void testPurge(){
+        Item storedItem = storeItemToClient1AndCommit();
+        Assert.isTrue(_client1.isStored(storedItem));
+        _client1.purge(storedItem);
+        Assert.isFalse(_client1.isStored(storedItem));
+    }
+    
+    public void testReflector(){
+        Assert.isNotNull(_client1.reflector());
+    }
+    
+    public void testActivate(){
+        Item storedItem = storeItemToClient1AndCommit();
+        long id = _client1.getID(storedItem);
+        
+        Item retrievedItem = (Item) _client2.getByID(id);
+        Assert.isNull(retrievedItem._name);
+        Assert.isFalse(_client2.isActive(retrievedItem));
+        
+        _client2.activate(retrievedItem, 1);
+        Assert.areEqual(ORIGINAL_NAME, retrievedItem._name);
+        Assert.isTrue(_client2.isActive(retrievedItem));
+    }
+    
+    public void testIsCached(){
+        Item storedItem = storeItemToClient1AndCommit();
+        long id = _client1.getID(storedItem);
+        
+        Assert.isFalse(_client2.isCached(id));
+        
+        Item retrievedItem = (Item) _client2.getByID(id);
+        Assert.isTrue(_client2.isCached(id));
+    }
+    
+    public void testIsClosed(){
+        _client1.close();
+        Assert.isTrue(_client1.isClosed());
+    }
+    
     public void testIsStored(){
         Item storedItem = storeItemToClient1AndCommit();
         Assert.isTrue(_client1.isStored(storedItem));
@@ -91,7 +217,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Item retrievedItem = retrieveItemFromClient2();
         
         StoredClass storedClass = _client2.storedClass(Item.class);
-        StoredField storedField = storedClass.storedField("_name", null);
+        StoredField storedField = storedClass.storedField(FIELD_NAME, null);
         Object retrievedName = storedField.get(retrievedItem);
         Assert.areEqual(ORIGINAL_NAME, retrievedName);
         
@@ -145,6 +271,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void setUp() throws Exception {
         File4.delete(FILENAME);
         Configuration config = Db4o.newConfiguration();
+        config.objectClass(Item.class).generateUUIDs(true);
         
         // ExtObjectServer server = Db4o.openServer(config, FILENAME, 0);
         // EmbeddedClientObjectContainer container = server.openClient();
@@ -152,7 +279,6 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         _server = (LocalObjectContainer) Db4o.openFile(config, FILENAME);
         _client1 = new EmbeddedClientObjectContainer(_server);
         _client2 = new EmbeddedClientObjectContainer(_server);
-
     }
 
     public void tearDown() throws Exception {
@@ -160,5 +286,24 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         _client2.close();
         _server.close();
     }
+    
+    public static void arrayAssertContains(Object[] array, Object[] expected){
+        for (int i = 0; i < expected.length; i++) {
+            if (-1 == indexOf(array, expected[i])) {
+                Assert.fail("Expecting contains '" + expected[i] + "'.");
+            }
+        }
+    }
+    
+    public static int indexOf(Object[] array, Object expected) {
+        for (int i = 0; i < array.length; ++i) {                
+            if (expected.equals(array[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
     
 }

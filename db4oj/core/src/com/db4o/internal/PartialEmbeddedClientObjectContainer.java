@@ -19,7 +19,7 @@ import com.db4o.types.*;
  */
 public abstract class PartialEmbeddedClientObjectContainer implements TransientClass, ObjectContainerSpec {
     
-    private final LocalObjectContainer _server;
+    private LocalObjectContainer _server;
     
     private final Transaction _transaction;
     
@@ -32,6 +32,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
         _transaction = trans;
     }
 
+    /** @param path */
     public void backup(String path) throws Db4oIOException, DatabaseClosedException,
         NotSupportedException {
         throw new NotSupportedException();
@@ -46,13 +47,11 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public Configuration configure() {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotSupportedException();
     }
 
     public Object descend(Object obj, String[] path) {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.descend(_transaction, obj, path);
     }
 
     public Object getByID(long id) throws DatabaseClosedException, InvalidIDException {
@@ -60,8 +59,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public Object getByUUID(Db4oUUID uuid) throws DatabaseClosedException, Db4oIOException {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.getByUUID(_transaction, uuid);
     }
 
     public long getID(Object obj) {
@@ -69,28 +67,26 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public ObjectInfo getObjectInfo(Object obj) {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.getObjectInfo(_transaction, obj);
     }
 
+    // TODO: Db4oDatabase is shared between embedded clients.
+    // This should work, since there is an automatic bind
+    // replacement. Replication test cases will tell.
     public Db4oDatabase identity() {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.identity();
     }
 
     public boolean isActive(Object obj) {
-        // TODO Auto-generated method stub
-        return false;
+        return _server.isActive(_transaction, obj);
     }
 
-    public boolean isCached(long ID) {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean isCached(long id) {
+        return _server.isCached(_transaction, id);
     }
 
     public boolean isClosed() {
-        // TODO Auto-generated method stub
-        return false;
+        return _server == null;
     }
 
     public boolean isStored(Object obj) throws DatabaseClosedException {
@@ -98,13 +94,11 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public ReflectClass[] knownClasses() {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.knownClasses();
     }
 
     public Object lock() {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.lock();
     }
 
     public void migrateFrom(ObjectContainer objectContainer) {
@@ -113,23 +107,19 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public Object peekPersisted(Object object, int depth, boolean committed) {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.peekPersisted(_transaction, object, depth, committed);
     }
 
     public void purge() {
-        // TODO Auto-generated method stub
-
+        _server.purge();
     }
 
     public void purge(Object obj) {
-        // TODO Auto-generated method stub
-
+        _server.purge(_transaction, obj);
     }
 
     public GenericReflector reflector() {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.reflector();
     }
 
     public void refresh(Object obj, int depth) {
@@ -178,12 +168,16 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public void activate(Object obj, int depth) throws Db4oIOException, DatabaseClosedException {
-        // TODO Auto-generated method stub
+        _server.activate(_transaction, obj, depth);
 
     }
 
     public boolean close() throws Db4oIOException {
+        if(isClosed()){
+            return false;
+        }
         _transaction.close(false);
+        _server = null;
         return true;
     }
 
