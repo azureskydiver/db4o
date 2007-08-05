@@ -10,6 +10,7 @@ Bundle-ClassPath: .,
  lib/db4o-@db4o.version.dotted@-java1.2.jar,
  lib/db4o-@db4o.version.dotted@-nqopt.jar,
  lib/bloat-1.0.jar
+Bundle-ActivationPolicy: lazy 
 Export-Package: EDU.purdue.cs.bloat.benchmark,
  EDU.purdue.cs.bloat.cfg,
  EDU.purdue.cs.bloat.codegen,
