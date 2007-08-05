@@ -556,8 +556,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
         }
     }
 
-    public final void rollback1() {
-        transaction().rollback();
+    public final void rollback1(Transaction trans) {
+        trans.rollback();
     }
 
     public final void setDirtyInSystemTransaction(PersistentBase a_object) {

@@ -531,12 +531,12 @@ public class ClientObjectContainer extends ObjectContainerBase implements ExtCli
 		readThis();
 	}
 
-	public final void rollback1() {
+	public final void rollback1(Transaction trans) {
 		if (_config.batchMessages()) {
 			clearBatchedObjects();
 		} 
 		write(Msg.ROLLBACK);
-		_transaction.rollback();
+		trans.rollback();
 	}
 
 	public void send(Object obj) {

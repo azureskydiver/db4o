@@ -201,24 +201,21 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     }
 
     public ObjectSet query(Class clazz) throws Db4oIOException, DatabaseClosedException {
-        return null;
+        return _server.query(_transaction, clazz);
     }
 
     public ObjectSet query(Predicate predicate) throws Db4oIOException, DatabaseClosedException {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.query(_transaction, predicate);
     }
 
     public ObjectSet query(Predicate predicate, QueryComparator comparator) throws Db4oIOException,
         DatabaseClosedException {
-        // TODO Auto-generated method stub
-        return null;
+        return _server.query(_transaction, predicate, comparator);
     }
 
     public void rollback() throws Db4oIOException, DatabaseClosedException,
         DatabaseReadOnlyException {
-        // TODO Auto-generated method stub
-
+        _server.rollback(_transaction);
     }
 
     public void set(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
