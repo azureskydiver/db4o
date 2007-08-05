@@ -9,7 +9,6 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.replication.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.types.*;
 
 
 /**

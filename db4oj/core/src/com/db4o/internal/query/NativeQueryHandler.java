@@ -10,8 +10,7 @@ import com.db4o.diagnostic.NativeQueryOptimizerNotLoaded;
 import com.db4o.foundation.Iterator4;
 import com.db4o.foundation.Iterator4Impl;
 import com.db4o.foundation.List4;
-import com.db4o.internal.ObjectContainerBase;
-import com.db4o.internal.ReflectPlatform;
+import com.db4o.internal.*;
 import com.db4o.internal.diagnostic.DiagnosticProcessor;
 import com.db4o.query.Predicate;
 import com.db4o.query.Query;
@@ -46,31 +45,30 @@ public class NativeQueryHandler {
 		_listeners=null;
 	}
 	
-	public ObjectSet execute(Predicate predicate,QueryComparator comparator) {
-		return configureQuery(predicate,comparator).execute();
+	public ObjectSet execute(Query query, Predicate predicate,QueryComparator comparator) {
+		return configureQuery(query, predicate,comparator).execute();
 	}
 	
-	private Query configureQuery(Predicate predicate,QueryComparator comparator) {
-		Query q=_container.query();
+	private Query configureQuery(Query query, Predicate predicate,QueryComparator comparator) {
 		if(comparator!=null) {
-			q.sortBy(comparator);
+			query.sortBy(comparator);
 		}
-		q.constrain(predicate.extentType());
+		query.constrain(predicate.extentType());
 		if(predicate instanceof Db4oEnhancedFilter) {
-			((Db4oEnhancedFilter)predicate).optimizeQuery(q);
+			((Db4oEnhancedFilter)predicate).optimizeQuery(query);
 			notifyListeners(predicate,NativeQueryHandler.PREOPTIMIZED,null);
-			return q;
+			return query;
 		}
 		try {
 			if (shouldOptimize()) {
-				Object optimized=_enhancer.optimize(q,predicate);
+				Object optimized=_enhancer.optimize(query,predicate);
 				notifyListeners(predicate,NativeQueryHandler.DYNOPTIMIZED,optimized);
-				return q;
+				return query;
 			}
 		} catch (Exception exc) {
 			//exc.printStackTrace();
 		}
-		q.constrain(new PredicateEvaluation(predicate));
+		query.constrain(new PredicateEvaluation(predicate));
 		notifyListeners(predicate,NativeQueryHandler.UNOPTIMIZED,null);
         if(shouldOptimize()){
             DiagnosticProcessor dp = ((ObjectContainerBase)_container)._handlers._diagnosticProcessor;
@@ -78,7 +76,7 @@ public class NativeQueryHandler {
                 dp.nativeQueryUnoptimized(predicate);
             }
         }
-		return q;
+		return query;
 	}
 
     private boolean shouldOptimize() {

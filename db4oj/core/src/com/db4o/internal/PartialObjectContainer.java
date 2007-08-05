@@ -1296,10 +1296,19 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public final ObjectSet query(Predicate predicate){
     	return query(predicate,(QueryComparator)null);
     }
-
+    
+    public final ObjectSet query(Transaction trans, Predicate predicate){
+        return query(trans, predicate,(QueryComparator)null);
+    }
+    
     public final ObjectSet query(Predicate predicate,QueryComparator comparator){
+        return query(null, predicate, comparator);
+    }
+
+    public final ObjectSet query(Transaction trans, Predicate predicate,QueryComparator comparator){
         synchronized (_lock) {
-            return getNativeQueryHandler().execute(predicate,comparator);
+            trans = checkTransaction(trans);
+            return getNativeQueryHandler().execute(query(trans), predicate,comparator);
         }
     }
 
@@ -1311,6 +1320,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public final ObjectSet query(Class clazz) {
         return get(clazz);
+    }
+    
+    public final ObjectSet query(Transaction trans, Class clazz) {
+        return get(trans, clazz);
     }
 
     public final Query query(Transaction ta) {
@@ -1503,16 +1516,20 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void reserve(int byteCount);
     
-    public void rollback() {
+    public final void rollback() {
+        rollback(null);
+    }
+    
+    public final void rollback(Transaction trans) {
         synchronized (_lock) {
-        	checkClosed();
+        	trans = checkTransaction(trans);
         	checkReadOnly();
-        	rollback1();
-        	_transaction.rollbackReferenceSystem();
+        	rollback1(trans);
+        	trans.rollbackReferenceSystem();
         }
     }
 
-    public abstract void rollback1();
+    public abstract void rollback1(Transaction trans);
 
     /** @param obj */
     public void send(Object obj) {

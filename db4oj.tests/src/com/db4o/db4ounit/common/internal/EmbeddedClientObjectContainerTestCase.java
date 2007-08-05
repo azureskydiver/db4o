@@ -10,7 +10,6 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
-import com.db4o.types.*;
 
 import db4ounit.*;
 
@@ -52,6 +51,12 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
             _name = name;
         }
     }
+    
+    public static class ItemPredicate extends Predicate{
+        public boolean match(Item item){
+            return true;
+        }
+    }
 
     public void testSetAndCommitIsolation() {
         Item item = new Item("one");
@@ -82,6 +87,47 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         });
     }
     
+    public void testBindIsolation(){
+        Item storedItem = storeItemToClient1AndCommit();
+        long id = _client1.getID(storedItem);
+        
+        Item retrievedItem = retrieveItemFromClient2();
+        
+        Item boundItem = new Item(CHANGED_NAME);
+        _client1.bind(boundItem, id);
+        Assert.areSame(boundItem, _client1.getByID(id));
+        Assert.areSame(retrievedItem, _client2.getByID(id));
+    }
+    
+    public void testClose() {
+        final BooleanByRef closed = new BooleanByRef();
+        
+        // FIXME: Sharpen doesn't understand the null parameter (the third one), we had to add a cast
+        //        to get sharpen to run through.
+        
+        Transaction trans = new LocalTransaction(_server, _server.systemTransaction(), (TransactionalReferenceSystem)null) {
+            public void close(boolean rollbackOnClose) {
+                super.close(rollbackOnClose);
+                closed.value = true;
+            }
+        };
+        EmbeddedClientObjectContainer client = new EmbeddedClientObjectContainer(_server, trans);
+        
+        // FIXME: close needs to unregister reference system
+        //        also for crashed clients 
+        client.close();
+        
+        Assert.isTrue(closed.value);
+    }
+    
+    public void testConfigure(){
+        Assert.expect(NotSupportedException.class, new CodeBlock() {
+            public void run() throws Throwable {
+                _client1.configure();
+            }
+        });
+    }
+    
     public void testDeactivate(){
         Item item = storeItemToClient1AndCommit();
         ItemHolder holder = new ItemHolder(item);
@@ -96,6 +142,21 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Assert.isTrue(_client1.isStored(item));
         _client1.delete(item);
         Assert.isFalse(_client1.isStored(item));
+    }
+    
+    public void testDescendIsolation(){
+        Item storedItem = storeItemToClient1AndCommit();
+        storedItem._name = CHANGED_NAME;
+        _client1.set(storedItem);
+        
+        Item retrievedItem = retrieveItemFromClient2();
+        Object descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
+        Assert.areEqual(ORIGINAL_NAME, descendValue);
+        
+        _client1.commit();
+        
+        descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
+        Assert.areEqual(CHANGED_NAME, descendValue);
     }
     
     public void testExt(){
@@ -118,41 +179,6 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Item storedItem = storeItemToClient1AndCommit();
         long id = _client1.getID(storedItem);
         Assert.areSame(storedItem, _client1.getByID(id));
-    }
-    
-    public void testBindIsolation(){
-        Item storedItem = storeItemToClient1AndCommit();
-        long id = _client1.getID(storedItem);
-        
-        Item retrievedItem = retrieveItemFromClient2();
-        
-        Item boundItem = new Item(CHANGED_NAME);
-        _client1.bind(boundItem, id);
-        Assert.areSame(boundItem, _client1.getByID(id));
-        Assert.areSame(retrievedItem, _client2.getByID(id));
-    }
-    
-    public void testConfigure(){
-        Assert.expect(NotSupportedException.class, new CodeBlock() {
-            public void run() throws Throwable {
-                _client1.configure();
-            }
-        });
-    }
-    
-    public void testDescendIsolation(){
-        Item storedItem = storeItemToClient1AndCommit();
-        storedItem._name = CHANGED_NAME;
-        _client1.set(storedItem);
-        
-        Item retrievedItem = retrieveItemFromClient2();
-        Object descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
-        Assert.areEqual(ORIGINAL_NAME, descendValue);
-        
-        _client1.commit();
-        
-        descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
-        Assert.areEqual(CHANGED_NAME, descendValue);
     }
     
     public void testGetObjectInfo(){
@@ -255,6 +281,17 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Assert.areEqual(ORIGINAL_NAME, storedItem._name);
     }
     
+    public void testRollback(){
+        Item storedItem = storeItemToClient1AndCommit();
+        storedItem._name = CHANGED_NAME;
+        _client1.set(storedItem);
+        _client1.rollback();
+        _client1.commit();
+        
+        Item retrievedItem = retrieveItemFromClient2();
+        Assert.areEqual(ORIGINAL_NAME, retrievedItem._name);
+    }
+    
     public void testSetSemaphore(){
         String semaphoreName = "sem";
         Assert.isTrue(_client1.setSemaphore(semaphoreName, 0));
@@ -312,25 +349,6 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Assert.isGreater(1, _client1.version());
     }
 
-    public void testClose() {
-        final BooleanByRef closed = new BooleanByRef();
-        
-        // FIXME: Sharpen doesn't understand the null parameter (the third one), we had to add a cast
-        //        to get sharpen to run through.
-        
-        Transaction trans = new LocalTransaction(_server, _server.systemTransaction(), (TransactionalReferenceSystem)null) {
-            public void close(boolean rollbackOnClose) {
-                super.close(rollbackOnClose);
-                closed.value = true;
-            }
-        };
-        EmbeddedClientObjectContainer client = new EmbeddedClientObjectContainer(_server, trans);
-        // FIXME: close needs to unregister reference system
-        //        also for crashed clients 
-        client.close();
-        Assert.isTrue(closed.value);
-    }
-    
     private void assertItemCount(EmbeddedClientObjectContainer client, int count) {
         Query query = client.query();
         query.constrain(Item.class);
@@ -338,7 +356,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Assert.areEqual(count, result.size());
     }
     
-    private Item storeItemToClient1AndCommit() {
+    protected Item storeItemToClient1AndCommit() {
         Item storedItem = new Item(ORIGINAL_NAME);
         _client1.set(storedItem);
         _client1.commit();
