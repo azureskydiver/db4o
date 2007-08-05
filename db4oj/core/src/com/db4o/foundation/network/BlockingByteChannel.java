@@ -13,7 +13,7 @@ class BlockingByteChannel {
 
     private final static int DISCARD_BUFFER_SIZE = 500;
     protected byte[] i_cache;
-    private boolean i_closed = false;
+    boolean i_closed = false;
     protected int i_readOffset;
     private int i_timeout;
     protected int i_writeOffset;
@@ -150,7 +150,7 @@ class BlockingByteChannel {
 		});
 	}
 
-	private void checkClosed() {
+	public void checkClosed() {
 		if (i_closed) {
 			throw new Db4oIOException();
 		}

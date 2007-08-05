@@ -100,10 +100,10 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public Object lock() {
         return _server.lock();
     }
-
+    
+    /** @param objectContainer */
     public void migrateFrom(ObjectContainer objectContainer) {
-        // TODO Auto-generated method stub
-
+        throw new NotSupportedException();
     }
 
     public Object peekPersisted(Object object, int depth, boolean committed) {
@@ -131,6 +131,11 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
 
     }
 
+    /**
+     * @param peerB
+     * @param conflictHandler
+     * @deprecated
+     */
     public ReplicationProcess replicationBegin(ObjectContainer peerB,
         ReplicationConflictHandler conflictHandler) {
         throw new NotSupportedException();
