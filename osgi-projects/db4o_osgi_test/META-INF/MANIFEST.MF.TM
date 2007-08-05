@@ -13,5 +13,6 @@ Bundle-ClassPath: .,
  lib/db4o-@db4o.version.dotted@-db4ounit.jar,
  lib/db4o-tests.jar,
  lib/db4o-tests-nq.jar
+Bundle-ActivationPolicy: lazy 
 Provide-Package: com.db4o.osgi.test
 
