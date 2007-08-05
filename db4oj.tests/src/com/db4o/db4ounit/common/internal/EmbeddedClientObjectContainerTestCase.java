@@ -52,12 +52,6 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         }
     }
     
-    public static class ItemPredicate extends Predicate{
-        public boolean match(Item item){
-            return true;
-        }
-    }
-
     public void testSetAndCommitIsolation() {
         Item item = new Item("one");
         _client1.set(item);
