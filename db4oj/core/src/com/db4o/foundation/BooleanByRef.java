@@ -14,8 +14,8 @@ public class BooleanByRef {
 		this(false);
 	}
 
-	public BooleanByRef(boolean value) {
-		this.value = value;
+	public BooleanByRef(boolean value_) {
+		value = value_;
 	}
 	
 }
