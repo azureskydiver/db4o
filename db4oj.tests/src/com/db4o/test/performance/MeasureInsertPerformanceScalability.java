@@ -11,7 +11,7 @@ public class MeasureInsertPerformanceScalability {
     
     public static class Item{
         
-        int value;
+        public int value;
         
         public Item() {
             
