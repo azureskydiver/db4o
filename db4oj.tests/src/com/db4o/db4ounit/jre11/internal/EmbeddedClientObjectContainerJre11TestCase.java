@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.jre11.internal;
 
 import com.db4o.db4ounit.common.internal.*;
+import com.db4o.query.*;
 
 import db4ounit.*;
 
@@ -20,7 +21,7 @@ public class EmbeddedClientObjectContainerJre11TestCase extends EmbeddedClientOb
         retrievedItem = _client1.query(new ItemPredicate()).next();
         Assert.areSame(storedItem, retrievedItem);
         
-        retrievedItem = _client1.query(new ItemPredicate(), null).next();
+        retrievedItem = _client1.query(new ItemPredicate(), (QueryComparator)null).next();
         Assert.areSame(storedItem, retrievedItem);
     }
 
