@@ -12,7 +12,7 @@ import com.db4o.query.Query;
  */
 public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	
-	private final ObjectContainerBase _container;
+	private final InternalObjectContainer _container;
 	
 	protected final Event4Impl _queryStarted = new Event4Impl();
 	protected final Event4Impl _queryFinished = new Event4Impl();
@@ -40,7 +40,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 		}
 	}
 
-	public EventRegistryImpl(ObjectContainerBase container) {
+	public EventRegistryImpl(InternalObjectContainer container) {
 		_container = container;
 	}
 

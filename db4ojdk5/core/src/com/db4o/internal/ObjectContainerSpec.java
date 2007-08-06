@@ -2,7 +2,7 @@
 
 package com.db4o.internal;
 
-import com.db4o.ext.*;
+
 
 /**
  * Workaround to provide the Java 5 version with a hook to add ExtObjectContainer.
@@ -11,5 +11,5 @@ import com.db4o.ext.*;
  * 
  * @exclude
  */
-public interface ObjectContainerSpec extends ExtObjectContainer {
+public interface ObjectContainerSpec extends InternalObjectContainer {
 }

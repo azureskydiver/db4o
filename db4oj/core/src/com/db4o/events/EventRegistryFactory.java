@@ -21,7 +21,7 @@ public class EventRegistryFactory {
 			throw new ArgumentNullException();
 		}
 		
-		ObjectContainerBase container = ((ObjectContainerBase)objectContainer);
+		InternalObjectContainer container = ((InternalObjectContainer)objectContainer);
 		Callbacks callbacks = container.callbacks();
 		if (callbacks instanceof EventRegistry) {
 			return (EventRegistry)callbacks;

@@ -273,6 +273,10 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	public synchronized ObjectContainer openClient(Configuration config) {
 		checkClosed();
+
+//      The following switches on new MTOC mode:		
+//	    return new EmbeddedClientObjectContainer(_container);
+		
 		ClientObjectContainer client = new ClientObjectContainer(config,
 				openClientSocket(), Const4.EMBEDDED_CLIENT_USER
 						+ (i_threadIDGen - 1), "", false);

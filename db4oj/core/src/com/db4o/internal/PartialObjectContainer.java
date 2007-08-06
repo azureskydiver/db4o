@@ -2079,5 +2079,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	public ReferenceSystemRegistry referenceSystemRegistry(){
 	    return _referenceSystemRegistry;
 	}
-
+	   
+    public ObjectContainerBase container(){
+        return _this;
+    }
 }

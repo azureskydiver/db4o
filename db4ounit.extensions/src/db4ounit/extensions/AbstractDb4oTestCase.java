@@ -195,23 +195,23 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
         return (independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
     }
 
-	protected ObjectContainerBase stream() {
-	    return (ObjectContainerBase) db();
-	}
-	
-	public LocalObjectContainer fileSession() {
-		return fixture().fileSession();
-	}
+    protected ObjectContainerBase stream() {
+        return ((InternalObjectContainer) db()).container();
+    }
+    
+    public LocalObjectContainer fileSession() {
+        return fixture().fileSession();
+    }
 
-	protected Transaction trans() {
-	    return stream().transaction();
-	}
+    protected Transaction trans() {
+        return ((InternalObjectContainer) db()).transaction();
+    }
 
-	protected Transaction systemTrans() {
-	    return stream().systemTransaction();
-	}
-	
-	protected Query newQuery(Transaction transaction, Class clazz) {
+    protected Transaction systemTrans() {
+        return trans().systemTransaction();
+    }
+    
+    protected Query newQuery(Transaction transaction, Class clazz) {
 		final Query query = newQuery(transaction);
 		query.constrain(clazz);
 		return query;

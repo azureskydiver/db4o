@@ -3,6 +3,7 @@ package com.db4o.db4ounit.common.exceptions;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -61,8 +62,12 @@ public class DatabaseReadonlyExceptionTestCase extends AbstractDb4oTestCase {
 	}
 
 	public void testReserveStorage() {
-		configReadOnly();
-		Class exceptionType = isClientServer() ? NotSupportedException.class
+	    configReadOnly();
+	    
+	    // TODO: The following isMTOC() can be isEmbeddedClientServer() after new
+	    // MTOC is permanently in place. 
+	    
+		Class exceptionType = isClientServer() && ! isMTOC() ? NotSupportedException.class
 				: DatabaseReadOnlyException.class;
 		Assert.expect(exceptionType, new CodeBlock() {
 			public void run() throws Throwable {
@@ -71,7 +76,12 @@ public class DatabaseReadonlyExceptionTestCase extends AbstractDb4oTestCase {
 		});
 	}
 	
+	private boolean isMTOC(){
+	    return db() instanceof EmbeddedClientObjectContainer;
+	}
+	
 	private void configReadOnly() {
 		db().configure().readOnly(true);
 	}
+	
 }

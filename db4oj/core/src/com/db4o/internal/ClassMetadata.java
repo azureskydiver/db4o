@@ -1396,7 +1396,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 a_candidates.i_trans.container().activate(trans, obj, 2);
                 Platform4.forEachCollectionElement(obj, new Visitor4() {
                     public void visit(Object elem) {
-                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, (int)trans.container().getID(elem), true));
+                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, trans.container().getID(trans, elem), true));
                     }
                 });
             }

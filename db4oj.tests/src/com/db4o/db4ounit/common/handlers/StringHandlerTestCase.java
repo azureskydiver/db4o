@@ -12,7 +12,7 @@ public class StringHandlerTestCase extends AbstractDb4oTestCase {
 
 	public void testIndexMarshalling() {
 		Buffer reader=new Buffer(2*Const4.INT_LENGTH);
-		ObjectContainerBase stream=(ObjectContainerBase)db();
+		ObjectContainerBase stream= stream();
 		StringHandler handler=new StringHandler(stream,stream.stringIO());
 		final Slot original = new Slot(0xdb,0x40);
 		handler.writeIndexEntry(reader,original);
