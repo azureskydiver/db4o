@@ -29,8 +29,8 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _committing = new Event4Impl();
 	protected final Event4Impl _committed = new CommittedEvent();
 	protected final Event4Impl _instantiated = new Event4Impl();
-	protected final Event4Impl _classRegistered = new Event4Impl();	
-	
+	protected final Event4Impl _classRegistered = new Event4Impl();
+
 	/**
 	 * @sharpen.ignore
 	 */
@@ -188,5 +188,14 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 
 	public boolean caresAboutCommitted() {
 		return EventPlatform.hasListeners(_committed);
-	}	
+	}
+
+    public boolean caresAboutDeleting() {
+        return EventPlatform.hasListeners(_deleting);
+    }
+
+    public boolean caresAboutDeleted() {
+        return EventPlatform.hasListeners(_deleted);
+    }
+
 }

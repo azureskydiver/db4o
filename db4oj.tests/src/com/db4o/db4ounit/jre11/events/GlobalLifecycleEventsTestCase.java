@@ -215,13 +215,9 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 	}
 	
 	private EventRegistry eventRegistryForDelete() {
-		return EventRegistryFactory.forObjectContainer(fileSession());
+		return serverEventRegistry();
 	}
 
-	private EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(db());
-	}
-	
 	private void listenToEvent(Event4 event) {
 		event.addListener(_recorder);
 	}

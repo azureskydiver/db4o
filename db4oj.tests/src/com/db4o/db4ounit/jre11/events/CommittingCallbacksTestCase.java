@@ -70,7 +70,7 @@ public class CommittingCallbacksTestCase extends AbstractDb4oTestCase {
 		
 		final Transaction transaction = stream().transaction();
 		final ObjectByRef objectByRef = new ObjectByRef();
-		eventRegistry().committing().addListener(new EventListener4() {
+		serverEventRegistry().committing().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				objectByRef.value = ((CommitEventArgs)args).transaction();
 			}
@@ -184,10 +184,6 @@ public class CommittingCallbacksTestCase extends AbstractDb4oTestCase {
 	}
 
 	private Event4 committing() {
-		return eventRegistry().committing();
-	}
-
-	private EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(fixture().fileSession());
+		return serverEventRegistry().committing();
 	}
 }

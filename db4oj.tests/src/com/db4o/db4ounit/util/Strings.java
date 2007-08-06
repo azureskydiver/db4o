@@ -16,6 +16,7 @@ public class Strings {
 	private Strings(){}
 	
 	public Strings(String str){
+		this();
 		_string = str;
 	}
 	

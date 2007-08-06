@@ -185,8 +185,4 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	private Event4 committed() {
 		return eventRegistry().committed();
 	}
-
-	private EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(db());
-	}
 }

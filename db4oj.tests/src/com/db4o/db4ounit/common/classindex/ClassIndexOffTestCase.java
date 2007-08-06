@@ -4,13 +4,11 @@ package com.db4o.db4ounit.common.classindex;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.internal.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
-
 
 public class ClassIndexOffTestCase extends AbstractDb4oTestCase implements OptOutCS{
 	

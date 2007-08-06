@@ -4,6 +4,7 @@ package db4ounit.extensions;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -38,6 +39,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	
 	public boolean isClientServer() {
 		return fixture() instanceof Db4oClientServerFixture;
+	}
+	
+	protected boolean isEmbeddedClientServer() {
+		return isClientServer() && ((Db4oClientServerFixture)fixture()).embeddedClients();
 	}
     
     protected void reopen() throws Exception{
@@ -321,5 +326,13 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	
 	public final void configureThreadCount(int count) {
 		_threadCount = count;
+	}
+
+	protected EventRegistry eventRegistry() {
+		return EventRegistryFactory.forObjectContainer(db());
+	}
+
+	protected EventRegistry serverEventRegistry() {
+		return EventRegistryFactory.forObjectContainer(fileSession());
 	}
 }

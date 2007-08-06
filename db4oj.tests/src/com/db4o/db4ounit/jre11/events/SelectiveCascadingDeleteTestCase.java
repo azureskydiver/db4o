@@ -31,7 +31,7 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 		
 		Assert.areEqual(3, queryItems().size());
 		
-		eventRegistry().deleting().addListener(new EventListener4() {
+		serverEventRegistry().deleting().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				CancellableObjectEventArgs a = (CancellableObjectEventArgs)args;
 				Item item = ((Item)a.object());
@@ -80,10 +80,6 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 		Query q = db().query();
 		q.constrain(Item.class);
 		return q;
-	}
-
-	private EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(fileSession());
 	}
 
 	private void enableCascadeOnDelete(Configuration config) {

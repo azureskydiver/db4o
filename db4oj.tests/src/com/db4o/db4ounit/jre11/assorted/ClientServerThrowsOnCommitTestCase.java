@@ -28,12 +28,12 @@ public class ClientServerThrowsOnCommitTestCase extends AbstractDb4oTestCase imp
 				throw new ExpectedException();
 			}
 		};
-		EventRegistryFactory.forObjectContainer(fileSession()).committing().addListener(listener);
+		serverEventRegistry().committing().addListener(listener);
 		Assert.expect(ExpectedException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				db().commit();
 			}
 		});
-		EventRegistryFactory.forObjectContainer(fileSession()).committing().removeListener(listener);
+		serverEventRegistry().committing().removeListener(listener);
 	}
 }

@@ -173,8 +173,4 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	private Event4 committed() {
 		return eventRegistry().committed();
 	}
-
-	private EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(db());
-	}
 }

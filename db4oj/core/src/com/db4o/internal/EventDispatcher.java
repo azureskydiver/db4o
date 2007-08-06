@@ -97,4 +97,8 @@ public final class EventDispatcher {
 	private static String toPascalCase(String name) {
 		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
+
+    public boolean hasEventRegistered(int eventID){
+        return methods[eventID] != null;
+    }
 }

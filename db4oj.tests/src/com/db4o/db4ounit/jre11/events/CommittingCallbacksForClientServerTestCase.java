@@ -27,7 +27,7 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 		clientRegistry().committing().addListener(clientRecorder);
 		
 		final EventRecorder serverRecorder = new EventRecorder(fileSession().lock());
-		serverRegistry().committing().addListener(serverRecorder);		
+		serverEventRegistry().committing().addListener(serverRecorder);		
 		
 		final Item item = new Item();
 		final ExtObjectContainer client = db();
@@ -36,7 +36,7 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 		
 		Cool.sleepIgnoringInterruption(50);
 		
-		EventAssert.assertCommitEvent(serverRecorder, serverRegistry().committing(), new ObjectInfo[] { infoFor(item) }, new ObjectInfo[0], new ObjectInfo[0]);
+		EventAssert.assertCommitEvent(serverRecorder, serverEventRegistry().committing(), new ObjectInfo[] { infoFor(item) }, new ObjectInfo[0], new ObjectInfo[0]);
 		EventAssert.assertNoEvents(clientRecorder);
 		
 	}
@@ -44,10 +44,6 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 	private ObjectInfo infoFor(Object obj){
 		int id = (int) db().getID(obj);
 		return new LazyObjectReference(fileSession().transaction(), id);
-	}
-
-	private EventRegistry serverRegistry() {
-		return EventRegistryFactory.forObjectContainer(fileSession());
 	}
 
 	private EventRegistry clientRegistry() {
