@@ -620,10 +620,21 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public final boolean dispatchEvent(ObjectContainerBase stream, Object obj, int message) {
-    	if(_eventDispatcher == null || ! stream.dispatchsEvents()){
+    	if(!dispatchingEvents(stream)){
     		return true;
     	}
         return _eventDispatcher.dispatch(stream, obj, message);
+    }
+
+	private boolean dispatchingEvents(ObjectContainerBase stream) {
+		return _eventDispatcher != null && stream.dispatchsEvents();
+	}
+    
+    public boolean hasEventRegistered(ObjectContainerBase stream, int eventID) {
+    	if(!dispatchingEvents(stream)){
+    		return true;
+    	}
+    	return _eventDispatcher.hasEventRegistered(eventID);
     }
     
     public final int fieldCount(){

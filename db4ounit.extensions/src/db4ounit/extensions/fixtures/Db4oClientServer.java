@@ -106,9 +106,7 @@ public class Db4oClientServer extends
 	        _server.close();
 	        _server = null;
     	}
-    }
-
-	
+    }	
 
 	public ExtObjectContainer db() {
 		return _objectContainer;
@@ -120,6 +118,10 @@ public class Db4oClientServer extends
     
     public ObjectServer server() {
     	return _server;
+    }
+    
+    public boolean embeddedClients() {
+    	return _embeddedClient;
     }
     
     /**

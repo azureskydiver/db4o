@@ -68,4 +68,11 @@ public class NullCallbacks implements Callbacks {
 	public void classOnRegistered(ClassMetadata clazz) {
 	}
 
+    public boolean caresAboutDeleting() {
+        return false;
+    }
+
+    public boolean caresAboutDeleted() {
+        return false;
+    }
 }

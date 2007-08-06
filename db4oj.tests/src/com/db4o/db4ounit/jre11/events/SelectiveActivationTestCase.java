@@ -84,10 +84,6 @@ public class SelectiveActivationTestCase extends AbstractDb4oTestCase {
         return q;
     }
 
-    private EventRegistry eventRegistry() {
-        return EventRegistryFactory.forObjectContainer(db());
-    }
-
     private void enableCascadeOnDelete(Configuration config) {
         config.objectClass(Item.class).cascadeOnDelete(true);
     }

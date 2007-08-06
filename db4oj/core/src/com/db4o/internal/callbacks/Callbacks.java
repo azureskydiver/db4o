@@ -30,4 +30,7 @@ public interface Callbacks {
 	
 	void commitOnStarted(Object transaction, CallbackObjectInfoCollections objectInfoCollections);
 	void commitOnCompleted(Object transaction, CallbackObjectInfoCollections objectInfoCollections);
+
+    boolean caresAboutDeleting();
+    boolean caresAboutDeleted();
 }

@@ -1,13 +1,19 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.events;
 
-import com.db4o.events.*;
-
 import db4ounit.extensions.*;
 
 public class EventsTestCaseBase extends AbstractDb4oTestCase {
 
-	public static final class Item {	
+	public static final class Item {
+		public int id;
+		
+		public Item() {
+		}
+		
+		public Item(int id) {
+			this.id = id;
+		}
 	}
 	
 	protected static final class EventLog {
@@ -16,11 +22,6 @@ public class EventsTestCaseBase extends AbstractDb4oTestCase {
 	}
 	
 	protected void store() throws Exception {
-		store(new Item());
+		store(new Item(1));
 	}
-
-	protected EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(db());
-	}
-
 }

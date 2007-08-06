@@ -143,7 +143,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         storedItem._name = CHANGED_NAME;
         _client1.set(storedItem);
         
-        Item retrievedItem = retrieveItemFromClient2();
+        /*Item retrievedItem = */ retrieveItemFromClient2();
         Object descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
         Assert.areEqual(ORIGINAL_NAME, descendValue);
         
@@ -210,7 +210,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         
         Assert.isFalse(_client2.isCached(id));
         
-        Item retrievedItem = (Item) _client2.getByID(id);
+        /*Item retrievedItem = (Item)*/ _client2.getByID(id);
         Assert.isTrue(_client2.isCached(id));
     }
     
