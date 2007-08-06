@@ -2,12 +2,10 @@
 
 package com.db4o.db4ounit.common.assorted;
 
-import com.db4o.ObjectSet;
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
+import com.db4o.config.*;
+import com.db4o.ext.*;
 
-import db4ounit.extensions.Db4oClientServerTestCase;
+import db4ounit.extensions.*;
 
 public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 
@@ -97,7 +95,7 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 		}
 
 	}
-
+/*
 	private void tMembersFirst(ExtObjectContainer oc, String name) {
 		boolean commit = name.indexOf("commit") > 1;
 		Query q = oc.query();
@@ -139,7 +137,7 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 			oc.commit();
 		}
 	}
-
+*/
 	public static class CddMember {
 		public String name;
 	}
