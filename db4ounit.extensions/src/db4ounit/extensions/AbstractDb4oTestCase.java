@@ -44,6 +44,13 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	protected boolean isEmbeddedClientServer() {
 		return isClientServer() && ((Db4oClientServerFixture)fixture()).embeddedClients();
 	}
+	
+	// TODO: The following code is only a temporary addition until MTOC
+	//       is part of the core. When it is, all occurences of this 
+	//       method should be replaced with    isEmbeddedClientServer() 
+	protected boolean isMTOC(){
+	    return fixture().db() instanceof EmbeddedClientObjectContainer;
+	}
     
     protected void reopen() throws Exception{
     	_fixture.reopen();

@@ -63,10 +63,6 @@ public class DatabaseReadonlyExceptionTestCase extends AbstractDb4oTestCase {
 
 	public void testReserveStorage() {
 	    configReadOnly();
-	    
-	    // TODO: The following isMTOC() can be isEmbeddedClientServer() after new
-	    // MTOC is permanently in place. 
-	    
 		Class exceptionType = isClientServer() && ! isMTOC() ? NotSupportedException.class
 				: DatabaseReadOnlyException.class;
 		Assert.expect(exceptionType, new CodeBlock() {
@@ -74,10 +70,6 @@ public class DatabaseReadonlyExceptionTestCase extends AbstractDb4oTestCase {
 				db().configure().reserveStorageSpace(1);
 			}
 		});
-	}
-	
-	private boolean isMTOC(){
-	    return db() instanceof EmbeddedClientObjectContainer;
 	}
 	
 	private void configReadOnly() {
