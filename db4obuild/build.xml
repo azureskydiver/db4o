@@ -1145,7 +1145,7 @@
 		<ant antfile="run-doctor.xml" />
 	</target>
 
-	<target name="buildjava" depends="doctor, zipjava" description="Full java build" />
+	<target name="buildjava" depends="runtestsjava, doctor, zipjava" description="Full java build" />
 
 	<target name="buildnet">
 		<ant antfile="build-dotnet.xml" target="package-net1" />
