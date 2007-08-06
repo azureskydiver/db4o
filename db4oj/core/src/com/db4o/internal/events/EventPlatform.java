@@ -13,25 +13,25 @@ import com.db4o.query.Query;
  */
 class EventPlatform {
 
-	public static void triggerQueryEvent(Event4Impl e, Query q) {
-		e.trigger(new QueryEventArgs(q));
+	public static void triggerQueryEvent(Transaction transaction, Event4Impl e, Query q) {
+		e.trigger(new QueryEventArgs(transaction, q));
 	}
 
 	public static void triggerClassEvent(Event4Impl e, ClassMetadata clazz) {
 		e.trigger(new ClassEventArgs(clazz));
 	}
 
-	public static boolean triggerCancellableObjectEventArgs(Event4Impl e, Object o) {
-		CancellableObjectEventArgs args = new CancellableObjectEventArgs(o);
+	public static boolean triggerCancellableObjectEventArgs(Transaction transaction, Event4Impl e, Object o) {
+		CancellableObjectEventArgs args = new CancellableObjectEventArgs(transaction, o);
 		e.trigger(args);
 		return !args.isCancelled();
 	}
 	
-	public static void triggerObjectEvent(Event4Impl e, Object o) {
-		e.trigger(new ObjectEventArgs(o));
+	public static void triggerObjectEvent(Transaction transaction, Event4Impl e, Object o) {
+		e.trigger(new ObjectEventArgs(transaction, o));
 	}
 
-	public static void triggerCommitEvent(Event4Impl e, Object transaction, CallbackObjectInfoCollections collections) {
+	public static void triggerCommitEvent(Transaction transaction, Event4Impl e, CallbackObjectInfoCollections collections) {
 		e.trigger(new CommitEventArgs(transaction, collections));
 	}
 

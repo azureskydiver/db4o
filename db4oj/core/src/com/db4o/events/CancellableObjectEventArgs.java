@@ -2,6 +2,8 @@
 
 package com.db4o.events;
 
+import com.db4o.internal.*;
+
 /**
  * Argument for object related events which can be cancelled.
  * 
@@ -14,8 +16,8 @@ public class CancellableObjectEventArgs extends ObjectEventArgs implements Cance
 	/**
 	 * Creates a new instance for the specified object.
 	 */
-	public CancellableObjectEventArgs(Object obj) {
-		super(obj);
+	public CancellableObjectEventArgs(Transaction transaction, Object obj) {
+		super(transaction, obj);
 	}
 	
 	/**

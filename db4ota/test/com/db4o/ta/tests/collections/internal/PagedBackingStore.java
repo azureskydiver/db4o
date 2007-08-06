@@ -41,7 +41,7 @@ class PagedBackingStore extends ActivatableImpl {
 	}
 
 	private Page lastPage() {
-		return (Page) _pages[_top - 1];
+		return _pages[_top - 1];
 	}
 
 	private Page getPageForAdd() {
@@ -76,7 +76,7 @@ class PagedBackingStore extends ActivatableImpl {
 	 * @return
 	 */
 	private Page pageHolding(int itemIndex) {
-		return (Page) _pages[pageIndex(itemIndex)];
+		return _pages[pageIndex(itemIndex)];
 	}
 	
 	private int pageIndex(int itemIndex) {

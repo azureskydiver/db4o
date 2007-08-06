@@ -30,7 +30,7 @@ public abstract class QQueryBase implements Unversioned {
 
     private static final transient IDGenerator i_orderingGenerator = new IDGenerator();
 
-    transient Transaction i_trans;
+    transient Transaction _trans;
     
     public Collection4 i_constraints = new Collection4();
 
@@ -53,7 +53,7 @@ public abstract class QQueryBase implements Unversioned {
 
     protected QQueryBase(Transaction a_trans, QQuery a_parent, String a_field) {
     	_this = cast(this);
-        i_trans = a_trans;
+        _trans = a_trans;
         i_parent = a_parent;
         i_field = a_field;
     }
@@ -69,7 +69,7 @@ public abstract class QQueryBase implements Unversioned {
         if(attachToExistingConstraints(col, obj, false)){
             return;
         }
-        QConObject newConstraint = new QConObject(i_trans, null, null, obj);
+        QConObject newConstraint = new QConObject(_trans, null, null, obj);
         addConstraint(newConstraint);
         col.add(newConstraint);
     }
@@ -111,7 +111,7 @@ public abstract class QQueryBase implements Unversioned {
                 return addClassConstraint(claxx);
             }
             
-            QConEvaluation eval = Platform4.evaluationCreate(i_trans, example);
+            QConEvaluation eval = Platform4.evaluationCreate(_trans, example);
 			if (eval != null) {
                 return addEvaluationToAllConstraints(eval);
             }
@@ -125,10 +125,10 @@ public abstract class QQueryBase implements Unversioned {
 	private Constraint addEvaluationToAllConstraints(QConEvaluation eval) {
 
 	    if(i_constraints.size() == 0){
-	        i_trans.container().classCollection().iterateTopLevelClasses(new Visitor4() {
+	        _trans.container().classCollection().iterateTopLevelClasses(new Visitor4() {
                 public void visit(Object obj) {
                     ClassMetadata classMetadata = (ClassMetadata) obj;
-                    QConClass qcc = new QConClass(i_trans,classMetadata.classReflector());
+                    QConClass qcc = new QConClass(_trans,classMetadata.classReflector());
                     addConstraint(qcc);
                 }
             });
@@ -168,7 +168,7 @@ public abstract class QQueryBase implements Unversioned {
 		    }
 		}
 		if (col.size() == 0) {
-		    QConClass qcc = new QConClass(i_trans,claxx);
+		    QConClass qcc = new QConClass(_trans,claxx);
 		    addConstraint(qcc);
 		    return qcc;
 		}
@@ -179,7 +179,7 @@ public abstract class QQueryBase implements Unversioned {
 	private Constraint addInterfaceConstraint(ReflectClass claxx) {
 		Collection4 classes = stream().classCollection().forInterface(claxx);
 		if (classes.size() == 0) {
-		    QConClass qcc = new QConClass(i_trans, null, null, claxx);
+		    QConClass qcc = new QConClass(_trans, null, null, claxx);
 		    addConstraint(qcc);
 		    return qcc;
 		}
@@ -207,7 +207,7 @@ public abstract class QQueryBase implements Unversioned {
 			return (ReflectClass)example;
 		}
 		if(example instanceof Class) {
-			return i_trans.reflector().forClass((Class)example);
+			return _trans.reflector().forClass((Class)example);
 		}
 		return null;
 	}
@@ -216,13 +216,13 @@ public abstract class QQueryBase implements Unversioned {
         synchronized (streamLock()) {
             Constraint[] constraints = new Constraint[i_constraints.size()];
             i_constraints.toArray(constraints);
-            return new QConstraints(i_trans, constraints);
+            return new QConstraints(_trans, constraints);
         }
     }
 
     public Query descend(final String a_field) {
         synchronized (streamLock()) {
-            final QQuery query = new QQuery(i_trans, _this, a_field);
+            final QQuery query = new QQuery(_trans, _this, a_field);
             int[] run = { 1 };
             if (!descend1(query, a_field, run)) {
 
@@ -233,7 +233,7 @@ public abstract class QQueryBase implements Unversioned {
                 if (run[0] == 1) {
                     run[0] = 2;
                     if (!descend1(query, a_field, run)) {
-                        new QConUnconditional(i_trans, false).attach(query, a_field);
+                        new QConUnconditional(_trans, false).attach(query, a_field);
                     }
                 }
             }
@@ -277,9 +277,9 @@ public abstract class QQueryBase implements Unversioned {
 
                         QConClass qcc =
                             new QConClass(
-                                i_trans,
+                                _trans,
                                 null,
-                                yf.qField(i_trans),
+                                yf.qField(_trans),
                                 parentYc.classReflector());
                         addConstraint(qcc);
                     }
@@ -300,16 +300,16 @@ public abstract class QQueryBase implements Unversioned {
 
     public ObjectSet execute() {
 		Callbacks callbacks = stream().callbacks();
-		callbacks.queryOnStarted(cast(this));
+		callbacks.queryOnStarted(_trans, cast(this));
 	    QueryResult qresult = getQueryResult();
-	    callbacks.queryOnFinished(cast(this));
+	    callbacks.queryOnFinished(_trans, cast(this));
 		return new ObjectSetFacade(qresult);
 	}
 
 	public QueryResult getQueryResult() {
 		synchronized (streamLock()) {
 	        if(i_constraints.size() == 0){
-	            return stream().getAll(i_trans);
+	            return stream().getAll(_trans);
 	        }
 			QueryResult result = classOnlyQuery();
 			if(result != null) {
@@ -320,7 +320,7 @@ public abstract class QQueryBase implements Unversioned {
 	}
 
 	protected ObjectContainerBase stream() {
-		return i_trans.container();
+		return _trans.container();
 	}
 
 	private QueryResult classOnlyQuery() {
@@ -341,7 +341,7 @@ public abstract class QQueryBase implements Unversioned {
 			return null;
 		}
 		
-		QueryResult queryResult = stream().classOnlyQuery(i_trans, clazz);
+		QueryResult queryResult = stream().classOnlyQuery(_trans, clazz);
 		if(queryResult == null){
 			return null;
 		}
@@ -484,7 +484,7 @@ public abstract class QQueryBase implements Unversioned {
                                             public void visit(Object treeInt) {
                                                 int id = ((TreeInt)treeInt)._key;
                                                 StatefulBuffer reader =
-                                                    stream.readWriterByID(i_trans, id);
+                                                    stream.readWriterByID(_trans, id);
                                                 if (reader != null) {
                                                     ObjectHeader oh = new ObjectHeader(stream, reader);
                                                     idsNew[0] = oh.classMetadata().collectFieldIDs(
@@ -565,7 +565,7 @@ public abstract class QQueryBase implements Unversioned {
 		    }
 		}
 		
-		QCandidates candidates = new QCandidates((LocalTransaction) i_trans, qcon.getYapClass(), null);
+		QCandidates candidates = new QCandidates((LocalTransaction) _trans, qcon.getYapClass(), null);
 		candidates.addConstraint(qcon);
 		return new List4(candidateCollection, candidates);
 	}
@@ -582,7 +582,7 @@ public abstract class QQueryBase implements Unversioned {
 	}
 
     public final Transaction getTransaction() {
-        return i_trans;
+        return _trans;
     }
     
     Iterator4 iterateConstraints(){
@@ -623,7 +623,7 @@ public abstract class QQueryBase implements Unversioned {
 
     public void unmarshall(final Transaction a_trans) {
     	_evaluationMode = QueryEvaluationMode.fromInt(_evaluationModeAsInt);
-        i_trans = a_trans;
+        _trans = a_trans;
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
             ((QCon)i.current()).unmarshall(a_trans);
@@ -640,7 +640,7 @@ public abstract class QQueryBase implements Unversioned {
         } else if (constraints.size() > 0) {
             Constraint[] constraintArray = new Constraint[constraints.size()];
             constraints.toArray(constraintArray);
-            return new QConstraints(i_trans, constraintArray);
+            return new QConstraints(_trans, constraintArray);
         }
         return null;
     }

@@ -7,29 +7,29 @@ import com.db4o.query.Query;
 
 public interface Callbacks {
 
-	boolean objectCanNew(Object obj);
-	boolean objectCanActivate(Object obj);
-	boolean objectCanUpdate(Object obj);
-	boolean objectCanDelete(Object obj);
-	boolean objectCanDeactivate(Object obj);
+	boolean objectCanNew(Transaction transaction, Object obj);
+	boolean objectCanActivate(Transaction transaction, Object obj);
+	boolean objectCanUpdate(Transaction transaction, Object obj);
+	boolean objectCanDelete(Transaction transaction, Object obj);
+	boolean objectCanDeactivate(Transaction transaction, Object obj);
 
-	void objectOnActivate(Object obj);
-	void objectOnNew(Object obj);
-	void objectOnUpdate(Object obj);
-	void objectOnDelete(Object obj);
-	void objectOnDeactivate(Object obj);
-	void objectOnInstantiate(Object obj);
+	void objectOnActivate(Transaction transaction, Object obj);
+	void objectOnNew(Transaction transaction, Object obj);
+	void objectOnUpdate(Transaction transaction, Object obj);
+	void objectOnDelete(Transaction transaction, Object obj);
+	void objectOnDeactivate(Transaction transaction, Object obj);
+	void objectOnInstantiate(Transaction transaction, Object obj);
 
-	void queryOnStarted(Query query);
-	void queryOnFinished(Query query);
+	void queryOnStarted(Transaction transaction, Query query);
+	void queryOnFinished(Transaction transaction, Query query);
 	
 	boolean caresAboutCommitting();
 	boolean caresAboutCommitted();
 	
 	void classOnRegistered(ClassMetadata clazz);
 	
-	void commitOnStarted(Object transaction, CallbackObjectInfoCollections objectInfoCollections);
-	void commitOnCompleted(Object transaction, CallbackObjectInfoCollections objectInfoCollections);
+	void commitOnStarted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections);
+	void commitOnCompleted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections);
 
     boolean caresAboutDeleting();
     boolean caresAboutDeleted();

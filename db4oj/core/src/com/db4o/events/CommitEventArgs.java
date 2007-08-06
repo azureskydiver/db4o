@@ -10,25 +10,15 @@ import com.db4o.internal.*;
  * 
  * @see EventRegistry
  */
-public class CommitEventArgs extends EventArgs {
+public class CommitEventArgs extends TransactionalEventArgs {
 	
 	private final CallbackObjectInfoCollections _collections;
-	private final Object _transaction;
 
-	public CommitEventArgs(Object transaction, CallbackObjectInfoCollections collections) {
-		_transaction = transaction;
+	public CommitEventArgs(Transaction transaction, CallbackObjectInfoCollections collections) {
+		super(transaction);
 		_collections = collections;
 	}
 	
-	/**
-	 * The transaction being committed.
-	 * 
-	 * @sharpen.property
-	 */
-	public Object transaction() {
-		return _transaction;
-	}
-
 	/**
 	 * Returns a iteration
 	 * 

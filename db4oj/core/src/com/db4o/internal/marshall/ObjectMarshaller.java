@@ -130,12 +130,13 @@ public abstract class ObjectMarshaller {
             yo.setStateClean();
         }
         yo.endProcessing();
-        objectOnUpdate(yc, stream, obj);
+        objectOnUpdate(trans, yc, obj);
     }
 
-	private void objectOnUpdate(ClassMetadata yc, ObjectContainerBase stream, Object obj) {
-		stream.callbacks().objectOnUpdate(obj);
-		yc.dispatchEvent(stream, obj, EventDispatcher.UPDATE);
+	private void objectOnUpdate(Transaction transaction, ClassMetadata yc, Object obj) {
+		ObjectContainerBase container = transaction.container();
+		container.callbacks().objectOnUpdate(transaction, obj);
+		yc.dispatchEvent(container, obj, EventDispatcher.UPDATE);
 	}
     
     public abstract Object readIndexEntry(

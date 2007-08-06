@@ -25,14 +25,14 @@ public class TransparentActivationSupport implements ConfigurationItem {
 				ObjectEventArgs oea = (ObjectEventArgs) args;
 				Object obj = oea.object();
 				if (obj instanceof Activatable) {
-					((Activatable) obj).bind(activatorForObject(container, obj));
+					((Activatable) obj).bind(activatorForObject((Transaction) oea.transaction(), obj));
 				}
 			}
 
 			private Activator activatorForObject(
-					final ObjectContainerBase container_, Object obj) {
+					final Transaction transaction, Object obj) {
 			    // FIXME: Using ObjectContainerBase here won't work for MTOC.
-				return container_.transaction().referenceForObject(obj);
+				return transaction.referenceForObject(obj);
 			}
 		});
 
@@ -86,5 +86,5 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			}
 			return true;
 		}
-	};
+	}
 }

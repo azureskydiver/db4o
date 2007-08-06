@@ -541,7 +541,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	activate(obj, 1);
         }
         
-        if (!objectCanDelete(yc, obj)) {
+        if (!objectCanDelete(trans, yc, obj)) {
             return;
         }
         
@@ -552,7 +552,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
         
         if(delete4(trans, ref, cascade, userCall)){
-        	objectOnDelete(yc, obj);
+        	objectOnDelete(trans, yc, obj);
             if (configImpl().messageLevel() > Const4.STATE) {
                 message("" + ref.getID() + " delete " + ref.getYapClass().getName());
             }
@@ -571,13 +571,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     		|| yc.hasEventRegistered(_this, EventDispatcher.DELETE);
     }
     
-	private boolean objectCanDelete(ClassMetadata yc, Object obj) {
-		return _this.callbacks().objectCanDelete(obj)
+	private boolean objectCanDelete(Transaction transaction, ClassMetadata yc, Object obj) {
+		return _this.callbacks().objectCanDelete(transaction, obj)
 			&& yc.dispatchEvent(_this, obj, EventDispatcher.CAN_DELETE);
 	}
 	
-	private void objectOnDelete(ClassMetadata yc, Object obj) {
-		_this.callbacks().objectOnDelete(obj);
+	private void objectOnDelete(Transaction transaction, ClassMetadata yc, Object obj) {
+		_this.callbacks().objectOnDelete(transaction, obj);
 		yc.dispatchEvent(_this, obj, EventDispatcher.DELETE);
 	}
 	
@@ -1713,7 +1713,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         
         if (ref == null) {
             ClassMetadata classMetadata = analyzer.classMetadata();
-            if (!objectCanNew(classMetadata, obj)) {
+            if (!objectCanNew(trans, classMetadata, obj)) {
                 return 0;
             }
             ref = new ObjectReference();
@@ -1750,9 +1750,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	return (updateDepth == Const4.UNSPECIFIED) || (updateDepth > 0);
     }
 
-	private boolean objectCanNew(ClassMetadata yc, Object a_object) {
-		return callbacks().objectCanNew(a_object)
-			&& yc.dispatchEvent(_this, a_object, EventDispatcher.CAN_NEW);
+	private boolean objectCanNew(Transaction transaction, ClassMetadata yc, Object obj) {
+		return callbacks().objectCanNew(transaction, obj)
+			&& yc.dispatchEvent(_this, obj, EventDispatcher.CAN_NEW);
 	}
 
     public abstract void setDirtyInSystemTransaction(PersistentBase a_object);
