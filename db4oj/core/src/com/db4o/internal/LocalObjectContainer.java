@@ -784,7 +784,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
 		return (LocalTransaction)systemTransaction();
 	}
 	
-	public void onCommittedListener() {
-		
-	}
+    public void onCommittedListener() {
+        // do nothing
+    }
+	
 }

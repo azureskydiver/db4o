@@ -114,12 +114,17 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         Assert.isTrue(closed.value);
     }
     
+    public void testCommitOnClose(){
+        Item storedItem = storeItemToClient1AndCommit();
+        storedItem._name = CHANGED_NAME;
+        _client1.set(storedItem);
+        _client1.close();
+        Item retrievedItem = retrieveItemFromClient2();
+        Assert.areEqual(CHANGED_NAME, retrievedItem._name);
+    }
+    
     public void testConfigure(){
-        Assert.expect(NotSupportedException.class, new CodeBlock() {
-            public void run() throws Throwable {
-                _client1.configure();
-            }
-        });
+        Assert.isNotNull(_client1.configure());
     }
     
     public void testDeactivate(){
@@ -143,7 +148,6 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         storedItem._name = CHANGED_NAME;
         _client1.set(storedItem);
         
-        /*Item retrievedItem = */ retrieveItemFromClient2();
         Object descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
         Assert.areEqual(ORIGINAL_NAME, descendValue);
         
@@ -210,7 +214,8 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         
         Assert.isFalse(_client2.isCached(id));
         
-        /*Item retrievedItem = (Item)*/ _client2.getByID(id);
+        Item retrievedItem = (Item) _client2.getByID(id);
+        Assert.isNotNull(retrievedItem);
         Assert.isTrue(_client2.isCached(id));
     }
     
@@ -228,7 +233,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void testKnownClasses(){
         ReflectClass[] knownClasses = _client1.knownClasses();
         ReflectClass itemClass = _client1.reflector().forClass(Item.class);
-        arrayAssertContains(knownClasses, new ReflectClass[]{itemClass});
+        ArrayAssert.contains(knownClasses, new ReflectClass[]{itemClass});
     }
     
     public void testLock(){
@@ -329,7 +334,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         storeItemToClient1AndCommit();
         StoredClass[] storedClasses = _client1.storedClasses();
         StoredClass storedClass = _client1.storedClass(Item.class);
-        arrayAssertContains(storedClasses, new Object[]{storedClass});
+        ArrayAssert.contains(storedClasses, new Object[]{storedClass});
     }
     
     public void testSystemInfo(){
@@ -383,24 +388,5 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         _client2.close();
         _server.close();
     }
-    
-    public static void arrayAssertContains(Object[] array, Object[] expected){
-        for (int i = 0; i < expected.length; i++) {
-            if (-1 == indexOf(array, expected[i])) {
-                Assert.fail("Expecting contains '" + expected[i] + "'.");
-            }
-        }
-    }
-    
-    public static int indexOf(Object[] array, Object expected) {
-        for (int i = 0; i < array.length; ++i) {                
-            if (expected.equals(array[i])) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-
     
 }

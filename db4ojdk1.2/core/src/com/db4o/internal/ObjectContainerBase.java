@@ -6,14 +6,13 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.ext.*;
 import com.db4o.query.*;
 
 /**
  * @exclude
  * @sharpen.partial
  */
-public abstract class ObjectContainerBase extends PartialObjectContainer implements ExtObjectContainer {
+public abstract class ObjectContainerBase extends PartialObjectContainer implements InternalObjectContainer {
 	
 	public ObjectContainerBase(Configuration config,ObjectContainerBase a_parent) {
 		super(config,a_parent);

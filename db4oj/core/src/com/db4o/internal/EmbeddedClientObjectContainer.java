@@ -2,15 +2,13 @@
 
 package com.db4o.internal;
 
-import com.db4o.ext.*;
-
 
 /**
  * @exclude
  * @sharpen.partial
  * @sharpen.ignore
  */
-public class EmbeddedClientObjectContainer extends PartialEmbeddedClientObjectContainer implements ExtObjectContainer {
+public class EmbeddedClientObjectContainer extends PartialEmbeddedClientObjectContainer implements InternalObjectContainer {
 
     public EmbeddedClientObjectContainer(LocalObjectContainer server) {
         super(server);
