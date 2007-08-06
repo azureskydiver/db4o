@@ -9,4 +9,10 @@ public final class ObjectByRef {
 	
 	public Object value;
 
+	public ObjectByRef() {
+	}
+
+	public ObjectByRef(Object value) {
+		this.value = value;
+	}
 }

@@ -101,7 +101,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 	
 	/** return false if class not completely initialized, otherwise true **/
-	boolean continueSet(Transaction a_trans, int a_updateDepth) {
+	boolean continueSet(Transaction trans, int updateDepth) {
 		if (bitIsTrue(Const4.CONTINUE)) {
 		    if(! _class.stateOKAndAncestors()){
 		        return false;
@@ -113,13 +113,13 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
             
 			bitFalse(Const4.CONTINUE);
             
-            StatefulBuffer writer = MarshallerFamily.current()._object.marshallNew(a_trans, this, a_updateDepth);
+            StatefulBuffer writer = MarshallerFamily.current()._object.marshallNew(trans, this, updateDepth);
 
-            ObjectContainerBase stream = a_trans.container();
+            ObjectContainerBase stream = trans.container();
 			stream.writeNew(_class, writer);
 
             Object obj = _object;
-			objectOnNew(stream, obj);
+			objectOnNew(trans, obj);
 			
             if(! _class.isPrimitive()){
                 _object = stream._references.createYapRef(this, obj);
@@ -131,9 +131,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return true;
 	}
 
-	private void objectOnNew(ObjectContainerBase stream, Object obj) {
-		stream.callbacks().objectOnNew(obj);
-		_class.dispatchEvent(stream, obj, EventDispatcher.NEW);
+	private void objectOnNew(Transaction transaction, Object obj) {
+		ObjectContainerBase container = transaction.container();
+		container.callbacks().objectOnNew(transaction, obj);
+		_class.dispatchEvent(container, obj, EventDispatcher.NEW);
 	}
 
 	public void deactivate(Transaction a_trans, int a_depth) {
@@ -407,9 +408,9 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		}
 	}
 
-	public void writeUpdate(Transaction a_trans, int a_updatedepth) {
+	public void writeUpdate(Transaction trans, int updatedepth) {
 
-		continueSet(a_trans, a_updatedepth);
+		continueSet(trans, updatedepth);
 		// make sure, a concurrent new, possibly triggered by objectOnNew
 		// is written to the file
 
@@ -418,7 +419,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    
 		    Object obj = getObject();
 		    
-		    if(objectCanUpdate(a_trans.container(), obj)){
+		    if(objectCanUpdate(trans, obj)){
 				
 				if ((!isActive()) || obj == null) {
 					endProcessing();
@@ -437,14 +438,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 					}
 				}
 				
-				logEvent(a_trans.container(), "update", Const4.STATE);
+				logEvent(trans.container(), "update", Const4.STATE);
 				
 				setStateClean();
 
-				a_trans.writeUpdateDeleteMembers(getID(), _class, a_trans
+				trans.writeUpdateDeleteMembers(getID(), _class, trans
 						.container()._handlers.arrayType(obj), 0);
                 
-                MarshallerFamily.current()._object.marshallUpdate(a_trans, a_updatedepth, this, obj);
+                MarshallerFamily.current()._object.marshallUpdate(trans, updatedepth, this, obj);
 				
 		    } else{
 		        endProcessing();
@@ -452,9 +453,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		}
 	}
 
-	private boolean objectCanUpdate(ObjectContainerBase stream, Object obj) {
-		return stream.callbacks().objectCanUpdate(obj)
-			&& _class.dispatchEvent(stream, obj, EventDispatcher.CAN_UPDATE);
+	private boolean objectCanUpdate(Transaction transaction, Object obj) {
+		ObjectContainerBase container = transaction.container();
+		return container.callbacks().objectCanUpdate(transaction, obj)
+			&& _class.dispatchEvent(container, obj, EventDispatcher.CAN_UPDATE);
 	}
 
 	/***** HCTREE *****/

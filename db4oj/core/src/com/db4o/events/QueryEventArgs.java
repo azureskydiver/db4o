@@ -2,7 +2,8 @@
 
 package com.db4o.events;
 
-import com.db4o.query.Query;
+import com.db4o.internal.*;
+import com.db4o.query.*;
 
 /**
  * Arguments for {@link Query} related events.
@@ -14,8 +15,8 @@ public class QueryEventArgs extends ObjectEventArgs {
 	/**
 	 * Creates a new instance for the specified {@link Query} instance.
 	 */
-	public QueryEventArgs(Query q) {
-		super(q);
+	public QueryEventArgs(Transaction transaction, Query q) {
+		super(transaction, q);
 	}
 	
 	/**

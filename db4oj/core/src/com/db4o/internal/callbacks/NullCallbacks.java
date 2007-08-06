@@ -7,54 +7,54 @@ import com.db4o.query.Query;
 
 public class NullCallbacks implements Callbacks {
 
-	public void queryOnFinished(Query query) {
+	public void queryOnFinished(Transaction transaction, Query query) {
 	}
 
-	public void queryOnStarted(Query query) {
+	public void queryOnStarted(Transaction transaction, Query query) {
 	}
 
-	public boolean objectCanNew(Object obj) {
+	public boolean objectCanNew(Transaction transaction, Object obj) {
 		return true;
 	}
 
-	public boolean objectCanActivate(Object obj) {
+	public boolean objectCanActivate(Transaction transaction, Object obj) {
 		return true;
 	}
 	
-	public boolean objectCanUpdate(Object obj) {
+	public boolean objectCanUpdate(Transaction transaction, Object obj) {
 		return true;
 	}
 	
-	public boolean objectCanDelete(Object obj) {
+	public boolean objectCanDelete(Transaction transaction, Object obj) {
 		return true;
 	}
 	
-	public boolean objectCanDeactivate(Object obj) {
+	public boolean objectCanDeactivate(Transaction transaction, Object obj) {
 		return true;
 	}
 	
-	public void objectOnNew(Object obj) {
+	public void objectOnNew(Transaction transaction, Object obj) {
 	}
 	
-	public void objectOnActivate(Object obj) {
+	public void objectOnActivate(Transaction transaction, Object obj) {
 	}
 
-	public void objectOnUpdate(Object obj) {
+	public void objectOnUpdate(Transaction transaction, Object obj) {
 	}
 
-	public void objectOnDelete(Object obj) {
+	public void objectOnDelete(Transaction transaction, Object obj) {
 	}
 
-	public void objectOnDeactivate(Object obj) {	
+	public void objectOnDeactivate(Transaction transaction, Object obj) {	
 	}
 
-	public void objectOnInstantiate(Object obj) {
+	public void objectOnInstantiate(Transaction transaction, Object obj) {
 	}
 
-	public void commitOnStarted(Object transaction, CallbackObjectInfoCollections objectInfoCollections) {
+	public void commitOnStarted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections) {
 	}
 	
-	public void commitOnCompleted(Object transaction, CallbackObjectInfoCollections objectInfoCollections) {
+	public void commitOnCompleted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections) {
 	}
 
 	public boolean caresAboutCommitting() {

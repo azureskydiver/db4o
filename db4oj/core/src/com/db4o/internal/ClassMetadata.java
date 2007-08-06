@@ -100,9 +100,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         _classHandler = new ClassHandler(this);
     }
     
-    void activateFields(Transaction a_trans, Object a_object, int a_depth) {
-        if(objectCanActivate(a_trans.container(), a_object)){
-            activateFields1(a_trans, a_object, a_depth);
+    void activateFields(Transaction trans, Object obj, int depth) {
+        if(objectCanActivate(trans, obj)){
+            activateFields1(trans, obj, depth);
         }
     }
 
@@ -514,21 +514,23 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         
     }
 
-	public void deactivate(Transaction a_trans, Object a_object, int a_depth) {
-        if(objectCanDeactivate(a_trans.container(), a_object)){
-            deactivate1(a_trans, a_object, a_depth);
-            objectOnDeactivate(a_trans.container(), a_object);
+	public void deactivate(Transaction trans, Object obj, int depth) {
+        if(objectCanDeactivate(trans, obj)){
+            deactivate1(trans, obj, depth);
+            objectOnDeactivate(trans, obj);
         }
     }
 
-	private void objectOnDeactivate(ObjectContainerBase stream, Object obj) {
-		stream.callbacks().objectOnDeactivate(obj);
-		dispatchEvent(stream, obj, EventDispatcher.DEACTIVATE);
+	private void objectOnDeactivate(Transaction transaction, Object obj) {
+		ObjectContainerBase container = transaction.container();
+		container.callbacks().objectOnDeactivate(transaction, obj);
+		dispatchEvent(container, obj, EventDispatcher.DEACTIVATE);
 	}
 
-	private boolean objectCanDeactivate(ObjectContainerBase stream, Object obj) {
-		return stream.callbacks().objectCanDeactivate(obj)
-			&& dispatchEvent(stream, obj, EventDispatcher.CAN_DEACTIVATE);
+	private boolean objectCanDeactivate(Transaction transaction, Object obj) {
+		ObjectContainerBase container = transaction.container();
+		return container.callbacks().objectCanDeactivate(transaction, obj)
+			&& dispatchEvent(container, obj, EventDispatcher.CAN_DEACTIVATE);
 	}
 
     void deactivate1(Transaction a_trans, Object a_object, int a_depth) {
@@ -1042,7 +1044,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			ref.setObjectWeak(stream, obj);
 			transaction.referenceSystem().addExistingReferenceToObjectTree(ref);
 			
-			objectOnInstantiate(stream, obj);
+			objectOnInstantiate(buffer.getTransaction(), obj);
 		}
         
 		if(addToIDTree){
@@ -1058,7 +1060,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			if (buffer.getInstantiationDepth() == 0) {
 				ref.setStateDeactivated();
 			} else {
-				activate(stream, buffer, mf, attributes, ref, obj);
+				activate(buffer, mf, attributes, ref, obj);
 			}
 		} else {
 			if (activatingActiveObject(stream, ref)) {
@@ -1066,7 +1068,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                     activateFields(buffer.getTransaction(), obj, buffer.getInstantiationDepth() - 1);
                 }
 			} else {
-				activate(stream, buffer, mf, attributes, ref, obj);
+				activate(buffer, mf, attributes, ref, obj);
 			}
 		}
         return obj;
@@ -1076,13 +1078,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return !stream._refreshInsteadOfActivate && ref.isActive();
 	}
 
-	private void activate(final ObjectContainerBase stream, StatefulBuffer buffer, MarshallerFamily mf, ObjectHeaderAttributes attributes, ObjectReference ref, Object obj) {
-		if(objectCanActivate(stream, obj)){
+	private void activate(StatefulBuffer buffer, MarshallerFamily mf, ObjectHeaderAttributes attributes, ObjectReference ref, Object obj) {
+		if(objectCanActivate(buffer.getTransaction(), obj)){
 			ref.setStateClean();
 			if (buffer.getInstantiationDepth() > 0 || cascadeOnActivate()) {
 				instantiateFields(ref, obj, mf, attributes, buffer);
 			}
-			objectOnActivate(stream, obj);
+			objectOnActivate(buffer.getTransaction(), obj);
 		} else {
 			ref.setStateDeactivated();
 		}
@@ -1092,8 +1094,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	    return _classHandler.instantiateObject(buffer, mf);
 	}
 
-	private void objectOnInstantiate(ObjectContainerBase container, Object instance) {
-		container.callbacks().objectOnInstantiate(instance);
+	private void objectOnInstantiate(Transaction transaction, Object instance) {
+		transaction.container().callbacks().objectOnInstantiate(transaction, instance);
 	}
 
 	Object instantiateFromReflector(ObjectContainerBase stream) {
@@ -1153,14 +1155,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 	}
 
-	private void objectOnActivate(ObjectContainerBase stream, Object obj) {
-		stream.callbacks().objectOnActivate(obj);
-		dispatchEvent(stream, obj, EventDispatcher.ACTIVATE);
+	private void objectOnActivate(Transaction transaction, Object obj) {
+		ObjectContainerBase container = transaction.container();
+		container.callbacks().objectOnActivate(transaction, obj);
+		dispatchEvent(container, obj, EventDispatcher.ACTIVATE);
 	}
 
-	private boolean objectCanActivate(ObjectContainerBase stream, Object obj) {
-		return stream.callbacks().objectCanActivate(obj)
-			&& dispatchEvent(stream, obj, EventDispatcher.CAN_ACTIVATE);
+	private boolean objectCanActivate(Transaction transaction, Object obj) {
+		ObjectContainerBase container = transaction.container();
+		return container.callbacks().objectCanActivate(transaction, obj)
+			&& dispatchEvent(container, obj, EventDispatcher.CAN_ACTIVATE);
 	}
 
 	/** @param obj */
