@@ -536,10 +536,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         
         ref.endProcessing();
         
-        if (!isActive(obj) && (caresAboutDeleting(yc) || caresAboutDeleted(yc))) {
-        	// Activate Objects for Callbacks, because in C/S mode Objects are not activated on the Server
-        	activate(obj, 1);
-        }
+        activateForDeletionCallback(yc, obj);
         
         if (!objectCanDelete(trans, yc, obj)) {
             return;
@@ -560,6 +557,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         
         ref.endProcessing();
     }
+
+	private void activateForDeletionCallback(ClassMetadata yc, Object obj) {
+		if (!isActive(obj) && (caresAboutDeleting(yc) || caresAboutDeleted(yc))) {
+        	// Activate Objects for Callbacks, because in C/S mode Objects are not activated on the Server
+        	activate(obj, 1);
+        }
+	}
     
     private boolean caresAboutDeleting(ClassMetadata yc) {
     	return this._callbacks.caresAboutDeleting()
