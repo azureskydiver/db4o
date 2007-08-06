@@ -12,7 +12,7 @@ public final class ObjectByRef {
 	public ObjectByRef() {
 	}
 
-	public ObjectByRef(Object value) {
-		this.value = value;
+	public ObjectByRef(Object value_) {
+		value = value_;
 	}
 }
