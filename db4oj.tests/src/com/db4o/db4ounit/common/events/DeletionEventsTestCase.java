@@ -36,7 +36,7 @@ public class DeletionEventsTestCase extends EventsTestCaseBase {
 		});
 		
 		db().delete(retrieveOnlyInstance(Item.class));
-		
+		db().commit();
 		Assert.isTrue(deletionLog.xing);
 		Assert.isTrue(deletionLog.xed);
 	}
