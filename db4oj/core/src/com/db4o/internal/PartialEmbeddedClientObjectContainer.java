@@ -26,13 +26,14 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     
     private boolean _closed = false;
     
-    public PartialEmbeddedClientObjectContainer(LocalObjectContainer server) {
-        this(server, server.newTransaction(server.systemTransaction(), server.createReferenceSystem()));
-    }
-
     public PartialEmbeddedClientObjectContainer(LocalObjectContainer server, Transaction trans) {
         _server = server;
         _transaction = trans;
+        _transaction.setOutSideRepresentation(cast(this));
+    }
+    
+    public PartialEmbeddedClientObjectContainer(LocalObjectContainer server) {
+        this(server, server.newTransaction(server.systemTransaction(), server.createReferenceSystem()));
     }
 
     /** @param path */
@@ -376,6 +377,9 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public void onCommittedListener() {
         // do nothing
     }
-
+    
+    private static ObjectContainer cast(PartialEmbeddedClientObjectContainer container){
+        return (ObjectContainer) container;
+    }
 
 }
