@@ -14,6 +14,10 @@ public class SendMessageToClientTestCase extends ClientServerTestCaseBase {
 	}
 	
 	public void test(){
+	    if(isMTOC()){
+	        // No sending messages back and forth on MTOC.
+	        return;
+	    }
 		serverDispatcher().write(Msg.OK);
 		Msg msg = client().getResponse();
 		Assert.areEqual(Msg.OK, msg);

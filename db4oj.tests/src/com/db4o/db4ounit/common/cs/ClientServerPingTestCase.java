@@ -25,6 +25,11 @@ public class ClientServerPingTestCase extends ClientServerTestCaseBase {
 	}
 
 	public void test() throws Exception {
+	    if(isMTOC()){
+	        // This test really doesn't make sense for MTOC, there
+	        // is no client to ping.
+	        return;
+	    }
 		ServerMessageDispatcher dispatcher = serverDispatcher();
 		PingThread pingThread = new PingThread(dispatcher);
 		pingThread.start();

@@ -6,6 +6,11 @@ package com.db4o.db4ounit.common.cs;
 public class SwitchingFilesFromClientTestCase extends ClientServerTestCaseBase {
 
 	public void testSwitch() {
+        if(isMTOC()){
+            // Cast to ExtClient won't work and switching files is 
+            // not supported.
+            return;
+        }
 		client().switchToFile(SwitchingFilesFromClientUtil.FILENAME_A);
 		client().switchToFile(SwitchingFilesFromClientUtil.FILENAME_B);
 		client().switchToMainFile();

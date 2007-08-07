@@ -29,9 +29,20 @@ public class PingTestCase extends Db4oClientServerTestCase {
 				.setMessageRecipient(recipient);
 
 		final ExtObjectContainer client = clientServerFixture().db();
-		MessageSender sender = client.configure().clientServer()
+		final MessageSender sender = client.configure().clientServer()
 				.getMessageSender();
-		sender.send(new Data());
+		
+		if(isMTOC()){
+		    Assert.expect(NotSupportedException.class, new CodeBlock(){
+                public void run() throws Throwable {
+                    sender.send(new Data());
+                }
+		    });
+		    return;
+		}
+		
+	    sender.send(new Data());
+		
 
 		// The following query will be block by the sender
 		ObjectSet os = client.get(null);

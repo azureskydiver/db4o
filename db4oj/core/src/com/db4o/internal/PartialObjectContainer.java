@@ -1553,7 +1553,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     /** @param obj */
     public void send(Object obj) {
         // TODO: implement
-        // so far this only works from YapClient
+        throw new NotSupportedException();
     }
 
     public void set(Object obj) throws DatabaseClosedException,
