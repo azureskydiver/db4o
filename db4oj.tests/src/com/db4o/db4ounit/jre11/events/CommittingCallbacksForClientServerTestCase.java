@@ -21,7 +21,7 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 	}
 	
 	
-	public void testCommittingIsTriggeredOnServer() {
+	public void testTriggerCommitting() {
 		
 		final EventRecorder clientRecorder = new EventRecorder(fixture().db().lock());
 		clientRegistry().committing().addListener(clientRecorder);
@@ -37,7 +37,13 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 		Cool.sleepIgnoringInterruption(50);
 		
 		EventAssert.assertCommitEvent(serverRecorder, serverEventRegistry().committing(), new ObjectInfo[] { infoFor(item) }, new ObjectInfo[0], new ObjectInfo[0]);
-		EventAssert.assertNoEvents(clientRecorder);
+	    
+		// For MTOC we expect the same events, in a normal client we don't want to see these events. 
+		if(isMTOC()){
+		    EventAssert.assertCommitEvent(clientRecorder, serverEventRegistry().committing(), new ObjectInfo[] { infoFor(item) }, new ObjectInfo[0], new ObjectInfo[0]);
+		}else{
+		    EventAssert.assertNoEvents(clientRecorder);
+		}
 		
 	}
 	

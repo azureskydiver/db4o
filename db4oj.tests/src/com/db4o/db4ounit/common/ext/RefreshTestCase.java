@@ -37,8 +37,17 @@ public class RefreshTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void test() {
+	    
 		ExtObjectContainer oc1 = openNewClient();
 		ExtObjectContainer oc2 = openNewClient();
+		
+		// FIXME: Setting cascadeOnUpdate on an open ObjectContainer only works
+		//        by accident, if the class has not been used before.
+		//        Moving the configuration method here gets MTOC to pass, but
+		//        configuration methods should really tell the users direclty 
+		//        what works and what doesn't.
+		oc2.configure().objectClass(RefreshTestCase.class).cascadeOnUpdate(true);
+		
 		try {
 			RefreshTestCase r1 = getRoot(oc1);
 			r1.name = "cc";
@@ -52,7 +61,6 @@ public class RefreshTestCase extends Db4oClientServerTestCase {
 			oc1.refresh(r1, 2);
 			Assert.areEqual("o2", r1.child.name);
 
-			oc2.configure().objectClass(RefreshTestCase.class).cascadeOnUpdate(true);
 			RefreshTestCase r2 = getRoot(oc2);
 			r2.name = "o21";
 			r2.child.name = "o22";

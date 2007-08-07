@@ -24,6 +24,12 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase {
 	TestMessageRecipient recipient = new TestMessageRecipient();
 
 	public void test() {
+       if(isMTOC()){
+            // This test really doesn't make sense for MTOC, there
+            // is no client to time out.
+            return;
+        }
+
 		clientServerFixture().server().ext().configure().clientServer()
 				.setMessageRecipient(recipient);
 
@@ -32,7 +38,7 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase {
 				.getMessageSender();
 		sender.send(new Data());
 		
-		// The following query will be block by the sender
+		// The following query will be blocked by the sender
 		Assert.expect(DatabaseClosedException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				ObjectSet os = client.get(null);

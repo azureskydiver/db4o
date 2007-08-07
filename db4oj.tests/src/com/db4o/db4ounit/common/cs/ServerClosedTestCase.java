@@ -15,6 +15,12 @@ public class ServerClosedTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void test() throws Exception {
+        
+	    if(isMTOC()){
+            // No sending messages back and forth on MTOC.
+            return;
+        }
+        
 		final ExtObjectContainer db = fixture().db();
 		ObjectServerImpl serverImpl = (ObjectServerImpl) clientServerFixture()
 				.server();
