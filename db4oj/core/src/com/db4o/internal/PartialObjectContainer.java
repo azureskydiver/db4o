@@ -451,10 +451,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 ObjectReference currentObject = (ObjectReference) i.current();
                 i.moveNext();
 				Integer currentInteger = ((Integer) i.current());
-				currentObject.deactivate(_transaction, currentInteger.intValue());
+				currentObject.deactivate(trans, currentInteger.intValue());
             }
         }
-        
     }
 
     public final void delete(Object a_object) {

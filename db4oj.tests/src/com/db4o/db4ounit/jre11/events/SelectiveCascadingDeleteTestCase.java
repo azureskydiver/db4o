@@ -34,18 +34,25 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 		serverEventRegistry().deleting().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				CancellableObjectEventArgs a = (CancellableObjectEventArgs)args;
+
+                // TODO: Not really nice. Internal abstract class Transaction 
+				//       is exposed. We should have an outside Transaction interface. 
+				Transaction trans = (Transaction) a.transaction();
+				
+				ObjectContainer container = trans.objectContainer();
+				
 				Item item = ((Item)a.object());
-				fileSession().activate(item, 1);
+				container.activate(item, 1);
                 if (item.id.equals("B")) {
 					// cancel deletion of this item
 					a.cancel();
 					
 					// restart from the child
-					fileSession().delete(item.child);
+					container.delete(item.child);
 					
 					// and disconnect it
 					item.child = null;
-					fileSession().set(item);
+					container.set(item);
 				}
 			}
 		});

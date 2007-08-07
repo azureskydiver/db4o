@@ -29,8 +29,8 @@ public class LocalTransaction extends Transaction {
     
 	protected final LocalObjectContainer _file;
 
-	public LocalTransaction(ObjectContainerBase container, Transaction parent, TransactionalReferenceSystem referenceSystem) {
-		super(container, parent, referenceSystem);
+	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
+		super(container, parentTransaction, referenceSystem);
 		_file = (LocalObjectContainer) container;
         i_pointerIo = new StatefulBuffer(this, Const4.POINTER_LENGTH);
 	}

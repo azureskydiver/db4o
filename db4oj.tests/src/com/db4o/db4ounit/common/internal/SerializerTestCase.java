@@ -8,14 +8,14 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class SerializerTestCase extends AbstractDb4oTestCase {
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
 		new SerializerTestCase().runAll();
 	}
 	
 	public void testMarshall() throws Exception {
 		ReflectException e = new ReflectException(new NullPointerException());
-		SerializedGraph marshalled = Serializer.marshall(
-				(ObjectContainerBase) db(), e);
+		SerializedGraph marshalled = Serializer.marshall(stream().container(), e);
 		Assert.isTrue(marshalled.length() > 0);
 	}
 }

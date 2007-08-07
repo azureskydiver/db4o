@@ -21,12 +21,26 @@ public abstract class Transaction {
     
     protected final Transaction _systemTransaction;
 
+    /**
+     * This is the inside representation to operate against, the actual
+     * file-based ObjectContainerBase or the client. For all calls 
+     * against this ObjectContainerBase the method signatures that take
+     * a transaction have to be used.
+     */
     private final ObjectContainerBase _container;
+    
+    /**
+     * This is the outside representation to the user. This ObjectContainer
+     * should use this transaction as it's main user transation, so it also
+     * allows using the method signatures on ObjectContainer without a 
+     * transaction.  
+     */
+    private ObjectContainer _objectContainer;
     
     private List4 _transactionListeners;
     
     private final TransactionalReferenceSystem _referenceSystem;
-
+    
     public Transaction(ObjectContainerBase container, Transaction systemTransaction, TransactionalReferenceSystem referenceSystem) {
         _container = container;
         _systemTransaction = systemTransaction;
@@ -332,6 +346,17 @@ public abstract class Transaction {
         if(ref != null){
             removeReference(ref);
         }
+    }
+    
+    public void setOutSideRepresentation(ObjectContainer objectContainer){
+        _objectContainer = objectContainer;
+    }
+    
+    public ObjectContainer objectContainer(){
+        if(_objectContainer != null){
+            return _objectContainer;
+        }
+        return _container;
     }
 
 }
