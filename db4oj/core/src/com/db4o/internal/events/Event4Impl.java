@@ -3,7 +3,9 @@
 package com.db4o.internal.events;
 
 import com.db4o.events.*;
+import com.db4o.ext.Db4oException;
 import com.db4o.foundation.*;
+import com.db4o.internal.ReflectException;
 
 /**
  * @exclude
@@ -71,7 +73,13 @@ public class Event4Impl implements Event4 {
 	}
 	
 	private void onEvent(EventListener4 listener, Event4 e, EventArgs args) {
-		listener.onEvent(e, args);
+		try {
+			listener.onEvent(e, args);
+		} catch(Db4oException db4oException) {
+			throw db4oException;
+		} catch (Throwable exc) {
+			throw new ReflectException(exc);
+		}
 	}
 	
 	private void validateListener(EventListener4 listener) {
