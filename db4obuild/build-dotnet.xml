@@ -1052,7 +1052,6 @@
 		<property name="dir.cecil" location="${dir.dist}/cecil" />
 		<property name="mono.svn" value="svn://anonsvn.mono-project.com/source/trunk" />
 	
-<!--
 		<delete dir="${dir.cecil}" />
 		<mkdir dir="${dir.cecil}" />
 		<exec executable="svn" dir="${dir.cecil}">
@@ -1069,7 +1068,7 @@
 			<arg value="export" />
 			<arg value="${mono.svn}/cecil/flowanalysis" />
 		</exec>
-	-->
+	
 		<exec executable="${nant.exe}" dir="${dir.cecil}/Mono.Cecil">
 			<arg value="-D:compactframework.v1.dir=${dir.compactframework}/v1.0" />
 			<arg value="-t:net-1.1" />
