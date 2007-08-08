@@ -8,6 +8,7 @@ import com.db4o.constraints.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.callbacks.*;
+import com.db4o.internal.query.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -20,9 +21,9 @@ import com.db4o.types.*;
  */
 public abstract class PartialEmbeddedClientObjectContainer implements TransientClass, ObjectContainerSpec {
     
-    private final LocalObjectContainer _server;
+    protected final LocalObjectContainer _server;
     
-    private final Transaction _transaction;
+    protected final Transaction _transaction;
     
     private boolean _closed = false;
     
@@ -371,6 +372,13 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
         synchronized(lock()){
             checkClosed();
             return _server.callbacks();
+        }
+    }
+    
+    public final NativeQueryHandler getNativeQueryHandler() {
+        synchronized(lock()){
+            checkClosed();
+            return _server.getNativeQueryHandler();
         }
     }
     

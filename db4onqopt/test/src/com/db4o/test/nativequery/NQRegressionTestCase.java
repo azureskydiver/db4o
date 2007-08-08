@@ -640,7 +640,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 				run++;
 			}
 		};
-		((ObjectContainerBase)db).getNativeQueryHandler().addListener(listener);
+		((InternalObjectContainer)db).getNativeQueryHandler().addListener(listener);
 		db.ext().configure().optimizeNativeQueries(false);
 		ObjectSet raw=db.query(predicate);
 		db.ext().configure().optimizeNativeQueries(true);
@@ -691,7 +691,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 				exc.printStackTrace();
 			}
 		}
-		((ObjectContainerBase)db).getNativeQueryHandler().clearListeners();
+		((InternalObjectContainer)db).getNativeQueryHandler().clearListeners();
 		db.ext().configure().optimizeNativeQueries(true);
 	}
 }
