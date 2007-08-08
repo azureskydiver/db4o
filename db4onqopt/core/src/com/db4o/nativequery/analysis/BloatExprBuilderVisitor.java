@@ -4,6 +4,7 @@ package com.db4o.nativequery.analysis;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,7 +67,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			Short.class.getName(), Character.class.getName(),
 			Integer.class.getName(), Long.class.getName(),
 			Double.class.getName(), Float.class.getName(),
-			String.class.getName(), };
+			String.class.getName(), Date.class.getName() };
 
 	static {
 		Arrays.sort(PRIMITIVE_WRAPPER_NAMES);

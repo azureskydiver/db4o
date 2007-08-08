@@ -1,5 +1,7 @@
 package com.db4o.test.nativequery.analysis;
 
+import java.util.Date;
+
 class Data extends Base {
 	boolean bool;
 	float value;
@@ -9,6 +11,7 @@ class Data extends Base {
 	int[] intArray;
 	Data[] objArray;
 	Boolean boolWrapper;
+	Date date;
 	
 	public boolean getBool() {
 		return bool;
@@ -29,6 +32,10 @@ class Data extends Base {
 	
 	public boolean hasNext() {
 		return getNext()!=null;
+	}
+
+	public Date getDate() {
+		return date;
 	}
 	
 	public void someMethod() {
