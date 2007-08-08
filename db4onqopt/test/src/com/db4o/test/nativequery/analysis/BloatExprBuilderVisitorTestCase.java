@@ -2,6 +2,8 @@
 
 package com.db4o.test.nativequery.analysis;
 
+import java.util.Date;
+
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.tree.*;
@@ -20,6 +22,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	private static final String INT_WRAPPED_FIELDNAME = "idWrap";
 	private static final String BOOLEAN_FIELDNAME = "bool";
 	private static final String BOOLEAN_WRAPPED_FIELDNAME = "boolWrapper";
+	private static final String DATE_FIELDNAME = "date";
 	private static final String INT_FIELDNAME = "id";
 	private static final String FLOAT_FIELDNAME = "value";
 	private static final String OTHER_FLOAT_FIELDNAME = "otherValue";
@@ -31,6 +34,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	private final static String STRING_CMPVAL="Test";
 	private final static Integer INT_WRAPPER_CMPVAL=new Integer(INT_CMPVAL);
 	private final static Boolean BOOLEAN_WRAPPER_CMPVAL=Boolean.TRUE;
+	private final static Date DATE_WRAPPER_CMPVAL=new Date();
 	private final Integer intWrapperCmpVal=new Integer(INT_CMPVAL);
 	
 	private boolean boolMember=false;
@@ -39,6 +43,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	private float floatMember=47.11f;
 	private int[] intArrayMember={};
 	private Data[] objArrayMember={};
+	private Date dateMember;
 
 	private ClassFileLoader loader;
 	private BloatUtil bloatUtil;
@@ -451,12 +456,12 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 
 	// primitive wrapper equality
 
-	boolean sampleFieldBooleanWrapperEqualsComp(Data data) {
-		return data.boolWrapper.booleanValue();
+	boolean sampleFieldDateEqualsComp(Data data) {
+		return data.getDate().equals(dateMember);
 	}
 
-	public void testFieldBooleanWrapperEqualsComp() throws Exception {
-		assertComparison("sampleFieldBooleanWrapperEqualsComp",BOOLEAN_WRAPPED_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
+	public void testFieldDateEqualsComp() throws Exception {
+		assertComparison("sampleFieldDateEqualsComp",DATE_FIELDNAME,new FieldValue(PredicateFieldRoot.INSTANCE,"dateMember","java.util.Date"),ComparisonOperator.EQUALS,false);
 	}
 
 	boolean sampleFieldIntWrapperEqualsComp(Data data) {
@@ -474,6 +479,16 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void testIntWrapperFieldEqualsComp() throws Exception {
 		assertComparison("sampleIntWrapperFieldEqualsComp",INT_WRAPPED_FIELDNAME,new FieldValue(PredicateFieldRoot.INSTANCE,"intWrapperCmpVal","java.lang.Integer"),ComparisonOperator.EQUALS,false);
 	}	
+	
+	// date equality
+	
+	boolean sampleFieldBooleanWrapperEqualsComp(Data data) {
+		return data.boolWrapper.booleanValue();
+	}
+
+	public void testFieldBooleanWrapperEqualsComp() throws Exception {
+		assertComparison("sampleFieldBooleanWrapperEqualsComp",BOOLEAN_WRAPPED_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
+	}
 	
 	// descend into primitive wrapper
 
@@ -1179,11 +1194,12 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		java.lang.reflect.Method method=BloatExprBuilderVisitorTestCase.class.getMethod("testFieldWrapperIntCompToEquals",new Class[]{});
-		Test[] tests={
-				new TestMethod(new BloatExprBuilderVisitorTestCase(),method)
-		};
-		TestSuite suite=new TestSuite(tests);
-		new TestRunner(suite).run();
+//		java.lang.reflect.Method method=BloatExprBuilderVisitorTestCase.class.getMethod("testFieldWrapperIntCompToEquals",new Class[]{});
+//		Test[] tests={
+//				new TestMethod(new BloatExprBuilderVisitorTestCase(),method)
+//		};
+//		TestSuite suite=new TestSuite(tests);
+//		new TestRunner(suite).run();
+		new TestRunner(BloatExprBuilderVisitorTestCase.class).run();
 	}
 }

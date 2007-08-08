@@ -3,6 +3,7 @@
 package com.db4o.test.nativequery;
 
 import java.lang.reflect.*;
+import java.util.Date;
 
 import com.db4o.*;
 import com.db4o.internal.*;
@@ -24,6 +25,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	private static final String BSTR = "Ba";
 	private static final String ASTR = "Aa";
 	public final static Integer INTWRAPPER=new Integer(1);
+	public final static Date DATE=new Date(0);
 	private final static Integer PRIVATE_INTWRAPPER=new Integer(1);
 	
 	private static Data _prevData=null;
@@ -55,8 +57,9 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		Data prev;
 		int id2;
 		Boolean boolWrap;
+		java.util.Date curDate;
 		
-		public Data(int id, boolean bool,float value, String name,Data prev, int id2) {
+		public Data(int id, boolean bool,float value, String name,Data prev, int id2, java.util.Date curDate) {
 			super(id);
 			this.bool=bool;
 			this.boolWrap=Boolean.valueOf(bool);
@@ -64,6 +67,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 			this.name = name;
 			this.prev=prev;
 			this.id2=id2;
+			this.curDate = curDate;
 		}
 
 		public float getValue() {
@@ -89,10 +93,13 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	}
 
 	public void store() {
-		Data a=new Data(1,false,1.1f,ASTR,null, 0);
-		Data b=new Data(2,false,1.1f,BSTR,a, Integer.MIN_VALUE);
-		Data c=new Data(3,true,2.2f,CSTR,b, Integer.MIN_VALUE);
-		Data cc=new Data(3,false,3.3f,CSTR,null, Integer.MIN_VALUE);
+		java.util.Date date1 = new java.util.Date(0);
+		java.util.Date date2 = new java.util.Date();
+		
+		Data a=new Data(1,false,1.1f,ASTR,null, 0, date1);
+		Data b=new Data(2,false,1.1f,BSTR,a, Integer.MIN_VALUE, date1);
+		Data c=new Data(3,true,2.2f,CSTR,b, Integer.MIN_VALUE, date1);
+		Data cc=new Data(3,false,3.3f,CSTR,null, Integer.MIN_VALUE, date2);
 		ObjectContainer db=db();
 		db.set(a);
 		db.set(b);
@@ -589,6 +596,12 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 			public int expected() { return 3;}
 			public boolean match(Data candidate) {
 				return candidate.idWrap.compareTo(INTWRAPPER)>0;
+			}
+		},
+		new ExpectingPredicate("curDate.equals(DATE)") {
+			public int expected() { return 3;}
+			public boolean match(Data candidate) {
+				return candidate.curDate.equals(DATE);
 			}
 		},
 		// Note: We never get to see a static field access here - non-static inner class
