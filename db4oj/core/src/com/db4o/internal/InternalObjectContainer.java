@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.ext.*;
 import com.db4o.internal.callbacks.*;
+import com.db4o.internal.query.*;
 
 
 /**
@@ -20,5 +21,7 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     public Transaction transaction();
     
     public void onCommittedListener();
+    
+    public NativeQueryHandler getNativeQueryHandler();
 
 }
