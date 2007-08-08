@@ -87,7 +87,7 @@ public class P1Object implements Db4oTypeImpl{
     
     protected void delete(Object a_obj){
         if(i_trans != null){
-            stream().delete(a_obj);
+            stream().delete(i_trans, a_obj);
         }
     }
     
@@ -95,7 +95,7 @@ public class P1Object implements Db4oTypeImpl{
         if(i_trans == null){
             return 0;
         }
-        return stream().getID(a_obj);
+        return stream().getID(i_trans, a_obj);
     }
     
     protected Transaction getTrans(){
