@@ -203,20 +203,19 @@ public class FieldMetadata implements StoredField {
             loadJavaField();
 
             if(i_handler != null) {
+                // TODO: This part is not quite correct.
+                // We are using the old array information read from file to wrap.
+
+                // If a schema evolution changes an array to a different variable,
+                // we are in trouble here.
                 i_handler = wrapHandlerToArrays(container(), i_handler);
             }
             
             if(i_handler == null || i_javaField == null){
                 i_state = UNAVAILABLE;
                 i_javaField = null;
-            }else{
-
-                // TODO: This part is not quite correct.
-                // We are using the old array information read from file to wrap.
-
-                // If a schema evolution changes an array to a different variable,
-                // we are in trouble here.
-
+            }
+            else {
                 i_state = AVAILABLE;
                 checkDb4oType();
             }
