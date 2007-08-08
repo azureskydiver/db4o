@@ -24,8 +24,7 @@ public class EmbeddedClientObjectContainer extends PartialEmbeddedClientObjectCo
 
     public ObjectSet query(Predicate predicate, Comparator comparator) throws Db4oIOException,
         DatabaseClosedException {
-        // FIXME: implement
-        return null;
+        return _server.query(_transaction, predicate, new JdkComparatorWrapper(comparator)); 
     }
 
 }
