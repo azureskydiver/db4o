@@ -274,14 +274,20 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	public synchronized ObjectContainer openClient(Configuration config) {
 		checkClosed();
 
-//      The following switches on new MTOC mode:		
-//	    return new EmbeddedClientObjectContainer(_container);
 		
-		ClientObjectContainer client = new ClientObjectContainer(config,
-				openClientSocket(), Const4.EMBEDDED_CLIENT_USER
-						+ (i_threadIDGen - 1), "", false);
-		client.blockSize(_container.blockSize());
-		return client;
+//      The following uses new MTOC mode:
+		
+ 	    return new EmbeddedClientObjectContainer(_container);
+
+ 	    
+//      The following uses old embedded C/S mode:      
+
+//		ClientObjectContainer client = new ClientObjectContainer(config,
+//				openClientSocket(), Const4.EMBEDDED_CLIENT_USER
+//						+ (i_threadIDGen - 1), "", false);
+//		client.blockSize(_container.blockSize());
+//		return client;
+ 	    
 	}
 
 	public LoopbackSocket openClientSocket() {
