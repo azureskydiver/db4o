@@ -17,7 +17,7 @@ import com.db4o.ext.ObjectInfo;
 import com.db4o.ext.VirtualField;
 import com.db4o.foundation.Tree;
 import com.db4o.foundation.Visitor4;
-import com.db4o.internal.ObjectContainerBase;
+import com.db4o.internal.ExternalObjectContainer;
 import com.db4o.internal.Transaction;
 import com.db4o.internal.TreeInt;
 import com.db4o.internal.replication.Db4oReplicationReference;
@@ -31,7 +31,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	private ReadonlyReplicationProviderSignature _mySignature;
 
-	protected final ObjectContainerBase _stream;
+	protected final ExternalObjectContainer _stream;
 
 	private final Reflector _reflector;
 
@@ -55,7 +55,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 		cfg.callbacks(false);
 
 		_name = name;
-		_stream = (ObjectContainerBase) objectContainer;
+		_stream = (ExternalObjectContainer) objectContainer;
 		_reflector = _stream.reflector();
 		_signatureMap = new Db4oSignatureMap(_stream);
 	}
