@@ -173,7 +173,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
         stream.showInternalClasses(true);
         try {
 	        int id = stream.getID(trans, stored);
-	        stream.bind(this, id);
+	        stream.bind(trans, this, id);
 	        return id;
 	    } finally {
             stream.showInternalClasses(false);

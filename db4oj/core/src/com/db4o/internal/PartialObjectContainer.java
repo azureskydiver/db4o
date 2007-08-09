@@ -121,7 +121,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	            initialize1(_config);
 	        	openImpl();
 				initializePostOpen();
-				Platform4.postOpen(_this);
+				Platform4.postOpen(cast(_this));
 				ok = true;
 			} finally {
 				if(!ok) {
@@ -133,10 +133,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	protected abstract void openImpl() throws Db4oIOException;
     
-	public final void activate(Object obj, int depth) throws DatabaseClosedException {
-	    activate(null, obj, depth);
-    }
-
     public final void activateDefaultDepth(Transaction trans, Object obj) {
         activate(trans, obj, configImpl().activationDepth());
     }
@@ -181,11 +177,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public final void bind(Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
-        bind(null, obj, id);
-    }
-
-    public final void bind(Transaction ta, Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
+    public final void bind(Transaction trans, Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
         synchronized (_lock) {
             if(obj == null){
                 throw new ArgumentNullException();
@@ -193,19 +185,19 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if(DTrace.enabled){
                 DTrace.BIND.log(id, " ihc " + System.identityHashCode(obj));
             }
-            ta = checkTransaction(ta);
+            trans = checkTransaction(trans);
             int intID = (int) id;
-            Object oldObject = getByID(id);
+            Object oldObject = getByID(trans, id);
             if (oldObject == null) {
                 throw new IllegalArgumentException("id");
             }
-            ObjectReference yo = ta.referenceForId(intID);
+            ObjectReference yo = trans.referenceForId(intID);
             if(yo == null){
                 throw new IllegalArgumentException("obj");
             }
-            if (ta.reflector().forObject(obj) == yo.getYapClass().classReflector()) {
-                ObjectReference newRef = bind2(ta, yo, obj);
-                newRef.virtualAttributes(ta);
+            if (trans.reflector().forObject(obj) == yo.getYapClass().classReflector()) {
+                ObjectReference newRef = bind2(trans, yo, obj);
+                newRef.virtualAttributes(trans);
             } else {
                 throw new RuntimeException(Messages.get(57));
             }
@@ -308,7 +300,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (_classCollection == null) {
             return;
         }
-        Platform4.preClose(_this);
+        Platform4.preClose(cast(_this));
         processPendingClassUpdates();
         if (stateMessages()) {
             logMsg(2, toString());
@@ -332,26 +324,18 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	protected abstract void shutdownDataStorage();
 	
-	public Db4oCollections collections() {
-	    return collections(null);
-	}
-    
     public Db4oCollections collections(Transaction trans) {
         synchronized (_lock) {
             return Platform4.collections(checkTransaction(trans));
         }
     }
     
-    public final void commit() throws DatabaseReadOnlyException, DatabaseClosedException {
-        commit(_transaction);
-    }
-
     public final void commit(Transaction trans) throws DatabaseReadOnlyException, DatabaseClosedException {
         synchronized (_lock) {
             if(DTrace.enabled){
                 DTrace.COMMIT.log();
             }
-            checkClosed();
+            trans = checkTransaction(trans);
             checkReadOnly();
             beginTopLevelCall();
             try{            	
@@ -423,10 +407,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public final void deactivate(Object obj, int depth) throws DatabaseClosedException {
-        deactivate(null, obj, depth);
-    }
-
     public final void deactivate(Transaction trans, Object obj, int depth) throws DatabaseClosedException {
         synchronized (_lock) {
             trans = checkTransaction(trans);
@@ -456,10 +436,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    public final void delete(Object a_object) {
-    	delete(null, a_object);
-    }
-    
     public final void delete(Transaction trans, Object obj) throws DatabaseReadOnlyException, DatabaseClosedException {
         synchronized (_lock) {
         	trans = checkTransaction(trans);
@@ -558,7 +534,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
 	private void activateForDeletionCallback(Transaction trans, ClassMetadata yc, Object obj) {
-		if (!isActive(obj) && (caresAboutDeleting(yc) || caresAboutDeleted(yc))) {
+		if (!isActive(trans, obj) && (caresAboutDeleting(yc) || caresAboutDeleted(yc))) {
         	// Activate Objects for Callbacks, because in C/S mode Objects are not activated on the Server
         	activate(trans, obj, 1);
         }
@@ -586,12 +562,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	
     public abstract boolean delete4(Transaction ta, ObjectReference yapObject, int a_cascade, boolean userCall);
     
-    public Object descend(Object obj, String[] path){
-        return descend(checkTransaction(), obj, path);
-    }
-    
     Object descend(Transaction trans, Object obj, String[] path){
         synchronized (_lock) {
+            trans = checkTransaction(trans);
             ObjectReference yo = trans.referenceForObject(obj);
             if(yo == null){
                 return null;
@@ -659,10 +632,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	return true;
     }
 
-    public ExtObjectContainer ext() {
-        return _this;
-    }
-
     /*
 	 * This method will be exuected on finalization, and vm exit if it's enabled
 	 * by configuration.
@@ -724,10 +693,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         _references.pollReferenceQueue();
     }
     
-    public final ObjectSet get(Object template) throws DatabaseClosedException {
-        return get(null, template);
-    }
-
     public final ObjectSet get(Transaction trans, Object template) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
@@ -755,10 +720,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public abstract AbstractQueryResult getAll(Transaction ta);
-
-    public final Object getByID(long id) throws DatabaseClosedException, InvalidIDException  {
-        return getByID(null, id);
-    }
 
     public final Object getByID(Transaction ta, long id) throws DatabaseClosedException, InvalidIDException {
         synchronized (_lock) {
@@ -818,10 +779,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return obj;
     }
     
-    public final Object getByUUID(Db4oUUID uuid){
-        return getByUUID(null, uuid);
-    }
-    
     public final Object getByUUID(Transaction trans, Db4oUUID uuid){
         synchronized (_lock) {
             if(uuid == null){
@@ -833,10 +790,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             					uuid.getSignaturePart());
             return hardRef._object; 
         }
-    }
-
-    public final long getID(Object obj) {
-        return getID(null, obj);
     }
 
     public final int getID(Transaction trans, Object obj) {
@@ -856,10 +809,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public final ObjectInfo getObjectInfo (Object obj){
-        return getObjectInfo(null, obj);
-    }
-    
     public final ObjectInfo getObjectInfo (Transaction trans, Object obj){
         synchronized(_lock){
             trans = checkTransaction(trans);
@@ -867,10 +816,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public final HardObjectReference getHardObjectReferenceById(int id) {
-    	return getHardObjectReferenceById(transaction(), id);
-    }
-
     public final HardObjectReference getHardObjectReferenceById(Transaction trans, int id) {
         if (id <= 0) {
         	return HardObjectReference.INVALID;
@@ -1077,7 +1022,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (configImpl().detectSchemaChanges()) {
             _systemTransaction.commit();
         }
-        configImpl().applyConfigurationItems(_this);
+        configImpl().applyConfigurationItems(cast(_this));
     }
 
     void initializeEssentialClasses(){
@@ -1088,10 +1033,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     final void instantiating(boolean flag) {
         _instantiating = flag;
-    }
-
-    public boolean isActive(Object obj) {
-        return isActive(null, obj);
     }
 
     final boolean isActive(Transaction trans, Object obj) {
@@ -1107,10 +1048,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public boolean isCached(long id) {
-        return isCached(null, id); 
-    }
-
     public boolean isCached(Transaction trans, long id) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
@@ -1141,11 +1078,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return false;
     }
 
-    public boolean isStored(Object obj) {
-        return isStored(null, obj);
-    }
-
-    final boolean isStored(Transaction trans, Object obj) {
+    public final boolean isStored(Transaction trans, Object obj) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
             if (obj == null) {
@@ -1221,11 +1154,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract int newUserObject();
     
-    public final Object peekPersisted(Object obj, int depth, boolean committed) throws DatabaseClosedException {
-        return peekPersisted(null, obj, depth, committed);
-        
-    }
-
     public final Object peekPersisted(Transaction trans, Object obj, int depth, boolean committed) throws DatabaseClosedException {
     	
     	// TODO: peekPersisted is not stack overflow safe, if depth is too high. 
@@ -1282,10 +1210,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public final void purge(Object obj) {
-        purge(null, obj);
-    }
-
     public final void purge(Transaction trans, Object obj) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
@@ -1305,24 +1229,18 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final NativeQueryHandler getNativeQueryHandler() {
-    	if (null == _nativeQueryHandler) {
-    		_nativeQueryHandler = new NativeQueryHandler(_this);
-    	}
-    	return _nativeQueryHandler;
-    }
-    
-    public final ObjectSet query(Predicate predicate){
-    	return query(predicate,(QueryComparator)null);
+        synchronized(_lock){
+        	if (null == _nativeQueryHandler) {
+        		_nativeQueryHandler = new NativeQueryHandler(cast(_this));
+        	}
+        	return _nativeQueryHandler;
+        }
     }
     
     public final ObjectSet query(Transaction trans, Predicate predicate){
         return query(trans, predicate,(QueryComparator)null);
     }
     
-    public final ObjectSet query(Predicate predicate,QueryComparator comparator){
-        return query(null, predicate, comparator);
-    }
-
     public final ObjectSet query(Transaction trans, Predicate predicate,QueryComparator comparator){
         synchronized (_lock) {
             trans = checkTransaction(trans);
@@ -1330,16 +1248,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-	public Query query() {
-		synchronized (_lock) {
-			return query((Transaction)null);
-    	}
-    }
-    
-    public final ObjectSet query(Class clazz) {
-        return get(clazz);
-    }
-    
     public final ObjectSet query(Transaction trans, Class clazz) {
         return get(trans, clazz);
     }
@@ -1386,7 +1294,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids);
 
     private void reboot() {
-        commit();
+        commit(null);
         close();
         open();
     }
@@ -1395,10 +1303,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return _handlers._reflector;
     }
     
-    public final void refresh(Object obj, int depth) {
-        refresh(null, obj, depth);
-    }
-
     public final void refresh(Transaction trans, Object obj, int depth) {
         synchronized (_lock) {
             _refreshInsteadOfActivate = true;
@@ -1451,7 +1355,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		Iterator4 i = config.rename().iterator();
 		while (i.moveNext()) {
 			Rename ren = (Rename) i.current();
-			if (get(ren).size() == 0) {
+			if (get(systemTransaction(), ren).size() == 0) {
 				boolean renamed = false;
 				boolean isField = ren.rClass.length() > 0;
 				ClassMetadata yapClass = _classCollection
@@ -1478,14 +1382,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 					// delete all that rename from the new name
 					// to allow future backswitching
-					ObjectSet backren = get(new Rename(ren.rClass, null,
+					ObjectSet backren = get(systemTransaction(), new Rename(ren.rClass, null,
 							ren.rFrom));
 					while (backren.hasNext()) {
-						delete(backren.next());
+						delete(systemTransaction(), backren.next());
 					}
 
 					// store the rename, so we only do it once
-					set(ren);
+					set(systemTransaction(), ren);
 				}
 			}
 		}
@@ -1497,7 +1401,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      * @deprecated see {@link ReplicationProcess}
      */
     public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
-        return new ReplicationImpl(_this, peerB,conflictHandler);
+        return new ReplicationImpl(_this, (ObjectContainerBase)peerB,conflictHandler);
     }
     
     /**
@@ -1534,10 +1438,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void reserve(int byteCount);
     
-    public final void rollback() {
-        rollback(null);
-    }
-    
     public final void rollback(Transaction trans) {
         synchronized (_lock) {
         	trans = checkTransaction(trans);
@@ -1555,21 +1455,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         throw new NotSupportedException();
     }
 
-    public void set(Object obj) throws DatabaseClosedException,
-			DatabaseReadOnlyException {
-        set(obj, Const4.UNSPECIFIED);
-    }
-    
     public final void set(Transaction trans, Object obj)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
     	set(trans, obj, Const4.UNSPECIFIED);
     }    
     
-    public final void set(Object obj, int depth)
-			throws DatabaseClosedException, DatabaseReadOnlyException {
-        set(null, obj, depth);
-    }
-
 	public final void set(Transaction trans, Object obj, int depth)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
 		synchronized (_lock) {
@@ -1830,7 +1720,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                     // Special handling to deactivate Top-Level unknown objects only.
                     ClassMetadata yc = classMetadataForReflectClass(reflector().forObject(obj));
                     if (yc != null) {
-                        yc.deactivate(_transaction, obj, depth);
+                        yc.deactivate(trans, obj, depth);
                     }
                 }
             }
@@ -1881,15 +1771,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         _transaction = null;
     }
     
-    public final StoredClass storedClass(Object clazz) {
-        synchronized (_lock) {
-            return storedClass(checkTransaction(), clazz);
-        }
-    }
-
     public final StoredClass storedClass(Transaction trans, Object clazz) {
         synchronized (_lock) {
-            checkClosed();
+            trans = checkTransaction(trans);
             ReflectClass claxx = ReflectorUtils.reflectClassFor(reflector(), clazz);
             if (claxx == null) {
             	return null;
@@ -1902,10 +1786,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public StoredClass[] storedClasses() {
-        return storedClasses(null);
-    }
-
     public StoredClass[] storedClasses(Transaction trans) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
@@ -2028,8 +1908,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes);
 
     // cheat emulating '(YapStream)this'
-    private static ObjectContainerBase cast(PartialObjectContainer obj) {
-    	return (ObjectContainerBase)obj;
+    private static ExternalObjectContainer cast(PartialObjectContainer obj) {
+    	return (ExternalObjectContainer)obj;
     }
     
     public Callbacks callbacks() {

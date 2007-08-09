@@ -25,6 +25,10 @@ public class TransactionsPerSecond {
     private static final long TOTAL_COUNT = 5000;
     
     public void run(){
+        
+        // This switch will make a big difference:
+        Db4o.configure().flushFileBuffers(false);
+        
         new File(FILE).delete();
         
         ObjectContainer objectContainer = Db4o.openFile(FILE).ext();

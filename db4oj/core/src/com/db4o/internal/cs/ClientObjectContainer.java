@@ -19,7 +19,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class ClientObjectContainer extends ObjectContainerBase implements ExtClient, BlobTransport, ClientMessageDispatcher {
+public class ClientObjectContainer extends ExternalObjectContainer implements ExtClient, BlobTransport, ClientMessageDispatcher {
 	
 	final Object blobLock = new Object();
 

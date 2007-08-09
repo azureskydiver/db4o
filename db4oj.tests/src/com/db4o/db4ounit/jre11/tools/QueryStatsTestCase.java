@@ -38,7 +38,7 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 	
 	protected void db4oSetupAfterStore() throws Exception {
 		_stats = new QueryStats();		
-		_stats.connect(stream());
+		_stats.connect(db());
 	}
 
 	protected void db4oTearDownBeforeClean() throws Exception {

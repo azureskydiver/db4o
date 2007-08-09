@@ -1820,7 +1820,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	                // This may produce unwanted side effects if the static field object
 	                // was modified in the current session. TODO:Add documentation case.
 	                
-	                stream.refresh(newValue, Integer.MAX_VALUE);
+	                stream.refresh(trans, newValue, Integer.MAX_VALUE);
 	                
 	                existingField.value = newValue;
 	            }
@@ -1924,7 +1924,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             if(obj instanceof Integer){
                 i_lastID = ((Integer)obj).intValue();
             }else{
-                i_lastID = (int)_container.getID(obj);
+                
+                // FIXME: The getID method wants a transaction here, but
+                //        we don't have one available. What to do?
+                
+                // This could be an issue for MTOC, but it does not show
+                // up in test cases.
+                
+                i_lastID = _container.getID(null, obj);
+                
             }
             i_compareTo = reflector().forObject(obj);
         } else {

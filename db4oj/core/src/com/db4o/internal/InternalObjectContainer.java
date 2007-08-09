@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.ext.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.query.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -23,5 +24,9 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     public void onCommittedListener();
     
     public NativeQueryHandler getNativeQueryHandler();
+
+    public ClassMetadata classMetadataForReflectClass(ReflectClass reflectClass);
+    
+    public HandlerRegistry handlers();
 
 }

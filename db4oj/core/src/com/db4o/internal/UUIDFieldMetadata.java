@@ -174,7 +174,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 			linkToDatabase = true;
 		}
         if(linkToDatabase){
-            Db4oDatabase db = stream.identity();
+            Db4oDatabase db = ((InternalObjectContainer)stream).identity();
             if(db == null){
                 // can happen on early classes like Metaxxx, no problem
                 attr = null;

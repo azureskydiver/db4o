@@ -36,7 +36,7 @@ public class ReplicationImpl implements ReplicationProcess {
 
     private static final int CHECK_CONFLICT = -99;
     
-	public ReplicationImpl(ObjectContainerBase peerA, ObjectContainer peerB,
+	public ReplicationImpl(ObjectContainerBase peerA, ObjectContainerBase peerB,
 			ReplicationConflictHandler conflictHandler) {
         
         if(conflictHandler == null){
@@ -45,13 +45,13 @@ public class ReplicationImpl implements ReplicationProcess {
             throw new NullPointerException();
         }
         
-        synchronized (peerA.ext().lock()) {
-			synchronized (peerB.ext().lock()) {
+        synchronized (peerA.lock()) {
+			synchronized (peerB.lock()) {
 
 				_peerA = peerA;
 				_transA = peerA.checkTransaction();
 
-				_peerB = (ObjectContainerBase) peerB;
+				_peerB = peerB;
 				_transB = _peerB.checkTransaction(null);
 
 				MigrationConnection mgc = new MigrationConnection(_peerA, _peerB);
@@ -96,8 +96,8 @@ public class ReplicationImpl implements ReplicationProcess {
         synchronized (_peerA.lock()) {
             synchronized (_peerB.lock()) {
         
-        		_peerA.commit();
-        		_peerB.commit();
+        		_peerA.commit(_transA);
+        		_peerB.commit(_transB);
         
                 endReplication();
         
@@ -155,11 +155,11 @@ public class ReplicationImpl implements ReplicationProcess {
 	}
     
 	public ObjectContainer peerA() {
-		return _peerA;
+		return (ObjectContainer)_peerA;
 	}
 
 	public ObjectContainer peerB() {
-		return _peerB;
+		return (ObjectContainer)_peerB;
 	}
     
 	public void replicate(Object obj) {
@@ -171,20 +171,22 @@ public class ReplicationImpl implements ReplicationProcess {
 		// anyway, for members of the replicated object, especially the
 		// prevention of endless loops in case of circular references.
 
-		ObjectContainerBase stream = _peerB;
+		ObjectContainerBase container = _peerB;
+		Transaction trans = _transB;
 
-		if (_peerB.isStored(obj)) {
-			if (!_peerA.isStored(obj)) {
-				stream = _peerA;
+		if (_peerB.isStored(_transB, obj)) {
+			if (!_peerA.isStored(_transA, obj)) {
+				container = _peerA;
+				trans = _transA;
 			}
 		}
 
-		stream.set(obj);
+		container.set(trans, obj);
 	}
 
 	public void rollback() {
-		_peerA.rollback();
-		_peerB.rollback();
+		_peerA.rollback(_transA);
+		_peerB.rollback(_transB);
 		endReplication();
 	}
 
@@ -333,8 +335,8 @@ public class ReplicationImpl implements ReplicationProcess {
 				return idInCaller(caller, referenceA, referenceB);
 			}
 			
-			_peerA.refresh(objectA, 1);
-			_peerB.refresh(objectB, 1);
+			_peerA.refresh(_transA, objectA, 1);
+			_peerB.refresh(_transB, objectB, 1);
 			
 			if (attA.i_version <= _record._version
 					&& attB.i_version <= _record._version) {

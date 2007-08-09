@@ -112,7 +112,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
 	}
 	
 	public Db4oDatabase identity() {
-	    return _parent.identity();
+	    return ((ExternalObjectContainer) _parent).identity();
 	}
 	
 	public boolean maintainsIndices(){

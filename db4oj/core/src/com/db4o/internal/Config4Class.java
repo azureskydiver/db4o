@@ -182,8 +182,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     Object instantiate(ObjectContainerBase a_stream, Object a_toTranslate) {
-        return ((ObjectConstructor) _config.get(TRANSLATOR)).onInstantiate(a_stream,
-            a_toTranslate);
+        return ((ObjectConstructor) _config.get(TRANSLATOR)).onInstantiate((InternalObjectContainer)a_stream, a_toTranslate);
     }
 
     boolean instantiates() {

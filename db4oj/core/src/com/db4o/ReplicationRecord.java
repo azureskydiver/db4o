@@ -31,14 +31,14 @@ public class ReplicationRecord implements Internal4{
         _version = version;
     }
     
-    public void store(ObjectContainerBase stream){
-        stream.showInternalClasses(true);
+    public void store(ObjectContainerBase container){
+        container.showInternalClasses(true);
         try {
-	        Transaction ta = stream.checkTransaction();
-	        stream.setAfterReplication(ta, this, 1, false);
-	        stream.commit();
+	        Transaction trans = container.checkTransaction();
+	        container.setAfterReplication(trans, this, 1, false);
+	        container.commit(trans);
         } finally {
-        	stream.showInternalClasses(false);
+        	container.showInternalClasses(false);
         }
     }
     
@@ -47,8 +47,8 @@ public class ReplicationRecord implements Internal4{
         ObjectContainerBase peerA = transA.container();
         ObjectContainerBase peerB = transB.container();
         
-        Db4oDatabase dbA = peerA.identity();
-        Db4oDatabase dbB = peerB.identity();
+        Db4oDatabase dbA = ((InternalObjectContainer)peerA).identity();
+        Db4oDatabase dbB = ((InternalObjectContainer)peerB).identity();
         
         dbB.bind(transA);
         dbA.bind(transB);
@@ -64,8 +64,8 @@ public class ReplicationRecord implements Internal4{
             older = dbB;
         }
         
-        ReplicationRecord rrA = queryForReplicationRecord(peerA, younger, older);
-        ReplicationRecord rrB = queryForReplicationRecord(peerB, younger, older);
+        ReplicationRecord rrA = queryForReplicationRecord(peerA, transA, younger, older);
+        ReplicationRecord rrB = queryForReplicationRecord(peerB, transB, younger, older);
         if(rrA == null){
             if(rrB == null){
                 return new ReplicationRecord(younger, older);
@@ -92,10 +92,10 @@ public class ReplicationRecord implements Internal4{
         return rrA;
     }
     
-    public static ReplicationRecord queryForReplicationRecord(ObjectContainerBase stream, Db4oDatabase younger, Db4oDatabase older) {
-        stream.showInternalClasses(true);
+    public static ReplicationRecord queryForReplicationRecord(ObjectContainerBase container, Transaction trans, Db4oDatabase younger, Db4oDatabase older) {
+        container.showInternalClasses(true);
         try {
-	        Query q = stream.query();
+	        Query q = container.query(trans);
 	        q.constrain(Const4.CLASS_REPLICATIONRECORD);
 	        q.descend("_youngerPeer").constrain(younger).identity();
 	        q.descend("_olderPeer").constrain(older).identity();
@@ -104,7 +104,7 @@ public class ReplicationRecord implements Internal4{
 	        	? (ReplicationRecord)objectSet.next()
 	        	: null;
         } finally {
-        	stream.showInternalClasses(false);
+        	container.showInternalClasses(false);
         }
     }
 }

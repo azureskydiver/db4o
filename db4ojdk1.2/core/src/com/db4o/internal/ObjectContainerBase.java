@@ -12,13 +12,13 @@ import com.db4o.query.*;
  * @exclude
  * @sharpen.partial
  */
-public abstract class ObjectContainerBase extends PartialObjectContainer implements InternalObjectContainer {
+public abstract class ObjectContainerBase extends PartialObjectContainer {
 	
 	public ObjectContainerBase(Configuration config,ObjectContainerBase a_parent) {
 		super(config,a_parent);
 	}
 	
 	public ObjectSet query(Predicate predicate,Comparator comparator) {
-		return query(predicate,new JdkComparatorWrapper(comparator));
+		return query(null, predicate,new JdkComparatorWrapper(comparator));
 	}
 }

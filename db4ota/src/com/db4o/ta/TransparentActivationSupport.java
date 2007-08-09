@@ -14,7 +14,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 		// Nothing to do...
 	}
 
-	public void apply(final ObjectContainerBase container) {
+	public void apply(final InternalObjectContainer container) {
 		container.configure().activationDepth(0);
 
 		EventRegistry factory = EventRegistryFactory
@@ -46,9 +46,10 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	}
 
 	private final class TADiagnosticProcessor {
-		private final ObjectContainerBase _container;
+	    
+		private final InternalObjectContainer _container;
 
-		public TADiagnosticProcessor(ObjectContainerBase container) {
+		public TADiagnosticProcessor(InternalObjectContainer container) {
 			_container = container;
 		}
 

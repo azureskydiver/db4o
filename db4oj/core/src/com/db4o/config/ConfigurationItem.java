@@ -23,6 +23,6 @@ public interface ConfigurationItem {
 	 * 
 	 * @param container the ObjectContainer to configure
 	 */
-	public void apply(ObjectContainerBase container);
+	public void apply(InternalObjectContainer container);
 	
 }

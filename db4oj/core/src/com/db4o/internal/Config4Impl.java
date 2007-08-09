@@ -179,7 +179,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     	return (Hashtable4)_config.get(CONFIGURATION_ITEMS);
     }
     
-	public void applyConfigurationItems(final ObjectContainerBase container) {
+	public void applyConfigurationItems(final InternalObjectContainer container) {
 		Hashtable4 items = configurationItems();
 		if(items == null){
 			return;

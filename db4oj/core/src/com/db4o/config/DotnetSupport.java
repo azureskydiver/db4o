@@ -4,7 +4,7 @@ package com.db4o.config;
 import com.db4o.StaticClass;
 import com.db4o.StaticField;
 import com.db4o.ext.Db4oDatabase;
-import com.db4o.internal.ObjectContainerBase;
+import com.db4o.internal.*;
 
 /**
  * Adds the basic configuration settings required to access a
@@ -33,6 +33,6 @@ public class DotnetSupport implements ConfigurationItem {
 						StaticClass.class.getName()));
 	}
 	
-	public void apply(ObjectContainerBase container) {
+	public void apply(InternalObjectContainer container) {
 	}
 }

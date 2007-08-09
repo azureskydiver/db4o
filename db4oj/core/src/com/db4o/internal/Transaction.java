@@ -356,7 +356,7 @@ public abstract class Transaction {
         if(_objectContainer != null){
             return _objectContainer;
         }
-        return _container;
+        return (ObjectContainer)_container;
     }
 
 }

@@ -22,16 +22,16 @@ final class TranslatedFieldMetadata extends FieldMetadata
         return false;
     }
 
-	void deactivate(Transaction a_trans, Object a_onObject, int a_depth){
-		if(a_depth > 0){
-			cascadeActivation(a_trans, a_onObject, a_depth, false);
+	void deactivate(Transaction trans, Object onObject, int depth){
+		if(depth > 0){
+			cascadeActivation(trans, onObject, depth, false);
 		}
-		setOn(a_trans.container(), a_onObject, null);
+		setOn(trans, onObject, null);
 	}
 
 	public Object getOn(Transaction a_trans, Object a_OnObject) {
 		try {
-			return i_translator.onStore(a_trans.container(), a_OnObject);
+			return i_translator.onStore(a_trans.objectContainer(), a_OnObject);
 		} catch(ReflectException e) {
 			throw e;
 		} catch (RuntimeException e) {
@@ -52,16 +52,16 @@ final class TranslatedFieldMetadata extends FieldMetadata
 		
 		a_bytes.getStream().activate(a_bytes.getTransaction(), toSet, a_bytes.getInstantiationDepth());
 
-		setOn(a_bytes.getStream(), a_onObject, toSet);
+		setOn(a_bytes.getTransaction(), a_onObject, toSet);
 	}
 	
 	void refresh() {
 	    // do nothing
 	}
 	
-	private void setOn(ObjectContainerBase a_stream, Object a_onObject, Object toSet) {
+	private void setOn(Transaction trans, Object a_onObject, Object toSet) {
 		try {
-			i_translator.onActivate(a_stream, a_onObject, toSet);
+			i_translator.onActivate(trans.objectContainer(), a_onObject, toSet);
 		} catch (RuntimeException e) {
 			throw new ReflectException(e);
 		}
