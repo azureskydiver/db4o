@@ -1808,7 +1808,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		if (existingField.value != null
 	        && newValue != null
 	        && existingField.value.getClass() == newValue.getClass()) {
-	        long id = stream.getID(trans, existingField.value);
+	        int id = stream.getID(trans, existingField.value);
 	        if (id > 0) {
 	            if (existingField.value != newValue) {
 	                
@@ -1920,29 +1920,28 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private ReflectClass i_compareTo;
     
     public Comparable4 prepareComparison(Object obj) {
-        if (obj != null) {
-            if(obj instanceof Integer){
-                i_lastID = ((Integer)obj).intValue();
-            }else{
-                
-                // FIXME: The getID method wants a transaction here, but
-                //        we don't have one available. What to do?
-                
-                // This could be an issue for MTOC, but it does not show
-                // up in test cases.
-                
-                i_lastID = _container.getID(null, obj);
-                
-            }
-            i_compareTo = reflector().forObject(obj);
-        } else {
+        if(obj == null){
             i_lastID = 0;
             i_compareTo = null;
+            return this;
         }
+        if(obj instanceof Integer){
+            i_lastID = ((Integer)obj).intValue();
+        }else if (obj instanceof TransactionContext){
+            TransactionContext tc = (TransactionContext)obj;
+            obj = tc._object;
+            i_lastID = _container.getID(tc._transaction, obj);
+        }else{
+            throw new IllegalComparisonException();
+        }
+        i_compareTo = reflector().forObject(obj);
         return this;
     }
     
     public int compareTo(Object obj) {
+        if(obj instanceof TransactionContext){
+            obj = ((TransactionContext)obj)._object;
+        }
         if(obj instanceof Integer){
             return ((Integer)obj).intValue() - i_lastID;
         }
@@ -2022,6 +2021,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public ReflectClass classSubstitute() {
         return _classHandler.classSubstitute();
+    }
+
+    public Object wrapWithTransactionContext(Transaction transaction, Object value) {
+        if(value instanceof Integer){
+            return value;
+        }
+        return new TransactionContext(transaction, value);
     }
 
 }

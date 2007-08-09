@@ -221,4 +221,8 @@ public class PrimitiveFieldHandler extends ClassMetadata{
             i_handler.defrag(mf, readers, false);
         }
     }
+    
+    public Object wrapWithTransactionContext(Transaction transaction, Object value) {
+        return value;
+    }
 }

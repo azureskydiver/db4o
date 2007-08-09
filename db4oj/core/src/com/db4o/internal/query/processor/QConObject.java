@@ -160,7 +160,8 @@ public class QConObject extends QCon {
 //                    }
                     i_selfComparison = true;
                 }
-                i_comparator = i_yapClass.prepareComparison(i_object);
+                Object transactionalObject = i_yapClass.wrapWithTransactionContext(transaction(), i_object);
+                i_comparator = i_yapClass.prepareComparison(transactionalObject);
             }
         }
         super.evaluateSelf();
