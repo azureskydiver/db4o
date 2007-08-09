@@ -62,22 +62,9 @@
 	</target>
 
 	<target name="clean" description="Delete all generated files">
-		<delete failonerror="false" includeemptydirs="true" description="Removing all generated files">
-			<fileset dir="${dir.sharpen}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.dist}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.j.tutorial.out.java}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.j.tutorial.out.net}">
-				<include name="**/*" />
-			</fileset>
-			<fileset dir="${dir.j.tutorial.out.mono}">
-				<include name="**/*" />
-			</fileset>
+        <delete dir="${dir.dist}" />
+        <delete dir="${dir.j.tutorial.out}" />
+		<delete>
 			<fileset dir="${dir.build}">
 				<include name="*.yap" />
 				<include name="*.db4o" />
