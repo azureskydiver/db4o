@@ -22,6 +22,9 @@ public class MessagingTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc, int seq) {
+	    if(isMTOC()){
+	        return;
+	    }
 		clientServerFixture().server().ext().configure().clientServer()
 				.setMessageRecipient(_recipient);
 		MessageSender sender = oc.configure().clientServer().getMessageSender();
@@ -29,6 +32,9 @@ public class MessagingTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void check(ExtObjectContainer oc) throws Exception {
+       if(isMTOC()){
+            return;
+        }
 		Thread.sleep(1000);
 		_recipient.check();
 	}
