@@ -18,7 +18,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public abstract class LocalObjectContainer extends ObjectContainerBase {
+public abstract class LocalObjectContainer extends ExternalObjectContainer implements InternalObjectContainer{
     
     private static final int DEFAULT_FREESPACE_ID = 0;
 
@@ -40,8 +40,8 @@ public abstract class LocalObjectContainer extends ObjectContainerBase {
     
     private SystemData          _systemData;
         
-    LocalObjectContainer(Configuration config,ObjectContainerBase a_parent) {
-        super(config,a_parent);
+    LocalObjectContainer(Configuration config,ObjectContainerBase parentContainer) {
+        super(config, parentContainer);
     }
     
     public Transaction newTransaction(Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {

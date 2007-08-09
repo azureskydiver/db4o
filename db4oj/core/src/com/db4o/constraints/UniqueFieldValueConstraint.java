@@ -35,7 +35,7 @@ public class UniqueFieldValueConstraint implements ConfigurationItem {
 	/**
 	 * internal method, public for implementation reasons.
 	 */
-	public void apply(final ObjectContainerBase objectContainer) {
+	public void apply(final InternalObjectContainer objectContainer) {
 		
 		EventRegistryFactory.forObjectContainer(objectContainer).committing().addListener(
 				new EventListener4() {

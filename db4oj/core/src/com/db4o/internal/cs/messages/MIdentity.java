@@ -10,7 +10,7 @@ import com.db4o.internal.*;
 public class MIdentity extends Msg implements ServerSideMessage {
 	public boolean processAtServer() {
 		ObjectContainerBase stream = stream();
-		respondInt((int) stream.getID(stream.identity()));
+		respondInt(stream.getID(transaction(), ((InternalObjectContainer)stream).identity()));
 		return true;
 	}
 }

@@ -389,5 +389,13 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     private static ObjectContainer cast(PartialEmbeddedClientObjectContainer container){
         return (ObjectContainer) container;
     }
+    
+    public ClassMetadata classMetadataForReflectClass(ReflectClass reflectClass) {
+        return _server.classMetadataForReflectClass(reflectClass);
+    }
+    
+    public HandlerRegistry handlers(){
+        return _server.handlers();
+    }
 
 }

@@ -9,7 +9,7 @@ public final class MUserMessage extends MsgObject implements ServerSideMessage {
 	public final boolean processAtServer() {
 		if (messageRecipient() != null) {
 			unmarshall();
-			messageRecipient().processMessage(stream(), readObjectFromPayLoad());
+			messageRecipient().processMessage(transaction().objectContainer(), readObjectFromPayLoad());
 		}
 		return true;
 	}

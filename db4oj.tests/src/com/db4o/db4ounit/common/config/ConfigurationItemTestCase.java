@@ -7,7 +7,7 @@ import com.db4o.config.Configuration;
 import com.db4o.config.ConfigurationItem;
 import com.db4o.foundation.io.File4;
 import com.db4o.foundation.io.Path4;
-import com.db4o.internal.ObjectContainerBase;
+import com.db4o.internal.*;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;
@@ -16,10 +16,10 @@ public class ConfigurationItemTestCase implements TestCase {
 	
 	static final class ConfigurationItemStub implements ConfigurationItem {
 
-		private ObjectContainerBase _container;
+		private InternalObjectContainer _container;
 		private Configuration _configuration;
 
-		public void apply(ObjectContainerBase container) {
+		public void apply(InternalObjectContainer container) {
 			Assert.isNotNull(container);
 			_container = container;
 		}
@@ -33,7 +33,7 @@ public class ConfigurationItemTestCase implements TestCase {
 			return _configuration;
 		}
 		
-		public ObjectContainerBase appliedContainer() {
+		public InternalObjectContainer appliedContainer() {
 			return _container;
 		}
 		

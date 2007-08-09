@@ -40,7 +40,7 @@ public class BTreeSearchTestCase extends AbstractDb4oTestCase implements
 
 		int id = btree.getID();
 
-		stream().commit();
+		stream().commit(trans());
 
 		reopen();
 

@@ -14,7 +14,7 @@ import com.db4o.ta.tests.collections.internal.*;
  */
 public class PagedListSupport implements ConfigurationItem {
 
-	public void apply(ObjectContainerBase db) {
+	public void apply(InternalObjectContainer db) {
 		eventRegistry(db).updating().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				CancellableObjectEventArgs cancellable = (CancellableObjectEventArgs) args;

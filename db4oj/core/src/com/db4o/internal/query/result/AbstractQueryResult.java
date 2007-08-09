@@ -49,7 +49,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 
 	public ExtObjectContainer objectContainer() {
-	    return stream();
+	    return transaction().objectContainer().ext();
 	}
 	
     public Iterator4 iterator() {

@@ -28,8 +28,8 @@ public class MWriteBlob extends MsgBlob implements ServerSideMessage {
 
                     // make sure to load the filename to i_blob
                     // to allow client databasefile switching
-                    stream.deactivate(_blob, Integer.MAX_VALUE);
-                    stream.activate(_blob, Integer.MAX_VALUE);
+                    stream.deactivate(transaction(), _blob, Integer.MAX_VALUE);
+                    stream.activate(transaction(), _blob, Integer.MAX_VALUE);
 
                     this._blob.setStatus(Status.COMPLETED);
                 } else {

@@ -99,7 +99,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 			}
 
 			_replicationRecord = ReplicationRecord.queryForReplicationRecord(
-					_stream, younger, older);
+					_stream, trans, younger, older);
 			if (_replicationRecord == null) {
 				_replicationRecord = new ReplicationRecord(younger, older);
 				_replicationRecord.store(_stream);

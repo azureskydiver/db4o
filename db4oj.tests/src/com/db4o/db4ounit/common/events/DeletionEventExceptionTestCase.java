@@ -6,7 +6,9 @@ import com.db4o.config.Configuration;
 import com.db4o.events.Event4;
 import com.db4o.events.EventArgs;
 import com.db4o.events.EventListener4;
+import com.db4o.internal.*;
 
+import db4ounit.*;
 import db4ounit.extensions.fixtures.OptOutSolo;
 
 public class DeletionEventExceptionTestCase extends EventsTestCaseBase implements OptOutSolo {
@@ -19,15 +21,22 @@ public class DeletionEventExceptionTestCase extends EventsTestCaseBase implement
 		config.activationDepth(1);
 	}
 	
-	public void testDeletionEvents() {	
+	public void testDeletionEvents() {
 		serverEventRegistry().deleting().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				throw new RuntimeException();
 			}
 		});
-		
-		db().delete(retrieveOnlyInstance(Item.class));
-		db().commit();
+		final Object item = retrieveOnlyInstance(Item.class);
+	    if(isMTOC()){
+	        Assert.expect( ReflectException.class, new CodeBlock() {
+                public void run() throws Throwable {
+                    db().delete(item);
+                }
+            });
+	    }else{
+	        db().delete(item);
+	    }
+        db().commit();
 	}
-	
 }

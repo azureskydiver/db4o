@@ -54,7 +54,7 @@ public class P1Object implements Db4oTypeImpl{
 	        
 	        i_yapObject = i_trans.referenceForObject(this);
 	        if(i_yapObject == null){
-	            stream().set(this);
+	            stream().set(i_trans, this);
 	            i_yapObject = i_trans.referenceForObject(this);
 	        }
 	    }
@@ -131,7 +131,7 @@ public class P1Object implements Db4oTypeImpl{
             
     		if(id > 0) {
                 // replication has taken care, we need that object
-    			return toStream.getByID(id);
+    			return toStream.getByID(toTrans, id);
     		}
             
             if(mgc != null){

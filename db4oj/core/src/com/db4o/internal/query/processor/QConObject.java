@@ -310,22 +310,22 @@ public class QConObject extends QCon {
         return candidate;
     }
 
-    void unmarshall(Transaction a_trans) {
+    void unmarshall(Transaction trans) {
         if (i_trans == null) {
-            super.unmarshall(a_trans);
+            super.unmarshall(trans);
 
             if (i_object == null) {
                 i_comparator = Null.INSTANCE;
             }
             if (i_yapClassID != 0) {
-                i_yapClass = a_trans.container().classMetadataForId(i_yapClassID);
+                i_yapClass = trans.container().classMetadataForId(i_yapClassID);
             }
             if (i_field != null) {
-                i_field.unmarshall(a_trans);
+                i_field.unmarshall(trans);
             }
             
             if(i_objectID > 0){
-                Object obj = a_trans.container().getByID(i_objectID);
+                Object obj = trans.container().getByID(trans, i_objectID);
                 if(obj != null){
                     i_object = obj;
                 }
