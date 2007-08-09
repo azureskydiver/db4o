@@ -660,6 +660,24 @@
 		
 	</target>
 	
+	<target name="update-admin-projects">
+		<property name="dir.n.admin" location="${dir.n.v6}/Db4oAdmin" />
+		
+		<updatecsharpproject projectfile="${dir.n.admin}/Db4oAdmin/Db4oAdmin-2005.csproj">
+			<sources dir="${dir.n.admin}/Db4oAdmin">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		
+		<!--
+		<updatecsharpproject projectfile="${dir.n.admin}/Db4oAdmin.Tests/Db4oAdmin.Tests-2005.csproj">
+			<sources dir="${dir.n.admin}/Db4oAdmin.Tests">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		-->
+	</target>
+	
 	<target name="prepare-ta-conversion-workspace">	
 	
 		<reset-dir dir="${dir.sharpen.ta}" />
@@ -1045,30 +1063,33 @@
 	
 	<target
 		name="update-cecil"
-		description="updates Mono.Cecil and Cecil.FlowAnalysis from mono's repository">
+		description="updates Mono.Cecil and Cecil.FlowAnalysis from mono's repository"
+		depends="init">
 	
-		<property name="nant.exe" location="C:/dotnet/nant-0.85/bin/NAnt.exe" />
+		<property name="nant.exe" location="nant" />
+		<property name="svn.exe" location="svn" />
 	
 		<property name="dir.cecil" location="${dir.dist}/cecil" />
 		<property name="mono.svn" value="svn://anonsvn.mono-project.com/source/trunk" />
 	
 		<delete dir="${dir.cecil}" />
 		<mkdir dir="${dir.cecil}" />
-		<exec executable="svn" dir="${dir.cecil}">
+		<exec executable="${svn.exe}" dir="${dir.cecil}">
 			<arg value="export" />
 			<arg value="${mono.svn}/mcs/class/mono.snk" />
 		</exec>
 	
-		<exec executable="svn" dir="${dir.cecil}">
+		<exec executable="${svn.exe}" dir="${dir.cecil}">
 			<arg value="export" />
 			<arg value="${mono.svn}/mcs/class/Mono.Cecil" />
 		</exec>
 		
-		<exec executable="svn" dir="${dir.cecil}">
+		<exec executable="${svn.exe}" dir="${dir.cecil}">
 			<arg value="export" />
 			<arg value="${mono.svn}/cecil/flowanalysis" />
 		</exec>
 	
+		<!--
 		<exec executable="${nant.exe}" dir="${dir.cecil}/Mono.Cecil">
 			<arg value="-D:compactframework.v1.dir=${dir.compactframework}/v1.0" />
 			<arg value="-t:net-1.1" />
@@ -1082,6 +1103,22 @@
 			<arg value="-D:keyfile=../mono.snk" />
 			<arg value="-t:net-1.1" />
 			<arg value="compactframework" />
+		</exec>
+		-->
+		
+		<exec executable="${nant.exe}" dir="${dir.cecil}/Mono.Cecil">
+			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0" />
+			<arg value="-t:netcf-2.0" />
+			<arg value="clean" />
+			<arg value="compactframework2" />
+		</exec>
+	
+		<exec executable="${nant.exe}" dir="${dir.cecil}/flowanalysis">
+			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0" />
+			<arg value="-D:Mono.Cecil.dll=../Mono.Cecil/bin/Mono.Cecil.dll" />
+			<arg value="-D:keyfile=../mono.snk" />
+			<arg value="-t:netcf-2.0" />
+			<arg value="compactframework2" />
 		</exec>
 
 	</target>
