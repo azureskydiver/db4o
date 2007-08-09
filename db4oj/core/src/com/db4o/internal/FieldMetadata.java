@@ -946,6 +946,9 @@ public class FieldMetadata implements StoredField {
 	
 	public BTreeRange search(Transaction transaction, Object value) {
 		assertHasIndex();
+		if(i_handler instanceof ClassMetadata){
+		    value = ((ClassMetadata)i_handler).wrapWithTransactionContext(transaction, value);
+		}
 		BTreeNodeSearchResult lowerBound = searchLowerBound(transaction, value);
 	    BTreeNodeSearchResult upperBound = searchUpperBound(transaction, value);	    
 		return lowerBound.createIncludingRange(upperBound);

@@ -299,11 +299,13 @@ public abstract class QQueryBase implements Unversioned {
     }
 
     public ObjectSet execute() {
-		Callbacks callbacks = stream().callbacks();
-		callbacks.queryOnStarted(_trans, cast(this));
-	    QueryResult qresult = getQueryResult();
-	    callbacks.queryOnFinished(_trans, cast(this));
-		return new ObjectSetFacade(qresult);
+        synchronized (streamLock()) {
+    		Callbacks callbacks = stream().callbacks();
+    		callbacks.queryOnStarted(_trans, cast(this));
+    	    QueryResult qresult = getQueryResult();
+    	    callbacks.queryOnFinished(_trans, cast(this));
+    		return new ObjectSetFacade(qresult);
+        }
 	}
 
 	public QueryResult getQueryResult() {
