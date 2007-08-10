@@ -19,7 +19,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
     
 	private transient Db4oFixture _fixture;
 	
-	private transient static final int DEFAULT_CONCURRENCY_THREAD_COUNT = 1;
+	private transient static final int DEFAULT_CONCURRENCY_THREAD_COUNT = 10;
 	
 	private transient int _threadCount = DEFAULT_CONCURRENCY_THREAD_COUNT;
 	
