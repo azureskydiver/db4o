@@ -70,13 +70,13 @@ public class Buffer implements SlotBuffer {
 		if (Deploy.debug) {
 			if (Deploy.brackets) {
 				if (readByte() != Const4.YAPBEGIN) {
-					throw new RuntimeException("YapBytes.readBegin() YAPBEGIN expected.");
+					throw new RuntimeException("Buffer.readBegin() YAPBEGIN expected.");
 				}
 			}
 			if (Deploy.identifiers) {
 				byte readB = readByte();
 				if (readB != a_identifier) {
-					throw new RuntimeException("YapBytes.readBegin() wrong identifier: "+(char)readB);
+					throw new RuntimeException("Buffer.readBegin() wrong identifier: "+(char)readB);
 				}
 			}
 		}
