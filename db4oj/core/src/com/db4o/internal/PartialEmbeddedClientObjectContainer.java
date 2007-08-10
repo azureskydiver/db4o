@@ -393,7 +393,11 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public ClassMetadata classMetadataForReflectClass(ReflectClass reflectClass) {
         return _server.classMetadataForReflectClass(reflectClass);
     }
-    
+
+    public ClassMetadata classMetadataForName(String name) {
+        return _server.classMetadataForName(name);
+    }
+
     public HandlerRegistry handlers(){
         return _server.handlers();
     }

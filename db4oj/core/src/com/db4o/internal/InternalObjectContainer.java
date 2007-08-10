@@ -26,7 +26,9 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     public NativeQueryHandler getNativeQueryHandler();
 
     public ClassMetadata classMetadataForReflectClass(ReflectClass reflectClass);
-    
+
+    public ClassMetadata classMetadataForName(String name);
+
     public HandlerRegistry handlers();
 
 }
