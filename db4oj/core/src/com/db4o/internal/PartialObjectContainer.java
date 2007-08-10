@@ -924,6 +924,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return _classCollection.classMetadataIdForName(name);
     }
 
+    public ClassMetadata classMetadataForName(String name) {
+    	return classMetadataForId(classMetadataIdForName(name));
+    }
+    
     public ClassMetadata classMetadataForId(int id) {
     	if(DTrace.enabled){
     		DTrace.YAPCLASS_BY_ID.log(id);
