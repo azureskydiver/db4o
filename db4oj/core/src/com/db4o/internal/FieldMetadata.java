@@ -946,13 +946,18 @@ public class FieldMetadata implements StoredField {
 	
 	public BTreeRange search(Transaction transaction, Object value) {
 		assertHasIndex();
-		if(i_handler instanceof ClassMetadata){
-		    value = ((ClassMetadata)i_handler).wrapWithTransactionContext(transaction, value);
-		}
-		BTreeNodeSearchResult lowerBound = searchLowerBound(transaction, value);
-	    BTreeNodeSearchResult upperBound = searchUpperBound(transaction, value);	    
+		Object transActionalValue = wrapWithTransactionContext(transaction, value);
+		BTreeNodeSearchResult lowerBound = searchLowerBound(transaction, transActionalValue);
+	    BTreeNodeSearchResult upperBound = searchUpperBound(transaction, transActionalValue);	    
 		return lowerBound.createIncludingRange(upperBound);
 	}
+
+    private Object wrapWithTransactionContext(Transaction transaction, Object value) {
+        if(i_handler instanceof ClassMetadata){
+		    value = ((ClassMetadata)i_handler).wrapWithTransactionContext(transaction, value);
+		}
+        return value;
+    }
 	
 	private BTreeNodeSearchResult searchUpperBound(Transaction transaction, final Object value) {
 		return searchBound(transaction, Integer.MAX_VALUE, value);
