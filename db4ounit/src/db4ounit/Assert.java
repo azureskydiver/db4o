@@ -159,6 +159,11 @@ public final class Assert {
 		if (actual >= expected) return;
 		fail(expected, actual, "greater than or equal to ");
 	}
+	
+    public static void isSmaller(long expected, long actual) {
+        if (actual < expected) return;
+        fail(failureMessage(new Long(expected), new Long(actual), "smaller than ", null));
+    }
 
 	private static void fail(long expected, long actual, final String operator) {
 		fail(failureMessage(new Long(expected), new Long(actual), operator, null));
