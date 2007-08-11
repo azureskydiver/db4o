@@ -139,6 +139,7 @@ public abstract class PersistentBase implements Persistent {
 	        LocalObjectContainer stream = (LocalObjectContainer)trans.container();
 	        
 	        int length = ownLength();
+	        length = stream.blockAlignedBytes(length);
 	        
 	        Buffer writer = new Buffer(length);
 	        

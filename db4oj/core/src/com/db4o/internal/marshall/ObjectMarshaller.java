@@ -78,6 +78,7 @@ public abstract class ObjectMarshaller {
             int address, 
             int length) {
         
+        length = a_trans.container().blockAlignedBytes(length);
         StatefulBuffer writer = new StatefulBuffer(a_trans, length);
         writer.useSlot(id, address, length);
         if (Deploy.debug) {

@@ -217,16 +217,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public abstract byte blockSize();
      
-    public int blocksToBytes(long bytes) {
+    public final int bytesToBlocks(long bytes) {
     	int blockLen = blockSize();
     	return (int) ((bytes + blockLen -1 )/ blockLen);
     }
     
     public final int blockAlignedBytes(int bytes) {
-    	return blocksToBytes(bytes) * blockSize();
+    	return bytesToBlocks(bytes) * blockSize();
     }
     
-    public final int bytesToBlocks(int blocks){
+    public final int blocksToBytes(int blocks){
     	return blocks * blockSize();
     }
     

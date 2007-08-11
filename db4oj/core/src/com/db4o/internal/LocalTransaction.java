@@ -221,9 +221,9 @@ public class LocalTransaction extends Transaction {
     }
 	
     private Slot allocateTransactionLogSlot(boolean appendToFile){
+        int transactionLogByteCount = transactionLogSlotLength();
     	if(freespaceManager() != null){
-    		int nonBlockedLength = transactionLogSlotLength();
-    		int blockedLength = _file.bytesToBlocks(nonBlockedLength);
+    		int blockedLength = _file.bytesToBlocks(transactionLogByteCount);
     		Slot slot = freespaceManager().allocateTransactionLogSlot(blockedLength);
     		if(slot != null){
     			return _file.toNonBlockedLength(slot);
@@ -232,7 +232,7 @@ public class LocalTransaction extends Transaction {
     	if(! appendToFile){
     		return null;
     	}
-    	return _file.appendSlot(transactionLogSlotLength());
+    	return _file.appendBytes(transactionLogByteCount);
     }
     
     private int transactionLogSlotLength(){
@@ -246,7 +246,7 @@ public class LocalTransaction extends Transaction {
     }
     
 
-	protected void commit6WriteChanges(Slot reservedSlot) {
+	protected final void commit6WriteChanges(Slot reservedSlot) {
         checkSynchronization();
             
         int slotChangeCount = countSlotChanges();
@@ -289,7 +289,7 @@ public class LocalTransaction extends Transaction {
     	if(freespaceManager() == null){
     	    return;
     	}
-    	freespaceManager().freeTransactionLogSlot(_file.toNonBlockedLength(slot));
+    	freespaceManager().freeTransactionLogSlot(_file.toBlockedLength(slot));
 	}
     
     public void writeZeroPointer(int id){
