@@ -2,18 +2,15 @@
 
 package com.db4o.db4ounit.common.freespace;
 
-import java.io.*;
-
 import com.db4o.internal.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.slots.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public abstract class FreespaceManagerTestCaseBase extends AbstractDb4oTestCase implements OptOutCS{
+public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase implements OptOutCS{
 	
 	protected FreespaceManager[] fm;
 	
@@ -69,15 +66,7 @@ public abstract class FreespaceManagerTestCaseBase extends AbstractDb4oTestCase 
         public int _int; 
     }
 
-     protected int fileSize() {
-        LocalObjectContainer localContainer = fixture().fileSession();
-        IoAdaptedObjectContainer container = (IoAdaptedObjectContainer) localContainer;
-        container.syncFiles();
-        long length = new File(container.fileName()).length();
-        return (int)length;
-    }
-
-    protected void storeSomeItems() {
+     protected void storeSomeItems() {
         for (int i = 0; i < 3; i++) {
             store(new Item());
         }

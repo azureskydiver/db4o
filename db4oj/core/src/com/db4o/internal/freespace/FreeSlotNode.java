@@ -71,7 +71,7 @@ public final class FreeSlotNode extends TreeInt {
 		if (size > sizeLimit) {
 			FreeSlotNode node = new FreeSlotNode(size);
 			node.createPeer(address);
-			if (Deploy.debug) {
+			if (Deploy.debug  && Debug.xbytes) {
 				debugCheckBuffer(buffer, node);
 			}
 			return node;

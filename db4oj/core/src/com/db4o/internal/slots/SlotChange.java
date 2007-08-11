@@ -65,7 +65,7 @@ public class SlotChange extends TreeInt {
         }
 	}
 
-	public void freeOnCommit(LocalObjectContainer file, Slot slot) {
+	public final void freeOnCommit(LocalObjectContainer file, Slot slot) {
 
 		if (_shared != null) {
 

@@ -12,6 +12,7 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
         return new Class[] {
+            BlockConfigurationFileSizeTestCase.class,
             FileSizeTestCase.class,
             FreespaceManagerDiscardLimitTestCase.class,
             FreespaceManagerReopenTestCase.class,

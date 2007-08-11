@@ -60,7 +60,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public void setRegularEndAddress(long address){
-        _blockEndAddress = blocksToBytes(address);
+        _blockEndAddress = bytesToBlocks(address);
     }
     
     final protected void close2() {
@@ -180,9 +180,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         	//       with index-based FreespaceManagers appear to deliver zeroed slots.
             // throw new IllegalArgumentException();
         }
-        if(DTrace.enabled){
-            DTrace.FILE_FREE.logLength(slot.address(), slot.length());
-        }
         if(_freespaceManager == null){
             // Can happen on early free before freespacemanager
             // is up, during conversion.
@@ -190,11 +187,15 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         }
         Slot blockedSlot = toBlockedLength(slot);
         
+        if(DTrace.enabled){
+            DTrace.FILE_FREE.logLength(blockedSlot.address(), blockedSlot.length());
+        }
+        
         _freespaceManager.free(blockedSlot);
 
     }
     
-    private Slot toBlockedLength(Slot slot){
+    public Slot toBlockedLength(Slot slot){
     	return new Slot(slot.address(), bytesToBlocks(slot.length()));
     }
     
@@ -284,8 +285,8 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return slot; 
     }
     
-    final Slot appendSlot(int length){
-    	Slot slot = appendBlocks(bytesToBlocks(length));
+    final Slot appendBytes(long bytes){
+    	Slot slot = appendBlocks(bytesToBlocks(bytes));
     	return toNonBlockedLength(slot);
     }
     
@@ -300,11 +301,16 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		_config.readOnly(true);
 	}
     
-	// Please comment why this is necessary.
+	// When a file gets opened, it uses the file size to determine where 
+	// new slots can be appended. If this method would not be called, the
+	// freespace system could already contain a slot that points beyond
+	// the end of the file and this space could be allocated and used twice,
+	// for instance if a slot was allocated and freed without ever being
+	// written to file.
     void ensureLastSlotWritten(){
         if (!Debug.xbytes){
             if(Deploy.overwrite){
-                if(_blockEndAddress > blocksToBytes(fileLength())){
+                if(_blockEndAddress > bytesToBlocks(fileLength())){
                     StatefulBuffer writer = getWriter(systemTransaction(), _blockEndAddress - 1, blockSize());
                     writer.write();
                 }
