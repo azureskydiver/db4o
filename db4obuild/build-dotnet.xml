@@ -466,11 +466,8 @@
 		</csc-all>
 	</target>
 		
-	<target name="build-core" depends="init, check-dependencies">
-	<!--
 	<target name="build-core" depends="init, check-dependencies, sharpen">
-	-->
-	
+		
 		<fileset id="core.sources" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
 		</fileset>
@@ -1134,8 +1131,6 @@
 		</exec>
 		
 		<copy-cecil-libs todir="${dir.n.v6.libs}/compact-1.0" />
-		
-		<property name="mono.snk" location="${dir.dist.cecil}/mono.snk" />
 		
 		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
 			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0/WindowsCE" />
