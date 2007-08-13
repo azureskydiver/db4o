@@ -98,11 +98,11 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		traverseFields(yc, writer, attributes, command);
     }
     
-    private void marshall(final ObjectReference yo, final Object obj,ObjectHeaderAttributes1 attributes, final StatefulBuffer writer, final boolean isNew) {
-		ClassMetadata yc = yo.getYapClass();
-		writeObjectClassID(writer,yc.getID());
+    private void marshall(final ObjectReference ref, final Object obj, ObjectHeaderAttributes1 attributes, final StatefulBuffer writer, final boolean isNew) {
+		ClassMetadata classMetadata = ref.getYapClass();
+		writeObjectClassID(writer,classMetadata.getID());
 		attributes.write(writer);
-		yc.checkUpdateDepth(writer);
+		classMetadata.checkUpdateDepth(writer);
 		final Transaction trans = writer.getTransaction();
 
 		TraverseFieldCommand command = new TraverseFieldCommand() {
@@ -120,10 +120,10 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 				if (child instanceof Db4oTypeImpl) {
 					child = ((Db4oTypeImpl) child).storedTo(trans);
 				}
-				field.marshall(yo, child, _family, writer, containingClass.configOrAncestorConfig(), isNew);
+				field.marshall(ref, child, _family, writer, containingClass.configOrAncestorConfig(), isNew);
 			}
 		};
-		traverseFields(yc, writer, attributes, command);
+		traverseFields(classMetadata, writer, attributes, command);
 		if (Deploy.debug) {
 			writer.writeEnd();
 			writer.debugCheckBytes();
