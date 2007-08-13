@@ -80,6 +80,21 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     	}
 	}
 
+    public void closeConnection() {
+		synchronized (_mainLock) {
+			synchronized (_lock) {
+				if (!isMessageDispatcherAlive()) {
+					return;
+				}
+				sendCloseMessage();
+				closeSocket();
+				removeFromServer();
+				_isClosed = true;
+			}
+		}
+	}
+		
+    
 	public void sendCloseMessage() {
 		try {
             if (i_sendCloseMessage) {
