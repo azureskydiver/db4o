@@ -47,7 +47,7 @@ class BlobProcessor extends Thread{
 					}
 					if(msg == null){
 						terminated = true;
-						Msg.CLOSE.write(socket);
+						Msg.CLOSE_SOCKET.write(socket);
 						try{
 							socket.close();
 						}catch(Exception e){

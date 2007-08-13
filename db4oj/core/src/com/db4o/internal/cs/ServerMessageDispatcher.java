@@ -36,6 +36,8 @@ public interface ServerMessageDispatcher extends MessageDispatcher {
 
 	public boolean close();
 	
+	public void closeConnection();
+	
 	public boolean caresAboutCommitted();
 	
 	public void caresAboutCommitted(boolean care);

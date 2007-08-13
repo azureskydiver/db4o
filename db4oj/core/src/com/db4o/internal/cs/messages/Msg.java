@@ -26,6 +26,7 @@ public abstract class Msg implements Cloneable {
 	public static final MClassMetadataIdForName CLASS_METADATA_ID_FOR_NAME = new MClassMetadataIdForName();
 	public static final MClassNameForID CLASS_NAME_FOR_ID = new MClassNameForID();
 	public static final MClose CLOSE = new MClose();
+	public static final MCloseSocket CLOSE_SOCKET = new MCloseSocket();
     public static final MCommit COMMIT = new MCommit();
     public static final MCommittedCallBackRegistry COMMITTED_CALLBACK_REGISTER = new MCommittedCallBackRegistry();
     public static final MCommittedInfo COMMITTED_INFO = new MCommittedInfo();

@@ -82,21 +82,20 @@ class BlockingByteChannel {
 
 	}
 
-    public int read(final byte[] a_bytes, final int a_offset, final int a_length)
+    public int read(final byte[] bytes, final int offset, final int length)
 			throws Db4oIOException {
 		Integer ret = (Integer) i_lock.run(new SafeClosure4() {
 			public Object run() {
 				waitForAvailable();
 				int avail = available();
-				int length = a_length;
-				if (avail < a_length) {
-					length = avail;
+				int toRead = length;
+				if (avail < length) {
+					toRead = avail;
 				}
-				System.arraycopy(i_cache, i_readOffset, a_bytes, a_offset,
-						length);
-				i_readOffset += length;
+				System.arraycopy(i_cache, i_readOffset, bytes, offset, toRead);
+				i_readOffset += toRead;
 				checkDiscardCache();
-				return new Integer(avail);
+				return new Integer(toRead);
 			}
 		});
 		return ret.intValue();
