@@ -109,7 +109,13 @@
 			</then>
 			<else>
 				<prepare-assemblyInfo configuration="@{compactConfiguration}" />
-				
+				<echo>
+	@{assemblyName} (Compact Framework)
+	=================
+	csc = ${csc.executable}
+	dir = ${dir.dll.cf}
+	=================
+				</echo>
 				<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
 					<arg value="/optimize" />
 					<arg value="/debug-" />
@@ -118,9 +124,9 @@
 					<arg value="/target:library" />
 					<arg value="/warn:0" />
 					<arg value="/noconfig" />
-					<arg value="/nostdlib" />
-					<arg value="/r:${dir.dll.cf}/mscorlib.dll" />
-					<arg value="/r:${dir.dll.cf}/System.dll" />
+					<arg value="/nostdlib+" />
+					<arg value="/reference:${dir.dll.cf}/mscorlib.dll" />
+					<arg value="/reference:${dir.dll.cf}/System.dll" />
 					<arg value="/doc:@{compactOutputDir}/@{assemblyName}.xml" />
 					<compact-args />
 					<arg value="/recurse:*.cs" />
@@ -151,7 +157,9 @@
 		<uptodate
 			property="csharp.uptodate"
 			targetfile="${dir.n.v6.core.src}/Transaction.cs">
-			<srcfiles refid="db4oj.srcfiles">
+			<srcfiles dir="${dir.j.core.src}" >
+				<include name="**/*.java" />
+				<exclude name="**/Db4oVersion.java" />
 			</srcfiles>
 		</uptodate>
 	</target>
@@ -458,7 +466,10 @@
 		</csc-all>
 	</target>
 		
+	<target name="build-core" depends="init, check-dependencies">
+	<!--
 	<target name="build-core" depends="init, check-dependencies, sharpen">
+	-->
 	
 		<fileset id="core.sources" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
@@ -669,13 +680,12 @@
 			</sources>
 		</updatecsharpproject>
 		
-		<!--
 		<updatecsharpproject projectfile="${dir.n.admin}/Db4oAdmin.Tests/Db4oAdmin.Tests-2005.csproj">
 			<sources dir="${dir.n.admin}/Db4oAdmin.Tests">
 				<include name="**/*.cs" />
+				<exclude name="**/Resources/*.*" />
 			</sources>
 		</updatecsharpproject>
-		-->
 	</target>
 	
 	<target name="prepare-ta-conversion-workspace">	
@@ -1107,16 +1117,16 @@
 			</sequential>
 		</macrodef>
 		
-		<exec executable="${nant.exe}" dir="${cecil.dir}">
-			<arg value="-D:compactframework.v1.dir=${dir.compactframework}/v1.0" />
+		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
+			<arg value="-D:compactframework.v1.dir=${dir.compactframework}/v1.0/WindowsCE" />
 			<arg value="-D:csc.defines=KEYFILE" />
 			<arg value="-t:net-1.1" />
 			<arg value="clean" />
 			<arg value="compactframework" />
 		</exec>
 	
-		<exec executable="${nant.exe}" dir="${cecil.fa.dir}">
-			<arg value="-D:compactframework.v1.dir=${dir.compactframework}/v1.0" />
+		<exec executable="${nant.exe}" dir="${cecil.fa.dir}" failonerror="true">
+			<arg value="-D:compactframework.v1.dir=${dir.compactframework}/v1.0/WindowsCE" />
 			<arg value="-D:csc.defines=KEYFILE" />
 			<arg value="-t:net-1.1" />
 			<arg value="clean" />
@@ -1127,32 +1137,32 @@
 		
 		<property name="mono.snk" location="${dir.dist.cecil}/mono.snk" />
 		
-		<exec executable="${nant.exe}" dir="${cecil.dir}">
-			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0" />
-			<arg value="-t:net-2.0" />
+		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
+			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0/WindowsCE" />
+			<arg value="-t:netcf-2.0" />
 			<arg value="-D:csc.defines=KEYFILE" />
 			<arg value="clean" />
 			<arg value="compactframework2" />
 		</exec>
 	
-		<exec executable="${nant.exe}" dir="${cecil.fa.dir}">
-			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0" />
+		<exec executable="${nant.exe}" dir="${cecil.fa.dir}" failonerror="true">
+			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0/WindowsCE" />
 			<arg value="-D:csc.defines=KEYFILE" />
-			<arg value="-t:net-2.0" />
+			<arg value="-t:netcf-2.0" />
 			<arg value="clean" />
 			<arg value="compactframework2" />
 		</exec>
 		
 		<copy-cecil-libs todir="${dir.n.v6.libs}/compact-2.0" />
 		
-		<exec executable="${nant.exe}" dir="${cecil.dir}">
+		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
 			<arg value="-t:net-1.1" />
 			<arg value="-D:csc.defines=KEYFILE" />
 			<arg value="clean" />
 			<arg value="cecil" />
 		</exec>
 	
-		<exec executable="${nant.exe}" dir="${cecil.fa.dir}">
+		<exec executable="${nant.exe}" dir="${cecil.fa.dir}" failonerror="true">
 			<arg value="-D:csc.defines=KEYFILE" />
 			<arg value="-t:net-1.1" />
 			<arg value="clean" />
@@ -1161,13 +1171,13 @@
 		
 		<copy-cecil-libs todir="${dir.n.v6.libs}/net-1.1" />
 		
-		<exec executable="${nant.exe}" dir="${cecil.dir}">
+		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
 			<arg value="-t:net-2.0" />
 			<arg value="clean" />
 			<arg value="cecil" />
 		</exec>
 	
-		<exec executable="${nant.exe}" dir="${cecil.fa.dir}">
+		<exec executable="${nant.exe}" dir="${cecil.fa.dir}" failonerror="true">
 			<arg value="-t:net-2.0" />
 			<arg value="clean" />
 			<arg value="build" />
