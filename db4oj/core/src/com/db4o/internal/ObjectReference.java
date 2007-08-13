@@ -171,7 +171,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return _object;
 	}
     
-    public ObjectContainerBase getStream(){
+    public ObjectContainerBase container(){
         if(_class == null){
             return null;
         }
@@ -182,9 +182,9 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     // single ObjectContainers, after the YapClass
     // is set.
     public Transaction getTrans(){
-        ObjectContainerBase stream = getStream();
-        if(stream != null){
-            return stream.transaction();
+        ObjectContainerBase container = container();
+        if(container != null){
+            return container.transaction();
         }
         return null;
     }
@@ -379,23 +379,25 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return _virtualAttributes;
 	}
 	
-	public VirtualAttributes virtualAttributes(Transaction a_trans){
-        if(a_trans == null){
+	public VirtualAttributes virtualAttributes(Transaction trans){
+        if(trans == null){
             return _virtualAttributes;
         }
-	    if(_virtualAttributes == null){ 
-            if(_class.hasVirtualAttributes()){
-                _virtualAttributes = new VirtualAttributes();
-                _class.readVirtualAttributes(a_trans, this);
-            }
-	    }else{
-            if(! _virtualAttributes.suppliesUUID()){
+        synchronized(trans.container().lock()){
+    	    if(_virtualAttributes == null){ 
                 if(_class.hasVirtualAttributes()){
-                    _class.readVirtualAttributes(a_trans, this);
+                    _virtualAttributes = new VirtualAttributes();
+                    _class.readVirtualAttributes(trans, this);
+                }
+    	    }else{
+                if(! _virtualAttributes.suppliesUUID()){
+                    if(_class.hasVirtualAttributes()){
+                        _class.readVirtualAttributes(trans, this);
+                    }
                 }
             }
+    	    return _virtualAttributes;
         }
-	    return _virtualAttributes;
 	}
     
     public void setVirtualAttributes(VirtualAttributes at){

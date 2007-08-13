@@ -47,7 +47,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
         Transaction trans = yo.getTrans();
         Object obj = yo.getObject();
         calculateLengths(trans, yc, obj, 0);
-        _baseLength = yo.getStream().blockAlignedBytes(_baseLength);        
+        _baseLength = yo.container().blockAlignedBytes(_baseLength);        
     }
     
     private void calculateLengths(Transaction trans, ClassMetadata yc, Object obj, int fieldIndex) {
