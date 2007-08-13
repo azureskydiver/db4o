@@ -181,7 +181,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     // this method will only work client-side or on
     // single ObjectContainers, after the YapClass
     // is set.
-    public Transaction getTrans(){
+    public Transaction transaction(){
         ObjectContainerBase container = container();
         if(container != null){
             return container.transaction();
@@ -190,7 +190,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     }
     
     public Db4oUUID getUUID(){
-        VirtualAttributes va = virtualAttributes(getTrans());
+        VirtualAttributes va = virtualAttributes(transaction());
         if(va != null && va.i_database != null){
             return new Db4oUUID(va.i_uuid, va.i_database.i_signature);
         }
@@ -198,7 +198,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     }
 	
     public long getVersion(){
-        VirtualAttributes va = virtualAttributes(getTrans());
+        VirtualAttributes va = virtualAttributes(transaction());
         if(va == null) {
 			return 0;
         }
@@ -206,7 +206,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     }
 
 
-	public ClassMetadata getYapClass() {
+	public final ClassMetadata classMetadata() {
 		return _class;
 	}
 
@@ -838,7 +838,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 			        objToString = obj.toString();
 			    }catch(Exception e){
 			    }
-			    ReflectClass claxx = getYapClass().reflector().forObject(obj);
+			    ReflectClass claxx = classMetadata().reflector().forObject(obj);
 			    str += "\n" + claxx.getName() + "\n" + objToString;
 		    }
 		    return str;

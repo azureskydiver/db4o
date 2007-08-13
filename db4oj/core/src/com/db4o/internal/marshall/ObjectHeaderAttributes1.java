@@ -22,7 +22,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     
     
     public ObjectHeaderAttributes1(ObjectReference ref) {
-        _fieldCount = ref.getYapClass().fieldCount();
+        _fieldCount = ref.classMetadata().fieldCount();
         _nullBitMap = new BitMap4(_fieldCount);
         calculateLengths(ref);
     }
@@ -40,14 +40,14 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
         _payLoadLength += length;
     }
     
-    private void calculateLengths(ObjectReference yo) {
+    private void calculateLengths(ObjectReference ref) {
         _baseLength = headerLength() + nullBitMapLength();
         _payLoadLength = 0;
-        ClassMetadata yc = yo.getYapClass();
-        Transaction trans = yo.getTrans();
-        Object obj = yo.getObject();
+        ClassMetadata yc = ref.classMetadata();
+        Transaction trans = ref.transaction();
+        Object obj = ref.getObject();
         calculateLengths(trans, yc, obj, 0);
-        _baseLength = yo.container().blockAlignedBytes(_baseLength);        
+        _baseLength = ref.container().blockAlignedBytes(_baseLength);        
     }
     
     private void calculateLengths(Transaction trans, ClassMetadata yc, Object obj, int fieldIndex) {

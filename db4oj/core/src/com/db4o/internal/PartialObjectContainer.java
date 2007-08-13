@@ -195,7 +195,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if(yo == null){
                 throw new IllegalArgumentException("obj");
             }
-            if (trans.reflector().forObject(obj) == yo.getYapClass().classReflector()) {
+            if (trans.reflector().forObject(obj) == yo.classMetadata().classReflector()) {
                 ObjectReference newRef = bind2(trans, yo, obj);
                 newRef.virtualAttributes(trans);
             } else {
@@ -240,7 +240,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(reference == null){
             return false;
         }
-        return Platform4.jdk().isEnum(reflector(), reference.getYapClass().classReflector());
+        return Platform4.jdk().isEnum(reflector(), reference.classMetadata().classReflector());
     }
 
     boolean canUpdate() {
@@ -503,7 +503,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	return;
         }
         
-        ClassMetadata yc = ref.getYapClass();
+        ClassMetadata yc = ref.classMetadata();
         Object obj = ref.getObject();
         
         // We have to end processing temporarily here, otherwise the can delete callback
@@ -526,7 +526,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(delete4(trans, ref, cascade, userCall)){
         	objectOnDelete(trans, yc, obj);
             if (configImpl().messageLevel() > Const4.STATE) {
-                message("" + ref.getID() + " delete " + ref.getYapClass().getName());
+                message("" + ref.getID() + " delete " + ref.classMetadata().getName());
             }
         }
         
@@ -576,7 +576,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if(fieldName == null){
                 return null;
             }
-            ClassMetadata yc = yo.getYapClass();
+            ClassMetadata yc = yo.classMetadata();
             final FieldMetadata[] field = new FieldMetadata[]{null};
             yc.forEachFieldMetadata(new Visitor4() {
                 public void visit(Object yf) {
@@ -1620,7 +1620,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 			    ((Db4oTypeImpl)obj).setTrans(trans);
 			}
 			if (configImpl().messageLevel() > Const4.STATE) {
-				message("" + ref.getID() + " new " + ref.getYapClass().getName());
+				message("" + ref.getID() + " new " + ref.classMetadata().getName());
 			}
 			
 			flagAsHandled(ref);
