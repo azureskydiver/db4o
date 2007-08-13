@@ -19,7 +19,7 @@ import com.db4o.types.*;
  */
 public class Db4oDatabase implements Db4oType, Internal4{
     
-    public static final Db4oDatabase STATIC_IDENTITY = Debug.staticIdentity ? new Db4oDatabase(new byte[] {'d' , 'e', 'b'}, 1) : null;
+    public static final Db4oDatabase STATIC_IDENTITY = Debug.staticIdentity ? new Db4oDatabase(new byte[] {(byte)'d' , (byte)'e', (byte)'b', (byte)'u', (byte)'g'}, 1) : null;
     
     public static final int STATIC_ID = -1;
 

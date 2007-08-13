@@ -21,10 +21,10 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     private int _payLoadLength;
     
     
-    public ObjectHeaderAttributes1(ObjectReference yo) {
-        _fieldCount = yo.getYapClass().fieldCount();
+    public ObjectHeaderAttributes1(ObjectReference ref) {
+        _fieldCount = ref.getYapClass().fieldCount();
         _nullBitMap = new BitMap4(_fieldCount);
-        calculateLengths(yo);
+        calculateLengths(ref);
     }
     
     public ObjectHeaderAttributes1(Buffer reader){

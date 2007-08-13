@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.*;
 
 /**
  * @exclude
@@ -83,8 +84,7 @@ public abstract class Debug extends Debug4 {
      * allows faking the Db4oDatabase identity object, so the first
      * stored object in the debugger is the actually persisted object  
      */
-    public static final boolean staticIdentity = false; 
-   
+    public static final boolean staticIdentity = MarshallingSpike.enabled;
 
 	public static void expect(boolean cond){
         if(! cond){
