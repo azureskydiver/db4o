@@ -98,8 +98,8 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		traverseFields(yc, writer, attributes, command);
     }
     
-    private void marshall(final ObjectReference ref, final Object obj, ObjectHeaderAttributes1 attributes, final StatefulBuffer writer, final boolean isNew) {
-		ClassMetadata classMetadata = ref.getYapClass();
+    protected void marshall(final ObjectReference ref, final Object obj, ObjectHeaderAttributes1 attributes, final StatefulBuffer writer, final boolean isNew) {
+		ClassMetadata classMetadata = ref.classMetadata();
 		writeObjectClassID(writer,classMetadata.getID());
 		attributes.write(writer);
 		classMetadata.checkUpdateDepth(writer);
@@ -130,17 +130,17 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		}
 	}
 
-    public StatefulBuffer marshallNew(Transaction a_trans, ObjectReference yo, int a_updateDepth){
+    public StatefulBuffer marshallNew(Transaction trans, ObjectReference ref, int updateDepth){
         
-        ObjectHeaderAttributes1 attributes = new ObjectHeaderAttributes1(yo);
+        ObjectHeaderAttributes1 attributes = new ObjectHeaderAttributes1(ref);
         
         StatefulBuffer writer = createWriterForNew(
-            a_trans, 
-            yo, 
-            a_updateDepth, 
+            trans, 
+            ref, 
+            updateDepth, 
             attributes.objectLength());
         
-        marshall(yo, yo.getObject(), attributes, writer, true);
+        marshall(ref, ref.getObject(), attributes, writer, true);
         
         return writer;
     }

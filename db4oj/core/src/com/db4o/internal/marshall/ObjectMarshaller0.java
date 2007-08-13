@@ -141,7 +141,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         
         StatefulBuffer writer = createWriterForNew(a_trans, yo, a_updateDepth, objectLength(yo));
         
-        ClassMetadata yc = yo.getYapClass();
+        ClassMetadata yc = yo.classMetadata();
         Object obj = yo.getObject();
         
         if(yc.isPrimitive()){
@@ -167,7 +167,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         
         StatefulBuffer writer = createWriterForUpdate(trans,updateDepth, yapObject.getID(), 0, objectLength(yapObject));
         
-        ClassMetadata yapClass = yapObject.getYapClass();
+        ClassMetadata yapClass = yapObject.classMetadata();
         
         yapClass.checkUpdateDepth(writer);
         
@@ -178,7 +178,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
 
     private int objectLength(ObjectReference yo) {
-        return headerLength() + linkLength(yo.getYapClass(), yo);
+        return headerLength() + linkLength(yo.classMetadata(), yo);
     }
 
     public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {

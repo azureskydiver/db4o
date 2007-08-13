@@ -123,7 +123,7 @@ public abstract class ObjectMarshaller {
             Object obj, 
             StatefulBuffer writer) {
         
-        ClassMetadata yc = yo.getYapClass();
+        ClassMetadata yc = yo.classMetadata();
         
         ObjectContainerBase stream = trans.container();
         stream.writeUpdate(yc, writer);

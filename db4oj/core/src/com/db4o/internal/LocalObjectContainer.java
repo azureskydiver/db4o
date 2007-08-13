@@ -152,7 +152,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             }
             reader.setCascadeDeletes(a_cascade);
             reader.slotDelete();
-            ClassMetadata yc = yo.getYapClass();
+            ClassMetadata yc = yo.classMetadata();
             yc.delete(reader, obj);
 
             // The following will not work with this approach.

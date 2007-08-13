@@ -27,7 +27,7 @@ public class Db4oReplicationReferenceImpl extends ObjectReference implements Rep
 
 	Db4oReplicationReferenceImpl(ObjectInfo objectInfo) {
 		ObjectReference yo = (ObjectReference) objectInfo;
-		Transaction trans = yo.getTrans();
+		Transaction trans = yo.transaction();
 		VirtualAttributes va = yo.virtualAttributes(trans);
 		if (va != null) {
 			setVirtualAttributes((VirtualAttributes) va.shallowClone());

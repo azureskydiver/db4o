@@ -40,7 +40,7 @@ class ObjectAnalyzer {
                 }
             }
         } else {
-            _classMetadata = _ref.getYapClass();
+            _classMetadata = _ref.classMetadata();
         }
         
         if (isPlainObjectOrPrimitive(_classMetadata) ) {
