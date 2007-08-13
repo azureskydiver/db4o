@@ -40,6 +40,15 @@
 	<target name="build_before_checkin" depends="clean, compilecorejava, compiledb4ounitjava, compiletestsjava" description="This target has to pass before checking in.">
 		<ant antfile="build-dotnet.xml" target="run-tests" />
 	</target>
+	
+	<target name="buildjava-old-school" depends="compile.java.all, doctor, zipjava">
+	</target>
+	
+	<target name="buildall-old-school" depends="clean, buildjava-old-school, buildnet">
+	</target>
+	
+	<target name="buildall2-old-school" depends="clean, buildjava-old-school, buildnet2">
+	</target>
 
 	<target name="init" description="Basic initialization">
 		<tstamp />
