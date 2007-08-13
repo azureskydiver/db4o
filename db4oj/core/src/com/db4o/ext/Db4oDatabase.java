@@ -19,6 +19,9 @@ import com.db4o.types.*;
  */
 public class Db4oDatabase implements Db4oType, Internal4{
     
+    public static final Db4oDatabase STATIC_IDENTITY = Debug.staticIdentity ? new Db4oDatabase(new byte[] {'d' , 'e', 'b'}, 1) : null;
+    
+    public static final int STATIC_ID = -1;
 
     /**
      * Field is public for implementation reasons, DO NOT TOUCH!
@@ -65,6 +68,9 @@ public class Db4oDatabase implements Db4oType, Internal4{
      * generates a new Db4oDatabase object with a unique signature.
      */
     public static Db4oDatabase generate() {
+        if(Debug.staticIdentity){
+            return STATIC_IDENTITY;
+        }
         return new Db4oDatabase(
         		Unobfuscated.generateSignature(),
         		System.currentTimeMillis());
@@ -97,6 +103,9 @@ public class Db4oDatabase implements Db4oType, Internal4{
 	 * @return the db4o ID for the ObjectContainer
 	 */
     public int getID(Transaction trans) {
+        if(Debug.staticIdentity){
+            return STATIC_ID; 
+        }
         ObjectContainerBase stream = trans.container();
         if(stream != i_stream) {
             i_stream = stream;
