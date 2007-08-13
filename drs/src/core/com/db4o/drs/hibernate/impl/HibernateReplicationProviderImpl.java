@@ -40,7 +40,6 @@ import com.db4o.drs.inside.ReplicationReflector;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.foundation.Visitor4;
-import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
 
 

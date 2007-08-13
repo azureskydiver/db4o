@@ -2,11 +2,9 @@
 
 package com.db4o.drs.test;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.*;
 
-import com.db4o.ObjectSet;
 import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.inside.ReplicationReflector;

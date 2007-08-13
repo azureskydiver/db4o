@@ -5,9 +5,6 @@ package com.db4o.drs.test;
 import java.util.ArrayList;
 import java.util.*;
 
-import com.db4o.ObjectSet;
-import com.db4o.drs.inside.TestableReplicationProviderInside;
-
 import db4ounit.Assert;
 
 public class ListTest extends DrsTestCase {

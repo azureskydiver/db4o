@@ -2,7 +2,6 @@
 
 package com.db4o.drs.db4o;
 
-import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;

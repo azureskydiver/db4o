@@ -4,7 +4,6 @@ package com.db4o.drs.test;
 
 import java.util.Iterator;
 
-import com.db4o.*;
 import com.db4o.drs.*;
 import com.db4o.drs.inside.*;
 import com.db4o.drs.test.foundation.Set4;

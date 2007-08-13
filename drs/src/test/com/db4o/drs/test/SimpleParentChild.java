@@ -2,8 +2,6 @@
 
 package com.db4o.drs.test;
 
-import com.db4o.drs.inside.TestableReplicationProviderInside;
-
 import db4ounit.Assert;
 
 public class SimpleParentChild extends DrsTestCase {

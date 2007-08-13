@@ -4,7 +4,6 @@ package com.db4o.drs.test;
 
 import java.util.Iterator;
 
-import com.db4o.ObjectSet;
 import com.db4o.drs.Replication;
 import com.db4o.drs.ReplicationSession;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
