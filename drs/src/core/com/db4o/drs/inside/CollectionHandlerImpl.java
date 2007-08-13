@@ -5,12 +5,8 @@ import com.db4o.foundation.Iterator4;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.Reflector;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 public class CollectionHandlerImpl implements CollectionHandler {
 

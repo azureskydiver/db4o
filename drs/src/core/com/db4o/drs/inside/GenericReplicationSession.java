@@ -2,7 +2,6 @@ package com.db4o.drs.inside;
 
 import java.util.Iterator;
 
-import com.db4o.ObjectSet;
 import com.db4o.drs.ReplicationEventListener;
 import com.db4o.drs.ReplicationProvider;
 import com.db4o.drs.ReplicationSession;

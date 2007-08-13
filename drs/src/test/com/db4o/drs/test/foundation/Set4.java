@@ -1,10 +1,8 @@
 package com.db4o.drs.test.foundation;
 
 import com.db4o.foundation.Entry4;
-import com.db4o.foundation.Function4;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.Iterator4;
-import com.db4o.foundation.Iterators;
 
 public class Set4 {
 	

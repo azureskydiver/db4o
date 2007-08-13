@@ -2,8 +2,6 @@
 
 package com.db4o.drs.test;
 
-import java.io.IOException;
-
 import com.db4o.Db4o;
 import com.db4o.ObjectServer;
 import com.db4o.drs.db4o.Db4oProviderFactory;
