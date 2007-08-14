@@ -32,9 +32,6 @@ public class SelfReflector implements Reflector {
 
 	public ReflectClass forName(String className) {
 		Class clazz = ReflectPlatform.forName(className);
-		if (clazz == null) {
-			return null;
-		}
 		return forClass(clazz);
 	}
 
