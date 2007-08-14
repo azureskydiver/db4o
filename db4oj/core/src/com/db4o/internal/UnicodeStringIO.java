@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import com.db4o.marshall.*;
+
 
 /**
  * @exclude
@@ -59,16 +61,16 @@ public final class UnicodeStringIO extends LatinStringIO{
 		return (a_string.length() * 2)  + Const4.INT_LENGTH;
 	}
 	
-	public void write(Buffer bytes, String string){
-	    final int len = writetoBuffer(string);
+	public void write(WriteBuffer buffer, String string){
+	    final int len = marshalledLength(string);
 	    for (int i = 0; i < len; i ++){
-			bytes._buffer[bytes._offset++] = (byte) (chars[i] & 0xff);
-			bytes._buffer[bytes._offset++] = (byte) (chars[i] >> 8);
+	        buffer.writeByte((byte) (chars[i] & 0xff));
+	        buffer.writeByte((byte) (chars[i] >> 8));
 		}
 	}
 	
 	byte[] write(String string){
-	    final int len = writetoBuffer(string);
+	    final int len = marshalledLength(string);
 	    byte[] bytes = new byte[len * 2];
 	    int j = 0;
 	    for (int i = 0; i < len; i ++){

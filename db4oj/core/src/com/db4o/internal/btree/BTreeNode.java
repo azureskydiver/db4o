@@ -1052,7 +1052,7 @@ public final class BTreeNode extends PersistentBase{
         int endOffset = a_writer._offset;
         a_writer._offset = startOffset;
         a_writer.writeInt(count);
-        a_writer.append( _isLeaf ? (byte) 1 : (byte) 0);
+        a_writer.writeByte( _isLeaf ? (byte) 1 : (byte) 0);
         a_writer.writeInt(_parentID);
         a_writer.writeInt(_previousID);
         a_writer.writeInt(_nextID);

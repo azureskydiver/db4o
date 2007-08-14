@@ -12,7 +12,7 @@ public class BufferTestCase implements TestCase {
 	public void testCopy() {
 		Buffer from=new Buffer(READERLENGTH);
 		for(int i=0;i<READERLENGTH;i++) {
-			from.append((byte)i);
+			from.writeByte((byte)i);
 		}
 		Buffer to=new Buffer(READERLENGTH-1);
 		from.copyTo(to,1,2,10);

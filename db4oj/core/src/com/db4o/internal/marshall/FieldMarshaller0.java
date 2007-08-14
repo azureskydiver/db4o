@@ -109,7 +109,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         bitmap.set(0, field.isPrimitive());
         bitmap.set(1, handler instanceof ArrayHandler);
         bitmap.set(2, handler instanceof MultidimensionalArrayHandler); // keep the order
-        writer.append(bitmap.getByte(0));
+        writer.writeByte(bitmap.getByte(0));
     }
 
 

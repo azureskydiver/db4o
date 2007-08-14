@@ -7,6 +7,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 
@@ -255,4 +256,9 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         	mf._string.defrag(readers);
         }
     }
+    
+    public void write(Marshaller context, Object obj) {
+        MarshallerFamily.current()._string.write(context, obj);
+    }
+
 }

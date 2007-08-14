@@ -701,23 +701,42 @@ public class FieldMetadata implements StoredField {
         
         Object indexEntry = null;
         
-        if (obj != null
-            && ((config != null && (config.cascadeOnUpdate().definiteYes())) || (i_config != null && (i_config.cascadeOnUpdate().definiteYes())))) {
-            int min = 1;
-            if (_clazz.isCollection(obj)) {
-                GenericReflector reflector = _clazz.reflector();
-                min = reflector.collectionUpdateDepth(reflector.forObject(obj));
-            }
+        if (obj != null && cascadeOnUpdate(config)) {
             int updateDepth = writer.getUpdateDepth();
-            if (updateDepth < min) {
-                writer.setUpdateDepth(min);
-            }
+            writer.setUpdateDepth(adjustUpdateDepth(obj, updateDepth));
             indexEntry = i_handler.write(mf, obj, true, writer, true, true);
             writer.setUpdateDepth(updateDepth);
         } else {
             indexEntry = i_handler.write(mf, obj, true, writer, true, true);
         }
         addIndexEntry(writer, indexEntry);
+    }
+
+    private int adjustUpdateDepth(Object obj, int updateDepth) {
+        int minimumUpdateDepth = 1;
+        if (_clazz.isCollection(obj)) {
+            GenericReflector reflector = _clazz.reflector();
+            minimumUpdateDepth = reflector.collectionUpdateDepth(reflector.forObject(obj));
+        }
+        if (updateDepth < minimumUpdateDepth) {
+            return minimumUpdateDepth;
+        }
+        return updateDepth;
+    }
+
+    private boolean cascadeOnUpdate(Config4Class parentClassConfiguration) {
+        return ((parentClassConfiguration != null && (parentClassConfiguration.cascadeOnUpdate().definiteYes())) || (i_config != null && (i_config.cascadeOnUpdate().definiteYes())));
+    }
+    
+    public void marshall(MarshallingContext context, Object obj){
+        // alive needs to be checked by all callers: Done
+        int updateDepth = context.updateDepth();
+        if (obj != null && cascadeOnUpdate(context.classConfiguration())) {
+            context.updateDepth(adjustUpdateDepth(obj, updateDepth));
+        }
+        i_handler.write(context, obj);
+        context.updateDepth(updateDepth);
+        addIndexEntry(context.transaction(), context.objectID(), context.currentIndexEntry() );
     }
 
     public boolean needsArrayAndPrimitiveInfo(){

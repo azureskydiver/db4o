@@ -6,12 +6,13 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 
 /**
  * 
  * @exclude
  */
-public class Buffer implements SlotBuffer {
+public class Buffer implements SlotBuffer, WriteBuffer {
 	
 	// for coding convenience, we allow objects to grab into the buffer
 	public byte[] _buffer;
@@ -29,10 +30,6 @@ public class Buffer implements SlotBuffer {
 		_offset = offset;
 	}
 	
-    public final void append(byte a_byte) {
-        _buffer[_offset++] = a_byte;
-    }
-
     public void append(byte[] a_bytes) {
         System.arraycopy(a_bytes, 0, _buffer, _offset, a_bytes.length);
         _offset += a_bytes.length;
@@ -204,10 +201,10 @@ public class Buffer implements SlotBuffer {
     public void writeBegin(byte a_identifier) {
         if (Deploy.debug) {
             if (Deploy.brackets) {
-                append(Const4.YAPBEGIN);
+                writeByte(Const4.YAPBEGIN);
             }
             if (Deploy.identifiers) {
-                append(a_identifier);
+                writeByte(a_identifier);
             }
         }
     }
@@ -215,6 +212,10 @@ public class Buffer implements SlotBuffer {
     public final void writeBitMap(BitMap4 nullBitMap) {
         nullBitMap.writeTo(_buffer, _offset);
         _offset += nullBitMap.marshalledLength();
+    }
+    
+    public final void writeByte(byte a_byte) {
+        _buffer[_offset++] = a_byte;
     }
     
     public final void writeEncrypt(LocalObjectContainer file, int address, int addressOffset) {
@@ -225,32 +226,21 @@ public class Buffer implements SlotBuffer {
     
     public void writeEnd() {
         if (Deploy.debug && Deploy.brackets) {
-            append(Const4.YAPEND);
+            writeByte(Const4.YAPEND);
         }
     }
     
     public final void writeInt(int a_int) {
-        
         if (Deploy.debug) {
             IntHandler.writeInt(a_int, this);
         } else {
-            
-//            if (YapConst.INTEGER_BYTES == 4) {
-                
-                int o = _offset + 4;
-                _offset = o;
-                byte[] b = _buffer;
-                b[--o] = (byte)a_int;
-                b[--o] = (byte) (a_int >>= 8);
-                b[--o] = (byte) (a_int >>= 8);
-                b[--o] = (byte) (a_int >> 8);
-                
-//            } else {
-//                for (; ii >= 0; ii -= 8) {
-//                    _buffer[_offset++] = (byte) (a_int >> ii);
-//                }
-//            }
-                
+            int o = _offset + 4;
+            _offset = o;
+            byte[] b = _buffer;
+            b[--o] = (byte)a_int;
+            b[--o] = (byte) (a_int >>= 8);
+            b[--o] = (byte) (a_int >>= 8);
+            b[--o] = (byte) (a_int >> 8);
         }
     }
     

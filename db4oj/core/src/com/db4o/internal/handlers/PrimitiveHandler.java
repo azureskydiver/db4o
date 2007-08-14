@@ -7,6 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 
@@ -190,4 +191,9 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
 	protected PrimitiveMarshaller primitiveMarshaller() {
 		return MarshallerFamily.current()._primitive;
 	}
+	
+    public void write(Marshaller context, Object obj) {
+        throw new NotImplementedException();
+    }
+
 }

@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 /**
  * @exclude
  */
-public abstract class ObjectHeaderAttributes {
+public abstract class ObjectHeaderAttributes implements FieldListInfo {
     
     public abstract void addBaseLength(int length);
     

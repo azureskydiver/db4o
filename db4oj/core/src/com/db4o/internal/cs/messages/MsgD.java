@@ -34,7 +34,7 @@ public class MsgD extends Msg{
 	
 	public final MsgD getWriterForByte(Transaction trans, byte b) {
 		MsgD msg = getWriterForLength(trans, 1);
-		msg._payLoad.append(b);
+		msg._payLoad.writeByte(b);
 		return msg;
 	}
 	
@@ -45,9 +45,9 @@ public class MsgD extends Msg{
 		message.writeInt(_msgID);
 		message.writeInt(length);
 		if(trans.parentTransaction() == null){
-		    message._payLoad.append(Const4.SYSTEM_TRANS);
+		    message._payLoad.writeByte(Const4.SYSTEM_TRANS);
 		}else{
-		    message._payLoad.append(Const4.USER_TRANS);
+		    message._payLoad.writeByte(Const4.USER_TRANS);
 		}
 		return message;
 	}

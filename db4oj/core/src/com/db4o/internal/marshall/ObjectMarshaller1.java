@@ -99,16 +99,21 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     }
     
     protected void marshall(final ObjectReference ref, final Object obj, ObjectHeaderAttributes1 attributes, final StatefulBuffer writer, final boolean isNew) {
+
+        final Transaction trans = writer.getTransaction();
+
 		ClassMetadata classMetadata = ref.classMetadata();
 		writeObjectClassID(writer,classMetadata.getID());
 		attributes.write(writer);
-		classMetadata.checkUpdateDepth(writer);
-		final Transaction trans = writer.getTransaction();
+		
+		writer.setUpdateDepth( classMetadata.adjustUpdateDepth(trans, writer.getUpdateDepth()));
 
 		TraverseFieldCommand command = new TraverseFieldCommand() {
-			public int fieldCount(ClassMetadata yapClass, Buffer reader) {
-				reader.writeInt(yapClass.i_fields.length);
-				return yapClass.i_fields.length;
+		    
+			public int fieldCount(ClassMetadata containingClass, Buffer buffer) {
+			    int fieldCount = containingClass.i_fields.length;
+				buffer.writeInt(fieldCount);
+				return fieldCount;
 			}
 			
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
@@ -203,8 +208,8 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		traverseFields(yc, reader, attributes, command);
 	}
 
-    protected boolean isNull(ObjectHeaderAttributes attributes,int fieldIndex) {
-    	return ((ObjectHeaderAttributes1)attributes).isNull(fieldIndex);
+    protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
+    	return fieldList.isNull(fieldIndex);
     }
 
 	public void defragFields(ClassMetadata yc,ObjectHeader header, final BufferPair readers) {

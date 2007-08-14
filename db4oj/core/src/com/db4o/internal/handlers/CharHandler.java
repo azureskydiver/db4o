@@ -55,8 +55,8 @@ public final class CharHandler extends PrimitiveHandler {
 			a_bytes.writeBegin(Const4.YAPCHAR);
 		}
 		char char_ = ((Character) a_object).charValue();
-		a_bytes.append((byte) (char_ & 0xff));
-		a_bytes.append((byte) (char_ >> 8));
+		a_bytes.writeByte((byte) (char_ & 0xff));
+		a_bytes.writeByte((byte) (char_ >> 8));
 		if (Deploy.debug) {
 			a_bytes.writeEnd();
 		}

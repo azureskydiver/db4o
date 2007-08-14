@@ -307,7 +307,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     }
     
     public void writeThis(Transaction trans, Buffer a_writer) {
-        a_writer.append(BTREE_VERSION);
+        a_writer.writeByte(BTREE_VERSION);
         a_writer.writeInt(_size);
         a_writer.writeInt(nodeSize());
         a_writer.writeIDOf(trans, _root);

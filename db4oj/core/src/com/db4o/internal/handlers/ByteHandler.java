@@ -56,7 +56,7 @@ public final class ByteHandler extends PrimitiveHandler {
 		if(Deploy.debug){
 			a_bytes.writeBegin(Const4.YAPBYTE);
 		}
-		a_bytes.append(((Byte)a_object).byteValue());
+		a_bytes.writeByte(((Byte)a_object).byteValue());
 		if(Deploy.debug){
 			a_bytes.writeEnd();
 		}
