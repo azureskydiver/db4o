@@ -100,6 +100,6 @@ public abstract class StringMarshaller {
 
 	public abstract void defrag(SlotBuffer reader);
 	
-	public abstract void write(Marshaller context, Object obj);
+	public abstract void write(WriteContext context, Object obj);
 
 }

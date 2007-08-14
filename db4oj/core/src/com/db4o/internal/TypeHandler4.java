@@ -51,6 +51,6 @@ public interface TypeHandler4 extends Comparable4 {
 
 	void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
 
-    void write(Marshaller context, Object obj);
+    void write(WriteContext context, Object obj);
 	
 }

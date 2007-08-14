@@ -42,7 +42,7 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
     
     public abstract void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
     
-    public void write(Marshaller context, Object obj) {
+    public void write(WriteContext context, Object obj) {
         throw new NotImplementedException();
     }
 

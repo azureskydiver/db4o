@@ -84,7 +84,7 @@ public class StringMarshaller1 extends StringMarshaller{
 		reader.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
 	}
 	
-    public void write(Marshaller marshaller, Object obj) {
+    public void write(WriteContext marshaller, Object obj) {
         
         MarshallingContext context = (MarshallingContext) marshaller;
         

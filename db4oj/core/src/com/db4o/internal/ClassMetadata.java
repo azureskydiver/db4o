@@ -2030,7 +2030,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return new TransactionContext(transaction, value);
     }
     
-    public void write(Marshaller context, Object obj) {
+    public void write(WriteContext context, Object obj) {
         throw new NotImplementedException();
     }
 

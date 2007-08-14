@@ -51,7 +51,7 @@ public class StringMarshaller0 extends StringMarshaller {
 	public void defrag(SlotBuffer reader) {
 	}
 	
-	public void write(Marshaller context, Object obj) {
+	public void write(WriteContext context, Object obj) {
 	    throw new NotImplementedException();
 	}
 }

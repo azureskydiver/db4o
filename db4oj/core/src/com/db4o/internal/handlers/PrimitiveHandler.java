@@ -192,7 +192,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
 		return MarshallerFamily.current()._primitive;
 	}
 	
-    public void write(Marshaller context, Object obj) {
+    public void write(WriteContext context, Object obj) {
         throw new NotImplementedException();
     }
 
