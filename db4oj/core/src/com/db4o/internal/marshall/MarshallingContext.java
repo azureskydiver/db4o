@@ -11,7 +11,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class MarshallingContext implements FieldListInfo, Marshaller {
+public class MarshallingContext implements FieldListInfo, WriteContext {
     
     private static final byte VERSION = (byte)1;
     

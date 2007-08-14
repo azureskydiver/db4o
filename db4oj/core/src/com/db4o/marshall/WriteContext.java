@@ -10,7 +10,7 @@ import com.db4o.internal.*;
  * during marshalling and provides methods to marshall
  * objects. 
  */
-public interface Marshaller {
+public interface WriteContext {
 
     WriteBuffer newBuffer(int length);
 

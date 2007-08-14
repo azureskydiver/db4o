@@ -257,7 +257,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         }
     }
     
-    public void write(Marshaller context, Object obj) {
+    public void write(WriteContext context, Object obj) {
         MarshallerFamily.current()._string.write(context, obj);
     }
 
