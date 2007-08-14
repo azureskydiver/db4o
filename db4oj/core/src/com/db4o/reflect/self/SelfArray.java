@@ -35,7 +35,7 @@ public class SelfArray implements ReflectArray {
 	}
 
 	public ReflectClass getComponentType(ReflectClass a_class) {
-		return ((SelfClass)a_class).getComponentType();
+		return a_class.getComponentType();
 	}
 
 	public int getLength(Object array) {
@@ -50,6 +50,9 @@ public class SelfArray implements ReflectArray {
 	}
 
 	public Object newInstance(ReflectClass componentType, int length) {
+		if (!(componentType instanceof SelfClass)) {
+			componentType = componentType.getDelegate();
+		}
 		return _registry.arrayFor(((SelfClass)componentType).getJavaClass(),length);
 	}
 
