@@ -8,9 +8,9 @@ import com.db4o.internal.*;
 /**
  * @exclude
  */
-public class ObjectMarshallerSpike extends ObjectMarshaller1 {
+public class ObjectMarshaller2Spike extends ObjectMarshaller1 {
     
-    public ObjectMarshallerSpike() {
+    public ObjectMarshaller2Spike() {
         if(! MarshallingSpike.enabled){
             throw new IllegalStateException();
         }
