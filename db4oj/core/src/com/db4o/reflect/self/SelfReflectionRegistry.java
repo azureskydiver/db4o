@@ -51,9 +51,6 @@ public abstract class SelfReflectionRegistry {
 		if(String.class.isAssignableFrom(clazz)) {
 			return new String[length];
 		}
-		if(Object.class.isAssignableFrom(clazz)) {
-			return new Object[length];
-		}
 		return null;
 	}
 
@@ -62,9 +59,6 @@ public abstract class SelfReflectionRegistry {
 			if(ARRAYTYPES[i].equals(clazz)) {
 				return PRIMITIVES[i];
 			}
-		}
-		if (Object[].class.equals(clazz)) {
-			return Object.class;
 		}
 		return null;
 	}

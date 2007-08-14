@@ -47,7 +47,7 @@ public class SelfClass implements ReflectClass {
 	}
 
 	public ReflectConstructor[] getDeclaredConstructors() {
-		if (isInterface() || isPrimitive() || isArray() || isAbstract()) {
+		if (isInterface()) {
 			return new SelfConstructor[0];
 		}
 		return new SelfConstructor[] { new SelfConstructor(_class) };
@@ -63,9 +63,6 @@ public class SelfClass implements ReflectClass {
 			ClassInfo classInfo = _registry.infoFor(_class);
 			if (classInfo == null) {
 				_fields = EMPTY_FIELDS;
-				if (!isPrimitive() && _class != Object.class) {
-					_superClass = Object.class;
-				}
 				return;
 			}
 			_superClass = classInfo.superClass();
