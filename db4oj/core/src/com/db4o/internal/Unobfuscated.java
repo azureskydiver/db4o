@@ -26,7 +26,7 @@ public class Unobfuscated {
 	    if(! Deploy.csharp) {
 		    try {
 	            new LatinStringIO().write(writer, java.net.InetAddress.getLocalHost().getHostName());
-	            writer.append((byte)0);
+	            writer.writeByte((byte)0);
 	            writer.append(java.net.InetAddress.getLocalHost().getAddress());
 	        } catch (Exception e) {
 	        }

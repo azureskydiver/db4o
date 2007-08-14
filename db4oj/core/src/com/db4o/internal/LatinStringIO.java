@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import com.db4o.marshall.*;
+
 
 
 /**
@@ -27,21 +29,6 @@ public class LatinStringIO {
             return new UnicodeStringIO();
         }
     }
-
-
-// Currently not needed
-
-//	boolean isEqual(YapBytes bytes, String a_string){
-//		char ch;
-//		final int len = a_string.length();
-//		for (int ii = 0; ii < len; ii ++){
-//			ch = a_string.charAt(ii);
-//			if(bytes.i_bytes[bytes.i_offset++] != (byte) (ch & 0xff)){
-//				return false;
-//			}
-//		}
-//		return true;
-//	}
 	
 	public int length(String a_string){
 		return a_string.length() + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
@@ -73,23 +60,22 @@ public class LatinStringIO {
 		return a_string.length() + Const4.INT_LENGTH;
 	}
 	
-	protected int writetoBuffer(String str){
+	protected int marshalledLength(String str){
 	    final int len = str.length();
 	    checkBufferLength(len);
 	    str.getChars(0, len, chars, 0);
 	    return len;
 	}
-	        
 	
-	public void write(Buffer bytes, String string){
-	    final int len = writetoBuffer(string);
+	public void write(WriteBuffer buffer, String string){
+	    final int len = marshalledLength(string);
 	    for (int i = 0; i < len; i ++){
-			bytes._buffer[bytes._offset++] = (byte) (chars[i] & 0xff);
+			buffer.writeByte((byte) (chars[i] & 0xff));
 		}
 	}
 	
 	byte[] write(String string){
-	    final int len = writetoBuffer(string);
+	    final int len = marshalledLength(string);
 	    byte[] bytes = new byte[len];
 	    for (int i = 0; i < len; i ++){
 	        bytes[i] = (byte) (chars[i] & 0xff);

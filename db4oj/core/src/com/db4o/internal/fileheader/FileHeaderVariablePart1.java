@@ -53,7 +53,7 @@ public class FileHeaderVariablePart1 extends PersistentBase{
 
     public void writeThis(Transaction trans, Buffer writer) {
         writer.writeInt(_systemData.converterVersion());
-        writer.append(_systemData.freespaceSystem());
+        writer.writeByte(_systemData.freespaceSystem());
         writer.writeInt(_systemData.freespaceAddress());
         writer.writeInt(_systemData.identity().getID(trans));
         writer.writeLong(_systemData.lastTimeStampID());

@@ -28,19 +28,19 @@ public abstract class ObjectMarshaller {
 		public abstract void processField(FieldMetadata field,boolean isNull, ClassMetadata containingClass);
 	}
 
-    protected void traverseFields(ClassMetadata yc,Buffer reader,ObjectHeaderAttributes attributes,TraverseFieldCommand command) {
+    protected final void traverseFields(ClassMetadata yc,Buffer reader, FieldListInfo fieldList,TraverseFieldCommand command) {
     	int fieldIndex=0;
     	while(yc!=null&&!command.cancelled()) {
         	int fieldCount=command.fieldCount(yc, reader);
 			for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
-				command.processField(yc.i_fields[i],isNull(attributes,fieldIndex),yc);
+				command.processField(yc.i_fields[i],isNull(fieldList,fieldIndex),yc);
 			    fieldIndex ++;
 			}
 			yc=yc.i_ancestor;
     	}
     }
 
-    protected abstract boolean isNull(ObjectHeaderAttributes attributes,int fieldIndex);
+    protected abstract boolean isNull(FieldListInfo fieldList,int fieldIndex);
 
     public abstract void addFieldIndices(
             ClassMetadata yc, 

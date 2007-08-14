@@ -242,13 +242,13 @@ public final class ConfigBlock {
         for (int i = 0; i < 2; i++) {
             writer.writeLong(timerFileLock().openTime());
         }
-		writer.append(systemData().stringEncoding());
+		writer.writeByte(systemData().stringEncoding());
 		IntHandler.writeInt(0, writer);
 		IntHandler.writeInt(0, writer);
 		IntHandler.writeInt(_bootRecordID, writer);
 		IntHandler.writeInt(0, writer);  // dead byte from wrong attempt for blocksize
 		writer.append(passwordToken());
-        writer.append(systemData().freespaceSystem());
+        writer.writeByte(systemData().freespaceSystem());
         _container.ensureFreespaceSlot();
         IntHandler.writeInt(systemData().freespaceAddress(), writer);
         IntHandler.writeInt(systemData().converterVersion(), writer);

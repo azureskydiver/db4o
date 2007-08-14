@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 
@@ -49,5 +50,7 @@ public interface TypeHandler4 extends Comparable4 {
     QCandidate readSubCandidate(MarshallerFamily mf, Buffer buffer, QCandidates candidates, boolean withIndirection);
 
 	void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
+
+    void write(Marshaller context, Object obj);
 	
 }

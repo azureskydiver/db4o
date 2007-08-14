@@ -51,7 +51,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     }
     
     private void calculateLengths(Transaction trans, ClassMetadata yc, Object obj, int fieldIndex) {
-        _baseLength += Const4.INT_LENGTH;
+        _baseLength += Const4.INT_LENGTH;  // the int for the number of fields
         if (yc.i_fields != null) {
             for (int i = 0; i < yc.i_fields.length; i++) {
                 FieldMetadata yf = yc.i_fields[i];
@@ -93,7 +93,7 @@ public class ObjectHeaderAttributes1 extends ObjectHeaderAttributes{
     }
     
     public void write(StatefulBuffer writer){
-        writer.append(VERSION);
+        writer.writeByte(VERSION);
         writer.writeInt(_fieldCount);
         writer.writeBitMap(_nullBitMap);
         writer._payloadOffset = _baseLength;

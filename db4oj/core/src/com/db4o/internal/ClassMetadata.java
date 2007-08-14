@@ -15,6 +15,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -385,37 +386,36 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			_classIndexed = i_config.indexed();
 		}
     }
-
-    public void checkUpdateDepth(StatefulBuffer a_bytes) {
-        int depth = a_bytes.getUpdateDepth();
+    
+    public final int adjustUpdateDepth(Transaction trans, int depth) {
         Config4Class config = configOrAncestorConfig();
         if (depth == Const4.UNSPECIFIED) {
-            depth = checkUpdateDepthUnspecified(a_bytes.getStream());
+            depth = checkUpdateDepthUnspecified(trans.container().configImpl());
             if (classReflector().isCollection()) {
-                depth = adjustDepth(depth);
+                depth = adjustDepthToBorders(depth);
             }
         }
         if ((config != null && (config.cascadeOnDelete() == TernaryBool.YES || config.cascadeOnUpdate() == TernaryBool.YES))) {
-            depth = adjustDepth(depth);
+            depth = adjustDepthToBorders(depth);
         }
-        a_bytes.setUpdateDepth(depth - 1);
+        return depth - 1;
     }
 
-	private int adjustDepth(int depth) {
+	private int adjustDepthToBorders(int depth) {
 		int depthBorder = reflector().collectionUpdateDepth(classReflector());
-		if (depth>Integer.MIN_VALUE && depth < depthBorder) {
+		if (depth > Integer.MIN_VALUE && depth < depthBorder) {
 		    depth = depthBorder;
 		}
 		return depth;
 	}
 
-    int checkUpdateDepthUnspecified(ObjectContainerBase a_stream) {
-        int depth = a_stream.configImpl().updateDepth() + 1;
+    private final int checkUpdateDepthUnspecified(Config4Impl config) {
+        int depth = config.updateDepth() + 1;
         if (i_config != null && i_config.updateDepth() != 0) {
             depth = i_config.updateDepth() + 1;
         }
         if (i_ancestor != null) {
-            int ancestordepth = i_ancestor.checkUpdateDepthUnspecified(a_stream);
+            int ancestordepth = i_ancestor.checkUpdateDepthUnspecified(config);
             if (ancestordepth > depth) {
                 return ancestordepth;
             }
@@ -2028,6 +2028,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return value;
         }
         return new TransactionContext(transaction, value);
+    }
+    
+    public void write(Marshaller context, Object obj) {
+        throw new NotImplementedException();
     }
 
 }

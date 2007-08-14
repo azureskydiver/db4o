@@ -5,6 +5,7 @@ package com.db4o;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
 
 /**
  * @exclude
@@ -125,5 +126,22 @@ public abstract class Debug extends Debug4 {
             return true;
         }
         return false;
+    }
+
+    public static void writeBegin(WriteBuffer buffer, byte identifier) {
+        if (Deploy.debug) {
+            if (Deploy.brackets) {
+                buffer.writeByte(Const4.YAPBEGIN);
+            }
+            if (Deploy.identifiers) {
+                buffer.writeByte(identifier);
+            }
+        }
+    }
+
+    public static void writeEnd(WriteBuffer buffer) {
+        if (Deploy.debug && Deploy.brackets) {
+            buffer.writeByte(Const4.YAPEND);
+        }
     }
 }

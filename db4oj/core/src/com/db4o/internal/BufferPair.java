@@ -180,9 +180,9 @@ public final class BufferPair implements SlotBuffer {
 		context.targetWriteBytes(readers,targetSlot.address());
 	}
 
-	public void append(byte value) {
+	public void writeByte(byte value) {
 		_source.incrementOffset(1);
-		_target.append(value);
+		_target.writeByte(value);
 	}
 
 	public long readLong() {

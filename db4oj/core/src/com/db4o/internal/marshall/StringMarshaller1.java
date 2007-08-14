@@ -4,6 +4,7 @@ package com.db4o.internal.marshall;
 
 import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.marshall.*;
 
 
 public class StringMarshaller1 extends StringMarshaller{
@@ -82,5 +83,33 @@ public class StringMarshaller1 extends StringMarshaller{
 	public void defrag(SlotBuffer reader) {
 		reader.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
 	}
+	
+    public void write(Marshaller marshaller, Object obj) {
+        
+        MarshallingContext context = (MarshallingContext) marshaller;
+        
+        String str = (String) obj;
+        
+        ObjectContainerBase container = context.container();
+        
+        int length = container.stringIO().length(str);
+        
+        WriteBuffer buffer = marshaller.newBuffer(length);
+        
+        if (Deploy.debug) {
+            Debug.writeBegin(buffer, Const4.YAPSTRING);
+        }
+        
+        buffer.writeInt(length);
+        
+        container.stringIO().write(buffer, str);
+        
+        Debug.writeBegin(buffer, Const4.YAPSTRING);
+        
+        if (Deploy.debug) {
+            Debug.writeEnd(buffer);
+        }
+    }
+
 
 }

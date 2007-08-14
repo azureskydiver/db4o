@@ -75,7 +75,7 @@ public final class BooleanHandler extends PrimitiveHandler {
 		if(Deploy.debug){
 			buffer.writeBegin(Const4.YAPBOOLEAN);
 		}		
-		buffer.append(getEncodedByteValue(obj));
+		buffer.writeByte(getEncodedByteValue(obj));
 		if(Deploy.debug){
 			buffer.writeEnd();
 		}

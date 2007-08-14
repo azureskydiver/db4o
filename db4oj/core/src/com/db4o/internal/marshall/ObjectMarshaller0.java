@@ -152,7 +152,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
             }
         }else{
             writeObjectClassID(writer,yc.getID());
-            yc.checkUpdateDepth(writer);
+            writer.setUpdateDepth(yc.adjustUpdateDepth(a_trans, writer.getUpdateDepth()));
             marshall(yc, yo, obj, writer, true);
         }
         return writer;
@@ -165,14 +165,18 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         Object obj
         ) {
         
-        StatefulBuffer writer = createWriterForUpdate(trans,updateDepth, yapObject.getID(), 0, objectLength(yapObject));
+        ClassMetadata classMetadata = yapObject.classMetadata();
         
-        ClassMetadata yapClass = yapObject.classMetadata();
+        StatefulBuffer writer = createWriterForUpdate(
+            trans,
+            classMetadata.adjustUpdateDepth(trans, updateDepth), 
+            yapObject.getID(), 
+            0, 
+            objectLength(yapObject)
+        );
         
-        yapClass.checkUpdateDepth(writer);
-        
-        writer.writeInt(yapClass.getID());
-        marshall(yapClass, yapObject, obj, writer, false);
+        writer.writeInt(classMetadata.getID());
+        marshall(classMetadata, yapObject, obj, writer, false);
         
         marshallUpdateWrite(trans, yapObject, obj, writer);
     }
@@ -210,7 +214,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	traverseFields(yc, reader, attributes, command);
     }
 
-    protected boolean isNull(ObjectHeaderAttributes attributes,int fieldIndex) {
+    protected boolean isNull(FieldListInfo fieldList,int fieldIndex) {
     	return false;
     }
 

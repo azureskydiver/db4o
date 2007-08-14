@@ -105,7 +105,7 @@ public class FileHeader1 extends FileHeader {
     public void writeFixedPart(
         LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize, int freespaceID) {
         writer.append(SIGNATURE);
-        writer.append(VERSION);
+        writer.writeByte(VERSION);
         writer.writeInt((int)timeToWrite(_timerFileLock.openTime(), shuttingDown));
         writer.writeLong(timeToWrite(_timerFileLock.openTime(), shuttingDown));
         writer.writeLong(timeToWrite(System.currentTimeMillis(), shuttingDown));

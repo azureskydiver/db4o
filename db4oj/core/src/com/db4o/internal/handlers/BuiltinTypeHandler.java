@@ -2,8 +2,10 @@
 
 package com.db4o.internal.handlers;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
 
 
 
@@ -39,4 +41,9 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
     public abstract int compareTo(Object obj);
     
     public abstract void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
+    
+    public void write(Marshaller context, Object obj) {
+        throw new NotImplementedException();
+    }
+
 }

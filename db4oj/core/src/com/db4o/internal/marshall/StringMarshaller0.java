@@ -3,7 +3,9 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.marshall.*;
 
 
 public class StringMarshaller0 extends StringMarshaller {
@@ -47,5 +49,9 @@ public class StringMarshaller0 extends StringMarshaller {
     }
 
 	public void defrag(SlotBuffer reader) {
+	}
+	
+	public void write(Marshaller context, Object obj) {
+	    throw new NotImplementedException();
 	}
 }

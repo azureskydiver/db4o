@@ -20,7 +20,7 @@ public interface SlotBuffer {
 	void readEnd();
 
 	byte readByte();
-	void append(byte value);
+	void writeByte(byte value);
 
 	int readInt();
 	void writeInt(int value);
