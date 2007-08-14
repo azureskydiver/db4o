@@ -54,7 +54,7 @@ public class MarshallingSpike {
                 new ArrayMarshaller1(),
                 new ClassMarshaller2(),
                 new FieldMarshaller1(),
-                new ObjectMarshallerSpike(), 
+                new ObjectMarshaller2Spike(), 
                 new PrimitiveMarshaller1(),
                 new StringMarshaller1(),
                 new UntypedMarshaller1()),
