@@ -20,14 +20,12 @@ public class ObjectMarshaller2Spike extends ObjectMarshaller1 {
         
         MarshallingContext context = new MarshallingContext(trans, ref, updateDepth, true);
         
-        StatefulBuffer writer = null;
-        
-        marshall(ref, ref.getObject(), context, writer);
+        marshall(ref.getObject(), context);
         
         return context.ToWriteBuffer();
     }
     
-    protected void marshall(final ObjectReference ref, final Object obj, final MarshallingContext context, final StatefulBuffer writer) {
+    protected void marshall(final Object obj, final MarshallingContext context) {
         
         final Transaction trans = context.transaction();
 
@@ -35,9 +33,9 @@ public class ObjectMarshaller2Spike extends ObjectMarshaller1 {
             
             private int fieldIndex = -1; 
             
-            public int fieldCount(ClassMetadata yapClass, Buffer reader) {
+            public int fieldCount(ClassMetadata yapClass, Buffer buffer) {
                 int fieldCount = yapClass.i_fields.length;
-                reader.writeInt(fieldCount);
+                buffer.writeInt(fieldCount);
                 return fieldCount;
             }
             
@@ -46,17 +44,20 @@ public class ObjectMarshaller2Spike extends ObjectMarshaller1 {
                 Object child = field.getOrCreate(trans, obj);
                 if(child == null) {
                     context.isNull(fieldIndex, true);
-                    field.addIndexEntry(trans, writer.getID(), null);
+                    field.addIndexEntry(trans, context.objectID(), null);
                     return;
                 }
                 
                 if (child instanceof Db4oTypeImpl) {
                     child = ((Db4oTypeImpl) child).storedTo(trans);
                 }
-                field.marshall(ref, child, _family, writer, containingClass.configOrAncestorConfig(), context.isNew());
+                field.marshall(context, child);
             }
         };
-        traverseFields(context.classMetadata(), writer, context, command);
+        
+        // traverseFields(context.classMetadata(), writer, context, command);
+        
+        traverseFields(context.classMetadata(), null, context, command);
     }
 
 }
