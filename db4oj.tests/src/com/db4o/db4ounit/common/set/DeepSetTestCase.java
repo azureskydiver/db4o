@@ -13,7 +13,7 @@ public class DeepSetTestCase extends AbstractDb4oTestCase {
 		new DeepSetTestCase().runSolo();
 	}
 	
-	public class Item {
+	public static class Item {
 		public Item child;
 		public String name;
 	}

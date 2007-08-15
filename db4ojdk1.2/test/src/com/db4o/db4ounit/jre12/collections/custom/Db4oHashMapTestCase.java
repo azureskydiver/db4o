@@ -143,9 +143,6 @@ public class Db4oHashMapTestCase extends AbstractDb4oTestCase {
 		db().deactivate(data.i_map, Integer.MAX_VALUE);
 		data.i_map.put("yup", new AtomData("yup"));
 
-		db().set(this);
-		db().set(this);
-		db().set(this);
 		db().set(data.i_map);
 		db().set(data.i_map);
 		db().set(data.i_map);
@@ -314,4 +311,7 @@ public class Db4oHashMapTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
+	public static void main(String[] args) {
+		new Db4oHashMapTestCase().runAll();
+	}
 }

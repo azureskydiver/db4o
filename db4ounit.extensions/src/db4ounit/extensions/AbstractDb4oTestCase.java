@@ -17,11 +17,11 @@ import db4ounit.extensions.fixtures.*;
 
 public class AbstractDb4oTestCase implements Db4oTestCase {
     
-	private transient Db4oFixture _fixture;
+	private Db4oFixture _fixture;
 	
-	private transient static final int DEFAULT_CONCURRENCY_THREAD_COUNT = 10;
+	private static final int DEFAULT_CONCURRENCY_THREAD_COUNT = 10;
 	
-	private transient int _threadCount = DEFAULT_CONCURRENCY_THREAD_COUNT;
+	private int _threadCount = DEFAULT_CONCURRENCY_THREAD_COUNT;
 	
 	/* (non-Javadoc)
 	 * @see db4ounit.extensions.Db4oTestCase#fixture(db4ounit.extensions.Db4oFixture)

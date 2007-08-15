@@ -16,7 +16,7 @@ public class HashtableModifiedUpdateDepthTestCase extends Db4oClientServerTestCa
 		new HashtableModifiedUpdateDepthTestCase().runClientServer();
 	}
 	
-	public class Item {
+	public static class Item {
 		public Hashtable ht;
 	}
 

@@ -13,7 +13,8 @@ import db4ounit.extensions.AbstractDb4oTestCase;
 public class EnumTestCase extends AbstractDb4oTestCase {
 	private final static int NUMRUNS=1;
     
-    public void testSingleStoreRetrieve() throws Exception {     	
+    @SuppressWarnings("unchecked")
+	public void testSingleStoreRetrieve() throws Exception {     	
         // We make sure the Jdk5Enum class is already loaded, otherwise
         // we may get the side effect that storing it will load the class
         // and overwrite our changes exactly when we store them. 
@@ -45,7 +46,7 @@ public class EnumTestCase extends AbstractDb4oTestCase {
         sub.descend("type").constrain("A");
         sub.descend("count").constrain(Integer.valueOf(1));
 
-        ObjectSet result=query.execute();
+        ObjectSet<EnumHolder> result=(ObjectSet<EnumHolder>)query.execute();
         Assert.areEqual(1, result.size());
         data=(EnumHolder)result.next();
         Assert.areEqual(data.getType(), TypeCountEnum.A);
@@ -55,29 +56,30 @@ public class EnumTestCase extends AbstractDb4oTestCase {
         ensureEnumInstancesInDB(db());
     }
 
+	private static class TypeCountEnumComparator implements Comparator<TypeCountEnum> {
+		public int compare(TypeCountEnum e1, TypeCountEnum e2) {
+			return e1.name().compareTo(e2.name());
+		}
+	}
+
+	private static class CollectionHolder {
+		public List<TypeCountEnum> list; 
+		public List<TypeCountEnum> db4olist;
+		public Set<TypeCountEnum> set; 
+		public Map<TypeCountEnum,String> keymap; 
+		public Map<String,TypeCountEnum> valmap; 
+		public Map<TypeCountEnum,String> db4okeymap; 
+		public Map<String,TypeCountEnum> db4ovalmap; 
+		public TypeCountEnum[] array; 
+	}
         
     @SuppressWarnings("unchecked")
 	public void testEnumsInCollections() throws Exception {
     	final boolean withDb4oCollections=true;
 
-    	class CollectionHolder {
-    		public List<TypeCountEnum> list; 
-    		public List<TypeCountEnum> db4olist;
-    		public Set<TypeCountEnum> set; 
-    		public Map<TypeCountEnum,String> keymap; 
-    		public Map<String,TypeCountEnum> valmap; 
-    		public Map<TypeCountEnum,String> db4okeymap; 
-    		public Map<String,TypeCountEnum> db4ovalmap; 
-    		public TypeCountEnum[] array; 
-    	}
-
     	CollectionHolder holder=new CollectionHolder();
     	holder.list=new ArrayList<TypeCountEnum>(NUMRUNS);
-    	Comparator<TypeCountEnum> comp=new Comparator<TypeCountEnum>() {
-			public int compare(TypeCountEnum e1, TypeCountEnum e2) {
-				return e1.name().compareTo(e2.name());
-			}    		
-    	};
+    	Comparator<TypeCountEnum> comp=new TypeCountEnumComparator();
     	holder.set=new TreeSet<TypeCountEnum>(comp);
     	holder.keymap=new HashMap<TypeCountEnum,String>(NUMRUNS);
     	holder.valmap=new HashMap<String,TypeCountEnum>(NUMRUNS);
@@ -125,12 +127,13 @@ public class EnumTestCase extends AbstractDb4oTestCase {
     	ensureEnumInstancesInDB(db());
     }
     
+	@SuppressWarnings("unchecked")
 	private void ensureEnumInstancesInDB(ObjectContainer db) {
 		Query query;
-		ObjectSet result;
+		ObjectSet<TypeCountEnum> result;
 		query=db.query();
 		query.constrain(TypeCountEnum.class);
-		result=query.execute();
+		result=(ObjectSet<TypeCountEnum>)query.execute();
 		// We should have all enum members once in the database, since they're
         // statically referenced by the Enum subclass.
 		if(result.size()!=2) {

@@ -16,7 +16,7 @@ public class HashtableModifiedUpdateDepthTestCase extends Db4oClientServerTestCa
 		new HashtableModifiedUpdateDepthTestCase().runConcurrency();
 	}
 	
-	public class Item {
+	public static class Item {
 		public Hashtable ht;
 	}
 
