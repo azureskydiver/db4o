@@ -171,9 +171,17 @@
 	<target name="run-tests-net1" depends="configure-net1, run-tests-net">
 	</target>
 	
-	<target name="run-tests-net" depends="build-tests" unless="mono">
+	<target name="run-tests-core" depends="build-tests">
 		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true">
 		</exec>
+	</target>
+
+	<target name="run-tests-admin" depends="build-admin-tests" unless="skip.admin">
+		<exec executable="${dir.dist.dll.net}/Db4oAdmin.Tests.exe" dir="${dir.dist.dll.net}" failonerror="true">
+		</exec>
+	</target>
+	
+	<target name="run-tests-net" depends="run-tests-core, run-tests-admin" unless="mono">
 	</target>
 	
 	<target name="run-tests-mono" depends="build-tests" if="mono">
@@ -467,7 +475,7 @@
 	</target>
 		
 	<target name="build-core" depends="init, check-dependencies, sharpen">
-		
+	
 		<fileset id="core.sources" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
 		</fileset>
@@ -478,10 +486,61 @@
 		</csc-all>		
 	</target>
 	
-	<target name="build-admin" depends="build-tools" unless="skip.admin">
+	<target name="build-admin-tests" depends="build-admin" unless="skip.admin">
+	
+		<property name="src.dir" location="${dir.n.v6}/Db4oAdmin/Db4oAdmin.Tests" />
+
+		<csc
+			destfile="${dir.dist.dll.net}/Db4oAdmin.Tests.exe"
+			targettype="exe"
+			mainclass="Db4oAdmin.Tests.Program"
+			definitions="${csharp.definitions}"
+			debug="true"
+			executable="${csc.executable}"
+			extraoptions="${csc.tests.extraoptions}">
+	
+			<resource
+				file="${src.dir}/Core/Resources/CustomInstrumentationSubject.cs"
+				name="Db4oAdmin.Tests.Core.Resources.CustomInstrumentationSubject.cs" />
+	
+			<resource
+				file="${src.dir}/NQ/Resources/CFNQSubject.cs"
+				name="Db4oAdmin.Tests.NQ.Resources.CFNQSubject.cs" />	
+			<resource
+				file="${src.dir}/NQ/Resources/PredicateSubject.cs"
+				name="Db4oAdmin.Tests.NQ.Resources.PredicateSubject.cs" />
+			<resource
+				file="${src.dir}/NQ/Resources/UnoptimizablePredicateSubject.cs"
+				name="Db4oAdmin.Tests.NQ.Resources.UnoptimizablePredicateSubject.cs" />
+	
+			<resource
+				file="${src.dir}/TA/Resources/TAInstrumentationSubject.cs"
+				name="Db4oAdmin.Tests.TA.Resources.TAInstrumentationSubject.cs" />	
+	
+			<src dir="${src.dir}">
+				<include name="**/*.cs" />
+				<exclude name="**/Resources/**" />
+				<exclude name="**/obj/**" />
+			</src>
+	
+			<reference dir="${dir.dist.dll.net}">
+				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4objects.Db4o.TA.dll" />
+				<include name="Db4objects.Db4o.Tools.dll" />
+				<include name="Db4oUnit.dll" />
+				<include name="Db4oUnit.Extensions.dll" />
+				<include name="Mono.Cecil.dll" />
+				<include name="Cecil.FlowAnalysis.dll" />
+				<include name="Db4oAdmin.exe" />
+			</reference>
+		</csc>
+	</target>
+	
+	<target name="build-admin" depends="build-tools, build-ta" unless="skip.admin">
 		<csc outputfile="${dir.dist.dll.net}/Db4oAdmin.exe"
 			targettype="exe"
 			debug="true"
+			definitions="TRACE"
 			executable="${csc.executable}">
 			<src dir="${dir.n.v6}/Db4oAdmin/Db4oAdmin">
 				<include name="**/*.cs" />
