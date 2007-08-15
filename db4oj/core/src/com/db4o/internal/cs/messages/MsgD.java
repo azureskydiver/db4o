@@ -106,7 +106,7 @@ public class MsgD extends Msg{
 	}
 
 	public MsgD getWriter(StatefulBuffer bytes) {
-		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength());
+		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.length());
 		message._payLoad.append(bytes._buffer);
 		return message;
 	}

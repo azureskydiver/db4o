@@ -18,7 +18,7 @@ public final class MReadMultipleObjects extends MsgD implements ServerSideMessag
 					StatefulBuffer bytes = stream().readWriterByID(transaction(),id);
 					if(bytes != null){
 						ret[i] = Msg.OBJECT_TO_CLIENT.getWriter(bytes);
-						length += ret[i]._payLoad.getLength();
+						length += ret[i]._payLoad.length();
 					}
 				} catch (Exception e) {
 					if(Debug.atHome){
@@ -34,7 +34,7 @@ public final class MReadMultipleObjects extends MsgD implements ServerSideMessag
 			if(ret[i] == null){
 				multibytes.writeInt(0);
 			}else{
-				multibytes.writeInt(ret[i]._payLoad.getLength());
+				multibytes.writeInt(ret[i]._payLoad.length());
 				multibytes._payLoad.append(ret[i]._payLoad._buffer);
 			}
 		}

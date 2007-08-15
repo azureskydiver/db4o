@@ -46,7 +46,7 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
         System.arraycopy(_buffer, fromOffset, to._buffer, toOffset, length);
     }
 
-	public int getLength() {
+	public int length() {
 		return _buffer.length;
 	}
 	
@@ -60,7 +60,7 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
      * @param a_address
      */
     public void read(ObjectContainerBase stream, int address, int addressOffset){
-        stream.readBytes(_buffer, address, addressOffset, getLength());
+        stream.readBytes(_buffer, address, addressOffset, length());
     }
 	
     public final void readBegin(byte identifier) {
@@ -96,7 +96,7 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
 	}
 	
 	public void readEncrypt(ObjectContainerBase stream, int address) throws Db4oIOException {
-		stream.readBytes(_buffer, address, getLength());
+		stream.readBytes(_buffer, address, length());
 		stream._handlers.decrypt(this);
 	}
 
@@ -172,7 +172,7 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
     }
     
     void replaceWith(byte[] a_bytes) {
-        System.arraycopy(a_bytes, 0, _buffer, 0, getLength());
+        System.arraycopy(a_bytes, 0, _buffer, 0, length());
     }
     
     public String toString() {

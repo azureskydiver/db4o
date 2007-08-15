@@ -279,7 +279,7 @@ public final class HandlerRegistry {
 	    if(i_encrypt){
 			int encryptorOffSet = i_lastEncryptorByte;
 			byte[] bytes = reader._buffer;
-			for (int i = reader.getLength() - 1; i >= 0; i--) {
+			for (int i = reader.length() - 1; i >= 0; i--) {
 				bytes[i] += i_encryptor[encryptorOffSet];
 				if (encryptorOffSet == 0) {
 					encryptorOffSet = i_lastEncryptorByte;
@@ -294,7 +294,7 @@ public final class HandlerRegistry {
         if(i_encrypt){
 	        byte[] bytes = reader._buffer;
 	        int encryptorOffSet = i_lastEncryptorByte;
-	        for (int i = reader.getLength() - 1; i >= 0; i--) {
+	        for (int i = reader.length() - 1; i >= 0; i--) {
 	            bytes[i] -= i_encryptor[encryptorOffSet];
 	            if (encryptorOffSet == 0) {
 	                encryptorOffSet = i_lastEncryptorByte;

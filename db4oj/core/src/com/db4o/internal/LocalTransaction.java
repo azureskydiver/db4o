@@ -682,7 +682,7 @@ public class LocalTransaction extends Transaction {
         
         objectBytes.setCascadeDeletes(cascade);
         clazz.deleteMembers(oh._marshallerFamily, oh._headerAttributes, objectBytes, typeInfo, true);
-        slotFreeOnCommit(id, new Slot(objectBytes.getAddress(), objectBytes.getLength()));
+        slotFreeOnCommit(id, new Slot(objectBytes.getAddress(), objectBytes.length()));
     }
     
 	private Callbacks callbacks(){

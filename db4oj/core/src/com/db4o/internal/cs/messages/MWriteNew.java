@@ -19,7 +19,7 @@ public final class MWriteNew extends MsgObject implements ServerSideMessage {
             stream.prefetchedIDConsumed(id);
             transaction().slotFreePointerOnRollback(id);
             
-            Slot slot = stream.getSlot(_payLoad.getLength());
+            Slot slot = stream.getSlot(_payLoad.length());
             _payLoad.address(slot.address());
             
             transaction().slotFreeOnRollback(id, slot);

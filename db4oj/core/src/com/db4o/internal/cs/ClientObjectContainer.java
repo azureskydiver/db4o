@@ -752,7 +752,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			if (msg == null) {
 				multibytes.writeInt(0);
 			} else {
-				multibytes.writeInt(msg.payLoad().getLength());
+				multibytes.writeInt(msg.payLoad().length());
 				multibytes.payLoad().append(msg.payLoad()._buffer);
 			}
 		}
@@ -763,7 +763,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public final void addToBatch(Msg msg) {
 		_batchedMessages.add(msg);
 		// the first INT_LENGTH is for buffer.length, and then buffer content.
-		_batchedQueueLength += Const4.INT_LENGTH + msg.payLoad().getLength();
+		_batchedQueueLength += Const4.INT_LENGTH + msg.payLoad().length();
 	}
 
 	private final void clearBatchedObjects() {

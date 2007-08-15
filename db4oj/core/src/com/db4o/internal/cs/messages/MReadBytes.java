@@ -9,7 +9,7 @@ public final class MReadBytes extends MsgD implements ServerSideMessage {
 	
 	public final Buffer getByteLoad() {
 		int address = _payLoad.readInt();
-		int length = _payLoad.getLength() - (Const4.INT_LENGTH);
+		int length = _payLoad.length() - (Const4.INT_LENGTH);
         Slot slot = new Slot(address, length);
 		_payLoad.removeFirstBytes(Const4.INT_LENGTH);
 		_payLoad.useSlot(slot);
@@ -17,7 +17,7 @@ public final class MReadBytes extends MsgD implements ServerSideMessage {
 	}
 
 	public final MsgD getWriter(StatefulBuffer bytes) {
-		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.getLength() + Const4.INT_LENGTH);
+		MsgD message = getWriterForLength(bytes.getTransaction(), bytes.length() + Const4.INT_LENGTH);
 		message._payLoad.writeInt(bytes.getAddress());
 		message._payLoad.append(bytes._buffer);
 		return message;

@@ -306,20 +306,20 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 				}
 			}
 			if (doCheck) {
-				checkXBytes(address, addressOffset, bytes.getLength());
+				checkXBytes(address, addressOffset, bytes.length());
 			}
 		}
 
 		if (DTrace.enabled) {
 			DTrace.WRITE_BYTES.logLength(address + addressOffset, bytes
-					.getLength());
+					.length());
 		}
 
 		_file.blockSeek(address, addressOffset);
-		_file.write(bytes._buffer, bytes.getLength());
+		_file.write(bytes._buffer, bytes.length());
 		if (_backupFile != null) {
 			_backupFile.blockSeek(address, addressOffset);
-			_backupFile.write(bytes._buffer, bytes.getLength());
+			_backupFile.write(bytes._buffer, bytes.length());
 		}
 	}
 
