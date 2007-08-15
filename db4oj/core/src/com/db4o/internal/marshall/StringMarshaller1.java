@@ -84,17 +84,16 @@ public class StringMarshaller1 extends StringMarshaller{
 		reader.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
 	}
 	
-    public void write(WriteContext marshaller, Object obj) {
-        
-        MarshallingContext context = (MarshallingContext) marshaller;
+    public void write(WriteContext context, Object obj) {
         
         String str = (String) obj;
         
-        ObjectContainerBase container = context.container();
+        InternalObjectContainer objectContainer = (InternalObjectContainer) context.objectContainer();
+        LatinStringIO stringIO = objectContainer.container().stringIO();
         
-        int length = container.stringIO().length(str);
+        int length = stringIO.length(str);
         
-        WriteBuffer buffer = marshaller.newBuffer(length);
+        WriteBuffer buffer = context.newBuffer(length);
         
         if (Deploy.debug) {
             Debug.writeBegin(buffer, Const4.YAPSTRING);
@@ -102,7 +101,7 @@ public class StringMarshaller1 extends StringMarshaller{
         
         buffer.writeInt(length);
         
-        container.stringIO().write(buffer, str);
+        stringIO.write(buffer, str);
         
         Debug.writeBegin(buffer, Const4.YAPSTRING);
         
