@@ -2033,5 +2033,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public void write(WriteContext context, Object obj) {
         throw new NotImplementedException();
     }
+    
+    public Object read(WriteContext context) {
+        throw new NotImplementedException();
+    }
+
 
 }

@@ -2,7 +2,7 @@
 
 package com.db4o.marshall;
 
-import com.db4o.internal.*;
+import com.db4o.*;
 
 
 /**
@@ -11,6 +11,8 @@ import com.db4o.internal.*;
  * objects. 
  */
 public interface WriteContext {
+    
+    ObjectContainer objectContainer();
 
     WriteBuffer newBuffer(int length);
 

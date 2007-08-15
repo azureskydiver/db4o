@@ -45,5 +45,9 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
     public void write(WriteContext context, Object obj) {
         throw new NotImplementedException();
     }
+    
+    public Object read(WriteContext context) {
+        throw new NotImplementedException();
+    }
 
 }

@@ -121,4 +121,8 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         return null;
     }
 
+    public ObjectContainer objectContainer() {
+        return transaction().objectContainer();
+    }
+
 }

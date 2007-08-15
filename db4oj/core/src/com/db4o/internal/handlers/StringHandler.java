@@ -3,6 +3,7 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -259,6 +260,10 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     
     public void write(WriteContext context, Object obj) {
         MarshallerFamily.current()._string.write(context, obj);
+    }
+
+    public Object read(WriteContext context) {
+        throw new NotImplementedException();
     }
 
 }
