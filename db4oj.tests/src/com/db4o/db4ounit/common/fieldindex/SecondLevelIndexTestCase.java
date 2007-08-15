@@ -17,7 +17,7 @@ public class SecondLevelIndexTestCase extends AbstractDb4oTestCase implements Di
         new SecondLevelIndexTestCase().runSolo();
     }
 	
-	public class ItemPair {
+	public static class ItemPair {
 	    
 	    public Item item1;
 	    

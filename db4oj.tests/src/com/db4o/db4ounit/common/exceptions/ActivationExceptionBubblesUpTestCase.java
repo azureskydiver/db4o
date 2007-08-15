@@ -17,6 +17,12 @@ public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 		new ActivationExceptionBubblesUpTestCase().runAll();
 	}
 	
+	public static class AcceptAllEvaluation implements Evaluation {
+		public void evaluate(Candidate candidate) {
+			candidate.include(true);
+		}
+	}
+
 	public static final class ItemTranslator implements ObjectTranslator {
 
 		public void onActivate(ObjectContainer container,
@@ -50,11 +56,7 @@ public class ActivationExceptionBubblesUpTestCase extends AbstractDb4oTestCase {
 					public void run() throws Throwable {
 						final Query q = db().query();
 						q.constrain(Item.class);
-						q.constrain(new Evaluation() {
-							public void evaluate(Candidate candidate) {
-								candidate.include(true);
-							}
-						});
+						q.constrain(new AcceptAllEvaluation());
 						q.execute().next();
 					}
 				});

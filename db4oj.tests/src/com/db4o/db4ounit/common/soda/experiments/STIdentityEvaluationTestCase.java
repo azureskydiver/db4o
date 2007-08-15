@@ -39,11 +39,7 @@ public class STIdentityEvaluationTestCase extends com.db4o.db4ounit.common.soda.
         q = newQuery();
         q.constrain(STIdentityEvaluationTestCase.class);
         q.descend("helper").constrain(helperA).identity();
-        q.constrain(new Evaluation() {
-            public void evaluate(Candidate candidate) {
-                candidate.include(true);
-            }
-        });
+        q.constrain(new AcceptAllEvaluation());
         expect(q, new int[] {1, 2, 3});
     }
     
@@ -55,7 +51,13 @@ public class STIdentityEvaluationTestCase extends com.db4o.db4ounit.common.soda.
         expect(q, new int[] {4});
     }
     
-    public static class Helper{
+    public static class AcceptAllEvaluation implements Evaluation {
+		public void evaluate(Candidate candidate) {
+		    candidate.include(true);
+		}
+	}
+
+	public static class Helper{
         
         public String hString;
         

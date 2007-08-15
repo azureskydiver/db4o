@@ -13,7 +13,7 @@ public class DeepSetClientServerTestCase extends Db4oClientServerTestCase {
 		new DeepSetClientServerTestCase().runAll();
 	}
 	
-	public class Item {
+	public static class Item {
 		public Item child;
 		public String name;
 	}
