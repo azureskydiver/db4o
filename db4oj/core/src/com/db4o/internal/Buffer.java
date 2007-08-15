@@ -63,19 +63,9 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
         stream.readBytes(_buffer, address, addressOffset, getLength());
     }
 	
-    public final void readBegin(byte a_identifier) {
+    public final void readBegin(byte identifier) {
 		if (Deploy.debug) {
-			if (Deploy.brackets) {
-				if (readByte() != Const4.YAPBEGIN) {
-					throw new RuntimeException("Buffer.readBegin() YAPBEGIN expected.");
-				}
-			}
-			if (Deploy.identifiers) {
-				byte readB = readByte();
-				if (readB != a_identifier) {
-					throw new RuntimeException("Buffer.readBegin() wrong identifier: "+(char)readB);
-				}
-			}
+		    Debug.readBegin(this, identifier);
 		}
 	}
     
@@ -111,10 +101,8 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
 	}
 
     public void readEnd() {
-        if (Deploy.debug && Deploy.brackets) {
-            if (readByte() != Const4.YAPEND) {
-                throw new RuntimeException("YapBytes.readEnd() YAPEND expected");
-            }
+        if(Deploy.debug){
+            Debug.readEnd(this);
         }
     }
 

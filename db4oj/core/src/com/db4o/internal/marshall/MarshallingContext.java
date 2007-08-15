@@ -115,12 +115,6 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         return transaction().container();
     }
 
-    public WriteBuffer newBuffer(int length) {
-        
-        // TODO Auto-generated method stub
-        return null;
-    }
-
     public ObjectContainer objectContainer() {
         return transaction().objectContainer();
     }

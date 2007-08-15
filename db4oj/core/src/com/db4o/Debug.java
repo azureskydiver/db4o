@@ -128,7 +128,7 @@ public abstract class Debug extends Debug4 {
         return false;
     }
 
-	public static void readBegin(ReadBuffer buffer, byte identifier) {
+	public static final void readBegin(ReadBuffer buffer, byte identifier) {
 		if (Deploy.debug) {
 			if (Deploy.brackets) {
 				if (buffer.readByte() != Const4.YAPBEGIN) {
@@ -145,7 +145,7 @@ public abstract class Debug extends Debug4 {
 		
 	}
 	
-    public static void readEnd(ReadBuffer buffer) {
+    public static final void readEnd(ReadBuffer buffer) {
         if (Deploy.debug && Deploy.brackets) {
             if (buffer.readByte() != Const4.YAPEND) {
                 throw new RuntimeException("Debug.readEnd() YAPEND expected");
@@ -153,7 +153,7 @@ public abstract class Debug extends Debug4 {
         }
     }
     
-    public static void writeBegin(WriteBuffer buffer, byte identifier) {
+    public static final void writeBegin(WriteBuffer buffer, byte identifier) {
         if (Deploy.debug) {
             if (Deploy.brackets) {
                 buffer.writeByte(Const4.YAPBEGIN);
@@ -164,7 +164,7 @@ public abstract class Debug extends Debug4 {
         }
     }
 
-    public static void writeEnd(WriteBuffer buffer) {
+    public static final void writeEnd(WriteBuffer buffer) {
         if (Deploy.debug && Deploy.brackets) {
             buffer.writeByte(Const4.YAPEND);
         }
