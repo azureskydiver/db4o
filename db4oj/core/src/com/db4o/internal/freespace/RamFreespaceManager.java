@@ -120,7 +120,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     
     private void freeReader(StatefulBuffer reader) {
         if(! Debug.freespace){
-            _file.free(reader.getAddress(), reader.getLength());
+            _file.free(reader.getAddress(), reader.length());
         }
     }
     

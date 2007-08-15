@@ -140,7 +140,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
          if(entry instanceof StatefulBuffer){
              StatefulBuffer entryAsWriter = (StatefulBuffer)entry;
              writer.writeInt(entryAsWriter.getAddress());
-             writer.writeInt(entryAsWriter.getLength());
+             writer.writeInt(entryAsWriter.length());
              return;
          }
          if(entry instanceof Slot){
@@ -266,7 +266,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
             Debug.writeBegin(context, Const4.YAPSTRING);
         }
         
-        context.writeInt(stringIo(context).length(str));
+        context.writeInt(str.length());
         stringIo(context).write(context, str);
         
         if (Deploy.debug) {

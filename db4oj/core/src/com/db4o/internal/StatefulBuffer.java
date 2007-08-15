@@ -141,7 +141,7 @@ public final class StatefulBuffer extends Buffer {
         final int[] length = { 0 };
         forEachEmbedded(new StatefulBufferVisitor() {
             public void visit(StatefulBuffer a_bytes) {
-                length[0] += a_bytes.getLength() + a_bytes.embeddedLength();
+                length[0] += a_bytes.length() + a_bytes.embeddedLength();
             }
         });
         return length[0];
@@ -173,7 +173,7 @@ public final class StatefulBuffer extends Buffer {
         return i_instantionDepth;
     }
 
-    public int getLength() {
+    public int length() {
         return i_length;
     }
 
@@ -359,7 +359,7 @@ public final class StatefulBuffer extends Buffer {
      * index will be possible.
      */
     public void writePayload(StatefulBuffer payLoad, boolean topLevel){
-        checkMinimumPayLoadOffsetAndWritePointerAndLength(payLoad.getLength(), topLevel);
+        checkMinimumPayLoadOffsetAndWritePointerAndLength(payLoad.length(), topLevel);
         System.arraycopy(payLoad._buffer, 0, _buffer, _payloadOffset, payLoad._buffer.length);
         transferPayLoadAddress(payLoad, _payloadOffset);
         _payloadOffset += payLoad._buffer.length;

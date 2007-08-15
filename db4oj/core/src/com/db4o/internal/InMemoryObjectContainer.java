@@ -107,7 +107,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
 
 	public void writeBytes(Buffer bytes, int address, int addressOffset) {
 		int fullAddress = address + addressOffset;
-		int length = bytes.getLength();
+		int length = bytes.length();
 		ensureMemoryFileSize(fullAddress + length);   
 		System.arraycopy(bytes._buffer, 0, _memoryFile.getBytes(), fullAddress , length);
 	}

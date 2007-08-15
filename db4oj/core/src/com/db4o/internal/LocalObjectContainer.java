@@ -667,7 +667,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public final void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child) {
-        Slot slot = getSlot(a_child.getLength());
+        Slot slot = getSlot(a_child.length());
         a_child.getTransaction().slotFreeOnRollback(slot.address(), slot);
         a_child.address(slot.address());
         a_child.writeEncrypt();
@@ -722,7 +722,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     public final void getSlotForUpdate(StatefulBuffer buffer){
         Transaction trans = buffer.getTransaction();
         int id = buffer.getID();
-        Slot slot = getSlot(buffer.getLength());
+        Slot slot = getSlot(buffer.length());
         buffer.address(slot.address());
         trans.produceUpdateSlotChange(id, slot);
     }

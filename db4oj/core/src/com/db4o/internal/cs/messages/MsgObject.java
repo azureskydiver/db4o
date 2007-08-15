@@ -14,7 +14,7 @@ public class MsgObject extends MsgD {
 	private int _address;
 	
 	MsgD getWriter(StatefulBuffer bytes, int[] prependInts) {
-		int lengthNeeded = bytes.getLength() + LENGTH_FOR_FIRST;
+		int lengthNeeded = bytes.length() + LENGTH_FOR_FIRST;
 		if(prependInts != null){
 			lengthNeeded += (prependInts.length * Const4.INT_LENGTH);
 		}

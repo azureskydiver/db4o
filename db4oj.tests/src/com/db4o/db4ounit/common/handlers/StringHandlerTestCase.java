@@ -4,7 +4,6 @@ package com.db4o.db4ounit.common.handlers;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.StringHandler;
 import com.db4o.internal.slots.Slot;
-import com.db4o.marshall.*;
 
 import db4ounit.Assert;
 
@@ -29,13 +28,13 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
     }
 	
 	public void testReadWrite(){
-	    MockMarshallingContext context = new MockMarshallingContext(db());
-	    stringHandler().write(context, "one");
-	    stringHandler().read(context);
+	    MockWriteContext writeContext = new MockWriteContext(db());
+	    stringHandler().write(writeContext, "one");
 	    
+	    MockReadContext readContext = new MockReadContext(writeContext);
+	    
+	    String str = (String)stringHandler().read(readContext);
+	    Assert.areEqual("one", str);
 	}
-	
-	
-	
 	
 }

@@ -23,8 +23,8 @@ public final class BufferPair implements SlotBuffer {
 	public BufferPair(Buffer source,DefragContext mapping,Transaction systemTrans) {
 		_source = source;
 		_mapping=mapping;
-		_target = new Buffer(source.getLength());
-		_source.copyTo(_target, 0, 0, _source.getLength());
+		_target = new Buffer(source.length());
+		_source.copyTo(_target, 0, 0, _source.length());
 		_systemTrans=systemTrans;
 	}
 	
@@ -157,7 +157,7 @@ public final class BufferPair implements SlotBuffer {
 	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, Buffer sourceReader) throws CorruptionException, IOException {
 		int targetID=context.mappedID(sourceID);
 	
-		Slot targetSlot = context.allocateTargetSlot(sourceReader.getLength());
+		Slot targetSlot = context.allocateTargetSlot(sourceReader.length());
 		
 		if(registerAddressMapping) {
 			int sourceAddress=context.sourceAddressByID(sourceID);
