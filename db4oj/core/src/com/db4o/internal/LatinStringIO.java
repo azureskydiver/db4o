@@ -40,12 +40,12 @@ public class LatinStringIO {
 	    }
 	}
 	
-	public String read(Buffer bytes, int a_length){
-	    checkBufferLength(a_length);
-		for(int ii = 0; ii < a_length; ii++){
-			chars[ii] = (char)(bytes._buffer[bytes._offset ++]& 0xff);
+	public String read(ReadBuffer buffer, int length){
+	    checkBufferLength(length);
+		for(int ii = 0; ii < length; ii++){
+			chars[ii] = (char)(buffer.readByte() & 0xff);
 		}
-		return new String(chars,0,a_length);
+		return new String(chars,0,length);
 	}
 	
 	public String read(byte[] a_bytes){

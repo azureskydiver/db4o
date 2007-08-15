@@ -4,7 +4,6 @@ package com.db4o.internal.marshall;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.marshall.*;
 
 
 public abstract class StringMarshaller {
@@ -99,7 +98,5 @@ public abstract class StringMarshaller {
     }
 
 	public abstract void defrag(SlotBuffer reader);
-	
-	public abstract void write(WriteContext context, Object obj);
 
 }

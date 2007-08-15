@@ -125,4 +125,18 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         return transaction().objectContainer();
     }
 
+	public void useVariableLength() {
+		throw new NotImplementedException();
+	}
+
+	public void writeByte(byte b) {
+		throw new NotImplementedException();
+		
+	}
+
+	public void writeInt(int i) {
+		throw new NotImplementedException();
+		
+	}
+
 }

@@ -28,8 +28,8 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
         return new StringHandler(stream(), stream().stringIO());
     }
 	
-	public void _testReadWrite(){
-	    MockWriteContext context = new MockWriteContext(db());
+	public void testReadWrite(){
+	    MockMarshallingContext context = new MockMarshallingContext(db());
 	    stringHandler().write(context, "one");
 	    stringHandler().read(context);
 	    

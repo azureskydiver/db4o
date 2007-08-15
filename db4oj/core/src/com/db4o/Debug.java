@@ -128,6 +128,31 @@ public abstract class Debug extends Debug4 {
         return false;
     }
 
+	public static void readBegin(ReadBuffer buffer, byte identifier) {
+		if (Deploy.debug) {
+			if (Deploy.brackets) {
+				if (buffer.readByte() != Const4.YAPBEGIN) {
+					throw new RuntimeException("Debug.readBegin() YAPBEGIN expected.");
+				}
+			}
+			if (Deploy.identifiers) {
+				byte readB = buffer.readByte();
+				if (readB != identifier) {
+					throw new RuntimeException("Debug.readBegin() wrong identifier: "+(char)readB);
+				}
+			}
+		}
+		
+	}
+	
+    public static void readEnd(ReadBuffer buffer) {
+        if (Deploy.debug && Deploy.brackets) {
+            if (buffer.readByte() != Const4.YAPEND) {
+                throw new RuntimeException("Debug.readEnd() YAPEND expected");
+            }
+        }
+    }
+    
     public static void writeBegin(WriteBuffer buffer, byte identifier) {
         if (Deploy.debug) {
             if (Deploy.brackets) {

@@ -2,13 +2,12 @@
 
 package com.db4o.marshall;
 
-
 /**
  * this interface is passed to {@link TypeHandler4}
- * during marshalling and provides methods to marshall
- * objects. 
+ * when instantiating objects.
  */
-public interface WriteContext extends Context, WriteBuffer {
+public interface ReadContext extends Context, ReadBuffer {
 
+	void useVariableLength();
 
 }
