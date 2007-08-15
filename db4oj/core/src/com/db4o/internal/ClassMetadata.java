@@ -2034,7 +2034,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         throw new NotImplementedException();
     }
     
-    public Object read(WriteContext context) {
+    public Object read(ReadContext context) {
         throw new NotImplementedException();
     }
 

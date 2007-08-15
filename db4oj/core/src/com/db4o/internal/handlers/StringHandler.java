@@ -3,7 +3,6 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -252,18 +251,54 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     public void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
         if(! redirect){
         	readers.incrementOffset(linkLength());
-        }
-        else {
+        } else {
         	mf._string.defrag(readers);
         }
     }
     
     public void write(WriteContext context, Object obj) {
-        MarshallerFamily.current()._string.write(context, obj);
+        
+        context.useVariableLength();
+    	
+    	String str = (String) obj;
+        
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPSTRING);
+        }
+        
+        context.writeInt(stringIo(context).length(str));
+        stringIo(context).write(context, str);
+        
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
     }
 
-    public Object read(WriteContext context) {
-        throw new NotImplementedException();
+    public Object read(ReadContext context) {
+    	
+        context.useVariableLength();
+    	
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPSTRING);
+        }
+        
+        int length = context.readInt();
+        
+        Object result = stringIo(context).read(context, length);
+        
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        
+        return result;
     }
+    
+	private LatinStringIO stringIo(Context context) {
+		InternalObjectContainer objectContainer = (InternalObjectContainer) context.objectContainer();
+        LatinStringIO stringIO = objectContainer.container().stringIO();
+		return stringIO;
+	}
+
+
 
 }

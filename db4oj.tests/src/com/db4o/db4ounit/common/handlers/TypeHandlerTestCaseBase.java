@@ -12,17 +12,17 @@ public class TypeHandlerTestCaseBase extends AbstractDb4oTestCase {
     
     
     
-    public static class MockWriteContext implements WriteContext{
+    public static class MockMarshallingContext implements ReadContext, WriteContext{
 
         private final ObjectContainer _objectContainer;
         
-        private final Buffer _fixedPart;
+        private final Buffer _header;
         
         private final Buffer _payLoad;
-
-        public MockWriteContext(ObjectContainer objectContainer){
+        
+        public MockMarshallingContext(ObjectContainer objectContainer){
             _objectContainer = objectContainer;
-            _fixedPart = new Buffer(1000);
+            _header = new Buffer(1000);
             _payLoad = new Buffer(1000);
         }
 
@@ -33,6 +33,31 @@ public class TypeHandlerTestCaseBase extends AbstractDb4oTestCase {
         public ObjectContainer objectContainer() {
             return _objectContainer;
         }
+
+		public void useVariableLength() {
+			// _header.writeInt(_pa)
+			// TODO Auto-generated method stub
+		}
+
+		public byte readByte() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		public int readInt() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		public void writeByte(byte b) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void writeInt(int i) {
+			// TODO Auto-generated method stub
+			
+		}
         
     }
 

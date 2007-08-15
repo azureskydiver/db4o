@@ -12,7 +12,7 @@ import com.db4o.marshall.*;
  * 
  * @exclude
  */
-public class Buffer implements SlotBuffer, WriteBuffer {
+public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
 	
 	// for coding convenience, we allow objects to grab into the buffer
 	public byte[] _buffer;

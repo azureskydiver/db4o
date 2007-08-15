@@ -39,12 +39,12 @@ public final class UnicodeStringIO extends LatinStringIO{
 		return (a_string.length() * 2) + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
 	}
 	
-	public String read(Buffer bytes, int a_length){
-	    checkBufferLength(a_length);
-		for(int ii = 0; ii < a_length; ii++){
-			chars[ii] = (char)((bytes._buffer[bytes._offset ++]& 0xff) | ((bytes._buffer[bytes._offset ++]& 0xff) << 8));
+	public String read(ReadBuffer buffer, int length){
+	    checkBufferLength(length);
+		for(int ii = 0; ii < length; ii++){
+			chars[ii] = (char)((buffer.readByte() & 0xff) | ((buffer.readByte() & 0xff) << 8));
 		}
-		return new String(chars,0,a_length);
+		return new String(chars, 0, length);
 	}
 	
 	public String read(byte[] a_bytes){

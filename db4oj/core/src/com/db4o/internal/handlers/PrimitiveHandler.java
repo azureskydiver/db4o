@@ -196,7 +196,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
         throw new NotImplementedException();
     }
     
-    public Object read(WriteContext context) {
+    public Object read(ReadContext context) {
         throw new NotImplementedException();
     }
 
