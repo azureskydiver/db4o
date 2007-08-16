@@ -37,7 +37,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		_id = a_id;
 	}
 
-	ObjectReference(ClassMetadata classMetadata, int id) {
+	public ObjectReference(ClassMetadata classMetadata, int id) {
 		_class = classMetadata;
 		_id = id;
 	}

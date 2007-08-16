@@ -1,10 +1,12 @@
 /* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.common.handlers;
+package com.db4o.db4ounit.common.internal;
 
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 
+
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 
@@ -29,17 +31,23 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
             return;
         }
         
+        int imaginativeID = 500;
+        
         Item item = new Item("one");
         
-        ObjectReference ref = new ObjectReference();
+        ObjectReference ref = new ObjectReference(classMetadataForObject(item), imaginativeID);
         ref.setObject(item);
         
         ObjectMarshaller2Spike marshaller = new ObjectMarshaller2Spike();
         StatefulBuffer buffer = marshaller.marshallNew(trans(), ref, Integer.MAX_VALUE);
         
+        Assert.isNotNull(buffer);
         
-            
         
+    }
+
+    private ClassMetadata classMetadataForObject(Object obj) {
+        return stream().produceClassMetadata(reflector().forObject(obj));
     }
     
     

@@ -25,6 +25,14 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     
     private final BitMap4 _nullBitMap;
     
+    private final MarshallingBuffer _fixedLengthBuffer;
+    
+    private MarshallingBuffer _payLoadBuffer;
+    
+    private MarshallingBuffer _currentBuffer;
+    
+    private int _fieldWriteCount;
+    
 
     public MarshallingContext(Transaction trans, ObjectReference ref, int updateDepth, boolean isNew) {
         _transaction = trans;
@@ -32,6 +40,8 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         _nullBitMap = new BitMap4(fieldCount());
         _updateDepth = classMetadata().adjustUpdateDepth(trans, updateDepth);
         _isNew = isNew;
+        _fixedLengthBuffer = new MarshallingBuffer();
+        _currentBuffer = _fixedLengthBuffer;
     }
 
     private int fieldCount() {
@@ -67,8 +77,6 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         buffer.writeBitMap(_nullBitMap);
         
         
-        
-        
 
         if (Deploy.debug) {
             buffer.writeEnd();
@@ -78,8 +86,15 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
 
     private int marshalledLength() {
-        // TODO Auto-generated method stub
-        return 0;
+        int length = requiredLength(_fixedLengthBuffer);
+        if(_payLoadBuffer != null){
+            length += requiredLength(_payLoadBuffer);
+        }
+        return length;
+    }
+
+    private int requiredLength(MarshallingBuffer buffer) {
+        return container().blockAlignedBytes(buffer.length());
     }
     
     private void writeObjectClassID(Buffer reader, int id) {
@@ -119,18 +134,36 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         return transaction().objectContainer();
     }
 
-	public void useVariableLength() {
-		throw new NotImplementedException();
-	}
-
 	public void writeByte(byte b) {
-		throw new NotImplementedException();
-		
+	    prepareWrite();
+	    _currentBuffer.writeByte(b);
 	}
 
-	public void writeInt(int i) {
-		throw new NotImplementedException();
-		
-	}
+    public void writeInt(int i) {
+        prepareWrite();
+        _currentBuffer.writeInt(i);
+    }
+    
+	private void prepareWrite() {
+	    if(_currentBuffer == _payLoadBuffer){
+	        return;
+	    }
+        if(! isFirstWriteToField()){
+            usePayloadBuffer();
+        }
+        _fieldWriteCount++;
+    }
+
+    private void usePayloadBuffer() {
+        throw new NotImplementedException();
+    }
+
+    private boolean isFirstWriteToField() {
+        return _fieldWriteCount < 1;
+    }
+    
+    public void nextField(){
+        _fieldWriteCount = 0;
+    }
 
 }

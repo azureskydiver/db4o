@@ -15,6 +15,8 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 		    EmbeddedClientObjectContainerTestCase.class,
 		    InternalObjectContainerAPITestCase.class,
+		    MarshallingBufferTestCase.class,
+		    MarshallingContextTestCase.class,
 		    PartialObjectContainerTestCase.class,
 			SerializerTestCase.class,
 			StoredClassTestCase.class,
