@@ -13,9 +13,9 @@ import com.db4o.internal.slots.*;
  */
 public abstract class PersistentBase implements Persistent {
 
-    protected int i_id; // UID and address of pointer to the object in our file
+    protected int _id; // UID and address of pointer to the object in our file
 
-    protected int i_state = 2; // DIRTY and ACTIVE
+    protected int _state = 2; // DIRTY and ACTIVE
 
     final boolean beginProcessing() {
         if (bitIsTrue(Const4.PROCESSING)) {
@@ -26,19 +26,19 @@ public abstract class PersistentBase implements Persistent {
     }
 
     final void bitFalse(int bitPos) {
-        i_state &= ~(1 << bitPos);
+        _state &= ~(1 << bitPos);
     }
     
     final boolean bitIsFalse(int bitPos) {
-        return (i_state | (1 << bitPos)) != i_state;
+        return (_state | (1 << bitPos)) != _state;
     }
 
     final boolean bitIsTrue(int bitPos) {
-        return (i_state | (1 << bitPos)) == i_state;
+        return (_state | (1 << bitPos)) == _state;
     }
 
     final void bitTrue(int bitPos) {
-        i_state |= (1 << bitPos);
+        _state |= (1 << bitPos);
     }
 
     void cacheDirty(Collection4 col) {
@@ -57,7 +57,7 @@ public abstract class PersistentBase implements Persistent {
     }
 
     public int getID() {
-        return i_id;
+        return _id;
     }
 
     public final boolean isActive() {
@@ -69,7 +69,7 @@ public abstract class PersistentBase implements Persistent {
     }
     
     public final boolean isNew(){
-        return i_id == 0;
+        return _id == 0;
     }
 
     public int linkLength() {
@@ -101,7 +101,7 @@ public abstract class PersistentBase implements Persistent {
     	if(DTrace.enabled){
     		DTrace.YAPMETA_SET_ID.log(a_id);
     	}
-        i_id = a_id;
+        _id = a_id;
     }
 
     public final void setStateClean() {
@@ -155,7 +155,7 @@ public abstract class PersistentBase implements Persistent {
                 
 	        }else{
 	            slot = stream.getSlot(length);
-	            trans.slotFreeOnRollbackCommitSetPointer(i_id, slot, isFreespaceComponent());
+	            trans.slotFreeOnRollbackCommitSetPointer(_id, slot, isFreespaceComponent());
 	        }
 	        
 	        writeToFile(trans, writer, slot);

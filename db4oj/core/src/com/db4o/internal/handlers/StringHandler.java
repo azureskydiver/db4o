@@ -256,6 +256,25 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         }
     }
     
+    public Object read(ReadContext context) {
+        
+        context.useVariableLength();
+        
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPSTRING);
+        }
+        
+        int length = context.readInt();
+        
+        Object result = stringIo(context).read(context, length);
+        
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        
+        return result;
+    }
+    
     public void write(WriteContext context, Object obj) {
         
         context.useVariableLength();
@@ -274,25 +293,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         }
     }
 
-    public Object read(ReadContext context) {
-    	
-        context.useVariableLength();
-    	
-        if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPSTRING);
-        }
-        
-        int length = context.readInt();
-        
-        Object result = stringIo(context).read(context, length);
-        
-        if (Deploy.debug) {
-            Debug.readEnd(context);
-        }
-        
-        return result;
-    }
-    
 	private LatinStringIO stringIo(Context context) {
 		InternalObjectContainer objectContainer = (InternalObjectContainer) context.objectContainer();
         LatinStringIO stringIO = objectContainer.container().stringIO();
