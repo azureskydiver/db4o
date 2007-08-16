@@ -1486,12 +1486,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     public void rename(String newName){
         if (!_container.isClient()) {
-            int tempState = i_state;
+            int tempState = _state;
             setStateOK();
             i_name = newName;
             setStateDirty();
             write(_container.systemTransaction());
-            i_state = tempState;
+            _state = tempState;
         }else{
             Exceptions4.throwRuntimeException(58);
         }

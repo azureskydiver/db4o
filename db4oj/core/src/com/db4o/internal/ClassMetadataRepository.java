@@ -454,7 +454,7 @@ public final class ClassMetadataRepository extends PersistentBase {
 
     public void refreshClasses() {
         ClassMetadataRepository rereader = new ClassMetadataRepository(_systemTransaction);
-        rereader.i_id = i_id;
+        rereader._id = _id;
         rereader.read(stream().systemTransaction());
         Iterator4 i = rereader.i_classes.iterator();
         while (i.moveNext()) {
@@ -541,7 +541,7 @@ public final class ClassMetadataRepository extends PersistentBase {
     		return;
     	}
     	
-        if(i_id == 0) {        	
+        if(_id == 0) {        	
 			systemData().classCollectionID(a_id);
         }
         super.setID(a_id);

@@ -19,14 +19,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	private Object _object;
 	private VirtualAttributes _virtualAttributes;
 
-	private ObjectReference id_preceding;
-	private ObjectReference id_subsequent;
-	private int id_size;
+	private ObjectReference _idPreceding;
+	private ObjectReference _idSubsequent;
+	private int _idSize;
 
-	private ObjectReference hc_preceding;
-	private ObjectReference hc_subsequent;
-	private int hc_size;
-	private int hc_code; // redundant hashCode
+	private ObjectReference _hcPreceding;
+	private ObjectReference _hcSubsequent;
+	private int _hcSize;
+	private int _hcHashcode; // redundant hashCode
 	
 	private int _lastTopLevelCallId;
     
@@ -34,63 +34,59 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     }
 	
 	public ObjectReference(int a_id) {
-		i_id = a_id;
+		_id = a_id;
 	}
 
-	ObjectReference(ClassMetadata a_yapClass, int a_id) {
-		_class = a_yapClass;
-		i_id = a_id;
+	ObjectReference(ClassMetadata classMetadata, int id) {
+		_class = classMetadata;
+		_id = id;
 	}
 	
 	public void activate() {
 		if (isActive()) {
 			return;
 		}
-		activate(stream().transaction(), getObject(), 1, false);
+		activate(container().transaction(), getObject(), 1, false);
 	}
 
-	private ObjectContainerBase stream() {
-		return _class.stream();
-	}
-	
-	public void activate(Transaction ta, Object a_object, int a_depth, boolean a_refresh) {
-	    activate1(ta, a_object, a_depth, a_refresh);
+	public void activate(Transaction ta, Object obj, int depth, boolean isRefresh) {
+	    activate1(ta, obj, depth, isRefresh);
 		ta.container().activate3CheckStill(ta);
 	}
 	
-	void activate1(Transaction ta, Object a_object, int a_depth, boolean a_refresh) {
-	    if(a_object instanceof Db4oTypeImpl){
-	        a_depth = ((Db4oTypeImpl)a_object).adjustReadDepth(a_depth);
+	void activate1(Transaction ta, Object obj, int depth, boolean isRefresh) {
+	    if(obj instanceof Db4oTypeImpl){
+	        depth = ((Db4oTypeImpl)obj).adjustReadDepth(depth);
 	    }
-		if (a_depth > 0) {
-		    ObjectContainerBase stream = ta.container();
-		    if(a_refresh){
-				logActivation(stream, "refresh");
+		if (depth > 0) {
+		    ObjectContainerBase container = ta.container();
+		    if(isRefresh){
+				logActivation(container, "refresh");
 		    }else{
 				if (isActive()) {
-					if (a_object != null) {
-						if (a_depth > 1) {
+					if (obj != null) {
+						if (depth > 1) {
 					        if (_class.config() != null) {
-					            a_depth = _class.config().adjustActivationDepth(a_depth);
+					            depth = _class.config().adjustActivationDepth(depth);
 					        }
-							_class.activateFields(ta, a_object, a_depth);
+							_class.activateFields(ta, obj, depth);
 						}
 						return;
 					}
 				}
-				logActivation(stream, "activate");
+				logActivation(container, "activate");
 		    }
-			read(ta, null, a_object, a_depth, Const4.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
+			read(ta, null, obj, depth, Const4.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
 		}
 	}
 	
-	private void logActivation(ObjectContainerBase stream, String event) {
-		logEvent(stream, event, Const4.ACTIVATION);
+	private void logActivation(ObjectContainerBase container, String event) {
+		logEvent(container, event, Const4.ACTIVATION);
 	}
 
-	private void logEvent(ObjectContainerBase stream, String event, final int level) {
-		if (stream.configImpl().messageLevel() > level) {
-			stream.message("" + getID() + " " + event + " " + _class.getName());
+	private void logEvent(ObjectContainerBase container, String event, final int level) {
+		if (container.configImpl().messageLevel() > level) {
+			container.message("" + getID() + " " + event + " " + _class.getName());
 		}
 	}
 
@@ -115,14 +111,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
             
             StatefulBuffer writer = MarshallerFamily.current()._object.marshallNew(trans, this, updateDepth);
 
-            ObjectContainerBase stream = trans.container();
-			stream.writeNew(_class, writer);
+            ObjectContainerBase container = trans.container();
+			container.writeNew(_class, writer);
 
             Object obj = _object;
 			objectOnNew(trans, obj);
 			
             if(! _class.isPrimitive()){
-                _object = stream._references.createYapRef(this, obj);
+                _object = container._references.createYapRef(this, obj);
             }
 			
 			setStateClean();
@@ -137,17 +133,17 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		_class.dispatchEvent(container, obj, EventDispatcher.NEW);
 	}
 
-	public void deactivate(Transaction a_trans, int a_depth) {
-		if (a_depth > 0) {
+	public void deactivate(Transaction trans, int depth) {
+		if (depth > 0) {
 			Object obj = getObject();
 			if (obj != null) {
 			    if(obj instanceof Db4oTypeImpl){
 			        ((Db4oTypeImpl)obj).preDeactivate();
 			    }
-			    ObjectContainerBase stream = a_trans.container();
-				logActivation(stream, "deactivate");
+			    ObjectContainerBase container = trans.container();
+				logActivation(container, "deactivate");
 				setStateDeactivated();
-				_class.deactivate(a_trans, obj, a_depth);
+				_class.deactivate(trans, obj, depth);
 			}
 		}
 	}
@@ -230,26 +226,26 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 	
 	final Object read(
-		Transaction ta,
-		StatefulBuffer a_reader,
-		Object a_object,
-		int a_instantiationDepth,
+		Transaction trans,
+		StatefulBuffer buffer,
+		Object obj,
+		int instantiationDepth,
 		int addToIDTree,
         boolean checkIDTree) {
 
-		// a_instantiationDepth is a way of overriding instantiation
+		// instantiationDepth is a way of overriding instantiation
 		// in a positive manner
 
 		if (beginProcessing()) {
 		    
-		    ObjectContainerBase stream = ta.container();
+		    ObjectContainerBase container = trans.container();
 		    int id = getID();
-			if (a_reader == null && id > 0) {
-				a_reader = stream.readWriterByID(ta, id);
+			if (buffer == null && id > 0) {
+				buffer = container.readWriterByID(trans, id);
 			}
-			if (a_reader != null) {
+			if (buffer != null) {
                 
-                ObjectHeader header = new ObjectHeader(stream, a_reader);
+                ObjectHeader header = new ObjectHeader(container, buffer);
 			    
 				_class = header.classMetadata();
 
@@ -260,33 +256,33 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
                 if(checkIDTree){
                     // the typical side effect: static fields and enums
                     
-                    Object objectInCacheFromClassCreation = ta.objectForIdFromCache(getID());
+                    Object objectInCacheFromClassCreation = trans.objectForIdFromCache(getID());
                     if(objectInCacheFromClassCreation != null){
                         return objectInCacheFromClassCreation;
                     }
                 }
 
-				a_reader.setInstantiationDepth(a_instantiationDepth);
-				a_reader.setUpdateDepth(addToIDTree);
+				buffer.setInstantiationDepth(instantiationDepth);
+				buffer.setUpdateDepth(addToIDTree);
 				
 				if(addToIDTree == Const4.TRANSIENT){
-				    a_object = _class.instantiateTransient(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader);
+				    obj = _class.instantiateTransient(this, obj, header._marshallerFamily, header._headerAttributes, buffer);
 				}else{
-				    a_object = _class.instantiate(this, a_object, header._marshallerFamily, header._headerAttributes, a_reader, addToIDTree == Const4.ADD_TO_ID_TREE);
+				    obj = _class.instantiate(this, obj, header._marshallerFamily, header._headerAttributes, buffer, addToIDTree == Const4.ADD_TO_ID_TREE);
 				}
 				
 			}
 			endProcessing();
 		}
-		return a_object;
+		return obj;
 	}
 
-	public final Object readPrefetch(ObjectContainerBase a_stream, StatefulBuffer a_reader) {
+	public final Object readPrefetch(ObjectContainerBase container, StatefulBuffer buffer) {
 
 		Object readObject = null;
 		if (beginProcessing()) {
             
-            ObjectHeader header = new ObjectHeader(a_stream, a_reader);
+            ObjectHeader header = new ObjectHeader(container, buffer);
 
 			_class = header.classMetadata();
 
@@ -303,40 +299,40 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 			// that are carried around in a_bytes.
 			//
 			// TODO: optimize  
-			a_reader.setInstantiationDepth(_class.configOrAncestorConfig() == null ? 1 : 0);
+			buffer.setInstantiationDepth(_class.configOrAncestorConfig() == null ? 1 : 0);
 
-			readObject = _class.instantiate(this, getObject(), header._marshallerFamily, header._headerAttributes, a_reader, true);
+			readObject = _class.instantiate(this, getObject(), header._marshallerFamily, header._headerAttributes, buffer, true);
 			
 			endProcessing();
 		}
 		return readObject;
 	}
 
-	public final void readThis(Transaction a_trans, Buffer a_bytes) {
+	public final void readThis(Transaction trans, Buffer buffer) {
 		if (Deploy.debug) {
 			System.out.println(
 				"YapObject.readThis should never be called. All handling takes place in read");
 		}
 	}
 
-	void setObjectWeak(ObjectContainerBase a_stream, Object a_object) {
-		if (a_stream._references._weak) {
+	void setObjectWeak(ObjectContainerBase container, Object obj) {
+		if (container._references._weak) {
 			if(_object != null){
 				Platform4.killYapRef(_object);
 			}
-			_object = Platform4.createYapRef(a_stream._references._queue, this, a_object);
+			_object = Platform4.createYapRef(container._references._queue, this, obj);
 		} else {
-			_object = a_object;
+			_object = obj;
 		}
 	}
 
-	public void setObject(Object a_object) {
-		_object = a_object;
+	public void setObject(Object obj) {
+		_object = obj;
 	}
 
-	final void store(Transaction trans, ClassMetadata yapClass, Object obj){
+	final void store(Transaction trans, ClassMetadata classMetadata, Object obj){
 		_object = obj;
-		_class = yapClass;
+		_class = classMetadata;
 		
 		writeObjectBegin();
 		
@@ -404,7 +400,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         _virtualAttributes = at;
     }
 
-	public void writeThis(Transaction trans, Buffer a_writer) {
+	public void writeThis(Transaction trans, Buffer buffer) {
 		if (Deploy.debug) {
 			System.out.println("YapObject.writeThis should never be called.");
 		}
@@ -463,41 +459,41 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 
 	/***** HCTREE *****/
 
-	public ObjectReference hc_add(ObjectReference a_add) {
-		if (a_add.getObject() == null) {
+	public ObjectReference hc_add(ObjectReference newRef) {
+		if (newRef.getObject() == null) {
 			return this;
 		}
-		a_add.hc_init();
-		return hc_add1(a_add);
+		newRef.hc_init();
+		return hc_add1(newRef);
 	}
     
     public void hc_init(){
-        hc_preceding = null;
-        hc_subsequent = null;
-        hc_size = 1;
-        hc_code = hc_getCode(getObject());
+        _hcPreceding = null;
+        _hcSubsequent = null;
+        _hcSize = 1;
+        _hcHashcode = hc_getCode(getObject());
     }
     
-	private ObjectReference hc_add1(ObjectReference a_new) {
-		int cmp = hc_compare(a_new);
+	private ObjectReference hc_add1(ObjectReference newRef) {
+		int cmp = hc_compare(newRef);
 		if (cmp < 0) {
-			if (hc_preceding == null) {
-				hc_preceding = a_new;
-				hc_size++;
+			if (_hcPreceding == null) {
+				_hcPreceding = newRef;
+				_hcSize++;
 			} else {
-				hc_preceding = hc_preceding.hc_add1(a_new);
-				if (hc_subsequent == null) {
+				_hcPreceding = _hcPreceding.hc_add1(newRef);
+				if (_hcSubsequent == null) {
 					return hc_rotateRight();
 				} 
 				return hc_balance();
 			}
 		} else {
-			if (hc_subsequent == null) {
-				hc_subsequent = a_new;
-				hc_size++;
+			if (_hcSubsequent == null) {
+				_hcSubsequent = newRef;
+				_hcSize++;
 			} else {
-				hc_subsequent = hc_subsequent.hc_add1(a_new);
-				if (hc_preceding == null) {
+				_hcSubsequent = _hcSubsequent.hc_add1(newRef);
+				if (_hcPreceding == null) {
 					return hc_rotateLeft();
 				} 
 				return hc_balance();
@@ -507,37 +503,37 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 
 	private ObjectReference hc_balance() {
-		int cmp = hc_subsequent.hc_size - hc_preceding.hc_size;
+		int cmp = _hcSubsequent._hcSize - _hcPreceding._hcSize;
 		if (cmp < -2) {
 			return hc_rotateRight();
 		} else if (cmp > 2) {
 			return hc_rotateLeft();
 		} else {
-			hc_size = hc_preceding.hc_size + hc_subsequent.hc_size + 1;
+			_hcSize = _hcPreceding._hcSize + _hcSubsequent._hcSize + 1;
 			return this;
 		}
 	}
 
 	private void hc_calculateSize() {
-		if (hc_preceding == null) {
-			if (hc_subsequent == null) {
-				hc_size = 1;
+		if (_hcPreceding == null) {
+			if (_hcSubsequent == null) {
+				_hcSize = 1;
 			} else {
-				hc_size = hc_subsequent.hc_size + 1;
+				_hcSize = _hcSubsequent._hcSize + 1;
 			}
 		} else {
-			if (hc_subsequent == null) {
-				hc_size = hc_preceding.hc_size + 1;
+			if (_hcSubsequent == null) {
+				_hcSize = _hcPreceding._hcSize + 1;
 			} else {
-				hc_size = hc_preceding.hc_size + hc_subsequent.hc_size + 1;
+				_hcSize = _hcPreceding._hcSize + _hcSubsequent._hcSize + 1;
 			}
 		}
 	}
 
-	private int hc_compare(ObjectReference a_to) {
-	    int cmp = a_to.hc_code - hc_code;
+	private int hc_compare(ObjectReference toRef) {
+	    int cmp = toRef._hcHashcode - _hcHashcode;
 	    if(cmp == 0){
-	        cmp = a_to.i_id - i_id;
+	        cmp = toRef._id - _id;
 	    }
 		return cmp;
 	}
@@ -546,28 +542,28 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return hc_find(hc_getCode(obj), obj);
 	}
 
-	private ObjectReference hc_find(int a_id, Object obj) {
-		int cmp = a_id - hc_code;
+	private ObjectReference hc_find(int id, Object obj) {
+		int cmp = id - _hcHashcode;
 		if (cmp < 0) {
-			if (hc_preceding != null) {
-				return hc_preceding.hc_find(a_id, obj);
+			if (_hcPreceding != null) {
+				return _hcPreceding.hc_find(id, obj);
 			}
 		} else if (cmp > 0) {
-			if (hc_subsequent != null) {
-				return hc_subsequent.hc_find(a_id, obj);
+			if (_hcSubsequent != null) {
+				return _hcSubsequent.hc_find(id, obj);
 			}
 		} else {
 			if (obj == getObject()) {
 				return this;
 			}
-			if (hc_preceding != null) {
-				ObjectReference inPreceding = hc_preceding.hc_find(a_id, obj);
+			if (_hcPreceding != null) {
+				ObjectReference inPreceding = _hcPreceding.hc_find(id, obj);
 				if (inPreceding != null) {
 					return inPreceding;
 				}
 			}
-			if (hc_subsequent != null) {
-				return hc_subsequent.hc_find(a_id, obj);
+			if (_hcSubsequent != null) {
+				return _hcSubsequent.hc_find(id, obj);
 			}
 		}
 		return null;
@@ -582,52 +578,52 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 
 	private ObjectReference hc_rotateLeft() {
-		ObjectReference tree = hc_subsequent;
-		hc_subsequent = tree.hc_preceding;
+		ObjectReference tree = _hcSubsequent;
+		_hcSubsequent = tree._hcPreceding;
 		hc_calculateSize();
-		tree.hc_preceding = this;
-		if(tree.hc_subsequent == null){
-			tree.hc_size = 1 + hc_size;
+		tree._hcPreceding = this;
+		if(tree._hcSubsequent == null){
+			tree._hcSize = 1 + _hcSize;
 		}else{
-			tree.hc_size = 1 + hc_size + tree.hc_subsequent.hc_size;
+			tree._hcSize = 1 + _hcSize + tree._hcSubsequent._hcSize;
 		}
 		return tree;
 	}
 
 	private ObjectReference hc_rotateRight() {
-		ObjectReference tree = hc_preceding;
-		hc_preceding = tree.hc_subsequent;
+		ObjectReference tree = _hcPreceding;
+		_hcPreceding = tree._hcSubsequent;
 		hc_calculateSize();
-		tree.hc_subsequent = this;
-		if(tree.hc_preceding == null){
-			tree.hc_size = 1 + hc_size;
+		tree._hcSubsequent = this;
+		if(tree._hcPreceding == null){
+			tree._hcSize = 1 + _hcSize;
 		}else{
-			tree.hc_size = 1 + hc_size + tree.hc_preceding.hc_size;
+			tree._hcSize = 1 + _hcSize + tree._hcPreceding._hcSize;
 		}
 		return tree;
 	}
 
 	private ObjectReference hc_rotateSmallestUp() {
-		if (hc_preceding != null) {
-			hc_preceding = hc_preceding.hc_rotateSmallestUp();
+		if (_hcPreceding != null) {
+			_hcPreceding = _hcPreceding.hc_rotateSmallestUp();
 			return hc_rotateRight();
 		}
 		return this;
 	}
 
-	ObjectReference hc_remove(ObjectReference a_find) {
-		if (this == a_find) {
+	ObjectReference hc_remove(ObjectReference findRef) {
+		if (this == findRef) {
 			return hc_remove();
 		}
-		int cmp = hc_compare(a_find);
+		int cmp = hc_compare(findRef);
 		if (cmp <= 0) {
-			if (hc_preceding != null) {
-				hc_preceding = hc_preceding.hc_remove(a_find);
+			if (_hcPreceding != null) {
+				_hcPreceding = _hcPreceding.hc_remove(findRef);
 			}
 		}
 		if (cmp >= 0) {
-			if (hc_subsequent != null) {
-				hc_subsequent = hc_subsequent.hc_remove(a_find);
+			if (_hcSubsequent != null) {
+				_hcSubsequent = _hcSubsequent.hc_remove(findRef);
 			}
 		}
 		hc_calculateSize();
@@ -635,11 +631,11 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
     
     public void hc_traverse(Visitor4 visitor){
-        if(hc_preceding != null){
-            hc_preceding.hc_traverse(visitor);
+        if(_hcPreceding != null){
+            _hcPreceding.hc_traverse(visitor);
         }
-        if(hc_subsequent != null){
-            hc_subsequent.hc_traverse(visitor);
+        if(_hcSubsequent != null){
+            _hcSubsequent.hc_traverse(visitor);
         }
         
         // Traversing the leaves first allows to add ObjectReference 
@@ -649,47 +645,47 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     }
 
 	private ObjectReference hc_remove() {
-		if (hc_subsequent != null && hc_preceding != null) {
-			hc_subsequent = hc_subsequent.hc_rotateSmallestUp();
-			hc_subsequent.hc_preceding = hc_preceding;
-			hc_subsequent.hc_calculateSize();
-			return hc_subsequent;
+		if (_hcSubsequent != null && _hcPreceding != null) {
+			_hcSubsequent = _hcSubsequent.hc_rotateSmallestUp();
+			_hcSubsequent._hcPreceding = _hcPreceding;
+			_hcSubsequent.hc_calculateSize();
+			return _hcSubsequent;
 		}
-		if (hc_subsequent != null) {
-			return hc_subsequent;
+		if (_hcSubsequent != null) {
+			return _hcSubsequent;
 		}
-		return hc_preceding;
+		return _hcPreceding;
 	}
 
 	/***** IDTREE *****/
 
-	ObjectReference id_add(ObjectReference a_add) {
-		a_add.id_preceding = null;
-		a_add.id_subsequent = null;
-		a_add.id_size = 1;
-		return id_add1(a_add);
+	ObjectReference id_add(ObjectReference newRef) {
+		newRef._idPreceding = null;
+		newRef._idSubsequent = null;
+		newRef._idSize = 1;
+		return id_add1(newRef);
 	}
 
-	private ObjectReference id_add1(ObjectReference a_new) {
-		int cmp = a_new.i_id - i_id;
+	private ObjectReference id_add1(ObjectReference newRef) {
+		int cmp = newRef._id - _id;
 		if (cmp < 0) {
-			if (id_preceding == null) {
-				id_preceding = a_new;
-				id_size++;
+			if (_idPreceding == null) {
+				_idPreceding = newRef;
+				_idSize++;
 			} else {
-				id_preceding = id_preceding.id_add1(a_new);
-				if (id_subsequent == null) {
+				_idPreceding = _idPreceding.id_add1(newRef);
+				if (_idSubsequent == null) {
 					return id_rotateRight();
 				} 
 				return id_balance();
 			}
 		} else if(cmp > 0) {
-			if (id_subsequent == null) {
-				id_subsequent = a_new;
-				id_size++;
+			if (_idSubsequent == null) {
+				_idSubsequent = newRef;
+				_idSize++;
 			} else {
-				id_subsequent = id_subsequent.id_add1(a_new);
-				if (id_preceding == null) {
+				_idSubsequent = _idSubsequent.id_add1(newRef);
+				if (_idPreceding == null) {
 					return id_rotateLeft();
 				} 
 				return id_balance();
@@ -699,42 +695,42 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 
 	private ObjectReference id_balance() {
-		int cmp = id_subsequent.id_size - id_preceding.id_size;
+		int cmp = _idSubsequent._idSize - _idPreceding._idSize;
 		if (cmp < -2) {
 			return id_rotateRight();
 		} else if (cmp > 2) {
 			return id_rotateLeft();
 		} else {
-			id_size = id_preceding.id_size + id_subsequent.id_size + 1;
+			_idSize = _idPreceding._idSize + _idSubsequent._idSize + 1;
 			return this;
 		}
 	}
 
 	private void id_calculateSize() {
-		if (id_preceding == null) {
-			if (id_subsequent == null) {
-				id_size = 1;
+		if (_idPreceding == null) {
+			if (_idSubsequent == null) {
+				_idSize = 1;
 			} else {
-				id_size = id_subsequent.id_size + 1;
+				_idSize = _idSubsequent._idSize + 1;
 			}
 		} else {
-			if (id_subsequent == null) {
-				id_size = id_preceding.id_size + 1;
+			if (_idSubsequent == null) {
+				_idSize = _idPreceding._idSize + 1;
 			} else {
-				id_size = id_preceding.id_size + id_subsequent.id_size + 1;
+				_idSize = _idPreceding._idSize + _idSubsequent._idSize + 1;
 			}
 		}
 	}
 
-	ObjectReference id_find(int a_id) {
-		int cmp = a_id - i_id;
+	ObjectReference id_find(int id) {
+		int cmp = id - _id;
 		if (cmp > 0) {
-			if (id_subsequent != null) {
-				return id_subsequent.id_find(a_id);
+			if (_idSubsequent != null) {
+				return _idSubsequent.id_find(id);
 			}
 		} else if (cmp < 0) {
-			if (id_preceding != null) {
-				return id_preceding.id_find(a_id);
+			if (_idPreceding != null) {
+				return _idPreceding.id_find(id);
 			}
 		} else {
 			return this;
@@ -743,48 +739,48 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 
 	private ObjectReference id_rotateLeft() {
-		ObjectReference tree = id_subsequent;
-		id_subsequent = tree.id_preceding;
+		ObjectReference tree = _idSubsequent;
+		_idSubsequent = tree._idPreceding;
 		id_calculateSize();
-		tree.id_preceding = this;
-		if(tree.id_subsequent == null){
-			tree.id_size = id_size + 1;
+		tree._idPreceding = this;
+		if(tree._idSubsequent == null){
+			tree._idSize = _idSize + 1;
 		}else{
-			tree.id_size = id_size + 1 + tree.id_subsequent.id_size;
+			tree._idSize = _idSize + 1 + tree._idSubsequent._idSize;
 		}
 		return tree;
 	}
 
 	private ObjectReference id_rotateRight() {
-		ObjectReference tree = id_preceding;
-		id_preceding = tree.id_subsequent;
+		ObjectReference tree = _idPreceding;
+		_idPreceding = tree._idSubsequent;
 		id_calculateSize();
-		tree.id_subsequent = this;
-		if(tree.id_preceding == null){
-			tree.id_size = id_size + 1;
+		tree._idSubsequent = this;
+		if(tree._idPreceding == null){
+			tree._idSize = _idSize + 1;
 		}else{
-			tree.id_size = id_size + 1 + tree.id_preceding.id_size;
+			tree._idSize = _idSize + 1 + tree._idPreceding._idSize;
 		}
 		return tree;
 	}
 
 	private ObjectReference id_rotateSmallestUp() {
-		if (id_preceding != null) {
-			id_preceding = id_preceding.id_rotateSmallestUp();
+		if (_idPreceding != null) {
+			_idPreceding = _idPreceding.id_rotateSmallestUp();
 			return id_rotateRight();
 		}
 		return this;
 	}
 
-	ObjectReference id_remove(int a_id) {
-		int cmp = a_id - i_id;
+	ObjectReference id_remove(int id) {
+		int cmp = id - _id;
 		if (cmp < 0) {
-			if (id_preceding != null) {
-				id_preceding = id_preceding.id_remove(a_id);
+			if (_idPreceding != null) {
+				_idPreceding = _idPreceding.id_remove(id);
 			}
 		} else if (cmp > 0) {
-			if (id_subsequent != null) {
-				id_subsequent = id_subsequent.id_remove(a_id);
+			if (_idSubsequent != null) {
+				_idSubsequent = _idSubsequent.id_remove(id);
 			}
 		} else {
 			return id_remove();
@@ -794,16 +790,16 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 
 	private ObjectReference id_remove() {
-		if (id_subsequent != null && id_preceding != null) {
-			id_subsequent = id_subsequent.id_rotateSmallestUp();
-			id_subsequent.id_preceding = id_preceding;
-			id_subsequent.id_calculateSize();
-			return id_subsequent;
+		if (_idSubsequent != null && _idPreceding != null) {
+			_idSubsequent = _idSubsequent.id_rotateSmallestUp();
+			_idSubsequent._idPreceding = _idPreceding;
+			_idSubsequent.id_calculateSize();
+			return _idSubsequent;
 		}
-		if (id_subsequent != null) {
-			return id_subsequent;
+		if (_idSubsequent != null) {
+			return _idSubsequent;
 		}
-		return id_preceding;
+		return _idPreceding;
 	}
 	
 	public String toString(){
@@ -812,15 +808,15 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         }
 	    try{
 		    int id = getID();
-		    String str = "YapObject\nID=" + id;
+		    String str = "ObjectReference\nID=" + id;
 		    if(_class != null){
-		        ObjectContainerBase stream = _class.container();
-		        if(stream != null && id > 0){
-		            StatefulBuffer writer = stream.readWriterByID(stream.transaction(), id);
+		        ObjectContainerBase container = _class.container();
+		        if(container != null && id > 0){
+		            StatefulBuffer writer = container.readWriterByID(container.transaction(), id);
 		            if(writer != null){
 		                str += "\nAddress=" + writer.getAddress();
 		            }
-                    ObjectHeader oh = new ObjectHeader(stream, writer);
+                    ObjectHeader oh = new ObjectHeader(container(), writer);
 		            ClassMetadata yc = oh.classMetadata();
 		            if(yc != _class){
 		                str += "\nYapClass corruption";
