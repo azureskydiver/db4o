@@ -123,23 +123,13 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
 			return ret;
         }
             
-        // if (YapConst.INTEGER_BYTES == 4) {
-                
         int o = (_offset += 4) - 1;
+        
         return (_buffer[o] & 255) | (_buffer[--o] & 255)
             << 8 | (_buffer[--o] & 255)
             << 16 | _buffer[--o]
             << 24;
-                
-//            } else {
-//            	int ret = 0;
-//                int ii = _offset + YapConst.INTEGER_BYTES;
-//                while (_offset < ii) {
-//                    ret = (ret << 8) + (_buffer[_offset++] & 0xff);
-//                }
-//				return ret;
-//            }
-		
+        
     }
     
     public long readLong() {

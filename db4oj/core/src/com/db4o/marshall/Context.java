@@ -11,7 +11,5 @@ import com.db4o.*;
 public interface Context {
 	
     ObjectContainer objectContainer();
-    
-	void useVariableLength();
 
 }

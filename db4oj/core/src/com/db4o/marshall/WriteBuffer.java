@@ -11,5 +11,5 @@ public interface WriteBuffer {
     void writeByte(byte b);
 
     void writeInt(int i);
-
+    
 }

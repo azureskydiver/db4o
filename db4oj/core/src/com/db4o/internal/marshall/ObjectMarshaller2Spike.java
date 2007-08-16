@@ -33,9 +33,11 @@ public class ObjectMarshaller2Spike extends ObjectMarshaller1 {
             
             private int fieldIndex = -1; 
             
-            public int fieldCount(ClassMetadata yapClass, Buffer buffer) {
-                int fieldCount = yapClass.i_fields.length;
-                buffer.writeInt(fieldCount);
+            public int fieldCount(ClassMetadata classMetadata, Buffer buffer) {
+                int fieldCount = classMetadata.i_fields.length;
+                
+                // TODO: inform context here.
+                
                 return fieldCount;
             }
             

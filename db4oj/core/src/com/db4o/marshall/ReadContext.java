@@ -8,6 +8,4 @@ package com.db4o.marshall;
  */
 public interface ReadContext extends Context, ReadBuffer {
 
-	void useVariableLength();
-
 }

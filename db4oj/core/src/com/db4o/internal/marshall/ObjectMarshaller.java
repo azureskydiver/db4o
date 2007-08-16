@@ -13,8 +13,8 @@ public abstract class ObjectMarshaller {
 	protected abstract static class TraverseFieldCommand {
 		private boolean _cancelled=false;
 		
-		public int fieldCount(ClassMetadata yapClass,Buffer reader) {
-			return (Debug.atHome ? yapClass.readFieldCountSodaAtHome(reader) : yapClass.readFieldCount(reader));
+		public int fieldCount(ClassMetadata classMetadata, Buffer reader) {
+			return classMetadata.readFieldCount(reader);
 		}
 
 		public boolean cancelled() {
@@ -28,15 +28,15 @@ public abstract class ObjectMarshaller {
 		public abstract void processField(FieldMetadata field,boolean isNull, ClassMetadata containingClass);
 	}
 
-    protected final void traverseFields(ClassMetadata yc,Buffer reader, FieldListInfo fieldList,TraverseFieldCommand command) {
+    protected final void traverseFields(ClassMetadata classMetadata,Buffer reader, FieldListInfo fieldList,TraverseFieldCommand command) {
     	int fieldIndex=0;
-    	while(yc!=null&&!command.cancelled()) {
-        	int fieldCount=command.fieldCount(yc, reader);
+    	while(classMetadata!=null&&!command.cancelled()) {
+        	int fieldCount=command.fieldCount(classMetadata, reader);
 			for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
-				command.processField(yc.i_fields[i],isNull(fieldList,fieldIndex),yc);
+				command.processField(classMetadata.i_fields[i],isNull(fieldList,fieldIndex),classMetadata);
 			    fieldIndex ++;
 			}
-			yc=yc.i_ancestor;
+			classMetadata=classMetadata.i_ancestor;
     	}
     }
 

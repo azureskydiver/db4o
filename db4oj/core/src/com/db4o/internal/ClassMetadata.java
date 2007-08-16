@@ -953,7 +953,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     void incrementFieldsOffset1(Buffer a_bytes) {
-        int length = Debug.atHome ? readFieldCountSodaAtHome(a_bytes) : readFieldCount(a_bytes);
+        int length = readFieldCount(a_bytes);
         for (int i = 0; i < length; i++) {
             i_fields[i].incrementOffset(a_bytes);
         }
@@ -1404,12 +1404,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-    public final int readFieldCount(Buffer a_bytes) {
-        int count = a_bytes.readInt();
+    public final int readFieldCount(Buffer buffer) {
+        int count = buffer.readInt();
         if (count > i_fields.length) {
             if (Debug.atHome) {
                 System.out.println(
-                    "YapClass.readFieldCount "
+                    "ClassMetadata.readFieldCount "
                         + getName()
                         + " count to high:"
                         + count
@@ -1420,17 +1420,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return i_fields.length;
         }		
         return count;
-    }
-
-    public int readFieldCountSodaAtHome(Buffer a_bytes) {
-        if (Debug.atHome) {
-            int count = a_bytes.readInt();
-            if (count > i_fields.length) {
-                return i_fields.length;
-            }
-            return count;
-        }
-        return 0;
     }
 
     public Object readIndexEntry(Buffer a_reader) {

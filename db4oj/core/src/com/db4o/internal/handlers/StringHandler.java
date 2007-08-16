@@ -258,8 +258,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     
     public Object read(ReadContext context) {
         
-        context.useVariableLength();
-        
         if (Deploy.debug) {
             Debug.readBegin(context, Const4.YAPSTRING);
         }
@@ -277,8 +275,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     
     public void write(WriteContext context, Object obj) {
         
-        context.useVariableLength();
-    	
     	String str = (String) obj;
         
         if (Deploy.debug) {
