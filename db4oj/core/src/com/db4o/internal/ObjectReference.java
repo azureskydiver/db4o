@@ -225,7 +225,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return read(trans, null, null, instantiationDepth, addToIDTree, checkIDTree); 
 	}
 	
-	final Object read(
+	public final Object read(
 		Transaction trans,
 		StatefulBuffer buffer,
 		Object obj,
