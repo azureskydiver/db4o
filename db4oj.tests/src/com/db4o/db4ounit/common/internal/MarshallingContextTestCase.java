@@ -41,16 +41,13 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
         ObjectMarshaller2Spike marshaller = new ObjectMarshaller2Spike();
         StatefulBuffer buffer = marshaller.marshallNew(trans(), ref, Integer.MAX_VALUE);
         
-        Assert.isNotNull(buffer);
-        
-        
+        buffer.offset(0);
+        Item readItem = (Item)ref.read(trans(), buffer, null, imaginativeID, imaginativeID, false);
+        Assert.areEqual("one", readItem._name);
     }
 
     private ClassMetadata classMetadataForObject(Object obj) {
         return stream().produceClassMetadata(reflector().forObject(obj));
     }
-    
-    
-    
 
 }

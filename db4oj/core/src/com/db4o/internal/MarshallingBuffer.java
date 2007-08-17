@@ -16,6 +16,9 @@ public class MarshallingBuffer implements WriteBuffer{
     private int _lastOffSet;
 
     public int length() {
+        if(_delegate == null){
+            return 0;
+        }
         return _delegate.offset();
     }
     
@@ -41,7 +44,11 @@ public class MarshallingBuffer implements WriteBuffer{
         _lastOffSet = _delegate.offset();
         
         if(_delegate.length() - _lastOffSet < sizeNeeded){
-            Buffer temp = new Buffer(_delegate.length() * 2);
+            int newLength = _delegate.length() * 2;
+            if(newLength - _lastOffSet < sizeNeeded){
+                newLength += sizeNeeded;
+            }
+            Buffer temp = new Buffer(newLength);
             temp.offset(_lastOffSet);
             _delegate.copyTo(temp, 0, 0, _lastOffSet);
             _delegate = temp;
@@ -57,6 +64,11 @@ public class MarshallingBuffer implements WriteBuffer{
         _lastOffSet -= length;
         other._delegate.offset(otherOffset + length);
         other._lastOffSet = otherOffset;
+    }
+    
+    public void transferContentTo(Buffer buffer){
+        System.arraycopy(_delegate._buffer, 0, buffer._buffer, buffer._offset, length());
+        buffer._offset += length();
     }
     
     public Buffer testDelegate(){

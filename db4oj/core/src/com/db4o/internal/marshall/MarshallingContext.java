@@ -13,7 +13,12 @@ import com.db4o.marshall.*;
  */
 public class MarshallingContext implements FieldListInfo, WriteContext {
     
-    private static final byte VERSION = (byte)1;
+    private static final int HEADER_LENGTH = Const4.OBJECT_LENGTH 
+            + Const4.ID_LENGTH  // YapClass ID
+            + Const4.INT_LENGTH // number of fields
+            + 1; // Marshaller Version 
+    
+    private static final byte MARSHALLER_FAMILY_VERSION = (byte)3;
     
     private final Transaction _transaction;
     
@@ -72,12 +77,13 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     public StatefulBuffer ToWriteBuffer() {
         StatefulBuffer buffer = new StatefulBuffer(_transaction, marshalledLength());
         writeObjectClassID(buffer, classMetadata().getID());
-        buffer.writeByte(VERSION);
+        buffer.writeByte(MARSHALLER_FAMILY_VERSION);
         buffer.writeInt(fieldCount());
         buffer.writeBitMap(_nullBitMap);
-        
-        
-
+        _fixedLengthBuffer.transferContentTo(buffer);
+        if(_payLoadBuffer != null){
+            _payLoadBuffer.transferContentTo(buffer);
+        }
         if (Deploy.debug) {
             buffer.writeEnd();
             buffer.debugCheckBytes();
@@ -86,11 +92,17 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
 
     private int marshalledLength() {
-        int length = requiredLength(_fixedLengthBuffer);
+        int length = HEADER_LENGTH 
+            + nullBitMapLength() 
+            + requiredLength(_fixedLengthBuffer);
         if(_payLoadBuffer != null){
             length += requiredLength(_payLoadBuffer);
         }
         return length;
+    }
+    
+    private int nullBitMapLength(){
+        return Const4.INT_LENGTH + _nullBitMap.marshalledLength();
     }
 
     private int requiredLength(MarshallingBuffer buffer) {
@@ -155,7 +167,14 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
 
     private void usePayloadBuffer() {
-        throw new NotImplementedException();
+        if(_payLoadBuffer == null){
+            _payLoadBuffer = new MarshallingBuffer();
+        }
+        int offset = _payLoadBuffer.length();
+        _fixedLengthBuffer.transferLastWriteTo(_payLoadBuffer);
+        _fixedLengthBuffer.writeInt(offset);
+        _fixedLengthBuffer.writeInt(0);
+        _currentBuffer = _payLoadBuffer;
     }
 
     private boolean isFirstWriteToField() {
@@ -164,6 +183,10 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     
     public void nextField(){
         _fieldWriteCount = 0;
+    }
+
+    public void fieldCount(int fieldCount) {
+        _fixedLengthBuffer.writeInt(fieldCount);
     }
 
 }

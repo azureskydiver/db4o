@@ -36,7 +36,7 @@ public class ObjectMarshaller2Spike extends ObjectMarshaller1 {
             public int fieldCount(ClassMetadata classMetadata, Buffer buffer) {
                 int fieldCount = classMetadata.i_fields.length;
                 
-                // TODO: inform context here.
+                context.fieldCount(fieldCount);
                 
                 return fieldCount;
             }
