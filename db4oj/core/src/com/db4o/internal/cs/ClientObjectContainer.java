@@ -110,7 +110,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     }
 
     protected void close2() {
-		if (_messageDispatcher == null || !_messageDispatcher.isMessageDispatcherAlive()) {
+		if ((!_singleThreaded) && (_messageDispatcher == null || !_messageDispatcher.isMessageDispatcherAlive())) {
 			shutdownObjectContainer();
 			return;
 		}
