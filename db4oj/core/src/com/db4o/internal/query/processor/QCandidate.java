@@ -365,7 +365,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 		if (oldPending == null) {
 			a_pending.changeConstraint();
-			_pendingJoins = Tree.add(_pendingJoins, a_pending);
+			_pendingJoins = Tree.add(_pendingJoins, a_pending.internalClonePayload());
 			return true;
 		} 
 		_pendingJoins = _pendingJoins.removeNode(oldPending);
