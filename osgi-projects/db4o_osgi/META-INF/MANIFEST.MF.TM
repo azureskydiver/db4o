@@ -90,4 +90,5 @@ Export-Package: EDU.purdue.cs.bloat.benchmark,
  com.db4o.reflect.jdk,
  com.db4o.reflect.self,
  com.db4o.replication,
- com.db4o.types
+ com.db4o.types,
+ com.db4o.marshall
