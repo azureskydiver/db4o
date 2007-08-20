@@ -689,12 +689,6 @@
 			<pathelement location="${file.db4ounit.jar}" />
         </path>
         
-        <path id="tests.java5.cp">
-            <pathelement path="${dir.dist.classes.test.jdk1.5}" />
-            <pathelement location="${file.java5.jar}" />
-			<pathelement location="${file.db4ounit.jar}" />
-        </path>
-        
         <copy todir=".">
             <fileset dir="${dir.j.jdk1.2}">
 				<include name="test/db4oVersions/**/*" />
@@ -711,7 +705,30 @@
 			<classpath refid="tests.java1.2.cp" />
 		</java>
         
-        <echo message="Running com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5 on jvm ${file.jvm.jdk1.5}" />
+		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.test.AllTests" failonerror="true" timeout="1200000">
+			<classpath refid="tests.java1.1.cp" />
+			<arg value="-withExceptions" />
+		</java>
+		<java jvm="${file.jvm.jdk1.3}" fork="true" classname="com.db4o.test.AllTestsJdk1_2" failonerror="true" timeout="3600000">
+			<classpath refid="tests.java1.2.cp" />
+			<arg value="-withExceptions" />
+		</java>
+        
+        <antcall target="runtestsjava5" />
+        
+		<antcall target="runosgitests"></antcall>
+        
+        <antcall target="runconcurrencytests" />
+	</target>
+    
+    <target name="runtestsjava5">
+        <path id="tests.java5.cp">
+            <pathelement path="${dir.dist.classes.test.jdk1.5}" />
+            <pathelement location="${file.java5.jar}" />
+			<pathelement location="${file.db4ounit.jar}" />
+        </path>
+        
+        <echo message="Running tests on jvm ${file.jvm.jdk1.5}" />
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="10000000">
 			<jvmarg value="-Xmx512m"/>
 			<classpath refid="tests.java5.cp" />
@@ -722,18 +739,10 @@
 				<pathelement location="${dir.dist.classes.test.nq}" />
                 <pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${file.bloat.jar}" />
-                <path refid="tests.java1.2.cp" />
+                <path refid="tests.java5.cp" />
 			</classpath>
 		</java>
-		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.test.AllTests" failonerror="true" timeout="1200000">
-			<classpath refid="tests.java1.1.cp" />
-			<arg value="-withExceptions" />
-		</java>
-		<java jvm="${file.jvm.jdk1.3}" fork="true" classname="com.db4o.test.AllTestsJdk1_2" failonerror="true" timeout="3600000">
-			<classpath refid="tests.java1.2.cp" />
-			<arg value="-withExceptions" />
-		</java>
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" timeout="3600000">
+        <java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" timeout="3600000">
 			<classpath refid="tests.java5.cp" />
 			<arg value="-withExceptions" />
 		</java>
@@ -744,11 +753,7 @@
 			<classpath refid="tests.java5.cp" />
 			<arg value="-withExceptions" />
 		</java>
-
-		<antcall target="runosgitests"></antcall>
-        
-        <antcall target="runconcurrencytests" />
-	</target>
+    </target>
     
     <target name="runconcurrencytests" >
         <java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.concurrency.AllTests" failonerror="true" timeout="1200000">
@@ -1160,4 +1165,8 @@
 	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
 	
 	<target name="buildall2" depends="clean, buildjava, buildnet2" description="Full clean build (.net 2 runtime)" />
+    
+    <target name="buildlite" depends="clean, compile.java.all, runtestsjava5">
+        <ant antfile="build-dotnet.xml" target="run-tests" />
+    </target>
 </project>
