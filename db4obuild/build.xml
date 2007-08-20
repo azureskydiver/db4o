@@ -1166,7 +1166,7 @@
 	
 	<target name="buildall2" depends="clean, buildjava, buildnet2" description="Full clean build (.net 2 runtime)" />
     
-    <target name="buildlite" depends="clean, compile.java.all, runtestsjava5">
+    <target name="build-before-checkin" depends="clean, compile.java.all, runtestsjava5">
         <ant antfile="build-dotnet.xml" target="run-tests" />
     </target>
 </project>
