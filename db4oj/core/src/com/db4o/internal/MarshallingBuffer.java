@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import com.db4o.foundation.*;
 import com.db4o.marshall.*;
 
 /**
@@ -9,13 +10,23 @@ import com.db4o.marshall.*;
  */
 public class MarshallingBuffer implements WriteBuffer{
     
-    private static final int SIZE_NEEDED = Const4.LONG_LENGTH; 
+    private static final int SIZE_NEEDED = Const4.LONG_LENGTH;
+    
+    private static final int LINK_LENGTH = Const4.INT_LENGTH + Const4.ID_LENGTH;
     
     private Buffer _delegate;
     
     private int _lastOffSet;
+    
+    private int _addressInParent;
+    
+    private Collection4 _children;    
 
     public int length() {
+        return offset();
+    }
+    
+    public int offset(){
         if(_delegate == null){
             return 0;
         }
@@ -66,13 +77,51 @@ public class MarshallingBuffer implements WriteBuffer{
         other._lastOffSet = otherOffset;
     }
     
-    public void transferContentTo(Buffer buffer){
+    public int transferContentTo(Buffer buffer){
+        int offset = buffer._offset;
         System.arraycopy(_delegate._buffer, 0, buffer._buffer, buffer._offset, length());
         buffer._offset += length();
+        return offset;
     }
     
     public Buffer testDelegate(){
         return _delegate;
+    }
+
+    public MarshallingBuffer addChild() {
+        MarshallingBuffer child = new MarshallingBuffer();
+        if(_children == null){
+            _children = new Collection4();
+        }
+        child._addressInParent = offset();
+        _children.add(child);
+        _delegate.incrementOffset(LINK_LENGTH);
+        return child;
+    }
+
+    public int mergeChildren(int linkOffset) {
+        if(_children == null){
+            return 0;
+        }
+        int linkOffSetAddress = linkOffset + offset();
+        Iterator4 i = _children.iterator();
+        while(i.moveNext()){
+            MarshallingBuffer child = (MarshallingBuffer) i.current();
+            int childLengthBeforeMerge = child.length();
+            linkOffSetAddress = child.mergeChildren(linkOffSetAddress);
+            prepareWrite(child.length());
+            int offset = child.transferContentTo(_delegate);
+            writeLink(child, offset, childLengthBeforeMerge);
+        }
+        return linkOffSetAddress;
+    }
+    
+    private void writeLink(MarshallingBuffer child, int offset, int length){
+        int savedOffset = _delegate.offset();
+        _delegate.offset(child._addressInParent);
+        _delegate.writeInt(offset);
+        _delegate.writeInt(length);
+        _delegate.offset(savedOffset);
     }
 
 }

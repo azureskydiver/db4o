@@ -9,8 +9,11 @@ import db4ounit.*;
 
 public class MarshallingBufferTestCase implements TestCase {
     
-    private static final int DATA_1 = 777;  
-    private static final byte DATA_2 = (byte)5; 
+    private static final int DATA_1 = 111;  
+    private static final byte DATA_2 = (byte)2; 
+    private static final int DATA_3 = 333; 
+    private static final int DATA_4 = 444; 
+    private static final int DATA_5 = 55; 
     
     public void testWrite(){
         MarshallingBuffer buffer = new MarshallingBuffer();
@@ -50,6 +53,34 @@ public class MarshallingBufferTestCase implements TestCase {
         Buffer bufferDelegate = buffer.testDelegate();
         bufferDelegate.offset(0);
         return bufferDelegate;
+    }
+    
+    public void testChildren(){
+        MarshallingBuffer buffer = new MarshallingBuffer();
+        buffer.writeInt(DATA_1);
+        buffer.writeByte(DATA_2);
+        
+        MarshallingBuffer child = buffer.addChild();
+        child.writeInt(DATA_3);
+        child.writeInt(DATA_4);
+        
+        // MarshallingBuffer grandChild = child.
+        
+        buffer.mergeChildren(0);
+        
+        Buffer content = inspectContent(buffer);
+        Assert.areEqual(DATA_1, content.readInt());
+        Assert.areEqual(DATA_2, content.readByte());
+        
+        int address = content.readInt();
+        content.offset(address);
+        
+        Assert.areEqual(DATA_3, content.readInt());
+        Assert.areEqual(DATA_4, content.readInt());
+        
+        
+        
+        
     }
     
     
