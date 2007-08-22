@@ -12,7 +12,9 @@ public interface SlotBuffer {
 
 	int offset();
 
+	// TODO: rename to #seek() and use #seek everywhere. 
 	void offset(int offset);
+	
 	void incrementOffset(int numBytes);
 	void incrementIntSize();
 
