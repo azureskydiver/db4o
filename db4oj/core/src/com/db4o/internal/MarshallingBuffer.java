@@ -92,18 +92,23 @@ public class MarshallingBuffer implements WriteBuffer{
         return _delegate;
     }
 
-    public MarshallingBuffer addChild() {
+    public MarshallingBuffer addChild(boolean reserveLinkSpace) {
         MarshallingBuffer child = new MarshallingBuffer();
         if(_children == null){
             _children = new Collection4();
         }
         child._addressInParent = offset();
         _children.add(child);
-        prepareWrite(LINK_LENGTH);
-        _delegate.incrementOffset(LINK_LENGTH);
+        if(reserveLinkSpace){
+            reserveChildLinkSpace();
+        }
         return child;
     }
-    
+
+    public void reserveChildLinkSpace() {
+        prepareWrite(LINK_LENGTH);
+        _delegate.incrementOffset(LINK_LENGTH);
+    }
     
     public void mergeChildren(int linkOffset) {
         mergeChildren(this, this, linkOffset);
@@ -132,11 +137,11 @@ public class MarshallingBuffer implements WriteBuffer{
         childBuffer.transferContentTo(writeBuffer._delegate);
         writeBuffer.seek(savedWriteBufferOffset);
         
-        parentBuffer.writeLink(childBuffer, childPosition, childLength);
+        parentBuffer.writeLink(childBuffer, childPosition + linkOffset, childLength);
         
     }
     
-    private void seek(int offset) {
+    public void seek(int offset) {
         _delegate.offset(offset);
     }
 

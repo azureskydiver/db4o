@@ -30,9 +30,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     
     private final BitMap4 _nullBitMap;
     
-    private final MarshallingBuffer _fixedLengthBuffer;
-    
-    private MarshallingBuffer _payLoadBuffer;
+    private final MarshallingBuffer _writeBuffer;
     
     private MarshallingBuffer _currentBuffer;
     
@@ -45,8 +43,8 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         _nullBitMap = new BitMap4(fieldCount());
         _updateDepth = classMetadata().adjustUpdateDepth(trans, updateDepth);
         _isNew = isNew;
-        _fixedLengthBuffer = new MarshallingBuffer();
-        _currentBuffer = _fixedLengthBuffer;
+        _writeBuffer = new MarshallingBuffer();
+        _currentBuffer = _writeBuffer;
     }
 
     private int fieldCount() {
@@ -75,30 +73,30 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
 
     public StatefulBuffer ToWriteBuffer() {
+        
+        _writeBuffer.mergeChildren(writeBufferOffset());
+        
         StatefulBuffer buffer = new StatefulBuffer(_transaction, marshalledLength());
+        
         writeObjectClassID(buffer, classMetadata().getID());
         buffer.writeByte(MARSHALLER_FAMILY_VERSION);
         buffer.writeInt(fieldCount());
         buffer.writeBitMap(_nullBitMap);
-        _fixedLengthBuffer.transferContentTo(buffer);
-        if(_payLoadBuffer != null){
-            _payLoadBuffer.transferContentTo(buffer);
-        }
+        
+        _writeBuffer.transferContentTo(buffer);
         if (Deploy.debug) {
             buffer.writeEnd();
             buffer.debugCheckBytes();
         }
         return buffer;
     }
+    
+    private int writeBufferOffset(){
+        return HEADER_LENGTH + nullBitMapLength();
+    }
 
     private int marshalledLength() {
-        int length = HEADER_LENGTH 
-            + nullBitMapLength() 
-            + requiredLength(_fixedLengthBuffer);
-        if(_payLoadBuffer != null){
-            length += requiredLength(_payLoadBuffer);
-        }
-        return length;
+        return HEADER_LENGTH + nullBitMapLength() + requiredLength(_writeBuffer);
     }
     
     private int nullBitMapLength(){
@@ -157,24 +155,17 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
     
 	private void prepareWrite() {
-	    if(_currentBuffer == _payLoadBuffer){
-	        return;
-	    }
         if(! isFirstWriteToField()){
-            usePayloadBuffer();
+            createChildBuffer();
         }
         _fieldWriteCount++;
     }
 
-    private void usePayloadBuffer() {
-        if(_payLoadBuffer == null){
-            _payLoadBuffer = new MarshallingBuffer();
-        }
-        int offset = _payLoadBuffer.length();
-        _fixedLengthBuffer.transferLastWriteTo(_payLoadBuffer);
-        _fixedLengthBuffer.writeInt(offset);
-        _fixedLengthBuffer.writeInt(0);
-        _currentBuffer = _payLoadBuffer;
+    private void createChildBuffer() {
+        MarshallingBuffer childBuffer = _currentBuffer.addChild(false);
+        _currentBuffer.transferLastWriteTo(childBuffer);
+        _currentBuffer.reserveChildLinkSpace();
+        _currentBuffer = childBuffer;
     }
 
     private boolean isFirstWriteToField() {
@@ -183,10 +174,11 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     
     public void nextField(){
         _fieldWriteCount = 0;
+        _currentBuffer = _writeBuffer;
     }
 
     public void fieldCount(int fieldCount) {
-        _fixedLengthBuffer.writeInt(fieldCount);
+        _writeBuffer.writeInt(fieldCount);
     }
 
 }
