@@ -60,7 +60,7 @@ public class MarshallingBufferTestCase implements TestCase {
         buffer.writeInt(DATA_1);
         buffer.writeByte(DATA_2);
         
-        MarshallingBuffer child = buffer.addChild();
+        MarshallingBuffer child = buffer.addChild(true);
         child.writeInt(DATA_3);
         child.writeInt(DATA_4);
         
@@ -83,11 +83,11 @@ public class MarshallingBufferTestCase implements TestCase {
         buffer.writeInt(DATA_1);
         buffer.writeByte(DATA_2);
         
-        MarshallingBuffer child = buffer.addChild();
+        MarshallingBuffer child = buffer.addChild(true);
         child.writeInt(DATA_3);
         child.writeInt(DATA_4);
         
-        MarshallingBuffer grandChild = child.addChild();
+        MarshallingBuffer grandChild = child.addChild(true);
         grandChild.writeInt(DATA_5);
         
         buffer.mergeChildren(0);
@@ -108,7 +108,7 @@ public class MarshallingBufferTestCase implements TestCase {
         
     }
     
-    public void _testLinkOffset(){
+    public void testLinkOffset(){
         
         int linkOffset = 7;
         
@@ -116,28 +116,35 @@ public class MarshallingBufferTestCase implements TestCase {
         buffer.writeInt(DATA_1);
         buffer.writeByte(DATA_2);
         
-        MarshallingBuffer child = buffer.addChild();
+        MarshallingBuffer child = buffer.addChild(true);
         child.writeInt(DATA_3);
         child.writeInt(DATA_4);
         
-        MarshallingBuffer grandChild = child.addChild();
+        MarshallingBuffer grandChild = child.addChild(true);
         grandChild.writeInt(DATA_5);
         
         buffer.mergeChildren(linkOffset);
         
         Buffer content = inspectContent(buffer);
-        Assert.areEqual(DATA_1, content.readInt());
-        Assert.areEqual(DATA_2, content.readByte());
         
-        int address = content.readInt();
-        content.offset(address + linkOffset);
+        Buffer extendedBuffer = new Buffer(content.length() + linkOffset);
         
-        Assert.areEqual(DATA_3, content.readInt());
-        Assert.areEqual(DATA_4, content.readInt());
+        content.copyTo(extendedBuffer, 0, linkOffset, content.length());
         
-        address = content.readInt();
-        content.offset(address + linkOffset);
-        Assert.areEqual(DATA_5, content.readInt());
+        extendedBuffer.offset(linkOffset);
+        
+        Assert.areEqual(DATA_1, extendedBuffer.readInt());
+        Assert.areEqual(DATA_2, extendedBuffer.readByte());
+        
+        int address = extendedBuffer.readInt();
+        extendedBuffer.offset(address);
+        
+        Assert.areEqual(DATA_3, extendedBuffer.readInt());
+        Assert.areEqual(DATA_4, extendedBuffer.readInt());
+        
+        address = extendedBuffer.readInt();
+        extendedBuffer.offset(address);
+        Assert.areEqual(DATA_5, extendedBuffer.readInt());
         
     }
 
@@ -145,7 +152,7 @@ public class MarshallingBufferTestCase implements TestCase {
     public void testLateChildrenWrite(){
         MarshallingBuffer buffer = new MarshallingBuffer();
         buffer.writeInt(DATA_1);
-        MarshallingBuffer child = buffer.addChild();
+        MarshallingBuffer child = buffer.addChild(true);
         child.writeInt(DATA_3);
         buffer.writeByte(DATA_2);
         child.writeInt(DATA_4);
