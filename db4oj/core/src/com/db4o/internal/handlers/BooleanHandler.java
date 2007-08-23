@@ -5,6 +5,8 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.MarshallerFamily;
+import com.db4o.marshall.ReadContext;
+import com.db4o.marshall.WriteContext;
 
 
 /**
@@ -122,4 +124,35 @@ public final class BooleanHandler extends PrimitiveHandler {
 	    }
 	    return obj instanceof Boolean && ! val(obj);
 	}
+	
+	public Object read(ReadContext context) {
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPBOOLEAN);
+        }
+        
+		byte ret = context.readByte();
+		
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+		if(ret == TRUE){
+			return new Boolean(true);
+		}
+		if(ret == FALSE){
+			return new Boolean(false);
+		}
+		return null;
+	}
+	
+	public void write(WriteContext context, Object obj) {
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPBOOLEAN);
+        }
+		context.writeByte(getEncodedByteValue(obj));
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPBOOLEAN);
+        }
+        
+	}
+	
 }
