@@ -17,31 +17,26 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
     }
     
     public static class Item{
-        
         public String _name;
-        
         public Item(String name){
             _name = name;
         }
-        
     }
     
     public void test(){
-        if(! MarshallingSpike.enabled){
-            return;
-        }
-        
         int imaginativeID = 500;
-        
         Item item = new Item("one");
-        
         ObjectReference ref = new ObjectReference(classMetadataForObject(item), imaginativeID);
         ref.setObject(item);
         
-        ObjectMarshaller2Spike marshaller = new ObjectMarshaller2Spike();
-        StatefulBuffer buffer = marshaller.marshallNew(trans(), ref, Integer.MAX_VALUE);
+        ObjectMarshaller marshaller = MarshallerFamily.current()._object;
         
+        StatefulBuffer buffer = marshaller.marshallNew(trans(), ref, Integer.MAX_VALUE);
         buffer.offset(0);
+        
+        // String str = new String(buffer._buffer);
+        // System.out.println(str);
+        
         Item readItem = (Item)ref.read(trans(), buffer, null, imaginativeID, imaginativeID, false);
         Assert.areEqual("one", readItem._name);
     }

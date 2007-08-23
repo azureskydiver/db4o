@@ -73,12 +73,12 @@ public class MarshallingBuffer implements WriteBuffer{
     }
     
     public void transferLastWriteTo(MarshallingBuffer other){
+        other._addressInParent = _lastOffSet;
         int length = _delegate.offset() - _lastOffSet;
         other.prepareWrite(length);
         int otherOffset = other._delegate.offset();
         System.arraycopy(_delegate._buffer, _lastOffSet, other._delegate._buffer, otherOffset, length);
         _delegate.offset(_lastOffSet);
-        _lastOffSet -= length;
         other._delegate.offset(otherOffset + length);
         other._lastOffSet = otherOffset;
     }
@@ -138,7 +138,6 @@ public class MarshallingBuffer implements WriteBuffer{
         writeBuffer.seek(savedWriteBufferOffset);
         
         parentBuffer.writeLink(childBuffer, childPosition + linkOffset, childLength);
-        
     }
     
     public void seek(int offset) {
@@ -151,9 +150,15 @@ public class MarshallingBuffer implements WriteBuffer{
     }
 
     private void writeLink(MarshallingBuffer child, int position, int length){
+        int offset = offset();
         _delegate.offset(child._addressInParent);
         _delegate.writeInt(position);
         _delegate.writeInt(length);
+        _delegate.offset(offset);
+    }
+    
+    public void debugDecrementLastOffset(int count){
+        _lastOffSet -= count;
     }
 
 }

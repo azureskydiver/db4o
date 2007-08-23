@@ -155,6 +155,17 @@ public abstract class Debug extends Debug4 {
     
     public static final void writeBegin(WriteBuffer buffer, byte identifier) {
         if (Deploy.debug) {
+            if(buffer instanceof MarshallingContext){
+                Buffer prepend = new Buffer(2);
+                if (Deploy.brackets) {
+                    prepend.writeByte(Const4.YAPBEGIN);
+                }
+                if (Deploy.identifiers) {
+                    prepend.writeByte(identifier);
+                }
+                ((MarshallingContext)buffer).debugPrependNextWrite(prepend);
+                return;
+            }
             if (Deploy.brackets) {
                 buffer.writeByte(Const4.YAPBEGIN);
             }

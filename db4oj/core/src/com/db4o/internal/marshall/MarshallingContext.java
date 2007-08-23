@@ -13,10 +13,10 @@ import com.db4o.marshall.*;
  */
 public class MarshallingContext implements FieldListInfo, WriteContext {
     
-    private static final int HEADER_LENGTH = Const4.OBJECT_LENGTH 
+    private static final int HEADER_LENGTH = Const4.LEADING_LENGTH 
             + Const4.ID_LENGTH  // YapClass ID
-            + Const4.INT_LENGTH // number of fields
-            + 1; // Marshaller Version 
+            + 1 // Marshaller Version
+            + Const4.INT_LENGTH; // number of fields
     
     private static final byte MARSHALLER_FAMILY_VERSION = (byte)3;
     
@@ -35,6 +35,8 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     private MarshallingBuffer _currentBuffer;
     
     private int _fieldWriteCount;
+    
+    private Buffer _debugPrepend;
     
 
     public MarshallingContext(Transaction trans, ObjectReference ref, int updateDepth, boolean isNew) {
@@ -78,6 +80,10 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         
         StatefulBuffer buffer = new StatefulBuffer(_transaction, marshalledLength());
         
+        if (Deploy.debug) {
+            buffer.writeBegin(Const4.YAPOBJECT);
+        }
+        
         writeObjectClassID(buffer, classMetadata().getID());
         buffer.writeByte(MARSHALLER_FAMILY_VERSION);
         buffer.writeInt(fieldCount());
@@ -92,7 +98,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
     
     private int writeBufferOffset(){
-        return HEADER_LENGTH + nullBitMapLength();
+        return HEADER_LENGTH + _nullBitMap.marshalledLength();
     }
 
     private int marshalledLength() {
@@ -145,21 +151,39 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
 
 	public void writeByte(byte b) {
-	    prepareWrite();
+	    preWrite();
 	    _currentBuffer.writeByte(b);
+	    postWrite();
 	}
 
     public void writeInt(int i) {
-        prepareWrite();
+        preWrite();
         _currentBuffer.writeInt(i);
+        postWrite();
     }
     
-	private void prepareWrite() {
-        if(! isFirstWriteToField()){
+	private void preWrite() {
+        _fieldWriteCount++;
+        if(isSecondWriteToField()){
             createChildBuffer();
         }
-        _fieldWriteCount++;
+        if(Deploy.debug){
+            if(_debugPrepend != null){
+                for (int i = 0; i < _debugPrepend.offset(); i++) {
+                    _currentBuffer.writeByte(_debugPrepend._buffer[i]);
+                }
+            }
+        }
     }
+	
+	private void postWrite(){
+	    if(Deploy.debug){
+	        if(_debugPrepend != null){
+	            _currentBuffer.debugDecrementLastOffset(_debugPrepend.offset());
+	            _debugPrepend = null;
+	        }
+	    }
+	}
 
     private void createChildBuffer() {
         MarshallingBuffer childBuffer = _currentBuffer.addChild(false);
@@ -168,8 +192,8 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         _currentBuffer = childBuffer;
     }
 
-    private boolean isFirstWriteToField() {
-        return _fieldWriteCount < 1;
+    private boolean isSecondWriteToField() {
+        return _fieldWriteCount == 2;
     }
     
     public void nextField(){
@@ -179,6 +203,12 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
 
     public void fieldCount(int fieldCount) {
         _writeBuffer.writeInt(fieldCount);
+    }
+
+    public void debugPrependNextWrite(Buffer prepend) {
+        if(Deploy.debug){
+            _debugPrepend = prepend;
+        }
     }
 
 }
