@@ -502,6 +502,19 @@
 			<resource
 				file="${src.dir}/Core/Resources/CustomInstrumentationSubject.cs"
 				name="Db4oAdmin.Tests.Core.Resources.CustomInstrumentationSubject.cs" />
+			
+			<resource
+				file="${src.dir}/Core/Resources/ByAttributeInstrumentationSubject.cs"
+				name="Db4oAdmin.Tests.Core.Resources.ByAttributeInstrumentationSubject.cs" />
+		
+			<resource
+				file="${src.dir}/Core/Resources/ByFilterInstrumentationSubject.cs"
+				name="Db4oAdmin.Tests.Core.Resources.ByFilterInstrumentationSubject.cs" />
+		
+			<resource
+				file="${src.dir}/Core/Resources/ByNameInstrumentationSubject.cs"
+				name="Db4oAdmin.Tests.Core.Resources.ByNameInstrumentationSubject.cs" />
+
 	
 			<resource
 				file="${src.dir}/NQ/Resources/CFNQSubject.cs"
