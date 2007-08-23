@@ -3,15 +3,19 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.CorruptionException;
+import com.db4o.Debug;
 import com.db4o.Deploy;
+import com.db4o.ext.Db4oException;
 import com.db4o.foundation.Coercion4;
 import com.db4o.internal.Buffer;
+import com.db4o.internal.BufferPair;
 import com.db4o.internal.Const4;
 import com.db4o.internal.LatinStringIO;
 import com.db4o.internal.ObjectContainerBase;
-import com.db4o.internal.BufferPair;
 import com.db4o.internal.StatefulBuffer;
 import com.db4o.internal.marshall.MarshallerFamily;
+import com.db4o.marshall.ReadContext;
+import com.db4o.marshall.WriteContext;
 import com.db4o.reflect.ReflectClass;
 
 /**
@@ -122,5 +126,38 @@ public class IntHandler extends PrimitiveHandler {
 
     public void defragIndexEntry(BufferPair readers) {
     	readers.incrementIntSize();
+    }
+
+    
+    public Object read(ReadContext context) {
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPINTEGER);
+        }
+        
+        int intValue = context.readInt();
+        
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        
+        return new Integer(intValue);
+    }
+
+    public void write(WriteContext context, Object obj) {
+        if (!(obj instanceof Integer)){
+            throw new Db4oException(obj + "is not an Integer");
+        }
+        
+        Integer intObject = (Integer) obj;
+        
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPINTEGER);
+        }
+        
+        context.writeInt(intObject.intValue());
+        
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
     }
 }
