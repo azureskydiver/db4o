@@ -106,10 +106,10 @@ public interface ClientServerConfiguration {
 
 	/**
 	 * Configures to batch messages between client and server. By default, batch
-	 * mode is disabled.
+	 * mode is enabled.
 	 * 
 	 * @param flag
-	 *            true for batching messages.
+	 *            false, to turn message batching off.
 	 */
 	public void batchMessages(boolean flag);
 	

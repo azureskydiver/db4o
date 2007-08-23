@@ -136,7 +136,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private final static KeySpec ALIASES=new KeySpec(null);
 	
-	private final static KeySpec BATCH_MESSAGES=new KeySpec(false);
+	private final static KeySpec BATCH_MESSAGES=new KeySpec(true);
 	
 	private static final KeySpec MAX_BATCH_QUEUE_SIZE = new KeySpec(Integer.MAX_VALUE);
 
