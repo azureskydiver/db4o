@@ -2,9 +2,12 @@
 
 package com.db4o.internal.marshall;
 
+import sun.security.action.*;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
 
@@ -73,12 +76,30 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     public Transaction transaction() {
         return _transaction;
     }
+    
+    private StatefulBuffer createNewBuffer() {
+        Slot slot = new Slot(-1, marshalledLength());
+        if(_transaction instanceof LocalTransaction){
+            slot = ((LocalTransaction)_transaction).file().getSlot(marshalledLength());
+            _transaction.slotFreeOnRollback(objectID(), slot);
+        }
+        _transaction.setPointer(objectID(), slot);
+        return createUpdateBuffer( slot.address());
+    }
+
+    private StatefulBuffer createUpdateBuffer(int address) {
+        int length = _transaction.container().blockAlignedBytes(marshalledLength());
+        StatefulBuffer buffer = new StatefulBuffer(_transaction, length);
+        buffer.useSlot(objectID(), address, length);
+        buffer.setUpdateDepth(_updateDepth);
+        return buffer;
+    }
 
     public StatefulBuffer ToWriteBuffer() {
         
         _writeBuffer.mergeChildren(writeBufferOffset());
         
-        StatefulBuffer buffer = new StatefulBuffer(_transaction, marshalledLength());
+        StatefulBuffer buffer = isNew() ? createNewBuffer() : createUpdateBuffer(0);
         
         if (Deploy.debug) {
             buffer.writeBegin(Const4.YAPOBJECT);
