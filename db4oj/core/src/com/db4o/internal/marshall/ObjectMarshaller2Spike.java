@@ -42,6 +42,7 @@ public class ObjectMarshaller2Spike extends ObjectMarshaller1 {
             }
             
             public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                context.nextField();
                 fieldIndex++;
                 Object child = field.getOrCreate(trans, obj);
                 if(child == null) {

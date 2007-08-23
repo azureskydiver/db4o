@@ -177,6 +177,10 @@ public abstract class Debug extends Debug4 {
 
     public static final void writeEnd(WriteBuffer buffer) {
         if (Deploy.debug && Deploy.brackets) {
+            if(buffer instanceof MarshallingContext){
+                ((MarshallingContext)buffer).debugWriteEnd(Const4.YAPEND);
+                return;
+            }
             buffer.writeByte(Const4.YAPEND);
         }
     }
