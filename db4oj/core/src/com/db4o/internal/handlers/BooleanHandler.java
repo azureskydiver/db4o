@@ -150,9 +150,8 @@ public final class BooleanHandler extends PrimitiveHandler {
         }
 		context.writeByte(getEncodedByteValue(obj));
         if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPBOOLEAN);
+            Debug.writeEnd(context);
         }
-        
 	}
 	
 }
