@@ -2,8 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import sun.security.action.*;
-
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
@@ -230,6 +228,10 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         if(Deploy.debug){
             _debugPrepend = prepend;
         }
+    }
+
+    public void debugWriteEnd(byte b) {
+        _currentBuffer.writeByte(b);
     }
 
 }

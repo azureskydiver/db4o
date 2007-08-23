@@ -144,17 +144,6 @@ public class IntHandler extends PrimitiveHandler {
     }
 
     public void write(WriteContext context, Object obj) {
-        
-        Integer intObject = (Integer) obj;
-        
-        if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPINTEGER);
-        }
-        
-        context.writeInt(intObject.intValue());
-        
-        if (Deploy.debug) {
-            Debug.writeEnd(context);
-        }
+        context.writeInt(((Integer) obj).intValue());
     }
 }
