@@ -30,9 +30,7 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
 	public void testReadWrite(){
 	    MockWriteContext writeContext = new MockWriteContext(db());
 	    stringHandler().write(writeContext, "one");
-	    
 	    MockReadContext readContext = new MockReadContext(writeContext);
-	    
 	    String str = (String)stringHandler().read(readContext);
 	    Assert.areEqual("one", str);
 	}
