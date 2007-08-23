@@ -144,9 +144,6 @@ public class IntHandler extends PrimitiveHandler {
     }
 
     public void write(WriteContext context, Object obj) {
-        if (!(obj instanceof Integer)){
-            throw new Db4oException(obj + "is not an Integer");
-        }
         
         Integer intObject = (Integer) obj;
         
