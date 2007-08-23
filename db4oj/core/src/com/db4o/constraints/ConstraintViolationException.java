@@ -7,7 +7,7 @@ import com.db4o.ext.*;
 /**
  * Base class for all constraint exceptions.
  */
-public abstract class ConstraintViolationException extends Db4oException{
+public class ConstraintViolationException extends Db4oException{
 
 	/**
 	 * ConstraintViolationException constructor with a specific 
