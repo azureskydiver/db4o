@@ -12,9 +12,23 @@ public class ByteHandlerTestCase extends TypeHandlerTestCaseBase {
         new ByteHandlerTestCase().runSolo();
     }
     
+    public static class Item{
+        
+        public byte _byte;
+        
+        public Byte _byteWrapper;
+        
+        public Item(byte b, Byte wrapper){
+            _byte = b;
+            _byteWrapper = wrapper;
+        }
+        
+    }
+    
     private ByteHandler byteHandler() {
         return new ByteHandler(stream());
     }
+    
     public void testReadWrite() {
         MockWriteContext writeContext = new MockWriteContext(db());
         Byte expected = new Byte((byte)0x61);
@@ -24,5 +38,17 @@ public class ByteHandlerTestCase extends TypeHandlerTestCaseBase {
         
         Byte byteValue = (Byte)byteHandler().read(readContext);
         Assert.areEqual(expected, byteValue);
+    }
+    
+    public void testStoreObject() throws Exception{
+        Item storedItem = new Item((byte)5, new Byte((byte)6));
+        db().set(storedItem);
+        db().purge(storedItem);
+    
+        Item readItem = (Item) retrieveOnlyInstance(Item.class);
+        
+        Assert.areNotSame(storedItem, readItem);
+        Assert.areEqual(storedItem._byte, readItem._byte);
+        Assert.areEqual(storedItem._byteWrapper, readItem._byteWrapper);
     }
 }
