@@ -3,8 +3,11 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
+import com.db4o.ext.Db4oException;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.marshall.ReadContext;
+import com.db4o.marshall.WriteContext;
 import com.db4o.reflect.*;
 
 public final class ByteHandler extends PrimitiveHandler {
@@ -85,4 +88,30 @@ public final class ByteHandler extends PrimitiveHandler {
 	boolean isSmaller1(Object obj){
 		return obj instanceof Byte && val(obj) < i_compareTo;
 	}
+
+    public Object read(ReadContext context) {
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPBYTE);
+        }
+        
+        byte byteValue = context.readByte();
+        
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        
+        return new Byte(byteValue);
+    }
+
+    public void write(WriteContext context, Object obj) {
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPBYTE);
+        }
+        
+        context.writeByte(((Byte)obj).byteValue());
+        
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
+    }
 }

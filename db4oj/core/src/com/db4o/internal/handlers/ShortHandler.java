@@ -6,6 +6,8 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.MarshallerFamily;
+import com.db4o.marshall.ReadContext;
+import com.db4o.marshall.WriteContext;
 import com.db4o.reflect.ReflectClass;
 
 public final class ShortHandler extends PrimitiveHandler {
@@ -90,6 +92,39 @@ public final class ShortHandler extends PrimitiveHandler {
 	boolean isSmaller1(Object obj){
 		return obj instanceof Short && val(obj) < i_compareTo;
 	}
+
+    public Object read(ReadContext context) {
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPSHORT);
+        }
+        
+        int value = 0;
+        for (int i = 0; i < Const4.SHORT_BYTES; i++) {
+            value = ((value << 8) + context.readByte());
+        }
+        
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        
+        return new Short((short) value);
+    }
+
+    public void write(WriteContext context, Object obj) {
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPSHORT);
+        }
+        
+        short shortValue = ((Short)obj).shortValue();
+        
+        for (int i = 0; i < Const4.SHORT_BYTES; i++) {
+            context.writeByte((byte) (shortValue >> ((Const4.SHORT_BYTES - 1 - i) * 8)));
+        }
+        
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
+    }
 	
 	
 }
