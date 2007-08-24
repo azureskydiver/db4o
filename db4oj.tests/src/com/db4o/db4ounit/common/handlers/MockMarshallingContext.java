@@ -50,5 +50,25 @@ public abstract class MockMarshallingContext {
 	public void writeInt(int i) {
 	    _current.writeInt(i);
 	}
+	
+    public Object readObject() {
+        int id = readInt();
+        Object obj = container().getByID(transaction(), id);
+        objectContainer().activate(obj, Integer.MAX_VALUE);
+        return obj;
+    }
+ 
+    public void writeObject(Object obj) {
+        int id = container().setInternal(transaction(), obj, false);
+        writeInt(id);
+    }
     
+    private Transaction transaction(){
+        return container().transaction();
+    }
+
+    protected ObjectContainerBase container() {
+        return ((InternalObjectContainer) _objectContainer).container();
+    }
+
 }
