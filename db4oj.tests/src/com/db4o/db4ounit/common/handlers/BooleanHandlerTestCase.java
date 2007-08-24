@@ -10,29 +10,49 @@ public class BooleanHandlerTestCase extends TypeHandlerTestCaseBase {
         new BooleanHandlerTestCase().runSolo();
     }
     
+    public static class Item {
+    	public Boolean _boolWrapper;
+    	public boolean _bool;
+    	
+    	public Item(Boolean boolWrapper, boolean bool){
+    		_boolWrapper = boolWrapper;
+    		_bool = bool;
+    	}
+    }
+    
     private BooleanHandler booleanHandler() {
         return new BooleanHandler(stream());
     }
 
 	public void testReadWriteTrue(){
-	    MockWriteContext writeContext = new MockWriteContext(db());
-	    booleanHandler().write(writeContext, Boolean.TRUE);
-	    
-	    MockReadContext readContext = new MockReadContext(writeContext);
-	    Boolean res = (Boolean)booleanHandler().read(readContext);
-	    
-	    Assert.areEqual(Boolean.TRUE, res);
+		doTestReadWrite(Boolean.TRUE);
 	}
 	
 	public void testReadWriteFalse(){
+		doTestReadWrite(Boolean.FALSE);
+	}
+	
+	public void doTestReadWrite(Boolean b){
 	    MockWriteContext writeContext = new MockWriteContext(db());
-	    booleanHandler().write(writeContext, Boolean.FALSE);
+	    booleanHandler().write(writeContext, b);
 	    
 	    MockReadContext readContext = new MockReadContext(writeContext);
 	    Boolean res = (Boolean)booleanHandler().read(readContext);
 	    
-	    Assert.areEqual(Boolean.FALSE, res);
+	    Assert.areEqual(b, res);
 	}
+	
+    public void testStoreObject() throws Exception{
+        Item storedItem = new Item(Boolean.FALSE, true);
+        db().set(storedItem);
+        db().purge(storedItem);
+    
+        Item readItem = (Item) retrieveOnlyInstance(Item.class);
+        
+        Assert.areNotSame(storedItem, readItem);
+        Assert.areEqual(storedItem._bool, readItem._bool);
+        Assert.areEqual(storedItem._boolWrapper, readItem._boolWrapper);
+    }
 
 
 }
