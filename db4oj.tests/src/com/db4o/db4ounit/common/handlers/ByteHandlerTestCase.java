@@ -12,7 +12,7 @@ public class ByteHandlerTestCase extends TypeHandlerTestCaseBase {
         new ByteHandlerTestCase().runSolo();
     }
     
-    public static class Item{
+    public static class Item extends TypeHandlerTestCaseBase.Item {
         
         public byte _byte;
         
@@ -21,6 +21,29 @@ public class ByteHandlerTestCase extends TypeHandlerTestCaseBase {
         public Item(byte b, Byte wrapper){
             _byte = b;
             _byteWrapper = wrapper;
+        }
+        
+        public boolean equals(Object obj) {
+        	if(obj == this){
+        		return true;
+        	}
+        	if (!(obj instanceof Item)) {
+        		return false;
+			}
+        	Item other = (Item)obj;
+        	return (other._byte == this._byte) 
+        			&& this._byteWrapper.equals(other._byteWrapper);
+        	        	
+        }
+        
+        public int hashCode() {
+        	int hash = 7;
+        	hash = 31 * hash + _byte;
+        	hash = 31 * hash + (null == _byteWrapper ? 0 : _byteWrapper.hashCode());
+        	return hash;
+        }
+        public String toString() {
+    		return "[" + _byte + "," + _byteWrapper + "]";
         }
         
     }
@@ -42,13 +65,6 @@ public class ByteHandlerTestCase extends TypeHandlerTestCaseBase {
     
     public void testStoreObject() throws Exception{
         Item storedItem = new Item((byte)5, new Byte((byte)6));
-        db().set(storedItem);
-        db().purge(storedItem);
-    
-        Item readItem = (Item) retrieveOnlyInstance(Item.class);
-        
-        Assert.areNotSame(storedItem, readItem);
-        Assert.areEqual(storedItem._byte, readItem._byte);
-        Assert.areEqual(storedItem._byteWrapper, readItem._byteWrapper);
+        doTestStoreObject(storedItem);
     }
 }

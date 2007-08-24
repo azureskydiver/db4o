@@ -12,6 +12,34 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
     public static void main(String[] arguments) {
         new StringHandlerTestCase().runSolo();
     }
+    
+    public static class Item extends TypeHandlerTestCaseBase.Item {
+    	public String _string;
+    	public Item(String s) {
+    		_string = s;
+		}
+    	public boolean equals(Object obj) {
+        	if(obj == this){
+        		return true;
+        	}
+        	if (!(obj instanceof Item)) {
+        		return false;
+			}
+        	Item other = (Item)obj;
+        	return this._string.equals(other._string);
+    	}
+    	
+    	public int hashCode() {
+        	int hash = 7;
+        	hash = 31 * hash + (null == _string ? 0 : _string.hashCode());
+        	return hash;
+    	}
+    	
+    	public String toString() {
+    		return "[" + _string + "]";
+    	}
+    }
+    
 
 	public void testIndexMarshalling() {
 		Buffer reader=new Buffer(2*Const4.INT_LENGTH);
@@ -34,5 +62,10 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
 	    String str = (String)stringHandler().read(readContext);
 	    Assert.areEqual("one", str);
 	}
+	
+    public void testStoreObject() throws Exception{
+        Item storedItem = new Item("one");
+        doTestStoreObject(storedItem);
+    }
 	
 }
