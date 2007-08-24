@@ -13,11 +13,20 @@ public interface WriteBuffer {
      * @param b the byte
      */
     void writeByte(byte b);
+    
+    
+    /**
+     * writes an array of bytes to the buffer
+     * @param bytes the byte array
+     */
+    void writeBytes(byte[] bytes);
+
 
     /**
      * writes an int to the buffer.
      * @param i the int
      */
     void writeInt(int i);
+    
     
 }

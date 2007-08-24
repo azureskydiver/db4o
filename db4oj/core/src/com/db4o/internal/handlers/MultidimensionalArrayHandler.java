@@ -3,9 +3,11 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 
@@ -21,7 +23,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
     }
 
     public final Object[] allElements(Object a_array) {
-		return allElements(_reflectArray, a_array);
+		return allElements(arrayReflector(), a_array);
     }
 
 	public static Object[] allElements(final ReflectArray reflectArray, Object array) {
@@ -48,14 +50,14 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
     }
 
     public final int objectLength(Object a_object) {
-        int[] dim = _reflectArray.dimensions(a_object);
+        int[] dim = arrayReflector().dimensions(a_object);
         return Const4.OBJECT_LENGTH
             + (Const4.INT_LENGTH * (2 + dim.length))
             + (elementCount(dim) * i_handler.linkLength());
     }
     
     public int ownLength(Object obj){
-        int[] dim = _reflectArray.dimensions(obj);
+        int[] dim = arrayReflector().dimensions(obj);
         return Const4.OBJECT_LENGTH
             + (Const4.INT_LENGTH * (2 + dim.length));
     }
@@ -73,7 +75,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
 	        for (int i = 0; i < objects.length; i++) {
 	            objects[i] = i_handler.read(mf, reader, true);
 	        }
-            _reflectArray.shape(objects, 0, ret[0], dim, 0);
+	        arrayReflector().shape(objects, 0, ret[0], dim, 0);
 		}
         
         if (Deploy.debug) {
@@ -127,7 +129,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
 			for (int i = 0; i < objects.length; i++) {
 				objects[i] = i_handler.readQuery(a_trans, mf, true, a_bytes, true);
 			}
-            _reflectArray.shape(objects, 0, ret[0], dim, 0);
+			arrayReflector().shape(objects, 0, ret[0], dim, 0);
         }
         
         if (Deploy.debug) {
@@ -164,7 +166,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
             writer.writeBegin(identifier());
         }
         
-        int[] dim = _reflectArray.dimensions(obj);
+        int[] dim = arrayReflector().dimensions(obj);
         writeClass(obj, writer);
         writer.writeInt(dim.length);
         for (int i = 0; i < dim.length; i++) {
@@ -186,9 +188,18 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
 
     private Object element(Object a_array, int a_position) {
         try {
-            return _reflectArray.get(a_array, a_position);
+            return arrayReflector().get(a_array, a_position);
         } catch (Exception e) {
             return null;
         }
     }
+    
+    public void write(WriteContext context, Object obj) {
+        throw new NotImplementedException();
+    }
+    
+    public Object read(ReadContext context) {
+        throw new NotImplementedException();
+    }
+
 }

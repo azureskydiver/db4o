@@ -174,6 +174,12 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
 	    _currentBuffer.writeByte(b);
 	    postWrite();
 	}
+	
+	public void writeBytes(byte[] bytes) {
+	    preWrite();
+	    _currentBuffer.writeBytes(bytes);
+	    postWrite();
+	}
 
     public void writeInt(int i) {
         preWrite();
