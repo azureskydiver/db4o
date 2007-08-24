@@ -8,4 +8,11 @@ package com.db4o.marshall;
  */
 public interface ReadContext extends Context, ReadBuffer {
 
+    /**
+     * Interprets the current position in the context as 
+     * an ID and returns the object with this ID.
+     * @return the object
+     */
+    public Object readObject();
+
 }

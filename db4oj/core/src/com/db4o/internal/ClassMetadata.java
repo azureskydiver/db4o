@@ -2020,12 +2020,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public void write(WriteContext context, Object obj) {
-        throw new NotImplementedException();
+        context.writeObject(obj);
     }
     
     public Object read(ReadContext context) {
-        throw new NotImplementedException();
+        return context.readObject();
     }
-
 
 }

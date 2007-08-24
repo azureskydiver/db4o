@@ -10,5 +10,11 @@ package com.db4o.marshall;
  */
 public interface WriteContext extends Context, WriteBuffer {
 
+    /**
+     * makes sure the object is stored and writes the ID of
+     * the object to the context.
+     * @param obj the object.
+     */
+    void writeObject(Object obj);
 
 }
