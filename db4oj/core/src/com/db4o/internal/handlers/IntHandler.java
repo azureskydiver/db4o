@@ -129,16 +129,7 @@ public class IntHandler extends PrimitiveHandler {
 
     
     public Object read(ReadContext context) {
-        if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPINTEGER);
-        }
-        
         int intValue = context.readInt();
-        
-        if (Deploy.debug) {
-            Debug.readEnd(context);
-        }
-        
         return new Integer(intValue);
     }
 
