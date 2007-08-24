@@ -4,6 +4,8 @@ package com.db4o.internal.handlers;
 
 import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.marshall.ReadContext;
+import com.db4o.marshall.WriteContext;
 
 
 
@@ -85,5 +87,35 @@ public final class CharHandler extends PrimitiveHandler {
 	boolean isSmaller1(Object obj) {
 		return obj instanceof Character && val(obj) < i_compareTo;
 	}
+
+    public Object read(ReadContext context) {
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPCHAR);
+        }
+        
+        byte b1 = context.readByte();
+        byte b2 = context.readByte();
+        char charValue = (char) ((b1 & 0xff) | ((b2 & 0xff) << 8));
+        
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        
+        return new Character(charValue);
+    }
+
+    public void write(WriteContext context, Object obj) {
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPCHAR);
+        }
+        
+        char charValue = ((Character) obj).charValue();
+        
+        context.writeByte((byte)(charValue & 0xff));
+        context.writeByte((byte)(charValue >> 8));
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
+    }
 
 }
