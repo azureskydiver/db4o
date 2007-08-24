@@ -10,13 +10,35 @@ public class BooleanHandlerTestCase extends TypeHandlerTestCaseBase {
         new BooleanHandlerTestCase().runSolo();
     }
     
-    public static class Item {
+    public static class Item extends TypeHandlerTestCaseBase.Item {
     	public Boolean _boolWrapper;
     	public boolean _bool;
     	
     	public Item(Boolean boolWrapper, boolean bool){
     		_boolWrapper = boolWrapper;
     		_bool = bool;
+    	}
+    	
+    	public boolean equals(Object obj) {
+        	if(obj == this){
+        		return true;
+        	}
+        	if (!(obj instanceof Item)) {
+        		return false;
+			}
+        	Item other = (Item)obj;
+        	return (other._bool == this._bool) 
+        			&& this._boolWrapper.equals(other._boolWrapper);
+    	}
+    	
+    	public int hashCode() {
+        	int hash = 7;
+        	hash = 31 * hash + (_bool? 0 : 1);
+        	hash = 31 * hash + (null == _boolWrapper ? 0 : _boolWrapper.hashCode());
+        	return hash;
+    	}
+    	public String toString() {
+    		return "[" + _bool + "," + _boolWrapper + "]";
     	}
     }
     
@@ -44,14 +66,7 @@ public class BooleanHandlerTestCase extends TypeHandlerTestCaseBase {
 	
     public void testStoreObject() throws Exception{
         Item storedItem = new Item(Boolean.FALSE, true);
-        db().set(storedItem);
-        db().purge(storedItem);
-    
-        Item readItem = (Item) retrieveOnlyInstance(Item.class);
-        
-        Assert.areNotSame(storedItem, readItem);
-        Assert.areEqual(storedItem._bool, readItem._bool);
-        Assert.areEqual(storedItem._boolWrapper, readItem._boolWrapper);
+        doTestStoreObject(storedItem);
     }
 
 

@@ -12,6 +12,37 @@ public class CharHandlerTestCase extends TypeHandlerTestCaseBase {
         new CharHandlerTestCase().runSolo();
     }
     
+    public static class Item extends TypeHandlerTestCaseBase.Item {
+    	public char _char;
+    	public Character _charWrapper;
+    	public Item(char c, Character wrapper) {
+    		_char = c;
+    		_charWrapper = wrapper;
+		}
+    	
+    	public boolean equals(Object obj) {
+        	if(obj == this){
+        		return true;
+        	}
+        	if (!(obj instanceof Item)) {
+        		return false;
+			}
+        	Item other = (Item)obj;
+        	return (other._char == this._char) 
+        			&& this._charWrapper.equals(other._charWrapper);
+    	}
+    	
+    	public int hashCode() {
+        	int hash = 7;
+        	hash = 31 * hash + _char;
+        	hash = 31 * hash + (null == _charWrapper ? 0 : _charWrapper.hashCode());
+        	return hash;
+    	}
+    	public String toString() {
+    		return "[" + _char + "," + _charWrapper + "]";
+    	}
+    }
+    
     private CharHandler charHandler() {
         return new CharHandler(stream());
     }
@@ -26,4 +57,10 @@ public class CharHandlerTestCase extends TypeHandlerTestCaseBase {
         
         Assert.areEqual(expected, charValue);
     }
+    
+    public void testStoreObject() throws Exception{
+        Item storedItem = new Item((char)0x4e2f, new Character((char)0x4e2d));
+        doTestStoreObject(storedItem);
+    }
+    
 }

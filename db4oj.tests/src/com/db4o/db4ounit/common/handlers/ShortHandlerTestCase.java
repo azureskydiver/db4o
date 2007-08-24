@@ -12,6 +12,37 @@ public class ShortHandlerTestCase extends TypeHandlerTestCaseBase {
         new ShortHandlerTestCase().runSolo();
     }
     
+    public static class Item extends TypeHandlerTestCaseBase.Item {
+    	public short _short;
+    	public Short _shortWrapper;
+    	public Item(short s, Short wrapper) {
+    		_short = s;
+    		_shortWrapper = wrapper;
+		}
+    	public boolean equals(Object obj) {
+        	if(obj == this){
+        		return true;
+        	}
+        	if (!(obj instanceof Item)) {
+        		return false;
+			}
+        	Item other = (Item)obj;
+        	return (other._short == this._short) 
+        			&& this._shortWrapper.equals(other._shortWrapper);
+    	}
+    	
+    	public int hashCode() {
+        	int hash = 7;
+        	hash = 31 * hash + _short;
+        	hash = 31 * hash + (null == _shortWrapper ? 0 : _shortWrapper.hashCode());
+        	return hash;
+    	}
+    	
+    	public String toString() {
+    		return "[" + _short + ","+ _shortWrapper + "]";
+    	}
+    }
+    
     private ShortHandler shortHandler() {
         return new ShortHandler(stream());
     }
@@ -26,4 +57,9 @@ public class ShortHandlerTestCase extends TypeHandlerTestCaseBase {
         Short shortValue = (Short)shortHandler().read(readContext);
         Assert.areEqual(expected, shortValue);
     }
+    public void testStoreObject() throws Exception{
+        Item storedItem = new Item((short) 0x1020, new Short((short) 0x1122));
+        doTestStoreObject(storedItem);
+    }
+
 }
