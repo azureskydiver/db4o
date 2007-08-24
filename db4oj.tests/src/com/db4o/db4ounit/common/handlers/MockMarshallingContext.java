@@ -51,6 +51,10 @@ public abstract class MockMarshallingContext {
 	    _current.writeInt(i);
 	}
 	
+    public void writeBytes(byte[] bytes) {
+        _current.writeBytes(bytes);
+    }
+	
     public Object readObject() {
         int id = readInt();
         Object obj = container().getByID(transaction(), id);

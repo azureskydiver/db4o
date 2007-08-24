@@ -30,9 +30,14 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
 		_offset = offset;
 	}
 	
-    public void append(byte[] a_bytes) {
-        System.arraycopy(a_bytes, 0, _buffer, _offset, a_bytes.length);
-        _offset += a_bytes.length;
+	public void writeBytes(byte[] bytes) {
+        System.arraycopy(bytes, 0, _buffer, _offset, bytes.length);
+        _offset += bytes.length;
+	}
+	
+    // TODO: Change all callers to call writeBytes directly.
+	public void append(byte[] bytes) {
+        writeBytes(bytes);
     }
     
 	public final boolean containsTheSame(Buffer other) {

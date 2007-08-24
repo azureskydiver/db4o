@@ -2019,12 +2019,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return new TransactionContext(transaction, value);
     }
     
-    public void write(WriteContext context, Object obj) {
-        context.writeObject(obj);
-    }
-    
     public Object read(ReadContext context) {
         return context.readObject();
     }
 
+    public void write(WriteContext context, Object obj) {
+        context.writeObject(obj);
+    }
+    
 }

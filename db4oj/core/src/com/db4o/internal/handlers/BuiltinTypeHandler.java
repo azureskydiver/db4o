@@ -2,16 +2,14 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.marshall.*;
 
 
 
 /**
- * Common base class for YapString and YapArray:
- * There is one indirection in the database file to this.
+ * Common base class for StringHandler and ArrayHandler:
+ * The common pattern for both is that a slot  is one indirection in the database file to this.
  * 
  * @exclude
  */
@@ -42,12 +40,4 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
     
     public abstract void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
     
-    public void write(WriteContext context, Object obj) {
-        throw new NotImplementedException();
-    }
-    
-    public Object read(ReadContext context) {
-        throw new NotImplementedException();
-    }
-
 }

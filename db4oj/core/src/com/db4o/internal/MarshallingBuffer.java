@@ -37,6 +37,11 @@ public class MarshallingBuffer implements WriteBuffer{
         prepareWrite();
         _delegate.writeByte(b);
     }
+    
+    public void writeBytes(byte[] bytes) {
+        prepareWrite(bytes.length);
+        _delegate.writeBytes(bytes);
+    }
 
     public void writeInt(int i) {
         prepareWrite();

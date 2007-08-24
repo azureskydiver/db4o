@@ -8,6 +8,7 @@ import com.db4o.internal.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.GenericReflector;
 
@@ -18,17 +19,19 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 	
     public final TypeHandler4 i_handler;
     public final boolean i_isPrimitive;
-    public final ReflectArray _reflectArray;
 
     public ArrayHandler(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream);
         i_handler = a_handler;
         i_isPrimitive = a_isPrimitive;
-        _reflectArray = stream.reflector().array();
+    }
+    
+    protected ReflectArray arrayReflector(){
+        return _stream.reflector().array();
     }
 
     public Object[] allElements(Object a_object) {
-		return allElements(_reflectArray, a_object);
+		return allElements(arrayReflector(), a_object);
     }
 
 	public static Object[] allElements(final ReflectArray reflectArray, Object array) {
@@ -166,7 +169,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     }
 
     public int objectLength(Object obj) {
-        return ownLength(obj) + (_reflectArray.getLength(obj) * i_handler.linkLength());
+        return ownLength(obj) + (arrayReflector().getLength(obj) * i_handler.linkLength());
     }
     
     /** @param obj */
@@ -200,7 +203,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         Object ret = readCreate(a_trans, a_reader, elements);
 		if(ret != null){
 			for (int i = 0; i < elements.value; i++) {
-                _reflectArray.set(ret, i, i_handler.readQuery(a_trans, mf, true, a_reader, true));
+			    arrayReflector().set(ret, i, i_handler.readQuery(a_trans, mf, true, a_reader, true));
 			}
 		}
         if (Deploy.debug) {
@@ -224,7 +227,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 	            reader.readBytes((byte[])array);
 	        } else{
     			for (int i = 0; i < elements.value; i++) {
-    				_reflectArray.set(array, i, i_handler.read(mf, reader, true));
+    				arrayReflector().set(array, i, i_handler.read(mf, reader, true));
     			}
 	        }
 		}
@@ -240,10 +243,10 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 		ReflectClassByRef clazz = new ReflectClassByRef();
 		elements.value = readElementsAndClass(trans, buffer, clazz);
 		if (i_isPrimitive) {
-			return _reflectArray.newInstance(primitiveClassReflector(), elements.value);
+			return arrayReflector().newInstance(primitiveClassReflector(), elements.value);
 		} 
 		if (clazz.value != null) {
-			return _reflectArray.newInstance(clazz.value, elements.value);	
+			return arrayReflector().newInstance(clazz.value, elements.value);	
 		}
 		return null;
 	}
@@ -348,12 +351,10 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 		return ArrayHandler.allElements(reflectArray, obj);
     }
 
-	void writeClass(Object a_object, StatefulBuffer a_bytes){
+	final void writeClass(Object obj, StatefulBuffer buffer){
         int yapClassID = 0;
         
-        Reflector reflector = a_bytes.getTransaction().reflector();
-        
-        ReflectClass claxx = _reflectArray.getComponentType(reflector.forObject(a_object));
+        ReflectClass claxx = componentType(obj);
         
         boolean primitive = false;
         if(! Deploy.csharp){
@@ -361,7 +362,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
                 primitive = true;
             }
         }
-        ObjectContainerBase stream = a_bytes.getStream();
+        ObjectContainerBase stream = buffer.getStream();
         if(primitive){
             claxx = stream._handlers.handlerForClass(stream,claxx).classReflector();
         }
@@ -382,8 +383,18 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
             }
         }
 
-        a_bytes.writeInt(- yapClassID);
+        buffer.writeInt(- yapClassID);
+        
     }
+	
+	private ReflectClass componentType(Object obj){
+	    return arrayReflector().getComponentType(reflector().forObject(obj));
+	}
+	
+	private Reflector reflector(){
+	    return _stream.reflector();
+	}
+	
     
     public final Object write(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
         return mf._array.writeNew(this, a_object, restoreLinkOffset, a_bytes);
@@ -397,7 +408,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         
         writeClass(obj, writer);
 		
-		int elements = _reflectArray.getLength(obj);
+		int elements = arrayReflector().getLength(obj);
         writer.writeInt(elements);
         
         if(handleAsByteArray(obj)){
@@ -405,7 +416,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
             writer.append((byte[])obj);
         }else{
             for (int i = 0; i < elements; i++) {
-                i_handler.write(MarshallerFamily.current(), _reflectArray.get(obj, i), false, writer, true, true);
+                i_handler.write(MarshallerFamily.current(), arrayReflector().get(obj, i), false, writer, true, true);
             }
         }
         
@@ -488,5 +499,13 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         }
 		return elements;
 	}
+	
+    public void write(WriteContext context, Object obj) {
+        throw new NotImplementedException();
+    }
+    
+    public Object read(ReadContext context) {
+        throw new NotImplementedException();
+    }
 
 }
