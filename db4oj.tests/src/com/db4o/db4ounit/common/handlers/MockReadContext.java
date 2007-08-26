@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.*;
+import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
 
@@ -17,6 +18,5 @@ public class MockReadContext extends MockMarshallingContext implements ReadConte
         writeContext._header.copyTo(_header, 0, 0, writeContext._header.length());
         writeContext._payLoad.copyTo(_payLoad, 0, 0, writeContext._payLoad.length());
     }
-
 
 }

@@ -398,6 +398,10 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
         return _server.classMetadataForName(name);
     }
 
+    public ClassMetadata classMetadataForId(int id) {
+        return _server.classMetadataForId(id);
+    }
+
     public HandlerRegistry handlers(){
         return _server.handlers();
     }

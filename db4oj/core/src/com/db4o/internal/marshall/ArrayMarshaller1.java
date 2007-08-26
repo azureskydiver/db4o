@@ -12,7 +12,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
     
     public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, ArrayHandler arrayHandler, Object obj, boolean topLevel){
         
-        TypeHandler4 typeHandler = arrayHandler.i_handler;
+        TypeHandler4 typeHandler = arrayHandler._handler;
         
         if(topLevel){
             header.addBaseLength(arrayHandler.linkLength());
@@ -42,7 +42,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         int linkOffSet = reader._offset; 
         
         Transaction trans = reader.getTransaction();
-        TypeHandler4 typeHandler = arrayHandler.i_handler;
+        TypeHandler4 typeHandler = arrayHandler._handler;
         
         if (reader.cascadeDeletes() > 0 && typeHandler instanceof ClassMetadata) {
             reader._offset = address;
@@ -51,7 +51,7 @@ class ArrayMarshaller1 extends ArrayMarshaller{
             }
             reader.setCascadeDeletes(reader.cascadeDeletes());
             for (int i = arrayHandler.elementCount(trans, reader); i > 0; i--) {
-                arrayHandler.i_handler.deleteEmbedded(_family, reader);
+                arrayHandler._handler.deleteEmbedded(_family, reader);
             }
         }
         

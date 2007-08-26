@@ -53,7 +53,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         int[] dim = arrayReflector().dimensions(a_object);
         return Const4.OBJECT_LENGTH
             + (Const4.INT_LENGTH * (2 + dim.length))
-            + (elementCount(dim) * i_handler.linkLength());
+            + (elementCount(dim) * _handler.linkLength());
     }
     
     public int ownLength(Object obj){
@@ -73,7 +73,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
 		if(ret[0] != null){
 	        Object[] objects = new Object[elementCount(dim)];
 	        for (int i = 0; i < objects.length; i++) {
-	            objects[i] = i_handler.read(mf, reader, true);
+	            objects[i] = _handler.read(mf, reader, true);
 	        }
 	        arrayReflector().shape(objects, 0, ret[0], dim, 0);
 		}
@@ -104,7 +104,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         if(ret[0] != null){
             int count = elementCount(dim);
             for (int i = 0; i < count; i++) {
-                QCandidate qc = i_handler.readSubCandidate(mf, reader, candidates, true);
+                QCandidate qc = _handler.readSubCandidate(mf, reader, candidates, true);
                 if(qc != null){
                     candidates.addByIdentity(qc);
                 }
@@ -127,7 +127,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         if(ret[0] != null){
 			Object[] objects = new Object[elementCount(dim)];
 			for (int i = 0; i < objects.length; i++) {
-				objects[i] = i_handler.readQuery(a_trans, mf, true, a_bytes, true);
+				objects[i] = _handler.readQuery(a_trans, mf, true, a_bytes, true);
 			}
 			arrayReflector().shape(objects, 0, ret[0], dim, 0);
         }
@@ -142,7 +142,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
     private int[] read1Create(Transaction a_trans, Buffer a_bytes, Object[] obj) {
 		ReflectClassByRef clazz = new ReflectClassByRef();
 		int[] dim = readDimensions(a_trans, a_bytes, clazz);
-        if (i_isPrimitive) {
+        if (_isPrimitive) {
         	obj[0] = a_trans.reflector().array().newInstance(primitiveClassReflector(), dim);
         } else {
         	if (clazz.value != null) {
@@ -177,7 +177,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         MarshallerFamily mf = MarshallerFamily.current();
         
         for (int i = 0; i < objects.length; i++) {
-            i_handler.write(mf, element(objects, i), false, writer, true, true);
+            _handler.write(mf, element(objects, i), false, writer, true, true);
         }
         
         if (Deploy.debug) {

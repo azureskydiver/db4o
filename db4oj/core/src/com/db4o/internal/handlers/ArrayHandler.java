@@ -17,13 +17,13 @@ import com.db4o.reflect.generic.GenericReflector;
  */
 public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandler {
 	
-    public final TypeHandler4 i_handler;
-    public final boolean i_isPrimitive;
+    public final TypeHandler4 _handler;
+    public final boolean _isPrimitive;
 
     public ArrayHandler(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream);
-        i_handler = a_handler;
-        i_isPrimitive = a_isPrimitive;
+        _handler = a_handler;
+        _isPrimitive = a_isPrimitive;
     }
     
     protected ReflectArray arrayReflector(){
@@ -48,7 +48,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         int a_depth,
         boolean a_activate) {
         // We simply activate all Objects here
-        if (i_handler instanceof ClassMetadata) {
+        if (_handler instanceof ClassMetadata) {
             
             a_depth --;
             
@@ -66,7 +66,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     }
     
     public ReflectClass classReflector(){
-    	return i_handler.classReflector();
+    	return _handler.classReflector();
     }
 
     public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader) throws Db4oIOException{
@@ -109,24 +109,6 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
             return;
         }        
         
-//        if (address > 0) {
-//            Transaction trans = a_bytes.getTransaction();
-//            YapReader bytes =
-//                a_bytes.getStream().readWriterByAddress(trans, address, length);
-//            if (bytes != null) {
-//                if (Deploy.debug) {
-//                    bytes.readBegin(identifier());
-//                }
-//                for (int i = elementCount(trans, bytes); i > 0; i--) {
-//                    int id = bytes.readInt();
-//                    Slot slot = trans.getCurrentSlotOfID(id);
-//                    
-//					a_classPrimitive.free(trans, id, slot._address,slot._length);
-//                }
-//            }
-//            
-//            trans.slotFreeOnCommit(address, address, length);
-//        }
     }
 
     /** @param trans */
@@ -145,12 +127,12 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         if (((ArrayHandler) obj).identifier() != identifier()) {
             return false;
         }
-        return (i_handler.equals(((ArrayHandler) obj).i_handler));
+        return (_handler.equals(((ArrayHandler) obj)._handler));
     }
 
 
     public final int getID() {
-        return i_handler.getID();
+        return _handler.getID();
     }
 
     private boolean handleAsByteArray(Object obj) {
@@ -169,7 +151,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     }
 
     public int objectLength(Object obj) {
-        return ownLength(obj) + (arrayReflector().getLength(obj) * i_handler.linkLength());
+        return ownLength(obj) + (arrayReflector().getLength(obj) * _handler.linkLength());
     }
     
     /** @param obj */
@@ -182,7 +164,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 	}
     
 	public ReflectClass primitiveClassReflector() {
-		return Handlers4.primitiveClassReflector(i_handler);
+		return Handlers4.primitiveClassReflector(_handler);
 	}
 	
     public final Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
@@ -203,7 +185,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         Object ret = readCreate(a_trans, a_reader, elements);
 		if(ret != null){
 			for (int i = 0; i < elements.value; i++) {
-			    arrayReflector().set(ret, i, i_handler.readQuery(a_trans, mf, true, a_reader, true));
+			    arrayReflector().set(ret, i, _handler.readQuery(a_trans, mf, true, a_reader, true));
 			}
 		}
         if (Deploy.debug) {
@@ -227,7 +209,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 	            reader.readBytes((byte[])array);
 	        } else{
     			for (int i = 0; i < elements.value; i++) {
-    				arrayReflector().set(array, i, i_handler.read(mf, reader, true));
+    				arrayReflector().set(array, i, _handler.read(mf, reader, true));
     			}
 	        }
 		}
@@ -239,10 +221,10 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         return array;
     }
 
-	private Object readCreate(Transaction trans, Buffer buffer, IntByRef elements) {
+	private Object readCreate(Transaction trans, ReadBuffer buffer, IntByRef elements) {
 		ReflectClassByRef clazz = new ReflectClassByRef();
 		elements.value = readElementsAndClass(trans, buffer, clazz);
-		if (i_isPrimitive) {
+		if (_isPrimitive) {
 			return arrayReflector().newInstance(primitiveClassReflector(), elements.value);
 		} 
 		if (clazz.value != null) {
@@ -268,7 +250,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         Object ret = readCreate(candidates.i_trans, reader, elements);
         if(ret != null){
             for (int i = 0; i < elements.value; i++) {
-                QCandidate qc = i_handler.readSubCandidate(mf, reader, candidates, true);
+                QCandidate qc = _handler.readSubCandidate(mf, reader, candidates, true);
                 if(qc != null){
                     candidates.addByIdentity(qc);
                 }
@@ -287,16 +269,16 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         
     }
     
-    final int readElementsAndClass(Transaction trans, Buffer buffer, ReflectClassByRef clazz){
+    final int readElementsAndClass(Transaction trans, ReadBuffer buffer, ReflectClassByRef clazz){
         int elements = buffer.readInt();
         if (elements < 0) {
             clazz.value =reflectClassFromElementsEntry(trans, elements);
             elements = buffer.readInt();
         }
         else {
-    		clazz.value =i_handler.classReflector();
+    		clazz.value =_handler.classReflector();
         }
-        if(Debug.exceedsMaximumArrayEntries(elements, i_isPrimitive)){
+        if(Debug.exceedsMaximumArrayEntries(elements, _isPrimitive)){
             return 0;
         }
         return elements;
@@ -338,7 +320,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata) : classMetadata.classReflector());
 		    }
 		}
-		return i_handler.classReflector();
+		return _handler.classReflector();
 	}
     
     public static Object[] toArray(ObjectContainerBase stream, Object obj) {
@@ -350,41 +332,29 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 		}
 		return ArrayHandler.allElements(reflectArray, obj);
     }
-
-	final void writeClass(Object obj, StatefulBuffer buffer){
-        int yapClassID = 0;
-        
+    
+    private final int classID(Object obj){
         ReflectClass claxx = componentType(obj);
-        
-        boolean primitive = false;
-        if(! Deploy.csharp){
-            if(claxx.isPrimitive()){
-                primitive = true;
-            }
-        }
-        ObjectContainerBase stream = buffer.getStream();
+        boolean primitive = Deploy.csharp ? false : claxx.isPrimitive();
         if(primitive){
-            claxx = stream._handlers.handlerForClass(stream,claxx).classReflector();
+            claxx = _stream._handlers.handlerForClass(_stream,claxx).classReflector();
         }
-        ClassMetadata yc = stream.produceClassMetadata(claxx);
-        if (yc != null) {
-            yapClassID = yc.getID();
-        }
-        if(yapClassID == 0){
-            
+        ClassMetadata classMetadata = _stream.produceClassMetadata(claxx);
+        if (classMetadata == null) {
             // TODO: This one is a terrible low-frequency blunder !!!
             // If YapClass-ID == 99999 then we will get IGNORE back.
             // Discovered on adding the primitives
-            yapClassID = - Const4.IGNORE_ID;
-            
-        } else{
-            if(primitive){
-                yapClassID -= Const4.PRIMITIVE;
-            }
+            return Const4.IGNORE_ID;
         }
+        int classID = classMetadata.getID();
+        if(primitive){
+            classID -= Const4.PRIMITIVE;
+        }
+        return -classID;
+    }
 
-        buffer.writeInt(- yapClassID);
-        
+	final void writeClass(Object obj, StatefulBuffer buffer){
+        buffer.writeInt(classID(obj));
     }
 	
 	private ReflectClass componentType(Object obj){
@@ -413,10 +383,10 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         
         if(handleAsByteArray(obj)){
             // byte[] performance optimisation
-            writer.append((byte[])obj);
+            writer.writeBytes((byte[])obj);
         }else{
             for (int i = 0; i < elements; i++) {
-                i_handler.write(MarshallerFamily.current(), arrayReflector().get(obj, i), false, writer, true, true);
+                _handler.write(MarshallerFamily.current(), arrayReflector().get(obj, i), false, writer, true, true);
             }
         }
         
@@ -429,7 +399,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     // Comparison_______________________
 
     public Comparable4 prepareComparison(Object obj) {
-        i_handler.prepareComparison(obj);
+        _handler.prepareComparison(obj);
         return this;
     }
     
@@ -443,7 +413,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         }
         Object[] compareWith = allElements(obj);
         for (int j = 0; j < compareWith.length; j++) {
-            if (i_handler.compareTo(compareWith[j]) == 0) {
+            if (_handler.compareTo(compareWith[j]) == 0) {
                 return true;
             }
         }
@@ -453,7 +423,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     public boolean isGreater(Object obj) {
         Object[] compareWith = allElements(obj);
         for (int j = 0; j < compareWith.length; j++) {
-            if (i_handler.compareTo(compareWith[j]) > 0) {
+            if (_handler.compareTo(compareWith[j]) > 0) {
                 return true;
             }
         }
@@ -463,7 +433,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     public boolean isSmaller(Object obj) {
         Object[] compareWith = allElements(obj);
         for (int j = 0; j < compareWith.length; j++) {
-            if (i_handler.compareTo(compareWith[j]) < 0) {
+            if (_handler.compareTo(compareWith[j]) < 0) {
                 return true;
             }
         }
@@ -471,7 +441,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     }
 
     public final void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
-        if(Handlers4.handlesSimple(i_handler)){
+        if(Handlers4.handlesSimple(_handler)){
             readers.incrementOffset(linkLength());
         }else{
             mf._array.defragIDs(this, readers);
@@ -484,7 +454,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 		}
 		int elements = readElementsDefrag(readers);
 		for (int i = 0; i < elements; i++) {
-			i_handler.defrag(mf,readers, true);
+			_handler.defrag(mf,readers, true);
 		}
         if (Deploy.debug) {
             readers.readEnd();
@@ -501,11 +471,44 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 	}
 	
     public void write(WriteContext context, Object obj) {
-        throw new NotImplementedException();
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPARRAY);
+        }
+        int classID = classID(obj);
+        context.writeInt(classID);
+        int elementCount = arrayReflector().getLength(obj);
+        context.writeInt(elementCount);
+        if(handleAsByteArray(obj)){
+            context.writeBytes((byte[])obj);  // byte[] performance optimisation
+        }else{
+            for (int i = 0; i < elementCount; i++) {
+                _handler.write(context, arrayReflector().get(obj, i));
+            }
+        }
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
     }
     
     public Object read(ReadContext context) {
-        throw new NotImplementedException();
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPARRAY);
+        }
+        IntByRef elements = new IntByRef();
+        Object array = readCreate(context.transaction(), context, elements);
+        if (array != null){
+            if(handleAsByteArray(array)){
+                context.readBytes((byte[])array); // byte[] performance optimisation
+            } else{
+                for (int i = 0; i < elements.value; i++) {
+                    arrayReflector().set(array, i, _handler.read(context));
+                }
+            }
+        }
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        return array;
     }
 
 }

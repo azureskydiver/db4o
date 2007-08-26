@@ -8,6 +8,8 @@ package com.db4o.marshall;
 public interface ReadBuffer {
 
     byte readByte();
+    
+    void readBytes(byte[] bytes);
 
     int readInt();
 

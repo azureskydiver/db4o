@@ -18,7 +18,7 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         }
         Transaction trans = reader.getTransaction();
         if (reader.cascadeDeletes() > 0
-				&& arrayHandler.i_handler instanceof ClassMetadata) {
+				&& arrayHandler._handler instanceof ClassMetadata) {
 			StatefulBuffer bytes = reader.getStream().readWriterByAddress(
 					trans, slot.address(), slot.length());
 			if (Deploy.debug) {
@@ -26,7 +26,7 @@ class ArrayMarshaller0  extends ArrayMarshaller{
 			}
 			bytes.setCascadeDeletes(reader.cascadeDeletes());
 			for (int i = arrayHandler.elementCount(trans, bytes); i > 0; i--) {
-				arrayHandler.i_handler.deleteEmbedded(_family, bytes);
+				arrayHandler._handler.deleteEmbedded(_family, bytes);
 			}
 		}
         trans.slotFreeOnCommit(slot.address(), slot);

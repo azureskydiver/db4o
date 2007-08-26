@@ -126,11 +126,9 @@ public class IntHandler extends PrimitiveHandler {
     public void defragIndexEntry(BufferPair readers) {
     	readers.incrementIntSize();
     }
-
     
     public Object read(ReadContext context) {
-        int intValue = context.readInt();
-        return new Integer(intValue);
+        return new Integer(context.readInt());
     }
 
     public void write(WriteContext context, Object obj) {

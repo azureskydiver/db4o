@@ -48,7 +48,7 @@ public class Handlers4 {
     
     public static TypeHandler4 baseTypeHandler(TypeHandler4 handler){
         if(handler instanceof ArrayHandler){
-            return ((ArrayHandler)handler).i_handler;
+            return ((ArrayHandler)handler)._handler;
         }
         if(handler instanceof PrimitiveFieldHandler){
             return ((PrimitiveFieldHandler)handler).i_handler;
