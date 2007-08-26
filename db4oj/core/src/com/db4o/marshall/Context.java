@@ -3,6 +3,7 @@
 package com.db4o.marshall;
 
 import com.db4o.*;
+import com.db4o.internal.*;
 
 /**
  * common functionality for {@link ReadContext} and 
@@ -11,5 +12,7 @@ import com.db4o.*;
 public interface Context {
 	
     ObjectContainer objectContainer();
+    
+    Transaction transaction();
 
 }

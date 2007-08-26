@@ -28,6 +28,8 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     public ClassMetadata classMetadataForReflectClass(ReflectClass reflectClass);
 
     public ClassMetadata classMetadataForName(String name);
+    
+    public ClassMetadata classMetadataForId(int id);
 
     public HandlerRegistry handlers();
 

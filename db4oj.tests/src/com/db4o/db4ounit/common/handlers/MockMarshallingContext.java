@@ -38,6 +38,10 @@ public abstract class MockMarshallingContext {
 	public byte readByte() {
 		return _current.readByte();
 	}
+	
+    public void readBytes(byte[] bytes) {
+        _current.readBytes(bytes);
+    }
 
 	public int readInt() {
 		return _current.readInt();
@@ -67,7 +71,7 @@ public abstract class MockMarshallingContext {
         writeInt(id);
     }
     
-    private Transaction transaction(){
+    public Transaction transaction(){
         return container().transaction();
     }
 
