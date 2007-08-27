@@ -49,7 +49,7 @@ public class DoubleHandlerTestCase extends TypeHandlerTestCaseBase {
 	public void testReadWrite() {
 	    MockWriteContext writeContext = new MockWriteContext(db());
 	    DoubleHandler doubleHandler = (DoubleHandler)_handler;
-	    Double expected = new Double(Double.MAX_VALUE);
+	    Double expected = new Double(1.23456789);
 	    doubleHandler.write(writeContext, expected);
 	    
 	    MockReadContext readContext = new MockReadContext(writeContext);
