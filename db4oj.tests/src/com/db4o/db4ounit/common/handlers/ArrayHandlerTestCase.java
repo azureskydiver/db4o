@@ -42,7 +42,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
         return new ArrayHandler(stream(),typeHandler, isPrimitive);
     }
     
-    public void _testIntArrayReadWrite() {
+    public void testIntArrayReadWrite() {
         MockWriteContext writeContext = new MockWriteContext(db());
         int[] expected = new int[]{7, 8, 9};
         intArrayHandler().write(writeContext, expected);
@@ -51,7 +51,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
         ArrayAssert.areEqual(expected, actual);
     }
 
-    public void _testIntArrayStoreObject() throws Exception{
+    public void testIntArrayStoreObject() throws Exception{
         IntArrayHolder expectedItem = new IntArrayHolder(new int[] {1, 2, 3});
         db().set(expectedItem);
         db().purge(expectedItem);
@@ -69,7 +69,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
         ArrayAssert.areEqual(expected, actual);
     }
 
-    public void _testStringArrayStoreObject() throws Exception{
+    public void testStringArrayStoreObject() throws Exception{
         StringArrayHolder expectedItem = new StringArrayHolder(new String[] {"one", "two", "three"});
         db().set(expectedItem);
         db().purge(expectedItem);

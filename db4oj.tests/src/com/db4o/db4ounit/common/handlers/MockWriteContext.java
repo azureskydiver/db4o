@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.*;
+import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
 
@@ -11,6 +12,9 @@ public class MockWriteContext extends MockMarshallingContext implements WriteCon
     public MockWriteContext(ObjectContainer objectContainer) {
         super(objectContainer);
     }
-
-
+    
+    public void writeObject(TypeHandler4 handler, Object obj) {
+        handler.write(this, obj);
+    }
+    
 }

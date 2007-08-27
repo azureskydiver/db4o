@@ -482,7 +482,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
             context.writeBytes((byte[])obj);  // byte[] performance optimisation
         }else{
             for (int i = 0; i < elementCount; i++) {
-                _handler.write(context, arrayReflector().get(obj, i));
+                context.writeObject(_handler, arrayReflector().get(obj, i));
             }
         }
         if (Deploy.debug) {
