@@ -131,11 +131,11 @@ public class MarshallingBuffer implements WriteBuffer{
     
     private static void merge(MarshallingBuffer writeBuffer, MarshallingBuffer parentBuffer, MarshallingBuffer childBuffer, int linkOffset) {
         
-        mergeChildren(writeBuffer, childBuffer, linkOffset);
-        
         int childLength = childBuffer.length();
         int childPosition = writeBuffer.offset();
         writeBuffer.reserve(childLength);
+        
+        mergeChildren(writeBuffer, childBuffer, linkOffset);
         
         int savedWriteBufferOffset = writeBuffer.offset();
         writeBuffer.seek(childPosition);

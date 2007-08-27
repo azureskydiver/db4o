@@ -225,7 +225,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         _fieldWriteCount = 0;
         _currentBuffer = _writeBuffer;
     }
-
+    
     public void fieldCount(int fieldCount) {
         _writeBuffer.writeInt(fieldCount);
     }
@@ -246,6 +246,15 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         int id = container().setInternal(transaction(), obj, _updateDepth, true);
         
         writeInt(id);
+    }
+    
+    public void writeObject(TypeHandler4 handler, Object obj){
+        MarshallingBuffer tempBuffer = _currentBuffer;
+        int tempFieldWriteCount = _fieldWriteCount;
+        _fieldWriteCount = 0;
+        handler.write(this, obj);
+        _fieldWriteCount = tempFieldWriteCount;
+        _currentBuffer = tempBuffer;
     }
 
 }
