@@ -12,18 +12,18 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 		    ArrayHandlerTestCase.class,
+            BooleanHandlerTestCase.class,
+            ByteHandlerTestCase.class,
+            CharHandlerTestCase.class,
 		    ClassHandlerTestCase.class,
 		    CustomClassHandlerTestCase.class,
+            DateHandlerTestCase.class,
+            DoubleHandlerTestCase.class,
+            FloatHandlerTestCase.class,
+            IntHandlerTestCase.class,
+            LongHandlerTestCase.class,
 			StringHandlerTestCase.class,
-			DoubleHandlerTestCase.class,
-			BooleanHandlerTestCase.class,
-			IntHandlerTestCase.class,
 			ShortHandlerTestCase.class,
-			ByteHandlerTestCase.class,
-			CharHandlerTestCase.class,
-			DateHandlerTestCase.class,
-			FloatHandlerTestCase.class,
-			LongHandlerTestCase.class,
 		};
     }
 
