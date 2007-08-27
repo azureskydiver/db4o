@@ -81,11 +81,11 @@ public final class DoubleHandler extends LongHandler {
 
     public Object read(ReadContext context) {
         Long l = (Long)super.read(context);
-        return new Double(Double.longBitsToDouble(l.longValue()));
+        return new Double(Platform4.longToDouble(l.longValue()));
     }
 
     public void write(WriteContext context, Object obj) {
-        long l = Double.doubleToLongBits(((Double)obj).doubleValue());
+        long l = Platform4.doubleToLong(((Double)obj).doubleValue());
         super.write(context, new Long(l));
     }
 }
