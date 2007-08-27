@@ -6,6 +6,8 @@ import com.db4o.CorruptionException;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.MarshallerFamily;
+import com.db4o.marshall.ReadContext;
+import com.db4o.marshall.WriteContext;
 import com.db4o.reflect.*;
 
 /**
@@ -76,6 +78,14 @@ public final class DoubleHandler extends LongHandler {
 	boolean isSmaller1(Object obj){
 		return obj instanceof Double && dval(obj) < i_compareToDouble;
 	}
-	
-	
+
+    public Object read(ReadContext context) {
+        Long l = (Long)super.read(context);
+        return new Double(Double.longBitsToDouble(l.longValue()));
+    }
+
+    public void write(WriteContext context, Object obj) {
+        long l = Double.doubleToLongBits(((Double)obj).doubleValue());
+        super.write(context, new Long(l));
+    }
 }

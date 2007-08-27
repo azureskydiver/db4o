@@ -3,9 +3,16 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.CorruptionException;
-import com.db4o.foundation.*;
-import com.db4o.internal.*;
+import com.db4o.Debug;
+import com.db4o.Deploy;
+import com.db4o.foundation.Coercion4;
+import com.db4o.internal.Buffer;
+import com.db4o.internal.Const4;
+import com.db4o.internal.ObjectContainerBase;
+import com.db4o.internal.StatefulBuffer;
 import com.db4o.internal.marshall.MarshallerFamily;
+import com.db4o.marshall.ReadContext;
+import com.db4o.marshall.WriteContext;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -77,4 +84,29 @@ public final class FloatHandler extends IntHandler {
 		return obj instanceof Float && valu(obj) < i_compareTo;
 	}
 
+    public Object read(ReadContext context) {
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPFLOAT);
+        }
+        
+        float f = Float.intBitsToFloat(context.readInt());
+        
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        return new Float(f);
+    }
+
+    public void write(WriteContext context, Object obj) {
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPFLOAT);
+        }
+        
+        float f = ((Float)obj).floatValue();
+        context.writeInt(Float.floatToIntBits(f));
+        
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
+    }
 }
