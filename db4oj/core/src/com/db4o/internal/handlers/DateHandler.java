@@ -8,6 +8,8 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.marshall.ReadContext;
+import com.db4o.marshall.WriteContext;
 import com.db4o.reflect.*;
 
 public final class DateHandler extends LongHandler {
@@ -81,5 +83,15 @@ public final class DateHandler extends LongHandler {
 	
 	boolean isSmaller1(Object obj){
 		return obj instanceof Date && val(obj) < currentLong();
-	}	
+	}
+
+    public Object read(ReadContext context) {
+        long milliseconds = ((Long)super.read(context)).longValue();
+        return new Date(milliseconds);
+    }
+
+    public void write(WriteContext context, Object obj) {
+        long milliseconds = ((Date)obj).getTime();
+        super.write(context, new Long(milliseconds));
+    }	
 }

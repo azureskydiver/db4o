@@ -6,6 +6,8 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.MarshallerFamily;
+import com.db4o.marshall.ReadContext;
+import com.db4o.marshall.WriteContext;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -109,5 +111,38 @@ public class LongHandler extends PrimitiveHandler {
 	boolean isSmaller1(Object obj){
 		return obj instanceof Long && val(obj) < i_compareTo;
 	}
-	
+
+    public Object read(ReadContext context) {
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPLONG);
+        }
+        
+        long longValue = 0;
+        for (int i = 0; i < Const4.LONG_BYTES; i++) {
+            byte b = context.readByte();
+            longValue = (longValue << 8) + (b & 0xff);
+        }
+        
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        
+        return new Long(longValue);
+    }
+
+    public void write(WriteContext context, Object obj) {
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPLONG);
+        }
+
+        long longValue = ((Long) obj).longValue();
+        for (int i = 0; i < Const4.LONG_BYTES; i++) {
+            byte b = (byte) (longValue >> ((Const4.LONG_BYTES - 1 - i) * 8));
+            context.writeByte(b);
+        }
+        
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
+    }
 }
