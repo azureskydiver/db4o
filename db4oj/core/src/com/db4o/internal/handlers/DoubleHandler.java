@@ -85,7 +85,6 @@ public final class DoubleHandler extends LongHandler {
     }
 
     public void write(WriteContext context, Object obj) {
-        long l = Platform4.doubleToLong(((Double)obj).doubleValue());
-        super.write(context, new Long(l));
+        context.writeLong(Platform4.doubleToLong(((Double)obj).doubleValue()));
     }
 }

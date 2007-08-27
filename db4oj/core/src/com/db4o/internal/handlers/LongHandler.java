@@ -6,8 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.MarshallerFamily;
-import com.db4o.marshall.ReadContext;
-import com.db4o.marshall.WriteContext;
+import com.db4o.marshall.*;
 import com.db4o.reflect.ReflectClass;
 
 
@@ -57,30 +56,43 @@ public class LongHandler extends PrimitiveHandler {
 	}
 	
 	public void write(Object obj, Buffer buffer){
-	    writeLong(((Long)obj).longValue(), buffer);
+	    writeLong(buffer, ((Long)obj).longValue());
 	}
 	
-	public static final void writeLong(long val, Buffer bytes){
+	public static final void writeLong(WriteBuffer buffer, long val){
 		if(Deploy.debug){
-			bytes.writeBegin(Const4.YAPLONG);
-			if(Deploy.debugLong){
-				String l_s = "                                " + val;
-				new LatinStringIO().write(bytes, l_s.substring(l_s.length() - Const4.LONG_BYTES));
-			}
-			else{
-				for (int i = 0; i < Const4.LONG_BYTES; i++){
-					bytes._buffer[bytes._offset++] = (byte) (val >> ((Const4.LONG_BYTES - 1 - i) * 8));
-				}
-			}
-			bytes.writeEnd();
+		    Debug.writeBegin(buffer, Const4.YAPLONG);
+		}
+		if(Deploy.debug && Deploy.debugLong){
+			String l_s = "                                " + val;
+			new LatinStringIO().write(buffer, l_s.substring(l_s.length() - Const4.LONG_BYTES));
 		}else{
-			PrimitiveCodec.writeLong(bytes._buffer, bytes._offset,  val);
-			incrementOffset(bytes);
+			for (int i = 0; i < Const4.LONG_BYTES; i++){
+			    buffer.writeByte((byte) (val >> ((Const4.LONG_BYTES - 1 - i) * 8)));
+			}
+		}
+		if(Deploy.debug){
+		    Debug.writeEnd(buffer);
 		}
 	}
 	
-	private static final void incrementOffset(Buffer buffer){
-		buffer.incrementOffset(Const4.LONG_BYTES);
+	public static final long readLong(ReadBuffer buffer){
+        long ret = 0;
+        if (Deploy.debug){
+            Debug.readBegin(buffer, Const4.YAPLONG);
+        }
+        if(Deploy.debug && Deploy.debugLong){
+            ret = Long.parseLong(new LatinStringIO().read(buffer, Const4.LONG_BYTES).trim()); 
+        }else{
+            for (int i = 0; i < Const4.LONG_BYTES; i++){
+                ret = (ret << 8) + (buffer.readByte() & 0xff);
+            }
+        }
+        if (Deploy.debug){
+            Debug.readEnd(buffer);
+        }
+        
+        return ret;
 	}
 	
 		
@@ -113,36 +125,10 @@ public class LongHandler extends PrimitiveHandler {
 	}
 
     public Object read(ReadContext context) {
-        if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPLONG);
-        }
-        
-        long longValue = 0;
-        for (int i = 0; i < Const4.LONG_BYTES; i++) {
-            byte b = context.readByte();
-            longValue = (longValue << 8) + (b & 0xff);
-        }
-        
-        if (Deploy.debug) {
-            Debug.readEnd(context);
-        }
-        
-        return new Long(longValue);
+        return new Long(context.readLong());
     }
 
     public void write(WriteContext context, Object obj) {
-        if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPLONG);
-        }
-
-        long longValue = ((Long) obj).longValue();
-        for (int i = 0; i < Const4.LONG_BYTES; i++) {
-            byte b = (byte) (longValue >> ((Const4.LONG_BYTES - 1 - i) * 8));
-            context.writeByte(b);
-        }
-        
-        if (Deploy.debug) {
-            Debug.writeEnd(context);
-        }
+        context.writeLong(((Long) obj).longValue());
     }
 }

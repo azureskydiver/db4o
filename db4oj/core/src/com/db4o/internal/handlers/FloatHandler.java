@@ -85,28 +85,10 @@ public final class FloatHandler extends IntHandler {
 	}
 
     public Object read(ReadContext context) {
-        if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPFLOAT);
-        }
-        
-        float f = Float.intBitsToFloat(context.readInt());
-        
-        if (Deploy.debug) {
-            Debug.readEnd(context);
-        }
-        return new Float(f);
+        return new Float(Float.intBitsToFloat(context.readInt()));
     }
 
     public void write(WriteContext context, Object obj) {
-        if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPFLOAT);
-        }
-        
-        float f = ((Float)obj).floatValue();
-        context.writeInt(Float.floatToIntBits(f));
-        
-        if (Deploy.debug) {
-            Debug.writeEnd(context);
-        }
+        context.writeInt(Float.floatToIntBits(((Float)obj).floatValue()));
     }
 }

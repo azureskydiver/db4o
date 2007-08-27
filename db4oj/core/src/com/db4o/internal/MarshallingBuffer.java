@@ -48,6 +48,11 @@ public class MarshallingBuffer implements WriteBuffer{
         _delegate.writeInt(i);
     }
     
+    public void writeLong(long l) {
+        prepareWrite();
+        _delegate.writeLong(l);
+    }
+    
     private void prepareWrite(){
         prepareWrite(SIZE_NEEDED);
     }
@@ -165,5 +170,6 @@ public class MarshallingBuffer implements WriteBuffer{
     public void debugDecrementLastOffset(int count){
         _lastOffSet -= count;
     }
+
 
 }

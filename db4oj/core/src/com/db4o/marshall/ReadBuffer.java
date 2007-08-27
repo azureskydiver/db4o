@@ -12,5 +12,7 @@ public interface ReadBuffer {
     void readBytes(byte[] bytes);
 
     int readInt();
+    
+    long readLong();
 
 }

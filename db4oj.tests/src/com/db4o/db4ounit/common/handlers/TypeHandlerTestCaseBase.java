@@ -19,7 +19,7 @@ public class TypeHandlerTestCaseBase extends AbstractDb4oTestCase {
         Item readItem = (Item) retrieveOnlyInstance(Item.class);
         
         Assert.areNotSame(storedItem, readItem);
-        Assert.areEqual((Object)storedItem, (Object)readItem);
+        Assert.areEqual(storedItem, readItem);
 		
 	}
 
