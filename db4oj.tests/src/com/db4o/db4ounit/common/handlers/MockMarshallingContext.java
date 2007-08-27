@@ -46,6 +46,10 @@ public abstract class MockMarshallingContext {
 	public int readInt() {
 		return _current.readInt();
 	}
+	
+	public long readLong(){
+	    return _current.readLong();
+	}
 
 	public void writeByte(byte b) {
 	    _current.writeByte(b);
@@ -55,6 +59,10 @@ public abstract class MockMarshallingContext {
 	    _current.writeInt(i);
 	}
 	
+    public void writeLong(long l) {
+        _current.writeLong(l);
+    }
+
     public void writeBytes(byte[] bytes) {
         _current.writeBytes(bytes);
     }

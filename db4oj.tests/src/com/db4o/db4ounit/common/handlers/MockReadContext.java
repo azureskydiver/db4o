@@ -3,7 +3,6 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.*;
-import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
 

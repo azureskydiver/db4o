@@ -117,9 +117,10 @@ public final class ShortHandler extends PrimitiveHandler {
         
         short shortValue = ((Short)obj).shortValue();
         
-        for (int i = 0; i < Const4.SHORT_BYTES; i++) {
-            context.writeByte((byte) (shortValue >> ((Const4.SHORT_BYTES - 1 - i) * 8)));
-        }
+        context.writeBytes(new byte [] {
+            (byte) (shortValue >> 8),
+            (byte) shortValue
+        });
         
         if (Deploy.debug) {
             Debug.writeEnd(context);

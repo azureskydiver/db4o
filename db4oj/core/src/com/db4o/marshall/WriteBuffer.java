@@ -14,13 +14,11 @@ public interface WriteBuffer {
      */
     void writeByte(byte b);
     
-    
     /**
      * writes an array of bytes to the buffer
      * @param bytes the byte array
      */
     void writeBytes(byte[] bytes);
-
 
     /**
      * writes an int to the buffer.
@@ -28,5 +26,10 @@ public interface WriteBuffer {
      */
     void writeInt(int i);
     
+    /**
+     * writes a long to the buffer
+     * @param l the long
+     */
+    void writeLong(long l);
     
 }

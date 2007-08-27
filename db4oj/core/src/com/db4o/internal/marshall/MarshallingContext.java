@@ -187,6 +187,13 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         postWrite();
     }
     
+    public void writeLong(long l) {
+        preWrite();
+        _currentBuffer.writeLong(l);
+        postWrite();
+    }
+
+    
 	private void preWrite() {
         _fieldWriteCount++;
         if(isSecondWriteToField()){
@@ -256,5 +263,8 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         _fieldWriteCount = tempFieldWriteCount;
         _currentBuffer = tempBuffer;
     }
+
+    
+    
 
 }

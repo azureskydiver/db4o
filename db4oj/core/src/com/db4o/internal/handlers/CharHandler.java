@@ -111,8 +111,11 @@ public final class CharHandler extends PrimitiveHandler {
         
         char charValue = ((Character) obj).charValue();
         
-        context.writeByte((byte)(charValue & 0xff));
-        context.writeByte((byte)(charValue >> 8));
+        context.writeBytes(new byte[]{
+            (byte)(charValue & 0xff),
+            (byte)(charValue >> 8)
+        });
+        
         if (Deploy.debug) {
             Debug.writeEnd(context);
         }
