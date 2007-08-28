@@ -272,7 +272,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     final int readElementsAndClass(Transaction trans, ReadBuffer buffer, ReflectClassByRef clazz){
         int elements = buffer.readInt();
         if (elements < 0) {
-            clazz.value =reflectClassFromElementsEntry(trans, elements);
+            clazz.value = reflectClassFromElementsEntry(trans, elements);
             elements = buffer.readInt();
         }
         else {
@@ -301,7 +301,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     	return mapped;
     }
     
-	private ReflectClass reflectClassFromElementsEntry(Transaction a_trans,int elements) {
+	private ReflectClass reflectClassFromElementsEntry(Transaction trans,int elements) {
 
 		// TODO: Here is a low-frequency mistake, extremely unlikely.
 		// If YapClass-ID == 99999 by accident then we will get ignore.
@@ -315,7 +315,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 		        }
 		    }
 		    int classID = - elements;
-			ClassMetadata classMetadata = a_trans.container().classMetadataForId(classID);
+			ClassMetadata classMetadata = trans.container().classMetadataForId(classID);
 		    if (classMetadata != null) {
 		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata) : classMetadata.classReflector());
 		    }
@@ -333,7 +333,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 		return ArrayHandler.allElements(reflectArray, obj);
     }
     
-    private final int classID(Object obj){
+    protected final int classID(Object obj){
         ReflectClass claxx = componentType(obj);
         boolean primitive = Deploy.csharp ? false : claxx.isPrimitive();
         if(primitive){
@@ -470,26 +470,6 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 		return elements;
 	}
 	
-    public void write(WriteContext context, Object obj) {
-        if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPARRAY);
-        }
-        int classID = classID(obj);
-        context.writeInt(classID);
-        int elementCount = arrayReflector().getLength(obj);
-        context.writeInt(elementCount);
-        if(handleAsByteArray(obj)){
-            context.writeBytes((byte[])obj);  // byte[] performance optimisation
-        }else{
-            for (int i = 0; i < elementCount; i++) {
-                context.writeObject(_handler, arrayReflector().get(obj, i));
-            }
-        }
-        if (Deploy.debug) {
-            Debug.writeEnd(context);
-        }
-    }
-    
     public Object read(ReadContext context) {
         if (Deploy.debug) {
             Debug.readBegin(context, Const4.YAPARRAY);
@@ -510,5 +490,25 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         }
         return array;
     }
-
+    
+    public void write(WriteContext context, Object obj) {
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPARRAY);
+        }
+        int classID = classID(obj);
+        context.writeInt(classID);
+        int elementCount = arrayReflector().getLength(obj);
+        context.writeInt(elementCount);
+        if(handleAsByteArray(obj)){
+            context.writeBytes((byte[])obj);  // byte[] performance optimisation
+        }else{
+            for (int i = 0; i < elementCount; i++) {
+                context.writeObject(_handler, arrayReflector().get(obj, i));
+            }
+        }
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
+    }
+    
 }
