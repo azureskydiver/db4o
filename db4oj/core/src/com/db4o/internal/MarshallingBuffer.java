@@ -12,9 +12,7 @@ public class MarshallingBuffer implements WriteBuffer{
     
     private static final int SIZE_NEEDED = Const4.LONG_LENGTH;
     
-    private static final int LINK_LENGTH = Const4.INT_LENGTH + Const4.ID_LENGTH;
-    
-    private static final int NO_PARENT = -1;
+    private static final int NO_PARENT = - Integer.MAX_VALUE;
     
     private Buffer _delegate;
     
@@ -86,8 +84,8 @@ public class MarshallingBuffer implements WriteBuffer{
         _delegate = temp;
     }
     
-    public void transferLastWriteTo(MarshallingBuffer other){
-        other._addressInParent = _lastOffSet;
+    public void transferLastWriteTo(MarshallingBuffer other, boolean storeLengthInLink){
+        other.addressInParent(_lastOffSet, storeLengthInLink);
         int length = _delegate.offset() - _lastOffSet;
         other.prepareWrite(length);
         int otherOffset = other._delegate.offset();
@@ -97,6 +95,10 @@ public class MarshallingBuffer implements WriteBuffer{
         other._lastOffSet = otherOffset;
     }
     
+    private void addressInParent(int offset, boolean storeLengthInLink) {
+        _addressInParent = storeLengthInLink ? offset : -offset;
+    }
+
     public void transferContentTo(Buffer buffer){
         System.arraycopy(_delegate._buffer, 0, buffer._buffer, buffer._offset, length());
         buffer._offset += length();
@@ -105,20 +107,25 @@ public class MarshallingBuffer implements WriteBuffer{
     public Buffer testDelegate(){
         return _delegate;
     }
-
-    public MarshallingBuffer addChild(boolean reserveLinkSpace) {
+    
+    public MarshallingBuffer addChild() {
+        return addChild(true, false);
+    }
+    
+    public MarshallingBuffer addChild(boolean reserveLinkSpace, boolean storeLengthInLink) {
         MarshallingBuffer child = new MarshallingBuffer();
-        child._addressInParent = offset();
+        child.addressInParent(offset(), storeLengthInLink);
         _children = new List4(_children, child);
         if(reserveLinkSpace){
-            reserveChildLinkSpace();
+            reserveChildLinkSpace(storeLengthInLink);
         }
         return child;
     }
 
-    public void reserveChildLinkSpace() {
-        prepareWrite(LINK_LENGTH);
-        _delegate.incrementOffset(LINK_LENGTH);
+    public void reserveChildLinkSpace(boolean storeLengthInLink) {
+        int length = storeLengthInLink ? Const4.INT_LENGTH * 2 : Const4.INT_LENGTH;
+        prepareWrite(length);
+        _delegate.incrementOffset(length);
     }
     
     public void mergeChildren(int linkOffset) {
@@ -162,18 +169,34 @@ public class MarshallingBuffer implements WriteBuffer{
 
     private void writeLink(MarshallingBuffer child, int position, int length){
         int offset = offset();
-        _delegate.offset(child._addressInParent);
+        _delegate.offset(child.addressInParent());
         _delegate.writeInt(position);
-        _delegate.writeInt(length);
+        if(child.storeLengthInLink()){
+            _delegate.writeInt(length);
+        }
         _delegate.offset(offset);
     }
     
+    private int addressInParent() {
+        if(! hasParent()){
+            throw new IllegalStateException();
+        }
+        if(_addressInParent < 0){
+            return - _addressInParent;
+        }
+        return _addressInParent;
+    }
+
     public void debugDecrementLastOffset(int count){
         _lastOffSet -= count;
     }
     
     public boolean hasParent(){
         return _addressInParent != NO_PARENT;
+    }
+    
+    boolean storeLengthInLink(){
+        return _addressInParent > 0;
     }
 
     public void addIndexEntry(FieldMetadata fieldMetadata) {

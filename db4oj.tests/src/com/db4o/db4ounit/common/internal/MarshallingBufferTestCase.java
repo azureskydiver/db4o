@@ -37,7 +37,7 @@ public class MarshallingBufferTestCase implements TestCase {
         
         MarshallingBuffer other = new MarshallingBuffer();
         
-        buffer.transferLastWriteTo(other);
+        buffer.transferLastWriteTo(other, true);
         
         Assert.areEqual(lastOffset, offset(buffer));
         
@@ -60,7 +60,7 @@ public class MarshallingBufferTestCase implements TestCase {
         buffer.writeInt(DATA_1);
         buffer.writeByte(DATA_2);
         
-        MarshallingBuffer child = buffer.addChild(true);
+        MarshallingBuffer child = buffer.addChild();
         child.writeInt(DATA_3);
         child.writeInt(DATA_4);
         
@@ -83,11 +83,11 @@ public class MarshallingBufferTestCase implements TestCase {
         buffer.writeInt(DATA_1);
         buffer.writeByte(DATA_2);
         
-        MarshallingBuffer child = buffer.addChild(true);
+        MarshallingBuffer child = buffer.addChild();
         child.writeInt(DATA_3);
         child.writeInt(DATA_4);
         
-        MarshallingBuffer grandChild = child.addChild(true);
+        MarshallingBuffer grandChild = child.addChild();
         grandChild.writeInt(DATA_5);
         
         buffer.mergeChildren(0);
@@ -116,11 +116,11 @@ public class MarshallingBufferTestCase implements TestCase {
         buffer.writeInt(DATA_1);
         buffer.writeByte(DATA_2);
         
-        MarshallingBuffer child = buffer.addChild(true);
+        MarshallingBuffer child = buffer.addChild();
         child.writeInt(DATA_3);
         child.writeInt(DATA_4);
         
-        MarshallingBuffer grandChild = child.addChild(true);
+        MarshallingBuffer grandChild = child.addChild();
         grandChild.writeInt(DATA_5);
         
         buffer.mergeChildren(linkOffset);
@@ -152,7 +152,7 @@ public class MarshallingBufferTestCase implements TestCase {
     public void testLateChildrenWrite(){
         MarshallingBuffer buffer = new MarshallingBuffer();
         buffer.writeInt(DATA_1);
-        MarshallingBuffer child = buffer.addChild(true);
+        MarshallingBuffer child = buffer.addChild(true, true);
         child.writeInt(DATA_3);
         buffer.writeByte(DATA_2);
         child.writeInt(DATA_4);

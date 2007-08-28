@@ -200,7 +200,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
 	private void preWrite() {
         _fieldWriteCount++;
         if(isSecondWriteToField()){
-            createChildBuffer();
+            createChildBuffer(true, true);
         }
         if(Deploy.debug){
             if(_debugPrepend != null){
@@ -220,10 +220,12 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
 	    }
 	}
 
-    private void createChildBuffer() {
-        MarshallingBuffer childBuffer = _currentBuffer.addChild(false);
-        _currentBuffer.transferLastWriteTo(childBuffer);
-        _currentBuffer.reserveChildLinkSpace();
+    private void createChildBuffer(boolean transferLastWrite, boolean storeLengthInLink) {
+        MarshallingBuffer childBuffer = _currentBuffer.addChild(false, storeLengthInLink);
+        if(transferLastWrite){
+            _currentBuffer.transferLastWriteTo(childBuffer, storeLengthInLink);
+        }
+        _currentBuffer.reserveChildLinkSpace(storeLengthInLink);
         _currentBuffer = childBuffer;
     }
 
@@ -271,8 +273,21 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         ClassMetadata classMetadata = ClassMetadata.forObject(transaction(), obj, false);
         MarshallingBuffer tempBuffer = _currentBuffer;
         int tempFieldWriteCount = _fieldWriteCount;
-        _fieldWriteCount = 0;
+        createChildBuffer(false, false);
         writeInt(classMetadata.getID());
+        
+        if(classMetadata.isArray()){
+
+            // TODO: This will force the array to produce another indirection.
+            // This indirection is unneccessary, but it is required by the 
+            // current old reading format. Try to remove.  
+            
+            _fieldWriteCount = 0;
+            
+        }else{
+            _fieldWriteCount = 3;
+            
+        }
         classMetadata.write(this, obj);
         _fieldWriteCount = tempFieldWriteCount;
         _currentBuffer = tempBuffer;

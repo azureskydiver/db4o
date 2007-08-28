@@ -2,9 +2,6 @@
 
 package com.db4o.db4ounit.common.handlers;
 
-import java.util.*;
-
-import db4ounit.*;
 
 
 public class UntypedHandlerTestCase extends TypeHandlerTestCaseBase {
@@ -67,10 +64,8 @@ public class UntypedHandlerTestCase extends TypeHandlerTestCaseBase {
         doTestStoreObject(new Item("one"));
     }
     
-    public void _testStoreArrayItem() throws Exception{
+    public void testStoreArrayItem() throws Exception{
         doTestStoreObject(new Item(new String[]{"one", "two", "three"}));
     }
-    
-
 
 }
