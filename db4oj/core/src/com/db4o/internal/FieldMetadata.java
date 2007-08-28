@@ -736,7 +736,9 @@ public class FieldMetadata implements StoredField {
         }
         i_handler.write(context, obj);
         context.updateDepth(updateDepth);
-        addIndexEntry(context.transaction(), context.objectID(), context.currentIndexEntry() );
+        if(hasIndex()){
+            context.addIndexEntry(this, obj);
+        }
     }
 
     public boolean needsArrayAndPrimitiveInfo(){

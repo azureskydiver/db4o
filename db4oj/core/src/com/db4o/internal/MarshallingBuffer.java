@@ -14,13 +14,17 @@ public class MarshallingBuffer implements WriteBuffer{
     
     private static final int LINK_LENGTH = Const4.INT_LENGTH + Const4.ID_LENGTH;
     
+    private static final int NO_PARENT = -1;
+    
     private Buffer _delegate;
     
     private int _lastOffSet;
     
-    private int _addressInParent;
+    private int _addressInParent = NO_PARENT;
     
-    private Collection4 _children;    
+    private List4 _children;
+    
+    private List4 _indexEntries;
 
     public int length() {
         return offset();
@@ -104,11 +108,8 @@ public class MarshallingBuffer implements WriteBuffer{
 
     public MarshallingBuffer addChild(boolean reserveLinkSpace) {
         MarshallingBuffer child = new MarshallingBuffer();
-        if(_children == null){
-            _children = new Collection4();
-        }
         child._addressInParent = offset();
-        _children.add(child);
+        _children = new List4(_children, child);
         if(reserveLinkSpace){
             reserveChildLinkSpace();
         }
@@ -128,7 +129,7 @@ public class MarshallingBuffer implements WriteBuffer{
         if(parentBuffer._children == null){
             return;
         }
-        Iterator4 i = parentBuffer._children.iterator();
+        Iterator4 i = new Iterator4Impl(parentBuffer._children);
         while(i.moveNext()){
             merge(writeBuffer, parentBuffer, (MarshallingBuffer) i.current(), linkOffset);
         }
@@ -169,6 +170,15 @@ public class MarshallingBuffer implements WriteBuffer{
     
     public void debugDecrementLastOffset(int count){
         _lastOffSet -= count;
+    }
+    
+    public boolean hasParent(){
+        return _addressInParent != NO_PARENT;
+    }
+
+    public void addIndexEntry(FieldMetadata fieldMetadata) {
+        
+        // TODO Auto-generated method stub
     }
 
 

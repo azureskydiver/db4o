@@ -3,7 +3,6 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.CorruptionException;
-import com.db4o.Debug;
 import com.db4o.Deploy;
 import com.db4o.foundation.Coercion4;
 import com.db4o.internal.Buffer;

@@ -7,6 +7,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
 
@@ -225,4 +226,13 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     public Object wrapWithTransactionContext(Transaction transaction, Object value) {
         return value;
     }
+    
+    public Object read(ReadContext context) {
+        throw new NotImplementedException();
+    }
+    
+    public void write(WriteContext context, Object obj) {
+        i_handler.write(context, obj);
+    }
+
 }
