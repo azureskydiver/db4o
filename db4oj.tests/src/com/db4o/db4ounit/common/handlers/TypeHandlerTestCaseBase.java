@@ -8,15 +8,11 @@ import db4ounit.extensions.*;
 
 public class TypeHandlerTestCaseBase extends AbstractDb4oTestCase {
 	
-	abstract public static class Item {
-	
-	}
-	
-	protected void doTestStoreObject(Item storedItem){
+	protected void doTestStoreObject(Object storedItem){
         db().set(storedItem);
         db().purge(storedItem);
     
-        Item readItem = (Item) retrieveOnlyInstance(Item.class);
+        Object readItem = retrieveOnlyInstance(storedItem.getClass());
         
         Assert.areNotSame(storedItem, readItem);
         Assert.areEqual(storedItem, readItem);

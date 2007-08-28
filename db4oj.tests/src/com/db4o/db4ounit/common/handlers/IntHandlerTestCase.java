@@ -12,7 +12,7 @@ public class IntHandlerTestCase extends TypeHandlerTestCaseBase {
         new IntHandlerTestCase().runSolo();
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item  {
     	public int _int;
     	public Integer _intWrapper;
     	public Item(int i, Integer wrapper) {
@@ -29,13 +29,6 @@ public class IntHandlerTestCase extends TypeHandlerTestCaseBase {
         	Item other = (Item)obj;
         	return (other._int == this._int) 
         			&& this._intWrapper.equals(other._intWrapper);
-    	}
-    	
-    	public int hashCode() {
-        	int hash = 7;
-        	hash = 31 * hash + _int;
-        	hash = 31 * hash + (null == _intWrapper ? 0 : _intWrapper.hashCode());
-        	return hash;
     	}
     	
     	public String toString() {

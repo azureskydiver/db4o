@@ -2,6 +2,10 @@
 
 package com.db4o.db4ounit.common.handlers;
 
+import java.util.*;
+
+import db4ounit.*;
+
 
 public class UntypedHandlerTestCase extends TypeHandlerTestCaseBase {
 
@@ -9,7 +13,7 @@ public class UntypedHandlerTestCase extends TypeHandlerTestCaseBase {
         new UntypedHandlerTestCase().runSolo();
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item  {
         
         public Object _member;
         
@@ -25,7 +29,23 @@ public class UntypedHandlerTestCase extends TypeHandlerTestCaseBase {
                 return false;
             }
             Item other = (Item)obj;
+            if(this._member.getClass().isArray()){
+                return arraysEquals((Object[])this._member, (Object[])other._member);
+            }
             return this._member.equals(other._member);
+            
+        }
+        
+        private boolean arraysEquals(Object[] arr1, Object[] arr2){
+            if(arr1.length != arr2.length){
+                return false;
+            }
+            for (int i = 0; i < arr1.length; i++) {
+                if(! arr1[i].equals(arr2[i])){
+                    return false;
+                }
+            }
+            return true;
         }
         
         public int hashCode() {
