@@ -22,8 +22,8 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         super(stream, a_handler, a_isPrimitive);
     }
 
-    public final Object[] allElements(Object a_array) {
-		return allElements(arrayReflector(), a_array);
+    public final Object[] allElements(Object array) {
+		return allElements(arrayReflector(), array);
     }
 
 	public static Object[] allElements(final ReflectArray reflectArray, Object array) {
@@ -68,21 +68,21 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
             reader.readBegin(identifier());
         }
         
-		Object[] ret = new Object[1];
-		int[] dim = read1Create(reader.getTransaction(), reader, ret);
-		if(ret[0] != null){
-	        Object[] objects = new Object[elementCount(dim)];
+        IntArrayByRef dimensions = new IntArrayByRef();
+        Object arr = readCreate(reader.getTransaction(), reader, dimensions);
+		if(arr != null){
+	        Object[] objects = new Object[elementCount(dimensions.value)];
 	        for (int i = 0; i < objects.length; i++) {
 	            objects[i] = _handler.read(mf, reader, true);
 	        }
-	        arrayReflector().shape(objects, 0, ret[0], dim, 0);
+	        arrayReflector().shape(objects, 0, arr, dimensions.value, 0);
 		}
         
         if (Deploy.debug) {
             reader.readEnd();
         }
         
-        return ret[0];
+        return arr;
     }
     
     protected int readElementsDefrag(BufferPair readers) {
@@ -99,10 +99,11 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
             reader.readBegin(identifier());
         }
         
-        Object[] ret = new Object[1];
-        int[] dim = read1Create(candidates.i_trans, reader, ret);
-        if(ret[0] != null){
-            int count = elementCount(dim);
+        IntArrayByRef dimensions = new IntArrayByRef();
+        Object arr = readCreate(candidates.i_trans, reader, dimensions);
+        
+        if(arr != null){
+            int count = elementCount(dimensions.value);
             for (int i = 0; i < count; i++) {
                 QCandidate qc = _handler.readSubCandidate(mf, reader, candidates, true);
                 if(qc != null){
@@ -122,40 +123,39 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
             a_bytes.readBegin(identifier());
         }
         
-		Object[] ret = new Object[1];
-		int[] dim = read1Create(a_trans, a_bytes, ret);
-        if(ret[0] != null){
-			Object[] objects = new Object[elementCount(dim)];
+        IntArrayByRef dimensions = new IntArrayByRef();
+		Object arr = readCreate(a_trans, a_bytes, dimensions);
+        if(arr != null){
+			Object[] objects = new Object[elementCount(dimensions.value)];
 			for (int i = 0; i < objects.length; i++) {
 				objects[i] = _handler.readQuery(a_trans, mf, true, a_bytes, true);
 			}
-			arrayReflector().shape(objects, 0, ret[0], dim, 0);
+			arrayReflector().shape(objects, 0, arr, dimensions.value, 0);
         }
         
         if (Deploy.debug) {
             a_bytes.readEnd();
         }
 
-		return ret[0];
+		return arr;
 	}
 
-    private int[] read1Create(Transaction a_trans, Buffer a_bytes, Object[] obj) {
+    private Object readCreate(Transaction trans, ReadBuffer buffer, IntArrayByRef dimensions) {
 		ReflectClassByRef clazz = new ReflectClassByRef();
-		int[] dim = readDimensions(a_trans, a_bytes, clazz);
+		dimensions.value = readDimensions(trans, buffer, clazz);
         if (_isPrimitive) {
-        	obj[0] = a_trans.reflector().array().newInstance(primitiveClassReflector(), dim);
-        } else {
-        	if (clazz.value != null) {
-				obj[0] = a_trans.reflector().array().newInstance(clazz.value, dim);
-        	}
-        }
-        return dim;
+        	return arrayReflector().newInstance(primitiveClassReflector(), dimensions.value);
+        } 
+    	if (clazz.value != null) {
+			return arrayReflector().newInstance(clazz.value, dimensions.value);
+    	}
+    	return null;
     }
 
-    private final int[] readDimensions(Transaction a_trans, Buffer a_bytes, ReflectClassByRef clazz) {
-        int[] dim = new int[readElementsAndClass(a_trans, a_bytes, clazz)];
+    private final int[] readDimensions(Transaction trans, ReadBuffer buffer, ReflectClassByRef clazz) {
+        int[] dim = new int[readElementsAndClass(trans, buffer, clazz)];
         for (int i = 0; i < dim.length; i++) {
-            dim[i] = a_bytes.readInt();
+            dim[i] = buffer.readInt();
         }
         return dim;
     }
@@ -194,12 +194,54 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         }
     }
     
+    public Object read(ReadContext context) {
+        
+        if (Deploy.debug) {
+            Debug.readBegin(context, Const4.YAPARRAYN);
+        }
+            
+        IntArrayByRef dimensions = new IntArrayByRef();
+        Object array = readCreate(context.transaction(), context, dimensions);
+
+        if(array != null){
+            Object[] objects = new Object[elementCount(dimensions.value)];
+            for (int i = 0; i < objects.length; i++) {
+                objects[i] = _handler.read(context);
+            }
+            arrayReflector().shape(objects, 0, array, dimensions.value, 0);
+        }
+        
+        if (Deploy.debug) {
+            Debug.readEnd(context);
+        }
+        
+        return array;
+    }
+
     public void write(WriteContext context, Object obj) {
-        throw new NotImplementedException();
+        
+        if (Deploy.debug) {
+            Debug.writeBegin(context, Const4.YAPARRAYN);
+        }
+        
+        int classID = classID(obj);
+        context.writeInt(classID);
+        
+        int[] dim = arrayReflector().dimensions(obj);
+        context.writeInt(dim.length);
+        for (int i = 0; i < dim.length; i++) {
+            context.writeInt(dim[i]);
+        }
+        
+        Object[] objects = allElements(obj);
+        for (int i = 0; i < objects.length; i++) {
+            context.writeObject(_handler, element(objects, i));
+        }
+        
+        if (Deploy.debug) {
+            Debug.writeEnd(context);
+        }
     }
     
-    public Object read(ReadContext context) {
-        throw new NotImplementedException();
-    }
 
 }
