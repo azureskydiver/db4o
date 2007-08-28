@@ -64,6 +64,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
 
     public boolean isNull(int fieldIndex) {
         // TODO Auto-generated method stub
+        
         return false;
     }
 
@@ -75,18 +76,17 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         return _transaction;
     }
     
-    private StatefulBuffer createNewBuffer() {
-        Slot slot = new Slot(-1, marshalledLength());
+    private StatefulBuffer createNewBuffer(int length) {
+        Slot slot = new Slot(-1, length);
         if(_transaction instanceof LocalTransaction){
-            slot = ((LocalTransaction)_transaction).file().getSlot(marshalledLength());
+            slot = ((LocalTransaction)_transaction).file().getSlot(length);
             _transaction.slotFreeOnRollback(objectID(), slot);
         }
         _transaction.setPointer(objectID(), slot);
-        return createUpdateBuffer( slot.address());
+        return createUpdateBuffer( slot.address(), length);
     }
 
-    private StatefulBuffer createUpdateBuffer(int address) {
-        int length = _transaction.container().blockAlignedBytes(marshalledLength());
+    private StatefulBuffer createUpdateBuffer(int address, int length) {
         StatefulBuffer buffer = new StatefulBuffer(_transaction, length);
         buffer.useSlot(objectID(), address, length);
         buffer.setUpdateDepth(_updateDepth);
@@ -98,9 +98,11 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
 
     public StatefulBuffer ToWriteBuffer() {
         
-        _writeBuffer.mergeChildren(writeBufferOffset());
+        int length = marshalledLength();
         
-        StatefulBuffer buffer = isNew() ? createNewBuffer() : createUpdateBuffer(0);
+        StatefulBuffer buffer = isNew() ? createNewBuffer(length) : createUpdateBuffer(0, length);
+        
+        _writeBuffer.mergeChildren(this, buffer.getAddress(), writeBufferOffset());
         
         if (Deploy.debug) {
             buffer.writeBegin(Const4.YAPOBJECT);
@@ -124,14 +126,17 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
 
     private int marshalledLength() {
-        return HEADER_LENGTH + nullBitMapLength() + requiredLength(_writeBuffer);
+        return HEADER_LENGTH + nullBitMapLength() + _writeBuffer.marshalledLength(this);
     }
     
     private int nullBitMapLength(){
         return Const4.INT_LENGTH + _nullBitMap.marshalledLength();
     }
 
-    private int requiredLength(MarshallingBuffer buffer) {
+    public int requiredLength(MarshallingBuffer buffer, boolean align) {
+        if(! align){
+            return buffer.length();
+        }
         return container().blockAlignedBytes(buffer.length());
     }
     
@@ -299,7 +304,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
             fieldMetadata.addIndexEntry(transaction(), objectID(), obj);
             return;
         }
-        _currentBuffer.addIndexEntry(fieldMetadata);
+        _currentBuffer.requestIndexEntry(fieldMetadata);
     }
 
 }
