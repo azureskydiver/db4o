@@ -90,6 +90,9 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         StatefulBuffer buffer = new StatefulBuffer(_transaction, length);
         buffer.useSlot(objectID(), address, length);
         buffer.setUpdateDepth(_updateDepth);
+        if(( address == 0) && (transaction() instanceof LocalTransaction)){
+            ((LocalTransaction)transaction()).file().getSlotForUpdate(buffer);
+        }
         return buffer;
     }
 
@@ -263,8 +266,25 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         _fieldWriteCount = tempFieldWriteCount;
         _currentBuffer = tempBuffer;
     }
+    
+    public void writeAny(Object obj){
+        ClassMetadata classMetadata = ClassMetadata.forObject(transaction(), obj, false);
+        MarshallingBuffer tempBuffer = _currentBuffer;
+        int tempFieldWriteCount = _fieldWriteCount;
+        _fieldWriteCount = 0;
+        writeInt(classMetadata.getID());
+        classMetadata.write(this, obj);
+        _fieldWriteCount = tempFieldWriteCount;
+        _currentBuffer = tempBuffer;
+    }
 
-    
-    
+
+    public void addIndexEntry(FieldMetadata fieldMetadata, Object obj) {
+        if(! _currentBuffer.hasParent()){
+            fieldMetadata.addIndexEntry(transaction(), objectID(), obj);
+            return;
+        }
+        _currentBuffer.addIndexEntry(fieldMetadata);
+    }
 
 }

@@ -3,11 +3,8 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.CorruptionException;
-import com.db4o.Debug;
-import com.db4o.Deploy;
 import com.db4o.foundation.Coercion4;
 import com.db4o.internal.Buffer;
-import com.db4o.internal.Const4;
 import com.db4o.internal.ObjectContainerBase;
 import com.db4o.internal.StatefulBuffer;
 import com.db4o.internal.marshall.MarshallerFamily;

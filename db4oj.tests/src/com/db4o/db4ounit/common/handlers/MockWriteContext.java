@@ -16,5 +16,11 @@ public class MockWriteContext extends MockMarshallingContext implements WriteCon
     public void writeObject(TypeHandler4 handler, Object obj) {
         handler.write(this, obj);
     }
+
+    public void writeAny(Object obj) {
+        ClassMetadata classMetadata = ClassMetadata.forObject(transaction(), obj, false);
+        writeInt(classMetadata.getID());
+        classMetadata.write(this, obj);
+    }
     
 }

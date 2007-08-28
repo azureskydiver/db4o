@@ -3,8 +3,10 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.marshall.*;
 
 
 public final class UntypedFieldHandler extends ClassMetadata {
@@ -101,4 +103,13 @@ public final class UntypedFieldHandler extends ClassMetadata {
         }
     	mf._untyped.defrag(readers);
     }
+    
+    public Object read(ReadContext context) {
+        throw new NotImplementedException();
+    }
+
+    public void write(WriteContext context, Object obj) {
+        ((MarshallingContext)context).writeAny(obj);
+    }
+
 }
