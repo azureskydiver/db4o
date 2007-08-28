@@ -64,7 +64,7 @@ public class MarshallingBufferTestCase implements TestCase {
         child.writeInt(DATA_3);
         child.writeInt(DATA_4);
         
-        buffer.mergeChildren(0);
+        buffer.mergeChildren(null, 0, 0);
         
         Buffer content = inspectContent(buffer);
         Assert.areEqual(DATA_1, content.readInt());
@@ -90,7 +90,7 @@ public class MarshallingBufferTestCase implements TestCase {
         MarshallingBuffer grandChild = child.addChild();
         grandChild.writeInt(DATA_5);
         
-        buffer.mergeChildren(0);
+        buffer.mergeChildren(null, 0, 0);
         
         Buffer content = inspectContent(buffer);
         Assert.areEqual(DATA_1, content.readInt());
@@ -123,7 +123,7 @@ public class MarshallingBufferTestCase implements TestCase {
         MarshallingBuffer grandChild = child.addChild();
         grandChild.writeInt(DATA_5);
         
-        buffer.mergeChildren(linkOffset);
+        buffer.mergeChildren(null, 0, linkOffset);
         
         Buffer content = inspectContent(buffer);
         
@@ -156,7 +156,7 @@ public class MarshallingBufferTestCase implements TestCase {
         child.writeInt(DATA_3);
         buffer.writeByte(DATA_2);
         child.writeInt(DATA_4);
-        buffer.mergeChildren(0);
+        buffer.mergeChildren(null, 0, 0);
         
         Buffer content = inspectContent(buffer);
         Assert.areEqual(DATA_1, content.readInt());

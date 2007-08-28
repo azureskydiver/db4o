@@ -3,6 +3,8 @@
 package com.db4o.internal;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.marshall.*;
+import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
 /**
@@ -22,8 +24,8 @@ public class MarshallingBuffer implements WriteBuffer{
     
     private List4 _children;
     
-    private List4 _indexEntries;
-
+    private FieldMetadata _indexedField;
+    
     public int length() {
         return offset();
     }
@@ -128,34 +130,34 @@ public class MarshallingBuffer implements WriteBuffer{
         _delegate.incrementOffset(length);
     }
     
-    public void mergeChildren(int linkOffset) {
-        mergeChildren(this, this, linkOffset);
+    public void mergeChildren(MarshallingContext context, int masterAddress, int linkOffset) {
+        mergeChildren(context, masterAddress, this, this, linkOffset);
     }
 
-    private static void mergeChildren(MarshallingBuffer writeBuffer, MarshallingBuffer parentBuffer, int linkOffset) {
+    private static void mergeChildren(MarshallingContext context, int masterAddress, MarshallingBuffer writeBuffer, MarshallingBuffer parentBuffer, int linkOffset) {
         if(parentBuffer._children == null){
             return;
         }
         Iterator4 i = new Iterator4Impl(parentBuffer._children);
         while(i.moveNext()){
-            merge(writeBuffer, parentBuffer, (MarshallingBuffer) i.current(), linkOffset);
+            merge(context, masterAddress, writeBuffer, parentBuffer, (MarshallingBuffer) i.current(), linkOffset);
         }
     }
     
-    private static void merge(MarshallingBuffer writeBuffer, MarshallingBuffer parentBuffer, MarshallingBuffer childBuffer, int linkOffset) {
+    private static void merge(MarshallingContext context, int masterAddress, MarshallingBuffer writeBuffer, MarshallingBuffer parentBuffer, MarshallingBuffer childBuffer, int linkOffset) {
         
         int childLength = childBuffer.length();
         int childPosition = writeBuffer.offset();
         writeBuffer.reserve(childLength);
         
-        mergeChildren(writeBuffer, childBuffer, linkOffset);
+        mergeChildren(context,  masterAddress, writeBuffer, childBuffer, linkOffset);
         
         int savedWriteBufferOffset = writeBuffer.offset();
         writeBuffer.seek(childPosition);
         childBuffer.transferContentTo(writeBuffer._delegate);
         writeBuffer.seek(savedWriteBufferOffset);
         
-        parentBuffer.writeLink(childBuffer, childPosition + linkOffset, childLength);
+        parentBuffer.writeLink(context, masterAddress, childBuffer, childPosition + linkOffset, childLength);
     }
     
     public void seek(int offset) {
@@ -167,16 +169,28 @@ public class MarshallingBuffer implements WriteBuffer{
         _delegate.offset(_delegate.offset() + length );
     }
 
-    private void writeLink(MarshallingBuffer child, int position, int length){
+    private void writeLink(MarshallingContext context, int masterAddress, MarshallingBuffer child, int position, int length){
         int offset = offset();
         _delegate.offset(child.addressInParent());
         _delegate.writeInt(position);
         if(child.storeLengthInLink()){
             _delegate.writeInt(length);
         }
+        child.writeIndex(context, masterAddress, position, length);
         _delegate.offset(offset);
+        
     }
     
+    private void writeIndex(MarshallingContext context, int masterAddress, int position, int length) {
+        if(_indexedField != null){
+            
+            // for now this is a String index only, it takes the entire slot.
+            
+            Slot slot = new Slot(masterAddress + position, length);
+            _indexedField.addIndexEntry(context.transaction(), context.objectID(), slot);
+        }
+    }
+
     private int addressInParent() {
         if(! hasParent()){
             throw new IllegalStateException();
@@ -195,14 +209,38 @@ public class MarshallingBuffer implements WriteBuffer{
         return _addressInParent != NO_PARENT;
     }
     
-    boolean storeLengthInLink(){
+    private boolean storeLengthInLink(){
         return _addressInParent > 0;
     }
 
-    public void addIndexEntry(FieldMetadata fieldMetadata) {
-        
-        // TODO Auto-generated method stub
+    public void requestIndexEntry(FieldMetadata fieldMetadata) {
+        _indexedField = fieldMetadata;
     }
 
+    public int marshalledLength(MarshallingContext context) {
+        int length = context.requiredLength(this, doBlockAlign());
+        if(doBlockAlign()){
+            blockAlign(length);
+        }
+        if(_children != null){
+            Iterator4 i = new Iterator4Impl(_children);
+            while(i.moveNext()){
+                length += ((MarshallingBuffer) i.current()).marshalledLength(context);
+            }
+        }
+        return length;
+    }
+
+    private void blockAlign(int length) {
+        if(length > _delegate.length()){
+            int sizeNeeded = length - _delegate.length();
+            prepareWrite(sizeNeeded);
+        }
+        _delegate.offset(length);
+    }
+
+    private boolean doBlockAlign() {
+        return ! hasParent() || _indexedField != null;
+    }
 
 }
