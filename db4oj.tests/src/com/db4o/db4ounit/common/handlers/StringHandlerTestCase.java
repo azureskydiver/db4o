@@ -13,7 +13,7 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
         new StringHandlerTestCase().runSolo();
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item  {
     	public String _string;
     	public Item(String s) {
     		_string = s;
@@ -64,8 +64,7 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
 	}
 	
     public void testStoreObject() throws Exception{
-        Item storedItem = new Item("one");
-        doTestStoreObject(storedItem);
+        doTestStoreObject(new Item("one"));
     }
 	
 }

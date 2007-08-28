@@ -10,7 +10,7 @@ public class BooleanHandlerTestCase extends TypeHandlerTestCaseBase {
         new BooleanHandlerTestCase().runSolo();
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item {
     	public Boolean _boolWrapper;
     	public boolean _bool;
     	
@@ -31,12 +31,6 @@ public class BooleanHandlerTestCase extends TypeHandlerTestCaseBase {
         			&& this._boolWrapper.equals(other._boolWrapper);
     	}
     	
-    	public int hashCode() {
-        	int hash = 7;
-        	hash = 31 * hash + (_bool? 0 : 1);
-        	hash = 31 * hash + (null == _boolWrapper ? 0 : _boolWrapper.hashCode());
-        	return hash;
-    	}
     	public String toString() {
     		return "[" + _bool + "," + _boolWrapper + "]";
     	}

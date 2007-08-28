@@ -63,7 +63,7 @@ public class DoubleHandlerTestCase extends TypeHandlerTestCaseBase {
         doTestStoreObject(storedItem);
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item {
         public double _double;
         public Double _doubleWrapper;
         public Item(double d, Double wrapper) {
@@ -80,13 +80,6 @@ public class DoubleHandlerTestCase extends TypeHandlerTestCaseBase {
             Item other = (Item)obj;
             return (other._double == this._double) 
                     && this._doubleWrapper.equals(other._doubleWrapper);
-        }
-        
-        public int hashCode() {
-            int hash = 7;
-            hash = 31 * hash + new Double(_double).hashCode();
-            hash = 31 * hash + (null == _doubleWrapper ? 0 : _doubleWrapper.hashCode());
-            return hash;
         }
         
         public String toString() {

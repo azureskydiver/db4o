@@ -35,7 +35,7 @@ public class DateHandlerTestCase extends TypeHandlerTestCaseBase {
         doTestStoreObject(storedItem);
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item {
         public Date date;
         public Item(Date date_) {
             this.date = date_;

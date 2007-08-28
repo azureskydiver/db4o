@@ -12,7 +12,7 @@ public class ShortHandlerTestCase extends TypeHandlerTestCaseBase {
         new ShortHandlerTestCase().runSolo();
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item {
     	public short _short;
     	public Short _shortWrapper;
     	public Item(short s, Short wrapper) {
@@ -29,13 +29,6 @@ public class ShortHandlerTestCase extends TypeHandlerTestCaseBase {
         	Item other = (Item)obj;
         	return (other._short == this._short) 
         			&& this._shortWrapper.equals(other._shortWrapper);
-    	}
-    	
-    	public int hashCode() {
-        	int hash = 7;
-        	hash = 31 * hash + _short;
-        	hash = 31 * hash + (null == _shortWrapper ? 0 : _shortWrapper.hashCode());
-        	return hash;
     	}
     	
     	public String toString() {

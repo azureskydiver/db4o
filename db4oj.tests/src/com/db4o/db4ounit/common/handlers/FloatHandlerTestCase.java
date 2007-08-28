@@ -32,7 +32,7 @@ public class FloatHandlerTestCase extends TypeHandlerTestCaseBase {
         doTestStoreObject(storedItem);
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item {
         public float _float;
         public Float _floatWrapper;
         public Item(float f, Float wrapper) {
@@ -49,13 +49,6 @@ public class FloatHandlerTestCase extends TypeHandlerTestCaseBase {
             Item other = (Item)obj;
             return (other._float == this._float) 
                     && this._floatWrapper.equals(other._floatWrapper);
-        }
-        
-        public int hashCode() {
-            int hash = 7;
-            hash = 31 * hash + new Float(_float).hashCode();
-            hash = 31 * hash + (null == _floatWrapper ? 0 : _floatWrapper.hashCode());
-            return hash;
         }
         
         public String toString() {

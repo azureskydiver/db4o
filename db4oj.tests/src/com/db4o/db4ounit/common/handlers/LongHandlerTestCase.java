@@ -32,7 +32,7 @@ public class LongHandlerTestCase extends TypeHandlerTestCaseBase {
         doTestStoreObject(storedItem);
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item  {
         public long _long;
         public Long _longWrapper;
         public Item(long l, Long wrapper) {
@@ -49,13 +49,6 @@ public class LongHandlerTestCase extends TypeHandlerTestCaseBase {
             Item other = (Item)obj;
             return (other._long == this._long) 
                     && this._longWrapper.equals(other._longWrapper);
-        }
-        
-        public int hashCode() {
-            int hash = 7;
-            hash = 31 * hash + new Long(_long).hashCode();
-            hash = 31 * hash + (null == _longWrapper ? 0 : _longWrapper.hashCode());
-            return hash;
         }
         
         public String toString() {

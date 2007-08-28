@@ -12,7 +12,7 @@ public class ByteHandlerTestCase extends TypeHandlerTestCaseBase {
         new ByteHandlerTestCase().runSolo();
     }
     
-    public static class Item extends TypeHandlerTestCaseBase.Item {
+    public static class Item {
         
         public byte _byte;
         
@@ -36,12 +36,6 @@ public class ByteHandlerTestCase extends TypeHandlerTestCaseBase {
         	        	
         }
         
-        public int hashCode() {
-        	int hash = 7;
-        	hash = 31 * hash + _byte;
-        	hash = 31 * hash + (null == _byteWrapper ? 0 : _byteWrapper.hashCode());
-        	return hash;
-        }
         public String toString() {
     		return "[" + _byte + "," + _byteWrapper + "]";
         }
