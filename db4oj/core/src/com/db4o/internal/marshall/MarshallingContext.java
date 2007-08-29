@@ -133,13 +133,11 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
 
     private int marshalledLength() {
-        return HEADER_LENGTH + nullBitMapLength() + _writeBuffer.marshalledLength(this);
+        int length = writeBufferOffset();
+        _writeBuffer.checkBlockAlignment(this, null, length);
+        return length + _writeBuffer.marshalledLength();
     }
     
-    private int nullBitMapLength(){
-        return Const4.INT_LENGTH + _nullBitMap.marshalledLength();
-    }
-
     public int requiredLength(MarshallingBuffer buffer, boolean align) {
         if(! align){
             return buffer.length();

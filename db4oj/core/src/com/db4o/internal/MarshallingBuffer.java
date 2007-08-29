@@ -81,7 +81,7 @@ public class MarshallingBuffer implements WriteBuffer{
         }
         Buffer temp = new Buffer(newSize);
         temp.offset(_lastOffSet);
-        _delegate.copyTo(temp, 0, 0, _lastOffSet);
+        _delegate.copyTo(temp, 0, 0, _delegate.length());
         _delegate = temp;
     }
     
@@ -186,8 +186,13 @@ public class MarshallingBuffer implements WriteBuffer{
             // for now this is a String index only, it takes the entire slot.
             
             StatefulBuffer buffer = new StatefulBuffer(context.transaction(), length);
-            buffer.setID(masterAddress + position);
-            buffer.address(masterAddress + position);
+            
+            int blockedPosition = context.container().bytesToBlocks(position);
+            
+            int indexID = masterAddress + blockedPosition;
+            
+            buffer.setID(indexID);
+            buffer.address(indexID);
             transferContentTo(buffer);
             _indexedField.addIndexEntry(context.transaction(), context.objectID(), buffer);
             
@@ -219,16 +224,37 @@ public class MarshallingBuffer implements WriteBuffer{
     public void requestIndexEntry(FieldMetadata fieldMetadata) {
         _indexedField = fieldMetadata;
     }
-
-    public int marshalledLength(MarshallingContext context) {
-        int length = context.requiredLength(this, doBlockAlign());
+    
+    public MarshallingBuffer checkBlockAlignment(MarshallingContext context, MarshallingBuffer precedingBuffer, int precedingLength) {
         if(doBlockAlign()){
-            blockAlign(length);
+            precedingBuffer.blockAlign(context, precedingLength);
         }
+        if(precedingBuffer != null){
+            precedingLength += precedingBuffer.length();
+        }
+        
+        precedingBuffer = this;
         if(_children != null){
             Iterator4 i = new Iterator4Impl(_children);
             while(i.moveNext()){
-                length += ((MarshallingBuffer) i.current()).marshalledLength(context);
+                precedingBuffer = ((MarshallingBuffer) i.current()).checkBlockAlignment(context, precedingBuffer, precedingLength);
+            }
+        }
+        return precedingBuffer;
+    }
+
+    private void blockAlign(MarshallingContext context, int precedingLength) {
+        int totalLength = context.container().blockAlignedBytes(precedingLength + length());
+        int newLength = totalLength - precedingLength;
+        blockAlign(newLength);
+    }
+
+    public int marshalledLength() {
+        int length = length();
+        if(_children != null){
+            Iterator4 i = new Iterator4Impl(_children);
+            while(i.moveNext()){
+                length += ((MarshallingBuffer) i.current()).marshalledLength();
             }
         }
         return length;
@@ -236,14 +262,14 @@ public class MarshallingBuffer implements WriteBuffer{
 
     private void blockAlign(int length) {
         if(length > _delegate.length()){
-            int sizeNeeded = length - _delegate.length();
+            int sizeNeeded = length - _delegate.offset();
             prepareWrite(sizeNeeded);
         }
         _delegate.offset(length);
     }
 
     private boolean doBlockAlign() {
-        return ! hasParent() || _indexedField != null;
+        return hasParent();  // For now we block align every linked entry. Indexes could be created late.
     }
 
 }
