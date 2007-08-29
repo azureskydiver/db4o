@@ -940,17 +940,7 @@ public class FieldMetadata implements StoredField {
 		if(! (classHandler instanceof Indexable4)){
 		    return null;
 		}
-		Indexable4 indexHandler = (Indexable4) classHandler; 
-		if(Debug.indexAllFields) {
-			// check for legacy case with uninitialized MetaIndex on old headers
-			if(indexHandler==null) {
-			    if(i_handler instanceof Indexable4){
-			        indexHandler=(Indexable4) i_handler;
-			    }
-				System.err.println("No index handler found for "+this);
-			}
-		}
-		return indexHandler;
+		return (Indexable4) classHandler;
 	}
     
 	/** @param trans */
