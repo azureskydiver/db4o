@@ -8,6 +8,7 @@ import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.QConObject;
 import com.db4o.internal.replication.*;
 import com.db4o.internal.slots.Slot;
+import com.db4o.marshall.*;
 
 
 /**
@@ -17,6 +18,8 @@ import com.db4o.internal.slots.Slot;
  * @exclude
  */
 public abstract class VirtualFieldMetadata extends FieldMetadata {
+    
+    private static final Object ANY_OBJECT = new Object();
 
     VirtualFieldMetadata() {
         super(null);
@@ -57,8 +60,9 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     public Object getOrCreate(Transaction a_trans, Object a_OnObject) {
         // This is the first part of marshalling
-        // Virtual fields do it all in #marshall() so it's fine to return null here
-        return null;
+        // Virtual fields do it all in #marshall(), the object is never used.
+        // Returning any object here prevents triggering null handling.
+        return ANY_OBJECT;
     }
     
     public boolean needsArrayAndPrimitiveInfo(){
@@ -80,19 +84,31 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     public void loadHandler(ObjectContainerBase a_stream){
     	// do nothing
     }
-
+    
     public final void marshall(
-            ObjectReference a_yapObject, 
-            Object a_object,
-            MarshallerFamily mf, 
-            StatefulBuffer a_bytes,
-            Config4Class a_config, 
-            boolean a_new) {
+        ObjectReference ref, 
+        Object a_object,
+        MarshallerFamily mf, 
+        StatefulBuffer buffer,
+        Config4Class config, 
+        boolean isNew) {
         
-        Transaction trans = a_bytes.getTransaction();
+            marshall(buffer.getTransaction(), ref, buffer, isNew);
+    }
+    
+    public void marshall(MarshallingContext context, Object obj){
+        context.doNotIndirectWrites();
+        marshall(context.transaction(), context.reference(), context, context.isNew());
+    }
+
+    private final void marshall(
+            Transaction trans,
+            ObjectReference ref, 
+            WriteBuffer buffer,
+            boolean isNew) {
         
         if(! trans.supportsVirtualFields()){
-            marshallIgnore(a_bytes);
+            marshallIgnore(buffer);
             return;
         }
         
@@ -107,22 +123,22 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
                 // old replication code 
 
                 migrating = true;
-                if (a_yapObject.virtualAttributes() == null) {
-                    Object obj = a_yapObject.getObject();
-                    ObjectReference migrateYapObject = null;
+                if (ref.virtualAttributes() == null) {
+                    Object obj = ref.getObject();
+                    ObjectReference migratingRef = null;
                     MigrationConnection mgc = handlers.i_migration;
                     if(mgc != null){
-                        migrateYapObject = mgc.referenceFor(obj);
-                        if(migrateYapObject == null){
+                        migratingRef = mgc.referenceFor(obj);
+                        if(migratingRef == null){
                             ObjectContainerBase peer = mgc.peer(stream);
-                            migrateYapObject = peer.transaction().referenceForObject(obj);
+                            migratingRef = peer.transaction().referenceForObject(obj);
                         }
                     }
-                    if (migrateYapObject != null){
-                    	VirtualAttributes migrateAttributes = migrateYapObject.virtualAttributes();
+                    if (migratingRef != null){
+                    	VirtualAttributes migrateAttributes = migratingRef.virtualAttributes();
                     	if(migrateAttributes != null && migrateAttributes.i_database != null){
 	                        migrating = true;
-	                        a_yapObject.setVirtualAttributes((VirtualAttributes)migrateAttributes.shallowClone());
+	                        ref.setVirtualAttributes((VirtualAttributes)migrateAttributes.shallowClone());
                             migrateAttributes.i_database.bind(trans);
                     	}
                     }
@@ -132,29 +148,28 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
                 // new dRS replication
                 
                 Db4oReplicationReferenceProvider provider = handlers._replicationReferenceProvider;
-                Object parentObject = a_yapObject.getObject();
-                Db4oReplicationReference ref = provider.referenceFor(parentObject); 
-                if(ref != null){
+                Object parentObject = ref.getObject();
+                Db4oReplicationReference replicationReference = provider.referenceFor(parentObject); 
+                if(replicationReference != null){
                     migrating = true;
-                    VirtualAttributes va = a_yapObject.produceVirtualAttributes();
-                    va.i_version = ref.version();
-                    va.i_uuid = ref.longPart();
-                    va.i_database = ref.signaturePart();
+                    VirtualAttributes va = ref.produceVirtualAttributes();
+                    va.i_version = replicationReference.version();
+                    va.i_uuid = replicationReference.longPart();
+                    va.i_database = replicationReference.signaturePart();
                 }
             }
         }
         
-        if (a_yapObject.virtualAttributes() == null) {
-        	a_yapObject.produceVirtualAttributes();
+        if (ref.virtualAttributes() == null) {
+        	ref.produceVirtualAttributes();
             migrating = false;
         }
-	    marshall1(a_yapObject, a_bytes, migrating, a_new);
+	    marshall(trans, ref, buffer, migrating, isNew);
     }
-
-    abstract void marshall1(ObjectReference a_yapObject, StatefulBuffer a_bytes,
-        boolean a_migrating, boolean a_new);
     
-    abstract void marshallIgnore(Buffer writer);
+    abstract void marshall(Transaction trans, ObjectReference ref, WriteBuffer buffer, boolean migrating, boolean isNew);
+    
+    abstract void marshallIgnore(WriteBuffer writer);
     
     public void readVirtualAttribute(Transaction a_trans, Buffer a_reader, ObjectReference a_yapObject) {
         if(! a_trans.supportsVirtualFields()){

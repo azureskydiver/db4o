@@ -21,6 +21,8 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     
     private static final byte MARSHALLER_FAMILY_VERSION = (byte)3;
     
+    private static final int NO_INDIRECTION = 3; // and number above 2 
+    
     private final Transaction _transaction;
     
     private final ObjectReference _reference;
@@ -290,8 +292,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
             _fieldWriteCount = 0;
             
         }else{
-            _fieldWriteCount = 3;
-            
+            doNotIndirectWrites();
         }
         classMetadata.write(this, obj);
         _fieldWriteCount = tempFieldWriteCount;
@@ -305,6 +306,14 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
             return;
         }
         _currentBuffer.requestIndexEntry(fieldMetadata);
+    }
+    
+    public ObjectReference reference(){
+        return _reference;
+    }
+    
+    public void doNotIndirectWrites(){
+        _fieldWriteCount = NO_INDIRECTION;
     }
 
 }

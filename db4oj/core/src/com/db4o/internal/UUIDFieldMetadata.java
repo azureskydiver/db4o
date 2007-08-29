@@ -9,6 +9,7 @@ import com.db4o.internal.btree.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -162,19 +163,14 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         return LINK_LENGTH;
     }
     
-    void marshall1(ObjectReference a_yapObject, StatefulBuffer a_bytes, boolean a_migrating, boolean a_new) {
-        ObjectContainerBase stream = a_bytes.getStream();
-        Transaction trans = a_bytes.getTransaction();
-        boolean indexEntry = a_new && stream.maintainsIndices();
+    void marshall(Transaction trans, ObjectReference ref, WriteBuffer buffer, boolean isMigrating, boolean isNew) {
+        VirtualAttributes attr = ref.virtualAttributes();
+        ObjectContainerBase container = trans.container();
+        boolean doAddIndexEntry = isNew && container.maintainsIndices();
         int dbID = 0;
-		VirtualAttributes attr = a_yapObject.virtualAttributes();
-		
-		boolean linkToDatabase = ! a_migrating;
-		if(attr != null && attr.i_database == null) {
-			linkToDatabase = true;
-		}
+		boolean linkToDatabase =  (attr != null && attr.i_database == null) ?  true  :  ! isMigrating;
         if(linkToDatabase){
-            Db4oDatabase db = ((InternalObjectContainer)stream).identity();
+            Db4oDatabase db = ((InternalObjectContainer)container).identity();
             if(db == null){
                 // can happen on early classes like Metaxxx, no problem
                 attr = null;
@@ -183,9 +179,9 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	            attr.i_database = db;
                     
                     // TODO: Should be check for ! client instead of instanceof
-    	            if (stream instanceof LocalObjectContainer){
-    					attr.i_uuid = stream.generateTimeStampId();
-    	                indexEntry = true;
+    	            if (container instanceof LocalObjectContainer){
+    					attr.i_uuid = container.generateTimeStampId();
+    	                doAddIndexEntry = true;
     	            }
     	        }
     	        db = attr.i_database;
@@ -198,20 +194,20 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
                 dbID = attr.i_database.getID(trans);
             }
         }
-        a_bytes.writeInt(dbID);
-        if(attr != null){
-	        a_bytes.writeLong(attr.i_uuid);
-	        if(indexEntry){
-	            addIndexEntry(a_bytes, new Long(attr.i_uuid));
-	        }
-        }else{
-            a_bytes.writeLong(0);
+        buffer.writeInt(dbID);
+        if(attr == null){
+            buffer.writeLong(0);
+            return;
+        }
+        buffer.writeLong(attr.i_uuid);
+        if(doAddIndexEntry){
+            addIndexEntry(trans, ref.getID(), new Long(attr.i_uuid));
         }
     }
     
-    void marshallIgnore(Buffer writer) {
-        writer.writeInt(0);
-        writer.writeLong(0);
+    void marshallIgnore(WriteBuffer buffer) {
+        buffer.writeInt(0);
+        buffer.writeLong(0);
     }
 
 	public final HardObjectReference getHardObjectReferenceBySignature(final Transaction transaction, final long longPart, final byte[] signature) {
