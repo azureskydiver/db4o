@@ -199,6 +199,11 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
     public Object read(ReadContext context) {
         throw new NotImplementedException();
     }
+    
+    public Object nullRepresentationInUntypedArrays(){
+        return primitiveNull();
+    }
+    
 
 
 }
