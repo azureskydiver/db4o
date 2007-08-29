@@ -186,8 +186,12 @@ public class MarshallingBuffer implements WriteBuffer{
             
             // for now this is a String index only, it takes the entire slot.
             
-            Slot slot = new Slot(masterAddress + position, length);
-            _indexedField.addIndexEntry(context.transaction(), context.objectID(), slot);
+            StatefulBuffer buffer = new StatefulBuffer(context.transaction(), length);
+            buffer.setID(masterAddress + position);
+            buffer.address(masterAddress + position);
+            transferContentTo(buffer);
+            _indexedField.addIndexEntry(context.transaction(), context.objectID(), buffer);
+            
         }
     }
 
