@@ -377,4 +377,11 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         return container().handlers();
     }
 
+    public void createIndirection(TypeHandler4 handler) {
+        if(handlerRegistry().isVariableLength(handler)){
+            createChildBuffer(false, true);
+            doNotIndirectWrites();
+        }
+    }
+
 }
