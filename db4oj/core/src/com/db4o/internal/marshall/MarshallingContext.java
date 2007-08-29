@@ -105,7 +105,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
 
     public StatefulBuffer ToWriteBuffer() {
         
-        int length = marshalledLength();
+        int length = container().blockAlignedBytes(marshalledLength());
         
         StatefulBuffer buffer = isNew() ? createNewBuffer(length) : createUpdateBuffer(0, length);
         
