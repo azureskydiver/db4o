@@ -734,6 +734,7 @@ public class FieldMetadata implements StoredField {
         if (obj != null && cascadeOnUpdate(context.classConfiguration())) {
             context.updateDepth(adjustUpdateDepth(obj, updateDepth));
         }
+        context.createIndirection(i_handler);
         i_handler.write(context, obj);
         context.updateDepth(updateDepth);
         if(hasIndex()){
