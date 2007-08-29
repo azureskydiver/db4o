@@ -5,6 +5,7 @@ package com.db4o.internal.marshall;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
@@ -268,16 +269,64 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
     
     public void writeObject(TypeHandler4 handler, Object obj){
+        
         MarshallingBuffer tempBuffer = _currentBuffer;
         int tempFieldWriteCount = _fieldWriteCount;
-        _fieldWriteCount = 0;
-        handler.write(this, obj);
+        
+        if(obj == null){
+            
+            // TODO: This should never happen. All handlers should take care
+            //       of nulls on a higher level, otherwise primitive wrappers
+            //       default to their primitive values.
+            
+            //       Consider to throw an IllegalArgumentException here to
+            //       prevent users from calling with null arguments.
+            
+            writeNullObject(handler);
+            
+        } else{
+            _fieldWriteCount = 0;
+            handler.write(this, obj);
+        }
+        
         _fieldWriteCount = tempFieldWriteCount;
         _currentBuffer = tempBuffer;
     }
     
+    private void writeNullObject(TypeHandler4 handler){
+        if( handlerRegistry().isVariableLength(handler)){
+            doNotIndirectWrites();
+            writeNullLink();
+            return;
+        }
+        
+        if (handler instanceof PrimitiveHandler){
+            PrimitiveHandler primitiveHandler = (PrimitiveHandler) handler;
+            handler.write(this, primitiveHandler.nullRepresentationInUntypedArrays());
+            return;
+        }
+            
+        handler.write(this, null);
+    }
+    
+    private void writeNullLink(){
+        writeInt(0);
+        writeInt(0);
+    }
+    
     public void writeAny(Object obj){
+
+        if(obj == null){
+            writeInt(0);
+            return;
+        }
+        
         ClassMetadata classMetadata = ClassMetadata.forObject(transaction(), obj, true);
+        if(classMetadata == null){
+            writeInt(0);
+            return;
+        }
+        
         MarshallingBuffer tempBuffer = _currentBuffer;
         int tempFieldWriteCount = _fieldWriteCount;
         createChildBuffer(false, false);
@@ -314,6 +363,10 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     
     public void doNotIndirectWrites(){
         _fieldWriteCount = NO_INDIRECTION;
+    }
+    
+    private HandlerRegistry handlerRegistry(){
+        return container().handlers();
     }
 
 }

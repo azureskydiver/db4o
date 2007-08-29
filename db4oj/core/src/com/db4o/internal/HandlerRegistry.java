@@ -458,4 +458,8 @@ public final class HandlerRegistry {
         }
         return null;
 	}
+
+    public boolean isVariableLength(TypeHandler4 handler) {
+        return handler instanceof StringHandler;
+    }
 }

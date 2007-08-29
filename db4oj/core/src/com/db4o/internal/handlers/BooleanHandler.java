@@ -154,4 +154,8 @@ public final class BooleanHandler extends PrimitiveHandler {
         }
 	}
 	
+    public Object nullRepresentationInUntypedArrays(){
+        return null;
+    }
+	
 }
