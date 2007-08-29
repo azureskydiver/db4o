@@ -42,6 +42,10 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     
     private Buffer _debugPrepend;
     
+    private Object _currentMarshalledObject;
+    
+    private Object _currentIndexEntry;
+    
 
     public MarshallingContext(Transaction trans, ObjectReference ref, int updateDepth, boolean isNew) {
         _transaction = trans;
@@ -266,6 +270,9 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         int id = container().setInternal(transaction(), obj, _updateDepth, true);
         
         writeInt(id);
+        
+        _currentMarshalledObject = obj;
+        _currentIndexEntry = new Integer(id);
     }
     
     public void writeObject(TypeHandler4 handler, Object obj){
@@ -351,7 +358,8 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
 
     public void addIndexEntry(FieldMetadata fieldMetadata, Object obj) {
         if(! _currentBuffer.hasParent()){
-            fieldMetadata.addIndexEntry(transaction(), objectID(), obj);
+            Object indexEntry = (obj == _currentMarshalledObject) ? _currentIndexEntry : obj; 
+            fieldMetadata.addIndexEntry(transaction(), objectID(), indexEntry);
             return;
         }
         _currentBuffer.requestIndexEntry(fieldMetadata);
