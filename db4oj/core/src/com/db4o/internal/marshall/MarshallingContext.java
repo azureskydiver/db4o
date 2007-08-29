@@ -277,7 +277,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
     }
     
     public void writeAny(Object obj){
-        ClassMetadata classMetadata = ClassMetadata.forObject(transaction(), obj, false);
+        ClassMetadata classMetadata = ClassMetadata.forObject(transaction(), obj, true);
         MarshallingBuffer tempBuffer = _currentBuffer;
         int tempFieldWriteCount = _fieldWriteCount;
         createChildBuffer(false, false);
