@@ -6,6 +6,7 @@ import com.db4o.ext.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -31,16 +32,15 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
         a_yapObject.virtualAttributes().i_version = a_bytes.readLong();
     }
 
-    void marshall1(ObjectReference a_yapObject, StatefulBuffer a_bytes, boolean a_migrating, boolean a_new) {
-        ObjectContainerBase stream = a_bytes.getStream()._parent;
-        VirtualAttributes va = a_yapObject.virtualAttributes();
-        if (! a_migrating) {
-            va.i_version = stream.generateTimeStampId();
+    void marshall(Transaction trans, ObjectReference ref, WriteBuffer buffer, boolean isMigrating, boolean isNew) {
+        VirtualAttributes attr = ref.virtualAttributes();
+        if (! isMigrating) {
+            attr.i_version = trans.container()._parent.generateTimeStampId();
         }
-        if(va == null){
-            a_bytes.writeLong(0);
+        if(attr == null){
+            buffer.writeLong(0);
         }else{
-            a_bytes.writeLong(va.i_version);
+            buffer.writeLong(attr.i_version);
         }
     }
 
@@ -48,8 +48,8 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
         return Const4.LONG_LENGTH;
     }
     
-    void marshallIgnore(Buffer writer) {
-        writer.writeLong(0);
+    void marshallIgnore(WriteBuffer buffer) {
+        buffer.writeLong(0);
     }
 
 
