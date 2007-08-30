@@ -101,8 +101,12 @@ public class MarshallingBuffer implements WriteBuffer{
     }
 
     public void transferContentTo(Buffer buffer){
-        System.arraycopy(_delegate._buffer, 0, buffer._buffer, buffer._offset, length());
-        buffer._offset += length();
+        transferContentTo(buffer, length());
+    }
+    
+    public void transferContentTo(Buffer buffer, int length){
+        System.arraycopy(_delegate._buffer, 0, buffer._buffer, buffer._offset, length);
+        buffer._offset += length;
     }
     
     public Buffer testDelegate(){
@@ -145,9 +149,9 @@ public class MarshallingBuffer implements WriteBuffer{
     
     private static void merge(MarshallingContext context, int masterAddress, MarshallingBuffer writeBuffer, MarshallingBuffer parentBuffer, MarshallingBuffer childBuffer, int linkOffset) {
         
-        int childLength = childBuffer.length();
         int childPosition = writeBuffer.offset();
-        writeBuffer.reserve(childLength);
+        
+        writeBuffer.reserve(childBuffer.blockedLength());
         
         mergeChildren(context,  masterAddress, writeBuffer, childBuffer, linkOffset);
         
@@ -156,7 +160,10 @@ public class MarshallingBuffer implements WriteBuffer{
         childBuffer.transferContentTo(writeBuffer._delegate);
         writeBuffer.seek(savedWriteBufferOffset);
         
-        parentBuffer.writeLink(context, masterAddress, childBuffer, childPosition + linkOffset, childLength);
+        parentBuffer.writeLink(childBuffer, childPosition + linkOffset, childBuffer.unblockedLength());
+        
+        childBuffer.writeIndex(context, masterAddress, childPosition + linkOffset);
+        
     }
     
     public void seek(int offset) {
@@ -168,24 +175,22 @@ public class MarshallingBuffer implements WriteBuffer{
         _delegate.offset(_delegate.offset() + length );
     }
 
-    private void writeLink(MarshallingContext context, int masterAddress, MarshallingBuffer child, int position, int length){
+    private void writeLink(MarshallingBuffer child, int position, int length){
         int offset = offset();
         _delegate.offset(child.addressInParent());
         _delegate.writeInt(position);
         if(child.storeLengthInLink()){
             _delegate.writeInt(length);
         }
-        child.writeIndex(context, masterAddress, position, length);
         _delegate.offset(offset);
-        
     }
     
-    private void writeIndex(MarshallingContext context, int masterAddress, int position, int length) {
+    private void writeIndex(MarshallingContext context, int masterAddress, int position) {
         if(_indexedField != null){
             
             // for now this is a String index only, it takes the entire slot.
             
-            StatefulBuffer buffer = new StatefulBuffer(context.transaction(), length);
+            StatefulBuffer buffer = new StatefulBuffer(context.transaction(), unblockedLength());
             
             int blockedPosition = context.container().bytesToBlocks(position);
             
@@ -193,9 +198,10 @@ public class MarshallingBuffer implements WriteBuffer{
             
             buffer.setID(indexID);
             buffer.address(indexID);
-            transferContentTo(buffer);
+
+            transferContentTo(buffer, unblockedLength());
+
             _indexedField.addIndexEntry(context.transaction(), context.objectID(), buffer);
-            
         }
     }
 
@@ -225,14 +231,16 @@ public class MarshallingBuffer implements WriteBuffer{
         _indexedField = fieldMetadata;
     }
     
-    public MarshallingBuffer checkBlockAlignment(MarshallingContext context, MarshallingBuffer precedingBuffer, int precedingLength) {
+    public MarshallingBuffer checkBlockAlignment(MarshallingContext context, MarshallingBuffer precedingBuffer, IntByRef precedingLength) {
+        
+        _lastOffSet = offset();
+        
         if(doBlockAlign()){
-            precedingBuffer.blockAlign(context, precedingLength);
+            precedingBuffer.blockAlign(context, precedingLength.value);
         }
         if(precedingBuffer != null){
-            precedingLength += precedingBuffer.length();
+            precedingLength.value += precedingBuffer.length();
         }
-        
         precedingBuffer = this;
         if(_children != null){
             Iterator4 i = new Iterator4Impl(_children);
@@ -270,6 +278,15 @@ public class MarshallingBuffer implements WriteBuffer{
 
     private boolean doBlockAlign() {
         return hasParent();  // For now we block align every linked entry. Indexes could be created late.
+    }
+    
+    private int blockedLength(){
+        return length();
+    }
+    
+    private int unblockedLength(){
+        // This is only valid after checkBlockAlignMent has been called. 
+        return _lastOffSet;
     }
 
 }

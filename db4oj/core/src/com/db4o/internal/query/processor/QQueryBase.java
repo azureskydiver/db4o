@@ -515,7 +515,6 @@ public abstract class QQueryBase implements Unversioned {
             }
         }
         sort(result);
-//        result.reset();
     }
     
     private Collection4 fieldPathFromTop(){
