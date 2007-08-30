@@ -119,7 +119,7 @@ public class InjectTransparentActivationEdit implements BloatClassEdit {
 			}
 
 			public void visitMethodEditor(MethodEditor editor) {
-				if(editor.isConstructor()) {
+				if(editor.isConstructor() || editor.isAbstract() || editor.isStatic()) {
 					return;
 				}
 				MemberRef methodRef = editor.memberRef();

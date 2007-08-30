@@ -15,4 +15,6 @@ public class ToBeInstrumented {
 	private void boo() {
 	}
 	
+	public static void fooStatic() {
+	}
 }
