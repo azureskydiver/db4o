@@ -134,8 +134,8 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
 
     private int marshalledLength() {
         int length = writeBufferOffset();
-        _writeBuffer.checkBlockAlignment(this, null, length);
-        return length + _writeBuffer.marshalledLength();
+        _writeBuffer.checkBlockAlignment(this, null, new IntByRef(length));
+        return length + _writeBuffer.marshalledLength() + Const4.BRACKETS_BYTES;
     }
     
     public int requiredLength(MarshallingBuffer buffer, boolean align) {
