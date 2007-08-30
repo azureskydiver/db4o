@@ -98,85 +98,6 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		traverseFields(yc, writer, attributes, command);
     }
     
-    protected void marshall(final ObjectReference ref, final Object obj, ObjectHeaderAttributes1 attributes, final StatefulBuffer writer, final boolean isNew) {
-
-        final Transaction trans = writer.getTransaction();
-
-		ClassMetadata classMetadata = ref.classMetadata();
-		writeObjectClassID(writer,classMetadata.getID());
-		attributes.write(writer);
-		
-		writer.setUpdateDepth( classMetadata.adjustUpdateDepth(trans, writer.getUpdateDepth()));
-
-		TraverseFieldCommand command = new TraverseFieldCommand() {
-		    
-			public int fieldCount(ClassMetadata containingClass, Buffer buffer) {
-			    int fieldCount = containingClass.i_fields.length;
-				buffer.writeInt(fieldCount);
-				return fieldCount;
-			}
-			
-			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-				if(isNull) {
-					field.addIndexEntry(trans, writer.getID(), null);
-					return;
-				}
-				Object child = field.getOrCreate(trans, obj);
-				if (child instanceof Db4oTypeImpl) {
-					child = ((Db4oTypeImpl) child).storedTo(trans);
-				}
-				field.marshall(ref, child, _family, writer, containingClass.configOrAncestorConfig(), isNew);
-			}
-		};
-		traverseFields(classMetadata, writer, attributes, command);
-		if (Deploy.debug) {
-			writer.writeEnd();
-			writer.debugCheckBytes();
-		}
-	}
-
-    public StatefulBuffer marshallNew(Transaction trans, ObjectReference ref, int updateDepth){
-        
-        ObjectHeaderAttributes1 attributes = new ObjectHeaderAttributes1(ref);
-        
-        StatefulBuffer writer = createWriterForNew(
-            trans, 
-            ref, 
-            updateDepth, 
-            attributes.objectLength());
-        
-        marshall(ref, ref.getObject(), attributes, writer, true);
-        
-        return writer;
-    }
-    
-    public void marshallUpdate(
-        Transaction trans,
-        int updateDepth,
-        ObjectReference yo,
-        Object obj
-        ) {
-        
-        ObjectHeaderAttributes1 attributes = new ObjectHeaderAttributes1(yo);
-        
-        StatefulBuffer writer = createWriterForUpdate(
-            trans, 
-            updateDepth, 
-            yo.getID(), 
-            0, 
-            attributes.objectLength());
-        
-        if(trans instanceof LocalTransaction){
-            // Running in single mode or on server.
-            // We need the slot now, so indexes can adjust to address.
-            ((LocalTransaction)trans).file().getSlotForUpdate(writer);
-        }
-        
-        marshall(yo, obj, attributes, writer, false);
-        
-        marshallUpdateWrite(trans, yo, obj, writer);
-    }
-    
     public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {
         return new ObjectHeaderAttributes1(reader);
     }
@@ -235,4 +156,46 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 	public void skipMarshallerInfo(Buffer reader) {
 		reader.incrementOffset(1);
 	}
+	
+    public void marshallUpdate(Transaction trans, int updateDepth, ObjectReference ref, Object obj) {
+        MarshallingContext context = new MarshallingContext(trans, ref, updateDepth, false);
+        marshall(obj, context);
+        marshallUpdateWrite(trans, ref, obj, context.ToWriteBuffer());
+    }
+
+    
+    public StatefulBuffer marshallNew(Transaction trans, ObjectReference ref, int updateDepth){
+        MarshallingContext context = new MarshallingContext(trans, ref, updateDepth, true);
+        marshall(ref.getObject(), context);
+        return context.ToWriteBuffer();
+    }
+    
+    protected void marshall(final Object obj, final MarshallingContext context) {
+        final Transaction trans = context.transaction();
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+            private int fieldIndex = -1; 
+            public int fieldCount(ClassMetadata classMetadata, Buffer buffer) {
+                int fieldCount = classMetadata.i_fields.length;
+                context.fieldCount(fieldCount);
+                return fieldCount;
+            }
+            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                context.nextField();
+                fieldIndex++;
+                Object child = field.getOrCreate(trans, obj);
+                if(child == null) {
+                    context.isNull(fieldIndex, true);
+                    field.addIndexEntry(trans, context.objectID(), null);
+                    return;
+                }
+                
+                if (child instanceof Db4oTypeImpl) {
+                    child = ((Db4oTypeImpl) child).storedTo(trans);
+                }
+                field.marshall(context, child);
+            }
+        };
+        traverseFields(context.classMetadata(), null, context, command);
+    }
+	
 }

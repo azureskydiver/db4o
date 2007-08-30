@@ -20,7 +20,7 @@ public class MarshallerFamily {
         
     }
     
-    private static int FAMILY_VERSION = MarshallingSpike.enabled ? MarshallingSpike.familyVersion() : FamilyVersion.BTREE_FIELD_INDEXES;
+    private static int FAMILY_VERSION = FamilyVersion.BTREE_FIELD_INDEXES;
     
     public final ArrayMarshaller _array;
     
@@ -39,8 +39,7 @@ public class MarshallerFamily {
     private final int _converterVersion;
 
 
-    private final static MarshallerFamily[] allVersions = MarshallingSpike.enabled ? MarshallingSpike.marshallerFamily() :
-            new MarshallerFamily[] {
+    private final static MarshallerFamily[] allVersions = new MarshallerFamily[] {
         
         // LEGACY => before 5.4
         

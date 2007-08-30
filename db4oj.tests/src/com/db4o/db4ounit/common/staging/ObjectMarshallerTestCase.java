@@ -1,16 +1,23 @@
 /* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.common.assorted;
+package com.db4o.db4ounit.common.staging;
 
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.marshall.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 
 
+/**
+ * The functionality of ObjectMarshaller does not make any
+ * sense any more with the new TypeHandler4 functionality 
+ * evolving.
+ * 
+ * It's just as easy to write a TypeHandler and it will get
+ * you full querying support.
+ */
 public class ObjectMarshallerTestCase extends AbstractDb4oTestCase {
 
 	public static void main(String[] args) {
@@ -82,19 +89,13 @@ public class ObjectMarshallerTestCase extends AbstractDb4oTestCase {
 		config.objectClass(Item.class).marshallWith(marshaller);
 	}
 	
-	protected void store() throws Exception {
-        if(MarshallingSpike.enabled){
-            return;
-        }
+	protected void _store() throws Exception {
 		marshaller.reset();
 		store(new Item(Integer.MAX_VALUE, Long.MAX_VALUE, 1));
 		Assert.isTrue(marshaller.writeCalled);
 	}
 	
-	public void testReadWrite() throws Exception{
-	    if(MarshallingSpike.enabled){
-	        return;
-	    }
+	public void _testReadWrite() throws Exception{
 		Item item = assertRetrieve();
 		Assert.isTrue(marshaller.readCalled);
 		
@@ -107,10 +108,7 @@ public class ObjectMarshallerTestCase extends AbstractDb4oTestCase {
 		assertRetrieve();
 	}
 	
-	public void testQueryByExample() throws Exception{
-        if(MarshallingSpike.enabled){
-            return;
-        }
+	public void _testQueryByExample() throws Exception{
 		ObjectSet os = db().get(new Item());
 		Assert.areEqual(1, os.size());
 		Item item = (Item) os.next();
