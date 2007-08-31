@@ -14,24 +14,6 @@ public class StringMarshaller1 extends StringMarshaller{
         return true;
     }
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
-        
-        if(topLevel){
-            header.addBaseLength(linkLength());
-            header.prepareIndexedPayLoadEntry(trans);
-        }else{
-            if(withIndirection){
-                header.addPayLoadLength(linkLength());
-            }
-        }
-        
-        if(obj == null){
-            return;
-        }
-        
-        header.addPayLoadLength(trans.container().stringIO().length((String)obj));
-    }
-    
     public Object writeNew(Object obj, boolean topLevel, StatefulBuffer writer, boolean redirect) {
         
         ObjectContainerBase stream = writer.getStream();

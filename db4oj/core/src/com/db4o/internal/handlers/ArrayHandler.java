@@ -146,10 +146,6 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         return Const4.YAPARRAY;
     }
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
-        MarshallerFamily.current()._array.calculateLengths(trans, header, this, obj, topLevel);
-    }
-
     public int objectLength(Object obj) {
         return ownLength(obj) + (arrayReflector().getLength(obj) * _handler.linkLength());
     }

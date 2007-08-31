@@ -12,10 +12,6 @@ public class StringMarshaller0 extends StringMarshaller {
         return false;
     }
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
-        // do nothing
-    }
-    
     public Object writeNew(Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean redirect) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();

@@ -5,7 +5,6 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.internal.marshall.MarshallerFamily;
-import com.db4o.internal.marshall.ObjectHeaderAttributes;
 
 
 /**
@@ -18,10 +17,6 @@ final class CustomMarshallerFieldMetadata extends FieldMetadata {
 	public CustomMarshallerFieldMetadata(ClassMetadata containingClass, ObjectMarshaller marshaller) {
 		super(containingClass, marshaller);
 		_marshaller = marshaller;
-	}
-	
-	public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, Object obj) {
-		header.addBaseLength(linkLength());
 	}
 	
     public void defragField(MarshallerFamily mf,BufferPair readers) {

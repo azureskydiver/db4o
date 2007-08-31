@@ -64,10 +64,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         return null;
     }
 
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection){
-        MarshallerFamily.current()._string.calculateLengths(trans, header, topLevel, obj, withIndirection);
-    }
-
     public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
         return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes, redirect);
     }

@@ -58,7 +58,7 @@ public class FieldMetadata implements StoredField {
     public FieldMetadata(ClassMetadata a_yapClass) {
         _clazz = a_yapClass;
     }
-
+    
     FieldMetadata(ClassMetadata a_yapClass, ObjectTranslator a_translator) {
         // for TranslatedFieldMetadata only
     	this(a_yapClass);
@@ -641,20 +641,6 @@ public class FieldMetadata implements StoredField {
         return i_handler.linkLength();
     }
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, Object obj){
-        alive();
-        if (i_handler == null) {
-            
-            // must be a YapClass
-            
-            header.addBaseLength(Const4.ID_LENGTH);
-            return ;
-        }
-        
-        i_handler.calculateLengths(trans, header, true, obj, true);
-    }
-    
-
     public void loadHandler(ObjectContainerBase a_stream) {
     	i_handler=a_stream.handlerByID(i_handlerID);
     }

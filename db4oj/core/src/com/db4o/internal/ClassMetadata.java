@@ -1221,14 +1221,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return Platform4.isValueType(classReflector());
     }
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
-        if(topLevel){
-            header.addBaseLength(linkLength());
-        }else{
-            header.addPayLoadLength(linkLength());
-        }
-    }
-
     public String nameToWrite() {
         if(i_config != null && i_config.writeAs() != null){
             return i_config.writeAs();

@@ -31,10 +31,6 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         return true;
     }
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, Object obj){
-        header.addBaseLength(linkLength());
-    }
-    
     boolean canAddToQuery(String fieldName){
         return fieldName.equals(getName()); 
     }

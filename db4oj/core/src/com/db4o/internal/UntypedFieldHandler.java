@@ -54,20 +54,6 @@ public final class UntypedFieldHandler extends ClassMetadata {
 		return false;
 	}
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
-        if(topLevel){
-            header.addBaseLength(Const4.INT_LENGTH); 
-        }else{
-            header.addPayLoadLength(Const4.INT_LENGTH);  // single relink
-        }
-        ClassMetadata yc = forObject(trans, obj, true);
-        if( yc == null){
-            return;
-        }
-        header.addPayLoadLength(Const4.INT_LENGTH); //  type information int
-        yc.calculateLengths(trans, header, false, obj, false);
-    }
-    
     public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
         if(mf._untyped.useNormalClassRead()){
             return super.read(mf, a_bytes, redirect);

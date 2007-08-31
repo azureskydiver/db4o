@@ -162,10 +162,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
 		return false;
 	}
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
-        i_handler.calculateLengths(trans, header, topLevel, obj, withIndirection);
-    }
-    
     public Comparable4 prepareComparison(Object a_constraint) {
         i_handler.prepareComparison(a_constraint);
         return i_handler;
