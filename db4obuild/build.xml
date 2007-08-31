@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="db4obuild" default="build_before_checkin" basedir=".">
+<project name="db4obuild" default="build-before-checkin" basedir=".">
 <!--
 	Depends on a custom local file 'machine.properties' with
 	the following entries:
