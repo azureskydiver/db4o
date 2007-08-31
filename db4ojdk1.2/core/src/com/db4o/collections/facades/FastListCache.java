@@ -3,6 +3,9 @@ package com.db4o.collections.facades;
 
 import java.util.*;
 
+/**
+ * @exclude 
+ */
 public class FastListCache {
 
 	private transient List _list;
