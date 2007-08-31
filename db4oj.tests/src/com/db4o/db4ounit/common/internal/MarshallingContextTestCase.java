@@ -43,7 +43,7 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
         }
     }
     
-    public void _testStringItem() {
+    public void testStringItem() {
         StringItem writtenItem = new StringItem("one");
         StringItem readItem = (StringItem) writeRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
