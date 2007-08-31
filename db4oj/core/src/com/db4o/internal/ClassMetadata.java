@@ -1873,21 +1873,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         a_writer.writeInt(((Integer)a_object).intValue());
     }
     
-    public Object write(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
-        if (a_object == null) {
-            a_bytes.writeInt(0);
-            return new Integer(0);
-        }
-
-		int id = a_bytes.getStream().setInternal(
-                    a_bytes.getTransaction(),
-                    a_object,
-                    a_bytes.getUpdateDepth(), true);
-        
-        a_bytes.writeInt(id);
-		return new Integer(id);
-    }
-
     public final void writeThis(Transaction trans, Buffer writer) {
         MarshallerFamily.current()._class.write(trans, this, writer);
     }

@@ -148,10 +148,6 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
          throw new IllegalArgumentException();
     }
     
-    public Object write(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkeOffset) {
-        return mf._string.writeNew(a_object, topLevel, a_bytes, withIndirection);
-    }
-
     public final void writeShort(String a_string, Buffer a_bytes) {
         if (a_string == null) {
             a_bytes.writeInt(0);

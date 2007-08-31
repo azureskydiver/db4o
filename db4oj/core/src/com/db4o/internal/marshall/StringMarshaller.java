@@ -15,8 +15,6 @@ public abstract class StringMarshaller {
         return Const4.INT_LENGTH + Const4.ID_LENGTH;
     }
     
-    public abstract Object writeNew(Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean redirect);
-    
     public final String read(ObjectContainerBase stream, Buffer reader) throws CorruptionException {
         if (reader == null) {
             return null;

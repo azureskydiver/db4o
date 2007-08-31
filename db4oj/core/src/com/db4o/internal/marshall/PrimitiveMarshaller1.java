@@ -13,14 +13,6 @@ public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
         return false;
     }
     
-    public int writeNew(Transaction trans, PrimitiveFieldHandler yapClassPrimitive, Object obj, boolean topLevel, StatefulBuffer writer, boolean withIndirection, boolean restoreLinkOffset){
-        if(obj != null){
-            TypeHandler4 handler = yapClassPrimitive.i_handler;
-            handler.write(_family, obj, topLevel, writer, withIndirection, restoreLinkOffset);
-        }
-        return 0;
-    }
-    
     public Date readDate(Buffer bytes){
 		return new Date(bytes.readLong());
 	}

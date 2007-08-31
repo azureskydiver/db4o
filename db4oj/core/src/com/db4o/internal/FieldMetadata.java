@@ -671,33 +671,6 @@ public class FieldMetadata implements StoredField {
 		return handlerForClass;
 	}
 
-    /** 
-     * @param ref
-     * @param isNew
-     */
-    public void marshall(
-            ObjectReference ref, 
-            Object obj, 
-            MarshallerFamily mf,
-            StatefulBuffer writer,
-            Config4Class config, 
-            boolean isNew) {
-        
-        // alive needs to be checked by all callers: Done
-        
-        Object indexEntry = null;
-        
-        if (obj != null && cascadeOnUpdate(config)) {
-            int updateDepth = writer.getUpdateDepth();
-            writer.setUpdateDepth(adjustUpdateDepth(obj, updateDepth));
-            indexEntry = i_handler.write(mf, obj, true, writer, true, true);
-            writer.setUpdateDepth(updateDepth);
-        } else {
-            indexEntry = i_handler.write(mf, obj, true, writer, true, true);
-        }
-        addIndexEntry(writer, indexEntry);
-    }
-
     private int adjustUpdateDepth(Object obj, int updateDepth) {
         int minimumUpdateDepth = 1;
         if (_clazz.isCollection(obj)) {

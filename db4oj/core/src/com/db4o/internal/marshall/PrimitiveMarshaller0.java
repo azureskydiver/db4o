@@ -6,49 +6,12 @@ import java.util.Date;
 
 import com.db4o.Deploy;
 import com.db4o.internal.*;
-import com.db4o.internal.slots.*;
 
 
 public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
     
     public boolean useNormalClassRead(){
         return true;
-    }
-    
-    public int writeNew(Transaction trans, PrimitiveFieldHandler yapClassPrimitive, Object obj, boolean topLevel, StatefulBuffer parentWriter, boolean withIndirection, boolean restoreLinkOffset){
-        
-        int id = 0;
-        
-        if(obj != null){
-            
-            TypeHandler4 handler = yapClassPrimitive.i_handler;
-        
-            ObjectContainerBase stream = trans.container();
-            id = stream.newUserObject();
-            Slot slot = new Slot(-1, objectLength(handler));
-            if(! stream.isClient()){
-                slot = ((LocalTransaction)trans).file().getSlot(slot.length()); 
-            }
-            Pointer4 pointer = new Pointer4(id, slot);
-            trans.setPointer(pointer);
-            
-            StatefulBuffer writer = new StatefulBuffer(trans, pointer);
-            if (Deploy.debug) {
-                writer.writeBegin(Const4.YAPOBJECT);
-            }
-            writer.writeInt(yapClassPrimitive.getID());
-            
-            handler.write(_family, obj, false, writer, true, false);
-            
-            writer.writeEnd();
-            stream.writeNew(yapClassPrimitive, writer);
-        }
-        
-        if(parentWriter != null){
-            parentWriter.writeInt(id);
-        }
-        
-        return id;
     }
     
     public Date readDate(Buffer bytes) {

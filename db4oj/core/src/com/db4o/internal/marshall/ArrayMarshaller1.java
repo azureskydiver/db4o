@@ -56,20 +56,6 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         return arrayHandler.read1Query(trans,_family, reader);
     }
     
-    public Object writeNew(ArrayHandler arrayHandler, Object obj, boolean restoreLinkOffset, StatefulBuffer writer) {
-        if (obj == null) {
-            writer.writeEmbeddedNull();
-            return null;
-        }
-        int length = arrayHandler.objectLength(obj);
-        int linkOffset = writer.reserveAndPointToPayLoadSlot(length);
-        arrayHandler.writeNew1(obj, writer);
-        if(restoreLinkOffset){
-            writer._offset = linkOffset;
-        }
-        return obj;
-    }
-
     protected Buffer prepareIDReader(Transaction trans,Buffer reader) {
         reader._offset = reader.readInt();
         return reader;

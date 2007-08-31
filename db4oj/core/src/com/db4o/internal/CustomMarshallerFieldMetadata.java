@@ -49,12 +49,6 @@ final class CustomMarshallerFieldMetadata extends FieldMetadata {
 		incrementOffset(reader);
 	}
 	
-	public void marshall(ObjectReference yo, Object obj, MarshallerFamily mf,
-		StatefulBuffer writer, Config4Class config, boolean isNew) {
-		_marshaller.writeFields(obj, writer._buffer, writer._offset);
-		incrementOffset(writer);
-	}
-	
 	public int linkLength() {
 		return _marshaller.marshalledFieldLength();
 	}

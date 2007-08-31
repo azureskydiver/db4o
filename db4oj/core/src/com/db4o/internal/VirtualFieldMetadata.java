@@ -81,17 +81,6 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     	// do nothing
     }
     
-    public final void marshall(
-        ObjectReference ref, 
-        Object a_object,
-        MarshallerFamily mf, 
-        StatefulBuffer buffer,
-        Config4Class config, 
-        boolean isNew) {
-        
-            marshall(buffer.getTransaction(), ref, buffer, isNew);
-    }
-    
     public void marshall(MarshallingContext context, Object obj){
         context.doNotIndirectWrites();
         marshall(context.transaction(), context.reference(), context, context.isNew());
