@@ -42,10 +42,6 @@ public final class UntypedFieldHandler extends ClassMetadata {
 	    return false;
 	}
     
-    public boolean hasFixedLength(){
-        return false;
-    }
-
 	public boolean holdsAnyClass() {
 		return true;
 	}
