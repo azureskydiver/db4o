@@ -14,35 +14,6 @@ public class StringMarshaller1 extends StringMarshaller{
         return true;
     }
     
-    public Object writeNew(Object obj, boolean topLevel, StatefulBuffer writer, boolean redirect) {
-        
-        ObjectContainerBase stream = writer.getStream();
-        String str = (String) obj;
-        
-        if(! redirect){
-            if(str != null){
-                writeShort(stream,str , writer);
-            }
-            // TODO:  Really we should return a YapWriter for indexing but
-            //        for now it's not needed since this is used for untyped
-            //        references only which are not indexed.
-            return str;  
-        }
-        
-        if (str == null) {
-            writer.writeEmbeddedNull();
-            return null;
-        }
-        
-        int length = stream.stringIO().length(str);
-        
-        StatefulBuffer bytes = new StatefulBuffer(writer.getTransaction(), length);
-        writeShort(stream, str, bytes);
-        
-        writer.writePayload(bytes, topLevel);
-        return bytes;
-    }
-    
     public Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException{
         int payLoadOffSet = parentSlot.readInt();
         int length = parentSlot.readInt();

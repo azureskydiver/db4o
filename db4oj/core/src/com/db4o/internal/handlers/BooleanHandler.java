@@ -4,7 +4,6 @@ package com.db4o.internal.handlers;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteContext;
 
@@ -63,14 +62,6 @@ public final class BooleanHandler extends PrimitiveHandler {
 		}
 		
 		return null;
-	}
-	
-	public Object write(MarshallerFamily mf, Object obj,
-			boolean topLevel, StatefulBuffer buffer, boolean withIndirection,
-			boolean restoreLinkeOffset) {
-		
-		write(obj, buffer);
-		return obj;
 	}
 	
 	public void write(Object obj, Buffer buffer){

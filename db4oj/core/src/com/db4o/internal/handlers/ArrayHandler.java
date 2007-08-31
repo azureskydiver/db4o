@@ -349,10 +349,6 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         return -classID;
     }
 
-	final void writeClass(Object obj, StatefulBuffer buffer){
-        buffer.writeInt(classID(obj));
-    }
-	
 	private ReflectClass componentType(Object obj){
 	    return arrayReflector().getComponentType(reflector().forObject(obj));
 	}
@@ -361,36 +357,6 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 	    return _stream.reflector();
 	}
 	
-    
-    public final Object write(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkOffset) {
-        return mf._array.writeNew(this, a_object, restoreLinkOffset, a_bytes);
-    }
-
-    public void writeNew1(Object obj, StatefulBuffer writer) {
-        
-        if (Deploy.debug) {
-            writer.writeBegin(identifier());
-        }
-        
-        writeClass(obj, writer);
-		
-		int elements = arrayReflector().getLength(obj);
-        writer.writeInt(elements);
-        
-        if(handleAsByteArray(obj)){
-            // byte[] performance optimisation
-            writer.writeBytes((byte[])obj);
-        }else{
-            for (int i = 0; i < elements; i++) {
-                _handler.write(MarshallerFamily.current(), arrayReflector().get(obj, i), false, writer, true, true);
-            }
-        }
-        
-        if (Deploy.debug) {
-            writer.writeEnd();
-        }
-        
-    }
 
     // Comparison_______________________
 

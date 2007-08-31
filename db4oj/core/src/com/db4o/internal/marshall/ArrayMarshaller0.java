@@ -32,22 +32,6 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         trans.slotFreeOnCommit(slot.address(), slot);
     }
     
-    public Object writeNew(ArrayHandler arrayHandler, Object a_object, boolean topLevel, StatefulBuffer a_bytes) {
-        if (a_object == null) {
-            a_bytes.writeEmbeddedNull();
-            return null;
-        }
-        int length = arrayHandler.objectLength(a_object);
-        StatefulBuffer bytes = new StatefulBuffer(a_bytes.getTransaction(), length);
-        bytes.setUpdateDepth(a_bytes.getUpdateDepth());
-        arrayHandler.writeNew1(a_object, bytes);
-        bytes.setID(a_bytes._offset);
-        a_bytes.getStream().writeEmbedded(a_bytes, bytes);
-        a_bytes.incrementOffset(Const4.ID_LENGTH);
-        a_bytes.writeInt(length);
-        return a_object;
-    }
-    
     public Object read(ArrayHandler arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
         StatefulBuffer bytes = a_bytes.readEmbeddedObject();
         return arrayHandler.read1(_family, bytes);

@@ -160,32 +160,6 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         return dim;
     }
 
-    public final void writeNew1(Object obj, StatefulBuffer writer) {
-        
-        if (Deploy.debug) {
-            writer.writeBegin(identifier());
-        }
-        
-        int[] dim = arrayReflector().dimensions(obj);
-        writeClass(obj, writer);
-        writer.writeInt(dim.length);
-        for (int i = 0; i < dim.length; i++) {
-            writer.writeInt(dim[i]);
-        }
-        Object[] objects = allElements(obj);
-        
-        MarshallerFamily mf = MarshallerFamily.current();
-        
-        for (int i = 0; i < objects.length; i++) {
-            _handler.write(mf, element(objects, i), false, writer, true, true);
-        }
-        
-        if (Deploy.debug) {
-            writer.writeEnd();
-        }
-        
-    }
-
     private Object element(Object a_array, int a_position) {
         try {
             return arrayReflector().get(a_array, a_position);

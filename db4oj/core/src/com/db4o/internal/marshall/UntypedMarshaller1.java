@@ -121,40 +121,6 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
     }
 
     
-    public Object writeNew(Object obj, boolean restoreLinkOffset, StatefulBuffer writer) {
-        if (obj == null) {
-            writer.writeInt(0);
-            return new Integer(0);
-        }
-        
-        ClassMetadata yc = ClassMetadata.forObject(writer.getTransaction(), obj, false);
-        
-        if(yc == null){
-            writer.writeInt(0);
-            return new Integer(0);
-        }
-        
-        
-        writer.writeInt(writer._payloadOffset);
-        int linkOffset = writer._offset;
-        writer._offset = writer._payloadOffset;
-        
-        
-        writer.writeInt(yc.getID());
-        
-        yc.write(_family, obj, false, writer, false, false);
-        
-        if(writer._payloadOffset < writer._offset){
-            writer._payloadOffset = writer._offset;
-        }
-        
-        if(restoreLinkOffset){
-            writer._offset = linkOffset;
-        }
-        
-        return obj;
-    }
-
 	public void defrag(BufferPair readers) {
         int payLoadOffSet = readers.readInt();
         if(payLoadOffSet == 0){

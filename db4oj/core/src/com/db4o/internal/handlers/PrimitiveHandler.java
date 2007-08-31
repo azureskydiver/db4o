@@ -114,14 +114,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
         write(a_object, a_writer);
     }
     
-    public Object write(MarshallerFamily mf, Object a_object, boolean topLevel, StatefulBuffer a_bytes, boolean withIndirection, boolean restoreLinkeOffset) {
-        if (a_object == null) {
-            a_object = primitiveNull();
-        }
-        write(a_object, a_bytes);
-		return a_object;
-    }
-
     public Comparable4 prepareComparison(Object obj) {
         if (obj == null) {
             i_compareToIsNull = true;

@@ -79,21 +79,6 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
         return null;
     }
 
-    public Object writeNew(Object a_object, boolean restoreLinkOffset, StatefulBuffer a_bytes) {
-        if (a_object == null) {
-            a_bytes.writeInt(0);
-            return new Integer(0);
-        }
-
-        int id = a_bytes.getStream().setInternal(
-                    a_bytes.getTransaction(),
-                    a_object,
-                    a_bytes.getUpdateDepth(), true);
-        
-        a_bytes.writeInt(id);
-        return new Integer(id);
-    }
-
 	public void defrag(BufferPair readers) {
 		// TODO
 	}

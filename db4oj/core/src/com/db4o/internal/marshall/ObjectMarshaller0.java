@@ -3,6 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
@@ -83,51 +84,11 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	traverseFields(yc, writer, attributes, command);
     }
     
-    private int linkLength(ClassMetadata yc, ObjectReference yo) {
-        int length = Const4.INT_LENGTH;
-        if (yc.i_fields != null) {
-            for (int i = 0; i < yc.i_fields.length; i++) {
-                length += linkLength(yc.i_fields[i], yo);
-            }
-        }
-        if (yc.i_ancestor != null) {
-            length += linkLength(yc.i_ancestor, yo);
-        }
-        return length;
-    }
-    
     /** @param ref */
     protected int linkLength(FieldMetadata yf, ObjectReference ref){
         return yf.linkLength();
     }
     
-    private void marshall(ClassMetadata yapClass, ObjectReference a_yapObject, Object a_object, StatefulBuffer writer, boolean a_new) {
-        marshallDeclaredFields(yapClass, a_yapObject, a_object, writer, a_new);
-        if (Deploy.debug) {
-            writer.writeEnd();
-            writer.debugCheckBytes();
-        }
-    }
-    
-    private void marshallDeclaredFields(ClassMetadata yapClass, final ObjectReference yapObject, final Object object, final StatefulBuffer writer, final boolean isNew) {
-        final Config4Class config = yapClass.configOrAncestorConfig();
-        final Transaction trans=writer.getTransaction();
-    	TraverseFieldCommand command=new TraverseFieldCommand() {
-    		public int fieldCount(ClassMetadata yc, Buffer reader) {
-    	        writer.writeInt(yc.i_fields.length);
-    	        return yc.i_fields.length;
-    		}
-    		
-			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-	            Object obj = field.getOrCreate(trans, object);
-	            if (obj instanceof Db4oTypeImpl) {
-	                obj = ((Db4oTypeImpl)obj).storedTo(trans);
-	            }
-	            field.marshall(yapObject, obj, _family, writer, config, isNew);
-			}
-    	};
-    	traverseFields(yapClass, writer, readHeaderAttributes(writer), command);
-    }
     
     /**
      * @param yf
@@ -138,24 +99,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     }
 
     public StatefulBuffer marshallNew(Transaction a_trans, ObjectReference yo, int a_updateDepth){
-        
-        StatefulBuffer writer = createWriterForNew(a_trans, yo, a_updateDepth, objectLength(yo));
-        
-        ClassMetadata yc = yo.classMetadata();
-        Object obj = yo.getObject();
-        
-        if(yc.isPrimitive()){
-            ((PrimitiveFieldHandler)yc).i_handler.write(MarshallerFamily.current(), obj, false, writer, true, false);
-            if (Deploy.debug) {
-                writer.writeEnd();
-                writer.debugCheckBytes();
-            }
-        }else{
-            writeObjectClassID(writer,yc.getID());
-            writer.setUpdateDepth(yc.adjustUpdateDepth(a_trans, writer.getUpdateDepth()));
-            marshall(yc, yo, obj, writer, true);
-        }
-        return writer;
+        throw new NotSupportedException();
     }
 
     public void marshallUpdate(
@@ -165,24 +109,8 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         Object obj
         ) {
         
-        ClassMetadata classMetadata = yapObject.classMetadata();
+        throw new NotSupportedException();
         
-        StatefulBuffer writer = createWriterForUpdate(
-            trans,
-            classMetadata.adjustUpdateDepth(trans, updateDepth), 
-            yapObject.getID(), 
-            0, 
-            objectLength(yapObject)
-        );
-        
-        writer.writeInt(classMetadata.getID());
-        marshall(classMetadata, yapObject, obj, writer, false);
-        
-        marshallUpdateWrite(trans, yapObject, obj, writer);
-    }
-
-    private int objectLength(ObjectReference yo) {
-        return headerLength() + linkLength(yo.classMetadata(), yo);
     }
 
     public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {
