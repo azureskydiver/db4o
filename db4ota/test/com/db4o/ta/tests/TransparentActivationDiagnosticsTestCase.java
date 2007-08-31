@@ -43,15 +43,15 @@ public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCa
 		}
 	}
 	
-	private DiagnosticsRegistered _registered = new DiagnosticsRegistered();
-
 	private static class DiagnosticsRegistered {
 		public int _registeredCount = 0;
 	}
 	
-	protected void configure(Configuration config) {
-		config.add(new TransparentActivationSupport());
-		config.diagnostic().addListener(new DiagnosticListener() {
+	private final DiagnosticsRegistered _registered = new DiagnosticsRegistered();
+	private final DiagnosticListener _checker;
+	
+	public TransparentActivationDiagnosticsTestCase() {
+		 _checker = new DiagnosticListener() {
 			public void onDiagnostic(Diagnostic diagnostic) {
 				if (!(diagnostic instanceof NotTransparentActivationEnabled)) {
 					return;
@@ -60,9 +60,19 @@ public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCa
 				Assert.areEqual(CrossPlatformServices.fullyQualifiedName(NotTAAwareData.class), ((ClassMetadata)taDiagnostic.reason()).getName());
 				_registered._registeredCount++;
 			}
-		});
+		};
 	}
-
+	
+	protected void configure(Configuration config) {
+		config.add(new TransparentActivationSupport());
+		config.diagnostic().addListener(_checker);
+	}
+	
+	protected void db4oTearDownBeforeClean() throws Exception {
+		db().ext().configure().diagnostic().removeAllListeners();
+		super.db4oTearDownBeforeClean();
+	}
+	
 	public void testTADiagnostics() {
 		store(new SomeTAAwareData(1));
 		Assert.areEqual(0, _registered._registeredCount);
