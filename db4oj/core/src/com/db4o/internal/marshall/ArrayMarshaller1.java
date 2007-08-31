@@ -10,27 +10,6 @@ import com.db4o.internal.query.processor.*;
 
 class ArrayMarshaller1 extends ArrayMarshaller{
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, ArrayHandler arrayHandler, Object obj, boolean topLevel){
-        
-        TypeHandler4 typeHandler = arrayHandler._handler;
-        
-        if(topLevel){
-            header.addBaseLength(arrayHandler.linkLength());
-        } else{
-            header.addPayLoadLength(arrayHandler.linkLength());
-        }
-
-        if(typeHandler.hasFixedLength()){
-            header.addPayLoadLength(arrayHandler.objectLength(obj));
-        }else{
-            header.addPayLoadLength(arrayHandler.ownLength(obj));
-            Object[] all = arrayHandler.allElements(obj);
-            for (int i = 0; i < all.length; i++) {
-                typeHandler.calculateLengths(trans, header, false, all[i], true);
-            }
-        }
-    }
-    
     public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws Db4oIOException {
         
         int address = reader.readInt();

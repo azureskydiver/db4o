@@ -99,7 +99,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     }
     
     public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {
-        return new ObjectHeaderAttributes1(reader);
+        return new ObjectHeaderAttributes(reader);
     }
     
     public Object readIndexEntry(ClassMetadata clazz, ObjectHeaderAttributes attributes, FieldMetadata field, StatefulBuffer reader) throws FieldIndexException {

@@ -51,14 +51,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
         return indexEntry;
     }
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection) {
-        if(topLevel){
-            header.addBaseLength(linkLength());
-        }else{
-            header.addPayLoadLength(linkLength());
-        }
-    }
-    
     protected abstract Class primitiveJavaClass();
     
     public abstract Object primitiveNull();

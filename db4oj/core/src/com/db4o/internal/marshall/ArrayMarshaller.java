@@ -23,8 +23,6 @@ public abstract class ArrayMarshaller {
 
     public abstract void defragIDs(ArrayHandler arrayHandler,BufferPair readers);
     
-    public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, ArrayHandler handler, Object obj, boolean topLevel);
-    
     public abstract Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, Db4oIOException;
     
     public abstract void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) throws Db4oIOException;

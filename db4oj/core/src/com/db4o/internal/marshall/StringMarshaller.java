@@ -11,8 +11,6 @@ public abstract class StringMarshaller {
     
     public abstract boolean inlinedStrings();
     
-    public abstract void calculateLengths(Transaction trans, ObjectHeaderAttributes header, boolean topLevel, Object obj, boolean withIndirection);
-    
     protected final int linkLength(){
         return Const4.INT_LENGTH + Const4.ID_LENGTH;
     }

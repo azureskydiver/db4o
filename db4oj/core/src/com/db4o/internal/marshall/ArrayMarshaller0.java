@@ -32,10 +32,6 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         trans.slotFreeOnCommit(slot.address(), slot);
     }
     
-    public void calculateLengths(Transaction trans, ObjectHeaderAttributes header, ArrayHandler handler, Object obj, boolean topLevel){
-        // do nothing
-    }
-    
     public Object writeNew(ArrayHandler arrayHandler, Object a_object, boolean topLevel, StatefulBuffer a_bytes) {
         if (a_object == null) {
             a_bytes.writeEmbeddedNull();

@@ -2,19 +2,27 @@
 
 package com.db4o.internal.marshall;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 
 /**
  * @exclude
  */
-public abstract class ObjectHeaderAttributes implements FieldListInfo {
+public class ObjectHeaderAttributes implements FieldListInfo {
+
+    private final int _fieldCount;
     
-    public abstract void addBaseLength(int length);
+    private final BitMap4 _nullBitMap;
     
-    public abstract void addPayLoadLength(int length);
+    public ObjectHeaderAttributes(Buffer reader){
+        _fieldCount = reader.readInt();
+        _nullBitMap = reader.readBitMap(_fieldCount);
+    }
     
-    public abstract void prepareIndexedPayLoadEntry(Transaction trans);
-    
+    public boolean isNull(int fieldIndex){
+        return _nullBitMap.isTrue(fieldIndex);
+    }
+
 
 }
