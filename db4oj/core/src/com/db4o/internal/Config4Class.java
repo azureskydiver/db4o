@@ -25,8 +25,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	
 	private final static KeySpec CLASS_INDEXED = new KeySpec(true);
 	
-	private final static KeySpec CUSTOM_HANDLER=new KeySpec(null);
-
 	private final static KeySpec EXCEPTIONAL_FIELDS=new KeySpec(null);
 
 	private final static KeySpec GENERATE_UUIDS=new KeySpec(false);
@@ -114,10 +112,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         return (Config4Field) exceptionalFields.get(fieldName);
     }
     
-    public CustomClassHandler customHandler(){
-        return (CustomClassHandler) _config.get(CUSTOM_HANDLER);
-    }
-
     public Object deepClone(Object param){
         return new Config4Class((Config4Impl)param,_config);
     }
@@ -177,10 +171,6 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 		return _config.getAsBoolean(CLASS_INDEXED);
 	}
 	
-    public void installCustomHandler(CustomClassHandler customClassHandler) {
-        _config.put(CUSTOM_HANDLER, customClassHandler);
-    }
-
     Object instantiate(ObjectContainerBase a_stream, Object a_toTranslate) {
         return ((ObjectConstructor) _config.get(TRANSLATOR)).onInstantiate((InternalObjectContainer)a_stream, a_toTranslate);
     }

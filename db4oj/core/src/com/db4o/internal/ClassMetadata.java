@@ -26,8 +26,6 @@ import com.db4o.reflect.generic.*;
  */
 public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass {
     
-    private ClassHandler _classHandler;
-
     public ClassMetadata i_ancestor;
 
     private Config4Class i_config;
@@ -98,7 +96,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         _reflector = reflector;
         _index = createIndexStrategy();
         _classIndexed = true;
-        _classHandler = new ClassHandler(this);
     }
     
     void activateFields(Transaction trans, Object obj, int depth) {
@@ -443,7 +440,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public boolean customizedNewInstance(){
-        return _classHandler.customizedNewInstance();
+        return configInstantiates();
     }
     
     public Config4Class config() {
@@ -1086,8 +1083,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 	}
 	
+    private boolean configInstantiates(){
+        return config() != null && config().instantiates();
+    }
+	
 	Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
-	    return _classHandler.instantiateObject(buffer, mf);
+        if (configInstantiates()) {
+            return instantiateFromConfig(buffer.getStream(), buffer, mf);
+        }
+        return  instantiateFromReflector(buffer.getStream());
 	}
 
 	private void objectOnInstantiate(Transaction transaction, Object instance) {
@@ -1580,13 +1584,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         // for the first time. In that case we never change the setting
         if(i_config == null){
             i_config = config;
-            CustomClassHandler customHandler = config.customHandler();
-            if(customHandler != null){
-                _classHandler = new CustomizedClassHandler(this, customHandler);
-                if(_classHandler.ignoreAncestor()){
-                    i_ancestor = null;
-                }
-            }
         }
     }
 
@@ -1976,14 +1973,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			throw new IllegalStateException();
 		}
 		i_ancestor = ancestor;
-        if(_classHandler.ignoreAncestor()){
-            i_ancestor = null;
-        }
 	}
-
-    public ReflectClass classSubstitute() {
-        return _classHandler.classSubstitute();
-    }
 
     public Object wrapWithTransactionContext(Transaction transaction, Object value) {
         if(value instanceof Integer){

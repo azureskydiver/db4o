@@ -1601,7 +1601,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             ((Db4oTypeImpl) obj).storedTo(trans);
         }
         
-        ObjectAnalyzer analyzer = new ObjectAnalyzer(this, trans, obj);
+        ObjectAnalyzer analyzer = new ObjectAnalyzer(this, obj);
+        analyzer.analyze(trans);
         if(analyzer.notStorable()){
             return 0;
         }

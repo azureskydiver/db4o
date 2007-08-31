@@ -20,9 +20,12 @@ class ObjectAnalyzer {
     
     private boolean _notStorable;
     
-    ObjectAnalyzer(PartialObjectContainer container, Transaction trans, Object obj){
+    ObjectAnalyzer(PartialObjectContainer container, Object obj){
         _container = container;
         _obj = obj;
+    }
+    
+    void analyze(Transaction trans){
         _ref = trans.referenceForObject(_obj);
         if (_ref == null) {
             ReflectClass claxx = _container.reflector().forObject(_obj);
@@ -32,12 +35,6 @@ class ObjectAnalyzer {
             }
             if(!detectClassMetadata(trans, claxx)){
                 return;
-            }
-            ReflectClass substituteClass = _classMetadata.classSubstitute();
-            if(substituteClass != null){
-                if(!detectClassMetadata(trans, substituteClass)){
-                    return;
-                }
             }
         } else {
             _classMetadata = _ref.classMetadata();

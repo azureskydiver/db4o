@@ -315,12 +315,6 @@ public interface ObjectClass {
 	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
      */
     public void updateDepth (int depth);
-
-    /**
-     * installs a CustomClassHandler for this class.
-     * @param customClassHandler the CustomClassHandler
-     */
-    public void installCustomHandler(CustomClassHandler customClassHandler);
     
 }
 
