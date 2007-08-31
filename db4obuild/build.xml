@@ -37,10 +37,6 @@
 -->
 	<import file="common.xml" />
 	
-	<target name="build_before_checkin" depends="clean, compilecorejava, compiledb4ounitjava, compiletestsjava" description="This target has to pass before checking in.">
-		<ant antfile="build-dotnet.xml" target="run-tests" />
-	</target>
-	
 	<target name="buildjava-old-school" depends="compile.java.all, doctor, zipjava">
 	</target>
 	
