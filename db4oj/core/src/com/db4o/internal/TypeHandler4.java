@@ -22,8 +22,6 @@ public interface TypeHandler4 extends Comparable4 {
 	
 	int getID();
 	
-    boolean hasFixedLength();
-    
     int linkLength();
    
 	Object read(MarshallerFamily mf, StatefulBuffer buffer, boolean redirect) throws CorruptionException, Db4oIOException;

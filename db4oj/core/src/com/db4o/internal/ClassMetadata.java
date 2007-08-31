@@ -929,10 +929,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     }
     
-    public boolean hasFixedLength(){
-        return true;
-    }
-
     /** @param container */
     public boolean hasField(ObjectContainerBase container, String fieldName) {
     	if(classReflector().isCollection()){

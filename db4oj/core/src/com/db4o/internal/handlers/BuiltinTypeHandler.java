@@ -20,10 +20,6 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
         _stream = stream;
     }
     
-    public final boolean hasFixedLength(){
-        return false;
-    }
-    
     public final int linkLength(){
         
         // TODO:  Now that array and string are embedded into their parent

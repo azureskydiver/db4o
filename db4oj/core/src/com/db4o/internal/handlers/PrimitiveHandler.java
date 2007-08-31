@@ -43,10 +43,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler {
         a_bytes.incrementOffset(linkLength());
     }
     
-    public boolean hasFixedLength(){
-        return true;
-    }
-    
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
         return indexEntry;
     }
