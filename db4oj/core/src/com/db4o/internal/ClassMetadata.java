@@ -100,16 +100,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     void activateFields(Transaction trans, Object obj, int depth) {
         if(objectCanActivate(trans, obj)){
-            activateFields1(trans, obj, depth);
+            activateFieldsLoop(trans, obj, depth);
         }
     }
 
-    void activateFields1(Transaction a_trans, Object a_object, int a_depth) {
+    private final void activateFieldsLoop(Transaction trans, Object obj, int depth) {
         for (int i = 0; i < i_fields.length; i++) {
-            i_fields[i].cascadeActivation(a_trans, a_object, a_depth, true);
+            i_fields[i].cascadeActivation(trans, obj, depth, true);
         }
         if (i_ancestor != null) {
-            i_ancestor.activateFields1(a_trans, a_object, a_depth);
+            i_ancestor.activateFieldsLoop(trans, obj, depth);
         }
     }
 
@@ -1066,9 +1066,86 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
         return obj;
     }
+	
+	   /** @param obj */
+    Object instantiateTransient(ObjectReference ref, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer) {
 
-	private boolean activatingActiveObject(final ObjectContainerBase stream, ObjectReference ref) {
-		return !stream._refreshInsteadOfActivate && ref.isActive();
+        // overridden in YapClassPrimitive
+        // never called for primitive YapAny
+
+        Object instantiated = instantiateObject(buffer, mf);
+        if (instantiated == null) {
+            return null;
+        }
+        buffer.getStream().peeked(ref.getID(), instantiated);
+        instantiateFields(ref, instantiated, mf, attributes, buffer);
+        return instantiated;
+    }
+    
+    
+    public Object instantiate(UnmarshallingContext context) {
+        
+        // overridden in YapClassPrimitive
+        // never called for primitive YapAny
+        
+        context.adjustInstantiationDepth();
+        
+        Object obj = context.persistentObject();
+        
+        final boolean instantiating = (obj == null);
+        if (instantiating) {
+            obj = instantiateObject(context);
+            if (obj == null) {
+                return null;
+            }
+            
+            shareTransaction(obj, context.transaction());
+            shareObjectReference(obj, context.reference());
+            
+            context.setObjectWeak(obj);
+            
+            context.transaction().referenceSystem().addExistingReferenceToObjectTree(context.reference());
+            
+            objectOnInstantiate(context.transaction(), obj);
+        }
+        
+        context.addToIDTree();
+        
+        if (instantiating) {
+            if (context.activationDepth() == 0) {
+                context.reference().setStateDeactivated();
+            } else {
+                activate(context);
+            }
+        } else {
+            if (activatingActiveObject(context.container(), context.reference())) {
+                if (context.activationDepth() > 1) {
+                    activateFields(context.transaction(), obj, context.activationDepth() - 1);
+                }
+            } else {
+                activate(context);
+            }
+        }
+        return obj;
+    }
+    
+    public Object instantiateTransient(UnmarshallingContext context) {
+
+        // overridden in YapClassPrimitive
+        // never called for primitive YapAny
+
+        Object obj = instantiateObject(context);
+        if (obj == null) {
+            return null;
+        }
+        context.container().peeked(context.objectID(), obj);
+        instantiateFields(context);
+        return obj;
+        
+    }
+
+	private boolean activatingActiveObject(final ObjectContainerBase container, ObjectReference ref) {
+		return !container._refreshInsteadOfActivate && ref.isActive();
 	}
 
 	private void activate(StatefulBuffer buffer, MarshallerFamily mf, ObjectHeaderAttributes attributes, ObjectReference ref, Object obj) {
@@ -1083,15 +1160,33 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 	}
 	
+   private void activate(UnmarshallingContext context) {
+        if(! objectCanActivate(context.transaction(), context.persistentObject())){
+            context.reference().setStateDeactivated();
+            return;
+        }
+        context.reference().setStateClean();
+        if (context.activationDepth() > 0 || cascadeOnActivate()) {
+            instantiateFields(context);
+        }
+        objectOnActivate(context.transaction(), context.persistentObject());
+    }
+	
     private boolean configInstantiates(){
         return config() != null && config().instantiates();
     }
 	
-	Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
+	private Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
         if (configInstantiates()) {
             return instantiateFromConfig(buffer.getStream(), buffer, mf);
         }
         return  instantiateFromReflector(buffer.getStream());
+	}
+	
+	private Object instantiateObject(UnmarshallingContext context) {
+	    Object obj = configInstantiates() ? instantiateFromConfig(context) : instantiateFromReflector(context.container());
+	    context.persistentObject(obj);
+        return obj;
 	}
 
 	private void objectOnInstantiate(Transaction transaction, Object instance) {
@@ -1117,7 +1212,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 	}
 
-	Object instantiateFromConfig(ObjectContainerBase stream, StatefulBuffer a_bytes, MarshallerFamily mf) {
+	private Object instantiateFromConfig(ObjectContainerBase stream, StatefulBuffer a_bytes, MarshallerFamily mf) {
 		int bytesOffset = a_bytes._offset;
 		a_bytes.incrementOffset(Const4.INT_LENGTH);
 		// Field length is always 1
@@ -1131,6 +1226,21 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			a_bytes._offset = bytesOffset;
 		}
 	}
+	
+	private Object instantiateFromConfig(UnmarshallingContext context) {
+       
+       int offset = context.offset();
+       
+    // Field length is always 1
+       context.seek(offset + Const4.INT_LENGTH);
+       
+        try {
+            return i_config.instantiate(context.container(), i_fields[0].read(context));                      
+        } finally {
+            context.seek(offset);
+        }
+    }
+
 
 	private void adjustInstantiationDepth(StatefulBuffer a_bytes) {
 		if (i_config != null) {
@@ -1167,24 +1277,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			&& dispatchEvent(container, obj, EventDispatcher.CAN_ACTIVATE);
 	}
 
-	/** @param obj */
-    Object instantiateTransient(ObjectReference yapObject, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer) {
-
-        // overridden in YapClassPrimitive
-        // never called for primitive YapAny
-
-        Object instantiated = instantiateObject(buffer, mf);
-        if (instantiated == null) {
-        	return null;
-        }
-        buffer.getStream().peeked(yapObject.getID(), instantiated);
-        instantiateFields(yapObject, instantiated, mf, attributes, buffer);
-        return instantiated;
-    }
-
     void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         mf._object.instantiateFields(this, attributes, a_yapObject, a_onObject, a_bytes);
     }
+    
+    void instantiateFields(UnmarshallingContext context) {
+        context.marshallerFamily()._object.instantiateFields(context);
+    }
+
 
     public boolean isArray() {
         return classReflector().isCollection(); 

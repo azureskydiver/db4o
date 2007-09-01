@@ -65,12 +65,12 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return Const4.OBJECT_LENGTH + Const4.ID_LENGTH;
     }
     
-    public void instantiateFields(ClassMetadata yc, ObjectHeaderAttributes attributes, final ObjectReference yapObject, final Object onObject, final StatefulBuffer writer) {
+    public void instantiateFields(ClassMetadata yc, ObjectHeaderAttributes attributes, final ObjectReference ref, final Object onObject, final StatefulBuffer writer) {
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
 				boolean ok = false;
                 try {
-					field.instantiate(_family, yapObject, onObject, writer);
+					field.instantiate(_family, ref, onObject, writer);
 					ok = true;
 				} catch (CorruptionException e) {
 					// FIXME: CorruptionException SHOULD BE IGNORED?
@@ -155,4 +155,8 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 
 	public void skipMarshallerInfo(Buffer reader) {
 	}
+
+    public void instantiateFields(UnmarshallingContext context) {
+        instantiateFields(context.classMetadata(), context.headerAttributes(), context.reference(), context.persistentObject(), context.statefulBuffer());
+    }
 }

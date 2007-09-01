@@ -269,15 +269,17 @@ public class FieldMetadata implements StoredField {
 
     void cascadeActivation(Transaction a_trans, Object a_object, int a_depth,
         boolean a_activate) {
-        if (alive()) {
-            try {
-                Object cascadeTo = getOrCreate(a_trans, a_object);
-                if (cascadeTo != null && i_handler != null) {
-                    i_handler.cascadeActivation(a_trans, cascadeTo, a_depth,
-                        a_activate);
-                }
-            } catch (Exception e) {
+        if (! alive()) {
+            return;
+        }
+        try {
+            Object cascadeTo = getOrCreate(a_trans, a_object);
+            if (cascadeTo != null && i_handler != null) {
+                i_handler.cascadeActivation(a_trans, cascadeTo, a_depth,
+                    a_activate);
             }
+        } catch (Exception e) {
+            // FIXME: Catch all
         }
     }
 
@@ -324,12 +326,13 @@ public class FieldMetadata implements StoredField {
 
     public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree,
 			StatefulBuffer a_bytes)  throws FieldIndexException {
-		if (alive()) {
-			if (i_handler instanceof ClassMetadata) {
-				tree = (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
-			} else if (i_handler instanceof ArrayHandler) {
-				tree = ((ArrayHandler) i_handler).collectIDs(mf, tree, a_bytes);
-			}
+		if (! alive()) {
+		    return tree;
+		}
+		if (i_handler instanceof ClassMetadata) {
+			return (TreeInt) Tree.add(tree, new TreeInt(a_bytes.readInt()));
+		} else if (i_handler instanceof ArrayHandler) {
+			return ((ArrayHandler) i_handler).collectIDs(mf, tree, a_bytes);
 		}
 		return tree;
 	}
@@ -372,8 +375,7 @@ public class FieldMetadata implements StoredField {
 
     /** @param isUpdate */
     public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) throws FieldIndexException {
-        if (! alive()) {
-            incrementOffset(a_bytes);
+        if (! checkAlive(a_bytes)) {
             return;
         }
         
@@ -610,22 +612,41 @@ public class FieldMetadata implements StoredField {
 
     /** @param ref */
     public void instantiate(MarshallerFamily mf, ObjectReference ref, Object onObject, StatefulBuffer buffer) throws Db4oIOException, CorruptionException {
-        
-        if (! alive()) {
-            incrementOffset(buffer);
+        if(! checkAlive(buffer)) {
             return;
         }
-            
         Object toSet = read(mf, buffer);
         if (i_db4oType != null) {
             if (toSet != null) {
                 ((Db4oTypeImpl) toSet).setTrans(buffer.getTransaction());
             }
         }
-        
         set(onObject, toSet);
-        
     }
+    
+    public void instantiate(UnmarshallingContext context) {
+        if(! checkAlive(context.buffer())) {
+            return;
+        }
+        Object toSet = read(context);
+        informAboutTransaction(toSet, context.transaction());
+        set(context.persistentObject(), toSet);
+    }
+    
+    private boolean checkAlive(Buffer buffer){
+        boolean alive = alive(); 
+        if (! alive) {
+            incrementOffset(buffer);
+        }
+        return alive;
+    }
+    
+    private void informAboutTransaction(Object obj, Transaction trans){
+        if (i_db4oType != null  && obj != null) {
+            ((Db4oTypeImpl) obj).setTrans(trans);
+        }
+    }
+
 
     public boolean isArray() {
         return i_isArray;
@@ -725,12 +746,18 @@ public class FieldMetadata implements StoredField {
         return new QField(a_trans, i_name, this, yapClassID, i_arrayPosition);
     }
 
-    Object read(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
-        if (!alive()) {
-            incrementOffset(a_bytes);
+    Object read(MarshallerFamily mf, StatefulBuffer buffer) throws CorruptionException, Db4oIOException {
+        if (!checkAlive(buffer)) {
             return null;
         }
-        return i_handler.read(mf, a_bytes, true);
+        return i_handler.read(mf, buffer, true);
+    }
+    
+    public Object read(UnmarshallingContext context) {
+        if (!checkAlive(context.buffer())) {
+            return null;
+        }
+        return context.read(i_handler);
     }
 
     public Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader)
@@ -846,20 +873,19 @@ public class FieldMetadata implements StoredField {
 
     public final String toString(MarshallerFamily mf, StatefulBuffer writer) {
         String str = "\n Field " + i_name;
-        if (! alive()) {
-            incrementOffset(writer);
+        if (!checkAlive(writer)) {
+            return str;
+        }
+        Object obj = null;
+        try{
+            obj = read(mf, writer);
+        }catch(Exception e){
+            // can happen
+        }
+        if(obj == null){
+            str += "\n [null]";
         }else{
-            Object obj = null;
-            try{
-                obj = read(mf, writer);
-            }catch(Exception e){
-                // can happen
-            }
-            if(obj == null){
-                str += "\n [null]";
-            }else{
-                str+="\n  " + obj.toString();
-            }
+            str+="\n  " + obj.toString();
         }
         return str;
     }
@@ -1011,5 +1037,7 @@ public class FieldMetadata implements StoredField {
 		    container.systemTransaction().commit();
 		}
 	}
+
+
 
 }
