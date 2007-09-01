@@ -18,19 +18,18 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     
     public final TypeHandler4 i_handler;
     
-    PrimitiveFieldHandler(ObjectContainerBase a_stream, TypeHandler4 a_handler) {
-    	super(a_stream, a_handler.classReflector());
+    PrimitiveFieldHandler(ObjectContainerBase container, TypeHandler4 handler) {
+    	super(container, handler.classReflector());
         i_fields = FieldMetadata.EMPTY_ARRAY;
-        i_handler = a_handler;
+        i_handler = handler;
     }
 
-    void activateFields(Transaction a_trans, Object a_object, int a_depth) {
+    void activateFields(Transaction trans, Object obj, int depth) {
         // Override
         // do nothing
     }
 
-
-    final void addToIndex(LocalObjectContainer a_stream, Transaction a_trans, int a_id) {
+    final void addToIndex(LocalObjectContainer container, Transaction trans, int id) {
         // Override
         // Primitive Indices will be created later.
     }
@@ -112,19 +111,19 @@ public class PrimitiveFieldHandler extends ClassMetadata{
 	    return false;
 	}
 
-    Object instantiate(ObjectReference a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, boolean a_addToIDTree) {
-        if (a_object == null) {
+    Object instantiate(ObjectReference ref, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, boolean addToIDTree) {
+        if (obj == null) {
         	// FIXME catchall
             try {
-                a_object = i_handler.read(mf, a_bytes, true);
+                obj = i_handler.read(mf, buffer, true);
             } 
             catch (CorruptionException ce) {
                 return null;
             }
-            a_yapObject.setObjectWeak(a_bytes.getStream(), a_object);
+            ref.setObjectWeak(buffer.getStream(), obj);
         }
-        a_yapObject.setStateClean();
-        return a_object;
+        ref.setStateClean();
+        return obj;
     }
     
     Object instantiateTransient(ObjectReference a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
@@ -135,6 +134,20 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         catch (CorruptionException ce) {
             return null;
         }
+    }
+    
+    public Object instantiate(UnmarshallingContext context) {
+        Object obj = context.persistentObject();
+        if (obj == null) {
+            obj = context.read(i_handler);
+            context.setObjectWeak(obj);
+        }
+        context.setStateClean();
+        return obj;
+    }
+    
+    public Object instantiateTransient(UnmarshallingContext context) {
+        return i_handler.read(context);
     }
 
     void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
@@ -147,6 +160,13 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         }
         if (obj != null  &&  (i_handler instanceof DateHandler)) {
             ((DateHandler)i_handler).copyValue(obj, a_onObject);
+        }
+    }
+    
+    void instantiateFields(UnmarshallingContext context) {
+        Object obj = context.read(i_handler);
+        if (obj != null  &&  (i_handler instanceof DateHandler)) {
+            ((DateHandler)i_handler).copyValue(obj, context.persistentObject());
         }
     }
 

@@ -28,10 +28,10 @@ public abstract class ObjectMarshaller {
 		public abstract void processField(FieldMetadata field,boolean isNull, ClassMetadata containingClass);
 	}
 
-    protected final void traverseFields(ClassMetadata classMetadata,Buffer reader, FieldListInfo fieldList,TraverseFieldCommand command) {
+    protected final void traverseFields(ClassMetadata classMetadata, Buffer buffer, FieldListInfo fieldList,TraverseFieldCommand command) {
     	int fieldIndex=0;
     	while(classMetadata!=null&&!command.cancelled()) {
-        	int fieldCount=command.fieldCount(classMetadata, reader);
+        	int fieldCount=command.fieldCount(classMetadata, buffer);
 			for (int i = 0; i < fieldCount && !command.cancelled(); i++) {
 				command.processField(classMetadata.i_fields[i],isNull(fieldList,fieldIndex),classMetadata);
 			    fieldIndex ++;
@@ -160,4 +160,7 @@ public abstract class ObjectMarshaller {
 	public abstract void writeObjectClassID(Buffer reader,int id);
 	
 	public abstract void skipMarshallerInfo(Buffer reader);
+
+    public abstract void instantiateFields(UnmarshallingContext context);
+    
 }

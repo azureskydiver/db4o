@@ -17,7 +17,7 @@ public abstract class PersistentBase implements Persistent {
 
     protected int _state = 2; // DIRTY and ACTIVE
 
-    final boolean beginProcessing() {
+    public final boolean beginProcessing() {
         if (bitIsTrue(Const4.PROCESSING)) {
             return false;
         }

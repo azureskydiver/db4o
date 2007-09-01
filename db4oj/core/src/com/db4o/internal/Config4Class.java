@@ -67,7 +67,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
         setName(a_name);
     }
 
-    int adjustActivationDepth(int depth) {
+    public int adjustActivationDepth(int depth) {
 		TernaryBool cascadeOnActivate = cascadeOnActivate();
 		if (cascadeOnActivate.definiteYes() && depth < 2) {
 			depth = 2;

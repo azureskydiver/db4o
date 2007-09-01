@@ -90,7 +90,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		}
 	}
 
-	final void addExistingReferenceToIdTree(Transaction trans) {
+	public final void addExistingReferenceToIdTree(Transaction trans) {
 		if (!(_class instanceof PrimitiveFieldHandler)) {
 			trans.referenceSystem().addExistingReferenceToIdTree(this);
 		}
@@ -205,6 +205,10 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	public final ClassMetadata classMetadata() {
 		return _class;
 	}
+	
+    public void classMetadata(ClassMetadata classMetadata) {
+        _class = classMetadata;
+    }
 
 	public int ownLength() {
         throw Exceptions4.shouldNeverBeCalled();
@@ -315,7 +319,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		}
 	}
 
-	void setObjectWeak(ObjectContainerBase container, Object obj) {
+	public void setObjectWeak(ObjectContainerBase container, Object obj) {
 		if (container._references._weak) {
 			if(_object != null){
 				Platform4.killYapRef(_object);
@@ -844,6 +848,5 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	    return "Exception in YapObject analyzer";
 	}
 
-	
 	
 }

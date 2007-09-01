@@ -460,6 +460,6 @@ public final class HandlerRegistry {
 	}
 
     public boolean isVariableLength(TypeHandler4 handler) {
-        return handler instanceof StringHandler;
+        return handler instanceof StringHandler || handler instanceof ArrayHandler;
     }
 }
