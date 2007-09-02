@@ -1,6 +1,7 @@
 <project name="doctor" default="compiledoctor" basedir=".">
 
-	<property file="machine.properties" />
+	<property name="file.machine.properties" value="machine.properties.win" />
+	<property file="${file.machine.properties}" />
 	<property file="ant.properties" />
 
 	<target name="compiledoctor" depends="" description="Compile db4odev and Doctor sources">
@@ -9,6 +10,7 @@
 		<delete dir="${dir.doctor.bin}" includes="**/*" failonerror="false"/>
 		<delete dir="${dir.build.bin}" includes="**/*" failonerror="false"/>
 		<javac srcdir="${dir.doctor.src}"
+				executable="${file.compiler.jdk1.3}"
 				fork="true"
 				destdir="${dir.doctor.bin}"
 				debug="off"
