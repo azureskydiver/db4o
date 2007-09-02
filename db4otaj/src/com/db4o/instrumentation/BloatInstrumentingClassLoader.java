@@ -43,7 +43,7 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 		return name.startsWith("java.")
 				|| name.startsWith("javax.")
 				||name.startsWith("sun.")
-				||((name.startsWith("com.db4o.") && name.indexOf("test.")<0));
+				||((name.startsWith("com.db4o.") && name.indexOf("test.")<0 && name.indexOf("samples.")<0));
 	}
 
 	private Class findRawClass(String className) throws ClassNotFoundException {
