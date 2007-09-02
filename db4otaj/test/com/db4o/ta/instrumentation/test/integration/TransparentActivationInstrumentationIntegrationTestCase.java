@@ -24,7 +24,8 @@ public class TransparentActivationInstrumentationIntegrationTestCase extends Abs
 		ClassLoader baseLoader = TransparentActivationInstrumentationIntegrationTestCase.class.getClassLoader();
 		URL[] urls = {};
 		ClassFilter filter = new ByNameClassFilter(new String[] { Project.class.getName() , UnitOfWork.class.getName(), PrioritizedProject.class.getName() });
-		_classLoader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit(filter));
+		BloatClassEdit edit = new InjectTransparentActivationEdit(filter);
+		_classLoader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, edit);
 		config.add(new PagedListSupport());
 		config.add(new TransparentActivationSupport());
 		config.reflectWith(new JdkReflector(_classLoader));
