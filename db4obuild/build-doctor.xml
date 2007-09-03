@@ -1,7 +1,7 @@
 <project name="doctor" default="compiledoctor" basedir=".">
 	<property environment="env" />
-	<property name="file.machine.properties" value="machine.properties" />
-	<property file="${file.machine.properties}" />
+	<property name="path.machine.properties" value="machine.properties" />
+	<property file="${path.machine.properties}" />
 	<property file="ant.properties" />
 
 	<target name="compiledoctor" depends="" description="Compile db4odev and Doctor sources">

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <project name="common build definitions">
 	<property environment="env" />
-	<property name="file.machine.properties" value="machine.properties" />
-	<property file="${file.machine.properties}" />
+	<property name="path.machine.properties" value="machine.properties" />
+	<property file="${path.machine.properties}" />
 	<property file="ant.properties" />
 	
 	<taskdef name="doctor" classname="com.yetac.doctor.Doctor">
