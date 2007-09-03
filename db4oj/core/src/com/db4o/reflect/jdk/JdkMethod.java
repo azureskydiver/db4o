@@ -7,6 +7,9 @@ import java.lang.reflect.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
+/**
+ * @exclude
+ */
 public class JdkMethod implements ReflectMethod{
 	
 	private final Method method;

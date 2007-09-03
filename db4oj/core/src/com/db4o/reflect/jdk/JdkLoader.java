@@ -4,6 +4,9 @@ package com.db4o.reflect.jdk;
 
 import com.db4o.foundation.*;
 
+/**
+ * @exclude
+ */
 public interface JdkLoader extends DeepClone {
 	Class loadClass(String className);
 }
