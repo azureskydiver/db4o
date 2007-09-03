@@ -127,10 +127,64 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     public void setObjectWeak(Object obj) {
         _ref.setObjectWeak(container(), obj);
     }
+    
+    public Object readAny(){
+        int payloadOffset = readInt();
+        if(payloadOffset == 0){
+            return null;
+        }
+        int savedOffSet = offset();
+        seek(payloadOffset);
+        ClassMetadata classMetadata = container().classMetadataForId(readInt());
+        if(classMetadata == null){
+            seek(savedOffSet);
+            return null;
+        }
+        if(classMetadata.isArray()){
+            // unnecessary secondary offset, consistent with old format
+            seek(readInt());
+        }
+        Object obj = classMetadata.read(this);
+        seek(savedOffSet);
+        return obj;
+    }
 
     public Object readObject() {
-        // TODO Auto-generated method stub
-        return null;
+        int id = readInt();
+        int depth = _activationDepth - 1;
+
+        if (_activationDepth == Const4.TRANSIENT) {
+            return container().peekPersisted(transaction(), id, depth);
+        }
+        
+        if (classMetadata().isValueType()) {
+            return classMetadata().readValueType(transaction(), id, depth);
+        } 
+
+        Object obj = container().getByID2(transaction(), id);
+
+        if (obj instanceof Db4oTypeImpl) {
+            depth = ((Db4oTypeImpl)obj).adjustReadDepth(depth);
+        }
+
+        // this is OK for primitive YapAnys. They will not be added
+        // to the list, since they will not be found in the ID tree.
+        container().stillToActivate(transaction(), obj, depth);
+
+        return obj;
+    }
+    
+    public Object readObject(TypeHandler4 handler) {
+        if(! isVariableLength(handler)){
+            return handler.read(this);
+        }
+        int payLoadOffset = readInt();
+        readInt(); // length - never used
+        int savedOffset = offset();
+        seek(payLoadOffset);
+        Object obj = handler.read(this);
+        seek(savedOffset);
+        return obj;
     }
 
     public ObjectContainer objectContainer() {
@@ -211,7 +265,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     }
 
     public Object read(TypeHandler4 handler) {
-        if(! handlerRegistry().isVariableLength(handler)){
+        if(! isVariableLength(handler)){
             return handler.read(this);
         }
         int indirectedOffSet = readInt();
@@ -222,10 +276,15 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         seek(offset);
         return obj;
     }
+
+    private boolean isVariableLength(TypeHandler4 handler) {
+        return handlerRegistry().isVariableLength(handler);
+    }
     
     private HandlerRegistry handlerRegistry(){
         return container().handlers();
     }
+
 
 }
 

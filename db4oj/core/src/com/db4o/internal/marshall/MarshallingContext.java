@@ -353,7 +353,6 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         _currentBuffer = tempBuffer;
     }
 
-
     public void addIndexEntry(FieldMetadata fieldMetadata, Object obj) {
         if(! _currentBuffer.hasParent()){
             Object indexEntry = (obj == _currentMarshalledObject) ? _currentIndexEntry : obj; 

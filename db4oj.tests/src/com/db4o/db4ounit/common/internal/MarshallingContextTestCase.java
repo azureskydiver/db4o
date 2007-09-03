@@ -78,7 +78,7 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
         Object readObject = null;
         
         if(NewTypeHandlerReading.enabled){
-            UnmarshallingContext context = new UnmarshallingContext(trans(), ref);
+            UnmarshallingContext context = new UnmarshallingContext(trans(), ref, Const4.ADD_TO_ID_TREE, false);
             context.buffer(buffer);
             context.activationDepth(5);
             readObject = context.read();

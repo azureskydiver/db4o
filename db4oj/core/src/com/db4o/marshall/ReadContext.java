@@ -2,6 +2,8 @@
 
 package com.db4o.marshall;
 
+import com.db4o.internal.*;
+
 /**
  * this interface is passed to {@link TypeHandler4}
  * when instantiating objects.
@@ -14,5 +16,12 @@ public interface ReadContext extends Context, ReadBuffer {
      * @return the object
      */
     public Object readObject();
+
+    
+    /**
+     * reads sub-objects, in cases where the {@link TypeHandler4}
+     * is known.
+     */
+    public Object readObject(TypeHandler4 handler);
 
 }

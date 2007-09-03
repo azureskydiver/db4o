@@ -443,7 +443,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
                 context.readBytes((byte[])array); // byte[] performance optimisation
             } else{
                 for (int i = 0; i < elements.value; i++) {
-                    arrayReflector().set(array, i, _handler.read(context));
+                    arrayReflector().set(array, i, context.readObject(_handler));
                 }
             }
         }

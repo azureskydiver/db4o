@@ -743,7 +743,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    final Object getByID2(Transaction ta, int id) {
+    public final Object getByID2(Transaction ta, int id) {
 		Object obj = ta.objectForIdFromCache(id);
 		if (obj != null) {
 			// Take care about handling the returned candidate reference.
