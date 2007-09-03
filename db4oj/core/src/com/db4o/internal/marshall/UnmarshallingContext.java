@@ -28,9 +28,11 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     
     private int _activationDepth;
     
-    public UnmarshallingContext(Transaction transaction, ObjectReference ref) {
+    public UnmarshallingContext(Transaction transaction, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
         _transaction = transaction;
         _ref = ref;
+        _addToIDTree = addToIDTree;
+        _checkIDTree = checkIDTree;
     }
 
     public void buffer(Buffer buffer) {
@@ -82,11 +84,14 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         
         _ref.classMetadata(classMetadata);
         
-        Object objectInCacheFromClassCreation = _transaction.objectForIdFromCache(objectID());
-        if(objectInCacheFromClassCreation != null){
-            _object = objectInCacheFromClassCreation;
-            endProcessing();
-            return _object;
+        
+        if(_checkIDTree){
+            Object objectInCacheFromClassCreation = _transaction.objectForIdFromCache(objectID());
+            if(objectInCacheFromClassCreation != null){
+                _object = objectInCacheFromClassCreation;
+                endProcessing();
+                return _object;
+            }
         }
         
         if(_addToIDTree == Const4.TRANSIENT){
