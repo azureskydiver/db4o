@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="common build definitions">
-	<property name="file.machine.properties" value="machine.properties" />
 	<property environment="env" />
+	<property name="file.machine.properties" value="machine.properties" />
 	<property file="${file.machine.properties}" />
 	<property file="ant.properties" />
 	

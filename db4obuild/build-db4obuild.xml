@@ -1,12 +1,13 @@
 <project name="compilebuild" default="compileall" basedir=".">
-	<property name="file.machine.properties" value="machine.properties.win" />
+	<property environment="env" />
+	<property name="file.machine.properties" value="machine.properties" />
 	<property file="${file.machine.properties}" />
 	<property file="ant.properties" />
 	
 	<target name="compiledb4obuild" depends="" description="Compile db4obuild">
 		<delete dir="${dir.build.bin}" includes="**/*"/>
 		<mkdir dir="${dir.build.bin}" />
-		<javac fork="true" executable="${file.compiler.jdk1.3}" srcdir="${dir.build.src}" destdir="${dir.build.bin}" source="1.5" target="1.5" encoding="UTF-8">
+		<javac fork="true" srcdir="${dir.build.src}" destdir="${dir.build.bin}" source="1.5" target="1.5" encoding="UTF-8">
 			<classpath>
 				<dirset dir="${dir.build.bin}"/>
 				<fileset dir="${dir.build.lib}">
@@ -16,7 +17,7 @@
 			<exclude name="**/osgi/**/*.java" />
 		</javac>
 		<!-- TODO get rid of this 'fork' -->
-		<javac fork="true" executable="${file.compiler.jdk1.3}" srcdir="${dir.build.src}" destdir="${dir.build.bin}" source="1.3" target="1.1" encoding="UTF-8">
+		<javac fork="true" srcdir="${dir.build.src}" destdir="${dir.build.bin}" source="1.3" target="1.1" encoding="UTF-8">
 			<classpath>
 				<dirset dir="${dir.build.bin}"/>
 				<fileset dir="${dir.build.lib}">
@@ -28,6 +29,7 @@
 	</target>
 	
 	<target name="compiledoctor" depends="" description="Compile Doctor">
+		<echo message="${file.machine.properties}" />
 		<ant antfile="${dir.build}/build-doctor.xml" dir="${dir.build}"/>
 	</target>
 
