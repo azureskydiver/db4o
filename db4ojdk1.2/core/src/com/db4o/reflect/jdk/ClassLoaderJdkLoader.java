@@ -6,6 +6,9 @@ public class ClassLoaderJdkLoader implements JdkLoader {
 
 	private final ClassLoader _loader;
 	
+	/**
+	 * @exclude
+	 */
 	public ClassLoaderJdkLoader(ClassLoader loader) {
 		_loader = loader;
 	}
