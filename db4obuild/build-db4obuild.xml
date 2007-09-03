@@ -5,6 +5,7 @@
 	<property file="ant.properties" />
 	
 	<target name="compiledb4obuild" depends="" description="Compile db4obuild">
+		<echo level="warning" message="PROPERTY FILE: ${file.machine.properties}" />
 		<delete dir="${dir.build.bin}" includes="**/*"/>
 		<mkdir dir="${dir.build.bin}" />
 		<javac fork="true" srcdir="${dir.build.src}" destdir="${dir.build.bin}" source="1.5" target="1.5" encoding="UTF-8">
