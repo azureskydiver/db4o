@@ -1,11 +1,10 @@
 <project name="compilebuild" default="compileall" basedir=".">
 	<property environment="env" />
-	<property name="file.machine.properties" value="machine.properties" />
-	<property file="${file.machine.properties}" />
+	<property name="path.machine.properties" value="machine.properties" />
+	<property file="${path.machine.properties}" />
 	<property file="ant.properties" />
 	
 	<target name="compiledb4obuild" depends="" description="Compile db4obuild">
-		<echo level="warning" message="PROPERTY FILE: ${file.machine.properties}" />
 		<delete dir="${dir.build.bin}" includes="**/*"/>
 		<mkdir dir="${dir.build.bin}" />
 		<javac fork="true" srcdir="${dir.build.src}" destdir="${dir.build.bin}" source="1.5" target="1.5" encoding="UTF-8">
@@ -30,7 +29,6 @@
 	</target>
 	
 	<target name="compiledoctor" depends="" description="Compile Doctor">
-		<echo message="${file.machine.properties}" />
 		<ant antfile="${dir.build}/build-doctor.xml" dir="${dir.build}"/>
 	</target>
 
