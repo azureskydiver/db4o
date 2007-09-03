@@ -236,6 +236,15 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		int instantiationDepth,
 		int addToIDTree,
         boolean checkIDTree) {
+	    
+	    if(NewTypeHandlerReading.enabled){
+            UnmarshallingContext context = new UnmarshallingContext(trans, this, addToIDTree, checkIDTree);
+            context.buffer(buffer);
+            context.persistentObject(obj);
+            context.activationDepth(instantiationDepth);
+            return context.read();
+	    }
+	    
 
 		// instantiationDepth is a way of overriding instantiation
 		// in a positive manner
