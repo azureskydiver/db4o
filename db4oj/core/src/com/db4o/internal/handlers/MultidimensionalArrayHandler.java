@@ -180,7 +180,7 @@ public final class MultidimensionalArrayHandler extends ArrayHandler {
         if(array != null){
             Object[] objects = new Object[elementCount(dimensions.value)];
             for (int i = 0; i < objects.length; i++) {
-                objects[i] = _handler.read(context);
+                objects[i] = context.readObject(_handler);
             }
             arrayReflector().shape(objects, 0, array, dimensions.value, 0);
         }

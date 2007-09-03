@@ -239,7 +239,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
     
     public Object read(ReadContext context) {
-        throw new NotImplementedException();
+        return i_handler.read(context);
     }
     
     public void write(WriteContext context, Object obj) {

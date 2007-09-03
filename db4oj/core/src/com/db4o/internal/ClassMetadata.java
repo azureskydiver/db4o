@@ -1317,7 +1317,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return true;
     }
     
-    boolean isValueType(){
+    public boolean isValueType(){
         return Platform4.isValueType(classReflector());
     }
     
@@ -1400,7 +1400,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 //        return null;
     }
 
-	private Object readValueType(Transaction trans, int id, int depth) {
+	public Object readValueType(Transaction trans, int id, int depth) {
 		// for C# value types only:
 		// they need to be instantiated fully before setting them
 		// on the parent object because the set call modifies identity.
@@ -1411,14 +1411,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		// TODO: Do we want value types in the ID tree?
 		// Shouldn't we treat them like strings and update
 		// them every time ???		
-		ObjectReference yo = trans.referenceForId(id);
-		if (yo != null) {
-		    Object obj = yo.getObject();
+		ObjectReference ref = trans.referenceForId(id);
+		if (ref != null) {
+		    Object obj = ref.getObject();
 		    if(obj == null){
-		        trans.removeReference(yo);
+		        trans.removeReference(ref);
 		    }else{
-		        yo.activate(trans, obj, newDepth, false);
-		        return yo.getObject();
+		        ref.activate(trans, obj, newDepth, false);
+		        return ref.getObject();
 		    }
 		}
 		return new ObjectReference(id).read(trans, newDepth,Const4.ADD_TO_ID_TREE, false);

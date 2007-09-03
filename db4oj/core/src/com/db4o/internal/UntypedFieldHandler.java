@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
@@ -83,7 +82,7 @@ public final class UntypedFieldHandler extends ClassMetadata {
     }
     
     public Object read(ReadContext context) {
-        throw new NotImplementedException();
+        return ((UnmarshallingContext)context).readAny();
     }
 
     public void write(WriteContext context, Object obj) {
