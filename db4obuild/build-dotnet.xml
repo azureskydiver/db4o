@@ -394,7 +394,7 @@
 	<target name="rebuild" depends="clean, build">
 	</target>
 	
-	<target name="build-ta" depends="build-db4ounit-extensions">
+	<target name="build-ta" depends="build-db4ounit-extensions" unless="skip.ta">
 		<fileset id="ta.sources" dir="${dir.n.v6}/Db4objects.Db4o.TA">
 			<include name="**/*.cs" />
 		</fileset>
@@ -414,7 +414,7 @@
 		</csc-all>
 	</target>
 	
-	<target name="build-ta-tests" depends="build-ta">
+	<target name="build-ta-tests" depends="build-ta" unless="skip.ta">
 		<csc destfile="${dir.dist.dll.net}/Db4objects.Db4o.TA.Tests.exe" 
 			targettype="exe" 
 			mainclass="Db4objects.Db4o.TA.Tests.MainTestSuite" 
@@ -434,7 +434,7 @@
 		</csc>
 	</target>
 	
-	<target name="run-tests-ta" depends="build-ta-tests">
+	<target name="run-tests-ta" depends="build-ta-tests" unless="skip.ta">
 		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.TA.Tests.exe" 
 			dir="${dir.dist.dll.net}" 
 			failonerror="true" />

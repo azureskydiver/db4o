@@ -31,7 +31,8 @@
 		
 		<!-- don't build Db4oAdmin for .net 1.1 -->
 		<property name="skip.admin" value="true" />
-		
+		<property name="skip.ta" value="true" />
+        
 		<property name="target.framework.version" value="1.1" />
 		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
 		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
