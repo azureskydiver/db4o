@@ -21,6 +21,9 @@ import com.db4o.internal.slots.*;
  */
 public class DefragContextImpl implements DefragContext {	
 
+	/**
+	 * @exclude
+	 */
 	public static abstract class DbSelector {
 		DbSelector() {
 		}
