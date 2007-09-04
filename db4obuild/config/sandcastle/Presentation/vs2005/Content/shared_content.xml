@@ -15,8 +15,8 @@
 	<item id="netcfDocSetAttribute">NetCompactFramework</item>
 
   <!-- header -->
-	<item id="header"><font color="DarkGray">[This topic is pre-release documentation and is subject to change in future releases. Blank topics are included as placeholders.]</font>
-		<p/> </item>
+	<item id="header"><font color="DarkGray"><!-- [This topic is pre-release documentation and is subject to change in future releases. Blank topics are included as placeholders.]</font>
+		<p/> --></item>
 
 	<!-- alert titles -->
 	<item id="cautionTitle"><b>Caution:</b></item>
