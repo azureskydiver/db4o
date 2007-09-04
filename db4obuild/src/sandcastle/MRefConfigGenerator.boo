@@ -60,8 +60,14 @@ def resetApiFilters(path as string):
 def getExcludedTypes(xmldocPath as string):
 	return [name.Value[2:]
 			for name as XmlAttribute
-			in queryXmlDoc(xmldocPath, "//member[exclude]/@name")]		
-
+			in queryXmlDoc(xmldocPath, "//member[exclude]/@name")]
+			
+def isExcluded(excluded as Boo.Lang.List, type as System.Type) as bool:
+	if type.FullName in excluded: return true
+	if type.DeclaringType is not null:
+		return isExcluded(excluded, type.DeclaringType)
+	return false
+			
 if len(argv) == 2:
 	 baseConfigPath, baseDistPath = argv
 else:
@@ -90,7 +96,7 @@ try:
 		if currentNamespace in documentedNamespaces:
 			filter = appendElement(filters, "namespace", {"name": currentNamespace, "expose": "true"})
 			for type as Type in namespaceGroup.Value:
-				if type.FullName in excludedTypes:
+				if isExcluded(excludedTypes, type):
 					appendElement(filter, "type", { "name": type.Name, "expose": "false" })								
 		else:
 			appendElement(filters, "namespace", {"name": currentNamespace, "expose": "false" })		
