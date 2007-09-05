@@ -74,6 +74,11 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     	a_yapObject.produceVirtualAttributes();
         instantiate1(a_bytes.getTransaction(), a_yapObject, a_bytes);
     }
+    
+    public void instantiate(UnmarshallingContext context) {
+        context.reference().produceVirtualAttributes();
+        instantiate1(context.transaction(), context.reference(), context.buffer());
+    }
 
     abstract void instantiate1(Transaction a_trans, ObjectReference a_yapObject, Buffer a_bytes);
     

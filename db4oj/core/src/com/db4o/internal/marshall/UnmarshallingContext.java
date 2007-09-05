@@ -140,7 +140,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
             seek(savedOffSet);
             return null;
         }
-        if(classMetadata.isArray()){
+        if(classMetadata instanceof PrimitiveFieldHandler && classMetadata.isArray()){
             // unnecessary secondary offset, consistent with old format
             seek(readInt());
         }
@@ -180,6 +180,9 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         }
         int payLoadOffset = readInt();
         readInt(); // length - never used
+        if(payLoadOffset == 0){
+            return null;
+        }
         int savedOffset = offset();
         seek(payLoadOffset);
         Object obj = handler.read(this);

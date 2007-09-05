@@ -22,6 +22,10 @@ public class NullFieldMetadata extends FieldMetadata {
 		return null;
 	}
 	
+	public final Object read(UnmarshallingContext context) {
+	    return null;
+	}
+	
 	public Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader) throws CorruptionException {
 		return null;
 	}

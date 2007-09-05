@@ -97,16 +97,10 @@ public final class ShortHandler extends PrimitiveHandler {
         if (Deploy.debug) {
             Debug.readBegin(context, Const4.YAPSHORT);
         }
-        
-        int value = 0;
-        for (int i = 0; i < Const4.SHORT_BYTES; i++) {
-            value = ((value << 8) + context.readByte());
-        }
-        
+        int value = ((context.readByte() & 0xff) << 8) + (context.readByte() & 0xff);
         if (Deploy.debug) {
             Debug.readEnd(context);
         }
-        
         return new Short((short) value);
     }
 
@@ -114,18 +108,14 @@ public final class ShortHandler extends PrimitiveHandler {
         if (Deploy.debug) {
             Debug.writeBegin(context, Const4.YAPSHORT);
         }
-        
-        short shortValue = ((Short)obj).shortValue();
-        
+        int shortValue = ((Short)obj).shortValue();
         context.writeBytes(new byte [] {
             (byte) (shortValue >> 8),
             (byte) shortValue
         });
-        
         if (Deploy.debug) {
             Debug.writeEnd(context);
         }
     }
-	
 	
 }
