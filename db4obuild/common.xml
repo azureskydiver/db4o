@@ -23,6 +23,13 @@
 		</classpath>
 	</taskdef>
 	
+	<taskdef name="svnRevision" classname="com.db4o.devtools.ant.SvnRevision">
+		<classpath>
+			<pathelement location="${dir.build.bin}" />
+			<path path="${path.classpath.full}" />
+		</classpath>
+	</taskdef>
+	
 	<taskdef name="filehead" classname="com.db4o.devtools.ant.FileHeadAntTask">
 		<classpath>
 			<pathelement location="${dir.build.bin}" />
@@ -141,6 +148,12 @@
 		<copy todir="${plugin.dir}" file="${javatocsharp.core.dir}/plugin.xml" />
 
 	</target>
+	
+	<target name="get-svn-revision">
+		<svnRevision property="svn.revision" />
+		<echo>Revision: ${svn.revision}</echo>
+	</target>
+
 	
 	<if>
 		<equals arg1="${compiledll.debug}" arg2="true" />
