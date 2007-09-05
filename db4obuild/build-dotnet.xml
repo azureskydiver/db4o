@@ -20,10 +20,13 @@
 		<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
 		<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
 		<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
-		<include name="core/src/com/db4o/nativequery/NativeClassFactory.java" />
-		<include name="core/src/com/db4o/nativequery/DefaultNativeClassFactory.java" />
 	</fileset>
-	
+
+	<fileset id="db4otools.srcfiles" dir="../db4otools">
+		<include name="src/com/db4o/instrumentation/NativeClassFactory.java" />
+		<include name="src/com/db4o/instrumentation/DefaultNativeClassFactory.java" />
+	</fileset>
+
 	<macrodef name="copy-bin">
 		<attribute name="srcdir" />
 		<attribute name="name" />
@@ -636,7 +639,11 @@
 		<copy todir="${dir.sharpen}/db4oj">
 			<fileset refid="db4onqopt.srcfiles" />
 		</copy>
-		
+
+		<copy todir="${dir.sharpen}/db4oj/core">
+			<fileset refid="db4otools.srcfiles" />
+		</copy>
+
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
 			<fileset dir="${dir.n.v6}/sharpen/">
 				<include name="**/*.java" />

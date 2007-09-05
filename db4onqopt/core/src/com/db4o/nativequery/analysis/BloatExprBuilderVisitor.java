@@ -35,8 +35,8 @@ import EDU.purdue.cs.bloat.tree.StaticFieldExpr;
 import EDU.purdue.cs.bloat.tree.StoreExpr;
 import EDU.purdue.cs.bloat.tree.TreeVisitor;
 
+import com.db4o.instrumentation.*;
 import com.db4o.nativequery.NQDebug;
-import com.db4o.nativequery.bloat.BloatUtil;
 import com.db4o.nativequery.expr.BoolConstExpression;
 import com.db4o.nativequery.expr.ComparisonExpression;
 import com.db4o.nativequery.expr.Expression;

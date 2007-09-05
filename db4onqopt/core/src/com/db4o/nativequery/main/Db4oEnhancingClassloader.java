@@ -11,7 +11,7 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
-import com.db4o.nativequery.bloat.*;
+import com.db4o.instrumentation.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
