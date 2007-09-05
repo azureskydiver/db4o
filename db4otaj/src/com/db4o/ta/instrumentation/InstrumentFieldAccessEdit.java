@@ -20,8 +20,9 @@ import com.db4o.instrumentation.BloatClassEdit;
 
 public class InstrumentFieldAccessEdit implements BloatClassEdit {
 
-	public void bloat(ClassEditor ce) {
+	public boolean bloat(ClassEditor ce) {
 		instrumentAllMethods(ce);
+		return true;
 	}
 
 	private void instrumentAllMethods(final ClassEditor ce) {
