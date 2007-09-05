@@ -54,7 +54,7 @@
 		<sequential>
 			<updateAssemblyInfo
 				keyfile="${filename.keyfile}"
-				version="${db4o.version.full}"
+				version="${assembly.version}"
 				configuration="@{configuration} ${target.framework.version}">
 				<fileset dir="${dir.dist.net.compile}">
 					<include name="**/AssemblyInfo.cs" />
@@ -1153,9 +1153,11 @@
 		</exec>
 	</target>
 	
-	<target name="init">
+	<target name="init" depends="get-svn-revision">
 		<mkdir dir="${dir.dist.dll.net}" />
 		<mkdir dir="${dir.dist.dll.compact}" />
+		
+		<property name="assembly.version" value="${db4o.version.full}.${svn.revision}" />
 	</target>
 	
 	<target name="clean" description="Delete all generated files">
