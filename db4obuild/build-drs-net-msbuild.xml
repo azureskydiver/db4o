@@ -108,7 +108,7 @@
     	<move file="${drs.net.dir}/drs.xml" todir="${drs.net.dir}/bin" />
     </target>
     
-    <target name="prepare-dotnet-solution" depends="sharpen-drs">
+    <target name="prepare-dotnet-solution" depends="sharpen-drs, get-svn-revision">
         <!-- .NET: drs -->
 		<copy todir="${drs.net.src.dir}/drs/src">
 			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src">
@@ -124,7 +124,7 @@
         <updateAssemblyInfo
             drs="true"
             keyfile="${filename.keyfile}"
-			version="${db4o.version.full}"
+			version="${db4o.version.full}.${svn.revision}"
 			configuration=".NET 2.0">
 			<fileset dir="${drs.net.src.dir}/drs/Properties">
 				<include name="AssemblyInfo.cs" />
