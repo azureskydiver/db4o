@@ -11,10 +11,14 @@ public class CompositeBloatClassEdit implements BloatClassEdit {
 		_edits = edits;
 	}
 
-	public void bloat(ClassEditor ce) {
+	public boolean bloat(ClassEditor ce) {
 		for (int editIdx = 0; editIdx < _edits.length; editIdx++) {
-			_edits[editIdx].bloat(ce);
+			boolean succeeded = _edits[editIdx].bloat(ce);
+			if(!succeeded) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 }

@@ -12,7 +12,7 @@ public class RunTASampleInstrumented {
 
 	public static void main(String[] args) throws Exception {
 		ClassFilter filter = new ByNameClassFilter(new String[] { Project.class.getName(), PrioritizedProject.class.getName(), UnitOfWork.class.getName() });
-		BloatClassEdit edit = new InjectInfrastructureEdit(filter);
+		BloatClassEdit edit = new InjectTransparentActivationEdit(filter);
 		ClassLoader loader = new BloatInstrumentingClassLoader(new URL[]{}, RunTASampleInstrumented.class.getClassLoader(), filter, edit);
 		Class mainClass = loader.loadClass(TransparentActivationSampleMain.class.getName());
 		Method mainMethod = mainClass.getMethod("main", new Class[]{ String[].class });
