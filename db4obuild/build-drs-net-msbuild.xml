@@ -121,6 +121,16 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
+        <updateAssemblyInfo
+            drs="true"
+            keyfile="${filename.keyfile}"
+			version="${db4o.version.full}"
+			configuration=".NET 2.0">
+			<fileset dir="${drs.net.src.dir}/drs/Properties">
+				<include name="AssemblyInfo.cs" />
+			</fileset>
+        </updateAssemblyInfo>
+        
         <!--.NET: drs.tests -->
         <copy todir="${drs.net.src.dir}/drs.tests/src">
 			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src">
@@ -407,6 +417,6 @@
 			<antcall target="sandcastle" />
 		</target>
 
-    
+    <target name="rebuild" depends="clean, init, build" />
 
 </project>
