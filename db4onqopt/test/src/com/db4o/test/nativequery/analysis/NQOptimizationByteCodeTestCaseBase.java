@@ -6,8 +6,8 @@ import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 
+import com.db4o.instrumentation.*;
 import com.db4o.nativequery.analysis.*;
-import com.db4o.nativequery.bloat.*;
 import com.db4o.nativequery.expr.*;
 
 import db4ounit.*;

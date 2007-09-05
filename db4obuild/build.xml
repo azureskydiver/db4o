@@ -165,7 +165,27 @@
 		<jar destfile="${file.java5.jar}">
 			<fileset dir="${dir.dist.classes.java5}" />
 		</jar>
-		
+
+	    <mkdir dir="${dir.dist.classes.db4otools}" />
+		<javac srcdir="${dir.j.db4otools.src}" 
+	        fork="true" 
+	        destdir="${dir.dist.classes.db4otools}" 
+	        debug="${javac.debug.mode}" 
+	        target="1.4" 
+	        source="1.4" 
+	        encoding="UTF-8">
+			<classpath>
+				<pathelement path="${file.java1.2.jar}"/>
+				<pathelement path="${file.bloat.jar}"/>
+			</classpath>
+		</javac>
+		<jar destfile="${file.db4otools.jar}">
+			<fileset dir="${dir.dist.classes.db4otools}" />
+			<manifest>
+				<attribute name="Class-Path" value="${filename.bloat.jar} ${filename.java1.2.jar}"/>
+			</manifest>
+		</jar>
+	
         <mkdir dir="${dir.dist.classes.nqopt}" />
 		<javac srcdir="${dir.j.nqopt.src}" 
             fork="true" 
@@ -178,13 +198,14 @@
 			<classpath>
 				<pathelement path="${file.java1.2.jar}"/>
 				<pathelement path="${file.bloat.jar}"/>
+				<pathelement path="${file.db4otools.jar}"/>
 				<pathelement path="${file.ant.jar}"/>
 			</classpath>
 		</javac>
 		<jar destfile="${file.nqopt.jar}">
 			<fileset dir="${dir.dist.classes.nqopt}" />
 			<manifest>
-				<attribute name="Class-Path" value="${filename.bloat.jar} ${filename.ant.jar} ${filename.java1.2.jar}"/>
+				<attribute name="Class-Path" value="${filename.bloat.jar} ${filename.db4otools.jar} ${filename.ant.jar} ${filename.java1.2.jar}"/>
 			</manifest>
 		</jar>
 
@@ -200,13 +221,14 @@
 			<classpath>
 				<pathelement path="${file.java1.2.jar}"/>
                 <pathelement path="${file.bloat.jar}"/>
+			    <pathelement path="${file.db4otools.jar}"/>
 			</classpath>
 		</javac>
 		
 		<jar destfile="${file.ta.jar}">
 			<fileset dir="${dir.dist.classes.taj}" />
 			<manifest>
-				<attribute name="Class-Path" value="${filename.bloat.jar} ${filename.java1.2.jar}"/>
+				<attribute name="Class-Path" value="${filename.bloat.jar} ${filename.db4otools.jar} ${filename.java1.2.jar}"/>
 			</manifest>
 		</jar>
 
@@ -344,6 +366,7 @@
 		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.java1.2.jar}" file="${file.java1.2.jar}"/>
 		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.nqopt.jar}" file="${file.nqopt.jar}"/>
 		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.bloat.jar}" file="${file.bloat.jar}"/>
+		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.db4otools.jar}" file="${file.db4otools.jar}"/>
 		<javac destdir="${dir.dist.classes.osgi}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
 				<fileset dir="${dir.build.lib}">
@@ -512,6 +535,7 @@
 				<pathelement location="${file.java1.2.jar}" />
 				<pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${file.bloat.jar}" />
+				<pathelement location="${file.db4otools.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 			<src path="${dir.j.tests.src}"/>
@@ -738,6 +762,7 @@
 				<pathelement location="${dir.dist.classes.test.nq}" />
                 <pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${file.bloat.jar}" />
+				<pathelement location="${file.db4otools.jar}" />
                 <path refid="tests.java5.cp" />
 			</classpath>
 		</java>
@@ -831,6 +856,14 @@
 		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.bloat}">
 			<fileset dir="${dir.bloat}">
+				<include name=".project" />
+				<include name=".classpath" />
+				<include name="src/**" />
+				<exclude name="**/CVS/**" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.java.src}/${name.project.j.db4otools}">
+			<fileset dir="${dir.j.db4otools}">
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="src/**" />

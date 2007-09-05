@@ -3,6 +3,7 @@
 package com.db4o.nativequery.optimization;
 
 import com.db4o.foundation.*;
+import com.db4o.instrumentation.*;
 import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
