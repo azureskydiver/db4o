@@ -55,6 +55,19 @@ final class TranslatedFieldMetadata extends FieldMetadata
 		setOn(a_bytes.getTransaction(), a_onObject, toSet);
 	}
 	
+	public void instantiate(UnmarshallingContext context) {
+	    
+        Object obj = read(context);
+
+        // Activation of members is necessary on purpose here.
+        // Classes like Hashtable need fully activated members
+        // to be able to calculate hashCode()
+        
+        context.container().activate(context.transaction(), obj, context.activationDepth());
+
+        setOn(context.transaction(), context.persistentObject(), obj);
+	}
+	
 	void refresh() {
 	    // do nothing
 	}
