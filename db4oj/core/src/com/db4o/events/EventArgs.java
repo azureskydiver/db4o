@@ -7,10 +7,6 @@ package com.db4o.events;
  * Base class for event arguments.
  * @sharpen.ignore
  */
-/**
- * Base class for event arguments.
- * @sharpen.ignore
- */
 public class EventArgs {
 	
 	/**
