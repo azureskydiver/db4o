@@ -18,10 +18,16 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     
     public final TypeHandler4 i_handler;
     
+    private Hashtable4 _handlerVersions = new Hashtable4();
+    
     PrimitiveFieldHandler(ObjectContainerBase container, TypeHandler4 handler) {
     	super(container, handler.classReflector());
         i_fields = FieldMetadata.EMPTY_ARRAY;
         i_handler = handler;
+    }
+    
+    public void addHandlerVersion(int versionNumber, TypeHandler4 handler){
+        _handlerVersions.put(versionNumber, handler);
     }
 
     void activateFields(Transaction trans, Object obj, int depth) {
@@ -136,10 +142,16 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         }
     }
     
+    private TypeHandler4 handler(UnmarshallingContext context){
+        return context.oldHandlerVersion() ? 
+            (TypeHandler4) _handlerVersions.get(context.handlerVersion()) : 
+            i_handler;
+    }
+    
     public Object instantiate(UnmarshallingContext context) {
         Object obj = context.persistentObject();
         if (obj == null) {
-            obj = context.read(i_handler);
+            obj = context.read(handler(context));
             context.setObjectWeak(obj);
         }
         context.setStateClean();

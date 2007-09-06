@@ -27,7 +27,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     }
     
     protected ReflectArray arrayReflector(){
-        return _stream.reflector().array();
+        return container().reflector().array();
     }
 
     public Object[] allElements(Object a_object) {
@@ -55,11 +55,11 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
             Object[] all = allElements(a_object);
             if (a_activate) {
                 for (int i = all.length - 1; i >= 0; i--) {
-                    _stream.stillToActivate(a_trans, all[i], a_depth);
+                    container().stillToActivate(a_trans, all[i], a_depth);
                 }
             } else {
                 for (int i = all.length - 1; i >= 0; i--) {
-                  _stream.stillToDeactivate(a_trans, all[i], a_depth, false);
+                    container().stillToDeactivate(a_trans, all[i], a_depth, false);
                 }
             }
         }
@@ -333,9 +333,9 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         ReflectClass claxx = componentType(obj);
         boolean primitive = Deploy.csharp ? false : claxx.isPrimitive();
         if(primitive){
-            claxx = _stream._handlers.handlerForClass(_stream,claxx).classReflector();
+            claxx = container()._handlers.handlerForClass(container(),claxx).classReflector();
         }
-        ClassMetadata classMetadata = _stream.produceClassMetadata(claxx);
+        ClassMetadata classMetadata = container().produceClassMetadata(claxx);
         if (classMetadata == null) {
             // TODO: This one is a terrible low-frequency blunder !!!
             // If YapClass-ID == 99999 then we will get IGNORE back.
@@ -354,7 +354,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
 	}
 	
 	private Reflector reflector(){
-	    return _stream.reflector();
+	    return container().reflector();
 	}
 	
 

@@ -14,10 +14,11 @@ import com.db4o.internal.marshall.*;
  * @exclude
  */
 public abstract class BuiltinTypeHandler implements TypeHandler4 {
-    final ObjectContainerBase _stream;
     
-    public BuiltinTypeHandler(ObjectContainerBase stream) {
-        _stream = stream;
+    private final ObjectContainerBase _container;
+    
+    public BuiltinTypeHandler(ObjectContainerBase container) {
+        _container = container;
     }
     
     public final int linkLength(){
@@ -35,5 +36,9 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
     public abstract int compareTo(Object obj);
     
     public abstract void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
+    
+    public ObjectContainerBase container(){
+        return _container;
+    }
     
 }
