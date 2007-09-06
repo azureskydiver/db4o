@@ -82,4 +82,9 @@ public class BloatUtil {
 	public ClassEditor classEditor(int modifiers, String className, Type superClass, Type[] interfaces) {
 		return new ClassEditor(context, modifiers, className, superClass, interfaces);
 	}
+	
+	public Type superType(Type type) throws ClassNotFoundException {
+		ClassInfo classInfo = loader.loadClass(type.className());
+		return new ClassEditor(new CachingBloatContext(loader,new ArrayList(),false),classInfo).superclass();
+	}
 }

@@ -28,10 +28,11 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 		if(_cache.containsKey(name)) {
 			return (Class)_cache.get(name);
 		}
+		Class originalClazz = super.loadClass(name, resolve);
 		if(mustDelegate(name)) {
-			return super.loadClass(name,resolve);
+			return originalClazz;
 		}
-		Class clazz=(_filter.accept(name) ? findClass(name) : findRawClass(name));
+		Class clazz=(_filter.accept(originalClazz) ? findClass(name) : findRawClass(name));
 		_cache.put(clazz.getName(), clazz);
 		if(resolve) {
 			resolveClass(clazz);

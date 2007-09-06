@@ -614,7 +614,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		},
 	};
 	
-	private static ExpectingPredicate[] PREDICATES=_PREDICATES;
+	private static ExpectingPredicate[] PREDICATES = _PREDICATES;
 	
 	public void testAll() {
 		_prevData = (Data) db().get(_prevData).next();

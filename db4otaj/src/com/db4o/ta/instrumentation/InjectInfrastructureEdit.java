@@ -27,14 +27,19 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 	}
 	
 	public boolean bloat(ClassEditor ce) {
-		String superClassName = normalizeClassName(ce.superclass().className());
-		if(!(_instrumentedClassesFilter.accept(superClassName))) {
-			ce.addInterface(Activatable.class);
-			createActivatorField(ce);
-			createBindMethod(ce);
-			createActivateMethod(ce);
+		try {
+			String superClassName = normalizeClassName(ce.superclass().className());
+			Class superClazz = Class.forName(superClassName);
+			if(!(_instrumentedClassesFilter.accept(superClazz))) {
+				ce.addInterface(Activatable.class);
+				createActivatorField(ce);
+				createBindMethod(ce);
+				createActivateMethod(ce);
+			}
+			return true;
+		} catch (ClassNotFoundException exc) {
+			return false;
 		}
-		return true;
 	}
 
 	private void createActivatorField(ClassEditor ce) {

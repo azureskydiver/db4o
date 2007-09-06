@@ -38,11 +38,24 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 			opClass=value.getClass();
 			prepareConversion(value.getClass(),!inArithmetic);
 		}
-		methodEditor.addInstruction(Opcode.opc_ldc,value);
+		methodEditor.addInstruction(Opcode.opc_ldc, coerce(value));
 		if(value!=null) {
 			applyConversion(value.getClass(),!inArithmetic);
 		}
 		// FIXME handle char, boolean,...
+	}
+
+	private Object coerce(Object value) {
+		if(value instanceof Boolean) {
+			return ((Boolean)value).booleanValue() ? new Integer(1) : new Integer(0);
+		}
+		if(value instanceof Character) {
+			return new Integer(((Character)value).charValue());
+		}
+		if(value instanceof Byte || value instanceof Short) {
+			return new Integer(((Number)value).intValue());
+		}
+		return value;
 	}
 
 	public void visit(FieldValue fieldValue) {
@@ -294,6 +307,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		conversions.put(Byte.class,new Class[]{Byte.class,Byte.TYPE});
 		conversions.put(Double.class,new Class[]{Double.class,Double.TYPE});
 		conversions.put(Float.class,new Class[]{Float.class,Float.TYPE});
+		conversions.put(Boolean.class,new Class[]{Boolean.class,Boolean.TYPE});
 		// FIXME this must be handled somewhere else -  FieldValue, etc.
 		conversions.put(Integer.TYPE,conversions.get(Integer.class));
 		conversions.put(Long.TYPE,conversions.get(Long.class));
@@ -301,5 +315,6 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		conversions.put(Byte.TYPE,conversions.get(Byte.class));
 		conversions.put(Double.TYPE,conversions.get(Double.class));
 		conversions.put(Float.TYPE,conversions.get(Float.class));
+		conversions.put(Boolean.TYPE,conversions.get(Boolean.class));
 	}
 }
