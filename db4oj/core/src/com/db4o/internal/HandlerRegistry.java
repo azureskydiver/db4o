@@ -25,8 +25,8 @@ import com.db4o.reflect.generic.*;
  */
 public final class HandlerRegistry {
 	
-	private final ObjectContainerBase _masterStream;  // this is master YapStream and not valid
-	                                   // for YapObjectCarrier
+	private final ObjectContainerBase _masterStream;  // this is the master container and not valid
+	                                   // for TransportObjectContainer
 
     private static final Db4oTypeImpl[]   i_db4oTypes     = { new BlobImpl()};
 
@@ -104,7 +104,7 @@ public final class HandlerRegistry {
         _virtualFields[0] = i_indexes.i_fieldVersion;
         _virtualFields[1] = i_indexes.i_fieldUUID;
 
-        i_stringHandler = new StringHandler(a_stream, LatinStringIO.forEncoding(stringEncoding));
+        i_stringHandler = new StringHandler2(a_stream, LatinStringIO.forEncoding(stringEncoding));
 
         i_handlers = new TypeHandler4[] { new IntHandler(a_stream), new LongHandler(a_stream), new FloatHandler(a_stream),
             new BooleanHandler(a_stream), new DoubleHandler(a_stream), new ByteHandler(a_stream), new CharHandler(a_stream),
@@ -181,9 +181,17 @@ public final class HandlerRegistry {
             untypedHandler(), false));
         i_anyArrayN.setID(ANY_ARRAY_N_ID);
         i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
+        registerOldHandlers(reflector);
     }
 
-	int arrayType(Object a_object) {
+	private void registerOldHandlers(Reflector reflector) {
+	    PrimitiveFieldHandler stringFieldHandler = (PrimitiveFieldHandler) classMetadataForClass(reflector.forClass(String.class));
+	    StringHandler stringHandler = (StringHandler) stringFieldHandler.i_handler;
+        stringFieldHandler.addHandlerVersion(0, new StringHandler0(stringHandler));
+        stringFieldHandler.addHandlerVersion(1, new StringHandler1(stringHandler));
+    }
+
+    int arrayType(Object a_object) {
     	ReflectClass claxx = _masterStream.reflector().forObject(a_object);
         if (! claxx.isArray()) {
             return 0;
@@ -335,7 +343,7 @@ public final class HandlerRegistry {
          if (a_class.isArray()) {
              return handlerForClass(a_stream, a_class.getComponentType());
          }
-         ClassMetadata yc = getYapClassStatic(a_class);
+         ClassMetadata yc = classMetadataForClass(a_class);
          if (yc != null) {
              return ((PrimitiveFieldHandler) yc).i_handler;
          }
@@ -387,14 +395,14 @@ public final class HandlerRegistry {
         return null;
     }
 
-    public ClassMetadata getYapClassStatic(int a_id) {
+    public ClassMetadata classMetadataForId(int a_id) {
         if (a_id > 0 && a_id <= i_maxTypeID) {
             return i_yapClasses[a_id - 1];
         }
         return null;
     }
 
-    ClassMetadata getYapClassStatic(ReflectClass a_class) {
+    ClassMetadata classMetadataForClass(ReflectClass a_class) {
         if (a_class == null) {
             return null;
         }

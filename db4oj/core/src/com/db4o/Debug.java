@@ -86,6 +86,13 @@ public abstract class Debug extends Debug4 {
      * stored object in the debugger is the actually persisted object  
      */
     public static final boolean staticIdentity = false;
+    
+    /**
+     * turn to false, to prevent reading old PBootRecord object
+     * for debugging updating database files.
+     */
+    public static final boolean readBootRecord = true;
+    
 
 	public static void expect(boolean cond){
         if(! cond){

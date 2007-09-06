@@ -15,13 +15,13 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public final class StringHandler extends BuiltinTypeHandler implements IndexableTypeHandler{
+public abstract class StringHandler extends BuiltinTypeHandler implements IndexableTypeHandler{
     
-    public LatinStringIO i_stringIo; 
+    private LatinStringIO _stringIO; 
     
-    public StringHandler(ObjectContainerBase stream, LatinStringIO stringIO) {
-        super(stream);
-        i_stringIo = stringIO;
+    public StringHandler(ObjectContainerBase container, LatinStringIO stringIO) {
+        super(container);
+        _stringIO = stringIO;
     }
     
     public void cascadeActivation(
@@ -33,7 +33,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     }
 
     public ReflectClass classReflector(){
-    	return _stream._handlers.ICLASS_STRING;
+    	return container()._handlers.ICLASS_STRING;
     }
 
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer){
@@ -54,10 +54,10 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     public Object indexEntryToObject(Transaction trans, Object indexEntry){
         if(indexEntry instanceof Slot){
             Slot slot = (Slot)indexEntry;
-            indexEntry = _stream.bufferByAddress(slot.address(), slot.length());
+            indexEntry = container().bufferByAddress(slot.address(), slot.length());
         }
         try {
-            return StringMarshaller.readShort(_stream, (Buffer)indexEntry);
+            return StringMarshaller.readShort(container(), (Buffer)indexEntry);
         } catch (CorruptionException e) {
             
         }
@@ -75,7 +75,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
             if(withIndirection){
                 obj = readQuery(candidates.i_trans, mf, withIndirection, reader, true);
             }else{
-                obj = mf._string.read(_stream, reader);
+                obj = mf._string.read(container(), reader);
             }
             if(obj != null){
                 return new QCandidate(candidates, obj, 0, true);
@@ -124,7 +124,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
 	}
     
     public void setStringIo(LatinStringIO a_io) {
-        i_stringIo = a_io;
+        _stringIO = a_io;
     }
     
     public void writeIndexEntry(Buffer writer, Object entry) {
@@ -153,7 +153,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
             a_bytes.writeInt(0);
         } else {
             a_bytes.writeInt(a_string.length());
-            i_stringIo.write(a_bytes, a_string);
+            _stringIO.write(a_bytes, a_string);
         }
     }
 
@@ -162,7 +162,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
     private Buffer i_compareTo;
 
     private Buffer val(Object obj) {
-    	return val(obj,_stream);
+    	return val(obj,container());
     }
 
     public Buffer val(Object obj,ObjectContainerBase oc) {
@@ -170,7 +170,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
             return (Buffer)obj;
         }
         if(obj instanceof String) {
-            return StringMarshaller.writeShort(_stream, (String)obj);
+            return StringMarshaller.writeShort(container(), (String)obj);
         }
 
         if (obj instanceof Slot) {
@@ -248,22 +248,7 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         }
     }
     
-    public Object read(ReadContext context) {
-        
-        if (Deploy.debug) {
-            Debug.readBegin(context, Const4.YAPSTRING);
-        }
-        
-        int length = context.readInt();
-        
-        Object result = stringIo(context).read(context, length);
-        
-        if (Deploy.debug) {
-            Debug.readEnd(context);
-        }
-        
-        return result;
-    }
+    public abstract Object read(ReadContext context);
     
     public void write(WriteContext context, Object obj) {
         
@@ -281,12 +266,29 @@ public final class StringHandler extends BuiltinTypeHandler implements Indexable
         }
     }
 
-	private LatinStringIO stringIo(Context context) {
+	protected LatinStringIO stringIo(Context context) {
 		InternalObjectContainer objectContainer = (InternalObjectContainer) context.objectContainer();
         LatinStringIO stringIO = objectContainer.container().stringIO();
 		return stringIO;
 	}
 
+    public LatinStringIO stringIO() {
+        return _stringIO;
+    }
+    
+    protected String readShort( boolean internStrings, Buffer bytes) {
+        int length = bytes.readInt();
+        if (length > 0) {
+            String str = stringIO().read(bytes, length);
+            if(! Deploy.csharp){
+                if(internStrings){
+                    str = str.intern();
+                }
+            }
+            return str;
+        }
+        return "";
+    }
 
 
 }

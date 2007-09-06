@@ -48,6 +48,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         buffer.setID(objectID());
         buffer.setInstantiationDepth(activationDepth());
         _buffer.copyTo(buffer, 0, 0, _buffer.length());
+        buffer.offset(_buffer.offset());
         return buffer;
     }
     
@@ -175,7 +176,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     }
     
     public Object readObject(TypeHandler4 handler) {
-        if(! isVariableLength(handler)){
+        if(! isIndirected(handler)){
             return handler.read(this);
         }
         int payLoadOffset = readInt();
@@ -268,7 +269,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     }
 
     public Object read(TypeHandler4 handler) {
-        if(! isVariableLength(handler)){
+        if(! isIndirected(handler)){
             return handler.read(this);
         }
         int indirectedOffSet = readInt();
@@ -280,7 +281,10 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         return obj;
     }
 
-    private boolean isVariableLength(TypeHandler4 handler) {
+    private boolean isIndirected(TypeHandler4 handler) {
+        if(handlerVersion() == 0){
+            return false;
+        }
         return handlerRegistry().isVariableLength(handler);
     }
     
@@ -288,6 +292,13 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         return container().handlers();
     }
 
+    public boolean oldHandlerVersion() {
+        return marshallerFamily() != MarshallerFamily.current();
+    }
 
+    public int handlerVersion() {
+        return marshallerFamily().handlerVersion();
+    }
+    
 }
 

@@ -76,7 +76,7 @@ public class FileHeader0 extends FileHeader {
         if (_configBlock._bootRecordID <= 0) {
             return;
         }
-        Object bootRecord = getBootRecord(file);
+        Object bootRecord = Debug.readBootRecord ? getBootRecord(file) : null;
         
         if (! (bootRecord instanceof PBootRecord)) {
             initBootRecord(file);

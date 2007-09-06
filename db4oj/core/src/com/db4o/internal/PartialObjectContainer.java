@@ -868,7 +868,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
-        ClassMetadata yc = _handlers.getYapClassStatic(claxx);
+        ClassMetadata yc = _handlers.classMetadataForClass(claxx);
         if (yc != null) {
             return yc;
         }
@@ -881,7 +881,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
-        ClassMetadata yc = _handlers.getYapClassStatic(claxx);
+        ClassMetadata yc = _handlers.classMetadataForClass(claxx);
         if (yc != null) {
             return yc;
         }
@@ -903,7 +903,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
-        ClassMetadata yc = _handlers.getYapClassStatic(claxx);
+        ClassMetadata yc = _handlers.classMetadataForClass(claxx);
         if (yc != null) {
             return yc;
         }
@@ -935,7 +935,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (id == 0) {
             return null;
         }
-        ClassMetadata yc = _handlers.getYapClassStatic(id);
+        ClassMetadata yc = _handlers.classMetadataForId(id);
         if (yc != null) {
             return yc;
         }
@@ -1804,7 +1804,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 		
     public LatinStringIO stringIO(){
-    	return _handlers.i_stringHandler.i_stringIo;
+    	return _handlers.i_stringHandler.stringIO();
     }
     
     public abstract SystemInfo systemInfo();

@@ -2,7 +2,7 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.StringHandler;
+import com.db4o.internal.handlers.*;
 import com.db4o.internal.slots.Slot;
 
 import db4ounit.Assert;
@@ -52,7 +52,7 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
 	}
 
     private StringHandler stringHandler() {
-        return new StringHandler(stream(), stream().stringIO());
+        return new StringHandler2(stream(), stream().stringIO());
     }
 	
 	public void testReadWrite(){
