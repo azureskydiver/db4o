@@ -157,10 +157,6 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         if (_activationDepth == Const4.TRANSIENT) {
             return container().peekPersisted(transaction(), id, depth);
         }
-        
-        if (classMetadata().isValueType()) {
-            return classMetadata().readValueType(transaction(), id, depth);
-        } 
 
         Object obj = container().getByID2(transaction(), id);
 

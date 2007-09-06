@@ -1368,36 +1368,31 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
-//        try {
-            int id = a_bytes.readInt();
-            int depth = a_bytes.getInstantiationDepth() - 1;
+        int id = a_bytes.readInt();
+        int depth = a_bytes.getInstantiationDepth() - 1;
 
-            Transaction trans = a_bytes.getTransaction();
-            ObjectContainerBase stream = trans.container();
+        Transaction trans = a_bytes.getTransaction();
+        ObjectContainerBase stream = trans.container();
 
-            if (a_bytes.getUpdateDepth() == Const4.TRANSIENT) {
-                return stream.peekPersisted(trans, id, depth);
-            }
-            
-            if (isValueType()) {
-                return readValueType(trans, id, depth);
-            } 
+        if (a_bytes.getUpdateDepth() == Const4.TRANSIENT) {
+            return stream.peekPersisted(trans, id, depth);
+        }
+        
+        if (isValueType()) {
+            return readValueType(trans, id, depth);
+        } 
 
-            Object ret = stream.getByID2(trans, id);
+        Object ret = stream.getByID2(trans, id);
 
-            if (ret instanceof Db4oTypeImpl) {
-                depth = ((Db4oTypeImpl)ret).adjustReadDepth(depth);
-            }
+        if (ret instanceof Db4oTypeImpl) {
+            depth = ((Db4oTypeImpl)ret).adjustReadDepth(depth);
+        }
 
-            // this is OK for primitive YapAnys. They will not be added
-            // to the list, since they will not be found in the ID tree.
-            stream.stillToActivate(trans, ret, depth);
+        // this is OK for primitive YapAnys. They will not be added
+        // to the list, since they will not be found in the ID tree.
+        stream.stillToActivate(trans, ret, depth);
 
-            return ret;
-
-//        } catch (Exception e) {
-//        }
-//        return null;
+        return ret;
     }
 
 	public Object readValueType(Transaction trans, int id, int depth) {
@@ -2083,6 +2078,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public Object read(ReadContext context) {
+        // FIXME: .NET value types should get their own TypeHandler and it 
+        //        should do the following:
+        if(isValueType()){
+            return readValueType(context.transaction(), context.readInt(), ((UnmarshallingContext)context).activationDepth() - 1);
+        }
         return context.readObject();
     }
 
