@@ -9,7 +9,8 @@ Import-Package: org.osgi.framework;version="1.3.0"
 Bundle-ClassPath: .,
  lib/db4o-@db4o.version.dotted@-java1.2.jar,
  lib/db4o-@db4o.version.dotted@-nqopt.jar,
- lib/bloat-1.0.jar
+ lib/bloat-1.0.jar,
+ lib/db4o-@db4o.version.dotted@-tools.jar
 Bundle-ActivationPolicy: lazy 
 Export-Package: EDU.purdue.cs.bloat.benchmark,
  EDU.purdue.cs.bloat.cfg,
@@ -91,4 +92,6 @@ Export-Package: EDU.purdue.cs.bloat.benchmark,
  com.db4o.reflect.self,
  com.db4o.replication,
  com.db4o.types,
- com.db4o.marshall
+ com.db4o.marshall,
+ com.db4o.instrumentation
+ 
