@@ -11,7 +11,10 @@ import com.db4o.internal.*;
 import com.db4o.internal.replication.*;
 
 /**
- * using YapObject's hc_tree functionality, only exposing the methods
+ * @exclude
+ */
+/*
+ * using ObjectReference's hc_tree functionality, only exposing the methods
  * that are to be used in this class. Do not use superclass methods.
  * <p/>
  * Implementation details that are difficult to read:
