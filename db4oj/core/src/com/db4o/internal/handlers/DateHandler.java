@@ -12,12 +12,12 @@ import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteContext;
 import com.db4o.reflect.*;
 
-public final class DateHandler extends LongHandler {
+public class DateHandler extends LongHandler {
 	
 	private static final Date PROTO = new Date(0);
     
-    public DateHandler(ObjectContainerBase stream) {
-        super(stream);
+    public DateHandler(ObjectContainerBase container) {
+        super(container);
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {

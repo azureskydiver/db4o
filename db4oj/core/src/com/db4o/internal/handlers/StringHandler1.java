@@ -3,6 +3,7 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
 
@@ -11,7 +12,7 @@ import com.db4o.marshall.*;
  */
 public class StringHandler1 extends StringHandler {
 
-    public StringHandler1(StringHandler template) {
+    public StringHandler1(TypeHandler4 template) {
         super(template);
     }
     

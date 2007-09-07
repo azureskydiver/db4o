@@ -27,7 +27,11 @@ public abstract class ObjectMarshaller {
 
 		public abstract void processField(FieldMetadata field,boolean isNull, ClassMetadata containingClass);
 	}
-
+	
+	protected final void traverseFields(MarshallingInfo context, TraverseFieldCommand command) {
+	    traverseFields(context.classMetadata(), context.buffer(), context, command);
+	}
+	
     protected final void traverseFields(ClassMetadata classMetadata, Buffer buffer, FieldListInfo fieldList,TraverseFieldCommand command) {
     	int fieldIndex=0;
     	while(classMetadata!=null&&!command.cancelled()) {

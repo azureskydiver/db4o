@@ -13,7 +13,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class MarshallingContext implements FieldListInfo, WriteContext {
+public class MarshallingContext implements FieldListInfo, MarshallingInfo, WriteContext {
     
     private static final int HEADER_LENGTH = Const4.LEADING_LENGTH 
             + Const4.ID_LENGTH  // YapClass ID
@@ -379,6 +379,12 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
             createChildBuffer(false, true);
             doNotIndirectWrites();
         }
+    }
+
+    // FIXME: This method was just temporarily added to fulfill contract of MarshallingInfo
+    //        It will go, the buffer is never needed in new marshalling. 
+    public Buffer buffer() {
+        return null;
     }
 
 }

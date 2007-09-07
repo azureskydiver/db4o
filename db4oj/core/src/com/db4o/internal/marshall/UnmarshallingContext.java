@@ -10,11 +10,11 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public class UnmarshallingContext implements FieldListInfo, ReadContext{
+public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, ReadContext{
     
     private final Transaction _transaction;
     
-    private final ObjectReference _ref;
+    private final ObjectReference _reference;
     
     private Object _object;
     
@@ -30,7 +30,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     
     public UnmarshallingContext(Transaction transaction, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
         _transaction = transaction;
-        _ref = ref;
+        _reference = ref;
         _addToIDTree = addToIDTree;
         _checkIDTree = checkIDTree;
     }
@@ -53,7 +53,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     }
     
     public int objectID(){
-        return _ref.getID();
+        return _reference.getID();
     }
     
     public ObjectContainerBase container(){
@@ -83,7 +83,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
             return _object;
         }
         
-        _ref.classMetadata(classMetadata);
+        _reference.classMetadata(classMetadata);
         
         
         if(_checkIDTree){
@@ -106,19 +106,19 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     }
     
     public ClassMetadata classMetadata(){
-        return _ref.classMetadata();
+        return _reference.classMetadata();
     }
         
     private boolean beginProcessing() {
-        return _ref.beginProcessing();
+        return _reference.beginProcessing();
     }
     
     private void endProcessing() {
-        _ref.endProcessing();
+        _reference.endProcessing();
     }
 
     public void setStateClean() {
-        _ref.setStateClean();
+        _reference.setStateClean();
     }
 
     public Object persistentObject() {
@@ -126,7 +126,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     }
 
     public void setObjectWeak(Object obj) {
-        _ref.setObjectWeak(container(), obj);
+        _reference.setObjectWeak(container(), obj);
     }
     
     public Object readAny(){
@@ -235,12 +235,12 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     }
 
     public ObjectReference reference() {
-        return _ref;
+        return _reference;
     }
 
     public void addToIDTree() {
         if(_addToIDTree == Const4.ADD_TO_ID_TREE){
-            _ref.addExistingReferenceToIdTree(transaction());    
+            _reference.addExistingReferenceToIdTree(transaction());    
         }
     }
 
@@ -264,7 +264,8 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         return headerAttributes().isNull(fieldIndex);
     }
 
-    public Object read(TypeHandler4 handler) {
+    public Object read(TypeHandler4 handlerType) {
+        TypeHandler4 handler = correctHandlerVersion(handlerType);
         if(! isIndirected(handler)){
             return handler.read(this);
         }
@@ -295,6 +296,14 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     public int handlerVersion() {
         return _objectHeader.handlerVersion();
     }
+    
+    public TypeHandler4 correctHandlerVersion(TypeHandler4 handler){
+        if(! oldHandlerVersion()){
+            return handler;
+        }
+        return container().handlers().correctHandlerVersion(handler, handlerVersion());
+    }
+
     
 }
 
