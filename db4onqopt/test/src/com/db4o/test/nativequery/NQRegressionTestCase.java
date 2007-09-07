@@ -3,7 +3,7 @@
 package com.db4o.test.nativequery;
 
 import java.lang.reflect.*;
-import java.util.Date;
+import java.util.*;
 
 import com.db4o.*;
 import com.db4o.internal.*;
@@ -19,7 +19,7 @@ import db4ounit.extensions.fixtures.*;
 
 
 public class NQRegressionTestCase extends AbstractDb4oTestCase {
-	private final static boolean RUN_LOADTIME=false;
+	private final static boolean RUN_LOADTIME = false;
 	
 	private static final String CSTR = "Cc";
 	private static final String BSTR = "Ba";
@@ -616,7 +616,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	
 	private static ExpectingPredicate[] PREDICATES = _PREDICATES;
 	
-	public void testAll() {
+	public void testAll() throws Exception {
 		_prevData = (Data) db().get(_prevData).next();
 		for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {
 			ExpectingPredicate predicate = PREDICATES[predIdx];
@@ -624,7 +624,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
-	private void assertNQResult(final ExpectingPredicate predicate) {
+	private void assertNQResult(final ExpectingPredicate predicate) throws Exception {
 		final String predicateId = "PREDICATE: "+predicate;
 		ObjectContainer db=db();
 		Db4oQueryExecutionListener listener = new Db4oQueryExecutionListener() {
@@ -679,8 +679,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(predicate.expected(),raw.size(),predicateId);
 
 		if(RUN_LOADTIME) {
-			db.ext().configure().optimizeNativeQueries(false);
-			try {
+				db.ext().configure().optimizeNativeQueries(false);
 				Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
 				Class filterClass=loader.loadClass(predicate.getClass().getName());
 				Constructor constr=null;
@@ -699,11 +698,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 				Assert.areEqual(predicate.expected(),preoptimized.size(),predicateId);
 				Assert.areEqual(raw,preoptimized,predicateId);
 				Assert.areEqual(optimized,preoptimized,predicateId);
-			} 
-			catch (Throwable exc) {
-				exc.printStackTrace();
-			}
-		}
+		} 
 		((InternalObjectContainer)db).getNativeQueryHandler().clearListeners();
 		db.ext().configure().optimizeNativeQueries(true);
 	}
