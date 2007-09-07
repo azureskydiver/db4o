@@ -36,8 +36,8 @@ class JDK_1_4 extends JDK_1_3 {
 		}
 		
 		Object lock = null;
-		Object channel = invoke(file, "getChannel", null, null);
-		lock = invoke(channel, "tryLock", null, null);
+		Object channel = Reflection4.invoke(file, "getChannel");
+		lock = Reflection4.invoke(channel, "tryLock");
 		if(lock == null){
 			throw new DatabaseFileLockedException(canonicalPath);
 		}
@@ -52,7 +52,7 @@ class JDK_1_4 extends JDK_1_3 {
 		if (fl == null) {
 			return;
 		}
-		invoke("java.nio.channels.FileLock", "release", null, null, fl);
+		Reflection4.invoke("java.nio.channels.FileLock", "release", null, null, fl);
 		fileLocks.remove(path);
 	}
 	
@@ -63,15 +63,15 @@ class JDK_1_4 extends JDK_1_3 {
 	            return null;
 	        }
 	    }
-	    return (Constructor) invoke(new Object[]{clazz, _objectConstructor}, _reflectionFactory, _factoryMethod);
+	    return (Constructor) Reflection4.invoke(new Object[]{clazz, _objectConstructor}, _reflectionFactory, _factoryMethod);
 	}
 	
 	
 	private boolean initSerializableConstructor(){
 		try {
-			_reflectionFactory = invoke(Platform4.REFLECTIONFACTORY,
+			_reflectionFactory = Reflection4.invoke(Platform4.REFLECTIONFACTORY,
 					"getReflectionFactory", null, null, null);
-			_factoryMethod = getMethod(Platform4.REFLECTIONFACTORY,
+			_factoryMethod = Reflection4.getMethod(Platform4.REFLECTIONFACTORY,
 					"newConstructorForSerialization", new Class[] { Class.class,
 							Constructor.class });
 			if (_factoryMethod == null) {

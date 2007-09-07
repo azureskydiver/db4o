@@ -18,13 +18,9 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     public void configure(){
         Configuration config = Db4o.configure();
         
-        // Richard, please temporarily experiment with the following.
-        // It won't be possible to migrate to .NET, but Rodrigo and I can fix
-        
-        // JDKReflect.invoke(config, "allowVersionUpdates", new Class[]{boolean.class}, new Object[]{new Boolean(true)});
-        
-        // This is not available in early versions like 3.0 
-        config.allowVersionUpdates(true);
+        // Configuration#allowVersionUpdates is not available for old db4o versions
+        // so we call by reflection.
+        Reflection4.invoke(config, "allowVersionUpdates", new Class[]{boolean.class}, new Object[]{new Boolean(true)});
         
         configure(config);
         
