@@ -108,7 +108,7 @@
     	<move file="${drs.net.dir}/drs.xml" todir="${drs.net.dir}/bin" />
     </target>
     
-    <target name="prepare-dotnet-solution" depends="sharpen-drs, get-svn-revision">
+    <target name="prepare-dotnet-solution" depends="sharpen-drs">
         <!-- .NET: drs -->
 		<copy todir="${drs.net.src.dir}/drs/src">
 			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src">
