@@ -149,7 +149,7 @@
 
 	</target>
 	
-	<target name="get-svn-revision">
+	<target name="get-svn-revision" unless="svn.revision">
 		<svnRevision property="svn.revision" />
 		<echo>Revision: ${svn.revision}</echo>
 	</target>
