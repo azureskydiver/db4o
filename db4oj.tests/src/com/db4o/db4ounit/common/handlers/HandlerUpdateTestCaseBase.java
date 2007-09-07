@@ -3,8 +3,10 @@
 package com.db4o.db4ounit.common.handlers;
 
 
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.query.*;
 
 public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseBase {
     
@@ -40,7 +42,10 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     }
     
     protected void assertObjectsAreReadable(ExtObjectContainer objectContainer) {
-        Holder holder = (Holder) objectContainer.query(Holder.class).next();
+        Query q = objectContainer.query();
+        q.constrain(Holder.class);
+        ObjectSet objectSet = q.execute();
+        Holder holder = (Holder) objectSet.next();
         
         assertValues(holder._values);
         

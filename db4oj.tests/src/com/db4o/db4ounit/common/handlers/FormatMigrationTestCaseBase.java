@@ -8,18 +8,26 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 
 
 public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     
-    private Configuration _config;
-
     public void configure(){
-        _config = Db4o.newConfiguration();
-        _config.allowVersionUpdates(true);
-        configure(_config);
+        Configuration config = Db4o.configure();
+        
+        // Richard, please temporarily experiment with the following.
+        // It won't be possible to migrate to .NET, but Rodrigo and I can fix
+        
+        // JDKReflect.invoke(config, "allowVersionUpdates", new Class[]{boolean.class}, new Object[]{new Boolean(true)});
+        
+        // This is not available in early versions like 3.0 
+        config.allowVersionUpdates(true);
+        
+        configure(config);
+        
     }
     
     protected static final String PATH = "./test/db4oVersions/";
@@ -43,7 +51,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
         if(File4.exists(file)){
             File4.delete(file);
         }
-        ExtObjectContainer objectContainer = Db4o.openFile(_config, file).ext();
+        ExtObjectContainer objectContainer = Db4o.openFile(file).ext();
         try {
             store(objectContainer);
         } finally {
@@ -80,7 +88,8 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     }
     
     private void checkDatabaseFile(String testFile) {
-        ExtObjectContainer objectContainer = Db4o.openFile(_config, testFile).ext();
+        configure();
+        ExtObjectContainer objectContainer = Db4o.openFile(testFile).ext();
         try {
             assertObjectsAreReadable(objectContainer);
         } finally {
