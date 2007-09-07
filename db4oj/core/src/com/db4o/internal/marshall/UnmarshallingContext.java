@@ -256,10 +256,6 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         _object = obj;
     }
 
-    public MarshallerFamily marshallerFamily() {
-        return _objectHeader._marshallerFamily;
-    }
-    
     public ObjectHeaderAttributes headerAttributes(){
         return _objectHeader._headerAttributes;
     }
@@ -293,11 +289,11 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
     }
 
     public boolean oldHandlerVersion() {
-        return marshallerFamily() != MarshallerFamily.current();
+        return handlerVersion() != MarshallingContext.HANDLER_VERSION;
     }
 
     public int handlerVersion() {
-        return marshallerFamily().handlerVersion();
+        return _objectHeader.handlerVersion();
     }
     
 }

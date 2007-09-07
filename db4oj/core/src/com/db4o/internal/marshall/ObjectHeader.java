@@ -17,6 +17,8 @@ public final class ObjectHeader {
     
     public final ObjectHeaderAttributes _headerAttributes;
     
+    private int _handlerVersion;
+    
     public ObjectHeader(ObjectContainerBase stream, Buffer reader){
     	this(stream,null,reader);
     }
@@ -75,11 +77,11 @@ public final class ObjectHeader {
 
 	private MarshallerFamily readMarshallerFamily(Buffer reader, int classID) {
 		boolean marshallerAware=marshallerAware(classID);
-        byte marshallerVersion=0;
+		_handlerVersion = 0;
         if(marshallerAware) {
-            marshallerVersion = reader.readByte();
+            _handlerVersion = reader.readByte();
         }
-        MarshallerFamily marshallerFamily=MarshallerFamily.version(marshallerVersion);
+        MarshallerFamily marshallerFamily=MarshallerFamily.version(_handlerVersion);
 		return marshallerFamily;
 	}
     
@@ -98,4 +100,9 @@ public final class ObjectHeader {
     public ClassMetadata classMetadata() {
         return _classMetadata;
     }
+    
+    public int handlerVersion() {
+        return _handlerVersion;
+    }
+    
 }
