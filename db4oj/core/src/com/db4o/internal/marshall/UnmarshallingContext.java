@@ -95,7 +95,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
             }
         }
         
-        if(_addToIDTree == Const4.TRANSIENT){
+        if(peekPersisted()){
             _object = classMetadata().instantiateTransient(this);
         }else{
             _object = classMetadata().instantiate(this);
@@ -154,7 +154,7 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         int id = readInt();
         int depth = _activationDepth - 1;
 
-        if (_activationDepth == Const4.TRANSIENT) {
+        if (peekPersisted()) {
             return container().peekPersisted(transaction(), id, depth);
         }
 
@@ -169,6 +169,10 @@ public class UnmarshallingContext implements FieldListInfo, ReadContext{
         container().stillToActivate(transaction(), obj, depth);
 
         return obj;
+    }
+
+    private boolean peekPersisted() {
+        return _addToIDTree == Const4.TRANSIENT;
     }
     
     public Object readObject(TypeHandler4 handler) {

@@ -11,8 +11,8 @@ import com.db4o.marshall.*;
  */
 public class StringHandler1 extends StringHandler {
 
-    public StringHandler1(StringHandler currentStringHandler) {
-        super(currentStringHandler.container(), currentStringHandler.stringIO());
+    public StringHandler1(StringHandler template) {
+        super(template);
     }
     
     public Object read(ReadContext context) {
