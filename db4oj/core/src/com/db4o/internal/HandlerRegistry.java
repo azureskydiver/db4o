@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import java.util.*;
+
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.diagnostic.*;
@@ -71,12 +73,13 @@ public final class HandlerRegistry {
     
     public final DiagnosticProcessor      _diagnosticProcessor;
     
-    
     public boolean                 i_encrypt;
     byte[]                  i_encryptor;
     int                     i_lastEncryptorByte;
     
     final GenericReflector                _reflector;
+    
+    private final Hashtable4 _handlerVersions = new Hashtable4();
     
     public ReflectClass ICLASS_COMPARE;
     ReflectClass ICLASS_DB4OTYPE;
@@ -181,14 +184,34 @@ public final class HandlerRegistry {
             untypedHandler(), false));
         i_anyArrayN.setID(ANY_ARRAY_N_ID);
         i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
-        registerOldHandlers(reflector);
+        
+        registerOldHandlers();
     }
 
-	private void registerOldHandlers(Reflector reflector) {
-	    PrimitiveFieldHandler stringFieldHandler = (PrimitiveFieldHandler) classMetadataForClass(reflector.forClass(String.class));
-	    StringHandler stringHandler = (StringHandler) stringFieldHandler.i_handler;
-        stringFieldHandler.addHandlerVersion(0, new StringHandler0(stringHandler));
-        stringFieldHandler.addHandlerVersion(1, new StringHandler1(stringHandler));
+	private void registerOldHandlers() {
+	    TypeHandler4 stringHandler = handlerForPrimitiveClass(String.class);
+	    registerHandlerVersion(stringHandler, 0, new StringHandler0(stringHandler));
+	    registerHandlerVersion(stringHandler, 1, new StringHandler1(stringHandler));
+	    
+	    TypeHandler4 intHandler = handlerForPrimitiveClass(int.class);
+	    registerHandlerVersion(intHandler, 0, new IntHandler0(_masterStream));
+	    
+	    TypeHandler4 dateHandler = handlerForPrimitiveClass(Date.class);
+	    registerHandlerVersion(dateHandler, 0, new DateHandler0(_masterStream));
+
+    }
+	
+	private void registerHandlerVersion(TypeHandler4 handler, int version, TypeHandler4 replacement) {
+	    _handlerVersions.put(new HandlerVersionKey(handler, version), replacement);
+    }
+
+    private TypeHandler4 handlerForPrimitiveClass(Class clazz){
+	    return ((PrimitiveFieldHandler) classMetadataForClass(_reflector.forClass(clazz))).i_handler;
+	}
+    
+    public TypeHandler4 correctHandlerVersion(TypeHandler4 handler, int version){
+        TypeHandler4 replacement = (TypeHandler4) _handlerVersions.get(new HandlerVersionKey(handler, version));
+        return replacement == null ? handler : replacement;
     }
 
     int arrayType(Object a_object) {

@@ -24,8 +24,8 @@ public abstract class StringHandler extends BuiltinTypeHandler implements Indexa
         _stringIO = stringIO;
     }
     
-    protected StringHandler(StringHandler template){
-        this(template.container(), template.stringIO());
+    protected StringHandler(TypeHandler4 template){
+        this(((StringHandler)template).container(), ((StringHandler)template).stringIO());
     }
     
     public void cascadeActivation(

@@ -116,7 +116,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
                 }
             }
         };
-        traverseFields(context.classMetadata(), context.buffer(), context.headerAttributes(), command);
+        traverseFields(context, command);
     }
 
     
@@ -217,7 +217,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
                 field.marshall(context, child);
             }
         };
-        traverseFields(context.classMetadata(), null, context, command);
+        traverseFields(context, command);
     }
 	
 }

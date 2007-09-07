@@ -23,8 +23,8 @@ public class IntHandler extends PrimitiveHandler {
     
     private static final Integer i_primitive = new Integer(0);
     
-    public IntHandler(ObjectContainerBase stream) {
-        super(stream);
+    public IntHandler(ObjectContainerBase container) {
+        super(container);
     }
     
     public Object coerce(ReflectClass claxx, Object obj) {

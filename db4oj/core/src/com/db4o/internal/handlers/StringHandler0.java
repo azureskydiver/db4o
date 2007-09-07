@@ -12,7 +12,7 @@ import com.db4o.marshall.*;
  */
 public class StringHandler0 extends StringHandler {
 
-    public StringHandler0(StringHandler template) {
+    public StringHandler0(TypeHandler4 template) {
         super(template);
     }
     
