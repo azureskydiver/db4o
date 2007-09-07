@@ -1282,9 +1282,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     void instantiateFields(UnmarshallingContext context) {
-        context.marshallerFamily()._object.instantiateFields(context);
+        MarshallerFamily.version(context.handlerVersion())._object.instantiateFields(context);
     }
-
 
     public boolean isArray() {
         return classReflector().isCollection(); 

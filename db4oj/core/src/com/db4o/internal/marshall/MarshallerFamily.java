@@ -38,15 +38,12 @@ public class MarshallerFamily {
 
     private final int _converterVersion;
 
-    private final int _handlerVersion;
-
 
     private final static MarshallerFamily[] allVersions = new MarshallerFamily[] {
         
         // LEGACY => before 5.4
         
         new MarshallerFamily(
-            0,
             0,
             new ArrayMarshaller0(),
             new ClassMarshaller0(),
@@ -57,7 +54,6 @@ public class MarshallerFamily {
             new UntypedMarshaller0()),
         
         new MarshallerFamily(
-            1,
             ClassIndexesToBTrees_5_5.VERSION,
             new ArrayMarshaller1(),
             new ClassMarshaller1(),
@@ -68,7 +64,6 @@ public class MarshallerFamily {
             new UntypedMarshaller1()),
     
         new MarshallerFamily(
-            2,
             FieldIndexesToBTrees_5_7.VERSION,
             new ArrayMarshaller1(),
             new ClassMarshaller2(),
@@ -81,7 +76,6 @@ public class MarshallerFamily {
         };
 
     public MarshallerFamily(
-            int handlerVersion,
             int converterVersion,
             ArrayMarshaller arrayMarshaller,
             ClassMarshaller classMarshaller,
@@ -90,7 +84,6 @@ public class MarshallerFamily {
             PrimitiveMarshaller primitiveMarshaller, 
             StringMarshaller stringMarshaller,
             UntypedMarshaller untypedMarshaller) {
-        _handlerVersion = handlerVersion;
         _converterVersion = converterVersion;
         _array = arrayMarshaller;
         _array._family = this;
@@ -128,7 +121,4 @@ public class MarshallerFamily {
         return result;
     }
     
-    public int handlerVersion(){
-        return _handlerVersion;
-    }
 }

@@ -20,7 +20,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
             + 1 // Marshaller Version
             + Const4.INT_LENGTH; // number of fields
     
-    private static final byte MARSHALLER_FAMILY_VERSION = (byte)2;
+    public static final byte HANDLER_VERSION = (byte)2;
     
     private static final int NO_INDIRECTION = 3; // and number above 2 
     
@@ -116,7 +116,7 @@ public class MarshallingContext implements FieldListInfo, WriteContext {
         }
         
         writeObjectClassID(buffer, classMetadata().getID());
-        buffer.writeByte(MARSHALLER_FAMILY_VERSION);
+        buffer.writeByte(HANDLER_VERSION);
         buffer.writeInt(fieldCount());
         buffer.writeBitMap(_nullBitMap);
         
