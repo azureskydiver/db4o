@@ -7,8 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -53,68 +51,7 @@ public class JDKReflect extends JDK {
      */
     final boolean methodIsAvailable(String className, String methodName,
 			Class[] params) {
-		return getMethod(className, methodName, params) != null;
-	}
-    
-    public static Object invoke (Class clazz, String methodName, Class[] paramClasses, Object[] params) throws ReflectException {
-        return invoke(clazz.getName(), methodName, paramClasses, params, null);
-    }
-    
-    
-    /**
-     * use for system classes only, since not ClassLoader
-     * or Reflector-aware
-     * @throws ReflectException 
-     */
-    public static Object invoke (Object obj, String methodName, Class[] paramClasses, Object[] params) throws ReflectException {
-        return invoke(obj.getClass().getName(), methodName, paramClasses, params, obj );
-    }
-    
-    /**
-     * use for system classes only, since not ClassLoader
-     * or Reflector-aware
-     * @throws ReflectException 
-     */
-    public static Object invoke(String className, String methodName,
-			Class[] paramClasses, Object[] params, Object onObject) throws ReflectException {
-		Method method = getMethod(className, methodName, paramClasses);
-		return invoke(params, onObject, method);
-	}
-
-	public static Object invoke(Object[] params, Object onObject, Method method) throws ReflectException {
-		if(method == null) {
-			return null;
-		}
-		try {
-			return method.invoke(onObject, params);
-		} catch (InvocationTargetException e) {
-			throw new ReflectException(e.getTargetException());
-		} catch (IllegalArgumentException e) {
-			throw new ReflectException(e);
-		} catch (IllegalAccessException e) {
-			throw new ReflectException(e);			
-		} 
-	}
-
-    /**
-	 * calling this "method" will break C# conversion with the old converter
-	 * 
-	 * use for system classes only, since not ClassLoader or Reflector-aware
-	 */
-    public static Method getMethod(String className, String methodName,
-			Class[] paramClasses) {
-		Class clazz = ReflectPlatform.forName(className);
-		if (clazz == null) {
-			return null;
-		}
-		try {
-			return clazz.getMethod(methodName, paramClasses);
-		} catch (SecurityException e) {
-			// e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// e.printStackTrace();
-		}
-		return null;
+		return Reflection4.getMethod(className, methodName, params) != null;
 	}
     
     public void registerCollections(GenericReflector reflector) {

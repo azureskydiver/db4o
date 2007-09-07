@@ -21,7 +21,7 @@ public class JdkMethod implements ReflectMethod{
 	}
 	
 	public Object invoke(Object onObject, Object[] params) throws ReflectException {
-		return JDKReflect.invoke(params, onObject, method);
+		return Reflection4.invoke(params, onObject, method);
 	} 
 
     public ReflectClass getReturnType() {

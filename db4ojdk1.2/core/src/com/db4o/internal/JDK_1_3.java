@@ -4,22 +4,14 @@ package com.db4o.internal;
 
 class JDK_1_3 extends JDK_1_2{
 
-	Thread addShutdownHook(Runnable a_runnable){
-		Thread thread = new Thread(a_runnable);
-		try {
-			invoke(Runtime.getRuntime(), "addShutdownHook", new Class[]{Thread.class}, new Object[]{thread});
-		} catch (Throwable e) {
-			Exceptions4.shouldNeverHappen();
-		}
+	Thread addShutdownHook(Runnable runnable){
+		Thread thread = new Thread(runnable);
+	    Reflection4.invoke(Runtime.getRuntime(), "addShutdownHook", new Object[]{thread});
 		return thread;
 	}
 	
-	void removeShutdownHook(Thread a_thread){
-		try {
-			invoke(Runtime.getRuntime(), "removeShutdownHook", new Class[]{Thread.class}, new Object[]{a_thread});
-		} catch (Throwable e) {
-			Exceptions4.shouldNeverHappen();
-		}
+	void removeShutdownHook(Thread thread){
+	    Reflection4.invoke(Runtime.getRuntime(), "removeShutdownHook", new Object[]{thread});
 	}
 	
 	public int ver(){
