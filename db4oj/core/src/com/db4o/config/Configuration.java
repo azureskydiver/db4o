@@ -409,10 +409,15 @@ public interface Configuration {
     public void generateVersionNumbers(ConfigScope setting);
 
     /**
-     * Configures db4o to call intern() on strings upon retrieval.
-     * @param doIntern intern strings on retrieval if true, don't otherwise
+     * configures db4o to call #intern() on strings upon retrieval.
+     * @param flag true to intern strings
      */
-    public void internStrings(boolean doIntern);
+    public void internStrings(boolean flag);
+    
+    /**
+     * returns true if strings will be interned.
+     */
+    public boolean internStrings();
     
     /**
      * allows to configure db4o to use a customized byte IO adapter.
@@ -499,9 +504,8 @@ public interface Configuration {
     public void optimizeNativeQueries(boolean optimizeNQ);
     
     /**
-     * indicates whether Native Queries will be optimized
-     * dynamically.
-     * @return boolean indicates whether Native Queries will be optimized
+     * indicates whether Native Queries will be optimized dynamically.
+     * @return boolean true if Native Queries will be optimized
      * dynamically.
      * @see #optimizeNativeQueries
      */

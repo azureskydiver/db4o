@@ -24,6 +24,10 @@ public abstract class StringHandler extends BuiltinTypeHandler implements Indexa
         _stringIO = stringIO;
     }
     
+    protected StringHandler(StringHandler template){
+        this(template.container(), template.stringIO());
+    }
+    
     public void cascadeActivation(
         Transaction a_trans,
         Object a_object,
@@ -276,19 +280,31 @@ public abstract class StringHandler extends BuiltinTypeHandler implements Indexa
         return _stringIO;
     }
     
-    protected String readShort( boolean internStrings, Buffer bytes) {
-        int length = bytes.readInt();
+    protected String readString(ReadContext context, ReadBuffer buffer) {
+        if (Deploy.debug) {
+            Debug.readBegin(buffer, Const4.YAPSTRING);
+        }
+        String str = internalRead(context, buffer);
+        if (Deploy.debug) {
+            Debug.readEnd(buffer);
+        }
+        return str;
+    }
+    
+    private String internalRead(ReadContext context, ReadBuffer buffer) {
+        int length = buffer.readInt();
         if (length > 0) {
-            String str = stringIO().read(bytes, length);
-            if(! Deploy.csharp){
-                if(internStrings){
-                    str = str.intern();
-                }
-            }
-            return str;
+            return intern(context, stringIO().read(buffer, length));
         }
         return "";
     }
-
+    
+    protected String intern(ReadContext context, String str){
+        if(context.objectContainer().ext().configure().internStrings()){
+            return str.intern();
+        }
+        return str;
+    }
+    
 
 }
