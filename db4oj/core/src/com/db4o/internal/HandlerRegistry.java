@@ -197,6 +197,9 @@ public final class HandlerRegistry {
 	    
 	    TypeHandler4 dateHandler = handlerForPrimitiveClass(Date.class);
 	    registerHandlerVersion(dateHandler, 0, new DateHandler0(_masterStream));
+	    
+	    TypeHandler4 anyTypeHandler = untypedHandler();
+	    registerHandlerVersion(anyTypeHandler, 0, new UntypedFieldHandler0(_masterStream));
 
     }
 	
