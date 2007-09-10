@@ -6,6 +6,7 @@ import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
 
+//TODO extract generic functionality and move to db4otools
 public class MethodBuilder {
 	private Map _labels;
 
