@@ -55,7 +55,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
         }
     }
     
-    public void test() throws IOException{
+    public void _test() throws IOException{
         for(int i = 0; i < versionNames().length; i ++){
             String fileName = oldVersionFileName(versionNames()[i]);
             if(File4.exists(fileName)){
