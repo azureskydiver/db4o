@@ -1904,8 +1904,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void writeDirty();
 
-    public abstract void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child);
-
     public abstract void writeNew(ClassMetadata a_yapClass, StatefulBuffer aWriter);
 
     public abstract void writeTransactionPointer(int a_address);

@@ -666,17 +666,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         _timeStampIdGenerator.setClean();
     }
     
-    public final void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child) {
-        Slot slot = getSlot(a_child.length());
-        a_child.getTransaction().slotFreeOnRollback(slot.address(), slot);
-        a_child.address(slot.address());
-        a_child.writeEncrypt();
-        int offsetBackup = a_parent._offset;
-        a_parent._offset = a_child.getID();
-        a_parent.writeInt(slot.address());
-        a_parent._offset = offsetBackup;
-    }
-
     void writeHeader(boolean startFileLockingThread, boolean shuttingDown) {
         
         int freespaceID=DEFAULT_FREESPACE_ID;

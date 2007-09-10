@@ -7,7 +7,7 @@ import com.db4o.internal.*;
 
 public class MsgObject extends MsgD {
 	
-	private static final int LENGTH_FOR_ALL = Const4.ID_LENGTH + (Const4.INT_LENGTH * 3);
+	private static final int LENGTH_FOR_ALL = Const4.ID_LENGTH + (Const4.INT_LENGTH * 2);
 	private static final int LENGTH_FOR_FIRST = LENGTH_FOR_ALL;
 	
 	private int _id;
@@ -18,17 +18,12 @@ public class MsgObject extends MsgD {
 		if(prependInts != null){
 			lengthNeeded += (prependInts.length * Const4.INT_LENGTH);
 		}
-		int embeddedCount = bytes.embeddedCount();
-		if(embeddedCount > 0){
-			lengthNeeded += (LENGTH_FOR_ALL * embeddedCount) + bytes.embeddedLength();
-		}
 		MsgD message = getWriterForLength(bytes.getTransaction(), lengthNeeded);
 		if(prependInts != null){
 		    for (int i = 0; i < prependInts.length; i++) {
 		        message._payLoad.writeInt(prependInts[i]);    
             }
 		}
-		message._payLoad.writeInt(embeddedCount);
 		bytes.appendTo(message._payLoad, -1);
 		return message;
 	}
@@ -54,22 +49,14 @@ public class MsgObject extends MsgD {
 
 	public final StatefulBuffer unmarshall(int addLengthBeforeFirst) {
 		_payLoad.setTransaction(transaction());
-		int embeddedCount = _payLoad.readInt();
+		
 		int length = _payLoad.readInt();
 		if (length == 0) {
 			return null;  // does this happen ?
 		}
 		_id = _payLoad.readInt();
 		_address = _payLoad.readInt();
-		if(embeddedCount == 0){
-			_payLoad.removeFirstBytes(LENGTH_FOR_FIRST + addLengthBeforeFirst);
-		}else{
-			_payLoad._offset += length;
-			StatefulBuffer[] embedded = new StatefulBuffer[embeddedCount + 1];
-			embedded[0] = _payLoad;
-			new StatefulBuffer(_payLoad, embedded, 1);  // this line cascades and adds all embedded YapBytes 
-			_payLoad.trim4(LENGTH_FOR_FIRST + addLengthBeforeFirst, length);
-		}
+		_payLoad.removeFirstBytes(LENGTH_FOR_FIRST + addLengthBeforeFirst);
 		_payLoad.useSlot(_id, _address, length);
 		return _payLoad;
 	}

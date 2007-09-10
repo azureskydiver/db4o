@@ -13,7 +13,6 @@ public final class MWriteUpdate extends MsgObject implements ServerSideMessage {
 	    unmarshall(_payLoad._offset);
 	    synchronized(streamLock()){
 	        ClassMetadata yc = stream.classMetadataForId(yapClassId);
-			_payLoad.writeEmbedded();
 			int id = _payLoad.getID();
 			transaction().dontDelete(id);
             Slot oldSlot = ((LocalTransaction)transaction()).getCommittedSlotOfID(id);

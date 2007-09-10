@@ -16,17 +16,11 @@ import com.db4o.internal.slots.*;
  */
 public final class StatefulBuffer extends Buffer {
 	
-	private static interface StatefulBufferVisitor {
-		void visit(StatefulBuffer buffer);
-	}
-    
-
     private int i_address;
     private int _addressOffset;
 
     private int i_cascadeDelete; 
 
-    private Tree i_embedded;
     private int i_id;
 
     // carries instantiation depth through the reading process
@@ -62,55 +56,13 @@ public final class StatefulBuffer extends Buffer {
         i_id = pointer._id;
     }
 
-    public StatefulBuffer(StatefulBuffer parent, StatefulBuffer[] previousRead, int previousCount) {
-        previousRead[previousCount++] = this;
-        int parentID = parent.readInt();
-        i_length = parent.readInt();
-        i_id = parent.readInt();
-        previousRead[parentID].addEmbedded(this);
-        i_address = parent.readInt();
-        i_trans = parent.getTransaction();
-        _buffer = new byte[i_length];
-        System.arraycopy(parent._buffer, parent._offset, _buffer, 0, i_length);
-        parent._offset += i_length;
-        if (previousCount < previousRead.length) {
-            new StatefulBuffer(parent, previousRead, previousCount);
-        }
-    }
-
-    //	void debug(){
-    //		if(Debug.current){
-    //			System.out.println("Address: " + i_address + " ID:" + i_id);
-    //			if(i_embedded != null){
-    //				System.out.println("Children:");
-    //				Iterator i = i_embedded.iterator();
-    //				while(i.hasNext()){
-    //					((YapBytes)(i.next())).debug();
-    //				}
-    //			}
-    //		}
-    //	}
-
-    public void addEmbedded(StatefulBuffer a_bytes) {
-        i_embedded = Tree.add(i_embedded, new TreeIntObject(a_bytes.getID(), a_bytes));
-    }
-
-
     public int appendTo(final Buffer a_bytes, int a_id) {
         a_id++;
         a_bytes.writeInt(i_length);
         a_bytes.writeInt(i_id);
         a_bytes.writeInt(i_address);
         a_bytes.append(_buffer);
-        final int[] newID = { a_id };
-        final int myID = a_id;
-        forEachEmbedded(new StatefulBufferVisitor() {
-            public void visit(StatefulBuffer a_embedded) {
-                a_bytes.writeInt(myID);
-                newID[0] = a_embedded.appendTo(a_bytes, newID[0]);
-            }
-        });
-        return newID[0];
+        return a_id;
     }
 
     public int cascadeDeletes() {
@@ -124,36 +76,6 @@ public final class StatefulBuffer extends Buffer {
                 // This is normal for writing The FreeSlotArray, becauce one
                 // slot is possibly reserved by it's own pointer.
             }
-        }
-    }
-
-    public int embeddedCount() {
-        final int[] count = { 0 };
-        forEachEmbedded(new StatefulBufferVisitor() {
-            public void visit(StatefulBuffer a_bytes) {
-                count[0] += 1 + a_bytes.embeddedCount();
-            }
-        });
-        return count[0];
-    }
-
-    public int embeddedLength() {
-        final int[] length = { 0 };
-        forEachEmbedded(new StatefulBufferVisitor() {
-            public void visit(StatefulBuffer a_bytes) {
-                length[0] += a_bytes.length() + a_bytes.embeddedLength();
-            }
-        });
-        return length[0];
-    }
-
-    private void forEachEmbedded(final StatefulBufferVisitor a_visitor) {
-        if (i_embedded != null) {
-            i_embedded.traverse(new Visitor4() {
-                public void visit(Object a_object) {
-                    a_visitor.visit((StatefulBuffer) ((TreeIntObject)a_object)._object);
-                }
-            });
         }
     }
 
@@ -220,15 +142,10 @@ public final class StatefulBuffer extends Buffer {
         int id = readInt();
         int length = readInt();
         StatefulBuffer bytes = null;
-        Tree tio = TreeInt.find(i_embedded, id);
-        if (tio != null) {
-            bytes = (StatefulBuffer) ((TreeIntObject)tio)._object; 
-        }else{
             bytes = stream().readWriterByAddress(i_trans, id, length);
             if (bytes != null) {
                 bytes.setID(id);
             }
-        }
         if(bytes != null){
             bytes.setUpdateDepth(getUpdateDepth());
             bytes.setInstantiationDepth(getInstantiationDepth());
@@ -323,24 +240,6 @@ public final class StatefulBuffer extends Buffer {
             debugCheckBytes();
         }
         file().writeBytes(this, i_address, _addressOffset);
-    }
-
-    public void writeEmbedded() {
-        final StatefulBuffer finalThis = this;
-        forEachEmbedded(new StatefulBufferVisitor() {
-            public void visit(StatefulBuffer a_bytes) {
-                a_bytes.writeEmbedded();
-                stream().writeEmbedded(finalThis, a_bytes);
-            }
-        });
-        
-        // TODO: It may be possible to remove the following to 
-        // allow indexes to be created from the bytes passed
-        // from the client without having to reread. Currently
-        // the bytes don't seem to be found and there is a
-        // problem with encryption during the write process.
-
-        i_embedded = null; // no reuse !!!
     }
 
     public void writeEmbeddedNull() {
