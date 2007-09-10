@@ -98,28 +98,6 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		traverseFields(yc, writer, attributes, command);
     }
     
-    public void instantiateFields(final UnmarshallingContext context) {
-        TraverseFieldCommand command = new TraverseFieldCommand() {
-            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-                if (isNull) {
-                    field.set(context.persistentObject(), null);
-                    return;
-                } 
-                boolean ok = false;
-                try {
-                    field.instantiate(context);
-                    ok = true;
-                } finally {
-                    if(!ok) {
-                        cancel();
-                    }
-                }
-            }
-        };
-        traverseFields(context, command);
-    }
-
-    
     public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {
         return new ObjectHeaderAttributes(reader);
     }

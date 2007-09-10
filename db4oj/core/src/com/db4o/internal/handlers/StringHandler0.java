@@ -3,7 +3,6 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.internal.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 
@@ -16,14 +15,11 @@ public class StringHandler0 extends StringHandler {
         super(template);
     }
     
-    public Object read(ReadContext readContext) {
-        UnmarshallingContext context = (UnmarshallingContext) readContext;
-        Buffer reader =   
-            context.container().bufferByAddress(context.readInt(), context.readInt()); 
-        if (reader == null) {
+    public Object read(ReadContext context) {
+        Buffer buffer = readIndirectedBuffer(context); 
+        if (buffer == null) {
             return null;
         }
-        return readString(context, reader);
+        return readString(context, buffer);
     }
-
 }

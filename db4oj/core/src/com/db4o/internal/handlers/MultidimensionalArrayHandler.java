@@ -15,11 +15,14 @@ import com.db4o.reflect.*;
  * n-dimensional array
  * @exclude
  */
-public final class MultidimensionalArrayHandler extends ArrayHandler {
-	
+public class MultidimensionalArrayHandler extends ArrayHandler {
 	
     public MultidimensionalArrayHandler(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
         super(stream, a_handler, a_isPrimitive);
+    }
+    
+    protected MultidimensionalArrayHandler(TypeHandler4 template) {
+        super(template);
     }
 
     public final Object[] allElements(Object array) {
