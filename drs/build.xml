@@ -118,28 +118,7 @@
 		<copy file="${javadoc.stylesheet}" todir="${drs.dir.dist.api}" overwrite="true" />
 	</target>
 
-	<target name="doctor" if="db4obuild.available">
-		<!--TODO Use the Doctor Ant Task-->
-		
-		<property environment="env" />
-		<delete dir="${dir.doc}/out" />
-		
-		<java fork="true" classname="com.yetac.doctor.Doctor">
-			<!--TODO ${basedir} is needed for db4occ to run correctly-->
-			<arg line="${basedir}/${dir.doc} ${font.pdf.base}" />
-			<classpath>
-				<fileset dir="lib">
-					<include name="*.jar" />
-				</fileset>
-				<fileset dir="lib/doctor">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</java>
-		<move file="${dir.doc}/out/doctor.pdf" tofile="${dir.doc}/out/dRS-tutorial.pdf"/>
-	</target>
-
-	<target name="dist" depends="build-all, javadoc, doctor, javadoc" if="db4obuild.available">
+	<target name="dist" depends="build-all, javadoc" if="db4obuild.available">
 		<property name="zipbasedir" value="drs-${drs.version.dotted}" />
 		
 		<copy file="compatibility.java.html" tofile="compatibility.html" overwrite="true">
@@ -161,7 +140,7 @@
 			<zipfileset dir="lib" prefix="${zipbasedir}/lib" includes="*.jar, *.html" />
 			<zipfileset dir="src" prefix="${zipbasedir}/src" excludes="misc/, jira/" />
 
-			<zipfileset dir="doc/out" prefix="${zipbasedir}/doc/tutorial" />
+			<zipfileset dir="docWiki/java" prefix="${zipbasedir}/doc/reference" />
 			<zipfileset dir="${drs.dir.dist.api}" prefix="${zipbasedir}/doc/api" />
 
 			<zipfileset file="${file.drs.core.jar}" fullpath="${zipbasedir}/lib/${filename.drs.core.jar}" />
