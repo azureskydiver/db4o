@@ -2077,11 +2077,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public Object read(ReadContext context) {
+        
         // FIXME: .NET value types should get their own TypeHandler and it 
         //        should do the following:
         if(isValueType()){
             return readValueType(context.transaction(), context.readInt(), ((UnmarshallingContext)context).activationDepth() - 1);
         }
+        
         return context.readObject();
     }
 

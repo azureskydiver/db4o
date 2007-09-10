@@ -8,11 +8,12 @@ import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 
 
-public final class UntypedFieldHandler extends ClassMetadata {
+public class UntypedFieldHandler extends ClassMetadata {
     
-	public UntypedFieldHandler(ObjectContainerBase stream){
-		super(stream, stream._handlers.ICLASS_OBJECT);
+	public UntypedFieldHandler(ObjectContainerBase container){
+		super(container, container._handlers.ICLASS_OBJECT);
 	}
+	
 
 	public void cascadeActivation(
 		Transaction a_trans,

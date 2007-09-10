@@ -2,6 +2,7 @@
 
 package com.db4o.internal.handlers;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
@@ -16,8 +17,7 @@ public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler 
     }
     
     public Object read(ReadContext context) {
-        // TODO Auto-generated method stub
-        return super.read(context);
+        throw new NotImplementedException();
     }
 
 }
