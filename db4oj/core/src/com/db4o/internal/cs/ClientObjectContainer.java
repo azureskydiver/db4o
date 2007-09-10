@@ -607,10 +607,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// do nothing
 	}
 
-	public final void writeEmbedded(StatefulBuffer a_parent, StatefulBuffer a_child) {
-		a_parent.addEmbedded(a_child);
-	}
-
 	public final void write(Msg msg) {
 		writeMsg(msg, true);
 	}
