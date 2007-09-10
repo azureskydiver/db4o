@@ -333,7 +333,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 			if(_object != null){
 				Platform4.killYapRef(_object);
 			}
-			_object = Platform4.createYapRef(container._references._queue, this, obj);
+			_object = Platform4.createActiveObjectReference(container._references._queue, this, obj);
 		} else {
 			_object = obj;
 		}
