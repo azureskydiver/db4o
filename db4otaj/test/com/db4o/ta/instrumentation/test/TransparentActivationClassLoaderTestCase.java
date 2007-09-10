@@ -26,6 +26,8 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	private static final String CLASS_NAME = ORIG_CLASS.getName();
 	private static final Class SUB_CLASS = ToBeInstrumentedSub.class;
 	private static final String SUB_CLASS_NAME = SUB_CLASS.getName();
+	private static final Class FA_CLASS = ToBeInstrumentedWithFieldAccess.class;
+	private static final String FA_CLASS_NAME = FA_CLASS.getName();
 
 	private ClassLoader _loader;
 
@@ -56,6 +58,21 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		assertMethodInstrumentation(clazz, "booSub", true);
 	}
 
+	public void testFieldAccessIsInstrumented() throws Exception {
+		Class clazz = _loader.loadClass(FA_CLASS_NAME);
+		final Activatable objOne = (Activatable) clazz.newInstance();
+		final Activatable objTwo = (Activatable) clazz.newInstance();
+		MockActivator ocOne = new MockActivator();
+		objOne.bind(ocOne);
+		MockActivator ocTwo = new MockActivator();
+		objTwo.bind(ocTwo);
+		final Method method = clazz.getDeclaredMethod("compareID", new Class[]{ clazz });
+		method.setAccessible(true);
+		method.invoke(objOne, new Object[]{ objTwo });
+		Assert.areEqual(1, ocOne.count());
+		Assert.areEqual(1, ocTwo.count());
+	}
+	
 	private void assertActivatableInterface(Class clazz) {
 		Assert.isTrue(Activatable.class.isAssignableFrom(clazz));
 	}
@@ -159,7 +176,7 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	public void setUp() throws Exception {
 		ClassLoader baseLoader = ORIG_CLASS.getClassLoader();
 		URL[] urls = {};
-		ClassFilter filter = new ByNameClassFilter(new String[]{ CLASS_NAME, SUB_CLASS_NAME });
+		ClassFilter filter = new ByNameClassFilter(new String[]{ CLASS_NAME, SUB_CLASS_NAME, FA_CLASS_NAME });
 		_loader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit(filter));
 	}
 
