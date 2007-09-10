@@ -48,7 +48,7 @@ public class JDK {
      * @param ref
      * @param obj
      */
-	Object createYapRef(Object queue, ObjectReference ref, Object obj) {
+	Object createActivateObjectReference(Object queue, ObjectReference ref, Object obj) {
 		return null;
 	}
 	

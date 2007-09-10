@@ -28,7 +28,7 @@ class WeakReferenceCollector implements Runnable {
             return obj;
         }
         
-        return Platform4.createYapRef(_queue, a_yo, obj);
+        return Platform4.createActiveObjectReference(_queue, a_yo, obj);
     }
 
     void pollReferenceQueue() {
