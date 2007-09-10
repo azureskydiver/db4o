@@ -69,7 +69,7 @@ public abstract class PersistentBase implements Persistent {
     }
     
     public final boolean isNew(){
-        return _id == 0;
+        return getID() == 0;
     }
 
     public int linkLength() {

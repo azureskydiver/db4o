@@ -155,22 +155,6 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 
 	public void skipMarshallerInfo(Buffer reader) {
 	}
+    
 
-    public void instantiateFields(final UnmarshallingContext context) {
-        TraverseFieldCommand command=new TraverseFieldCommand() {
-            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-                boolean ok = false;
-                try {
-                    field.instantiate(context);
-                    ok = true;
-                } finally {
-                    if (!ok) {
-                        cancel();
-                    }
-                }
-            }
-        };
-        traverseFields(context, command);
-
-    }
 }

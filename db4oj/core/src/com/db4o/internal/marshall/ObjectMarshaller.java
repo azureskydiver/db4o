@@ -165,6 +165,26 @@ public abstract class ObjectMarshaller {
 	
 	public abstract void skipMarshallerInfo(Buffer reader);
 
-    public abstract void instantiateFields(UnmarshallingContext context);
+    public final void instantiateFields(final UnmarshallingContext context) {
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                if (isNull) {
+                    field.set(context.persistentObject(), null);
+                    return;
+                } 
+                boolean ok = false;
+                try {
+                    field.instantiate(context);
+                    ok = true;
+                } finally {
+                    if(!ok) {
+                        cancel();
+                    }
+                }
+            }
+        };
+        traverseFields(context, command);
+    }
+
     
 }

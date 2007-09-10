@@ -35,8 +35,10 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         _checkIDTree = checkIDTree;
     }
 
-    public void buffer(Buffer buffer) {
+    public Buffer buffer(Buffer buffer) {
+        Buffer temp = _buffer;
         _buffer = buffer;
+        return temp;
     }
     
     public Buffer buffer() {
@@ -303,7 +305,6 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         }
         return container().handlers().correctHandlerVersion(handler, handlerVersion());
     }
-
     
 }
 

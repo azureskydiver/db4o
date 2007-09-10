@@ -4,6 +4,7 @@ package com.db4o.internal.handlers;
 
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
 
 
 
@@ -39,6 +40,11 @@ public abstract class BuiltinTypeHandler implements TypeHandler4 {
     
     public ObjectContainerBase container(){
         return _container;
+    }
+    
+    protected Buffer readIndirectedBuffer(ReadContext readContext) {
+        UnmarshallingContext context = (UnmarshallingContext) readContext;
+        return context.container().bufferByAddress(context.readInt(), context.readInt());
     }
     
 }

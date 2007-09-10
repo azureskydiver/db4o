@@ -20,12 +20,16 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
     public final TypeHandler4 _handler;
     public final boolean _isPrimitive;
 
-    public ArrayHandler(ObjectContainerBase stream, TypeHandler4 a_handler, boolean a_isPrimitive) {
-        super(stream);
-        _handler = a_handler;
-        _isPrimitive = a_isPrimitive;
+    public ArrayHandler(ObjectContainerBase container, TypeHandler4 handler, boolean isPrimitive) {
+        super(container);
+        _handler = handler;
+        _isPrimitive = isPrimitive;
     }
     
+    protected ArrayHandler(TypeHandler4 template) {
+        this(((ArrayHandler)template).container(),((ArrayHandler)template)._handler, ((ArrayHandler)template)._isPrimitive );
+    }
+
     protected ReflectArray arrayReflector(){
         return container().reflector().array();
     }
@@ -129,13 +133,17 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         }
         return (_handler.equals(((ArrayHandler) obj)._handler));
     }
-
+    
+    public int hashCode() {
+        int hc = _handler.hashCode() >> 7; 
+        return _isPrimitive ? hc : - hc;
+    }
 
     public final int getID() {
         return _handler.getID();
     }
 
-    private boolean handleAsByteArray(Object obj) {
+    protected boolean handleAsByteArray(Object obj) {
         if(Deploy.csharp){
             return obj.getClass() ==  byte[].class;
         }
@@ -217,7 +225,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         return array;
     }
 
-	private Object readCreate(Transaction trans, ReadBuffer buffer, IntByRef elements) {
+	protected Object readCreate(Transaction trans, ReadBuffer buffer, IntByRef elements) {
 		ReflectClassByRef clazz = new ReflectClassByRef();
 		elements.value = readElementsAndClass(trans, buffer, clazz);
 		if (_isPrimitive) {

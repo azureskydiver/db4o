@@ -191,7 +191,6 @@ public final class HandlerRegistry {
 	private void registerOldHandlers() {
 	    TypeHandler4 stringHandler = handlerForPrimitiveClass(String.class);
 	    registerHandlerVersion(stringHandler, 0, new StringHandler0(stringHandler));
-	    registerHandlerVersion(stringHandler, 1, new StringHandler1(stringHandler));
 	    
 	    TypeHandler4 intHandler = handlerForPrimitiveClass(int.class);
 	    registerHandlerVersion(intHandler, 0, new IntHandler0(_masterStream));
@@ -211,7 +210,16 @@ public final class HandlerRegistry {
     
     public TypeHandler4 correctHandlerVersion(TypeHandler4 handler, int version){
         TypeHandler4 replacement = (TypeHandler4) _handlerVersions.get(new HandlerVersionKey(handler, version));
-        return replacement == null ? handler : replacement;
+        if(replacement != null){
+            return replacement;
+        }
+        if(handler instanceof MultidimensionalArrayHandler && (version == 0)){
+            return new MultidimensionalArrayHandler0(handler);
+        }
+        if(handler instanceof ArrayHandler  && (version == 0)){
+            return new ArrayHandler0(handler);
+        }
+        return handler;
     }
 
     int arrayType(Object a_object) {
