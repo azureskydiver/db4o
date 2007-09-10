@@ -15,6 +15,7 @@ import EDU.purdue.cs.bloat.reflect.Modifiers;
 
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
+import com.db4o.instrumentation.LabelGenerator;
 import com.db4o.internal.query.Db4oEnhancedFilter;
 import com.db4o.nativequery.expr.AndExpression;
 import com.db4o.nativequery.expr.BoolConstExpression;
@@ -152,14 +153,15 @@ public class SODABloatMethodBuilder {
 	public MethodEditor injectOptimization(Expression expr, ClassEditor classEditor,ClassLoader classLoader, ClassSource classSource) {
 		classEditor.addInterface(Db4oEnhancedFilter.class);
 		methodEditor=new MethodEditor(classEditor,Modifiers.PUBLIC,Void.TYPE,"optimizeQuery",new Class[]{Query.class},new Class[]{});
-		methodEditor.addLabel(new Label(0,true));
+		LabelGenerator labelGen = new LabelGenerator();
+		methodEditor.addLabel(labelGen.createLabel(true));
 		try {
 			Class predicateClass = classLoader.loadClass(classEditor.name().replace('/','.'));
 			expr.accept(new SODABloatMethodVisitor(predicateClass,classLoader,classSource));
 			methodEditor.addInstruction(Opcode.opc_pop);
-			methodEditor.addLabel(new Label(1,false));
+			methodEditor.addLabel(labelGen.createLabel(false));
 			methodEditor.addInstruction(Opcode.opc_return);
-			methodEditor.addLabel(new Label(2,true));
+			methodEditor.addLabel(labelGen.createLabel(true));
 			if(LOG_BYTECODE) {
 				methodEditor.print(System.out);
 			}

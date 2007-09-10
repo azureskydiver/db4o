@@ -15,6 +15,7 @@ import EDU.purdue.cs.bloat.reflect.Modifiers;
 import com.db4o.activation.Activator;
 import com.db4o.instrumentation.BloatClassEdit;
 import com.db4o.instrumentation.ClassFilter;
+import com.db4o.instrumentation.LabelGenerator;
 import com.db4o.ta.Activatable;
 
 public class InjectInfrastructureEdit implements BloatClassEdit {
@@ -54,8 +55,9 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 		String methodName = TransparentActivationInstrumentationConstants.BIND_METHOD_NAME;
 		Type[] paramTypes = { activatorType };
 		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID, methodName, paramTypes, new Type[] {});
-		Label startLabel = new Label(0);
-		Label setActivatorLabel = new Label(1);
+		LabelGenerator labelGen = new LabelGenerator();
+		Label startLabel = labelGen.createLabel(true);
+		Label setActivatorLabel = labelGen.createLabel(true);
 		LocalVariable activatorArg = new LocalVariable(1);
 		
 		methodEditor.addLabel(startLabel);
@@ -92,8 +94,9 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 		final Type activatorType = Type.getType(Activator.class);
 		String methodName = TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME;
 		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PROTECTED, Type.VOID, methodName, new Type[] { }, new Type[] {});
-		Label startLabel = new Label(0);
-		Label activateLabel = new Label(1);
+		LabelGenerator labelGen = new LabelGenerator();
+		Label startLabel = labelGen.createLabel(true);
+		Label activateLabel = labelGen.createLabel(true);
 
 		// if (_activator == null) { return; }
 		methodEditor.addLabel(startLabel);

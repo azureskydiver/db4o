@@ -4,11 +4,14 @@ package com.db4o.j2me.bloat;
 
 import java.io.File;
 
+import com.db4o.instrumentation.LabelGenerator;
+
 import EDU.purdue.cs.bloat.context.PersistentBloatContext;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
 import EDU.purdue.cs.bloat.reflect.*;
 
+// TODO extract generic functionality and move to db4otools
 public class BloatContext {
 	public static final String INIT_METHODNAME = "<init>";
 	public static final String EQUALS_METHODNAME = "equals";
@@ -99,14 +102,6 @@ public class BloatContext {
 		return Type.getType(desc);
 	}
 
-	public Label[] createLabels(int num) {
-		Label[] labels = new Label[num + 1];
-		for (int i = 0; i <= num; i++) {
-			labels[i] = new Label(i);
-		}
-		return labels;
-	}
-
 	public LocalVariable[] createLocalVariables(int num) {
 		LocalVariable[] localVars = new LocalVariable[num + 1];
 		for (int i = 0; i <= num; i++) {
@@ -164,7 +159,8 @@ public class BloatContext {
 				INIT_METHODNAME, new Type[0], new Type[0]);
 		MemberRef mr = methodRef(ce.superclass(), INIT_METHODNAME,
 				new Class[0], void.class);
-		init.addLabel(new Label(0));
+		LabelGenerator labelGen = new LabelGenerator();
+		init.addLabel(labelGen.createLabel(true));
 		init.addInstruction(Opcode.opcx_aload, init.paramAt(0));
 		init.addInstruction(Opcode.opcx_invokespecial, mr);
 		init.addInstruction(Opcode.opcx_return);
