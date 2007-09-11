@@ -68,10 +68,6 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
                 // Twice, to ensure everything is fine after opening, converting and closing.
                 checkDatabaseFile(testFileName);
             }else{
-                
-                // FIXME: Change back to Assert.fail as soon as all new handler
-                //        test files are available for all Java and .NET versions
-                
                 Assert.fail("Version upgrade check failed. File not found:" + testFileName);
             }
         }
