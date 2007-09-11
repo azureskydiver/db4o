@@ -194,7 +194,19 @@ public final class HandlerRegistry {
 	    
 	    TypeHandler4 intHandler = handlerForPrimitiveClass(int.class);
 	    registerHandlerVersion(intHandler, 0, new IntHandler0(_masterStream));
-	    
+
+	    TypeHandler4 shortHandler = handlerForPrimitiveClass(short.class);
+	    registerHandlerVersion(shortHandler, 0, new ShortHandler0(_masterStream));
+
+	    TypeHandler4 floatHandler = handlerForPrimitiveClass(float.class);
+	    registerHandlerVersion(floatHandler, 0, new FloatHandler0(_masterStream));
+
+	    TypeHandler4 longHandler = handlerForPrimitiveClass(long.class);
+	    registerHandlerVersion(longHandler, 0, new LongHandler0(_masterStream));
+
+	    TypeHandler4 doubleHandler = handlerForPrimitiveClass(double.class);
+	    registerHandlerVersion(doubleHandler, 0, new DoubleHandler0(_masterStream));
+
 	    TypeHandler4 dateHandler = handlerForPrimitiveClass(Date.class);
 	    registerHandlerVersion(dateHandler, 0, new DateHandler0(_masterStream));
 	    

@@ -10,7 +10,7 @@ import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteContext;
 import com.db4o.reflect.ReflectClass;
 
-public final class ShortHandler extends PrimitiveHandler {
+public class ShortHandler extends PrimitiveHandler {
 	
     static final int LENGTH = Const4.SHORT_BYTES + Const4.ADDED_LENGTH;
 	
