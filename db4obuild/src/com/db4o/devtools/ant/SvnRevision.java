@@ -5,6 +5,8 @@ package com.db4o.devtools.ant;
 import java.io.*;
 
 import org.apache.tools.ant.*;
+import org.tmatesoft.svn.core.*;
+import org.tmatesoft.svn.core.wc.*;
 
 /**
  * Gets the svn revision from a specified resource and puts it
@@ -12,10 +14,6 @@ import org.apache.tools.ant.*;
  * 
  * If no resource is specified then the project's directory is
  * assumed to be the resource.
- * 
- * The 'svn' command is assumed to be in the path. Alternatively
- * the path to the svn utility can be specified through the
- * 'svn.exe' build property. 
  */
 public class SvnRevision extends Task {
 	
@@ -34,57 +32,21 @@ public class SvnRevision extends Task {
 	public void execute() throws BuildException {
 		try {
 			getProject().setProperty(_property, resourceRevision());
-		} catch (IOException e) {
+		} catch (SVNException e) {
 			throw new BuildException(e, getLocation());
 		}
 	}
 
-	private String resourceRevision() throws IOException {
-		final Process p = svnInfo();
-		final String revision = scanForRevision(stdout(p));
-		if (null != revision) return revision;
-		
-		throw new BuildException("Revision not found.", getLocation());
+	private String resourceRevision() throws SVNException {
+		SVNWCClient c = new SVNWCClient(SVNWCUtil.createDefaultAuthenticationManager(), SVNWCUtil.createDefaultOptions(true));
+		SVNInfo info = c.doInfo(resource(), SVNRevision.COMMITTED);
+		return Long.toString(info.getCommittedRevision().getNumber());
 	}
 
-	private BufferedReader stdout(final Process p) {
-		return new BufferedReader(new InputStreamReader(p.getInputStream()));
-	}
 
-	private String scanForRevision(final BufferedReader reader)
-			throws IOException {
-		String line = null;
-		while (null != (line = reader.readLine())) {
-			final String prefix = "Revision: ";
-			if (line.startsWith(prefix)) {
-				return line.substring(prefix.length());
-			}
-		}
-		return null;
-	}
-
-	private Process svnInfo() throws IOException {
-		String[] cmd = new String[] {
-			svn(), "info", resourceName() 
-		};
-		final Process p = Runtime.getRuntime().exec(cmd, null, resourceDir());
-		return p;
-	}
-
-	private File resourceDir() {
+	private File resource() {
 		if (null == _resource) return getProject().getBaseDir();
-		return _resource.getParentFile();
-	}
-
-	private String resourceName() {
-		if (_resource == null) return ".";
-		return _resource.getName();
-	}
-
-	private String svn() {
-		final String svn = getProject().getProperty("svn.exe");
-		if (null != svn) return svn;
-		return "svn";
+		return _resource;
 	}
 
 }
