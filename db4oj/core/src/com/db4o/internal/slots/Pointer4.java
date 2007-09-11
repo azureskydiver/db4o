@@ -16,4 +16,16 @@ public class Pointer4 {
     	_slot = slot;
     }
     
+    public int address(){
+        return _slot.address();
+    }
+    
+    public int id(){
+        return _id;
+    }
+
+    public int length() {
+        return _slot.length();
+    }
+    
 }

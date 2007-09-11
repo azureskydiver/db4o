@@ -3,6 +3,7 @@
 package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
+import com.db4o.internal.slots.*;
 
 
 public class MsgObject extends MsgD {
@@ -13,7 +14,7 @@ public class MsgObject extends MsgD {
 	private int _id;
 	private int _address;
 	
-	MsgD getWriter(StatefulBuffer bytes, int[] prependInts) {
+	final MsgD getWriter(Pointer4 pointer, StatefulBuffer bytes,int[] prependInts) {
 		int lengthNeeded = bytes.length() + LENGTH_FOR_FIRST;
 		if(prependInts != null){
 			lengthNeeded += (prependInts.length * Const4.INT_LENGTH);
@@ -24,23 +25,23 @@ public class MsgObject extends MsgD {
 		        message._payLoad.writeInt(prependInts[i]);    
             }
 		}
-		bytes.appendTo(message._payLoad, -1);
+		message._payLoad.append(pointer, bytes);
 		return message;
 	}
 
-	public MsgD getWriter(StatefulBuffer bytes) {
-		return getWriter(bytes, null);
+	final public MsgD getWriter(StatefulBuffer buffer) {
+		return getWriter(buffer.pointer(), buffer, null);
 	}
 	
-	public MsgD getWriter(ClassMetadata a_yapClass, StatefulBuffer bytes) {
+	public final MsgD getWriter(Pointer4 pointer, ClassMetadata a_yapClass, StatefulBuffer bytes) {
         if(a_yapClass == null){
-            return getWriter(bytes, new int[]{0});
+            return getWriter(pointer, bytes, new int[]{0});
         }
-		return getWriter(bytes, new int[]{ a_yapClass.getID()});
+		return getWriter(pointer, bytes, new int[]{ a_yapClass.getID()});
 	}
 	
-	public MsgD getWriter(ClassMetadata a_yapClass, int a_param, StatefulBuffer bytes) {
-		return getWriter(bytes, new int[]{ a_yapClass.getID(), a_param});
+	public final MsgD getWriter(Pointer4 pointer, ClassMetadata classMetadata, int param, StatefulBuffer buffer) {
+		return getWriter(pointer, buffer, new int[]{ classMetadata.getID(), param});
 	}
 	
 	public final StatefulBuffer unmarshall() {

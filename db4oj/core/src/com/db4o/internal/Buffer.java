@@ -39,6 +39,14 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
 	public void append(byte[] bytes) {
         writeBytes(bytes);
     }
+	
+    public void append(Pointer4 pointer, final Buffer buffer) {
+        writeInt(buffer.length());
+        writeInt(pointer.id());
+        writeInt(pointer.address());
+        append(buffer._buffer);
+    }
+
     
 	public final boolean containsTheSame(Buffer other) {
 	    if (other != null) {

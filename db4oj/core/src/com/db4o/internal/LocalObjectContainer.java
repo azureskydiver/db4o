@@ -709,18 +709,21 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     }
     
     public final void getSlotForUpdate(StatefulBuffer buffer){
-        Transaction trans = buffer.getTransaction();
-        int id = buffer.getID();
-        Slot slot = getSlot(buffer.length());
+        Slot slot = getSlotForUpdate(buffer.getTransaction(), buffer.getID(), buffer.length());
         buffer.address(slot.address());
+    }
+    
+    public final Slot getSlotForUpdate(Transaction trans, int id, int length){
+        Slot slot = getSlot(length);
         trans.produceUpdateSlotChange(id, slot);
+        return slot;
     }
 
-    public final void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes) {
-        if(a_bytes.getAddress() == 0){
-            getSlotForUpdate(a_bytes);
+    public final void writeUpdate(Pointer4 pointer, ClassMetadata classMetadata, StatefulBuffer buffer) {
+        if(buffer.getAddress() == 0){
+            getSlotForUpdate(buffer);
         }
-        a_bytes.writeEncrypt();
+        buffer.writeEncrypt();
     }
 
     public void setNextTimeStampId(long val) {

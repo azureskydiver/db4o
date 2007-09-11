@@ -157,17 +157,19 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		reader.incrementOffset(1);
 	}
 	
-    public void marshallUpdate(Transaction trans, int updateDepth, ObjectReference ref, Object obj) {
+    public final void marshallUpdate(Transaction trans, int updateDepth, ObjectReference ref, Object obj) {
         MarshallingContext context = new MarshallingContext(trans, ref, updateDepth, false);
         marshall(obj, context);
-        marshallUpdateWrite(trans, ref, obj, context.ToWriteBuffer());
+        Pointer4 pointer = context.allocateSlot();
+        marshallUpdateWrite(trans, pointer, ref, obj, context.ToWriteBuffer(pointer));
     }
 
     
     public StatefulBuffer marshallNew(Transaction trans, ObjectReference ref, int updateDepth){
         MarshallingContext context = new MarshallingContext(trans, ref, updateDepth, true);
         marshall(ref.getObject(), context);
-        return context.ToWriteBuffer();
+        Pointer4 pointer = context.allocateSlot();
+        return context.ToWriteBuffer(pointer);
     }
     
     protected void marshall(final Object obj, final MarshallingContext context) {

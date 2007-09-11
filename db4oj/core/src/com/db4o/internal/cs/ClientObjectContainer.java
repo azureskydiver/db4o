@@ -14,6 +14,7 @@ import com.db4o.internal.convert.*;
 import com.db4o.internal.cs.messages.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
+import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
 
 /**
@@ -635,8 +636,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		msg.write(i_socket);
 	}
 	
-	public final void writeNew(ClassMetadata a_yapClass, StatefulBuffer aWriter) {
-		MsgD msg = Msg.WRITE_NEW.getWriter(a_yapClass, aWriter);
+	public final void writeNew(ClassMetadata classMetadata, StatefulBuffer buffer) {
+		MsgD msg = Msg.WRITE_NEW.getWriter(buffer.pointer(), classMetadata, buffer);
 		writeBatchedMessage(msg);
 	}
     
@@ -644,8 +645,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// do nothing
 	}
 
-	public final void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes) {
-		MsgD msg = Msg.WRITE_UPDATE.getWriter(a_yapClass, a_bytes);
+	public final void writeUpdate(Pointer4 pointer, ClassMetadata classMetadata, StatefulBuffer buffer) {
+		MsgD msg = Msg.WRITE_UPDATE.getWriter(pointer, classMetadata, buffer);
 		writeBatchedMessage(msg);
 	}
 

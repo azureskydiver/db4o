@@ -14,6 +14,7 @@ import com.db4o.internal.query.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
 import com.db4o.internal.replication.*;
+import com.db4o.internal.slots.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -1908,7 +1909,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void writeTransactionPointer(int a_address);
 
-    public abstract void writeUpdate(ClassMetadata a_yapClass, StatefulBuffer a_bytes);
+    public abstract void writeUpdate(Pointer4 pointer, ClassMetadata classMetadata, StatefulBuffer buffer);
 
     // cheat emulating '(YapStream)this'
     private static ExternalObjectContainer cast(PartialObjectContainer obj) {
