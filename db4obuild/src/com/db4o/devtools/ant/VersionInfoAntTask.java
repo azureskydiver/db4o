@@ -1,28 +1,20 @@
 package com.db4o.devtools.ant;
 
 import java.io.*;
+import java.util.*;
 
 import org.apache.tools.ant.*;
 
 public class VersionInfoAntTask extends Task {
-	
+    
+    static final int DB4O_ITERATION_OFFSET = 29;
+    
+    private Calendar calendar;
     private int major;
 	private int minor;
     
     private String path;
-    private String version;
-    private String keyfile;
-    
-    static final int NET = 0;
-    static final int COMPACT = 1;
-    static final int JAVA = 2;
-    
-    private int distribution = NET;
-	
-    private String[] distributionNames = {
-        ".NET",
-        ".NET CompactFramework"
-    };
+    private String revision;
     
     public void setPath(String path) {
         this.path = path;
@@ -36,73 +28,49 @@ public class VersionInfoAntTask extends Task {
     	this.minor = minor;
     }
     
-    public void setVersion(String version){
-        this.version = version;
+    public void setRevision(String revision){
+        this.revision = revision;
     }
     
-    public void setKeyfile(String keyfile){
-        this.keyfile = keyfile;
-    }
-	
-    public void setNet(boolean net) {
-        if(net){
-            distribution = NET;
+    private int getIteration() {
+        if (calendar == null) {
+            calendar = Calendar.getInstance(Locale.UK);
         }
+        int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
+        return (weekOfYear - DB4O_ITERATION_OFFSET);
     }
     
-    public void setJava(boolean java){
-        if(java){
-            distribution = JAVA;
-        }
-    }
-	
-	public boolean getJava() {
-		return JAVA == distribution;
-	}
-    
-    public void setCompact(boolean compact) {
-        if(compact){
-            distribution = COMPACT;
-        }
+    private void outputJavaVersionInfo(PrintWriter pr) {
+        int iteration = getIteration();
+        String name = new StringBuffer().append(major).append(".")
+                .append(minor).append(".").append(iteration).append(".")
+                .append(revision).toString();
+        
+        pr.println("/* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */");
+        pr.println();
+        pr.println("package com.db4o;");
+        pr.println();
+        pr.println("/**");
+        pr.println("* @exclude");
+        pr.println("*/");
+        pr.println("public class Db4oVersion {");
+        pr.println("    public static final String NAME = \"" + name + "\";");
+        pr.println("    public static final int MAJOR = " + major + ";");
+        pr.println("    public static final int MINOR = " + minor + ";");
+        pr.println("    public static final int ITERATION = " + iteration + ";");
+        pr.println("    public static final int REVISION = " + revision + ";");
+        pr.println("}");
     }
     
     public void execute() throws BuildException {
-        String fileName = getJava() ? "Db4oVersion.java": "AssemblyInfo.cs";
+        String fileName = "Db4oVersion.java";
         try{
 	        File dir = new File(path);
 	        File file = new File(dir, fileName);
 	        file.delete();
 	        FileOutputStream fos = new FileOutputStream(file);
 	        PrintWriter pr = new PrintWriter(fos);
-	        pr.println("/* Copyright (C) 2005   db4objects Inc.   http://www.db4o.com */");
-	        pr.println();
-	        if(getJava()){
-	            pr.println("package com.db4o;");
-                pr.println();
-                pr.println("/**");
-                pr.println("* @exclude");
-                pr.println("*/");
-	            pr.println("public class Db4oVersion {");
-                pr.println("    public static final String NAME = \"" + version + "\";");
-                pr.println("    public static final int MAJOR = " + major + ";");
-                pr.println("    public static final int MINOR = " + minor + ";");
-	            pr.println("}");
-	        }else{ /* Deprecated in build-1.1. .net Assembly are now updated using UpdateAssemblyInfoTask */
-		        pr.println("using System.Reflection;");
-		        pr.println("using System.Runtime.CompilerServices;");
-		        pr.println("[assembly: AssemblyTitle(\"db4o - database for objects\")]");
-		        pr.println("[assembly: AssemblyDescription(\"db4o " + version + " " +  distributionNames[distribution] + "\")]");
-		        pr.println("[assembly: AssemblyConfiguration(\"" + distributionNames[distribution] + "\")]");
-		        pr.println("[assembly: AssemblyCompany(\""+ AssemblyInfo.COMPANY + "\")]");
-		        pr.println("[assembly: AssemblyProduct(\"" + AssemblyInfo.DB4O.product() + "\")]");
-		        pr.println("[assembly: AssemblyCopyright(\"" + AssemblyInfo.COPYRIGHT + "\")]");
-		        pr.println("[assembly: AssemblyTrademark(\"\")]");
-		        pr.println("[assembly: AssemblyCulture(\"\")]	");
-		        pr.println("[assembly: AssemblyVersion(\"" + version +  "\")]");
-		        pr.println("[assembly: AssemblyDelaySign(false)]");
-		        pr.println("[assembly: AssemblyKeyFile(\"" + keyfile   + "\")]");
-		        pr.println("[assembly: AssemblyKeyName(\"\")]");
-	        }
+	        outputJavaVersionInfo(pr);
 	        pr.close();
 	        fos.close();
         }catch(Exception e){
