@@ -53,6 +53,6 @@ public class DoubleMigrationTestCase extends MigrationTestCaseBase {
 		// reference db4o 5.2 and uncomment the line below
 		// if you ever need to regenerate the file
 //		new DoubleMigrationTestCase().generateFile();
-		new TestRunner(IntegerMigrationTestCase.class).run();
+		new TestRunner(DoubleMigrationTestCase.class).run();
 	}
 }
