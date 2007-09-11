@@ -11,7 +11,7 @@
 			<classpath>
 				<dirset dir="${dir.build.bin}"/>
 				<fileset dir="${dir.build.lib}">
-					<include name="*.jar" />
+					<include name="**/*.jar" />
 				</fileset>
 			</classpath>
 			<exclude name="**/osgi/**/*.java" />
