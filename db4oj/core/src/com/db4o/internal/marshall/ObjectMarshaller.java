@@ -126,12 +126,12 @@ public abstract class ObjectMarshaller {
             Pointer4 pointer,
             ObjectReference ref, 
             Object obj, 
-            StatefulBuffer writer) {
+            Buffer buffer) {
         
         ClassMetadata classMetadata = ref.classMetadata();
         
         ObjectContainerBase container = trans.container();
-        container.writeUpdate(pointer, classMetadata, writer);
+        container.writeUpdate(trans, pointer, classMetadata, buffer);
         if (ref.isActive()) {
             ref.setStateClean();
         }

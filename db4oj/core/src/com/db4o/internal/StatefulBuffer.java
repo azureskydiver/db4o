@@ -242,7 +242,7 @@ public final class StatefulBuffer extends Buffer {
         if (Deploy.debug) {
             debugCheckBytes();
         }
-        writeEncrypt(file(),i_address, _addressOffset);
+        file().writeEncrypt(this, i_address, _addressOffset);
     }
     
     /* Only used for Strings, topLevel therefore means aligning blocksize, so

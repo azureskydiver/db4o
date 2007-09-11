@@ -186,8 +186,8 @@ public abstract class PersistentBase implements Persistent {
 		if (Deploy.debug) {
 		    writer.writeEnd();
 		}
-
-		writer.writeEncrypt(container, slot.address(), 0);
+		
+		container.writeEncrypt(writer, slot.address(), 0);
 
 		if (isActive()) {
 		    setStateClean();

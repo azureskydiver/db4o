@@ -656,6 +656,12 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         }
         i_dirty.clear();
 	}
+	
+    public final void writeEncrypt(Buffer buffer, int address, int addressOffset) {
+        _handlers.encrypt(buffer);
+        writeBytes(buffer, address, addressOffset);
+        _handlers.decrypt(buffer);
+    }
     
     protected void writeVariableHeader(){
         if(! _timeStampIdGenerator.isDirty()){
@@ -684,14 +690,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         syncFiles();
     }
 
-    public final void writeNew(ClassMetadata a_yapClass, StatefulBuffer aWriter) {
-        aWriter.writeEncrypt(this, aWriter.getAddress(), 0);
-        if(a_yapClass == null){
+    public final void writeNew(ClassMetadata classMetadata, StatefulBuffer buffer) {
+        writeEncrypt(buffer, buffer.getAddress(), 0);
+        if(classMetadata == null){
             return;
         }
         if (maintainsIndices()) {
-            a_yapClass.addToIndex(this, aWriter.getTransaction(), aWriter
-                .getID());
+            classMetadata.addToIndex(this, buffer.getTransaction(), buffer.getID());
         }
     }
 
@@ -719,11 +724,12 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return slot;
     }
 
-    public final void writeUpdate(Pointer4 pointer, ClassMetadata classMetadata, StatefulBuffer buffer) {
-        if(buffer.getAddress() == 0){
-            getSlotForUpdate(buffer);
+    public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {
+        int address = pointer.address();
+        if(address == 0){
+            address = getSlotForUpdate(trans, pointer.id(), pointer.length()).address();
         }
-        buffer.writeEncrypt();
+        writeEncrypt(buffer, address, 0);
     }
 
     public void setNextTimeStampId(long val) {

@@ -637,7 +637,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 	
 	public final void writeNew(ClassMetadata classMetadata, StatefulBuffer buffer) {
-		MsgD msg = Msg.WRITE_NEW.getWriter(buffer.pointer(), classMetadata, buffer);
+		MsgD msg = Msg.WRITE_NEW.getWriter(buffer.getTransaction(), buffer.pointer(), classMetadata, buffer);
 		writeBatchedMessage(msg);
 	}
     
@@ -645,8 +645,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// do nothing
 	}
 
-	public final void writeUpdate(Pointer4 pointer, ClassMetadata classMetadata, StatefulBuffer buffer) {
-		MsgD msg = Msg.WRITE_UPDATE.getWriter(pointer, classMetadata, buffer);
+	public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {
+		MsgD msg = Msg.WRITE_UPDATE.getWriter(trans, pointer, classMetadata, buffer);
 		writeBatchedMessage(msg);
 	}
 

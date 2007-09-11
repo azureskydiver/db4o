@@ -1905,11 +1905,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void writeDirty();
 
-    public abstract void writeNew(ClassMetadata a_yapClass, StatefulBuffer aWriter);
+    public abstract void writeNew(ClassMetadata classMetadata, StatefulBuffer buffer);
 
-    public abstract void writeTransactionPointer(int a_address);
+    public abstract void writeTransactionPointer(int address);
 
-    public abstract void writeUpdate(Pointer4 pointer, ClassMetadata classMetadata, StatefulBuffer buffer);
+    public abstract void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer);
 
     // cheat emulating '(YapStream)this'
     private static ExternalObjectContainer cast(PartialObjectContainer obj) {
