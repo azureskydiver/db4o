@@ -723,16 +723,19 @@
 		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.AllTests" failonerror="true" timeout="1200000">
 			<classpath refid="tests.java1.1.cp" />
 		</java>
-        
-        <echo message="Running com.db4o.db4ounit.jre12.AllTestsJdk1_2 on jvm ${file.jvm.jdk1.3}" />
-		<java jvm="${file.jvm.jdk1.3}" fork="true" classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" failonerror="true" timeout="1200000">
-			<classpath refid="tests.java1.2.cp" />
-		</java>
-        
+
 		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.test.AllTests" failonerror="true" timeout="1200000">
 			<classpath refid="tests.java1.1.cp" />
 			<arg value="-withExceptions" />
 		</java>
+
+        <echo message="Running com.db4o.db4ounit.jre12.AllTestsJdk1_2 on jvm ${file.jvm.jdk1.3}" />
+		<java jvm="${file.jvm.jdk1.3}" fork="true" classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" failonerror="true" timeout="1200000">
+			<classpath refid="tests.java1.2.cp" />
+			<sysproperty key="db4oj.tests.bin" value="${dir.dist.classes.test.jdk1.2}" />
+			<sysproperty key="db4o.archives.path" value="${dir.workspace}/db4o.archives/java1.2/" />
+		</java>
+        
 		<java jvm="${file.jvm.jdk1.3}" fork="true" classname="com.db4o.test.AllTestsJdk1_2" failonerror="true" timeout="3600000">
 			<classpath refid="tests.java1.2.cp" />
 			<arg value="-withExceptions" />
