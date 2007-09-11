@@ -112,16 +112,7 @@ public abstract class ObjectMarshaller {
             Object obj, 
             StatefulBuffer reader);
     
-    public abstract StatefulBuffer marshallNew(Transaction a_trans, ObjectReference yo, int a_updateDepth);
-    
-    public abstract void marshallUpdate(
-        Transaction trans,
-        int updateDepth,
-        ObjectReference ref,
-        Object obj
-        );
-    
-    protected final void marshallUpdateWrite(
+    public final void marshallUpdateWrite(
             Transaction trans,
             Pointer4 pointer,
             ObjectReference ref, 
@@ -186,6 +177,35 @@ public abstract class ObjectMarshaller {
         };
         traverseFields(context, command);
     }
+    
+    public void marshall(final Object obj, final MarshallingContext context) {
+        final Transaction trans = context.transaction();
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+            private int fieldIndex = -1; 
+            public int fieldCount(ClassMetadata classMetadata, Buffer buffer) {
+                int fieldCount = classMetadata.i_fields.length;
+                context.fieldCount(fieldCount);
+                return fieldCount;
+            }
+            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                context.nextField();
+                fieldIndex++;
+                Object child = field.getOrCreate(trans, obj);
+                if(child == null) {
+                    context.isNull(fieldIndex, true);
+                    field.addIndexEntry(trans, context.objectID(), null);
+                    return;
+                }
+                
+                if (child instanceof Db4oTypeImpl) {
+                    child = ((Db4oTypeImpl) child).storedTo(trans);
+                }
+                field.marshall(context, child);
+            }
+        };
+        traverseFields(context, command);
+    }
+
 
     
 }

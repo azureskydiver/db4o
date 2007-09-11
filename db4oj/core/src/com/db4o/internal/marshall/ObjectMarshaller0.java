@@ -3,7 +3,6 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
@@ -96,21 +95,6 @@ class ObjectMarshaller0 extends ObjectMarshaller {
      */
     protected int marshalledLength(FieldMetadata yf, ObjectReference yo){
         return 0;
-    }
-
-    public StatefulBuffer marshallNew(Transaction a_trans, ObjectReference yo, int a_updateDepth){
-        throw new NotSupportedException();
-    }
-
-    public void marshallUpdate(
-        Transaction trans,
-        int updateDepth,
-        ObjectReference yapObject,
-        Object obj
-        ) {
-        
-        throw new NotSupportedException();
-        
     }
 
     public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {
