@@ -12,7 +12,19 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     
     protected String[] versionNames() {
         return new String[]{
-            "db4o_6.4.000",
+                /*"db4o_3.0.3",
+                "db4o_4.0.010",
+                "db4o_4.6.010",
+                "db4o_5.0.018",
+                "db4o_5.3.001",*/
+                "db4o_5.4.012",
+                "db4o_5.5.1",
+                "db4o_5.6.000",
+                "db4o_5.7.003",
+                "db4o_6.0.200",
+                "db4o_6.1.604",
+                "db4o_6.3.500",
+                "db4o_6.4.000",
         };
     }
 
