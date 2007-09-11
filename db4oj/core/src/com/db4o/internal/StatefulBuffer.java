@@ -56,15 +56,6 @@ public final class StatefulBuffer extends Buffer {
         i_id = pointer._id;
     }
 
-    public int appendTo(final Buffer a_bytes, int a_id) {
-        a_id++;
-        a_bytes.writeInt(i_length);
-        a_bytes.writeInt(i_id);
-        a_bytes.writeInt(i_address);
-        a_bytes.append(_buffer);
-        return a_id;
-    }
-
     public int cascadeDeletes() {
         return i_cascadeDelete;
     }
@@ -351,6 +342,10 @@ public final class StatefulBuffer extends Buffer {
 	
 	public Slot slot(){
 		return new Slot(i_address, i_length);
+	}
+	
+	public Pointer4 pointer(){
+	    return new Pointer4(i_id, slot());
 	}
 
 }

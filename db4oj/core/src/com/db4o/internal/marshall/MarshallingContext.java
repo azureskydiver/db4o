@@ -83,31 +83,36 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         return _transaction;
     }
     
-    private StatefulBuffer createNewBuffer(int length) {
+    private Slot createNewSlot(int length){
         Slot slot = new Slot(-1, length);
         if(_transaction instanceof LocalTransaction){
             slot = ((LocalTransaction)_transaction).file().getSlot(length);
             _transaction.slotFreeOnRollback(objectID(), slot);
         }
         _transaction.setPointer(objectID(), slot);
-        return createUpdateBuffer( slot.address(), length);
+        return slot;
     }
-
-    private StatefulBuffer createUpdateBuffer(int address, int length) {
-        StatefulBuffer buffer = new StatefulBuffer(_transaction, length);
-        buffer.useSlot(objectID(), address, length);
-        buffer.setUpdateDepth(_updateDepth);
-        if(( address == 0) && (transaction() instanceof LocalTransaction)){
-            ((LocalTransaction)transaction()).file().getSlotForUpdate(buffer);
+    
+    private Slot createUpdateSlot(int length){
+        if(transaction() instanceof LocalTransaction){
+            return ((LocalTransaction)transaction()).file().getSlotForUpdate(transaction(), objectID(), length);
         }
-        return buffer;
+        return new Slot(0, length);
     }
-
-    public StatefulBuffer ToWriteBuffer() {
-        
+    
+    
+    public Pointer4 allocateSlot(){
         int length = container().blockAlignedBytes(marshalledLength());
+        Slot slot = isNew() ? createNewSlot(length) : createUpdateSlot(length);
+        return new Pointer4(objectID(), slot);
+    }
+    
+
+    public StatefulBuffer ToWriteBuffer(Pointer4 pointer) {
         
-        StatefulBuffer buffer = isNew() ? createNewBuffer(length) : createUpdateBuffer(0, length);
+        StatefulBuffer buffer = new StatefulBuffer(transaction(), pointer.length());
+        buffer.useSlot(pointer.id(), pointer.address(), pointer.length());
+        buffer.setUpdateDepth(_updateDepth);
         
         _writeBuffer.mergeChildren(this, buffer.getAddress(), writeBufferOffset());
         
@@ -123,7 +128,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _writeBuffer.transferContentTo(buffer);
         if (Deploy.debug) {
             buffer.writeEnd();
-            buffer.debugCheckBytes();
         }
         return buffer;
     }

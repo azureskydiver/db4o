@@ -115,27 +115,28 @@ public abstract class ObjectMarshaller {
     public abstract StatefulBuffer marshallNew(Transaction a_trans, ObjectReference yo, int a_updateDepth);
     
     public abstract void marshallUpdate(
-        Transaction a_trans,
-        int a_updateDepth,
-        ObjectReference a_yapObject,
-        Object a_object
+        Transaction trans,
+        int updateDepth,
+        ObjectReference ref,
+        Object obj
         );
     
-    protected void marshallUpdateWrite(
-            Transaction trans, 
-            ObjectReference yo, 
+    protected final void marshallUpdateWrite(
+            Transaction trans,
+            Pointer4 pointer,
+            ObjectReference ref, 
             Object obj, 
             StatefulBuffer writer) {
         
-        ClassMetadata yc = yo.classMetadata();
+        ClassMetadata classMetadata = ref.classMetadata();
         
-        ObjectContainerBase stream = trans.container();
-        stream.writeUpdate(yc, writer);
-        if (yo.isActive()) {
-            yo.setStateClean();
+        ObjectContainerBase container = trans.container();
+        container.writeUpdate(pointer, classMetadata, writer);
+        if (ref.isActive()) {
+            ref.setStateClean();
         }
-        yo.endProcessing();
-        objectOnUpdate(trans, yc, obj);
+        ref.endProcessing();
+        objectOnUpdate(trans, classMetadata, obj);
     }
 
 	private void objectOnUpdate(Transaction transaction, ClassMetadata yc, Object obj) {
