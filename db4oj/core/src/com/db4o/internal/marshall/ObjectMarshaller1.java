@@ -156,48 +156,6 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 	public void skipMarshallerInfo(Buffer reader) {
 		reader.incrementOffset(1);
 	}
-	
-    public final void marshallUpdate(Transaction trans, int updateDepth, ObjectReference ref, Object obj) {
-        MarshallingContext context = new MarshallingContext(trans, ref, updateDepth, false);
-        marshall(obj, context);
-        Pointer4 pointer = context.allocateSlot();
-        marshallUpdateWrite(trans, pointer, ref, obj, context.ToWriteBuffer(pointer));
-    }
 
-    
-    public StatefulBuffer marshallNew(Transaction trans, ObjectReference ref, int updateDepth){
-        MarshallingContext context = new MarshallingContext(trans, ref, updateDepth, true);
-        marshall(ref.getObject(), context);
-        Pointer4 pointer = context.allocateSlot();
-        return context.ToWriteBuffer(pointer);
-    }
-    
-    protected void marshall(final Object obj, final MarshallingContext context) {
-        final Transaction trans = context.transaction();
-        TraverseFieldCommand command = new TraverseFieldCommand() {
-            private int fieldIndex = -1; 
-            public int fieldCount(ClassMetadata classMetadata, Buffer buffer) {
-                int fieldCount = classMetadata.i_fields.length;
-                context.fieldCount(fieldCount);
-                return fieldCount;
-            }
-            public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-                context.nextField();
-                fieldIndex++;
-                Object child = field.getOrCreate(trans, obj);
-                if(child == null) {
-                    context.isNull(fieldIndex, true);
-                    field.addIndexEntry(trans, context.objectID(), null);
-                    return;
-                }
-                
-                if (child instanceof Db4oTypeImpl) {
-                    child = ((Db4oTypeImpl) child).storedTo(trans);
-                }
-                field.marshall(context, child);
-            }
-        };
-        traverseFields(context, command);
-    }
 	
 }

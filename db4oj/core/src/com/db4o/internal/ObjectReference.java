@@ -7,6 +7,7 @@ import com.db4o.activation.Activator;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
 
 
@@ -98,32 +99,38 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	
 	/** return false if class not completely initialized, otherwise true **/
 	boolean continueSet(Transaction trans, int updateDepth) {
-		if (bitIsTrue(Const4.CONTINUE)) {
-		    if(! _class.stateOKAndAncestors()){
-		        return false;
-		    }
-            
-            if(DTrace.enabled){
-                DTrace.CONTINUESET.log(getID());
-            }
-            
-			bitFalse(Const4.CONTINUE);
-            
-            StatefulBuffer writer = MarshallerFamily.current()._object.marshallNew(trans, this, updateDepth);
-
-            ObjectContainerBase container = trans.container();
-			container.writeNew(_class, writer);
-
-            Object obj = _object;
-			objectOnNew(trans, obj);
-			
-            if(! _class.isPrimitive()){
-                _object = container._references.createYapRef(this, obj);
-            }
-			
-			setStateClean();
-			endProcessing();
+		if (! bitIsTrue(Const4.CONTINUE)) {
+		    return true;
 		}
+		
+	    if(! _class.stateOKAndAncestors()){
+	        return false;
+	    }
+        
+        if(DTrace.enabled){
+            DTrace.CONTINUESET.log(getID());
+        }
+        
+		bitFalse(Const4.CONTINUE);
+        
+        MarshallingContext context = new MarshallingContext(trans, this, updateDepth, true);
+        MarshallerFamily.current()._object.marshall(getObject(), context);
+        Pointer4 pointer = context.allocateSlot();
+        Buffer buffer = context.ToWriteBuffer(pointer);
+
+        ObjectContainerBase container = trans.container();
+		container.writeNew(trans, pointer, _class, buffer);
+
+        Object obj = _object;
+		objectOnNew(trans, obj);
+		
+        if(! _class.isPrimitive()){
+            _object = container._references.createYapRef(this, obj);
+        }
+		
+		setStateClean();
+		endProcessing();
+		
 		return true;
 	}
 
@@ -419,49 +426,55 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		}
 	}
 
-	public void writeUpdate(Transaction trans, int updatedepth) {
+	public void writeUpdate(Transaction transaction, int updatedepth) {
 
-		continueSet(trans, updatedepth);
+		continueSet(transaction, updatedepth);
 		// make sure, a concurrent new, possibly triggered by objectOnNew
 		// is written to the file
 
 		// preventing recursive
-		if (beginProcessing()) {
-		    
-		    Object obj = getObject();
-		    
-		    if(objectCanUpdate(trans, obj)){
-				
-				if ((!isActive()) || obj == null) {
-					endProcessing();
-					return;
-				}
-				if (Deploy.debug) {
-					if (!(getID() > 0)) {
-						System.out.println(
-							"Object passed to set() with valid YapObject. YapObject had no ID.");
-						throw new RuntimeException();
-					}
-					if (_class == null) {
-						System.out.println(
-							"Object passed to set() with valid YapObject. YapObject has no valid yapClass.");
-						throw new RuntimeException();
-					}
-				}
-				
-				logEvent(trans.container(), "update", Const4.STATE);
-				
-				setStateClean();
-
-				trans.writeUpdateDeleteMembers(getID(), _class, trans
-						.container()._handlers.arrayType(obj), 0);
-                
-                MarshallerFamily.current()._object.marshallUpdate(trans, updatedepth, this, obj);
-				
-		    } else{
-		        endProcessing();
-		    }
+		if ( !beginProcessing() ) {
+		    return;
 		}
+		    
+	    Object obj = getObject();
+	    
+	    if( !objectCanUpdate(transaction, obj) ||  !isActive()  || obj == null ){
+	        endProcessing();
+	        return;
+	    }
+			
+		if (Deploy.debug) {
+			if (!(getID() > 0)) {
+				throw new IllegalStateException("ID invalid");
+			}
+			if (_class == null) {
+				throw new IllegalStateException("ClassMetadata invalid");
+			}
+		}
+		
+        ObjectContainerBase container = transaction.container();
+		
+		logEvent(container, "update", Const4.STATE);
+		
+		setStateClean();
+
+		transaction.writeUpdateDeleteMembers(getID(), _class, container._handlers.arrayType(obj), 0);
+		
+        MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
+        MarshallerFamily.current()._object.marshall(obj, context);
+        Pointer4 pointer = context.allocateSlot();
+        Buffer buffer = context.ToWriteBuffer(pointer);
+        
+        container.writeUpdate(transaction, pointer, classMetadata(), buffer);
+        if (isActive()) {
+            setStateClean();
+        }
+        endProcessing();
+        
+        container.callbacks().objectOnUpdate(transaction, obj);
+        classMetadata().dispatchEvent(container, obj, EventDispatcher.UPDATE);
+		
 	}
 
 	private boolean objectCanUpdate(Transaction transaction, Object obj) {

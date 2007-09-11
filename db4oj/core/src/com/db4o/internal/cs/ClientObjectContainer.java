@@ -636,8 +636,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		msg.write(i_socket);
 	}
 	
-	public final void writeNew(ClassMetadata classMetadata, StatefulBuffer buffer) {
-		MsgD msg = Msg.WRITE_NEW.getWriter(buffer.getTransaction(), buffer.pointer(), classMetadata, buffer);
+	public final void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {
+		MsgD msg = Msg.WRITE_NEW.getWriter(trans, pointer, classMetadata, buffer);
 		writeBatchedMessage(msg);
 	}
     

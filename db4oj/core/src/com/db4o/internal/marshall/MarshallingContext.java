@@ -108,13 +108,10 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
     
 
-    public StatefulBuffer ToWriteBuffer(Pointer4 pointer) {
+    public Buffer ToWriteBuffer(Pointer4 pointer) {
         
-        StatefulBuffer buffer = new StatefulBuffer(transaction(), pointer.length());
-        buffer.useSlot(pointer.id(), pointer.address(), pointer.length());
-        buffer.setUpdateDepth(_updateDepth);
-        
-        _writeBuffer.mergeChildren(this, buffer.getAddress(), writeBufferOffset());
+        Buffer buffer = new Buffer(pointer.length());
+        _writeBuffer.mergeChildren(this, pointer.address(), writeBufferOffset());
         
         if (Deploy.debug) {
             buffer.writeBegin(Const4.YAPOBJECT);
@@ -126,9 +123,11 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         buffer.writeBitMap(_nullBitMap);
         
         _writeBuffer.transferContentTo(buffer);
+        
         if (Deploy.debug) {
             buffer.writeEnd();
         }
+        
         return buffer;
     }
     

@@ -690,13 +690,13 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         syncFiles();
     }
 
-    public final void writeNew(ClassMetadata classMetadata, StatefulBuffer buffer) {
-        writeEncrypt(buffer, buffer.getAddress(), 0);
+    public final void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {
+        writeEncrypt(buffer, pointer.address(), 0);
         if(classMetadata == null){
             return;
         }
         if (maintainsIndices()) {
-            classMetadata.addToIndex(this, buffer.getTransaction(), buffer.getID());
+            classMetadata.addToIndex(this, trans, pointer.id());
         }
     }
 
