@@ -49,7 +49,7 @@
 	<target name="buildall2-old-school" depends="clean, buildjava-old-school, buildnet2">
 	</target>
 
-	<target name="init" description="Basic initialization">
+	<target name="init" depends="get-svn-revision" description="Basic initialization">
 		<tstamp />
 		<mkdir dir="${dir.dist}" />
 		<mkdir dir="${dir.sharpen}" />
@@ -65,7 +65,11 @@
 		<mkdir dir="${dir.dist.dll.mono}" />
 		<loadfile property="content.gplheader" srcfile="${file.gplheader}" encoding="iso-8859-1" />
 		<loadfile property="content.copyrightheader" srcfile="${file.copyrightheader}" encoding="iso-8859-1" />
-		<versioninfo path="${dir.j.core.src}/com/db4o" java="true" version="${db4o.version.full}" major="${db4o.version.major}" minor="${db4o.version.minor}" />
+		<versioninfo path="${dir.j.core.src}/com/db4o"  
+			major="${db4o.version.major}" 
+			minor="${db4o.version.minor}"
+			revision="${svn.revision}"
+		/>
 		<property name="file.compiler.jdk1.3.args.optional" value="" />
 	</target>
 
