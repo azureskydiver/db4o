@@ -40,8 +40,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
         return PATH + fileNamePrefix() + versionName.replace(' ', '_') ;
     }
     
-    public void setUp() throws Exception {
-        configure();
+    public void createDatabase() {
         String file = fileName();
         File4.mkdirs(PATH);
         if(File4.exists(file)){
@@ -55,13 +54,16 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
         }
     }
     
-    public void _test() throws IOException{
+    public void setUp() throws Exception {
+        configure();
+        createDatabase();
+    }
+    
+    public void test() throws IOException{
         for(int i = 0; i < versionNames().length; i ++){
-            String fileName = oldVersionFileName(versionNames()[i]);
-            if(File4.exists(fileName)){
-                String testFileName = fileName(versionNames()[i]); 
-                File4.delete(testFileName);
-                File4.copy(fileName, testFileName);
+            String testFileName = fileName(versionNames()[i]); 
+            if(File4.exists(testFileName)){
+                System.out.println("Check database: " + testFileName);
                 checkDatabaseFile(testFileName);
                 // Twice, to ensure everything is fine after opening, converting and closing.
                 checkDatabaseFile(testFileName);
@@ -70,11 +72,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
                 // FIXME: Change back to Assert.fail as soon as all new handler
                 //        test files are available for all Java and .NET versions
                 
-                // Assert.fail("Version upgrade check failed. File not found:" + fileName);
-                
-                System.err.println("Version upgrade check failed. File not found:");
-                System.err.println(fileName);
-
+                Assert.fail("Version upgrade check failed. File not found:" + testFileName);
             }
         }
     }
