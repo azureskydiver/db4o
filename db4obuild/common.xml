@@ -26,6 +26,7 @@
 	<taskdef name="svnRevision" classname="com.db4o.devtools.ant.SvnRevision">
 		<classpath>
 			<pathelement location="${dir.build.bin}" />
+			<pathelement location="${dir.build.lib}/svnkit/svnkit.jar" />
 			<path path="${path.classpath.full}" />
 		</classpath>
 	</taskdef>
