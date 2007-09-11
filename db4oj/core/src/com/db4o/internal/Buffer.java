@@ -194,12 +194,6 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
         _buffer[_offset++] = a_byte;
     }
     
-    public final void writeEncrypt(LocalObjectContainer file, int address, int addressOffset) {
-        file._handlers.encrypt(this);
-        file.writeBytes(this, address, addressOffset);
-        file._handlers.decrypt(this);
-    }
-    
     public void writeEnd() {
         if (Deploy.debug && Deploy.brackets) {
             writeByte(Const4.YAPEND);

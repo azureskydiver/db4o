@@ -14,34 +14,34 @@ public class MsgObject extends MsgD {
 	private int _id;
 	private int _address;
 	
-	final MsgD getWriter(Pointer4 pointer, StatefulBuffer bytes,int[] prependInts) {
-		int lengthNeeded = bytes.length() + LENGTH_FOR_FIRST;
+	final MsgD getWriter(Transaction trans, Pointer4 pointer, Buffer buffer,int[] prependInts) {
+		int lengthNeeded = buffer.length() + LENGTH_FOR_FIRST;
 		if(prependInts != null){
 			lengthNeeded += (prependInts.length * Const4.INT_LENGTH);
 		}
-		MsgD message = getWriterForLength(bytes.getTransaction(), lengthNeeded);
+		MsgD message = getWriterForLength(trans, lengthNeeded);
 		if(prependInts != null){
 		    for (int i = 0; i < prependInts.length; i++) {
 		        message._payLoad.writeInt(prependInts[i]);    
             }
 		}
-		message._payLoad.append(pointer, bytes);
+		message._payLoad.append(pointer, buffer);
 		return message;
 	}
 
 	final public MsgD getWriter(StatefulBuffer buffer) {
-		return getWriter(buffer.pointer(), buffer, null);
+		return getWriter(buffer.getTransaction(), buffer.pointer(), buffer, null);
 	}
 	
-	public final MsgD getWriter(Pointer4 pointer, ClassMetadata a_yapClass, StatefulBuffer bytes) {
-        if(a_yapClass == null){
-            return getWriter(pointer, bytes, new int[]{0});
+	public final MsgD getWriter(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {
+        if(classMetadata == null){
+            return getWriter(trans, pointer, buffer, new int[]{0});
         }
-		return getWriter(pointer, bytes, new int[]{ a_yapClass.getID()});
+		return getWriter(trans, pointer, buffer, new int[]{ classMetadata.getID()});
 	}
 	
-	public final MsgD getWriter(Pointer4 pointer, ClassMetadata classMetadata, int param, StatefulBuffer buffer) {
-		return getWriter(pointer, buffer, new int[]{ classMetadata.getID(), param});
+	public final MsgD getWriter(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, int param, Buffer buffer) {
+		return getWriter(trans, pointer, buffer, new int[]{ classMetadata.getID(), param});
 	}
 	
 	public final StatefulBuffer unmarshall() {
