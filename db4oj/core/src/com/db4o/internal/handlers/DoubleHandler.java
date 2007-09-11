@@ -13,7 +13,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public final class DoubleHandler extends LongHandler {
+public class DoubleHandler extends LongHandler {
 	
     private static final Double DEFAULT_VALUE = new Double(0);
     

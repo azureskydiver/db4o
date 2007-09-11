@@ -14,7 +14,7 @@ import com.db4o.reflect.ReflectClass;
 
 
 
-public final class FloatHandler extends IntHandler {
+public class FloatHandler extends IntHandler {
     
     private static final Float i_primitive = new Float(0);
     
