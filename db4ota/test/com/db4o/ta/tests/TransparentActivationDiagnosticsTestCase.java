@@ -29,6 +29,9 @@ public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCa
 		
 		public void bind(Activator activator) {
 		}
+		
+		public void activate() {			
+		}
 
 		public SomeOtherTAAwareData(SomeTAAwareData data) {
 			_data = data;
