@@ -47,10 +47,6 @@ public abstract class StringHandler extends BuiltinTypeHandler implements Indexa
         }
     }
     
-    public int getID() {
-        return 9;
-    }
-
     byte getIdentifier() {
         return Const4.YAPSTRING;
     }

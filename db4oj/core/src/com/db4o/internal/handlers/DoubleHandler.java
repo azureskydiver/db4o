@@ -29,10 +29,6 @@ public class DoubleHandler extends LongHandler {
 		return DEFAULT_VALUE;
 	}
 	
-	public int getID(){
-		return 5;
-	}
-	
 	protected Class primitiveJavaClass(){
 		return double.class;
 	}

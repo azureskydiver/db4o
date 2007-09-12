@@ -35,10 +35,6 @@ public class DateHandler extends LongHandler {
 		return PROTO;
 	}
 	
-	public int getID(){
-		return 10;
-	}
-    
 	protected Class primitiveJavaClass(){
 		return null;
 	}

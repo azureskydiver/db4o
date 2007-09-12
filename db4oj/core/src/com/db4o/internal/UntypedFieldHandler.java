@@ -31,7 +31,7 @@ public class UntypedFieldHandler extends ClassMetadata {
 	}
 	
 	public int getID() {
-		return 11;
+		return Handlers4.UNTYPED_ID;
 	}
 
 	public boolean hasField(ObjectContainerBase a_stream, String a_path) {

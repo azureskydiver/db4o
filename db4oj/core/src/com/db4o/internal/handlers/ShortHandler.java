@@ -27,10 +27,6 @@ public class ShortHandler extends PrimitiveHandler {
 		return i_primitive;
 	}
 	
-	public int getID(){
-		return 8;
-	}
-	
 	public int linkLength(){
 		return LENGTH;
 	}

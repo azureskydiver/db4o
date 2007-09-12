@@ -23,10 +23,6 @@ public final class CharHandler extends PrimitiveHandler {
 		return i_primitive;
 	}
 	
-	public int getID() {
-		return 7;
-	}
-
 	public int linkLength() {
 		return LENGTH;
 	}

@@ -35,10 +35,6 @@ public class IntHandler extends PrimitiveHandler {
 		return i_primitive;
 	}
 	
-    public int getID() {
-        return 1;
-    }
-
     protected Class primitiveJavaClass() {
         return int.class;
     }

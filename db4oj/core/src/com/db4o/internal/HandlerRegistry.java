@@ -369,17 +369,21 @@ public final class HandlerRegistry {
     // TODO: Interfaces should be handled by the ANY handler but we
     // need to write the code to migrate from the old field handler to the new
     public final TypeHandler4 handlerForClass(ObjectContainerBase container, ReflectClass clazz) {
-    	 if(clazz == null){
-             return null;
-         }
-         if (clazz.isArray()) {
-             return handlerForClass(container, clazz.getComponentType());
-         }
-         ClassMetadata classMetadata = classMetadataForClass(clazz);
-         if (classMetadata != null) {
-             return classMetadata.typeHandler();
-         }
-         return container.produceClassMetadata(clazz);
+        return classMetadataForClass(container, clazz).typeHandler();
+    }
+    
+    public final ClassMetadata classMetadataForClass(ObjectContainerBase container, ReflectClass clazz) {
+        if(clazz == null){
+            return null;
+        }
+        if (clazz.isArray()) {
+            return classMetadataForClass(container, clazz.getComponentType());
+        }
+        ClassMetadata classMetadata = classMetadataForClass(clazz);
+        if (classMetadata != null) {
+            return classMetadata;
+        }
+        return container.produceClassMetadata(clazz);
     }
 
 	public TypeHandler4 untypedHandler() {

@@ -85,12 +85,13 @@ public class FieldMetadata implements StoredField {
         _handler = container()._handlers.untypedHandler();
     }
 
-    FieldMetadata(ClassMetadata containingClass, ReflectField field, TypeHandler4 handler) {
+    FieldMetadata(ClassMetadata containingClass, ReflectField field, TypeHandler4 handler, int handlerID) {
     	this(containingClass);
         init(containingClass, field.getName());
         _javaField = field;
         _javaField.setAccessible();
         _handler = handler;
+        _handlerID = handlerID;
         
         // TODO: beautify !!!  possibly pull up isPrimitive to ReflectField
         boolean isPrimitive = false;
@@ -503,7 +504,7 @@ public class FieldMetadata implements StoredField {
         // alive needs to be checked by all callers: Done
         TypeHandler4 handler = baseTypeHandler();
         if(Handlers4.handlesSimple(handler)){
-            return container._handlers.primitiveClassById(handler.getID());
+            return container._handlers.primitiveClassById(handlerID());
         }
         return (ClassMetadata)handler;
     }

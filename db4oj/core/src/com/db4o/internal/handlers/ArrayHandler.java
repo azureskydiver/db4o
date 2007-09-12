@@ -139,10 +139,6 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         return _isPrimitive ? hc : - hc;
     }
 
-    public final int getID() {
-        return _handler.getID();
-    }
-
     protected boolean handleAsByteArray(Object obj) {
         if(Deploy.csharp){
             return obj.getClass() ==  byte[].class;

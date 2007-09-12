@@ -183,14 +183,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		ReflectField[] fields = reflectFields();
 		for (int i = 0; i < fields.length; i++) {
 		    if (storeField(fields[i])) {
-		        
-		        TypeHandler4 handler = container._handlers.handlerForClass(container, fields[i].getFieldType());
-		        
-		        if (handler == null) {
-		            continue;
-		        }
-		        FieldMetadata field = new FieldMetadata(this, fields[i], handler);
-
+		        ClassMetadata fieldClassMetadata = container._handlers.classMetadataForClass(container, fields[i].getFieldType());
+                if (fieldClassMetadata == null) {
+                    continue;
+                }
+                TypeHandler4 handler = fieldClassMetadata.typeHandler();
+                FieldMetadata field = new FieldMetadata(this, fields[i], handler, fieldClassMetadata.getID());
 		        boolean found = false;
 		        Iterator4 m = collectedFields.iterator();
 		        while (m.moveNext()) {
@@ -202,12 +200,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		        if (found) {
 		            continue;
 		        }
-
-		        // this has no effect on YapClients
 		        dirty = true;
-		        // we need a local dirty flag to tell us to reconstruct
-		        // i_fields
-
 		        collectedFields.add(field);
 		    }
 		}

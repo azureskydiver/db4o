@@ -25,10 +25,6 @@ public final class BooleanHandler extends PrimitiveHandler {
         super(stream);
     }
     
-	public int getID(){
-		return 4;
-	}
-	
 	public Object defaultValue(){
 		return i_primitive;
 	}
