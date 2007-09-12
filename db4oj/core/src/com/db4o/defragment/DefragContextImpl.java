@@ -257,7 +257,7 @@ public class DefragContextImpl implements DefragContext {
 		if(sourceUuidIndexID()==0) {
 			return null;
 		}
-		return _sourceDb.getUUIDIndex().getIndex(systemTrans());
+		return _sourceDb.uUIDIndex().getIndex(systemTrans());
 	}
 	
 	public void targetUuidIndexID(int id) {

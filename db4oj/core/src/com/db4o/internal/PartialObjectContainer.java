@@ -1931,12 +1931,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return _config;
     }
     
-	public UUIDFieldMetadata getUUIDIndex() {
-		return _handlers.i_indexes.i_fieldUUID;
+	public UUIDFieldMetadata uUIDIndex() {
+		return _handlers.indexes()._uUID;
 	}
 	
-	public VersionFieldMetadata getVersionIndex() {
-		return _handlers.i_indexes.i_fieldVersion;
+	public VersionFieldMetadata versionIndex() {
+		return _handlers.indexes()._version;
 	}
 
     public ClassMetadataRepository classCollection() {

@@ -27,7 +27,7 @@ import com.db4o.reflect.generic.*;
  */
 public final class HandlerRegistry {
 	
-	private final ObjectContainerBase _masterStream;  // this is the master container and not valid
+	private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
 
     private static final Db4oTypeImpl[]   i_db4oTypes     = { new BlobImpl()};
@@ -60,7 +60,7 @@ public final class HandlerRegistry {
 
     private final Hashtable4        i_classByClass  = new Hashtable4(32);
     
-    SharedIndexedFields              		i_indexes;
+    private SharedIndexedFields              		_indexes;
     
     /**
 	 * @deprecated
@@ -92,32 +92,32 @@ public final class HandlerRegistry {
 	public ReflectClass ICLASS_STRING;
     ReflectClass ICLASS_TRANSIENTCLASS;
 
-    HandlerRegistry(final ObjectContainerBase a_stream, byte stringEncoding, GenericReflector reflector) {
+    HandlerRegistry(final ObjectContainerBase container, byte stringEncoding, GenericReflector reflector) {
     	
-    	_masterStream = a_stream;
-    	a_stream._handlers = this;
+    	_container = container;
+    	container._handlers = this;
         
         _reflector = reflector;
-        _diagnosticProcessor = a_stream.configImpl().diagnosticProcessor();
+        _diagnosticProcessor = container.configImpl().diagnosticProcessor();
     	
     	initClassReflectors(reflector);
         
-        i_indexes = new SharedIndexedFields(a_stream);
+        _indexes = new SharedIndexedFields(container);
         
-        _virtualFields[0] = i_indexes.i_fieldVersion;
-        _virtualFields[1] = i_indexes.i_fieldUUID;
+        _virtualFields[0] = _indexes._version;
+        _virtualFields[1] = _indexes._uUID;
 
-        i_stringHandler = new StringHandler2(a_stream, LatinStringIO.forEncoding(stringEncoding));
+        i_stringHandler = new StringHandler2(container, LatinStringIO.forEncoding(stringEncoding));
 
-        i_handlers = new TypeHandler4[] { new IntHandler(a_stream), new LongHandler(a_stream), new FloatHandler(a_stream),
-            new BooleanHandler(a_stream), new DoubleHandler(a_stream), new ByteHandler(a_stream), new CharHandler(a_stream),
-            new ShortHandler(a_stream),
+        i_handlers = new TypeHandler4[] { new IntHandler(container), new LongHandler(container), new FloatHandler(container),
+            new BooleanHandler(container), new DoubleHandler(container), new ByteHandler(container), new CharHandler(container),
+            new ShortHandler(container),
 
             // primitives first
-            i_stringHandler, new DateHandler(a_stream), new UntypedFieldHandler(a_stream) // Index = 10, ID = 11
+            i_stringHandler, new DateHandler(container), new UntypedFieldHandler(container) // Index = 10, ID = 11
         };
         
-        i_platformTypes = Platform4.types(a_stream);
+        i_platformTypes = Platform4.types(container);
 
         if (i_platformTypes.length > 0) {
             for (int i = 0; i < i_platformTypes.length; i++) {
@@ -140,7 +140,7 @@ public final class HandlerRegistry {
 
         for (int i = 0; i < CLASSCOUNT; i++) {
             int id = i + 1; // note that we avoid 0 here
-            i_yapClasses[i] = new PrimitiveFieldHandler(a_stream, i_handlers[i]);
+            i_yapClasses[i] = new PrimitiveFieldHandler(container, i_handlers[i]);
             i_yapClasses[i].setID(id); 
             i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
             if(i < ANY_INDEX){
@@ -162,7 +162,7 @@ public final class HandlerRegistry {
             GenericConverter converter = (i_platformTypes[i] instanceof GenericConverter) ? (GenericConverter)i_platformTypes[i] : null;  
             reflector.registerPrimitiveClass(id, i_platformTypes[i].getName(), converter);
             i_handlers[idx] = i_platformTypes[i];
-            i_yapClasses[idx] = new PrimitiveFieldHandler(a_stream, i_platformTypes[i]);
+            i_yapClasses[idx] = new PrimitiveFieldHandler(container, i_platformTypes[i]);
             i_yapClasses[idx].setID(id);
             if (id > i_maxTypeID) {
                 i_maxTypeID = idx;
@@ -175,12 +175,12 @@ public final class HandlerRegistry {
             }
         }
 
-        i_anyArray = new PrimitiveFieldHandler(a_stream, new ArrayHandler(_masterStream,
+        i_anyArray = new PrimitiveFieldHandler(container, new ArrayHandler(_container,
             untypedHandler(), false));
         i_anyArray.setID(ANY_ARRAY_ID);
         i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 
-        i_anyArrayN = new PrimitiveFieldHandler(a_stream, new MultidimensionalArrayHandler(_masterStream,
+        i_anyArrayN = new PrimitiveFieldHandler(container, new MultidimensionalArrayHandler(_container,
             untypedHandler(), false));
         i_anyArrayN.setID(ANY_ARRAY_N_ID);
         i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
@@ -193,25 +193,25 @@ public final class HandlerRegistry {
 	    registerHandlerVersion(stringHandler, 0, new StringHandler0(stringHandler));
 	    
 	    TypeHandler4 intHandler = handlerForPrimitiveClass(int.class);
-	    registerHandlerVersion(intHandler, 0, new IntHandler0(_masterStream));
+	    registerHandlerVersion(intHandler, 0, new IntHandler0(_container));
 
 	    TypeHandler4 shortHandler = handlerForPrimitiveClass(short.class);
-	    registerHandlerVersion(shortHandler, 0, new ShortHandler0(_masterStream));
+	    registerHandlerVersion(shortHandler, 0, new ShortHandler0(_container));
 
 	    TypeHandler4 floatHandler = handlerForPrimitiveClass(float.class);
-	    registerHandlerVersion(floatHandler, 0, new FloatHandler0(_masterStream));
+	    registerHandlerVersion(floatHandler, 0, new FloatHandler0(_container));
 
 	    TypeHandler4 longHandler = handlerForPrimitiveClass(long.class);
-	    registerHandlerVersion(longHandler, 0, new LongHandler0(_masterStream));
+	    registerHandlerVersion(longHandler, 0, new LongHandler0(_container));
 
 	    TypeHandler4 doubleHandler = handlerForPrimitiveClass(double.class);
-	    registerHandlerVersion(doubleHandler, 0, new DoubleHandler0(_masterStream));
+	    registerHandlerVersion(doubleHandler, 0, new DoubleHandler0(_container));
 
 	    TypeHandler4 dateHandler = handlerForPrimitiveClass(Date.class);
-	    registerHandlerVersion(dateHandler, 0, new DateHandler0(_masterStream));
+	    registerHandlerVersion(dateHandler, 0, new DateHandler0(_container));
 	    
 	    TypeHandler4 anyTypeHandler = untypedHandler();
-	    registerHandlerVersion(anyTypeHandler, 0, new UntypedFieldHandler0(_masterStream));
+	    registerHandlerVersion(anyTypeHandler, 0, new UntypedFieldHandler0(_container));
 
     }
 	
@@ -238,11 +238,11 @@ public final class HandlerRegistry {
     }
 
     int arrayType(Object a_object) {
-    	ReflectClass claxx = _masterStream.reflector().forObject(a_object);
+    	ReflectClass claxx = _container.reflector().forObject(a_object);
         if (! claxx.isArray()) {
             return 0;
         }
-        if (_masterStream.reflector().array().isNDimensional(claxx)) {
+        if (_container.reflector().array().isNDimensional(claxx)) {
             return Const4.TYPE_NARRAY;
         } 
         return Const4.TYPE_ARRAY;
@@ -259,12 +259,12 @@ public final class HandlerRegistry {
         }
         
         if(! Platform4.callConstructor()){
-            if(claxx.skipConstructor(skipConstructor, _masterStream.config().testConstructors())){
+            if(claxx.skipConstructor(skipConstructor, _container.config().testConstructors())){
                 return true;
             }
         }
         
-        if (! _masterStream.configImpl().testConstructors()) {
+        if (! _container.configImpl().testConstructors()) {
             return true;
         }
         
@@ -272,7 +272,7 @@ public final class HandlerRegistry {
             return true;
         }
         
-        if (_masterStream.reflector().constructorCallsSupported()) {
+        if (_container.reflector().constructorCallsSupported()) {
 			Tree sortedConstructors = sortConstructorsByParamsCount(claxx);
 			return findConstructor(claxx, sortedConstructors);
 		}
@@ -363,7 +363,7 @@ public final class HandlerRegistry {
         i_encrypt = false;
         i_encryptor = null;
         i_lastEncryptorByte = 0;
-        _masterStream.configImpl().oldEncryptionOff();
+        _container.configImpl().oldEncryptionOff();
     }
     
     final TypeHandler4 getHandler(int a_index) {
@@ -448,22 +448,22 @@ public final class HandlerRegistry {
         return null;
     }
 
-    ClassMetadata classMetadataForClass(ReflectClass a_class) {
-        if (a_class == null) {
+    ClassMetadata classMetadataForClass(ReflectClass clazz) {
+        if (clazz == null) {
             return null;
         }
-        if (a_class.isArray()) {
-            if (_masterStream.reflector().array().isNDimensional(a_class)) {
+        if (clazz.isArray()) {
+            if (_container.reflector().array().isNDimensional(clazz)) {
                 return i_anyArrayN;
             }
             return i_anyArray;
         }
-        return (ClassMetadata) i_classByClass.get(a_class);
+        return (ClassMetadata) i_classByClass.get(clazz);
     }
     
     public boolean isSecondClass(Object a_object){
     	if(a_object != null){
-    		ReflectClass claxx = _masterStream.reflector().forObject(a_object);
+    		ReflectClass claxx = _container.reflector().forObject(a_object);
     		if(i_classByClass.get(claxx) != null){
     			return true;
     		}
@@ -515,5 +515,9 @@ public final class HandlerRegistry {
 
     public boolean isVariableLength(TypeHandler4 handler) {
         return handler instanceof StringHandler || handler instanceof ArrayHandler;
+    }
+    
+    public SharedIndexedFields indexes(){
+        return _indexes;
     }
 }
