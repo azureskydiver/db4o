@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.internal;
 
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.slots.*;
 
 
 import db4ounit.*;
@@ -44,12 +45,18 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
     }
     
     public void testStringItem() {
+        if(! NewTypeHandlerReading.enabled){
+            return;
+        }
         StringItem writtenItem = new StringItem("one");
         StringItem readItem = (StringItem) writeRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
     }
     
     public void testStringIntItem() {
+        if(! NewTypeHandlerReading.enabled){
+            return;
+        }
         StringIntItem writtenItem = new StringIntItem("one", 777);
         StringIntItem readItem = (StringIntItem) writeRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
@@ -57,6 +64,9 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
     }
 
     public void testStringIntBooleanItem() {
+        if(! NewTypeHandlerReading.enabled){
+            return;
+        }
         StringIntBooleanItem writtenItem = new StringIntBooleanItem("one", 777, true);
         StringIntBooleanItem readItem = (StringIntBooleanItem) writeRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
@@ -69,24 +79,21 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
         ObjectReference ref = new ObjectReference(classMetadataForObject(obj), imaginativeID);
         ref.setObject(obj);
         ObjectMarshaller marshaller = MarshallerFamily.current()._object;
-        StatefulBuffer buffer = marshaller.marshallNew(trans(), ref, Integer.MAX_VALUE);
+        MarshallingContext marshallingContext = new MarshallingContext(trans(), ref, Integer.MAX_VALUE, true);
+        marshaller.marshall(ref.getObject(), marshallingContext);
+        Pointer4 pointer = marshallingContext.allocateSlot();
+        Buffer buffer = marshallingContext.ToWriteBuffer(pointer);
+        
+        
         buffer.offset(0);
         
 //        String str = new String(buffer._buffer);
 //        System.out.println(str);
         
-        Object readObject = null;
-        
-        if(NewTypeHandlerReading.enabled){
-            UnmarshallingContext context = new UnmarshallingContext(trans(), ref, Const4.ADD_TO_ID_TREE, false);
-            context.buffer(buffer);
-            context.activationDepth(5);
-            readObject = context.read();
-        }else{
-            readObject = ref.read(trans(), buffer, null, imaginativeID, imaginativeID, false);
-        }
-        
-        return readObject;
+        UnmarshallingContext unmarshallingContext = new UnmarshallingContext(trans(), ref, Const4.ADD_TO_ID_TREE, false);
+        unmarshallingContext.buffer(buffer);
+        unmarshallingContext.activationDepth(5);
+        return unmarshallingContext.read();
     }
 
     private ClassMetadata classMetadataForObject(Object obj) {
