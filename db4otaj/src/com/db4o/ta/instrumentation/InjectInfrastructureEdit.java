@@ -93,7 +93,7 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 		// protected void activate()
 		final Type activatorType = Type.getType(Activator.class);
 		String methodName = TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME;
-		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PROTECTED, Type.VOID, methodName, new Type[] { }, new Type[] {});
+		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID, methodName, new Type[] { }, new Type[] {});
 		LabelGenerator labelGen = new LabelGenerator();
 		Label startLabel = labelGen.createLabel(true);
 		Label activateLabel = labelGen.createLabel(true);

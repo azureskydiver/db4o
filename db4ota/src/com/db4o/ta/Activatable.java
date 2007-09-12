@@ -50,7 +50,7 @@ package com.db4o.ta;import com.db4o.activation.Activator;
  * other implementations are possible.)
  * 
  * public class Item implements Activatable {
- *   protected void activate() {
+ *   public void activate() {
  *     if (_activator == null) return;
  *     _activator.activate();
  *   }
@@ -77,4 +77,5 @@ package com.db4o.ta;import com.db4o.activation.Activator;
  * (probably Map based) per-container registry of activatable objects, or
  * by reusing existing db4o internal metadata (like ObjectReference) for
  * TA purposes. 
- */public interface Activatable {	void bind(Activator activator);}
+ */public interface Activatable {	void bind(Activator activator);
+	void activate();}
