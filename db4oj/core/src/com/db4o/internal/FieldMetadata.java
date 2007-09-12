@@ -391,8 +391,7 @@ public class FieldMetadata implements StoredField {
 			removeIndexEntry(mf, a_bytes);
 			boolean dotnetValueType = false;
 			if (Deploy.csharp) {
-				dotnetValueType = Platform4.isValueType(_handler
-						.classReflector());
+				dotnetValueType = Platform4.isValueType(getStoredType());
 			}
 			if ((_config != null && _config.cascadeOnDelete().definiteYes())
 					|| dotnetValueType) {
@@ -555,15 +554,10 @@ public class FieldMetadata implements StoredField {
     }
 
     public ReflectClass getStoredType() {
-        if (!Deploy.csharp) {
-            if (_isPrimitive) {
-                return  Handlers4.primitiveClassReflector(_handler);
-            }
+        if(_javaField == null){
+            return null;
         }
-        if(_handler==null) {
-        	return null;
-        }
-        return _handler.classReflector();
+        return Handlers4.baseType(_javaField.getFieldType());
     }
     
     public ObjectContainerBase container(){
@@ -664,7 +658,7 @@ public class FieldMetadata implements StoredField {
     public int linkLength() {
         alive();
         if (_handler == null) {
-            // must be a YapClass
+            // must be ClassMetadata
             return Const4.ID_LENGTH;
         }
         return _handler.linkLength();

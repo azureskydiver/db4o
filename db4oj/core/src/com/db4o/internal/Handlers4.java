@@ -33,8 +33,6 @@ public class Handlers4 {
     
     public static final int UNTYPED_ID = 11;
     
-    
-    
     public static boolean handlerCanHold(TypeHandler4 handler, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
         if(Handlers4.handlesSimple(baseTypeHandler)){
@@ -78,5 +76,12 @@ public class Handlers4 {
             return ((PrimitiveFieldHandler)handler).typeHandler();
         }
         return handler;
+    }
+    
+    public static ReflectClass baseType(ReflectClass clazz){
+        if(clazz.isArray()){
+            return baseType(clazz.getComponentType());
+        }
+        return clazz;
     }
 }

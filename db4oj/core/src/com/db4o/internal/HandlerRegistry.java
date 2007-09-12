@@ -376,14 +376,12 @@ public final class HandlerRegistry {
         if(clazz == null){
             return null;
         }
-        if (clazz.isArray()) {
-            return classMetadataForClass(container, clazz.getComponentType());
-        }
-        ClassMetadata classMetadata = classMetadataForClass(clazz);
+        ReflectClass baseType = Handlers4.baseType(clazz);
+        ClassMetadata classMetadata = classMetadataForClass(baseType);
         if (classMetadata != null) {
             return classMetadata;
         }
-        return container.produceClassMetadata(clazz);
+        return container.produceClassMetadata(baseType);
     }
 
 	public TypeHandler4 untypedHandler() {
