@@ -30,10 +30,6 @@ public class LongHandler extends PrimitiveHandler {
 		return i_primitive;
 	}
 	
-	public int getID(){
-		return Handlers4.LONG_ID;
-	}
-	
 	protected Class primitiveJavaClass(){
 		return long.class;
 	}

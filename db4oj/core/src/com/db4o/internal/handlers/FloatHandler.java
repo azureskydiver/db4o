@@ -30,10 +30,6 @@ public class FloatHandler extends IntHandler {
 		return i_primitive;
 	}
 	
-	public int getID() {
-		return 3;
-	}
-
 	protected Class primitiveJavaClass() {
 		return float.class;
 	}

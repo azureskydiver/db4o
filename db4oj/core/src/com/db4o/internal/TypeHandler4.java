@@ -20,8 +20,6 @@ public interface TypeHandler4 extends Comparable4 {
     
 	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer) throws Db4oIOException;
 	
-	int getID();
-	
     int linkLength();
    
 	Object read(MarshallerFamily mf, StatefulBuffer buffer, boolean redirect) throws CorruptionException, Db4oIOException;

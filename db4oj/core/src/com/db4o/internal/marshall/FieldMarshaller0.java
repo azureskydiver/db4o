@@ -88,23 +88,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
                 trans.container().needsUpdate(clazz);
             }
         }
-        int handlerID = 0;
-        try {
-            // The handler can be null and it can fail to
-            // deliver the ID.
-
-            // In this case the field is dead.
-
-            handlerID = handler.getID();
-        } catch (Exception e) {
-            if (Debug.atHome) {
-                e.printStackTrace();
-            }
-        }
-        if (handlerID == 0) {
-            handlerID = field.handlerID();
-        }
-        writer.writeInt(handlerID);
+        writer.writeInt(field.handlerID());
         BitMap4 bitmap = new BitMap4(3);
         bitmap.set(0, field.isPrimitive());
         bitmap.set(1, handler instanceof ArrayHandler);

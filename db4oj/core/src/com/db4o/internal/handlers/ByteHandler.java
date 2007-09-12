@@ -23,10 +23,6 @@ public final class ByteHandler extends PrimitiveHandler {
     	return Coercion4.toSByte(obj);
     }
 
-	public int getID(){
-		return 6;
-	}
-	
 	public Object defaultValue(){
 		return DEFAULT_VALUE;
 	}
