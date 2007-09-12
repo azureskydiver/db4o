@@ -120,13 +120,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
     
-    void addMembers(ObjectContainerBase ocb) {
+    void addMembers(ObjectContainerBase container) {
         bitTrue(Const4.CHECKED_CHANGES);
-        if (installTranslator(ocb) || installMarshaller(ocb)) {
+        if (installTranslator(container) || installMarshaller(container)) {
         	return;
         }
 
-        if (ocb.detectSchemaChanges()) {
+        if (container.detectSchemaChanges()) {
             boolean dirty = isDirty();
 
             Collection4 members = new Collection4();
@@ -140,17 +140,17 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
             if(generateVersionNumbers()) {
                 if(! hasVersionField()) {
-                    members.add(ocb.getVersionIndex());
+                    members.add(container.versionIndex());
                     dirty = true;
                 }
             }
             if(generateUUIDs()) {
                 if(! hasUUIDField()) {
-                    members.add(ocb.getUUIDIndex());
+                    members.add(container.uUIDIndex());
                     dirty = true;
                 }
             }
-            dirty = collectReflectFields(ocb, members) | dirty;
+            dirty = collectReflectFields(container, members) | dirty;
             if (dirty) {
                 _container.setDirtyInSystemTransaction(this);
                 i_fields = new FieldMetadata[members.size()];
@@ -183,7 +183,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		ReflectField[] fields = reflectFields();
 		for (int i = 0; i < fields.length; i++) {
 		    if (storeField(fields[i])) {
+		        
 		        TypeHandler4 wrapper = stream._handlers.handlerForClass(stream, fields[i].getFieldType());
+		        
 		        if (wrapper == null) {
 		            continue;
 		        }
@@ -270,11 +272,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             // We don't want to have a null field, so let's add the version
             // number, if we have a UUID, even if it's not needed.
             
-            i_fields[1] = ocb.getVersionIndex();
+            i_fields[1] = ocb.versionIndex();
         }
         
         if(uuids){
-            i_fields[2] = ocb.getUUIDIndex();
+            i_fields[2] = ocb.uUIDIndex();
         }
         
     	setStateOK();

@@ -3,13 +3,16 @@
 package com.db4o.internal;
 
 
-class SharedIndexedFields {
+/**
+ * @exclude
+ */
+public class SharedIndexedFields {
     
-    final VersionFieldMetadata i_fieldVersion;
-    final UUIDFieldMetadata i_fieldUUID;
+    final VersionFieldMetadata _version;
+    final UUIDFieldMetadata _uUID;
     
-    SharedIndexedFields(ObjectContainerBase stream){
-        i_fieldVersion = new VersionFieldMetadata(stream);
-        i_fieldUUID = new UUIDFieldMetadata(stream);
+    public SharedIndexedFields(ObjectContainerBase stream){
+        _version = new VersionFieldMetadata(stream);
+        _uUID = new UUIDFieldMetadata(stream);
     }
 }

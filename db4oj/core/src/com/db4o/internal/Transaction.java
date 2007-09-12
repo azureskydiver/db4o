@@ -160,7 +160,7 @@ public abstract class Transaction {
     
     public HardObjectReference getHardReferenceBySignature(final long a_uuid, final byte[] a_signature) {
         checkSynchronization();  
-        return container().getUUIDIndex().getHardObjectReferenceBySignature(this, a_uuid, a_signature);
+        return container().uUIDIndex().getHardObjectReferenceBySignature(this, a_uuid, a_signature);
     }
     
 	public abstract void processDeletes();
