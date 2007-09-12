@@ -37,7 +37,7 @@ public class FieldMetadata implements StoredField {
 
     TypeHandler4              _handler;
     
-    private int              _handlerID;
+    protected int              _handlerID;
 
     private int              _state;
 
@@ -176,28 +176,19 @@ public class FieldMetadata implements StoredField {
 
             if (_handler == null) {
 
-                // this may happen if the local YapClassCollection has not
-                // been updated from the server and presumably in some
-                // refactoring cases. The origin is not verified but we
-                // saw a database that had 0 in some wrapper IDs.
+                // this may happen if the local ClassMetadataRepository
+                // has not been updated from the server and presumably 
+                // in some refactoring cases. 
 
                 // We try to heal the problem by re-reading the class.
 
-                // This could be inherently dangerous, if the class type of
-                // a field was modified.
+                // This could be dangerous, if the class type of a field
+                // has been modified.
 
                 // TODO: add class refactoring features
 
                 _handler = loadJavaField1();
-                if (_handler != null) {
-                    if (_handlerID == 0) {
-                        _handlerID = _handler.getID();
-                    } else {
-                        if (_handler.getID() != _handlerID) {
-                            _handler = null;
-                        }
-                    }
-                }
+                checkHandlerID();
             }
 
             loadJavaField();
@@ -221,7 +212,23 @@ public class FieldMetadata implements StoredField {
             }
         }
         return _state == AVAILABLE;
+    }
 
+    private void checkHandlerID() {
+        if(! (_handler instanceof ClassMetadata)){
+            return;
+        }
+        ClassMetadata classMetadata = (ClassMetadata) _handler;
+        int id = classMetadata.getID();
+        
+        if (_handlerID == 0) {
+            _handlerID = id;
+            return;
+        }
+        if(id > 0 && id != _handlerID){
+            // wrong type, refactoring, field should be turned off 
+            _handler = null;
+        }
     }
 
     boolean canAddToQuery(String fieldName){
@@ -492,7 +499,7 @@ public class FieldMetadata implements StoredField {
         return _name;
     }
 
-    public final ClassMetadata getFieldYapClass(ObjectContainerBase container) {
+    public final ClassMetadata handlerClassMetadata(ObjectContainerBase container) {
         // alive needs to be checked by all callers: Done
         TypeHandler4 handler = baseTypeHandler();
         if(Handlers4.handlesSimple(handler)){
@@ -510,7 +517,8 @@ public class FieldMetadata implements StoredField {
         return _handler;
     }
     
-    public int getHandlerID(){
+    public int handlerID(){
+        // alive needs to be checked by all callers: Done
         return _handlerID;
     }
 
@@ -577,20 +585,19 @@ public class FieldMetadata implements StoredField {
         buffer.incrementOffset(linkLength());
     }
 
-    public final void init(ClassMetadata a_yapClass, String a_name) {
-        _containingClass = a_yapClass;
-        _name = a_name;
-        initIndex(a_yapClass, a_name);
+    public final void init(ClassMetadata containingClass, String name) {
+        _containingClass = containingClass;
+        _name = name;
+        initIndex(containingClass, name);
     }
 
-	final void initIndex(ClassMetadata a_yapClass, String a_name) {
-		if (a_yapClass.config() != null) {
-            _config = a_yapClass.config().configField(a_name);
-            if (Debug.configureAllFields) {
-                if (_config == null) {
-                    _config = (Config4Field) a_yapClass.config().objectField(_name);
-                }
-            }
+	final void initIndex(ClassMetadata containingClass, String name) {
+		if (containingClass.config() == null) {
+		    return;
+		}
+        _config = containingClass.config().configField(name);
+        if (Debug.configureAllFields  && _config == null) {
+            _config = (Config4Field) containingClass.config().objectField(_name);
         }
 	}
     
@@ -1037,7 +1044,6 @@ public class FieldMetadata implements StoredField {
 		    container.systemTransaction().commit();
 		}
 	}
-
-
+	
 
 }

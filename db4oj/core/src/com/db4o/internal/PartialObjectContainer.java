@@ -882,11 +882,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if(cantGetClassMetadata(claxx)){
     		return null;
     	}
-        ClassMetadata yc = _handlers.classMetadataForClass(claxx);
-        if (yc != null) {
-            return yc;
+        ClassMetadata classMetadata = _handlers.classMetadataForClass(claxx);
+        if (classMetadata != null) {
+            return classMetadata;
         }
-        
         return _classCollection.produceClassMetadata(claxx);
     }
     

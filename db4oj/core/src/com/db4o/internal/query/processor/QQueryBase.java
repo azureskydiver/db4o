@@ -261,7 +261,7 @@ public abstract class QQueryBase implements Unversioned {
                     Object[] pair = ((Object[]) obj);
                     ClassMetadata parentYc = (ClassMetadata)pair[0];
                     FieldMetadata yf = (FieldMetadata)pair[1];
-                    ClassMetadata childYc = yf.getFieldYapClass(stream());
+                    ClassMetadata childYc = yf.handlerClassMetadata(stream());
 
                     boolean take = true;
 

@@ -178,18 +178,18 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         setStateOK();
     }
 
-	private boolean collectReflectFields(ObjectContainerBase stream, Collection4 collectedFields) {
+	private boolean collectReflectFields(ObjectContainerBase container, Collection4 collectedFields) {
 		boolean dirty=false;
 		ReflectField[] fields = reflectFields();
 		for (int i = 0; i < fields.length; i++) {
 		    if (storeField(fields[i])) {
 		        
-		        TypeHandler4 wrapper = stream._handlers.handlerForClass(stream, fields[i].getFieldType());
+		        TypeHandler4 handler = container._handlers.handlerForClass(container, fields[i].getFieldType());
 		        
-		        if (wrapper == null) {
+		        if (handler == null) {
 		            continue;
 		        }
-		        FieldMetadata field = new FieldMetadata(this, fields[i], wrapper);
+		        FieldMetadata field = new FieldMetadata(this, fields[i], handler);
 
 		        boolean found = false;
 		        Iterator4 m = collectedFields.iterator();
@@ -812,7 +812,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public long[] getIDs() {
-        synchronized(_container._lock){
+        synchronized(lock()){
 	        if (! stateOK()) {
                 return new long[0];
             }
@@ -821,7 +821,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public long[] getIDs(Transaction trans) {
-        synchronized(_container._lock){
+        synchronized(lock()){
             if (! stateOK()) {
                 return new long[0];
             }        
@@ -901,7 +901,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public StoredField[] getStoredFields(){
-        synchronized(_container._lock){
+        synchronized(lock()){
 	        if(i_fields == null){
 	            return new StoredField[0];
 	        }
@@ -1320,6 +1320,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     public boolean isValueType(){
         return Platform4.isValueType(classReflector());
+    }
+    
+    private final Object lock(){
+        return _container.lock();
     }
     
     public String nameToWrite() {
@@ -1744,15 +1748,19 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return Platform4.canSetAccessible() || a_field.isPublic();
     }
     
-    public StoredField storedField(String a_name, Object a_type) {
-        synchronized(_container._lock){
+    public StoredField storedField(String name, Object clazz) {
+        synchronized(lock()){
         	
-            ClassMetadata yc = _container.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), a_type)); 
+            ClassMetadata classMetadata = _container.classMetadataForReflectClass(ReflectorUtils.reflectClassFor(reflector(), clazz)); 
     		
 	        if(i_fields != null){
 	            for (int i = 0; i < i_fields.length; i++) {
-	                if(i_fields[i].getName().equals(a_name)){
-	                    if(yc == null || yc == i_fields[i].getFieldYapClass(_container)){
+	                if(i_fields[i].getName().equals(name)){
+	                    
+	                    
+	                    // FIXME: The == comparison in the following line could be wrong. 
+	                    
+	                    if(classMetadata == null || classMetadata == i_fields[i].handlerClassMetadata(_container)){
 	                        return (i_fields[i]);
 	                    }
 	                }
@@ -2091,6 +2099,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     public void write(WriteContext context, Object obj) {
         context.writeObject(obj);
+    }
+    
+    public TypeHandler4 typeHandler(){
+        return this;
     }
     
 }

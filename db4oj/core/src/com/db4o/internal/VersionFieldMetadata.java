@@ -18,6 +18,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
         super();
         setName(VirtualField.VERSION);
         _handler = new LongHandler(stream);
+        _handlerID = Handlers4.LONG_ID;
     }
     
     public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {

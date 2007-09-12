@@ -16,12 +16,13 @@ import com.db4o.reflect.*;
  */
 public class PrimitiveFieldHandler extends ClassMetadata{
     
-    public final TypeHandler4 i_handler;
+    private final TypeHandler4 _handler;
     
-    PrimitiveFieldHandler(ObjectContainerBase container, TypeHandler4 handler) {
+    PrimitiveFieldHandler(ObjectContainerBase container, TypeHandler4 handler, int handlerID) {
     	super(container, handler.classReflector());
         i_fields = FieldMetadata.EMPTY_ARRAY;
-        i_handler = handler;
+        _handler = handler;
+        _id = handlerID;
     }
     
     void activateFields(Transaction trans, Object obj, int depth) {
@@ -43,7 +44,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     public ReflectClass classReflector(){
-    	return i_handler.classReflector();
+    	return _handler.classReflector();
     }
     
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
@@ -59,8 +60,8 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     
     public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws Db4oIOException  {
         
-        if(i_handler instanceof ArrayHandler){
-            ArrayHandler ya = (ArrayHandler)i_handler;
+        if(_handler instanceof ArrayHandler){
+            ArrayHandler ya = (ArrayHandler)_handler;
             
             // TODO: the following checks, whether the array stores
             // primitives. There is one case that is not covered here:
@@ -81,11 +82,11 @@ public class PrimitiveFieldHandler extends ClassMetadata{
             }
         }
         
-       if(i_handler instanceof UntypedFieldHandler){
+       if(_handler instanceof UntypedFieldHandler){
             // Any-In-Any: Ignore delete 
-            a_bytes.incrementOffset(i_handler.linkLength());
+            a_bytes.incrementOffset(_handler.linkLength());
         }else{
-            i_handler.deleteEmbedded(mf, a_bytes);
+            _handler.deleteEmbedded(mf, a_bytes);
         }
 		
 		// TODO: Was this freeing call necessary? 
@@ -115,7 +116,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         if (obj == null) {
         	// FIXME catchall
             try {
-                obj = i_handler.read(mf, buffer, true);
+                obj = _handler.read(mf, buffer, true);
             } 
             catch (CorruptionException ce) {
                 return null;
@@ -129,7 +130,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     Object instantiateTransient(ObjectReference a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
     	// FIXME catchall
         try {
-            return i_handler.read(mf, a_bytes, true);
+            return _handler.read(mf, a_bytes, true);
         }
         catch (CorruptionException ce) {
             return null;
@@ -139,7 +140,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     public Object instantiate(UnmarshallingContext context) {
         Object obj = context.persistentObject();
         if (obj == null) {
-            obj = context.read(i_handler);
+            obj = context.read(_handler);
             context.setObjectWeak(obj);
         }
         context.setStateClean();
@@ -147,26 +148,26 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
     
     public Object instantiateTransient(UnmarshallingContext context) {
-        return i_handler.read(context);
+        return _handler.read(context);
     }
 
     void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
         Object obj = null;
         // FIXME catchall
         try {
-            obj = i_handler.read(mf, a_bytes, true);
+            obj = _handler.read(mf, a_bytes, true);
         }
         catch (CorruptionException ce) {
         }
-        if (obj != null  &&  (i_handler instanceof DateHandler)) {
-            ((DateHandler)i_handler).copyValue(obj, a_onObject);
+        if (obj != null  &&  (_handler instanceof DateHandler)) {
+            ((DateHandler)_handler).copyValue(obj, a_onObject);
         }
     }
     
     void instantiateFields(UnmarshallingContext context) {
-        Object obj = context.read(i_handler);
-        if (obj != null  &&  (i_handler instanceof DateHandler)) {
-            ((DateHandler)i_handler).copyValue(obj, context.persistentObject());
+        Object obj = context.read(_handler);
+        if (obj != null  &&  (_handler instanceof DateHandler)) {
+            ((DateHandler)_handler).copyValue(obj, context.persistentObject());
         }
     }
 
@@ -183,20 +184,20 @@ public class PrimitiveFieldHandler extends ClassMetadata{
 	}
     
     public Comparable4 prepareComparison(Object a_constraint) {
-        i_handler.prepareComparison(a_constraint);
-        return i_handler;
+        _handler.prepareComparison(a_constraint);
+        return _handler;
     }
     
     public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
         if(mf._primitive.useNormalClassRead()){
             return super.read(mf, a_bytes, redirect);
         }
-        return i_handler.read(mf, a_bytes, false);
+        return _handler.read(mf, a_bytes, false);
     }
 
     public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         if (isArray()) {
-            return i_handler;
+            return _handler;
         }
         return null;
     }
@@ -205,12 +206,12 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         if(mf._primitive.useNormalClassRead()){
             return super.readQuery(trans, mf, withRedirection, reader, toArray);
         }
-        return i_handler.readQuery(trans, mf, withRedirection, reader, toArray);
+        return _handler.readQuery(trans, mf, withRedirection, reader, toArray);
     }
 
     
     public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
-        return i_handler.readSubCandidate(mf, reader, candidates, withIndirection);
+        return _handler.readSubCandidate(mf, reader, candidates, withIndirection);
     } 
 
     void removeFromIndex(Transaction ta, int id) {
@@ -222,7 +223,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
     
     public String toString(){
-        return "Wraps " + i_handler.toString() + " in YapClassPrimitive";
+        return "Wraps " + _handler.toString() + " in YapClassPrimitive";
     }
 
     public void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
@@ -230,7 +231,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
             super.defrag(mf,readers, redirect);
         }
         else {
-            i_handler.defrag(mf, readers, false);
+            _handler.defrag(mf, readers, false);
         }
     }
     
@@ -239,11 +240,15 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
     
     public Object read(ReadContext context) {
-        return i_handler.read(context);
+        return _handler.read(context);
     }
     
     public void write(WriteContext context, Object obj) {
-        i_handler.write(context, obj);
+        _handler.write(context, obj);
+    }
+    
+    public TypeHandler4 typeHandler(){
+        return _handler;
     }
 
 }
