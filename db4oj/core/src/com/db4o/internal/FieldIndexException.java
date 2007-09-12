@@ -21,7 +21,7 @@ public class FieldIndexException extends ChainedRuntimeException {
 	}
 
 	public FieldIndexException(String msg, Throwable cause,FieldMetadata field) {
-		this(msg,cause,field.getParentYapClass().getName(),field.getName());
+		this(msg,cause,field.containingClass().getName(),field.getName());
 	}
 
 	public FieldIndexException(String msg, Throwable cause,String className,String fieldName) {

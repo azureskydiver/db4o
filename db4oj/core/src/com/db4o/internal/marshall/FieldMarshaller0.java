@@ -61,7 +61,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         	return stream._handlers.virtualFieldByName(name);
         }
         
-        field.init(field.getParentYapClass(), name);
+        field.init(field.containingClass(), name);
         field.init(spec.handlerID(), spec.isPrimitive(), spec.isArray(), spec.isNArray());
         field.loadHandler(stream);
         field.alive();
