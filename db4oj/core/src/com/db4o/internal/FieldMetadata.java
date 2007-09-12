@@ -236,7 +236,7 @@ public class FieldMetadata implements StoredField {
         if(! alive()){
             return false;
         }
-        return fieldName.equals(getName())  && getParentYapClass() != null && !getParentYapClass().isInternal(); 
+        return fieldName.equals(getName())  && containingClass() != null && !containingClass().isInternal(); 
     }
     
     public boolean canHold(ReflectClass claxx) {
@@ -549,7 +549,7 @@ public class FieldMetadata implements StoredField {
 		return obj;
 	}
 
-    public ClassMetadata getParentYapClass() {
+    public final ClassMetadata containingClass() {
         // alive needs to be checked by all callers: Done
         return _containingClass;
     }
@@ -1016,7 +1016,7 @@ public class FieldMetadata implements StoredField {
             stream.message("dropping index " + toString());
         }
         _index.free(systemTrans);
-        stream.setDirtyInSystemTransaction(getParentYapClass());
+        stream.setDirtyInSystemTransaction(containingClass());
         _index = null;
     }    
     
@@ -1035,12 +1035,12 @@ public class FieldMetadata implements StoredField {
             container.message("creating index " + toString());
         }
 	    initIndex(container.systemTransaction());
-	    container.setDirtyInSystemTransaction(getParentYapClass());
+	    container.setDirtyInSystemTransaction(containingClass());
         reindex(container);
 	}
 
 	private void reindex(LocalObjectContainer container) {
-		ClassMetadata clazz = getParentYapClass();		
+		ClassMetadata clazz = containingClass();		
 		if (rebuildIndexForClass(container, clazz)) {
 		    container.systemTransaction().commit();
 		}
