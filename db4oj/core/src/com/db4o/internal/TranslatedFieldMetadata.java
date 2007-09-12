@@ -85,6 +85,6 @@ final class TranslatedFieldMetadata extends FieldMetadata
 	}
 	
 	protected Indexable4 indexHandler(ObjectContainerBase stream) {
-		return (Indexable4)i_handler;
+		return (Indexable4)_handler;
 	}
 }

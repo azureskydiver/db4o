@@ -154,10 +154,6 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         return Const4.YAPARRAY;
     }
     
-    public int objectLength(Object obj) {
-        return ownLength(obj) + (arrayReflector().getLength(obj) * _handler.linkLength());
-    }
-    
     /** @param obj */
     public int ownLength(Object obj){
         return ownLength();
