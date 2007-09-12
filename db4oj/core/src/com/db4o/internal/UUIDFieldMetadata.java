@@ -22,7 +22,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     UUIDFieldMetadata(ObjectContainerBase stream) {
         super();
         setName(Const4.VIRTUAL_FIELD_PREFIX + "uuid");
-        i_handler = new LongHandler(stream);
+        _handler = new LongHandler(stream);
     }
     
     public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) throws FieldIndexException {

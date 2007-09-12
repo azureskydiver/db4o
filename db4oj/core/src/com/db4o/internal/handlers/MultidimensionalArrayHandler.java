@@ -52,13 +52,6 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         return Const4.YAPARRAYN;
     }
 
-    public final int objectLength(Object a_object) {
-        int[] dim = arrayReflector().dimensions(a_object);
-        return Const4.OBJECT_LENGTH
-            + (Const4.INT_LENGTH * (2 + dim.length))
-            + (elementCount(dim) * _handler.linkLength());
-    }
-    
     public int ownLength(Object obj){
         int[] dim = arrayReflector().dimensions(obj);
         return Const4.OBJECT_LENGTH

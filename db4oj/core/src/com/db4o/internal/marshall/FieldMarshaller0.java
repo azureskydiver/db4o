@@ -84,7 +84,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         if (handler instanceof ClassMetadata) {
             
             // TODO: ensure there is a test case, to make this happen 
-            if (handler.getID() == 0) {
+            if ( ((ClassMetadata)handler).getID() == 0) {
                 trans.container().needsUpdate(clazz);
             }
         }
