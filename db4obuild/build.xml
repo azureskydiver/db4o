@@ -467,7 +467,7 @@
 		</java>
 	</target>
 
-	<target name="compiletestsjava" depends="compiledb4ounitjava" description="Compile db4o test sources">
+	<target name="compiletestsjava" depends="compilecorejava, compiledb4ounitjava" description="Compile db4o test sources">
 		<mkdir dir="${dir.dist.classes.test.jdk1.1}" />
 		<mkdir dir="${dir.dist.classes.test.jdk1.2}" />
 		<mkdir dir="${dir.dist.classes.test.jdk1.5}" />
@@ -1209,6 +1209,8 @@
     <target name="build-java-before-checkin" depends="clean, compile.java.all, runtestsjava5" />
 
     <target name="build-before-checkin" depends="build-java-before-checkin">
-        <ant antfile="build-dotnet.xml" target="run-tests" />
+        <ant antfile="build-dotnet.xml" target="run-tests">
+        	<property name="skip.java.compilation" value="true" />
+        </ant>
     </target>
 </project>
