@@ -8,7 +8,7 @@
 	Notice however that the build will overwrite a few files in the sandcastle installation,
 	if you don't want this, copy your sandcastle installation to a different folder.
 	-->
-		
+	
 	<import file="common-dotnet.xml" />
 	
 	<fileset id="db4oj.srcfiles" dir="..">
@@ -718,7 +718,7 @@
 	
 	<property name="dependencies.jar" location="${dir.sharpen}/lib/dependencies.jar" />
 	
-	<target name="create-dependencies-jar">
+	<target name="create-dependencies-jar" depends="compiletestsjava">
 		<mkdir dir="${dir.sharpen}/lib" />
 		<jar destfile="${dependencies.jar}">			
 			<fileset dir="${dir.dist.classes.java1.1}" />
