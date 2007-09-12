@@ -10,6 +10,11 @@ import com.db4o.reflect.*;
  * @exclude
  */
 public class Handlers4 {
+
+    
+    public static final int LONG_ID = 2;
+    
+    
     
     public static boolean handlerCanHold(TypeHandler4 handler, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
@@ -51,7 +56,7 @@ public class Handlers4 {
             return ((ArrayHandler)handler)._handler;
         }
         if(handler instanceof PrimitiveFieldHandler){
-            return ((PrimitiveFieldHandler)handler).i_handler;
+            return ((PrimitiveFieldHandler)handler).typeHandler();
         }
         return handler;
     }

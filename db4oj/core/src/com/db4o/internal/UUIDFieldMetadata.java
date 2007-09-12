@@ -23,6 +23,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         super();
         setName(Const4.VIRTUAL_FIELD_PREFIX + "uuid");
         _handler = new LongHandler(stream);
+        _handlerID = Handlers4.LONG_ID;
     }
     
     public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) throws FieldIndexException {

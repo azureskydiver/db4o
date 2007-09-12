@@ -102,7 +102,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
             }
         }
         if (handlerID == 0) {
-            handlerID = field.getHandlerID();
+            handlerID = field.handlerID();
         }
         writer.writeInt(handlerID);
         BitMap4 bitmap = new BitMap4(3);

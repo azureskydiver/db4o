@@ -140,8 +140,7 @@ public final class HandlerRegistry {
 
         for (int i = 0; i < CLASSCOUNT; i++) {
             int id = i + 1; // note that we avoid 0 here
-            i_yapClasses[i] = new PrimitiveFieldHandler(container, i_handlers[i]);
-            i_yapClasses[i].setID(id); 
+            i_yapClasses[i] = new PrimitiveFieldHandler(container, i_handlers[i], id);
             i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
             if(i < ANY_INDEX){
             	reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName(), null);
@@ -162,8 +161,7 @@ public final class HandlerRegistry {
             GenericConverter converter = (i_platformTypes[i] instanceof GenericConverter) ? (GenericConverter)i_platformTypes[i] : null;  
             reflector.registerPrimitiveClass(id, i_platformTypes[i].getName(), converter);
             i_handlers[idx] = i_platformTypes[i];
-            i_yapClasses[idx] = new PrimitiveFieldHandler(container, i_platformTypes[i]);
-            i_yapClasses[idx].setID(id);
+            i_yapClasses[idx] = new PrimitiveFieldHandler(container, i_platformTypes[i], id);
             if (id > i_maxTypeID) {
                 i_maxTypeID = idx;
             }
@@ -176,13 +174,11 @@ public final class HandlerRegistry {
         }
 
         i_anyArray = new PrimitiveFieldHandler(container, new ArrayHandler(_container,
-            untypedHandler(), false));
-        i_anyArray.setID(ANY_ARRAY_ID);
+            untypedHandler(), false), ANY_ARRAY_ID);
         i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
 
         i_anyArrayN = new PrimitiveFieldHandler(container, new MultidimensionalArrayHandler(_container,
-            untypedHandler(), false));
-        i_anyArrayN.setID(ANY_ARRAY_N_ID);
+            untypedHandler(), false), ANY_ARRAY_N_ID);
         i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
         
         registerOldHandlers();
@@ -220,7 +216,7 @@ public final class HandlerRegistry {
     }
 
     private TypeHandler4 handlerForPrimitiveClass(Class clazz){
-	    return ((PrimitiveFieldHandler) classMetadataForClass(_reflector.forClass(clazz))).i_handler;
+	    return classMetadataForClass(_reflector.forClass(clazz)).typeHandler();
 	}
     
     public TypeHandler4 correctHandlerVersion(TypeHandler4 handler, int version){
@@ -370,30 +366,20 @@ public final class HandlerRegistry {
         return i_handlers[a_index - 1];
     }
 
-    final TypeHandler4 handlerForClass(ReflectClass a_class, ReflectClass[] a_Supported) {
-        for (int i = 0; i < a_Supported.length; i++) {
-            if (a_Supported[i].equals(a_class)) {
-                return i_handlers[i];
-            }
-        }
-        return null;
-    }
-
     // TODO: Interfaces should be handled by the ANY handler but we
     // need to write the code to migrate from the old field handler to the new
-    public final TypeHandler4 handlerForClass(ObjectContainerBase a_stream, ReflectClass a_class) {
-    	 if(a_class == null){
+    public final TypeHandler4 handlerForClass(ObjectContainerBase container, ReflectClass clazz) {
+    	 if(clazz == null){
              return null;
          }
-    	 
-         if (a_class.isArray()) {
-             return handlerForClass(a_stream, a_class.getComponentType());
+         if (clazz.isArray()) {
+             return handlerForClass(container, clazz.getComponentType());
          }
-         ClassMetadata yc = classMetadataForClass(a_class);
-         if (yc != null) {
-             return ((PrimitiveFieldHandler) yc).i_handler;
+         ClassMetadata classMetadata = classMetadataForClass(clazz);
+         if (classMetadata != null) {
+             return classMetadata.typeHandler();
          }
-         return a_stream.produceClassMetadata(a_class);
+         return container.produceClassMetadata(clazz);
     }
 
 	public TypeHandler4 untypedHandler() {

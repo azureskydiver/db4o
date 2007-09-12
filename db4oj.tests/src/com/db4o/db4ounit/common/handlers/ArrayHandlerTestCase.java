@@ -38,8 +38,8 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
     }
     
     private ArrayHandler arrayHandler(Class clazz, boolean isPrimitive) {
-        TypeHandler4 typeHandler = stream().handlers().handlerForClass(stream(), reflector().forClass(clazz));
-        return new ArrayHandler(stream(),typeHandler, isPrimitive);
+        ClassMetadata classMetadata = stream().produceClassMetadata(reflector().forClass(clazz));
+        return new ArrayHandler(stream(),classMetadata.typeHandler(), isPrimitive);
     }
     
     public void testIntArrayReadWrite() {
