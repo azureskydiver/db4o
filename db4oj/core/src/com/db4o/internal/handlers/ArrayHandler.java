@@ -270,8 +270,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         if (elements < 0) {
             clazz.value = reflectClassFromElementsEntry(trans, elements);
             elements = buffer.readInt();
-        }
-        else {
+        } else {
     		clazz.value =_handler.classReflector();
         }
         if(Debug.exceedsMaximumArrayEntries(elements, _isPrimitive)){
@@ -333,7 +332,7 @@ public class ArrayHandler extends BuiltinTypeHandler implements FirstClassHandle
         ReflectClass claxx = componentType(obj);
         boolean primitive = Deploy.csharp ? false : claxx.isPrimitive();
         if(primitive){
-            claxx = container()._handlers.handlerForClass(container(),claxx).classReflector();
+            claxx = container()._handlers.classMetadataForClass(container(),claxx).classReflector();
         }
         ClassMetadata classMetadata = container().produceClassMetadata(claxx);
         if (classMetadata == null) {
