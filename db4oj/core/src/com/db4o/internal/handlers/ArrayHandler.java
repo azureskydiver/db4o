@@ -70,7 +70,13 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     }
     
     public ReflectClass classReflector(){
-    	return _handler.classReflector();
+        if(_handler instanceof BuiltinTypeHandler){
+            return ((BuiltinTypeHandler)_handler).classReflector();
+        }
+        if(_handler instanceof ClassMetadata){
+            return ((ClassMetadata)_handler).classReflector();
+        }
+        return container().handlers().classReflectorForHandler(_handler);
     }
 
     public final TreeInt collectIDs(MarshallerFamily mf, TreeInt tree, StatefulBuffer reader) throws Db4oIOException{
@@ -271,7 +277,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
             clazz.value = reflectClassFromElementsEntry(trans, elements);
             elements = buffer.readInt();
         } else {
-    		clazz.value =_handler.classReflector();
+    		clazz.value = classReflector();
         }
         if(Debug.exceedsMaximumArrayEntries(elements, _isPrimitive)){
             return 0;
@@ -315,7 +321,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 		        return (primitive ?   Handlers4.primitiveClassReflector(classMetadata) : classMetadata.classReflector());
 		    }
 		}
-		return _handler.classReflector();
+		return classReflector();
 	}
     
     public static Object[] toArray(ObjectContainerBase stream, Object obj) {

@@ -50,7 +50,9 @@ public final class HandlerRegistry {
     
     private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[2]; 
 
-    private final Hashtable4        _mapReflectorToClassMetadata  = new Hashtable4(32);
+    private final Hashtable4        _mapReflectorToHandler  = new Hashtable4(32);
+    
+    private final Hashtable4        _mapHandlerToReflector  = new Hashtable4(32);
     
     private SharedIndexedFields              		_indexes;
     
@@ -103,17 +105,27 @@ public final class HandlerRegistry {
         
         registerPlatformTypes();
         
-        initArrayHandlers(container);
+        initArrayHandlers();
         
     }
 
-    private void initArrayHandlers(final ObjectContainerBase container) {
-        i_anyArray = new PrimitiveFieldHandler(container, new ArrayHandler(_container,
-            untypedHandler(), false), Handlers4.ANY_ARRAY_ID);
+    private void initArrayHandlers() {
+        UntypedFieldHandler handler = untypedHandler();
+        ReflectClass classReflector = handler.classReflector();
+        
+        i_anyArray = new PrimitiveFieldHandler(
+            _container, 
+            new ArrayHandler(_container,handler, false), 
+            Handlers4.ANY_ARRAY_ID,
+            classReflector);
         _classMetadata.put(Handlers4.ANY_ARRAY_ID, i_anyArray);
 
-        i_anyArrayN = new PrimitiveFieldHandler(container, new MultidimensionalArrayHandler(_container,
-            untypedHandler(), false), Handlers4.ANY_ARRAY_N_ID);
+        i_anyArrayN = new PrimitiveFieldHandler(
+            _container, 
+            new MultidimensionalArrayHandler(_container, handler, false), 
+            Handlers4.ANY_ARRAY_N_ID,
+            classReflector);
+        
         _classMetadata.put(Handlers4.ANY_ARRAY_N_ID, i_anyArrayN);
     }
 
@@ -183,19 +195,21 @@ public final class HandlerRegistry {
             _reflector.registerPrimitiveClass(id, primitiveName, converter);
         }
         
-        _handlers.put(id, handler);
-        _classes.put(id, handler.classReflector());
+        ReflectClass classReflector = handler.classReflector();
         
-        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(_container, handler, id);
+        _handlers.put(id, handler);
+        _classes.put(id, classReflector);
+        
+        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(_container, handler, id, classReflector);
         _classMetadata.put(id, primitiveFieldHandler);
-        _mapReflectorToClassMetadata.put(handler.classReflector(), primitiveFieldHandler);
+        map(primitiveFieldHandler, classReflector);
 
         if (!Deploy.csharp) {
             if(handler instanceof PrimitiveHandler){
                 PrimitiveHandler primitiveHandler = (PrimitiveHandler) handler;
                 ReflectClass primitiveClassReflector = primitiveHandler.primitiveClassReflector();
                 if(primitiveClassReflector != null){
-                    _mapReflectorToClassMetadata.put(primitiveClassReflector, primitiveFieldHandler);
+                    map(primitiveFieldHandler, primitiveClassReflector);
                 }
             }
         }
@@ -203,6 +217,11 @@ public final class HandlerRegistry {
         if (id > _highestBuildinTypeID) {
             _highestBuildinTypeID = id;
         }
+    }
+
+    private void map(TypeHandler4 handler, ReflectClass classReflector) {
+        _mapReflectorToHandler.put(classReflector, handler);
+        _mapHandlerToReflector.put(handler, classReflector);
     }
 
 	private void registerHandlerVersion(TypeHandler4 handler, int version, TypeHandler4 replacement) {
@@ -379,8 +398,8 @@ public final class HandlerRegistry {
         return container.produceClassMetadata(baseType);
     }
 
-	public TypeHandler4 untypedHandler() {
-		return handlerForID(Handlers4.UNTYPED_ID);
+	public UntypedFieldHandler untypedHandler() {
+		return (UntypedFieldHandler) handlerForID(Handlers4.UNTYPED_ID);
 	}
     
     private void initClassReflectors(GenericReflector reflector){
@@ -438,13 +457,17 @@ public final class HandlerRegistry {
             }
             return i_anyArray;
         }
-        return (ClassMetadata) _mapReflectorToClassMetadata.get(clazz);
+        return (ClassMetadata) _mapReflectorToHandler.get(clazz);
+    }
+    
+    public ReflectClass classReflectorForHandler(TypeHandler4 handler){
+        return (ReflectClass) _mapHandlerToReflector.get(handler);
     }
     
     public boolean isSecondClass(Object a_object){
     	if(a_object != null){
     		ReflectClass claxx = _container.reflector().forObject(a_object);
-    		if(_mapReflectorToClassMetadata.get(claxx) != null){
+    		if(_mapReflectorToHandler.get(claxx) != null){
     			return true;
     		}
             if(Deploy.csharp){
