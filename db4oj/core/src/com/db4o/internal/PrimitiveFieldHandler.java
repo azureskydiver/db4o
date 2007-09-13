@@ -8,7 +8,6 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
-import com.db4o.reflect.*;
 
 
 /**
@@ -43,10 +42,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         // do nothing
     }
 
-    public ReflectClass classReflector(){
-    	return _handler.classReflector();
-    }
-    
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
         if(mf._primitive.useNormalClassRead()){
             super.deleteEmbedded(mf, a_bytes);

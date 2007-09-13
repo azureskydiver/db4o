@@ -30,7 +30,7 @@ public final class HandlerRegistry {
 	private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
 
-    private static final Db4oTypeImpl[]   i_db4oTypes     = { new BlobImpl()};
+    private static final Db4oTypeImpl[]   _db4oTypes     = { new BlobImpl()};
 
     public static final int         ANY_ARRAY_ID      = 12;
     public static final int         ANY_ARRAY_N_ID     = 13;
@@ -41,16 +41,16 @@ public final class HandlerRegistry {
     private ClassMetadata                i_anyArray;
     private ClassMetadata                i_anyArrayN;
 
-    public final StringHandler          i_stringHandler;
+    public StringHandler          _stringHandler;
 
-    private TypeHandler4[]           i_handlers;
+    private Hashtable4           _handlers = new Hashtable4(16);
 
     private int                     i_maxTypeID     = ANY_ARRAY_N_ID + 1;
 
-    private NetTypeHandler[]       i_platformTypes;
+    private NetTypeHandler[]       _platformTypes;
     static private final int        PRIMITIVECOUNT  = 8;
 
-    ClassMetadata[]                      i_yapClasses;
+    ClassMetadata[]                      _classMetadata;
 
     // need to keep getID Functions in Sync with ArrayIndex
     private static final int        ANY_INDEX          = 10;
@@ -58,7 +58,7 @@ public final class HandlerRegistry {
     
     private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[2]; 
 
-    private final Hashtable4        i_classByClass  = new Hashtable4(32);
+    private final Hashtable4        _mapReflectorToClassMetadata  = new Hashtable4(32);
     
     private SharedIndexedFields              		_indexes;
     
@@ -107,118 +107,133 @@ public final class HandlerRegistry {
         _virtualFields[0] = _indexes._version;
         _virtualFields[1] = _indexes._uUID;
 
-        i_stringHandler = new StringHandler2(container, LatinStringIO.forEncoding(stringEncoding));
+        registerHandlers(stringEncoding);
 
-        i_handlers = new TypeHandler4[] { new IntHandler(container), new LongHandler(container), new FloatHandler(container),
-            new BooleanHandler(container), new DoubleHandler(container), new ByteHandler(container), new CharHandler(container),
-            new ShortHandler(container),
+        _platformTypes = Platform4.types(container);
 
-            // primitives first
-            i_stringHandler, new DateHandler(container), new UntypedFieldHandler(container) // Index = 10, ID = 11
-        };
-        
-        i_platformTypes = Platform4.types(container);
-
-        if (i_platformTypes.length > 0) {
-            for (int i = 0; i < i_platformTypes.length; i++) {
-                i_platformTypes[i].initialize();
-                if (i_platformTypes[i].getID() > i_maxTypeID) {
-                    i_maxTypeID = i_platformTypes[i].getID();
+        if (_platformTypes.length > 0) {
+            for (int i = 0; i < _platformTypes.length; i++) {
+                _platformTypes[i].initialize();
+                int id = _platformTypes[i].getID();
+                
+                // FIXME: Call registerPrimitiveHandler(), as soon as we now how to get a class.
+                _handlers.put(id, _platformTypes[i]);
+                
+                if (id > i_maxTypeID) {
+                    i_maxTypeID = id;
                 }
-            }
-
-            TypeHandler4[] temp = i_handlers;
-            i_handlers = new TypeHandler4[i_maxTypeID];
-            System.arraycopy(temp, 0, i_handlers, 0, temp.length);
-            for (int i = 0; i < i_platformTypes.length; i++) {
-                int idx = i_platformTypes[i].getID() - 1;
-                i_handlers[idx] = i_platformTypes[i];
             }
         }
 
-        i_yapClasses = new ClassMetadata[i_maxTypeID + 1];
+        _classMetadata = new ClassMetadata[i_maxTypeID + 1];
 
         for (int i = 0; i < CLASSCOUNT; i++) {
-            int id = i + 1; // note that we avoid 0 here
-            i_yapClasses[i] = new PrimitiveFieldHandler(container, i_handlers[i], id);
-            i_classByClass.put(i_handlers[i].classReflector(), i_yapClasses[i]);
+            int id = i + 1; // avoid 0
+            TypeHandler4 handler = handler(id);
+            _classMetadata[i] = new PrimitiveFieldHandler(container, handler, id);
+            _mapReflectorToClassMetadata.put(handler.classReflector(), _classMetadata[i]);
             if(i < ANY_INDEX){
-            	reflector.registerPrimitiveClass(id, i_handlers[i].classReflector().getName(), null);
+            	reflector.registerPrimitiveClass(id, handler.classReflector().getName(), null);
             }
             if (!Deploy.csharp) {
-               if(i_handlers[i] instanceof PrimitiveHandler){
-                   PrimitiveHandler primitiveHandler = (PrimitiveHandler) i_handlers[i];
+               if(handler instanceof PrimitiveHandler){
+                   PrimitiveHandler primitiveHandler = (PrimitiveHandler) handler;
                    ReflectClass primitiveClassReflector = primitiveHandler.primitiveClassReflector();
                    if(primitiveClassReflector != null){
-                       i_classByClass.put(primitiveClassReflector, i_yapClasses[i]);
+                       _mapReflectorToClassMetadata.put(primitiveClassReflector, _classMetadata[i]);
                    }
                }
             }
         }
-        for (int i = 0; i < i_platformTypes.length; i++) {
-        	int id = i_platformTypes[i].getID();
+        for (int i = 0; i < _platformTypes.length; i++) {
+        	int id = _platformTypes[i].getID();
             int idx = id - 1;
-            GenericConverter converter = (i_platformTypes[i] instanceof GenericConverter) ? (GenericConverter)i_platformTypes[i] : null;  
-            reflector.registerPrimitiveClass(id, i_platformTypes[i].getName(), converter);
-            i_handlers[idx] = i_platformTypes[i];
-            i_yapClasses[idx] = new PrimitiveFieldHandler(container, i_platformTypes[i], id);
+            GenericConverter converter = (_platformTypes[i] instanceof GenericConverter) ? (GenericConverter)_platformTypes[i] : null;  
+            reflector.registerPrimitiveClass(id, _platformTypes[i].getName(), converter);
+            
+            // FIXME: Call registerPrimitiveHandler(), as soon as we now how to get a class.
+            _handlers.put(id, _platformTypes[i]);
+            
+            _classMetadata[idx] = new PrimitiveFieldHandler(container, _platformTypes[i], id);
             if (id > i_maxTypeID) {
                 i_maxTypeID = idx;
             }
-            i_classByClass.put(i_platformTypes[i].classReflector(), i_yapClasses[idx]);
+            _mapReflectorToClassMetadata.put(_platformTypes[i].classReflector(), _classMetadata[idx]);
             if (!Deploy.csharp) {
-                if (i_platformTypes[i].primitiveClassReflector() != null) {
-                	i_classByClass.put(i_platformTypes[i].primitiveClassReflector(), i_yapClasses[idx]);
+                if (_platformTypes[i].primitiveClassReflector() != null) {
+                	_mapReflectorToClassMetadata.put(_platformTypes[i].primitiveClassReflector(), _classMetadata[idx]);
                 }
             }
         }
 
         i_anyArray = new PrimitiveFieldHandler(container, new ArrayHandler(_container,
             untypedHandler(), false), ANY_ARRAY_ID);
-        i_yapClasses[ANY_ARRAY_ID - 1] = i_anyArray;
+        _classMetadata[ANY_ARRAY_ID - 1] = i_anyArray;
 
         i_anyArrayN = new PrimitiveFieldHandler(container, new MultidimensionalArrayHandler(_container,
             untypedHandler(), false), ANY_ARRAY_N_ID);
-        i_yapClasses[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
+        _classMetadata[ANY_ARRAY_N_ID - 1] = i_anyArrayN;
         
-        registerOldHandlers();
+    }
+    
+    private void registerHandlers(byte stringEncoding){
+        
+        IntHandler intHandler = new IntHandler(_container);
+        registerPrimitiveHandler(Handlers4.INT_ID, int.class, intHandler);
+        registerHandlerVersion(intHandler, 0, new IntHandler0(_container));
+        
+        LongHandler longHandler = new LongHandler(_container);
+        registerPrimitiveHandler(Handlers4.LONG_ID, long.class, longHandler);
+        registerHandlerVersion(longHandler, 0, new LongHandler0(_container));
+        
+        FloatHandler floatHandler = new FloatHandler(_container);
+        registerPrimitiveHandler(Handlers4.FLOAT_ID, float.class, floatHandler);
+        registerHandlerVersion(floatHandler, 0, new FloatHandler0(_container));
+        
+        BooleanHandler booleanHandler = new BooleanHandler(_container);
+        registerPrimitiveHandler(Handlers4.BOOLEAN_ID, boolean.class, booleanHandler);
+        // TODO: Are we missing a boolean handler version?
+        
+        DoubleHandler doubleHandler = new DoubleHandler(_container);
+        registerPrimitiveHandler(Handlers4.DOUBLE_ID, double.class, doubleHandler);
+        registerHandlerVersion(doubleHandler, 0, new DoubleHandler0(_container));
+        
+        ByteHandler byteHandler = new ByteHandler(_container);
+        registerPrimitiveHandler(Handlers4.BYTE_ID, byte.class, byteHandler);
+        // TODO: Are we missing a byte handler version?
+
+        CharHandler charHandler = new CharHandler(_container);
+        registerPrimitiveHandler(Handlers4.CHAR_ID, char.class, charHandler);
+        // TODO: Are we missing a char handler version?
+        
+        ShortHandler shortHandler = new ShortHandler(_container);
+        registerPrimitiveHandler(Handlers4.SHORT_ID, short.class, shortHandler);
+        registerHandlerVersion(shortHandler, 0, new ShortHandler0(_container));
+        
+        _stringHandler = new StringHandler2(_container, LatinStringIO.forEncoding(stringEncoding));
+        registerPrimitiveHandler(Handlers4.STRING_ID, String.class, _stringHandler);
+        registerHandlerVersion(_stringHandler, 0, new StringHandler0(_stringHandler));
+
+        DateHandler dateHandler = new DateHandler(_container);
+        registerPrimitiveHandler(Handlers4.DATE_ID, Date.class, dateHandler);
+        registerHandlerVersion(dateHandler, 0, new DateHandler0(_container));
+        
+        UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(_container);
+        registerPrimitiveHandler(Handlers4.UNTYPED_ID, Object.class, untypedFieldHandler);
+        registerHandlerVersion(untypedFieldHandler, 0, new UntypedFieldHandler0(_container));
     }
 
-	private void registerOldHandlers() {
-	    TypeHandler4 stringHandler = handlerForPrimitiveClass(String.class);
-	    registerHandlerVersion(stringHandler, 0, new StringHandler0(stringHandler));
-	    
-	    TypeHandler4 intHandler = handlerForPrimitiveClass(int.class);
-	    registerHandlerVersion(intHandler, 0, new IntHandler0(_container));
-
-	    TypeHandler4 shortHandler = handlerForPrimitiveClass(short.class);
-	    registerHandlerVersion(shortHandler, 0, new ShortHandler0(_container));
-
-	    TypeHandler4 floatHandler = handlerForPrimitiveClass(float.class);
-	    registerHandlerVersion(floatHandler, 0, new FloatHandler0(_container));
-
-	    TypeHandler4 longHandler = handlerForPrimitiveClass(long.class);
-	    registerHandlerVersion(longHandler, 0, new LongHandler0(_container));
-
-	    TypeHandler4 doubleHandler = handlerForPrimitiveClass(double.class);
-	    registerHandlerVersion(doubleHandler, 0, new DoubleHandler0(_container));
-
-	    TypeHandler4 dateHandler = handlerForPrimitiveClass(Date.class);
-	    registerHandlerVersion(dateHandler, 0, new DateHandler0(_container));
-	    
-	    TypeHandler4 anyTypeHandler = untypedHandler();
-	    registerHandlerVersion(anyTypeHandler, 0, new UntypedFieldHandler0(_container));
-
+    /**
+     * @param clazz
+     */
+    private void registerPrimitiveHandler(int id, Class clazz, TypeHandler4 handler) {
+        _handlers.put(id, handler);
     }
-	
+
 	private void registerHandlerVersion(TypeHandler4 handler, int version, TypeHandler4 replacement) {
 	    _handlerVersions.put(new HandlerVersionKey(handler, version), replacement);
     }
 
-    private TypeHandler4 handlerForPrimitiveClass(Class clazz){
-	    return classMetadataForClass(_reflector.forClass(clazz)).typeHandler();
-	}
-    
     public TypeHandler4 correctHandlerVersion(TypeHandler4 handler, int version){
         TypeHandler4 replacement = (TypeHandler4) _handlerVersions.get(new HandlerVersionKey(handler, version));
         if(replacement != null){
@@ -301,9 +316,9 @@ public final class HandlerRegistry {
 
 	private Object nullValue(ReflectClass clazz) {
 		for (int k = 0; k < PRIMITIVECOUNT; k++) {
-		    PrimitiveHandler handler = (PrimitiveHandler) i_handlers[k]; 
+		    PrimitiveHandler handler = (PrimitiveHandler) handler(k); 
 			if (clazz.equals(handler.primitiveClassReflector())) {
-				return ((PrimitiveHandler) i_handlers[k]).primitiveNull();
+				return handler.primitiveNull();
 			}
 		}
 		return null;
@@ -362,8 +377,8 @@ public final class HandlerRegistry {
         _container.configImpl().oldEncryptionOff();
     }
     
-    final TypeHandler4 getHandler(int a_index) {
-        return i_handlers[a_index - 1];
+    final TypeHandler4 handler(int id) {
+        return (TypeHandler4) _handlers.get(id);
     }
 
     // TODO: Interfaces should be handled by the ANY handler but we
@@ -385,7 +400,7 @@ public final class HandlerRegistry {
     }
 
 	public TypeHandler4 untypedHandler() {
-		return i_handlers[ANY_INDEX];
+		return handler(Handlers4.UNTYPED_ID);
 	}
     
     private void initClassReflectors(GenericReflector reflector){
@@ -421,9 +436,9 @@ public final class HandlerRegistry {
     }
     
     static Db4oTypeImpl getDb4oType(ReflectClass clazz) {
-        for (int i = 0; i < i_db4oTypes.length; i++) {
-            if (clazz.isInstance(i_db4oTypes[i])) {
-                return i_db4oTypes[i];
+        for (int i = 0; i < _db4oTypes.length; i++) {
+            if (clazz.isInstance(_db4oTypes[i])) {
+                return _db4oTypes[i];
             }
         }
         return null;
@@ -431,7 +446,7 @@ public final class HandlerRegistry {
 
     public ClassMetadata classMetadataForId(int a_id) {
         if (a_id > 0 && a_id <= i_maxTypeID) {
-            return i_yapClasses[a_id - 1];
+            return _classMetadata[a_id - 1];
         }
         return null;
     }
@@ -446,13 +461,13 @@ public final class HandlerRegistry {
             }
             return i_anyArray;
         }
-        return (ClassMetadata) i_classByClass.get(clazz);
+        return (ClassMetadata) _mapReflectorToClassMetadata.get(clazz);
     }
     
     public boolean isSecondClass(Object a_object){
     	if(a_object != null){
     		ReflectClass claxx = _container.reflector().forObject(a_object);
-    		if(i_classByClass.get(claxx) != null){
+    		if(_mapReflectorToClassMetadata.get(claxx) != null){
     			return true;
     		}
             if(Deploy.csharp){
@@ -489,7 +504,7 @@ public final class HandlerRegistry {
 	}
 
 	public ClassMetadata primitiveClassById(int id) {
-        return i_yapClasses[id - 1];
+        return _classMetadata[id - 1];
 	}
 	
 	public VirtualFieldMetadata virtualFieldByName(String name) {

@@ -1108,7 +1108,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return null;
         }
         if (_handlers.isSystemHandler(id)) {
-            return _handlers.getHandler(id);
+            return _handlers.handler(id);
         } 
         return classMetadataForId(id);
     }
@@ -1658,7 +1658,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract boolean setSemaphore(String name, int timeout);
 
     void setStringIo(LatinStringIO a_io) {
-        _handlers.i_stringHandler.setStringIo(a_io);
+        _handlers._stringHandler.setStringIo(a_io);
     }
 
     final boolean showInternalClasses() {
@@ -1804,7 +1804,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 		
     public LatinStringIO stringIO(){
-    	return _handlers.i_stringHandler.stringIO();
+    	return _handlers._stringHandler.stringIO();
     }
     
     public abstract SystemInfo systemInfo();
