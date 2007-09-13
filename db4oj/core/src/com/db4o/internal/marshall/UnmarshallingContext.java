@@ -177,7 +177,8 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         return _addToIDTree == Const4.TRANSIENT;
     }
     
-    public Object readObject(TypeHandler4 handler) {
+    public Object readObject(TypeHandler4 handlerType) {
+        TypeHandler4 handler = correctHandlerVersion(handlerType);
         if(! isIndirected(handler)){
             return handler.read(this);
         }

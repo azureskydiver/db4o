@@ -64,6 +64,9 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
             String testFileName = fileName(versionNames()[i]); 
             if(File4.exists(testFileName)){
                 System.out.println("Check database: " + testFileName);
+                
+                investigateDb4oHeaderVersion(testFileName);
+
                 checkDatabaseFile(testFileName);
                 // Twice, to ensure everything is fine after opening, converting and closing.
                 checkDatabaseFile(testFileName);
@@ -92,6 +95,23 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
             objectContainer.close();
         }
     }
+    
+    private void investigateDb4oHeaderVersion(String testFile) throws IOException{
+        RandomAccessFile raf = new RandomAccessFile(testFile, "r");
+        byte[] bytes = new byte[1];
+        raf.read(bytes);  // readByte() doesn't convert to .NET.
+        _db4oHeaderVersion = bytes[0]; 
+        raf.close();
+    }
+    
+    protected byte _db4oHeaderVersion;
+    
+    protected static final byte HEADER_30_40 = 123;
+    
+    protected static final byte HEADER_46_57 = 4;
+    
+    protected static final byte HEADER_60 = 100;
+    
     
     protected abstract String[] versionNames();
     

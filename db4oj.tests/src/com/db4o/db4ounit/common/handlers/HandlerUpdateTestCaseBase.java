@@ -6,6 +6,8 @@ package com.db4o.db4ounit.common.handlers;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.internal.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.query.*;
 
 public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseBase {
@@ -24,6 +26,8 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
         public Object _arrays;
         
     }
+    
+    protected int _handlerVersion;
     
     protected String fileNamePrefix() {
         return "migrate_" + typeName() + "_" ;
@@ -48,9 +52,24 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
         ObjectSet objectSet = q.execute();
         Holder holder = (Holder) objectSet.next();
         
-        assertValues(holder._values);
+        investigateHandlerVersion(objectContainer, holder);
         
+        assertValues(holder._values);
         assertArrays(holder._arrays);
+    }
+    
+    private void investigateHandlerVersion(ExtObjectContainer objectContainer, Object obj){
+        int id = (int) objectContainer.getID(obj);
+        ObjectInfo objectInfo = objectContainer.getObjectInfo(obj);
+        ObjectContainerBase container = (ObjectContainerBase) objectContainer;
+        Transaction trans = container.transaction();
+        Buffer buffer = container.readReaderByID(trans, id);
+        UnmarshallingContext context = new UnmarshallingContext(trans, (ObjectReference)objectInfo, Const4.TRANSIENT, false);
+        context.buffer(buffer);
+        context.persistentObject(obj);
+        context.activationDepth(0);
+        context.read();
+        _handlerVersion = context.handlerVersion();
     }
 
     protected abstract String typeName();
