@@ -27,11 +27,37 @@
 	</path>
 
     <available property="db4obuild.available" 
-        file="db4o-${db4o.version.dotted}-java5.jar" 
-        filepath="../db4obuild/dist/java/lib" />
+        file="../db4obuild/dist/java/lib" />
     
-	<target name="init">
-		<tstamp />
+	<property name="dir.workspace" value=".." />
+	<property file="${dir.workspace}/db4obuild/ant.properties" />
+	<import file="${dir.workspace}/db4obuild/common.xml" optional="true"/>
+	
+	<target name="drs.properties" if="db4obuild.available">
+		<svnRevision property="svn.revision" />
+		<echo>Revision: ${svn.revision}</echo>
+		<tstamp>
+			<format property="db4o.iteration" pattern="w" offset="-29" unit="week"/>
+		</tstamp>
+
+		<property name="drs.version.dotted" 
+			value="${drs.version.major}.${drs.version.minor}.${db4o.iteration}.${svn.revision}" />
+	</target>
+	
+	<target name="init" depends="drs.properties">
+		<property name="drs.version.dotted" value="${drs.version.major}.${drs.version.minor}" />
+		<property name="db4o.version.dotted" value="${drs.version.dotted}" />
+		<property name="drs.file" value="dRS-${drs.version.dotted}-" />
+		<property name="filename.drs.core.jar" value="${drs.file}core.jar" />
+		<property name="filename.drs.test.jar" value="${drs.file}test.jar" />
+		<property name="filename.drs.tutorial.jar" value="${drs.file}tutorial.jar" />
+		<property name="filename.drs.zip" value="dRS-java-${drs.version.dotted}.zip" />
+		
+		<property name="file.drs.core.jar" value="${drs.dir.dist.lib}/${filename.drs.core.jar}" />
+		<property name="file.drs.test.jar" value="${drs.dir.dist.lib}/${filename.drs.test.jar}" />
+		<property name="file.drs.tutorial.jar" value="${drs.dir.dist.lib}/${filename.drs.tutorial.jar}" />
+		<property name="file.drs.zip" value="${drs.dir.dist}/${filename.drs.zip}" />
+		
 		<mkdir dir="${drs.dir.dist.lib}" />
 		<mkdir dir="${drs.dir.dist.api}" />
         
