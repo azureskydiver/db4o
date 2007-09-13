@@ -5,9 +5,8 @@
 	<!-- set the appropriate db4o jar file to use -->
     <property name="dir.workspace" value=".." />
     <property file="${dir.workspace}/db4obuild/ant.properties" />
-	<property name="db4o.version" value="${filename.java5.jar}"/>
-	<property name="dist.version" value="objectmanager-${db4o.version.dotted}"/>
-
+	<import file="${dir.workspace}/db4obuild/common.xml" />
+	
 	<!-- set global properties for this build -->
 	<property name="src" location="src"/>
     <property name="lib" location="lib"/>
@@ -16,7 +15,6 @@
 	<property name="docs" location="docs"/>
 	<property name="launch" location="launch"/>
 	<property name="dist.root" location="dist"/>
-	<property name="dist" location="${dist.root}/${dist.version}"/>
     <property name="webstart" value="webstart"/>
     <property name="dist-webstart" value="dist-webstart"/>
 
@@ -27,19 +25,31 @@
         </fileset>
     </path>
 
-    <target name="init">
+    <target name="init" depends="properties">
+    	<property name="db4o.version" value="${db4o.file}java5.jar"/>
+    	<property name="dist.version" value="objectmanager-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}"/>
+    	<property name="om.jar" value="${dist.version}.jar" />
+    	<property name="dist" location="${dist.root}/${dist.version}"/>
+    	<property name="om-api.jar" value="objectmanager-api-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}.jar" />
+    	
         <!-- Create the time stamp -->
         <tstamp/>
         <!-- Create the build directory structure used by compile -->
         <mkdir dir="${build}"/>
-        <delete dir="${dist}" />
-        <delete file="${dist.version}.zip" />
+        <delete dir="${dist.root}" />
         <delete dir="${lib}">
-            <include name="${filename.java5.jar}" />
-            <include name="objectmanager-api.jar" />
+            <include name="db4o-*-java5.jar" />
+            <include name="objectmanager-api*.jar" />
         </delete>
-        <delete file="${dist.version}.zip" />
-        <copy file="${dir.dist}/java/lib/${filename.java5.jar}" todir="${lib}" />
+    	<delete dir=".">
+    		<include name="objectmanager-*.zip" />
+    	</delete>
+        <copy todir="${lib}">
+        	<fileset dir="${dir.dist}/java/lib/">
+        		<include name="db4o-*-java5.jar" />
+        	</fileset>
+        </copy>
+
     </target>
 
     <target name="compile" depends="init"
@@ -48,12 +58,18 @@
 		<ant antfile="../objectmanager-api/build.xml"
              dir="../objectmanager-api"
              target="dist"
-             inheritAll="false"/>
+             inheritAll="false">
+			<property name="om-api.jar" value="${om-api.jar}" />
+		</ant>
 		<!-- copy dependencies -->
 		<copy  todir="./lib/">
 			<fileset dir="../objectmanager-api/lib/"/>
 		</copy>
-		<copy file="../objectmanager-api/dist/lib/objectmanager-api.jar" todir="./lib/"/>
+		<copy todir="${lib}" >
+			<fileset dir="../objectmanager-api/dist/lib/">
+				<include name="objectmanager-api*.jar" />
+    		</fileset>
+    	</copy>
         <!-- Compile from ${src} into ${build} -->
         <javac srcdir="${src}" destdir="${build}"
 				debug="true" 
@@ -81,10 +97,10 @@
 		<copy todir="${dist}/lib">
             <fileset dir="${lib}"/>
         </copy>
-        <jar jarfile="${dist}/${ant.project.name}.jar" basedir="${build}">
+        <jar jarfile="${dist}/${om.jar}" basedir="${build}">
             <manifest>
                 <attribute name="Class-Path"
-                           value="lib/${db4o.version} lib/db4o-sql.jar lib/looks-2.0.4.jar lib/forms-1.0.7.jar lib/objectmanager-api.jar"/>
+                           value="lib/${db4o.version} lib/db4o-sql.jar lib/looks-2.0.4.jar lib/forms-1.0.7.jar lib/${om-api.jar}"/>
                 <attribute name="Main-Class" value="com.db4o.objectManager.v2.Dashboard"/>
             </manifest>
         </jar>
@@ -96,7 +112,10 @@
 		<copy todir="${dist}">
             <fileset dir="${launch}"/>
         </copy>
-
+		
+		<echo file="${dist}/objectmanager.sh" message="java -jar ${om.jar}"/>
+    	<echo file="${dist}/objectmanager.bat" message="java -jar ${om.jar}"/>
+    	
 	</target>
     <target name="dist-webstart" depends="dist">
 
@@ -132,7 +151,8 @@
         <signjar jar="${wslib}/db4o-sql.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/forms-1.0.7.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/looks-2.0.4.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
-        <signjar jar="${wslib}/objectmanager-api.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
+        <signjar jar="${wslib}/objectmanager-api-${db4o.version.dotted}.${svn.revision}.jar" 
+        	alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/objectmanager.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
 
     </target>
