@@ -40,7 +40,7 @@ public class SvnRevision extends Task {
 	private String resourceRevision() throws SVNException {
 		SVNWCClient c = new SVNWCClient(SVNWCUtil.createDefaultAuthenticationManager(), SVNWCUtil.createDefaultOptions(true));
 		SVNInfo info = c.doInfo(resource(), SVNRevision.COMMITTED);
-		return Long.toString(info.getCommittedRevision().getNumber());
+		return Long.toString(info.getRevision().getNumber());
 	}
 
 

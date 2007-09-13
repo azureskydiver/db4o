@@ -173,5 +173,25 @@
 			<mkdir dir="@{dir}" />
 		</sequential>
 	</macrodef>
+
+	<target name="properties" depends="get-svn-revision">
+		<tstamp>
+			<format property="db4o.iteration" pattern="w" offset="-29" unit="week"/>
+		</tstamp>		
+		<property name="db4o.file" value="db4o-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}-" />
 		
+		<property name="file.java1.1.jar" value="${dir.dist.jars}/${db4o.file}java1.1.jar" />
+		<property name="file.java1.2.jar" value="${dir.dist.jars}/${db4o.file}java1.2.jar" />
+		<property name="file.java5.jar" value="${dir.dist.jars}/${db4o.file}java5.jar" />
+		<property name="file.osgi.jar" value="${dir.dist.jars}/${db4o.file}osgi.jar" />
+		<property name="file.osgi.test.jar" value="${dir.dist.jars}/${db4o.file}osgi-test.jar" />
+		<property name="file.sharp.jar" value="${dir.dist.jars}/${db4o.file}sharp.jar" />
+		<property name="file.db4otools.jar" value="${dir.dist.jars}/${db4o.file}tools.jar" />
+		<property name="file.nqopt.jar" value="${dir.dist.jars}/${db4o.file}nqopt.jar" />
+		<property name="file.db4ounit.jar" value="${dir.dist.jars}/${db4o.file}db4ounit.jar" />
+		<property name="file.ta.jar" value="${dir.dist.jars}/${db4o.file}ta.jar" />
+		<property name="file.java.test.src.zip" value="${dir.dist.java}/${db4o.file}test.zip" />
+		<property name="file.dist.java" value="${dir.dist}/${db4o.file}java.zip" />
+	</target>
+
 </project>

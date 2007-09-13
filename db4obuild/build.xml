@@ -49,7 +49,7 @@
 	<target name="buildall2-old-school" depends="clean, buildjava-old-school, buildnet2">
 	</target>
 
-	<target name="init" depends="get-svn-revision" description="Basic initialization">
+	<target name="init" depends="properties" description="Basic initialization">
 		<tstamp />
 		<mkdir dir="${dir.dist}" />
 		<mkdir dir="${dir.sharpen}" />
@@ -271,80 +271,8 @@
 		<ant antfile="build-dotnet.xml" target="run-tests" />
 	</target>
 
-	<target name="do-compiletoolsmono">
-		<updateAssemblyInfo version="${db4o.version.full}">
-			<fileset dir="${src.dir}">
-				<include name="AssemblyInfo.cs" />
-			</fileset>
-		</updateAssemblyInfo>
-		<csc srcdir="${src.dir}"
-			targettype="library"
-			destfile="${file.dll.tools.mono}"
-			debug="true"
-			executable="${mono.executable}"
-			definitions="${mono.definitions}">
-			
-			<exclude name="compact*/**" />
-			<exclude name="**/templates/**" />
-			<exclude name="**/Cecil.FlowAnalysis.Tests/**" />
-			<exclude name="**/Cecil.FlowAnalysis/AssemblyInfo.cs" />
-			<exclude name="**/Mono.Cecil/AssemblyInfo.cs" />
-
-			<reference dir="${dir.dist.dll.mono}">
-				<include name="${file.name.dll}" />
-			</reference>
-		</csc>
-	</target>
-
-	<target name="do-compiletestsmono">
-		<mkdir dir="${dir.dist.dll.mono}"/>
-		
-		<antcall target="compile-db4ounit-libs">
-			<param name="output.dir" value="${dir.dist.dll.mono}" />
-			<param name="csc.executable" value="${mono.executable}" />
-		</antcall>
-		
-		<csc srcdir="${src.dir}"
-			targettype="exe"
-			destfile="${file.exe.tests.mono}"
-			debug="true"
-			executable="${mono.executable}"
-			mainclass="com.db4o.test.AllTests"
-			extraoptions="-r:System.Drawing"
-			definitions="${mono.definitions}">
-			
-			<exclude name="compact*/**" />
-			<exclude name="**/ListElementByIdentity.cs" />
-			<exclude name="**/TestCatSpeed.cs" />
-			
-			<reference dir="${dir.dist.dll.mono}">
-				<include name="Db4oUnit.dll" />
-				<include name="Db4oUnit.Extensions.dll" />
-				<include name="${file.name.dll}" />
-				<include name="${file.name.dll.tools.mono}" />
-			</reference>
-		</csc>
-	</target>
-
 	<target name="runtestsmono">
 		<ant antfile="build-dotnet.xml" target="run-tests" />
-	</target>
-	
-	<target name="do-compiledllmono">
-		<versioninfo path="${src.dir}/net" net="true" keyfile="${filename.keyfile}" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
-		<csc srcdir="${src.dir}"
-			targettype="library"
-			destfile="${file.dll.mono}"
-			docfile="${file.xml.mono}"
-			debug="${compiledll.debug}"
-			executable="${mono.executable}"
-			warnlevel="0"
-			optimize="true"
-			definitions="${mono.definitions}">
-			<include name="**/*.cs" />
-			<exclude name="compact*/**" />
-		</csc>
-		<versioninfo path="${src.dir}/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
 	</target>
 
 	<target name="compiledb4ounitjava" description="Compile db4o test framework">
@@ -1045,94 +973,6 @@
 		<property name="installer.package.suffix" value="net2" />
 		<property name="installer.package.guid" value="${installer.package.guid.net2}" />
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
-	</target>
-
-	<target name="create-zipnet">
-		<mkdir dir="${dir.dist.net.src.core}" />
-		<copy todir="${dir.dist.net.src.core}">
-			<fileset dir="${dir.core}">
-				<include name="**/*.cs" />
-				<include name="*.*" />
-				<exclude name=".*" />
-			</fileset>
-		</copy>
-		<versioninfo path="${dir.dist.net.src.core}/src/net" net="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
-		<versioninfo path="${dir.dist.net.src.core}/src/compact" compact="true" keyfile="" version="${db4o.version.full}" major="${db4o.version.major}"  minor="${db4o.version.minor}"/>
-		<mkdir dir="${dir.dist.net.src.tools}" />
-		<copy todir="${dir.dist.net.src.tools}">
-			<fileset dir="${dir.tools}">
-				<include name="**/*.cs" />
-				<include name="*.*" />
-				<exclude name=".*" />
-			</fileset>
-		</copy>
-		<mkdir dir="${dir.dist.net.src.test}" />
-		<copy todir="${dir.dist.net.src.test}">
-			<fileset dir="${dir.test}">
-				<include name="**/*.cs" />
-				<include name="**/*.resx" />
-				<include name="lib/Db4oUnit.dll" />
-				<include name="*.*" />
-				<exclude name=".*" />
-			</fileset>
-		</copy>
-		<copy todir="${dir.dist.net.build.tutorial}">
-			<fileset dir="${dir.j.tutorial.out.net}">
-				<include name="**/**" />
-			</fileset>
-			<fileset dir="${dir.tutorial}">
-				<include name="**/*.cs" />
-				<include name="vb/**/*.vb" />
-				<include name="vb/**/*.vbproj" />
-				<include name="vb/**/*.sln" />
-				<exclude name="db4o-tutorial/**/*.*" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${dir.dist.net.build.tutorial}/vb">
-			<fileset dir="${dir.j.tutorial.out.vb}">
-				<include name="**/**" />
-			</fileset>
-		</copy>	
-
-		<copy todir="${dir.dist.net.build}">
-			<fileset dir="${dir.dist}" includes="dll/**/**" />
-			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
-			<fileset dir="${dir.config}" includes="README.txt" />
-			<fileset dir="${dir.dist.net.instrumentation}" includes="**/**" />
-		</copy>
-		
-		<filehead beforePattern="using|namespace" header="${content.gplheader}" >
-			<sources dir="${dir.dist.net.build.src}">
-				<include name="**/*.cs" />
-				<exclude name="**/tools/Libs/**" />
-			</sources>
-		</filehead>
-		
-		<mkdir dir="${dir.dist.net.build}/doc/api" />
-		
-		<copy todir="${dir.dist.net.build}/doc/api">
-			<fileset dir="${dir.dist}/ndoc">
-				<include name="db4o.chm" />
-				<include name="db4o.HxS" />
-				<include name="db4oCollection.*" />
-				<include name="db4oCollection.h2reg.ini" />
-			</fileset>
-			<fileset dir="lib/h2reg">
-				<include name="*.exe" />
-				<include name="*.ini" />
-			</fileset>
-		</copy>
-		
-		<zip destfile="${dir.dist}/${db4o.file}${installer.package.suffix}.zip">
-			<fileset dir="${dir.dist.net}" includes="${folder.build}/**" />
-		</zip>
-		
-		<ant antfile="build-net-installer.xml">
-			<property name="installer.package.guid" value="${installer.package.guid}" />
-			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
-			<property name="target.framework.version" value="${target.framework.version}" />
-		</ant>
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
