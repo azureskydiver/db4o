@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
-import com.db4o.reflect.*;
 
 
 /**
@@ -16,8 +15,6 @@ public interface TypeHandler4 extends Comparable4 {
 	
 	void cascadeActivation(Transaction trans, Object obj, int depth, boolean activate);
 	
-	ReflectClass classReflector();
-    
 	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer) throws Db4oIOException;
 	
     int linkLength();

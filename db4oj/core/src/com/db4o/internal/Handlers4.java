@@ -40,8 +40,8 @@ public class Handlers4 {
     
     public static boolean handlerCanHold(TypeHandler4 handler, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
-        if(Handlers4.handlesSimple(baseTypeHandler)){
-            return claxx.equals(baseTypeHandler.classReflector());
+        if(handlesSimple(baseTypeHandler)){
+            return claxx.equals(((BuiltinTypeHandler)baseTypeHandler).classReflector());
         }
         
         if(baseTypeHandler instanceof UntypedFieldHandler){

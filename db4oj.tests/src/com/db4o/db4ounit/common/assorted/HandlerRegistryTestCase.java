@@ -35,6 +35,13 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
         Assert.areEqual(byReflector, byID);
 	}
 	
+	public void testClassReflectorForHandler(){
+        ReflectClass byReflector = reflector().forClass(Integer.class);
+        ReflectClass byID = handlers().classForID(Handlers4.INT_ID);
+        Assert.isNotNull(byID);
+        Assert.areEqual(byReflector, byID);
+    }
+	
 	public static void main(String[] arguments) {
         new HandlerRegistryTestCase().runSolo();
     }

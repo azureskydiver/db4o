@@ -8,6 +8,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -17,8 +18,8 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     
     private final TypeHandler4 _handler;
     
-    PrimitiveFieldHandler(ObjectContainerBase container, TypeHandler4 handler, int handlerID) {
-    	super(container, handler.classReflector());
+    PrimitiveFieldHandler(ObjectContainerBase container, TypeHandler4 handler, int handlerID, ReflectClass classReflector) {
+    	super(container, classReflector);
         i_fields = FieldMetadata.EMPTY_ARRAY;
         _handler = handler;
         _id = handlerID;
