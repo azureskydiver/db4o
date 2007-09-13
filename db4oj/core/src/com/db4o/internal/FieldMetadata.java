@@ -508,7 +508,7 @@ public class FieldMetadata implements StoredField {
         // alive needs to be checked by all callers: Done
         TypeHandler4 handler = baseTypeHandler();
         if(Handlers4.handlesSimple(handler)){
-            return container._handlers.primitiveClassById(handlerID());
+            return container._handlers.classMetadataForId(handlerID());
         }
         return (ClassMetadata)handler;
     }
