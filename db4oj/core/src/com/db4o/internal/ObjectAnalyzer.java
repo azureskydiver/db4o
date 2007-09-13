@@ -74,7 +74,7 @@ class ObjectAnalyzer {
     }
     
     private final boolean isPlainObjectOrPrimitive(ClassMetadata classMetadata) {
-        return classMetadata.getID() == HandlerRegistry.ANY_ID  || classMetadata.isPrimitive();
+        return classMetadata.getID() == Handlers4.UNTYPED_ID  || classMetadata.isPrimitive();
     }
 
     ObjectReference objectReference() {

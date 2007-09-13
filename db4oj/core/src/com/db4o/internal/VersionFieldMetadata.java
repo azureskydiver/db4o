@@ -8,17 +8,14 @@ import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
-
 /**
  * @exclude
  */
 public class VersionFieldMetadata extends VirtualFieldMetadata {
 
     VersionFieldMetadata(ObjectContainerBase stream) {
-        super();
+        super(Handlers4.LONG_ID, new LongHandler(stream));
         setName(VirtualField.VERSION);
-        _handler = new LongHandler(stream);
-        _handlerID = Handlers4.LONG_ID;
     }
     
     public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) {

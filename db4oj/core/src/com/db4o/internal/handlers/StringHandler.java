@@ -15,7 +15,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public abstract class StringHandler extends BuiltinTypeHandler implements IndexableTypeHandler{
+public abstract class StringHandler extends VariableLengthTypeHandler implements IndexableTypeHandler, BuiltinTypeHandler{
     
     private LatinStringIO _stringIO; 
     

@@ -9,6 +9,7 @@ import com.db4o.internal.query.processor.QConObject;
 import com.db4o.internal.replication.*;
 import com.db4o.internal.slots.Slot;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 
 /**
@@ -20,9 +21,12 @@ import com.db4o.marshall.*;
 public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     private static final Object ANY_OBJECT = new Object();
+    
+    private final ReflectClass _classReflector;
 
-    VirtualFieldMetadata() {
-        super(null);
+    VirtualFieldMetadata(int handlerID, BuiltinTypeHandler handler) {
+        super(handlerID, handler);
+        _classReflector = handler.classReflector();
     }
     
     public abstract void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer a_writer, Slot oldSlot) throws FieldIndexException;
@@ -37,6 +41,10 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     public boolean canUseNullBitmap(){
         return false;
+    }
+    
+    public ReflectClass classReflector(){
+        return _classReflector;
     }
     
     void collectConstraints(Transaction a_trans, QConObject a_parent,

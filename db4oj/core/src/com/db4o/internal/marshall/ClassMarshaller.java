@@ -78,7 +78,7 @@ public abstract class ClassMarshaller {
         return nameBytes;
     }
 
-    public void read(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) {
+    public final void read(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) {
         clazz.setAncestor(stream.classMetadataForId(reader.readInt()));
         
         if(clazz.callConstructor()){

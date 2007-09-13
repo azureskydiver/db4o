@@ -19,11 +19,9 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     
     private static final int LINK_LENGTH = Const4.LONG_LENGTH + Const4.ID_LENGTH;
 
-    UUIDFieldMetadata(ObjectContainerBase stream) {
-        super();
+    UUIDFieldMetadata(ObjectContainerBase container) {
+        super(Handlers4.LONG_ID, new LongHandler(container));
         setName(Const4.VIRTUAL_FIELD_PREFIX + "uuid");
-        _handler = new LongHandler(stream);
-        _handlerID = Handlers4.LONG_ID;
     }
     
     public void addFieldIndex(MarshallerFamily mf, ClassMetadata yapClass, StatefulBuffer writer, Slot oldSlot) throws FieldIndexException {

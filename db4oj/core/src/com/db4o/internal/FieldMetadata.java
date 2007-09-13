@@ -103,6 +103,11 @@ public class FieldMetadata implements StoredField {
         _state = AVAILABLE;
     }
     
+    protected FieldMetadata(int handlerID, TypeHandler4 handler){
+        _handlerID = handlerID;
+        _handler = handler;
+    }
+    
     /**
      * @param classMetadata
      * @param oldSlot 

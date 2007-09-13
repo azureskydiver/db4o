@@ -33,6 +33,11 @@ public class Handlers4 {
     
     public static final int UNTYPED_ID = 11;
     
+    public static final int ANY_ARRAY_ID = 12;
+    
+    public static final int ANY_ARRAY_N_ID = 13;
+
+    
     public static boolean handlerCanHold(TypeHandler4 handler, ReflectClass claxx){
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler);
         if(Handlers4.handlesSimple(baseTypeHandler)){

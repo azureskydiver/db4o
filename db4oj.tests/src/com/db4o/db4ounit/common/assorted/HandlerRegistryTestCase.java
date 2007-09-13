@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.internal.*;
+import com.db4o.reflect.*;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
@@ -26,4 +27,16 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	private HandlerRegistry handlers() {
 		return stream().handlers();
 	}
+	
+	public void testClassForID(){
+	    ReflectClass byReflector = reflector().forClass(Integer.class);
+	    ReflectClass byID = handlers().classForID(Handlers4.INT_ID);
+        Assert.isNotNull(byID);
+        Assert.areEqual(byReflector, byID);
+	}
+	
+	public static void main(String[] arguments) {
+        new HandlerRegistryTestCase().runSolo();
+    }
+	
 }
