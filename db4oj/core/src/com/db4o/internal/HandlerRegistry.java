@@ -315,7 +315,7 @@ public final class HandlerRegistry {
 	}
 
 	private Object nullValue(ReflectClass clazz) {
-		for (int k = 0; k < PRIMITIVECOUNT; k++) {
+		for (int k = 1; k <= PRIMITIVECOUNT; k++) {
 		    PrimitiveHandler handler = (PrimitiveHandler) handler(k); 
 			if (clazz.equals(handler.primitiveClassReflector())) {
 				return handler.primitiveNull();
