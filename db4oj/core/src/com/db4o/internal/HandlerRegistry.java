@@ -30,11 +30,8 @@ public final class HandlerRegistry {
 
     private static final Db4oTypeImpl[]   _db4oTypes     = { new BlobImpl()};
 
-
-    // Array Indices in i_YapContainers
-    private static final int        CLASSCOUNT      = 11;
-
     private ClassMetadata                i_anyArray;
+    
     private ClassMetadata                i_anyArrayN;
 
     public StringHandler          _stringHandler;
@@ -45,11 +42,8 @@ public final class HandlerRegistry {
     
     private Hashtable4          _classMetadata = new Hashtable4(16);
 
-    
+    private int                     _highestBuildinTypeID     = Handlers4.ANY_ARRAY_N_ID + 1;
 
-    private int                     i_maxTypeID     = Handlers4.ANY_ARRAY_N_ID + 1;
-
-    private NetTypeHandler[]       _platformTypes;
     static private final int        PRIMITIVECOUNT  = 8;
 
     public static final int         ANY_ID        = 11;
@@ -77,7 +71,7 @@ public final class HandlerRegistry {
     
     final GenericReflector                _reflector;
     
-    private final Hashtable4 _handlerVersions = new Hashtable4();
+    private final Hashtable4 _handlerVersions = new Hashtable4(16);
     
     public ReflectClass ICLASS_COMPARE;
     ReflectClass ICLASS_DB4OTYPE;
@@ -105,54 +99,15 @@ public final class HandlerRegistry {
         _virtualFields[0] = _indexes._version;
         _virtualFields[1] = _indexes._uUID;
 
-        registerHandlers(stringEncoding);
-
-        for (int id = 1; id <= CLASSCOUNT; id++) {
-            TypeHandler4 handler = handlerForID(id);
-            PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(container, handler, id);
-            _classMetadata.put(id, primitiveFieldHandler);
-            _mapReflectorToClassMetadata.put(handler.classReflector(), primitiveFieldHandler);
-            if(id < ANY_ID){
-            	reflector.registerPrimitiveClass(id, handler.classReflector().getName(), null);
-            }
-            if (!Deploy.csharp) {
-               if(handler instanceof PrimitiveHandler){
-                   PrimitiveHandler primitiveHandler = (PrimitiveHandler) handler;
-                   ReflectClass primitiveClassReflector = primitiveHandler.primitiveClassReflector();
-                   if(primitiveClassReflector != null){
-                       _mapReflectorToClassMetadata.put(primitiveClassReflector, primitiveFieldHandler);
-                   }
-               }
-            }
-        }
+        registerBuiltinHandlers(stringEncoding);
         
-        _platformTypes = Platform4.types(container);
+        registerPlatformTypes();
+        
+        initArrayHandlers(container);
+        
+    }
 
-        for (int i = 0; i < _platformTypes.length; i++) {
-            NetTypeHandler handler = _platformTypes[i]; 
-            handler.initialize();
-        	int id = handler.getID();
-        	
-            registerBuiltinHandler(id, handler);
-
-            GenericConverter converter = (handler instanceof GenericConverter) ? (GenericConverter)handler : null;  
-            reflector.registerPrimitiveClass(id, handler.getName(), converter);
-            
-            
-            PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(container, handler, id);
-            _classMetadata.put(id, primitiveFieldHandler);
-            
-            if (id > i_maxTypeID) {
-                i_maxTypeID = id;
-            }
-            _mapReflectorToClassMetadata.put(handler.classReflector(), primitiveFieldHandler);
-            if (!Deploy.csharp) {
-                if (handler.primitiveClassReflector() != null) {
-                	_mapReflectorToClassMetadata.put(handler.primitiveClassReflector(), primitiveFieldHandler);
-                }
-            }
-        }
-
+    private void initArrayHandlers(final ObjectContainerBase container) {
         i_anyArray = new PrimitiveFieldHandler(container, new ArrayHandler(_container,
             untypedHandler(), false), Handlers4.ANY_ARRAY_ID);
         _classMetadata.put(Handlers4.ANY_ARRAY_ID, i_anyArray);
@@ -160,11 +115,18 @@ public final class HandlerRegistry {
         i_anyArrayN = new PrimitiveFieldHandler(container, new MultidimensionalArrayHandler(_container,
             untypedHandler(), false), Handlers4.ANY_ARRAY_N_ID);
         _classMetadata.put(Handlers4.ANY_ARRAY_N_ID, i_anyArrayN);
+    }
 
-        
+    private void registerPlatformTypes() {
+        NetTypeHandler[] handlers = Platform4.types(_container);
+        for (int i = 0; i < handlers.length; i++) {
+            handlers[i].initialize();
+        	GenericConverter converter = (handlers[i] instanceof GenericConverter) ? (GenericConverter)handlers[i] : null;
+            registerBuiltinHandler(handlers[i].getID(), handlers[i], true, handlers[i].getName(), converter);
+        }
     }
     
-    private void registerHandlers(byte stringEncoding){
+    private void registerBuiltinHandlers(byte stringEncoding){
         
         IntHandler intHandler = new IntHandler(_container);
         registerBuiltinHandler(Handlers4.INT_ID, intHandler);
@@ -207,13 +169,40 @@ public final class HandlerRegistry {
         registerHandlerVersion(dateHandler, 0, new DateHandler0(_container));
         
         UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(_container);
-        registerBuiltinHandler(Handlers4.UNTYPED_ID, untypedFieldHandler);
+        registerBuiltinHandler(Handlers4.UNTYPED_ID, untypedFieldHandler, false, null, null);
         registerHandlerVersion(untypedFieldHandler, 0, new UntypedFieldHandler0(_container));
     }
-
+    
     private void registerBuiltinHandler(int id, BuiltinTypeHandler handler) {
+        registerBuiltinHandler(id, handler, true, handler.classReflector().getName(), null);
+    }
+
+    private void registerBuiltinHandler(int id, BuiltinTypeHandler handler, boolean registerPrimitiveClass, String primitiveName, GenericConverter converter) {
+
+        if(registerPrimitiveClass){
+            _reflector.registerPrimitiveClass(id, primitiveName, converter);
+        }
+        
         _handlers.put(id, handler);
         _classes.put(id, handler.classReflector());
+        
+        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(_container, handler, id);
+        _classMetadata.put(id, primitiveFieldHandler);
+        _mapReflectorToClassMetadata.put(handler.classReflector(), primitiveFieldHandler);
+
+        if (!Deploy.csharp) {
+            if(handler instanceof PrimitiveHandler){
+                PrimitiveHandler primitiveHandler = (PrimitiveHandler) handler;
+                ReflectClass primitiveClassReflector = primitiveHandler.primitiveClassReflector();
+                if(primitiveClassReflector != null){
+                    _mapReflectorToClassMetadata.put(primitiveClassReflector, primitiveFieldHandler);
+                }
+            }
+        }
+        
+        if (id > _highestBuildinTypeID) {
+            _highestBuildinTypeID = id;
+        }
     }
 
 	private void registerHandlerVersion(TypeHandler4 handler, int version, TypeHandler4 replacement) {
@@ -436,13 +425,8 @@ public final class HandlerRegistry {
     }
 
     public ClassMetadata classMetadataForId(int id) {
-        return primitiveClassById(id);
-    }
-    
-    public ClassMetadata primitiveClassById(int id) {
         return (ClassMetadata) _classMetadata.get(id);
     }
-
 
     ClassMetadata classMetadataForClass(ReflectClass clazz) {
         if (clazz == null) {
@@ -471,7 +455,7 @@ public final class HandlerRegistry {
     }
 
     public boolean isSystemHandler(int id) {
-    	return id<=i_maxTypeID;
+    	return id<=_highestBuildinTypeID;
     }
 
 	public void migrationConnection(MigrationConnection mgc) {
@@ -506,7 +490,7 @@ public final class HandlerRegistry {
 	}
 
     public boolean isVariableLength(TypeHandler4 handler) {
-        return handler instanceof StringHandler || handler instanceof ArrayHandler;
+        return handler instanceof VariableLengthTypeHandler;
     }
     
     public SharedIndexedFields indexes(){
