@@ -98,8 +98,8 @@
 	</target>
 
 	<target name="copyjava1.1">
-		<mkdir dir="${dir.dist.java.temp.src.core}" />
-		<copy todir="${dir.dist.java.temp.src.core}" overwrite="true">
+		<reset-dir dir="${dir.dist.java.temp.src.core}" />
+		<copy todir="${dir.dist.java.temp.src.core}">
 			<fileset dir="${dir.j.core.src}">
 				<include name="**/*.java" />
 			</fileset>
