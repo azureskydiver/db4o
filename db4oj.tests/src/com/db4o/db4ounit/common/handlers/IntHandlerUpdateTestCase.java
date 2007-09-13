@@ -115,9 +115,9 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     protected void assertValues(Object[] values) {
         for (int i = 0; i < data.length; i++) {
             Item item = (Item) values[i];
-            Assert.areEqual(item._typedPrimitive, data[i]);
-            Assert.areEqual(item._typedWrapper, new Integer(data[i]));
-            Assert.areEqual(item._untyped, new Integer(data[i]));
+            assertAreEqual(data[i], item._typedPrimitive);
+            assertAreEqual(new Integer(data[i]), item._typedWrapper);
+            assertAreEqual( new Integer(data[i]), item._untyped);
         }
         Item nullItem = (Item) values[values.length - 1];
         Assert.areEqual(0, nullItem._typedPrimitive);
@@ -150,13 +150,18 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
      */
     protected void assertUntypedObjectArray(ItemArrays item) {
         for (int i = 0; i < data.length; i++) {
-            Assert.areEqual(new Integer(data[i]), item._untypedObjectArray[i]);
+            assertAreEqual(new Integer(data[i]), item._untypedObjectArray[i]);
         }
         Assert.isNull(item._untypedObjectArray[item._untypedObjectArray.length - 1]);
     }
     
     private void assertPrimitiveArrayInObject(ItemArrays item) {
-        assertData((int[]) item._primitiveArrayInObject);
+        if(_db4oHeaderVersion == HEADER_30_40){
+           // Bug in the oldest format: It accidentally int[] arrays to Integer[] arrays.
+            assertWrapperData((Integer[]) item._primitiveArrayInObject);
+        } else{
+            assertData((int[]) item._primitiveArrayInObject);
+        }
     }
     
     private void assertWrapperArrayInObject(ItemArrays item) {
@@ -166,13 +171,13 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
     private void assertData(int[] values) {
         for (int i = 0; i < data.length; i++) {
-            Assert.areEqual(data[i], values[i]);
+            assertAreEqual(data[i], values[i]);
         }
     }
 
     private void assertWrapperData(Integer[] values) {
         for (int i = 0; i < data.length; i++) {
-            Assert.areEqual(new Integer(data[i]), values[i]);
+            assertAreEqual(new Integer(data[i]), values[i]);
         }
         
         // FIXME: The following fails as is because of a deficiency 
@@ -182,6 +187,21 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         
         // Assert.isNull(values[values.length - 1]);
     }
-
+    
+    private void assertAreEqual(int expected, int actual){
+        if(expected == Integer.MAX_VALUE  && _handlerVersion == 0){
+            // Bug in the oldest format: It treats Integer.MAX_VALUE as null. 
+            expected = 0;
+        }
+        Assert.areEqual(expected, actual);
+    }
+    
+    private void assertAreEqual(Object expected, Object actual){
+        if(new Integer(Integer.MAX_VALUE).equals(expected) && _handlerVersion == 0){
+            // Bug in the oldest format: It treats Integer.MAX_VALUE as null.
+            expected = null;
+        }
+        Assert.areEqual(expected, actual);
+    }
 
 }

@@ -60,15 +60,14 @@ public class Db4oVersionRunner extends Db4oTestSuite {
     public int runSolo() {
         if (testCase != null) {
             return runSingleUpdateTest(testCase);
-        } else {
-            Class[] testCases = testCases();
-            for (int i = 0; i < testCases.length; i++) {
-                if (FormatMigrationTestCaseBase.class
-                        .isAssignableFrom(testCases[i])) {
-                    int failures = runSingleUpdateTest(testCases[i]);
-                    if (failures != 0) {
-                        return failures;
-                    }
+        } 
+        Class[] testCases = testCases();
+        for (int i = 0; i < testCases.length; i++) {
+            if (FormatMigrationTestCaseBase.class
+                    .isAssignableFrom(testCases[i])) {
+                int failures = runSingleUpdateTest(testCases[i]);
+                if (failures != 0) {
+                    return failures;
                 }
             }
         }
@@ -86,13 +85,13 @@ public class Db4oVersionRunner extends Db4oTestSuite {
                 createDatabase(file, test);
                 String version = getDb4oVersion(file.toURL());
                 return run(new String[] { version }, test);
-            } else {
-                File[] files = getDb4oJarFiles();
-                for (int i = 0; i < files.length; i++) {
-                    createDatabase(files[i], test);
-                }
-                return run(getDb4oVersions(), test);
+            } 
+            File[] files = getDb4oJarFiles();
+            for (int i = 0; i < files.length; i++) {
+                createDatabase(files[i], test);
             }
+            return run(getDb4oVersions(), test);
+            
         } catch (Exception e) {
             throw new Db4oException(e);
         }
