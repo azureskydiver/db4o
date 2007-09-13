@@ -14,7 +14,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public abstract class PrimitiveHandler implements IndexableTypeHandler {
+public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinTypeHandler {
     
     protected final ObjectContainerBase _stream;
     

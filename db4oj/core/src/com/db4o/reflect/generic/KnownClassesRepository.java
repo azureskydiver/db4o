@@ -59,7 +59,7 @@ public class KnownClassesRepository {
 
     public ReflectClass forID(int id) {
     	if(_stream.handlers().isSystemHandler(id)) {
-    		return _stream.handlerByID(id).classReflector();
+    		return _stream.handlers().classForID(id);
     	}
 		ensureClassAvailability(id);
         return lookupByID(id);        
@@ -169,7 +169,7 @@ public class KnownClassesRepository {
 		
 		if(fieldInfo.isVirtual()) {
 			 VirtualFieldMetadata fieldMeta=_stream.handlers().virtualFieldByName(fieldInfo.name());
-			 return fieldMeta.getHandler().classReflector();
+			 return fieldMeta.classReflector();
 		}
 		
 		int handlerID=fieldInfo.handlerID();
@@ -177,10 +177,10 @@ public class KnownClassesRepository {
 
 		// need to take care of special handlers here
 		switch (handlerID){
-		    case HandlerRegistry.ANY_ID:
+		    case Handlers4.UNTYPED_ID:
 		        fieldClass = _stream.reflector().forClass(Object.class);
 		        break;
-		    case HandlerRegistry.ANY_ARRAY_ID:
+		    case Handlers4.ANY_ARRAY_ID:
 		        fieldClass = arrayClass(_stream.reflector().forClass(Object.class));
 		        break;
 		    default:

@@ -167,7 +167,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     public boolean isArray() {
-        return _id == HandlerRegistry.ANY_ARRAY_ID || _id == HandlerRegistry.ANY_ARRAY_N_ID;
+        return _id == Handlers4.ANY_ARRAY_ID || _id == Handlers4.ANY_ARRAY_N_ID;
     }
     
     public boolean isPrimitive(){

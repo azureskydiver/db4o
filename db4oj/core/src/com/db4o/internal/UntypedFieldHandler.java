@@ -8,7 +8,7 @@ import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 
 
-public class UntypedFieldHandler extends ClassMetadata {
+public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHandler{
     
 	public UntypedFieldHandler(ObjectContainerBase container){
 		super(container, container._handlers.ICLASS_OBJECT);

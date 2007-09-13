@@ -14,11 +14,11 @@ import com.db4o.marshall.*;
  * 
  * @exclude
  */
-public abstract class BuiltinTypeHandler implements TypeHandler4 {
+public abstract class VariableLengthTypeHandler implements TypeHandler4 {
     
     private final ObjectContainerBase _container;
     
-    public BuiltinTypeHandler(ObjectContainerBase container) {
+    public VariableLengthTypeHandler(ObjectContainerBase container) {
         _container = container;
     }
     
