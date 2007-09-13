@@ -4,8 +4,8 @@
     </description>
     <!-- set global properties for this build -->
     <property name="dir.workspace" value=".." />
-    
     <property file="${dir.workspace}/db4obuild/ant.properties" />
+	<import file="${dir.workspace}/db4obuild/common.xml" />
     
     <property name="src" location="src"/>
     <property name="lib" location="lib"/>
@@ -19,16 +19,21 @@
         </fileset>
     </path>
 
-    <target name="init">
+    <target name="init" depends="properties">
+    	<property name="om-api.jar" value="objectmanager-api-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}.jar" />
         <!-- Create the time stamp -->
         <tstamp/>
         <!-- Create the build directory structure used by compile -->
         <mkdir dir="${build}"/>
         <delete dir="${dist}" />
         <delete dir="${lib}">
-            <include name="${filename.java5.jar}" />
+            <include name="db4o-*.jar" />
         </delete>
-        <copy file="${dir.dist}/java/lib/${filename.java5.jar}" todir="${lib}" />
+        <copy todir="${lib}">
+        	<fileset dir="${dir.dist}/java/lib/">
+        		<include name="db4o-*-java5.jar" />
+        	</fileset>
+        </copy>
     </target>
 
     <target name="compile" depends="init"
@@ -46,7 +51,7 @@
         <mkdir dir="${dist}/lib"/>
 
         <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
-        <jar jarfile="${dist}/lib/${ant.project.name}.jar" basedir="${build}"/>
+        <jar jarfile="${dist}/lib/${om-api.jar}" basedir="${build}"/>
     </target>
 
     <target name="clean"
