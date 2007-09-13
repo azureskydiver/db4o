@@ -5,17 +5,16 @@ package com.db4o.db4ounit.jre12.handlers;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
+import java.util.*;
 
 import com.db4o.db4ounit.common.handlers.*;
 import com.db4o.db4ounit.util.*;
+import com.db4o.ext.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
-public class Db4oVersionRunner implements TestCase {
-
-    public static void main(String[] args) throws Exception {
-        runDatabaseCreator(IntHandlerUpdateTestCase.class.getName());
-    }
+public class Db4oVersionRunner extends Db4oTestSuite {
 
     private static String DB4OTESTS_BIN_PATH = System.getProperty(
             "db4oj.tests.bin", "../db4oj.tests/bin");
@@ -23,28 +22,131 @@ public class Db4oVersionRunner implements TestCase {
     private static String DB4OARCHIVES_PATH = System.getProperty(
             "db4o.archives.path", "../db4o.archives/java1.2/");
 
-    private static String[] DB4OLIBS = { "db4o-3.0.jar",
-            "db4o-4.0-java1.1.jar", "db4o-4.6-java1.2.jar",
-            "db4o-5.0-java1.2.jar", "db4o-5.3-java1.2.jar",
-            "db4o-5.4-java1.2.jar", "db4o-5.5-java1.2.jar",
-            "db4o-5.6-java1.2.jar", "db4o-5.7-java1.2.jar",
-            "db4o-6.0-java1.2.jar", "db4o-6.1-java1.2.jar",
-            "db4o-6.3-java1.2.jar", };
-
     private static String[] prefixes = { "com.db4o" };
 
-    public static void runDatabaseCreator(String className) throws Exception {
-        //Should use canonical file. Maybe a defect of JDK 1.2 URLClassLoader
-        File testBin = new File(DB4OTESTS_BIN_PATH).getCanonicalFile();
-        
-        for (int i = 0; i < DB4OLIBS.length; i++) {
-            URL[] urls = new URL[] { testBin.toURL(),
-                    new File(DB4OARCHIVES_PATH + DB4OLIBS[i]).toURL() };
-            ClassLoader loader = new VersionClassLoader(urls, prefixes);
-            Class clazz = loader.loadClass(className);
-            Object obj = clazz.newInstance();
-            Method method = clazz.getMethod("createDatabase", new Class[] {});
-            method.invoke(obj, new Object[] {});
+    private File testBinPath = new File(DB4OTESTS_BIN_PATH);
+
+    private File archivePath = new File(DB4OARCHIVES_PATH);
+
+    private Class testCase;
+
+    private String db4oJarFile;
+
+    public static void main(String[] args) throws Exception {
+        new Db4oVersionRunner().runSolo();
+    }
+
+    protected Class[] testCases() {
+        return new Class[] { IntHandlerUpdateTestCase.class, };
+    }
+
+    public Db4oVersionRunner() {
+        this(null, null);
+    }
+
+    public Db4oVersionRunner(String db4oJar, Class test) {
+        this.db4oJarFile = db4oJar;
+        this.testCase = test;
+
+        try {
+            // if possible, use the canonical file.
+            testBinPath = new File(DB4OTESTS_BIN_PATH).getCanonicalFile();
+            archivePath = new File(DB4OARCHIVES_PATH).getCanonicalFile();
+        } catch (IOException e) {
+            //
         }
+    }
+
+    public int runSolo() {
+        if (testCase != null) {
+            return runSingleUpdateTest(testCase);
+        } else {
+            Class[] testCases = testCases();
+            for (int i = 0; i < testCases.length; i++) {
+                if (FormatMigrationTestCaseBase.class
+                        .isAssignableFrom(testCases[i])) {
+                    int failures = runSingleUpdateTest(testCases[i]);
+                    if (failures != 0) {
+                        return failures;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
+    private int runSingleUpdateTest(Class test) {
+        try {
+            if (db4oJarFile != null) {
+                File file = new File(archivePath, db4oJarFile);
+                if (!file.exists()) {
+                    throw new Db4oException("File not found: " + db4oJarFile);
+                }
+                file = file.getCanonicalFile();
+                createDatabase(file, test);
+                String version = getDb4oVersion(file.toURL());
+                return run(new String[] { version }, test);
+            } else {
+                File[] files = getDb4oJarFiles();
+                for (int i = 0; i < files.length; i++) {
+                    createDatabase(files[i], test);
+                }
+                return run(getDb4oVersions(), test);
+            }
+        } catch (Exception e) {
+            throw new Db4oException(e);
+        }
+    }
+
+    private void createDatabase(File file, Class test) throws Exception {
+        URL[] urls = new URL[] { testBinPath.toURL(), file.toURL() };
+        ClassLoader loader = new VersionClassLoader(urls, prefixes);
+        Class clazz = loader.loadClass(test.getName());
+        Object obj = clazz.newInstance();
+        Method method = clazz.getMethod("createDatabase", new Class[] {});
+        method.invoke(obj, new Object[] {});
+    }
+
+    private int run(String[] versions, Class test) throws Exception {
+        Field field = test.getField("db4oVersions");
+        field.set(null, versions);
+        return new TestRunner(test).run();
+    }
+
+    private File[] getDb4oJarFiles() {
+        File[] files = archivePath.listFiles(new FilenameFilter() {
+            public boolean accept(File file, String name) {
+                return name.endsWith(".jar");
+            }
+        });
+        return files;
+    }
+
+    private String[] getDb4oVersions() throws Exception {
+        ArrayList lists = new ArrayList();
+
+        File[] files = archivePath.listFiles(new FilenameFilter() {
+            public boolean accept(File file, String name) {
+                return name.endsWith(".jar");
+            }
+        });
+        for (int i = 0; i < files.length; i++) {
+            URL db4oEngineURL = files[i].toURL();
+            String version = getDb4oVersion(db4oEngineURL);
+            lists.add(version);
+        }
+        String[] db4oVersions = new String[lists.size()];
+        lists.toArray(db4oVersions);
+        return db4oVersions;
+    }
+
+    private String getDb4oVersion(URL db4oEngineURL) throws Exception {
+        URL[] urls = new URL[] { db4oEngineURL, };
+
+        ClassLoader loader = new VersionClassLoader(urls, prefixes);
+        Class clazz = loader.loadClass("com.db4o.Db4o");
+        Method method = clazz.getMethod("version", new Class[] {});
+        String version = (String) method.invoke(null, new Object[] {});
+        return version.replace(' ', '_');
     }
 }
