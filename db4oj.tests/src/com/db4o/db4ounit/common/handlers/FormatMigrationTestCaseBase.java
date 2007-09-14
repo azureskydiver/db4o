@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
@@ -65,7 +66,8 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
             if(File4.exists(testFileName)){
                 System.out.println("Check database: " + testFileName);
                 
-                investigateDb4oHeaderVersion(testFileName);
+                
+                investigateFileHeaderVersion(testFileName);
 
                 checkDatabaseFile(testFileName);
                 // Twice, to ensure everything is fine after opening, converting and closing.
@@ -96,22 +98,11 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
         }
     }
     
-    private void investigateDb4oHeaderVersion(String testFile) throws IOException{
-        RandomAccessFile raf = new RandomAccessFile(testFile, "r");
-        byte[] bytes = new byte[1];
-        raf.read(bytes);  // readByte() doesn't convert to .NET.
-        _db4oHeaderVersion = bytes[0]; 
-        raf.close();
+    private void investigateFileHeaderVersion(String testFile) throws IOException{
+        _db4oHeaderVersion = VersionServices.fileHeaderVersion(testFile); 
     }
     
     protected byte _db4oHeaderVersion;
-    
-    protected static final byte HEADER_30_40 = 123;
-    
-    protected static final byte HEADER_46_57 = 4;
-    
-    protected static final byte HEADER_60 = 100;
-    
     
     protected abstract String[] versionNames();
     
