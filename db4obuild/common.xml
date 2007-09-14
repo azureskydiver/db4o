@@ -174,17 +174,13 @@
 		</sequential>
 	</macrodef>
 
-	<macrodef name="get-iteration">
-		<attribute name="iteration" />
-		<sequential>
-			<tstamp>
-				<format property="@{iteration}" pattern="w" offset="-29" unit="week"/>
-			</tstamp>
-		</sequential>
-	</macrodef>
+	<target name="get-iteration">
+		<tstamp>
+			<format property="db4o.iteration" pattern="w" offset="-29" unit="week"/>
+		</tstamp>
+	</target>
 	
-	<target name="properties" depends="get-svn-revision">
-		<get-iteration iteration="db4o.iteration"/>	
+	<target name="properties" depends="get-iteration, get-svn-revision">
 		<property name="db4o.file" value="db4o-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}-" />
 		
 		<property name="file.java1.1.jar" value="${dir.dist.jars}/${db4o.file}java1.1.jar" />
