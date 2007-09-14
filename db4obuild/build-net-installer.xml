@@ -58,9 +58,6 @@
 			<arg file="bin/files.wxs" />			
 		</exec>
 		
-		<property name="installer.msi"
-				location="${dir.dist}/db4o-${db4o.version.dotted}-${installer.package.suffix}.msi" />
-		
 		<exec executable="${light.exe}" failonerror="true">			
 			<arg file="bin/installer.wixobj" />
 			<arg file="bin/files.wixobj" />

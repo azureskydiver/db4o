@@ -379,6 +379,7 @@
 	
 	<target name="build-net-installer"  depends="prepare-package-structure" unless="mono">
 		<ant antfile="build-net-installer.xml">
+			<property name="installer.msi" location="${dir.dist}/${db4o.file}-${installer.package.suffix}.msi" />
 			<property name="installer.package.guid" value="${installer.package.guid}" />
 			<property name="installer.upgrade.guid" value="${installer.upgrade.guid}" />
 			<property name="target.framework.version" value="${target.framework.version}" />
