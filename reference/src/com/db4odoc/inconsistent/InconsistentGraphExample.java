@@ -1,4 +1,4 @@
-package com.db4odoc.commitcallbacks;
+package com.db4odoc.inconsistent;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,17 +9,9 @@ import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
-import com.db4o.events.CommitEventArgs;
-import com.db4o.events.Event4;
-import com.db4o.events.EventArgs;
-import com.db4o.events.EventListener4;
-import com.db4o.events.EventRegistry;
-import com.db4o.events.EventRegistryFactory;
-import com.db4o.ext.ObjectInfo;
-import com.db4o.ext.ObjectInfoCollection;
-import com.db4o.foundation.Iterator4;
+import com.db4o.ObjectSet;
 
-public class PushedUpdatesExample {
+public class InconsistentGraphExample {
 
 	private static final String DB4O_FILE_NAME = "reference.db4o";
 
@@ -29,10 +21,9 @@ public class PushedUpdatesExample {
 
 	private static final String PASSWORD = "db4o";
 
-	private static Map clientListeners = new HashMap();
 
 	public static void main(String[] args) throws IOException {
-		new PushedUpdatesExample().run();
+		new InconsistentGraphExample().run();
 	}
 
 	// end main
@@ -56,25 +47,34 @@ public class PushedUpdatesExample {
 							"Schumacher"));
 					client1.set(client1Car);
 					client1.commit();
-
+					System.out.println("Client1 version initially: " + client1Car);
 					waitForCompletion();
 
 					// retrieve the same pilot with client2
 					Car client2Car = (Car) client2.query(Car.class).next();
-					System.out.println(client2Car);
+					System.out.println("Client2 version initially: " + client2Car);
 
-					// modify the pilot with client1
+					// delete the pilot with client1
+					Pilot client1Pilot = (Pilot)client1.query(Pilot.class).next();
+					client1.delete(client1Pilot);
+					// modify the car, add and link a new pilot with client1
 					client1Car.setModel(2007);
 					client1Car.setPilot(new Pilot("Hakkinnen"));
 					client1.set(client1Car);
 					client1.commit();
 
 					waitForCompletion();
+					client1Car = (Car) client1.query(Car.class).next();
+					System.out.println("Client1 version after update: " + client1Car);
 
-					// client2Car has been automatically updated in
-					// the committed event handler because of the
-					// modification and the commit by client1
-					System.out.println(client2Car);
+
+					System.out.println();
+					System.out.println("client2Car still holds the old object graph in its reference cache"); 
+					client2Car = (Car) client2.query(Car.class).next();
+					System.out.println("Client2 version after update: " + client2Car);
+					ObjectSet result = client2.query(Pilot.class);
+					System.out.println("Though the new Pilot is retrieved by a new query: ");
+					listResult(result);
 
 					waitForCompletion();
 				} catch (Exception ex) {
@@ -94,14 +94,6 @@ public class PushedUpdatesExample {
 	// end run
 
 	private void closeClient(ObjectContainer client) {
-		// remove listeners before shutting down
-		if (clientListeners.get(client) != null) {
-			EventRegistry eventRegistry = EventRegistryFactory
-					.forObjectContainer(client);
-			eventRegistry.committed().removeListener(
-					(EventListener4) clientListeners.get(client));
-			clientListeners.remove(client);
-		}
 		client.close();
 	}
 
@@ -111,13 +103,6 @@ public class PushedUpdatesExample {
 		try {
 			ObjectContainer client = Db4o.openClient("localhost", PORT, USER,
 					PASSWORD);
-			EventListener4 committedEventListener = createCommittedEventListener(client);
-			EventRegistry eventRegistry = EventRegistryFactory
-					.forObjectContainer(client);
-			eventRegistry.committed().addListener(committedEventListener);
-			// save the client-listener pair in a map, so that we can
-			// remove the listener later
-			clientListeners.put(client, committedEventListener);
 			return client;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -127,26 +112,7 @@ public class PushedUpdatesExample {
 
 	// end openClient
 
-	private EventListener4 createCommittedEventListener(
-			final ObjectContainer objectContainer) {
-		return new EventListener4() {
-			public void onEvent(Event4 e, EventArgs args) {
-				// get all the updated objects
-				ObjectInfoCollection updated = ((CommitEventArgs) args)
-						.updated();
-				Iterator4 infos = updated.iterator();
-				while (infos.moveNext()) {
-					ObjectInfo info = (ObjectInfo) infos.current();
-					Object obj = info.getObject();
-					// refresh object on the client
-					objectContainer.ext().refresh(obj, 2);
-				}
-			}
-		};
-	}
-
-	// end createCommittedEventListener
-
+	
 	private void waitForCompletion() {
 		try {
 			Thread.sleep(1000);
@@ -155,5 +121,13 @@ public class PushedUpdatesExample {
 		}
 	}
 	// end waitForCompletion
+	
+	private static void listResult(ObjectSet result) {
+        System.out.println(result.size());
+        while(result.hasNext()) {
+            System.out.println(result.next());
+        }
+    }
+    // end listResult
 
 }
