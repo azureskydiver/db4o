@@ -44,7 +44,7 @@ Namespace Db4objects.Db4odoc.CommitCallbacks
                         Dim client2Car As Car = CType(client2.Query(GetType(Car)).Next, Car)
                         System.Console.WriteLine(client2Car)
 
-                        ' modify the pilot with pilot1
+                        ' modify the pilot with client1
                         client1Car.Model = 2007
                         client1Car.Pilot = New Pilot("Hakkinnen")
                         client1.Set(client1Car)
