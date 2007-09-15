@@ -4,13 +4,12 @@ using System.Threading;
 using System.Collections;
 
 using Db4objects.Db4o;
-using Db4objects.Db4o.Events;
 using Db4objects.Db4o.Ext;
-using Db4objects.Db4o.Foundation;
 
-namespace Db4objects.Db4odoc.CommitCallbacks
+
+namespace Db4objects.Db4odoc.Inconsistent
 {
-    class PushedUpdatesExample
+    class InconsistentGraphExample
     {
 
         private const string Db4oFileName = "reference.db4o";
@@ -21,11 +20,10 @@ namespace Db4objects.Db4odoc.CommitCallbacks
 
         private const string Password = "db4o";
 
-        private static Hashtable clientListeners = new Hashtable();
-
+        
         public static void Main(string[] args)
         {
-            new PushedUpdatesExample().Run();
+            new InconsistentGraphExample().Run();
         }
 
         // end Main
@@ -52,14 +50,18 @@ namespace Db4objects.Db4odoc.CommitCallbacks
                         Car client1Car = new Car("Ferrari", 2006, new Pilot("Schumacher"));
                         client1.Set(client1Car);
                         client1.Commit();
+                        System.Console.WriteLine("Client1 version initially: " + client1Car);
 
                         WaitForCompletion();
 
                         // retrieve the same pilot with client2
                         Car client2Car = (Car)client2.Query(typeof(Car)).Next();
-                        System.Console.WriteLine(client2Car);
+                        System.Console.WriteLine("Client2 version initially: " + client2Car);
 
-                        // modify the pilot with client1
+                        // delete the pilot with client1
+					    Pilot client1Pilot = (Pilot)client1.Query(typeof(Pilot)).Next();
+					    client1.Delete(client1Pilot);
+					    // modify the car, add and link a new pilot with client1
                         client1Car.Model = 2007;
                         client1Car.Pilot = new Pilot("Hakkinnen");
                         client1.Set(client1Car);
@@ -67,10 +69,18 @@ namespace Db4objects.Db4odoc.CommitCallbacks
 
                         WaitForCompletion();
 
-                        // client2Car has been automatically updated in
-                        // the committed event handler because of the
-                        // modification and the commit by client1
-                        System.Console.WriteLine(client2Car);
+                        client1Car = (Car) client1.Query(typeof(Car)).Next();
+					    System.Console.WriteLine("Client1 version after update: " + client1Car);
+
+
+					    System.Console.WriteLine();
+                        System.Console.WriteLine("client2Car still holds the old object graph in its reference cache"); 
+					    client2Car = (Car) client2.Query(typeof(Car)).Next();
+					    System.Console.WriteLine("Client2 version after update: " + client2Car);
+					    IObjectSet result = client2.Query(typeof(Pilot));
+					    System.Console.WriteLine("Though the new Pilot is retrieved by a new query: ");
+					    ListResult(result);
+
 
                         WaitForCompletion();
                     }
@@ -99,13 +109,6 @@ namespace Db4objects.Db4odoc.CommitCallbacks
 
         private void CloseClient(IObjectContainer client)
         {
-            // remove listeners before shutting down
-            if (clientListeners[client] != null)
-            {
-                IEventRegistry eventRegistry = EventRegistryFactory.ForObjectContainer(client);
-                eventRegistry.Committed -= (CommitEventHandler)clientListeners[client];
-                clientListeners.Remove(client);
-            }
             client.Close();
         }
 
@@ -117,12 +120,6 @@ namespace Db4objects.Db4odoc.CommitCallbacks
             {
                 IObjectContainer client = Db4oFactory.OpenClient("localhost", Port, User,
                         Password);
-                CommitEventHandler committedEventHandler = CreateCommittedEventHandler(client);
-                IEventRegistry eventRegistry = EventRegistryFactory.ForObjectContainer(client);
-                eventRegistry.Committed += committedEventHandler;
-                // save the client-listener pair in a map, so that we can
-                // remove the listener later
-                clientListeners.Add(client, committedEventHandler);
                 return client;
             }
             catch (Exception ex)
@@ -134,24 +131,7 @@ namespace Db4objects.Db4odoc.CommitCallbacks
 
         // end OpenClient
 
-        private CommitEventHandler CreateCommittedEventHandler(IObjectContainer objectContainer)
-        {
-            return new CommitEventHandler(delegate(object sender, CommitEventArgs args)
-                {
-                    // get all the updated objects
-                    IObjectInfoCollection updated = args.Updated;
-
-                    foreach (IObjectInfo info in updated)
-                    {
-                        Object obj = info.GetObject();
-                        // refresh object on the client
-                        objectContainer.Ext().Refresh(obj, 2);
-                    }
-                });
-        }
-
-        // end CreateCommittedEventHandler
-
+        
         private void WaitForCompletion()
         {
             try
@@ -164,6 +144,16 @@ namespace Db4objects.Db4odoc.CommitCallbacks
             }
         }
         // end WaitForCompletion
+
+        private static void ListResult(IObjectSet result)
+		{
+			Console.WriteLine(result.Count);
+			foreach (object item in result)
+			{
+				Console.WriteLine(item);
+			}
+		}
+		// end ListResult
 
     }
 }
