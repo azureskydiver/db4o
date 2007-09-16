@@ -42,7 +42,7 @@ public class VersionFieldMetadata extends VirtualFieldMetadata {
         }
     }
 
-    public int linkLength() {
+    protected int linkLength() {
         return Const4.LONG_LENGTH;
     }
     

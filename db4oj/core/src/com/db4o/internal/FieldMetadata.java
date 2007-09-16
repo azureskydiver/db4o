@@ -51,6 +51,8 @@ public class FieldMetadata implements StoredField {
 
     private Db4oTypeImpl     _db4oType;
     
+    private int _linkLength;
+    
     private BTree _index;
 
     static final FieldMetadata[]  EMPTY_ARRAY = new FieldMetadata[0];
@@ -654,19 +656,47 @@ public class FieldMetadata implements StoredField {
         }
     }
 
-
     public boolean isArray() {
         return _isArray;
     }
 
     
-    public int linkLength() {
+    protected int linkLength() {
         alive();
+        
+        if(_linkLength == 0){
+            _linkLength = calculateLinkLength();
+        }
+        return _linkLength;
+    }
+    
+    private int calculateLinkLength(){
         if (_handler == null) {
             // must be ClassMetadata
             return Const4.ID_LENGTH;
         }
-        return _handler.linkLength();
+        if(_handler instanceof PersistentBase){
+            return ((PersistentBase)_handler).linkLength();
+        }
+        if(_handler instanceof PrimitiveHandler){
+            return ((PrimitiveHandler)_handler).linkLength();
+        }
+        if(_handler instanceof VariableLengthTypeHandler){
+            return ((VariableLengthTypeHandler)_handler).linkLength();
+        }
+        
+        // TODO: For custom handlers there will have to be a way 
+        //       to calculate the length in the slot.
+        
+        //        Options:
+        
+        //        (1) Remember when the first object is marshalled.
+        //        (2) Add a #defaultValue() method to TypeHandler4,
+        //            marshall the default value and check.
+        //        (3) Add a way to test the custom handler when it
+        //            is installed and remember the length there. 
+        
+        throw new UnsupportedOperationException();
     }
     
     public void loadHandler(ObjectContainerBase a_stream) {
@@ -777,7 +807,7 @@ public class FieldMetadata implements StoredField {
      * @param ref
      */
     public void readVirtualAttribute(Transaction trans, Buffer buffer, ObjectReference ref) {
-        buffer.incrementOffset(_handler.linkLength());
+        incrementOffset(buffer);
     }
 
     void refresh() {
