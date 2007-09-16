@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Db4objects.Db4o;
+using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Query;
 using System.Drawing;
 
@@ -10,23 +11,31 @@ namespace Db4objects.Db4odoc.StaticFields
 	{
 		private const string Db4oFileName = "reference.db4o";
 
+        private static IObjectContainer _container = null;
+        private static IConfiguration _configuration = null;
+
 		public StaticFieldExample()
 		{
 		}
-		public static void Main(string[] args) 
+
+        public static void Main(string[] args) 
 		{
-			SetPilotsSimple();
+            Console.WriteLine("In the default setting, static constants are not continously stored and updated.");
+			
+			SetPilots();
 			CheckPilots();
 			//
-			SetPilotsStatic();
+            Configure();
+			SetPilots();
 			CheckPilots();
 			UpdatePilots();
 			UpdatePilotCategories();
 			CheckPilots();
+            AddDeleteConfiguration();
 			DeleteTest();
 		}
 		// end Main
-
+		
 		public static void SetCar()
 		{
 			IObjectContainer db=Db4oFactory.OpenFile(Db4oFileName);
@@ -42,154 +51,201 @@ namespace Db4objects.Db4odoc.StaticFields
 			}
 		}
 		// end SetCar
+		
 
-		public static void SetPilotsSimple()
+        private static IObjectContainer Database()
+        {
+            if (_container == null)
+            {
+                try
+                {
+                    if (_configuration == null)
+                    {
+                        _container = Db4oFactory.OpenFile(Db4oFileName);
+                    }
+                    else
+                    {
+                        _container = Db4oFactory.OpenFile(_configuration, Db4oFileName);
+                    }
+                }
+                catch (DatabaseFileLockedException ex)
+                {
+                    System.Console.WriteLine(ex.Message);
+                }
+            }
+            return _container;
+        }
+
+        // end Database
+
+        private static void CloseDatabase()
+        {
+            if (_container != null)
+            {
+                _container.Close();
+                _container = null;
+            }
+        }
+
+        // end CloseDatabase
+
+        private static void Configure() {
+            System.Console.WriteLine("Saving static fields can be turned on for individual classes.");
+            _configuration = Db4oFactory.NewConfiguration();
+            _configuration.ObjectClass(typeof(PilotCategories)).PersistStaticFieldValues();
+        }
+        // end Configure
+
+		private static void SetPilots()
 		{
-			Console.WriteLine("In the default setting, static constants are not continously stored and updated.");
 			File.Delete(Db4oFileName);
-			IObjectContainer db=Db4oFactory.OpenFile(Db4oFileName);
-			try 
-			{
-				db.Set(new Pilot("Michael Schumacher",PilotCategories.Winner));
-				db.Set(new Pilot("Rubens Barrichello",PilotCategories.Talented));
-			} 
-			finally 
-			{
-				db.Close();
-			}
+            IObjectContainer db = Database();
+            if (db != null)
+            {
+                try
+                {
+                    db.Set(new Pilot("Michael Schumacher", PilotCategories.Winner));
+                    db.Set(new Pilot("Rubens Barrichello", PilotCategories.Talented));
+                }
+                finally
+                {
+                    CloseDatabase();
+                }
+            }
 		}
 		// end SetPilotsSimple
 	
-		public static void SetPilotsStatic()
+		
+		private static void CheckPilots()
 		{
-			Console.WriteLine("The feature can be turned on for individual classes.");
-			Db4oFactory.Configure().ObjectClass(typeof(PilotCategories)).PersistStaticFieldValues();
-			File.Delete(Db4oFileName);
-			IObjectContainer db=Db4oFactory.OpenFile(Db4oFileName);
-			try 
-			{
-				db.Set(new Pilot("Michael Schumacher",PilotCategories.Winner));
-				db.Set(new Pilot("Rubens Barrichello",PilotCategories.Talented));
-			} 
-			finally 
-			{
-				db.Close();
-			}
-		}
-		// end SetPilotsStatic
-	
-		public static void CheckPilots()
-		{
-			IObjectContainer db=Db4oFactory.OpenFile(Db4oFileName);
-			try 
-			{
-				IObjectSet result = db.Get(typeof(Pilot));
-				for(int x = 0; x < result.Count; x++)
-				{
-					Pilot pilot = (Pilot )result[x];
-					if (pilot.Category == PilotCategories.Winner)
-					{
-						Console.WriteLine("Winner pilot: " + pilot);
-					} 
-					else if (pilot.Category == PilotCategories.Talented)
-					{
-						Console.WriteLine("Talented pilot: " + pilot);
-					}  
-					else 
-					{
-						Console.WriteLine("Uncategorized pilot: " + pilot);
-					}
-				}
-			} 
-			finally 
-			{
-				db.Close();
-			}
+            IObjectContainer db = Database();
+            if (db != null)
+            {
+                try
+                {
+                    IObjectSet result = db.Get(typeof(Pilot));
+                    for (int x = 0; x < result.Count; x++)
+                    {
+                        Pilot pilot = (Pilot)result[x];
+                        if (pilot.Category == PilotCategories.Winner)
+                        {
+                            Console.WriteLine("Winner pilot: " + pilot);
+                        }
+                        else if (pilot.Category == PilotCategories.Talented)
+                        {
+                            Console.WriteLine("Talented pilot: " + pilot);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Uncategorized pilot: " + pilot);
+                        }
+                    }
+                }
+                finally
+                {
+                    CloseDatabase();
+                }
+            }
 		}
 		// end CheckPilots
-	
-		public static void UpdatePilots()
+
+        private static void UpdatePilots()
 		{
 			Console.WriteLine("Updating PilotCategory in pilot reference:");
-			IObjectContainer db=Db4oFactory.OpenFile(Db4oFileName);
-			try 
-			{
-				IObjectSet result = db.Get(typeof(Pilot));
-				for(int x = 0; x < result.Count; x++)
-				{
-					Pilot pilot = (Pilot )result[x];
-					if (pilot.Category == PilotCategories.Winner)
-					{
-						Console.WriteLine("Winner pilot: " + pilot);
-						PilotCategories pc = pilot.Category;
-						pc.TestChange("WINNER2006");
-						db.Set(pilot);
-					}
-				}
-                PrintCategories(db);
-			} 
-			finally 
-			{
-				db.Close();
-			}
+            IObjectContainer db = Database();
+            if (db != null)
+            {
+                try
+                {
+                    IObjectSet result = db.Get(typeof(Pilot));
+                    for (int x = 0; x < result.Count; x++)
+                    {
+                        Pilot pilot = (Pilot)result[x];
+                        if (pilot.Category == PilotCategories.Winner)
+                        {
+                            Console.WriteLine("Winner pilot: " + pilot);
+                            PilotCategories pc = pilot.Category;
+                            pc.TestChange("WINNER2006");
+                            db.Set(pilot);
+                        }
+                    }
+                    PrintCategories(db);
+                }
+                finally
+                {
+                    CloseDatabase();
+                }
+            }
 		}
 		// end UpdatePilots
-	
-		public static void UpdatePilotCategories()
+
+        private static void UpdatePilotCategories()
 		{
 			Console.WriteLine("Updating PilotCategories explicitly:");
-			IObjectContainer db=Db4oFactory.OpenFile(Db4oFileName);
-			try 
-			{
-				IObjectSet result = db.Get(typeof(PilotCategories));
-				for(int x = 0; x < result.Count; x++)
-				{
-					PilotCategories pc = (PilotCategories)result[x];
-					if (pc == PilotCategories.Winner)
-					{
-						pc.TestChange("WINNER2006");
-						db.Set(pc);
-					}
-				}
-                PrintCategories(db);
-			} 
-			finally 
-			{
-				db.Close();
-			}
+            IObjectContainer db = Database();
+            if (db != null)
+            {
+                try
+                {
+                    IObjectSet result = db.Get(typeof(PilotCategories));
+                    for (int x = 0; x < result.Count; x++)
+                    {
+                        PilotCategories pc = (PilotCategories)result[x];
+                        if (pc == PilotCategories.Winner)
+                        {
+                            pc.TestChange("WINNER2006");
+                            db.Set(pc);
+                        }
+                    }
+                    PrintCategories(db);
+                }
+                finally
+                {
+                    CloseDatabase();
+                }
+            }
 		}
 		// end UpdatePilotCategories
-	
-		public static void DeleteTest()
+
+        private static void AddDeleteConfiguration() {
+            if (_configuration != null) {
+                _configuration.ObjectClass(typeof(Pilot)).CascadeOnDelete(true);
+            }
+        }
+        // end AddDeleteConfiguration
+
+		private static void DeleteTest()
 		{
-			IObjectContainer db=Db4oFactory.OpenFile(Db4oFileName);
-			db.Ext().Configure().ObjectClass(typeof(Pilot)).CascadeOnDelete(true);
-			try 
-			{
-				Console.WriteLine("Deleting Pilots :");
-				IObjectSet result = db.Get(typeof(Pilot));
-				for(int x = 0; x < result.Count; x++)
-				{
-					Pilot pilot = (Pilot )result[x];
-					db.Delete(pilot);
-				}
-				PrintCategories(db);
-				Console.WriteLine("Deleting PilotCategories :");
-				result = db.Get(typeof(PilotCategories));
-				for(int x = 0; x < result.Count; x++)
-				{
-					db.Delete(result[x]);
-				}
-				PrintCategories(db);
-			} 
-			finally 
-			{
-				db.Close();
-			}
+            IObjectContainer db = Database();
+            if (db != null)
+            {
+                try
+                {
+                    Console.WriteLine("Deleting Pilots :");
+                    IObjectSet result = db.Get(typeof(Pilot));
+                    for (int x = 0; x < result.Count; x++)
+                    {
+                        Pilot pilot = (Pilot)result[x];
+                        db.Delete(pilot);
+                    }
+                    PrintCategories(db);
+                    Console.WriteLine("Deleting PilotCategories :");
+                    result = db.Get(typeof(PilotCategories));
+                    for (int x = 0; x < result.Count; x++)
+                    {
+                        db.Delete(result[x]);
+                    }
+                    PrintCategories(db);
+                }
+                finally
+                {
+                    CloseDatabase();
+                }
+            }
 		}
 		// end DeleteTest
 	
-		public static void PrintCategories(IObjectContainer db)
+		private static void PrintCategories(IObjectContainer db)
 		{
 			IObjectSet  result = db.Get(typeof(PilotCategories));
 			Console.WriteLine("Stored categories: " + result.Count);
@@ -201,24 +257,27 @@ namespace Db4objects.Db4odoc.StaticFields
 		}
 		// end PrintCategories
 	
-		public static void DeletePilotCategories()
+		private static void DeletePilotCategories()
 		{
-			IObjectContainer db=Db4oFactory.OpenFile(Db4oFileName);
-			try 
-			{
-                PrintCategories(db);
-				IObjectSet  result = db.Get(typeof(PilotCategories));
-				for(int x = 0; x < result.Count; x++)
-				{
-					PilotCategories pc = (PilotCategories)result[x];
-					db.Delete(pc);
-				}
-                PrintCategories(db);
-			} 
-			finally 
-			{
-				db.Close();
-			}
+            IObjectContainer db = Database();
+            if (db != null)
+            {
+                try
+                {
+                    PrintCategories(db);
+                    IObjectSet result = db.Get(typeof(PilotCategories));
+                    for (int x = 0; x < result.Count; x++)
+                    {
+                        PilotCategories pc = (PilotCategories)result[x];
+                        db.Delete(pc);
+                    }
+                    PrintCategories(db);
+                }
+                finally
+                {
+                    CloseDatabase();
+                }
+            }
 		}
 		// end DeletePilotCategories
 	}
