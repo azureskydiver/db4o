@@ -158,7 +158,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         }
     }
 
-    public int linkLength() {
+    protected int linkLength() {
         return LINK_LENGTH;
     }
     

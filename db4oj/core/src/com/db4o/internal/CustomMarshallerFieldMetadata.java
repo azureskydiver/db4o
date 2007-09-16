@@ -49,7 +49,7 @@ final class CustomMarshallerFieldMetadata extends FieldMetadata {
 		incrementOffset(reader);
 	}
 	
-	public int linkLength() {
+	protected int linkLength() {
 		return _marshaller.marshalledFieldLength();
 	}
 	
