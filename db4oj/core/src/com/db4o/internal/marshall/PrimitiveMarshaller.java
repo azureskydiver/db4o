@@ -24,8 +24,5 @@ public abstract class PrimitiveMarshaller {
     public abstract Object readDouble(Buffer buffer);
     
     public abstract Object readLong(Buffer buffer);
-        
-    protected final int objectLength(TypeHandler4 handler){
-        return handler.linkLength() + Const4.OBJECT_LENGTH + Const4.ID_LENGTH;
-    }
+    
 }

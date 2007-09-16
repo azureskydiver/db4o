@@ -112,14 +112,14 @@ public class FieldMetadata implements StoredField {
      * @param classMetadata
      * @param oldSlot 
      */
-    public void addFieldIndex(MarshallerFamily mf, ClassMetadata classMetadata, StatefulBuffer writer, Slot oldSlot)  throws FieldIndexException {
+    public void addFieldIndex(MarshallerFamily mf, ClassMetadata classMetadata, StatefulBuffer buffer, Slot oldSlot)  throws FieldIndexException {
         if (! hasIndex()) {
-            writer.incrementOffset(linkLength());
+            incrementOffset(buffer);
             return;
         }
         
         try {
-			addIndexEntry(writer, readIndexEntry(mf, writer));
+			addIndexEntry(buffer, readIndexEntry(mf, buffer));
 		} catch (CorruptionException exc) {
 			throw new FieldIndexException(exc,this);
 		} 
