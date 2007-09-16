@@ -169,12 +169,12 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     abstract void marshallIgnore(WriteBuffer writer);
     
-    public void readVirtualAttribute(Transaction a_trans, Buffer a_reader, ObjectReference a_yapObject) {
-        if(! a_trans.supportsVirtualFields()){
-            a_reader.incrementOffset(linkLength());
+    public void readVirtualAttribute(Transaction trans, Buffer buffer, ObjectReference ref) {
+        if(! trans.supportsVirtualFields()){
+            incrementOffset(buffer);
             return;
         }
-        instantiate1(a_trans, a_yapObject, a_reader);
+        instantiate1(trans, ref, buffer);
     }
     
     public boolean isVirtual() {

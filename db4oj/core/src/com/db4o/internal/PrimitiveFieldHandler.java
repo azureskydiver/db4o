@@ -80,7 +80,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         
        if(_handler instanceof UntypedFieldHandler){
             // Any-In-Any: Ignore delete 
-            a_bytes.incrementOffset(_handler.linkLength());
+            a_bytes.incrementOffset(linkLength());
         }else{
             _handler.deleteEmbedded(mf, a_bytes);
         }

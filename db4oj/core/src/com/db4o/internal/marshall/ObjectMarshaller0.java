@@ -44,7 +44,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	traverseFields(yc, writer, attributes, command);
     }
     
-    public boolean findOffset(ClassMetadata yc, ObjectHeaderAttributes attributes, final Buffer writer, final FieldMetadata field) {
+    public boolean findOffset(ClassMetadata yc, ObjectHeaderAttributes attributes, final Buffer buffer, final FieldMetadata field) {
     	final boolean[] ret={false};
     	TraverseFieldCommand command=new TraverseFieldCommand() {
     		public void processField(FieldMetadata curField, boolean isNull, ClassMetadata containingClass) {
@@ -53,10 +53,10 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 	                cancel();
 	                return;
 	            }
-	            writer.incrementOffset(curField.linkLength());
+	            curField.incrementOffset(buffer);
 			}
     	};
-    	traverseFields(yc, writer, attributes, command);
+    	traverseFields(yc, buffer, attributes, command);
     	return ret[0];
     }
     
@@ -82,12 +82,6 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	};
     	traverseFields(yc, writer, attributes, command);
     }
-    
-    /** @param ref */
-    protected int linkLength(FieldMetadata yf, ObjectReference ref){
-        return yf.linkLength();
-    }
-    
     
     /**
      * @param yf
