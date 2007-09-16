@@ -57,6 +57,8 @@ public interface Configuration {
      * increase performance of queries.<br><br>
      * {@link com.db4o.ObjectContainer#deactivate ObjectContainer#deactivate(Object, depth)}
      * can be used to manually free memory by deactivating objects.<br><br>
+     * In client/server environment the same setting should be used on both 
+     * client and server<br><br>.
      * @param depth the desired global activation depth.
      * @see ObjectClass#maximumActivationDepth configuring classes individually
      */
@@ -115,7 +117,8 @@ public interface Configuration {
      * (or on the server) are not permitted and will throw an exception
      * when the database file is opened.
      * <br><br>Aliases should be configured before opening a database file
-     * or connecting to a server.
+     * or connecting to a server.<br><br>
+     * In client/server environment this setting should be used on the server side.
      */
     public void addAlias(Alias alias);
     
