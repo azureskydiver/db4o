@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: db4o OSGI
 Bundle-SymbolicName: db4o_osgi
-Bundle-Version: @db4o.version.dotted@
+Bundle-Version: @db4o.version.iteration.revision@
 Bundle-Activator: com.db4o.osgi.Db4oActivator
 Bundle-Vendor: db4objects, Inc.
 Import-Package: org.osgi.framework;version="1.3.0"
 Bundle-ClassPath: .,
- lib/db4o-@db4o.version.dotted@-java1.2.jar,
- lib/db4o-@db4o.version.dotted@-nqopt.jar,
+ lib/db4o-@db4o.version.iteration.revision@-java1.2.jar,
+ lib/db4o-@db4o.version.iteration.revision@-nqopt.jar,
  lib/bloat-1.0.jar,
- lib/db4o-@db4o.version.dotted@-tools.jar
+ lib/db4o-@db4o.version.iteration.revision@-tools.jar
 Bundle-ActivationPolicy: lazy 
 Export-Package: EDU.purdue.cs.bloat.benchmark,
  EDU.purdue.cs.bloat.cfg,
