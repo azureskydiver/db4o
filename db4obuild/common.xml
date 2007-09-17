@@ -181,7 +181,8 @@
 	</target>
 	
 	<target name="properties" depends="get-iteration, get-svn-revision">
-		<property name="db4o.file" value="db4o-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}-" />
+		<property name="db4o.version.iteration.revision" value="${db4o.version.dotted}.${db4o.iteration}.${svn.revision}" />
+		<property name="db4o.file" value="db4o-${db4o.version.iteration.revision}-" />
 		
 		<property name="file.java1.1.jar" value="${dir.dist.jars}/${db4o.file}java1.1.jar" />
 		<property name="file.java1.2.jar" value="${dir.dist.jars}/${db4o.file}java1.2.jar" />

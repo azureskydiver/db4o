@@ -295,10 +295,10 @@
 		<delete dir="${dir.dist.classes.osgi.lib}"/>
 		<mkdir dir="${dir.dist.classes.osgi}"/>
 		<mkdir dir="${dir.dist.classes.osgi.lib}"/>
-		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.java1.2.jar}" file="${file.java1.2.jar}"/>
-		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.nqopt.jar}" file="${file.nqopt.jar}"/>
-		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.bloat.jar}" file="${file.bloat.jar}"/>
-		<copy tofile="${dir.dist.classes.osgi.lib}/${filename.db4otools.jar}" file="${file.db4otools.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.java1.2.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.nqopt.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.bloat.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.db4otools.jar}"/>
 		<javac destdir="${dir.dist.classes.osgi}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
 				<fileset dir="${dir.build.lib}">
@@ -310,12 +310,12 @@
 		</javac>
 		<copy tofile="${dir.dist.classes.osgi}/build.properties" file="${dir.osgi}/build.properties.TM" overwrite="true">
 			<filterset>
-				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 			</filterset>
 		</copy>
 		<copy tofile="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF" file="${file.osgi.manifest}.TM" overwrite="true">
 			<filterset>
-				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 			</filterset>
 		</copy>
 		<jar destfile="${file.osgi.jar}" manifest="${dir.dist.classes.osgi}/META-INF/MANIFEST.MF">
@@ -327,7 +327,7 @@
 		<delete dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test}"/>
 		<mkdir dir="${dir.dist.classes.osgi.test.lib}"/>
-		<copy tofile="${dir.dist.classes.osgi.test.lib}/${filename.db4ounit.jar}" file="${file.db4ounit.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.test.lib}" file="${file.db4ounit.jar}"/>
 		<jar destfile="${dir.dist.classes.osgi.test.lib}/${filename.osgi.testlib.jar}">
 			<fileset dir="${dir.dist.classes.test.jdk1.2}">
 				<include name="**/*" />
@@ -352,12 +352,12 @@
 		</javac>
 		<copy tofile="${dir.dist.classes.osgi.test}/build.properties" file="${dir.osgi.test}/build.properties.TM" overwrite="true">
 			<filterset>
-				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 			</filterset>
 		</copy>
 		<copy tofile="${dir.dist.classes.osgi.test}/META-INF/MANIFEST.MF" file="${file.osgi.test.manifest}.TM" overwrite="true">
 			<filterset>
-				<filter token="db4o.version.dotted" value="${db4o.version.dotted}"/>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 				<filter token="bundle.activator" value="com.db4o.osgi.test.Db4oTestActivator"/>
 			</filterset>
 		</copy>
