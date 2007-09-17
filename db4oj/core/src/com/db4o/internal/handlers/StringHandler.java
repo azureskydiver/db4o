@@ -17,15 +17,12 @@ import com.db4o.reflect.*;
  */
 public abstract class StringHandler extends VariableLengthTypeHandler implements IndexableTypeHandler, BuiltinTypeHandler{
     
-    private LatinStringIO _stringIO; 
-    
-    public StringHandler(ObjectContainerBase container, LatinStringIO stringIO) {
+    public StringHandler(ObjectContainerBase container) {
         super(container);
-        _stringIO = stringIO;
     }
     
     protected StringHandler(TypeHandler4 template){
-        this(((StringHandler)template).container(), ((StringHandler)template).stringIO());
+        this(((StringHandler)template).container());
     }
     
     public void cascadeActivation(
@@ -123,10 +120,6 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
 	    return reader;
 	}
     
-    public void setStringIo(LatinStringIO a_io) {
-        _stringIO = a_io;
-    }
-    
     public void writeIndexEntry(Buffer writer, Object entry) {
         if(entry == null){
             writer.writeInt(0);
@@ -148,12 +141,12 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
          throw new IllegalArgumentException();
     }
     
-    public final void writeShort(String a_string, Buffer a_bytes) {
-        if (a_string == null) {
-            a_bytes.writeInt(0);
+    public final void writeShort(Transaction trans, String str, Buffer buffer) {
+        if (str == null) {
+            buffer.writeInt(0);
         } else {
-            a_bytes.writeInt(a_string.length());
-            _stringIO.write(a_bytes, a_string);
+            buffer.writeInt(str.length());
+            trans.container().handlers().stringIO().write(buffer, str);
         }
     }
 
@@ -266,17 +259,13 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         }
     }
 
-	protected LatinStringIO stringIo(Context context) {
+	protected static LatinStringIO stringIo(Context context) {
 		InternalObjectContainer objectContainer = (InternalObjectContainer) context.objectContainer();
         LatinStringIO stringIO = objectContainer.container().stringIO();
 		return stringIO;
 	}
 
-    public LatinStringIO stringIO() {
-        return _stringIO;
-    }
-    
-    protected String readString(ReadContext context, ReadBuffer buffer) {
+    public static String readString(Context context, ReadBuffer buffer) {
         if (Deploy.debug) {
             Debug.readBegin(buffer, Const4.YAPSTRING);
         }
@@ -287,15 +276,15 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         return str;
     }
     
-    private String internalRead(ReadContext context, ReadBuffer buffer) {
+    private static String internalRead(Context context, ReadBuffer buffer) {
         int length = buffer.readInt();
         if (length > 0) {
-            return intern(context, stringIO().read(buffer, length));
+            return intern(context, stringIo(context).read(buffer, length));
         }
         return "";
     }
     
-    protected String intern(ReadContext context, String str){
+    protected static String intern(Context context, String str){
         if(context.objectContainer().ext().configure().internStrings()){
             return str.intern();
         }

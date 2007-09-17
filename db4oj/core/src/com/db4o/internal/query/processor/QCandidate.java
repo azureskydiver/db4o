@@ -8,6 +8,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -51,7 +52,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	// temporary yapField and member for one field during evaluation
 	FieldMetadata _yapField; // null denotes null object
     
-    MarshallerFamily _marshallerFamily;
+    private MarshallerFamily _marshallerFamily;
 
 	private QCandidate(QCandidates qcandidates) {
 		super(0);
@@ -95,13 +96,13 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	private void checkInstanceOfCompare() {
 		if (_member instanceof Compare) {
 			_member = ((Compare) _member).compare();
-			LocalObjectContainer stream = getStream();
+			LocalObjectContainer stream = container();
 			_yapClass = stream.classMetadataForReflectClass(stream.reflector().forObject(_member));
-			_key = stream.getID(getTransaction(), _member);
+			_key = stream.getID(transaction(), _member);
 			if (_key == 0) {
 				setBytes(null);
 			} else {
-				setBytes(stream.readReaderByID(getTransaction(), _key));
+				setBytes(stream.readReaderByID(transaction(), _key));
 			}
 		}
 	}
@@ -132,7 +133,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				
 				if(handler instanceof FirstClassHandler){
 				    tempHandler = ((FirstClassHandler)handler).readArrayHandler(
-                        getTransaction(), _marshallerFamily, arrayBytes);
+                        transaction(), _marshallerFamily, arrayBytes);
 				    
 				}
 
@@ -388,7 +389,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	// / ***<Candidate interface code>***
 
 	public ObjectContainer objectContainer() {
-		return getStream();
+		return container();
 	}
 
 	public Object getObject() {
@@ -396,22 +397,38 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		if (obj instanceof Buffer) {
 			Buffer reader = (Buffer) obj;
 			int offset = reader._offset;
-            obj = _marshallerFamily._string.readFromOwnSlot(getStream(), reader); 
+            obj = readString(reader); 
 			reader._offset = offset;
 		}
 		return obj;
+	}
+	
+	public String readString(Buffer buffer){
+	    return StringHandler.readString(context(), buffer);
 	}
 
 	QCandidate getRoot() {
 		return _root == null ? this : _root;
 	}
 
-	private LocalObjectContainer getStream() {
-		return getTransaction().file();
+	final LocalObjectContainer container() {
+		return transaction().file();
 	}
 
-	private LocalTransaction getTransaction() {
+	final LocalTransaction transaction() {
 		return _candidates.i_trans;
+	}
+	
+	private Context context(){
+	    return new Context(){
+            public ObjectContainer objectContainer() {
+                return QCandidate.this.container();
+            }
+
+            public Transaction transaction() {
+                return QCandidate.this.transaction();
+            }
+	    };
 	}
 
 	public boolean hasDuplicates() {
@@ -450,7 +467,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	}
 
 	private ReflectClass memberClass() {
-		return getTransaction().reflector().forObject(_member);
+		return transaction().reflector().forObject(_member);
 	}
 
 	Comparable4 prepareComparison(ObjectContainerBase a_stream, Object a_constraint) {
@@ -495,7 +512,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 					if (DTrace.enabled) {
 						DTrace.CANDIDATE_READ.log(_key);
 					}
-                    setBytes(getStream().readReaderByID(getTransaction(), _key));
+                    setBytes(container().readReaderByID(transaction(), _key));
 					if (_bytes == null) {
 						_include = false;
 					}
@@ -530,7 +547,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	private void readThis(boolean a_activate) {
 		read();
 
-		Transaction trans = getTransaction();
+		Transaction trans = transaction();
 		if (trans != null) {
 
 			_member = trans.container().getByID(trans, _key);
@@ -549,7 +566,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 				_bytes._offset = 0;
                 
-                ObjectContainerBase stream = getStream();
+                ObjectContainerBase stream = container();
                 ObjectHeader objectHeader = new ObjectHeader(stream, _bytes);
 				_yapClass = objectHeader.classMetadata();
                 
@@ -635,7 +652,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				// FIXME catchall
 				boolean ok = false;
 				try {
-					_member = _yapField.readQuery(getTransaction(),
+					_member = _yapField.readQuery(transaction(),
 							_marshallerFamily, _bytes);
 					ok = true;
 				} catch (CorruptionException ce) {
@@ -654,4 +671,5 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     void setBytes(Buffer bytes){
         _bytes = bytes;
     }
+    
 }

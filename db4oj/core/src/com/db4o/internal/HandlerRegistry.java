@@ -78,6 +78,8 @@ public final class HandlerRegistry {
     
     private final Hashtable4 _handlerVersions = new Hashtable4(16);
     
+    private LatinStringIO _stringIO;
+    
     public ReflectClass ICLASS_COMPARE;
     ReflectClass ICLASS_DB4OTYPE;
     ReflectClass ICLASS_DB4OTYPEIMPL;
@@ -90,6 +92,8 @@ public final class HandlerRegistry {
     ReflectClass ICLASS_TRANSIENTCLASS;
 
     HandlerRegistry(final ObjectContainerBase container, byte stringEncoding, GenericReflector reflector) {
+        
+        _stringIO = LatinStringIO.forEncoding(stringEncoding);
     	
     	_container = container;
     	container._handlers = this;
@@ -104,12 +108,11 @@ public final class HandlerRegistry {
         _virtualFields[0] = _indexes._version;
         _virtualFields[1] = _indexes._uUID;
 
-        registerBuiltinHandlers(stringEncoding);
+        registerBuiltinHandlers();
         
         registerPlatformTypes();
         
         initArrayHandlers();
-        
     }
 
     private void initArrayHandlers() {
@@ -141,7 +144,7 @@ public final class HandlerRegistry {
         }
     }
     
-    private void registerBuiltinHandlers(byte stringEncoding){
+    private void registerBuiltinHandlers(){
         
         IntHandler intHandler = new IntHandler(_container);
         registerBuiltinHandler(Handlers4.INT_ID, intHandler);
@@ -175,7 +178,7 @@ public final class HandlerRegistry {
         registerBuiltinHandler(Handlers4.SHORT_ID, shortHandler);
         registerHandlerVersion(shortHandler, 0, new ShortHandler0(_container));
         
-        _stringHandler = new StringHandler2(_container, LatinStringIO.forEncoding(stringEncoding));
+        _stringHandler = new StringHandler2(_container);
         registerBuiltinHandler(Handlers4.STRING_ID, _stringHandler);
         registerHandlerVersion(_stringHandler, 0, new StringHandler0(_stringHandler));
 
@@ -534,5 +537,13 @@ public final class HandlerRegistry {
     
     public SharedIndexedFields indexes(){
         return _indexes;
+    }
+    
+    public LatinStringIO stringIO(){
+        return _stringIO;
+    }
+
+    public void stringIO(LatinStringIO io) {
+        _stringIO = io;
     }
 }

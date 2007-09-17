@@ -366,7 +366,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public abstract AbstractQueryResult newQueryResult(Transaction trans, QueryEvaluationMode mode);
 
     protected void createStringIO(byte encoding) {
-    	setStringIo(LatinStringIO.forEncoding(encoding));
+    	stringIO(LatinStringIO.forEncoding(encoding));
     }
 
     final protected void initializeTransactions() {
@@ -1657,8 +1657,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract boolean setSemaphore(String name, int timeout);
 
-    void setStringIo(LatinStringIO a_io) {
-        _handlers._stringHandler.setStringIo(a_io);
+    void stringIO(LatinStringIO io) {
+        _handlers.stringIO(io);
     }
 
     final boolean showInternalClasses() {
@@ -1804,7 +1804,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 		
     public LatinStringIO stringIO(){
-    	return _handlers._stringHandler.stringIO();
+    	return _handlers.stringIO();
     }
     
     public abstract SystemInfo systemInfo();
