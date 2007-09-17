@@ -44,7 +44,12 @@ public abstract class VariableLengthTypeHandler implements TypeHandler4 {
     
     protected Buffer readIndirectedBuffer(ReadContext readContext) {
         UnmarshallingContext context = (UnmarshallingContext) readContext;
-        return context.container().bufferByAddress(context.readInt(), context.readInt());
+        int address = context.readInt();
+        int length = context.readInt();
+        if(address == 0){
+            return null;
+        }
+        return context.container().bufferByAddress(address, length);
     }
     
 }

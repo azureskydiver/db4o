@@ -105,7 +105,12 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
 	}
     
 	public final Buffer readEmbeddedObject(Transaction trans) throws Db4oIOException {
-		return trans.container().bufferByAddress(readInt(), readInt());
+	    int address = readInt();
+	    int length = readInt();
+	    if(address == 0){
+	        return null;
+	    }
+		return trans.container().bufferByAddress(address, length);
 	}
 	
 	public void readEncrypt(ObjectContainerBase stream, int address) throws Db4oIOException {
