@@ -113,24 +113,24 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         }
     }
     
-	public final Object read1Query(Transaction a_trans, MarshallerFamily mf, Buffer a_bytes) throws CorruptionException, Db4oIOException {
+	public final Object read1Query(Transaction trans, MarshallerFamily mf, Buffer buffer) throws CorruptionException, Db4oIOException {
         
         if(Deploy.debug){
-            a_bytes.readBegin(identifier());
+            buffer.readBegin(identifier());
         }
         
         IntArrayByRef dimensions = new IntArrayByRef();
-		Object arr = readCreate(a_trans, a_bytes, dimensions);
+		Object arr = readCreate(trans, buffer, dimensions);
         if(arr != null){
 			Object[] objects = new Object[elementCount(dimensions.value)];
 			for (int i = 0; i < objects.length; i++) {
-				objects[i] = _handler.readQuery(a_trans, mf, true, a_bytes, true);
+				objects[i] = _handler.readQuery(trans, mf, true, buffer, true);
 			}
 			arrayReflector().shape(objects, 0, arr, dimensions.value, 0);
         }
         
         if (Deploy.debug) {
-            a_bytes.readEnd();
+            buffer.readEnd();
         }
 
 		return arr;

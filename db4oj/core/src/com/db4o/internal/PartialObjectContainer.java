@@ -566,8 +566,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     Object descend(Transaction trans, Object obj, String[] path){
         synchronized (_lock) {
             trans = checkTransaction(trans);
-            ObjectReference yo = trans.referenceForObject(obj);
-            if(yo == null){
+            ObjectReference ref = trans.referenceForObject(obj);
+            if(ref == null){
                 return null;
             }
             
@@ -577,9 +577,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if(fieldName == null){
                 return null;
             }
-            ClassMetadata yc = yo.classMetadata();
+            ClassMetadata classMetadata = ref.classMetadata();
             final FieldMetadata[] field = new FieldMetadata[]{null};
-            yc.forEachFieldMetadata(new Visitor4() {
+            classMetadata.forEachFieldMetadata(new Visitor4() {
                 public void visit(Object yf) {
                     FieldMetadata yapField = (FieldMetadata)yf;
                     if(yapField.canAddToQuery(fieldName)){
@@ -590,14 +590,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if(field[0] == null){
                 return null;
             }
-            if(yo.isActive()){
+            if(ref.isActive()){
                 child = field[0].get(trans, obj);
             }else{
-                Buffer reader = readReaderByID(trans, yo.getID());
+                Buffer reader = readReaderByID(trans, ref.getID());
                 if(reader == null){
                     return null;
                 }
-                MarshallerFamily mf = yc.findOffset(reader, field[0]);
+                MarshallerFamily mf = classMetadata.findOffset(reader, field[0]);
                 if(mf == null){
                     return null;
                 }

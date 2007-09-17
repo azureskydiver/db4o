@@ -16,20 +16,20 @@ public abstract class QEStringCmp extends QEAbstract {
 		caseSensitive = caseSensitive_;
 	}
 
-	boolean evaluate(QConObject a_constraint, QCandidate a_candidate, Object a_value){
-		if(a_value != null){
-		    if(a_value instanceof Buffer) {
-                a_value = a_candidate._marshallerFamily._string.readFromOwnSlot(a_constraint.i_trans.container(), ((Buffer)a_value));
+	boolean evaluate(QConObject constraint, QCandidate candidate, Object obj){
+		if(obj != null){
+		    if(obj instanceof Buffer) {
+                obj = candidate._marshallerFamily._string.readFromOwnSlot(constraint.i_trans.container(), ((Buffer)obj));
 		    }
-		    String candidate=a_value.toString();
-		    String constraint=a_constraint.i_object.toString();
+		    String candidateStringValue = obj.toString();
+		    String stringConstraint = constraint.i_object.toString();
 		    if(!caseSensitive) {
-		    	candidate=candidate.toLowerCase();
-		    	constraint=constraint.toLowerCase();
+		    	candidateStringValue=candidateStringValue.toLowerCase();
+		    	stringConstraint=stringConstraint.toLowerCase();
 		    }
-			return compareStrings(candidate,constraint);
+			return compareStrings(candidateStringValue,stringConstraint);
 		}
-		return a_constraint.i_object==null;
+		return constraint.i_object==null;
 	}
 	
 	public boolean supportsIndex(){
