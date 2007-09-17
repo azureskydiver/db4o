@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
@@ -82,12 +83,60 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     	mf._untyped.defrag(readers);
     }
     
-    public Object read(ReadContext context) {
-        return ((UnmarshallingContext)context).readAny();
+    private boolean isArray(TypeHandler4 handler){
+        if(handler instanceof ClassMetadata){
+            return ((ClassMetadata)handler).isArray();
+        }
+        return handler instanceof ArrayHandler;
+    }
+    
+    public Object read(ReadContext readContext) {
+        UnmarshallingContext context = (UnmarshallingContext) readContext;
+        int payloadOffset = context.readInt();
+        if(payloadOffset == 0){
+            return null;
+        }
+        int savedOffSet = context.offset();
+        context.seek(payloadOffset);
+        ClassMetadata classMetadata = container().classMetadataForId(context.readInt());
+        if(classMetadata == null){
+            context.seek(savedOffSet);
+            return null;
+        }
+        if(classMetadata instanceof PrimitiveFieldHandler && classMetadata.isArray()){
+            // unnecessary secondary offset, consistent with old format
+            context.seek(context.readInt());
+        }
+        Object obj = classMetadata.read(context);
+        context.seek(savedOffSet);
+        return obj;
     }
 
     public void write(WriteContext context, Object obj) {
-        ((MarshallingContext)context).writeAny(obj);
+        if(obj == null){
+            context.writeInt(0);
+            return;
+        }
+        MarshallingContext marshallingContext = (MarshallingContext) context;
+        TypeHandler4 handler =   ClassMetadata.forObject(context.transaction(), obj, true);
+        if(handler == null){
+            context.writeInt(0);
+            return;
+        }
+        MarshallingContextState state = marshallingContext.currentState();
+        marshallingContext.createChildBuffer(false, false);
+        int id = marshallingContext.container().handlers().handlerID(handler);
+        context.writeInt(id);
+        if(isArray(handler)){
+            // TODO: This indirection is unneccessary, but it is required by the 
+            // current old reading format. 
+            // Remove in the next version of UntypedFieldHandler  
+            marshallingContext.prepareIndirectionOfSecondWrite();
+        }else{
+            marshallingContext.doNotIndirectWrites();
+        }
+        handler.write(context, obj);
+        marshallingContext.restoreState(state);
     }
 
 }

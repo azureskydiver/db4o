@@ -12,17 +12,6 @@ import com.db4o.internal.*;
 public interface WriteContext extends Context, WriteBuffer {
 
     /**
-     * writes any type of object, first class objects and primitive
-     * types.
-     * The type information is stored in the slot, to allow it to 
-     * be reconstructed, for instance for objects in untyped fields.
-     * For first class objects where the type is known, use 
-     * {@link #writeObject(Object)} instead, since it is more efficient.   
-     * @param obj the object to write.
-     */
-    void writeAny(Object obj);
-
-    /**
      * makes sure the object is stored and writes the ID of
      * the object to the context.
      * Use this method for first class objects only (objects that

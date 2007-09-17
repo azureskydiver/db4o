@@ -233,7 +233,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
 	    }
 	}
 
-    private void createChildBuffer(boolean transferLastWrite, boolean storeLengthInLink) {
+    public void createChildBuffer(boolean transferLastWrite, boolean storeLengthInLink) {
         MarshallingBuffer childBuffer = _currentBuffer.addChild(false, storeLengthInLink);
         if(transferLastWrite){
             _currentBuffer.transferLastWriteTo(childBuffer, storeLengthInLink);
@@ -278,8 +278,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     public void writeObject(TypeHandler4 handler, Object obj){
         
-        MarshallingBuffer tempBuffer = _currentBuffer;
-        int tempFieldWriteCount = _fieldWriteCount;
+        MarshallingContextState state = currentState();
         
         if(obj == null){
             
@@ -293,12 +292,11 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
             writeNullObject(handler);
             
         } else{
-            _fieldWriteCount = 0;
+            prepareIndirectionOfSecondWrite();
             handler.write(this, obj);
         }
         
-        _fieldWriteCount = tempFieldWriteCount;
-        _currentBuffer = tempBuffer;
+        restoreState(state);
     }
     
     private void writeNullObject(TypeHandler4 handler){
@@ -322,40 +320,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         writeInt(0);
     }
     
-    public void writeAny(Object obj){
-
-        if(obj == null){
-            writeInt(0);
-            return;
-        }
-        
-        ClassMetadata classMetadata = ClassMetadata.forObject(transaction(), obj, true);
-        if(classMetadata == null){
-            writeInt(0);
-            return;
-        }
-        
-        MarshallingBuffer tempBuffer = _currentBuffer;
-        int tempFieldWriteCount = _fieldWriteCount;
-        createChildBuffer(false, false);
-        writeInt(classMetadata.getID());
-        
-        if(classMetadata.isArray()){
-
-            // TODO: This will force the array to produce another indirection.
-            // This indirection is unneccessary, but it is required by the 
-            // current old reading format. Try to remove.  
-            
-            _fieldWriteCount = 0;
-            
-        }else{
-            doNotIndirectWrites();
-        }
-        classMetadata.write(this, obj);
-        _fieldWriteCount = tempFieldWriteCount;
-        _currentBuffer = tempBuffer;
-    }
-
     public void addIndexEntry(FieldMetadata fieldMetadata, Object obj) {
         if(! _currentBuffer.hasParent()){
             Object indexEntry = (obj == _currentMarshalledObject) ? _currentIndexEntry : obj; 
@@ -373,6 +337,10 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _fieldWriteCount = NO_INDIRECTION;
     }
     
+    public void prepareIndirectionOfSecondWrite(){
+        _fieldWriteCount = 0;
+    }
+    
     private HandlerRegistry handlerRegistry(){
         return container().handlers();
     }
@@ -388,6 +356,15 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     //        It will go, the buffer is never needed in new marshalling. 
     public Buffer buffer() {
         return null;
+    }
+    
+    public MarshallingContextState currentState(){
+        return new MarshallingContextState(_currentBuffer, _fieldWriteCount);
+    }
+    
+    public void restoreState(MarshallingContextState state){
+        _currentBuffer = state._buffer;
+        _fieldWriteCount = state._fieldWriteCount;
     }
 
 }
