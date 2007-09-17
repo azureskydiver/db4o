@@ -10,11 +10,8 @@ public class StringHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     private static final String[] data = new String[] { 
         "one",
         "aAzZ|!§$%&/()=?ßöäüÄÖÜYZ;:-_+*~#^°'@",
-
-        // FIXME: The following two fail:
-        
-//        "",
-//        null,
+        "",
+        null,
 
     };
 
