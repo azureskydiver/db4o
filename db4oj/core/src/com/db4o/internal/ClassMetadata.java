@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.config.ObjectMarshaller;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.classindex.*;
@@ -122,7 +121,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     void addMembers(ObjectContainerBase container) {
         bitTrue(Const4.CHECKED_CHANGES);
-        if (installTranslator(container) || installMarshaller(container)) {
+        if (installTranslator(container)) {
         	return;
         }
 
@@ -207,16 +206,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return dirty;
 	}
 	
-	private boolean installMarshaller(ObjectContainerBase ocb) {
-		ObjectMarshaller om = getMarshaller();
-    	if (om == null) {
-    		return false;
-    	}
-    	installCustomFieldMetadata(ocb, new CustomMarshallerFieldMetadata(this, om));
-    	return true;
-	}
-	
-
     private boolean installTranslator(ObjectContainerBase ocb) {
     	ObjectTranslator ot = getTranslator();
     	if (ot == null) {
@@ -281,12 +270,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     		: i_config.getTranslator();
     }
     
-    private ObjectMarshaller getMarshaller() {
-    	return i_config == null
-		? null
-		: i_config.getMarshaller();
-    }
-
 	private boolean isNewTranslator(ObjectTranslator ot) {
 		return !hasFields()
 		    || !ot.getClass().getName().equals(i_fields[0].getName());
