@@ -686,20 +686,24 @@
             <pathelement location="${file.java5.jar}" />
 			<pathelement location="${file.db4ounit.jar}" />
         </path>
-        
+        <path id="tests.java1.2.cp">
+            <pathelement path="${dir.dist.classes.test.jdk1.2}" />
+            <pathelement location="${file.java1.2.jar}" />
+			<pathelement location="${file.db4ounit.jar}" />
+        </path>
         <echo message="Running tests on jvm ${file.jvm.jdk1.5}" />
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" failonerror="true" timeout="10000000">
 			<jvmarg value="-Xmx512m"/>
 			<classpath refid="tests.java5.cp" />
 		</java>
-
+    	<!-- TODO This is not jdk5. Move? -->
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="320000">
 			<classpath>
 				<pathelement location="${dir.dist.classes.test.nq}" />
                 <pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${file.bloat.jar}" />
 				<pathelement location="${file.db4otools.jar}" />
-                <path refid="tests.java5.cp" />
+                <path refid="tests.java1.2.cp" />
 			</classpath>
 		</java>
         <java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.AllTestsJdk5" failonerror="true" timeout="3600000">
@@ -1050,9 +1054,11 @@
 
     <target name="build-java-before-checkin" depends="clean, compile.java.all, runtestsjava5" />
 
-    <target name="build-before-checkin" depends="build-java-before-checkin">
+    <target name="build-net-before-checkin">
         <ant antfile="build-dotnet.xml" target="run-tests">
         	<property name="skip.java.compilation" value="true" />
         </ant>
     </target>
+
+    <target name="build-before-checkin" depends="build-java-before-checkin,build-net-before-checkin" />
 </project>
