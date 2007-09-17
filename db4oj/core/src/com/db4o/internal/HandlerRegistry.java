@@ -41,6 +41,9 @@ public final class HandlerRegistry {
     private Hashtable4           _classes = new Hashtable4(16);
     
     private Hashtable4          _classMetadata = new Hashtable4(16);
+    
+    private Hashtable4          _ids = new Hashtable4(16);
+    
 
     private int                     _highestBuildinTypeID     = Handlers4.ANY_ARRAY_N_ID + 1;
 
@@ -202,14 +205,14 @@ public final class HandlerRegistry {
         
         PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(_container, handler, id, classReflector);
         _classMetadata.put(id, primitiveFieldHandler);
-        map(primitiveFieldHandler, classReflector);
+        map(id, primitiveFieldHandler, classReflector);
 
         if (!Deploy.csharp) {
             if(handler instanceof PrimitiveHandler){
                 PrimitiveHandler primitiveHandler = (PrimitiveHandler) handler;
                 ReflectClass primitiveClassReflector = primitiveHandler.primitiveClassReflector();
                 if(primitiveClassReflector != null){
-                    map(primitiveFieldHandler, primitiveClassReflector);
+                    map(0, primitiveFieldHandler, primitiveClassReflector);
                 }
             }
         }
@@ -219,9 +222,12 @@ public final class HandlerRegistry {
         }
     }
 
-    private void map(TypeHandler4 handler, ReflectClass classReflector) {
+    private void map(int id, TypeHandler4 handler, ReflectClass classReflector) {
         _mapReflectorToHandler.put(classReflector, handler);
         _mapHandlerToReflector.put(handler, classReflector);
+        if(id != 0){
+            _ids.put(handler, new Integer(id));
+        }
     }
 
 	private void registerHandlerVersion(TypeHandler4 handler, int version, TypeHandler4 replacement) {
@@ -379,6 +385,16 @@ public final class HandlerRegistry {
         return (TypeHandler4) _handlers.get(id);
     }
     
+    public final int handlerID(TypeHandler4 handler){
+        if(handler instanceof ClassMetadata){
+            return ((ClassMetadata)handler).getID();
+        }
+        Object idAsInt = _ids.get(handler);
+        if(idAsInt == null){
+            return 0;
+        }
+        return ((Integer)idAsInt).intValue();
+    }
 
     // TODO: Interfaces should be handled by the ANY handler but we
     // need to write the code to migrate from the old field handler to the new

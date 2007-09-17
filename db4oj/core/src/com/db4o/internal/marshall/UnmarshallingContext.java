@@ -131,27 +131,6 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         _reference.setObjectWeak(container(), obj);
     }
     
-    public Object readAny(){
-        int payloadOffset = readInt();
-        if(payloadOffset == 0){
-            return null;
-        }
-        int savedOffSet = offset();
-        seek(payloadOffset);
-        ClassMetadata classMetadata = container().classMetadataForId(readInt());
-        if(classMetadata == null){
-            seek(savedOffSet);
-            return null;
-        }
-        if(classMetadata instanceof PrimitiveFieldHandler && classMetadata.isArray()){
-            // unnecessary secondary offset, consistent with old format
-            seek(readInt());
-        }
-        Object obj = classMetadata.read(this);
-        seek(savedOffSet);
-        return obj;
-    }
-
     public Object readObject() {
         int id = readInt();
         int depth = _activationDepth - 1;
