@@ -2,8 +2,6 @@
 
 package  com.db4o.config;
 
-import com.db4o.reflect.*;
-
 /**
  * configuration interface for classes.
  * <br><br>
@@ -154,33 +152,6 @@ public interface ObjectClass {
      */
     public void indexed(boolean flag);
     
-    
-    /**
-	 * registers a custom marshaller for this class.
-     * <br><br>
-     * Custom marshallers can be used for tuning the performance to store
-     * and read objects. Instead of letting db4o do all the marshalling 
-     * by detecting the fields on a class and by using reflection, a
-     * custom {@link ObjectMarshaller ObjectMarshaller} allows the 
-     * application developer to write the logic how the fields of an
-     * object are converted to a byte[] and back. 
-	 * <br><br>Downside:<br>
-	 * - Indexes and querying can not be used.
-	 * <br><br>Upsides:<br>
-	 * - Not all fields need to be stored.<br>
-	 * - Reflection does not need to be called.<br>
-	 * <br><br>As an alternative to using a custom marshallers you may
-	 * want to consider writing an {@link ObjectTranslator ObjectTranslator}
-	 * or your own {@link Reflector Reflector}.
-	 * <br><br>The use of an {@link ObjectMarshaller ObjectMarshaller} is not
-	 * compatible with the use of an 
-	 * {@link ObjectTranslator ObjectTranslator}.<br><br>
-     * @param marshaller to be used for this class
-	 * @see ObjectMarshaller
-     */
-    public void marshallWith(ObjectMarshaller marshaller);
-    
-
     /**
 	 * sets the maximum activation depth to the desired value.
 	 * <br><br>A class specific setting overrides the
@@ -191,8 +162,6 @@ public interface ObjectClass {
 	 * @see ObjectClass#cascadeOnActivate
      */
     public void maximumActivationDepth (int depth);
-
-
 
     /**
 	 * sets the minimum activation depth to the desired value.
