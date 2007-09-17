@@ -672,13 +672,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	// returns null if not successful or if the field value at this offset is null
     // returns MarshallerFamily from the object header if it is successful and
     //         if the value at this offset is not null
-    public final MarshallerFamily findOffset(Buffer a_bytes, FieldMetadata a_field) {
-        if (a_bytes == null) {
+    public final MarshallerFamily findOffset(Buffer buffer, FieldMetadata field) {
+        if (buffer == null) {
             return null;
         }
-        a_bytes._offset = 0;
-        ObjectHeader oh = new ObjectHeader(_container, this, a_bytes);
-        boolean res = oh.objectMarshaller().findOffset(this, oh._headerAttributes, a_bytes, a_field);
+        buffer._offset = 0;
+        ObjectHeader oh = new ObjectHeader(_container, this, buffer);
+        boolean res = oh.objectMarshaller().findOffset(this, oh._headerAttributes, buffer, field);
         if(! res){
             return null;
         }

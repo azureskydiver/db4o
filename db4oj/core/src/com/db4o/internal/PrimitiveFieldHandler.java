@@ -198,11 +198,11 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return null;
     }
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException {
+    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer buffer, boolean toArray) throws CorruptionException, Db4oIOException {
         if(mf._primitive.useNormalClassRead()){
-            return super.readQuery(trans, mf, withRedirection, reader, toArray);
+            return super.readQuery(trans, mf, withRedirection, buffer, toArray);
         }
-        return _handler.readQuery(trans, mf, withRedirection, reader, toArray);
+        return _handler.readQuery(trans, mf, withRedirection, buffer, toArray);
     }
 
     

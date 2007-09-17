@@ -796,9 +796,9 @@ public class FieldMetadata implements StoredField {
         return context.read(_handler);
     }
 
-    public Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader)
+    public Object readQuery(Transaction trans, MarshallerFamily mf, Buffer buffer)
         throws CorruptionException, Db4oIOException {
-        return _handler.readQuery(a_trans, mf, true, a_reader, false);
+        return _handler.readQuery(trans, mf, true, buffer, false);
     }
     
     /**
