@@ -29,7 +29,7 @@ public abstract class StringMarshaller {
         return ret;
     }
     
-    public String readFromOwnSlot(ObjectContainerBase stream, Buffer reader){
+    public final String readFromOwnSlot(ObjectContainerBase stream, Buffer reader){
         try {
             return read(stream, reader);
         } catch (Exception e) {

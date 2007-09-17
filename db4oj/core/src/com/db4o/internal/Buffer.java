@@ -255,7 +255,7 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
 	}
     
     public void writeShortString(Transaction trans, String a_string) {
-        trans.container()._handlers._stringHandler.writeShort(a_string, this);
+        trans.container()._handlers._stringHandler.writeShort(trans, a_string, this);
     }
 
     public void writeLong(long l) {
