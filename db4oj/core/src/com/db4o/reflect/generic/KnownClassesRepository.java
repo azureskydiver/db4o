@@ -66,7 +66,7 @@ public class KnownClassesRepository {
     }
     
     public ReflectClass forName(String className) {
-        ReflectClass clazz = (ReflectClass)_classByName.get(className);
+        final ReflectClass clazz = (ReflectClass)_classByName.get(className);
         if(clazz != null){
             return clazz;
         }
@@ -75,17 +75,23 @@ public class KnownClassesRepository {
         	return null;
         }
         
-        if(_stream.classCollection() != null){
-            int classID = _stream.classMetadataIdForName(className);
-            if(classID > 0){
-                clazz = ensureClassInitialised(classID);
-                _classByName.put(className, clazz);
-                return clazz; 
-            }
+        if(_stream.classCollection() == null){
+        	return null;
         }
         
-        return null;
+        int classID = _stream.classMetadataIdForName(className);
+        if(classID <= 0){
+        	return null;
+        }
+        
+        return initializeClass(classID, className);
     }
+
+	private ReflectClass initializeClass(int classID, String className) {
+		ReflectClass newClazz = ensureClassInitialised(classID);
+        _classByName.put(className, newClazz);
+        return newClazz;
+	}
 
 	private void readAll(){
 		for(Iterator4 idIter=_stream.classCollection().ids();idIter.moveNext();) {
@@ -167,36 +173,47 @@ public class KnownClassesRepository {
 
 	private ReflectClass reflectClassForFieldSpec(RawFieldSpec fieldInfo) {
 		
-		if(fieldInfo.isVirtual()) {
-			 VirtualFieldMetadata fieldMeta=_stream.handlers().virtualFieldByName(fieldInfo.name());
-			 return fieldMeta.classReflector();
+		if (fieldInfo.isVirtual()) {
+			 return virtualFieldByName(fieldInfo.name()).classReflector();
 		}
 		
-		int handlerID=fieldInfo.handlerID();
-		ReflectClass fieldClass = null;
-
+		final int handlerID = fieldInfo.handlerID();
+		
 		// need to take care of special handlers here
 		switch (handlerID){
 		    case Handlers4.UNTYPED_ID:
-		        fieldClass = _stream.reflector().forClass(Object.class);
-		        break;
+		        return objectClass();
 		    case Handlers4.ANY_ARRAY_ID:
-		        fieldClass = arrayClass(_stream.reflector().forClass(Object.class));
-		        break;
+		        return arrayClass(objectClass());
 		    default:
-		    	fieldClass=forID(handlerID);
-		    	if (null == fieldClass) {
-		    		return null;
+		    	ReflectClass fieldClass=forID(handlerID);
+		    	if (null != fieldClass) {
+		    		return normalizeFieldClass(fieldInfo, fieldClass);
 		    	}
-		    	fieldClass=_stream.reflector().forName(fieldClass.getName());		    	
-		    	if(fieldInfo.isPrimitive()) {
-		    		fieldClass=primitiveClass(fieldClass);
-		    	}
-		    	if(fieldInfo.isArray()) {
-		    		fieldClass=arrayClass(fieldClass);
-		    	}
+		    	break;
 		}
-		return fieldClass;
+		return null;
+	}
+
+	private ReflectClass normalizeFieldClass(RawFieldSpec fieldInfo,
+			ReflectClass fieldClass) {
+		// TODO: why the following line is necessary?
+		ReflectClass theClass=_stream.reflector().forName(fieldClass.getName());		    	
+		if(fieldInfo.isPrimitive()) {
+			return primitiveClass(theClass);
+		}
+		if(fieldInfo.isArray()) {
+			return arrayClass(theClass);
+		}
+		return theClass;
+	}
+
+	private ReflectClass objectClass() {
+		return _stream.reflector().forClass(Object.class);
+	}
+
+	private VirtualFieldMetadata virtualFieldByName(final String fieldName) {
+		return _stream.handlers().virtualFieldByName(fieldName);
 	}
 
 	private MarshallerFamily marshallerFamily() {
