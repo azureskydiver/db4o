@@ -12,7 +12,11 @@ public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 	
 	private String _configuration;
 	
-	private AssemblyInfo assemblyType = AssemblyInfo.DB4O;;
+	private String _title;
+	
+	private String _product;
+	
+	private AssemblyInfo assemblyType = AssemblyInfo.DB4O();;
 	
 	public File getKeyFile() {
 		return _keyFile;
@@ -30,13 +34,19 @@ public class UpdateAssemblyInfoTask extends AbstractAssemblyInfoTask {
 		_configuration = configuration;
 	}
 	
-	public void setDRS(boolean drs) {
-		if (drs)
-			assemblyType = AssemblyInfo.DRS;
+	public void setTitle(String title) {
+		_title = title;
+	}
+	
+	public void setProduct(String product) {
+	    _product = product;
 	}
 	
 	@Override
 	protected String updateAttributes(String contents) {
+	    if (_title != null) {
+	        assemblyType = new AssemblyInfo(_title, _product);
+	    }
 		contents = updateAttribute(contents, "AssemblyTitle", assemblyType.title());
 		contents = updateAttribute(contents, "AssemblyVersion", _version);
 		contents = updateAttribute(contents, "AssemblyProduct", assemblyType.product());
