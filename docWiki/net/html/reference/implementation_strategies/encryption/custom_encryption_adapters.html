@@ -21,9 +21,9 @@
 </ul>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 <p><code>.NET: Db4o.Configure().Io(new MyEncryptionAdapter()); </code></p>
-<p></span>
+</span>
 
 <p>However, you'll have to keep in mind that db4o will write partial updates. For example, it may write a full object and then only modify one field entry later on. Therefore it is not sufficient to en-/decrypt each access in isolation. You'll rather have to make up a tiling structure that defines the data chunks that have to be en-/decrypted together.</p><p>A community project containing an XTEA encryption IoAdapter implementation can be found here:</p><p><a href="http://developer.db4o.com/ProjectSpaces/view.aspx/XTEA">http://developer.db4o.com/ProjectSpaces/view.aspx/XTEA</a></p>
 

@@ -11,13 +11,13 @@
 
 <p>Db4o provides its own built-in collection implementation to improve performance and decrease memory consumption:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java:</p><p><code>ObjectContainer.ext().collections.newLinkedList(); <br>
 ObjectContainer.ext().collections.newHashMap();<br>
 ObjectContainer.ext().collections.newIdentityHashMap(); </code></p>
-<p></span>
+</span>
 
-
+<p>
 
 <p>
 The LinkedList implementation only holds the first and the last elements in RAM, all the other objects are loaded on demand. Apparently, this implementation provides good performance for sequential traversal, but it is still quite inefficient for random selection/update. </p>

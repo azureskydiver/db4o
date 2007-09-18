@@ -1,0 +1,68 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Update Depth</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Update Depth</h1><p>db4o update behavior is regulated by
+<a href="../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>. Understanding Update Depth
+will help you to improve performance and avoid unnecessary memory
+usage. 
+</p>
+
+<p>When Update Depth is set to a big value
+on objects with a deep reference hierarchy it will cause each update
+on the top-level object to trigger updates on the lower-level
+objects, which can impose a huge performance penalty. 
+</p>
+
+<p>The following settings should be used
+with a special care and only with a good reason to do so:</p>
+<ol>
+<li>
+<p>Global deep update depth setting:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>configuration.updateDepth(Integer.MaxValue);</code></p>
+
+</span>
+
+
+
+<p>This setting causes ALL objects in the
+database to be updated to the lowest possible level on each update.</p>
+
+</li>
+<li>
+<p>Cascade on update:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>configuration.objectClass(Item.class).cascadeOnUpdateDepth(true);</code></p>
+
+</span>
+
+
+
+</li>
+</ol>
+<p>This setting will cause an update to
+the lowest level for Item class only. This can be unnecessary and
+therefore undesired in order to safe system resources.</p>
+
+<p>For more detailed information, please,
+refer to  <a href="../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-09-02T18:02:41 by Tetyana.
+				</div>
+  </body>
+</html>

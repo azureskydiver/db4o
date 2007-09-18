@@ -11,20 +11,17 @@
 <p>Db4o gives you a simple and straightforward interface to object persistence - ObjectContainer. In .NET versions a conventional name IObjectContainer is used.</p><a name="Accessing A Database&nbsp;"></a><h2>Accessing A Database&nbsp;</h2>
 <p> ObjectContainer is your db4o database.</p>
 
-<span class="cs"></p>
+<span name="cs_wiki_filter" csw_filters="cs">
 <p>c#: </p><p><code>IObjectContainer container = Db4oFactory.OpenFile(filename)</code></p>
-<p></span> </p>
-<span class="vb"></p>
+<p>[/filter] </p>
+<p><span name="cs_wiki_filter" csw_filters="vb"></p>
 <p>VB: </p><p><code>Dim container As IObjectContainer = Db4oFactory.OpenFile(filename)</code></p>
 <p></span>  </p>
 <p>filename is the path to the file, in which you want to store your objects. Normally you should open an ObjectContainer when the application starts and close it, when the session is finished to persist the changes to a physical storage location:<br></p>
-
-<span class="cs"></p>
-<p>c#: </p><p><code>container.Close()</code></p>
-<p></span> </p>
-<span class="vb"></p>
+<p> </p>
+<p>[filter=vb]</p>
 <p>VB: </p><p><code>container.Close()</code></p>
-<p></span><a name=""></a><h1>
+</span><a name=""></a><h1>
 
 </h1><p>Applications using db4o versions
 lower than 6.1can issue multiple calls to open the same file (without closing
@@ -44,12 +41,12 @@ allows to simplify the internal db4o design as well.</p>
 <p>ObjectContainer interface gives you all the basic functionality to work with persistent objects. Normally you can save a new or updated object of any class using <code>objectContainer.set(object)</code></p>
 <p>Deletion is done with the following method:</p>
 
-<span class="cs"></p>
+<span name="cs_wiki_filter" csw_filters="cs">
 <p>c#: </p><p><code>container.Delete(object)</code> </p>
-<p></span>
-<span class="vb"></p>
+</span>
+<span name="cs_wiki_filter" csw_filters="vb">
 <p>VB: </p><p><code>container.Delete(object)</code> </p>
-<p></span>
+</span>
 <p>Through ObjectContainer#get and ObjectContainer#query you get access to objects retrieval functionality. </p><p>Object Container Features&nbsp;</p><p>The characteristic features of an ObjectContainer are: </p>
 <ul>
 <li>An ObjectContainer can either be a database in a single-user mode or a client connection to a db4o server.</li>

@@ -14,9 +14,9 @@
 <a name="Effect"></a><h2>Effect</h2>
 <p>If your persistent class contains fields that do not need to be stored you should mark them as transient to prevent them from being stored:</p>
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 <p>.NET:<br><code>public class NotStorable {<br>&nbsp;&nbsp;[Transient] private int length;<br>. . . <br>}</code></p>
-<p></span>
+</span>
 <p>You can use <a href="../../implementation_strategies/callbacks.html" class="wikiLink">Callbacks</a> or <a href="../../implementation_strategies/translators.html" class="wikiLink">Translators</a> to set transient fields on retrieval.</p>
 <p>Also avoid storing classes having only transient information - their indexes' maintenance will produce unnecessary performance overhead.</p>
 <a name="Alternate strategies"></a><h2>Alternate strategies</h2>

@@ -8,32 +8,32 @@
     <div class="CommonContent">
       <div class="CommonContentArea">
         <h1>Update Depth</h1> 
-<P> </P>
+
 <P>Update depth term is used to determine a number of levels of member objects down the hierarchy, which will be updated automatically, when the top-level object is updated. Understanding of update depth and its performance impact is especially important for working with deep object graphs and collections. </P>
 <P>The default update depth value is 1, which means that objectContainer#set(object) method will only update the object passed as a parameter and any changes to its member objects will be lost.</P>
 <P>Update depth can be changed globally or for a specific class.</P>
 <P>Global update depth settings:</P>
 
-<span class="cs"></P>
+<span name="cs_wiki_filter" csw_filters="cs">
 <P>c#:&nbsp;</P>
 <P><code>configuration.UpdateDepth(depth)</code></P>
-<P></span>
-<span class="vb"></P>
+</span>
+<span name="cs_wiki_filter" csw_filters="vb">
 <P>VB:&nbsp;</P>
 <P><code>configuration.UpdateDepth(depth)</code></P>
-<P></span>
+</span>
 <P>Class-specific update settings:</P>
 
-<span class="cs"></P>
+<span name="cs_wiki_filter" csw_filters="cs">
 <P>с#:&nbsp;</P>
 <P><code>configuration.ObjectClass(typeof(ListObject)).CascadeOnUpdate(flag);</code></P>
 <P><code>configuration.ObjectClass(typeof(ListObject)).UpdateDepth(depth);</code></P>
-<P></span>
-<span class="vb"></P>
+</span>
+<span name="cs_wiki_filter" csw_filters="vb">
 <P>VB:&nbsp;</P>
 <P><code>configuration.ObjectClass(GetType(ListObject)).CascadeOnUpdate(flag);</code></P>
 <P><code>configuration.ObjectClass(GetType(ListObject)).UpdateDepth(depth);</code></P>
-<P></span>
+</span>
 <P>Here depth parameter specifies the number of member object levels down the hierarchy, which will be updated when the top-level object is saved.</P>
 <P>Flag parameter determines whether update operation should be cascaded to all the member objects.</P>
 

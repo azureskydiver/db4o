@@ -1,0 +1,84 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Reading Db4o File</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Reading Db4o File</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p>For debugging, learning and teaching
+purposes, the db4o file format can be modified to be (nearly ?) human readable.</p>
+
+<p>To do this, simply compile the sources
+with Deploy.debug set to true, run an application that creates a db4o database
+file and look at the file with any editor.</p>
+
+<p>With the Deploy.debug setting all
+pointers in the database file will be readable with their physical address as a
+readable&nbsp;number.</p>
+
+<p>All other slots will be identifiable by a
+single character at the beginning. An index that explains the character
+constants can be found in com.db4o.internal.Const4.</p>
+
+<p>To understand the format best, you may
+want to look at the <a href="http://developer.db4o.com/ProjectSpaces/view.aspx/Db4o_Product_Design/Db4o_Core/File_Header">File
+Header</a> structure and at the #readThis() methods of classes derived from
+PersistentBase, like&nbsp;ClassMetadataRepository for instance.</p>
+
+<p>This functionality proved to be very
+useful when db4o was originally written. By marking freespace with XXXXes a bug
+in the format could be spotted immediately by visual inspection of a database
+file.</p><p>To navigate through a database file in
+your favourite editor, it will work best if you write a macro for this editor
+that allows you to mark and select a number in the database file and to hit a
+button in the editor to jump to the corresponding offset in the database file
+(number of characters from the beginning).</p><p>Such macro for Microsoft Word is presented below:</p><div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">OffsetNavigator.Vb</span></div><div class="fscCode"><pre ID="ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">1</span><img id="ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Open_Text').style.display='inline';"/><span id="ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">Sub SearchOffset()</span><span id="ResourcesReferenceTuningDebugging_Db4oReading_Db4o_FileOffsetNavigator.Vb_1538_32_0_222_Open_Text"><span style="color: #0000FF;">Sub</span><span style="color: #000000;"> SearchOffset()
+</span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">Dim</span><span style="color: #000000;"> pos </span><span style="color: #0000FF;">As</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Integer</span><span style="color: #000000;">
+</span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    pos </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Val</span><span style="color: #000000;">(Selection.Text)
+</span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">If</span><span style="color: #000000;"> pos </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #800080;">0</span><span style="color: #000000;"> </span><span style="color: #0000FF;">Then</span><span style="color: #000000;">
+</span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        </span><span style="color: #0000FF;">MsgBox</span><span style="color: #000000;"> (</span><span style="color: #800000;">&quot;</span><span style="color: #800000;">The selection is not a number</span><span style="color: #800000;">&quot;</span><span style="color: #000000;">)
+</span><span style="color: #008080;">6</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">Else</span><span style="color: #000000;">
+</span><span style="color: #008080;">7</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        ActiveDocument.Content.Characters(pos).Select
+</span><span style="color: #008080;">8</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    </span><span style="color: #0000FF;">End</span><span style="color: #000000;"> </span><span style="color: #0000FF;">If</span><span style="color: #000000;">
+</span><span style="color: #008080;">9</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/></span><span style="color: #0000FF;">End Sub</span></span></div></pre></div></div><p>To make use of it, open Visual Basic Macro editor within your Word environment, create a new Macro in the Normal template and paste the code above. In order to make its usage easy assign a key sequence to call the macro command:</p><ul><li>open Tools/Customize/Commands/Keyboard;</li><li> select
+"Macros" as a Category and the newly-created macro name in the Commands list;</li><li> press
+a new key sequence for the command and press "Assign". <br></li></ul><p>Now you can navigate
+through the human-readable db4o file using the selected key sequence.</p>
+
+
+
+<p><br></p>
+
+
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-09-15T13:59:47 by Tetyana.
+				</div>
+  </body>
+</html>

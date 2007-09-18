@@ -17,23 +17,23 @@
 B-trees are optimized for scenarios when part or all of a data set is on secondary storage such as a hard disk, since disk accesses are extremely expensive operations. B-trees minimize the number of disk accesses required to find data by traversing a sorted tree structure and only need a single disk access per level of the tree. </p>
 <p>In order to use B-tree capabilities for field indexes you will simply need to define indexed fields in your classes:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>configuration.objectClass(Foo.class).objectField("field").indexed(true)</code></p>
-<p></span>
+</span>
 
 
 
 <a name="Effect"></a><h2>Effect</h2>
 <p>The caching behaviour of the B-trees can be configured with the following two switches:
-</p><span class="java"></p>
+</p><span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>configuration.bTreeCacheHeight(height)</code></p>
-<p></span>
+</span>
 
 
 configures the size of BTree nodes in indexes.
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>configuration.bTreeNodeSize(size)</code></p>
-<p></span>
+</span>
 
 
 <p>configures caching of B-tree nodes. Clean B-tree nodes will be unloaded on #commit and #rollback unless they are configured as cached here.</p>

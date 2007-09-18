@@ -1,0 +1,47 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Object Manager Specifics</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Object Manager Specifics</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Java enumerations">Java enumerations</a></li></ul></li></ul></div></div></div><p><br></p><p>Object Manager can operate on any java or .NET db4o
+database, because it does not need class definitions to instantiate database
+objects. Instead of real classes ObjectManager in fact instantiates
+<a href="../implementation_strategies/db4o_reflection_api/genericreflector.html" class="wikiLink">Generic
+Objects</a>, which hold a database object information in an array of fields. This
+approach is very powerful, however it introduces some limitations.</p><a name="Java enumerations"></a><h2>Java enumerations</h2>
+
+<p>Java enumerations (java.lang.Enum) hold the information in
+<code>name</code> and <code>ordinal</code> fields. However, when an enumeration
+is used in a persistent object it is not really necessary to save the whole
+enumeration to the database, as it will be available from the classloader in
+runtime. That is why db4o only saves the actual enumeration values together
+with the object, and the values are bind to the enumeration when the object is
+instantiated. For more information about the enumerations see
+<a href="../implementation_strategies/type_handling/static_fields_and_enums.html" class="wikiLink">Static Fields And Enums</a>.</p>
+
+<p>This approach allows to save database space and proves to be
+efficient. However, if you are looking at an enumeration object using
+ObjectManager, the enumeration will be constructed as a generic object,
+therefore the binding procedure won't be triggered. This will affect the
+following:</p>
+
+<ul><li>enumeration
+     type fields will show the class name instead of the actual values, for
+     example "com.examples.Colors" instead of "Red", "Green" etc.;</li><li>you
+     won't be able to constrain queries on the enumeration field values;</li><li>you
+     won't see "name" and "ordinal" field values querying for the enumeration
+     type data.</li></ul>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-08-11T14:57:01 by Tetyana.
+				</div>
+  </body>
+</html>

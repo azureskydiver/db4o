@@ -20,33 +20,33 @@
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET: </p>
 <p><code>IExtObjectContainer#SetSemaphore(string name, int waitMilliSeconds);<br>IExtObjectContainer#ReleaseSemaphore(string name); </code></p>
 
-<p></span>
+</span>
 <a name="OO Languages Semaphores&nbsp;"></a><h2>OO Languages Semaphores&nbsp;</h2>
 The concept of db4o semaphores is very similar to the concept of synchronization in OO programming languages: 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET: </p>
 <p><code>lock(monitorObject){ <br><br>// exclusive code block here<br>
 <br>}</code></p>
 
-<p></span>
+</span>
 
 <a name="db4o Semaphore"></a><h2>db4o Semaphore</h2>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET: </p>
 <p><code>if(objectContainer.Ext().SetSemaphore(semaphoreName, 1000){<br><br>// exclusive code block here<br>objectContainer.Ext().ReleaseSemaphore(semaphoreName);<br>} </code></p>
 
-<p></span>
+</span>
 
 <p>Although the principle of semaphores is very simple they are powerful enough for a wide range of usecases.</p>
 <p><div class="childTopicList">More Reading:<ul>

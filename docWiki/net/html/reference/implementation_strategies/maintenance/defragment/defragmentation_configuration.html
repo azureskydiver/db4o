@@ -38,13 +38,13 @@ backup file to be deleted automatically before the defragment run, specify:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>configuration.ForceBackupDelete(true)</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -61,7 +61,7 @@ used to keep track of objects moved during defragmentation. Db4o provides 2
 mapping classes.</p>
 
 <p><b>TreeIDMapping </b>- default in-memory mapping. Will increase the
-memory usage, but is a faster alternative. Set up <a href="./Defragmentation_Configuration.html#Commit Frequency">objectCommitFrequency</a> to
+memory usage, but is a faster alternative. Set up <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Db4o_Database_Management/Maintenance/Defragment/Defragmentation_Configuration#Commit Frequency">objectCommitFrequency</a> to
 control memory usage.</p>
 
 <p><b>BTreeIDMapping</b> - mapping is done in a separate file using
@@ -79,14 +79,14 @@ deleted classes instances:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>configuration.StoredClassFilter(new
 AvailableClassFilter())</code></p>
 
-<p></span>
+</span>
 
 <p>In this case only the classes known to the classloader will
 be left in the database, the rest will be deleted.</p>
@@ -101,13 +101,13 @@ of db4o configuration:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>configuration.Db4oConfig(db4oConfiguration)</code></p>
 
-<p></span>
+</span>
 
 <p>For more information about db4o configuration see
 <a href="../../../tuning/configuration.html" class="wikiLink">Configuration</a>.</p>
@@ -122,13 +122,13 @@ should trigger an immediate commit of the target file. By default, frequency =
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>configuration.ObjectCommitFrequency(frequency)</code></p>
 
-<p></span>
+</span>
 
 <p>This method can be used to reduce memory usage during
 defragmentation.</p>
@@ -142,13 +142,13 @@ defragmentation:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>configuration.pgradeFile(tempFile)</code></p>
 
-<p></span>
+</span>
 
 <p>This method can be used to reduce memory usage during
 defragmentation, however it will make it slower.</p>

@@ -16,11 +16,11 @@
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET: <code>public void Evaluate(Candidate candidate)</code> </p>
 
-<p></span>
+</span>
 
 <p>This will be called by db4o to check whether the object encapsulated by this candidate should be included into the current candidate set.</p>
 
@@ -29,11 +29,11 @@ The Candidate interface provides three methods:</p>
 
 
 
-<span class="net"></p>
+<p><span name="cs_wiki_filter" csw_filters="net"></p>
 <p>.NET:</p><p><code>public Object GetObject()
 </p><p>public void Include(bool flag)
 </p><p>public ObjectContainer ObjectContainer() </code>
-</span>
+</span></p>
 
 <p>An Evaluation implementation may call getObject() to retrieve the actual object instance to be evaluated, it may call include() to instruct db4o whether or not to include this object in the current candidate set, and finally it may access the current database directly by calling objectContainer().</p></div>
     </div>

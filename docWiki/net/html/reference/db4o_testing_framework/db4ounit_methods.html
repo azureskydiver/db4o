@@ -28,7 +28,7 @@ client/server (AbstractClientServerDb4oFixture). </p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET: </p>
 
@@ -36,31 +36,31 @@ client/server (AbstractClientServerDb4oFixture). </p>
 Fixture(IDb4oFixture fixture)
 </code></p>
 
-<p></span>
+</span>
 
 <a name="Methods for working with a database:"></a><h3>Methods for working with a database:</h3>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public virtual Db4objects.Db4o.Ext.IExtObjectContainer Db()</code></p>
 
-<p></span>
+</span>
 
 <p>Returns an instanse of object container for the current
 environment.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual void Reopen()</code></p>
 
-<p></span>
+</span>
 
 <p>This function will close the database and open it again. It
 also performs an implicit commit on close.</p>
@@ -73,17 +73,17 @@ also performs an implicit commit on close.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 <p>.NET:</p>
 <p><code>protected virtual Db4objects.Db4o.Reflect.IReflector
 Reflector()</code></p>
-<p></span>
+</span>
 
 <p>Returns current reflector.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
@@ -94,7 +94,7 @@ Reflector()</code></p>
 <p><code>protected virtual Db4objects.Db4o.Transaction
 NewTransaction()</code></p>
 
-<p></span>
+</span>
 
 <p>Methods to get transaction object for the current environment.</p>
 
@@ -102,7 +102,7 @@ NewTransaction()</code></p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
@@ -118,47 +118,53 @@ NewQuery(Db4objects.Db4o.Transaction transaction, System.Type clazz)</code></p>
 
 <p><code>protected virtual Db4objects.Db4o.Query.IQuery
 NewQuery(Db4objects.Db4o.Transaction transaction)</code></p>
-<p></span>
+<p>[/filter]&nbsp;</p>
 
 <p>Create a new query object.</p>
 <br>
+<p>[filter=java]</p>
 
+<p>Java:</p>
 
-<span class="net"></p>
+<p><code>protected Object retrieveOnlyInstance(Class clazz)</code></p>
+
+</span>
+
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual object RetrieveOnlyInstance(System.Type
 clazz)</code></p>
 
-<p></span>
+</span>
 
 <p>Checks if only one object of a class is stored in the
 database</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual int CountOccurences(System.Type clazz)</code></p>
 
-<p></span>
+</span>
 
 <p>Returns the amount of objects of the specified class in the
 database.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual void Foreach(System.Type clazz,
 Db4objects.Db4o.Foundation.IVisitor4 visitor)</code></p>
 
-<p></span>
+</span>
 
 <p>This method goes through the ObjectSet of the specified
 class objects in the database calling Visitor4.visit() method. Visitor4 is an
@@ -166,23 +172,23 @@ interface specifiing a visit method:</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>void Visit(object obj);</code></p>
 
-<p></span>
+</span>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual void DeleteAll(System.Type clazz)</code></p>
 
-<p></span>
+</span>
 
 <p>Deletes all the instances of the specified class in the
 database.</p>
@@ -195,26 +201,26 @@ database.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual void
 IndexField(Db4objects.Db4o.Config.IConfiguration config, System.Type clazz, string fieldName)</code></p>
 
-<p></span>
+</span>
 
 <p>Adds field index into specified configuration.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET</p>
 
 <p><code>public void SetUp()</code></p>
 
-<p></span>
+</span>
 
 <p>This method:</p>
 
@@ -243,14 +249,14 @@ IndexField(Db4objects.Db4o.Config.IConfiguration config, System.Type clazz, stri
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual void
 Configure(Db4objects.Db4o.Config.IConfiguration config)</code></p>
 
-<p></span>
+</span>
 
 <p>Use this method to create your custom configuration for a
 test. Config parameter is the current default test configuration, which can be
@@ -258,26 +264,26 @@ modified.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual void Db4oSetupBeforeStore()</code></p>
 
-<p></span>
+</span>
 
 <p>This method is a placeholder for any custom setup actions
 that need to be taken before filling up the database with objects.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual void Store()</code></p>
 
-<p></span>
+</span>
 
 <p>This method is supplied for creating and storing the
 objects, which you are going to use for your test.</p>
@@ -285,13 +291,13 @@ objects, which you are going to use for your test.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>protected virtual void Db4oSetupAfterStore()</code></p>
 
-<p></span>
+</span>
 
 <p>This method is a placeholder for any custom setup actions
 that need to be taken after the database is filled up with objects.</p>
@@ -301,38 +307,38 @@ that need to be taken after the database is filled up with objects.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public virtual int RunSoloAndClientServer()</code></p>
 
-<p></span>
+</span>
 
 <p>Will run the test in both modes</p>
 
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public virtual int RunSolo()</code></p>
 
-<p></span>
+</span>
 
 <p>Only local mode.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public virtual int RunClientServer()</code></p>
 
-<p></span>
+</span>
 
 <a name="Db4ounit.Assert"></a><h2>Db4ounit.Assert</h2>
 
@@ -343,14 +349,14 @@ source code.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public
 static void Expect(System.Type exception, Db4oUnit.ICodeBlock block)</code></p>
 
-<p></span>
+</span>
 
 <p>This method
 runs a specified method (block parameter) and throws an exception if the block
@@ -358,7 +364,7 @@ runs without any exception.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
@@ -368,7 +374,7 @@ static void IsTrue(bool condition)</code></p>
 <p><code>public
 static void IsTrue(bool condition, string msg)</code></p>
 
-<p></span>
+</span>
 
 <p>This method
 checks the condition and throws an exception if the condition is false. Msg
@@ -377,14 +383,14 @@ parameter can be used to customize exception message.</p>
 <br>
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public
 static void AreEqual(object expected, object actual)</code></p>
 
-<p></span>
+</span>
 
 <p>Checks if
 the supplied parameters are equal and throws an exception otherwise.</p>
@@ -399,14 +405,14 @@ suite and check if its results.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public static void RunTestAndExpect(Db4oUnit.ITest test, int
 expFailures)</code></p>
 
-<p></span>
+</span>
 
 <p>This method will run the test specified and throw an
 exception if the number of expected failures (expFailures parameter) is not

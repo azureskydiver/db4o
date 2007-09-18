@@ -1,0 +1,19 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Security Requirements On Java Platform</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Security Requirements On Java Platform</h1>
+<P><FONT color=#990000>This topic applies to Java version only</FONT></P>
+<P>Java Security Manager can be used to specify Java application security permissions. It is usually provided by web-browsers for applet execution, however any Java application can make use of a security manager. For example, to use the default security manager you will only need to pass <code>-Djava.security.manager</code> option to JVM command line. Custom security managers can be created and utilized as well (please refer to Java documentation for more information).</P>
+<P>Unfortunately, current db4o implementation can't work under a default security manager. If this feature is important for you, please, vote and watch db4o task <A href="http://tracker.db4o.com/browse/COR-830">COR-830</A>.</P></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-09-01T14:01:08 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>.NET Translator Implementation</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>.NET Translator Implementation</h1>
+
+
+<p><font color="#990000">This topic applies to .NET version only.</font></p>
+
+<p>To translate CultureInfo instances, we will store only their name since this is enough to recreate them<br>later. Note that we don't have to do any work in onActivate(), since object reinstantiation is already<br>fully completed in onInstantiate().</p>
+
+
+
+
+
+<p>Let's try it out:</p>
+
+
+
+
+
+<p>ObjectTranslators let you reconfigure the state of a 'blank' application object reinstantiated by<br>db4o, ObjectConstructors also take care of instantiating the application object itself. ObjectTranslators and ObjectConstructors can be used for classes that cannot cleanly be stored and retrieved with db4o's standard object instantiation mechanisms.<br></p>
+<br></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2007-08-04T20:24:01 by Tetyana.
+				</div>
+  </body>
+</html>

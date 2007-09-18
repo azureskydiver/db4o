@@ -1,0 +1,140 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Security Requirements On .NET Platform</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Security Requirements On .NET Platform</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+<P><FONT color=#990000>This topic applies to .NET version only.</FONT></P>
+<P>db4o requires certain security permissions to be granted for successfull execution. It is important to know these permission requirements if the environment where db4o will be used is not fully trusted. .NET security model is out of scope of this article, to find out more about it use internet search on ".NET security permissions". </P>
+<P>Security permissions of an assembly can be calculated with the help of PermCalc tool, which can be found in VS2005 installation:</P>
+<P>[Visual Studio Home]\SDK\v2.0\Bin</P>
+<P>The following command line will calculate the minimum security permissions for Db4objects.Db4o.dll and will safe them in xml format Sandbox.Permcalc.xml document:</P>
+<P><code>PermCalc.exe -sandbox Db4objects.Db4o.dll</code></P>
+<P>The output should look like this:</P>
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">Db4o.Xml</span></div><div class="fscCode"><pre ID="ResourcesReferencePlatform_Specific_IssuesSecurity_Requirements_On_.NET_Platformdb4o.Xml_876_22"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">&lt;?</span><span style="color: #FF00FF;">xml version=&quot;1.0&quot;</span><span style="color: #0000FF;">?&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">Sandbox</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">PermissionSet </span><span style="color: #FF0000;">version</span><span style="color: #0000FF;">=&quot;1&quot;</span><span style="color: #FF0000;"> class</span><span style="color: #0000FF;">=&quot;System.Security.PermissionSet&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">IPermission </span><span style="color: #FF0000;">version</span><span style="color: #0000FF;">=&quot;1&quot;</span><span style="color: #FF0000;"> class</span><span style="color: #0000FF;">=&quot;System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;</span><span style="color: #FF0000;"> Read</span><span style="color: #0000FF;">=&quot;*AllFiles*&quot;</span><span style="color: #FF0000;"> PathDiscovery</span><span style="color: #0000FF;">=&quot;*AllFiles*&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">IPermission </span><span style="color: #FF0000;">version</span><span style="color: #0000FF;">=&quot;1&quot;</span><span style="color: #FF0000;"> class</span><span style="color: #0000FF;">=&quot;System.Security.Permissions.ReflectionPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;</span><span style="color: #FF0000;"> Flags</span><span style="color: #0000FF;">=&quot;MemberAccess&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">IPermission </span><span style="color: #FF0000;">version</span><span style="color: #0000FF;">=&quot;1&quot;</span><span style="color: #FF0000;"> class</span><span style="color: #0000FF;">=&quot;System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;</span><span style="color: #FF0000;"> Flags</span><span style="color: #0000FF;">=&quot;UnmanagedCode, Execution, ControlEvidence, SerializationFormatter, ControlAppDomain&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">IPermission </span><span style="color: #FF0000;">Window</span><span style="color: #0000FF;">=&quot;SafeSubWindows&quot;</span><span style="color: #FF0000;"> Clipboard</span><span style="color: #0000FF;">=&quot;OwnClipboard&quot;</span><span style="color: #FF0000;"> version</span><span style="color: #0000FF;">=&quot;1&quot;</span><span style="color: #FF0000;"> class</span><span style="color: #0000FF;">=&quot;System.Security.Permissions.UIPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">IPermission </span><span style="color: #FF0000;">version</span><span style="color: #0000FF;">=&quot;1&quot;</span><span style="color: #FF0000;"> class</span><span style="color: #0000FF;">=&quot;System.Security.Permissions.KeyContainerPermission, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089&quot;</span><span style="color: #FF0000;"> Unrestricted</span><span style="color: #0000FF;">=&quot;true&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">PermissionSet</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">Sandbox</span><span style="color: #0000FF;">&gt;</span></div></pre></div></div>
+<P>(UIPermission is not required).</P>
+<P>The table below contains short explanation of each permission requirement. For the complete list of method calls requiring special security permissions, please run permcalc tool with -Stacks parameter. (More information on PermCalc can be found on <A href="http://msdn2.microsoft.com/">MSDN</A> site).</P>
+<P>
+<TABLE class="" cellSpacing=0 cellPadding=0 border=0>
+
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P><STRONG>Permission name</STRONG></P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P><STRONG>Functionality</STRONG></P></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>FileIOPermission</P>
+</TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>File read, write and create permissions are required for the corresponding operations on the database file. db4o does not restrict the location of a database file, therefore these permissions and browsing permission is required for all files in the system.</P></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>ReflectionPermission</P>
+</TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>db4o ability to create runtime objects from the database data is based on reflection. Reflection should be allowed.</P></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>SecurityPermission:</P>
+</TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+</TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P><I>UnmanagedCode</I><I></I></P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>Unmanaged code is used internally for file access and socket operations.</P></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P><I>Execution</I><I></I></P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>Permission for the code to run. Without this permission, managed code will not be executed.</P></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P><I>ControlEvidence</I><I></I></P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>Is required internally to make use of some .NET functionality</P></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P><I>SerializationFormatter</I><I></I></P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>Used to utilize serialization services (formatters)</P></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P><I>ControlAppDomain</I><I></I></P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>Utilized with AppDomain functions.</P></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>KeyContainerPermission</P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:432px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>Is used in .NET Socket operations.</P></TD></TR></TABLE></P>
+<P>When you deploy an assembly, you must take into consideration all the assemblies that can be referenced from the original assembly. db4o can be deployed with the following additional:</P>
+<UL>
+<LI>l Db4objects.Db4o.Tools.dll : for runtime <a href="../basic_concepts/native_query_concepts.html" class="wikiLink">NQ</a> optimization;</LI>
+<LI>l Db4objects.Db4o.TA.dll : for <a href="../object_lifecycle/activation/transparent_activation_framework.html" class="wikiLink">Transparent Activation</a> support.</LI></UL>
+<P>The following table lists the permission requirements of these auxiliary assemblies:</P>
+<P>
+<TABLE class="" cellSpacing=0 cellPadding=0 border=0>
+
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:454px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P><STRONG>Assembly</STRONG></P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:454px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P><STRONG>Permission requirements</STRONG></P></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:454px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>Db4objects.Db4o.Tools</P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:454px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<UL>
+<LI>l FileIOPermission</LI>
+<LI>l ReflectionPermission</LI>
+<LI>l SecurityPermission (UnmanagedCOde, Execution, ControlEvidence)</LI>
+<LI>l UIPermission </LI>
+<LI>l KeyContainerPermission</LI></UL></TD></TR>
+<TR>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:454px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>Db4objects.Db4o.TA</P></TD>
+<TD class="" style="BORDER-RIGHT:#000000 1px solid;BORDER-TOP:#000000 1px solid;BORDER-LEFT:#000000 1px solid;WIDTH:454px;BORDER-BOTTOM:#000000 1px solid;" vAlign=top>
+<P>No specific requirements</P></TD></TR></TABLE></P>
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-08-26T18:13:01 by Tetyana.
+				</div>
+  </body>
+</html>

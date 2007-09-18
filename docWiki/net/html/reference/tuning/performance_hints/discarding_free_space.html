@@ -11,9 +11,9 @@
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 <p>.NET: <code>Db4oFactory.Configure().Freespace().DiscardSmallerThan(byteCount)</code></p>
-<p></span><p>Configures the minimum size of free space slots in the database file that are to 
+</span><p>Configures the minimum size of free space slots in the database file that are to 
 be reused. </p>
 <p>2 extremes for byteCount value:</p>
 <ul>
@@ -29,9 +29,9 @@ When objects are updated or deleted, the space previously occupied in the databa
 <p>
 Regular defragment will also keep the number of free space slots small. See:</p>
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 <p>.NET: <code>Db4objetcs.Db4o.Defragment.Defragment</code></p>
-<p></span>
+</span>
 <p>If defragment can be frequently run, it will also reclaim lost space and decrease the database file to the minimum size. Therefore #discardSmallerThan(maxValue) may be a good tuning mechanism for setups with frequent defragment runs.</p></div>
     </div>
     <div id="footer">

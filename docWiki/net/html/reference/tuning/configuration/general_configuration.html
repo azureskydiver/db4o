@@ -8,8 +8,7 @@
     <div class="CommonContent">
       <div class="CommonContentArea">
         <h1>General Configuration</h1>
-<p>
-</p>
+
 
 <p>Db4o configuration resides in com.db4o.config
 package/Db4object.Db4o.Config namespace. </p>
@@ -23,13 +22,13 @@ interface. For class and field specific configuration see <a href="objectclass_c
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void ActivationDepth(int depth);</code></p>
 
-<p></span>
+</span>
 
 <p>sets the activation depth to the specified value.
 </p>
@@ -38,14 +37,14 @@ interface. For class and field specific configuration see <a href="objectclass_c
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void ClassActivationDepthConfigurable(bool
 flag);</code></p>
 
-<p></span>
+</span>
 
 <p>turns maximumActivationDepth setting of ObjectClass/IObjectClass
 configuration on and off.</p>
@@ -60,7 +59,7 @@ configuration on and off.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
@@ -68,7 +67,7 @@ configuration on and off.</p>
 
 <p><code>public void RemoveAlias(IAlias alias);</code></p>
 
-<p></span>
+</span>
 
 <p>these methods, as the names suggest, add or remove aliases.
 Aliases should be configured before opening a database file or connecting to a
@@ -79,13 +78,13 @@ server. For more information on aliases please check
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void AllowVersionUpdates(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>Turns automatic database file format version updates on. For
 more information see <a href="../../implementation_strategies/maintenance/updating_db4o_file_format.html" class="wikiLink">Updating Db4o File Format</a>.</p>
@@ -98,13 +97,13 @@ more information see <a href="../../implementation_strategies/maintenance/updati
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void BlockSize(int bytes);</code></p>
 
-<p></span>
+</span>
 
 <p>sets the storage data blocksize for new ObjectContainers.
 For more information read
@@ -114,13 +113,13 @@ For more information read
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void BTreeNodeSize(int size);</code></p>
 
-<p></span>
+</span>
 
 <p>configures the size of BTree nodes in indexes. </p>
 
@@ -128,13 +127,13 @@ For more information read
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void BTreeCacheHeight(int height);</code></p>
 
-<p></span>
+</span>
 
 <p>configures caching of BTree nodes.</p>
 
@@ -145,13 +144,13 @@ For more information read
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void Callbacks(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>turns <a href="../../implementation_strategies/callbacks.html" class="wikiLink">object
 callbacks</a> on and off. <a href="../performance_hints/no_callbacks.html" class="wikiLink">No callbacks</a> article explains
@@ -161,13 +160,13 @@ how this setting can be useful for tuning.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void CallConstructors(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>advises db4o to try instantiating objects with/without
 calling constructors.</p>
@@ -194,13 +193,13 @@ your current environment.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void DetectSchemaChanges(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>tuning feature: configures whether db4o checks all
 persistent classes upon system startup for added or removed fields. For more
@@ -210,13 +209,13 @@ information see <a href="../performance_hints/no_schema_changes.html" class="wik
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public DiagnosticConfiguration Diagnostic();</code></p>
 
-<p></span>
+</span>
 
 <p>returns the configuration interface for diagnostics. See
 <a href="../diagnostics.html" class="wikiLink">Diagnostics</a> for more information.</p>
@@ -225,13 +224,13 @@ information see <a href="../performance_hints/no_schema_changes.html" class="wik
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void DisableCommitRecovery();</code></p>
 
-<p></span>
+</span>
 
 <p>turns commit recovery off.</p>
 
@@ -250,13 +249,13 @@ support. </p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void FlushFileBuffers(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>configures file buffers to be flushed during transaction
 commits. For more information see <a href="../performance_hints/flushfilebuffers.html" class="wikiLink">FlushFileBuffers</a>.</p>
@@ -265,13 +264,13 @@ commits. For more information see <a href="../performance_hints/flushfilebuffers
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void DiscardFreeSpace(int byteCount);</code></p>
 
-<p></span>
+</span>
 
 <p>tuning feature: configures the minimum size of free space
 slots in the database file that are to be reused. For more information see
@@ -281,13 +280,13 @@ slots in the database file that are to be reused. For more information see
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void Encrypt(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>configures the use of <a href="../../implementation_strategies/encryption/built-in_simple_encryption.html" class="wikiLink">encryption</a>.
 This method is deprecated, please use:</p>
@@ -296,14 +295,14 @@ This method is deprecated, please use:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>Db4oFactory.Configure().Io(new XTeaEncryptionFileAdapter(password))
 </code></p>
 
-<p></span>
+</span>
 
 <p>or any of the other XTeaEncryptionFileAdapter constructors.</p>
 
@@ -311,13 +310,13 @@ This method is deprecated, please use:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void ExceptionsOnNotStorable(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>configures whether Exceptions are to be thrown, if objects
 can not be stored. For more information see
@@ -328,13 +327,13 @@ false.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public FreespaceConfiguration Freespace();</code></p>
 
-<p></span>
+</span>
 
 <p>returns the
 <a href="../../implementation_strategies/freespace_management_system.html" class="wikiLink">freespace</a> configuration
@@ -344,13 +343,13 @@ interface.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void GenerateUUIDs(int setting);</code></p>
 
-<p></span>
+</span>
 
 <p>configures db4o to generate UUIDs for stored objects.</p>
 
@@ -373,13 +372,13 @@ interface.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void GenerateUUIDs(ConfigScope)</code></p>
 
-<p></span>
+</span>
 
 <p>configures db4o to generate UUIDs for stored objects. For
 more information see
@@ -389,14 +388,14 @@ more information see
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void GenerateVersionNumbers(int
 setting);</code></p>
 
-<p></span>
+</span>
 
 <p>configures db4o to generate version numbers for stored
 objects. This method is deprecated. Use the next method instead.</p>
@@ -405,14 +404,14 @@ objects. This method is deprecated. Use the next method instead.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void GenerateVersionNumbers(ConfigScope
 setting);</code></p>
 
-<p></span>
+</span>
 
 <p>configures db4o to generate version numbers for stored
 objects. Version numbers are used for <a href="../../db4o_replication_system_drs.html" class="wikiLink">db4o Replication System (dRS)</a></p>
@@ -421,13 +420,13 @@ objects. Version numbers are used for <a href="../../db4o_replication_system_drs
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void InternStrings(bool doIntern);</code></p>
 
-<p></span>
+</span>
 
 <p>Configures db4o to call intern() on strings upon retrieval.
 For more information see Java/.NET documentation for string class.</p>
@@ -436,13 +435,13 @@ For more information see Java/.NET documentation for string class.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void Io(IoAdapter adapter);</code></p>
 
-<p></span>
+</span>
 
 <p>allows to configure db4o to use a customized byte IO
 adapter. <a href="../../implementation_strategies/io_adapter.html" class="wikiLink">IO Adapter</a> topic discusses how to
@@ -450,7 +449,7 @@ use a pluggable IO-adapter and how to create you own IO-adapter.</p>
 
 <p><br></p>
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
@@ -462,20 +461,20 @@ For more information see</p>
 
 <p><a href="../selective_persistence/transient_fields_in_.net.html" class="wikiLink">Transient Fields In .NET</a>&nbsp;</p>
 
-<p></span>
+</span>
 
 
 <p><br></p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void MessageLevel(int level);</code></p>
 
-<p></span>
+</span>
 
 <p>Sets the detail level of db4o messages (from1 to 3). For
 more information see <a href="../debugging_db4o.html" class="wikiLink">Debugging db4o</a></p>
@@ -484,13 +483,13 @@ more information see <a href="../debugging_db4o.html" class="wikiLink">Debugging
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void LockDatabaseFile(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>can be used to turn the database file locking thread off.
 This tuning setting makes sense with java version 1.4 and higher. For more
@@ -500,13 +499,13 @@ information see <a href="../performance_hints/no_lock_file_thread.html" class="w
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public IObjectClass ObjectClass(object clazz);</code></p>
 
-<p></span>
+</span>
 
 <p>returns an ObjectClass/IObjectClass to
 configure the specified class.</p>
@@ -526,14 +525,14 @@ configure the specified class.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void OptimizeNativeQueries(bool
 optimizeNQ);</code></p>
 
-<p></span>
+</span>
 
 <p>If set to true, db4o will try to optimize native queries
 dynamically at query execution time, otherwise it will run native queries in
@@ -544,13 +543,13 @@ unoptimized mode as SODA evaluations. For more information see
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public boolean OptimizeNativeQueries();</code></p>
 
-<p></span>
+</span>
 
 <p>returns true if native queries will be optimized
 dynamically. For more information see <a href="../native_query_optimization.html" class="wikiLink">Native Query Optimization</a>.</p>
@@ -559,13 +558,13 @@ dynamically. For more information see <a href="../native_query_optimization.html
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void Password(string pass);</code></p>
 
-<p></span>
+</span>
 
 <p>protects the database file with a password when
 <a href="../../implementation_strategies/encryption/built-in_simple_encryption.html" class="wikiLink">simple
@@ -576,14 +575,14 @@ encryption</a> is used. This method is deprecated . Please use:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>Db4oFactory.Configure().Io(new
 XTeaEncryptionFileAdapter(password))</code></p>
 
-<p></span>
+</span>
 
 <p>or any of the other XTeaEncryptionFileAdapter constructors.</p>
 
@@ -591,13 +590,13 @@ XTeaEncryptionFileAdapter(password))</code></p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public IQueryConfiguration Queries();</code></p>
 
-<p></span>
+</span>
 
 <p>returns the Query configuration interface. For more
 information see <a href="../../object_lifecycle/querying/query_modes.html" class="wikiLink">Query Modes</a>.</p>
@@ -606,13 +605,13 @@ information see <a href="../../object_lifecycle/querying/query_modes.html" class
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void ReadOnly(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>turns readOnly mode on and off.</p>
 
@@ -624,13 +623,13 @@ database files on CD-ROM.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void ReflectWith(IReflector reflector);</code></p>
 
-<p></span>
+</span>
 
 <p>Configures the use of a specially designed reflection
 implementation.</p>
@@ -644,13 +643,13 @@ see <a href="../../implementation_strategies/db4o_reflection_api.html" class="wi
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void RefreshClasses();</code></p>
 
-<p></span>
+</span>
 
 <p>forces analysis of all Classes during a running session.</p>
 
@@ -668,14 +667,14 @@ ObjectContainer will be refreshed.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void ReserveStorageSpace(long
 byteCount);</code></p>
 
-<p></span>
+</span>
 
 <p>tuning feature only: reserves a number of bytes on creation
 of a database file.</p>
@@ -696,14 +695,14 @@ space to be slightly greater than the anticipated database file size.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void SetBlobPath(string path) throws
 IOException;</code></p>
 
-<p></span>
+</span>
 
 <p>configures the path to be used to store and read Blob data.
 For more information see <a href="../../implementation_strategies/type_handling/blobs.html" class="wikiLink">Blobs</a></p>
@@ -712,13 +711,13 @@ For more information see <a href="../../implementation_strategies/type_handling/
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void SetClassLoader(object classLoader);</code></p>
 
-<p></span>
+</span>
 
 <p>configures db4o to use a custom ClassLoader. This method is
 deprecated, use instead:</p>
@@ -727,25 +726,25 @@ deprecated, use instead:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>ReflectWith(new NetReflector(classLoader)) </code></p>
 
-<p></span>
+</span>
 
 <p><br></p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void SetOut(StreamWriter outStream);</code></p>
 
-<p></span>
+</span>
 
 <p>Assigns a stream to print db4o event messages.</p>
 
@@ -754,32 +753,15 @@ deprecated, use instead:</p>
 
 <p><br></p>
 
- </p>
-
-<span class="net"></p>
-
-<p>.NET:</p>
-
-<p><code>public void TestConstructors(bool flag);</code></p>
-
-<p></span> </p>
-
-<p>tuning feature: configures whether db4o should try to
-instantiate one instance of each persistent class on system startup. For more
-information see <a href="../performance_hints/no_test_instances.html" class="wikiLink">No test instances</a>&nbsp;&nbsp;&nbsp; </p>
 
 
-<p><br></p>
-
-
-
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void Unicode(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>configures the storage format of Strings.</p>
 
@@ -795,13 +777,13 @@ for strings by factor 2 and improves performance.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void UpdateDepth(int depth);</code></p>
 
-<p></span>
+</span>
 
 <p>specifies the global updateDepth. For more information see
 <a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a></p>
@@ -810,13 +792,13 @@ for strings by factor 2 and improves performance.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void WeakReferences(bool flag);</code></p>
 
-<p></span>
+</span>
 
 <p>turns weak reference management on or off. For more
 information see <a href="../performance_hints/turning_off_weak_references.html" class="wikiLink">Turning Off Weak References</a>.</p>
@@ -825,14 +807,14 @@ information see <a href="../performance_hints/turning_off_weak_references.html" 
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>public void WeakReferenceCollectionInterval(int
 milliseconds);</code></p>
 
-<p></span>
+</span>
 
 <p>configures the timer for WeakReference collection.</p>
 
@@ -845,13 +827,13 @@ collection off. For more information see <a href="../../basic_concepts/object_id
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p>public IClientServerConfiguration ClientServer();</p>
 
-<p></span>
+</span>
 
 <p>returns an interface for client/server specific
 configuration.</p>

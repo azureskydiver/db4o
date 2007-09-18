@@ -11,7 +11,7 @@
 
 
 
-<span class="cs"></p><p>c#:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="cs"><p>c#:&nbsp;</p>
 
 <p><code>delegateAdapter = new
 RandomAccessFileAdapter();</code></p>
@@ -19,9 +19,9 @@ RandomAccessFileAdapter();</code></p>
 <p><code>Db4oFactory.Configure().Io(new
 CachedIoAdapter(delegateAdapter));</code></p>
 
-<p></span>
+</span>
 
-<span class="vb"></p>
+<span name="cs_wiki_filter" csw_filters="vb">
 <p>VB:&nbsp;</p>
 
 
@@ -33,7 +33,7 @@ RandomAccessFileAdapter();</code></p>
 CachedIoAdapter(delegateAdapter));</code></p>
 
 
-<p></span>
+</span>
 
 
 <p>This will create 64 pages in memory of 1024 bytes each, resulting
@@ -43,19 +43,19 @@ in 64 kB of memory available for caching. </p>
 
 
 
-<span class="cs"></p><p>c#:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="cs"><p>c#:&nbsp;</p>
 
 <p><code>Db4oFactory.Configure().Io(new
 CachedIoAdapter(delegateAdapter, page_size, page_count));</code></p>
 
-<p></span>
+</span>
 
-<span class="vb"></p><p>VB:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="vb"><p>VB:&nbsp;</p>
 
 <p><code>Db4oFactory.Configure().Io(new
 CachedIoAdapter(delegateAdapter, page_size, page_count));</code></p>
 
-<p></span>
+</span>
 
 <p>Optimal cache size depends on many factors (application design, system resources etc) and will show
 different results for different disc access operations (read/write). The best

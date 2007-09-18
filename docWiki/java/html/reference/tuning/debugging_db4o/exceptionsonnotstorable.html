@@ -9,17 +9,17 @@
       <div class="CommonContentArea">
         <h1>ExceptionsOnNotStorable</h1>
 <p>There is another setting that can be of great value in debug process:</p>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>configuration.exceptionsOnNotStorable (true)</code> </p>
-<p></span>
+</span>
 
 
 <p>In some environments (especially those that provide plugin mechanics or perform some kind of class reloading) you may encounter strange problems due to classloader issues. These environments include servlet containers, Eclipse plugins, reloading JUnit test runners, etc. </p>
 <p>In most of those cases db4o will fail quietly (i.e. will not deliver any results on queries), unless you have configured #exceptionsOnNotStorable(true) - then you may see messages related to not being able to store db4o internal classes or set db4o internal translators, etc. </p>
 <p>Db4o uses the context classloader by default. This is an appropriate choice in most situations, but it's not really reliable, since the concrete context classloader depends on the environment you're running in. Therefore you can explicitly specify the classloader to be used for db4o operation by calling</p>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>configuration.reflectWith(new JdkReflector(classLoader)) </code></p>
-<p></span>
+</span>
 
 
 <p>Basically you just have to find out the appropriate classloader and configure db4o accordingly. The right choice depends on the specific classloader hierarchy of your application context. Two examples:</p>
@@ -50,9 +50,9 @@ add a zero-parameter constructor specifically for db4o; </li>
 <li>add a custom translator. </li>
 </ul>
 <p>If you need to quickly implement a solution for one of the JDK classes, and querying members is not an issue, you may choose to use the built-in serializable translator. Here is an example, how this is done for java.net.URL:</p>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>configuration.objectClass("java.net.URL").translate(new TSerializable());</code> </p>
-<p></span>
+</span>
 
 
 <p>The above code needs to be executed every time before the db4o engine is started. See also:<a href="../../object_lifecycle/object_construction.html" class="wikiLink">Constructors</a>, <a href="../../implementation_strategies/translators.html" class="wikiLink">Translators</a>.</p>

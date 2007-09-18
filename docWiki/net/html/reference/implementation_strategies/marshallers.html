@@ -15,34 +15,34 @@ marshallers through a plug-in interface:</p>
 
 
 
-<span class="cs"></p><p>c#:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="cs"><p>c#:&nbsp;</p>
 
 <p><code>Db4oFactory.Configure().ObjectClass(typeof(YourClass)).MarshallWith(yourMarshaller);</code></p>
 
-<p></span><span class="vb"></p><p>VB:&nbsp;</p>
+</span><span name="cs_wiki_filter" csw_filters="vb"><p>VB:&nbsp;</p>
 
 
 <p><code>Db4oFactory.Configure().ObjectClass(GetType(YourClass)).MarshallWith(yourMarshaller)</code></p>
 
 
-<p></span><p>Custom marshaller provides a functionality to convert object fields to a byte array and back. This approach allows to achieve a better performance due to the following:</p><ul><li>reflection is not used to detect object fields;</li><li>only the required fields need to be marshalled.<br></li></ul><p>However there are certain limitations:</p><ul><li>custom marshaller is not compatible with the use of a translator;</li><li>quering for fields is not possible when a custom marshaller is used.&nbsp;</li></ul>
+</span><p>Custom marshaller provides a functionality to convert object fields to a byte array and back. This approach allows to achieve a better performance due to the following:</p><ul><li>reflection is not used to detect object fields;</li><li>only the required fields need to be marshalled.<br></li></ul><p>However there are certain limitations:</p><ul><li>custom marshaller is not compatible with the use of a translator;</li><li>quering for fields is not possible when a custom marshaller is used.&nbsp;</li></ul>
 
 <p>Custom marshallers should implement
 an ObjectMarshaller interface:</p>
 
 
 
-<span class="cs"></p><p>c#:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="cs"><p>c#:&nbsp;</p>
 
 <p><code> public class CustomMarshaller: IObjectMarshaller</code></p>
 
-<p></span><span class="vb"></p><p>VB:&nbsp;</p>
+</span><span name="cs_wiki_filter" csw_filters="vb"><p>VB:&nbsp;</p>
 
 
 <p><code> Class CustomMarshaller</code> </p><p><code>Implements IObjectMarshaller</code></p>
 
 
-<p></span>
+</span>
 <p>To simplify the task of creating
 custom marshallers db4o provides a <a href="https://source.db4o.com/db4o/trunk/db4oj/core/src/com/db4o/foundation/PrimitiveCodec.java">PrimitiveCodec</a> class,
 which implements write and read functions for int and long values.</p><p><div class="childTopicList">More Reading:<ul>

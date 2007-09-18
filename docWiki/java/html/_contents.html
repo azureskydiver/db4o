@@ -103,7 +103,16 @@ background-color:#838383;
                 <li><a target="content" href="reference/object_lifecycle/class_name_format_in_.net.html">Class Name Format In .NET</a><ul></ul>
                 </li>
                 <li><a target="content" href="reference/object_lifecycle/querying.html">Querying</a><ul>
-                    <li><a target="content" href="reference/object_lifecycle/querying/query_by_example.html">Query By Example</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/querying/query_by_example.html">Query By Example</a><ul>
+                        <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations.html">QBE Limitations</a><ul>
+                            <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations/pilot1.html">Pilot1</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations/pilot1derived.html">Pilot1Derived</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations/pilot2.html">Pilot2</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations/pilot2derived.html">Pilot2Derived</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
                     <li><a target="content" href="reference/object_lifecycle/querying/soda_query_api.html">SODA Query API</a></li>
                     <li><a target="content" href="reference/object_lifecycle/querying/native_queries.html">Native Queries</a><ul>
                         <li><a target="content" href="reference/object_lifecycle/querying/native_queries/native_query_syntax.html">Native Query Syntax</a><ul>
@@ -147,10 +156,13 @@ background-color:#838383;
                     <li><a target="content" href="reference/object_lifecycle/activation/collections_activation.html">Collections Activation</a></li>
                     <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework.html">Transparent Activation Framework</a><ul>
                         <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_implementation.html">TA Implementation</a></li>
-                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/simple_example.html">Simple Example</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/bytecode_instrumentation_example.html">Bytecode Instrumentation Example</a><ul>
+                            <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/bytecode_instrumentation_example/sensorpanelta.html">SensorPanelTA</a></li>
+                          </ul>
+                        </li>
+                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/detailed_example.html">Detailed Example</a></li>
                         <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/collection_example.html">Collection Example</a></li>
                         <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_diagnostics.html">TA Diagnostics</a></li>
-                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/bytecode_instrumentation_example.html">Bytecode Instrumentation Example</a></li>
                       </ul>
                     </li>
                   </ul>
@@ -190,6 +202,8 @@ background-color:#838383;
                     </li>
                     <li><a target="content" href="reference/implementation_strategies/maintenance/updating_db4o_file_format.html">Updating Db4o File Format</a><ul></ul>
                     </li>
+                    <li><a target="content" href="reference/implementation_strategies/maintenance/system_info.html">System Info</a><ul></ul>
+                    </li>
                     <li><a target="content" href="reference/implementation_strategies/maintenance/backup.html">Backup</a></li>
                   </ul>
                 </li>
@@ -197,6 +211,7 @@ background-color:#838383;
                     <li><a target="content" href="reference/implementation_strategies/type_handling/collections.html">Collections</a><ul>
                         <li><a target="content" href="reference/implementation_strategies/type_handling/collections/built-in_db4o_collections.html">Built-in db4o collections</a></li>
                         <li><a target="content" href="reference/implementation_strategies/type_handling/collections/fast_collections.html">Fast collections</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/collections/collections_or_arrays.html">Collections Or Arrays</a></li>
                       </ul>
                     </li>
                     <li><a target="content" href="reference/implementation_strategies/type_handling/blobs.html">Blobs</a><ul>
@@ -247,11 +262,23 @@ background-color:#838383;
                 </li>
                 <li><a target="content" href="reference/implementation_strategies/translators.html">Translators</a><ul>
                     <li><a target="content" href="reference/implementation_strategies/translators/java_example_class.html">Java Example Class</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/translators/.net_example_class.html">.NET Example Class</a></li>
                     <li><a target="content" href="reference/implementation_strategies/translators/the_translator_api.html">The Translator API</a><ul>
                         <li><a target="content" href="reference/implementation_strategies/translators/the_translator_api/objectconstructor.html">ObjectConstructor</a></li>
                       </ul>
                     </li>
+                    <li><a target="content" href="reference/implementation_strategies/translators/.net_translator_implementation.html">.NET Translator Implementation</a></li>
                     <li><a target="content" href="reference/implementation_strategies/translators/java_translator_implementation.html">Java Translator Implementation</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators.html">Built-In Translators</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/tnull_translator.html">TNull Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/collection_translators.html">Collection Translators</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/tserializable_translator.html">TSerializable Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/ttransient_translator.html">TTransient Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/tcultureinfo_translator.html">TCultureInfo Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/ttype_translator.html">TType Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/tclass_translator.html">TClass Translator</a></li>
+                      </ul>
+                    </li>
                   </ul>
                 </li>
                 <li><a target="content" href="reference/implementation_strategies/marshallers.html">Marshallers</a><ul>
@@ -309,6 +336,7 @@ background-color:#838383;
                     <li><a target="content" href="reference/implementation_strategies/aliases/typealias.html">TypeAlias</a></li>
                     <li><a target="content" href="reference/implementation_strategies/aliases/wildcardalias.html">WildcardAlias</a></li>
                     <li><a target="content" href="reference/implementation_strategies/aliases/cross-platform_aliasing.html">Cross-Platform Aliasing</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/aliases/cross-platform_aliasing_from_.net_to_java.html">Cross-Platform Aliasing From .NET To Java</a></li>
                   </ul>
                 </li>
                 <li><a target="content" href="reference/implementation_strategies/encryption.html">Encryption</a><ul>
@@ -368,7 +396,18 @@ background-color:#838383;
             </li>
             <li><a target="content" href="reference/platform_specific_issues.html">Platform Specific Issues</a><ul>
                 <li><a target="content" href="reference/platform_specific_issues/db4o_on_java_platforms.html">db4o on Java Platforms</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/security_requirements_on_java_platform.html">Security Requirements On Java Platform</a></li>
                 <li><a target="content" href="reference/platform_specific_issues/db4o_on_.net_platforms.html">db4o on .NET Platforms</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/security_requirements_on_.net_platform.html">Security Requirements On .NET Platform</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/deployment_instructions.html">Deployment Instructions</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/db4o_on_mono.html">Db4o On Mono</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/cross-platform_applications.html">Cross-Platform Applications</a><ul>
+                    <li><a target="content" href="reference/platform_specific_issues/cross-platform_applications/configuration.html">Configuration</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/cross-platform_applications/limitations_of_db4o_cross-platform_usage.html">Limitations Of Db4o Cross-Platform Usage</a></li>
+                  </ul>
+                </li>
                 <li><a target="content" href="reference/platform_specific_issues/symbian_os.html">Symbian OS</a><ul></ul>
                 </li>
                 <li><a target="content" href="reference/platform_specific_issues/servlets.html">Servlets</a><ul></ul>
@@ -382,7 +421,25 @@ background-color:#838383;
                     <li><a target="content" href="reference/platform_specific_issues/classloader_issues/special_cases.html">Special Cases</a></li>
                   </ul>
                 </li>
-                <li><a target="content" href="reference/platform_specific_issues/database_for_osgi.html">Database For OSGi</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/database_for_osgi.html">Database For OSGi</a><ul>
+                    <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/db4o-osgi_usage.html">Db4o-Osgi Usage</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service.html">Eclipse Plug-In With Db4o Service</a><ul>
+                        <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/creating_a_plugin.html">Creating A Plugin</a></li>
+                        <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/code_overview.html">Code Overview</a></li>
+                        <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/connecting_to_db4o.html">Connecting To Db4o</a></li>
+                        <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/testing_memoplugin.html">Testing MemoPlugin</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/isolated_storage.html">Isolated Storage</a><ul>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/isolated_storage_io_adapter.html">Isolated Storage IO Adapter</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/isolated_storage_example.html">Isolated Storage Example</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/benefits_and_limitations.html">Benefits And Limitations</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/db4oisolatedstoragefile.html">Db4oIsolatedStorageFile</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/isolatedstoragefileadapter.html">IsolatedStorageFileAdapter</a></li>
+                  </ul>
+                </li>
               </ul>
             </li>
             <li><a target="content" href="reference/tuning.html">Tuning</a><ul>
@@ -430,12 +487,17 @@ background-color:#838383;
                     <li><a target="content" href="reference/tuning/performance_hints/no_class_index.html">No Class Index</a></li>
                     <li><a target="content" href="reference/tuning/performance_hints/no_field_evaluation.html">No Field Evaluation</a></li>
                     <li><a target="content" href="reference/tuning/performance_hints/randomaccessfileadapter.html">RandomAccessFileAdapter</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/commit_strategies.html">Commit Strategies</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/optimizing_native_queries.html">Optimizing Native Queries</a></li>
                   </ul>
                 </li>
                 <li><a target="content" href="reference/tuning/debugging_db4o.html">Debugging db4o</a><ul>
                     <li><a target="content" href="reference/tuning/debugging_db4o/debug_messaging_system.html">Debug Messaging System</a></li>
                     <li><a target="content" href="reference/tuning/debugging_db4o/customizing_the_debug_message_output.html">Customizing The Debug Message Output</a></li>
                     <li><a target="content" href="reference/tuning/debugging_db4o/exceptionsonnotstorable.html">ExceptionsOnNotStorable</a></li>
+                    <li><a target="content" href="reference/tuning/debugging_db4o/using_dtrace.html">Using DTrace</a></li>
+                    <li><a target="content" href="reference/tuning/debugging_db4o/reading_db4o_file.html">Reading Db4o File</a><ul></ul>
+                    </li>
                   </ul>
                 </li>
                 <li><a target="content" href="reference/tuning/diagnostics.html">Diagnostics</a><ul>
@@ -466,13 +528,26 @@ background-color:#838383;
               </ul>
             </li>
             <li><a target="content" href="reference/usage_pitfalls.html">Usage Pitfalls</a><ul>
-                <li><a target="content" href="reference/usage_pitfalls/accessing_persistent_classes_from_different_.net_applications.html">Accessing Persistent Classes From Different .NET Applications</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/activation_depth.html">Activation Depth</a><ul>
+                    <li><a target="content" href="reference/usage_pitfalls/activation_depth/equality_comparison.html">Equality Comparison</a><ul>
+                        <li><a target="content" href="reference/usage_pitfalls/activation_depth/equality_comparison/qbe.html">QBE</a></li>
+                        <li><a target="content" href="reference/usage_pitfalls/activation_depth/equality_comparison/using_equals.html">Using Equals</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/usage_pitfalls/reference_cache_in_client-server_mode.html">Reference Cache In Client-Server Mode</a><ul></ul>
+                </li>
                 <li><a target="content" href="reference/usage_pitfalls/storing_bigdecimal.html">Storing BigDecimal</a><ul></ul>
                 </li>
                 <li><a target="content" href="reference/usage_pitfalls/storing_marshalbyref_objects.html">Storing MarshalByRef Objects</a><ul></ul>
                 </li>
                 <li><a target="content" href="reference/usage_pitfalls/storing_timestamp_and_date_values.html">Storing Timestamp And Date Values</a><ul></ul>
                 </li>
+                <li><a target="content" href="reference/usage_pitfalls/accessing_persistent_classes_from_different_.net_applications.html">Accessing Persistent Classes From Different .NET Applications</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/dangerous_practices.html">Dangerous Practices</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/update_depth.html">Update Depth</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/working_with_large_amounts_of_data.html">Working With Large Amounts Of Data</a></li>
               </ul>
             </li>
             <li><a target="content" href="reference/client-server.html">Client-Server</a><ul>
@@ -553,6 +628,7 @@ background-color:#838383;
                     <li><a target="content" href="reference/db4o_replication_system_drs/advanced_replication_strategies/deleted_objects_replication.html">Deleted Objects Replication</a></li>
                   </ul>
                 </li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/deployment_instructions.html">Deployment Instructions</a></li>
                 <li><a target="content" href="reference/db4o_replication_system_drs/license.html">License</a></li>
               </ul>
             </li>
@@ -564,7 +640,13 @@ background-color:#838383;
             </li>
             <li><a target="content" href="reference/object_manager_for_db4o.html">Object Manager For db4o</a><ul>
                 <li><a target="content" href="reference/object_manager_for_db4o/installation.html">Installation</a></li>
+                <li><a target="content" href="reference/object_manager_for_db4o/object_manager_specifics.html">Object Manager Specifics</a></li>
                 <li><a target="content" href="reference/object_manager_for_db4o/object_manager_tour.html">Object Manager Tour</a></li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/db4oadmin_utility.html">Db4oAdmin Utility</a><ul>
+                <li><a target="content" href="reference/db4oadmin_utility/db4oadmin_usage.html">Db4oAdmin Usage</a></li>
+                <li><a target="content" href="reference/db4oadmin_utility/including_db4oadmin_in_the_build.html">Including Db4oAdmin In The Build</a></li>
               </ul>
             </li>
             <li><a target="content" href="reference/working_with_source_code.html">Working With Source Code</a><ul>

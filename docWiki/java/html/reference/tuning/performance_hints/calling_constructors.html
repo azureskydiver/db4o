@@ -9,9 +9,9 @@
       <div class="CommonContentArea">
         <h1>Calling constructors</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
 
-<span class="java"></p>
-<p>Java: <code>Db4o.configure().callConstructors(true)</code></p>
-<p></span>
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java: </p><p><code>Db4o.configure().callConstructors(true)</code></p>
+</span>
 
 
 <a name="Advantage"></a><h2>Advantage</h2>
@@ -25,15 +25,15 @@ On VMs where this is supported (Sun Java VM &gt; 1.4, .NET, Mono) db4o tries to 
 <p>
 Constructors can also be turned on for individual classes only with</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: <code>Db4o.configure().objectClass(Foo.class).callConstructor(true)</code></p>
-<p></span>
+</span>
 
 
 <p>There are some classes (e.g. java.util.Calendar) that require a constructor to be called to work. Further details can be found in the <a href="../../object_lifecycle/object_construction.html" class="wikiLink">Constructors</a>  chapter</p></div>
     </div>
     <div id="footer">
-					This revision (12) was last Modified 2007-05-07T15:25:33 by Tetyana.
+					This revision (13) was last Modified 2007-08-04T11:34:14 by Tetyana.
 				</div>
   </body>
 </html>

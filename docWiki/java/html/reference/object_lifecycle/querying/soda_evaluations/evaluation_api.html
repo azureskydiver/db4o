@@ -14,11 +14,11 @@
 
 <p>The Evaluation interface contains a single method only:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java: <code>public void evaluate(Candidate candidate)</code> </p>
 
-<p></span>
+</span>
 
 
 
@@ -27,16 +27,16 @@
 <p>
 The Candidate interface provides three methods:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p> <code>public Object getObject()
 </p><p>public void include(boolean flag)
 </p><p>public ObjectContainer objectContainer()</code>
-</p><p></span>
+</p></span>
 
-
+<p></p>
 
 <p>An Evaluation implementation may call getObject() to retrieve the actual object instance to be evaluated, it may call include() to instruct db4o whether or not to include this object in the current candidate set, and finally it may access the current database directly by calling objectContainer().</p></div>
     </div>

@@ -8,7 +8,7 @@
     <div class="CommonContent">
       <div class="CommonContentArea">
         <h1>Native Queries In Client-Server Mode</h1><p><font color="#990000">This topic applies to java version only</font>&nbsp;</p>
-<span class="java">A quite subtle problem may occur if
+<p><span name="cs_wiki_filter" csw_filters="java">A quite subtle problem may occur if
 you're using Native Queries as anonymous (or just non-static)
 inner classes in Client/Server mode. Anonymous/non-static inner class
 instances carry a synthetic field referencing their outer class
@@ -31,7 +31,7 @@ classes only. Alternatively, you could either make sure that the
 outer classes containing Predicate definitions could principally be
 persisted to db4o, too, and don't add significant overhead to the
 predicate (the appropriate value for 'significant' being your choice) or ensure during development that all predicates used actually can be optimized to S.O.D.A. form.</p>
-<p></span></div>
+<p></span></p></div>
     </div>
     <div id="footer">
 					This revision (12) was last Modified 2007-05-09T07:30:32 by Tetyana.
