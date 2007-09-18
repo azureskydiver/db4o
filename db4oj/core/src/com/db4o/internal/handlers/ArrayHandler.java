@@ -239,36 +239,31 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         return this;
     }
 
-    public void readCandidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) throws Db4oIOException {
-        mf._array.readCandidates(this, reader, candidates);
+    public void readCandidates(int handlerVersion, Buffer reader, QCandidates candidates) throws Db4oIOException {
+        reader.seek(reader.readInt());
+        readSubCandidates(handlerVersion, reader, candidates);
     }
     
-    public void read1Candidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) {
+    public void readSubCandidates(int handlerVersion, Buffer reader, QCandidates candidates) {
         if(Deploy.debug){
             reader.readBegin(identifier());
         }
-        
         IntByRef elements = new IntByRef();
-        Object ret = readCreate(candidates.i_trans, reader, elements);
-        if(ret != null){
-            for (int i = 0; i < elements.value; i++) {
-                QCandidate qc = _handler.readSubCandidate(mf, reader, candidates, true);
-                if(qc != null){
-                    candidates.addByIdentity(qc);
-                }
+        Object arr = readCreate(candidates.i_trans, reader, elements);
+        if(arr == null){
+            return;
+        }
+        readSubCandidates(handlerVersion, reader, candidates, elements.value);
+    }
+
+    protected void readSubCandidates(int handlerVersion, Buffer reader, QCandidates candidates, int count) {
+        QueryingReadContext context = new QueryingReadContext(candidates.transaction(), handlerVersion, reader);
+        for (int i = 0; i < count; i++) {
+            QCandidate qc = candidates.readSubCandidate(context, _handler);
+            if(qc != null){
+                candidates.addByIdentity(qc);
             }
         }
-    }
-    
-    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
-        reader.incrementOffset(linkLength());
-        
-        return null;
-        
-        // TODO: Here we should theoretically read through the array and collect candidates.
-        // The respective construct is wild: "Contains query through an array in an array."
-        // Ignore for now.
-        
     }
     
     final int readElementsAndClass(Transaction trans, ReadBuffer buffer, ReflectClassByRef clazz){

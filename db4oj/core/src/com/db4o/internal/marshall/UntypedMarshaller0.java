@@ -4,7 +4,6 @@ package com.db4o.internal.marshall;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.query.processor.*;
 
 
 /**
@@ -72,10 +71,6 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
                 }
             }
         }
-        return null;
-    }
-
-    public QCandidate readSubCandidate(Buffer reader, QCandidates candidates, boolean withIndirection) {
         return null;
     }
 

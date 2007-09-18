@@ -5,7 +5,6 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 
 
@@ -82,13 +81,6 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         return classMetadata.readObjectID(context);
     }
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
-        if(mf._untyped.useNormalClassRead()){
-            return super.readSubCandidate(mf, reader, candidates, withIndirection);
-        }
-        return mf._untyped.readSubCandidate(reader, candidates, withIndirection);
-    } 
-	
     public void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
         if(mf._untyped.useNormalClassRead()){
             super.defrag(mf,readers, redirect);

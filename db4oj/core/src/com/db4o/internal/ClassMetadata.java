@@ -1442,33 +1442,25 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return id == 0 ? ObjectID.IS_NULL : new ObjectID(id);
     }
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
-        int id = reader.readInt();
-        if(id == 0){
-            return null;
-        }
-        return new QCandidate(candidates, null, id, true);
-    } 
-
-    public void readCandidates(MarshallerFamily mf, final Buffer a_bytes, final QCandidates a_candidates) {
+    public void readCandidates(int handlerVersion, final Buffer buffer, final QCandidates candidates) {
         int id = 0;
 
-        int offset = a_bytes._offset;
+        int offset = buffer._offset;
         try {
-            id = a_bytes.readInt();
+            id = buffer.readInt();
         } catch (Exception e) {
         }
-        a_bytes._offset = offset;
+        buffer._offset = offset;
 
         if (id != 0) {
-            final Transaction trans = a_candidates.i_trans;
+            final Transaction trans = candidates.i_trans;
             Object obj = trans.container().getByID(trans, id);
             if (obj != null) {
 
-                a_candidates.i_trans.container().activate(trans, obj, 2);
+                candidates.i_trans.container().activate(trans, obj, 2);
                 Platform4.forEachCollectionElement(obj, new Visitor4() {
                     public void visit(Object elem) {
-                        a_candidates.addByIdentity(new QCandidate(a_candidates, elem, trans.container().getID(trans, elem), true));
+                        candidates.addByIdentity(new QCandidate(candidates, elem, trans.container().getID(trans, elem), true));
                     }
                 });
             }

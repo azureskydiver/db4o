@@ -4,7 +4,6 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 
 
@@ -21,8 +20,6 @@ public interface TypeHandler4 extends Comparable4 {
     
 	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer buffer, boolean toArray) throws CorruptionException, Db4oIOException;
 	
-    QCandidate readSubCandidate(MarshallerFamily mf, Buffer buffer, QCandidates candidates, boolean withIndirection);
-
 	void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
 
 	Object read(ReadContext context);

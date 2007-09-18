@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
@@ -61,17 +60,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     }
 
     abstract Object read1(Buffer reader) throws CorruptionException;
-
-    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
-        try {
-            Object obj = readQuery(candidates.i_trans, mf, withIndirection, reader, true);
-            if(obj != null){
-                return new QCandidate(candidates, obj, 0, true);
-            }
-        } catch (CorruptionException e) {
-        }
-        return null;
-    } 
 
     public Object readIndexEntry(Buffer a_reader) {
         try {

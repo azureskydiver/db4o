@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 
 
@@ -16,6 +17,18 @@ public class ArrayHandler0 extends ArrayHandler {
 
     public ArrayHandler0(TypeHandler4 template) {
         super(template);
+    }
+    
+    public void readCandidates(int handlerVersion, Buffer reader, QCandidates candidates) throws Db4oIOException {
+        Transaction transaction = candidates.transaction();
+        Buffer arrayBuffer = reader.readEmbeddedObject(transaction);
+        if(Deploy.debug){
+            arrayBuffer.readBegin(identifier());
+        }
+        int count = elementCount(transaction, arrayBuffer);
+        for (int i = 0; i < count; i++) {
+            candidates.addByIdentity(new QCandidate(candidates, null, arrayBuffer.readInt(), true));
+        }
     }
 
     public Object read(ReadContext readContext) {

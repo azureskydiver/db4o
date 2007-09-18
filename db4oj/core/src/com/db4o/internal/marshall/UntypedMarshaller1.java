@@ -4,7 +4,6 @@ package com.db4o.internal.marshall;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.query.processor.*;
 
 /**
  * @exclude
@@ -97,29 +96,6 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         }
         return ret;
     }
-    
-    public QCandidate readSubCandidate(Buffer reader, QCandidates candidates, boolean withIndirection) {
-        int payLoadOffSet = reader.readInt();
-        if(payLoadOffSet == 0){
-            return null;
-        }
-        
-        QCandidate ret = null;
-
-        int linkOffSet = reader._offset;
-        reader._offset = payLoadOffSet;
-        
-        int yapClassID = reader.readInt();
-        
-        ClassMetadata yc = candidates.i_trans.container().classMetadataForId(yapClassID);
-        if(yc != null){
-            ret = yc.readSubCandidate(_family, reader, candidates, false);
-        }
-        reader._offset = linkOffSet;
-        
-        return ret;
-    }
-
     
 	public void defrag(BufferPair readers) {
         int payLoadOffSet = readers.readInt();
