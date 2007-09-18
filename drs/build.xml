@@ -33,8 +33,7 @@
 	<property file="${dir.workspace}/db4obuild/ant.properties" />
 	<import file="${dir.workspace}/db4obuild/common.xml" optional="true"/>
 	
-	<target name="drs.properties" if="db4obuild.available">
-		<svnRevision property="svn.revision" />
+	<target name="drs.properties" if="db4obuild.available" depends="get-svn-revision">
 		<echo>Revision: ${svn.revision}</echo>
 		<tstamp>
 			<format property="db4o.iteration" pattern="w" offset="-29" unit="week"/>
@@ -43,7 +42,12 @@
 		<property name="drs.version.dotted" 
 			value="${drs.version.major}.${drs.version.minor}.${db4o.iteration}.${svn.revision}" />
 	</target>
-	
+
+	<target name="get-svn-revision" unless="svn.revision">
+		<svnRevision property="svn.revision" />
+		<echo>Revision: ${svn.revision}</echo>
+	</target>
+
 	<target name="init" depends="drs.properties">
 		<property name="drs.version.dotted" value="${drs.version.major}.${drs.version.minor}" />
 		<property name="db4o.version.dotted" value="${drs.version.dotted}" />
