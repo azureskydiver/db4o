@@ -204,7 +204,19 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         }
         return _handler.readQuery(trans, mf, withRedirection, buffer, toArray);
     }
-
+    
+    public ObjectID readObjectID(InternalReadContext context){
+        if(_handler instanceof ClassMetadata){
+            return ((ClassMetadata)_handler).readObjectID(context);
+        }
+        if(_handler instanceof ArrayHandler){
+            // TODO: Here we should theoretically read through the array and collect candidates.
+            // The respective construct is wild: "Contains query through an array in an array."
+            // Ignore for now.
+            return ObjectID.IGNORE;
+        }
+        return ObjectID.NOT_POSSIBLE;
+    }
     
     public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         return _handler.readSubCandidate(mf, reader, candidates, withIndirection);

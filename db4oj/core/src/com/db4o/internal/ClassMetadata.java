@@ -1437,6 +1437,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return null;
     }
     
+    public ObjectID readObjectID(InternalReadContext context){
+        int id = context.readInt();
+        return id == 0 ? ObjectID.IS_NULL : new ObjectID(id);
+    }
+    
     public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         int id = reader.readInt();
         if(id == 0){
