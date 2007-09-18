@@ -18,34 +18,34 @@
 
 <p>Semaphores can be set and released with the following two methods:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
  
 <p><code>ExtObjectContainer#setSemaphore(String name, int waitMilliSeconds);<br>ExtObjectContainer#releaseSemaphore(String name); </code></p>
 
-<p></span>
+</span>
 
 
 <a name="OO Languages Semaphores&nbsp;"></a><h2>OO Languages Semaphores&nbsp;</h2>
 The concept of db4o semaphores is very similar to the concept of synchronization in OO programming languages: 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java: </p>
 <p><code>synchronized(monitorObject){ <br><br>// exclusive code block here
 <br><br>}</code></p>
 
-<p></span>
+</span>
 
 
 
 <a name="db4o Semaphore"></a><h2>db4o Semaphore</h2>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 <p><code>if(objectContainer.ext().setSemaphore(semaphoreName, 1000){<br><br>// exclusive code block here<br>objectContainer.ext().releaseSemaphore(semaphoreName);<br>} </code></p>
 
-<p></span>
+</span>
 
 
 

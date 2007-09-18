@@ -9,7 +9,7 @@
       <div class="CommonContentArea">
         <h1>Using CachedIoAdapter</h1><p>CachedIoAdapter can be set up using the following code:</p>
 
-<span class="java"></p><p>Java:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
 
 <p><code>delegateAdapter = new
 RandomAccessFileAdapter();</code></p>
@@ -17,7 +17,7 @@ RandomAccessFileAdapter();</code></p>
 <p><code>Db4o.configure().io(new
 CachedIoAdapter(delegateAdapter));</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -29,12 +29,12 @@ in 64 kB of memory available for caching. </p>
 
 <p>You can customize the amount of available memory using:</p>
 
-<span class="java"></p><p>Java:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
 
 <p><code>Db4o.configure().io(new
 CachedIoAdapter(delegateAdapter, page_size, page_count));</code></p>
 
-<p></span>
+</span>
 
 
 

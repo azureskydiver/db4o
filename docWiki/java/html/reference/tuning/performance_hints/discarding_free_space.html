@@ -9,9 +9,9 @@
       <div class="CommonContentArea">
         <h1>Discarding Free Space</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: <code>Db4o.configure().freespace().discardSmallerThan(byteCount)</code></p>
-<p></span>
+</span>
 
 <p>Configures the minimum size of free space slots in the database file that are to 
 be reused. </p>
@@ -28,9 +28,9 @@ When objects are updated or deleted, the space previously occupied in the databa
 <a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
 <p>
 Regular defragment will also keep the number of free space slots small. See:</p>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: <code>com.db4o.defragment.Defragment</code></p>
-<p></span>
+</span>
 
 <p>If defragment can be frequently run, it will also reclaim lost space and decrease the database file to the minimum size. Therefore #discardSmallerThan(maxValue) may be a good tuning mechanism for setups with frequent defragment runs.</p></div>
     </div>

@@ -9,13 +9,13 @@
       <div class="CommonContentArea">
         <h1>Reserving Storage Space</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java: </p>
 
 <p><code>configuration.reserveStorageSpace(byteCount)</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -52,14 +52,14 @@ storage space to be slightly greater than the anticipated database file size.</p
 
 <p>An alternative strategy can be to use MemoryIoAdapter:</p>
 
-<span class="java"></p><p>Java:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
 
 <p><code>MemoryIoAdapter
 adapter = new MemoryIoAdapter();</code></p>
 
 <p><code>configuration.io(adapter);</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -67,11 +67,11 @@ adapter = new MemoryIoAdapter();</code></p>
 <p>You can control the
 growth of the memory file by:</p>
 
-<span class="java"></p><p>Java:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
 
 <p><code>adapter.growBy(100);</code></p>
 
-<p></span>
+</span>
 
 
 

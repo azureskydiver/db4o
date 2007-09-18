@@ -28,18 +28,18 @@ object. db4o will return all of the objects which match all non-default field
 values. This is done via reflecting all of the fields and building a query 
 expression where all non-default-value fields are combined with AND expressions. 
 Here's a simple example:</p>
-<span class="java"></p>
-<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">PersistentExample.java: <span class="fscMemberName">retrievePilotByName</span></span></div><div class="fscCode"><pre ID="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72"><div><!--
+<span name="cs_wiki_filter" csw_filters="java">
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">PersistentExample.java: <span class="fscMemberName">retrievePilotByName</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72"><div><!--
 
 Code highlighting produced by Actipro CodeHighlighter (freeware)
 http://www.CodeHighlighter.com/
 
---><span style="color: #008080;">1</span><img id="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Open_Text').style.display='none'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Closed_Image').style.display='inline'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Closed_Text').style.display='inline';"/><img id="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Closed_Text').style.display='none'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Open_Image').style.display='inline'; document.getElementById('QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> retrievePilotByName(ObjectContainer container) </span><span id="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="QueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_375_72_67_188_Open_Text"><span style="color: #000000;">{
+--><span style="color: #008080;">1</span><img id="ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> retrievePilotByName(ObjectContainer container) </span><span id="ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceObject_LifecycleQueryingqueriesJava.ZipsPersistentExample.Java_PersistentExample.Java_RetrievePilotByName_399_72_67_188_Open_Text"><span style="color: #000000;">{
 </span><span style="color: #008080;">2</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Pilot proto </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Pilot(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Michael Schumacher</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">, </span><span style="color: #000000;">0</span><span style="color: #000000;">);
 </span><span style="color: #008080;">3</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectSet result </span><span style="color: #000000;">=</span><span style="color: #000000;"> container.get(proto);
 </span><span style="color: #008080;">4</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    listResult(result);
 </span><span style="color: #008080;">5</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>  }</span></span></div></pre></div></div>
-<p></span>
+</span>
 
 
 <p>Querying 
@@ -52,18 +52,16 @@ OR, NOT, etc.)</li>
 <li>You cannot constrain on values like 0 (integers), "" (empty 
 strings), or nulls (reference types) because they would be interpreted as 
 unconstrained.</li>
-<li>You need to be able to create objects without initialized 
-fields. That means you can not initialize fields where they are declared. You 
-can not enforce contracts that objects of a class are only allowed in a 
-well-defined initialized state.</li>
-<li>You need a constructor to create objects 
+<li>You need to be able to create <a href="query_by_example/qbe_limitations.html" class="wikiLink">objects without initialized 
+fields</a>. That means you can not initialize fields where they are declared. <br></li>
+<li>You need a <a href="query_by_example/qbe_limitations.html" class="wikiLink">constructor</a> to create objects 
 without initialized fields.</li>
 </ul>
-<p>To get around all of these constraints, db4o 
-provides the Native Query (NQ) system.</p></div>
+<p>For more information see <a href="query_by_example/qbe_limitations.html" class="wikiLink">QBE Limitations</a>. To get around all of these constraints, db4o 
+provides the [[Native_Queries|Native Query] (NQ) system.</p></div>
     </div>
     <div id="footer">
-					This revision (4) was last Modified 2006-11-14T09:57:01 by Tetyana.
+					This revision (6) was last Modified 2007-09-09T07:02:17 by Tetyana.
 				</div>
   </body>
 </html>

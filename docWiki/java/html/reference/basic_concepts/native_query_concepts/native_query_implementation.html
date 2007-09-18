@@ -16,12 +16,12 @@ realized in practice?</p>
 Suppose we need to find all pilots with the name starting from "M" and points
 over 100. In a native OO language it would be expressed as:</p>
 
-<span class="java"></p><p>Java:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
 
 <p><code>pilot.getName().startsWith("M")
 &amp;&amp; pilot.getPoints() &gt; 100</code></p>
 
-<p></span>In order to pass this condition to a database, collection or
+</span>In order to pass this condition to a database, collection or
 other query processor a special object is used. In .NET2 it is a delegate, in
 Java5 it is a named method. 
 
@@ -29,7 +29,7 @@ Java5 it is a named method.
 
 
 
-<span class="java"></p><p>Java:&nbsp;</p>
+<p><span name="cs_wiki_filter" csw_filters="java"></p><p>Java:&nbsp;</p>
 
 <p><code>public abstract class
 Predicate &lt;ExtentType&gt; {</code></p>
@@ -52,7 +52,7 @@ pilot.getName().contains("M") &amp;&amp; pilot.getPoints() &gt; 100; </code></p>
 
 <p><code>&nbsp;&nbsp;&nbsp; } </code></p>
 
-<p><code>} </code></p><p></span>For more information about NQ implementations in the other
+<p><code>} </code></p><p></span>&nbsp;</p>For more information about NQ implementations in the other
 Java and .NET versions see
 <a href="../../object_lifecycle/querying/native_queries/native_query_syntax.html" class="wikiLink">Native Query Syntax</a>.
 

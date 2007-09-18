@@ -12,21 +12,21 @@
 
 <p>UpdateDepth configuration setting allows you to specify the level of objects' enclosure where update command will still be valid:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java: </p><p><code>configuration.updateDepth(depth)</code></p>
 
-<p></span>
+</span>
 
 
 
 <p>This setting has a considerable impact on performance and can make the application very slow. It is recommended to keep the default configuration setting (UpdateDepth(1)) and specify UpdateDepth for selected classes, where cascaded update will be really useful:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java: </p><p><code>configuration.objectClass(Car.class).updateDepth(3)</code></p>
 
-<p></span>
+</span>
 
 </div>
     </div>

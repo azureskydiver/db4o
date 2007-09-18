@@ -7,9 +7,7 @@
   <body>
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>Exception Types</h1><p>
-
-</p><p>Using db4o you will have to deal with db4o-specific
+        <h1>Exception Types</h1><p>Using db4o you will have to deal with db4o-specific
 exceptions and system exceptions thrown
 directly out of db4o (like OutOfMemory error in Java or System.Exception in
 .NET).</p>
@@ -17,21 +15,21 @@ directly out of db4o (like OutOfMemory error in Java or System.Exception in
 <p>Db4o-specific exceptions are Unchecked exceptions, which all
 inherit from a single root class Db4oException.</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>In Java Unchecked exceptions are inherited from
 RuntimeExceptions class, while in .NET all exceptions are unchecked.</p>
 
-<p></span>
+</span>
 
 <p>Db4o exceptions are chained; you can get the cause of the
 exception using:</p>
 
-<span class="java"></p><p>Java:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
 
 <p><code>db4oException.getCause();</code></p>
 
-<p></span>
+</span>
 
 
 

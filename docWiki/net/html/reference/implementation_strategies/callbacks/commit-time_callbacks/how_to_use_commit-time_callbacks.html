@@ -15,27 +15,27 @@ Commit-time event handlers can be defined:</p>
 
 
 
-<span class="cs"></p>
+<span name="cs_wiki_filter" csw_filters="cs">
 
 <p>c#:&nbsp;</p><p><code> registry.Committing += new
 CommitEventHandler(delegate(object sender, CommitEventArgs args){ ... });</code></p>
 
 <p><code> registry.Committed += new
-CommitEventHandler(delegate(object sender, CommitEventArgs args){ ... });</code></p><p></span>
+CommitEventHandler(delegate(object sender, CommitEventArgs args){ ... });</code></p></span>
 
-<span class="vb"></p><p>VB:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="vb"><p>VB:&nbsp;</p>
 
 
 
 <p><code>AddHandler
 registry.Committing, AddressOf OnCommitting</code></p><p><code>AddHandler
-registry.Committed, AddressOf OnCommitted</code> <br></p><p></span>
+registry.Committed, AddressOf OnCommitted</code> <br></p></span>
 
-<span class="net"></p><p>.NET
+<span name="cs_wiki_filter" csw_filters="net"><p>.NET
 version provides a special event handler - CommitEventHandler - for commit-time
 callbacks.</p>
 
-<p></span>
+</span>
 
 <p>Event
 arguments can be reached through CommitEventArgs

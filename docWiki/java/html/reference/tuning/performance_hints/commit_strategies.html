@@ -1,0 +1,82 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Commit Strategies</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Commit Strategies</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Best Strategies">Best Strategies</a></li></ul></li></ul></div></div></div>
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p>
+
+<p><code>objectContainer.commit();</code></p>
+
+</span>
+
+
+
+<p>Objects created or instantiated within one db4o transaction
+are written to a temporary transaction area in the database file and are only
+durable after the transaction is committed.</p>
+
+<p>Transactions are committed implicitly when the
+ObjectContainer is closed.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p>
+
+<p><code>objectContainer.close();</code></p>
+
+</span>
+
+
+
+<a name="Advantage"></a><h2>Advantage</h2>
+
+<p>Committing a transaction makes sure that all the changes are
+effectively written to a storage location. Commit uses a special sequence of
+actions, which ensures ACID transactions. The following operations are done
+during commit:</p>
+
+<ul><li>flushing
+     modified class indexes</li><li>flushing
+     changes of in-memory field indexes to file-based indexes</li><li>writing
+     all intended pointer changes as a "pre-log" to the file</li><li>writing
+     all pointer changes</li><li>reorganizing
+     the free-space system</li><li>deleting
+     the "pre log"</li></ul>
+
+<a name="Effect"></a><h2>Effect</h2>
+
+<p>Commit is a costly operation as it includes disk writes and
+flushes of the operating system disk cache. Too many commits can decrease your
+application's performance. On the other hand long transaction increases the
+risk of loosing your data in case of a system or a hardware failure.</p>
+
+
+
+<a name="Best Strategies"></a><h2>Best Strategies</h2>
+
+<ul><li>You should call commit() at the end of every logical
+operation, at a point where you want to make sure that all the changes done get
+permanently stored to the database.</li><li>If you are doing a bulk insert of many (say &gt;100 000)
+objects, it is a good idea to commit after every few thousand inserts,
+depending on the complexity of your objects. If you don't do that, there is not
+only a risk of losing the objects in a case of a failure, but also a good
+chance of running out of memory and slowing down the operations due to memory
+flushes to disk. The exact amount of inserts that can be done safely and
+effectively within one transaction should be calculated for the concrete system
+and will depend on available system resources and size and complexity of
+objects.</li><li>Don't forget to close db4o ObjectContainer before the
+application exits to make sure that all the changes will be saved to disk
+during implicit commit.</li></ul></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-08-20T12:15:03 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -23,14 +23,14 @@ com.db4o.config package/namespace.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>IConfiguration configuration =
 Db4oFactory.NewConfiguration();</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -39,7 +39,7 @@ use one of the following methods:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
@@ -52,7 +52,7 @@ databaseFileName, port)</code></p>
 <p><code>Db4oFactory.OpenClient(configuration,
 hostName, port, user, password)</code></p>
 
-<p></span><p>Configuration settings are <b>not</b> stored in
+</span><p>Configuration settings are <b>not</b> stored in
 db4o database files. Accordingly you will need to pass the same configuration object <b>every
 time</b> you open an ObjectContainer/Client/Server. <br>For using db4o in
 client/server mode it is recommended to use the same configuration on
@@ -70,14 +70,14 @@ IClientServerConfiguration). These settings are accessed with:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET: </p>
 
 <p><code>IClientServerConfiguration configuration =
 Db4oFactory.NewConfiguration().ClientServer();</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -102,27 +102,27 @@ due to their limitations.</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>Db4oFactory.Configure()</code></p>
 
-<p></span>
+</span>
 
 <p>Starting from version 6.0 you can obtain a clone of the
 global configuration:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>IConfiguration configuration =
 Db4oFactory.CloneConfiguration()</code></p>
 
-<p></span>
+</span>
 
 <p>When an ObjectContainer/ObjectServer is opened, the global
 configuration context is cloned and copied into the newly opened
@@ -148,14 +148,14 @@ open ObjectContainer/Client/Server:</p>
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 
 <p>.NET:</p>
 
 <p><code>objectContainer.Ext().Configure()</code><br>
 <code>objectServer.Ext().Configure()</code></p>
 
-<p></span>
+</span>
 
 <p>Closing the container will erase all the settings.</p>
 

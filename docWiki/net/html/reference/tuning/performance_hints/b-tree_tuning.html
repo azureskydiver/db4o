@@ -19,23 +19,23 @@ B-trees are optimized for scenarios when part or all of a data set is on seconda
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 <p>.NET: </p><p><code>configuration.ObjectClass(typeof(Foo)).ObjectField("field").Indexed(true)</code></p>
-<p></span>
+</span>
 
 <a name="Effect"></a><h2>Effect</h2>
 <p>The caching behaviour of the B-trees can be configured with the following two switches:
 </p>
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 <p>.NET: </p><p><code>configuration.BTreeCacheHeight(height)</code></p>
-<p></span>
+</span>
 configures the size of BTree nodes in indexes.
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 <p>.NET: </p><p><code>configuration.BTreeNodeSize(size)</code></p>
-<p></span>
+</span>
 <p>configures caching of B-tree nodes. Clean B-tree nodes will be unloaded on #commit and #rollback unless they are configured as cached here.</p>
 <p>Higher values for the cache height will get you better performance at more RAM consumption.</p>
 <p>With the node size you can fine-tune exactly how many reads the B-tree will need to get to leaf nodes. Lower values will allow a lower memory footprint and more efficient reading and writing of small slots. Higher values will reduce the overall number of read and write operations and allow better performance at the cost of more RAM use.</p>

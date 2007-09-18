@@ -11,11 +11,11 @@
 <p>This topic applies to db4o versions 6.2 and higher.</p>
 
 
-<span class="net"></p><p>.NET:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="net"><p>.NET:&nbsp;</p>
 
 <p><code>configuration.Io(new RandomAccessFileAdapter())</code></p>
 
-<p></span>
+</span>
 <a name="Advantage"></a><h2>Advantage</h2>
 
 <p>Decreases memory consumption by using an IO
@@ -35,12 +35,12 @@ in the CachedIoAdapter constructor:</p>
 
 
 
-<span class="net"></p><p>.NET:&nbsp;</p>
+<span name="cs_wiki_filter" csw_filters="net"><p>.NET:&nbsp;</p>
 
 <p><code>configuration.Io(new
 CachedIoAdapter(delegateAdapter, page_size, page_count));</code></p>
 
-<p></span>
+</span>
 
 <p>page_size
 * page_count - will define the maximum amount of memory used for caching.</p></div>

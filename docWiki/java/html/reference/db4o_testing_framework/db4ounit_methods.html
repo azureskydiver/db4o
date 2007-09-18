@@ -26,36 +26,36 @@ client/server (AbstractClientServerDb4oFixture). </p>
 
 <p>You can always access the fixture from your test class using</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java: </p>
 
 <p><code>public void fixture(Db4oFixture fixture)</code></p>
 
-<p></span>
+</span>
 
 
 
 <a name="Methods for working with a database:"></a><h3>Methods for working with a database:</h3>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>public ExtObjectContainer db()</code></p>
 
-<p></span>
+</span>
 
 
 
 <p>Returns an instanse of object container for the current
 environment.</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 Java:
 
 <p><code>protected void reopen() throws Exception</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -69,15 +69,15 @@ also performs an implicit commit on close.</p>
 
 
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java:</p>
 <p><code>protected Reflector reflector()</code></p>
-<p></span>
+</span>
 
 
 <p>Returns current reflector.</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:
 </p>
@@ -88,7 +88,7 @@ also performs an implicit commit on close.</p>
 
 <p><code>protected Transaction newTransaction()</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -96,7 +96,7 @@ also performs an implicit commit on close.</p>
 
 <a name="Various methods to work with persistent objects:"></a><h3>Various methods to work with persistent objects:</h3>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
@@ -109,45 +109,35 @@ clazz)</code> </p>
 
 <p><code>protected Query newQuery(Transaction transaction)</code></p>
 
-<p></span>
+</span>
 
 
-
-<p>Create a new query object.</p>
-<br>
-<span class="java"></p>
-
-<p>Java:</p>
-
-<p><code>protected Object retrieveOnlyInstance(Class clazz)</code></p>
-
-<p></span>
 
 
 
 <p>Checks if only one object of a class is stored in the
 database</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>protected int countOccurences(Class clazz)</code></p>
 
-<p></span>
+</span>
 
 
 
 <p>Returns the amount of objects of the specified class in the
 database.</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>protected void foreach(Class clazz, Visitor4 visitor)</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -155,23 +145,23 @@ database.</p>
 class objects in the database calling Visitor4.visit() method. Visitor4 is an
 interface specifiing a visit method:</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>public void visit(Object obj);</code></p>
 
-<p></span>
+</span>
 
 
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <br>
 <p>Java:</p>
 
 <p><code>protected void deleteAll(Class clazz)</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -179,35 +169,35 @@ interface specifiing a visit method:</p>
 database.</p>
 
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>protected ReflectClass reflectClass(Class clazz)</code></p>
 
-<p></span>
+</span>
 
 <p>Returns a ReflectClass instance for the specified class.</p>
 
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>protected void indexField(Configuration config,Class clazz,
 String fieldName)</code></p>
 
-<p></span>
+</span>
 
 
 
 <p>Adds field index into specified configuration.</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 Java:
 <p><code>public final void setUp() throws Exception</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -236,13 +226,13 @@ Java:
 <br>
 <p>More details about the mentioned above methods:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>protected void configure(Configuration config)</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -250,26 +240,26 @@ Java:
 test. Config parameter is the current default test configuration, which can be
 modified.</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>protected void db4oSetupBeforeStore() throws Exception</code></p>
 
-<p></span>
+</span>
 
 
 
 <p>This method is a placeholder for any custom setup actions
 that need to be taken before filling up the database with objects.</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>protected void store() throws Exception {}</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -277,13 +267,13 @@ that need to be taken before filling up the database with objects.</p>
 objects, which you are going to use for your test.</p>
 
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>protected void db4oSetupAfterStore() throws Exception</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -293,39 +283,39 @@ that need to be taken after the database is filled up with objects.</p>
 <br>
 <a name="Methods for running tests:"></a><h3>Methods for running tests:</h3>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>public int runSoloAndClientServer()</code></p>
 
-<p></span>
+</span>
 
 
 
 <p>Will run the test in both modes</p>
 
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>public int runSolo()</code></p>
 
-<p></span>
+</span>
 
 
 
 <p>Only local mode.</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:
 </p>
 
 <p><code>public int runClientServer()</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -336,14 +326,14 @@ class - provides a variety of methods for controlling code execution. Some of
 the methods are presented below. For more information please refer to the
 source code.</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>public
 static void expect(Class exception, CodeBlock block)</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -351,7 +341,7 @@ static void expect(Class exception, CodeBlock block)</code></p>
 runs a specified method (block parameter) and throws an exception if the block
 runs without any exception.</p>
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
@@ -361,7 +351,7 @@ static void isTrue(boolean condition)</code></p>
 <p><code>public
 static void isTrue(boolean condition, String msg)</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -370,14 +360,14 @@ checks the condition and throws an exception if the condition is false. Msg
 parameter can be used to customize exception message.</p>
 
 <br>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>public
 static void areEqual(Object expected, Object actual)</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -392,14 +382,14 @@ other checkings, please refer to Assert class code for full information.</p>
 <p>FrameworkTestCase class provides methods to run your test
 suite and check if its results.</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>public static void runTestAndExpect(Test test,int
 expFailures)</code></p>
 
-<p></span>
+</span>
 
 
 

@@ -17,13 +17,13 @@ Another FreespaceConfiguration method</p>
 
 
 
-<span class="cs"></p>
+<span name="cs_wiki_filter" csw_filters="cs">
 <p>c#:   </p><p><code>void DiscardSmallerThan(int byteCount) </code></p>
-<p></span>
+</span>
 
-<span class="vb"></p>
+<span name="cs_wiki_filter" csw_filters="vb">
 <p>VB:   </p><p><code>void DiscardSmallerThan(int byteCount) </code></p>
-<p></span>
+</span>
 
 <p>configures the minimum size of free space slots in the database file that are to be reused. FreespaceManager keeps 2 lists of all 'freed' space that can be reused (sorted by address and by size). In some cases (numerous updates, deletes) these lists can grow large, causing extra RAM consumption and performance loss for maintenance. With this method you can specify an upper bound for the byte slot size to discard from Freespace manager list. It is not recommended to specify a value of byteCount &gt; 100 as freespace re-usage will become less efficient and the database file will grow faster. However, if defragment can be run frequently, it will also reclaim lost space and decrease the database file to the minimum size. Therefore byteCount may be set to bigger value.</p>
 <p>By default byteCount = 0, which means that all 'freed' space is reused.</p>
@@ -32,13 +32,13 @@ Another configuration setting that can be used with frequently defragmented syst
 
 
 
-<span class="cs"></p>
+<span name="cs_wiki_filter" csw_filters="cs">
 <p>c#:   </p><p><code>configuration.AutomaticShutDown(false);</code></p>
-<p></span>
+</span>
 
-<span class="vb"></p>
+<span name="cs_wiki_filter" csw_filters="vb">
 <p>VB:   </p><p><code>configuration.AutomaticShutDown(false);</code></p>
-<p></span>
+</span>
 <p>
 Detailed description of this method can be found in <a href="../../tuning/performance_hints/no_shutdown_thread.html" class="wikiLink">Tuning</a> part of the Reference documentation.</p></div>
     </div>

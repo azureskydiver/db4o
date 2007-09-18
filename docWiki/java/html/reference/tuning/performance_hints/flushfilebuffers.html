@@ -10,10 +10,10 @@
         <h1>FlushFileBuffers</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
 
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: 
 </p><p><code>configuration.flushFileBuffers(false)</code></p>
-<p></span>
+</span>
 
 
 <a name="Advantage"></a><h2>Advantage</h2>
@@ -41,9 +41,9 @@ In case of transaction commit such cache management means that transaction data 
 <p>
 On operating systems that cache file access, this configuration has to be set to true to ensure each step of transaction being written in order.</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>configuration.flushFileBuffers(true)</code></p>
-<p></span>
+</span>
 
 
 <p>Otherwise file caching can be switched off in OS settings.</p></div>

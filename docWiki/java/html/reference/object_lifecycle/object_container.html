@@ -10,16 +10,10 @@
         <h1>Object Container</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Accessing A Database&nbsp;">Accessing A Database&nbsp;</a></li></ul></li><li><a href ="#"></a><ul><li><a href ="#Working With Objects&nbsp;">Working With Objects&nbsp;</a></li><li><a href ="#Extended Object Container Interface&nbsp;">Extended Object Container Interface&nbsp;</a></li></ul></li></ul></div></div></div>
 <p>Db4o gives you a simple and straightforward interface to object persistence - ObjectContainer. In .NET versions a conventional name IObjectContainer is used.</p><a name="Accessing A Database&nbsp;"></a><h2>Accessing A Database&nbsp;</h2>
 <p> ObjectContainer is your db4o database.</p>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>ObjectContainer container = Db4o.openFile(filename)</code></p>
-<p></span>
- </p>
-  </p>
-<p>filename is the path to the file, in which you want to store your objects. Normally you should open an ObjectContainer when the application starts and close it, when the session is finished to persist the changes to a physical storage location:<br></p>
-<span class="java"></p>
-<p>Java: </p><p><code>container.close()</code></p>
-<p></span>
- </p>
+</span>
+
 <a name=""></a><h1>
 
 </h1><p>Applications using db4o versions
@@ -39,9 +33,9 @@ allows to simplify the internal db4o design as well.</p>
 <a name="Working With Objects&nbsp;"></a><h2>Working With Objects&nbsp;</h2>
 <p>ObjectContainer interface gives you all the basic functionality to work with persistent objects. Normally you can save a new or updated object of any class using <code>objectContainer.set(object)</code></p>
 <p>Deletion is done with the following method:</p>
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 <p>Java: </p><p><code>container.delete(object)</code> </p>
-<p></span>
+</span>
 
 
 <p>Through ObjectContainer#get and ObjectContainer#query you get access to objects retrieval functionality. </p><p>Object Container Features&nbsp;</p><p>The characteristic features of an ObjectContainer are: </p>

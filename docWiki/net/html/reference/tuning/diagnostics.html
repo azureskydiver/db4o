@@ -13,9 +13,9 @@ Diagnostics can be switched on in the configuration before opening the database 
 
 
 
-<span class="net"></p>
+<span name="cs_wiki_filter" csw_filters="net">
 <p>.NET: </p><p><code>configuration.Diagnostic().AddListener(new DiagnosticListener())</code></p>
-<p></span>
+</span>
 <p>where DiagnosticListener is a callback interface tracking diagnostic messages from different parts of the system:</p>
 <p><code>public interface DiagnosticListener {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;    public void onDiagnostic(Diagnostic d);<br>

@@ -21,14 +21,14 @@ com.db4o.config package/namespace.</p>
 
 <p>Configuration can be obtained using the following methods:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>Configuration configuration =
 Db4o.newConfiguration();</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -37,7 +37,7 @@ Db4o.newConfiguration();</code></p>
 <p>To apply the configuration to an ObjectContainer/Client/Server
 use one of the following methods:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
@@ -50,7 +50,7 @@ databaseFileName, port)</code></p>
 <p><code>Db4o.openClient(configuration,
 hostName, port, user, password)</code></p>
 
-<p></span>
+</span>
 
 <p>Configuration settings are <b>not</b> stored in
 db4o database files. Accordingly you will need to pass the same configuration object <b>every
@@ -68,14 +68,14 @@ to deploy this class both to the server and to all clients.&nbsp;
 ClientServerConfiguration interface (.NET conventional name
 IClientServerConfiguration). These settings are accessed with:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java: </p>
 
 <p><code>ClientServerConfiguration configuration =
 Db4o.newConfiguration().clientServer();</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -100,26 +100,26 @@ due to their limitations.</p>
 
 <p>Global configuration can be set using:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>Db4o.configure()</code></p>
 
-<p></span>
+</span>
 
 
 
 <p>Starting from version 6.0 you can obtain a clone of the
 global configuration:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>Configuration configuration = Db4o.cloneConfiguration()</code></p>
 
-<p></span>
+</span>
 
 
 
@@ -145,14 +145,14 @@ VM/runtime</li><li>the settings can't be reset.</li></ul>
 <p>Object Container instance configuration can be used for an
 open ObjectContainer/Client/Server:</p>
 
-<span class="java"></p>
+<span name="cs_wiki_filter" csw_filters="java">
 
 <p>Java:</p>
 
 <p><code>objectContainer.ext().configure() </code><br>
 <code>objectServer.ext().configure()</code></p>
 
-<p></span>
+</span>
 
 
 
