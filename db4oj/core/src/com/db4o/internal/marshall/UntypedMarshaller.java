@@ -4,7 +4,6 @@ package com.db4o.internal.marshall;
 
 import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.internal.query.processor.*;
 
 /**
  * @exclude
@@ -22,8 +21,6 @@ public abstract class UntypedMarshaller {
     public abstract boolean useNormalClassRead();
     
     public abstract Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException;
-
-    public abstract QCandidate readSubCandidate(Buffer reader, QCandidates candidates, boolean withIndirection);
 
 	public abstract void defrag(BufferPair readers);
 }

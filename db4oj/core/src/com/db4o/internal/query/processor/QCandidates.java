@@ -116,6 +116,34 @@ public final class QCandidates implements Visitor4 {
     		_majorOrderingID = absoluteOrderingID;
     	}
     }
+    
+    public QCandidate readSubCandidate(QueryingReadContext context, TypeHandler4 handler){
+        ObjectID objectID = ObjectID.NOT_POSSIBLE;
+        try {
+            int offset = context.offset();
+            if(handler instanceof ClassMetadata){
+                ClassMetadata classMetadata = (ClassMetadata) handler;
+                objectID = classMetadata.readObjectID(context);
+            }
+            if(objectID.isValid()){
+                return new QCandidate(this, null, objectID._id, true);
+            }
+            if(objectID == ObjectID.NOT_POSSIBLE){
+                context.seek(offset);
+                Object obj = context.read(handler);
+                if(obj != null){
+                    return new QCandidate(this, obj, 0, true);
+                }
+            }
+            
+        } catch (Exception e) {
+            
+            // FIXME: Catchall
+            
+        }
+        return null;
+    }
+
 
 	private Tree recreateTreeFromCandidates() {
 		Collection4 col = collectCandidates();
@@ -478,5 +506,9 @@ public final class QCandidates implements Visitor4 {
 
 	public void clearOrdering() {
 		i_ordered = null;
+	}
+	
+	public final Transaction transaction(){
+	    return i_trans;
 	}
 }

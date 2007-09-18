@@ -5,7 +5,6 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -65,25 +64,6 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes, redirect);
     }
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
-    	// FIXME catchall
-        try {
-            Object obj = null;
-            if(withIndirection){
-                obj = readQuery(candidates.i_trans, mf, withIndirection, reader, true);
-            }else{
-                obj = mf._string.read(container(), reader);
-            }
-            if(obj != null){
-                return new QCandidate(candidates, obj, 0, true);
-            }
-        } catch (CorruptionException e) {
-        	// FIXME: should it be ignored?
-        }
-        return null;
-    } 
-
-
     /**
      * This readIndexEntry method reads from the parent slot.
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  

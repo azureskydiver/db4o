@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 
@@ -218,10 +217,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return ObjectID.NOT_POSSIBLE;
     }
     
-    public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
-        return _handler.readSubCandidate(mf, reader, candidates, withIndirection);
-    } 
-
     void removeFromIndex(Transaction ta, int id) {
         // do nothing
     }

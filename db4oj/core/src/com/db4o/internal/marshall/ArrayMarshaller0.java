@@ -5,7 +5,6 @@ package com.db4o.internal.marshall;
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
-import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
 
 
@@ -36,18 +35,6 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         StatefulBuffer bytes = a_bytes.readEmbeddedObject();
         return arrayHandler.read1(_family, bytes);
     }
-    
-    public void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) throws Db4oIOException {
-        Buffer bytes = reader.readEmbeddedObject(candidates.i_trans);
-		if(Deploy.debug){
-            bytes.readBegin(arrayHandler.identifier());
-        }
-        int count = arrayHandler.elementCount(candidates.i_trans, bytes);
-        for (int i = 0; i < count; i++) {
-            candidates.addByIdentity(new QCandidate(candidates, null, bytes.readInt(), true));
-        }
-    }
-
     
     public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, Db4oIOException {
         Buffer bytes = reader.readEmbeddedObject(trans);

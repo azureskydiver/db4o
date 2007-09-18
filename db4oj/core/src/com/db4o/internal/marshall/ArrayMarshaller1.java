@@ -5,7 +5,6 @@ package com.db4o.internal.marshall;
 import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
-import com.db4o.internal.query.processor.*;
 
 
 class ArrayMarshaller1 extends ArrayMarshaller{
@@ -44,11 +43,6 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         Object array = arrayHandler.read1(_family, reader);
         reader._offset = linkOffSet;
         return array;
-    }
-    
-    public void readCandidates(ArrayHandler arrayHandler, Buffer reader, QCandidates candidates) {
-        reader._offset = reader.readInt();
-        arrayHandler.read1Candidates(_family, reader, candidates);
     }
     
     public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, Db4oIOException {

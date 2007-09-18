@@ -90,27 +90,16 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
 	    return elementCount(dimensions);
     }
     
-    public final void read1Candidates(MarshallerFamily mf, Buffer reader, QCandidates candidates) {
+    public void readSubCandidates(int handlerVersion, Buffer reader, QCandidates candidates) {
         if(Deploy.debug){
             reader.readBegin(identifier());
         }
-        
         IntArrayByRef dimensions = new IntArrayByRef();
         Object arr = readCreate(candidates.i_trans, reader, dimensions);
-        
-        if(arr != null){
-            int count = elementCount(dimensions.value);
-            for (int i = 0; i < count; i++) {
-                QCandidate qc = _handler.readSubCandidate(mf, reader, candidates, true);
-                if(qc != null){
-                    candidates.addByIdentity(qc);
-                }
-            }
+        if(arr == null){
+            return;
         }
-        
-        if (Deploy.debug) {
-            reader.readEnd();
-        }
+        readSubCandidates(handlerVersion, reader, candidates, elementCount(dimensions.value));
     }
     
 	public final Object read1Query(Transaction trans, MarshallerFamily mf, Buffer buffer) throws CorruptionException, Db4oIOException {
