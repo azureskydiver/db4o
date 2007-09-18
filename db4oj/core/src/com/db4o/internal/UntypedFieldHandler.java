@@ -69,6 +69,19 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         return mf._untyped.readQuery(trans, reader, toArray);
     }
     
+    public ObjectID readObjectID(InternalReadContext context){
+        int payloadOffset = context.readInt();
+        if(payloadOffset == 0){
+            return ObjectID.IS_NULL;
+        }
+        ClassMetadata classMetadata = readClassMetadata(context, payloadOffset);
+        if(classMetadata == null){
+            return ObjectID.IS_NULL;
+        }
+        seekSecondaryOffset(context, classMetadata);
+        return classMetadata.readObjectID(context);
+    }
+    
     public QCandidate readSubCandidate(MarshallerFamily mf, Buffer reader, QCandidates candidates, boolean withIndirection) {
         if(mf._untyped.useNormalClassRead()){
             return super.readSubCandidate(mf, reader, candidates, withIndirection);
@@ -97,19 +110,29 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return null;
         }
         int savedOffSet = context.offset();
-        context.seek(payloadOffset);
-        ClassMetadata classMetadata = container().classMetadataForId(context.readInt());
+        ClassMetadata classMetadata = readClassMetadata(context, payloadOffset);
         if(classMetadata == null){
             context.seek(savedOffSet);
             return null;
         }
+        seekSecondaryOffset(context, classMetadata);
+        Object obj = classMetadata.read(context);
+        context.seek(savedOffSet);
+        return obj;
+    }
+
+
+    private ClassMetadata readClassMetadata(InternalReadContext context, int payloadOffset) {
+        context.seek(payloadOffset);
+        ClassMetadata classMetadata = container().classMetadataForId(context.readInt());
+        return classMetadata;
+    }
+
+    private void seekSecondaryOffset(InternalReadContext context, ClassMetadata classMetadata) {
         if(classMetadata instanceof PrimitiveFieldHandler && classMetadata.isArray()){
             // unnecessary secondary offset, consistent with old format
             context.seek(context.readInt());
         }
-        Object obj = classMetadata.read(context);
-        context.seek(savedOffSet);
-        return obj;
     }
 
     public void write(WriteContext context, Object obj) {

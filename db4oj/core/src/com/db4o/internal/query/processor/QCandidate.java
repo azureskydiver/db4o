@@ -522,27 +522,61 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			}
 		}
 	}
+	
+	private int currentOffSet(){
+	    return _bytes._offset;
+	}
 
 	private QCandidate readSubCandidate(QCandidates candidateCollection) {
 		read();
-		if (_bytes != null) {
-            
-            QCandidate subCandidate = null;
-			final int offset = _bytes._offset;
-			try {
-                subCandidate =  _yapField.getHandler().readSubCandidate(marshallerFamily(), _bytes, candidateCollection, false);
-			} catch (Exception e) {
-				return null;
-			}
-			_bytes._offset = offset;
+		if (_bytes == null || _yapField == null) {
+		    return null;
+		}
+        QCandidate subCandidate = null;
+		final int offset = currentOffSet();
+		
+        QueryingReadContext context = newQueryingReadContext();
+        TypeHandler4 handler = context.correctHandlerVersion(_yapField.getHandler());
+        ObjectID objectID = ObjectID.NOT_POSSIBLE;
+		
+		try {
+		    if(handler instanceof ClassMetadata){
+		        ClassMetadata classMetadata = (ClassMetadata) handler;
+		        objectID = classMetadata.readObjectID(context);
+		    }
+		    if(objectID.isValid()){
+		        subCandidate = new QCandidate(candidateCollection, null, objectID._id, true);
+		    }else{
+		        if(objectID == ObjectID.NOT_POSSIBLE){
+		            context.seek(offset);
+		            Object obj = _yapField.read(context);
+		            if(obj != null){
+		                subCandidate = new QCandidate(candidateCollection, obj, 0, true);
+		            }
+		        }
+		    }
+		} catch (Exception e) {
+		    
+		    // FIXME: Catchall
+		    
+			return null;
+		}
+		seek(offset);
 
-			if (subCandidate != null) {
-				subCandidate._root = getRoot();
-				return subCandidate;
-			}
+		if (subCandidate != null) {
+			subCandidate._root = getRoot();
+			return subCandidate;
 		}
 		return null;
 	}
+	
+	private void seek(int offset){
+	    _bytes._offset = offset;
+	}
+
+    private QueryingReadContext newQueryingReadContext() {
+        return new QueryingReadContext(transaction(), _handlerVersion, _bytes);
+    }
 
 	private void readThis(boolean a_activate) {
 		read();
@@ -563,9 +597,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		if (_yapClass == null) {
 			read();
 			if (_bytes != null) {
-
-				_bytes._offset = 0;
-                
+			    seek(0);
                 ObjectContainerBase stream = container();
                 ObjectHeader objectHeader = new ObjectHeader(stream, _bytes);
 				_yapClass = objectHeader.classMetadata();
@@ -659,9 +691,9 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			if (_yapField == null) {
 				readThis(a_activate);
 			} else {
-				int offset = _bytes._offset;
-				_member = _yapField.read(new QueryingReadContext(transaction(), _handlerVersion, _bytes));
-				_bytes._offset = offset;
+				int offset = currentOffSet();
+				_member = _yapField.read(newQueryingReadContext());
+				seek(offset);
 				checkInstanceOfCompare();
 			}
 		}

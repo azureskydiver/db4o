@@ -2,7 +2,6 @@
 
 package com.db4o.internal;
 
-import com.db4o.*;
 import com.db4o.internal.marshall.*;
 
 /**
@@ -26,7 +25,4 @@ public class NullFieldMetadata extends FieldMetadata {
 	    return null;
 	}
 	
-	public Object readQuery(Transaction a_trans, MarshallerFamily mf, Buffer a_reader) throws CorruptionException {
-		return null;
-	}
 }
