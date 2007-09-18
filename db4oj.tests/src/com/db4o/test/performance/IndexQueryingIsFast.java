@@ -36,7 +36,7 @@ public class IndexQueryingIsFast {
         }
     }
     
-    public void test(){
+    public void _test(){
         
         Query q = Test.query();
         q.constrain(IndexQueryingIsFast.class);
