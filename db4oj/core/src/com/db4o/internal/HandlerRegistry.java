@@ -45,7 +45,7 @@ public final class HandlerRegistry {
     private Hashtable4          _ids = new Hashtable4(16);
     
 
-    private int                     _highestBuildinTypeID     = Handlers4.ANY_ARRAY_N_ID + 1;
+    private int                     _highestBuiltinTypeID     = Handlers4.ANY_ARRAY_N_ID + 1;
 
     static private final int        PRIMITIVECOUNT  = 8;
 
@@ -220,8 +220,8 @@ public final class HandlerRegistry {
             }
         }
         
-        if (id > _highestBuildinTypeID) {
-            _highestBuildinTypeID = id;
+        if (id > _highestBuiltinTypeID) {
+            _highestBuiltinTypeID = id;
         }
     }
 
@@ -497,7 +497,7 @@ public final class HandlerRegistry {
     }
 
     public boolean isSystemHandler(int id) {
-    	return id<=_highestBuildinTypeID;
+    	return id<=_highestBuiltinTypeID;
     }
 
 	public void migrationConnection(MigrationConnection mgc) {
