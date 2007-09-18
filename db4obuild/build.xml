@@ -366,7 +366,7 @@
 		</jar>
 	</target>
 	
-	<target name="runosgitests" depends="compiletestsosgi">
+	<target name="runosgitests" depends="prepare-test-environment">
 		<delete dir="${dir.test.osgi}"/>
 		<mkdir dir="${dir.test.osgi}"/>
 		<mkdir dir="${dir.test.osgi.conf}"/>
@@ -630,28 +630,30 @@
 	</target>
 
     <target name="compile.java.all" depends="clean.java, compilecorejava, compiletestsjava, compileosgijava, compiletestsosgi" />
-    
-	<target name="runtestsjava" depends="compile.java.all" description="Run db4o AllTests">
-        <path id="tests.java1.1.cp">
+	
+	<target name="prepare-test-environment" depends="compile.java.all">
+		<path id="tests.java1.1.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.1}" />
 			<pathelement location="${file.java1.1.jar}" />
             <pathelement path="${file.db4ounit.jar}" />
 			<pathelement location="${path.classpath.jdk1.1}" />
         </path>
-        
+		        
         <path id="tests.java1.2.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
             <pathelement location="${file.java1.2.jar}" />
 			<pathelement location="${file.db4ounit.jar}" />
         </path>
-        
+		        
         <copy todir=".">
             <fileset dir="${dir.j.jdk1.2}">
 				<include name="test/db4oVersions/**/*" />
 			</fileset>
         </copy>
-            
-        <echo message="Running com.db4o.db4ounit.jre11.AllTests on jvm ${file.jvm.jdk1.1}" />
+	</target>
+	
+	<target name="runtestsjava1.1" depends="prepare-test-environment">
+		<echo message="Running com.db4o.db4ounit.jre11.AllTests on jvm ${file.jvm.jdk1.1}" />
 		<java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.AllTests" failonerror="true" timeout="1200000">
 			<classpath refid="tests.java1.1.cp" />
 		</java>
@@ -660,8 +662,10 @@
 			<classpath refid="tests.java1.1.cp" />
 			<arg value="-withExceptions" />
 		</java>
-
-        <echo message="Running com.db4o.db4ounit.jre12.AllTestsJdk1_2 on jvm ${file.jvm.jdk1.3}" />
+	</target>
+	
+	<target name="runtestsjava1.3" depends="prepare-test-environment">
+		<echo message="Running com.db4o.db4ounit.jre12.AllTestsJdk1_2 on jvm ${file.jvm.jdk1.3}" />
 		<java jvm="${file.jvm.jdk1.3}" fork="true" classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" failonerror="true" timeout="1200000">
 			<classpath refid="tests.java1.2.cp" />
 			<sysproperty key="db4oj.tests.bin" value="${dir.dist.classes.test.jdk1.2}" />
@@ -672,15 +676,14 @@
 			<classpath refid="tests.java1.2.cp" />
 			<arg value="-withExceptions" />
 		</java>
-        
-        <antcall target="runtestsjava5" />
-        
-		<antcall target="runosgitests"></antcall>
-        
-        <antcall target="runconcurrencytests" />
+	</target>   
+    
+	<target name="runtestsjava"
+		depends="runtestsjava1.1, runtestsjava1.3, runtestsjava5, runosgitests, runconcurrencytests"
+		description="Run db4o AllTests">
 	</target>
     
-    <target name="runtestsjava5">
+    <target name="runtestsjava5" depends="prepare-test-environment">
         <path id="tests.java5.cp">
             <pathelement path="${dir.dist.classes.test.jdk1.5}" />
             <pathelement location="${file.java5.jar}" />
@@ -719,7 +722,7 @@
 		</java>
     </target>
     
-    <target name="runconcurrencytests" >
+    <target name="runconcurrencytests" depends="prepare-test-environment">
         <java jvm="${file.jvm.jdk1.1}" fork="true" classname="com.db4o.db4ounit.jre11.concurrency.AllTests" failonerror="true" timeout="1200000">
 			<classpath>
 				<pathelement path="${dir.dist.classes.test.jdk1.1}" />
@@ -1052,7 +1055,7 @@
 	
 	<target name="buildall2" depends="clean, buildjava, buildnet2" description="Full clean build (.net 2 runtime)" />
 
-    <target name="build-java-before-checkin" depends="clean, compile.java.all, runtestsjava5" />
+    <target name="build-java-before-checkin" depends="clean, runtestsjava5" />
 
     <target name="build-net-before-checkin">
         <ant antfile="build-dotnet.xml" target="run-tests">
