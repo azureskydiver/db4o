@@ -47,9 +47,16 @@ public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
             assertPrimitiveArray((long[])itemArrays._primitiveArrayInObject);
         }
         assertWrapperArray(itemArrays._typedWrapperArray);
-        assertWrapperArray((Long[])itemArrays._untypedObjectArray);
+        assertUntypedObjectArray(itemArrays);
         assertWrapperArray((Long[])itemArrays._wrapperArrayInObject);
     }
+
+    /**
+     * @sharpen.remove Cannot convert 'object[]' to 'long[]' in .net
+     */
+	private void assertUntypedObjectArray(ItemArrays itemArrays) {
+		assertWrapperArray((Long[])itemArrays._untypedObjectArray);
+	}
 
     private void assertPrimitiveArray(long[] primitiveArray) {
         for (int i = 0; i < data.length; i++) {
@@ -107,8 +114,7 @@ public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         itemArrays._typedWrapperArray = new Long[data.length + 1];
         System.arraycopy(dataWrapper, 0, itemArrays._typedWrapperArray, 0, dataWrapper.length);
         
-        itemArrays._untypedObjectArray = new Long[data.length + 1];
-        System.arraycopy(dataWrapper, 0, itemArrays._untypedObjectArray, 0, dataWrapper.length);
+        initializeUntypedObjectArray(itemArrays, dataWrapper);
         
         long[] primitiveArray = new long[data.length];
         System.arraycopy(data, 0, primitiveArray, 0, data.length);
@@ -119,6 +125,15 @@ public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         itemArrays._wrapperArrayInObject = wrapperArray;
         return itemArrays;
     }
+
+    /**
+     * @sharpen.remove Cannot convert 'long[]' to 'object[]'
+     */
+	private void initializeUntypedObjectArray(ItemArrays itemArrays,
+			Long[] dataWrapper) {
+		itemArrays._untypedObjectArray = new Long[data.length + 1];
+        System.arraycopy(dataWrapper, 0, itemArrays._untypedObjectArray, 0, dataWrapper.length);
+	}
 
     protected Object[] createValues() {
         Item[] values = new Item[data.length + 1];
