@@ -17,7 +17,7 @@
     
     <taskdef resource="org/apache/ant/dotnet/antlib.xml" />
     
-    <target name="init">
+    <target name="init" depends="properties">
         <condition property="isUnix">
             <os family="unix"/>
         </condition>
@@ -28,8 +28,9 @@
 		<mkdir dir="${drs.net.dir}" />
 		<mkdir dir="${drs.net.bin.dir}" />
         <mkdir dir="${drs.net.src.dir}" />
-        
         <mkdir dir="${drs.sharpen.workspace.dir}" />
+    	
+    	<property name="drs.net.version" value="${db4o.version.iteration.revision}" />
     </target>
     
     <target name="clean">
@@ -74,7 +75,7 @@
             </fileset>
         </delete>
         
-        <zip destfile="${drs.dir}/dist/dRS-net-${db4o.version.major}.${db4o.version.minor}.zip">
+        <zip destfile="${drs.dir}/dist/dRS-net-${drs.net.version}.zip">
             <zipfileset dir="${drs.net.dir}" prefix="dRS-net-${db4o.version.major}.${db4o.version.minor}"/>
         </zip>
     </target>
@@ -122,9 +123,10 @@
 			</fileset>
 		</copy>
         <updateAssemblyInfo
-            drs="true"
+            title="dRS"
+        	product="dRS - db4o Replication System"
             keyfile="${filename.keyfile}"
-			version="${db4o.version.full}.${svn.revision}"
+			version="${drs.net.version}"
 			configuration=".NET 2.0">
 			<fileset dir="${drs.net.src.dir}/drs/Properties">
 				<include name="AssemblyInfo.cs" />
@@ -143,10 +145,32 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
+        <updateAssemblyInfo
+            title="Db4objects.Drs.Test"
+        	product="dRS Tests"
+            keyfile="${filename.keyfile}"
+			version="${drs.net.version}"
+			configuration=".NET 2.0">
+			<fileset dir="${drs.net.src.dir}/drs.tests/Properties">
+				<include name="AssemblyInfo.cs" />
+			</fileset>
+        </updateAssemblyInfo>
+
         <!--.NET: QuickStart -->
         <copy todir="${drs.net.src.dir}/QuickStart">
             <fileset dir="${drs.overlay.dir}/QuickStart" />
         </copy>
+        <updateAssemblyInfo
+            title="Db4objects.Drs.QuickStart"
+        	product="dRS QuickStart"
+            keyfile="${filename.keyfile}"
+			version="${drs.net.version}"
+			configuration=".NET 2.0">
+			<fileset dir="${drs.net.src.dir}/QuickStart/Properties">
+				<include name="AssemblyInfo.cs" />
+			</fileset>
+        </updateAssemblyInfo>
+
         <!--.NET solution files -->
         <copy file="${drs.overlay.dir}/drs.sln" todir="${drs.net.src.dir}"/>
         <copy file="${drs.overlay.dir}/drs.suo" todir="${drs.net.src.dir}"/>
