@@ -89,17 +89,6 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
 		return (slot.address() == 0) && (slot.length() == 0);
 	}
     
-	public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
-        if(! withRedirection){
-            return mf._string.read(a_trans.container(), a_reader);
-        }
-	    Buffer reader = mf._string.readSlotFromParentSlot(a_trans.container(), a_reader);
-	    if(a_toArray) {
-	    	return mf._string.readFromOwnSlot(a_trans.container(), reader);
-	    }
-	    return reader;
-	}
-    
     public void writeIndexEntry(Buffer writer, Object entry) {
         if(entry == null){
             writer.writeInt(0);

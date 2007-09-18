@@ -50,11 +50,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     
     public abstract Object primitiveNull();
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray)
-        throws CorruptionException {
-        return read1(reader);
-    }
-
     public Object read(MarshallerFamily mf, StatefulBuffer buffer, boolean redirect) throws CorruptionException {
     	return read1(buffer);
     }

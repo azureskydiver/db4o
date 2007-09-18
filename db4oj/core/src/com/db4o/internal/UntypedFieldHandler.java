@@ -61,13 +61,6 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         return mf._untyped.readArrayHandler(a_trans, a_bytes);
 	}
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException {
-        if(mf._untyped.useNormalClassRead()){
-            return super.readQuery(trans, mf, withRedirection, reader, toArray);
-        }
-        return mf._untyped.readQuery(trans, reader, toArray);
-    }
-    
     public ObjectID readObjectID(InternalReadContext context){
         int payloadOffset = context.readInt();
         if(payloadOffset == 0){

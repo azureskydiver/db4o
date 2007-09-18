@@ -24,7 +24,5 @@ public abstract class ArrayMarshaller {
     
     public abstract Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, Db4oIOException;
     
-    public abstract Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, Db4oIOException;
-    
     protected abstract Buffer prepareIDReader(Transaction trans,Buffer reader) throws Db4oIOException;
 }

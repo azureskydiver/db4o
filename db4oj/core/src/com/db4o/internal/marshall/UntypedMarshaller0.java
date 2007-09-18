@@ -35,11 +35,6 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
         throw Exceptions4.shouldNeverBeCalled();
     }
     
-    public Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException{
-        throw Exceptions4.shouldNeverBeCalled();
-    }
-
-    
     public TypeHandler4 readArrayHandler(Transaction a_trans, Buffer[] a_bytes) {
         int id = 0;
 

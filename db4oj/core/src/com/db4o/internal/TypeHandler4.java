@@ -18,8 +18,6 @@ public interface TypeHandler4 extends Comparable4 {
 	
 	Object read(MarshallerFamily mf, StatefulBuffer buffer, boolean redirect) throws CorruptionException, Db4oIOException;
     
-	Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer buffer, boolean toArray) throws CorruptionException, Db4oIOException;
-	
 	void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
 
 	Object read(ReadContext context);

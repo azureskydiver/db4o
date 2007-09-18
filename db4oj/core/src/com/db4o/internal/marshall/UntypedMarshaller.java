@@ -20,7 +20,5 @@ public abstract class UntypedMarshaller {
 
     public abstract boolean useNormalClassRead();
     
-    public abstract Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException;
-
 	public abstract void defrag(BufferPair readers);
 }
