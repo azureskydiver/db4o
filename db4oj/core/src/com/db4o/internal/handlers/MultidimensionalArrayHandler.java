@@ -102,29 +102,6 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         readSubCandidates(handlerVersion, reader, candidates, elementCount(dimensions.value));
     }
     
-	public final Object read1Query(Transaction trans, MarshallerFamily mf, Buffer buffer) throws CorruptionException, Db4oIOException {
-        
-        if(Deploy.debug){
-            buffer.readBegin(identifier());
-        }
-        
-        IntArrayByRef dimensions = new IntArrayByRef();
-		Object arr = readCreate(trans, buffer, dimensions);
-        if(arr != null){
-			Object[] objects = new Object[elementCount(dimensions.value)];
-			for (int i = 0; i < objects.length; i++) {
-				objects[i] = _handler.readQuery(trans, mf, true, buffer, true);
-			}
-			arrayReflector().shape(objects, 0, arr, dimensions.value, 0);
-        }
-        
-        if (Deploy.debug) {
-            buffer.readEnd();
-        }
-
-		return arr;
-	}
-
     private Object readCreate(Transaction trans, ReadBuffer buffer, IntArrayByRef dimensions) {
 		ReflectClassByRef clazz = new ReflectClassByRef();
 		dimensions.value = readDimensions(trans, buffer, clazz);

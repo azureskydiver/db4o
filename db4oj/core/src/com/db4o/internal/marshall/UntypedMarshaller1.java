@@ -52,31 +52,6 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return ret;
     }
     
-    public Object readQuery(Transaction trans, Buffer reader, boolean toArray) throws CorruptionException, Db4oIOException {
-        
-        Object ret = null;
-        
-        int payLoadOffSet = reader.readInt();
-        if(payLoadOffSet == 0){
-            return null;
-        }
-        
-        int linkOffSet = reader._offset;
-        reader._offset = payLoadOffSet;
-        
-        int yapClassID = reader.readInt();
-        
-        ClassMetadata yc = trans.container().classMetadataForId(yapClassID);
-        if(yc != null){
-            ret = yc.readQuery(trans, _family, false, reader, toArray);
-        }
-        
-        reader._offset = linkOffSet;
-        
-        return ret;
-    }
-
-    
     public TypeHandler4 readArrayHandler(Transaction trans, Buffer[] reader) {
         
         int payLoadOffSet = reader[0].readInt();

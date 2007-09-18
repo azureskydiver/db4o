@@ -1399,18 +1399,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return new ObjectReference(id).read(trans, newDepth,Const4.ADD_TO_ID_TREE, false);
 	}
     
-    public Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
-        try {
-            return a_trans.container().getByID2(a_trans, a_reader.readInt());
-        } catch (Exception e) {
-        	// FIXME: DO WE NEED TO CATCH IT HERE?
-            if (Debug.atHome) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
     public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         if (isArray()) {
             return this;

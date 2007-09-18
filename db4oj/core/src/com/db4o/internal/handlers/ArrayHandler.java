@@ -173,30 +173,6 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         return mf._array.read(this, a_bytes);
     }
     
-	public final Object readQuery(Transaction a_trans, MarshallerFamily mf, boolean withRedirection, Buffer a_reader, boolean a_toArray) throws CorruptionException, Db4oIOException {
-        return mf._array.readQuery(this, a_trans, a_reader);
-	}
-	
-	public Object read1Query(Transaction trans, MarshallerFamily mf, Buffer buffer) throws CorruptionException, Db4oIOException {
-
-        if(Deploy.debug){
-            buffer.readBegin(identifier());
-        }
-
-        IntByRef elements = new IntByRef();
-        Object ret = readCreate(trans, buffer, elements);
-		if(ret != null){
-			for (int i = 0; i < elements.value; i++) {
-			    arrayReflector().set(ret, i, _handler.readQuery(trans, mf, true, buffer, true));
-			}
-		}
-        if (Deploy.debug) {
-            buffer.readEnd();
-        }
-        
-		return ret;
-	}
-
     public Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException, Db4oIOException {
         
         if (Deploy.debug) {

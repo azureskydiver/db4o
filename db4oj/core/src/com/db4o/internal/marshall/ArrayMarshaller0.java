@@ -36,11 +36,6 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         return arrayHandler.read1(_family, bytes);
     }
     
-    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, Db4oIOException {
-        Buffer bytes = reader.readEmbeddedObject(trans);
-        return arrayHandler.read1Query(trans,_family, bytes);
-    }
-    
     protected Buffer prepareIDReader(Transaction trans,Buffer reader) throws Db4oIOException {
     	return reader.readEmbeddedObject(trans);
     }

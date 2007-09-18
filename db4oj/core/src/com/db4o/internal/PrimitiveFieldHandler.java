@@ -197,13 +197,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return null;
     }
     
-    public Object readQuery(Transaction trans, MarshallerFamily mf, boolean withRedirection, Buffer buffer, boolean toArray) throws CorruptionException, Db4oIOException {
-        if(mf._primitive.useNormalClassRead()){
-            return super.readQuery(trans, mf, withRedirection, buffer, toArray);
-        }
-        return _handler.readQuery(trans, mf, withRedirection, buffer, toArray);
-    }
-    
     public ObjectID readObjectID(InternalReadContext context){
         if(_handler instanceof ClassMetadata){
             return ((ClassMetadata)_handler).readObjectID(context);

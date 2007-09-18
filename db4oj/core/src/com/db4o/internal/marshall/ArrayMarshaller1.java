@@ -45,11 +45,6 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         return array;
     }
     
-    public final Object readQuery(ArrayHandler arrayHandler, Transaction trans, Buffer reader) throws CorruptionException, Db4oIOException {
-        reader._offset = reader.readInt();
-        return arrayHandler.read1Query(trans,_family, reader);
-    }
-    
     protected Buffer prepareIDReader(Transaction trans,Buffer reader) {
         reader._offset = reader.readInt();
         return reader;
