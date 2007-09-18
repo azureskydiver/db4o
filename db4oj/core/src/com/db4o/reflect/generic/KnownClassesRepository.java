@@ -185,7 +185,10 @@ public class KnownClassesRepository {
 		        break;
 		    default:
 		    	fieldClass=forID(handlerID);
-		    	fieldClass=_stream.reflector().forName(fieldClass.getName());
+		    	if (null == fieldClass) {
+		    		return null;
+		    	}
+		    	fieldClass=_stream.reflector().forName(fieldClass.getName());		    	
 		    	if(fieldInfo.isPrimitive()) {
 		    		fieldClass=primitiveClass(fieldClass);
 		    	}
