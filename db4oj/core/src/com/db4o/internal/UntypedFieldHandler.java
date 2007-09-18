@@ -91,7 +91,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
     
     public Object read(ReadContext readContext) {
-        UnmarshallingContext context = (UnmarshallingContext) readContext;
+        InternalReadContext context = (InternalReadContext) readContext;
         int payloadOffset = context.readInt();
         if(payloadOffset == 0){
             return null;

@@ -28,6 +28,9 @@ public class TestDescend {
     }
     
     public void test(){
+        if(Test.isClientServer()){
+            return;
+        }
         Query q = Test.query();
         q.constrain(this.getClass());
         q.descend("_name").constrain("0");

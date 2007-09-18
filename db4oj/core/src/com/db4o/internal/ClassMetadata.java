@@ -668,21 +668,17 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     // Scrolls offset in passed reader to the offset the passed field should
     // be read at.
-    //
-	// returns null if not successful or if the field value at this offset is null
-    // returns MarshallerFamily from the object header if it is successful and
-    //         if the value at this offset is not null
-    public final MarshallerFamily findOffset(Buffer buffer, FieldMetadata field) {
+    public final HandlerVersion findOffset(Buffer buffer, FieldMetadata field) {
         if (buffer == null) {
-            return null;
+            return HandlerVersion.INVALID;
         }
         buffer._offset = 0;
         ObjectHeader oh = new ObjectHeader(_container, this, buffer);
         boolean res = oh.objectMarshaller().findOffset(this, oh._headerAttributes, buffer, field);
         if(! res){
-            return null;
+            return HandlerVersion.INVALID;
         }
-        return oh._marshallerFamily;
+        return new HandlerVersion(oh.handlerVersion());
     }
 
     void forEachFieldMetadata(Visitor4 visitor) {

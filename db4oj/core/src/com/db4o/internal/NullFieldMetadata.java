@@ -22,7 +22,7 @@ public class NullFieldMetadata extends FieldMetadata {
 		return null;
 	}
 	
-	public final Object read(UnmarshallingContext context) {
+	public final Object read(InternalReadContext context) {
 	    return null;
 	}
 	

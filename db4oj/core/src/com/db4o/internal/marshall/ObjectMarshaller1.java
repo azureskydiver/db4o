@@ -57,7 +57,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		traverseFields(yc, writer, attributes, command);
     }
 
-    public boolean findOffset(ClassMetadata yc, ObjectHeaderAttributes attributes, final Buffer reader, final FieldMetadata field) {
+    public boolean findOffset(ClassMetadata yc, FieldListInfo fieldListInfo, final Buffer reader, final FieldMetadata field) {
         final boolean[] ret={false};
 		TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(FieldMetadata curField, boolean isNull, ClassMetadata containingClass) {
@@ -71,7 +71,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		        }
 			}
 		};
-		traverseFields(yc, reader, attributes, command);
+		traverseFields(yc, reader, fieldListInfo, command);
 		return ret[0];
     }
     

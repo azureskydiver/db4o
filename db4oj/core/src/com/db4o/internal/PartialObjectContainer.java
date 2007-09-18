@@ -571,8 +571,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 return null;
             }
             
-            Object child = null;
-            
             final String fieldName = path[0];
             if(fieldName == null){
                 return null;
@@ -590,24 +588,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if(field[0] == null){
                 return null;
             }
-            if(ref.isActive()){
-                child = field[0].get(trans, obj);
-            }else{
-                Buffer reader = readReaderByID(trans, ref.getID());
-                if(reader == null){
-                    return null;
-                }
-                MarshallerFamily mf = classMetadata.findOffset(reader, field[0]);
-                if(mf == null){
-                    return null;
-                }
-                // FIXME catchall
-                try {
-                    child = field[0].readQuery(trans, mf, reader);
-                } 
-                catch (CorruptionException e) {
-                }
-            }
+            
+            Object child = ref.isActive() ? 
+                field[0].get(trans, obj) :
+                new UnmarshallingContext(trans, ref, Const4.ADD_TO_ID_TREE, false).readFieldValue(ref.getID(), field[0]);
+            
             if(path.length == 1){
                 return child;
             }

@@ -92,6 +92,7 @@ public class AllTestsConfAll extends TestSuite{
 	    	//StoreObject.class,
             StorePrimitiveDirectly.class,
 			SwitchingFilesFromClient.class,
+			TestDescend.class,
 	        TestHashTable.class,
 	        TwoClients.class,
             UuidAware.class,

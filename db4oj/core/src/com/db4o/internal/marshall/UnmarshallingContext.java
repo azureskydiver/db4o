@@ -2,23 +2,17 @@
 
 package com.db4o.internal.marshall;
 
-import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.marshall.*;
 
 
 /**
  * @exclude
  */
-public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, ReadContext{
-    
-    private final Transaction _transaction;
+public class UnmarshallingContext extends AbstractReadContext implements FieldListInfo, MarshallingInfo{
     
     private final ObjectReference _reference;
     
     private Object _object;
-    
-    private Buffer _buffer;
     
     private ObjectHeader _objectHeader;
     
@@ -26,25 +20,13 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
     
     private boolean _checkIDTree;
     
-    private int _activationDepth;
-    
     public UnmarshallingContext(Transaction transaction, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
-        _transaction = transaction;
+        super(transaction);
         _reference = ref;
         _addToIDTree = addToIDTree;
         _checkIDTree = checkIDTree;
     }
 
-    public Buffer buffer(Buffer buffer) {
-        Buffer temp = _buffer;
-        _buffer = buffer;
-        return temp;
-    }
-    
-    public Buffer buffer() {
-        return _buffer;
-    }
-    
     public StatefulBuffer statefulBuffer() {
         StatefulBuffer buffer = new StatefulBuffer(_transaction, _buffer.length());
         buffer.setID(objectID());
@@ -58,27 +40,19 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         return _reference.getID();
     }
     
-    public ObjectContainerBase container(){
-        return _transaction.container();
-    }
-    
     public Object read(){
         if(! beginProcessing()){
             return _object;
         }
         
-        if (_buffer == null && objectID() > 0) {
-            _buffer = container().readReaderByID(_transaction, objectID()); 
-        }
+        readBuffer(objectID());
         
         if(_buffer == null){
             endProcessing();
             return _object;
         }
         
-        _objectHeader = new ObjectHeader(container(), _buffer);
-        
-        ClassMetadata classMetadata = _objectHeader.classMetadata();
+        ClassMetadata classMetadata = readObjectHeader(); 
         
         if(classMetadata == null){
             endProcessing();
@@ -86,7 +60,7 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         }
         
         _reference.classMetadata(classMetadata);
-        
+
         
         if(_checkIDTree){
             Object objectInCacheFromClassCreation = _transaction.objectForIdFromCache(objectID());
@@ -105,6 +79,36 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         
         endProcessing();
         return _object;
+    }
+    
+    public Object readFieldValue (int objectID, FieldMetadata field){
+        readBuffer(objectID);
+        if(_buffer == null){
+            return null;
+        }
+        ClassMetadata classMetadata = readObjectHeader(); 
+        if(classMetadata == null){
+            return null;
+        }
+        if(! _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, _buffer, field)){
+            return null;
+        }
+        return field.read(this);
+    }
+
+    private ClassMetadata readObjectHeader() {
+        _objectHeader = new ObjectHeader(container(), _buffer);
+        ClassMetadata classMetadata = _objectHeader.classMetadata();
+        if(classMetadata == null){
+            return null;
+        }
+        return classMetadata;
+    }
+
+    private void readBuffer(int id) {
+        if (_buffer == null && id > 0) {
+            _buffer = container().readReaderByID(_transaction, id); 
+        }
     }
     
     public ClassMetadata classMetadata(){
@@ -173,30 +177,6 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         return obj;
     }
 
-    public ObjectContainer objectContainer() {
-        return (ObjectContainer) container();
-    }
-
-    public Transaction transaction() {
-        return _transaction;
-    }
-
-    public byte readByte() {
-        return _buffer.readByte();
-    }
-
-    public void readBytes(byte[] bytes) {
-        _buffer.readBytes(bytes);
-    }
-
-    public int readInt() {
-        return _buffer.readInt();
-    }
-
-    public long readLong() {
-        return _buffer.readLong();
-    }
-
     public void adjustInstantiationDepth() {
         Config4Class classConfig = classConfig();
         if(classConfig != null){
@@ -208,14 +188,6 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         return classMetadata().config();
     }
 
-    public int offset() {
-        return _buffer.offset();
-    }
-
-    public void seek(int offset) {
-        _buffer.seek(offset);
-    }
-
     public ObjectReference reference() {
         return _reference;
     }
@@ -224,14 +196,6 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         if(_addToIDTree == Const4.ADD_TO_ID_TREE){
             _reference.addExistingReferenceToIdTree(transaction());    
         }
-    }
-
-    public int activationDepth() {
-        return _activationDepth;
-    }
-    
-    public void activationDepth(int depth){
-        _activationDepth = depth;
     }
 
     public void persistentObject(Object obj) {
@@ -246,44 +210,8 @@ public class UnmarshallingContext implements FieldListInfo, MarshallingInfo, Rea
         return headerAttributes().isNull(fieldIndex);
     }
 
-    public Object read(TypeHandler4 handlerType) {
-        TypeHandler4 handler = correctHandlerVersion(handlerType);
-        if(! isIndirected(handler)){
-            return handler.read(this);
-        }
-        int indirectedOffSet = readInt();
-        readInt(); // length, not needed
-        int offset = offset();
-        seek(indirectedOffSet);
-        Object obj = handler.read(this);
-        seek(offset);
-        return obj;
-    }
-
-    private boolean isIndirected(TypeHandler4 handler) {
-        if(handlerVersion() == 0){
-            return false;
-        }
-        return handlerRegistry().isVariableLength(handler);
-    }
-    
-    private HandlerRegistry handlerRegistry(){
-        return container().handlers();
-    }
-
-    public boolean oldHandlerVersion() {
-        return handlerVersion() != MarshallingContext.HANDLER_VERSION;
-    }
-
     public int handlerVersion() {
         return _objectHeader.handlerVersion();
-    }
-    
-    public TypeHandler4 correctHandlerVersion(TypeHandler4 handler){
-        if(! oldHandlerVersion()){
-            return handler;
-        }
-        return container().handlers().correctHandlerVersion(handler, handlerVersion());
     }
     
 }

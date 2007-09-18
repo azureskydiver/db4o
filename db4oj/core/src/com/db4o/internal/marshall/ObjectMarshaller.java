@@ -100,9 +100,9 @@ public abstract class ObjectMarshaller {
             boolean isUpdate);
     
     public abstract boolean findOffset(
-            ClassMetadata yc, 
-            ObjectHeaderAttributes attributes, 
-            Buffer reader, 
+            ClassMetadata classMetadata, 
+            FieldListInfo fieldListInfo, 
+            Buffer buffer, 
             FieldMetadata field);
     
     public abstract void instantiateFields(
