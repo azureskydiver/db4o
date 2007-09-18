@@ -20,7 +20,7 @@ public class ArrayHandler0 extends ArrayHandler {
 
     public Object read(ReadContext readContext) {
         
-        UnmarshallingContext context = (UnmarshallingContext) readContext;
+        InternalReadContext context = (InternalReadContext) readContext;
         
         Buffer buffer = readIndirectedBuffer(context); 
         if (buffer == null) {

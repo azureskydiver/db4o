@@ -68,18 +68,18 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
 		}
     }
 
-   private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, ClassMetadata yapClass, Slot oldSlot, boolean checkClass) throws Db4oIOException {
+   private DatabaseIdentityIDAndUUID readDatabaseIdentityIDAndUUID(ObjectContainerBase stream, ClassMetadata classMetadata, Slot oldSlot, boolean checkClass) throws Db4oIOException {
         if(DTrace.enabled){
             DTrace.REREAD_OLD_UUID.logLength(oldSlot.address(), oldSlot.length());
         }
 		Buffer reader = stream.bufferByAddress(oldSlot.address(), oldSlot.length());
 		if(checkClass){
             ClassMetadata realClass = ClassMetadata.readClass(stream,reader);
-            if(realClass != yapClass){
+            if(realClass != classMetadata){
                 return null;
             }
         }
-		if (null == yapClass.findOffset(reader, this)) {
+		if (classMetadata.findOffset(reader, this) == HandlerVersion.INVALID ) {
 			return null;
 		}
 		return new DatabaseIdentityIDAndUUID(reader.readInt(), reader.readLong());

@@ -21,7 +21,7 @@ import com.db4o.reflect.*;
  */
 public class QCandidate extends TreeInt implements Candidate, Orderable {
 
-	// db4o ID is stored in i_key;
+	// db4o ID is stored in _key;
 
 	// db4o byte stream storing the object
 	Buffer _bytes;
@@ -52,7 +52,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	// temporary yapField and member for one field during evaluation
 	FieldMetadata _yapField; // null denotes null object
     
-    private MarshallerFamily _marshallerFamily;
+    private int _handlerVersion;
 
 	private QCandidate(QCandidates qcandidates) {
 		super(0);
@@ -133,7 +133,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				
 				if(handler instanceof FirstClassHandler){
 				    tempHandler = ((FirstClassHandler)handler).readArrayHandler(
-                        transaction(), _marshallerFamily, arrayBytes);
+                        transaction(), marshallerFamily(), arrayBytes);
 				    
 				}
 
@@ -167,7 +167,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 							qcon.setCandidates(candidates);
 							
 							if(arrayHandler instanceof FirstClassHandler){
-							    ((FirstClassHandler)arrayHandler).readCandidates(_marshallerFamily,arrayBytes[0], candidates);
+							    ((FirstClassHandler)arrayHandler).readCandidates(marshallerFamily(),arrayBytes[0], candidates);
 							}
 							
 							arrayBytes[0]._offset = offset;
@@ -530,7 +530,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
             QCandidate subCandidate = null;
 			final int offset = _bytes._offset;
 			try {
-                subCandidate =  _yapField.getHandler().readSubCandidate(_marshallerFamily, _bytes, candidateCollection, false);
+                subCandidate =  _yapField.getHandler().readSubCandidate(marshallerFamily(), _bytes, candidateCollection, false);
 			} catch (Exception e) {
 				return null;
 			}
@@ -621,20 +621,32 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
             return;
 		} 
 		_yapField = a_field.getYapField(_yapClass);
-        
-        _marshallerFamily = _yapClass.findOffset(_bytes, _yapField);
-        
-		if (_yapField == null || _marshallerFamily == null ) {
-			if (_yapClass.holdsAnyClass()) {
-                // TODO: What does this mean?
-				_yapField = null;
-			} else {
-                // TODO: And now what does this mean and whats the difference?
-
-				_yapField = new NullFieldMetadata();
-			}
+		if(_yapField == null){
+		    fieldNotFound();
+		    return;
 		}
+        
+		HandlerVersion handlerVersion = _yapClass.findOffset(_bytes, _yapField);
+        
+		if (handlerVersion == HandlerVersion.INVALID ) {
+		    fieldNotFound();
+		    return;
+		}
+		
+		_handlerVersion = handlerVersion._number;
 	}
+	
+	private void fieldNotFound(){
+        if (_yapClass.holdsAnyClass()) {
+            // retry finding the field on reading the value 
+            _yapField = null;
+        } else {
+            // we can't get a value for the field, comparisons should definitely run against null
+            _yapField = new NullFieldMetadata();
+        }
+        _handlerVersion = MarshallingContext.HANDLER_VERSION;  
+	}
+	
 
 	Object value() {
 		return value(false);
@@ -647,20 +659,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			if (_yapField == null) {
 				readThis(a_activate);
 			} else {
-				// FIXME: Should _bytes ever be null here?
 				int offset = _bytes._offset;
-				// FIXME catchall
-				boolean ok = false;
-				try {
-					_member = _yapField.readQuery(transaction(),
-							_marshallerFamily, _bytes);
-					ok = true;
-				} catch (CorruptionException ce) {
-				} finally {
-					if (!ok) {
-						_member = null;
-					}
-				}
+				_member = _yapField.read(new QueryingReadContext(transaction(), _handlerVersion, _bytes));
 				_bytes._offset = offset;
 				checkInstanceOfCompare();
 			}
@@ -670,6 +670,10 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     
     void setBytes(Buffer bytes){
         _bytes = bytes;
+    }
+    
+    private MarshallerFamily marshallerFamily(){
+        return MarshallerFamily.version(_handlerVersion);
     }
     
 }

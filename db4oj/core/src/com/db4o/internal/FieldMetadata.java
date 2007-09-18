@@ -789,7 +789,7 @@ public class FieldMetadata implements StoredField {
         return _handler.read(mf, buffer, true);
     }
     
-    public Object read(UnmarshallingContext context) {
+    public Object read(InternalReadContext context) {
         if (!checkAlive(context.buffer())) {
             return null;
         }
