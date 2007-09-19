@@ -132,6 +132,9 @@ public final class StatefulBuffer extends Buffer {
     public final StatefulBuffer readEmbeddedObject() throws Db4oIOException {
         int id = readInt();
         int length = readInt();
+        if(id == 0){
+            return null;
+        }
         StatefulBuffer bytes = null;
             bytes = stream().readWriterByAddress(i_trans, id, length);
             if (bytes != null) {
