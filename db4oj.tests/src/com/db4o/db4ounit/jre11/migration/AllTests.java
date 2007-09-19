@@ -2,7 +2,8 @@
 
 package com.db4o.db4ounit.jre11.migration;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.*;
+import db4ounit.extensions.*;
 
 
 public class AllTests extends Db4oTestSuite {
@@ -18,6 +19,9 @@ public class AllTests extends Db4oTestSuite {
 			LongMigrationTestCase.class,
 			ShortMigrationTestCase.class,
 		};
+	}
+	public static void main(String[] args) {
+		new AllTests().runAll();
 	}
 
 }
