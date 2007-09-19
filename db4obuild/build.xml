@@ -40,13 +40,13 @@
 -->
 	<import file="common.xml" />
 	
-	<target name="buildjava-old-school" depends="compile.java.all, doctor, zipjava">
+	<target name="buildjava-old-school" depends="clean, init, compile.java.all, doctor, zipjava">
 	</target>
 	
-	<target name="buildall-old-school" depends="clean, buildjava-old-school, buildnet">
+	<target name="buildall-old-school" depends="clean, init, buildjava-old-school, buildnet">
 	</target>
 	
-	<target name="buildall2-old-school" depends="clean, buildjava-old-school, buildnet2">
+	<target name="buildall2-old-school" depends="clean, init, buildjava-old-school, buildnet2">
 	</target>
 
 	<target name="init" depends="properties" description="Basic initialization">
@@ -1063,5 +1063,5 @@
         </ant>
     </target>
 
-    <target name="build-before-checkin" depends="build-java-before-checkin,build-net-before-checkin" />
+    <target name="build-before-checkin" depends="prepare-test-environment,build-net-before-checkin" />
 </project>
