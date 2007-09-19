@@ -33,6 +33,9 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     
     public Object read(ArrayHandler arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
         StatefulBuffer bytes = a_bytes.readEmbeddedObject();
+        if(bytes == null){
+            return null;
+        }
         return arrayHandler.read1(_family, bytes);
     }
     
