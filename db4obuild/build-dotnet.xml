@@ -1168,7 +1168,7 @@
 		</exec>
 	</target>
 	
-	<target name="init" depends="get-svn-revision">
+	<target name="init" depends="properties, get-svn-revision">
 		<mkdir dir="${dir.dist.dll.net}" />
 		<mkdir dir="${dir.dist.dll.compact}" />
 		
