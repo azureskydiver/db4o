@@ -1022,31 +1022,27 @@
 			<arg path="${dir.build}" />
 		</exec>
 		
-		<exec executable="${sandcastle.tools}/MRefBuilder">
+		<exec executable="${sandcastle.tools}/MRefBuilder" dir="${dir.dist.ndoc}">
 			<arg value="/config:${dir.dist.ndoc}/Output/MRefBuilder.config" />
 			<arg file="${dir.dist.dll}/Db4objects.Db4o.dll" />
 			<arg value="/out:${dir.dist.ndoc}/sandcastle" />
 			<arg value="/internal-" />
 		</exec>	
 	
-		<exec executable="${XslTransform}">
-			<!--
-			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddOverloads.xsl" />
-			-->
+		<exec executable="${XslTransform}" failonerror="true" dir="${dir.dist.ndoc}">
 			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ApplyVSDocModel.xsl" />
 			<arg value="${dir.dist.ndoc}/sandcastle" />
 			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/AddFriendlyFilenames.xsl" />
 			<arg value="/out:${dir.dist.ndoc}/reflection.xml" />
 		</exec>
 	
-		<exec executable="${XslTransform}">
+		<exec executable="${XslTransform}" failonerror="true" dir="${dir.dist.ndoc}">
 			<arg value="/xsl:${dir.lib.sandcastle}/ProductionTransforms/ReflectionToManifest.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
 			<arg value="/out:${dir.dist.ndoc}/manifest.xml" />
 		</exec>
-	
-		<exec executable="${sandcastle.tools}/BuildAssembler"
-			dir="${dir.dist.ndoc}">
+		
+		<exec executable="${sandcastle.tools}/BuildAssembler" dir="${dir.dist.ndoc}">
 			<arg value="/config:${dir.build}/config/sandcastle/sandcastle.config" />
 			<arg file="${dir.dist.ndoc}/manifest.xml" />
 	
@@ -1070,8 +1066,14 @@
 		<copy todir="${dir.dist.ndoc}/Output">
 			<fileset dir="${dir.lib.sandcastle}/Presentation/vs2005">
 				<include name="Icons/**" />
+				<include name="icons/**" />
 				<include name="Scripts/**" />
 				<include name="Styles/**" />
+			</fileset>
+		</copy>
+		<copy todir="${dir.dist.ndoc}/Output">
+			<fileset dir="${dir.lib.sandcastle}/Presentation/Shared">
+				<include name="**/**" />
 			</fileset>
 		</copy>
 		<mkdir dir="${dir.dist.ndoc}/Intellisense" />
@@ -1083,27 +1085,27 @@
 		<property name="dir.transforms" location="${dir.lib.sandcastle}/ProductionTransforms" />
 	
 		<!-- Generate HTML help project -->
-		<exec executable="${XslTransform}">
+		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}" failonerror="true">
 			<arg value="/xsl:${dir.transforms}/ReflectionToChmProject.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhp" />
 		</exec>	 
 	
 		<!--  Generate table of contents for HTML help project -->
-		<exec executable="${XslTransform}">
+		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}" failonerror="true">
 			<arg value="/xsl:${dir.transforms}/createvstoc.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
 			<arg value="/out:${dir.dist.ndoc}/toc.xml" />
 		</exec>
 
-		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}">
+		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}" failonerror="true">
 			<arg value="/xsl:${dir.transforms}/TocToChmContents.xsl" />
 			<arg value="${dir.dist.ndoc}/toc.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhc" />
 		</exec>
 	
 		<!-- Generate Index information -->
-		<exec executable="${XslTransform}">
+		<exec executable="${XslTransform}" dir="${dir.dist.ndoc}">
 			<arg value="/xsl:${dir.transforms}/ReflectionToChmIndex.xsl" />
 			<arg value="${dir.dist.ndoc}/reflection.xml" />
 			<arg value="/out:${dir.dist.ndoc}/Output/test.hhk" />
