@@ -6,6 +6,7 @@ import com.db4o.config.*;
 
 /**
  * Specifies a socket connection via a socket factory and a port number.
+ * @exclude
  */
 public class SocketSpec {
 	
