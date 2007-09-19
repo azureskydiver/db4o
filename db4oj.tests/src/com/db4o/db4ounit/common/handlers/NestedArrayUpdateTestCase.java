@@ -144,7 +144,7 @@ public class NestedArrayUpdateTestCase extends HandlerUpdateTestCaseBase{
     }
 
     protected String typeName() {
-        return "nested_arrays";
+        return "nested_array";
     }
 
 }

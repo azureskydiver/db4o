@@ -45,6 +45,7 @@ public class Db4oVersionRunner extends Db4oTestSuite {
             IntHandlerUpdateTestCase.class, 
             LongHandlerUpdateTestCase.class,
             NestedArrayUpdateTestCase.class,
+            ObjectArrayUpdateTestCase.class,
             ShortHandlerUpdateTestCase.class,
             StringHandlerUpdateTestCase.class,
             };
