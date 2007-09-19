@@ -12,11 +12,11 @@ public class DoubleHandler0 extends DoubleHandler {
 	}
 	
 	public Object read(ReadContext context) {
-		long value = context.readLong();
-		if (value == Long.MAX_VALUE) {
+		Double value = (Double)super.read(context);
+		if (value.isNaN()) {
 			return null;
 		}
-		return new Double(Platform4.longToDouble(value));
+		return value;
 	}
 
 }
