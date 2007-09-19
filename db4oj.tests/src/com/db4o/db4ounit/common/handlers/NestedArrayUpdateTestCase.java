@@ -54,11 +54,11 @@ public class NestedArrayUpdateTestCase extends HandlerUpdateTestCaseBase{
         
         public Object[] _nestedArray;
         
-        public Object[] _nestedArrayInObject;
+        public Object _nestedArrayInObject;
         
         public Object[] _nestedNestedArray;
         
-        public Object[] _nestedNestedArrayInObject;
+        public Object _nestedNestedArrayInObject;
         
     }
     
