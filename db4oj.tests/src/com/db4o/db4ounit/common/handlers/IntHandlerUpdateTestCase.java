@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.handlers;
 
-import com.db4o.db4ounit.util.*;
-
 import db4ounit.*;
 
 public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
@@ -158,12 +156,7 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private void assertPrimitiveArrayInObject(ItemArrays item) {
-        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
-           // Bug in the oldest format: It accidentally int[] arrays to Integer[] arrays.
-            assertWrapperData((Integer[]) item._primitiveArrayInObject);
-        } else{
-            assertData((int[]) item._primitiveArrayInObject);
-        }
+        assertData(castToIntArray(item._primitiveArrayInObject));
     }
     
     private void assertWrapperArrayInObject(ItemArrays item) {

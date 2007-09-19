@@ -71,4 +71,24 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     
     protected abstract void assertArrays(Object obj);
 
+    
+    protected int[] castToIntArray(Object obj){
+        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
+            
+            // Bug in the oldest format: 
+            // It accidentally converted int[] arrays to Integer[] arrays.
+            
+            Integer[] wrapperArray = (Integer[])obj;
+            int[] res = new int[wrapperArray.length];
+            for (int i = 0; i < wrapperArray.length; i++) {
+                if(wrapperArray[i] != null){
+                    res[i] = wrapperArray[i].intValue();
+                }
+            }
+            return res;
+        }
+        
+        return (int[]) obj;
+    }
+
 }
