@@ -31,6 +31,8 @@ public class Db4oVersionRunner extends Db4oTestSuite {
     private Class testCase;
 
     private String db4oJarFile;
+    
+    private Map cache = new HashMap();
 
     public static void main(String[] args) throws Exception {
         new Db4oVersionRunner().runSolo();
@@ -41,6 +43,7 @@ public class Db4oVersionRunner extends Db4oTestSuite {
 			DoubleHandlerUpdateTestCase.class,
             IntHandlerUpdateTestCase.class, 
             LongHandlerUpdateTestCase.class,
+            ShortHandlerUpdateTestCase.class,
             StringHandlerUpdateTestCase.class,
             };
     }
@@ -103,8 +106,7 @@ public class Db4oVersionRunner extends Db4oTestSuite {
     }
 
     private void createDatabase(File file, Class test) throws Exception {
-        URL[] urls = new URL[] { testBinPath.toURL(), file.toURL() };
-        ClassLoader loader = new VersionClassLoader(urls, prefixes);
+        ClassLoader loader = getVersionClassLoader(file.toURL());
         Class clazz = loader.loadClass(test.getName());
         Object obj = clazz.newInstance();
         Method method = clazz.getMethod("createDatabase", new Class[] {});
@@ -145,12 +147,21 @@ public class Db4oVersionRunner extends Db4oTestSuite {
     }
 
     private String getDb4oVersion(URL db4oEngineURL) throws Exception {
-        URL[] urls = new URL[] { db4oEngineURL, };
-
-        ClassLoader loader = new VersionClassLoader(urls, prefixes);
+        ClassLoader loader = getVersionClassLoader(db4oEngineURL);
         Class clazz = loader.loadClass("com.db4o.Db4o");
         Method method = clazz.getMethod("version", new Class[] {});
         String version = (String) method.invoke(null, new Object[] {});
         return version.replace(' ', '_');
+    }
+    
+    private ClassLoader getVersionClassLoader(URL url)
+            throws MalformedURLException {
+        ClassLoader loader = (ClassLoader) cache.get(url);
+        if (loader == null) {
+            URL[] urls = new URL[] { testBinPath.toURL(), url, };
+            loader = new VersionClassLoader(urls, prefixes);
+            cache.put(url, loader);
+        }
+        return loader;
     }
 }
