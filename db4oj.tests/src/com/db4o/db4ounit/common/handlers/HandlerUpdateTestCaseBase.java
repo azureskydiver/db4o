@@ -12,7 +12,7 @@ import com.db4o.query.*;
 public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseBase {
     
     public static String[] db4oVersions = new String[]{
-            "db4o_6.4.000",
+            Db4o.version(),
     };
     protected String[] versionNames() {
         return db4oVersions;
