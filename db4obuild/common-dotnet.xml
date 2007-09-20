@@ -73,7 +73,7 @@
 	</target>
 	
 	<target name="compiletestsjava" unless="skip.java.compilation">
-		<ant antfile="build.xml" target="compiletestsjava" />
+		<ant antfile="build.xml" target="prepare-test-environment" />
 	</target>
 	
 	<macrodef name="reset-src-dir">
