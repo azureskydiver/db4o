@@ -25,4 +25,7 @@ public class NotToBeInstrumented {
 		int yy = _xx;
 	}
 
+	public boolean accessToBeInstrumented(ToBeInstrumented other) {
+		return _x == other._x;
+	}
 }

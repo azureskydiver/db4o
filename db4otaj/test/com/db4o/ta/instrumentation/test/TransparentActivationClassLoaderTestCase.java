@@ -9,16 +9,12 @@ import java.net.URL;
 
 import com.db4o.ObjectContainer;
 import com.db4o.activation.Activator;
-import com.db4o.instrumentation.BloatInstrumentingClassLoader;
-import com.db4o.instrumentation.ByNameClassFilter;
-import com.db4o.instrumentation.ClassFilter;
+import com.db4o.instrumentation.*;
 import com.db4o.ta.Activatable;
 import com.db4o.ta.instrumentation.InjectTransparentActivationEdit;
 import com.db4o.ta.instrumentation.TransparentActivationInstrumentationConstants;
 
-import db4ounit.Assert;
-import db4ounit.CodeBlock;
-import db4ounit.TestLifeCycle;
+import db4ounit.*;
 
 public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 
@@ -28,6 +24,8 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	private static final String SUB_CLASS_NAME = SUB_CLASS.getName();
 	private static final Class FA_CLASS = ToBeInstrumentedWithFieldAccess.class;
 	private static final String FA_CLASS_NAME = FA_CLASS.getName();
+	private static final Class NI_CLASS = NotToBeInstrumented.class;
+	private static final String NI_CLASS_NAME = NI_CLASS.getName();
 
 	private ClassLoader _loader;
 
@@ -72,7 +70,20 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		Assert.areEqual(1, ocOne.count());
 		Assert.areEqual(1, ocTwo.count());
 	}
-	
+
+	public void testInterObjectFieldAccessIsInstrumented() throws Exception {
+		Class iClazz = _loader.loadClass(CLASS_NAME);
+		Class niClazz = _loader.loadClass(NI_CLASS_NAME);
+		final Activatable iObj = (Activatable) iClazz.newInstance();
+		final Object niObj = niClazz.newInstance();
+		MockActivator act = new MockActivator();
+		iObj.bind(act);
+		final Method method = niClazz.getDeclaredMethod("accessToBeInstrumented", new Class[]{ iClazz });
+		method.setAccessible(true);
+		method.invoke(niObj, new Object[]{ iObj });
+		Assert.areEqual(1, act.count());
+	}
+
 	private void assertActivatableInterface(Class clazz) {
 		Assert.isTrue(Activatable.class.isAssignableFrom(clazz));
 	}
@@ -166,21 +177,23 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	}
 	
 	public void testOtherClassIsNotInstrumented() throws Exception {
-		Class otherOrigClass = NotToBeInstrumented.class;
-		String otherOrigClassName = otherOrigClass.getName();
-		Class clazz = _loader.loadClass(otherOrigClassName);
-		Assert.areEqual(otherOrigClassName, clazz.getName());
-		Assert.areNotSame(otherOrigClass, clazz);
+		Class clazz = _loader.loadClass(NI_CLASS_NAME);
+		Assert.areEqual(NI_CLASS_NAME, clazz.getName());
+		Assert.areNotSame(NI_CLASS, clazz);
+		Assert.isFalse(Activatable.class.isAssignableFrom(clazz));
 	}
 
 	public void setUp() throws Exception {
 		ClassLoader baseLoader = ORIG_CLASS.getClassLoader();
 		URL[] urls = {};
 		ClassFilter filter = new ByNameClassFilter(new String[]{ CLASS_NAME, SUB_CLASS_NAME, FA_CLASS_NAME });
-		_loader = new BloatInstrumentingClassLoader(urls, baseLoader, filter, new InjectTransparentActivationEdit(filter));
+		_loader = new BloatInstrumentingClassLoader(urls, baseLoader, new AcceptAllClassesFilter(), new InjectTransparentActivationEdit(filter));
 	}
 
 	public void tearDown() throws Exception {
 	}
 	
+	public static void main(String[] args) {
+		new TestRunner(TransparentActivationClassLoaderTestCase.class).run();
+	}
 }

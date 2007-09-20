@@ -25,4 +25,8 @@ public class ToBeInstrumented {
 	public static void fooStatic() {
 		int yy = _xx;
 	}
+
+	public boolean accessNotToBeInstrumented(NotToBeInstrumented other) {
+		return _x == other._x;
+	}
 }

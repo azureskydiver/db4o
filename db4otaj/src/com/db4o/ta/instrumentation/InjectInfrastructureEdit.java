@@ -13,9 +13,7 @@ import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.reflect.Modifiers;
 
 import com.db4o.activation.Activator;
-import com.db4o.instrumentation.BloatClassEdit;
-import com.db4o.instrumentation.ClassFilter;
-import com.db4o.instrumentation.LabelGenerator;
+import com.db4o.instrumentation.*;
 import com.db4o.ta.Activatable;
 
 public class InjectInfrastructureEdit implements BloatClassEdit {
@@ -29,7 +27,12 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 	
 	public boolean bloat(ClassEditor ce) {
 		try {
-			String superClassName = normalizeClassName(ce.superclass().className());
+			String clazzName = BloatUtil.normalizeClassName(ce.name());
+			Class clazz = Class.forName(clazzName);
+			if(!_instrumentedClassesFilter.accept(clazz)) {
+				return true;
+			}
+			String superClassName = BloatUtil.normalizeClassName(ce.superclass());
 			Class superClazz = Class.forName(superClassName);
 			if(!(_instrumentedClassesFilter.accept(superClazz))) {
 				ce.addInterface(Activatable.class);
@@ -133,7 +136,4 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 		return new MemberRef(parent, nameAndType);
 	}
 
-	private String normalizeClassName(String className) {
-		return className.replace('/', '.');
-	}
 }

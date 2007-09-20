@@ -16,10 +16,15 @@ import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
 
 import com.db4o.activation.Activator;
-import com.db4o.instrumentation.BloatClassEdit;
+import com.db4o.instrumentation.*;
 
 public class InstrumentFieldAccessEdit implements BloatClassEdit {
 
+	private ClassFilter _filter;
+	
+	public InstrumentFieldAccessEdit(ClassFilter filter) {
+		_filter = filter;
+	}
 	public boolean bloat(ClassEditor ce) {
 		instrumentAllMethods(ce);
 		return true;
@@ -53,7 +58,7 @@ public class InstrumentFieldAccessEdit implements BloatClassEdit {
 				for(int codeIdx = 0; codeIdx < editor.codeLength(); codeIdx++) {
 					Object curCode = editor.codeElementAt(codeIdx);
 					MemberRef fieldRef = fieldRef(curCode);
-					if(fieldRef != null) {
+					if(fieldRef != null && accept(fieldRef)) {
 						fieldAccessIndexes.put(new Integer(codeIdx), fieldRef);
 					}
 				}
@@ -70,6 +75,18 @@ public class InstrumentFieldAccessEdit implements BloatClassEdit {
 					editor.insertCodeAt(new Instruction(Opcode.opc_dup), idx.intValue());
 					editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, targetActivateMethod), idx.intValue() + 1);
 					editor.commit();
+				}
+			}
+
+			private boolean accept(MemberRef fieldRef) {
+				String className = fieldRef.declaringClass().className();
+				String normalizedClassName = BloatUtil.normalizeClassName(className);
+				try {
+					return _filter.accept(Class.forName(normalizedClassName));
+				} catch (ClassNotFoundException e) {
+					// TODO: sensible error notification.
+					e.printStackTrace();
+					return false;
 				}
 			}
 
