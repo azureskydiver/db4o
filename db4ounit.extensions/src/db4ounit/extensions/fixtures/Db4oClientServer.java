@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.foundation.io.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
@@ -37,7 +38,7 @@ public class Db4oClientServer extends
 	
 	private String _label;
     
-    protected static final int _port = findFreePort();
+    private int _port;
     
     
     public Db4oClientServer(ConfigurationSource configSource,String fileName, boolean embeddedClient, String label) {
@@ -48,34 +49,17 @@ public class Db4oClientServer extends
     }
     
     public Db4oClientServer(ConfigurationSource configSource, boolean embeddedClient, String label){
-        this(configSource,FILE, embeddedClient, label);
-    }
-    
-    public static int findFreePort() {
-    	
-		try {
-			return findFreePort(DEFAULT_PORT);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			return findFreePort(0);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		throw new IllegalStateException("Could not allocate a usable port");
-    }
-    
-    private static int findFreePort(int port) throws IOException{
-		ServerSocket4 server = new ServerSocket4(new PlainSocketFactory(), port);
-		port = server.getLocalPort();
-		server.close();
-    	Cool.sleepIgnoringInterruption(3);
-    	return port; 
+        this(configSource,filePath(), embeddedClient, label);
     }
 
+	private static String filePath() {
+		String path = System.getProperty("db4ounit.file.path");
+		if(path == null || path.length() == 0) {
+			path =".";
+		}
+		return Path4.combine(path, FILE);
+	}
+    
     public void open() throws Exception {
 		openServer();
 		_objectContainer = _embeddedClient ? openEmbeddedClient().ext() : Db4o
@@ -89,7 +73,8 @@ public class Db4oClientServer extends
 	}
 
     private void openServer() throws Exception {
-        _server = Db4o.openServer(config(),_yap.getAbsolutePath(), _port);
+        _server = Db4o.openServer(config(),_yap.getAbsolutePath(), -1);
+        _port = _server.ext().port();
         _server.grantAccess(USERNAME, PASSWORD);
     }
     
@@ -144,7 +129,7 @@ public class Db4oClientServer extends
 	}
 	
 	public void defragment() throws Exception {
-		defragment(FILE);
+		defragment(filePath());
 	}
 	
 	private ObjectContainer openEmbeddedClient() {

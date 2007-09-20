@@ -56,4 +56,9 @@ public interface ExtObjectServer extends ObjectServer{
 	 * @param userName the name of the user
 	 */
 	public void revokeAccess(String userName);
+	
+	/**
+	 * @return The local port this server uses, 0 if disconnected or in embedded mode
+	 */
+    public int port();
 }

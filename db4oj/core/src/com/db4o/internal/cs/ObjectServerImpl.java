@@ -21,7 +21,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 
 	private ServerSocket4 _serverSocket;
 	
-	private final int _port;
+	private int _port;
 
 	private int i_threadIDGen = 1;
 
@@ -43,8 +43,15 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private SimpleTimer _houseKeepingTimer;
 	
 	private final NativeSocketFactory _socketFactory;
+
+	private final boolean _isEmbeddedServer;
 	
 	public ObjectServerImpl(final LocalObjectContainer container, int port, NativeSocketFactory socketFactory) {
+		this(container, (port < 0 ? 0 : port), port == 0, socketFactory);
+	}
+	
+	public ObjectServerImpl(final LocalObjectContainer container, int port, boolean isEmbeddedServer, NativeSocketFactory socketFactory) {
+		_isEmbeddedServer = isEmbeddedServer;
 		_socketFactory = socketFactory;
 		_container = container;
 		_transactionPool = new ClientTransactionPool(container);
@@ -106,6 +113,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private void startServerSocket() {
 		try {
 			_serverSocket = new ServerSocket4(_socketFactory, _port);
+			_port = _serverSocket.getLocalPort();
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
 		}
@@ -113,7 +121,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private boolean isEmbeddedServer() {
-		return _port <= 0;
+		return _isEmbeddedServer;
 	}
 
 	private void ensureLoadStaticClass() {
@@ -410,5 +418,9 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
             }
         }
 		return false;
+	}
+
+	public int port() {
+		return _port;
 	}
 }
