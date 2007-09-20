@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.handlers;
 
-import java.io.*;
+import com.db4o.db4ounit.util.*;
 
 import db4ounit.*;
 
@@ -29,22 +29,24 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private static final char[] data = new char[] {
-    	0x0000,
-    	0x000F,
-    	0x00F0,
-    	0x00FF,
-    	0x0F00,
-    	0x0F0F,
-    	0x0FF0,
-    	0x0FFF,
-    	0xF000,
-    	0xF00F,
-    	0xF0F0,
-    	0xF0FF,
-    	0xFF00,
-    	0xFF0F,
-    	0xFFF0,
-    	0xFFFF,
+        Character.MIN_VALUE,
+    	(char)0x0000,
+    	(char)0x000F,
+    	(char)0x00F0,
+    	(char)0x00FF,
+    	(char)0x0F00,
+    	(char)0x0F0F,
+    	(char)0x0FF0,
+    	(char)0x0FFF,
+    	(char)0xF000,
+    	(char)0xF00F,
+    	(char)0xF0F0,
+    	(char)0xF0FF,
+    	(char)0xFF00,
+    	(char)0xFF0F,
+    	(char)0xFFF0,
+    	(char)0xFFFF,
+    	Character.MAX_VALUE,
     };
     
     public static void main(String[] args) {
@@ -55,7 +57,7 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         ItemArrays itemArrays = (ItemArrays)obj;
         
         assertPrimitiveArray(itemArrays._typedPrimitiveArray);
-        assertPrimitiveArray((char[])itemArrays._primitiveArrayInObject);
+        assertPrimitiveArray(castToCharArray(itemArrays._primitiveArrayInObject));
         assertWrapperArray(itemArrays._typedWrapperArray);
         assertUntypedObjectArray(itemArrays);
         assertWrapperArray((Character[])itemArrays._wrapperArrayInObject);
@@ -92,18 +94,10 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         
         Item nullItem = (Item) values[values.length -1];
         assertAreEqual((char)0, nullItem._typedPrimitive);
-        Assert.isNull(nullItem._typedWrapper);
+        assertCharWrapperIsNull(nullItem._typedWrapper);
         Assert.isNull(nullItem._untyped);
     }
 
-    private void assertAreEqual(char expected, char actual) {
-        Assert.areEqual(expected, actual);
-    }
-
-    private void assertAreEqual(Object expected, Object actual) {
-        Assert.areEqual(expected, actual);
-    }
-    
     protected Object createArrays() {
         ItemArrays itemArrays = new ItemArrays();
         itemArrays._typedPrimitiveArray = new char[data.length];
@@ -154,8 +148,43 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         return "char";
     }
     
-    public void test() throws IOException {
-    	return;
+    private void assertAreEqual(char expected, char actual){
+        Assert.areEqual(expected, actual);
+    }
+    
+    private void assertAreEqual(Object expected, Object actual){
+        Assert.areEqual(expected, actual);
+    }
+    
+    private void assertCharWrapperIsNull(Object obj){
+        if(_handlerVersion == 0){
+            
+            // Bug when reading old format:
+            // Null wrappers are converted to Character.MAX_VALUE
+            
+            Assert.areEqual(new Character(Character.MAX_VALUE), obj);
+        } else {
+            Assert.isNull(obj);
+        }
+    }
+    
+    private char[] castToCharArray(Object obj){
+        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
+            
+            // Bug in the oldest format: 
+            // It accidentally converted char[] arrays to Character[] arrays.
+            
+            Character[] wrapperArray = (Character[])obj;
+            char[] res = new char[wrapperArray.length];
+            for (int i = 0; i < wrapperArray.length; i++) {
+                if(wrapperArray[i] != null){
+                    res[i] = wrapperArray[i].charValue();
+                }
+            }
+            return res;
+        }
+        
+        return (char[]) obj;
     }
     
 
