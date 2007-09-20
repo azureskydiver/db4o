@@ -399,7 +399,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			if (rcvRetval == null
 					|| rcvRetval.root() != CandidateFieldRoot.INSTANCE) {
 				if (rcvRetval == null) {
-					rcvRetval = new StaticFieldRoot(bloatUtil.normalizedClassName(expr
+					rcvRetval = new StaticFieldRoot(bloatUtil.normalizeClassName(expr
 							.method().declaringClass()));
 				}
 				params.remove(0);
@@ -407,7 +407,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 						.paramTypes();
 				Class[] javaParamTypes = new Class[paramTypes.length];
 				for (int paramIdx = 0; paramIdx < paramTypes.length; paramIdx++) {
-					String className = bloatUtil.normalizedClassName(paramTypes[paramIdx]);
+					String className = bloatUtil.normalizeClassName(paramTypes[paramIdx]);
 					javaParamTypes[paramIdx] = (PRIMITIVE_CLASSES
 							.containsKey(className) ? (Class) PRIMITIVE_CLASSES
 							.get(className) : Class.forName(className));
@@ -550,7 +550,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private boolean isPrimitiveWrapper(Type type) {
 		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,
-				bloatUtil.normalizedClassName(type)) >= 0;
+				bloatUtil.normalizeClassName(type)) >= 0;
 	}
 	
 	private boolean isPrimitiveExpr(Expr expr) {
@@ -601,14 +601,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		String fieldName = expr.field().name();
 		if (fieldObj instanceof ComparisonOperandAnchor) {
 			retval(new FieldValue((ComparisonOperandAnchor) fieldObj,
-					fieldName, bloatUtil.normalizedClassName(expr.field().type())));
+					fieldName, bloatUtil.normalizeClassName(expr.field().type())));
 		}
 	}
 
 	public void visitStaticFieldExpr(StaticFieldExpr expr) {
 		MemberRef field = expr.field();
-		retval(new FieldValue(new StaticFieldRoot(bloatUtil.normalizedClassName(field
-				.declaringClass())), field.name(), bloatUtil.normalizedClassName(field
+		retval(new FieldValue(new StaticFieldRoot(bloatUtil.normalizeClassName(field
+				.declaringClass())), field.name(), bloatUtil.normalizeClassName(field
 				.type())));
 	}
 

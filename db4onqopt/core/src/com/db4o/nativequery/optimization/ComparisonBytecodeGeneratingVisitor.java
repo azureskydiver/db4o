@@ -42,7 +42,6 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		if(value!=null) {
 			applyConversion(value.getClass(),!inArithmetic);
 		}
-		// FIXME handle char, boolean,...
 	}
 
 	private Object coerce(Object value) {
