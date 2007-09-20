@@ -277,7 +277,8 @@ public class Db4o {
      * port number.
      * @param databaseFileName an absolute or relative path to the database file
      * @param port the port to be used, or 0, if the server should not open a port,
-     * because it will only be used with {@link ObjectServer#openClient()}
+     * because it will only be used with {@link ObjectServer#openClient()}.
+     * Specify a value < 0 if an arbitrary free port should be chosen - see {@link ExtObjectServer#port()}.
 	 * @return an {@link ObjectServer ObjectServer} listening
 	 * on the specified port.
      * @see Configuration#readOnly
@@ -311,7 +312,8 @@ public class Db4o {
 	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
      * @param databaseFileName an absolute or relative path to the database file
      * @param port the port to be used, or 0, if the server should not open a port,
-     * because it will only be used with {@link ObjectServer#openClient()}
+     * because it will only be used with {@link ObjectServer#openClient()}.
+     * Specify a value < 0 if an arbitrary free port should be chosen - see {@link ExtObjectServer#port()}.
 	 * @return an {@link ObjectServer ObjectServer} listening
 	 * on the specified port.
      * @see Configuration#readOnly
@@ -345,7 +347,8 @@ public class Db4o {
 	 * @param config a custom {@link Configuration Configuration} instance to be obtained via {@link Db4o#newConfiguration()}
      * @param databaseFileName an absolute or relative path to the database file
      * @param port the port to be used, or 0, if the server should not open a port,
-     * because it will only be used with {@link ObjectServer#openClient()}
+     * because it will only be used with {@link ObjectServer#openClient()}.
+     * Specify a value < 0 if an arbitrary free port should be chosen - see {@link ExtObjectServer#port()}.
      * @param socketFactory the {@link NativeSocketFactory} to be used for socket creation
 	 * @return an {@link ObjectServer ObjectServer} listening
 	 * on the specified port.

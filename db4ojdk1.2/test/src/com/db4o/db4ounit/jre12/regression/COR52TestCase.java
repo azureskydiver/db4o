@@ -24,11 +24,10 @@ public class COR52TestCase implements TestCase {
 		int originalActivationDepth = ((Config4Impl) Db4o.configure())
 				.activationDepth();
 		Db4o.configure().activationDepth(0);
-		int port = Db4oClientServer.findFreePort();
-		ObjectServer server = Db4o.openServer(TEST_FILE, port);
+		ObjectServer server = Db4o.openServer(TEST_FILE, -1);
 		try {
 			server.grantAccess("db4o", "db4o");
-			ObjectContainer oc = Db4o.openClient("localhost", port, "db4o",
+			ObjectContainer oc = Db4o.openClient("localhost", server.ext().port(), "db4o",
 					"db4o");
 			oc.close();
 		} finally {
