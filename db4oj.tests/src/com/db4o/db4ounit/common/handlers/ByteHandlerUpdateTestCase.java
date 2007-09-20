@@ -86,9 +86,7 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
         Item nullItem = (Item) values[values.length - 1];
         assertAreEqual((byte) 0, nullItem._typedPrimitive);
-        // FIXME: Store null Byte
-        System.out.println("Null: " + nullItem._typedWrapper);
-        // Assert.isNull(nullItem._typedWrapper);
+        assertByteWrapperIsNull(nullItem._typedWrapper);
         Assert.isNull(nullItem._untyped);
     }
 
@@ -148,6 +146,18 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         }
         values[values.length - 1] = new Item();
         return values;
+    }
+    
+    private void assertByteWrapperIsNull(Object obj){
+        if(_handlerVersion == 0){
+            
+            // Bug when reading old format:
+            // Null wrappers are converted to 0
+            
+            Assert.areEqual(new Byte((byte)0), obj);
+        } else {
+            Assert.isNull(obj);
+        }
     }
 
     protected String typeName() {
