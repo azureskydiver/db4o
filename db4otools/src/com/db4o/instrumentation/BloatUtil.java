@@ -50,7 +50,7 @@ public class BloatUtil {
 	}
 
 	public ClassEditor classEditor(Type type) throws ClassNotFoundException {
-		return type == null ? null : classEditor(normalizedClassName(type));
+		return type == null ? null : classEditor(normalizeClassName(type));
 	}
 
 	private boolean signatureMatchesTypes(Type[] argTypes,
@@ -75,8 +75,12 @@ public class BloatUtil {
 		return new ClassEditor(context, loader.loadClass(className));
 	}
 
-	public String normalizedClassName(Type type) {
-		return type.className().replace('/', '.');
+	public static String normalizeClassName(Type type) {
+		return normalizeClassName(type.className());
+	}
+	
+	public static String normalizeClassName(String className) {
+		return className.replace('/', '.');
 	}
 	
 	public ClassEditor classEditor(int modifiers, String className, Type superClass, Type[] interfaces) {
