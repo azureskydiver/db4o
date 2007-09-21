@@ -91,12 +91,16 @@ public class Db4oVersionRunner extends Db4oTestSuite {
 	public int runSolo() {
 		int failures = 0;
 		for (int i = 0; i < _testCases.length; i++) {
-			if (FormatMigrationTestCaseBase.class
-					.isAssignableFrom(_testCases[i])) {
-				failures += runSingleUpdateTest(_testCases[i]);
-			}
+			assertVersionUpdateTestCase(_testCases[i]);
+			failures += runSingleUpdateTest(_testCases[i]);
 		}
 		return failures;
+	}
+
+	private void assertVersionUpdateTestCase(Class clazz) {
+		if (!FormatMigrationTestCaseBase.class.isAssignableFrom(clazz)) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	private int runSingleUpdateTest(Class test) {
