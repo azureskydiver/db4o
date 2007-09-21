@@ -152,7 +152,7 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         for (int i = 0; i < data.length; i++) {
             assertAreEqual(new Integer(data[i]), item._untypedObjectArray[i]);
         }
-        Assert.isNull(item._untypedObjectArray[item._untypedObjectArray.length - 1]);
+        Assert.isNull(item._untypedObjectArray[data.length]);
     }
     
     private void assertPrimitiveArrayInObject(ItemArrays item) {
@@ -180,7 +180,7 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         
         //        Arrays should also get a null Bitmap to fix.
         
-        // Assert.isNull(values[values.length - 1]);
+        // Assert.isNull(values[data.length]);
     }
     
     private void assertAreEqual(int expected, int actual){

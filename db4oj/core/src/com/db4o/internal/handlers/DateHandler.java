@@ -43,6 +43,10 @@ public class DateHandler extends LongHandler {
 		return null;
 	}
 	
+	public Object nullRepresentationInUntypedArrays() {
+	    return new Date(0);
+	}
+	
 	public Object read(MarshallerFamily mf, StatefulBuffer writer, boolean redirect)
 			throws CorruptionException {
 		return mf._primitive.readDate(writer);
