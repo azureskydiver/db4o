@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.db4ounit.util.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 
@@ -169,23 +170,30 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private char[] castToCharArray(Object obj){
-        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
-            
-            // Bug in the oldest format: 
-            // It accidentally converted char[] arrays to Character[] arrays.
-            
-            Character[] wrapperArray = (Character[])obj;
-            char[] res = new char[wrapperArray.length];
-            for (int i = 0; i < wrapperArray.length; i++) {
-                if(wrapperArray[i] != null){
-                    res[i] = wrapperArray[i].charValue();
-                }
-            }
-            return res;
-        }
-        
-        return (char[]) obj;
+        ObjectByRef byRef = new ObjectByRef(obj);
+        castToCharArrayJavaOnly(byRef);
+        return (char[]) byRef.value;
     }
     
+    /**
+     * @sharpen.remove
+     */
+    private void castToCharArrayJavaOnly(ObjectByRef byRef) {
+        if(_db4oHeaderVersion != VersionServices.HEADER_30_40){
+            return;
+        }
+            
+        // Bug in the oldest format: 
+        // It accidentally converted char[] arrays to Character[] arrays.
+        
+        Character[] wrapperArray = (Character[])byRef.value;
+        char[] res = new char[wrapperArray.length];
+        for (int i = 0; i < wrapperArray.length; i++) {
+            if(wrapperArray[i] != null){
+                res[i] = wrapperArray[i].charValue();
+            }
+        }
+        byRef.value = res;
+    }
 
 }

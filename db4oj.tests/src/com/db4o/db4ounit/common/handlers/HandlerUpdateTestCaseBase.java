@@ -7,6 +7,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.query.*;
 
 public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseBase {
@@ -71,24 +72,31 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     
     protected abstract void assertArrays(Object obj);
 
-    
     protected int[] castToIntArray(Object obj){
-        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
-            
-            // Bug in the oldest format: 
-            // It accidentally converted int[] arrays to Integer[] arrays.
-            
-            Integer[] wrapperArray = (Integer[])obj;
-            int[] res = new int[wrapperArray.length];
-            for (int i = 0; i < wrapperArray.length; i++) {
-                if(wrapperArray[i] != null){
-                    res[i] = wrapperArray[i].intValue();
-                }
-            }
-            return res;
+        ObjectByRef byRef = new ObjectByRef(obj);
+        castToIntArrayJavaOnly(byRef);
+        return (int[]) byRef.value;
+    }
+
+    /**
+     * @sharpen.remove
+     */
+    private void castToIntArrayJavaOnly(ObjectByRef byRef) {
+        if(_db4oHeaderVersion != VersionServices.HEADER_30_40){
+            return;
         }
+            
+        // Bug in the oldest format: 
+        // It accidentally converted int[] arrays to Integer[] arrays.
         
-        return (int[]) obj;
+        Integer[] wrapperArray = (Integer[])byRef.value;
+        int[] res = new int[wrapperArray.length];
+        for (int i = 0; i < wrapperArray.length; i++) {
+            if(wrapperArray[i] != null){
+                res[i] = wrapperArray[i].intValue();
+            }
+        }
+        byRef.value = res;
     }
 
 }
