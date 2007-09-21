@@ -18,29 +18,28 @@ public class Db4oVersionUpdateService {
 
 	private final static String[] PREFIXES = { "com.db4o" };
 
-	public static void createDatabase(File file, Class test) throws Exception {
-		ClassLoader loader = getVersionClassLoader(file.toURL());
-		Class clazz = loader.loadClass(test.getName());
+	public static void createDatabase(File db4oLib, Class databaseCreator) throws Exception {
+		ClassLoader loader = getVersionClassLoader(db4oLib.toURL());
+		Class clazz = loader.loadClass(databaseCreator.getName());
 		Object obj = clazz.newInstance();
 		Method method = clazz.getMethod("createDatabase", new Class[] {});
 		method.invoke(obj, new Object[] {});
 	}
 	
-	public static String getDb4oVersion(URL db4oEngineURL) throws Exception {
-        ClassLoader loader = getVersionClassLoader(db4oEngineURL);
+	public static String getDb4oVersion(URL db4oLibURL) throws Exception {
+        ClassLoader loader = getVersionClassLoader(db4oLibURL);
         Class clazz = loader.loadClass("com.db4o.Db4o");
         Method method = clazz.getMethod("version", new Class[] {});
         String version = (String) method.invoke(null, new Object[] {});
         return version.replace(' ', '_');
     }
 	
-	public static File[] getDb4oLibFiles(File path) {
-        File[] files = path.listFiles(new FilenameFilter() {
+	public static File[] getDb4oLibFiles(File libDir) {
+        return libDir.listFiles(new FilenameFilter() {
             public boolean accept(File file, String name) {
                 return name.endsWith(".jar");
             }
         });
-        return files;
     }
 	
 	private static ClassLoader getVersionClassLoader(URL url)
