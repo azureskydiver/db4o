@@ -4,11 +4,8 @@ package com.db4o.db4ounit.jre12.handlers;
 
 import java.io.*;
 import java.lang.reflect.*;
-import java.net.*;
-import java.util.*;
 
 import com.db4o.db4ounit.common.handlers.*;
-import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 
 import db4ounit.*;
@@ -16,158 +13,108 @@ import db4ounit.extensions.*;
 
 public class Db4oVersionRunner extends Db4oTestSuite {
 
-    private static String DB4OTESTS_BIN_PATH = System.getProperty(
-            "db4oj.tests.bin", "../db4oj.tests/bin");
+	private Class[] _testCases;
 
-    private static String DB4OARCHIVES_PATH = System.getProperty(
-            "db4o.archives.path", "../db4o.archives/java1.2/");
+	private File[] _db4oLibs;
 
-    private static String[] prefixes = { "com.db4o" };
+	private String[] _db4oLibVersions;
 
-    private File testBinPath = new File(DB4OTESTS_BIN_PATH);
+	public static File _testBinPath;
 
-    private File archivePath = new File(DB4OARCHIVES_PATH);
+	private static File _archivesPath;
 
-    private Class testCase;
+	static {
+		globalInitialize();
+	}
 
-    private String db4oJarFile;
-    
-    private Map cache = new HashMap();
+	private static void globalInitialize() {
+		_testBinPath = getCanonicalFile(System.getProperty("db4oj.tests.bin",
+				"../db4oj.tests/bin"));
+		_archivesPath = getCanonicalFile(System.getProperty(
+				"db4o.archives.path", "../db4o.archives/java1.2/"));
+	}
 
-    public static void main(String[] args) throws Exception {
-        new Db4oVersionRunner().runSolo();
-    }
+	private static File getCanonicalFile(String path) {
+		File file = new File(path);
+		try {
+			return file.getCanonicalFile();
+		} catch (IOException e) {
+			return file;
+		}
+	}
 
-    protected Class[] testCases() {
-        return new Class[] {
-            BooleanHandlerUpdateTestCase.class,
-        	CharHandlerUpdateTestCase.class,
-			DoubleHandlerUpdateTestCase.class,
-			FloatHandlerUpdateTestCase.class,
-            IntHandlerUpdateTestCase.class, 
-            LongHandlerUpdateTestCase.class,
-            MultiDimensionalArrayHandlerUpdateTestCase.class,
-            NestedArrayUpdateTestCase.class,
-            ObjectArrayUpdateTestCase.class,
-            ShortHandlerUpdateTestCase.class,
-            StringHandlerUpdateTestCase.class,
-        };
-    }
+	public static void main(String[] args) throws Exception {
+		new Db4oVersionRunner().runSolo();
+	}
 
-    public Db4oVersionRunner() {
-        this(null, null);
-    }
+	protected Class[] testCases() {
+		return new Class[] { 
+				BooleanHandlerUpdateTestCase.class,
+				CharHandlerUpdateTestCase.class,
+				DoubleHandlerUpdateTestCase.class,
+				FloatHandlerUpdateTestCase.class,
+				IntHandlerUpdateTestCase.class,
+				LongHandlerUpdateTestCase.class,
+				NestedArrayUpdateTestCase.class,
+				ObjectArrayUpdateTestCase.class,
+				ShortHandlerUpdateTestCase.class,
+				StringHandlerUpdateTestCase.class, };
+	}
 
-    public Db4oVersionRunner(String db4oJar, Class test) {
-        this.db4oJarFile = db4oJar;
-        this.testCase = test;
+	public Db4oVersionRunner() {
+		this(null, null);
+	}
 
-        try {
-            // if possible, use the canonical file.
-            testBinPath = new File(DB4OTESTS_BIN_PATH).getCanonicalFile();
-            archivePath = new File(DB4OARCHIVES_PATH).getCanonicalFile();
-        } catch (IOException e) {
-            //
-        }
-    }
+	public Db4oVersionRunner(String db4oLib, Class testCase) {
+		if (db4oLib == null) {
+			_db4oLibs = Db4oVersionUpdateService.getDb4oLibFiles(_archivesPath);
+		} else {
+			_db4oLibs = new File[] { getCanonicalFile(db4oLib) };
+		}
+		_db4oLibVersions = libVersions(_db4oLibs);
+		_testCases = testCase == null ? testCases() : new Class[] { testCase };
+	}
 
-    public int runSolo() {
-        if (testCase != null) {
-            return runSingleUpdateTest(testCase);
-        } 
-        Class[] testCases = testCases();
-        for (int i = 0; i < testCases.length; i++) {
-            if (FormatMigrationTestCaseBase.class
-                    .isAssignableFrom(testCases[i])) {
-                int failures = runSingleUpdateTest(testCases[i]);
-                if (failures != 0) {
-                    return failures;
-                }
-            }
-        }
-        return 0;
-    }
+	private static String[] libVersions(File[] libs) {
+		String[] versions = new String[libs.length];
+		try {
+			for (int i = 0; i < versions.length; ++i) {
+				versions[i] = Db4oVersionUpdateService.getDb4oVersion(libs[i]
+						.toURL());
+			}
+		} catch (Exception e) {
+			Assert.fail("failed to get lib version" + e.getMessage());
+		}
+		return versions;
+	}
 
-    private int runSingleUpdateTest(Class test) {
-        try {
-            if (db4oJarFile != null) {
-                File file = new File(archivePath, db4oJarFile);
-                if (!file.exists()) {
-                    throw new Db4oException("File not found: " + db4oJarFile);
-                }
-                file = file.getCanonicalFile();
-                createDatabase(file, test);
-                String version = getDb4oVersion(file.toURL());
-                return run(new String[] { version }, test);
-            } 
-            File[] files = getDb4oJarFiles();
-            for (int i = 0; i < files.length; i++) {
-                createDatabase(files[i], test);
-            }
-            return run(getDb4oVersions(), test);
-            
-        } catch (Exception e) {
-            throw new Db4oException(e);
-        }
-    }
+	public int runSolo() {
+		int failures = 0;
+		for (int i = 0; i < _testCases.length; i++) {
+			if (FormatMigrationTestCaseBase.class
+					.isAssignableFrom(_testCases[i])) {
+				failures += runSingleUpdateTest(_testCases[i]);
+			}
+		}
+		return failures;
+	}
 
-    private void createDatabase(File file, Class test) throws Exception {
-        ClassLoader loader = getVersionClassLoader(file.toURL());
-        Class clazz = loader.loadClass(test.getName());
-        Object obj = clazz.newInstance();
-        Method method = clazz.getMethod("createDatabase", new Class[] {});
-        method.invoke(obj, new Object[] {});
-    }
+	private int runSingleUpdateTest(Class test) {
+		try {
+			for (int i = 0; i < _db4oLibs.length; i++) {
+				Db4oVersionUpdateService.createDatabase(_db4oLibs[i], test);
+			}
+			return run(_db4oLibVersions, test);
 
-    private int run(String[] versions, Class test) throws Exception {
-        Field field = test.getField("db4oVersions");
-        field.set(null, versions);
-        return new TestRunner(test).run();
-    }
+		} catch (Exception e) {
+			throw new Db4oException(e);
+		}
+	}
 
-    private File[] getDb4oJarFiles() {
-        File[] files = archivePath.listFiles(new FilenameFilter() {
-            public boolean accept(File file, String name) {
-                return name.endsWith(".jar");
-            }
-        });
-        return files;
-    }
+	private int run(String[] versions, Class test) throws Exception {
+		Field field = test.getField("db4oVersions");
+		field.set(null, versions);
+		return new TestRunner(test).run();
+	}
 
-    private String[] getDb4oVersions() throws Exception {
-        ArrayList lists = new ArrayList();
-
-        File[] files = archivePath.listFiles(new FilenameFilter() {
-            public boolean accept(File file, String name) {
-                return name.endsWith(".jar");
-            }
-        });
-        for (int i = 0; i < files.length; i++) {
-            URL db4oEngineURL = files[i].toURL();
-            String version = getDb4oVersion(db4oEngineURL);
-            lists.add(version);
-        }
-        String[] db4oVersions = new String[lists.size()];
-        lists.toArray(db4oVersions);
-        return db4oVersions;
-    }
-
-    private String getDb4oVersion(URL db4oEngineURL) throws Exception {
-        ClassLoader loader = getVersionClassLoader(db4oEngineURL);
-        Class clazz = loader.loadClass("com.db4o.Db4o");
-        Method method = clazz.getMethod("version", new Class[] {});
-        String version = (String) method.invoke(null, new Object[] {});
-        return version.replace(' ', '_');
-    }
-    
-    private ClassLoader getVersionClassLoader(URL url)
-            throws MalformedURLException {
-        ClassLoader loader = (ClassLoader) cache.get(url);
-        if (loader == null) {
-            URL[] urls = new URL[] { testBinPath.toURL(), url, };
-            loader = new VersionClassLoader(urls, prefixes);
-            cache.put(url, loader);
-        }
-        return loader;
-    }
 }
