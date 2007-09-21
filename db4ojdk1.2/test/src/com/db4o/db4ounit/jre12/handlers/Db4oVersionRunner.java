@@ -49,16 +49,19 @@ public class Db4oVersionRunner extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] { 
-				BooleanHandlerUpdateTestCase.class,
-				CharHandlerUpdateTestCase.class,
-				DoubleHandlerUpdateTestCase.class,
-				FloatHandlerUpdateTestCase.class,
-				IntHandlerUpdateTestCase.class,
-				LongHandlerUpdateTestCase.class,
-				NestedArrayUpdateTestCase.class,
-				ObjectArrayUpdateTestCase.class,
-				ShortHandlerUpdateTestCase.class,
-				StringHandlerUpdateTestCase.class, };
+            BooleanHandlerUpdateTestCase.class,
+            ByteHandlerUpdateTestCase.class,
+            CharHandlerUpdateTestCase.class,
+            DateHandlerUpdateTestCase.class,
+            DoubleHandlerUpdateTestCase.class,
+            FloatHandlerUpdateTestCase.class,
+            IntHandlerUpdateTestCase.class,
+            LongHandlerUpdateTestCase.class,
+            NestedArrayUpdateTestCase.class,
+            ObjectArrayUpdateTestCase.class,
+            ShortHandlerUpdateTestCase.class,
+            StringHandlerUpdateTestCase.class, 
+		};
 	}
 
 	public Db4oVersionRunner() {
