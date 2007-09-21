@@ -46,11 +46,12 @@ public class Db4oVersionRunner extends Db4oTestSuite {
 			FloatHandlerUpdateTestCase.class,
             IntHandlerUpdateTestCase.class, 
             LongHandlerUpdateTestCase.class,
+            MultiDimensionalArrayHandlerUpdateTestCase.class,
             NestedArrayUpdateTestCase.class,
             ObjectArrayUpdateTestCase.class,
             ShortHandlerUpdateTestCase.class,
             StringHandlerUpdateTestCase.class,
-            };
+        };
     }
 
     public Db4oVersionRunner() {

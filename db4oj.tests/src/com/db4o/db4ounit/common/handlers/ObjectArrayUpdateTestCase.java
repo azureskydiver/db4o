@@ -87,11 +87,11 @@ public class ObjectArrayUpdateTestCase extends HandlerUpdateTestCaseBase {
 
     protected Object createArrays() {
         ItemArrays item = new ItemArrays();
-        item._typedChildren = cast(childData);
+        item._typedChildren = castToChildItemArray(childData);
         item._typedChildrenInParentArray = childData;
-        item._untypedChildren = cast(childData);
+        item._untypedChildren = castToChildItemArray(childData);
         item._untypedChildrenInParentArray = childData;
-        item._untypedChildrenInObject = cast(childData);
+        item._untypedChildrenInObject = castToChildItemArray(childData);
         item._untypedChildrenInParentArrayInObject = childData;
         item._typedMixed = mixedData;
         item._untypedMixed = mixedData;
@@ -101,18 +101,18 @@ public class ObjectArrayUpdateTestCase extends HandlerUpdateTestCaseBase {
 
     protected void assertArrays(Object obj) {
         ItemArrays item = (ItemArrays) obj;
-        ArrayAssert.areEqual(cast(childData), item._typedChildren);
+        ArrayAssert.areEqual(castToChildItemArray(childData), item._typedChildren);
         ArrayAssert.areEqual(childData, item._typedChildrenInParentArray);
-        ArrayAssert.areEqual(cast(childData), item._untypedChildren);
+        ArrayAssert.areEqual(castToChildItemArray(childData), item._untypedChildren);
         ArrayAssert.areEqual(childData, item._untypedChildrenInParentArray);
-        ArrayAssert.areEqual(cast(childData), (Object[]) item._untypedChildrenInObject);
+        ArrayAssert.areEqual(castToChildItemArray(childData), (Object[]) item._untypedChildrenInObject);
         ArrayAssert.areEqual(childData, (Object[]) item._untypedChildrenInParentArrayInObject);
         ArrayAssert.areEqual(mixedData, item._typedMixed);
         ArrayAssert.areEqual(mixedData, item._untypedMixed);
         ArrayAssert.areEqual(mixedData, (Object[]) item._untypedMixedInObject);
     }
     
-    private ChildItem[] cast(ParentItem[] array){
+    private ChildItem[] castToChildItemArray(ParentItem[] array){
         ChildItem[] res = new ChildItem[array.length];
         for (int i = 0; i < res.length; i++) {
             res[i] = (ChildItem) array[i];
