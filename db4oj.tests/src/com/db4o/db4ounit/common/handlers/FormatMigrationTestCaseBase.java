@@ -27,7 +27,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
         
     }
     
-    protected static final String PATH = "./test/db4oVersions/";
+    protected static final String PATH = Path4.combine(Path4.getTempPath(), "test/db4oVersions");
 
     protected String fileName(){
         return fileName(Db4o.version());
