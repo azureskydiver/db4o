@@ -184,21 +184,27 @@
 		<property name="db4o.version.iteration.revision" value="${db4o.version.dotted}.${db4o.iteration}.${svn.revision}" />
 		<property name="db4o.file" value="db4o-${db4o.version.iteration.revision}-" />
 		
-		<property name="db4o.jarfile" value="db4o-${db4o.version.dotted}-" />
+		<property name="filename.java1.1.jar" value="${db4o.file}java1.1.jar" />
+		<property name="filename.java1.2.jar" value="${db4o.file}java1.2.jar" />
+		<property name="filename.java5.jar" value="${db4o.file}java5.jar" />
+		<property name="filename.nqopt.jar" value="${db4o.file}nqopt.jar" />
+		<property name="filename.db4otools.jar" value="${db4o.file}tools.jar" />
+		<property name="filename.db4ounit.jar" value="${db4o.file}db4ounit.jar" />
+		<property name="filename.ta.jar" value="${db4o.file}ta.jar" />
+		<property name="filename.osgi.jar" value="${db4o.file}osgi.jar" />
+		<property name="filename.osgi.test.jar" value="${db4o.file}osgi-test.jar" />
 		
-		<property name="file.java1.1.jar" value="${dir.dist.jars}/${db4o.jarfile}java1.1.jar" />
-		<property name="filename.java1.2.jar" value="${db4o.jarfile}java1.2.jar" />
+		<property name="file.java1.1.jar" value="${dir.dist.jars}/${filename.java1.1.jar}" />
 		<property name="file.java1.2.jar" value="${dir.dist.jars}/${filename.java1.2.jar}" />
-		<property name="file.java5.jar" value="${dir.dist.jars}/${db4o.jarfile}java5.jar" />
-		<property name="file.osgi.jar" value="${dir.dist.jars}/${db4o.jarfile}osgi.jar" />
-		<property name="file.osgi.test.jar" value="${dir.dist.jars}/${db4o.jarfile}osgi-test.jar" />
-		<property name="file.sharp.jar" value="${dir.dist.jars}/${db4o.jarfile}sharp.jar" />
-		<property name="file.db4otools.jar" value="${dir.dist.jars}/${db4o.jarfile}tools.jar" />
-		<property name="filename.nqopt.jar" value="${db4o.jarfile}nqopt.jar" />
+		<property name="file.java5.jar" value="${dir.dist.jars}/${filename.java5.jar}" />
 		<property name="file.nqopt.jar" value="${dir.dist.jars}/${filename.nqopt.jar}" />
-		<property name="file.db4ounit.jar" value="${dir.dist.jars}/${db4o.jarfile}db4ounit.jar" />
-		<property name="file.ta.jar" value="${dir.dist.jars}/${db4o.jarfile}ta.jar" />
-		<property name="file.java.test.src.zip" value="${dir.dist.java}/${db4o.jarfile}test.zip" />
+		<property name="file.db4otools.jar" value="${dir.dist.jars}/${filename.db4otools.jar}" />
+		<property name="file.db4ounit.jar" value="${dir.dist.jars}/${filename.db4ounit.jar}" />
+		<property name="file.ta.jar" value="${dir.dist.jars}/${filename.ta.jar}" />
+		<property name="file.osgi.jar" value="${dir.dist.jars}/${filename.osgi.jar}" />
+		<property name="file.osgi.test.jar" value="${dir.dist.jars}/${filename.osgi.test.jar}" />
+		<property name="file.sharp.jar" value="${dir.dist.jars}/${db4o.file}sharp.jar" />
+		<property name="file.java.test.src.zip" value="${dir.dist.java}/${db4o.file}test.zip" />
 		<property name="file.dist.java" value="${dir.dist}/${db4o.file}java.zip" />
 	</target>
 

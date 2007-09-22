@@ -1042,9 +1042,8 @@
 	</target>
 
 	<target name="buildnet2">
-		<ant antfile="build-dotnet.xml" target="package" >
-			<property name="skip.java.compilation" value="true" />
-		</ant>
+		<ant antfile="build-java.xml" target="doctor"/>
+		<ant antfile="build-dotnet.xml" target="package" />
 	</target>	
 
 	<target name="buildmono2" depends="compile.java.all">

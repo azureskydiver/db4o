@@ -72,8 +72,8 @@
 		<property name="debug" value="true" />
 	</target>
 	
-	<target name="compiletestsjava" unless="skip.java.compilation">
-		<ant antfile="build.xml" target="prepare-test-environment" />
+	<target name="compiletestsjava">
+		<ant antfile="build-java.xml" target="build.db4ojdk1.1.tests" />
 	</target>
 	
 	<macrodef name="reset-src-dir">
