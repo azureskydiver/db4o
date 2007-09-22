@@ -74,6 +74,7 @@
 	
 	<target name="compiletestsjava">
 		<ant antfile="build-java.xml" target="build.db4ojdk1.1.tests" />
+		<ant antfile="build-java.xml" target="build.db4ojdk1.2" />
 	</target>
 	
 	<macrodef name="reset-src-dir">
