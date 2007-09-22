@@ -6,6 +6,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 				//FinalFieldTestCase.class,
 				GenericArrayFieldTypeTestCase.class,
+				GenericPrimitiveArrayTestCase.class,
 				TranslatorStoredClassesTestCase.class,
 				//Comment out this test temporarily
 				//UpdatingDb4oVersionsTestCase.class,

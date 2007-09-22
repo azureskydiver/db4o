@@ -200,10 +200,10 @@ public class KnownClassesRepository {
 		// TODO: why the following line is necessary?
 		ReflectClass theClass=_stream.reflector().forName(fieldClass.getName());		    	
 		if(fieldInfo.isPrimitive()) {
-			return primitiveClass(theClass);
+			theClass = primitiveClass(theClass);
 		}
 		if(fieldInfo.isArray()) {
-			return arrayClass(theClass);
+			theClass = arrayClass(theClass);
 		}
 		return theClass;
 	}
