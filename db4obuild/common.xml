@@ -206,6 +206,8 @@
 		<property name="file.sharp.jar" value="${dir.dist.jars}/${db4o.file}sharp.jar" />
 		<property name="file.java.test.src.zip" value="${dir.dist.java}/${db4o.file}test.zip" />
 		<property name="file.dist.java" value="${dir.dist}/${db4o.file}java.zip" />
+		
+		<property name="file.compiler.jdk1.3.args.line" value="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}" />
 	</target>
 
 </project>

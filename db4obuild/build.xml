@@ -70,7 +70,6 @@
 			minor="${db4o.version.minor}"
 			revision="${svn.revision}"
 		/>
-		<property name="file.compiler.jdk1.3.args.optional" value="" />
 	</target>
 
 	<target name="clean" description="Delete all generated files">
@@ -136,7 +135,7 @@
 			executable="${file.compiler.jdk1.3}"
 			srcdir="${dir.dist.java.temp.src.core}"
 			destdir="${dir.dist.classes.java1.1}" debug="${javac.debug.mode}">
-			<compilerarg line="${file.compiler.jdk1.3.args} ${file.compiler.jdk1.3.args.optional}"/>
+			<compilerarg line="${file.compiler.jdk1.3.args.line}"/>
 		</javac>
 
 		<antcall target="copyjava1.2" />
