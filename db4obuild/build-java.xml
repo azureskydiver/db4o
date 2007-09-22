@@ -61,7 +61,7 @@
 			executable="${file.compiler.jdk1.3}"
 			srcdir="${java.src.core.jdk1.1}"
 			destdir="${dir.dist.classes.java1.1}" debug="${javac.debug.mode}">
-			<compilerarg line="${file.compiler.jdk1.3.args}"/>
+			<compilerarg line="${file.compiler.jdk1.3.args.line}"/>
 		</javac>
 		
 		<jar destfile="${file.java1.1.jar}">
