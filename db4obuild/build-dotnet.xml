@@ -171,7 +171,7 @@
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
 	</target>
 		
-	<target name="run-tests-net1" depends="configure-net1, run-tests-net">
+	<target name="run-tests-net1" depends="clean, configure-net1, run-tests-net">
 	</target>
 	
 	<target name="run-tests-core" depends="build-tests">

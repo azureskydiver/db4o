@@ -21,6 +21,7 @@
 	</target>
 	
 	<target name="compileandsign" description="compiles and signs the libraries necessary for doctor tasks">
+		<mkdir dir="${dir.dist.doctor}" />
 		<javac srcdir="${dir.doctor.src}" destdir="${dir.dist.doctor}" target="1.3" source="1.3" fork="true" encoding="UTF-8">			
 			<include name="**/com/yetac/doctor/applet/*.java"/>
 		</javac>
