@@ -169,13 +169,13 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         if(!i_loggedin && !Msg.LOGIN.equals(message)) {
         	return true;
         }
-        
-        // TODO: On fast systems, the server may have been closed here
-        //       while messages still arrive from the client.
-        //       checking for close would require entering a synchronized
-        //       block, that's why we did not add here. (Yet.)
-        
-        return ((ServerSideMessage)message).processAtServer();
+
+        // TODO: COR-885 - message may process against closed server
+        // Checking aliveness just makes the issue less likely to occur. Naive synchronization against main lock is prohibitive.        
+    	if(isMessageDispatcherAlive()) {
+    		return ((ServerSideMessage)message).processAtServer();
+    	}
+    	return false;
     }
 
 	private void updateLastActiveTime() {
