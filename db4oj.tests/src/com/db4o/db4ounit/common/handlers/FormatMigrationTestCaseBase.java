@@ -38,12 +38,19 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     }
     
     protected String oldVersionFileName(String versionName){
-        return PATH + fileNamePrefix() + versionName.replace(' ', '_') ;
+        return Path4.combine(PATH, fileNamePrefix() + versionName.replace(' ', '_'));
     }
     
     public void createDatabase() {
-        String file = fileName();
-        File4.mkdirs(PATH);
+        createDatabase(fileName());
+    }
+    
+    public void createDatabaseFor(String versionName) {
+    	createDatabase(fileName(versionName));
+    }
+
+	private void createDatabase(String file) {
+		File4.mkdirs(PATH);
         if(File4.exists(file)){
             File4.delete(file);
         }
@@ -53,7 +60,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
         } finally {
             objectContainer.close();
         }
-    }
+	}
     
     public void setUp() throws Exception {
         configure();
@@ -62,27 +69,32 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     
     public void test() throws IOException{
         for(int i = 0; i < versionNames().length; i ++){
-            String testFileName = fileName(versionNames()[i]); 
-            if(File4.exists(testFileName)){
-                System.out.println("Check database: " + testFileName);
-                
-                
-                investigateFileHeaderVersion(testFileName);
-
-                checkDatabaseFile(testFileName);
-                // Twice, to ensure everything is fine after opening, converting and closing.
-                checkDatabaseFile(testFileName);
-            }else{
-                
-                System.out.println("Version upgrade check failed. File not found:" + testFileName);
-                
-                
-                // FIXME: The following fails the CC build since not all files are there on .NET.
-                //        Change back when we have all files.
-                // Assert.fail("Version upgrade check failed. File not found:" + testFileName);
-            }
+            final String versionName = versionNames()[i];
+			test(versionName);
         }
     }
+
+	public void test(final String versionName) throws IOException {
+		String testFileName = fileName(versionName); 
+		if(File4.exists(testFileName)){
+		    System.out.println("Check database: " + testFileName);
+		    
+		    
+		    investigateFileHeaderVersion(testFileName);
+
+		    checkDatabaseFile(testFileName);
+		    // Twice, to ensure everything is fine after opening, converting and closing.
+		    checkDatabaseFile(testFileName);
+		}else{
+		    
+		    System.out.println("Version upgrade check failed. File not found:" + testFileName);
+		    
+		    
+		    // FIXME: The following fails the CC build since not all files are there on .NET.
+		    //        Change back when we have all files.
+		    // Assert.fail("Version upgrade check failed. File not found:" + testFileName);
+		}
+	}
     
     public void tearDown() throws Exception {
         // do nothing
