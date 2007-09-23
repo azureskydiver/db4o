@@ -5,7 +5,7 @@ import java.lang.reflect.*;
 /**
  * Reflection based db4ounit.Test implementation.
  */
-public class TestMethod implements Test {
+public class TestMethod extends TestAdapter {
 	
 	
 	public static LabelProvider DEFAULT_LABEL_PROVIDER = new LabelProvider() {
@@ -43,22 +43,8 @@ public class TestMethod implements Test {
 		return _labelProvider.getLabel(this);
 	}
 
-	public void run(TestResult result) {
-		try {
-			result.testStarted(this);
-			setUp();
-			invoke();
-		} catch (InvocationTargetException e) {
-			result.testFailed(this, e.getTargetException());
-		} catch (Exception e) {
-			result.testFailed(this, e);
-		} finally {
-			try {
-				tearDown();
-			} catch (TestException e) {
-				result.testFailed(this, e);
-			}
-		}
+	protected void runTest() throws Exception {
+		invoke();
 	}
 
 	protected void invoke() throws Exception {
