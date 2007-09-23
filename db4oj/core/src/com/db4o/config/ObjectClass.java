@@ -31,6 +31,8 @@ public interface ObjectClass {
      * the .NET framework (not available on CompactFramework).<br><br>
      * This setting may also be set globally for all classes in
      * {@link Configuration#callConstructors(boolean)}.<br><br>
+     * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
      * @param flag - specify true, to request calling constructors, specify
      * false to request <b>not</b> calling constructors.
 	 * @see Configuration#callConstructors
@@ -45,7 +47,9 @@ public interface ObjectClass {
 	 * of all member objects if an instance of this class is activated.
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
-	 * @param flag whether activation is to be cascaded to member objects.
+	 * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
+     * @param flag whether activation is to be cascaded to member objects.
 	 * @see ObjectField#cascadeOnActivate
 	 * @see com.db4o.ObjectContainer#activate
 	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
@@ -79,7 +83,9 @@ public interface ObjectClass {
 	 * to bar1.
 	 * <br><br>
 	 * The default setting is <b>false</b>.<br><br>
-	 * @param flag whether deletes are to be cascaded to member objects.
+	 * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
+     * @param flag whether deletes are to be cascaded to member objects.
 	 * @see ObjectField#cascadeOnDelete
 	 * @see com.db4o.ObjectContainer#delete
 	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
@@ -94,7 +100,9 @@ public interface ObjectClass {
 	 * of all member objects if a stored instance of this class is passed
 	 * to {@link com.db4o.ObjectContainer#set(Object)}.<br><br>
 	 * The default setting is <b>false</b>.<br><br>
-	 * @param flag whether updates are to be cascaded to member objects.
+	 * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
+     * @param flag whether updates are to be cascaded to member objects.
 	 * @see ObjectField#cascadeOnUpdate
 	 * @see com.db4o.ObjectContainer#set
 	 * @see com.db4o.ext.ObjectCallbacks Using callbacks
@@ -107,6 +115,8 @@ public interface ObjectClass {
 	 * <br><br>The query processor will compare the object returned by the
 	 * attribute provider instead of the actual object, both for the constraint
 	 * and the candidate persistent object.<br><br> 
+	 * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
 	 * @param attributeProvider the attribute provider to be used
 	 */
 	public void compare(ObjectAttribute attributeProvider);
@@ -124,7 +134,7 @@ public interface ObjectClass {
 	
 	/**
      * generate UUIDs for stored objects of this class.
-     * 
+     * This setting should be used before the database is first created.<br><br>
      * @param setting 
      */
     public void generateUUIDs(boolean setting);
@@ -132,7 +142,7 @@ public interface ObjectClass {
     
     /**
      * generate version numbers for stored objects of this class.
-     * 
+     * This setting should be used before the database is first created.<br><br>
      * @param setting
      */
     public void generateVersionNumbers(boolean setting);
@@ -148,7 +158,9 @@ public interface ObjectClass {
      * - The application always works with subclasses or superclasses.<br>
      * - There are convenient field indexes that will always find instances
      * of a class.<br>
-     * - The application always works with IDs. 
+     * - The application always works with IDs.<br><br>
+     * In client-server environment this setting should be used on both 
+     * client and server. <br><br> 
      */
     public void indexed(boolean flag);
     
@@ -157,6 +169,8 @@ public interface ObjectClass {
 	 * <br><br>A class specific setting overrides the
      * {@link Configuration#activationDepth(int) global setting}
      * <br><br>
+     * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
      * @param depth the desired maximum activation depth
 	 * @see Configuration#activationDepth Why activation?
 	 * @see ObjectClass#cascadeOnActivate
@@ -168,6 +182,8 @@ public interface ObjectClass {
 	 * <br><br>A class specific setting overrides the
      * {@link Configuration#activationDepth(int) global setting}
 	 * <br><br>
+	 * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
      * @param depth the desired minimum activation depth
 	 * @see Configuration#activationDepth Why activation?
 	 * @see ObjectClass#cascadeOnActivate
@@ -176,7 +192,8 @@ public interface ObjectClass {
     
     /**
      * gets the configured minimum activation depth.
-     * 
+     * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
      * @return the configured minimum activation depth.
      */
     public int minimumActivationDepth();
@@ -215,6 +232,8 @@ public interface ObjectClass {
      * <br><br>Use this setting for constant static object members.
      * <br><br>This option will slow down the process of opening database
      * files and the stored objects will occupy space in the database file.
+     * <br><br>In client-server environment this setting should be used on both 
+     * client and server. <br><br>
      */
     public void persistStaticFieldValues();
     
@@ -239,7 +258,8 @@ public interface ObjectClass {
     /**
 	 * renames a stored class.
 	 * <br><br>Use this method to refactor classes.
-     * <br><br>
+     * <br><br>In client-server environment this setting should be used on both 
+     * client and server. <br><br>
      * @param newName the new fully qualified classname.
      */
     public void rename (String newName);
@@ -249,6 +269,8 @@ public interface ObjectClass {
     /**
 	 * allows to specify if transient fields are to be stored.
 	 * <br>The default for every class is <code>false</code>.<br><br>
+	 * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
      * @param flag whether or not transient fields are to be stored.
      */
     public void storeTransientFields (boolean flag);
@@ -261,6 +283,8 @@ public interface ObjectClass {
 	 * <br><br>The use of an {@link ObjectTranslator ObjectTranslator} is not
 	 * compatible with the use of an 
 	 * {@link ObjectMarshaller ObjectMarshaller}.<br><br>
+	 * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
      * @param translator this may be an {@link ObjectTranslator ObjectTranslator}
      *  or an {@link ObjectConstructor ObjectConstructor}
 	 * @see ObjectTranslator
@@ -277,6 +301,8 @@ public interface ObjectClass {
 	 * for further details.<br><br>
 	 * The default setting is 0: Only the object passed to
 	 * {@link com.db4o.ObjectContainer#set(Object)} will be updated.<br><br>
+	 * In client-server environment this setting should be used on both 
+     * client and server. <br><br>
      * @param depth the depth of the desired update for this class.
 	 * @see Configuration#updateDepth
 	 * @see ObjectClass#cascadeOnUpdate
