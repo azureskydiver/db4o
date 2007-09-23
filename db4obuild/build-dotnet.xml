@@ -894,6 +894,12 @@
 				<include name="**/db4ounit/util/**/*.java" />
 			</fileset>
 		</copy>
+		<copy todir="${target.dir}/db4oj.tests/src">
+			<fileset dir="${dir.j.jdk1.2.test.src}">
+				<include name="**/db4ounit/common/migration/*.java" />
+				<include name="**/db4ounit/util/*.java" />
+			</fileset>
+		</copy>
 		
 		<copy todir="${target.dir}/db4oj.tests/core">
 			<fileset dir="../db4oj/core/src">
