@@ -10,7 +10,7 @@ import java.io.*;
 public class File4 {
 
 	public static void rename(String oldPath,String newPath) throws IOException {
-		if(!new java.io.File(oldPath).renameTo(new File(newPath))) {
+		if(!new File(oldPath).renameTo(new File(newPath))) {
 			throw new IOException("Could not rename '"+oldPath+"' to '"+newPath+"'.");
 		}
 	}

@@ -6,6 +6,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class VersionClassLoader extends URLClassLoader {
 
     private Map cache = new HashMap();

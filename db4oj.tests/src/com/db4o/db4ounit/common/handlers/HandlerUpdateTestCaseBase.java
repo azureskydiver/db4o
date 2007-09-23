@@ -12,13 +12,6 @@ import com.db4o.query.*;
 
 public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseBase {
     
-    public static String[] db4oVersions = new String[]{
-            Db4o.version(),
-    };
-    protected String[] versionNames() {
-        return db4oVersions;
-    }
-
     public static class Holder{
         
         public Object[] _values;
@@ -31,6 +24,10 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     
     protected String fileNamePrefix() {
         return "migrate_" + typeName() + "_" ;
+    }
+    
+    protected String[] versionNames() {
+    	return new String[] { Db4o.version() };
     }
 
     protected void configure(Configuration config) {
