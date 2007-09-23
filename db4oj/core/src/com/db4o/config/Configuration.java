@@ -143,7 +143,9 @@ public interface Configuration {
      * <br><br>Call this method to turn automatic database file
      * version updating on.
      * <br><br>If automatic updating is turned off, db4o will refuse
-     * to open database files that use an older database file format.
+     * to open database files that use an older database file format.<br><br>
+     * In client-server environment this setting should be used on both client 
+     * and server.
      */
     public void allowVersionUpdates(boolean flag);
     
@@ -158,6 +160,8 @@ public interface Configuration {
      * Some JVMs have severe problems with both methods. For these rare cases the
      * autoShutDown feature may be turned off.<br><br>
      * The default and recommended setting is <code>true</code>.<br><br>
+     * In client-server environment this setting should be used on both client 
+     * and server.
      * @param flag whether db4o should shut down automatically.
      */
     public void automaticShutDown(boolean flag);
@@ -170,7 +174,10 @@ public interface Configuration {
      * be lost to padding because the size of some stored objects
      * will not be an exact multiple of the block size. A 
      * recommended setting for large database files is 8, since
-     * internal pointers have this length.
+     * internal pointers have this length.<br><br>
+     * This setting is only effective when the database is first created, in 
+     * client-server environment in most cases it means that the setting 
+     * should be used on the server side.
      * @param bytes the size in bytes from 1 to 127
      */
     public void blockSize(int bytes) throws GlobalOnlyConfigException;
@@ -183,7 +190,9 @@ public interface Configuration {
      * and more efficient reading and writing of small slots.
      * <br>Higher values will reduce the overall number of
      * read and write operations and allow better performance
-     * at the cost of more RAM use.
+     * at the cost of more RAM use.<br><br>
+     * This setting should be used on both client and server in
+     * client-server environment. 
      * @param size the number of elements held in one BTree node.
      */
     public void bTreeNodeSize(int size);
@@ -197,8 +206,10 @@ public interface Configuration {
      * <br>Possible settings: 1, 2 or 3
      * <br><br> The potential number of cached BTree nodes can be
      * calculated with the following forumula:<br>
-     * maxCachedNodes = bTreeNodeSize ^ bTreeCacheHeight    
-     * @param height the height of the cache from the root
+     * maxCachedNodes = bTreeNodeSize ^ bTreeCacheHeight<br><br>    
+     * This setting should be used on both client and server in
+     * client-server environment. 
+     @param height the height of the cache from the root
      */
     public void bTreeCacheHeight(int height);
     
@@ -209,6 +220,8 @@ public interface Configuration {
      * A tuning hint: If callbacks are not used, you can turn this feature off, to
      * prevent db4o from looking for callback methods in persistent classes. This will
      * increase the performance on system startup.<br><br>
+     * In client/server environment this setting should be used on both 
+     * client and server.
      * @param flag false to turn callback methods off
      * @see com.db4o.ext.ObjectCallbacks Using callbacks
      */
@@ -227,7 +240,9 @@ public interface Configuration {
      * the .NET framework (not available on CompactFramework).
      * This setting may also be overridden for individual classes in
      * {@link ObjectClass#callConstructor(boolean)}.
-     * <br><br>The default setting depends on the features supported by your current environment.
+     * <br><br>The default setting depends on the features supported by your current environment.<br><br>
+     * In client/server environment this setting should be used on both 
+     * client and server.
      * <br><br>
      * @param flag - specify true, to request calling constructors, specify
      * false to request <b>not</b> calling constructors.
@@ -240,6 +255,8 @@ public interface Configuration {
      * {@link ObjectClass#maximumActivationDepth individual class activation depth configuration} on 
      * and off.
      * <br><br>This feature is turned on by default.<br><br>
+     * In client/server environment this setting should be used on both 
+     * client and server.<br><br>
      * @param flag false to turn the possibility to individually configure class
      * activation depths off
      * @see Configuration#activationDepth Why activation?
@@ -251,7 +268,9 @@ public interface Configuration {
      * startup, for added or removed fields.
      * <br><br>In a production environment this setting can be set to <code>false</code>,
      * if all necessary classes have been stored to the database file and none of them
-     * have been modified since the last use.
+     * have been modified since the last use.<br><br>
+     * In client/server environment this setting should be used on both 
+     * client and server.
      * <br><br>Default value:<br>
      * <code>true</code>
      * @param flag the desired setting
@@ -331,6 +350,8 @@ public interface Configuration {
      * if an object can not be stored.
      * <br><br>
      * The default for this setting is <b>false</b>.<br><br>
+     * In client/server environment this setting should be used on both 
+     * client and server.<br><br>
      * @param flag true to throw Exceptions if objects can not be stored.
      */
     public void exceptionsOnNotStorable(boolean flag);
@@ -363,7 +384,9 @@ public interface Configuration {
      * buffers after every single one of the above steps during transaction
      * commit. Flush calls have a strong impact on performance. It is possible to 
      * tune an application by turning flushing off, at the risc of less security
-     * for hardware-, power- or operating system failures.
+     * for hardware-, power- or operating system failures.<br><br>
+     * In client/server environment this setting should be used on both 
+     * client and server.<br><br>
      * @param flag true for flushing file buffers
      */
     public void flushFileBuffers(boolean flag);
@@ -379,8 +402,8 @@ public interface Configuration {
      * @param setting one of the following values:<br>
      * -1 - off<br>
      * 1 - configure classes individually<br>
-     * Integer.MAX_Value - on for all classes
-     * 
+     * Integer.MAX_Value - on for all classes<br><br>
+     * This setting should be used when the database is first created.
      * @deprecated Use {@link #generateUUIDs(ConfigScope)} instead.
      */
     public void generateUUIDs(int setting);
@@ -388,6 +411,7 @@ public interface Configuration {
     /**
      * configures db4o to generate UUIDs for stored objects.
      * 
+     * This setting should be used when the database is first created.<br><br>
      * @param setting the scope for UUID generation: disabled, generate for all classes, or configure individually
      */
     public void generateUUIDs(ConfigScope setting);
@@ -398,8 +422,8 @@ public interface Configuration {
      * @param setting one of the following values:<br>
      * -1 - off<br>
      * 1 - configure classes individually<br>
-     * Integer.MAX_Value - on for all classes
-     * 
+     * Integer.MAX_Value - on for all classes<br><br>
+     * This setting should be used when the database is first created.
      * @deprecated Use {@link #generateVersionNumbers(ConfigScope)} instead.
      */
     public void generateVersionNumbers(int setting);
@@ -407,12 +431,15 @@ public interface Configuration {
     /**
      * configures db4o to generate version numbers for stored objects.
      * 
+     * This setting should be used when the database is first created.
      * @param setting the scope for version number generation: disabled, generate for all classes, or configure individually
      */
     public void generateVersionNumbers(ConfigScope setting);
 
     /**
      * configures db4o to call #intern() on strings upon retrieval.
+     * In client/server environment the setting should be used on both
+     * client and server.
      * @param flag true to intern strings
      */
     public void internStrings(boolean flag);
@@ -429,7 +456,9 @@ public interface Configuration {
      * with a native library, mirrored write to two files, encryption or 
      * read-on-write fail-safety control.<br><br>An example of a custom
      * io adapter can be found in xtea_db4o community project:<br>
-     * http://developer.db4o.com/ProjectSpaces/view.aspx/XTEA
+     * http://developer.db4o.com/ProjectSpaces/view.aspx/XTEA<br><br>
+     * In client-server environment this setting should be used on the server 
+     * (adapter class must be available)<br><br>
      * @param adapter - the IoAdapter
      */
     public void io(IoAdapter adapter) throws GlobalOnlyConfigException;
@@ -440,6 +469,8 @@ public interface Configuration {
      * wish to use to mark fields as transient. Multiple transient attributes 
      * are possible by calling this method multiple times with different
      * attribute names.<br><br>
+     * In client/server environment the setting should be used on both
+     * client and server.<br><br>
      * @param attributeName - the fully qualified name of the attribute, including
      * it's namespace  
      */
@@ -453,7 +484,10 @@ public interface Configuration {
      * Level 1 - open and close messages<br>
      * Level 2 - messages for new, update and delete<br>
      * Level 3 - messages for activate and deactivate<br><br>
-     * When using client-server and the level is set to 0, the server will override this and set it to 1.  To get around this you can set the level to -1.  This has the effect of not returning any messages.<br><br>  
+     * When using client-server and the level is set to 0, the server will override this and set it to 1.  To get around this you can set the level to -1.  This has the effect of not returning any messages.<br><br>
+     * In client-server environment this setting can be used on client or on server
+     * depending on which information do you want to track (server side provides more
+     * detailed information).<br><br>  
      * @param level integer from 0 to 3
      * @see #setOut
      */
@@ -474,6 +508,7 @@ public interface Configuration {
      * has no effect on open ObjectContainers. It will only affect how
      * ObjectContainers are opened.<br><br>
      * The default setting is <code>true</code>.<br><br>
+     * In client-server environment this setting should be used on both client and server.<br><br>  
      * @param flag <code>false</code> to turn database file locking off.
      */
     public void lockDatabaseFile(boolean flag);
@@ -500,7 +535,8 @@ public interface Configuration {
      * optimization (db4o-X.x-nqopt.jar, bloat-X.x.jar) have to be 
      * on the classpath at runtime for this
      * switch to have effect. 
-     * <br><br>The default setting is <code>true</code>.
+     * <br><br>The default setting is <code>true</code>.<br><br>
+     * In client-server environment this setting should be used on both client and server.<br><br>  
      * @param optimizeNQ true, if db4o should try to optimize
      * native queries at query execution time, false otherwise
      */
@@ -542,7 +578,9 @@ public interface Configuration {
      * {@link com.db4o.Db4o#openFile Db4o.openFile()} will open files.
      * <br><br>Readonly mode allows to open an unlimited number of reading
      * processes on one database file. It is also convenient
-     * for deploying db4o database files on CD-ROM.<br>
+     * for deploying db4o database files on CD-ROM.<br><br>
+     * In client-server environment this setting should be used on the server side 
+     * in embedded mode and ONLY on client side in networked mode.<br><br>
      * @param flag <code>true</code> for configuring readOnly mode for subsequent
      * calls to {@link com.db4o.Db4o#openFile Db4o.openFile()}.
      */
@@ -555,7 +593,9 @@ public interface Configuration {
      * do not support this package, customized implementations may be written
      * to supply all the functionality of the interfaces in the com.db4o.reflect
      * package. This method can be used to install a custom reflection
-     * implementation.
+     * implementation.<br><br>
+     * In client-server environment this setting should be used on the server side
+     * (reflector class must be available)<br><br>
      */
     public void reflectWith(Reflector reflector);
 
@@ -588,7 +628,9 @@ public interface Configuration {
      * method should be called before the Defragment run to configure the
      * allocation of storage space to be slightly greater than the anticipated
      * database file size.
-     * <br><br> Default configuration: 0<br><br> 
+     * <br><br> 
+     * In client-server environment this setting should be used on the server side. <br><br>
+     * Default configuration: 0<br><br> 
      * @param byteCount the number of bytes to reserve
      */
     public void reserveStorageSpace(long byteCount) throws DatabaseReadOnlyException, NotSupportedException;
@@ -597,6 +639,8 @@ public interface Configuration {
      * configures the path to be used to store and read 
      * Blob data.
      * <br><br>
+     * In client-server environment this setting should be used on the
+     * server side. <br><br>
      * @param path the path to be used
      */
     public void setBlobPath(String path) throws IOException;
@@ -618,6 +662,8 @@ public interface Configuration {
      * to produce more detailed messages.
      * <br><br>Use <code>setOut(System.out)</code> to print messages to the
      * console.<br><br>
+     * In client-server environment this setting should be used on the same side
+     * where {@link Configuration#messageLevel(int)} is used.<br><br>
      * @param outStream the new <code>PrintStream</code> for messages.
      * @see #messageLevel
      */
@@ -628,7 +674,10 @@ public interface Configuration {
      * of each persistent class on system startup.
      * <br><br>In a production environment this setting can be set to <code>false</code>,
      * if all persistent classes have public default constructors.
-     * <br><br>Default value:<br>
+     * <br><br>
+     * In client-server environment this setting should be used on both client and server
+     * side. <br><br>
+     * Default value:<br>
      * <code>true</code>
      * @param flag the desired setting
      */
@@ -638,7 +687,7 @@ public interface Configuration {
      * configures the storage format of Strings.
      * <br><br>This method needs to be called <b>before</b> a database file
      * is created with the first 
-     * {@link com.db4o.Db4o#openFile}.
+     * {@link com.db4o.Db4o#openFile} or  {@link com.db4o.Db4o#openServer}.
      * db4o database files keep their string format after creation.<br><br>
      * Turning Unicode support off reduces the file storage space for strings 
      * by factor 2 and improves performance.<br><br>
@@ -657,6 +706,8 @@ public interface Configuration {
      * The default setting is 1: Only the object passed to
      * {@link com.db4o.ObjectContainer#set}
      * will be updated.<br><br>
+     * In client-server environment this setting should be used on both client and
+     * server sides.<br><br>
      * @param depth the depth of the desired update.
      * @see ObjectClass#updateDepth
      * @see ObjectClass#cascadeOnUpdate

@@ -11,16 +11,18 @@ import com.db4o.messaging.MessageSender;
 public interface ClientServerConfiguration {
 	/**
 	 * Sets the number of IDs to be pre-allocated in the database for new 
-	 * objects created on the client
-	 * 
+	 * objects created on the client.
+	 * This setting should be used on the client side. In embedded mode this setting
+	 * has no effect.
 	 * @param prefetchIDCount
 	 *            The number of IDs to be prefetched
 	 */
 	void prefetchIDCount(int prefetchIDCount);
 
 	/**
-	 * Sets the number of objects to be prefetched for an ObjectSet in C/S mode
-	 * 
+	 * Sets the number of objects to be prefetched for an ObjectSet in C/S mode.
+	 * This setting should be used on the server side. In embedded mode this setting
+	 * has no effect.
 	 * @param prefetchObjectCount
 	 *            The number of objects to be prefetched
 	 */
@@ -29,7 +31,7 @@ public interface ClientServerConfiguration {
 	/**
 	 * sets the MessageRecipient to receive Client Server messages. <br>
 	 * <br>
-	 * 
+	 * This setting should be used on the server side.<br><br>
 	 * @param messageRecipient
 	 *            the MessageRecipient to be used
 	 */
@@ -37,7 +39,7 @@ public interface ClientServerConfiguration {
 
 	/**
 	 * returns the MessageSender for this Configuration context.
-	 * 
+	 * This setting should be used on the client side.
 	 * @return MessageSender
 	 */
 	public MessageSender getMessageSender();
@@ -48,7 +50,7 @@ public interface ClientServerConfiguration {
 	 * <br>
 	 * Default value: 300000ms (5 minutes)<br>
 	 * <br>
-	 * 
+	 * This setting can be used on both client and server.<br><br> 
 	 * @param milliseconds
 	 *            time in milliseconds
 	 */
@@ -63,7 +65,7 @@ public interface ClientServerConfiguration {
 	 * <br>
 	 * Default value: 5000ms (5 seconds)<br>
 	 * <br>
-	 * 
+	 * This setting can be used on both client and server.<br><br>
 	 * @param milliseconds
 	 *            time in milliseconds
 	 */
@@ -82,7 +84,7 @@ public interface ClientServerConfiguration {
 	 * <br>
 	 * Default value: 180000ms (3 minutes)<br>
 	 * <br>
-	 * 
+	 * This setting can be used on both client and server.<br><br> 
 	 * @param milliseconds
 	 *            time in milliseconds
 	 * @see #singleThreadedClient
@@ -93,12 +95,13 @@ public interface ClientServerConfiguration {
      * configures the client messaging system to be single threaded 
      * or multithreaded.
      * <br><br>Recommended settings:<br>
-     * - <code>true</code> for low ressource systems.<br>
+     * - <code>true</code> for low resource systems.<br>
      * - <code>false</code> for best asynchronous performance and fast
      * GUI response.
      * <br><br>Default value:<br>
      * - .NET Compactframework: <code>true</code><br>
-     * - all other plaforms: <code>false</code><br><br>
+     * - all other platforms: <code>false</code><br><br>
+     * This setting can be used on both client and server.<br><br>
      * @param flag the desired setting
      */
     public void singleThreadedClient(boolean flag);
@@ -106,8 +109,8 @@ public interface ClientServerConfiguration {
 
 	/**
 	 * Configures to batch messages between client and server. By default, batch
-	 * mode is enabled.
-	 * 
+	 * mode is enabled.<br><br>
+	 * This setting can be used on both client and server.<br><br>
 	 * @param flag
 	 *            false, to turn message batching off.
 	 */
@@ -116,8 +119,8 @@ public interface ClientServerConfiguration {
 	/**
 	 * Configures the maximum memory buffer size for batched message. If the
 	 * size of batched messages is greater than <code>maxSize</code>, batched
-	 * messages will be sent to server.
-	 * 
+	 * messages will be sent to server.<br><br>
+	 * This setting can be used on both client and server.<br><br>
 	 * @param maxSize
 	 */
 	public void maxBatchQueueSize(int maxSize);
