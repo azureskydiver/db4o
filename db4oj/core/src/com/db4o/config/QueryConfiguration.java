@@ -83,7 +83,8 @@ public interface QueryConfiguration {
      * constants from the {@link QueryEvaluationMode} class to this method:<br>
      * - {@link QueryEvaluationMode#IMMEDIATE}<br>
      * - {@link QueryEvaluationMode#SNAPSHOT}<br>
-     * - {@link QueryEvaluationMode#LAZY}
+     * - {@link QueryEvaluationMode#LAZY}<br><br>
+     * This setting must be issued from the client side.
      */
 	public void evaluationMode(QueryEvaluationMode mode);
 	
