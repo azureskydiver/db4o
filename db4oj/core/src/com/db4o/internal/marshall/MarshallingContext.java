@@ -292,7 +292,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
             writeNullObject(handler);
             
         } else{
-            prepareIndirectionOfSecondWrite();
+            createIndirection(handler);
             handler.write(this, obj);
         }
         
@@ -366,5 +366,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _currentBuffer = state._buffer;
         _fieldWriteCount = state._fieldWriteCount;
     }
+
 
 }
