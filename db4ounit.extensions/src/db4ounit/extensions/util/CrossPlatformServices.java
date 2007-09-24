@@ -1,5 +1,6 @@
 package db4ounit.extensions.util;
 
+import com.db4o.foundation.io.*;
 import com.db4o.internal.ReflectPlatform;
 
 public class CrossPlatformServices {
@@ -14,4 +15,11 @@ public class CrossPlatformServices {
 		return ReflectPlatform.fullyQualifiedName(klass);
 	}
 
+	public static String databasePath(String fileName) {
+		String path = System.getProperty("db4ounit.file.path");
+		if(path == null || path.length() == 0) {
+			path =".";
+		}
+		return Path4.combine(path, fileName);
+	}
 }
