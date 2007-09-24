@@ -184,6 +184,14 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 				e.printStackTrace();
 			}
 		}
+		i = iterateDispatchers();
+		while (i.moveNext()) {
+			try {
+				((Thread) i.current()).join();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public Iterator4 iterateDispatchers() {
