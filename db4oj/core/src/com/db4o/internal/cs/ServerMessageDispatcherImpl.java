@@ -69,12 +69,12 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 				if (!isMessageDispatcherAlive()) {
 					return true;
 				}
+				_isClosed = true;
 				_transactionHandle.releaseTransaction();
 				sendCloseMessage();
 				_transactionHandle.close();
 				closeSocket();
 				removeFromServer();
-				_isClosed = true;
 				return true;
 	    	}
     	}
@@ -87,9 +87,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 					return;
 				}
 				sendCloseMessage();
+				_isClosed = true;
 				closeSocket();
 				removeFromServer();
-				_isClosed = true;
 			}
 		}
 	}
