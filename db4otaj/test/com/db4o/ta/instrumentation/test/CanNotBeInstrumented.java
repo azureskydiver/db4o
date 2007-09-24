@@ -7,11 +7,11 @@ import java.awt.*;
 /**
  * @exclude
  */
-public class MyPoint extends Point {
+public class CanNotBeInstrumented extends Point {
 
 	private int _z;
 	
-	public MyPoint(int x, int y, int z) {
+	public CanNotBeInstrumented(int x, int y, int z) {
 		super(x,y);
 		_z = z;
 	}
