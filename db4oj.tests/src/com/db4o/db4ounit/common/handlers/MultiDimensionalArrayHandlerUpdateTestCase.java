@@ -61,6 +61,13 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
         }
     };
     
+    public static final byte [][] byteData2D = new byte [][]{
+        ByteHandlerUpdateTestCase.data,
+        ByteHandlerUpdateTestCase.data,
+    };
+    
+    
+    
     
     public static class ItemArrays {
         
@@ -75,6 +82,8 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
         public Object[][] _objectArray;
         
         public Object[][] _stringObjectArray;
+        
+        public byte [][] _typedByteArray;
         
     }
     
@@ -112,6 +121,7 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
         item._untypedStringArray = stringData2D;
         item._objectArray = objectData2D;
         item._stringObjectArray = stringObjectData2D;
+        item._typedByteArray = byteData2D;
         return item;
     }
     
@@ -124,6 +134,7 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
         assertAreEqual(stringData2D, (String[][]) item._untypedStringArray);
         assertAreEqual(objectData2D, item._objectArray);
         assertAreEqual(objectData2D, item._objectArray);
+        assertAreEqual(byteData2D, item._typedByteArray);
     }
     
     public static void assertAreEqual(int[][] expected, int[][] actual) {
@@ -152,6 +163,14 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
         correctIntArray2DJavaOnly(byRef);
         return (int[][]) byRef.value;
     }
+    
+    public static void assertAreEqual(byte[][] expected, byte[][] actual) {
+        Assert.areEqual(expected.length, actual.length);
+        for (int i = 0; i < expected.length; i++) {
+            ArrayAssert.areEqual(expected[i], actual[i]);
+        }
+    }
+
     
     /**
      * @sharpen.remove

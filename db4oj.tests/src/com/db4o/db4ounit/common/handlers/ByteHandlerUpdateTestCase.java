@@ -28,7 +28,7 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         public Object _wrapperArrayInObject;
     }
 
-    private static final byte[] data = new byte[] { Byte.MIN_VALUE,
+    public static final byte[] data = new byte[] { Byte.MIN_VALUE,
             Byte.MIN_VALUE + 1, (byte) 0xFB, (byte) 0xFF, 0, 1, 5,
             Byte.MAX_VALUE - 1, Byte.MAX_VALUE, };
 
