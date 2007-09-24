@@ -21,15 +21,18 @@ public class Db4oLibrarian {
 		final File[] libFiles = libFiles(archivesPath());
 		Db4oLibrary[] libraries = new Db4oLibrary[libFiles.length];
 		for (int i = 0; i < libFiles.length; i++) {
-			final File file = libFiles[i];
-			libraries[i] = new Db4oLibrary(file.getCanonicalPath(), environmentFor(file));
+			libraries[i] = forFile(libFiles[i].getCanonicalPath());
 		}
 		return libraries;
 	}
 
-	private Db4oLibraryEnvironment environmentFor(File libFile)
+	public Db4oLibrary forFile(final String fname) throws IOException {
+		return new Db4oLibrary(fname, environmentFor(fname));
+	}
+
+	private Db4oLibraryEnvironment environmentFor(String fname)
 			throws IOException {
-		return _provider.environmentFor(libFile.getCanonicalPath());
+		return _provider.environmentFor(fname);
 	}
 	
 	private File[] libFiles(String libDir) {
