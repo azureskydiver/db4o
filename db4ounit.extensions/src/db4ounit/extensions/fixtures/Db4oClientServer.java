@@ -5,14 +5,11 @@ package db4ounit.extensions.fixtures;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
-import com.db4o.foundation.io.*;
-import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.util.*;
 
 
 public class Db4oClientServer extends
@@ -51,14 +48,6 @@ public class Db4oClientServer extends
     public Db4oClientServer(ConfigurationSource configSource, boolean embeddedClient, String label){
         this(configSource,filePath(), embeddedClient, label);
     }
-
-	private static String filePath() {
-		String path = System.getProperty("db4ounit.file.path");
-		if(path == null || path.length() == 0) {
-			path =".";
-		}
-		return Path4.combine(path, FILE);
-	}
     
     public void open() throws Exception {
 		openServer();
@@ -146,5 +135,9 @@ public class Db4oClientServer extends
 
 	public int serverPort() {
 		return _port;
+	}
+
+	private static String filePath() {
+		return CrossPlatformServices.databasePath(FILE);
 	}
 }
