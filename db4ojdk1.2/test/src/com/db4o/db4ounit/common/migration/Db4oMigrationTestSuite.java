@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.migration;
 
 import com.db4o.db4ounit.common.handlers.*;
+import com.db4o.db4ounit.util.*;
 
 import db4ounit.*;
 
@@ -14,7 +15,23 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 	}
 
 	public TestSuite build() {
-		return new Db4oMigrationSuiteBuilder(testCases()).build();
+		return new Db4oMigrationSuiteBuilder(testCases(), libraries()).build();
+	}
+
+	private String[] libraries() {
+		if (true) {
+			return Db4oMigrationSuiteBuilder.ALL;
+		}
+		
+		if (true) {
+			// run against specific libraries + the current one
+			return new String[] {
+				WorkspaceServices.workspacePath("db4o.archives/java1.2/db4o-3.0.jar"),
+				WorkspaceServices.workspacePath("db4o.archives/java1.2/db4o-4.0-java1.1.jar"),
+			};
+		} 
+		
+		return Db4oMigrationSuiteBuilder.CURRENT;
 	}
 
 	protected Class[] testCases() {
