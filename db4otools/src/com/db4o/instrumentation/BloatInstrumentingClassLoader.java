@@ -41,12 +41,10 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 	}
 
 	private boolean mustDelegate(String name) {
-		return name.startsWith("java.")
-				|| name.startsWith("javax.")
-				||name.startsWith("sun.")
+		return BloatUtil.isPlatformClassName(name)
 				||((name.startsWith("com.db4o.") && name.indexOf("test.")<0 && name.indexOf("samples.")<0));
 	}
-
+	
 	private Class findRawClass(String className) throws ClassNotFoundException {
         try {
 			String resourcePath = className.replace('.','/') + ".class";

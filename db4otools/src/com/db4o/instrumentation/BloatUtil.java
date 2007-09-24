@@ -83,6 +83,17 @@ public class BloatUtil {
 		return className.replace('/', '.');
 	}
 	
+	public static Class classForEditor(ClassEditor ce) throws ClassNotFoundException {
+		String clazzName = normalizeClassName(ce.name());
+		Class clazz = Class.forName(clazzName);
+		return clazz;
+	}
+	
+	public static boolean isPlatformClassName(String name) {
+		return name.startsWith("java.") || name.startsWith("javax.")
+				|| name.startsWith("sun.");
+	}
+	
 	public ClassEditor classEditor(int modifiers, String className, Type superClass, Type[] interfaces) {
 		return new ClassEditor(context, modifiers, className, superClass, interfaces);
 	}

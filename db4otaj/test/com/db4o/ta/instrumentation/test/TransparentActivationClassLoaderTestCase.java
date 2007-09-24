@@ -18,7 +18,7 @@ import db4ounit.*;
 
 public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 
-	private static final Class ORIG_CLASS = ToBeInstrumented.class;
+	private static final Class ORIG_CLASS = ToBeInstrumented.class;	
 	private static final String CLASS_NAME = ORIG_CLASS.getName();
 	private static final Class SUB_CLASS = ToBeInstrumentedSub.class;
 	private static final String SUB_CLASS_NAME = SUB_CLASS.getName();
@@ -26,6 +26,8 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	private static final String FA_CLASS_NAME = FA_CLASS.getName();
 	private static final Class NI_CLASS = NotToBeInstrumented.class;
 	private static final String NI_CLASS_NAME = NI_CLASS.getName();
+	private static final Class CNI_CLASS = CanNotBeInstrumented.class;
+	private static final String CNI_CLASS_NAME = CNI_CLASS.getName();
 
 	private ClassLoader _loader;
 
@@ -183,10 +185,18 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		Assert.isFalse(Activatable.class.isAssignableFrom(clazz));
 	}
 
+	public void testCanNotBeInstrumented() throws Exception {
+		Assert.expect(IllegalArgumentException.class, new CodeBlock () {
+			public void run() throws Throwable {
+				_loader.loadClass(CNI_CLASS_NAME);
+			}
+		});
+	}
+	
 	public void setUp() throws Exception {
 		ClassLoader baseLoader = ORIG_CLASS.getClassLoader();
 		URL[] urls = {};
-		ClassFilter filter = new ByNameClassFilter(new String[]{ CLASS_NAME, SUB_CLASS_NAME, FA_CLASS_NAME });
+		ClassFilter filter = new ByNameClassFilter(new String[]{ CLASS_NAME, SUB_CLASS_NAME, FA_CLASS_NAME, CNI_CLASS_NAME });
 		_loader = new BloatInstrumentingClassLoader(urls, baseLoader, new AcceptAllClassesFilter(), new InjectTransparentActivationEdit(filter));
 	}
 

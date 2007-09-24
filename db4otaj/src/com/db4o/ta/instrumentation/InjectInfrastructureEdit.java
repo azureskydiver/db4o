@@ -27,8 +27,7 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 	
 	public boolean bloat(ClassEditor ce) {
 		try {
-			String clazzName = BloatUtil.normalizeClassName(ce.name());
-			Class clazz = Class.forName(clazzName);
+			Class clazz = BloatUtil.classForEditor(ce);
 			if(!_instrumentedClassesFilter.accept(clazz)) {
 				return true;
 			}
