@@ -530,6 +530,10 @@
 			extraoptions="${csc.tests.extraoptions}">
 	
 			<resource
+				file="${src.dir}/Core/Resources/PreserveDebugInfoSubject.cs"
+				name="Db4oAdmin.Tests.Core.Resources.PreserveDebugInfoSubject.cs" />
+			
+			<resource
 				file="${src.dir}/Core/Resources/CustomInstrumentationSubject.cs"
 				name="Db4oAdmin.Tests.Core.Resources.CustomInstrumentationSubject.cs" />
 			
@@ -587,6 +591,7 @@
 	</target>
 	
 	<target name="build-admin" depends="build-tools, build-ta" unless="skip.admin">
+		<copy todir="${dir.dist.dll.net}" file="${dir.libs.net}/Mono.Cecil.Pdb.dll" />
 		<csc outputfile="${dir.dist.dll.net}/Db4oAdmin.exe"
 			targettype="exe"
 			debug="true"
@@ -1302,6 +1307,22 @@
 		</exec>
 		
 		<copy-cecil-libs todir="${dir.n.v6.libs}/net-2.0" />
+		
+		<!-- Pdb libraries (COR-800) -->
+		<exec executable="${svn.exe}" dir="${dir.dist.cecil}/cecil/pdb">
+			<arg value="export" />
+			<arg value="${mono.svn}/cecil/pdb" />
+		</exec>
+		
+		<exec executable="${nant.exe}" dir="${dir.dist.cecil}/cecil/pdb" failonerror="true">
+			<arg value="-t:net-2.0" />
+		</exec>
+		
+		<copy todir="${dir.n.v6.libs}/net-2.0" overwrite="true">
+			<fileset dir="${dir.dist.cecil}/cecil/pdb/bin">
+				<include name="Mono.Cecil.Pdb.dll" />
+			</fileset>
+		</copy>
 
 	</target>
 
