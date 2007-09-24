@@ -3,7 +3,6 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -39,39 +38,18 @@ public class ArrayHandler0 extends ArrayHandler {
         if (buffer == null) {
             return null;
         }
-        if (Deploy.debug) {
-            Debug.readBegin(buffer, identifier());
-        }
         
         // With the following line we ask the context to work with 
         // a different buffer. Should this logic ever be needed by
         // a user handler, it should be implemented by using a Queue
         // in the UnmarshallingContext.
         
-        // The buffer has to be set back from the outside!  See the
-        // secondlast line of this method. 
-        
+        // The buffer has to be set back from the outside!  See below
         Buffer contextBuffer = context.buffer(buffer);
-
-        IntByRef elements = new IntByRef();
-        Object array = readCreate(context.transaction(), buffer, elements);
-        if (array != null){
-            if(handleAsByteArray(array)){
-                buffer.readBytes((byte[])array);
-            } else{
-                for (int i = 0; i < elements.value; i++) {
-                    arrayReflector().set(array, i, context.readObject(_handler));
-                }
-            }
-        }
         
-        if (Deploy.debug) {
-            Debug.readEnd(buffer);
-        }
-        
+        Object array = super.read(context);
         
         // The context buffer has to be set back.
-        
         context.buffer(contextBuffer);
         
         return array;

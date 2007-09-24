@@ -43,6 +43,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             FloatHandlerUpdateTestCase.class,
             IntHandlerUpdateTestCase.class,
             LongHandlerUpdateTestCase.class,
+            MultiDimensionalArrayHandlerUpdateTestCase.class,
             NestedArrayUpdateTestCase.class,
             ObjectArrayUpdateTestCase.class,
             ShortHandlerUpdateTestCase.class,

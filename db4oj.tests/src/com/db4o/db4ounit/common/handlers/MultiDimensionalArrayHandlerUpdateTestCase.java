@@ -3,12 +3,12 @@
 package com.db4o.db4ounit.common.handlers;
 
 import com.db4o.db4ounit.util.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 
 
 /**
- * @sharpen.ignore
  * @exclude
  */
 public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTestCaseBase{
@@ -148,21 +148,29 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
     }
 
     protected int[][] castToIntArray2D(Object obj){
+        ObjectByRef byRef = new ObjectByRef(obj);
+        correctIntArray2DJavaOnly(byRef);
+        return (int[][]) byRef.value;
+    }
+    
+    /**
+     * @sharpen.remove
+     */
+    protected void correctIntArray2DJavaOnly(ObjectByRef byRef){
         if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
             
             // Bug in the oldest format: 
             // It accidentally converted int[][] arrays to Integer[][] arrays.
             
-            Integer[][] wrapperArray = (Integer[][])obj;
+            Integer[][] wrapperArray = (Integer[][])byRef.value;
             int[][] res = new int[wrapperArray.length][];
             for (int i = 0; i < wrapperArray.length; i++) {
                 res[i] = castToIntArray(wrapperArray[i]);
             }
-            return res;
+            byRef.value = res;
         }
-        
-        return (int[][]) obj;
     }
+    
 
     protected Object[] createValues() {
         // not used
