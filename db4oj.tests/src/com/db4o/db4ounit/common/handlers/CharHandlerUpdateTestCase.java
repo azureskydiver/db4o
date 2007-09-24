@@ -95,7 +95,7 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         
         Item nullItem = (Item) values[values.length -1];
         assertAreEqual((char)0, nullItem._typedPrimitive);
-        assertCharWrapperIsNull(nullItem._typedWrapper);
+        assertCharWrapperIsNullJavaOnly(nullItem._typedWrapper);
         Assert.isNull(nullItem._untyped);
     }
 
@@ -157,7 +157,10 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         Assert.areEqual(expected, actual);
     }
     
-    private void assertCharWrapperIsNull(Object obj){
+    /**
+     * @sharpen.remove
+     */
+    private void assertCharWrapperIsNullJavaOnly(Object obj){
         if(_handlerVersion == 0){
             
             // Bug when reading old format:

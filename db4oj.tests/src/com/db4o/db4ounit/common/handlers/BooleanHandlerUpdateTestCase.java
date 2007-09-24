@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.handlers;
 
+import com.db4o.*;
 import com.db4o.db4ounit.util.*;
 
 import db4ounit.*;
@@ -81,7 +82,7 @@ public class BooleanHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
         Item nullItem = (Item) values[values.length - 1];
         assertAreEqual(false, nullItem._typedPrimitive);
-        Assert.isNull(nullItem._typedWrapper);
+        assertPrimitiveWrapperIsNullJavaOnly(nullItem._typedWrapper);
         Assert.isNull(nullItem._untyped);
     }
 

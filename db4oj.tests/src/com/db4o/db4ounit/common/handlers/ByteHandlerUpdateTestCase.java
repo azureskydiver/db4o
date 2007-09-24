@@ -68,6 +68,13 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         }
     }
 
+    /**
+     * FIXME: The byte optimization format change, COR-884 also hits .NET for the 
+     * wrapper array. Convert to Dotnet again after we install special handlers
+     * for byte[] 
+     * 
+     * @sharpen.remove
+     */
     private void assertWrapperArray(Byte[] wrapperArray) {
         for (int i = 0; i < data.length; i++) {
             assertAreEqual(new Byte(data[i]), wrapperArray[i]);
@@ -86,7 +93,7 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
         Item nullItem = (Item) values[values.length - 1];
         assertAreEqual((byte) 0, nullItem._typedPrimitive);
-        assertByteWrapperIsNull(nullItem._typedWrapper);
+        assertByteWrapperIsNullJavaOnly(nullItem._typedWrapper);
         Assert.isNull(nullItem._untyped);
     }
 
@@ -148,7 +155,11 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         return values;
     }
     
-    private void assertByteWrapperIsNull(Object obj){
+
+    /**
+     * @sharpen.remove
+     */
+    private void assertByteWrapperIsNullJavaOnly(Object obj){
         if(_handlerVersion == 0){
             
             // Bug when reading old format:

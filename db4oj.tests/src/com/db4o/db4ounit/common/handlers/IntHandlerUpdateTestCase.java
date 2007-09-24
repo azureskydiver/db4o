@@ -121,7 +121,7 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         }
         Item nullItem = (Item) values[values.length - 1];
         Assert.areEqual(0, nullItem._typedPrimitive);
-        Assert.isNull(nullItem._typedWrapper);
+        assertPrimitiveWrapperIsNullJavaOnly(nullItem._typedWrapper);
         Assert.isNull(nullItem._untyped);
     }
     
