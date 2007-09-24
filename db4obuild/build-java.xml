@@ -245,7 +245,8 @@
 			build.db4ojdk1.2.tests,
 			build.db4ojdk5.tests,
 			build.nqopt.tests,
-			build.osgi.tests"
+			build.osgi.tests,
+			build.ta.tests"
 	/>
 	
 	<target name="build.db4ounit" depends="init, build.db4ojdk1.1">
@@ -450,6 +451,7 @@
 			run.tests.jdk1.2,
 			run.tests.jdk5,
 			run.tests.nqopt,
+			run.tests.ta,
 			run.tests.concurrency,
 			run.tests.osgi"
 	/>
@@ -936,7 +938,8 @@
 	<target name="cc.step.3" 
 		depends="run.tests.jdk1.1, 
 				run.tests.jdk1.2, 
-				run.tests.nqopt, 
+				run.tests.nqopt,
+				run.tests.ta,
 				run.tests.concurrency, 
 				run.tests.osgi,
 				package.java" />
