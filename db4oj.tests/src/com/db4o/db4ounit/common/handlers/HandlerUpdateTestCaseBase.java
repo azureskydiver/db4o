@@ -10,6 +10,8 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.query.*;
 
+import db4ounit.*;
+
 public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseBase {
     
     public static class Holder{
@@ -94,6 +96,16 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
             }
         }
         byRef.value = res;
+    }
+    
+    /**
+     * On .NET there are no primitive wrappers, so the primitives have 
+     * their default value. Since default values are tested OK with the 
+     * other values test, we don't have to test again, so it's safe to: 
+     * @sharpen.remove
+     */
+    protected void assertPrimitiveWrapperIsNullJavaOnly(Object obj) {
+        Assert.isNull(obj);
     }
 
 }

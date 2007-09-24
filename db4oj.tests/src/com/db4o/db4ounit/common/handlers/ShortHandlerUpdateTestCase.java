@@ -90,7 +90,7 @@ public class ShortHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         
         Item nullItem = (Item) values[values.length -1];
         assertAreEqual((short)0, nullItem._typedPrimitive);
-        Assert.isNull(nullItem._typedWrapper);
+        assertPrimitiveWrapperIsNullJavaOnly(nullItem._typedWrapper);
         Assert.isNull(nullItem._untyped);
     }
 

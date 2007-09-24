@@ -30,7 +30,6 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 				WorkspaceServices.workspacePath("db4o.archives/java1.2/db4o-4.0-java1.1.jar"),
 			};
 		} 
-		
 		return Db4oMigrationSuiteBuilder.CURRENT;
 	}
 
@@ -47,9 +46,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             NestedArrayUpdateTestCase.class,
             ObjectArrayUpdateTestCase.class,
             ShortHandlerUpdateTestCase.class,
-            
-            // FIXME: StringHandlerUpdateTestCase.test currently failing 
-//            StringHandlerUpdateTestCase.class, 
+            StringHandlerUpdateTestCase.class, 
 		};
 	}
 
