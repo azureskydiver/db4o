@@ -11,7 +11,7 @@ import com.db4o.db4ounit.util.*;
  */
 public class Db4oLibrarian {
 	
-	private Db4oLibraryEnvironmentProvider _provider;
+	private final Db4oLibraryEnvironmentProvider _provider;
 
 	public Db4oLibrarian(Db4oLibraryEnvironmentProvider provider) {
 		_provider = provider;
