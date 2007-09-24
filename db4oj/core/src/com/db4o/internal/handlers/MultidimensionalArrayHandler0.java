@@ -2,8 +2,8 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 
@@ -16,8 +16,28 @@ public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler 
         super(template);
     }
     
-    public Object read(ReadContext context) {
-        throw new NotImplementedException();
+    public Object read(ReadContext readContext) {
+        InternalReadContext context = (InternalReadContext) readContext;
+        
+        Buffer buffer = readIndirectedBuffer(context); 
+        if (buffer == null) {
+            return null;
+        }
+        
+        // With the following line we ask the context to work with 
+        // a different buffer. Should this logic ever be needed by
+        // a user handler, it should be implemented by using a Queue
+        // in the UnmarshallingContext.
+        
+        // The buffer has to be set back from the outside!  See below
+        Buffer contextBuffer = context.buffer(buffer);
+        
+        Object array = super.read(context);
+        
+        // The context buffer has to be set back.
+        context.buffer(contextBuffer);
+        
+        return array;
     }
 
 }

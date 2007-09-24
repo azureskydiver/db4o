@@ -40,7 +40,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         return elementCount(readDimensions(a_trans, a_bytes, ReflectClassByRef.IGNORED));
     }
 
-    private static final int elementCount(int[] a_dim) {
+    protected static final int elementCount(int[] a_dim) {
         int elements = a_dim[0];
         for (int i = 1; i < a_dim.length; i++) {
             elements = elements * a_dim[i];
@@ -102,7 +102,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         readSubCandidates(handlerVersion, reader, candidates, elementCount(dimensions.value));
     }
     
-    private Object readCreate(Transaction trans, ReadBuffer buffer, IntArrayByRef dimensions) {
+    protected Object readCreate(Transaction trans, ReadBuffer buffer, IntArrayByRef dimensions) {
 		ReflectClassByRef clazz = new ReflectClassByRef();
 		dimensions.value = readDimensions(trans, buffer, clazz);
         if (_isPrimitive) {
