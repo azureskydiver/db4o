@@ -17,8 +17,6 @@
 	<property name="drs.net.tests.in.dir" location="${drs.overlay.dir}/drs.tests/" />
     
 	<property name="drs.conversion.workspace.dir" location="${dir.dist}/drs.net/workspace" />
-	
-    
     
 	<condition property="mono" value="1">
 		<os family="unix" />
@@ -216,6 +214,8 @@
 			
 				<include name="test/**/test/foundation/*.java" />
                 <include name="test/**/test/regression/*.java" />
+				
+				<include name="test/**/dotnet/*.java" />
 				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/CollectionHandlerImplTest.java" />
