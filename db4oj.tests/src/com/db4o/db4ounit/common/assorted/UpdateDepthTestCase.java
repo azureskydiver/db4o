@@ -58,7 +58,7 @@ public class UpdateDepthTestCase extends AbstractDb4oTestCase {
 	
 	protected void configure(Configuration config) throws Exception {
 		final ObjectClass itemClass = config.objectClass(Item.class);
-		itemClass.updateDepth(1);
+		itemClass.updateDepth(3);
 		itemClass.minimumActivationDepth(3);
 	}	
 	
@@ -163,5 +163,9 @@ public class UpdateDepthTestCase extends AbstractDb4oTestCase {
 	private Item queryRoot() {
 		return ((RootItem)newQuery(RootItem.class).execute().next()).root;
 	}
+	
+	public static void main(String[] arguments) {
+        new UpdateDepthTestCase().runSolo();
+    }
 
 }
