@@ -70,7 +70,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
             // primitive in our pointers, in the highest bit of the
             // length int.
             
-            if(ya._isPrimitive){
+            if(ya._usePrimitiveClassReflector){
                 ya.deletePrimitiveEmbedded(a_bytes, this);
                 a_bytes.slotDelete();
                 return;

@@ -357,14 +357,24 @@ public class FieldMetadata implements StoredField {
             ReflectArray reflectArray = container().reflector().array();
             _isNArray = reflectArray.isNDimensional(clazz);
             _isPrimitive = reflectArray.getComponentType(clazz).isPrimitive();
-            if (_isNArray) {
-                _handler = new MultidimensionalArrayHandler(container(), _handler, _isPrimitive);
-            } else {
-                _handler = new ArrayHandler(container(), _handler, _isPrimitive);
-            }
+            _handler = wrapHandlerToArrays(container(), _handler);
         } else {
         	_isPrimitive = isPrimitive | clazz.isPrimitive();
         }
+    }
+    
+    private final TypeHandler4 wrapHandlerToArrays(ObjectContainerBase container, TypeHandler4 handler) {
+        if (_isNArray) {
+            return new MultidimensionalArrayHandler(container, handler, arraysUsePrimitiveClassReflector());
+        } 
+        if (_isArray) {
+            return new ArrayHandler(container, handler, arraysUsePrimitiveClassReflector());
+        }
+        return handler;
+    }
+
+    private boolean arraysUsePrimitiveClassReflector() {
+        return Deploy.csharp ? false : _isPrimitive;
     }
 
     void deactivate(Transaction a_trans, Object a_onObject, int a_depth) {
@@ -879,18 +889,6 @@ public class FieldMetadata implements StoredField {
             Exceptions4.throwRuntimeException(Messages.ONLY_FOR_INDEXED_FIELDS);
         }
 	}
-
-
-    private final TypeHandler4 wrapHandlerToArrays(ObjectContainerBase a_stream, TypeHandler4 a_handler) {
-        if (_isNArray) {
-            a_handler = new MultidimensionalArrayHandler(a_stream, a_handler, _isPrimitive);
-        } else {
-            if (_isArray) {
-                a_handler = new ArrayHandler(a_stream, a_handler, _isPrimitive);
-            }
-        }
-        return a_handler;
-    }
 
     public String toString() {
         StringBuffer sb = new StringBuffer();
