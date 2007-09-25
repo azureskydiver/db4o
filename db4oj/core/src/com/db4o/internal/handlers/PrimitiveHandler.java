@@ -69,23 +69,24 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     }
     
     public ReflectClass classReflector(){
-    	
+        ensureClassReflectorLoaded();
+    	return _classReflector;  
+    }
+    
+    public ReflectClass primitiveClassReflector(){
+        ensureClassReflectorLoaded();
+    	return _primitiveClassReflector;  
+    }
+    
+    private void ensureClassReflectorLoaded(){
         if(_classReflector != null){
-        	return _classReflector;
+            return;
         }
         _classReflector = _stream.reflector().forClass(defaultValue().getClass());
         Class clazz = primitiveJavaClass();
         if(clazz != null){
-        	_primitiveClassReflector = _stream.reflector().forClass(clazz);
+            _primitiveClassReflector = _stream.reflector().forClass(clazz);
         }
-    	return _classReflector;  
-    }
-    
-    /** 
-     * classReflector() has to be called first, before this returns a value
-     */
-    public ReflectClass primitiveClassReflector(){
-    	return _primitiveClassReflector;  
     }
 
     public abstract void write(Object a_object, Buffer a_bytes);
