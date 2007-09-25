@@ -18,16 +18,16 @@ import com.db4o.reflect.generic.GenericReflector;
 public class ArrayHandler extends VariableLengthTypeHandler implements FirstClassHandler {
 	
     public final TypeHandler4 _handler;
-    public final boolean _isPrimitive;
+    public final boolean _usePrimitiveClassReflector;
 
-    public ArrayHandler(ObjectContainerBase container, TypeHandler4 handler, boolean isPrimitive) {
+    public ArrayHandler(ObjectContainerBase container, TypeHandler4 handler, boolean usePrimitiveClassReflector) {
         super(container);
         _handler = handler;
-        _isPrimitive = isPrimitive;
+        _usePrimitiveClassReflector = usePrimitiveClassReflector;
     }
     
     protected ArrayHandler(TypeHandler4 template) {
-        this(((ArrayHandler)template).container(),((ArrayHandler)template)._handler, ((ArrayHandler)template)._isPrimitive );
+        this(((ArrayHandler)template).container(),((ArrayHandler)template)._handler, ((ArrayHandler)template)._usePrimitiveClassReflector );
     }
 
     protected ReflectArray arrayReflector(){
@@ -142,7 +142,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     
     public int hashCode() {
         int hc = _handler.hashCode() >> 7; 
-        return _isPrimitive ? hc : - hc;
+        return _usePrimitiveClassReflector ? hc : - hc;
     }
 
     protected boolean handleAsByteArray(Object obj) {
@@ -200,16 +200,21 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     }
 
 	protected Object readCreate(Transaction trans, ReadBuffer buffer, IntByRef elements) {
-		ReflectClassByRef clazz = new ReflectClassByRef();
-		elements.value = readElementsAndClass(trans, buffer, clazz);
-		if (_isPrimitive) {
-			return arrayReflector().newInstance(primitiveClassReflector(), elements.value);
-		} 
-		if (clazz.value != null) {
-			return arrayReflector().newInstance(clazz.value, elements.value);	
+		ReflectClassByRef classByRef = new ReflectClassByRef();
+		elements.value = readElementsAndClass(trans, buffer, classByRef);
+		ReflectClass clazz = newInstanceReflectClass(classByRef);
+		if(clazz == null){
+		    return null;
 		}
-		return null;
+		return arrayReflector().newInstance(clazz, elements.value);	
 	}
+	
+    protected ReflectClass newInstanceReflectClass(ReflectClassByRef byRef){
+        if(_usePrimitiveClassReflector){
+            return primitiveClassReflector(); 
+        }
+        return byRef.value;
+    }
 
     public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         return this;
@@ -250,7 +255,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         } else {
     		clazz.value = classReflector();
         }
-        if(Debug.exceedsMaximumArrayEntries(elements, _isPrimitive)){
+        if(Debug.exceedsMaximumArrayEntries(elements, _usePrimitiveClassReflector)){
             return 0;
         }
         return elements;

@@ -103,17 +103,15 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
     }
     
     protected Object readCreate(Transaction trans, ReadBuffer buffer, IntArrayByRef dimensions) {
-		ReflectClassByRef clazz = new ReflectClassByRef();
-		dimensions.value = readDimensions(trans, buffer, clazz);
-        if (_isPrimitive) {
-        	return arrayReflector().newInstance(primitiveClassReflector(), dimensions.value);
-        } 
-    	if (clazz.value != null) {
-			return arrayReflector().newInstance(clazz.value, dimensions.value);
-    	}
-    	return null;
+		ReflectClassByRef classByRef = new ReflectClassByRef();
+		dimensions.value = readDimensions(trans, buffer, classByRef);
+		ReflectClass clazz = newInstanceReflectClass(classByRef);
+		if(clazz == null){
+		    return null;
+		}
+		return arrayReflector().newInstance(clazz, dimensions.value);
     }
-
+    
     private final int[] readDimensions(Transaction trans, ReadBuffer buffer, ReflectClassByRef clazz) {
         int[] dim = new int[readElementsAndClass(trans, buffer, clazz)];
         for (int i = 0; i < dim.length; i++) {
