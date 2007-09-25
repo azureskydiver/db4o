@@ -35,6 +35,12 @@ namespace Db4objects.Drs.Inside
 			}
 			return null;
 		}
+		
+		public static bool IsValueType(object o)
+		{
+			if (null == o) return false;
+			return o.GetType().IsValueType;
+		}
 	}
 }
 
