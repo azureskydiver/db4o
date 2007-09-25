@@ -267,7 +267,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
 
     public void writeObject(Object obj) {
         
-        // TODO: check if updatedepth is right here. It could maybe be updateDepth -1.
         int id = container().setInternal(transaction(), obj, _updateDepth, true);
         
         writeInt(id);
