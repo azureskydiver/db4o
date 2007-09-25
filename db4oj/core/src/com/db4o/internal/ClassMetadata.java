@@ -370,7 +370,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 depth = adjustDepthToBorders(depth);
             }
         }
-        if ((config != null && (config.cascadeOnDelete() == TernaryBool.YES || config.cascadeOnUpdate() == TernaryBool.YES))) {
+        if(config == null){
+            return depth - 1;
+        }
+        boolean cascadeOnDelete = config.cascadeOnDelete() == TernaryBool.YES;
+        boolean cascadeOnUpdate = config.cascadeOnUpdate() == TernaryBool.YES;
+        
+        if ( cascadeOnDelete || cascadeOnUpdate) {
             depth = adjustDepthToBorders(depth);
         }
         return depth - 1;
