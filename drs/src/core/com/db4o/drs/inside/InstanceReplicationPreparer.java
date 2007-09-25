@@ -1,3 +1,23 @@
+/* Copyright (C) 2004 - 2007  db4objects Inc.  http://www.db4o.com
+
+This file is part of the db4o open source object database.
+
+db4o is free software; you can redistribute it and/or modify it under
+the terms of version 2 of the GNU General Public License as published
+by the Free Software Foundation and as clarified by db4objects' GPL 
+interpretation policy, available at
+http://www.db4o.com/about/company/legalpolicies/gplinterpretation/
+Alternatively you can write to db4objects, Inc., 1900 S Norfolk Street,
+Suite 350, San Mateo, CA 94403, USA.
+
+db4o is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
 import com.db4o.drs.ReplicationConflictException;
@@ -8,6 +28,7 @@ import com.db4o.drs.inside.traversal.Visitor;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.TimeStampIdGenerator;
+import com.db4o.internal.*;
 import com.db4o.reflect.ReflectClass;
 
 class InstanceReplicationPreparer implements Visitor {
@@ -61,10 +82,17 @@ class InstanceReplicationPreparer implements Visitor {
 
 
 	public final boolean visit(Object obj) {
+		
 		if (_objectsPreparedToReplicate.get(obj) != null) return false;
+		if (isValueType(obj)) return true;
+		
 		_objectsPreparedToReplicate.put(obj, obj);
-
 		return prepareObjectToBeReplicated(obj, null, null);
+	}
+
+
+	private boolean isValueType(Object o) {
+		return ReplicationPlatform.isValueType(o);
 	}
 
 	
@@ -298,7 +326,7 @@ class InstanceReplicationPreparer implements Visitor {
 
 	private Object emptyClone(ReplicationProviderInside sourceProvider, Object obj) {
 		if (obj == null) return null;
-		ReflectClass claxx = _reflector.forObject(obj);
+		ReflectClass claxx = reflectClass(obj);
 //		if (claxx.isSecondClass()) return obj;
 		if (claxx.isSecondClass()) throw new RuntimeException("IllegalState");
 //		if (claxx.isArray()) return arrayClone(obj, claxx, sourceProvider); //Copy arrayClone() from GenericReplicationSession if necessary.
@@ -311,6 +339,11 @@ class InstanceReplicationPreparer implements Visitor {
 		if (result == null)
 			throw new RuntimeException("Unable to create a new instance of " + obj.getClass()); //FIXME Use db4o's standard for throwing exceptions.
 		return result;
+	}
+
+
+	private ReflectClass reflectClass(Object obj) {
+		return _reflector.forObject(obj);
 	}
 
 	
