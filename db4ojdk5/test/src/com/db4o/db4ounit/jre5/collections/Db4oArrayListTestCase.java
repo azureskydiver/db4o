@@ -14,12 +14,13 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 		new TestRunner(Db4oArrayListTestCase.class).run();
 	}
 	
-	public Db4oArrayList <Integer> _list;
+	public ArrayList <Integer> _list;
 
 	private static int CAPACITY = 100;
 
 	public void setUp() throws Exception {
-		_list = new Db4oArrayList<Integer>();
+//		_list = new Db4oArrayList<Integer>();
+		_list = new ArrayList<Integer>();
 		for (int i = 0; i < CAPACITY; i++) {
 			_list.add(new Integer(i));
 		}
