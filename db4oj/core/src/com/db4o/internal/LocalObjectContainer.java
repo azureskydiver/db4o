@@ -247,6 +247,10 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         if(_handlers.isSystemHandler(id)){
             return getPointerSlot();
         }
+        
+        if(DTrace.enabled){
+            DTrace.GET_POINTER_SLOT.log(id);
+        }
             
         return id;
     }

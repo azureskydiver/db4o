@@ -140,7 +140,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         int depth = _activationDepth - 1;
 
         if (peekPersisted()) {
-            return container().peekPersisted(transaction(), id, depth);
+            return container().peekPersisted(transaction(), id, depth, false);
         }
 
         Object obj = container().getByID2(transaction(), id);
