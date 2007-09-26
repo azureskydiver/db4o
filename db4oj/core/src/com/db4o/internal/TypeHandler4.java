@@ -12,8 +12,6 @@ import com.db4o.marshall.*;
  */
 public interface TypeHandler4 extends Comparable4 {
 	
-	void cascadeActivation(Transaction trans, Object obj, int depth, boolean activate);
-	
 	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer) throws Db4oIOException;
 	
 	Object read(MarshallerFamily mf, StatefulBuffer buffer, boolean redirect) throws CorruptionException, Db4oIOException;

@@ -27,11 +27,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
 
     private boolean i_compareToIsNull;
 
-    public void cascadeActivation(Transaction a_trans, Object a_object,
-        int a_depth, boolean a_activate) {
-        // do nothing
-    }
-    
     public Object coerce(ReflectClass claxx, Object obj) {
         return Handlers4.handlerCanHold(this, claxx) ? obj : No4.INSTANCE;
     }

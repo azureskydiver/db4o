@@ -24,14 +24,6 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         this(((StringHandler)template).container());
     }
     
-    public void cascadeActivation(
-        Transaction a_trans,
-        Object a_object,
-        int a_depth,
-        boolean a_activate) {
-        // default: do nothing
-    }
-
     public ReflectClass classReflector(){
     	return container()._handlers.ICLASS_STRING;
     }
