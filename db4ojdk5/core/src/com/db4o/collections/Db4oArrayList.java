@@ -4,203 +4,224 @@ package com.db4o.collections;
 
 import java.util.*;
 
+import com.db4o.foundation.*;
+
 /**
  * @exclude
  */
-public class Db4oArrayList <E> extends ArrayList <E> {
+public class Db4oArrayList<E> extends ArrayList<E> {
 
 	private static final long serialVersionUID = 1L;
 
+	public E[] elements;
+
+	public int capacity;
+
+	public int listSize;
+
 	public Db4oArrayList() {
-		super();
+		this(10);
 	}
 
-	public Db4oArrayList(Collection <? extends E> c) {
+	@SuppressWarnings("unchecked")
+	public Db4oArrayList(Collection<? extends E> c) {
 		super(c);
+		Object[] data = c.toArray();
+		capacity = data.length;
+		elements = (E[]) new Object[capacity];
+		System.arraycopy(data, 0, elements, 0, data.length);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Db4oArrayList(int initialCapacity) {
-		super(initialCapacity);
+		if (initialCapacity < 0) {
+			throw new IllegalArgumentException();
+		}
+		capacity = initialCapacity;
+		elements = (E[]) new Object[initialCapacity];
 	}
 
-	@Override
 	public void add(int index, E element) {
-		// TODO Auto-generated method stub
-		super.add(index, element);
+		checkIndex(index);
+		ensureCapacity(size() + 1);
+		System.arraycopy(elements, index,
+				elements, index + 1, listSize - index);
+		increaseSize(1);
 	}
 
-	@Override
 	public boolean add(E e) {
-		// TODO Auto-generated method stub
-		return super.add(e);
+		ensureCapacity(size() + 1);
+		elements[listSize] = e;
+		increaseSize(1);
+		return true;
 	}
 
-	@Override
-	public boolean addAll(Collection <? extends E>c) {
-		// TODO Auto-generated method stub
-		return super.addAll(c);
+	public boolean addAll(Collection<? extends E> c) {
+		throw new NotImplementedException();
 	}
 
-	@Override
-	public boolean addAll(int index, Collection <? extends E> c) {
-		// TODO Auto-generated method stub
-		return super.addAll(index, c);
+	public boolean addAll(int index, Collection<? extends E> c) {
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		super.clear();
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public Object clone() {
-		// TODO Auto-generated method stub
-		return super.clone();
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public boolean contains(Object o) {
-		// TODO Auto-generated method stub
-		return super.contains(o);
+		throw new NotImplementedException();
 	}
 
-	@Override
+	@SuppressWarnings("unchecked")
 	public void ensureCapacity(int minCapacity) {
-		// TODO Auto-generated method stub
 		super.ensureCapacity(minCapacity);
+		if (minCapacity <= capacity) {
+			return;
+		}
+		E[] temp = (E[]) new Object[minCapacity];
+		System.arraycopy(elements, 0, temp, 0, capacity);
+		elements = temp;
+		capacity = minCapacity;
 	}
 
-	@Override
 	public E get(int index) {
-		// TODO Auto-generated method stub
-		return super.get(index);
+		checkIndex(index);
+		return elements[index];
 	}
 
-	@Override
 	public int indexOf(Object o) {
-		// TODO Auto-generated method stub
-		return super.indexOf(o);
+		for (int index = 0; index < size(); ++index) {
+			E element = get(index);
+			if (o == null ? element == null : o.equals(element)) {
+				return index;
+			}
+		}
+		return -1;
 	}
 
-	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return super.isEmpty();
+		return size() == 0;
 	}
 
-	@Override
 	public int lastIndexOf(Object o) {
-		// TODO Auto-generated method stub
-		return super.lastIndexOf(o);
+		for (int index = size() - 1; index >= 0; --index) {
+			E element = get(index);
+			if (o == null ? element == null : o.equals(element)) {
+				return index;
+			}
+		}
+		return -1;
 	}
 
-	@Override
 	public E remove(int index) {
-		// TODO Auto-generated method stub
-		return super.remove(index);
+		checkIndex(index);
+		E element = elements[index];
+		System.arraycopy(elements, index + 1, 
+				elements, index, size() - index	- 1);
+		decreaseSize(1);
+		return element;
 	}
 
-	@Override
 	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
-		return super.remove(o);
+		int index = indexOf(o);
+		if (index == -1) {
+			return false;
+		}
+		remove(index);
+		return true;
 	}
 
-	@Override
+
 	protected void removeRange(int fromIndex, int toIndex) {
-		// TODO Auto-generated method stub
-		super.removeRange(fromIndex, toIndex);
+		if ((fromIndex < 0 || fromIndex >= size() || toIndex > size() || toIndex < fromIndex)) {
+			throw new IndexOutOfBoundsException();
+		}
+		if (fromIndex == toIndex) {
+			return;
+		}
+		int count = toIndex - fromIndex;
+		System.arraycopy(elements, toIndex, elements, fromIndex, size()
+				- toIndex);
+		listSize -= count;
 	}
 
-	@Override
 	public E set(int index, E element) {
-		// TODO Auto-generated method stub
-		return super.set(index, element);
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return super.size();
+		return listSize;
 	}
 
-	@Override
 	public Object[] toArray() {
-		// TODO Auto-generated method stub
-		return super.toArray();
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public <T> T[] toArray(T[] a) {
-		// TODO Auto-generated method stub
-		return super.toArray(a);
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public void trimToSize() {
-		// TODO Auto-generated method stub
-		super.trimToSize();
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public boolean equals(Object o) {
-		// TODO Auto-generated method stub
-		return super.equals(o);
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
+		throw new NotImplementedException();
 	}
 
-	@Override
-	public Iterator <E> iterator() {
-		// TODO Auto-generated method stub
-		return super.iterator();
+	public Iterator<E> iterator() {
+		throw new NotImplementedException();
 	}
 
-	@Override
-	public ListIterator <E> listIterator() {
-		// TODO Auto-generated method stub
-		return super.listIterator();
+	public ListIterator<E> listIterator() {
+		throw new NotImplementedException();
 	}
 
-	@Override
-	public ListIterator <E> listIterator(int index) {
-		// TODO Auto-generated method stub
-		return super.listIterator(index);
+	public ListIterator<E> listIterator(int index) {
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public List<E> subList(int fromIndex, int toIndex) {
-		// TODO Auto-generated method stub
-		return super.subList(fromIndex, toIndex);
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public boolean containsAll(Collection c) {
-		// TODO Auto-generated method stub
-		return super.containsAll(c);
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public boolean removeAll(Collection c) {
-		// TODO Auto-generated method stub
-		return super.removeAll(c);
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public boolean retainAll(Collection c) {
-		// TODO Auto-generated method stub
-		return super.retainAll(c);
+		throw new NotImplementedException();
 	}
 
-	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
+		throw new NotImplementedException();
 	}
+
+	private void checkIndex(int index) {
+		if (index < 0 || index >= size()) {
+			throw new IndexOutOfBoundsException();
+		}
+	}
+	
+	private void increaseSize(int count) {
+		listSize += count;
+	}
+	
+	private void decreaseSize(int count) {
+		listSize -= count;
+	}
+
 
 }
