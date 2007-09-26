@@ -21,6 +21,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 package com.db4o.drs.test;
 
 import com.db4o.drs.test.regression.*;
+import com.db4o.foundation.*;
 
 import db4ounit.*;
 
@@ -34,9 +35,14 @@ public abstract class DrsTestSuite extends DrsTestCase implements
 		return new DrsTestSuiteBuilder(a(), b(), testCases()).build();
 	}
 
-	protected abstract Class[] testCases() ;
+	protected final Class[] testCases() {
+		return concat(shared(), specificTestCases());
 
-	protected Class[] shared() {
+	}
+
+	protected abstract Class[] specificTestCases();
+
+	private Class[] shared() {
 		return new Class[] {
 				
 				com.db4o.drs.test.foundation.AllTests.class,
@@ -70,8 +76,12 @@ public abstract class DrsTestSuite extends DrsTestCase implements
                 
                 //regression
                 DRS42Test.class,
-                
-                com.db4o.drs.test.dotnet.StructTestCase.class,
 		};
+	}
+	
+	private Class[] concat(Class[] shared, Class[] db4oSpecific) {
+		final Collection4 c = new Collection4(shared);
+		c.addAll(db4oSpecific);
+		return (Class[]) c.toArray(new Class[c.size()]);
 	}
 }

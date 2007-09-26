@@ -252,6 +252,8 @@
 				<include name="test/**/test/foundation/*.java" />
                 <include name="test/**/test/regression/*.java" />
 				
+				<include name="test/**/dotnet/*.java" />
+				
 				<exclude name="**/hibernate/**" />
 				<exclude name="**/CollectionHandlerImplTest.java" />
 				<exclude name="**/ReplicationTraversalTest.java" />
