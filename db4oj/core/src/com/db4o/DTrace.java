@@ -44,7 +44,7 @@ public class DTrace {
             
 //            turnAllOffExceptFor(new DTrace[] {YAPMETA_SET_ID});
         	
-          turnAllOffExceptFor(new DTrace[] {BEGIN_TOP_LEVEL_CALL, END_TOP_LEVEL_CALL});
+          turnAllOffExceptFor(new DTrace[] {GET_POINTER_SLOT, FREE_POINTER_ON_ROLLBACK});
         	
 //          turnAllOffExceptFor(new DTrace[] {BTREE_NODE_COMMIT_OR_ROLLBACK });
 //            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_REMOVE, BTREE_NODE_COMMIT_OR_ROLLBACK YAPMETA_SET_ID});
@@ -77,8 +77,10 @@ public class DTrace {
 		FILE_FREE = new DTrace(true, true, "fileFree", true);
 		FREE_RAM = new DTrace(true, true, "freeRAM", true);
 		FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
-		FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
-		GET_SLOT = new DTrace(true, true, "getSlot", true);
+        FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
+        FREE_POINTER_ON_ROLLBACK = new DTrace(true, true, "freePointerOnRollback", true);
+        GET_POINTER_SLOT = new DTrace(true, true, "getPointerSlot", true);
+        GET_SLOT = new DTrace(true, true, "getSlot", true);
 		GET_FREESPACE = new DTrace(true, true, "getFreespace", true);
 		GET_FREESPACE_RAM = new DTrace(true, true, "getFreespaceRam", true);
 		GET_YAPOBJECT = new DTrace(true, true, "get yapObject", true);
@@ -176,7 +178,9 @@ public class DTrace {
     public static DTrace FREE_RAM;
     public static DTrace FREE_ON_COMMIT;
     public static DTrace FREE_ON_ROLLBACK;
+    public static DTrace FREE_POINTER_ON_ROLLBACK;
     public static DTrace GET_SLOT;
+    public static DTrace GET_POINTER_SLOT;
     public static DTrace GET_FREESPACE;
     public static DTrace GET_FREESPACE_RAM;
     public static DTrace GET_YAPOBJECT;
@@ -217,7 +221,7 @@ public class DTrace {
     	init();
     }
 	
-    private static DTrace all[];
+    private static DTrace[] all;
     private static int current;
     
     public void log(){

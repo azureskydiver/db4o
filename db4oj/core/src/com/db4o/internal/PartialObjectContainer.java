@@ -1151,15 +1151,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	checkClosed();
             beginTopLevelCall();
             try{
-                _justPeeked = null;
                 trans = checkTransaction(trans);
                 ObjectReference ref = trans.referenceForObject(obj);
                 trans = committed ? _systemTransaction : trans;
                 Object cloned = null;
                 if (ref != null) {
-                    cloned = peekPersisted(trans, ref.getID(), depth);
+                    cloned = peekPersisted(trans, ref.getID(), depth, true);
                 }
-                _justPeeked = null;
                 completeTopLevelCall();
                 return cloned;
             } catch(Db4oException e) {
@@ -1171,21 +1169,29 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    public final Object peekPersisted(Transaction trans, int id, int depth) {
+    public final Object peekPersisted(Transaction trans, int id, int depth, boolean resetJustPeeked) {
         if(depth < 0){
             return null;
         }
-        TreeInt ti = new TreeInt(id);
-        TreeIntObject tio = (TreeIntObject) Tree.find(_justPeeked, ti);
-        if (tio == null) {
-        	return new ObjectReference(id).peekPersisted(trans, depth);
-        } 
-        return tio._object;
+        if(resetJustPeeked){
+            _justPeeked = null;
+        }else{
+            TreeInt ti = new TreeInt(id);
+            TreeIntObject tio = (TreeIntObject) Tree.find(_justPeeked, ti);
+            if(tio != null){
+                return tio._object;
+            }
+        }
+        Object res = new ObjectReference(id).peekPersisted(trans, depth);
+        if(resetJustPeeked){
+            _justPeeked = null;
+        }
+        return res; 
     }
 
-    void peeked(int a_id, Object a_object) {
+    void peeked(int id, Object obj) {
         _justPeeked = Tree
-            .add(_justPeeked, new TreeIntObject(a_id, a_object));
+            .add(_justPeeked, new TreeIntObject(id, obj));
     }
 
     public void purge() {

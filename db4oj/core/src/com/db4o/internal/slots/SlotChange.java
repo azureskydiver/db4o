@@ -2,6 +2,7 @@
 
 package com.db4o.internal.slots;
 
+import com.db4o.*;
 import com.db4o.internal.*;
 
 /**
@@ -172,6 +173,9 @@ public class SlotChange extends TreeInt {
 			yapFile.free(_newSlot);
 		}
 		if(isFreePointerOnRollback()){
+		    if(DTrace.enabled){
+		        DTrace.FREE_POINTER_ON_ROLLBACK.logLength(_key, Const4.POINTER_LENGTH);
+		    }
 			yapFile.free(_key, Const4.POINTER_LENGTH);
 		}
 	}

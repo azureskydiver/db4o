@@ -1361,7 +1361,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         ObjectContainerBase stream = trans.container();
 
         if (a_bytes.getUpdateDepth() == Const4.TRANSIENT) {
-            return stream.peekPersisted(trans, id, depth);
+            return stream.peekPersisted(trans, id, depth, false);
         }
         
         if (isValueType()) {

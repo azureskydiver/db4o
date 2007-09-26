@@ -84,7 +84,7 @@ public abstract class AbstractReadContext implements InternalReadContext {
         int depth = activationDepth() - 1;
 
         if (peekPersisted()) {
-            return container().peekPersisted(transaction(), id, depth);
+            return container().peekPersisted(transaction(), id, depth, false);
         }
 
         Object obj = container().getByID2(transaction(), id);
