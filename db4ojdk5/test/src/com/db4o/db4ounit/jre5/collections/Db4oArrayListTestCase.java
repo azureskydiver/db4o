@@ -19,8 +19,9 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 	private static int CAPACITY = 100;
 
 	public void setUp() throws Exception {
-//		_list = new Db4oArrayList<Integer>();
 		_list = new ArrayList<Integer>();
+		// commmet the following code to use platform ArrayList
+//		_list = new Db4oArrayList<Integer>();
 		for (int i = 0; i < CAPACITY; i++) {
 			_list.add(new Integer(i));
 		}
@@ -415,7 +416,7 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 	
 	public void testToArray_LObject() throws Exception {
 		Object[] array1;
-		Object[] array2 = new Object[CAPACITY];
+		Object[] array2 = new Integer[CAPACITY];
 		array1 = _list.toArray(array2);
 		Assert.areSame(array1, array2);
 		Assert.areEqual(CAPACITY, array2.length);
@@ -426,13 +427,13 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 		
 		_list.clear();
 		
-		array1 = new Object[0];
-		array2 = new Object[CAPACITY];
+		array1 = new Integer[0];
+		array2 = new Integer[CAPACITY];
 		array1 = _list.toArray(array2);
 		Assert.areSame(array1, array2);
 		Assert.areEqual(CAPACITY, array1.length);
 		
-		array2 = new Object[0];
+		array2 = new Integer[0];
 		array1 = _list.toArray(array2);
 		Assert.areEqual(0, array1.length);
 		

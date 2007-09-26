@@ -2,6 +2,7 @@
 
 package com.db4o.collections;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.foundation.*;
@@ -42,10 +43,11 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 	}
 
 	public void add(int index, E element) {
-		checkIndex(index);
+		checkAddIndex(index);
 		ensureCapacity(size() + 1);
 		System.arraycopy(elements, index,
 				elements, index + 1, listSize - index);
+		elements[index] = element;
 		increaseSize(1);
 	}
 
@@ -57,15 +59,33 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 	}
 
 	public boolean addAll(Collection<? extends E> c) {
-		throw new NotImplementedException();
+		int length = c.size();
+		if(length == 0) {
+			return false;
+		}
+		ensureCapacity(size() + length);
+		Object[] toBeAdded = c.toArray();
+		System.arraycopy(toBeAdded, 0, elements, size(), toBeAdded.length);
+		increaseSize(length);
+		return true;		
 	}
 
 	public boolean addAll(int index, Collection<? extends E> c) {
-		throw new NotImplementedException();
+		checkAddIndex(index);
+		int length = c.size();
+		if(length == 0) {
+			return false;
+		}
+		ensureCapacity(size() + length);
+		Object[] data = c.toArray();
+		System.arraycopy(elements, index, elements, index+length, size() - index);
+		System.arraycopy(data, 0, elements, index, length);
+		increaseSize(length);
+		return true;
 	}
 
 	public void clear() {
-		throw new NotImplementedException();
+		setSize(0);
 	}
 
 	public Object clone() {
@@ -73,7 +93,7 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 	}
 
 	public boolean contains(Object o) {
-		throw new NotImplementedException();
+		return indexOf(o) != -1;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -150,7 +170,10 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 	}
 
 	public E set(int index, E element) {
-		throw new NotImplementedException();
+		checkIndex(index);
+		E oldValue = elements[index];
+		elements[index] = element;
+		return oldValue;
 	}
 
 	public int size() {
@@ -158,11 +181,20 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 	}
 
 	public Object[] toArray() {
-		throw new NotImplementedException();
+		int size = size();
+		Object[] data = new Object[size];
+		System.arraycopy(elements, 0, data, 0, size);
+		return data;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
-		throw new NotImplementedException();
+		int size = size();
+		if(a.length < size) {
+			a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
+		}
+		System.arraycopy(elements, 0, a, 0, size);
+		return a;
 	}
 
 	public void trimToSize() {
@@ -193,16 +225,38 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		throw new NotImplementedException();
 	}
 
-	public boolean containsAll(Collection c) {
-		throw new NotImplementedException();
+	public boolean containsAll(Collection<?> c) {
+		Iterator<?> iter = c.iterator();
+		while(iter.hasNext()) {
+			if(!contains(iter.next())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
-	public boolean removeAll(Collection c) {
-		throw new NotImplementedException();
+	public boolean removeAll(Collection <?> c) {
+		boolean changed = false;
+		Iterator<?> it = iterator();
+		while (it.hasNext()) {
+			if (c.contains(it.next())) {
+				it.remove();
+				changed = true;
+			}
+		}
+		return changed;
 	}
 
-	public boolean retainAll(Collection c) {
-		throw new NotImplementedException();
+	public boolean retainAll(Collection <?> c) {
+		boolean changed = false;
+		Iterator<?> it = iterator();
+		while (it.hasNext()) {
+			if (!c.contains(it.next())) {
+				it.remove();
+				changed = true;
+			}
+		}
+		return changed;
 	}
 
 	public String toString() {
@@ -213,6 +267,16 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		if (index < 0 || index >= size()) {
 			throw new IndexOutOfBoundsException();
 		}
+	}
+	
+	private void checkAddIndex(int index) {
+		if (index < 0 || index > size()) {
+			throw new IndexOutOfBoundsException();
+		}
+	}
+	
+	private void setSize(int count) {
+		listSize = count;
 	}
 	
 	private void increaseSize(int count) {
