@@ -30,6 +30,7 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		Object[] data = c.toArray();
 		capacity = data.length;
 		elements = (E[]) new Object[capacity];
+		listSize = data.length;
 		System.arraycopy(data, 0, elements, 0, data.length);
 	}
 

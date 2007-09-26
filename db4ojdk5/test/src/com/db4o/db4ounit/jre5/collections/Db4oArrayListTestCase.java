@@ -21,7 +21,7 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 	public void setUp() throws Exception {
 		_list = new ArrayList<Integer>();
 		// commmet the following code to use platform ArrayList
-//		_list = new Db4oArrayList<Integer>();
+		//_list = new Db4oArrayList<Integer>();
 		for (int i = 0; i < CAPACITY; i++) {
 			_list.add(new Integer(i));
 		}
@@ -29,6 +29,55 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 
 	public void tearDown() throws Exception {
 		
+	}
+	
+	public void testConstructor() throws Exception {
+		Db4oArrayList<Integer> arrayList = new Db4oArrayList<Integer>();
+		fill(arrayList);
+		Assert.areEqual(CAPACITY, arrayList.size());
+	}
+	
+	public void testConstructor_I_LegalArguments1() throws Exception {
+		Db4oArrayList<Integer> arrayList; 
+		arrayList = new Db4oArrayList<Integer>(CAPACITY);
+		fill(arrayList);
+		Assert.areEqual(CAPACITY, arrayList.size());
+	}
+	
+	public void testConstructor_I_LegalArguments2() throws Exception {
+		Db4oArrayList<Integer> arrayList; 
+		arrayList = new Db4oArrayList<Integer>(0);
+		fill(arrayList);
+		Assert.areEqual(CAPACITY, arrayList.size());
+	}
+
+	public void testConstructor_I_IllegalArgumentException() throws Exception {
+		Assert.expect(IllegalArgumentException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				Db4oArrayList<Integer> arrayList = new Db4oArrayList<Integer>(-1);
+			}
+		});
+	}
+	
+	public void testConstructor_LCollection_NullPointerException() throws Exception {
+		Assert.expect(NullPointerException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				Db4oArrayList<Integer> arrayList = new Db4oArrayList<Integer>(null);
+			}
+		});
+	}
+	
+	public void testConstructor_LCollection() throws Exception {
+		Db4oArrayList<Integer> arrayList = new Db4oArrayList<Integer>(_list);
+		Assert.areEqual(_list.size(), arrayList.size());
+		Assert.isTrue(Arrays.equals(_list.toArray(), arrayList.toArray()));
+		
+	}
+
+	private void fill(Db4oArrayList<Integer> arrayList) {
+		for (int i = 0; i < CAPACITY; i++) {
+			arrayList.add(new Integer(i));
+		}
 	}
 
 	public void testAdd() throws Exception {
