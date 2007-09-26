@@ -15,7 +15,7 @@ import com.db4o.reflect.generic.GenericReflector;
 /**
  * @exclude
  */
-public class ArrayHandler extends VariableLengthTypeHandler implements FirstClassHandler {
+public class ArrayHandler extends VariableLengthTypeHandler implements FirstClassHandler, Comparable4 {
 	
     public final TypeHandler4 _handler;
     public final boolean _usePrimitiveClassReflector;
@@ -47,26 +47,28 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 	}
 
     public final void cascadeActivation(
-        Transaction a_trans,
-        Object a_object,
-        int a_depth,
-        boolean a_activate) {
-        // We simply activate all Objects here
-        if (_handler instanceof ClassMetadata) {
+        Transaction trans,
+        Object onObject,
+        int depth,
+        boolean activate) {
+        
+        if (! (_handler instanceof ClassMetadata)) {
+            return;
+        }
             
-            a_depth --;
-            
-            Object[] all = allElements(a_object);
-            if (a_activate) {
-                for (int i = all.length - 1; i >= 0; i--) {
-                    container().stillToActivate(a_trans, all[i], a_depth);
-                }
-            } else {
-                for (int i = all.length - 1; i >= 0; i--) {
-                    container().stillToDeactivate(a_trans, all[i], a_depth, false);
-                }
+        depth --;
+        
+        Object[] all = allElements(onObject);
+        if (activate) {
+            for (int i = all.length - 1; i >= 0; i--) {
+                container().stillToActivate(trans, all[i], depth);
+            }
+        } else {
+            for (int i = all.length - 1; i >= 0; i--) {
+                container().stillToDeactivate(trans, all[i], depth, false);
             }
         }
+        
     }
     
     public ReflectClass classReflector(){

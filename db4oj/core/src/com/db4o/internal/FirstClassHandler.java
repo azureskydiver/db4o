@@ -12,6 +12,8 @@ import com.db4o.internal.query.processor.*;
  */
 public interface FirstClassHandler {
     
+    void cascadeActivation(Transaction trans, Object obj, int depth, boolean activate);
+    
     void readCandidates(int handlerVersion, Buffer buffer, QCandidates candidates) throws Db4oIOException;
     
     TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes);

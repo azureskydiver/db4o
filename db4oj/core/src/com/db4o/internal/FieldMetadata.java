@@ -281,17 +281,21 @@ public class FieldMetadata implements StoredField {
         return true;
     }
 
-    void cascadeActivation(Transaction a_trans, Object a_object, int a_depth,
-        boolean a_activate) {
+    void cascadeActivation(Transaction trans, Object onObject, int depth, boolean activate) {
         if (! alive()) {
             return;
         }
+        if(! (_handler instanceof FirstClassHandler)){
+            return;
+        }
+        FirstClassHandler firstClassHandler = (FirstClassHandler) _handler;
+        
         try {
-            Object cascadeTo = getOrCreate(a_trans, a_object);
-            if (cascadeTo != null && _handler != null) {
-                _handler.cascadeActivation(a_trans, cascadeTo, a_depth,
-                    a_activate);
+            Object cascadeTo = getOrCreate(trans, onObject);
+            if (cascadeTo == null) {
+                return;
             }
+            firstClassHandler.cascadeActivation(trans, cascadeTo, depth,activate);
         } catch (Exception e) {
             // FIXME: Catch all
         }
@@ -556,10 +560,8 @@ public class FieldMetadata implements StoredField {
 		}
 		Object obj = _javaField.get(onObject);
 		if (_db4oType != null && obj == null) {
-
 			obj = _db4oType.createDefault(trans);
 			_javaField.set(onObject, obj);
-
 		}
 		return obj;
 	}
