@@ -510,7 +510,7 @@
 		
 		<java jvm="${file.jvm.jdk1.3}" 
 			fork="true" 
-			classname="com.db4o.db4ounit.common.migration.AllTests" 
+			classname="com.db4o.db4ounit.common.migration.AllCommonTests" 
 			failonerror="true" 
 			timeout="3600000">
 			<classpath refid="tests.java1.2.cp" />
