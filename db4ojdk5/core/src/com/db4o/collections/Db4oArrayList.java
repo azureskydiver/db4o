@@ -19,6 +19,8 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 	public int capacity;
 
 	public int listSize;
+	
+	protected transient int modCount;
 
 	public Db4oArrayList() {
 		this(10);
@@ -50,12 +52,14 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 				elements, index + 1, listSize - index);
 		elements[index] = element;
 		increaseSize(1);
+		markModified();
 	}
 
 	public boolean add(E e) {
 		ensureCapacity(size() + 1);
 		elements[listSize] = e;
 		increaseSize(1);
+		markModified();
 		return true;
 	}
 
@@ -68,6 +72,7 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		Object[] toBeAdded = c.toArray();
 		System.arraycopy(toBeAdded, 0, elements, size(), toBeAdded.length);
 		increaseSize(length);
+		markModified();
 		return true;		
 	}
 
@@ -82,31 +87,31 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		System.arraycopy(elements, index, elements, index+length, size() - index);
 		System.arraycopy(data, 0, elements, index, length);
 		increaseSize(length);
+		markModified();
 		return true;
 	}
 
 	public void clear() {
 		setSize(0);
+		markModified();
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object clone() {
-		throw new NotImplementedException();
+		Db4oArrayList <E> clonedList = (Db4oArrayList<E>) super.clone();
+		clonedList.elements = elements.clone();
+		return clonedList;
 	}
 
 	public boolean contains(Object o) {
 		return indexOf(o) != -1;
 	}
 
-	@SuppressWarnings("unchecked")
 	public void ensureCapacity(int minCapacity) {
-		super.ensureCapacity(minCapacity);
 		if (minCapacity <= capacity) {
 			return;
 		}
-		E[] temp = (E[]) new Object[minCapacity];
-		System.arraycopy(elements, 0, temp, 0, capacity);
-		elements = temp;
-		capacity = minCapacity;
+		resize(minCapacity);
 	}
 
 	public E get(int index) {
@@ -144,6 +149,7 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		System.arraycopy(elements, index + 1, 
 				elements, index, size() - index	- 1);
 		decreaseSize(1);
+		markModified();
 		return element;
 	}
 
@@ -167,7 +173,8 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		int count = toIndex - fromIndex;
 		System.arraycopy(elements, toIndex, elements, fromIndex, size()
 				- toIndex);
-		listSize -= count;
+		decreaseSize(count);
+		markModified();
 	}
 
 	public E set(int index, E element) {
@@ -199,19 +206,47 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 	}
 
 	public void trimToSize() {
-		throw new NotImplementedException();
+		resize(size());
 	}
 
-	public boolean equals(Object o) {
-		throw new NotImplementedException();
+	public boolean equals(Object other) {
+		if (other == this) {
+			return true;
+		}
+		if (!(other instanceof List)) {
+			return false;
+		}
+		List<?> otherList = (List<?>) other;
+		if (otherList.size() != size()) {
+			return false;
+		}
+		Iterator<E> iter = iterator();
+		Iterator<?> otherIter = otherList.iterator();
+		while (iter.hasNext()) {
+			E e1 = iter.next();
+			Object e2 = otherIter.next();
+			if (!(e1 == null ? e2 == null : e1.equals(e2))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
+	/**
+	 * @see List#hashCode()
+	 */
 	public int hashCode() {
-		throw new NotImplementedException();
+		int hashCode = 1;
+		Iterator<E> i = iterator();
+		while (i.hasNext()) {
+			E obj = i.next();
+			hashCode = 31 * hashCode + (obj == null ? 0 : obj.hashCode());
+		}
+		return hashCode;
 	}
 
 	public Iterator<E> iterator() {
-		throw new NotImplementedException();
+		return new Db4oArrayListIterator();
 	}
 
 	public ListIterator<E> listIterator() {
@@ -260,8 +295,34 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		return changed;
 	}
 
+	/**
+	 * @see Collection#toString()
+	 */
 	public String toString() {
-		throw new NotImplementedException();
+		StringBuilder buffer = new StringBuilder();
+		buffer.append('[');
+		Iterator<E> iter = iterator();
+		while (iter.hasNext()) {
+			E element = iter.next();
+			if (element != this) {
+				buffer.append(element);
+			} else {
+				buffer.append("(this Collection)"); //$NON-NLS-1$
+			}
+            if(iter.hasNext()) {
+                buffer.append(", "); //$NON-NLS-1$
+            }
+		}
+		buffer.append(']');
+		return buffer.toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void resize(int minCapacity) {
+		E[] temp = (E[]) new Object[minCapacity];
+		System.arraycopy(elements, 0, temp, 0, size());
+		elements = temp;
+		capacity = minCapacity;
 	}
 
 	private void checkIndex(int index) {
@@ -287,6 +348,60 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 	private void decreaseSize(int count) {
 		listSize -= count;
 	}
+	
+	private void markModified() {
+		++modCount;
+	}
 
+	private class Db4oArrayListIterator implements Iterator<E> {
 
+		private int _currentIndex;
+		
+		private int _iteratorModCount;
+		
+		private boolean _canRemove;
+		
+		public Db4oArrayListIterator () {
+			_currentIndex = -1;
+			syncModCount();
+		}
+		
+		public boolean hasNext() {
+			return _currentIndex + 1 < size();
+		}
+
+		public E next() {
+			checkConcurrentModification();
+			try {
+				++_currentIndex;
+				E element = get(_currentIndex);
+				_canRemove = true;
+				return element;
+			} catch (IndexOutOfBoundsException e) {
+				throw new NoSuchElementException();
+			}
+		}
+
+		public void remove() {
+			if(!_canRemove) {
+				throw new IllegalStateException();
+			}
+			checkConcurrentModification();
+			Db4oArrayList.this.remove(_currentIndex);
+			--_currentIndex;
+			syncModCount();
+			_canRemove = false;
+		}
+		
+		private void syncModCount() {
+			_iteratorModCount = modCount;
+		}
+
+		private void checkConcurrentModification() {
+			if(_iteratorModCount != modCount) {
+				throw new ConcurrentModificationException();
+			}
+		}
+
+	}
 }
