@@ -21,7 +21,7 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 	public void setUp() throws Exception {
 		_list = new ArrayList<Integer>();
 		// commmet the following code to use platform ArrayList
-		// _list = new Db4oArrayList<Integer>();
+		//_list = new Db4oArrayList<Integer>();
 		for (int i = 0; i < CAPACITY; i++) {
 			_list.add(new Integer(i));
 		}
@@ -262,6 +262,7 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 	}
 
 	public void testIsEmpty() throws Exception {
+		Assert.isTrue(new Db4oArrayList<Integer>().isEmpty());
 		Assert.isFalse(_list.isEmpty());
 		_list.clear();
 		Assert.isTrue(_list.isEmpty());
@@ -413,15 +414,19 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 
 	public void testSet() throws Exception {
 		Integer element = new Integer(1);
-		_list.set(0, element);
+		
+		Integer previousElement = _list.get(0);
+		Assert.areSame(previousElement, _list.set(0, element));
 		Assert.areSame(element, _list.get(0));
 
-		_list.set(42, element);
+		previousElement = _list.get(42);
+		Assert.areSame(previousElement, _list.set(42, element));
 		Assert.areSame(element, _list.get(42));
 
 		for (int i = 0; i < CAPACITY; ++i) {
 			element = new Integer(i);
-			_list.set(i, element);
+			previousElement = _list.get(i);
+			Assert.areSame(previousElement, _list.set(i, element));
 			Assert.areSame(element, _list.get(i));
 		}
 
@@ -497,4 +502,165 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 		list.add(3);
 		Assert.areEqual("[1, 2, (this Collection), 3]",list.toString());
 	}
+	
+	public void testTrimToSize_EnsureCapacity() throws Exception {
+		_list.ensureCapacity(CAPACITY*2);
+		Assert.areEqual(CAPACITY, _list.size());
+		for(int i = 0; i < CAPACITY; ++i) {
+			Integer element = (Integer) _list.get(i);
+			Assert.areEqual(new Integer(i), element);
+		}
+		
+		_list.trimToSize();
+		Assert.areEqual(CAPACITY, _list.size());
+		for(int i = 0; i < CAPACITY; ++i) {
+			Integer element = (Integer) _list.get(i);
+			Assert.areEqual(new Integer(i), element);
+		}
+	}
+	
+	public void testTrimToSize_Remove() throws Exception {
+		for (int i = CAPACITY-1; i >= 10 ; i--) {
+			_list.remove(i);
+		}
+		Assert.areEqual(10, _list.size());
+		for(int i = 0; i < 10; ++i) {
+			Integer element = (Integer) _list.get(i);
+			Assert.areEqual(new Integer(i), element);
+		}
+	}
+	
+	public void testTrimToSize_Iterator() throws Exception {
+		final Iterator<Integer> iterator = _list.iterator();
+		_list.trimToSize();
+		Assert.expect(ConcurrentModificationException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				iterator.next();
+			}
+		});
+	}
+	
+	public void testEnsureCapacity_Iterator() throws Exception {
+		final Iterator<Integer> iterator = _list.iterator();
+		_list.ensureCapacity(CAPACITY*2);
+		Assert.expect(ConcurrentModificationException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				iterator.next();
+			}
+		});
+	}
+	
+	public void testClear_Iterator() throws Exception {
+		final Iterator<Integer> iterator = _list.iterator();
+		_list.clear();
+		Assert.expect(ConcurrentModificationException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				iterator.next();
+			}
+		});
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public void testClone() throws Exception {
+		_list.add(null);
+		ArrayList<Integer> cloned = (ArrayList<Integer>)_list.clone();
+		for (int i = 0; i < CAPACITY; i++) {
+			Assert.areSame(_list.get(i), cloned.get(i));
+		}
+	}
+	
+	public void testEquals() throws Exception {
+		Assert.isFalse(_list.equals(null));
+		Assert.isFalse(_list.equals(new Integer(1)));
+		Assert.isTrue(_list.equals(_list));
+		Vector<Integer> v = new Vector<Integer>(_list);
+		Assert.isTrue(_list.equals(v));
+		v = new Vector<Integer>();
+		Assert.isFalse(_list.equals(v));
+		Assert.isTrue(_list.equals(_list.clone()));
+	}
+	
+	public void testIteratorNext_NoSuchElementException() throws Exception {
+		final Iterator<Integer> iterator = _list.iterator();
+		Assert.expect(NoSuchElementException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				while(true){iterator.next();}
+			}
+		});
+	}
+	
+	public void testIteratorNext_ConcurrentModificationException() throws Exception {
+		final Iterator<Integer> iterator = _list.iterator();
+		Assert.expect(NoSuchElementException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				while(true){iterator.next();}
+			}
+		});
+		_list.clear();
+		Assert.expect(ConcurrentModificationException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				iterator.next();
+			}
+		});
+		
+	}
+	
+	public void testIteratorNext() throws Exception {
+		final Iterator<Integer> iterator = _list.iterator();
+		int i = 0;
+		while (iterator.hasNext()) {
+			Integer e1 = iterator.next();
+			Assert.areSame(e1, _list.get(i));
+			i++;
+		}
+	}
+	
+	public void testIteratorRemove() throws Exception {
+		final Iterator<Integer> iterator = _list.iterator();
+		int i = CAPACITY-1;
+		while (iterator.hasNext()) {
+			Integer e1 = iterator.next();
+			Assert.areSame(e1, _list.get(0));
+			Assert.areEqual(new Integer(CAPACITY-1), _list.get(i));
+			iterator.remove();
+			Assert.areEqual(i, _list.size());
+			i--;
+		}
+	}
+	
+	public void testRemove_IllegalStateException() throws Exception {
+		final Iterator<Integer> iterator = _list.iterator();
+		Assert.expect(IllegalStateException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				iterator.remove();
+			}
+		});
+		
+		iterator.next();
+		
+		Assert.expect(IllegalStateException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				iterator.remove();
+				iterator.remove();
+			}
+		});
+	}
+	
+	public void testIteratorRemove_ConcurrentModificationException() throws Exception {
+		final Iterator<Integer> iterator = _list.iterator();
+		iterator.next();
+		_list.clear();
+		Assert.expect(ConcurrentModificationException.class, new CodeBlock(){
+			public void run() throws Throwable {
+				iterator.remove();
+			}
+		});
+	}
+	
+	public void testSubList() throws Exception {
+		
+	}
+	
+	
 }

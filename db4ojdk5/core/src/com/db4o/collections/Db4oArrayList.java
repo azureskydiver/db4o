@@ -319,6 +319,7 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 
 	@SuppressWarnings("unchecked")
 	private void resize(int minCapacity) {
+		markModified();
 		E[] temp = (E[]) new Object[minCapacity];
 		System.arraycopy(elements, 0, temp, 0, size());
 		elements = temp;
