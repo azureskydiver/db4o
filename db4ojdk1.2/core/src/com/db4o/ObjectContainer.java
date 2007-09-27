@@ -300,10 +300,10 @@ public interface ObjectContainer {
 
     /**
      * Native Query Interface. Queries as with {@link com.db4o.ObjectContainer#query(com.db4o.query.Predicate)},
-     * but will sort the resulting {@link com.db4o.ObjectSet} according to the given {@link Comparator}.
+     * but will sort the resulting {@link com.db4o.ObjectSet} according to the given java.util.Comparator.
      * 
      * @param predicate the {@link Predicate} containing the native query expression.
-     * @param comparator the {@link Comparator} specifiying the sort order of the result
+     * @param comparator the java.util.Comparator specifying the sort order of the result
      * @return the {@link ObjectSet} returned by the query.
      * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
      * @throws DatabaseClosedException db4o database file was closed or failed to open.
