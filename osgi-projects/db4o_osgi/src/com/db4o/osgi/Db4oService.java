@@ -33,7 +33,7 @@ import com.db4o.ext.*;
  * 
  * @see Db4o
  * @see com.db4o.reflect.Reflector
- * @see org.osgi.framework.BundleContext
+ * @see "org.osgi.framework.BundleContext"
  */
 
 public interface Db4oService {
