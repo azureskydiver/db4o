@@ -266,7 +266,7 @@
 		<ant antfile="build-dotnet.xml" target="run-tests-net1" />
 	</target>
 	
-	<target name="runtestsnet2">
+	<target name="runtestsnet2" depends="init">
 		<ant antfile="build-dotnet.xml" target="run-tests" />
 	</target>
 
@@ -1040,7 +1040,7 @@
 		<ant antfile="build-dotnet.xml" target="package-net1" />
 	</target>
 
-	<target name="buildnet2">
+	<target name="buildnet2" depends="init">
 		<ant antfile="build-java.xml" target="doctor"/>
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>	
