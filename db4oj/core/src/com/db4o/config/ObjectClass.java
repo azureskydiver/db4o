@@ -282,7 +282,7 @@ public interface ObjectClass {
      * <br><br>
 	 * <br><br>The use of an {@link ObjectTranslator ObjectTranslator} is not
 	 * compatible with the use of an 
-	 * {@link ObjectMarshaller ObjectMarshaller}.<br><br>
+	 * internal class ObjectMarshaller.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
      * @param translator this may be an {@link ObjectTranslator ObjectTranslator}

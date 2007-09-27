@@ -13,9 +13,9 @@ import com.db4o.*;
  * http://developer.db4o.com/Resources/view.aspx/Reference/Client-Server/Messaging<br>
  * http://developer.db4o.com/Resources/view.aspx/Reference/Client-Server/Remote_Code_Execution<br><br>
  * <b>See Also:</b><br> 
- * {@link com.db4o.config.Configuration#setMessageRecipient(com.db4o.messaging.MessageRecipient) Configuration.setMessageRecipient(MessageRecipient)}, <br>
+ * {@link com.db4o.config.ClientServerConfiguration#setMessageRecipient(com.db4o.messaging.MessageRecipient) ClientServerConfiguration.setMessageRecipient(MessageRecipient)}, <br>
  * {@link MessageSender},<br>
- * {@link com.db4o.config.Configuration#getMessageSender()},<br>
+ * {@link com.db4o.config.ClientServerConfiguration#getMessageSender()}<br>
  */
 public interface MessageRecipient {
 	

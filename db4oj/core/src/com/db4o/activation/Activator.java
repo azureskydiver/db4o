@@ -7,7 +7,7 @@ package com.db4o.activation;
  * an Activator implementation, which is called
  * by TransparentActivation framework, when a request is
  * received to activate the host object.
- * @see Transparent Activation framework. 
+ * @see <a href="http://developer.db4o.com/resources/view.aspx/reference/Object_Lifecycle/Activation/Transparent_Activation_Framework">Transparent Activation framework.</a> 
  */
 public interface Activator {
 	

@@ -50,7 +50,7 @@ public interface Constraint {
 
 
     /**
-     * Used in conjunction with {@link smaller()} or {@link greater()} to create constraints
+     * Used in conjunction with {@link #smaller()} or {@link #greater()} to create constraints
      * like "smaller or equal", "greater or equal".
      * For example:<br>
      * <code>query.constrain(Pilot.class);</code><br>
@@ -133,7 +133,7 @@ public interface Constraint {
      * <code>query.constrain(Team.class);</code><br>
      * <code>query.descend("pilots").constrain(pilot2).contains();</code><br>
      * will return the Team object as it contains pilot2.<br>
-     * If applied to a String object, this constrain will behave as {@link like()}.
+     * If applied to a String object, this constrain will behave as {@link #like()}.
      * @return this {@link Constraint} to allow the chaining of method calls.
      */
     public Constraint contains ();
