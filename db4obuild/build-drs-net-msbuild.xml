@@ -132,6 +132,11 @@
 				<include name="AssemblyInfo.cs" />
 			</fileset>
         </updateAssemblyInfo>
+        <updatecsharpproject projectFile="${drs.net.src.dir}/drs/drs.csproj">
+        	<sources dir="${drs.net.src.dir}/drs">
+        		<include name="**/*.cs" />
+        	</sources>
+        </updatecsharpproject>
         
         <!--.NET: drs.tests -->
         <copy todir="${drs.net.src.dir}/drs.tests/src">
@@ -155,6 +160,11 @@
 				<include name="AssemblyInfo.cs" />
 			</fileset>
         </updateAssemblyInfo>
+        <updatecsharpproject projectFile="${drs.net.src.dir}/drs.tests/drs.tests.csproj">
+        	<sources dir="${drs.net.src.dir}/drs.tests">
+        		<include name="**/*.cs" />
+        	</sources>
+        </updatecsharpproject>
 
         <!--.NET: QuickStart -->
         <copy todir="${drs.net.src.dir}/QuickStart">
