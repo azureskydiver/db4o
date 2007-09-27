@@ -6,8 +6,8 @@ import com.db4o.internal.*;
 
 
 /**
- * this interface is passed to {@link TypeHandler4} during marshalling
- * and provides methods to marshall objects. 
+ * this interface is passed to internal class com.db4o.internal.TypeHandler4 during marshalling
+ * and provides methods to marshal objects. 
  */
 public interface WriteContext extends Context, WriteBuffer {
 
@@ -16,14 +16,14 @@ public interface WriteContext extends Context, WriteBuffer {
      * the object to the context.
      * Use this method for first class objects only (objects that
      * have an identity in the database). If the object can potentially
-     * be a primitive type, do not use this method bue use 
-     * {@link #writeAny(Object)} instead.
+     * be a primitive type, do not use this method but use 
+     * a matching {@link WriteBuffer} method instead.
      * @param obj the object to write.
      */
     void writeObject(Object obj);
 
     /**
-     * writes sub-objects, in cases where the {@link TypeHandler4}
+     * writes sub-objects, in cases where the TypeHandler4
      * is known.
      * @param obj the object to write
      */

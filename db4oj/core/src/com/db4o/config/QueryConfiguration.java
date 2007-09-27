@@ -79,11 +79,11 @@ public interface QueryConfiguration {
      * - Client/Server applications with the risk of concurrent modifications should prefer 
      * <b>Snapshot</b> mode to avoid side effects from other transactions.
      * <br><br>
-     * To change the evaluationMode, pass any of the three static {@link QueryEvaluationMode}
-     * constants from the {@link QueryEvaluationMode} class to this method:<br>
-     * - {@link QueryEvaluationMode#IMMEDIATE}<br>
-     * - {@link QueryEvaluationMode#SNAPSHOT}<br>
-     * - {@link QueryEvaluationMode#LAZY}<br><br>
+     * To change the evaluationMode, pass any of the three static {@link com.db4o.config.QueryEvaluationMode}
+     * constants from the {@link com.db4o.config.QueryEvaluationMode} class to this method:<br>
+     * - {@link com.db4o.config.QueryEvaluationMode#IMMEDIATE}<br>
+     * - {@link com.db4o.config.QueryEvaluationMode#SNAPSHOT}<br>
+     * - {@link com.db4o.config.QueryEvaluationMode#LAZY}<br><br>
      * This setting must be issued from the client side.
      */
 	public void evaluationMode(QueryEvaluationMode mode);

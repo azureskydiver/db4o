@@ -5,7 +5,7 @@ package com.db4o.reflect;
 /**
  * Predicate representation.
  * @see com.db4o.query.Predicate
- *@see Reflecotr
+ * @see Reflector
  */
 public interface ReflectClassPredicate {
     

@@ -4,7 +4,6 @@ package com.db4o.config;
 
 
 /**
- * @exclude
  * This class provides static constants for the query evaluation
  * modes that db4o supports. 
  * <br><br><b>For detailed documentation please see 
@@ -31,7 +30,7 @@ public class QueryEvaluationMode {
 	 * the query processor chooses the best indexes, does all index processing
 	 * and creates a snapshot of the index at this point in time. Non-indexed
 	 * constraints are evaluated lazily when the application iterates through 
-	 * the {@link ObjectSet} resultset of the query.
+	 * the {@link com.db4o.ObjectSet} resultset of the query.
 	 * <br><br><b>For detailed documentation please see 
 	 * {@link QueryConfiguration#evaluationMode(QueryEvaluationMode)}</b> 
 	 */
@@ -41,7 +40,7 @@ public class QueryEvaluationMode {
 	 * Constant for lazy query evaluation. When Query#execute() is called, the
 	 * query processor only chooses the best index and creates an iterator on 
 	 * this index. Indexes and constraints are evaluated lazily when the 
-	 * application iterates through the {@link ObjectSet} resultset of the query.
+	 * application iterates through the {@link com.db4o.ObjectSet} resultset of the query.
 	 * <br><br><b>For detailed documentation please see 
 	 * {@link QueryConfiguration#evaluationMode(QueryEvaluationMode)}</b> 
 	 */
