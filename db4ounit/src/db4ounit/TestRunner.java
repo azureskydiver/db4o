@@ -5,12 +5,18 @@ import java.io.IOException;
 public class TestRunner {
 	
 	private TestSuiteBuilder _suiteBuilder;
+	private boolean _reportToFile = true;
 	
 	public TestRunner(TestSuite suite) {
+		this(suite, true);
+	}
+
+	public TestRunner(TestSuite suite, boolean reportToFile) {
 		if (null == suite) throw new IllegalArgumentException("suite");
 		_suiteBuilder = new NullTestSuiteBuilder(suite);
+		_reportToFile = reportToFile;
 	}
-	
+
 	public TestRunner(TestSuiteBuilder builder) {
 		if (null == builder) throw new IllegalArgumentException("suite");
 		_suiteBuilder = builder;
@@ -50,7 +56,9 @@ public class TestRunner {
 	}
 
 	private void report(TestResult result) {
-		reportToTextFile(result);
+		if(_reportToFile) {
+			reportToTextFile(result);
+		}
 		reportToStdErr(result);
 	}
 

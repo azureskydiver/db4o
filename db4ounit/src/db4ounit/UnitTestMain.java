@@ -14,7 +14,7 @@ public class UnitTestMain {
 	public final void runTests(String[] args) throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException {
 		TestSuite suite = build(args);
-		TestRunner runner=new TestRunner(suite);
+		TestRunner runner=new TestRunner(suite, false);
 		runner.run();
 	}
 	
