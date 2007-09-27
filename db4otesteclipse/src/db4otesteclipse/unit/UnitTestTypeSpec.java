@@ -43,13 +43,17 @@ public class UnitTestTypeSpec implements TestTypeSpec {
 	}
 
 	public void configureSpecific(ILaunchConfigurationWorkingCopy workingCopy,
-			List testTypes, String typeArgsList) throws JavaModelException {
+			List testTypes, String typeArgsList) throws CoreException {
 		String testLauncherName = (needsDb4oExtensions(testTypes) ? DB4O_TESTLAUNCHER_NAME : PLAIN_TESTLAUNCHER_NAME);
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,
 				testLauncherName);
 		workingCopy.setAttribute(
 				IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, typeArgsList);
+		String vmArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, "");
+		String tmpDirConfig = "-Ddb4ounit.file.path=" + System.getProperty("java.io.tmpdir");
+		workingCopy.setAttribute(
+				IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (vmArgs.isEmpty() ? tmpDirConfig : vmArgs + " " + tmpDirConfig));
 	}
 
 	private boolean needsDb4oExtensions(List testTypes) throws JavaModelException {
