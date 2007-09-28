@@ -61,7 +61,9 @@ public class NetworkSocket implements Socket4 {
     
     public int read() throws Db4oIOException {
         try {
-        	return _in.read();
+        	int ret = _in.read();
+        	checkEOF(ret);
+        	return ret;
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
 		}
@@ -69,10 +71,18 @@ public class NetworkSocket implements Socket4 {
 
     public int read(byte[] a_bytes, int a_offset, int a_length) throws Db4oIOException {
         try {
-        	return _in.read(a_bytes, a_offset, a_length);
+        	int ret = _in.read(a_bytes, a_offset, a_length);
+        	checkEOF(ret);
+			return ret;
 		} catch (IOException e) {
 			throw new Db4oIOException(e);
 		}
+    }
+    
+    private void checkEOF(int ret) {
+    	if(ret == -1) {
+    		throw new Db4oIOException();
+    	}
     }
 
     public void setSoTimeout(int timeout) {
