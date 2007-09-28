@@ -51,9 +51,9 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
 
     abstract Object read1(Buffer reader) throws CorruptionException;
 
-    public Object readIndexEntry(Buffer a_reader) {
+    public Object readIndexEntry(Buffer buffer) {
         try {
-            return read1(a_reader);
+            return read1(buffer);
         } catch (CorruptionException e) {
         }
         return null;
