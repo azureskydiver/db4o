@@ -55,7 +55,7 @@ public class ClassFileLoader implements ClassInfoLoader {
 	private boolean verbose;
 
 	private static final int CACHE_LIMIT = 10;
-	
+
 	private ClassSource _classSource;
 
 	public ClassFileLoader(ClassSource classSource) {
@@ -72,6 +72,7 @@ public class ClassFileLoader implements ClassInfoLoader {
 		verbose = false;
 		_classSource = classSource;
 	}
+	
 	/**
 	 * Constructor. The classpath initially consists of the contents of the
 	 * <tt>java.class.path</tt> and <tt>sun.boot.class.path</tt> system
@@ -424,8 +425,7 @@ public class ClassFileLoader implements ClassInfoLoader {
 
 		cache.addFirst(file);
 	}
-	
-	
+
 	/**
 	 * Set the directory into which commited class files should be written.
 	 * 
