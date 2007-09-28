@@ -11,14 +11,14 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
 import EDU.purdue.cs.bloat.reflect.*;
 
-// TODO extract generic functionality and move to db4otools
-public class BloatContext {
+// TODO extract generic functionality, move to db4otools, delete
+public class BloatJ2MEContext {
 	public static final String INIT_METHODNAME = "<init>";
 	public static final String EQUALS_METHODNAME = "equals";
 	private static final String LOADCLASSCONSTMETHODNAME = "db4o$class$";
 	private ClassFileLoader _loader;
 
-	public BloatContext(ClassFileLoader loader, String outputDirPath) {
+	public BloatJ2MEContext(ClassFileLoader loader, String outputDirPath) {
 		_loader = loader;
 		_loader.setOutputDir(new File(outputDirPath));
 	}

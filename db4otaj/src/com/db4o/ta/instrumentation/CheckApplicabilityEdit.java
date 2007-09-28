@@ -17,7 +17,7 @@ public class CheckApplicabilityEdit implements BloatClassEdit {
 		_filter = filter;
 	}
 
-	public boolean bloat(ClassEditor ce, ClassLoader origLoader) {
+	public boolean bloat(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
 			if (!_filter.accept(clazz)) {

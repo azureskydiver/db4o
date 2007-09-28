@@ -13,11 +13,11 @@ import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
 
 import com.db4o.activation.Activator;
-import com.db4o.instrumentation.BloatClassEdit;
+import com.db4o.instrumentation.*;
 
 public class InstrumentMethodStartEdit implements BloatClassEdit {
 
-	public boolean bloat(ClassEditor ce, ClassLoader origLoader) {
+	public boolean bloat(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		instrumentAllMethods(ce);
 		return true;
 	}

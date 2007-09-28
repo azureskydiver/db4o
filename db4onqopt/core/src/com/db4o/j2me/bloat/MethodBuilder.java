@@ -14,9 +14,9 @@ public class MethodBuilder {
 
 	private MethodEditor _editor;
 
-	private BloatContext _context;
+	private BloatJ2MEContext _context;
 
-	public MethodBuilder(BloatContext context, ClassEditor classEditor,
+	public MethodBuilder(BloatJ2MEContext context, ClassEditor classEditor,
 			int modifiers, Class type, String name, Class[] params,
 			Class[] exceptions) {
 		_context = context;

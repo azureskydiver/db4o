@@ -27,9 +27,9 @@ public class RegistryEnhancer {
 
 	private Class[] _clazzes;
 
-	private BloatContext _context;
+	private BloatJ2MEContext _context;
 
-	public RegistryEnhancer(BloatContext context, ClassEditor ce, Class clazz) {
+	public RegistryEnhancer(BloatJ2MEContext context, ClassEditor ce, Class clazz) {
 		this._ce = ce;
 		this._clazzes = createClasses(clazz);
 		this._context = context;
@@ -62,7 +62,7 @@ public class RegistryEnhancer {
 				new Class[0]);
 		builder.newRef(Hashtable.class);
 		builder.dup();
-		builder.invokeSpecial(_context.getType(Hashtable.class), BloatContext.INIT_METHODNAME,
+		builder.invokeSpecial(_context.getType(Hashtable.class), BloatJ2MEContext.INIT_METHODNAME,
 				new Type[0], Type.VOID);
 		builder.putstatic(_ce.type(), Hashtable.class, CLASSINFO_CONSTNAME);
 		for (int classIdx = 0; classIdx < _clazzes.length; classIdx++) {
@@ -89,7 +89,7 @@ public class RegistryEnhancer {
 		for (int i = 0; i < fieldsInf.length; i++) {
 			generateInfoForField(builder, _context.fieldEditor(clazz, fieldsInf[i]), i);
 		}
-		builder.invokeSpecial(_context.getType(ClassInfo.class), BloatContext.INIT_METHODNAME,
+		builder.invokeSpecial(_context.getType(ClassInfo.class), BloatJ2MEContext.INIT_METHODNAME,
 				new Type[] { Type.BOOLEAN, Type.CLASS,
 						_context.getType(com.db4o.reflect.self.FieldInfo[].class) },
 				Type.VOID);
@@ -113,7 +113,7 @@ public class RegistryEnhancer {
 		builder.ldc(fieldEditor.isStatic());
 		builder.ldc(fieldEditor.isTransient());
 		builder.invokeSpecial(
-				_context.getType(com.db4o.reflect.self.FieldInfo.class), BloatContext.INIT_METHODNAME,
+				_context.getType(com.db4o.reflect.self.FieldInfo.class), BloatJ2MEContext.INIT_METHODNAME,
 				new Type[] { Type.STRING, Type.CLASS, Type.BOOLEAN,
 						Type.BOOLEAN, Type.BOOLEAN }, Type.VOID);
 		builder.aastore();

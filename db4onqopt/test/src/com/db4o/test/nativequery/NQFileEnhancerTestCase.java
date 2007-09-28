@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.*;
 
 import com.db4o.foundation.io.*;
-import com.db4o.internal.query.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
@@ -26,7 +25,7 @@ public class NQFileEnhancerTestCase implements TestCase {
 			copyClassFile(srcDir, clazzes[clazzIdx]);
 		}
 		
-		Db4oFileEnhancer enhancer = new Db4oFileEnhancer();
+		Db4oFileEnhancer enhancer = new Db4oFileEnhancer(new TranslateNQToSODAEdit());
 		enhancer.enhance(srcDir, targetDir, new String[]{}, "");
 		
 		ExcludingClassLoader excludingLoader = new ExcludingClassLoader(getClass().getClassLoader(), clazzes);

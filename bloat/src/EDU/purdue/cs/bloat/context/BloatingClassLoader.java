@@ -98,6 +98,10 @@ public abstract class BloatingClassLoader extends URLClassLoader {
 	public ClassInfoLoader getClassInfoLoader() {
 		return this.loader;
 	}
+	
+	protected EditorContext getEditorContext() {
+		return context;
+	}
 
 	/**
 	 * This method is invoked as a class is being loaded.

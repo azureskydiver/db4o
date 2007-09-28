@@ -20,7 +20,7 @@ public class NativeQueryEnhancer {
 	
 	private static SODABloatMethodBuilder BLOAT_BUILDER=new SODABloatMethodBuilder();
 	
-	public boolean enhance(BloatUtil bloatUtil,ClassEditor classEditor,String methodName,Type[] argTypes,ClassLoader classLoader,ClassSource classSource) throws Exception {
+	public boolean enhance(BloatLoaderContext bloatUtil,ClassEditor classEditor,String methodName,Type[] argTypes,ClassLoader classLoader,ClassSource classSource) throws Exception {
 		if(NQDebug.LOG) {
 			System.err.println("Enhancing "+classEditor.name());
 		}
@@ -38,11 +38,11 @@ public class NativeQueryEnhancer {
 		return true;
 	}
 	
-	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName) {
+	public Expression analyze(BloatLoaderContext bloatUtil, ClassEditor classEditor, String methodName) {
 		return analyze(bloatUtil, classEditor, methodName,null);
 	}
 	
-	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName, Type[] argTypes) {
+	public Expression analyze(BloatLoaderContext bloatUtil, ClassEditor classEditor, String methodName, Type[] argTypes) {
 		FlowGraph flowGraph=null;
 		try {
 			flowGraph=bloatUtil.flowGraph(classEditor,methodName, argTypes);

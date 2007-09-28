@@ -46,7 +46,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	private Date dateMember;
 
 	private ClassFileLoader loader;
-	private BloatUtil bloatUtil;
+	private BloatLoaderContext bloatUtil;
 	
 	private int intMemberPlusOne() {
 		return intMember+1;
@@ -59,7 +59,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void setUp() throws Exception {
 		ClassSource classSource = new Db4oClassSource(new ClassLoaderNativeClassFactory(Data.class.getClassLoader()));
 		loader=new ClassFileLoader(classSource);
-		bloatUtil=new BloatUtil(loader);
+		bloatUtil=new BloatLoaderContext(loader);
 	}
 	
 	// unconditional

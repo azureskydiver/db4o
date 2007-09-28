@@ -40,7 +40,7 @@ public class Db4oFileEnhancerAntTask extends Task {
 			}
 		}
 		try {
-			new Db4oFileEnhancer().enhance(srcDir,targetDir,(String[])paths.toArray(new String[paths.size()]),(packagePredicate==null ? "" : packagePredicate));
+			new Db4oFileEnhancer(new TranslateNQToSODAEdit()).enhance(srcDir,targetDir,(String[])paths.toArray(new String[paths.size()]),(packagePredicate==null ? "" : packagePredicate));
 		} catch (Exception exc) {
 			throw new BuildException(exc);
 		}
