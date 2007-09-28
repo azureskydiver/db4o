@@ -1237,34 +1237,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         //       indexes here
     }
 
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
-        int id = a_bytes.readInt();
-        int depth = a_bytes.getInstantiationDepth() - 1;
-
-        Transaction trans = a_bytes.getTransaction();
-        ObjectContainerBase stream = trans.container();
-
-        if (a_bytes.getUpdateDepth() == Const4.TRANSIENT) {
-            return stream.peekPersisted(trans, id, depth, false);
-        }
-        
-        if (isValueType()) {
-            return readValueType(trans, id, depth);
-        } 
-
-        Object ret = stream.getByID2(trans, id);
-
-        if (ret instanceof Db4oTypeImpl) {
-            depth = ((Db4oTypeImpl)ret).adjustReadDepth(depth);
-        }
-
-        // this is OK for primitive YapAnys. They will not be added
-        // to the list, since they will not be found in the ID tree.
-        stream.stillToActivate(trans, ret, depth);
-
-        return ret;
-    }
-
 	public Object readValueType(Transaction trans, int id, int depth) {
 		// for C# value types only:
 		// they need to be instantiated fully before setting them

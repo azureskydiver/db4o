@@ -171,10 +171,6 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 		return Handlers4.primitiveClassReflector(_handler);
 	}
 	
-    public final Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
-        return null;
-    }
-    
 	protected Object readCreate(Transaction trans, ReadBuffer buffer, IntByRef elements) {
 		ReflectClassByRef classByRef = new ReflectClassByRef();
 		elements.value = readElementsAndClass(trans, buffer, classByRef);

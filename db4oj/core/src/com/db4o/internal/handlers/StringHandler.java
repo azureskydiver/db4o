@@ -46,10 +46,6 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         }
         return readStringNoDebug(trans.context(), (ReadBuffer)indexEntry);
     }
-
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
-        return null;
-    }
     
     /**
      * This readIndexEntry method reads from the parent slot.
