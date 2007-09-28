@@ -64,25 +64,6 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return Const4.OBJECT_LENGTH + Const4.ID_LENGTH;
     }
     
-    public void instantiateFields(ClassMetadata yc, ObjectHeaderAttributes attributes, final ObjectReference ref, final Object onObject, final StatefulBuffer writer) {
-    	TraverseFieldCommand command=new TraverseFieldCommand() {
-			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-				boolean ok = false;
-                try {
-					field.instantiate(_family, ref, onObject, writer);
-					ok = true;
-				} catch (CorruptionException e) {
-					// FIXME: CorruptionException SHOULD BE IGNORED?
-				} finally {
-					if (!ok) {
-						cancel();
-					}
-				}
-			}
-    	};
-    	traverseFields(yc, writer, attributes, command);
-    }
-    
     /**
      * @param yf
      * @param yo

@@ -243,43 +243,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		int instantiationDepth,
 		int addToIDTree,
         boolean checkIDTree) {
-	    
-        UnmarshallingContext context = new UnmarshallingContext(trans, this, addToIDTree, checkIDTree);
-        context.buffer(buffer);
-        context.persistentObject(obj);
-        context.activationDepth(instantiationDepth);
-        return context.read();
+            UnmarshallingContext context = new UnmarshallingContext(trans, buffer, this, addToIDTree, checkIDTree);
+            context.persistentObject(obj);
+            context.activationDepth(instantiationDepth);
+            return context.read();
 	}
 
-	public final Object readPrefetch(ObjectContainerBase container, StatefulBuffer buffer) {
-
-		Object readObject = null;
-		if (beginProcessing()) {
-            
-            ObjectHeader header = new ObjectHeader(container, buffer);
-
-			_class = header.classMetadata();
-
-			if (_class == null) {
-				return null;
-			}
-
-			// We use an instantiationdepth of 1 only, if there is no special
-			// configuration for the class. This is a quick fix due to a problem
-			// instantiating Hashtables. There may be a better workaround that
-			// works with configured objects only to make them fast also.
-			//
-			// An instantiation depth of 1 makes use of possibly prefetched strings
-			// that are carried around in a_bytes.
-			//
-			// TODO: optimize  
-			buffer.setInstantiationDepth(_class.configOrAncestorConfig() == null ? 1 : 0);
-
-			readObject = _class.instantiate(this, getObject(), header._marshallerFamily, header._headerAttributes, buffer, true);
-			
-			endProcessing();
-		}
-		return readObject;
+	public final Object readPrefetch(Transaction trans, StatefulBuffer buffer) {
+	    return new UnmarshallingContext(trans, buffer, this, Const4.ADD_TO_ID_TREE, false).readPrefetch();
 	}
 
 	public final void readThis(Transaction trans, Buffer buffer) {

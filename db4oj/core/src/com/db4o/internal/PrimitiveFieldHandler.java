@@ -107,31 +107,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
 	    return false;
 	}
 
-    Object instantiate(ObjectReference ref, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, boolean addToIDTree) {
-        if (obj == null) {
-        	// FIXME catchall
-            try {
-                obj = _handler.read(mf, buffer, true);
-            } 
-            catch (CorruptionException ce) {
-                return null;
-            }
-            ref.setObjectWeak(buffer.getStream(), obj);
-        }
-        ref.setStateClean();
-        return obj;
-    }
-    
-    Object instantiateTransient(ObjectReference a_yapObject, Object a_object, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
-    	// FIXME catchall
-        try {
-            return _handler.read(mf, a_bytes, true);
-        }
-        catch (CorruptionException ce) {
-            return null;
-        }
-    }
-    
     public Object instantiate(UnmarshallingContext context) {
         Object obj = context.persistentObject();
         if (obj == null) {
@@ -146,19 +121,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return _handler.read(context);
     }
 
-    void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
-        Object obj = null;
-        // FIXME catchall
-        try {
-            obj = _handler.read(mf, a_bytes, true);
-        }
-        catch (CorruptionException ce) {
-        }
-        if (obj != null  &&  (_handler instanceof DateHandler)) {
-            ((DateHandler)_handler).copyValue(obj, a_onObject);
-        }
-    }
-    
     void instantiateFields(UnmarshallingContext context) {
         Object obj = context.read(_handler);
         if (obj != null  &&  (_handler instanceof DateHandler)) {
