@@ -148,12 +148,16 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         storedItem._name = CHANGED_NAME;
         _client1.set(storedItem);
         
-        Object descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
+        int id = (int) _client1.getID(storedItem);
+        Object retrievedItem = _client2.getByID(id);
+        Assert.isNotNull(retrievedItem);
+        
+        Object descendValue = _client2.descend(retrievedItem, new String[]{FIELD_NAME});
         Assert.areEqual(ORIGINAL_NAME, descendValue);
         
         _client1.commit();
         
-        descendValue = _client1.descend(storedItem, new String[]{FIELD_NAME});
+        descendValue = _client2.descend(retrievedItem, new String[]{FIELD_NAME});
         Assert.areEqual(CHANGED_NAME, descendValue);
     }
     

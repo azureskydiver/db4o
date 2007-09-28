@@ -111,8 +111,8 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         activationDepth(depth);
     }
     
-    public Object readFieldValue (int objectID, FieldMetadata field){
-        readBuffer(objectID);
+    public Object readFieldValue (FieldMetadata field){
+        readBuffer(objectID());
         if(_buffer == null){
             return null;
         }

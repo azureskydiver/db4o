@@ -482,37 +482,17 @@ public class FieldMetadata implements StoredField {
 		    }
 		    
 			container.checkClosed();
-			ObjectReference yo = trans.referenceForObject(onObject);
-			if (yo == null) {
+			ObjectReference ref = trans.referenceForObject(onObject);
+			if (ref == null) {
 				return null;
 			}
-			int id = yo.getID();
+			int id = ref.getID();
 			if (id <= 0) {
 				return null;
 			}
-
-			StatefulBuffer writer = container.readWriterByID(container
-					.transaction(), id);
-			if (writer == null) {
-				return null;
-			}
-			writer._offset = 0;
-			ObjectHeader oh = new ObjectHeader(container, writer);
-			boolean findOffset = oh.objectMarshaller().findOffset(oh.classMetadata(),
-					oh._headerAttributes, writer, this);
-			if (!findOffset) {
-				return null;
-			}
-			try {
-				return read(oh._marshallerFamily, writer);
-			} catch (CorruptionException e) {
-				// FIXME: SHOULD CorruptionException BE IGNORED?
-				if (Debug.atHome) {
-					e.printStackTrace();
-				}
-			}
+			UnmarshallingContext context = new UnmarshallingContext(trans, ref, Const4.ADD_TO_ID_TREE, false);
+            return context.readFieldValue(this);
 		}
-		return null;
 	}
 
     public String getName() {
@@ -886,25 +866,6 @@ public class FieldMetadata implements StoredField {
             sb.append(getName());
         }
         return sb.toString();
-    }
-
-    public final String toString(MarshallerFamily mf, StatefulBuffer writer) {
-        String str = "\n Field " + _name;
-        if (!checkAlive(writer)) {
-            return str;
-        }
-        Object obj = null;
-        try{
-            obj = read(mf, writer);
-        }catch(Exception e){
-            // can happen
-        }
-        if(obj == null){
-            str += "\n [null]";
-        }else{
-            str+="\n  " + obj.toString();
-        }
-        return str;
     }
 
     private void initIndex(Transaction systemTrans) {        
