@@ -25,14 +25,14 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 		_instrumentedClassesFilter = instrumentedClassesFilter;
 	}
 	
-	public boolean bloat(ClassEditor ce) {
+	public boolean bloat(ClassEditor ce, ClassLoader origLoader) {
 		try {
-			Class clazz = BloatUtil.classForEditor(ce);
+			Class clazz = BloatUtil.classForEditor(ce, origLoader);
 			if(!_instrumentedClassesFilter.accept(clazz)) {
 				return true;
 			}
 			String superClassName = BloatUtil.normalizeClassName(ce.superclass());
-			Class superClazz = Class.forName(superClassName);
+			Class superClazz = origLoader.loadClass(superClassName);
 			if(!(_instrumentedClassesFilter.accept(superClazz))) {
 				ce.addInterface(Activatable.class);
 				createActivatorField(ce);

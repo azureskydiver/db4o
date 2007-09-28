@@ -16,20 +16,18 @@ public class TranslateNQToSODAEdit implements BloatClassEdit {
 
 	private final NativeQueryEnhancer _enhancer;
 	private final BloatUtil _bloatUtil;
-	private final ClassLoader _rawClassLoader;
 	
-	public TranslateNQToSODAEdit(NativeQueryEnhancer enhancer, BloatUtil bloatUtil, ClassLoader rawClassLoader) {
+	public TranslateNQToSODAEdit(NativeQueryEnhancer enhancer, BloatUtil bloatUtil) {
 		_enhancer = enhancer;
 		_bloatUtil = bloatUtil;
-		_rawClassLoader = rawClassLoader;
 	}
 	
-	public boolean bloat(ClassEditor ce) {
+	public boolean bloat(ClassEditor ce, ClassLoader origLoader) {
 		try {
 			Type type=ce.superclass();
 			while(type!=null) {
-				if(type.className().equals(Predicate.class.getName().replace('.','/'))) {
-					_enhancer.enhance(_bloatUtil,ce,Predicate.PREDICATEMETHOD_NAME,null /*new Type[]{Type.OBJECT}*/,_rawClassLoader, new DefaultClassSource());
+				if(BloatUtil.normalizeClassName(type.className()).equals(Predicate.class.getName())) {
+					_enhancer.enhance(_bloatUtil,ce,Predicate.PREDICATEMETHOD_NAME,null,origLoader, new DefaultClassSource());
 					return true;
 				}
 				type = _bloatUtil.superType(type);

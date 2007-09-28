@@ -83,9 +83,9 @@ public class BloatUtil {
 		return className.replace('/', '.');
 	}
 	
-	public static Class classForEditor(ClassEditor ce) throws ClassNotFoundException {
+	public static Class classForEditor(ClassEditor ce, ClassLoader loader) throws ClassNotFoundException {
 		String clazzName = normalizeClassName(ce.name());
-		Class clazz = Class.forName(clazzName);
+		Class clazz = loader.loadClass(clazzName);
 		return clazz;
 	}
 	
