@@ -30,11 +30,6 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
         return true;
     }
 
-
-    public Object read(StatefulBuffer reader) {
-        throw Exceptions4.shouldNeverBeCalled();
-    }
-    
     public TypeHandler4 readArrayHandler(Transaction a_trans, Buffer[] a_bytes) {
         int id = 0;
 

@@ -44,8 +44,20 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     protected abstract Class primitiveJavaClass();
     
     public abstract Object primitiveNull();
-    
-    public Object read(MarshallerFamily mf, StatefulBuffer buffer, boolean redirect) throws CorruptionException {
+
+    /**
+     * 
+     * @param mf
+     * @param buffer
+     * @param redirect
+     */
+    public Object read(
+        
+        /* FIXME: Work in progress here, this signature should not be used */
+        MarshallerFamily mf,
+        
+        
+        StatefulBuffer buffer, boolean redirect) throws CorruptionException {
     	return read1(buffer);
     }
 

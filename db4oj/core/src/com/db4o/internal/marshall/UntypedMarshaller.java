@@ -14,8 +14,6 @@ public abstract class UntypedMarshaller {
     
     public abstract void deleteEmbedded(StatefulBuffer reader) throws Db4oIOException;
     
-    public abstract Object read(StatefulBuffer reader) throws CorruptionException, Db4oIOException;
-    
     public abstract TypeHandler4 readArrayHandler(Transaction a_trans, Buffer[] a_bytes);
 
     public abstract boolean useNormalClassRead();
