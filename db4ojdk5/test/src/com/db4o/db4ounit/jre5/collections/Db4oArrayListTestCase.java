@@ -494,6 +494,9 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 	
 	public void testToString() throws Exception {
 		Db4oArrayList<Object> list = new Db4oArrayList<Object>();
+		
+		Assert.areEqual("[]",list.toString());
+		
 		list.add(new Integer(1));
 		list.add(new Integer(2));
 		Assert.areEqual("[1, 2]",list.toString());
