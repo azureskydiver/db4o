@@ -44,7 +44,7 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
             Slot slot = (Slot)indexEntry;
             indexEntry = container().bufferByAddress(slot.address(), slot.length());
         }
-        return internalRead(trans.context(), (ReadBuffer)indexEntry);
+        return readStringNoDebug(trans.context(), (ReadBuffer)indexEntry);
     }
 
     public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
@@ -232,14 +232,14 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         if (Deploy.debug) {
             Debug.readBegin(buffer, Const4.YAPSTRING);
         }
-        String str = internalRead(context, buffer);
+        String str = readStringNoDebug(context, buffer);
         if (Deploy.debug) {
             Debug.readEnd(buffer);
         }
         return str;
     }
     
-    private static String internalRead(Context context, ReadBuffer buffer) {
+    public static String readStringNoDebug(Context context, ReadBuffer buffer) {
         int length = buffer.readInt();
         if (length > 0) {
             return intern(context, stringIo(context).read(buffer, length));
@@ -253,6 +253,5 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         }
         return str;
     }
-    
 
 }

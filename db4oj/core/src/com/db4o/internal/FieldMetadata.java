@@ -888,10 +888,10 @@ public class FieldMetadata implements StoredField {
 	}
 
 	protected Indexable4 indexHandler(ObjectContainerBase stream) {
-		ReflectClass indexType =null;
-		if(_javaField!=null) {
-			indexType=_javaField.indexType();
+		if(_javaField ==null) {
+		    return null;
 		}
+		ReflectClass indexType = _javaField.indexType();
 		TypeHandler4 classHandler = stream._handlers.handlerForClass(stream,indexType);
 		if(! (classHandler instanceof Indexable4)){
 		    return null;

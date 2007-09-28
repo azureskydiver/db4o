@@ -7,7 +7,6 @@ import java.io.IOException;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.mapping.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 
 
@@ -119,10 +118,16 @@ public final class BufferPair implements SlotBuffer {
 		file.writeBytes(_target,address,0);
 	}
 	
-	public String readShortString(LatinStringIO sio) throws CorruptionException {
-		String value=StringMarshaller.readShort(sio,false,_source);
-		StringMarshaller.readShort(sio,false,_target);
-		return value;
+	public void incrementStringOffset(LatinStringIO sio) {
+	    incrementStringOffset(sio, _source);
+	    incrementStringOffset(sio, _target);
+	}
+	
+	private void incrementStringOffset(LatinStringIO sio, Buffer buffer) {
+	    int length = buffer.readInt();
+	    if(length > 0){
+	        sio.read(buffer, length);
+	    }
 	}
 	
 	public Buffer source() {
