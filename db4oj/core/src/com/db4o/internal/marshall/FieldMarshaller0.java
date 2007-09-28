@@ -26,7 +26,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
     
     public RawFieldSpec readSpec(ObjectContainerBase stream, Buffer reader) {
-        String name = StringHandler.readString(stream.transaction().context(), reader);
+        String name = StringHandler.readStringNoDebug(stream.transaction().context(), reader);
         if (name.indexOf(Const4.VIRTUAL_FIELD_PREFIX) == 0) {
         	if(stream._handlers.virtualFieldByName(name)!=null) {
                 return new RawFieldSpec(name);
@@ -88,7 +88,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
 
 
 	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,BufferPair readers) throws CorruptionException, IOException {
-		readers.readShortString(sio);
+		readers.incrementStringOffset(sio);
         if (yapField.isVirtual()) {
         	return;
         }
