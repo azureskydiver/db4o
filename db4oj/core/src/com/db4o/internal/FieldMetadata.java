@@ -760,13 +760,6 @@ public class FieldMetadata implements StoredField {
         return new QField(a_trans, _name, this, yapClassID, _arrayPosition);
     }
 
-    Object read(MarshallerFamily mf, StatefulBuffer buffer) throws CorruptionException, Db4oIOException {
-        if (!checkAlive(buffer)) {
-            return null;
-        }
-        return _handler.read(mf, buffer, true);
-    }
-    
     public Object read(InternalReadContext context) {
         if (!checkAlive(context.buffer())) {
             return null;

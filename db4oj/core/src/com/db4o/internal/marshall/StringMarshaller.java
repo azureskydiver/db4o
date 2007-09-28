@@ -15,38 +15,6 @@ public abstract class StringMarshaller {
         return Const4.INT_LENGTH + Const4.ID_LENGTH;
     }
     
-    public final String read(ObjectContainerBase stream, Buffer reader) throws CorruptionException {
-        if (reader == null) {
-            return null;
-        }
-        if (Deploy.debug) {
-            reader.readBegin(Const4.YAPSTRING);
-        }
-        String ret = readShort(stream, reader);
-        if (Deploy.debug) {
-            reader.readEnd();
-        }
-        return ret;
-    }
-    
-    public final String readFromOwnSlot(ObjectContainerBase stream, Buffer reader){
-        try {
-            return read(stream, reader);
-        } catch (Exception e) {
-            if(Deploy.debug || Debug.atHome) {
-                e.printStackTrace();
-            }
-        }
-        return "";
-    }
-    
-    public String readFromParentSlot(ObjectContainerBase stream, Buffer reader, boolean redirect) throws CorruptionException, Db4oIOException {
-        if(redirect){
-    		return read(stream, readSlotFromParentSlot(stream, reader));
-        }
-        return read(stream, reader);
-    }
-    
     public abstract Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, IllegalArgumentException, Db4oIOException;
     
     public static String readShort(ObjectContainerBase stream, Buffer bytes) throws CorruptionException {
@@ -68,29 +36,6 @@ public abstract class StringMarshaller {
             return str;
         }
         return "";
-    }
-
-    // TODO: Instead of working with YapReader objects to transport
-    // string buffers, we should consider to have a specific string
-    // buffer class, that allows comparisons and carries it's encoding.
-    public abstract Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException, Db4oIOException;
-
-    public static Buffer writeShort(ObjectContainerBase stream, String str){
-        Buffer reader = new Buffer(stream.stringIO().length(str));
-        writeShort(stream, str, reader);
-        return reader;
-    }
-    
-    public static void writeShort(ObjectContainerBase stream, String str, Buffer reader){
-        int length = str.length();
-        if (Deploy.debug) {
-            reader.writeBegin(Const4.YAPSTRING);
-        }
-        reader.writeInt(length);
-        stream.stringIO().write(reader, str);
-        if (Deploy.debug) {
-            reader.writeEnd();
-        }
     }
 
 	public abstract void defrag(SlotBuffer reader);

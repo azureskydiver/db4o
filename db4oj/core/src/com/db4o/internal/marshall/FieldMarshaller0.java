@@ -26,15 +26,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
     
     public RawFieldSpec readSpec(ObjectContainerBase stream, Buffer reader) {
-        
-        String name = null;
-        
-        try {
-            name = StringMarshaller.readShort(stream, reader);
-        } catch (CorruptionException ce) {
-            return null;
-        }
-        
+        String name = StringHandler.readString(stream.transaction().context(), reader);
         if (name.indexOf(Const4.VIRTUAL_FIELD_PREFIX) == 0) {
         	if(stream._handlers.virtualFieldByName(name)!=null) {
                 return new RawFieldSpec(name);
@@ -42,10 +34,8 @@ public class FieldMarshaller0 implements FieldMarshaller {
         }
         int handlerID = reader.readInt();
         byte attribs=reader.readByte();
-        
         return new RawFieldSpec(name,handlerID,attribs);
     }
-
     
     public final FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, Buffer reader) {
     	RawFieldSpec spec=readSpec(stream, reader);

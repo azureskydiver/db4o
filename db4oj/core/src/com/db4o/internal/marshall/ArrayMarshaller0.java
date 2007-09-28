@@ -31,14 +31,6 @@ class ArrayMarshaller0  extends ArrayMarshaller{
         trans.slotFreeOnCommit(slot.address(), slot);
     }
     
-    public Object read(ArrayHandler arrayHandler,  StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
-        StatefulBuffer bytes = a_bytes.readEmbeddedObject();
-        if(bytes == null){
-            return null;
-        }
-        return arrayHandler.read1(_family, bytes);
-    }
-    
     protected Buffer prepareIDReader(Transaction trans,Buffer reader) throws Db4oIOException {
     	return reader.readEmbeddedObject(trans);
     }

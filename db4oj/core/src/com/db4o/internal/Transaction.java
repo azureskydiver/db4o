@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.ix.IndexTransaction;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.Reflector;
 
 
@@ -357,6 +358,18 @@ public abstract class Transaction {
             return _objectContainer;
         }
         return (ObjectContainer)_container;
+    }
+    
+    public Context context(){
+        return new Context(){
+            public ObjectContainer objectContainer() {
+                return Transaction.this.objectContainer();
+            }
+
+            public Transaction transaction() {
+                return Transaction.this;
+            }
+        };
     }
 
 }

@@ -17,10 +17,6 @@ public class StringMarshaller0 extends StringMarshaller {
         return parentSlot.getStream().readWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
     }
     
-    public Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException, Db4oIOException {
-        return reader.readEmbeddedObject(stream.transaction());
-    }
-
 	public void defrag(SlotBuffer reader) {
 	}
 	

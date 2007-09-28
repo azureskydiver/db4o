@@ -22,7 +22,5 @@ public abstract class ArrayMarshaller {
 
     public abstract void defragIDs(ArrayHandler arrayHandler,BufferPair readers);
     
-    public abstract Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, Db4oIOException;
-    
     protected abstract Buffer prepareIDReader(Transaction trans,Buffer reader) throws Db4oIOException;
 }
