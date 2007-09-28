@@ -20,7 +20,7 @@ public class Db4oEnhancingClassloader extends BloatInstrumentingClassLoader {
 		ClassLoader parentLoader = Thread.currentThread().getContextClassLoader();
 		BloatUtil bloatUtil = new BloatUtil(new ClassFileLoader());
 		NativeQueryEnhancer enhancer=new NativeQueryEnhancer();
-		BloatClassEdit edit = new TranslateNQToSODAEdit(enhancer, bloatUtil, parentLoader);
+		BloatClassEdit edit = new TranslateNQToSODAEdit(enhancer, bloatUtil);
 		return edit;
 	}
 }

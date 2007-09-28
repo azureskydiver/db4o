@@ -15,7 +15,7 @@ import EDU.purdue.cs.bloat.reflect.Modifiers;
 
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
-import com.db4o.instrumentation.LabelGenerator;
+import com.db4o.instrumentation.*;
 import com.db4o.internal.query.Db4oEnhancedFilter;
 import com.db4o.nativequery.expr.AndExpression;
 import com.db4o.nativequery.expr.BoolConstExpression;
@@ -156,7 +156,7 @@ public class SODABloatMethodBuilder {
 		LabelGenerator labelGen = new LabelGenerator();
 		methodEditor.addLabel(labelGen.createLabel(true));
 		try {
-			Class predicateClass = classLoader.loadClass(classEditor.name().replace('/','.'));
+			Class predicateClass = classLoader.loadClass(BloatUtil.normalizeClassName(classEditor.name()));
 			expr.accept(new SODABloatMethodVisitor(predicateClass,classLoader,classSource));
 			methodEditor.addInstruction(Opcode.opc_pop);
 			methodEditor.addLabel(labelGen.createLabel(false));

@@ -4,5 +4,5 @@ package com.db4o.instrumentation;
 import EDU.purdue.cs.bloat.editor.*;
 
 public interface BloatClassEdit {
-	boolean bloat(ClassEditor ce);
+	boolean bloat(ClassEditor ce, ClassLoader origLoader);
 }

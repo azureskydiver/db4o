@@ -25,12 +25,12 @@ public class InstrumentFieldAccessEdit implements BloatClassEdit {
 	public InstrumentFieldAccessEdit(ClassFilter filter) {
 		_filter = filter;
 	}
-	public boolean bloat(ClassEditor ce) {
-		instrumentAllMethods(ce);
+	public boolean bloat(ClassEditor ce, ClassLoader origLoader) {
+		instrumentAllMethods(ce, origLoader);
 		return true;
 	}
 
-	private void instrumentAllMethods(final ClassEditor ce) {
+	private void instrumentAllMethods(final ClassEditor ce, final ClassLoader origLoader) {
 		final MemberRef activateMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID);
 		final MemberRef bindMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Type[]{ Type.getType(Activator.class) }, Type.VOID);
 		ce.visit(new EditorVisitor() {
@@ -82,7 +82,7 @@ public class InstrumentFieldAccessEdit implements BloatClassEdit {
 				String className = fieldRef.declaringClass().className();
 				String normalizedClassName = BloatUtil.normalizeClassName(className);
 				try {
-					return _filter.accept(Class.forName(normalizedClassName));
+					return _filter.accept(origLoader.loadClass(normalizedClassName));
 				} catch (ClassNotFoundException e) {
 					// TODO: sensible error notification.
 					e.printStackTrace();

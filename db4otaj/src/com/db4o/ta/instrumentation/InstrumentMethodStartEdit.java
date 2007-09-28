@@ -17,7 +17,7 @@ import com.db4o.instrumentation.BloatClassEdit;
 
 public class InstrumentMethodStartEdit implements BloatClassEdit {
 
-	public boolean bloat(ClassEditor ce) {
+	public boolean bloat(ClassEditor ce, ClassLoader origLoader) {
 		instrumentAllMethods(ce);
 		return true;
 	}
