@@ -244,57 +244,11 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		int addToIDTree,
         boolean checkIDTree) {
 	    
-	    if(NewTypeHandlerReading.enabled){
-            UnmarshallingContext context = new UnmarshallingContext(trans, this, addToIDTree, checkIDTree);
-            context.buffer(buffer);
-            context.persistentObject(obj);
-            context.activationDepth(instantiationDepth);
-            return context.read();
-	    }
-	    
-
-		// instantiationDepth is a way of overriding instantiation
-		// in a positive manner
-
-		if (beginProcessing()) {
-		    
-		    ObjectContainerBase container = trans.container();
-		    int id = getID();
-			if (buffer == null && id > 0) {
-				buffer = container.readWriterByID(trans, id);
-			}
-			if (buffer != null) {
-                
-                ObjectHeader header = new ObjectHeader(container, buffer);
-			    
-				_class = header.classMetadata();
-
-				if (_class == null) {
-					return null;
-				}
-                
-                if(checkIDTree){
-                    // the typical side effect: static fields and enums
-                    
-                    Object objectInCacheFromClassCreation = trans.objectForIdFromCache(getID());
-                    if(objectInCacheFromClassCreation != null){
-                        return objectInCacheFromClassCreation;
-                    }
-                }
-
-				buffer.setInstantiationDepth(instantiationDepth);
-				buffer.setUpdateDepth(addToIDTree);
-				
-				if(addToIDTree == Const4.TRANSIENT){
-				    obj = _class.instantiateTransient(this, obj, header._marshallerFamily, header._headerAttributes, buffer);
-				}else{
-				    obj = _class.instantiate(this, obj, header._marshallerFamily, header._headerAttributes, buffer, addToIDTree == Const4.ADD_TO_ID_TREE);
-				}
-				
-			}
-			endProcessing();
-		}
-		return obj;
+        UnmarshallingContext context = new UnmarshallingContext(trans, this, addToIDTree, checkIDTree);
+        context.buffer(buffer);
+        context.persistentObject(obj);
+        context.activationDepth(instantiationDepth);
+        return context.read();
 	}
 
 	public final Object readPrefetch(ObjectContainerBase container, StatefulBuffer buffer) {
