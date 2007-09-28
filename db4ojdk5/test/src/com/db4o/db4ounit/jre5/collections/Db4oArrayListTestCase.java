@@ -54,7 +54,7 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 	public void testConstructor_I_IllegalArgumentException() throws Exception {
 		Assert.expect(IllegalArgumentException.class, new CodeBlock(){
 			public void run() throws Throwable {
-				Db4oArrayList<Integer> arrayList = new Db4oArrayList<Integer>(-1);
+				new Db4oArrayList<Integer>(-1);
 			}
 		});
 	}
@@ -62,7 +62,7 @@ public class Db4oArrayListTestCase implements TestLifeCycle {
 	public void testConstructor_LCollection_NullPointerException() throws Exception {
 		Assert.expect(NullPointerException.class, new CodeBlock(){
 			public void run() throws Throwable {
-				Db4oArrayList<Integer> arrayList = new Db4oArrayList<Integer>(null);
+				new Db4oArrayList<Integer>(null);
 			}
 		});
 	}
