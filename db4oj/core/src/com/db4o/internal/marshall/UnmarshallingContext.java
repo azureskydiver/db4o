@@ -20,11 +20,15 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
     
     private boolean _checkIDTree;
     
-    public UnmarshallingContext(Transaction transaction, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
-        super(transaction);
+    public UnmarshallingContext(Transaction transaction, Buffer buffer, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
+        super(transaction, buffer);
         _reference = ref;
         _addToIDTree = addToIDTree;
         _checkIDTree = checkIDTree;
+    }
+    
+    public UnmarshallingContext(Transaction transaction, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
+        this(transaction, null, ref, addToIDTree, checkIDTree);
     }
 
     public StatefulBuffer statefulBuffer() {
@@ -41,6 +45,14 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
     }
     
     public Object read(){
+        return readInternal(false);
+    }
+    
+    public Object readPrefetch(){
+        return readInternal(true);
+    }
+    
+    private final Object readInternal(boolean doAdjustActivationDepthForPrefetch){
         if(! beginProcessing()){
             return _object;
         }
@@ -60,7 +72,10 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         }
         
         _reference.classMetadata(classMetadata);
-
+        
+        if(doAdjustActivationDepthForPrefetch){
+            adjustActivationDepthForPrefetch();
+        }
         
         if(_checkIDTree){
             Object objectInCacheFromClassCreation = _transaction.objectForIdFromCache(objectID());
@@ -79,6 +94,21 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         
         endProcessing();
         return _object;
+    }
+
+    private void adjustActivationDepthForPrefetch() {
+        // We use an instantiationdepth of 1 only, if there is no special
+        // configuration for the class. This is a quick fix due to a problem
+        // instantiating Hashtables. There may be a better workaround that
+        // works with configured objects only to make them fast also.
+        //
+        // An instantiation depth of 1 makes use of possibly prefetched strings
+        // that are carried around in a_bytes.
+        //
+        // TODO: optimize
+        
+        int depth = classMetadata().configOrAncestorConfig() == null ? 1 : 0;
+        activationDepth(depth);
     }
     
     public Object readFieldValue (int objectID, FieldMetadata field){

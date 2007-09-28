@@ -105,13 +105,6 @@ public abstract class ObjectMarshaller {
             Buffer buffer, 
             FieldMetadata field);
     
-    public abstract void instantiateFields(
-            ClassMetadata yc, 
-            ObjectHeaderAttributes attributes, 
-            ObjectReference yo, 
-            Object obj, 
-            StatefulBuffer reader);
-    
     public final void marshallUpdateWrite(
             Transaction trans,
             Pointer4 pointer,

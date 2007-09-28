@@ -45,23 +45,23 @@ public class SingleMessagePrefetchingStrategy implements PrefetchingStrategy {
 		}
 
 		if (toGet > 0) {
-			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(container.transaction(),
-					idsToGet, toGet);
+		    Transaction trans = container.transaction();
+			MsgD msg = Msg.READ_MULTIPLE_OBJECTS.getWriterForIntArray(trans, idsToGet, toGet);
 			container.write(msg);
 			MsgD response = (MsgD) container.expectedResponse(Msg.READ_MULTIPLE_OBJECTS);
 			int embeddedMessageCount = response.readInt();
 			for (int i = 0; i < embeddedMessageCount; i++) {
 				MsgObject mso = (MsgObject) Msg.OBJECT_TO_CLIENT.publicClone();
-				mso.setTransaction(container.transaction());
+				mso.setTransaction(trans);
 				mso.payLoad(response.payLoad().readYapBytes());
 				if (mso.payLoad() != null) {
 					mso.payLoad().incrementOffset(Const4.MESSAGE_LENGTH);
 					StatefulBuffer reader = mso.unmarshall(Const4.MESSAGE_LENGTH);
-                    Object obj = container.transaction().objectForIdFromCache(idsToGet[i]);
+                    Object obj = trans.objectForIdFromCache(idsToGet[i]);
                     if(obj != null){
                         prefetched[position[i]] = obj;
                     }else{
-    					prefetched[position[i]] = new ObjectReference(idsToGet[i]).readPrefetch(container, reader);
+    					prefetched[position[i]] = new ObjectReference(idsToGet[i]).readPrefetch(trans, reader);
                     }
 				}
 			}

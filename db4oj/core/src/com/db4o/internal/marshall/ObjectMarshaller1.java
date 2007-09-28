@@ -75,29 +75,6 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		return ret[0];
     }
     
-    public void instantiateFields(ClassMetadata yc, ObjectHeaderAttributes attributes, final ObjectReference yapObject, final Object onObject, final StatefulBuffer writer) {
-        TraverseFieldCommand command = new TraverseFieldCommand() {
-			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
-				if (isNull) {
-					field.set(onObject, null);
-					return;
-				} 
-				boolean ok = false;
-				try {
-					field.instantiate(_family, yapObject,onObject, writer);
-					ok = true;
-				} catch (CorruptionException e) {
-					// FIXME: should it be ignored
-				} finally {
-					if(!ok) {
-						cancel();
-					}
-				}
-			}
-		};
-		traverseFields(yc, writer, attributes, command);
-    }
-    
     public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {
         return new ObjectHeaderAttributes(reader);
     }

@@ -2,7 +2,6 @@
 
 package com.db4o.internal;
 
-import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.internal.marshall.*;
 
@@ -43,18 +42,6 @@ final class TranslatedFieldMetadata extends FieldMetadata
 		return getOn(a_trans, a_OnObject);
 	}
 
-	public void instantiate(MarshallerFamily mf,  ObjectReference a_yapObject, Object a_onObject, StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
-		Object toSet = read(mf, a_bytes);
-
-		// Activation of members is necessary on purpose here.
-		// Classes like Hashtable need fully activated members
-		// to be able to calculate hashCode()
-		
-		a_bytes.getStream().activate(a_bytes.getTransaction(), toSet, a_bytes.getInstantiationDepth());
-
-		setOn(a_bytes.getTransaction(), a_onObject, toSet);
-	}
-	
 	public void instantiate(UnmarshallingContext context) {
 	    
         Object obj = read(context);

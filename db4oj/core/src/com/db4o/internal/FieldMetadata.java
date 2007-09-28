@@ -630,20 +630,6 @@ public class FieldMetadata implements StoredField {
         }
     }
 
-    /** @param ref */
-    public void instantiate(MarshallerFamily mf, ObjectReference ref, Object onObject, StatefulBuffer buffer) throws Db4oIOException, CorruptionException {
-        if(! checkAlive(buffer)) {
-            return;
-        }
-        Object toSet = read(mf, buffer);
-        if (_db4oType != null) {
-            if (toSet != null) {
-                ((Db4oTypeImpl) toSet).setTrans(buffer.getTransaction());
-            }
-        }
-        set(onObject, toSet);
-    }
-    
     public void instantiate(UnmarshallingContext context) {
         if(! checkAlive(context.buffer())) {
             return;

@@ -995,77 +995,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         initConfigOnUp(systemTrans);
         storeStaticFieldValues(systemTrans, false);
     }
-
-	Object instantiate(ObjectReference ref, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer, boolean addToIDTree) {
-        
-        // overridden in YapClassPrimitive
-        // never called for primitive YapAny
-		
-		adjustInstantiationDepth(buffer);
-
-		final ObjectContainerBase stream = buffer.getStream();
-		
-        Transaction transaction = buffer.getTransaction();
-
-		final boolean instantiating = (obj == null);
-		if (instantiating) {
-			obj = instantiateObject(buffer, mf);
-			if (obj == null) {
-				return null;
-			}
-			
-			shareTransaction(obj, transaction);
-			shareObjectReference(obj, ref);
-            
-			ref.setObjectWeak(stream, obj);
-			transaction.referenceSystem().addExistingReferenceToObjectTree(ref);
-			
-			objectOnInstantiate(buffer.getTransaction(), obj);
-		}
-        
-		if(addToIDTree){
-			ref.addExistingReferenceToIdTree(transaction);
-		}
-        
-		// when there's a ObjectConstructor configured for a type
-		// the type is marshalled through a lone virtual field
-		// of type YapFieldTranslator which should take care of everything		
-		//final boolean instantiatedByTranslator = instantiating && configInstantiates();	
-		
-		if (instantiating) {
-			if (buffer.getInstantiationDepth() == 0) {
-				ref.setStateDeactivated();
-			} else {
-				activate(buffer, mf, attributes, ref, obj);
-			}
-		} else {
-			if (activatingActiveObject(stream, ref)) {
-				if (buffer.getInstantiationDepth() > 1) {
-                    activateFields(buffer.getTransaction(), obj, buffer.getInstantiationDepth() - 1);
-                }
-			} else {
-				activate(buffer, mf, attributes, ref, obj);
-			}
-		}
-        return obj;
-    }
 	
-	   /** @param obj */
-    Object instantiateTransient(ObjectReference ref, Object obj, MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer buffer) {
-
-        // overridden in YapClassPrimitive
-        // never called for primitive YapAny
-
-        Object instantiated = instantiateObject(buffer, mf);
-        if (instantiated == null) {
-            return null;
-        }
-        buffer.getStream().peeked(ref.getID(), instantiated);
-        instantiateFields(ref, instantiated, mf, attributes, buffer);
-        return instantiated;
-    }
-    
-    
     public Object instantiate(UnmarshallingContext context) {
         
         // overridden in YapClassPrimitive
@@ -1131,18 +1061,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return !container._refreshInsteadOfActivate && ref.isActive();
 	}
 
-	private void activate(StatefulBuffer buffer, MarshallerFamily mf, ObjectHeaderAttributes attributes, ObjectReference ref, Object obj) {
-		if(objectCanActivate(buffer.getTransaction(), obj)){
-			ref.setStateClean();
-			if (buffer.getInstantiationDepth() > 0 || cascadeOnActivate()) {
-				instantiateFields(ref, obj, mf, attributes, buffer);
-			}
-			objectOnActivate(buffer.getTransaction(), obj);
-		} else {
-			ref.setStateDeactivated();
-		}
-	}
-	
    private void activate(UnmarshallingContext context) {
         if(! objectCanActivate(context.transaction(), context.persistentObject())){
             context.reference().setStateDeactivated();
@@ -1158,13 +1076,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private boolean configInstantiates(){
         return config() != null && config().instantiates();
     }
-	
-	private Object instantiateObject(StatefulBuffer buffer, MarshallerFamily mf) {
-        if (configInstantiates()) {
-            return instantiateFromConfig(buffer.getStream(), buffer, mf);
-        }
-        return  instantiateFromReflector(buffer.getStream());
-	}
 	
 	private Object instantiateObject(UnmarshallingContext context) {
 	    Object obj = configInstantiates() ? instantiateFromConfig(context) : instantiateFromReflector(context.container());
@@ -1195,21 +1106,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
 	}
 
-	private Object instantiateFromConfig(ObjectContainerBase stream, StatefulBuffer a_bytes, MarshallerFamily mf) {
-		int bytesOffset = a_bytes._offset;
-		a_bytes.incrementOffset(Const4.INT_LENGTH);
-		// Field length is always 1
-		try {
-		    return i_config.instantiate(stream, i_fields[0].read(mf, a_bytes));                      
-		} catch (CorruptionException e) {
-			Messages.logErr(stream.configImpl(), 6, classReflector().getName(), e);
-		    return null;
-		} 
-		finally {
-			a_bytes._offset = bytesOffset;
-		}
-	}
-	
 	private Object instantiateFromConfig(UnmarshallingContext context) {
        
        int offset = context.offset();
@@ -1223,14 +1119,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             context.seek(offset);
         }
     }
-
-
-	private void adjustInstantiationDepth(StatefulBuffer a_bytes) {
-		if (i_config != null) {
-            a_bytes.setInstantiationDepth(
-                i_config.adjustActivationDepth(a_bytes.getInstantiationDepth()));
-        }
-	}
 
 	private boolean cascadeOnActivate() {
 		return i_config != null && (i_config.cascadeOnActivate() == TernaryBool.YES);
@@ -1260,10 +1148,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			&& dispatchEvent(container, obj, EventDispatcher.CAN_ACTIVATE);
 	}
 
-    void instantiateFields(ObjectReference a_yapObject, Object a_onObject, MarshallerFamily mf,ObjectHeaderAttributes attributes, StatefulBuffer a_bytes) {
-        mf._object.instantiateFields(this, attributes, a_yapObject, a_onObject, a_bytes);
-    }
-    
     void instantiateFields(UnmarshallingContext context) {
         MarshallerFamily.version(context.handlerVersion())._object.instantiateFields(context);
     }
