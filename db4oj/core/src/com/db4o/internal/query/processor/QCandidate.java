@@ -8,7 +8,6 @@ import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
-import com.db4o.marshall.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 
@@ -404,7 +403,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	}
 	
 	public String readString(Buffer buffer){
-	    return StringHandler.readString(context(), buffer);
+	    return StringHandler.readString(transaction().context(), buffer);
 	}
 
 	QCandidate getRoot() {
@@ -419,18 +418,6 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return _candidates.i_trans;
 	}
 	
-	private Context context(){
-	    return new Context(){
-            public ObjectContainer objectContainer() {
-                return QCandidate.this.container();
-            }
-
-            public Transaction transaction() {
-                return QCandidate.this.transaction();
-            }
-	    };
-	}
-
 	public boolean hasDuplicates() {
 
 		// Subcandidates are evaluated along with their constraints

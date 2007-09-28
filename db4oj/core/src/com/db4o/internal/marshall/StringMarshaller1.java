@@ -23,15 +23,6 @@ public class StringMarshaller1 extends StringMarshaller{
         return parentSlot.readPayloadWriter(payLoadOffSet, length);
     }
     
-    public Buffer readSlotFromParentSlot(ObjectContainerBase stream, Buffer reader) throws CorruptionException {
-        int payLoadOffSet = reader.readInt();
-        int length = reader.readInt();
-        if(payLoadOffSet == 0){
-            return null;
-        }
-        return reader.readPayloadReader(payLoadOffSet, length);
-    }
-
 	public void defrag(SlotBuffer reader) {
 		reader.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
 	}

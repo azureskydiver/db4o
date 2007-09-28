@@ -44,16 +44,11 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
             Slot slot = (Slot)indexEntry;
             indexEntry = container().bufferByAddress(slot.address(), slot.length());
         }
-        try {
-            return StringMarshaller.readShort(container(), (Buffer)indexEntry);
-        } catch (CorruptionException e) {
-            
-        }
-        return null;
+        return internalRead(trans.context(), (ReadBuffer)indexEntry);
     }
 
     public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
-        return mf._string.readFromParentSlot(a_bytes.getStream(), a_bytes, redirect);
+        return null;
     }
     
     /**
@@ -119,14 +114,13 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
     	return val(obj,container());
     }
 
-    public Buffer val(Object obj,ObjectContainerBase oc) {
+    public Buffer val(Object obj, ObjectContainerBase oc) {
         if(obj instanceof Buffer) {
             return (Buffer)obj;
         }
         if(obj instanceof String) {
-            return StringMarshaller.writeShort(container(), (String)obj);
+            return writeToBuffer((InternalObjectContainer) oc, (String)obj);
         }
-
         if (obj instanceof Slot) {
 			Slot s = (Slot) obj;
 			return oc.bufferByAddress(s.address(), s.length());
@@ -205,25 +199,33 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
     public abstract Object read(ReadContext context);
     
     public void write(WriteContext context, Object obj) {
-        
-    	String str = (String) obj;
-        
+        internalWrite((InternalObjectContainer) context.objectContainer(), context, (String) obj);
+    }
+    
+    protected static void internalWrite(InternalObjectContainer objectContainer, WriteBuffer buffer, String str){
         if (Deploy.debug) {
-            Debug.writeBegin(context, Const4.YAPSTRING);
+            Debug.writeBegin(buffer, Const4.YAPSTRING);
         }
-        
-        context.writeInt(str.length());
-        stringIo(context).write(context, str);
+        buffer.writeInt(str.length());
+        stringIo(objectContainer).write(buffer, str);
         
         if (Deploy.debug) {
-            Debug.writeEnd(context);
+            Debug.writeEnd(buffer);
         }
     }
-
+    
+    public static Buffer writeToBuffer(InternalObjectContainer container, String str){
+        Buffer buffer = new Buffer(stringIo(container).length(str));
+        internalWrite(container, buffer, str);
+        return buffer;
+    }
+    
 	protected static LatinStringIO stringIo(Context context) {
-		InternalObjectContainer objectContainer = (InternalObjectContainer) context.objectContainer();
-        LatinStringIO stringIO = objectContainer.container().stringIO();
-		return stringIO;
+	    return stringIo((InternalObjectContainer) context.objectContainer());
+	}
+	
+	protected static LatinStringIO stringIo(InternalObjectContainer objectContainer){
+	    return objectContainer.container().stringIO();
 	}
 
     public static String readString(Context context, ReadBuffer buffer) {

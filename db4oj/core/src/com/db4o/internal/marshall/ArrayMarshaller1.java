@@ -38,13 +38,6 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         }
     }
     
-    public Object read(ArrayHandler arrayHandler,  StatefulBuffer reader) throws CorruptionException, Db4oIOException {
-        int linkOffSet = reader.preparePayloadRead();
-        Object array = arrayHandler.read1(_family, reader);
-        reader._offset = linkOffSet;
-        return array;
-    }
-    
     protected Buffer prepareIDReader(Transaction trans,Buffer reader) {
         reader._offset = reader.readInt();
         return reader;

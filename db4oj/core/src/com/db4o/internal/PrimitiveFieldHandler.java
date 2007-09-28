@@ -145,13 +145,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return _handler;
     }
     
-    public Object read(MarshallerFamily mf, StatefulBuffer a_bytes, boolean redirect) throws CorruptionException, Db4oIOException {
-        if(mf._primitive.useNormalClassRead()){
-            return super.read(mf, a_bytes, redirect);
-        }
-        return _handler.read(mf, a_bytes, false);
-    }
-
     public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
         if (isArray()) {
             return _handler;

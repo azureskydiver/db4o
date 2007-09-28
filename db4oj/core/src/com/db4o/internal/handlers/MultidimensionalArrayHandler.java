@@ -5,7 +5,6 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -58,29 +57,6 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
             + (Const4.INT_LENGTH * (2 + dim.length));
     }
 
-    public final Object read1(MarshallerFamily mf, StatefulBuffer reader) throws CorruptionException, Db4oIOException {
-        
-        if (Deploy.debug) {
-            reader.readBegin(identifier());
-        }
-        
-        IntArrayByRef dimensions = new IntArrayByRef();
-        Object arr = readCreate(reader.getTransaction(), reader, dimensions);
-		if(arr != null){
-	        Object[] objects = new Object[elementCount(dimensions.value)];
-	        for (int i = 0; i < objects.length; i++) {
-	            objects[i] = _handler.read(mf, reader, true);
-	        }
-	        arrayReflector().shape(objects, 0, arr, dimensions.value, 0);
-		}
-        
-        if (Deploy.debug) {
-            reader.readEnd();
-        }
-        
-        return arr;
-    }
-    
     protected int readElementsDefrag(BufferPair readers) {
     	int numDimensions=super.readElementsDefrag(readers);        
     	int [] dimensions=new int[numDimensions];

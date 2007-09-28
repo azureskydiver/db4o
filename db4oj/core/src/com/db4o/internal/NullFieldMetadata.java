@@ -17,10 +17,6 @@ public class NullFieldMetadata extends FieldMetadata {
 		return Null.INSTANCE;
 	}
 	
-	Object read(MarshallerFamily mf,  StatefulBuffer a_bytes) {
-		return null;
-	}
-	
 	public final Object read(InternalReadContext context) {
 	    return null;
 	}
