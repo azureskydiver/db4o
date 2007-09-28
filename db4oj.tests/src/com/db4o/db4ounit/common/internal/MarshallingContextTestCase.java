@@ -45,18 +45,12 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
     }
     
     public void testStringItem() {
-        if(! NewTypeHandlerReading.enabled){
-            return;
-        }
         StringItem writtenItem = new StringItem("one");
         StringItem readItem = (StringItem) writeRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
     }
     
     public void testStringIntItem() {
-        if(! NewTypeHandlerReading.enabled){
-            return;
-        }
         StringIntItem writtenItem = new StringIntItem("one", 777);
         StringIntItem readItem = (StringIntItem) writeRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
@@ -64,9 +58,6 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
     }
 
     public void testStringIntBooleanItem() {
-        if(! NewTypeHandlerReading.enabled){
-            return;
-        }
         StringIntBooleanItem writtenItem = new StringIntBooleanItem("one", 777, true);
         StringIntBooleanItem readItem = (StringIntBooleanItem) writeRead(writtenItem);
         Assert.areEqual(writtenItem._name, readItem._name);
