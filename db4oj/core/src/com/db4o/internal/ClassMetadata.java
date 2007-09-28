@@ -1872,19 +1872,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         throw new IllegalComparisonException(); 
     }
     
-    public String toString(MarshallerFamily mf, StatefulBuffer writer, ObjectReference yapObject, int depth, int maxDepth)  {
-        int length = readFieldCount(writer);
-        String str = "";
-        for (int i = 0; i < length; i++) {
-            str += i_fields[i].toString(mf, writer);
-        }
-        if (i_ancestor != null) {
-            str+= i_ancestor.toString(mf, writer, yapObject, depth, maxDepth);
-        }
-        return str;
-
-    }
-
     public static void defragObject(BufferPair readers) {
     	ObjectHeader header=ObjectHeader.defrag(readers);
     	header._marshallerFamily._object.defragFields(header.classMetadata(),header,readers);

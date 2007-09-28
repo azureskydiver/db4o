@@ -760,23 +760,13 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	    try{
 		    int id = getID();
 		    String str = "ObjectReference\nID=" + id;
+	        Object obj = getObject();
 		    if(_class != null){
 		        ObjectContainerBase container = _class.container();
 		        if(container != null && id > 0){
-		            StatefulBuffer writer = container.readWriterByID(container.transaction(), id);
-		            if(writer != null){
-		                str += "\nAddress=" + writer.getAddress();
-		            }
-                    ObjectHeader oh = new ObjectHeader(container(), writer);
-		            ClassMetadata yc = oh.classMetadata();
-		            if(yc != _class){
-		                str += "\nYapClass corruption";
-		            }else{
-		                str += yc.toString(oh._marshallerFamily, writer, this, 0, 5);
-		            }
+		            obj = container.peekPersisted(container.transaction(), id, 5, true).toString();
 		        }
 		    }
-		    Object obj = getObject();
 		    if(obj == null){
 		        str += "\nfor [null]";
 		    }else{

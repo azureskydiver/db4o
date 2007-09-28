@@ -591,7 +591,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             
             Object child = ref.isActive() ? 
                 field[0].get(trans, obj) :
-                new UnmarshallingContext(trans, ref, Const4.ADD_TO_ID_TREE, false).readFieldValue(ref.getID(), field[0]);
+                new UnmarshallingContext(trans, ref, Const4.ADD_TO_ID_TREE, false).readFieldValue(field[0]);
             
             if(path.length == 1){
                 return child;
