@@ -13,13 +13,17 @@ import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
 public class Db4oFileEnhancer {
-	private NativeQueryEnhancer enhancer=new NativeQueryEnhancer();
-	
+	private final NativeQueryEnhancer enhancer=new NativeQueryEnhancer();
+
 	public void enhance(String sourceDir,String targetDir,String[] classPath,String packagePredicate) throws Exception {
+		enhance(new DefaultClassSource(), sourceDir, targetDir, classPath, packagePredicate);
+	}
+
+	public void enhance(ClassSource classSource, String sourceDir,String targetDir,String[] classPath,String packagePredicate) throws Exception {
 		File source = new File(sourceDir);
 		File target = new File(targetDir);
 		
-		ClassFileLoader fileLoader=new ClassFileLoader();
+		ClassFileLoader fileLoader=new ClassFileLoader(classSource);
 		fileLoader.setClassPath(sourceDir);
 		URL[] urls=new URL[classPath.length+1];
 		urls[0]=source.toURL();
@@ -62,7 +66,11 @@ public class Db4oFileEnhancer {
 				if(filterClass.isAssignableFrom(clazz)&&filterClass!=clazz) {
 					System.err.println("Processing "+className);
 					ClassEditor classEditor=bloatUtil.classEditor(className);
-					enhancer.enhance(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,new Type[]{Type.OBJECT},classLoader, new DefaultClassSource());
+					boolean success = enhancer.enhance(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,null,classLoader, new DefaultClassSource());
+					if(!success) {
+						System.err.println("Could not enhance: " + className);
+						copyFile(source,target);
+					}
 				}
 				else {
 					copyFile(source,target);

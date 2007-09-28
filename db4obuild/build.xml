@@ -468,6 +468,7 @@
 				<pathelement location="${file.bloat.jar}" />
 				<pathelement location="${file.db4otools.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
+				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
 			</classpath>
 			<src path="${dir.j.tests.src}"/>
 			<src path="${dir.j.tools.src}" />

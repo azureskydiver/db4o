@@ -16,15 +16,17 @@ import com.db4o.nativequery.expr.Expression;
 
 public class NativeQueryEnhancer {
 	
+	public static final String OPTIMIZE_QUERY_METHOD_NAME = "optimizeQuery";
+	
 	private static SODABloatMethodBuilder BLOAT_BUILDER=new SODABloatMethodBuilder();
 	
-	public void enhance(BloatUtil bloatUtil,ClassEditor classEditor,String methodName,Type[] argTypes,ClassLoader classLoader,ClassSource classSource) throws Exception {
+	public boolean enhance(BloatUtil bloatUtil,ClassEditor classEditor,String methodName,Type[] argTypes,ClassLoader classLoader,ClassSource classSource) throws Exception {
 		if(NQDebug.LOG) {
 			System.err.println("Enhancing "+classEditor.name());
 		}
 		Expression expr = analyze(bloatUtil, classEditor, methodName, argTypes);
 		if(expr==null) {
-			return;
+			return false;
 		}
 		MethodEditor methodEditor=BLOAT_BUILDER.injectOptimization(expr,classEditor,classLoader,classSource);
 		if(NQDebug.LOG) {
@@ -33,6 +35,7 @@ public class NativeQueryEnhancer {
 		}
 		methodEditor.commit();
 		classEditor.commit();
+		return true;
 	}
 	
 	public Expression analyze(BloatUtil bloatUtil, ClassEditor classEditor, String methodName) {

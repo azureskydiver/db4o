@@ -152,7 +152,7 @@ public class SODABloatMethodBuilder {
 	
 	public MethodEditor injectOptimization(Expression expr, ClassEditor classEditor,ClassLoader classLoader, ClassSource classSource) {
 		classEditor.addInterface(Db4oEnhancedFilter.class);
-		methodEditor=new MethodEditor(classEditor,Modifiers.PUBLIC,Void.TYPE,"optimizeQuery",new Class[]{Query.class},new Class[]{});
+		methodEditor=new MethodEditor(classEditor,Modifiers.PUBLIC,Void.TYPE,NativeQueryEnhancer.OPTIMIZE_QUERY_METHOD_NAME,new Class[]{Query.class},new Class[]{});
 		LabelGenerator labelGen = new LabelGenerator();
 		methodEditor.addLabel(labelGen.createLabel(true));
 		try {
