@@ -25,7 +25,7 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 		_instrumentedClassesFilter = instrumentedClassesFilter;
 	}
 	
-	public boolean bloat(ClassEditor ce, ClassLoader origLoader) {
+	public boolean bloat(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
 			if(!_instrumentedClassesFilter.accept(clazz)) {

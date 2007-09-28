@@ -2,60 +2,18 @@
 
 package com.db4o.nativequery.analysis;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import EDU.purdue.cs.bloat.cfg.Block;
-import EDU.purdue.cs.bloat.cfg.FlowGraph;
-import EDU.purdue.cs.bloat.editor.ClassEditor;
-import EDU.purdue.cs.bloat.editor.MemberRef;
-import EDU.purdue.cs.bloat.editor.Type;
-import EDU.purdue.cs.bloat.tree.ArithExpr;
-import EDU.purdue.cs.bloat.tree.ArrayRefExpr;
-import EDU.purdue.cs.bloat.tree.CallExpr;
-import EDU.purdue.cs.bloat.tree.CallMethodExpr;
-import EDU.purdue.cs.bloat.tree.CallStaticExpr;
-import EDU.purdue.cs.bloat.tree.ConstantExpr;
-import EDU.purdue.cs.bloat.tree.Expr;
-import EDU.purdue.cs.bloat.tree.ExprStmt;
-import EDU.purdue.cs.bloat.tree.FieldExpr;
-import EDU.purdue.cs.bloat.tree.IfCmpStmt;
-import EDU.purdue.cs.bloat.tree.IfStmt;
-import EDU.purdue.cs.bloat.tree.IfZeroStmt;
-import EDU.purdue.cs.bloat.tree.LocalExpr;
-import EDU.purdue.cs.bloat.tree.PrintVisitor;
-import EDU.purdue.cs.bloat.tree.ReturnExprStmt;
-import EDU.purdue.cs.bloat.tree.StackExpr;
-import EDU.purdue.cs.bloat.tree.StaticFieldExpr;
-import EDU.purdue.cs.bloat.tree.StoreExpr;
-import EDU.purdue.cs.bloat.tree.TreeVisitor;
+import EDU.purdue.cs.bloat.cfg.*;
+import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.instrumentation.*;
-import com.db4o.nativequery.NQDebug;
-import com.db4o.nativequery.expr.BoolConstExpression;
-import com.db4o.nativequery.expr.ComparisonExpression;
-import com.db4o.nativequery.expr.Expression;
-import com.db4o.nativequery.expr.ExpressionVisitor;
-import com.db4o.nativequery.expr.TraversingExpressionVisitor;
-import com.db4o.nativequery.expr.build.ExpressionBuilder;
-import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
-import com.db4o.nativequery.expr.cmp.ArithmeticOperator;
-import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
-import com.db4o.nativequery.expr.cmp.ComparisonOperand;
-import com.db4o.nativequery.expr.cmp.ComparisonOperandAnchor;
-import com.db4o.nativequery.expr.cmp.ComparisonOperator;
-import com.db4o.nativequery.expr.cmp.ConstValue;
-import com.db4o.nativequery.expr.cmp.FieldValue;
-import com.db4o.nativequery.expr.cmp.MethodCallValue;
-import com.db4o.nativequery.expr.cmp.ThreeWayComparison;
-import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
+import com.db4o.nativequery.*;
+import com.db4o.nativequery.expr.*;
+import com.db4o.nativequery.expr.build.*;
+import com.db4o.nativequery.expr.cmp.*;
+import com.db4o.nativequery.expr.cmp.field.*;
 
 public class BloatExprBuilderVisitor extends TreeVisitor {
 
@@ -182,7 +140,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private Map seenBlocks = new HashMap();
 
-	private BloatUtil bloatUtil;
+	private BloatLoaderContext bloatUtil;
 
 	private LinkedList methodStack = new LinkedList();
 
@@ -192,7 +150,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private int blockCount = 0;
 
-	public BloatExprBuilderVisitor(BloatUtil bloatUtil) {
+	public BloatExprBuilderVisitor(BloatLoaderContext bloatUtil) {
 		this.bloatUtil = bloatUtil;
 		localStack.addLast(new ComparisonOperand[] {
 				PredicateFieldRoot.INSTANCE, CandidateFieldRoot.INSTANCE });
@@ -399,7 +357,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			if (rcvRetval == null
 					|| rcvRetval.root() != CandidateFieldRoot.INSTANCE) {
 				if (rcvRetval == null) {
-					rcvRetval = new StaticFieldRoot(bloatUtil.normalizeClassName(expr
+					rcvRetval = new StaticFieldRoot(BloatUtil.normalizeClassName(expr
 							.method().declaringClass()));
 				}
 				params.remove(0);
@@ -407,7 +365,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 						.paramTypes();
 				Class[] javaParamTypes = new Class[paramTypes.length];
 				for (int paramIdx = 0; paramIdx < paramTypes.length; paramIdx++) {
-					String className = bloatUtil.normalizeClassName(paramTypes[paramIdx]);
+					String className = BloatUtil.normalizeClassName(paramTypes[paramIdx]);
 					javaParamTypes[paramIdx] = (PRIMITIVE_CLASSES
 							.containsKey(className) ? (Class) PRIMITIVE_CLASSES
 							.get(className) : Class.forName(className));
@@ -550,7 +508,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 
 	private boolean isPrimitiveWrapper(Type type) {
 		return Arrays.binarySearch(PRIMITIVE_WRAPPER_NAMES,
-				bloatUtil.normalizeClassName(type)) >= 0;
+				BloatUtil.normalizeClassName(type)) >= 0;
 	}
 	
 	private boolean isPrimitiveExpr(Expr expr) {
@@ -601,14 +559,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		String fieldName = expr.field().name();
 		if (fieldObj instanceof ComparisonOperandAnchor) {
 			retval(new FieldValue((ComparisonOperandAnchor) fieldObj,
-					fieldName, bloatUtil.normalizeClassName(expr.field().type())));
+					fieldName, BloatUtil.normalizeClassName(expr.field().type())));
 		}
 	}
 
 	public void visitStaticFieldExpr(StaticFieldExpr expr) {
 		MemberRef field = expr.field();
-		retval(new FieldValue(new StaticFieldRoot(bloatUtil.normalizeClassName(field
-				.declaringClass())), field.name(), bloatUtil.normalizeClassName(field
+		retval(new FieldValue(new StaticFieldRoot(BloatUtil.normalizeClassName(field
+				.declaringClass())), field.name(), BloatUtil.normalizeClassName(field
 				.type())));
 	}
 

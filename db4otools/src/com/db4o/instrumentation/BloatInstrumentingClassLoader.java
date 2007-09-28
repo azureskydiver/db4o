@@ -17,6 +17,7 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 	private final Map _cache = new HashMap();
 	private final ClassFilter _filter;
 	private final BloatClassEdit _edit;
+	private final BloatLoaderContext _loaderContext = new BloatLoaderContext(getClassInfoLoader(), getEditorContext());
 
 	public BloatInstrumentingClassLoader(URL[] urls, ClassLoader parent, ClassFilter filter, BloatClassEdit edit) {
 		super(urls, parent);
@@ -64,7 +65,7 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 	}
 
 	protected void bloat(ClassEditor ce) {
-		_edit.bloat(ce, getParent());
+		_edit.bloat(ce, getParent(), _loaderContext);
 	}
 
 }

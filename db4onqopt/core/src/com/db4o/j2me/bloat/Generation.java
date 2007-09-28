@@ -16,7 +16,7 @@ public class Generation {
 	public static void main(String[] args) {
 		String outputDirName = "generated";
 		ClassFileLoader loader = new ClassFileLoader();
-		BloatContext context = new BloatContext(loader, outputDirName);
+		BloatJ2MEContext context = new BloatJ2MEContext(loader, outputDirName);
 		
 		ClassEditor ce = context.createClass(Modifiers.PUBLIC,
 				"com.db4o.j2me.bloat.testdata.GeneratedDogSelfReflectionRegistry", Type.getType(Type.classDescriptor(SelfReflectionRegistry.class.getName())),
@@ -32,7 +32,7 @@ public class Generation {
 		enhanceClass(context,"../bin","com.db4o.j2me.bloat.testdata.Animal");
 	}
 	
-	private static void enhanceClass(BloatContext context,String path,String name) {
+	private static void enhanceClass(BloatJ2MEContext context,String path,String name) {
 		ClassEditor cled = context.loadClass(path,name);
 		ClassEnhancer classEnhancer = new ClassEnhancer(context, cled);
 		classEnhancer.generate();

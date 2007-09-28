@@ -24,7 +24,7 @@ public abstract class NQOptimizationByteCodeTestCaseBase implements TestCase {
 	protected final Label START_LABEL = _labelGenerator.createLabel(true);
 	
 	public void testOptimization() throws Exception {
-		BloatUtil bloatUtil = new BloatUtil(new ClassFileLoader());
+		BloatLoaderContext bloatUtil = new BloatLoaderContext(new ClassFileLoader());
 		ClassEditor clazz = bloatUtil.classEditor(NO_MODIFIERS, CLASSNAME, Type.OBJECT, new Type[]{});
 		MethodEditor method = new MethodEditor(clazz, NO_MODIFIERS, Type.BOOLEAN, METHODNAME, new Type[]{ Type.getType(Data.class) }, new Type[]{});
 		method.addLabel(START_LABEL);

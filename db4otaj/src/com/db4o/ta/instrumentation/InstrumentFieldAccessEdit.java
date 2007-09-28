@@ -25,7 +25,7 @@ public class InstrumentFieldAccessEdit implements BloatClassEdit {
 	public InstrumentFieldAccessEdit(ClassFilter filter) {
 		_filter = filter;
 	}
-	public boolean bloat(ClassEditor ce, ClassLoader origLoader) {
+	public boolean bloat(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		instrumentAllMethods(ce, origLoader);
 		return true;
 	}

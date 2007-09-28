@@ -15,9 +15,9 @@ public class ClassEnhancer {
 
 	private ClassEditor _ce;
 
-	private BloatContext _context;
+	private BloatJ2MEContext _context;
 
-	public ClassEnhancer(BloatContext context, ClassEditor ce) {
+	public ClassEnhancer(BloatJ2MEContext context, ClassEditor ce) {
 		this._context = context;
 		this._ce = ce;
 	}
@@ -27,7 +27,7 @@ public class ClassEnhancer {
 		for (int i = 0; i < methods.length; i++) {
 			me = new MethodEditor(_ce, methods[i]);
 			if ((me.type().equals(Type.VOID))
-					&& (me.name().equals(BloatContext.INIT_METHODNAME))) {
+					&& (me.name().equals(BloatJ2MEContext.INIT_METHODNAME))) {
 				return true;
 			}
 		}
@@ -62,7 +62,7 @@ public class ClassEnhancer {
 		}
 		builder.aload(1);
 		builder.ldc(field.name());
-		builder.invokeVirtual(Type.STRING, BloatContext.EQUALS_METHODNAME,
+		builder.invokeVirtual(Type.STRING, BloatJ2MEContext.EQUALS_METHODNAME,
 				new Type[] { Type.OBJECT }, Type.BOOLEAN);
 		builder.ifeq(labelIdx + 1);
 		if (wrapper != null) {
@@ -73,7 +73,7 @@ public class ClassEnhancer {
 		builder.getfield(field);
 		if (wrapper != null) {
 			builder.invokeSpecial(_context
-					.getType(wrapper), BloatContext.INIT_METHODNAME,
+					.getType(wrapper), BloatJ2MEContext.INIT_METHODNAME,
 					new Type[] { field.type() }, Type.VOID);
 		}
 		builder.areturn();
@@ -122,7 +122,7 @@ public class ClassEnhancer {
 		Class wrapper = PrimitiveUtil.wrapper(fieldType);
 		builder.aload(1);
 		builder.ldc(field.name());
-		builder.invokeVirtual(Type.STRING, BloatContext.EQUALS_METHODNAME,
+		builder.invokeVirtual(Type.STRING, BloatJ2MEContext.EQUALS_METHODNAME,
 				new Type[] { Type.OBJECT }, Type.BOOLEAN);
 		builder.ifeq(labelIdx + 1);
 		builder.aload(0);

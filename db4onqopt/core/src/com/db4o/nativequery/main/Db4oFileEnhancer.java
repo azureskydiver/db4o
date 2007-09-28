@@ -13,7 +13,11 @@ import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
 public class Db4oFileEnhancer {
-	private final NativeQueryEnhancer enhancer=new NativeQueryEnhancer();
+	private final BloatClassEdit classEdit;
+	
+	public Db4oFileEnhancer(BloatClassEdit classEdit) {
+		this.classEdit = classEdit;
+	}
 
 	public void enhance(String sourceDir,String targetDir,String[] classPath,String packagePredicate) throws Exception {
 		enhance(new DefaultClassSource(), sourceDir, targetDir, classPath, packagePredicate);
@@ -36,11 +40,11 @@ public class Db4oFileEnhancer {
 		if(!source.isDirectory()) {
 			throw new IOException("No directory: "+sourceDir);
 		}
-		enhance(source.getCanonicalPath(),source,target,classLoader,new BloatUtil(fileLoader),packagePredicate);
+		enhance(source.getCanonicalPath(),source,target,classLoader,new BloatLoaderContext(fileLoader),packagePredicate);
 		fileLoader.done();
 	}
 	
-	private void enhance(String prefix,File source,File target,ClassLoader classLoader,BloatUtil bloatUtil,String packagePredicate) throws Exception {
+	private void enhance(String prefix,File source,File target,ClassLoader classLoader,BloatLoaderContext bloatUtil,String packagePredicate) throws Exception {
 		if(source.isDirectory()) {
 			File[] subFiles=source.listFiles(new FileFilter() {
 				public boolean accept(File file) {
@@ -66,7 +70,7 @@ public class Db4oFileEnhancer {
 				if(filterClass.isAssignableFrom(clazz)&&filterClass!=clazz) {
 					System.err.println("Processing "+className);
 					ClassEditor classEditor=bloatUtil.classEditor(className);
-					boolean success = enhancer.enhance(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,null,classLoader, new DefaultClassSource());
+					boolean success = classEdit.bloat(classEditor, classLoader, bloatUtil);
 					if(!success) {
 						System.err.println("Could not enhance: " + className);
 						copyFile(source,target);
@@ -107,6 +111,6 @@ public class Db4oFileEnhancer {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new Db4oFileEnhancer().enhance(args[0],args[1],new String[]{},"");
+		new Db4oFileEnhancer(new TranslateNQToSODAEdit()).enhance(args[0],args[1],new String[]{},"");
 	}
 }

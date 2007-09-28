@@ -11,9 +11,9 @@ public class CompositeBloatClassEdit implements BloatClassEdit {
 		_edits = edits;
 	}
 
-	public boolean bloat(ClassEditor ce, ClassLoader origLoader) {
+	public boolean bloat(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		for (int editIdx = 0; editIdx < _edits.length; editIdx++) {
-			boolean succeeded = _edits[editIdx].bloat(ce, origLoader);
+			boolean succeeded = _edits[editIdx].bloat(ce, origLoader, loaderContext);
 			if(!succeeded) {
 				return false;
 			}
