@@ -7,7 +7,7 @@ import java.lang.reflect.*;
 public class Db4oRunner {
 	public static void main(String[] args) throws Throwable {
 		ClassLoader parentLoader = Thread.currentThread().getContextClassLoader();
-		ClassLoader loader=new Db4oEnhancingClassloader(parentLoader);
+		ClassLoader loader=new NQEnhancingClassloader(parentLoader);
 		Thread.currentThread().setContextClassLoader(loader);
 		Class mainClass=loader.loadClass(args[0]);
 		Method mainMethod=mainClass.getMethod("main",new Class[]{String[].class});

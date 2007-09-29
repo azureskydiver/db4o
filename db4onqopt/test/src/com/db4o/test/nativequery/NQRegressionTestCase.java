@@ -680,7 +680,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 
 		if(RUN_LOADTIME) {
 				db.ext().configure().optimizeNativeQueries(false);
-				Db4oEnhancingClassloader loader=new Db4oEnhancingClassloader(getClass().getClassLoader());
+				NQEnhancingClassloader loader=new NQEnhancingClassloader(getClass().getClassLoader());
 				Class filterClass=loader.loadClass(predicate.getClass().getName());
 				Constructor constr=null;
 				Object[] args=null;

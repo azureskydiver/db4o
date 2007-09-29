@@ -10,9 +10,9 @@ import com.db4o.instrumentation.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
-public class Db4oEnhancingClassloader extends BloatInstrumentingClassLoader {
+public class NQEnhancingClassloader extends BloatInstrumentingClassLoader {
 	
-	public Db4oEnhancingClassloader(ClassLoader delegate) {
+	public NQEnhancingClassloader(ClassLoader delegate) {
 		super(new URL[]{},delegate, new AssignableClassFilter(Predicate.class), new TranslateNQToSODAEdit());
 	}
 }
