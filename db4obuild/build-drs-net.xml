@@ -2,17 +2,14 @@
 <project name="drs.net" default="package">
 	<import file="common.xml" />
     
-    <property name="db4o.dll" value="${file.dll.net}" />
-    <property name="db4ounit.dll" value="${file.dll.net.db4ounit}" />
-        
     <property name="drs.dir" location="${dir.workspace}/drs" />
     <property name="drs.src.dir" location="${drs.dir}/src" />
-	<property name="drs.xml" location="${drs.dir}/drs.net/bin/drs.xml" />
-    <property name="drs.net.dir" location="${drs.dir}/drs.net" />
+	<property name="db4o.net.dir" location="../db4o.net" />
+    <property name="drs.net.dir" location="${db4o.net.dir}/drs" />
     <property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />
     <property name="drs.net.src.dir" location="${drs.net.dir}/src" />
-    <property name="drs.overlay.dir" location="${drs.dir}/overlay" />
-    
+	<property name="drs.xml" location="${drs.net.bin.dir}/drs.xml" />
+	
     <property name="drs.sharpen.workspace.dir" location="${dir.dist}/drs.net/workspace" />
     
     <taskdef resource="org/apache/ant/dotnet/antlib.xml" />
@@ -34,9 +31,17 @@
     </target>
     
     <target name="clean">
-        <delete dir="${drs.net.dir}" />
         <delete dir="${drs.sharpen.workspace.dir}" />
-        <delete dir="${drs.dir}/dist" />
+    	<delete dir="${drs.net.bin.dir}" />
+    	<delete dir="${drs.net.dir}/docs" />
+    	<delete>
+    		<fileset dir="${drs.net.dir}">
+    			<include name="*.html" />
+    		</fileset>
+    		<fileset dir="${dir.dist}">
+    			<include name="dRS-net-*.zip" />
+    		</fileset>
+    	</delete>
     </target>
     
 	<target name="reference">
@@ -75,53 +80,50 @@
             </fileset>
         </delete>
         
-        <zip destfile="${drs.dir}/dist/dRS-net-${drs.net.version}.zip">
+        <zip destfile="${dir.dist}/dRS-net-${drs.net.version}.zip">
             <zipfileset dir="${drs.net.dir}" prefix="dRS-net-${db4o.version.major}.${db4o.version.minor}"/>
         </zip>
     </target>
     
     <target name="build" depends="init, prepare-dotnet-solution">
-        <msbuild buildfile="${drs.net.src.dir}/drs.sln">
-            <target name="clean" />
-        </msbuild>
-        	
-
+    	<copy todir="${drs.net.bin.dir}" >
+    		<fileset dir="${dir.dist.dll.net}">
+    			<include name="Db4objects.Db4o.dll" />
+    			<include name="Db4oUnit.dll" />
+        	</fileset>
+    	</copy>
+    	
     	<msbuild buildfile="${drs.net.src.dir}/drs/drs.csproj">
             <target name="build" />
-            <property name="Configuration" value="Release" />
+            <property name="Configuration" value="Debug" />
         	<property name="OutputPath" value="${drs.net.dir}/bin" />
-        	<property name="DocumentationFile" value="${drs.net.dir}/bin/drs.xml" />
+        	<property name="DocumentationFile" value="${drs.net.bin.dir}/drs.xml" />
         </msbuild>
     	
-    	<move file="${drs.net.dir}/bin/drs.xml" todir="${drs.net.dir}" />
     	<msbuild buildfile="${drs.net.src.dir}/drs.tests/drs.tests.csproj">
-	            <target name="build" />
-   	            <property name="Configuration" value="Release" />
-   	        	<property name="OutputPath" value="${drs.net.dir}/bin" />
-   	        </msbuild>
+	        <target name="build" />
+   	        <property name="Configuration" value="Debug" />
+   	        <property name="OutputPath" value="${drs.net.dir}/bin" />
+   	    </msbuild>
     	
     	<msbuild buildfile="${drs.net.src.dir}/QuickStart/QuickStart.csproj">
-   	            <target name="build" />
-   	            <property name="Configuration" value="Release" />
-   	        	<property name="OutputPath" value="${drs.net.dir}/bin" />
-   	        </msbuild>
-    	
-    	<move file="${drs.net.dir}/drs.xml" todir="${drs.net.dir}/bin" />
+   	        <target name="build" />
+   	        <property name="Configuration" value="Debug" />
+   	        <property name="OutputPath" value="${drs.net.dir}/bin" />
+   	    </msbuild>
     </target>
     
     <target name="prepare-dotnet-solution" depends="sharpen-drs, get-svn-revision">
         <!-- .NET: drs -->
-		<copy todir="${drs.net.src.dir}/drs/src">
-			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src">
+		<copy todir="${drs.net.src.dir}/drs/Db4objects.Drs">
+			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs">
 				<include name="**/*.cs" />
+				<exclude name="Foundation/*.cs" />
+				<exclude name="Inside/ReplicationPlatform.cs" />
 				<exclude name="**/Test/**" />
 			</fileset>
 		</copy>
-        <copy todir="${drs.net.src.dir}/drs" overwrite="true">
-			<fileset dir="${drs.overlay.dir}/drs">
-				<include name="**/*" />
-			</fileset>
-		</copy>
+        
         <updateAssemblyInfo
             title="dRS"
         	product="dRS - db4o Replication System"
@@ -139,17 +141,16 @@
         </updatecsharpproject>
         
         <!--.NET: drs.tests -->
-        <copy todir="${drs.net.src.dir}/drs.tests/src">
-			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src">
-				<include name="**/Test/**" />
+        <copy todir="${drs.net.src.dir}/drs.tests/Db4objects.Drs.Test">
+			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs/Test">
+				<exclude name="Foundation/ObjectSetCollection4FacadeTestCase.cs" />
+				<exclude name="Regression/DRS42Test.cs" />
+				<exclude name="DrsTestCase.cs" />
+				<exclude name="ListTest.cs" />
+				<exclude name="ReplicationProviderTest.cs" />
 			</fileset>
 		</copy>
 		
-		<copy todir="${drs.net.src.dir}/drs.tests/" overwrite="true">
-			<fileset dir="${drs.overlay.dir}/drs.tests">
-				<include name="**/*" />
-			</fileset>
-		</copy>
         <updateAssemblyInfo
             title="Db4objects.Drs.Test"
         	product="dRS Tests"
@@ -167,9 +168,6 @@
         </updatecsharpproject>
 
         <!--.NET: QuickStart -->
-        <copy todir="${drs.net.src.dir}/QuickStart">
-            <fileset dir="${drs.overlay.dir}/QuickStart" />
-        </copy>
         <updateAssemblyInfo
             title="Db4objects.Drs.QuickStart"
         	product="dRS QuickStart"
@@ -180,13 +178,6 @@
 				<include name="AssemblyInfo.cs" />
 			</fileset>
         </updateAssemblyInfo>
-
-        <!--.NET solution files -->
-        <copy file="${drs.overlay.dir}/drs.sln" todir="${drs.net.src.dir}"/>
-        <copy file="${drs.overlay.dir}/drs.suo" todir="${drs.net.src.dir}"/>
-        <!--.NET: reference dlls -->
-        <copy file="${db4o.dll}" todir="${drs.net.bin.dir}" />
-		<copy file="${db4ounit.dll}" todir="${drs.net.bin.dir}" />
     </target>
     
     <target name="sharpen-drs" depends="prepare-sharpen-workspace, install-javatocsharp-plugin">
