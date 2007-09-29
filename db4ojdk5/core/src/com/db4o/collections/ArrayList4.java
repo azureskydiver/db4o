@@ -102,7 +102,8 @@ public class ArrayList4<E> extends AbstractList<E> implements Cloneable,
 			clonedList.elements = elements.clone();
 			return clonedList;
 		} catch (CloneNotSupportedException e) {
-			return null;
+			// impossible case
+			throw new Error(e);
 		}
 	}
 
