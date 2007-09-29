@@ -24,7 +24,11 @@ public abstract class AbstractAssemblyInfoTask extends AbstractMultiFileSetTask 
 	protected String updateAttribute(String contents, String attributeName, String value) {
 		Pattern pattern = Pattern.compile(attributeName + "\\((.+)\\)");
 		Matcher matcher = pattern.matcher(contents);
-		return matcher.replaceFirst(attributeName + "(\"" + value + "\")");
+		return matcher.replaceFirst(attributeName + "(\"" + escape(value) + "\")");
+	}
+
+	private String escape(String value) {
+		return Matcher.quoteReplacement(value);
 	}	
 
 }
