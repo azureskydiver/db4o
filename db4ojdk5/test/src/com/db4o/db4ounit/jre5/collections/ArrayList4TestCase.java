@@ -8,10 +8,10 @@ import com.db4o.collections.*;
 
 import db4ounit.*;
 
-public class Db4oArrayListTestCase implements TestLifeCycle {
+public class ArrayList4TestCase implements TestLifeCycle {
 
 	public static void main(String[] args) {
-		new TestRunner(Db4oArrayListTestCase.class).run();
+		new TestRunner(ArrayList4TestCase.class).run();
 	}
 	
 	public ArrayList4 <Integer> _list;
