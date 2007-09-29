@@ -14,10 +14,9 @@ import System.Collections.Generic
 
 
 def getExportedTypes(path as string):
-	drsAssemblyPath=Path.Combine(path, "drs.dll")
-	db4oAssemblyPath=Path.Combine(path, "Db4objects.Db4o.dll")
-	db4oAssemblyName=Assembly.ReflectionOnlyLoadFrom(db4oAssemblyPath).GetName()
-	a = Assembly.Load(db4oAssemblyName)
+	drsAssemblyPath=Path.Combine(path, "Db4objects.Drs.dll")
+	// preload db4o assembly so the reflection runtime is happy
+	Assembly.ReflectionOnlyLoadFrom(Path.Combine(path, "Db4objects.Db4o.dll"))
 	return groupByNamespace(Assembly.ReflectionOnlyLoadFrom(drsAssemblyPath).GetExportedTypes())
 	
 def groupByNamespace(types):
@@ -81,7 +80,7 @@ configTemplatePath = buildConfigPath("sandcastle/MRefBuilder.config")
 configPath = buildDistPath("ndoc/Output/MRefBuilder.config")
 assemblyPath = buildDistPath("bin/")
 namespaceSummaryPath = buildConfigPath("dRS-namespace-summaries.xml")
-assemblyPathDrs = Path.Combine(assemblyPath,"drs.dll")
+assemblyPathDrs = Path.Combine(assemblyPath,"Db4objects.Drs.dll")
 xmldocPath = Path.ChangeExtension(assemblyPathDrs, ".xml")
 
 

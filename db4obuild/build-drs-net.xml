@@ -4,14 +4,14 @@
     
     <property name="drs.dir" location="${dir.workspace}/drs" />
     <property name="drs.src.dir" location="${drs.dir}/src" />
-	<property name="db4o.net.dir" location="../db4o.net" />
+	<property name="db4o.net.dir" location="${dir.workspace}/db4o.net" />
     <property name="drs.net.dir" location="${db4o.net.dir}/drs" />
     <property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />
-    <property name="drs.net.src.dir" location="${drs.net.dir}/src" />
-	<property name="drs.xml" location="${drs.net.bin.dir}/drs.xml" />
+    <property name="drs.net.src.dir" location="${drs.net.dir}" />
+	<property name="drs.xml" location="${drs.net.bin.dir}/Db4objects.Drs.xml" />
 	
     <property name="drs.sharpen.workspace.dir" location="${dir.dist}/drs.net/workspace" />
-    
+	
     <taskdef resource="org/apache/ant/dotnet/antlib.xml" />
     
     <target name="init" depends="properties">
@@ -93,14 +93,14 @@
         	</fileset>
     	</copy>
     	
-    	<msbuild buildfile="${drs.net.src.dir}/drs/drs.csproj">
+    	<msbuild buildfile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs.csproj">
             <target name="build" />
             <property name="Configuration" value="Debug" />
         	<property name="OutputPath" value="${drs.net.dir}/bin" />
-        	<property name="DocumentationFile" value="${drs.net.bin.dir}/drs.xml" />
+        	<property name="DocumentationFile" value="${drs.net.bin.dir}/Db4objects.Drs.xml" />
         </msbuild>
     	
-    	<msbuild buildfile="${drs.net.src.dir}/drs.tests/drs.tests.csproj">
+    	<msbuild buildfile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests.csproj">
 	        <target name="build" />
    	        <property name="Configuration" value="Debug" />
    	        <property name="OutputPath" value="${drs.net.dir}/bin" />
@@ -115,12 +115,12 @@
     
     <target name="prepare-dotnet-solution" depends="sharpen-drs, get-svn-revision">
         <!-- .NET: drs -->
-		<copy todir="${drs.net.src.dir}/drs/Db4objects.Drs">
+		<copy todir="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs">
 			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs">
 				<include name="**/*.cs" />
 				<exclude name="Foundation/*.cs" />
 				<exclude name="Inside/ReplicationPlatform.cs" />
-				<exclude name="**/Test/**" />
+				<exclude name="**/Tests/**" />
 			</fileset>
 		</copy>
         
@@ -130,19 +130,19 @@
             keyfile="${filename.keyfile}"
 			version="${drs.net.version}"
 			configuration=".NET 2.0">
-			<fileset dir="${drs.net.src.dir}/drs/Properties">
+			<fileset dir="${drs.net.src.dir}/Db4objects.Drs/Properties">
 				<include name="AssemblyInfo.cs" />
 			</fileset>
         </updateAssemblyInfo>
-        <updatecsharpproject projectFile="${drs.net.src.dir}/drs/drs.csproj">
-        	<sources dir="${drs.net.src.dir}/drs">
+        <updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs.csproj">
+        	<sources dir="${drs.net.src.dir}/Db4objects.Drs">
         		<include name="**/*.cs" />
         	</sources>
         </updatecsharpproject>
         
         <!--.NET: drs.tests -->
-        <copy todir="${drs.net.src.dir}/drs.tests/Db4objects.Drs.Test">
-			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs/Test">
+        <copy todir="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests">
+			<fileset dir="${drs.sharpen.workspace.dir}/drs.net/src/Db4objects/Drs/Tests">
 				<exclude name="Foundation/ObjectSetCollection4FacadeTestCase.cs" />
 				<exclude name="Regression/DRS42Test.cs" />
 				<exclude name="DrsTestCase.cs" />
@@ -152,17 +152,17 @@
 		</copy>
 		
         <updateAssemblyInfo
-            title="Db4objects.Drs.Test"
+            title="Db4objects.Drs.Tests"
         	product="dRS Tests"
             keyfile="${filename.keyfile}"
 			version="${drs.net.version}"
 			configuration=".NET 2.0">
-			<fileset dir="${drs.net.src.dir}/drs.tests/Properties">
+			<fileset dir="${drs.net.src.dir}/Db4objects.Drs.Tests/Properties">
 				<include name="AssemblyInfo.cs" />
 			</fileset>
         </updateAssemblyInfo>
-        <updatecsharpproject projectFile="${drs.net.src.dir}/drs.tests/drs.tests.csproj">
-        	<sources dir="${drs.net.src.dir}/drs.tests">
+        <updatecsharpproject projectFile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests.csproj">
+        	<sources dir="${drs.net.src.dir}/Db4objects.Drs.Tests">
         		<include name="**/*.cs" />
         	</sources>
         </updatecsharpproject>
@@ -263,7 +263,7 @@
 	</target>
 
     <target name="run-tests" depends="build">
-        <exec executable="${drs.net.bin.dir}/drs.test.exe" failonerror="true" />
+        <exec executable="${drs.net.bin.dir}/Db4objects.Drs.Tests.exe" failonerror="true" />
     </target>
     
     <target name="package-api" unless="mono">
@@ -347,7 +347,7 @@
 
 			<exec executable="${sandcastle.tools}/MRefBuilder">
 				<arg value="/config:${drs.net.dir}/ndoc/Output/MRefBuilder.config" />
-				<arg file="${drs.net.dir}/bin/drs.dll" />
+				<arg file="${drs.net.dir}/bin/Db4objects.Drs.dll" />
 				<arg value="/out:${drs.net.dir}/ndoc/sandcastle" />
 				<arg value="/internal-" />
 			</exec>	
@@ -373,7 +373,7 @@
 				<arg value="/config:${dir.build}/config/sandcastle/sandcastle.config" />
 				<arg file="${drs.net.dir}/ndoc/manifest.xml" />
 		
-				<env key="XMLDOC" value="${drs.net.dir}/bin/drs.xml" />
+				<env key="XMLDOC" value="${drs.net.dir}/bin/Db4objects.Drs.xml" />
 				<env key="DXROOT" value="${dir.lib.sandcastle}" />			
 			</exec>
 		
