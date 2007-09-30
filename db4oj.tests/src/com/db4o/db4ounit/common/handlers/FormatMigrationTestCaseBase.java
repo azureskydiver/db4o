@@ -9,7 +9,6 @@ import com.db4o.config.*;
 import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
-import com.db4o.internal.*;
 
 import db4ounit.*;
 
@@ -18,13 +17,8 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     
     public void configure(){
         Configuration config = Db4o.configure();
-        
-        // Configuration#allowVersionUpdates is not available for old db4o versions
-        // so we call by reflection.
-        Reflection4.invoke(config, "allowVersionUpdates", new Class[]{boolean.class}, new Object[]{new Boolean(true)});
-        
+        config.allowVersionUpdates(true);
         configure(config);
-        
     }
     
     protected static final String PATH = Path4.combine(Path4.getTempPath(), "test/db4oVersions");
