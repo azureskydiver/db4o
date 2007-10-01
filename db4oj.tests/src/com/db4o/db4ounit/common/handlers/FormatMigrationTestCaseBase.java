@@ -71,7 +71,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
 	public void test(final String versionName) throws IOException {
 		String testFileName = fileName(versionName); 
 		if(File4.exists(testFileName)){
-		    System.out.println("Check database: " + testFileName);
+//		    System.out.println("Check database: " + testFileName);
 		    
 		    
 		    investigateFileHeaderVersion(testFileName);
