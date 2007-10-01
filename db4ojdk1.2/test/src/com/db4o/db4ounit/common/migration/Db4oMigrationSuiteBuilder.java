@@ -20,7 +20,7 @@ public class Db4oMigrationSuiteBuilder extends ReflectionTestSuiteBuilder {
 	 */
 	public static final String[] CURRENT = new String[0];
 	
-	private final Db4oLibraryEnvironmentProvider _environmentProvider = new Db4oLibraryEnvironmentProvider();
+	private final Db4oLibraryEnvironmentProvider _environmentProvider = new Db4oLibraryEnvironmentProvider(PathProvider.testCasePath());
 	private final String[] _specificLibraries;
 
 	/**
