@@ -2,7 +2,12 @@
 
 package com.db4o.db4ounit.util;
 
-import com.db4o.foundation.io.Path4;
+import java.io.*;
+import java.net.*;
+
+import com.db4o.foundation.io.*;
+
+import db4ounit.*;
 
 /**
  * @sharpen.ignore
@@ -21,7 +26,30 @@ public class WorkspaceServices {
 	 * @sharpen.property
 	 */
 	public static String workspaceRoot() {
-		return "..";
+		return findFolderWithChild(pathToClass(WorkspaceServices.class), "db4obuild");
+	}
+	
+	static String pathToClass(Class clazz) {
+		final URL resource = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class");
+		return new File(resource.getPath()).getParent();
+	}
+	
+	static String findFolderWithChild(String baseFolder, String folderChild) {
+		
+		File test = new File(baseFolder, folderChild);		
+		if (test.exists()) return test.getParent(); 
+		
+		if (test.getParentFile() == null) return null;
+		
+		// we should test against root folder... :)		
+		return findFolderWithChild(test.getParentFile().getParent(), folderChild);
+	}
+
+	public static File configurableWorkspacePath(String configurableProperty, String defaultWorkspacePath) {
+		final String path = System.getProperty(configurableProperty, workspacePath(defaultWorkspacePath));
+		final File file = new File(IOServices.safeCanonicalPath(path));
+		Assert.isTrue(file.exists(), path); 
+		return file;
 	}
 
 }

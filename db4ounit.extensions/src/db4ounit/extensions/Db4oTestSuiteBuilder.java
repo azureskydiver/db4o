@@ -17,15 +17,15 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
     
 	public Db4oTestSuiteBuilder(Db4oFixture fixture, Class clazz) {		
 		super(clazz);
-        setFixture(fixture);
+        fixture(fixture);
 	}
     
     public Db4oTestSuiteBuilder(Db4oFixture fixture, Class[] classes) {     
         super(classes);
-        setFixture(fixture);
+        fixture(fixture);
     }
     
-    private void setFixture(Db4oFixture fixture){
+    private void fixture(Db4oFixture fixture){
         if (null == fixture) throw new ArgumentNullException("fixture");     
         _fixture = fixture;
     }

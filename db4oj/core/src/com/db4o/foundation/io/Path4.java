@@ -2,6 +2,8 @@
 
 package com.db4o.foundation.io;
 
+import java.io.*;
+
 
 /**
  * IMPORTANT: Keep the interface of this class compatible with .NET System.IO.Path otherwise
@@ -22,5 +24,9 @@ public class Path4 {
 			return path;
 		}
 		return "/temp";
+	}
+
+	public static String getTempFileName() throws IOException {
+		return java.io.File.createTempFile("", "").getAbsolutePath();
 	}
 }

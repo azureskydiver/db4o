@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.migration;
 import java.io.*;
 
 import com.db4o.db4ounit.util.*;
+import com.db4o.foundation.io.*;
 
 /**
  * @sharpen.ignore
@@ -25,8 +26,19 @@ public class Db4oLibrarian {
 		}
 		return libraries;
 	}
+	
+	public Db4oLibrary forVersion(String version) throws IOException {
+		return forFile(fileForVersion(version));
+	}
+
+	private String fileForVersion(String version) {
+		return Path4.combine(archivesPath(), "db4o-" + version + "-java1.2.jar");
+	}
 
 	public Db4oLibrary forFile(final String fname) throws IOException {
+		if (!File4.exists(fname)) {
+			throw new FileNotFoundException(fname);
+		}
 		return new Db4oLibrary(fname, environmentFor(fname));
 	}
 
@@ -44,6 +56,9 @@ public class Db4oLibrarian {
     }
 	
 	private String archivesPath() {
-		return IOServices.safeCanonicalPath(System.getProperty("db4o.archives.path", "../db4o.archives/java1.2/"));
+		return IOServices.safeCanonicalPath(
+					System.getProperty(
+						"db4o.archives.path",
+						WorkspaceServices.workspacePath("db4o.archives/java1.2")));
 	}
 }
