@@ -6,6 +6,7 @@ import com.db4o.db4ounit.util.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
+import db4ounit.util.*;
 
 
 /**
@@ -67,8 +68,6 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
     };
     
     
-    
-    
     public static class ItemArrays {
         
         public int[][] _typedIntArray;
@@ -115,6 +114,9 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
     
     protected Object createArrays() {
         ItemArrays item = new ItemArrays();
+        if(multiDimensionalArraysCantBeStored()){
+            return item;
+        }
         item._typedIntArray = intData2D;
         item._untypedIntArray = intData2D;
         item._typedStringArray = stringData2D;
@@ -127,6 +129,9 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
     
     
     protected void assertArrays(Object obj) {
+        if(multiDimensionalArraysCantBeStored()){
+            return;
+        }
         ItemArrays item = (ItemArrays) obj;
         assertAreEqual(intData2D, item._typedIntArray);
         assertAreEqual(intData2D, castToIntArray2D(item._untypedIntArray));
@@ -135,6 +140,10 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
         assertAreEqual(objectData2D, item._objectArray);
         assertAreEqual(objectData2D, item._objectArray);
         assertAreEqual(byteData2D, item._typedByteArray);
+    }
+    
+    private boolean multiDimensionalArraysCantBeStored(){
+        return PlatformInformation.isDotNet() && (db4oMajorVersion() < 6);
     }
     
     public static void assertAreEqual(int[][] expected, int[][] actual) {

@@ -27,7 +27,7 @@ public class Db4oLibraryEnvironment {
 	
 	public String version() throws Exception {
 		String version = (String)invokeStaticMethod("com.db4o.Db4o", "version");
-        return version.replace(' ', '_');
+		return version.substring(5);
 	}	
 
 	private Object invokeStaticMethod(String className, String methodName) throws Exception {

@@ -15,6 +15,8 @@ import db4ounit.*;
 
 public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     
+    private String _db4oVersion;
+    
     public void configure(){
         Configuration config = Db4o.configure();
         config.allowVersionUpdates(true);
@@ -24,7 +26,8 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     protected static final String PATH = Path4.combine(Path4.getTempPath(), "test/db4oVersions");
 
     protected String fileName(){
-        return fileName(Db4o.version());
+        _db4oVersion = Db4oVersion.NAME;
+        return fileName(_db4oVersion);
     }
     
     protected String fileName(String versionName){
@@ -40,6 +43,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     }
     
     public void createDatabaseFor(String versionName) {
+        _db4oVersion = versionName;
     	createDatabase(fileName(versionName));
     }
 
@@ -69,6 +73,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     }
 
 	public void test(final String versionName) throws IOException {
+	    _db4oVersion = versionName;
 		String testFileName = fileName(versionName); 
 		if(File4.exists(testFileName)){
 //		    System.out.println("Check database: " + testFileName);
@@ -106,6 +111,10 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
     
     private void investigateFileHeaderVersion(String testFile) throws IOException{
         _db4oHeaderVersion = VersionServices.fileHeaderVersion(testFile); 
+    }
+    
+    protected int db4oMajorVersion(){
+        return new Integer (_db4oVersion.substring(0, 1)).intValue();
     }
     
     protected byte _db4oHeaderVersion;
