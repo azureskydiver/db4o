@@ -11,7 +11,10 @@ import java.io.*;
  * 
  * @sharpen.ignore
  */
-public class Path4 {
+public class Path4 { 
+	
+	private static final java.util.Random _random = new java.util.Random();
+
 	public static String combine(String parent, String child) {		
 		return parent.endsWith(java.io.File.separator)
         ? parent + child
@@ -27,6 +30,16 @@ public class Path4 {
 	}
 
 	public static String getTempFileName() throws IOException {
-		return java.io.File.createTempFile("", "").getAbsolutePath();
+		String tempPath = getTempPath();
+		while (true) {
+			String fname = combine(tempPath, "db4o-test-" + nextRandom() + ".tmp");
+			if (!File4.exists(fname)) {
+				return fname;
+			}
+		}
+	}
+
+	private static String nextRandom() {
+		return Integer.toHexString(_random.nextInt());
 	}
 }
