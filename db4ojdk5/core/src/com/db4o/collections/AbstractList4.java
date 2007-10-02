@@ -203,8 +203,7 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 	public abstract int size();
 	
 	public List<E> subList(int fromIndex, int toIndex) {
-		// return new SubArrayList4(this, fromIndex, toIndex);
-		throw new UnsupportedOperationException();
+		return new SubArrayList4 <E> (this, fromIndex, toIndex);
 	}
 	
 	public Object[] toArray() {
