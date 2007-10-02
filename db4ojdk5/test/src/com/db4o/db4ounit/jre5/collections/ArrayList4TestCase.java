@@ -14,12 +14,12 @@ public class ArrayList4TestCase implements TestLifeCycle {
 		new TestRunner(ArrayList4TestCase.class).run();
 	}
 	
-	public ArrayList4 <Integer> _list;
+	public Db4oArrayList <Integer> _list;
 
 	private static int CAPACITY = 100;
 
 	public void setUp() throws Exception {
-		_list = new ArrayList4<Integer>();
+		_list = new Db4oArrayList<Integer>();
 		for (int i = 0; i < CAPACITY; i++) {
 			_list.add(new Integer(i));
 		}
@@ -30,21 +30,21 @@ public class ArrayList4TestCase implements TestLifeCycle {
 	}
 	
 	public void testConstructor() throws Exception {
-		ArrayList4<Integer> arrayList = new ArrayList4<Integer>();
+		Db4oArrayList<Integer> arrayList = new Db4oArrayList<Integer>();
 		fill(arrayList);
 		Assert.areEqual(CAPACITY, arrayList.size());
 	}
 	
 	public void testConstructor_I_LegalArguments1() throws Exception {
-		ArrayList4<Integer> arrayList; 
-		arrayList = new ArrayList4<Integer>(CAPACITY);
+		Db4oArrayList<Integer> arrayList; 
+		arrayList = new Db4oArrayList<Integer>(CAPACITY);
 		fill(arrayList);
 		Assert.areEqual(CAPACITY, arrayList.size());
 	}
 	
 	public void testConstructor_I_LegalArguments2() throws Exception {
-		ArrayList4<Integer> arrayList; 
-		arrayList = new ArrayList4<Integer>(0);
+		Db4oArrayList<Integer> arrayList; 
+		arrayList = new Db4oArrayList<Integer>(0);
 		fill(arrayList);
 		Assert.areEqual(CAPACITY, arrayList.size());
 	}
@@ -52,7 +52,7 @@ public class ArrayList4TestCase implements TestLifeCycle {
 	public void testConstructor_I_IllegalArgumentException() throws Exception {
 		Assert.expect(IllegalArgumentException.class, new CodeBlock(){
 			public void run() throws Throwable {
-				new ArrayList4<Integer>(-1);
+				new Db4oArrayList<Integer>(-1);
 			}
 		});
 	}
@@ -60,19 +60,19 @@ public class ArrayList4TestCase implements TestLifeCycle {
 	public void testConstructor_LCollection_NullPointerException() throws Exception {
 		Assert.expect(NullPointerException.class, new CodeBlock(){
 			public void run() throws Throwable {
-				new ArrayList4<Integer>(null);
+				new Db4oArrayList<Integer>(null);
 			}
 		});
 	}
 	
 	public void testConstructor_LCollection() throws Exception {
-		ArrayList4<Integer> arrayList = new ArrayList4<Integer>(_list);
+		Db4oArrayList<Integer> arrayList = new Db4oArrayList<Integer>(_list);
 		Assert.areEqual(_list.size(), arrayList.size());
 		Assert.isTrue(Arrays.equals(_list.toArray(), arrayList.toArray()));
 		
 	}
 
-	private void fill(ArrayList4<Integer> arrayList) {
+	private void fill(Db4oArrayList<Integer> arrayList) {
 		for (int i = 0; i < CAPACITY; i++) {
 			arrayList.add(new Integer(i));
 		}
@@ -260,7 +260,7 @@ public class ArrayList4TestCase implements TestLifeCycle {
 	}
 
 	public void testIsEmpty() throws Exception {
-		Assert.isTrue(new ArrayList4<Integer>().isEmpty());
+		Assert.isTrue(new Db4oArrayList<Integer>().isEmpty());
 		Assert.isFalse(_list.isEmpty());
 		_list.clear();
 		Assert.isTrue(_list.isEmpty());
@@ -491,7 +491,7 @@ public class ArrayList4TestCase implements TestLifeCycle {
 	}
 	
 	public void testToString() throws Exception {
-		ArrayList4<Object> list = new ArrayList4<Object>();
+		Db4oArrayList<Object> list = new Db4oArrayList<Object>();
 		
 		Assert.areEqual("[]",list.toString());
 		
@@ -565,7 +565,7 @@ public class ArrayList4TestCase implements TestLifeCycle {
 	@SuppressWarnings("unchecked")
 	public void testClone() throws Exception {
 		_list.add(null);
-		ArrayList4<Integer> cloned = (ArrayList4<Integer>)_list.clone();
+		Db4oArrayList<Integer> cloned = (Db4oArrayList<Integer>)_list.clone();
 		for (int i = 0; i < CAPACITY; i++) {
 			Assert.areSame(_list.get(i), cloned.get(i));
 		}
