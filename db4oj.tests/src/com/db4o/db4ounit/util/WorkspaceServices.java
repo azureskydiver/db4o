@@ -31,7 +31,7 @@ public class WorkspaceServices {
 	
 	static String pathToClass(Class clazz) {
 		final URL resource = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class");
-		return new File(resource.getPath()).getParent();
+		return new File(resource.getFile()).getParent();
 	}
 	
 	static String findFolderWithChild(String baseFolder, String folderChild) {
