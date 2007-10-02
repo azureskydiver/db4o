@@ -11,7 +11,7 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public class Db4oArrayList<E> extends AbstractList4<E> implements Cloneable,
+public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		Serializable, RandomAccess {
 
 	private static final long serialVersionUID = 1L;
@@ -22,12 +22,12 @@ public class Db4oArrayList<E> extends AbstractList4<E> implements Cloneable,
 
 	public int listSize;
 	
-	public Db4oArrayList() {
+	public ArrayList4() {
 		this(10);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Db4oArrayList(Collection<? extends E> c) {
+	public ArrayList4(Collection<? extends E> c) {
 		Object[] data = c.toArray();
 		capacity = data.length;
 		elements = (E[]) new Object[capacity];
@@ -36,7 +36,7 @@ public class Db4oArrayList<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 	@SuppressWarnings("unchecked")
-	public Db4oArrayList(int initialCapacity) {
+	public ArrayList4(int initialCapacity) {
 		if (initialCapacity < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -97,9 +97,9 @@ public class Db4oArrayList<E> extends AbstractList4<E> implements Cloneable,
 	
 	@SuppressWarnings("unchecked")
 	public Object clone() {
-		Db4oArrayList<E> clonedList;
+		ArrayList4<E> clonedList;
 		try {
-			clonedList = (Db4oArrayList<E>) super.clone();
+			clonedList = (ArrayList4<E>) super.clone();
 			clonedList.elements = elements.clone();
 			return clonedList;
 		} catch (CloneNotSupportedException e) {
