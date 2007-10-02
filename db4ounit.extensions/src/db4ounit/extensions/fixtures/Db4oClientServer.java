@@ -15,8 +15,6 @@ import db4ounit.extensions.util.*;
 public class Db4oClientServer extends
 		AbstractDb4oFixture implements Db4oClientServerFixture {
     
-    private static final int	DEFAULT_PORT	= 0xdb40;
-
 	protected static final String FILE = "Db4oClientServer.yap";
     
     protected static final String HOST = "localhost";
@@ -106,8 +104,13 @@ public class Db4oClientServer extends
 	 *         assignable from Db4oTestCase. Otherwise, returns true.
 	 */
 	public boolean accept(Class clazz) {
-		if ((OptOutCS.class.isAssignableFrom(clazz))
-				|| !AbstractDb4oTestCase.class.isAssignableFrom(clazz)) {
+		if (!AbstractDb4oTestCase.class.isAssignableFrom(clazz)) {
+			return false;
+		}
+		if (OptOutCS.class.isAssignableFrom(clazz)) {
+			return false;
+		}
+		if (_embeddedClient && (OptOutAllButNetworkingCS.class.isAssignableFrom(clazz))) {
 			return false;
 		}
 		return true;
