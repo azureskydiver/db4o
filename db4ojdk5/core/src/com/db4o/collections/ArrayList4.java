@@ -6,8 +6,6 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
-import com.db4o.foundation.*;
-
 /**
  * @exclude
  */
@@ -107,10 +105,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		}
 	}
 
-	public boolean contains(Object o) {
-		return indexOf(o) != -1;
-	}
-
 	public void ensureCapacity(int minCapacity) {
 		if (minCapacity <= capacity) {
 			return;
@@ -133,10 +127,16 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		return -1;
 	}
 
-	public boolean isEmpty() {
-		return size() == 0;
+	public int lastIndexOf(Object o) {
+		for (int index = size() - 1; index >= 0; --index) {
+			E element = get(index);
+			if (o == null ? element == null : o.equals(element)) {
+				return index;
+			}
+		}
+		return -1;
 	}
-
+	
 	public E remove(int index) {
 		checkIndex(index, 0, size() - 1);
 		E element = elements[index];
@@ -202,53 +202,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		resize(size());
 	}
 
-	public List<E> subList(int fromIndex, int toIndex) {
-		throw new NotImplementedException();
-	}
-
-	public boolean containsAll(Collection<?> c) {
-		Iterator<?> iter = c.iterator();
-		while(iter.hasNext()) {
-			if(!contains(iter.next())) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public boolean retainAll(Collection <?> c) {
-		boolean changed = false;
-		Iterator<?> it = iterator();
-		while (it.hasNext()) {
-			if (!c.contains(it.next())) {
-				it.remove();
-				changed = true;
-			}
-		}
-		return changed;
-	}
-
-	/**
-	 * @see Collection#toString()
-	 */
-	public String toString() {
-		StringBuilder buffer = new StringBuilder();
-		buffer.append('[');
-		Iterator<E> iter = iterator();
-		while (iter.hasNext()) {
-			E element = iter.next();
-			if (element != this) {
-				buffer.append(element);
-			} else {
-				buffer.append("(this Collection)"); //$NON-NLS-1$
-			}
-            if(iter.hasNext()) {
-                buffer.append(", "); //$NON-NLS-1$
-            }
-		}
-		buffer.append(']');
-		return buffer.toString();
-	}
 
 	@SuppressWarnings("unchecked")
 	private void resize(int minCapacity) {
