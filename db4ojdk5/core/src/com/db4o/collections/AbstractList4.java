@@ -5,6 +5,7 @@ package com.db4o.collections;
 /**
  * @exclude
  */
+import java.lang.reflect.*;
 import java.util.*;
 
 public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, List<E> {
@@ -50,21 +51,111 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 	public void clear() {
 		removeRange(0, size());
 	}
-
-	public abstract E get(int index);
 	
-	public int lastIndexOf(Object o) {
-		for (int index = size() - 1; index >= 0; --index) {
-			E element = get(index);
-			if (o == null ? element == null : o.equals(element)) {
-				return index;
+	public boolean contains(Object o) {
+		return indexOf(o) != -1;
+	}
+	
+	public boolean containsAll(Collection<?> c) {
+		Iterator<?> iter = c.iterator();
+		while(iter.hasNext()) {
+			if(!contains(iter.next())) {
+				return false;
 			}
 		}
+		return true;
+	}
+
+	public boolean equals(Object other) {
+		if (other == this) {
+			return true;
+		}
+		if (!(other instanceof List)) {
+			return false;
+		}
+		List<?> otherList = (List<?>) other;
+		if (otherList.size() != size()) {
+			return false;
+		}
+		Iterator<E> iter = iterator();
+		Iterator<?> otherIter = otherList.iterator();
+		while (iter.hasNext()) {
+			E e1 = iter.next();
+			Object e2 = otherIter.next();
+			if (!(e1 == null ? e2 == null : e1.equals(e2))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public abstract E get(int index);
+
+	/**
+	 * @see List#hashCode()
+	 */
+	public int hashCode() {
+		int hashCode = 1;
+		Iterator<E> i = iterator();
+		while (i.hasNext()) {
+			E obj = i.next();
+			hashCode = 31 * hashCode + (obj == null ? 0 : obj.hashCode());
+		}
+		return hashCode;
+	}
+
+	public boolean isEmpty() {
+		return size() == 0;
+	}
+	
+	public Iterator<E> iterator() {
+		 return new Db4oArrayListIterator(-1);
+	}
+	
+	public int indexOf(Object o) {
+		ListIterator<E> iter = listIterator();
+		while(iter.hasNext()) {
+			if(equals(o, iter.next())) {
+				return iter.previousIndex();
+			}	
+		}
 		return -1;
+	}
+	
+	public int lastIndexOf(Object o) {
+		ListIterator<E> iter = listIterator(size());
+		while(iter.hasPrevious()) {
+			if(equals(o, iter.previous())) {
+				return iter.nextIndex();
+			}	
+		}
+		return -1;
+	}
+	
+	private boolean equals(Object e1,  E e2) {
+		return (e1 == null ? e2 == null : e1.equals(e2));
+	}
+
+	public ListIterator<E> listIterator() {
+		return listIterator(0);
+	}
+
+	public ListIterator<E> listIterator(int index) {
+		checkIndex(index, 0, size());
+		return new Db4oArrayListIndexIterator(index);
 	}
 
 	public E remove(int index) {
 		throw new UnsupportedOperationException();
+	}
+	
+	public boolean remove(Object o) {
+		int index = indexOf(o);
+		if (index == -1) {
+			return false;
+		}
+		remove(index);
+		return true;
 	}
 	
 	public boolean removeAll(Collection <?> c) {
@@ -93,55 +184,76 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		}
 	}
 
-	public boolean equals(Object other) {
-		if (other == this) {
-			return true;
-		}
-		if (!(other instanceof List)) {
-			return false;
-		}
-		List<?> otherList = (List<?>) other;
-		if (otherList.size() != size()) {
-			return false;
-		}
-		Iterator<E> iter = iterator();
-		Iterator<?> otherIter = otherList.iterator();
-		while (iter.hasNext()) {
-			E e1 = iter.next();
-			Object e2 = otherIter.next();
-			if (!(e1 == null ? e2 == null : e1.equals(e2))) {
-				return false;
+	public boolean retainAll(Collection <?> c) {
+		boolean changed = false;
+		Iterator<?> it = iterator();
+		while (it.hasNext()) {
+			if (!c.contains(it.next())) {
+				it.remove();
+				changed = true;
 			}
 		}
-		return true;
+		return changed;
+	}
+	
+	public E set(int index, E element) {
+		throw new UnsupportedOperationException();		
+	}
+	
+	public abstract int size();
+	
+	public List<E> subList(int fromIndex, int toIndex) {
+		// return new SubArrayList4(this, fromIndex, toIndex);
+		throw new UnsupportedOperationException();
+	}
+	
+	public Object[] toArray() {
+		int size = size();
+		Object[] data = new Object[size];
+		Iterator<E> iter = iterator();
+		int i = 0;
+		while(iter.hasNext()) {
+			data[i++] = iter.next();
+		}
+		return data;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T[] toArray(T[] a) {
+		int size = size();
+		if(a.length < size) {
+			a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
+		}
+		Iterator<E> iter = iterator();
+		int i = 0;
+		while(iter.hasNext()) {
+			a[i++] = (T) iter.next();
+		}
+		return a;
 	}
 
 	/**
-	 * @see List#hashCode()
+	 * @see Collection#toString()
 	 */
-	public int hashCode() {
-		int hashCode = 1;
-		Iterator<E> i = iterator();
-		while (i.hasNext()) {
-			E obj = i.next();
-			hashCode = 31 * hashCode + (obj == null ? 0 : obj.hashCode());
+	public String toString() {
+		StringBuilder buffer = new StringBuilder();
+		buffer.append('[');
+		Iterator<E> iter = iterator();
+		while (iter.hasNext()) {
+			E element = iter.next();
+			if (element != this) {
+				buffer.append(element);
+			} else {
+				buffer.append("(this Collection)"); //$NON-NLS-1$
+			}
+            if(iter.hasNext()) {
+                buffer.append(", "); //$NON-NLS-1$
+            }
 		}
-		return hashCode;
+		buffer.append(']');
+		return buffer.toString();
 	}
-
-	public Iterator<E> iterator() {
-		 return new Db4oArrayListIterator(-1);
-	}
-
-	public ListIterator<E> listIterator() {
-		return listIterator(0);
-	}
-
-	public ListIterator<E> listIterator(int index) {
-		checkIndex(index, 0, size());
-		return new Db4oArrayListIndexIterator(index);
-	}
-	
+		
 	void checkIndex(int index, int from, int to) {
 		if (index < from || index > to) {
 			throw new IndexOutOfBoundsException();
