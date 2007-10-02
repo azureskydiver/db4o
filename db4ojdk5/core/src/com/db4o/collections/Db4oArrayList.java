@@ -2,6 +2,7 @@
 
 package com.db4o.collections;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -10,7 +11,8 @@ import com.db4o.foundation.*;
 /**
  * @exclude
  */
-public class Db4oArrayList<E> extends ArrayList<E> {
+public class Db4oArrayList<E> extends AbstractList4<E> implements Cloneable,
+		Serializable, RandomAccess {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,15 +22,12 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 
 	public int listSize;
 	
-	protected transient int modCount;
-
 	public Db4oArrayList() {
 		this(10);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Db4oArrayList(Collection<? extends E> c) {
-		super(c);
 		Object[] data = c.toArray();
 		capacity = data.length;
 		elements = (E[]) new Object[capacity];
@@ -45,6 +44,14 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		elements = (E[]) new Object[initialCapacity];
 	}
 
+	public boolean add(E e) {
+		ensureCapacity(size() + 1);
+		elements[listSize] = e;
+		increaseSize(1);
+		markModified();
+		return true;
+	}
+	
 	public void add(int index, E element) {
 		checkIndex(index, 0, size());
 		ensureCapacity(size() + 1);
@@ -53,14 +60,6 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		elements[index] = element;
 		increaseSize(1);
 		markModified();
-	}
-
-	public boolean add(E e) {
-		ensureCapacity(size() + 1);
-		elements[listSize] = e;
-		increaseSize(1);
-		markModified();
-		return true;
 	}
 
 	public boolean addAll(Collection<? extends E> c) {
@@ -95,12 +94,17 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		setSize(0);
 		markModified();
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public Object clone() {
-		Db4oArrayList <E> clonedList = (Db4oArrayList<E>) super.clone();
-		clonedList.elements = elements.clone();
-		return clonedList;
+		Db4oArrayList<E> clonedList;
+		try {
+			clonedList = (Db4oArrayList<E>) super.clone();
+			clonedList.elements = elements.clone();
+			return clonedList;
+		} catch (CloneNotSupportedException e) {
+			throw new Error(e);
+		}
 	}
 
 	public boolean contains(Object o) {
@@ -133,16 +137,6 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		return size() == 0;
 	}
 
-	public int lastIndexOf(Object o) {
-		for (int index = size() - 1; index >= 0; --index) {
-			E element = get(index);
-			if (o == null ? element == null : o.equals(element)) {
-				return index;
-			}
-		}
-		return -1;
-	}
-
 	public E remove(int index) {
 		checkIndex(index, 0, size() - 1);
 		E element = elements[index];
@@ -162,7 +156,6 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		return true;
 	}
 
-
 	protected void removeRange(int fromIndex, int toIndex) {
 		if ((fromIndex < 0 || fromIndex >= size() || toIndex > size() || toIndex < fromIndex)) {
 			throw new IndexOutOfBoundsException();
@@ -176,7 +169,7 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		decreaseSize(count);
 		markModified();
 	}
-
+	
 	public E set(int index, E element) {
 		checkIndex(index, 0, size() - 1);
 		E oldValue = elements[index];
@@ -209,55 +202,6 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		resize(size());
 	}
 
-	public boolean equals(Object other) {
-		if (other == this) {
-			return true;
-		}
-		if (!(other instanceof List)) {
-			return false;
-		}
-		List<?> otherList = (List<?>) other;
-		if (otherList.size() != size()) {
-			return false;
-		}
-		Iterator<E> iter = iterator();
-		Iterator<?> otherIter = otherList.iterator();
-		while (iter.hasNext()) {
-			E e1 = iter.next();
-			Object e2 = otherIter.next();
-			if (!(e1 == null ? e2 == null : e1.equals(e2))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * @see List#hashCode()
-	 */
-	public int hashCode() {
-		int hashCode = 1;
-		Iterator<E> i = iterator();
-		while (i.hasNext()) {
-			E obj = i.next();
-			hashCode = 31 * hashCode + (obj == null ? 0 : obj.hashCode());
-		}
-		return hashCode;
-	}
-
-	public Iterator<E> iterator() {
-		 return new Db4oArrayListIterator(-1);
-	}
-
-	public ListIterator<E> listIterator() {
-		return listIterator(0);
-	}
-
-	public ListIterator<E> listIterator(int index) {
-		checkIndex(index, 0, size());
-		return new Db4oArrayListIndexIterator(index);
-	}
-
 	public List<E> subList(int fromIndex, int toIndex) {
 		throw new NotImplementedException();
 	}
@@ -270,18 +214,6 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 			}
 		}
 		return true;
-	}
-
-	public boolean removeAll(Collection <?> c) {
-		boolean changed = false;
-		Iterator<?> it = iterator();
-		while (it.hasNext()) {
-			if (c.contains(it.next())) {
-				it.remove();
-				changed = true;
-			}
-		}
-		return changed;
 	}
 
 	public boolean retainAll(Collection <?> c) {
@@ -327,142 +259,19 @@ public class Db4oArrayList<E> extends ArrayList<E> {
 		capacity = minCapacity;
 	}
 
-	private void checkIndex(int index, int from, int to) {
-		if (index < from || index > to) {
-			throw new IndexOutOfBoundsException();
-		}
-	}
-	
-	private void setSize(int count) {
+	void setSize(int count) {
 		listSize = count;
 	}
 	
-	private void increaseSize(int count) {
+	void increaseSize(int count) {
 		listSize += count;
 	}
 	
-	private void decreaseSize(int count) {
+	void decreaseSize(int count) {
 		listSize -= count;
 	}
 	
-	private void markModified() {
+	void markModified() {
 		++modCount;
-	}
-
-	private class Db4oArrayListIterator implements Iterator<E> {
-
-		protected int currentIndex;
-		
-		private int _iteratorModCount;
-		
-		protected boolean canOperate;
-		
-		public Db4oArrayListIterator (int pos) {
-			currentIndex = pos;
-			syncModCount();
-		}
-		
-		public boolean hasNext() {
-			return currentIndex + 1 < size();
-		}
-
-		public E next() {
-			checkConcurrentModification();
-			try {
-				E element = get(currentIndex + 1);
-				++currentIndex;
-				setCanOperateFlag(true);
-				return element;
-			} catch (IndexOutOfBoundsException e) {
-				checkConcurrentModification();
-				throw new NoSuchElementException();
-			}
-		}
-
-		public void remove() {
-			checkCanOperate();
-			checkConcurrentModification();
-			Db4oArrayList.this.remove(currentIndex);
-			--currentIndex;
-			syncModCount();
-			setCanOperateFlag(false);
-		}
-		
-		protected void syncModCount() {
-			_iteratorModCount = modCount;
-		}
-
-		protected void checkCanOperate() {
-			if(!canOperate) {
-				throw new IllegalStateException();
-			}
-		}
-		
-		protected void setCanOperateFlag(boolean enabled) {
-			canOperate = enabled;
-		}
-		
-		protected void checkConcurrentModification() {
-			if(_iteratorModCount != modCount) {
-				throw new ConcurrentModificationException();
-			}
-		}
-
-	}
-	
-	private class Db4oArrayListIndexIterator extends Db4oArrayListIterator
-			implements ListIterator<E> {
-		public Db4oArrayListIndexIterator(int index) {
-			super(index - 1);
-		}
-
-		public void add(E element) {
-			checkCanOperate();
-			checkConcurrentModification();
-			try {
-				Db4oArrayList.this.add(currentIndex, element);
-				++currentIndex;
-				syncModCount();
-				setCanOperateFlag(false);
-			} catch (IndexOutOfBoundsException e) {
-				throw new ConcurrentModificationException();
-			}
-		}
-
-		public boolean hasPrevious() {
-			return currentIndex != -1;
-		}
-
-		public int nextIndex() {
-			return currentIndex + 1;
-		}
-
-		public E previous() {
-			checkConcurrentModification();
-			try {
-				E element = get(currentIndex);
-				--currentIndex;
-				setCanOperateFlag(true);
-				return element;
-			} catch (IndexOutOfBoundsException e) {
-				checkConcurrentModification();
-				throw new NoSuchElementException();
-			}
-		}
-
-		public int previousIndex() {
-			return currentIndex;
-		}
-
-		public void set(E element) {
-			checkCanOperate();
-			checkConcurrentModification();
-			try {
-				Db4oArrayList.this.set(currentIndex, element);
-				setCanOperateFlag(false);
-			} catch (IndexOutOfBoundsException e) {
-				throw new ConcurrentModificationException();
-			}
-		}
 	}
 }
