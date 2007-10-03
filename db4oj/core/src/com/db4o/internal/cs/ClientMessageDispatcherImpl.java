@@ -42,6 +42,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 			Msg message = null;
 			try {
 				message = Msg.readMessage(this, i_stream.transaction(), i_socket);
+				// TODO are there possibly messages that have to be processed *and* passed on?
 				if (isClientSideMessage(message)) {
 					if (((ClientSideMessage) message).processAtClient()) {
 						continue;

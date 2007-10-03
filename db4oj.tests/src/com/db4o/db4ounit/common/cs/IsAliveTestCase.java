@@ -8,7 +8,7 @@ import db4ounit.extensions.fixtures.*;
 
 public class IsAliveTestCase  extends Db4oClientServerTestCase implements OptOutAllButNetworkingCS {
 
-	public void _test() {
+	public void test() {
 		Assert.isTrue(((ClientObjectContainer)db()).isAlive());
 	}
 	
