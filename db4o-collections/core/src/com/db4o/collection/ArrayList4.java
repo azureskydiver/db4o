@@ -6,11 +6,14 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
 
+import com.db4o.activation.*;
+import com.db4o.ta.*;
+
 /**
  * @exclude
  */
 public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
-		Serializable, RandomAccess{
+		Serializable, RandomAccess, Activatable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -19,6 +22,21 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	public int capacity;
 
 	public int listSize;
+	
+	private transient Activator _activator;
+	
+	public void activate() {
+		if(_activator != null) {
+			_activator.activate();
+		}
+	}
+
+	public void bind(Activator activator) {
+		if(_activator != null) {
+			throw new IllegalStateException();
+		}
+		_activator = activator;
+	}
 	
 	public ArrayList4() {
 		this(10);
@@ -113,6 +131,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 	public E get(int index) {
+		activate();
 		checkIndex(index, 0, size() - 1);
 		return elements[index];
 	}
@@ -227,4 +246,5 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	void markModified() {
 		++modCount;
 	}
+
 }

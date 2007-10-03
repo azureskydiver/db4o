@@ -7,11 +7,12 @@ import db4ounit.extensions.*;
 public class AllTests extends Db4oTestSuite {
     
     public static void main(String[] arguments) {
-        new AllTests().runAll();
+        new AllTests().runSolo();
     }
     
 	protected Class[] testCases() {
 		return new Class[] {
+				ArrayList4TATestCase.class,
 				ArrayList4TestCase.class,
 		};
 	}
