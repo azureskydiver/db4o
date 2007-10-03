@@ -39,26 +39,6 @@ public class ArrayList4TATestCase extends AbstractDb4oTestCase {
 		super.configure(config);
 	}
 
-	@SuppressWarnings("unchecked")
-	public void testGet_I() throws Exception {
-		final ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
-		for (int i = 0; i < CAPACITY; ++i) {
-			Assert.areEqual(new Integer(i), list.get(i));
-		}
-
-		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				list.get(-1);
-			}
-		});
-
-		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				list.get(CAPACITY);
-			}
-		});
-	}
-
 	public void testAdd() throws Exception {
 		final ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
 		for (int i = 0; i < CAPACITY; ++i) {
@@ -173,12 +153,121 @@ public class ArrayList4TATestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(0, list.size());
 	}
 	
+	public void testContains() throws Exception {
+		final ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
+		Assert.isTrue(list.contains(new Integer(0)));
+		Assert.isTrue(list.contains(new Integer(CAPACITY / 2)));
+		Assert.isTrue(list.contains(new Integer(CAPACITY / 3)));
+		Assert.isTrue(list.contains(new Integer(CAPACITY / 4)));
+
+		Assert.isFalse(list.contains(new Integer(-1)));
+		Assert.isFalse(list.contains(new Integer(CAPACITY)));
+
+		// returns false because current data doesn't contain null.
+		// Quotes from j.u.List spec: More formally, returns true if and only if
+		// this list contains at least one element e such that (o==null ?
+		// e==null : o.equals(e)).
+		Assert.isFalse(list.contains(null));
+	}
+
+	public void testContainsAll() throws Exception {
+		final ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
+		Vector<Integer> v = new Vector<Integer>();
+
+		v.add(new Integer(0));
+		Assert.isTrue(list.containsAll(v));
+
+		v.add(new Integer(0));
+		Assert.isTrue(list.containsAll(v));
+
+		v.add(new Integer(CAPACITY / 2));
+		Assert.isTrue(list.containsAll(v));
+
+		v.add(new Integer(CAPACITY / 3));
+		Assert.isTrue(list.containsAll(v));
+
+		v.add(new Integer(CAPACITY / 4));
+		Assert.isTrue(list.containsAll(v));
+
+		v.add(new Integer(CAPACITY));
+		Assert.isFalse(list.containsAll(v));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void testGet() throws Exception {
+		final ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
+		for (int i = 0; i < CAPACITY; ++i) {
+			Assert.areEqual(new Integer(i), list.get(i));
+		}
+
+		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				list.get(-1);
+			}
+		});
+
+		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				list.get(CAPACITY);
+			}
+		});
+	}
+
+	public void testIndexOf() throws Exception {
+		final ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
+		Assert.areEqual(0, list.indexOf(new Integer(0)));
+		Assert.areEqual(CAPACITY / 2, list.indexOf(new Integer(CAPACITY / 2)));
+		Assert.areEqual(CAPACITY / 3, list.indexOf(new Integer(CAPACITY / 3)));
+		Assert.areEqual(CAPACITY / 4, list.indexOf(new Integer(CAPACITY / 4)));
+
+		Assert.areEqual(-1, list.indexOf(new Integer(-1)));
+		Assert.areEqual(-1, list.indexOf(new Integer(CAPACITY)));
+
+		// returns false because current data doesn't contain null.
+		// Quotes from j.u.List spec: More formally, returns the lowest index i
+		// such that (o==null ? get(i)==null : o.equals(get(i))), or -1 if there
+		// is no such index.
+		Assert.areEqual(-1, list.indexOf(null));
+	}
+
 	public void testIsEmpty() throws Exception {
 		final ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
 		Assert.isTrue(new ArrayList4<Integer>().isEmpty());
 		Assert.isFalse(list.isEmpty());
 		list.clear();
 		Assert.isTrue(list.isEmpty());
+	}
+
+	public void testSet() throws Exception {
+		final ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
+		Integer element = new Integer(1);
+		
+		Integer previousElement = list.get(0);
+		Assert.areSame(previousElement, list.set(0, element));
+		Assert.areSame(element, list.get(0));
+
+		previousElement = list.get(42);
+		Assert.areSame(previousElement, list.set(42, element));
+		Assert.areSame(element, list.get(42));
+
+		for (int i = 0; i < CAPACITY; ++i) {
+			element = new Integer(i);
+			previousElement = list.get(i);
+			Assert.areSame(previousElement, list.set(i, element));
+			Assert.areSame(element, list.get(i));
+		}
+
+		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				list.set(-1, new Integer(0));
+			}
+		});
+
+		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				list.set(CAPACITY, new Integer(0));
+			}
+		});
 	}
 
 	public void testSize() throws Exception {
