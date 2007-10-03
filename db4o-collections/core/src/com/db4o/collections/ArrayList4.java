@@ -61,48 +61,38 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 	public void add(int index, E element) {
+		activate();
 		checkIndex(index, 0, size());
 		ensureCapacity(size() + 1);
-		if (index == size()) {
-			elements[listSize] = element;
-		} else {
-			System.arraycopy(elements, index, elements, index + 1, listSize
+		System.arraycopy(elements, index, elements, index + 1, listSize
 					- index);
 			elements[index] = element;
-		}
 		increaseSize(1);
 		markModified();
 	}
 
 	public boolean addAll(Collection<? extends E> c) {
+		return addAll(size(), c);
+	}
+
+	public boolean addAll(int index, Collection<? extends E> c) {
+		activate();
+		checkIndex(index, 0, size());
 		int length = c.size();
 		if(length == 0) {
 			return false;
 		}
 		ensureCapacity(size() + length);
 		Object[] toBeAdded = c.toArray();
-		System.arraycopy(toBeAdded, 0, elements, size(), toBeAdded.length);
-		increaseSize(length);
-		markModified();
-		return true;		
-	}
-
-	public boolean addAll(int index, Collection<? extends E> c) {
-		checkIndex(index, 0, size());
-		int length = c.size();
-		if(length == 0) {
-			return false;
-		}
-		ensureCapacity(size() + length);
-		Object[] data = c.toArray();
 		System.arraycopy(elements, index, elements, index+length, size() - index);
-		System.arraycopy(data, 0, elements, index, length);
+		System.arraycopy(toBeAdded, 0, elements, index, length);
 		increaseSize(length);
 		markModified();
 		return true;
 	}
 
 	public void clear() {
+		activate();
 		setSize(0);
 		markModified();
 	}
