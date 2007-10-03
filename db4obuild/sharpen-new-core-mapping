@@ -25,3 +25,5 @@
 
 -typeMapping java.io.InputStream Sharpen.IO.IInputStream
 -typeMapping java.io.OutputStream Sharpen.IO.IOutputStream
+
+-methodMapping java.util.Date.getTime Sharpen.Runtime.ToJavaMilliseconds

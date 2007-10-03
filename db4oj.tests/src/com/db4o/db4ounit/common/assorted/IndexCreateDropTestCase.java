@@ -5,11 +5,13 @@ package com.db4o.db4ounit.common.assorted;
 import java.util.Date;
 
 import com.db4o.config.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.query.Query;
 
 import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
 import db4ounit.extensions.fixtures.*;
+import db4ounit.util.*;
 
 public class IndexCreateDropTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
     
@@ -28,11 +30,20 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase implements Opt
         }
         
         public IndexCreateDropItem(int int_) {
-            this(int_, int_ == 0 ? null : "" + int_, int_ == 0 ? null : new Date(int_));
+            this(int_, int_ == 0 ? null : "" + int_, int_ == 0 ? nullDate() : new Date(int_));
         }
 
+        /**
+         * java.util.Date gets translated to System.DateTime on .net which is
+         * a value type thus no null.
+         * 
+         * We ask the DateHandler the proper 'null' representation for the
+         * current platform.
+         */
+		private static Date nullDate() {
+			return (Date) new DateHandler(null).primitiveNull();
+		}
     }
-
     
     private final int[] VALUES = new int[]{4, 7, 6, 6, 5, 4, 0, 0};
     
@@ -124,15 +135,15 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase implements Opt
         
         q = newQuery();
         q.descend("_date").constrain(new Date(7)).smaller().equal();
-        assertQuerySize(6, q);
+        assertQuerySize(PlatformInformation.isJava() ? 6 : 8, q);
         
         q = newQuery();
         q.descend("_date").constrain(new Date(7)).smaller();
-        assertQuerySize(5, q);
+        assertQuerySize(PlatformInformation.isJava() ? 5 : 7, q);
         
         q = newQuery();
         q.descend("_date").constrain(null);
-        assertQuerySize(2, q);
+        assertQuerySize(PlatformInformation.isJava() ? 2 : 0, q);
         
     }
 

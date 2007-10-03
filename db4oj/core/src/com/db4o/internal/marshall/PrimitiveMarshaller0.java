@@ -17,7 +17,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
     public Date readDate(Buffer bytes) {
 		final long value = bytes.readLong();
 		if (value == Long.MAX_VALUE) {
-			return null;
+			return MarshallingConstants0.NULL_DATE;
 		}
 		return new Date(value);
 	}

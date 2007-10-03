@@ -124,9 +124,14 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     void instantiateFields(UnmarshallingContext context) {
         Object obj = context.read(_handler);
         if (obj != null  &&  (_handler instanceof DateHandler)) {
-            ((DateHandler)_handler).copyValue(obj, context.persistentObject());
+            final Object existing = context.persistentObject();
+			context.persistentObject(dateHandler().copyValue(obj, existing));
         }
     }
+
+	private DateHandler dateHandler() {
+		return ((DateHandler)_handler);
+	}
 
     public boolean isArray() {
         return _id == Handlers4.ANY_ARRAY_ID || _id == Handlers4.ANY_ARRAY_N_ID;

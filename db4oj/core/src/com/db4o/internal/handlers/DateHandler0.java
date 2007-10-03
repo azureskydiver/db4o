@@ -20,7 +20,7 @@ public class DateHandler0 extends DateHandler{
     public Object read(ReadContext context) {
         final long value = context.readLong();
         if (value == Long.MAX_VALUE) {
-            return null;
+            return primitiveNull();
         }
         return new Date(value);
     }
