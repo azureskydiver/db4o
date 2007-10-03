@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
@@ -62,14 +63,19 @@ public class DefragContextImpl implements DefragContext {
 		sourceConfig.flushFileBuffers(false);
 		sourceConfig.readOnly(true);
 		_sourceDb=(LocalObjectContainer)Db4o.openFile(sourceConfig,defragConfig.tempPath()).ext();
-		_targetDb = freshYapFile(defragConfig.origPath(),defragConfig.blockSize());
+		_targetDb = freshYapFile(defragConfig);
 		_mapping=defragConfig.mapping();
 		_mapping.open();
 	}
 	
 	static LocalObjectContainer freshYapFile(String fileName,int blockSize) {
-		new File(fileName).delete();
+		File4.delete(fileName);
 		return (LocalObjectContainer)Db4o.openFile(DefragmentConfig.vanillaDb4oConfig(blockSize),fileName).ext();
+	}
+	
+	static LocalObjectContainer freshYapFile(DefragmentConfig  config) {
+		File4.delete(config.origPath());
+		return (LocalObjectContainer)Db4o.openFile(config.clonedDb4oConfig(),config.origPath()).ext();
 	}
 	
 	public int mappedID(int oldID,int defaultID) {

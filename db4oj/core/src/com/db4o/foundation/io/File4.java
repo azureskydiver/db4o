@@ -4,6 +4,8 @@ package com.db4o.foundation.io;
 
 import java.io.*;
 
+import com.db4o.*;
+
 /**
  * @sharpen.ignore
  */
@@ -64,7 +66,7 @@ public class File4 {
 			return;
 		}
 		if (!file.delete()) {
-			throw new RuntimeException("Could not delete '" + fname + "'.");
+			throw new Db4oIOException("Could not delete '" + fname + "'.");
 		}
 	}
     
