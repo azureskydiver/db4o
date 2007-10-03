@@ -101,12 +101,20 @@ public class AliasesTestCase extends AbstractDb4oTestCase implements OptOutDefra
 	private void addAlias(String storedLetter, String runtimeLetter){
 		removeAlias();
 		alias = createAlias(storedLetter, runtimeLetter);
-		db().configure().addAlias(alias);	
+		fixture().configureAtRuntime(new RuntimeConfigureAction() {
+			public void apply(Configuration config) {
+				config.addAlias(alias);	
+			}
+		});
 	}
 	
 	private void removeAlias(){
 		if(alias != null){
-			db().configure().removeAlias(alias);
+			fixture().configureAtRuntime(new RuntimeConfigureAction() {
+				public void apply(Configuration config) {
+					config.removeAlias(alias);
+				}
+			});
 			alias = null;
 		}
 	}

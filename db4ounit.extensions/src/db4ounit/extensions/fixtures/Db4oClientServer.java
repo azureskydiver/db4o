@@ -5,6 +5,7 @@ package db4ounit.extensions.fixtures;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 
@@ -34,6 +35,8 @@ public class Db4oClientServer extends
 	private String _label;
     
     private int _port;
+
+	private Configuration _serverConfig;
     
     
     public Db4oClientServer(ConfigurationSource configSource,String fileName, boolean embeddedClient, String label) {
@@ -60,7 +63,8 @@ public class Db4oClientServer extends
 	}
 
     private void openServer() throws Exception {
-        _server = Db4o.openServer(config(),_yap.getAbsolutePath(), -1);
+        _serverConfig = cloneDb4oConfiguration(config());
+		_server = Db4o.openServer(_serverConfig,_yap.getAbsolutePath(), -1);
         _port = _server.ext().port();
         _server.grantAccess(USERNAME, PASSWORD);
     }
@@ -128,8 +132,8 @@ public class Db4oClientServer extends
 		return _server.openClient(config());
 	}
 	
-	private Config4Impl cloneDb4oConfiguration(Config4Impl config) {
-		return (Config4Impl) config.deepClone(this);
+	private Config4Impl cloneDb4oConfiguration(Configuration config) {
+		return (Config4Impl) ((Config4Impl)config).deepClone(this);
 	}
 
 	public String getLabel() {
@@ -142,5 +146,10 @@ public class Db4oClientServer extends
 
 	private static String filePath() {
 		return CrossPlatformServices.databasePath(FILE);
+	}
+
+	public void configureAtRuntime(RuntimeConfigureAction action) {
+		action.apply(config());
+		action.apply(_serverConfig);
 	}
 }
