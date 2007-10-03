@@ -109,7 +109,7 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 	}
 	
 	public Iterator<E> iterator() {
-		 return new Db4oArrayListIterator(-1);
+		 return new ArrayList4Iterator(-1);
 	}
 	
 	public int indexOf(Object o) {
@@ -142,7 +142,7 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 
 	public ListIterator<E> listIterator(int index) {
 		checkIndex(index, 0, size());
-		return new Db4oArrayListIndexIterator(index);
+		return new ArrayList4IndexIterator(index);
 	}
 
 	public E remove(int index) {
@@ -259,7 +259,7 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		}
 	}
 	
-	class Db4oArrayListIterator implements Iterator<E> {
+	class ArrayList4Iterator implements Iterator<E> {
 
 		protected int currentIndex;
 		
@@ -267,7 +267,7 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		
 		protected boolean canOperate;
 		
-		public Db4oArrayListIterator (int pos) {
+		public ArrayList4Iterator (int pos) {
 			currentIndex = pos;
 			syncModCount();
 		}
@@ -320,9 +320,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 
 	}
 	
-	class Db4oArrayListIndexIterator extends Db4oArrayListIterator
+	class ArrayList4IndexIterator extends ArrayList4Iterator
 			implements ListIterator<E> {
-		public Db4oArrayListIndexIterator(int index) {
+		public ArrayList4IndexIterator(int index) {
 			super(index - 1);
 		}
 
