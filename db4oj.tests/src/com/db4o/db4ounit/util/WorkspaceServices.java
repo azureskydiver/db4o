@@ -26,6 +26,10 @@ public class WorkspaceServices {
 	 * @sharpen.property
 	 */
 	public static String workspaceRoot() {
+       String property = System.getProperty("dir.workspace");
+        if(property != null){
+            return property;
+        }
 		return findFolderWithChild(pathToClass(WorkspaceServices.class), "db4obuild");
 	}
 	
