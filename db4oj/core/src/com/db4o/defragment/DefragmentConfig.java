@@ -192,4 +192,8 @@ public class DefragmentConfig {
 		return config;
 	}
 	
+	public Configuration clonedDb4oConfig() {
+		return (Configuration) ((Config4Impl)db4oConfig()).deepClone(null);
+	}
+	
 }

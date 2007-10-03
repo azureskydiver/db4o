@@ -16,6 +16,10 @@ public class Db4oIOException extends Db4oException {
 	public Db4oIOException() {
 		super();
 	}
+	
+	public Db4oIOException(String message) {
+		super(message);
+	}
 
 	/**
 	 * Constructor allowing to specify the causing exception

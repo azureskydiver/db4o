@@ -116,9 +116,9 @@ public class TimerFileLockEnabled extends TimerFileLock{
         writeAccessTime(false);
         _timerFile.sync();
         checkOpenTime();
-        // TODO: Thread could be a daemon.
         Thread thread = new Thread(this);
         thread.setName("db4o file lock");
+        thread.setDaemon(true);
         thread.start(); 
     }
     

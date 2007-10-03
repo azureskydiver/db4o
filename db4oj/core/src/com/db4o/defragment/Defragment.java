@@ -144,7 +144,7 @@ public class Defragment {
 			context.close();
 		}
 		if(targetIdentityID>0) {
-			setIdentity(config.origPath(), targetIdentityID, targetUuidIndexID, config.blockSize());
+			setIdentity(config, targetIdentityID, targetUuidIndexID);
 		}
 		else {
 			listener.notifyDefragmentInfo(new DefragmentInfo("No database identity found in original file."));
@@ -174,10 +174,9 @@ public class Defragment {
 		}
 	}
 
-	private static void setIdentity(String targetFile, int targetIdentityID,
-			int targetUuidIndexID, int blockSize) {
-		LocalObjectContainer targetDB = (LocalObjectContainer) Db4o.openFile(DefragmentConfig
-				.vanillaDb4oConfig(blockSize), targetFile);
+	private static void setIdentity(DefragmentConfig config, int targetIdentityID,
+			int targetUuidIndexID) {
+		LocalObjectContainer targetDB = (LocalObjectContainer) Db4o.openFile(config.clonedDb4oConfig(), config.origPath());
 		try {
 			Db4oDatabase identity = (Db4oDatabase) targetDB
 					.getByID(targetIdentityID);
