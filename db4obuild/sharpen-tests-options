@@ -5,3 +5,5 @@
 @sharpen-new-core-mapping
 
 -fullyQualify AllTests
+
+-propertyMapping java.util.Date.getTime Ticks

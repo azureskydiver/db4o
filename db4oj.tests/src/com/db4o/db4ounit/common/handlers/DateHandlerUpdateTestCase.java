@@ -4,6 +4,9 @@ package com.db4o.db4ounit.common.handlers;
 
 import java.util.*;
 
+import com.db4o.internal.handlers.*;
+import com.db4o.internal.marshall.*;
+
 import db4ounit.*;
 
 public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
@@ -25,10 +28,13 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
     }
 
-    private static final Date[] data = { new Date(Long.MIN_VALUE),
-            new Date(Long.MIN_VALUE + 1), new Date(-1), new Date(0),
-            new Date(1), new Date(Long.MAX_VALUE - 1),
-            new Date(Long.MAX_VALUE), };
+    private static final Date[] data = {
+		new Date(DatePlatform.MIN_DATE),
+        new Date(DatePlatform.MIN_DATE + 1),
+        new Date(),
+        new Date(DatePlatform.MAX_DATE - 1),
+        new Date(DatePlatform.MAX_DATE),
+    };
 
     public static void main(String[] args) {
         new TestRunner(DateHandlerUpdateTestCase.class).run();
@@ -43,13 +49,14 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
             assertAreEqual(data[i], dateArray[i]);
         }
         
-        // FIXME: We are not signalling null for Dates in typed arrays in 
-        //        the current handler format:
         
         // Assert.isNull(itemArrays._dateArray[data.length]);
         
         Assert.isNull(itemArrays._untypedObjectArray[data.length]);
-        Assert.isNull(dateArray[data.length]);
+        
+        // FIXME: We are not signalling null for Dates in typed arrays in 
+        //        the current handler format:        
+        Assert.areEqual(emptyValue(), dateArray[data.length]);
     }
 
     protected void assertValues(Object[] values) {
@@ -58,16 +65,20 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
             assertAreEqual(data[i], item._date);
             assertAreEqual(data[i], (Date)item._untyped);
         }
-
-        Item nullItem = (Item) values[values.length - 1];
-        Assert.isNull(nullItem._date);
-        Assert.isNull(nullItem._untyped);
+        
+        Item emptyItem = (Item) values[values.length - 1];
+        Assert.areEqual(emptyValue(), emptyItem._date);
+        Assert.isNull(emptyItem._untyped);
     }
 
+	private Object emptyValue() {
+		return new DateHandler(null).primitiveNull();
+	}
+
     private void assertAreEqual(Date expected, Date actual) {
-        if(expected.equals(new Date(Long.MAX_VALUE)) && _handlerVersion == 0){
+        if(expected.equals(new Date(DatePlatform.MAX_DATE)) && _handlerVersion == 0){
             // Bug in the oldest format: It treats a Long.MAX_VALUE date as null. 
-            expected = null;
+            expected = MarshallingConstants0.NULL_DATE;
         }
         Assert.areEqual(expected, actual);
     }
