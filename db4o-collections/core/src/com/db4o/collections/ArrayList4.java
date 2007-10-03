@@ -60,20 +60,16 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		elements = (E[]) new Object[initialCapacity];
 	}
 
-	public boolean add(E e) {
-		ensureCapacity(size() + 1);
-		elements[listSize] = e;
-		increaseSize(1);
-		markModified();
-		return true;
-	}
-	
 	public void add(int index, E element) {
 		checkIndex(index, 0, size());
 		ensureCapacity(size() + 1);
-		System.arraycopy(elements, index,
-				elements, index + 1, listSize - index);
-		elements[index] = element;
+		if (index == size()) {
+			elements[listSize] = element;
+		} else {
+			System.arraycopy(elements, index, elements, index + 1, listSize
+					- index);
+			elements[index] = element;
+		}
 		increaseSize(1);
 		markModified();
 	}
@@ -197,6 +193,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 	public int size() {
+		activate();
 		return listSize;
 	}
 
