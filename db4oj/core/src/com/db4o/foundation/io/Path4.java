@@ -2,7 +2,6 @@
 
 package com.db4o.foundation.io;
 
-import java.io.*;
 
 
 /**
@@ -29,7 +28,7 @@ public class Path4 {
 		return "/temp";
 	}
 
-	public static String getTempFileName() throws IOException {
+	public static String getTempFileName() {
 		String tempPath = getTempPath();
 		while (true) {
 			String fname = combine(tempPath, "db4o-test-" + nextRandom() + ".tmp");

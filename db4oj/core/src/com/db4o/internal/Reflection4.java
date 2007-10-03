@@ -40,10 +40,6 @@ public class Reflection4 {
         return invoke(params, onObject, method);
     }
     
-    public static Object invokeStatic (String className, String methodName) throws ReflectException {
-        return invoke(className, methodName, null, null, null );
-    }
-
     public static Object invoke(Object[] params, Object onObject, Method method) throws ReflectException {
         if(method == null) {
             return null;
