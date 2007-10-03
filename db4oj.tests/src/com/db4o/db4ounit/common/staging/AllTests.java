@@ -16,7 +16,7 @@ public class AllTests extends Db4oTestSuite {
 			/**
 			 *  When you add a test here, make sure you create a Jira issue. 
 			 */
-		    
+		    ActivateDepthTestCase.class,
 			LazyQueryDeleteTestCase.class,
 			SODAClassTypeDescend.class,			
 		};
