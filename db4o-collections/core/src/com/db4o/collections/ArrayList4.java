@@ -61,7 +61,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 	public void add(int index, E element) {
-		activate();
 		checkIndex(index, 0, size());
 		ensureCapacity(size() + 1);
 		System.arraycopy(elements, index, elements, index + 1, listSize
@@ -76,7 +75,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 	public boolean addAll(int index, Collection<? extends E> c) {
-		activate();
 		checkIndex(index, 0, size());
 		int length = c.size();
 		if(length == 0) {
@@ -99,9 +97,9 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	
 	@SuppressWarnings("unchecked")
 	public Object clone() {
-		ArrayList4<E> clonedList;
+		activate();
 		try {
-			clonedList = (ArrayList4<E>) super.clone();
+			ArrayList4 <E> clonedList = (ArrayList4<E>) super.clone();
 			clonedList.elements = elements.clone();
 			return clonedList;
 		} catch (CloneNotSupportedException e) {
@@ -110,6 +108,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 	public void ensureCapacity(int minCapacity) {
+		activate();
 		if (minCapacity <= capacity) {
 			return;
 		}
@@ -117,7 +116,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 	public E get(int index) {
-		activate();
 		checkIndex(index, 0, size() - 1);
 		return elements[index];
 	}
@@ -152,17 +150,9 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		return element;
 	}
 
-	public boolean remove(Object o) {
-		int index = indexOf(o);
-		if (index == -1) {
-			return false;
-		}
-		remove(index);
-		return true;
-	}
-
 	protected void removeRange(int fromIndex, int toIndex) {
-		if ((fromIndex < 0 || fromIndex >= size() || toIndex > size() || toIndex < fromIndex)) {
+		int size = size();
+		if ((fromIndex < 0 || fromIndex >= size || toIndex > size || toIndex < fromIndex)) {
 			throw new IndexOutOfBoundsException();
 		}
 		if (fromIndex == toIndex) {
