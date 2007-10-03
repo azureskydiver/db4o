@@ -28,4 +28,5 @@ public interface Db4oFixture {
 
 	void defragment() throws Exception;
 
+	void configureAtRuntime(RuntimeConfigureAction action);
 }

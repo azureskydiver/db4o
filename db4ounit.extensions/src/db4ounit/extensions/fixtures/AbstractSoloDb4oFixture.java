@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 import db4ounit.Assert;
+import db4ounit.extensions.*;
 
 public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 
@@ -41,6 +42,10 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 	
 	public LocalObjectContainer fileSession() {
 		return (LocalObjectContainer)_db;
+	}
+
+	public void configureAtRuntime(RuntimeConfigureAction action) {
+		action.apply(config());
 	}
 
 }
