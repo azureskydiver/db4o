@@ -8,16 +8,10 @@ package db4ounit.util;
  */
 public class PlatformInformation {
     
-	/**
-	 * @sharpen.property
-	 */
     public static boolean isJava(){
         return true;
     }
     
-    /**
-     * @sharpen.property
-     */
     public static boolean isDotNet(){
         return false;
     }
