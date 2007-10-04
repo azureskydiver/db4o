@@ -15,8 +15,6 @@ public class SubArrayList4<E> extends AbstractList4<E> {
 
 	private int _size;
 
-	private int _modCount;
-
 	public SubArrayList4(AbstractList4<E> delegate, int fromIndex, int toIndex) {
 		_delegate = delegate;
 		_fromIndex = fromIndex;
@@ -88,13 +86,13 @@ public class SubArrayList4<E> extends AbstractList4<E> {
 	}
 
 	private void checkConcurrentModification() {
-		if (_modCount != _delegate.modCount) {
+		if (modCount != _delegate.modCount) {
 			throw new ConcurrentModificationException();
 		}
 	}
 
 	private void syncModCount() {
-		_modCount = modCount;
+		modCount = _delegate.modCount;
 	}
 
 	private int translatedIndex(int index) {
