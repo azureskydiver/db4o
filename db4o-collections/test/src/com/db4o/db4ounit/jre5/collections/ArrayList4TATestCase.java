@@ -4,7 +4,7 @@ package com.db4o.db4ounit.jre5.collections;
 
 import com.db4o.collections.*;
 import com.db4o.config.*;
-import com.db4o.internal.*;
+import com.db4o.reflect.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;
@@ -171,9 +171,16 @@ public class ArrayList4TATestCase extends AbstractDb4oTestCase {
 	}
 
 	private void assertNullArrayList4(ArrayList4<Integer> list) throws Exception {
-		Assert.isNull(ReflectPlatform.getField(list, "elements"));
-		Assert.areEqual(0, ReflectPlatform.getField(list, "capacity"));
-		Assert.areEqual(0, ReflectPlatform.getField(list, "listSize"));
+		Assert.isNull(getField(list, "elements"));
+		Assert.areEqual(0, getField(list, "capacity"));
+		Assert.areEqual(0, getField(list, "listSize"));
+	}
+	
+	private Object getField(Object parent, String fieldName) {
+		ReflectClass parentClazz = reflector().forObject(parent);
+		ReflectField field = parentClazz.getDeclaredField(fieldName);
+		field.setAccessible();
+		return field.get(parent);
 	}
 	
 }

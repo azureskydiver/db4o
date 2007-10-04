@@ -2,7 +2,6 @@
 
 package com.db4o.internal;
 
-import java.lang.reflect.*;
 
 /**
  * @sharpen.ignore
@@ -45,12 +44,6 @@ public class ReflectPlatform {
 
 	public static String fullyQualifiedName(Class clazz) {
 		return clazz.getName();
-	}
-	
-	public static Object getField(Object parent, String fieldName) throws Exception {
-		Field field = parent.getClass().getDeclaredField(fieldName);
-		field.setAccessible(true);
-		return field.get(parent);
 	}
 
 }
