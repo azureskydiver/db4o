@@ -120,8 +120,13 @@ public class JDK {
 		
 	}
 	
-	public Class loadClass(String className, ClassLoader loader) throws ClassNotFoundException {
-		return (loader != null ? loader.loadClass(className) : Class.forName(className));
+	/**
+	 * @param classLoader
+	 */
+	public Class loadClass(String className, Object classLoader) throws ClassNotFoundException {
+	    // We can't use the ClassLoader here since JDK get's converted to .NET
+	    // Functionality is overridden in JDKReflect 
+		return Class.forName(className);
 	}
 	
 	/**
