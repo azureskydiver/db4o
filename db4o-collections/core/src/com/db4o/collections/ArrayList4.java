@@ -199,7 +199,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 
-//	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	private void resize(int minCapacity) {
 		markModified();
 		E[] temp = (E[]) new Object[minCapacity];
