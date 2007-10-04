@@ -2,6 +2,8 @@
 
 package com.db4o.reflect.jdk;
 
+import com.db4o.internal.*;
+
 /**
  * @exclude
  */
@@ -15,7 +17,7 @@ public class ClassLoaderJdkLoader implements JdkLoader {
 
 	public Class loadClass(String className) {
 		try {
-			return (_loader == null ? Class.forName(className) : _loader.loadClass(className));
+			return Platform4.jdk().loadClass(className, _loader);
 		} catch (Exception e) {
 			// e.printStackTrace();
 		} catch (LinkageError e) {
