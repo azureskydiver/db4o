@@ -637,6 +637,7 @@
 			<jvmarg value="-Xmx64m"/>
 			<jvmarg value="-Dosgi.configuration.area=${dir.test.osgi.conf}"/>
 			<jvmarg value="-Dosgi.instance.area=${dir.test.osgi}/data"/>
+			<sysproperty key="dir.workspace" value="${dir.workspace}" />
 			<arg value="${dir.test.osgi}/db4o-osgi-edition.jar" />
 			<arg value="${dir.test.osgi}/db4o-osgi-test.jar" />
 		</java>
