@@ -8,9 +8,13 @@ import com.db4o.internal.*;
 
 public class ClientTransactionPool {
 
-	private Hashtable4 _transaction2Container; // Transaction -> ContainerCount
-	private Hashtable4 _fileName2Container; // String -> ContainerCount
+	private final Hashtable4 _transaction2Container; // Transaction -> ContainerCount
+	
+	private final Hashtable4 _fileName2Container; // String -> ContainerCount
+	
 	private final LocalObjectContainer _mainContainer;
+	
+	private boolean _closed;
 		
 	public ClientTransactionPool(LocalObjectContainer mainContainer) {
 		ContainerCount mainEntry = new ContainerCount(mainContainer, 1);
@@ -59,18 +63,17 @@ public class ClientTransactionPool {
 				Entry4 hashEntry = (Entry4) entryIter.current();
 				((ContainerCount)hashEntry.value()).close();
 			}
-			_transaction2Container = null;
-			_fileName2Container = null;
+			_closed = true;
 		}
 	}
 
 
 	public int openFileCount() {
-		return (_fileName2Container == null ? 0 : _fileName2Container.size());
+		return isClosed() ? 0 : _fileName2Container.size();
 	}
 
     public boolean isClosed() {
-		return _mainContainer == null || _mainContainer.isClosed();
+		return _closed == true || _mainContainer.isClosed();
 	}
 
 	private static class ContainerCount {

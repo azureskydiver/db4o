@@ -616,23 +616,23 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		writeMsg(msg, false);
 	}
 	
-	private final void writeMsg(Msg a_message, boolean flush) {
+	private final void writeMsg(Msg msg, boolean flush) {
 		if(_config.batchMessages()) {
 			if(flush && _batchedMessages.isEmpty()) {
 				// if there's nothing batched, just send this message directly
-				writeImpl(a_message);
+				writeMessageToSocket(msg);
 			} else {
-				addToBatch(a_message);
+				addToBatch(msg);
 				if(flush || _batchedQueueLength > _config.maxBatchQueueSize()) {
 					writeBatchedMessages();
 				}
 			}
 		} else {
-			writeImpl(a_message);
+			writeMessageToSocket(msg);
 		}
 	}
 
-	private void writeImpl(Msg msg) {
+	public void writeMessageToSocket(Msg msg) {
 		msg.write(i_socket);
 	}
 	
@@ -753,7 +753,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 				multibytes.payLoad().append(msg.payLoad()._buffer);
 			}
 		}
-		writeImpl(multibytes);
+		writeMessageToSocket(multibytes);
 		clearBatchedObjects();
 	}
 
