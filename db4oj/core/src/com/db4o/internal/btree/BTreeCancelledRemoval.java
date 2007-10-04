@@ -20,6 +20,7 @@ public class BTreeCancelledRemoval extends BTreeUpdate {
 	}
 	
 	protected void committed(BTree btree) {
+	    // do nothing
 	}
 	
 	public boolean isCancelledRemoval() {
@@ -33,5 +34,9 @@ public class BTreeCancelledRemoval extends BTreeUpdate {
 	protected Object getCommittedObject() {
 		return _newKey;
 	}
+
+    protected void adjustSizeOnRemovalByOtherTransaction(BTree btree) {
+        // The other transaction reduces the size, this entry ignores.
+    }
 	
 }
