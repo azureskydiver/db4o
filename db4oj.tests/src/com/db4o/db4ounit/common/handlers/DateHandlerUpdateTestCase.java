@@ -28,10 +28,13 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
     }
 
+    /**
+     * @deprecated so we don't have warnings because of the deprecated Date ctor
+     */
     private static final Date[] data = {
 		new Date(DatePlatform.MIN_DATE),
         new Date(DatePlatform.MIN_DATE + 1),
-        new Date(),
+        new Date(1975, 7, 21, 5, 32, 12),
         new Date(DatePlatform.MAX_DATE - 1),
         new Date(DatePlatform.MAX_DATE),
     };
