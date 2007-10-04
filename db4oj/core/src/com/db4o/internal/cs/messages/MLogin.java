@@ -18,11 +18,11 @@ public class MLogin extends MsgD implements ServerSideMessage {
 		if (found != null) {
 			if (found.password.equals(password)) {
 				serverMessageDispatcher().setDispatcherName(userName);
-				serverMessageDispatcher().login();
 				logMsg(32, userName);
 				int blockSize = stream().blockSize();
 				int encrypt = stream()._handlers.i_encrypt ? 1 : 0;
 				write(Msg.LOGIN_OK.getWriterForInts(transaction(), new int[] { blockSize, encrypt}));
+				serverMessageDispatcher().login();
 				return true;
 			}
 		}
