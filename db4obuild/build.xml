@@ -22,6 +22,9 @@
 	javac.debug.mode=<OPTIONAL: debug switch for javac, default: false>
 	eclipse.startup.jar=<OPTIONAL: use a different jar for eclipse startup if you're using eclipse 3.3+>
 	
+	If the java executable on your path is JDK>=1.6 you have to specify file.jvm.jdk1.1 to point to a JDK<=5,
+	otherwise you may experience failures running the java1.1 test suite.
+	
 	The path to this file can be specified via property "path.machine.properties", as in
 	ant -Dpath.machine.properties=machine.properties.win build-before-checkin
 	
