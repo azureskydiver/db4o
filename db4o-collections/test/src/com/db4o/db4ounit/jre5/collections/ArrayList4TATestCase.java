@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.jre5.collections;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 import com.db4o.collections.*;
@@ -656,15 +657,25 @@ public class ArrayList4TATestCase extends AbstractDb4oTestCase {
 		});
 	}
 	@SuppressWarnings("unchecked")
-	private ArrayList4<Integer> retrieveAndAssertNullArrayList4() {
+	private ArrayList4<Integer> retrieveAndAssertNullArrayList4() throws Exception{
 		ArrayList4<Integer> list = (ArrayList4<Integer>) retrieveOnlyInstance(ArrayList4.class);
 		assertNullArrayList4(list);
 		return list;
 	}
 
-	private void assertNullArrayList4(ArrayList4<Integer> list) {
-		Assert.isNull(list.elements);
-		Assert.areEqual(0, list.capacity);
-		Assert.areEqual(0, list.listSize);
+	private void assertNullArrayList4(ArrayList4<Integer> list) throws Exception {
+		Assert.isNull(getFieldByReflection(list, "elements"));
+		Assert.areEqual(0, getFieldByReflection(list, "capacity"));
+		Assert.areEqual(0, getFieldByReflection(list, "listSize"));
 	}
+
+
+	private Object getFieldByReflection(ArrayList4<Integer> list, String fieldName)
+			throws NoSuchFieldException, IllegalAccessException {
+		Field field = list.getClass().getDeclaredField(fieldName);
+		field.setAccessible(true);
+		return field.get(list);
+	}
+	
+	
 }

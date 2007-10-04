@@ -17,11 +17,11 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 
 	private static final long serialVersionUID = 1L;
 
-	public E[] elements;
+	private E[] elements;
 
-	public int capacity;
+	private int capacity;
 
-	public int listSize;
+	private int listSize;
 	
 	private transient Activator _activator;
 	
