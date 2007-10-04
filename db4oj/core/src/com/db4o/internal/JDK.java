@@ -120,6 +120,10 @@ public class JDK {
 		
 	}
 	
+	public Class loadClass(String className, ClassLoader loader) throws ClassNotFoundException {
+		return (loader != null ? loader.loadClass(className) : Class.forName(className));
+	}
+	
 	/**
 	 * @param path
 	 * @param file

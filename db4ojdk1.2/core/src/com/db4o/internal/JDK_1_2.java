@@ -17,6 +17,13 @@ class JDK_1_2 extends JDKReflect {
 	JDK_1_2(){
 	}
 	
+	public Class loadClass(String className, ClassLoader loader) throws ClassNotFoundException {
+		if(loader == null) {
+			loader = getClass().getClassLoader();
+		}
+		return Class.forName(className, false, loader);
+	}
+
 	public static void link(){
 	    // link standard translators, so they won't get deleted
 	    // by deployment
