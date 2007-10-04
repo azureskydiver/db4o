@@ -2,11 +2,11 @@
 
 package com.db4o.db4ounit.jre5.collections;
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 import com.db4o.collections.*;
 import com.db4o.config.*;
+import com.db4o.internal.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;
@@ -241,7 +241,7 @@ public class ArrayList4TATestCase extends AbstractDb4oTestCase {
 
 	public void testIterator() throws Exception {
 		final ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
-		Iterator iter = list.iterator();
+		Iterator<Integer> iter = list.iterator();
 		int count = 0;
 		while (iter.hasNext()) {
 			Integer i = (Integer) iter.next();
@@ -669,13 +669,8 @@ public class ArrayList4TATestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(0, getFieldByReflection(list, "listSize"));
 	}
 
-
-	private Object getFieldByReflection(ArrayList4<Integer> list, String fieldName)
-			throws NoSuchFieldException, IllegalAccessException {
-		Field field = list.getClass().getDeclaredField(fieldName);
-		field.setAccessible(true);
-		return field.get(list);
+	private Object getFieldByReflection(ArrayList4<Integer> list, String fieldName) throws Exception {
+		return ReflectPlatform.getField(list, fieldName);
 	}
-	
 	
 }
