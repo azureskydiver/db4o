@@ -45,6 +45,11 @@ public class JDKReflect extends JDK {
         return new SimpleDateFormat(fmt).format(date);
 	}
 	
+	public Class loadClass(String className, Object loader) throws ClassNotFoundException {
+        return (loader != null ? ((ClassLoader)loader).loadClass(className) : Class.forName(className));
+    }
+
+	
     /**
      * use for system classes only, since not ClassLoader
      * or Reflector-aware

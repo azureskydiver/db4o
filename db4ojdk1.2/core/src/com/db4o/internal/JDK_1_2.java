@@ -17,11 +17,11 @@ class JDK_1_2 extends JDKReflect {
 	JDK_1_2(){
 	}
 	
-	public Class loadClass(String className, ClassLoader loader) throws ClassNotFoundException {
+	public Class loadClass(String className, Object loader) throws ClassNotFoundException {
 		if(loader == null) {
 			loader = getClass().getClassLoader();
 		}
-		return Class.forName(className, false, loader);
+		return Class.forName(className, false, (ClassLoader)loader);
 	}
 
 	public static void link(){
