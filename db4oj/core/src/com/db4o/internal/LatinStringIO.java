@@ -11,8 +11,6 @@ import com.db4o.marshall.*;
  */
 public class LatinStringIO {
     
-    protected char[] chars = new char[0];
-    
     public int bytesPerChar(){
         return 1;
     }
@@ -30,54 +28,45 @@ public class LatinStringIO {
         }
     }
 	
-	public int length(String a_string){
-		return a_string.length() + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
-	}
-	
-	protected void checkBufferLength(int a_length){
-	    if(a_length > chars.length){
-	        chars = new char[a_length];
-	    }
+	public int length(String str){
+		return str.length() + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
 	}
 	
 	public String read(ReadBuffer buffer, int length){
-	    checkBufferLength(length);
+	    char[] chars = new char[length];
 		for(int ii = 0; ii < length; ii++){
 			chars[ii] = (char)(buffer.readByte() & 0xff);
 		}
 		return new String(chars,0,length);
 	}
 	
-	public String read(byte[] a_bytes){
-	    checkBufferLength(a_bytes.length);
-	    for(int i = 0; i < a_bytes.length; i++){
-	        chars[i] = (char)(a_bytes[i]& 0xff);
+	public String read(byte[] bytes){
+	    char[] chars = new char[bytes.length];
+	    for(int i = 0; i < bytes.length; i++){
+	        chars[i] = (char)(bytes[i]& 0xff);
 	    }
-	    return new String(chars,0,a_bytes.length);
+	    return new String(chars,0,bytes.length);
 	}
 	
-	public int shortLength(String a_string){
-		return a_string.length() + Const4.INT_LENGTH;
+	public int shortLength(String str){
+		return str.length() + Const4.INT_LENGTH;
 	}
 	
-	protected int marshalledLength(String str){
-	    final int len = str.length();
-	    checkBufferLength(len);
-	    str.getChars(0, len, chars, 0);
-	    return len;
-	}
-	
-	public void write(WriteBuffer buffer, String string){
-	    final int len = marshalledLength(string);
-	    for (int i = 0; i < len; i ++){
+	public void write(WriteBuffer buffer, String str){
+	    final int length = str.length();
+	    char[] chars = new char[length];
+	    str.getChars(0, length, chars, 0);
+	    for (int i = 0; i < length; i ++){
 			buffer.writeByte((byte) (chars[i] & 0xff));
 		}
 	}
 	
-	byte[] write(String string){
-	    final int len = marshalledLength(string);
-	    byte[] bytes = new byte[len];
-	    for (int i = 0; i < len; i ++){
+	byte[] write(String str){
+	    final int length = str.length();
+        char[] chars = new char[length];
+        str.getChars(0, length, chars, 0);
+	    byte[] bytes = new byte[length];
+	    for (int i = 0; i < length; i ++){
 	        bytes[i] = (byte) (chars[i] & 0xff);
 	    }
 	    return bytes;

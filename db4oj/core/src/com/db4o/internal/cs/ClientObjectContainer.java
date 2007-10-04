@@ -30,7 +30,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private BlockingQueue _messageQueue = new BlockingQueue();
 
-	private String _password; // null denotes password not necessary
+	private final String _password; // null denotes password not necessary
 
 	int[] _prefetchedIDs;
 
@@ -42,7 +42,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private boolean _singleThreaded;
 
-	private String _userName;
+	private final String _userName;
 
 	private Db4oDatabase i_db;
 

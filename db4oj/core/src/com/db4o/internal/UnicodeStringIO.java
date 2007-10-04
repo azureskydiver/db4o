@@ -18,62 +18,49 @@ public final class UnicodeStringIO extends LatinStringIO{
 		return Const4.UNICODE;
 	}
 	
-//	Currently not needed
-
-//	boolean isEqual(YapBytes bytes, String a_string){
-//		char ch;
-//		final int len = a_string.length();
-//		for (int ii = 0; ii < len; ii ++){
-//			ch = a_string.charAt(ii);
-//			if(bytes.i_bytes[bytes.i_offset++] != (byte) (ch & 0xff)){
-//				return false;
-//			}
-//			if(bytes.i_bytes[bytes.i_offset++] != (byte)(ch >> 8)){
-//				return false;
-//			}
-//		}
-//		return true;
-//	}
-	
-	public int length(String a_string){
-		return (a_string.length() * 2) + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
+	public int length(String str){
+		return (str.length() * 2) + Const4.OBJECT_LENGTH + Const4.INT_LENGTH;
 	}
 	
 	public String read(ReadBuffer buffer, int length){
-	    checkBufferLength(length);
+	    char[] chars = new char[length];
 		for(int ii = 0; ii < length; ii++){
 			chars[ii] = (char)((buffer.readByte() & 0xff) | ((buffer.readByte() & 0xff) << 8));
 		}
 		return new String(chars, 0, length);
 	}
 	
-	public String read(byte[] a_bytes){
-	    int len = a_bytes.length / 2;
-	    checkBufferLength(len);
+	public String read(byte[] bytes){
+	    int length = bytes.length / 2;
+	    char[] chars = new char[length];
 	    int j = 0;
-	    for(int ii = 0; ii < len; ii++){
-	        chars[ii] = (char)((a_bytes[j++]& 0xff) | ((a_bytes[j++]& 0xff) << 8));
+	    for(int ii = 0; ii < length; ii++){
+	        chars[ii] = (char)((bytes[j++]& 0xff) | ((bytes[j++]& 0xff) << 8));
 	    }
-	    return new String(chars,0,len);
+	    return new String(chars,0,length);
 	}
 	
-	public int shortLength(String a_string){
-		return (a_string.length() * 2)  + Const4.INT_LENGTH;
+	public int shortLength(String str){
+		return (str.length() * 2)  + Const4.INT_LENGTH;
 	}
 	
-	public void write(WriteBuffer buffer, String string){
-	    final int len = marshalledLength(string);
-	    for (int i = 0; i < len; i ++){
+	public void write(WriteBuffer buffer, String str){
+	    final int length = str.length();
+	    char[] chars = new char[length];
+	    str.getChars(0, length, chars, 0);
+	    for (int i = 0; i < length; i ++){
 	        buffer.writeByte((byte) (chars[i] & 0xff));
 	        buffer.writeByte((byte) (chars[i] >> 8));
 		}
 	}
 	
-	byte[] write(String string){
-	    final int len = marshalledLength(string);
-	    byte[] bytes = new byte[len * 2];
+	byte[] write(String str){
+	    final int length = str.length();
+	    char[] chars = new char[length];
+	    str.getChars(0, length, chars, 0);
+	    byte[] bytes = new byte[length * 2];
 	    int j = 0;
-	    for (int i = 0; i < len; i ++){
+	    for (int i = 0; i < length; i ++){
 	        bytes[j++] = (byte) (chars[i] & 0xff);
 	        bytes[j++] = (byte) (chars[i] >> 8);
 	    }
