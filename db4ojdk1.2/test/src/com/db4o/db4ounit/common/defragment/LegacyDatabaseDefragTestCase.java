@@ -31,6 +31,7 @@ public class LegacyDatabaseDefragTestCase implements TestCase {
 		}
 	}
 	
+	// FIXME: solve the workspacePath issue and uncomment this
 	public void _test() throws Exception {
 		final String dbFile = getTempFile();
 		createLegacyDatabase(dbFile);
