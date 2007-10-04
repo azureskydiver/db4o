@@ -109,7 +109,34 @@ public class BTreeAddRemoveTestCase extends BTreeTestCaseBase {
 		
 		assertEmpty(systemTrans());
 		assertEmpty(trans());
-	} 
+		
+        _btree.commit(systemTrans());
+		_btree.commit(trans());
+		
+        assertEmpty(systemTrans());
+        assertEmpty(trans());
+	}
+	
+    public void testRemoveCommitInDifferentTransactions() {
+        
+        final int element = 1;
+        
+        add(trans(), element);
+        _btree.commit(trans());
+        
+        remove(systemTrans(), element);
+        remove(trans(), element);
+        
+        assertEmpty(systemTrans());
+        assertEmpty(trans());
+        
+        _btree.commit(systemTrans());
+        _btree.commit(trans());
+        
+        assertEmpty(systemTrans());
+        assertEmpty(trans());
+    }
+	
 	
 	public void testRemoveAddInDifferentTransactions() {
 		final int element = 1;

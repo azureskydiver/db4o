@@ -789,7 +789,7 @@ public final class BTreeNode extends PersistentBase{
 	}
 	
 	private BTreeRemove applyNewRemovePatch(Transaction trans, Object key) {
-        _btree.sizeChanged(trans, -1);
+        sizeDecrement(trans);
 		return new BTreeRemove(trans, key);
 	}
 

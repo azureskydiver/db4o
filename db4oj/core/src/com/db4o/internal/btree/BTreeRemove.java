@@ -28,5 +28,10 @@ public class BTreeRemove extends BTreeUpdate {
 	protected Object getCommittedObject() {
 		return No4.INSTANCE;
 	}
+
+    protected void adjustSizeOnRemovalByOtherTransaction(BTree btree) {
+        // The size was reduced for this entry, let's change back.
+        btree.sizeChanged(_transaction, +1);
+    }
     
 }
