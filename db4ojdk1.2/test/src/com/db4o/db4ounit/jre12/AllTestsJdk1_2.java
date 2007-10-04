@@ -10,6 +10,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			com.db4o.db4ounit.common.migration.AllCommonTests.class,
 			com.db4o.db4ounit.common.defragment.LegacyDatabaseDefragTestCase.class,
 			com.db4o.db4ounit.jre11.AllTests.class,
 			com.db4o.db4ounit.jre12.assorted.AllTests.class,
