@@ -11,11 +11,11 @@ public final class MCreateClass extends MsgD implements ServerSideMessage {
 	public final boolean processAtServer() {
 		ObjectContainerBase stream = stream();
 		Transaction trans = stream.systemTransaction();
-		ReflectClass claxx = trans.reflector().forName(readString());
 		boolean ok = false;
 		try {
-			if (claxx != null) {
-				synchronized (streamLock()) {
+			synchronized (streamLock()) {
+			    ReflectClass claxx = trans.reflector().forName(readString());
+	            if (claxx != null) {
 					ClassMetadata classMetadata = stream.produceClassMetadata(claxx);
 					if (classMetadata != null) {
 						stream.checkStillToSet();
@@ -24,7 +24,7 @@ public final class MCreateClass extends MsgD implements ServerSideMessage {
 						write(createdClass);
 						ok = true;
 					}
-				}
+	            }
 			}
 		} catch (Db4oException e) {
 			// TODO: send the exception to the client
