@@ -15,7 +15,7 @@ import com.db4o.ta.*;
 public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		Serializable, RandomAccess, Activatable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 7971683768827646182L;
 
 	private E[] elements;
 
@@ -32,7 +32,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 
 	public void bind(Activator activator) {
-		if(_activator != null) {
+		if(_activator != null || activator == null) {
 			throw new IllegalStateException();
 		}
 		_activator = activator;
