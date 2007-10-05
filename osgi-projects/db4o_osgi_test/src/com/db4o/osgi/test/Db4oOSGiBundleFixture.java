@@ -11,12 +11,14 @@ import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.osgi.*;
 
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 
 	private final BundleContext _context;
 	private final String _fileName;
+	private Configuration _config;
 	
 	public Db4oOSGiBundleFixture(BundleContext context, String fileName) {
 		super(new IndependentConfigurationSource());
@@ -26,15 +28,17 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 
 	protected ObjectContainer createDatabase(Configuration config) {
 		// hack around sticky stream reference, should actually be fixed in config API
-		if(config instanceof DeepClone) {
-			config = (Configuration) ((DeepClone)config).deepClone(null);
+		_config = config;
+		if(_config instanceof DeepClone) {
+			_config = (Configuration) ((DeepClone)_config).deepClone(null);
 		}
 	    ServiceReference sRef = _context.getServiceReference(Db4oService.class.getName());
 	    Db4oService dbs = (Db4oService)_context.getService(sRef);
-	    return dbs.openFile(config,_fileName);
+	    return dbs.openFile(_config,_fileName);
 	}
 
 	protected void doClean() {
+		_config = null;
 		new File(_fileName).delete();
 	}
 
@@ -49,4 +53,9 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 	public boolean accept(Class clazz) {
 		return super.accept(clazz)&&(!(OptOutNoFileSystemData.class.isAssignableFrom(clazz)));
 	}
+
+	public void configureAtRuntime(RuntimeConfigureAction action) {
+		action.apply(_config);
+	}
+
 }

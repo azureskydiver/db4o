@@ -11,9 +11,10 @@ import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 
-public abstract class FormatMigrationTestCaseBase implements TestLifeCycle{
+public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptOutNoFileSystemData {
     
     private String _db4oVersion;
     
