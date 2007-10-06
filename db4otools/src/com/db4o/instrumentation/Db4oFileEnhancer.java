@@ -17,15 +17,6 @@ public class Db4oFileEnhancer {
 		_classEdit = classEdit;
 	}
 
-	/**
-	 * 
-	 * @param sourceDir
-	 * @param targetDir
-	 * @param classPath
-	 *            includes the sourceDir
-	 * @param packagePredicate
-	 * @throws Exception
-	 */
 	public void enhance(String sourceDir, String targetDir, String[] classpath,
 			String packagePredicate) throws Exception {
 		enhance(new DefaultClassSource(), sourceDir, targetDir, classpath,
@@ -39,14 +30,22 @@ public class Db4oFileEnhancer {
 		assertSourceDir(fSourceDir);
 		
 		ClassFileLoader fileLoader=new ClassFileLoader(classSource);
+		String[] fullClasspath = fullClasspath(sourceDir, classpath);
 		setOutputDir(fileLoader, fTargetDir);
-		setClasspath(fileLoader, classpath);
+		setClasspath(fileLoader, fullClasspath);
 		
-		URL[] urls = classpathToURLs(classpath);	
+		URL[] urls = classpathToURLs(fullClasspath);	
 		URLClassLoader classLoader=new URLClassLoader(urls,ClassLoader.getSystemClassLoader());
 		enhance(fSourceDir.getCanonicalPath(),fSourceDir,fTargetDir,classLoader,new BloatLoaderContext(fileLoader),packagePredicate);
 		
 		fileLoader.done();
+	}
+
+	private String[] fullClasspath(String sourceDir, String[] classpath) {
+		String [] fullClasspath = new String[classpath.length + 1];
+		fullClasspath[0] = sourceDir;
+		System.arraycopy(classpath, 0, fullClasspath, 1, classpath.length);
+		return fullClasspath;
 	}
 
 	private void setOutputDir(ClassFileLoader fileLoader, File fTargetDir) {

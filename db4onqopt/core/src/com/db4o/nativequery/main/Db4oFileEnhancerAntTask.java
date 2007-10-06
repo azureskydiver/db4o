@@ -33,7 +33,6 @@ public class Db4oFileEnhancerAntTask extends Task {
 
 	public void execute() {
 		List paths=new ArrayList();
-		paths.add(srcDir);
 		for (Iterator pathIter = classPath.iterator(); pathIter.hasNext();) {
 			Path path = (Path) pathIter.next();
 			System.err.println(path.size());

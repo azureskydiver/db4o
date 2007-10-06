@@ -27,7 +27,7 @@ public class NQFileEnhancerTestCase implements TestCase {
 		}
 		
 		Db4oFileEnhancer enhancer = new Db4oFileEnhancer(new TranslateNQToSODAEdit());
-		enhancer.enhance(srcDir, targetDir, new String[]{srcDir}, "");
+		enhancer.enhance(srcDir, targetDir, new String[]{}, "");
 		
 		ExcludingClassLoader excludingLoader = new ExcludingClassLoader(getClass().getClassLoader(), clazzes);
 		URLClassLoader loader = new URLClassLoader(new URL[] { new File(targetDir).toURI().toURL() }, excludingLoader);
