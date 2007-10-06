@@ -22,6 +22,8 @@ public class IndexedByIdentityTestCase extends Db4oClientServerTestCase {
 
 	protected void configure(Configuration config) {
 		config.objectClass(this).objectField("atom").indexed(true);
+	    config.objectClass(IndexedByIdentityTestCase.class).cascadeOnUpdate(true);
+
 	}
 
 	protected void store() {
@@ -52,8 +54,6 @@ public class IndexedByIdentityTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void concUpdate(ExtObjectContainer oc, int seq) throws Exception {
-		oc.configure().objectClass(IndexedByIdentityTestCase.class).cascadeOnUpdate(
-				true);
 		Query q = oc.query();
 		q.constrain(IndexedByIdentityTestCase.class);
 		ObjectSet os = q.execute();
