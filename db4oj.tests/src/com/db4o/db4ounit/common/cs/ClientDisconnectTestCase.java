@@ -2,21 +2,20 @@
 
 package com.db4o.db4ounit.common.cs;
 
-import java.io.*;
-
 import com.db4o.ext.*;
 import com.db4o.internal.cs.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class ClientDisconnectTestCase extends Db4oClientServerTestCase {
+public class ClientDisconnectTestCase extends Db4oClientServerTestCase implements OptOutAllButNetworkingCS{
 	
 	public static void main(String[] arguments) {
 		new ClientDisconnectTestCase().runClientServer();
 	}
 	
-	public void _testDisconnect() throws IOException {
+	public void testDisconnect() {
 		ExtObjectContainer oc1 = openNewClient();
 		ExtObjectContainer oc2 = openNewClient();
 		try {
