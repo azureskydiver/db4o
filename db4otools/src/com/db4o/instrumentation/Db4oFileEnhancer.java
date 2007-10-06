@@ -39,14 +39,18 @@ public class Db4oFileEnhancer {
 		assertSourceDir(fSourceDir);
 		
 		ClassFileLoader fileLoader=new ClassFileLoader(classSource);
-		fileLoader.setOutputDir(fTargetDir);
-		setClasspath(fileLoader, classpath);	
-		URL[] urls = classpathToURLs(classpath);
+		setOutputDir(fileLoader, fTargetDir);
+		setClasspath(fileLoader, classpath);
 		
+		URL[] urls = classpathToURLs(classpath);	
 		URLClassLoader classLoader=new URLClassLoader(urls,ClassLoader.getSystemClassLoader());
 		enhance(fSourceDir.getCanonicalPath(),fSourceDir,fTargetDir,classLoader,new BloatLoaderContext(fileLoader),packagePredicate);
 		
 		fileLoader.done();
+	}
+
+	private void setOutputDir(ClassFileLoader fileLoader, File fTargetDir) {
+		fileLoader.setOutputDir(fTargetDir);
 	}
 
 	private void assertSourceDir(File fSourceDir) throws IOException {
