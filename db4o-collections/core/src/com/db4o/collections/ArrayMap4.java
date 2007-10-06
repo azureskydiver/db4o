@@ -6,14 +6,15 @@ import java.io.*;
 import java.util.*;
 
 import com.db4o.activation.*;
+import com.db4o.ta.*;
 
-public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable {
+public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable, Activatable {
 
     private static final long serialVersionUID = 1L;
 
-    private ArrayList4<K> keys;
+    private ArrayList4<K> _keys;
 
-    private ArrayList4<V> values;
+    private ArrayList4<V> _values;
 
     private transient Activator _activator;
 
@@ -22,8 +23,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable {
     }
 
     public ArrayMap4(int initialCapacity) {
-        keys = new ArrayList4<K>(initialCapacity);
-        values = new ArrayList4<V>(initialCapacity);
+        _keys = new ArrayList4<K>(initialCapacity);
+        _values = new ArrayList4<V>(initialCapacity);
     }
 
     public void activate() {
@@ -33,29 +34,29 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable {
     }
 
     public void bind(Activator activator) {
-        if (_activator != null) {
+        if (_activator != null || activator == null) {
             throw new IllegalStateException();
         }
         _activator = activator;
     }
 
     public void clear() {
-        keys.clear();
-        values.clear();
+        _keys.clear();
+        _values.clear();
     }
 
     public boolean containsKey(Object key) {
-        return keys.contains(key);
+        return _keys.contains(key);
     }
 
     public boolean containsValue(Object value) {
-        return values.contains(value);
+        return _values.contains(value);
     }
 
     public Set<Map.Entry<K, V>> entrySet() {
         HashSet<Map.Entry<K, V>> set = new HashSet<Entry<K, V>>();
-        for (int i = 0; i < keys.size(); i++) {
-            MapEntry4<K, V> entry = new MapEntry4<K, V>(keys.get(i), values
+        for (int i = 0; i < _keys.size(); i++) {
+            MapEntry4<K, V> entry = new MapEntry4<K, V>(_keys.get(i), _values
                     .get(i));
             set.add(entry);
         }
@@ -63,27 +64,27 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable {
     }
 
     public V get(Object key) {
-        int index = keys.indexOf(key);
-        return index == -1 ? null : values.get(index);
+        int index = _keys.indexOf(key);
+        return index == -1 ? null : _values.get(index);
     }
 
     public boolean isEmpty() {
-        return keys.size() == 0;
+        return _keys.size() == 0;
     }
 
     public Set<K> keySet() {
-        return new HashSet<K>(keys);
+        return new HashSet<K>(_keys);
     }
 
     public V put(K key, V value) {
-        int index = keys.indexOf(key);
+        int index = _keys.indexOf(key);
         V oldValue = null;
         if (index == -1) {
-            keys.add(key);
-            values.add(value);
+            _keys.add(key);
+            _values.add(value);
         } else {
-            oldValue = values.get(index);
-            values.set(index, value);
+            oldValue = _values.get(index);
+            _values.set(index, value);
         }
 
         return oldValue;
@@ -96,29 +97,29 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable {
     }
 
     public V remove(Object key) {
-        int index = keys.indexOf(key);
+        int index = _keys.indexOf(key);
         if (index == -1) {
             return null;
         }
 
-        keys.remove(index);
-        return values.remove(index);
+        _keys.remove(index);
+        return _values.remove(index);
     }
 
     public int size() {
-        return keys.size();
+        return _keys.size();
     }
 
     public Collection<V> values() {
-        return values;
+        return _values;
     }
 
     @SuppressWarnings("unchecked")
     public Object clone() {
         try {
             ArrayMap4<K, V> mapClone = (ArrayMap4<K, V>) super.clone();
-            mapClone.keys = (ArrayList4<K>) keys.clone();
-            mapClone.values = (ArrayList4<V>) values.clone();
+            mapClone._keys = (ArrayList4<K>) _keys.clone();
+            mapClone._values = (ArrayList4<V>) _values.clone();
             return mapClone;
         } catch (CloneNotSupportedException e) {
             throw new Error(e);
