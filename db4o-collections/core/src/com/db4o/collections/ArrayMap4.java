@@ -128,26 +128,26 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable, Acti
 
     public static class MapEntry4<K, V> implements Map.Entry<K, V> {
 
-        private K key;
+        private K _key;
 
-        private V value;
+        private V _value;
 
         public MapEntry4(K key, V value) {
-            this.key = key;
-            this.value = value;
+            _key = key;
+            _value = value;
         }
 
         public K getKey() {
-            return key;
+            return _key;
         }
 
         public V getValue() {
-            return value;
+            return _value;
         }
 
         public V setValue(V value) {
             V oldValue = value;
-            this.value = value;
+            this._value = value;
             return oldValue;
         }
 
@@ -162,16 +162,16 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable, Acti
 
             MapEntry4<K, V> other = (MapEntry4<K, V>) o;
 
-            return (key == null ? other.getKey() == null : key.equals(other
+            return (_key == null ? other.getKey() == null : _key.equals(other
                     .getKey())
-                    && value == null ? other.getValue() == null : value
+                    && _value == null ? other.getValue() == null : _value
                             .equals(other.getValue()));
 
         }
 
         public int hashCode() {
-            return (key == null ? 0 : key.hashCode())
-                    ^ (value == null ? 0 : value.hashCode());
+            return (_key == null ? 0 : _key.hashCode())
+                    ^ (_value == null ? 0 : _value.hashCode());
         }
     }
 }
