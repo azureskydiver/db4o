@@ -237,6 +237,26 @@
 
 	</target>
 	
+	<target name="build.db4o.collections" depends="build.db4ojdk5, build.ta">
+		<mkdir dir="${dir.dist.classes.collections}" />
+		<javac srcdir="${dir.collections}/core/src" 
+            fork="true" 
+            destdir="${dir.dist.classes.collections}" 
+            debug="${javac.debug.mode}" 
+            target="1.5" 
+            source="1.5" 
+            encoding="UTF-8">
+			<classpath>
+				<pathelement location="${file.java5.jar}" />
+				<pathelement location="${file.ta.jar}" />
+			</classpath>
+		</javac>
+		
+		<jar destfile="${file.collections.jar}">
+			<fileset dir="${dir.dist.classes.collections}" />
+		</jar>
+	</target>
+	
 	<!-- Compile test -->
 	
 	<target name="build.db4ojava.tests" 
@@ -445,6 +465,28 @@
 		</javac>
 	</target>
 	
+	<target name="build.db4o.collections.tests" depends="build.db4o.collections, build.db4ounit">
+		<mkdir dir="${dir.dist.classes.test.collections}" />
+		<javac srcdir="${dir.collections}/test/src" 
+            fork="true" 
+            destdir="${dir.dist.classes.test.collections}" 
+            debug="${javac.debug.mode}" 
+            target="1.5" 
+            source="1.5" 
+            encoding="UTF-8">
+			<classpath>
+				<pathelement location="${file.collections.jar}" />
+				<pathelement location="${file.java5.jar}" />
+				<pathelement location="${file.ta.jar}" />
+				<pathelement location="${file.db4ounit.jar}" />
+			</classpath>
+		</javac>
+		
+		<jar destfile="${file.collections.jar}">
+			<fileset dir="${dir.dist.classes.collections}" />
+		</jar>
+	</target>
+
 	<!--Run test -->
 	
 	<target name="run.tests.db4ojava" 
@@ -669,6 +711,22 @@
 				<pathelement path="${file.java1.2.jar}"/>
 	            <pathelement path="${file.bloat.jar}"/>
 			    <pathelement path="${file.db4otools.jar}"/>
+				<pathelement location="${file.db4ounit.jar}" />
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="run.tests.collections" depends="build.db4o.collections.tests">
+		<java classname="com.db4o.db4ounit.jre5.collections.AllTests"
+			fork="true"
+			jvm="${file.jvm.jdk1.5}"
+			failonerror="true"
+			timeout="1800000">
+			<classpath>
+				<pathelement path="${dir.dist.classes.test.collections}" />
+				<pathelement location="${file.collections.jar}" />
+				<pathelement location="${file.java5.jar}" />
+				<pathelement location="${file.ta.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 		</java>
@@ -948,5 +1006,6 @@
 				run.tests.ta,
 				run.tests.concurrency, 
 				run.tests.osgi,
+				run.tests.collections,
 				package.java" />
 </project>
