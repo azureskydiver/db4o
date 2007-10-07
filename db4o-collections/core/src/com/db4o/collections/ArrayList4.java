@@ -10,8 +10,12 @@ import com.db4o.activation.*;
 import com.db4o.ta.*;
 
 /**
- * @exclude
+ * db4o ArrayList implementation, which is transparent activate awared.
+ * The behaviour is similar as java.util.ArrayList.
+ * 
+ * @see java.util.ArrayList
  */
+
 public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		Serializable, RandomAccess, Activatable {
 
