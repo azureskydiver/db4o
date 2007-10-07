@@ -35,22 +35,23 @@ public class WildcardAlias implements Alias {
      * resolving is done through simple pattern matching  
      */
 	public String resolveRuntimeName(String runtimeTypeName) {
-		String match = _runtimePattern.matches(runtimeTypeName);
-		return match != null
-			? _storedPattern.inject(match)
-			: null;
+		return resolve(_runtimePattern, _storedPattern, runtimeTypeName);
 	}
-
+	
     /**
      * resolving is done through simple pattern matching  
      */
 	
 	public String resolveStoredName(String storedTypeName) {
-		String match = _storedPattern.matches(storedTypeName);
-		return match != null
-			? _runtimePattern.inject(match)
-			: null;
+		return resolve(_storedPattern, _runtimePattern, storedTypeName);
 	}
+
+	private String resolve(final WildcardPattern from, final WildcardPattern to, String typeName) {
+		String match = from.matches(typeName);
+		return match != null
+			? to.inject(match)
+			: null;
+	}	
 	
 	static class WildcardPattern {
 		private String _head;
