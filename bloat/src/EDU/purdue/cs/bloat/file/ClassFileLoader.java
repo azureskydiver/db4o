@@ -210,7 +210,7 @@ public class ClassFileLoader implements ClassInfoLoader {
      * @return the ClassInfo
      */
     private ClassInfo loadClassFromRessource(String name){
-        name = name.replaceAll("/",".");
+        name = name.replace('/','.');
         try {
             Class clazz = _classSource.loadClass(name);
             int i = name.lastIndexOf('.');
