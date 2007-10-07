@@ -10,6 +10,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class MessagingTestCase extends Db4oClientServerTestCase {
+    
+    public static final Object lock = new Object();
 
 	public static void main(String[] args) {
 		new MessagingTestCase().runConcurrency();
@@ -22,12 +24,18 @@ public class MessagingTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc, int seq) {
-	    if(isMTOC()){
-	        return;
+	    MessageSender sender = null;
+	    
+	    // Configuration is not threadsafe.
+	    synchronized(lock){
+    	    if(isMTOC()){
+    	        return;
+    	    }
+    		clientServerFixture().server().ext().configure().clientServer()
+    				.setMessageRecipient(_recipient);
+    		sender = oc.configure().clientServer().getMessageSender();
 	    }
-		clientServerFixture().server().ext().configure().clientServer()
-				.setMessageRecipient(_recipient);
-		MessageSender sender = oc.configure().clientServer().getMessageSender();
+		
 		sender.send(new Data(seq));
 	}
 
