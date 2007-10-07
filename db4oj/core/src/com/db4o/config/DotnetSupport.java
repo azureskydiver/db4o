@@ -11,7 +11,7 @@ import com.db4o.internal.*;
  * .net generated database from java.
  * 
  * The configuration only makes sure that database files can be
- * successfuly open and things like UUIDs can be successfuly
+ * successfully open and things like UUIDs can be successfully
  * retrieved.
  * 
  * @sharpen.ignore
