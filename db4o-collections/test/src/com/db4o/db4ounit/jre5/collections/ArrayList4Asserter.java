@@ -207,7 +207,7 @@ public class ArrayList4Asserter {
 	}
 
 	public static void assertIterator(final List<Integer> list) throws Exception {
-		Iterator iter = list.iterator();
+		Iterator<Integer> iter = list.iterator();
 		int count = 0;
 		while (iter.hasNext()) {
 			Integer i = (Integer) iter.next();
