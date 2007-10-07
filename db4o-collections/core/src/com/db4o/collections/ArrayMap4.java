@@ -53,6 +53,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
     public void clear() {
+        activate();
+        
         _startIndex = 0;
         _endIndex = 0;
         Arrays.fill(_keys, null);
@@ -60,14 +62,20 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
     public boolean containsKey(Object key) {
+        activate();
+        
         return indexOf(_keys, key) != -1;
     }
 
     public boolean containsValue(Object value) {
+        activate();
+        
         return indexOf(_values, value) != -1;
     }
 
     public Set<Map.Entry<K, V>> entrySet() {
+        activate();
+        
         HashSet<Map.Entry<K, V>> set = new HashSet<Entry<K, V>>();
         for (int i = _startIndex; i < _endIndex; i++) {
             MapEntry4<K, V> entry = new MapEntry4<K, V>(_keys[i], _values[i]);
@@ -77,15 +85,21 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
     public V get(Object key) {
+        activate();
+        
         int index = indexOf(_keys, key);
         return index == -1 ? null : _values[index];
     }
 
     public boolean isEmpty() {
+        activate();
+        
         return (_endIndex - _startIndex) == 0;
     }
 
     public Set<K> keySet() {
+        activate();
+        
         HashSet<K> set = new HashSet<K>();
         for (int i = _startIndex; i < _endIndex; i++) {
             set.add(_keys[i]);
@@ -94,6 +108,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
     public V put(K key, V value) {
+        activate();
+        
         int index = indexOf(_keys, key);
         V oldValue = null;
         if (index == -1) {
@@ -114,6 +130,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 
     @SuppressWarnings("unchecked")
     public V remove(Object key) {
+        activate();
+        
         int index = indexOf(_keys, key);
         if (index == -1) {
             return null;
@@ -122,15 +140,24 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
     public int size() {
+        activate();
+        
         return _endIndex - _startIndex;
     }
 
     public Collection<V> values() {
-        return Arrays.asList(_values);
+        activate();
+        
+        ArrayList<V> list = new ArrayList<V>();
+        for (int i = _startIndex; i < _endIndex; i++) {
+            list.add(_values[i]);
+        }
+        return list;
     }
 
     @SuppressWarnings("unchecked")
     public Object clone() {
+        activate();
         try {
             ArrayMap4<K, V> mapClone = (ArrayMap4<K, V>) super.clone();
             mapClone._keys =  _keys.clone();
@@ -181,8 +208,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     private Object delete(int index) {
         Object value = _values[index];
         for (int i = index; i < _endIndex -1; i++) {
-            _keys[i] = _keys[index + 1];
-            _values[i] = _values[index + 1];
+            _keys[i] = _keys[i + 1];
+            _values[i] = _values[i + 1];
         }
         _endIndex--;
         return value;

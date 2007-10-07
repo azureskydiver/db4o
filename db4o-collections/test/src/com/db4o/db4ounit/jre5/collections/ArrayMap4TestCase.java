@@ -117,6 +117,9 @@ public class ArrayMap4TestCase implements TestLifeCycle {
         Assert.areEqual("yi", m.get("one"));
         Assert.areEqual("er", m.get("two"));
         Assert.areEqual("san", m.get("three"));
+        
+        m.put("two", "liang");
+        Assert.areEqual("liang", m.get("two"));
     }
 
     public void testPutAll() {
@@ -157,6 +160,47 @@ public class ArrayMap4TestCase implements TestLifeCycle {
         Assert.areEqual(1, m.size());
 
     }
+    
+    public void testRemove_FromHead() {
+        Integer value = map.remove("0");
+        Assert.areEqual(Integer.valueOf(0), value);
+        
+        Assert.areEqual(9, map.size());
+        for (int i = 1; i < 10; i++) {
+            Assert.areEqual(Integer.valueOf(i * 100), map
+                    .get(String.valueOf(i)));
+        }
+        Assert.isNull(map.get("0"));
+    }
+
+    public void testRemove_FromEnd() {
+        Integer value = map.remove("9");
+        Assert.areEqual(Integer.valueOf(900), value);
+        
+        Assert.areEqual(9, map.size());
+        for (int i = 0; i < 9; i++) {
+            Assert.areEqual(Integer.valueOf(i * 100), map
+                    .get(String.valueOf(i)));
+        }
+        Assert.isNull(map.get("9"));
+    }
+
+    public void testRemove_FromMiddle() {
+        Integer value = map.remove("5");
+        Assert.areEqual(Integer.valueOf(500), value);
+        
+        Assert.areEqual(9, map.size());
+        for (int i = 0; i < 5; i++) {
+            Assert.areEqual(Integer.valueOf(i * 100), map
+                    .get(String.valueOf(i)));
+        }
+        Assert.isNull(map.get("5"));
+        
+        for (int i = 6; i < 9; i++) {
+            Assert.areEqual(Integer.valueOf(i * 100), map
+                    .get(String.valueOf(i)));
+        }
+    }
 
     public void testSize() {
         Assert.areEqual(10, map.size());
@@ -168,11 +212,10 @@ public class ArrayMap4TestCase implements TestLifeCycle {
 
     public void testValues() {
         Collection<Integer> values = map.values();
+        Assert.areEqual(10, values.size());
         for (int i = 0; i < 10; i++) {
             Assert.isTrue(values.contains(Integer.valueOf(i * 100)));
         }
     }
-
-    // db4o - ta test
 
 }
