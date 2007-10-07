@@ -11,14 +11,16 @@ public class CompositeBloatClassEdit implements BloatClassEdit {
 		_edits = edits;
 	}
 
-	public boolean bloat(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
+	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
+		InstrumentationStatus status = InstrumentationStatus.NOT_INSTRUMENTED;
 		for (int editIdx = 0; editIdx < _edits.length; editIdx++) {
-			boolean succeeded = _edits[editIdx].bloat(ce, origLoader, loaderContext);
-			if(!succeeded) {
-				return false;
+			InstrumentationStatus curStatus = _edits[editIdx].enhance(ce, origLoader, loaderContext);
+			status = status.aggregate(curStatus);
+			if(!status.canContinue()) {
+				break;
 			}
 		}
-		return true;
+		return status;
 	}
 
 }

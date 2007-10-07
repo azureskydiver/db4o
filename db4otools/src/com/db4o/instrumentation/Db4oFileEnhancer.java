@@ -97,21 +97,21 @@ public class Db4oFileEnhancer {
 		className = className.substring(0, className.length()-".class".length());
 		className=className.replace(File.separatorChar,'.');
 		
-		boolean enhanced = false;
+		InstrumentationStatus status = InstrumentationStatus.NOT_INSTRUMENTED;
 		try {
 			if (className.startsWith(packagePredicate)) {
 				System.err.println("Processing " + className);
 				ClassEditor classEditor = bloatUtil.classEditor(className);
-				enhanced = _classEdit.bloat(classEditor, classLoader, bloatUtil);
-				System.err.println("enhance " + className + (enhanced ? "ok" : "failed"));
+				status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
+				System.err.println("enhance " + className + ": " + (status.isInstrumented() ? "ok" : "failed"));
 			}
 		} catch (Exception e) {
-			enhanced = true;
+			status = InstrumentationStatus.FAILED;
 			e.printStackTrace();
 		} catch (NoClassDefFoundError e) {
 			System.err.println("Omitting " + className + ": Referenced class " + e.getMessage() + " not found.");
 		} finally {
-			if (!enhanced) {
+			if (!status.isInstrumented()) {
 				File4.copyFile(source, target);
 			}
 		}

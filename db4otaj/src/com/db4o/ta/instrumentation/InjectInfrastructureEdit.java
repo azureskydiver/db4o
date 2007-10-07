@@ -25,11 +25,11 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 		_instrumentedClassesFilter = instrumentedClassesFilter;
 	}
 	
-	public boolean bloat(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
+	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
 			if(!_instrumentedClassesFilter.accept(clazz)) {
-				return true;
+				return InstrumentationStatus.NOT_INSTRUMENTED;
 			}
 			String superClassName = BloatUtil.normalizeClassName(ce.superclass());
 			Class superClazz = origLoader.loadClass(superClassName);
@@ -38,10 +38,12 @@ public class InjectInfrastructureEdit implements BloatClassEdit {
 				createActivatorField(ce);
 				createBindMethod(ce);
 				createActivateMethod(ce);
+				ce.commit();
+				return InstrumentationStatus.INSTRUMENTED;
 			}
-			return true;
+			return InstrumentationStatus.NOT_INSTRUMENTED;
 		} catch (ClassNotFoundException exc) {
-			return false;
+			return InstrumentationStatus.FAILED;
 		}
 	}
 

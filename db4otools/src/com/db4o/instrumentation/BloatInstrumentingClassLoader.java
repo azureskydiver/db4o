@@ -65,7 +65,7 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 	}
 
 	protected void bloat(ClassEditor ce) {
-		_edit.bloat(ce, getParent(), _loaderContext);
+		_edit.enhance(ce, getParent(), _loaderContext);
 	}
 
 }
