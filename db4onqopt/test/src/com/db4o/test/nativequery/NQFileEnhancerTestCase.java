@@ -43,21 +43,18 @@ public class NQFileEnhancerTestCase implements TestCase {
 		});
 	}
 
-	private void copyClassFile(String srcDir, Class clazz)
-			throws URISyntaxException, IOException {
+	private void copyClassFile(String srcDir, Class clazz) throws IOException {
 		File file = fileForClass(clazz);
 		String targetPath = Path4.combine(srcDir, clazz.getName().replace('.', '/') + ".class");
 		File4.delete(targetPath);
 		File4.copy(file.getCanonicalPath(), targetPath);
 	}
 
-	private File fileForClass(Class clazz) throws URISyntaxException,
-			IOException {
+	private File fileForClass(Class clazz) throws IOException {
 		String clazzName = clazz.getName();
 		int dotIdx = clazzName.lastIndexOf('.');
 		String simpleName = clazzName.substring(dotIdx + 1);
 		URL url = clazz.getResource(simpleName + ".class");
-		// FIXME: toURI is since 1.4
-		return new File(url.toURI());
+		return new File(url.getPath());
 	}
 }
