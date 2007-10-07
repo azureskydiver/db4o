@@ -192,6 +192,7 @@
 				<pathelement path="${file.java1.2.jar}"/>
                 <pathelement path="${file.bloat.jar}"/>
 			    <pathelement path="${file.db4otools.jar}"/>
+				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
 			</classpath>
 		</javac>
 		
@@ -445,7 +446,7 @@
 		</jar>
 	</target>
 	
-	<target name="build.ta.tests" depends="build.ta, build.db4ounit">
+	<target name="build.ta.tests" depends="build.ta, build.db4ounit, build.db4ojdk1.2.tests">
 		<mkdir dir="${dir.dist.classes.test.taj}" />
 		<javac fork="true" 
             destdir="${dir.dist.classes.test.taj}" 
@@ -461,6 +462,7 @@
                 <pathelement path="${file.bloat.jar}"/>
 			    <pathelement path="${file.db4otools.jar}"/>
 				<pathelement location="${file.db4ounit.jar}" />
+				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
 			</classpath>
 		</javac>
 	</target>
@@ -712,6 +714,7 @@
 	            <pathelement path="${file.bloat.jar}"/>
 			    <pathelement path="${file.db4otools.jar}"/>
 				<pathelement location="${file.db4ounit.jar}" />
+				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
 			</classpath>
 		</java>
 	</target>
