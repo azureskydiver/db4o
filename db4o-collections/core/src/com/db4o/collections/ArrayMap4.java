@@ -8,13 +8,26 @@ import java.util.*;
 import com.db4o.activation.*;
 import com.db4o.ta.*;
 
-public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable, Activatable {
+/**
+ * db4o <code>ArrayMap4</code> is an implementation of java.util.Map, which
+ * supports Transparent Activate.
+ * 
+ * db4o <code>ArrayMap4</code> uses two separate arrays to store keys and
+ * Values
+ */
+
+public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
+        Activatable {
 
     private static final long serialVersionUID = 1L;
 
-    private ArrayList4<K> _keys;
+    private K[] _keys;
 
-    private ArrayList4<V> _values;
+    private V[] _values;
+
+    private int _startIndex;
+
+    private int _endIndex;
 
     private transient Activator _activator;
 
@@ -23,8 +36,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable, Acti
     }
 
     public ArrayMap4(int initialCapacity) {
-        _keys = new ArrayList4<K>(initialCapacity);
-        _values = new ArrayList4<V>(initialCapacity);
+        initializeBackingArray(initialCapacity);
     }
 
     public void activate() {
@@ -41,50 +53,54 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable, Acti
     }
 
     public void clear() {
-        _keys.clear();
-        _values.clear();
+        _startIndex = 0;
+        _endIndex = 0;
+        Arrays.fill(_keys, null);
+        Arrays.fill(_values, null);
     }
 
     public boolean containsKey(Object key) {
-        return _keys.contains(key);
+        return indexOf(_keys, key) != -1;
     }
 
     public boolean containsValue(Object value) {
-        return _values.contains(value);
+        return indexOf(_values, value) != -1;
     }
 
     public Set<Map.Entry<K, V>> entrySet() {
         HashSet<Map.Entry<K, V>> set = new HashSet<Entry<K, V>>();
-        for (int i = 0; i < _keys.size(); i++) {
-            MapEntry4<K, V> entry = new MapEntry4<K, V>(_keys.get(i), _values
-                    .get(i));
+        for (int i = _startIndex; i < _endIndex; i++) {
+            MapEntry4<K, V> entry = new MapEntry4<K, V>(_keys[i], _values[i]);
             set.add(entry);
         }
         return set;
     }
 
     public V get(Object key) {
-        int index = _keys.indexOf(key);
-        return index == -1 ? null : _values.get(index);
+        int index = indexOf(_keys, key);
+        return index == -1 ? null : _values[index];
     }
 
     public boolean isEmpty() {
-        return _keys.size() == 0;
+        return (_endIndex - _startIndex) == 0;
     }
 
     public Set<K> keySet() {
-        return new HashSet<K>(_keys);
+        HashSet<K> set = new HashSet<K>();
+        for (int i = _startIndex; i < _endIndex; i++) {
+            set.add(_keys[i]);
+        }
+        return set;
     }
 
     public V put(K key, V value) {
-        int index = _keys.indexOf(key);
+        int index = indexOf(_keys, key);
         V oldValue = null;
         if (index == -1) {
-            _keys.add(key);
-            _values.add(value);
+            add(key, value);
         } else {
-            oldValue = _values.get(index);
-            _values.set(index, value);
+            oldValue = _values[index];
+            _values[index] = value;
         }
 
         return oldValue;
@@ -96,34 +112,80 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable, Acti
         }
     }
 
+    @SuppressWarnings("unchecked")
     public V remove(Object key) {
-        int index = _keys.indexOf(key);
+        int index = indexOf(_keys, key);
         if (index == -1) {
             return null;
         }
-
-        _keys.remove(index);
-        return _values.remove(index);
+        return (V) delete(index);
     }
 
     public int size() {
-        return _keys.size();
+        return _endIndex - _startIndex;
     }
 
     public Collection<V> values() {
-        return _values;
+        return Arrays.asList(_values);
     }
 
     @SuppressWarnings("unchecked")
     public Object clone() {
         try {
             ArrayMap4<K, V> mapClone = (ArrayMap4<K, V>) super.clone();
-            mapClone._keys = (ArrayList4<K>) _keys.clone();
-            mapClone._values = (ArrayList4<V>) _values.clone();
+            mapClone._keys =  _keys.clone();
+            mapClone._values = _values.clone();
             return mapClone;
         } catch (CloneNotSupportedException e) {
             throw new Error(e);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initializeBackingArray(int length) {
+        _keys = (K[]) new Object[length];
+        _values = (V[]) new Object[length];
+    }
+    
+    private int indexOf(Object[] array, Object obj) {
+        int index = -1;
+        for (int i = _startIndex; i < _endIndex; i++) {
+            if (array[i] ==null ? obj == null : array[i].equals(obj)) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+    
+    private void add(K key, V value) {
+        increase();
+        _keys[_endIndex] = key;
+        _values[_endIndex] = value;
+        
+        _endIndex ++;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private void increase() {
+        if (_endIndex == _keys.length) {
+            Object[] newKeys = new Object[_keys.length * 2];
+            Object[] newValues = new Object[_values.length * 2];
+            System.arraycopy(_keys, _startIndex, newKeys, 0, _endIndex - _startIndex);
+            System.arraycopy(_values, _startIndex, newValues, 0, _endIndex - _startIndex);
+            _keys = (K[]) newKeys;
+            _values = (V[]) newValues;
+        }
+    }
+    
+    private Object delete(int index) {
+        Object value = _values[index];
+        for (int i = index; i < _endIndex -1; i++) {
+            _keys[i] = _keys[index + 1];
+            _values[i] = _values[index + 1];
+        }
+        _endIndex--;
+        return value;
     }
 
     public static class MapEntry4<K, V> implements Map.Entry<K, V> {
@@ -165,7 +227,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable, Acti
             return (_key == null ? other.getKey() == null : _key.equals(other
                     .getKey())
                     && _value == null ? other.getValue() == null : _value
-                            .equals(other.getValue()));
+                    .equals(other.getValue()));
 
         }
 
