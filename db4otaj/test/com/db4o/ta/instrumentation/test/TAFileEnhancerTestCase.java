@@ -1,46 +1,46 @@
-package com.db4o.test.nativequery;
+package com.db4o.ta.instrumentation.test;
 
 import java.io.*;
 import java.net.*;
 
 import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.*;
-import com.db4o.nativequery.main.*;
-import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
+import com.db4o.ta.*;
+import com.db4o.ta.instrumentation.*;
 import com.db4o.test.util.*;
 
 import db4ounit.*;
 
-public class NQFileEnhancerTestCase implements TestCase {
+public class TAFileEnhancerTestCase implements TestCase {
+	
+	private final static Class INSTRUMENTED_CLAZZ = ToBeInstrumentedWithFieldAccess.class;
+	
+	private final static Class NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
 
 	public void test() throws Exception {
-		final String srcDir = Path4.combine(Path4.getTempPath(), "nqfileinstr/source");
+		final String srcDir = Path4.combine(Path4.getTempPath(), "tafileinstr/source");
 		File4.mkdirs(srcDir);
-		final String targetDir = Path4.combine(Path4.getTempPath(), "nqfileinstr/target");
+		final String targetDir = Path4.combine(Path4.getTempPath(), "tafileinstr/target");
 		File4.mkdirs(targetDir);
 
-		final Class[] clazzes = { ToBeInstrumented.class, NotToBeInstrumented.class };
+		final Class[] clazzes = { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ };
 		
 		for (int clazzIdx = 0; clazzIdx < clazzes.length; clazzIdx++) {
 			copyClassFile(srcDir, clazzes[clazzIdx]);
 		}
 		
-		Db4oFileEnhancer enhancer = new Db4oFileEnhancer(new TranslateNQToSODAEdit());
+		ClassFilter filter = new ByNameClassFilter(new String[]{ INSTRUMENTED_CLAZZ.getName() });
+		Db4oFileEnhancer enhancer = new Db4oFileEnhancer(new InjectTransparentActivationEdit(filter));
 		enhancer.enhance(srcDir, targetDir, new String[]{}, "");
 		
 		ExcludingClassLoader excludingLoader = new ExcludingClassLoader(getClass().getClassLoader(), clazzes);
 		URLClassLoader loader = new URLClassLoader(new URL[] { new File(targetDir).toURI().toURL() }, excludingLoader);
 		
-		Class instrumented = loader.loadClass(ToBeInstrumented.class.getName());
-		final Class[] queryClassSig = new Class[]{Query.class};
-		Assert.isNotNull(instrumented.getDeclaredMethod(NativeQueryEnhancer.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig));
-		final Class uninstrumented = loader.loadClass(NotToBeInstrumented.class.getName());
-		Assert.expect(NoSuchMethodException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				uninstrumented.getDeclaredMethod(NativeQueryEnhancer.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig);
-			}
-		});
+		Class instrumented = loader.loadClass(INSTRUMENTED_CLAZZ.getName());
+		Assert.isTrue(Activatable.class.isAssignableFrom(instrumented));
+		Class uninstrumented = loader.loadClass(NOT_INSTRUMENTED_CLAZZ.getName());
+		Assert.isFalse(Activatable.class.isAssignableFrom(uninstrumented));
 	}
 
 	private void copyClassFile(String srcDir, Class clazz)

@@ -13,18 +13,19 @@ import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
 
 import com.db4o.activation.Activator;
+import com.db4o.foundation.*;
 import com.db4o.instrumentation.*;
 
 public class InstrumentMethodStartEdit implements BloatClassEdit {
 
-	public boolean bloat(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
-		instrumentAllMethods(ce);
-		return true;
+	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
+		return instrumentAllMethods(ce);
 	}
 
-	private void instrumentAllMethods(final ClassEditor ce) {
+	private InstrumentationStatus instrumentAllMethods(final ClassEditor ce) {
 		final MemberRef activateMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID);
 		final MemberRef bindMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Type[]{ Type.getType(Activator.class) }, Type.VOID);
+		final ObjectByRef instrumented = new ObjectByRef(InstrumentationStatus.NOT_INSTRUMENTED);
 		ce.visit(new EditorVisitor() {
 
 			public void visitClassEditor(ClassEditor editor) {
@@ -45,6 +46,7 @@ public class InstrumentMethodStartEdit implements BloatClassEdit {
 				// activate();
 				insertActivateCall(ce, editor, 1);
 				editor.commit();
+				instrumented.value = InstrumentationStatus.INSTRUMENTED;
 			}
 
 			private void insertActivateCall(final ClassEditor ce, MethodEditor editor, int idx) {
@@ -52,6 +54,7 @@ public class InstrumentMethodStartEdit implements BloatClassEdit {
 				editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID)), idx + 1);
 			}
 		});
+		return (InstrumentationStatus) instrumented.value;
 	}
 
 	private MemberRef createMethodReference(Type parent, String name, Type[] args, Type ret) {

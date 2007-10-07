@@ -17,19 +17,19 @@ public class CheckApplicabilityEdit implements BloatClassEdit {
 		_filter = filter;
 	}
 
-	public boolean bloat(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
+	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
 			if (!_filter.accept(clazz)) {
-				return true;
+				return InstrumentationStatus.NOT_INSTRUMENTED;
 			}
 			if (!isApplicableClass(clazz)) {
 				throw new IllegalArgumentException(clazz.getName());
 			}
 		} catch (ClassNotFoundException e) {
-			return false;
+			return InstrumentationStatus.FAILED;
 		}
-		return true;
+		return InstrumentationStatus.NOT_INSTRUMENTED;
 	}
 
 	private boolean isApplicableClass(Class clazz) {
