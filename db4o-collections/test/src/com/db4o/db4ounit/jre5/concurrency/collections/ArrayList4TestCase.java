@@ -42,14 +42,13 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		markTaskDone(seq, true);
 		waitForAllTasksDone();
 		ArrayList4Asserter.assertAdd(list);
+		oc.set(list);
 	}
 	
 	public void checkAdd(ExtObjectContainer oc) throws Exception {
 		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
 		ArrayList4Asserter.checkAdd(list);
 	}
-	
-	
 
 	@SuppressWarnings("unchecked")
 	private ArrayList4<Integer> retrieveAndAssertNullArrayList4(ExtObjectContainer oc) throws Exception{
