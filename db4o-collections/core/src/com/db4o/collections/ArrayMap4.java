@@ -167,6 +167,42 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
             throw new Error(e);
         }
     }
+    
+    @SuppressWarnings("unchecked")
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Map)) {
+            return false;
+        }
+        Map<K, V> other = (Map<K, V>) obj;
+        if (size() != other.size()) {
+            return false;
+        }
+        
+        Set<K> otherKeySet = other.keySet(); 
+        for (Map.Entry<K, V> entry : entrySet()) {
+            K key = entry.getKey();
+            if (!otherKeySet.contains(key)) {
+                return false;
+            }
+            
+            V value = entry.getValue();
+            if (!(value == null ? other.get(key) == null : value.equals(other.get(key)))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public int hashCode() {
+        int hashCode = 0;
+        for (Map.Entry<K, V> entry : entrySet()) {
+            hashCode += entry.hashCode();
+        }
+        return hashCode;
+    }
 
     @SuppressWarnings("unchecked")
     private void initializeBackingArray(int length) {
@@ -186,7 +222,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
     
     private void add(K key, V value) {
-        increase();
+        ensureCapacity();
         _keys[_endIndex] = key;
         _values[_endIndex] = value;
         
@@ -194,12 +230,14 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
     
     @SuppressWarnings("unchecked")
-    private void increase() {
+    private void ensureCapacity() {
         if (_endIndex == _keys.length) {
             Object[] newKeys = new Object[_keys.length * 2];
             Object[] newValues = new Object[_values.length * 2];
             System.arraycopy(_keys, _startIndex, newKeys, 0, _endIndex - _startIndex);
             System.arraycopy(_values, _startIndex, newValues, 0, _endIndex - _startIndex);
+            Arrays.fill(_keys, null);
+            Arrays.fill(_values, null);
             _keys = (K[]) newKeys;
             _values = (V[]) newValues;
         }
@@ -212,6 +250,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
             _values[i] = _values[i + 1];
         }
         _endIndex--;
+        _keys[_endIndex] = null;
+        _values[_endIndex] = null;
         return value;
     }
 
