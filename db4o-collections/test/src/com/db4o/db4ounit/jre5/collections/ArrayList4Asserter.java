@@ -18,14 +18,22 @@ public class ArrayList4Asserter {
 	}
 
 	public static void assertAdd(final List<Integer> list) throws Exception {
+		operateAdd(list);
+		checkAdd(list);
+	}
+
+	private static void operateAdd(final List<Integer> list) {
 		for (int i = 0; i < CAPACITY; ++i) {
 			list.add(new Integer(CAPACITY + i));
 		}
-
+	}
+	
+	public static void checkAdd(final List<Integer> list) {
 		for (int i = 0; i < CAPACITY * 2; ++i) {
 			Assert.areEqual(new Integer(i), list.get(i));
 		}
 	}
+
 	
 	public static void assertAdd_LObject(final List<Integer> list) throws Exception {
 		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
