@@ -33,35 +33,25 @@
     <target name="clean">
         <delete dir="${drs.sharpen.workspace.dir}" />
     	<delete dir="${drs.net.bin.dir}" />
-    	<delete dir="${drs.net.dir}/docs" />
+    	<delete dir="${drs.net.dir}/docs/api" />
+    	<delete file="${drs.net.dir}/compatibility.html" />
     	<delete>
-    		<fileset dir="${drs.net.dir}">
-    			<include name="*.html" />
-    		</fileset>
     		<fileset dir="${dir.dist}">
     			<include name="dRS-net-*.zip" />
     		</fileset>
     	</delete>
     </target>
-    
-	<target name="reference">
-        <mkdir dir="${drs.net.dir}/docs/reference" />
-    	<copydir dest="${drs.net.dir}/docs/reference" src="${drs.dir}/docWiki/net" />
-	</target>
-    
-	<target name="package" depends="clean, init, build, reference, ndoc, run-tests">
+        
+	<target name="package" depends="clean, init, build, ndoc, run-tests">
     	<antcall target="package-api" />    	
-        <mkdir dir="${drs.dir}/dist" />
-		<copy file="${drs.dir}/drs.license.html" todir="${drs.net.dir}"/>		
-		<copy file="${drs.dir}/db4o.license.html" todir="${drs.net.bin.dir}"/>		
-		<copy file="${drs.dir}/readme.net.html" tofile="${drs.net.dir}/readme.html"/>		
-		<copy file="${drs.dir}/compatibility.net.html" tofile="${drs.net.dir}/compatibility.html" >
+		<copy file="${dir.config}/db4o.license.html" todir="${drs.net.bin.dir}"/>		
+		<copy file="${drs.net.dir}/compatibility.net.html" tofile="${drs.net.dir}/compatibility.html" >
 				        <filterchain>
 				           <striplinecomments>
 				              <comment value="!"/>
 				           </striplinecomments>
 				           <replacetokens>
-				                <token key="db4o.version.dotted" value="${db4o.version.dotted}"/>
+				                <token key="db4o.version.dotted" value="${db4o.version.iteration.revision}"/>
 				            </replacetokens>
 				        </filterchain>
 		</copy>
@@ -80,8 +70,9 @@
             </fileset>
         </delete>
         
-        <zip destfile="${dir.dist}/dRS-net-${drs.net.version}.zip">
-            <zipfileset dir="${drs.net.dir}" prefix="dRS-net-${db4o.version.major}.${db4o.version.minor}"/>
+        <zip destfile="${dir.dist}/dRS-${drs.net.version}-net.zip">
+            <zipfileset dir="${drs.net.dir}" excludes="sandcastle/, compatibility.net.html" 
+            	prefix="dRS-${drs.net.version}-net"/>
         </zip>
     </target>
     
@@ -93,24 +84,36 @@
         	</fileset>
     	</copy>
     	
-    	<msbuild buildfile="${drs.net.src.dir}/Db4objects.Drs/Db4objects.Drs.csproj">
-            <target name="build" />
-            <property name="Configuration" value="Debug" />
-        	<property name="OutputPath" value="${drs.net.dir}/bin" />
-        	<property name="DocumentationFile" value="${drs.net.bin.dir}/Db4objects.Drs.xml" />
-        </msbuild>
+    	<csc destfile="${drs.net.dir}/bin/Db4objects.Drs.dll"
+    		targettype="library"
+    		srcdir="${drs.net.src.dir}/Db4objects.Drs"
+    		docfile="${drs.net.bin.dir}/Db4objects.Drs.xml"
+    		>
+			<reference dir="${drs.net.bin.dir}">
+				<include name="Db4objects.Db4o.dll" />
+			</reference>
+    	</csc>
     	
-    	<msbuild buildfile="${drs.net.src.dir}/Db4objects.Drs.Tests/Db4objects.Drs.Tests.csproj">
-	        <target name="build" />
-   	        <property name="Configuration" value="Debug" />
-   	        <property name="OutputPath" value="${drs.net.dir}/bin" />
-   	    </msbuild>
+    	<csc destfile="${drs.net.dir}/bin/Db4objects.Drs.Tests.exe"
+    		targettype="exe"
+    		mainclass="Db4objects.Drs.Tests.Db4oTests"
+    		srcdir="${drs.net.src.dir}/Db4objects.Drs.Tests">
+			<reference dir="${drs.net.bin.dir}">
+				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4oUnit.dll" />
+				<include name="Db4objects.Drs.dll" />
+			</reference>
+    	</csc>
     	
-    	<msbuild buildfile="${drs.net.src.dir}/QuickStart/QuickStart.csproj">
-   	        <target name="build" />
-   	        <property name="Configuration" value="Debug" />
-   	        <property name="OutputPath" value="${drs.net.dir}/bin" />
-   	    </msbuild>
+    	<csc destfile="${drs.net.dir}/bin/QuickStart.exe"
+    		targettype="exe"
+    		mainclass="Db4objects.Drs.Quickstart.Simple.Simple"
+    		srcdir="${drs.net.src.dir}/QuickStart">
+			<reference dir="${drs.net.bin.dir}">
+				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4objects.Drs.dll" />
+			</reference>
+    	</csc>
     </target>
     
     <target name="prepare-dotnet-solution" depends="sharpen-drs, get-svn-revision">
@@ -280,13 +283,14 @@
 		</copy>		
 		<delete dir="${drs.net.dir}/ndoc" failonerror="true" /> 
 		<delete dir="${drs.net.dir}/config" failonerror="true" />		
+    	<delete dir="${drs.net.dir}/Output" failonerror="true" />
 	</target>
 	
 	<target name="preparendoc">
 		<delete dir="${drs.net.dir}/config" failonerror="false" />
 		<mkdir dir="${drs.net.dir}/config" />
 		<copy todir="${drs.net.dir}/config">
-			<fileset dir="${drs.dir}/sandcastle">
+			<fileset dir="${drs.net.dir}/sandcastle">
 				<include name="dRS-namespace-summaries.xml" />
 			</fileset>
 		</copy>
@@ -341,7 +345,7 @@
 			</copy>
 			
 			<exec executable="${dir.build}/lib/boo/booi">
-				<arg file="${drs.dir}/sandcastle/MRefDrsConfigGenerator.boo" />
+				<arg file="${drs.net.dir}/sandcastle/MRefDrsConfigGenerator.boo" />
 				<arg path="${drs.net.dir}" />
 			</exec>
 
