@@ -15,11 +15,11 @@ import db4ounit.extensions.*;
 /**
  * @exclude
  */
-public class ArrayList4TestCase extends Db4oClientServerTestCase {
+public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 	public static void main(String[] args) {
 		new ArrayList4TestCase().runEmbeddedConcurrency();
 	}
-	
+
 	protected void store() throws Exception {
 		ArrayList4<Integer> list = new ArrayList4<Integer>();
 		ArrayList4Asserter.createList(list);
@@ -37,6 +37,20 @@ public class ArrayList4TestCase extends Db4oClientServerTestCase {
 		retrieveAndAssertNullArrayList4(oc);
 	}
 	
+	public void concAdd(ExtObjectContainer oc, int seq) throws Exception {
+		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
+		markTaskDone(seq, true);
+		waitForAllTasksDone();
+		ArrayList4Asserter.assertAdd(list);
+	}
+	
+	public void checkAdd(ExtObjectContainer oc) throws Exception {
+		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
+		ArrayList4Asserter.checkAdd(list);
+	}
+	
+	
+
 	@SuppressWarnings("unchecked")
 	private ArrayList4<Integer> retrieveAndAssertNullArrayList4(ExtObjectContainer oc) throws Exception{
 		ArrayList4<Integer> list = (ArrayList4<Integer>) retrieveOnlyInstance(oc, ArrayList4.class);
