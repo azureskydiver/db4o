@@ -145,10 +145,12 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	}
 	
 	public E remove(int index) {
-		checkIndex(index, 0, size() - 1);
+		int size = size();
+		checkIndex(index, 0, size - 1);
 		E element = elements[index];
 		System.arraycopy(elements, index + 1, 
-				elements, index, size() - index	- 1);
+				elements, index, size - index	- 1);
+		elements[size - 1] = null;
 		decreaseSize(1);
 		markModified();
 		return element;
@@ -163,8 +165,8 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 			return;
 		}
 		int count = toIndex - fromIndex;
-		System.arraycopy(elements, toIndex, elements, fromIndex, size()
-				- toIndex);
+		System.arraycopy(elements, toIndex, elements, fromIndex, size - toIndex);
+		Arrays.fill(elements, size - 1 - count, size - 1, null);
 		decreaseSize(count);
 		markModified();
 	}
