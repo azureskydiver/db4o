@@ -19,6 +19,10 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 	private final BloatClassEdit _edit;
 	private final BloatLoaderContext _loaderContext = new BloatLoaderContext(getClassInfoLoader(), getEditorContext());
 
+	public BloatInstrumentingClassLoader(URL[] urls, ClassLoader parent, BloatClassEdit edit) {
+		this(urls, parent, new AcceptAllClassesFilter(), edit);
+	}
+
 	public BloatInstrumentingClassLoader(URL[] urls, ClassLoader parent, ClassFilter filter, BloatClassEdit edit) {
 		super(urls, parent);
 		_filter = filter;
