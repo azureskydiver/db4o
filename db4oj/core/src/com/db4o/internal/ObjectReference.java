@@ -44,10 +44,12 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 	
 	public void activate() {
-		if (isActive()) {
-			return;
-		}
-		activate(container().transaction(), getObject(), 1, false);
+	    synchronized(container().lock()){
+    		if (isActive()) {
+    			return;
+    		}
+    		activate(container().transaction(), getObject(), 1, false);
+	    }
 	}
 
 	public void activate(Transaction ta, Object obj, int depth, boolean isRefresh) {
