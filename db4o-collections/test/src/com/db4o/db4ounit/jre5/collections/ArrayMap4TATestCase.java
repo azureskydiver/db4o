@@ -232,4 +232,32 @@ public class ArrayMap4TATestCase extends AbstractDb4oTestCase {
         }
     }
 
+    public void testEquals() {
+        ArrayMap4<String, Integer> map = retrieveOnlyInstance();
+        
+        ArrayMap4<String, Integer> other = new ArrayMap4<String, Integer>();
+        for (int i = 0; i < 10; i++) {
+            other.put(String.valueOf(i), Integer.valueOf(i * 100));
+        }
+        
+        Assert.isTrue(map.equals(other));
+        Assert.isTrue(other.equals(map));
+        Assert.areEqual(map.hashCode(), other.hashCode());
+        Assert.isFalse(map.equals(null));
+        
+        other.remove("5");
+        Assert.isFalse(map.equals(other));
+    }
+    
+    public void testIncreaseSize() {
+        ArrayMap4<String, Integer> map = retrieveOnlyInstance();
+        
+        for (int i = 10; i < 50; i++) {
+            map.put(String.valueOf(i), Integer.valueOf(i * 100));
+        }
+        
+        for (int i = 0; i < 50; i++) {
+            Assert.areEqual(Integer.valueOf(i * 100), map.get(String.valueOf(i)));
+        }
+    }
 }
