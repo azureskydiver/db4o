@@ -17,8 +17,7 @@ public class AllTests extends Db4oTestSuite {
 				ArrayList4TestCase.class,
 				SubArrayList4TestCase.class,
 				ArrayMap4TestCase.class,
-				// FIXME missing in checkin?
-				//ArrayMap4TATestCase.class,
+				ArrayMap4TATestCase.class,
 		};
 	}
 
