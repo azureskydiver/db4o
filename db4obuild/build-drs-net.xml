@@ -393,8 +393,14 @@
 			<copy todir="${drs.net.dir}/ndoc/Output">
 				<fileset dir="${dir.lib.sandcastle}/Presentation/vs2005">
 					<include name="Icons/**" />
+					<include name="icons/**" />
 					<include name="Scripts/**" />
 					<include name="Styles/**" />
+				</fileset>
+			</copy>
+			<copy todir="${drs.net.dir}/Output">
+				<fileset dir="${dir.lib.sandcastle}/Presentation/Shared">
+					<include name="**/**" />
 				</fileset>
 			</copy>
 			<mkdir dir="${drs.net.dir}/ndoc/Intellisense" />
