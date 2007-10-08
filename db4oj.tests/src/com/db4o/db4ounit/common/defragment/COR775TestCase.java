@@ -7,26 +7,41 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.defragment.*;
+import com.db4o.foundation.io.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 
-public class COR775TestCase extends AbstractDb4oTestCase {
+public class COR775TestCase implements TestLifeCycle {
 
-    String dbName = "cor775.yap";
+    private static final String ORIGINAL = "cor775.yap";
+    
+    private static final String DEFGARED = ORIGINAL + ".bk";
 
     Configuration db4oConfig;
+    
+    public void setUp() throws Exception {
+    	cleanup();
+	}
+
+	public void tearDown() throws Exception {
+		cleanup();
+	}
+	
+	private void cleanup() {
+		File4.delete(ORIGINAL);
+		File4.delete(DEFGARED);
+	}
 
     public static void main(String[] args) {
-        new COR775TestCase().runSolo();
+        new TestRunner(COR775TestCase.class).run();
     }
 
     public void testCOR775() throws Exception {
         prepare();
         verifyDB();
         
-        DefragmentConfig config = new DefragmentConfig(dbName, dbName + ".bk");
+        DefragmentConfig config = new DefragmentConfig(ORIGINAL, DEFGARED);
         config.forceBackupDelete(true);
         //config.storedClassFilter(new AvailableClassFilter());
         config.db4oConfig(getConfiguration());
@@ -36,7 +51,7 @@ public class COR775TestCase extends AbstractDb4oTestCase {
     }
 
     private void prepare() {
-        File file = new File(dbName);
+        File file = new File(ORIGINAL);
         if (file.exists()) {
             file.delete();
         }
@@ -62,7 +77,7 @@ public class COR775TestCase extends AbstractDb4oTestCase {
 
     private ObjectContainer openDB() {
         Configuration db4oConfig = getConfiguration();
-        ObjectContainer testDB = Db4o.openFile(db4oConfig, dbName);
+        ObjectContainer testDB = Db4o.openFile(db4oConfig, ORIGINAL);
         return testDB;
     }
 
@@ -153,4 +168,5 @@ public class COR775TestCase extends AbstractDb4oTestCase {
         }
 
     }
+
 }
