@@ -22,6 +22,7 @@
 		<versioninfo path="${dir.j.core.src}/com/db4o"  
 			major="${db4o.version.major}" 
 			minor="${db4o.version.minor}"
+			iteration="${db4o.iteration}"
 			revision="${svn.revision}"
 		/>
 	</target>
