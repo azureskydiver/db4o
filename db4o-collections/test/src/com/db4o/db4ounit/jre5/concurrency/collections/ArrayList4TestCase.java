@@ -39,9 +39,9 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 	
 	public void concAdd(ExtObjectContainer oc, int seq) throws Exception {
 		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
+		ArrayList4Asserter.assertAdd(list);
 		markTaskDone(seq, true);
 		waitForAllTasksDone();
-		ArrayList4Asserter.assertAdd(list);
 		oc.set(list);
 	}
 	
@@ -49,7 +49,33 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
 		ArrayList4Asserter.checkAdd(list);
 	}
+	
+	public void concAdd_LObject(ExtObjectContainer oc, int seq) throws Exception {
+		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
+		ArrayList4Asserter.assertAdd_LObject(list);
+		markTaskDone(seq, true);
+		waitForAllTasksDone();
+		oc.set(list);
+	}
 
+	public void checkAdd_LObject(ExtObjectContainer oc) throws Exception {
+		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
+		ArrayList4Asserter.checkAdd_LObject(list);
+	}
+	
+	public void concAddAll_LCollection(ExtObjectContainer oc, int seq) throws Exception {
+		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
+		ArrayList4Asserter.assertAddAll_LCollection(list);
+		markTaskDone(seq, true);
+		waitForAllTasksDone();
+		oc.set(list);
+	}
+
+	public void checkAddAll_LCollection(ExtObjectContainer oc) throws Exception {
+		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
+		ArrayList4Asserter.checkAddAll_LCollection(list);
+	}
+	
 	@SuppressWarnings("unchecked")
 	private ArrayList4<Integer> retrieveAndAssertNullArrayList4(ExtObjectContainer oc) throws Exception{
 		ArrayList4<Integer> list = (ArrayList4<Integer>) retrieveOnlyInstance(oc, ArrayList4.class);
