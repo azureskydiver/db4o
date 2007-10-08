@@ -10,6 +10,7 @@ import db4ounit.*;
 
 public class ArrayList4Asserter {
 	public static int CAPACITY = 100;
+	private static final Integer ITEM = new Integer((CAPACITY/2));
 	
 	public static void createList(final List<Integer> list) throws Exception {
 		for (int i = 0; i < CAPACITY; i++) {
@@ -18,16 +19,12 @@ public class ArrayList4Asserter {
 	}
 
 	public static void assertAdd(final List<Integer> list) throws Exception {
-		operateAdd(list);
-		checkAdd(list);
-	}
-
-	private static void operateAdd(final List<Integer> list) {
 		for (int i = 0; i < CAPACITY; ++i) {
 			list.add(new Integer(CAPACITY + i));
 		}
+		checkAdd(list);
 	}
-	
+
 	public static void checkAdd(final List<Integer> list) {
 		for (int i = 0; i < CAPACITY * 2; ++i) {
 			Assert.areEqual(new Integer(i), list.get(i));
@@ -58,19 +55,21 @@ public class ArrayList4Asserter {
 			Assert.areEqual(new Integer(i - 1), list.get(i));
 		}
 
-		int val = CAPACITY/2;
-		Integer i2 = new Integer(val);
-		list.add(val, i2);
+		list.add(CAPACITY/2, ITEM);
+		checkAdd_LObject(list);
+	}
+
+	public static void checkAdd_LObject(final List<Integer> list) {
 		// elements: 0, 0,1 - C/2, C/2, C+1 - C
 		// index: 0, 1,2 - C/2-1, C/2, C/2+1 - C
-		for (int i = 1; i < val; ++i) {
+		for (int i = 1; i < (CAPACITY/2); ++i) {
 			Assert.areEqual(new Integer(i - 1), list.get(i));
 		}
 
-		Assert.areSame(i2, list.get(val));
-		Assert.areEqual(new Integer(val/2), list.get(val/2+1));
+		Assert.areEqual(ITEM, list.get(CAPACITY/2));
+		Assert.areEqual(new Integer((CAPACITY/2)/2), list.get((CAPACITY/2)/2+1));
 
-		for (int i = val+1 ; i < CAPACITY + 2; ++i) {
+		for (int i = (CAPACITY/2)+1 ; i < CAPACITY + 2; ++i) {
 			Assert.areEqual(new Integer(i - 2), list.get(i));
 		}
 	}
@@ -95,6 +94,10 @@ public class ArrayList4Asserter {
 
 		list.addAll(v);
 
+		checkAddAll_LCollection(list);
+	}
+
+	public static void checkAddAll_LCollection(final List<Integer> list) {
 		for (int i = 0; i < CAPACITY * 2; ++i) {
 			Assert.areEqual(new Integer(i), list.get(i));
 		}
