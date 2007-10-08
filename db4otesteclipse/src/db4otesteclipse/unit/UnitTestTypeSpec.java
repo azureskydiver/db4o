@@ -53,7 +53,7 @@ public class UnitTestTypeSpec implements TestTypeSpec {
 		String vmArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, "");
 		String tmpDirConfig = "-Ddb4ounit.file.path=" + System.getProperty("java.io.tmpdir");
 		workingCopy.setAttribute(
-				IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (vmArgs.isEmpty() ? tmpDirConfig : vmArgs + " " + tmpDirConfig));
+				IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, (vmArgs.length() > 0) ? tmpDirConfig : vmArgs + " " + tmpDirConfig);
 	}
 
 	private boolean needsDb4oExtensions(List testTypes) throws JavaModelException {
