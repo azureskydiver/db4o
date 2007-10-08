@@ -1,20 +1,18 @@
 package com.db4o.devtools.ant;
 
 import java.io.*;
-import java.util.*;
 
 import org.apache.tools.ant.*;
 
 public class VersionInfoAntTask extends Task {
     
-    static final int DB4O_ITERATION_OFFSET = 29;
-    
-    private Calendar calendar;
     private int major;
 	private int minor;
     
+	private int iteration;
+	
     private String path;
-    private String revision;
+    private String revision;    
     
     public void setPath(String path) {
         this.path = path;
@@ -27,21 +25,16 @@ public class VersionInfoAntTask extends Task {
     public void setMinor(int minor) {
     	this.minor = minor;
     }
-    
+
+    public void setIteration(int iteration){
+        this.iteration = iteration;
+    }
+
     public void setRevision(String revision){
         this.revision = revision;
     }
     
-    private int getIteration() {
-        if (calendar == null) {
-            calendar = Calendar.getInstance(Locale.UK);
-        }
-        int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
-        return (weekOfYear - DB4O_ITERATION_OFFSET);
-    }
-    
     private void outputJavaVersionInfo(PrintWriter pr) {
-        int iteration = getIteration();
         String name = new StringBuffer().append(major).append(".")
                 .append(minor).append(".").append(iteration).append(".")
                 .append(revision).toString();
