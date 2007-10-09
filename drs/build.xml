@@ -55,7 +55,7 @@
 		<property name="filename.drs.core.jar" value="${drs.file}core.jar" />
 		<property name="filename.drs.test.jar" value="${drs.file}test.jar" />
 		<property name="filename.drs.tutorial.jar" value="${drs.file}tutorial.jar" />
-		<property name="filename.drs.zip" value="dRS-java-${drs.version.dotted}.zip" />
+		<property name="filename.drs.zip" value="dRS-${drs.version.dotted}-java.zip" />
 		
 		<property name="file.drs.core.jar" value="${drs.dir.dist.lib}/${filename.drs.core.jar}" />
 		<property name="file.drs.test.jar" value="${drs.dir.dist.lib}/${filename.drs.test.jar}" />
