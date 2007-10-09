@@ -114,8 +114,8 @@ public class ArrayList4TestCase implements TestLifeCycle {
 		ArrayList4Asserter.assertLastIndexOf(_list);
 	}
 
-	public void testRemove_Object() throws Exception {
-		ArrayList4Asserter.assertRemove_Object(_list);
+	public void testRemove_LObject() throws Exception {
+		ArrayList4Asserter.assertRemove_LObject(_list);
 	}
 
 	public void testRemoveAll() throws Exception {

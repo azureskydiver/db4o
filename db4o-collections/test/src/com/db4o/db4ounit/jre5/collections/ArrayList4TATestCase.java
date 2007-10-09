@@ -74,8 +74,8 @@ public class ArrayList4TATestCase extends AbstractDb4oTestCase {
 		ArrayList4Asserter.assertLastIndexOf(retrieveAndAssertNullArrayList4());
 	}
 
-	public void testRemove_Object() throws Exception {
-		ArrayList4Asserter.assertRemove_Object(retrieveAndAssertNullArrayList4());
+	public void testRemove_LObject() throws Exception {
+		ArrayList4Asserter.assertRemove_LObject(retrieveAndAssertNullArrayList4());
 	}
 
 	public void testRemoveAll() throws Exception {

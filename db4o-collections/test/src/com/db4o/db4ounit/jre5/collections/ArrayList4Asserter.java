@@ -135,6 +135,10 @@ public class ArrayList4Asserter {
 
 	public static void assertClear(final List<Integer> list) throws Exception {
 		list.clear();
+		checkClear(list);
+	}
+
+	public static void checkClear(final List<Integer> list) {
 		Assert.areEqual(0, list.size());
 	}
 
@@ -273,7 +277,7 @@ public class ArrayList4Asserter {
 		Assert.areEqual(-1, list.lastIndexOf(null));
 	}
 
-	public static void assertRemove_Object(final List<Integer> list) throws Exception {
+	public static void assertRemove_LObject(final List<Integer> list) throws Exception {
 		list.remove(new Integer(0));
 		Assert.areEqual(new Integer(1), list.get(0));
 
@@ -309,6 +313,10 @@ public class ArrayList4Asserter {
 			list.remove(0);
 			Assert.areEqual(CAPACITY - 3 - i, list.size());
 		}
+		checkRemove_LObject(list);
+	}
+
+	public static void checkRemove_LObject(final List<Integer> list) {
 		Assert.isTrue(list.isEmpty());
 	}
 
@@ -337,6 +345,10 @@ public class ArrayList4Asserter {
 			v.add(new Integer(i));
 		}
 		list.removeAll(v);
+		checkRemoveAll(list);
+	}
+
+	public static void checkRemoveAll(final List<Integer> list) {
 		Assert.isTrue(list.isEmpty());
 	}
 
