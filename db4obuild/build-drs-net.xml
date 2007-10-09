@@ -37,7 +37,7 @@
     	<delete file="${drs.net.dir}/compatibility.html" />
     	<delete>
     		<fileset dir="${dir.dist}">
-    			<include name="dRS-net-*.zip" />
+    			<include name="dRS-*-net.zip" />
     		</fileset>
     	</delete>
     </target>
