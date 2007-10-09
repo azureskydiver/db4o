@@ -36,7 +36,7 @@ public class JavaServicesTestCase implements TestCase {
     /**
      * @sharpen.remove
      */
-    public void testJava() throws IOException, InterruptedException{
+    public void _testJava() throws IOException, InterruptedException{
         String output = JavaServices.java(ShortProgram.class.getName());
         Assert.isTrue(output.indexOf(ShortProgram.OUTPUT) >=0 );
     }
@@ -44,7 +44,7 @@ public class JavaServicesTestCase implements TestCase {
     /**
      * @sharpen.remove
      */
-    public void testStartAndKillJavaProcess() throws IOException{
+    public void _testStartAndKillJavaProcess() throws IOException{
         Assert.expect(DestroyTimeoutException.class, new CodeBlock() {
             public void run() throws Throwable {
                 JavaServices.startAndKillJavaProcess(LongProgram.class.getName(), ShortProgram.OUTPUT, 50);
