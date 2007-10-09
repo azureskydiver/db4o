@@ -43,10 +43,18 @@ public class WorkspaceServices {
 		File test = new File(baseFolder, folderChild);		
 		if (test.exists()) return test.getParent(); 
 		
-		if (test.getParentFile() == null) return null;
+		if (getParentFile(test) == null) return null;
 		
 		// we should test against root folder... :)		
-		return findFolderWithChild(test.getParentFile().getParent(), folderChild);
+		return findFolderWithChild(getParentFile(test).getParent(), folderChild);
+	}
+	
+	private static File getParentFile(File file){
+        String path = file.getParent();
+        if (path == null){
+            return null;
+        }
+        return new File(path);
 	}
 
 	public static File configurableWorkspacePath(String configurableProperty, String defaultWorkspacePath) {
