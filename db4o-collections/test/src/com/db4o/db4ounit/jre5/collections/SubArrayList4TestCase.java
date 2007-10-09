@@ -58,8 +58,8 @@ public class SubArrayList4TestCase implements TestLifeCycle {
 		ArrayList4Asserter.assertLastIndexOf(_subList);
 	}
 
-	public void testRemove_Object() throws Exception {
-		ArrayList4Asserter.assertRemove_Object(_subList);
+	public void testRemove_LObject() throws Exception {
+		ArrayList4Asserter.assertRemove_LObject(_subList);
 	}
 
 	public void testRemoveAll() throws Exception {
