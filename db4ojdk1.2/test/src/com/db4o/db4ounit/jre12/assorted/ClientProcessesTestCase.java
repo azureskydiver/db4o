@@ -43,7 +43,7 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
 
     public void _testKillingClients() throws InterruptedException{
 
-        final int CLIENT_COUNT = 10;  // more clients will need more than 3 GB of memory 
+        final int CLIENT_COUNT = 10;  
         
         final StringBuffer results = new StringBuffer();
         
