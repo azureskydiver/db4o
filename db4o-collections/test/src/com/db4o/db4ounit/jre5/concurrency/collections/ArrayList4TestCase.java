@@ -172,62 +172,62 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4Asserter.checkTrimToSize_EnsureCapacity(retrieveAndAssertNullArrayList4(oc));
 	}
 	
-//	public void concExtOTrimToSize_Remove(ExtObjectContainer oc) throws Exception {
-//		ArrayList4Asserter.assertTrimToSize_Remove(retrieveAndAssertNullArrayList4(oc));
-//	}
-//	
-//	public void testTrimToSize_Iterator() throws Exception {
-//		ArrayList4Asserter.assertTrimToSize_Iterator(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testEnsureCapacity_Iterator() throws Exception {
-//		ArrayList4Asserter.assertEnsureCapacity_Iterator(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testClear_Iterator() throws Exception {
-//		ArrayList4Asserter.assertClear_Iterator(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testClone() throws Exception {
-//		ArrayList4Asserter.assertClone(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testEquals() throws Exception {
-//		ArrayList4Asserter.assertEquals(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testIteratorNext_NoSuchElementException() throws Exception {
-//		ArrayList4Asserter.assertIteratorNext_NoSuchElementException(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testIteratorNext_ConcurrentModificationException() throws Exception {
-//		ArrayList4Asserter.assertIteratorNext_ConcurrentModificationException(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testIteratorNext() throws Exception {
-//		ArrayList4Asserter.assertIteratorNext(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testIteratorRemove() throws Exception {
-//		ArrayList4Asserter.assertIteratorRemove(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testRemove_IllegalStateException() throws Exception {
-//		ArrayList4Asserter.assertRemove_IllegalStateException(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testIteratorRemove_ConcurrentModificationException() throws Exception {
-//		ArrayList4Asserter.assertIteratorRemove_ConcurrentModificationException(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testSubList() throws Exception {
-//		ArrayList4Asserter.assertSubList(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testSubList_ConcurrentModification() throws Exception {
-//		ArrayList4Asserter.assertSubList_ConcurrentModification(retrieveAndAssertNullArrayList4());
-//	}
-//	
+	public void concExtOTrimToSize_Remove(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertTrimToSize_Remove(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concTrimToSize_Iterator(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertTrimToSize_Iterator(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concEnsureCapacity_Iterator(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertEnsureCapacity_Iterator(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concClear_Iterator(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertClear_Iterator(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concClone(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertClone(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concEquals(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertEquals(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concIteratorNext_NoSuchElementException(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertIteratorNext_NoSuchElementException(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concIteratorNext_ConcurrentModificationException(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertIteratorNext_ConcurrentModificationException(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concIteratorNext(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertIteratorNext(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concIteratorRemove(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertIteratorRemove(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concRemove_IllegalStateException(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertRemove_IllegalStateException(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concIteratorRemove_ConcurrentModificationException(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertIteratorRemove_ConcurrentModificationException(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concSubList(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertSubList(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+	public void concSubList_ConcurrentModification(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertSubList_ConcurrentModification(retrieveAndAssertNullArrayList4(oc));
+	}
+	
 	@SuppressWarnings("unchecked")
 	private ArrayList4<Integer> retrieveAndAssertNullArrayList4(ExtObjectContainer oc) throws Exception{
 		ArrayList4<Integer> list = (ArrayList4<Integer>) retrieveOnlyInstance(oc, ArrayList4.class);
