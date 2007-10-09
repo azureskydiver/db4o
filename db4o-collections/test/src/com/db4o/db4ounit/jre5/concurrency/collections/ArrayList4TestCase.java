@@ -6,10 +6,8 @@ import com.db4o.collections.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.jre5.collections.*;
 import com.db4o.ext.*;
-import com.db4o.reflect.*;
 import com.db4o.ta.*;
 
-import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
@@ -228,23 +226,7 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4Asserter.assertSubList_ConcurrentModification(retrieveAndAssertNullArrayList4(oc));
 	}
 	
-	@SuppressWarnings("unchecked")
 	private ArrayList4<Integer> retrieveAndAssertNullArrayList4(ExtObjectContainer oc) throws Exception{
-		ArrayList4<Integer> list = (ArrayList4<Integer>) retrieveOnlyInstance(oc, ArrayList4.class);
-		assertNullArrayList4(list);
-		return list;
-	}
-	
-	private void assertNullArrayList4(ArrayList4<Integer> list) throws Exception {
-		Assert.isNull(getField(list, "elements"));
-		Assert.areEqual(0, getField(list, "capacity"));
-		Assert.areEqual(0, getField(list, "listSize"));
-	}
-	
-	private Object getField(Object parent, String fieldName) {
-		ReflectClass parentClazz = reflector().forObject(parent);
-		ReflectField field = parentClazz.getDeclaredField(fieldName);
-		field.setAccessible();
-		return field.get(parent);
+		return CollectionsUtil.retrieveAndAssertNullArrayList4(oc, reflector());
 	}
 }

@@ -10,9 +10,9 @@ public class AllTests extends Db4oTestSuite {
         new AllTests().runSolo();
     }
     
-	@SuppressWarnings("unchecked")
     protected Class[] testCases() {
 		return new Class[] {
+				ArrayList4TAMultiClientsTestCase.class,
 				ArrayList4TATestCase.class,
 				ArrayList4TestCase.class,
 				SubArrayList4TestCase.class,
