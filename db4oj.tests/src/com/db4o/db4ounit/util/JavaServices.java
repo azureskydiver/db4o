@@ -16,8 +16,8 @@ public class JavaServices {
         return IOServices.exec(javaExecutable(), javaRunArguments(className));
     }
 
-    public static void startAndKillJavaProcess(String className, String expectedOutput, long timeout) throws IOException{
-        IOServices.execAndDestroy(javaExecutable(), javaRunArguments(className), expectedOutput, timeout);
+    public static String startAndKillJavaProcess(String className, String expectedOutput, long timeout) throws IOException{
+        return IOServices.execAndDestroy(javaExecutable(), javaRunArguments(className), expectedOutput, timeout);
     }
 
     private static String javaExecutable() {
