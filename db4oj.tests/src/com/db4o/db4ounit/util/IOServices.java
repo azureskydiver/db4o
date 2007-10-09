@@ -35,16 +35,16 @@ public class IOServices {
 	    return runner.formattedResult();  
 	}
 	
-	public static void execAndDestroy(String program, String[] arguments, String expectedOutput, long timeout) throws IOException{
-        new ProcessRunner(program, arguments).destroy(expectedOutput, timeout);
+	public static String execAndDestroy(String program, String[] arguments, String expectedOutput, long timeout) throws IOException{
+        ProcessRunner runner = new ProcessRunner(program, arguments);
+        runner.destroy(expectedOutput, timeout);
+        return runner.formattedResult();
     }
 	
 	public static class DestroyTimeoutException extends RuntimeException{
-	    
 	}
 	
 	public static class ProcessTerminatedBeforeDestroyException extends RuntimeException{
-	    
 	}
 	
 	static class ProcessRunner{

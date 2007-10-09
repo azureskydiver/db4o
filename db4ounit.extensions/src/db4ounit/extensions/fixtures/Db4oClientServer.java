@@ -18,11 +18,11 @@ public class Db4oClientServer extends
     
 	protected static final String FILE = "Db4oClientServer.yap";
     
-    protected static final String HOST = "localhost";
+    public static final String HOST = "localhost";
 
-    protected static final String USERNAME = "db4o";
+    public static final String USERNAME = "db4o";
 
-    protected static final String PASSWORD = USERNAME;
+    public static final String PASSWORD = USERNAME;
 
     private ObjectServer _server;
 
