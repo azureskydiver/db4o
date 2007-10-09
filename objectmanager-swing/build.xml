@@ -158,7 +158,7 @@
     </target>
 
     <target name="zip" depends="dist" description="Create the distribution zip file.">
-		<zip destfile="${dist.version}.zip" basedir="${dist.root}" />
+		<zip destfile="${dist.version}-java.zip" basedir="${dist.root}" />
     </target>
 
     <target name="clean"
