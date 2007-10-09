@@ -673,7 +673,7 @@ public class FieldMetadata implements StoredField {
         //        (3) Add a way to test the custom handler when it
         //            is installed and remember the length there. 
         
-        throw new UnsupportedOperationException();
+        throw new NotImplementedException();
     }
     
     public void loadHandler(ObjectContainerBase a_stream) {
