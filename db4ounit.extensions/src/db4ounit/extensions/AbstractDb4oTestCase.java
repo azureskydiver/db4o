@@ -232,7 +232,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
         return newQuery(db());
     }
     
-    protected Query newQuery(ExtObjectContainer oc){
+    protected static Query newQuery(ExtObjectContainer oc){
         return oc.query();
     }
     
@@ -240,7 +240,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		return newQuery(db(), clazz);
 	}
 	
-	protected Query newQuery(ExtObjectContainer oc, Class clazz) {
+	protected static Query newQuery(ExtObjectContainer oc, Class clazz) {
 		final Query query = newQuery(oc);
 		query.constrain(clazz);
 		return query;
@@ -262,7 +262,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		return retrieveOnlyInstance(db(), clazz);
 	}
 	
-	protected Object retrieveOnlyInstance(ExtObjectContainer oc, Class clazz) {
+	public static Object retrieveOnlyInstance(ExtObjectContainer oc, Class clazz) {
 		ObjectSet result=newQuery(oc, clazz).execute();
 		Assert.areEqual(1,result.size());
 		return result.next();
