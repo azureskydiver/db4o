@@ -377,6 +377,18 @@ public class ArrayList4Asserter {
 	}
 
 	public static void assertSet(final List<Integer> list) throws Exception {
+		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				list.set(-1, new Integer(0));
+			}
+		});
+
+		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				list.set(CAPACITY, new Integer(0));
+			}
+		});
+		
 		Integer element = new Integer(1);
 		
 		Integer previousElement = list.get(0);
@@ -394,18 +406,6 @@ public class ArrayList4Asserter {
 			Assert.areSame(previousElement, list.set(i, element));
 			Assert.areSame(element, list.get(i));
 		}
-
-		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				list.set(-1, new Integer(0));
-			}
-		});
-
-		Assert.expect(IndexOutOfBoundsException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				list.set(CAPACITY, new Integer(0));
-			}
-		});
 	}
 
 	public static void assertSize(final List<Integer> list) throws Exception {
@@ -479,13 +479,12 @@ public class ArrayList4Asserter {
 	
 	public static void assertTrimToSize_EnsureCapacity(final ArrayList4<Integer> list) throws Exception {
 		list.ensureCapacity(CAPACITY*2);
-		Assert.areEqual(CAPACITY, list.size());
-		for(int i = 0; i < CAPACITY; ++i) {
-			Integer element = (Integer) list.get(i);
-			Assert.areEqual(new Integer(i), element);
-		}
-		
+		checkTrimToSize_EnsureCapacity(list);
 		list.trimToSize();
+		checkTrimToSize_EnsureCapacity(list);
+	}
+
+	public static void checkTrimToSize_EnsureCapacity(final ArrayList4<Integer> list) {
 		Assert.areEqual(CAPACITY, list.size());
 		for(int i = 0; i < CAPACITY; ++i) {
 			Integer element = (Integer) list.get(i);

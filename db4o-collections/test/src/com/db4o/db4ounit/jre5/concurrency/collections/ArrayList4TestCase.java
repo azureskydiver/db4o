@@ -139,11 +139,11 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
 		ArrayList4Asserter.checkRemoveAll(list);
 	}
-//
-//	public void testSet() throws Exception {
-//		ArrayList4Asserter.assertSet(retrieveAndAssertNullArrayList4());
-//	}
-//
+
+	public void concSet(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.assertSet(retrieveAndAssertNullArrayList4(oc));
+	}
+
 	public void concSize(ExtObjectContainer oc) throws Exception {
 		ArrayList4Asserter.assertSize(retrieveAndAssertNullArrayList4(oc));
 	}
@@ -159,13 +159,21 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 	public void concToString(ExtObjectContainer oc) throws Exception {
 		ArrayList4Asserter.assertToString(retrieveAndAssertNullArrayList4(oc));
 	}
-//	
-//	public void testTrimToSize_EnsureCapacity() throws Exception {
-//		ArrayList4Asserter.assertTrimToSize_EnsureCapacity(retrieveAndAssertNullArrayList4());
-//	}
-//	
-//	public void testTrimToSize_Remove() throws Exception {
-//		ArrayList4Asserter.assertTrimToSize_Remove(retrieveAndAssertNullArrayList4());
+	
+	public void concTrimToSize_EnsureCapacity(ExtObjectContainer oc, int seq) throws Exception {
+		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4(oc);
+		ArrayList4Asserter.assertTrimToSize_EnsureCapacity(list);
+		markTaskDone(seq, true);
+		waitForAllTasksDone();
+		oc.set(list);
+	}
+	
+	public void checkTrimToSize_EnsureCapacity(ExtObjectContainer oc) throws Exception {
+		ArrayList4Asserter.checkTrimToSize_EnsureCapacity(retrieveAndAssertNullArrayList4(oc));
+	}
+	
+//	public void concExtOTrimToSize_Remove(ExtObjectContainer oc) throws Exception {
+//		ArrayList4Asserter.assertTrimToSize_Remove(retrieveAndAssertNullArrayList4(oc));
 //	}
 //	
 //	public void testTrimToSize_Iterator() throws Exception {
