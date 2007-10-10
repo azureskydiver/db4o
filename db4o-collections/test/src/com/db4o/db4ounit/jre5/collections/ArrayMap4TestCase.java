@@ -2,11 +2,11 @@
 
 package com.db4o.db4ounit.jre5.collections;
 
-import java.util.*;
+import com.db4o.collections.ArrayMap4;
 
-import com.db4o.collections.*;
-
-import db4ounit.*;
+import db4ounit.Assert;
+import db4ounit.TestLifeCycle;
+import db4ounit.TestRunner;
 
 public class ArrayMap4TestCase implements TestLifeCycle {
 
@@ -18,9 +18,7 @@ public class ArrayMap4TestCase implements TestLifeCycle {
 
     public void setUp() throws Exception {
         map = new ArrayMap4<String, Integer>();
-        for (int i = 0; i < 10; i++) {
-            map.put(String.valueOf(i), Integer.valueOf(i * 100));
-        }
+        ArrayMap4Asserter.putData(map);
     }
 
     public void tearDown() throws Exception {
@@ -29,112 +27,48 @@ public class ArrayMap4TestCase implements TestLifeCycle {
 
     // Function Test
     public void testConstructor() {
-        ArrayMap4<String, String> m = new ArrayMap4<String, String>();
-        Assert.isNotNull(m);
-        Assert.areEqual(0, m.size());
-        Assert.isTrue(m.isEmpty());
+        ArrayMap4<String, Integer> m = new ArrayMap4<String, Integer>();
+        ArrayMap4Asserter.assertInitalStatus(m);
     }
 
     public void testClear() {
-        Assert.areEqual(10, map.size());
-        Assert.isFalse(map.isEmpty());
-
-        map.clear();
-        Assert.areEqual(0, map.size());
-        Assert.isTrue(map.isEmpty());
+        ArrayMap4Asserter.assertClear(map);
     }
 
-    @SuppressWarnings("unchecked")
     public void testClone() {
-        Assert.areEqual(10, map.size());
-        Assert.isFalse(map.isEmpty());
-
-        ArrayMap4<String, Integer> clone = (ArrayMap4<String, Integer>) map
-                .clone();
-        Assert.areEqual(10, clone.size());
-
-        for (int i = 0; i < 10; i++) {
-            Assert.areEqual(Integer.valueOf(i * 100), clone.get(String
-                    .valueOf(i)));
-        }
+        ArrayMap4Asserter.assertClone(map);
     }
 
     public void testContainsKey() {
-        for (int i = 0; i < 10; i++) {
-            Assert.isTrue(map.containsKey(String.valueOf(i)));
-        }
-
-        Assert.isFalse(map.containsKey("10"));
+        ArrayMap4Asserter.assertContainsKey(map);
     }
 
     public void testContainsValue() {
-        for (int i = 0; i < 10; i++) {
-            Assert.isTrue(map.containsValue(Integer.valueOf(i * 100)));
-        }
-
-        Assert.isFalse(map.containsValue("1"));
+        ArrayMap4Asserter.assertContainsValue(map);
     }
 
     public void testEntrySet() {
-        Set<Map.Entry<String, Integer>> set = map.entrySet();
-        Assert.areEqual(10, set.size());
-
-        for (int i = 0; i < 10; i++) {
-            ArrayMap4.MapEntry4<String, Integer> entry = new ArrayMap4.MapEntry4<String, Integer>(
-                    String.valueOf(i), Integer.valueOf(i * 100));
-            Assert.isTrue(set.contains(entry));
-        }
+        ArrayMap4Asserter.assertEntrySet(map);
     }
 
     public void testGet() {
-        for (int i = 0; i < 10; i++) {
-            Integer value = map.get(String.valueOf(i));
-            Assert.areEqual(Integer.valueOf(i * 100), value);
-        }
+        ArrayMap4Asserter.assertGet(map);
     }
 
     public void testIsEmpty() {
-        ArrayMap4<String, String> m = new ArrayMap4<String, String>();
-        Assert.isTrue(m.isEmpty());
-        m.put("key", "value");
-        Assert.isFalse(m.isEmpty());
+        ArrayMap4Asserter.assertIsEmpty(map);
     }
 
     public void testKeySet() {
-        Set<String> set = map.keySet();
-        Assert.areEqual(10, set.size());
-        for (int i = 0; i < 10; i++) {
-            set.contains(String.valueOf(i));
-        }
+        ArrayMap4Asserter.assertKeySet(map);
     }
 
     public void testPut() {
-        ArrayMap4<String, String> m = new ArrayMap4<String, String>();
-        m.put("one", "yi");
-        m.put("two", "er");
-        m.put("three", "san");
-        Assert.areEqual(3, m.size());
-        Assert.areEqual("yi", m.get("one"));
-        Assert.areEqual("er", m.get("two"));
-        Assert.areEqual("san", m.get("three"));
-        
-        m.put("two", "liang");
-        Assert.areEqual("liang", m.get("two"));
+        ArrayMap4Asserter.assertPut(map);
     }
 
     public void testPutAll() {
-        ArrayMap4<String, Integer> other = new ArrayMap4<String, Integer>();
-        for (int i = 10; i < 20; i++) {
-            other.put(String.valueOf(i), Integer.valueOf(i * 100));
-        }
-
-        map.putAll(other);
-
-        Assert.areEqual(20, map.size());
-        for (int i = 0; i < 20; i++) {
-            Assert.areEqual(Integer.valueOf(i * 100), map
-                    .get(String.valueOf(i)));
-        }
+        ArrayMap4Asserter.assertPutAll(map);
     }
 
     public void testRemove() {
@@ -162,85 +96,30 @@ public class ArrayMap4TestCase implements TestLifeCycle {
     }
     
     public void testRemove_FromHead() {
-        Integer value = map.remove("0");
-        Assert.areEqual(Integer.valueOf(0), value);
-        
-        Assert.areEqual(9, map.size());
-        for (int i = 1; i < 10; i++) {
-            Assert.areEqual(Integer.valueOf(i * 100), map
-                    .get(String.valueOf(i)));
-        }
-        Assert.isNull(map.get("0"));
+        ArrayMap4Asserter.assertRemove_FromHead(map);
     }
 
     public void testRemove_FromEnd() {
-        Integer value = map.remove("9");
-        Assert.areEqual(Integer.valueOf(900), value);
-        
-        Assert.areEqual(9, map.size());
-        for (int i = 0; i < 9; i++) {
-            Assert.areEqual(Integer.valueOf(i * 100), map
-                    .get(String.valueOf(i)));
-        }
-        Assert.isNull(map.get("9"));
+        ArrayMap4Asserter.assertRemove_FromEnd(map);
     }
 
     public void testRemove_FromMiddle() {
-        Integer value = map.remove("5");
-        Assert.areEqual(Integer.valueOf(500), value);
-        
-        Assert.areEqual(9, map.size());
-        for (int i = 0; i < 5; i++) {
-            Assert.areEqual(Integer.valueOf(i * 100), map
-                    .get(String.valueOf(i)));
-        }
-        Assert.isNull(map.get("5"));
-        
-        for (int i = 6; i < 9; i++) {
-            Assert.areEqual(Integer.valueOf(i * 100), map
-                    .get(String.valueOf(i)));
-        }
+        ArrayMap4Asserter.assertRemove_FromMiddle(map);
     }
 
     public void testSize() {
-        Assert.areEqual(10, map.size());
-        map.remove("1");
-        Assert.areEqual(9, map.size());
-        map.put("x", Integer.valueOf(1234));
-        Assert.areEqual(10, map.size());
+        ArrayMap4Asserter.assertSize(map);
     }
 
     public void testValues() {
-        Collection<Integer> values = map.values();
-        Assert.areEqual(10, values.size());
-        for (int i = 0; i < 10; i++) {
-            Assert.isTrue(values.contains(Integer.valueOf(i * 100)));
-        }
+        ArrayMap4Asserter.assertValues(map);
     }
 
     public void testEquals() {
-        ArrayMap4<String, Integer> other = new ArrayMap4<String, Integer>();
-        for (int i = 0; i < 10; i++) {
-            other.put(String.valueOf(i), Integer.valueOf(i * 100));
-        }
-        
-        Assert.isTrue(map.equals(other));
-        Assert.isTrue(other.equals(map));
-        Assert.areEqual(map.hashCode(), other.hashCode());
-        Assert.isFalse(map.equals(null));
-        
-        other.remove("5");
-        Assert.isFalse(map.equals(other));
+        ArrayMap4Asserter.assertEquals(map);
     }
     
     public void testIncreaseSize() {
-        ArrayMap4<String, Integer> map = new ArrayMap4<String, Integer>(2);
-        for (int i = 0; i < 50; i++) {
-            map.put(String.valueOf(i), Integer.valueOf(i * 10));
-        }
-        
-        for (int i = 0; i < 50; i++) {
-            Assert.areEqual(Integer.valueOf(i * 10), map.get(String.valueOf(i)));
-        }
+        ArrayMap4Asserter.assertIncreaseSize(map);
     }
 }
