@@ -162,8 +162,8 @@ public class JdkReflector implements Reflector{
         if(claxx == null){
             return null;
         }
-        if(claxx instanceof JdkClass){
-            return ((JdkClass)claxx).getJavaClass();
+        if(claxx instanceof JavaReflectClass){
+            return ((JavaReflectClass)claxx).getJavaClass();
         }
         ReflectClass d = claxx.getDelegate();
         if(d == claxx){

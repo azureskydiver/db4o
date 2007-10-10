@@ -10,7 +10,7 @@ import com.db4o.reflect.*;
 /**
  * Reflection implementation for Class to map to JDK reflection.
  */
-public class JdkClass implements ReflectClass{
+public class JdkClass implements JavaReflectClass{
 	
 	private final Reflector _reflector;
 	private final Class _clazz;
@@ -88,7 +88,7 @@ public class JdkClass implements ReflectClass{
 	}
 
 	public boolean isAssignableFrom(ReflectClass type) {
-		if(!(type instanceof JdkClass)) {
+		if(!(type instanceof JavaReflectClass)) {
 			return false;
 		}
 		return _clazz.isAssignableFrom(JdkReflector.toNative(type));
@@ -127,7 +127,7 @@ public class JdkClass implements ReflectClass{
 		return _constructor.newInstance(_constructorParams);
 	}
 	
-	Class getJavaClass(){
+	public Class getJavaClass(){
 		return _clazz;
 	}
     
