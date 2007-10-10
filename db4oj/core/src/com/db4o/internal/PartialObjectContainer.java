@@ -144,7 +144,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	beginTopLevelCall();
             try {
                 stillToActivate(trans, obj, depth);
-                activate3CheckStill(trans);
+                activatePending(trans);
                 completeTopLevelCall();
             } catch(Db4oException e){
             	completeTopLevelCall(e);
@@ -153,8 +153,18 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	}
         }
     }
+    
+    static final class PendingActivationItem {
+    	public final ObjectReference ref;
+    	public final int depth;
+    	
+    	public PendingActivationItem(ObjectReference ref, int depth) {
+    		this.ref = ref;
+    		this.depth = depth;
+    	}
+    }
 
-	final void activate3CheckStill(Transaction ta){
+	final void activatePending(Transaction ta){
         while (_stillToActivate != null) {
 
             // TODO: Optimize!  A lightweight int array would be faster.
@@ -163,16 +173,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             _stillToActivate = null;
 
             while (i.moveNext()) {
-                ObjectReference yo = (ObjectReference) i.current();
-                
-                i.moveNext();
-                int depth = ((Integer) i.current()).intValue();
-                
-                Object obj = yo.getObject();
+            	PendingActivationItem item = (PendingActivationItem) i.current();
+                ObjectReference ref = item.ref;
+				Object obj = ref.getObject();
                 if (obj == null) {
-                    ta.removeReference(yo);
+                    ta.removeReference(ref);
                 } else {
-                    yo.activate1(ta, obj, depth, _refreshInsteadOfActivate);
+                    ref.activate1(ta, obj, item.depth, _refreshInsteadOfActivate);
                 }
             }
         }
@@ -208,13 +215,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public final ObjectReference bind2(Transaction trans, ObjectReference oldRef, Object obj){
         int id = oldRef.getID();
         trans.removeReference(oldRef);
-        ObjectReference newRef = new ObjectReference(classMetadataForReflectClass(reflector().forObject(obj)),
-            id);
+        ObjectReference newRef = new ObjectReference(classMetadataForObject(obj), id);
         newRef.setObjectWeak(_this, obj);
         newRef.setStateDirty();
         trans.referenceSystem().addExistingReference(newRef);
         return newRef;
     }
+
+	private ClassMetadata classMetadataForObject(Object obj) {
+		return classMetadataForReflectClass(reflector().forObject(obj));
+	}
     
     public abstract byte blockSize();
      
@@ -429,10 +439,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             Iterator4 i = new Iterator4Impl(_stillToDeactivate);
             _stillToDeactivate = null;
             while (i.moveNext()) {
-                ObjectReference currentObject = (ObjectReference) i.current();
-                i.moveNext();
-				Integer currentInteger = ((Integer) i.current());
-				currentObject.deactivate(trans, currentInteger.intValue());
+                PendingActivationItem item = (PendingActivationItem) i.current();
+				item.ref.deactivate(trans, item.depth);
             }
         }
     }
@@ -761,7 +769,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         } finally{
         	endTopLevelCall();
         }
-        activate3CheckStill(ta);
+        activatePending(ta);
         return obj;
     }
     
@@ -1696,15 +1704,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         		return still;
         	}
         	flagAsHandled(ref);
-            return new List4(new List4(still, new Integer(depth)), ref);
+            return new List4(still, new PendingActivationItem(ref, depth));
         } 
         final ReflectClass clazz = reflector().forObject(obj);
 		if (clazz.isArray()) {
 			if (!clazz.getComponentType().isPrimitive()) {
                 Object[] arr = ArrayHandler.toArray(_this, obj);
                 for (int i = 0; i < arr.length; i++) {
-                    still = stillTo1(trans, still, arr[i],
-                        depth, forceUnknownDeactivate);
+                    still = stillTo1(trans, still, arr[i], depth, forceUnknownDeactivate);
                 }
 			}
         } else {
@@ -1714,7 +1721,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             } else {
                 if (forceUnknownDeactivate) {
                     // Special handling to deactivate Top-Level unknown objects only.
-                    ClassMetadata yc = classMetadataForReflectClass(reflector().forObject(obj));
+                    ClassMetadata yc = classMetadataForObject(obj);
                     if (yc != null) {
                         yc.deactivate(trans, obj, depth);
                     }
