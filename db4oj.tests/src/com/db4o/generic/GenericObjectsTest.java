@@ -1,18 +1,18 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.generic;
 
-import java.util.Date;
+import java.util.*;
 
-import com.db4o.ObjectSet;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.internal.*;
+import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.reflect.jdk.JdkReflector;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.Db4oSolo;
+import db4ounit.extensions.fixtures.*;
 
 /**
  * 
@@ -66,7 +66,7 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 	public GenericClass initGenericClass() {
 		GenericReflector reflector = new GenericReflector(
 				null,
-				new JdkReflector(Thread.currentThread().getContextClassLoader()));
+				Platform4.reflectorForType(GenericObjectsTest.class));
 		GenericClass _objectIClass = (GenericClass) reflector
 				.forClass(Object.class);
 		GenericClass result = new GenericClass(reflector, null,
