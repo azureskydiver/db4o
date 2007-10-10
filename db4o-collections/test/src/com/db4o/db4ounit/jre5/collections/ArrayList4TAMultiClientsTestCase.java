@@ -34,6 +34,18 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 		}	
 	};	
 	
+	private static final ArrayList4Operation<Integer> _clearOp = new ArrayList4Operation<Integer>() {
+		public void operate(ArrayList4<Integer> list) {
+			list.clear();
+		}	
+	};	
+
+	private static final ArrayList4Operation<Integer> _containsOp = new ArrayList4Operation<Integer>() {
+		public void operate(ArrayList4<Integer> list) {
+			Assert.isFalse(list.contains(new Integer(ArrayList4Asserter.CAPACITY)));
+		}	
+	};	
+	
 	public void testAddAdd() throws Exception {
 		ArrayList4Operation<Integer> anotherAddOp = new ArrayList4Operation<Integer>() {
 			public void operate(ArrayList4<Integer> list) {
@@ -55,12 +67,22 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	}
 	
 	private void checkAdd() throws Exception {
+		checkListSize(ArrayList4Asserter.CAPACITY+1);
+	}
+	
+	private void checkNotModified() throws Exception {
+		checkListSize(ArrayList4Asserter.CAPACITY);
+	}
+	
+	private void checkListSize(int expectedSize) throws Exception {
 		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
-		Assert.areEqual(ArrayList4Asserter.CAPACITY + 1, list.size());
-		for (int i = 0; i <= ArrayList4Asserter.CAPACITY; ++i) {
+		Assert.areEqual(expectedSize, list.size());
+		for (int i = 0; i < expectedSize; ++i) {
 			Assert.areEqual(new Integer(i), list.get(i));
 		}
 	}
+	
+	
 
 	public void testAddRemove() throws Exception {
 		operate(_addOp, _removeOp);
@@ -108,6 +130,41 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 		};
 		operate(anotherSetOp, _setOp);
 		checkSet();
+	}
+	
+	public void testClearSet() throws Exception {
+		operate(_clearOp, _setOp);
+		checkSet();
+	}
+	
+	public void testSetClear() throws Exception {
+		operate(_setOp, _clearOp);
+		checkClear();
+	}
+	
+	public void testClearRemove() throws Exception {
+		operate(_clearOp, _removeOp);
+		checkRemove();
+	}
+	
+	public void testRemoveClear() throws Exception {
+		operate(_removeOp, _clearOp);
+		checkClear();
+	}
+	
+	public void testContainsAdd() throws Exception {
+		operate(_addOp, _containsOp);
+		checkNotModified();
+	}
+	
+	public void testAddContains() throws Exception {
+		operate(_containsOp, _addOp);
+		checkAdd();
+	}
+	
+	private void checkClear() throws Exception {
+		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
+		Assert.areEqual(0, list.size());
 	}
 
 	private void checkSet() throws Exception {
