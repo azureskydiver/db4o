@@ -378,7 +378,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return true;
 	}
 
-	private void loginToServer(Socket4 a_socket) throws InvalidPasswordException {
+	private void loginToServer(Socket4 socket) throws InvalidPasswordException {
 		UnicodeStringIO stringWriter = new UnicodeStringIO();
 		int length = stringWriter.length(_userName)
 				+ stringWriter.length(_password);
@@ -386,17 +386,25 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 				.getWriterForLength(systemTransaction(), length);
 		message.writeString(_userName);
 		message.writeString(_password);
-		message.write(a_socket);
-		Msg msg = Msg.readMessage(this, systemTransaction(), a_socket);
-		if (!Msg.LOGIN_OK.equals(msg)) {
-			throw new InvalidPasswordException();
-		}
+		message.write(socket);
+		Msg msg = readLoginMessage(socket);
 		Buffer payLoad = msg.payLoad();
 		_blockSize = payLoad.readInt();
 		int doEncrypt = payLoad.readInt();
 		if (doEncrypt == 0) {
 			_handlers.oldEncryptionOff();
 		}
+	}
+	
+	private Msg readLoginMessage(Socket4 socket){
+       Msg msg = Msg.readMessage(this, systemTransaction(), socket);
+       while(Msg.PING.equals(msg)){
+           msg = Msg.readMessage(this, systemTransaction(), socket);
+       }
+       if (!Msg.LOGIN_OK.equals(msg)) {
+            throw new InvalidPasswordException();
+       }
+       return msg;
 	}
 
 	public boolean maintainsIndices() {
@@ -608,8 +616,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// do nothing
 	}
 
-	public final void write(Msg msg) {
+	public final boolean write(Msg msg) {
 		writeMsg(msg, true);
+		return true;
 	}
 	
 	public final void writeBatchedMessage(Msg msg) {
@@ -632,8 +641,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	}
 
-	public void writeMessageToSocket(Msg msg) {
-		msg.write(i_socket);
+	public boolean writeMessageToSocket(Msg msg) {
+		return msg.write(i_socket);
 	}
 	
 	public final void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {

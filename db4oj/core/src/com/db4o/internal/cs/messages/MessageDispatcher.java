@@ -11,7 +11,7 @@ public interface MessageDispatcher {
 
 	public boolean isMessageDispatcherAlive();
 	
-	public void write(Msg msg);
+	public boolean write(Msg msg);
 	
 	public boolean close();
 

@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
 			 */
 		    ActivateDepthTestCase.class,
 			LazyQueryDeleteTestCase.class,
+            PingTestCase.class,
 			SODAClassTypeDescend.class,			
 		};
 	}

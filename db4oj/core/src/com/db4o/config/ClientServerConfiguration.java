@@ -71,25 +71,6 @@ public interface ClientServerConfiguration {
 	 */
 	public void timeoutServerSocket(int milliseconds);
 
-	/**
-	 * configures the delay time after which the server starts pinging connected
-	 * clients to check the connection. <br>
-	 * <br>
-	 * If no client messages are received by the server for the configured
-	 * interval, the server sends a "PING" message to the client and wait's for
-	 * an "PONG" response. <br>
-	 * <br>
-	 * This value may need to be increased for single-threaded clients, since
-	 * they can't respond instantaneously. <br>
-	 * <br>
-	 * Default value: 180000ms (3 minutes)<br>
-	 * <br>
-	 * This setting can be used on both client and server.<br><br> 
-	 * @param milliseconds
-	 *            time in milliseconds
-	 * @see #singleThreadedClient
-	 */
-	public void pingInterval(int milliseconds);
 	
 	/**
      * configures the client messaging system to be single threaded 

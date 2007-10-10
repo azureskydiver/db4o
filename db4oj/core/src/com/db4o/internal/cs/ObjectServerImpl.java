@@ -40,8 +40,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
     
     private boolean _caresAboutCommitted;
 
-	private SimpleTimer _houseKeepingTimer;
-	
 	private final NativeSocketFactory _socketFactory;
 
 	private final boolean _isEmbeddedServer;
@@ -66,7 +64,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		try {
 			ensureLoadStaticClass();
 			startCommittedCallbackThread(_committedInfosQueue);
-			startHouseKeepingTimer();
 			startServer();
 			ok = true;
 		} finally {
@@ -74,11 +71,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 				close();
 			}
 		}
-	}
-
-	private void startHouseKeepingTimer() {
-		_houseKeepingTimer = new SimpleTimer(new HouseKeepingTask(this), 1, "HouseKeeping"); //$NON-NLS-1$
-		_houseKeepingTimer.start();
 	}
 
 	private void startServer() {		
@@ -150,7 +142,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	public synchronized boolean close() {
 		closeServerSocket();
 		stopCommittedCallbacksDispatcher();
-		stopHouseKeepingTimer();
 		closeMessageDispatchers();
 		return closeFile();
 	}
@@ -161,12 +152,6 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 		}
 	}
 
-	private void stopHouseKeepingTimer() {
-		if(_houseKeepingTimer != null ) {
-			_houseKeepingTimer.stop();
-		}
-	}
-	
 	private boolean closeFile() {
 		if (_container != null) {
 			_transactionPool.close();
@@ -227,7 +212,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 			Iterator4 i = _dispatchers.iterator();
 			while (i.moveNext()) {
 				ServerMessageDispatcherImpl serverThread = (ServerMessageDispatcherImpl) i.current();
-				if (serverThread.i_threadID == a_threadID) {
+				if (serverThread._threadID == a_threadID) {
 					return serverThread;
 				}
 			}
