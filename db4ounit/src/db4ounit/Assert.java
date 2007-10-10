@@ -2,15 +2,17 @@ package db4ounit;
 
 public final class Assert {
 	
-	public static void expect(Class exception, CodeBlock block) {
+	public static Throwable expect(Class exception, CodeBlock block) {
 		Throwable e = getThrowable(block);
 		assertThrowable(exception, e);
+		return e;
 	}
 
-	public static void expect(Class exception, Class cause, CodeBlock block) {
+	public static Throwable expect(Class exception, Class cause, CodeBlock block) {
 		Throwable e = getThrowable(block);
 		assertThrowable(exception, e);
 		assertThrowable(cause, TestPlatform.getExceptionCause(e));
+		return e;
 	}
 	
 	private static void assertThrowable(Class exception, Throwable e) {
