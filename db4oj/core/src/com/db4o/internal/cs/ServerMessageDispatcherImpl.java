@@ -10,24 +10,21 @@ import com.db4o.internal.cs.messages.*;
 
 public final class ServerMessageDispatcherImpl extends Thread implements ServerMessageDispatcher {
 
-    private String i_clientName;
+    private String _clientName;
 
-    private boolean i_loggedin;
-    private long _lastActiveTime;
+    private boolean _loggedin;
+    
+    private boolean _closeMessageSent;
 
-    private boolean i_sendCloseMessage = true;
+    private final ObjectServerImpl _server;
 
-    private final ObjectServerImpl i_server;
-
-    private Socket4 i_socket;
+    private Socket4 _socket;
 
     private ClientTransactionHandle _transactionHandle;
     
     private Hashtable4 _queryResults;
     
-    private Config4Impl i_config;
-
-    final int i_threadID;
+    final int _threadID;
 
 	private CallbackObjectInfoCollections _committedInfo;
 
@@ -36,8 +33,10 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	private boolean _isClosed;
 	
 	private final Object _lock = new Object();
+	
 	private final Object _mainLock;
-
+	
+	
     ServerMessageDispatcherImpl(ObjectServerImpl server,
 			ClientTransactionHandle transactionHandle, Socket4 socket,
 			int threadID, boolean loggedIn, Object mainLock) throws Exception {
@@ -47,15 +46,13 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
 		setDaemon(true);
 
-		i_loggedin = loggedIn;
+		_loggedin = loggedIn;
 
-		updateLastActiveTime();
-		i_server = server;
-		i_config = (Config4Impl) i_server.configure();
-		i_threadID = threadID;
+		_server = server;
+		_threadID = threadID;
 		setDispatcherName("" + threadID);
-		i_socket = socket;
-		i_socket.setSoTimeout(((Config4Impl) server.configure())
+		_socket = socket;
+		_socket.setSoTimeout(((Config4Impl) server.configure())
 				.timeoutServerSocket());
 
 		// TODO: Experiment with packetsize and noDelay
@@ -64,54 +61,57 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	}
 
     public boolean close() {
+        synchronized(_lock) {
+            if (!isMessageDispatcherAlive()) {
+                return true;
+            }
+            _isClosed = true;
+        }
     	synchronized(_mainLock) {
-	    	synchronized(_lock) {
-				if (!isMessageDispatcherAlive()) {
-					return true;
-				}
-				_isClosed = true;
-				_transactionHandle.releaseTransaction();
-				sendCloseMessage();
-				_transactionHandle.close();
-				closeSocket();
-				removeFromServer();
-				return true;
-	    	}
+			_transactionHandle.releaseTransaction();
+			sendCloseMessage();
+			_transactionHandle.close();
+			closeSocket();
+			removeFromServer();
+			return true;
     	}
 	}
 
     public void closeConnection() {
-		synchronized (_mainLock) {
-			synchronized (_lock) {
-				if (!isMessageDispatcherAlive()) {
-					return;
-				}
-				sendCloseMessage();
-				_isClosed = true;
-				closeSocket();
-				removeFromServer();
+        synchronized (_lock) {
+			if (!isMessageDispatcherAlive()) {
+				return;
 			}
+			_isClosed = true;
+        }
+        synchronized (_mainLock) {
+			closeSocket();
+			removeFromServer();
 		}
 	}
-		
     
-	public void sendCloseMessage() {
+    public boolean isMessageDispatcherAlive() {
+        synchronized(_lock){
+            return !_isClosed;
+        }
+    }
+
+	private void sendCloseMessage() {
 		try {
-            if (i_sendCloseMessage) {
+            if (! _closeMessageSent) {
+                _closeMessageSent = true;
                 write(Msg.CLOSE);
             }
-            i_sendCloseMessage = false;
         } catch (Exception e) {
             if (Debug.atHome) {
                 e.printStackTrace();
             }
-
         }
 	}
 
 	private void removeFromServer() {
 		try {
-            i_server.removeThread(this);
+            _server.removeThread(this);
         } catch (Exception e) {
             if (Debug.atHome) {
                 e.printStackTrace();
@@ -121,8 +121,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
 	private void closeSocket() {
 		try {
-			if(i_socket != null) {
-				i_socket.close();
+			if(_socket != null) {
+				_socket.close();
 			}
         } catch (Db4oIOException e) {
             if (Debug.atHome) {
@@ -131,42 +131,49 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
         }
 	}
 
-    public synchronized boolean isMessageDispatcherAlive() {
-		return !_isClosed;
-	}
-
 	public Transaction getTransaction() {
     	return _transactionHandle.transaction();
     }
 
     public void run() {
+        messageLoop();
+        close();
+    }
+    
+    private void messageLoop(){
         while (isMessageDispatcherAlive()) {
             try {
                 if(! messageProcessor()){
-                    break;
+                    return;
                 }
             } catch (Db4oIOException e) {
-                if (Debug.atHome) {
-                    e.printStackTrace();
+                if(isClosed()){
+                    return;
                 }
-                if (_transactionHandle.isClosed()) {
-                    break;
-                }
-                if(i_socket == null ||  ! i_socket.isConnected()){
-                	break;
+                if(!pingClientSuccessful()){
+                    return;
                 }
             }
         }
-        close();
+    }
+    
+    private boolean isClosed(){
+        return ! isMessageDispatcherAlive() ||
+              _transactionHandle.isClosed() || 
+               _socket == null ||  
+             ! _socket.isConnected();
+    }
+    
+    private boolean pingClientSuccessful(){
+        return write(Msg.PING);
     }
 
     private boolean messageProcessor() throws Db4oIOException{
-        Msg message = Msg.readMessage(this, getTransaction(), i_socket);
+        Msg message = Msg.readMessage(this, getTransaction(), _socket);
         if(message == null){
             return true;
         }
-        updateLastActiveTime();
-        if(!i_loggedin && !Msg.LOGIN.equals(message)) {
+        if(!_loggedin && !Msg.LOGIN.equals(message)) {
         	return true;
         }
 
@@ -178,12 +185,8 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     	return false;
     }
 
-	private void updateLastActiveTime() {
-		_lastActiveTime = System.currentTimeMillis();
-	}
-
     public ObjectServerImpl server() {
-    	return i_server;
+    	return _server;
     }
     
 	public void queryResultFinalized(int queryResultID) {
@@ -228,14 +231,13 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 
     public void useTransaction(MUseTransaction message) {
         int threadID = message.readInt();
-		Transaction transToUse = i_server.findTransaction(threadID);
+		Transaction transToUse = _server.findTransaction(threadID);
 		_transactionHandle.transaction(transToUse);
     }
     
-    public void write(Msg msg){
+    public boolean write(Msg msg){
     	synchronized(_lock) {
-    		msg.write(i_socket);
-	    	updateLastActiveTime();
+    		return msg.write(_socket);
     	}
     }
     
@@ -248,25 +250,25 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     }
     
     public Socket4 socket(){
-    	return i_socket;
+    	return _socket;
     }
 
 	public String name() {
-		return i_clientName;
+		return _clientName;
 	}
 	
 	public void setDispatcherName(String name) {
-		i_clientName = name;
+		_clientName = name;
 		// set thread name
 		setName("db4o server message dispatcher " + name);
 	}
     
     public int dispatcherID() {
-    	return i_threadID;
+    	return _threadID;
     }
 
 	public void login() {
-		i_loggedin = true;
+		_loggedin = true;
 	}
 
 	public void startDispatcher() {
@@ -289,10 +291,6 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	public void committedInfo(CallbackObjectInfoCollections committedInfo) {
 		_committedInfo = committedInfo;
 	}
-
-	public boolean isPingTimeout() {
-		long elapsed = System.currentTimeMillis() - _lastActiveTime;
-		return i_loggedin && ((elapsed > i_config.pingInterval()));
-	}
+	
 
 }

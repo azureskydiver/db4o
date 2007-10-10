@@ -59,8 +59,9 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 		return message instanceof ClientSideMessage;
 	}
 	
-	public void write(Msg msg) {
+	public boolean write(Msg msg) {
 		i_stream.write(msg);
+		return true;
 	}
 
 	public void setDispatcherName(String name) {

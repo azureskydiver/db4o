@@ -225,7 +225,7 @@ public abstract class Msg implements Cloneable {
     	write(ID_LIST.getWriterForInt(transaction(), response));
     }
 	
-	public final void write(Socket4 sock) {
+	public boolean write(Socket4 sock) {
 		if (null == sock) {
 			throw new ArgumentNullException();
 		}
@@ -236,10 +236,14 @@ public abstract class Msg implements Cloneable {
 				}
 				sock.write(payLoad()._buffer);
 				sock.flush();
+				return true;
 			} catch (Exception e) {
+			    
                 // TODO: .NET convert SocketException to Db4oIOException
 				// and let Db4oIOException bubble up.
                 //e.printStackTrace();
+			    
+			    return false; 
 			}
 		}
 	}
