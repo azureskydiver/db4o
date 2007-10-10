@@ -32,18 +32,17 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
         ThreadServices.spawnAndJoin(CLIENT_COUNT, new CodeBlock() {
             public void run() throws Throwable {
                 String result = JavaServices.java(clientRunnerCommand());
-                Assert.isTrue(result.indexOf(CLIENT_COMPLETED_OK) >= 0);
                 results.append(result);
+                Assert.isTrue(result.indexOf(CLIENT_COMPLETED_OK) >= 0);
             }
         });
-        asserItemCount(CLIENT_COUNT * ITEM_COUNT);
-        
         System.out.println(results);
+        asserItemCount(CLIENT_COUNT * ITEM_COUNT);
     }
 
-    public void _testKillingClients() throws InterruptedException{
+    public void testKillingClients() throws InterruptedException{
 
-        final int CLIENT_COUNT = 10;  
+        final int CLIENT_COUNT = 1;  
         
         final StringBuffer results = new StringBuffer();
         
