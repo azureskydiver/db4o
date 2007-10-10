@@ -54,7 +54,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 
 	public void activate(Transaction ta, Object obj, int depth, boolean isRefresh) {
 	    activate1(ta, obj, depth, isRefresh);
-		ta.container().activate3CheckStill(ta);
+		ta.container().activatePending(ta);
 	}
 	
 	void activate1(Transaction ta, Object obj, int depth, boolean isRefresh) {
