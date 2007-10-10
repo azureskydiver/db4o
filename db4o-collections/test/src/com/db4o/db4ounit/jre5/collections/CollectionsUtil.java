@@ -13,27 +13,44 @@ import db4ounit.extensions.*;
  * @exclude
  */
 public class CollectionsUtil {
-	@SuppressWarnings("unchecked")
-	public static ArrayList4<Integer> retrieveAndAssertNullArrayList4(
-			ExtObjectContainer oc, Reflector reflector) throws Exception {
-		ArrayList4<Integer> list = (ArrayList4<Integer>) AbstractDb4oTestCase
-				.retrieveOnlyInstance(oc, ArrayList4.class);
-		assertNullArrayList4(list, reflector);
-		return list;
-	}
+    @SuppressWarnings("unchecked")
+    public static ArrayList4<Integer> retrieveAndAssertNullArrayList4(
+            ExtObjectContainer oc, Reflector reflector) throws Exception {
+        ArrayList4<Integer> list = (ArrayList4<Integer>) AbstractDb4oTestCase
+                .retrieveOnlyInstance(oc, ArrayList4.class);
+        assertNullArrayList4(list, reflector);
+        return list;
+    }
 
-	private static void assertNullArrayList4(ArrayList4<Integer> list,
-			Reflector reflector) throws Exception {
-		Assert.isNull(getField(reflector, list, "elements"));
-		Assert.areEqual(0, getField(reflector, list, "capacity"));
-		Assert.areEqual(0, getField(reflector, list, "listSize"));
-	}
+    private static void assertNullArrayList4(ArrayList4<Integer> list,
+            Reflector reflector) throws Exception {
+        Assert.isNull(getField(reflector, list, "elements"));
+        Assert.areEqual(0, getField(reflector, list, "capacity"));
+        Assert.areEqual(0, getField(reflector, list, "listSize"));
+    }
 
-	private static Object getField(Reflector reflector, Object parent,
-			String fieldName) {
-		ReflectClass parentClazz = reflector.forObject(parent);
-		ReflectField field = parentClazz.getDeclaredField(fieldName);
-		field.setAccessible();
-		return field.get(parent);
-	}
+    private static Object getField(Reflector reflector, Object parent,
+            String fieldName) {
+        ReflectClass parentClazz = reflector.forObject(parent);
+        ReflectField field = parentClazz.getDeclaredField(fieldName);
+        field.setAccessible();
+        return field.get(parent);
+    }
+
+    private static void assertRetrieveStatus(Reflector reflector,
+            ArrayMap4<String, Integer> map) {
+        Assert.isNull(getField(reflector, map, "_keys"));
+        Assert.isNull(getField(reflector, map, "_values"));
+        Assert.areEqual(0, getField(reflector, map, "_startIndex"));
+        Assert.areEqual(0, getField(reflector, map, "_endIndex"));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static ArrayMap4<String, Integer> retrieveMapFromDB(
+            ExtObjectContainer oc, Reflector reflector) {
+        ArrayMap4<String, Integer> map = (ArrayMap4<String, Integer>) AbstractDb4oTestCase
+                .retrieveOnlyInstance(oc, ArrayMap4.class);
+        assertRetrieveStatus(reflector, map);
+        return map;
+    }
 }

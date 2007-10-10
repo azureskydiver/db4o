@@ -13,6 +13,7 @@ public class AllTests extends Db4oConcurrenyTestSuite {
 	protected Class[] testCases() {
 		return new Class[] { 
 			ArrayList4TestCase.class,
+			ArrayMap4TestCase.class,
 		};
 	}
 
