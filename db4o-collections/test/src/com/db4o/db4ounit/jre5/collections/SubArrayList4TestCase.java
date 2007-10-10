@@ -18,6 +18,10 @@ public class SubArrayList4TestCase implements TestLifeCycle {
 		ArrayList4Asserter.CAPACITY = 10;
 	}
 	
+	public void tearDown() throws Exception {
+		ArrayList4Asserter.CAPACITY = 100;
+	}
+	
 	public void testAdd() throws Exception {
 		ArrayList4Asserter.assertAdd(_subList);
 	}
@@ -121,8 +125,5 @@ public class SubArrayList4TestCase implements TestLifeCycle {
 	public void testSubList_ConcurrentModification() throws Exception {
 		ArrayList4Asserter.assertSubList_ConcurrentModification(_subList);
 	}	
-	public void tearDown() throws Exception {
-		ArrayList4Asserter.CAPACITY = 100;
-	}
 
 }
