@@ -4,6 +4,7 @@ package com.db4o.db4ounit.util;
 
 import java.io.*;
 
+import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 
 
@@ -21,11 +22,12 @@ public class JavaServices {
     }
 
     private static String javaExecutable() {
-        return  Path4.combine(Path4.combine(javaHome(), "bin"), "java"); 
-    }
-    
-    private static String javaHome(){
-        return System.getProperty("java.home");
+        for (int i = 0; i < vmTypes.length; i++) {
+            if(vmTypes[i].identified()){
+                return vmTypes[i].executable();
+            }
+        }
+        throw new NotImplementedException("VM " + vmName() + " not known. Please add as JavaVM class to end of JavaServices class.");
     }
     
     private static String[] javaRunArguments(String className) {
@@ -33,7 +35,53 @@ public class JavaServices {
     }
     
     private static String currentClassPath(){
-        return System.getProperty("java.class.path");
+        return property("java.class.path");
+    }
+    
+    static String javaHome(){
+        return property("java.home");
+    }
+    
+    static String vmName(){
+        return property("java.vm.name");
+    }
+    
+    static String property(String propertyName){
+        return System.getProperty(propertyName);
+    }
+    
+    private static final JavaVM[] vmTypes = new JavaVM[]{
+        new J9(),
+        new SunWindows(),
+    };
+    
+    static interface JavaVM {
+        boolean identified();
+        String executable();
+    }
+    
+    static class SunWindows implements JavaVM{
+        public String executable() {
+            return  Path4.combine(Path4.combine(javaHome(), "bin"), "java");
+        }
+        public boolean identified() {
+            return true;
+        }
+    }
+    
+    static class J9 implements JavaVM{
+        public String executable() {
+            
+            // The following does start J9, but it produces an error:
+            // JVMJ9VM011W Unable to load jclfoun10_23: The specified module could not be found. 
+            
+            return property("com.ibm.oti.vm.exe");
+        }
+        public boolean identified() {
+            return false;
+            // return vmName().equals("J9");
+        }
+        
     }
 
 }
