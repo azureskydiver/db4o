@@ -67,6 +67,21 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 		checkRemove();
 	}
 	
+	public void testsetRemove() throws Exception {
+		operate(_setOp, _removeOp);
+		checkRemove();
+	}
+	
+	public void testRemoveRemove() throws Exception {
+		ArrayList4Operation<Integer> anotherRemoveOp = new ArrayList4Operation<Integer>() {
+			public void operate(ArrayList4<Integer> list) {
+				list.remove(1);
+			}	
+		};	
+		operate(anotherRemoveOp, _removeOp);
+		checkRemove();
+	}
+	
 	private void checkRemove() throws Exception {
 		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
 		Assert.areEqual(ArrayList4Asserter.CAPACITY - 1, list.size());
@@ -77,6 +92,21 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 
 	public void testAddSet() throws Exception {
 		operate(_addOp, _setOp);
+		checkSet();
+	}
+	
+	public void testRemoveSet() throws Exception {
+		operate(_removeOp, _setOp);
+		checkSet();
+	}
+	
+	public void testSetSet() throws Exception {
+		ArrayList4Operation<Integer>  anotherSetOp = new ArrayList4Operation<Integer>() {
+			public void operate(ArrayList4<Integer> list) {
+				list.set(0, new Integer(2));
+			}	
+		};
+		operate(anotherSetOp, _setOp);
 		checkSet();
 	}
 
