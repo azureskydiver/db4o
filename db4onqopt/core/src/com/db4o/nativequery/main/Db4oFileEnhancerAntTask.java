@@ -14,7 +14,12 @@ public class Db4oFileEnhancerAntTask extends Task {
 	private String targetDir;
 	private List classPath=new ArrayList();
 	private String packagePredicate;
-	
+	private String editClassName = TranslateNQToSODAEdit.class.getName();
+
+	public void setEditClass(String editClassName) {
+		this.editClassName = editClassName;
+	}
+
 	public void setSrcdir(String srcDir) {
 		this.srcDir=srcDir;
 	}
@@ -42,7 +47,8 @@ public class Db4oFileEnhancerAntTask extends Task {
 			}
 		}
 		try {
-			new Db4oFileEnhancer(new TranslateNQToSODAEdit()).enhance(srcDir,targetDir,(String[])paths.toArray(new String[paths.size()]),(packagePredicate==null ? "" : packagePredicate));
+			BloatClassEdit clazzEdit = (BloatClassEdit) Class.forName(editClassName).newInstance();
+			new Db4oFileEnhancer(clazzEdit).enhance(srcDir,targetDir,(String[])paths.toArray(new String[paths.size()]),(packagePredicate==null ? "" : packagePredicate));
 		} catch (Exception exc) {
 			throw new BuildException(exc);
 		}

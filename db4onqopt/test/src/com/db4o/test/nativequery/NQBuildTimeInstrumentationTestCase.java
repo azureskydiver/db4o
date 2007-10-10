@@ -12,25 +12,32 @@ import com.db4o.test.util.*;
 
 import db4ounit.*;
 
-public class NQFileEnhancerTestCase implements TestCase {
+public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 
-	public void test() throws Exception {
-		final String srcDir = Path4.combine(Path4.getTempPath(), "nqfileinstr/source");
-		File4.mkdirs(srcDir);
-		final String targetDir = Path4.combine(Path4.getTempPath(), "nqfileinstr/target");
-		File4.mkdirs(targetDir);
+	private final static String SRC_DIR = Path4.combine(Path4.getTempPath(), "nqfileinstr/source");
+	private final static String TARGET_DIR = Path4.combine(Path4.getTempPath(), "nqfileinstr/target");
+	private final static Class[] CLAZZES = { ToBeInstrumented.class, NotToBeInstrumented.class };
 
-		final Class[] clazzes = { ToBeInstrumented.class, NotToBeInstrumented.class };
-		
-		for (int clazzIdx = 0; clazzIdx < clazzes.length; clazzIdx++) {
-			copyClassFile(srcDir, clazzes[clazzIdx]);
-		}
-		
+
+	public void testFileEnhancer() throws Exception {		
 		Db4oFileEnhancer enhancer = new Db4oFileEnhancer(new TranslateNQToSODAEdit());
-		enhancer.enhance(srcDir, targetDir, new String[]{}, "");
-		
-		ExcludingClassLoader excludingLoader = new ExcludingClassLoader(getClass().getClassLoader(), clazzes);
-		URLClassLoader loader = new URLClassLoader(new URL[] { new File(targetDir).toURI().toURL() }, excludingLoader);
+		enhancer.enhance(SRC_DIR, TARGET_DIR, new String[]{}, "");		
+		assertInstrumented();
+	}
+
+	public void testAntTask() throws Exception {		
+		Db4oFileEnhancerAntTask antTask = new Db4oFileEnhancerAntTask();
+		antTask.setSrcdir(SRC_DIR);
+		antTask.setTargetdir(TARGET_DIR);
+		antTask.setEditClass(TranslateNQToSODAEdit.class.getName());
+		antTask.execute();
+		assertInstrumented();
+	}
+
+	private void assertInstrumented() throws MalformedURLException,
+			ClassNotFoundException, NoSuchMethodException {
+		ExcludingClassLoader excludingLoader = new ExcludingClassLoader(getClass().getClassLoader(), CLAZZES);
+		URLClassLoader loader = new URLClassLoader(new URL[] { new File(TARGET_DIR).toURI().toURL() }, excludingLoader);
 		
 		Class instrumented = loader.loadClass(ToBeInstrumented.class.getName());
 		final Class[] queryClassSig = new Class[]{Query.class};
@@ -56,5 +63,16 @@ public class NQFileEnhancerTestCase implements TestCase {
 		String simpleName = clazzName.substring(dotIdx + 1);
 		URL url = clazz.getResource(simpleName + ".class");
 		return new File(url.getPath());
+	}
+
+	public void setUp() throws Exception {
+		File4.mkdirs(SRC_DIR);
+		File4.mkdirs(TARGET_DIR);		
+		for (int clazzIdx = 0; clazzIdx < CLAZZES.length; clazzIdx++) {
+			copyClassFile(SRC_DIR, CLAZZES[clazzIdx]);
+		}
+	}
+
+	public void tearDown() throws Exception {
 	}
 }
