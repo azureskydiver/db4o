@@ -68,7 +68,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     private List4           _stillToActivate;
     private List4           _stillToDeactivate;
-
     private List4           _stillToSet;
 
     // used for ClassMetadata and ClassMetadataRepository
@@ -154,11 +153,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    static final class PendingActivationItem {
+    static final class PendingActivation {
     	public final ObjectReference ref;
     	public final int depth;
     	
-    	public PendingActivationItem(ObjectReference ref, int depth) {
+    	public PendingActivation(ObjectReference ref, int depth) {
     		this.ref = ref;
     		this.depth = depth;
     	}
@@ -169,13 +168,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
             // TODO: Optimize!  A lightweight int array would be faster.
 
-            Iterator4 i = new Iterator4Impl(_stillToActivate);
+            final Iterator4 i = new Iterator4Impl(_stillToActivate);
             _stillToActivate = null;
 
             while (i.moveNext()) {
-            	PendingActivationItem item = (PendingActivationItem) i.current();
-                ObjectReference ref = item.ref;
-				Object obj = ref.getObject();
+            	final PendingActivation item = (PendingActivation) i.current();
+                final ObjectReference ref = item.ref;
+				final Object obj = ref.getObject();
                 if (obj == null) {
                     ta.removeReference(ref);
                 } else {
@@ -439,7 +438,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             Iterator4 i = new Iterator4Impl(_stillToDeactivate);
             _stillToDeactivate = null;
             while (i.moveNext()) {
-                PendingActivationItem item = (PendingActivationItem) i.current();
+                PendingActivation item = (PendingActivation) i.current();
 				item.ref.deactivate(trans, item.depth);
             }
         }
@@ -1550,18 +1549,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             Iterator4 i = new Iterator4Impl(_stillToSet);
             _stillToSet = null;
             while (i.moveNext()) {
-                Integer updateDepth = (Integer)i.current();
+                PendingSet item = (PendingSet)i.current();
                 
-                i.moveNext();
-                ObjectReference ref = (ObjectReference)i.current();
+                ObjectReference ref = item.ref;
+                Transaction trans = item.transaction;
                 
-                i.moveNext();
-                Transaction trans = (Transaction)i.current();
-                
-                if(! ref.continueSet(trans, updateDepth.intValue())){
-                    postponedStillToSet = new List4(postponedStillToSet, trans);
-                    postponedStillToSet = new List4(postponedStillToSet, ref);
-                    postponedStillToSet = new List4(postponedStillToSet, updateDepth);
+                if(! ref.continueSet(trans, item.depth)) {
+                    postponedStillToSet = new List4(postponedStillToSet, item);
                 }
             }
         }
@@ -1704,7 +1698,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         		return still;
         	}
         	flagAsHandled(ref);
-            return new List4(still, new PendingActivationItem(ref, depth));
+            return new List4(still, new PendingActivation(ref, depth));
         } 
         final ReflectClass clazz = reflector().forObject(obj);
 		if (clazz.isArray()) {
@@ -1750,16 +1744,26 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         boolean a_forceUnknownDeactivate) {
         _stillToDeactivate = stillTo1(trans, _stillToDeactivate, a_object, a_depth, a_forceUnknownDeactivate);
     }
+    
+    static class PendingSet {
+    	public final Transaction transaction;
+    	public final ObjectReference ref;
+    	public final int depth;
+    	
+    	public PendingSet(Transaction transaction, ObjectReference ref, int depth) {
+    		this.transaction = transaction;
+    		this.ref = ref;
+    		this.depth = depth;
+		}
+    }
 
-    void stillToSet(Transaction a_trans, ObjectReference a_yapObject, int a_updateDepth) {
+    void stillToSet(Transaction transaction, ObjectReference ref, int updateDepth) {
         if(stackIsSmall()){
-            if(a_yapObject.continueSet(a_trans, a_updateDepth)){
+            if(ref.continueSet(transaction, updateDepth)){
                 return;
             }
         }
-        _stillToSet = new List4(_stillToSet, a_trans);
-        _stillToSet = new List4(_stillToSet, a_yapObject);
-        _stillToSet = new List4(_stillToSet, new Integer(a_updateDepth));
+        _stillToSet = new List4(_stillToSet, new PendingSet(transaction, ref, updateDepth));
     }
 
     protected final void stopSession() {
