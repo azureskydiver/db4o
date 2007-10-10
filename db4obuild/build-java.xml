@@ -616,6 +616,7 @@
             <pathelement path="${dir.dist.classes.test.jdk1.2}" />
             <pathelement location="${file.java1.2.jar}" />
 			<pathelement location="${file.db4ounit.jar}" />
+			<pathelement location="${file.ant.jar}" />
         </path>
 
 		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="320000">
@@ -1002,11 +1003,9 @@
 		</zip>
 	</target>
 	
-	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk5" />
+	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests" />
 	<target name="cc.step.3" 
-		depends="run.tests.jdk1.1, 
-				run.tests.jdk1.2, 
-				run.tests.nqopt,
+		depends="run.tests.nqopt,
 				run.tests.ta,
 				run.tests.concurrency, 
 				run.tests.osgi,

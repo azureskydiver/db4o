@@ -174,13 +174,10 @@
 		</sequential>
 	</macrodef>
 
-	<target name="get-iteration">
+	<target name="properties" depends="get-svn-revision">
 		<tstamp>
 			<format property="db4o.iteration" pattern="w" offset="-29" unit="week"/>
 		</tstamp>
-	</target>
-	
-	<target name="properties" depends="get-iteration, get-svn-revision">
 		<property name="db4o.version.iteration.revision" value="${db4o.version.dotted}.${db4o.iteration}.${svn.revision}" />
 		<property name="db4o.file" value="db4o-${db4o.version.iteration.revision}-" />
 		
