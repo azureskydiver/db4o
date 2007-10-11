@@ -10,15 +10,7 @@ import java.lang.reflect.Method;
 
 import EDU.purdue.cs.bloat.file.ClassSource;
 
-import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
-import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
-import com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor;
-import com.db4o.nativequery.expr.cmp.ConstValue;
-import com.db4o.nativequery.expr.cmp.FieldValue;
-import com.db4o.nativequery.expr.cmp.MethodCallValue;
-import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
+import com.db4o.nativequery.expr.cmp.operand.*;
 
 class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	private Class _predicateClass;

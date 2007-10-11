@@ -5,7 +5,7 @@ package com.db4o.nativequery.main;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 

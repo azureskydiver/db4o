@@ -9,7 +9,7 @@ import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.file.ClassSource;
 import EDU.purdue.cs.bloat.tree.PrintVisitor;
 
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
 import com.db4o.nativequery.NQDebug;
 import com.db4o.nativequery.analysis.BloatExprBuilderVisitor;
 import com.db4o.nativequery.expr.Expression;

@@ -10,9 +10,7 @@ import com.db4o.nativequery.expr.NotExpression;
 import com.db4o.nativequery.expr.OrExpression;
 import com.db4o.nativequery.expr.build.ExpressionBuilder;
 import com.db4o.nativequery.expr.cmp.ComparisonOperator;
-import com.db4o.nativequery.expr.cmp.ConstValue;
-import com.db4o.nativequery.expr.cmp.FieldValue;
-import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
+import com.db4o.nativequery.expr.cmp.operand.*;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;

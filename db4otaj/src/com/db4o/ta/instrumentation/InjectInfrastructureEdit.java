@@ -13,7 +13,7 @@ import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.reflect.Modifiers;
 
 import com.db4o.activation.Activator;
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
 import com.db4o.ta.Activatable;
 
 public class InjectInfrastructureEdit implements BloatClassEdit {

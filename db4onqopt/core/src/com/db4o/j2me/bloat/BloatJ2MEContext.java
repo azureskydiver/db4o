@@ -4,7 +4,7 @@ package com.db4o.j2me.bloat;
 
 import java.io.File;
 
-import com.db4o.instrumentation.LabelGenerator;
+import com.db4o.instrumentation.core.*;
 
 import EDU.purdue.cs.bloat.context.PersistentBloatContext;
 import EDU.purdue.cs.bloat.editor.*;

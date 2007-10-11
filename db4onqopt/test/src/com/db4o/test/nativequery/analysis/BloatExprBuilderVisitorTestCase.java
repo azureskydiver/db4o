@@ -8,12 +8,12 @@ import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.tree.*;
 
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
 import com.db4o.nativequery.*;
 import com.db4o.nativequery.analysis.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.nativequery.expr.cmp.field.*;
+import com.db4o.nativequery.expr.cmp.operand.*;
 
 import db4ounit.*;
 
@@ -595,7 +595,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return BOOLEAN_CMPVAL!=data.getBool();
 	}
 
-	public void testBoolGetterNotEqualsComp() throws Exception {
+	public void _testBoolGetterNotEqualsComp() throws Exception {
 		assertComparison("sampleBoolGetterNotEqualsComp",BOOLEAN_FIELDNAME,Boolean.valueOf(!BOOLEAN_CMPVAL),ComparisonOperator.EQUALS,false);
 	}
 

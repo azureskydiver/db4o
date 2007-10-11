@@ -7,7 +7,8 @@ import java.util.*;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
 
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.main.*;
 
 public class Db4oFileEnhancerAntTask extends Task {
 	private String srcDir;

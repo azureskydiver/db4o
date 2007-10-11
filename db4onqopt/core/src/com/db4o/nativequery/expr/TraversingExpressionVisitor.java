@@ -2,16 +2,7 @@
 
 package com.db4o.nativequery.expr;
 
-import com.db4o.nativequery.expr.cmp.ArithmeticExpression;
-import com.db4o.nativequery.expr.cmp.ArrayAccessValue;
-import com.db4o.nativequery.expr.cmp.ComparisonOperand;
-import com.db4o.nativequery.expr.cmp.ComparisonOperandVisitor;
-import com.db4o.nativequery.expr.cmp.ConstValue;
-import com.db4o.nativequery.expr.cmp.FieldValue;
-import com.db4o.nativequery.expr.cmp.MethodCallValue;
-import com.db4o.nativequery.expr.cmp.field.CandidateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.PredicateFieldRoot;
-import com.db4o.nativequery.expr.cmp.field.StaticFieldRoot;
+import com.db4o.nativequery.expr.cmp.operand.*;
 
 public class TraversingExpressionVisitor implements ExpressionVisitor, ComparisonOperandVisitor  {
 	public void visit(AndExpression expression) {
