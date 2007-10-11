@@ -3,6 +3,9 @@
 package com.db4o.nativequery.main;
 
 
+/**
+ * @deprecated Use {@link com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask} instead.
+ */
 public class Db4oFileEnhancerAntTask extends com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask {
 
 	public Db4oFileEnhancerAntTask() {
