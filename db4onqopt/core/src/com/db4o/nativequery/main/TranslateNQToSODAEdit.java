@@ -6,6 +6,7 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 
 import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.util.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 

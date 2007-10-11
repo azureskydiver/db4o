@@ -16,6 +16,7 @@ import EDU.purdue.cs.bloat.reflect.Modifiers;
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
 import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.util.*;
 import com.db4o.internal.query.Db4oEnhancedFilter;
 import com.db4o.nativequery.expr.AndExpression;
 import com.db4o.nativequery.expr.BoolConstExpression;

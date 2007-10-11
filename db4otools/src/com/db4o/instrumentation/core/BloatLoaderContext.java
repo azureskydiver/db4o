@@ -4,6 +4,8 @@ package com.db4o.instrumentation.core;
 
 import java.util.*;
 
+import com.db4o.instrumentation.util.*;
+
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.context.*;
 import EDU.purdue.cs.bloat.editor.*;

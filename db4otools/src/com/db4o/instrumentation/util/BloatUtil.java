@@ -1,4 +1,4 @@
-package com.db4o.instrumentation.core;
+package com.db4o.instrumentation.util;
 
 import EDU.purdue.cs.bloat.editor.*;
 

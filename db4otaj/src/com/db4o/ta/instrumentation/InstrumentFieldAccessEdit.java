@@ -18,6 +18,7 @@ import EDU.purdue.cs.bloat.editor.Type;
 import com.db4o.activation.Activator;
 import com.db4o.foundation.*;
 import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.util.*;
 
 public class InstrumentFieldAccessEdit implements BloatClassEdit {
 
