@@ -79,7 +79,7 @@ Export-Package: EDU.purdue.cs.bloat.benchmark,
  com.db4o.nativequery.expr,
  com.db4o.nativequery.expr.build,
  com.db4o.nativequery.expr.cmp,
- com.db4o.nativequery.expr.cmp.field,
+ com.db4o.nativequery.expr.cmp.operand,
  com.db4o.nativequery.main,
  com.db4o.nativequery.optimization,
  com.db4o.osgi,
@@ -92,5 +92,7 @@ Export-Package: EDU.purdue.cs.bloat.benchmark,
  com.db4o.replication,
  com.db4o.types,
  com.db4o.marshall,
- com.db4o.instrumentation
+ com.db4o.instrumentation,
+ com.db4o.instrumentation.core,
+ com.db4o.instrumentation.util
  
