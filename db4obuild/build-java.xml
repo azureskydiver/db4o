@@ -1003,9 +1003,11 @@
 		</zip>
 	</target>
 	
-	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests" />
+	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk5" />
 	<target name="cc.step.3" 
-		depends="run.tests.nqopt,
+		depends="run.tests.jdk1.1, 
+				run.tests.jdk1.2, 
+				run.tests.nqopt,
 				run.tests.ta,
 				run.tests.concurrency, 
 				run.tests.osgi,
