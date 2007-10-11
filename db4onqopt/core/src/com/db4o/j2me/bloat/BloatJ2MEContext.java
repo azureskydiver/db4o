@@ -5,6 +5,7 @@ package com.db4o.j2me.bloat;
 import java.io.File;
 
 import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.util.*;
 
 import EDU.purdue.cs.bloat.context.PersistentBloatContext;
 import EDU.purdue.cs.bloat.editor.*;

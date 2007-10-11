@@ -9,6 +9,7 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.util.*;
 import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.build.*;
