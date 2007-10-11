@@ -107,7 +107,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return false;
 	}
 
-	public void _testUnnecessarilyComplicatedFieldBooleanConstantEqualsComp() throws Exception {
+	public void testUnnecessarilyComplicatedFieldBooleanConstantEqualsComp() throws Exception {
 		assertComparison("sampleUnnecessarilyComplicatedFieldBooleanConstantEqualsComp",BOOLEAN_FIELDNAME,Boolean.TRUE,ComparisonOperator.EQUALS,false);
 	}
 
@@ -595,7 +595,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		return BOOLEAN_CMPVAL!=data.getBool();
 	}
 
-	public void _testBoolGetterNotEqualsComp() throws Exception {
+	public void testBoolGetterNotEqualsComp() throws Exception {
 		assertComparison("sampleBoolGetterNotEqualsComp",BOOLEAN_FIELDNAME,Boolean.valueOf(!BOOLEAN_CMPVAL),ComparisonOperator.EQUALS,false);
 	}
 
