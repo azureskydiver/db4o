@@ -55,18 +55,28 @@ public class ClientServerPingTestCase extends ClientServerTestCaseBase {
 
 		ServerMessageDispatcher	_dispatcher;
 		boolean					_stop;
+		
+		private final Object   lock = new Object();
 
 		public PingThread(ServerMessageDispatcher dispatcher) {
 			_dispatcher = dispatcher;
 		}
 
 		public void close() {
-			_stop = true;
+		    synchronized(lock){
+		        _stop = true;
+		    }
+		}
+		
+		private boolean notStopped(){
+		    synchronized(lock){
+		        return !_stop;
+		    }
 		}
 
 		public void run() {
-			while (!_stop) {
-				_dispatcher.write(Msg.PING);
+			while (notStopped()) {
+				_dispatcher.writeIfAlive(Msg.PING);
 				Cool.sleepIgnoringInterruption(1);
 			}
 		}
