@@ -210,7 +210,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
         return fixture().fileSession();
     }
 
-    protected Transaction trans() {
+    public Transaction trans() {
         return ((InternalObjectContainer) db()).transaction();
     }
 
@@ -258,7 +258,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		return stream().newUserTransaction();
 	}
 	
-	protected Object retrieveOnlyInstance(Class clazz) {
+	public Object retrieveOnlyInstance(Class clazz) {
 		return retrieveOnlyInstance(db(), clazz);
 	}
 	
@@ -313,7 +313,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		}
 	}
 	
-	protected final void store(Object obj) {
+	public final void store(Object obj) {
 		db().set(obj);
 	}
 

@@ -19,8 +19,8 @@ public class Iterable4Adaptor {
     
     private Object _current = MOVE_NEXT;
     
-    public Iterable4Adaptor(Iterable4 delegate) {
-    	_delegate = delegate;
+    public Iterable4Adaptor(Iterable4 delegate_) {
+    	_delegate = delegate_;
     }
     
     public boolean hasNext() {

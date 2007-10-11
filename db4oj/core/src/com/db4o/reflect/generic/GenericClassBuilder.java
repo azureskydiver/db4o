@@ -12,10 +12,10 @@ public class GenericClassBuilder implements ReflectClassBuilder {
 	private GenericReflector _reflector;
 	private Reflector _delegate;
 	
-	public GenericClassBuilder(GenericReflector reflector, Reflector delegate) {
+	public GenericClassBuilder(GenericReflector reflector, Reflector delegate_) {
 		super();
 		_reflector = reflector;
-		_delegate = delegate;
+		_delegate = delegate_;
 	}
 
 	public ReflectClass createClass(String name, ReflectClass superClass, int fieldCount) {
