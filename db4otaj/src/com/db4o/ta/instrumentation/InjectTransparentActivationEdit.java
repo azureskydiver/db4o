@@ -1,8 +1,6 @@
 package com.db4o.ta.instrumentation;
 
-import com.db4o.instrumentation.BloatClassEdit;
-import com.db4o.instrumentation.ClassFilter;
-import com.db4o.instrumentation.CompositeBloatClassEdit;
+import com.db4o.instrumentation.core.*;
 
 public class InjectTransparentActivationEdit extends CompositeBloatClassEdit {
 

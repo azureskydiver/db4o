@@ -7,10 +7,10 @@ package com.db4o.nativequery.optimization;
 
 import java.lang.reflect.*;
 
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
 import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.nativequery.expr.cmp.field.*;
+import com.db4o.nativequery.expr.cmp.operand.*;
 
 final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor {
 	private Object _predicate;

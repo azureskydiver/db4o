@@ -6,6 +6,9 @@ import java.lang.reflect.*;
 import java.net.*;
 
 import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.filter.*;
+import com.db4o.instrumentation.main.*;
 import com.db4o.ta.instrumentation.*;
 
 public class RunTASampleInstrumented {

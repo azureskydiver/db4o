@@ -2,9 +2,8 @@
 
 package com.db4o.nativequery.expr;
 
-import com.db4o.nativequery.expr.cmp.ComparisonOperand;
 import com.db4o.nativequery.expr.cmp.ComparisonOperator;
-import com.db4o.nativequery.expr.cmp.FieldValue;
+import com.db4o.nativequery.expr.cmp.operand.*;
 
 public class ComparisonExpression implements Expression {
 	private FieldValue _left;

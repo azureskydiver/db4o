@@ -4,7 +4,7 @@ package com.db4o.test.nativequery.expr;
 
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.nativequery.expr.cmp.field.*;
+import com.db4o.nativequery.expr.cmp.operand.*;
 
 import db4ounit.*;
 

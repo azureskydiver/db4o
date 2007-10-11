@@ -4,7 +4,7 @@ package com.db4o.ta.instrumentation;
 
 import EDU.purdue.cs.bloat.editor.*;
 
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
 
 /**
  * @exclude

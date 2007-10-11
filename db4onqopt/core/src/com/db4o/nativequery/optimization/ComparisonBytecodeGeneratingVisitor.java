@@ -11,7 +11,7 @@ import EDU.purdue.cs.bloat.editor.Type;
 import EDU.purdue.cs.bloat.file.*;
 
 import com.db4o.nativequery.expr.cmp.*;
-import com.db4o.nativequery.expr.cmp.field.*;
+import com.db4o.nativequery.expr.cmp.operand.*;
 
 class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	private MethodEditor methodEditor;

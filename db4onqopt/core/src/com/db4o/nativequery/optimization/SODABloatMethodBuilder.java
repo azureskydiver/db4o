@@ -15,7 +15,7 @@ import EDU.purdue.cs.bloat.reflect.Modifiers;
 
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.Iterator4;
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
 import com.db4o.internal.query.Db4oEnhancedFilter;
 import com.db4o.nativequery.expr.AndExpression;
 import com.db4o.nativequery.expr.BoolConstExpression;
@@ -24,9 +24,8 @@ import com.db4o.nativequery.expr.Expression;
 import com.db4o.nativequery.expr.ExpressionVisitor;
 import com.db4o.nativequery.expr.NotExpression;
 import com.db4o.nativequery.expr.OrExpression;
-import com.db4o.nativequery.expr.cmp.ComparisonOperand;
 import com.db4o.nativequery.expr.cmp.ComparisonOperator;
-import com.db4o.nativequery.expr.cmp.FieldValue;
+import com.db4o.nativequery.expr.cmp.operand.*;
 import com.db4o.query.Constraint;
 import com.db4o.query.Query;
 

@@ -4,7 +4,9 @@ import java.io.*;
 import java.net.*;
 
 import com.db4o.foundation.io.*;
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.filter.*;
+import com.db4o.instrumentation.main.*;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
 import com.db4o.test.util.*;

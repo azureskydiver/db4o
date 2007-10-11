@@ -4,7 +4,8 @@ import java.io.*;
 import java.net.*;
 
 import com.db4o.foundation.io.*;
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.main.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;

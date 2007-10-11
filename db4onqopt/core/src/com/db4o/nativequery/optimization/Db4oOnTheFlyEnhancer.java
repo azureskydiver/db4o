@@ -9,7 +9,7 @@ import EDU.purdue.cs.bloat.editor.ClassEditor;
 import EDU.purdue.cs.bloat.editor.EditorContext;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
 
-import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.core.*;
 import com.db4o.internal.query.Db4oNQOptimizer;
 import com.db4o.nativequery.expr.Expression;
 import com.db4o.query.Predicate;
