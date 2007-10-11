@@ -5,12 +5,11 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import com.db4o.instrumentation.*;
-import com.db4o.instrumentation.core.*;
-import com.db4o.instrumentation.filter.*;
-
 import EDU.purdue.cs.bloat.context.*;
 import EDU.purdue.cs.bloat.editor.*;
+
+import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.filter.*;
 
 /*
  * TODO: COR-591 - Lots of copy & paste from db4onqopt/Db4oEnhancingClassLoader, BloatUtil, SODABloatMethodBuilder, etc.
