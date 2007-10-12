@@ -28,7 +28,11 @@ public interface ExtObjectServer extends ObjectServer{
      * @param path a fully qualified path
      */
     public void backup(String path) throws IOException;
-
+    
+    /**
+     * returns the number of connected clients.
+     */
+    public int clientCount();
 	
 	 /**
 	 * returns the {@link Configuration} context for this ObjectServer.

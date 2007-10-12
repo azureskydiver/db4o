@@ -416,4 +416,10 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	public int port() {
 		return _port;
 	}
+	
+	public int clientCount(){
+	    synchronized(_dispatchers){
+	        return _dispatchers.size();
+	    }
+	}
 }

@@ -4,6 +4,7 @@ package com.db4o.db4ounit.jre12.assorted;
 
 import com.db4o.*;
 import com.db4o.db4ounit.util.*;
+import com.db4o.internal.cs.*;
 import com.db4o.query.*;
 
 import db4ounit.*;
@@ -40,9 +41,9 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
         asserItemCount(CLIENT_COUNT * ITEM_COUNT);
     }
 
-    public void testKillingClients() throws InterruptedException{
+    public void _testKillingClients() throws InterruptedException{
 
-        final int CLIENT_COUNT = 1;  
+        final int CLIENT_COUNT = 3;  
         
         final StringBuffer results = new StringBuffer();
         
@@ -52,10 +53,15 @@ public class ClientProcessesTestCase extends AbstractDb4oTestCase implements Opt
             }
         });
         
+        Assert.areEqual(1, connectedClients());
         System.out.println(results);
-        
     }
     
+    private int connectedClients() {
+        Db4oClientServer csFixture = (Db4oClientServer) fixture();
+        return (csFixture.server()).ext().clientCount();
+    }
+
     private void asserItemCount(final int expectedCount) {
         Query query = db().query();
         query.constrain(Item.class);
