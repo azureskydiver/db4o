@@ -93,9 +93,9 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		return true;
 	}
 
-	public void clear() {
-		int lastIndex = size()-1;
-		Arrays.fill(elements, 0, lastIndex, null);
+	public void clear() { 
+		int size = size();
+		Arrays.fill(elements, 0, size, null);
 		setSize(0);
 		markModified();
 	}
