@@ -202,4 +202,12 @@ public class ArrayList4TestCase implements TestLifeCycle {
 		ArrayList4Asserter.assertSubList_ConcurrentModification(_list);
 	}
 	
+	public void testSubList_Clear() throws Exception {
+		ArrayList4Asserter.assertSubList_Clear(_list);
+	}
+	
+	public void testSubList_Clear2() throws Exception {
+		ArrayList4Asserter.assertSubList_Clear2(_list);
+	}
+	
 }
