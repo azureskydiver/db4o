@@ -167,7 +167,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		}
 		int count = toIndex - fromIndex;
 		System.arraycopy(elements, toIndex, elements, fromIndex, size - toIndex);
-		Arrays.fill(elements, size - 1 - count, size - 1, null);
+		Arrays.fill(elements, size - count, size, null);
 		decreaseSize(count);
 		markModified();
 	}

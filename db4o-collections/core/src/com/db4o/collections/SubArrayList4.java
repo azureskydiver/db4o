@@ -66,7 +66,7 @@ public class SubArrayList4<E> extends AbstractList4<E> {
 		if (fromIndex == toIndex) {
 			return;
 		}
-		_delegate.removeRange(fromIndex, toIndex);
+		_delegate.removeRange(fromIndex+_fromIndex, toIndex+_fromIndex);
 		decreaseSize(toIndex - fromIndex);
 		syncModCount();
 	}

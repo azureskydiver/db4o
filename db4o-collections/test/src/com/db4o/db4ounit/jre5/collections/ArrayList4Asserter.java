@@ -657,6 +657,23 @@ public class ArrayList4Asserter {
 			}
 		});
 	}
-
+	
+	public static void assertSubList_Clear(List<Integer> list) throws Exception {
+		list.subList(CAPACITY-10, CAPACITY).clear();
+		int expectedSize = CAPACITY-10;
+		Assert.areEqual(expectedSize, list.size());
+		for (int i = 0; i < expectedSize; ++i) {
+			Assert.areEqual(new Integer(i), list.get(i));
+		}
+	}
+	
+	public static void assertSubList_Clear2(List<Integer> list) throws Exception {
+		list.subList(0, 10).clear();
+		int expectedSize = CAPACITY-10;
+		Assert.areEqual(expectedSize, list.size());
+		for (int i = 0; i < expectedSize; ++i) {
+			Assert.areEqual(new Integer(i+10), list.get(i));
+		}
+	}
 	
 }

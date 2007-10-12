@@ -140,5 +140,12 @@ public class ArrayList4TATestCase extends ArrayList4TATestCaseBase {
 	public void testSubList_ConcurrentModification() throws Exception {
 		ArrayList4Asserter.assertSubList_ConcurrentModification(retrieveAndAssertNullArrayList4());
 	}
+	public void testSubList_Clear() throws Exception {
+		ArrayList4Asserter.assertSubList_Clear(retrieveAndAssertNullArrayList4());
+	}
+	
+	public void testSubList_Clear2() throws Exception {
+		ArrayList4Asserter.assertSubList_Clear2(retrieveAndAssertNullArrayList4());
+	}
 
 }
