@@ -17,6 +17,7 @@ import com.db4o.ext.*;
  * @see ExtObjectServer ExtObjectServer for extended functionality
  */
 public interface ObjectServer {
+    
     /**
     * closes the {@link ObjectServer } and writes all cached data.
     * <br><br>
@@ -27,7 +28,7 @@ public interface ObjectServer {
 
     /**
      * returns an  {@link ObjectServer } with extended functionality.
-     * <br><br>Use this method as a convient accessor to extended methods. 
+     * <br><br>Use this method as a convenient accessor to extended methods. 
      * Every  {@link ObjectServer } can be casted to an {@link com.db4o.ext.ExtObjectServer}.
      * <br><br>The functionality is split to two interfaces to allow newcomers to
      * focus on the essential methods.
