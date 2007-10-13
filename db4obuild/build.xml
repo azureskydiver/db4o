@@ -1067,4 +1067,9 @@
     </target>
 
     <target name="build-before-checkin" depends="prepare-test-environment,build-net-before-checkin" />
+	
+	<target name="build-cf20" depends="init">
+		<ant antfile="build-dotnet.xml" target="build-cf20" />
+	</target>
+	
 </project>

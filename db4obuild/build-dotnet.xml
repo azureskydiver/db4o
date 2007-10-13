@@ -1327,13 +1327,13 @@
 
 	</target>
 
-    <target name="build-dotnet-CF20" depends="init, sharpen">
+    <target name="build-cf20" depends="init, configure, sharpen">
         <taskdef resource="org/apache/ant/dotnet/antlib.xml" />
         <property name="dir.n.v6.tests" location="${dir.n.v6}/Db4objects.Db4o.Tests" />
         
         <msbuild buildfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.sln">
             <target name="rebuild" />
-            <property name="Configuration" value="Release" />
+            <property name="Configuration" value="Debug" />
             <property name="OutputPath" value="${dir.dist.dll}/cf2.0" />
         </msbuild>
         
