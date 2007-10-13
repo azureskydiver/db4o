@@ -3,6 +3,7 @@
 package com.db4o.instrumentation.filter;
 
 import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.util.*;
 
 /**
  * @exclude
@@ -10,7 +11,7 @@ import com.db4o.instrumentation.core.*;
 public class AcceptAllClassesFilter implements ClassFilter {
 
 	public boolean accept(Class clazz) {
-		return true;
+		return !BloatUtil.isPlatformClassName(clazz.getName());
 	}
 
 }

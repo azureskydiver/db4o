@@ -13,12 +13,12 @@ import com.db4o.instrumentation.main.*;
 public class Db4oFileEnhancerAntTask extends Task {
 	private String srcDir;
 	private String targetDir;
-	private List classPath=new ArrayList();
+	private final List classPath = new ArrayList();
 	private String packagePredicate;
-	private String editClassName;
+	private final List editFactories = new ArrayList();
 
-	public void setEditClass(String editClassName) {
-		this.editClassName = editClassName;
+	public void add(ClassEditFactory editFactory) {
+		editFactories.add(editFactory);
 	}
 
 	public void setSrcdir(String srcDir) {
@@ -41,14 +41,29 @@ public class Db4oFileEnhancerAntTask extends Task {
 		List paths=new ArrayList();
 		for (Iterator pathIter = classPath.iterator(); pathIter.hasNext();) {
 			Path path = (Path) pathIter.next();
-			System.err.println(path.size());
 			String[] curPaths=path.list();
 			for (int curPathIdx = 0; curPathIdx < curPaths.length; curPathIdx++) {
 				paths.add(curPaths[curPathIdx]);
 			}
 		}
+		BloatClassEdit clazzEdit = null;
+		switch(editFactories.size()) {
+			case 0:
+				clazzEdit = new NullClassEdit();
+				break;
+			case 1:
+				clazzEdit = ((ClassEditFactory)editFactories.get(0)).createEdit();
+				break;
+			default:
+				List classEdits = new ArrayList(editFactories.size());
+				for (Iterator factoryIter = editFactories.iterator(); factoryIter.hasNext(); ) {
+					ClassEditFactory curFactory = (ClassEditFactory) factoryIter.next();
+					classEdits.add(curFactory.createEdit());
+				}
+				clazzEdit = new CompositeBloatClassEdit((BloatClassEdit[])classEdits.toArray(new BloatClassEdit[classEdits.size()]), true);
+				
+		}
 		try {
-			BloatClassEdit clazzEdit = (BloatClassEdit) Class.forName(editClassName).newInstance();
 			new Db4oFileEnhancer(clazzEdit).enhance(srcDir,targetDir,(String[])paths.toArray(new String[paths.size()]),(packagePredicate==null ? "" : packagePredicate));
 		} catch (Exception exc) {
 			throw new BuildException(exc);

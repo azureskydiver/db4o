@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 
 import com.db4o.foundation.io.*;
-import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask;
 import com.db4o.instrumentation.main.*;
 import com.db4o.nativequery.main.*;
 import com.db4o.nativequery.optimization.*;
@@ -30,6 +30,7 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 		Db4oFileEnhancerAntTask antTask = new Db4oFileEnhancerAntTask();
 		antTask.setSrcdir(SRC_DIR);
 		antTask.setTargetdir(TARGET_DIR);
+		antTask.add(new NQClassEditFactory());
 		antTask.execute();
 		assertInstrumented();
 	}
