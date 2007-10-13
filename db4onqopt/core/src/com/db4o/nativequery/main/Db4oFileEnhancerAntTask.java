@@ -9,7 +9,7 @@ package com.db4o.nativequery.main;
 public class Db4oFileEnhancerAntTask extends com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask {
 
 	public Db4oFileEnhancerAntTask() {
-		add(new NQClassEditFactory());
+		add(new NQAntClassEditFactory());
 	}
 	
 }
