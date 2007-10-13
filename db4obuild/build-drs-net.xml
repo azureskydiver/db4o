@@ -51,7 +51,7 @@
 				              <comment value="!"/>
 				           </striplinecomments>
 				           <replacetokens>
-				                <token key="db4o.version.dotted" value="${db4o.version.iteration.revision}"/>
+				                <token key="db4o.version.dotted" value="${db4o.version.dotted}"/>
 				            </replacetokens>
 				        </filterchain>
 		</copy>
