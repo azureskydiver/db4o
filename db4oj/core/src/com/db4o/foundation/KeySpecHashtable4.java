@@ -5,29 +5,32 @@ package com.db4o.foundation;
 /**
  * @exclude
  */
-public class KeySpecHashtable4 extends Hashtable4 {
-	private KeySpecHashtable4() {
-		super((DeepClone)null);
+public class KeySpecHashtable4 {
+    
+    private SynchronizedHashtable4 _delegate;
+    
+	private KeySpecHashtable4(SynchronizedHashtable4 delegate_) {
+		_delegate = delegate_;
 	}
 	
-	public KeySpecHashtable4(int a_size) {
-		super(a_size);
+	public KeySpecHashtable4(int size) {
+	    this(new SynchronizedHashtable4(size));
 	}
 	
     public void put(KeySpec spec,byte value) {
-    	super.put(spec,new Byte(value));
+    	_delegate.put(spec,new Byte(value));
     }
 
     public void put(KeySpec spec,boolean value) {
-    	super.put(spec,new Boolean(value));
+    	_delegate.put(spec,new Boolean(value));
     }
 
     public void put(KeySpec spec,int value) {
-    	super.put(spec,new Integer(value));
+    	_delegate.put(spec,new Integer(value));
     }
 
     public void put(KeySpec spec, Object value) {
-    	super.put(spec,value);
+    	_delegate.put(spec,value);
     }
 
     public byte getAsByte(KeySpec spec) {
@@ -50,18 +53,18 @@ public class KeySpecHashtable4 extends Hashtable4 {
     	return (String)get(spec);
     }
 
-    public Object get(KeySpec spec) {
-        Object value=super.get(spec);
+    public synchronized Object get(KeySpec spec) {
+        Object value=_delegate.get(spec);
         if(value == null){
             value = spec.defaultValue();
             if(value != null){
-                super.put(spec, value);
+                _delegate.put(spec, value);
             }
         }
         return value;
     }
     
     public Object deepClone(Object obj) {
-    	return deepCloneInternal(new KeySpecHashtable4(), obj);
+    	return new KeySpecHashtable4((SynchronizedHashtable4) _delegate.deepClone(obj));
     }
 }
