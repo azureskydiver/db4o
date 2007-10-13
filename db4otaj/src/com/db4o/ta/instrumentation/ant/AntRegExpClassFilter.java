@@ -10,11 +10,9 @@ public class AntRegExpClassFilter implements ClassFilter {
 	private final Regexp _regExp;
 
 	public AntRegExpClassFilter(String exp, Project project) {
-		System.out.println(exp);
         RegularExpression regExp = new RegularExpression();
         regExp.setPattern(exp);
         _regExp = regExp.getRegexp(project);
-		System.out.println(_regExp);
 	}
 
 	public boolean accept(Class clazz) {
