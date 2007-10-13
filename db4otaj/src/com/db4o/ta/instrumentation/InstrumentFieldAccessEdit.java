@@ -76,9 +76,9 @@ public class InstrumentFieldAccessEdit implements BloatClassEdit {
 					}
 					editor.insertCodeAt(new Instruction(Opcode.opc_dup), idx.intValue());
 					editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, targetActivateMethod), idx.intValue() + 1);
-					editor.commit();
-					instrumented.value = InstrumentationStatus.INSTRUMENTED;
 				}
+				editor.commit();
+				instrumented.value = InstrumentationStatus.INSTRUMENTED;
 			}
 
 			private boolean accept(MemberRef fieldRef) {
@@ -105,6 +105,9 @@ public class InstrumentFieldAccessEdit implements BloatClassEdit {
 			}
 
 		});
+		if(((InstrumentationStatus)instrumented.value).isInstrumented()) {
+			ce.commit();
+		}
 		return (InstrumentationStatus) instrumented.value;
 	}
 	private MemberRef createMethodReference(Type parent, String name, Type[] args, Type ret) {
