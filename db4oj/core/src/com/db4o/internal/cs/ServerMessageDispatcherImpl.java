@@ -237,15 +237,10 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     
     public boolean write(Msg msg){
     	synchronized(_lock) {
+    	    if(! isMessageDispatcherAlive()){
+    	        return false;
+    	    }
     		return msg.write(_socket);
-    	}
-    }
-    
-    public void writeIfAlive(Msg msg){
-    	synchronized(_lock) {
-	    	if(isMessageDispatcherAlive()){
-	        	write(msg);
-	    	}
     	}
     }
     

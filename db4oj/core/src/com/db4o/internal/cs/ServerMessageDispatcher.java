@@ -42,7 +42,7 @@ public interface ServerMessageDispatcher extends MessageDispatcher {
 	
 	public void caresAboutCommitted(boolean care);
 	
-	public void writeIfAlive(Msg msg);
+	public boolean write(Msg msg);
 
 	public CallbackObjectInfoCollections committedInfo();
 	
