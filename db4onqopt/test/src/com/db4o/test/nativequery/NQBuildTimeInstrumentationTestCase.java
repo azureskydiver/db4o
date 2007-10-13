@@ -30,7 +30,7 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 		Db4oFileEnhancerAntTask antTask = new Db4oFileEnhancerAntTask();
 		antTask.setSrcdir(SRC_DIR);
 		antTask.setTargetdir(TARGET_DIR);
-		antTask.add(new NQClassEditFactory());
+		antTask.add(new NQAntClassEditFactory());
 		antTask.execute();
 		assertInstrumented();
 	}
