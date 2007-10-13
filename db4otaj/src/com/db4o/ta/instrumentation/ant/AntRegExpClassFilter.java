@@ -1,21 +1,23 @@
 package com.db4o.ta.instrumentation.ant;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.util.regexp.*;
 
 import com.db4o.instrumentation.core.*;
 
 public class AntRegExpClassFilter implements ClassFilter {
-	private final Regexp _regExp;
+	private final Regexp[] _regExp;
 
-	public AntRegExpClassFilter(String exp, Project project) {
-        RegularExpression regExp = new RegularExpression();
-        regExp.setPattern(exp);
-        _regExp = regExp.getRegexp(project);
+	public AntRegExpClassFilter(Regexp[] regExp) {
+        _regExp = regExp;
 	}
 
 	public boolean accept(Class clazz) {
-		return _regExp.matches(clazz.getName());
+		for (int reIdx = 0; reIdx < _regExp.length; reIdx++) {
+			Regexp re = _regExp[reIdx];
+			if(re.matches(clazz.getName())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
