@@ -898,7 +898,7 @@
 		<copy todir="${dir.dist.java.src}/${name.project.osgi}">
 			<fileset dir="${dir.osgi}">
 				<include name=".project" />
-				<include name=".classpath" />
+				<exclude name=".classpath" />
 				<include name="**/src/**/*.java" />
 			</fileset>
 			<fileset dir="${dir.dist.classes.osgi}">
@@ -915,11 +915,16 @@
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 			</filterset>
 		</copy>
+		<copy tofile="${dir.dist.java.src}/${name.project.osgi}/.classpath" file="${dir.osgi}/classpath.TM">
+			<filterset>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
+			</filterset>
+		</copy>
 	
 		<copy todir="${dir.dist.java.src}/${name.project.osgi.test}">
 			<fileset dir="${dir.osgi.test}">
 				<include name=".project" />
-				<include name=".classpath" />
+				<exclude name=".classpath" />
 				<include name="**/src/**/*.java" />
 			</fileset>
 			<fileset dir="${dir.dist.classes.osgi.test}">
@@ -932,6 +937,12 @@
 			</filterset>
 		</copy>
 		<copy tofile="${dir.dist.java.src}/${name.project.osgi.test}/META-INF/MANIFEST.MF" file="${file.osgi.test.manifest}.TM">
+			<filterset>
+				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
+				<filter token="bundle.activator" value="com.db4o.osgi.test.Db4oWorkspaceActivator"/>
+			</filterset>
+		</copy>
+		<copy tofile="${dir.dist.java.src}/${name.project.osgi.test}/.classpath" file="${dir.osgi.test}/classpath.TM">
 			<filterset>
 				<filter token="db4o.version.iteration.revision" value="${db4o.version.iteration.revision}"/>
 				<filter token="bundle.activator" value="com.db4o.osgi.test.Db4oWorkspaceActivator"/>
@@ -1004,14 +1015,9 @@
 		</zip>
 	</target>
 	
-	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests, run.tests.jdk5" />
+	<target name="cc.step.1" depends="build.db4ojava, build.db4ojava.tests" />
 	<target name="cc.step.3" 
-		depends="run.tests.jdk1.1, 
-				run.tests.jdk1.2, 
-				run.tests.nqopt,
-				run.tests.ta,
-				run.tests.concurrency, 
+		depends="
 				run.tests.osgi,
-				run.tests.collections,
 				package.java" />
 </project>

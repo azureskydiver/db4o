@@ -15,4 +15,3 @@ Bundle-ClassPath: .,
  lib/db4o-tests-nq.jar
 Bundle-ActivationPolicy: lazy 
 Provide-Package: com.db4o.osgi.test
-
