@@ -30,7 +30,7 @@ public class WorkspaceServices {
         if(property != null){
             return property;
         }
-		return findFolderWithChild(pathToClass(WorkspaceServices.class), "db4obuild");
+		return findFolderWithChild(pathToClass(WorkspaceServices.class), "db4oj.tests");
 	}
 	
 	static String pathToClass(Class clazz) {
