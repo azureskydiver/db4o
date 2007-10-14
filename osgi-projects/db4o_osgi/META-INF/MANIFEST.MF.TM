@@ -94,4 +94,3 @@ Export-Package: EDU.purdue.cs.bloat.benchmark,
  com.db4o.marshall,
  com.db4o.instrumentation.core,
  com.db4o.instrumentation.util
- 
