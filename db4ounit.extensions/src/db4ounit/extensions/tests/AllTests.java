@@ -2,9 +2,12 @@
 
 package db4ounit.extensions.tests;
 
+import com.db4o.foundation.io.*;
+
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.util.*;
 import db4ounit.tests.*;
 
 public class AllTests implements TestCase {
@@ -55,5 +58,12 @@ public class AllTests implements TestCase {
 	
 	public void testInterfaceIsAvailable() {
 		Assert.isTrue(Db4oTestCase.class.isAssignableFrom(AbstractDb4oTestCase.class));
+	}
+	
+	public void testDeleteDir() throws Exception {
+		File4.mkdirs("a/b/c");
+		Assert.isTrue(File4.exists("a"));
+		IOUtil.deleteDir("a");
+		Assert.isFalse(File4.exists("a"));
 	}
 }

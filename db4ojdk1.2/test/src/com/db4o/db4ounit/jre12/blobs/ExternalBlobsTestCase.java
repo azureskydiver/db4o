@@ -6,12 +6,12 @@ import java.io.*;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
-import com.db4o.test.util.*;
 import com.db4o.types.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.util.*;
 
 public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 
