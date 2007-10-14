@@ -866,6 +866,7 @@
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="src/**" />
+				<include name="lib/**"/>
 				<exclude name="**/CVS/**" />
 			</fileset>
 		</copy>
