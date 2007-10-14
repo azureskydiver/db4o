@@ -32,6 +32,12 @@
 	<property name="dir.workspace" value=".." />
 	<property file="${dir.workspace}/db4obuild/ant.properties" />
 	<import file="${dir.workspace}/db4obuild/common.xml" optional="true"/>
+
+	<condition property="svn.revision" value="0000">
+		<not>
+			<isset property="db4obuild.available" />
+		</not>
+	</condition>
 	
 	<target name="drs.properties" if="db4obuild.available" depends="get-svn-revision">
 		<echo>Revision: ${svn.revision}</echo>
@@ -142,7 +148,6 @@
             <doctitle><![CDATA[<h1>db4o Replication System (dRS)</h1><p align="left">This document is the API specification for db4o Replication System (dRS)]]></doctitle>
 			<fileset dir="${drs.dir.src.core}" defaultexcludes="yes">
 				<include name="com/db4o/drs/*.java" />
-                <include name="com/db4o/drs/db4o/*.java" />
 			</fileset>
 		</javadoc>
 		<copy file="${javadoc.stylesheet}" todir="${drs.dir.dist.api}" overwrite="true" />
