@@ -7,8 +7,9 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.test.*;
-import com.db4o.test.util.*;
 import com.db4o.types.*;
+
+import db4ounit.extensions.util.*;
 
 public class ExternalBlobs {
 	

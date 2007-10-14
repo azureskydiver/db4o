@@ -12,8 +12,9 @@ import com.db4o.nativequery.analysis.*;
 import com.db4o.nativequery.expr.*;
 
 import db4ounit.*;
+import db4ounit.extensions.util.*;
 
-public abstract class NQOptimizationByteCodeTestCaseBase implements TestCase {
+public abstract class NQOptimizationByteCodeTestCaseBase implements TestLifeCycle {
 
 	public final static int NO_MODIFIERS = 0;
 	public final static String CLASSNAME = "invalid.CandidateClass";
@@ -23,6 +24,14 @@ public abstract class NQOptimizationByteCodeTestCaseBase implements TestCase {
 	protected final LocalVariable DATA_VAR = new LocalVariable(1);
 	private final LabelGenerator _labelGenerator = new LabelGenerator();
 	protected final Label START_LABEL = _labelGenerator.createLabel(true);
+	
+	public void setUp() throws Exception {
+		
+	}
+	
+	public void tearDown() throws Exception {
+		IOUtil.deleteDir("invalid");
+	}
 	
 	public void testOptimization() throws Exception {
 		BloatLoaderContext bloatUtil = new BloatLoaderContext(new ClassFileLoader());
