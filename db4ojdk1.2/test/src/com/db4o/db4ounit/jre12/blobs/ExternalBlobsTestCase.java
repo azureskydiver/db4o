@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.io.*;
 import com.db4o.types.*;
 
 import db4ounit.*;
@@ -19,7 +20,7 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOu
 		new ExternalBlobsTestCase().runClientServer();
 	}
 	
-	private static final String BLOB_PATH = "test/TEMP/db4oTestBlobs";
+	private static final String BLOB_PATH = Path4.combine(Path4.getTempPath(), "db4oTestBlobs");
 	private static final String BLOB_FILE_IN = BLOB_PATH + "/regressionBlobIn.txt"; 
 	private static final String BLOB_FILE_OUT = BLOB_PATH + "/regressionBlobOut.txt"; 
 
@@ -37,6 +38,7 @@ public class ExternalBlobsTestCase extends AbstractDb4oTestCase implements OptOu
 
 	protected void db4oSetupBeforeStore() throws Exception {
 		deleteFiles();
+		File4.mkdirs(BLOB_PATH);
 	}
 	
 	protected void db4oTearDownAfterClean() throws Exception {
