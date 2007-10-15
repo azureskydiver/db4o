@@ -36,6 +36,7 @@ public class AllTests extends Db4oTestSuite {
             MaximumActivationDepthTestCase.class,
             MultiDeleteTestCase.class,
             NakedObjectTestCase.class,
+            ObjectNotStorableExceptionTestCase.class,
             PersistentIntegerArrayTestCase.class,
             PersistStaticFieldValuesTestCase.class,
             PersistTypeTestCase.class,

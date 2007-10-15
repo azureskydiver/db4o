@@ -8,20 +8,19 @@ import com.db4o.internal.cs.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class ServerClosedTestCase extends Db4oClientServerTestCase {
+public class ServerClosedTestCase extends Db4oClientServerTestCase implements OptOutAllButNetworkingCS{
+    
 	public static void main(String[] args) {
 		new ServerClosedTestCase().runAll();
 	}
 
 	public void test() throws Exception {
-        
-	    if(isMTOC()){
-            // No sending messages back and forth on MTOC.
-            return;
-        }
-        
 		final ExtObjectContainer db = fixture().db();
+		
+		closeOnTimeouts((ClientObjectContainer) db);
+		
 		ObjectServerImpl serverImpl = (ObjectServerImpl) clientServerFixture()
 				.server();
 		try {
@@ -41,4 +40,5 @@ public class ServerClosedTestCase extends Db4oClientServerTestCase {
 			serverImpl.close();
 		}
 	}
+
 }

@@ -43,6 +43,7 @@ public abstract class Msg implements Cloneable {
 	public static final MGetThreadID GET_THREAD_ID = new MGetThreadID();
 	public static final MIDList ID_LIST = new MIDList();
 	public static final MIdentity IDENTITY = new MIdentity();
+	public static final MIsAlive IS_ALIVE = new MIsAlive();
 	public static final MLength LENGTH = new MLength();
     public static final MLogin LOGIN = new MLogin();
     public static final MLoginOK LOGIN_OK = new MLoginOK();

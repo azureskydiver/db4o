@@ -11,7 +11,7 @@ import com.db4o.query.Query;
  * 
  * @sharpen.ignore
  */
-class EventPlatform {
+public class EventPlatform {
 
 	public static void triggerQueryEvent(Transaction transaction, Event4Impl e, Query q) {
 		e.trigger(new QueryEventArgs(transaction, q));
