@@ -318,6 +318,22 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			}
 			return;
 		}
+		// FIXME
+		if (!isStatic && expr.method().name().equals("activate")) {
+			final String activatableName = "com.db4o.ta.Activatable";
+			try {
+				ClassEditor activateClazz = bloatUtil.classEditor(expr.method().declaringClass());
+				Type[] interfaces = activateClazz.interfaces();
+				for (int interfaceIdx = 0; interfaceIdx < interfaces.length; interfaceIdx++) {
+					Type curInterface = interfaces[interfaceIdx];
+					if(activatableName.equals(BloatUtil.normalizeClassName(curInterface))) {
+						return;
+					}
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 		if(expr.method().declaringClass().equals(Type.STRING)) {
 			if(applyStringHandling(expr)) {
 				return;

@@ -72,7 +72,7 @@ public class InstrumentFieldAccessEdit implements BloatClassEdit {
 					MemberRef fieldRef = (MemberRef)fieldAccessIndexes.get(idx);
 					MemberRef targetActivateMethod = createMethodReference(fieldRef.declaringClass(),  TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID);
 					if(targetActivateMethod == null) {
-						return;
+						continue;
 					}
 					editor.insertCodeAt(new Instruction(Opcode.opc_dup), idx.intValue());
 					editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, targetActivateMethod), idx.intValue() + 1);

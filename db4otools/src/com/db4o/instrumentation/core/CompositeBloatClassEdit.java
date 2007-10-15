@@ -21,6 +21,8 @@ public class CompositeBloatClassEdit implements BloatClassEdit {
 		InstrumentationStatus status = InstrumentationStatus.NOT_INSTRUMENTED;
 		for (int editIdx = 0; editIdx < _edits.length; editIdx++) {
 			InstrumentationStatus curStatus = _edits[editIdx].enhance(ce, origLoader, loaderContext);
+			// TODO
+			loaderContext.commit();
 			status = status.aggregate(curStatus, _ignoreFailure);
 			if(!_ignoreFailure && !status.canContinue()) {
 				break;
