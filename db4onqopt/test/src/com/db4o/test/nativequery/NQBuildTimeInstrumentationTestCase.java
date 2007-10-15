@@ -3,6 +3,9 @@ package com.db4o.test.nativequery;
 import java.io.*;
 import java.net.*;
 
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
+
 import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask;
 import com.db4o.instrumentation.main.*;
@@ -15,8 +18,9 @@ import db4ounit.*;
 
 public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 
-	private final static String SRC_DIR = Path4.combine(Path4.getTempPath(), "nqfileinstr/source");
-	private final static String TARGET_DIR = Path4.combine(Path4.getTempPath(), "nqfileinstr/target");
+	private final static String BASE_DIR = Path4.combine(Path4.getTempPath(), "nqfileinstr");
+	private final static String SRC_DIR = Path4.combine(BASE_DIR, "source");
+	private final static String TARGET_DIR = Path4.combine(BASE_DIR, "target");
 	private final static Class[] CLAZZES = { ToBeInstrumented.class, NotToBeInstrumented.class };
 
 
@@ -28,7 +32,12 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 
 	public void testAntTask() throws Exception {		
 		Db4oFileEnhancerAntTask antTask = new Db4oFileEnhancerAntTask();
-		antTask.setSrcdir(SRC_DIR);
+		Project project = new Project();
+		project.setBaseDir(new File(BASE_DIR));
+		FileSet fileSet = new FileSet();
+		fileSet.setProject(project);
+		fileSet.setDir(new File(SRC_DIR));
+		antTask.addSources(fileSet);
 		antTask.setTargetdir(TARGET_DIR);
 		antTask.add(new NQAntClassEditFactory());
 		antTask.execute();
