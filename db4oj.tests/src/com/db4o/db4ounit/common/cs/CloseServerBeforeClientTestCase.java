@@ -2,7 +2,10 @@
 
 package com.db4o.db4ounit.common.cs;
 
+import com.db4o.cs.events.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
+import com.db4o.internal.cs.*;
 
 import db4ounit.extensions.*;
 
@@ -14,6 +17,10 @@ public class CloseServerBeforeClientTestCase extends Db4oClientServerTestCase {
 
 	public void test() throws Exception {
 		ExtObjectContainer client = openNewClient();
+		if(! isMTOC()){
+    		closeOnTimeouts((ClientObjectContainer) db());
+    		closeOnTimeouts((ClientObjectContainer) client);
+		}
 		try {
 			clientServerFixture().server().close();
 		} finally {
@@ -31,4 +38,6 @@ public class CloseServerBeforeClientTestCase extends Db4oClientServerTestCase {
 		}
 
 	}
+	
+
 }

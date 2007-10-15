@@ -5,6 +5,8 @@ package com.db4o.internal.cs;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
+import com.db4o.internal.*;
+import com.db4o.internal.cs.events.*;
 import com.db4o.internal.cs.messages.*;
 
 class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatcher {
@@ -25,6 +27,9 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 	}
 
 	public synchronized boolean close() {
+	    if(_isClosed){
+	        return true;
+	    }
 		_isClosed = true;
 		if(i_socket != null) {
 			try {
@@ -38,23 +43,42 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 	}
 	
 	public void run() {
+	    messageLoop();
+	    close();
+	}
+	
+	public void messageLoop() {
 		while (isMessageDispatcherAlive()) {
 			Msg message = null;
 			try {
-				message = Msg.readMessage(this, i_stream.transaction(), i_socket);
-				// TODO are there possibly messages that have to be processed *and* passed on?
-				if (isClientSideMessage(message)) {
-					if (((ClientSideMessage) message).processAtClient()) {
-						continue;
-					}
-				}
-				_messageQueue.add(message);
+				message = Msg.readMessage(this, transaction(), i_socket);
 			} catch (Db4oIOException exc) {
-				close();
+			    if(!isMessageDispatcherAlive()){
+			        return;
+			    }
+			    if(! eventCallbacks().continueOnTimeout(transaction())){
+			        return;
+			    }
+            }
+			if(message == null){
+			    continue;
 			}
+			
+			// TODO are there possibly messages that have to be processed *and* passed on?
+			if (isClientSideMessage(message)) {
+				if (((ClientSideMessage) message).processAtClient()) {
+					continue;
+				}
+			}
+			_messageQueue.add(message);
+			
 		}
 	}
-
+	
+	private ClientEventCallbacks eventCallbacks(){
+	    return i_stream.clientEventCallbacks();
+	}
+	
 	private boolean isClientSideMessage(Msg message) {
 		return message instanceof ClientSideMessage;
 	}
@@ -70,6 +94,10 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 
 	public void startDispatcher() {
 		start();
+	}
+	
+	private Transaction transaction(){
+	    return i_stream.transaction();
 	}
 	
 }

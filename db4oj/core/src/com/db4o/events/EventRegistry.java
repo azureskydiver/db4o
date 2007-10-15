@@ -3,9 +3,10 @@
 package com.db4o.events;
 
 /**
- * Provides a way to register event handlers for specific {@link com.db4o.ObjectContainer} events.<br>
+ * Provides the interface to register event handlers for  
+ * {@link com.db4o.ObjectContainer} events.<br>
  * EventRegistry methods represent events available for registering callbacks.
- * EventRegistry instance can be obtained from {@link EventRegistryFactory}.
+ * An EventRegistry instance can be obtained from the {@link EventRegistryFactory}.
  * <code>EventRegistry registry =  EventRegistryFactory.forObjectContainer(container);</code>
  * A new callback can be registered for an event with the following code:
  * <code>registry.created().addListener(new EventListener4(){...});</code>

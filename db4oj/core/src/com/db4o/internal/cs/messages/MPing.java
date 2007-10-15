@@ -11,7 +11,6 @@ import com.db4o.internal.cs.*;
 public class MPing extends Msg implements ServerSideMessage, ClientSideMessage {
 
 	public boolean processAtServer() {
-		write(Msg.PONG);
 		return true;
 	}
 	

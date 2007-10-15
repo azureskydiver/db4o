@@ -150,7 +150,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                 if(isClosed()){
                     return;
                 }
-                if(!pingClientSuccessful()){
+                if(!pingSuccessful()){
                     return;
                 }
             }
@@ -164,7 +164,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
              ! _socket.isConnected();
     }
     
-    private boolean pingClientSuccessful(){
+    private boolean pingSuccessful(){
         return write(Msg.PING);
     }
 

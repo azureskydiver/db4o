@@ -11,6 +11,7 @@ import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.convert.*;
+import com.db4o.internal.cs.events.*;
 import com.db4o.internal.cs.messages.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
@@ -57,12 +58,15 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	private int _batchedQueueLength = Const4.INT_LENGTH;
 
 	private boolean _login;
+	
+	private ClientEventCallbacks _clientEventCallbacks;
 
 	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password, boolean login) {
 		super(config, null);
 		_userName = user;
 		_password = password;
 		_login = login;
+		_clientEventCallbacks = new NullClientEventCallbacks();
 		setAndConfigSocket(socket);
 		open();
 	}
@@ -125,13 +129,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		} catch (Exception e) {
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
-		try {
-			if (!_singleThreaded) {
-				_messageDispatcher.close();
-			}
-		} catch (Exception e) {
-			Exceptions4.catchAllExceptDb4oException(e);
-		}
+		
+		closeMessageDispatcher();
 		
 		_messageQueue.stop();
 		
@@ -143,6 +142,17 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		
 		shutdownObjectContainer();
 	}
+    
+    private void closeMessageDispatcher(){
+        try {
+            if (!_singleThreaded) {
+                _messageDispatcher.close();
+            }
+        } catch (Exception e) {
+            Exceptions4.catchAllExceptDb4oException(e);
+        }
+    }
+    
 
 	public final void commit1(Transaction trans) {
 		trans.commit();
@@ -319,8 +329,14 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 					}
 				}
 				return message;
-			} catch (Exception e) {
-			}
+	         } catch (Db4oIOException exc) {
+	             if(!isMessageDispatcherAlive()){
+	                 return null;
+	             }
+	             if(! clientEventCallbacks().continueOnTimeout(transaction())){
+	                 return null;
+	             }
+	         }
 		}
 		return null;
 	}
@@ -661,8 +677,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	public boolean isAlive() {
 		try {
-			write(Msg.PING);
-			return expectedResponse(Msg.PONG) != null;
+			write(Msg.IS_ALIVE);
+			return expectedResponse(Msg.IS_ALIVE) != null;
 		} catch (Db4oException exc) {
 			return false;
 		}
@@ -791,7 +807,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	protected void shutdownDataStorage() {
-		// do nothing here
+	    closeMessageDispatcher();
 	}
 
 	public void setDispatcherName(String name) {
@@ -819,5 +835,13 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         MsgD response = (MsgD) expectedResponse(Msg.CLASS_ID);
         return response.readInt();
     }
+	
+	public ClientEventCallbacks clientEventCallbacks(){
+	    return _clientEventCallbacks;
+	}
+	
+	public void clientEventCallbacks( ClientEventCallbacks callbacks){
+	    _clientEventCallbacks = callbacks;
+	}
 	
 }
