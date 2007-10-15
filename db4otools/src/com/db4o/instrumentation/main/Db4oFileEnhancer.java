@@ -4,12 +4,14 @@ package com.db4o.instrumentation.main;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 
 import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.file.*;
 
 public class Db4oFileEnhancer {
 	private final BloatClassEdit _classEdit;
@@ -18,34 +20,87 @@ public class Db4oFileEnhancer {
 		_classEdit = classEdit;
 	}
 
-	public void enhance(String sourceDir, String targetDir, String[] classpath,
-			String packagePredicate) throws Exception {
-		enhance(new DefaultClassSource(), sourceDir, targetDir, classpath,
-				packagePredicate);
+	public void enhance(String sourceDir, String targetDir, String[] classpath, String packagePredicate) throws Exception {
+		enhance(new DefaultFilePathRoot(new String[]{ sourceDir }, ".class"), targetDir, classpath, packagePredicate);
 	}
 
-	private void enhance(ClassSource classSource, String sourceDir,String targetDir,String[] classpath,String packagePredicate) throws Exception {
-		File fSourceDir = new File(sourceDir);
+	public void enhance(FilePathRoot sources, String targetDir, String[] classpath,
+			String packagePredicate) throws Exception {
+		enhance(new DefaultClassSource(), sources, targetDir, classpath, packagePredicate);
+	}
+
+	private void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath,String packagePredicate) throws Exception {
 		File fTargetDir = new File(targetDir);
 		
-		assertSourceDir(fSourceDir);
+		String[] sourceRoots = sources.rootDirs();
+		for (int rootIdx = 0; rootIdx < sourceRoots.length; rootIdx++) {
+			File rootFile = new File(sourceRoots[rootIdx]);
+			assertSourceDir(rootFile);
+		}
 		
 		ClassFileLoader fileLoader=new ClassFileLoader(classSource);
-		String[] fullClasspath = fullClasspath(sourceDir, classpath);
+		String[] fullClasspath = fullClasspath(sources, classpath);
 		setOutputDir(fileLoader, fTargetDir);
 		setClasspath(fileLoader, fullClasspath);
 		
 		URL[] urls = classpathToURLs(fullClasspath);	
 		URLClassLoader classLoader=new URLClassLoader(urls,ClassLoader.getSystemClassLoader());
-		enhance(fSourceDir.getCanonicalPath(),fSourceDir,fTargetDir,classLoader,new BloatLoaderContext(fileLoader),packagePredicate);
+		enhance(sources,fTargetDir,classLoader,new BloatLoaderContext(fileLoader),packagePredicate);
 		
 		fileLoader.done();
 	}
 
-	private String[] fullClasspath(String sourceDir, String[] classpath) {
-		String [] fullClasspath = new String[classpath.length + 1];
-		fullClasspath[0] = sourceDir;
-		System.arraycopy(classpath, 0, fullClasspath, 1, classpath.length);
+	private void enhance(
+			FilePathRoot sources,
+			File target,
+			ClassLoader classLoader,
+			BloatLoaderContext bloatUtil,
+			String packagePredicate) throws Exception {
+		for (Iterator sourceFileIter = sources.files(); sourceFileIter.hasNext();) {
+			FileWithRoot file = (FileWithRoot) sourceFileIter.next();
+			enhanceFile(file.root(), file.file(), target, classLoader, bloatUtil, packagePredicate);
+		}
+	}
+
+	private void enhanceFile(
+			File prefix, 
+			File source, 
+			File target,
+			ClassLoader classLoader, 
+			BloatLoaderContext bloatUtil,
+			String packagePredicate) throws IOException {
+		String classPath = source.getCanonicalPath().substring(prefix.getCanonicalPath().length()+1);
+		String className = classPath.substring(0, classPath.length()-".class".length());
+		className=className.replace(File.separatorChar,'.');
+		
+		InstrumentationStatus status = InstrumentationStatus.NOT_INSTRUMENTED;
+		try {
+			if (className.startsWith(packagePredicate)) {
+				System.err.println("Processing " + className);
+				ClassEditor classEditor = bloatUtil.classEditor(className);
+				status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
+				System.err.println("enhance " + className + ": " + (status.isInstrumented() ? "ok" : "failed"));
+			}
+		} catch (Exception e) {
+			status = InstrumentationStatus.FAILED;
+			e.printStackTrace();
+		} catch (NoClassDefFoundError e) {
+			System.err.println("Omitting " + className + ": Referenced class " + e.getMessage() + " not found.");
+		} finally {
+			if (!status.isInstrumented()) {
+				File4.copyFile(source, new File(target, classPath));
+			}
+			else {
+//				bloatUtil.commit();
+			}
+		}
+	}
+
+	private String[] fullClasspath(FilePathRoot sources, String[] classpath) {
+		String[] sourceRoots = sources.rootDirs();
+		String [] fullClasspath = new String[sourceRoots.length + classpath.length];
+		System.arraycopy(sourceRoots, 0, fullClasspath, 0, sourceRoots.length);
+		System.arraycopy(classpath, 0, fullClasspath, sourceRoots.length, classpath.length);
 		return fullClasspath;
 	}
 
@@ -73,66 +128,4 @@ public class Db4oFileEnhancer {
 		return urls;
 	}
 	
-	private void enhance(
-			String prefix,File source,
-			File target,
-			ClassLoader classLoader,
-			BloatLoaderContext bloatUtil,
-			String packagePredicate) throws Exception {
-		if(source.isDirectory()) {
-			enhanceDir(prefix, source, target, classLoader, bloatUtil, packagePredicate);
-		}
-		else {
-			enhanceFile(prefix, source, target, classLoader, bloatUtil, packagePredicate);
-		}
-	}
-
-	private void enhanceFile(
-			String prefix, 
-			File source, 
-			File target,
-			ClassLoader classLoader, 
-			BloatLoaderContext bloatUtil,
-			String packagePredicate) throws IOException {
-		String className = source.getCanonicalPath().substring(prefix.length()+1);
-		className = className.substring(0, className.length()-".class".length());
-		className=className.replace(File.separatorChar,'.');
-		
-		InstrumentationStatus status = InstrumentationStatus.NOT_INSTRUMENTED;
-		try {
-			if (className.startsWith(packagePredicate)) {
-				System.err.println("Processing " + className);
-				ClassEditor classEditor = bloatUtil.classEditor(className);
-				status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
-				System.err.println("enhance " + className + ": " + (status.isInstrumented() ? "ok" : "failed"));
-			}
-		} catch (Exception e) {
-			status = InstrumentationStatus.FAILED;
-			e.printStackTrace();
-		} catch (NoClassDefFoundError e) {
-			System.err.println("Omitting " + className + ": Referenced class " + e.getMessage() + " not found.");
-		} finally {
-			if (!status.isInstrumented()) {
-				File4.copyFile(source, target);
-			}
-		}
-	}
-
-	private void enhanceDir(
-			String prefix, 
-			File source, 
-			File target,
-			ClassLoader classLoader, 
-			BloatLoaderContext bloatUtil,
-			String packagePredicate) throws Exception {
-		File[] subFiles=source.listFiles(new FileFilter() {
-			public boolean accept(File file) {
-				return file.isDirectory()||file.getName().endsWith(".class");
-			}
-		});
-		target.mkdirs();
-		for (int idx = 0; idx < subFiles.length; idx++) {
-			enhance(prefix,subFiles[idx],new File(target,subFiles[idx].getName()),classLoader,bloatUtil,packagePredicate);
-		}
-	}
 }

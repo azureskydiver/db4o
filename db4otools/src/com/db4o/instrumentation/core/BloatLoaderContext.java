@@ -88,4 +88,14 @@ public class BloatLoaderContext {
 		ClassInfo classInfo = loader.loadClass(type.className());
 		return new ClassEditor(new CachingBloatContext(loader,new ArrayList(),false),classInfo).superclass();
 	}
+	
+	public void commit() {
+		try {
+			context.commit();
+		}
+		catch(ConcurrentModificationException exc) {
+			exc.printStackTrace();
+			throw exc;
+		}
+	}
 }

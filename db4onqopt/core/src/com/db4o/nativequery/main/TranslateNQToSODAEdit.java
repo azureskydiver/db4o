@@ -29,7 +29,7 @@ public class TranslateNQToSODAEdit implements BloatClassEdit {
 			}
 			//System.err.println("Bypassing "+ce.name());
 		} catch (Exception exc) {
-//			throw new RuntimeException(exc.getMessage());
+//			throw new RuntimeException(exc);
 			return InstrumentationStatus.FAILED;
 		}
 		return InstrumentationStatus.NOT_INSTRUMENTED;
