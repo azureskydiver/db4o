@@ -59,6 +59,8 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 			    if(! eventCallbacks().continueOnTimeout(transaction())){
 			        return;
 			    }
+			    // give other threads a chance
+			    Cool.sleepIgnoringInterruption(1);
             }
 			if(message == null){
 			    continue;
