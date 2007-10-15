@@ -14,11 +14,12 @@ public class ObjectNotStorableExceptionTestCase extends AbstractDb4oTestCase{
         new ObjectNotStorableExceptionTestCase().runSolo();
     }
     
-    public class Item {
+    public static class Item {
         public Object nakedObject;
     }
     
     public void testObjectContainerAliveAfterObjectNotStorableException(){
+        
         final Item item = new Item();
         item.nakedObject = new Object();
         
@@ -28,11 +29,9 @@ public class ObjectNotStorableExceptionTestCase extends AbstractDb4oTestCase{
             }
         });
         
-        item.nakedObject = null;
-        store(item);
+        store(new Item());
         
-        Item retrieved = (Item)retrieveOnlyInstance(Item.class);
-        Assert.areSame(item, retrieved);
+        Assert.isNotNull(retrieveOnlyInstance(Item.class));
     }
 
 }
