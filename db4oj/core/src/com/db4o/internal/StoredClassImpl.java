@@ -15,6 +15,9 @@ public class StoredClassImpl implements StoredClass {
     private final ClassMetadata _classMetadata;
     
     public StoredClassImpl(Transaction transaction, ClassMetadata classMetadata){
+        if(classMetadata == null){
+            throw new IllegalArgumentException();
+        }
         _transaction = transaction;
         _classMetadata = classMetadata;
     }
@@ -29,6 +32,9 @@ public class StoredClassImpl implements StoredClass {
 
     public StoredClass getParentStoredClass() {
         ClassMetadata parentClassMetadata = _classMetadata.getAncestor();
+        if(parentClassMetadata == null){
+            return null;
+        }
         return new StoredClassImpl(_transaction, parentClassMetadata);
     }
 
