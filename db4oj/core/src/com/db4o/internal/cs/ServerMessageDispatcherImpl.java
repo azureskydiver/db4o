@@ -160,8 +160,7 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
     private boolean isClosed(){
         return ! isMessageDispatcherAlive() ||
               _transactionHandle.isClosed() || 
-               _socket == null ||  
-             ! _socket.isConnected();
+               _socket == null ;
     }
     
     private boolean pingSuccessful(){

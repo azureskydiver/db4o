@@ -102,7 +102,7 @@ public final class Const4
 
 	// Timings
 	public static final int LOCK_TIME_INTERVAL = 1000;
-	public static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 5000;  // jump out of the loop every 5 seconds
+	public static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 50000;  // jump out of the loop every 50 seconds
 	public static final int CLIENT_SOCKET_TIMEOUT = 300000;  // 5 minutes response time at the client side
 	public static final int CLIENT_EMBEDDED_TIMEOUT = 300000;
 		
