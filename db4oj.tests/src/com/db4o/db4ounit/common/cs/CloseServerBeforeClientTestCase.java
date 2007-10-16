@@ -38,6 +38,16 @@ public class CloseServerBeforeClientTestCase extends Db4oClientServerTestCase {
 		}
 
 	}
+
+    private void closeOnTimeouts(ClientObjectContainer client) {
+        ClientEventRegistryFactory.forClient(client).clientSocketReadTimeout().addListener(
+            new EventListener4() {
+                public void onEvent(Event4 e, EventArgs args) {
+                    CancellableEventArgs cancellableArgs = (CancellableEventArgs) args;
+                    cancellableArgs.cancel();
+                }
+            });
+    }
 	
 
 }

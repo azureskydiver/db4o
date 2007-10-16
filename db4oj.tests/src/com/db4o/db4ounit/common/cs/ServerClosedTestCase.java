@@ -2,6 +2,8 @@
 package com.db4o.db4ounit.common.cs;
 
 import com.db4o.*;
+import com.db4o.cs.events.*;
+import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.cs.*;
@@ -41,4 +43,14 @@ public class ServerClosedTestCase extends Db4oClientServerTestCase implements Op
 		}
 	}
 
+    private void closeOnTimeouts(ClientObjectContainer client) {
+        ClientEventRegistryFactory.forClient(client).clientSocketReadTimeout().addListener(
+            new EventListener4() {
+                public void onEvent(Event4 e, EventArgs args) {
+                    CancellableEventArgs cancellableArgs = (CancellableEventArgs) args;
+                    cancellableArgs.cancel();
+                }
+            });
+    }
+	
 }

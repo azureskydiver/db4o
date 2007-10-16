@@ -11,35 +11,46 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class ClientDisconnectTestCase extends Db4oClientServerTestCase implements OptOutAllButNetworkingCS{
-	
-	public static void main(String[] arguments) {
-		new ClientDisconnectTestCase().runClientServer();
-	}
-	
-	public void testDisconnect() {
-		ExtObjectContainer oc1 = openNewClient();
-		ExtObjectContainer oc2 = openNewClient();
-		try {
-			final ClientObjectContainer client1 = (ClientObjectContainer) oc1;
-			final ClientObjectContainer client2 = (ClientObjectContainer) oc2;
+public class ClientDisconnectTestCase extends Db4oClientServerTestCase implements
+    OptOutAllButNetworkingCS {
+
+    public static void main(String[] arguments) {
+        new ClientDisconnectTestCase().runClientServer();
+    }
+
+    public void testDisconnect() {
+        ExtObjectContainer oc1 = openNewClient();
+        ExtObjectContainer oc2 = openNewClient();
+        try {
+            final ClientObjectContainer client1 = (ClientObjectContainer) oc1;
+            final ClientObjectContainer client2 = (ClientObjectContainer) oc2;
             closeOnTimeouts(client1);
             closeOnTimeouts(client2);
-			client1.socket().close();
-			Assert.isFalse(oc1.isClosed());
-			Assert.expect(Db4oException.class, new CodeBlock() {
-				public void run() throws Throwable {
-					client1.get(null);	
-				}
-			});
-			// It's ok for client2 to get something.
-			client2.get(null);
-		} finally {
-			oc1.close();
-			oc2.close();
-			Assert.isTrue(oc1.isClosed());
-			Assert.isTrue(oc2.isClosed());
-		}
-	}
-	
+            client1.socket().close();
+            Assert.isFalse(oc1.isClosed());
+            Assert.expect(Db4oException.class, new CodeBlock() {
+                public void run() throws Throwable {
+                    client1.get(null);
+                }
+            });
+            // It's ok for client2 to get something.
+            client2.get(null);
+        } finally {
+            oc1.close();
+            oc2.close();
+            Assert.isTrue(oc1.isClosed());
+            Assert.isTrue(oc2.isClosed());
+        }
+    }
+
+    private void closeOnTimeouts(ClientObjectContainer client) {
+        ClientEventRegistryFactory.forClient(client).clientSocketReadTimeout().addListener(
+            new EventListener4() {
+                public void onEvent(Event4 e, EventArgs args) {
+                    CancellableEventArgs cancellableArgs = (CancellableEventArgs) args;
+                    cancellableArgs.cancel();
+                }
+            });
+    }
+
 }
