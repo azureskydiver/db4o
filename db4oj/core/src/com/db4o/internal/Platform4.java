@@ -79,16 +79,12 @@ public final class Platform4 {
 
     public static final boolean canSetAccessible() {
         if (setAccessibleCheck.unspecified()) {
-            if (Deploy.csharp) {
-                setAccessibleCheck = TernaryBool.NO;
+            if (jdk().ver() >= 2) {
+                setAccessibleCheck = TernaryBool.YES;
             } else {
-                if (jdk().ver() >= 2) {
-                    setAccessibleCheck = TernaryBool.YES;
-                } else {
-                    setAccessibleCheck = TernaryBool.NO;
-                    if (((Config4Impl)Db4o.configure()).messageLevel() >= 0) {
-                        Messages.logErr(Db4o.configure(), 47, null, null);
-                    }
+                setAccessibleCheck = TernaryBool.NO;
+                if (((Config4Impl)Db4o.configure()).messageLevel() >= 0) {
+                    Messages.logErr(Db4o.configure(), 47, null, null);
                 }
             }
         }
