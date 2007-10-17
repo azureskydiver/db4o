@@ -13,6 +13,7 @@ public class AllTestsJdk1_2 extends Db4oTestSuite {
 			// FIXME: solve the workspacePath issue and uncomment migration.AllCommonTests.class below
 //			com.db4o.db4ounit.common.migration.AllCommonTests.class,
 			com.db4o.db4ounit.common.defragment.LegacyDatabaseDefragTestCase.class,
+			com.db4o.db4ounit.common.ta.AllTests.class,
 			com.db4o.db4ounit.jre11.AllTests.class,
 			com.db4o.db4ounit.jre12.assorted.AllTests.class,
 			com.db4o.db4ounit.jre12.blobs.AllTests.class,
