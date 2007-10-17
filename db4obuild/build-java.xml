@@ -44,7 +44,7 @@
 			build.db4ojdk5, 
 			build.db4otools, 
 			build.nqopt,
-			build.ta,
+			build.taj,
 			build.osgi" 
 	/>
 	
@@ -89,8 +89,8 @@
             fork="true" 
             destdir="${dir.dist.classes.java1.2}" 
             debug="${javac.debug.mode}" 
-            target="1.2" 
-            source="1.2" 
+            target="1.1" 
+            source="1.3" 
             encoding="UTF-8" />
 
 		<jar destfile="${file.java1.2.jar}">
@@ -138,8 +138,8 @@
 	        fork="true" 
 	        destdir="${dir.dist.classes.db4otools}" 
 	        debug="${javac.debug.mode}" 
-	        target="1.4" 
-	        source="1.4" 
+	        target="1.1" 
+	        source="1.3" 
 	        encoding="UTF-8">
 			<classpath>
 				<pathelement path="${file.java1.2.jar}"/>
@@ -160,8 +160,8 @@
             fork="true" 
             destdir="${dir.dist.classes.nqopt}" 
             debug="${javac.debug.mode}" 
-            target="1.2" 
-            source="1.2" 
+            target="1.1" 
+            source="1.3" 
             encoding="UTF-8">
 			<exclude name="**/j2me/**"/>
 			<classpath>
@@ -179,15 +179,14 @@
 		</jar>
 	</target>
 	
-	<target name="build.ta" depends="build.db4ojdk1.2, build.db4otools" >
+	<target name="build.taj" depends="build.db4ojdk1.2, build.db4otools" >
         <mkdir dir="${dir.dist.classes.taj}" />
 		<javac fork="true" 
             destdir="${dir.dist.classes.taj}" 
             debug="${javac.debug.mode}" 
-            target="1.2" 
-            source="1.2" 
+            target="1.1" 
+            source="1.3" 
             encoding="UTF-8">
-            <src path="${dir.ta.src}" />
             <src path="${dir.taj.src}" />
 			<classpath>
 				<pathelement path="${file.java1.2.jar}"/>
@@ -197,7 +196,7 @@
 			</classpath>
 		</javac>
 		
-		<jar destfile="${file.ta.jar}">
+		<jar destfile="${file.taj.jar}">
 			<fileset dir="${dir.dist.classes.taj}" />
 			<manifest>
 				<attribute name="Class-Path" value="${filename.bloat.jar} ${filename.db4otools.jar} ${filename.java1.2.jar}"/>
@@ -239,26 +238,6 @@
 
 	</target>
 	
-	<target name="build.db4o.collections" depends="build.db4ojdk5, build.ta">
-		<mkdir dir="${dir.dist.classes.collections}" />
-		<javac srcdir="${dir.collections}/core/src" 
-            fork="true" 
-            destdir="${dir.dist.classes.collections}" 
-            debug="${javac.debug.mode}" 
-            target="1.5" 
-            source="1.5" 
-            encoding="UTF-8">
-			<classpath>
-				<pathelement location="${file.java5.jar}" />
-				<pathelement location="${file.ta.jar}" />
-			</classpath>
-		</javac>
-		
-		<jar destfile="${file.collections.jar}">
-			<fileset dir="${dir.dist.classes.collections}" />
-		</jar>
-	</target>
-	
 	<!-- Compile test -->
 	
 	<target name="build.db4ojava.tests" 
@@ -268,7 +247,7 @@
 			build.db4ojdk5.tests,
 			build.nqopt.tests,
 			build.osgi.tests,
-			build.ta.tests"
+			build.taj.tests"
 	/>
 	
 	<target name="build.db4ounit" depends="init, build.db4ojdk1.1">
@@ -277,7 +256,7 @@
 			fork="true" 
 			debug="on" 
 			target="1.1" 
-			source="1.2" 
+			source="1.3" 
 			encoding="UTF-8">
 			<classpath>
 				<pathelement path="${file.java1.1.jar}" />
@@ -328,8 +307,8 @@
 		<javac destdir="${dir.dist.classes.test.jdk1.2}" 
 			fork="true" 
 			debug="on" 
-			target="1.2" 
-			source="1.2" 
+			target="1.1" 
+			source="1.3" 
 			encoding="UTF-8">
 			<classpath>
 				<pathelement location="${file.java1.2.jar}" />
@@ -447,18 +426,17 @@
 		</jar>
 	</target>
 	
-	<target name="build.ta.tests" depends="build.ta, build.db4ounit, build.db4ojdk1.2.tests">
+	<target name="build.taj.tests" depends="build.taj, build.db4ounit, build.db4ojdk1.2.tests">
 		<mkdir dir="${dir.dist.classes.test.taj}" />
 		<javac fork="true" 
             destdir="${dir.dist.classes.test.taj}" 
             debug="${javac.debug.mode}" 
-            target="1.2" 
-            source="1.2" 
+            target="1.1" 
+            source="1.3" 
             encoding="UTF-8">
-            <src path="${dir.ta.test.src}" />
             <src path="${dir.taj.test.src}" />
 			<classpath>
-				<pathelement location="${file.ta.jar}"/>
+				<pathelement location="${file.taj.jar}"/>
 				<pathelement path="${file.java1.2.jar}"/>
                 <pathelement path="${file.bloat.jar}"/>
 			    <pathelement path="${file.db4otools.jar}"/>
@@ -468,28 +446,6 @@
 		</javac>
 	</target>
 	
-	<target name="build.db4o.collections.tests" depends="build.db4o.collections, build.db4ounit">
-		<mkdir dir="${dir.dist.classes.test.collections}" />
-		<javac srcdir="${dir.collections}/test/src" 
-            fork="true" 
-            destdir="${dir.dist.classes.test.collections}" 
-            debug="${javac.debug.mode}" 
-            target="1.5" 
-            source="1.5" 
-            encoding="UTF-8">
-			<classpath>
-				<pathelement location="${file.collections.jar}" />
-				<pathelement location="${file.java5.jar}" />
-				<pathelement location="${file.ta.jar}" />
-				<pathelement location="${file.db4ounit.jar}" />
-			</classpath>
-		</javac>
-		
-		<jar destfile="${file.collections.jar}">
-			<fileset dir="${dir.dist.classes.collections}" />
-		</jar>
-	</target>
-
 	<!--Run test -->
 	
 	<target name="run.tests.db4ojava" 
@@ -497,7 +453,7 @@
 			run.tests.jdk1.2,
 			run.tests.jdk5,
 			run.tests.nqopt,
-			run.tests.ta,
+			run.tests.taj,
 			run.tests.concurrency,
 			run.tests.osgi"
 	/>
@@ -689,50 +645,21 @@
 		</java>
 	</target>
 	
-	<target name="run.tests.ta" depends="build.ta.tests">
-		<java classname="com.db4o.ta.tests.AllTests"
-			fork="true"
-			jvm="${file.jvm.jdk1.2}"
-			failonerror="true"
-			timeout="1800000">
-			<classpath>
-				<pathelement location="${dir.dist.classes.test.taj}"/>
-				<pathelement location="${file.ta.jar}"/>
-				<pathelement path="${file.java1.2.jar}"/>
-	            <pathelement path="${file.bloat.jar}"/>
-			    <pathelement path="${file.db4otools.jar}"/>
-				<pathelement location="${file.db4ounit.jar}" />
-			</classpath>
-		</java>
+	<target name="run.tests.taj" depends="build.taj.tests">
+		
 		<java classname="com.db4o.ta.instrumentation.test.AllTests"
 			fork="true"
-			jvm="${file.jvm.jdk1.5}"
+			jvm="${file.jvm.jdk1.3}"
 			failonerror="true"
 			timeout="1800000">
 			<classpath>
 				<pathelement location="${dir.dist.classes.test.taj}"/>
-				<pathelement location="${file.ta.jar}"/>
+				<pathelement location="${file.taj.jar}"/>
 				<pathelement path="${file.java1.2.jar}"/>
 	            <pathelement path="${file.bloat.jar}"/>
 			    <pathelement path="${file.db4otools.jar}"/>
 				<pathelement location="${file.db4ounit.jar}" />
 				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
-			</classpath>
-		</java>
-	</target>
-	
-	<target name="run.tests.collections" depends="build.db4o.collections.tests">
-		<java classname="com.db4o.db4ounit.jre5.collections.AllTests"
-			fork="true"
-			jvm="${file.jvm.jdk1.5}"
-			failonerror="true"
-			timeout="1800000">
-			<classpath>
-				<pathelement path="${dir.dist.classes.test.collections}" />
-				<pathelement location="${file.collections.jar}" />
-				<pathelement location="${file.java5.jar}" />
-				<pathelement location="${file.ta.jar}" />
-				<pathelement location="${file.db4ounit.jar}" />
 			</classpath>
 		</java>
 	</target>
@@ -878,14 +805,7 @@
 				<include name="**/src/**/*.txt" />
 			</fileset>
 		</copy>
-		<copy todir="${dir.dist.java.src}/${name.project.ta}">
-			<fileset dir="${dir.ta}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="**/src/**/*.java" />
-				<include name="**/test/**/*.java" />
-			</fileset>
-		</copy>
+		
 		<copy todir="${dir.dist.java.src}/${name.project.taj}">
 			<fileset dir="${dir.taj}">
 				<include name=".project" />
@@ -1020,9 +940,8 @@
 		depends="run.tests.jdk1.1, 
 				run.tests.jdk1.2, 
 				run.tests.nqopt,
-				run.tests.ta,
+				run.tests.taj,
 				run.tests.concurrency, 
 				run.tests.osgi,
-				run.tests.collections,
 				package.java" />
 </project>
