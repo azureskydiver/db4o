@@ -6,14 +6,13 @@ import java.net.*;
 import java.util.*;
 
 import com.db4o.config.*;
-import com.db4o.instrumentation.*;
+import com.db4o.db4ounit.common.ta.collections.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.filter.*;
 import com.db4o.instrumentation.main.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
-import com.db4o.ta.tests.collections.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
