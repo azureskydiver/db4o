@@ -5,7 +5,6 @@ package com.db4o.db4ounit.common.ta.collections;
 import java.util.*;
 
 import com.db4o.db4ounit.common.ta.*;
-import com.db4o.db4ounit.common.ta.collections.internal.*;
 
 /**
  * Platform specific facade.

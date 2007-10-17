@@ -184,6 +184,7 @@
 			<classpath>
 				<pathelement path="${file.java1.2.jar}"/>
 				<pathelement path="${file.bloat.jar}"/>
+				<pathelement path="${file.ant.jar}"/>
 			</classpath>
 		</javac>
 		<jar destfile="${file.db4otools.jar}">
@@ -223,7 +224,6 @@
             target="1.2" 
             source="1.2" 
             encoding="UTF-8">
-            <src path="${dir.ta.src}" />
             <src path="${dir.taj.src}" />
 			<classpath>
 				<pathelement path="${file.java1.2.jar}"/>
