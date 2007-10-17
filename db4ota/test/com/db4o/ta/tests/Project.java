@@ -1,3 +1,0 @@
-/* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
-package com.db4o.ta.tests;import java.util.*;
-class Project extends ActivatableImpl {		List _subProjects = new com.db4o.ta.tests.collections.PagedList();		List _workLog = new com.db4o.ta.tests.collections.PagedList();		String _name;		public Project(String name) {		_name = name;	}		public void logWorkDone(UnitOfWork work) {		// TA BEGIN		activate();		// TA END		_workLog.add(work);	}	public long totalTimeSpent() {				// TA BEGIN		activate();		// TA END				long total = 0;		Iterator i = _workLog.iterator();		while (i.hasNext()) {			UnitOfWork item = (UnitOfWork) i.next();			total += item.timeSpent();		}		return total;	}}
