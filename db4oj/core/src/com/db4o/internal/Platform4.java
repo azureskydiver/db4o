@@ -78,9 +78,6 @@ public final class Platform4 {
     }
 
     public static final boolean canSetAccessible() {
-        if (Deploy.csharp) {
-            return true;
-        }
         if (setAccessibleCheck.unspecified()) {
             if (Deploy.csharp) {
                 setAccessibleCheck = TernaryBool.NO;
@@ -302,19 +299,17 @@ public final class Platform4 {
 
     static final synchronized boolean hasCollections() {
         if (collectionCheck.unspecified()) {
-            if (!Deploy.csharp) {
-                if (classIsAvailable(UTIL + "Collection")) {
-                    collectionCheck = TernaryBool.YES;
-                    return true;
-                }
-            }
+        	if (classIsAvailable(UTIL + "Collection")) {
+        		collectionCheck = TernaryBool.YES;
+        		return true;
+        	}
             collectionCheck = TernaryBool.NO;
         }
         return collectionCheck.definiteYes();
     }
 
     public static final boolean hasLockFileThread() {
-        return !Deploy.csharp;
+        return true;
     }
 
     public static final boolean hasNio() {
@@ -334,14 +329,12 @@ public final class Platform4 {
     }
 
     static final boolean hasShutDownHook() {
-        if (shutDownHookCheck.unspecified()) {
-            if (!Deploy.csharp) {
-                if (jdk().ver() >= 3){
-                    shutDownHookCheck = TernaryBool.YES;
-                    return true;
-                } 
-                Reflection4.invoke(System.class, RUNFINALIZERSONEXIT, new Class[] {boolean.class}, new Object[]{new Boolean(true)});
-            }
+        if (shutDownHookCheck.unspecified()) {            
+            if (jdk().ver() >= 3){
+                shutDownHookCheck = TernaryBool.YES;
+                return true;
+            } 
+            Reflection4.invoke(System.class, RUNFINALIZERSONEXIT, new Class[] {boolean.class}, new Object[]{new Boolean(true)});
             shutDownHookCheck = TernaryBool.NO;
         }
         return shutDownHookCheck.definiteYes();
@@ -352,13 +345,11 @@ public final class Platform4 {
             return false;
         }
         if (weakReferenceCheck.unspecified()) {
-            if (!Deploy.csharp) {
-                if (classIsAvailable(ACCESSIBLEOBJECT)
-                    && classIsAvailable(REFERENCEQUEUE)
-                    && jdk().ver() >= 2) {
-                    weakReferenceCheck = TernaryBool.YES;
-                    return true;
-                }
+            if (classIsAvailable(ACCESSIBLEOBJECT)
+                && classIsAvailable(REFERENCEQUEUE)
+                && jdk().ver() >= 2) {
+                weakReferenceCheck = TernaryBool.YES;
+                return true;
             }
             weakReferenceCheck = TernaryBool.NO;
         }
@@ -437,16 +428,13 @@ public final class Platform4 {
     }
     
     public static void link(){
-        if (!Deploy.csharp) {
-            
-            // link standard translators, so they won't get deleted
-            // by deployment
-            
-            new TClass();
-            new TVector();
-            new THashtable();
-            new TNull();
-        }
+        // link standard translators, so they won't get deleted
+        // by deployment
+        
+        new TClass();
+        new TVector();
+        new THashtable();
+        new TNull();
     }
 
     // FIXME: functionality should really be in IoAdapter
@@ -541,10 +529,8 @@ public final class Platform4 {
     }
     
 	public static void registerCollections(GenericReflector reflector) {
-		if(!Deploy.csharp){
-			reflector.registerCollection(P1Collection.class);
-			jdk().registerCollections(reflector);
-		}
+		reflector.registerCollection(P1Collection.class);
+		jdk().registerCollections(reflector);
 	}
 
 
@@ -573,13 +559,11 @@ public final class Platform4 {
     }
 
     public static final void setAccessible(Object a_accessible) {
-        if (!Deploy.csharp) {
-            if (setAccessibleCheck == TernaryBool.UNSPECIFIED) {
-                canSetAccessible();
-            }
-            if (setAccessibleCheck == TernaryBool.YES) {
-                jdk().setAccessible(a_accessible);
-            }
+        if (setAccessibleCheck == TernaryBool.UNSPECIFIED) {
+            canSetAccessible();
+        }
+        if (setAccessibleCheck == TernaryBool.YES) {
+            jdk().setAccessible(a_accessible);
         }
     }
     
