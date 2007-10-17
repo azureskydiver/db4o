@@ -6,9 +6,9 @@ import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.ta.collections.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.ta.*;
-import com.db4o.ta.tests.collections.*;
 
 import db4ounit.extensions.*;
 
