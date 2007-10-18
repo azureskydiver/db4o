@@ -66,7 +66,6 @@ public class AllTestsConfAll extends TestSuite{
 	        ObjectContainerIsTransient.class,
 			ObjectSetIDs.class,
 			ParameterizedEvaluation.class,
-            PeekPersisted.class,
             
             // disabled because it fails due to fix
             // See comments in: YapClass.deleteEmbedded1()
