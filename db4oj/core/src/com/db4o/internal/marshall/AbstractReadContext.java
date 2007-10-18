@@ -4,6 +4,7 @@ package com.db4o.internal.marshall;
 
 import com.db4o.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 
 
 /**
@@ -15,7 +16,7 @@ public abstract class AbstractReadContext implements InternalReadContext {
     
     protected Buffer _buffer;
     
-    protected int _activationDepth;
+    protected ActivationDepth _activationDepth;
     
     protected AbstractReadContext(Transaction transaction){
         _transaction = transaction;
@@ -81,17 +82,17 @@ public abstract class AbstractReadContext implements InternalReadContext {
 
     public Object readObject() {
         int id = readInt();
-        int depth = activationDepth() - 1;
-
+        if (id == 0) {
+        	return null;
+        }
+        
         if (peekPersisted()) {
-            return container().peekPersisted(transaction(), id, depth, false);
+            return container().peekPersisted(transaction(), id, activationDepth().descend(classMetadataForId(id), ActivationMode.PEEK), false);
         }
 
         Object obj = container().getByID2(transaction(), id);
-
-        if (obj instanceof Db4oTypeImpl) {
-            depth = ((Db4oTypeImpl)obj).adjustReadDepth(depth);
-        }
+        
+        ActivationDepth depth = activationDepth().descend(classMetadataForId(id), ActivationMode.ACTIVATE);
 
         // this is OK for primitive YapAnys. They will not be added
         // to the list, since they will not be found in the ID tree.
@@ -100,7 +101,16 @@ public abstract class AbstractReadContext implements InternalReadContext {
         return obj;
     }
 
-    private boolean peekPersisted() {
+    private ClassMetadata classMetadataForId(int id) {
+    	HardObjectReference hardRef = container().getHardObjectReferenceById(transaction(), id);
+    	if (null == hardRef || hardRef._reference == null) {
+    		// com.db4o.db4ounit.common.querying.CascadeDeleteDeleted
+    		return null;
+    	}
+		return hardRef._reference.classMetadata();
+	}
+
+	protected boolean peekPersisted() {
         return false;
     }
     
@@ -121,11 +131,11 @@ public abstract class AbstractReadContext implements InternalReadContext {
         return obj;
     }
     
-    public int activationDepth() {
+    public ActivationDepth activationDepth() {
         return _activationDepth;
     }
     
-    public void activationDepth(int depth){
+    public void activationDepth(ActivationDepth depth){
         _activationDepth = depth;
     }
     

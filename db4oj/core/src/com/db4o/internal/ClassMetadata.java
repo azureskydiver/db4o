@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.handlers.*;
@@ -97,13 +98,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         _classIndexed = true;
     }
     
-    void activateFields(Transaction trans, Object obj, int depth) {
+    void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
         if(objectCanActivate(trans, obj)){
             activateFieldsLoop(trans, obj, depth);
         }
     }
 
-    private final void activateFieldsLoop(Transaction trans, Object obj, int depth) {
+    private final void activateFieldsLoop(Transaction trans, Object obj, ActivationDepth depth) {
         for (int i = 0; i < i_fields.length; i++) {
             i_fields[i].cascadeActivation(trans, obj, depth, true);
         }
@@ -302,25 +303,23 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public void cascadeActivation(
         Transaction a_trans,
         Object a_object,
-        int a_depth,
+        ActivationDepth depth,
         boolean a_activate) {
-        Config4Class config = configOrAncestorConfig();
-        if (config != null) {
-            if (a_activate) {
-                a_depth = config.adjustActivationDepth(a_depth);
+    	
+    	if (!depth.requiresActivation()) {
+    		return;
+    	}
+    	
+        ObjectContainerBase stream = a_trans.container();
+        if (a_activate) {
+        	// FIXME: [TA] do we need to check for isValueType here?
+            if(isValueType()){
+                activateFields(a_trans, a_object, depth);
+            }else{
+                stream.stillToActivate(a_trans, a_object, depth);
             }
-        }
-        if (a_depth > 0) {
-            ObjectContainerBase stream = a_trans.container();
-            if (a_activate) {
-                if(isValueType()){
-                    activateFields(a_trans, a_object, a_depth - 1);
-                }else{
-                    stream.stillToActivate(a_trans, a_object, a_depth - 1);
-                }
-            } else {
-                stream.stillToDeactivate(a_trans, a_object, a_depth - 1, false);
-            }
+        } else {
+            stream.stillToDeactivate(a_trans, a_object, depth, false);
         }
     }
 
@@ -354,7 +353,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         if (_container._handlers.ICLASS_UNVERSIONED.isAssignableFrom(claxx)) {
             _unversioned = true;
         }        
-        if (_container._handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(claxx)) {
+        if (isDb4oTypeImpl()) {
         	Db4oTypeImpl db4oTypeImpl = (Db4oTypeImpl) claxx.newInstance();
         	_classIndexed = (db4oTypeImpl == null || db4oTypeImpl.hasClassIndex());
 		} else if(i_config != null){
@@ -362,7 +361,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		}
     }
     
-    public final int adjustUpdateDepth(Transaction trans, int depth) {
+    public boolean isDb4oTypeImpl() {
+    	return _container._handlers.ICLASS_DB4OTYPEIMPL.isAssignableFrom(classReflector());
+    }
+
+	public final int adjustUpdateDepth(Transaction trans, int depth) {
         Config4Class config = configOrAncestorConfig();
         if (depth == Const4.UNSPECIFIED) {
             depth = checkUpdateDepthUnspecified(trans.container().configImpl());
@@ -495,9 +498,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         
     }
 
-	public void deactivate(Transaction trans, Object obj, int depth) {
+	public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
         if(objectCanDeactivate(trans, obj)){
-            deactivate1(trans, obj, depth);
+            deactivateFields(trans, obj, depth.descend(this, ActivationMode.DEACTIVATE));
             objectOnDeactivate(trans, obj);
         }
     }
@@ -514,13 +517,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 			&& dispatchEvent(container, obj, EventDispatcher.CAN_DEACTIVATE);
 	}
 
-    void deactivate1(Transaction a_trans, Object a_object, int a_depth) {
+    void deactivateFields(Transaction a_trans, Object a_object, ActivationDepth a_depth) {
         
         for (int i = 0; i < i_fields.length; i++) {
             i_fields[i].deactivate(a_trans, a_object, a_depth);
         }
         if (i_ancestor != null) {
-            i_ancestor.deactivate1(a_trans, a_object, a_depth);
+            i_ancestor.deactivateFields(a_trans, a_object, a_depth);
         }
     }
 
@@ -1001,7 +1004,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         // overridden in YapClassPrimitive
         // never called for primitive YapAny
         
-        context.adjustInstantiationDepth();
+    	// FIXME: [TA] no longer necessary?
+//        context.adjustInstantiationDepth();
         
         Object obj = context.persistentObject();
         
@@ -1025,15 +1029,16 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         context.addToIDTree();
         
         if (instantiating) {
-            if (context.activationDepth() == 0) {
+            if (!context.activationDepth().requiresActivation()) {
                 context.reference().setStateDeactivated();
             } else {
                 activate(context);
             }
         } else {
             if (activatingActiveObject(context.container(), context.reference())) {
-                if (context.activationDepth() > 1) {
-                    activateFields(context.transaction(), obj, context.activationDepth() - 1);
+            	ActivationDepth child = context.activationDepth().descend(this, ActivationMode.ACTIVATE);
+                if (child.requiresActivation()) {
+                    activateFields(context.transaction(), obj, child);
                 }
             } else {
                 activate(context);
@@ -1067,7 +1072,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return;
         }
         context.reference().setStateClean();
-        if (context.activationDepth() > 0 || cascadeOnActivate()) {
+        if (context.activationDepth().requiresActivation()/* || cascadeOnActivate()*/) {
             instantiateFields(context);
         }
         objectOnActivate(context.transaction(), context.persistentObject());
@@ -1237,13 +1242,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         //       indexes here
     }
 
-	public Object readValueType(Transaction trans, int id, int depth) {
+    // FIXME: [TA] ActivationDepth review
+	public Object readValueType(Transaction trans, int id, ActivationDepth depth) {
+		
 		// for C# value types only:
 		// they need to be instantiated fully before setting them
 		// on the parent object because the set call modifies identity.
-		
-		// We also have to instantiate structs completely every time.
-    	int newDepth = Math.max(1, depth);
 		
 		// TODO: Do we want value types in the ID tree?
 		// Shouldn't we treat them like strings and update
@@ -1254,11 +1258,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		    if(obj == null){
 		        trans.removeReference(ref);
 		    }else{
-		        ref.activate(trans, obj, newDepth, false);
+		        ref.activate(trans, obj, depth, false);
 		        return ref.getObject();
 		    }
 		}
-		return new ObjectReference(id).read(trans, newDepth,Const4.ADD_TO_ID_TREE, false);
+		return new ObjectReference(id).read(trans, depth, Const4.ADD_TO_ID_TREE, false);
 	}
     
     public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
@@ -1307,7 +1311,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             Object obj = trans.container().getByID(trans, id);
             if (obj != null) {
 
-                candidates.i_trans.container().activate(trans, obj, 2);
+            	// FIXME: [TA] review activation depth 
+                candidates.i_trans.container().activate(trans, obj, new LegacyActivationDepth(2));
                 Platform4.forEachCollectionElement(obj, new Visitor4() {
                     public void visit(Object elem) {
                         candidates.addByIdentity(new QCandidate(candidates, elem, trans.container().getID(trans, elem), true));
@@ -1627,7 +1632,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 	private void updateStaticClass(final Transaction trans, final StaticClass sc) {
 		final ObjectContainerBase stream = trans.container();
-		stream.activate(trans, sc, 4);
+		stream.activate(trans, sc, new FixedActivationDepth(4));
 		
 		final StaticField[] existingFields = sc.fields;
 		final Iterator4 staticFields = Iterators.map(
@@ -1900,7 +1905,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         // FIXME: .NET value types should get their own TypeHandler and it 
         //        should do the following:
         if(isValueType()){
-            return readValueType(context.transaction(), context.readInt(), ((UnmarshallingContext)context).activationDepth() - 1);
+            ActivationDepth activationDepth = ((UnmarshallingContext)context).activationDepth();
+			return readValueType(context.transaction(), context.readInt(), activationDepth.descend(this, ActivationMode.ACTIVATE));
         }
         
         return context.readObject();

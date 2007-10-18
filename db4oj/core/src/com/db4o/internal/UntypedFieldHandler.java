@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
@@ -18,7 +19,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 	public void cascadeActivation(
 		Transaction a_trans,
 		Object a_object,
-		int a_depth,
+		ActivationDepth a_depth,
 		boolean a_activate) {
 		ClassMetadata yc = forObject(a_trans, a_object, false);
 		if (yc != null) {

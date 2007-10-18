@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 
@@ -12,7 +13,7 @@ import com.db4o.internal.query.processor.*;
  */
 public interface FirstClassHandler {
     
-    void cascadeActivation(Transaction trans, Object obj, int depth, boolean activate);
+    void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth, boolean activate);
     
     void readCandidates(int handlerVersion, Buffer buffer, QCandidates candidates) throws Db4oIOException;
     

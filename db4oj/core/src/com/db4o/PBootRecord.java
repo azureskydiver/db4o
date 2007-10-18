@@ -27,10 +27,6 @@ public class PBootRecord extends P1Object implements Internal4{
 
     public MetaIndex          i_uuidMetaIndex;
 
-    public int activationDepth() {
-        return Integer.MAX_VALUE;
-    }
-
     public MetaIndex getUUIDMetaIndex(){
         return i_uuidMetaIndex;
     }

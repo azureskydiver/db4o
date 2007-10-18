@@ -34,42 +34,33 @@ public class SodaTestUtil {
             return;
         }
         int j = 0;
-        if (set.size() == results.length) {
-            while (set.hasNext()) {
-                Object obj = set.next();
-                boolean found = false;
-                if (ordered) {
-                    if (TCompare.isEqual(results[j], obj)) {
-                        results[j] = null;
-                        found = true;
-                    }
-                    j++;
-                } else {
-                    for (int i = 0; i < results.length; i++) {
-                        if (results[i] != null) {
-                            if (TCompare.isEqual(results[i], obj)) {
-                                results[i] = null;
-                                found = true;
-                                break;
-                            }
+        Assert.areEqual(set.size(), results.length);
+        while (set.hasNext()) {
+            Object obj = set.next();
+            boolean found = false;
+            if (ordered) {
+                if (TCompare.isEqual(results[j], obj)) {
+                    results[j] = null;
+                    found = true;
+                }
+                j++;
+            } else {
+                for (int i = 0; i < results.length; i++) {
+                    if (results[i] != null) {
+                        if (TCompare.isEqual(results[i], obj)) {
+                            results[i] = null;
+                            found = true;
+                            break;
                         }
                     }
                 }
-                if (!found) {
-                    Assert.fail("Object not expected: " + obj);
-                }
             }
-            for (int i = 0; i < results.length; i++) {
-                if (results[i] != null) {
-                    Assert.fail("Expected object not returned: " + results[i]);
-                }
+            Assert.isTrue(found, "Object not expected: " + obj);
+        }
+        for (int i = 0; i < results.length; i++) {
+            if (results[i] != null) {
+                Assert.fail("Expected object not returned: " + results[i]);
             }
-        } else {
-            Assert.fail(
-                "Unexpected size returned.\nExpected: "
-                    + results.length
-                    + " Returned: "
-                    + set.size());
         }
     }
 	

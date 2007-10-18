@@ -5,6 +5,7 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -49,14 +50,12 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     public final void cascadeActivation(
         Transaction trans,
         Object onObject,
-        int depth,
+        ActivationDepth depth,
         boolean activate) {
         
         if (! (_handler instanceof ClassMetadata)) {
             return;
         }
-            
-        depth --;
         
         Object[] all = allElements(onObject);
         if (activate) {

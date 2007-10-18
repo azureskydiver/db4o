@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.activation.*;
+
 
 /**
  * @exclude
@@ -20,7 +22,7 @@ public class HardObjectReference {
 	}
 	
 	public static HardObjectReference peekPersisted(Transaction trans, int id, int depth) {
-	    Object obj = trans.container().peekPersisted(trans, id, depth, true);
+	    Object obj = trans.container().peekPersisted(trans, id, new LegacyActivationDepth(depth), true);
 	    if(obj == null){
 	        return null;
 	    }

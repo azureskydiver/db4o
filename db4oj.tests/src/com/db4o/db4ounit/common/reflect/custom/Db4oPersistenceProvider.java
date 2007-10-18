@@ -2,6 +2,7 @@ package com.db4o.db4ounit.common.reflect.custom;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
@@ -86,7 +87,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 			
 			// cant use exception chaining here because the
 			// the must run in jdk 1.1
-			throw new RuntimeException(e.getMessage());
+			throw new Db4oException(e);
 		}
 	}
 
@@ -218,6 +219,14 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		cascade(config, CustomClassRepository.class);
 		cascade(config, Hashtable4.class);
 		cascade(config, CustomClass.class);
+		
+		// FIXME: [TA] this is necessary because the behavior
+		// on .net differs with regards to cascade activation
+		// remove the following two lines and run the test
+		// on .net to see it fail
+		cascade(config, CustomField.class);
+		cascade(config, CustomUidField.class);
+		
 		return config;
 	}
 

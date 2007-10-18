@@ -3,6 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 
 
 /**
@@ -64,8 +65,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
             return _object;
         }
         
-        ClassMetadata classMetadata = readObjectHeader(); 
-        
+        ClassMetadata classMetadata = readObjectHeader();
         if(classMetadata == null){
             endProcessing();
             return _object;
@@ -73,9 +73,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         
         _reference.classMetadata(classMetadata);
         
-        if(doAdjustActivationDepthForPrefetch){
-            adjustActivationDepthForPrefetch();
-        }
+        adjustActivationDepth(doAdjustActivationDepthForPrefetch);
         
         if(_checkIDTree){
             Object objectInCacheFromClassCreation = _transaction.objectForIdFromCache(objectID());
@@ -96,6 +94,16 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         return _object;
     }
 
+	private void adjustActivationDepth(boolean doAdjustActivationDepthForPrefetch) {
+		if(doAdjustActivationDepthForPrefetch){
+            adjustActivationDepthForPrefetch();
+        } else {
+        	if (UnknownActivationDepth.INSTANCE == _activationDepth) {
+        		_activationDepth = container().defaultActivationDepth(classMetadata());
+        	}
+        }
+	}
+
     private void adjustActivationDepthForPrefetch() {
         // We use an instantiationdepth of 1 only, if there is no special
         // configuration for the class. This is a quick fix due to a problem
@@ -108,7 +116,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         // TODO: optimize
         
         int depth = classMetadata().configOrAncestorConfig() == null ? 1 : 0;
-        activationDepth(depth);
+        activationDepth(new LegacyActivationDepth(depth));
     }
     
     public Object readFieldValue (FieldMetadata field){
@@ -164,29 +172,8 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
     public void setObjectWeak(Object obj) {
         _reference.setObjectWeak(container(), obj);
     }
-    
-    public Object readObject() {
-        int id = readInt();
-        int depth = _activationDepth - 1;
 
-        if (peekPersisted()) {
-            return container().peekPersisted(transaction(), id, depth, false);
-        }
-
-        Object obj = container().getByID2(transaction(), id);
-
-        if (obj instanceof Db4oTypeImpl) {
-            depth = ((Db4oTypeImpl)obj).adjustReadDepth(depth);
-        }
-
-        // this is OK for primitive YapAnys. They will not be added
-        // to the list, since they will not be found in the ID tree.
-        container().stillToActivate(transaction(), obj, depth);
-
-        return obj;
-    }
-
-    private boolean peekPersisted() {
+    protected boolean peekPersisted() {
         return _addToIDTree == Const4.TRANSIENT;
     }
     
@@ -207,12 +194,13 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         return obj;
     }
 
-    public void adjustInstantiationDepth() {
+    /*public void adjustInstantiationDepth() {
         Config4Class classConfig = classConfig();
         if(classConfig != null){
-            _activationDepth = classConfig.adjustActivationDepth(_activationDepth);
+        	// FIXME: [TA] review this
+//            _activationDepth = classConfig.adjustActivationDepth(_activationDepth);
         }
-    }
+    }*/
     
     public Config4Class classConfig() {
         return classMetadata().config();

@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
@@ -281,7 +282,7 @@ public class FieldMetadata implements StoredField {
         return true;
     }
 
-    void cascadeActivation(Transaction trans, Object onObject, int depth, boolean activate) {
+    void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth, boolean activate) {
         if (! alive()) {
             return;
         }
@@ -381,7 +382,7 @@ public class FieldMetadata implements StoredField {
         return Deploy.csharp ? false : _isPrimitive;
     }
 
-    void deactivate(Transaction a_trans, Object a_onObject, int a_depth) {
+    void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
         if (!alive()) {
             return;
         }
@@ -393,7 +394,7 @@ public class FieldMetadata implements StoredField {
 			}
 			return;
 		}
-		if (a_depth > 0) {
+		if (a_depth.requiresActivation()) {
 			cascadeActivation(a_trans, a_onObject, a_depth, false);
 		}
 		if (!isEnumClass) {

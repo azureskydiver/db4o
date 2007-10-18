@@ -5,6 +5,7 @@ package com.db4o.internal.query.result;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.query.*;
 
@@ -21,7 +22,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 	
 	public final Object activate(Object obj) {
-		stream().activate(_transaction, obj, config().activationDepth());
+		stream().activate(_transaction, obj, stream().defaultActivationDepthForObject(obj));
 		return obj;
 	}
 

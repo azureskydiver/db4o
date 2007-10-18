@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.internal;
 
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 
@@ -83,7 +84,7 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
         
         UnmarshallingContext unmarshallingContext = new UnmarshallingContext(trans(), ref, Const4.ADD_TO_ID_TREE, false);
         unmarshallingContext.buffer(buffer);
-        unmarshallingContext.activationDepth(5);
+        unmarshallingContext.activationDepth(new LegacyActivationDepth(5));
         return unmarshallingContext.read();
     }
 

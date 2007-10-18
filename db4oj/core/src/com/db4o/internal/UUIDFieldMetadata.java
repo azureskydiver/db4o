@@ -5,6 +5,7 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.FixedActivationDepth;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
@@ -148,7 +149,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         try {
 	        Db4oDatabase db = (Db4oDatabase)stream.getByID2(a_trans, dbID);
 	        if(db != null && db.i_signature == null){
-	            stream.activate(a_trans, db, 2);
+	            stream.activate(a_trans, db, new FixedActivationDepth(2));
 	        }
 	        VirtualAttributes va = a_yapObject.virtualAttributes();
 	        va.i_database = db; 

@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 
 
@@ -36,7 +37,7 @@ public class VersionServices {
         UnmarshallingContext context = new UnmarshallingContext(trans, (ObjectReference)objectInfo, Const4.TRANSIENT, false);
         context.buffer(buffer);
         context.persistentObject(obj);
-        context.activationDepth(0);
+        context.activationDepth(new LegacyActivationDepth(0));
         context.read();
         return context.handlerVersion();
     }

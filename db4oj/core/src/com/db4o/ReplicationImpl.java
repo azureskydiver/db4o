@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.replication.*;
 import com.db4o.query.*;
 import com.db4o.replication.*;
@@ -372,7 +373,7 @@ public class ReplicationImpl implements ReplicationProcess {
 
 			if (direction == TO_A) {
 				if (!referenceB.isActive()) {
-					referenceB.activate(_transB, objectB, 1, false);
+					referenceB.activate(_transB, objectB, new FixedActivationDepth(1), false);
 				}
                 int idA = bindAndSet(_transA, _peerA, referenceA, objectB);
                 if(caller == _peerA){
@@ -382,7 +383,7 @@ public class ReplicationImpl implements ReplicationProcess {
 
 			if (direction == TO_B) {
 				if (!referenceA.isActive()) {
-					referenceA.activate(_transA, objectA, 1, false);
+					referenceA.activate(_transA, objectA, new FixedActivationDepth(1), false);
 				}
                 int idB = bindAndSet(_transB, _peerB, referenceB, objectA);
                 if(caller == _peerB){

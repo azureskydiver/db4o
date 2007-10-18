@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.query.*;
 import com.db4o.types.*;
 
@@ -20,7 +21,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
     }
     
     public final void activate(Object obj, int depth) throws DatabaseClosedException {
-        activate(null, obj, depth);
+        activate(null, obj, new LegacyActivationDepth(depth));
     }
     
     public final void bind(Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
@@ -84,7 +85,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
     }
 
     public final Object peekPersisted(Object obj, int depth, boolean committed) throws DatabaseClosedException {
-        return peekPersisted(null, obj, depth, committed);
+        return peekPersisted(null, obj, new LegacyActivationDepth(depth), committed);
     }
 
     public final void purge(Object obj) {

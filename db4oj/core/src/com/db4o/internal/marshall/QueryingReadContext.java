@@ -3,7 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
-
+import com.db4o.internal.activation.*;
 
 /**
  * @exclude
@@ -15,6 +15,7 @@ public class QueryingReadContext extends AbstractReadContext {
     public QueryingReadContext(Transaction transaction, int handlerVersion, Buffer buffer) {
         super(transaction, buffer);
         _handlerVersion = handlerVersion;
+        _activationDepth = new LegacyActivationDepth(0);
     }
     
     public int handlerVersion() {
