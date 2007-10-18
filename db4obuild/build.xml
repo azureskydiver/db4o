@@ -826,14 +826,6 @@
 				<include name="**/src/**/*.txt" />
 			</fileset>
 		</copy>
-		<copy todir="${dir.dist.java.src}/${name.project.ta}">
-			<fileset dir="${dir.ta}">
-				<include name=".project" />
-				<include name=".classpath" />
-				<include name="**/src/**/*.java" />
-				<include name="**/test/**/*.java" />
-			</fileset>
-		</copy>
 		<copy todir="${dir.dist.java.src}/${name.project.taj}">
 			<fileset dir="${dir.taj}">
 				<include name=".project" />
