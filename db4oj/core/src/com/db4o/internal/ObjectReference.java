@@ -67,7 +67,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    }else{
 				if (isActive()) {
 					if (obj != null) {
-						ActivationDepth childDepth = depth.descend(_class, ActivationMode.ACTIVATE);
+						ActivationDepth childDepth = depth.descend(_class);
 						if (!childDepth.requiresActivation()) {
 							return;
 						}

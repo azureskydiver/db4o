@@ -85,7 +85,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
     }
 
     public final Object peekPersisted(Object obj, int depth, boolean committed) throws DatabaseClosedException {
-        return peekPersisted(null, obj, new LegacyActivationDepth(depth), committed);
+        return peekPersisted(null, obj, new LegacyActivationDepth(depth, ActivationMode.PEEK), committed);
     }
 
     public final void purge(Object obj) {

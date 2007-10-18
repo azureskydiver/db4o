@@ -22,7 +22,7 @@ public class HardObjectReference {
 	}
 	
 	public static HardObjectReference peekPersisted(Transaction trans, int id, int depth) {
-	    Object obj = trans.container().peekPersisted(trans, id, new LegacyActivationDepth(depth), true);
+	    Object obj = trans.container().peekPersisted(trans, id, new LegacyActivationDepth(depth, ActivationMode.PEEK), true);
 	    if(obj == null){
 	        return null;
 	    }

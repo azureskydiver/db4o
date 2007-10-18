@@ -10,26 +10,32 @@ import com.db4o.internal.*;
 public class LegacyActivationDepth implements ActivationDepth {
 
 	private final int _depth;
-
+	private ActivationMode _mode;
+	
 	public LegacyActivationDepth(int depth) {
-		_depth = depth;
+		this(depth, ActivationMode.ACTIVATE);
 	}
 
-	public ActivationDepth descend(ClassMetadata metadata, ActivationMode mode) {
-		if (null == metadata) {
-			throw new ArgumentNullException();
-		}
+	public LegacyActivationDepth(int depth, ActivationMode mode) {
 		if (null == mode) {
 			throw new ArgumentNullException();
 		}
-		return new LegacyActivationDepth(descendDepth(metadata, mode));
+		_depth = depth;
+		_mode = mode;
 	}
 
-	private int descendDepth(ClassMetadata metadata, ActivationMode mode) {
-		if (metadata.isDb4oTypeImpl()) {
-	        return 2;
-	    }
-		int depth = configuredActivationDepth(metadata, mode) - 1;
+	public ActivationDepth descend(ClassMetadata metadata) {
+		if (null == metadata) {
+			throw new ArgumentNullException();
+		}
+		return new LegacyActivationDepth(descendDepth(metadata), _mode);
+	}
+
+	private int descendDepth(ClassMetadata metadata) {
+//		if (metadata.isDb4oTypeImpl()) {
+//	        return 2;
+//	    }
+		int depth = configuredActivationDepth(metadata) - 1;
 		if (metadata.isValueType()) {
 			// 	We also have to instantiate structs completely every time.
 			return Math.max(1, depth);
@@ -37,15 +43,18 @@ public class LegacyActivationDepth implements ActivationDepth {
 		return depth;
 	}
 
-	private int configuredActivationDepth(ClassMetadata metadata, ActivationMode mode) {
+	private int configuredActivationDepth(ClassMetadata metadata) {
 		Config4Class config = metadata.configOrAncestorConfig();
-		if (config != null && mode.isActivate()) {
+		if (config != null && _mode.isActivate()) {
 			return config.adjustActivationDepth(_depth);
 		}
 		return _depth;
 	}
 
 	public boolean requiresActivation() {
+		if (_mode.isPeek()) {
+			return _depth >= 0;
+		}
 		return _depth > 0;
 	}
 

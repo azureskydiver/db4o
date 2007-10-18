@@ -4,7 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.LegacyActivationDepth;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.replication.*;
 
 /**
@@ -56,12 +56,12 @@ public class P1Object implements Db4oTypeImpl{
 	        }
 	    }
 	    if(validYapObject()){
-	    	i_yapObject.activate(i_trans, this, activationDepth(), false);
+	    	i_yapObject.activate(i_trans, this, activationDepth(ActivationMode.ACTIVATE), false);
 	    }
     }
 
-	private LegacyActivationDepth activationDepth() {
-		return new LegacyActivationDepth(2);
+	private LegacyActivationDepth activationDepth(ActivationMode mode) {
+		return new LegacyActivationDepth(3, mode);
 	}
 
     public Object createDefault(Transaction a_trans) {
@@ -70,7 +70,7 @@ public class P1Object implements Db4oTypeImpl{
     
     void deactivate(){
         if(validYapObject()){
-            i_yapObject.deactivate(i_trans, activationDepth());
+            i_yapObject.deactivate(i_trans, activationDepth(ActivationMode.DEACTIVATE));
         }
     }
     

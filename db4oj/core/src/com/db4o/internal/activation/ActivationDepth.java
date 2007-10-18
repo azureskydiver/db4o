@@ -9,6 +9,6 @@ public interface ActivationDepth {
 	
 	boolean requiresActivation();
 
-	ActivationDepth descend(ClassMetadata metadata, ActivationMode mode);
+	ActivationDepth descend(ClassMetadata metadata);
 
 }

@@ -15,11 +15,11 @@ public class TransparentActivationDepth implements ActivationDepth {
 	private final LegacyActivationDepth _delegate;
 
 	public TransparentActivationDepth() {
-		_delegate = new LegacyActivationDepth(1);
+		_delegate = new LegacyActivationDepth(1, ActivationMode.ACTIVATE);
 	}
 
-	public ActivationDepth descend(ClassMetadata metadata, ActivationMode mode) {
-		return _delegate.descend(metadata, mode);
+	public ActivationDepth descend(ClassMetadata metadata) {
+		return _delegate.descend(metadata);
 	}
 
 	public boolean requiresActivation() {

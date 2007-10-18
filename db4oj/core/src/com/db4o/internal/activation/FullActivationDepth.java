@@ -7,7 +7,7 @@ import com.db4o.internal.ClassMetadata;
  */
 public class FullActivationDepth implements ActivationDepth {
 
-	public ActivationDepth descend(ClassMetadata metadata, ActivationMode mode) {
+	public ActivationDepth descend(ClassMetadata metadata) {
 		return this;
 	}
 

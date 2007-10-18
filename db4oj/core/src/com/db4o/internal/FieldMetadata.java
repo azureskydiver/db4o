@@ -383,7 +383,7 @@ public class FieldMetadata implements StoredField {
     }
 
     void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
-        if (!alive()) {
+        if (!alive() || _containingClass == null) {
             return;
         }
         boolean isEnumClass = _containingClass.isEnum();
@@ -492,6 +492,7 @@ public class FieldMetadata implements StoredField {
 				return null;
 			}
 			UnmarshallingContext context = new UnmarshallingContext(trans, ref, Const4.ADD_TO_ID_TREE, false);
+			context.activationDepth(new LegacyActivationDepth(1));
             return context.readFieldValue(this);
 		}
 	}

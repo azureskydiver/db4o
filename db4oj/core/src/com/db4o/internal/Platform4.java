@@ -283,7 +283,15 @@ public final class Platform4 {
         netReadAsJava(config, "P2LinkedList");
         netReadAsJava(config, "StaticClass");
         netReadAsJava(config, "StaticField");
+        
+        maximumActivationDepth(config, "P1ListElement", 1);
+        maximumActivationDepth(config, "P2LinkedList", 1);
     }
+
+	private static void maximumActivationDepth(Config4Impl config,
+			final String className, int depth) {
+		config.objectClass(db4oClass(className)).maximumActivationDepth(depth);
+	}
     
     public static Object getTypeForClass(Object obj){
         return obj;
@@ -482,13 +490,17 @@ public final class Platform4 {
     }
     
     private static final void netReadAsJava(Config4Impl config, String className){
-        Config4Class classConfig = (Config4Class)config.objectClass(DB4O_PACKAGE + className + DB4O_ASSEMBLY);
+        Config4Class classConfig = (Config4Class)config.objectClass(db4oClass(className) + DB4O_ASSEMBLY);
         if(classConfig == null){
             return;
         }
         classConfig.maintainMetaClass(false);
-        classConfig.readAs(DB4O_PACKAGE + className);
+        classConfig.readAs(db4oClass(className));
     }
+
+	private static String db4oClass(String className) {
+		return DB4O_PACKAGE + className;
+	}
 
     private static final boolean noNIO() {
         try {

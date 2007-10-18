@@ -6,10 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.activation.ActivationDepth;
-import com.db4o.internal.activation.FixedActivationDepth;
-import com.db4o.internal.activation.LegacyActivationDepth;
-import com.db4o.internal.activation.UnknownActivationDepth;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.cs.*;
 import com.db4o.internal.handlers.*;
@@ -442,7 +439,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             trans = checkTransaction(trans);
         	beginTopLevelCall();
         	try{
-        		deactivateInternal(trans, obj, new LegacyActivationDepth(depth));
+        		deactivateInternal(trans, obj, new LegacyActivationDepth(depth, ActivationMode.DEACTIVATE));
         		completeTopLevelCall();
         	} catch(Db4oException e){
         		completeTopLevelCall(e);
@@ -617,9 +614,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 return null;
             }
             
-            Object child = ref.isActive() ? 
-                field[0].get(trans, obj) :
-                new UnmarshallingContext(trans, ref, Const4.ADD_TO_ID_TREE, false).readFieldValue(field[0]);
+            Object child = ref.isActive()
+            	? field[0].get(trans, obj)
+                : descendMarshallingContext(trans, ref).readFieldValue(field[0]);
             
             if(path.length == 1){
                 return child;
@@ -632,6 +629,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return descend(trans, child, subPath);
         }
     }
+
+	private UnmarshallingContext descendMarshallingContext(Transaction trans,
+			ObjectReference ref) {
+		final UnmarshallingContext context = new UnmarshallingContext(trans, ref, Const4.ADD_TO_ID_TREE, false);
+		context.activationDepth(new LegacyActivationDepth(1));
+		return context;
+	}
 
     public boolean detectSchemaChanges() {
         // overriden in YapClient

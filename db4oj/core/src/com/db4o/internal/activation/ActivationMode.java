@@ -24,4 +24,8 @@ public final class ActivationMode {
 	public boolean isActivate() {
 		return this == ACTIVATE;
 	}
+
+	public boolean isPeek() {
+		return this == PEEK;
+	}
 }
