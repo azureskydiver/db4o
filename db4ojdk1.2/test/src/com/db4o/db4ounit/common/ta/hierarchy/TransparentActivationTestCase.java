@@ -1,9 +1,10 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
-package com.db4o.db4ounit.common.ta;
+package com.db4o.db4ounit.common.ta.hierarchy;
 
 import java.util.*;
 
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.ta.*;
 import com.db4o.db4ounit.common.ta.collections.*;
 
 import db4ounit.*;
