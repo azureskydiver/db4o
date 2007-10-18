@@ -44,10 +44,6 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
         i_maximumSize = (int) (i_tableSize * FILL);
         i_table = new P1HashElement[i_tableSize];
     }
-
-    public int adjustReadDepth(int a_depth) {
-        return 2;
-    }
     
     public void checkActive() {
         super.checkActive();

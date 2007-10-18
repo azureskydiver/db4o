@@ -286,11 +286,22 @@ public final class Platform4 {
         
         maximumActivationDepth(config, "P1ListElement", 1);
         maximumActivationDepth(config, "P2LinkedList", 1);
+        maximumActivationDepth(config, "P1HashElement", 1);
+        minimumActivationDepth(config, "P2HashMap", 2);
     }
+
+	private static void minimumActivationDepth(Config4Impl config, String className, int depth) {
+		db4oClassConfig(config, className).minimumActivationDepth(depth);
+	}
 
 	private static void maximumActivationDepth(Config4Impl config,
 			final String className, int depth) {
-		config.objectClass(db4oClass(className)).maximumActivationDepth(depth);
+		db4oClassConfig(config, className).maximumActivationDepth(depth);
+	}
+
+	private static ObjectClass db4oClassConfig(Config4Impl config,
+			final String className) {
+		return config.objectClass(db4oClass(className));
 	}
     
     public static Object getTypeForClass(Object obj){

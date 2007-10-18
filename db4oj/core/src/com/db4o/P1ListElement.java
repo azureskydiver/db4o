@@ -23,13 +23,6 @@ public class P1ListElement extends P1Object{
         i_object = a_object;
     }
     
-    public int adjustReadDepth(int a_depth) {
-        if(a_depth >= 1){
-            return 1;
-        }
-        return 0;
-    }
-    
     Object activatedObject(int a_depth){
         
         // TODO: It may be possible to optimise away the following call

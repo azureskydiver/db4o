@@ -12,8 +12,6 @@ import com.db4o.*;
  */
 public interface Db4oTypeImpl extends TransactionAware {
 	
-	int adjustReadDepth(int depth);
-    
     boolean canBind();
 	
 	Object createDefault(Transaction trans);

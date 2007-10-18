@@ -23,10 +23,6 @@ public class P1HashElement extends P1ListElement {
         i_key = a_key;
     }
     
-    public int adjustReadDepth(int a_depth) {
-        return 1;
-    }
-    
     Object activatedKey(int a_depth){
         
         // TODO: It may be possible to optimise away the following call.

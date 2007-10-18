@@ -35,10 +35,6 @@ public class P1Object implements Db4oTypeImpl{
         }
     }
     
-    public int adjustReadDepth(int a_depth) {
-        return a_depth;
-    }
-    
     public boolean canBind() {
         return false;
     }
