@@ -2,19 +2,15 @@
 
 package com.db4o.internal;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.Constructor;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.*;
+import java.lang.reflect.*;
+import java.text.*;
+import java.util.*;
 
-import com.db4o.Db4o;
-import com.db4o.Deploy;
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.generic.GenericReflector;
-import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
+import com.db4o.reflect.jdk.*;
 
 
 /**
