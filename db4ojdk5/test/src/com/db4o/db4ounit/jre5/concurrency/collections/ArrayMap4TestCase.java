@@ -26,7 +26,6 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
 
     protected void configure(Configuration config) throws Exception {
         config.add(new TransparentActivationSupport());
-        config.activationDepth(0);
         super.configure(config);
     }
 

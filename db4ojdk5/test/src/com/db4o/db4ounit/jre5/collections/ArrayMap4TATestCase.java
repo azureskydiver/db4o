@@ -2,13 +2,10 @@
 
 package com.db4o.db4ounit.jre5.collections;
 
-import com.db4o.collections.ArrayMap4;
-import com.db4o.config.Configuration;
-import com.db4o.ta.TransparentActivationSupport;
+import com.db4o.collections.*;
+import com.db4o.db4ounit.common.ta.*;
 
-import db4ounit.extensions.AbstractDb4oTestCase;
-
-public class ArrayMap4TATestCase extends AbstractDb4oTestCase {
+public class ArrayMap4TATestCase extends TransparentActivationTestCaseBase {
 
     public static void main(String[] args) {
         new ArrayMap4TATestCase().runSolo();
@@ -18,12 +15,6 @@ public class ArrayMap4TATestCase extends AbstractDb4oTestCase {
         ArrayMap4<String, Integer> map = new ArrayMap4<String, Integer>();
         ArrayMap4Asserter.putData(map);
         store(map);
-    }
-
-    protected void configure(Configuration config) throws Exception {
-        config.add(new TransparentActivationSupport());
-        config.activationDepth(0);
-        super.configure(config);
     }
     
     @SuppressWarnings("unchecked")
