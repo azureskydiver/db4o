@@ -245,10 +245,11 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		ActivationDepth instantiationDepth,
 		int addToIDTree,
         boolean checkIDTree) {
-            UnmarshallingContext context = new UnmarshallingContext(trans, buffer, this, addToIDTree, checkIDTree);
-            context.persistentObject(obj);
-            context.activationDepth(instantiationDepth);
-            return context.read();
+		
+		UnmarshallingContext context = new UnmarshallingContext(trans, buffer, this, addToIDTree, checkIDTree);
+		context.persistentObject(obj);
+		context.activationDepth(instantiationDepth);
+		return context.read();
 	}
 
 	public final Object readPrefetch(Transaction trans, StatefulBuffer buffer) {
@@ -766,7 +767,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    if(_class != null){
 		        ObjectContainerBase container = _class.container();
 		        if(container != null && id > 0){
-		            obj = container.peekPersisted(container.transaction(), id, new LegacyActivationDepth(5), true).toString();
+		            obj = container.peekPersisted(container.transaction(), id, container.defaultActivationDepth(classMetadata()), true).toString();
 		        }
 		    }
 		    if(obj == null){
