@@ -133,10 +133,6 @@ public class P2LinkedList extends P1Collection implements Db4oList {
             return false;
         }
     }
-
-    public int adjustReadDepth(int a_depth) {
-        return 1;
-    }
     
     private void checkLastAndUpdate(P1ListElement a_oldLast,
             P1ListElement a_added) {
