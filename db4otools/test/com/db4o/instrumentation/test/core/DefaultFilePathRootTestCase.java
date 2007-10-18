@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 
 import com.db4o.foundation.io.*;
-import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.file.*;
 
 import db4ounit.*;
