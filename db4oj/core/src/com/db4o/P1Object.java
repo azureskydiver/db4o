@@ -4,6 +4,7 @@ package com.db4o;
 
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.LegacyActivationDepth;
 import com.db4o.internal.replication.*;
 
 /**
@@ -30,12 +31,8 @@ public class P1Object implements Db4oTypeImpl{
         if(a_depth < 0){
             stream().activateDefaultDepth(i_trans, a_obj);
         }else{
-            stream().activate(i_trans, a_obj, a_depth);
+            stream().activate(i_trans, a_obj, new LegacyActivationDepth(a_depth));
         }
-    }
-    
-    public int activationDepth(){
-        return 1;
     }
     
     public int adjustReadDepth(int a_depth) {
@@ -62,6 +59,10 @@ public class P1Object implements Db4oTypeImpl{
 	    	i_yapObject.activate(i_trans, this, activationDepth(), false);
 	    }
     }
+
+	private LegacyActivationDepth activationDepth() {
+		return new LegacyActivationDepth(2);
+	}
 
     public Object createDefault(Transaction a_trans) {
         throw Exceptions4.virtualException();
@@ -201,7 +202,8 @@ public class P1Object implements Db4oTypeImpl{
     }
     
     void update(){
-        update(activationDepth());
+    	// FIXME: [TA] normalize update depth usage as well?
+        update(2); // activationDepth());
     }
     
     void update(int depth){
@@ -221,7 +223,8 @@ public class P1Object implements Db4oTypeImpl{
     }
     
     void updateInternal(){
-        updateInternal(activationDepth());
+    	// FIXME: [TA] consider ActivationDepth approach for update too
+        updateInternal(2); //activationDepth());
     }
     
     void updateInternal(int depth){

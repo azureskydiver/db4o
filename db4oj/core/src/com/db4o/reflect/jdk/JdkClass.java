@@ -4,6 +4,7 @@ package com.db4o.reflect.jdk;
 
 import java.lang.reflect.*;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.reflect.*;
 
@@ -165,6 +166,6 @@ public class JdkClass implements JavaReflectClass{
     }
 
 	public Object[] toArray(Object obj){
-		return null;
+		throw new NotImplementedException();
 	}
 }

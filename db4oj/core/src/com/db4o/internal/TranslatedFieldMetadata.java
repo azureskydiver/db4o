@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.config.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 
 
@@ -21,8 +22,8 @@ final class TranslatedFieldMetadata extends FieldMetadata
         return false;
     }
 
-	void deactivate(Transaction trans, Object onObject, int depth){
-		if(depth > 0){
+	void deactivate(Transaction trans, Object onObject, ActivationDepth depth){
+		if(depth.requiresActivation()){
 			cascadeActivation(trans, onObject, depth, false);
 		}
 		setOn(trans, onObject, null);

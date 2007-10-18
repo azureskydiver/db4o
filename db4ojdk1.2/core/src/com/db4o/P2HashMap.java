@@ -45,10 +45,6 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
         i_table = new P1HashElement[i_tableSize];
     }
 
-    public int activationDepth() {
-        return 2;
-    }
-
     public int adjustReadDepth(int a_depth) {
         return 2;
     }

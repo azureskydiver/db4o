@@ -5,6 +5,7 @@ package com.db4o.ext;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.FixedActivationDepth;
 import com.db4o.query.*;
 import com.db4o.types.*;
 
@@ -226,7 +227,7 @@ public class Db4oDatabase implements Db4oType, Internal4{
         ObjectSet objectSet = q.execute();
         while (objectSet.hasNext()) {
             Db4oDatabase storedDatabase = (Db4oDatabase) objectSet.next();
-            stream.activate(null, storedDatabase, 4);
+            stream.activate(null, storedDatabase, new FixedActivationDepth(4));
             if (storedDatabase.equals(this)) {
                 return storedDatabase;
             }

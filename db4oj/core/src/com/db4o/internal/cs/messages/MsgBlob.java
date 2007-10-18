@@ -12,6 +12,7 @@ import com.db4o.*;
 import com.db4o.ext.Status;
 import com.db4o.foundation.network.Socket4;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.FixedActivationDepth;
 
 public abstract class MsgBlob extends MsgD implements BlobStatus{
 
@@ -34,7 +35,7 @@ public abstract class MsgBlob extends MsgD implements BlobStatus{
         ObjectContainerBase stream = stream();
         synchronized (stream._lock) {
             blobImpl = (BlobImpl) stream.getByID(transaction(), id);
-            stream.activate(transaction(), blobImpl, 3);
+            stream.activate(transaction(), blobImpl, new FixedActivationDepth(3));
         }
         return blobImpl;
     }

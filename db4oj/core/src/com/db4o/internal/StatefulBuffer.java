@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -24,7 +25,7 @@ public final class StatefulBuffer extends Buffer {
     private int i_id;
 
     // carries instantiation depth through the reading process
-    private int i_instantionDepth;
+    private ActivationDepth i_instantionDepth;
     private int i_length;
 
     Transaction i_trans;
@@ -82,7 +83,7 @@ public final class StatefulBuffer extends Buffer {
         return i_id;
     }
 
-    public int getInstantiationDepth() {
+    public ActivationDepth getInstantiationDepth() {
         return i_instantionDepth;
     }
 
@@ -181,7 +182,7 @@ public final class StatefulBuffer extends Buffer {
         i_id = a_id;
     }
 
-    public void setInstantiationDepth(int a_depth) {
+    public void setInstantiationDepth(ActivationDepth a_depth) {
         i_instantionDepth = a_depth;
     }
 

@@ -6,6 +6,10 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.ActivationDepth;
+import com.db4o.internal.activation.FixedActivationDepth;
+import com.db4o.internal.activation.LegacyActivationDepth;
+import com.db4o.internal.activation.UnknownActivationDepth;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.cs.*;
 import com.db4o.internal.handlers.*;
@@ -58,6 +62,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     //  others. Allows identifying the responsible Objectcontainer for IDs
     final ObjectContainerBase         _parent;
 
+    // FIXME: move to the right ActivationDepth implementation
     //  allowed adding refresh with little code changes.
     boolean                 _refreshInsteadOfActivate;
 
@@ -134,10 +139,25 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	protected abstract void openImpl() throws Db4oIOException;
     
     public final void activateDefaultDepth(Transaction trans, Object obj) {
-        activate(trans, obj, configImpl().activationDepth());
+		// FIXME: [TA] review activation depth
+        activate(trans, obj, defaultActivationDepthForObject(obj));
     }
 
-    public final void activate(Transaction trans, Object obj, int depth) {
+	public ActivationDepth defaultActivationDepthForObject(Object obj) {
+		ClassMetadata classMetadata = classMetadataForObject(obj);
+		return defaultActivationDepth(classMetadata);
+	}
+
+	public ActivationDepth defaultActivationDepth(ClassMetadata classMetadata) {
+		final int globalLegacyActivationDepth = configImpl().activationDepth();
+		Config4Class config = classMetadata.configOrAncestorConfig();
+		int defaultDepth = null == config
+			? globalLegacyActivationDepth
+			: config.adjustActivationDepth(globalLegacyActivationDepth);
+		return new LegacyActivationDepth(defaultDepth);
+	}
+
+    public final void activate(Transaction trans, Object obj, ActivationDepth depth) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
         	beginTopLevelCall();
@@ -155,9 +175,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     static final class PendingActivation {
     	public final ObjectReference ref;
-    	public final int depth;
+    	public final ActivationDepth depth;
     	
-    	public PendingActivation(ObjectReference ref, int depth) {
+    	public PendingActivation(ObjectReference ref, ActivationDepth depth) {
     		this.ref = ref;
     		this.depth = depth;
     	}
@@ -422,7 +442,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             trans = checkTransaction(trans);
         	beginTopLevelCall();
         	try{
-        		deactivateInternal(trans, obj, depth);
+        		deactivateInternal(trans, obj, new LegacyActivationDepth(depth));
         		completeTopLevelCall();
         	} catch(Db4oException e){
         		completeTopLevelCall(e);
@@ -432,7 +452,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    private final void deactivateInternal(Transaction trans, Object obj, int depth) {
+    private final void deactivateInternal(Transaction trans, Object obj, ActivationDepth depth) {
         stillToDeactivate(trans, obj, depth, true);
         while (_stillToDeactivate != null) {
             Iterator4 i = new Iterator4Impl(_stillToDeactivate);
@@ -544,7 +564,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	private void activateForDeletionCallback(Transaction trans, ClassMetadata yc, Object obj) {
 		if (!isActive(trans, obj) && (caresAboutDeleting(yc) || caresAboutDeleted(yc))) {
         	// Activate Objects for Callbacks, because in C/S mode Objects are not activated on the Server
-        	activate(trans, obj, 1);
+			// FIXME: [TA] review activation depth
+        	activate(trans, obj, new FixedActivationDepth(1));
         }
 	}
     
@@ -745,7 +766,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 			return obj;
 
 		}
-		return new ObjectReference(id).read(ta, 0, Const4.ADD_TO_ID_TREE, true);
+		return new ObjectReference(id).read(ta, new LegacyActivationDepth(0), Const4.ADD_TO_ID_TREE, true);
 	}
     
     public final Object getActivatedObjectFromCache(Transaction ta, int id){
@@ -753,7 +774,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(obj == null){
             return null;
         }
-        activate(ta, obj, configImpl().activationDepth());
+		// FIXME: [TA] review activation depth
+        activate(ta, obj, defaultActivationDepthForObject(obj));
         return obj;
     }
     
@@ -761,7 +783,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         Object obj = null;
     	beginTopLevelCall();
         try {
-            obj = new ObjectReference(id).read(ta, configImpl().activationDepth(),Const4.ADD_TO_ID_TREE, true);
+            obj = new ObjectReference(id).read(ta, UnknownActivationDepth.INSTANCE, Const4.ADD_TO_ID_TREE, true);
             completeTopLevelCall();
         } catch(Db4oException e) {
         	completeTopLevelCall(e);
@@ -827,7 +849,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             trans.removeReference(ref);
         }
         ref = new ObjectReference(id);
-        Object readObject = ref.read(trans, 0, Const4.ADD_TO_ID_TREE, true);
+        Object readObject = ref.read(trans, new LegacyActivationDepth(0), Const4.ADD_TO_ID_TREE, true);
         
         if(readObject == null){
             return HardObjectReference.INVALID;
@@ -1150,7 +1172,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract int newUserObject();
     
-    public final Object peekPersisted(Transaction trans, Object obj, int depth, boolean committed) throws DatabaseClosedException {
+    public final Object peekPersisted(Transaction trans, Object obj, ActivationDepth depth, boolean committed) throws DatabaseClosedException {
     	
     	// TODO: peekPersisted is not stack overflow safe, if depth is too high. 
     	
@@ -1176,8 +1198,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    public final Object peekPersisted(Transaction trans, int id, int depth, boolean resetJustPeeked) {
-        if(depth < 0){
+    public final Object peekPersisted(Transaction trans, int id, ActivationDepth depth, boolean resetJustPeeked) {
+        if(!depth.requiresActivation()){
             return null;
         }
         if(resetJustPeeked){
@@ -1309,7 +1331,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         synchronized (_lock) {
             _refreshInsteadOfActivate = true;
             try {
-            	activate(trans, obj, depth);
+            	activate(trans, obj, new LegacyActivationDepth(depth));
             } finally {
             	_refreshInsteadOfActivate = false;
             }
@@ -1686,9 +1708,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      * returns true in case an unknown single object is passed
      * This allows deactivating objects before queries are called.
      */
-    final List4 stillTo1(Transaction trans, List4 still, Object obj, int depth, boolean forceUnknownDeactivate) {
+    final List4 stillTo1(Transaction trans, List4 still, Object obj, ActivationDepth depth, boolean forceUnknownDeactivate) {
     	
-        if (obj == null || depth <= 0) {
+        if (obj == null || !depth.requiresActivation()) {
         	return still;
         }
         
@@ -1703,6 +1725,8 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         final ReflectClass clazz = reflector().forObject(obj);
 		if (clazz.isArray()) {
 			if (!clazz.getComponentType().isPrimitive()) {
+				// TODO: optimize this code by having the reflector returning
+				// an iterator for an array
                 Object[] arr = ArrayHandler.toArray(_this, obj);
                 for (int i = 0; i < arr.length; i++) {
                     still = stillTo1(trans, still, arr[i], depth, forceUnknownDeactivate);
@@ -1725,7 +1749,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return still;
     }
 
-    public final void stillToActivate(Transaction trans, Object a_object, int a_depth) {
+    public final void stillToActivate(Transaction trans, Object a_object, ActivationDepth a_depth) {
 
         // TODO: We don't want the simple classes to search the hc_tree
         // Kick them out here.
@@ -1740,7 +1764,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         //		}
     }
 
-    public final void stillToDeactivate(Transaction trans, Object a_object, int a_depth,
+    public final void stillToDeactivate(Transaction trans, Object a_object, ActivationDepth a_depth,
         boolean a_forceUnknownDeactivate) {
         _stillToDeactivate = stillTo1(trans, _stillToDeactivate, a_object, a_depth, a_forceUnknownDeactivate);
     }

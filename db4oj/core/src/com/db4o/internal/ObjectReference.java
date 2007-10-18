@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.activation.Activator;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
@@ -48,32 +49,29 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     		if (isActive()) {
     			return;
     		}
-    		activate(container().transaction(), getObject(), 1, false);
+    		activate(container().transaction(), getObject(), new TransparentActivationDepth(), false);
 	    }
 	}
 
-	public void activate(Transaction ta, Object obj, int depth, boolean isRefresh) {
+	public void activate(Transaction ta, Object obj, ActivationDepth depth, boolean isRefresh) {
 	    activate1(ta, obj, depth, isRefresh);
 		ta.container().activatePending(ta);
 	}
 	
-	void activate1(Transaction ta, Object obj, int depth, boolean isRefresh) {
-	    if(obj instanceof Db4oTypeImpl){
-	        depth = ((Db4oTypeImpl)obj).adjustReadDepth(depth);
-	    }
-		if (depth > 0) {
+	void activate1(Transaction ta, Object obj, ActivationDepth depth, boolean isRefresh) {
+	    
+		if (depth.requiresActivation()) {
 		    ObjectContainerBase container = ta.container();
 		    if(isRefresh){
 				logActivation(container, "refresh");
 		    }else{
 				if (isActive()) {
 					if (obj != null) {
-						if (depth > 1) {
-					        if (_class.config() != null) {
-					            depth = _class.config().adjustActivationDepth(depth);
-					        }
-							_class.activateFields(ta, obj, depth);
+						ActivationDepth childDepth = depth.descend(_class, ActivationMode.ACTIVATE);
+						if (!childDepth.requiresActivation()) {
+							return;
 						}
+						_class.activateFields(ta, obj, childDepth);
 						return;
 					}
 				}
@@ -142,19 +140,21 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		_class.dispatchEvent(container, obj, EventDispatcher.NEW);
 	}
 
-	public void deactivate(Transaction trans, int depth) {
-		if (depth > 0) {
-			Object obj = getObject();
-			if (obj != null) {
-			    if(obj instanceof Db4oTypeImpl){
-			        ((Db4oTypeImpl)obj).preDeactivate();
-			    }
-			    ObjectContainerBase container = trans.container();
-				logActivation(container, "deactivate");
-				setStateDeactivated();
-				_class.deactivate(trans, obj, depth);
-			}
+	public void deactivate(Transaction trans, ActivationDepth depth) {
+		if (!depth.requiresActivation()) {
+			return;
 		}
+		Object obj = getObject();
+		if (obj == null) {
+			return;
+		}
+	    if(obj instanceof Db4oTypeImpl){
+	        ((Db4oTypeImpl)obj).preDeactivate();
+	    }
+	    ObjectContainerBase container = trans.container();
+		logActivation(container, "deactivate");
+		setStateDeactivated();
+		_class.deactivate(trans, obj, depth);
 	}
 	
 	public byte getIdentifier() {
@@ -230,11 +230,11 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return _virtualAttributes;
 	}
 	
-	final Object peekPersisted(Transaction trans, int depth) {
+	final Object peekPersisted(Transaction trans, ActivationDepth depth) {
         return read(trans, depth, Const4.TRANSIENT, false);
 	}
 	
-	final Object read (Transaction trans, int instantiationDepth,int addToIDTree,boolean checkIDTree) {
+	final Object read(Transaction trans, ActivationDepth instantiationDepth,int addToIDTree,boolean checkIDTree) {
 		return read(trans, null, null, instantiationDepth, addToIDTree, checkIDTree); 
 	}
 	
@@ -242,7 +242,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		Transaction trans,
 		StatefulBuffer buffer,
 		Object obj,
-		int instantiationDepth,
+		ActivationDepth instantiationDepth,
 		int addToIDTree,
         boolean checkIDTree) {
             UnmarshallingContext context = new UnmarshallingContext(trans, buffer, this, addToIDTree, checkIDTree);
@@ -766,7 +766,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    if(_class != null){
 		        ObjectContainerBase container = _class.container();
 		        if(container != null && id > 0){
-		            obj = container.peekPersisted(container.transaction(), id, 5, true).toString();
+		            obj = container.peekPersisted(container.transaction(), id, new LegacyActivationDepth(5), true).toString();
 		        }
 		    }
 		    if(obj == null){

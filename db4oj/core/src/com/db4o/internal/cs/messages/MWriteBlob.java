@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.FullActivationDepth;
 
 
 public class MWriteBlob extends MsgBlob implements ServerSideMessage {
@@ -29,7 +30,7 @@ public class MWriteBlob extends MsgBlob implements ServerSideMessage {
                     // make sure to load the filename to i_blob
                     // to allow client databasefile switching
                     stream.deactivate(transaction(), _blob, Integer.MAX_VALUE);
-                    stream.activate(transaction(), _blob, Integer.MAX_VALUE);
+                    stream.activate(transaction(), _blob, new FullActivationDepth());
 
                     this._blob.setStatus(Status.COMPLETED);
                 } else {

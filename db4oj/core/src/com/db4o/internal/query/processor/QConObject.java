@@ -119,6 +119,9 @@ public class QConObject extends QCon {
         try {
             return a_candidate.evaluate(this, i_evaluator);
         } catch (Exception e) {
+        	if (Debug.atHome) {
+				e.printStackTrace();
+			}
             return false;
         }
     }

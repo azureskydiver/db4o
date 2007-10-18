@@ -10,6 +10,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.FixedActivationDepth;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.cs.events.*;
 import com.db4o.internal.cs.messages.*;
@@ -382,7 +383,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			showInternalClasses(true);
 			try {
 				i_db = (Db4oDatabase) getByID(reader.readInt());
-				activate(systemTransaction(), i_db, 3);
+				activate(systemTransaction(), i_db, new FixedActivationDepth(3));
 			} finally {
 				showInternalClasses(false);
 			}

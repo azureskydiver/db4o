@@ -60,6 +60,7 @@ public class UpdateDepthTestCase extends AbstractDb4oTestCase {
 		final ObjectClass itemClass = config.objectClass(Item.class);
 		itemClass.updateDepth(3);
 		itemClass.minimumActivationDepth(3);
+//		itemClass.cascadeOnDelete(true);
 	}	
 	
 	public void testDepth0() throws Exception {

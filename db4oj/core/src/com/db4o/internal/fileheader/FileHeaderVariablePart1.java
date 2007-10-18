@@ -5,6 +5,7 @@ package com.db4o.internal.fileheader;
 import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.FixedActivationDepth;
 
 
 /**
@@ -63,7 +64,8 @@ public class FileHeaderVariablePart1 extends PersistentBase{
     private void readIdentity(LocalTransaction trans, int identityID) {
         LocalObjectContainer file = trans.file();
         Db4oDatabase identity = Debug.staticIdentity ? Db4oDatabase.STATIC_IDENTITY : (Db4oDatabase) file.getByID(trans, identityID);
-        file.activate(trans, identity, 2);
+        file.activate(trans, identity, new FixedActivationDepth(2));
+       
         _systemData.identity(identity);
     }
 

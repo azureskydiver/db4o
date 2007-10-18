@@ -7,6 +7,7 @@ import com.db4o.config.*;
 import com.db4o.constraints.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.query.*;
 import com.db4o.query.*;
@@ -160,7 +161,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public Object peekPersisted(Object object, int depth, boolean committed) {
         synchronized(lock()){
             checkClosed();
-            return _server.peekPersisted(_transaction, object, depth, committed);
+            return _server.peekPersisted(_transaction, object, new LegacyActivationDepth(depth), committed);
         }
     }
 
@@ -254,7 +255,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public void activate(Object obj, int depth) throws Db4oIOException, DatabaseClosedException {
         synchronized(lock()){
             checkClosed();
-            _server.activate(_transaction, obj, depth);
+            _server.activate(_transaction, obj, new LegacyActivationDepth(depth));
         }
 
     }
