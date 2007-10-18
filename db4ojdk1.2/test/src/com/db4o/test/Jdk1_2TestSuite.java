@@ -13,7 +13,6 @@ public class Jdk1_2TestSuite extends TestSuite{
             ArrayListInHashMap.class,
             CascadeToHashMap.class,
             ClusterQueryImplementsList.class,
-            CollectionActivation.class,
             DeleteRemovedMapElements.class,
             DiscreteArrayInMap.class,
             ExtendsHashMap.class,
