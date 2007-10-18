@@ -383,9 +383,16 @@ public class FieldMetadata implements StoredField {
     }
 
     void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
-        if (!alive() || _containingClass == null) {
+        
+    	if (!alive()) {
             return;
         }
+        
+    	// FIXME: [TA] required after ActivationDepth refactoring, why?
+        if (_containingClass == null) {
+        	return;
+        }
+        
         boolean isEnumClass = _containingClass.isEnum();
 		if (_isPrimitive && !_isArray) {
 			if (!isEnumClass) {
