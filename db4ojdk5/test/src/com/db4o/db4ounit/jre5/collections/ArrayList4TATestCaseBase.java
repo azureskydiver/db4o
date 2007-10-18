@@ -3,29 +3,21 @@
 package com.db4o.db4ounit.jre5.collections;
 
 import com.db4o.collections.*;
-import com.db4o.config.*;
+import com.db4o.db4ounit.common.ta.*;
 import com.db4o.ext.*;
-import com.db4o.ta.*;
 
 import db4ounit.extensions.*;
 
 /**
  * @exclude
  */
-public class ArrayList4TATestCaseBase extends AbstractDb4oTestCase {
+public class ArrayList4TATestCaseBase extends TransparentActivationTestCaseBase {
 	
 	@Override
 	protected void store() throws Exception {
 		ArrayList4<Integer> list = new ArrayList4<Integer>();
 		ArrayList4Asserter.createList(list);
 		store(list);
-	}
-
-	@Override
-	protected void configure(Configuration config) throws Exception {
-		config.add(new TransparentActivationSupport());
-		config.activationDepth(0);
-		super.configure(config);
 	}
 	
 	protected ArrayList4<Integer> retrieveAndAssertNullArrayList4() throws Exception{

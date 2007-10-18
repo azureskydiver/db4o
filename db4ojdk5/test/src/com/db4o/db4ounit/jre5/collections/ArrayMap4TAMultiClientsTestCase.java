@@ -1,16 +1,14 @@
 package com.db4o.db4ounit.jre5.collections;
 
-import com.db4o.collections.ArrayMap4;
-import com.db4o.config.Configuration;
-import com.db4o.ext.ExtObjectContainer;
-import com.db4o.ta.TransparentActivationSupport;
+import com.db4o.collections.*;
+import com.db4o.db4ounit.common.ta.*;
+import com.db4o.ext.*;
 
-import db4ounit.Assert;
-import db4ounit.extensions.AbstractDb4oTestCase;
-import db4ounit.extensions.Db4oClientServerFixture;
-import db4ounit.extensions.fixtures.OptOutSolo;
+import db4ounit.*;
+import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class ArrayMap4TAMultiClientsTestCase extends AbstractDb4oTestCase
+public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCaseBase
         implements OptOutSolo {
 
     public static void main(String[] args) {
@@ -60,12 +58,6 @@ public class ArrayMap4TAMultiClientsTestCase extends AbstractDb4oTestCase
         ArrayMap4<String, Integer> map = new ArrayMap4<String, Integer>();
         ArrayMap4Asserter.putData(map);
         store(map);
-    }
-
-    protected void configure(Configuration config) throws Exception {
-        config.add(new TransparentActivationSupport());
-        config.activationDepth(0);
-        super.configure(config);
     }
 
     protected ExtObjectContainer openNewClient() {

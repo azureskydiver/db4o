@@ -8,11 +8,10 @@ import com.db4o.internal.*;
 import com.db4o.ta.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
-public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo {
+public class TransparentActivationDiagnosticsTestCase extends TransparentActivationTestCaseBase implements OptOutCS, OptOutDefragSolo {
 
 	public static class SomeTAAwareData {
 		public int _id;
@@ -65,7 +64,7 @@ public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCa
 	}
 	
 	protected void configure(Configuration config) {
-		config.add(new TransparentActivationSupport());
+		super.configure(config);
 		config.diagnostic().addListener(_checker);
 	}
 	
@@ -84,6 +83,6 @@ public class TransparentActivationDiagnosticsTestCase extends AbstractDb4oTestCa
 	}
 	
 	public static void main(String[] args) {
-		new TransparentActivationDiagnosticsTestCase().runSolo();
+		new TransparentActivationDiagnosticsTestCase().runAll();
 	}
 }

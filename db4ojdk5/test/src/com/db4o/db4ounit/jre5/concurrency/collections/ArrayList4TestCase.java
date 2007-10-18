@@ -27,7 +27,6 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 	@Override
 	protected void configure(Configuration config) throws Exception {
 		config.add(new TransparentActivationSupport());
-		config.activationDepth(0);
 		super.configure(config);
 	}
 	

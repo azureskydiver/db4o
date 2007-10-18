@@ -5,19 +5,20 @@ import java.util.*;
 
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.ta.collections.*;
-import com.db4o.ta.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
-public class TransparentActivationTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class TransparentActivationTestCase extends TransparentActivationTestCaseBase {
 
+	public static void main(String[] args) {
+		new TransparentActivationTestCase().runAll();
+	}
+	
 	private static final int PRIORITY = 42;
 
 	protected void configure(Configuration config) {
+		super.configure(config);
 		config.add(new PagedListSupport());
-		config.add(new TransparentActivationSupport());
 	}
 	
 	protected void store() throws Exception {
