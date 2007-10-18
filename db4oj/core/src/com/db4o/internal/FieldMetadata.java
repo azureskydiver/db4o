@@ -290,16 +290,11 @@ public class FieldMetadata implements StoredField {
             return;
         }
         FirstClassHandler firstClassHandler = (FirstClassHandler) _handler;
-        
-        try {
-            Object cascadeTo = getOrCreate(trans, onObject);
-            if (cascadeTo == null) {
-                return;
-            }
-            firstClassHandler.cascadeActivation(trans, cascadeTo, depth,activate);
-        } catch (Exception e) {
-            // FIXME: Catch all
+        Object cascadeTo = getOrCreate(trans, onObject);
+        if (cascadeTo == null) {
+        	return;
         }
+        firstClassHandler.cascadeActivation(trans, cascadeTo, depth,activate);
     }
 
     private void checkDb4oType() {
