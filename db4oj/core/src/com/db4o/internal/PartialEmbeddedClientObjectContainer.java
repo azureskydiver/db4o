@@ -161,7 +161,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public Object peekPersisted(Object object, int depth, boolean committed) {
         synchronized(lock()){
             checkClosed();
-            return _server.peekPersisted(_transaction, object, new LegacyActivationDepth(depth), committed);
+            return _server.peekPersisted(_transaction, object, new LegacyActivationDepth(depth, ActivationMode.PEEK), committed);
         }
     }
 

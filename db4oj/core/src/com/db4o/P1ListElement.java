@@ -34,8 +34,9 @@ public class P1ListElement extends P1Object{
         
         // TODO: It may be possible to optimise away the following call
         checkActive();
-        
-        
+        if (null == i_object) {
+        	return null;
+        }
         activate(i_object, a_depth);
         return i_object;
     }

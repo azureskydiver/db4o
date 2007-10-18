@@ -18,7 +18,7 @@ public class FixedActivationDepth implements ActivationDepth {
 		return _depth > 0;
 	}
 	
-	public ActivationDepth descend(ClassMetadata metadata, ActivationMode mode) {
+	public ActivationDepth descend(ClassMetadata metadata) {
 		if (_depth < 1) {
 			return this;
 		}

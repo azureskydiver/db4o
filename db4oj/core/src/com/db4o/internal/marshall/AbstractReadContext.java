@@ -16,7 +16,7 @@ public abstract class AbstractReadContext implements InternalReadContext {
     
     protected Buffer _buffer;
     
-    protected ActivationDepth _activationDepth;
+    protected ActivationDepth _activationDepth = UnknownActivationDepth.INSTANCE;
     
     protected AbstractReadContext(Transaction transaction){
         _transaction = transaction;
@@ -87,12 +87,15 @@ public abstract class AbstractReadContext implements InternalReadContext {
         }
         
         if (peekPersisted()) {
-            return container().peekPersisted(transaction(), id, activationDepth().descend(classMetadataForId(id), ActivationMode.PEEK), false);
+            return container().peekPersisted(transaction(), id, activationDepth().descend(classMetadataForId(id)), false);
         }
 
         Object obj = container().getByID2(transaction(), id);
+        if (null == obj) {
+        	return null;
+        }
         
-        ActivationDepth depth = activationDepth().descend(classMetadataForId(id), ActivationMode.ACTIVATE);
+        ActivationDepth depth = activationDepth().descend(classMetadataForId(id));
 
         // this is OK for primitive YapAnys. They will not be added
         // to the list, since they will not be found in the ID tree.

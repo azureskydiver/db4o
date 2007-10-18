@@ -500,7 +500,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 	public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
         if(objectCanDeactivate(trans, obj)){
-            deactivateFields(trans, obj, depth.descend(this, ActivationMode.DEACTIVATE));
+            deactivateFields(trans, obj, depth.descend(this));
             objectOnDeactivate(trans, obj);
         }
     }
@@ -1036,7 +1036,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
         } else {
             if (activatingActiveObject(context.container(), context.reference())) {
-            	ActivationDepth child = context.activationDepth().descend(this, ActivationMode.ACTIVATE);
+            	ActivationDepth child = context.activationDepth().descend(this);
                 if (child.requiresActivation()) {
                     activateFields(context.transaction(), obj, child);
                 }
@@ -1906,7 +1906,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         //        should do the following:
         if(isValueType()){
             ActivationDepth activationDepth = ((UnmarshallingContext)context).activationDepth();
-			return readValueType(context.transaction(), context.readInt(), activationDepth.descend(this, ActivationMode.ACTIVATE));
+			return readValueType(context.transaction(), context.readInt(), activationDepth.descend(this));
         }
         
         return context.readObject();
