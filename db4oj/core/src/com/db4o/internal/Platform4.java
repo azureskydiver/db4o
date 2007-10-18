@@ -285,13 +285,16 @@ public final class Platform4 {
         netReadAsJava(config, "StaticField");
         
         maximumActivationDepth(config, "P1ListElement", 1);
-        maximumActivationDepth(config, "P2LinkedList", 1);
-        maximumActivationDepth(config, "P1HashElement", 1);
-        minimumActivationDepth(config, "P2HashMap", 2);
+        activationDepth(config, "P2LinkedList", 1);
+        
+        activationDepth(config, "P2HashMap", 2);
+        activationDepth(config, "P1HashElement", 1);
     }
 
-	private static void minimumActivationDepth(Config4Impl config, String className, int depth) {
-		db4oClassConfig(config, className).minimumActivationDepth(depth);
+	private static void activationDepth(Config4Impl config, String className, int depth) {
+		final ObjectClass classConfig = db4oClassConfig(config, className);
+		classConfig.minimumActivationDepth(depth);
+		classConfig.maximumActivationDepth(depth);
 	}
 
 	private static void maximumActivationDepth(Config4Impl config,
