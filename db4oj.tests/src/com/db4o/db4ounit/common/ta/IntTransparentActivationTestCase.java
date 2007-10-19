@@ -34,7 +34,7 @@ public class IntTransparentActivationTestCase extends TransparentActivationTestC
 
 	private void asertNullItem(TAIntItem item) {
 		Assert.areEqual(0, item.value);
-		Assert.isNull(item.i);
+		isPrimitiveNull(item.i);
 		Assert.isNull(item.obj);
 		Assert.isNull(item.list);
 	}

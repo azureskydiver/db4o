@@ -8,6 +8,7 @@ package com.db4o.db4ounit.common.ta;
 import com.db4o.config.*;
 import com.db4o.ta.*;
 
+import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class TransparentActivationTestCaseBase extends AbstractDb4oTestCase  {
@@ -20,4 +21,10 @@ public class TransparentActivationTestCaseBase extends AbstractDb4oTestCase  {
 		config.add(new TransparentActivationSupport());
 	}
 
+	/**
+     * @sharpen.remove
+     */
+	public void isPrimitiveNull(Object primitive) {
+		Assert.isNull(primitive);
+	}
 }
