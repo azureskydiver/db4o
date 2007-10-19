@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.ta;
 
-import com.db4o.db4ounit.common.ta.*;
-
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
