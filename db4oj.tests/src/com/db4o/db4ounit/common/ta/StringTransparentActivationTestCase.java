@@ -8,9 +8,9 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-public class StringTransparentActivationDepthTestCase extends TransparentActivationTestCaseBase implements OptOutCS{
+public class StringTransparentActivationTestCase extends TransparentActivationTestCaseBase implements OptOutCS{
 	public static void main(String[] args) {
-		new StringTransparentActivationDepthTestCase().runAll();
+		new StringTransparentActivationTestCase().runAll();
 	}
 
 	protected void store() throws Exception {
