@@ -13,7 +13,6 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-				NestedClassesTestCase.class,
 				TransparentActivationClassLoaderTestCase.class,
 				TransparentActivationInstrumentationIntegrationTestCase.class,
 				TAFileEnhancerTestCase.class,
