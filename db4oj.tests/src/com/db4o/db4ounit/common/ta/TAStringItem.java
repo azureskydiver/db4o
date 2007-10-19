@@ -3,27 +3,20 @@
 package com.db4o.db4ounit.common.ta;
 
 
-public class TAIntItem extends ActivatableImpl {
-		public int value;
+public class TAStringItem extends ActivatableImpl {
+		public String value;
 		
 		public Object obj;
-		
-		public Integer i;
 
 		public LinkedList list;
 
-		public TAIntItem() {
+		public TAStringItem() {
 
 		}
 		
-		public int value() {
+		public String value() {
 			activate();
 			return value;
-		}
-		
-		public Integer integerValue() {
-			activate();
-			return i;
 		}
 		
 		public Object object() {
