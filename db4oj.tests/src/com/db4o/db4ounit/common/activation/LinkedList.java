@@ -5,19 +5,19 @@ package com.db4o.db4ounit.common.activation;
 /**
  * @exclude
  */
-public class LinkedItemList {
+public class LinkedList {
 
-	public LinkedItemList next;
+	public LinkedList next;
 	
-	public LinkedItemList() {
+	public LinkedList() {
 
 	}
 
-	public static LinkedItemList newList(int depth) {
+	public static LinkedList newList(int depth) {
 		if (depth == 0) {
 			return null;
 		}
-		LinkedItemList head = new LinkedItemList();
+		LinkedList head = new LinkedList();
 		head.next = newList(depth - 1);
 		return head;
 	}
