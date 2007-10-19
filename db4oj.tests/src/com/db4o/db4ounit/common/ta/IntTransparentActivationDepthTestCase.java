@@ -1,6 +1,6 @@
 /* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.common.activation;
+package com.db4o.db4ounit.common.ta;
 
 import com.db4o.db4ounit.common.ta.*;
 
@@ -25,9 +25,9 @@ public class IntTransparentActivationDepthTestCase extends TransparentActivation
 	public void test() throws Exception {
 		TAIntItem item = (TAIntItem) retrieveOnlyInstance(TAIntItem.class);
 		asertNullItem(item);
-		Assert.areEqual(42, item.getValue());
-		Assert.isNotNull(item.list);
-		Assert.isNull(item.list.next);
+		Assert.areEqual(42, item.value());
+		Assert.isNotNull(item.list());
+		Assert.isNull(item.list().next);
 	}
 
 	private void asertNullItem(TAIntItem item) {

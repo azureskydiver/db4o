@@ -19,7 +19,6 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			com.db4o.db4ounit.common.acid.AllTests.class,
-			com.db4o.db4ounit.common.activation.AllTests.class,
 			com.db4o.db4ounit.common.assorted.AllTests.class,
             com.db4o.db4ounit.common.btree.AllTests.class,
             com.db4o.db4ounit.common.classindex.AllTests.class,
@@ -47,6 +46,7 @@ public class AllTests extends Db4oTestSuite {
 			com.db4o.db4ounit.common.set.AllTests.class,
 			com.db4o.db4ounit.common.soda.AllTests.class,
 			com.db4o.db4ounit.common.stored.AllTests.class,
+			com.db4o.db4ounit.common.ta.AllTests.class,
 			com.db4o.db4ounit.common.types.AllTests.class,
 			com.db4o.db4ounit.util.test.AllTests.class,
 		};
