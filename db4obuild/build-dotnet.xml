@@ -525,6 +525,10 @@
 				file="${src.dir}/TA/Resources/TAAssemblyReferenceSubject.cs"
 				name="Db4oAdmin.Tests.TA.Resources.TAAssemblyReferenceSubject.cs" />
 	
+			<resource
+				file="${src.dir}/TA/Resources/TADoubleInstrumentationSubject.cs"
+				name="Db4oAdmin.Tests.TA.Resources.TADoubleInstrumentationSubject.cs" />
+			
 			<src dir="${src.dir}">
 				<include name="**/*.cs" />
 				<exclude name="**/Resources/**" />
