@@ -8,7 +8,7 @@ package com.db4o.db4ounit.common.ta;
 public class LinkedList {
 
 	public LinkedList next;
-	
+
 	public LinkedList() {
 
 	}
@@ -20,5 +20,13 @@ public class LinkedList {
 		LinkedList head = new LinkedList();
 		head.next = newList(depth - 1);
 		return head;
+	}
+
+	/**
+	 * Overrides this method to assert that 
+	 * <codee>other</code> is only activated with depth 1.
+	 */
+	public boolean equals(Object other) {
+		return ((LinkedList) other).next == null;
 	}
 }

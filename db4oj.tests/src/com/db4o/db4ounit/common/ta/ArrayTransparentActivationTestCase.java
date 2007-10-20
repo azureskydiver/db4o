@@ -13,6 +13,10 @@ public class ArrayTransparentActivationTestCase extends TransparentActivationTes
 	private static final int[] INTS1 = new int[] {1,2,3};
 	
 	private static final int[] INTS2 = new int[] {4,5,6};
+	
+	private static final LinkedList[] LIST1 = new LinkedList[] { LinkedList.newList(5), LinkedList.newList(5) };
+
+	private static final LinkedList[] LIST2 = new LinkedList[] { LinkedList.newList(5), LinkedList.newList(5) };
 
 	public static void main(String[] args) {
 		new ArrayTransparentActivationTestCase().runAll();
@@ -23,8 +27,8 @@ public class ArrayTransparentActivationTestCase extends TransparentActivationTes
 		item.value = INTS1;
 		item.obj = INTS2;
 		
-		item.lists = new LinkedList[] { LinkedList.newList(5), LinkedList.newList(5) };
-		item.listsObject = new LinkedList[] { LinkedList.newList(5), LinkedList.newList(5) };
+		item.lists = LIST1;
+		item.listsObject = LIST2;
 		store(item);
 	}
 
@@ -33,19 +37,8 @@ public class ArrayTransparentActivationTestCase extends TransparentActivationTes
 		asertNullItem(item);
 		ArrayAssert.areEqual(INTS1, item.value());
 		ArrayAssert.areEqual(INTS2, (int[])item.object());
-		assertLists(item.lists());
-		assertLists((LinkedList[]) item.listsObject());
-	}
-
-	private void assertLists(LinkedList[] lists) {
-		Assert.areEqual(2, lists.length);
-		for(int i = 0; i < lists.length; ++i) {
-			assertList(lists[i]);
-		}
-	}
-
-	private void assertList(LinkedList list) {
-		Assert.isNull(list.next);
+		ArrayAssert.areEqual(LIST1, item.lists());
+		ArrayAssert.areEqual(LIST2, (LinkedList[]) item.listsObject());
 	}
 
 	private void asertNullItem(TAArrayItem item) {

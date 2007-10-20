@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[] {
 			ArrayTransparentActivationTestCase.class,
 			IntTransparentActivationTestCase.class,
+			NArrayTransparentActivationTestCase.class,
 			StringTransparentActivationTestCase.class,
 		};
 	}
