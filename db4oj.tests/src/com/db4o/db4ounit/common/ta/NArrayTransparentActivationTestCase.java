@@ -10,13 +10,13 @@ import db4ounit.extensions.fixtures.*;
  */
 public class NArrayTransparentActivationTestCase extends TransparentActivationTestCaseBase implements OptOutCS{
 	
-	private static final int[][] INTS1 = new int[][]{ {1,2,3}, {4,5,6,7}};
+	private static final int[][] INTS1 = new int[][]{ {1,2,3}, {4,5,6}};
 	
-	private static final int[][] INTS2 = new int[][] { {4,5,6}, {7,8}};
+	private static final int[][] INTS2 = new int[][] { {4,5,6}, {7,8,9}};
 	
-	private static final LinkedList[][] LIST1 = new LinkedList[][] {{ LinkedList.newList(5), LinkedList.newList(5)}, {LinkedList.newList(5)}};
+	private static final LinkedList[][] LIST1 = new LinkedList[][] {{ LinkedList.newList(5)}, {LinkedList.newList(5)}};
 	
-	private static final LinkedList[][] LIST2 = new LinkedList[][] {{ LinkedList.newList(5), LinkedList.newList(5)}, {LinkedList.newList(5)}};
+	private static final LinkedList[][] LIST2 = new LinkedList[][] {{ LinkedList.newList(5)}, {LinkedList.newList(5)}};
 
 	public static void main(String[] args) {
 		new NArrayTransparentActivationTestCase().runAll();
@@ -35,11 +35,10 @@ public class NArrayTransparentActivationTestCase extends TransparentActivationTe
 	public void test() throws Exception {
 		TANArrayItem item = (TANArrayItem) retrieveOnlyInstance(TANArrayItem.class);
 		asertNullItem(item);
-		// TODO: Assert multi-dimensional array
-//		ArrayAssert.areEqual(INTS1, item.value());
-//		ArrayAssert.areEqual(INTS2, (int[][])item.object());
-//		ArrayAssert.areEqual(LIST1, item.lists());
-//		ArrayAssert.areEqual(LIST2, (LinkedList[]) item.listsObject());
+		ArrayAssert.areEqual(INTS1, item.value());
+		ArrayAssert.areEqual(INTS2, (int[][])item.object());
+		ArrayAssert.areEqual(LIST1, item.lists());
+		ArrayAssert.areEqual(LIST2, (LinkedList[][]) item.listsObject());
 	}
 
 	private void asertNullItem(TANArrayItem item) {
