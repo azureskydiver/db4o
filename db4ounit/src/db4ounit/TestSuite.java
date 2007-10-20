@@ -13,6 +13,10 @@ public class TestSuite implements Test {
 		this(null, tests);
 	}
 	
+	public TestSuite(Test singleTest) {
+		this(null, new Test[] { singleTest });
+	}
+	
 	public String getLabel() {
 		return _label == null ? labelFromTests(_tests) : _label;
 	}

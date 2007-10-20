@@ -16,6 +16,10 @@ public class FailingTest implements Test {
 	public String getLabel() {
 		return _label;
 	}
+	
+	public Throwable error() {
+		return _error;
+	}
 
 	public void run(TestResult result) {
 		result.testFailed(this, _error);
