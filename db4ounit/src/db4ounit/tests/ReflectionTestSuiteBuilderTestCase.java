@@ -1,9 +1,6 @@
 package db4ounit.tests;
 
-import db4ounit.Assert;
-import db4ounit.CodeBlock;
-import db4ounit.ReflectionTestSuiteBuilder;
-import db4ounit.TestCase;
+import db4ounit.*;
 
 public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 	
@@ -24,12 +21,7 @@ public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 	public void testUnmarkedTestFixture() {
 		
 		final ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(NonTestFixture.class);
-		
-		Assert.expect(IllegalArgumentException.class, new CodeBlock() {
-			public void run() throws Throwable {
-				builder.build();
-			}
-		});
+		assertFailingTestCase(IllegalArgumentException.class, builder);
 	}
 	
 	public static class Accepted implements TestCase {
@@ -45,5 +37,37 @@ public class ReflectionTestSuiteBuilderTestCase implements TestCase {
 	public void testNotAcceptedFixture() {
 		ReflectionTestSuiteBuilder builder = new ExcludingReflectionTestSuiteBuilder(new Class[]{Accepted.class,NotAccepted.class});
 		Assert.areEqual(1,builder.build().getTests().length);
+	}
+	
+	public static class ConstructorThrows implements TestCase {
+		
+		public static final RuntimeException ERROR = new RuntimeException("no way");
+		
+		public ConstructorThrows() {
+			throw ERROR;
+		}
+		
+		public void test1() {
+		}
+		
+		public void test2() {
+		}
+	}
+	
+	public void testConstructorFailuresAppearAsFailedTestCases() {
+		
+		final ReflectionTestSuiteBuilder builder = new ReflectionTestSuiteBuilder(ConstructorThrows.class);
+		final Throwable cause = assertFailingTestCase(TestException.class, builder);
+		Assert.areSame(ConstructorThrows.ERROR, ((TestException)cause).getReason());
+	}
+
+	private Throwable assertFailingTestCase(final Class expectedError,
+			final ReflectionTestSuiteBuilder builder) {
+		final TestSuite suite = builder.build();
+		Assert.areEqual(1, suite.getTests().length);
+		
+		FailingTest test = (FailingTest) suite.getTests()[0];
+		Assert.areSame(expectedError, test.error().getClass());
+		return test.error();
 	}
 }

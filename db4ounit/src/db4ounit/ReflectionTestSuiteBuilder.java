@@ -35,6 +35,15 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	}
 	
 	protected TestSuite fromClass(Class clazz) {
+		try {
+			return suiteFor(clazz);
+		} catch (Exception e) {
+			return new TestSuite(new FailingTest(clazz.getName(), e));
+		}
+		
+	}
+
+	private TestSuite suiteFor(Class clazz) {
 		if(!isApplicable(clazz)) {
 			TestPlatform.emitWarning("DISABLED: " + clazz.getName());
 			return new TestSuite(new Test[0]);
