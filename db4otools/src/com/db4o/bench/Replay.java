@@ -9,9 +9,10 @@ import com.db4o.io.*;
 
 public class Replay {
 
+	
+	private static final int LOG_MODE = LoggingIoAdapter.LOG_READ + LoggingIoAdapter.LOG_SYNC + LoggingIoAdapter.LOG_WRITE;
 	private static final String OPEN_LOG_FILE_NAME = "file_access.log";
 	private static final String WRITE_LOG_FILE_NAME = "replay.log";
-	private static final int LOG_MODE = 7;
 	private static final String DB_FILE_NAME = "replaytest.yap";
 	
 	public static void main(String[] args) {

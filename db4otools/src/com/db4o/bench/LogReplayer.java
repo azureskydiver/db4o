@@ -9,16 +9,6 @@ import com.db4o.io.IoAdapter;
 
 public class LogReplayer {
 	
-/**
- * TODO: These constants depend on LoggingIoAdapter.
- * Possible to factor them out? Or make public in LIA?
- */	
-	private static final String	WRITE = 		"WRITE";
-	private static final String READ  = 		"READ";
-	private static final String SYNC  = 		"SYNC";
-	private static final char 	SEPARATOR =		',';
-	private static final int	WRITE_INDEX =	6;
-	private static final int	READ_INDEX = 	5;
 
 	private String _logFilePath;
 	private IoAdapter _io;
@@ -49,13 +39,13 @@ public class LogReplayer {
 	}
 
 	private void replayLine(String line) {
-		if ( line.startsWith(WRITE) ) {
+		if ( line.startsWith(LoggingIoAdapter.WRITE_ENTRY) ) {
 			replayWrite(line);
 		}
-		else if ( line.startsWith(READ) ) {
+		else if ( line.startsWith(LoggingIoAdapter.READ_ENTRY) ) {
 			replayRead(line);
 		}
-		else if ( line.startsWith(SYNC) ) {
+		else if ( line.startsWith(LoggingIoAdapter.SYNC_ENTRY) ) {
 			replaySync();
 		}
 		else {
@@ -75,34 +65,32 @@ public class LogReplayer {
  */	
 	
 	private void replayRead(String line) {
-		// format of line: "READ startPos,length"
-		// 5 = READ_INDEX  ------^       ^-- separator 
+		// format of line: "READ startPos,length" 
 		
-		int separator = separatorIndexForLine(line);
-		long pos = posForLine(READ_INDEX, separator, line);
+		int separatorIndex = separatorIndexForLine(line);
+		long pos = posForLine(LoggingIoAdapter.READ_ENTRY.length(), separatorIndex, line);
 		_io.seek(pos);
 		
-		int length = lengthForLine(separator, line);
+		int length = lengthForLine(separatorIndex, line);
 		byte[] buffer = new byte[length];
 		_io.read(buffer, length);
 	}
 
 	private void replayWrite(String line) {
 		// format of line: "WRITE startPos,length"
-		// 6 = WRITE_INDEX  ------^       ^-- separator
 		
-		int separator = separatorIndexForLine(line);
-		long pos = posForLine(WRITE_INDEX, separator, line);
+		int separatorIndex = separatorIndexForLine(line);
+		long pos = posForLine(LoggingIoAdapter.WRITE_ENTRY.length(), separatorIndex, line);
 		_io.seek(pos);
 		
-		int length = lengthForLine(separator, line);
-		// TODO: use actual byte sequence from log?
+		int length = lengthForLine(separatorIndex, line);
 		byte[] buffer = new byte[length];
+		//TODO: initialise buffer?		
 		_io.write(buffer);
 	}
 	
 	private int separatorIndexForLine(String line) {
-		return line.indexOf(SEPARATOR);
+		return line.indexOf(LoggingIoAdapter.SEPARATOR);
 	}
 	
 	private int lengthForLine(int separator, String line) {
