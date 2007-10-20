@@ -332,10 +332,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 				return message;
 	         } catch (Db4oIOException exc) {
 	             if(!isMessageDispatcherAlive()){
-	                 return null;
+	                 onMsgError();
 	             }
 	             if(! clientEventCallbacks().continueOnTimeout(transaction())){
-	                 return null;
+	                 onMsgError();
 	             }
 	         }
 		}
