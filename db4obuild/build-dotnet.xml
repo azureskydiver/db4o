@@ -1261,5 +1261,7 @@
             <arg line="&quot;\Storage Card\Db4objects.Db4o.Tests.exe run&quot;" />
             <arg value="${emulator.sharefolder}/db4ounit.log" />
         </exec>
+    	<loadfile property="cf.db4ounit.log" srcfile="${emulator.sharefolder}/db4ounit.log" />
+    	<echo message="${cf.db4ounit.log}" />
     </target>
 </project>
