@@ -133,8 +133,9 @@ public class NetworkSocketTestCase implements TestLifeCycle {
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
             public void run() throws Throwable {
                 // This is a magic number: 
-                // On my machine all tests start to pass when I write at least 7 times. 
-                for (int i = 0; i < 7; i++) {
+                // On my machine all tests start to pass when I write at least 7 times.
+                // Trying with 20 on the build machine.
+                for (int i = 0; i < 20; i++) {
                     codeBlock.run();
                 }
             }
