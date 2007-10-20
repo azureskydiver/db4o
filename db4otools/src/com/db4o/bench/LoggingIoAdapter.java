@@ -8,16 +8,23 @@ import com.db4o.*;
 import com.db4o.io.*;
 
 public class LoggingIoAdapter extends VanillaIoAdapter {
-	private final static int READ=1;
-	private final static int WRITE=2;
-	private final static int SYNC=4;
+	
+	public final static int LOG_READ 	= 1;
+	public final static int LOG_WRITE 	= 2;
+	public final static int LOG_SYNC 	= 4;
+	
+	public final static String READ_ENTRY = "READ ";
+	public static final String WRITE_ENTRY = "WRITE ";
+	public static final String SYNC_ENTRY = "SYNC";
+	
+	public static final String SEPARATOR = ",";
 	
 	private PrintStream _out;
 	private int _config;
 	private long _curpos;
 	
     public LoggingIoAdapter(IoAdapter delegateAdapter,PrintStream out) {
-    	this(delegateAdapter,out,WRITE);
+    	this(delegateAdapter,out,LOG_WRITE);
     }
 
     public LoggingIoAdapter(IoAdapter delegateAdapter,PrintStream out,int config) {
@@ -38,8 +45,8 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
 	}
 
     public int read(byte[] bytes, int length) throws Db4oIOException {
-    	if(config(READ)) {
-    		_out.println("READ "+_curpos+","+length);
+    	if(config(LOG_READ)) {
+    		_out.println(READ_ENTRY +_curpos+ SEPARATOR +length);
     	}
         return _delegate.read(bytes, length);
     }
@@ -50,15 +57,15 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
     }
 
     public void sync() throws Db4oIOException {
-    	if(config(SYNC)) {
-    		_out.println("SYNC");
+    	if(config(LOG_SYNC)) {
+    		_out.println(SYNC_ENTRY);
     	}
         _delegate.sync();
     }
 
     public void write(byte[] buffer, int length) throws Db4oIOException {
-    	if(config(WRITE)) {
-    		_out.println("WRITE "+_curpos+","+length);
+    	if(config(LOG_WRITE)) {
+    		_out.println(WRITE_ENTRY + _curpos + SEPARATOR + length);
     	}
         _delegate.write(buffer, length);
     }
