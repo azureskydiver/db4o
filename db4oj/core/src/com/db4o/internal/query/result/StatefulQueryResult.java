@@ -9,7 +9,7 @@ import com.db4o.query.QueryComparator;
 /**
  * @exclude 
  */
-public class StatefulQueryResult {
+public class StatefulQueryResult implements Iterable4 {
     
     private final QueryResult _delegate;
     private final Iterable4Adaptor _iterable;
