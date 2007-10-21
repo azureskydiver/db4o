@@ -1,5 +1,7 @@
 package com.db4o.db4ounit.common.concurrency;
 
+import com.db4o.db4ounit.jre12.querying.*;
+
 import db4ounit.extensions.*;
 
 public class AllTestsJdk1_2 extends Db4oConcurrenyTestSuite {
@@ -15,6 +17,7 @@ public class AllTestsJdk1_2 extends Db4oConcurrenyTestSuite {
 			ReadCollectionQBETestCase.class,
 			ReadCollectionSODATestCase.class,
 			UpdateCollectionTestCase.class,
+			ObjectSetCollectionAPITestCase.class,
 		};
 	}
 }
