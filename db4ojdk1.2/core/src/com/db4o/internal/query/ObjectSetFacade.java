@@ -5,6 +5,7 @@ package com.db4o.internal.query;
 import java.util.*;
 
 import com.db4o.ext.ExtObjectSet;
+import com.db4o.foundation.*;
 import com.db4o.internal.query.result.*;
 
 /**
@@ -19,19 +20,17 @@ public class ObjectSetFacade extends AbstractList implements ExtObjectSet {
     }
     
     public Iterator iterator() {
-    	return new Iterator() {
+    	class JDKIterator extends Iterable4Adaptor implements Iterator {
+			public JDKIterator(Iterable4 delegate) {
+				super(delegate);
+			}
+
 			public void remove() {
 				throw new UnsupportedOperationException();
 			}
-		
-			public Object next() {
-				return _delegate.next();
-			}
-		
-			public boolean hasNext() {
-				return _delegate.hasNext();
-			}
-		};
+    		
+    	}
+    	return new JDKIterator(_delegate);
     }
     
     public long[] getIDs() {
