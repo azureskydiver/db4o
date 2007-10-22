@@ -32,9 +32,6 @@ public class LegacyActivationDepth implements ActivationDepth {
 	}
 
 	private int descendDepth(ClassMetadata metadata) {
-//		if (metadata.isDb4oTypeImpl()) {
-//	        return 2;
-//	    }
 		int depth = configuredActivationDepth(metadata) - 1;
 		if (metadata.isValueType()) {
 			// 	We also have to instantiate structs completely every time.
