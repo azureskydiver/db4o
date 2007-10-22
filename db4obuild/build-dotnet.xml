@@ -537,7 +537,6 @@
 	
 			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4objects.Db4o.dll" />
-				<include name="Db4objects.Db4o.TA.dll" />
 				<include name="Db4objects.Db4o.Tools.dll" />
 				<include name="Db4oUnit.dll" />
 				<include name="Db4oUnit.Extensions.dll" />
@@ -709,31 +708,6 @@
 				<exclude name="**/Resources/*.*" />
 			</sources>
 		</updatecsharpproject>
-	</target>
-	
-	<target name="prepare-ta-conversion-workspace">	
-	
-		<reset-dir dir="${dir.sharpen.ta}" />
-		
-		<copy todir="${dir.sharpen.ta}/db4ota" overwrite="true">
-			<fileset dir="${dir.workspace}/db4ota">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-	
-		<!--
-			event definitions are required to be visible in source
-			code form by the converter
-		-->
-		<copy todir="${dir.sharpen.ta}/db4ota/src">
-			<fileset dir="${dir.j.core.src}">
-				<include name="**/Event4.java" />
-				<include name="**/EventListener4.java" />
-				<include name="**/EventArgs.java" />
-				<include name="**/EventRegistry.java" />
-				<include name="**/ObjectEventArgs.java" />
-			</fileset>
-		</copy>
 	</target>
 			
 	<target name="sharpen-db4ounit-extensions" depends="install-javatocsharp-plugin, create-dependencies-jar">		
