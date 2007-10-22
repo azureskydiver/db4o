@@ -6,12 +6,9 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
-
 
 public class ObjectServerTestCase implements TestLifeCycle {
     

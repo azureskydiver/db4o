@@ -8,7 +8,6 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.cs.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
 // TODO fix db4ounit call logic - this should actually be run in C/S mode
 public abstract class StandaloneCSTestCaseBase implements TestCase {
