@@ -18,7 +18,7 @@ public class HashtableTestCase extends Db4oClientServerTestCase {
 	
 	private static long _id;
 	
-	private static int run;
+//	private static int run;
 	
 	protected void store() {
 		Hashtable ht = new Hashtable();
