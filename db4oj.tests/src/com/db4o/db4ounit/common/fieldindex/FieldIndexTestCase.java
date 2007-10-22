@@ -5,15 +5,14 @@ package com.db4o.db4ounit.common.fieldindex;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.btree.*;
-import com.db4o.db4ounit.common.foundation.IntArrays4;
-import com.db4o.ext.StoredField;
-import com.db4o.foundation.Visitor4;
+import com.db4o.db4ounit.common.foundation.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
-import com.db4o.query.Query;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 
 public class FieldIndexTestCase extends FieldIndexTestCaseBase {
@@ -85,10 +84,7 @@ public class FieldIndexTestCase extends FieldIndexTestCaseBase {
     }
     
     private FieldMetadata yapField() {
-        ReflectClass claxx = stream().reflector().forObject(new FieldIndexItem());
-        ClassMetadata yc = stream().classMetadataForReflectClass(claxx);
-        FieldMetadata yf = yc.fieldMetadataForName("foo");
-        return yf;
+        return classMetadataFor(FieldIndexItem.class).fieldMetadataForName("foo");
     }
     
 

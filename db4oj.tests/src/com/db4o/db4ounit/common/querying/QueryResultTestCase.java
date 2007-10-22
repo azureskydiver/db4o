@@ -61,7 +61,7 @@ public abstract class QueryResultTestCase extends AbstractDb4oTestCase implement
 	}
 
 	private ClassMetadata yapClass() {
-		return stream().classMetadataForReflectClass(reflector().forClass(Item.class));
+		return classMetadataFor(Item.class);
 	}
 
 	private QueryResult executeQuery(Query query) {

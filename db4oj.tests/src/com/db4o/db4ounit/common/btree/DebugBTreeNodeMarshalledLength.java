@@ -3,7 +3,6 @@
 package com.db4o.db4ounit.common.btree;
 
 import com.db4o.config.*;
-import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 
@@ -40,8 +39,7 @@ public class DebugBTreeNodeMarshalledLength extends AbstractDb4oTestCase{
 	}
 	
 	private BTree btree(){
-		ClassMetadata clazz = stream().classMetadataForReflectClass(reflector().forClass(Item.class));
-		ClassIndexStrategy index = clazz.index();
+		ClassIndexStrategy index = classMetadataFor(Item.class).index();
 		return ((BTreeClassIndexStrategy)index).btree();
 	}
 
