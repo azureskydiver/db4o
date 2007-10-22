@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.foundation.Visitor4;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.QConObject;
 import com.db4o.internal.replication.*;
@@ -55,7 +56,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         
     }
     
-    void deactivate(Transaction a_trans, Object a_onObject, int a_depth) {
+    void deactivate(Transaction a_trans, Object a_onObject, ActivationDepth a_depth) {
         // do nothing
     }
     
