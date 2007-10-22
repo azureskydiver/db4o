@@ -103,7 +103,7 @@ public final class Assert {
 	}
 
 	public static void areEqual(Object expected, Object actual,String message) {		
-		if (objectsAreEqual(expected, actual)) return;
+		if (Check.objectsAreEqual(expected, actual)) return;
 		fail(failureMessage(expected, actual, message));
 	}
 	
@@ -131,13 +131,6 @@ public final class Assert {
 
 	private static String failureMessage(Object expected, Object actual, final String cmpOper, String customMessage) {
 		return (customMessage==null ? "" : customMessage+": ")+"Expected " + cmpOper + "'"+ expected + "' but was '" + actual + "'";
-	}
-
-	private static boolean objectsAreEqual(Object expected, Object actual) {
-		return expected == actual
-			|| (expected != null
-				&& actual != null
-				&& expected.equals(actual));
 	}
 
 	public static void isFalse(boolean condition) {
@@ -177,7 +170,7 @@ public final class Assert {
 	}
 
 	public static void areNotEqual(Object notExpected, Object actual) {
-		if (!objectsAreEqual(notExpected, actual)) return;
+		if (!Check.objectsAreEqual(notExpected, actual)) return;
 		fail("Expecting not '" + notExpected + "'");
 	}
 

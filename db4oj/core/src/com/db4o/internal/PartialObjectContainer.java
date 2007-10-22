@@ -146,15 +146,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	}
 
 	public ActivationDepth defaultActivationDepth(ClassMetadata classMetadata) {
-		final int globalLegacyActivationDepth = configImpl().activationDepth();
-		Config4Class config = classMetadata.configOrAncestorConfig();
-		int defaultDepth = null == config
-			? globalLegacyActivationDepth
-			: config.adjustActivationDepth(globalLegacyActivationDepth);
-		return new LegacyActivationDepth(defaultDepth);
+		return activationDepthProvider().activationDepthFor(classMetadata);
 	}
 
-    public final void activate(Transaction trans, Object obj, ActivationDepth depth) {
+    protected ActivationDepthProvider activationDepthProvider() {
+    	return configImpl().activationDepthProvider();
+	}
+
+	public final void activate(Transaction trans, Object obj, ActivationDepth depth) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
         	beginTopLevelCall();

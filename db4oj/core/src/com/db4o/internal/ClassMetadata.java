@@ -1125,10 +1125,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-	private boolean cascadeOnActivate() {
-		return i_config != null && (i_config.cascadeOnActivate() == TernaryBool.YES);
-	}
-
 	private void shareObjectReference(Object obj, ObjectReference ref) {
 		if (obj instanceof Db4oTypeImpl) {
 		    ((Db4oTypeImpl)obj).setObjectReference(ref);

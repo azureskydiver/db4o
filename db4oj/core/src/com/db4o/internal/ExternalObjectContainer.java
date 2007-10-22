@@ -21,7 +21,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
     }
     
     public final void activate(Object obj, int depth) throws DatabaseClosedException {
-        activate(null, obj, new LegacyActivationDepth(depth));
+        activate(null, obj, activationDepthProvider().activationDepth(depth));
     }
     
     public final void bind(Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
