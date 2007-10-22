@@ -2,9 +2,7 @@
 
 package com.db4o.db4ounit.jre11.migration;
 
-import db4ounit.*;
 import db4ounit.extensions.*;
-
 
 public class AllTests extends Db4oTestSuite {
 
