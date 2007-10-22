@@ -88,7 +88,9 @@ public class Db4oFileEnhancer {
 			System.err.println("Omitting " + className + ": Referenced class " + e.getMessage() + " not found.");
 		} finally {
 			if (!status.isInstrumented()) {
-				File4.copyFile(source, new File(target, classPath));
+				File targetFile = new File(target, classPath);
+				targetFile.getParentFile().mkdirs();
+				File4.copyFile(source, targetFile);
 			}
 			else {
 //				bloatUtil.commit();
