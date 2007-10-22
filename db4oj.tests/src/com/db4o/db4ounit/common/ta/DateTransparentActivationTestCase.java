@@ -14,6 +14,9 @@ import db4ounit.extensions.fixtures.*;
 public class DateTransparentActivationTestCase extends
         TransparentActivationTestCaseBase implements OptOutCS {
 
+	/**
+	 * @deprecated
+	 */
     public static Date first = new Date(107, 10, 19);
 
     public static void main(String[] args) {
