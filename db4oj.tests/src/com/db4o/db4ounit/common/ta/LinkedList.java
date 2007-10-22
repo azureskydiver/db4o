@@ -8,25 +8,33 @@ package com.db4o.db4ounit.common.ta;
 public class LinkedList {
 
 	public LinkedList next;
+	
+	public int value;
 
-	public LinkedList() {
-
+	public LinkedList(int v) {
+		value = v;
 	}
 
 	public static LinkedList newList(int depth) {
 		if (depth == 0) {
 			return null;
 		}
-		LinkedList head = new LinkedList();
+		LinkedList head = new LinkedList(depth);
 		head.next = newList(depth - 1);
 		return head;
 	}
 
-	/**
-	 * Overrides this method to assert that 
-	 * <codee>other</code> is only activated with depth 1.
-	 */
 	public boolean equals(Object other) {
-		return ((LinkedList) other).next == null;
+		LinkedList otherList = (LinkedList) other;
+		if( value != otherList.value) {
+			return false;
+		}
+		if(next == otherList.next) {
+			return true;
+		}
+		if(otherList.next == null) {
+			return false;
+		}
+		return next.equals(otherList.next);
 	}
 }

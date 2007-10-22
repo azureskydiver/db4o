@@ -9,6 +9,8 @@ import db4ounit.extensions.fixtures.*;
  * @exclude
  */
 public class IntTransparentActivationTestCase extends TransparentActivationTestCaseBase implements OptOutCS{
+	private static final LinkedList LIST = LinkedList.newList(10);
+
 	public static void main(String[] args) {
 		new IntTransparentActivationTestCase().runAll();
 	}
@@ -18,7 +20,7 @@ public class IntTransparentActivationTestCase extends TransparentActivationTestC
 		item.value = 42;
 		item.i = new Integer(1);
 		item.obj = new Integer(2);
-		item.list = LinkedList.newList(5);
+		item.list = LIST;
 		store(item);
 	}
 
@@ -28,8 +30,7 @@ public class IntTransparentActivationTestCase extends TransparentActivationTestC
 		Assert.areEqual(42, item.value());
 		Assert.areEqual(new Integer(1), item.integerValue());
 		Assert.areEqual(new Integer(2), item.object());
-		Assert.isNotNull(item.list());
-		Assert.isNull(item.list().next);
+		Assert.areEqual(LIST, item.list());
 	}
 
 	private void asertNullItem(TAIntItem item) {
