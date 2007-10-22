@@ -2,22 +2,19 @@
 
 package com.db4o.db4ounit.common.activation;
 
-import com.db4o.config.*;
-import com.db4o.db4ounit.common.foundation.*;
-import com.db4o.internal.*;
+import com.db4o.config.Configuration;
+import com.db4o.db4ounit.common.foundation.Iterator4Assert;
+import com.db4o.internal.Config4Impl;
 
-import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.AbstractDb4oTestCase;
 
 /**
  * Ensures the container uses the provided ActivationDepthProvider instance
  * whenever necessary.
- * 
- * FIXME: dont OptOutCS
  */
-public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 	
-	public final class Item {
+	public static final class Item {
 	}
 	
 	private final MockActivationDepthProvider _dummyProvider = new MockActivationDepthProvider();
@@ -31,6 +28,7 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase implem
 	}
 	
 	public void testDefaultActivationDepth() {
+		resetProvider();
 		queryItem();
 		assertProviderCalled("activationDepthFor", classMetadataFor(Item.class));
 	}
