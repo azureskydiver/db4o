@@ -255,10 +255,13 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public void activate(Object obj, int depth) throws Db4oIOException, DatabaseClosedException {
         synchronized(lock()){
             checkClosed();
-            _server.activate(_transaction, obj, new LegacyActivationDepth(depth));
+            _server.activate(_transaction, obj, activationDepthProvider().activationDepth(depth));
         }
-
     }
+
+	private ActivationDepthProvider activationDepthProvider() {
+		return _server.activationDepthProvider();
+	}
 
     public boolean close() throws Db4oIOException {
         synchronized(lock()){
