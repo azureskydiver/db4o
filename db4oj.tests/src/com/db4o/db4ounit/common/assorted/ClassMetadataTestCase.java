@@ -25,8 +25,7 @@ public class ClassMetadataTestCase extends AbstractDb4oTestCase {
 	
 	public void testFieldIterator() {		
 		Collection4 expectedNames=new Collection4(new ArrayIterator4(new String[]{"_id","_name","_age"}));
-		ClassMetadata clazz=stream().classMetadataForReflectClass(reflector().forClass(SubClazz.class));
-		Iterator4 fieldIter=clazz.fields();
+		Iterator4 fieldIter=classMetadataFor(SubClazz.class).fields();
 		while(fieldIter.moveNext()) {
 			FieldMetadata curField=(FieldMetadata)fieldIter.current();
 			Assert.isNotNull(expectedNames.remove(curField.getName()));

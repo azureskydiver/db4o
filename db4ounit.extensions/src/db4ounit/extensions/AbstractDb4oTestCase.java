@@ -316,6 +316,10 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	public final void store(Object obj) {
 		db().set(obj);
 	}
+	
+	protected ClassMetadata classMetadataFor(Class clazz) {
+		return stream().classMetadataForReflectClass(reflectClass(clazz));
+	}
 
 	protected ReflectClass reflectClass(Class clazz) {
 		return reflector().forClass(clazz);

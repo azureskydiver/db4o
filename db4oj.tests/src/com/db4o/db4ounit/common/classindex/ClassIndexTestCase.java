@@ -2,11 +2,10 @@
 
 package com.db4o.db4ounit.common.classindex;
 
-import com.db4o.db4ounit.common.btree.ExpectingVisitor;
-import com.db4o.internal.*;
+import com.db4o.db4ounit.common.btree.*;
 import com.db4o.internal.classindex.*;
 
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 public class ClassIndexTestCase extends AbstractDb4oTestCase implements OptOutCS{
@@ -53,9 +52,8 @@ public class ClassIndexTestCase extends AbstractDb4oTestCase implements OptOutCS
 	}
 
 	private void assertIndex(Object[] expected) {
-		ClassMetadata clazz = stream().classMetadataForReflectClass(reflector().forClass(Item.class));
 		ExpectingVisitor visitor = new ExpectingVisitor(expected);
-		ClassIndexStrategy index = clazz.index();
+		ClassIndexStrategy index = classMetadataFor(Item.class).index();
 		index.traverseAll(trans(),visitor);
 		visitor.assertExpectations();
 	}

@@ -4,18 +4,17 @@ package com.db4o.db4ounit.common.fieldindex;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.btree.*;
-import com.db4o.db4ounit.common.foundation.IntArrays4;
-import com.db4o.foundation.Visitor4;
+import com.db4o.db4ounit.common.foundation.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.fieldindex.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.processor.QQueryBase.*;
-import com.db4o.query.Query;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.query.*;
 
-import db4ounit.Assert;
+import db4ounit.*;
 
 public abstract class FieldIndexProcessorTestCaseBase extends
 		FieldIndexTestCaseBase {
@@ -60,13 +59,9 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 	}
 
 	private ClassMetadata getYapClass(Class clazz) {
-		return stream().classMetadataForReflectClass(getReflectClass(clazz));
+		return classMetadataFor(clazz);
 	}
 
-	private ReflectClass getReflectClass(Class clazz) {
-		return stream().reflector().forClass(clazz);
-	}
-	
 	protected BTree classIndexBTree(Class clazz) {
 		return ((BTreeClassIndexStrategy)getYapClass(clazz).index()).btree();
 	}

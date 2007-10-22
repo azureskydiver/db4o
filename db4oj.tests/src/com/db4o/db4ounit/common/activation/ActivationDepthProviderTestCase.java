@@ -51,10 +51,6 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase implem
 			_dummyProvider.iterator());
 	}
 
-	private ClassMetadata classMetadataFor(Class klass) {
-		return stream().classMetadataForReflectClass(reflectClass(klass));
-	}
-	
 	private void resetProvider() {
 		_dummyProvider.reset();
 	}
