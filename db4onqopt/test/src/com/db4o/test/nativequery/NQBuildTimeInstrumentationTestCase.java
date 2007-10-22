@@ -15,6 +15,7 @@ import com.db4o.query.*;
 import com.db4o.test.util.*;
 
 import db4ounit.*;
+import db4ounit.extensions.util.*;
 
 public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 
@@ -76,6 +77,8 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 	}
 
 	public void setUp() throws Exception {
+		IOUtil.deleteDir(SRC_DIR);
+		IOUtil.deleteDir(TARGET_DIR);
 		File4.mkdirs(SRC_DIR);
 		File4.mkdirs(TARGET_DIR);		
 		for (int clazzIdx = 0; clazzIdx < CLAZZES.length; clazzIdx++) {
