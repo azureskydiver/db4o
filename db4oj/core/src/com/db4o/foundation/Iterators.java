@@ -64,18 +64,25 @@ public class Iterators {
 	}
 
 	public static String toString(Iterator4 i) {
-		if (!i.moveNext()) {
-			return "[]";
-		}
+		return join(i, "[", "]", ", ");
+	}
+	
+	public static String join(Iterator4 i, String separator) {
+		return join(i, "", "", separator);
+	}
+
+	public static String join(Iterator4 i, final String prefix,
+			final String suffix, final String separator) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("[");
-		sb.append(i.current());
-		
-		while (i.moveNext()) {
-			sb.append(", ");
+		sb.append(prefix);
+		if (i.moveNext()) {
 			sb.append(i.current());
+			while (i.moveNext()) {
+				sb.append(separator);
+				sb.append(i.current());
+			}
 		}
-		sb.append("]");
+		sb.append(suffix);
 		return sb.toString();
 	}
 }

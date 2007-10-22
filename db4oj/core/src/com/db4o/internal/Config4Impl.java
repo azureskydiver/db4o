@@ -8,6 +8,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.diagnostic.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.cs.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.freespace.*;
@@ -29,6 +30,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
 	private final static KeySpec ACTIVATION_DEPTH=new KeySpec(5);
+	
+	private final static KeySpec ACTIVATION_DEPTH_PROVIDER=new KeySpec(LegacyActivationDepthProvider.INSTANCE);
     
 	private final static KeySpec ALLOW_VERSION_UPDATES=new KeySpec(false);
 
@@ -881,5 +884,13 @@ public final class Config4Impl implements Configuration, DeepClone,
 
 	public int maxBatchQueueSize() {
 		return _config.getAsInt(MAX_BATCH_QUEUE_SIZE);
+	}
+
+	public void activationDepthProvider(ActivationDepthProvider provider) {
+		_config.put(ACTIVATION_DEPTH_PROVIDER, provider);
+	}
+
+	public ActivationDepthProvider activationDepthProvider() {
+		return (ActivationDepthProvider) _config.get(ACTIVATION_DEPTH_PROVIDER);
 	}
 }
