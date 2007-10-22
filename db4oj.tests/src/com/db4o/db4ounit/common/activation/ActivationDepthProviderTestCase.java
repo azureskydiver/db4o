@@ -32,7 +32,7 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase implem
 	
 	public void testDefaultActivationDepth() {
 		queryItem();
-		assertProviderCalled("activationDepthFor", classMetada(Item.class));
+		assertProviderCalled("activationDepthFor", classMetadataFor(Item.class));
 	}
 
 	public void testSpecificActivationDepth() {
@@ -51,7 +51,7 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase implem
 			_dummyProvider.iterator());
 	}
 
-	private ClassMetadata classMetada(Class klass) {
+	private ClassMetadata classMetadataFor(Class klass) {
 		return stream().classMetadataForReflectClass(reflectClass(klass));
 	}
 	
