@@ -5,6 +5,14 @@ package com.db4o.internal.marshall;
 import com.db4o.internal.convert.conversions.*;
 
 /**
+ * Represents a db4o file format version, assembles all the marshallers
+ * needed to read/write this specific version.
+ * 
+ * A marshaller knows how to read/write certain types of values from/to its
+ * representation on disk for a given db4o file format version.
+ * 
+ * Responsibilities are somewhat overlapping with TypeHandler's.
+ * 
  * @exclude
  */
 public class MarshallerFamily {

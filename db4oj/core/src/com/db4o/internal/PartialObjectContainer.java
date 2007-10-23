@@ -19,7 +19,6 @@ import com.db4o.internal.slots.*;
 import com.db4o.query.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
-import com.db4o.replication.*;
 import com.db4o.types.*;
 
 
@@ -1423,41 +1422,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 		return renamedOne;
 	}
-
-    /**
-     * @deprecated see {@link ReplicationProcess}
-     */
-    public ReplicationProcess replicationBegin(ObjectContainer peerB, ReplicationConflictHandler conflictHandler) {
-        return new ReplicationImpl(_this, (ObjectContainerBase)peerB,conflictHandler);
-    }
-    
-    /**
-	 * @deprecated
-	 */
-    public final int oldReplicationHandles(Transaction trans, Object obj){
-        
-        // The double check on i_migrateFrom is necessary:
-        // i_handlers.i_replicateFrom may be set in YapObjectCarrier for parent
-		// YapStream
-        if(_replicationCallState != Const4.OLD){
-            return 0;
-        }
-        
-        if(_handlers.i_replication == null){
-            return 0;
-        }
-        
-        if(obj instanceof Internal4){
-            return 0;
-        }
-        
-        ObjectReference reference = trans.referenceForObject(obj);
-        if(reference != null  && handledInCurrentTopLevelCall(reference)){
-        	return reference.getID();
-        }
-        
-        return _handlers.i_replication.tryToHandle(_this, obj);        
-    }
     
     public final boolean handledInCurrentTopLevelCall(ObjectReference ref){
     	return ref.isFlaggedAsHandled(_topLevelCallId);
@@ -1507,15 +1471,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	checkReadOnly();
     	beginTopLevelSet();
     	try{
-	        int id = oldReplicationHandles(trans, obj); 
-	        if (id != 0){
-	        	completeTopLevelSet();
-	            if(id < 0){
-	                return 0;
-	            }
-	            return id;
-	        }
-	        id = setAfterReplication(trans, obj, depth, checkJustSet);
+	        int id = setAfterReplication(trans, obj, depth, checkJustSet);
 	        completeTopLevelSet();
 			return id;
     	} catch(Db4oException e) {

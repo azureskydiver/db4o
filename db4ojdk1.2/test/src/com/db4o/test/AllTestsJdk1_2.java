@@ -3,7 +3,6 @@
 package com.db4o.test;
 
 import com.db4o.test.nativequery.*;
-import com.db4o.test.replication.old.*;
 
 public class AllTestsJdk1_2 extends AllTests{
 	
@@ -18,7 +17,6 @@ public class AllTestsJdk1_2 extends AllTests{
     protected void addTestSuites(TestSuite suites) {
     	super.addTestSuites(suites);
     	suites.add(new Jdk1_2TestSuite());
-        suites.add(new ReplicationTestSuite());
         suites.add(new NativeQueryTestSuite());
 	}
 

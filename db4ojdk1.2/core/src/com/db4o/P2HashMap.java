@@ -334,35 +334,6 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
         }
         return null;
     }
-    
-    public void replicateFrom(Object obj) {
-        checkActive();
-        if(i_entries != null){
-            for (int i = 0; i < i_entries.length; i++) {
-                if(i_entries[i] != null){
-                    i_entries[i].delete(false);
-                }
-                i_entries[i] = null;
-            }
-        }
-        if(i_table != null){
-            for (int i = 0; i < i_table.length; i++) {
-                i_table[i] = null;
-            }
-        }
-        i_size = 0;
-        
-        P2HashMap m4 = (P2HashMap)obj;
-        m4.checkActive();
-        P2HashMapIterator i = new P2HashMapIterator(m4);
-        while (i.hasNext()) {
-            Object key = i.next();
-            put4(key, m4.get4(key));
-        }
-        
-        modified();
-    }
-
 
     private void reposition(P1HashElement a_entry) {
         if (a_entry != null) {
@@ -390,14 +361,7 @@ public class P2HashMap extends P1Collection implements Db4oMap, TransactionListe
             modified();
         } else {
             if (a_trans != getTrans()) {
-                return replicate(getTrans(), a_trans);
-                
-//              Test fix for replication duplication. Not a good idea.                
-                             
-//                             Object replicated =  asReplicated(getTrans(), a_trans);
-//                             if (replicated != null){
-//                                 return replicated;
-//                             }
+            	throw new NotImplementedException();
             }
         }
         return this;

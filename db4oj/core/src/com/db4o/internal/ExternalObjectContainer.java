@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.query.*;
+import com.db4o.replication.*;
 import com.db4o.types.*;
 
 
@@ -138,5 +139,16 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
         NotSupportedException;
     
     public abstract Db4oDatabase identity();
+    
+    /**
+     * @param peerB
+     * @param conflictHandler
+     * @deprecated
+     */
+    public ReplicationProcess replicationBegin(ObjectContainer peerB,
+        ReplicationConflictHandler conflictHandler) {
+        throw new NotSupportedException();
+    }
+
     
 }

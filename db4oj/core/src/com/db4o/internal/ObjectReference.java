@@ -13,6 +13,13 @@ import com.db4o.reflect.*;
 
 
 /**
+ * A weak reference to an known object.
+ * 
+ * "Known" ~ has been stored and/or retrieved within a transaction.
+ * 
+ * References the corresponding ClassMetaData along with further metadata:
+ * internal id, UUID/version information, ...
+ * 
  * @exclude
  */
 public class ObjectReference extends PersistentBase implements ObjectInfo, Activator {
