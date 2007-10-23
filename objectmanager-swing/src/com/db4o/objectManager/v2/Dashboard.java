@@ -30,7 +30,7 @@ public class Dashboard {
 
 	public static final String COPYRIGHT =
 			"\u00a9 2007 db4objects Inc. All Rights Reserved.";
-	public static final String VERSION = "6.4";
+	public static final String VERSION = getVersion();
 	public static final String TITLE = "ObjectManager " + VERSION;
 
 	private JFrame frame;
@@ -61,7 +61,21 @@ public class Dashboard {
 		instance.configureUI();
 		instance.buildInterface();
 	}
-
+	
+	private static String getVersion() {
+        URL url = Dashboard.class.getResource("Version");
+        if (url != null) {
+            try {
+                Properties props = new Properties();
+                props.load(url.openStream());
+                return (String) props.get("version");
+            } catch (IOException e) {
+                System.out.println("Could not get version of ObjectManager.");
+            }
+        }
+        return null;
+    }
+	
 	/**
 	 * Configures the UI; tries to set the system look on Mac,
 	 * <code>WindowsLookAndFeel</code> on general Windows, and
@@ -111,7 +125,7 @@ public class Dashboard {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
-
+	
 	/**
 	 * Locates the frame on the screen center.
 	 */
@@ -302,28 +316,13 @@ public class Dashboard {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			String buildNumber = getBuildNumber();
 			JOptionPane.showMessageDialog(
 					frame,
 					"db4o Object Manager\n" +
 							"Version: " + VERSION + "\n" +
-							"Build: " + buildNumber + "\n" +
 							COPYRIGHT + "\n\n");
 		}
 
-		private String getBuildNumber() {
-			URL url = Dashboard.class.getResource("build.number");
-			if (url != null) {
-				try {
-					Properties props = new Properties();
-					props.load(url.openStream());
-					return (String) props.get("build.number");
-				} catch (IOException e) {
-					System.out.println("Could not get build number.");
-				}
-			}
-			return null;
-		}
 	}
 
 	private static final class HelpActionListener implements ActionListener {

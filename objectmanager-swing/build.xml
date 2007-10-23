@@ -3,7 +3,7 @@
         ObjectManager build file
     </description>
 	<!-- set the appropriate db4o jar file to use -->
-    <property name="dir.workspace" value=".." />
+    <property name="dir.workspace" location=".." />
     <property file="${dir.workspace}/db4obuild/ant.properties" />
 	<import file="${dir.workspace}/db4obuild/common.xml" />
 	
@@ -27,7 +27,8 @@
 
     <target name="init" depends="properties">
     	<property name="db4o.version" value="${db4o.file}java5.jar"/>
-    	<property name="dist.version" value="objectmanager-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}"/>
+    	<property name="version.info" value="${db4o.version.dotted}.${db4o.iteration}.${svn.revision}" />
+    	<property name="dist.version" value="objectmanager-${version.info}"/>
     	<property name="om.jar" value="${dist.version}.jar" />
     	<property name="dist" location="${dist.root}/${dist.version}"/>
     	<property name="om-api.jar" value="objectmanager-api-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}.jar" />
@@ -35,7 +36,7 @@
         <!-- Create the time stamp -->
         <tstamp/>
         <!-- Create the build directory structure used by compile -->
-        <mkdir dir="${build}"/>
+    	<delete dir="${build.root}" />
         <delete dir="${dist.root}" />
         <delete dir="${lib}">
             <include name="db4o-*-java5.jar" />
@@ -44,14 +45,8 @@
     	<delete dir=".">
     		<include name="objectmanager-*.zip" />
     	</delete>
-        <copy todir="${lib}">
-        	<fileset dir="${dir.dist}/java/lib/">
-        		<include name="db4o-*-java5.jar" />
-        	</fileset>
-        </copy>
-
     </target>
-
+	
     <target name="compile" depends="init"
             description="compile the source ">
 		<!-- build dependencies -->
@@ -60,6 +55,7 @@
              target="dist"
              inheritAll="false">
 			<property name="om-api.jar" value="${om-api.jar}" />
+			<property name="svn.revision" value="${svn.revision}" />
 		</ant>
 		<!-- copy dependencies -->
 		<copy  todir="./lib/">
@@ -71,6 +67,7 @@
     		</fileset>
     	</copy>
         <!-- Compile from ${src} into ${build} -->
+    	<mkdir dir="${build}" />
         <javac srcdir="${src}" destdir="${build}"
 				debug="true" 
 				source="1.5" target="1.5">
@@ -91,8 +88,8 @@
 
         <mkdir dir="${dist}/lib"/>
 
-		<buildnumber/>
-		<copy file="build.number" todir="${build}/com/db4o/objectManager/v2"></copy>
+		<echo file="${build}/com/db4o/objectManager/v2/Version"
+    		message="version=${version.info}" />
 
 		<copy todir="${dist}/lib">
             <fileset dir="${lib}"/>
@@ -151,7 +148,7 @@
         <signjar jar="${wslib}/db4o-sql.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/forms-1.0.7.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/looks-2.0.4.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
-        <signjar jar="${wslib}/objectmanager-api-${db4o.version.dotted}.${svn.revision}.jar" 
+        <signjar jar="${wslib}/${om-api.jar}" 
         	alias="${alias}" storepass="secret" keystore="${keystore}"/>
         <signjar jar="${wslib}/objectmanager.jar" alias="${alias}" storepass="secret" keystore="${keystore}"/>
 
