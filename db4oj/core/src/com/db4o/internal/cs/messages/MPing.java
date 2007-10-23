@@ -2,20 +2,16 @@
 
 package com.db4o.internal.cs.messages;
 
-import com.db4o.internal.cs.*;
 
 
 /**
  * @exclude
  */
-public class MPing extends Msg implements ServerSideMessage, ClientSideMessage {
+public class MPing extends Msg implements ServerSideMessage {
 
 	public boolean processAtServer() {
+	    write(Msg.PONG);
 		return true;
 	}
 	
-	public boolean processAtClient() {
-	    ((ClientObjectContainer)stream()).writeMessageToSocket(Msg.PONG);
-		return true;
-	}
 }

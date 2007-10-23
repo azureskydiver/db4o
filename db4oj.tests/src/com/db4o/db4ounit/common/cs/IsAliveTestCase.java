@@ -2,8 +2,6 @@ package com.db4o.db4ounit.common.cs;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.cs.events.*;
-import com.db4o.events.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.cs.*;
 
@@ -29,12 +27,6 @@ public class IsAliveTestCase  implements TestLifeCycle {
 		ObjectServer server = openServer();
 		int port = server.ext().port();
 		ClientObjectContainer client = openClient(port);
-		ClientEventRegistryFactory.forClient(client).clientSocketReadTimeout().addListener(new EventListener4() {
-		    public void onEvent(Event4 e, EventArgs args) {
-		        CancellableEventArgs cancellableArgs = (CancellableEventArgs) args;
-		        cancellableArgs.cancel();
-		    }
-		});
 		server.close();
 		Assert.isFalse(client.isAlive());
 		client.close();

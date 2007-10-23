@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.cs.events.*;
 import com.db4o.internal.cs.messages.*;
 
 class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatcher {
@@ -53,14 +52,7 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 			try {
 				message = Msg.readMessage(this, transaction(), i_socket);
 			} catch (Db4oIOException exc) {
-			    if(!isMessageDispatcherAlive()){
-			        return;
-			    }
-			    if(! eventCallbacks().continueOnTimeout(transaction())){
-			        return;
-			    }
-			    // give other threads a chance
-			    Cool.sleepIgnoringInterruption(1);
+			    return;
             }
 			if(message == null){
 			    continue;
@@ -75,10 +67,6 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 			_messageQueue.add(message);
 			
 		}
-	}
-	
-	private ClientEventCallbacks eventCallbacks(){
-	    return i_stream.clientEventCallbacks();
 	}
 	
 	private boolean isClientSideMessage(Msg message) {

@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.cs;
 
-import com.db4o.cs.events.*;
-import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.internal.cs.*;
 
@@ -24,8 +22,6 @@ public class ClientDisconnectTestCase extends Db4oClientServerTestCase implement
         try {
             final ClientObjectContainer client1 = (ClientObjectContainer) oc1;
             final ClientObjectContainer client2 = (ClientObjectContainer) oc2;
-            closeOnTimeouts(client1);
-            closeOnTimeouts(client2);
             client1.socket().close();
             Assert.isFalse(oc1.isClosed());
             Assert.expect(Db4oException.class, new CodeBlock() {
@@ -43,14 +39,5 @@ public class ClientDisconnectTestCase extends Db4oClientServerTestCase implement
         }
     }
 
-    private void closeOnTimeouts(ClientObjectContainer client) {
-        ClientEventRegistryFactory.forClient(client).clientSocketReadTimeout().addListener(
-            new EventListener4() {
-                public void onEvent(Event4 e, EventArgs args) {
-                    CancellableEventArgs cancellableArgs = (CancellableEventArgs) args;
-                    cancellableArgs.cancel();
-                }
-            });
-    }
 
 }
