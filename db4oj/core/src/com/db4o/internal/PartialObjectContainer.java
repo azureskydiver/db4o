@@ -1491,17 +1491,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             }
         }
         
-        if (Deploy.debug) {
-            return set2(trans, obj, depth, checkJust);
-        }
-        
-        try {
-            return set2(trans, obj, depth, checkJust);
-        } catch (ObjectNotStorableException e) {
-            throw e;
-        } catch (Db4oException exc) {
-            throw exc;
-        } 
+        return set2(trans, obj, depth, checkJust);
     }
     
     public final void setByNewReplication(Db4oReplicationReferenceProvider referenceProvider, Object obj){
