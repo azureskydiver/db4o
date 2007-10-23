@@ -3,15 +3,20 @@ package com.db4o.db4ounit.jre12.blobs;
 import java.io.*;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.io.*;
 import com.db4o.types.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.util.*;
 
 public class BlobThreadCloseTestCase extends Db4oClientServerTestCase {
+
 	public static void main(String[] args) {
 		new BlobThreadCloseTestCase().runClientServer();
 	}
 
+	private static final String TEST_FILE = "test.db4o";
+	
 	private static class Data {
 		private Blob _blob;
 
@@ -25,14 +30,15 @@ public class BlobThreadCloseTestCase extends Db4oClientServerTestCase {
 	}
 
 	protected void db4oTearDownAfterClean() throws Exception {
-		new File("test.yap").delete();
+		File4.delete(TEST_FILE);
+		IOUtil.deleteDir("blobs");
 	}
 
 	public void test() throws Exception {
 		if (isEmbeddedClientServer()) {
 			return;
 		}
-		((ExtClient) db()).switchToFile("test.yap");
+		((ExtClient) db()).switchToFile(TEST_FILE);
 		store(new Data());
 //		((ExtClient) db()).switchToFile("test.yap");
 
