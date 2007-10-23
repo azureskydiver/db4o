@@ -12,7 +12,6 @@ import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.FixedActivationDepth;
 import com.db4o.internal.convert.*;
-import com.db4o.internal.cs.events.*;
 import com.db4o.internal.cs.messages.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.query.result.*;
@@ -60,14 +59,14 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	private boolean _login;
 	
-	private ClientEventCallbacks _clientEventCallbacks;
+	private final ClientHeartbeat _heartbeat;
 
 	public ClientObjectContainer(Configuration config,Socket4 socket, String user, String password, boolean login) {
 		super(config, null);
 		_userName = user;
 		_password = password;
 		_login = login;
-		_clientEventCallbacks = new NullClientEventCallbacks();
+		_heartbeat = new ClientHeartbeat(this);
 		setAndConfigSocket(socket);
 		open();
 	}
@@ -90,7 +89,12 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			startDispatcherThread(i_socket, _userName);
 		}
 		logMsg(36, toString());
+		startHeartBeat();
 		readThis();
+	}
+	
+	private void startHeartBeat(){
+	    _heartbeat.start();
 	}
 	
 	private void startDispatcherThread(Socket4 socket, String user) {
@@ -117,6 +121,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
     protected void close2() {
 		if ((!_singleThreaded) && (_messageDispatcher == null || !_messageDispatcher.isMessageDispatcherAlive())) {
+		    stopHeartBeat();
 			shutdownObjectContainer();
 			return;
 		}
@@ -131,9 +136,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			Exceptions4.catchAllExceptDb4oException(e);
 		}
 		
-		closeMessageDispatcher();
-		
-		_messageQueue.stop();
+		shutDownCommunicationRessources();
 		
 		try {
 			i_socket.close();
@@ -143,6 +146,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		
 		shutdownObjectContainer();
 	}
+    
+    private void stopHeartBeat(){
+        _heartbeat.stop();
+    }
     
     private void closeMessageDispatcher(){
         try {
@@ -331,12 +338,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 				}
 				return message;
 	         } catch (Db4oIOException exc) {
-	             if(!isMessageDispatcherAlive()){
-	                 onMsgError();
-	             }
-	             if(! clientEventCallbacks().continueOnTimeout(transaction())){
-	                 onMsgError();
-	             }
+	             onMsgError();
 	         }
 		}
 		return null;
@@ -415,7 +417,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	
 	private Msg readLoginMessage(Socket4 socket){
        Msg msg = Msg.readMessage(this, systemTransaction(), socket);
-       while(Msg.PING.equals(msg)){
+       while(Msg.PONG.equals(msg)){
            msg = Msg.readMessage(this, systemTransaction(), socket);
        }
        if (!Msg.LOGIN_OK.equals(msg)) {
@@ -797,18 +799,17 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	}
 
 	int timeout() {
-		return isEmbeddedClient()
-			// TODO: make CLIENT_EMBEDDED_TIMEOUT configurable
-			? Const4.CLIENT_EMBEDDED_TIMEOUT
-			: configImpl().timeoutClientSocket();
-	}
-
-	private boolean isEmbeddedClient() {
-		return i_socket instanceof LoopbackSocket;
+	    return configImpl().timeoutClientSocket();
 	}
 
 	protected void shutdownDataStorage() {
+	    shutDownCommunicationRessources();
+	}
+	
+	private void shutDownCommunicationRessources() {
+	    stopHeartBeat();
 	    closeMessageDispatcher();
+	    _messageQueue.stop();
 	}
 
 	public void setDispatcherName(String name) {
@@ -836,13 +837,5 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         MsgD response = (MsgD) expectedResponse(Msg.CLASS_ID);
         return response.readInt();
     }
-	
-	public ClientEventCallbacks clientEventCallbacks(){
-	    return _clientEventCallbacks;
-	}
-	
-	public void clientEventCallbacks( ClientEventCallbacks callbacks){
-	    _clientEventCallbacks = callbacks;
-	}
 	
 }

@@ -147,26 +147,11 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                     return;
                 }
             } catch (Db4oIOException e) {
-                if(isClosed()){
-                    return;
-                }
-                if(!pingSuccessful()){
-                    return;
-                }
+                return;
             }
         }
     }
     
-    private boolean isClosed(){
-        return ! isMessageDispatcherAlive() ||
-              _transactionHandle.isClosed() || 
-               _socket == null ;
-    }
-    
-    private boolean pingSuccessful(){
-        return write(Msg.PING);
-    }
-
     private boolean messageProcessor() throws Db4oIOException{
         Msg message = Msg.readMessage(this, getTransaction(), _socket);
         if(message == null){

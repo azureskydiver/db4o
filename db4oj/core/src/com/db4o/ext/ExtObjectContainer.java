@@ -211,6 +211,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * the ObjectContainer.<br><br> 
      * Handle the use of this functionality with extreme care,
      * since deadlocks can be produced with just two lines of code.
+     * @deprecated Use is not recommended. Use your own monitor objects instead.
      * @return Object the ObjectContainer lock object
      */
     public Object lock();

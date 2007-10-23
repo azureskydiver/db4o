@@ -102,9 +102,10 @@ public final class Const4
 
 	// Timings
 	public static final int LOCK_TIME_INTERVAL = 1000;
-	public static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 50000;  // jump out of the loop every 50 seconds
-	public static final int CLIENT_SOCKET_TIMEOUT = 300000;  // 5 minutes response time at the client side
-	public static final int CLIENT_EMBEDDED_TIMEOUT = 300000;
+	
+	// 10 minutes until clients are disconnected, (5 minutes until they get pinged) 
+	public static final int SERVER_SOCKET_TIMEOUT = Debug.longTimeOuts ? 1000000: 600000;    
+	public static final int CLIENT_SOCKET_TIMEOUT = SERVER_SOCKET_TIMEOUT;  
 		
 	// TODO: Consider to make configurable
     public static final int MAXIMUM_BLOCK_SIZE = 70000000; // 70 MB   

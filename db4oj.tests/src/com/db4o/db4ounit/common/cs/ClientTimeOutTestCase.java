@@ -4,8 +4,6 @@ package com.db4o.db4ounit.common.cs;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.cs.events.*;
-import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.messaging.*;
@@ -20,8 +18,8 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase implements O
     
     static boolean _clientWasBlocked;
     
-    static boolean _timeoutEventArrived;
-
+    TestMessageRecipient recipient = new TestMessageRecipient();
+    
 	public static void main(String[] args) {
 		new ClientTimeOutTestCase().runAll();
 	}
@@ -39,51 +37,40 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase implements O
 	protected void configure(Configuration config) {
 		config.clientServer().timeoutClientSocket(TIMEOUT);
 	}
+	
+	public void testKeptAliveClient(){
+	    Item item = new Item("one");
+        store(item);
+	    Cool.sleepIgnoringInterruption(TIMEOUT * 2);
+	    Assert.areSame(item, retrieveOnlyInstance(Item.class));
+	}
+	
 
-	TestMessageRecipient recipient = new TestMessageRecipient();
-
-	public void test() {
-	    
-	   ClientEventRegistryFactory.forClient(db()).clientSocketReadTimeout().addListener(new EventListener4() {
-            public void onEvent(Event4 e, EventArgs args) {
-                
-                // For this test we simply continue on all timeouts.
-                
-                _timeoutEventArrived = true;
-            }
-	   });
-       
+	public void testTimedoutAndClosedClient() {
        store(new Item("one"));
-
        clientServerFixture().server().ext().configure().clientServer()
 				.setMessageRecipient(recipient);
-
        final ExtObjectContainer client = clientServerFixture().db();
        MessageSender sender = client.configure().clientServer()
 				.getMessageSender();
-       
-       _timeoutEventArrived = false;
        _clientWasBlocked = false;
        sender.send(new Data());
-       
        long start = System.currentTimeMillis();
-       ObjectSet os = client.get(null);
+       Assert.expect(DatabaseClosedException.class, new CodeBlock() {
+           public void run() throws Throwable {
+               client.get(null);
+           }
+       });
        long stop = System.currentTimeMillis();
        long duration = stop - start;
-       
-       Assert.isGreater(TIMEOUT, duration);
-       
-       Assert.isGreater(0, os.size());
-       
+       Assert.isGreaterOrEqual(TIMEOUT / 2, duration);
        Assert.isTrue(_clientWasBlocked);
-       Assert.isTrue(_timeoutEventArrived);
-       
 	}
 
 	public static class TestMessageRecipient implements MessageRecipient {
 		public void processMessage(ObjectContainer con, Object message) {
-			Cool.sleepIgnoringInterruption(1500);
-			_clientWasBlocked = true;
+            _clientWasBlocked = true;
+			Cool.sleepIgnoringInterruption(TIMEOUT * 3);
 		}
 	}
 

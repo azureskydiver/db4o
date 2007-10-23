@@ -6,9 +6,9 @@ package com.db4o.internal.cs.messages;
 /**
  * @exclude
  */
-public class MPong extends Msg implements ServerSideMessage {
+public class MPong extends Msg implements ClientSideMessage {
 
-	public boolean processAtServer() {
+	public boolean processAtClient() {
 		return true;
 	}
 
