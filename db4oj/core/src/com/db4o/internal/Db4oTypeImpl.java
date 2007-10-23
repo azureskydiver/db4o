@@ -17,8 +17,6 @@ public interface Db4oTypeImpl extends TransactionAware {
 	Object createDefault(Transaction trans);
 	
 	boolean hasClassIndex();
-    
-    void replicateFrom(Object obj);
 	
 	void setObjectReference(ObjectReference ref);
 	

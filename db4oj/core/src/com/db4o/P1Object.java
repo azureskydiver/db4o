@@ -5,7 +5,6 @@ package com.db4o;
 import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
-import com.db4o.internal.replication.*;
 
 /**
  * base class for all database aware objects
@@ -105,55 +104,7 @@ public class P1Object implements Db4oTypeImpl{
     
     public void preDeactivate(){
         // virtual, do nothing
-    }
-	
-    /**
-	 * @deprecated
-	 */
-    protected Object replicate(Transaction fromTrans, Transaction toTrans) {
-        
-        ObjectContainerBase fromStream = fromTrans.container();
-        ObjectContainerBase toStream = toTrans.container();
-        
-        MigrationConnection mgc = fromStream._handlers.migrationConnection();
-        
-        synchronized(fromStream.lock()){
-            
-    		int id = toStream.oldReplicationHandles(toTrans, this);
-            
-            if(id == -1){
-                // no action to be taken, already handled
-                return this;
-            }
-            
-    		if(id > 0) {
-                // replication has taken care, we need that object
-    			return toStream.getByID(toTrans, id);
-    		}
-            
-            if(mgc != null){
-                Object otherObj = mgc.identityFor(this);
-                if(otherObj != null){
-                    return otherObj;
-                }
-            }
-            
-            P1Object replica = (P1Object)createDefault(toTrans);
-            
-            if(mgc != null){
-                mgc.mapReference(replica, i_yapObject);
-                mgc.mapIdentity(this, replica);
-            }
-			
-            replica.store(0);
-			
-            return replica;
-        }
-	}
-    
-    public void replicateFrom(Object obj) {
-        // do nothing
-    }
+    }	
 
     public void setTrans(Transaction a_trans){
         i_trans = a_trans;

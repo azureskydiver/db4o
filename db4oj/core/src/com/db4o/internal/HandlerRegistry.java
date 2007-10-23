@@ -59,11 +59,6 @@ public final class HandlerRegistry {
     
     private SharedIndexedFields              		_indexes;
     
-    /**
-	 * @deprecated
-	 */
-    ReplicationImpl				    i_replication;
-    
     MigrationConnection             i_migration;
     
     Db4oReplicationReferenceProvider _replicationReferenceProvider;
@@ -506,20 +501,6 @@ public final class HandlerRegistry {
 	
 	public MigrationConnection  migrationConnection() {
 		return i_migration;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void replication(ReplicationImpl impl) {
-		i_replication = impl;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	public ReplicationImpl replication(){
-		return i_replication;
 	}
 
 	public VirtualFieldMetadata virtualFieldByName(String name) {

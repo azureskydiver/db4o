@@ -7,6 +7,8 @@ import com.db4o.internal.activation.*;
 
 
 /**
+ * Wraps the low-level details of reading a Buffer, which in turn is a glorified byte array.
+ * 
  * @exclude
  */
 public class UnmarshallingContext extends AbstractReadContext implements FieldListInfo, MarshallingInfo{

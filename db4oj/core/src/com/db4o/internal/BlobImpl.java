@@ -235,10 +235,6 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         }
     }
     
-    public void replicateFrom(Object obj) {
-        // do nothing
-    }
-    
     public Object storedTo(Transaction a_trans){
         return this;
     }
