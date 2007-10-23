@@ -391,6 +391,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
         _client1.close();
         _client2.close();
         _server.close();
+        File4.delete(FILENAME);
     }
     
 }
