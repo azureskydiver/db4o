@@ -2,15 +2,12 @@
 
 package com.db4o.db4ounit.jre12.regression;
 
-import java.io.File;
+import java.io.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.internal.Config4Impl;
+import com.db4o.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
 public class COR52TestCase implements TestCase {
 	
@@ -32,8 +29,8 @@ public class COR52TestCase implements TestCase {
 			oc.close();
 		} finally {
 			Db4o.configure().activationDepth(originalActivationDepth);
-			new File(TEST_FILE).delete();
 			server.close();
+			new File(TEST_FILE).delete();
 		}
 
 	}
