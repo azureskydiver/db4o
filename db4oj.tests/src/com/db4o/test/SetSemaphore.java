@@ -38,6 +38,8 @@ public class SetSemaphore {
             for (int i = 0; i < threads.length; i++) {
             	threads[i].join();
 			}
+            
+            Cool.sleepIgnoringInterruption(50);
 
             Test.ensure(clients[0].setSemaphore("hi", 0));
             clients[0].close();
