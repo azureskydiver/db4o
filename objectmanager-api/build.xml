@@ -3,7 +3,7 @@
         ObjectManager build file
     </description>
     <!-- set global properties for this build -->
-    <property name="dir.workspace" value=".." />
+    <property name="dir.workspace" location=".." />
     <property file="${dir.workspace}/db4obuild/ant.properties" />
 	<import file="${dir.workspace}/db4obuild/common.xml" />
     
@@ -20,25 +20,29 @@
     </path>
 
     <target name="init" depends="properties">
+    	<echo message="${dir.workspace}" />
     	<property name="om-api.jar" value="objectmanager-api-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}.jar" />
         <!-- Create the time stamp -->
         <tstamp/>
         <!-- Create the build directory structure used by compile -->
-        <mkdir dir="${build}"/>
+        <delete dir="${build.root}"/>
         <delete dir="${dist}" />
         <delete dir="${lib}">
             <include name="db4o-*.jar" />
         </delete>
-        <copy todir="${lib}">
-        	<fileset dir="${dir.dist}/java/lib/">
-        		<include name="db4o-*-java5.jar" />
-        	</fileset>
-        </copy>
     </target>
+	
+	<target name="build.db4o.core">
+		<ant antfile="${dir.workspace}/db4obuild/build-java.xml" target="build.db4ojdk5">
+			<property name="svn.revision" value="${svn.revision}" />
+		</ant>
+        <copy todir="${lib}" file="${file.java5.jar}" />
+	</target>
 
-    <target name="compile" depends="init"
+    <target name="compile" depends="init, build.db4o.core"
             description="compile the source ">
         <!-- Compile the java code from ${src} into ${build} -->
+    	<mkdir dir="${build}" />
         <javac srcdir="${src}" destdir="${build}"
 				source="1.5" target="1.5">
             <classpath refid="class.path"/>
