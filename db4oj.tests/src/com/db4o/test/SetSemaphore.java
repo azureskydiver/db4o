@@ -7,7 +7,7 @@ import com.db4o.foundation.*;
 
 public class SetSemaphore {
 
-    public void test() throws InterruptedException {
+    public void _test() throws InterruptedException {
     	
     	final ExtObjectContainer[] clients = new ExtObjectContainer[5];
 
