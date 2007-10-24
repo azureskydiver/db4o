@@ -2,6 +2,7 @@
 package com.db4o.db4ounit.common.ta.config;
 
 import com.db4o.db4ounit.common.ta.*;
+import com.db4o.internal.activation.*;
 
 import db4ounit.*;
 
@@ -12,6 +13,6 @@ public class TransparentActivationSupportTestCase extends TransparentActivationT
 	}
 	
 	public void testActivationDepth() {
-		Assert.areEqual(0, db().configure().activationDepth());
+		Assert.isInstanceOf(TransparentActivationDepthProvider.class, stream().configImpl().activationDepthProvider());
 	}
 }
