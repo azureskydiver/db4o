@@ -7,7 +7,7 @@ import java.util.*;
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
-public class NonTADateTestCase extends NonTATestCaseBase implements OptOutCS {
+public class NonTADateTestCase extends NonTAItemTestCaseBase implements OptOutCS {
 
     public static Date first = new Date(1195401600000L);
 
@@ -15,13 +15,13 @@ public class NonTADateTestCase extends NonTATestCaseBase implements OptOutCS {
         new NonTADateTestCase().runAll();
     }
 
-    protected void assertValue(Object obj) {
+    protected void assertItemValue(Object obj) {
         DateItem item = (DateItem) obj;
         Assert.areEqual(first, item._untyped);
         Assert.areEqual(first, item._typed);
     }
 
-    protected Object createValue() {
+    protected Object createItem() {
         DateItem item = new DateItem();
         item._typed = first;
         item._untyped = first;

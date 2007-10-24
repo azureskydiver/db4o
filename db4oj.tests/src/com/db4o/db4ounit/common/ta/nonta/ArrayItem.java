@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.ta.nonta;
 
+import com.db4o.db4ounit.common.ta.*;
+
 
 public class ArrayItem  {
 		

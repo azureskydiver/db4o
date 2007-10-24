@@ -8,20 +8,20 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-public class NonTAIntTestCase extends NonTATestCaseBase implements OptOutCS{
+public class NonTAIntTestCase extends NonTAItemTestCaseBase implements OptOutCS{
 
 	public static void main(String[] args) {
 		new NonTAIntTestCase().runAll();
 	}
 
-    protected void assertValue(Object obj) {
+    protected void assertItemValue(Object obj) {
         IntItem item = (IntItem) obj;
         Assert.areEqual(42, item.value());
         Assert.areEqual(new Integer(1), item.integerValue());
         Assert.areEqual(new Integer(2), item.object());
     }
 
-    protected Object createValue() {
+    protected Object createItem() {
         IntItem item = new IntItem();
         item.value = 42;
         item.i = new Integer(1);

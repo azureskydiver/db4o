@@ -1,6 +1,6 @@
 /* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.db4ounit.common.ta;
+package com.db4o.db4ounit.common.ta.ta;
 
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
@@ -8,29 +8,29 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-public class TAIntTestCase extends TransparentActivationTestCaseBase implements OptOutCS{
+public class TAIntTestCase extends TAItemTestCaseBase implements OptOutCS{
 
 	public static void main(String[] args) {
 		new TAIntTestCase().runAll();
 	}
 
-	protected void store() throws Exception {
+	protected Object createItem() throws Exception {
 		TAIntItem item = new TAIntItem();
 		item.value = 42;
 		item.i = new Integer(1);
 		item.obj = new Integer(2);
-		store(item);
+		return item;
 	}
 
-	public void test() throws Exception {
-		TAIntItem item = (TAIntItem) retrieveOnlyInstance(TAIntItem.class);
-		asertNullItem(item);
+	protected void assertItemValue(Object obj) throws Exception {
+		TAIntItem item = (TAIntItem) obj;
 		Assert.areEqual(42, item.value());
 		Assert.areEqual(new Integer(1), item.integerValue());
 		Assert.areEqual(new Integer(2), item.object());
 	}
 
-	private void asertNullItem(TAIntItem item) {
+	protected void assertRetrievedItem(Object obj) {
+		TAIntItem item = (TAIntItem) obj;
 		Assert.areEqual(0, item.value);
 		isPrimitiveNull(item.i);
 		Assert.isNull(item.obj);

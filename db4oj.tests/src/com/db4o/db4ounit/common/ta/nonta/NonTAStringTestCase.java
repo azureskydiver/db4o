@@ -8,19 +8,19 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-public class NonTAStringTestCase extends NonTATestCaseBase implements OptOutCS{
+public class NonTAStringTestCase extends NonTAItemTestCaseBase implements OptOutCS{
 
 	public static void main(String[] args) {
 		new NonTAStringTestCase().runAll();
 	}
 
-    protected void assertValue(Object obj) {
+    protected void assertItemValue(Object obj) {
         StringItem item = (StringItem) obj;
         Assert.areEqual("42", item.value());
         Assert.areEqual("hello", item.object());
     }
 
-    protected Object createValue() {
+    protected Object createItem() {
         StringItem item = new StringItem();
         item.value = "42";
         item.obj = "hello";

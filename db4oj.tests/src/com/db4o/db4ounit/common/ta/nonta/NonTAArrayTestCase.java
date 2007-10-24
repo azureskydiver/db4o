@@ -2,13 +2,15 @@
 
 package com.db4o.db4ounit.common.ta.nonta;
 
+import com.db4o.db4ounit.common.ta.*;
+
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
  */
-public class NonTAArrayTestCase extends NonTATestCaseBase implements OptOutCS{
+public class NonTAArrayTestCase extends NonTAItemTestCaseBase implements OptOutCS{
 	
 	private static final int[] INTS1 = new int[] {1,2,3};
 	
@@ -22,7 +24,7 @@ public class NonTAArrayTestCase extends NonTATestCaseBase implements OptOutCS{
 		new NonTAArrayTestCase().runAll();
 	}
 
-    protected void assertValue(Object obj) {
+    protected void assertItemValue(Object obj) {
         ArrayItem item = (ArrayItem) obj;
         ArrayAssert.areEqual(INTS1, item.value());
         ArrayAssert.areEqual(INTS2, (int[])item.object());
@@ -30,7 +32,7 @@ public class NonTAArrayTestCase extends NonTATestCaseBase implements OptOutCS{
         ArrayAssert.areEqual(LIST2, (LinkedList[]) item.listsObject());
     }
 
-    protected Object createValue() {
+    protected Object createItem() {
         ArrayItem item = new ArrayItem();
         item.value = INTS1;
         item.obj = INTS2;
