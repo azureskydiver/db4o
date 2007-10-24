@@ -1,6 +1,8 @@
-package com.db4o.db4ounit.common.ta;
+package com.db4o.db4ounit.common.ta.ta;
 
 import java.util.*;
+
+import com.db4o.db4ounit.common.ta.*;
 
 public class TADateItem extends ActivatableImpl {
 

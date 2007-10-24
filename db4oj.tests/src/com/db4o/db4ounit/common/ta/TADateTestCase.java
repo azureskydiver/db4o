@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.ta;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.db4ounit.common.ta.ta.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.query.*;
 
