@@ -855,17 +855,17 @@ public class CodeArray implements InstructionVisitor, Opcode {
 			stackHeight += 2;
 
 		} else if (operand instanceof String) {
-			createStringLDC((String) operand);
+			int index = constants.addConstant(Constant.STRING, operand);
+			createLDC(index);
 		} else if (operand instanceof Type) {
-			createStringLDC(((Type)operand).className());
+			int index = constants.addConstant(Constant.CLASS, operand);
+			createLDC(index);
 		} else {
-			System.err.println(operand.getClass());
 			throw new RuntimeException();
 		}
 	}
 
-	private void createStringLDC(String str) {
-		final int index = constants.addConstant(Constant.STRING, str);
+	private void createLDC(int index) {
 
 		if (index < 256) {
 			addOpcode(Opcode.opc_ldc);

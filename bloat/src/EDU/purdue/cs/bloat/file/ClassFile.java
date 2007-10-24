@@ -60,6 +60,10 @@ public class ClassFile implements ClassInfo {
 
 	private File file; // (.class) File in which this class resides
 
+	private int major = 45;
+
+	private int minor = 3;
+
 	/**
 	 * Constructor. This constructor parses the class file from the input
 	 * stream.
@@ -407,8 +411,8 @@ public class ClassFile implements ClassInfo {
 	 */
 	private void writeHeader(final DataOutputStream out) throws IOException {
 		out.writeInt(0xCAFEBABE);
-		out.writeShort(3);
-		out.writeShort(45);
+		out.writeShort(major);
+		out.writeShort(minor);
 	}
 
 	/**
@@ -650,8 +654,8 @@ public class ClassFile implements ClassInfo {
 			throw new ClassFormatError("Bad magic number.");
 		}
 
-		in.readUnsignedShort(); // major
-		in.readUnsignedShort(); // minor
+		this.major = in.readUnsignedShort(); // major
+		this.minor = in.readUnsignedShort(); // minor
 	}
 
 	/**
