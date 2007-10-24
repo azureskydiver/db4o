@@ -22,6 +22,8 @@ public interface Db4oCollections {
      * myObject.myList = objectContainer.ext().collections().newLinkedList();</pre></code><br><br>
      * @return {@link Db4oList}
      * @see Db4oList
+     * @deprecated Use of old internal collections is discouraged. Please use 
+     * com.db4o.collections.ArrayList4 and com.db4o.collections.ArrayMap4 instead.
      */
     public Db4oList newLinkedList();
     
@@ -47,6 +49,8 @@ public interface Db4oCollections {
      * @param initialSize the initial size of the HashMap
      * @return {@link Db4oMap}
      * @see Db4oMap
+     * @deprecated Use of old internal collections is discouraged. Please use 
+     * com.db4o.collections.ArrayList4 and com.db4o.collections.ArrayMap4 instead.
      */
     public Db4oMap newHashMap(int initialSize);
     
@@ -72,6 +76,8 @@ public interface Db4oCollections {
      * @param initialSize the initial size of the HashMap
      * @return {@link Db4oMap}
      * @see Db4oMap
+     * @deprecated Use of old internal collections is discouraged. Please use 
+     * com.db4o.collections.ArrayList4 and com.db4o.collections.ArrayMap4 instead.
      */
     public Db4oMap newIdentityHashMap(int initialSize);
     
