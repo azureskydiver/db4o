@@ -5,12 +5,12 @@ package com.db4o.db4ounit.common.ta.ta;
 import com.db4o.db4ounit.common.ta.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
  */
-public class TALinkedListTestCase extends TAItemTestCaseBase implements OptOutCS{
+public class TALinkedListTestCase extends TAItemTestCaseBase {
+    
 	private static final LinkedList LIST = LinkedList.newList(10);
 
 	public static void main(String[] args) {

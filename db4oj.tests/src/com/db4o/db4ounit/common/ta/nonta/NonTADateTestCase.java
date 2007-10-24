@@ -5,9 +5,8 @@ package com.db4o.db4ounit.common.ta.nonta;
 import java.util.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
-public class NonTADateTestCase extends NonTAItemTestCaseBase implements OptOutCS {
+public class NonTADateTestCase extends NonTAItemTestCaseBase {
 
     public static Date first = new Date(1195401600000L);
 
