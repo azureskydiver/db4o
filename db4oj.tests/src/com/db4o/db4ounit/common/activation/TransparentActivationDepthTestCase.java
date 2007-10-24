@@ -1,6 +1,7 @@
 package com.db4o.db4ounit.common.activation;
 
 import com.db4o.activation.*;
+import com.db4o.config.*;
 import com.db4o.internal.activation.*;
 import com.db4o.ta.*;
 
@@ -20,18 +21,22 @@ public class TransparentActivationDepthTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
+	protected void configure(Configuration config) throws Exception {
+		// configured depth should be ignored by ta provider
+		config.objectClass(TAAware.class).minimumActivationDepth(42);
+		config.objectClass(NonTAAware.class).minimumActivationDepth(42);
+	}
+	
 	protected void store() throws Exception {
 		store(new TAAware());
 		store(new NonTAAware());
 	}
 	
-	public void testDescendingFromNonTAAwareToTAAware() {
-		
+	public void testDescendingFromNonTAAwareToTAAware() {		
 		ActivationDepth depth = nonTAAwareDepth();
 		
 		ActivationDepth child = depth.descend(classMetadataFor(TAAware.class));
 		Assert.isFalse(child.requiresActivation());
-		
 	}
 
 	public void testDefaultActivationNonTAAware() {
@@ -41,18 +46,37 @@ public class TransparentActivationDepthTestCase extends AbstractDb4oTestCase {
 		ActivationDepth child = depth.descend(classMetadataFor(NonTAAware.class));
 		Assert.isTrue(child.requiresActivation());
 	}
+	
+	public void testDefaultActivationTAAware() {
+		ActivationDepth depth = TAAwareDepth();
+		Assert.isFalse(depth.requiresActivation());
+	}
+	
+	public void testSpecificActivationDepth() {
+		ActivationDepth depth = provider().activationDepth(3, ActivationMode.ACTIVATE);
+		assertDescendingDepth(3, depth, TAAware.class);
+		assertDescendingDepth(3, depth, NonTAAware.class);
+	}	
+
+	private void assertDescendingDepth(int expectedDepth, ActivationDepth depth, Class clazz) {
+		if (expectedDepth < 1) {
+			Assert.isFalse(depth.requiresActivation());
+			return;
+		}
+		Assert.isTrue(depth.requiresActivation());
+		assertDescendingDepth(expectedDepth-1, depth.descend(classMetadataFor(clazz)), clazz);
+	}
 
 	private ActivationDepth nonTAAwareDepth() {
 		return transparentActivationDepthFor(NonTAAware.class);
 	}
 	
 	private ActivationDepth transparentActivationDepthFor(Class clazz) {
-		return new TransparentActivationDepthProvider().activationDepthFor(classMetadataFor(clazz), ActivationMode.ACTIVATE);
+		return provider().activationDepthFor(classMetadataFor(clazz), ActivationMode.ACTIVATE);
 	}
 
-	public void testDefaultActivationTAAware() {
-		ActivationDepth depth = TAAwareDepth();
-		Assert.isFalse(depth.requiresActivation());
+	private TransparentActivationDepthProvider provider() {
+		return new TransparentActivationDepthProvider();
 	}
 
 	private ActivationDepth TAAwareDepth() {
