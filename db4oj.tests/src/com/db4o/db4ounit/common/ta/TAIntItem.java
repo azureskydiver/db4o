@@ -10,8 +10,6 @@ public class TAIntItem extends ActivatableImpl {
 		
 		public Integer i;
 
-		public LinkedList list;
-
 		public TAIntItem() {
 
 		}
@@ -30,9 +28,5 @@ public class TAIntItem extends ActivatableImpl {
 			activate();
 			return obj;
 		}
-		
-		public LinkedList list() {
-			activate();
-			return list;
-		}
+	
 	}

@@ -11,7 +11,7 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
-public class DateTransparentActivationTestCase extends
+public class TADateTestCase extends
         TransparentActivationTestCaseBase implements OptOutCS {
 
 	/**
@@ -20,7 +20,7 @@ public class DateTransparentActivationTestCase extends
     public static Date first = new Date(107, 10, 19);
 
     public static void main(String[] args) {
-        new DateTransparentActivationTestCase().runAll();
+        new TADateTestCase().runAll();
     }
 
     protected void store() throws Exception {
