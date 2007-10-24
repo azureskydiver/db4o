@@ -1,10 +1,11 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta;
 
-import com.db4o.activation.Activator;
+import com.db4o.activation.*;
 import com.db4o.config.*;
 import com.db4o.events.*;
 import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.reflect.*;
 
@@ -15,7 +16,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	}
 
 	public void apply(final InternalObjectContainer container) {
-		container.configure().activationDepth(0);
+		container.configImpl().activationDepthProvider(new TransparentActivationDepthProvider());
 
 		EventRegistry factory = EventRegistryFactory
 				.forObjectContainer(container);

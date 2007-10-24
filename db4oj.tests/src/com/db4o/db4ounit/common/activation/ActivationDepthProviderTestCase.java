@@ -4,7 +4,8 @@ package com.db4o.db4ounit.common.activation;
 
 import com.db4o.config.Configuration;
 import com.db4o.db4ounit.common.foundation.Iterator4Assert;
-import com.db4o.internal.Config4Impl;
+import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
 
 import db4ounit.extensions.AbstractDb4oTestCase;
 
@@ -27,10 +28,34 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 		store(new Item());
 	}
 	
-	public void testDefaultActivationDepth() {
+	public void testCSActivationDepthFor() {
+		if (!isNetworkCS()) {
+			return;
+		}
+		
 		resetProvider();
 		queryItem();
-		assertProviderCalled("activationDepthFor", classMetadataFor(Item.class));
+		assertProviderCalled(new MethodCall[] {
+			new MethodCall("activationDepthFor", itemMetadata(), ActivationMode.PREFETCH),
+			new MethodCall("activationDepthFor", itemMetadata(), ActivationMode.ACTIVATE),
+		});
+	}
+	
+	public void testSoloActivationDepthFor() {
+		if (isNetworkCS()) {
+			return;
+		}
+		resetProvider();
+		queryItem();
+		assertProviderCalled("activationDepthFor", itemMetadata(), ActivationMode.ACTIVATE);
+	}
+
+	private boolean isNetworkCS() {
+		return isClientServer() && !isMTOC();
+	}
+
+	private ClassMetadata itemMetadata() {
+		return classMetadataFor(Item.class);
 	}
 
 	public void testSpecificActivationDepth() {
@@ -44,8 +69,20 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 	}
 	
 	private void assertProviderCalled(String methodName, Object arg) {
+		assertProviderCalled(new MethodCall[] {
+			new MethodCall(methodName, arg)
+		});
+	}
+
+	private void assertProviderCalled(MethodCall[] expectedCalls) {
 		Iterator4Assert.areEqual(
-			new Object[] { new MethodCall(methodName, arg) },
+			expectedCalls,
+			_dummyProvider.iterator());
+	}
+	
+	private void assertProviderCalled(String methodName, Object arg1, Object arg2) {
+		Iterator4Assert.areEqual(
+			new Object[] { new MethodCall(methodName, arg1, arg2) },
 			_dummyProvider.iterator());
 	}
 

@@ -56,7 +56,8 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     		if (isActive()) {
     			return;
     		}
-    		activate(container().transaction(), getObject(), new TransparentActivationDepth(), false);
+    		TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container().activationDepthProvider();
+    		activate(container().transaction(), getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE), false);
 	    }
 	}
 
@@ -185,20 +186,13 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
     
     public ObjectContainerBase container(){
         if(_class == null){
-            return null;
+            throw new IllegalStateException();
         }
         return _class.container();
     }
     
-    // this method will only work client-side or on
-    // single ObjectContainers, after the YapClass
-    // is set.
     public Transaction transaction(){
-        ObjectContainerBase container = container();
-        if(container != null){
-            return container.transaction();
-        }
-        return null;
+        return container().transaction();
     }
     
     public Db4oUUID getUUID(){

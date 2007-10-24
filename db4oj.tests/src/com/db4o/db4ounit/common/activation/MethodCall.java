@@ -1,6 +1,9 @@
 package com.db4o.db4ounit.common.activation;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
+import com.db4o.internal.activation.*;
+
 import db4ounit.*;
 
 public class MethodCall {
@@ -16,6 +19,10 @@ public class MethodCall {
 		this(methodName, new Object[] { singleArg });
 	}
 	
+	public MethodCall(String methodName, Object arg1, Object arg2) {
+		this(methodName, new Object[] { arg1, arg2 });
+	}
+
 	public String toString() {
 		return methodName + "(" + Iterators.join(Iterators.iterate(args), ", ") + ")";
 	}
