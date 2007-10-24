@@ -7,8 +7,8 @@ import com.db4o.ta.*;
 public class TransparentActivationDepthProvider implements
 		ActivationDepthProvider {
 
-	public ActivationDepth activationDepth(int depth) {
-		return null;
+	public ActivationDepth activationDepth(int depth, ActivationMode mode) {
+		return new LegacyActivationDepth(depth, mode);
 	}
 
 	public ActivationDepth activationDepthFor(ClassMetadata classMetadata, ActivationMode mode) {

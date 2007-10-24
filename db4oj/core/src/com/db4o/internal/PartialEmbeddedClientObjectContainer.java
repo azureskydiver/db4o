@@ -166,7 +166,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public Object peekPersisted(Object object, int depth, boolean committed) {
         synchronized(lock()){
             checkClosed();
-            return _server.peekPersisted(_transaction, object, new LegacyActivationDepth(depth, ActivationMode.PEEK), committed);
+            return _server.peekPersisted(_transaction, object, activationDepthProvider().activationDepth(depth, ActivationMode.PEEK), committed);
         }
     }
 
@@ -260,7 +260,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public void activate(Object obj, int depth) throws Db4oIOException, DatabaseClosedException {
         synchronized(lock()){
             checkClosed();
-            _server.activate(_transaction, obj, activationDepthProvider().activationDepth(depth));
+            _server.activate(_transaction, obj, activationDepthProvider().activationDepth(depth, ActivationMode.ACTIVATE));
         }
     }
 

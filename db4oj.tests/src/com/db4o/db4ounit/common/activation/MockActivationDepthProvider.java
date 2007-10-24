@@ -20,8 +20,8 @@ public class MockActivationDepthProvider extends MethodCallRecorder implements A
 		return _delegate.activationDepthFor(classMetadata, mode);
 	}
 
-	public ActivationDepth activationDepth(int depth) {
-		record(new MethodCall("activationDepth", new Integer(depth)));
-		return _delegate.activationDepth(depth);
+	public ActivationDepth activationDepth(int depth, ActivationMode mode) {
+		record(new MethodCall("activationDepth", new Integer(depth), mode));
+		return _delegate.activationDepth(depth, mode);
 	}
 }

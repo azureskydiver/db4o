@@ -1308,7 +1308,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             if (obj != null) {
 
             	// FIXME: [TA] review activation depth 
-                candidates.i_trans.container().activate(trans, obj, new LegacyActivationDepth(2));
+                candidates.i_trans.container().activate(trans, obj, activationDepthProvider().activationDepth(2, ActivationMode.ACTIVATE));
                 Platform4.forEachCollectionElement(obj, new Visitor4() {
                     public void visit(Object elem) {
                         candidates.addByIdentity(new QCandidate(candidates, elem, trans.container().getID(trans, elem), true));
@@ -1319,7 +1319,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
 
-    public final int readFieldCount(Buffer buffer) {
+    private ActivationDepthProvider activationDepthProvider() {
+    	return stream().activationDepthProvider();
+	}
+
+	public final int readFieldCount(Buffer buffer) {
         int count = buffer.readInt();
         if (count > i_fields.length) {
             if (Debug.atHome) {

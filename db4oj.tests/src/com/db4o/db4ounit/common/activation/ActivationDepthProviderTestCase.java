@@ -65,15 +65,9 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 		
 		db().activate(item, 3);
 		
-		assertProviderCalled("activationDepth", new Integer(3));
+		assertProviderCalled("activationDepth", new Integer(3), ActivationMode.ACTIVATE);
 	}
 	
-	private void assertProviderCalled(String methodName, Object arg) {
-		assertProviderCalled(new MethodCall[] {
-			new MethodCall(methodName, arg)
-		});
-	}
-
 	private void assertProviderCalled(MethodCall[] expectedCalls) {
 		Iterator4Assert.areEqual(
 			expectedCalls,

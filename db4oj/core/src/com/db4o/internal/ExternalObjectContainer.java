@@ -22,7 +22,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
     }
     
     public final void activate(Object obj, int depth) throws DatabaseClosedException {
-        activate(null, obj, activationDepthProvider().activationDepth(depth));
+        activate(null, obj, activationDepthProvider().activationDepth(depth, ActivationMode.ACTIVATE));
     }
     
     public final void bind(Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
@@ -86,7 +86,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
     }
 
     public final Object peekPersisted(Object obj, int depth, boolean committed) throws DatabaseClosedException {
-        return peekPersisted(null, obj, new LegacyActivationDepth(depth, ActivationMode.PEEK), committed);
+        return peekPersisted(null, obj, activationDepthProvider().activationDepth(depth, ActivationMode.PEEK), committed);
     }
 
     public final void purge(Object obj) {
