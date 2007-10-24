@@ -12,23 +12,6 @@ public class TADateItem extends ActivatableImpl {
 
     public Object _untyped;
 
-    public TADateItem _next;
-
-    public TADateItem(Date date) {
-        this._typed = date;
-        this._untyped = date;
-    }
-
-    public static TADateItem itemList(Date date, int depth) {
-        if (depth == 0) {
-            return null;
-        }
-        TADateItem header = new TADateItem(date);
-        header._next = itemList(new Date(date.getTime() + (depth - 1) * DAY),
-                depth - 1);
-        return header;
-    }
-
     public Date getTyped() {
         activate();
         return _typed;
@@ -39,12 +22,8 @@ public class TADateItem extends ActivatableImpl {
         return _untyped;
     }
 
-    public TADateItem next() {
-        activate();
-        return _next;
-    }
-
     public String toString() {
-        return _typed + "[" + (_next == null ? null : "next") + "]";
+        activate();
+        return _typed.toString();
     }
 }
