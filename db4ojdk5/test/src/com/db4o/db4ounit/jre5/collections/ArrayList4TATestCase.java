@@ -9,7 +9,7 @@ package com.db4o.db4ounit.jre5.collections;
 public class ArrayList4TATestCase extends ArrayList4TATestCaseBase {
 
 	public static void main(String[] args) {
-		new ArrayList4TATestCase().runSolo();
+		new ArrayList4TATestCase().runAll();
 	}
 
 
