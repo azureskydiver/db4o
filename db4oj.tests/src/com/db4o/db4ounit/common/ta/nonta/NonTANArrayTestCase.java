@@ -40,8 +40,4 @@ public class NonTANArrayTestCase extends NonTATestCaseBase implements OptOutCS{
         return item;
     }
 
-    protected Class itemClass() {
-        return NArrayItem.class;
-    }
-
 }

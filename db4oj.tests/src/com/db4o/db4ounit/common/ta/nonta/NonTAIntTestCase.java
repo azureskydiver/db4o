@@ -21,10 +21,6 @@ public class NonTAIntTestCase extends NonTATestCaseBase implements OptOutCS{
         Assert.areEqual(new Integer(2), item.object());
     }
 
-    protected Class itemClass() {
-        return IntItem.class;
-    }
-
     protected Object createValue() {
         IntItem item = new IntItem();
         item.value = 42;

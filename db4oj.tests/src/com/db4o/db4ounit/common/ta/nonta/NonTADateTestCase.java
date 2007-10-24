@@ -28,8 +28,4 @@ public class NonTADateTestCase extends NonTATestCaseBase implements OptOutCS {
         return item;
     }
 
-    protected Class itemClass() {
-        return DateItem.class;
-    }
-
 }
