@@ -3,12 +3,11 @@
 package com.db4o.db4ounit.common.ta.ta;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
  */
-public class TAIntTestCase extends TAItemTestCaseBase implements OptOutCS{
+public class TAIntTestCase extends TAItemTestCaseBase {
 
 	public static void main(String[] args) {
 		new TAIntTestCase().runAll();

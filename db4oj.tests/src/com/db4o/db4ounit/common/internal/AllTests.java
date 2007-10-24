@@ -14,13 +14,13 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 		    EmbeddedClientObjectContainerTestCase.class,
-		    /*InternalObjectContainerAPITestCase.class,
+		    InternalObjectContainerAPITestCase.class,
 		    MarshallingBufferTestCase.class,
 		    MarshallingContextTestCase.class,
 		    PartialObjectContainerTestCase.class,
 			SerializerTestCase.class,
 			StoredClassTestCase.class,
-			TransactionTestCase.class,*/
+			TransactionTestCase.class,
 		};
 	}
 

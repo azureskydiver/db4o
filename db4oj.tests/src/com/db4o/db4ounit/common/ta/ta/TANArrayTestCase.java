@@ -5,12 +5,11 @@ package com.db4o.db4ounit.common.ta.ta;
 import com.db4o.db4ounit.common.ta.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
  */
-public class TANArrayTestCase extends TAItemTestCaseBase implements OptOutCS{
+public class TANArrayTestCase extends TAItemTestCaseBase {
 	
 	private static final int[][] INTS1 = new int[][]{ {1,2,3}, {4,5,6}};
 	

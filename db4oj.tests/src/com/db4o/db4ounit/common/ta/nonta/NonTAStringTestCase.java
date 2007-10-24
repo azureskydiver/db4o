@@ -3,12 +3,11 @@
 package com.db4o.db4ounit.common.ta.nonta;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
  */
-public class NonTAStringTestCase extends NonTAItemTestCaseBase implements OptOutCS{
+public class NonTAStringTestCase extends NonTAItemTestCaseBase {
 
 	public static void main(String[] args) {
 		new NonTAStringTestCase().runAll();

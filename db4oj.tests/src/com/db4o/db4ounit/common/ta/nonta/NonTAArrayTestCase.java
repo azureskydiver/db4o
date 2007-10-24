@@ -5,12 +5,11 @@ package com.db4o.db4ounit.common.ta.nonta;
 import com.db4o.db4ounit.common.ta.*;
 
 import db4ounit.*;
-import db4ounit.extensions.fixtures.*;
 
 /**
  * @exclude
  */
-public class NonTAArrayTestCase extends NonTAItemTestCaseBase implements OptOutCS{
+public class NonTAArrayTestCase extends NonTAItemTestCaseBase {
 	
 	private static final int[] INTS1 = new int[] {1,2,3};
 	
