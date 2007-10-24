@@ -437,7 +437,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             trans = checkTransaction(trans);
         	beginTopLevelCall();
         	try{
-        		deactivateInternal(trans, obj, new LegacyActivationDepth(depth, ActivationMode.DEACTIVATE));
+        		deactivateInternal(trans, obj, activationDepthProvider().activationDepth(depth, ActivationMode.DEACTIVATE));
         		completeTopLevelCall();
         	} catch(Db4oException e){
         		completeTopLevelCall(e);
@@ -631,7 +631,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	private UnmarshallingContext descendMarshallingContext(Transaction trans,
 			ObjectReference ref) {
 		final UnmarshallingContext context = new UnmarshallingContext(trans, ref, Const4.ADD_TO_ID_TREE, false);
-		context.activationDepth(new LegacyActivationDepth(1));
+		context.activationDepth(activationDepthProvider().activationDepth(1, ActivationMode.ACTIVATE));
 		return context;
 	}
 

@@ -22,11 +22,15 @@ public class HardObjectReference {
 	}
 	
 	public static HardObjectReference peekPersisted(Transaction trans, int id, int depth) {
-	    Object obj = trans.container().peekPersisted(trans, id, new LegacyActivationDepth(depth, ActivationMode.PEEK), true);
+	    Object obj = trans.container().peekPersisted(trans, id, activationDepthProvider(trans).activationDepth(depth, ActivationMode.PEEK), true);
 	    if(obj == null){
 	        return null;
 	    }
 	    ObjectReference ref = trans.referenceForId(id);
 		return new HardObjectReference(ref, obj);
+	}
+
+	private static ActivationDepthProvider activationDepthProvider(Transaction trans) {
+		return trans.container().activationDepthProvider();
 	}
 }

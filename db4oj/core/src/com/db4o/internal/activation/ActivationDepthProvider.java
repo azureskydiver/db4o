@@ -9,5 +9,5 @@ public interface ActivationDepthProvider {
 
 	ActivationDepth activationDepthFor(ClassMetadata classMetadata, ActivationMode mode);
 
-	ActivationDepth activationDepth(int depth);
+	ActivationDepth activationDepth(int depth, ActivationMode mode);
 }
