@@ -6,21 +6,22 @@ import com.db4o.db4ounit.common.ta.*;
 
 public abstract class NonTATestCaseBase extends TransparentActivationTestCaseBase {
     
+	private Class _clazz;
+	
     protected void store() throws Exception {
         Object value = createValue();
+        _clazz = value.getClass();
         store(value);
     }
     
     public void test() throws Exception {
-        Object item = retrieveOnlyInstance(itemClass());
+        Object item = retrieveOnlyInstance(_clazz);
         assertNullItem(item);
         assertValue(item);
     }
     
     protected abstract void assertValue(Object obj);
-    
-    protected abstract Class itemClass();
-    
+     
     protected abstract Object createValue();
     
     void assertNullItem(Object obj) {

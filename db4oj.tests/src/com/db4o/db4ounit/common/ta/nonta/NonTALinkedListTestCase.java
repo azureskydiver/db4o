@@ -20,11 +20,9 @@ public class NonTALinkedListTestCase extends NonTATestCaseBase implements OptOut
     }
 
     protected Object createValue() {
-        return new LinkedListItem();;
-    }
-
-    protected Class itemClass() {
-        return LinkedListItem.class;
+        LinkedListItem item = new LinkedListItem();
+        item.list = LIST;
+        return item;
     }
 
 }

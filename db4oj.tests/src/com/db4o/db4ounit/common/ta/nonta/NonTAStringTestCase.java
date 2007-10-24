@@ -27,8 +27,4 @@ public class NonTAStringTestCase extends NonTATestCaseBase implements OptOutCS{
         return item;
     }
 
-    protected Class itemClass() {
-        return StringItem.class;
-    }
-
 }
