@@ -37,7 +37,7 @@ public class NestedClassesTestCase extends AbstractDb4oTestCase {
 		ObjectSet query = db().query(OuterClass.InnerClass.class);
 		while(query.hasNext()){
 			OuterClass.InnerClass innerObject = (OuterClass.InnerClass) query.next();
-			Assert.isNull(OuterClass.InnerClass.class.getDeclaredField("this$0").get(innerObject));
+			Assert.isNull(innerObject.getOuterObjectWithoutActivation());
 			Assert.areEqual(_outerObject.foo(), innerObject.getOuterObject().foo());
 		}
 	}
