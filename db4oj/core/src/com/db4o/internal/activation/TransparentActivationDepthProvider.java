@@ -8,7 +8,7 @@ public class TransparentActivationDepthProvider implements
 		ActivationDepthProvider {
 
 	public ActivationDepth activationDepth(int depth, ActivationMode mode) {
-		return new LegacyActivationDepth(depth, mode);
+		return new FixedActivationDepth(depth);
 	}
 
 	public ActivationDepth activationDepthFor(ClassMetadata classMetadata, ActivationMode mode) {

@@ -15,7 +15,26 @@ import db4ounit.extensions.AbstractDb4oTestCase;
  */
 public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 	
+	public static final class ItemRoot {
+		public Item root;
+		
+		public ItemRoot(Item root_) {
+			this.root = root_;
+		}
+		
+		public ItemRoot() {
+		}
+	}
+	
 	public static final class Item {
+		public Item child;
+		
+		public Item() {
+		}
+		
+		public Item(Item child_) {
+			this.child = child_;
+		}
 	}
 	
 	private final MockActivationDepthProvider _dummyProvider = new MockActivationDepthProvider();
@@ -25,7 +44,7 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 	}
 	
 	protected void store() throws Exception {
-		store(new Item());
+		store(new ItemRoot(new Item(new Item(new Item()))));
 	}
 	
 	public void testCSActivationDepthFor() {
@@ -36,8 +55,8 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 		resetProvider();
 		queryItem();
 		assertProviderCalled(new MethodCall[] {
-			new MethodCall("activationDepthFor", itemMetadata(), ActivationMode.PREFETCH),
-			new MethodCall("activationDepthFor", itemMetadata(), ActivationMode.ACTIVATE),
+			new MethodCall("activationDepthFor", itemRootMetadata(), ActivationMode.PREFETCH),
+			new MethodCall("activationDepthFor", itemRootMetadata(), ActivationMode.ACTIVATE),
 		});
 	}
 	
@@ -47,15 +66,7 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 		}
 		resetProvider();
 		queryItem();
-		assertProviderCalled("activationDepthFor", itemMetadata(), ActivationMode.ACTIVATE);
-	}
-
-	private boolean isNetworkCS() {
-		return isClientServer() && !isMTOC();
-	}
-
-	private ClassMetadata itemMetadata() {
-		return classMetadataFor(Item.class);
+		assertProviderCalled("activationDepthFor", itemRootMetadata(), ActivationMode.ACTIVATE);
 	}
 
 	public void testSpecificActivationDepth() {
@@ -66,6 +77,18 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 		db().activate(item, 3);
 		
 		assertProviderCalled("activationDepth", new Integer(3), ActivationMode.ACTIVATE);
+	}
+	
+	public void testPeekPersisted() {
+		
+	}
+	
+	private boolean isNetworkCS() {
+		return isClientServer() && !isMTOC();
+	}
+
+	private ClassMetadata itemRootMetadata() {
+		return classMetadataFor(ItemRoot.class);
 	}
 	
 	private void assertProviderCalled(MethodCall[] expectedCalls) {
@@ -85,6 +108,6 @@ public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
 	}
 
 	private Item queryItem() {
-		return (Item)retrieveOnlyInstance(Item.class);
+		return ((ItemRoot)retrieveOnlyInstance(ItemRoot.class)).root;
 	}
 }
