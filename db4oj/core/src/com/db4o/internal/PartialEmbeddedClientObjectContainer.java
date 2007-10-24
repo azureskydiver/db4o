@@ -51,6 +51,11 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public Db4oCollections collections() {
         return _server.collections(_transaction);
     }
+    
+    public Config4Impl configImpl() {
+    	// internal interface method doesn't need to lock
+    	return _server.configImpl();
+    }
 
     public Configuration configure() {
         

@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.ext.*;
+import com.db4o.internal.activation.*;
 
 
 /**
@@ -45,7 +46,7 @@ public class Serializer {
         MemoryFile memoryFile = new MemoryFile(bytes);
 		TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
 		Object obj = carrier.getByID(id);
-		carrier.activate(obj, Integer.MAX_VALUE);
+		carrier.activate(carrier.transaction(), obj, new FullActivationDepth());
 		carrier.close();
 		return obj;
     }

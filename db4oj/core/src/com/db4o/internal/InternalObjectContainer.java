@@ -32,5 +32,8 @@ public interface InternalObjectContainer extends ExtObjectContainer {
     public ClassMetadata classMetadataForId(int id);
 
     public HandlerRegistry handlers();
+    
+    public Config4Impl configImpl();
+    
 
 }

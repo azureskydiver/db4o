@@ -7,7 +7,7 @@ import com.db4o.internal.*;
 
 public interface ActivationDepthProvider {
 
-	ActivationDepth activationDepthFor(ClassMetadata classMetadata);
+	ActivationDepth activationDepthFor(ClassMetadata classMetadata, ActivationMode mode);
 
 	ActivationDepth activationDepth(int depth);
 }

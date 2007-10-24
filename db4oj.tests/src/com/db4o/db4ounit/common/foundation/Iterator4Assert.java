@@ -17,7 +17,9 @@ public class Iterator4Assert {
 			Assert.isTrue(actual.moveNext(), "'" + expected.current() + "' expected.");
 			Assert.areEqual(expected.current(), actual.current());
 		}
-		Assert.isFalse(actual.moveNext());
+		if (actual.moveNext()) {
+			Assert.fail("Unexpected element: " + actual.current());
+		}
 	}
 
 	public static void areEqual(Object[] expected, Iterator4 iterator) {

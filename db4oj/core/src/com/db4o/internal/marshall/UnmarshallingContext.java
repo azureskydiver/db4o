@@ -116,12 +116,14 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         // that are carried around in a_bytes.
         //
         // TODO: optimize
-        
-        int depth = classMetadata().configOrAncestorConfig() == null ? 1 : 0;
-        activationDepth(new LegacyActivationDepth(depth));
+        activationDepth(activationDepthProvider().activationDepthFor(classMetadata(), ActivationMode.PREFETCH));
     }
     
-    public Object readFieldValue (FieldMetadata field){
+    private ActivationDepthProvider activationDepthProvider() {
+    	return container().activationDepthProvider();
+	}
+
+	public Object readFieldValue (FieldMetadata field){
         readBuffer(objectID());
         if(_buffer == null){
             return null;

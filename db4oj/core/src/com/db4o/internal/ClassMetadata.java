@@ -1384,7 +1384,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         oh.objectMarshaller().readVirtualAttributes(a_trans, this, a_yapObject, oh._headerAttributes, reader);
     }
     
-	GenericReflector reflector() {
+	public GenericReflector reflector() {
 		return _container.reflector();
 	}
     

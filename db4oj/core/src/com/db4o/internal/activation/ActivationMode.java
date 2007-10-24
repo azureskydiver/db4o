@@ -6,7 +6,9 @@ public final class ActivationMode {
 	
 	public static final ActivationMode DEACTIVATE = new ActivationMode();
 	
-	public static final ActivationMode PEEK = new ActivationMode();	
+	public static final ActivationMode PEEK = new ActivationMode();
+
+	public static final ActivationMode PREFETCH = new ActivationMode();	
 	
 	private ActivationMode() {
 	}
@@ -18,6 +20,9 @@ public final class ActivationMode {
 		if (this == DEACTIVATE) {
 			return "DEACTIVATE";
 		}
+		if (this == PREFETCH) {
+			return "PREFETCH";
+		}
 		return "PEEK";
 	}
 
@@ -27,5 +32,9 @@ public final class ActivationMode {
 
 	public boolean isPeek() {
 		return this == PEEK;
+	}
+
+	public boolean isPrefetch() {
+		return this == PREFETCH;
 	}
 }

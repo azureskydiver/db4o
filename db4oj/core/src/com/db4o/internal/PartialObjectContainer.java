@@ -145,7 +145,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	}
 
 	public ActivationDepth defaultActivationDepth(ClassMetadata classMetadata) {
-		return activationDepthProvider().activationDepthFor(classMetadata);
+		return activationDepthProvider().activationDepthFor(classMetadata, ActivationMode.ACTIVATE);
 	}
 
     public ActivationDepthProvider activationDepthProvider() {
