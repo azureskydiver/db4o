@@ -26,6 +26,10 @@ public class OuterClass extends ActivatableImpl {
 			// TA END
 			return OuterClass.this;
 		}
+
+		public OuterClass getOuterObjectWithoutActivation() {
+			return OuterClass.this;
+		}
 	} 
 
 }
