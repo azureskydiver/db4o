@@ -22,7 +22,7 @@ public class SampleTestCase extends AbstractDb4oTestCase implements OptOutCS{
         config.add(new TransparentActivationSupport());
     }
     
-    public void store(){
+    protected void store(){
         Customer customer = new Customer();
         customer._name = "db4objects";
         Address address = new Address();
