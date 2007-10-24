@@ -8,8 +8,6 @@ public class TAStringItem extends ActivatableImpl {
 		
 		public Object obj;
 
-		public LinkedList list;
-
 		public TAStringItem() {
 
 		}
@@ -24,8 +22,4 @@ public class TAStringItem extends ActivatableImpl {
 			return obj;
 		}
 		
-		public LinkedList list() {
-			activate();
-			return list;
-		}
 	}

@@ -8,7 +8,7 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-public class ArrayTransparentActivationTestCase extends TransparentActivationTestCaseBase implements OptOutCS{
+public class TAArrayTestCase extends TransparentActivationTestCaseBase implements OptOutCS{
 	
 	private static final int[] INTS1 = new int[] {1,2,3};
 	
@@ -19,7 +19,7 @@ public class ArrayTransparentActivationTestCase extends TransparentActivationTes
 	private static final LinkedList[] LIST2 = new LinkedList[] { LinkedList.newList(5), LinkedList.newList(5) };
 
 	public static void main(String[] args) {
-		new ArrayTransparentActivationTestCase().runAll();
+		new TAArrayTestCase().runAll();
 	}
 
 	protected void store() throws Exception {

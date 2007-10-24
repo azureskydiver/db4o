@@ -8,18 +8,16 @@ import db4ounit.extensions.fixtures.*;
 /**
  * @exclude
  */
-public class StringTransparentActivationTestCase extends TransparentActivationTestCaseBase implements OptOutCS{
-	private static final LinkedList LIST = LinkedList.newList(10);
+public class TAStringTestCase extends TransparentActivationTestCaseBase implements OptOutCS{
 
 	public static void main(String[] args) {
-		new StringTransparentActivationTestCase().runAll();
+		new TAStringTestCase().runAll();
 	}
 
 	protected void store() throws Exception {
 		TAStringItem item = new TAStringItem();
 		item.value = "42";
 		item.obj = "hello";
-		item.list = LIST;
 		store(item);
 	}
 
@@ -28,13 +26,11 @@ public class StringTransparentActivationTestCase extends TransparentActivationTe
 		asertNullItem(item);
 		Assert.areEqual("42", item.value());
 		Assert.areEqual("hello", item.object());
-		Assert.areEqual(LIST, item.list());
 	}
 
 	private void asertNullItem(TAStringItem item) {
 		Assert.isNull(item.value);
 		Assert.isNull(item.obj);
-		Assert.isNull(item.list);
 	}
 
 }
