@@ -225,7 +225,7 @@ public class ArrayList4Asserter {
 		Iterator<Integer> iter = list.iterator();
 		int count = 0;
 		while (iter.hasNext()) {
-			Integer i = (Integer) iter.next();
+			Integer i = iter.next();
 			Assert.areEqual(count, i.intValue());
 			++count;
 		}
@@ -473,7 +473,7 @@ public class ArrayList4Asserter {
 		Assert.areEqual("[1, 2]",oList.toString());
 		
 		oList.add(oList);
-		oList.add(3);
+		oList.add(new Integer(3));
 		Assert.areEqual("[1, 2, (this Collection), 3]",oList.toString());
 	}
 	
@@ -487,7 +487,7 @@ public class ArrayList4Asserter {
 	public static void checkTrimToSize_EnsureCapacity(final ArrayList4<Integer> list) {
 		Assert.areEqual(CAPACITY, list.size());
 		for(int i = 0; i < CAPACITY; ++i) {
-			Integer element = (Integer) list.get(i);
+			Integer element = list.get(i);
 			Assert.areEqual(new Integer(i), element);
 		}
 	}
@@ -498,7 +498,7 @@ public class ArrayList4Asserter {
 		}
 		Assert.areEqual(10, list.size());
 		for(int i = 0; i < 10; ++i) {
-			Integer element = (Integer) list.get(i);
+			Integer element = list.get(i);
 			Assert.areEqual(new Integer(i), element);
 		}
 	}

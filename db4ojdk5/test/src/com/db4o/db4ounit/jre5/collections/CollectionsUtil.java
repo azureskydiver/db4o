@@ -25,8 +25,8 @@ public class CollectionsUtil {
     private static void assertNullArrayList4(ArrayList4<Integer> list,
             Reflector reflector) throws Exception {
         Assert.isNull(getField(reflector, list, "elements"));
-        Assert.areEqual(0, getField(reflector, list, "capacity"));
-        Assert.areEqual(0, getField(reflector, list, "listSize"));
+        Assert.areEqual(new Integer(0), getField(reflector, list, "capacity"));
+        Assert.areEqual(new Integer(0), getField(reflector, list, "listSize"));
     }
 
     private static Object getField(Reflector reflector, Object parent,
@@ -41,8 +41,8 @@ public class CollectionsUtil {
             ArrayMap4<String, Integer> map) {
         Assert.isNull(getField(reflector, map, "_keys"));
         Assert.isNull(getField(reflector, map, "_values"));
-        Assert.areEqual(0, getField(reflector, map, "_startIndex"));
-        Assert.areEqual(0, getField(reflector, map, "_endIndex"));
+        Assert.areEqual(new Integer(0), getField(reflector, map, "_startIndex"));
+        Assert.areEqual(new Integer(0), getField(reflector, map, "_endIndex"));
     }
 
     @SuppressWarnings("unchecked")
