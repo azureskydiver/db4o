@@ -13,6 +13,8 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 				TAArrayTestCase.class,
+				TADateArrayTestCase.class,
+				TADateTestCase.class,
                 TAIntTestCase.class,
                 TALinkedListTestCase.class,
                 TANArrayTestCase.class,
