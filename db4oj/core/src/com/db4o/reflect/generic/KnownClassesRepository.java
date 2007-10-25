@@ -58,11 +58,13 @@ public class KnownClassesRepository {
     }
 
     public ReflectClass forID(int id) {
-    	if(_stream.handlers().isSystemHandler(id)) {
-    		return _stream.handlers().classForID(id);
+    	synchronized(_stream.lock()) {
+	    	if(_stream.handlers().isSystemHandler(id)) {
+	    		return _stream.handlers().classForID(id);
+	    	}
+			ensureClassAvailability(id);
+	        return lookupByID(id);        
     	}
-		ensureClassAvailability(id);
-        return lookupByID(id);        
     }
     
     public ReflectClass forName(String className) {
@@ -75,16 +77,19 @@ public class KnownClassesRepository {
         	return null;
         }
         
-        if(_stream.classCollection() == null){
-        	return null;
-        }
-        
-        int classID = _stream.classMetadataIdForName(className);
-        if(classID <= 0){
-        	return null;
-        }
-        
-        return initializeClass(classID, className);
+		
+    	synchronized(_stream.lock()) {
+	        if(_stream.classCollection() == null){
+	        	return null;
+	        }
+	        
+	        int classID = _stream.classMetadataIdForName(className);
+	        if(classID <= 0){
+	        	return null;
+	        }
+	        
+	        return initializeClass(classID, className);
+    	}
     }
 
 	private ReflectClass initializeClass(int classID, String className) {
