@@ -107,15 +107,6 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
 	}
 
     private void adjustActivationDepthForPrefetch() {
-        // We use an instantiationdepth of 1 only, if there is no special
-        // configuration for the class. This is a quick fix due to a problem
-        // instantiating Hashtables. There may be a better workaround that
-        // works with configured objects only to make them fast also.
-        //
-        // An instantiation depth of 1 makes use of possibly prefetched strings
-        // that are carried around in a_bytes.
-        //
-        // TODO: optimize
         activationDepth(activationDepthProvider().activationDepthFor(classMetadata(), ActivationMode.PREFETCH));
     }
     
