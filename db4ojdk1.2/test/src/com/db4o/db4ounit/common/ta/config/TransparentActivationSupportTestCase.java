@@ -6,7 +6,8 @@ import com.db4o.internal.activation.*;
 
 import db4ounit.*;
 
-public class TransparentActivationSupportTestCase extends TransparentActivationTestCaseBase {
+public class TransparentActivationSupportTestCase
+	extends TransparentActivationTestCaseBase {
 
 	public static void main(String[] args) {
 		new TransparentActivationSupportTestCase().runAll();

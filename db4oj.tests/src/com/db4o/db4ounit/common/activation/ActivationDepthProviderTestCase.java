@@ -7,13 +7,15 @@ import com.db4o.db4ounit.common.foundation.Iterator4Assert;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
-import db4ounit.extensions.AbstractDb4oTestCase;
+import db4ounit.extensions.*;
 
 /**
  * Ensures the container uses the provided ActivationDepthProvider instance
  * whenever necessary.
  */
-public class ActivationDepthProviderTestCase extends AbstractDb4oTestCase  {
+public class ActivationDepthProviderTestCase
+	extends AbstractDb4oTestCase
+	implements OptOutTA {
 	
 	public static final class ItemRoot {
 		public Item root;

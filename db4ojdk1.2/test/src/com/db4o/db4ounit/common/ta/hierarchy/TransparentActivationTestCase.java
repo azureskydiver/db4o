@@ -9,7 +9,8 @@ import com.db4o.db4ounit.common.ta.collections.*;
 
 import db4ounit.*;
 
-public class TransparentActivationTestCase extends TransparentActivationTestCaseBase {
+public class TransparentActivationTestCase
+	extends TransparentActivationTestCaseBase {
 
 	public static void main(String[] args) {
 		new TransparentActivationTestCase().runAll();

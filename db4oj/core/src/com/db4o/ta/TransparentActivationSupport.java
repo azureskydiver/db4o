@@ -18,15 +18,18 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	public void apply(final InternalObjectContainer container) {
 		container.configImpl().activationDepthProvider(new TransparentActivationDepthProvider());
 
-		EventRegistry factory = EventRegistryFactory
-				.forObjectContainer(container);
+		EventRegistry registry = EventRegistryFactory.forObjectContainer(container);
 
-		factory.instantiated().addListener(new EventListener4() {
+		registry.instantiated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				ObjectEventArgs oea = (ObjectEventArgs) args;
+				bindActivatableToActivator((ObjectEventArgs) args);
+			}
+
+			private void bindActivatableToActivator(ObjectEventArgs oea) {
 				Object obj = oea.object();
 				if (obj instanceof Activatable) {
-					((Activatable) obj).bind(activatorForObject((Transaction) oea.transaction(), obj));
+					final Transaction transaction = (Transaction) oea.transaction();
+					((Activatable) obj).bind(activatorForObject(transaction, obj));
 				}
 			}
 
@@ -38,7 +41,7 @@ public class TransparentActivationSupport implements ConfigurationItem {
 		});
 
 		final TADiagnosticProcessor processor = new TADiagnosticProcessor(container);
-		factory.classRegistered().addListener(new EventListener4() {
+		registry.classRegistered().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				ClassEventArgs cea = (ClassEventArgs) args;
 				processor.onClassRegistered(cea.classMetadata());
@@ -78,15 +81,26 @@ public class TransparentActivationSupport implements ConfigurationItem {
 		private boolean hasOnlyPrimitiveFields(ReflectClass clazz) {
 			ReflectClass curClass = clazz;
 			while (curClass != null) {
-				ReflectField[] fields = curClass.getDeclaredFields();
-				for (int fieldIdx = 0; fieldIdx < fields.length; fieldIdx++) {
-					if (!fields[fieldIdx].getFieldType().isPrimitive()) {
-						return false;
-					}
+				final ReflectField[] fields = curClass.getDeclaredFields();
+				if (!hasOnlyPrimitiveFields(fields)) {
+					return false;
 				}
 				curClass = curClass.getSuperclass();
 			}
 			return true;
+		}
+
+		private boolean hasOnlyPrimitiveFields(ReflectField[] fields) {
+			for (int i = 0; i < fields.length; i++) {
+				if (!isPrimitive(fields[i])) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		private boolean isPrimitive(final ReflectField field) {
+			return field.getFieldType().isPrimitive();
 		}
 	}
 }

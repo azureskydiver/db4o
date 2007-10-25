@@ -7,7 +7,9 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class DatabaseReadonlyExceptionTestCase extends AbstractDb4oTestCase {
+public class DatabaseReadonlyExceptionTestCase
+	extends AbstractDb4oTestCase
+	implements OptOutTA {
 
 	public static void main(String[] args) {
 		new DatabaseReadonlyExceptionTestCase().runAll();

@@ -9,7 +9,9 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class MaximumActivationDepthTestCase extends AbstractDb4oTestCase {
+public class MaximumActivationDepthTestCase
+	extends AbstractDb4oTestCase
+	implements OptOutTA {
 
 	public static class Data {
 		public int _id;

@@ -15,7 +15,9 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
 
-public class SampleTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class SampleTestCase
+	extends AbstractDb4oTestCase
+	implements OptOutCS, OptOutTA {
 
     public static void main(String[] args) {
         new SampleTestCase().runAll(); 

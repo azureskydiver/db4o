@@ -53,6 +53,9 @@ public abstract class StringIndexTestCaseBase extends AbstractDb4oTestCase {
 	}
 
 	protected void grafittiFreeSpace() {
+		if (!(db() instanceof IoAdaptedObjectContainer)) {
+			return;
+		}
 		final IoAdaptedObjectContainer file = ((IoAdaptedObjectContainer)db());
 		final FreespaceManager fm = file.freespaceManager();
 		fm.traverse(new Visitor4() {
