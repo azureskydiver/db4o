@@ -75,7 +75,7 @@ public class SampleTestCase
         checkGraphActivation((Country) retrieveOnlyInstance(Country.class));
     }
     
-    public void _testPeekPersisted(){
+    public void testPeekPersisted(){
         run(new ActAndAssert(){
             public Object actOnRoot(Object obj) {
                 return db().peekPersisted(obj, Integer.MAX_VALUE, true);

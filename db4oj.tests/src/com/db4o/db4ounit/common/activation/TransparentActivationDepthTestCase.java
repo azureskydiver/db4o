@@ -57,6 +57,17 @@ public class TransparentActivationDepthTestCase extends AbstractDb4oTestCase {
 		assertDescendingDepth(3, depth, TAAware.class);
 		assertDescendingDepth(3, depth, NonTAAware.class);
 	}	
+	
+	public void testIntegerMaxValueMeansFull() {
+		assertFullActivationDepthForMaxValue(ActivationMode.PEEK);
+		assertFullActivationDepthForMaxValue(ActivationMode.ACTIVATE);
+	}
+
+	private void assertFullActivationDepthForMaxValue(final ActivationMode mode) {
+		Assert.isInstanceOf(
+			FullActivationDepth.class,
+			provider().activationDepth(Integer.MAX_VALUE, mode));
+	}
 
 	private void assertDescendingDepth(int expectedDepth, ActivationDepth depth, Class clazz) {
 		if (expectedDepth < 1) {
