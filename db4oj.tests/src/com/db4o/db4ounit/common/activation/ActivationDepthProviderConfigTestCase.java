@@ -13,7 +13,7 @@ import db4ounit.extensions.mocking.*;
  * Ensures the container uses the provided ActivationDepthProvider instance
  * whenever necessary.
  */
-public class ActivationDepthProviderTestCase
+public class ActivationDepthProviderConfigTestCase
 	extends AbstractDb4oTestCase
 	implements OptOutTA {
 	
@@ -79,10 +79,6 @@ public class ActivationDepthProviderTestCase
 		db().activate(item, 3);
 		
 		assertProviderCalled("activationDepth", new Integer(3), ActivationMode.ACTIVATE);
-	}
-	
-	public void testPeekPersisted() {
-		
 	}
 	
 	private boolean isNetworkCS() {
