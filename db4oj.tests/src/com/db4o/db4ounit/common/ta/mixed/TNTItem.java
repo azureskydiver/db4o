@@ -8,7 +8,16 @@ import com.db4o.db4ounit.common.ta.*;
  * @exclude
  */
 public class TNTItem extends ActivatableImpl {
+
 	public NTItem ntItem;
+
+	public TNTItem() {
+
+	}
+
+	public TNTItem(int v) {
+		ntItem = new NTItem(v);
+	}
 
 	public NTItem value() {
 		activate();
