@@ -44,6 +44,7 @@ public class InstrumentFieldAccessEdit implements BloatClassEdit {
 			}
 
 			public void visitMethodEditor(MethodEditor editor) {
+				// FIXME we potentially need to instrument constructors and static methods
 				if(editor.isConstructor() || editor.isAbstract() || editor.isStatic()) {
 					return;
 				}
