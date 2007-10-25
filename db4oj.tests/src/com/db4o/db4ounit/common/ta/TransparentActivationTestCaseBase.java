@@ -19,6 +19,7 @@ public class TransparentActivationTestCaseBase extends AbstractDb4oTestCase  {
 
 	protected void configure(Configuration config) {
 		config.add(new TransparentActivationSupport());
+		config.generateUUIDs(ConfigScope.GLOBALLY);		
 	}
 
 	/**
