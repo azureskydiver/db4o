@@ -28,10 +28,10 @@ public class MixedArrayTestCase extends ItemTestCaseBase {
 		for (int i = 0; i < objects.length; ++i) {
 			Assert.isNotNull(objects[i]);
 		}
-		Assert.areEqual(LinkedList.newList(42), (LinkedList)objects[0]);
-		Assert.areEqual(0, ((TItem)objects[1]).value());
-		Assert.areEqual(LinkedList.newList(42), (LinkedList)objects[2]);
-		Assert.areEqual(0, ((TItem)objects[3]).value());
+		Assert.areEqual(LinkedList.newList(42), objects[0]);
+		Assert.areEqual(0, ((TItem)objects[1]).value);
+		Assert.areEqual(LinkedList.newList(42), objects[2]);
+		Assert.areEqual(0, ((TItem)objects[3]).value);
 	}
 
 }
