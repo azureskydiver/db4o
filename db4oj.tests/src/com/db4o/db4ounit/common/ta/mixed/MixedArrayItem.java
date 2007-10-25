@@ -3,7 +3,8 @@ package com.db4o.db4ounit.common.ta.mixed;
 import com.db4o.db4ounit.common.ta.*;
 
 public class MixedArrayItem {
-	public Object objects[];
+    
+	public Object[] objects;
 
 	public MixedArrayItem() {
 
