@@ -16,10 +16,7 @@ public class NTTestCase extends ItemTestCaseBase {
 	}
 	
 	protected Object createItem() throws Exception {
-		NTItem item = new NTItem();
-		item.tItem = new TItem();
-		item.tItem.value = 42;
-		return item;
+		return new NTItem(42);
 	}
 
 	protected void assertRetrievedItem(Object obj) throws Exception {

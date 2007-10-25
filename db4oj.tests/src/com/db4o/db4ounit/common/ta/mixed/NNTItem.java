@@ -7,4 +7,12 @@ package com.db4o.db4ounit.common.ta.mixed;
  */
 public class NNTItem {
 	public NTItem ntItem;
+
+	public NNTItem() {
+
+	}
+
+	public NNTItem(int v) {
+		ntItem = new NTItem(v);
+	}
 }
