@@ -15,6 +15,9 @@ public class TransparentActivationDepthProvider implements
 		if (isTAAware(classMetadata)) {
 			return new NonDescendingActivationDepth();
 		}
+		if(mode.isPrefetch()){
+		    return new FixedActivationDepth(classMetadata.prefetchActivationDepth());
+		}
 		return new DescendingActivationDepth(this, mode);
 	}
 

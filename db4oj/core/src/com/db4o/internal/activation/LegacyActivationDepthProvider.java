@@ -10,8 +10,7 @@ public class LegacyActivationDepthProvider implements ActivationDepthProvider {
 	
 	public ActivationDepth activationDepthFor(ClassMetadata classMetadata, ActivationMode mode) {
 		if (mode.isPrefetch()) {
-			int depth = classMetadata.configOrAncestorConfig() == null ? 1 : 0;
-			return new LegacyActivationDepth(depth, mode);
+			return new LegacyActivationDepth(classMetadata.prefetchActivationDepth(), mode);
 		}
 		final int globalLegacyActivationDepth = configImpl(classMetadata).activationDepth();
 		Config4Class config = classMetadata.configOrAncestorConfig();
