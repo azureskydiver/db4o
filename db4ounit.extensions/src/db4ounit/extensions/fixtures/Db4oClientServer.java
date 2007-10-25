@@ -50,10 +50,12 @@ public class Db4oClientServer extends
         this(configSource,filePath(), embeddedClient, label);
     }
     
-    public void open() throws Exception {
+    public void open(Class testCaseClass) throws Exception {
 		openServer();
+		final Configuration config = config();
+		applyFixtureConfiguration(testCaseClass, config);
 		_objectContainer = _embeddedClient ? openEmbeddedClient().ext() : Db4o
-				.openClient(config(), HOST, _port, USERNAME, PASSWORD).ext();
+				.openClient(config, HOST, _port, USERNAME, PASSWORD).ext();
 	}
 
 	public ExtObjectContainer openNewClient() {
@@ -137,7 +139,7 @@ public class Db4oClientServer extends
 	}
 
 	public String getLabel() {
-		return _label;
+		return buildLabel(_label);
 	}
 
 	public int serverPort() {

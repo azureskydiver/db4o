@@ -3,7 +3,7 @@
 package db4ounit.extensions;
 
 /**
- * Marks a test case as non valid for the {@link TAFixture}.
+ * Marks a test case as non valid for the {@link TAFixtureConfiguration}.
  */
 public interface OptOutTA {
 }

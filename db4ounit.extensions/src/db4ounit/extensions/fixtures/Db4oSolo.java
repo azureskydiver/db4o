@@ -5,6 +5,7 @@ package db4ounit.extensions.fixtures;
 import com.db4o.*;
 import com.db4o.config.*;
 
+import db4ounit.extensions.*;
 import db4ounit.extensions.util.*;
 
 public class Db4oSolo extends AbstractFileBasedDb4oFixture {
@@ -19,12 +20,17 @@ public class Db4oSolo extends AbstractFileBasedDb4oFixture {
 		super(configSource, filePath());	
 	}
     
+	public Db4oSolo(FixtureConfiguration fixtureConfiguration) {
+		this();
+		fixtureConfiguration(fixtureConfiguration);
+	}
+
 	protected ObjectContainer createDatabase(Configuration config) {
-		return Db4o.openFile(config,getAbsolutePath());
+		return Db4o.openFile(config, getAbsolutePath());
 	}
 	
 	public String getLabel() {
-		return "SOLO";
+		return buildLabel("SOLO");
 	}
 
 	public void defragment() throws Exception {

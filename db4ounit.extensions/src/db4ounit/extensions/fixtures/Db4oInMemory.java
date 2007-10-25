@@ -6,6 +6,8 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 
+import db4ounit.extensions.*;
+
 public class Db4oInMemory extends AbstractSoloDb4oFixture {
     
 	public Db4oInMemory() {
@@ -14,6 +16,11 @@ public class Db4oInMemory extends AbstractSoloDb4oFixture {
 
 	public Db4oInMemory(ConfigurationSource configSource) {
 		super(configSource);
+	}
+	
+	public Db4oInMemory(FixtureConfiguration fc) {
+		this();
+		fixtureConfiguration(fc);
 	}
 
 	private MemoryFile _memoryFile;
@@ -30,7 +37,7 @@ public class Db4oInMemory extends AbstractSoloDb4oFixture {
     }
 
 	public String getLabel() {
-		return "IN-MEMORY";
+		return buildLabel("IN-MEMORY");
 	}
 
 	public void defragment() throws Exception {

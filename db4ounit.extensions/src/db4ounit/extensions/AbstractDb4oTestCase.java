@@ -53,18 +53,18 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
     
     protected void reopen() throws Exception{
-    	_fixture.reopen();
+    	_fixture.reopen(getClass());
     }
 	
 	public final void setUp() throws Exception {
         _fixture.clean();
 		configure(_fixture.config());
-		_fixture.open();
+		_fixture.open(getClass());
         db4oSetupBeforeStore();
 		store();
 		_fixture.db().commit();
         _fixture.close();
-        _fixture.open();
+        _fixture.open(getClass());
         db4oSetupAfterStore();
 	}
 	
@@ -328,7 +328,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	protected void defragment() throws Exception{
 		fixture().close();
 		fixture().defragment();
-		fixture().open();
+		fixture().open(getClass());
 	}
 	
 	public final int threadCount() {

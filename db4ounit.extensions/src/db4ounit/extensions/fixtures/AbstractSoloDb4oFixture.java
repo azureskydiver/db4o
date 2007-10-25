@@ -18,11 +18,13 @@ public abstract class AbstractSoloDb4oFixture extends AbstractDb4oFixture {
 		super(configSource);
 	}
 	
-	public final void open() {
+	public final void open(Class testCaseClass) {
 		Assert.isNull(_db);
-		_db=createDatabase(config()).ext();
+		final Configuration config = config();
+		applyFixtureConfiguration(testCaseClass, config);
+		_db=createDatabase(config).ext();
 	}
-	
+
 	public void close() throws Exception {
 		if (null != _db) {
 			Assert.isTrue(db().close());
