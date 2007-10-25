@@ -13,7 +13,9 @@ import db4ounit.extensions.*;
 /**
  * @exclude
  */
-public class PartialObjectContainerTestCase extends AbstractDb4oTestCase{
+public class PartialObjectContainerTestCase
+	extends AbstractDb4oTestCase
+	implements OptOutTA {
     
     public static void main(String[] arguments) {
         new PartialObjectContainerTestCase().runSolo();

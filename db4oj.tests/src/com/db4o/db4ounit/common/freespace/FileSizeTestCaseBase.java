@@ -9,7 +9,9 @@ import com.db4o.internal.*;
 import db4ounit.extensions.*;
 
 
-public abstract class FileSizeTestCaseBase extends AbstractDb4oTestCase{
+public abstract class FileSizeTestCaseBase
+	extends AbstractDb4oTestCase
+	implements OptOutTA {
     
     protected int databaseFileSize() {
         LocalObjectContainer localContainer = fixture().fileSession();

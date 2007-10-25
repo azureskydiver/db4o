@@ -11,7 +11,9 @@ import com.db4o.ta.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class TransparentActivationTestCaseBase extends AbstractDb4oTestCase  {
+public class TransparentActivationTestCaseBase
+	extends AbstractDb4oTestCase
+	implements OptOutTA {
 
 	public TransparentActivationTestCaseBase() {
 		super();

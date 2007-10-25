@@ -12,7 +12,9 @@ import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
-public class TransparentActivationDiagnosticsTestCase extends TransparentActivationTestCaseBase implements OptOutCS, OptOutDefragSolo {
+public class TransparentActivationDiagnosticsTestCase
+	extends TransparentActivationTestCaseBase
+	implements OptOutCS, OptOutDefragSolo {
 
 	public static class SomeTAAwareData {
 		public int _id;

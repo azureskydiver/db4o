@@ -10,7 +10,10 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.Db4oSolo;
 
-public class SelectiveActivationTestCase extends AbstractDb4oTestCase {
+public class SelectiveActivationTestCase
+	extends AbstractDb4oTestCase
+	implements OptOutTA {
+	
     private boolean debug = false;
 
     protected void configure(Configuration config) {

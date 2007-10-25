@@ -8,7 +8,9 @@ import com.db4o.ta.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-public class NestedClassesTestCase extends AbstractDb4oTestCase {
+public class NestedClassesTestCase
+	extends AbstractDb4oTestCase
+	implements OptOutTA {
 	
 	private OuterClass _outerObject;
 

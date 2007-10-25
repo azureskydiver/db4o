@@ -8,7 +8,9 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class CollectionActivationTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+public class CollectionActivationTestCase
+	extends AbstractDb4oTestCase
+	implements OptOutDefragSolo, OptOutTA {
 	
 	public static final class Item {    
 		public Item(List list) {
