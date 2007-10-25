@@ -8,7 +8,7 @@ public class TransparentActivationDepthProvider implements
 		ActivationDepthProvider {
 
 	public ActivationDepth activationDepth(int depth, ActivationMode mode) {
-		return new FixedActivationDepth(depth);
+		return new FixedActivationDepth(mode.isPeek() ? depth+1 : depth);
 	}
 
 	public ActivationDepth activationDepthFor(ClassMetadata classMetadata, ActivationMode mode) {
