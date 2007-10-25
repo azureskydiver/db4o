@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.acid;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.config.Configuration;
 import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
@@ -16,23 +17,25 @@ import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
 
+// TODO: survives commenting out invocations of IoAdaptedObjectContainer#syncFiles() other
+// than the one in LocalTransaction#flushFile()
 public class CrashSimulatingTestCase implements TestCase, OptOutCS {	
     
-    public String _name;
-    
-    public CrashSimulatingTestCase _next;
-    
-    
+	public static class CrashData {
+	    public String _name;	    
+	    public CrashData _next;
+
+	    public CrashData(CrashData next_, String name) {
+	        _next = next_;
+	        _name = name;
+	    }
+	    
+		public String toString() {
+			return _name+" -> "+_next;
+		}
+	}
+	
     static final boolean LOG = false;
-    
-    
-    public CrashSimulatingTestCase() {
-    }
-    
-    public CrashSimulatingTestCase(CrashSimulatingTestCase next_, String name) {
-        _next = next_;
-        _name = name;
-    }
     
     private boolean hasLockFileThread(){
         if (!Platform4.hasLockFileThread()) {
@@ -53,48 +56,46 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     	File4.delete(fileName);
     	File4.mkdirs(path);
         
-    	Db4o.configure().reflectWith(Platform4.reflectorForType(CrashSimulatingTestCase.class));
-        Db4o.configure().bTreeNodeSize(4);
-
-        createFile(fileName);
+    	createFile(baseConfig(), fileName);
         
         CrashSimulatingIoAdapter adapterFactory = new CrashSimulatingIoAdapter(new RandomAccessFileAdapter());
-        Db4o.configure().io(adapterFactory);
+
         
-        ObjectContainer oc = Db4o.openFile(fileName);
+        Configuration recordConfig = baseConfig();
+        recordConfig.io(adapterFactory);
         
-        ObjectSet objectSet = oc.get(new CrashSimulatingTestCase(null, "three"));
+        ObjectContainer oc = Db4o.openFile(recordConfig, fileName);
+        
+        ObjectSet objectSet = oc.get(new CrashData(null, "three"));
         oc.delete(objectSet.next());
         
-        oc.set(new CrashSimulatingTestCase(null, "four"));
-        oc.set(new CrashSimulatingTestCase(null, "five"));
-        oc.set(new CrashSimulatingTestCase(null, "six"));
-        oc.set(new CrashSimulatingTestCase(null, "seven"));
-        oc.set(new CrashSimulatingTestCase(null, "eight"));
-        oc.set(new CrashSimulatingTestCase(null, "nine"));
-        oc.set(new CrashSimulatingTestCase(null, "10"));
-        oc.set(new CrashSimulatingTestCase(null, "11"));
-        oc.set(new CrashSimulatingTestCase(null, "12"));
-        oc.set(new CrashSimulatingTestCase(null, "13"));
-        oc.set(new CrashSimulatingTestCase(null, "14"));
+        oc.set(new CrashData(null, "four"));
+        oc.set(new CrashData(null, "five"));
+        oc.set(new CrashData(null, "six"));
+        oc.set(new CrashData(null, "seven"));
+        oc.set(new CrashData(null, "eight"));
+        oc.set(new CrashData(null, "nine"));
+        oc.set(new CrashData(null, "10"));
+        oc.set(new CrashData(null, "11"));
+        oc.set(new CrashData(null, "12"));
+        oc.set(new CrashData(null, "13"));
+        oc.set(new CrashData(null, "14"));
         
         oc.commit();
         
         Query q = oc.query();
-        q.constrain(CrashSimulatingTestCase.class);
+        q.constrain(CrashData.class);
         objectSet = q.execute();
         while(objectSet.hasNext()){
-        	CrashSimulatingTestCase cst = (CrashSimulatingTestCase) objectSet.next();
-            if( !  (cst._name.equals("10") || cst._name.equals("13")) ){
-                oc.delete(cst);
+        	CrashData cData = (CrashData) objectSet.next();
+            if( !  (cData._name.equals("10") || cData._name.equals("13")) ){
+                oc.delete(cData);
             }
         }
         
         oc.commit();
 
         oc.close();
-
-        Db4o.configure().io(new RandomAccessFileAdapter());
 
         int count = adapterFactory.batch.writeVersions(fileName);
 
@@ -105,13 +106,21 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 		}
     }
 
+	private Configuration baseConfig() {
+		Configuration config = Db4o.newConfiguration();
+		config.objectClass(CrashData.class).objectField("_name").indexed(true);
+    	config.reflectWith(Platform4.reflectorForType(CrashSimulatingTestCase.class));
+        config.bTreeNodeSize(4);
+		return config;
+	}
+
 	private void checkFiles(String fileName, String infix,int count) {
         for (int i = 1; i <= count; i++) {
             if(LOG){
                 System.out.println("Checking " + infix + i);
             }
             String versionedFileName = fileName + infix + i;
-            ObjectContainer oc = Db4o.openFile(versionedFileName);
+            ObjectContainer oc = Db4o.openFile(baseConfig(), versionedFileName);
 	        try {
 	            if(! stateBeforeCommit(oc)){
 	                if(! stateAfterFirstCommit(oc)){
@@ -138,9 +147,9 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
     
     private boolean expect(ObjectContainer container, String[] names){
     	Collection4 expected = new Collection4(names);
-        ObjectSet actual = container.query(CrashSimulatingTestCase.class);
+        ObjectSet actual = container.query(CrashData.class);
         while (actual.hasNext()){
-            CrashSimulatingTestCase current = (CrashSimulatingTestCase)actual.next();
+            CrashData current = (CrashData)actual.next();
             if (null == expected.remove(current._name)) {
             	return false;
             }
@@ -148,8 +157,8 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         return expected.isEmpty();
     }
     
-    private void createFile(String fileName) throws IOException{
-        ObjectContainer oc = Db4o.openFile(fileName);
+    private void createFile(Configuration config, String fileName) throws IOException{
+        ObjectContainer oc = Db4o.openFile(config, fileName);
         try {
         	populate(oc);
         } finally {
@@ -162,9 +171,9 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 		for (int i = 0; i < 10; i++) {
             container.set(new SimplestPossibleItem("delme"));
         }
-        CrashSimulatingTestCase one = new CrashSimulatingTestCase(null, "one");
-        CrashSimulatingTestCase two = new CrashSimulatingTestCase(one, "two");
-        CrashSimulatingTestCase three = new CrashSimulatingTestCase(one, "three");
+        CrashData one = new CrashData(null, "one");
+        CrashData two = new CrashData(one, "two");
+        CrashData three = new CrashData(one, "three");
         container.set(one);
         container.set(two);
         container.set(three);
@@ -173,10 +182,6 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         while(objectSet.hasNext()){
             container.delete(objectSet.next());
         }
-	}
-    
-	public String toString() {
-		return _name+" -> "+_next;
 	}
 	
 }
