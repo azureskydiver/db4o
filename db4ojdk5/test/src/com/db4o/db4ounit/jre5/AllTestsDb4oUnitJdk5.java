@@ -9,7 +9,7 @@ import db4ounit.extensions.fixtures.*;
 public class AllTestsDb4oUnitJdk5 extends Db4oTestSuite {
 
 	public static void main(String[] args) {
-		runTAFixture();
+//		runTAFixture();
 		
 		System.exit(new AllTestsDb4oUnitJdk5().runAll());
 	}
