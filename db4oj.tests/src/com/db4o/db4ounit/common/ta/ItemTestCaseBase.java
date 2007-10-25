@@ -4,8 +4,12 @@ package com.db4o.db4ounit.common.ta;
 
 import com.db4o.ext.*;
 
+import db4ounit.extensions.fixtures.*;
 
-public abstract class ItemTestCaseBase extends TransparentActivationTestCaseBase {
+
+public abstract class ItemTestCaseBase
+	extends TransparentActivationTestCaseBase
+	implements OptOutDefragSolo {
     
 	private Class _clazz;
 	protected long id;
