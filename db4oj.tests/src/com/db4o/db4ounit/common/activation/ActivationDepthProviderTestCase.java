@@ -2,12 +2,12 @@
 
 package com.db4o.db4ounit.common.activation;
 
-import com.db4o.config.Configuration;
-import com.db4o.db4ounit.common.foundation.Iterator4Assert;
+import com.db4o.config.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
 import db4ounit.extensions.*;
+import db4ounit.extensions.mocking.*;
 
 /**
  * Ensures the container uses the provided ActivationDepthProvider instance
@@ -94,15 +94,13 @@ public class ActivationDepthProviderTestCase
 	}
 	
 	private void assertProviderCalled(MethodCall[] expectedCalls) {
-		Iterator4Assert.areEqual(
-			expectedCalls,
-			_dummyProvider.iterator());
+		_dummyProvider.verify(expectedCalls);
 	}
 	
 	private void assertProviderCalled(String methodName, Object arg1, Object arg2) {
-		Iterator4Assert.areEqual(
-			new Object[] { new MethodCall(methodName, arg1, arg2) },
-			_dummyProvider.iterator());
+		_dummyProvider.verify(new MethodCall[] {
+			new MethodCall(methodName, arg1, arg2)
+		});
 	}
 
 	private void resetProvider() {

@@ -1,12 +1,16 @@
-package com.db4o.db4ounit.common.activation;
+package db4ounit.extensions.mocking;
 
 import com.db4o.foundation.*;
-import com.db4o.internal.*;
-import com.db4o.internal.activation.*;
 
 import db4ounit.*;
 
 public class MethodCall {
+	public static final Object IGNORED_ARGUMENT = new Object() {
+		public String toString() {
+			return "...";
+		}
+	};
+	
 	public final String methodName;
 	public final Object[] args;
 	
@@ -34,6 +38,9 @@ public class MethodCall {
 		if (!methodName.equals(other.methodName)) return false;
 		if (args.length != other.args.length) return false;
 		for (int i=0; i<args.length; ++i) {
+			if (args[i] == IGNORED_ARGUMENT) {
+				continue;
+			}
 			if (!Check.objectsAreEqual(args[i], other.args[i])) {
 				return false;
 			}

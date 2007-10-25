@@ -11,14 +11,19 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
 
 	private final ConfigurationSource _configSource;
 	private Configuration _config;
+	private FixtureConfiguration _fixtureConfiguration;
 
 	protected AbstractDb4oFixture(ConfigurationSource configSource) {
 		_configSource=configSource;
 	}
 	
-	public void reopen() throws Exception {
+	public void fixtureConfiguration(FixtureConfiguration fc) {
+		_fixtureConfiguration = fc;
+	}
+	
+	public void reopen(Class testCaseClass) throws Exception {
 		close();
-		open();
+		open(testCaseClass);
 	}
 
 	public Configuration config() {
@@ -47,5 +52,15 @@ public abstract class AbstractDb4oFixture implements Db4oFixture {
         defragConfig.forceBackupDelete(true);
         defragConfig.db4oConfig(config());
 		com.db4o.defragment.Defragment.defrag(defragConfig);
+	}
+	
+	protected String buildLabel(String label) {
+		if (null == _fixtureConfiguration) return label;
+		return label + " - " + _fixtureConfiguration.getLabel();
+	}
+
+	protected void applyFixtureConfiguration(Class testCaseClass, final Configuration config) {
+		if (null == _fixtureConfiguration) return;
+		_fixtureConfiguration.configure(testCaseClass, config);
 	}
 }

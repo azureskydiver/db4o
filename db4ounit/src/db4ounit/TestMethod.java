@@ -7,7 +7,6 @@ import java.lang.reflect.*;
  */
 public class TestMethod extends TestAdapter {
 	
-	
 	public static LabelProvider DEFAULT_LABEL_PROVIDER = new LabelProvider() {
 		public String getLabel(TestMethod method) {
 			return method.getSubject().getClass().getName() + "." + method.getMethod().getName();
@@ -41,6 +40,10 @@ public class TestMethod extends TestAdapter {
 
 	public String getLabel() {
 		return _labelProvider.getLabel(this);
+	}
+	
+	public String toString() {
+		return "TestMethod(" + _method + ")";
 	}
 
 	protected void runTest() throws Exception {

@@ -10,11 +10,11 @@ public interface Db4oFixture {
 	
 	String getLabel();
     
-	void open() throws Exception;
+	void open(Class testCaseClass) throws Exception;
     
 	void close() throws Exception;
 	
-	void reopen() throws Exception;
+	void reopen(Class testCaseClass) throws Exception;
     
     void clean();
     
@@ -29,4 +29,6 @@ public interface Db4oFixture {
 	void defragment() throws Exception;
 
 	void configureAtRuntime(RuntimeConfigureAction action);
+
+	void fixtureConfiguration(FixtureConfiguration configuration);
 }

@@ -57,7 +57,7 @@ public class DatabaseReadonlyExceptionTestCase
 				fixture().close();
 				fixture().clean();
 				fixture().config().readOnly(true);
-				fixture().open();
+				fixture().open(getClass());
 			}
 		});
 	}

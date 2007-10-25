@@ -8,6 +8,7 @@ import com.db4o.db4ounit.common.foundation.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
+import db4ounit.extensions.foundation.*;
 
 
 public class JdkCollectionIterator4TestCase implements TestCase{
