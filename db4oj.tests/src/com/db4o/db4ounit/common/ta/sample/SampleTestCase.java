@@ -49,12 +49,20 @@ public class SampleTestCase extends AbstractDb4oTestCase implements OptOutCS{
         state._cities = new City[] {city};
         store(customer);
         
+        
+    }
+    
+    protected void db4oSetupAfterStore() throws Exception {
+        Object customer = retrieveOnlyInstance(Customer.class);
+        Object country = retrieveOnlyInstance(Country.class);
+        
         customerID = db().getID(customer);
         countryID = db().getID(country);
         
         customerUUID = db().getObjectInfo(customer).getUUID();
         countryUUID = db().getObjectInfo(country).getUUID();
         
+        reopen();
     }
     
     public void testRetrieveNonActivatable() throws Exception{
