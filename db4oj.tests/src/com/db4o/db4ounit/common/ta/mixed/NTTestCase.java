@@ -17,20 +17,20 @@ public class NTTestCase extends ItemTestCaseBase {
 	
 	protected Object createItem() throws Exception {
 		NTItem item = new NTItem();
-		item.item = new TItem();
-		item.item.value = 42;
+		item.tItem = new TItem();
+		item.tItem.value = 42;
 		return item;
 	}
 
 	protected void assertRetrievedItem(Object obj) throws Exception {
 		NTItem item = (NTItem) obj;
-		Assert.isNotNull(item.item);
-		Assert.areEqual(0, item.item.value);
+		Assert.isNotNull(item.tItem);
+		Assert.areEqual(0, item.tItem.value);
 	}
 	
 	protected void assertItemValue(Object obj) throws Exception {
 		NTItem item = (NTItem) obj;
-		Assert.areEqual(42, item.item.value());
+		Assert.areEqual(42, item.tItem.value());
 	}
 
 	

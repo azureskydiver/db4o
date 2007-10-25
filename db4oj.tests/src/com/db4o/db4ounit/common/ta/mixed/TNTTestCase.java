@@ -9,14 +9,14 @@ import db4ounit.*;
 /**
  * @exclude
  */
-public class NNTTestCase extends ItemTestCaseBase {
+public class TNTTestCase extends ItemTestCaseBase {
 	
 	public static void main(String[] args) {
-		new NNTTestCase().runAll();
+		new TNTTestCase().runAll();
 	}
 	
 	protected Object createItem() throws Exception {
-		NNTItem item = new NNTItem();
+		TNTItem item = new TNTItem();
 		item.ntItem = new NTItem();
 		item.ntItem.tItem = new TItem();
 		item.ntItem.tItem.value = 42;
@@ -24,17 +24,17 @@ public class NNTTestCase extends ItemTestCaseBase {
 	}
 
 	protected void assertRetrievedItem(Object obj) throws Exception {
-		NNTItem item = (NNTItem) obj;
-		Assert.isNotNull(item.ntItem);
-		Assert.isNotNull(item.ntItem.tItem);
-		Assert.areEqual(0, item.ntItem.tItem.value);
+		TNTItem item = (TNTItem) obj;
+		Assert.isNull(item.ntItem);
 	}
 	
 	protected void assertItemValue(Object obj) throws Exception {
-		NNTItem item = (NNTItem) obj;
-		Assert.areEqual(42, item.ntItem.tItem.value());
+		TNTItem item = (TNTItem) obj;
+		NTItem ntItem = item.value();
+		Assert.isNotNull(ntItem);
+		Assert.isNotNull(ntItem.tItem);
+		Assert.areEqual(0, ntItem.tItem.value);
+		Assert.areEqual(42, ntItem.tItem.value());
 	}
-
-	
 
 }
