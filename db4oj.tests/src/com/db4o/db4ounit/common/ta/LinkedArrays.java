@@ -10,8 +10,6 @@ import db4ounit.*;
 
 public class LinkedArrays implements CanAssertActivationDepth {
     
-    
-    
     public static class Item implements CanAssertActivationDepth{
         
         public String _name;
@@ -39,7 +37,6 @@ public class LinkedArrays implements CanAssertActivationDepth {
         }
         
     }
-    
     
     public static class ActivatableItem implements Activatable, CanAssertActivationDepth {
         
@@ -118,12 +115,10 @@ public class LinkedArrays implements CanAssertActivationDepth {
         
         la._next = newLinkedArrays(depth);
         
-        depth--;
-        
         la._objectArray = new Object[] {newItem(depth)};
         la._untypedArray = new Object[] {newItem(depth)};
         la._stringArray = new String[] { new Integer(depth).toString()};
-        la._intArray = new int[] {depth};
+        la._intArray = new int[] {depth + 1};
         la._itemArray = new Item[]{newItem(depth)};
         la._activatableItemArray = new ActivatableItem[] { newActivatableItem(depth) };
         la._linkedArrays = new LinkedArrays[] { newLinkedArrays(depth)};
@@ -160,10 +155,8 @@ public class LinkedArrays implements CanAssertActivationDepth {
             return;
         }
         
-        depth--;
-        
         Assert.isNotNull(_stringArray[0]);
-        Assert.areEqual(depth, _intArray[0]);
+        Assert.isGreater(0, _intArray[0]);
         
         recurseAssertActivationDepth(((Object[])_objectArray)[0], depth);
         recurseAssertActivationDepth(_untypedArray[0], depth);
