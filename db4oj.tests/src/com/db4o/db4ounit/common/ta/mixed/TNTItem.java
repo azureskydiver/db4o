@@ -1,0 +1,17 @@
+/* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
+
+package com.db4o.db4ounit.common.ta.mixed;
+
+import com.db4o.db4ounit.common.ta.*;
+
+/**
+ * @exclude
+ */
+public class TNTItem extends ActivatableImpl {
+	public NTItem ntItem;
+
+	public NTItem value() {
+		activate();
+		return ntItem;
+	}
+}
