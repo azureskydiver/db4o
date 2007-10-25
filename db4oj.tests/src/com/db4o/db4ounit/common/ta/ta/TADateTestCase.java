@@ -4,6 +4,8 @@ package com.db4o.db4ounit.common.ta.ta;
 
 import java.util.*;
 
+import com.db4o.internal.handlers.*;
+
 import db4ounit.*;
 
 public class TADateTestCase extends TAItemTestCaseBase {
@@ -23,7 +25,11 @@ public class TADateTestCase extends TAItemTestCaseBase {
     protected void assertRetrievedItem(Object obj) throws Exception {
         TADateItem item = (TADateItem) obj;
         Assert.isNull(item._untyped);
-        Assert.isNull(item._typed);
+        Assert.areEqual(emptyValue(),item._typed);
+    }
+    
+    private Object emptyValue() {
+        return new DateHandler(null).primitiveNull();
     }
 
     protected Object createItem() throws Exception {
