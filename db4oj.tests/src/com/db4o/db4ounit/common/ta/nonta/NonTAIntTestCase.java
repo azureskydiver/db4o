@@ -27,5 +27,12 @@ public class NonTAIntTestCase extends NonTAItemTestCaseBase {
         item.obj = new Integer(2);
         return item;
     }
+    
+	protected void assertNullItem(Object obj) {
+		IntItem item = (IntItem) obj;
+		Assert.areEqual(0, item.value);
+		isPrimitiveNull(item.i);
+		Assert.isNull(item.obj);
+	}
 
 }

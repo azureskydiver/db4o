@@ -41,4 +41,11 @@ public class NonTANArrayTestCase extends NonTAItemTestCaseBase {
         return item;
     }
 
+    protected void assertNullItem(Object obj){
+    	NArrayItem item = (NArrayItem) obj;
+		Assert.isNull(item.value);
+		Assert.isNull(item.obj);
+		Assert.isNull(item.lists);
+		Assert.isNull(item.listsObject);
+	}
 }

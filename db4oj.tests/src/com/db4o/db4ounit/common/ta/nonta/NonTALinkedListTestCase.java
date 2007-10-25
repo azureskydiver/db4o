@@ -27,4 +27,9 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
         return item;
     }
 
+    protected void assertNullItem(Object obj) {
+    	LinkedListItem item = (LinkedListItem) obj;
+		Assert.isNull(item.list);
+	}
+
 }

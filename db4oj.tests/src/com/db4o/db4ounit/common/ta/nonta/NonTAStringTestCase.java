@@ -25,5 +25,11 @@ public class NonTAStringTestCase extends NonTAItemTestCaseBase {
         item.obj = "hello";
         return item;
     }
+    
+	protected void assertNullItem(Object obj) {
+		StringItem item = (StringItem) obj;
+		Assert.isNull(item.value);
+		Assert.isNull(item.obj);
+	}
 
 }
