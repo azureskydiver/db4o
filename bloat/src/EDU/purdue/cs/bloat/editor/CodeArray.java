@@ -858,6 +858,7 @@ public class CodeArray implements InstructionVisitor, Opcode {
 			int index = constants.addConstant(Constant.STRING, operand);
 			createLDC(index);
 		} else if (operand instanceof Type) {
+			// JDK5 class literal
 			int index = constants.addConstant(Constant.CLASS, operand);
 			createLDC(index);
 		} else {
