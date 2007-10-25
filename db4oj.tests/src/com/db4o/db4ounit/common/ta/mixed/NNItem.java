@@ -5,6 +5,6 @@ package com.db4o.db4ounit.common.ta.mixed;
 /**
  * @exclude
  */
-public class NonTAItem {
-	public NonTAChildItem child;
+public class NNItem {
+	public NTItem child;
 }

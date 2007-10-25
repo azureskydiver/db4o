@@ -16,22 +16,22 @@ public class NNTTestCase extends ItemTestCaseBase {
 	}
 	
 	protected Object createItem() throws Exception {
-		NonTAItem item = new NonTAItem();
-		item.child = new NonTAChildItem();
-		item.child.item = new TAItem();
+		NNItem item = new NNItem();
+		item.child = new NTItem();
+		item.child.item = new TItem();
 		item.child.item.value = 42;
 		return item;
 	}
 
 	protected void assertRetrievedItem(Object obj) throws Exception {
-		NonTAItem item = (NonTAItem) obj;
+		NNItem item = (NNItem) obj;
 		Assert.isNotNull(item.child);
 		Assert.isNotNull(item.child.item);
 		Assert.areEqual(0, item.child.item.value);
 	}
 	
 	protected void assertItemValue(Object obj) throws Exception {
-		NonTAItem item = (NonTAItem) obj;
+		NNItem item = (NNItem) obj;
 		Assert.areEqual(42, item.child.item.value());
 	}
 

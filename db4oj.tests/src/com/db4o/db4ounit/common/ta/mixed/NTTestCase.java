@@ -16,20 +16,20 @@ public class NTTestCase extends ItemTestCaseBase {
 	}
 	
 	protected Object createItem() throws Exception {
-		NonTAChildItem item = new NonTAChildItem();
-		item.item = new TAItem();
+		NTItem item = new NTItem();
+		item.item = new TItem();
 		item.item.value = 42;
 		return item;
 	}
 
 	protected void assertRetrievedItem(Object obj) throws Exception {
-		NonTAChildItem item = (NonTAChildItem) obj;
+		NTItem item = (NTItem) obj;
 		Assert.isNotNull(item.item);
 		Assert.areEqual(0, item.item.value);
 	}
 	
 	protected void assertItemValue(Object obj) throws Exception {
-		NonTAChildItem item = (NonTAChildItem) obj;
+		NTItem item = (NTItem) obj;
 		Assert.areEqual(42, item.item.value());
 	}
 

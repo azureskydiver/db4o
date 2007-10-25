@@ -7,7 +7,7 @@ import com.db4o.db4ounit.common.ta.*;
 /**
  * @exclude
  */
-public class TAItem extends ActivatableImpl {
+public class TItem extends ActivatableImpl {
 	public int value;
 
 	public int value() {
