@@ -4,6 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
@@ -24,7 +25,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         _id = handlerID;
     }
     
-    void activateFields(Transaction trans, Object obj, int depth) {
+    void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
         // Override
         // do nothing
     }

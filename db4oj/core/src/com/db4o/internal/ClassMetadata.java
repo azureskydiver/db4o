@@ -98,7 +98,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         _classIndexed = true;
     }
     
-    final void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
+    void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
         if(objectCanActivate(trans, obj)){
             activateFieldsLoop(trans, obj, depth);
         }

@@ -30,7 +30,10 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
     private transient ObjectContainerBase i_stream;
     private transient Transaction i_trans;
 
-    public int adjustReadDepth(int a_depth) {
+    /**
+     * @param depth
+     */
+    public int adjustReadDepth(int depth) {
         return 1;
     }
     
