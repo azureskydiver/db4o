@@ -29,6 +29,9 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
         bind(null, obj, id);
     }
 
+    /**
+     * @deprecated
+     */
     public Db4oCollections collections() {
         return collections(null);
     }

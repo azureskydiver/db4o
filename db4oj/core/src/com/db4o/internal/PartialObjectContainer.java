@@ -172,9 +172,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	public final ObjectReference ref;
     	public final ActivationDepth depth;
     	
-    	public PendingActivation(ObjectReference ref, ActivationDepth depth) {
-    		this.ref = ref;
-    		this.depth = depth;
+    	public PendingActivation(ObjectReference ref_, ActivationDepth depth_) {
+    		this.ref = ref_;
+    		this.depth = depth_;
     	}
     }
 
@@ -1723,10 +1723,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	public final ObjectReference ref;
     	public final int depth;
     	
-    	public PendingSet(Transaction transaction, ObjectReference ref, int depth) {
-    		this.transaction = transaction;
-    		this.ref = ref;
-    		this.depth = depth;
+    	public PendingSet(Transaction transaction_, ObjectReference ref_, int depth_) {
+    		this.transaction = transaction_;
+    		this.ref = ref_;
+    		this.depth = depth_;
 		}
     }
 
