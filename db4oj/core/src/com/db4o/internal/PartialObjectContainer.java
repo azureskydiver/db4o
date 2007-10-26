@@ -236,7 +236,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return newRef;
     }
 
-	private ClassMetadata classMetadataForObject(Object obj) {
+	public ClassMetadata classMetadataForObject(Object obj) {
 		return classMetadataForReflectClass(reflector().forObject(obj));
 	}
     

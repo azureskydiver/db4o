@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.ta.mixed;
 
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.ta.*;
+import com.db4o.db4ounit.common.ta.LinkedArrays.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
 import com.db4o.ta.*;
@@ -68,9 +69,20 @@ public class LinkedArrayTestCase extends AbstractDb4oTestCase {
         }
     }
     
-    public void _testTransparentActivation(){
-        LinkedArrays linkedArrays = queryForRoot();
-        linkedArrays.assertActivationDepth(TESTED_DEPTH - 1, true);
+    public void testTransparentActivationQuery(){
+        LinkedArrays linkedArray = queryForRoot();
+        linkedArray.assertActivationDepth(TESTED_DEPTH - 1, true);
+    }
+    
+    public void testTransparentActivationTraversal(){
+        LinkedArrays root = queryForRoot();
+        ActivatableItem activatableItem = root._activatableItemArray[0];
+        activatableItem.activate();
+        LinkedArrays descendant = activatableItem._linkedArrays; 
+        descendant.assertActivationDepth(TESTED_DEPTH - 3, true);
+        db().deactivate(activatableItem, 1);
+        activatableItem.activate();
+        descendant.assertActivationDepth(TESTED_DEPTH - 3, true);
     }
     
     private LinkedArrays queryForRoot(){
