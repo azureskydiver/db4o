@@ -12,12 +12,9 @@ import com.db4o.ta.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-import db4ounit.extensions.fixtures.*;
 
 
-public class SampleTestCase
-	extends AbstractDb4oTestCase
-	implements OptOutCS, OptOutTA {
+public class SampleTestCase extends AbstractDb4oTestCase implements OptOutTA {
 
     public static void main(String[] args) {
         new SampleTestCase().runAll(); 
@@ -50,8 +47,6 @@ public class SampleTestCase
         City city = new City();
         state._cities = new City[] {city};
         store(customer);
-        
-        
     }
     
     protected void db4oSetupAfterStore() throws Exception {

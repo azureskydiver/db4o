@@ -282,7 +282,7 @@ public class FieldMetadata implements StoredField {
         return true;
     }
 
-    void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth, boolean activate) {
+    final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth, boolean activate) {
         if (! alive()) {
             return;
         }

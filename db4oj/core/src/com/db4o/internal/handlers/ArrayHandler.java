@@ -60,14 +60,34 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         Object[] all = allElements(onObject);
         if (activate) {
             for (int i = all.length - 1; i >= 0; i--) {
-                container().stillToActivate(trans, all[i], depth);
+                ActivationDepth elementDepth = descend(depth, all[i]);
+                if(elementDepth.requiresActivation()){
+                    container().stillToActivate(trans, all[i], elementDepth);
+                }
             }
         } else {
             for (int i = all.length - 1; i >= 0; i--) {
-                container().stillToDeactivate(trans, all[i], depth, false);
+                ActivationDepth elementDepth = descend(depth, all[i]);
+                if(elementDepth.requiresActivation()){
+                    container().stillToDeactivate(trans, all[i], elementDepth, false);
+                }
             }
         }
-        
+    }
+    
+    private ActivationDepth descend(ActivationDepth depth, Object obj){
+        if(obj == null){
+            return new NonDescendingActivationDepth();
+        }
+        ClassMetadata cm = classMetaDataForObject(obj);
+        if(cm.isPrimitive()){
+            return new NonDescendingActivationDepth();
+        }
+        return depth.descend(cm);
+    }
+    
+    private ClassMetadata classMetaDataForObject(Object obj){
+        return container().classMetadataForObject(obj);
     }
     
     public ReflectClass classReflector(){
