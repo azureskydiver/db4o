@@ -43,6 +43,12 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
 	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
 		return new LoggingIoAdapter(_delegate,path,lockFile,initialLength,_out,_config);
 	}
+	
+	public void close() throws Db4oIOException {
+		super.close();
+		_out.flush();
+		_out.close();
+	}
 
     public int read(byte[] bytes, int length) throws Db4oIOException {
     	if(config(LOG_READ)) {
