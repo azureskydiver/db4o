@@ -4,6 +4,7 @@ package com.db4o.bench;
 
 import java.io.*;
 import java.text.*;
+import java.util.*;
 
 
 public class LogStatistics {
@@ -45,7 +46,18 @@ public class LogStatistics {
 		try {
 			openStatisticsFile();
 			openLogFile();
+			
+			System.out.println("Creating statistics for " + _logFilePath);
+			
+			long start = System.currentTimeMillis();
 			createStatistics();
+			long end = System.currentTimeMillis();
+			
+			Date date = new Date(end-start);
+			SimpleDateFormat sdf = new SimpleDateFormat("mm:ss.S");
+			String elapsed = sdf.format(date);
+			
+			System.out.println("Time taken: " + elapsed);
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -141,6 +153,18 @@ public class LogStatistics {
 		_out.println("<tr><td colspan=\"9\"></td></tr>");
 		_out.println("<tr><td>Total</td><td></td><td align=\"right\">" + totalCountString + "</td><td></td><td></td><td></td><td>" + totalBytesString + "</td><td></td></tr>");
 		_out.println("</table>");
+		
+		double avgBytesPerRead = _readBytes / _readCount;
+		String avgBytesPerReadString = formatCount.format(avgBytesPerRead);
+		double avgBytesPerWrite = _writeBytes / _writeCount;
+		String avgBytesPerWriteString = formatCount.format(avgBytesPerWrite);
+		
+		_out.println("<p>");
+		_out.println("Average byte count per read: " + avgBytesPerReadString);
+		_out.println("<br>");
+		_out.println("Average byte count per write: " + avgBytesPerWriteString);
+		_out.println("</p>");
+		
 		_out.println("</body>");
 		_out.println("</html>");
 	}
