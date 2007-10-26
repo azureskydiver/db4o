@@ -8,6 +8,6 @@ package com.db4o.db4ounit.common.ta;
  */
 public interface CanAssertActivationDepth {
     
-    public void assertActivationDepth(int depth);
+    public void assertActivationDepth(int depth, boolean transparent);
     
 }
