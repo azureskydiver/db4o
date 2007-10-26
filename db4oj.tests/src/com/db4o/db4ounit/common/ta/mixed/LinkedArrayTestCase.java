@@ -5,13 +5,13 @@ package com.db4o.db4ounit.common.ta.mixed;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.ta.*;
 import com.db4o.ext.*;
+import com.db4o.query.*;
 import com.db4o.ta.*;
 
 import db4ounit.extensions.*;
 
 
 public class LinkedArrayTestCase extends AbstractDb4oTestCase {
-    
     
     static int TESTED_DEPTH = 7;
 
@@ -27,7 +27,7 @@ public class LinkedArrayTestCase extends AbstractDb4oTestCase {
     }
     
     protected void store() throws Exception {
-        LinkedArrays linkedArrays = LinkedArrays.newLinkedArrays(TESTED_DEPTH);
+        LinkedArrays linkedArrays = LinkedArrays.newLinkedArrayRoot(TESTED_DEPTH);
         store(linkedArrays);
         _linkedArraysUUID = db().getObjectInfo(linkedArrays).getUUID();
     }
@@ -35,7 +35,7 @@ public class LinkedArrayTestCase extends AbstractDb4oTestCase {
     public void testTheTest(){
         for (int depth = 1; depth < TESTED_DEPTH; depth++) {
             LinkedArrays linkedArrays = LinkedArrays.newLinkedArrays(depth);
-            linkedArrays.assertActivationDepth(depth - 1);
+            linkedArrays.assertActivationDepth(depth - 1, false);
         }
     }
     
@@ -43,7 +43,7 @@ public class LinkedArrayTestCase extends AbstractDb4oTestCase {
         LinkedArrays linkedArrays = root();
         for (int depth = 0; depth < TESTED_DEPTH; depth++) {
             db().activate(linkedArrays, depth);
-            linkedArrays.assertActivationDepth(depth);
+            linkedArrays.assertActivationDepth(depth, false);
             db().deactivate(linkedArrays, Integer.MAX_VALUE);
         }
     }
@@ -54,7 +54,7 @@ public class LinkedArrayTestCase extends AbstractDb4oTestCase {
             for (int firstActivationDepth = 1; firstActivationDepth < secondActivationDepth; firstActivationDepth++) {
                 db().activate(linkedArrays, firstActivationDepth);
                 db().activate(linkedArrays, secondActivationDepth);
-                linkedArrays.assertActivationDepth(secondActivationDepth);
+                linkedArrays.assertActivationDepth(secondActivationDepth, false);
                 db().deactivate(linkedArrays, Integer.MAX_VALUE);
             }
         }
@@ -64,8 +64,20 @@ public class LinkedArrayTestCase extends AbstractDb4oTestCase {
         LinkedArrays linkedArrays = root();
         for (int depth = 0; depth < TESTED_DEPTH; depth++) {
             LinkedArrays peeked = (LinkedArrays) db().peekPersisted(linkedArrays, depth, true);
-            peeked.assertActivationDepth(depth);
+            peeked.assertActivationDepth(depth, false);
         }
+    }
+    
+    public void _testTransparentActivation(){
+        LinkedArrays linkedArrays = queryForRoot();
+        linkedArrays.assertActivationDepth(TESTED_DEPTH - 1, true);
+    }
+    
+    private LinkedArrays queryForRoot(){
+        Query q = db().query();
+        q.constrain(LinkedArrays.class);
+        q.descend("_isRoot").constrain(new Boolean(true));
+        return (LinkedArrays) q.execute().next();
     }
     
     private LinkedArrays root(){

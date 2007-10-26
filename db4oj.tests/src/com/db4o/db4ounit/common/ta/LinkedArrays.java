@@ -27,13 +27,13 @@ public class LinkedArrays implements CanAssertActivationDepth {
             }
         }
 
-        public void assertActivationDepth(int depth) {
+        public void assertActivationDepth(int depth, boolean transparent) {
             nullAssert(_name, depth);
             nullAssert(_linkedArrays, depth);
             if(depth < 1){
                 return;
             }
-            recurseAssertActivationDepth(_linkedArrays, depth);
+            recurseAssertActivationDepth(_linkedArrays, depth, transparent);
         }
         
     }
@@ -70,17 +70,24 @@ public class LinkedArrays implements CanAssertActivationDepth {
             _activator = activator;
         }
 
-        public void assertActivationDepth(int depth) {
+        public void assertActivationDepth(int depth, boolean transparent) {
+            if(transparent){
+                Assert.isNull(_name);
+                Assert.isNull(_linkedArrays);
+                return;
+            }
             nullAssert(_name, depth);
             nullAssert(_linkedArrays, depth);
             if(depth < 1){
                 return;
             }
-            recurseAssertActivationDepth(_linkedArrays,depth );
+            recurseAssertActivationDepth(_linkedArrays,depth, transparent);
         }
         
     }
     
+
+    public boolean _isRoot;
     
     public LinkedArrays _next;
     
@@ -98,6 +105,12 @@ public class LinkedArrays implements CanAssertActivationDepth {
     
     public LinkedArrays[] _linkedArrays;
     
+    
+    public static LinkedArrays newLinkedArrayRoot(int depth){
+        LinkedArrays root = newLinkedArrays(depth);
+        root._isRoot = true;
+        return root;
+    }
     
     public static LinkedArrays newLinkedArrays(int depth){
         
@@ -141,7 +154,7 @@ public class LinkedArrays implements CanAssertActivationDepth {
     }
 
 
-    public void assertActivationDepth(int depth) {
+    public void assertActivationDepth(int depth, boolean transparent) {
         nullAssert(_next, depth);
         nullAssert(_objectArray, depth);
         nullAssert(_untypedArray, depth);
@@ -158,20 +171,20 @@ public class LinkedArrays implements CanAssertActivationDepth {
         Assert.isNotNull(_stringArray[0]);
         Assert.isGreater(0, _intArray[0]);
         
-        recurseAssertActivationDepth(((Object[])_objectArray)[0], depth);
-        recurseAssertActivationDepth(_untypedArray[0], depth);
-        recurseAssertActivationDepth(_itemArray[0], depth);
-        recurseAssertActivationDepth(_activatableItemArray[0], depth);
-        recurseAssertActivationDepth(_linkedArrays[0], depth);
+        recurseAssertActivationDepth(((Object[])_objectArray)[0], depth, transparent);
+        recurseAssertActivationDepth(_untypedArray[0], depth, transparent);
+        recurseAssertActivationDepth(_itemArray[0], depth, transparent);
+        recurseAssertActivationDepth(_activatableItemArray[0], depth, transparent);
+        recurseAssertActivationDepth(_linkedArrays[0], depth, transparent);
         
     }
     
-    static void recurseAssertActivationDepth(Object obj, int depth){
+    static void recurseAssertActivationDepth(Object obj, int depth, boolean transparent){
         nullAssert(obj, depth);
         if(obj == null){
             return;
         }
-        ((CanAssertActivationDepth)obj).assertActivationDepth(depth-1);
+        ((CanAssertActivationDepth)obj).assertActivationDepth(depth-1, transparent);
     }
     
     static void nullAssert(Object obj, int depth){
@@ -181,5 +194,6 @@ public class LinkedArrays implements CanAssertActivationDepth {
             Assert.isNotNull(obj);
         }
     }
+    
     
 }
