@@ -306,15 +306,27 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         ActivationDepth depth,
         boolean activate) {
         
-        depth = depth.descend(this);
-    	
-    	if (!depth.requiresActivation()) {
-    		return;
-    	}
-    	
+        cascadeActivation(true, trans, onObject, depth, activate);
+    }
+    
+    protected void cascadeActivation(
+        boolean doDescend,
+        Transaction trans,
+        Object onObject,
+        ActivationDepth depth,
+        boolean activate) {
+        
+        if(doDescend){
+            depth = depth.descend(this);
+        }
+        
+        if (!depth.requiresActivation()) {
+            return;
+        }
+        
         ObjectContainerBase stream = trans.container();
         if (activate) {
-        	// FIXME: [TA] do we need to check for isValueType here?
+            // FIXME: [TA] do we need to check for isValueType here?
             if(isValueType()){
                 activateFields(trans, onObject, depth);
             }else{

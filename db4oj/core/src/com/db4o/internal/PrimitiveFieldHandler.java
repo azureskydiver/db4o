@@ -42,6 +42,15 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     void cacheDirty(Collection4 col) {
         // do nothing
     }
+    
+    public void cascadeActivation(
+        Transaction trans,
+        Object onObject,
+        ActivationDepth depth,
+        boolean activate) {
+        
+        cascadeActivation(false, trans, onObject, depth, activate);
+    }
 
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
         if(mf._primitive.useNormalClassRead()){
