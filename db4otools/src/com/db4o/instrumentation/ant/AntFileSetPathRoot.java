@@ -7,7 +7,10 @@ import org.apache.tools.ant.types.resources.*;
 
 import com.db4o.instrumentation.file.*;
 
-public class AntFileSetPathRoot implements FilePathRoot {
+/**
+ * @exclude
+ */
+class AntFileSetPathRoot implements FilePathRoot {
 
 	private FileSet[] _fileSets;
 

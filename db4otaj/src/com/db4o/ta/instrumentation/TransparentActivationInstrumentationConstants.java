@@ -1,6 +1,9 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta.instrumentation;
 
+/**
+ * @exclude
+ */
 public abstract class TransparentActivationInstrumentationConstants {
 
 	public final static String ACTIVATOR_FIELD_NAME = "_db4o$$ta$$activator";

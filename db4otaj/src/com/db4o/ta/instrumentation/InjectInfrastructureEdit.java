@@ -17,7 +17,10 @@ import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.util.*;
 import com.db4o.ta.Activatable;
 
-public class InjectInfrastructureEdit implements BloatClassEdit {
+/**
+ * @exclude
+ */
+class InjectInfrastructureEdit implements BloatClassEdit {
 
 	private final LocalVariable THIS_VAR = new LocalVariable(0);
 	private final ClassFilter _instrumentedClassesFilter;

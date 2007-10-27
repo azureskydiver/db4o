@@ -10,6 +10,9 @@ import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.filter.*;
 import com.db4o.ta.instrumentation.*;
 
+/**
+ * @exclude
+ */
 public class TAAntClassEditFactory extends ProjectComponent implements ClassEditFactory {
 
 	private final List _regExp = new ArrayList();

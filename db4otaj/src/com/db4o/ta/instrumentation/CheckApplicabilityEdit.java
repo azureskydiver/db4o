@@ -10,7 +10,7 @@ import com.db4o.instrumentation.util.*;
 /**
  * @exclude
  */
-public class CheckApplicabilityEdit implements BloatClassEdit {
+class CheckApplicabilityEdit implements BloatClassEdit {
 
 	private ClassFilter _filter;
 

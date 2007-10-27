@@ -2,6 +2,9 @@
 
 package com.db4o.instrumentation.core;
 
+/**
+ * @exclude
+ */
 public class ClassLoaderNativeClassFactory implements NativeClassFactory {
 
 	private ClassLoader _loader;

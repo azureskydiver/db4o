@@ -7,6 +7,9 @@ import java.net.*;
 
 import com.db4o.instrumentation.core.*;
 
+/**
+ * Launch an application through an instrumenting classloader.
+ */
 public class Db4oInstrumentationLauncher {
 
 	public static void launch(BloatClassEdit[] edits, URL[] classPath, String mainClazzName, String[] args) throws Exception {

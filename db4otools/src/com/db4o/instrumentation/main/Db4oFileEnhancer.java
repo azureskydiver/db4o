@@ -13,6 +13,9 @@ import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.file.*;
 
+/**
+ * @exclude
+ */
 public class Db4oFileEnhancer {
 	private final BloatClassEdit _classEdit;
 	

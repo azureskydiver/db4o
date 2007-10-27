@@ -3,6 +3,9 @@ package com.db4o.instrumentation.core;
 import EDU.purdue.cs.bloat.editor.ClassEditor;
 
 
+/**
+ * Composes a sequence of instrumentation steps.
+ */
 public class CompositeBloatClassEdit implements BloatClassEdit {
 
 	private final BloatClassEdit[] _edits;

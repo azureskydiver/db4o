@@ -3,6 +3,10 @@ package com.db4o.instrumentation.filter;
 
 import com.db4o.instrumentation.core.*;
 
+/**
+ * Filter by class name/prefix.
+ */
+
 public class ByNameClassFilter implements ClassFilter {
 
 	private final String[] _names;

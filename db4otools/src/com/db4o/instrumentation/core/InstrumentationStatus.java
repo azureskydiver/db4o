@@ -3,7 +3,7 @@
 package com.db4o.instrumentation.core;
 
 /**
- * @exclude
+ * Used to report success/status after applying an instrumentation step.
  */
 public class InstrumentationStatus {
 

@@ -12,7 +12,9 @@ import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.filter.*;
 import com.db4o.instrumentation.util.*;
 
-
+/**
+ * @exclude
+ */
 public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 
 	private final Map _cache = new HashMap();

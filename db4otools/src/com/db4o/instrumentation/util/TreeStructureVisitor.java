@@ -4,6 +4,9 @@ package com.db4o.instrumentation.util;
 
 import EDU.purdue.cs.bloat.tree.*;
 
+/**
+ * @exclude
+ */
 public class TreeStructureVisitor extends TreeVisitor {
 	private int depth=0;
 	

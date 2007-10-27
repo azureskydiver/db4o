@@ -4,6 +4,9 @@ package com.db4o.instrumentation.util;
 
 import EDU.purdue.cs.bloat.editor.*;
 
+/**
+ * @exclude
+ */
 public class LabelGenerator {
 
 	private int _id = 0;

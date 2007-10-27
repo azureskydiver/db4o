@@ -2,6 +2,9 @@
 
 package com.db4o.instrumentation.core;
 
+/**
+ * @exclude
+ */
 public class DefaultNativeClassFactory implements NativeClassFactory {
 
 	public Class forName(String className) throws ClassNotFoundException {
