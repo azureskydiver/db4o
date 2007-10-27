@@ -43,13 +43,8 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         // do nothing
     }
     
-    public void cascadeActivation(
-        Transaction trans,
-        Object onObject,
-        ActivationDepth depth,
-        boolean activate) {
-        
-        cascadeActivation(false, trans, onObject, depth, activate);
+    protected boolean descendOnCascadingActivation() {
+        return false;
     }
 
     public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
