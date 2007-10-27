@@ -306,17 +306,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         ActivationDepth depth,
         boolean activate) {
         
-        cascadeActivation(true, trans, onObject, depth, activate);
-    }
-    
-    protected void cascadeActivation(
-        boolean doDescend,
-        Transaction trans,
-        Object onObject,
-        ActivationDepth depth,
-        boolean activate) {
-        
-        if(doDescend){
+        if(descendOnCascadingActivation()){
             depth = depth.descend(this);
         }
         
@@ -335,6 +325,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         } else {
             stream.stillToDeactivate(trans, onObject, depth, false);
         }
+    }
+
+    protected boolean descendOnCascadingActivation() {
+        return true;
     }
 
     void checkChanges() {
