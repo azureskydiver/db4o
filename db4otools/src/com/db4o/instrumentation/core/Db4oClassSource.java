@@ -2,6 +2,9 @@ package com.db4o.instrumentation.core;
 
 import EDU.purdue.cs.bloat.file.*;
 
+/**
+ * @exclude
+ */
 public class Db4oClassSource implements ClassSource {
 	
 	private NativeClassFactory _classFactory;

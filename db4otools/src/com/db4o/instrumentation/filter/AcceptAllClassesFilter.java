@@ -6,7 +6,7 @@ import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.util.*;
 
 /**
- * @exclude
+ * Accepts all classes that are not part of the Java platform.
  */
 public class AcceptAllClassesFilter implements ClassFilter {
 

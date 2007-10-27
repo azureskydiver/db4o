@@ -3,6 +3,9 @@ package com.db4o.instrumentation.file;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @exclude
+ */
 public class DefaultFilePathRoot implements FilePathRoot {
 
 	private final String[] _rootDirs;

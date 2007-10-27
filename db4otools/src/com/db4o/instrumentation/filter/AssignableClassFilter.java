@@ -5,7 +5,7 @@ package com.db4o.instrumentation.filter;
 import com.db4o.instrumentation.core.*;
 
 /**
- * @exclude
+ * Filter by superclass/interface.
  */
 public class AssignableClassFilter implements ClassFilter {
 

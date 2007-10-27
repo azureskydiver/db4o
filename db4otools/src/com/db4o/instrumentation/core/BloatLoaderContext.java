@@ -11,6 +11,9 @@ import EDU.purdue.cs.bloat.context.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
+/**
+ * @exclude
+ */
 public class BloatLoaderContext {
 	private ClassInfoLoader loader;
 	private EditorContext context;

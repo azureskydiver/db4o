@@ -4,7 +4,10 @@ import org.apache.tools.ant.util.regexp.*;
 
 import com.db4o.instrumentation.core.*;
 
-public class AntRegExpClassFilter implements ClassFilter {
+/**
+ * @exclude
+ */
+class AntRegExpClassFilter implements ClassFilter {
 	private final Regexp[] _regExp;
 
 	public AntRegExpClassFilter(Regexp[] regExp) {

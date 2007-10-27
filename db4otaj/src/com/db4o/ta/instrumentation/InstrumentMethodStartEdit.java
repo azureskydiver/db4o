@@ -16,7 +16,11 @@ import com.db4o.activation.Activator;
 import com.db4o.foundation.*;
 import com.db4o.instrumentation.core.*;
 
-public class InstrumentMethodStartEdit implements BloatClassEdit {
+/**
+ * @exclude
+ * @deprecated replaced by {@link InstrumentFieldAccessEdit} strategy
+ */
+class InstrumentMethodStartEdit implements BloatClassEdit {
 
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		return instrumentAllMethods(ce);

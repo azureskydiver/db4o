@@ -20,7 +20,10 @@ import com.db4o.foundation.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.util.*;
 
-public class InstrumentFieldAccessEdit implements BloatClassEdit {
+/**
+ * @exclude
+ */
+class InstrumentFieldAccessEdit implements BloatClassEdit {
 
 	private ClassFilter _filter;
 	

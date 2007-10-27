@@ -2,6 +2,9 @@ package com.db4o.instrumentation.util;
 
 import EDU.purdue.cs.bloat.editor.*;
 
+/**
+ * @exclude
+ */
 public class BloatUtil {
 
 	public static String normalizeClassName(Type type) {

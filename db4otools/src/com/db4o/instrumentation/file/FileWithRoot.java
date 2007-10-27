@@ -2,6 +2,9 @@ package com.db4o.instrumentation.file;
 
 import java.io.*;
 
+/**
+ * @exclude
+ */
 public class FileWithRoot implements Comparable {
 	private final File _root;
 	private final File _file;

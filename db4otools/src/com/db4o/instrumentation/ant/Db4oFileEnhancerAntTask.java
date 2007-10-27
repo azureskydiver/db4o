@@ -10,6 +10,11 @@ import org.apache.tools.ant.types.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.main.*;
 
+/**
+ * Ant task for build time class file instrumentation.
+ * 
+ * @see BloatClassEdit
+ */
 public class Db4oFileEnhancerAntTask extends Task {
 	private final List _sources = new ArrayList();
 	private String _targetDir;
