@@ -10,6 +10,7 @@ import java.util.*;
 public class LogStatistics {
 
 	private String _logFilePath;
+	private String _logFileName;
 	private String _statisticsFilePath;
 	private PrintStream _out;
 	private BufferedReader _in;
@@ -21,6 +22,7 @@ public class LogStatistics {
 	private long _syncCount = 0;
 	
 	
+	
 	/**
 	 * @param args
 	 */
@@ -29,11 +31,12 @@ public class LogStatistics {
 			System.out.println("Usage: LogStatistics <log file path> [<statistics file path>]");
 		}
 		else {
-			String statisticsFilePath = args[0] + "-stat.htm";
 			if ( args.length > 1 ) {
-				statisticsFilePath = args[1];
+				new LogStatistics(args[0], args[1]);
 			}
-			new LogStatistics(args[0], statisticsFilePath);
+			else {
+				new LogStatistics(args[0]);
+			}
 		}
 
 	}
@@ -47,17 +50,18 @@ public class LogStatistics {
 			openStatisticsFile();
 			openLogFile();
 			
-			System.out.println("Creating statistics for " + _logFilePath);
+			_logFileName = new File(_logFilePath).getName();
+			System.out.print("  Creating statistics for " + _logFileName + "  ...   ");
 			
 			long start = System.currentTimeMillis();
 			createStatistics();
 			long end = System.currentTimeMillis();
 			
 			Date date = new Date(end-start);
-			SimpleDateFormat sdf = new SimpleDateFormat("mm:ss.S");
+			SimpleDateFormat sdf = new SimpleDateFormat("mm'min' ss'sec' S'millisec'");
 			String elapsed = sdf.format(date);
 			
-			System.out.println("Time taken: " + elapsed);
+			System.out.println("Finished! Time taken: " + elapsed);
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -66,6 +70,11 @@ public class LogStatistics {
 		closeStatisticsFile();
 		closeLogFile();
 	}
+
+	public LogStatistics(String logFilepath) {
+		new LogStatistics(logFilepath, logFilepath+"-stat.htm");
+	}
+
 
 	private void closeLogFile() {
 		try {
@@ -141,7 +150,8 @@ public class LogStatistics {
 		_out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
 		_out.println("<html>");
 		_out.println("<head>");
-		_out.println("<title>Log Statistics</title><meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">");
+		_out.println("<title>Log Statistics - " + _logFileName + "</title>");
+		_out.println("<meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">");
 		_out.println("</head>");
 		_out.println("<body>");
 		_out.println("<p>Statistics for logfile '" + _logFilePath + "'</p>");
