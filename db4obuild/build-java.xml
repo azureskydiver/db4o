@@ -909,7 +909,6 @@
 		        </replacetokens>
 			</filterchain>
 		</copy>
-		<copy file="${dir.taj}/db4ota.readme.html" todir="${dir.dist.java.build}/lib" />
 		
 		<mkdir dir="${dir.dist.java.build}/doc/reference" />
 		<copy todir="${dir.dist.java.build}/doc/reference">
