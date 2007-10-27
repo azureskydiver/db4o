@@ -36,22 +36,8 @@ H4 { font-size: 10pt; color: black; }
             <td style="width: 190px">
                 Db4objects.Db4o.Tools</td>
             <td style="width: 338px">
-                db4o tools package. Functionality: Native Query optimization, defragment and statistics
+                db4o tools package. Functionality: Native Query optimization, TA instrumentation, defragment and statistics
                 tools</td>
-        </tr>
-        <tr>
-            <td style="width: 190px">
-                Db4objects.Db4o.TA</td>
-            <td style="width: 338px">
-                <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Activation/Transparent_Activation_Framework">
-                    Transparent Activation</a> project</td>
-        </tr>
-        <tr>
-            <td style="width: 190px">
-                Db4objects.Db4o.TA.Tests</td>
-            <td style="width: 338px">
-                <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Activation/Transparent_Activation_Framework">
-                    Transparent Activation</a> tests</td>
         </tr>
         <tr>
             <td style="width: 190px">
@@ -74,6 +60,13 @@ H4 { font-size: 10pt; color: black; }
         </tr>
         <tr>
             <td style="width: 190px">
+                Drs
+            </td>
+            <td style="width: 338px">
+                db4o replication library</td>
+        </tr>
+        <tr>
+            <td style="width: 190px">
                 Libs</td>
             <td style="width: 338px">
                 additional libraries used in the projects
@@ -84,6 +77,12 @@ H4 { font-size: 10pt; color: black; }
                 db4objects.snk</td>
             <td style="width: 338px">
                 db4o assembly key</td>
+        </tr>
+        <tr>
+            <td style="width: 190px">
+                default.build</td>
+            <td style="width: 338px">
+                nant build script</td>
         </tr>
         <tr>
             <td style="width: 190px">
@@ -99,13 +98,5 @@ H4 { font-size: 10pt; color: black; }
         </tr>
     </table>
     <br />
-<p>Because of a Microsoft bug in CompactFramework, CF 1.0 solutions loose their links to libraries. When you open the following
-solution</p>
-<p><i> '/Db4objects.Db4o.Tests/Db4objects.Db4o.Tests-CF-2003.sln'</i></p>
-<p> it will tell you <i>"Cecil.FlowAnalyis not found"</i> and <i>"Mono.Cecil
-not found"</i>.</p>
-
-<p>These two libraries have to be added by hand to the references of the <code>Db4objects.Db4o.Tools</code> and <code>Db4objects.Db4o.Tests</code> project. You
-can find them in <a href="./Libs/compact-1.0/">.<i>/src/Libs/compact-1.0/</i></a></p>
 </body>
 </html>
