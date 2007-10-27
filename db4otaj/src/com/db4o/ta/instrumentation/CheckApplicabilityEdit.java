@@ -35,7 +35,7 @@ public class CheckApplicabilityEdit implements BloatClassEdit {
 
 	private boolean isApplicableClass(Class clazz) {
 		Class curClazz = clazz;
-		while (curClazz != Object.class) {
+		while (curClazz != Object.class && curClazz != null) {
 			if (BloatUtil.isPlatformClassName(curClazz.getName())) {
 				return false;
 			}
