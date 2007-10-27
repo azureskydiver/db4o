@@ -22,7 +22,7 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
     protected void assertRetrievedItem(Object obj) throws Exception {
         Item item = (Item) obj;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 9; i++) {
             assertNullItem(item, 10 - i);
             item = item.next();
         }
@@ -123,7 +123,6 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
         }
 
         public String toString() {
-            activate();
             return _name;
         }
 
