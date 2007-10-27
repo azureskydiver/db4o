@@ -21,6 +21,7 @@
 package EDU.purdue.cs.bloat.file;
 
 import java.io.*;
+import java.util.*;
 
 import EDU.purdue.cs.bloat.reflect.*;
 
@@ -118,7 +119,7 @@ public class Code extends Attribute {
 
 		final int numAttributes = in.readUnsignedShort();
 
-		attrs = new Attribute[numAttributes];
+		List attrList = new ArrayList(numAttributes);
 
 		for (int i = 0; i < numAttributes; i++) {
 			final int nameIndex = in.readUnsignedShort();
@@ -129,17 +130,25 @@ public class Code extends Attribute {
 			if (name != null) {
 				if ("LineNumberTable".equals(name.value())) {
 					lineNumbers = new LineNumberTable(in, nameIndex, length);
-					attrs[i] = lineNumbers;
-				} else if ("LocalVariableTable".equals(name.value())) {
+					attrList.add(lineNumbers);
+				}
+				else if ("LocalVariableTable".equals(name.value())) {
 					locals = new LocalVariableTable(in, nameIndex, length);
-					attrs[i] = locals;
+					attrList.add(locals);
+				}
+				else if ("LocalVariableTypeTable".equals(name.value())) {
+					// just read and ignore
+					new GenericAttribute(in, nameIndex, length);
+				}
+				else {
+					attrList.add(new GenericAttribute(in, nameIndex, length));
 				}
 			}
-
-			if (attrs[i] == null) {
-				attrs[i] = new GenericAttribute(in, nameIndex, length);
+			else {
+				attrList.add(new GenericAttribute(in, nameIndex, length));
 			}
 		}
+		attrs = (Attribute[]) attrList.toArray(new Attribute[attrList.size()]);
 	}
 
 	/**

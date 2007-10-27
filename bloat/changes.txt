@@ -1,3 +1,7 @@
+2007-10-27
+
+- Ignore/purge JDK5 LVTT attribute in Code constructor
+
 2007-10-25
 
 - ClassFileLoader#loadClassFromRessource(): String#replaceAll() -> String#replace()
