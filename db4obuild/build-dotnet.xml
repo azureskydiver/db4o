@@ -170,9 +170,6 @@
 	
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
 	</target>
-		
-	<target name="run-tests-net1" depends="clean, configure-net1, run-tests-net">
-	</target>
 	
 	<target name="run-tests-core" depends="build-tests">
 		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="3600000">
@@ -195,9 +192,6 @@
 	</target>
 	
 	<target name="package" depends="build, ndoc, meta-package" description="Builds the complete set of .net 2 distros">
-	</target>
-	
-	<target name="package-net1" depends="build-net1, vsdoc, meta-package" description="Builds the complete set of .net 1 distros">
 	</target>
 	
 	<target name="meta-package" depends="build-zip, build-net-installer">
@@ -388,10 +382,7 @@
 	
 	<target name="build" depends="init, configure, build-all">
 	</target>
-	
-	<target name="build-net1" depends="configure-net1, build-all">
-	</target>
-	
+
 	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-tutorial">
 	</target>
 	
@@ -577,19 +568,11 @@
 			<exclude name="Libs/Cecil.FlowAnalysis/Cecil.FlowAnalysis.Tests/**/*.*" />
 		</fileset>
 		
-		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-CF-2003.csdproj">
-			<sources refid="tools.sources"/>
-		</updatecsharpproject>
-		
 		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-CF-2005.csproj">
 			<sources refid="tools.sources"/>
 		</updatecsharpproject>
 		
 		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-2005.csproj">
-			<sources refid="tools.sources"/>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-2003.csproj">
 			<sources refid="tools.sources"/>
 		</updatecsharpproject>
 	</target>
@@ -662,15 +645,7 @@
 		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2005.csproj">
 			<sources refid="core.net.files" />
 		</updatecsharpproject>		
-		
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2003.csproj">
-			<sources refid="core.net.files" />
-		</updatecsharpproject>
 
-		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2003.csdproj">
-			<sources refid="core.net.files" />
-		</updatecsharpproject>
-		
 		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2005.csproj">
 			<sources refid="core.net.files" />
 		</updatecsharpproject>
@@ -746,19 +721,7 @@
 			</fileset>
 		</copy>
 		
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2003.csproj">
-			<sources dir="${dir.n.v6.extensions}">
-				<include name="**/*.cs" />
-			</sources>
-		</updatecsharpproject>
-		
 		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2005.csproj">
-			<sources dir="${dir.n.v6.extensions}">
-				<include name="**/*.cs" />
-			</sources>
-		</updatecsharpproject>
-
-		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-CF-2003.csdproj">
 			<sources dir="${dir.n.v6.extensions}">
 				<include name="**/*.cs" />
 			</sources>
@@ -825,12 +788,6 @@
 				<include name="**/*.cs" />
 			</fileset>
 		</copy>
-
-		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2003.csdproj">
-			<sources dir="${dir.n.v6.tests}">
-				<include name="**/*.cs" />
-			</sources>
-		</updatecsharpproject>
 		
 		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.csproj">
 			<sources dir="${dir.n.v6.tests}">
@@ -839,12 +796,6 @@
 		</updatecsharpproject>
 		
 		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-2005.csproj">
-			<sources dir="${dir.n.v6.tests}">
-				<include name="**/*.cs" />
-			</sources>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-2003.csproj">
 			<sources dir="${dir.n.v6.tests}">
 				<include name="**/*.cs" />
 			</sources>
@@ -1127,24 +1078,6 @@
 		</macrodef>
 		
 		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
-			<arg value="-D:compactframework.v1.dir=${dir.compactframework}/v1.0/WindowsCE" />
-			<arg value="-D:csc.defines=KEYFILE" />
-			<arg value="-t:net-1.1" />
-			<arg value="clean" />
-			<arg value="compactframework" />
-		</exec>
-	
-		<exec executable="${nant.exe}" dir="${cecil.fa.dir}" failonerror="true">
-			<arg value="-D:compactframework.v1.dir=${dir.compactframework}/v1.0/WindowsCE" />
-			<arg value="-D:csc.defines=KEYFILE" />
-			<arg value="-t:net-1.1" />
-			<arg value="clean" />
-			<arg value="compactframework" />
-		</exec>
-		
-		<copy-cecil-libs todir="${dir.n.v6.libs}/compact-1.0" />
-		
-		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
 			<arg value="-D:compactframework.v2.dir=${dir.compactframework}/v2.0/WindowsCE" />
 			<arg value="-t:netcf-2.0" />
 			<arg value="-D:csc.defines=KEYFILE" />
@@ -1161,23 +1094,7 @@
 		</exec>
 		
 		<copy-cecil-libs todir="${dir.n.v6.libs}/compact-2.0" />
-		
-		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
-			<arg value="-t:net-1.1" />
-			<arg value="-D:csc.defines=KEYFILE" />
-			<arg value="clean" />
-			<arg value="cecil" />
-		</exec>
 	
-		<exec executable="${nant.exe}" dir="${cecil.fa.dir}" failonerror="true">
-			<arg value="-D:csc.defines=KEYFILE" />
-			<arg value="-t:net-1.1" />
-			<arg value="clean" />
-			<arg value="build" />
-		</exec>
-		
-		<copy-cecil-libs todir="${dir.n.v6.libs}/net-1.1" />
-		
 		<exec executable="${nant.exe}" dir="${cecil.dir}" failonerror="true">
 			<arg value="-t:net-2.0" />
 			<arg value="clean" />

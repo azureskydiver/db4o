@@ -83,16 +83,8 @@
 		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-2005.csproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-2003.csproj">
-			<sources refid="db4ounit.files" />
-		</updatecsharpproject>
 
 		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-CF-2005.csproj">
-			<sources refid="db4ounit.files" />
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${db4ounit.net.dir}/${projectName}-CF-2003.csdproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 		

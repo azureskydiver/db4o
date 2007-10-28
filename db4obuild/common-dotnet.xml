@@ -26,29 +26,6 @@
 
 	</target>
 
-	<target name="configure-net1" unless="mono">
-		<echo>Configuring .net 1 build.</echo>
-		
-		<!-- don't build Db4oAdmin for .net 1.1 -->
-		<property name="skip.admin" value="true" />
-		<property name="skip.ta" value="true" />
-        
-		<property name="target.framework.version" value="1.1" />
-		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
-		<property name="csc.executable" location="${csc.executable.path.net1}/csc.exe" />
-	
-		<property name="csharp.definitions" value="NET_1_1" />
-		<property name="csharp.definitions.cf" value="CF_1_0" />
-		<property name="dir.libs.net" location="${dir.n.v6.libs}/net-1.1" />
-		<property name="dir.dll.cf" location="${dir.compactframework}v1.0/WindowsCE/" />
-		<property name="dir.libs.cf" location="${dir.n.v6.libs}/compact-1.0" />
-		<property name="csc.tests.extraoptions" value="" />
-	
-		<property name="installer.package.suffix" value="net1" />
-		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
-		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
-	</target>
-	
 	<target name="configure-net2" unless="mono">
 		<echo>Configuring .net 2 build.</echo>
 		
