@@ -9,32 +9,34 @@ import com.db4o.io.*;
 
 
 
-public class Logging {
+public class LoggingExample {
 
-	private static final int LOG_MODE = LoggingIoAdapter.LOG_READ + LoggingIoAdapter.LOG_SYNC + LoggingIoAdapter.LOG_WRITE;
 	private static final String LOG_FILE_NAME = "file_access.log";
 	private static final String DB_FILE_NAME = "logtest.yap";
+
+	
+	private static final int LOG_MODE = LoggingIoAdapter.LOG_READ + LoggingIoAdapter.LOG_SYNC + LoggingIoAdapter.LOG_WRITE;
 	
 	
 	public static void main(String[] args) {
+		new LoggingExample();
+	}
+
+	public LoggingExample() {
 		try {
 			configureIo();
-			
 			ObjectContainer db = Db4o.openFile(DB_FILE_NAME);
-			
-			//db.commit();
 			db.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
-
-
-	private static void configureIo() throws FileNotFoundException {
+	
+	
+	private void configureIo() throws FileNotFoundException {
 		PrintStream out = new PrintStream(new FileOutputStream(LOG_FILE_NAME));
-		IoAdapter delegate = new MemoryIoAdapter();
+		IoAdapter delegate = new RandomAccessFileAdapter();
 		IoAdapter io = new LoggingIoAdapter(delegate, out, LOG_MODE);
 		Db4o.configure().io(io);
 	}
