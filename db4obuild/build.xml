@@ -109,7 +109,7 @@
 		</copy>
 	</target>
 
-	<target name="runtestsnet2" depends="init">
+	<target name="runtestsnet" depends="init">
 		<ant antfile="build-dotnet.xml" target="run-tests" />
 	</target>
 
