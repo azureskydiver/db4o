@@ -256,6 +256,13 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
             return _server.version();
         }
     }
+    
+    public void activate(Object obj) throws Db4oIOException, DatabaseClosedException {
+        synchronized(lock()){
+            checkClosed();
+            _server.activate(_transaction, obj);
+        }
+    }
 
     public void activate(Object obj, int depth) throws Db4oIOException, DatabaseClosedException {
         synchronized(lock()){

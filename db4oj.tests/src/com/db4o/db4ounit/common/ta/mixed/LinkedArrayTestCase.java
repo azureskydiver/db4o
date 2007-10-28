@@ -61,6 +61,12 @@ public class LinkedArrayTestCase extends AbstractDb4oTestCase {
         }
     }
     
+    public void testActivateDefaultMode(){
+        LinkedArrays linkedArrays = root();
+        db().activate(linkedArrays);
+        linkedArrays.assertActivationDepth(TESTED_DEPTH - 1, true);
+    }
+    
     public void _testPeekPersisted(){
         LinkedArrays linkedArrays = root();
         for (int depth = 0; depth < TESTED_DEPTH; depth++) {
