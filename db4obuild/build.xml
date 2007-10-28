@@ -49,9 +49,6 @@
 	
 	<target name="buildall-old-school" depends="clean, init, buildjava-old-school, buildnet">
 	</target>
-	
-	<target name="buildall2-old-school" depends="clean, init, buildjava-old-school, buildnet2">
-	</target>
 
 	<target name="init" depends="properties" description="Basic initialization">
 		<tstamp />
@@ -112,10 +109,6 @@
 		</copy>
 	</target>
 
-	<target name="runtestsnet">
-		<ant antfile="build-dotnet.xml" target="run-tests-net1" />
-	</target>
-	
 	<target name="runtestsnet2" depends="init">
 		<ant antfile="build-dotnet.xml" target="run-tests" />
 	</target>
@@ -201,24 +194,6 @@
             -->
 		</exec>
 	</target>
-	
-	<target name="install-vsdoc" depends="vsdoc" description="Register the VS.NET 2003 integrated docs">
-		<property name="h2reg.exe" location="lib/h2reg/h2reg.exe" />
-		<property name="h2reg.cmdfile" location="${dir.dist.ndoc}/db4oCollection.h2reg.ini" />
-		<exec executable="${h2reg.exe}">
-			<arg value="-r" />
-			<arg value="CmdFile=${h2reg.cmdfile}" />
-		</exec>
-	</target>
-	
-	<target name="uninstall-vsdoc" depends="vsdoc" description="Unregister the VS.NET 2003 integrated docs">
-		<property name="h2reg.exe" location="lib/h2reg/h2reg.exe" />
-		<property name="h2reg.cmdfile" location="${dir.dist.ndoc}/db4oCollection.h2reg.ini" />
-		<exec executable="${h2reg.exe}">
-			<arg value="-u" />
-			<arg value="CmdFile=${h2reg.cmdfile}" />
-		</exec>
-	</target>
 
 	<target name="javadoc" depends="init" description="Build public javadocs">
 		<javadoc classpath="" 
@@ -293,29 +268,6 @@
 		<ant antfile="build-java.xml" target="run.tests.db4ojava" />
 	</target>
 
-	<target name="configure-net1.1">
-
-		<property name="target.framework.version" value="1.1" />
-			
-		<property name="csc.executable.path.net1" location="${env.SystemRoot}/Microsoft.NET/Framework/v1.1.4322" />
-		<property name="csc.executable.net1" location="${csc.executable.path.net1}/csc.exe" />
-		<property name="csc.executable" location="${csc.executable.net1}" />
-		
-		<available property="csc.executable.available" file="${csc.executable}"></available>
-		<fail unless="csc.executable.available">
-		.net 1.1 c# compiler not found at '${csc.executable.path.net1}', please configure your machine.properties by setting the property 'csc.executable.path.net1' accordingly.
-		</fail>
-		
-		<property name="csharp.defines" value="NET" />
-		
-		<property name="csharp.defines.cf" value="CF_1_0" />		
-		<property name="dir.dll.wince" value="${dir.compactframework}v1.0/WindowsCE/" />
-			
-		<property name="installer.package.guid" value="${installer.package.guid.net1}" />
-		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net1}" />
-		<property name="installer.package.suffix" value="net" />
-	</target>	
-	
 	<target name="configure-net2">
 		
 		<property name="target.framework.version" value="2.0" />
@@ -380,11 +332,7 @@
 		<ant antfile="build-java.xml" target="package.java" />
 	</target>
 
-	<target name="buildnet">
-		<ant antfile="build-dotnet.xml" target="package-net1" />
-	</target>
-
-	<target name="buildnet2" depends="init">
+	<target name="buildnet" depends="init">
 		<ant antfile="build-java.xml" target="doctor"/>
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>	
@@ -393,9 +341,7 @@
 		<ant antfile="build-dotnet.xml" target="package" />
 	</target>
 
-	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build" />
-	
-	<target name="buildall2" depends="clean, buildjava, buildnet2" description="Full clean build (.net 2 runtime)" />
+	<target name="buildall" depends="clean, buildjava, buildnet" description="Full clean build (.net 2 runtime)" />
 
     <target name="build-java-before-checkin" depends="clean, runtestsjava5" />
 
