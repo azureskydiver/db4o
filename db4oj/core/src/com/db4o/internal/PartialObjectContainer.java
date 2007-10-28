@@ -151,6 +151,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public ActivationDepthProvider activationDepthProvider() {
     	return configImpl().activationDepthProvider();
 	}
+    
+    public final void activate(Transaction trans, Object obj){
+        synchronized (_lock) {
+            activate(checkTransaction(trans), obj, defaultActivationDepthForObject(obj));
+        }
+    }
 
 	public final void activate(Transaction trans, Object obj, ActivationDepth depth) {
         synchronized (_lock) {

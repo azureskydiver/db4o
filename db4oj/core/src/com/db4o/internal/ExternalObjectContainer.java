@@ -21,6 +21,10 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
         super(config, parentContainer);
     }
     
+    public final void activate(Object obj){
+        activate(null, obj);
+    }
+    
     public final void activate(Object obj, int depth) throws DatabaseClosedException {
         activate(null, obj, activationDepthProvider().activationDepth(depth, ActivationMode.ACTIVATE));
     }
