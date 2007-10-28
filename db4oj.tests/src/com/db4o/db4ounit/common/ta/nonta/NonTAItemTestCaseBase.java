@@ -12,6 +12,7 @@ public abstract class NonTAItemTestCaseBase extends ItemTestCaseBase {
     }
     
     public void testGetByID() throws Exception {
+    	
     	Object item = db().ext().getByID(id);
     	assertNullItem(item);
 

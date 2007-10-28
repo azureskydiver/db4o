@@ -18,7 +18,7 @@ public class ServerRevokeAccessTestCase extends Db4oClientServerTestCase {
 	}
 
 	/**
-	 * @sharpen.if !CF_1_0 && !CF_2_0
+	 * @sharpen.if !CF_2_0
 	 */
 	public void test() throws IOException {
 		final String user = "hohohi";
