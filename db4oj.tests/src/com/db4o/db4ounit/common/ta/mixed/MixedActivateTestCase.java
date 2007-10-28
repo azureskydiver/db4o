@@ -123,6 +123,7 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
         }
 
         public String toString() {
+        	activate();
             return _name;
         }
 
