@@ -55,7 +55,9 @@ public final class Assert {
 	}
 	
 	public static void isNull(Object reference) {
-		isNull(reference, failureMessage("null", reference));
+		if (reference != null) {
+			fail(failureMessage("null", reference));
+		}
 	}
 
 	public static void isNull(Object reference,String message) {
@@ -65,7 +67,9 @@ public final class Assert {
 	}
 
 	public static void isNotNull(Object reference) {
-		isNotNull(reference, failureMessage("not null", reference));
+		if (reference == null) {
+			fail(failureMessage("not null", reference));
+		}
 	}
 
 	public static void isNotNull(Object reference,String message) {
