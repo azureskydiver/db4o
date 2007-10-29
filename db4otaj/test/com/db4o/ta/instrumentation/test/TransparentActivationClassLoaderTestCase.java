@@ -189,11 +189,8 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	}
 
 	public void testCanNotBeInstrumented() throws Exception {
-		Assert.expect(IllegalArgumentException.class, new CodeBlock () {
-			public void run() throws Throwable {
-				_loader.loadClass(CNI_CLASS_NAME);
-			}
-		});
+		Class clazz = _loader.loadClass(CNI_CLASS_NAME);
+		Assert.isFalse(Activatable.class.isAssignableFrom(clazz));
 	}
 	
 	public void setUp() throws Exception {
