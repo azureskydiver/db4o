@@ -92,7 +92,7 @@ depth at a very fine-grained level. You'll find those triggers ._
 in .x com.db4o.config.Configuration .. and the ._
 associated .x ObjectClass .. and .x ObjectField .. classes.
 
-The new Transparent Activation feature introduced in db4o-6.4 allows you to ._
+The new Transparent Activation feature introduced in db4o-7.0 allows you to ._
 forget about all these worries providing activation on request. More information ._
 can be obtained from  .l http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Activation/Transparent_Activation_Framework Transparent Activation Framework ..l  article online or from ._
 the offline version of the Reference documentation.
