@@ -59,34 +59,23 @@ public class LogReplayer {
 	}
 
 	
-/**
- * TODO: Code of replayRead and replayWrite very similar.
- * Possible / sensible to factor out common things?
- */	
-	
 	private void replayRead(String line) {
-		// format of line: "READ startPos,length" 
-		
-		int separatorIndex = separatorIndexForLine(line);
-		long pos = posForLine(LoggingIoAdapter.READ_ENTRY.length(), separatorIndex, line);
-		_io.seek(pos);
-		
-		int length = lengthForLine(separatorIndex, line);
-		byte[] buffer = new byte[length];
-		_io.read(buffer, length);
+		byte[] buffer = prepareCommand(LoggingIoAdapter.READ_ENTRY, line);
+		_io.read(buffer, buffer.length);
 	}
 
 	private void replayWrite(String line) {
-		// format of line: "WRITE startPos,length"
-		
+		byte[] buffer = prepareCommand(LoggingIoAdapter.WRITE_ENTRY, line);		
+		_io.write(buffer);
+	}
+	
+	private byte[] prepareCommand(String command, String line) {
 		int separatorIndex = separatorIndexForLine(line);
-		long pos = posForLine(LoggingIoAdapter.WRITE_ENTRY.length(), separatorIndex, line);
+		long pos = posForLine(command.length(), separatorIndex, line);
 		_io.seek(pos);
 		
 		int length = lengthForLine(separatorIndex, line);
-		byte[] buffer = new byte[length];
-		//TODO: initialise buffer?		
-		_io.write(buffer);
+		return new byte[length];
 	}
 	
 	private int separatorIndexForLine(String line) {
