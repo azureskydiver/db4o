@@ -12,12 +12,6 @@ import com.db4o.instrumentation.util.*;
  */
 class CheckApplicabilityEdit implements BloatClassEdit {
 
-	private ClassFilter _filter;
-
-	public CheckApplicabilityEdit(ClassFilter filter) {
-		_filter = filter;
-	}
-
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
