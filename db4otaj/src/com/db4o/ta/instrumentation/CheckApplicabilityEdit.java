@@ -21,11 +21,11 @@ class CheckApplicabilityEdit implements BloatClassEdit {
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
-			if (!_filter.accept(clazz)) {
-				return InstrumentationStatus.NOT_INSTRUMENTED;
+			if (clazz.isInterface()) {
+				return InstrumentationStatus.FAILED;
 			}
 			if (!isApplicableClass(clazz)) {
-				throw new IllegalArgumentException(clazz.getName());
+				return InstrumentationStatus.FAILED;
 			}
 		} catch (ClassNotFoundException e) {
 			return InstrumentationStatus.FAILED;
