@@ -134,16 +134,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	protected abstract void openImpl() throws Db4oIOException;
     
-    public final void activateDefaultDepth(Transaction trans, Object obj) {
-		// FIXME: [TA] review activation depth
-        activate(trans, obj, defaultActivationDepthForObject(obj));
-    }
-
-	public ActivationDepth defaultActivationDepthForObject(Object obj) {
-		ClassMetadata classMetadata = classMetadataForObject(obj);
-		return defaultActivationDepth(classMetadata);
-	}
-
 	public ActivationDepth defaultActivationDepth(ClassMetadata classMetadata) {
 		return activationDepthProvider().activationDepthFor(classMetadata, ActivationMode.ACTIVATE);
 	}
@@ -156,6 +146,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         synchronized (_lock) {
             activate(checkTransaction(trans), obj, defaultActivationDepthForObject(obj));
         }
+    }
+    
+    private final ActivationDepth defaultActivationDepthForObject(Object obj) {
+        ClassMetadata classMetadata = classMetadataForObject(obj);
+        return defaultActivationDepth(classMetadata);
     }
 
 	public final void activate(Transaction trans, Object obj, ActivationDepth depth) {
@@ -782,8 +777,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(obj == null){
             return null;
         }
-		// FIXME: [TA] review activation depth
-        activate(ta, obj, defaultActivationDepthForObject(obj));
+        activate(ta, obj);
         return obj;
     }
     

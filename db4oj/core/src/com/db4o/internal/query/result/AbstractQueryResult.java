@@ -21,7 +21,7 @@ public abstract class AbstractQueryResult implements QueryResult {
 	}
 	
 	public final Object activate(Object obj) {
-		stream().activate(_transaction, obj, stream().defaultActivationDepthForObject(obj));
+		stream().activate(_transaction, obj);
 		return obj;
 	}
 
