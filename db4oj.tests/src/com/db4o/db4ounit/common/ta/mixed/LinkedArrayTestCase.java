@@ -67,7 +67,7 @@ public class LinkedArrayTestCase extends AbstractDb4oTestCase {
         linkedArrays.assertActivationDepth(TESTED_DEPTH - 1, true);
     }
     
-    public void _testPeekPersisted(){
+    public void testPeekPersisted(){
         LinkedArrays linkedArrays = root();
         for (int depth = 0; depth < TESTED_DEPTH; depth++) {
             LinkedArrays peeked = (LinkedArrays) db().peekPersisted(linkedArrays, depth, true);
