@@ -11,32 +11,51 @@ import db4ounit.*;
 
 public class MixedActivateTestCase extends ItemTestCaseBase {
 
+    private final int ITEM_DEPTH = 10;
+
     public static void main(String[] args) {
         new MixedActivateTestCase().runAll();
     }
 
     protected void assertItemValue(Object obj) throws Exception {
+        assertActivatedItemByMethod((Item) obj, ITEM_DEPTH);
+    }
 
+    void assertActivatedItemByMethod(Item item, int level) {
+        for (int i = 0; i < ITEM_DEPTH; i++) {
+            Assert.areEqual("Item " + (ITEM_DEPTH - i), item.getName());
+            Assert.areEqual(ITEM_DEPTH - i, item.getValue());
+            if (i < ITEM_DEPTH - 1) {
+                Assert.isNotNull(item.next());
+            } else {
+                Assert.isNull(item.next());
+            }
+            item = item.next();
+        }
     }
 
     protected void assertRetrievedItem(Object obj) throws Exception {
         Item item = (Item) obj;
 
-        for (int i = 0; i < 9; i++) {
-            assertNullItem(item, 10 - i);
+        for (int i = 0; i < ITEM_DEPTH; i++) {
+            assertNullItem(item, ITEM_DEPTH - i);
             item = item.next();
         }
     }
 
-    private void assertNullItem(Item item, int i) {
-        if (i % 2 == 0) {
+    private void assertNullItem(Item item, int level) {
+        if (level % 2 == 0) {
             Assert.isNull(item._name);
             Assert.isNull(item._next);
             Assert.areEqual(0, item._value);
         } else {
-            Assert.areEqual("Item " + i, item._name);
-            Assert.areEqual(i, item._value);
-            Assert.isNotNull(item._next);
+            Assert.areEqual("Item " + level, item._name);
+            Assert.areEqual(level, item._value);
+            if (level == 1) {
+                Assert.isNull(item._next);
+            } else {
+                Assert.isNotNull(item._next);
+            }
         }
     }
 
@@ -45,6 +64,48 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
         item._isRoot = true;
 
         return item;
+    }
+
+    public void testActivate() {
+        Item item = (Item) retrieveOnlyInstance(TAItem.class);
+        Assert.isNull(item._name);
+        Assert.isNull(item._next);
+        Assert.areEqual(0, item._value);
+        // depth = 0;
+        db().activate(item, 0);
+        Assert.isNull(item._name);
+        Assert.isNull(item._next);
+        Assert.areEqual(0, item._value);
+
+        // depth = 1;
+        // item.next();
+        db().activate(item, 1);
+        assertActivatedItemByField(item, 1);
+
+        db().activate(item, 5);
+        assertActivatedItemByField(item, 5);
+
+        db().activate(item, 10);
+        assertActivatedItemByField(item, 10);
+    }
+
+    void assertActivatedItemByField(Item item, int level) {
+        for (int i = 0; i < level; i++) {
+            Assert.areEqual("Item " + (ITEM_DEPTH - i), item._name);
+            Assert.areEqual(ITEM_DEPTH - i, item._value);
+
+            if (i < ITEM_DEPTH - 1) {
+                Assert.isNotNull(item._next);
+            } else {
+                Assert.isNull(item._next);
+            }
+            item = item._next;
+        }
+        if (level < ITEM_DEPTH) {
+            Assert.isNull(item._name);
+            Assert.isNull(item._next);
+            Assert.areEqual(0, item._value);
+        }
     }
 
     public Object retrieveOnlyInstance(Class clazz) {
@@ -64,13 +125,20 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
 
         public boolean _isRoot;
 
+        public Item() {
+            //
+        }
+
+        public Item(String name, int value) {
+            _name = name;
+            _value = value;
+        }
+
         public static Item newItem(int depth) {
             if (depth == 0) {
                 return null;
             }
-            Item header = new Item();
-            header._name = "Item " + depth;
-            header._value = depth;
+            Item header = new Item("Item " + depth, depth);
             header._next = TAItem.newTAITem(depth - 1);
             return header;
         }
@@ -87,22 +155,21 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
             return _next;
         }
 
-        public String toString() {
-            return _name;
-        }
     }
 
     public static class TAItem extends Item implements Activatable {
 
         private transient Activator _activator;
 
+        public TAItem(String name, int value) {
+            super(name, value);
+        }
+
         public static TAItem newTAITem(int depth) {
             if (depth == 0) {
                 return null;
             }
-            TAItem header = new TAItem();
-            header._name = "TAItem " + depth;
-            header._value = depth;
+            TAItem header = new TAItem("Item " + depth, depth);
             header._next = Item.newItem(depth - 1);
             return header;
         }
@@ -120,11 +187,6 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
         public Item next() {
             activate();
             return _next;
-        }
-
-        public String toString() {
-        	activate();
-            return _name;
         }
 
         public void activate() {
