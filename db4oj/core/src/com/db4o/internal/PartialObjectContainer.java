@@ -1207,9 +1207,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public final Object peekPersisted(Transaction trans, int id, ActivationDepth depth, boolean resetJustPeeked) {
-        if(!depth.requiresActivation()){
-            return null;
-        }
         if(resetJustPeeked){
             _justPeeked = null;
         }else{

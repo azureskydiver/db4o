@@ -49,9 +49,6 @@ public class LegacyActivationDepth implements ActivationDepth {
 	}
 
 	public boolean requiresActivation() {
-		if (_mode.isPeek()) {
-			return _depth >= 0;
-		}
 		return _depth > 0;
 	}
 

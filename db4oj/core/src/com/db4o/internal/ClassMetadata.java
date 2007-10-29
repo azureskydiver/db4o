@@ -1065,7 +1065,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return null;
         }
         context.container().peeked(context.objectID(), obj);
-        instantiateFields(context);
+        
+        if(context.activationDepth().requiresActivation()){
+            instantiateFields(context);
+        }
         return obj;
         
     }
