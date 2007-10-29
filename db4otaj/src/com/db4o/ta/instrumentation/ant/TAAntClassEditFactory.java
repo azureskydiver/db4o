@@ -52,18 +52,7 @@ public class TAAntClassEditFactory extends ProjectComponent implements ClassEdit
 				filter = (ClassFilter) filters.get(0);
 				break;
 			default:
-				// TODO: belongs to CompositeClassFilter/ClassFilterBuilder/whatever
-				filter = new ClassFilter() {
-					public boolean accept(Class clazz) {
-						for (Iterator filterIter = filters.iterator(); filterIter.hasNext();) {
-							ClassFilter curFilter = (ClassFilter) filterIter.next();
-							if(curFilter.accept(clazz)) {
-								return true;
-							}
-						}
-						return false;
-					}
-				};
+				filter = new CompositeClassFilter((ClassFilter[]) filters.toArray(new ClassFilter[filters.size()]));
 		}
 		return new InjectTransparentActivationEdit(filter);
 	}
