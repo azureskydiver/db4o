@@ -35,7 +35,8 @@ class CheckApplicabilityEdit implements BloatClassEdit {
 
 	private boolean isApplicableClass(Class clazz) {
 		Class curClazz = clazz;
-		while (curClazz != Object.class && curClazz != null) {
+		// FIXME string reference to Enum is rather fragile
+		while (curClazz != Object.class && curClazz != null && !curClazz.getName().equals("java.lang.Enum")) {
 			if (BloatUtil.isPlatformClassName(curClazz.getName())) {
 				return false;
 			}
