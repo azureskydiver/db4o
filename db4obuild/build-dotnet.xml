@@ -865,7 +865,8 @@
 		
 		<exec executable="${dir.build}/lib/boo/booi">
 			<arg file="src/sandcastle/MRefConfigGenerator.boo" />
-			<arg path="${dir.build}" />
+			<arg path="${dir.build}/config" />
+			<arg path="${dir.dist}" />
 		</exec>
 		
 		<exec executable="${sandcastle.tools}/MRefBuilder" dir="${dir.dist.ndoc}">
