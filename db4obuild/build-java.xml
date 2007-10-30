@@ -560,6 +560,14 @@
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" 
 			fork="true" 
+			classname="com.db4o.db4ounit.jre5.AllTestsWithTAJdk5" 
+			failonerror="true" 
+			timeout="3000000">
+			<sysproperty key="dir.workspace" value="${dir.workspace}" />
+			<classpath refid="tests.java5.cp" />
+		</java>
+		<java jvm="${file.jvm.jdk1.5}" 
+			fork="true" 
 			classname="com.db4o.test.AllTestsLegacy" 
 			failonerror="true" 
 			timeout="3600000">
