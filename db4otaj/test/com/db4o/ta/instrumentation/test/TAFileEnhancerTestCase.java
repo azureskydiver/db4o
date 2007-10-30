@@ -20,16 +20,11 @@ public class TAFileEnhancerTestCase implements TestCase {
 	private final static Class NOT_INSTRUMENTED_CLAZZ = NotToBeInstrumented.class;
 
 	public void test() throws Exception {
-		final String srcDir = Path4.combine(Path4.getTempPath(), "tafileinstr/source");
-		File4.mkdirs(srcDir);
-		final String targetDir = Path4.combine(Path4.getTempPath(), "tafileinstr/target");
-		File4.mkdirs(targetDir);
+		final String srcDir = mkTempDir("tafileinstr/source");
+		final String targetDir = mkTempDir("tafileinstr/target");
 
 		final Class[] clazzes = { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ };
-		
-		for (int clazzIdx = 0; clazzIdx < clazzes.length; clazzIdx++) {
-			copyClassFile(srcDir, clazzes[clazzIdx]);
-		}
+		copyClassFilesTo(clazzes, srcDir);
 		
 		ClassFilter filter = new ByNameClassFilter(new String[]{ INSTRUMENTED_CLAZZ.getName() });
 		Db4oFileEnhancer enhancer = new Db4oFileEnhancer(new InjectTransparentActivationEdit(filter));
@@ -44,9 +39,22 @@ public class TAFileEnhancerTestCase implements TestCase {
 		Assert.isFalse(Activatable.class.isAssignableFrom(uninstrumented));
 	}
 
-	private void copyClassFile(String srcDir, Class clazz) throws IOException {
+	private void copyClassFilesTo(final Class[] classes, final String toDir)
+			throws IOException {
+		for (int i = 0; i < classes.length; i++) {
+			copyClassFile(classes[i], toDir);
+		}
+	}
+
+	private String mkTempDir(String path) {
+		final String tempDir = Path4.combine(Path4.getTempPath(), path);
+		File4.mkdirs(tempDir);
+		return tempDir;
+	}
+
+	private void copyClassFile(Class clazz, String toDir) throws IOException {
 		File file = fileForClass(clazz);
-		String targetPath = Path4.combine(srcDir, clazz.getName().replace('.', '/') + ".class");
+		String targetPath = Path4.combine(toDir, clazz.getName().replace('.', '/') + ".class");
 		File4.delete(targetPath);
 		File4.copy(file.getCanonicalPath(), targetPath);
 	}
