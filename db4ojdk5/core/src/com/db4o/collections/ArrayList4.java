@@ -13,9 +13,9 @@ import com.db4o.ta.*;
  * Transparent activatable ArrayList implementation.
  * Implements List interface using an array to store elements.
  * Each ArrayList4 instance has a capacity, which indicates the 
- * size of the internal array. 
+ * size of the internal array. <br><br>
  * When instantiated as a result of a query, all the internal members
- * are NOT activated at all. When internal memebers are required to 
+ * are NOT activated at all. When internal members are required to 
  * perform an operation, the instance transparently activates all 
  * the members.   
  * 
