@@ -30,13 +30,13 @@ public class DefaultFilePathRootTestCase implements TestLifeCycle {
 			files.add(fileIter.next());
 		}
 		Collections.sort(files);
-		FileWithRoot[] expected = { 
-				new FileWithRoot(dirA, fileA), 
-				new FileWithRoot(dirB, fileB), 
-				new FileWithRoot(dirB, fileC), 
-				new FileWithRoot(dirB, fileD), 
+		InstrumentationClassSource[] expected = { 
+				new FileInstrumentationClassSource(dirA, fileA), 
+				new FileInstrumentationClassSource(dirB, fileB), 
+				new FileInstrumentationClassSource(dirB, fileC), 
+				new FileInstrumentationClassSource(dirB, fileD), 
 		};
-		FileWithRoot[] actual = (FileWithRoot[]) files.toArray(new FileWithRoot[files.size()]);
+		InstrumentationClassSource[] actual = (InstrumentationClassSource[]) files.toArray(new InstrumentationClassSource[files.size()]);
 		ArrayAssert.areEqual(expected, actual);
 	}
 

@@ -9,7 +9,6 @@ import java.util.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 
-import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.file.*;
 
@@ -60,40 +59,35 @@ public class Db4oFileEnhancer {
 			BloatLoaderContext bloatUtil,
 			String packagePredicate) throws Exception {
 		for (Iterator sourceFileIter = sources.files(); sourceFileIter.hasNext();) {
-			FileWithRoot file = (FileWithRoot) sourceFileIter.next();
-			enhanceFile(file.root(), file.file(), target, classLoader, bloatUtil, packagePredicate);
+			InstrumentationClassSource file = (InstrumentationClassSource) sourceFileIter.next();
+			enhanceFile(file, target, classLoader, bloatUtil, packagePredicate);
 		}
 	}
 
 	private void enhanceFile(
-			File prefix, 
-			File source, 
+			InstrumentationClassSource source, 
 			File target,
 			ClassLoader classLoader, 
 			BloatLoaderContext bloatUtil,
 			String packagePredicate) throws IOException {
-		String classPath = source.getCanonicalPath().substring(prefix.getCanonicalPath().length()+1);
-		String className = classPath.substring(0, classPath.length()-".class".length());
-		className=className.replace(File.separatorChar,'.');
-		
 		InstrumentationStatus status = InstrumentationStatus.NOT_INSTRUMENTED;
 		try {
-			if (className.startsWith(packagePredicate)) {
-				System.err.println("Processing " + className);
-				ClassEditor classEditor = bloatUtil.classEditor(className);
+			if (source.className().startsWith(packagePredicate)) {
+				System.err.println("Processing " + source.className());
+				ClassEditor classEditor = bloatUtil.classEditor(source.className());
 				status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
-				System.err.println("enhance " + className + ": " + (status.isInstrumented() ? "ok" : "failed"));
+				System.err.println("enhance " + source.className() + ": " + (status.isInstrumented() ? "ok" : "failed"));
 			}
 		} catch (Exception e) {
 			status = InstrumentationStatus.FAILED;
 			e.printStackTrace();
 		} catch (NoClassDefFoundError e) {
-			System.err.println("Omitting " + className + ": Referenced class " + e.getMessage() + " not found.");
+			System.err.println("Omitting " + source.className() + ": Referenced class " + e.getMessage() + " not found.");
 		} finally {
 			if (!status.isInstrumented()) {
-				File targetFile = new File(target, classPath);
+				File targetFile = source.targetPath(target);
 				targetFile.getParentFile().mkdirs();
-				File4.copyFile(source, targetFile);
+				copy(source.inputStream(), targetFile);
 			}
 			else {
 //				bloatUtil.commit();
@@ -101,7 +95,33 @@ public class Db4oFileEnhancer {
 		}
 	}
 
-	private String[] fullClasspath(FilePathRoot sources, String[] classpath) {
+	private void copy(InputStream inputStream, File targetFile) throws IOException {
+		final int bufSize = 4096;
+		BufferedInputStream bufIn = new BufferedInputStream(inputStream, bufSize);
+		try {
+			BufferedOutputStream bufOut = new BufferedOutputStream(new FileOutputStream(targetFile));
+			try {
+				copy(bufSize, bufIn, bufOut);
+			}
+			finally {
+				bufOut.close();
+			}
+		}
+		finally {
+			bufIn.close();
+		}
+	}
+
+	private void copy(final int bufSize, BufferedInputStream bufIn,
+			BufferedOutputStream bufOut) throws IOException {
+		byte[] buf = new byte[bufSize];
+		int bytesRead = -1;
+		while((bytesRead = bufIn.read(buf)) >= 0) {
+			bufOut.write(buf, 0, bytesRead);
+		}
+	}
+
+	private String[] fullClasspath(FilePathRoot sources, String[] classpath) throws IOException {
 		String[] sourceRoots = sources.rootDirs();
 		String [] fullClasspath = new String[sourceRoots.length + classpath.length];
 		System.arraycopy(sourceRoots, 0, fullClasspath, 0, sourceRoots.length);
@@ -115,7 +135,7 @@ public class Db4oFileEnhancer {
 
 	private void assertSourceDir(File fSourceDir) throws IOException {
 		if(!fSourceDir.isDirectory()) {
-			throw new IOException("No directory: "+fSourceDir.getCanonicalPath());
+			//throw new IOException("No directory: "+fSourceDir.getCanonicalPath());
 		}
 	}
 

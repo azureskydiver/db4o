@@ -1,5 +1,7 @@
 package com.db4o.instrumentation.util;
 
+import java.io.*;
+
 import EDU.purdue.cs.bloat.editor.*;
 
 /**
@@ -24,6 +26,17 @@ public class BloatUtil {
 	public static boolean isPlatformClassName(String name) {
 		return name.startsWith("java.") || name.startsWith("javax.")
 				|| name.startsWith("sun.");
+	}
+
+	public static String classNameForPath(String classPath) {
+		String className = classPath.substring(0, classPath.length()-".class".length());
+		className=className.replace(File.separatorChar,'.');
+		return className;
+	}
+
+	public static String classPathForName(String className) {
+		String classPath = className.replace('.', File.separatorChar);
+		return className + ".class";
 	}
 
 	private BloatUtil() {
