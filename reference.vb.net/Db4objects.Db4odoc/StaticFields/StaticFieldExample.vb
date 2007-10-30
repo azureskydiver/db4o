@@ -90,7 +90,7 @@ Namespace Db4objects.Db4odoc.StaticFields
                 End Try
             End If
         End Sub
-        ' end SetPilotsSimple
+        ' end SetPilots
 
 
         Private Shared Sub CheckPilots()

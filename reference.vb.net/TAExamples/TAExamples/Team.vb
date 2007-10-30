@@ -3,7 +3,8 @@ Imports System.Collections
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Activation
 Imports Db4objects.Db4o.TA
-Imports Db4objects.Db4o.TA.Tests.Collections
+Imports Db4objects.Db4o.Tests.Common.TA
+
 
 Namespace Db4ojects.Db4odoc.TAExamples
 
@@ -26,7 +27,7 @@ Namespace Db4ojects.Db4odoc.TAExamples
         End Sub
 
         ' activate object fields 
-        Protected Sub Activate()
+        Public Sub Activate() Implements IActivatable.Activate
             If _activator Is Nothing Then
                 Return
             End If

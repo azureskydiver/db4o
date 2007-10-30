@@ -7,7 +7,6 @@ Imports System.Collections
 
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Ext
-Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.NQCollection
     Class ParameterizedExamples
@@ -74,7 +73,7 @@ Namespace Db4objects.Db4odoc.NQCollection
         ' end storePilots
 
         Private Class PilotNamePredicate
-            Inherits Predicate
+            Inherits Query.Predicate
             Private startsWith As String
 
             Public Sub New(ByVal startsWith As String)

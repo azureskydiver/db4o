@@ -34,7 +34,7 @@ namespace Db4ojects.Db4odoc.TAExamples
         }
 
         // activate the object fields
-        protected void Activate()
+        public void Activate()
         {
             if (_activator == null)
                 return;

@@ -6,7 +6,6 @@ Imports System.Collections.Generic
 
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Ext
-Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.NQCollection
 
@@ -120,7 +119,7 @@ Namespace Db4objects.Db4odoc.NQCollection
         ' end SelectPilotsAndTrainees
 
         Private Class CarPilotPredicate
-            Inherits Predicate
+            Inherits Query.Predicate
 
             Private pilots As IList(Of Pilot) = Nothing
 

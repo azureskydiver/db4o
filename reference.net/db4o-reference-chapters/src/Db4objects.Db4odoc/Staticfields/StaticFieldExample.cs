@@ -113,7 +113,7 @@ namespace Db4objects.Db4odoc.StaticFields
                 }
             }
 		}
-		// end SetPilotsSimple
+		// end SetPilots
 	
 		
 		private static void CheckPilots()

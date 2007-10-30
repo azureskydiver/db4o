@@ -5,7 +5,6 @@ Imports System.IO
 
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Ext
-Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.NQSyntax
 
@@ -112,7 +111,7 @@ Namespace Db4objects.Db4odoc.NQSyntax
         ' end QuerySyntax2
 
         Private Class PilotPredicate
-            Inherits Predicate
+            Inherits Query.Predicate
             Public Function Match(ByVal obj As Object) As Boolean
                 ' each Pilot is included in the result
                 If TypeOf obj Is Pilot Then

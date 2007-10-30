@@ -7,7 +7,6 @@ Imports System.Collections
 
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Ext
-Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.NQCollection
     Class SimpleExamples
@@ -158,7 +157,7 @@ Namespace Db4objects.Db4odoc.NQCollection
         ' end selectPilot5Points
 
         Private Class NonGenericPredicate
-            Inherits Predicate
+            Inherits Query.Predicate
             Public Function Match(ByVal obj As Object) As Boolean
                 ' each Pilot is included in the result
                 If TypeOf obj Is Pilot Then
@@ -275,7 +274,7 @@ Namespace Db4objects.Db4odoc.NQCollection
         ' end SelectPilots6To12Points
 
         Private Class RandomPredicate
-            Inherits Predicate
+            Inherits Query.Predicate
             Private randomArray As IList = Nothing
 
             Private Function GetRandomArray() As IList
@@ -336,7 +335,7 @@ Namespace Db4objects.Db4odoc.NQCollection
         ' end SelectPilotsEven
 
         Private Class AnyPilotPredicate
-            Inherits Predicate
+            Inherits Query.Predicate
             Dim selected As Boolean = False
 
             Public Function Match(ByVal p As Pilot) As Boolean
@@ -350,7 +349,7 @@ Namespace Db4objects.Db4odoc.NQCollection
                 End If
             End Function
         End Class
-        ' AnyPilotPredicate
+        ' end AnyPilotPredicate
 
         Private Shared Sub SelectAnyOnePilot()
             Dim container As IObjectContainer = Database()
@@ -437,7 +436,7 @@ Namespace Db4objects.Db4odoc.NQCollection
         ' end PilotComparator
 
         Private Class DistinctPilotsPredicate
-            Inherits Predicate
+            Inherits Query.Predicate
 
             Public uniqueResult As Dictionary(Of Pilot, Object) = New Dictionary(Of Pilot, Object)()
 
