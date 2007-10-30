@@ -623,8 +623,8 @@
 			<arg value="-withExceptions" />
 		</java>
     </target>
-
-	<target name="run.tests.osgi" depends="build.osgi.tests">
+	
+	<target name="run.tests.osgi" depends="build.osgi.tests" unless="ignore.run.tests.osgi">
 		<delete dir="${dir.test.osgi}"/>
 		<mkdir dir="${dir.test.osgi}"/>
 		<mkdir dir="${dir.test.osgi.conf}"/>
