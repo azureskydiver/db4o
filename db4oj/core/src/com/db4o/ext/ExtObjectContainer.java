@@ -29,7 +29,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * global activation depth, ( see {@link Configuration#activationDepth()} )
      * and all configured settings for {@link ObjectClass#maximumActivationDepth(int)} 
      * and {@link ObjectClass#maximumActivationDepth(int)} will be respected.<br><br>   
-     * In Transparent Activation Mode ( see {@link}TransparentActivationSupport ) 
+     * In Transparent Activation Mode ( see {@link TransparentActivationSupport} ) 
      * the parameter object will only be activated, if it does not implement 
      * {@link Activatable}. All referenced members that do not implement 
      * {@link Activatable} will also be activated. Any {@link Activatable} objects 
