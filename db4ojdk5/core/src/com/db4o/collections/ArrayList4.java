@@ -10,10 +10,17 @@ import com.db4o.activation.*;
 import com.db4o.ta.*;
 
 /**
- * db4o ArrayList implementation, which is transparent activate awared.
- * The behaviour is similar as java.util.ArrayList.
+ * Transparent activatable ArrayList implementation.
+ * Implements List interface using an array to store elements.
+ * Each ArrayList4 instance has a capacity, which indicates the 
+ * size of the internal array. 
+ * When instantiated as a result of a query, all the internal members
+ * are NOT activated at all. When internal memebers are required to 
+ * perform an operation, the instance transparently activates all 
+ * the members.   
  * 
  * @see java.util.ArrayList
+ * @see com.db4o.ta.Activatable
  */
 
 public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
@@ -29,12 +36,22 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	
 	private transient Activator _activator;
 	
+	/**
+	 * activate basic implementation.
+	 * 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public void activate() {
 		if(_activator != null) {
 			_activator.activate();
 		}
 	}
 
+	/**
+	 * bind basic implementation.
+	 * 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public void bind(Activator activator) {
 		if(_activator != null || activator == null) {
 			throw new IllegalStateException();
@@ -42,10 +59,20 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		_activator = activator;
 	}
 	
+	/**
+	 * Same behaviour as java.util.ArrayList
+	 * 
+	 * @see java.util.ArrayList 
+	 */
 	public ArrayList4() {
 		this(10);
 	}
 
+	/**
+	 * Same behaviour as java.util.ArrayList
+	 * 
+	 * @see java.util.ArrayList 
+	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList4(Collection<? extends E> c) {
 		Object[] data = c.toArray();
@@ -55,6 +82,11 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		System.arraycopy(data, 0, elements, 0, data.length);
 	}
 
+	/**
+	 * Same behaviour as java.util.ArrayList
+	 * 
+	 * @see java.util.ArrayList 
+	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList4(int initialCapacity) {
 		if (initialCapacity < 0) {
@@ -63,7 +95,14 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		capacity = initialCapacity;
 		elements = (E[]) new Object[initialCapacity];
 	}
-
+	
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public void add(int index, E element) {
 		checkIndex(index, 0, size());
 		ensureCapacity(size() + 1);
@@ -74,10 +113,24 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		markModified();
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public boolean addAll(Collection<? extends E> c) {
 		return addAll(size(), c);
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public boolean addAll(int index, Collection<? extends E> c) {
 		checkIndex(index, 0, size());
 		int length = c.size();
@@ -93,6 +146,13 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		return true;
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public void clear() { 
 		int size = size();
 		Arrays.fill(elements, 0, size, null);
@@ -100,6 +160,13 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		markModified();
 	}
 	
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	@SuppressWarnings("unchecked")
 	public Object clone() {
 		activate();
@@ -112,6 +179,13 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		}
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public void ensureCapacity(int minCapacity) {
 		activate();
 		if (minCapacity <= capacity) {
@@ -120,11 +194,25 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		resize(minCapacity);
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public E get(int index) {
 		checkIndex(index, 0, size() - 1);
 		return elements[index];
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public int indexOf(Object o) {
 		for (int index = 0; index < size(); ++index) {
 			E element = get(index);
@@ -135,6 +223,13 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		return -1;
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public int lastIndexOf(Object o) {
 		for (int index = size() - 1; index >= 0; --index) {
 			E element = get(index);
@@ -145,6 +240,13 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		return -1;
 	}
 	
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public E remove(int index) {
 		int size = size();
 		checkIndex(index, 0, size - 1);
@@ -172,6 +274,13 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		markModified();
 	}
 	
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public E set(int index, E element) {
 		checkIndex(index, 0, size() - 1);
 		E oldValue = elements[index];
@@ -179,11 +288,25 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		return oldValue;
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public int size() {
 		activate();
 		return listSize;
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public Object[] toArray() {
 		int size = size();
 		Object[] data = new Object[size];
@@ -191,6 +314,13 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		return data;
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
 		int size = size();
@@ -201,6 +331,13 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		return a;
 	}
 
+	/**
+	 * same as java.util.ArrayList but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.ArrayList 
+	 * @see com.db4o.ta.Activatable
+	 */
 	public void trimToSize() {
 		resize(size());
 	}
