@@ -76,7 +76,7 @@ public class Db4oFileEnhancer {
 				System.err.println("Processing " + source.className());
 				ClassEditor classEditor = bloatUtil.classEditor(source.className());
 				status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
-				System.err.println("enhance " + source.className() + ": " + (status.isInstrumented() ? "ok" : "failed"));
+				System.err.println("enhance " + source.className() + ": " + (status.isInstrumented() ? "ok" : "skipped"));
 			}
 		} catch (Exception e) {
 			status = InstrumentationStatus.FAILED;
