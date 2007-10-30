@@ -1,5 +1,6 @@
 package com.db4o.instrumentation.ant;
 
+import java.io.*;
 import java.util.*;
 
 import org.apache.tools.ant.types.*;
@@ -22,10 +23,19 @@ class AntFileSetPathRoot implements FilePathRoot {
 		return new FileSetIterator(_fileSets);
 	}
 
-	public String[] rootDirs() {
+	public String[] rootDirs() throws IOException {
 		String[] rootDirs = new String[_fileSets.length];
 		for (int rootIdx = 0; rootIdx < _fileSets.length; rootIdx++) {
-			rootDirs[rootIdx] = _fileSets[rootIdx].getDir().getAbsolutePath();
+			FileSet curFileSet = _fileSets[rootIdx];
+			File rootDir = curFileSet.getDir();
+			if(rootDir == null && (curFileSet instanceof ZipFileSet)) {				
+				ZipFileSet zipFileSet = (ZipFileSet)curFileSet;
+				rootDir = zipFileSet.getSrc();
+			}
+			if(rootDir == null) {				
+				rootDir = File.listRoots()[0]; // XXX
+			}
+			rootDirs[rootIdx] = rootDir.getCanonicalPath();
 		}
 		return rootDirs;
 	}
@@ -46,8 +56,13 @@ class AntFileSetPathRoot implements FilePathRoot {
 		}
 
 		public Object next() {
-			FileResource fileRes = (FileResource) _fileSetIter.next();
-			return new FileWithRoot(fileRes.getBaseDir(), fileRes.getFile());
+			Resource resource = (Resource)_fileSetIter.next();
+			advanceFileSet();
+			if(resource instanceof FileResource) {
+				FileResource fileRes = (FileResource)resource;
+				return new FileInstrumentationClassSource(fileRes.getBaseDir(), fileRes.getFile());
+			}
+			return new AntJarEntryInstrumentationClassSource(resource);
 		}
 
 		public void remove() {

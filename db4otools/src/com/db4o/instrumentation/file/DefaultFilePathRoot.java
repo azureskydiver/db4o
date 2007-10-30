@@ -36,7 +36,7 @@ public class DefaultFilePathRoot implements FilePathRoot {
 			_extension = extension;
 			for (int rootIdx = 0; rootIdx < roots.length; rootIdx++) {
 				File root = new File(roots[rootIdx]);
-				push(new FileWithRoot(root, root));
+				push(new FileInstrumentationClassSource(root, root));
 			}
 			advanceQueue();
 		}
@@ -46,7 +46,7 @@ public class DefaultFilePathRoot implements FilePathRoot {
 		}
 
 		public Object next() {
-			FileWithRoot top = pop();
+			InstrumentationClassSource top = pop();
 			advanceQueue();
 			return top;
 		}
@@ -58,31 +58,31 @@ public class DefaultFilePathRoot implements FilePathRoot {
 		
 		private void advanceQueue() {
 			while(!_stack.isEmpty() && !accept(peek())) {
-				FileWithRoot dir = pop();
+				FileInstrumentationClassSource dir = pop();
 				if(!dir.file().isDirectory()) {
 					continue;
 				}
 				File[] children = dir.file().listFiles();
 				for (int childIdx = 0; childIdx < children.length; childIdx++) {
-					_stack.addFirst(new FileWithRoot(dir.root(), children[childIdx]));
+					_stack.addFirst(new FileInstrumentationClassSource(dir.root(), children[childIdx]));
 				}
 			}
 		}
 
-		private boolean accept(FileWithRoot file) {
+		private boolean accept(FileInstrumentationClassSource file) {
 			return file.file().isFile() && file.file().getName().endsWith(_extension);
 		}
 
-		private void push(FileWithRoot root) {
+		private void push(InstrumentationClassSource root) {
 			_stack.addFirst(root);
 		}		
 
-		private FileWithRoot pop() {
-			return (FileWithRoot) _stack.removeFirst();
+		private FileInstrumentationClassSource pop() {
+			return (FileInstrumentationClassSource) _stack.removeFirst();
 		}
 
-		private FileWithRoot peek() {
-			return (FileWithRoot)_stack.getFirst();
+		private FileInstrumentationClassSource peek() {
+			return (FileInstrumentationClassSource)_stack.getFirst();
 		}
 	}
 }

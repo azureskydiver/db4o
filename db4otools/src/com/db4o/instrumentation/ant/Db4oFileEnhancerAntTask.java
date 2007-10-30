@@ -17,6 +17,7 @@ import com.db4o.instrumentation.main.*;
  */
 public class Db4oFileEnhancerAntTask extends Task {
 	private final List _sources = new ArrayList();
+	private final List _sourceJars = new ArrayList();
 	private String _targetDir;
 	private final List _classPath = new ArrayList();
 	private String _packagePredicate;
@@ -29,7 +30,11 @@ public class Db4oFileEnhancerAntTask extends Task {
 	public void addSources(FileSet fileSet) {
 		_sources.add(fileSet);
 	}
-	
+
+	public void addSourceJars(ZipFileSet fileSet) {
+		_sourceJars.add(fileSet);
+	}
+
 	public void setTargetdir(String targetDir) {
 		_targetDir=targetDir;
 	}
@@ -68,11 +73,28 @@ public class Db4oFileEnhancerAntTask extends Task {
 				clazzEdit = new CompositeBloatClassEdit((BloatClassEdit[])classEdits.toArray(new BloatClassEdit[classEdits.size()]), true);
 				
 		}
-		AntFileSetPathRoot root = new AntFileSetPathRoot((FileSet[])_sources.toArray(new FileSet[_sources.size()]));
+		FileSet[] sourceArr = new FileSet[_sources.size() + _sourceJars.size()];
+		copyFileSets(sourceArr, 0, _sources);
+		copyFileSets(sourceArr, _sources.size(), _sourceJars);
+		AntFileSetPathRoot root = new AntFileSetPathRoot(sourceArr);
 		try {
-			new Db4oFileEnhancer(clazzEdit).enhance(root,_targetDir,(String[])paths.toArray(new String[paths.size()]),(_packagePredicate==null ? "" : _packagePredicate));
+			try {
+				new Db4oFileEnhancer(clazzEdit).enhance(root,_targetDir,(String[])paths.toArray(new String[paths.size()]),(_packagePredicate==null ? "" : _packagePredicate));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (Exception exc) {
 			throw new BuildException(exc);
+		}
+	}
+
+	private void copyFileSets(FileSet[] sourceArr, int sourceOffset, List curFileSet) {
+		for (Iterator sourceIter = curFileSet.iterator(); sourceIter.hasNext();) {
+			FileSet fileSet = (FileSet) sourceIter.next();
+			fileSet.appendIncludes(new String[]{"**/*.class"});
+			sourceArr[sourceOffset] = fileSet;
+			sourceOffset++;
 		}
 	}
 }
