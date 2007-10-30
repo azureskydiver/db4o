@@ -20,7 +20,6 @@ import com.db4odoc.ios.IOExample;
 import com.db4odoc.listdeleting.ListDeletingExample;
 import com.db4odoc.listoperations.ListOperationsExample;
 import com.db4odoc.lists.CollectionExample;
-import com.db4odoc.marshal.CustomMarshallerExample;
 import com.db4odoc.metainfo.MetaInfExample;
 import com.db4odoc.persist.PeekPersistedExample;
 import com.db4odoc.queries.NQExample;
@@ -74,7 +73,6 @@ public class Main {
     	EvaluationExample.main(args);
     	ListDeletingExample.main(args);
     	ListOperationsExample.main(args);
-    	CustomMarshallerExample.main(args);
     	NQExample.main(args);
     	PersistentExample.main(args);
     	QueryExample.main(args);

@@ -6,7 +6,9 @@ import java.io.File;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.events.CancellableObjectEventArgs;
 import com.db4o.events.Event4;
 import com.db4o.events.EventArgs;
@@ -30,7 +32,9 @@ public class CallbacksExample {
 
 	private static void testCreated(){
 		new File(DB4O_FILE_NAME).delete();
-		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+		ObjectServer server = Db4o.openServer(DB4O_FILE_NAME, 0);
+		ObjectContainer container = server.openClient();
+		//ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			EventRegistry registry =  EventRegistryFactory.forObjectContainer(container);
 			// register an event handler, which will print all the car objects, that have been created
@@ -48,6 +52,7 @@ public class CallbacksExample {
 			container.set(car);
 		} finally {
 			container.close();
+			server.close();
 		}
 	}
 	// end testCreated
@@ -68,7 +73,13 @@ public class CallbacksExample {
 	
 	private static void testCascadedDelete(){
 		fillDB();
-		final ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
+		Configuration con = Db4o.newConfiguration();
+		con.callbacks(false);
+		ObjectServer server = Db4o.openServer(con, DB4O_FILE_NAME, 0xdb40);
+		server.grantAccess("A", "A");
+		final ObjectContainer container = Db4o.openClient(con, "localhost", 0xdb40, "A", "A");
+		
+		//final ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			// check the contents of the database
 			ObjectSet result = container.get(null);
@@ -95,6 +106,7 @@ public class CallbacksExample {
 			listResult(result);
 		} finally {
 			container.close();
+			server.close();
 		}
 	}
 	// end testCascadedDelete

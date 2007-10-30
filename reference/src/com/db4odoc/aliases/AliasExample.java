@@ -6,6 +6,7 @@ import java.io.File;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
 import com.db4o.config.TypeAlias;
@@ -21,9 +22,9 @@ public class AliasExample {
 		saveDrivers(configuration);
 		removeClassAlias(configuration);
 		getPilots(configuration);
-		savePilots(configuration);
-		configuration = configureAlias();
-		getObjectsWithAlias(configuration);
+//		savePilots(configuration);
+//		configuration = configureAlias();
+//		getObjectsWithAlias(configuration);
 	}
 	// end main
 	
@@ -48,7 +49,9 @@ public class AliasExample {
 	
 	private static void saveDrivers(Configuration configuration){
 		new File(DB4O_FILE_NAME ).delete();
-		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+		ObjectServer server = Db4o.openServer(DB4O_FILE_NAME, 0xdb40);
+		server.grantAccess("user", "password");
+		ObjectContainer container = Db4o.openClient(configuration, "localhost", 0xdb40, "user", "password");
 		try {
 			Driver driver = new Driver("David Barrichello",99);
 			container.set(driver);
@@ -56,6 +59,7 @@ public class AliasExample {
 			container.set(driver);
 		} finally {
 			container.close();
+			server.close();
 		}
 	}
 	// end saveDrivers
@@ -75,12 +79,19 @@ public class AliasExample {
 	// end savePilots
 	
 	private static void getPilots(Configuration configuration){
-		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+//		ObjectServer server = Db4o.openServer(configuration, DB4O_FILE_NAME, 0);
+//		ObjectContainer container = server.openClient();
+		ObjectServer server = Db4o.openServer(DB4O_FILE_NAME, 0xdb40);
+		server.grantAccess("user", "password");
+		ObjectContainer container = Db4o.openClient(configuration, "localhost", 0xdb40, "user", "password");
+		
+		//ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			ObjectSet result = container.query(com.db4odoc.aliases.Pilot.class);
 			listResult(result);
 		} finally {
 			container.close();
+			server.close();
 		}
 	}
 	// end getPilots

@@ -2,8 +2,6 @@ package com.db4odoc.inconsistent;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
@@ -34,8 +32,8 @@ public class InconsistentGraphExample {
 		try {
 			server.grantAccess(USER, PASSWORD);
 
-			ObjectContainer client1 = openClient();
-			ObjectContainer client2 = openClient();
+			ObjectContainer client1 = server.openClient();
+			ObjectContainer client2 = server.openClient();
 
 			if (client1 != null && client2 != null) {
 				try {

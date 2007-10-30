@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
 import com.db4o.query.Query;
@@ -22,9 +23,10 @@ public class ReflectorExample  {
 	
 	public static void main(String[] args) throws IOException {
 		setCars();
-		getReflectorInfo();
-		getCars();
-		getCarInfo();
+		testReflector();
+//		getReflectorInfo();
+//		getCars();
+//		getCarInfo();
 	}
 	// end main
 	
@@ -120,7 +122,11 @@ public class ReflectorExample  {
 		LoggingReflector logger = new LoggingReflector();
 		Configuration configuration = Db4o.newConfiguration();
 		configuration.reflectWith(logger);
-		ObjectContainer container=Db4o.openFile(configuration , DB4O_FILE_NAME);
+		ObjectServer server = Db4o.openServer( DB4O_FILE_NAME, 0xdb40);
+		server.grantAccess("y", "y");
+		ObjectContainer container = server.openClient();
+		//ObjectContainer container = Db4o.openClient(configuration, "localhost", 0xdb40,"y", "y");
+		//ObjectContainer container=Db4o.openFile(configuration , DB4O_FILE_NAME);
 		try {
 			ReflectClass rc  = container.ext().reflector().forName(Car.class.getName());
 			System.out.println("Reflected class: " + rc);

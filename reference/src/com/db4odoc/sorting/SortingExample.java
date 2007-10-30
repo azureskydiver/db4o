@@ -86,17 +86,20 @@ public class SortingExample {
 
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
+			 
+			
 			Query query = container.query();
 			query.constrain(Pilot.class);
 			query.descend("name").orderAscending();
-			query.descend("points").orderDescending();
-			long t1 = System.currentTimeMillis();
-			ObjectSet result = query.execute();
-			long t2 = System.currentTimeMillis();
-			long diff = t2 - t1;
-			System.out.println("Time to query and sort with  SODA: "
-					+ diff + " ms.");
-			listResult(result);
+			Pilot pilot = (Pilot)query.execute().next();
+//			query.descend("points").orderDescending();
+//			long t1 = System.currentTimeMillis();
+//			ObjectSet result = query.execute();
+//			long t2 = System.currentTimeMillis();
+//			long diff = t2 - t1;
+//			System.out.println("Time to query and sort with  SODA: "
+//					+ diff + " ms.");
+//			listResult(result);
 		} finally {
 			container.close();
 		}

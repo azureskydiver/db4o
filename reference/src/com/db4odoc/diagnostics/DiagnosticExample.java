@@ -70,7 +70,8 @@ public class DiagnosticExample{
     	
     	Configuration configuration = Db4o.newConfiguration();
     	configuration.diagnostic().addListener(new IndexDiagListener());
-    	configuration.updateDepth(3);
+    	//configuration.objectClass(Pilot.class).objectField("name").indexed(true);
+    	//configuration.updateDepth(3);
         
         ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
         try {
