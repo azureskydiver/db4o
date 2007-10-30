@@ -740,7 +740,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public final Object getByID(Transaction ta, long id) throws DatabaseClosedException, InvalidIDException {
         synchronized (_lock) {
-            if (id <= 0) {
+            if (id <= 0 || id >= Integer.MAX_VALUE) {
                 throw new IllegalArgumentException();
             }
             checkClosed();
