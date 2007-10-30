@@ -33,7 +33,7 @@ Namespace Db4ojects.Db4odoc.TAExamples
         'Call the registered activator to activate the next level,
         ' the activator remembers the objects that were already 
         ' activated and won't activate them twice. 
-        Protected Sub Activate()
+        Public Sub Activate() Implements IActivatable.Activate
             If _activator Is Nothing Then
                 Return
             End If

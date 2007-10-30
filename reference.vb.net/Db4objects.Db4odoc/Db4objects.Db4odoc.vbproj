@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Db4objects.Db4odoc.Equality.EqualityExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.StaticFields.StaticFieldExample</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>
@@ -152,6 +152,7 @@
     <Compile Include="QBE\QBEExample.vb" />
     <Compile Include="ReplicationEvents\EventsExample.vb" />
     <Compile Include="ReplicationEvents\Pilot.vb" />
+    <Compile Include="StaticFields\Car.vb" />
     <Compile Include="Transactions\Car.vb" />
     <Compile Include="Transactions\Pilot.vb" />
     <Compile Include="Transactions\PressureSensorReadout.vb" />
@@ -184,9 +185,6 @@
     <Compile Include="Lists\Pilot.vb" />
     <Compile Include="Lists\Team.vb" />
     <Compile Include="Lists\VerboseList.vb" />
-    <Compile Include="Marshal\CustomMarshallerExample.vb" />
-    <Compile Include="Marshal\Item.vb" />
-    <Compile Include="Marshal\ItemMarshaller.vb" />
     <Compile Include="Messaging\MessagingExample.vb" />
     <Compile Include="Messaging\MyClientServerMessage.vb" />
     <Compile Include="Metainfo\Car.vb" />
@@ -237,7 +235,6 @@
     <Compile Include="Serializing\SerializeExample.vb" />
     <Compile Include="Sorting\Pilot.vb" />
     <Compile Include="Sorting\SortingExample.vb" />
-    <Compile Include="StaticFields\Car.vb" />
     <Compile Include="StaticFields\Pilot.vb" />
     <Compile Include="StaticFields\PilotCategories.vb" />
     <Compile Include="StaticFields\StaticFieldExample.vb" />

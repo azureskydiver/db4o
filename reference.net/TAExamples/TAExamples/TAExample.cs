@@ -7,6 +7,7 @@ using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Diagnostic;
 using Db4objects.Db4o.TA;
 
+
 namespace Db4ojects.Db4odoc.TAExamples
 {
     public class TAExample
@@ -68,8 +69,6 @@ namespace Db4ojects.Db4odoc.TAExamples
         private static IConfiguration ConfigureTA()
         {
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            // set normal activation to 0
-            configuration.ActivationDepth(0);
             // add TA support
             configuration.Add(new TransparentActivationSupport());
             // activate TA diagnostics to reveal the classes that are not TA-enabled.

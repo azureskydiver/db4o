@@ -39,7 +39,7 @@ namespace Db4ojects.Db4odoc.TAExamples
          * the activator remembers the objects that were already 
          * activated and won't activate them twice. 
          */
-        protected void Activate()
+        public void Activate()
         {
             if (_activator == null)
                 return;

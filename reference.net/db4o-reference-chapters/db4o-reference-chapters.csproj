@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.Inconsistent.InconsistentGraphExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.NQCollection.SimpleExamples</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -276,6 +276,7 @@
     <Compile Include="src\Db4objects.Db4odoc\QBE\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\ReplicationEvents\EventsExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\ReplicationEvents\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Staticfields\Car.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Transactions\Car.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Transactions\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Transactions\PressureSensorReadout.cs" />
@@ -352,9 +353,6 @@
     <Compile Include="src\Db4objects.Db4odoc\Lists\VerboseList.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="src\Db4objects.Db4odoc\Marshal\CustomMarshallerExample.cs" />
-    <Compile Include="src\Db4objects.Db4odoc\Marshal\Item.cs" />
-    <Compile Include="src\Db4objects.Db4odoc\Marshal\ItemMarshaller.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Messaging\MessagingExample.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -464,9 +462,6 @@
     </Compile>
     <Compile Include="src\Db4objects.Db4odoc\Sorting\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Sorting\SortingExample.cs" />
-    <Compile Include="src\Db4objects.Db4odoc\Staticfields\Car.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="src\Db4objects.Db4odoc\Staticfields\Pilot.cs">
       <SubType>Code</SubType>
     </Compile>

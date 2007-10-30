@@ -14,7 +14,10 @@ namespace Db4objects.Db4odoc.NQCollection
     class SimpleExamples
     {
 
-        private const string Db4oFileName = "reference.db4o";
+        private readonly static string Db4oFileName = Path.Combine(
+                               Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                               "formula1.db4o");  
+
 
         private const int ObjectCount = 10;
 
@@ -453,7 +456,7 @@ namespace Db4objects.Db4odoc.NQCollection
 
             }
         }
-        // AnyPilotPredicate
+        // end AnyPilotPredicate
 
         private static void SelectAnyOnePilot()
         {

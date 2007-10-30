@@ -6,7 +6,6 @@ Imports System.Collections
 
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Ext
-Imports Db4objects.Db4o.Query
 
 Namespace Db4objects.Db4odoc.NQCollection
 
@@ -95,7 +94,7 @@ Namespace Db4objects.Db4odoc.NQCollection
         ' end SumPilotPoints
 
         Private Class SumPredicate
-            Inherits Predicate
+            Inherits Query.Predicate
 
             Public sum As Integer = 0
 
@@ -158,7 +157,7 @@ Namespace Db4objects.Db4odoc.NQCollection
         ' end AveragePilotPoints
 
         Private Class AveragePredicate
-            Inherits Predicate
+            Inherits Query.Predicate
             Public sum As Integer = 0
 
             Public count As Integer = 0
@@ -176,7 +175,7 @@ Namespace Db4objects.Db4odoc.NQCollection
         ' end AveragePredicate
 
         Private Class CountPredicate
-            Inherits Predicate
+            Inherits Query.Predicate
         
             Public countTable As Hashtable = New Hashtable()
 

@@ -54,8 +54,6 @@ Namespace Db4ojects.Db4odoc.TAExamples
 
         Private Shared Function ConfigureTA() As IConfiguration
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration
-            ' set normal activation to 0
-            configuration.ActivationDepth(0)
             ' add TA support
             configuration.Add(New TransparentActivationSupport)
             ' activate TA diagnostics to reveal the classes that are not TA-enabled.

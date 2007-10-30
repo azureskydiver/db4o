@@ -26,7 +26,7 @@ Namespace Db4ojects.Db4odoc.TAExamples
         End Sub
 
         ' activate the object fields
-        Protected Sub Activate()
+        Public Sub Activate() Implements IActivatable.Activate
             If _activator Is Nothing Then
                 Return
             End If

@@ -4,7 +4,7 @@ using System.Collections;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
 using Db4objects.Db4o.TA;
-using Db4objects.Db4o.TA.Tests.Collections;
+using Db4objects.Db4o.Tests.Common.TA;
 
 namespace Db4ojects.Db4odoc.TAExamples
 {
@@ -30,7 +30,7 @@ namespace Db4ojects.Db4odoc.TAExamples
         }
 
         // activate object fields 
-        protected void Activate()
+        public void Activate()
         {
             if (_activator == null) return;
             _activator.Activate();
