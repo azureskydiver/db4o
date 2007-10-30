@@ -86,7 +86,12 @@ public abstract class AbstractReadContext implements InternalReadContext {
         	return null;
         }
         
-        ActivationDepth depth = activationDepth().descend(classMetadataForId(id));
+        final ClassMetadata classMetadata = classMetadataForId(id);
+        if (null == classMetadata) {
+        	return null;
+        }
+        
+		ActivationDepth depth = activationDepth().descend(classMetadata);
         
         if (peekPersisted()) {
             return container().peekPersisted(transaction(), id, depth, false);
