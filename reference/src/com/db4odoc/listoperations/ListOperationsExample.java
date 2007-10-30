@@ -14,7 +14,7 @@ public class ListOperationsExample {
 
         public static void main(String[] args)
         {
-            fillUpDb(2);
+            //fillUpDb(2);
             removeInsert();
             checkResults();
             //updateObject();

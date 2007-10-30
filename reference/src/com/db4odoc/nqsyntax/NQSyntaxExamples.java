@@ -85,6 +85,7 @@ public class NQSyntaxExamples {
 		if (container != null) {
 			try {
 				List<Pilot> result = container.query(Pilot.class);
+				container.ext().configure().freespace();
 				listResult(result);
 			} catch (Exception ex) {
 				System.out.println("System Exception: " + ex.getMessage());

@@ -8,6 +8,7 @@ import java.io.RandomAccessFile;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
 import com.db4o.io.MemoryIoAdapter;
@@ -18,8 +19,8 @@ public class IOExample  {
 	
 	public static void main(String[] args) {
 		setObjects();
-		getObjectsInMem();
-		getObjects();
+//		getObjectsInMem();
+//		getObjects();
 		testLoggingAdapter();
 	}
 	// end main
@@ -94,13 +95,18 @@ public class IOExample  {
 	private static void testLoggingAdapter(){
 		Configuration configuration = Db4o.newConfiguration();
 		configuration.io(new LoggingAdapter());
-		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+		ObjectServer server = Db4o.openServer(configuration, DB4O_FILE_NAME, 0xdb40);
+		server.grantAccess("y", "y");
+		ObjectContainer container = server.openClient();
+		//ObjectContainer container = Db4o.openClient(configuration, "localhost", 0xdb40,"y", "y");
 		try {
 		     Pilot pilot = new Pilot("Michael Schumacher");
 		     container.set(pilot);
 		     System.out.println("New pilot added");
 		} finally {
+			
 			container.close();
+			server.close();
 		}
 	
 		container = Db4o.openFile(DB4O_FILE_NAME);

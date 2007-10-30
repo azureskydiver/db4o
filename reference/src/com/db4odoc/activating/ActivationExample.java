@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
 import com.db4o.P2LinkedList;
 import com.db4o.config.Configuration;
@@ -17,14 +18,14 @@ public class ActivationExample {
 	private final static String DB4O_FILE_NAME="reference.db4o";
 	 
 	public static void main(String[] args){
-		testActivationDefault();
-		testActivationConfig();
-		testCascadeActivate();
-		testMaxActivate();
+		//testActivationDefault();
+		//testActivationConfig();
+//		testCascadeActivate();
+//		testMaxActivate();
 		testMinActivate();
-		testActivateDeactivate();
-		testCollectionDef();
-		testCollectionActivation();
+//		testActivateDeactivate();
+//		testCollectionDef();
+//		testCollectionActivation();
 	}
 	//	end main
 	
@@ -90,7 +91,11 @@ public class ActivationExample {
 		storeSensorPanel();
 		Configuration configuration = Db4o.newConfiguration();
 		configuration.objectClass(SensorPanel.class).cascadeOnActivate(true);
-		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+		ObjectServer server = Db4o.openServer(DB4O_FILE_NAME, 0xdb40);
+		server.grantAccess("A", "A");
+		//ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+		configuration.activationDepth(0);
+		ObjectContainer container = Db4o.openClient(configuration, "localhost", 0xdb40, "A", "A");
 		try {
 			System.out.println("Cascade activation");
 			ObjectSet result = container.get(new SensorPanel(1));
@@ -235,7 +240,7 @@ public class ActivationExample {
 			ObjectSet result = container.get(List.class);
 			listResult(result);
 			P2LinkedList list = (P2LinkedList)result.get(0);
-			System.out.println("Default List activation depth: " + list.activationDepth());
+			//System.out.println("Default List activation depth: " + list.activationDepth());
 			for (int i = 0; i < list.size(); i++){
 				System.out.println("List element: " + list.get(i));
 			}

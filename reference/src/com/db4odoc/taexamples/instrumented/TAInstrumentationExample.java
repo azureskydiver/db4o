@@ -1,0 +1,110 @@
+package com.db4odoc.taexamples.instrumented;
+
+import java.io.File;
+
+import com.db4o.DatabaseFileLockedException;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
+import com.db4o.query.Query;
+import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.ta.TransparentActivationSupport;
+
+public class TAInstrumentationExample {
+
+	private final static String DB4O_FILE_NAME = "reference.db4o";
+
+	private static ObjectContainer _container = null;
+
+	public static void main(String[] args) {
+		testActivation();
+	}
+	// end main
+
+	private static Configuration configureTA() {
+		Configuration configuration = Db4o.newConfiguration();
+		configuration.add(new TransparentActivationSupport());
+		// configure db4o to use instrumenting classloader
+		// This is required for build time optimization!
+		configuration.reflectWith(new JdkReflector(
+				TAInstrumentationExample.class.getClassLoader()));
+
+		return configuration;
+	}
+	// end configureTA
+
+	private static void storeSensorPanel() {
+		new File(DB4O_FILE_NAME).delete();
+		ObjectContainer container = database(configureTA());
+		if (container != null) {
+			try {
+				// create a linked list with length 10
+				SensorPanel list = new SensorPanel().createList(10);
+				container.set(list);
+			} finally {
+				closeDatabase();
+			}
+		}
+	}
+
+	// end storeSensorPanel
+
+	private static void testActivation() {
+		storeSensorPanel();
+		Configuration configuration = configureTA();
+
+		ObjectContainer container = database(configuration);
+		if (container != null) {
+			try {
+				Query query  = container.query();
+				query.constrain(SensorPanel.class);
+				query.descend("_sensor").constrain(new Integer(1));
+				ObjectSet result = query.execute();
+				listResult(result);
+				if (result.size() > 0) {
+					SensorPanel sensor = (SensorPanel) result.get(0);
+					SensorPanel next = sensor._next;
+					while (next != null) {
+						System.out.println(next);
+						next = next._next;
+					}
+				}
+			} finally {
+				closeDatabase();
+			}
+		}
+	}
+
+	// end testActivation
+
+	private static ObjectContainer database(Configuration configuration) {
+		if (_container == null) {
+			try {
+				_container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+			} catch (DatabaseFileLockedException ex) {
+				System.out.println(ex.getMessage());
+			}
+		}
+		return _container;
+	}
+
+	// end database
+
+	private static void closeDatabase() {
+		if (_container != null) {
+			_container.close();
+			_container = null;
+		}
+	}
+
+	// end closeDatabase
+
+	private static void listResult(ObjectSet result) {
+		System.out.println(result.size());
+		while (result.hasNext()) {
+			System.out.println(result.next());
+		}
+	}
+	// end listResult
+}

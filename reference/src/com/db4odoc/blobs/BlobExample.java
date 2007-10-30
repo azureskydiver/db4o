@@ -3,23 +3,34 @@
 package com.db4odoc.blobs;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
+import com.db4o.config.Configuration;
 import com.db4o.query.Query;
 
 public class BlobExample {
 	private final static String DB4O_FILE_NAME="reference.db4o";
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException{
 		storeCars();
 	    retrieveCars();
 	}
 	// end main
 		
-	  private static void storeCars() {
+	  private static void storeCars() throws IOException{
 		  new File(DB4O_FILE_NAME).delete();
-		  ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
+		  Configuration config = Db4o.newConfiguration();
+		  config.setBlobPath("c:\\blobs");
+		  ObjectServer server = Db4o.openServer(DB4O_FILE_NAME, 0xdb40);
+			server.grantAccess("y", "y");
+			//ObjectContainer container = server.openClient();
+			ObjectContainer container = Db4o.openClient(config, "localhost", 0xdb40,"y", "y");
+			//ObjectContainer container=Db4o.openFile(configuration , DB4O_FILE_NAME);
+			
+		  //ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		   try {
 			    Car car1=new Car("Ferrari");
 			    container.set(car1);
@@ -29,6 +40,7 @@ public class BlobExample {
 			    storeImage(car2);
 		   }  finally {
 		      container.close();
+		      server.close();
 		    } 
 	  }
 	  // end storeCars
