@@ -20,18 +20,22 @@ import com.db4o.ta.Activatable;
 /**
  * @exclude
  */
-class InjectInfrastructureEdit implements BloatClassEdit {
+class InjectTAInfrastructureEdit implements BloatClassEdit {
 
 	private final LocalVariable THIS_VAR = new LocalVariable(0);
 	private final ClassFilter _instrumentedClassesFilter;
 	
-	public InjectInfrastructureEdit(ClassFilter instrumentedClassesFilter) {
+	public InjectTAInfrastructureEdit(ClassFilter instrumentedClassesFilter) {
 		_instrumentedClassesFilter = instrumentedClassesFilter;
 	}
 	
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
+			Class activatableClazz = origLoader.loadClass(Activatable.class.getName());
 			Class clazz = BloatUtil.classForEditor(ce, origLoader);
+			if(activatableClazz.isAssignableFrom(clazz)) {
+				return InstrumentationStatus.FAILED;
+			}
 			if(!_instrumentedClassesFilter.accept(clazz)) {
 				return InstrumentationStatus.NOT_INSTRUMENTED;
 			}
