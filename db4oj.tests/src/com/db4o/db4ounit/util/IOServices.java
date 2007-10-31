@@ -5,7 +5,7 @@ package com.db4o.db4ounit.util;
 import java.io.*;
 
 import com.db4o.foundation.*;
-import com.db4o.foundation.io.Path4;
+import com.db4o.foundation.io.*;
 
 /**
  * @sharpen.ignore
@@ -232,7 +232,5 @@ public class IOServices {
         public String result(){
             return _result;
         }
-        
     }
-
 }
