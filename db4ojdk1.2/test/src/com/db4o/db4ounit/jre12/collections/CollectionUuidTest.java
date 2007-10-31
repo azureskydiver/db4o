@@ -9,6 +9,9 @@ import db4ounit.extensions.*;
 
 public class CollectionUuidTest extends AbstractDb4oTestCase {	
 	
+	/**
+	 * @deprecated using deprecated api
+	 */
 	protected void configure(Configuration config) {
 		config.generateUUIDs(Integer.MAX_VALUE);
 	}

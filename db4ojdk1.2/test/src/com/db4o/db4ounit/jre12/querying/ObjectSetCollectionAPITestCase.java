@@ -17,6 +17,10 @@ public class ObjectSetCollectionAPITestCase extends AbstractDb4oTestCase {
 		
 		public Data(int id) {
 			_id = id;
+			use(_id);
+		}
+
+		private void use(int id) {
 		}
 	}
 	

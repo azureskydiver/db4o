@@ -13,6 +13,9 @@ import db4ounit.*;
  */
 public class EmbeddedClientObjectContainerJre12TestCase extends EmbeddedClientObjectContainerTestCase{
     
+	/**
+	 * @deprecated using deprecated api
+	 */
     public void testCollections(){
         Db4oList list = _client1.collections().newLinkedList();
         Assert.isNotNull(list);

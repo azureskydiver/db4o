@@ -12,10 +12,6 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-
-/**
- * 
- */
 public class Db4oLinkedListTestCase extends AbstractDb4oTestCase {
     
     public static class Db4oLinkedListHelper{
@@ -32,6 +28,9 @@ public class Db4oLinkedListTestCase extends AbstractDb4oTestCase {
 	    List i_subList;
     }
     
+	/**
+	 * @deprecated using deprecated api
+	 */
     private List createList() {
     	return db().collections().newLinkedList();
     }

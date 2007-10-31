@@ -23,6 +23,7 @@ public class ArrayListCandidatesTestCase implements TestCase {
 		}
 		
 		public DataHolder(Object[] data) {
+			this();
 			_data = new ArrayList(data.length);
 			for (int dataIdx = 0; dataIdx < data.length; dataIdx++) {
 				_data.add(data[dataIdx]);
@@ -35,6 +36,10 @@ public class ArrayListCandidatesTestCase implements TestCase {
 
 		public DataA(String a) {
 			_a = a;
+			use(_a);
+		}
+
+		private void use(String a) {
 		}
 	}
 
@@ -43,6 +48,10 @@ public class ArrayListCandidatesTestCase implements TestCase {
 
 		public DataB(String b) {
 			_b = b;
+			use(_b);
+		}
+
+		private void use(String b) {
 		}
 	}
 

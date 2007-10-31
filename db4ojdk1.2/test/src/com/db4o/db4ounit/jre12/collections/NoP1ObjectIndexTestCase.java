@@ -17,6 +17,9 @@ public class NoP1ObjectIndexTestCase extends AbstractDb4oTestCase implements Opt
 		}
 	}
 	
+	/**
+	 * @deprecated using deprecated api
+	 */
 	protected void store() throws Exception {
 		store(new Data(db().collections().newLinkedList()));
 	}

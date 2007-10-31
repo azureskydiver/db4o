@@ -32,6 +32,9 @@ public class CollectionActivationTestCase
 	
 	private long _elementId;
 	
+	/**
+	 * @deprecated using deprecated apis
+	 */
     protected void store() {
         Item item = new Item(db().collections().newLinkedList());        
         item.list.add(storeElement());
