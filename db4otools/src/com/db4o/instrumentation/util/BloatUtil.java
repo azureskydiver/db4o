@@ -30,13 +30,7 @@ public class BloatUtil {
 
 	public static String classNameForPath(String classPath) {
 		String className = classPath.substring(0, classPath.length()-".class".length());
-		className=className.replace(File.separatorChar,'.');
-		return className;
-	}
-
-	public static String classPathForName(String className) {
-		String classPath = className.replace('.', File.separatorChar);
-		return classPath + ".class";
+		return className.replace(File.separatorChar,'.');
 	}
 
 	private BloatUtil() {
