@@ -31,7 +31,7 @@ class WeakReferenceCollector implements Runnable {
         return Platform4.createActiveObjectReference(_queue, a_yo, obj);
     }
 
-    private void pollReferenceQueue() {
+    void pollReferenceQueue() {
         if (!_weak) {
         	return;
         }
