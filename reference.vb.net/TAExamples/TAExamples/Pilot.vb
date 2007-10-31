@@ -7,14 +7,11 @@ Namespace Db4ojects.Db4odoc.TAExamples
 
     Public Class Pilot
         Implements IActivatable
-        Private Const Extention As String = ".jpg"
         Private _name As String
-        Private _image As Image
         <Transient()> Private _activator As Db4objects.Db4o.Activation.IActivator
 
         Public Sub New(ByVal name As String)
             _name = name
-            _image = New Image(name + Extention)
         End Sub
 
         ' Bind the class to an object container
