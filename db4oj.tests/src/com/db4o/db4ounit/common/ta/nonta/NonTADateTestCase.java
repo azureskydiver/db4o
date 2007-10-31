@@ -4,8 +4,6 @@ package com.db4o.db4ounit.common.ta.nonta;
 
 import java.util.*;
 
-import com.db4o.internal.handlers.*;
-
 import db4ounit.*;
 
 public class NonTADateTestCase extends NonTAItemTestCaseBase {
@@ -20,16 +18,6 @@ public class NonTADateTestCase extends NonTAItemTestCaseBase {
         DateItem item = (DateItem) obj;
         Assert.areEqual(first, item._untyped);
         Assert.areEqual(first, item._typed);
-    }
-    
-    protected void assertNullItem(Object obj) {
-        DateItem item = (DateItem) obj;
-        Assert.isNull(item._untyped);
-        Assert.areEqual(emptyValue(),item._typed);
-    }
-    
-    private Object emptyValue() {
-        return new DateHandler(null).primitiveNull();
     }
     
     protected Object createItem() {

@@ -30,11 +30,6 @@ public class TAArrayListTestCase extends ItemTestCaseBase {
         Assert.areEqual(new Integer(300), taIntItem.object());
         
     }
-
-    //TODO: what does ArrayList look like with depth 0?
-    protected void assertNullItem(Object obj) throws Exception {
-    	
-    }
     
     protected void assertRetrievedItem(Object obj) throws Exception {
         ArrayList item = (ArrayList) obj;

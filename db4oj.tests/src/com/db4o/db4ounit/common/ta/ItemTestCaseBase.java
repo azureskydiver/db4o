@@ -3,7 +3,9 @@
 package com.db4o.db4ounit.common.ta;
 
 import com.db4o.ext.*;
+import com.db4o.reflect.*;
 
+import db4ounit.*;
 import db4ounit.extensions.fixtures.*;
 
 
@@ -35,9 +37,26 @@ public abstract class ItemTestCaseBase
     	assertNullItem(item);    	
 	}
     
-    protected abstract void assertNullItem(Object obj) throws Exception;
-    
-    protected abstract void assertItemValue(Object obj) throws Exception;
+    protected void assertNullItem(Object obj) throws Exception {
+    	ReflectClass claxx = reflector().forObject(obj);
+        ReflectField[] fields = claxx.getDeclaredFields();
+    	for(int i = 0; i < fields.length; ++i) {
+    		ReflectField field = fields[i];
+    		if(field.isStatic() || field.isTransient()) {
+    			continue;
+    		}
+    		field.setAccessible();
+    		ReflectClass type = field.getFieldType();
+    		if(type.isSecondClass()) {
+    			continue;
+    		}
+    		Object value = field.get(obj);
+    		Assert.isNull(value);
+    			
+    	}
+    }
+
+	protected abstract void assertItemValue(Object obj) throws Exception;
      
     protected abstract Object createItem() throws Exception;
     

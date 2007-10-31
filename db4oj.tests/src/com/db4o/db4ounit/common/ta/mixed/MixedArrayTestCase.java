@@ -34,9 +34,4 @@ public class MixedArrayTestCase extends ItemTestCaseBase {
 		Assert.areEqual(0, ((TItem)objects[3]).value);
 	}
 	
-	protected void assertNullItem(Object obj) throws Exception {
-		MixedArrayItem item = (MixedArrayItem) obj;
-		Assert.isNull(item.objects);
-	}
-
 }

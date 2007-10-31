@@ -28,11 +28,4 @@ public class TAIntTestCase extends TAItemTestCaseBase {
 		Assert.areEqual(new Integer(2), item.object());
 	}
 
-	protected void assertRetrievedItem(Object obj) {
-		TAIntItem item = (TAIntItem) obj;
-		Assert.areEqual(0, item.value);
-		isPrimitiveNull(item.i);
-		Assert.isNull(item.obj);
-	}
-
 }

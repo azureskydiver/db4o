@@ -42,10 +42,6 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
         }
     }
     
-    protected void assertNullItem(Object obj) throws Exception {
-    	assertRetrievedItem(obj);
-	}
-
     private void assertNullItem(Item item, int level) {
         if (level % 2 == 0) {
             Assert.isNull(item._name);
