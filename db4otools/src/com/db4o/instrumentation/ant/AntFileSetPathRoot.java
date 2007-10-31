@@ -3,11 +3,13 @@ package com.db4o.instrumentation.ant;
 import java.io.*;
 import java.util.*;
 
+import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.types.resources.*;
 
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.file.*;
+import com.db4o.instrumentation.util.*;
 
 /**
  * @exclude
@@ -15,9 +17,17 @@ import com.db4o.instrumentation.file.*;
 class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 
 	private FileSet[] _fileSets;
+	private DirectoryScanner[] _scanners;
 
 	public AntFileSetPathRoot(FileSet[] fileSets) {
 		_fileSets = fileSets;
+		_scanners = new DirectoryScanner[_fileSets.length];
+		for (int fileSetIdx = 0; fileSetIdx < _fileSets.length; fileSetIdx++) {
+			DirectoryScanner scanner = _fileSets[fileSetIdx].getDirectoryScanner();
+			scanner.scan();
+			_scanners[fileSetIdx] = scanner;
+			System.err.println(scanner);
+		}
 	}
 	
 	public Iterator files() {
@@ -79,17 +89,29 @@ class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 	}
 
 	public boolean accept(Class clazz) {
-		try {
-			for (Iterator fileSetIter = files(); fileSetIter.hasNext();) {
-				InstrumentationClassSource source = (InstrumentationClassSource) fileSetIter.next();
-				if(clazz.getName().equals(source.className())) {
+// // Ultra slow, but works with current Jar approach
+//		try {
+//			for (Iterator fileSetIter = files(); fileSetIter.hasNext();) {
+//				InstrumentationClassSource source = (InstrumentationClassSource) fileSetIter.next();
+//				if(clazz.getName().equals(source.className())) {
+//					return true;
+//				}
+//			}
+//		}
+//		catch (IOException exc) {
+//			// FIXME
+//			throw new RuntimeException(exc.getMessage());
+//		}
+		for (int scannerIdx = 0; scannerIdx < _scanners.length; scannerIdx++) {
+			DirectoryScanner scanner = _scanners[scannerIdx];
+			String[] files = scanner.getIncludedFiles();
+			for (int fileIdx = 0; fileIdx < files.length; fileIdx++) {
+				String fileName = files[fileIdx];
+				String clazzName = BloatUtil.classNameForPath(fileName);
+				if(clazz.getName().equals(clazzName)) {
 					return true;
 				}
 			}
-		}
-		catch (IOException exc) {
-			// FIXME
-			throw new RuntimeException(exc.getMessage());
 		}
 		return false;
 	}
