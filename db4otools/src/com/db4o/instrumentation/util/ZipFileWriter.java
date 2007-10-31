@@ -40,7 +40,6 @@ public class ZipFileWriter {
 	}
 
 	private void endEntry() throws IOException {
-		_zipWriter.flush();
 		_zipWriter.closeEntry();
 	}
 }
