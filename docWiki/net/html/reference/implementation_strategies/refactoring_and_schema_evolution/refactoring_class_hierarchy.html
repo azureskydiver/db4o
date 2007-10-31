@@ -1,0 +1,62 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Refactoring Class Hierarchy</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Refactoring Class Hierarchy</h1>
+
+<p>db4o does not directly support the following two
+refactorings: </p>
+
+<ul>
+<li>Inserting
+     classes into an inheritance hierarchy. </li>
+<li>Removing
+     class from inheritance hierarchies.</li>
+</ul>
+<p>For example:</p>
+<p><code>class A</code> </p>
+
+<p><code>class B : A</code> </p>
+
+<p><code>class C : B</code></p>
+<ol>
+<li>A
+     new Class D can not be introduced above C. </li>
+<li>Classes
+     A and B can not be removed.<br></li>
+</ol>
+
+
+
+<p>The only current possible solution for the above
+refactorings is a workaround:</p>
+<ol>
+<li>Create
+     the new hierarchy with different names, preferably in a new package.
+     </li>
+<li>Copy
+     all values from the old classes to the new classes. </li>
+<li>Redirect
+     all links from existing objects to the new classes.</li>
+</ol>
+
+
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="refactoring_class_hierarchy/removing_class_from_a_hierarchy.html" class="wikiLink">Removing Class From A Hierarchy</a></p></li>
+<li><p><a href="refactoring_class_hierarchy/inserting_class_into_a_hierarchy.html" class="wikiLink">Inserting Class Into A Hierarchy</a></p></li>
+<li><p><a href="refactoring_class_hierarchy/a.html" class="wikiLink">A</a></p></li>
+<li><p><a href="refactoring_class_hierarchy/b.html" class="wikiLink">B</a></p></li>
+<li><p><a href="refactoring_class_hierarchy/c.html" class="wikiLink">C</a></p></li>
+</ul></div>
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-09-30T18:22:10 by Tetyana.
+				</div>
+  </body>
+</html>
