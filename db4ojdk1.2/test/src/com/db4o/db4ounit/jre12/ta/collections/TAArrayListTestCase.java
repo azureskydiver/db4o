@@ -31,6 +31,11 @@ public class TAArrayListTestCase extends ItemTestCaseBase {
         
     }
 
+    //TODO: what does ArrayList look like with depth 0?
+    protected void assertNullItem(Object obj) throws Exception {
+    	
+    }
+    
     protected void assertRetrievedItem(Object obj) throws Exception {
         ArrayList item = (ArrayList) obj;
         IntItem intItem = (IntItem) item.get(0);
