@@ -18,7 +18,7 @@ public class ZipFileCreation {
 	private final File _baseDir;
 
 	public ZipFileCreation(String sourceDir, File outputFile) throws IOException {
-		_baseDir = new File(sourceDir);
+		_baseDir = new File(sourceDir).getCanonicalFile();
 		_zipFile = new ZipFileWriter(outputFile);
 		try {
 			writeEntries(_baseDir.listFiles());
@@ -42,14 +42,25 @@ public class ZipFileCreation {
 	}
 
 	private void writeFileEntry(File file) throws IOException {
-		_zipFile.writeEntry(relativePath(file), readAllBytes(file));
+		_zipFile.writeEntry(relativePath(file).replace('\\', '/'), readAllBytes(file));
 	}
 
 	private byte[] readAllBytes(File file) throws IOException {
 		return File4.readAllBytes(file.getAbsolutePath());
 	}
 	
-	private String relativePath(File file) {
-		return _baseDir.toURI().relativize(file.toURI()).getPath();
+	private String relativePath(File file) throws IOException {
+		final String basePath = _baseDir.getAbsolutePath();
+		final String filePath = file.getCanonicalPath();
+		assertPathPrefix(basePath, filePath);
+		return filePath.substring(basePath.length() + 1);
+	}
+
+	private void assertPathPrefix(final String expectedPrefix,
+			final String actualPath) {
+		if (!actualPath.startsWith(expectedPrefix)) {
+			// how come?
+			throw new IllegalStateException();
+		}
 	}
 }
