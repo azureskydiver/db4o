@@ -26,16 +26,16 @@ public class Db4oFileEnhancer {
 		this(new CompositeBloatClassEdit(classEdits));
 	}
 
-	public void enhance(String sourceDir, String targetDir, String[] classpath, String packagePredicate) throws Exception {
-		enhance(new DefaultFilePathRoot(new String[]{ sourceDir }, ".class"), targetDir, classpath, packagePredicate);
+	public void enhance(String sourceDir, String targetDir, String[] classpath, String packagePrefix) throws Exception {
+		enhance(new DefaultFilePathRoot(new String[]{ sourceDir }, ".class"), targetDir, classpath, packagePrefix);
 	}
 
 	public void enhance(FilePathRoot sources, String targetDir, String[] classpath,
-			String packagePredicate) throws Exception {
-		enhance(new DefaultClassSource(), sources, targetDir, classpath, packagePredicate);
+			String packagePrefix) throws Exception {
+		enhance(new DefaultClassSource(), sources, targetDir, classpath, packagePrefix);
 	}
 
-	private void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath,String packagePredicate) throws Exception {
+	private void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath,String packagePrefix) throws Exception {
 		File fTargetDir = new File(targetDir);
 		
 		String[] sourceRoots = sources.rootDirs();
@@ -51,7 +51,7 @@ public class Db4oFileEnhancer {
 		
 		URL[] urls = classpathToURLs(fullClasspath);	
 		URLClassLoader classLoader=new URLClassLoader(urls,ClassLoader.getSystemClassLoader());
-		enhance(sources,fTargetDir,classLoader,new BloatLoaderContext(fileLoader),packagePredicate);
+		enhance(sources,fTargetDir,classLoader,new BloatLoaderContext(fileLoader),packagePrefix);
 		
 		fileLoader.done();
 	}
@@ -61,10 +61,10 @@ public class Db4oFileEnhancer {
 			File target,
 			ClassLoader classLoader,
 			BloatLoaderContext bloatUtil,
-			String packagePredicate) throws Exception {
+			String packagePrefix) throws Exception {
 		for (Iterator sourceFileIter = sources.files(); sourceFileIter.hasNext();) {
 			InstrumentationClassSource file = (InstrumentationClassSource) sourceFileIter.next();
-			enhanceFile(file, target, classLoader, bloatUtil, packagePredicate);
+			enhanceFile(file, target, classLoader, bloatUtil, packagePrefix);
 		}
 	}
 
@@ -73,10 +73,10 @@ public class Db4oFileEnhancer {
 			File target,
 			ClassLoader classLoader, 
 			BloatLoaderContext bloatUtil,
-			String packagePredicate) throws IOException {
+			String packagePrefix) throws IOException {
 		InstrumentationStatus status = InstrumentationStatus.NOT_INSTRUMENTED;
 		try {
-			if (source.className().startsWith(packagePredicate)) {
+			if (source.className().startsWith(packagePrefix)) {
 				System.err.println("Processing " + source.className());
 				ClassEditor classEditor = bloatUtil.classEditor(source.className());
 				status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
@@ -152,9 +152,17 @@ public class Db4oFileEnhancer {
 	private URL[] classpathToURLs(String[] classPath) throws MalformedURLException {
 		URL[] urls=new URL[classPath.length];
 		for (int pathIdx = 0; pathIdx < classPath.length; pathIdx++) {
-			urls[pathIdx]=new File(classPath[pathIdx]).toURL();
+			urls[pathIdx]=toURL(classPath[pathIdx]);
 		}
 		return urls;
 	}
-	
+
+	/**
+	 * @deprecated
+	 * 
+	 * @throws MalformedURLException
+	 */
+	private URL toURL(final String classPathItem) throws MalformedURLException {
+		return new File(classPathItem).toURL();
+	}
 }
