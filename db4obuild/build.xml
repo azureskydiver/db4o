@@ -21,6 +21,7 @@
 	path.classpath.jdk1.1=<OPTIONAL: path to classes.zip for JDK1.1>
 	javac.debug.mode=<OPTIONAL: debug switch for javac, default: false>
 	eclipse.startup.jar=<OPTIONAL: use a different jar for eclipse startup if you're using eclipse 3.3+>
+	java.vmargs=<OPTIONAL: java VM args for test suites>
 	
 	If the java executable on your path is JDK>=1.6 you have to specify file.jvm.jdk1.1 to point to a JDK<=5,
 	otherwise you may experience failures running the java1.1 test suite.
@@ -40,6 +41,7 @@
 	csc.executable.path.net2=C:/WINDOWS/Microsoft.NET/Framework/v2.0.50727/
 	path.classpath.jdk1.1=d:/java/jdk/jdk1.1.8/lib/classes.zip
 	eclipse.startup.jar=${eclipse.home}/plugins/org.eclipse.equinox.launcher_1.0.0.v20070606.jar
+	java.vmargs=-Ddb4ounit.file.path=/mnt/rd0/db4ounit -Djava.io.tmpdir=/mnt/rd0/tmp
 -->
 	<import file="common.xml" />
 	

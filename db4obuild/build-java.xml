@@ -468,6 +468,7 @@
         </path>
 		
 		<java jvm="${file.jvm.jdk1.1}" 
+			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre11.AllTests" 
 			failonerror="true" 
@@ -477,6 +478,7 @@
 		</java>
 
 		<java jvm="${file.jvm.jdk1.1}" 
+			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.test.AllTests" 
 			failonerror="true" 
@@ -494,6 +496,7 @@
         </path>
 
 		<java jvm="${file.jvm.jdk1.3}" 
+			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre12.AllTestsJdk1_2" 
 			failonerror="true" 
@@ -505,6 +508,7 @@
 		</java>
         
 		<java jvm="${file.jvm.jdk1.3}" 
+			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.test.AllTestsJdk1_2" 
 			failonerror="true" 
@@ -514,6 +518,7 @@
 		</java>
 		
 		<java jvm="${file.jvm.jdk1.3}" 
+			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.common.migration.AllCommonTests" 
 			failonerror="true" 
@@ -533,6 +538,7 @@
         </path>
         
 		<java jvm="${file.jvm.jdk1.5}" 
+			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre5.AllTestsDb4oUnitJdk5" 
 			failonerror="true" 
@@ -543,6 +549,7 @@
 		</java>
 
         <java jvm="${file.jvm.jdk1.5}" 
+			jvmargs="${java.vmargs}"
         	fork="true" 
         	classname="com.db4o.test.AllTestsJdk5" 
         	failonerror="true" 
@@ -551,6 +558,7 @@
 			<arg value="-withExceptions" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" 
+			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre5.defrag.RunTestsDefrag" 
 			failonerror="true" 
@@ -559,6 +567,7 @@
 			<classpath refid="tests.java5.cp" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" 
+			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.db4ounit.jre5.AllTestsWithTAJdk5" 
 			failonerror="true" 
@@ -567,6 +576,7 @@
 			<classpath refid="tests.java5.cp" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" 
+			jvmargs="${java.vmargs}"
 			fork="true" 
 			classname="com.db4o.test.AllTestsLegacy" 
 			failonerror="true" 
@@ -584,7 +594,12 @@
 			<pathelement location="${file.ant.jar}" />
         </path>
 
-		<java jvm="${file.jvm.jdk1.5}" fork="true" classname="com.db4o.test.nativequery.AllTestsNQ" failonerror="true" timeout="320000">
+		<java jvm="${file.jvm.jdk1.5}"
+				jvmargs="${java.vmargs}"
+				fork="true"
+				classname="com.db4o.test.nativequery.AllTestsNQ"
+				failonerror="true"
+				timeout="320000">
 			<classpath>
 				<pathelement location="${dir.dist.classes.test.nq}" />
                 <pathelement location="${file.nqopt.jar}" />
@@ -597,6 +612,7 @@
 	
     <target name="run.tests.concurrency" depends="build.db4ojdk1.1.tests, build.db4ojdk5.tests">
         <java jvm="${file.jvm.jdk1.1}" 
+			jvmargs="${java.vmargs}"
         	fork="true" 
         	classname="com.db4o.db4ounit.jre11.concurrency.AllTests" 
         	failonerror="true" 
@@ -611,6 +627,7 @@
 		</java>
         
         <java jvm="${file.jvm.jdk1.5}" 
+			jvmargs="${java.vmargs}"
         	fork="true" 
         	classname="com.db4o.db4ounit.jre5.AllTestsConcurrency" 
         	failonerror="true" 
@@ -636,6 +653,7 @@
 			classname="com.db4o.osgi.test.launch.TestLauncher" 
 			fork="true" 
 			jvm="${file.jvm.cdc_fp}" 
+			jvmargs="${java.vmargs}"
 			failonerror="true" 
 			timeout="1800000">
 			<!-- TODO extract reference to build classpath in common.xml -->
@@ -657,6 +675,7 @@
 	<target name="run.tests.taj" depends="build.taj.tests">
 		
 		<java classname="com.db4o.ta.instrumentation.test.AllTests"
+			jvmargs="${java.vmargs}"
 			fork="true"
 			jvm="${file.jvm.jdk1.3}"
 			failonerror="true"
