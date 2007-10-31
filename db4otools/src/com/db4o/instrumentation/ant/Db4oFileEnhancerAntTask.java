@@ -78,12 +78,7 @@ public class Db4oFileEnhancerAntTask extends Task {
 		copyFileSets(sourceArr, _sources.size(), _sourceJars);
 		AntFileSetPathRoot root = new AntFileSetPathRoot(sourceArr);
 		try {
-			try {
-				new Db4oFileEnhancer(clazzEdit).enhance(root,_targetDir,(String[])paths.toArray(new String[paths.size()]),(_packagePredicate==null ? "" : _packagePredicate));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			new Db4oFileEnhancer(clazzEdit).enhance(root,_targetDir,(String[])paths.toArray(new String[paths.size()]),(_packagePredicate==null ? "" : _packagePredicate));
 		} catch (Exception exc) {
 			throw new BuildException(exc);
 		}
