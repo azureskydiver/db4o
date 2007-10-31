@@ -19,8 +19,7 @@ public class BloatUtil {
 
 	public static Class classForEditor(ClassEditor ce, ClassLoader loader) throws ClassNotFoundException {
 		String clazzName = normalizeClassName(ce.name());
-		Class clazz = loader.loadClass(clazzName);
-		return clazz;
+		return loader.loadClass(clazzName);
 	}
 
 	public static boolean isPlatformClassName(String name) {

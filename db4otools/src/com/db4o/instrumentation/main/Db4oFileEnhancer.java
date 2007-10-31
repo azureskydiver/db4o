@@ -73,29 +73,19 @@ public class Db4oFileEnhancer {
 			File target,
 			ClassLoader classLoader, 
 			BloatLoaderContext bloatUtil,
-			String packagePrefix) throws IOException {
-		InstrumentationStatus status = InstrumentationStatus.NOT_INSTRUMENTED;
-		try {
-			if (source.className().startsWith(packagePrefix)) {
-				System.err.println("Processing " + source.className());
-				ClassEditor classEditor = bloatUtil.classEditor(source.className());
-				status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
-				System.err.println("enhance " + source.className() + ": " + (status.isInstrumented() ? "ok" : "skipped"));
-			}
-		} catch (Exception e) {
-			status = InstrumentationStatus.FAILED;
-			e.printStackTrace();
-		} catch (NoClassDefFoundError e) {
-			System.err.println("Omitting " + source.className() + ": Referenced class " + e.getMessage() + " not found.");
-		} finally {
-			if (!status.isInstrumented()) {
-				File targetFile = source.targetPath(target);
-				targetFile.getParentFile().mkdirs();
-				copy(source.inputStream(), targetFile);
-			}
-			else {
-//				bloatUtil.commit();
-			}
+			String packagePrefix) throws IOException, ClassNotFoundException {
+		
+		if (!source.className().startsWith(packagePrefix)) {
+			return;
+		}
+		System.err.println("Processing " + source.className());
+		ClassEditor classEditor = bloatUtil.classEditor(source.className());
+		InstrumentationStatus status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
+		System.err.println("enhance " + source.className() + ": " + (status.isInstrumented() ? "ok" : "skipped"));
+		if (!status.isInstrumented()) {
+			File targetFile = source.targetPath(target);
+			targetFile.getParentFile().mkdirs();
+			copy(source.inputStream(), targetFile);
 		}
 	}
 
