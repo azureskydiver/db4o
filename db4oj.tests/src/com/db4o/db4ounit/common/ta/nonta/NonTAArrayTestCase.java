@@ -31,14 +31,6 @@ public class NonTAArrayTestCase extends NonTAItemTestCaseBase {
         ArrayAssert.areEqual(LIST2, (LinkedList[]) item.listsObject());
     }
     
-	protected void assertNullItem(Object obj) {
-		ArrayItem item = (ArrayItem) obj;
-		Assert.isNull(item.value);
-		Assert.isNull(item.obj);
-		Assert.isNull(item.lists);
-		Assert.isNull(item.listsObject);
-	}
-
     protected Object createItem() {
         ArrayItem item = new ArrayItem();
         item.value = INTS1;

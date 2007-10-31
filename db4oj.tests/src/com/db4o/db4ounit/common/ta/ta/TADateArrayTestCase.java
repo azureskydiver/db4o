@@ -26,12 +26,6 @@ public class TADateArrayTestCase extends TAItemTestCaseBase {
         }
     }
 
-    protected void assertRetrievedItem(Object obj) throws Exception {
-        TADateArrayItem item = (TADateArrayItem) obj;
-        Assert.isNull(item._typed);
-        Assert.isNull(item._untyped);
-    }
-
     protected Object createItem() throws Exception {
         TADateArrayItem item = new TADateArrayItem();
         item._typed = new Date[data.length];

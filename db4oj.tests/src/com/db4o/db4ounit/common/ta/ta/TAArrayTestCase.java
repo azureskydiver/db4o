@@ -40,13 +40,4 @@ public class TAArrayTestCase extends TAItemTestCaseBase {
 		ArrayAssert.areEqual(LIST1, item.lists());
 		ArrayAssert.areEqual(LIST2, (LinkedList[]) item.listsObject());
 	}
-
-	protected void assertRetrievedItem(Object obj) {
-		TAArrayItem item = (TAArrayItem) obj;
-		Assert.isNull(item.value);
-		Assert.isNull(item.obj);
-		Assert.isNull(item.lists);
-		Assert.isNull(item.listsObject);
-	}
-
 }
