@@ -9,11 +9,15 @@ import com.db4o.activation.*;
 import com.db4o.ta.*;
 
 /**
- * db4o <code>ArrayMap4</code> is an implementation of java.util.Map, which
- * supports Transparent Activate.
+ * Transparent activatable Map implementation.
+ * Implements Map interface using two arrays to store keys and values.
+ * When instantiated as a result of a query, all the internal members
+ * are NOT activated at all. When internal members are required to 
+ * perform an operation, the instance transparently activates all 
+ * the members.   
  * 
- * db4o <code>ArrayMap4</code> uses two separate arrays to store keys and
- * Values
+ * @see java.util.Map
+ * @see com.db4o.ta.Activatable
  */
 
 public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
@@ -39,12 +43,22 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         initializeBackingArray(initialCapacity);
     }
 
+	/**
+	 * activate basic implementation.
+	 * 
+	 * @see com.db4o.ta.Activatable
+	 */
     public void activate() {
         if (_activator != null) {
             _activator.activate();
         }
     }
 
+	/**
+	 * bind basic implementation.
+	 * 
+	 * @see com.db4o.ta.Activatable
+	 */
     public void bind(Activator activator) {
         if (_activator != null || activator == null) {
             throw new IllegalStateException();
@@ -52,6 +66,13 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         _activator = activator;
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public void clear() {
         activate();
         
@@ -61,18 +82,39 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         Arrays.fill(_values, null);
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public boolean containsKey(Object key) {
         activate();
         
         return indexOf(_keys, key) != -1;
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public boolean containsValue(Object value) {
         activate();
         
         return indexOf(_values, value) != -1;
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public Set<Map.Entry<K, V>> entrySet() {
         activate();
         
@@ -84,6 +126,13 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         return set;
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public V get(Object key) {
         activate();
         
@@ -91,12 +140,26 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         return index == -1 ? null : _values[index];
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public boolean isEmpty() {
         activate();
         
         return (_endIndex - _startIndex) == 0;
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public Set<K> keySet() {
         activate();
         
@@ -107,6 +170,13 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         return set;
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public V put(K key, V value) {
         activate();
         
@@ -122,12 +192,26 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         return oldValue;
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public void putAll(Map<? extends K, ? extends V> t) {
         for (Map.Entry<? extends K, ? extends V> entry : t.entrySet()) {
             put(entry.getKey(), entry.getValue());
         }
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     @SuppressWarnings("unchecked")
     public V remove(Object key) {
         activate();
@@ -139,12 +223,26 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         return (V) delete(index);
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public int size() {
         activate();
         
         return _endIndex - _startIndex;
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public Collection<V> values() {
         activate();
         
@@ -155,6 +253,13 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         return list;
     }
 
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     @SuppressWarnings("unchecked")
     public Object clone() {
         activate();
@@ -168,6 +273,13 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         }
     }
     
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     @SuppressWarnings("unchecked")
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -196,6 +308,13 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         return true;
     }
     
+	/**
+	 * java.util.Map implementation but transparently 
+	 * activates the members as required.
+	 * 
+	 * @see java.util.Map 
+	 * @see com.db4o.ta.Activatable
+	 */
     public int hashCode() {
         int hashCode = 0;
         for (Map.Entry<K, V> entry : entrySet()) {
