@@ -8,8 +8,8 @@ import java.util.*;
 import EDU.purdue.cs.bloat.context.*;
 import EDU.purdue.cs.bloat.editor.*;
 
+import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
-import com.db4o.instrumentation.filter.*;
 import com.db4o.instrumentation.util.*;
 
 /**

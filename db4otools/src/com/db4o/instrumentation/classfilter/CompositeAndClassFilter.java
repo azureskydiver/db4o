@@ -1,4 +1,6 @@
-package com.db4o.instrumentation.core;
+package com.db4o.instrumentation.classfilter;
+
+import com.db4o.instrumentation.core.*;
 
 /**
  * A class filter composed of multiple other filters - accepts if all filters accept.
