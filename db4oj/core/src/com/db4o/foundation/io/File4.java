@@ -10,6 +10,20 @@ import com.db4o.*;
  * @sharpen.ignore
  */
 public class File4 {
+	
+	public  static byte[] readAllBytes(final String fname) 
+		throws FileNotFoundException, IOException {
+			
+		final File file = new File(fname);
+		byte[] bytes = new byte[(int)file.length()];
+		final FileInputStream fis = new FileInputStream(file);
+		try {
+			fis.read(bytes);
+		} finally {
+			fis.close();
+		}
+		return bytes;
+	}
 
 	public static void rename(String oldPath,String newPath) throws IOException {
 		if(!new File(oldPath).renameTo(new File(newPath))) {

@@ -2,6 +2,8 @@
 
 package com.db4o.foundation.io;
 
+import java.io.*;
+
 
 
 /**
@@ -13,6 +15,10 @@ package com.db4o.foundation.io;
 public class Path4 { 
 	
 	private static final java.util.Random _random = new java.util.Random();
+	
+	public static String getDirectoryName(String targetPath) {
+		return new File(targetPath).getParent();
+	}
 
 	public static String combine(String parent, String child) {		
 		return parent.endsWith(java.io.File.separator)
@@ -40,5 +46,5 @@ public class Path4 {
 
 	private static String nextRandom() {
 		return Integer.toHexString(_random.nextInt());
-	}
+	}	
 }
