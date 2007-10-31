@@ -26,6 +26,9 @@ public class UpdatingDb4oVersionsTestCase extends FormatMigrationTestCaseBase {
         config.objectClass(UpdatingDb4oVersions.class).objectField("name").indexed(true);
     }
     
+    /**
+     * @deprecated we are using deprecated apis
+     */
     protected void store(ExtObjectContainer oc){
         UpdatingDb4oVersions udv = new UpdatingDb4oVersions();
         udv.name = "check";
