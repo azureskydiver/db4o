@@ -13,13 +13,13 @@ public abstract class TAItemTestCaseBase
     
     public void testGetByID() throws Exception {
     	Object item = db().ext().getByID(id);
-        assertRetrievedItem(item);
+    	assertNullItem(item);
         assertItemValue(item);
 	}
     
     public void testGetByUUID() throws Exception {
     	Object item = db().ext().getByUUID(uuid);
-        assertRetrievedItem(item);
+    	assertNullItem(item);
         assertItemValue(item);
 	}
 	
