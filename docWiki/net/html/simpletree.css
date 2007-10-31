@@ -10,7 +10,8 @@ margin-bottom: 4px;
 }
 
 .treeview li.submenu{ /* Style for LI that contains sub lists (other ULs). */
-list-style-image: url(images/closed.gif);
+list-style-image: none;
+list-style-type: none;
 cursor: hand !important;
 cursor: pointer !important;
 }

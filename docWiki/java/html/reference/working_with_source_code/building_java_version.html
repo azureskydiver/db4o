@@ -7,47 +7,18 @@
   <body>
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>Building Java Version</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Building Jar Only&nbsp;">Building Jar Only&nbsp;</a></li><li><a href ="#Building db4o Java Distribution&nbsp;">Building db4o Java Distribution&nbsp;</a><ul><li><a href ="#Projects Required&nbsp;">Projects Required&nbsp;</a></li><li><a href ="#machine.properties">machine.properties</a></li><li><a href ="#Running the Build">Running the Build</a></li></ul></li></ul></li></ul></div></div></div><p><font color="#cc0033">This topic applies
-to Java version only</font> <br></p><span name="cs_wiki_filter" csw_filters="java">
+        <h1>Building Java Version</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Projects Required&nbsp;">Projects Required&nbsp;</a></li><li><a href ="#machine.properties">machine.properties</a></li><li><a href ="#Running the Build">Running the Build</a></li></ul></li></ul></div></div></div><p><font color="#cc0033">This topic applies
+to Java version only</font> <br></p><span name="cs_wiki_filter" csw_filters="java"><a name="Projects Required&nbsp;"></a><h3>Projects Required&nbsp;</h3><p>You ca use db4obuild project to create a full db4o java distribution. In this case,
+you will need to check out the following projects.
 
-
-
-
-
-<a name="Building Jar Only&nbsp;"></a><h2>Building Jar Only&nbsp;</h2><p>To work with the
-Java db4o sources you will need the following projects:</p>
-
-<p>db4oj</p><p>db4o_osgi&nbsp;</p><p>db4o_osgi_test <br></p>
-
-<p>db4ojdk1.2</p>
-
-<p>db4ojdk5</p>
-
-<p>db4ounit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
-
-<p>db4ounit.extensions</p>
-
-<p>db4oj.tests</p>
-
-<p>These projects are
-available in the /src folder of the db4o distribution. They can also be checked
-out from the SVN repository.</p>
-
-<p>You can build the
-projects and assemble them into a *.jar file.</p>
-
-<a name="Building db4o Java Distribution&nbsp;"></a><h2>Building db4o Java Distribution&nbsp;</h2><a name="Projects Required&nbsp;"></a><h3>Projects Required&nbsp;</h3><p>Another option is to
-use db4obuild project to create a full db4o java distribution. In this case,
-you will have to additionally check out the following projects.
-
-</p><p>build-1.1 - db4o
+</p><p>db4obuild - db4o
 build tool</p>
 
 <p>bloat - bytecode
-optimization library, required for db4o NQ optimizer</p>
+optimization library, required for db4o NQ optimizer</p><p>db4o-osgi - db4o OSGI library</p><p>db4o-osgi-tests - tests for db4o OSGI</p><p>db4oj - db4o core</p><p>db4ojdk1.2 - db4o core for JDK1.2-1.4</p><p>db4ojdk5 - db4o core for JDK5</p><p>db4otaj - TA instrumentation</p><p>db4otools - bytecode instrumentation for db4o&nbsp;</p>
 
 <p>db4onqopt - db4o NQ
-optimizer</p>
+optimizer</p><p>db4ounit - db4o unit-test framework&nbsp;</p><p>db4ounit.extensions - db4o unit-test framework extensions<br></p>
 
 <p>doctor -
 documentation generation tool, required for building interactive tutorial</p>
@@ -75,7 +46,7 @@ JDK 5 to build db4o for Java 1.1, you will need this line:</p>
 <a name="Running the Build"></a><h3>Running the Build</h3>
 
 <p>You can start the build by right-clicking build.xml file and
-selecting "Run As/Ant Build". You will need "clean" and "buildjava" targets. (You can't use "buildall" or "buildnet" as they require javatocsharp project, which is not public.)<br> </p>
+selecting "Run As/Ant Build". You will run "buildjava" target. (You can't use "buildall" or "buildnet" as they require javatocsharp project, which is not public.)<br> </p>
 
 <p>The ready distribution can be found in /dist folder of db4obuild project</p></span><p>Further reading:</p><p><a href="testing_db4o.html" class="wikiLink">Testing Db4o</a>&nbsp;</p>
 
@@ -84,7 +55,7 @@ selecting "Run As/Ant Build". You will need "clean" and "buildjava" targets. (Yo
 <p><a href="patch_submission.html" class="wikiLink">Patch Submission</a><br>&nbsp;</p></div>
     </div>
     <div id="footer">
-					This revision (7) was last Modified 2007-09-09T18:28:55 by Tetyana.
+					This revision (8) was last Modified 2007-10-28T11:11:03 by Tetyana.
 				</div>
   </body>
 </html>

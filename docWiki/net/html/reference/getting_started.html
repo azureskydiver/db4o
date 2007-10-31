@@ -7,7 +7,7 @@
   <body>
     <div class="CommonContent">
       <div class="CommonContentArea">
-        <h1>Getting Started</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Download Contents">Download Contents</a><ul><li><a href ="#.NET Platform">.NET Platform</a></li></ul></li><li><a href ="#The db4o Engine">The db4o Engine</a></li></ul></li></ul></div></div></div> 
+        <h1>Getting Started</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Download Contents">Download Contents</a><ul><li><a href ="#.NET Platform">.NET Platform</a></li></ul></li><li><a href ="#The db4o Engine">The db4o Engine</a></li><li><a href ="#Installation&nbsp;">Installation&nbsp;</a><ul><li><a href ="#Visual Studio Installation">Visual Studio Installation</a></li><li><a href ="#Mono Installation">Mono Installation</a></li></ul></li></ul></li></ul></div></div></div> 
 
 <P>This topic will give you some start information about db4o and will help you to get your environment ready to work with db4o.<BR></P>
 <a name="Download Contents"></a><H2>Download Contents</H2>
@@ -27,7 +27,7 @@
 </span>
 
 <a name="The db4o Engine"></a><H2>The db4o Engine</H2>
-<P><span name="cs_wiki_filter" csw_filters="net">&nbsp;</P>
+<span name="cs_wiki_filter" csw_filters="net">
 <P>The db4o object database engine for .NET platforms consists of one single DLL. This is all that you need to program against.</P>
 <P>db4o is available in two separate distributions for Microsoft .NET. One distribution is for the .NET Framework 1.1 and the other is for the .NET Framework 2.0. Be sure to use the correct one for your project environment.</P>
 <P><B>/db4o-X.X/bin/net[-2.0]/Db4objects.Db4o.dll</B></P>
@@ -36,12 +36,39 @@
 <P>is built for the .NET CompactFramework.</P>
 <P><a href="platform_specific_issues/security_requirements_on_.net_platform.html" class="wikiLink">Security Requirements On .NET Platform</a> discusses, which security permissions should be granted to db4o assembly for correct operation.</P>
 <P>Since version 6.0 you will also see legacy libraries in the distribution. These are provided for users, which are not ready yet to upgrade their applications for the new db4o syntax.<BR></P>
-<P></span>&nbsp;</P>
+</span>
 
-<P></P></div>
+<a name="Installation&nbsp;"></a><H2>Installation&nbsp;</H2>
+<span name="cs_wiki_filter" csw_filters="net">
+<a name="Visual Studio Installation"></a><H3>Visual Studio Installation</H3>
+<P>To use db4o in a development project, you only need to add one&nbsp;of the above db4o.dll files to your project references.</P>
+<P>Here is how to do this with Visual Studio .NET:</P>
+<UL>
+<LI>copy Db4objects.Db4o.dll to your VS.NET project folder</LI>
+<LI>right-click on "References" in the Solution Explorer</LI>
+<LI>choose "Add Reference"</LI>
+<LI>select "Browse"</LI>
+<LI>find the Db4objects.Db4o.dll in your project folder</LI>
+<LI>click "Open"</LI>
+<LI>click "OK"</LI>
+<LI>Right-click db4o</LI>
+<LI>Choose "Properties"</LI>
+<LI>Set "Copy Local" to "True" if it is not already set. </LI></UL>
+<a name="Mono Installation"></a><H3>Mono Installation</H3>
+<P>To use db4o in a development project, you only need to add Db4objects.Db4o.dll file to your project references.</P>
+<P>Here is how to do this if you are using MonoDevelop:</P>
+<UL>
+<LI>Right-click on "References" in the Solution Tab</LI>
+<LI>choose "Edit References"</LI>
+<LI>select the ".NET Assembly" tab and then "Browse"</LI>
+<LI>select /usr/lib/db4o/Db4objects.Db4o.dll</LI>
+<LI>click "Open"</LI>
+<LI>click "OK" </LI></UL>
+</span>
+</div>
     </div>
     <div id="footer">
-					This revision (32) was last Modified 2007-09-01T14:03:22 by Tetyana.
+					This revision (33) was last Modified 2007-10-14T16:06:10 by Tetyana.
 				</div>
   </body>
 </html>
