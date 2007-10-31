@@ -11,7 +11,7 @@ namespace Db4ojects.Db4odoc.TAExamples
     public class Team : IActivatable
     {
 
-        IList _pilots = new PagedList();
+        IList _pilots = new ArrayList4();
 
         string _name;
 
@@ -38,7 +38,9 @@ namespace Db4ojects.Db4odoc.TAExamples
 
         public void AddPilot(Pilot pilot)
         {
-            _pilots.Add(pilot);
+			// activate before adding new pilots
+			activate();
+			_pilots.Add(pilot);
         }
 
         public void ListAllPilots()
