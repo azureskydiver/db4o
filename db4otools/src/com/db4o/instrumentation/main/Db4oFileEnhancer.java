@@ -22,6 +22,10 @@ public class Db4oFileEnhancer {
 		_classEdit = classEdit;
 	}
 
+	public Db4oFileEnhancer(BloatClassEdit[] classEdits) {
+		this(new CompositeBloatClassEdit(classEdits));
+	}
+
 	public void enhance(String sourceDir, String targetDir, String[] classpath, String packagePredicate) throws Exception {
 		enhance(new DefaultFilePathRoot(new String[]{ sourceDir }, ".class"), targetDir, classpath, packagePredicate);
 	}
