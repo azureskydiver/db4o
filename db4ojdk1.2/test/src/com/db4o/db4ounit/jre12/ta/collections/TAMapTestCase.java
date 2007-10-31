@@ -30,6 +30,10 @@ public class TAMapTestCase extends ItemTestCaseBase {
         Assert.areEqual(new Integer(300), taIntItem.object());
     }
 
+    //  TODO: what does Hashmap look like with depth 0?
+    protected void assertNullItem(Object obj) throws Exception {
+    	
+    }
     protected void assertRetrievedItem(Object obj) throws Exception {
         HashMap item = (HashMap) obj;
         IntItem intItem = (IntItem) item.get(IntItem.class.getName());
