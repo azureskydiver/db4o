@@ -25,6 +25,11 @@ public class NTTestCase extends ItemTestCaseBase {
 		Assert.areEqual(0, item.tItem.value);
 	}
 	
+	protected void assertNullItem(Object obj) throws Exception {
+		NTItem item = (NTItem) obj;
+		Assert.isNull(item.tItem);
+	}
+	
 	protected void assertItemValue(Object obj) throws Exception {
 		NTItem item = (NTItem) obj;
 		Assert.areEqual(42, item.tItem.value());

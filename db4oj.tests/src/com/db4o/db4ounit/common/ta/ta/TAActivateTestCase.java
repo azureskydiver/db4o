@@ -7,7 +7,7 @@ import com.db4o.query.*;
 
 import db4ounit.*;
 
-public class TAActivateTestCase extends ItemTestCaseBase {
+public class TAActivateTestCase extends TAItemTestCaseBase {
 
     public static void main(String[] args) {
         new TAActivateTestCase().runAll();

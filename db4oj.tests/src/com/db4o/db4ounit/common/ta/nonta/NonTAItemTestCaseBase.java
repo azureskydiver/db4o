@@ -29,6 +29,4 @@ public abstract class NonTAItemTestCaseBase extends ItemTestCaseBase {
         assertItemValue(item);
 	}
     
-    protected abstract void assertNullItem(Object obj) throws Exception;
-    
 }

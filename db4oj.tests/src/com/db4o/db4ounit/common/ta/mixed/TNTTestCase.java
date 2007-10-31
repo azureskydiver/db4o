@@ -24,6 +24,10 @@ public class TNTTestCase extends ItemTestCaseBase {
 		Assert.isNull(item.ntItem);
 	}
 	
+	protected void assertNullItem(Object obj) throws Exception {
+		assertRetrievedItem(obj);
+	}
+	
 	protected void assertItemValue(Object obj) throws Exception {
 		TNTItem item = (TNTItem) obj;
 		NTItem ntItem = item.value();

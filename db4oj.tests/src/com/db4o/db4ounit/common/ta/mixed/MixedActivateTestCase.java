@@ -36,12 +36,15 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
 
     protected void assertRetrievedItem(Object obj) throws Exception {
         Item item = (Item) obj;
-
         for (int i = 0; i < ITEM_DEPTH; i++) {
             assertNullItem(item, ITEM_DEPTH - i);
             item = item.next();
         }
     }
+    
+    protected void assertNullItem(Object obj) throws Exception {
+    	assertRetrievedItem(obj);
+	}
 
     private void assertNullItem(Item item, int level) {
         if (level % 2 == 0) {
@@ -202,5 +205,6 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
             _activator = activator;
         }
     }
+
 
 }

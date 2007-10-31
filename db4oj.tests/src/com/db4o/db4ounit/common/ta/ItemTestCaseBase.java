@@ -29,6 +29,14 @@ public abstract class ItemTestCaseBase
         assertItemValue(item);
     }
     
+    public void testDeactivate() throws Exception {	
+    	Object item = retrieveOnlyInstance(_clazz);
+    	db().deactivate(item, 1);
+    	assertNullItem(item);    	
+	}
+    
+    protected abstract void assertNullItem(Object obj) throws Exception;
+    
     protected abstract void assertItemValue(Object obj) throws Exception;
      
     protected abstract Object createItem() throws Exception;
