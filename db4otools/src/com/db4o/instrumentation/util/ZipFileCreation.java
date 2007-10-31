@@ -3,7 +3,6 @@
 package com.db4o.instrumentation.util;
 
 import java.io.*;
-import java.util.zip.*;
 
 import com.db4o.foundation.io.*;
 
@@ -15,16 +14,15 @@ import com.db4o.foundation.io.*;
  */
 public class ZipFileCreation {
 
-	private final ZipOutputStream _zipFile;
+	private final ZipFileWriter _zipFile;
 	private final File _baseDir;
 
 	public ZipFileCreation(String sourceDir, File outputFile) throws IOException {
 		_baseDir = new File(sourceDir);
-		_zipFile = new ZipOutputStream(new FileOutputStream(outputFile));
+		_zipFile = new ZipFileWriter(outputFile);
 		try {
 			writeEntries(_baseDir.listFiles());
 		} finally {
-			_zipFile.flush();
 			_zipFile.close();
 		}
 	}
@@ -44,22 +42,13 @@ public class ZipFileCreation {
 	}
 
 	private void writeFileEntry(File file) throws IOException {
-		_zipFile.putNextEntry(entryForFile(file));
-		try {
-			_zipFile.write(readAllBytes(file));
-		} finally {
-			_zipFile.closeEntry();
-		}
+		_zipFile.writeEntry(relativePath(file), readAllBytes(file));
 	}
 
 	private byte[] readAllBytes(File file) throws IOException {
 		return File4.readAllBytes(file.getAbsolutePath());
 	}
-
-	private ZipEntry entryForFile(File file) {
-		return new ZipEntry(relativePath(file));
-	}
-
+	
 	private String relativePath(File file) {
 		return _baseDir.toURI().relativize(file.toURI()).getPath();
 	}

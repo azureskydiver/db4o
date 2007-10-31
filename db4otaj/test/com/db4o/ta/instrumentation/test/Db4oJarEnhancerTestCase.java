@@ -16,10 +16,7 @@ import db4ounit.*;
 
 public class Db4oJarEnhancerTestCase implements TestCase {
 	
-	public interface Marker {
-	}
-	
-	public void _test() throws Exception {
+	public void test() throws Exception {
 		final File inputJar = mkTempFile("in.jar");		
 		createJar(inputJar);
 		
@@ -66,11 +63,13 @@ public class Db4oJarEnhancerTestCase implements TestCase {
 
 	private void enhance(File inputJar, File outputJar) throws Exception {
 		Db4oJarEnhancer enhancer = new Db4oJarEnhancer(new AddMarkerInterfaceClassEdit(Marker.class));
-		enhancer.enhance(inputJar, outputJar, new String[0], null);
+		enhancer.enhance(inputJar, outputJar, new String[0], "");
 	}
 
 	private File mkTempFile(final String name) {
-		return new File(Path4.combine(IO.mkTempDir("JarEnhancer"), name));
+		final File temp = new File(Path4.combine(IO.mkTempDir("JarEnhancer"), name));
+		temp.deleteOnExit();
+		return temp;
 	}
 
 	private void createJar(File file) throws IOException {

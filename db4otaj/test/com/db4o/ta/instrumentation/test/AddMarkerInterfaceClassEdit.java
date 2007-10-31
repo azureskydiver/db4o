@@ -17,6 +17,7 @@ public class AddMarkerInterfaceClassEdit implements BloatClassEdit {
 	public InstrumentationStatus enhance(ClassEditor ce,
 			ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		ce.addInterface(_markerInterface);
+		ce.commit();
 		return InstrumentationStatus.INSTRUMENTED;
 	}
 
