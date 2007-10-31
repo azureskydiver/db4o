@@ -7,17 +7,12 @@ import com.db4o.ta.Activatable;
 
 public class Pilot implements Activatable {
 
-	private final static String EXTENTION = ".jpg";
-
 	private String _name;
-
-	private Image _image;
 
 	transient Activator _activator;
 
 	public Pilot(String name) {
 		_name = name;
-		_image = new Image(name + EXTENTION);
 	}
 
 	// Bind the class to an object container
