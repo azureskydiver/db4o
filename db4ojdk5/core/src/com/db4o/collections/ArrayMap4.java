@@ -10,7 +10,7 @@ import com.db4o.ta.*;
 
 /**
  * Transparent activatable Map implementation.
- * Implements Map interface using two arrays to store keys and values.
+ * Implements Map interface using two arrays to store keys and values.<br><br>
  * When instantiated as a result of a query, all the internal members
  * are NOT activated at all. When internal members are required to 
  * perform an operation, the instance transparently activates all 
