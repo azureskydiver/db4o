@@ -11,7 +11,7 @@ Namespace Db4ojects.Db4odoc.TAExamples
     Public Class Team
         Implements IActivatable
 
-        Private _pilots As IList = New PagedList
+        Private _pilots As IList = New ArrayList4
         Private _name As String
 
         ' TA Activator
@@ -35,6 +35,8 @@ Namespace Db4ojects.Db4odoc.TAExamples
         End Sub
 
         Public Sub AddPilot(ByVal pilot As Pilot)
+            ' activate before adding new pilots
+            Activate()
             _pilots.Add(pilot)
         End Sub
 
