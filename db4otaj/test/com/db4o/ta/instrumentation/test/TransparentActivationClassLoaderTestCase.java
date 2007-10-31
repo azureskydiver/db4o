@@ -1,21 +1,16 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta.instrumentation.test;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.URL;
+import java.lang.reflect.*;
+import java.net.*;
 
-import com.db4o.ObjectContainer;
-import com.db4o.activation.Activator;
-import com.db4o.instrumentation.*;
+import com.db4o.*;
+import com.db4o.activation.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.filter.*;
 import com.db4o.instrumentation.main.*;
-import com.db4o.ta.Activatable;
-import com.db4o.ta.instrumentation.InjectTransparentActivationEdit;
-import com.db4o.ta.instrumentation.TransparentActivationInstrumentationConstants;
+import com.db4o.ta.*;
+import com.db4o.ta.instrumentation.*;
 
 import db4ounit.*;
 
