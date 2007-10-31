@@ -125,6 +125,19 @@ public class Hashtable4 implements DeepClone {
 		}
 		return null != getObjectEntry(key.hashCode(), key); 
 	}
+	
+	public boolean containsAllKeys(Iterable4 collection) {
+		return containsAllKeys(collection.iterator());
+	}
+
+	public boolean containsAllKeys(Iterator4 iterator) {
+		while (iterator.moveNext()) {
+			if (!containsKey(iterator.current())) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public void put(byte[] key, Object value) {
 		putEntry(new HashtableByteArrayEntry(key, value));
@@ -162,6 +175,10 @@ public class Hashtable4 implements DeepClone {
 	public void remove(Object objectKey) {
 		int intKey = objectKey.hashCode();
 		removeObjectEntry(intKey, objectKey);
+	}
+	
+	public String toString() {
+		return Iterators.join(iterator(), "{", "}", ", ");
 	}
 
 	protected Hashtable4 deepCloneInternal(Hashtable4 ret, Object obj) {
@@ -285,5 +302,5 @@ public class Hashtable4 implements DeepClone {
 			entry._next = _table[entryIndex(entry)];
 			_table[entryIndex(entry)] = entry;
 		}
-	}	
+	}		
 }
