@@ -7,12 +7,7 @@ namespace Db4ojects.Db4odoc.TAExamples
 {
     public class Pilot : IActivatable
     {
-
-        private const string Extention = ".jpg";
-
         private string _name;
-
-        private Image _image;
 
         [System.NonSerialized]
         IActivator _activator;
@@ -20,7 +15,6 @@ namespace Db4ojects.Db4odoc.TAExamples
         public Pilot(string name)
         {
             _name = name;
-            _image = new Image(name + Extention);
         }
 
         // Bind the class to an object container
