@@ -23,5 +23,8 @@ public abstract class TAItemTestCaseBase
         assertItemValue(item);
 	}
     
+    protected void assertNullItem(Object obj) throws Exception {
+    	assertRetrievedItem(obj);
+    }
 	
 }
