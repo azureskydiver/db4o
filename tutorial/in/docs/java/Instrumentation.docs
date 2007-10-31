@@ -1,0 +1,23 @@
+.n
+.a Instrumentation ..
+.0 Instrumentation ..
+
+As we have seen both  .l TransparentActivation Transparent Activation ..  and ._
+ .l NativeQueries Native Queries ..  will produce correct results out-of-the-box.
+ 
+To get your application to run as fast as possible with db4o, you will want ._
+to make sure that only required objects are loaded from the database ._
+and that Native Queries are optimized to use field ._
+indexes where that is possible.
+
+Theoretically you could write all the necessary code by hand but you will save ._
+yourself a lot of time if you use instrumentation. 
+
+db4o for Java supplies three optimization strategies:
+(1) Instrumentation at compile and deploment time
+(2) Instrumentation at class loading time
+(3) Native Query optimization at query execution time
+ 
+.n
+.< NQOptimization ..
+.n

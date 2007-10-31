@@ -7,13 +7,14 @@
 .e Inheritance ..
 .e Deep ..
 .e Transactions ..
+.e TransparentActivation ..
 .e ClientServer ..
 .e Evaluations ..
 .e Translators ..
 .e Configuration ..
 .e Indexes ..
 .e IDs ..
-.e NQOptimization ..
+.e Instrumentation ..
 .e Troubleshooting .. 
 .e License ..
 .e Contact ..
