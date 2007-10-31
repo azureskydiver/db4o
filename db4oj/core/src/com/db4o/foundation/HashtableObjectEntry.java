@@ -47,4 +47,8 @@ public class HashtableObjectEntry extends HashtableIntEntry {
 			? hasKey(((HashtableObjectEntry) other)._objectKey)
 			: false;
 	}
+	
+	public String toString() {
+		return "" + _objectKey + ": " + _object;
+	}
 }

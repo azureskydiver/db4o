@@ -52,4 +52,8 @@ public class HashtableIntEntry implements Entry4, DeepClone  {
 		}
 		return entry;
 	}
+	
+	public String toString() {
+		return "" + _key + ": " + _object;
+	}
 }

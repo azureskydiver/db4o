@@ -14,6 +14,13 @@ public class Hashtable4TestCase implements TestCase {
 		new TestRunner(Hashtable4TestCase.class).run();
 	}
 	
+	public void testToString() {
+		final Hashtable4 table = new Hashtable4();
+		table.put("foo", "bar");
+		table.put("bar", "baz");
+		Assert.areEqual("{foo: bar, bar: baz}", table.toString());
+	}
+	
 	public void testContainsKey() {
 		Hashtable4 table = new Hashtable4();
 		Assert.isFalse(table.containsKey(null));
