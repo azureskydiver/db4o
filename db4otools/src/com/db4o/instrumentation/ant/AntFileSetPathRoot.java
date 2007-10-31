@@ -6,12 +6,13 @@ import java.util.*;
 import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.types.resources.*;
 
+import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.file.*;
 
 /**
  * @exclude
  */
-class AntFileSetPathRoot implements FilePathRoot {
+class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 
 	private FileSet[] _fileSets;
 
@@ -75,5 +76,21 @@ class AntFileSetPathRoot implements FilePathRoot {
 				_fileSetIdx++;
 			}
 		}
+	}
+
+	public boolean accept(Class clazz) {
+		try {
+			for (Iterator fileSetIter = files(); fileSetIter.hasNext();) {
+				InstrumentationClassSource source = (InstrumentationClassSource) fileSetIter.next();
+				if(clazz.getName().equals(source.className())) {
+					return true;
+				}
+			}
+		}
+		catch (IOException exc) {
+			// FIXME
+			throw new RuntimeException(exc.getMessage());
+		}
+		return false;
 	}
 }

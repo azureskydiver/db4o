@@ -3,11 +3,11 @@ package com.db4o.instrumentation.core;
 /**
  * A class filter composed of multiple other filters - accepts if one of the filters accepts.
  */
-public class CompositeClassFilter implements ClassFilter {
+public class CompositeOrClassFilter implements ClassFilter {
 
 	private final ClassFilter[] _filters;
 	
-	public CompositeClassFilter(ClassFilter[] filters) {
+	public CompositeOrClassFilter(ClassFilter[] filters) {
 		_filters = filters;
 	}
 
