@@ -10,7 +10,7 @@ optimized internal comparison algorithms.
 
 If no ._
 optimizer is found in the CLASSPATH or if optimization is turned ._
-off, Native Quer may be executed by instantiating all objects, ._
+off, Native Queries may be executed by instantiating all objects, ._
 using  .l Evaluations SODA Evaluations .. . Naturally performance ._
 will not be as good in this case.
 

@@ -53,8 +53,11 @@ Finally, we clean up again.
 .1 Conclusion ..
 
 We have seen how transactions work for a single client. In the ._
-.l ClientServer next chapter ..l  we will see how the transaction concept extends to multiple ._
+.l ClientServer Client/Server chapter ..l  we will see how the transaction concept extends to multiple ._
 clients, whether they are located within the same  .? java VM ..? .? net runtime ..? or on a remote machine.
+
+Let't first revisit Activation again in the  .l TransparentActivation next chapter ..l and ._
+take a look at how db4o can take care of our Object lifecycle automatically. 
 
 .1 Full source ..
 
