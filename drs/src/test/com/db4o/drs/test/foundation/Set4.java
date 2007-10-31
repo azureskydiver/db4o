@@ -1,10 +1,8 @@
 package com.db4o.drs.test.foundation;
 
-import com.db4o.foundation.Entry4;
-import com.db4o.foundation.Hashtable4;
-import com.db4o.foundation.Iterator4;
+import com.db4o.foundation.*;
 
-public class Set4 {
+public class Set4 implements Iterable4 {
 	
 	public static final Set4 EMPTY_SET = new Set4(0);
 	
@@ -23,7 +21,7 @@ public class Set4 {
 	}
 	
 	public void addAll(Set4 other) {
-		Iterator4 i = other._table.iterator();
+		Iterator4 i = other.iterator();
 		while(i.moveNext()){
 			add(((Entry4)i.current()).key());			
 		}
@@ -42,11 +40,7 @@ public class Set4 {
 	}
 	
 	public boolean containsAll(Set4 other) {
-		Iterator4 i = other.iterator();
-		while (i.moveNext()) {
-			if (!contains(i.current())) return false;
-		}
-		return true;
+		return _table.containsAllKeys(other);
 	}
 	
 	public Iterator4 iterator() {
