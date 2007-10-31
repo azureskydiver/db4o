@@ -2,17 +2,16 @@
 
 package com.db4odoc.taexamples;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-import com.db4o.activation.Activator;
-import com.db4o.db4ounit.common.ta.collections.PagedList;
-import com.db4o.ta.Activatable;
+import com.db4o.activation.*;
+import com.db4o.collections.*;
+import com.db4o.ta.*;
 
 
 public class Team implements Activatable {
 
-	List<Pilot> _pilots = new PagedList();
+	List<Pilot> _pilots = new ArrayList4<Pilot>();
 	
 	String _name;
 	
@@ -34,6 +33,8 @@ public class Team implements Activatable {
 	}
 	
 	public void addPilot(Pilot pilot) {
+		// activate before adding new pilots
+		activate();
 		_pilots.add(pilot);
 	}
 
