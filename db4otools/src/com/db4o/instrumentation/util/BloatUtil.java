@@ -36,7 +36,7 @@ public class BloatUtil {
 
 	public static String classPathForName(String className) {
 		String classPath = className.replace('.', File.separatorChar);
-		return className + ".class";
+		return classPath + ".class";
 	}
 
 	private BloatUtil() {
