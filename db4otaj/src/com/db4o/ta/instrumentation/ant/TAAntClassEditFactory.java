@@ -7,8 +7,8 @@ import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.util.regexp.*;
 
 import com.db4o.instrumentation.ant.*;
+import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
-import com.db4o.instrumentation.filter.*;
 import com.db4o.ta.instrumentation.*;
 
 /**

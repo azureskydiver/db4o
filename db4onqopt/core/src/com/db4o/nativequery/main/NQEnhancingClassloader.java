@@ -7,8 +7,8 @@ import java.net.*;
 import EDU.purdue.cs.bloat.file.*;
 
 import com.db4o.instrumentation.*;
+import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
-import com.db4o.instrumentation.filter.*;
 import com.db4o.instrumentation.main.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
