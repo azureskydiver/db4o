@@ -56,6 +56,7 @@ public class ZipFileExtraction {
 				is.close();
 			}
 		} finally {
+			fos.flush();
 			fos.close();
 		}
 	}

@@ -79,8 +79,12 @@ public class File4 {
 		if (!file.exists()) {
 			return;
 		}
+		translateDeleteFailureToException(file);
+	}
+
+	static void translateDeleteFailureToException(final File file) {
 		if (!file.delete()) {
-			throw new Db4oIOException("Could not delete '" + fname + "'.");
+			throw new Db4oIOException("Could not delete '" + file.getName() + "'.");
 		}
 	}
     

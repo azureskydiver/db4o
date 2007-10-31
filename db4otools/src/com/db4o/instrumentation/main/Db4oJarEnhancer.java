@@ -8,6 +8,10 @@ import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.util.*;
 
+/**
+ * Enhances classes stored in jar files keeping the jar structure
+ * untouched.
+ */
 public class Db4oJarEnhancer {
 	
 	private final Db4oFileEnhancer _fileEnhancer;
@@ -28,6 +32,7 @@ public class Db4oJarEnhancer {
 	}
 
 	private void deleteDirectory(String workingDir) {
+		Directory4.delete(workingDir, true);
 	}
 
 	private void enhance(String workingDir, String[] classPath, String packagePredicate) throws Exception  {
