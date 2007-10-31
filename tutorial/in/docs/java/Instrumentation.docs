@@ -7,16 +7,52 @@ As we have seen both  .l TransparentActivation Transparent Activation ..  and ._
  
 To get your application to run as fast as possible with db4o, you will want ._
 to make sure that only required objects are loaded from the database ._
-and that Native Queries are optimized to use field ._
-indexes where that is possible.
+and that Native Queries are optimized to use field indexes where that is possible.
 
 Theoretically you could write all the necessary code by hand but you will save ._
-yourself a lot of time if you use instrumentation. 
+yourself a lot of time if you use instrumentation.
 
-db4o for Java supplies three optimization strategies:
-(1) Instrumentation at compile and deploment time
+Instrumentation is a technology to automatically add code to your persistent ._
+classes to make them work even better with db4o.
+
+ db4o for Java supplies three different optimization strategies:
+(1) Instrumentation at compile/deployment time
 (2) Instrumentation at class loading time
 (3) Native Query optimization at query execution time
+
+.1 Required Libraries ..
+
+For the following instrumentation tasks, you will have need to add most of the ._
+supplied db4o libraries to your CLASSPATH:
+
+.b ant.jar ..   
+in case you want to use the Ant task for instrumentation
+
+.b bloat-1.0.jar ..
+the bytecode optimization library
+
+.b db4o-7.0-java5.jar ..
+the db4o core engine
+
+.b db4o-7.0-nqopt.jar ..
+the Native Query Optimizer
+
+.b db4o-7.0-taj.jar ..
+the Transparent Activation Framework for Java
+
+.b db4o-7.0-tools.jar ..
+the Tools interface that provides the top level tasks.
+
+. 1 Compile Time Instrumentation ..
+
+
+
+
+
+
+ 
+
+
  
 .n
 .< NQOptimization ..
