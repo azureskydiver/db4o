@@ -37,6 +37,9 @@ public class Db4oHashMapTestCase extends AbstractDb4oTestCase {
 	static final String MORE = "more and more ";
 
 
+	/**
+	 * @deprecated using deprecated api
+	 */
 	protected void store() {
 		Data data=new Data();
 		data.i_map = db().collections().newHashMap(10);
@@ -45,6 +48,9 @@ public class Db4oHashMapTestCase extends AbstractDb4oTestCase {
 		store(data);
 	}
 
+	/**
+	 * @deprecated using deprecated api
+	 */
 	private Db4oHashMapHelper helper(int a_depth) {
 		if (a_depth > 0) {
 			Db4oHashMapHelper helper = new Db4oHashMapHelper();
@@ -76,6 +82,9 @@ public class Db4oHashMapTestCase extends AbstractDb4oTestCase {
 		runElementTest(data,false);
 	}
 
+	/**
+	 * @deprecated using deprecated api
+	 */
 	private void runElementTest(Data data,boolean onOriginal) throws Exception {
 
 		Map otherMap = new HashMap();

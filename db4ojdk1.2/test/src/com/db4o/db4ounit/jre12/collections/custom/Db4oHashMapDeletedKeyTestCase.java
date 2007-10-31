@@ -13,6 +13,9 @@ public class Db4oHashMapDeletedKeyTestCase extends AbstractDb4oTestCase {
 		public Map _map;
 	}
 	
+	/**
+	 * @deprecated using deprecated api
+	 */
     protected void store(){
     	Data data=new Data();
         data._map = db().collections().newHashMap(1);

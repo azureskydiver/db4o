@@ -11,10 +11,11 @@ import com.db4o.query.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
-
 public class PCollectionReferencedTwiceTestCase extends AbstractDb4oTestCase {
-    
 
+	/**
+	 * @deprecated using deprecated api
+	 */
     protected void store(){
         
         ExtObjectContainer oc = db();

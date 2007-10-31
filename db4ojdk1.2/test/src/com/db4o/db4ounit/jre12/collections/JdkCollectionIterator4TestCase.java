@@ -4,7 +4,6 @@ package com.db4o.db4ounit.jre12.collections;
 
 import java.util.*;
 
-import com.db4o.db4ounit.common.foundation.*;
 import com.db4o.foundation.*;
 
 import db4ounit.*;

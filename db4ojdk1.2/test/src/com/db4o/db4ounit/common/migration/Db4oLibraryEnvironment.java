@@ -22,7 +22,14 @@ public class Db4oLibraryEnvironment {
 
 	private URL[] urls(File db4oLibrary, File additionalClassPath)
 			throws MalformedURLException {
-		return new URL[] { db4oLibrary.toURL(), additionalClassPath.toURL() };
+		return new URL[] { toURL(db4oLibrary), toURL(additionalClassPath) };
+	}
+
+	/**
+	 * @deprecated using deprecated api
+	 */
+	private URL toURL(File db4oLibrary) throws MalformedURLException {
+		return db4oLibrary.toURL();
 	}
 	
 	public String version() throws Exception {
