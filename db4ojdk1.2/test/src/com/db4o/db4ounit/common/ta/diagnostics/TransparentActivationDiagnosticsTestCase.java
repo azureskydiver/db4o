@@ -52,6 +52,7 @@ public class TransparentActivationDiagnosticsTestCase
 	
 	private final DiagnosticsRegistered _registered = new DiagnosticsRegistered();
 	private final DiagnosticListener _checker;
+	private DiagnosticConfiguration _diagnostic;
 	
 	public TransparentActivationDiagnosticsTestCase() {
 		 _checker = new DiagnosticListener() {
@@ -68,12 +69,20 @@ public class TransparentActivationDiagnosticsTestCase
 	
 	protected void configure(Configuration config) {
 		super.configure(config);
-		config.diagnostic().addListener(_checker);
+		_diagnostic = config.diagnostic();
+		_diagnostic.addListener(_checker);
 	}
 	
 	protected void db4oTearDownBeforeClean() throws Exception {
+		workaroundOsgiConfigCloningBehavior();
+		
 		db().ext().configure().diagnostic().removeAllListeners();
 		super.db4oTearDownBeforeClean();
+	}
+
+	private void workaroundOsgiConfigCloningBehavior() {
+		// fix for Osgi config cloning behavior - see Db4oOSGiBundleFixture
+		_diagnostic.removeAllListeners();
 	}
 	
 	public void testTADiagnostics() {
