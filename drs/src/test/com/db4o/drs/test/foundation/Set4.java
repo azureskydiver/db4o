@@ -16,14 +16,19 @@ public class Set4 implements Iterable4 {
 		_table = new Hashtable4(size);
 	}
 	
+	public Set4(Iterable4 keys) {
+		this();
+		addAll(keys);
+	}
+
 	public void add(Object element) {
 		_table.put(element, element);
 	}
 	
-	public void addAll(Set4 other) {
+	public void addAll(Iterable4 other) {
 		Iterator4 i = other.iterator();
 		while(i.moveNext()){
-			add(((Entry4)i.current()).key());			
+			add(i.current());			
 		}
 	}
 	
