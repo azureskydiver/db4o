@@ -58,19 +58,14 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         }
         
         Object[] all = allElements(onObject);
-        if (activate) {
-            for (int i = all.length - 1; i >= 0; i--) {
-                ActivationDepth elementDepth = descend(depth, all[i]);
-                if(elementDepth.requiresActivation()){
-                    container().stillToActivate(trans, all[i], elementDepth);
-                }
-            }
-        } else {
-            for (int i = all.length - 1; i >= 0; i--) {
-                ActivationDepth elementDepth = descend(depth, all[i]);
-                if(elementDepth.requiresActivation()){
-                    container().stillToDeactivate(trans, all[i], elementDepth, false);
-                }
+        for (int i = 0; i < all.length; ++i) {
+            ActivationDepth elementDepth = descend(depth, all[i]);
+            if(elementDepth.requiresActivation()){
+            	if (activate) {
+            		container().stillToActivate(trans, all[i], elementDepth);
+            	} else {
+            		container().stillToDeactivate(trans, all[i], elementDepth, false);
+            	}
             }
         }
     }
