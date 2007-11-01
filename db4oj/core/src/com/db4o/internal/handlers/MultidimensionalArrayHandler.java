@@ -24,15 +24,16 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         super(template);
     }
 
-    public final Object[] allElements(Object array) {
+    public final Iterator4 allElements(Object array) {
 		return allElements(arrayReflector(), array);
     }
 
-	public static Object[] allElements(final ReflectArray reflectArray, Object array) {
+	public static Iterator4 allElements(final ReflectArray reflectArray, Object array) {
+		// TODO: replace array copying code with iteration
 		int[] dim = reflectArray.dimensions(array);
         Object[] flat = new Object[elementCount(dim)];
         reflectArray.flatten(array, dim, 0, flat, 0);
-        return flat;
+        return new ArrayIterator4(flat);
 	}
 
     public final int elementCount(Transaction a_trans, Buffer a_bytes) {
@@ -96,14 +97,6 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         return dim;
     }
 
-    private Object element(Object a_array, int a_position) {
-        try {
-            return arrayReflector().get(a_array, a_position);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-    
     public Object read(ReadContext context) {
         
         if (Deploy.debug) {
@@ -143,9 +136,9 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
             context.writeInt(dim[i]);
         }
         
-        Object[] objects = allElements(obj);
-        for (int i = 0; i < objects.length; i++) {
-            context.writeObject(_handler, element(objects, i));
+        Iterator4 objects = allElements(obj);
+        while (objects.moveNext()) {
+            context.writeObject(_handler, objects.current());
         }
         
         if (Deploy.debug) {

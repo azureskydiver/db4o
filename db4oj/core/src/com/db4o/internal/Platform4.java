@@ -189,14 +189,14 @@ public final class Platform4 {
         } else {
             ReflectClass claxx = stream.reflector().forObject(obj);
             if (claxx.isArray()) {
-                Object[] objects;
+                Iterator4 objects;
                 if (claxx.getComponentType().isArray()) {
                     objects = new MultidimensionalArrayHandler(stream, null, false).allElements(obj);
                 } else {
                     objects = new ArrayHandler(stream, null, false).allElements(obj);
                 }
-                for (int i = 0; i < objects.length; i++) {
-                    flattenCollection1(stream, objects[i], col);
+                while (objects.moveNext()) {
+                    flattenCollection1(stream, objects.current(), col);
                 }
             } else {
                 flattenCollection2(stream, obj, col);

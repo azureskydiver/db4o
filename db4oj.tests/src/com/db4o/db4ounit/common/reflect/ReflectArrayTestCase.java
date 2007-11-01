@@ -35,7 +35,7 @@ public class ReflectArrayTestCase extends AbstractDb4oTestCase {
 		String[][] array = newStringMatrix(3, 4);
 		ArrayAssert.areEqual(new int[] { 3, 4 }, arrayReflector().dimensions(array));
 	}
-
+	
 	private Object newInstance(Class elementType, int[] dimensions) {
 		return arrayReflector().newInstance(reflectClass(elementType), dimensions);
 	}
