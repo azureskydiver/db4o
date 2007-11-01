@@ -5,8 +5,11 @@ import com.db4o.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class InvalidPasswordTestCase extends Db4oClientServerTestCase {
+public class InvalidPasswordTestCase
+	extends Db4oClientServerTestCase
+	implements OptOutAllButNetworkingCS {
 
 	public static void main(String[] args) {
 		new InvalidPasswordTestCase().runAll();
