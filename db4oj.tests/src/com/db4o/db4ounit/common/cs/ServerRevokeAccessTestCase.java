@@ -8,8 +8,11 @@ import com.db4o.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
-public class ServerRevokeAccessTestCase extends Db4oClientServerTestCase {
+public class ServerRevokeAccessTestCase
+	extends Db4oClientServerTestCase
+	implements OptOutAllButNetworkingCS {
 
 	private static final String SERVER_HOSTNAME = "127.0.0.1";
 
