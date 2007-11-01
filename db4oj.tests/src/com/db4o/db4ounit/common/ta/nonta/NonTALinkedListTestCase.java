@@ -37,8 +37,12 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
     	Assert.isNotNull(next5.next);
     	
     	db().deactivate(list, 4);
+    	
+    	Assert.isNull(list.next);
+    	Assert.areEqual(0, list.value);
+    	
     	// FIXME: test fails if uncomenting the following assertion.
-		// Assert.isNull(next3.next);
+//    	Assert.isNull(next3.next);
     	Assert.isNotNull(next5.next);
     }
 
