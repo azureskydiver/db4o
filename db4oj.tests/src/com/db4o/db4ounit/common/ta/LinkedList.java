@@ -6,15 +6,7 @@ package com.db4o.db4ounit.common.ta;
  * @exclude
  */
 public class LinkedList {
-
-	public LinkedList next;
 	
-	public int value;
-
-	public LinkedList(int v) {
-		value = v;
-	}
-
 	public static LinkedList newList(int depth) {
 		if (depth == 0) {
 			return null;
@@ -22,6 +14,14 @@ public class LinkedList {
 		LinkedList head = new LinkedList(depth);
 		head.next = newList(depth - 1);
 		return head;
+	}
+
+	public LinkedList next;
+	
+	public int value;
+
+	public LinkedList(int v) {
+		value = v;
 	}
 
 	public boolean equals(Object other) {
