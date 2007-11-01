@@ -53,18 +53,6 @@ public class Set4 implements Iterable4 {
 	}
 	
 	public String toString() {
-		StringBuffer buf=new StringBuffer("[");
-		boolean first=true;
-		for(Iterator4 iter=iterator();iter.moveNext();) {
-			if(!first) {
-				buf.append(',');
-			}
-			else {
-				first=false;
-			}
-			buf.append(iter.current().toString());
-		}
-		buf.append(']');
-		return buf.toString();
+		return Iterators.join(iterator(), "[", "]", ", ");
 	}
 }
