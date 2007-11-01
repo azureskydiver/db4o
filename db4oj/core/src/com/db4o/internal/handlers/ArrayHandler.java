@@ -18,7 +18,22 @@ import com.db4o.reflect.generic.GenericReflector;
  */
 public class ArrayHandler extends VariableLengthTypeHandler implements FirstClassHandler, Comparable4 {
 	
-    public final TypeHandler4 _handler;
+    private static final class ReflectArrayIterator extends IndexedIterator {
+		private final Object _array;
+		private final ReflectArray _reflectArray;
+
+		public ReflectArrayIterator(ReflectArray reflectArray, Object array) {
+			super(reflectArray.getLength(array));
+			_reflectArray = reflectArray;
+			_array = array;
+		}
+
+		protected Object get(int index) {
+			return _reflectArray.get(_array, index);
+		}
+	}
+
+	public final TypeHandler4 _handler;
     public final boolean _usePrimitiveClassReflector;
 
     public ArrayHandler(ObjectContainerBase container, TypeHandler4 handler, boolean usePrimitiveClassReflector) {
@@ -35,16 +50,12 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         return container().reflector().array();
     }
 
-    public Object[] allElements(Object a_object) {
+    public Iterator4 allElements(Object a_object) {
 		return allElements(arrayReflector(), a_object);
     }
 
-	public static Object[] allElements(final ReflectArray reflectArray, Object array) {
-		Object[] all = new Object[reflectArray.getLength(array)];
-        for (int i = all.length - 1; i >= 0; i--) {
-            all[i] = reflectArray.get(array, i);
-        }
-        return all;
+	public static Iterator4 allElements(final ReflectArray reflectArray, final Object array) {
+		return new ReflectArrayIterator(reflectArray, array);
 	}
 
     public final void cascadeActivation(
@@ -57,14 +68,15 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
             return;
         }
         
-        Object[] all = allElements(onObject);
-        for (int i = 0; i < all.length; ++i) {
-            ActivationDepth elementDepth = descend(depth, all[i]);
+        Iterator4 all = allElements(onObject);
+        while (all.moveNext()) {
+        	final Object current = all.current();
+            ActivationDepth elementDepth = descend(depth, current);
             if(elementDepth.requiresActivation()){
             	if (activate) {
-            		container().stillToActivate(trans, all[i], elementDepth);
+            		container().stillToActivate(trans, current, elementDepth);
             	} else {
-            		container().stillToDeactivate(trans, all[i], elementDepth, false);
+            		container().stillToDeactivate(trans, current, elementDepth, false);
             	}
             }
         }
@@ -286,7 +298,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 		return classReflector();
 	}
     
-    public static Object[] toArray(ObjectContainerBase stream, Object obj) {
+    public static Iterator4 iterator(ObjectContainerBase stream, Object obj) {
     	final GenericReflector reflector = stream.reflector();
 		ReflectClass claxx = reflector.forObject(obj);
 		ReflectArray reflectArray = reflector.array();
@@ -340,9 +352,9 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         if(obj == null){
             return false;
         }
-        Object[] compareWith = allElements(obj);
-        for (int j = 0; j < compareWith.length; j++) {
-            if (_handler.compareTo(compareWith[j]) == 0) {
+        Iterator4 compareWith = allElements(obj);
+        while (compareWith.moveNext()) {
+            if (_handler.compareTo(compareWith.current()) == 0) {
                 return true;
             }
         }
@@ -350,9 +362,9 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     }
 
     public boolean isGreater(Object obj) {
-        Object[] compareWith = allElements(obj);
-        for (int j = 0; j < compareWith.length; j++) {
-            if (_handler.compareTo(compareWith[j]) > 0) {
+        Iterator4 compareWith = allElements(obj);
+        while (compareWith.moveNext()) {
+            if (_handler.compareTo(compareWith.current()) > 0) {
                 return true;
             }
         }
@@ -360,9 +372,9 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     }
 
     public boolean isSmaller(Object obj) {
-        Object[] compareWith = allElements(obj);
-        for (int j = 0; j < compareWith.length; j++) {
-            if (_handler.compareTo(compareWith[j]) < 0) {
+        Iterator4 compareWith = allElements(obj);
+        while (compareWith.moveNext()) {
+            if (_handler.compareTo(compareWith.current()) < 0) {
                 return true;
             }
         }

@@ -2,35 +2,16 @@
 
 package com.db4o.foundation;
 
-public class ArrayIterator4 implements Iterator4 {
+public class ArrayIterator4 extends IndexedIterator {
 	
-	Object[] _elements;
-	int _next;
-
+	private final Object[] _elements;
+	
 	public ArrayIterator4(Object[] elements) {
+		super(elements.length);
 		_elements = elements;
-		_next = -1;
 	}
 
-	public boolean moveNext() {
-		if (_next < lastIndex()) {
-			++_next;
-			return true;
-		}
-		// force exception on unexpected call to current
-		_next = _elements.length;
-		return false;
-	}
-
-	public Object current() {
-		return _elements[_next]; 
-	}
-	
-	public void reset() {
-		_next = -1;
-	}
-	
-	private int lastIndex() {
-		return _elements.length - 1;
-	}
+	protected Object get(final int index) {
+		return _elements[index];
+	}	
 }
