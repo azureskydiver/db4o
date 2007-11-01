@@ -66,7 +66,7 @@ public class Db4oFileEnhancerAntTask extends Task {
 				clazzEdit = new NullClassEdit();
 				break;
 			case 1:
-				clazzEdit = ((AntClassEditFactory)_editFactories.get(0)).createEdit(null);
+				clazzEdit = ((AntClassEditFactory)_editFactories.get(0)).createEdit(root);
 				break;
 			default:
 				List classEdits = new ArrayList(_editFactories.size());
