@@ -450,7 +450,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     private final void deactivateInternal(Transaction trans, Object obj, ActivationDepth depth) {
         stillToDeactivate(trans, obj, depth, true);
-        while (_stillToDeactivate != null) {
+        deactivatePending(trans);
+    }
+
+	private void deactivatePending(Transaction trans) {
+		while (_stillToDeactivate != null) {
             Iterator4 i = new Iterator4Impl(_stillToDeactivate);
             _stillToDeactivate = null;
             while (i.moveNext()) {
@@ -458,7 +462,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 				item.ref.deactivate(trans, item.depth);
             }
         }
-    }
+	}
 
     public final void delete(Transaction trans, Object obj) throws DatabaseReadOnlyException, DatabaseClosedException {
         synchronized (_lock) {
@@ -1650,10 +1654,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return true; // overridden to do nothing in YapObjectCarrier
     }
 
-    /**
-     * returns true in case an unknown single object is passed
-     * This allows deactivating objects before queries are called.
-     */
     final List4 stillTo1(Transaction trans, List4 still, Object obj, ActivationDepth depth, boolean forceUnknownDeactivate) {
     	
         if (obj == null || !depth.requiresActivation()) {
