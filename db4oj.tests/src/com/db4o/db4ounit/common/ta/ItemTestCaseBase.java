@@ -26,19 +26,23 @@ public abstract class ItemTestCaseBase
     }
     
     public void testQuery() throws Exception {
-        Object item = retrieveOnlyInstance(_clazz);
+        Object item = retrieveOnlyInstance();
         assertRetrievedItem(item);
         assertItemValue(item);
     }
     
     public void testDeactivate() throws Exception {	
-    	Object item = retrieveOnlyInstance(_clazz);
+    	Object item = retrieveOnlyInstance();
     	db().deactivate(item, 1);
     	assertNullItem(item);  
     	
     	db().activate(item, 42);
     	db().deactivate(item, 1);
     	assertNullItem(item);
+	}
+
+	protected Object retrieveOnlyInstance() {
+		return retrieveOnlyInstance(_clazz);
 	}
     
     protected void assertNullItem(Object obj) throws Exception {

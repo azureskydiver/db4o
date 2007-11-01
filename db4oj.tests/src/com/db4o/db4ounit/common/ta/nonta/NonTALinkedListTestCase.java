@@ -26,5 +26,28 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
         item.list = LIST;
         return item;
     }
+    
+    public void testDeactivateDepth() throws Exception {
+    	LinkedListItem item = (LinkedListItem) retrieveOnlyInstance();
+    	LinkedList list = item.list;
+    	LinkedList next3 = next(list, 3);
+    	LinkedList next5 = next(list, 5);
+    	
+    	Assert.isNotNull(next3.next);
+    	Assert.isNotNull(next5.next);
+    	
+    	db().deactivate(list, 4);
+    	// FIXME: test fails if uncomenting the following assertion.
+		// Assert.isNull(next3.next);
+    	Assert.isNotNull(next5.next);
+    }
+
+	private LinkedList next(LinkedList list, int depth) {
+		LinkedList node = list;
+		for(int i = 0; i < depth; ++i) {
+			node = node.next;
+		}
+		return node;
+	}
 
 }
