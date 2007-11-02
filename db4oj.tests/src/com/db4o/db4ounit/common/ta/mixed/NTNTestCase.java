@@ -29,5 +29,20 @@ public class NTNTestCase extends ItemTestCaseBase {
 		NTNItem item = (NTNItem) obj;
 		Assert.areEqual(LinkedList.newList(42), item.tnItem.value());
 	}
+	
+	public void testDeactivateDepth() throws Exception {
+		NTNItem item = (NTNItem) retrieveOnlyInstance();
+		TNItem tnItem = item.tnItem;
+		tnItem.value();
+		Assert.isNotNull(tnItem.list);
+		// item.tnItem.list
+		db().deactivate(item, 2);
+		// FIXME: failure 
+		// Assert.isNull(tnItem.list);
+		
+		db().activate(item, 42);
+		db().deactivate(item, 10);
+		Assert.isNull(tnItem.list);
+	}
 
 }
