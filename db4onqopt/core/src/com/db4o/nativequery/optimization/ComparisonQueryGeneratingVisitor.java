@@ -8,7 +8,6 @@ package com.db4o.nativequery.optimization;
 import java.lang.reflect.*;
 
 import com.db4o.instrumentation.core.*;
-import com.db4o.nativequery.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
 
