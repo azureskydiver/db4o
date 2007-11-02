@@ -24,6 +24,14 @@ public class LinkedList {
 		value = v;
 	}
 
+	public LinkedList nextN(int depth) {
+		LinkedList node = this;
+		for (int i = 0; i < depth; ++i) {
+			node = node.next;
+		}
+		return node;
+	}
+	
 	public boolean equals(Object other) {
 		LinkedList otherList = (LinkedList) other;
 		if( value != otherList.value) {

@@ -18,6 +18,14 @@ public class TALinkedList extends ActivatableImpl {
 		return head;
 	}
 
+	public TALinkedList nextN(int depth) {
+		TALinkedList node = this;
+		for (int i = 0; i < depth; ++i) {
+			node = node.next();
+		}
+		return node;
+	}
+	
 	public TALinkedList next;
 	
 	public int value;

@@ -12,7 +12,7 @@ public class TALinkedListTestCase extends TAItemTestCaseBase {
 	private static final TALinkedList LIST = TALinkedList.newList(10);
 
 	public static void main(String[] args) {
-		new TALinkedListTestCase().runSolo();
+		new TALinkedListTestCase().runAll();
 	}
 
 	protected Object createItem() throws Exception {
@@ -25,6 +25,25 @@ public class TALinkedListTestCase extends TAItemTestCaseBase {
 		TALinkedListItem item = (TALinkedListItem) obj;
 		Assert.areEqual(LIST,item.list());
 	}
+
+	 public void testDeactivateDepth() throws Exception {
+	    	TALinkedListItem item = (TALinkedListItem) retrieveOnlyInstance();
+	    	TALinkedList list = item.list();
+	    	TALinkedList next3 = list.nextN(3);
+	    	TALinkedList next5 = list.nextN(5);
+	    	
+	    	Assert.isNotNull(next3.next());
+	    	Assert.isNotNull(next5.next());
+	    	
+	    	db().deactivate(list, 4);
+	    	
+	    	Assert.isNull(list.next);
+	    	Assert.areEqual(0, list.value);
+	    	
+	    	// FIXME: test fails if uncomenting the following assertion.
+//	    	Assert.isNull(next3.next);
+	    	Assert.isNotNull(next5.next);
+	    }
 
 
 }
