@@ -232,7 +232,7 @@
 		</jar>
 	</target>
 	
-	<target name="build.osgi" depends="build.nqopt">
+	<target name="build.osgi" depends="build.nqopt, build.db4otools">
 		<delete dir="${dir.dist.classes.osgi}"/>
 		<delete dir="${dir.dist.classes.osgi.lib}"/>
 		<mkdir dir="${dir.dist.classes.osgi}"/>
