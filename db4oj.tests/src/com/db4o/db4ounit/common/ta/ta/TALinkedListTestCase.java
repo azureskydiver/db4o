@@ -28,9 +28,5 @@ public class TALinkedListTestCase extends TAItemTestCaseBase {
 		Assert.areEqual(LIST, item.list());
 	}
 
-	protected void assertRetrievedItem(Object obj) {
-		TALinkedListItem item = (TALinkedListItem) obj;
-		Assert.isNull(item.list);
-	}
 
 }
