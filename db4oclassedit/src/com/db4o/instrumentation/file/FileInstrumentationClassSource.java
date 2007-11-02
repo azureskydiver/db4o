@@ -62,5 +62,9 @@ public class FileInstrumentationClassSource implements Comparable, Instrumentati
 	public String toString() {
 		return _file + " [" + _root + "]";
 	}
+
+    public File sourceFile() {
+        return _file;
+    }
 	
 }

@@ -78,7 +78,7 @@ public class Db4oFileEnhancerAntTask extends Task {
 				
 		}
 		try {
-			new Db4oFileInstrumentation(clazzEdit).enhance(root,_targetDir,(String[])paths.toArray(new String[paths.size()]),(_packagePredicate==null ? "" : _packagePredicate));
+			new Db4oFileInstrumentor(clazzEdit).enhance(root,_targetDir,(String[])paths.toArray(new String[paths.size()]),(_packagePredicate==null ? "" : _packagePredicate));
 		} catch (Exception exc) {
 			throw new BuildException(exc);
 		}

@@ -7,8 +7,10 @@ import EDU.purdue.cs.bloat.file.*;
 
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.util.*;
+import com.db4o.internal.query.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
+import com.db4o.ta.*;
 
 /**
  * @exclude
@@ -19,6 +21,12 @@ public class TranslateNQToSODAEdit implements BloatClassEdit {
 	
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
 		try {
+		    Class enhancedPredicateClass = origLoader.loadClass(Db4oEnhancedFilter.class.getName());
+            Class clazz = BloatUtil.classForEditor(ce, origLoader);
+            if(enhancedPredicateClass.isAssignableFrom(clazz)) {
+                return InstrumentationStatus.FAILED;
+            }
+
 			Type type=ce.superclass();
 			while(type!=null) {
 				if(BloatUtil.normalizeClassName(type.className()).equals(Predicate.class.getName())) {

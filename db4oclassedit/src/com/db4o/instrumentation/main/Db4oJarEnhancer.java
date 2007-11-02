@@ -14,10 +14,10 @@ import com.db4o.instrumentation.util.*;
  */
 public class Db4oJarEnhancer {
 	
-	private final Db4oFileInstrumentation _fileEnhancer;
+	private final Db4oFileInstrumentor _fileEnhancer;
 
 	public Db4oJarEnhancer(BloatClassEdit classEdit) {
-		_fileEnhancer = new Db4oFileInstrumentation(classEdit);
+		_fileEnhancer = new Db4oFileInstrumentor(classEdit);
 	}
 
 	public void enhance(File inputJar, File outputJar, String[] classPath, String packagePredicate) throws Exception {
