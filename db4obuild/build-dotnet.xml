@@ -22,7 +22,7 @@
 		<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
 	</fileset>
 
-	<fileset id="db4otools.srcfiles" dir="../db4otools">
+	<fileset id="db4oclassedit.srcfiles" dir="../db4oclassedit">
 		<include name="src/com/db4o/instrumentation/core/NativeClassFactory.java" />
 		<include name="src/com/db4o/instrumentation/core/DefaultNativeClassFactory.java" />
 	</fileset>
@@ -594,7 +594,7 @@
 		</copy>
 
 		<copy todir="${dir.sharpen}/db4oj/core">
-			<fileset refid="db4otools.srcfiles" />
+			<fileset refid="db4oclassedit.srcfiles" />
 		</copy>
 
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
