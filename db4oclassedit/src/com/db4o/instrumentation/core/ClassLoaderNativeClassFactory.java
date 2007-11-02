@@ -1,0 +1,20 @@
+/* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
+
+package com.db4o.instrumentation.core;
+
+/**
+ * @exclude
+ */
+public class ClassLoaderNativeClassFactory implements NativeClassFactory {
+
+	private ClassLoader _loader;
+	
+	public ClassLoaderNativeClassFactory(ClassLoader loader) {
+		_loader = loader;
+	}
+
+	public Class forName(String className) throws ClassNotFoundException {
+		return _loader.loadClass(className);
+	}
+
+}
