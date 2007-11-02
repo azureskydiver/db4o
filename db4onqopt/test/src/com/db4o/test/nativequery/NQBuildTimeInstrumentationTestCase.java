@@ -26,7 +26,7 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 
 
 	public void testFileEnhancer() throws Exception {		
-		Db4oFileEnhancer enhancer = new Db4oFileEnhancer(new TranslateNQToSODAEdit());
+		Db4oFileInstrumentation enhancer = new Db4oFileInstrumentation(new TranslateNQToSODAEdit());
 		enhancer.enhance(SRC_DIR, TARGET_DIR, new String[]{}, "");		
 		assertInstrumented();
 	}
