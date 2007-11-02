@@ -2,8 +2,6 @@
 
 package com.db4o.db4ounit.common.ta.ta;
 
-import com.db4o.db4ounit.common.ta.*;
-
 import db4ounit.*;
 
 /**
@@ -11,10 +9,10 @@ import db4ounit.*;
  */
 public class TALinkedListTestCase extends TAItemTestCaseBase {
     
-	private static final LinkedList LIST = LinkedList.newList(10);
+	private static final TALinkedList LIST = TALinkedList.newList(10);
 
 	public static void main(String[] args) {
-		new TALinkedListTestCase().runAll();
+		new TALinkedListTestCase().runSolo();
 	}
 
 	protected Object createItem() throws Exception {
@@ -25,7 +23,7 @@ public class TALinkedListTestCase extends TAItemTestCaseBase {
 
 	protected void assertItemValue(Object obj) throws Exception {
 		TALinkedListItem item = (TALinkedListItem) obj;
-		Assert.areEqual(LIST, item.list());
+		Assert.areEqual(LIST,item.list());
 	}
 
 

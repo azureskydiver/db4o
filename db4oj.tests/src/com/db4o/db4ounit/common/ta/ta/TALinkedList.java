@@ -1,0 +1,53 @@
+/* Copyright (C) 2007  db4objects Inc.  http://www.db4o.com */
+
+package com.db4o.db4ounit.common.ta.ta;
+
+import com.db4o.db4ounit.common.ta.*;
+
+/**
+ * @exclude
+ */
+public class TALinkedList extends ActivatableImpl {
+	
+	public static TALinkedList newList(int depth) {
+		if (depth == 0) {
+			return null;
+		}
+		TALinkedList head = new TALinkedList(depth);
+		head.next = newList(depth - 1);
+		return head;
+	}
+
+	public TALinkedList next;
+	
+	public int value;
+
+	public TALinkedList(int v) {
+		value = v;
+	}
+
+	public int value() {
+		activate();
+		return value;
+	}
+	
+	public TALinkedList next() {
+		activate();
+		return next;
+	}
+	
+	public boolean equals(Object other) {
+		activate();
+		TALinkedList otherList = (TALinkedList) other;
+		if( value != otherList.value()) {
+			return false;
+		}
+		if(next == otherList.next()) {
+			return true;
+		}
+		if(otherList.next() == null) {
+			return false;
+		}
+		return next.equals(otherList.next());
+	}
+}

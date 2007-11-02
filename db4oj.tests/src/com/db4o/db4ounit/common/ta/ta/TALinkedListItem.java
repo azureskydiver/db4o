@@ -7,13 +7,13 @@ import com.db4o.db4ounit.common.ta.*;
 
 public class TALinkedListItem extends ActivatableImpl {
 		
-		public LinkedList list;
+		public TALinkedList list;
 
 		public TALinkedListItem() {
 
 		}
 		
-		public LinkedList list() {
+		public TALinkedList list() {
 			activate();
 			return list;
 		}
