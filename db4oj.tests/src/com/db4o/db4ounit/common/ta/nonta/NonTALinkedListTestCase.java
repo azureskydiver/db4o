@@ -30,8 +30,8 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
     public void testDeactivateDepth() throws Exception {
     	LinkedListItem item = (LinkedListItem) retrieveOnlyInstance();
     	LinkedList list = item.list;
-    	LinkedList next3 = next(list, 3);
-    	LinkedList next5 = next(list, 5);
+    	LinkedList next3 = list.nextN(3);
+    	LinkedList next5 = list.nextN(5);
     	
     	Assert.isNotNull(next3.next);
     	Assert.isNotNull(next5.next);
@@ -45,13 +45,5 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
 //    	Assert.isNull(next3.next);
     	Assert.isNotNull(next5.next);
     }
-
-	private LinkedList next(LinkedList list, int depth) {
-		LinkedList node = list;
-		for(int i = 0; i < depth; ++i) {
-			node = node.next;
-		}
-		return node;
-	}
 
 }
