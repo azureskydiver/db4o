@@ -15,14 +15,14 @@ import com.db4o.instrumentation.file.*;
 /**
  * @exclude
  */
-public class Db4oFileInstrumentation {
+public class Db4oFileInstrumentor {
 	private final BloatClassEdit _classEdit;
 	
-	public Db4oFileInstrumentation(BloatClassEdit classEdit) {
+	public Db4oFileInstrumentor(BloatClassEdit classEdit) {
 		_classEdit = classEdit;
 	}
 	
-	public Db4oFileInstrumentation(BloatClassEdit[] classEdits) {
+	public Db4oFileInstrumentor(BloatClassEdit[] classEdits) {
 		this(new CompositeBloatClassEdit(classEdits));
 	}
 
@@ -86,13 +86,18 @@ public class Db4oFileInstrumentation {
 		if (!status.isInstrumented()) {
 			File targetFile = source.targetPath(target);
 			targetFile.getParentFile().mkdirs();
-			copy(source.inputStream(), targetFile);
+			copy(source, targetFile);
 		}
 	}
 
-	private void copy(InputStream inputStream, File targetFile) throws IOException {
+	private void copy(InstrumentationClassSource source, File targetFile) throws IOException {
+	    
+	    if(targetFile.equals(source.sourceFile())){
+	        return;
+	    }
+	    
 		final int bufSize = 4096;
-		BufferedInputStream bufIn = new BufferedInputStream(inputStream, bufSize);
+		BufferedInputStream bufIn = new BufferedInputStream(source.inputStream(), bufSize);
 		try {
 			BufferedOutputStream bufOut = new BufferedOutputStream(new FileOutputStream(targetFile));
 			try {

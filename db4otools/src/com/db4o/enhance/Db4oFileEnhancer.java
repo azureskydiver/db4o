@@ -15,7 +15,7 @@ import com.db4o.ta.instrumentation.*;
 public class Db4oFileEnhancer {
     
     public void enhance(String sourceDir, String targetDir) throws Exception{
-        Db4oFileInstrumentation instrument = new Db4oFileInstrumentation(new BloatClassEdit[]{
+        Db4oFileInstrumentor instrument = new Db4oFileInstrumentor(new BloatClassEdit[]{
             new TranslateNQToSODAEdit(),
             new InjectTransparentActivationEdit(new AcceptAllClassesFilter()),
         });

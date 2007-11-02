@@ -27,4 +27,8 @@ public class AntJarEntryInstrumentationClassSource implements InstrumentationCla
 		return new File(targetBase, _resource.getName());
 	}
 
+    public File sourceFile() {
+        return null;
+    }
+
 }
