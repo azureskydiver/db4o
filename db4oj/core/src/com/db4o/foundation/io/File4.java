@@ -4,7 +4,7 @@ package com.db4o.foundation.io;
 
 import java.io.*;
 
-import com.db4o.*;
+import com.db4o.ext.*;
 
 /**
  * @sharpen.ignore

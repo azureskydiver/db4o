@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.io;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
