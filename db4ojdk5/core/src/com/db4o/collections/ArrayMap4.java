@@ -373,7 +373,10 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         _values[_endIndex] = null;
         return value;
     }
-
+    
+    /**
+     * @exclude
+     */
     public static class MapEntry4<K, V> implements Map.Entry<K, V> {
 
         private K _key;
