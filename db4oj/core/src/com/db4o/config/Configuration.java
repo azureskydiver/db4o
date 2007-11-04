@@ -5,8 +5,8 @@ package com.db4o.config;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import com.db4o.*;
 import com.db4o.diagnostic.DiagnosticConfiguration;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.io.IoAdapter;
 import com.db4o.reflect.Reflector;

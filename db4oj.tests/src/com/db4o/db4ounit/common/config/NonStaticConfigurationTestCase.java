@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;

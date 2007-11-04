@@ -10,7 +10,7 @@ import java.util.*;
 
 import sun.nio.ch.*;
 
-import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.io.*;
 
 public class NIOFileAdapter extends IoAdapter {

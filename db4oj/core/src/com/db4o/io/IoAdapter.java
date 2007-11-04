@@ -3,6 +3,7 @@
 package com.db4o.io;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 
 /**
  * Base class for database file adapters, both for file and memory databases.

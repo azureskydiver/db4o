@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.diagnostic.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.cs.*;

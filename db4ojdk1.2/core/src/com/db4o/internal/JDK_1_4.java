@@ -7,6 +7,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 
 class JDK_1_4 extends JDK_1_3 {

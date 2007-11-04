@@ -7,9 +7,9 @@ import com.db4o.query.*;
 
 
 /**
- * @deprecated
  * db4o replication interface.
- * 
+ * @deprecated Since db4o-5.2. Use db4o Replication System (dRS)
+ * instead.<br><br>
  * @see com.db4o.ext.ExtObjectContainer#replicationBegin(ObjectContainer, ReplicationConflictHandler)
  */
 public interface ReplicationProcess {

@@ -2,7 +2,7 @@
 
 package com.db4o.internal.fileheader;
 
-import com.db4o.Db4oIOException;
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 

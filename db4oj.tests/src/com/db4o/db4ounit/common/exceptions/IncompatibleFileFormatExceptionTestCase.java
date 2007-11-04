@@ -2,6 +2,7 @@
 package com.db4o.db4ounit.common.exceptions;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
 import com.db4o.io.*;
 

@@ -5,12 +5,13 @@ package com.db4o.replication;
 import com.db4o.*;
 
 /**
- * @deprecated
  * will be called by a {@link com.db4o.replication.ReplicationProcess}upon
  * replication conflicts. Conflicts occur whenever
  * {@link ReplicationProcess#replicate(Object)}is called with an object that
  * was modified in both ObjectContainers since the last replication run between
  * the two.
+ * @deprecated Since db4o-5.2. Use db4o Replication System (dRS)
+ * instead.<br><br>
  */
 public interface ReplicationConflictHandler {
 

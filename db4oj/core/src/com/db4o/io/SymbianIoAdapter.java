@@ -4,7 +4,7 @@ package com.db4o.io;
 
 import java.io.*;
 
-import com.db4o.*;
+import com.db4o.ext.*;
 
 /**
  * Workaround for two I/O bugs in Symbian JDK versions:<br>
