@@ -83,9 +83,8 @@ public interface ExtObjectContainer extends ObjectContainer {
      * returns the {@link Db4oCollections} interface to create or modify database-aware
      * collections for this {@link ObjectContainer}.<br><br>
      * @return the {@link Db4oCollections} interface for this {@link ObjectContainer}.
-     * @deprecated Use of old internal collections is discouraged. Please use 
+     * @deprecated since 7.0. Use of old internal collections is discouraged. Please use 
      * com.db4o.collections.ArrayList4 and com.db4o.collections.ArrayMap4 instead.
-     * @deprecated since 7.0
      */
     public Db4oCollections collections();
     
