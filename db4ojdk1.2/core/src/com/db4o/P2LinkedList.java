@@ -12,6 +12,7 @@ import com.db4o.types.*;
  * database aware linked list implementation
  * @exclude 
  * @persistent
+ * @deprecated since 7.0
  */
 public class P2LinkedList extends P1Collection implements Db4oList {
 

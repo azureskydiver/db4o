@@ -9,6 +9,7 @@ import com.db4o.reflect.*;
 
 /**
  * @persistent
+ * @deprecated since 7.0
  */
 class P2HashMapKeySet implements Set {
 

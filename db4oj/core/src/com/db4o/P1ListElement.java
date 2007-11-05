@@ -8,6 +8,7 @@ import com.db4o.internal.*;
  * element of linked lists 
  * @exclude 
  * @persistent
+ * @deprecated since 7.0
  */
 public class P1ListElement extends P1Object{
     

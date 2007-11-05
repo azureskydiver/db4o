@@ -4,6 +4,7 @@ package com.db4o.types;
 
 /**
  * factory and other methods for database-aware collections.
+ * @deprecated since 7.0
  */
 public interface Db4oCollections {
     

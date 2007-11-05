@@ -9,6 +9,7 @@ import com.db4o.types.*;
  * @exclude 
  * @persistent
  * @sharpen.ignore
+ * @deprecated since 7.0
  */
 public abstract class P1Collection extends P1Object implements Db4oCollection{
     
