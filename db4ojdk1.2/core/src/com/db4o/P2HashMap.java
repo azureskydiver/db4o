@@ -11,6 +11,7 @@ import com.db4o.types.*;
 /**
  * @exclude
  * @persistent
+ * @deprecated since 7.0
  */
 public class P2HashMap extends P1Collection implements Db4oMap, TransactionListener {
 

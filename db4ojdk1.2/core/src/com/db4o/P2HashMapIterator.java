@@ -6,6 +6,7 @@ import java.util.*;
 
 /**
  * @persistent 
+ * @deprecated since 7.0
  */
 class P2HashMapIterator implements Iterator {
 

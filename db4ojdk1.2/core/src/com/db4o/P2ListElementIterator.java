@@ -10,6 +10,7 @@ import java.util.*;
  * Intended state: i_next is always active.
  *  
  * @persistent
+ * @deprecated since 7.0
  */
 class P2ListElementIterator implements Iterator {
 
