@@ -1,24 +1,16 @@
 package com.db4o.objectmanager.model;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import java.net.*;
+import java.util.logging.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.config.Configuration;
-import com.db4o.config.DotnetSupport;
-import com.db4o.objectmanager.api.prefs.ActivationPreferences;
-import com.db4o.objectmanager.api.prefs.ClasspathPreferences;
-import com.db4o.objectmanager.api.prefs.ConstructorPreferences;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.instrumentation.classfilter.*;
+import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.main.*;
+import com.db4o.reflect.jdk.*;
+import com.db4o.ta.*;
+import com.db4o.ta.instrumentation.*;
 
 public abstract class Db4oConnectionSpec {
 
@@ -106,9 +98,18 @@ public abstract class Db4oConnectionSpec {
 		//Db4o.configure().allowVersionUpdates(true);
 		//Db4o.configure().readOnly(readOnly);
 		Configuration config = Db4o.newConfiguration();
-		config.activationDepth(10);
+		configureTA(config);
 		config.updateDepth(10);
 		config.add(new DotnetSupport());
 		return config;
+	}
+
+	private void configureTA(Configuration config) {
+		config.activationDepth(0);
+		config.add(new TransparentActivationSupport());
+		ClassLoader instrumentingClassLoader = new BloatInstrumentingClassLoader(new URL[]{},
+				this.getClass().getClassLoader(),
+				new InjectTransparentActivationEdit( new AcceptAllClassesFilter() ));
+		config.reflectWith(new JdkReflector(instrumentingClassLoader));
 	}
 }

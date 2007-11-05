@@ -1,21 +1,19 @@
 package com.db4o.objectManager.v2.query;
 
-import com.spaceprogram.db4o.sql.*;
-import com.spaceprogram.db4o.sql.util.ReflectHelper;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
-import com.db4o.ObjectContainer;
-import com.db4o.objectManager.v2.util.Log;
-import com.db4o.objectManager.v2.resources.ResourceManager;
-import com.db4o.objectManager.v2.results.MapValue;
-import com.db4o.objectManager.v2.results.CollectionValue;
-import com.db4o.objectmanager.api.helpers.ReflectHelper2;
-
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.*;
 import java.util.*;
+
+import javax.swing.*;
+import javax.swing.table.*;
+
+import com.db4o.*;
+import com.db4o.objectManager.v2.resources.*;
+import com.db4o.objectManager.v2.results.*;
+import com.db4o.objectManager.v2.util.*;
+import com.db4o.objectmanager.api.helpers.*;
+import com.db4o.reflect.*;
+import com.db4o.ta.*;
+import com.spaceprogram.db4o.sql.*;
+import com.spaceprogram.db4o.sql.util.*;
 
 /**
  * User: treeder
@@ -85,6 +83,7 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 			}
 			result = (Result) resultWindow.get(index);
 		}
+		activateRowObject(row, result);
 		Object ret = null;
 		try {
 			ret = result.getObject(column - extraColumns);
@@ -110,6 +109,14 @@ public class QueryResultsTableModel extends AbstractTableModel implements TableM
 			Log.addException(e);
 		}
 		return ret;
+	}
+
+	private void activateRowObject(int row, Result result) {
+		Object rowObject = result.getBaseObject(row);
+		if(Activatable.class.isAssignableFrom(rowObject.getClass())){
+			((Activatable)rowObject).activate();
+		}
+	
 	}
 
 	private int loadWindow(int row) {
