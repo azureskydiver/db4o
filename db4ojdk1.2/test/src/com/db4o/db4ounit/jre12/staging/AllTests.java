@@ -17,7 +17,8 @@ public class AllTests extends Db4oTestSuite {
 			/**
 			 *  When you add a test here, make sure you create a Jira issue. 
 			 */
-			
+			HashtableTestCase.class,
+			LinkedHashMapTestCase.class,
 			DuplicatePrimitiveArrayTestCase.class,
 			MapNullValueTestCase.class,
 		};
