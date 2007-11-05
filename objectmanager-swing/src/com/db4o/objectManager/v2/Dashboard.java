@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.objectManager.v2.connections.*;
 import com.db4o.objectManager.v2.custom.*;
 import com.db4o.objectManager.v2.maint.*;
@@ -48,7 +49,7 @@ public class Dashboard {
 		// try to open preferences file right away so we can show message and exit
 		try {
 			Preferences pref = Preferences.getDefault();
-		} catch (com.db4o.DatabaseFileLockedException e) {
+		} catch (DatabaseFileLockedException e) {
 			OptionPaneHelper.showErrorMessage(null, "Another instance of ObjectManager is currently open. Only one instance can be open at a time. " +
 					"You can connect to multiple databases through the same instance.", "Error Opening Database");
 			return;
