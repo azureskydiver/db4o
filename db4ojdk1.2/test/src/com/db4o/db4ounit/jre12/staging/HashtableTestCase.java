@@ -13,7 +13,7 @@ public class HashtableTestCase extends AbstractDb4oTestCase implements OptOutCS 
 
 	protected void store() throws Exception {
 		Hashtable hashtable = new Hashtable();
-		for (int i = 0; i < 4; ++i) {
+		for (int i = 0; i < 42; ++i) {
 			hashtable.put(new Integer(i), "hello" + i);
 		}
 		store(hashtable);
@@ -22,8 +22,6 @@ public class HashtableTestCase extends AbstractDb4oTestCase implements OptOutCS 
 	public void test() throws Exception {
 		Hashtable hashtable = (Hashtable) retrieveOnlyInstance(Hashtable.class);
 		long oldSize = db().systemInfo().totalSize();
-		store(hashtable);
-		db().commit();
 		store(hashtable);
 		db().commit();
 		long newSize = db().systemInfo().totalSize();

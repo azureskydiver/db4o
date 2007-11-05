@@ -13,7 +13,7 @@ public class LinkedHashMapTestCase extends AbstractDb4oTestCase implements OptOu
 
 	protected void store() throws Exception {
 		LinkedHashMap hashtable = new LinkedHashMap();
-		for (int i = 0; i < 2; ++i) {
+		for (int i = 0; i < 42; ++i) {
 			hashtable.put(new Integer(i), "hello" + i);
 		}
 		store(hashtable);
@@ -22,8 +22,6 @@ public class LinkedHashMapTestCase extends AbstractDb4oTestCase implements OptOu
 	public void test() throws Exception {
 		LinkedHashMap hashtable = (LinkedHashMap) retrieveOnlyInstance(LinkedHashMap.class);
 		long oldSize = db().systemInfo().totalSize();
-		store(hashtable);
-		db().commit();
 		store(hashtable);
 		db().commit();
 		long newSize = db().systemInfo().totalSize();
