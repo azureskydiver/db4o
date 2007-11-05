@@ -12,17 +12,17 @@ public class LinkedHashMapTestCase extends AbstractDb4oTestCase implements OptOu
 	}
 
 	protected void store() throws Exception {
-		LinkedHashMap hashtable = new LinkedHashMap();
+		LinkedHashMap hashmap = new LinkedHashMap();
 		for (int i = 0; i < 42; ++i) {
-			hashtable.put(new Integer(i), "hello" + i);
+			hashmap.put(new Integer(i), "hello" + i);
 		}
-		store(hashtable);
+		store(hashmap);
 	}
 
 	public void test() throws Exception {
-		LinkedHashMap hashtable = (LinkedHashMap) retrieveOnlyInstance(LinkedHashMap.class);
+		LinkedHashMap hashmap = (LinkedHashMap) retrieveOnlyInstance(LinkedHashMap.class);
 		long oldSize = db().systemInfo().totalSize();
-		store(hashtable);
+		store(hashmap);
 		db().commit();
 		long newSize = db().systemInfo().totalSize();
 		Assert.areEqual(oldSize, newSize);
