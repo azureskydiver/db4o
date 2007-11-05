@@ -10,6 +10,7 @@ Bundle-ClassPath: .,
  lib/db4o-@db4o.version.iteration.revision@-java1.2.jar,
  lib/db4o-@db4o.version.iteration.revision@-nqopt.jar,
  lib/bloat-1.0.jar,
+ lib/db4o-@db4o.version.iteration.revision@-classedit.jar,
  lib/db4o-@db4o.version.iteration.revision@-tools.jar
 Bundle-ActivationPolicy: lazy 
 Export-Package: EDU.purdue.cs.bloat.benchmark,
@@ -95,6 +96,4 @@ Export-Package: EDU.purdue.cs.bloat.benchmark,
  com.db4o.marshall,
  com.db4o.instrumentation.core,
  com.db4o.instrumentation.util,
- com.db4o.ta,
- com.db4o.cs.events
-
+ com.db4o.ta
