@@ -6,27 +6,27 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class HashtableTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class HashMapTestCase extends AbstractDb4oTestCase implements OptOutCS {
 	public static void main(String[] args) {
-		new HashtableTestCase().runSolo();
+		new HashMapTestCase().runSolo();
 	}
 
 	protected void store() throws Exception {
-		Hashtable hashtable = new Hashtable();
+		HashMap hashmap = new HashMap();
 		for (int i = 0; i < 42; ++i) {
-			hashtable.put(new Integer(i), "hello" + i);
+			hashmap.put(new Integer(i), "hello" + i);
 		}
-		store(hashtable);
+		store(hashmap);
 	}
 
 	public void test() throws Exception {
-		Hashtable hashtable = (Hashtable) retrieveOnlyInstance(Hashtable.class);
+		HashMap hashmap = (HashMap) retrieveOnlyInstance(HashMap.class);
 		for (int i = 0; i < 10; ++i) {
-			store(hashtable);
+			store(hashmap);
 			db().commit();
 		}
 		long oldSize = db().systemInfo().totalSize();
-		store(hashtable);
+		store(hashmap);
 		db().commit();
 		long newSize = db().systemInfo().totalSize();
 		Assert.areEqual(oldSize, newSize);
