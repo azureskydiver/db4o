@@ -159,6 +159,8 @@ public class MainPanel extends JPanel implements UISession {
             ReflectField[] fields = ReflectHelper.getDeclaredFieldsInHeirarchy(storedClass);
             for (int j = 0; j < fields.length; j++) {
                 ReflectField field = fields[j];
+                //TODO: do not show transient fields
+                //if(!field.isTransient())
                 parent.add(new DefaultMutableTreeNode(field.getName()));
             }
         }

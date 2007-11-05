@@ -10,6 +10,8 @@ import com.db4o.reflect.generic.GenericObject;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 import com.db4o.reflect.Reflector;
+import com.db4o.ta.*;
+import com.spaceprogram.db4o.sql.*;
 import com.spaceprogram.db4o.sql.util.ReflectHelper;
 
 import javax.swing.tree.TreeModel;
@@ -44,6 +46,9 @@ public class ObjectTreeModel implements TreeModel {
 		Object parentObject = parentNode.getObject();
 		Reflector reflector = session.getObjectContainer().ext().reflector();
 		ReflectClass reflectClass = reflector.forObject(parentObject);
+		if(Activatable.class.isAssignableFrom(parentObject.getClass())){
+			((Activatable)parentObject).activate();
+		}		
 		
 		if (reflectClass.isArray()) {
 			return makeArrayNode(parentObject, parentNode, index, reflector);
