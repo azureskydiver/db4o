@@ -1,9 +1,8 @@
 package com.db4o.objectManager.v2.query;
 
+import java.util.*;
+
 import javax.swing.*;
-import javax.swing.event.ListDataListener;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * User: treeder

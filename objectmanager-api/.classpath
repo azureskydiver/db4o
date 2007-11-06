@@ -4,8 +4,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk1.2"/>
 	<classpathentry kind="lib" path="test.lib/db4ounit.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4oclassedit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4otaj"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4otools"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

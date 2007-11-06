@@ -1,6 +1,5 @@
 package com.db4o.objectManager.v2.query;
 
-import com.db4o.query.Query;
 
 /**
  * User: treeder

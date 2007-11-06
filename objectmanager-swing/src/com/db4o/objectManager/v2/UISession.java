@@ -1,10 +1,8 @@
 package com.db4o.objectManager.v2;
 
-import com.db4o.ObjectServer;
-import com.db4o.ObjectContainer;
+import java.awt.*;
 
-import javax.swing.*;
-import java.awt.Component;
+import com.db4o.*;
 
 /**
  * User: treeder

@@ -37,6 +37,19 @@
 			<property name="svn.revision" value="${svn.revision}" />
 		</ant>
         <copy todir="${lib}" file="${file.java5.jar}" />
+		
+		<ant antfile="${dir.workspace}/db4obuild/build-java.xml" target="build.taj">
+			<property name="svn.revision" value="${svn.revision}" />
+		</ant>
+		<copy todir="${lib}" file="${file.taj.jar}" />
+		
+		<ant antfile="${dir.workspace}/db4obuild/build-java.xml" target="build.classedit">
+			<property name="svn.revision" value="${svn.revision}" />
+		</ant>
+		<copy todir="${lib}" file="${file.classedit.jar}" />
+
+		<copy todir="${lib}" file="${file.bloat.jar}" />
+		
 	</target>
 
     <target name="compile" depends="init, build.db4o.core"

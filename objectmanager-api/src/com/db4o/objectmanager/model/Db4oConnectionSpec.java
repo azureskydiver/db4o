@@ -6,7 +6,6 @@ import java.util.logging.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.instrumentation.classfilter.*;
-import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.main.*;
 import com.db4o.reflect.jdk.*;
 import com.db4o.ta.*;

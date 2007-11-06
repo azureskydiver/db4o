@@ -1,13 +1,9 @@
 package com.db4o.objectManager.v2.maint;
 
-import com.db4o.Db4o;
-import com.db4o.config.Configuration;
-import com.db4o.config.DotnetSupport;
-import com.db4o.defragment.DefragmentConfig;
-import com.db4o.defragment.Defragment;
-import com.db4o.objectmanager.model.Db4oConnectionSpec;
+import java.io.*;
 
-import java.io.IOException;
+import com.db4o.defragment.*;
+import com.db4o.objectmanager.model.*;
 
 /**
  * User: treeder

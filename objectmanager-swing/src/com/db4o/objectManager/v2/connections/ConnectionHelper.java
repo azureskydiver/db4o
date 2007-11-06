@@ -4,8 +4,6 @@ import java.awt.*;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.config.Configuration;
-import com.db4o.config.DotnetSupport;
 import com.db4o.ext.*;
 import com.db4o.objectManager.v2.uiHelper.*;
 import com.db4o.objectmanager.model.*;

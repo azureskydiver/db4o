@@ -1,11 +1,10 @@
 package com.db4o.objectManager.v2.results;
 
-import com.db4o.objectManager.v2.util.DateFormatter;
-import com.db4o.objectManager.v2.MainPanel;
+import java.util.*;
 
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.util.Date;
+import javax.swing.table.*;
+
+import com.db4o.objectManager.v2.*;
 
 /**
  * User: treeder

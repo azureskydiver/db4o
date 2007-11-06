@@ -16,19 +16,14 @@
  */
 package com.db4o.objectmanager.model.nodes.field;
 
-import java.io.PrintStream;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
-import com.db4o.objectmanager.model.IDatabase;
-import com.db4o.objectmanager.model.Db4oConnectionSpec;
-import com.db4o.objectmanager.model.nodes.IModelNode;
-import com.db4o.objectmanager.model.nodes.partition.PartitionFieldNodeFactory;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectMethod;
+import com.db4o.objectmanager.model.*;
+import com.db4o.objectmanager.model.nodes.*;
+import com.db4o.objectmanager.model.nodes.partition.*;
+import com.db4o.reflect.*;
 
 /**
  * Class MapFieldNode.

@@ -1,15 +1,11 @@
 package com.db4o.objectmanager.api.helpers;
 
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.Reflector;
-import com.db4o.reflect.ReflectConstructor;
-import com.db4o.reflect.generic.GenericObject;
-import com.db4o.ext.StoredClass;
-import com.db4o.ext.StoredField;
-import com.db4o.ObjectContainer;
-
+import java.text.*;
 import java.util.*;
-import java.text.Collator;
+
+import com.db4o.*;
+import com.db4o.ext.*;
+import com.db4o.reflect.*;
 
 /**
  * <p/>

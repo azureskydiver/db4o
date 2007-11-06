@@ -1,20 +1,13 @@
 package demo.objectmanager.model;
 
-import com.db4o.ObjectContainer;
-import com.db4o.Db4o;
-import com.db4o.objectmanager.api.util.GenericObjectUtil;
-import com.db4o.reflect.generic.GenericClass;
-import com.db4o.reflect.generic.GenericReflector;
-import com.db4o.reflect.generic.GenericField;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
+import java.io.*;
+import java.math.*;
+import java.util.*;
 
-import java.io.File;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Calendar;
-import java.math.BigDecimal;
+import com.db4o.*;
+import com.db4o.objectmanager.api.util.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
 
 /**
  * User: treeder

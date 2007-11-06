@@ -1,13 +1,12 @@
 package com.db4o.objectManager.v2;
 
-import com.db4o.objectManager.v2.uiHelper.OptionPaneHelper;
-import com.db4o.objectManager.v2.resources.ResourceManager;
+import java.awt.event.*;
+import java.io.*;
 
 import javax.swing.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
+
+import com.db4o.objectManager.v2.resources.*;
+import com.db4o.objectManager.v2.uiHelper.*;
 
 /**
  * User: treeder

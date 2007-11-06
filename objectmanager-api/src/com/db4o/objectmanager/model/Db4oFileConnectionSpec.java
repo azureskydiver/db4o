@@ -2,8 +2,6 @@ package com.db4o.objectmanager.model;
 
 import java.io.*;
 
-import com.db4o.*;
-
 public class Db4oFileConnectionSpec extends Db4oConnectionSpec {
 	private String filePath;
 	

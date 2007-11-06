@@ -1,11 +1,6 @@
 package com.db4o.objectmanager.model;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
+import java.util.logging.*;
 
 public class Db4oSocketConnectionSpec extends Db4oConnectionSpec {
 
