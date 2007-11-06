@@ -3,3 +3,4 @@
 -methodMapping com.db4o.foundation.io.File4.mkdirs System.IO.Directory.CreateDirectory
 -methodMapping com.db4o.foundation.io.File4.exists System.IO.File.Exists
 -methodMapping com.db4o.foundation.io.File4.rename System.IO.File.Move
+-methodMapping com.db4o.foundation.io.File4.copyFile System.IO.File.Copy
