@@ -1,16 +1,9 @@
 package com.db4o.objectManager.v2.custom;
 
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
+import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-import java.awt.Component;
-import java.awt.Color;
-import java.awt.BorderLayout;
+import javax.swing.border.*;
 
 /**
  * This doesn't extend JPanel so that subclass can support builder pattern (jgoodies)

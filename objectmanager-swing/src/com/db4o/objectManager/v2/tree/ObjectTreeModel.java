@@ -1,25 +1,18 @@
 package com.db4o.objectManager.v2.tree;
 
-import com.db4o.objectManager.v2.tree.ObjectTreeNode;
-import com.db4o.objectManager.v2.util.Log;
-import com.db4o.objectManager.v2.util.Converter;
-import com.db4o.objectManager.v2.UISession;
-import com.db4o.objectManager.v2.MainPanel;
-import com.db4o.objectmanager.api.helpers.ReflectHelper2;
-import com.db4o.reflect.generic.GenericObject;
-import com.db4o.reflect.ReflectClass;
-import com.db4o.reflect.ReflectField;
-import com.db4o.reflect.Reflector;
-import com.db4o.ta.*;
-import com.spaceprogram.db4o.sql.*;
-import com.spaceprogram.db4o.sql.util.ReflectHelper;
-
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.EventListenerList;
+import java.lang.reflect.*;
 import java.util.*;
-import java.lang.reflect.Array;
+
+import javax.swing.event.*;
+import javax.swing.tree.*;
+
+import com.db4o.objectManager.v2.*;
+import com.db4o.objectManager.v2.util.*;
+import com.db4o.objectmanager.api.helpers.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
+import com.db4o.ta.*;
+import com.spaceprogram.db4o.sql.util.*;
 
 /**
  * User: treeder

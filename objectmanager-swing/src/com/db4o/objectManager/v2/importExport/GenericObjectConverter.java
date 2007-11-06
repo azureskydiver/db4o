@@ -1,21 +1,12 @@
 package com.db4o.objectManager.v2.importExport;
 
-import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.db4o.reflect.generic.GenericObject;
-import com.db4o.reflect.generic.GenericClass;
-import com.db4o.reflect.generic.GenericField;
-import com.db4o.reflect.ReflectField;
-import com.db4o.objectmanager.api.util.GenericObjectUtil;
+import java.util.*;
 
-import java.util.Calendar;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.lang.reflect.Array;
+import com.db4o.objectmanager.api.util.*;
+import com.db4o.reflect.*;
+import com.db4o.reflect.generic.*;
+import com.thoughtworks.xstream.converters.*;
+import com.thoughtworks.xstream.io.*;
 
 /**
  * User: treeder

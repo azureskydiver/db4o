@@ -1,7 +1,7 @@
 package com.db4o.objectManager.v2.custom;
 
 import java.awt.*;
-import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.plaf.basic.*;

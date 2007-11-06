@@ -3,16 +3,13 @@
  */
 package com.db4o.objectmanager.api.prefs;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.logging.Logger;
+import java.io.*;
+import java.util.*;
+import java.util.logging.*;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.config.ObjectClass;
-import com.db4o.query.Query;
+import com.db4o.*;
+import com.db4o.config.*;
+import com.db4o.query.*;
 
 public class Preferences {
     private static Logger logger = Logger.getLogger(Preferences.class.getName());

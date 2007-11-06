@@ -1,14 +1,12 @@
 package com.db4o.objectManager.v2.custom;
 
-import com.db4o.objectManager.v2.Dashboard;
+import java.awt.*;
+import java.net.*;
 
+import javax.imageio.*;
 import javax.swing.*;
-import javax.imageio.ImageIO;
-import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.Image;
-import java.awt.GridLayout;
-import java.net.URL;
+
+import com.db4o.objectManager.v2.*;
 
 /**
  * User: treeder
