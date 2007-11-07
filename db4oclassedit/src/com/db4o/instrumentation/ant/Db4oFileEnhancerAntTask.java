@@ -61,7 +61,7 @@ public class Db4oFileEnhancerAntTask extends Task {
 			AntFileSetPathRoot root = new AntFileSetPathRoot(sourceArr);
 			ClassFilter filter = collectClassFilters(root);
 			BloatClassEdit clazzEdit = collectClassEdits(filter);
-			final String[] classPath = collectClassPathArray();
+			final String[] classPath = collectClassPath();
 
 			enhanceClassFiles(root, clazzEdit, classPath);
 			enhanceJars(clazzEdit, classPath);
@@ -70,14 +70,23 @@ public class Db4oFileEnhancerAntTask extends Task {
 		}
 	}
 
-	private String[] collectClassPathArray() {
-		List paths=new ArrayList();
+	private String[] collectClassPath() throws Exception {
+		final List paths=new ArrayList();
 		for (Iterator pathIter = _classPath.iterator(); pathIter.hasNext();) {
 			Path path = (Path) pathIter.next();
 			String[] curPaths=path.list();
 			for (int curPathIdx = 0; curPathIdx < curPaths.length; curPathIdx++) {
 				paths.add(curPaths[curPathIdx]);
 			}
+		}
+		forEachResource(_jars, new FileResourceBlock() {
+			public void process(FileResource resource) throws Exception {
+				paths.add(resource.getFile().getCanonicalPath());
+			}
+		});
+		for (Iterator fileSetIter = _sources.iterator(); fileSetIter.hasNext();) {
+			FileSet fileSet = (FileSet) fileSetIter.next();
+			paths.add(fileSet.getDir().getCanonicalPath());
 		}
 		return (String[]) paths.toArray(new String[paths.size()]);
 	}
@@ -91,7 +100,7 @@ public class Db4oFileEnhancerAntTask extends Task {
 	private void enhanceJars(BloatClassEdit clazzEdit, final String[] classPath)
 			throws Exception {
 		final Db4oJarEnhancer jarEnhancer = new Db4oJarEnhancer(clazzEdit);
-		forEachJar(new FileResourceBlock() {
+		forEachResource(_jars, new FileResourceBlock() {
 			public void process(FileResource resource) throws Exception {
 				File targetJarFile = new File(_jarTargetDir, resource.getFile().getName());
 				jarEnhancer.enhance(resource.getFile(), targetJarFile, classPath);
@@ -102,7 +111,7 @@ public class Db4oFileEnhancerAntTask extends Task {
 	private ClassFilter collectClassFilters(AntFileSetPathRoot root) throws Exception {
 		final List filters = new ArrayList();
 		filters.add(root);
-		forEachJar(new FileResourceBlock() {
+		forEachResource(_jars, new FileResourceBlock() {
 			public void process(FileResource resource) throws IOException {
 				JarFile jarFile = new JarFile(resource.getFile());
 				filters.add(new JarFileClassFilter(jarFile));
@@ -114,13 +123,12 @@ public class Db4oFileEnhancerAntTask extends Task {
 		return filter;
 	}
 
-	private void forEachJar(FileResourceBlock collectFiltersBlock) throws Exception {
-		for (Iterator jarSetIter = _jars.iterator(); jarSetIter.hasNext();) {
-			FileSet jarSet = (FileSet) jarSetIter.next();
-			for (Iterator jarIter = jarSet.iterator(); jarIter.hasNext();) {
-				FileResource jarResource = (FileResource) jarIter.next();
-				collectFiltersBlock.process(jarResource);
-				
+	private void forEachResource(List fileSets, FileResourceBlock collectFiltersBlock) throws Exception {
+		for (Iterator fileSetIter = fileSets.iterator(); fileSetIter.hasNext();) {
+			FileSet fileSet = (FileSet) fileSetIter.next();
+			for (Iterator resourceIter = fileSet.iterator(); resourceIter.hasNext();) {
+				FileResource fileResource = (FileResource) resourceIter.next();
+				collectFiltersBlock.process(fileResource);
 			}
 		}
 	}
