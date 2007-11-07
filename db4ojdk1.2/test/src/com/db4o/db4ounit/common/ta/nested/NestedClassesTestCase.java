@@ -8,6 +8,11 @@ import com.db4o.ta.*;
 import db4ounit.*;
 import db4ounit.extensions.*;
 
+/**
+ * TODO: This test case will fail when run against JDK1.3/JDK1.4 (though it will run green against
+ * JDK1.2 and JDK1.5+) because the synthetic "this$0" field is final.
+ * See http://developer.db4o.com/Resources/view.aspx/Reference/Implementation_Strategies/Type_Handling/Final_Fields/Final_Fields_Specifics
+ */
 public class NestedClassesTestCase
 	extends AbstractDb4oTestCase
 	implements OptOutTA {
@@ -32,7 +37,6 @@ public class NestedClassesTestCase
 	
 	protected void configure(Configuration config) throws Exception {
 		config.add(new TransparentActivationSupport());
-		config.activationDepth(0);
 	}
 	
 	public void test() throws Exception {
