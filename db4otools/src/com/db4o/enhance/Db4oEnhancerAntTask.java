@@ -8,7 +8,7 @@ import com.db4o.ta.instrumentation.ant.*;
 
 
 /**
- * FIXME: Write documentation
+ * Ant task to enhance class files for db4o.
  */
 public class Db4oEnhancerAntTask extends Db4oFileEnhancerAntTask {
     

@@ -10,10 +10,16 @@ import com.db4o.ta.instrumentation.*;
 
 
 /**
- * FIXME: Write documentation 
+ * Programmatic user interface to the db4o enhancer.
  */
 public class Db4oFileEnhancer {
     
+    /**
+     * enhances a set of class files for db4o. The enhancer applies optimizations for
+     * Native Queries and for Transparent Activation to all files.  
+     * @param sourceDir the source directory of the class files that are to be enhanced.
+     * @param targetDir the target directory where the enhanced files are to be places
+     */
     public void enhance(String sourceDir, String targetDir) throws Exception{
         Db4oFileInstrumentor instrument = new Db4oFileInstrumentor(new BloatClassEdit[]{
             new TranslateNQToSODAEdit(),
