@@ -7,6 +7,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.io.*;
 import com.db4o.internal.activation.FixedActivationDepth;
 import com.db4o.types.*;
 
@@ -18,9 +19,9 @@ import com.db4o.types.*;
  * @exclude
  */
 public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
+	
+	public final static int COPYBUFFER_LENGTH=4096;
 
-    public final static int COPYBUFFER_LENGTH=4096;
-    
     public String fileName;
     public String i_ext;
     private transient File i_file;
@@ -54,26 +55,8 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         
     }
 
-    private void copy(File from, File to) throws IOException {
-        to.delete();
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(from));
-        try {
-	        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(to));
-	        try {
-		        byte[] buffer=new byte[COPYBUFFER_LENGTH];
-		        int bytesread=-1;
-		        while ((bytesread=in.read(buffer))>=0) {
-		            out.write(buffer,0,bytesread);
-		        }
-		        out.flush();
-	        }
-	        finally {
-	        	out.close();
-	        }
-        }
-        finally {
-        	in.close();
-        }
+    private static void copy(File from, File to) throws IOException {
+    	File4.copyFile(from, to);
     }
 
     public Object createDefault(Transaction a_trans) {
