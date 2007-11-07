@@ -1,5 +1,6 @@
 package com.db4o.instrumentation.test;
 
+import com.db4o.instrumentation.test.classfilter.*;
 import com.db4o.instrumentation.test.core.*;
 
 import db4ounit.*;
@@ -9,6 +10,7 @@ public class AllTests implements TestSuiteBuilder {
 	public TestSuite build() {
 		return new ReflectionTestSuiteBuilder(new Class[] {
 				DefaultFilePathRootTestCase.class,
+				JarFileClassFilterTestCase.class,
 			}).build();	
 	}
 

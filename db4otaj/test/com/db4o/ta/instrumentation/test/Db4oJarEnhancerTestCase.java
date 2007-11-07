@@ -63,7 +63,7 @@ public class Db4oJarEnhancerTestCase implements TestCase {
 
 	private void enhance(File inputJar, File outputJar) throws Exception {
 		Db4oJarEnhancer enhancer = new Db4oJarEnhancer(new AddMarkerInterfaceClassEdit(Marker.class));
-		enhancer.enhance(inputJar, outputJar, new String[0], "");
+		enhancer.enhance(inputJar, outputJar, new String[0]);
 	}
 
 	private File mkTempFile(final String name) {

@@ -26,17 +26,15 @@ public class Db4oFileInstrumentor {
 		this(new CompositeBloatClassEdit(classEdits));
 	}
 
-	// TODO: Remove packagePrefix, we now use class filters 
-	public void enhance(String sourceDir, String targetDir, String[] classpath, String packagePrefix) throws Exception {
-		enhance(new DefaultFilePathRoot(new String[]{ sourceDir }, ".class"), targetDir, classpath, packagePrefix);
+	public void enhance(String sourceDir, String targetDir, String[] classpath) throws Exception {
+		enhance(new DefaultFilePathRoot(new String[]{ sourceDir }, ".class"), targetDir, classpath);
 	}
 
-	public void enhance(FilePathRoot sources, String targetDir, String[] classpath,
-			String packagePrefix) throws Exception {
-		enhance(new DefaultClassSource(), sources, targetDir, classpath, packagePrefix);
+	public void enhance(FilePathRoot sources, String targetDir, String[] classpath) throws Exception {
+		enhance(new DefaultClassSource(), sources, targetDir, classpath);
 	}
 
-	private void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath,String packagePrefix) throws Exception {
+	private void enhance(ClassSource classSource, FilePathRoot sources,String targetDir,String[] classpath) throws Exception {
 		File fTargetDir = new File(targetDir);
 		
 		String[] sourceRoots = sources.rootDirs();
@@ -52,7 +50,7 @@ public class Db4oFileInstrumentor {
 		
 		URL[] urls = classpathToURLs(fullClasspath);	
 		URLClassLoader classLoader=new URLClassLoader(urls,ClassLoader.getSystemClassLoader());
-		enhance(sources,fTargetDir,classLoader,new BloatLoaderContext(fileLoader),packagePrefix);
+		enhance(sources,fTargetDir,classLoader,new BloatLoaderContext(fileLoader));
 		
 		fileLoader.done();
 	}
@@ -61,11 +59,10 @@ public class Db4oFileInstrumentor {
 			FilePathRoot sources,
 			File target,
 			ClassLoader classLoader,
-			BloatLoaderContext bloatUtil,
-			String packagePrefix) throws Exception {
+			BloatLoaderContext bloatUtil) throws Exception {
 		for (Iterator sourceFileIter = sources.files(); sourceFileIter.hasNext();) {
 			InstrumentationClassSource file = (InstrumentationClassSource) sourceFileIter.next();
-			enhanceFile(file, target, classLoader, bloatUtil, packagePrefix);
+			enhanceFile(file, target, classLoader, bloatUtil);
 		}
 	}
 
@@ -73,12 +70,7 @@ public class Db4oFileInstrumentor {
 			InstrumentationClassSource source, 
 			File target,
 			ClassLoader classLoader, 
-			BloatLoaderContext bloatUtil,
-			String packagePrefix) throws IOException, ClassNotFoundException {
-		
-		if (!source.className().startsWith(packagePrefix)) {
-			return;
-		}
+			BloatLoaderContext bloatUtil) throws IOException, ClassNotFoundException {
 		System.err.println("Processing " + source.className());
 		ClassEditor classEditor = bloatUtil.classEditor(source.className());
 		InstrumentationStatus status = _classEdit.enhance(classEditor, classLoader, bloatUtil);
