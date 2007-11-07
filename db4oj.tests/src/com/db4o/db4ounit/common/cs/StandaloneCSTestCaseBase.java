@@ -8,6 +8,7 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.cs.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 // TODO fix db4ounit call logic - this should actually be run in C/S mode
 public abstract class StandaloneCSTestCaseBase implements TestCase {
@@ -16,12 +17,8 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 
 	public static final class Item {
 	}
-
-	public interface ClientBlock {
-		void run(ObjectContainer client);
-	}
-
-	public void test() {
+	
+	public void test() throws Throwable {
 		final Configuration config = Db4o.newConfiguration();
 		configure(config);
 		
@@ -40,13 +37,8 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 		}
 	}
 
-	protected void withClient(ClientBlock block) {
-		final ObjectContainer client = openClient();
-		try {
-			block.run(client);			
-		} finally {
-			client.close();
-		}
+	protected void withClient(ContainerBlock block) throws Throwable {
+		ContainerServices.withContainer(openClient(), block);
 	}
 
 	protected ClientObjectContainer openClient() {
@@ -57,7 +49,7 @@ public abstract class StandaloneCSTestCaseBase implements TestCase {
 		return _port;
 	}
 	
-	protected abstract void runTest();
+	protected abstract void runTest() throws Throwable;
 
 	protected abstract void configure(Configuration config);
 

@@ -5,7 +5,15 @@ import com.db4o.internal.ClassMetadata;
 /**
  * Activates the full object graph.
  */
-public class FullActivationDepth implements ActivationDepth {
+public class FullActivationDepth extends ActivationDepthImpl {
+
+	public FullActivationDepth(ActivationMode mode) {
+		super(mode);
+	}
+	
+	public FullActivationDepth() {
+		this(ActivationMode.ACTIVATE);
+	}
 
 	public ActivationDepth descend(ClassMetadata metadata) {
 		return this;

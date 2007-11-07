@@ -58,10 +58,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     //  others. Allows identifying the responsible Objectcontainer for IDs
     final ObjectContainerBase         _parent;
 
-    // FIXME: move to the right ActivationDepth implementation
-    //  allowed adding refresh with little code changes.
-    boolean                 _refreshInsteadOfActivate;
-
     // a value greater than 0 indicates class implementing the
     // "Internal" interface are visible in queries and can
     // be used.
@@ -194,7 +190,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
                 if (obj == null) {
                     ta.removeReference(ref);
                 } else {
-                    ref.activate1(ta, obj, item.depth, _refreshInsteadOfActivate);
+                    ref.activateInternal(ta, obj, item.depth);
                 }
             }
         }
@@ -1332,14 +1328,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public final void refresh(Transaction trans, Object obj, int depth) {
         synchronized (_lock) {
-            _refreshInsteadOfActivate = true;
-            try {
-            	activate(trans, obj, new LegacyActivationDepth(depth));
-            } finally {
-            	_refreshInsteadOfActivate = false;
-            }
+        	activate(trans, obj, refreshActivationDepth(depth));
         }
     }
+
+	private ActivationDepth refreshActivationDepth(int depth) {
+		return activationDepthProvider().activationDepth(depth, ActivationMode.REFRESH);
+	}
 
     final void refreshClasses() {
         synchronized (_lock) {

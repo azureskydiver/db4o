@@ -8,9 +8,10 @@ import com.db4o.internal.*;
  * Transparent Activation strategy.
  * 
  */
-public class NonDescendingActivationDepth implements ActivationDepth {
+public class NonDescendingActivationDepth extends ActivationDepthImpl {
 
-	public NonDescendingActivationDepth() {
+	public NonDescendingActivationDepth(ActivationMode mode) {
+		super(mode);
 	}
 
 	public ActivationDepth descend(ClassMetadata metadata) {

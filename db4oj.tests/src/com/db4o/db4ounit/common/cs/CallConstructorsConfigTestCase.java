@@ -6,18 +6,19 @@ import com.db4o.*;
 import com.db4o.config.*;
 
 import db4ounit.*;
+import db4ounit.extensions.*;
 
 
 public class CallConstructorsConfigTestCase extends StandaloneCSTestCaseBase {
 	
-	protected void runTest() {
-		withClient(new ClientBlock() {
+	protected void runTest() throws Throwable {
+		withClient(new ContainerBlock() {
 			public void run(ObjectContainer client) {	
 				client.set(new Item());
 			}
 		});
 		
-		withClient(new ClientBlock() {
+		withClient(new ContainerBlock() {
 			public void run(ObjectContainer client) {	
 				Assert.areEqual(1, client.query(Item.class).size());
 			}

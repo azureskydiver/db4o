@@ -7,21 +7,17 @@ import com.db4o.internal.*;
  * Activates an object graph to a specific depth respecting any
  * activation configuration settings that might be in effect.
  */
-public class LegacyActivationDepth implements ActivationDepth {
+public class LegacyActivationDepth extends ActivationDepthImpl {
 
 	private final int _depth;
-	private ActivationMode _mode;
 	
 	public LegacyActivationDepth(int depth) {
 		this(depth, ActivationMode.ACTIVATE);
 	}
 
 	public LegacyActivationDepth(int depth, ActivationMode mode) {
-		if (null == mode) {
-			throw new ArgumentNullException();
-		}
+		super(mode);
 		_depth = depth;
-		_mode = mode;
 	}
 
 	public ActivationDepth descend(ClassMetadata metadata) {

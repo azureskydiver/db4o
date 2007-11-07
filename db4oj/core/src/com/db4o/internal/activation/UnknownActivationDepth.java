@@ -8,6 +8,10 @@ public class UnknownActivationDepth implements ActivationDepth {
 	
 	private UnknownActivationDepth() {
 	}
+	
+	public ActivationMode mode() {
+		throw new IllegalStateException();
+	}
 
 	public ActivationDepth descend(ClassMetadata metadata) {
 		throw new IllegalStateException();

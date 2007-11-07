@@ -85,11 +85,11 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     
     private ActivationDepth descend(ActivationDepth depth, Object obj){
         if(obj == null){
-            return new NonDescendingActivationDepth();
+            return new NonDescendingActivationDepth(depth.mode());
         }
         ClassMetadata cm = classMetaDataForObject(obj);
         if(cm.isPrimitive()){
-            return new NonDescendingActivationDepth();
+            return new NonDescendingActivationDepth(depth.mode());
         }
         return depth.descend(cm);
     }

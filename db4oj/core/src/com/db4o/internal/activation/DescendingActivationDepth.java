@@ -2,14 +2,13 @@ package com.db4o.internal.activation;
 
 import com.db4o.internal.*;
 
-public class DescendingActivationDepth implements ActivationDepth {
+public class DescendingActivationDepth extends ActivationDepthImpl {
 
 	private final TransparentActivationDepthProvider _provider;
-	private final ActivationMode _mode;
 	
 	public DescendingActivationDepth(TransparentActivationDepthProvider provider, ActivationMode mode) {
+		super(mode);
 		_provider = provider;
-		_mode = mode;
 	}
 
 	public ActivationDepth descend(ClassMetadata metadata) {

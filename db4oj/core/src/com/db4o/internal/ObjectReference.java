@@ -52,37 +52,47 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 	
 	public void activate() {
-	    synchronized(container().lock()){
+		activateOn(container().transaction());
+	}
+
+	public void activateOn(final Transaction transaction) {
+		final ObjectContainerBase container = transaction.container(); 
+	    synchronized(container.lock()){
     		if (isActive()) {
     			return;
     		}
-    		TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container().activationDepthProvider();
-    		activate(container().transaction(), getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE), false);
+    		TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.activationDepthProvider();
+			activate(transaction, getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE));
 	    }
 	}
 
-	public void activate(Transaction ta, Object obj, ActivationDepth depth, boolean isRefresh) {
-	    activate1(ta, obj, depth, isRefresh);
+	public void activate(Transaction ta, Object obj, ActivationDepth depth) {
+	    activateInternal(ta, obj, depth);
 		ta.container().activatePending(ta);
 	}
 	
-	void activate1(Transaction ta, Object obj, ActivationDepth depth, boolean isRefresh) {
-	    
-		if (depth.requiresActivation()) {
-		    ObjectContainerBase container = ta.container();
-		    if(isRefresh){
-				logActivation(container, "refresh");
-		    }else{
-				if (isActive()) {
-					if (obj != null) {
-					    _class.activateFields(ta, obj, depth);
-						return;
-					}
-				}
-				logActivation(container, "activate");
-		    }
-			read(ta, null, obj, depth, Const4.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
+	void activateInternal(Transaction ta, Object obj, ActivationDepth depth) {
+		if (!depth.requiresActivation()) {
+			return;
 		}
+		
+	    ObjectContainerBase container = ta.container();
+	    if (depth.mode().isRefresh()){
+			logActivation(container, "refresh");
+	    } else {
+			if (isActive()) {
+				if (obj != null) {
+				    _class.activateFields(ta, obj, depth);
+					return;
+				}
+			}
+			logActivation(container, "activate");
+	    }
+		readForActivation(ta, obj, depth);
+	}
+
+	private void readForActivation(Transaction ta, Object obj, ActivationDepth depth) {
+		read(ta, null, obj, depth, Const4.ADD_MEMBERS_TO_ID_TREE_ONLY, false);
 	}
 	
 	private void logActivation(ObjectContainerBase container, String event) {
