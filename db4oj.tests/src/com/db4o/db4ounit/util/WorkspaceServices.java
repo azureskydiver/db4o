@@ -34,6 +34,10 @@ public class WorkspaceServices {
 	}
 	
 	static String pathToClass(Class clazz) {
+		/*
+		 * FIXME: This will fail for paths containing special chars (e.g. spaces).
+		 * The obvious workarounds (going through URI or URLDecoder) are not available on JDK<1.2 / are not .NET compatible.
+		 */ 
 		final URL resource = clazz.getResource("/" + clazz.getName().replace('.', '/') + ".class");
 		return new File(resource.getFile()).getParent();
 	}
