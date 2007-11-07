@@ -25,7 +25,7 @@ public class Db4oFileEnhancer {
             new TranslateNQToSODAEdit(),
             new InjectTransparentActivationEdit(new AcceptAllClassesFilter()),
         });
-        instrument.enhance(sourceDir, targetDir, new String[]{}, "");
+        instrument.enhance(sourceDir, targetDir, new String[]{});
     }
 
 }

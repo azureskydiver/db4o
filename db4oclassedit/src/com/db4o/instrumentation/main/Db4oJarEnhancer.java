@@ -20,11 +20,11 @@ public class Db4oJarEnhancer {
 		_fileEnhancer = new Db4oFileInstrumentor(classEdit);
 	}
 
-	public void enhance(File inputJar, File outputJar, String[] classPath, String packagePredicate) throws Exception {
+	public void enhance(File inputJar, File outputJar, String[] classPath) throws Exception {
 		final String workingDir = tempDir(inputJar.getName());
 		try {
 			extractJarTo(inputJar, workingDir);
-			enhance(workingDir, classPath, packagePredicate);
+			enhance(workingDir, classPath);
 			makeJarFromDirectory(workingDir, outputJar);
 		} finally {
 			deleteDirectory(workingDir);
@@ -35,8 +35,8 @@ public class Db4oJarEnhancer {
 		Directory4.delete(workingDir, true);
 	}
 
-	private void enhance(String workingDir, String[] classPath, String packagePredicate) throws Exception  {
-		_fileEnhancer.enhance(workingDir, workingDir, classPath, packagePredicate);
+	private void enhance(String workingDir, String[] classPath) throws Exception  {
+		_fileEnhancer.enhance(workingDir, workingDir, classPath);
 	}
 
 	private String tempDir(String name) {

@@ -35,7 +35,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 		
 		ClassFilter filter = new ByNameClassFilter(new String[]{ INSTRUMENTED_CLAZZ.getName() });
 		Db4oFileInstrumentor enhancer = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(filter));
-		enhancer.enhance(srcDir, targetDir, new String[]{}, "");
+		enhancer.enhance(srcDir, targetDir, new String[]{});
 		
 		AssertingClassLoader loader = new AssertingClassLoader(new File(targetDir), new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ });
 		loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_CLAZZ);
@@ -57,7 +57,7 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 						throw exception;
 						
 					}
-				}).enhance(srcDir, targetDir, new String[] {}, "");
+				}).enhance(srcDir, targetDir, new String[] {});
 			}
 		});
 		
