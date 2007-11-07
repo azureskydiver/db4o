@@ -10,8 +10,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class TARefreshTestCase extends TransparentActivationTestCaseBase
-        implements OptOutSolo {
+public class TARefreshTestCase extends TransparentActivationTestCaseBase implements OptOutSolo {
 
     public static void main(String[] args) {
         new TARefreshTestCase().runClientServer();
@@ -19,24 +18,21 @@ public class TARefreshTestCase extends TransparentActivationTestCaseBase
     
     private static final int ITEM_DEPTH = 10;
 
-    private Class _class;
     protected void store() throws Exception {
-        TAItem item = TAItem.newTAItem(ITEM_DEPTH);
-        item._isRoot = true;
-        _class = item.getClass();
+        TAItem item = TAItem.newGraph(ITEM_DEPTH);
         store(item);
     }
     
     public void testRefresh() {
         ExtObjectContainer client1 = openNewClient();
         ExtObjectContainer client2 = openNewClient();
-        TAItem item1 = (TAItem) retrieveInstance(client1);
-        TAItem item2 = (TAItem) retrieveInstance(client2);
+        TAItem item1 = queryRoot(client1);
+        TAItem item2 = queryRoot(client2);
 
         TAItem next1 = item1;
         int value = 10;
         while (next1 != null) {
-            Assert.areEqual(value, next1.getValue());
+            Assert.areEqual(value, next1.value());
             next1 = next1.next();
             value --;
         }
@@ -44,62 +40,66 @@ public class TARefreshTestCase extends TransparentActivationTestCaseBase
         TAItem next2 = item2;
         value = 10;
         while (next2 != null) {
-            Assert.areEqual(value, next2.getValue());
+            Assert.areEqual(value, next2.value());
             next2 = next2.next();
             value --;
         }
         
         //update depth = 1
-        item1.setValue(100);
-        item1.next().setValue(200);
-        client1.set(item1);
+        item1.value(100);
+        item1.next().value(200);
+        client1.set(item1, 2);
         client1.commit();
         
-        Assert.areEqual(100, item1.getValue());
-        Assert.areEqual(200, item1.next().getValue());
+        assertItemValue(100, item1);
+        assertItemValue(200, item1.next());
         
-        Assert.areEqual(10, item2.getValue());
-        Assert.areEqual(9, item2.next().getValue());
+        assertItemValue(10, item2);
+        assertItemValue(9, item2.next());
         
         //refresh 0
         client2.refresh(item2, 0);
-        Assert.areEqual(10, item2.getValue());
-        Assert.areEqual(9, item2.next().getValue());
+        assertItemValue(10, item2);
+        assertItemValue(9, item2.next());
         
         //refresh 1
         client2.refresh(item2, 1);
-        Assert.areEqual(100, item2.getValue());
-        Assert.areEqual(9, item2.next().getValue());
+        assertItemValue(100, item2);
+        assertItemValue(9, item2.next());
         
         //refresh 2
         client2.refresh(item2, 2);
-        Assert.areEqual(100, item2.getValue());
-        //FIXME: maybe a bug
-        //Assert.areEqual(200, item2.next().getValue());
+        assertItemValue(100, item2);
+        assertItemValue(200, item2.next());
         
         next1 = item1;
         value = 1000;
         while (next1 != null) {
-            next1.setValue(value);
+            next1.value(value);
             next1 = next1.next();
             value++;
         }
-        client1.set(item1);
+        client1.set(item1, 5);
         client1.commit();
         
         client2.refresh(item2, 5);
         next2 = item2;
         for (int i = 1000; i < 1005; i++) {
-            Assert.areEqual(i, next2.getValue());
+            assertItemValue(i, next2);
             next2 = next2.next();
         }
     }
 
-    private Object retrieveInstance(ExtObjectContainer client) {
+	private void assertItemValue(final int expectedValue, TAItem item) {
+		Assert.areEqual(expectedValue, item.passThroughValue());
+		Assert.areEqual(expectedValue, item.value());
+	}
+
+    private TAItem queryRoot(ExtObjectContainer client) {
         Query query = client.query();
-        query.constrain(_class);
+        query.constrain(TAItem.class);
         query.descend("_isRoot").constrain(new Boolean(true));
-        return query.execute().next();
+        return (TAItem)query.execute().next();
     }
     
     private ExtObjectContainer openNewClient() {
@@ -113,8 +113,14 @@ public class TARefreshTestCase extends TransparentActivationTestCaseBase
         public TAItem _next;
 
         public boolean _isRoot;
+        
+        public static TAItem newGraph(int depth) {
+        	TAItem item = newTAItem(depth);
+        	item._isRoot = true;
+        	return item;
+        }
 
-        public static TAItem newTAItem(int depth) {
+        private static TAItem newTAItem(int depth) {
             if (depth == 0) {
                 return null;
             }
@@ -123,14 +129,17 @@ public class TARefreshTestCase extends TransparentActivationTestCaseBase
             root._next = newTAItem(depth - 1);
             return root;
         }
+        
+        public int passThroughValue() {
+        	return _value;
+        }
 
-        public int getValue() {
+        public int value() {
             activate();
             return _value;
         }
 
-        public void setValue(int value) {
-            activate();
+        public void value(int value) {
             _value = value;
         }
         

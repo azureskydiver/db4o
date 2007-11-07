@@ -17,6 +17,7 @@ public class AllTests extends Db4oTestSuite {
                 NonTAIntTestCase.class,
                 NonTALinkedListTestCase.class,
                 NonTANArrayTestCase.class,
+                NonTARefreshTestCase.class,
                 NonTAStringTestCase.class,
         };
     }

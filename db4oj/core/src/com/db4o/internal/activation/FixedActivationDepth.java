@@ -6,12 +6,17 @@ import com.db4o.internal.ClassMetadata;
  * Activates a fixed depth of the object graph regardless of
  * any existing activation depth configuration settings.
  */
-public class FixedActivationDepth implements ActivationDepth {
+public class FixedActivationDepth extends ActivationDepthImpl {
 
 	private final int _depth;
 
-	public FixedActivationDepth(int depth) {
+	public FixedActivationDepth(int depth, ActivationMode mode) {
+		super(mode);
 		_depth = depth;
+	}
+	
+	public FixedActivationDepth(int depth) {
+		this(depth, ActivationMode.ACTIVATE);
 	}
 	
 	public boolean requiresActivation() {
@@ -22,7 +27,7 @@ public class FixedActivationDepth implements ActivationDepth {
 		if (_depth < 1) {
 			return this;
 		}
-		return new FixedActivationDepth(_depth-1);
+		return new FixedActivationDepth(_depth-1, _mode);
 	}
 
 }

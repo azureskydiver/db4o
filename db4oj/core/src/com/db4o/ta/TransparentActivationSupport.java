@@ -33,10 +33,16 @@ public class TransparentActivationSupport implements ConfigurationItem {
 				}
 			}
 
-			private Activator activatorForObject(
-					final Transaction transaction, Object obj) {
-			    // FIXME: Using ObjectContainerBase here won't work for MTOC.
-				return transaction.referenceForObject(obj);
+			private Activator activatorForObject(final Transaction transaction, Object obj) {
+				final ObjectReference objectReference = transaction.referenceForObject(obj);
+				if (isEmbeddedClient(transaction)) {
+					return new TransactionalActivator(transaction, objectReference);
+				}
+				return objectReference;
+			}
+
+			private boolean isEmbeddedClient(Transaction transaction) {
+				return transaction.objectContainer() instanceof EmbeddedClientObjectContainer;
 			}
 		});
 

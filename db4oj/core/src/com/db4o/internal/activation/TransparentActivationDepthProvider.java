@@ -9,17 +9,17 @@ public class TransparentActivationDepthProvider implements
 
 	public ActivationDepth activationDepth(int depth, ActivationMode mode) {
 		if (Integer.MAX_VALUE == depth) {
-			return new FullActivationDepth();
+			return new FullActivationDepth(mode);
 		}
-        return new FixedActivationDepth(depth);
+        return new FixedActivationDepth(depth, mode);
 	}
 
 	public ActivationDepth activationDepthFor(ClassMetadata classMetadata, ActivationMode mode) {
 		if (isTAAware(classMetadata)) {
-			return new NonDescendingActivationDepth();
+			return new NonDescendingActivationDepth(mode);
 		}
 		if(mode.isPrefetch()){
-		    return new FixedActivationDepth(classMetadata.prefetchActivationDepth());
+		    return new FixedActivationDepth(classMetadata.prefetchActivationDepth(), mode);
 		}
 		return new DescendingActivationDepth(this, mode);
 	}

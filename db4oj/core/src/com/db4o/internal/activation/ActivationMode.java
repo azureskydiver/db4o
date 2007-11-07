@@ -8,22 +8,31 @@ public final class ActivationMode {
 	
 	public static final ActivationMode PEEK = new ActivationMode();
 
-	public static final ActivationMode PREFETCH = new ActivationMode();	
+	public static final ActivationMode PREFETCH = new ActivationMode();
+	
+	public static final ActivationMode REFRESH = new ActivationMode();
 	
 	private ActivationMode() {
 	}
 	
 	public String toString() {
-		if (this == ACTIVATE) {
+		if (isActivate()) {
 			return "ACTIVATE";
 		}
-		if (this == DEACTIVATE) {
+		if (isDeactivate()) {
 			return "DEACTIVATE";
 		}
-		if (this == PREFETCH) {
+		if (isPrefetch()) {
 			return "PREFETCH";
 		}
+		if (isRefresh()) {
+			return "REFRESH";
+		}
 		return "PEEK";
+	}
+
+	private boolean isDeactivate() {
+		return this == DEACTIVATE;
 	}
 
 	public boolean isActivate() {
@@ -36,5 +45,9 @@ public final class ActivationMode {
 
 	public boolean isPrefetch() {
 		return this == PREFETCH;
+	}
+	
+	public boolean isRefresh() {
+		return this == REFRESH;
 	}
 }

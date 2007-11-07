@@ -1043,7 +1043,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 activate(context);
             }
         } else {
-            if (activatingActiveObject(context.container(), context.reference())) {
+            if (activatingActiveObject(context.activationDepth().mode(), context.reference())) {
             	ActivationDepth child = context.activationDepth().descend(this);
                 if (child.requiresActivation()) {
                     activateFields(context.transaction(), obj, child);
@@ -1073,8 +1073,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         
     }
 
-	private boolean activatingActiveObject(final ObjectContainerBase container, ObjectReference ref) {
-		return !container._refreshInsteadOfActivate && ref.isActive();
+	private boolean activatingActiveObject(final ActivationMode mode, ObjectReference ref) {
+		return !mode.isRefresh() && ref.isActive();
 	}
 
    private void activate(UnmarshallingContext context) {
@@ -1277,7 +1277,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		    if(obj == null){
 		        trans.removeReference(ref);
 		    }else{
-		        ref.activate(trans, obj, depth, false);
+		        ref.activate(trans, obj, depth);
 		        return ref.getObject();
 		    }
 		}

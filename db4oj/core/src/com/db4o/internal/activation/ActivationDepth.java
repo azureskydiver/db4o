@@ -7,6 +7,8 @@ import com.db4o.internal.ClassMetadata;
  */
 public interface ActivationDepth {
 	
+	ActivationMode mode();
+	
 	boolean requiresActivation();
 
 	ActivationDepth descend(ClassMetadata metadata);

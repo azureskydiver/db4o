@@ -51,7 +51,7 @@ public class P1Object implements Db4oTypeImpl{
 	        }
 	    }
 	    if(validYapObject()){
-	    	i_yapObject.activate(i_trans, this, activationDepth(ActivationMode.ACTIVATE), false);
+	    	i_yapObject.activate(i_trans, this, activationDepth(ActivationMode.ACTIVATE));
 	    }
     }
 
