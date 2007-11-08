@@ -24,8 +24,7 @@ public class NonblockingQueue implements Queue4 {
 			if(!_active) {
 				_current=_last;
 				_active=true;
-			}
-			else {
+			} else {
 				if(_current!=null) {
 					_current=_current._next;
 				}
