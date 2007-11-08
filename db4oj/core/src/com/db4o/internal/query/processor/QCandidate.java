@@ -542,15 +542,12 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	private void readThis(boolean a_activate) {
 		read();
 
-		Transaction trans = transaction();
-		if (trans != null) {
-
-			_member = trans.container().getByID(trans, _key);
-
-			if (_member != null && (a_activate || _member instanceof Compare)) {
-				trans.container().activate(trans, _member);
-				checkInstanceOfCompare();
-			}
+		final ObjectContainerBase container = transaction().container();
+		
+		_member = container.getByID(transaction(), _key);
+		if (_member != null && (a_activate || _member instanceof Compare)) {
+			container.activate(transaction(), _member);
+			checkInstanceOfCompare();
 		}
 	}
 
