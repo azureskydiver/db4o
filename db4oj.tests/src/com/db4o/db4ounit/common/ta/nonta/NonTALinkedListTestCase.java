@@ -28,22 +28,39 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
     }
     
     public void testDeactivateDepth() throws Exception {
-    	LinkedListItem item = (LinkedListItem) retrieveOnlyInstance();
-    	LinkedList list = item.list;
-    	LinkedList next3 = list.nextN(3);
-    	LinkedList next5 = list.nextN(5);
+    	final LinkedListItem item = queryItem();
+    	final LinkedList list = item.list;
+    	final LinkedList next1 = list.nextN(1);
+    	final LinkedList next2 = list.nextN(2);
+    	final LinkedList next3 = list.nextN(3);
+    	final LinkedList next4 = list.nextN(4);
+    	final LinkedList next5 = list.nextN(5);
     	
+    	Assert.isNotNull(list.next);
+    	Assert.isNotNull(next1.next);
+    	Assert.isNotNull(next2.next);
     	Assert.isNotNull(next3.next);
+    	Assert.isNotNull(next4.next);
     	Assert.isNotNull(next5.next);
     	
     	db().deactivate(list, 4);
     	
-    	Assert.isNull(list.next);
-    	Assert.areEqual(0, list.value);
+    	assertDeactivated(list);
+    	assertDeactivated(next1);
+    	assertDeactivated(next2);
+    	assertDeactivated(next3);
+    	assertDeactivated(next4);
     	
-    	// FIXME: test fails if uncomenting the following assertion.
-//    	Assert.isNull(next3.next);
     	Assert.isNotNull(next5.next);
     }
+
+	private void assertDeactivated(final LinkedList list) {
+		Assert.isNull(list.next);
+    	Assert.areEqual(0, list.value);
+	}
+
+	private LinkedListItem queryItem() {
+		return (LinkedListItem) retrieveOnlyInstance();
+	}
 
 }
