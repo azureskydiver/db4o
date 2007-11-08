@@ -1,25 +1,15 @@
 package com.db4o.drs.test;
 
-import com.db4o.ObjectSet;
-import com.db4o.drs.foundation.ObjectSetCollection4Facade;
-import com.db4o.drs.inside.CollectionHandler;
-import com.db4o.drs.inside.CollectionHandlerImpl;
-import com.db4o.drs.inside.ReadonlyReplicationProviderSignature;
-import com.db4o.drs.inside.ReplicationReference;
-import com.db4o.drs.inside.ReplicationReflector;
-import com.db4o.drs.inside.TestableReplicationProvider;
-import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.drs.inside.traversal.*;
-import com.db4o.ext.Db4oUUID;
-import com.db4o.foundation.Collection4;
-import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.foundation.Visitor4;
-import com.db4o.internal.traversal.*;
-import com.db4o.reflect.Reflector;
+import java.util.*;
 
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.Map;
+import com.db4o.*;
+import com.db4o.drs.foundation.*;
+import com.db4o.drs.inside.*;
+import com.db4o.drs.inside.CollectionHandler;
+import com.db4o.drs.inside.traversal.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 public class TransientReplicationProvider implements TestableReplicationProvider, TestableReplicationProviderInside {
 	private TimeStampIdGenerator _timeStampIdGenerator = new TimeStampIdGenerator();
