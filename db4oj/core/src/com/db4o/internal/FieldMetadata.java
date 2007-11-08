@@ -33,7 +33,7 @@ public class FieldMetadata implements StoredField {
 
     private boolean          _isPrimitive;
     
-    private ReflectField     _javaField;
+    private ReflectField     _reflectField;
 
     TypeHandler4              _handler;
     
@@ -90,8 +90,8 @@ public class FieldMetadata implements StoredField {
     FieldMetadata(ClassMetadata containingClass, ReflectField field, TypeHandler4 handler, int handlerID) {
     	this(containingClass);
         init(containingClass, field.getName());
-        _javaField = field;
-        _javaField.setAccessible();
+        _reflectField = field;
+        _reflectField.setAccessible();
         _handler = handler;
         _handlerID = handlerID;
         
@@ -153,7 +153,7 @@ public class FieldMetadata implements StoredField {
 	}
 
 	protected Object indexEntryFor(Object indexEntry) {
-		return _javaField.indexEntry(indexEntry);
+		return _reflectField.indexEntry(indexEntry);
 	}
     
     public boolean canUseNullBitmap(){
@@ -210,9 +210,9 @@ public class FieldMetadata implements StoredField {
                 _handler = wrapHandlerToArrays(container(), _handler);
             }
             
-            if(_handler == null || _javaField == null){
+            if(_handler == null || _reflectField == null){
                 _state = UNAVAILABLE;
-                _javaField = null;
+                _reflectField = null;
             }
             else {
                 _state = AVAILABLE;
@@ -234,7 +234,8 @@ public class FieldMetadata implements StoredField {
             return;
         }
         if(id > 0 && id != _handlerID){
-            // wrong type, refactoring, field should be turned off 
+            // wrong type, refactoring, field should be turned off
+        	// TODO: it would be cool to log something here
             _handler = null;
         }
     }
@@ -286,21 +287,34 @@ public class FieldMetadata implements StoredField {
         if (! alive()) {
             return;
         }
+        
         if(! (_handler instanceof FirstClassHandler)){
             return;
         }
-        FirstClassHandler firstClassHandler = (FirstClassHandler) _handler;
-        Object cascadeTo = getOrCreate(trans, onObject);
+        
+        Object cascadeTo = cascadingTarget(trans, depth, onObject);
         if (cascadeTo == null) {
         	return;
         }
+        
+        FirstClassHandler firstClassHandler = (FirstClassHandler) _handler;
         firstClassHandler.cascadeActivation(trans, cascadeTo, depth);
     }
 
+	protected Object cascadingTarget(Transaction trans, ActivationDepth depth, Object onObject) {
+		if (depth.mode().isDeactivate()) {
+			if (null == _reflectField) {
+				return null;
+			}
+			return _reflectField.get(onObject);
+		}
+		return getOrCreate(trans, onObject);
+	}
+
     private void checkDb4oType() {
-        if (_javaField != null) {
-            if (container()._handlers.ICLASS_DB4OTYPE.isAssignableFrom(_javaField.getFieldType())) {
-                _db4oType = HandlerRegistry.getDb4oType(_javaField.getFieldType());
+        if (_reflectField != null) {
+            if (container()._handlers.ICLASS_DB4OTYPE.isAssignableFrom(_reflectField.getFieldType())) {
+                _db4oType = HandlerRegistry.getDb4oType(_reflectField.getFieldType());
             }
         }
     }
@@ -386,7 +400,7 @@ public class FieldMetadata implements StoredField {
         boolean isEnumClass = _containingClass.isEnum();
 		if (_isPrimitive && !_isArray) {
 			if (!isEnumClass) {
-				_javaField.set(a_onObject, ((PrimitiveHandler) _handler)
+				_reflectField.set(a_onObject, ((PrimitiveHandler) _handler)
 						.primitiveNull());
 			}
 			return;
@@ -395,7 +409,7 @@ public class FieldMetadata implements StoredField {
 			cascadeActivation(a_trans, a_onObject, a_depth);
 		}
 		if (!isEnumClass) {
-			_javaField.set(a_onObject, null);
+			_reflectField.set(a_onObject, null);
 		}
     }
 
@@ -524,7 +538,7 @@ public class FieldMetadata implements StoredField {
     /** @param trans */
     public Object getOn(Transaction trans, Object onObject) {
 		if (alive()) {
-			return _javaField.get(onObject);
+			return _reflectField.get(onObject);
 		}
 		return null;
 	}
@@ -537,10 +551,10 @@ public class FieldMetadata implements StoredField {
 		if (!alive()) {
 			return null;
 		}
-		Object obj = _javaField.get(onObject);
+		Object obj = _reflectField.get(onObject);
 		if (_db4oType != null && obj == null) {
 			obj = _db4oType.createDefault(trans);
-			_javaField.set(onObject, obj);
+			_reflectField.set(onObject, obj);
 		}
 		return obj;
 	}
@@ -551,10 +565,10 @@ public class FieldMetadata implements StoredField {
     }
 
     public ReflectClass getStoredType() {
-        if(_javaField == null){
+        if(_reflectField == null){
             return null;
         }
-        return Handlers4.baseType(_javaField.getFieldType());
+        return Handlers4.baseType(_reflectField.getFieldType());
     }
     
     public ObjectContainerBase container(){
@@ -682,7 +696,7 @@ public class FieldMetadata implements StoredField {
     private void loadJavaField() {
         TypeHandler4 handler = loadJavaField1();
         if (handler == null || (!handler.equals(_handler))) {
-            _javaField = null;
+            _reflectField = null;
             _state = UNAVAILABLE;
         }
     }
@@ -692,15 +706,15 @@ public class FieldMetadata implements StoredField {
 		if (claxx == null) {
 			return null;
 		}
-		_javaField = claxx.getDeclaredField(_name);
-		if (_javaField == null) {
+		_reflectField = claxx.getDeclaredField(_name);
+		if (_reflectField == null) {
 			return null;
 		}
-		_javaField.setAccessible();
+		_reflectField.setAccessible();
 		ObjectContainerBase container = container();
 		container.showInternalClasses(true);
 		TypeHandler4 handlerForClass = container._handlers.handlerForClass(
-				container, _javaField.getFieldType());
+				container, _reflectField.getFieldType());
 		container.showInternalClasses(false);
 		return handlerForClass;
 	}
@@ -782,7 +796,7 @@ public class FieldMetadata implements StoredField {
                 return;
             }
         }
-        _javaField = null;
+        _reflectField = null;
         _state = UNAVAILABLE;
     }
 
@@ -804,8 +818,8 @@ public class FieldMetadata implements StoredField {
     
     public void set(Object onObject, Object obj){
     	// TODO: remove the following if and check callers
-    	if (null == _javaField) return;
-    	_javaField.set(onObject, obj);
+    	if (null == _reflectField) return;
+    	_reflectField.set(onObject, obj);
     }
 
     void setName(String a_name) {
@@ -887,10 +901,10 @@ public class FieldMetadata implements StoredField {
 	}
 
 	protected Indexable4 indexHandler(ObjectContainerBase stream) {
-		if(_javaField ==null) {
+		if(_reflectField ==null) {
 		    return null;
 		}
-		ReflectClass indexType = _javaField.indexType();
+		ReflectClass indexType = _reflectField.indexType();
 		TypeHandler4 classHandler = stream._handlers.handlerForClass(stream,indexType);
 		if(! (classHandler instanceof Indexable4)){
 		    return null;
