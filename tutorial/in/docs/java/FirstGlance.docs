@@ -17,7 +17,7 @@ IBM J9 configurations, Symbian and Savaje.
 is built for all Java JDKs between 1.2 and 1.4.
 
 .b db4o-7.0-java5.jar ..
-is built for Java JDK 5.
+is built for Java JDK 5 and JDK 6
 
 .1 Installation ..
 If you add one of the above db4o-*.jar files to your CLASSPATH ._
@@ -25,6 +25,9 @@ db4o is installed. In case you work with an integrated development ._
 environment like  .l http://www.eclipse.org Eclipse ..  you would ._
 copy the db4o-*.jar to the /lib/ ._
 folder under your project and add db4o to your project as a library.
+
+
+
 
 .< ObjectManagerIntro ..
 .< APIOverview ..
