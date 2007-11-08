@@ -23,6 +23,7 @@ package com.db4o.drs.inside;
 import com.db4o.drs.ReplicationConflictException;
 import com.db4o.drs.ReplicationEventListener;
 import com.db4o.drs.ReplicationProvider;
+import com.db4o.drs.inside.traversal.*;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.TimeStampIdGenerator;
