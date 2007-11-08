@@ -15,7 +15,7 @@ yourself a lot of time if you use automatic enhancement.
 The db4o enhancer tools will add code to your persistent classes to make them ._
 work even better with db4o.
 
- db4o for Java supplies three different enhancer strategies:
+db4o for Java supplies three different enhancer strategies:
 .l EnhancementCompileTime Enhancing at Compile/Deployment Time ..
 .l EnhancementLoadTime Enhancing at Class Loading Time ..
 .l NQOptimization Native Query Optimization at Query Execution Time ..
@@ -62,8 +62,10 @@ worked perfectly as usual.
 The db4o enhancer technology is new and we rely on the community ._
 for feedback. For now we recommend to instrument files in-place. Should ._
 you experience problems with your environment, please report them back ._
-to the  .l http://developer.db4o.com/forums/default.aspx db4o forums .. ._
-To resolve problems with in-place enhancement you could 
+to the  .l http://developer.db4o.com/forums/default.aspx db4o forums ..  . ._
+A possible strategy to resolve problems with in-place enhancement would be ._
+to use different output directories than /bin and /lib as output paths ._
+for the enhancer and to run your enhanced application from there.  
 
 .2 Enhancing with Ant ..
 
