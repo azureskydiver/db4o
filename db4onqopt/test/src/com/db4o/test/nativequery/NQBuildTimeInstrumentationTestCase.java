@@ -39,7 +39,7 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 		fileSet.setProject(project);
 		fileSet.setDir(new File(SRC_DIR));
 		antTask.addSources(fileSet);
-		antTask.setTargetdir(TARGET_DIR);
+		antTask.setClassTargetDir(TARGET_DIR);
 		antTask.add(new NQAntClassEditFactory());
 		antTask.execute();
 		assertInstrumented();
