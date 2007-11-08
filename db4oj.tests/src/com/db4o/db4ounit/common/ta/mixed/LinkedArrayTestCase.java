@@ -12,7 +12,7 @@ import com.db4o.ta.*;
 import db4ounit.extensions.*;
 
 
-public class LinkedArrayTestCase extends AbstractDb4oTestCase {
+public class LinkedArrayTestCase extends AbstractDb4oTestCase implements OptOutTA {
     
     static int TESTED_DEPTH = 7;
 
