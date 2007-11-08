@@ -25,10 +25,9 @@ import java.util.Iterator;
 import com.db4o.drs.ReplicationEventListener;
 import com.db4o.drs.ReplicationProvider;
 import com.db4o.drs.ReplicationSession;
-import com.db4o.drs.inside.traversal.GenericTraverser;
-import com.db4o.drs.inside.traversal.Traverser;
 import com.db4o.foundation.Hashtable4;
 import com.db4o.foundation.Visitor4;
+import com.db4o.internal.traversal.*;
 import com.db4o.reflect.ReflectClass;
 import com.db4o.reflect.ReflectField;
 

@@ -1,15 +1,10 @@
 package com.db4o.drs.inside.traversal;
 
-import com.db4o.foundation.Iterator4;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.internal.traversal.*;
 
-public interface CollectionFlattener {
-
-	boolean canHandle(ReflectClass claxx);
+public interface CollectionFlattener extends CollectionHandler {
 
 	boolean canHandle(Object obj);
 
-	boolean canHandle(Class c);
-
-	Iterator4 iteratorFor(Object collection);
+	boolean canHandle(Class c);	
 }
