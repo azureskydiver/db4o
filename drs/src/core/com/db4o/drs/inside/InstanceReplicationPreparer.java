@@ -20,16 +20,11 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA. */
 package com.db4o.drs.inside;
 
-import com.db4o.drs.ReplicationConflictException;
-import com.db4o.drs.ReplicationEventListener;
-import com.db4o.drs.ReplicationProvider;
+import com.db4o.drs.*;
 import com.db4o.drs.inside.traversal.*;
-import com.db4o.ext.Db4oUUID;
-import com.db4o.foundation.Hashtable4;
-import com.db4o.foundation.TimeStampIdGenerator;
-import com.db4o.internal.*;
-import com.db4o.internal.traversal.*;
-import com.db4o.reflect.ReflectClass;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.reflect.*;
 
 class InstanceReplicationPreparer implements Visitor {
 
