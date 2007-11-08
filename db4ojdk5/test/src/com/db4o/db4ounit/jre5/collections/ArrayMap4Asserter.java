@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.db4o.collections.ArrayMap4;
+import com.db4o.collections.*;
 
 import db4ounit.Assert;
 
@@ -77,7 +77,7 @@ public class ArrayMap4Asserter {
         Assert.areEqual(DATA_LENGTH, set.size());
 
         for (int i = 0; i < DATA_LENGTH; i++) {
-            ArrayMap4.MapEntry4<String, Integer> entry = new ArrayMap4.MapEntry4<String, Integer>(
+            MapEntry4<String, Integer> entry = new MapEntry4<String, Integer>(
                     String.valueOf(i), Integer.valueOf(i * MULTIPLE));
             Assert.isTrue(set.contains(entry));
         }
