@@ -51,13 +51,9 @@ public class Db4oFileEnhancerAntTask extends Task {
 		_classPath.add(path);
 	}
 
-	private static interface FileResourceBlock {
-		void process(FileResource resource) throws Exception;
-	}
-	
 	public void execute() {
 		try {
-			FileSet[] sourceArr = prepareFileSets(_sources);
+			FileSet[] sourceArr = (FileSet[]) _sources.toArray(new FileSet[_sources.size()]);
 			AntFileSetPathRoot root = new AntFileSetPathRoot(sourceArr);
 			ClassFilter filter = collectClassFilters(root);
 			BloatClassEdit clazzEdit = collectClassEdits(filter);
@@ -70,6 +66,10 @@ public class Db4oFileEnhancerAntTask extends Task {
 		}
 	}
 
+	private static interface FileResourceBlock {
+		void process(FileResource resource) throws Exception;
+	}
+	
 	private String[] collectClassPath() throws Exception {
 		final List paths=new ArrayList();
 		for (Iterator pathIter = _classPath.iterator(); pathIter.hasNext();) {
@@ -152,13 +152,5 @@ public class Db4oFileEnhancerAntTask extends Task {
 				
 		}
 		return clazzEdit;
-	}
-
-	private FileSet[] prepareFileSets(List fileSets) {
-		for (Iterator sourceIter = fileSets.iterator(); sourceIter.hasNext();) {
-			FileSet fileSet = (FileSet) sourceIter.next();
-			fileSet.appendIncludes(new String[]{"**/*.class"});
-		}
-		return (FileSet[]) fileSets.toArray(new FileSet[fileSets.size()]);
 	}
 }
