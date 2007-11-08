@@ -15,6 +15,7 @@ public class AllTests extends Db4oTestSuite {
             LinkedArrayTestCase.class,
             MixedActivateTestCase.class,
     		MixedArrayTestCase.class,
+    		MixedTARefreshTestCase.class,
             NNTTestCase.class,
             NTNTestCase.class,
             NTTestCase.class,

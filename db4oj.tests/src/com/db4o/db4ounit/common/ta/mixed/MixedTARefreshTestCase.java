@@ -21,19 +21,17 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
     
     private static final int ITEM_DEPTH = 10;
 
-    private Class _class;
     protected void store() throws Exception {
         Item item = TAItem.newItem(ITEM_DEPTH);
         item._isRoot = true;
-        _class = item.getClass();
         store(item);
     }
     
     public void testRefresh() {
         ExtObjectContainer client1 = openNewClient();
         ExtObjectContainer client2 = openNewClient();
-        Item item1 = (Item) retrieveInstance(client1);
-        Item item2 = (Item) retrieveInstance(client2);
+        Item item1 = retrieveInstance(client1);
+        Item item2 = retrieveInstance(client2);
 
         Item next1 = item1;
         int value = 10;
@@ -51,10 +49,9 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
             value --;
         }
         
-        //update depth = 1
         item1.setValue(100);
         item1.next().setValue(200);
-        client1.set(item1);
+        client1.set(item1, 2);
         client1.commit();
         
         Assert.areEqual(100, item1.getValue());
@@ -86,7 +83,7 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
             next1 = next1.next();
             value++;
         }
-        client1.set(item1);
+        client1.set(item1, 5);
         client1.commit();
         
         client2.refresh(item2, 5);
@@ -97,11 +94,11 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
         }
     }
 
-    private Object retrieveInstance(ExtObjectContainer client) {
+    private Item retrieveInstance(ExtObjectContainer client) {
         Query query = client.query();
-        query.constrain(_class);
+        query.constrain(Item.class);
         query.descend("_isRoot").constrain(new Boolean(true));
-        return query.execute().next();
+        return (Item)query.execute().next();
     }
     
     private ExtObjectContainer openNewClient() {
