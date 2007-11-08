@@ -9,13 +9,11 @@ import com.db4o.drs.inside.ReplicationReference;
 import com.db4o.drs.inside.ReplicationReflector;
 import com.db4o.drs.inside.TestableReplicationProvider;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
-import com.db4o.drs.inside.traversal.GenericTraverser;
-import com.db4o.drs.inside.traversal.Traverser;
-import com.db4o.drs.inside.traversal.Visitor;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.TimeStampIdGenerator;
 import com.db4o.foundation.Visitor4;
+import com.db4o.internal.traversal.*;
 import com.db4o.reflect.Reflector;
 
 import java.util.IdentityHashMap;
