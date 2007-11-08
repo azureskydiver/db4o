@@ -27,7 +27,7 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
         return item;
     }
     
-    public void testDeactivateDepth() throws Exception {
+    public void _testDeactivateDepth() throws Exception {
     	final LinkedListItem item = queryItem();
     	final LinkedList list = item.list;
     	final LinkedList next1 = list.nextN(1);
