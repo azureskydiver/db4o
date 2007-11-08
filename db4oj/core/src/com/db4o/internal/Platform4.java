@@ -189,7 +189,7 @@ public final class Platform4 {
         } else {
             ReflectClass claxx = stream.reflector().forObject(obj);
             if (claxx.isArray()) {
-                Iterator4 objects = arrayIterator(stream, claxx, obj);
+                Iterator4 objects = ArrayHandler.iterator(claxx, obj);
                 while (objects.moveNext()) {
                     flattenCollection1(stream, objects.current(), col);
                 }
@@ -198,14 +198,6 @@ public final class Platform4 {
             }
         }
     }
-
-	private static Iterator4 arrayIterator(ObjectContainerBase stream,
-			ReflectClass claxx, Object array) {
-		if (claxx.getComponentType().isArray()) {
-		    return new MultidimensionalArrayHandler(stream, null, false).allElements(array);
-		}
-		return new ArrayHandler(stream, null, false).allElements(array);
-	}
 
     static final void flattenCollection2(final ObjectContainerBase a_stream, Object a_object, final com.db4o.foundation.Collection4 col) {
         Reflector reflector = a_stream.reflector();

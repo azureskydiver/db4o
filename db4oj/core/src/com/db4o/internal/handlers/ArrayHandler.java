@@ -12,7 +12,6 @@ import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
-import com.db4o.reflect.generic.GenericReflector;
 
 /**
  * @exclude
@@ -298,16 +297,14 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 		}
 		return classReflector();
 	}
-    
-    public static Iterator4 iterator(ObjectContainerBase stream, Object obj) {
-    	final GenericReflector reflector = stream.reflector();
-		ReflectClass claxx = reflector.forObject(obj);
-		ReflectArray reflectArray = reflector.array();
-        if(reflectArray.isNDimensional(claxx)) {
+
+	public static Iterator4 iterator(ReflectClass claxx, Object obj) {
+		ReflectArray reflectArray = claxx.reflector().array();
+        if (reflectArray.isNDimensional(claxx)) {
 		    return MultidimensionalArrayHandler.allElements(reflectArray, obj);
 		}
 		return ArrayHandler.allElements(reflectArray, obj);
-    }
+	}
     
     protected final int classID(Object obj){
         ReflectClass claxx = componentType(obj);
