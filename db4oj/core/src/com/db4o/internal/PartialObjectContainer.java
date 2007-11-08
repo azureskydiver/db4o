@@ -1666,7 +1666,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         final ReflectClass clazz = reflector().forObject(obj);
 		if (clazz.isArray()) {
 			if (!clazz.getComponentType().isPrimitive()) {
-                Iterator4 arr = ArrayHandler.iterator(_this, obj);
+                Iterator4 arr = ArrayHandler.iterator(clazz, obj);
                 while (arr.moveNext()) {
                 	final Object current = arr.current();
                     if(current == null){
