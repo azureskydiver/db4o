@@ -19,11 +19,10 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 	public void cascadeActivation(
 		Transaction trans,
 		Object onObject,
-		ActivationDepth depth,
-		boolean activate) {
+		ActivationDepth depth) {
 		ClassMetadata classMetadata = forObject(trans, onObject, false);
 		if (classMetadata != null) {
-			classMetadata.cascadeActivation(trans, onObject, depth, activate);
+			classMetadata.cascadeActivation(trans, onObject, depth);
 		}
 	}
     

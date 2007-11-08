@@ -106,7 +106,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     private final void activateFieldsLoop(Transaction trans, Object obj, ActivationDepth depth) {
         for (int i = 0; i < i_fields.length; i++) {
-            i_fields[i].cascadeActivation(trans, obj, depth, true);
+            i_fields[i].cascadeActivation(trans, obj, depth);
         }
         if (i_ancestor != null) {
             i_ancestor.activateFieldsLoop(trans, obj, depth);
@@ -303,8 +303,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public void cascadeActivation(
         Transaction trans,
         Object onObject,
-        ActivationDepth depth,
-        boolean activate) {
+        ActivationDepth depth) {
         
         if(descendOnCascadingActivation()){
             depth = depth.descend(this);
@@ -315,15 +314,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
         
         ObjectContainerBase stream = trans.container();
-        if (activate) {
-            // FIXME: [TA] do we need to check for isValueType here?
+        if (depth.mode().isDeactivate()) {
+        	stream.stillToDeactivate(trans, onObject, depth, false);
+        } else {
+        	// FIXME: [TA] do we need to check for isValueType here?
             if(isValueType()){
                 activateFields(trans, onObject, depth);
             }else{
                 stream.stillToActivate(trans, onObject, depth);
             }
-        } else {
-            stream.stillToDeactivate(trans, onObject, depth, false);
         }
     }
 
