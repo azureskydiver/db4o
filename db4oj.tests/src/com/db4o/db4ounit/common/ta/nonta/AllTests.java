@@ -12,13 +12,13 @@ public class AllTests extends Db4oTestSuite {
 
     protected Class[] testCases() {
         return new Class[] {
-                NonTAArrayTestCase.class,
-                NonTADateTestCase.class,
-                NonTAIntTestCase.class,
-                NonTALinkedListTestCase.class,
-                NonTANArrayTestCase.class,
-                NonTARefreshTestCase.class,
-                NonTAStringTestCase.class,
+            NonTAArrayTestCase.class,
+            NonTADateTestCase.class,
+            NonTAIntTestCase.class,
+            NonTALinkedListTestCase.class,
+            NonTANArrayTestCase.class,
+            NonTARefreshTestCase.class,
+            NonTAStringTestCase.class,
         };
     }
 
