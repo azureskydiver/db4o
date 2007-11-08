@@ -24,7 +24,7 @@ final class TranslatedFieldMetadata extends FieldMetadata
 
 	void deactivate(Transaction trans, Object onObject, ActivationDepth depth){
 		if(depth.requiresActivation()){
-			cascadeActivation(trans, onObject, depth, false);
+			cascadeActivation(trans, onObject, depth);
 		}
 		setOn(trans, onObject, null);
 	}

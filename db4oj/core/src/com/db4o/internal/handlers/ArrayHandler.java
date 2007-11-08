@@ -61,8 +61,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     public final void cascadeActivation(
         Transaction trans,
         Object onObject,
-        ActivationDepth depth,
-        boolean activate) {
+        ActivationDepth depth) {
         
         if (! (_handler instanceof ClassMetadata)) {
             return;
@@ -73,10 +72,10 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         	final Object current = all.current();
             ActivationDepth elementDepth = descend(depth, current);
             if(elementDepth.requiresActivation()){
-            	if (activate) {
-            		container().stillToActivate(trans, current, elementDepth);
-            	} else {
+            	if (depth.mode().isDeactivate()) {
             		container().stillToDeactivate(trans, current, elementDepth, false);
+            	} else {
+            		container().stillToActivate(trans, current, elementDepth);
             	}
             }
         }

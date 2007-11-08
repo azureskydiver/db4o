@@ -282,7 +282,7 @@ public class FieldMetadata implements StoredField {
         return true;
     }
 
-    final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth, boolean activate) {
+    final void cascadeActivation(Transaction trans, Object onObject, ActivationDepth depth) {
         if (! alive()) {
             return;
         }
@@ -294,7 +294,7 @@ public class FieldMetadata implements StoredField {
         if (cascadeTo == null) {
         	return;
         }
-        firstClassHandler.cascadeActivation(trans, cascadeTo, depth,activate);
+        firstClassHandler.cascadeActivation(trans, cascadeTo, depth);
     }
 
     private void checkDb4oType() {
@@ -392,7 +392,7 @@ public class FieldMetadata implements StoredField {
 			return;
 		}
 		if (a_depth.requiresActivation()) {
-			cascadeActivation(a_trans, a_onObject, a_depth, false);
+			cascadeActivation(a_trans, a_onObject, a_depth);
 		}
 		if (!isEnumClass) {
 			_javaField.set(a_onObject, null);

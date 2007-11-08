@@ -31,7 +31,7 @@ public final class ActivationMode {
 		return "PEEK";
 	}
 
-	private boolean isDeactivate() {
+	public boolean isDeactivate() {
 		return this == DEACTIVATE;
 	}
 
