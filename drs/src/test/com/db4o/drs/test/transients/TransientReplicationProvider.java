@@ -9,6 +9,7 @@ import com.db4o.drs.inside.ReplicationReference;
 import com.db4o.drs.inside.ReplicationReflector;
 import com.db4o.drs.inside.TestableReplicationProvider;
 import com.db4o.drs.inside.TestableReplicationProviderInside;
+import com.db4o.drs.inside.traversal.*;
 import com.db4o.ext.Db4oUUID;
 import com.db4o.foundation.Collection4;
 import com.db4o.foundation.TimeStampIdGenerator;

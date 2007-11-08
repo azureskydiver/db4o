@@ -1,4 +1,4 @@
-package com.db4o.internal.traversal;
+package com.db4o.drs.inside.traversal;
 
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
