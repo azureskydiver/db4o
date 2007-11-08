@@ -26,7 +26,6 @@ class AntFileSetPathRoot implements FilePathRoot, ClassFilter {
 			DirectoryScanner scanner = _fileSets[fileSetIdx].getDirectoryScanner();
 			scanner.scan();
 			_scanners[fileSetIdx] = scanner;
-			System.err.println(scanner);
 		}
 	}
 	
