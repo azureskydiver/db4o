@@ -29,29 +29,25 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
     
     public void testDeactivateDepth() throws Exception {
     	final LinkedListItem item = queryItem();
-    	final LinkedList list = item.list;
-    	final LinkedList next1 = list.nextN(1);
-    	final LinkedList next2 = list.nextN(2);
-    	final LinkedList next3 = list.nextN(3);
-    	final LinkedList next4 = list.nextN(4);
-    	final LinkedList next5 = list.nextN(5);
+    	final LinkedList level1 = item.list;
+    	final LinkedList level2 = level1.nextN(1);
+    	final LinkedList level3 = level1.nextN(2);
+    	final LinkedList level4 = level1.nextN(3);
+    	final LinkedList level5 = level1.nextN(4);
     	
-    	Assert.isNotNull(list.next);
-    	Assert.isNotNull(next1.next);
-    	Assert.isNotNull(next2.next);
-    	Assert.isNotNull(next3.next);
-    	Assert.isNotNull(next4.next);
-    	Assert.isNotNull(next5.next);
+    	Assert.isNotNull(level1.next);
+    	Assert.isNotNull(level2.next);
+    	Assert.isNotNull(level3.next);
+    	Assert.isNotNull(level4.next);
+    	Assert.isNotNull(level5.next);
     	
-    	db().deactivate(list, 4);
+    	db().deactivate(level1, 4);
     	
-    	assertDeactivated(list);
-    	assertDeactivated(next1);
-    	assertDeactivated(next2);
-    	assertDeactivated(next3);
-    	assertDeactivated(next4);
-    	
-    	Assert.isNotNull(next5.next);
+    	assertDeactivated(level1);
+    	assertDeactivated(level2);
+    	assertDeactivated(level3);
+    	assertDeactivated(level4);
+    	Assert.isNotNull(level5.next);
     }
 
 	private void assertDeactivated(final LinkedList list) {

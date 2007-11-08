@@ -507,7 +507,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 	public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
         if(objectCanDeactivate(trans, obj)){
-            deactivateFields(trans, obj, depth.descend(this));
+            deactivateFields(trans, obj, depth);
             objectOnDeactivate(trans, obj);
         }
     }
