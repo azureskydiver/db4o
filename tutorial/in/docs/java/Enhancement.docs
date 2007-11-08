@@ -78,9 +78,9 @@ the reference documentation.
 
 The simplest enhancer task does both: It optimizes Native Queries ._
 and it adds the Activatable interface to your classes, making sure ._
-a persistent object is activated whenever any field is accessed.
+a persistent object is activated whenever any field is read.
 
-Here is an example of how an Ant script could look like. This script ._
+Here is an example of how an  .l http://ant.apache.org/ Ant ..  script could look like. This script ._
 enhances all class files in-place, in the /bin directory of your project:
 
 .c <?xml version="1.0"?> 
@@ -106,8 +106,9 @@ enhances all class files in-place, in the /bin directory of your project:
 	
 </project> ..
 
-If you use Eclipse, there is a very convenient way to make sure an Ant ._
-script is executed every time after compilation and before you run your ._ 
+If you use Eclipse, there is a very convenient way to make ._
+sure an  .l http://ant.apache.org/ Ant ..  script ._
+is executed every time after compilation and before you run your ._ 
 application: You can add a builder to your project. To do this, right ._ 
 click on your project, choose "Properties" + "Builders" + "New" + ._
 "Ant Builder" and enter the name of the build file you created. 
@@ -183,7 +184,7 @@ a query execution listener as follows:
 }); ..c
 
 The listener will be notified on each native query call and will be ._
-passed the Predicate object processed, the optimized expression tree (if
+passed the Predicate object processed, the optimized expression tree (if ._
 successful) and the success status of the optimization run:
 
 NativeQueryHandler.UNOPTIMIZED ("UNOPTIMIZED")
