@@ -4,10 +4,10 @@ package com.db4o.db4ounit.common.ta;
 
 import db4ounit.extensions.*;
 
-public class AllTests extends Db4oTestSuite {
+public class AllCommonTATests extends Db4oTestSuite {
 	
 	public static void main(String[] args) {
-		new AllTests().runAll();
+		new AllCommonTATests().runAll();
 	}
 	
 	protected Class[] testCases() {

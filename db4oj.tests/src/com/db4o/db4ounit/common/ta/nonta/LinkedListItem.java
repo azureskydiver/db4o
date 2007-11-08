@@ -4,16 +4,6 @@ package com.db4o.db4ounit.common.ta.nonta;
 
 import com.db4o.db4ounit.common.ta.*;
 
-
 public class LinkedListItem {
-		
-		public LinkedList list;
-
-		public LinkedListItem() {
-
-		}
-		
-		public LinkedList list() {
-			return list;
-		}
-	}
+	public LinkedList list;
+}

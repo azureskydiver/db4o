@@ -18,7 +18,7 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
 	}
 
     protected void assertItemValue(Object obj) {
-        Assert.areEqual(LIST, ((LinkedListItem)obj).list());
+        Assert.areEqual(LIST, ((LinkedListItem)obj).list);
     }
 
     protected Object createItem() {
@@ -27,7 +27,7 @@ public class NonTALinkedListTestCase extends NonTAItemTestCaseBase {
         return item;
     }
     
-    public void _testDeactivateDepth() throws Exception {
+    public void testDeactivateDepth() throws Exception {
     	final LinkedListItem item = queryItem();
     	final LinkedList list = item.list;
     	final LinkedList next1 = list.nextN(1);
