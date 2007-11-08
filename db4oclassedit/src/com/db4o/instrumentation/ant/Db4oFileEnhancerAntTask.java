@@ -39,7 +39,7 @@ public class Db4oFileEnhancerAntTask extends Task {
 		_jars.add(fileSet);
 	}
 
-	public void setTargetdir(String targetDir) {
+	public void setClassTargetDir(String targetDir) {
 		_targetDir=targetDir;
 	}
 
