@@ -6,10 +6,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.yetac.doctor.*;
 import com.yetac.doctor.writers.DocsWriter;
 
 public class Source extends Command{
+    
     public final static String CMD_RUN="run";
     public final static String CMD_OUTPUT="out";
     public final static String CMD_FULL="{}";
