@@ -35,24 +35,26 @@ Let's configure db4o to run in Transparent Activation mode and let's try again:
 
 .s com.db4o.f1.chapter7.TransparentActivationExample#retrieveSnapshotsSequentially ..
 
-Wow it worked! Is it really that easy? To be honest, not quite.
+Wow it worked! Is it really that easy? Principally yes. When db4o is run in ._
+Transparent Activation mode there are no surprises with null members that ._
+have not yet been read from the database. 
                 
 .? net .1 Implementing IActivatable ..1 ..?                
 .? java .1 Implementing Activatable ..1 ..?
 
 When Transparent Activation is turned on, all objects that do not implement ._
-the  .? net Db4objects.Db4o.TA.I ..? .? java com.db4o.ta. ..?Activatable interface will be fully activated when they are ._
-used. 
+the  .? net Db4objects.Db4o.TA.I ..? .? java com.db4o.ta. ..?Activatable interface will ._
+be fully activated when they are used. 
 
 Although we wont get any surprises with null objects when we work in this mode, ._
-access to the root of ._
-a deep graph will still load the entire graph into memory.
+access to the root of a deep graph may load the entire graph into memory and that ._
+can take a long time and use a lot of memory.
 
-To prevent full activation we have to implement the 'Activatable' interface ._
-with at least some of our persistent classes. Whenever db4o comes across ._
+To prevent immediate activation of a class you can implement the 'Activatable' ._
+interface. Whenever db4o comes across ._
 an 'Activatable' object while activating a graph of objects it will stop ._
 traversing the graph any deeper. db4o will "know" that it can activate ._
-these objects on demand later, so there is no reason to continue activation ._
+'Activatable objects on demand, so there is no reason to continue activation ._
 until these objects are really needed. 
 
 For demonstration purposes we have made all classes used in this example ._
