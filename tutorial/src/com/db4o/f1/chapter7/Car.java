@@ -27,7 +27,6 @@ public class Car implements Activatable {
     }
 
     public void setPilot(Pilot pilot) {
-        activate();
         this.pilot=pilot;
     }
 
@@ -52,12 +51,10 @@ public class Car implements Activatable {
     }
 
     protected double pollOilTemperature() {
-        activate();
         return 0.1*countHistoryElements();
     }
 
     protected double pollWaterTemperature() {
-        activate();
         return 0.2*countHistoryElements();
     }
 

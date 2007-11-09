@@ -59,13 +59,16 @@ compiled class files. In all our tests the Eclipse debugger simply ._
 ignored additional statements and stepped over them and debugging ._
 worked perfectly as usual.
 
-The db4o enhancer technology is new and we rely on the community ._
-for feedback. For now we recommend to instrument files in-place. Should ._
-you experience problems with your environment, please report them back ._
-to the  .l http://developer.db4o.com/forums/default.aspx db4o forums ..  . ._
-A possible strategy to resolve problems with in-place enhancement would be ._
-to use different output directories than /bin and /lib as output paths ._
-for the enhancer and to run your enhanced application from there.  
+The db4o enhancer technology is new. Not all possible development environment ._
+setups have been checked by the db4o team and there may be incompatibility ._
+issues with your IDE when enhancing class and library files in place. By trying ._
+out in-place enhancement with your setup and by reporting back issues to ._
+the  .l http://developer.db4o.com/forums/default.aspx db4o forums ..  you ._
+can help the db4o team to improve enhancement for your personal setup. A ._
+possible strategy to resolve problems with in-place enhancement ._
+would be to use different output directories than /bin and /lib as ._
+output paths for the enhancer and to run your enhanced application ._
+from there.  
 
 .2 Enhancing with Ant ..
 
@@ -80,8 +83,10 @@ The simplest enhancer task does both: It optimizes Native Queries ._
 and it adds the Activatable interface to your classes, making sure ._
 a persistent object is activated whenever any field is read.
 
-Here is an example of how an  .l http://ant.apache.org/ Ant ..  script could look like. This script ._
-enhances all class files in-place, in the /bin directory of your project:
+Here is an example of how an  .l http://ant.apache.org/ Ant ..  script ._
+could look like. This script enhances all class files and jar files ._
+except for the db4o libraries in-place, in the /bin and /lib directory ._
+of your project: 
 
 .c <?xml version="1.0"?> 
 <project name="db4o enhance project" default="enhance" basedir=".">
@@ -98,11 +103,17 @@ enhances all class files in-place, in the /bin directory of your project:
 		classpathref="project.classpath" />
 	
 	<target name="enhance">
-		<db4o-enhance targetdir="${basedir}/bin">
+		<db4o-enhance classtargetdir="${basedir}/bin" jartargetdir="${basedir}/lib">
 			<classpath refid="project.classpath" />		
 			<sources dir="${basedir}/bin" />
+			<jars dir="${basedir}/lib">
+				<include name="*.jar" />
+				<exclude name="db4o-*.jar" />
+				<exclude name="ant.jar" />
+				<exclude name="bloat-1.0.jar" />
+			</jars>
 		</db4o-enhance>
-	</target> 
+	</target>
 	
 </project> ..
 
