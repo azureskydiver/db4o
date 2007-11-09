@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="project" default="pdf.java">
 	<target name="init">
-		<property name="dir.workspace" value="D:/working/trunk" />
-		<property name="dir.db4obuild" value="${dir.workspace}/db4obuild"/>
-		
-		<property name="dir.pdf.conversion" value="${dir.db4obuild}/dist/java/html2pdf" />
-		<property name="dir.reference.java" value="${dir.workspace}/docWiki/java" />
-		<property name="dir.reference.net" value="${dir.workspace}/docWiki/net" />
+		<property file="ant.properties" />
+		<property name="dir.reference.java" value="${dir.docWiki}/java" />
+		<property name="dir.reference.net" value="${dir.docWiki}/net" />
 		<property name="dir.content.xml" value="${dir.pdf.conversion}/content.xml" />
-		
-		<property name="dir.acrobat" value="C:/Program Files/Adobe/Acrobat 8.0/Acrobat/" />
 		
 		<property name="lib" value="lib" />
 		<property name="bin" value="bin" />
