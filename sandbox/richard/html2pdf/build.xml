@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="project" default="pdf.java">
+	<target name="init">
+		<property name="dir.workspace" value="D:/working/trunk" />
+		<property name="dir.db4obuild" value="${dir.workspace}/db4obuild"/>
+		
+		<property name="dir.pdf.conversion" value="${dir.db4obuild}/dist/java/html2pdf" />
+		<property name="dir.reference.java" value="${dir.workspace}/docWiki/java" />
+		<property name="dir.reference.net" value="${dir.workspace}/docWiki/net" />
+		<property name="dir.content.xml" value="${dir.pdf.conversion}/content.xml" />
+		
+		<property name="dir.acrobat" value="C:/Program Files/Adobe/Acrobat 8.0/Acrobat/" />
+		
+		<property name="lib" value="lib" />
+		<property name="bin" value="bin" />
+		<property name="src" value="src" />
+		
+		<delete dir="${dir.pdf.conversion}" />
+		<mkdir dir="${dir.pdf.conversion}" />
+		
+	</target>
+	
+    <target name="pdf.java" depends="init">
+    	<property name="dir.reference" value="${dir.reference.java}" />
+    	<antcall target="convert" />
+    </target>
+
+    <target name="pdf.net" depends="init">
+    	<property name="dir.reference" value="${dir.reference.net}" />
+    	<antcall target="convert" />
+    </target>
+
+    	
+    <target name="convert" depends="init, build.html2pdf">
+		<java fork="true" 
+				jar="${lib}/tidy.jar"
+				output="${dir.content.xml}"
+				error="fake.error">
+			<arg line="-config ${lib}/tidy.config"/>
+			<arg line="-asxml" />
+			<arg line="${dir.reference}/html/_contents.html" />
+		</java>
+    	
+    	<java classname="tools.HTML2PDF" failonerror="true">
+    		<classpath>
+    			<pathelement location="bin" />
+    		</classpath>
+    		<arg line="-ref ${dir.reference}" />
+    		<arg line="-conv ${dir.pdf.conversion}" />
+    		<arg line="-content ${dir.content.xml}" />
+    	</java>
+    	
+		<copy todir="${dir.acrobat}/Javascripts" overwrite="true" >
+			<fileset dir="${dir.pdf.conversion}">
+				<include name="*.js" />
+			</fileset>
+		</copy>
+    	
+    	<!--You have to quit Acrobat.exe manually! -->
+		<exec executable="${dir.acrobat}/acrobat.exe"/>
+    	
+    </target>
+	
+	<target name="build.html2pdf">
+		<delete dir="${bin}"/>
+		<mkdir dir="${bin}" />
+		<javac srcdir="${src}" destdir="${bin}" />
+	</target>
+
+</project>
