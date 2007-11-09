@@ -33,9 +33,6 @@ public class HTML2PDF {
         String ref = options.get("-ref");
         String conv = options.get("-conv");
         String content = options.get("-content");
-        System.out.println("ref: " + ref);
-        System.out.println(conv);
-        System.out.println(content);
         
         if (ref.length() == 0
                 || conv.length() == 0
