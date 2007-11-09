@@ -170,6 +170,31 @@
 	
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
 	</target>
+
+	<target name="run-core-tests-instrumented">
+		<mkdir dir="${dir.dist.dll.net}/Instrumented" />
+					
+		<copy todir="${dir.dist.dll.net}/Instrumented">
+			<fileset dir="${dir.dist.dll.net}">
+				<include name="*Db4oUnit*" />
+				<include name="*Tests*" />
+				<include name="*.dll" />
+				<include name="*.exe" />
+			</fileset>
+		</copy>
+		
+		<exec executable="${dir.dist.dll.net}/Instrumented/Db4oAdmin.exe" dir="${dir.dist.dll.net}/Instrumented" failonerror="true" timeout="3600000">
+			<arg value="-ta"/>
+			<arg value="Db4objects.Db4o.Tests.exe" />
+		</exec>
+		
+		<exec 
+			executable="${dir.dist.dll.net}/Instrumented/Db4objects.Db4o.Tests.exe"
+			dir = "${dir.dist.dll.net}/Instrumented"
+			failonerror="true" timeout="3600000" />
+		
+		<delete dir="${dir.dist.dll.net}/Instrumented1" />
+	</target>
 	
 	<target name="run-tests-core" depends="build-tests">
 		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="3600000">
