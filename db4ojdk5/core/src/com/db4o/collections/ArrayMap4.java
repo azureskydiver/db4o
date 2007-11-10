@@ -148,9 +148,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @see com.db4o.ta.Activatable
 	 */
     public boolean isEmpty() {
-        activate();
-        
-        return (_endIndex - _startIndex) == 0;
+        return size() == 0;
     }
 
 	/**
