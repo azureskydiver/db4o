@@ -346,6 +346,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 	protected abstract void shutdownDataStorage();
 	
+	/**
+	 * @deprecated
+	 */
     public Db4oCollections collections(Transaction trans) {
         synchronized (_lock) {
             return Platform4.collections(checkTransaction(trans));
