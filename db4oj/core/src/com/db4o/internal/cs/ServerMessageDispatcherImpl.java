@@ -147,6 +147,9 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
                     return;
                 }
             } catch (Db4oIOException e) {
+            	if(DTrace.enabled){
+            		DTrace.ADD_TO_CLASS_INDEX.log(e.toString());
+            	}
                 return;
             }
         }

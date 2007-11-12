@@ -52,7 +52,7 @@ public abstract class DateHandlerBase extends LongHandler {
 	}
     
 	public static String now(){
-		return Platform4.format(new Date(), true);
+		return Platform4.format(Platform4.now(), true);
 	}
 	
 	long val(Object obj){

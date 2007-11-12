@@ -72,9 +72,12 @@ public class Db4oDatabase implements Db4oType, Internal4{
         if(Debug.staticIdentity){
             return STATIC_IDENTITY;
         }
+        StatefulBuffer writer = new StatefulBuffer(null, 300);
+        new LatinStringIO().write(writer, SignatureGenerator.generateSignature());
         return new Db4oDatabase(
-        		Unobfuscated.generateSignature(),
-        		System.currentTimeMillis());
+                writer.getWrittenBytes(),
+                System.currentTimeMillis());
+
     }
     
     /**
@@ -234,6 +237,6 @@ public class Db4oDatabase implements Db4oType, Internal4{
         }
         return null;
     }
-    
-    
 }
+    
+    

@@ -54,7 +54,7 @@ public final class UnicodeStringIO extends LatinStringIO{
 		}
 	}
 	
-	byte[] write(String str){
+	public byte[] write(String str){
 	    final int length = str.length();
 	    char[] chars = new char[length];
 	    str.getChars(0, length, chars, 0);

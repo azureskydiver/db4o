@@ -308,6 +308,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     final public boolean close() {
 		synchronized (_lock) {
+			if(DTrace.enabled){
+				DTrace.CLOSE_CALLED.logStack(this.toString());
+			}
 			close1();
 			return true;
 		}
@@ -688,6 +691,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     final void fatalException(Throwable t, int msgID) {
+    	if(DTrace.enabled){
+    		DTrace.FATAL_EXCEPTION.log(t.toString());
+    	}
 		Messages.logErr(configImpl(), (msgID == Messages.FATAL_MSG_ID ? 18
 				: msgID), null, t);
 		if (!isClosed()) {
@@ -1093,7 +1099,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    final boolean isInstantiating() {
+    public final boolean isInstantiating() {
         return _instantiating;
     }
 
