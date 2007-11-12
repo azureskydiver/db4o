@@ -12,8 +12,7 @@ import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
 import com.db4o.internal.cs.messages.*;
 
-public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable,
-		LoopbackSocketServer {
+public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable {
 	
 	private static final int START_THREAD_WAIT_TIMEOUT = 5000;
 
@@ -287,23 +286,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 //		return client;
  	    
 	}
-
-	public LoopbackSocket openClientSocket() {
-		int timeout = _config.timeoutClientSocket();
-		LoopbackSocket clientFake = new LoopbackSocket(this, timeout);
-		LoopbackSocket serverFake = new LoopbackSocket(this, timeout, clientFake);
-		try {
-			ServerMessageDispatcher messageDispatcher = new ServerMessageDispatcherImpl(this, new ClientTransactionHandle(_transactionPool),
-					serverFake, newThreadId(), true, _container.lock());
-			addServerMessageDispatcher(messageDispatcher);
-			messageDispatcher.startDispatcher();
-			return clientFake;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-
-	}
+	
 
 	void removeThread(ServerMessageDispatcherImpl dispatcher) {
 		synchronized (_dispatchers) {
