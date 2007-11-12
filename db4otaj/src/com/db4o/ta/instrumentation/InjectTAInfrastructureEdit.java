@@ -1,16 +1,8 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta.instrumentation;
 
-import EDU.purdue.cs.bloat.editor.ClassEditor;
-import EDU.purdue.cs.bloat.editor.FieldEditor;
-import EDU.purdue.cs.bloat.editor.Label;
-import EDU.purdue.cs.bloat.editor.LocalVariable;
-import EDU.purdue.cs.bloat.editor.MemberRef;
-import EDU.purdue.cs.bloat.editor.MethodEditor;
-import EDU.purdue.cs.bloat.editor.NameAndType;
-import EDU.purdue.cs.bloat.editor.Opcode;
-import EDU.purdue.cs.bloat.editor.Type;
-import EDU.purdue.cs.bloat.reflect.Modifiers;
+import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.reflect.*;
 
 import com.db4o.activation.Activator;
 import com.db4o.instrumentation.core.*;
@@ -90,6 +82,8 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		methodEditor.addInstruction(Opcode.opc_return);
 		
 		methodEditor.commit();
+		// FIXME
+		ce.constants().addConstant(Constant.METHOD_REF, createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, paramTypes, Type.VOID));
 	}
 
 	private void throwException(MethodEditor methodEditor, Class exceptionType) {
@@ -123,6 +117,8 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		methodEditor.addInstruction(Opcode.opc_return);
 		
 		methodEditor.commit();
+		// FIXME
+		ce.constants().addConstant(Constant.METHOD_REF, createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID));
 	}
 
 	private void loadThisOnStack(MethodEditor methodEditor) {
