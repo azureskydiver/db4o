@@ -99,6 +99,9 @@ public final class Platform4 {
     	return ReflectPlatform.forName(className) != null;
     }
     
+    /**
+     * @deprecated
+     */
     static Db4oCollections collections(Transaction transaction){
         return jdk().collections(transaction);
     }
@@ -546,10 +549,16 @@ public final class Platform4 {
     }
     
 	public static void registerCollections(GenericReflector reflector) {
-		reflector.registerCollection(P1Collection.class);
+		registerDeprecatedCollection(reflector);
 		jdk().registerCollections(reflector);
 	}
 
+	/**
+	 * @deprecated
+	 */
+	private static void registerDeprecatedCollection(GenericReflector reflector) {
+		reflector.registerCollection(P1Collection.class);
+	}
 
     synchronized static final void removeShutDownHook(PartialObjectContainer container) {
         if (!hasShutDownHook() || shutDownRunnable == null) {

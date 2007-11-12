@@ -26,7 +26,10 @@ public class JDK {
 		return null;
 	}
 	
-	/** @param transaction TODO*/
+	/**
+	 * @param transaction
+	 * @deprecated
+	 **/
 	Db4oCollections collections(Transaction transaction){
 	    return null;
 	}
