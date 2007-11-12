@@ -48,6 +48,9 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
         _server.bind(_transaction, obj, id);
     }
 
+    /**
+     * @deprecated
+     */
     public Db4oCollections collections() {
         return _server.collections(_transaction);
     }
