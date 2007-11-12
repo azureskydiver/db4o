@@ -37,7 +37,6 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 	
 	private final Object _mainLock;
 	
-	
     ServerMessageDispatcherImpl(ObjectServerImpl server,
 			ClientTransactionHandle transactionHandle, Socket4 socket,
 			int threadID, boolean loggedIn, Object mainLock) throws Exception {
@@ -268,9 +267,11 @@ public final class ServerMessageDispatcherImpl extends Thread implements ServerM
 		return _committedInfo;
 	}
 
-	public void committedInfo(CallbackObjectInfoCollections committedInfo) {
+	public void dispatchCommitted(CallbackObjectInfoCollections committedInfo) {
 		_committedInfo = committedInfo;
 	}
 	
-
+	public boolean willDispatchCommitted() {
+		return server().caresAboutCommitted();
+	}
 }

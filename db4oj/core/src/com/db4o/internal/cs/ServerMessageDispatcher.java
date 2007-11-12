@@ -10,7 +10,7 @@ import com.db4o.internal.cs.messages.*;
 /**
  * @exclude
  */
-public interface ServerMessageDispatcher extends MessageDispatcher {
+public interface ServerMessageDispatcher extends MessageDispatcher, CommittedCallbackDispatcher {
 
 	public String name();
 
@@ -37,15 +37,12 @@ public interface ServerMessageDispatcher extends MessageDispatcher {
 	public boolean close();
 	
 	public void closeConnection();
+
+	public void caresAboutCommitted(boolean care);
 	
 	public boolean caresAboutCommitted();
-	
-	public void caresAboutCommitted(boolean care);
 	
 	public boolean write(Msg msg);
 
 	public CallbackObjectInfoCollections committedInfo();
-	
-	public void  committedInfo(CallbackObjectInfoCollections committedInfo);
-	
 }
