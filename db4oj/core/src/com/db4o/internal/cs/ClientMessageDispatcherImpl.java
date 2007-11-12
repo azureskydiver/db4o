@@ -2,6 +2,7 @@
 
 package com.db4o.internal.cs;
 
+import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
@@ -52,6 +53,9 @@ class ClientMessageDispatcherImpl extends Thread implements ClientMessageDispatc
 			try {
 				message = Msg.readMessage(this, transaction(), i_socket);
 			} catch (Db4oIOException exc) {
+				if(DTrace.enabled){
+					DTrace.CLIENT_MESSAGE_LOOP_EXCEPTION.log(exc.toString());
+				}
 			    return;
             }
 			if(message == null){

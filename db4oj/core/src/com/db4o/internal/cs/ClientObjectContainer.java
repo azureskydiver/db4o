@@ -311,6 +311,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		try {
 			msg = (Msg)_messageQueue.next();
 		} catch (BlockingQueueStoppedException e) {
+			if(DTrace.enabled){
+				DTrace.BLOCKING_QUEUE_STOPPED_EXCEPTION.log(e.toString());
+			}
 			msg = Msg.ERROR;
 		}
 		if(msg == Msg.ERROR) {	

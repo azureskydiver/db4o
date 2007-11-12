@@ -20,7 +20,7 @@ public class P2Collections implements Db4oCollections{
 
     public Db4oList newLinkedList() {
         synchronized(lock()) {
-	        if(Unobfuscated.createDb4oList(container())){
+        	if(canCreateCollection(container())){
 	            Db4oList l = new P2LinkedList();
 	            container().set(_transaction, l);
 	            return l;
@@ -31,7 +31,7 @@ public class P2Collections implements Db4oCollections{
 
     public Db4oMap newHashMap(int a_size) {
         synchronized(lock()) {
-	        if(Unobfuscated.createDb4oList(container())){
+        	if(canCreateCollection(container())){
 	            return new P2HashMap(a_size);
 	        }
 	        return null;
@@ -40,7 +40,7 @@ public class P2Collections implements Db4oCollections{
     
     public Db4oMap newIdentityHashMap(int a_size) {
         synchronized(lock()) {
-	        if(Unobfuscated.createDb4oList(container())){
+	        if(canCreateCollection(container())){
 	            P2HashMap m = new P2HashMap(a_size);
 	            m.i_type = 1;
 	            container().set(_transaction, m);
@@ -57,5 +57,10 @@ public class P2Collections implements Db4oCollections{
     private ObjectContainerBase container(){
         return _transaction.container();
     }
+    
+	private boolean canCreateCollection(ObjectContainerBase container){
+	    container.checkClosed();
+	    return ! container.isInstantiating();
+	}
 
 }

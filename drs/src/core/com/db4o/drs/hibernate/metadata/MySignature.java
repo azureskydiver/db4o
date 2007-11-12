@@ -2,6 +2,7 @@
 
 package com.db4o.drs.hibernate.metadata;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 /**
@@ -15,7 +16,9 @@ import com.db4o.internal.*;
 public class MySignature extends ProviderSignature {
 	public static MySignature generateSignature() {
 		MySignature out = new MySignature();
-		out.setSignature(Unobfuscated.generateSignature());
+		StatefulBuffer writer = new StatefulBuffer(null, 300);
+	        new LatinStringIO().write(writer, SignatureGenerator.generateSignature());
+		out.setSignature(writer.getWrittenBytes());
 		return out;
 	}
 

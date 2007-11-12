@@ -657,4 +657,13 @@ public final class Platform4 {
 	public static Reflector reflectorForType(Class clazz) {
 		return jdk().reflectorForType(clazz);
 	}
+	
+	public static String stackTrace(){
+		return StackTracer.stackTrace();
+	}
+	
+	public static Date now(){
+		return new Date();
+	}
+	
 }
