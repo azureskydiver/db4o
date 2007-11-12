@@ -176,10 +176,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		int serverThreadID = expectedByteResponse(Msg.ID_LIST).readInt();
 
 		Socket4 sock = i_socket.openParalellSocket();
-
-		if (!(i_socket instanceof LoopbackSocket)) {
-			loginToServer(sock);
-		}
+		loginToServer(sock);
 
 		if (switchedToFile != null) {
 			MsgD message = Msg.SWITCH_TO_FILE.getWriterForString(systemTransaction(),
