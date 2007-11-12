@@ -231,28 +231,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 
         if (Debug.configureAllClasses) {
             if (config == null) {
-
-                boolean skip = false;
-
-                Class[] ignore = new Class[] { P1HashElement.class,
-                    P1ListElement.class, P1Object.class, P1Collection.class,
-
-                    // XXX You may need the following for indexing tests. 
-
-                    //                        P2HashMap.class,
-                    //                        P2LinkedList.class,
-
-                    StaticClass.class, StaticField.class
-
-                };
-                for (int i = 0; i < ignore.length; i++) {
-                    if (ignore[i].getName().equals(className)) {
-                        skip = true;
-                        break;
-                    }
-
-                }
-                if (!skip) {
+                if (!isIgnoredClass(className)) {
                     config = (Config4Class) objectClass(className);
                 }
 
@@ -260,6 +239,29 @@ public final class Config4Impl implements Configuration, DeepClone,
         }
         return config;
     }
+
+    /**
+     * @deprecated using deprecated api
+     */
+	private boolean isIgnoredClass(String className) {
+		Class[] ignore = new Class[] { P1HashElement.class,
+		    P1ListElement.class, P1Object.class, P1Collection.class,
+
+		    // XXX You may need the following for indexing tests. 
+
+		    //                        P2HashMap.class,
+		    //                        P2LinkedList.class,
+
+		    StaticClass.class, StaticField.class
+		};
+		for (int i = 0; i < ignore.length; i++) {
+		    if (ignore[i].getName().equals(className)) {
+		        return true;
+		    }
+
+		}
+		return false;
+	}
 
     public Object deepClone(Object param) {
         Config4Impl ret = new Config4Impl();
