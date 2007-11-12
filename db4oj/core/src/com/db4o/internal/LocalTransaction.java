@@ -5,7 +5,6 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.callbacks.*;
-import com.db4o.internal.cs.*;
 import com.db4o.internal.freespace.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
@@ -15,7 +14,7 @@ import com.db4o.internal.slots.*;
  */
 public class LocalTransaction extends Transaction {
 
-    private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
+	private final byte[] _pointerBuffer = new byte[Const4.POINTER_LENGTH];
     
     protected final StatefulBuffer i_pointerIo;    
     
@@ -28,11 +27,22 @@ public class LocalTransaction extends Transaction {
     private Tree _writtenUpdateDeletedMembers;
     
 	protected final LocalObjectContainer _file;
+	
+	private final CommittedCallbackDispatcher _committedCallbackDispatcher;
 
 	public LocalTransaction(ObjectContainerBase container, Transaction parentTransaction, TransactionalReferenceSystem referenceSystem) {
 		super(container, parentTransaction, referenceSystem);
 		_file = (LocalObjectContainer) container;
         i_pointerIo = new StatefulBuffer(this, Const4.POINTER_LENGTH);
+        
+        _committedCallbackDispatcher = new CommittedCallbackDispatcher() {
+    		public boolean willDispatchCommitted() {
+    			return callbacks().caresAboutCommitted();
+    		}
+    		public void dispatchCommitted(CallbackObjectInfoCollections committedInfo) {
+    			callbacks().commitOnCompleted(LocalTransaction.this, committedInfo);
+    		}
+    	};
 	}
 	
 	public LocalObjectContainer file() {
@@ -40,40 +50,36 @@ public class LocalTransaction extends Transaction {
 	}
 	
     public void commit() {
-    	commit(null);
+    	commit(_committedCallbackDispatcher);
     }
     
-    public void commit(ServerMessageDispatcher dispatcher) {
+    public void commit(CommittedCallbackDispatcher dispatcher) {
         synchronized (container()._lock) {
         	if(doCommittingCallbacks()){
-        		callbacks().commitOnStarted(this, collectCallbackObjectInfos(dispatcher));
+        		callbacks().commitOnStarted(this, collectCallbackObjectInfos());
         	}
             freespaceBeginCommit();
             commitImpl();
-            CallbackObjectInfoCollections committedInfo = null;
-        	if(doCommittedCallbacks(dispatcher)){
-        		committedInfo = collectCallbackObjectInfos(dispatcher);
-        	} 
+            CallbackObjectInfoCollections committedInfo = committedInfoFor(dispatcher); 
             commitClearAll();
             freespaceEndCommit();
-            if(doCommittedCallbacks(dispatcher)){
-    	        if(dispatcher == null){
-    	        	callbacks().commitOnCompleted(this, committedInfo);
-    	        } else {
-    	        	dispatcher.committedInfo(committedInfo);
-    	        }
+            if (null != committedInfo) {
+    	        dispatcher.dispatchCommitted(committedInfo);
             } 
         }
     }
 
-    private boolean doCommittedCallbacks(ServerMessageDispatcher dispatcher) {
+	private CallbackObjectInfoCollections committedInfoFor(CommittedCallbackDispatcher dispatcher) {
+		return doCommittedCallbacks(dispatcher)
+			? collectCallbackObjectInfos()
+			: null;
+	}
+
+    private boolean doCommittedCallbacks(CommittedCallbackDispatcher dispatcher) {
         if (isSystemTransaction()){
             return false;
         }
-        if(dispatcher != null){
-            return dispatcher.server().caresAboutCommitted();
-        }
-		return callbacks().caresAboutCommitted();
+		return dispatcher.willDispatchCommitted();
 	}
 
 	private boolean doCommittingCallbacks() {
@@ -689,7 +695,7 @@ public class LocalTransaction extends Transaction {
 		return container().callbacks();
 	}
 
-	private CallbackObjectInfoCollections collectCallbackObjectInfos(ServerMessageDispatcher serverMessageDispatcher) {
+	private CallbackObjectInfoCollections collectCallbackObjectInfos() {
 		if (null == _slotChanges) {
 			return CallbackObjectInfoCollections.EMTPY;
 		}
@@ -709,7 +715,7 @@ public class LocalTransaction extends Transaction {
 				}
 			}
 		});
-		return new CallbackObjectInfoCollections (serverMessageDispatcher, new ObjectInfoCollectionImpl(added), new ObjectInfoCollectionImpl(updated), new ObjectInfoCollectionImpl(deleted));
+		return new CallbackObjectInfoCollections (new ObjectInfoCollectionImpl(added), new ObjectInfoCollectionImpl(updated), new ObjectInfoCollectionImpl(deleted));
 	}
 	
     private void setAddress(int a_address) {
