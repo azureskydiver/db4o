@@ -83,7 +83,10 @@ public class LocalTransaction extends Transaction {
 	}
 
 	private boolean doCommittingCallbacks() {
-		return ! isSystemTransaction() && callbacks().caresAboutCommitting();
+		if (isSystemTransaction()) {
+			return false;
+		}
+		return callbacks().caresAboutCommitting();
 	}
     
 	public void enlist(TransactionParticipant participant) {
