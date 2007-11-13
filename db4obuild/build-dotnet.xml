@@ -171,27 +171,43 @@
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
 	</target>
 
-	<target name="run-core-tests-instrumented">
+	<target name="run-core-tests-instrumented" depends="configure, build-admin, build-tests">
+		<delete dir="${dir.dist.dll.net}/Instrumented" />
+		
 		<mkdir dir="${dir.dist.dll.net}/Instrumented" />
 					
 		<copy todir="${dir.dist.dll.net}/Instrumented">
 			<fileset dir="${dir.dist.dll.net}">
-				<include name="*Db4oUnit*" />
-				<include name="*Tests*" />
 				<include name="*.dll" />
 				<include name="*.exe" />
+				<include name="*.pdb" />
 			</fileset>
 		</copy>
 		
-		<exec executable="${dir.dist.dll.net}/Instrumented/Db4oAdmin.exe" dir="${dir.dist.dll.net}/Instrumented" failonerror="true" timeout="3600000">
+		<exec executable="${dir.dist.dll.net}/Instrumented/Db4oAdmin.exe" dir="${dir.dist.dll.net}/Instrumented" failonerror="true" timeout="3600000" description="Instrumenting Db4objects.Db4o.Tests.exe">
+			<!--
+			<arg value="-by-name:xyz" />
+			<arg value="-not" />
+			 -->
 			<arg value="-ta"/>
 			<arg value="Db4objects.Db4o.Tests.exe" />
+		</exec>
+		
+		<exec
+			executable="peverify.exe"
+			dir = "${dir.dist.dll.net}/Instrumented"
+			failonerror="true" timeout="3600000"
+			description="Check the instrumented test application">
+			
+			<arg value="Db4objects.Db4o.Tests.exe" />			
 		</exec>
 		
 		<exec 
 			executable="${dir.dist.dll.net}/Instrumented/Db4objects.Db4o.Tests.exe"
 			dir = "${dir.dist.dll.net}/Instrumented"
-			failonerror="true" timeout="3600000" />
+			failonerror="true" timeout="3600000"
+			description="Running Instrumented Tests">
+		</exec>
 		
 		<delete dir="${dir.dist.dll.net}/Instrumented1" />
 	</target>
