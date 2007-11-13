@@ -1,8 +1,8 @@
 package com.db4o.devtools.ant.tests;
 
-import db4ounit.extensions.Db4oTestSuite;
+import db4ounit.*;
 
-public class AllTests extends Db4oTestSuite {
+public class AllTests extends ReflectionTestSuite {
 	
 	@Override
 	protected Class[] testCases() {
@@ -12,7 +12,6 @@ public class AllTests extends Db4oTestSuite {
 	}
 	
 	public static void main(String[] args) {
-		new AllTests().runAll();
+		new AllTests().run();
 	}
-
 }

@@ -7,9 +7,8 @@ import java.util.regex.*;
 import com.db4o.devtools.ant.*;
 
 import db4ounit.*;
-import db4ounit.extensions.*;
 
-public class FolderDiffTestCase implements Db4oTestCase {
+public class FolderDiffTestCase implements TestCase, TestLifeCycle {
 
 	private String folder1Path; 
 	private String folder2Path; 
