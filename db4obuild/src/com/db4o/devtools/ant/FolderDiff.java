@@ -20,17 +20,17 @@ public final class FolderDiff {
 		}
 	};
 	
-	private final List<String> _changed;
-	private final List<String> _deleted;
-	private final List<String> _new;
+	private final Set<String> _changed;
+	private final Set<String> _deleted;
+	private final Set<String> _new;
 	
 	private final String _sourceFolder;
 	private final String _compareToFolder;
 	
 	private FolderDiff(String source, String compareTo, HashSet<String> changedFiles, HashSet<String> deletedFiles, HashSet<String> newFiles) {
-		_changed = new ArrayList<String>(changedFiles);
-		_deleted = new ArrayList<String>(deletedFiles);
-		_new = new ArrayList<String>(newFiles);
+		_changed = Collections.unmodifiableSet(changedFiles);
+		_deleted = Collections.unmodifiableSet(deletedFiles);
+		_new = Collections.unmodifiableSet(newFiles);
 		
 		_sourceFolder = source;
 		_compareToFolder = compareTo;
@@ -60,15 +60,15 @@ public final class FolderDiff {
 		return new FolderDiff(source, compareTo, changedFiles, deletedFiles, newFiles);
 	}
 
-	public List<String> changedFiles(){
+	public Set<String> changedFiles(){
 		return _changed;
 	}
 	
-	public List<String> deletedFiles(){
+	public Set<String> deletedFiles(){
 		return _deleted;
 	}
 	
-	public List<String> newFiles(){
+	public Set<String> newFiles(){
 		return _new;
 	}
 	
