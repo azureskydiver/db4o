@@ -172,8 +172,6 @@
 	</target>
 
 	<target name="run-core-tests-instrumented" depends="configure, build-admin, build-tests">
-		<delete dir="${dir.dist.dll.net}/Instrumented" />
-		
 		<mkdir dir="${dir.dist.dll.net}/Instrumented" />
 					
 		<copy todir="${dir.dist.dll.net}/Instrumented">
@@ -209,7 +207,7 @@
 			description="Running Instrumented Tests">
 		</exec>
 		
-		<delete dir="${dir.dist.dll.net}/Instrumented1" />
+		<delete dir="${dir.dist.dll.net}/Instrumented" />
 	</target>
 	
 	<target name="run-tests-core" depends="build-tests">
