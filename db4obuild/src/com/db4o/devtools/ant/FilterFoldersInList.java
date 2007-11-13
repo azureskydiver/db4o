@@ -1,5 +1,6 @@
 package com.db4o.devtools.ant;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -16,10 +17,6 @@ public class FilterFoldersInList implements FolderFilter {
 	}
 
 	private String lastFolderInPath(String path) {
-		int index =path.lastIndexOf('\\');
-		if ( index > 0) {
-			path = path.substring(index + 1);
-		}
-		return path;
+		return new File(path).getName();
 	}
 }

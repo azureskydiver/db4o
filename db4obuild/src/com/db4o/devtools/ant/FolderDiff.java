@@ -1,13 +1,7 @@
 package com.db4o.devtools.ant;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashSet;
+import java.io.*;
+import java.util.*;
 
 /**
  * FolderDiff class.<br><br>
@@ -19,13 +13,19 @@ import java.util.HashSet;
  *
  */
 public final class FolderDiff {
-	private static final FolderFilter INCLUDE_ALL_FOLDERS = null;
-	private List<String> _changed;
-	private List<String> _deleted;
-	private List<String> _new;
 	
-	private String _sourceFolder;
-	private String _compareToFolder;
+	private static final FolderFilter INCLUDE_ALL_FOLDERS = new FolderFilter() {
+		public boolean filter(String path) {
+			return false;
+		}
+	};
+	
+	private final List<String> _changed;
+	private final List<String> _deleted;
+	private final List<String> _new;
+	
+	private final String _sourceFolder;
+	private final String _compareToFolder;
 	
 	private FolderDiff(String source, String compareTo, HashSet<String> changedFiles, HashSet<String> deletedFiles, HashSet<String> newFiles) {
 		_changed = new ArrayList<String>(changedFiles);
@@ -50,19 +50,16 @@ public final class FolderDiff {
 		HashSet<String> filesInSource = getFiles(source, folderFilter);
 		HashSet<String> filesInComparand = getFiles(compareTo, folderFilter);
 		
-		HashSet<String> changedCandidates = getChangedCandidates(filesInSource, filesInComparand);
+		HashSet<String> changedCandidates = intersection(filesInSource, filesInComparand);
 		
-		HashSet<String> deletedFiles = filesInSource;
-		deletedFiles.removeAll(changedCandidates);
-		
-		HashSet<String> newFiles = filesInComparand;
-		newFiles.removeAll(changedCandidates);
+		HashSet<String> deletedFiles = disjunction(filesInSource, changedCandidates);		
+		HashSet<String> newFiles = disjunction(filesInComparand, changedCandidates);
 		
 		HashSet<String> changedFiles = getChangedFilesFromCandidates(changedCandidates, source, compareTo);
 		
 		return new FolderDiff(source, compareTo, changedFiles, deletedFiles, newFiles);
 	}
-	
+
 	public List<String> changedFiles(){
 		return _changed;
 	}
@@ -87,32 +84,28 @@ public final class FolderDiff {
 		return diff(source, compareTo, INCLUDE_ALL_FOLDERS);
 	}
 	
-	private static HashSet<String> getFiles(String source, FolderFilter folderFilter) {
-		File folder = new File(source);
-		HashSet<String> files = new HashSet<String>();
-		
-		internalGetFiles(source.length(), folder, files, folderFilter);
-		
+	private static HashSet<String> getFiles(String source, FolderFilter folderFilter) throws IOException {
+		final HashSet<String> files = new HashSet<String>();
+		internalGetFiles(source.length(), new File(source), files, folderFilter);
 		return files;
 	}
 
-	private static void internalGetFiles(int baseFolderLen, File folder, HashSet<String> files, FolderFilter folderFilter) {
+	private static void internalGetFiles(int baseFolderLen, File folder, HashSet<String> files, FolderFilter folderFilter) throws IOException {
 		for (File file : folder.listFiles()) {
 			if (file.isDirectory()) {
-				if (folderFilter == null || !folderFilter.filter(file.getAbsolutePath())) {
+				if (!folderFilter.filter(file.getCanonicalPath())) {
 					internalGetFiles(baseFolderLen, file, files, folderFilter);
 				}
-			}
-			else {
-				files.add(file.getAbsolutePath().substring(baseFolderLen));
+			} else {
+				files.add(file.getCanonicalPath().substring(baseFolderLen));
 			}
 		}
 	}
 
 	private static HashSet<String> getChangedFilesFromCandidates(HashSet<String> changedCandidates, String source, String compareToBasePath) throws IOException {
-		HashSet<String> changedFiles = (HashSet<String>) changedCandidates.clone();
+		HashSet<String> changedFiles = new HashSet<String>(changedCandidates);
 		for (String candidate : changedCandidates) {
-			if (compareFileContents(source + candidate, compareToBasePath + candidate) == 0) {
+			if (!sameFile(source + candidate, compareToBasePath + candidate)) {
 				changedFiles.remove(candidate);
 			}
 		}
@@ -120,52 +113,49 @@ public final class FolderDiff {
 		return changedFiles;
 	}
 
-	private static long compareFileContents(String lhs, String rhs) throws IOException {
+	private static boolean sameFile(String lhs, String rhs) throws IOException {
 		File f1 = new File(rhs);
 		File f2 = new File(lhs);
-
-		long ret = compareFileLength(f1, f2);
-		if (ret != 0) {
-			return ret;
-		}
-
-		return compareFileContents(f1, f2);
+		return sameSize(f1, f2) && sameContents(f1, f2);
 	}
 
-	private static long compareFileContents(File lhs, File rhs) throws IOException {
-		FileChannel lhsChannel = null;
-		FileChannel rhsChannel = null;
-		
+	private static boolean sameSize(File f1, File f2) {
+		return f1.length() == f2.length();
+	}
+
+	private static boolean sameContents(File lhs, File rhs) throws IOException {
+		InputStream lin = new BufferedInputStream(new FileInputStream(lhs));
 		try {
-			lhsChannel = new RandomAccessFile(lhs, "r").getChannel();
-			rhsChannel = new RandomAccessFile(rhs, "r").getChannel();
-			
-			MappedByteBuffer lhsBuffer = lhsChannel.map(FileChannel.MapMode.READ_ONLY, 0, lhs.length());
-			MappedByteBuffer rhsBuffer = rhsChannel.map(FileChannel.MapMode.READ_ONLY, 0, rhs.length());
-			
-			return lhsBuffer.compareTo(rhsBuffer);
+			InputStream rin = new BufferedInputStream(new FileInputStream(rhs));
+			try {
+				return sameContents(lin, rin);
+			} finally {
+				rin.close();
+			}
+		} finally {
+			lin.close();
 		}
-		finally {
-			if (lhsChannel != null) {
-				lhsChannel.close();
-			}
-			
-			if (rhsChannel != null) {
-				rhsChannel.close();
-			}
-		}		
 	}
 
-	private static long compareFileLength(File lhs, File rhs) {
-		long lhsLength = lhs.length();
-		long rhsLength = rhs.length();
-		
-		return lhsLength - rhsLength;
+	private static boolean sameContents(InputStream lin, InputStream rin) throws IOException {
+		int value = 0;
+		while (-1 != (value = lin.read())) {
+			if (value != rin.read()) {
+				return false;
+			}
+		}
+		return true;
 	}
-
-	private static HashSet<String> getChangedCandidates(HashSet<String> filesInSource, HashSet<String> filesInComparand) {
-		HashSet<String> changedCandidates = (HashSet<String>) filesInSource.clone();
-		changedCandidates.retainAll(filesInComparand);
-		return changedCandidates;
+	
+	private static HashSet<String> intersection(HashSet<String> set1, HashSet<String> set2) {
+		HashSet<String> intersection = new HashSet<String>(set1);
+		intersection.retainAll(set2);
+		return intersection;
+	}
+	
+	private static HashSet<String> disjunction(HashSet<String> source, HashSet<String> removed) {
+		final HashSet<String> deletedFiles = new HashSet<String>(source);
+		deletedFiles.removeAll(removed);
+		return deletedFiles;
 	}
 }
