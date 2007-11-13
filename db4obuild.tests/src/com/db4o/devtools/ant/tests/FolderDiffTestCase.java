@@ -98,7 +98,7 @@ public class FolderDiffTestCase implements Db4oTestCase {
 				"A/f2.txt(file2 contents)",
 				"A/B/f3.txt(contents file3)",
 				"A/f4.txt(new file1)",
-				"A/f4.txt.new(new file 2");
+				"A/f4.txt.new(new file 2)");
 
 		assertFolder(
 				FolderDiff.diff(folder1Path, folderWithIgnoredSubFolders, new FilterFoldersInList(new String[] {".svn"}) ),
@@ -154,11 +154,8 @@ public class FolderDiffTestCase implements Db4oTestCase {
 	}
 
 	private void assertContains(String expectedFile, final Set<String> files, final String operation) {
-		Assert.isTrue(files.contains(expectedFile), "Expecting '" + operation + expectedFile + "'");
+		Assert.isTrue(files.contains(expectedFile), "Expecting '" + operation + expectedFile + "'. Found '" + files + "'");
 	}
-
-	
-
 	
 	private String createFolderStructure(String folderName, String... files) throws IOException {
 		String tempPath = getTempPath();
