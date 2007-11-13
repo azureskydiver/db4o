@@ -103,13 +103,12 @@ public final class FolderDiff {
 	}
 
 	private static Set<String> getChangedFilesFromCandidates(Set<String> changedCandidates, String source, String compareToBasePath) throws IOException {
-		Set<String> changedFiles = new HashSet<String>(changedCandidates);
+		final Set<String> changedFiles = new HashSet<String>();
 		for (String candidate : changedCandidates) {
 			if (!sameFile(source + candidate, compareToBasePath + candidate)) {
-				changedFiles.remove(candidate);
+				changedFiles.add(candidate);
 			}
 		}
-		
 		return changedFiles;
 	}
 
