@@ -50,12 +50,11 @@ public final class FolderDiff {
 		Set<String> fromFiles = allFiles(from, filter);
 		Set<String> toFiles = allFiles(to, filter);
 		
-		Set<String> changedCandidates = intersection(fromFiles, toFiles);
-		
 		Set<String> deletedFiles = disjunction(fromFiles, toFiles);		
 		Set<String> newFiles = disjunction(toFiles, fromFiles);
-		
-		Set<String> changedFiles = getChangedFilesFromCandidates(changedCandidates, from, to);
+
+		Set<String> changedFiles = intersection(fromFiles, toFiles);
+		retainChangedFiles(changedFiles, from, to);
 		
 		return new FolderDiff(from, to, changedFiles, deletedFiles, newFiles);
 	}
@@ -102,14 +101,14 @@ public final class FolderDiff {
 		}
 	}
 
-	private static Set<String> getChangedFilesFromCandidates(Set<String> changedCandidates, String source, String compareToBasePath) throws IOException {
-		final Set<String> changedFiles = new HashSet<String>();
-		for (String candidate : changedCandidates) {
-			if (!sameFile(source + candidate, compareToBasePath + candidate)) {
-				changedFiles.add(candidate);
+	private static void retainChangedFiles(Set<String> candidates, String source, String compareToBasePath) throws IOException {
+		final Iterator<String> i = candidates.iterator();
+		while (i.hasNext()) {
+			String candidate = i.next();
+			if (sameFile(source + candidate, compareToBasePath + candidate)) {
+				i.remove();
 			}
 		}
-		return changedFiles;
 	}
 
 	private static boolean sameFile(String lhs, String rhs) throws IOException {
