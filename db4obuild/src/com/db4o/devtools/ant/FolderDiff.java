@@ -27,7 +27,7 @@ public final class FolderDiff {
 	private final String _sourceFolder;
 	private final String _compareToFolder;
 	
-	private FolderDiff(String source, String compareTo, HashSet<String> changedFiles, HashSet<String> deletedFiles, HashSet<String> newFiles) {
+	private FolderDiff(String source, String compareTo, Set<String> changedFiles, Set<String> deletedFiles, Set<String> newFiles) {
 		_changed = Collections.unmodifiableSet(changedFiles);
 		_deleted = Collections.unmodifiableSet(deletedFiles);
 		_new = Collections.unmodifiableSet(newFiles);
@@ -38,26 +38,26 @@ public final class FolderDiff {
 
 	/**
 	 * 
-	 * @param source	
-	 * @param compareTo
-	 * @param folderFilter an object that specifies which children folders should be processed
+	 * @param from	
+	 * @param to
+	 * @param filter an object that specifies which children folders should be processed
 	 * and which should not. To process all subfolders user INCLUDE_ALL_FOLDERS constant.
 	 * @return a reference to a FolderDiff object that represents the difference
 	 * between source and compareTo folders.
 	 * @throws IOException
 	 */
-	public static FolderDiff diff(String source, String compareTo, FolderFilter folderFilter) throws IOException {
-		HashSet<String> filesInSource = getFiles(source, folderFilter);
-		HashSet<String> filesInComparand = getFiles(compareTo, folderFilter);
+	public static FolderDiff diff(String from, String to, FolderFilter filter) throws IOException {
+		Set<String> fromFiles = allFiles(from, filter);
+		Set<String> toFiles = allFiles(to, filter);
 		
-		HashSet<String> changedCandidates = intersection(filesInSource, filesInComparand);
+		Set<String> changedCandidates = intersection(fromFiles, toFiles);
 		
-		HashSet<String> deletedFiles = disjunction(filesInSource, changedCandidates);		
-		HashSet<String> newFiles = disjunction(filesInComparand, changedCandidates);
+		Set<String> deletedFiles = disjunction(fromFiles, toFiles);		
+		Set<String> newFiles = disjunction(toFiles, fromFiles);
 		
-		HashSet<String> changedFiles = getChangedFilesFromCandidates(changedCandidates, source, compareTo);
+		Set<String> changedFiles = getChangedFilesFromCandidates(changedCandidates, from, to);
 		
-		return new FolderDiff(source, compareTo, changedFiles, deletedFiles, newFiles);
+		return new FolderDiff(from, to, changedFiles, deletedFiles, newFiles);
 	}
 
 	public Set<String> changedFiles(){
@@ -84,7 +84,7 @@ public final class FolderDiff {
 		return diff(source, compareTo, INCLUDE_ALL_FOLDERS);
 	}
 	
-	private static HashSet<String> getFiles(String source, FolderFilter folderFilter) throws IOException {
+	private static HashSet<String> allFiles(String source, FolderFilter folderFilter) throws IOException {
 		final HashSet<String> files = new HashSet<String>();
 		internalGetFiles(source.length(), new File(source), files, folderFilter);
 		return files;
@@ -102,8 +102,8 @@ public final class FolderDiff {
 		}
 	}
 
-	private static HashSet<String> getChangedFilesFromCandidates(HashSet<String> changedCandidates, String source, String compareToBasePath) throws IOException {
-		HashSet<String> changedFiles = new HashSet<String>(changedCandidates);
+	private static Set<String> getChangedFilesFromCandidates(Set<String> changedCandidates, String source, String compareToBasePath) throws IOException {
+		Set<String> changedFiles = new HashSet<String>(changedCandidates);
 		for (String candidate : changedCandidates) {
 			if (!sameFile(source + candidate, compareToBasePath + candidate)) {
 				changedFiles.remove(candidate);
@@ -147,15 +147,15 @@ public final class FolderDiff {
 		return true;
 	}
 	
-	private static HashSet<String> intersection(HashSet<String> set1, HashSet<String> set2) {
+	private static Set<String> intersection(Set<String> set1, Set<String> set2) {
 		HashSet<String> intersection = new HashSet<String>(set1);
 		intersection.retainAll(set2);
 		return intersection;
 	}
 	
-	private static HashSet<String> disjunction(HashSet<String> source, HashSet<String> removed) {
-		final HashSet<String> deletedFiles = new HashSet<String>(source);
-		deletedFiles.removeAll(removed);
-		return deletedFiles;
+	private static Set<String> disjunction(Set<String> source, Set<String> removed) {
+		final HashSet<String> disjunction = new HashSet<String>(source);
+		disjunction.removeAll(removed);
+		return disjunction;
 	}
 }
