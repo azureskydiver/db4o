@@ -133,7 +133,7 @@ public class FolderDiffTestCase implements Db4oTestCase {
 		}
 	}
 
-	private void assertEmpty(final List<String> files) {
+	private void assertEmpty(final Set<String> files) {
 		Assert.isTrue(files.isEmpty());
 	}
 
@@ -153,7 +153,7 @@ public class FolderDiffTestCase implements Db4oTestCase {
 		assertContains(file, diff.newFiles(), "+");
 	}
 
-	private void assertContains(String expectedFile, final List<String> files, final String operation) {
+	private void assertContains(String expectedFile, final Set<String> files, final String operation) {
 		Assert.isTrue(files.contains(expectedFile), "Expecting '" + operation + expectedFile + "'");
 	}
 
