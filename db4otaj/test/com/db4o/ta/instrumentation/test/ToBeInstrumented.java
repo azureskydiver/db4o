@@ -5,6 +5,7 @@ public class ToBeInstrumented {
 	
 	protected static int _xx;
 	protected int _x;
+	protected transient int _xxx;
 
 	public void foo() {
 		int y = _x;
@@ -24,6 +25,10 @@ public class ToBeInstrumented {
 	
 	public static void fooStatic() {
 		int yy = _xx;
+	}
+
+	public void fooTransient() {
+		int yy = _xxx;
 	}
 
 	public boolean accessNotToBeInstrumented(NotToBeInstrumented other) {

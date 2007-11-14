@@ -41,6 +41,7 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		assertMethodInstrumentation(clazz, "bar", true);
 		assertMethodInstrumentation(clazz, "baz", true);
 		assertMethodInstrumentation(clazz, "boo", true);
+		assertMethodInstrumentation(clazz, "fooTransient", false);
 	}
 
 	public void testSubClassIsInstrumented() throws Exception {

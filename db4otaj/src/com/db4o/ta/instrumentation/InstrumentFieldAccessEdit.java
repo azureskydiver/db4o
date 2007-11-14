@@ -31,10 +31,10 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 		_filter = filter;
 	}
 	public InstrumentationStatus enhance(ClassEditor ce, ClassLoader origLoader, BloatLoaderContext loaderContext) {
-		return instrumentAllMethods(ce, origLoader);
+		return instrumentAllMethods(ce, origLoader, loaderContext);
 	}
 
-	private InstrumentationStatus instrumentAllMethods(final ClassEditor ce, final ClassLoader origLoader) {
+	private InstrumentationStatus instrumentAllMethods(final ClassEditor ce, final ClassLoader origLoader, final BloatLoaderContext loaderContext) {
 		final MemberRef activateMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID);
 		final MemberRef bindMethod = createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, new Type[]{ Type.getType(Activator.class) }, Type.VOID);
 		final ObjectByRef instrumented = new ObjectByRef(InstrumentationStatus.NOT_INSTRUMENTED);
@@ -70,18 +70,30 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 				if(fieldAccessIndexes.isEmpty()) {
 					return;
 				}
+				int modifiedCount = 0;
 				for (Iterator idxIter = fieldAccessIndexes.keySet().iterator(); idxIter.hasNext();) {
 					Integer idx = ((Integer) idxIter.next());
 					MemberRef fieldRef = (MemberRef)fieldAccessIndexes.get(idx);
+					try {
+						FieldEditor fieldEdit = loaderContext.field(ce, fieldRef.name(), fieldRef.type());
+						if(fieldEdit.isTransient() || fieldEdit.isStatic()) {
+							continue;
+						}
+					} 
+					catch (ClassNotFoundException e) {
+						instrumented.value = InstrumentationStatus.FAILED;
+						return;
+					}
 					MemberRef targetActivateMethod = createMethodReference(fieldRef.declaringClass(),  TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID);
 					if(targetActivateMethod == null) {
 						continue;
 					}
 					editor.insertCodeAt(new Instruction(Opcode.opc_dup), idx.intValue());
 					editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, targetActivateMethod), idx.intValue() + 1);
+					modifiedCount++;
 				}
 				editor.commit();
-				instrumented.value = InstrumentationStatus.INSTRUMENTED;
+				instrumented.value = (modifiedCount > 0 ? InstrumentationStatus.INSTRUMENTED : InstrumentationStatus.NOT_INSTRUMENTED);
 			}
 
 			private boolean accept(MemberRef fieldRef) {
