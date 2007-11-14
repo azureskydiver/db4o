@@ -57,6 +57,22 @@ public class BloatLoaderContext {
 		return null;
 	}
 
+	public FieldEditor field(ClassEditor classEdit, String fieldName,Type fieldType) throws ClassNotFoundException {
+		ClassEditor clazz = classEdit;
+		while(clazz != null) {
+			FieldInfo[] fields = clazz.fields();
+			for (int fieldIdx = 0; fieldIdx < fields.length; fieldIdx++) {
+				FieldInfo fieldInfo=fields[fieldIdx];
+				FieldEditor fieldEdit = new FieldEditor(clazz, fieldInfo);
+				if (fieldEdit.name().equals(fieldName)&&fieldType.equals(fieldEdit.type())) {
+					return fieldEdit;
+				}
+			}
+			clazz = classEditor(clazz.superclass());
+		}
+		return null;
+	}
+
 	public ClassEditor classEditor(Type type) throws ClassNotFoundException {
 		return type == null ? null : classEditor(BloatUtil.normalizeClassName(type));
 	}
