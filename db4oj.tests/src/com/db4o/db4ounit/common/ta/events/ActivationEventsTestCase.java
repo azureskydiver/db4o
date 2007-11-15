@@ -25,7 +25,7 @@ public class ActivationEventsTestCase extends TransparentActivationTestCaseBase 
 	public static class ActivatableItem implements Activatable {
 		public String name;
 		public NonActivatableItem child;
-		private Activator _activator;
+		private transient Activator _activator;
 		
 		public ActivatableItem(String name_, NonActivatableItem child_) {
 			name = name_;
