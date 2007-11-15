@@ -12,8 +12,7 @@ import EDU.purdue.cs.bloat.file.ClassFileLoader;
 import com.db4o.instrumentation.core.*;
 import com.db4o.internal.query.Db4oNQOptimizer;
 import com.db4o.nativequery.expr.Expression;
-import com.db4o.query.Predicate;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 import com.db4o.reflect.Reflector;
 
 // only introduced to keep Db4oListFacade clean of Bloat references
@@ -58,7 +57,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 
 	private Expression analyzeInternal(Predicate filter) throws ClassNotFoundException {
 		ClassEditor classEditor=new ClassEditor(context,loader.loadClass(filter.getClass().getName()));
-		Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,Predicate.PREDICATEMETHOD_NAME,null);
+		Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,PredicatePlatform.PREDICATEMETHOD_NAME,null);
 		return expr;
 	}
 	

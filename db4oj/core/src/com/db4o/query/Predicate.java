@@ -5,7 +5,6 @@ package com.db4o.query;
 import java.io.*;
 import java.lang.reflect.*;
 
-import com.db4o.*;
 import com.db4o.internal.*;
 
 /**
@@ -85,12 +84,7 @@ import com.db4o.internal.*;
  */
 public abstract class Predicate implements Serializable {
 	
-    /**
-     * public for implementation reasons, please ignore.
-     */
-    public final static String PREDICATEMETHOD_NAME="match";
-	
-	static final Class OBJECT_CLASS = Object.class;
+    static final Class OBJECT_CLASS = Object.class;
 	
 	private Class _extentType;
 	private transient Method cachedFilterMethod=null;
@@ -113,7 +107,7 @@ public abstract class Predicate implements Serializable {
 		Method untypedMethod=null;
 		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
 			Method method=methods[methodIdx];
-			if (isFilterMethod(method)) {
+			if (PredicatePlatform.isFilterMethod(method)) {
 				if (!OBJECT_CLASS.equals(method.getParameterTypes()[0])) {
 					cachedFilterMethod=method;
 					return method;
@@ -128,17 +122,7 @@ public abstract class Predicate implements Serializable {
 		throw new IllegalArgumentException("Invalid predicate.");
 	}
 
-	private boolean isFilterMethod(Method method) {
-		if (method.getParameterTypes().length != 1) {
-			return false;
-		}
-		if (Deploy.csharp) {
-			return method.getName().equalsIgnoreCase(PREDICATEMETHOD_NAME);
-		} 
-		return method.getName().equals(PREDICATEMETHOD_NAME);
-	}
-
-    /**
+	/**
      * public for implementation reasons, please ignore.
      */
 	public Class extentType() {

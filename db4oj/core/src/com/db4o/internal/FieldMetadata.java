@@ -338,10 +338,8 @@ public class FieldMetadata implements StoredField {
                         }
                     }
                     
-                    if(Deploy.csharp){
-                        if(Platform4.ignoreAsConstraint(obj)){
-                            return;
-                        }
+                    if(Platform4.ignoreAsConstraint(obj)){
+                    	return;
                     }
                     if (!a_parent.hasObjectInParentPath(obj)) {
                         a_visitor.visit(new QConObject(a_trans, a_parent,

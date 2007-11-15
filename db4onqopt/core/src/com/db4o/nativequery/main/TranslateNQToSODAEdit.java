@@ -30,7 +30,7 @@ public class TranslateNQToSODAEdit implements BloatClassEdit {
 			Type type=ce.superclass();
 			while(type!=null) {
 				if(BloatUtil.normalizeClassName(type.className()).equals(Predicate.class.getName())) {
-					boolean success = _enhancer.enhance(loaderContext,ce,Predicate.PREDICATEMETHOD_NAME,null,origLoader, new DefaultClassSource());
+					boolean success = _enhancer.enhance(loaderContext,ce,PredicatePlatform.PREDICATEMETHOD_NAME,null,origLoader, new DefaultClassSource());
 					return (success ? InstrumentationStatus.INSTRUMENTED : InstrumentationStatus.NOT_INSTRUMENTED);
 				}
 				type = loaderContext.superType(type);

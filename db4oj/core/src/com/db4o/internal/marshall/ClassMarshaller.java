@@ -71,9 +71,7 @@ public abstract class ClassMarshaller {
         len = len * sio.bytesPerChar();
         byte[] nameBytes = new byte[len];
         System.arraycopy(reader._buffer, reader._offset, nameBytes, 0, len);
-        if(Deploy.csharp){
-            nameBytes  = Platform4.updateClassName(nameBytes);
-        }
+        nameBytes  = Platform4.updateClassName(nameBytes);
         reader.incrementOffset(len);
         return nameBytes;
     }
