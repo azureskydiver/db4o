@@ -932,7 +932,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (yc != null) {
             return yc;
         }
-        return _classCollection.getActiveYapClass(claxx);
+        return _classCollection.getActiveClassMetadata(claxx);
     }
     
     private final boolean cantGetClassMetadata(ReflectClass claxx){
@@ -964,7 +964,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (yc != null) {
             return yc;
         }
-        return _classCollection.getYapClass(id);
+        return _classCollection.getClassMetadata(id);
     }
     
     public HandlerRegistry handlers(){
@@ -1390,13 +1390,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 				boolean renamed = false;
 				boolean isField = ren.rClass.length() > 0;
 				ClassMetadata yapClass = _classCollection
-						.getYapClass(isField ? ren.rClass : ren.rFrom);
+						.getClassMetadata(isField ? ren.rClass : ren.rFrom);
 				if (yapClass != null) {
 					if (isField) {
 						renamed = yapClass.renameField(ren.rFrom, ren.rTo);
 					} else {
 						ClassMetadata existing = _classCollection
-								.getYapClass(ren.rTo);
+								.getClassMetadata(ren.rTo);
 						if (existing == null) {
 							yapClass.setName(ren.rTo);
 							renamed = true;

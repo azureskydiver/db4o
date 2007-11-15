@@ -234,7 +234,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 		a_yapClass.setID(message.getId());
 		a_yapClass.readName1(systemTransaction(), bytes);
-		classCollection().addYapClass(a_yapClass);
+		classCollection().addClassMetadata(a_yapClass);
 		classCollection().readClassMetadata(a_yapClass, a_class);
 		return true;
 	}
