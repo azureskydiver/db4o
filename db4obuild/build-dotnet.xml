@@ -158,11 +158,11 @@
 			</then>
 		</if>
 		<uptodate
-			property="csharp.uptodate"
-			targetfile="${dir.n.v6.core.src}/Transaction.cs">
+			property="skip.sharpen"
+			targetfile="${dir.n.v6.core.src}/LocalTransaction.cs">
 			<srcfiles dir="${dir.j.core.src}" >
 				<include name="**/*.java" />
-				<exclude name="**/Db4oVersion.java" />
+				<exclude name="**/**/Db4oVersion.java" />
 			</srcfiles>
 		</uptodate>
 	</target>
@@ -181,12 +181,13 @@
 				<include name="*.pdb" />
 			</fileset>
 		</copy>
-		
 		<exec executable="${dir.dist.dll.net}/Instrumented/Db4oAdmin.exe" dir="${dir.dist.dll.net}/Instrumented" failonerror="true" timeout="3600000" description="Instrumenting Db4objects.Db4o.Tests.exe">
-			<!--
-			<arg value="-by-name:xyz" />
+			
+			<arg value="-by-name:(Db4objects\.Db4o\.Tests\.Common\.TA\.|NativeQueries)" />
 			<arg value="-not" />
-			 -->
+			
+			<arg value="-debug" />
+			
 			<arg value="-ta"/>
 			<arg value="Db4objects.Db4o.Tests.exe" />
 		</exec>
@@ -208,6 +209,11 @@
 		</exec>
 		
 		<delete dir="${dir.dist.dll.net}/Instrumented" />
+	</target>
+		
+	<target name="standalone-run-core-tests-instrumented">
+		<property name="skip.sharpen" value="true" />
+		<antcall target="run-core-tests-instrumented" />
 	</target>
 	
 	<target name="run-tests-core" depends="build-tests">
@@ -598,7 +604,7 @@
 		</ant>
 	</target>
 	
-	<target name="sharpen-tools">
+	<target name="sharpen-tools" unless="skip.sharpen">
 		<fileset id="tools.sources" dir="${dir.n.v6.tools}">
 			<include name="**/*.cs" />
 			<exclude name="Libs/**/AssemblyInfo.cs" />
@@ -618,7 +624,7 @@
 	
 	<target name="sharpen"
 		depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests"
-		unless="csharp.uptodate">
+		unless="skip.sharpen">
 	</target>
 	
 	<target name="prepare-conversion-workspace" depends="init">
@@ -656,7 +662,7 @@
 		</copy>
 	</target>	
 
-	<target name="sharpen-core" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="csharp.uptodate">
+	<target name="sharpen-core" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="skip.sharpen">
 
 		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
 			<args>
@@ -691,14 +697,14 @@
 
 	</target>
 	
-	<target name="sharpen-db4ounit">
+	<target name="sharpen-db4ounit" unless="skip.sharpen">
 		<ant antfile="build-new-db4ounit.xml" target="update-csharp-projects" inheritall="false">
 		</ant>
 	</target>
 	
 	<property name="dependencies.jar" location="${dir.sharpen}/lib/dependencies.jar" />
 	
-	<target name="create-dependencies-jar" depends="compiletestsjava">
+	<target name="create-dependencies-jar" depends="compiletestsjava" unless="skip.sharpen">
 		<mkdir dir="${dir.sharpen}/lib" />
 		<jar destfile="${dependencies.jar}">			
 			<fileset dir="${dir.dist.classes.java1.1}" />
@@ -724,7 +730,7 @@
 		</updatecsharpproject>
 	</target>
 			
-	<target name="sharpen-db4ounit-extensions" depends="install-javatocsharp-plugin, create-dependencies-jar">		
+	<target name="sharpen-db4ounit-extensions" depends="install-javatocsharp-plugin, create-dependencies-jar" unless="skip.sharpen">		
 		
 		<property name="target.dir" value="${dir.sharpen}/db4ounit-extensions" />
 		
@@ -773,7 +779,7 @@
 		</updatecsharpproject>
 	</target>		
 	
-	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions">
+	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions" unless="skip.sharpen">
 		
 		<property name="target.dir" location="${dir.sharpen}" />
 		
