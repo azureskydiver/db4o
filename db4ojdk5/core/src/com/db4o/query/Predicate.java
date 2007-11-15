@@ -118,6 +118,7 @@ public abstract class Predicate<ExtentType> implements Serializable{
     /**
      * public for implementation reasons, please ignore.
      */
+	@SuppressWarnings("unchecked")
 	public Class<? extends ExtentType> extentType() {
 		if(_extentType!=null) {
 			return _extentType;
