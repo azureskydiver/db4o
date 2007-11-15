@@ -170,12 +170,13 @@ public class FolderDiffTestCase implements TestCase, TestLifeCycle {
 	private String getTempPath() throws IOException {
 		return new File(System.getProperty("java.io.tmpdir")).getCanonicalPath();
 	}
+	
+	static final Pattern FILE_CONTENTS_REGEX = Pattern.compile("(.*)\\((.*)\\)");
 
 	private void createFileContents(String parent, String string) throws IOException {
-		Pattern regexp = Pattern.compile("(.*)\\((.*)\\)");
-		Matcher m = regexp.matcher(string);
 		
-		if (m.matches()){
+		Matcher m = FILE_CONTENTS_REGEX.matcher(string);
+		if (m.matches()) {
 			String filePath = parent + "/" + m.group(1);
 			String fileContents = m.group(2);
 			
