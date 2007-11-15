@@ -12,7 +12,7 @@ import java.lang.reflect.*;
 public class NoArgsClassConfiguratorFactory implements Db4oConfiguratorFactory {
 	private Constructor _constructor;
 
-	public NoArgsClassConfiguratorFactory(Class configuratorClass) throws NoSuchMethodException {
+	public NoArgsClassConfiguratorFactory(Class<?> configuratorClass) throws NoSuchMethodException {
 		_constructor=configuratorClass.getConstructor(new Class[]{String.class});
 	}
 
