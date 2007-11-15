@@ -1081,7 +1081,7 @@
 	
 		<property name="dir.dist.cecil" location="${dir.dist}/cecil" />
 		<property name="mono.svn" value="svn://anonsvn.mono-project.com/source/trunk" />
-	
+		
 		<delete dir="${dir.dist.cecil}" />
 		<mkdir dir="${dir.dist.cecil}/mcs/class" />
 		<mkdir dir="${dir.dist.cecil}/cecil" />
@@ -1099,6 +1099,11 @@
 		<exec executable="${svn.exe}" dir="${dir.dist.cecil}/cecil">
 			<arg value="export" />
 			<arg value="${mono.svn}/cecil/flowanalysis" />
+		</exec>
+		
+		<exec executable="${svn.exe}" dir="${dir.dist.cecil}/cecil">
+			<arg value="export" />
+			<arg value="${mono.svn}/cecil/pdb" />
 		</exec>
 		
 		<property name="cecil.dir" location="${dir.dist.cecil}/mcs/class/Mono.Cecil" />
@@ -1150,17 +1155,12 @@
 		<copy-cecil-libs todir="${dir.n.v6.libs}/net-2.0" />
 		
 		<!-- Pdb libraries (COR-800) -->
-		<exec executable="${svn.exe}" dir="${dir.dist.cecil}/cecil/pdb">
-			<arg value="export" />
-			<arg value="${mono.svn}/cecil/pdb" />
-		</exec>
-		
-		<exec executable="${nant.exe}" dir="${dir.dist.cecil}/cecil/pdb" failonerror="true">
+		<exec executable="${nant.exe}" dir="${dir.dist.cecil}/cecil/pdb/Mono.Cecil.Pdb" failonerror="true">
 			<arg value="-t:net-2.0" />
 		</exec>
 		
 		<copy todir="${dir.n.v6.libs}/net-2.0" overwrite="true">
-			<fileset dir="${dir.dist.cecil}/cecil/pdb/bin">
+			<fileset dir="${dir.dist.cecil}/cecil/pdb/Mono.Cecil.Pdb/bin">
 				<include name="Mono.Cecil.Pdb.dll" />
 			</fileset>
 		</copy>
