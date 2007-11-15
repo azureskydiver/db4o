@@ -13,55 +13,55 @@ import com.db4o.reflect.ReflectClass;
  */
 public final class ClassMetadataRepository extends PersistentBase {
 
-    private Collection4 i_classes;
-    private Hashtable4 i_creating;
+    private Collection4 _classes;
+    private Hashtable4 _creating;
     
     private final Transaction _systemTransaction;
 
-    private Hashtable4 i_yapClassByBytes;
-    private Hashtable4 i_yapClassByClass;
-    private Hashtable4 i_yapClassByID;
+    private Hashtable4 _classMetadataByBytes;
+    private Hashtable4 _classMetadataByClass;
+    private Hashtable4 _classMetadataByID;
     
-    private int i_yapClassCreationDepth;
-    private Queue4 i_initYapClassesOnUp;
+    private int _classMetadataCreationDepth;
+    private Queue4 _initClassMetadataOnUp;
 	
 	private final PendingClassInits _classInits; 
 
 
     ClassMetadataRepository(Transaction systemTransaction) {
         _systemTransaction = systemTransaction;
-        i_initYapClassesOnUp = new NonblockingQueue();
+        _initClassMetadataOnUp = new NonblockingQueue();
 		_classInits = new PendingClassInits(_systemTransaction);
     }
 
-    public void addYapClass(ClassMetadata yapClass) {
-        stream().setDirtyInSystemTransaction(this);
-        i_classes.add(yapClass);
-        if(yapClass.stateUnread()){
-            i_yapClassByBytes.put(yapClass.i_nameBytes, yapClass);
+    public void addClassMetadata(ClassMetadata clazz) {
+        container().setDirtyInSystemTransaction(this);
+        _classes.add(clazz);
+        if(clazz.stateUnread()){
+            _classMetadataByBytes.put(clazz.i_nameBytes, clazz);
         }else{
-            i_yapClassByClass.put(yapClass.classReflector(), yapClass);
+            _classMetadataByClass.put(clazz.classReflector(), clazz);
         }
-        if (yapClass.getID() == 0) {
-            yapClass.write(_systemTransaction);
+        if (clazz.getID() == 0) {
+            clazz.write(_systemTransaction);
         }
-        i_yapClassByID.put(yapClass.getID(), yapClass);
+        _classMetadataByID.put(clazz.getID(), clazz);
     }
     
     private byte[] asBytes(String str){
-        return stream().stringIO().write(str);
+        return container().stringIO().write(str);
     }
 
-    public void attachQueryNode(final String fieldName, final Visitor4 a_visitor) {
+    public void attachQueryNode(final String fieldName, final Visitor4 visitor) {
         ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
             final ClassMetadata classMetadata = i.currentClass();
             if(! classMetadata.isInternal()){
                 classMetadata.forEachFieldMetadata(new Visitor4() {
                     public void visit(Object obj) {
-                        FieldMetadata yf = (FieldMetadata)obj;
-                        if(yf.canAddToQuery(fieldName)){
-                            a_visitor.visit(new Object[] {classMetadata, yf});
+                        FieldMetadata field = (FieldMetadata)obj;
+                        if(field.canAddToQuery(fieldName)){
+                            visitor.visit(new Object[] {classMetadata, field});
                         }
                     }
                 });
@@ -82,22 +82,22 @@ public final class ClassMetadataRepository extends PersistentBase {
     }
 
     void checkChanges() {
-        Iterator4 i = i_classes.iterator();
+        Iterator4 i = _classes.iterator();
         while (i.moveNext()) {
             ((ClassMetadata)i.current()).checkChanges();
         }
     }
     
-    final boolean createYapClass(ClassMetadata a_yapClass, ReflectClass a_class) {
-        i_yapClassCreationDepth++;
-        ReflectClass superClass = a_class.getSuperclass();
-        ClassMetadata superYapClass = null;
-        if (superClass != null && ! superClass.equals(stream()._handlers.ICLASS_OBJECT)) {
-            superYapClass = produceClassMetadata(superClass);
+    final boolean createClassMetadata(ClassMetadata clazz, ReflectClass reflectClazz) {
+        _classMetadataCreationDepth++;
+        ReflectClass parentReflectClazz = reflectClazz.getSuperclass();
+        ClassMetadata parentClazz = null;
+        if (parentReflectClazz != null && ! parentReflectClazz.equals(container()._handlers.ICLASS_OBJECT)) {
+            parentClazz = produceClassMetadata(parentReflectClazz);
         }
-        boolean ret = stream().createClassMetadata(a_yapClass, a_class, superYapClass);
-        i_yapClassCreationDepth--;
-        initYapClassesOnUp();
+        boolean ret = container().createClassMetadata(clazz, reflectClazz, parentClazz);
+        _classMetadataCreationDepth--;
+        initClassMetadataOnUp();
         return ret;
     }
 
@@ -118,31 +118,31 @@ public final class ClassMetadataRepository extends PersistentBase {
 		boolean allClassesRead=false;
     	while(!allClassesRead) {
 	    	Collection4 unreadClasses=new Collection4();
-			int numClasses=i_classes.size();
-	        Iterator4 classIter = i_classes.iterator();
+			int numClasses=_classes.size();
+	        Iterator4 classIter = _classes.iterator();
 	        while(classIter.moveNext()) {
-	        	ClassMetadata yapClass=(ClassMetadata)classIter.current();
-	        	if(yapClass.stateUnread()) {
-	        		unreadClasses.add(yapClass);
+	        	ClassMetadata clazz=(ClassMetadata)classIter.current();
+	        	if(clazz.stateUnread()) {
+	        		unreadClasses.add(clazz);
 	        	}
 	        }
 	        Iterator4 unreadIter=unreadClasses.iterator();
 	        while(unreadIter.moveNext()) {
-	        	ClassMetadata yapClass=(ClassMetadata)unreadIter.current();
-	        	yapClass = readClassMetadata(yapClass,null);
-	            if(yapClass.classReflector() == null){
-	            	yapClass.forceRead();
+	        	ClassMetadata clazz=(ClassMetadata)unreadIter.current();
+	        	clazz = readClassMetadata(clazz,null);
+	            if(clazz.classReflector() == null){
+	            	clazz.forceRead();
 	            }
 	        }
-	        allClassesRead=(i_classes.size()==numClasses);
+	        allClassesRead=(_classes.size()==numClasses);
     	}
 		applyReadAs();
 	}
 
-    boolean fieldExists(String a_field) {
+    boolean fieldExists(String field) {
         ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
-            if (i.currentClass().fieldMetadataForName(a_field) != null) {
+            if (i.currentClass().fieldMetadataForName(field) != null) {
                 return true;
             }
         }
@@ -153,21 +153,21 @@ public final class ClassMetadataRepository extends PersistentBase {
         Collection4 col = new Collection4();
         ClassMetadataIterator i = iterator();
         while (i.moveNext()) {
-            ClassMetadata yc = i.currentClass();
-            ReflectClass candidate = yc.classReflector();
+            ClassMetadata clazz = i.currentClass();
+            ReflectClass candidate = clazz.classReflector();
             if(! candidate.isInterface()){
                 if (claxx.isAssignableFrom(candidate)) {
-                    col.add(yc);
+                    col.add(clazz);
                     Iterator4 j = new Collection4(col).iterator();
                     while (j.moveNext()) {
                         ClassMetadata existing = (ClassMetadata)j.current();
-                        if(existing != yc){
-                            ClassMetadata higher = yc.getHigherHierarchy(existing);
+                        if(existing != clazz){
+                            ClassMetadata higher = clazz.getHigherHierarchy(existing);
                             if (higher != null) {
-                                if (higher == yc) {
+                                if (higher == clazz) {
                                     col.remove(existing);
                                 }else{
-                                    col.remove(yc);
+                                    col.remove(clazz);
                                 }
                             }
                         }
@@ -182,60 +182,60 @@ public final class ClassMetadataRepository extends PersistentBase {
         return Const4.YAPCLASSCOLLECTION;
     }
     
-    ClassMetadata getActiveYapClass(ReflectClass a_class) {
-        return (ClassMetadata)i_yapClassByClass.get(a_class);
+    ClassMetadata getActiveClassMetadata(ReflectClass reflectClazz) {
+        return (ClassMetadata)_classMetadataByClass.get(reflectClazz);
     }
     
-    ClassMetadata classMetadataForReflectClass (ReflectClass a_class) {
-    	ClassMetadata yapClass = (ClassMetadata)i_yapClassByClass.get(a_class);
-        if (yapClass != null) {
-        	return yapClass;
+    ClassMetadata classMetadataForReflectClass (ReflectClass reflectClazz) {
+    	ClassMetadata clazz = (ClassMetadata)_classMetadataByClass.get(reflectClazz);
+        if (clazz != null) {
+        	return clazz;
         }
-        yapClass = (ClassMetadata)i_yapClassByBytes.remove(getNameBytes(a_class.getName()));
-        return readClassMetadata(yapClass, a_class);
+        clazz = (ClassMetadata)_classMetadataByBytes.remove(getNameBytes(reflectClazz.getName()));
+        return readClassMetadata(clazz, reflectClazz);
     }
 
-    ClassMetadata produceClassMetadata(ReflectClass claxx) {
+    ClassMetadata produceClassMetadata(ReflectClass reflectClazz) {
     	
-    	ClassMetadata classMetadata = classMetadataForReflectClass(claxx);
+    	ClassMetadata classMetadata = classMetadataForReflectClass(reflectClazz);
     	
         if (classMetadata != null ) {
             return classMetadata;
         }
         
-        classMetadata = (ClassMetadata)i_creating.get(claxx);
+        classMetadata = (ClassMetadata)_creating.get(reflectClazz);
         
         if(classMetadata != null){
             return classMetadata;
         }
         
-        classMetadata = new ClassMetadata(stream(), claxx);
+        classMetadata = new ClassMetadata(container(), reflectClazz);
         
-        i_creating.put(claxx, classMetadata);
+        _creating.put(reflectClazz, classMetadata);
         
-        if(! createYapClass(classMetadata, claxx)){
-            i_creating.remove(claxx);
+        if(! createClassMetadata(classMetadata, reflectClazz)){
+            _creating.remove(reflectClazz);
             return null;
         }
 
-        // YapStream#createYapClass may add the YapClass already,
+        // ObjectContainerBase#createClassMetadata may add the ClassMetadata already,
         // so we have to check again
         
         boolean addMembers = false;
         
-        if (i_yapClassByClass.get(claxx) == null) {
-            addYapClass(classMetadata);
+        if (_classMetadataByClass.get(reflectClazz) == null) {
+            addClassMetadata(classMetadata);
             addMembers = true;
         }
         
         int id = classMetadata.getID();
         if(id == 0){
-            classMetadata.write(stream().systemTransaction());
+            classMetadata.write(container().systemTransaction());
             id = classMetadata.getID();
         }
         
-        if(i_yapClassByID.get(id) == null){
-            i_yapClassByID.put(id, classMetadata);
+        if(_classMetadataByID.get(id) == null){
+            _classMetadataByID.put(id, classMetadata);
             addMembers = true;
         }
         
@@ -243,19 +243,19 @@ public final class ClassMetadataRepository extends PersistentBase {
 			_classInits.process(classMetadata);
         }
         
-        i_creating.remove(claxx);
+        _creating.remove(reflectClazz);
         
-        stream().setDirtyInSystemTransaction(this);
+        container().setDirtyInSystemTransaction(this);
         
         return classMetadata;
     }    
     
-	ClassMetadata getYapClass(int id) {
-        return readClassMetadata((ClassMetadata)i_yapClassByID.get(id), null);
+	ClassMetadata getClassMetadata(int id) {
+        return readClassMetadata((ClassMetadata)_classMetadataByID.get(id), null);
     }
 	
 	public int classMetadataIdForName(String name) {
-	    ClassMetadata classMetadata = (ClassMetadata)i_yapClassByBytes.get(getNameBytes(name));
+	    ClassMetadata classMetadata = (ClassMetadata)_classMetadataByBytes.get(getNameBytes(name));
 	    if(classMetadata == null){
 	        classMetadata = findInitializedClassByName(name);
 	    }
@@ -265,10 +265,10 @@ public final class ClassMetadataRepository extends PersistentBase {
 	    return 0;
 	}
 	
-    public ClassMetadata getYapClass(String a_name) {
-        ClassMetadata classMetadata = (ClassMetadata)i_yapClassByBytes.remove(getNameBytes(a_name));
+    public ClassMetadata getClassMetadata(String name) {
+        ClassMetadata classMetadata = (ClassMetadata)_classMetadataByBytes.remove(getNameBytes(name));
         if (classMetadata == null) {
-            classMetadata = findInitializedClassByName(a_name);
+            classMetadata = findInitializedClassByName(name);
         }
         if(classMetadata != null){
             classMetadata = readClassMetadata(classMetadata, null);
@@ -287,10 +287,10 @@ public final class ClassMetadataRepository extends PersistentBase {
         return null;
     }
     
-    public int getYapClassID(String name){
-        ClassMetadata yc = (ClassMetadata)i_yapClassByBytes.get(getNameBytes(name));
-        if(yc != null){
-            return yc.getID();
+    public int getClassMetadataID(String name){
+        ClassMetadata clazz = (ClassMetadata)_classMetadataByBytes.get(getNameBytes(name));
+        if(clazz != null){
+            return clazz.getID();
         }
         return 0;
     }
@@ -300,47 +300,47 @@ public final class ClassMetadataRepository extends PersistentBase {
 	}
 
 	private String resolveAliasRuntimeName(String name) {
-		return stream().configImpl().resolveAliasRuntimeName(name);
+		return container().configImpl().resolveAliasRuntimeName(name);
 	}
 
     void initOnUp(Transaction systemTrans) {
-        i_yapClassCreationDepth++;
+        _classMetadataCreationDepth++;
         systemTrans.container().showInternalClasses(true);
         try {
-	        Iterator4 i = i_classes.iterator();
+	        Iterator4 i = _classes.iterator();
 	        while (i.moveNext()) {
 	            ((ClassMetadata)i.current()).initOnUp(systemTrans);
 	        }
         } finally {
         	systemTrans.container().showInternalClasses(false);
         }
-        i_yapClassCreationDepth--;
-        initYapClassesOnUp();
+        _classMetadataCreationDepth--;
+        initClassMetadataOnUp();
     }
 
-    void initTables(int a_size) {
-        i_classes = new Collection4();
-        i_yapClassByBytes = new Hashtable4(a_size);
-        if (a_size < 16) {
-            a_size = 16;
+    void initTables(int size) {
+        _classes = new Collection4();
+        _classMetadataByBytes = new Hashtable4(size);
+        if (size < 16) {
+            size = 16;
         }
-        i_yapClassByClass = new Hashtable4(a_size);
-        i_yapClassByID = new Hashtable4(a_size);
-        i_creating = new Hashtable4(1);
+        _classMetadataByClass = new Hashtable4(size);
+        _classMetadataByID = new Hashtable4(size);
+        _creating = new Hashtable4(1);
     }
     
-    private void initYapClassesOnUp() {
-        if(i_yapClassCreationDepth == 0){
-            ClassMetadata yc = (ClassMetadata)i_initYapClassesOnUp.next();
-            while(yc != null){
-                yc.initOnUp(_systemTransaction);
-                yc = (ClassMetadata)i_initYapClassesOnUp.next();
+    private void initClassMetadataOnUp() {
+        if(_classMetadataCreationDepth == 0){
+            ClassMetadata clazz = (ClassMetadata)_initClassMetadataOnUp.next();
+            while(clazz != null){
+                clazz.initOnUp(_systemTransaction);
+                clazz = (ClassMetadata)_initClassMetadataOnUp.next();
             }
         }
     }
     
     public ClassMetadataIterator iterator(){
-        return new ClassMetadataIterator(this, new ArrayIterator4(i_classes.toArray()));
+        return new ClassMetadataIterator(this, new ArrayIterator4(_classes.toArray()));
     } 
 
     private static class ClassIDIterator extends MappingIterator {
@@ -355,43 +355,43 @@ public final class ClassMetadataRepository extends PersistentBase {
     }
     
     public Iterator4 ids(){
-        return new ClassIDIterator(i_classes);
+        return new ClassIDIterator(_classes);
     } 
 
     public int ownLength() {
         return Const4.OBJECT_LENGTH
             + Const4.INT_LENGTH
-            + (i_classes.size() * Const4.ID_LENGTH);
+            + (_classes.size() * Const4.ID_LENGTH);
     }
 
     void purge() {
-        Iterator4 i = i_classes.iterator();
+        Iterator4 i = _classes.iterator();
         while (i.moveNext()) {
             ((ClassMetadata)i.current()).purge();
         }
     }
 
-    public final void readThis(Transaction a_trans, Buffer a_reader) {
-		int classCount = a_reader.readInt();
+    public final void readThis(Transaction trans, Buffer buffer) {
+		int classCount = buffer.readInt();
 
 		initTables(classCount);
 
-		ObjectContainerBase stream = stream();
+		ObjectContainerBase container = container();
 		int[] ids = new int[classCount];
 
 		for (int i = 0; i < classCount; ++i) {
-			ids[i] = a_reader.readInt();
+			ids[i] = buffer.readInt();
 		}
-		StatefulBuffer[] yapWriters = stream.readWritersByIDs(a_trans, ids);
+		StatefulBuffer[] clazzWriters = container.readWritersByIDs(trans, ids);
 
 		for (int i = 0; i < classCount; ++i) {
-			ClassMetadata classMetadata = new ClassMetadata(stream, null);
+			ClassMetadata classMetadata = new ClassMetadata(container, null);
 			classMetadata.setID(ids[i]);
-			i_classes.add(classMetadata);
-			i_yapClassByID.put(ids[i], classMetadata);
-			byte[] name = classMetadata.readName1(a_trans, yapWriters[i]);
+			_classes.add(classMetadata);
+			_classMetadataByID.put(ids[i], classMetadata);
+			byte[] name = classMetadata.readName1(trans, clazzWriters[i]);
 			if (name != null) {
-				i_yapClassByBytes.put(name, classMetadata);
+				_classMetadataByBytes.put(name, classMetadata);
 			}
 		}
 
@@ -400,11 +400,11 @@ public final class ClassMetadataRepository extends PersistentBase {
 	}
 
 	Hashtable4 classByBytes(){
-    	return i_yapClassByBytes;
+    	return _classMetadataByBytes;
     }
     
     private void applyReadAs(){
-        final Hashtable4 readAs = stream().configImpl().readAs();
+        final Hashtable4 readAs = container().configImpl().readAs();
         Iterator4 i = readAs.iterator();
         while(i.moveNext()){
         	Entry4 entry = (Entry4) i.current();
@@ -413,19 +413,19 @@ public final class ClassMetadataRepository extends PersistentBase {
             byte[] dbbytes = getNameBytes(dbName);
             byte[] useBytes = getNameBytes(useName);
             if(classByBytes().get(useBytes) == null){
-                ClassMetadata yc = (ClassMetadata)classByBytes().get(dbbytes);
-                if(yc != null){
-                    yc.i_nameBytes = useBytes;
-                    yc.setConfig(configClass(dbName));
+                ClassMetadata clazz = (ClassMetadata)classByBytes().get(dbbytes);
+                if(clazz != null){
+                    clazz.i_nameBytes = useBytes;
+                    clazz.setConfig(configClass(dbName));
                     classByBytes().remove(dbbytes);
-                    classByBytes().put(useBytes, yc);
+                    classByBytes().put(useBytes, clazz);
                 }
             }
         }
     }
 
     private Config4Class configClass(String name) {
-        return stream().configImpl().configClass(name);
+        return container().configImpl().configClass(name);
     }
 
     public ClassMetadata readClassMetadata(ClassMetadata classMetadata, ReflectClass clazz) {
@@ -435,86 +435,86 @@ public final class ClassMetadataRepository extends PersistentBase {
         if (! classMetadata.stateUnread()) {
             return classMetadata;
         }
-        i_yapClassCreationDepth++;
+        _classMetadataCreationDepth++;
         
         String name = classMetadata.resolveName(clazz);
         
-        classMetadata.createConfigAndConstructor(i_yapClassByBytes, clazz, name);
+        classMetadata.createConfigAndConstructor(_classMetadataByBytes, clazz, name);
         ReflectClass claxx = classMetadata.classReflector();
         if(claxx != null){
-            i_yapClassByClass.put(claxx, classMetadata);
+            _classMetadataByClass.put(claxx, classMetadata);
             classMetadata.readThis();
             classMetadata.checkChanges();
-            i_initYapClassesOnUp.add(classMetadata);
+            _initClassMetadataOnUp.add(classMetadata);
         }
-        i_yapClassCreationDepth--;
-        initYapClassesOnUp();
+        _classMetadataCreationDepth--;
+        initClassMetadataOnUp();
         return classMetadata;
     }
 
     public void refreshClasses() {
         ClassMetadataRepository rereader = new ClassMetadataRepository(_systemTransaction);
         rereader._id = _id;
-        rereader.read(stream().systemTransaction());
-        Iterator4 i = rereader.i_classes.iterator();
+        rereader.read(container().systemTransaction());
+        Iterator4 i = rereader._classes.iterator();
         while (i.moveNext()) {
-            ClassMetadata yc = (ClassMetadata)i.current();
-            if (i_yapClassByID.get(yc.getID()) == null) {
-                i_classes.add(yc);
-                i_yapClassByID.put(yc.getID(), yc);
-                if(yc.stateUnread()){
-                    i_yapClassByBytes.put(yc.readName(_systemTransaction), yc);
+            ClassMetadata clazz = (ClassMetadata)i.current();
+            if (_classMetadataByID.get(clazz.getID()) == null) {
+                _classes.add(clazz);
+                _classMetadataByID.put(clazz.getID(), clazz);
+                if(clazz.stateUnread()){
+                    _classMetadataByBytes.put(clazz.readName(_systemTransaction), clazz);
                 }else{
-                    i_yapClassByClass.put(yc.classReflector(), yc);
+                    _classMetadataByClass.put(clazz.classReflector(), clazz);
                 }
             }
         }
-        i = i_classes.iterator();
+        i = _classes.iterator();
         while (i.moveNext()) {
-            ClassMetadata yc = (ClassMetadata)i.current();
-            yc.refresh();
+            ClassMetadata clazz = (ClassMetadata)i.current();
+            clazz.refresh();
         }
     }
 
-    void reReadYapClass(ClassMetadata yapClass){
-        if(yapClass != null){
-            reReadYapClass(yapClass.i_ancestor);
-            yapClass.readName(_systemTransaction);
-            yapClass.forceRead();
-            yapClass.setStateClean();
-            yapClass.bitFalse(Const4.CHECKED_CHANGES);
-            yapClass.bitFalse(Const4.READING);
-            yapClass.bitFalse(Const4.CONTINUE);
-            yapClass.bitFalse(Const4.DEAD);
-            yapClass.checkChanges();
+    void reReadClassMetadata(ClassMetadata clazz){
+        if(clazz != null){
+            reReadClassMetadata(clazz.i_ancestor);
+            clazz.readName(_systemTransaction);
+            clazz.forceRead();
+            clazz.setStateClean();
+            clazz.bitFalse(Const4.CHECKED_CHANGES);
+            clazz.bitFalse(Const4.READING);
+            clazz.bitFalse(Const4.CONTINUE);
+            clazz.bitFalse(Const4.DEAD);
+            clazz.checkChanges();
         }
     }
     
     public StoredClass[] storedClasses() {
     	ensureAllClassesRead();
-        StoredClass[] sclasses = new StoredClass[i_classes.size()];
-        i_classes.toArray(sclasses);
+        StoredClass[] sclasses = new StoredClass[_classes.size()];
+        _classes.toArray(sclasses);
         return sclasses;
     }
 
     public void writeAllClasses(){
         StoredClass[] storedClasses = storedClasses();
         for (int i = 0; i < storedClasses.length; i++) {
-            ClassMetadata yc = (ClassMetadata)storedClasses[i];
-            yc.setStateDirty();
+            ClassMetadata clazz = (ClassMetadata)storedClasses[i];
+            clazz.setStateDirty();
         }
         
         for (int i = 0; i < storedClasses.length; i++) {
-            ClassMetadata yc = (ClassMetadata)storedClasses[i];
-            yc.write(_systemTransaction);
+            ClassMetadata clazz = (ClassMetadata)storedClasses[i];
+            clazz.write(_systemTransaction);
         }
     }
 
-    public void writeThis(Transaction trans, Buffer a_writer) {
-        a_writer.writeInt(i_classes.size());
-        Iterator4 i = i_classes.iterator();
+    public void writeThis(Transaction trans, Buffer buffer) {
+        buffer.writeInt(_classes.size());
+        Iterator4 i = _classes.iterator();
         while (i.moveNext()) {
-            a_writer.writeIDOf(trans, i.current());
+            buffer.writeIDOf(trans, i.current());
         }
     }
 
@@ -523,28 +523,28 @@ public final class ClassMetadataRepository extends PersistentBase {
             return super.toString();
         }
 		String str = "Active:\n";
-		Iterator4 i = i_classes.iterator();
+		Iterator4 i = _classes.iterator();
 		while(i.moveNext()){
-			ClassMetadata yc = (ClassMetadata)i.current();
-			str += yc.getID() + " " + yc + "\n";
+			ClassMetadata clazz = (ClassMetadata)i.current();
+			str += clazz.getID() + " " + clazz + "\n";
 		}
 		return str;
 	}
 
-    ObjectContainerBase stream() {
+    ObjectContainerBase container() {
         return _systemTransaction.container();
     }
     
-    public void setID(int a_id) {
-    	if (stream().isClient()) {
-    		super.setID(a_id);
+    public void setID(int id) {
+    	if (container().isClient()) {
+    		super.setID(id);
     		return;
     	}
     	
         if(_id == 0) {        	
-			systemData().classCollectionID(a_id);
+			systemData().classCollectionID(id);
         }
-        super.setID(a_id);
+        super.setID(id);
     }
 
 	private SystemData systemData() {
