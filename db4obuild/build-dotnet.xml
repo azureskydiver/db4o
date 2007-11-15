@@ -183,7 +183,7 @@
 		</copy>
 		<exec executable="${dir.dist.dll.net}/Instrumented/Db4oAdmin.exe" dir="${dir.dist.dll.net}/Instrumented" failonerror="true" timeout="3600000" description="Instrumenting Db4objects.Db4o.Tests.exe">
 			
-			<arg value="-by-name:(Db4objects\.Db4o\.Tests\.Common\.TA\.|NativeQueries|ActivationTestCase)" />
+			<arg value="-by-name:(Db4objects\.Db4o\.Tests\.(Common|CLI2)\.TA\.|NativeQueries|ActivationTestCase)" />
 			<arg value="-not" />
 			
 			<arg value="-debug" />
