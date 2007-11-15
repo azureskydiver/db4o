@@ -594,8 +594,12 @@ public final class Platform4 {
     }
     
     public static boolean storeStaticFieldValues(Reflector reflector, ReflectClass claxx) {
-        return jdk().isEnum(reflector, claxx);
+        return isEnum(reflector, claxx);
     }
+
+	public static boolean isEnum(Reflector reflector, ReflectClass claxx) {
+		return jdk().isEnum(reflector, claxx);
+	}
 
     private static final void translate(ObjectClass oc, String to) {
         ((Config4Class)oc).translateOnDemand(DB4O_CONFIG + to);

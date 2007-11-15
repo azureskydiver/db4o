@@ -262,7 +262,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if(reference == null){
             return false;
         }
-        return Platform4.jdk().isEnum(reflector(), reference.classMetadata().classReflector());
+        return Platform4.isEnum(reflector(), reference.classMetadata().classReflector());
     }
 
     boolean canUpdate() {

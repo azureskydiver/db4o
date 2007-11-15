@@ -6,7 +6,6 @@ import java.lang.reflect.*;
 import java.net.*;
 import java.util.*;
 
-import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -15,9 +14,9 @@ import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 import com.db4o.types.*;
 
-
 /**
  * @exclude
+ * @sharpen.ignore
  */
 public class JDK {
 	
@@ -69,17 +68,15 @@ public class JDK {
     }
 
     void forEachCollectionElement(Object obj, Visitor4 visitor) {
-        if(! Deploy.csharp){
-            Enumeration e = null;
-            if (obj instanceof Hashtable) {
-                e = ((Hashtable)obj).elements();
-            } else if (obj instanceof Vector) {
-                e = ((Vector)obj).elements();
-            }
-            if (e != null) {
-                while (e.hasMoreElements()) {
-                    visitor.visit(e.nextElement());
-                }
+        Enumeration e = null;
+        if (obj instanceof Hashtable) {
+            e = ((Hashtable)obj).elements();
+        } else if (obj instanceof Vector) {
+            e = ((Vector)obj).elements();
+        }
+        if (e != null) {
+            while (e.hasMoreElements()) {
+                visitor.visit(e.nextElement());
             }
         }
 	}
@@ -99,12 +96,10 @@ public class JDK {
 	}
     
     boolean isCollectionTranslator(Config4Class config) {
-        if(!Deploy.csharp){
-            if (config != null) {
-                ObjectTranslator ot = config.getTranslator();
-                if (ot != null) {
-                    return ot instanceof THashtable;
-                }
+        if (config != null) {
+            ObjectTranslator ot = config.getTranslator();
+            if (ot != null) {
+                return ot instanceof THashtable;
             }
         }
         return false;

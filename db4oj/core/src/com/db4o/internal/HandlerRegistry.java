@@ -484,9 +484,7 @@ public final class HandlerRegistry {
     		if(_mapReflectorToHandler.get(claxx) != null){
     			return true;
     		}
-            if(Deploy.csharp){
-                return Platform4.isValueType(claxx);
-            }
+            return Platform4.isValueType(claxx);
     	}
     	return false;
     }

@@ -464,7 +464,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         
         if(! Deploy.csharp){
             if(a_class != null){
-                _isEnum = Platform4.jdk().isEnum(reflector(), a_class);
+                _isEnum = Platform4.isEnum(reflector(), a_class);
             }
         }
         

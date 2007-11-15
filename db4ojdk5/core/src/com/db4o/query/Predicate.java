@@ -104,7 +104,7 @@ public abstract class Predicate<ExtentType> implements Serializable{
 		Method[] methods=getClass().getMethods();
 		for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
 			Method method=methods[methodIdx];
-			if((method.getName().equals(PREDICATEMETHOD_NAME))&&method.getParameterTypes().length==1) {					
+			if((method.getName().equals(PredicatePlatform.PREDICATEMETHOD_NAME))&&method.getParameterTypes().length==1) {					
 				String targetName=method.getParameterTypes()[0].getName();
 				if(!"java.lang.Object".equals(targetName)) {
 					cachedFilterMethod=method;
