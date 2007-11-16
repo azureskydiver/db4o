@@ -82,8 +82,6 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		methodEditor.addInstruction(Opcode.opc_return);
 		
 		methodEditor.commit();
-		// FIXME
-		ce.constants().addConstant(Constant.METHOD_REF, createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.BIND_METHOD_NAME, paramTypes, Type.VOID));
 	}
 
 	private void throwException(MethodEditor methodEditor, Class exceptionType) {
@@ -117,8 +115,6 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		methodEditor.addInstruction(Opcode.opc_return);
 		
 		methodEditor.commit();
-		// FIXME
-		ce.constants().addConstant(Constant.METHOD_REF, createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID));
 	}
 
 	private void loadThisOnStack(MethodEditor methodEditor) {

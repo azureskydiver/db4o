@@ -4,26 +4,24 @@ package com.db4o.instrumentation.core;
 
 import java.util.*;
 
-import com.db4o.instrumentation.util.*;
-
 import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.context.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
+import com.db4o.instrumentation.util.*;
+
 /**
  * @exclude
  */
 public class BloatLoaderContext {
-	private ClassInfoLoader loader;
 	private EditorContext context;
 	
 	public BloatLoaderContext(ClassInfoLoader loader) {
-		this(loader, new CachingBloatContext(loader,new LinkedList(),false));
+		this(new CachingBloatContext(loader,new LinkedList(),false));
 	}
 
-	public BloatLoaderContext(ClassInfoLoader loader, EditorContext context) {
-		this.loader=loader;
+	public BloatLoaderContext(EditorContext context) {
 		this.context=context;
 	}
 
@@ -46,8 +44,7 @@ public class BloatLoaderContext {
 		while(clazz != null) {
 			MethodInfo[] methods = clazz.methods();
 			for (int methodIdx = 0; methodIdx < methods.length; methodIdx++) {
-				MethodInfo methodInfo=methods[methodIdx];
-				MethodEditor methodEdit = new MethodEditor(clazz, methodInfo);
+				MethodEditor methodEdit = context.editMethod(methods[methodIdx]);
 				if (methodEdit.name().equals(methodName)&&signatureMatchesTypes(argTypes, methodEdit)) {
 					return methodEdit;
 				}
@@ -63,7 +60,7 @@ public class BloatLoaderContext {
 			FieldInfo[] fields = clazz.fields();
 			for (int fieldIdx = 0; fieldIdx < fields.length; fieldIdx++) {
 				FieldInfo fieldInfo=fields[fieldIdx];
-				FieldEditor fieldEdit = new FieldEditor(clazz, fieldInfo);
+				FieldEditor fieldEdit = context.editField(fieldInfo);
 				if (fieldEdit.name().equals(fieldName)&&fieldType.equals(fieldEdit.type())) {
 					return fieldEdit;
 				}
@@ -96,16 +93,15 @@ public class BloatLoaderContext {
 	}
 
 	public ClassEditor classEditor(String className) throws ClassNotFoundException {
-		return new ClassEditor(context, loader.loadClass(className));
+		return context.editClass(className);
 	}
 
 	public ClassEditor classEditor(int modifiers, String className, Type superClass, Type[] interfaces) {
-		return new ClassEditor(context, modifiers, className, superClass, interfaces);
+		return context.newClass(modifiers, className, superClass, interfaces);
 	}
 	
 	public Type superType(Type type) throws ClassNotFoundException {
-		ClassInfo classInfo = loader.loadClass(type.className());
-		return new ClassEditor(new CachingBloatContext(loader,new ArrayList(),false),classInfo).superclass();
+		return context.editClass(type).superclass();
 	}
 	
 	public void commit() {
