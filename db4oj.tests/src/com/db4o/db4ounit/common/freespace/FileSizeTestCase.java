@@ -4,9 +4,10 @@ package com.db4o.db4ounit.common.freespace;
 
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
 
-public class FileSizeTestCase extends FreespaceManagerTestCaseBase {
+public class FileSizeTestCase extends FreespaceManagerTestCaseBase implements OptOutDefragSolo {
     
     private static final int ITERATIONS = 100;
 
