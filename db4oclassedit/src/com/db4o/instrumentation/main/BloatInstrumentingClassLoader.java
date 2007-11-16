@@ -20,7 +20,7 @@ public class BloatInstrumentingClassLoader extends BloatingClassLoader {
 	private final Map _cache = new HashMap();
 	private final ClassFilter _filter;
 	private final BloatClassEdit _edit;
-	private final BloatLoaderContext _loaderContext = new BloatLoaderContext(getClassInfoLoader(), getEditorContext());
+	private final BloatLoaderContext _loaderContext = new BloatLoaderContext(getEditorContext());
 
 	public BloatInstrumentingClassLoader(URL[] urls, ClassLoader parent, BloatClassEdit edit) {
 		this(urls, parent, new AcceptAllClassesFilter(), edit);
