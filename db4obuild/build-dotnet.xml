@@ -569,6 +569,10 @@
 				file="${src.dir}/TA/Resources/TADoubleInstrumentationSubject.cs"
 				name="Db4oAdmin.Tests.TA.Resources.TADoubleInstrumentationSubject.cs" />
 			
+			<resource
+				file="${src.dir}/TA/Resources/TAUnsafeInstrumentationSubject.cs"
+				name="Db4oAdmin.Tests.TA.Resources.TAUnsafeInstrumentationSubject.cs" />
+			
 			<src dir="${src.dir}">
 				<include name="**/*.cs" />
 				<exclude name="**/Resources/**" />
@@ -711,15 +715,14 @@
 				<arg value="@sharpen-new-db4ounit-mapping" />
 			</args>
 		</sharpen>
-	</target>
 		
-	<target name="update-csharp-projects-db4ounit" depends="properties, sharpen-db4ounit">
-		<delete dir="${dir.n.db4ounit}">
+		<delete dir="${dir.n.db4ounit}/Db4oUnit">
 			<include name="**/*.cs" />
 			<exclude name="**/.svn/**" />
 		</delete>
-		<mkdir dir="${dir.n.db4ounit}" />
-		<copy todir="${dir.n.db4ounit}">
+		
+		<mkdir dir="${dir.n.db4ounit}/Db4oUnit" />
+		<copy todir="${dir.n.db4ounit}/Db4oUnit">
 			<fileset dir="${dir.sharpen}/db4ounit.net/src">
 				<include name="**/*.cs" />
 			</fileset>
@@ -745,13 +748,10 @@
 	</target>
 	
 	<target name="prepare-conversion-workspace-db4ounit" depends="init">
-		<delete dir="${dir.sharpen}" />
-		<mkdir dir="${dir.sharpen}" />
-		
+		<reset-dir dir="${dir.sharpen}" />		
 		<copy todir="${dir.sharpen}/db4ounit/src">
 			<fileset dir="${dir.db4ounit.src}">
 				<include name="**/*.java" />
-				<exclude name="**/db4o/**/*.java" />
 			</fileset>
 		</copy>
 	</target>
