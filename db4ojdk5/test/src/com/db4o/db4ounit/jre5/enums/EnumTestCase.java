@@ -73,7 +73,10 @@ public class EnumTestCase extends AbstractDb4oTestCase {
 		public TypeCountEnum[] array; 
 	}
         
-    @SuppressWarnings("unchecked")
+	/**
+	 * @deprecated testing deprecated api
+	 */
+    @SuppressWarnings("unchecked")    
 	public void testEnumsInCollections() throws Exception {
     	final boolean withDb4oCollections=true;
 
