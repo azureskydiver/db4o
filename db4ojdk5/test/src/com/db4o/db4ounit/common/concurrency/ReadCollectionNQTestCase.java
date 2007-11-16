@@ -22,7 +22,7 @@ public class ReadCollectionNQTestCase extends Db4oClientServerTestCase {
 	
 	private static int LIST_SIZE = 100;
 	
-	private List list = new ArrayList();
+	private List<Object> list = new ArrayList<Object>();
 
 	protected void store() throws Exception {
 		for (int i = 0; i < LIST_SIZE; i++) {
