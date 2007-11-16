@@ -9,7 +9,8 @@ issue the following API method call in your global  ._
 open an IObjectContainer/IObjectServer:
 
 .c // assuming
-class Foo{
+class Foo
+{
   String bar;
 }
 
