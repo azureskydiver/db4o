@@ -3,7 +3,6 @@
 package com.db4o.nativequery.optimization;
 
 import com.db4o.instrumentation.core.*;
-import com.db4o.nativequery.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.jdk.*;
 
