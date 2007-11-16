@@ -171,7 +171,7 @@
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
 	</target>
 
-	<target name="run-core-tests-instrumented" depends="configure, build-admin, build-tests">
+	<target name="run-core-tests-instrumented" depends="configure, build-tests, build-admin">
 		<mkdir dir="${dir.dist.dll.net}/Instrumented" />
 					
 		<copy todir="${dir.dist.dll.net}/Instrumented">
@@ -447,6 +447,7 @@
 			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4objects.Db4o.dll" />
 				<include name="Db4objects.Db4o.Tools.dll" />
+				<include name="Mono.Cecil.dll" />
 				<include name="Db4oUnit.dll" />
 				<include name="Db4oUnit.Extensions.dll" />
 			</reference>
@@ -468,9 +469,12 @@
 	</target>
 	
 	<target name="build-db4ounit" depends="sharpen-db4ounit">
-		<ant antfile="build-new-db4ounit.xml" target="compilenet" inheritall="false">
-			<property name="csc.executable" value="${csc.executable}" />
-		</ant>
+		<csc outputfile="${dir.dist.dll.net}/Db4oUnit.dll"
+			targettype="library"
+			srcdir="${dir.n.db4ounit}"
+			executable="${csc.executable}"
+			debug="true">
+		</csc>
 	</target>
 	
 	<target name="build-tools" depends="build-core">
@@ -594,7 +598,11 @@
 				<include name="**/*.cs" />
 			</src>
 			<reference dir="${dir.dist.dll.net}">
-				<include name="*.dll" />
+				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4objects.Db4o.Tools.dll" />
+				<include name="Mono.GetOptions.dll" />
+				<include name="Mono.Cecil.dll" />
+				<include name="Cecil.FlowAnalysis.dll" />
 			</reference>
 		</csc>
 	</target>
@@ -697,9 +705,55 @@
 
 	</target>
 	
-	<target name="sharpen-db4ounit" unless="skip.sharpen">
-		<ant antfile="build-new-db4ounit.xml" target="update-csharp-projects" inheritall="false">
-		</ant>
+	<target name="sharpen-db4ounit" depends="prepare-conversion-workspace-db4ounit, install-javatocsharp-plugin" unless="skip.sharpen">
+		<sharpen resource="db4ounit/src" workspace="${dir.sharpen}">
+			<args>
+				<arg value="@sharpen-new-db4ounit-mapping" />
+			</args>
+		</sharpen>
+	</target>
+		
+	<target name="update-csharp-projects-db4ounit" depends="properties, sharpen-db4ounit">
+		<delete dir="${dir.n.db4ounit}">
+			<include name="**/*.cs" />
+			<exclude name="**/.svn/**" />
+		</delete>
+		<mkdir dir="${dir.n.db4ounit}" />
+		<copy todir="${dir.n.db4ounit}">
+			<fileset dir="${dir.sharpen}/db4ounit.net/src">
+				<include name="**/*.cs" />
+			</fileset>
+		</copy>
+		
+		<fileset id="db4ounit.files" dir="${dir.n.db4ounit}">
+			<include name="**/*.cs" />
+		</fileset>
+
+		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-2005.csproj">
+			<sources refid="db4ounit.files" />
+		</updatecsharpproject>
+
+		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-CF-2005.csproj">
+			<sources refid="db4ounit.files" />
+		</updatecsharpproject>
+		
+		<updateAssemblyInfo version="${assembly.version}">
+			<fileset dir="${dir.n.db4ounit}">
+				<include name="**/AssemblyInfo.cs" />
+			</fileset>
+		</updateAssemblyInfo>
+	</target>
+	
+	<target name="prepare-conversion-workspace-db4ounit" depends="init">
+		<delete dir="${dir.sharpen}" />
+		<mkdir dir="${dir.sharpen}" />
+		
+		<copy todir="${dir.sharpen}/db4ounit/src">
+			<fileset dir="${dir.db4ounit.src}">
+				<include name="**/*.java" />
+				<exclude name="**/db4o/**/*.java" />
+			</fileset>
+		</copy>
 	</target>
 	
 	<property name="dependencies.jar" location="${dir.sharpen}/lib/dependencies.jar" />
@@ -1062,11 +1116,11 @@
 		</exec>
 	</target>
 	
-	<target name="init" depends="properties, get-svn-revision">
-		<mkdir dir="${dir.dist.dll.net}" />
-		<mkdir dir="${dir.dist.dll.compact}" />
+	<target name="init" depends="properties">
+		<reset-dir dir="${dir.dist.dll.net}" />
+		<reset-dir dir="${dir.dist.dll.compact}" />
 		
-		<property name="assembly.version" value="${db4o.version.full}.${svn.revision}" />
+		<property name="assembly.version" value="${db4o.version.iteration.revision}" />
 	</target>
 	
 	<target name="clean" description="Delete all generated files">

@@ -353,6 +353,12 @@
         </ant>
     </target>
 	
+	<target name="run-instrumented-net-tests" depends="prepare-test-environment" description="runs the .net test suite after being instrumented for TA">
+		<ant antfile="build-dotnet.xml" target="run-core-tests-instrumented">
+        	<property name="skip.java.compilation" value="true" />
+        </ant>
+	</target>
+	
 	<target name="prepare-test-environment" depends="clean.java">
 		<ant antfile="build-java.xml" target="build.db4ojava.tests" />
 	</target>
