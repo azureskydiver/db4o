@@ -12,9 +12,10 @@ import com.db4o.ta.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
-public class SampleTestCase extends AbstractDb4oTestCase implements OptOutTA {
+public class SampleTestCase extends AbstractDb4oTestCase implements OptOutTA, OptOutDefragSolo {
 
     public static void main(String[] args) {
         new SampleTestCase().runAll(); 
