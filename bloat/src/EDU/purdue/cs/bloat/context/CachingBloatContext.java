@@ -364,21 +364,24 @@ public class CachingBloatContext extends PersistentBloatContext {
 	}
 
 	public void commit() {
-		Iterator iter = fieldEditors.values().iterator();
-		while (iter.hasNext()) {
-			final FieldEditor fe = (FieldEditor) iter.next();
+		Collection fieldValues = fieldEditors.values();
+		FieldEditor[] fieldArray = (FieldEditor[]) fieldValues.toArray(new FieldEditor[fieldValues.size()]);
+		for (int i = 0; i < fieldArray.length; i++) {
+			final FieldEditor fe = fieldArray[i];
 			commit(fe.fieldInfo());
 		}
 
-		iter = methodEditors.values().iterator();
-		while (iter.hasNext()) {
-			final MethodEditor me = (MethodEditor) iter.next();
+		Collection methodValues = methodEditors.values();
+		MethodEditor[] methodArray = (MethodEditor[]) methodValues.toArray(new MethodEditor[methodValues.size()]);
+		for (int i = 0; i < methodArray.length; i++) {
+			final MethodEditor me = methodArray[i];
 			commit(me.methodInfo());
 		}
 
-		iter = classEditors.values().iterator();
-		while (iter.hasNext()) {
-			final ClassEditor ce = (ClassEditor) iter.next();
+		Collection classValues = classEditors.values();
+		ClassEditor[] classArray = (ClassEditor[]) classValues.toArray(new ClassEditor[classValues.size()]);
+		for (int i = 0; i < classArray.length; i++) {
+			final ClassEditor ce = classArray[i];
 			commit(ce.classInfo());
 		}
 	}
