@@ -104,18 +104,6 @@
 		</sequential>
 	</macrodef>
 	
-	<macrodef name="updateAssemblyInfoFiles">
-		<attribute name="srcdir" />
-		<sequential>
-			<updateAssemblyInfo version="${db4o.version.full}">
-				<fileset dir="@{srcdir}">
-					<include name="**/AssemblyInfo.cs" />
-				</fileset>
-			</updateAssemblyInfo>
-		</sequential>
-	</macrodef>
-
-	
 	<target name="install-javatocsharp-plugin">
 			
 		<property name="javatocsharp.core.dir" location="../javatocsharp.core" />
