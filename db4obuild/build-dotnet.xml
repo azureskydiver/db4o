@@ -174,7 +174,7 @@
 	<target name="run-core-tests-instrumented" depends="configure, build-tests, build-admin">
 		<mkdir dir="${dir.dist.dll.net}/Instrumented" />
 					
-		<copy todir="${dir.dist.dll.net}/Instrumented">
+		<copy todir="${dir.dist.dll.net}/Instrumented" overwrite="true">
 			<fileset dir="${dir.dist.dll.net}">
 				<include name="*.dll" />
 				<include name="*.exe" />
@@ -183,7 +183,7 @@
 		</copy>
 		<exec executable="${dir.dist.dll.net}/Instrumented/Db4oAdmin.exe" dir="${dir.dist.dll.net}/Instrumented" failonerror="true" timeout="3600000" description="Instrumenting Db4objects.Db4o.Tests.exe">
 			
-			<arg value="-by-name:(Db4objects\.Db4o\.Tests\.(Common|CLI1|CLI2)\.(TA|Activation|Handlers|(Inside\.Query))\.|NativeQueries|ActivationTestCase)" />
+			<arg value="-by-name:(Db4objects\.Db4o\.Tests\.(Common|CLI1|CLI2)\.(TA|Activation|Migration|Handlers|(Inside\.Query))\.|NativeQueries|ActivationTestCase)" />
 			<arg value="-not" />
 			
 			<arg value="-debug" />
