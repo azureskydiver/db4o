@@ -2,17 +2,12 @@
 
 package com.db4odoc.qbe;
 
-import java.io.File;
-import java.util.Comparator;
 import java.util.List;
 
-import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.ext.Db4oException;
-import com.db4o.query.Predicate;
-import com.db4o.query.QueryComparator;
+import com.db4o.ext.DatabaseFileLockedException;
 import com.db4odoc.nqcollection.Pilot;
 
 public class QBEExample {

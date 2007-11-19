@@ -3,11 +3,11 @@ package com.db4odoc.inconsistent;
 import java.io.File;
 import java.io.IOException;
 
-import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
+import com.db4o.ext.DatabaseFileLockedException;
 
 public class InconsistentGraphExample {
 

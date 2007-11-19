@@ -5,11 +5,11 @@ package com.db4odoc.pitfalls;
 import java.io.File;
 import java.math.BigDecimal;
 
-import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
+import com.db4o.ext.DatabaseFileLockedException;
 
 
 public class BigDecimalExample {

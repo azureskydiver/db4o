@@ -5,9 +5,9 @@ package com.db4odoc.taexamples.instrumented;
 import java.io.File;
 import java.net.URL;
 
+import com.db4o.instrumentation.classfilter.ByNameClassFilter;
 import com.db4o.instrumentation.core.BloatClassEdit;
 import com.db4o.instrumentation.core.ClassFilter;
-import com.db4o.instrumentation.filter.ByNameClassFilter;
 import com.db4o.instrumentation.main.Db4oInstrumentationLauncher;
 import com.db4o.ta.instrumentation.InjectTransparentActivationEdit;
 

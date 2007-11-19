@@ -2,7 +2,6 @@
 
 package com.db4odoc.versionupdate;
 
-import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 
 public class UpdateExample {

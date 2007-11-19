@@ -2,13 +2,16 @@ package com.db4odoc.taexamples.instrumented;
 
 import java.io.File;
 
-import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
+import com.db4o.diagnostic.Diagnostic;
+import com.db4o.diagnostic.DiagnosticListener;
+import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.query.Query;
 import com.db4o.reflect.jdk.JdkReflector;
+import com.db4o.ta.NotTransparentActivationEnabled;
 import com.db4o.ta.TransparentActivationSupport;
 
 public class TAInstrumentationExample {
@@ -21,6 +24,20 @@ public class TAInstrumentationExample {
 		testActivation();
 	}
 	// end main
+
+	private static void activateDiagnostics(Configuration configuration) {
+		// Add diagnostic listener that will show all the classes that are not
+		// TA aware.
+		configuration.diagnostic().addListener(new DiagnosticListener() {
+			public void onDiagnostic(Diagnostic diagnostic) {
+				if (!(diagnostic instanceof NotTransparentActivationEnabled)) {
+					return;
+				}
+				System.out.println(diagnostic.toString());
+			}
+		});
+	}
+	// end activateDiagnostics
 
 	private static Configuration configureTA() {
 		Configuration configuration = Db4o.newConfiguration();
@@ -53,6 +70,7 @@ public class TAInstrumentationExample {
 	private static void testActivation() {
 		storeSensorPanel();
 		Configuration configuration = configureTA();
+		activateDiagnostics(configuration);
 
 		ObjectContainer container = database(configuration);
 		if (container != null) {

@@ -8,8 +8,8 @@ import java.io.PrintStream;
 import java.io.RandomAccessFile;
 
 import com.db4o.DTrace;
-import com.db4o.DatabaseFileLockedException;
-import com.db4o.Db4oIOException;
+import com.db4o.ext.DatabaseFileLockedException;
+import com.db4o.ext.Db4oIOException;
 import com.db4o.internal.Platform4;
 import com.db4o.io.IoAdapter;
 
