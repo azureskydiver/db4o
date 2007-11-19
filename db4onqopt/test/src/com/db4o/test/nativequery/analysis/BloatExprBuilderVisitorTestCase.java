@@ -1187,11 +1187,11 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		if(NQDebug.LOG) {
 			System.out.println(expr);
 		}
-		_context.commit();
 		return expr;		
 	}
 
 	public void tearDown() throws Exception {
+		_context = null;
 	}
 	
 	public static void main(String[] args) throws Exception {
