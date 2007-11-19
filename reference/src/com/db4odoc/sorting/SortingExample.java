@@ -26,9 +26,9 @@ public class SortingExample {
 		Db4o.configure().objectClass(Pilot.class).objectField(
 				"points").indexed(true);
 		setObjects();
-		getObjectsNQ();
+		//getObjectsNQ();
 		getObjectsSODA();
-		getObjectsEval();
+		//getObjectsEval();
 	}
 
 	// end main
@@ -90,16 +90,16 @@ public class SortingExample {
 			
 			Query query = container.query();
 			query.constrain(Pilot.class);
+			query.descend("points").constrain(2).greater();
 			query.descend("name").orderAscending();
-			Pilot pilot = (Pilot)query.execute().next();
-//			query.descend("points").orderDescending();
-//			long t1 = System.currentTimeMillis();
-//			ObjectSet result = query.execute();
-//			long t2 = System.currentTimeMillis();
-//			long diff = t2 - t1;
-//			System.out.println("Time to query and sort with  SODA: "
-//					+ diff + " ms.");
-//			listResult(result);
+			query.descend("points").orderAscending();
+			long t1 = System.currentTimeMillis();
+			ObjectSet result = query.execute();
+			long t2 = System.currentTimeMillis();
+			long diff = t2 - t1;
+			System.out.println("Time to query and sort with  SODA: "
+					+ diff + " ms.");
+			listResult(result);
 		} finally {
 			container.close();
 		}

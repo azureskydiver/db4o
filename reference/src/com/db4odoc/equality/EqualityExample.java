@@ -2,10 +2,10 @@
 
 package com.db4odoc.equality;
 
-import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.query.Predicate;
 
 

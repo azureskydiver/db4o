@@ -4,14 +4,13 @@ package com.db4odoc.taexamples;
 
 import java.io.File;
 
-import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
-import com.db4o.db4ounit.common.ta.collections.PagedListSupport;
 import com.db4o.diagnostic.Diagnostic;
 import com.db4o.diagnostic.DiagnosticListener;
+import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.ta.NotTransparentActivationEnabled;
 import com.db4o.ta.TransparentActivationSupport;
 
@@ -63,7 +62,7 @@ public class TAExample {
 		// add TA support
 		configuration.add(new TransparentActivationSupport());
 		// activate TA diagnostics to reveal the classes that are not TA-enabled.
-		// activateDiagnostics(configuration);
+		activateDiagnostics(configuration);
 		return configuration;	
 	}
 	// end configureTA

@@ -6,11 +6,11 @@ import java.io.File;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
+import com.db4o.ext.DatabaseFileLockedException;
 
 
 public class TimestampExample {

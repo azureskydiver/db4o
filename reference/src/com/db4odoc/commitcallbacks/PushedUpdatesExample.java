@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.db4o.DatabaseFileLockedException;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
@@ -15,6 +14,7 @@ import com.db4o.events.EventArgs;
 import com.db4o.events.EventListener4;
 import com.db4o.events.EventRegistry;
 import com.db4o.events.EventRegistryFactory;
+import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.ext.ObjectInfoCollection;
 import com.db4o.foundation.Iterator4;

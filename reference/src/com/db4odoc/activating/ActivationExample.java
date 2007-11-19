@@ -219,7 +219,7 @@ public class ActivationExample {
 		new File(DB4O_FILE_NAME).delete();
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			List list = container.ext().collections().newLinkedList(); 
+			List list = (List)container.ext().collections().newLinkedList(); 
 			for (int i =0; i < 10; i++){
 				SensorPanel sensor = new SensorPanel(i);
 				list.add(sensor);
