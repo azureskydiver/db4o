@@ -1419,13 +1419,22 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             int tempState = _state;
             setStateOK();
             i_name = newName;
+            i_nameBytes = asBytes(i_name);
             setStateDirty();
             write(_container.systemTransaction());
+            _reflector = container().reflector().forName(newName);
+            container().classCollection().refreshClassCache(this);
+            refresh();
             _state = tempState;
         }else{
             Exceptions4.throwRuntimeException(58);
         }
     }
+
+    //TODO: duplicates ClassMetadataRepository#asBytes
+	private byte[] asBytes(String str) {
+		return container().stringIO().write(str);
+	}
 
     final void createConfigAndConstructor(
         Hashtable4 a_byteHashTable,

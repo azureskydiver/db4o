@@ -8,7 +8,8 @@ public class AllTests extends Db4oTestSuite {
 
 	protected Class[] testCases() {
 		return new Class[] {
-				ClassRenameTestCase.class,
+				ClassRenameByConfigTestCase.class,
+				ClassRenameByStoredClassTestCase.class,
 				RemoveArrayFieldTestCase.class,
 		};
 	}
