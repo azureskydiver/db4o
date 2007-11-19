@@ -46,7 +46,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	private Date dateMember;
 
 	private ClassFileLoader loader;
-	private BloatLoaderContext bloatUtil;
+	private BloatLoaderContext _context;
 	
 	private int intMemberPlusOne() {
 		return intMember+1;
@@ -59,7 +59,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void setUp() throws Exception {
 		ClassSource classSource = new Db4oClassSource(new ClassLoaderNativeClassFactory(Data.class.getClassLoader()));
 		loader=new ClassFileLoader(classSource);
-		bloatUtil=new BloatLoaderContext(loader);
+		_context=new BloatLoaderContext(loader);
 	}
 	
 	// unconditional
@@ -1176,8 +1176,8 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	}
 	
 	private Expression expression(String methodName) throws ClassNotFoundException {
-		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(bloatUtil);	
-		FlowGraph flowGraph=bloatUtil.flowGraph(getClass().getName(),methodName);
+		BloatExprBuilderVisitor visitor = new BloatExprBuilderVisitor(_context);	
+		FlowGraph flowGraph=_context.flowGraph(getClass().getName(),methodName);
 		if(NQDebug.LOG) {
 			flowGraph.visit(new PrintVisitor());
 //		flowGraph.visit(new TreeStructureVisitor());
@@ -1187,6 +1187,7 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 		if(NQDebug.LOG) {
 			System.out.println(expr);
 		}
+		_context.commit();
 		return expr;		
 	}
 
