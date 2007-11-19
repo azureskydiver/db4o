@@ -459,15 +459,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         Iterator4 i = rereader._classes.iterator();
         while (i.moveNext()) {
             ClassMetadata clazz = (ClassMetadata)i.current();
-            if (_classMetadataByID.get(clazz.getID()) == null) {
-                _classes.add(clazz);
-                _classMetadataByID.put(clazz.getID(), clazz);
-                if(clazz.stateUnread()){
-                    _classMetadataByBytes.put(clazz.readName(_systemTransaction), clazz);
-                }else{
-                    _classMetadataByClass.put(clazz.classReflector(), clazz);
-                }
-            }
+            refreshClass(clazz);
         }
         i = _classes.iterator();
         while (i.moveNext()) {
@@ -475,6 +467,22 @@ public final class ClassMetadataRepository extends PersistentBase {
             clazz.refresh();
         }
     }
+
+	public void refreshClass(ClassMetadata clazz) {
+		if (_classMetadataByID.get(clazz.getID()) == null) {
+		    _classes.add(clazz);
+			_classMetadataByID.put(clazz.getID(), clazz);
+		    refreshClassCache(clazz);
+		}
+	}
+
+	public void refreshClassCache(ClassMetadata clazz) {
+		if(clazz.stateUnread()){
+		    _classMetadataByBytes.put(clazz.readName(_systemTransaction), clazz);
+		}else{
+		    _classMetadataByClass.put(clazz.classReflector(), clazz);
+		}
+	}
 
     void reReadClassMetadata(ClassMetadata clazz){
         if(clazz != null){

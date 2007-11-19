@@ -10,10 +10,10 @@ import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.CrossPlatformServices;
 
 
-public class ClassRenameTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+public class ClassRenameByConfigTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
 
 	public static void main(String[] args) {
-		new ClassRenameTestCase().runClientServer();
+		new ClassRenameByConfigTestCase().runClientServer();
 	}
 	
 	
