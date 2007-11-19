@@ -287,49 +287,6 @@
 		<property name="installer.upgrade.guid" value="${installer.upgrade.guid.net2}" />
 	</target>
 	
-	<target name="prepare-conversion-workspace" depends="init">
-		<delete dir="${target.dir}" />
-		<mkdir dir="${target.dir}" />
-		
-		<copy todir="${target.dir}">
-			<fileset dir="..">
-				<include name="db4oj/core/src/**/*.java" />
-			</fileset>
-		</copy>
-		
-		<!-- shared native query support -->
-		<copy todir="${target.dir}/db4oj">
-			<fileset dir="../db4onqopt">
-				<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
-				<!-- TODO: move to dedicated package, create shared reference for call in build-dotnet.xml -->
-				<include name="core/src/com/db4o/nativequery/NativeClassFactory.java" />
-				<include name="core/src/com/db4o/nativequery/DefaultNativeClassFactory.java" />
-				<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
-				<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
-				<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${target.dir}/db4oj/core/src" overwrite="true">
-			<fileset dir="../db4on/in/java">
-				<include name="**/*.java" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="copy-sharpened-files">
-		<copy todir="${target.dir}">
-			<fileset dir="${src.dir}">
-				<include name="**/*.cs" />
-				<exclude name="com/db4o/handlers/*.*" />
-				<exclude name="com/db4o/reflect/jdk/**/*.*" />
-				<exclude name="com/db4o/JDK_*.cs" />
-				<exclude name="com/db4o/JDKReflect*.cs" />
-				<exclude name="com/db4o/reflect/self/*.*" />
-			</fileset>
-		</copy>
-	</target>
-
 	<target name="buildjava" depends="clean.java" description="Full java build">
 		<ant antfile="build-java.xml" target="package.java" />
 	</target>
