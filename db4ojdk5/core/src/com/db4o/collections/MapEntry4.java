@@ -7,6 +7,8 @@ import java.util.*;
 
 /**
  * @exclude
+ * 
+ * @sharpen.ignore
  */
 public class MapEntry4<K, V> implements Map.Entry<K, V> {
 

@@ -434,7 +434,7 @@
 	<target name="rebuild" depends="clean, build">
 	</target>
 
-	<target name="build-tests" depends="build-tools, build-db4ounit-extensions">
+	<target name="build-tests" depends="build-tools, build-db4ounit-extensions, sharpen-tests">
 		<csc
 			destfile="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe"
 			targettype="exe"
@@ -454,7 +454,7 @@
 		</csc>
 	</target>
 		
-	<target name="build-db4ounit-extensions" depends="build-core, build-db4ounit"> 
+	<target name="build-db4ounit-extensions" depends="build-core, build-db4ounit, sharpen-db4ounit-extensions"> 
 		<csc
 			destfile="${dir.dist.dll.net}/Db4oUnit.Extensions.dll"
 			targettype="library"
@@ -477,7 +477,7 @@
 		</csc>
 	</target>
 	
-	<target name="build-tools" depends="build-core">
+	<target name="build-tools" depends="build-core, sharpen-tools">
 		<csc-all
 			assemblyName="Db4objects.Db4o.Tools"
 			sources="tools.sources">			
@@ -498,7 +498,7 @@
 		</csc-all>
 	</target>
 		
-	<target name="build-core" depends="init, check-dependencies, sharpen">
+	<target name="build-core" depends="init, configure, check-dependencies, sharpen-core">
 	
 		<fileset id="core.sources" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />
@@ -659,6 +659,13 @@
 				<include name="**/*.java" />
 			</fileset>
 		</copy>
+		
+		<copy todir="${dir.sharpen}/db4oj/core/src">
+			<fileset dir="${dir.j.jdk5.core.src}">
+				<include name="com/db4o/collections/ArrayMap4.java" />
+				<include name="com/db4o/collections/MapEntry4.java" />
+			</fileset>
+		</copy>
 	</target>
 	
 	<target name="copy-sharpened-files">
@@ -709,7 +716,8 @@
 
 	</target>
 	
-	<target name="sharpen-db4ounit" depends="prepare-conversion-workspace-db4ounit, install-javatocsharp-plugin" unless="skip.sharpen">
+	<target name="sharpen-db4ounit" depends="prepare-conversion-workspace-db4ounit, install-javatocsharp-plugin"
+			unless="skip.sharpen">
 		<sharpen resource="db4ounit/src" workspace="${dir.sharpen}">
 			<args>
 				<arg value="@sharpen-new-db4ounit-mapping" />
@@ -784,7 +792,8 @@
 		</updatecsharpproject>
 	</target>
 			
-	<target name="sharpen-db4ounit-extensions" depends="install-javatocsharp-plugin, create-dependencies-jar" unless="skip.sharpen">		
+	<target name="sharpen-db4ounit-extensions" depends="install-javatocsharp-plugin, create-dependencies-jar"
+			unless="skip.sharpen">		
 		
 		<property name="target.dir" value="${dir.sharpen}/db4ounit-extensions" />
 		
@@ -833,7 +842,8 @@
 		</updatecsharpproject>
 	</target>		
 	
-	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions" unless="skip.sharpen">
+	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions"
+			unless="skip.sharpen">
 		
 		<property name="target.dir" location="${dir.sharpen}" />
 		

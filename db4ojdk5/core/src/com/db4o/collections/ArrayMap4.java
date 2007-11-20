@@ -18,16 +18,23 @@ import com.db4o.ta.*;
  * 
  * @see java.util.Map
  * @see com.db4o.ta.Activatable
+ * 
+ * @sharpen.ignore.implements
+ * @sharpen.rename ArrayDictionary4
+ * @sharpen.partial
  */
 
 public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         Activatable {
 
+	/**
+	 * @sharpen.ignore
+	 */
     private static final long serialVersionUID = 1L;
 
-    private K[] _keys;
+    private Object[] _keys;
 
-    private V[] _values;
+    private Object[] _values;
 
     private int _startIndex;
 
@@ -74,8 +81,6 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @see com.db4o.ta.Activatable
 	 */
     public void clear() {
-        activate();
-        
         _startIndex = 0;
         _endIndex = 0;
         Arrays.fill(_keys, null);
@@ -88,12 +93,18 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     public boolean containsKey(Object key) {
-        activate();
-        
-        return indexOf(_keys, key) != -1;
+        return containsKeyImpl((K) key);
     }
+
+	private boolean containsKeyImpl(K key) {
+		activate();
+        
+        return indexOfKey(key) != -1;
+	}
 
 	/**
 	 * java.util.Map implementation but transparently 
@@ -101,12 +112,22 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     public boolean containsValue(Object value) {
-        activate();
-        
-        return indexOf(_values, value) != -1;
+        return containsValueImpl((V) value);
     }
+
+	private boolean containsValueImpl(V value) {
+		activate();
+        
+        return indexOfValue(value) != -1;
+	}
+
+	private int indexOfValue(V value) {
+		return indexOf(_values, value);
+	}
 
 	/**
 	 * java.util.Map implementation but transparently 
@@ -114,13 +135,15 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     public Set<Map.Entry<K, V>> entrySet() {
         activate();
         
         HashSet<Map.Entry<K, V>> set = new HashSet<Entry<K, V>>();
         for (int i = _startIndex; i < _endIndex; i++) {
-            MapEntry4<K, V> entry = new MapEntry4<K, V>(_keys[i], _values[i]);
+            MapEntry4<K, V> entry = new MapEntry4<K, V>(keyAt(i), valueAt(i));
             set.add(entry);
         }
         return set;
@@ -132,13 +155,19 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     public V get(Object key) {
         activate();
         
-        int index = indexOf(_keys, key);
-        return index == -1 ? null : _values[index];
+        int index = indexOfKey((K)key);
+        return index == -1 ? null : valueAt(index);
     }
+
+	private V valueAt(int index) {
+		return (V)_values[index];
+	}
 
 	/**
 	 * java.util.Map implementation but transparently 
@@ -146,6 +175,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     public boolean isEmpty() {
         return size() == 0;
@@ -157,38 +188,52 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     public Set<K> keySet() {
         activate();
         
         HashSet<K> set = new HashSet<K>();
         for (int i = _startIndex; i < _endIndex; i++) {
-            set.add(_keys[i]);
+            set.add(keyAt(i));
         }
         return set;
     }
 
+	private K keyAt(int i) {
+		return (K)_keys[i];
+	}
+
 	/**
 	 * java.util.Map implementation but transparently 
 	 * activates the members as required.
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     public V put(K key, V value) {
         activate();
         
-        int index = indexOf(_keys, key);
-        V oldValue = null;
+        int index = indexOfKey(key);
         if (index == -1) {
-            add(key, value);
-        } else {
-            oldValue = _values[index];
-            _values[index] = value;
+            insert(key, value);
+            return null;
         }
-
-        return oldValue;
+        return replace(index, value);
     }
+
+	private int indexOfKey(K key) {
+		return indexOf(_keys, key);
+	}
+
+	private V replace(int index, V value) {
+		V oldValue = valueAt(index);
+		_values[index] = value;
+		return oldValue;
+	}
 
 	/**
 	 * java.util.Map implementation but transparently 
@@ -196,6 +241,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     public void putAll(Map<? extends K, ? extends V> t) {
         for (Map.Entry<? extends K, ? extends V> entry : t.entrySet()) {
@@ -209,6 +256,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     @SuppressWarnings("unchecked")
     public V remove(Object key) {
@@ -218,7 +267,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         if (index == -1) {
             return null;
         }
-        return (V) delete(index);
+        return delete(index);
     }
 
 	/**
@@ -227,6 +276,9 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.internal
+	 * @sharpen.property
 	 */
     public int size() {
         activate();
@@ -240,13 +292,15 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.property
 	 */
     public Collection<V> values() {
         activate();
         
         ArrayList<V> list = new ArrayList<V>();
         for (int i = _startIndex; i < _endIndex; i++) {
-            list.add(_values[i]);
+            list.add(valueAt(i));
         }
         return list;
     }
@@ -257,6 +311,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     @SuppressWarnings("unchecked")
     public Object clone() {
@@ -277,6 +333,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see java.util.Map 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
     @SuppressWarnings("unchecked")
     public boolean equals(Object obj) {
@@ -323,10 +381,13 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 
     @SuppressWarnings("unchecked")
     private void initializeBackingArray(int length) {
-        _keys = (K[]) new Object[length];
-        _values = (V[]) new Object[length];
+        _keys = new Object[length];
+        _values = new Object[length];
     }
-    
+
+    /**
+     * @sharpen.ignore
+     */
     private int indexOf(Object[] array, Object obj) {
         int index = -1;
         for (int i = _startIndex; i < _endIndex; i++) {
@@ -338,7 +399,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         return index;
     }
     
-    private void add(K key, V value) {
+    private void insert(K key, V value) {
         ensureCapacity();
         _keys[_endIndex] = key;
         _values[_endIndex] = value;
@@ -355,13 +416,13 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
             System.arraycopy(_values, _startIndex, newValues, 0, _endIndex - _startIndex);
             Arrays.fill(_keys, null);
             Arrays.fill(_values, null);
-            _keys = (K[]) newKeys;
-            _values = (V[]) newValues;
+            _keys = newKeys;
+            _values = newValues;
         }
     }
     
-    private Object delete(int index) {
-        Object value = _values[index];
+    private V delete(int index) {
+        V value = valueAt(index);
         for (int i = index; i < _endIndex -1; i++) {
             _keys[i] = _keys[i + 1];
             _values[i] = _values[i + 1];
