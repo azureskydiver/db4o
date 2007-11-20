@@ -10,7 +10,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/db4oclassedit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4onqopt"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4otaj"/>
-	<classpathentry kind="lib" path="lib/ant.jar"/>
 	<classpathentry kind="lib" path="lib/ant-launcher.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
