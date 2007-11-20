@@ -7,8 +7,7 @@ import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
-//TODO: this test should also run in EmbeddedClientServer
-public class ClassRenameByStoredClassTestCase extends AbstractDb4oTestCase implements OptOutCS {
+public class ClassRenameByStoredClassTestCase extends AbstractDb4oTestCase implements OptOutNetworkingCS {
 
 	private static String NAME = "test";
 	

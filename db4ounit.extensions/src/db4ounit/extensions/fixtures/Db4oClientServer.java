@@ -116,6 +116,9 @@ public class Db4oClientServer extends
 		if (OptOutCS.class.isAssignableFrom(clazz)) {
 			return false;
 		}
+		if (!_embeddedClient && (OptOutNetworkingCS.class.isAssignableFrom(clazz))) {
+			return false;
+		}
 		if (_embeddedClient && (OptOutAllButNetworkingCS.class.isAssignableFrom(clazz))) {
 			return false;
 		}
