@@ -2,23 +2,19 @@
 
 package com.db4o.nativequery.optimization;
 
-import EDU.purdue.cs.bloat.cfg.FlowGraph;
-import EDU.purdue.cs.bloat.editor.ClassEditor;
-import EDU.purdue.cs.bloat.editor.MethodEditor;
-import EDU.purdue.cs.bloat.editor.Type;
-import EDU.purdue.cs.bloat.file.ClassSource;
-import EDU.purdue.cs.bloat.tree.PrintVisitor;
+import EDU.purdue.cs.bloat.cfg.*;
+import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.file.*;
+import EDU.purdue.cs.bloat.tree.*;
 
 import com.db4o.instrumentation.core.*;
-import com.db4o.nativequery.NQDebug;
-import com.db4o.nativequery.analysis.BloatExprBuilderVisitor;
-import com.db4o.nativequery.expr.Expression;
+import com.db4o.nativequery.*;
+import com.db4o.nativequery.analysis.*;
+import com.db4o.nativequery.expr.*;
 
 public class NativeQueryEnhancer {
 	
 	public static final String OPTIMIZE_QUERY_METHOD_NAME = "optimizeQuery";
-	
-	private static SODABloatMethodBuilder BLOAT_BUILDER=new SODABloatMethodBuilder();
 	
 	public boolean enhance(BloatLoaderContext bloatUtil,ClassEditor classEditor,String methodName,Type[] argTypes,ClassLoader classLoader,ClassSource classSource) throws Exception {
 		if(NQDebug.LOG) {
@@ -28,12 +24,8 @@ public class NativeQueryEnhancer {
 		if(expr==null) {
 			return false;
 		}
-		MethodEditor methodEditor=BLOAT_BUILDER.injectOptimization(expr,classEditor,classLoader,classSource);
-		if(NQDebug.LOG) {
-			System.out.println("SODA BYTE CODE:");
-			methodEditor.print(System.out);
-		}
-		methodEditor.commit();
+		new SODABloatMethodBuilder().injectOptimization(expr,classEditor,classLoader,classSource);
+		
 		classEditor.commit();
 		return true;
 	}

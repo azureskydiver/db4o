@@ -10,7 +10,6 @@ import com.db4o.instrumentation.util.*;
 import com.db4o.internal.query.*;
 import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
-import com.db4o.ta.*;
 
 /**
  * @exclude

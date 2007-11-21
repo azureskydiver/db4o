@@ -38,7 +38,7 @@ public class SODABloatMethodBuilder {
 		private Class candidateClass;
 		private ClassSource classSource;
 		
-		public SODABloatMethodVisitor(Class predicateClass, ClassLoader classLoader, ClassSource classSource) {
+		public SODABloatMethodVisitor(Class predicateClass, ClassSource classSource) {
 			this.predicateClass=predicateClass;
 			this.classSource = classSource;
 		}
@@ -46,7 +46,7 @@ public class SODABloatMethodBuilder {
 		public void visit(AndExpression expression) {
 			expression.left().accept(this);
 			expression.right().accept(this);
-			methodEditor.addInstruction(Opcode.opc_invokeinterface,andRef);
+			invoke(andRef);
 		}
 
 		public void visit(BoolConstExpression expression) {
@@ -57,7 +57,7 @@ public class SODABloatMethodBuilder {
 		public void visit(OrExpression expression) {
 			expression.left().accept(this);
 			expression.right().accept(this);
-			methodEditor.addInstruction(Opcode.opc_invokeinterface,orRef);
+			invoke(orRef);
 		}
 
 		public void visit(final ComparisonExpression expression) {
@@ -65,48 +65,41 @@ public class SODABloatMethodBuilder {
 					"query", queryType, 1));
 			Iterator4 fieldNames = fieldNames(expression.left());
 			while (fieldNames.moveNext()) {
-				methodEditor.addInstruction(Opcode.opc_ldc, fieldNames.current());
-				methodEditor.addInstruction(Opcode.opc_invokeinterface, descendRef);
+				ldc(fieldNames.current());
+				invoke(descendRef);
 			}
 			expression.right().accept(
 					new ComparisonBytecodeGeneratingVisitor(methodEditor,
 							predicateClass, candidateClass, classSource));
-			methodEditor.addInstruction(Opcode.opc_invokeinterface,
-					constrainRef);
+			invoke(constrainRef);
 			ComparisonOperator op = expression.op();
 			if (op.equals(ComparisonOperator.EQUALS)) {
 				return;
 			}
 			if (op.equals(ComparisonOperator.IDENTITY)) {
-				methodEditor.addInstruction(Opcode.opc_invokeinterface,
-						identityRef);
+				invoke(identityRef);
 				return;
 			}
 			if (op.equals(ComparisonOperator.GREATER)) {
-				methodEditor.addInstruction(Opcode.opc_invokeinterface,
-						greaterRef);
+				invoke(greaterRef);
 				return;
 			}
 			if (op.equals(ComparisonOperator.SMALLER)) {
-				methodEditor.addInstruction(Opcode.opc_invokeinterface,
-						smallerRef);
+				invoke(smallerRef);
 				return;
 			}
 			if (op.equals(ComparisonOperator.CONTAINS)) {
-				methodEditor.addInstruction(Opcode.opc_invokeinterface,
-						containsRef);
+				invoke(containsRef);
 				return;
 			}
 			if (op.equals(ComparisonOperator.STARTSWITH)) {
-				methodEditor.addInstruction(Opcode.opc_ldc, new Integer(1));
-				methodEditor.addInstruction(Opcode.opc_invokeinterface,
-						startsWithRef);
+				ldc(new Integer(1));
+				invoke(startsWithRef);
 				return;
 			}
 			if (op.equals(ComparisonOperator.ENDSWITH)) {
-				methodEditor.addInstruction(Opcode.opc_ldc, new Integer(1));
-				methodEditor.addInstruction(Opcode.opc_invokeinterface,
-						endsWithRef);
+				ldc(new Integer(1));
+				invoke(endsWithRef);
 				return;
 			}
 			throw new RuntimeException("Cannot interpret constraint: "
@@ -115,7 +108,7 @@ public class SODABloatMethodBuilder {
 
 		public void visit(NotExpression expression) {
 			expression.expr().accept(this);
-			methodEditor.addInstruction(Opcode.opc_invokeinterface,notRef);
+			invoke(notRef);
 		}
 		
 		private Iterator4 fieldNames(FieldValue fieldValue) {
@@ -134,14 +127,14 @@ public class SODABloatMethodBuilder {
 		buildMethodReferences();
 	}
 	
-	public MethodEditor injectOptimization(Expression expr, ClassEditor classEditor,ClassLoader classLoader, ClassSource classSource) {
+	public void injectOptimization(Expression expr, ClassEditor classEditor,ClassLoader classLoader, ClassSource classSource) {
 		classEditor.addInterface(Db4oEnhancedFilter.class);
 		methodEditor=new MethodEditor(classEditor,Modifiers.PUBLIC,Void.TYPE,NativeQueryEnhancer.OPTIMIZE_QUERY_METHOD_NAME,new Class[]{Query.class},new Class[]{});
 		LabelGenerator labelGen = new LabelGenerator();
 		methodEditor.addLabel(labelGen.createLabel(true));
 		try {
 			Class predicateClass = classLoader.loadClass(BloatUtil.normalizeClassName(classEditor.name()));
-			expr.accept(new SODABloatMethodVisitor(predicateClass,classLoader,classSource));
+			expr.accept(new SODABloatMethodVisitor(predicateClass,classSource));
 			methodEditor.addInstruction(Opcode.opc_pop);
 			methodEditor.addLabel(labelGen.createLabel(false));
 			methodEditor.addInstruction(Opcode.opc_return);
@@ -149,7 +142,7 @@ public class SODABloatMethodBuilder {
 			if(LOG_BYTECODE) {
 				methodEditor.print(System.out);
 			}
-			return methodEditor;
+			methodEditor.commit();
 		} catch (ClassNotFoundException exc) {
 			throw new RuntimeException(exc.getMessage());
 		}
@@ -181,5 +174,13 @@ public class SODABloatMethodBuilder {
 
 	private Type createType(Class clazz) {
 		return Type.getType(clazz);
+	}
+	
+	private void invoke(final MemberRef method) {
+		methodEditor.addInstruction(Opcode.opc_invokeinterface, method);
+	}
+	
+	private void ldc(Object value) {
+		methodEditor.addInstruction(Opcode.opc_ldc, value);
 	}
 }
