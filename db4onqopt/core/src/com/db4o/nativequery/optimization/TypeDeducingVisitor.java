@@ -67,11 +67,9 @@ class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	}
 	
 	Field fieldFor(Class clazz,String fieldName) {
-		while(clazz!=null) {
-			try {
-				return clazz.getDeclaredField(fieldName);
-			} catch (Exception e) {
-			}
+		try {
+			return clazz.getDeclaredField(fieldName);
+		} catch (Exception e) {
 		}
 		return null;
 	}

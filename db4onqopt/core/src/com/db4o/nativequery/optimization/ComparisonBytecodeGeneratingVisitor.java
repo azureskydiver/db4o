@@ -89,7 +89,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 
 	public void visit(StaticFieldRoot root) {
 		try {
-			staticRoot=classSource.loadClass((root.className()));
+			staticRoot=classSource.loadClass(root.className());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
