@@ -44,6 +44,17 @@ public class RandomAccessFileAdapter extends IoAdapter {
 	}
 
 	public void close() throws Db4oIOException {
+		
+		// FIXME: This is a temporary quickfix for a bug in Android.
+		//        Remove after Android has been fixed.
+		try {
+			if (_delegate != null) {
+				_delegate.seek(0);
+			}
+		} catch (IOException e) {
+			// ignore
+		}
+		
 		Platform4.unlockFile(_path, _delegate);
 		try {
 			if (_delegate != null) {
