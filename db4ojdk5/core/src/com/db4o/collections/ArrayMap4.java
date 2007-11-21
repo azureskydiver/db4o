@@ -81,6 +81,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @see com.db4o.ta.Activatable
 	 */
     public void clear() {
+        activate();
+        
         _startIndex = 0;
         _endIndex = 0;
         Arrays.fill(_keys, null);
@@ -225,6 +227,9 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         return replace(index, value);
     }
 
+    /**
+     * @sharpen.ignore 
+     */
 	private int indexOfKey(K key) {
 		return indexOf(_keys, key);
 	}
