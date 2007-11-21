@@ -30,7 +30,6 @@ public class SODABloatMethodBuilder {
 	private MemberRef andRef;
 	private MemberRef orRef;
 	private MemberRef identityRef;
-	private Type queryType;
 
 	private class SODABloatMethodVisitor implements ExpressionVisitor {
 
@@ -50,8 +49,12 @@ public class SODABloatMethodBuilder {
 		}
 
 		public void visit(BoolConstExpression expression) {
-			methodEditor.addInstruction(Opcode.opc_aload,new LocalVariable("query",queryType,1));
+			loadQuery();
 			//throw new RuntimeException("No boolean constants expected in parsed expression tree");
+		}
+
+		private void loadQuery() {
+			methodEditor.addInstruction(Opcode.opc_aload, new LocalVariable(1));
 		}
 
 		public void visit(OrExpression expression) {
@@ -61,18 +64,29 @@ public class SODABloatMethodBuilder {
 		}
 
 		public void visit(final ComparisonExpression expression) {
-			methodEditor.addInstruction(Opcode.opc_aload, new LocalVariable(
-					"query", queryType, 1));
-			Iterator4 fieldNames = fieldNames(expression.left());
+			loadQuery();
+			
+			descend(fieldNames(expression.left()));
+			
+			expression.right().accept(comparisonEmitter());
+			
+			constrain(expression.op());
+		}
+
+		private void descend(Iterator4 fieldNames) {
 			while (fieldNames.moveNext()) {
-				ldc(fieldNames.current());
-				invoke(descendRef);
+				descend(fieldNames.current());
 			}
-			expression.right().accept(
-					new ComparisonBytecodeGeneratingVisitor(methodEditor,
-							predicateClass, candidateClass, classSource));
+		}
+
+		private ComparisonBytecodeGeneratingVisitor comparisonEmitter() {
+			return new ComparisonBytecodeGeneratingVisitor(methodEditor,
+					predicateClass, candidateClass, classSource);
+		}
+
+		private void constrain(ComparisonOperator op) {
 			invoke(constrainRef);
-			ComparisonOperator op = expression.op();
+			
 			if (op.equals(ComparisonOperator.EQUALS)) {
 				return;
 			}
@@ -104,6 +118,11 @@ public class SODABloatMethodBuilder {
 			}
 			throw new RuntimeException("Cannot interpret constraint: "
 					+ op);
+		}
+
+		private void descend(final Object fieldName) {
+			ldc(fieldName);
+			invoke(descendRef);
 		}
 
 		public void visit(NotExpression expression) {
@@ -149,7 +168,6 @@ public class SODABloatMethodBuilder {
 	}
 	
 	private void buildMethodReferences() {
-		queryType = createType(Query.class);
 		descendRef=createMethodReference(Query.class,"descend",new Class[]{String.class},Query.class);
 		constrainRef=createMethodReference(Query.class,"constrain",new Class[]{Object.class},Constraint.class);
 		greaterRef=createMethodReference(Constraint.class,"greater",new Class[]{},Constraint.class);
