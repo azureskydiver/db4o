@@ -9,76 +9,68 @@ import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
 
 class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
-	private MethodBuilder methodEditor;
-	private Class predicateClass;
-	private boolean inArithmetic=false;
-	private Class opClass=null;
-	private Class staticRoot=null;
-	private TypeLoader typeLoader;
+	private MethodBuilder _methodBuilder;
+	private Class _predicateClass;
+	private boolean _inArithmetic=false;
+	private Class _opClass=null;
+	private Class _staticRoot=null;
+	private TypeLoader _typeLoader;
 
-	public ComparisonBytecodeGeneratingVisitor(TypeLoader typeLoader, MethodBuilder methodEditor, Class predicateClass) {
-		this.typeLoader = typeLoader;
-		this.methodEditor = methodEditor;
-		this.predicateClass = predicateClass;
+	public ComparisonBytecodeGeneratingVisitor(TypeLoader typeLoader, MethodBuilder methodBuilder, Class predicateClass) {
+		this._typeLoader = typeLoader;
+		this._methodBuilder = methodBuilder;
+		this._predicateClass = predicateClass;
 	}
 
 	public void visit(ConstValue operand) {
 		Object value = operand.value();
 		if(value!=null) {
-			opClass=value.getClass();
+			_opClass=value.getClass();
 		}
-		methodEditor.ldc(value);
+		_methodBuilder.ldc(value);
 		if(value!=null) {
-			applyConversion(value.getClass(),!inArithmetic);
+			box(value.getClass(),!_inArithmetic);
 		}
 	}	
 
 	public void visit(FieldValue fieldValue) {
-		try {
-			Class lastFieldClass = deduceFieldClass(fieldValue);
-			Class parentClass=deduceFieldClass(fieldValue.parent());
-			boolean needConversion=lastFieldClass.isPrimitive();
+		Class lastFieldClass = deduceFieldClass(fieldValue);
+		Class parentClass=deduceFieldClass(fieldValue.parent());
+		boolean needConversion=lastFieldClass.isPrimitive();
 			
-			fieldValue.parent().accept(this);
-			if(staticRoot!=null) {
-				methodEditor.loadStaticField(createFieldReference(staticRoot, lastFieldClass,fieldValue.fieldName()));
-				staticRoot=null;
-				return;
-			}
-			FieldRef fieldRef=createFieldReference(parentClass,lastFieldClass,fieldValue.fieldName());
-			methodEditor.loadField(fieldRef);
-			
-			applyConversion(lastFieldClass,!inArithmetic&&needConversion);
-		} catch (Exception exc) {
-			throw new RuntimeException(exc.getMessage());
+		fieldValue.parent().accept(this);
+		if(_staticRoot!=null) {
+			_methodBuilder.loadStaticField(fieldReference(_staticRoot, lastFieldClass,fieldValue.fieldName()));
+			_staticRoot=null;
+			return;
 		}
+		FieldRef fieldRef=fieldReference(parentClass,lastFieldClass,fieldValue.fieldName());
+		_methodBuilder.loadField(fieldRef);
+		
+		box(lastFieldClass,!_inArithmetic&&needConversion);
 	}
 
 	public void visit(CandidateFieldRoot root) {
-		methodEditor.loadArgument(1);
+		_methodBuilder.loadArgument(1);
 	}
 
 	public void visit(PredicateFieldRoot root) {
-		methodEditor.loadArgument(0);
+		_methodBuilder.loadArgument(0);
 	}
 
 	public void visit(StaticFieldRoot root) {
-		try {
-			staticRoot=typeLoader.loadType(root.className());
-		} catch (InstrumentationException e) {
-			e.printStackTrace();
-		}
+		_staticRoot=_typeLoader.loadType(root.className());
 	}
 
 	public void visit(ArrayAccessValue operand) {
 		Class cmpType=deduceFieldClass(operand.parent()).getComponentType();
 		operand.parent().accept(this);
-		boolean outerInArithmetic=inArithmetic;
-		inArithmetic=true;
+		boolean outerInArithmetic=_inArithmetic;
+		_inArithmetic=true;
 		operand.index().accept(this);
-		inArithmetic=outerInArithmetic;
-		methodEditor.loadArrayElement(cmpType);
-		applyConversion(cmpType, !inArithmetic);
+		_inArithmetic=outerInArithmetic;
+		_methodBuilder.loadArrayElement(cmpType);
+		box(cmpType, !_inArithmetic);
 	}
 
 	public void visit(MethodCallValue operand) {
@@ -88,58 +80,58 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		// FIXME: this should be handled within conversions
 		boolean needConversion=retType.isPrimitive();
 		operand.parent().accept(this);
-		boolean oldInArithmetic=inArithmetic;
+		boolean oldInArithmetic=_inArithmetic;
 		for (int paramIdx = 0; paramIdx < operand.args().length; paramIdx++) {
-			inArithmetic=operand.paramTypes()[paramIdx].isPrimitive();
+			_inArithmetic=operand.paramTypes()[paramIdx].isPrimitive();
 			operand.args()[paramIdx].accept(this);
 		}
-		inArithmetic=oldInArithmetic;
-		methodEditor.invoke(method);
-		applyConversion(retType, !inArithmetic&&needConversion);
+		_inArithmetic=oldInArithmetic;
+		_methodBuilder.invoke(method);
+		box(retType, !_inArithmetic&&needConversion);
 	}
 
 	public void visit(ArithmeticExpression operand) {
-		boolean oldInArithmetic=inArithmetic;
-		inArithmetic=true;
+		boolean oldInArithmetic=_inArithmetic;
+		_inArithmetic=true;
 		operand.left().accept(this);
 		operand.right().accept(this);
 		Class operandType=arithmeticType(operand);
 		switch(operand.op().id()) {
 			case ArithmeticOperator.ADD_ID:
-				methodEditor.add(operandType);
+				_methodBuilder.add(operandType);
 				break;
 			case ArithmeticOperator.SUBTRACT_ID:
-				methodEditor.subtract(operandType);
+				_methodBuilder.subtract(operandType);
 				break;
 			case ArithmeticOperator.MULTIPLY_ID:
-				methodEditor.multiply(operandType);
+				_methodBuilder.multiply(operandType);
 				break;
 			case ArithmeticOperator.DIVIDE_ID:
-				methodEditor.divide(operandType);
+				_methodBuilder.divide(operandType);
 				break;
 			default:
 				throw new RuntimeException("Unknown operand: "+operand.op());
 		}
-		applyConversion(opClass,!oldInArithmetic);
-		inArithmetic=oldInArithmetic;
+		box(_opClass,!oldInArithmetic);
+		_inArithmetic=oldInArithmetic;
 		// FIXME: need to map dX,fX,...
 	}
 
-	private void applyConversion(Class boxedType, boolean canApply) {
+	private void box(Class boxedType, boolean canApply) {
 		if (!canApply) {
 			return;
 		}
-		methodEditor.box(boxedType);
+		_methodBuilder.box(boxedType);
 	}
 
 	private Class deduceFieldClass(ComparisonOperand fieldValue) {
-		TypeDeducingVisitor visitor=new TypeDeducingVisitor(predicateClass, typeLoader);
+		TypeDeducingVisitor visitor=new TypeDeducingVisitor(_predicateClass, _typeLoader);
 		fieldValue.accept(visitor);
 		return visitor.operandClass();
 	}
 
-	private FieldRef createFieldReference(Class parentClass,Class fieldClass,String name) throws NoSuchFieldException {
-		return methodEditor.references().forField(parentClass, fieldClass, name);
+	private FieldRef fieldReference(Class parentClass, Class fieldClass, String name) {
+		return _methodBuilder.references().forField(parentClass, fieldClass, name);
 	}
 
 
