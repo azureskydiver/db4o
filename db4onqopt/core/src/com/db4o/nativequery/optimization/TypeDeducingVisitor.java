@@ -14,13 +14,11 @@ import com.db4o.nativequery.expr.cmp.operand.*;
 
 class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	private Class _predicateClass;
-	private Class _candidateClass;
 	private Class _clazz;
 	private ClassSource _classSource;
 	
-	public TypeDeducingVisitor(Class predicateClass, Class candidateClass,ClassSource classSource) {
+	public TypeDeducingVisitor(Class predicateClass, ClassSource classSource) {
 		this._predicateClass = predicateClass;
-		this._candidateClass = candidateClass;
 		this._classSource = classSource;
 		_clazz=null;
 	}
@@ -30,7 +28,7 @@ class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	}
 
 	public void visit(CandidateFieldRoot root) {
-		_clazz=_candidateClass;
+//		_clazz=_candidateClass;
 	}
 
 	public void visit(StaticFieldRoot root) {

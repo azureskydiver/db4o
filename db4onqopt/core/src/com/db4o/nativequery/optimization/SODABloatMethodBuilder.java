@@ -34,7 +34,6 @@ public class SODABloatMethodBuilder {
 	private class SODABloatMethodVisitor implements ExpressionVisitor {
 
 		private Class predicateClass;
-		private Class candidateClass;
 		private ClassSource classSource;
 		
 		public SODABloatMethodVisitor(Class predicateClass, ClassSource classSource) {
@@ -80,8 +79,7 @@ public class SODABloatMethodBuilder {
 		}
 
 		private ComparisonBytecodeGeneratingVisitor comparisonEmitter() {
-			return new ComparisonBytecodeGeneratingVisitor(methodEditor,
-					predicateClass, candidateClass, classSource);
+			return new ComparisonBytecodeGeneratingVisitor(methodEditor, predicateClass, classSource);
 		}
 
 		private void constrain(ComparisonOperator op) {
