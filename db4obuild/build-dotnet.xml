@@ -619,10 +619,6 @@
 	<target name="sharpen-tools" unless="skip.sharpen">
 		<fileset id="tools.sources" dir="${dir.n.v6.tools}">
 			<include name="**/*.cs" />
-			<exclude name="Libs/**/AssemblyInfo.cs" />
-			<exclude name="Libs/Mono.Cecil/CodeGen/**/*.*" />
-			<exclude name="Libs/Cecil.FlowAnalysis/codegen/**/*.*" />
-			<exclude name="Libs/Cecil.FlowAnalysis/Cecil.FlowAnalysis.Tests/**/*.*" />
 		</fileset>
 		
 		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-CF-2005.csproj">
