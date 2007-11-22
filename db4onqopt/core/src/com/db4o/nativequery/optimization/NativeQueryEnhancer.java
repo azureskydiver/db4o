@@ -7,6 +7,7 @@ import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.file.*;
 import EDU.purdue.cs.bloat.tree.*;
 
+import com.db4o.instrumentation.bloat.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.nativequery.*;
 import com.db4o.nativequery.analysis.*;
@@ -24,7 +25,7 @@ public class NativeQueryEnhancer {
 		if(expr==null) {
 			return false;
 		}
-		new SODABloatMethodBuilder().injectOptimization(expr,classEditor,classLoader,classSource);
+		new SODAMethodBuilder(new BloatTypeEditor(classEditor,classLoader,classSource)).injectOptimization(expr);
 		
 		classEditor.commit();
 		return true;
