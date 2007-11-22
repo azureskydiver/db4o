@@ -16,7 +16,6 @@ import com.db4o.nativequery.expr.cmp.operand.*;
 class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	private MethodEditor methodEditor;
 	private Class predicateClass;
-	private Class candidateClass;
 	
 	private Map conversions;
 	private boolean inArithmetic=false;
@@ -24,11 +23,10 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	private Class staticRoot=null;
 	private ClassSource classSource;
 
-	public ComparisonBytecodeGeneratingVisitor(MethodEditor methodEditor,Class predicateClass,Class candidateClass, ClassSource classSource) {
+	public ComparisonBytecodeGeneratingVisitor(MethodEditor methodEditor, Class predicateClass, ClassSource classSource) {
 		this.methodEditor = methodEditor;
-		this.predicateClass=predicateClass;
-		this.candidateClass=candidateClass;
-		this.classSource=classSource;
+		this.predicateClass = predicateClass;
+		this.classSource = classSource;
 		buildConversions();
 	}
 
@@ -222,7 +220,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	}
 
 	private Class deduceFieldClass(ComparisonOperand fieldValue) {
-		TypeDeducingVisitor visitor=new TypeDeducingVisitor(predicateClass,candidateClass,classSource);
+		TypeDeducingVisitor visitor=new TypeDeducingVisitor(predicateClass, classSource);
 		fieldValue.accept(visitor);
 		return visitor.operandClass();
 	}
