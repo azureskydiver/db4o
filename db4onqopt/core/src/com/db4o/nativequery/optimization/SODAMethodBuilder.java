@@ -2,43 +2,39 @@
 
 package com.db4o.nativequery.optimization;
 
-import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.file.*;
-import EDU.purdue.cs.bloat.reflect.*;
-
 import com.db4o.foundation.*;
-import com.db4o.instrumentation.util.*;
+import com.db4o.instrumentation.api.*;
 import com.db4o.internal.query.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
 import com.db4o.query.*;
 
-public class SODABloatMethodBuilder {	
+public class SODAMethodBuilder {	
 	private final static boolean LOG_BYTECODE=false;
-	
-	private MethodEditor methodEditor;
-	
-	private MemberRef descendRef;
-	private MemberRef constrainRef;
-	private MemberRef greaterRef;
-	private MemberRef smallerRef;
-	private MemberRef containsRef;
-	private MemberRef startsWithRef;
-	private MemberRef endsWithRef;
-	private MemberRef notRef;
-	private MemberRef andRef;
-	private MemberRef orRef;
-	private MemberRef identityRef;
 
-	private class SODABloatMethodVisitor implements ExpressionVisitor {
+	private MethodRef descendRef;
+	private MethodRef constrainRef;
+	private MethodRef greaterRef;
+	private MethodRef smallerRef;
+	private MethodRef containsRef;
+	private MethodRef startsWithRef;
+	private MethodRef endsWithRef;
+	private MethodRef notRef;
+	private MethodRef andRef;
+	private MethodRef orRef;
+	private MethodRef identityRef;
+
+	private final TypeEditor _editor;
+
+	private MethodBuilder _builder;
+
+	private class SODAExpressionBuilder implements ExpressionVisitor {
 
 		private Class predicateClass;
-		private ClassSource classSource;
 		
-		public SODABloatMethodVisitor(Class predicateClass, ClassSource classSource) {
+		public SODAExpressionBuilder(Class predicateClass) {
 			this.predicateClass=predicateClass;
-			this.classSource = classSource;
 		}
 		
 		public void visit(AndExpression expression) {
@@ -53,7 +49,7 @@ public class SODABloatMethodBuilder {
 		}
 
 		private void loadQuery() {
-			methodEditor.addInstruction(Opcode.opc_aload, new LocalVariable(1));
+			loadArgument(1);
 		}
 
 		public void visit(OrExpression expression) {
@@ -79,7 +75,7 @@ public class SODABloatMethodBuilder {
 		}
 
 		private ComparisonBytecodeGeneratingVisitor comparisonEmitter() {
-			return new ComparisonBytecodeGeneratingVisitor(methodEditor, predicateClass, classSource);
+			return new ComparisonBytecodeGeneratingVisitor(_editor.loader(), _builder, predicateClass);
 		}
 
 		private void constrain(ComparisonOperator op) {
@@ -114,8 +110,7 @@ public class SODABloatMethodBuilder {
 				invoke(endsWithRef);
 				return;
 			}
-			throw new RuntimeException("Cannot interpret constraint: "
-					+ op);
+			throw new RuntimeException("Cannot interpret constraint: " + op);
 		}
 
 		private void descend(final Object fieldName) {
@@ -140,29 +135,34 @@ public class SODABloatMethodBuilder {
 		}
 	}
 	
-	public SODABloatMethodBuilder() {
+	public SODAMethodBuilder(TypeEditor editor) {
+		_editor = editor;
 		buildMethodReferences();
 	}
 	
-	public void injectOptimization(Expression expr, ClassEditor classEditor,ClassLoader classLoader, ClassSource classSource) {
-		classEditor.addInterface(Db4oEnhancedFilter.class);
-		methodEditor=new MethodEditor(classEditor,Modifiers.PUBLIC,Void.TYPE,NativeQueryEnhancer.OPTIMIZE_QUERY_METHOD_NAME,new Class[]{Query.class},new Class[]{});
-		LabelGenerator labelGen = new LabelGenerator();
-		methodEditor.addLabel(labelGen.createLabel(true));
-		try {
-			Class predicateClass = classLoader.loadClass(BloatUtil.normalizeClassName(classEditor.name()));
-			expr.accept(new SODABloatMethodVisitor(predicateClass,classSource));
-			methodEditor.addInstruction(Opcode.opc_pop);
-			methodEditor.addLabel(labelGen.createLabel(false));
-			methodEditor.addInstruction(Opcode.opc_return);
-			methodEditor.addLabel(labelGen.createLabel(true));
-			if(LOG_BYTECODE) {
-				methodEditor.print(System.out);
-			}
-			methodEditor.commit();
-		} catch (ClassNotFoundException exc) {
-			throw new RuntimeException(exc.getMessage());
+	public void injectOptimization(Expression expr) {
+		_editor.addInterface(Db4oEnhancedFilter.class);
+		_builder = _editor.newPublicMethod(NativeQueryEnhancer.OPTIMIZE_QUERY_METHOD_NAME, Void.TYPE, new Class[] { Query.class });
+		
+		Class predicateClass = _editor.actualType();
+		expr.accept(new SODAExpressionBuilder(predicateClass));
+		_builder.pop();
+		if (LOG_BYTECODE) {
+			_builder.print(System.out);
 		}
+		_builder.endMethod();
+	}
+	
+	private void loadArgument(int index) {
+		_builder.loadArgument(index);
+	}
+	
+	private void invoke(MethodRef method) {
+		_builder.invoke(method);
+	}
+	
+	private void ldc(Object value) {
+		_builder.ldc(value);
 	}
 	
 	private void buildMethodReferences() {
@@ -179,24 +179,7 @@ public class SODABloatMethodBuilder {
 		identityRef=createMethodReference(Constraint.class,"identity",new Class[]{},Constraint.class);
 	}
 	
-	private MemberRef createMethodReference(Class parent,String name,Class[] args,Class ret) {
-		Type[] argTypes=new Type[args.length];
-		for (int argIdx = 0; argIdx < args.length; argIdx++) {
-			argTypes[argIdx]=createType(args[argIdx]);
-		}
-		NameAndType nameAndType=new NameAndType(name,Type.getType(argTypes,createType(ret)));
-		return new MemberRef(createType(parent),nameAndType);
-	}
-
-	private Type createType(Class clazz) {
-		return Type.getType(clazz);
-	}
-	
-	private void invoke(final MemberRef method) {
-		methodEditor.addInstruction(Opcode.opc_invokeinterface, method);
-	}
-	
-	private void ldc(Object value) {
-		methodEditor.addInstruction(Opcode.opc_ldc, value);
+	private MethodRef createMethodReference(Class parent,String name,Class[] args,Class ret) {
+		return _editor.references().forMethod(parent, name, args, ret);
 	}
 }

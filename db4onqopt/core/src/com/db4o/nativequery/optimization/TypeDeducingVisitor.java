@@ -5,21 +5,19 @@
  */
 package com.db4o.nativequery.optimization;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
-import EDU.purdue.cs.bloat.file.ClassSource;
-
+import com.db4o.instrumentation.api.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
 
 class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	private Class _predicateClass;
 	private Class _clazz;
-	private ClassSource _classSource;
+	private TypeLoader _classSource;
 	
-	public TypeDeducingVisitor(Class predicateClass, ClassSource classSource) {
+	public TypeDeducingVisitor(Class predicateClass, TypeLoader typeLoader) {
 		this._predicateClass = predicateClass;
-		this._classSource = classSource;
+		this._classSource = typeLoader;
 		_clazz=null;
 	}
 
@@ -33,8 +31,8 @@ class TypeDeducingVisitor implements ComparisonOperandVisitor {
 
 	public void visit(StaticFieldRoot root) {
 		try {
-			_clazz=_classSource.loadClass(root.className());
-		} catch (ClassNotFoundException e) {
+			_clazz=_classSource.loadType(root.className());
+		} catch (InstrumentationException e) {
 			e.printStackTrace();
 		}
 	}
