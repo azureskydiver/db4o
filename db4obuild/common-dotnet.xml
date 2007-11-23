@@ -9,6 +9,8 @@
 	<property name="dir.n.v6.tools" location="${dir.n.v6}/Db4objects.Db4o.Tools/" />
 	<property name="dir.n.v6.libs" location="${dir.n.v6}/Libs/" />
 	<property name="dir.n.db4ounit" location="${dir.n.v6}/Db4oUnit" />
+	<property name="dir.n.v6.nq" location="${dir.n.v6}/Db4objects.Db4o.NativeQueries" />
+	<property name="dir.n.v6.instrumentation" location="${dir.n.v6}/Db4objects.Db4o.Instrumentation" />
 	
 	<condition property="mono" value="true">
 		<os family="unix" />

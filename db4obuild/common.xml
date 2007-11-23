@@ -173,7 +173,7 @@
 		<property name="filename.java1.2.jar" value="${db4o.file}java1.2.jar" />
 		<property name="filename.java5.jar" value="${db4o.file}java5.jar" />
 		<property name="filename.nqopt.jar" value="${db4o.file}nqopt.jar" />
-		<property name="filename.classedit.jar" value="${db4o.file}classedit.jar" />
+		<property name="filename.instrumentation.jar" value="${db4o.file}instrumentation.jar" />
 		<property name="filename.db4otools.jar" value="${db4o.file}tools.jar" />
 		<property name="filename.db4ounit.jar" value="${db4o.file}db4ounit.jar" />
 		<property name="filename.taj.jar" value="${db4o.file}taj.jar" />
@@ -184,7 +184,7 @@
 		<property name="file.java1.2.jar" value="${dir.dist.jars}/${filename.java1.2.jar}" />
 		<property name="file.java5.jar" value="${dir.dist.jars}/${filename.java5.jar}" />
 		<property name="file.nqopt.jar" value="${dir.dist.jars}/${filename.nqopt.jar}" />
-		<property name="file.classedit.jar" value="${dir.dist.jars}/${filename.classedit.jar}" />
+		<property name="file.instrumentation.jar" value="${dir.dist.jars}/${filename.instrumentation.jar}" />
 		<property name="file.db4otools.jar" value="${dir.dist.jars}/${filename.db4otools.jar}" />
 		<property name="file.db4ounit.jar" value="${dir.dist.jars}/${filename.db4ounit.jar}" />
 		<property name="file.taj.jar" value="${dir.dist.jars}/${filename.taj.jar}" />
