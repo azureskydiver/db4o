@@ -9,6 +9,8 @@ import com.db4o.reflect.core.AbstractReflectArray;
 
 /**
  * Reflection implementation for Array to map to JDK reflection.
+ * 
+ * @sharpen.ignore
  */
 public class JdkArray extends AbstractReflectArray {
     

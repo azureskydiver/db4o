@@ -8,6 +8,8 @@ import com.db4o.reflect.*;
  * db4o wrapper for JDK reflector functionality
  * @see com.db4o.ext.ExtObjectContainer#reflector()
  * @see com.db4o.reflect.generic.GenericReflector
+ * 
+ * @sharpen.ignore
  */
 public class JdkReflector implements Reflector{
 	

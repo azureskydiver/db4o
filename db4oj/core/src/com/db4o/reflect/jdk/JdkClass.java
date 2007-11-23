@@ -10,6 +10,8 @@ import com.db4o.reflect.*;
 
 /**
  * Reflection implementation for Class to map to JDK reflection.
+ * 
+ * @sharpen.ignore
  */
 public class JdkClass implements JavaReflectClass{
 	

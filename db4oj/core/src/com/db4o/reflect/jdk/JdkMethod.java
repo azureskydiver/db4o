@@ -9,6 +9,8 @@ import com.db4o.reflect.*;
 
 /**
  * @exclude
+ * 
+ * @sharpen.ignore
  */
 public class JdkMethod implements ReflectMethod{
 	
