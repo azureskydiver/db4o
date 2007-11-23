@@ -43,10 +43,10 @@
 		</ant>
 		<copy todir="${lib}" file="${file.taj.jar}" />
 		
-		<ant antfile="${dir.workspace}/db4obuild/build-java.xml" target="build.classedit">
+		<ant antfile="${dir.workspace}/db4obuild/build-java.xml" target="build.instrumentation">
 			<property name="svn.revision" value="${svn.revision}" />
 		</ant>
-		<copy todir="${lib}" file="${file.classedit.jar}" />
+		<copy todir="${lib}" file="${file.instrumentation.jar}" />
 
 		<copy todir="${lib}" file="${file.bloat.jar}" />
 		
