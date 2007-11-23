@@ -1,6 +1,6 @@
 package db4ounit;
 
-import java.io.IOException;
+import java.io.*;
 
 public class TestRunner {
 	
@@ -27,14 +27,14 @@ public class TestRunner {
 	}	
 
 	public int run() {
-		return run(true);
+		return run(TestPlatform.getStdErr());
 	}
 
-	private int run(boolean printLabels) {
+	public int run(Writer writer) {
 		TestSuite suite = buildTestSuite();
 		if (null == suite) return 1;
 		
-		TestResult result = new TestResult(printLabels);
+		TestResult result = new TestResult(writer);
 		result.runStarted();
 		suite.run(result);
 		result.runFinished();

@@ -25,12 +25,8 @@ public class TestPlatform {
 		printWriter.flush();
 	}
 
-	public static void printStackTrace(Throwable t) {
-		printStackTrace(getStdErr(), t);
-	}
-
-	public static Writer getStdOut() {
-		return new PrintWriter(System.out);
+	public static Writer getNullWriter() {
+		return new NullWriter();
 	}
 	
     public static Writer getStdErr() {
