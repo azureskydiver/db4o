@@ -786,6 +786,11 @@ public class FieldMetadata implements StoredField {
         incrementOffset(buffer);
     }
 
+    public void refreshActivated() {
+    	_state = AVAILABLE;
+    	refresh();
+    }
+    
     void refresh() {
         TypeHandler4 handler = loadJavaField1();
         if (handler != null) {
