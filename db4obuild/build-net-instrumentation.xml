@@ -8,11 +8,11 @@
 	<property name="output.dir" location="${dir.n.instrumentation}/bin" />	
 
 	<target name="build" depends="init">
-		<csc outputfile="${output.dir}/Db4oAdmin.exe"
+		<csc outputfile="${output.dir}/Db4oTool.exe"
 			targettype="exe"
 			debug="true"
 			executable="${csc.executable}">
-			<src dir="${dir.n.instrumentation}/Db4oAdmin">
+			<src dir="${dir.n.instrumentation}/Db4oTool">
 				<include name="**/*.cs" />
 			</src>
 			<reference dir="${output.dir}">
@@ -23,11 +23,11 @@
 	
 	<target name="test" depends="rebuild">
 		
-		<csc outputfile="${output.dir}/Db4oAdmin.Tests.exe"
+		<csc outputfile="${output.dir}/Db4oTool.Tests.exe"
 			targettype="exe"
 			debug="true"
 			executable="${csc.executable}">
-			<src dir="${dir.n.instrumentation}/Db4oAdmin.Tests">
+			<src dir="${dir.n.instrumentation}/Db4oTool.Tests">
 				<include name="**/*.cs" />
 				
 				<!-- embedded resource -->
@@ -36,25 +36,25 @@
 			</src>
 			<reference dir="${output.dir}">
 				<include name="*.dll" />
-				<include name="Db4oAdmin.exe" />
+				<include name="Db4oTool.exe" />
 			</reference>
 			
 			<resource embed="true"				
-				file="${dir.n.instrumentation}/Db4oAdmin.Tests/Resources/CFNQSubject.cs"
-				name="Db4oAdmin.Tests.Resources.CFNQSubject.cs" />
+				file="${dir.n.instrumentation}/Db4oTool.Tests/Resources/CFNQSubject.cs"
+				name="Db4oTool.Tests.Resources.CFNQSubject.cs" />
 			
 			<resource embed="true"				
-				file="${dir.n.instrumentation}/Db4oAdmin.Tests/Resources/PredicateSubject.cs"
-				name="Db4oAdmin.Tests.Resources.PredicateSubject.cs" />
+				file="${dir.n.instrumentation}/Db4oTool.Tests/Resources/PredicateSubject.cs"
+				name="Db4oTool.Tests.Resources.PredicateSubject.cs" />
 			
 			<resource embed="true"				
-				file="${dir.n.instrumentation}/Db4oAdmin.Tests/Resources/UnoptimizablePredicateSubject.cs"
-				name="Db4oAdmin.Tests.Resources.UnoptimizablePredicateSubject.cs" />
+				file="${dir.n.instrumentation}/Db4oTool.Tests/Resources/UnoptimizablePredicateSubject.cs"
+				name="Db4oTool.Tests.Resources.UnoptimizablePredicateSubject.cs" />
 
 
 		</csc>
 		
-		<exec executable="${output.dir}/Db4oAdmin.Tests.exe"
+		<exec executable="${output.dir}/Db4oTool.Tests.exe"
 			failonerror="true"
 			dir="${output.dir}">
 		</exec>

@@ -1,4 +1,10 @@
 <project name="db4otutorial" default="doctortutorial" basedir=".">
+	
+	<!--
+	
+	
+	
+	-->
 
 	<property file="machine.properties" />
 	<property file="ant.properties" />
@@ -46,18 +52,22 @@
 			interactive="true" 
 			workspace="${dir.workspace}" 
 			inputsource="${dir.n.v6.tutorial.src}/" 
+			sourcepathresolver="com.yetac.doctor.cmd.DotNetTutorialSourcePathResolver"
 			sourceextension="cs" 
-			outputfile="${db4o.file}tutorial" 
+			outputfile="db4o-${db4o.version.dotted}-tutorial" 
 			outputpath="${dir.j.tutorial.out.net}" 
 			pdfbasefont="${font.pdf.base}" 
-			archive="${filename.doctor.applets.jar}, ${filename.java1.4.jar}, ${filename.tutorial.jar}" 
+			archive="${filename.doctor.applets.jar}, ${filename.java1.2.jar}, ${filename.tutorial.jar}" 
 			outlineimage="db4objects1.jpg" 
 			linkhome="http://www.db4o.com">
 			<variable name="java" boolean="false" />
 			<variable name="net" boolean="true" />
+			<variable name="mono" boolean="false" />
 			<ignoreinputfolder name="java" />
+			<ignoreinputfolder name="mono" />
 		</doctor>
-		<exec executable="cmd" dir="${dir.j.tutorial.out.java}">
+		
+		<exec executable="cmd" dir="${dir.j.tutorial.out.net}">
 			<arg value="/k start index.html"/>
 		</exec>
 	</target>
