@@ -732,6 +732,12 @@
 				<include name="com/db4o/collections/MapEntry4.java" />
 			</fileset>
 		</copy>
+		<copy todir="${dir.sharpen}/db4oj" >
+			<fileset dir="../db4ojdk5/" >
+		    	<include name=".settings/**/*" />
+		   	</fileset>
+		</copy>
+
 	</target>
 	
 	<target name="sharpen-core" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="skip.sharpen">
