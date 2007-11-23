@@ -21,11 +21,18 @@ import com.db4o.ta.*;
  * 
  * @see java.util.ArrayList
  * @see com.db4o.ta.Activatable
+ * 
+ * @sharpen.partial
+ * @sharpen.ignore.implements
+ * @sharpen.ignore.extends
  */
 
 public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		Serializable, RandomAccess, Activatable {
 
+	/**
+	 * @sharpen.ignore
+	 */
 	private static final long serialVersionUID = 7971683768827646182L;
 
 	private E[] elements;
@@ -75,11 +82,27 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList4(Collection<? extends E> c) {
-		Object[] data = c.toArray();
+		E[] data = collectionToArray(c);
 		capacity = data.length;
-		elements = (E[]) new Object[capacity];
+		elements = allocateStorage(capacity);
 		listSize = data.length;
 		System.arraycopy(data, 0, elements, 0, data.length);
+	}
+
+	/**
+	 * @sharpen.ignore 
+	 */
+	@SuppressWarnings("unchecked")
+	private E[] allocateStorage(int size) {
+		return (E[]) new Object[size];
+	}
+
+	/**
+	 * @sharpen.ignore 
+	 */
+	@SuppressWarnings("unchecked")
+	private E[] collectionToArray(Collection<? extends E> c) {
+		return (E[]) c.toArray();
 	}
 
 	/**
@@ -93,22 +116,34 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 			throw new IllegalArgumentException();
 		}
 		capacity = initialCapacity;
-		elements = (E[]) new Object[initialCapacity];
+		elements = allocateStorage(initialCapacity);
+		
+		listSize = adjustSize(initialCapacity);
 	}
 	
+	/**
+	 * In java list size doesn't take initial capacity into account.
+	 * 
+	 * @sharpen.ignore
+	 */
+	private int adjustSize(int initialCapacity) {
+		return 0;
+	}
+
 	/**
 	 * same as java.util.ArrayList but transparently 
 	 * activates the members as required.
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.internal
 	 */
 	public void add(int index, E element) {
 		checkIndex(index, 0, size());
 		ensureCapacity(size() + 1);
-		System.arraycopy(elements, index, elements, index + 1, listSize
-					- index);
-			elements[index] = element;
+		System.arraycopy(elements, index, elements, index + 1, listSize - index);
+		elements[index] = element;
 		increaseSize(1);
 		markModified();
 	}
@@ -119,6 +154,8 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
 	public boolean addAll(Collection<? extends E> c) {
 		return addAll(size(), c);
@@ -130,15 +167,24 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean addAll(int index, Collection<? extends E> c) {
+		return addAllImpl(index, (E[]) c.toArray());
+	}
+
+	/**
+	 * @sharpen.internal 
+	 */
+	private boolean addAllImpl(int index, E[] toBeAdded) {
 		checkIndex(index, 0, size());
-		int length = c.size();
+		int length = toBeAdded.length;
 		if(length == 0) {
 			return false;
 		}
 		ensureCapacity(size() + length);
-		Object[] toBeAdded = c.toArray();
 		System.arraycopy(elements, index, elements, index+length, size() - index);
 		System.arraycopy(toBeAdded, 0, elements, index, length);
 		increaseSize(length);
@@ -155,17 +201,28 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	public void clear() { 
 		int size = size();
-		Arrays.fill(elements, 0, size, null);
+		Arrays.fill(elements, 0, size, defaultValue());
 		setSize(0);
 		markModified();
 	}
 	
+	/**
+	 * Used to abstract default value gathering because java does not support <b>default(E)</b>
+	 * 
+	 * @sharpen.ignore
+	 */
+	private E defaultValue() {
+		return null;
+	}
+
 	/**
 	 * same as java.util.ArrayList but transparently 
 	 * activates the members as required.
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
 	@SuppressWarnings("unchecked")
 	public Object clone() {
@@ -200,6 +257,8 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.internal
 	 */
 	public E get(int index) {
 		checkIndex(index, 0, size() - 1);
@@ -212,8 +271,14 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
 	public int indexOf(Object o) {
+		return indexOfImpl((E) o);
+	}
+
+	private int indexOfImpl(E o) {
 		for (int index = 0; index < size(); ++index) {
 			E element = get(index);
 			if (o == null ? element == null : o.equals(element)) {
@@ -229,8 +294,18 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
+	@SuppressWarnings("unchecked")
 	public int lastIndexOf(Object o) {
+		return lastIndexOfImpl( (E) o);
+	}
+
+	/**
+	 * @sharpen.rename LastIndexOf 
+	 */
+	private int lastIndexOfImpl(E o) {
 		for (int index = size() - 1; index >= 0; --index) {
 			E element = get(index);
 			if (o == null ? element == null : o.equals(element)) {
@@ -246,30 +321,39 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 *
+	 * @sharpen.internal
+	 * @sharpen.rename RemoveImpl
 	 */
 	public E remove(int index) {
 		int size = size();
-		checkIndex(index, 0, size - 1);
-		E element = elements[index];
+		E element = get(index);
 		System.arraycopy(elements, index + 1, 
 				elements, index, size - index	- 1);
-		elements[size - 1] = null;
+		elements[size - 1] = defaultValue();
 		decreaseSize(1);
 		markModified();
 		return element;
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	protected void removeRange(int fromIndex, int toIndex) {
+		removeRangeImpl(fromIndex, toIndex - fromIndex);
+	}
+
+	private void removeRangeImpl(int fromIndex, int count) {
 		int size = size();
+		int toIndex = fromIndex + count;
 		if ((fromIndex < 0 || fromIndex >= size || toIndex > size || toIndex < fromIndex)) {
 			throw new IndexOutOfBoundsException();
 		}
-		if (fromIndex == toIndex) {
+		if (count == 0) {
 			return;
 		}
-		int count = toIndex - fromIndex;
 		System.arraycopy(elements, toIndex, elements, fromIndex, size - toIndex);
-		Arrays.fill(elements, size - count, size, null);
+		Arrays.fill(elements, size - count, size, defaultValue());
 		decreaseSize(count);
 		markModified();
 	}
@@ -280,10 +364,11 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.internal
 	 */
 	public E set(int index, E element) {
-		checkIndex(index, 0, size() - 1);
-		E oldValue = elements[index];
+		E oldValue = get(index);
 		elements[index] = element;
 		return oldValue;
 	}
@@ -294,6 +379,9 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.internal
+	 * @sharpen.property
 	 */
 	public int size() {
 		activate();
@@ -306,6 +394,8 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
 	public Object[] toArray() {
 		int size = size();
@@ -320,6 +410,8 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.ignore
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
@@ -337,35 +429,46 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
+	 * 
+	 * @sharpen.rename TrimExcess
 	 */
 	public void trimToSize() {
 		resize(size());
 	}
 
-
 	@SuppressWarnings("unchecked")
 	private void resize(int minCapacity) {
 		markModified();
-		E[] temp = (E[]) new Object[minCapacity];
+		E[] temp = allocateStorage(minCapacity);
 		System.arraycopy(elements, 0, temp, 0, size());
 		elements = temp;
 		capacity = minCapacity;
 	}
 
+	/**
+	 * @sharpen.internal
+	 */
 	void setSize(int count) {
 		listSize = count;
 	}
 	
+	/**
+	 * @sharpen.internal
+	 */
 	void increaseSize(int count) {
 		listSize += count;
 	}
-	
+	/**
+	 * @sharpen.internal
+	 */
 	void decreaseSize(int count) {
 		listSize -= count;
 	}
 	
+	/**
+	 * @sharpen.internal
+	 */
 	void markModified() {
 		++modCount;
 	}
-
 }

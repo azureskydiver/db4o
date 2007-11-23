@@ -6,6 +6,7 @@ import java.util.*;
 
 /**
  * @exclude
+ * @sharpen.ignore
  */
 public class SubArrayList4<E> extends AbstractList4<E> {
 
