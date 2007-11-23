@@ -52,11 +52,11 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 		
 		Class instrumented = loader.loadClass(ToBeInstrumented.class.getName());
 		final Class[] queryClassSig = new Class[]{Query.class};
-		Assert.isNotNull(instrumented.getDeclaredMethod(NativeQueryEnhancer.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig));
+		Assert.isNotNull(instrumented.getDeclaredMethod(NativeQueriesPlatform.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig));
 		final Class uninstrumented = loader.loadClass(NotToBeInstrumented.class.getName());
 		Assert.expect(NoSuchMethodException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				uninstrumented.getDeclaredMethod(NativeQueryEnhancer.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig);
+				uninstrumented.getDeclaredMethod(NativeQueriesPlatform.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig);
 			}
 		});
 	}

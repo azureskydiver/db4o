@@ -3,12 +3,13 @@
 /**
  * 
  */
-package com.db4o.nativequery.optimization;
+package com.db4o.nativequery.instrumentation;
 
 import java.lang.reflect.*;
 
 import com.db4o.instrumentation.api.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
+import com.db4o.nativequery.optimization.*;
 
 class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	private Class _predicateClass;

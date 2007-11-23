@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.nativequery.optimization;
+package com.db4o.nativequery.instrumentation;
 
 import com.db4o.foundation.*;
 import com.db4o.instrumentation.api.*;
@@ -8,6 +8,7 @@ import com.db4o.internal.query.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
+import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
 public class SODAMethodBuilder {	
@@ -142,7 +143,7 @@ public class SODAMethodBuilder {
 	
 	public void injectOptimization(Expression expr) {
 		_editor.addInterface(Db4oEnhancedFilter.class);
-		_builder = _editor.newPublicMethod(NativeQueryEnhancer.OPTIMIZE_QUERY_METHOD_NAME, Void.TYPE, new Class[] { Query.class });
+		_builder = _editor.newPublicMethod(NativeQueriesPlatform.OPTIMIZE_QUERY_METHOD_NAME, Void.TYPE, new Class[] { Query.class });
 		
 		Class predicateClass = _editor.actualType();
 		expr.accept(new SODAExpressionBuilder(predicateClass));

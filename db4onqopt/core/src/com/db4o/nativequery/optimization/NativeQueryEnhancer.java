@@ -12,10 +12,9 @@ import com.db4o.instrumentation.core.*;
 import com.db4o.nativequery.*;
 import com.db4o.nativequery.analysis.*;
 import com.db4o.nativequery.expr.*;
+import com.db4o.nativequery.instrumentation.*;
 
 public class NativeQueryEnhancer {
-	
-	public static final String OPTIMIZE_QUERY_METHOD_NAME = "optimizeQuery";
 	
 	public boolean enhance(BloatLoaderContext bloatUtil,ClassEditor classEditor,String methodName,Type[] argTypes,ClassLoader classLoader,ClassSource classSource) throws Exception {
 		if(NQDebug.LOG) {
