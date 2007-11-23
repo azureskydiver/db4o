@@ -8,6 +8,11 @@ package com.db4o.collections;
 import java.lang.reflect.*;
 import java.util.*;
 
+/**
+ * @sharpen.ignore
+ * sharpen.ignore.implements
+ * sharpen.partial
+ */
 public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, List<E> {
 
 	protected transient int modCount;
@@ -20,11 +25,14 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		add(size(), e);
 		return true;
 	}
-	
+
 	public void add(int index, E element) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean addAll(Collection<? extends E> collection) {
 		if(collection.isEmpty()) {
 			return false;
@@ -36,6 +44,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return true;
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean addAll(int index, Collection<? extends E> collection) {
 		if(collection.isEmpty()) {
 			return false;
@@ -56,6 +67,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return indexOf(o) != -1;
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean containsAll(Collection<?> c) {
 		Iterator<?> iter = c.iterator();
 		while(iter.hasNext()) {
@@ -66,6 +80,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return true;
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean equals(Object other) {
 		if (other == this) {
 			return true;
@@ -93,6 +110,8 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 
 	/**
 	 * @see List#hashCode()
+	 * 
+	 * @sharpen.ignore
 	 */
 	public int hashCode() {
 		int hashCode = 1;
@@ -104,6 +123,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return hashCode;
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean isEmpty() {
 		return size() == 0;
 	}
@@ -112,6 +134,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		 return new ArrayList4Iterator(-1);
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public int indexOf(Object o) {
 		ListIterator<E> iter = listIterator();
 		while(iter.hasNext()) {
@@ -122,6 +147,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return -1;
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public int lastIndexOf(Object o) {
 		ListIterator<E> iter = listIterator(size());
 		while(iter.hasPrevious()) {
@@ -132,14 +160,23 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return -1;
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	private boolean equals(Object e1,  E e2) {
 		return (e1 == null ? e2 == null : e1.equals(e2));
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public ListIterator<E> listIterator() {
 		return listIterator(0);
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public ListIterator<E> listIterator(int index) {
 		checkIndex(index, 0, size());
 		return new ArrayList4IndexIterator(index);
@@ -149,6 +186,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean remove(Object o) {
 		int index = indexOf(o);
 		if (index == -1) {
@@ -158,6 +198,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return true;
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean removeAll(Collection <?> c) {
 		boolean changed = false;
 		Iterator<?> it = iterator();
@@ -170,6 +213,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return changed;
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	protected void removeRange(int fromIndex, int toIndex) {
 		if ((fromIndex < 0 || fromIndex >= size() || toIndex > size() || toIndex < fromIndex)) {
 			throw new IndexOutOfBoundsException();
@@ -184,6 +230,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		}
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	public boolean retainAll(Collection <?> c) {
 		boolean changed = false;
 		Iterator<?> it = iterator();
@@ -196,16 +245,29 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return changed;
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public E set(int index, E element) {
 		throw new UnsupportedOperationException();		
 	}
 	
+	/**
+	 * @sharpen.internal
+	 * @sharpen.property
+	 */
 	public abstract int size();
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public List<E> subList(int fromIndex, int toIndex) {
 		return new SubArrayList4 <E> (this, fromIndex, toIndex);
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	public Object[] toArray() {
 		int size = size();
 		Object[] data = new Object[size];
@@ -217,6 +279,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		return data;
 	}
 
+	/**
+	 * @sharpen.ignore
+	 */
 	@SuppressWarnings("unchecked")
 	public <T> T[] toArray(T[] a) {
 		int size = size();
@@ -259,6 +324,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 		}
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	class ArrayList4Iterator implements Iterator<E> {
 
 		protected int currentIndex;
@@ -320,6 +388,9 @@ public abstract class AbstractList4<E> implements Iterable<E>, Collection<E>, Li
 
 	}
 	
+	/**
+	 * @sharpen.ignore
+	 */
 	class ArrayList4IndexIterator extends ArrayList4Iterator
 			implements ListIterator<E> {
 		public ArrayList4IndexIterator(int index) {
