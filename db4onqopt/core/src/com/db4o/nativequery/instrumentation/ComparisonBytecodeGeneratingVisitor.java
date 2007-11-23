@@ -1,12 +1,13 @@
 /* Copyright (C) 2004 - 2006  db4objects Inc.  http://www.db4o.com */
 
-package com.db4o.nativequery.optimization;
+package com.db4o.nativequery.instrumentation;
 
 import java.lang.reflect.*;
 
 import com.db4o.instrumentation.api.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
+import com.db4o.nativequery.optimization.*;
 
 class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	private MethodBuilder _methodBuilder;
