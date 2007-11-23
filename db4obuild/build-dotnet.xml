@@ -730,6 +730,9 @@
 			<fileset dir="${dir.j.jdk5.core.src}">
 				<include name="com/db4o/collections/ArrayMap4.java" />
 				<include name="com/db4o/collections/MapEntry4.java" />
+				<include name="com/db4o/collections/ArrayList4.java" />
+				<include name="com/db4o/collections/AbstractList4.java" />
+				<include name="com/db4o/collections/SubArrayList4.java" />
 			</fileset>
 		</copy>
 		<copy todir="${dir.sharpen}/db4oj" >
