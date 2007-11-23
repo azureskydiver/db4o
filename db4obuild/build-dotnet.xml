@@ -8,23 +8,25 @@
 	Notice however that the build will overwrite a few files in the sandcastle installation,
 	if you don't want this, copy your sandcastle installation to a different folder.
 	-->
-	
 	<import file="common-dotnet.xml" />
 	
 	<fileset id="db4oj.srcfiles" dir="..">
 		<include name="db4oj/core/src/**/*.java" />
 	</fileset>
 	
+	<fileset id="db4o.instrumentation.srcfiles" dir="../db4o.instrumentation">
+		<include name="src/com/db4o/instrumentation/api/*.java" />
+		<include name="src/com/db4o/instrumentation/core/NativeClassFactory.java" />
+		<include name="src/com/db4o/instrumentation/core/DefaultNativeClassFactory.java" />
+	</fileset>
+	
 	<fileset id="db4onqopt.srcfiles" dir="../db4onqopt">
 		<include name="core/src/com/db4o/nativequery/expr/**/*.java" />
+		<include name="core/src/com/db4o/nativequery/optimization/NativeQueriesPlatform.java" />
 		<include name="core/src/com/db4o/nativequery/optimization/SODAQueryBuilder.java" />
 		<include name="core/src/com/db4o/nativequery/optimization/ComparisonQueryGeneratingVisitor.java" />
 		<include name="core/src/com/db4o/nativequery/optimization/ReflectUtil.java" />
-	</fileset>
-
-	<fileset id="db4oclassedit.srcfiles" dir="../db4oclassedit">
-		<include name="src/com/db4o/instrumentation/core/NativeClassFactory.java" />
-		<include name="src/com/db4o/instrumentation/core/DefaultNativeClassFactory.java" />
+		<include name="core/src/com/db4o/nativequery/instrumentation/*.java" />
 	</fileset>
 
 	<macrodef name="copy-bin">
@@ -428,13 +430,13 @@
 	<target name="build" depends="init, configure, build-all">
 	</target>
 
-	<target name="build-all" depends="build-core, build-tools, build-tests, build-admin, build-tutorial">
+	<target name="build-all" depends="build-core, build-instrumentation, build-nq, build-tools, build-tests, build-admin, build-tutorial">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
 	</target>
 
-	<target name="build-tests" depends="build-tools, build-db4ounit-extensions, sharpen-tests">
+	<target name="build-tests" depends="build-tools, build-instrumentation, build-nq, build-db4ounit-extensions, sharpen-tests">
 		<csc
 			destfile="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe"
 			targettype="exe"
@@ -447,6 +449,8 @@
 			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4objects.Db4o.dll" />
 				<include name="Db4objects.Db4o.Tools.dll" />
+				<include name="Db4objects.Db4o.Instrumentation.dll" />
+				<include name="Db4objects.Db4o.NativeQueries.dll" />
 				<include name="Mono.Cecil.dll" />
 				<include name="Db4oUnit.dll" />
 				<include name="Db4oUnit.Extensions.dll" />
@@ -477,10 +481,43 @@
 		</csc>
 	</target>
 	
-	<target name="build-tools" depends="build-core, sharpen-tools">
+	<target name="build-nq" depends="build-core, build-instrumentation, sharpen-nq">
+			
+		<fileset id="nq.sources" dir="${dir.n.v6.nq}">
+			<include name="**/*.cs" />
+		</fileset>
+				
 		<csc-all
-			assemblyName="Db4objects.Db4o.Tools"
-			sources="tools.sources">			
+			assemblyName="Db4objects.Db4o.NativeQueries"
+			sources="nq.sources">			
+			
+			<references>
+				<reference dir="${dir.dist.dll.net}">
+					<include name="Db4objects.Db4o.dll" />
+					<include name="Db4objects.Db4o.Instrumentation.dll" />
+					<include name="Mono.Cecil.dll" />
+					<include name="Cecil.FlowAnalysis.dll" />
+				</reference>
+			</references>
+			
+			<compact-args>
+				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
+				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.Instrumentation.dll" />
+				<arg value="/r:${dir.dist.dll.compact}/Mono.Cecil.dll" />
+				<arg value="/r:${dir.dist.dll.compact}/Cecil.FlowAnalysis.dll" />
+			</compact-args>
+		</csc-all>
+	</target>
+	
+	<target name="build-instrumentation" depends="build-core, sharpen-instrumentation">
+		
+		<fileset id="instrumentation.sources" dir="${dir.n.v6.instrumentation}">
+			<include name="**/*.cs" />
+		</fileset>
+				
+		<csc-all
+			assemblyName="Db4objects.Db4o.Instrumentation"
+			sources="instrumentation.sources">			
 			
 			<references>
 				<reference dir="${dir.dist.dll.net}">
@@ -494,6 +531,23 @@
 				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
 				<arg value="/r:${dir.dist.dll.compact}/Mono.Cecil.dll" />
 				<arg value="/r:${dir.dist.dll.compact}/Cecil.FlowAnalysis.dll" />
+			</compact-args>
+		</csc-all>
+	</target>
+	
+	<target name="build-tools" depends="build-core, sharpen-tools">
+		<csc-all
+			assemblyName="Db4objects.Db4o.Tools"
+			sources="tools.sources">			
+			
+			<references>
+				<reference dir="${dir.dist.dll.net}">
+					<include name="Db4objects.Db4o.dll" />
+				</reference>
+			</references>
+			
+			<compact-args>
+				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
 			</compact-args>
 		</csc-all>
 	</target>
@@ -591,7 +645,7 @@
 		</csc>
 	</target>
 	
-	<target name="build-admin" depends="build-tools" unless="skip.admin">
+	<target name="build-admin" depends="build-nq" unless="skip.admin">
 		<copy todir="${dir.dist.dll.net}" file="${dir.libs.net}/Mono.Cecil.Pdb.dll" />
 		<csc outputfile="${dir.dist.dll.net}/Db4oAdmin.exe"
 			targettype="exe"
@@ -603,7 +657,7 @@
 			</src>
 			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4objects.Db4o.dll" />
-				<include name="Db4objects.Db4o.Tools.dll" />
+				<include name="Db4objects.Db4o.NativeQueries.dll" />
 				<include name="Mono.GetOptions.dll" />
 				<include name="Mono.Cecil.dll" />
 				<include name="Cecil.FlowAnalysis.dll" />
@@ -614,6 +668,22 @@
 	<target name="build-tutorial" depends="build-tools">
 		<ant antfile="build-dotnet-tutorial.xml">
 		</ant>
+	</target>
+	
+	<target name="sharpen-instrumentation" depends="sharpen-core" unless="skip.sharpen">
+		<updatecsharpproject projectfile="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation.csproj">
+			<sources dir="${dir.n.v6.instrumentation}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+	</target>
+	
+	<target name="sharpen-nq" depends="sharpen-core" unless="skip.sharpen">
+		<updatecsharpproject projectfile="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries.csproj">
+			<sources dir="${dir.n.v6.nq}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
 	</target>
 	
 	<target name="sharpen-tools" unless="skip.sharpen">
@@ -631,7 +701,7 @@
 	</target>
 	
 	<target name="sharpen"
-		depends="sharpen-core, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests"
+		depends="sharpen-core, sharpen-instrumentation, sharpen-nq, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests"
 		unless="skip.sharpen">
 	</target>
 	
@@ -647,7 +717,7 @@
 		</copy>
 
 		<copy todir="${dir.sharpen}/db4oj/core">
-			<fileset refid="db4oclassedit.srcfiles" />
+			<fileset refid="db4o.instrumentation.srcfiles" />
 		</copy>
 
 		<copy todir="${dir.sharpen}/db4oj/core/src" overwrite="true">
@@ -664,19 +734,6 @@
 		</copy>
 	</target>
 	
-	<target name="copy-sharpened-files">
-		
-		<copy todir="${target.dir}">
-			<fileset dir="${src.dir}/Db4objects/Db4o">
-				<include name="**/*.cs" />
-				<exclude name="JDK_*.cs" />
-				<exclude name="JDKReflect*.cs" />
-				<exclude name="Reflect/Jdk/**/*.*" />
-				<exclude name="Reflect/Self/*.*" />
-			</fileset>
-		</copy>
-	</target>	
-
 	<target name="sharpen-core" depends="install-javatocsharp-plugin, prepare-conversion-workspace" unless="skip.sharpen">
 
 		<sharpen workspace="${dir.sharpen}" resource="db4oj/core/src">
@@ -687,16 +744,52 @@
 			</args>
 		</sharpen>
 		
-		<delete failonerror="false">
-			<fileset dir="${dir.n.v6.core.src}">
-				<include name="**/*.cs" />
-				<exclude name="**/.svn/**" />
-			</fileset>
-		</delete>
-		<antcall target="copy-sharpened-files">
-			<param name="src.dir" value="${dir.sharpen}/db4oj.net/src" />
-			<param name="target.dir" value="${dir.n.v6.core.src}" />
-		</antcall>
+		<property name="dir.sharpen.src" location="${dir.sharpen}/db4oj.net/src/Db4objects/Db4o" />
+		
+		<macrodef name="copy-sharpened-sources">
+			<attribute name="dir" />
+			<element name="files" />
+			<sequential>
+				<delete failonerror="false">
+					<fileset dir="@{dir}">
+						<include name="**/*.cs" />
+						<exclude name="**/.svn/**" />
+					</fileset>
+				</delete>
+				
+				<copy todir="@{dir}">
+					<files />
+				</copy>
+			</sequential>
+		</macrodef>
+		
+		<copy-sharpened-sources dir="${dir.n.v6.core.src}">
+			<files>
+				<fileset dir="${dir.sharpen.src}">
+					<include name="**/*.cs" />
+					<exclude name="Instrumentation/**/*.*" />
+					<exclude name="NativeQueries/**/*.*" />
+					<exclude name="**/Reflect/Jdk/**" />
+					<exclude name="**/Reflect/Self/**" />
+				</fileset>
+			</files>
+		</copy-sharpened-sources>
+		
+		<copy-sharpened-sources dir="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation/">
+			<files>
+				<fileset dir="${dir.sharpen.src}/Instrumentation">
+					<include name="**/*.cs" />
+				</fileset>
+			</files>
+		</copy-sharpened-sources>
+		
+		<copy-sharpened-sources dir="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries/">
+			<files>
+				<fileset dir="${dir.sharpen.src}/NativeQueries">
+					<include name="**/*.cs" />
+				</fileset>
+			</files>
+		</copy-sharpened-sources>
 		
 		<fileset id="core.net.files" dir="${dir.n.v6.core}">
 			<include name="**/*.cs" />

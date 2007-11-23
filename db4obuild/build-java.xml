@@ -42,7 +42,7 @@
 		depends="build.db4ojdk1.1, 
 			build.db4ojdk1.2, 
 			build.db4ojdk5, 
-			build.classedit, 
+			build.instrumentation, 
 			build.nqopt,
 			build.taj,
 		    build.db4otools,
@@ -133,11 +133,11 @@
 		</jar>
 	</target>
 	
-	<target name="build.classedit" depends="build.db4ojdk1.2">
-	    <mkdir dir="${dir.dist.classes.classedit}" />
-		<javac srcdir="${dir.j.classedit.src}" 
+	<target name="build.instrumentation" depends="build.db4ojdk1.2">
+	    <mkdir dir="${dir.dist.classes.instrumentation}" />
+		<javac srcdir="${dir.j.instrumentation.src}" 
 	        fork="true" 
-	        destdir="${dir.dist.classes.classedit}" 
+	        destdir="${dir.dist.classes.instrumentation}" 
 	        debug="${javac.debug.mode}" 
 	        target="1.1" 
 	        source="1.3" 
@@ -148,15 +148,15 @@
 				<pathelement path="${file.java1.2.jar}"/>
 			</classpath>
 		</javac>
-		<jar destfile="${file.classedit.jar}">
-			<fileset dir="${dir.dist.classes.classedit}" />
+		<jar destfile="${file.instrumentation.jar}">
+			<fileset dir="${dir.dist.classes.instrumentation}" />
 			<manifest>
 				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar}"/>
 			</manifest>
 		</jar>
 	</target>
 
-	<target name="build.db4otools" depends="build.db4ojdk1.2, build.classedit, build.nqopt, build.taj">
+	<target name="build.db4otools" depends="build.db4ojdk1.2, build.instrumentation, build.nqopt, build.taj">
 	    <mkdir dir="${dir.dist.classes.db4otools}" />
 		<javac srcdir="${dir.j.db4otools.src}" 
 	        fork="true" 
@@ -169,7 +169,7 @@
 				<pathelement path="${file.ant.jar}"/>
 				<pathelement path="${file.bloat.jar}"/>
 				<pathelement path="${file.java1.2.jar}"/>
-				<pathelement path="${file.classedit.jar}"/>
+				<pathelement path="${file.instrumentation.jar}"/>
 				<pathelement path="${file.nqopt.jar}"/>
 				<pathelement path="${file.taj.jar}"/>
 			</classpath>
@@ -182,12 +182,12 @@
 		<jar destfile="${file.db4otools.jar}">
 			<fileset dir="${dir.dist.classes.db4otools}" />
 			<manifest>
-				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.classedit.jar} ${filename.nqopt.jar} ${filename.taj.jar}"/>
+				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.instrumentation.jar} ${filename.nqopt.jar} ${filename.taj.jar}"/>
 			</manifest>
 		</jar>
 	</target>
 
-	<target name="build.nqopt" depends="build.db4ojdk1.2, build.classedit">
+	<target name="build.nqopt" depends="build.db4ojdk1.2, build.instrumentation">
         <mkdir dir="${dir.dist.classes.nqopt}" />
 		<javac srcdir="${dir.j.nqopt.src}" 
             fork="true" 
@@ -201,18 +201,18 @@
 				<pathelement path="${file.ant.jar}"/>
 				<pathelement path="${file.bloat.jar}"/>
 				<pathelement path="${file.java1.2.jar}"/>
-				<pathelement path="${file.classedit.jar}"/>
+				<pathelement path="${file.instrumentation.jar}"/>
 			</classpath>
 		</javac>
 		<jar destfile="${file.nqopt.jar}">
 			<fileset dir="${dir.dist.classes.nqopt}" />
 			<manifest>
-				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.classedit.jar} "/>
+				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.instrumentation.jar} "/>
 			</manifest>
 		</jar>
 	</target>
 	
-	<target name="build.taj" depends="build.db4ojdk1.2, build.classedit" >
+	<target name="build.taj" depends="build.db4ojdk1.2, build.instrumentation" >
         <mkdir dir="${dir.dist.classes.taj}" />
 		<javac fork="true" 
             destdir="${dir.dist.classes.taj}" 
@@ -225,14 +225,14 @@
 				<pathelement path="${file.ant.jar}"/>
                 <pathelement path="${file.bloat.jar}"/>
 				<pathelement path="${file.java1.2.jar}"/>
-			    <pathelement path="${file.classedit.jar}"/>
+			    <pathelement path="${file.instrumentation.jar}"/>
 			</classpath>
 		</javac>
 		
 		<jar destfile="${file.taj.jar}">
 			<fileset dir="${dir.dist.classes.taj}" />
 			<manifest>
-				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.classedit.jar}"/>
+				<attribute name="Class-Path" value="${filename.ant.jar} ${filename.bloat.jar} ${filename.java1.2.jar} ${filename.instrumentation.jar}"/>
 			</manifest>
 		</jar>
 	</target>
@@ -245,7 +245,7 @@
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.java1.2.jar}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.nqopt.jar}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.bloat.jar}"/>
-		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.classedit.jar}"/>
+		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.instrumentation.jar}"/>
 		<copy todir="${dir.dist.classes.osgi.lib}" file="${file.db4otools.jar}"/>
 		<javac destdir="${dir.dist.classes.osgi}" fork="true" debug="on" encoding="UTF-8" target="1.2" source="1.2">
 			<classpath>
@@ -407,7 +407,7 @@
 				<pathelement location="${file.bloat.jar}" />
 				<pathelement location="${file.java1.2.jar}" />
 				<pathelement location="${file.db4ounit.jar}" />
-				<pathelement location="${file.classedit.jar}" />
+				<pathelement location="${file.instrumentation.jar}" />
 				<pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
 			</classpath>
@@ -473,7 +473,7 @@
 				<pathelement location="${file.taj.jar}"/>
 				<pathelement path="${file.java1.2.jar}"/>
                 <pathelement path="${file.bloat.jar}"/>
-			    <pathelement path="${file.classedit.jar}"/>
+			    <pathelement path="${file.instrumentation.jar}"/>
 				<pathelement location="${file.db4ounit.jar}" />
 				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
 			</classpath>
@@ -637,7 +637,7 @@
 				<pathelement location="${dir.dist.classes.test.nq}" />
                 <pathelement location="${file.nqopt.jar}" />
 				<pathelement location="${file.bloat.jar}" />
-				<pathelement location="${file.classedit.jar}" />
+				<pathelement location="${file.instrumentation.jar}" />
                 <path refid="tests.java1.2.cp" />
 			</classpath>
 		</java>
@@ -716,7 +716,7 @@
 	            <pathelement location="${file.bloat.jar}"/>
 				<pathelement location="${file.java1.2.jar}"/>
 				<pathelement location="${file.db4ounit.jar}" />
-			    <pathelement location="${file.classedit.jar}"/>
+			    <pathelement location="${file.instrumentation.jar}"/>
 				<pathelement location="${file.taj.jar}"/>
 				<pathelement location="${dir.dist.classes.test.jdk1.2}" />
 				<pathelement location="${dir.dist.classes.test.taj}"/>
@@ -848,8 +848,8 @@
 				<exclude name="**/CVS/**" />
 			</fileset>
 		</copy>
-		<copy todir="${dir.dist.java.src}/${name.project.j.classedit}">
-			<fileset dir="${dir.j.classedit}">
+		<copy todir="${dir.dist.java.src}/${name.project.j.instrumentation}">
+			<fileset dir="${dir.j.instrumentation}">
 				<include name=".project" />
 				<include name=".classpath" />
 				<include name="src/**" />
