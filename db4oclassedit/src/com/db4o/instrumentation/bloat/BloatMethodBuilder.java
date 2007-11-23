@@ -33,11 +33,11 @@ public class BloatMethodBuilder implements MethodBuilder {
 	}
 
 	public void ldc(Object value) {
-		methodEditor.addInstruction(Opcode.opc_ldc, coerce(value));
+		addInstruction(Opcode.opc_ldc, coerce(value));
 	}
 	
 	public void loadArgument(final int index) {
-		methodEditor.addInstruction(Opcode.opc_aload, new LocalVariable(index));
+		addInstruction(Opcode.opc_aload, new LocalVariable(index));
 	}
 	
 	public void pop() {
@@ -68,7 +68,7 @@ public class BloatMethodBuilder implements MethodBuilder {
 	}
 
 	public void loadArrayElement(Class elementType) {
-		methodEditor.addInstruction(arrayElementOpcode(elementType));
+		addInstruction(arrayElementOpcode(elementType));
 	}
 
 	private int arrayElementOpcode(Class elementType) {
@@ -173,11 +173,11 @@ public class BloatMethodBuilder implements MethodBuilder {
 	}
 
 	public void loadField(FieldRef fieldRef) {
-		methodEditor.addInstruction(Opcode.opc_getfield, memberRef(fieldRef));
+		addInstruction(Opcode.opc_getfield, memberRef(fieldRef));
 	}
 
 	public void loadStaticField(FieldRef fieldRef) {
-		methodEditor.addInstruction(Opcode.opc_getstatic, memberRef(fieldRef));
+		addInstruction(Opcode.opc_getstatic, memberRef(fieldRef));
 	}
 	
 	public void box(Class boxedType) {
