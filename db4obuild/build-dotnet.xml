@@ -183,7 +183,7 @@
 				<include name="*.pdb" />
 			</fileset>
 		</copy>
-		<exec executable="${dir.dist.dll.net}/Instrumented/Db4oAdmin.exe" dir="${dir.dist.dll.net}/Instrumented" failonerror="true" timeout="3600000" description="Instrumenting Db4objects.Db4o.Tests.exe">
+		<exec executable="${dir.dist.dll.net}/Instrumented/Db4oTool.exe" dir="${dir.dist.dll.net}/Instrumented" failonerror="true" timeout="3600000" description="Instrumenting Db4objects.Db4o.Tests.exe">
 			
 			<arg value="-by-name:(Db4objects\.Db4o\.Tests\.(Common|CLI1|CLI2)\.(TA|Activation|Migration|Handlers|(Inside\.Query))\.|NativeQueries|ActivationTestCase)" />
 			<arg value="-not" />
@@ -224,7 +224,7 @@
 	</target>
 
 	<target name="run-tests-admin" depends="build-admin-tests" unless="skip.admin">
-		<exec executable="${dir.dist.dll.net}/Db4oAdmin.Tests.exe" dir="${dir.dist.dll.net}" failonerror="true" timeout="1800000">
+		<exec executable="${dir.dist.dll.net}/Db4oTool.Tests.exe" dir="${dir.dist.dll.net}" failonerror="true" timeout="1800000">
 		</exec>
 	</target>
 	
@@ -566,12 +566,12 @@
 	
 	<target name="build-admin-tests" depends="build-admin" unless="skip.admin">
 	
-		<property name="src.dir" location="${dir.n.v6}/Db4oAdmin/Db4oAdmin.Tests" />
+		<property name="src.dir" location="${dir.n.v6}/Db4oTool/Db4oTool.Tests" />
 
 		<csc
-			destfile="${dir.dist.dll.net}/Db4oAdmin.Tests.exe"
+			destfile="${dir.dist.dll.net}/Db4oTool.Tests.exe"
 			targettype="exe"
-			mainclass="Db4oAdmin.Tests.Program"
+			mainclass="Db4oTool.Tests.Program"
 			definitions="${csharp.definitions}"
 			debug="true"
 			executable="${csc.executable}"
@@ -579,53 +579,53 @@
 	
 			<resource
 				file="${src.dir}/Core/Resources/PreserveDebugInfoSubject.cs"
-				name="Db4oAdmin.Tests.Core.Resources.PreserveDebugInfoSubject.cs" />
+				name="Db4oTool.Tests.Core.Resources.PreserveDebugInfoSubject.cs" />
 			
 			<resource
 				file="${src.dir}/Core/Resources/CustomInstrumentationSubject.cs"
-				name="Db4oAdmin.Tests.Core.Resources.CustomInstrumentationSubject.cs" />
+				name="Db4oTool.Tests.Core.Resources.CustomInstrumentationSubject.cs" />
 			
 			<resource
 				file="${src.dir}/Core/Resources/ByAttributeInstrumentationSubject.cs"
-				name="Db4oAdmin.Tests.Core.Resources.ByAttributeInstrumentationSubject.cs" />
+				name="Db4oTool.Tests.Core.Resources.ByAttributeInstrumentationSubject.cs" />
 			
 			<resource
 				file="${src.dir}/Core/Resources/ByNotAttributeInstrumentationSubject.cs"
-				name="Db4oAdmin.Tests.Core.Resources.ByNotAttributeInstrumentationSubject.cs" />
+				name="Db4oTool.Tests.Core.Resources.ByNotAttributeInstrumentationSubject.cs" />
 		
 			<resource
 				file="${src.dir}/Core/Resources/ByFilterInstrumentationSubject.cs"
-				name="Db4oAdmin.Tests.Core.Resources.ByFilterInstrumentationSubject.cs" />
+				name="Db4oTool.Tests.Core.Resources.ByFilterInstrumentationSubject.cs" />
 		
 			<resource
 				file="${src.dir}/Core/Resources/ByNameInstrumentationSubject.cs"
-				name="Db4oAdmin.Tests.Core.Resources.ByNameInstrumentationSubject.cs" />
+				name="Db4oTool.Tests.Core.Resources.ByNameInstrumentationSubject.cs" />
 	
 			<resource
 				file="${src.dir}/NQ/Resources/CFNQSubject.cs"
-				name="Db4oAdmin.Tests.NQ.Resources.CFNQSubject.cs" />	
+				name="Db4oTool.Tests.NQ.Resources.CFNQSubject.cs" />	
 			<resource
 				file="${src.dir}/NQ/Resources/PredicateSubject.cs"
-				name="Db4oAdmin.Tests.NQ.Resources.PredicateSubject.cs" />
+				name="Db4oTool.Tests.NQ.Resources.PredicateSubject.cs" />
 			<resource
 				file="${src.dir}/NQ/Resources/UnoptimizablePredicateSubject.cs"
-				name="Db4oAdmin.Tests.NQ.Resources.UnoptimizablePredicateSubject.cs" />
+				name="Db4oTool.Tests.NQ.Resources.UnoptimizablePredicateSubject.cs" />
 	
 			<resource
 				file="${src.dir}/TA/Resources/TAInstrumentationSubject.cs"
-				name="Db4oAdmin.Tests.TA.Resources.TAInstrumentationSubject.cs" />	
+				name="Db4oTool.Tests.TA.Resources.TAInstrumentationSubject.cs" />	
 			
 			<resource
 				file="${src.dir}/TA/Resources/TAAssemblyReferenceSubject.cs"
-				name="Db4oAdmin.Tests.TA.Resources.TAAssemblyReferenceSubject.cs" />
+				name="Db4oTool.Tests.TA.Resources.TAAssemblyReferenceSubject.cs" />
 	
 			<resource
 				file="${src.dir}/TA/Resources/TADoubleInstrumentationSubject.cs"
-				name="Db4oAdmin.Tests.TA.Resources.TADoubleInstrumentationSubject.cs" />
+				name="Db4oTool.Tests.TA.Resources.TADoubleInstrumentationSubject.cs" />
 			
 			<resource
 				file="${src.dir}/TA/Resources/TAUnsafeInstrumentationSubject.cs"
-				name="Db4oAdmin.Tests.TA.Resources.TAUnsafeInstrumentationSubject.cs" />
+				name="Db4oTool.Tests.TA.Resources.TAUnsafeInstrumentationSubject.cs" />
 			
 			<src dir="${src.dir}">
 				<include name="**/*.cs" />
@@ -640,19 +640,19 @@
 				<include name="Db4oUnit.Extensions.dll" />
 				<include name="Mono.Cecil.dll" />
 				<include name="Cecil.FlowAnalysis.dll" />
-				<include name="Db4oAdmin.exe" />
+				<include name="Db4oTool.exe" />
 			</reference>
 		</csc>
 	</target>
 	
 	<target name="build-admin" depends="build-nq" unless="skip.admin">
 		<copy todir="${dir.dist.dll.net}" file="${dir.libs.net}/Mono.Cecil.Pdb.dll" />
-		<csc outputfile="${dir.dist.dll.net}/Db4oAdmin.exe"
+		<csc outputfile="${dir.dist.dll.net}/Db4oTool.exe"
 			targettype="exe"
 			debug="true"
 			definitions="TRACE"
 			executable="${csc.executable}">
-			<src dir="${dir.n.v6}/Db4oAdmin/Db4oAdmin">
+			<src dir="${dir.n.v6}/Db4oTool/Db4oTool">
 				<include name="**/*.cs" />
 			</src>
 			<reference dir="${dir.dist.dll.net}">
@@ -871,16 +871,16 @@
 	</target>
 	
 	<target name="update-admin-projects">
-		<property name="dir.n.admin" location="${dir.n.v6}/Db4oAdmin" />
+		<property name="dir.n.admin" location="${dir.n.v6}/Db4oTool" />
 		
-		<updatecsharpproject projectfile="${dir.n.admin}/Db4oAdmin/Db4oAdmin-2005.csproj">
-			<sources dir="${dir.n.admin}/Db4oAdmin">
+		<updatecsharpproject projectfile="${dir.n.admin}/Db4oTool/Db4oTool-2005.csproj">
+			<sources dir="${dir.n.admin}/Db4oTool">
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
 		
-		<updatecsharpproject projectfile="${dir.n.admin}/Db4oAdmin.Tests/Db4oAdmin.Tests-2005.csproj">
-			<sources dir="${dir.n.admin}/Db4oAdmin.Tests">
+		<updatecsharpproject projectfile="${dir.n.admin}/Db4oTool.Tests/Db4oTool.Tests-2005.csproj">
+			<sources dir="${dir.n.admin}/Db4oTool.Tests">
 				<include name="**/*.cs" />
 				<exclude name="**/Resources/*.*" />
 			</sources>

@@ -35,7 +35,7 @@ srcDirs = (
 	"db4o.net/Db4objects.Db4o/native",
 	"db4o.net/Db4objects.Db4o.Tests/native",
 	"db4o.net/Db4objects.Db4o.TA.Tests/native",
-	"db4o.net/Db4oAdmin",
+	"db4o.net/Db4oTool",
 	"db4o.net/Db4objects.Db4o.Tools",
 	"db4o.net/Db4oUnit/native",
 	"db4o.net/Db4oUnit.Extensions/native",
