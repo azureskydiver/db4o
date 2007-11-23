@@ -8,6 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4oj.tests"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4oclassedit"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/db4o.instrumentation"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
