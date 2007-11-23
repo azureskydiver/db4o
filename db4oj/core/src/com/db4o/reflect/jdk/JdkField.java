@@ -9,6 +9,8 @@ import com.db4o.reflect.*;
 
 /**
  * Reflection implementation for Field to map to JDK reflection.
+ * 
+ * @sharpen.ignore
  */
 public class JdkField implements ReflectField {
 

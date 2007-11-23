@@ -6,6 +6,8 @@ import com.db4o.internal.*;
 
 /**
  * @exclude
+ * 
+ * @sharpen.ignore
  */
 public class ClassLoaderJdkLoader implements JdkLoader {
 

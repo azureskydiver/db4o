@@ -6,6 +6,8 @@ import com.db4o.foundation.*;
 
 /**
  * @exclude
+ * 
+ * @sharpen.ignore
  */
 public interface JdkLoader extends DeepClone {
 	Class loadClass(String className);
