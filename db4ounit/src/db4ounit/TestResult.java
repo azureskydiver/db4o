@@ -13,14 +13,14 @@ public class TestResult extends Printable {
 	
 	private final StopWatch _watch = new StopWatch();
 	
-	private final Writer _stdout;
+	private final Writer _writer;
 	
-	public TestResult(boolean printLabels) {
-		_stdout = printLabels ? TestPlatform.getStdErr() : null;
+	public TestResult(Writer writer) {
+		_writer = writer;
 	}
 	
 	public TestResult() {
-		this(false);
+		this(TestPlatform.getNullWriter());
 	}
 
 	public void testStarted(Test test) {		
@@ -75,13 +75,11 @@ public class TestResult extends Printable {
 	}
 	
 	private void print(String message) {
-		if (null != _stdout) {
 			try {
-				_stdout.write(message + TestPlatform.NEWLINE);
-				_stdout.flush();
+				_writer.write(message + TestPlatform.NEWLINE);
+				_writer.flush();
 			} catch (IOException x) {
-				TestPlatform.printStackTrace(x);
+				TestPlatform.printStackTrace(_writer, x);
 			}
-		}
 	}
 }
