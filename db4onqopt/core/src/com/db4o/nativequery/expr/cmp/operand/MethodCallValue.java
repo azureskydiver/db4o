@@ -34,13 +34,15 @@ public class MethodCallValue extends ComparisonOperandDescendant {
 			return false;
 		}
 		MethodCallValue casted=(MethodCallValue)obj;
-		return _method.equals(casted._method);
+		return _method.equals(casted._method)
+			&& _callingConvention == casted._callingConvention;
 	}
 
 	public int hashCode() {
 		int hc=super.hashCode();
 		hc*=29+_method.hashCode();
 		hc*=29+_args.hashCode();
+		hc*=29+_callingConvention.hashCode();
 		return hc;
 	}
 	
