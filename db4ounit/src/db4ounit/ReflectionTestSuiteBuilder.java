@@ -8,8 +8,7 @@ public class ReflectionTestSuiteBuilder implements TestSuiteBuilder {
 	private Class[] _classes;
 	
 	public ReflectionTestSuiteBuilder(Class clazz) {
-		if (null == clazz) throw new IllegalArgumentException("clazz");
-		_classes = new Class[] { clazz };
+		this(new Class[] { clazz });
 	}
 	
 	public ReflectionTestSuiteBuilder(Class[] classes) {
