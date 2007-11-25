@@ -43,7 +43,6 @@ class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	}
 
 	public void visit(FieldValue operand) {
-		operand.parent().accept(this);
 		_clazz=operand.field().type();
 	}
 
@@ -53,7 +52,6 @@ class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	}
 
 	public void visit(MethodCallValue operand) {
-		operand.parent().accept(this);
 		_clazz=operand.method().returnType();
 	}
 }

@@ -17,5 +17,5 @@ public class BloatRef {
 	protected TypeRef typeRef(Type type) {
 		return _provider.forBloatType(type);
 	}
-
+	
 }

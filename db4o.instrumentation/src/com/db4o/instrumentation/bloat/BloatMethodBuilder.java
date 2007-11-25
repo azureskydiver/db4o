@@ -184,8 +184,24 @@ class BloatMethodBuilder implements MethodBuilder {
 	}
 
 	public void invoke(Method method) {
-		int opcode=((method.getModifiers()&Modifier.STATIC)!=0 ? Opcode.opc_invokestatic : Opcode.opc_invokevirtual);
-		addInstruction(opcode, memberRef(_references.forMethod(method)));
+		final MethodRef methodRef = _references.forMethod(method);
+		if (isStatic(method)) {
+			invokeStatic(methodRef); 
+		} else {
+			invokeVirtual(methodRef);
+		}
+	}	
+	
+	private void invokeVirtual(final MethodRef methodRef) {
+		addInstruction(Opcode.opc_invokevirtual, memberRef(methodRef));
+	}
+	
+	public void invokeStatic(final MethodRef methodRef) {
+		addInstruction(Opcode.opc_invokestatic, memberRef(methodRef));
+	}
+
+	private boolean isStatic(Method method) {
+		return (method.getModifiers()&Modifier.STATIC)!=0;
 	}
 
 	public ReferenceProvider references() {
