@@ -38,7 +38,7 @@ public class TestRunner {
 		result.runStarted();
 		suite.run(result);
 		result.runFinished();
-		report(result);
+		reportResult(result, writer);
 		return result.failures().size();
 	}
 	
@@ -55,18 +55,18 @@ public class TestRunner {
 		TestPlatform.printStackTrace(TestPlatform.getStdErr(), x);
 	}
 
-	private void report(TestResult result) {
+	private void reportResult(TestResult result, Writer writer) {
 		if(_reportToFile) {
 			reportToTextFile(result);
 		}
-		reportToStdErr(result);
+		report(result, writer);
 	}
 
 	private void reportToTextFile(TestResult result) {
 		try {
 			java.io.Writer writer = TestPlatform.openTextFile("db4ounit.log");
 			try {
-				report(writer, result);
+				report(result, writer);
 			} finally {
 				writer.close();
 			}
@@ -75,11 +75,7 @@ public class TestRunner {
 		}
 	}
 
-	private void reportToStdErr(TestResult result) {
-		report(TestPlatform.getStdErr(), result);
-	}
-
-	private void report(java.io.Writer writer, TestResult result) {
+	private void report(TestResult result, Writer writer) {
 		try {
 			result.print(writer);
 			writer.flush();
