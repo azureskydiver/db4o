@@ -2,16 +2,22 @@
 
 package com.db4o.nativequery.expr.cmp.operand;
 
+import com.db4o.instrumentation.api.*;
+
 
 public class StaticFieldRoot extends ComparisonOperandRoot {
-	private String _className;
 	
-	public StaticFieldRoot(String className) {
-		this._className = className;
+	private TypeRef _type;
+	
+	public StaticFieldRoot(TypeRef type) {
+		_type = type;
 	}
-
-	public String className() {
-		return _className;
+	
+	/**
+	 * @sharpen.property
+	 */
+	public TypeRef type() {
+		return _type;
 	}
 
 	public boolean equals(Object obj) {
@@ -22,18 +28,18 @@ public class StaticFieldRoot extends ComparisonOperandRoot {
 			return false;
 		}
 		StaticFieldRoot casted=(StaticFieldRoot)obj;
-		return _className.equals(casted._className);
+		return _type.equals(casted._type);
 	}
 	
 	public int hashCode() {
-		return _className.hashCode();
+		return _type.hashCode();
 	}
 	
 	public String toString() {
-		return _className;
+		return _type.toString();
 	}
 
 	public void accept(ComparisonOperandVisitor visitor) {
 		visitor.visit(this);
-	}
+	}	
 }

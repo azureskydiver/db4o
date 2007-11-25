@@ -8,6 +8,8 @@ import EDU.purdue.cs.bloat.cfg.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.tree.*;
 
+import com.db4o.instrumentation.api.*;
+import com.db4o.instrumentation.bloat.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.util.*;
 import com.db4o.nativequery.*;
@@ -214,9 +216,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				retval = forced;
 			} else {
 				FieldValue fieldVal = (FieldValue) retval;
-				String fieldType = (String)fieldVal.tag();
 				Object constVal=null;
-				if(fieldType.length()==1) {
+				if(fieldVal.field().type().isPrimitive()) {
 					constVal=new Integer(0);
 				}
 				retval = new ComparisonExpression(fieldVal,
@@ -374,22 +375,14 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 			if (rcvRetval == null
 					|| rcvRetval.root() != CandidateFieldRoot.INSTANCE) {
 				if (rcvRetval == null) {
-					rcvRetval = new StaticFieldRoot(BloatUtil.normalizeClassName(expr
-							.method().declaringClass()));
+					rcvRetval = new StaticFieldRoot(typeRef(expr.method().declaringClass()));
 				}
 				params.remove(0);
-				Type[] paramTypes = expr.method().nameAndType().type()
-						.paramTypes();
-				Class[] javaParamTypes = new Class[paramTypes.length];
-				for (int paramIdx = 0; paramIdx < paramTypes.length; paramIdx++) {
-					String className = BloatUtil.normalizeClassName(paramTypes[paramIdx]);
-					javaParamTypes[paramIdx] = (PRIMITIVE_CLASSES
-							.containsKey(className) ? (Class) PRIMITIVE_CLASSES
-							.get(className) : Class.forName(className));
-				}
-				retval(new MethodCallValue(rcvRetval, expr.method().name(),
-						javaParamTypes, (ComparisonOperand[]) params
-								.toArray(new ComparisonOperand[params.size()])));
+				retval(
+					new MethodCallValue(
+						rcvRetval,
+						methodRef(expr.method()),
+						(ComparisonOperand[]) params.toArray(new ComparisonOperand[params.size()])));
 				return;
 			}
 
@@ -429,6 +422,10 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 						+ methodRef + " , pop=" + last);
 			}
 		}
+	}
+
+	private MethodRef methodRef(MemberRef method) {
+		return references().forBloatMethod(method);
 	}
 
 	private boolean isSuperType(Type declaringClass, Type receiverType) throws ClassNotFoundException {
@@ -576,15 +573,26 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		String fieldName = expr.field().name();
 		if (fieldObj instanceof ComparisonOperandAnchor) {
 			retval(new FieldValue((ComparisonOperandAnchor) fieldObj,
-					fieldName, BloatUtil.normalizeClassName(expr.field().type())));
+					fieldRef(expr.field())));
 		}
 	}
 
 	public void visitStaticFieldExpr(StaticFieldExpr expr) {
 		MemberRef field = expr.field();
-		retval(new FieldValue(new StaticFieldRoot(BloatUtil.normalizeClassName(field
-				.declaringClass())), field.name(), BloatUtil.normalizeClassName(field
-				.type())));
+		retval(new FieldValue(new StaticFieldRoot(typeRef(field
+				.declaringClass())), fieldRef(field)));
+	}
+
+	private FieldRef fieldRef(MemberRef field) {
+		return references().forBloatField(field);
+	}
+
+	private TypeRef typeRef(Type declaringClass) {
+		return references().forBloatType(declaringClass);
+	}
+
+	private BloatReferenceProvider references() {
+		return bloatUtil.references();
 	}
 
 	public void visitConstantExpr(ConstantExpr expr) {
@@ -636,35 +644,31 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if (fieldVal.root() != CandidateFieldRoot.INSTANCE) {
 			return null;
 		}
-		String fieldType = ((String) fieldVal.tag());
-		if (fieldType.length() != 1) {
+		TypeRef fieldType = fieldVal.field().type();
+		if (!fieldType.isPrimitive()) {
 			return null;
 		}
-		Object constVal = null;
-		switch (fieldType.charAt(0)) {
-			case 'Z':
-				constVal = Boolean.TRUE;
-				break;
-//			case 'I':
-//				constVal = new Integer(0);
-//				break;
-			default:
-				return null;
+		 
+		if (!isPrimitiveBoolean(fieldType)) {
+			return null;
 		}
-		return new ComparisonExpression(fieldVal, new ConstValue(constVal),
-				ComparisonOperator.EQUALS);
+		return new ComparisonExpression(
+						fieldVal,
+						new ConstValue(Boolean.TRUE),
+						ComparisonOperator.EQUALS);
+	}
+
+	private static boolean isPrimitiveBoolean(TypeRef fieldType) {
+		return fieldType.name().equals("boolean");
 	}
 
 	private static boolean isBooleanField(FieldValue fieldVal) {
-		return isFieldType(fieldVal, "Z")||isFieldType(fieldVal, Boolean.class.getName());
-	}
-
-	private boolean isIntField(FieldValue fieldVal) {
-		return isFieldType(fieldVal, "I");
+		return isPrimitiveBoolean(fieldVal.field().type())
+			|| isFieldType(fieldVal, Boolean.class.getName());
 	}
 
 	private static boolean isFieldType(FieldValue fieldVal, String expType) {
-		return expType.equals(fieldVal.tag());
+		return expType.equals(fieldVal.field().type().name());
 	}
 
 	public void visitArithExpr(ArithExpr expr) {

@@ -7,10 +7,10 @@ import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
 
 import com.db4o.foundation.io.*;
-import com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask;
+import com.db4o.instrumentation.ant.*;
 import com.db4o.instrumentation.main.*;
+import com.db4o.nativequery.instrumentation.*;
 import com.db4o.nativequery.main.*;
-import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 import com.db4o.test.util.*;
 
@@ -52,11 +52,11 @@ public class NQBuildTimeInstrumentationTestCase implements TestLifeCycle {
 		
 		Class instrumented = loader.loadClass(ToBeInstrumented.class.getName());
 		final Class[] queryClassSig = new Class[]{Query.class};
-		Assert.isNotNull(instrumented.getDeclaredMethod(NativeQueriesPlatform.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig));
+		Assert.isNotNull(instrumented.getDeclaredMethod(SODAMethodBuilder.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig));
 		final Class uninstrumented = loader.loadClass(NotToBeInstrumented.class.getName());
 		Assert.expect(NoSuchMethodException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				uninstrumented.getDeclaredMethod(NativeQueriesPlatform.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig);
+				uninstrumented.getDeclaredMethod(SODAMethodBuilder.OPTIMIZE_QUERY_METHOD_NAME, queryClassSig);
 			}
 		});
 	}

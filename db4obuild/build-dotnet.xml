@@ -16,7 +16,6 @@
 	
 	<fileset id="db4o.instrumentation.srcfiles" dir="../db4o.instrumentation">
 		<include name="src/com/db4o/instrumentation/api/*.java" />
-		<include name="src/com/db4o/instrumentation/core/NativeClassFactory.java" />
 		<include name="src/com/db4o/instrumentation/core/DefaultNativeClassFactory.java" />
 	</fileset>
 	
@@ -657,6 +656,7 @@
 			</src>
 			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4objects.Db4o.dll" />
+				<include name="Db4objects.Db4o.Instrumentation.dll" />
 				<include name="Db4objects.Db4o.NativeQueries.dll" />
 				<include name="Mono.GetOptions.dll" />
 				<include name="Mono.Cecil.dll" />
@@ -945,6 +945,19 @@
 		
 		<property name="target.dir" location="${dir.sharpen}" />
 		
+		<copy todir="${target.dir}/db4oj.tests/core">
+			<fileset dir="../db4oj/core/src">
+				<include name="**/*.java" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${target.dir}/db4oj.tests/core">
+			<fileset dir="${dir.j.instrumentation.src}">
+				<include name="com/db4o/instrumentation/api/*.java" />
+				<include name="com/db4o/instrumentation/core/DefaultNativeClassFactory.java" />
+			</fileset>
+		</copy>
+		
 		<copy todir="${target.dir}/db4oj.tests/src">
 			<fileset dir="${dir.j.tests.src}">
 				<include name="**/db4ounit/common/**/*.java" />
@@ -960,11 +973,12 @@
 			</fileset>
 		</copy>
 		
-		<copy todir="${target.dir}/db4oj.tests/core">
-			<fileset dir="../db4oj/core/src">
-				<include name="**/*.java" />
+		<copy todir="${target.dir}/db4oj.tests/src">
+			<fileset dir="${dir.j.nqopt}/test/src">
+				<include name="**/mocks/*.java" />
 			</fileset>
 		</copy>
+		
 		
 		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
 			<args>

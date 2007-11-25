@@ -7,7 +7,7 @@ package com.db4o.nativequery.optimization;
 
 import java.lang.reflect.*;
 
-import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.api.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
 
@@ -16,7 +16,9 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 	
 	private Object _value=null;
 	
-	private NativeClassFactory classSource;
+	private final NativeClassFactory _classSource;
+
+	private final ReferenceResolver _resolver;
 
 	public Object value() {
 		return _value;
@@ -119,7 +121,7 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 
 	public void visit(StaticFieldRoot root) {
 		try {
-			_value=classSource.forName(root.className());
+			_value=_classSource.forName(root.type().name());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -136,28 +138,35 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 	public void visit(MethodCallValue operand) {
 		operand.parent().accept(this);
 		Object receiver=_value;
-		Object[] params=new Object[operand.args().length];
-		for (int paramIdx = 0; paramIdx < operand.args().length; paramIdx++) {
-			operand.args()[paramIdx].accept(this);
-			params[paramIdx]=_value;
-		}
-		Class clazz=receiver.getClass();
-		if(operand.parent().root() instanceof StaticFieldRoot&&clazz.equals(Class.class)) {
-			clazz=(Class)receiver;
-		}
-		Method method=ReflectUtil.methodFor(clazz,operand.methodName(),operand.paramTypes());
+		Method method=_resolver.resolve(operand.method());
 		try {
-			_value=method.invoke(receiver, params);
+			method.setAccessible(true);
+			_value=method.invoke(isStatic(method) ? null : receiver, args(operand));
 		} catch (Exception exc) {
 			exc.printStackTrace();
 			_value=null;
 		}
 	}
 
-	public ComparisonQueryGeneratingVisitor(Object predicate, NativeClassFactory classSource) {
+	private Object[] args(MethodCallValue operand) {
+		final ComparisonOperand[] args = operand.args();
+		Object[] params=new Object[args.length];
+		for (int paramIdx = 0; paramIdx < args.length; paramIdx++) {
+			args[paramIdx].accept(this);
+			params[paramIdx]=_value;
+		}
+		return params;
+	}
+
+	private boolean isStatic(Method method) {
+		return NativeQueriesPlatform.isStatic(method);
+	}
+
+	public ComparisonQueryGeneratingVisitor(Object predicate, NativeClassFactory classSource, ReferenceResolver resolver) {
 		super();
-		this._predicate = predicate;
-		this.classSource = classSource;
+		_predicate = predicate;
+		_classSource = classSource;
+		_resolver = resolver;
 	}
 	
 }

@@ -2,25 +2,21 @@
 
 package com.db4o.instrumentation.api;
 
-public interface MethodRef {
-	
+public interface TypeRef {
+
+	/**
+	 * @sharpen.property
+	 */
+	boolean isPrimitive();
+
+	/**
+	 * @sharpen.property
+	 */
+	TypeRef elementType();
+
 	/**
 	 * @sharpen.property
 	 */
 	String name();
 
-	/**
-	 * @sharpen.property
-	 */
-	TypeRef returnType();
-	
-	/**
-	 * @sharpen.property
-	 */
-	TypeRef[] paramTypes();
-
-	/**
-	 * @sharpen.property
-	 */
-	TypeRef declaringType();
 }

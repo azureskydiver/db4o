@@ -9,6 +9,7 @@ import EDU.purdue.cs.bloat.context.*;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
+import com.db4o.instrumentation.bloat.*;
 import com.db4o.instrumentation.util.*;
 
 /**
@@ -17,12 +18,19 @@ import com.db4o.instrumentation.util.*;
 public class BloatLoaderContext {
 	private EditorContext context;
 	
+	private final BloatReferenceProvider references;
+	
 	public BloatLoaderContext(ClassInfoLoader loader) {
 		this(new CachingBloatContext(loader,new LinkedList(),false));
 	}
 
 	public BloatLoaderContext(EditorContext context) {
 		this.context=context;
+		this.references = new BloatReferenceProvider();
+	}
+	
+	public BloatReferenceProvider references() {
+		return references;
 	}
 
 	public FlowGraph flowGraph(String className, String methodName) throws ClassNotFoundException {

@@ -30,11 +30,13 @@ public class SODAMethodBuilder {
 
 	private MethodBuilder _builder;
 
+	public static final String OPTIMIZE_QUERY_METHOD_NAME = "optimizeQuery";
+
 	private class SODAExpressionBuilder implements ExpressionVisitor {
 
-		private Class predicateClass;
+		private TypeRef predicateClass;
 		
-		public SODAExpressionBuilder(Class predicateClass) {
+		public SODAExpressionBuilder(TypeRef predicateClass) {
 			this.predicateClass=predicateClass;
 		}
 		
@@ -76,7 +78,7 @@ public class SODAMethodBuilder {
 		}
 
 		private ComparisonBytecodeGeneratingVisitor comparisonEmitter() {
-			return new ComparisonBytecodeGeneratingVisitor(_editor.loader(), _builder, predicateClass);
+			return new ComparisonBytecodeGeneratingVisitor(_builder, predicateClass);
 		}
 
 		private void constrain(ComparisonOperator op) {
@@ -142,16 +144,24 @@ public class SODAMethodBuilder {
 	}
 	
 	public void injectOptimization(Expression expr) {
-		_editor.addInterface(Db4oEnhancedFilter.class);
-		_builder = _editor.newPublicMethod(NativeQueriesPlatform.OPTIMIZE_QUERY_METHOD_NAME, Void.TYPE, new Class[] { Query.class });
+		_editor.addInterface(typeRef(Db4oEnhancedFilter.class));
+		_builder = _editor.newPublicMethod(platformName(OPTIMIZE_QUERY_METHOD_NAME), typeRef(Void.TYPE), new TypeRef[] { typeRef(Query.class) });
 		
-		Class predicateClass = _editor.actualType();
+		TypeRef predicateClass = _editor.type();
 		expr.accept(new SODAExpressionBuilder(predicateClass));
 		_builder.pop();
 		if (LOG_BYTECODE) {
 			_builder.print(System.out);
 		}
 		_builder.endMethod();
+	}
+
+	private TypeRef typeRef(Class type) {
+		return _editor.references().forType(type);
+	}
+
+	private String platformName(final String name) {
+		return NativeQueriesPlatform.toPlatformName(name);
 	}
 	
 	private void loadArgument(int index) {
@@ -181,6 +191,10 @@ public class SODAMethodBuilder {
 	}
 	
 	private MethodRef createMethodReference(Class parent,String name,Class[] args,Class ret) {
-		return _editor.references().forMethod(parent, name, args, ret);
+		try {
+			return _editor.references().forMethod(parent.getMethod(platformName(name), args));
+		} catch (Exception e) {
+			throw new InstrumentationException(e);
+		}
 	}
 }

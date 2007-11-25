@@ -9,6 +9,7 @@ import EDU.purdue.cs.bloat.editor.ClassEditor;
 import EDU.purdue.cs.bloat.editor.EditorContext;
 import EDU.purdue.cs.bloat.file.ClassFileLoader;
 
+import com.db4o.instrumentation.bloat.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.internal.query.Db4oNQOptimizer;
 import com.db4o.nativequery.expr.Expression;
@@ -47,7 +48,8 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 				throw new RuntimeException("Could not analyze "+filter);
 			}
 			//start=System.currentTimeMillis();
-			new SODAQueryBuilder().optimizeQuery(expr,query,filter,new JdkReverseLookupClassFactory(reflector));
+			final JdkReverseLookupClassFactory classFactory = new JdkReverseLookupClassFactory(reflector);
+			new SODAQueryBuilder().optimizeQuery(expr, query, filter, classFactory, new BloatReferenceResolver(classFactory));
 			//System.err.println((System.currentTimeMillis()-start)+" ms");
 			return expr;
 		} catch (ClassNotFoundException exc) {
@@ -57,8 +59,7 @@ public class Db4oOnTheFlyEnhancer implements Db4oNQOptimizer {
 
 	private Expression analyzeInternal(Predicate filter) throws ClassNotFoundException {
 		ClassEditor classEditor=new ClassEditor(context,loader.loadClass(filter.getClass().getName()));
-		Expression expr=new NativeQueryEnhancer().analyze(bloatUtil,classEditor,PredicatePlatform.PREDICATEMETHOD_NAME,null);
-		return expr;
+		return new NativeQueryEnhancer().analyze(bloatUtil,classEditor,PredicatePlatform.PREDICATEMETHOD_NAME,null);
 	}
 	
 	public static Expression analyze(Predicate filter) throws ClassNotFoundException {

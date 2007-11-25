@@ -8,8 +8,33 @@ import com.db4o.instrumentation.api.*;
 
 public class BloatMethodRef extends BloatMemberRef implements MethodRef {
 
-	public BloatMethodRef(MemberRef method) {
-		super(method);
+	private TypeRef[] _paramTypes;
+
+	public BloatMethodRef(BloatReferenceProvider provider, MemberRef method) {
+		super(provider, method);
+	}
+	
+	public TypeRef declaringType() {
+		return typeRef(_member.declaringClass());
 	}
 
+	public TypeRef returnType() {
+		return typeRef(_member.type().returnType());
+	}
+
+	public TypeRef[] paramTypes() {
+		if (null == _paramTypes) {
+			_paramTypes = buildParamTypes();
+		}
+		return _paramTypes;
+	}
+
+	private TypeRef[] buildParamTypes() {
+		final Type[] paramTypes = _member.type().paramTypes();
+		TypeRef[] types = new TypeRef[paramTypes.length];
+		for (int i=0; i<paramTypes.length; ++i) {
+			types[i] = typeRef(paramTypes[i]);
+		}
+		return types;
+	}
 }

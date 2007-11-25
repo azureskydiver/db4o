@@ -11,6 +11,7 @@ import com.db4o.nativequery.expr.OrExpression;
 import com.db4o.nativequery.expr.build.ExpressionBuilder;
 import com.db4o.nativequery.expr.cmp.ComparisonOperator;
 import com.db4o.nativequery.expr.cmp.operand.*;
+import com.db4o.test.nativequery.mocks.*;
 
 import db4ounit.Assert;
 import db4ounit.TestCase;
@@ -43,10 +44,14 @@ public class ExpressionBuilderTestCase implements TestCase, TestLifeCycle {
 		Assert.areSame(BoolConstExpression.TRUE,builder.not(builder.not(BoolConstExpression.TRUE)));
 		Assert.areSame(BoolConstExpression.FALSE,builder.not(builder.not(BoolConstExpression.FALSE)));
 		Assert.areEqual(new NotExpression(expr),builder.not(expr));
-		Assert.areEqual(new ComparisonExpression(new FieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.TRUE),ComparisonOperator.EQUALS),
-					builder.not(new ComparisonExpression(new FieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.FALSE),ComparisonOperator.EQUALS)));
+		Assert.areEqual(new ComparisonExpression(fieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.TRUE),ComparisonOperator.EQUALS),
+					builder.not(new ComparisonExpression(fieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.FALSE),ComparisonOperator.EQUALS)));
 	}
 	
+	private FieldValue fieldValue(ComparisonOperandAnchor instance, String name) {
+		return new FieldValue(instance, new MockFieldRef(name));
+	}
+
 	public void testAnd() {
 		Assert.areSame(BoolConstExpression.FALSE,builder.and(BoolConstExpression.FALSE,expr));
 		Assert.areSame(BoolConstExpression.FALSE,builder.and(expr,BoolConstExpression.FALSE));
