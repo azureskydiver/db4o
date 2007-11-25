@@ -3,7 +3,7 @@
 package com.db4o.nativequery.optimization;
 
 import com.db4o.foundation.*;
-import com.db4o.instrumentation.core.*;
+import com.db4o.instrumentation.api.*;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
@@ -15,11 +15,13 @@ public class SODAQueryBuilder {
 		private Query _query;
 		private Constraint _constraint;
 		private NativeClassFactory _classSource;
+		private ReferenceResolver _referenceResolver;
 
-		SODAQueryVisitor(Query query, Object predicate, NativeClassFactory classSource) {
+		SODAQueryVisitor(Query query, Object predicate, NativeClassFactory classSource, ReferenceResolver referenceResolver) {
 			_query=query;
 			_predicate = predicate;
 			_classSource = classSource;
+			_referenceResolver = referenceResolver;
 		}
 		
 		public void visit(AndExpression expression) {
@@ -42,14 +44,9 @@ public class SODAQueryBuilder {
 		}
 
 		public void visit(ComparisonExpression expression) {
-			Query subQuery = _query;
-			Iterator4 fieldNameIterator = fieldNames(expression.left());
-			while (fieldNameIterator.moveNext()) {
-				subQuery = subQuery.descend((String) fieldNameIterator
-						.current());
-			}
+			Query subQuery = descend(expression.left());
 			ComparisonQueryGeneratingVisitor visitor = new ComparisonQueryGeneratingVisitor(
-					_predicate, _classSource);
+					_predicate, _classSource, _referenceResolver);
 			expression.right().accept(visitor);
 			_constraint = subQuery.constrain(visitor.value());
 			ComparisonOperator op = expression.op();
@@ -84,6 +81,16 @@ public class SODAQueryBuilder {
 					+ op);
 		}
 
+		private Query descend(final FieldValue left) {
+			Query subQuery = _query;
+			Iterator4 fieldNameIterator = fieldNames(left);
+			while (fieldNameIterator.moveNext()) {
+				subQuery = subQuery.descend((String) fieldNameIterator
+						.current());
+			}
+			return subQuery;
+		}
+
 		public void visit(NotExpression expression) {
 			expression.expr().accept(this);
 			_constraint.not();
@@ -101,7 +108,7 @@ public class SODAQueryBuilder {
 		}
 	}
 		
-	public void optimizeQuery(Expression expr, Query query, Object predicate, NativeClassFactory classSource) {
-		expr.accept(new SODAQueryVisitor(query, predicate, classSource));
+	public void optimizeQuery(Expression expr, Query query, Object predicate, NativeClassFactory classSource, ReferenceResolver referenceResolver) {
+		expr.accept(new SODAQueryVisitor(query, predicate, classSource, referenceResolver));
 	}	
 }

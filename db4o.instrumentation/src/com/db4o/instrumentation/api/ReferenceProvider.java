@@ -2,10 +2,14 @@
 
 package com.db4o.instrumentation.api;
 
+import java.lang.reflect.*;
+
 
 public interface ReferenceProvider {
 	
-	MethodRef forMethod(Class declaringType, String methodName, Class[] parameterTypes, Class returnType);
-
-	FieldRef forField(Class declaringType, Class fieldType, String fieldName);
+	TypeRef forType(Class type);
+	
+	MethodRef forMethod(Method method);
+	
+	MethodRef forMethod(TypeRef declaringType, String methodName, TypeRef[] parameterTypes, TypeRef returnType);
 }

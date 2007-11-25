@@ -7,13 +7,17 @@ package com.db4o.instrumentation.api;
  */
 public interface TypeEditor {
 	
-	Class actualType();
+	/**
+	 * @sharpen.property
+	 */
+	TypeRef type();
 	
-	TypeLoader loader();
-	
+	/**
+	 * @sharpen.property
+	 */
 	ReferenceProvider references();
 	
-	void addInterface(Class type);
+	void addInterface(TypeRef type);
 	
-	MethodBuilder newPublicMethod(String methodName, Class returnType, Class[] parameterTypes);
+	MethodBuilder newPublicMethod(String methodName, TypeRef returnType, TypeRef[] parameterTypes);
 }

@@ -20,9 +20,9 @@ public class BloatMethodBuilder implements MethodBuilder {
 	private final BloatReferenceProvider _references;
 	private final Map _conversions;
 
-	public BloatMethodBuilder(BloatReferenceProvider references, ClassEditor classEditor, String methodName, Class returnType, Class[] parameterTypes) {
+	public BloatMethodBuilder(BloatReferenceProvider references, ClassEditor classEditor, String methodName, TypeRef returnType, TypeRef[] parameterTypes) {
 		_references = references;
-		methodEditor = new MethodEditor(classEditor, Modifiers.PUBLIC, returnType, methodName, parameterTypes, new Class[]{});
+		methodEditor = new MethodEditor(classEditor, Modifiers.PUBLIC, BloatTypeRef.bloatType(returnType), methodName, BloatTypeRef.bloatTypes(parameterTypes), new Type[]{});
 		_labelGen = new LabelGenerator();
 		methodEditor.addLabel(_labelGen.createLabel(true));
 		_conversions = setUpConversions();
@@ -67,24 +67,44 @@ public class BloatMethodBuilder implements MethodBuilder {
 		methodEditor.print(out);
 	}
 
-	public void loadArrayElement(Class elementType) {
+	public void loadArrayElement(TypeRef elementType) {
 		addInstruction(arrayElementOpcode(elementType));
 	}
 
-	private int arrayElementOpcode(Class elementType) {
-		if(elementType==Integer.TYPE) {
+	private int arrayElementOpcode(TypeRef elementType) {
+		if(elementType==integerType()) {
 			return Opcode.opc_iaload;
 		}
-		if(elementType==Long.TYPE) {
+		if(elementType==longType()) {
 			return Opcode.opc_laload;
 		}
-		if(elementType==Float.TYPE) {
+		if(elementType==floatType()) {
 			return Opcode.opc_faload;
 		}
-		if(elementType==Double.TYPE) {
+		if(elementType==doubleType()) {
 			return Opcode.opc_daload;
 		}
 		return Opcode.opc_aaload;
+	}
+
+	private TypeRef doubleType() {
+		return type(Double.TYPE);
+	}
+
+	private TypeRef floatType() {
+		return type(Float.TYPE);
+	}
+
+	private TypeRef longType() {
+		return type(Long.TYPE);
+	}
+
+	private TypeRef integerType() {
+		return type(Integer.TYPE);
+	}
+
+	private TypeRef type(Class type) {
+		return _references.forType(type);
 	}
 
 	public void addInstruction(Instruction instruction) {
@@ -95,69 +115,69 @@ public class BloatMethodBuilder implements MethodBuilder {
 		methodEditor.addInstruction(opcode, operand);
 	}
 
-	public void add(Class operandType) {
+	public void add(TypeRef operandType) {
 		addInstruction(addOpcode(operandType));
 	}
 
-	private int addOpcode(Class operandType) {
-		if(operandType==Double.class) {
+	private int addOpcode(TypeRef operandType) {
+		if(operandType==doubleType()) {
 			return Opcode.opc_dadd;
 		}
-		if(operandType==Float.class) {
+		if(operandType==floatType()) {
 			return Opcode.opc_fadd;
 		}
-		if(operandType==Long.class) {
+		if(operandType==longType()) {
 			return Opcode.opc_ladd;
 		}
 		return Opcode.opc_iadd;
 	}
 
-	public void subtract(Class operandType) {
+	public void subtract(TypeRef operandType) {
 		addInstruction(subOpcode(operandType));
 	}
 
-	private int subOpcode(Class operandType) {
-		if(operandType==Double.class) {
+	private int subOpcode(TypeRef operandType) {
+		if(operandType==doubleType()) {
 			return Opcode.opc_dsub;
 		}
-		if(operandType==Float.class) {
+		if(operandType==floatType()) {
 			return Opcode.opc_fsub;
 		}
-		if(operandType==Long.class) {
+		if(operandType==longType()) {
 			return Opcode.opc_lsub;
 		}
 		return Opcode.opc_isub;
 	}
 
-	public void multiply(Class operandType) {
+	public void multiply(TypeRef operandType) {
 		addInstruction(multOpcode(operandType));
 	}
 
-	private int multOpcode(Class operandType) {
-		if(operandType==Double.class) {
+	private int multOpcode(TypeRef operandType) {
+		if(operandType==doubleType()) {
 			return Opcode.opc_dmul;
 		}
-		if(operandType==Float.class) {
+		if(operandType==floatType()) {
 			return Opcode.opc_fmul;
 		}
-		if(operandType==Long.class) {
+		if(operandType==longType()) {
 			return Opcode.opc_lmul;
 		}
 		return Opcode.opc_imul;
 	}
 
-	public void divide(Class operandType) {
+	public void divide(TypeRef operandType) {
 		addInstruction(divOpcode(operandType));
 	}
 
-	private int divOpcode(Class operandType) {
-		if(operandType==Double.class) {
+	private int divOpcode(TypeRef operandType) {
+		if(operandType==doubleType()) {
 			return Opcode.opc_ddiv;
 		}
-		if(operandType==Float.class) {
+		if(operandType==floatType()) {
 			return Opcode.opc_fdiv;
 		}
-		if(operandType==Long.class) {
+		if(operandType==longType()) {
 			return Opcode.opc_ldiv;
 		}
 		return Opcode.opc_idiv;
@@ -165,7 +185,7 @@ public class BloatMethodBuilder implements MethodBuilder {
 
 	public void invoke(Method method) {
 		int opcode=((method.getModifiers()&Modifier.STATIC)!=0 ? Opcode.opc_invokestatic : Opcode.opc_invokevirtual);
-		addInstruction(opcode, memberRef(_references.forMethod(method.getDeclaringClass(), method.getName(), method.getParameterTypes(), method.getReturnType())));
+		addInstruction(opcode, memberRef(_references.forMethod(method)));
 	}
 
 	public ReferenceProvider references() {
@@ -180,7 +200,7 @@ public class BloatMethodBuilder implements MethodBuilder {
 		addInstruction(Opcode.opc_getstatic, memberRef(fieldRef));
 	}
 	
-	public void box(Class boxedType) {
+	public void box(TypeRef boxedType) {
 		Class[] convSpec=(Class[])_conversions.get(boxedType);
 		if (null == convSpec) {
 			return;
@@ -194,37 +214,37 @@ public class BloatMethodBuilder implements MethodBuilder {
 		addInstruction(Opcode.opc_new, typeRef(wrapperType));
 		addInstruction(Opcode.opc_dup);
 		addInstruction(loadOpcode(primitiveType), local);
-		addInstruction(Opcode.opc_invokespecial, memberRef(_references.forMethod(convSpec[0],"<init>",new Class[]{primitiveType},Void.TYPE)));
+		addInstruction(Opcode.opc_invokespecial, memberRef(_references.forMethod(type(convSpec[0]),"<init>",new TypeRef[]{type(primitiveType)},type(Void.TYPE))));
 	}
 	
 	private int loadOpcode(Class type) {
-		if(type==Long.TYPE) {
+		if(type==Long.class) {
 			return Opcode.opc_lload;
 		}
-		if(type==Float.TYPE) {
+		if(type==Float.class) {
 			return Opcode.opc_fload;
 		}
-		if(type==Double.TYPE) {
+		if(type==Double.class) {
 			return Opcode.opc_dload;
 		}
 		return Opcode.opc_iload;
 	}
 
 	private int storeOpcode(Class type) {
-		if(type==Long.TYPE) {
+		if(type==Long.class) {
 			return Opcode.opc_lstore;
 		}
-		if(type==Float.TYPE) {
+		if(type==Float.class) {
 			return Opcode.opc_fstore;
 		}
-		if(type==Double.TYPE) {
+		if(type==Double.class) {
 			return Opcode.opc_dstore;
 		}
 		return Opcode.opc_istore;
 	}
 
 	private Type typeRef(final Class type) {
-		return _references.typeRef(type);
+		return _references.bloatType(type);
 	}
 	
 	private Map setUpConversions() {
@@ -237,12 +257,12 @@ public class BloatMethodBuilder implements MethodBuilder {
 		conversions.put(Float.class,new Class[]{Float.class,Float.TYPE});
 		conversions.put(Boolean.class,new Class[]{Boolean.class,Boolean.TYPE});
 		// FIXME this must be handled somewhere else -  FieldValue, etc.
-		conversions.put(Integer.TYPE,conversions.get(Integer.class));
-		conversions.put(Long.TYPE,conversions.get(Long.class));
+		conversions.put(integerType(),conversions.get(Integer.class));
+		conversions.put(longType(),conversions.get(Long.class));
 		conversions.put(Short.TYPE,conversions.get(Short.class));
 		conversions.put(Byte.TYPE,conversions.get(Byte.class));
-		conversions.put(Double.TYPE,conversions.get(Double.class));
-		conversions.put(Float.TYPE,conversions.get(Float.class));
+		conversions.put(doubleType(),conversions.get(Double.class));
+		conversions.put(floatType(),conversions.get(Float.class));
 		conversions.put(Boolean.TYPE,conversions.get(Boolean.class));
 		return conversions;
 	}

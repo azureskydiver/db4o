@@ -2,11 +2,19 @@
 
 package com.db4o.nativequery.optimization;
 
+import java.lang.reflect.*;
+
 /**
  * @sharpen.ignore
  */
 public class NativeQueriesPlatform {
+	
+	public static String toPlatformName(String javaName) {
+		return javaName;
+	}
 
-	public static final String OPTIMIZE_QUERY_METHOD_NAME = "optimizeQuery";
+	public static boolean isStatic(Method method) {
+		return Modifier.isStatic(method.getModifiers());
+	}
 
 }

@@ -2,16 +2,17 @@
 
 package com.db4o.nativequery.expr.cmp.operand;
 
+import com.db4o.foundation.*;
+import com.db4o.instrumentation.api.*;
+
 
 public class MethodCallValue extends ComparisonOperandDescendant {
-	private String _methodName;
-	private Class[] _paramTypes; 
-	private ComparisonOperand[] _args;
+	private final MethodRef _method;
+	private final ComparisonOperand[] _args;
 	
-	public MethodCallValue(ComparisonOperandAnchor parent, String name, Class[] paramTypes, ComparisonOperand[] args) {
+	public MethodCallValue(ComparisonOperandAnchor parent, MethodRef method, ComparisonOperand[] args) {
 		super(parent);
-		_methodName = name;
-		_paramTypes = paramTypes;
+		_method = method;
 		_args = args;
 	}
 
@@ -19,14 +20,9 @@ public class MethodCallValue extends ComparisonOperandDescendant {
 		visitor.visit(this);
 	}
 
-	public String methodName() {
-		return _methodName;
-	}
-
-	public Class[] paramTypes() {
-		return _paramTypes;
-	}
-
+	/**
+	 * @sharpen.property
+	 */
 	public ComparisonOperand[] args() {
 		return _args;
 	}
@@ -36,38 +32,27 @@ public class MethodCallValue extends ComparisonOperandDescendant {
 			return false;
 		}
 		MethodCallValue casted=(MethodCallValue)obj;
-		return _methodName.equals(casted._methodName)&&arrayCmp(_paramTypes, casted._paramTypes)&&arrayCmp(_args, casted._args);
+		return _method.equals(casted._method);
 	}
 
 	public int hashCode() {
 		int hc=super.hashCode();
-		hc*=29+_methodName.hashCode();
-		hc*=29+_paramTypes.hashCode();
+		hc*=29+_method.hashCode();
 		hc*=29+_args.hashCode();
 		return hc;
 	}
 	
 	public String toString() {
-		String str=super.toString()+"."+_methodName+"(";
-		for (int paramIdx = 0; paramIdx < _paramTypes.length; paramIdx++) {
-			if(paramIdx>0) {
-				str+=",";
-			}
-			str+=_paramTypes[paramIdx]+":"+_args[paramIdx];
-		}
-		str+=")";
-		return str;
+		return super.toString()
+			+ "."
+			+ _method.name()
+			+ Iterators.join(Iterators.iterate(_args), "(", ")", ", ");
 	}
 	
-	private boolean arrayCmp(Object[] a,Object[] b) {
-		if(a.length!=b.length) {
-			return false;
-		}
-		for (int paramIdx = 0; paramIdx < a.length; paramIdx++) {
-			if(!a[paramIdx].equals(b[paramIdx])) {
-				return false;
-			}
-		}
-		return true;
+	/**
+	 * @sharpen.property
+	 */
+	public MethodRef method() {
+		return _method;
 	}
 }

@@ -2,6 +2,8 @@
 
 package com.db4o.instrumentation.core;
 
+import com.db4o.instrumentation.api.*;
+
 /**
  * @exclude
  */

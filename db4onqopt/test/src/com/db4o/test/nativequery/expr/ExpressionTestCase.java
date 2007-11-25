@@ -5,20 +5,21 @@ package com.db4o.test.nativequery.expr;
 import com.db4o.nativequery.expr.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
+import com.db4o.test.nativequery.mocks.*;
 
 import db4ounit.*;
 
 public class ExpressionTestCase implements TestCase {
 	public void testEqualsHashCodeFieldValue() {
-		FieldValue fieldValue = new FieldValue(PredicateFieldRoot.INSTANCE,"a");
-		assertEqualsHashCode(fieldValue,new FieldValue(PredicateFieldRoot.INSTANCE,"a"));
-		assertNotEquals(fieldValue,new FieldValue(PredicateFieldRoot.INSTANCE,"b"));
+		FieldValue fieldValue = fieldValue(PredicateFieldRoot.INSTANCE,"a");
+		assertEqualsHashCode(fieldValue,fieldValue(PredicateFieldRoot.INSTANCE,"a"));
+		assertNotEquals(fieldValue,fieldValue(PredicateFieldRoot.INSTANCE,"b"));
 	}
 	
 	public void testEqualsHashCodeConst() {
 		BoolConstExpression expr = BoolConstExpression.TRUE;
 		assertEqualsHashCode(expr,BoolConstExpression.TRUE);
-		assertNotEquals(expr,new FieldValue(PredicateFieldRoot.INSTANCE,"b"));
+		assertNotEquals(expr,fieldValue(PredicateFieldRoot.INSTANCE,"b"));
 	}
 
 	public void testEqualsHashCodeNot() {
@@ -44,13 +45,18 @@ public class ExpressionTestCase implements TestCase {
 	}
 
 	public void testEqualsHashCodeComparison() {
-		FieldValue[] fieldVals={new FieldValue(PredicateFieldRoot.INSTANCE,"A"),new FieldValue(CandidateFieldRoot.INSTANCE,"B")};
+		FieldValue[] fieldVals={fieldValue(PredicateFieldRoot.INSTANCE, "A"),fieldValue(CandidateFieldRoot.INSTANCE,"B")};
 		ConstValue[] constVals={new ConstValue("X"),new ConstValue("Y")};
 		ComparisonExpression expr = new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.EQUALS);
 		assertEqualsHashCode(expr,new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.EQUALS));
 		assertNotEquals(expr,new ComparisonExpression(fieldVals[1],constVals[0],ComparisonOperator.EQUALS));
 		assertNotEquals(expr,new ComparisonExpression(fieldVals[0],constVals[1],ComparisonOperator.EQUALS));
 		assertNotEquals(expr,new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.SMALLER));
+	}
+
+	private FieldValue fieldValue(final ComparisonOperandAnchor target,
+			final String fieldName) {
+		return new FieldValue(target, new MockFieldRef(fieldName));
 	}
 
 	private void assertEqualsHashCode(Object obj,Object same) {

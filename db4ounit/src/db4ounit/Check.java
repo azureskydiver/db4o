@@ -14,5 +14,15 @@ public class Check {
 				&& actual != null
 				&& expected.equals(actual));
 	}
+	
+	public static boolean arraysAreEqual(Object[] expected, Object[] actual) {
+		if (expected == actual) return true;
+		if (expected == null || actual == null) return false;
+		if (expected.length != actual.length) return false;
+	    for (int i = 0; i < expected.length; i++) {
+	        if (!objectsAreEqual(expected[i], actual[i])) return false;
+	    }
+	    return true;
+	}
 
 }

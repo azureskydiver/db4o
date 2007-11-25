@@ -2,25 +2,20 @@
 
 package com.db4o.nativequery.expr.cmp.operand;
 
+import com.db4o.instrumentation.api.*;
+
 
 public class FieldValue extends ComparisonOperandDescendant {
 	
-	private String _fieldName;
-	
-	private Object _tag;
-	
-	public FieldValue(ComparisonOperandAnchor root, String name) {
-		this(root, name, null);
-	}
-	
-	public FieldValue(ComparisonOperandAnchor root, String name, Object tag) {
+	private final FieldRef _field;
+
+	public FieldValue(ComparisonOperandAnchor root, FieldRef field) {
 		super(root);
-		_fieldName=name;
-		_tag=tag;
+		_field = field;
 	}
 
 	public String fieldName() {
-		return _fieldName;
+		return _field.name();
 	}
 	
 	public boolean equals(Object other) {
@@ -28,29 +23,15 @@ public class FieldValue extends ComparisonOperandDescendant {
 			return false;
 		}
 		FieldValue casted = (FieldValue) other;
-		if(_tag==null) {
-			if(casted._tag!=null) {
-				return false;
-			}
-		}
-		else {
-			if(!_tag.equals(casted._tag)) {
-				return false;
-			}
-		}
-		return _fieldName.equals(casted._fieldName);
+		return _field.equals(casted._field);
 	}
 	
 	public int hashCode() {
-		int hash=super.hashCode()*29+_fieldName.hashCode();
-		if(_tag!=null) {
-			hash*=29+_tag.hashCode();
-		}
-		return hash;
+		return super.hashCode()*29+_field.hashCode();
 	}
 	
 	public String toString() {
-		return super.toString()+"."+_fieldName;
+		return super.toString()+"."+_field;
 	}
 	
 	public void accept(ComparisonOperandVisitor visitor) {
@@ -58,16 +39,9 @@ public class FieldValue extends ComparisonOperandDescendant {
 	}
 	
 	/**
-	 * Code analysis specific information.
-	 * 
-	 * This is used in the .net side to preserve Mono.Cecil references
-	 * for instance.
+	 * @sharpen.property
 	 */
-	public Object tag() {
-		return _tag;
-	}
-	
-	public void tag(Object value) {
-		_tag = value;
+	public FieldRef field() {
+		return _field;
 	}
 }

@@ -3,56 +3,33 @@
 package com.db4o.instrumentation.bloat;
 
 import EDU.purdue.cs.bloat.editor.*;
-import EDU.purdue.cs.bloat.file.*;
 
 import com.db4o.instrumentation.api.*;
-import com.db4o.instrumentation.util.*;
 
 
-public class BloatTypeEditor implements TypeEditor, TypeLoader {
+public class BloatTypeEditor implements TypeEditor {
 
 	private final ClassEditor _classEditor;
-	private final ClassLoader _classLoader;
-	private final ClassSource _classSource;
 	private final BloatReferenceProvider _references;
 
-	public BloatTypeEditor(ClassEditor classEditor, ClassLoader classLoader, ClassSource classSource) {
+	public BloatTypeEditor(ClassEditor classEditor) {
 		_classEditor = classEditor;
-		_classLoader = classLoader;
-		_classSource = classSource;
 		_references = new BloatReferenceProvider();
 	}
 
-	public Class actualType() throws InstrumentationException {
-		try {
-			return _classLoader.loadClass(BloatUtil.normalizeClassName(_classEditor.name()));
-		} catch (ClassNotFoundException e) {
-			throw new InstrumentationException(e);
-		}
+	public TypeRef type() throws InstrumentationException {
+		return _references.forBloatType(_classEditor.type());
 	}
 
-	public void addInterface(Class type) {
-		_classEditor.addInterface(type);
+	public void addInterface(TypeRef type) {
+		_classEditor.addInterface(BloatTypeRef.bloatType(type));
 	}
 
-	public MethodBuilder newPublicMethod(String methodName, Class returnType, Class[] parameterTypes) {
+	public MethodBuilder newPublicMethod(String methodName, TypeRef returnType, TypeRef[] parameterTypes) {
 		return new BloatMethodBuilder(_references, _classEditor, methodName, returnType, parameterTypes);
 	}
 
 	public ReferenceProvider references() {
 		return _references;
 	}
-
-	public TypeLoader loader() {
-		return this;
-	}
-
-	public Class loadType(String typeName) {
-		try {
-			return _classSource.loadClass(typeName);
-		} catch (ClassNotFoundException e) {
-			throw new InstrumentationException(e);
-		}
-	}
-
 }

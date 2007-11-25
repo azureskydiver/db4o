@@ -8,7 +8,11 @@ import com.db4o.instrumentation.api.*;
 
 public class BloatFieldRef extends BloatMemberRef implements FieldRef {
 
-	public BloatFieldRef(MemberRef fieldRef) {
-		super(fieldRef);
+	public BloatFieldRef(BloatReferenceProvider provider, MemberRef fieldRef) {
+		super(provider, fieldRef);
+	}
+
+	public TypeRef type() {
+		return typeRef(_member.type());
 	}
 }

@@ -5,20 +5,17 @@
  */
 package com.db4o.nativequery.instrumentation;
 
-import java.lang.reflect.*;
-
 import com.db4o.instrumentation.api.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
-import com.db4o.nativequery.optimization.*;
 
 class TypeDeducingVisitor implements ComparisonOperandVisitor {
-	private Class _predicateClass;
-	private Class _clazz;
-	private TypeLoader _typeLoader;
+	private TypeRef _predicateClass;
+	private TypeRef _clazz;
+	private ReferenceProvider _referenceProvider;
 	
-	public TypeDeducingVisitor(Class predicateClass, TypeLoader typeLoader) {
+	public TypeDeducingVisitor(ReferenceProvider provider, TypeRef predicateClass) {
 		this._predicateClass = predicateClass;
-		this._typeLoader = typeLoader;
+		this._referenceProvider = provider;
 		_clazz=null;
 	}
 
@@ -31,14 +28,10 @@ class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	}
 
 	public void visit(StaticFieldRoot root) {
-		try {
-			_clazz=_typeLoader.loadType(root.className());
-		} catch (InstrumentationException e) {
-			e.printStackTrace();
-		}
+		_clazz=root.type();
 	}
 	
-	public Class operandClass() {
+	public TypeRef operandClass() {
 		return _clazz;
 	}
 
@@ -46,34 +39,21 @@ class TypeDeducingVisitor implements ComparisonOperandVisitor {
 	}
 
 	public void visit(ConstValue operand) {
-		_clazz=operand.value().getClass();
+		_clazz=_referenceProvider.forType(operand.value().getClass());
 	}
 
 	public void visit(FieldValue operand) {
 		operand.parent().accept(this);
-		try {
-			_clazz=fieldFor(_clazz,operand.fieldName()).getType();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		_clazz=operand.field().type();
 	}
 
 	public void visit(ArrayAccessValue operand) {
 		operand.parent().accept(this);
-		_clazz=_clazz.getComponentType();
-	}
-	
-	Field fieldFor(Class clazz,String fieldName) {
-		try {
-			return clazz.getDeclaredField(fieldName);
-		} catch (Exception e) {
-		}
-		return null;
+		_clazz=_clazz.elementType();
 	}
 
 	public void visit(MethodCallValue operand) {
 		operand.parent().accept(this);
-		Method method=ReflectUtil.methodFor(_clazz, operand.methodName(), operand.paramTypes());
-		_clazz=method.getReturnType();
+		_clazz=operand.method().returnType();
 	}
 }

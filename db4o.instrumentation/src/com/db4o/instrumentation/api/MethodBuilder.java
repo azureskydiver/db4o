@@ -10,6 +10,9 @@ import java.lang.reflect.*;
  */
 public interface MethodBuilder {
 	
+	/**
+	 * @sharpen.property
+	 */
 	ReferenceProvider references();
 	
 	void ldc(Object value);
@@ -18,15 +21,15 @@ public interface MethodBuilder {
 	
 	void pop();
 
-	void loadArrayElement(Class elementType);
+	void loadArrayElement(TypeRef elementType);
 
-	void add(Class operandType);
+	void add(TypeRef operandType);
 
-	void subtract(Class operandType);
+	void subtract(TypeRef operandType);
 
-	void multiply(Class operandType);
+	void multiply(TypeRef operandType);
 
-	void divide(Class operandType);
+	void divide(TypeRef operandType);
 
 	void invoke(MethodRef method);
 	
@@ -36,7 +39,7 @@ public interface MethodBuilder {
 
 	void loadStaticField(FieldRef fieldRef);
 	
-	void box(Class boxedType);
+	void box(TypeRef boxedType);
 	
 	void endMethod();
 	

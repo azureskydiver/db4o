@@ -86,6 +86,7 @@
 		
 		<sequential>
 			<exec executable="${file.jvm.jdk1.5}" failonerror="true" timeout="1800000">
+				<arg value="-Xms256m" />
 				<arg value="-Xmx512m" />
 				<arg value="-cp" />
 				<arg value="${eclipse.startup.jar}" />

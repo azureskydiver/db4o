@@ -3,8 +3,18 @@
 package com.db4o.instrumentation.api;
 
 /**
- * A reference to a field. See {@link ReferenceProvider#forField(Class, Class, String)}. 
+ * A reference to a field. See {@link ReferenceProvider#forField}. 
  */
 public interface FieldRef {
+
+	/**
+	 * @sharpen.property
+	 */
+	TypeRef type();
+
+	/**
+	 * @sharpen.property
+	 */
+	String name();
 
 }

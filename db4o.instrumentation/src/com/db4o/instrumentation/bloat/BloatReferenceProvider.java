@@ -2,29 +2,58 @@
 
 package com.db4o.instrumentation.bloat;
 
+import java.lang.reflect.*;
+
 import EDU.purdue.cs.bloat.editor.*;
+import EDU.purdue.cs.bloat.editor.Type;
 
 import com.db4o.instrumentation.api.*;
 
-
 public class BloatReferenceProvider implements ReferenceProvider {
 
-	public FieldRef forField(Class declaringType, Class fieldType, String fieldName) {
-		NameAndType nameAndType=new NameAndType(fieldName, typeRef(fieldType));
-		return new BloatFieldRef(new MemberRef(typeRef(declaringType),nameAndType));
-	}
-
-	public MethodRef forMethod(Class declaringType, String methodName, Class[] parameterTypes, Class returnType) {
+	public MethodRef forMethod(TypeRef declaringType, String methodName, TypeRef[] parameterTypes, TypeRef returnType) {
 		Type[] argTypes=new Type[parameterTypes.length];
 		for (int argIdx = 0; argIdx < parameterTypes.length; argIdx++) {
-			argTypes[argIdx]=typeRef(parameterTypes[argIdx]);
+			argTypes[argIdx]=bloatType(parameterTypes[argIdx]);
 		}
-		NameAndType nameAndType=new NameAndType(methodName, Type.getType(argTypes, typeRef(returnType)));
-		return new BloatMethodRef(new MemberRef(typeRef(declaringType), nameAndType));
+		NameAndType nameAndType=new NameAndType(methodName, Type.getType(argTypes, bloatType(returnType)));
+		return forBloatMethod(new MemberRef(bloatType(declaringType), nameAndType));
 	}
 
-	Type typeRef(Class clazz) {
+	Type bloatType(Class clazz) {
 		return Type.getType(clazz);
+	}
+	
+	Type bloatType(TypeRef type) {
+		return BloatTypeRef.bloatType(type);
+	}
+
+	public TypeRef forType(Class type) {
+		return forBloatType(bloatType(type));
+	}
+
+	public MethodRef forMethod(Method method) {
+		return forMethod(forType(method.getDeclaringClass()), method.getName(), forTypes(method.getParameterTypes()), forType(method.getReturnType()));
+	}
+
+	private TypeRef[] forTypes(Class[] types) {
+		TypeRef[] typeRefs = new TypeRef[types.length];
+		for (int i=0; i<types.length; ++i) {
+			typeRefs[i] = forType(types[i]);
+		}
+		return typeRefs;
+	}
+
+	public MethodRef forBloatMethod(MemberRef method) {
+		return new BloatMethodRef(this, method);
+	}
+
+	public TypeRef forBloatType(Type type) {
+		return new BloatTypeRef(this, type);
+	}
+
+	public FieldRef forBloatField(MemberRef field) {
+		return new BloatFieldRef(this, field);
 	}
 
 }

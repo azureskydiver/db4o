@@ -2,23 +2,18 @@
 
 package com.db4o.nativequery.instrumentation;
 
-import java.lang.reflect.*;
-
 import com.db4o.instrumentation.api.*;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
-import com.db4o.nativequery.optimization.*;
 
 class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	private MethodBuilder _methodBuilder;
-	private Class _predicateClass;
+	private TypeRef _predicateClass;
 	private boolean _inArithmetic=false;
-	private Class _opClass=null;
-	private Class _staticRoot=null;
-	private TypeLoader _typeLoader;
+	private TypeRef _opClass=null;
+	private TypeRef _staticRoot=null;
 
-	public ComparisonBytecodeGeneratingVisitor(TypeLoader typeLoader, MethodBuilder methodBuilder, Class predicateClass) {
-		this._typeLoader = typeLoader;
+	public ComparisonBytecodeGeneratingVisitor(MethodBuilder methodBuilder, TypeRef predicateClass) {
 		this._methodBuilder = methodBuilder;
 		this._predicateClass = predicateClass;
 	}
@@ -26,27 +21,29 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	public void visit(ConstValue operand) {
 		Object value = operand.value();
 		if(value!=null) {
-			_opClass=value.getClass();
+			_opClass=typeRef(value.getClass());
 		}
 		_methodBuilder.ldc(value);
 		if(value!=null) {
-			box(value.getClass(),!_inArithmetic);
+			box(_opClass,!_inArithmetic);
 		}
 	}	
 
+	private TypeRef typeRef(Class type) {
+		return _methodBuilder.references().forType(type);
+	}
+
 	public void visit(FieldValue fieldValue) {
-		Class lastFieldClass = deduceFieldClass(fieldValue);
-		Class parentClass=deduceFieldClass(fieldValue.parent());
+		TypeRef lastFieldClass = fieldValue.field().type();
 		boolean needConversion=lastFieldClass.isPrimitive();
 			
 		fieldValue.parent().accept(this);
 		if(_staticRoot!=null) {
-			_methodBuilder.loadStaticField(fieldReference(_staticRoot, lastFieldClass,fieldValue.fieldName()));
+			_methodBuilder.loadStaticField(fieldValue.field());
 			_staticRoot=null;
 			return;
 		}
-		FieldRef fieldRef=fieldReference(parentClass,lastFieldClass,fieldValue.fieldName());
-		_methodBuilder.loadField(fieldRef);
+		_methodBuilder.loadField(fieldValue.field());
 		
 		box(lastFieldClass,!_inArithmetic&&needConversion);
 	}
@@ -60,11 +57,11 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	}
 
 	public void visit(StaticFieldRoot root) {
-		_staticRoot=_typeLoader.loadType(root.className());
+		_staticRoot=root.type();
 	}
 
 	public void visit(ArrayAccessValue operand) {
-		Class cmpType=deduceFieldClass(operand.parent()).getComponentType();
+		TypeRef cmpType=deduceFieldClass(operand.parent()).elementType();
 		operand.parent().accept(this);
 		boolean outerInArithmetic=_inArithmetic;
 		_inArithmetic=true;
@@ -75,15 +72,14 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 	}
 
 	public void visit(MethodCallValue operand) {
-		Class rcvType=deduceFieldClass(operand.parent());
-		Method method=ReflectUtil.methodFor(rcvType, operand.methodName(), operand.paramTypes());
-		Class retType=method.getReturnType();
+		MethodRef method=operand.method();
+		TypeRef retType=method.returnType();
 		// FIXME: this should be handled within conversions
 		boolean needConversion=retType.isPrimitive();
 		operand.parent().accept(this);
 		boolean oldInArithmetic=_inArithmetic;
 		for (int paramIdx = 0; paramIdx < operand.args().length; paramIdx++) {
-			_inArithmetic=operand.paramTypes()[paramIdx].isPrimitive();
+			_inArithmetic=operand.method().paramTypes()[paramIdx].isPrimitive();
 			operand.args()[paramIdx].accept(this);
 		}
 		_inArithmetic=oldInArithmetic;
@@ -96,7 +92,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		_inArithmetic=true;
 		operand.left().accept(this);
 		operand.right().accept(this);
-		Class operandType=arithmeticType(operand);
+		TypeRef operandType=arithmeticType(operand);
 		switch(operand.op().id()) {
 			case ArithmeticOperator.ADD_ID:
 				_methodBuilder.add(operandType);
@@ -118,27 +114,22 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		// FIXME: need to map dX,fX,...
 	}
 
-	private void box(Class boxedType, boolean canApply) {
+	private void box(TypeRef boxedType, boolean canApply) {
 		if (!canApply) {
 			return;
 		}
 		_methodBuilder.box(boxedType);
 	}
 
-	private Class deduceFieldClass(ComparisonOperand fieldValue) {
-		TypeDeducingVisitor visitor=new TypeDeducingVisitor(_predicateClass, _typeLoader);
+	private TypeRef deduceFieldClass(ComparisonOperand fieldValue) {
+		TypeDeducingVisitor visitor=new TypeDeducingVisitor(_methodBuilder.references(), _predicateClass);
 		fieldValue.accept(visitor);
 		return visitor.operandClass();
 	}
 
-	private FieldRef fieldReference(Class parentClass, Class fieldClass, String name) {
-		return _methodBuilder.references().forField(parentClass, fieldClass, name);
-	}
-
-
-	private Class arithmeticType(ComparisonOperand operand) {
+	private TypeRef arithmeticType(ComparisonOperand operand) {
 		if (operand instanceof ConstValue) {
-			return ((ConstValue) operand).value().getClass();
+			return typeRef(((ConstValue) operand).value().getClass());
 		}
 		if (operand instanceof FieldValue) {
 			try {
@@ -150,19 +141,31 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		}
 		if (operand instanceof ArithmeticExpression) {
 			ArithmeticExpression expr=(ArithmeticExpression)operand;
-			Class left=arithmeticType(expr.left());
-			Class right=arithmeticType(expr.right());
-			if(left==Double.class||right==Double.class) {
-				return Double.class;
+			TypeRef left=arithmeticType(expr.left());
+			TypeRef right=arithmeticType(expr.right());
+			if(left==doubleRef()||right==doubleRef()) {
+				return doubleRef();
 			}
-			if(left==Float.class||right==Float.class) {
-				return Float.class;
+			if(left==floatRef()||right==floatRef()) {
+				return floatRef();
 			}
-			if(left==Long.class||right==Long.class) {
-				return Long.class;
+			if(left==longRef()||right==longRef()) {
+				return longRef();
 			}
-			return Integer.class;
+			return typeRef(Integer.class);
 		}
 		return null;
+	}
+
+	private TypeRef longRef() {
+		return typeRef(Long.class);
+	}
+
+	private TypeRef floatRef() {
+		return typeRef(Float.class);
+	}
+
+	private TypeRef doubleRef() {
+		return typeRef(Double.class);
 	}
 }
