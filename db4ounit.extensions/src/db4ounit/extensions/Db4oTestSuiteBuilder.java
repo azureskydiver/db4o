@@ -16,8 +16,7 @@ public class Db4oTestSuiteBuilder extends ReflectionTestSuiteBuilder {
 	private Db4oFixture _fixture;
     
 	public Db4oTestSuiteBuilder(Db4oFixture fixture, Class clazz) {		
-		super(clazz);
-        fixture(fixture);
+		this(fixture, new Class[] { clazz });
 	}
     
     public Db4oTestSuiteBuilder(Db4oFixture fixture, Class[] classes) {     
