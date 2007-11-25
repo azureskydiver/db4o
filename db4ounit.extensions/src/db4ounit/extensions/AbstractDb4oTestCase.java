@@ -175,30 +175,30 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 	
 
-    private Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
+    protected Db4oTestSuiteBuilder soloSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
 				new Db4oSolo(configSource(independentConfig)), testCases());
 	}
 
-	private Db4oTestSuiteBuilder clientServerSuite(boolean independentConfig) {
+	protected Db4oTestSuiteBuilder clientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
 		        new Db4oClientServer(configSource(independentConfig), false, "C/S"), 
 		        testCases());
 	}
 	
-	private Db4oTestSuiteBuilder embeddedClientServerSuite(boolean independentConfig) {
+	protected Db4oTestSuiteBuilder embeddedClientServerSuite(boolean independentConfig) {
 		return new Db4oTestSuiteBuilder(
 		        new Db4oClientServer(configSource(independentConfig), true, "C/S EMBEDDED"), 
 		        testCases());
 	}
 
-	private Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean independentConfig, boolean embedded, String label) {
+	protected Db4oTestSuiteBuilder concurrenyClientServerSuite(boolean independentConfig, boolean embedded, String label) {
 		return new Db4oConcurrencyTestSuiteBuilder(
 		        new Db4oClientServer(configSource(independentConfig), embedded, label), 
 		        testCases());
 	}
 	
-    private ConfigurationSource configSource(boolean independentConfig) {
+    protected ConfigurationSource configSource(boolean independentConfig) {
         return (independentConfig ? (ConfigurationSource)new IndependentConfigurationSource() : new GlobalConfigurationSource());
     }
 
