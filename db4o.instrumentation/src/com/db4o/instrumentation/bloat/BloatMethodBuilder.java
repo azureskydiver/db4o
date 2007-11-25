@@ -28,8 +28,26 @@ class BloatMethodBuilder implements MethodBuilder {
 		setUpConversions();
 	}
 
-	public void invoke(final MethodRef method) {
+	public void invoke(final MethodRef method, CallingConvention convention) {
+		if (convention == CallingConvention.INTERFACE) {
+			invokeInterface(method);
+		} else if (convention == CallingConvention.STATIC) {
+			invokeStatic(method);
+		} else {
+			invokeVirtual(method);
+		}
+	}
+
+	private void invokeInterface(final MethodRef method) {
 		addInstruction(Opcode.opc_invokeinterface, memberRef(method));
+	}
+	
+	private void invokeVirtual(final MethodRef methodRef) {
+		addInstruction(Opcode.opc_invokevirtual, memberRef(methodRef));
+	}
+	
+	private void invokeStatic(final MethodRef methodRef) {
+		addInstruction(Opcode.opc_invokestatic, memberRef(methodRef));
 	}
 
 	public void ldc(Object value) {
@@ -192,14 +210,6 @@ class BloatMethodBuilder implements MethodBuilder {
 		}
 	}	
 	
-	private void invokeVirtual(final MethodRef methodRef) {
-		addInstruction(Opcode.opc_invokevirtual, memberRef(methodRef));
-	}
-	
-	public void invokeStatic(final MethodRef methodRef) {
-		addInstruction(Opcode.opc_invokestatic, memberRef(methodRef));
-	}
-
 	private boolean isStatic(Method method) {
 		return (method.getModifiers()&Modifier.STATIC)!=0;
 	}

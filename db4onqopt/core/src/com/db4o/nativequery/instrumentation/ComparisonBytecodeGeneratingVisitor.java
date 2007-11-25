@@ -77,18 +77,13 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		// FIXME: this should be handled within conversions
 		boolean needConversion=retType.isPrimitive();
 		operand.parent().accept(this);
-		boolean staticMethod = _staticRoot != null;
 		boolean oldInArithmetic=_inArithmetic;
 		for (int paramIdx = 0; paramIdx < operand.args().length; paramIdx++) {
 			_inArithmetic=operand.method().paramTypes()[paramIdx].isPrimitive();
 			operand.args()[paramIdx].accept(this);
 		}
 		_inArithmetic=oldInArithmetic;
-		if (staticMethod) {
-			_methodBuilder.invokeStatic(method);
-		} else {
-			_methodBuilder.invoke(method);
-		}
+		_methodBuilder.invoke(method, operand.callingConvention());
 		box(retType, !_inArithmetic&&needConversion);
 	}
 
@@ -134,7 +129,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 
 	private TypeRef arithmeticType(ComparisonOperand operand) {
 		if (operand instanceof ConstValue) {
-			return typeRef(((ConstValue) operand).value().getClass());
+			return primitiveType(((ConstValue) operand).value().getClass());
 		}
 		if (operand instanceof FieldValue) {
 			return ((FieldValue)operand).field().type();
@@ -143,29 +138,52 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 			ArithmeticExpression expr=(ArithmeticExpression)operand;
 			TypeRef left=arithmeticType(expr.left());
 			TypeRef right=arithmeticType(expr.right());
-			if(left==doubleRef()||right==doubleRef()) {
-				return doubleRef();
+			if(left==doubleType()||right==doubleType()) {
+				return doubleType();
 			}
-			if(left==floatRef()||right==floatRef()) {
-				return floatRef();
+			if(left==floatType()||right==floatType()) {
+				return floatType();
 			}
-			if(left==longRef()||right==longRef()) {
-				return longRef();
+			if(left==longType()||right==longType()) {
+				return longType();
 			}
-			return typeRef(Integer.TYPE);
+			return intType();
 		}
 		return null;
 	}
 
-	private TypeRef longRef() {
+	private TypeRef primitiveType(Class klass) {
+		if (klass == Integer.class
+			|| klass == Short.class
+			|| klass == Boolean.class
+			|| klass == Byte.class) {
+			return intType();
+		}
+		if (klass == Double.class) {
+			return doubleType();
+		}
+		if (klass == Float.class) {
+			return floatType();
+		}
+		if (klass == Long.class) {
+			return longType();
+		}
+		return typeRef(klass);
+	}
+
+	private TypeRef intType() {
+		return typeRef(Integer.TYPE);
+	}	
+
+	private TypeRef longType() {
 		return typeRef(Long.TYPE);
 	}
 
-	private TypeRef floatRef() {
+	private TypeRef floatType() {
 		return typeRef(Float.TYPE);
 	}
 
-	private TypeRef doubleRef() {
+	private TypeRef doubleType() {
 		return typeRef(Double.TYPE);
 	}
 }

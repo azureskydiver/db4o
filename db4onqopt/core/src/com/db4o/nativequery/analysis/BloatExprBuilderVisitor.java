@@ -380,8 +380,9 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 				params.remove(0);
 				retval(
 					new MethodCallValue(
-						rcvRetval,
 						methodRef(expr.method()),
+						callingConvention(expr),
+						rcvRetval,
 						(ComparisonOperand[]) params.toArray(new ComparisonOperand[params.size()])));
 				return;
 			}
@@ -422,6 +423,17 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 						+ methodRef + " , pop=" + last);
 			}
 		}
+	}
+
+	private CallingConvention callingConvention(CallExpr expr) {
+		if (expr instanceof CallStaticExpr) {
+			return CallingConvention.STATIC;
+		}
+		CallMethodExpr cme = (CallMethodExpr)expr;
+		if (cme.kind() == CallMethodExpr.INTERFACE) {
+			return CallingConvention.INTERFACE;
+		}
+		return CallingConvention.VIRTUAL;
 	}
 
 	private MethodRef methodRef(MemberRef method) {

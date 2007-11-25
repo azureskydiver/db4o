@@ -2,6 +2,8 @@
 
 package com.db4o.test.nativequery.analysis;
 
+import java.lang.reflect.*;
+import java.lang.reflect.Method;
 import java.util.Date;
 
 import EDU.purdue.cs.bloat.cfg.*;
@@ -572,19 +574,39 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void testFieldWrapperIntSameComp() throws Exception {
 		assertComparison("sampleFieldWrapperIntSameComp",
 				INT_FIELDNAME,
-				new MethodCallValue(
+				methodCallValue(
 					fieldValue(
 						staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
 						"INT_WRAPPER_CMPVAL",
 						Integer.class),
-					methodRef(Integer.class, "intValue", new Class[0]),
+					method(Integer.class, "intValue", new Class[0]),
 					new ComparisonOperand[0]),
 				ComparisonOperator.EQUALS,
 				false);
 	}
 
-	private MethodRef methodRef(Class declaringClass, String methodName, Class[] paramTypes) throws Exception {
-		return new MockMethodRef(declaringClass.getDeclaredMethod(methodName, paramTypes));
+	private MethodCallValue methodCallValue(ComparisonOperandAnchor anchor, Method method, ComparisonOperand[] comparisonOperands) {
+		return new MethodCallValue(methodRef(method), callingConvention(method), anchor, comparisonOperands);
+	}
+
+	private CallingConvention callingConvention(Method method) {
+		final int modifiers = method.getModifiers();
+		if (Modifier.isStatic(modifiers)) {
+			return CallingConvention.STATIC;
+		}
+		if (method.getDeclaringClass().isInterface()) {
+			return CallingConvention.INTERFACE;
+		}
+		return CallingConvention.VIRTUAL;
+	}
+
+	private MethodRef methodRef(Method method) {
+		return new MockMethodRef(method);
+	}
+
+	private Method method(Class declaringClass, String methodName,
+			Class[] paramTypes) throws NoSuchMethodException {
+		return declaringClass.getDeclaredMethod(methodName, paramTypes);
 	}
 
 	private StaticFieldRoot staticFieldRoot(final Class declaringClass) {
@@ -598,12 +620,12 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void testBoolWrapperFieldSameComp() throws Exception {
 		assertComparison("sampleBoolWrapperFieldSameComp",
 				BOOLEAN_FIELDNAME,
-				new MethodCallValue(
+				methodCallValue(
 					fieldValue(
 						staticFieldRoot(BloatExprBuilderVisitorTestCase.class),
 						"BOOLEAN_WRAPPER_CMPVAL",
 						Boolean.class),
-					methodRef(Boolean.class, "booleanValue", new Class[0]),
+					method(Boolean.class, "booleanValue", new Class[0]),
 					new ComparisonOperand[0]),
 				ComparisonOperator.EQUALS,
 				false);
@@ -1056,9 +1078,9 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void testIntAddInPredicateMethod() throws Exception {
 		assertComparison("sampleIntAddInPredicateMethod",
 				INT_FIELDNAME,
-				new MethodCallValue(
+				methodCallValue(
 					PredicateFieldRoot.INSTANCE,
-					methodRef(getClass(), "intMemberPlusOne", new Class[]{}),
+					method(getClass(), "intMemberPlusOne", new Class[]{}),
 					new ComparisonOperand[]{}),
 				ComparisonOperator.EQUALS,
 				false);
@@ -1071,9 +1093,9 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void testStaticMethodCall() throws Exception {
 		assertComparison("sampleStaticMethodCall",
 				INT_FIELDNAME,
-				new MethodCallValue(
+				methodCallValue(
 					staticFieldRoot(Integer.class),
-					methodRef(Integer.class, "parseInt", new Class[]{String.class}),
+					method(Integer.class, "parseInt", new Class[]{String.class}),
 					new ComparisonOperand[]{
 						stringMemberFieldValue()}),
 				ComparisonOperator.EQUALS,
@@ -1094,9 +1116,9 @@ public class BloatExprBuilderVisitorTestCase implements TestCase,TestLifeCycle {
 	public void testTwoParamMethodCall() throws Exception {
 		assertComparison("sampleTwoParamMethodCall",
 				INT_FIELDNAME,
-				new MethodCallValue(
+				methodCallValue(
 					PredicateFieldRoot.INSTANCE,
-					methodRef(getClass(), "sum", new Class[]{Integer.TYPE,Integer.TYPE}),
+					method(getClass(), "sum", new Class[]{Integer.TYPE,Integer.TYPE}),
 					new ComparisonOperand[]{
 						intMemberFieldValue(),
 						new ConstValue(new Integer(0))}),

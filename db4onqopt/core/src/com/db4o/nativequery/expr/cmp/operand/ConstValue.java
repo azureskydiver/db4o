@@ -3,12 +3,12 @@
 package com.db4o.nativequery.expr.cmp.operand;
 
 
-
-public class ConstValue implements ComparisonOperand {	
+public class ConstValue implements ComparisonOperand {
+	
 	private Object _value;
 	
 	public ConstValue(Object value) {
-		this._value=value;
+		this._value = value;
 	}
 	
 	public Object value() {

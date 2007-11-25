@@ -9,11 +9,13 @@ import com.db4o.instrumentation.api.*;
 public class MethodCallValue extends ComparisonOperandDescendant {
 	private final MethodRef _method;
 	private final ComparisonOperand[] _args;
+	private final CallingConvention _callingConvention;
 	
-	public MethodCallValue(ComparisonOperandAnchor parent, MethodRef method, ComparisonOperand[] args) {
+	public MethodCallValue(MethodRef method, CallingConvention callingConvention, ComparisonOperandAnchor parent, ComparisonOperand[] args) {
 		super(parent);
 		_method = method;
 		_args = args;
+		_callingConvention = callingConvention;
 	}
 
 	public void accept(ComparisonOperandVisitor visitor) {
@@ -43,6 +45,7 @@ public class MethodCallValue extends ComparisonOperandDescendant {
 	}
 	
 	public String toString() {
+		
 		return super.toString()
 			+ "."
 			+ _method.name()
@@ -54,5 +57,12 @@ public class MethodCallValue extends ComparisonOperandDescendant {
 	 */
 	public MethodRef method() {
 		return _method;
+	}
+
+	/**
+	 * @sharpen.property
+	 */
+	public CallingConvention callingConvention() {
+		return _callingConvention;
 	}
 }
