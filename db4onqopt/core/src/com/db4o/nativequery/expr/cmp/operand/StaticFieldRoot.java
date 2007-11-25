@@ -2,6 +2,7 @@
 
 package com.db4o.nativequery.expr.cmp.operand;
 
+import com.db4o.foundation.*;
 import com.db4o.instrumentation.api.*;
 
 
@@ -10,6 +11,9 @@ public class StaticFieldRoot extends ComparisonOperandRoot {
 	private TypeRef _type;
 	
 	public StaticFieldRoot(TypeRef type) {
+		if (null == type) {
+			throw new ArgumentNullException();
+		}
 		_type = type;
 	}
 	

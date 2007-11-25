@@ -19,7 +19,7 @@ import db4ounit.extensions.fixtures.*;
 
 
 public class NQRegressionTestCase extends AbstractDb4oTestCase {
-	private final static boolean RUN_LOADTIME = false;
+	private final static boolean RUN_LOADTIME = true;
 	
 	private static final String CSTR = "Cc";
 	private static final String BSTR = "Ba";
@@ -625,7 +625,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	}
 	
 	private void assertNQResult(final ExpectingPredicate predicate) throws Exception {
-		final String predicateId = "PREDICATE: "+predicate;
+		final String predicateId = predicateId(predicate);
 		ObjectContainer db=db();
 		Db4oQueryExecutionListener listener = new Db4oQueryExecutionListener() {
 			private int run=0;
@@ -658,7 +658,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		ObjectSet raw=db.query(predicate);
 		db.ext().configure().optimizeNativeQueries(true);
 		if(NQDebug.LOG) {
-			System.err.println("PREDICATE: "+predicate);
+			System.err.println(predicateId(predicate));
 		}
 		ObjectSet optimized=db.query(predicate);
 		if(!raw.equals(optimized)) {
@@ -679,27 +679,39 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(predicate.expected(),raw.size(),predicateId);
 
 		if(RUN_LOADTIME) {
-				db.ext().configure().optimizeNativeQueries(false);
-				NQEnhancingClassloader loader=new NQEnhancingClassloader(getClass().getClassLoader());
-				Class filterClass=loader.loadClass(predicate.getClass().getName());
-				Constructor constr=null;
-				Object[] args=null;
-				try {
-					constr=filterClass.getDeclaredConstructor(new Class[]{String.class});
-					args=new Object[]{filterClass.getName()};
-				}
-				catch(NoSuchMethodException exc) {
-					constr=filterClass.getDeclaredConstructor(new Class[]{String.class,Class.class});
-					args=new Object[]{filterClass.getName(),Data.class};
-				}
-				constr.setAccessible(true);
-				Predicate clPredicate=(Predicate)constr.newInstance(args);
-				ObjectSet preoptimized=db.query(clPredicate);
-				Assert.areEqual(predicate.expected(),preoptimized.size(),predicateId);
-				Assert.areEqual(raw,preoptimized,predicateId);
-				Assert.areEqual(optimized,preoptimized,predicateId);
+			System.out.println("LOAD TIME: " + predicateId);
+			runLoadTimeTest(db, predicate, raw, optimized);
 		} 
 		((InternalObjectContainer)db).getNativeQueryHandler().clearListeners();
 		db.ext().configure().optimizeNativeQueries(true);
+	}
+
+	private void runLoadTimeTest(ObjectContainer db,
+			final ExpectingPredicate predicate, ObjectSet raw,
+			ObjectSet optimized) throws ClassNotFoundException,
+			NoSuchMethodException, InstantiationException,
+			IllegalAccessException, InvocationTargetException {
+		db.ext().configure().optimizeNativeQueries(false);
+		NQEnhancingClassloader loader=new NQEnhancingClassloader(getClass().getClassLoader());
+		Class filterClass=loader.loadClass(predicate.getClass().getName());
+		Constructor constr=null;
+		Object[] args=null;
+		try {
+			constr=filterClass.getDeclaredConstructor(new Class[]{String.class});
+			args=new Object[]{filterClass.getName()};
+		} catch(NoSuchMethodException exc) {
+			constr=filterClass.getDeclaredConstructor(new Class[]{String.class,Class.class});
+			args=new Object[]{filterClass.getName(),Data.class};
+		}
+		constr.setAccessible(true);
+		Predicate clPredicate=(Predicate)constr.newInstance(args);
+		ObjectSet preoptimized=db.query(clPredicate);
+		Assert.areEqual(predicate.expected(),preoptimized.size(),predicateId(predicate));
+		Assert.areEqual(raw,preoptimized,predicateId(predicate));
+		Assert.areEqual(optimized,preoptimized,predicateId(predicate));
+	}
+
+	private String predicateId(final ExpectingPredicate predicate) {
+		return "PREDICATE: "+predicate;
 	}
 }

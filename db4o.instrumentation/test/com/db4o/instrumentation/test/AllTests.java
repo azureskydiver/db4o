@@ -5,16 +5,17 @@ import com.db4o.instrumentation.test.core.*;
 
 import db4ounit.*;
 
-public class AllTests implements TestSuiteBuilder {
-
-	public TestSuite build() {
-		return new ReflectionTestSuiteBuilder(new Class[] {
-				DefaultFilePathRootTestCase.class,
-				JarFileClassFilterTestCase.class,
-			}).build();	
-	}
+public class AllTests extends ReflectionTestSuite {
 
 	public static void main(String[] args) {
 		new TestRunner(AllTests.class).run();
+	}
+
+	protected Class[] testCases() {
+		return new Class[] {
+			com.db4o.instrumentation.test.bloat.AllTests.class,
+			DefaultFilePathRootTestCase.class,
+			JarFileClassFilterTestCase.class,
+		};
 	}
 }

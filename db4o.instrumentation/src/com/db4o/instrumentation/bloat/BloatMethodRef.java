@@ -10,7 +10,7 @@ public class BloatMethodRef extends BloatMemberRef implements MethodRef {
 
 	private TypeRef[] _paramTypes;
 
-	public BloatMethodRef(BloatReferenceProvider provider, MemberRef method) {
+	BloatMethodRef(BloatReferenceProvider provider, MemberRef method) {
 		super(provider, method);
 	}
 	

@@ -13,19 +13,19 @@ import EDU.purdue.cs.bloat.reflect.*;
 import com.db4o.instrumentation.api.*;
 import com.db4o.instrumentation.util.*;
 
-public class BloatMethodBuilder implements MethodBuilder {
+class BloatMethodBuilder implements MethodBuilder {
 	
 	private final MethodEditor methodEditor;
 	private final LabelGenerator _labelGen;
 	private final BloatReferenceProvider _references;
-	private final Map _conversions;
+	private final Map _conversions = new HashMap();
 
-	public BloatMethodBuilder(BloatReferenceProvider references, ClassEditor classEditor, String methodName, TypeRef returnType, TypeRef[] parameterTypes) {
+	BloatMethodBuilder(BloatReferenceProvider references, ClassEditor classEditor, String methodName, TypeRef returnType, TypeRef[] parameterTypes) {
 		_references = references;
 		methodEditor = new MethodEditor(classEditor, Modifiers.PUBLIC, BloatTypeRef.bloatType(returnType), methodName, BloatTypeRef.bloatTypes(parameterTypes), new Type[]{});
 		_labelGen = new LabelGenerator();
 		methodEditor.addLabel(_labelGen.createLabel(true));
-		_conversions = setUpConversions();
+		setUpConversions();
 	}
 
 	public void invoke(final MethodRef method) {
@@ -209,64 +209,60 @@ public class BloatMethodBuilder implements MethodBuilder {
 		final Class wrapperType = convSpec[0];
 		final Class primitiveType = convSpec[1];
 		
-		final LocalVariable local = methodEditor.newLocal(typeRef(primitiveType));
+		final LocalVariable local = methodEditor.newLocal(bloatType(primitiveType));
 		addInstruction(storeOpcode(primitiveType), local);
-		addInstruction(Opcode.opc_new, typeRef(wrapperType));
+		addInstruction(Opcode.opc_new, bloatType(wrapperType));
 		addInstruction(Opcode.opc_dup);
 		addInstruction(loadOpcode(primitiveType), local);
 		addInstruction(Opcode.opc_invokespecial, memberRef(_references.forMethod(type(convSpec[0]),"<init>",new TypeRef[]{type(primitiveType)},type(Void.TYPE))));
 	}
 	
 	private int loadOpcode(Class type) {
-		if(type==Long.class) {
+		if(type==Long.TYPE) {
 			return Opcode.opc_lload;
 		}
-		if(type==Float.class) {
+		if(type==Float.TYPE) {
 			return Opcode.opc_fload;
 		}
-		if(type==Double.class) {
+		if(type==Double.TYPE) {
 			return Opcode.opc_dload;
 		}
 		return Opcode.opc_iload;
 	}
 
 	private int storeOpcode(Class type) {
-		if(type==Long.class) {
+		if(type==Long.TYPE) {
 			return Opcode.opc_lstore;
 		}
-		if(type==Float.class) {
+		if(type==Float.TYPE) {
 			return Opcode.opc_fstore;
 		}
-		if(type==Double.class) {
+		if(type==Double.TYPE) {
 			return Opcode.opc_dstore;
 		}
 		return Opcode.opc_istore;
 	}
 
-	private Type typeRef(final Class type) {
+	private Type bloatType(final Class type) {
 		return _references.bloatType(type);
 	}
 	
-	private Map setUpConversions() {
-		Map conversions=new HashMap();
-		conversions.put(Integer.class,new Class[]{Integer.class,Integer.TYPE});
-		conversions.put(Long.class,new Class[]{Long.class,Long.TYPE});
-		conversions.put(Short.class,new Class[]{Short.class,Short.TYPE});
-		conversions.put(Byte.class,new Class[]{Byte.class,Byte.TYPE});
-		conversions.put(Double.class,new Class[]{Double.class,Double.TYPE});
-		conversions.put(Float.class,new Class[]{Float.class,Float.TYPE});
-		conversions.put(Boolean.class,new Class[]{Boolean.class,Boolean.TYPE});
-		// FIXME this must be handled somewhere else -  FieldValue, etc.
-		conversions.put(integerType(),conversions.get(Integer.class));
-		conversions.put(longType(),conversions.get(Long.class));
-		conversions.put(Short.TYPE,conversions.get(Short.class));
-		conversions.put(Byte.TYPE,conversions.get(Byte.class));
-		conversions.put(doubleType(),conversions.get(Double.class));
-		conversions.put(floatType(),conversions.get(Float.class));
-		conversions.put(Boolean.TYPE,conversions.get(Boolean.class));
-		return conversions;
+	private void setUpConversions() {
+		setUpConversion(new Class[]{Integer.class,Integer.TYPE});
+		setUpConversion(new Class[]{Long.class,Long.TYPE});
+		setUpConversion(new Class[]{Short.class,Short.TYPE});
+		setUpConversion(new Class[]{Byte.class,Byte.TYPE});
+		setUpConversion(new Class[]{Double.class,Double.TYPE});
+		setUpConversion(new Class[]{Float.class,Float.TYPE});
+		setUpConversion(new Class[]{Boolean.class,Boolean.TYPE});
 	}
 	
+	private void setUpConversion(Class[] classes) {
+		for (int i = 0; i < classes.length; i++) {
+			_conversions.put(type(classes[i]), classes);
+		}
+	}
+
 	private Object coerce(Object value) {
 		if(value instanceof Boolean) {
 			return ((Boolean)value).booleanValue() ? new Integer(1) : new Integer(0);

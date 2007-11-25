@@ -12,9 +12,9 @@ public class BloatTypeEditor implements TypeEditor {
 	private final ClassEditor _classEditor;
 	private final BloatReferenceProvider _references;
 
-	public BloatTypeEditor(ClassEditor classEditor) {
+	public BloatTypeEditor(ClassEditor classEditor, BloatReferenceProvider references) {
 		_classEditor = classEditor;
-		_references = new BloatReferenceProvider();
+		_references = references;
 	}
 
 	public TypeRef type() throws InstrumentationException {

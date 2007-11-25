@@ -570,7 +570,6 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	public void visitFieldExpr(FieldExpr expr) {
 		expr.object().visit(this);
 		Object fieldObj = purgeReturnValue();
-		String fieldName = expr.field().name();
 		if (fieldObj instanceof ComparisonOperandAnchor) {
 			retval(new FieldValue((ComparisonOperandAnchor) fieldObj,
 					fieldRef(expr.field())));
@@ -587,8 +586,8 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		return references().forBloatField(field);
 	}
 
-	private TypeRef typeRef(Type declaringClass) {
-		return references().forBloatType(declaringClass);
+	private TypeRef typeRef(Type type) {
+		return references().forBloatType(type);
 	}
 
 	private BloatReferenceProvider references() {
@@ -659,16 +658,17 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	}
 
 	private static boolean isPrimitiveBoolean(TypeRef fieldType) {
-		return fieldType.name().equals("boolean");
+		return isType(fieldType, Boolean.TYPE);
+	}
+
+	private static boolean isType(TypeRef fieldType, final Class type) {
+		return fieldType.name().equals(type.getName());
 	}
 
 	private static boolean isBooleanField(FieldValue fieldVal) {
-		return isPrimitiveBoolean(fieldVal.field().type())
-			|| isFieldType(fieldVal, Boolean.class.getName());
-	}
-
-	private static boolean isFieldType(FieldValue fieldVal, String expType) {
-		return expType.equals(fieldVal.field().type().name());
+		final TypeRef type = fieldVal.field().type();
+		return isPrimitiveBoolean(type)
+			|| isType(type, Boolean.class);
 	}
 
 	public void visitArithExpr(ArithExpr expr) {
