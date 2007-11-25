@@ -170,7 +170,7 @@ public class SODAMethodBuilder {
 	}
 	
 	private void invoke(MethodRef method) {
-		_builder.invoke(method);
+		_builder.invoke(method, CallingConvention.INTERFACE);
 	}
 	
 	private void ldc(Object value) {
