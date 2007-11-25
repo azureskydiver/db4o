@@ -77,13 +77,18 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 		// FIXME: this should be handled within conversions
 		boolean needConversion=retType.isPrimitive();
 		operand.parent().accept(this);
+		boolean staticMethod = _staticRoot != null;
 		boolean oldInArithmetic=_inArithmetic;
 		for (int paramIdx = 0; paramIdx < operand.args().length; paramIdx++) {
 			_inArithmetic=operand.method().paramTypes()[paramIdx].isPrimitive();
 			operand.args()[paramIdx].accept(this);
 		}
 		_inArithmetic=oldInArithmetic;
-		_methodBuilder.invoke(method);
+		if (staticMethod) {
+			_methodBuilder.invokeStatic(method);
+		} else {
+			_methodBuilder.invoke(method);
+		}
 		box(retType, !_inArithmetic&&needConversion);
 	}
 
@@ -132,12 +137,7 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 			return typeRef(((ConstValue) operand).value().getClass());
 		}
 		if (operand instanceof FieldValue) {
-			try {
-				return deduceFieldClass(operand);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
+			return ((FieldValue)operand).field().type();
 		}
 		if (operand instanceof ArithmeticExpression) {
 			ArithmeticExpression expr=(ArithmeticExpression)operand;
@@ -152,20 +152,20 @@ class ComparisonBytecodeGeneratingVisitor implements ComparisonOperandVisitor {
 			if(left==longRef()||right==longRef()) {
 				return longRef();
 			}
-			return typeRef(Integer.class);
+			return typeRef(Integer.TYPE);
 		}
 		return null;
 	}
 
 	private TypeRef longRef() {
-		return typeRef(Long.class);
+		return typeRef(Long.TYPE);
 	}
 
 	private TypeRef floatRef() {
-		return typeRef(Float.class);
+		return typeRef(Float.TYPE);
 	}
 
 	private TypeRef doubleRef() {
-		return typeRef(Double.class);
+		return typeRef(Double.TYPE);
 	}
 }

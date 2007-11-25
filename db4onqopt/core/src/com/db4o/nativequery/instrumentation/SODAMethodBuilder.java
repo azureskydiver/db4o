@@ -12,7 +12,7 @@ import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
 public class SODAMethodBuilder {	
-	private final static boolean LOG_BYTECODE=true;
+	private final static boolean LOG_BYTECODE=false;
 
 	private MethodRef descendRef;
 	private MethodRef constrainRef;
@@ -151,6 +151,7 @@ public class SODAMethodBuilder {
 		expr.accept(new SODAExpressionBuilder(predicateClass));
 		_builder.pop();
 		if (LOG_BYTECODE) {
+			System.out.println("Expression: " + expr);
 			_builder.print(System.out);
 		}
 		_builder.endMethod();
@@ -177,20 +178,20 @@ public class SODAMethodBuilder {
 	}
 	
 	private void buildMethodReferences() {
-		descendRef=createMethodReference(Query.class,"descend",new Class[]{String.class},Query.class);
-		constrainRef=createMethodReference(Query.class,"constrain",new Class[]{Object.class},Constraint.class);
-		greaterRef=createMethodReference(Constraint.class,"greater",new Class[]{},Constraint.class);
-		smallerRef=createMethodReference(Constraint.class,"smaller",new Class[]{},Constraint.class);
-		containsRef=createMethodReference(Constraint.class,"contains",new Class[]{},Constraint.class);
-		startsWithRef=createMethodReference(Constraint.class,"startsWith",new Class[]{Boolean.TYPE},Constraint.class);
-		endsWithRef=createMethodReference(Constraint.class,"endsWith",new Class[]{Boolean.TYPE},Constraint.class);
-		notRef=createMethodReference(Constraint.class,"not",new Class[]{},Constraint.class);
-		andRef=createMethodReference(Constraint.class,"and",new Class[]{Constraint.class},Constraint.class);
-		orRef=createMethodReference(Constraint.class,"or",new Class[]{Constraint.class},Constraint.class);
-		identityRef=createMethodReference(Constraint.class,"identity",new Class[]{},Constraint.class);
+		descendRef=methodRef(Query.class,"descend",new Class[]{String.class});
+		constrainRef=methodRef(Query.class,"constrain",new Class[]{Object.class});
+		greaterRef=methodRef(Constraint.class,"greater",new Class[]{});
+		smallerRef=methodRef(Constraint.class,"smaller",new Class[]{});
+		containsRef=methodRef(Constraint.class,"contains",new Class[]{});
+		startsWithRef=methodRef(Constraint.class,"startsWith",new Class[]{Boolean.TYPE});
+		endsWithRef=methodRef(Constraint.class,"endsWith",new Class[]{Boolean.TYPE});
+		notRef=methodRef(Constraint.class,"not",new Class[]{});
+		andRef=methodRef(Constraint.class,"and",new Class[]{Constraint.class});
+		orRef=methodRef(Constraint.class,"or",new Class[]{Constraint.class});
+		identityRef=methodRef(Constraint.class,"identity",new Class[]{});
 	}
 	
-	private MethodRef createMethodReference(Class parent,String name,Class[] args,Class ret) {
+	private MethodRef methodRef(Class parent,String name,Class[] args) {
 		try {
 			return _editor.references().forMethod(parent.getMethod(platformName(name), args));
 		} catch (Exception e) {

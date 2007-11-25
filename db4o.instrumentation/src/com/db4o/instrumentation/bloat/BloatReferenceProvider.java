@@ -15,10 +15,7 @@ public class BloatReferenceProvider implements ReferenceProvider {
 	private Hashtable _types = new Hashtable();
 
 	public MethodRef forMethod(TypeRef declaringType, String methodName, TypeRef[] parameterTypes, TypeRef returnType) {
-		Type[] argTypes=new Type[parameterTypes.length];
-		for (int argIdx = 0; argIdx < parameterTypes.length; argIdx++) {
-			argTypes[argIdx]=bloatType(parameterTypes[argIdx]);
-		}
+		Type[] argTypes=BloatTypeRef.bloatTypes(parameterTypes);
 		NameAndType nameAndType=new NameAndType(methodName, Type.getType(argTypes, bloatType(returnType)));
 		return forBloatMethod(new MemberRef(bloatType(declaringType), nameAndType));
 	}

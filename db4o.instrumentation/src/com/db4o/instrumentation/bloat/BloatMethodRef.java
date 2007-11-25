@@ -30,7 +30,7 @@ public class BloatMethodRef extends BloatMemberRef implements MethodRef {
 	}
 
 	private TypeRef[] buildParamTypes() {
-		final Type[] paramTypes = _member.type().paramTypes();
+		Type[] paramTypes = _member.type().paramTypes();
 		TypeRef[] types = new TypeRef[paramTypes.length];
 		for (int i=0; i<paramTypes.length; ++i) {
 			types[i] = typeRef(paramTypes[i]);

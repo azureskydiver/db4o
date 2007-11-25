@@ -33,6 +33,8 @@ public interface MethodBuilder {
 
 	void invoke(MethodRef method);
 	
+	void invokeStatic(MethodRef method);
+	
 	void invoke(Method method);	
 
 	void loadField(FieldRef fieldRef);
