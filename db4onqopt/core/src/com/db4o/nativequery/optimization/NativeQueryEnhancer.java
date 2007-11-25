@@ -24,7 +24,7 @@ public class NativeQueryEnhancer {
 		if(expr==null) {
 			return false;
 		}
-		new SODAMethodBuilder(new BloatTypeEditor(classEditor)).injectOptimization(expr);
+		new SODAMethodBuilder(new BloatTypeEditor(classEditor, bloatUtil.references())).injectOptimization(expr);
 		
 		classEditor.commit();
 		return true;

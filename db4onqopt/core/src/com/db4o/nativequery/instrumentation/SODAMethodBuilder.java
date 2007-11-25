@@ -12,7 +12,7 @@ import com.db4o.nativequery.optimization.*;
 import com.db4o.query.*;
 
 public class SODAMethodBuilder {	
-	private final static boolean LOG_BYTECODE=false;
+	private final static boolean LOG_BYTECODE=true;
 
 	private MethodRef descendRef;
 	private MethodRef constrainRef;

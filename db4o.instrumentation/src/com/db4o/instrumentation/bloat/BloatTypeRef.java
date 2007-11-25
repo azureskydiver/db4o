@@ -23,7 +23,7 @@ public class BloatTypeRef extends BloatRef implements TypeRef {
 
 	private final Type _type;
 	
-	public BloatTypeRef(BloatReferenceProvider provider, Type type) {
+	BloatTypeRef(BloatReferenceProvider provider, Type type) {
 		super(provider);
 		_type = type;
 	}

@@ -3,6 +3,7 @@
 package com.db4o.instrumentation.bloat;
 
 import java.lang.reflect.*;
+import java.util.*;
 
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.editor.Type;
@@ -10,6 +11,8 @@ import EDU.purdue.cs.bloat.editor.Type;
 import com.db4o.instrumentation.api.*;
 
 public class BloatReferenceProvider implements ReferenceProvider {
+	
+	private Hashtable _types = new Hashtable();
 
 	public MethodRef forMethod(TypeRef declaringType, String methodName, TypeRef[] parameterTypes, TypeRef returnType) {
 		Type[] argTypes=new Type[parameterTypes.length];
@@ -49,7 +52,12 @@ public class BloatReferenceProvider implements ReferenceProvider {
 	}
 
 	public TypeRef forBloatType(Type type) {
-		return new BloatTypeRef(this, type);
+		BloatTypeRef typeRef = (BloatTypeRef)_types.get(type.descriptor());
+		if (null == typeRef) {
+			typeRef = new BloatTypeRef(this, type);
+			_types.put(type.descriptor(), typeRef);
+		}
+		return typeRef;
 	}
 
 	public FieldRef forBloatField(MemberRef field) {
