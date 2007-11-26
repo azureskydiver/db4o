@@ -19,7 +19,7 @@ import db4ounit.extensions.fixtures.*;
 
 
 public class NQRegressionTestCase extends AbstractDb4oTestCase {
-	private final static boolean RUN_LOADTIME = true;
+	private final static boolean RUN_LOADTIME = false;
 	
 	private static final String CSTR = "Cc";
 	private static final String BSTR = "Ba";
