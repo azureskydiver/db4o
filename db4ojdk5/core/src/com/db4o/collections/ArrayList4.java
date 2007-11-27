@@ -257,8 +257,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see java.util.ArrayList 
 	 * @see com.db4o.ta.Activatable
-	 * 
-	 * @sharpen.internal
 	 */
 	public E get(int index) {
 		checkIndex(index, 0, size() - 1);
