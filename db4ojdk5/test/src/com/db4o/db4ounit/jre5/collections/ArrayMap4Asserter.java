@@ -8,6 +8,9 @@ import com.db4o.collections.*;
 
 import db4ounit.Assert;
 
+/**
+ * @sharpen.ignore 
+ */
 public class ArrayMap4Asserter {
 
     public static int DATA_LENGTH = 10;
