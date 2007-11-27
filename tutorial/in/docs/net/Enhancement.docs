@@ -10,9 +10,8 @@ to make sure that only required objects are loaded from the database ._
 and that Native Queries are optimized to use field indexes where this is possible.
 
 Theoretically you could write all the necessary code by hand but you will save ._
-yourself a lot of time if you use automatic enhancement.
-
-Using the db4o enhancer tools you can automatically add code to your assemblies to ._
+yourself a lot of time if you use automatic enhancement. Using the db4o enhancer ._
+tools you can automatically add code to your assemblies to ._
 make them work even better with db4o.
 
 There are two possible strategies to enhance your assemblies:
@@ -51,9 +50,8 @@ helper library for Cecil
 .1 Enhancement with MSBuild ..
 
 When csc (or Visual Studio, calling csc) compiles your assemblies, it uses the ._
-instructions in your csproj project files to know what to do.
-
-The "code" in csproj files is plain XML, it is very well readable and you can ._
+instructions in your csproj project files to know what to do. The "code" in csproj ._
+files is plain XML, it is very well readable and you can ._
 add your own tasks to the build by editing the files with your favourite ._
 (XML) editor.
 
@@ -69,8 +67,7 @@ the reference documentation.
 
 The simplest enhancer task does both: It optimizes Native Queries ._
 and it adds the IActivatable interface to your classes, making sure ._
-a persistent object is activated whenever any field is read.
-
+a persistent object is activated whenever any field is read. ._
 Here is a simple example of how such an addition to MSBuild task could look like:
 
 .c <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -96,17 +93,16 @@ Db4oTool.exe is a top level command line interface to all enhancement tasks. ._
 You can either add it to your own build setup or you can directly ._
 integrate it from within Visual Studio.
 
-To get you an idea, here is a step-by-step example how you could integrate ._
-Db4oTool from Visual Studio.NET 2005 to do it's post-build tasks for a ._
-CompactFramework 2.0 project:
+To get you an idea on how you can set things up, here is a step-by-step example ._
+how you could integrate Db4oTool.exe from Visual Studio.NET 2005 to do it's ._
+post-build tasks for a CompactFramework 2.0 project:
 
-- Right click the project you want to enable Native Query optimization for
-- Select .b 'Properties' ..
-- In the Properties Page select the .b 'Build Events' .. tab
-- In the .b 'Post-build event command line' .. text box insert the following text ._
-.b "<path-to-your-db4o-installation>/bin/Db4oTool.exe -cf2-delegates $(TargetPath)" .. ._
-without the quotes and replacing <path-to-your-db4o-installation> with the correct ._
-path for your system.
+- In Visual Studio, right click on the project you want to enable Native Query optimization for
+- Select  .b 'Properties' ..
+- In the Properties Page select the  .b Build Events ..  tab
+- In the  .b Post-build event command line ..  text box insert the following text:
+.b <path-to-your-db4o-installation>/bin/Db4oTool.exe -cf2-delegates $(TargetPath) .. ._
+(replace <path-to-your-db4o-installation> with the correct path for your system)
 
 Db4oTool.exe offers different command line options for different setups. You can ._
 get a list of options directly from Db4oTool.exe by calling
@@ -122,7 +118,7 @@ Options may be grouped into 4 categories:
 .a EnhancementModes ..
 .2 Enhancement Modes ..
 
-Using the options in this group, developers can specify which type of instrumentation it wants to apply ._
+With the options in this group you can specify which type of instrumentation you want to apply ._
 (either  .l TransparentActivation Transparent Activation  .. or  .l NQOptimization Native Queries Optimization ..  or both)
 
      -ta : Add Transparent Activation Support
@@ -219,7 +215,7 @@ by following the simple steps below:
 without the quotes and replacing <path-to-your-db4o-installation> to the correct ._
 value for your system.
 
-.3 Monitoring optimization ..
+.2 Monitoring optimization ..
 
 To monitor optimization you can attach event handlers to the IObjectContainer:
 
