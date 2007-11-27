@@ -10,7 +10,8 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 /**
- * @exclude
+ * @exclude 
+ * @sharpen.ignore
  */
 public class CollectionsUtil {
     @SuppressWarnings("unchecked")

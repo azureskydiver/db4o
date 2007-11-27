@@ -8,6 +8,9 @@ import com.db4o.collections.*;
 
 import db4ounit.*;
 
+/**
+ * @sharpen.ignore
+ */
 public class ArrayList4Asserter {
 	public static int CAPACITY = 100;
 	private static final Integer ITEM = new Integer((CAPACITY/2));

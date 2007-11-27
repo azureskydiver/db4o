@@ -10,6 +10,8 @@ import db4ounit.extensions.*;
 
 /**
  * @exclude
+ * 
+ * @sharpen.ignore
  */
 public class ArrayList4TATestCaseBase extends TransparentActivationTestCaseBase {
 	
