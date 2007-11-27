@@ -12,104 +12,107 @@ and that Native Queries are optimized to use field indexes where this is possibl
 Theoretically you could write all the necessary code by hand but you will save ._
 yourself a lot of time if you use automatic enhancement.
 
-Using  .l Db4oAdmin  .. tool it's possible to achieve these two enhancements (._
-.l NQOptimization Native queries enhancement  .. and  .l TransparentActivation Transparent activation support  ..) ._
-automatically.
+Using the db4o enhancer tools you can automatically add code to your assemblies to ._
+make them work even better with db4o.
 
-.a Db4oAdmin ..
-.1 Db4oAdmin.exe enhancement tool ..
+There are two possible strategies to enhance your assemblies:
+.l EnhancementMSBuild Enhancement with MSBuild ..
+.l EnhancementDb4oTool Enhancement using Db4oTool ..
 
-The db4o enhancer tool (Db4oAdmin.exe) allows developers to apply these enhancements ._
-to it's assemblies enabling them to work even better with db4o. It is a flexible tool, that ._
-frees developers from the tedious task of writing repetitive and mechanical infrastructure code.
+.1 Required Libraries ..
 
-When enhancing assemblies for Transparent Activation, first Db4oAdmin will implement IActivatable interface for ._
-all selected classes (if these classes do not implement this interface by itself) and them prepend each fields access ._
-with a call to its declaring type IActivator.Activate()
+The db4o enhancer requires the following assemblies in order to work:
 
-.c
-public class Test
-{
-   public int value;
-   
-   public Test(int n)
-   {
-		value = n;
-   }
-}
-
-public class TestTAEnhanced
-{
-	private static void Main()
-	{
-		System.Console.WriteLine("Value: {0}, new Test(42).value);
-	}
-}
-..c
-
-If Db4oAdmin is used to add Transparent Activation the above classes ._
-they would be transformed to something like:
-
-.c
-public class Test : IActivatable
-{
-	[NonSerialized]
-	private IActivator db4o$ta$_activator;
-   
-	public int value;
-   
-	public Test(int n)
-	{
-		value = n;
-	}
-   
-	public void Bind(IActivator a)
-	{
-		db4o$$ta$$_activator = a;
-	}	
-   
-	public void Activate() 
-	{ 
-		_activator.Activate(); 
-	}
-}
-
-public class TestTAEnhanced
-{
-	private static void Main()
-	{
-	    Test test1 = new Test(0x2a);
-	    ((IActivatable) test1).Activate();
-	    Console.WriteLine("Value: {0}", test1.value);
-	} 
-}
-..c
-
-Since Db4oAdmin changes the assembly contents, in the case of signed assemblies you will need to ._
-take one of the following approaches:
-
-- Delay sign assemblies that will be instrumented or
-- Sign these assemblies again, after instrumentation. 
-
-.2 Required Libraries ..
-
-Db4oAdmin.exe requires the following assemblies in order to work
-
-.b Mono.GetOptions.dll ..   
-Helper library
-
-.b Mono.Cecil.dll ..
-bytecode handling library
-
-.b Db4objects.Db4o.Tools.dll ..
-enhancement support classes
+.b Cecil.FlowAnalysis.dll ..
+IL code flow analysis
 
 .b Db4objects.Db4o.dll ..
-the db4o core engine
+db4o core engine
 
-.2 Db4oAdmin command line options ..
+.b Db4objects.Db4o.Instrumentation.dll ..
+IL code instrumentation
 
-Db4oAdmin command line options may be grouped basically in 4 categories:
+.b Db4objects.Db4o.NativeQueries.dll ..
+Native Query Analyzer
+
+.b Db4oTool.exe ..
+commandline tool
+
+.b Db4oTool.MSBuild.dll ..
+MSBuild tasks   
+
+.b Mono.Cecil.dll ..
+IL code handling
+
+.b Mono.GetOptions.dll ..   
+helper library for Cecil
+
+.a EnhancementMSBuild ..
+.1 Enhancement with MSBuild ..
+
+When csc (or Visual Studio, calling csc) compiles your assemblies, it uses the ._
+instructions in your csproj project files to know what to do.
+
+The "code" in csproj files is plain XML, it is very well readable and you can ._
+add your own tasks to the build by editing the files with your favourite ._
+(XML) editor.
+
+If you want the produced assemblies to be enhanced for db4o, you can add ._
+the db4o enhancer build task to your csproj files as an "AfterBuild" task.
+
+Db4oTool.MSBuild.dll contains the main MSBuild enhancer task:
+Db4oTool.MSBuild.Db4oEnhancerMSBuildTask
+
+For all possibilities of using this task see ._
+the  .l http://developer.db4o.com/Resources/view.aspx/Reference/Object_Lifecycle/Activation/Transparent_Activation_Framework  topics on transparent activation ..  in ._
+the reference documentation.
+
+The simplest enhancer task does both: It optimizes Native Queries ._
+and it adds the IActivatable interface to your classes, making sure ._
+a persistent object is activated whenever any field is read.
+
+Here is a simple example of how such an addition to MSBuild task could look like:
+
+.c <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Normal build code here   
+  -->
+  
+  <UsingTask AssemblyFile="$(OutputPath)\Db4oTool.MSBuild.dll" TaskName="Db4oTool.MSBuild.Db4oEnhancerMSBuildTask" />
+  <ItemGroup>
+    <Db4oEnhance Include="$(TargetPath)" />
+  </ItemGroup>
+  <Target Name="AfterBuild">
+    <Db4oEnhancerMSBuildTask Assemblies="@(Db4oEnhance)" />
+  </Target>
+  
+</Project> .. 
+
+.a EnhancementDb4oTool ..
+.1 Enhancement using Db4oTool ..
+
+Db4oTool.exe is a top level command line interface to all enhancement tasks. ._
+You can either add it to your own build setup or you can directly ._
+integrate it from within Visual Studio.
+
+To get you an idea, here is a step-by-step example how you could integrate ._
+Db4oTool from Visual Studio.NET 2005 to do it's post-build tasks for a ._
+CompactFramework 2.0 project:
+
+- Right click the project you want to enable Native Query optimization for
+- Select .b 'Properties' ..
+- In the Properties Page select the .b 'Build Events' .. tab
+- In the .b 'Post-build event command line' .. text box insert the following text ._
+.b "<path-to-your-db4o-installation>/bin/Db4oTool.exe -cf2-delegates $(TargetPath)" .. ._
+without the quotes and replacing <path-to-your-db4o-installation> with the correct ._
+path for your system.
+
+Db4oTool.exe offers different command line options for different setups. You can ._
+get a list of options directly from Db4oTool.exe by calling
+.c Db4oTool.exe -help .. 
+
+Options may be grouped into 4 categories:
 
 .l EnhancementModes Enhancement Modes ..
 .l TargetTypeSpecification Target types (classes) specification ..
@@ -117,60 +120,18 @@ Db4oAdmin command line options may be grouped basically in 4 categories:
 .l MiscOptions Misc Options ..
 
 .a EnhancementModes ..
-.3 Enhancement Modes ..
+.2 Enhancement Modes ..
 
 Using the options in this group, developers can specify which type of instrumentation it wants to apply ._
 (either  .l TransparentActivation Transparent Activation  .. or  .l NQOptimization Native Queries Optimization ..  or both)
 
-     -ta : Implement Transparent Activation Support
-     -optimize-predicates : ?
-	 -instrumentation:PARAM
+     -ta : Add Transparent Activation Support
+     -optimize-predicates : Optimize predicate subclasses
+	 -instrumentation:PARAM : Use your own instrumentation type 
 
-Through  .b -instrumentation  ..  option it's even possible to implement your own enhancer ._
-The following example implements a custom enhancer to log all method calls to the console:
-
-.c 
-// trace.cs
-using System;
-using Db4oAdmin;
-using Mono.Cecil;
-using Mono.Cecil.Cil;
-    
-/// <summary>
-/// Prepends Console.WriteLine("TRACE: " + method.Name) to every method
-/// in the assembly.
-/// </summary>
-public class TraceInstrumentation : AbstractAssemblyInstrumentation
-{
-    override protected void ProcessMethod(MethodDefinition method)
-    {
-        if (!method.HasBody) return;
-        
-        MethodBody body = method.Body;
-        Instruction firstInstruction = body.Instructions[0];
-        CilWorker worker = body.CilWorker;
-        
-        // ldstr "TRACE: " + method
-        worker.InsertBefore(firstInstruction, worker.Create(OpCodes.Ldstr, "TRACE: " + method));
-        
-        // call Console.WriteLine(string)
-        MethodReference Console_WriteLine =  Import(typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string)}));
-        worker.InsertBefore(firstInstruction, worker.Create(OpCodes.Call, Console_WriteLine));
-    }
-}
-..c
-
-Just copy and paste the code above into a file named "MyCustomEnhancer.cs" and them compile it:
-.c
-csc /t:library /r:Db4oAdmin.exe /r:Db4objects.Db4o.Tools.dll /r:Mono.Cecil.dll c:\tmp\MyCustomEnhancer.cs
-..c
-
-and them you can add trace messages to any assembly simply:
-
-Db4oAdmin "-instrumentation:TraceInstrumentation,MyCustomEnhancer" ToBeEnhanced.dll
 
 .a TargetTypeSpecification ..
-.3 Target types (classes) specification ..
+.2 Target types (classes) specification ..
 
 When enhancing an assembly it's possible to enhance all or some of its types through the following options:
 
@@ -187,7 +148,7 @@ can specify  .b -not  .. option.
 matches this regular expression. 
 
 .a OutputMode ..
-.3 Output related options ..	 
+.2 Output related options ..	 
 
 Output related options
 
@@ -196,7 +157,7 @@ Output related options
 
 
 .a MiscOptions ..
-.3 Misc Options ..
+.2 Misc Options ..
 
      -case-sensitive         Case sensitive queries
      -cf2-delegates          Enable delegate style queries for CompactFramework 2
@@ -209,16 +170,6 @@ Output related options
 
 .a NQOptimization ..
 .1 Native Query Optimization ..
-
-Native Queries will run out of the box in any environment. ._
-If optimization is turned on, Native Queries will be converted to SODA queries ._
-whenever possible, allowing db4o to use indexes and ._
-optimized internal comparison algorithms.
-
-If optimization is turned off or not possible for some reason, ._
-a Native Query will be executed by instantiating all objects, ._
-using  .l Evaluations SODA Evaluations .. . Naturally performance ._
-will not be as good in this case.
 
 The Native Query optimizer is still under development to eventually ._
 "understand" all valid C# constructs. Current optimization supports ._
@@ -234,21 +185,25 @@ the following constructs well:
 - candidate methods composed of the above
 - chained combinations of the above
 
-This list will constantly grow with the latest versions of db4o.
+Note that the current implementation does not support polymorphism yet.
 
-Note that the current implementation doesn't support polymorphism yet.
+If optimization is turned off or not possible for some reason, ._
+a Native Query will be executed by instantiating all objects, ._
+using  .l Evaluations SODA Evaluations .. . Naturally performance ._
+will not be as good in this case, but queries will still deliver ._
+correct results.
 
-.2 Enabling Native Query optimization on the CompactFramework 2.0 ..
+.2 Native Query Optimization on CompactFramework 2.0 ..
 
 Due to some platform limitations, CompactFramework 2.0 users using the ._
-more convenient delegate based Native Query syntax that want their queries ._
-to be optimized are required to run the Db4oAdmin.exe ._
-command line utility on their assemblies ._
-prior to deploying them. 
+convenient delegate based Native Query syntax that want their queries ._
+to be optimized are required to run the Db4oTool.exe ._
+command line utility on their assemblies prior to deploying them. 
 
-The utility which can be found in the /bin folder of this distribution is required ._
-because the CompactFramework API does not expose any of the delegate metadata ._
-needed by the Native Query optimizer. The tool works by augmenting the bytecode ._
+The Db4oTool.exe utility, which can be found in the /bin folder of this ._
+distribution is required because the CompactFramework API does not expose ._
+any of the delegate metadata needed by the Native Query optimizer. The tool ._
+works by augmenting the bytecode ._
 with the necessary delegate metadata and replacing ObjectContainer#Query<Extent> ._
 invocations with invocations to a lower level ._
 method that makes use of the additional information.
@@ -260,37 +215,14 @@ by following the simple steps below:
 - Select .b 'Properties' ..
 - In the Properties Page select the .b 'Build Events' .. tab
 - In the .b 'Post-build event command line' .. text box insert the following text ._
-.b "<path-to-your-db4o-installation>/bin/Db4oAdmin.exe -cf2-delegates $(TargetPath)" .. ._
+.b "<path-to-your-db4o-installation>/bin/Db4oTool.exe -cf2-delegates $(TargetPath)" .. ._
 without the quotes and replacing <path-to-your-db4o-installation> to the correct ._
 value for your system.
 
-A complete example can be found in the /src/instrumentation/Db4oAdmin.Example ._
-directory of this distribution.
-
-.2 Build Time Optimization for Native Queries ..  
-
-Db4oAdmin.exe can also be used to pre optimize the Native Queries in a ._
-given assembly. This makes it possible to deploy an application without ._
-Db4oTools.dll (the assembly where the Native Query runtime optimizer ._
-lives) while also possibly reducing Native Query execution time by ._
-dropping runtime analysis completely.
-
-Execute the Db4oAdmin.exe command line utility without any arguments and check ._
-out the help information.
-
-IMPORTANT: the tool is still in constant development and it currently ._
-does not support pre optimization of Native Queries expressed as delegates.
-  
 .3 Monitoring optimization ..
 
-This feature still is quite basic but it will soon be improved. ._
-Currently you can only attach event handlers to the ObjectContainer:
+To monitor optimization you can attach event handlers to the IObjectContainer:
 
 .c NativeQueryHandler handler = ((ObjectContainerBase)container).GetNativeQueryHandler();
 handler.QueryExecution += OnQueryExecution;
 handler.QueryOptimizationFailure += OnQueryOptimizationFailure; ..c
-
-.a MsBuildTask ..
-.1 Enhancing at compile time with MSBuild  ..
-
-MSBuild Stuff here....
