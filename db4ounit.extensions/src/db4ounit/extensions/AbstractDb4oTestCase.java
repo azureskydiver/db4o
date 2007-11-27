@@ -150,7 +150,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 		return runConcurrencyAll(true);
 	}
 	
-    private int runEmbeddedClientServer(boolean independentConfig) {
+    protected int runEmbeddedClientServer(boolean independentConfig) {
 		return new TestRunner(embeddedClientServerSuite(independentConfig)).run();
 	}
 

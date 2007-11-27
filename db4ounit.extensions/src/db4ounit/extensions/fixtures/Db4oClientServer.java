@@ -18,7 +18,7 @@ public class Db4oClientServer extends
     
 	protected static final String FILE = "Db4oClientServer.yap";
     
-    public static final String HOST = "localhost";
+    public static final String HOST = "127.0.0.1";
 
     public static final String USERNAME = "db4o";
 
