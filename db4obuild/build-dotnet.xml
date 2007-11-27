@@ -735,6 +735,7 @@
 				<include name="com/db4o/collections/SubArrayList4.java" />
 			</fileset>
 		</copy>
+		
 		<copy todir="${dir.sharpen}/db4oj" >
 			<fileset dir="../db4ojdk5/" >
 		    	<include name=".settings/**/*" />
@@ -964,6 +965,7 @@
 				<include name="**/db4ounit/util/**/*.java" />
 			</fileset>
 		</copy>
+		
 		<copy todir="${target.dir}/db4oj.tests/src">
 			<fileset dir="${dir.j.jdk1.2.test.src}">
 				<include name="**/db4ounit/common/defragment/*.java" />
@@ -974,11 +976,32 @@
 		</copy>
 		
 		<copy todir="${target.dir}/db4oj.tests/src">
-			<fileset dir="${dir.j.nqopt}/test/src">
-				<include name="**/mocks/*.java" />
+			<fileset dir="${dir.j.jdk5.core.src}">
+				<include name="com/db4o/collections/ArrayMap4.java" />
+				<include name="com/db4o/collections/MapEntry4.java" />
+				<include name="com/db4o/collections/ArrayList4.java" />
+				<include name="com/db4o/collections/AbstractList4.java" />
+				<include name="com/db4o/collections/SubArrayList4.java" />
+			</fileset>
+		</copy>
+			
+		<copy todir="${target.dir}/db4oj.tests/src">
+			<fileset dir="${dir.j.jdk5.test.src}">
+				<include name="**/collections/ArrayList4TATestCaseBase.java" />
+				<include name="**/collections/ArrayList4SODATestCase.java" />
+				<include name="**/collections/ArrayList4Asserter.java" />				
+				<include name="**/collections/CollectionsUtil.java" />
+				<include name="**/collections/Order.java" />
+				<include name="**/collections/OrderItem.java" />
+				<include name="**/collections/Product.java" />
 			</fileset>
 		</copy>
 		
+		<copy todir="${target.dir}/db4oj.tests/src">
+			<fileset dir="${dir.j.nqopt}/test/src">
+				<include name="**/mocks/*.java" />
+			</fileset>
+		</copy>		
 		
 		<sharpen workspace="${target.dir}" resource="db4oj.tests/src">
 			<args>
