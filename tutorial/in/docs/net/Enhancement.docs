@@ -101,7 +101,7 @@ post-build tasks for a CompactFramework 2.0 project:
 - Select  .b 'Properties' ..
 - In the Properties Page select the  .b Build Events ..  tab
 - In the  .b Post-build event command line ..  text box insert the following text:
-.b <path-to-your-db4o-installation>/bin/Db4oTool.exe -cf2-delegates $(TargetPath) .. ._
+.b <path-to-your-db4o-installation>/bin/Db4oTool.exe -ta -nq $(TargetPath) .. ._
 (replace <path-to-your-db4o-installation> with the correct path for your system)
 
 Db4oTool.exe offers different command line options for different setups. You can ._
@@ -122,7 +122,7 @@ With the options in this group you can specify which type of instrumentation you
 (either  .l TransparentActivation Transparent Activation  .. or  .l NQOptimization Native Queries Optimization ..  or both)
 
      -ta : Add Transparent Activation Support
-     -optimize-predicates : Optimize predicate subclasses
+     -nq : Optimize Native Queries
 	 -instrumentation:PARAM : Use your own instrumentation type 
 
 
@@ -156,9 +156,7 @@ Output related options
 .2 Misc Options ..
 
      -case-sensitive         Case sensitive queries
-     -cf2-delegates          Enable delegate style queries for CompactFramework 2
-     -? -help                   Show this help list
-     -help2                  Show an additional help list
+     -? -help                Show this help list
      -usage                  Show usage syntax and exit
   -v -verbose                Verbose operation mode
   -V -version                Display version and licensing information
@@ -198,11 +196,7 @@ command line utility on their assemblies prior to deploying them.
 
 The Db4oTool.exe utility, which can be found in the /bin folder of this ._
 distribution is required because the CompactFramework API does not expose ._
-any of the delegate metadata needed by the Native Query optimizer. The tool ._
-works by augmenting the bytecode ._
-with the necessary delegate metadata and replacing ObjectContainer#Query<Extent> ._
-invocations with invocations to a lower level ._
-method that makes use of the additional information.
+any of the delegate metadata needed by the Native Query optimizer.
 
 The tool can be easily integrated inside Visual Studio.NET 2005 as a Post Build tool ._
 by following the simple steps below:
@@ -211,7 +205,7 @@ by following the simple steps below:
 - Select .b 'Properties' ..
 - In the Properties Page select the .b 'Build Events' .. tab
 - In the .b 'Post-build event command line' .. text box insert the following text ._
-.b "<path-to-your-db4o-installation>/bin/Db4oTool.exe -cf2-delegates $(TargetPath)" .. ._
+.b "<path-to-your-db4o-installation>/bin/Db4oTool.exe -nq $(TargetPath)" .. ._
 without the quotes and replacing <path-to-your-db4o-installation> to the correct ._
 value for your system.
 
