@@ -17,70 +17,68 @@ H4 { font-size: 10pt; color: black; }
         <li>net-2.0 </li>
     </ul>
     <br />
-    <br />
-    compact-2.0 folder contains the following files:
-    <br />
-    <br />
-    <table>
-        <tr>
-            <td style="width: 100px">
-                Db4objects.Db4o.dll</td>
-            <td style="width: 400px">
-                db4o database library. Include it in your project references to get access to the
-                db4o functionality</td>
-        </tr>
-        <tr>
-            <td style="width: 100px">
-                Db4objects.Db4o.xml</td>
-            <td style="width: 400px">
-                assembly documentation file</td>
-        </tr>
-        <tr>
-            <td style="width: 100px">
-                Db4objects.Db4o.tools.dll</td>
-            <td style="width: 400px">
-                db4o tools package, used for Native Query optimization, contains defragment and
-                statistics tools. Include this library in your project references to enable Native
-                Query optimization</td>
-        </tr>
-        <tr>
-            <td style="width: 100px">
-                Db4objects.Db4o.tools.xml</td>
-            <td style="width: 400px">
-                assembly documentation file</td>
-        </tr>
-        <tr>
-            <td style="width: 100px">
-                Cecil.Flowanalysis.dll and Mono.Cecil.dll</td>
-            <td style="width: 400px">
-                bytecode analyzing libraries, used for Native Query Optimization. (<a href="http://www.mono-project.com/Cecil">http://www.mono-project.com/Cecil</a>)
-                Include this library in your project references to enable Native Query optimization</td>
-        </tr>
-    </table>
-    <br />
-    net-2.0 in addition to the above mentioned files also includes:
+    The compact-2.0 folder contains the following files:
     <br />
     <br />
     <table>
         <tr>
-            <td style="width: 174px">
-                Db4oTool.exe</td>
-            <td style="width: 358px">
-                bytecode instrumentation tool, for a list of options execute without parameters
-            </td>
+            <td style="width: 280px">Cecil.Flowanalysis.dll</td>
+            <td>bytecode analyzing library for Native Query optimization</td>
         </tr>
         <tr>
-            <td style="width: 174px">
-                Mono.Getoptions.dll</td>
-            <td style="width: 358px">
-                library used for parameter parsing in Db4oTool tool</td>
+            <td valign=top>Db4objects.Db4o.dll</td>
+            <td>db4o database engine</td>
         </tr>
         <tr>
-            <td style="width: 174px">
-                Mono.Cecil.Pdb.dll</td>
-            <td style="width: 358px">
-                Mono Cecil pdb library</td>
+            <td>Db4objects.Db4o.xml</td>
+            <td>documentation for the db4o database engine</td>
+        </tr>
+        <tr>
+            <td valign=top>Db4objects.Db4o.Instrumentation.dll</td>
+            <td>bytecode instrumentation library, required for enhancements for Native Queries
+            and Transparent Activation</td>
+        </tr>
+        <tr>
+            <td>Db4objects.Db4o.Instrumentation.xml</td>
+            <td>documentation for the bytecode instrumentation library</td>
+        </tr>
+        <tr>
+            <td>Db4objects.Db4o.NativeQueries.dll</td>
+            <td>Native Queries support library</td>
+        </tr>
+        <tr>
+            <td>Db4objects.Db4o.NativeQueries.xml</td>
+            <td>documentation for the Native Queries support library</td>
+        </tr>
+        <tr>
+            <td valign=top>Mono.Cecil.dll</td>
+            <td>
+                <a href="http://www.mono-project.com/Cecil" target=_blank>Mono Cecil</a> bytecode analyzing library, 
+                required for enhancements for Native Queries and Transparent Activation</td>
         </tr>
     </table>
-</body>
+    <br />
+    <br />
+    The net-2.0 contains the following files in addition to the above:
+    <br />
+    <br />
+    <table>
+        <tr>
+            <td style="width: 280px" valign=top>Db4oTool.exe</td>
+            <td>db4o commandline tool. For a list of options run it without parameters.</td>
+        </tr>
+        <tr>
+            <td valign=top>Db4oTool.MSBuild.dll</td>
+            <td>MSBuild tasks for build-time enhancements for Transparent Activation and Native Queries</td>
+        </tr>
+        <tr>
+            <td>Mono.Getoptions.dll</td>
+            <td>required for Db4oTool.exe to parse parameters</td>
+        </tr>
+        <tr>
+            <td>Mono.Cecil.Pdb.dll</td>
+            <td>Mono Cecil pdb library</td>
+        </tr>
+    </table>
+</body)
 </html>

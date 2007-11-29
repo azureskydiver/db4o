@@ -10,91 +10,70 @@ H4 { font-size: 10pt; color: black; }
 </style>
 </head>
 <body bgcolor="#FFFFFF" color=#000000>
-    This folder contains the source code of db4o and associated projects.
-    <br />
+    This folder contains the source code of the db4o database engine core and associated projects.
     <br />
     <table>
         <tr>
-            <td style="width: 190px">
-                Db4objects.Db4o</td>
-            <td style="width: 338px">
-                db4o sources</td>
+            <td style="width:250px">Db4objects.Db4o</td>
+            <td>db4o core engine sources</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                Db4objects.Db4o.Tests</td>
-            <td style="width: 338px">
-                db4o tests collection</td>
+            <td valign=top>Db4objects.Db4o.Instrumentation</td>
+            <td>bytecode instrumentation, required for enhancements for Native Queries and Transparent Activation</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                Db4objects.Db4o.Tools</td>
-            <td style="width: 338px">
-                db4o tools package. Functionality: Native Query optimization, TA instrumentation, defragment and statistics
-                tools</td>
+            <td valign=top>Db4objects.Db4o.NativeQueries</td>
+            <td>Native Query optimization support</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                Db4oTool</td>
-            <td style="width: 338px">
-                tool used for bytecode instrumentation</td>
+            <td>Db4objects.Db4o.Tests</td>
+            <td>db4o unit and regression tests</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                Db4oTutorial</td>
-            <td style="width: 338px">
-                tutorial sources (runnable examples)</td>
+            <td valign=top>Db4oTool</td>
+            <td>db4o command line tools. Among the subprojects you will find the sources for the 
+            db4o MSBuild tasks and Db4oTool.Example where the db4o enhancer is integrated into the Post-build event command line</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                Db4oUnit</td>
-            <td style="width: 338px">
-                db4o unit-testing framework</td>
+            <td>Db4oTutorial</td>
+            <td>tutorial sources (runnable examples)</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                Db4oUnit.Extensions
-            </td>
-            <td style="width: 338px">
-                db4o-specific extensions to Db4oUnit</td>
+            <td>Db4oUnit</td>
+            <td>db4o unit-testing framework</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                Drs
-            </td>
-            <td style="width: 338px">
-                db4o replication library</td>
+            <td>Db4oUnit.Extensions</td>
+            <td>db4o-specific extensions to Db4oUnit</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                Libs</td>
-            <td style="width: 338px">
-                additional libraries used in the projects
-            </td>
+            <td>drs</td>
+            <td>db4o replication system</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                db4objects.snk</td>
-            <td style="width: 338px">
-                db4o assembly key</td>
+            <td valign=top>Libs</td>
+            <td>pre-built libraries used in projects, such as:
+            <ul>
+                <li>Cecil.FlowAnalysis.dll</li>
+                <li>Mono.Cecil.dll</li>
+                <li>Mono.GetOptions.dll</li>
+            </ul></td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                default.build</td>
-            <td style="width: 338px">
-                nant build script</td>
+            <td>db4objects.snk</td>
+            <td>db4o assembly key</td>
         </tr>
         <tr>
-            <td style="width: 190px">
-                include.mk</td>
-            <td style="width: 338px">
-                include file for db4o makefile</td>
+            <td>default.build</td>
+            <td>nant build script</td>
         </tr>
         <tr>
-            <td style="width: 190px; height: 18px">
-                Makefile</td>
-            <td style="width: 338px; height: 18px">
-                db4o makefile (mono)</td>
+            <td>include.mk</td>
+            <td>include file for db4o makefile</td>
+        </tr>
+        <tr>
+            <td>Makefile</td>
+            <td>db4o makefile for Mono</td>
         </tr>
     </table>
     <br />
