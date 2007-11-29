@@ -676,6 +676,13 @@
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
+		<updatecsharpproject 
+			projectfile="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation-CF-2005.csproj">
+			<sources dir="${dir.n.v6.instrumentation}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+
 	</target>
 	
 	<target name="sharpen-nq" depends="sharpen-core" unless="skip.sharpen">
@@ -684,6 +691,13 @@
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
+		<updatecsharpproject 
+			projectfile="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries-CF-2005.csproj">
+			<sources dir="${dir.n.v6.nq}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+		
 	</target>
 	
 	<target name="sharpen-tools" unless="skip.sharpen">
