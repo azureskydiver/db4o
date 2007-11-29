@@ -1,8 +1,10 @@
 <namespaces>
 	<namespace name="Db4objects.Db4o">Core package.</namespace>
 	<namespace name="Db4objects.Db4o.Activation">Activation interfaces.</namespace>
+	<namespace name="Db4objects.Db4o.Collections">Transparent Activation-aware collections.</namespace>
 	<namespace name="Db4objects.Db4o.Config">Configuration package.</namespace>
 	<namespace name="Db4objects.Db4o.Constraints">Constraints package.</namespace>
+	<namespace name="Db4objects.Db4o.Defragment">Database file defragmentation utilities.</namespace>
 	<namespace name="Db4objects.Db4o.Diagnostic">Diagnostics functionality.</namespace>
 	<namespace name="Db4objects.Db4o.Events">Events package.</namespace>
 	<namespace name="Db4objects.Db4o.Ext">Advanced API package.</namespace>
@@ -14,8 +16,7 @@
 	<namespace name="Db4objects.Db4o.Reflect.Generic">Generic reflection support (makes it possible to query database files when the original classes are not available).</namespace>
 	<namespace name="Db4objects.Db4o.Reflect.Net">.NET reflection support.</namespace>
 	<namespace name="Db4objects.Db4o.Replication">Replication support package</namespace>
-	<namespace name="Db4objects.Db4o.Tools">Tools package.</namespace>
+	<namespace name="Db4objects.Db4o.TA">Transparent Activation support.</namespace>
 	<namespace name="Db4objects.Db4o.Types">Types package.</namespace>
-	<namespace name="Db4objects.Db4o.Defragment">Database file defragmentation utilities.</namespace>
 </namespaces>
 
