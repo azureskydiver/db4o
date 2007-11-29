@@ -429,13 +429,13 @@
 	<target name="build" depends="init, configure, build-all">
 	</target>
 
-	<target name="build-all" depends="build-core, build-instrumentation, build-nq, build-tools, build-tests, build-admin, build-tutorial">
+	<target name="build-all" depends="build-core, build-instrumentation, build-nq, build-tests, build-admin, build-tutorial">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
 	</target>
 
-	<target name="build-tests" depends="build-tools, build-instrumentation, build-nq, build-db4ounit-extensions, sharpen-tests">
+	<target name="build-tests" depends="build-instrumentation, build-nq, build-db4ounit-extensions, sharpen-tests">
 		<csc
 			destfile="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe"
 			targettype="exe"
@@ -447,7 +447,6 @@
 			extraoptions="${csc.tests.extraoptions}">
 			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4objects.Db4o.dll" />
-				<include name="Db4objects.Db4o.Tools.dll" />
 				<include name="Db4objects.Db4o.Instrumentation.dll" />
 				<include name="Db4objects.Db4o.NativeQueries.dll" />
 				<include name="Mono.Cecil.dll" />
@@ -534,23 +533,6 @@
 		</csc-all>
 	</target>
 	
-	<target name="build-tools" depends="build-core, sharpen-tools">
-		<csc-all
-			assemblyName="Db4objects.Db4o.Tools"
-			sources="tools.sources">			
-			
-			<references>
-				<reference dir="${dir.dist.dll.net}">
-					<include name="Db4objects.Db4o.dll" />
-				</reference>
-			</references>
-			
-			<compact-args>
-				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
-			</compact-args>
-		</csc-all>
-	</target>
-		
 	<target name="build-core" depends="init, configure, check-dependencies, sharpen-core">
 	
 		<fileset id="core.sources" dir="${dir.n.v6.core}">
@@ -634,7 +616,6 @@
 	
 			<reference dir="${dir.dist.dll.net}">
 				<include name="Db4objects.Db4o.dll" />
-				<include name="Db4objects.Db4o.Tools.dll" />
 				<include name="Db4oUnit.dll" />
 				<include name="Db4oUnit.Extensions.dll" />
 				<include name="Mono.Cecil.dll" />
@@ -665,7 +646,7 @@
 		</csc>
 	</target>
 
-	<target name="build-tutorial" depends="build-tools">
+	<target name="build-tutorial" >
 		<ant antfile="build-dotnet-tutorial.xml">
 		</ant>
 	</target>
@@ -700,22 +681,8 @@
 		
 	</target>
 	
-	<target name="sharpen-tools" unless="skip.sharpen">
-		<fileset id="tools.sources" dir="${dir.n.v6.tools}">
-			<include name="**/*.cs" />
-		</fileset>
-		
-		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-CF-2005.csproj">
-			<sources refid="tools.sources"/>
-		</updatecsharpproject>
-		
-		<updatecsharpproject projectfile="${dir.n.v6.tools}/Db4objects.Db4o.Tools-2005.csproj">
-			<sources refid="tools.sources"/>
-		</updatecsharpproject>
-	</target>
-	
 	<target name="sharpen"
-		depends="sharpen-core, sharpen-instrumentation, sharpen-nq, sharpen-tools, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests"
+		depends="sharpen-core, sharpen-instrumentation, sharpen-nq, sharpen-db4ounit, sharpen-db4ounit-extensions, sharpen-tests"
 		unless="skip.sharpen">
 	</target>
 	
