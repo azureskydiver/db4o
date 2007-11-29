@@ -1010,7 +1010,13 @@
 				<include name="**/collections/Product.java" />
 			</fileset>
 		</copy>
-		
+
+		<copy todir="${target.dir}/db4oj.tests" >
+			<fileset dir="../db4ojdk5/" >
+		    	<include name=".settings/**/*" />
+		   	</fileset>
+		</copy>
+
 		<copy todir="${target.dir}/db4oj.tests/src">
 			<fileset dir="${dir.j.nqopt}/test/src">
 				<include name="**/mocks/*.java" />
