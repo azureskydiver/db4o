@@ -43,7 +43,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     private transient Activator _activator;
 
     public ArrayMap4() {
-        this(16);
+        //this(16);
     }
 
     public ArrayMap4(int initialCapacity) {
@@ -72,6 +72,20 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         }
         _activator = activator;
     }
+    
+    private Object[] getKeysArray() {
+        if (_keys == null) {
+            initializeBackingArray(16);
+        }
+        return _keys;
+    }
+    
+    private Object[] getValuesArray() {
+        if (_values == null) {
+            initializeBackingArray(16);
+        }
+        return _values;
+    }
 
 	/**
 	 * java.util.Map implementation but transparently 
@@ -85,8 +99,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         
         _startIndex = 0;
         _endIndex = 0;
-        Arrays.fill(_keys, null);
-        Arrays.fill(_values, null);
+        Arrays.fill(getKeysArray(), null);
+        Arrays.fill(getValuesArray(), null);
     }
 
 	/**
@@ -128,7 +142,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	}
 
 	private int indexOfValue(V value) {
-		return indexOf(_values, value);
+		return indexOf(getValuesArray(), value);
 	}
 
 	/**
@@ -168,7 +182,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
 	private V valueAt(int index) {
-		return (V)_values[index];
+		return (V)getValuesArray()[index];
 	}
 
 	/**
@@ -204,7 +218,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
 	private K keyAt(int i) {
-		return (K)_keys[i];
+		return (K)getKeysArray()[i];
 	}
 
 	/**
@@ -231,7 +245,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
      * @sharpen.ignore 
      */
 	private int indexOfKey(K key) {
-		return indexOf(_keys, key);
+		return indexOf(getKeysArray(), key);
 	}
 
 	private V replace(int index, V value) {
@@ -324,8 +338,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         activate();
         try {
             ArrayMap4<K, V> mapClone = (ArrayMap4<K, V>) super.clone();
-            mapClone._keys =  _keys.clone();
-            mapClone._values = _values.clone();
+            mapClone._keys =  getKeysArray().clone();
+            mapClone._values = getValuesArray().clone();
             return mapClone;
         } catch (CloneNotSupportedException e) {
             throw new Error(e);
@@ -414,6 +428,10 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     
     @SuppressWarnings("unchecked")
     private void ensureCapacity() {
+        if (_keys == null) {
+            initializeBackingArray(16);
+        }
+        
         if (_endIndex == _keys.length) {
             Object[] newKeys = new Object[_keys.length * 2];
             Object[] newValues = new Object[_values.length * 2];
