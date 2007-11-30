@@ -601,7 +601,11 @@
 			<resource
 				file="${src.dir}/Core/Resources/ByNameInstrumentationSubject.cs"
 				name="Db4oTool.Tests.Core.Resources.ByNameInstrumentationSubject.cs" />
-	
+
+			<resource
+					file="${src.dir}/NQ/Resources/DelegateSubject.cs"
+					name="Db4oTool.Tests.NQ.Resources.DelegateSubject.cs" />
+			
 			<resource
 				file="${src.dir}/NQ/Resources/PredicateSubject.cs"
 				name="Db4oTool.Tests.NQ.Resources.PredicateSubject.cs" />
