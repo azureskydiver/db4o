@@ -19,15 +19,8 @@ public class CollectionsUtil {
             ExtObjectContainer oc, Reflector reflector) throws Exception {
         ArrayList4<Integer> list = (ArrayList4<Integer>) AbstractDb4oTestCase
                 .retrieveOnlyInstance(oc, ArrayList4.class);
-        assertNullArrayList4(list, reflector);
+        Assert.isFalse(oc.isActive(list));
         return list;
-    }
-
-    private static void assertNullArrayList4(ArrayList4<Integer> list,
-            Reflector reflector) throws Exception {
-        Assert.isNull(getField(reflector, list, "elements"));
-        Assert.areEqual(new Integer(0), getField(reflector, list, "capacity"));
-        Assert.areEqual(new Integer(0), getField(reflector, list, "listSize"));
     }
 
     private static Object getField(Reflector reflector, Object parent,
