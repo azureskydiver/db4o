@@ -72,7 +72,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * @see java.util.ArrayList 
 	 */
 	public ArrayList4() {
-		this(10);
 	}
 
 	/**
@@ -112,6 +111,10 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList4(int initialCapacity) {
+		initialize(initialCapacity);
+	}
+
+	private void initialize(int initialCapacity) {
 		if (initialCapacity < 0) {
 			throw new IllegalArgumentException();
 		}
@@ -142,10 +145,18 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	public void add(int index, E element) {
 		checkIndex(index, 0, size());
 		ensureCapacity(size() + 1);
-		System.arraycopy(elements, index, elements, index + 1, listSize - index);
-		elements[index] = element;
+		E[] array = getElementsLazy();
+		System.arraycopy(array, index, array, index + 1, listSize - index);
+		array[index] = element;
 		increaseSize(1);
 		markModified();
+	}
+
+	private E[] getElementsLazy() {
+		if (elements == null) {
+			initialize(10);
+		}
+		return elements;
 	}
 
 	/**
@@ -185,8 +196,9 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 			return false;
 		}
 		ensureCapacity(size() + length);
-		System.arraycopy(elements, index, elements, index+length, size() - index);
-		System.arraycopy(toBeAdded, 0, elements, index, length);
+		E[] array = getElementsLazy();
+		System.arraycopy(array, index, array, index+length, size() - index);
+		System.arraycopy(toBeAdded, 0, array, index, length);
 		increaseSize(length);
 		markModified();
 		return true;
@@ -201,9 +213,11 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	public void clear() { 
 		int size = size();
-		Arrays.fill(elements, 0, size, defaultValue());
-		setSize(0);
-		markModified();
+		if (size > 0) {
+			Arrays.fill(elements, 0, size, defaultValue());
+			setSize(0);
+			markModified();
+		}
 	}
 	
 	/**
@@ -229,7 +243,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		activate();
 		try {
 			ArrayList4 <E> clonedList = (ArrayList4<E>) super.clone();
-			clonedList.elements = elements.clone();
+			clonedList.elements = getElementsLazy().clone();
 			return clonedList;
 		} catch (CloneNotSupportedException e) {
 			throw new Error(e);
@@ -326,8 +340,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	public E remove(int index) {
 		int size = size();
 		E element = get(index);
-		System.arraycopy(elements, index + 1, 
-				elements, index, size - index	- 1);
+		System.arraycopy(elements, index + 1, elements, index, size - index	- 1);
 		elements[size - 1] = defaultValue();
 		decreaseSize(1);
 		markModified();
@@ -350,8 +363,9 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		if (count == 0) {
 			return;
 		}
-		System.arraycopy(elements, toIndex, elements, fromIndex, size - toIndex);
-		Arrays.fill(elements, size - count, size, defaultValue());
+		E[] array = getElementsLazy();
+		System.arraycopy(array, toIndex, array, fromIndex, size - toIndex);
+		Arrays.fill(array, size - count, size, defaultValue());
 		decreaseSize(count);
 		markModified();
 	}
@@ -398,7 +412,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	public Object[] toArray() {
 		int size = size();
 		Object[] data = new Object[size];
-		System.arraycopy(elements, 0, data, 0, size);
+		System.arraycopy(getElementsLazy(), 0, data, 0, size);
 		return data;
 	}
 
@@ -417,7 +431,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		if(a.length < size) {
 			a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
 		}
-		System.arraycopy(elements, 0, a, 0, size);
+		System.arraycopy(getElementsLazy(), 0, a, 0, size);
 		return a;
 	}
 
@@ -438,7 +452,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	private void resize(int minCapacity) {
 		markModified();
 		E[] temp = allocateStorage(minCapacity);
-		System.arraycopy(elements, 0, temp, 0, size());
+		System.arraycopy(getElementsLazy(), 0, temp, 0, size());
 		elements = temp;
 		capacity = minCapacity;
 	}
