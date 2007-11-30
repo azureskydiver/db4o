@@ -603,9 +603,6 @@
 				name="Db4oTool.Tests.Core.Resources.ByNameInstrumentationSubject.cs" />
 	
 			<resource
-				file="${src.dir}/NQ/Resources/CFNQSubject.cs"
-				name="Db4oTool.Tests.NQ.Resources.CFNQSubject.cs" />	
-			<resource
 				file="${src.dir}/NQ/Resources/PredicateSubject.cs"
 				name="Db4oTool.Tests.NQ.Resources.PredicateSubject.cs" />
 			<resource
