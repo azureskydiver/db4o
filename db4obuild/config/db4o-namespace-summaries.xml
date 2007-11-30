@@ -10,6 +10,7 @@
 	<namespace name="Db4objects.Db4o.Ext">Advanced API package.</namespace>
 	<namespace name="Db4objects.Db4o.IO">Input/Output abstraction layer.</namespace>
 	<namespace name="Db4objects.Db4o.IO.Crypt">Cryptographic IO support.</namespace>
+	<namespace name="Db4objects.Db4o.Marshall">Marshalling Interfaces.</namespace>
 	<namespace name="Db4objects.Db4o.Messaging">Messaging package.</namespace>
 	<namespace name="Db4objects.Db4o.Query">Query package.</namespace>
 	<namespace name="Db4objects.Db4o.Reflect">Reflection support package.</namespace>
