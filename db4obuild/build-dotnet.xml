@@ -429,7 +429,7 @@
 	<target name="build" depends="init, configure, build-all">
 	</target>
 
-	<target name="build-all" depends="build-core, build-instrumentation, build-nq, build-tests, build-admin, build-tutorial">
+	<target name="build-all" depends="build-core, build-instrumentation, build-nq, build-tests, build-admin, build-tutorial, build-msbuild">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
@@ -531,6 +531,26 @@
 				<arg value="/r:${dir.dist.dll.compact}/Cecil.FlowAnalysis.dll" />
 			</compact-args>
 		</csc-all>
+	</target>
+	
+	<target name="build-msbuild" depends="build-admin">
+		<csc outputfile="${dir.dist.dll.net}/Db4oTool.MSBuild.dll"
+			docfile="${dir.dist.dll.net}/Db4oTool.MSBuild.xml"
+			targettype="library"
+			debug="true"
+			definitions="TRACE"
+			executable="${csc.executable}">
+			<src dir="${dir.n.v6.msbuild}">
+				<include name="**/*.cs" />
+			</src>
+			<reference dir="${dir.dist.dll.net}">
+				<include name="Db4oTool.exe" />
+			</reference>
+			<reference dir="${csc.executable.path.net2}">
+				<include name="Microsoft.Build.Framework.dll" />
+				<include name="Microsoft.Build.Utilities.dll" />
+			</reference>
+		</csc>
 	</target>
 	
 	<target name="build-core" depends="init, configure, check-dependencies, sharpen-core">
