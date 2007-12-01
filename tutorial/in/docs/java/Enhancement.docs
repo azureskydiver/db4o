@@ -31,8 +31,8 @@ for using the  .l http://ant.apache.org/ Ant ..  enhancer task
 .b bloat-1.0.jar ..
 the bytecode optimization library
 
-.b db4o-7.0-classedit.jar ..
-the classfile editor
+.b db4o-7.0-instrumentation.jar ..
+instrumentation library on top of bloat
 
 .b db4o-7.0-java5.jar ..
 the db4o core engine
