@@ -32,9 +32,9 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 */
     private static final long serialVersionUID = 1L;
 
-    private Object[] _keys;
+    private K[] _keys;
 
-    private Object[] _values;
+    private V[] _values;
 
     private int _startIndex;
 
@@ -85,8 +85,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         
         _startIndex = 0;
         _endIndex = 0;
-        Arrays.fill(_keys, null);
-        Arrays.fill(_values, null);
+        Arrays.fill(_keys, defaultKeyValue());
+        Arrays.fill(_values, defaultValue());
     }
 
 	/**
@@ -117,18 +117,11 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @sharpen.ignore
 	 */
-    public boolean containsValue(Object value) {
-        return containsValueImpl((V) value);
-    }
-
-	private boolean containsValueImpl(V value) {
+    @SuppressWarnings("unchecked")
+	public boolean containsValue(Object value) {
 		activate();
         
-        return indexOfValue(value) != -1;
-	}
-
-	private int indexOfValue(V value) {
-		return indexOf(_values, value);
+        return indexOf(_values, ((V)value)) != -1;
 	}
 
 	/**
@@ -168,7 +161,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
 	private V valueAt(int index) {
-		return (V)_values[index];
+		return _values[index];
 	}
 
 	/**
@@ -204,7 +197,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
 	private K keyAt(int i) {
-		return (K)_keys[i];
+		return _keys[i];
 	}
 
 	/**
@@ -386,8 +379,8 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 
     @SuppressWarnings("unchecked")
     private void initializeBackingArray(int length) {
-        _keys = new Object[length];
-        _values = new Object[length];
+        _keys = allocateKeyStorage(length);
+        _values = allocateValueStorage(length);
     }
 
     /**
@@ -415,27 +408,57 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     @SuppressWarnings("unchecked")
     private void ensureCapacity() {
         if (_endIndex == _keys.length) {
-            Object[] newKeys = new Object[_keys.length * 2];
-            Object[] newValues = new Object[_values.length * 2];
+            int count = _keys.length * 2;
+			K[] newKeys = allocateKeyStorage(count);
+            V[] newValues = allocateValueStorage(count);
             System.arraycopy(_keys, _startIndex, newKeys, 0, _endIndex - _startIndex);
             System.arraycopy(_values, _startIndex, newValues, 0, _endIndex - _startIndex);
-            Arrays.fill(_keys, null);
-            Arrays.fill(_values, null);
+            Arrays.fill(_keys, defaultKeyValue());
+            Arrays.fill(_values, defaultValue());
             _keys = newKeys;
             _values = newValues;
         }
     }
-    
-    private V delete(int index) {
+   
+	private V delete(int index) {
         V value = valueAt(index);
         for (int i = index; i < _endIndex -1; i++) {
             _keys[i] = _keys[i + 1];
             _values[i] = _values[i + 1];
         }
         _endIndex--;
-        _keys[_endIndex] = null;
-        _values[_endIndex] = null;
+        _keys[_endIndex] = defaultKeyValue();
+        _values[_endIndex] = defaultValue();
         return value;
     }
     
+    /**
+     * @sharpen.ignore 
+     */
+    private K defaultKeyValue() {
+    	return null;
+    }
+    
+    /**
+     * @sharpen.ignore 
+     */
+    private V defaultValue() {
+    	return null;
+    }
+    
+    /**
+     * @sharpen.ignore
+     */
+    @SuppressWarnings("unchecked")
+	private V[] allocateValueStorage(int count) {
+		return (V[]) new Object[count];
+	}
+
+    /**
+     * @sharpen.ignore
+     */
+	@SuppressWarnings("unchecked")
+	private K[] allocateKeyStorage(int count) {
+		return (K[]) new Object[count];
+	}    
 }
