@@ -273,10 +273,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * @sharpen.ignore
 	 */
 	public int indexOf(Object o) {
-		return indexOfImpl((E) o);
-	}
-
-	private int indexOfImpl(E o) {
 		for (int index = 0; index < size(); ++index) {
 			E element = get(index);
 			if (o == null ? element == null : o.equals(element)) {
@@ -297,13 +293,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	@SuppressWarnings("unchecked")
 	public int lastIndexOf(Object o) {
-		return lastIndexOfImpl( (E) o);
-	}
-
-	/**
-	 * @sharpen.rename LastIndexOf 
-	 */
-	private int lastIndexOfImpl(E o) {
 		for (int index = size() - 1; index >= 0; --index) {
 			E element = get(index);
 			if (o == null ? element == null : o.equals(element)) {
