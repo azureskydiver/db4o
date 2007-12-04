@@ -227,7 +227,7 @@
 		</exec>
 	</target>
 	
-	<target name="run-tests-net" depends="run-tests-core, run-tests-admin" unless="mono">
+	<target name="run-tests-net" depends="run-tests-core, run-tests-admin, run-msbuild-tests" unless="mono">
 	</target>
 	
 	<target name="run-tests-mono" depends="build-tests" if="mono">
@@ -553,6 +553,19 @@
 		</csc>
 	</target>
 	
+	<target name="build-msbuild-tests" depends="define-msbuild-task">
+		
+        <msbuild buildfile="${dir.n.v6}/Db4oTool/Db4oTool.MSBuild.Tests-2005.sln">
+            <target name="rebuild" />
+            <property name="Configuration" value="Debug" />
+            <property name="OutputPath" value="${dir.dist.dll}/msbuild.tests" />
+        </msbuild>
+	</target>
+
+	<target name="run-msbuild-tests" depends="build-msbuild-tests">
+		<exec executable="${dir.dist.dll}/msbuild.tests/Db4oTool.MSBuild.Tests.exe" failonerror="true"/>
+	</target>
+
 	<target name="build-core" depends="init, configure, check-dependencies, sharpen-core">
 	
 		<fileset id="core.sources" dir="${dir.n.v6.core}">
@@ -1380,8 +1393,7 @@
 
 	</target>
 
-    <target name="build-cf20" depends="init, configure, sharpen">
-        <taskdef resource="org/apache/ant/dotnet/antlib.xml" />
+    <target name="build-cf20" depends="init, configure, sharpen, define-msbuild-task">
         <property name="dir.n.v6.tests" location="${dir.n.v6}/Db4objects.Db4o.Tests" />
         
         <msbuild buildfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.sln">
@@ -1408,4 +1420,8 @@
     	<loadfile property="cf.db4ounit.log" srcfile="${emulator.sharefolder}/db4ounit.log" />
     	<echo message="${cf.db4ounit.log}" />
     </target>
+	
+	<target name="define-msbuild-task">
+		<taskdef resource="org/apache/ant/dotnet/antlib.xml" />
+	</target>
 </project>
