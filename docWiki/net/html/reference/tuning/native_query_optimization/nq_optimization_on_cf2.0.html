@@ -13,7 +13,7 @@
 <span name="cs_wiki_filter" csw_filters="net">
 <p>Due to some platform limitations, CompactFramework 2.0 users using the more 
 convenient delegate based Native Query syntax that want their queries to be 
-optimized are required to run the Db4oAdmin.exe command line utility on their 
+optimized are required to run the Db4oTool.exe command line utility on their 
 assemblies prior to deploying them. </p>
 
 <p>
@@ -36,21 +36,21 @@ click the project you want to enable Native Query optimization for</li>
 <li>Select<b>'Properties'</b></li>
 
 <li>In the Properties Page select the<b>'Build 
-Events'</b>tab</li>
+Events'</b> tab</li>
 
 
 
 <li>In the<b>'Post-build event command line'</b>text box insert 
-the following text&nbsp;<b>"/bin/Db4oAdmin.exe cf2-delegates $(TargetPath)"</b> without the quotes and replacing 
+the following text&nbsp;<b>"/bin/Db4oTool.exe -nq $(TargetPath)"</b> without the quotes and replacing 
 to the correct&nbsp;value for your system.</li>
 </ul>
 
-<p>A complete example can be found in the src\Db4oAdmin\Db4oAdmin.Example directory of the distribution. </p>
+<p>A complete example can be found in the src\Db4oTool\Db4oTool.Example directory of the distribution. </p>
 
 </span></div>
     </div>
     <div id="footer">
-					This revision (7) was last Modified 2007-08-04T12:53:14 by Tetyana.
+					This revision (9) was last Modified 2007-11-28T14:39:00 by Tetyana.
 				</div>
   </body>
 </html>

@@ -28,10 +28,10 @@
 <li>Whenever an object is instantiated from db4o, the database registers itself with this object. To enable this on the database level <code>TransparentActivationSupport</code> has to be registered with the db4o configuration.On the object level an object is made TA Aware by implementing the <code>Activatable/IActivatable</code> interface and providing the according <code>bind(activator)</code> method. The default implementation of the bind method will simply store the given <code>activator</code> reference for later use. 
 </li><li>All methods that are supposed to require activated object fields should call <code>activate()/Activate()</code> at the beginning of the message body. The <code>activate()/Activate()</code> method will check whether the object is already activated. If this is not the case, it will request the container to activate the object to level 1 and set the activated flag accordingly. </li></ol>
 <p>This implementation requires quite many modifications to the objects. That is why db4o provides an automated TA implementation through bytecode instrumentation. With this approach all the work for TA is done behind the scenes. </p>
-<p>Automatic and manual TA approaches are discussed in detail in the following examples.</p><ul><li><a href="bytecode_instrumentation_example.html" class="wikiLink">Bytecode Instrumentation Example</a> <br></li><li><a href="detailed_example.html" class="wikiLink">Detailed Example</a></li><li><a href="collection_example.html" class="wikiLink">Collection Example</a><br></li></ul></div>
+<p>Automatic and manual TA approaches are discussed in detail in the following examples.</p><ul><li><a href="ta_enhanced_example.html" class="wikiLink">TA Enhanced Example</a> <br></li><li><a href="detailed_example.html" class="wikiLink">Detailed Example</a></li><li><a href="collection_example.html" class="wikiLink">Collection Example</a><br></li></ul></div>
     </div>
     <div id="footer">
-					This revision (14) was last Modified 2007-10-31T14:22:13 by Tetyana.
+					This revision (15) was last Modified 2007-11-06T08:13:56 by Tetyana.
 				</div>
   </body>
 </html>
