@@ -13,12 +13,6 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
 	public final static int LOG_WRITE 	= 2;
 	public final static int LOG_SYNC 	= 4;
 	
-	public final static String READ_ENTRY = "READ ";
-	public static final String WRITE_ENTRY = "WRITE ";
-	public static final String SYNC_ENTRY = "SYNC";
-	
-	public static final String SEPARATOR = ",";
-	
 	private PrintStream _out;
 	private int _config;
 	private long _curpos;
@@ -52,7 +46,7 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
 
     public int read(byte[] bytes, int length) throws Db4oIOException {
     	if(config(LOG_READ)) {
-    		_out.println(READ_ENTRY +_curpos+ SEPARATOR +length);
+    		_out.println(LogConstants.READ_ENTRY +_curpos+ LogConstants.SEPARATOR +length);
     	}
         return _delegate.read(bytes, length);
     }
@@ -64,14 +58,14 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
 
     public void sync() throws Db4oIOException {
     	if(config(LOG_SYNC)) {
-    		_out.println(SYNC_ENTRY);
+    		_out.println(LogConstants.SYNC_ENTRY);
     	}
         _delegate.sync();
     }
 
     public void write(byte[] buffer, int length) throws Db4oIOException {
     	if(config(LOG_WRITE)) {
-    		_out.println(WRITE_ENTRY + _curpos + SEPARATOR + length);
+    		_out.println(LogConstants.WRITE_ENTRY + _curpos + LogConstants.SEPARATOR + length);
     	}
         _delegate.write(buffer, length);
     }
