@@ -5,11 +5,12 @@ import com.db4o.*;
 
 import com.db4o.db4ounit.common.soda.util.SodaBaseTestCase;
 import com.db4o.query.Query;
+import db4ounit.extensions.fixtures.OptOutCS;;
 
 /**
  * Tests for COR-1007
  */
-public class STOrderingTestCase extends SodaBaseTestCase {
+public class STOrderingTestCase extends SodaBaseTestCase implements OptOutCS {
 	public Object[] createData() {
 		return new Object[] {
 				/*new OrderTestSubject("Alexandr", 30, 5),   // 0
