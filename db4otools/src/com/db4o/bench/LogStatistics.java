@@ -181,13 +181,13 @@ public class LogStatistics {
 
 
 	private void handleLine(String line) {
-		if ( line.startsWith(LoggingIoAdapter.WRITE_ENTRY) ) {
+		if ( line.startsWith(LogConstants.WRITE_ENTRY) ) {
 			handleWrite(line);
 		}
-		else if ( line.startsWith(LoggingIoAdapter.READ_ENTRY) ) {
+		else if ( line.startsWith(LogConstants.READ_ENTRY) ) {
 			handleRead(line);
 		}
-		else if ( line.startsWith(LoggingIoAdapter.SYNC_ENTRY) ) {
+		else if ( line.startsWith(LogConstants.SYNC_ENTRY) ) {
 			handleSync();
 		}
 		else {
@@ -214,7 +214,7 @@ public class LogStatistics {
 
 
 	private long bytesForLine(String line) {
-		int separatorIndex = line.indexOf(LoggingIoAdapter.SEPARATOR);
+		int separatorIndex = line.indexOf(LogConstants.SEPARATOR);
 		long length = Long.parseLong(line.substring(separatorIndex+1));
 		return length;
 	}

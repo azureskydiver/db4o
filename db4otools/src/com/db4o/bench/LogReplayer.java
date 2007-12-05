@@ -39,13 +39,13 @@ public class LogReplayer {
 	}
 
 	private void replayLine(String line) {
-		if ( line.startsWith(LoggingIoAdapter.WRITE_ENTRY) ) {
+		if ( line.startsWith(LogConstants.WRITE_ENTRY) ) {
 			replayWrite(line);
 		}
-		else if ( line.startsWith(LoggingIoAdapter.READ_ENTRY) ) {
+		else if ( line.startsWith(LogConstants.READ_ENTRY) ) {
 			replayRead(line);
 		}
-		else if ( line.startsWith(LoggingIoAdapter.SYNC_ENTRY) ) {
+		else if ( line.startsWith(LogConstants.SYNC_ENTRY) ) {
 			replaySync();
 		}
 		else {
@@ -60,12 +60,12 @@ public class LogReplayer {
 
 	
 	private void replayRead(String line) {
-		byte[] buffer = prepareCommand(LoggingIoAdapter.READ_ENTRY, line);
+		byte[] buffer = prepareCommand(LogConstants.READ_ENTRY, line);
 		_io.read(buffer, buffer.length);
 	}
 
 	private void replayWrite(String line) {
-		byte[] buffer = prepareCommand(LoggingIoAdapter.WRITE_ENTRY, line);		
+		byte[] buffer = prepareCommand(LogConstants.WRITE_ENTRY, line);		
 		_io.write(buffer);
 	}
 	
@@ -79,7 +79,7 @@ public class LogReplayer {
 	}
 	
 	private int separatorIndexForLine(String line) {
-		return line.indexOf(LoggingIoAdapter.SEPARATOR);
+		return line.indexOf(LogConstants.SEPARATOR);
 	}
 	
 	private int lengthForLine(int separator, String line) {
