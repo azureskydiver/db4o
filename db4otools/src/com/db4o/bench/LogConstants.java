@@ -7,7 +7,8 @@ public class LogConstants {
 
 	public final static String READ_ENTRY = "READ ";
 	public static final String WRITE_ENTRY = "WRITE ";
-	public static final String SYNC_ENTRY = "SYNC";
+	public static final String SYNC_ENTRY = "SYNC ";
+	public static final String SEEK_ENTRY = "SEEK ";
 	
 	public static final String SEPARATOR = ",";
 	
