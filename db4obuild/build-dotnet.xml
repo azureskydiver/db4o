@@ -395,7 +395,8 @@
 		</copy>
 	</target>
 	
-	<target name="package-docs" depends="package-tutorial, package-api, package-reference">
+	<target name="package-docs" depends="package-tutorial, package-api, 
+		package-reference, prepare.reference.pdf">
 	</target>
 	
 	<target name="package-reference">
@@ -408,6 +409,19 @@
 		</copy>
 		
 	</target>
+	
+	<target name="prepare.reference.pdf" >
+		<ftp server="${ftp.server}"
+			userid="${ftp.user}"
+			password="${ftp.password}" 
+			remotedir="${ftp.reference.path}/${db4o.version.dotted}"
+			action="get">
+			<fileset dir="${dir.dist.net.build}/doc/reference">
+				<include name="reference-net.pdf" />
+			</fileset>
+		</ftp>
+	</target>
+
 	
 	<target name="build-zip" depends="prepare-package-structure">
 	

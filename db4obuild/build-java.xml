@@ -986,7 +986,20 @@
 		</copy>
 	</target>
 	
-	<target name="package.java" depends="init, build.db4ojava, build.db4ojava.tests, prepare.docs, prepare.java.src">
+	<target name="prepare.reference.pdf" >
+		<ftp server="${ftp.server}"
+			userid="${ftp.user}"
+			password="${ftp.password}" 
+			remotedir="${ftp.reference.path}/${db4o.version.dotted}"
+			action="get">
+			<fileset dir="${dir.dist.java.build}/doc/reference">
+				<include name="reference-java.pdf" />
+			</fileset>
+		</ftp>
+	</target>
+	
+	<target name="package.java" depends="init, build.db4ojava, build.db4ojava.tests, 
+		prepare.docs, prepare.reference.pdf, prepare.java.src">
 		<copy todir="${dir.dist.java.build}">
 			<fileset dir="${dir.dist.java}" includes="lib/**" />
 			<fileset dir="${dir.j}" includes="${filename.db4o.license}" />
