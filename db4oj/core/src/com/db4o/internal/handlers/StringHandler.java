@@ -29,10 +29,10 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
     	return container()._handlers.ICLASS_STRING;
     }
 
-    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer){
-    	Slot slot = buffer.readSlot();
-        if(slot.address() > 0  && ! mf._string.inlinedStrings()){
-            buffer.getTransaction().slotFreeOnCommit(slot.address(), slot);
+    public void delete(DeleteContext context){
+    	Slot slot = context.buffer().readSlot();
+        if(slot.address() > 0  && ! context.family()._string.inlinedStrings()){
+        	context.buffer().getTransaction().slotFreeOnCommit(slot.address(), slot);
         }
     }
     

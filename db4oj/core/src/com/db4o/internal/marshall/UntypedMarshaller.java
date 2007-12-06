@@ -12,7 +12,7 @@ public abstract class UntypedMarshaller {
     
     MarshallerFamily _family;
     
-    public abstract void deleteEmbedded(StatefulBuffer reader) throws Db4oIOException;
+    public abstract void deleteEmbedded(DeleteContext context) throws Db4oIOException;
     
     public abstract TypeHandler4 readArrayHandler(Transaction a_trans, Buffer[] a_bytes);
 

@@ -10,32 +10,33 @@ import com.db4o.internal.handlers.*;
 
 class ArrayMarshaller1 extends ArrayMarshaller{
     
-    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws Db4oIOException {
+    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer buffer) throws Db4oIOException {
         
-        int address = reader.readInt();
-        reader.readInt();  // length
+        int address = buffer.readInt();
+        buffer.readInt();  // length
         if (address <= 0) {
             return;
         }
         
-        int linkOffSet = reader._offset; 
+        int linkOffSet = buffer._offset; 
         
-        Transaction trans = reader.getTransaction();
+        Transaction trans = buffer.getTransaction();
         TypeHandler4 typeHandler = arrayHandler._handler;
         
-        if (reader.cascadeDeletes() > 0 && typeHandler instanceof ClassMetadata) {
-            reader._offset = address;
+        if (buffer.cascadeDeletes() > 0 && typeHandler instanceof ClassMetadata) {
+            buffer._offset = address;
             if (Deploy.debug) {
-                reader.readBegin(arrayHandler.identifier());
+                buffer.readBegin(arrayHandler.identifier());
             }
-            reader.setCascadeDeletes(reader.cascadeDeletes());
-            for (int i = arrayHandler.elementCount(trans, reader); i > 0; i--) {
-                arrayHandler._handler.deleteEmbedded(_family, reader);
+            DeleteContext context = new DeleteContext(_family, buffer);
+            buffer.setCascadeDeletes(buffer.cascadeDeletes());
+            for (int i = arrayHandler.elementCount(trans, buffer); i > 0; i--) {
+				arrayHandler._handler.delete(context);
             }
         }
         
         if(linkOffSet > 0){
-            reader._offset = linkOffSet;
+            buffer._offset = linkOffSet;
         }
     }
     

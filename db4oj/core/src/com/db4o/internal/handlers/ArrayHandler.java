@@ -125,8 +125,8 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 		return tree;
 	}
     
-    public final void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
-        mf._array.deleteEmbedded(this, a_bytes);
+    public final void delete(DeleteContext context) throws Db4oIOException {
+        context.family()._array.deleteEmbedded(this, context.buffer());
     }
 
     

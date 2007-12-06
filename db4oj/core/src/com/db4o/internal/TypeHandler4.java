@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.ext.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 
@@ -12,7 +11,7 @@ import com.db4o.marshall.*;
  */
 public interface TypeHandler4 extends Comparable4 {
 	
-	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer) throws Db4oIOException;
+	void delete(DeleteContext context) throws Db4oIOException;
 	
 	void defragment(DefragmentContext context);
 

@@ -412,31 +412,33 @@ public class FieldMetadata implements StoredField {
     }
 
     /** @param isUpdate */
-    public void delete(MarshallerFamily mf, StatefulBuffer a_bytes, boolean isUpdate) throws FieldIndexException {
-        if (! checkAlive(a_bytes)) {
+    public void delete(MarshallerFamily mf, StatefulBuffer buffer, boolean isUpdate) throws FieldIndexException {
+        if (! checkAlive(buffer)) {
             return;
         }
         
+        DeleteContext context = new DeleteContext(mf, buffer);
+        
         try {
-			removeIndexEntry(mf, a_bytes);
+			removeIndexEntry(mf, buffer);
 			boolean dotnetValueType = false;
 			if (Deploy.csharp) {
 				dotnetValueType = Platform4.isValueType(getStoredType());
 			}
 			if ((_config != null && _config.cascadeOnDelete().definiteYes())
 					|| dotnetValueType) {
-				int preserveCascade = a_bytes.cascadeDeletes();
-				a_bytes.setCascadeDeletes(1);
-				_handler.deleteEmbedded(mf, a_bytes);
-				a_bytes.setCascadeDeletes(preserveCascade);
+				int preserveCascade = buffer.cascadeDeletes();
+				buffer.setCascadeDeletes(1);
+				_handler.delete(context);
+				buffer.setCascadeDeletes(preserveCascade);
 			} else if (_config != null
 					&& _config.cascadeOnDelete().definiteNo()) {
-				int preserveCascade = a_bytes.cascadeDeletes();
-				a_bytes.setCascadeDeletes(0);
-				_handler.deleteEmbedded(mf, a_bytes);
-				a_bytes.setCascadeDeletes(preserveCascade);
+				int preserveCascade = buffer.cascadeDeletes();
+				buffer.setCascadeDeletes(0);
+				_handler.delete(context);
+				buffer.setCascadeDeletes(preserveCascade);
 			} else {
-				_handler.deleteEmbedded(mf, a_bytes);
+				_handler.delete(context);
 			}
 		} catch (CorruptionException exc) {
 			throw new FieldIndexException(exc, this);
