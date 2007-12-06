@@ -28,7 +28,7 @@ final class SecondPassCommand implements PassCommand {
 		_objectCommitFrequency = objectCommitFrequency;
 	}
 
-	public void processClass(final DefragContextImpl context, final ClassMetadata yapClass, int id,final int classIndexID) throws CorruptionException, IOException {
+	public void processClass(final DefragmentServicesImpl context, final ClassMetadata yapClass, int id,final int classIndexID) throws CorruptionException, IOException {
 		if(context.mappedID(id,-1)==-1) {
 			System.err.println("MAPPING NOT FOUND: "+id);
 		}
@@ -39,7 +39,7 @@ final class SecondPassCommand implements PassCommand {
 		});
 	}
 
-	public void processObjectSlot(final DefragContextImpl context, final ClassMetadata yapClass, int id) throws CorruptionException, IOException {
+	public void processObjectSlot(final DefragmentServicesImpl context, final ClassMetadata yapClass, int id) throws CorruptionException, IOException {
 		Buffer sourceBuffer = context.sourceBufferByID(id);
 		ObjectHeader objHead = context.sourceObjectHeader(sourceBuffer);
 		sourceBuffer._offset = 0;
@@ -58,7 +58,7 @@ final class SecondPassCommand implements PassCommand {
 		},registerAddresses, sourceBuffer);
 	}
 
-	public void processClassCollection(DefragContextImpl context) throws CorruptionException, IOException {
+	public void processClassCollection(DefragmentServicesImpl context) throws CorruptionException, IOException {
 		BufferPair.processCopy(context, context.sourceClassCollectionID(), new SlotCopyHandler() {
 			public void processCopy(BufferPair readers) {
 				ClassMetadataRepository.defrag(readers);
@@ -66,10 +66,10 @@ final class SecondPassCommand implements PassCommand {
 		});
 	}
 
-	public void processBTree(final DefragContextImpl context, BTree btree) throws CorruptionException, IOException {
+	public void processBTree(final DefragmentServicesImpl context, BTree btree) throws CorruptionException, IOException {
 		btree.defragBTree(context);
 	}
 
-	public void flush(DefragContextImpl context) {
+	public void flush(DefragmentServicesImpl context) {
 	}
 }

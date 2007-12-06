@@ -14,9 +14,9 @@ import com.db4o.internal.btree.*;
  * @exclude
  */
 interface PassCommand {
-	void processObjectSlot(DefragContextImpl context,ClassMetadata yapClass,int id) throws CorruptionException, IOException;
-	void processClass(DefragContextImpl context,ClassMetadata yapClass,int id,int classIndexID) throws CorruptionException, IOException;
-	void processClassCollection(DefragContextImpl context) throws CorruptionException, IOException;
-	void processBTree(DefragContextImpl context, BTree btree) throws CorruptionException, IOException;
-	void flush(DefragContextImpl context);
+	void processObjectSlot(DefragmentServicesImpl context,ClassMetadata yapClass,int id) throws CorruptionException, IOException;
+	void processClass(DefragmentServicesImpl context,ClassMetadata yapClass,int id,int classIndexID) throws CorruptionException, IOException;
+	void processClassCollection(DefragmentServicesImpl context) throws CorruptionException, IOException;
+	void processBTree(DefragmentServicesImpl context, BTree btree) throws CorruptionException, IOException;
+	void flush(DefragmentServicesImpl context);
 }

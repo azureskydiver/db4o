@@ -20,27 +20,27 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public class DefragContextImpl implements DefragContext {	
+public class DefragmentServicesImpl implements DefragmentServices {	
 
 	public static abstract class DbSelector {
 		DbSelector() {
 		}
 		
-		abstract LocalObjectContainer db(DefragContextImpl context);
+		abstract LocalObjectContainer db(DefragmentServicesImpl context);
 
-		Transaction transaction(DefragContextImpl context) {
+		Transaction transaction(DefragmentServicesImpl context) {
 			return db(context).systemTransaction();
 		}
 	}
 	
 	public final static DbSelector SOURCEDB=new DbSelector() {
-		LocalObjectContainer db(DefragContextImpl context) {
+		LocalObjectContainer db(DefragmentServicesImpl context) {
 			return context._sourceDb;
 		}
 	};
 
 	public final static DbSelector TARGETDB=new DbSelector() {
-		LocalObjectContainer db(DefragContextImpl context) {
+		LocalObjectContainer db(DefragmentServicesImpl context) {
 			return context._targetDb;
 		}
 	};
@@ -55,7 +55,7 @@ public class DefragContextImpl implements DefragContext {
 	private final Hashtable4 _hasFieldIndexCache = new Hashtable4();
 	
 
-	public DefragContextImpl(DefragmentConfig defragConfig,DefragmentListener listener) {
+	public DefragmentServicesImpl(DefragmentConfig defragConfig,DefragmentListener listener) {
 		_listener=listener;
 		Config4Impl originalConfig =  (Config4Impl) defragConfig.db4oConfig();
 		Configuration sourceConfig=(Configuration) originalConfig.deepClone(null);
