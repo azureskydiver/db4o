@@ -14,17 +14,18 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return false;
     }
     
-    public void deleteEmbedded(StatefulBuffer reader) throws Db4oIOException {
-        int payLoadOffset = reader.readInt();
+    public void deleteEmbedded(DeleteContext context) throws Db4oIOException {
+    	StatefulBuffer buffer = context.buffer();
+        int payLoadOffset = buffer.readInt();
         if (payLoadOffset > 0) {
-            int linkOffset = reader._offset;
-            reader._offset = payLoadOffset;
-            int yapClassID = reader.readInt();
-            ClassMetadata yc = reader.getStream().classMetadataForId(yapClassID);
+            int linkOffset = buffer._offset;
+            buffer._offset = payLoadOffset;
+            int yapClassID = buffer.readInt();
+            ClassMetadata yc = buffer.getStream().classMetadataForId(yapClassID);
             if(yc != null){
-                yc.deleteEmbedded(_family, reader);
+                yc.delete(new DeleteContext(_family, buffer));
             }
-            reader._offset = linkOffset;
+            buffer._offset = linkOffset;
         }
     }
     

@@ -47,9 +47,9 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return false;
     }
 
-    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
-        if(mf._primitive.useNormalClassRead()){
-            super.deleteEmbedded(mf, a_bytes);
+    public void delete(DeleteContext context) throws Db4oIOException {
+        if(context.family()._primitive.useNormalClassRead()){
+            super.delete(context);
             return;
         }
         
@@ -58,7 +58,9 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     
-    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws Db4oIOException  {
+    public void deleteEmbedded1(DeleteContext context, int a_id) throws Db4oIOException  {
+    	
+    	StatefulBuffer buffer = context.buffer();
         
         if(_handler instanceof ArrayHandler){
             ArrayHandler ya = (ArrayHandler)_handler;
@@ -76,23 +78,23 @@ public class PrimitiveFieldHandler extends ClassMetadata{
             // length int.
             
             if(ya._usePrimitiveClassReflector){
-                ya.deletePrimitiveEmbedded(a_bytes, this);
-                a_bytes.slotDelete();
+                ya.deletePrimitiveEmbedded(buffer, this);
+                buffer.slotDelete();
                 return;
             }
         }
         
        if(_handler instanceof UntypedFieldHandler){
             // Any-In-Any: Ignore delete 
-            a_bytes.incrementOffset(linkLength());
+            buffer.incrementOffset(linkLength());
         }else{
-            _handler.deleteEmbedded(mf, a_bytes);
+            _handler.delete(context);
         }
 		
 		// TODO: Was this freeing call necessary? 
 		//   free(a_bytes.getTransaction(), a_id, a_bytes.getAddress(), a_bytes.getLength());
 		
-		free(a_bytes, a_id);
+		free(buffer, a_id);
 			
     }
 

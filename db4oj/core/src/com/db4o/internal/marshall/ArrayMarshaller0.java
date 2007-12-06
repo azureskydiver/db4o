@@ -11,22 +11,23 @@ import com.db4o.internal.slots.*;
 
 class ArrayMarshaller0  extends ArrayMarshaller{
     
-    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws Db4oIOException {
-    	Slot slot = reader.readSlot();
+    public void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer parentBuffer) throws Db4oIOException {
+    	Slot slot = parentBuffer.readSlot();
         if (slot.address()<= 0) {
             return;
         }
-        Transaction trans = reader.getTransaction();
-        if (reader.cascadeDeletes() > 0
+        Transaction trans = parentBuffer.getTransaction();
+        if (parentBuffer.cascadeDeletes() > 0
 				&& arrayHandler._handler instanceof ClassMetadata) {
-			StatefulBuffer bytes = reader.getStream().readWriterByAddress(
+			StatefulBuffer arrayBuffer = parentBuffer.getStream().readWriterByAddress(
 					trans, slot.address(), slot.length());
 			if (Deploy.debug) {
-				bytes.readBegin(arrayHandler.identifier());
+				arrayBuffer.readBegin(arrayHandler.identifier());
 			}
-			bytes.setCascadeDeletes(reader.cascadeDeletes());
-			for (int i = arrayHandler.elementCount(trans, bytes); i > 0; i--) {
-				arrayHandler._handler.deleteEmbedded(_family, bytes);
+			DeleteContext deleteContext = new DeleteContext(_family, arrayBuffer);
+			arrayBuffer.setCascadeDeletes(parentBuffer.cascadeDeletes());
+			for (int i = arrayHandler.elementCount(trans, arrayBuffer); i > 0; i--) {
+				arrayHandler._handler.delete(deleteContext);
 			}
 		}
         trans.slotFreeOnCommit(slot.address(), slot);
@@ -37,5 +38,6 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     }
     
     public void defragIDs(ArrayHandler arrayHandler,BufferPair readers) {
+    	// Where is the code ???
     }
 }

@@ -12,16 +12,17 @@ import com.db4o.internal.*;
  */
 public class UntypedMarshaller0 extends UntypedMarshaller {
     
-    public void deleteEmbedded(StatefulBuffer parentBytes) throws Db4oIOException {
-        int objectID = parentBytes.readInt();
+    public void deleteEmbedded(DeleteContext context) throws Db4oIOException {
+    	StatefulBuffer parentBuffer = context.buffer();
+        int objectID = parentBuffer.readInt();
         if (objectID > 0) {
             StatefulBuffer reader =
-                parentBytes.getStream().readWriterByID(parentBytes.getTransaction(), objectID);
+                parentBuffer.getStream().readWriterByID(parentBuffer.getTransaction(), objectID);
             if (reader != null) {
-                reader.setCascadeDeletes(parentBytes.cascadeDeletes());
+                reader.setCascadeDeletes(parentBuffer.cascadeDeletes());
                 ObjectHeader oh = new ObjectHeader(reader);
                 if(oh.classMetadata() != null){
-                    oh.classMetadata().deleteEmbedded1(_family, reader, objectID);
+                    oh.classMetadata().deleteEmbedded1(context, objectID);
                 }
             }
         }

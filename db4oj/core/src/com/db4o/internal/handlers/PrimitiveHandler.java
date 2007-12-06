@@ -33,8 +33,8 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     
     public abstract Object defaultValue();
 
-    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) {
-        a_bytes.incrementOffset(linkLength());
+    public void delete(DeleteContext context) {
+        context.buffer().incrementOffset(linkLength());
     }
     
     public Object indexEntryToObject(Transaction trans, Object indexEntry){

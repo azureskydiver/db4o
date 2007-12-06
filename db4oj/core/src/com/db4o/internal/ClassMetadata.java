@@ -544,28 +544,29 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         deleteMembers(mf, attributes, a_bytes, a_bytes.getTransaction().container()._handlers.arrayType(a_object), false);
     }
 
-    public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer a_bytes) throws Db4oIOException {
-        if (a_bytes.cascadeDeletes() > 0) {
-            int id = a_bytes.readInt();
+    public void delete(DeleteContext context) throws Db4oIOException {
+        if (context.buffer().cascadeDeletes() > 0) {
+            int id = context.buffer().readInt();
             if (id > 0) {
-                deleteEmbedded1(mf, a_bytes, id);
+                deleteEmbedded1(context, id);
             }
         } else {
-            a_bytes.incrementOffset(linkLength());
+        	context.buffer().incrementOffset(linkLength());
         }
     }
     
-    /** @param mf */
-    public void deleteEmbedded1(MarshallerFamily mf, StatefulBuffer a_bytes, int a_id) throws Db4oIOException {
-        if (a_bytes.cascadeDeletes() > 0) {
+    /** @param context TODO*/
+    public void deleteEmbedded1(DeleteContext context, int a_id) throws Db4oIOException {
+    	StatefulBuffer buffer = context.buffer();
+        if (buffer.cascadeDeletes() > 0) {
         	
-        	ObjectContainerBase stream = a_bytes.getStream();
+        	ObjectContainerBase stream = buffer.getStream();
             
             // short-term reference to prevent WeakReference-gc to hit
-            Transaction transaction = a_bytes.getTransaction();
+            Transaction transaction = buffer.getTransaction();
             Object obj = stream.getByID2(transaction, a_id);
 
-            int cascade = a_bytes.cascadeDeletes() - 1;
+            int cascade = buffer.cascadeDeletes() - 1;
             if (obj != null) {
                 if (isCollection(obj)) {
                     cascade += reflector().collectionUpdateDepth(reflector().forObject(obj)) - 1;
@@ -574,7 +575,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
             ObjectReference yo = transaction.referenceForId(a_id);
             if (yo != null) {
-                a_bytes.getStream().delete2(transaction, yo, obj,cascade, false);
+                buffer.getStream().delete2(transaction, yo, obj,cascade, false);
             }
         }
     }

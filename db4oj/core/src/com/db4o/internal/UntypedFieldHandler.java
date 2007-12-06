@@ -26,8 +26,8 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 		}
 	}
     
-	public void deleteEmbedded(MarshallerFamily mf, StatefulBuffer reader) throws Db4oIOException {
-        mf._untyped.deleteEmbedded(reader);
+	public void delete(DeleteContext context) throws Db4oIOException {
+		context.family()._untyped.deleteEmbedded(context);
 	}
 	
 	public int getID() {
