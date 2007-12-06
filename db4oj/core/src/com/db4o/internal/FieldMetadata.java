@@ -1000,7 +1000,7 @@ public class FieldMetadata implements StoredField {
     }    
     
     public void defragField(MarshallerFamily mf,BufferPair readers) {
-    	getHandler().defrag(mf, readers, true);
+    	getHandler().defragment(new DefragmentContext(mf, readers, true));
     }
     
 	public void createIndex() {

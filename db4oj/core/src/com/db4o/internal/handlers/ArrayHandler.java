@@ -378,24 +378,24 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         return false;
     }
 
-    public final void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
+    public final void defragment(DefragmentContext context) {
         if(Handlers4.handlesSimple(_handler)){
-            readers.incrementOffset(linkLength());
+            context.readers().incrementOffset(linkLength());
         }else{
-            mf._array.defragIDs(this, readers);
+            context.marshallerFamily()._array.defragIDs(this, context.readers());
         }
     }
     
-    public void defrag1(MarshallerFamily mf,BufferPair readers) {
+    public void defrag1(DefragmentContext context) {
 		if (Deploy.debug) {
-			readers.readBegin(identifier());
+			context.readers().readBegin(identifier());
 		}
-		int elements = readElementsDefrag(readers);
+		int elements = readElementsDefrag(context.readers());
 		for (int i = 0; i < elements; i++) {
-			_handler.defrag(mf,readers, true);
+			_handler.defragment(context);
 		}
         if (Deploy.debug) {
-            readers.readEnd();
+            context.readers().readEnd();
         }
     }
 
