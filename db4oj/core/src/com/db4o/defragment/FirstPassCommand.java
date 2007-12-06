@@ -20,7 +20,7 @@ final class FirstPassCommand implements PassCommand {
 
 	private TreeInt _ids;
 	
-	void process(DefragContextImpl context, int objectID, boolean isClassID) {
+	void process(DefragmentServicesImpl context, int objectID, boolean isClassID) {
 		if(batchFull()) {
 			flush(context);
 		}
@@ -31,7 +31,7 @@ final class FirstPassCommand implements PassCommand {
 		return _ids!=null&&_ids.size()==ID_BATCH_SIZE;
 	}
 
-	public void processClass(DefragContextImpl context, ClassMetadata yapClass,int id,int classIndexID) {
+	public void processClass(DefragmentServicesImpl context, ClassMetadata yapClass,int id,int classIndexID) {
 		process(context,id, true);
 		for (int fieldIdx = 0; fieldIdx < yapClass.i_fields.length; fieldIdx++) {
 			FieldMetadata field=yapClass.i_fields[fieldIdx];
@@ -41,15 +41,15 @@ final class FirstPassCommand implements PassCommand {
 		}
 	}
 
-	public void processObjectSlot(DefragContextImpl context, ClassMetadata yapClass, int sourceID) {
+	public void processObjectSlot(DefragmentServicesImpl context, ClassMetadata yapClass, int sourceID) {
 		process(context,sourceID, false);
 	}
 
-	public void processClassCollection(DefragContextImpl context) throws CorruptionException {
+	public void processClassCollection(DefragmentServicesImpl context) throws CorruptionException {
 		process(context,context.sourceClassCollectionID(), false);
 	}
 
-	public void processBTree(final DefragContextImpl context, final BTree btree) {
+	public void processBTree(final DefragmentServicesImpl context, final BTree btree) {
 		process(context,btree.getID(), false);
 		context.traverseAllIndexSlots(btree, new Visitor4() {
 			public void visit(Object obj) {
@@ -59,7 +59,7 @@ final class FirstPassCommand implements PassCommand {
 		});
 	}
 
-	public void flush(DefragContextImpl context) {
+	public void flush(DefragmentServicesImpl context) {
 		if(_ids==null) {
 			return;
 		}

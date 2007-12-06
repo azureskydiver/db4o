@@ -122,7 +122,7 @@ public class Defragment {
 			upgradeFile(config);
 		}
 		
-		DefragContextImpl context = new DefragContextImpl(config, listener);
+		DefragmentServicesImpl context = new DefragmentServicesImpl(config, listener);
 		int newClassCollectionID = 0;
 		int targetIdentityID = 0;
 		int targetUuidIndexID = 0;
@@ -134,7 +134,7 @@ public class Defragment {
 					.sourceClassCollectionID());
 			context.targetClassCollectionID(newClassCollectionID);
 			int sourceIdentityID = context
-					.databaseIdentityID(DefragContextImpl.SOURCEDB);
+					.databaseIdentityID(DefragmentServicesImpl.SOURCEDB);
 			targetIdentityID = context.mappedID(sourceIdentityID,0);
 			targetUuidIndexID = context
 					.mappedID(context.sourceUuidIndexID(), 0);
@@ -159,7 +159,7 @@ public class Defragment {
 		db.close();
 	}
 
-	private static void defragUnindexed(DefragContextImpl context)
+	private static void defragUnindexed(DefragmentServicesImpl context)
 			throws CorruptionException, IOException {
 		Iterator4 unindexedIDs = context.unindexedIDs();
 		while (unindexedIDs.moveNext()) {
@@ -187,24 +187,24 @@ public class Defragment {
 		}
 	}
 
-	private static void firstPass(DefragContextImpl context,
+	private static void firstPass(DefragmentServicesImpl context,
 			DefragmentConfig config) throws CorruptionException, IOException {
 		// System.out.println("FIRST");
 		pass(context, config, new FirstPassCommand());
 	}
 
-	private static void secondPass(final DefragContextImpl context,
+	private static void secondPass(final DefragmentServicesImpl context,
 			DefragmentConfig config) throws CorruptionException, IOException {
 		// System.out.println("SECOND");
 		pass(context, config, new SecondPassCommand(config.objectCommitFrequency()));
 	}
 
-	private static void pass(DefragContextImpl context,
+	private static void pass(DefragmentServicesImpl context,
 			DefragmentConfig config, PassCommand command)
 			throws CorruptionException, IOException {
 		command.processClassCollection(context);
 		StoredClass[] classes = context
-				.storedClasses(DefragContextImpl.SOURCEDB);
+				.storedClasses(DefragmentServicesImpl.SOURCEDB);
 		for (int classIdx = 0; classIdx < classes.length; classIdx++) {
 			ClassMetadata yapClass = (ClassMetadata) classes[classIdx];
 			if (!config.storedClassFilter().accept(yapClass)) {
@@ -231,7 +231,7 @@ public class Defragment {
 	// deletions appear in the source class index?!?
 	// reproducable with SelectiveCascadingDeleteTestCase and ObjectSetTestCase
 	// - investigate.
-	private static void processYapClass(final DefragContextImpl context,
+	private static void processYapClass(final DefragmentServicesImpl context,
 			final ClassMetadata curClass, final PassCommand command)
 			throws CorruptionException, IOException {
 		processClassIndex(context, curClass, command);
@@ -253,7 +253,7 @@ public class Defragment {
 	}
 
 	private static void processObjectsForYapClass(
-			final DefragContextImpl context, final ClassMetadata curClass,
+			final DefragmentServicesImpl context, final ClassMetadata curClass,
 			final PassCommand command) {
 		context.traverseAll(curClass, new Visitor4() {
 			public void visit(Object obj) {
@@ -271,7 +271,7 @@ public class Defragment {
 	}
 
 	private static void processYapClassAndFieldIndices(
-			final DefragContextImpl context, final ClassMetadata curClass,
+			final DefragmentServicesImpl context, final ClassMetadata curClass,
 			final PassCommand command) throws CorruptionException, IOException {
 		int sourceClassIndexID = 0;
 		int targetClassIndexID = 0;
@@ -283,7 +283,7 @@ public class Defragment {
 				targetClassIndexID);
 	}
 
-	private static void processClassIndex(final DefragContextImpl context,
+	private static void processClassIndex(final DefragmentServicesImpl context,
 			final ClassMetadata curClass, final PassCommand command)
 			throws CorruptionException, IOException {
 		if (curClass.hasClassIndex()) {

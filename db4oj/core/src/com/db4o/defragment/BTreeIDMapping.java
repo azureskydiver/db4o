@@ -103,7 +103,7 @@ public class BTreeIDMapping extends AbstractContextIDMapping {
 	}
 
 	public void open() {
-		_mappingDb = DefragContextImpl.freshYapFile(_fileName,1);
+		_mappingDb = DefragmentServicesImpl.freshYapFile(_fileName,1);
 		Indexable4 handler = new MappedIDPairHandler(_mappingDb);
 		_idTree = (_treeSpec==null ? new BTree(trans(), 0, handler) : new BTree(trans(), 0, handler, _treeSpec.nodeSize(), _treeSpec.cacheHeight()));
 	}

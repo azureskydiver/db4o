@@ -16,10 +16,10 @@ import com.db4o.internal.slots.*;
 public final class BufferPair implements SlotBuffer {
 	private Buffer _source;
 	private Buffer _target;
-	private DefragContext _mapping;
+	private DefragmentServices _mapping;
 	private Transaction _systemTrans;
 	
-	public BufferPair(Buffer source,DefragContext mapping,Transaction systemTrans) {
+	public BufferPair(Buffer source,DefragmentServices mapping,Transaction systemTrans) {
 		_source = source;
 		_mapping=mapping;
 		_target = new Buffer(source.length());
@@ -146,20 +146,20 @@ public final class BufferPair implements SlotBuffer {
 		return _systemTrans;
 	}
 
-	public DefragContext context() {
+	public DefragmentServices context() {
 		return _mapping;
 	}
 
-	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command) throws CorruptionException, IOException {
+	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command) throws CorruptionException, IOException {
 		processCopy(context, sourceID, command, false);
 	}
 
-	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException, IOException {
+	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException, IOException {
 		Buffer sourceReader = context.sourceBufferByID(sourceID);
 		processCopy(context, sourceID, command, registerAddressMapping, sourceReader);
 	}
 
-	public static void processCopy(DefragContext context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, Buffer sourceReader) throws CorruptionException, IOException {
+	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, Buffer sourceReader) throws CorruptionException, IOException {
 		int targetID=context.mappedID(sourceID);
 	
 		Slot targetSlot = context.allocateTargetSlot(sourceReader.length());
