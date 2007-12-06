@@ -78,9 +78,22 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		String testFileName = fileName(versionName); 
 		if(File4.exists(testFileName)){
 //		    System.out.println("Check database: " + testFileName);
-		    
-		    
+			
 		    investigateFileHeaderVersion(testFileName);
+		    
+// FIXME: Defragmenting here will not work, because some of the
+//		  old MarshallerFamily implementations don't implement 
+// 		  defrag. 
+		    
+//        Fix by fully implementing defrag in Typehandler versions. 		    
+		    
+//		    String backupFileName = Path4.getTempFileName();
+//		    
+//		    try{
+//		    	Defragment.defrag(testFileName, backupFileName);
+//		    } finally{
+//		    	File4.delete(backupFileName);
+//		    }
 
 		    checkDatabaseFile(testFileName);
 		    // Twice, to ensure everything is fine after opening, converting and closing.
