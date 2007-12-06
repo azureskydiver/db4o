@@ -36,7 +36,7 @@ public abstract class VariableLengthTypeHandler implements TypeHandler4 {
     public abstract Comparable4 prepareComparison(Object obj);
     public abstract int compareTo(Object obj);
     
-    public abstract void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
+    public abstract void defragment(DefragmentContext context);
     
     public ObjectContainerBase container(){
         return _container;

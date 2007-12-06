@@ -185,11 +185,11 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
 		readers.incrementIntSize();
 	}
 
-    public void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
-        if(! redirect){
-        	readers.incrementOffset(linkLength());
+    public void defragment(DefragmentContext context) {
+        if(!context.redirect()){
+        	context.readers().incrementOffset(linkLength());
         } else {
-        	mf._string.defrag(readers);
+        	context.marshallerFamily()._string.defrag(context.readers());
         }
     }
     

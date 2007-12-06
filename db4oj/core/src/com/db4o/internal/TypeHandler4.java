@@ -14,7 +14,7 @@ public interface TypeHandler4 extends Comparable4 {
 	
 	void deleteEmbedded(MarshallerFamily mf, StatefulBuffer buffer) throws Db4oIOException;
 	
-	void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect);
+	void defragment(DefragmentContext context);
 
 	Object read(ReadContext context);
 	

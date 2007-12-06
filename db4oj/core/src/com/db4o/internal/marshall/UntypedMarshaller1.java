@@ -60,7 +60,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         
         ClassMetadata yc = readers.context().yapClass(yapClassID);
         if(yc != null){
-            yc.defrag(_family, readers, false);
+            yc.defragment(new DefragmentContext(_family, readers, false));
         }
         
         readers.offset(linkOffSet);

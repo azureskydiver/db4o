@@ -145,9 +145,9 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     // redundant, only added to make Sun JDK 1.2's java happy :(
     public abstract int linkLength();
     
-    public final void defrag(MarshallerFamily mf, BufferPair readers, boolean redirect) {
+    public final void defragment(DefragmentContext context) {
     	int linkLength = linkLength();
-    	readers.incrementOffset(linkLength);
+    	context.readers().incrementOffset(linkLength);
     }
     
     public void defragIndexEntry(BufferPair readers) {
