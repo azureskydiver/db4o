@@ -3,6 +3,7 @@
 package com.db4o.internal.diagnostic;
 
 import com.db4o.diagnostic.*;
+import com.db4o.diagnostic.DefragmentRecommendation.DefragmentRecommendationReason;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.query.*;
@@ -58,6 +59,10 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     public Object deepClone(Object context) {
         return new DiagnosticProcessor(cloneListeners());
     }
+    
+	public void defragmentRecommended(DefragmentRecommendationReason reason) {
+		onDiagnostic(new DefragmentRecommendation(reason));
+	}
 
 	private Collection4 cloneListeners() {
 		return _listeners != null
@@ -105,4 +110,5 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     public void removeAllListeners() {
         _listeners = null;
     }
+
 }

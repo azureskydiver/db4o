@@ -2,7 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 /**
@@ -14,20 +13,6 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return false;
     }
     
-    public void deleteEmbedded(DeleteContext context) throws Db4oIOException {
-    	StatefulBuffer buffer = context.buffer();
-        int payLoadOffset = buffer.readInt();
-        if (payLoadOffset > 0) {
-            int linkOffset = buffer._offset;
-            buffer._offset = payLoadOffset;
-            int yapClassID = buffer.readInt();
-            ClassMetadata yc = buffer.getStream().classMetadataForId(yapClassID);
-            if(yc != null){
-                yc.delete(new DeleteContext(_family, buffer));
-            }
-            buffer._offset = linkOffset;
-        }
-    }
     
     public TypeHandler4 readArrayHandler(Transaction trans, Buffer[] reader) {
         

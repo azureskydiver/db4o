@@ -41,4 +41,9 @@ public class CascadeDeleteFalse extends AbstractDb4oTestCase {
     private void checkHelperCount (int count){
         Assert.areEqual(count, countOccurences(CascadeDeleteFalseHelper.class));
     }
+    
+    public static void main(String[] args) {
+    	new CascadeDeleteFalse().runSolo();
+	}
+    
 }

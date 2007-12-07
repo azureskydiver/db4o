@@ -13,8 +13,6 @@ public abstract class ArrayMarshaller {
     
     public MarshallerFamily _family;
     
-    public abstract void deleteEmbedded(ArrayHandler arrayHandler, StatefulBuffer reader) throws Db4oIOException;
-    
     public final TreeInt collectIDs(ArrayHandler arrayHandler, TreeInt tree, StatefulBuffer reader) throws Db4oIOException{
         Transaction trans = reader.getTransaction();
         return arrayHandler.collectIDs1(trans, tree, prepareIDReader(trans,reader));

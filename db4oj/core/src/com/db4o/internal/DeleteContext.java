@@ -2,30 +2,34 @@
 
 package com.db4o.internal;
 
-import com.db4o.internal.marshall.MarshallerFamily;
+import com.db4o.internal.slots.Slot;
+import com.db4o.marshall.Context;
+import com.db4o.marshall.ReadBuffer;
+
 
 /**
  * @exclude
  */
-public class DeleteContext {
+public interface DeleteContext extends Context, ReadBuffer{
+
+	Object getByID(int id);
 	
-	private final MarshallerFamily _family;
-
-	private final StatefulBuffer _buffer;
-
-	public DeleteContext(MarshallerFamily family, StatefulBuffer buffer){
-		_family = family;
-		_buffer = buffer;
-	}
-
-	public MarshallerFamily family() {
-		return _family;
-	}
-
-	public StatefulBuffer buffer() {
-		return _buffer;
-	}
+	public void cascadeDeleteDepth(int depth);
 	
-	
+	public int cascadeDeleteDepth();
 
+	void delete(ObjectReference ref, Object obj, int cascadeDeleteDepth);
+
+	boolean isLegacyHandlerVersion();
+
+	void incrementOffset(int length);
+	
+	void defragmentRecommended();
+
+	Slot readSlot();
+
+	int offset();
+
+	void seek(int offset);
+	
 }

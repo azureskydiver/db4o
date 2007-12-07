@@ -28,12 +28,9 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
     public ReflectClass classReflector(){
     	return container()._handlers.ICLASS_STRING;
     }
-
+    
     public void delete(DeleteContext context){
-    	Slot slot = context.buffer().readSlot();
-        if(slot.address() > 0  && ! context.family()._string.inlinedStrings()){
-        	context.buffer().getTransaction().slotFreeOnCommit(slot.address(), slot);
-        }
+    	context.readSlot();
     }
     
     byte getIdentifier() {

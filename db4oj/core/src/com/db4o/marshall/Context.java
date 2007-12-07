@@ -7,7 +7,7 @@ import com.db4o.internal.*;
 
 /**
  * common functionality for {@link ReadContext} and 
- * {@link WriteContext}
+ * {@link WriteContext} and {@link DeleteContext}  
  */
 public interface Context {
 	

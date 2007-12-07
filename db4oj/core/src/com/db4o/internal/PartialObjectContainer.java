@@ -1944,4 +1944,28 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     public ObjectContainerBase container(){
         return _this;
     }
+    
+	public void deleteByID(Transaction transaction, int id, int cascadeDeleteDepth) {
+		if(id <= 0){
+			return;
+		}
+        if (cascadeDeleteDepth <= 0) {
+        	return;
+        }
+        Object obj = getByID2(transaction, id);
+        if(obj == null){
+        	return;
+        }
+        cascadeDeleteDepth--;
+        ReflectClass claxx = reflector().forObject(obj);
+		if (claxx.isCollection()) {
+            cascadeDeleteDepth += reflector().collectionUpdateDepth(claxx) - 1;
+        }
+        ObjectReference ref = transaction.referenceForId(id);
+        if (ref == null) {
+        	return;
+        }
+        delete2(transaction, ref, obj,cascadeDeleteDepth, false);
+	}
+
 }

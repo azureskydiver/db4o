@@ -19,6 +19,11 @@ public class ArrayHandler0 extends ArrayHandler {
         super(template);
     }
     
+    public void delete(DeleteContext context) throws Db4oIOException {
+    	context.readSlot();
+    	context.defragmentRecommended();
+    }
+    
     public void readCandidates(int handlerVersion, Buffer reader, QCandidates candidates) throws Db4oIOException {
         Transaction transaction = candidates.transaction();
         Buffer arrayBuffer = reader.readEmbeddedObject(transaction);

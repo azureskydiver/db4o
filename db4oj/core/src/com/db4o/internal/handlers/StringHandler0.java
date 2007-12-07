@@ -22,4 +22,10 @@ public class StringHandler0 extends StringHandler {
         }
         return readString(context, buffer);
     }
+    
+    public void delete(DeleteContext context){
+    	super.delete(context);
+    	context.defragmentRecommended();
+    }
+
 }

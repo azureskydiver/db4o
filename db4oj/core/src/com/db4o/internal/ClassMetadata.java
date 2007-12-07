@@ -545,39 +545,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
-        if (context.buffer().cascadeDeletes() > 0) {
-            int id = context.buffer().readInt();
-            if (id > 0) {
-                deleteEmbedded1(context, id);
-            }
-        } else {
-        	context.buffer().incrementOffset(linkLength());
-        }
-    }
-    
-    /** @param context TODO*/
-    public void deleteEmbedded1(DeleteContext context, int a_id) throws Db4oIOException {
-    	StatefulBuffer buffer = context.buffer();
-        if (buffer.cascadeDeletes() > 0) {
-        	
-        	ObjectContainerBase stream = buffer.getStream();
-            
-            // short-term reference to prevent WeakReference-gc to hit
-            Transaction transaction = buffer.getTransaction();
-            Object obj = stream.getByID2(transaction, a_id);
-
-            int cascade = buffer.cascadeDeletes() - 1;
-            if (obj != null) {
-                if (isCollection(obj)) {
-                    cascade += reflector().collectionUpdateDepth(reflector().forObject(obj)) - 1;
-                }
-            }
-
-            ObjectReference yo = transaction.referenceForId(a_id);
-            if (yo != null) {
-                buffer.getStream().delete2(transaction, yo, obj,cascade, false);
-            }
-        }
+    	((ObjectContainerBase)context.objectContainer()).deleteByID(
+    			context.transaction(), context.readInt(), context.cascadeDeleteDepth());
+    	
     }
 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
