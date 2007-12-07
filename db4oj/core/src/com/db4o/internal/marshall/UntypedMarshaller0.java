@@ -3,7 +3,6 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 
@@ -11,22 +10,6 @@ import com.db4o.internal.*;
  * @exclude
  */
 public class UntypedMarshaller0 extends UntypedMarshaller {
-    
-    public void deleteEmbedded(DeleteContext context) throws Db4oIOException {
-    	StatefulBuffer parentBuffer = context.buffer();
-        int objectID = parentBuffer.readInt();
-        if (objectID > 0) {
-            StatefulBuffer reader =
-                parentBuffer.getStream().readWriterByID(parentBuffer.getTransaction(), objectID);
-            if (reader != null) {
-                reader.setCascadeDeletes(parentBuffer.cascadeDeletes());
-                ObjectHeader oh = new ObjectHeader(reader);
-                if(oh.classMetadata() != null){
-                    oh.classMetadata().deleteEmbedded1(context, objectID);
-                }
-            }
-        }
-    }
     
     public boolean useNormalClassRead(){
         return true;

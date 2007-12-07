@@ -2,7 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 /**
@@ -11,8 +10,6 @@ import com.db4o.internal.*;
 public abstract class UntypedMarshaller {
     
     MarshallerFamily _family;
-    
-    public abstract void deleteEmbedded(DeleteContext context) throws Db4oIOException;
     
     public abstract TypeHandler4 readArrayHandler(Transaction a_trans, Buffer[] a_bytes);
 

@@ -417,7 +417,7 @@ public class FieldMetadata implements StoredField {
             return;
         }
         
-        DeleteContext context = new DeleteContext(mf, buffer);
+        DeleteContext context = new DeleteContextImpl(mf, buffer);
         
         try {
 			removeIndexEntry(mf, buffer);

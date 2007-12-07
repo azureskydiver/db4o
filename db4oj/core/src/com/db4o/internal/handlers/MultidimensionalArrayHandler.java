@@ -36,8 +36,8 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         return new ArrayIterator4(flat);
 	}
 
-    public final int elementCount(Transaction a_trans, Buffer a_bytes) {
-        return elementCount(readDimensions(a_trans, a_bytes, ReflectClassByRef.IGNORED));
+    public final int elementCount(Transaction trans, ReadBuffer buffer) {
+        return elementCount(readDimensions(trans, buffer, ReflectClassByRef.IGNORED));
     }
 
     protected static final int elementCount(int[] a_dim) {

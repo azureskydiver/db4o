@@ -129,4 +129,8 @@ public class MarshallerFamily {
         return result;
     }
     
+    public boolean isLegacyVersion(){
+    	return this == allVersions[0];
+    }
+    
 }

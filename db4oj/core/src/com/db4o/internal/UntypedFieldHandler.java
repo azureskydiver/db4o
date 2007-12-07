@@ -27,7 +27,23 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 	}
     
 	public void delete(DeleteContext context) throws Db4oIOException {
-		context.family()._untyped.deleteEmbedded(context);
+        int payLoadOffset = context.readInt();
+        if(context.isLegacyHandlerVersion()){
+        	context.defragmentRecommended();
+        	return;
+        }
+        if (payLoadOffset <= 0) {
+        	return;
+        }
+        int linkOffset = context.offset();
+        context.seek(payLoadOffset);
+        int classMetadataID = context.readInt();
+        ClassMetadata classMetadata = 
+        	((ObjectContainerBase)context.objectContainer()).classMetadataForId(classMetadataID);
+        if(classMetadata != null){
+            classMetadata.delete(context);
+        }
+        context.seek(linkOffset);
 	}
 	
 	public int getID() {

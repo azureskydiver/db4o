@@ -125,8 +125,28 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 		return tree;
 	}
     
-    public final void delete(DeleteContext context) throws Db4oIOException {
-        context.family()._array.deleteEmbedded(this, context.buffer());
+    public void delete(DeleteContext context) throws Db4oIOException {
+        int address = context.readInt();
+        context.readInt();  // length, not needed
+        if (address <= 0) {
+            return;
+        }
+        
+        int linkOffSet = context.offset(); 
+        
+        if (context.cascadeDeleteDepth() > 0 && _handler instanceof ClassMetadata) {
+            context.seek(address);
+            if (Deploy.debug) {
+            	Debug.readBegin(context, Const4.YAPARRAY);
+            }
+            for (int i = elementCount(context.transaction(), context); i > 0; i--) {
+				_handler.delete(context);
+            }
+        }
+        
+        if(linkOffSet > 0){
+        	context.seek(linkOffSet);
+        }
     }
 
     
@@ -149,7 +169,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     }
 
     /** @param trans */
-    public int elementCount(Transaction trans, SlotBuffer reader) {
+    public int elementCount(Transaction trans, ReadBuffer reader) {
         int typeOrLength = reader.readInt();
         if (typeOrLength >= 0) {
             return typeOrLength;

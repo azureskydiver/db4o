@@ -48,54 +48,10 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
-        if(context.family()._primitive.useNormalClassRead()){
-            super.delete(context);
-            return;
-        }
-        
-        // Do nothing here, we should be in the payload area
-        // no action to be taken.
-    }
-
-    
-    public void deleteEmbedded1(DeleteContext context, int a_id) throws Db4oIOException  {
-    	
-    	StatefulBuffer buffer = context.buffer();
-        
-        if(_handler instanceof ArrayHandler){
-            ArrayHandler ya = (ArrayHandler)_handler;
-            
-            // TODO: the following checks, whether the array stores
-            // primitives. There is one case that is not covered here:
-            // If a primitive array is stored to an untyped array or
-            // to an Object variable, they would need to be deleted 
-            // and freed also. However, if they are untyped, every 
-            // single one would have to be read an checked and this
-            // would be extremely slow.
-            
-            // Solution: Store information, whether an object is 
-            // primitive in our pointers, in the highest bit of the
-            // length int.
-            
-            if(ya._usePrimitiveClassReflector){
-                ya.deletePrimitiveEmbedded(buffer, this);
-                buffer.slotDelete();
-                return;
-            }
-        }
-        
-       if(_handler instanceof UntypedFieldHandler){
-            // Any-In-Any: Ignore delete 
-            buffer.incrementOffset(linkLength());
-        }else{
-            _handler.delete(context);
-        }
-		
-		// TODO: Was this freeing call necessary? 
-		//   free(a_bytes.getTransaction(), a_id, a_bytes.getAddress(), a_bytes.getLength());
-		
-		free(buffer, a_id);
-			
+    	if(context.isLegacyHandlerVersion()){
+    		context.readInt();
+    		context.defragmentRecommended();
+    	}
     }
 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
