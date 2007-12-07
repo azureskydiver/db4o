@@ -1423,8 +1423,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             i_nameBytes = asBytes(i_name);
             setStateDirty();
             write(_container.systemTransaction());
+            ReflectClass oldReflector = _reflector;
             _reflector = container().reflector().forName(newName);
-            container().classCollection().refreshClassCache(this);
+            container().classCollection().refreshClassCache(this, oldReflector);
             refresh();
             _state = tempState;
         }else{
