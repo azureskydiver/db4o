@@ -58,9 +58,6 @@ public final class StatefulBuffer extends Buffer {
         i_id = pointer._id;
     }
 
-    public int cascadeDeletes() {
-        return i_cascadeDelete;
-    }
 
     public void debugCheckBytes() {
         if (Debug.xbytes) {
@@ -173,10 +170,6 @@ public final class StatefulBuffer extends Buffer {
 
     public void address(int a_address) {
         i_address = a_address;
-    }
-
-    public void setCascadeDeletes(int depth) {
-        i_cascadeDelete = depth;
     }
 
     public void setID(int a_id) {
@@ -352,5 +345,13 @@ public final class StatefulBuffer extends Buffer {
 	public Pointer4 pointer(){
 	    return new Pointer4(i_id, slot());
 	}
+	
+    public int cascadeDeletes() {
+        return i_cascadeDelete;
+    }
+    
+    public void setCascadeDeletes(int depth) {
+        i_cascadeDelete = depth;
+    }
 
 }

@@ -551,8 +551,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
+        Config4Class config = configOrAncestorConfig();
         try{
-	        Config4Class config = configOrAncestorConfig();
 	        if (config != null && (config.cascadeOnDelete() == TernaryBool.YES)) {
 	            int preserveCascade = a_bytes.cascadeDeletes();
 	            if (classReflector().isCollection()) {
@@ -573,10 +573,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }catch(Exception e){
             
             // This a catch for changed class hierarchies.
-            // It's quite ugly to catch all here but it does
+            // It's very ugly to catch all here but it does
             // help to heal migration from earlier db4o
             // versions.
-            
+        	
+        	DiagnosticProcessor dp = container()._handlers._diagnosticProcessor;
+        	if(dp.enabled()){
+        		dp.deletionFailed();
+        	}
+        	
             if(Debug.atHome){
                 e.printStackTrace();
             }

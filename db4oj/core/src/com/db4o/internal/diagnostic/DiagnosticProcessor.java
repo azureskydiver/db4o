@@ -60,6 +60,10 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
         return new DiagnosticProcessor(cloneListeners());
     }
     
+	public void deletionFailed() {
+		onDiagnostic(new DeletionFailed());
+	}
+    
 	public void defragmentRecommended(DefragmentRecommendationReason reason) {
 		onDiagnostic(new DefragmentRecommendation(reason));
 	}
@@ -110,5 +114,6 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
     public void removeAllListeners() {
         _listeners = null;
     }
+
 
 }

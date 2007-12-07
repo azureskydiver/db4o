@@ -2,7 +2,6 @@
 
 package com.db4o.internal.marshall;
 
-import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 
@@ -10,61 +9,18 @@ import com.db4o.internal.activation.*;
 /**
  * @exclude
  */
-public abstract class AbstractReadContext implements InternalReadContext {
-    
-    protected final Transaction _transaction;
-    
-    protected Buffer _buffer;
+public abstract class AbstractReadContext extends BufferContext implements InternalReadContext {
     
     protected ActivationDepth _activationDepth = UnknownActivationDepth.INSTANCE;
     
     protected AbstractReadContext(Transaction transaction){
-        _transaction = transaction;
+    	super(transaction);
     }
     
     protected AbstractReadContext(Transaction transaction, Buffer buffer){
-        _transaction = transaction;
-        _buffer = buffer;
+    	super(transaction, buffer);
     }
     
-    public Buffer buffer(Buffer buffer) {
-        Buffer temp = _buffer;
-        _buffer = buffer;
-        return temp;
-    }
-    
-    public Buffer buffer() {
-        return _buffer;
-    }
-
-    public ObjectContainerBase container(){
-        return _transaction.container();
-    }
-
-    public ObjectContainer objectContainer() {
-        return (ObjectContainer) container();
-    }
-
-    public Transaction transaction() {
-        return _transaction;
-    }
-
-    public byte readByte() {
-        return _buffer.readByte();
-    }
-
-    public void readBytes(byte[] bytes) {
-        _buffer.readBytes(bytes);
-    }
-
-    public int readInt() {
-        return _buffer.readInt();
-    }
-
-    public long readLong() {
-        return _buffer.readLong();
-    }
-
     public Object read(TypeHandler4 handlerType) {
         TypeHandler4 handler = correctHandlerVersion(handlerType);
         if(! isIndirected(handler)){
@@ -146,14 +102,6 @@ public abstract class AbstractReadContext implements InternalReadContext {
         _activationDepth = depth;
     }
     
-    public int offset() {
-        return _buffer.offset();
-    }
-
-    public void seek(int offset) {
-        _buffer.seek(offset);
-    }
-
     public boolean isIndirected(TypeHandler4 handler) {
         if(handlerVersion() == 0){
             return false;
@@ -164,19 +112,5 @@ public abstract class AbstractReadContext implements InternalReadContext {
     private HandlerRegistry handlerRegistry(){
         return container().handlers();
     }
-
-    public boolean oldHandlerVersion() {
-        return handlerVersion() != MarshallingContext.HANDLER_VERSION;
-    }
-
-    public TypeHandler4 correctHandlerVersion(TypeHandler4 handler){
-        if(! oldHandlerVersion()){
-            return handler;
-        }
-        return container().handlers().correctHandlerVersion(handler, handlerVersion());
-    }
-    
-    public abstract int handlerVersion();
-
 
 }

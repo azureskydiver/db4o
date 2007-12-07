@@ -2,72 +2,44 @@
 
 package com.db4o.internal;
 
-import com.db4o.ObjectContainer;
-import com.db4o.diagnostic.DefragmentRecommendation.DefragmentRecommendationReason;
-import com.db4o.internal.diagnostic.DiagnosticProcessor;
-import com.db4o.internal.marshall.MarshallerFamily;
-import com.db4o.internal.slots.Slot;
+import com.db4o.diagnostic.DefragmentRecommendation.*;
+import com.db4o.internal.diagnostic.*;
+import com.db4o.internal.slots.*;
 
 /**
  * @exclude
  */
-public class DeleteContextImpl implements DeleteContext {
+public class DeleteContextImpl extends BufferContext implements DeleteContext {
 	
-	private final MarshallerFamily _family;
+	private final int _handlerVersion;
 
-	private final StatefulBuffer _buffer;
-
-	public DeleteContextImpl(MarshallerFamily family, StatefulBuffer buffer){
-		_family = family;
-		_buffer = buffer;
-	}
-
-	public MarshallerFamily family() {
-		return _family;
-	}
-
-	public StatefulBuffer buffer() {
-		return _buffer;
-	}
-
-	public Transaction transaction() {
-		return _buffer.getTransaction();
+	public DeleteContextImpl(StatefulBuffer buffer, int handlerVersion){
+		super(buffer.getTransaction(), buffer);
+		_handlerVersion = handlerVersion;
 	}
 
 	public Object getByID(int id) {
 		return container().getByID2(transaction(), id);
 	}
-	
-	private ObjectContainerBase container(){
-		return _buffer.getStream();
-	}
-
-	public ObjectContainer objectContainer() {
-		return (ObjectContainer) container();
-	}
 
 	public void cascadeDeleteDepth(int depth) {
-		_buffer.setCascadeDeletes(depth);
+		((StatefulBuffer)_buffer).setCascadeDeletes(depth);
 	}
 
 	public int cascadeDeleteDepth() {
-		return _buffer.cascadeDeletes();
+		return ((StatefulBuffer)_buffer).cascadeDeletes();
 	}
 
 	public void delete(ObjectReference ref, Object obj, int cascadeDeleteDepth) {
 		container().delete2(transaction(), ref, obj,cascadeDeleteDepth, false);
 	}
 
-	public int readInt() {
-		return _buffer.readInt();
-	}
-
 	public boolean isLegacyHandlerVersion() {
-		return _family.isLegacyVersion();
+		return handlerVersion() == 0;
 	}
 
 	public void incrementOffset(int length) {
-		_buffer.incrementOffset(length);
+		seek(offset() + length);
 	}
 
 	public void defragmentRecommended() {
@@ -81,24 +53,8 @@ public class DeleteContextImpl implements DeleteContext {
 		return _buffer.readSlot();
 	}
 
-	public int offset() {
-		return _buffer.offset();
-	}
-
-	public void seek(int offset) {
-		_buffer.seek(offset);
-	}
-
-	public byte readByte() {
-		return _buffer.readByte();
-	}
-
-	public void readBytes(byte[] bytes) {
-		_buffer.readBytes(bytes);
-	}
-
-	public long readLong() {
-		return _buffer.readLong();
+	public int handlerVersion() {
+		return _handlerVersion;
 	}
 
 }
