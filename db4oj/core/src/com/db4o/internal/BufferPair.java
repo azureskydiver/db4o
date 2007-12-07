@@ -65,9 +65,8 @@ public final class BufferPair implements SlotBuffer {
 		// The following would be non-redudant. 
 		// return copy(false, false);
 		
-		int mapped=_mapping.mappedID(_source.readInt(),false);
-		_target.writeInt(mapped);
-		return mapped;
+		int id = _source.readInt();
+		return writeMappedID(id);
 	}
 
 	public int copyID(boolean flipNegative,boolean lenient) {
@@ -223,4 +222,10 @@ public final class BufferPair implements SlotBuffer {
         offset(newPayLoadOffset);
         return linkOffSet;
     }
+
+    public int writeMappedID(int originalID) {
+		int mapped=_mapping.mappedID(originalID,false);
+		_target.writeInt(mapped);
+		return mapped;
+	}
 }

@@ -53,6 +53,8 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	private DefragmentListener _listener;
 	private Queue4 _unindexed=new NonblockingQueue();
 	private final Hashtable4 _hasFieldIndexCache = new Hashtable4();
+
+	private DefragmentConfig _defragConfig;
 	
 
 	public DefragmentServicesImpl(DefragmentConfig defragConfig,DefragmentListener listener) {
@@ -66,6 +68,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		_targetDb = freshYapFile(defragConfig);
 		_mapping=defragConfig.mapping();
 		_mapping.open();
+		_defragConfig = defragConfig;
 	}
 	
 	static LocalObjectContainer freshYapFile(String fileName,int blockSize) {
@@ -329,6 +332,10 @@ public class DefragmentServicesImpl implements DefragmentServices {
 
 	public int sourceAddressByID(int sourceID) {
 		return readPointer(SOURCEDB, sourceID).address();
+	}
+
+	public boolean accept(StoredClass klass) {
+		return this._defragConfig.storedClassFilter().accept(klass);
 	}
 	
 }

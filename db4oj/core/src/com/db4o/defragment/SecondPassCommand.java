@@ -58,12 +58,50 @@ final class SecondPassCommand implements PassCommand {
 		},registerAddresses, sourceBuffer);
 	}
 
-	public void processClassCollection(DefragmentServicesImpl context) throws CorruptionException, IOException {
+	public void processClassCollection(final DefragmentServicesImpl context) throws CorruptionException, IOException {
 		BufferPair.processCopy(context, context.sourceClassCollectionID(), new SlotCopyHandler() {
-			public void processCopy(BufferPair readers) {
-				ClassMetadataRepository.defrag(readers);
-			}
-		});
+				public void processCopy(BufferPair readers) {
+					if (Deploy.debug) {
+					    readers.readBegin(Const4.YAPCLASSCOLLECTION);
+					}
+					
+					int acceptedClasses = 0;
+					int numClassesOffset = readers.target().offset();
+					acceptedClasses = copyAcceptedClasses(readers, acceptedClasses);
+					writeIntAt(readers.target(), numClassesOffset, acceptedClasses);
+					
+					if (Deploy.debug) {
+					    readers.readEnd();
+					}
+				}
+
+				private int copyAcceptedClasses(BufferPair readers,
+						int acceptedClasses) {
+					int numClasses=readers.readInt();
+					for(int classIdx=0;classIdx<numClasses;classIdx++) {
+						int classId = readers.source().readInt();
+						if (! accept(classId)) {
+							continue;
+						}
+						++acceptedClasses;
+						readers.writeMappedID(classId);
+					}
+					return acceptedClasses;
+				}
+
+				private void writeIntAt(Buffer target, int offset,
+						int value) {
+					int currentOffset = target.offset();
+					target.seek(offset);
+					target.writeInt(value);
+					target.seek(currentOffset);
+					
+				}
+
+				private boolean accept(int classId) {
+					return context.accept(context.yapClass(classId));
+				}
+			});
 	}
 
 	public void processBTree(final DefragmentServicesImpl context, BTree btree) throws CorruptionException, IOException {

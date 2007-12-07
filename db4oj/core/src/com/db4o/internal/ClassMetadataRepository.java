@@ -101,19 +101,6 @@ public final class ClassMetadataRepository extends PersistentBase {
         return ret;
     }
 
-	public static void defrag(BufferPair readers) {
-        if (Deploy.debug) {
-            readers.readBegin(Const4.YAPCLASSCOLLECTION);
-        }
-		int numClasses=readers.readInt();
-		for(int classIdx=0;classIdx<numClasses;classIdx++) {
-			readers.copyID();
-		}
-        if (Deploy.debug) {
-            readers.readEnd();
-        }
-	}
-
 	private void ensureAllClassesRead() {
 		boolean allClassesRead=false;
     	while(!allClassesRead) {
@@ -472,14 +459,17 @@ public final class ClassMetadataRepository extends PersistentBase {
 		if (_classMetadataByID.get(clazz.getID()) == null) {
 		    _classes.add(clazz);
 			_classMetadataByID.put(clazz.getID(), clazz);
-		    refreshClassCache(clazz);
+		    refreshClassCache(clazz, null);
 		}
 	}
 
-	public void refreshClassCache(ClassMetadata clazz) {
+	public void refreshClassCache(ClassMetadata clazz, ReflectClass oldReflector) {
 		if(clazz.stateUnread()){
 		    _classMetadataByBytes.put(clazz.readName(_systemTransaction), clazz);
 		}else{
+			if(oldReflector != null){
+				_classMetadataByClass.remove(oldReflector);
+			}	
 		    _classMetadataByClass.put(clazz.classReflector(), clazz);
 		}
 	}
