@@ -417,7 +417,7 @@ public class FieldMetadata implements StoredField {
             return;
         }
         
-        DeleteContext context = new DeleteContextImpl(mf, buffer);
+        DeleteContextImpl context = new DeleteContextImpl(buffer, mf.handlerVersion());
         
         try {
 			removeIndexEntry(mf, buffer);
@@ -427,23 +427,24 @@ public class FieldMetadata implements StoredField {
 			}
 			if ((_config != null && _config.cascadeOnDelete().definiteYes())
 					|| dotnetValueType) {
-				int preserveCascade = buffer.cascadeDeletes();
-				buffer.setCascadeDeletes(1);
-				_handler.delete(context);
-				buffer.setCascadeDeletes(preserveCascade);
+				deleteWithCascadeDepth(context, 1);
 			} else if (_config != null
 					&& _config.cascadeOnDelete().definiteNo()) {
-				int preserveCascade = buffer.cascadeDeletes();
-				buffer.setCascadeDeletes(0);
-				_handler.delete(context);
-				buffer.setCascadeDeletes(preserveCascade);
+				deleteWithCascadeDepth(context, 0);
 			} else {
-				_handler.delete(context);
+				context.correctHandlerVersion(_handler).delete(context);
 			}
 		} catch (CorruptionException exc) {
 			throw new FieldIndexException(exc, this);
 		}
     }
+
+	private void deleteWithCascadeDepth(DeleteContextImpl context, int depth) {
+		int preservedCascadeDepth = context.cascadeDeleteDepth();
+		context.cascadeDeleteDepth(depth);
+		context.correctHandlerVersion(_handler).delete(context);
+		context.cascadeDeleteDepth(preservedCascadeDepth);
+	}
 
     private final void removeIndexEntry(MarshallerFamily mf, StatefulBuffer a_bytes) throws CorruptionException, Db4oIOException {
         if(! hasIndex()){

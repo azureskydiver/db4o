@@ -24,5 +24,4 @@ public class ObjectHeaderAttributes implements FieldListInfo {
         return _nullBitMap.isTrue(fieldIndex);
     }
 
-
 }
