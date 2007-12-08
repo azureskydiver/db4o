@@ -3,10 +3,17 @@
 package com.db4o.marshall;
 
 /**
- * a buffer interface with methods to read.
+ * a buffer interface with methods to read and to position 
+ * the read pointer in the buffer.
  */
 public interface ReadBuffer {
     
+	/**
+	 * returns the current offset in the buffer
+	 * @return the offset
+	 */
+    int offset();
+
     /**
      * reads a byte from the buffer.
      * @return the byte
@@ -33,5 +40,12 @@ public interface ReadBuffer {
      * @return the long
      */
     long readLong();
+    
+    /**
+     * positions the read pointer at the specified position
+     * @param offset the desired position in the buffer
+     */
+	void seek(int offset);
+
 
 }

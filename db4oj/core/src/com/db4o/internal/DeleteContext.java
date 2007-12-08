@@ -12,24 +12,14 @@ import com.db4o.marshall.ReadBuffer;
  */
 public interface DeleteContext extends Context, ReadBuffer{
 
-	Object getByID(int id);
-	
 	public void cascadeDeleteDepth(int depth);
 	
 	public int cascadeDeleteDepth();
 
-	void delete(ObjectReference ref, Object obj, int cascadeDeleteDepth);
-
 	boolean isLegacyHandlerVersion();
 
-	void incrementOffset(int length);
-	
 	void defragmentRecommended();
 
 	Slot readSlot();
-
-	int offset();
-
-	void seek(int offset);
 	
 }
