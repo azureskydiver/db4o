@@ -86,5 +86,13 @@ public abstract class MockMarshallingContext {
     protected ObjectContainerBase container() {
         return ((InternalObjectContainer) _objectContainer).container();
     }
+    
+	public int offset() {
+		return _current.offset();
+	}
+
+	public void seek(int offset) {
+		_current.seek(offset);
+	}
 
 }

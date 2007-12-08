@@ -4,11 +4,12 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.internal.marshall.*;
+import com.db4o.marshall.*;
 
 /**
  * @exclude
  */
-public abstract class BufferContext {
+public abstract class BufferContext implements ReadBuffer{
 	
 	protected final Transaction _transaction;
 

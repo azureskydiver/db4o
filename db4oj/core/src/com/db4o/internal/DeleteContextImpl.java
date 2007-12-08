@@ -18,10 +18,6 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
 		_handlerVersion = handlerVersion;
 	}
 
-	public Object getByID(int id) {
-		return container().getByID2(transaction(), id);
-	}
-
 	public void cascadeDeleteDepth(int depth) {
 		((StatefulBuffer)_buffer).setCascadeDeletes(depth);
 	}
@@ -30,16 +26,8 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
 		return ((StatefulBuffer)_buffer).cascadeDeletes();
 	}
 
-	public void delete(ObjectReference ref, Object obj, int cascadeDeleteDepth) {
-		container().delete2(transaction(), ref, obj,cascadeDeleteDepth, false);
-	}
-
 	public boolean isLegacyHandlerVersion() {
 		return handlerVersion() == 0;
-	}
-
-	public void incrementOffset(int length) {
-		seek(offset() + length);
 	}
 
 	public void defragmentRecommended() {
