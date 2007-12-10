@@ -251,6 +251,8 @@ public interface ObjectClass {
      * This method will be ignored if the database file already contains meta
      * information for clazz.
      * @param clazz class name, Class object, or example object.<br><br>
+     * @deprecated use {@link Configuration#addAlias(Alias)} instead. It 
+     * provides richer functionality in a way that is easier to use. 
      */
     public void readAs(Object clazz);
 
