@@ -25,7 +25,7 @@ namespace ObjectActivationSample
             
             for (int i = 0; i < 5; i++)
             {
-                Console.WriteLine("\r\nActivation Depth: {0}\r\n", i);
+                Console.WriteLine("\r\nActivation Depth: {0}", i);
                 ShowResultsAtActivationLevel(i, configuration);
                 Console.WriteLine("{0}\r\n", new String('-', 80));
             }
@@ -40,7 +40,7 @@ namespace ObjectActivationSample
 
                 IQuery query = QueryLeaf(db);
                 object obj = query.Execute().Next();
-                Console.WriteLine("Activation count: {0}\r\n{1}", activationCount, obj);
+                Console.WriteLine("Activation Count: {0}\r\n\r\n{1}", activationCount, obj);
             }
         }
 
