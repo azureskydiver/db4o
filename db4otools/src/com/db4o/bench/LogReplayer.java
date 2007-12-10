@@ -29,12 +29,15 @@ public class LogReplayer {
 			while ( (line = reader.readLine()) != null ) {
 				replayLine(line);
 			}
+			reader.close();
 		} catch (FileNotFoundException fne) {
 			// TODO Auto-generated catch block
 			fne.printStackTrace();
 		} catch (IOException ioe) {
 			// TODO Auto-generated catch block
 			ioe.printStackTrace();
+		} finally {
+			_io.close();
 		}
 	}
 
@@ -50,6 +53,7 @@ public class LogReplayer {
 		}
 		else {
 			// TODO: unknown command. how to react??
+			System.err.println("Unknown command in log: " + line);
 		}
 		
 	}
