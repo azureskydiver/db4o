@@ -26,10 +26,6 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
 		return ((StatefulBuffer)_buffer).cascadeDeletes();
 	}
 
-	public boolean isLegacyHandlerVersion() {
-		return handlerVersion() == 0;
-	}
-
 	public void defragmentRecommended() {
         DiagnosticProcessor dp = container()._handlers._diagnosticProcessor;
         if(dp.enabled()){

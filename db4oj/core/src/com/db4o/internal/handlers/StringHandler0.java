@@ -2,6 +2,7 @@
 
 package com.db4o.internal.handlers;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
@@ -26,6 +27,10 @@ public class StringHandler0 extends StringHandler {
     public void delete(DeleteContext context){
     	super.delete(context);
     	context.defragmentRecommended();
+    }
+    
+    public void defragment(DefragmentContext context) {
+    	throw new NotImplementedException();
     }
 
 }

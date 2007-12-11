@@ -3,29 +3,25 @@
 package com.db4o.internal;
 
 import com.db4o.internal.mapping.*;
-import com.db4o.internal.marshall.*;
 
 /**
  * @exclude
  */
 public class DefragmentContextImpl extends BufferContext implements DefragmentContext{
 	
-	private MarshallerFamily _mf;
-	
 	boolean _redirect;
 	
+	private final int _handlerVersion;
+
+	
 	public DefragmentContextImpl(DefragmentContext context, boolean redirect) {
-		this(((DefragmentContextImpl)context)._mf, ((DefragmentContextImpl)context)._buffer, redirect);
+		this(((DefragmentContextImpl)context).handlerVersion(), ((DefragmentContextImpl)context)._buffer, redirect);
 	}
 	
-	public DefragmentContextImpl(MarshallerFamily mf, Buffer readers, boolean redirect) {
+	public DefragmentContextImpl(int handlerVersion, Buffer readers, boolean redirect) {
 		super(((BufferPair)readers).services().systemTrans(), readers);
-		_mf= mf;
+		_handlerVersion = handlerVersion;
 		_redirect = redirect;
-	}
-	
-	public MarshallerFamily marshallerFamily() {
-		return _mf;
 	}
 	
 	private BufferPair buffers() {
@@ -77,7 +73,7 @@ public class DefragmentContextImpl extends BufferContext implements DefragmentCo
 	}
 
 	public int handlerVersion() {
-		return 0;
-	}	
+		return _handlerVersion;
+	}
 
 }

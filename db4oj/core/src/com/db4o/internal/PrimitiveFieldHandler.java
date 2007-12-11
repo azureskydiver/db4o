@@ -146,10 +146,9 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     public void defragment(DefragmentContext context) {
-        if(context.marshallerFamily()._primitive.useNormalClassRead()){
+        if(context.isLegacyHandlerVersion()){
             super.defragment(context);
-        }
-        else {
+        } else {
             _handler.defragment(new DefragmentContextImpl(context, false));
         }
     }

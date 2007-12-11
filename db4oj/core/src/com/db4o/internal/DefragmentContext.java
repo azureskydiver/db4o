@@ -3,13 +3,10 @@
 package com.db4o.internal;
 
 import com.db4o.internal.mapping.*;
-import com.db4o.internal.marshall.MarshallerFamily;
 
 public interface DefragmentContext {
 	
-	public MarshallerFamily marshallerFamily();
-	
-	// public BufferPair readers();
+	boolean isLegacyHandlerVersion();
 	
 	public boolean redirect();
 
