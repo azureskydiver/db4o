@@ -3,7 +3,6 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 
 
 class ArrayMarshaller1 extends ArrayMarshaller{
@@ -12,21 +11,6 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         reader._offset = reader.readInt();
         return reader;
     }
-    
-    public void defragIDs(ArrayHandler arrayHandler,DefragmentContext context) {
-    	int offset= preparePayloadRead(context);
-        arrayHandler.defrag1(new DefragmentContextImpl(context, true));
-        context.seek(offset);
-    }
-    
-    private int preparePayloadRead(DefragmentContext context) {
-        int newPayLoadOffset = context.readInt();
-        context.readInt();  // skip length, not needed
-        int linkOffSet = context.offset();
-        context.seek(newPayLoadOffset);
-        return linkOffSet;
-    }
-
     
     
 }

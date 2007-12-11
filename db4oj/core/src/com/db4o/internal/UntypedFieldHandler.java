@@ -84,10 +84,21 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
     }
     
     public void defragment(DefragmentContext context) {
-        if(context.marshallerFamily()._untyped.useNormalClassRead()){
-            super.defragment(context);
+        int payLoadOffSet = context.readInt();
+        if(payLoadOffSet == 0){
+            return;
         }
-    	context.marshallerFamily()._untyped.defrag(context);
+        int linkOffSet = context.offset();
+        context.seek(payLoadOffSet);
+        
+        int classMetadataID = context.copyIDAndRetrieveMapping().orig();
+        
+        ClassMetadata classMetadata = context.services().yapClass(classMetadataID);
+        if(classMetadata != null){
+            classMetadata.defragment(new DefragmentContextImpl(context, false));
+        }
+        
+        context.seek(linkOffSet);
     }
     
     private boolean isArray(TypeHandler4 handler){

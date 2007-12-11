@@ -398,13 +398,28 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         return false;
     }
 
-    public final void defragment(DefragmentContext context) {
+    public void defragment(DefragmentContext context) {
         if(Handlers4.handlesSimple(_handler)){
             context.incrementOffset(linkLength());
         }else{
-            context.marshallerFamily()._array.defragIDs(this, context);
+        	defragIDs(context);
         }
     }
+    
+    private void defragIDs(DefragmentContext context) {
+    	int offset= preparePayloadRead(context);
+        defrag1(new DefragmentContextImpl(context, true));
+        context.seek(offset);
+    }
+    
+    private int preparePayloadRead(DefragmentContext context) {
+        int newPayLoadOffset = context.readInt();
+        context.readInt();  // skip length, not needed
+        int linkOffSet = context.offset();
+        context.seek(newPayLoadOffset);
+        return linkOffSet;
+    }
+
     
     public void defrag1(DefragmentContext context) {
 		if (Deploy.debug) {

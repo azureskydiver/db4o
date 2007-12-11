@@ -16,7 +16,7 @@ import com.db4o.reflect.*;
  * @exclude
  */
 public abstract class StringHandler extends VariableLengthTypeHandler implements IndexableTypeHandler, BuiltinTypeHandler{
-    
+	
     public StringHandler(ObjectContainerBase container) {
         super(container);
     }
@@ -181,15 +181,9 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
 		// length
 		readers.incrementIntSize();
 	}
+	
+	public abstract void defragment(DefragmentContext context);
 
-    public void defragment(DefragmentContext context) {
-        if(!context.redirect()){
-        	context.incrementOffset(linkLength());
-        } else {
-        	context.marshallerFamily()._string.defrag(context);
-        }
-    }
-    
     public abstract Object read(ReadContext context);
     
     public void write(WriteContext context, Object obj) {

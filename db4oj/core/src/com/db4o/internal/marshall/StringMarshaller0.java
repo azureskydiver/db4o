@@ -16,9 +16,5 @@ public class StringMarshaller0 extends StringMarshaller {
     public BufferImpl readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, Db4oIOException{
         return parentSlot.getStream().readWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
     }
-    
-	public void defrag(DefragmentContext context) {
-		
-	}
 	
 }

@@ -4,6 +4,7 @@ package com.db4o.internal.handlers;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -59,5 +60,9 @@ public class ArrayHandler0 extends ArrayHandler {
         context.buffer(contextBuffer);
         
         return array;
+    }
+    
+    public void defragment(DefragmentContext context) {
+    	throw new NotImplementedException();
     }
 }

@@ -8,8 +8,6 @@ import com.db4o.internal.*;
 
 public class StringMarshaller1 extends StringMarshaller{
 	
-    private static final int DEFRAGMENT_INCREMENT_OFFSET = Const4.INT_LENGTH * 2;  
-    
     public boolean inlinedStrings(){
         return true;
     }
@@ -23,8 +21,4 @@ public class StringMarshaller1 extends StringMarshaller{
         return parentSlot.readPayloadWriter(payLoadOffSet, length);
     }
     
-	public void defrag(DefragmentContext context) {
-		context.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
-	}
-
 }

@@ -77,5 +77,11 @@ public abstract class BufferContext implements ReadBuffer{
 	}
 
 	public abstract int handlerVersion();
+	
+	public boolean isLegacyHandlerVersion() {
+		return handlerVersion() == 0;
+	}
+
+
 
 }

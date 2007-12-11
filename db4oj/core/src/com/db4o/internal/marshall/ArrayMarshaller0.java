@@ -4,7 +4,6 @@ package com.db4o.internal.marshall;
 
 import com.db4o.ext.*;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 
 
 class ArrayMarshaller0  extends ArrayMarshaller{
@@ -13,7 +12,4 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     	return reader.readEmbeddedObject(trans);
     }
     
-    public void defragIDs(ArrayHandler arrayHandler,DefragmentContext context) {
-    	// Where is the code ???
-    }
 }

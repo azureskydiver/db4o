@@ -18,5 +18,9 @@ public class StringHandler2 extends StringHandler{
     public Object read(ReadContext context) {
         return readString(context, context);
     }
+    
+    public void defragment(DefragmentContext context) {
+    	context.incrementOffset(linkLength());
+    }
 
 }
