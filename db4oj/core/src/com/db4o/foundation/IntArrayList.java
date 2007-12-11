@@ -20,18 +20,29 @@ public class IntArrayList implements Iterable4 {
     }
     
     public void add(int a_value){
+        ensureCapacity();
+        i_content[i_count++] = a_value;
+    }
+        
+    public void add(int index, int a_value) {
+        ensureCapacity();
+        System.arraycopy(i_content, index, i_content, index + 1, i_count - index);
+        i_content[index] = a_value;
+        i_count++;
+    }
+    
+    private void ensureCapacity() {
         if(i_count >= i_content.length){
-        	int inc = i_content.length / 2;
-        	if(inc < 10){
-        		inc = 10;
-        	}
+            int inc = i_content.length / 2;
+            if(inc < 10){
+                inc = 10;
+            }
             int[] temp = new int[i_content.length + inc];
             System.arraycopy(i_content, 0, temp, 0, i_content.length);
             i_content = temp;
         }
-        i_content[i_count++] = a_value;
     }
-    
+
     public int indexOf(int a_value) {
         for (int i = 0; i < i_count; i++) {
             if (i_content[i] == a_value){
