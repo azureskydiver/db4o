@@ -29,7 +29,7 @@ public abstract class ObjectMarshaller {
 	}
 	
 	protected final void traverseFields(MarshallingInfo context, TraverseFieldCommand command) {
-	    traverseFields(context.classMetadata(), context.buffer(), context, command);
+	    traverseFields(context.classMetadata(), (Buffer)context.buffer(), context, command);
 	}
 	
     protected final void traverseFields(ClassMetadata classMetadata, Buffer buffer, FieldListInfo fieldList,TraverseFieldCommand command) {

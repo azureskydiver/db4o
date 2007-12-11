@@ -588,8 +588,8 @@ public class FieldMetadata implements StoredField {
         return _index != null;
     }
 
-    public final void incrementOffset(Buffer buffer) {
-        buffer.incrementOffset(linkLength());
+    public final void incrementOffset(SlotBuffer buffer) {
+    	buffer.seek(buffer.offset() + linkLength());
     }
 
     public final void init(ClassMetadata containingClass, String name) {
@@ -633,7 +633,7 @@ public class FieldMetadata implements StoredField {
         set(context.persistentObject(), toSet);
     }
     
-    private boolean checkAlive(Buffer buffer){
+    private boolean checkAlive(SlotBuffer buffer){
         boolean alive = alive(); 
         if (! alive) {
             incrementOffset(buffer);
@@ -1003,7 +1003,7 @@ public class FieldMetadata implements StoredField {
     }    
     
     public void defragField(MarshallerFamily mf,BufferPair readers) {
-    	getHandler().defragment(new DefragmentContext(mf, readers, true));
+    	getHandler().defragment(new DefragmentContextImpl(mf, readers, true));
     }
     
 	public void createIndex() {

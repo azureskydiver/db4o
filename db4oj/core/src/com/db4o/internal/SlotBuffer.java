@@ -12,8 +12,7 @@ public interface SlotBuffer {
 
 	int offset();
 
-	// TODO: rename to #seek() and use #seek everywhere. 
-	void offset(int offset);
+	void seek(int offset);
 	
 	void incrementOffset(int numBytes);
 	void incrementIntSize();
@@ -31,6 +30,8 @@ public interface SlotBuffer {
 	void writeLong(long value);
 
 	public BitMap4 readBitMap(int bitCount);
-	
-	void copyBytes(byte[] target,int sourceOffset,int targetOffset,int length);
+
+	int length();
+
+	void readBytes(byte[] bytes);
 }

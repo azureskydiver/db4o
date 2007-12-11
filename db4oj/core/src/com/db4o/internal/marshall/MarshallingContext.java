@@ -353,7 +353,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
 
     // FIXME: This method was just temporarily added to fulfill contract of MarshallingInfo
     //        It will go, the buffer is never needed in new marshalling. 
-    public Buffer buffer() {
+    public SlotBuffer buffer() {
         return null;
     }
     

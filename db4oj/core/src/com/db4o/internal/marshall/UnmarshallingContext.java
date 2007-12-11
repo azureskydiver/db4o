@@ -38,8 +38,8 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         StatefulBuffer buffer = new StatefulBuffer(_transaction, _buffer.length());
         buffer.setID(objectID());
         buffer.setInstantiationDepth(activationDepth());
-        _buffer.copyTo(buffer, 0, 0, _buffer.length());
-        buffer.offset(_buffer.offset());
+        ((Buffer)_buffer).copyTo(buffer, 0, 0, _buffer.length());
+        buffer.seek(_buffer.offset());
         return buffer;
     }
     
@@ -123,7 +123,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         if(classMetadata == null){
             return null;
         }
-        if(! _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, _buffer, field)){
+        if(! _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, (Buffer)_buffer, field)){
             return null;
         }
         return field.read(this);

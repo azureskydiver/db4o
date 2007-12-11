@@ -319,7 +319,8 @@ public class LocalTransaction extends Transaction {
         if (Deploy.debug) {
             i_pointerIo.writeBegin(Const4.YAPPOINTER);
         }
-        i_pointerIo.writeSlot(slot);
+        i_pointerIo.writeInt(slot.address());
+    	i_pointerIo.writeInt(slot.length());
         if (Deploy.debug) {
             i_pointerIo.writeEnd();
         }

@@ -51,7 +51,7 @@ public class MarshallingBufferTestCase implements TestCase {
     
     private Buffer inspectContent(MarshallingBuffer buffer) {
         Buffer bufferDelegate = buffer.testDelegate();
-        bufferDelegate.offset(0);
+        bufferDelegate.seek(0);
         return bufferDelegate;
     }
     
@@ -71,7 +71,7 @@ public class MarshallingBufferTestCase implements TestCase {
         Assert.areEqual(DATA_2, content.readByte());
         
         int address = content.readInt();
-        content.offset(address);
+        content.seek(address);
         
         Assert.areEqual(DATA_3, content.readInt());
         Assert.areEqual(DATA_4, content.readInt());
@@ -97,13 +97,13 @@ public class MarshallingBufferTestCase implements TestCase {
         Assert.areEqual(DATA_2, content.readByte());
         
         int address = content.readInt();
-        content.offset(address);
+        content.seek(address);
         
         Assert.areEqual(DATA_3, content.readInt());
         Assert.areEqual(DATA_4, content.readInt());
         
         address = content.readInt();
-        content.offset(address);
+        content.seek(address);
         Assert.areEqual(DATA_5, content.readInt());
         
     }
@@ -131,19 +131,19 @@ public class MarshallingBufferTestCase implements TestCase {
         
         content.copyTo(extendedBuffer, 0, linkOffset, content.length());
         
-        extendedBuffer.offset(linkOffset);
+        extendedBuffer.seek(linkOffset);
         
         Assert.areEqual(DATA_1, extendedBuffer.readInt());
         Assert.areEqual(DATA_2, extendedBuffer.readByte());
         
         int address = extendedBuffer.readInt();
-        extendedBuffer.offset(address);
+        extendedBuffer.seek(address);
         
         Assert.areEqual(DATA_3, extendedBuffer.readInt());
         Assert.areEqual(DATA_4, extendedBuffer.readInt());
         
         address = extendedBuffer.readInt();
-        extendedBuffer.offset(address);
+        extendedBuffer.seek(address);
         Assert.areEqual(DATA_5, extendedBuffer.readInt());
         
     }

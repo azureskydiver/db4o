@@ -25,9 +25,17 @@ public class MsgObject extends MsgD {
 		        message._payLoad.writeInt(prependInts[i]);    
             }
 		}
-		message._payLoad.append(pointer, buffer);
+		appendPayLoad(message._payLoad, pointer, buffer);
 		return message;
 	}
+	
+    private void appendPayLoad(StatefulBuffer target, Pointer4 pointer, final Buffer payLoad) {
+        target.writeInt(payLoad.length());
+        target.writeInt(pointer.id());
+        target.writeInt(pointer.address());
+        target.append(payLoad._buffer);
+    }
+
 
 	final public MsgD getWriter(StatefulBuffer buffer) {
 		return getWriter(buffer.getTransaction(), buffer.pointer(), buffer, null);
