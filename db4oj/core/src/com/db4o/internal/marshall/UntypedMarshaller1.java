@@ -34,21 +34,21 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return ret;
     }
     
-	public void defrag(BufferPair readers) {
-        int payLoadOffSet = readers.readInt();
+	public void defrag(DefragmentContext context) {
+        int payLoadOffSet = context.readInt();
         if(payLoadOffSet == 0){
             return;
         }
-        int linkOffSet = readers.offset();
-        readers.seek(payLoadOffSet);
+        int linkOffSet = context.offset();
+        context.seek(payLoadOffSet);
         
-        int yapClassID = readers.copyIDAndRetrieveMapping().orig();
+        int yapClassID = context.copyIDAndRetrieveMapping().orig();
         
-        ClassMetadata yc = readers.context().yapClass(yapClassID);
+        ClassMetadata yc = context.services().yapClass(yapClassID);
         if(yc != null){
-            yc.defragment(new DefragmentContextImpl(_family, readers, false));
+            yc.defragment(new DefragmentContextImpl(context, false));
         }
         
-        readers.seek(linkOffSet);
+        context.seek(linkOffSet);
 	}
 }

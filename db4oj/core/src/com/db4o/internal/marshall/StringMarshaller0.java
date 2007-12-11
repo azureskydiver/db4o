@@ -17,8 +17,8 @@ public class StringMarshaller0 extends StringMarshaller {
         return parentSlot.getStream().readWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
     }
     
-	public void defrag(Buffer reader) {
-	    
+	public void defrag(DefragmentContext context) {
+		
 	}
 	
 }

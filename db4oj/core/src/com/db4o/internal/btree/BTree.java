@@ -385,8 +385,8 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 		BTreeNode.defragIndex(readers, _keyHandler);
 	}
 
-	public void defragBTree(final DefragmentServices context) throws CorruptionException, IOException {
-		BufferPair.processCopy(context,getID(),new SlotCopyHandler() {
+	public void defragBTree(final DefragmentServices services) throws CorruptionException, IOException {
+		BufferPair.processCopy(services,getID(),new SlotCopyHandler() {
 			public void processCopy(BufferPair readers) throws CorruptionException {
 				defragIndex(readers);
 			}
@@ -394,11 +394,11 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 		final CorruptionException[] corruptx={null};
 		final IOException[] iox={null};
 		try {
-			context.traverseAllIndexSlots(this, new Visitor4() {
+			services.traverseAllIndexSlots(this, new Visitor4() {
 				public void visit(Object obj) {
 					final int id=((Integer)obj).intValue();
 					try {
-						BufferPair.processCopy(context, id, new SlotCopyHandler() {
+						BufferPair.processCopy(services, id, new SlotCopyHandler() {
 							public void processCopy(BufferPair readers) {
 								defragIndexNode(readers);
 							}

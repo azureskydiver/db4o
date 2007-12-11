@@ -13,12 +13,12 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     
     protected ActivationDepth _activationDepth = UnknownActivationDepth.INSTANCE;
     
-    protected AbstractReadContext(Transaction transaction){
-    	super(transaction);
-    }
-    
     protected AbstractReadContext(Transaction transaction, BufferImpl buffer){
     	super(transaction, buffer);
+    }
+    
+    protected AbstractReadContext(Transaction transaction){
+    	this(transaction, null);
     }
     
     public Object read(TypeHandler4 handlerType) {

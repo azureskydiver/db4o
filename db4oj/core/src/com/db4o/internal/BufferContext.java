@@ -11,16 +11,11 @@ import com.db4o.marshall.*;
  */
 public abstract class BufferContext implements ReadBuffer{
 	
-	protected final Transaction _transaction;
-
 	protected Buffer _buffer;
-
-	public BufferContext(Transaction transaction) {
+	protected final Transaction _transaction;
+	
+	public BufferContext(Transaction transaction, Buffer buffer) {
 		_transaction = transaction;
-	}
-
-	public BufferContext(Transaction transaction, BufferImpl buffer) {
-        _transaction = transaction;
         _buffer = buffer;
 	}
 
@@ -32,18 +27,6 @@ public abstract class BufferContext implements ReadBuffer{
 
 	public Buffer buffer() {
 	    return _buffer;
-	}
-
-	public ObjectContainerBase container() {
-	    return _transaction.container();
-	}
-
-	public ObjectContainer objectContainer() {
-	    return (ObjectContainer) container();
-	}
-
-	public Transaction transaction() {
-	    return _transaction;
 	}
 
 	public byte readByte() {
@@ -70,8 +53,16 @@ public abstract class BufferContext implements ReadBuffer{
 	    _buffer.seek(offset);
 	}
 
-	public boolean oldHandlerVersion() {
-	    return handlerVersion() != MarshallingContext.HANDLER_VERSION;
+	public ObjectContainerBase container() {
+	    return _transaction.container();
+	}
+
+	public ObjectContainer objectContainer() {
+	    return (ObjectContainer) container();
+	}
+
+	public Transaction transaction() {
+	    return _transaction;
 	}
 
 	public TypeHandler4 correctHandlerVersion(TypeHandler4 handler) {
@@ -79,6 +70,10 @@ public abstract class BufferContext implements ReadBuffer{
 	        return handler;
 	    }
 	    return container().handlers().correctHandlerVersion(handler, handlerVersion());
+	}
+
+	public boolean oldHandlerVersion() {
+	    return handlerVersion() != MarshallingContext.HANDLER_VERSION;
 	}
 
 	public abstract int handlerVersion();

@@ -18,7 +18,7 @@ public abstract class ArrayMarshaller {
         return arrayHandler.collectIDs1(trans, tree, prepareIDReader(trans,reader));
     }
 
-    public abstract void defragIDs(ArrayHandler arrayHandler,BufferPair readers);
+    public abstract void defragIDs(ArrayHandler arrayHandler,DefragmentContext context);
     
     protected abstract BufferImpl prepareIDReader(Transaction trans,BufferImpl reader) throws Db4oIOException;
 }

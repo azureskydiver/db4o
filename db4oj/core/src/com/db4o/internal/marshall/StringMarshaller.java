@@ -13,6 +13,6 @@ public abstract class StringMarshaller {
     
     public abstract BufferImpl readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, IllegalArgumentException, Db4oIOException;
 
-	public abstract void defrag(Buffer reader);
+	public abstract void defrag(DefragmentContext context);
 
 }

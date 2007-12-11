@@ -23,8 +23,8 @@ public class StringMarshaller1 extends StringMarshaller{
         return parentSlot.readPayloadWriter(payLoadOffSet, length);
     }
     
-	public void defrag(Buffer reader) {
-		reader.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
+	public void defrag(DefragmentContext context) {
+		context.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
 	}
 
 }

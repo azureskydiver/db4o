@@ -16,12 +16,12 @@ import com.db4o.internal.slots.*;
 public final class BufferPair implements Buffer {
 	private BufferImpl _source;
 	private BufferImpl _target;
-	private DefragmentServices _mapping;
+	private DefragmentServices _services;
 	private Transaction _systemTrans;
 	
-	public BufferPair(BufferImpl source,DefragmentServices mapping,Transaction systemTrans) {
+	public BufferPair(BufferImpl source,DefragmentServices services,Transaction systemTrans) {
 		_source = source;
-		_mapping=mapping;
+		_services=services;
 		_target = new BufferImpl(length());
 		_source.copyTo(_target, 0, 0, length());
 		_systemTrans=systemTrans;
@@ -49,11 +49,11 @@ public final class BufferPair implements Buffer {
 		int orig=_source.readInt();
 		int mapped=-1;
 		try {
-			mapped=_mapping.mappedID(orig);
+			mapped=_services.mappedID(orig);
 		} catch (MappingNotFoundException exc) {
-			mapped=_mapping.allocateTargetSlot(Const4.POINTER_LENGTH).address();
-			_mapping.mapIDs(orig,mapped, false);
-			_mapping.registerUnindexed(orig);
+			mapped=_services.allocateTargetSlot(Const4.POINTER_LENGTH).address();
+			_services.mapIDs(orig,mapped, false);
+			_services.registerUnindexed(orig);
 		}
 		_target.writeInt(mapped);
 		return mapped;
@@ -83,7 +83,7 @@ public final class BufferPair implements Buffer {
 		if(flipNegative&&id<0) {
 			id=-id;
 		}
-		int mapped=_mapping.mappedID(id,lenient);
+		int mapped=_services.mappedID(id,lenient);
 		if(flipNegative&&id<0) {
 			mapped=-mapped;
 		}
@@ -143,19 +143,19 @@ public final class BufferPair implements Buffer {
 	}
 	
 	public IDMapping mapping() {
-		return _mapping;
+		return _services;
 	}
 
 	public Transaction systemTrans() {
 		return _systemTrans;
 	}
 
-	public DefragmentServices context() {
-		return _mapping;
+	public DefragmentServices services() {
+		return _services;
 	}
 
-	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command) throws CorruptionException, IOException {
-		processCopy(context, sourceID, command, false);
+	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command) throws CorruptionException, IOException {
+		processCopy(services, sourceID, command, false);
 	}
 
 	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException, IOException {
@@ -216,16 +216,8 @@ public final class BufferPair implements Buffer {
 		_target.readEnd();
 	}
 
-    public int preparePayloadRead() {
-        int newPayLoadOffset = readInt();
-        readInt();
-        int linkOffSet = offset();
-        seek(newPayLoadOffset);
-        return linkOffSet;
-    }
-
     public int writeMappedID(int originalID) {
-		int mapped=_mapping.mappedID(originalID,false);
+		int mapped=_services.mappedID(originalID,false);
 		_target.writeInt(mapped);
 		return mapped;
 	}

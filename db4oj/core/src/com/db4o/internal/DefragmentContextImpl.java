@@ -2,22 +2,25 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 
 /**
  * @exclude
  */
-public class DefragmentContextImpl implements DefragmentContext{
+public class DefragmentContextImpl extends BufferContext implements DefragmentContext{
 	
 	private MarshallerFamily _mf;
 	
-	private BufferPair _readers;
+	boolean _redirect;
 	
-	boolean _redirect;	
+	public DefragmentContextImpl(DefragmentContext context, boolean redirect) {
+		this(((DefragmentContextImpl)context)._mf, ((DefragmentContextImpl)context)._buffer, redirect);
+	}
 	
-	public DefragmentContextImpl(MarshallerFamily mf, BufferPair readers, boolean redirect) {
+	public DefragmentContextImpl(MarshallerFamily mf, Buffer readers, boolean redirect) {
+		super(((BufferPair)readers).services().systemTrans(), readers);
 		_mf= mf;
-		_readers = readers;
 		_redirect = redirect;
 	}
 	
@@ -25,12 +28,56 @@ public class DefragmentContextImpl implements DefragmentContext{
 		return _mf;
 	}
 	
-	public BufferPair readers() {
-		return _readers;
+	private BufferPair buffers() {
+		return (BufferPair)_buffer;
 	}
 	
 	public boolean redirect() {
 		return _redirect;
+	}
+
+	public void copyID() {
+		buffers().copyID();
+	}
+
+	public void copyUnindexedID() {
+		buffers().copyUnindexedID();
+	}
+
+	public void incrementOffset(int length) {
+		buffers().incrementOffset(length);
+	}
+
+	public void readBegin(byte identifier) {
+		buffers().readBegin(identifier);
+	}
+
+	public void readEnd() {
+		buffers().readEnd();
+	}
+
+	public IDMapping mapping() {
+		return buffers().mapping();
+	}
+
+	public Buffer sourceBuffer() {
+		return buffers().source();
+	}
+
+	public Buffer targetBuffer() {
+		return buffers().target();
+	}
+
+	public MappedIDPair copyIDAndRetrieveMapping() {
+		return buffers().copyIDAndRetrieveMapping();
+	}
+
+	public DefragmentServices services() {
+		return buffers().services();
+	}
+
+	public int handlerVersion() {
+		return 0;
 	}	
 
 }

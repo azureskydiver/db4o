@@ -58,11 +58,11 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
             + (Const4.INT_LENGTH * (2 + dim.length));
     }
 
-    protected int readElementsDefrag(BufferPair readers) {
-    	int numDimensions=super.readElementsDefrag(readers);        
+    protected int readElementsDefrag(DefragmentContext context) {
+    	int numDimensions=super.readElementsDefrag(context);        
     	int [] dimensions=new int[numDimensions];
 	    for (int i = 0; i < numDimensions; i++) {
-	    	dimensions[i]=readers.readInt();
+	    	dimensions[i]=context.readInt();
 	    }
 	    return elementCount(dimensions);
     }
