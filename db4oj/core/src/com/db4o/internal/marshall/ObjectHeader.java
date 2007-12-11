@@ -60,7 +60,7 @@ public final class ObjectHeader {
     public static ObjectHeader defrag(BufferPair readers) {
     	BufferImpl source = readers.source();
     	BufferImpl target = readers.target();
-		ObjectHeader header=new ObjectHeader(readers.context().systemTrans().container(),null,source);
+		ObjectHeader header=new ObjectHeader(readers.services().systemTrans().container(),null,source);
     	int newID =readers.mapping().mappedID(header.classMetadata().getID());
         if (Deploy.debug) {
             target.readBegin(Const4.YAPOBJECT);

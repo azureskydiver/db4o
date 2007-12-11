@@ -13,9 +13,20 @@ class ArrayMarshaller1 extends ArrayMarshaller{
         return reader;
     }
     
-    public void defragIDs(ArrayHandler arrayHandler,BufferPair readers) {
-    	int offset=readers.preparePayloadRead();
-        arrayHandler.defrag1(new DefragmentContextImpl(_family, readers, true));
-        readers.seek(offset);
+    public void defragIDs(ArrayHandler arrayHandler,DefragmentContext context) {
+    	int offset= preparePayloadRead(context);
+        arrayHandler.defrag1(new DefragmentContextImpl(context, true));
+        context.seek(offset);
     }
+    
+    private int preparePayloadRead(DefragmentContext context) {
+        int newPayLoadOffset = context.readInt();
+        context.readInt();  // skip length, not needed
+        int linkOffSet = context.offset();
+        context.seek(newPayLoadOffset);
+        return linkOffSet;
+    }
+
+    
+    
 }

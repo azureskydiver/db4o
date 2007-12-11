@@ -1867,13 +1867,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 	public void defragment(DefragmentContext context) {
 		if(hasClassIndex()) {
-			context.readers().copyID();
+			context.copyID();
 		}
 		else {
-			context.readers().copyUnindexedID();
+			context.copyUnindexedID();
 		}
 		int restLength = (linkLength()-Const4.INT_LENGTH);
-		context.readers().incrementOffset(restLength);
+		context.incrementOffset(restLength);
 	}
 	
 	public void defragClass(BufferPair readers, int classIndexID) throws CorruptionException, IOException {

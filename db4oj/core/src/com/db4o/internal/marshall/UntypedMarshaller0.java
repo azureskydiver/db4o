@@ -49,7 +49,7 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
         return null;
     }
 
-	public void defrag(BufferPair readers) {
+	public void defrag(DefragmentContext context) {
 		// TODO
 	}
 }

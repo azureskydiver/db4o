@@ -87,7 +87,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         if(context.marshallerFamily()._untyped.useNormalClassRead()){
             super.defragment(context);
         }
-    	context.marshallerFamily()._untyped.defrag(context.readers());
+    	context.marshallerFamily()._untyped.defrag(context);
     }
     
     private boolean isArray(TypeHandler4 handler){

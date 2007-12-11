@@ -146,8 +146,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     public abstract int linkLength();
     
     public final void defragment(DefragmentContext context) {
-    	int linkLength = linkLength();
-    	context.readers().incrementOffset(linkLength);
+    	context.incrementOffset(linkLength());
     }
     
     public void defragIndexEntry(BufferPair readers) {

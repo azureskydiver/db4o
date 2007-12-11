@@ -69,7 +69,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         	BTree index = yapField.getIndex(readers.systemTrans());
     		int targetIndexID=readers.copyID();
     		if(targetIndexID!=0) {
-    			index.defragBTree(readers.context());
+    			index.defragBTree(readers.services());
     		}
     	}
     	else {

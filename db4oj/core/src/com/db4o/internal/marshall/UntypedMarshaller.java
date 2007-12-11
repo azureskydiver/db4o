@@ -15,5 +15,5 @@ public abstract class UntypedMarshaller {
 
     public abstract boolean useNormalClassRead();
     
-	public abstract void defrag(BufferPair readers);
+	public abstract void defrag(DefragmentContext context);
 }

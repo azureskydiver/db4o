@@ -400,30 +400,30 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 
     public final void defragment(DefragmentContext context) {
         if(Handlers4.handlesSimple(_handler)){
-            context.readers().incrementOffset(linkLength());
+            context.incrementOffset(linkLength());
         }else{
-            context.marshallerFamily()._array.defragIDs(this, context.readers());
+            context.marshallerFamily()._array.defragIDs(this, context);
         }
     }
     
     public void defrag1(DefragmentContext context) {
 		if (Deploy.debug) {
-			context.readers().readBegin(identifier());
+			context.readBegin(identifier());
 		}
-		int elements = readElementsDefrag(context.readers());
+		int elements = readElementsDefrag(context);
 		for (int i = 0; i < elements; i++) {
 			_handler.defragment(context);
 		}
         if (Deploy.debug) {
-            context.readers().readEnd();
+            context.readEnd();
         }
     }
 
-	protected int readElementsDefrag(BufferPair readers) {
-        int elements = readers.source().readInt();
-        readers.target().writeInt(mapElementsEntry(elements,readers.mapping()));
+	protected int readElementsDefrag(DefragmentContext context) {
+        int elements = context.sourceBuffer().readInt();
+        context.targetBuffer().writeInt(mapElementsEntry(elements,context.mapping()));
         if (elements < 0) {
-            elements = readers.readInt();
+            elements = context.readInt();
         }
 		return elements;
 	}

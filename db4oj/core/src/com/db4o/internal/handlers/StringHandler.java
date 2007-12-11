@@ -184,9 +184,9 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
 
     public void defragment(DefragmentContext context) {
         if(!context.redirect()){
-        	context.readers().incrementOffset(linkLength());
+        	context.incrementOffset(linkLength());
         } else {
-        	context.marshallerFamily()._string.defrag(context.readers());
+        	context.marshallerFamily()._string.defrag(context);
         }
     }
     

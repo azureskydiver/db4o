@@ -13,7 +13,7 @@ class ArrayMarshaller0  extends ArrayMarshaller{
     	return reader.readEmbeddedObject(trans);
     }
     
-    public void defragIDs(ArrayHandler arrayHandler,BufferPair readers) {
+    public void defragIDs(ArrayHandler arrayHandler,DefragmentContext context) {
     	// Where is the code ???
     }
 }
