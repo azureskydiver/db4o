@@ -6,7 +6,6 @@ import com.db4o.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
-import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
 /**
@@ -41,14 +40,6 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
         writeBytes(bytes);
     }
 	
-    public void append(Pointer4 pointer, final Buffer buffer) {
-        writeInt(buffer.length());
-        writeInt(pointer.id());
-        writeInt(pointer.address());
-        append(buffer._buffer);
-    }
-
-    
 	public final boolean containsTheSame(Buffer other) {
 	    if (other != null) {
 	        return Arrays4.areEqual(_buffer, other._buffer);
@@ -161,10 +152,6 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
         return payLoad;
     }
 
-    public Slot readSlot(){
-    	return new Slot(readInt(), readInt());
-    }
-    
     void replaceWith(byte[] a_bytes) {
         System.arraycopy(a_bytes, 0, _buffer, 0, length());
     }
@@ -246,11 +233,6 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
         }
     }
     
-    public final void writeSlot(Slot slot){
-    	writeInt(slot.address());
-    	writeInt(slot.length());
-    }
-    
 	protected boolean canWritePersistentBase(){
 		return true;
 	}
@@ -271,11 +253,4 @@ public class Buffer implements ReadBuffer, SlotBuffer, WriteBuffer {
 		return _offset;
 	}
 
-	public void offset(int offset) {
-		_offset=offset;
-	}
-
-	public void copyBytes(byte[] target,int sourceOffset,int targetOffset, int length) {
-		System.arraycopy(_buffer, sourceOffset, target, targetOffset, length);
-	}
 }

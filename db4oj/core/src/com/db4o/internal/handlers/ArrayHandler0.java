@@ -51,7 +51,7 @@ public class ArrayHandler0 extends ArrayHandler {
         // in the UnmarshallingContext.
         
         // The buffer has to be set back from the outside!  See below
-        Buffer contextBuffer = context.buffer(buffer);
+        SlotBuffer contextBuffer = context.buffer(buffer);
         
         Object array = super.read(context);
         

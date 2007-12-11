@@ -77,7 +77,7 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
         Buffer buffer = marshallingContext.ToWriteBuffer(pointer);
         
         
-        buffer.offset(0);
+        buffer.seek(0);
         
 //        String str = new String(buffer._buffer);
 //        System.out.println(str);

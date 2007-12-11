@@ -22,8 +22,8 @@ public final class BufferPair implements SlotBuffer {
 	public BufferPair(Buffer source,DefragmentServices mapping,Transaction systemTrans) {
 		_source = source;
 		_mapping=mapping;
-		_target = new Buffer(source.length());
-		_source.copyTo(_target, 0, 0, _source.length());
+		_target = new Buffer(length());
+		_source.copyTo(_target, 0, 0, length());
 		_systemTrans=systemTrans;
 	}
 	
@@ -31,9 +31,9 @@ public final class BufferPair implements SlotBuffer {
 		return _source.offset();
 	}
 
-	public void offset(int offset) {
-		_source.offset(offset);
-		_target.offset(offset);
+	public void seek(int offset) {
+		_source.seek(offset);
+		_target.seek(offset);
 	}
 
 	public void incrementOffset(int numBytes) {
@@ -100,6 +100,11 @@ public final class BufferPair implements SlotBuffer {
 		byte value=_source.readByte();
 		_target.incrementOffset(1);
 		return value;
+	}
+	
+	public void readBytes(byte[] bytes) {
+		_source.readBytes(bytes);
+		_target.incrementOffset(bytes.length);
 	}
 
 	public int readInt() {
@@ -206,10 +211,6 @@ public final class BufferPair implements SlotBuffer {
 		return value;
 	}
 
-	public void copyBytes(byte[] target, int sourceOffset,int targetOffset, int length) {
-		_source.copyBytes(target, sourceOffset, targetOffset, length);
-	}
-
 	public void readEnd() {
 		_source.readEnd();
 		_target.readEnd();
@@ -219,7 +220,7 @@ public final class BufferPair implements SlotBuffer {
         int newPayLoadOffset = readInt();
         readInt();
         int linkOffSet = offset();
-        offset(newPayLoadOffset);
+        seek(newPayLoadOffset);
         return linkOffSet;
     }
 
@@ -228,4 +229,9 @@ public final class BufferPair implements SlotBuffer {
 		_target.writeInt(mapped);
 		return mapped;
 	}
+
+	public int length() {
+		return _source.length();
+	}
+
 }

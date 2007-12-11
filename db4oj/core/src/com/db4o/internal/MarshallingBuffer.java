@@ -80,7 +80,7 @@ public class MarshallingBuffer implements WriteBuffer{
             newSize += sizeNeeded;
         }
         Buffer temp = new Buffer(newSize);
-        temp.offset(_lastOffSet);
+        temp.seek(_lastOffSet);
         _delegate.copyTo(temp, 0, 0, _delegate.length());
         _delegate = temp;
     }
@@ -91,8 +91,8 @@ public class MarshallingBuffer implements WriteBuffer{
         other.prepareWrite(length);
         int otherOffset = other._delegate.offset();
         System.arraycopy(_delegate._buffer, _lastOffSet, other._delegate._buffer, otherOffset, length);
-        _delegate.offset(_lastOffSet);
-        other._delegate.offset(otherOffset + length);
+        _delegate.seek(_lastOffSet);
+        other._delegate.seek(otherOffset + length);
         other._lastOffSet = otherOffset;
     }
     
@@ -167,22 +167,22 @@ public class MarshallingBuffer implements WriteBuffer{
     }
     
     public void seek(int offset) {
-        _delegate.offset(offset);
+        _delegate.seek(offset);
     }
 
     private void reserve(int length) {
         prepareWrite(length);
-        _delegate.offset(_delegate.offset() + length );
+        _delegate.seek(_delegate.offset() + length );
     }
 
     private void writeLink(MarshallingBuffer child, int position, int length){
         int offset = offset();
-        _delegate.offset(child.addressInParent());
+        _delegate.seek(child.addressInParent());
         _delegate.writeInt(position);
         if(child.storeLengthInLink()){
             _delegate.writeInt(length);
         }
-        _delegate.offset(offset);
+        _delegate.seek(offset);
     }
     
     private void writeIndex(MarshallingContext context, int masterAddress, int position) {
@@ -273,7 +273,7 @@ public class MarshallingBuffer implements WriteBuffer{
             int sizeNeeded = length - _delegate.offset();
             prepareWrite(sizeNeeded);
         }
-        _delegate.offset(length);
+        _delegate.seek(length);
     }
 
     private boolean doBlockAlign() {

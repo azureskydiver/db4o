@@ -40,15 +40,15 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
             return;
         }
         int linkOffSet = readers.offset();
-        readers.offset(payLoadOffSet);
+        readers.seek(payLoadOffSet);
         
         int yapClassID = readers.copyIDAndRetrieveMapping().orig();
         
         ClassMetadata yc = readers.context().yapClass(yapClassID);
         if(yc != null){
-            yc.defragment(new DefragmentContext(_family, readers, false));
+            yc.defragment(new DefragmentContextImpl(_family, readers, false));
         }
         
-        readers.offset(linkOffSet);
+        readers.seek(linkOffSet);
 	}
 }

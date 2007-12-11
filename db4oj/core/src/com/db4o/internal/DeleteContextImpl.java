@@ -38,7 +38,7 @@ public class DeleteContextImpl extends BufferContext implements DeleteContext {
 	}
 
 	public Slot readSlot() {
-		return _buffer.readSlot();
+		return new Slot(_buffer.readInt(), _buffer.readInt());
 	}
 
 	public int handlerVersion() {
