@@ -993,7 +993,7 @@
 			remotedir="${ftp.reference.path}/${db4o.version.dotted}"
 			action="get">
 			<fileset dir="${dir.dist.java.build}/doc/reference">
-				<include name="reference-java.pdf" />
+				<include name="db4o-reference-java.pdf" />
 			</fileset>
 		</ftp>
 	</target>

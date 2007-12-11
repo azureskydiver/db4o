@@ -417,7 +417,7 @@
 			remotedir="${ftp.reference.path}/${db4o.version.dotted}"
 			action="get">
 			<fileset dir="${dir.dist.net.build}/doc/reference">
-				<include name="reference-net.pdf" />
+				<include name="db4o-reference-net.pdf" />
 			</fileset>
 		</ftp>
 	</target>
