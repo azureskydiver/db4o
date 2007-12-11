@@ -7,7 +7,7 @@ import com.db4o.internal.slots.*;
 
 public final class MReadBytes extends MsgD implements ServerSideMessage {
 	
-	public final Buffer getByteLoad() {
+	public final BufferImpl getByteLoad() {
 		int address = _payLoad.readInt();
 		int length = _payLoad.length() - (Const4.INT_LENGTH);
         Slot slot = new Slot(address, length);

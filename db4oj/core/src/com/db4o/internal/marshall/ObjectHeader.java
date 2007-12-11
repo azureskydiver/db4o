@@ -19,11 +19,11 @@ public final class ObjectHeader {
     
     private int _handlerVersion;
     
-    public ObjectHeader(ObjectContainerBase stream, SlotBuffer reader){
+    public ObjectHeader(ObjectContainerBase stream, Buffer reader){
     	this(stream,null,reader);
     }
 
-    public ObjectHeader(ClassMetadata yapClass, SlotBuffer reader){
+    public ObjectHeader(ClassMetadata yapClass, Buffer reader){
     	this(null,yapClass,reader);
     }
 
@@ -31,7 +31,7 @@ public final class ObjectHeader {
         this(writer.getStream(), writer);
     }
     
-    public ObjectHeader(ObjectContainerBase stream, ClassMetadata yc, SlotBuffer reader){
+    public ObjectHeader(ObjectContainerBase stream, ClassMetadata yc, Buffer reader){
         if (Deploy.debug) {
             reader.readBegin(Const4.YAPOBJECT);
         }
@@ -58,8 +58,8 @@ public final class ObjectHeader {
     }
 
     public static ObjectHeader defrag(BufferPair readers) {
-    	Buffer source = readers.source();
-    	Buffer target = readers.target();
+    	BufferImpl source = readers.source();
+    	BufferImpl target = readers.target();
 		ObjectHeader header=new ObjectHeader(readers.context().systemTrans().container(),null,source);
     	int newID =readers.mapping().mappedID(header.classMetadata().getID());
         if (Deploy.debug) {
@@ -75,7 +75,7 @@ public final class ObjectHeader {
         return _marshallerFamily._object;
     }
 
-	private MarshallerFamily readMarshallerFamily(SlotBuffer reader, int classID) {
+	private MarshallerFamily readMarshallerFamily(Buffer reader, int classID) {
 		boolean marshallerAware=marshallerAware(classID);
 		_handlerVersion = 0;
         if(marshallerAware) {
@@ -85,8 +85,8 @@ public final class ObjectHeader {
 		return marshallerFamily;
 	}
     
-    private static ObjectHeaderAttributes readAttributes(MarshallerFamily marshallerFamily,SlotBuffer reader) {
-    	return marshallerFamily._object.readHeaderAttributes((Buffer)reader);
+    private static ObjectHeaderAttributes readAttributes(MarshallerFamily marshallerFamily,Buffer reader) {
+    	return marshallerFamily._object.readHeaderAttributes((BufferImpl)reader);
     }
 
     private boolean marshallerAware(int id) {

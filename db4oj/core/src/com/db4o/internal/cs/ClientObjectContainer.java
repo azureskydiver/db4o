@@ -263,7 +263,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return _doFinalize;
 	}
 	
-	final Buffer expectedByteResponse(Msg expectedMessage) {
+	final BufferImpl expectedByteResponse(Msg expectedMessage) {
 		Msg msg = expectedResponse(expectedMessage);
 		if (msg == null) {
 			// TODO: throw Exception to allow
@@ -381,7 +381,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public Db4oDatabase identity() {
 		if (i_db == null) {
 			write(Msg.IDENTITY);
-			Buffer reader = expectedByteResponse(Msg.ID_LIST);
+			BufferImpl reader = expectedByteResponse(Msg.ID_LIST);
 			showInternalClasses(true);
 			try {
 				i_db = (Db4oDatabase) getByID(reader.readInt());
@@ -407,7 +407,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		message.writeString(_password);
 		message.write(socket);
 		Msg msg = readLoginMessage(socket);
-		Buffer payLoad = msg.payLoad();
+		BufferImpl payLoad = msg.payLoad();
 		_blockSize = payLoad.readInt();
 		int doEncrypt = payLoad.readInt();
 		if (doEncrypt == 0) {
@@ -433,7 +433,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public final int newUserObject() {
 		int prefetchIDCount = config().prefetchIDCount();
 		ensureIDCacheAllocated(prefetchIDCount);
-		Buffer reader = null;
+		BufferImpl reader = null;
 		if (remainingIDs < 1) {
 			MsgD msg = Msg.PREFETCH_IDS.getWriterForInt(_transaction, prefetchIDCount);
 			write(msg);
@@ -472,7 +472,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		MsgD msg = Msg.READ_BYTES.getWriterForInts(_transaction, new int[] {
 				a_address, a_length });
 		write(msg);
-		Buffer reader = expectedByteResponse(Msg.READ_BYTES);
+		BufferImpl reader = expectedByteResponse(Msg.READ_BYTES);
 		System.arraycopy(reader._buffer, 0, a_bytes, 0, a_length);
 	}
 
@@ -511,14 +511,14 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return yapWriters;
 	}
 
-	public final Buffer readReaderByID(Transaction a_ta, int a_id) {
+	public final BufferImpl readReaderByID(Transaction a_ta, int a_id) {
 		// TODO: read lightweight reader instead
 		return readWriterByID(a_ta, a_id);
 	}
 
 	private AbstractQueryResult readQueryResult(Transaction trans) {
 		AbstractQueryResult queryResult = null;
-		Buffer reader = expectedByteResponse(Msg.QUERY_RESULT);
+		BufferImpl reader = expectedByteResponse(Msg.QUERY_RESULT);
 		int queryResultID = reader.readInt();
 		if(queryResultID > 0){
 			queryResult = new LazyClientQueryResult(trans, this, queryResultID);
@@ -531,7 +531,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 
 	void readThis() {
 		write(Msg.GET_CLASSES.getWriter(systemTransaction()));
-		Buffer bytes = expectedByteResponse(Msg.GET_CLASSES);
+		BufferImpl bytes = expectedByteResponse(Msg.GET_CLASSES);
 		classCollection().setID(bytes.readInt());
 		createStringIO(bytes.readByte());
 		classCollection().read(systemTransaction());
@@ -664,7 +664,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		return msg.write(i_socket);
 	}
 	
-	public final void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {
+	public final void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, BufferImpl buffer) {
 		MsgD msg = Msg.WRITE_NEW.getWriter(trans, pointer, classMetadata, buffer);
 		writeBatchedMessage(msg);
 	}
@@ -673,7 +673,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		// do nothing
 	}
 
-	public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {
+	public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, BufferImpl buffer) {
 		MsgD msg = Msg.WRITE_UPDATE.getWriter(trans, pointer, classMetadata, buffer);
 		writeBatchedMessage(msg);
 	}
@@ -735,7 +735,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     public long[] getIDsForClass(Transaction trans, ClassMetadata clazz){
     	MsgD msg = Msg.GET_INTERNAL_IDS.getWriterForInt(trans, clazz.getID());
     	write(msg);
-    	Buffer reader = expectedByteResponse(Msg.ID_LIST);
+    	BufferImpl reader = expectedByteResponse(Msg.ID_LIST);
     	int size = reader.readInt();
     	final long[] ids = new long[size];
     	for (int i = 0; i < size; i++) {

@@ -76,19 +76,19 @@ public class TreeInt extends Tree implements ReadWriteable {
 		return null;
 	}
 
-	public Object read(Buffer a_bytes) {
+	public Object read(BufferImpl a_bytes) {
 		return new TreeInt(a_bytes.readInt());
 	}
 
-	public void write(Buffer a_writer) {
+	public void write(BufferImpl a_writer) {
 		a_writer.writeInt(_key);
 	}
 	
-	public static void write(final Buffer a_writer, TreeInt a_tree){
+	public static void write(final BufferImpl a_writer, TreeInt a_tree){
         write(a_writer, a_tree, a_tree == null ? 0 : a_tree.size());
 	}
     
-    public static void write(final Buffer a_writer, TreeInt a_tree, int size){
+    public static void write(final BufferImpl a_writer, TreeInt a_tree, int size){
         if(a_tree == null){
             a_writer.writeInt(0);
             return;

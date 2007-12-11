@@ -85,7 +85,7 @@ public abstract class PersistentBase implements Persistent {
 			return;
 		}
 		try {
-			Buffer reader = trans.container().readReaderByID(trans, getID());
+			BufferImpl reader = trans.container().readReaderByID(trans, getID());
 			if (Deploy.debug) {
 				reader.readBegin(getIdentifier());
 			}
@@ -118,7 +118,7 @@ public abstract class PersistentBase implements Persistent {
         bitFalse(Const4.CLEAN);
     }
 
-    void setStateOnRead(Buffer reader) {
+    void setStateOnRead(BufferImpl reader) {
         if (Deploy.debug) {
             reader.readEnd();
         }
@@ -141,7 +141,7 @@ public abstract class PersistentBase implements Persistent {
 	        int length = ownLength();
 	        length = stream.blockAlignedBytes(length);
 	        
-	        Buffer writer = new Buffer(length);
+	        BufferImpl writer = new BufferImpl(length);
 	        
 	        Slot slot;
 	        
@@ -169,7 +169,7 @@ public abstract class PersistentBase implements Persistent {
         return false;
     }
     
-	private final void writeToFile(Transaction trans, Buffer writer, Slot slot) {
+	private final void writeToFile(Transaction trans, BufferImpl writer, Slot slot) {
 		
         if(DTrace.enabled){
         	DTrace.YAPMETA_WRITE.log(getID());
@@ -201,7 +201,7 @@ public abstract class PersistentBase implements Persistent {
         return false;
     }
 
-    public void writeOwnID(Transaction trans, Buffer writer) {
+    public void writeOwnID(Transaction trans, BufferImpl writer) {
         write(trans);
         writer.writeInt(getID());
     }

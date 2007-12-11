@@ -40,7 +40,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     private int _fieldWriteCount;
     
-    private Buffer _debugPrepend;
+    private BufferImpl _debugPrepend;
     
     private Object _currentMarshalledObject;
     
@@ -108,9 +108,9 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
     
 
-    public Buffer ToWriteBuffer(Pointer4 pointer) {
+    public BufferImpl ToWriteBuffer(Pointer4 pointer) {
         
-        Buffer buffer = new Buffer(pointer.length());
+        BufferImpl buffer = new BufferImpl(pointer.length());
         _writeBuffer.mergeChildren(this, pointer.address(), writeBufferOffset());
         
         if (Deploy.debug) {
@@ -148,7 +148,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         return container().blockAlignedBytes(buffer.length());
     }
     
-    private void writeObjectClassID(Buffer reader, int id) {
+    private void writeObjectClassID(BufferImpl reader, int id) {
         reader.writeInt(-id);
     }
 
@@ -255,7 +255,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _writeBuffer.writeInt(fieldCount);
     }
 
-    public void debugPrependNextWrite(Buffer prepend) {
+    public void debugPrependNextWrite(BufferImpl prepend) {
         if(Deploy.debug){
             _debugPrepend = prepend;
         }
@@ -353,7 +353,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
 
     // FIXME: This method was just temporarily added to fulfill contract of MarshallingInfo
     //        It will go, the buffer is never needed in new marshalling. 
-    public SlotBuffer buffer() {
+    public Buffer buffer() {
         return null;
     }
     

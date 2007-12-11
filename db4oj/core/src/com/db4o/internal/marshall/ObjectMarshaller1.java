@@ -57,7 +57,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		traverseFields(yc, writer, attributes, command);
     }
 
-    public boolean findOffset(ClassMetadata yc, FieldListInfo fieldListInfo, final Buffer reader, final FieldMetadata field) {
+    public boolean findOffset(ClassMetadata yc, FieldListInfo fieldListInfo, final BufferImpl reader, final FieldMetadata field) {
         final boolean[] ret={false};
 		TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(FieldMetadata curField, boolean isNull, ClassMetadata containingClass) {
@@ -75,7 +75,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		return ret[0];
     }
     
-    public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {
+    public ObjectHeaderAttributes readHeaderAttributes(BufferImpl reader) {
         return new ObjectHeaderAttributes(reader);
     }
     
@@ -95,7 +95,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		} 
     }
     
-    public void readVirtualAttributes(final Transaction trans, ClassMetadata yc, final ObjectReference yo, ObjectHeaderAttributes attributes, final Buffer reader) {
+    public void readVirtualAttributes(final Transaction trans, ClassMetadata yc, final ObjectReference yo, ObjectHeaderAttributes attributes, final BufferImpl reader) {
 		TraverseFieldCommand command = new TraverseFieldCommand() {
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
 				if (!isNull) {
@@ -113,7 +113,7 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 	public void defragFields(ClassMetadata yc,ObjectHeader header, final BufferPair readers) {
         TraverseFieldCommand command = new TraverseFieldCommand() {
         	
-        	public int fieldCount(ClassMetadata yapClass, Buffer reader) {
+        	public int fieldCount(ClassMetadata yapClass, BufferImpl reader) {
         		return readers.readInt();
         	}
         	
@@ -126,11 +126,11 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
 		traverseFields(yc, null, header._headerAttributes, command);
 	}
 
-	public void writeObjectClassID(Buffer reader, int id) {
+	public void writeObjectClassID(BufferImpl reader, int id) {
 		reader.writeInt(-id);
 	}
 
-	public void skipMarshallerInfo(Buffer reader) {
+	public void skipMarshallerInfo(BufferImpl reader) {
 		reader.incrementOffset(1);
 	}
 

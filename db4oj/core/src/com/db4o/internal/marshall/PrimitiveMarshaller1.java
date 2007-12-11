@@ -13,27 +13,27 @@ public class PrimitiveMarshaller1 extends PrimitiveMarshaller {
         return false;
     }
     
-    public Date readDate(Buffer bytes){
+    public Date readDate(BufferImpl bytes){
 		return new Date(bytes.readLong());
 	}
     
-    public Object readInteger(Buffer bytes) {
+    public Object readInteger(BufferImpl bytes) {
     	return new Integer(bytes.readInt());
     }
     
-    public Object readFloat(Buffer bytes) {
+    public Object readFloat(BufferImpl bytes) {
     	return PrimitiveMarshaller0.unmarshallFloat(bytes);
     }
 
-	public Object readDouble(Buffer buffer) {
+	public Object readDouble(BufferImpl buffer) {
 		return PrimitiveMarshaller0.unmarshalDouble(buffer);
 	}
 
-	public Object readLong(Buffer buffer) {
+	public Object readLong(BufferImpl buffer) {
 		return new Long(buffer.readLong());
 	}
 
-	public Object readShort(Buffer buffer) {
+	public Object readShort(BufferImpl buffer) {
 		return new Short(PrimitiveMarshaller0.unmarshallShort(buffer));
 	}
 

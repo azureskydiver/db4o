@@ -26,11 +26,11 @@ public class Null implements Indexable4{
 		return this;
 	}
 	
-    public Object readIndexEntry(Buffer a_reader) {
+    public Object readIndexEntry(BufferImpl a_reader) {
         return null;
     }
 
-    public void writeIndexEntry(Buffer a_writer, Object a_object) {
+    public void writeIndexEntry(BufferImpl a_writer, Object a_object) {
         // do nothing
     }
 

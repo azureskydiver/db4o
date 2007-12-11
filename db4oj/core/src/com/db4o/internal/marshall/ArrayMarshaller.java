@@ -20,5 +20,5 @@ public abstract class ArrayMarshaller {
 
     public abstract void defragIDs(ArrayHandler arrayHandler,BufferPair readers);
     
-    protected abstract Buffer prepareIDReader(Transaction trans,Buffer reader) throws Db4oIOException;
+    protected abstract BufferImpl prepareIDReader(Transaction trans,BufferImpl reader) throws Db4oIOException;
 }

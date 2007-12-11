@@ -298,7 +298,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         }
     }
 
-    public void readThis(Transaction a_trans, Buffer a_reader) {
+    public void readThis(Transaction a_trans, BufferImpl a_reader) {
         a_reader.incrementOffset(1);  // first byte is version, for possible future format changes
         _size = a_reader.readInt();
         _nodeSize = a_reader.readInt();
@@ -306,7 +306,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         _root = produceNode(a_reader.readInt());
     }
     
-    public void writeThis(Transaction trans, Buffer a_writer) {
+    public void writeThis(Transaction trans, BufferImpl a_writer) {
         a_writer.writeByte(BTREE_VERSION);
         a_writer.writeInt(_size);
         a_writer.writeInt(nodeSize());

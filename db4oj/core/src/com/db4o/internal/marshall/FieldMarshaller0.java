@@ -25,7 +25,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         return len;
     }
     
-    public RawFieldSpec readSpec(ObjectContainerBase stream, Buffer reader) {
+    public RawFieldSpec readSpec(ObjectContainerBase stream, BufferImpl reader) {
         String name = StringHandler.readStringNoDebug(stream.transaction().context(), reader);
         if (name.indexOf(Const4.VIRTUAL_FIELD_PREFIX) == 0) {
         	if(stream._handlers.virtualFieldByName(name)!=null) {
@@ -37,7 +37,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         return new RawFieldSpec(name,handlerID,attribs);
     }
     
-    public final FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, Buffer reader) {
+    public final FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, BufferImpl reader) {
     	RawFieldSpec spec=readSpec(stream, reader);
     	return fromSpec(spec, stream, field);
     }
@@ -60,7 +60,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-    public void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, Buffer writer) {
+    public void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, BufferImpl writer) {
         
         field.alive();
         

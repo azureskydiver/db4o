@@ -16,7 +16,7 @@ public class StringHandler0 extends StringHandler {
     }
     
     public Object read(ReadContext context) {
-        Buffer buffer = readIndirectedBuffer(context); 
+        BufferImpl buffer = readIndirectedBuffer(context); 
         if (buffer == null) {
             return null;
         }

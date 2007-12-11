@@ -52,7 +52,7 @@ import com.db4o.internal.slots.*;
         if(Deploy.debug){
             length += Const4.LEADING_LENGTH;
         }
-        Buffer reader = new Buffer(length);
+        BufferImpl reader = new BufferImpl(length);
         reader.readEncrypt(ta.container(), slot.address());
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
@@ -72,11 +72,11 @@ import com.db4o.internal.slots.*;
         return Const4.OBJECT_LENGTH + marshalledLength();
     }
 
-    public final Object read(Buffer a_reader) {
+    public final Object read(BufferImpl a_reader) {
     	throw Exceptions4.virtualException();
     }
 
-    public final void readThis(Transaction a_trans, Buffer a_reader) {
+    public final void readThis(Transaction a_trans, BufferImpl a_reader) {
     	i_root = (TreeInt)new TreeReader(a_reader, new TreeInt(0)).read();
     }
 
@@ -89,11 +89,11 @@ import com.db4o.internal.slots.*;
         a_stream.setDirtyInSystemTransaction(this);
     }
 
-    public void write(Buffer a_writer) {
+    public void write(BufferImpl a_writer) {
         writeThis(null, a_writer);
     }
 
-    public final void writeThis(Transaction trans, final Buffer a_writer) {
+    public final void writeThis(Transaction trans, final BufferImpl a_writer) {
     	TreeInt.write(a_writer, i_root);
     }
     

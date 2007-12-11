@@ -53,7 +53,7 @@ public abstract class FreespaceManagerTestCaseBase extends FileSizeTestCaseBase 
         FreespaceManager fm = currentFreespaceManager();
         int length = 300;
         Slot slot = container().getSlot(length);
-        Buffer buffer = new Buffer(length);
+        BufferImpl buffer = new BufferImpl(length);
         container().writeBytes(buffer, slot.address(), 0);
         fm.free(slot);
     }

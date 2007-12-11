@@ -14,7 +14,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
         return true;
     }
     
-    public Date readDate(Buffer bytes) {
+    public Date readDate(BufferImpl bytes) {
 		final long value = bytes.readLong();
 		if (value == Long.MAX_VALUE) {
 			return MarshallingConstants0.NULL_DATE;
@@ -22,7 +22,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return new Date(value);
 	}
     
-    public Object readInteger(Buffer bytes) {
+    public Object readInteger(BufferImpl bytes) {
 		final int value = bytes.readInt();
 		if (value == Integer.MAX_VALUE) {
 			return null;
@@ -30,7 +30,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return new Integer(value);
 	}
 
-	public Object readFloat(Buffer bytes) {
+	public Object readFloat(BufferImpl bytes) {
 		Float value = unmarshallFloat(bytes);
 		if (value.isNaN()) {
 			return null;
@@ -38,7 +38,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return value;
 	}
 	
-	public Object readDouble(Buffer buffer) {
+	public Object readDouble(BufferImpl buffer) {
 		Double value = unmarshalDouble(buffer);
 		if (value.isNaN()) {
 			return null;
@@ -46,7 +46,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return value;
 	}	
 
-	public Object readLong(Buffer buffer) {
+	public Object readLong(BufferImpl buffer) {
 		long value = buffer.readLong();
 		if (value == Long.MAX_VALUE) {
 			return null;
@@ -54,7 +54,7 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return new Long(value);
 	}
 	
-	public Object readShort(Buffer buffer) {
+	public Object readShort(BufferImpl buffer) {
 		short value = unmarshallShort(buffer);
 		if (value == Short.MAX_VALUE) {
 			return null;
@@ -62,15 +62,15 @@ public class PrimitiveMarshaller0 extends PrimitiveMarshaller {
 		return new Short(value);
 	}
 	
-	public static Double unmarshalDouble(Buffer buffer) {
+	public static Double unmarshalDouble(BufferImpl buffer) {
 		return new Double(Platform4.longToDouble(buffer.readLong()));
 	}
 
-	public static Float unmarshallFloat(Buffer buffer) {
+	public static Float unmarshallFloat(BufferImpl buffer) {
 		return new Float(Float.intBitsToFloat(buffer.readInt()));
 	}	
 	
-	public static short unmarshallShort(Buffer buffer){
+	public static short unmarshallShort(BufferImpl buffer){
 		int ret = 0;
 		if (Deploy.debug){
 			buffer.readBegin(Const4.YAPSHORT);

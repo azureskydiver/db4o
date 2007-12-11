@@ -13,7 +13,7 @@ public abstract class ObjectMarshaller {
 	protected abstract static class TraverseFieldCommand {
 		private boolean _cancelled=false;
 		
-		public int fieldCount(ClassMetadata classMetadata, Buffer reader) {
+		public int fieldCount(ClassMetadata classMetadata, BufferImpl reader) {
 			return classMetadata.readFieldCount(reader);
 		}
 
@@ -29,10 +29,10 @@ public abstract class ObjectMarshaller {
 	}
 	
 	protected final void traverseFields(MarshallingInfo context, TraverseFieldCommand command) {
-	    traverseFields(context.classMetadata(), (Buffer)context.buffer(), context, command);
+	    traverseFields(context.classMetadata(), (BufferImpl)context.buffer(), context, command);
 	}
 	
-    protected final void traverseFields(ClassMetadata classMetadata, Buffer buffer, FieldListInfo fieldList,TraverseFieldCommand command) {
+    protected final void traverseFields(ClassMetadata classMetadata, BufferImpl buffer, FieldListInfo fieldList,TraverseFieldCommand command) {
     	int fieldIndex=0;
     	while(classMetadata!=null&&!command.cancelled()) {
         	int fieldCount=command.fieldCount(classMetadata, buffer);
@@ -102,7 +102,7 @@ public abstract class ObjectMarshaller {
     public abstract boolean findOffset(
             ClassMetadata classMetadata, 
             FieldListInfo fieldListInfo, 
-            Buffer buffer, 
+            BufferImpl buffer, 
             FieldMetadata field);
     
     public final void marshallUpdateWrite(
@@ -110,7 +110,7 @@ public abstract class ObjectMarshaller {
             Pointer4 pointer,
             ObjectReference ref, 
             Object obj, 
-            Buffer buffer) {
+            BufferImpl buffer) {
         
         ClassMetadata classMetadata = ref.classMetadata();
         
@@ -135,20 +135,20 @@ public abstract class ObjectMarshaller {
             FieldMetadata yf, 
             StatefulBuffer reader);
 
-    public abstract ObjectHeaderAttributes readHeaderAttributes(Buffer reader);
+    public abstract ObjectHeaderAttributes readHeaderAttributes(BufferImpl reader);
     
     public abstract void readVirtualAttributes(
             Transaction trans,  
             ClassMetadata yc, 
             ObjectReference yo, 
             ObjectHeaderAttributes attributes, 
-            Buffer reader);
+            BufferImpl reader);
 
 	public abstract void defragFields(ClassMetadata yapClass,ObjectHeader header, BufferPair readers);
  
-	public abstract void writeObjectClassID(Buffer reader,int id);
+	public abstract void writeObjectClassID(BufferImpl reader,int id);
 	
-	public abstract void skipMarshallerInfo(Buffer reader);
+	public abstract void skipMarshallerInfo(BufferImpl reader);
 
     public final void instantiateFields(final UnmarshallingContext context) {
         TraverseFieldCommand command = new TraverseFieldCommand() {
@@ -175,7 +175,7 @@ public abstract class ObjectMarshaller {
         final Transaction trans = context.transaction();
         TraverseFieldCommand command = new TraverseFieldCommand() {
             private int fieldIndex = -1; 
-            public int fieldCount(ClassMetadata classMetadata, Buffer buffer) {
+            public int fieldCount(ClassMetadata classMetadata, BufferImpl buffer) {
                 int fieldCount = classMetadata.i_fields.length;
                 context.fieldCount(fieldCount);
                 return fieldCount;

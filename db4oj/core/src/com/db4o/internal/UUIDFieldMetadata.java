@@ -73,7 +73,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         if(DTrace.enabled){
             DTrace.REREAD_OLD_UUID.logLength(oldSlot.address(), oldSlot.length());
         }
-		Buffer reader = stream.bufferByAddress(oldSlot.address(), oldSlot.length());
+		BufferImpl reader = stream.bufferByAddress(oldSlot.address(), oldSlot.length());
 		if(checkClass){
             ClassMetadata realClass = ClassMetadata.readClass(stream,reader);
             if(realClass != classMetadata){
@@ -142,7 +142,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     	}
 	}
 
-    void instantiate1(Transaction a_trans, ObjectReference a_yapObject, SlotBuffer a_bytes) {
+    void instantiate1(Transaction a_trans, ObjectReference a_yapObject, Buffer a_bytes) {
         int dbID = a_bytes.readInt();
         ObjectContainerBase stream = a_trans.container();
         stream.showInternalClasses(true);

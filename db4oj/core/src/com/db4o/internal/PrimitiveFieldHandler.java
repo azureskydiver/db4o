@@ -113,7 +113,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return _handler;
     }
     
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, BufferImpl[] a_bytes) {
         if (isArray()) {
             return _handler;
         }

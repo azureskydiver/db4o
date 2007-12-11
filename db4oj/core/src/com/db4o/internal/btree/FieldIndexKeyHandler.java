@@ -25,7 +25,7 @@ public class FieldIndexKeyHandler implements Indexable4{
         return _valueHandler.linkLength() + Const4.INT_LENGTH;
     }
 
-    public Object readIndexEntry(Buffer a_reader) {
+    public Object readIndexEntry(BufferImpl a_reader) {
         // TODO: could read int directly here with a_reader.readInt()
         int parentID = readParentID(a_reader);
         Object objPart = _valueHandler.readIndexEntry(a_reader);
@@ -36,11 +36,11 @@ public class FieldIndexKeyHandler implements Indexable4{
         return new FieldIndexKey(parentID, objPart);
     }
 
-	private int readParentID(Buffer a_reader) {
+	private int readParentID(BufferImpl a_reader) {
 		return ((Integer)_parentIdHandler.readIndexEntry(a_reader)).intValue();
 	}
 
-    public void writeIndexEntry(Buffer writer, Object obj) {
+    public void writeIndexEntry(BufferImpl writer, Object obj) {
         FieldIndexKey composite = (FieldIndexKey)obj;
         int parentID = composite.parentID();
         Object value = composite.value();

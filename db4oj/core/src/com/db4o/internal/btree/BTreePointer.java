@@ -42,9 +42,9 @@ public class BTreePointer{
 
 	private final Transaction _transaction;
 
-	private final Buffer _nodeReader;
+	private final BufferImpl _nodeReader;
    
-    public BTreePointer(Transaction transaction, Buffer nodeReader, BTreeNode node, int index) {
+    public BTreePointer(Transaction transaction, BufferImpl nodeReader, BTreeNode node, int index) {
     	if(transaction == null || node == null){
             throw new ArgumentNullException();
         }
@@ -70,7 +70,7 @@ public class BTreePointer{
 		return node().key(transaction(), nodeReader(), index());
 	}
 
-	private Buffer nodeReader() {
+	private BufferImpl nodeReader() {
 		return _nodeReader;
 	}
     
@@ -84,7 +84,7 @@ public class BTreePointer{
         }
         int newIndex = -1;
         BTreeNode nextNode = node();
-        Buffer nextReader = null;
+        BufferImpl nextReader = null;
         while(newIndex == -1){
             nextNode = nextNode.nextNode();
             if(nextNode == null){
@@ -106,7 +106,7 @@ public class BTreePointer{
 		}
 		int newIndex = -1;
 		BTreeNode previousNode = node();
-		Buffer previousReader = null;
+		BufferImpl previousReader = null;
 		while(newIndex == -1){
 			previousNode = previousNode.previousNode();
 			if(previousNode == null){

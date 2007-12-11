@@ -12,7 +12,7 @@ public class QueryingReadContext extends AbstractReadContext {
     
     private final int _handlerVersion;
     
-    public QueryingReadContext(Transaction transaction, int handlerVersion, Buffer buffer) {
+    public QueryingReadContext(Transaction transaction, int handlerVersion, BufferImpl buffer) {
         super(transaction, buffer);
         _handlerVersion = handlerVersion;
         _activationDepth = new LegacyActivationDepth(0);

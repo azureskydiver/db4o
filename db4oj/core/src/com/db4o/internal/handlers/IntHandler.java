@@ -5,7 +5,7 @@ package com.db4o.internal.handlers;
 import com.db4o.CorruptionException;
 import com.db4o.Deploy;
 import com.db4o.foundation.Coercion4;
-import com.db4o.internal.Buffer;
+import com.db4o.internal.BufferImpl;
 import com.db4o.internal.BufferPair;
 import com.db4o.internal.Const4;
 import com.db4o.internal.LatinStringIO;
@@ -51,19 +51,19 @@ public class IntHandler extends PrimitiveHandler {
         return mf._primitive.readInteger(writer);
     }
 
-    Object read1(Buffer a_bytes) {
+    Object read1(BufferImpl a_bytes) {
         return new Integer(a_bytes.readInt());
     }    
 
-    public void write(Object obj, Buffer writer) {
+    public void write(Object obj, BufferImpl writer) {
         write(((Integer) obj).intValue(), writer);
     }
 
-    public void write(int intValue, Buffer writer) {
+    public void write(int intValue, BufferImpl writer) {
         writeInt(intValue, writer);
     }
 
-    public static final void writeInt(int a_int, Buffer a_bytes) {
+    public static final void writeInt(int a_int, BufferImpl a_bytes) {
         if (Deploy.debug) {
             a_bytes.writeBegin(Const4.YAPINTEGER);
             if (Deploy.debugLong) {

@@ -11,7 +11,7 @@ import com.db4o.internal.*;
 public class ClassMarshaller1 extends ClassMarshaller {
     
 
-    protected void readIndex(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) {
+    protected void readIndex(ObjectContainerBase stream, ClassMetadata clazz, BufferImpl reader) {
         int indexID = reader.readInt();
         clazz.index().read(stream, - indexID);
     }

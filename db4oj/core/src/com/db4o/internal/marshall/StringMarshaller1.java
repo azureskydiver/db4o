@@ -14,7 +14,7 @@ public class StringMarshaller1 extends StringMarshaller{
         return true;
     }
     
-    public Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException{
+    public BufferImpl readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException{
         int payLoadOffSet = parentSlot.readInt();
         int length = parentSlot.readInt();
         if(payLoadOffSet == 0){
@@ -23,7 +23,7 @@ public class StringMarshaller1 extends StringMarshaller{
         return parentSlot.readPayloadWriter(payLoadOffSet, length);
     }
     
-	public void defrag(SlotBuffer reader) {
+	public void defrag(Buffer reader) {
 		reader.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
 	}
 

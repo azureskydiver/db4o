@@ -405,11 +405,11 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 		return yapWriters;
 	}
 
-    public Buffer readReaderByID(Transaction a_ta, int a_id) {
+    public BufferImpl readReaderByID(Transaction a_ta, int a_id) {
         return readReaderOrWriterByID(a_ta, a_id, true);
     }
     
-    private final Buffer readReaderOrWriterByID(Transaction a_ta, int a_id,
+    private final BufferImpl readReaderOrWriterByID(Transaction a_ta, int a_id,
 			boolean useReader) {
 		if (a_id <= 0) {
 			throw new IllegalArgumentException();
@@ -432,9 +432,9 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			DTrace.READ_SLOT.logLength(slot.address(), slot.length());
 		}
 
-		Buffer reader = null;
+		BufferImpl reader = null;
 		if (useReader) {
-			reader = new Buffer(slot.length());
+			reader = new BufferImpl(slot.length());
 		} else {
 			reader = getWriter(a_ta, slot.address(), slot.length());
 			((StatefulBuffer) reader).setID(a_id);
@@ -644,7 +644,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         _transaction.commit();
     }
 
-    public abstract void writeBytes(Buffer a_Bytes, int address, int addressOffset);
+    public abstract void writeBytes(BufferImpl a_Bytes, int address, int addressOffset);
 
     public final void writeDirty() {        
         writeCachedDirty();
@@ -661,7 +661,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         i_dirty.clear();
 	}
 	
-    public final void writeEncrypt(Buffer buffer, int address, int addressOffset) {
+    public final void writeEncrypt(BufferImpl buffer, int address, int addressOffset) {
         _handlers.encrypt(buffer);
         writeBytes(buffer, address, addressOffset);
         _handlers.decrypt(buffer);
@@ -694,7 +694,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         syncFiles();
     }
 
-    public final void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {
+    public final void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, BufferImpl buffer) {
         writeEncrypt(buffer, pointer.address(), 0);
         if(classMetadata == null){
             return;
@@ -728,7 +728,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         return slot;
     }
 
-    public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer) {
+    public final void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, BufferImpl buffer) {
         int address = pointer.address();
         if(address == 0){
             address = getSlotForUpdate(trans, pointer.id(), pointer.length()).address();

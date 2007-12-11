@@ -24,9 +24,9 @@ public class ArrayHandler0 extends ArrayHandler {
     	context.defragmentRecommended();
     }
     
-    public void readCandidates(int handlerVersion, Buffer reader, QCandidates candidates) throws Db4oIOException {
+    public void readCandidates(int handlerVersion, BufferImpl reader, QCandidates candidates) throws Db4oIOException {
         Transaction transaction = candidates.transaction();
-        Buffer arrayBuffer = reader.readEmbeddedObject(transaction);
+        BufferImpl arrayBuffer = reader.readEmbeddedObject(transaction);
         if(Deploy.debug){
             arrayBuffer.readBegin(identifier());
         }
@@ -40,7 +40,7 @@ public class ArrayHandler0 extends ArrayHandler {
         
         InternalReadContext context = (InternalReadContext) readContext;
         
-        Buffer buffer = readIndirectedBuffer(context); 
+        BufferImpl buffer = readIndirectedBuffer(context); 
         if (buffer == null) {
             return null;
         }
@@ -51,7 +51,7 @@ public class ArrayHandler0 extends ArrayHandler {
         // in the UnmarshallingContext.
         
         // The buffer has to be set back from the outside!  See below
-        SlotBuffer contextBuffer = context.buffer(buffer);
+        Buffer contextBuffer = context.buffer(buffer);
         
         Object array = super.read(context);
         

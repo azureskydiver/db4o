@@ -11,8 +11,8 @@ public abstract class StringMarshaller {
     
     public abstract boolean inlinedStrings();
     
-    public abstract Buffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, IllegalArgumentException, Db4oIOException;
+    public abstract BufferImpl readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, IllegalArgumentException, Db4oIOException;
 
-	public abstract void defrag(SlotBuffer reader);
+	public abstract void defrag(Buffer reader);
 
 }

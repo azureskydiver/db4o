@@ -93,7 +93,7 @@ public final class BTreeNode extends PersistentBase{
      */
     public BTreeNode add(Transaction trans, Object obj){
         
-        Buffer reader = prepareRead(trans);        
+        BufferImpl reader = prepareRead(trans);        
         Searcher s = search(reader);
         
         if(_isLeaf){
@@ -172,7 +172,7 @@ public final class BTreeNode extends PersistentBase{
 	}
     
     BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
-        Buffer reader = prepareRead(trans);
+        BufferImpl reader = prepareRead(trans);
         Searcher s = search(reader, target);
         if(! _isLeaf){
             return child(reader, s.cursor()).searchLeaf(trans, target);
@@ -198,7 +198,7 @@ public final class BTreeNode extends PersistentBase{
 		return findLowestLeafMatch(trans, prepareRead(trans), index);
 	}
 	
-	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, Buffer reader, int index){
+	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, BufferImpl reader, int index){
         
         if(index >= 0){
             if(!compareEquals(reader, index)){
@@ -215,7 +215,7 @@ public final class BTreeNode extends PersistentBase{
         
         final BTreeNode node = previousNode();
         if(node != null){
-        	final Buffer nodeReader = node.prepareRead(trans);
+        	final BufferImpl nodeReader = node.prepareRead(trans);
             BTreeNodeSearchResult res = node.findLowestLeafMatch(trans, nodeReader, node.lastIndex());
             if(res != null){
                 return res;
@@ -229,14 +229,14 @@ public final class BTreeNode extends PersistentBase{
         return createMatchingSearchResult(trans, reader, index);
     }
 
-	private boolean compareEquals(final Buffer reader, int index) {
+	private boolean compareEquals(final BufferImpl reader, int index) {
 		if(canWrite()){
 			return compareInWriteMode(index) == 0;
 		}
 		return compareInReadMode(reader, index) == 0;
 	}
 
-    private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, Buffer reader, int index) {
+    private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, BufferImpl reader, int index) {
         return new BTreeNodeSearchResult(trans, reader, btree(), this, index, true);
     }
     
@@ -251,7 +251,7 @@ public final class BTreeNode extends PersistentBase{
         return _btree.produceNode(((Integer)_children[index]).intValue());
     }
     
-    BTreeNode child(Buffer reader, int index){
+    BTreeNode child(BufferImpl reader, int index){
         if( childLoaded(index) ){
             return (BTreeNode)_children[index];
         }
@@ -266,7 +266,7 @@ public final class BTreeNode extends PersistentBase{
         return child;
     }
     
-    private int childID(Buffer reader, int index){
+    private int childID(BufferImpl reader, int index){
         if(_children == null){
             seekChild(reader, index);
             return reader.readInt();
@@ -471,7 +471,7 @@ public final class BTreeNode extends PersistentBase{
         return keyHandler().compareTo(key(index));
     }
     
-    private int compareInReadMode(Buffer reader, int index){
+    private int compareInReadMode(BufferImpl reader, int index){
         seekKey(reader, index);
         return keyHandler().compareTo(keyHandler().readIndexEntry(reader));
     }
@@ -564,7 +564,7 @@ public final class BTreeNode extends PersistentBase{
         return obj;
     }
     
-    Object key(Transaction trans, Buffer reader, int index){
+    Object key(Transaction trans, BufferImpl reader, int index){
         if(canWrite()){
             return key(trans, index);
         }
@@ -628,7 +628,7 @@ public final class BTreeNode extends PersistentBase{
           + Const4.BRACKETS_BYTES;
     }
     
-    Buffer prepareRead(Transaction trans){
+    BufferImpl prepareRead(Transaction trans){
 
         if(canWrite()){
             return null;
@@ -644,7 +644,7 @@ public final class BTreeNode extends PersistentBase{
             return null;
         }
         
-        Buffer reader = ((LocalTransaction)trans).file().readReaderByID(trans.systemTransaction(), getID());
+        BufferImpl reader = ((LocalTransaction)trans).file().readReaderByID(trans.systemTransaction(), getID());
         
         if (Deploy.debug) {
             reader.readBegin(getIdentifier());
@@ -681,7 +681,7 @@ public final class BTreeNode extends PersistentBase{
         }
     }
     
-    private void readNodeHeader(Buffer reader){
+    private void readNodeHeader(BufferImpl reader){
         _count = reader.readInt();
         byte leafByte = reader.readByte();
         _isLeaf = (leafByte == 1);
@@ -690,7 +690,7 @@ public final class BTreeNode extends PersistentBase{
         _nextID = reader.readInt();
     }
     
-    public void readThis(Transaction trans, Buffer reader) {
+    public void readThis(Transaction trans, BufferImpl reader) {
         readNodeHeader(reader);
 
         prepareArrays();
@@ -803,11 +803,11 @@ public final class BTreeNode extends PersistentBase{
         commitOrRollback(trans, false);
     }
     
-    private Searcher search(Buffer reader){
+    private Searcher search(BufferImpl reader){
         return search(reader, SearchTarget.ANY);
     }
     
-    private Searcher search(Buffer reader, SearchTarget target){
+    private Searcher search(BufferImpl reader, SearchTarget target){
         Searcher s = new Searcher(target, _count);
         if(canWrite()){
             while(s.incomplete()){
@@ -821,16 +821,16 @@ public final class BTreeNode extends PersistentBase{
         return s;
     }
     
-    private void seekAfterKey(Buffer reader, int ix){
+    private void seekAfterKey(BufferImpl reader, int ix){
         seekKey(reader, ix);
         reader._offset += keyHandler().linkLength();
     }
     
-    private void seekChild(Buffer reader, int ix){
+    private void seekChild(BufferImpl reader, int ix){
         seekAfterKey(reader, ix);
     }
     
-    private void seekKey(Buffer reader, int ix){
+    private void seekKey(BufferImpl reader, int ix){
         reader._offset = SLOT_LEADING_LENGTH + (entryLength() * ix);
     }
     
@@ -899,14 +899,14 @@ public final class BTreeNode extends PersistentBase{
     }
     
 	BTreePointer firstPointer(Transaction trans) {
-        Buffer reader = prepareRead(trans);
+        BufferImpl reader = prepareRead(trans);
 		if (_isLeaf) {
             return leafFirstPointer(trans, reader);
 		}
         return branchFirstPointer(trans, reader);
 	}
 
-	private BTreePointer branchFirstPointer(Transaction trans, Buffer reader) {
+	private BTreePointer branchFirstPointer(Transaction trans, BufferImpl reader) {
 		for (int i = 0; i < _count; i++) {
             BTreePointer childFirstPointer = child(reader, i).firstPointer(trans);
             if(childFirstPointer != null){
@@ -916,7 +916,7 @@ public final class BTreeNode extends PersistentBase{
 		return null;
 	}
 
-	private BTreePointer leafFirstPointer(Transaction trans, Buffer reader) {
+	private BTreePointer leafFirstPointer(Transaction trans, BufferImpl reader) {
 		int index = firstKeyIndex(trans);
 		if(index == -1){
 			return null;
@@ -925,14 +925,14 @@ public final class BTreeNode extends PersistentBase{
 	}
 	
 	public BTreePointer lastPointer(Transaction trans) {
-        Buffer reader = prepareRead(trans);
+        BufferImpl reader = prepareRead(trans);
 		if (_isLeaf) {
             return leafLastPointer(trans, reader);
 		}
         return branchLastPointer(trans, reader);
 	}
 
-	private BTreePointer branchLastPointer(Transaction trans, Buffer reader) {
+	private BTreePointer branchLastPointer(Transaction trans, BufferImpl reader) {
 		for (int i = _count - 1; i >= 0; i--) {
             BTreePointer childLastPointer = child(reader, i).lastPointer(trans);
             if(childLastPointer != null){
@@ -942,7 +942,7 @@ public final class BTreeNode extends PersistentBase{
 		return null;
 	}
 
-	private BTreePointer leafLastPointer(Transaction trans, Buffer reader) {
+	private BTreePointer leafLastPointer(Transaction trans, BufferImpl reader) {
 		int index = lastKeyIndex(trans);
 		if(index == -1){
 			return null;
@@ -990,7 +990,7 @@ public final class BTreeNode extends PersistentBase{
     }
     
     public void traverseKeys(Transaction trans, Visitor4 visitor){
-        Buffer reader = prepareRead(trans);
+        BufferImpl reader = prepareRead(trans);
         if(_isLeaf){
             for (int i = 0; i < _count; i++) {
                 Object obj = key(trans,reader, i);
@@ -1016,7 +1016,7 @@ public final class BTreeNode extends PersistentBase{
     }
     
     
-    public void writeThis(Transaction trans, Buffer a_writer) {
+    public void writeThis(Transaction trans, BufferImpl a_writer) {
         
         int count = 0;
         int startOffset = a_writer._offset;
@@ -1141,7 +1141,7 @@ public final class BTreeNode extends PersistentBase{
 
     /** This traversal goes over all nodes, not just leafs */
     void traverseAllNodes(Transaction trans, Visitor4 command) {
-        Buffer reader = prepareRead(trans);
+        BufferImpl reader = prepareRead(trans);
         command.visit(this);
         if(_isLeaf){
             return;

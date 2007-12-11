@@ -45,15 +45,15 @@ public class ShortHandler extends PrimitiveHandler {
 		return mf._primitive.readShort(buffer);
 	}
 	
-	Object read1(Buffer buffer){
+	Object read1(BufferImpl buffer){
 		return primitiveMarshaller().readShort(buffer);
 	}
 
-	public void write(Object a_object, Buffer a_bytes){
+	public void write(Object a_object, BufferImpl a_bytes){
 	    writeShort(((Short)a_object).shortValue(), a_bytes);
 	}
 	
-	static final void writeShort(int a_short, Buffer a_bytes){
+	static final void writeShort(int a_short, BufferImpl a_bytes){
 		if(Deploy.debug){
 			a_bytes.writeBegin(Const4.YAPSHORT);
 		}

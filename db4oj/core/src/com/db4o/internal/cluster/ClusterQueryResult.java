@@ -131,7 +131,7 @@ public class ClusterQueryResult implements QueryResult {
 	}
 
     /** @param r */
-	public void loadFromIdReader(Buffer r) {
+	public void loadFromIdReader(BufferImpl r) {
 		throw new NotSupportedException();
 	}
 }

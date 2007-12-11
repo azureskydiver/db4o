@@ -69,7 +69,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 		_client.write(Msg.OBJECTSET_FINALIZED.getWriterForInt(_transaction, _queryResultID));
 	}
 	
-	public void loadFromIdReader(Buffer reader) {
+	public void loadFromIdReader(BufferImpl reader) {
 		_iterator.loadFromIdReader(reader, reader.readInt());
 	}
 
@@ -79,7 +79,7 @@ public class LazyClientQueryResult extends AbstractQueryResult{
 
 	public void fetchIDs(int batchSize) {
 		_client.write(Msg.OBJECTSET_FETCH.getWriterForInts(_transaction, new int[]{_queryResultID, batchSize }));
-		Buffer reader = _client.expectedByteResponse(Msg.ID_LIST);
+		BufferImpl reader = _client.expectedByteResponse(Msg.ID_LIST);
 		loadFromIdReader(reader);
 	}
 	

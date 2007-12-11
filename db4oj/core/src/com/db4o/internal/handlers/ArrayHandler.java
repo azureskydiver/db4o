@@ -111,7 +111,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     }
     
     public final TreeInt collectIDs1(Transaction trans, TreeInt tree,
-			Buffer reader) {
+			BufferImpl reader) {
 		if (reader == null) {
 			return tree;
 		}
@@ -233,16 +233,16 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         return byRef.value;
     }
 
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, Buffer[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, BufferImpl[] a_bytes) {
         return this;
     }
 
-    public void readCandidates(int handlerVersion, Buffer reader, QCandidates candidates) throws Db4oIOException {
+    public void readCandidates(int handlerVersion, BufferImpl reader, QCandidates candidates) throws Db4oIOException {
         reader.seek(reader.readInt());
         readSubCandidates(handlerVersion, reader, candidates);
     }
     
-    public void readSubCandidates(int handlerVersion, Buffer reader, QCandidates candidates) {
+    public void readSubCandidates(int handlerVersion, BufferImpl reader, QCandidates candidates) {
         if(Deploy.debug){
             reader.readBegin(identifier());
         }
@@ -254,7 +254,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         readSubCandidates(handlerVersion, reader, candidates, elements.value);
     }
 
-    protected void readSubCandidates(int handlerVersion, Buffer reader, QCandidates candidates, int count) {
+    protected void readSubCandidates(int handlerVersion, BufferImpl reader, QCandidates candidates, int count) {
         QueryingReadContext context = new QueryingReadContext(candidates.transaction(), handlerVersion, reader);
         for (int i = 0; i < count; i++) {
             QCandidate qc = candidates.readSubCandidate(context, _handler);

@@ -17,7 +17,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         return ! field.isVirtual();
     }
 
-    public void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, Buffer writer) {
+    public void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, BufferImpl writer) {
         super.write(trans, clazz, field, writer);
         if(! hasBTreeIndex(field)){
             return;
@@ -25,7 +25,7 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
         writer.writeIDOf(trans, field.getIndex(trans));
     }
 
-    public RawFieldSpec readSpec(ObjectContainerBase stream, Buffer reader) {
+    public RawFieldSpec readSpec(ObjectContainerBase stream, BufferImpl reader) {
     	RawFieldSpec spec=super.readSpec(stream, reader);
     	if(spec==null) {
     		return null;

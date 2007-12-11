@@ -22,7 +22,7 @@ class IxFileRangeReader {
     private int               _upper;
     private int               _cursor;
 
-    private final Buffer   _reader;
+    private final BufferImpl   _reader;
 
     final int                 _slotLength;
 
@@ -32,7 +32,7 @@ class IxFileRangeReader {
         _handler = handler;
         _linkLegth = handler.linkLength();
         _slotLength = _linkLegth + Const4.INT_LENGTH;
-        _reader = new Buffer(_slotLength);
+        _reader = new BufferImpl(_slotLength);
     }
 
     Tree add(IxFileRange fileRange, final Tree newTree) throws IxException {

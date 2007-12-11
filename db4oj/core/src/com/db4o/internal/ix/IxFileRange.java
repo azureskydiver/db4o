@@ -56,7 +56,7 @@ class IxFileRange extends IxTree{
         if(! Debug4.prettyToStrings){
             return super.toString();
         }
-        Buffer fileReader = new Buffer(slotLength());
+        BufferImpl fileReader = new BufferImpl(slotLength());
         final StringBuffer sb = new StringBuffer();
         sb.append("IxFileRange");
         visitAll(new IntObjectVisitor() {
@@ -81,7 +81,7 @@ class IxFileRange extends IxTree{
         }
         int count = lowerUpper[1] - lowerUpper[0] + 1;
         if (count > 0) {
-            Buffer fileReader = new Buffer(count * frr._slotLength);
+            BufferImpl fileReader = new BufferImpl(count * frr._slotLength);
 			int offset = _addressOffset + (lowerUpper[0] * frr._slotLength);
 			fileReader.read(stream(), _address, offset);
             for (int i = lowerUpper[0]; i <= lowerUpper[1]; i++) {
@@ -102,7 +102,7 @@ class IxFileRange extends IxTree{
     public void visitAll(IntObjectVisitor visitor) throws IxException {
 		LocalObjectContainer yf = stream();
 		Transaction transaction = trans();
-		Buffer fileReader = new Buffer(slotLength());
+		BufferImpl fileReader = new BufferImpl(slotLength());
 		for (int i = 0; i < _entries; i++) {
 			int address = _address + (i * slotLength());
 			fileReader.read(yf, address, _addressOffset);
@@ -135,7 +135,7 @@ class IxFileRange extends IxTree{
     
     public void freespaceVisit(FreespaceVisitor visitor, int index){
         IxFileRangeReader frr = reader();
-        Buffer fileReader = new Buffer(frr._slotLength);
+        BufferImpl fileReader = new BufferImpl(frr._slotLength);
 		fileReader.read(stream(), _address, _addressOffset + (index * frr._slotLength));
         int val = fileReader.readInt();
         int parentID = fileReader.readInt();
