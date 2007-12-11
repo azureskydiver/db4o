@@ -2,12 +2,12 @@
 
 package com.db4o.internal.query.processor;
 
+import com.db4o.foundation.*;
 
 class Order implements Orderable {
 	
 	private int i_major;
-	private int[] i_minors = new int[8];
-	private int minorsSize;
+	private IntArrayList i_minors = new IntArrayList();
 	
 	public int compareTo(Object obj) {
 		if(obj instanceof Order){
@@ -16,7 +16,7 @@ class Order implements Orderable {
 			if(res != 0){
 				return res;
 			}
-			return compareMinors(other);
+			return compareMinors(other.i_minors);
 		}
 		return -1;
 	}
@@ -35,8 +35,8 @@ class Order implements Orderable {
 	
 	public String toString() {
 	    String str = "Order " + i_major;
-	    for (int i = 0; i < minorsSize; i++) {
-	        str = str + " " + i_minors[i];
+	    for (int i = 0; i < i_minors.size(); i++) {
+	        str = str + " " + i_minors.get(i);
 	    }
 		return str;
 	}
@@ -47,38 +47,25 @@ class Order implements Orderable {
 	}
 	
 	private void appendMinor(int minor) {
-	    ensureMinorsCapacity();
-	    i_minors[minorsSize] = minor;
-	    minorsSize++;
+	    i_minors.add(minor);
 	}
 	
 	private void insertMinor(int minor) {
-	    ensureMinorsCapacity();
-	    System.arraycopy(i_minors, 0, i_minors, 1, minorsSize);
-	    i_minors[0] = minor;
-	    minorsSize++;
+	    i_minors.add(0, minor);
 	}
 	
-	private void ensureMinorsCapacity() {
-	    if (minorsSize == i_minors.length) {
-	        int[] newMinors = new int[minorsSize * 2];
-	        System.arraycopy(i_minors, 0, newMinors, 0, minorsSize);
-	        i_minors = newMinors;
-	    }
-	}
-	
-	private int compareMinors(Order other) {
-	    if (minorsSize != other.minorsSize) {
-	        throw new RuntimeException("Unexpected exception: this.minorsSize=" + minorsSize 
-	                + ", other.minorsSize=" + other.minorsSize);
+	private int compareMinors(IntArrayList other) {
+	    if (i_minors.size() != other.size()) {
+	        throw new RuntimeException("Unexpected exception: this..size()=" + i_minors.size()
+	                + ", other.size()=" + other.size());
 	    }
 	    
 	    int result = 0; 
-	    for (int i = 0; i < minorsSize; i++) {
-	        if (i_minors[i] == other.i_minors[i]) {
+	    for (int i = 0; i < i_minors.size(); i++) {
+	        if (i_minors.get(i) == other.get(i)) {
 	            continue;
 	        } else {
-	            return (i_minors[i] - other.i_minors[i]);
+	            return (i_minors.get(i) - other.get(i));
 	        }
 	    }
 	    return result;
