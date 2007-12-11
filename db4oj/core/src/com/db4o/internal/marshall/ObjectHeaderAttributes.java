@@ -15,7 +15,7 @@ public class ObjectHeaderAttributes implements FieldListInfo {
     
     private final BitMap4 _nullBitMap;
     
-    public ObjectHeaderAttributes(Buffer reader){
+    public ObjectHeaderAttributes(BufferImpl reader){
         _fieldCount = reader.readInt();
         _nullBitMap = reader.readBitMap(_fieldCount);
     }

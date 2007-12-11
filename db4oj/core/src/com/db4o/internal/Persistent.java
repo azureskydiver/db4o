@@ -11,8 +11,8 @@ public interface Persistent {
 
 	int ownLength();
 
-	void readThis(Transaction trans, Buffer reader);
+	void readThis(Transaction trans, BufferImpl reader);
 
-	void writeThis(Transaction trans, Buffer writer);
+	void writeThis(Transaction trans, BufferImpl writer);
 
 }

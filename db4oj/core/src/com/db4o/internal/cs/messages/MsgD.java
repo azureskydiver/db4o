@@ -20,7 +20,7 @@ public class MsgD extends Msg{
 		super(aName);
 	}
 
-	public Buffer getByteLoad() {
+	public BufferImpl getByteLoad() {
 		return _payLoad;
 	}
 
@@ -131,7 +131,7 @@ public class MsgD extends Msg{
 		return Serializer.unmarshall(stream(),_payLoad);
 	}
 
-	final Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, Buffer reader){
+	final Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, BufferImpl reader){
 		int length = reader.readInt();
 		a_trans = checkParentTransaction(a_trans, reader);
 		final MsgD command = (MsgD)publicClone();

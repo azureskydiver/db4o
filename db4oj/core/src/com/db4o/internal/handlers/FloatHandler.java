@@ -4,7 +4,7 @@ package com.db4o.internal.handlers;
 
 import com.db4o.CorruptionException;
 import com.db4o.foundation.Coercion4;
-import com.db4o.internal.Buffer;
+import com.db4o.internal.BufferImpl;
 import com.db4o.internal.ObjectContainerBase;
 import com.db4o.internal.StatefulBuffer;
 import com.db4o.internal.marshall.MarshallerFamily;
@@ -42,12 +42,12 @@ public class FloatHandler extends IntHandler {
     	return mf._primitive.readFloat(writer);
     }
 
-	Object read1(Buffer a_bytes) {
+	Object read1(BufferImpl a_bytes) {
 		return primitiveMarshaller().readFloat(a_bytes);
 	}
 
 
-	public void write(Object a_object, Buffer a_bytes) {
+	public void write(Object a_object, BufferImpl a_bytes) {
 		writeInt(
 			Float.floatToIntBits(((Float) a_object).floatValue()),
 			a_bytes);

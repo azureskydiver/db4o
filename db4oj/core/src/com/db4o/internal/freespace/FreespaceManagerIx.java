@@ -218,7 +218,7 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
         MetaIndex miAddress = new MetaIndex();
         MetaIndex miLength = new MetaIndex();
         
-        Buffer reader = new Buffer(slotLength());
+        BufferImpl reader = new BufferImpl(slotLength());
         reader.read(_file, slotAddress, 0);
         miAddress.read(reader);
         miLength.read(reader);

@@ -71,7 +71,7 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
     
     public abstract Object read(byte[] bytes, int offset);
     
-    Object read1(Buffer a_bytes) throws CorruptionException {
+    Object read1(BufferImpl a_bytes) throws CorruptionException {
 		int offset = a_bytes._offset;
 		Object ret = read(a_bytes._buffer, a_bytes._offset);
 		a_bytes._offset = offset + linkLength();
@@ -82,7 +82,7 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
     
     public abstract void write(Object obj, byte[] bytes, int offset);
 
-    public void write(Object a_object, Buffer a_bytes) {
+    public void write(Object a_object, BufferImpl a_bytes) {
         int offset = a_bytes._offset;
         if(a_object != null){
             write(a_object, a_bytes._buffer, a_bytes._offset);

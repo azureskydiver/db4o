@@ -105,7 +105,7 @@ public class InMemoryObjectContainer extends LocalObjectContainer {
     public void syncFiles() {
     }
 
-	public void writeBytes(Buffer bytes, int address, int addressOffset) {
+	public void writeBytes(BufferImpl bytes, int address, int addressOffset) {
 		int fullAddress = address + addressOffset;
 		int length = bytes.length();
 		ensureMemoryFileSize(fullAddress + length);   

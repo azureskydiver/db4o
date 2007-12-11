@@ -82,7 +82,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
         instantiate1(context.transaction(), context.reference(), context.buffer());
     }
 
-    abstract void instantiate1(Transaction trans, ObjectReference ref, SlotBuffer buffer);
+    abstract void instantiate1(Transaction trans, ObjectReference ref, Buffer buffer);
     
     public void loadHandler(ObjectContainerBase a_stream){
     	// do nothing
@@ -163,7 +163,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
     
     abstract void marshallIgnore(WriteBuffer writer);
     
-    public void readVirtualAttribute(Transaction trans, Buffer buffer, ObjectReference ref) {
+    public void readVirtualAttribute(Transaction trans, BufferImpl buffer, ObjectReference ref) {
         if(! trans.supportsVirtualFields()){
             incrementOffset(buffer);
             return;

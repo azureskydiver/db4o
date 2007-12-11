@@ -588,7 +588,7 @@ public class FieldMetadata implements StoredField {
         return _index != null;
     }
 
-    public final void incrementOffset(SlotBuffer buffer) {
+    public final void incrementOffset(Buffer buffer) {
     	buffer.seek(buffer.offset() + linkLength());
     }
 
@@ -633,7 +633,7 @@ public class FieldMetadata implements StoredField {
         set(context.persistentObject(), toSet);
     }
     
-    private boolean checkAlive(SlotBuffer buffer){
+    private boolean checkAlive(Buffer buffer){
         boolean alive = alive(); 
         if (! alive) {
             incrementOffset(buffer);
@@ -785,7 +785,7 @@ public class FieldMetadata implements StoredField {
      * @param trans
      * @param ref
      */
-    public void readVirtualAttribute(Transaction trans, Buffer buffer, ObjectReference ref) {
+    public void readVirtualAttribute(Transaction trans, BufferImpl buffer, ObjectReference ref) {
         incrementOffset(buffer);
     }
 

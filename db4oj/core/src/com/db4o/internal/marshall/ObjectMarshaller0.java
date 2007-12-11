@@ -44,7 +44,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	traverseFields(yc, writer, attributes, command);
     }
     
-    public boolean findOffset(ClassMetadata yc, FieldListInfo fieldListInfo, final Buffer buffer, final FieldMetadata field) {
+    public boolean findOffset(ClassMetadata yc, FieldListInfo fieldListInfo, final BufferImpl buffer, final FieldMetadata field) {
     	final boolean[] ret={false};
     	TraverseFieldCommand command=new TraverseFieldCommand() {
     		public void processField(FieldMetadata curField, boolean isNull, ClassMetadata containingClass) {
@@ -72,7 +72,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
         return 0;
     }
 
-    public ObjectHeaderAttributes readHeaderAttributes(Buffer reader) {
+    public ObjectHeaderAttributes readHeaderAttributes(BufferImpl reader) {
         return null;
     }
 
@@ -92,7 +92,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 		}
     }
     
-    public void readVirtualAttributes(final Transaction trans,  ClassMetadata yc, final ObjectReference yo, ObjectHeaderAttributes attributes, final Buffer reader){
+    public void readVirtualAttributes(final Transaction trans,  ClassMetadata yc, final ObjectReference yo, ObjectHeaderAttributes attributes, final BufferImpl reader){
     	TraverseFieldCommand command=new TraverseFieldCommand() {
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
 	            field.readVirtualAttribute(trans, reader, yo);
@@ -108,11 +108,11 @@ class ObjectMarshaller0 extends ObjectMarshaller {
 	public void defragFields(ClassMetadata yapClass,ObjectHeader header, BufferPair readers) {
 	}
 
-	public void writeObjectClassID(Buffer reader, int id) {
+	public void writeObjectClassID(BufferImpl reader, int id) {
 		reader.writeInt(id);
 	}
 
-	public void skipMarshallerInfo(Buffer reader) {
+	public void skipMarshallerInfo(BufferImpl reader) {
 	}
     
 

@@ -32,7 +32,7 @@ public class LockedTree {
         return TreeInt.find(_tree, key);
     }
 
-    public void read(Buffer buffer, Readable template) {
+    public void read(BufferImpl buffer, Readable template) {
         clear();
         _tree = new TreeReader(buffer, template).read();
         changed();

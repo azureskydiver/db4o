@@ -163,7 +163,7 @@ public abstract class Debug extends Debug4 {
     public static final void writeBegin(WriteBuffer buffer, byte identifier) {
         if (Deploy.debug) {
             if(buffer instanceof MarshallingContext){
-                Buffer prepend = new Buffer(2);
+                BufferImpl prepend = new BufferImpl(2);
                 if (Deploy.brackets) {
                     prepend.writeByte(Const4.YAPBEGIN);
                 }

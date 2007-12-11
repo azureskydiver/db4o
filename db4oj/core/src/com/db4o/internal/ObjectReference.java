@@ -130,7 +130,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         MarshallingContext context = new MarshallingContext(trans, this, updateDepth, true);
         MarshallerFamily.current()._object.marshall(getObject(), context);
         Pointer4 pointer = context.allocateSlot();
-        Buffer buffer = context.ToWriteBuffer(pointer);
+        BufferImpl buffer = context.ToWriteBuffer(pointer);
 
         ObjectContainerBase container = trans.container();
 		container.writeNew(trans, pointer, _class, buffer);
@@ -263,7 +263,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	    return new UnmarshallingContext(trans, buffer, this, Const4.ADD_TO_ID_TREE, false).readPrefetch();
 	}
 
-	public final void readThis(Transaction trans, Buffer buffer) {
+	public final void readThis(Transaction trans, BufferImpl buffer) {
 		if (Deploy.debug) {
 			System.out.println(
 				"YapObject.readThis should never be called. All handling takes place in read");
@@ -355,7 +355,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         _virtualAttributes = at;
     }
 
-	public void writeThis(Transaction trans, Buffer buffer) {
+	public void writeThis(Transaction trans, BufferImpl buffer) {
 		if (Deploy.debug) {
 			System.out.println("YapObject.writeThis should never be called.");
 		}
@@ -399,7 +399,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
         MarshallingContext context = new MarshallingContext(transaction, this, updatedepth, false);
         MarshallerFamily.current()._object.marshall(obj, context);
         Pointer4 pointer = context.allocateSlot();
-        Buffer buffer = context.ToWriteBuffer(pointer);
+        BufferImpl buffer = context.ToWriteBuffer(pointer);
         
         container.writeUpdate(transaction, pointer, classMetadata(), buffer);
         if (isActive()) {

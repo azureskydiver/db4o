@@ -2,7 +2,7 @@
 
 package com.db4o.db4ounit.common.handlers;
 
-import com.db4o.internal.Buffer;
+import com.db4o.internal.BufferImpl;
 import com.db4o.internal.Indexable4;
 import com.db4o.internal.handlers.DoubleHandler;
 
@@ -26,7 +26,7 @@ public class DoubleHandlerTestCase extends TypeHandlerTestCaseBase {
 	public void testMarshalling() {
 		final Double expected = new Double(1.1);
 		
-		Buffer buffer = new Buffer(_handler.linkLength());		
+		BufferImpl buffer = new BufferImpl(_handler.linkLength());		
 		_handler.writeIndexEntry(buffer, expected);
 		
 		buffer.seek(0);

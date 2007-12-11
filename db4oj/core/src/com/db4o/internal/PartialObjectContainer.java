@@ -1294,11 +1294,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void readBytes(byte[] bytes, int address, int addressOffset, int length) throws Db4oIOException;
 
-    public final Buffer bufferByAddress(int address, int length)
+    public final BufferImpl bufferByAddress(int address, int length)
 			throws Db4oIOException {
 		checkAddress(address);
 
-		Buffer reader = new Buffer(length);
+		BufferImpl reader = new BufferImpl(length);
 		readBytes(reader._buffer, address, length);
 		_handlers.decrypt(reader);
 		return reader;
@@ -1321,7 +1321,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract StatefulBuffer readWriterByID(Transaction a_ta, int a_id);
 
-    public abstract Buffer readReaderByID(Transaction a_ta, int a_id);
+    public abstract BufferImpl readReaderByID(Transaction a_ta, int a_id);
     
     public abstract StatefulBuffer[] readWritersByIDs(Transaction a_ta, int[] ids);
 
@@ -1883,11 +1883,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     public abstract void writeDirty();
 
-    public abstract void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer);
+    public abstract void writeNew(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, BufferImpl buffer);
 
     public abstract void writeTransactionPointer(int address);
 
-    public abstract void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, Buffer buffer);
+    public abstract void writeUpdate(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, BufferImpl buffer);
 
     // cheat emulating '(YapStream)this'
     private static ExternalObjectContainer cast(PartialObjectContainer obj) {

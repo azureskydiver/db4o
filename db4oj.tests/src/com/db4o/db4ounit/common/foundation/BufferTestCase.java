@@ -10,11 +10,11 @@ public class BufferTestCase implements TestCase {
 	private static final int READERLENGTH = 64;
 
 	public void testCopy() {
-		Buffer from=new Buffer(READERLENGTH);
+		BufferImpl from=new BufferImpl(READERLENGTH);
 		for(int i=0;i<READERLENGTH;i++) {
 			from.writeByte((byte)i);
 		}
-		Buffer to=new Buffer(READERLENGTH-1);
+		BufferImpl to=new BufferImpl(READERLENGTH-1);
 		from.copyTo(to,1,2,10);
 		
 		Assert.areEqual(0,to.readByte());

@@ -8,7 +8,7 @@ import com.db4o.internal.handlers.*;
 
 class ArrayMarshaller1 extends ArrayMarshaller{
     
-    protected Buffer prepareIDReader(Transaction trans,Buffer reader) {
+    protected BufferImpl prepareIDReader(Transaction trans,BufferImpl reader) {
         reader._offset = reader.readInt();
         return reader;
     }

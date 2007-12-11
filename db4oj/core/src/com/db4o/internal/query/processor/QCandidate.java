@@ -23,7 +23,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	// db4o ID is stored in _key;
 
 	// db4o byte stream storing the object
-	Buffer _bytes;
+	BufferImpl _bytes;
 
 	final QCandidates _candidates;
 
@@ -126,7 +126,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			TypeHandler4 handler = _yapField.getHandler();
 			if (handler != null) {
 
-				final Buffer[] arrayBytes = { _bytes };
+				final BufferImpl[] arrayBytes = { _bytes };
 				
 				TypeHandler4 tempHandler = null;
 				
@@ -393,8 +393,8 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 
 	public Object getObject() {
 		Object obj = value(true);
-		if (obj instanceof Buffer) {
-			Buffer reader = (Buffer) obj;
+		if (obj instanceof BufferImpl) {
+			BufferImpl reader = (BufferImpl) obj;
 			int offset = reader._offset;
             obj = readString(reader); 
 			reader._offset = offset;
@@ -402,7 +402,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return obj;
 	}
 	
-	public String readString(Buffer buffer){
+	public String readString(BufferImpl buffer){
 	    return StringHandler.readString(transaction().context(), buffer);
 	}
 
@@ -658,7 +658,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return _member;
 	}
     
-    void setBytes(Buffer bytes){
+    void setBytes(BufferImpl bytes){
         _bytes = bytes;
     }
     

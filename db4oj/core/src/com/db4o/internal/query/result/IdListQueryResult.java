@@ -128,7 +128,7 @@ public class IdListQueryResult extends AbstractQueryResult implements Visitor4{
 		
 	}
 
-	public void loadFromIdReader(Buffer reader) {
+	public void loadFromIdReader(BufferImpl reader) {
 		int size = reader.readInt();
 		for (int i = 0; i < size; i++) {
 			add(reader.readInt());

@@ -13,16 +13,16 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public final class BufferPair implements SlotBuffer {
-	private Buffer _source;
-	private Buffer _target;
+public final class BufferPair implements Buffer {
+	private BufferImpl _source;
+	private BufferImpl _target;
 	private DefragmentServices _mapping;
 	private Transaction _systemTrans;
 	
-	public BufferPair(Buffer source,DefragmentServices mapping,Transaction systemTrans) {
+	public BufferPair(BufferImpl source,DefragmentServices mapping,Transaction systemTrans) {
 		_source = source;
 		_mapping=mapping;
-		_target = new Buffer(length());
+		_target = new BufferImpl(length());
 		_source.copyTo(_target, 0, 0, length());
 		_systemTrans=systemTrans;
 	}
@@ -127,18 +127,18 @@ public final class BufferPair implements SlotBuffer {
 	    incrementStringOffset(sio, _target);
 	}
 	
-	private void incrementStringOffset(LatinStringIO sio, Buffer buffer) {
+	private void incrementStringOffset(LatinStringIO sio, BufferImpl buffer) {
 	    int length = buffer.readInt();
 	    if(length > 0){
 	        sio.read(buffer, length);
 	    }
 	}
 	
-	public Buffer source() {
+	public BufferImpl source() {
 		return _source;
 	}
 
-	public Buffer target() {
+	public BufferImpl target() {
 		return _target;
 	}
 	
@@ -159,11 +159,11 @@ public final class BufferPair implements SlotBuffer {
 	}
 
 	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException, IOException {
-		Buffer sourceReader = context.sourceBufferByID(sourceID);
+		BufferImpl sourceReader = context.sourceBufferByID(sourceID);
 		processCopy(context, sourceID, command, registerAddressMapping, sourceReader);
 	}
 
-	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, Buffer sourceReader) throws CorruptionException, IOException {
+	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, BufferImpl sourceReader) throws CorruptionException, IOException {
 		int targetID=context.mappedID(sourceID);
 	
 		Slot targetSlot = context.allocateTargetSlot(sourceReader.length());
@@ -173,7 +173,7 @@ public final class BufferPair implements SlotBuffer {
 			context.mapIDs(sourceAddress, targetSlot.address(), false);
 		}
 		
-		Buffer targetPointerReader=new Buffer(Const4.POINTER_LENGTH);
+		BufferImpl targetPointerReader=new BufferImpl(Const4.POINTER_LENGTH);
 		if(Deploy.debug) {
 			targetPointerReader.writeBegin(Const4.YAPPOINTER);
 		}

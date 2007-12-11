@@ -55,7 +55,7 @@ public class FileHeader1 extends FileHeader {
         writeVariablePart(file, 0);
     }
     
-    protected FileHeader newOnSignatureMatch(LocalObjectContainer file, Buffer reader) {
+    protected FileHeader newOnSignatureMatch(LocalObjectContainer file, BufferImpl reader) {
         if(signatureMatches(reader, SIGNATURE, VERSION)){
             return new FileHeader1();
         }
@@ -75,7 +75,7 @@ public class FileHeader1 extends FileHeader {
         return LENGTH;
     }
 
-    protected void readFixedPart(LocalObjectContainer file, Buffer reader) {
+    protected void readFixedPart(LocalObjectContainer file, BufferImpl reader) {
         commonTasksForNewAndRead(file);
         checkThreadFileLock(file, reader);
         reader.seek(TRANSACTION_POINTER_OFFSET);
@@ -85,7 +85,7 @@ public class FileHeader1 extends FileHeader {
         _variablePart = new FileHeaderVariablePart1(reader.readInt(), file.systemData());
     }
     
-    private void checkThreadFileLock(LocalObjectContainer container, Buffer reader) {
+    private void checkThreadFileLock(LocalObjectContainer container, BufferImpl reader) {
     	reader.seek(ACCESS_TIME_OFFSET);
     	long lastAccessTime = reader.readLong();
 		if(FileHeader.lockedByOtherSession(container, lastAccessTime)){

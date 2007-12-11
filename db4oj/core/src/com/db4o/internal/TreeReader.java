@@ -11,17 +11,17 @@ import com.db4o.foundation.Tree;
 public final class TreeReader  
 {
 	private final Readable i_template;
-	private final Buffer i_bytes;
+	private final BufferImpl i_bytes;
 	private int i_current = 0;
 	private int i_levels = 0;
 	private int i_size;
 	private boolean i_orderOnRead;
 	
-	public TreeReader(Buffer a_bytes, Readable a_template) {
+	public TreeReader(BufferImpl a_bytes, Readable a_template) {
 		this(a_bytes, a_template, false);
 	}
 	
-	public TreeReader(Buffer a_bytes, Readable a_template, boolean a_orderOnRead) {
+	public TreeReader(BufferImpl a_bytes, Readable a_template, boolean a_orderOnRead) {
 		i_template = a_template;
 		i_bytes = a_bytes;
 		i_orderOnRead = a_orderOnRead;

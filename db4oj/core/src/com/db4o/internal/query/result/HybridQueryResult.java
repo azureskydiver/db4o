@@ -62,7 +62,7 @@ public class HybridQueryResult extends AbstractQueryResult {
 		_delegate.loadFromClassIndexes(iterator);
 	}
 
-	public void loadFromIdReader(Buffer reader) {
+	public void loadFromIdReader(BufferImpl reader) {
 		_delegate.loadFromIdReader(reader);
 	}
 

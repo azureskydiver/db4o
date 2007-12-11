@@ -13,24 +13,24 @@ public abstract class BufferContext implements ReadBuffer{
 	
 	protected final Transaction _transaction;
 
-	protected SlotBuffer _buffer;
+	protected Buffer _buffer;
 
 	public BufferContext(Transaction transaction) {
 		_transaction = transaction;
 	}
 
-	public BufferContext(Transaction transaction, Buffer buffer) {
+	public BufferContext(Transaction transaction, BufferImpl buffer) {
         _transaction = transaction;
         _buffer = buffer;
 	}
 
-	public SlotBuffer buffer(SlotBuffer buffer) {
-	    SlotBuffer temp = _buffer;
+	public Buffer buffer(Buffer buffer) {
+	    Buffer temp = _buffer;
 	    _buffer = buffer;
 	    return temp;
 	}
 
-	public SlotBuffer buffer() {
+	public Buffer buffer() {
 	    return _buffer;
 	}
 

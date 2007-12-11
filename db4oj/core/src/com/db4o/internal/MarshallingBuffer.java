@@ -15,7 +15,7 @@ public class MarshallingBuffer implements WriteBuffer{
     
     private static final int NO_PARENT = - Integer.MAX_VALUE;
     
-    private Buffer _delegate;
+    private BufferImpl _delegate;
     
     private int _lastOffSet;
     
@@ -62,7 +62,7 @@ public class MarshallingBuffer implements WriteBuffer{
     
     private void prepareWrite(int sizeNeeded){
         if(_delegate == null){
-            _delegate = new Buffer(sizeNeeded); 
+            _delegate = new BufferImpl(sizeNeeded); 
         }
         _lastOffSet = _delegate.offset();
         if(remainingSize() < sizeNeeded){
@@ -79,7 +79,7 @@ public class MarshallingBuffer implements WriteBuffer{
         if(newSize - _lastOffSet < sizeNeeded){
             newSize += sizeNeeded;
         }
-        Buffer temp = new Buffer(newSize);
+        BufferImpl temp = new BufferImpl(newSize);
         temp.seek(_lastOffSet);
         _delegate.copyTo(temp, 0, 0, _delegate.length());
         _delegate = temp;
@@ -100,16 +100,16 @@ public class MarshallingBuffer implements WriteBuffer{
         _addressInParent = storeLengthInLink ? offset : -offset;
     }
 
-    public void transferContentTo(Buffer buffer){
+    public void transferContentTo(BufferImpl buffer){
         transferContentTo(buffer, length());
     }
     
-    public void transferContentTo(Buffer buffer, int length){
+    public void transferContentTo(BufferImpl buffer, int length){
         System.arraycopy(_delegate._buffer, 0, buffer._buffer, buffer._offset, length);
         buffer._offset += length;
     }
     
-    public Buffer testDelegate(){
+    public BufferImpl testDelegate(){
         return _delegate;
     }
     

@@ -13,7 +13,7 @@ import com.db4o.internal.convert.conversions.*;
  */
 public class ClassMarshaller0 extends ClassMarshaller{
     
-    protected void readIndex(ObjectContainerBase stream, ClassMetadata clazz, Buffer reader) {
+    protected void readIndex(ObjectContainerBase stream, ClassMetadata clazz, BufferImpl reader) {
         int indexID = reader.readInt();
         if(! stream.maintainsIndices() || ! (stream instanceof LocalObjectContainer)){
             return;

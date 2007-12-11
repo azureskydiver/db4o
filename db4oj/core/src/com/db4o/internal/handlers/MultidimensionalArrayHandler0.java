@@ -19,7 +19,7 @@ public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler 
     public Object read(ReadContext readContext) {
         InternalReadContext context = (InternalReadContext) readContext;
         
-        Buffer buffer = readIndirectedBuffer(context); 
+        BufferImpl buffer = readIndirectedBuffer(context); 
         if (buffer == null) {
             return null;
         }
@@ -30,7 +30,7 @@ public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler 
         // in the UnmarshallingContext.
         
         // The buffer has to be set back from the outside!  See below
-        SlotBuffer contextBuffer = context.buffer(buffer);
+        Buffer contextBuffer = context.buffer(buffer);
         
         Object array = super.read(context);
         

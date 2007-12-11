@@ -42,7 +42,7 @@ public abstract class VariableLengthTypeHandler implements TypeHandler4 {
         return _container;
     }
     
-    protected Buffer readIndirectedBuffer(ReadContext readContext) {
+    protected BufferImpl readIndirectedBuffer(ReadContext readContext) {
         InternalReadContext context = (InternalReadContext) readContext;
         int address = context.readInt();
         int length = context.readInt();

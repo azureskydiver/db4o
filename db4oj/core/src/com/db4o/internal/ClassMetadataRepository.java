@@ -357,7 +357,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         }
     }
 
-    public final void readThis(Transaction trans, Buffer buffer) {
+    public final void readThis(Transaction trans, BufferImpl buffer) {
 		int classCount = buffer.readInt();
 
 		initTables(classCount);
@@ -507,7 +507,7 @@ public final class ClassMetadataRepository extends PersistentBase {
         }
     }
 
-    public void writeThis(Transaction trans, Buffer buffer) {
+    public void writeThis(Transaction trans, BufferImpl buffer) {
         buffer.writeInt(_classes.size());
         Iterator4 i = _classes.iterator();
         while (i.moveNext()) {

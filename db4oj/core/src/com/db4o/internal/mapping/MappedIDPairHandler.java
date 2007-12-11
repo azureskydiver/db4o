@@ -27,13 +27,13 @@ public class MappedIDPairHandler implements Indexable4 {
 		return _origHandler.linkLength()+_mappedHandler.linkLength();
 	}
 
-	public Object readIndexEntry(Buffer reader) {
+	public Object readIndexEntry(BufferImpl reader) {
 		int origID=readID(reader);
 		int mappedID=readID(reader);
         return new MappedIDPair(origID,mappedID);
 	}
 
-	public void writeIndexEntry(Buffer reader, Object obj) {
+	public void writeIndexEntry(BufferImpl reader, Object obj) {
 		MappedIDPair mappedIDs=(MappedIDPair)obj;
 		_origHandler.writeIndexEntry(reader, new Integer(mappedIDs.orig()));
 		_mappedHandler.writeIndexEntry(reader, new Integer(mappedIDs.mapped()));
@@ -50,7 +50,7 @@ public class MappedIDPairHandler implements Indexable4 {
         return this;
 	}
 	
-	private int readID(Buffer a_reader) {
+	private int readID(BufferImpl a_reader) {
 		return ((Integer)_origHandler.readIndexEntry(a_reader)).intValue();
 	}
 }

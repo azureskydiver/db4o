@@ -9,7 +9,7 @@ import com.db4o.internal.handlers.*;
 
 class ArrayMarshaller0  extends ArrayMarshaller{
     
-    protected Buffer prepareIDReader(Transaction trans,Buffer reader) throws Db4oIOException {
+    protected BufferImpl prepareIDReader(Transaction trans,BufferImpl reader) throws Db4oIOException {
     	return reader.readEmbeddedObject(trans);
     }
     

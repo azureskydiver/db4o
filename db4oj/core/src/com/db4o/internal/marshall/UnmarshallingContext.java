@@ -23,7 +23,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
     
     private boolean _checkIDTree;
     
-    public UnmarshallingContext(Transaction transaction, Buffer buffer, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
+    public UnmarshallingContext(Transaction transaction, BufferImpl buffer, ObjectReference ref, int addToIDTree, boolean checkIDTree) {
         super(transaction, buffer);
         _reference = ref;
         _addToIDTree = addToIDTree;
@@ -38,7 +38,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         StatefulBuffer buffer = new StatefulBuffer(_transaction, _buffer.length());
         buffer.setID(objectID());
         buffer.setInstantiationDepth(activationDepth());
-        ((Buffer)_buffer).copyTo(buffer, 0, 0, _buffer.length());
+        ((BufferImpl)_buffer).copyTo(buffer, 0, 0, _buffer.length());
         buffer.seek(_buffer.offset());
         return buffer;
     }
@@ -123,7 +123,7 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         if(classMetadata == null){
             return null;
         }
-        if(! _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, (Buffer)_buffer, field)){
+        if(! _objectHeader.objectMarshaller().findOffset(classMetadata, _objectHeader._headerAttributes, (BufferImpl)_buffer, field)){
             return null;
         }
         return field.read(this);

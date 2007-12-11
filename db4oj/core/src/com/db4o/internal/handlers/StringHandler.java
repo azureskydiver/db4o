@@ -58,7 +58,7 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
      * This readIndexEntry method reads from the actual index in the file.
      * TODO: Consider renaming methods in Indexable4 and Typhandler4 to make direction clear.  
      */
-    public Object readIndexEntry(Buffer reader) {
+    public Object readIndexEntry(BufferImpl reader) {
     	Slot s = new Slot(reader.readInt(), reader.readInt());
     	if (isInvalidSlot(s)){
     		return null;
@@ -70,7 +70,7 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
 		return (slot.address() == 0) && (slot.length() == 0);
 	}
     
-    public void writeIndexEntry(Buffer writer, Object entry) {
+    public void writeIndexEntry(BufferImpl writer, Object entry) {
         if(entry == null){
             writer.writeInt(0);
             writer.writeInt(0);
@@ -91,7 +91,7 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
          throw new IllegalArgumentException();
     }
     
-    public final void writeShort(Transaction trans, String str, Buffer buffer) {
+    public final void writeShort(Transaction trans, String str, BufferImpl buffer) {
         if (str == null) {
             buffer.writeInt(0);
         } else {
@@ -102,15 +102,15 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
 
     // Comparison_______________________
 
-    private Buffer i_compareTo;
+    private BufferImpl i_compareTo;
 
-    private Buffer val(Object obj) {
+    private BufferImpl val(Object obj) {
     	return val(obj,container());
     }
 
-    public Buffer val(Object obj, ObjectContainerBase oc) {
-        if(obj instanceof Buffer) {
-            return (Buffer)obj;
+    public BufferImpl val(Object obj, ObjectContainerBase oc) {
+        if(obj instanceof BufferImpl) {
+            return (BufferImpl)obj;
         }
         if(obj instanceof String) {
             return writeToBuffer((InternalObjectContainer) oc, (String)obj);
@@ -147,7 +147,7 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
      *
      * TODO: You will need collators here for different languages.  
      */
-    final int compare(Buffer a_compare, Buffer a_with) {
+    final int compare(BufferImpl a_compare, BufferImpl a_with) {
         if (a_compare == null) {
             if (a_with == null) {
                 return 0;
@@ -208,8 +208,8 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         }
     }
     
-    public static Buffer writeToBuffer(InternalObjectContainer container, String str){
-        Buffer buffer = new Buffer(stringIo(container).length(str));
+    public static BufferImpl writeToBuffer(InternalObjectContainer container, String str){
+        BufferImpl buffer = new BufferImpl(stringIo(container).length(str));
         internalWrite(container, buffer, str);
         return buffer;
     }

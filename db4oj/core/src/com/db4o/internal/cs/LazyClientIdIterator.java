@@ -60,7 +60,7 @@ public class LazyClientIdIterator implements IntIterator4{
 		_current = -1;
 	}
 
-	public void loadFromIdReader(Buffer reader, int count) {
+	public void loadFromIdReader(BufferImpl reader, int count) {
 		for (int i = 0; i < count; i++) {
 			_ids[i] = reader.readInt();
 		}

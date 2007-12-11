@@ -10,21 +10,21 @@ public abstract class MockMarshallingContext {
 
     private final ObjectContainer _objectContainer;
     
-    final Buffer _header;
+    final BufferImpl _header;
     
-    final Buffer _payLoad;
+    final BufferImpl _payLoad;
     
-    protected Buffer _current;
+    protected BufferImpl _current;
     
     public MockMarshallingContext(ObjectContainer objectContainer){
         _objectContainer = objectContainer;
-        _header = new Buffer(1000);
-        _payLoad = new Buffer(1000);
+        _header = new BufferImpl(1000);
+        _payLoad = new BufferImpl(1000);
         _current = _header;
     }
 
     public WriteBuffer newBuffer(int length) {
-        return new Buffer(length);
+        return new BufferImpl(length);
     }
 
     public ObjectContainer objectContainer() {

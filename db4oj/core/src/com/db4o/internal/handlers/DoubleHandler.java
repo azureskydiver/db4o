@@ -42,11 +42,11 @@ public class DoubleHandler extends LongHandler {
 		return mf._primitive.readDouble(buffer);
 	}
 	
-	Object read1(Buffer buffer){
+	Object read1(BufferImpl buffer){
 		return primitiveMarshaller().readDouble(buffer);
 	}
 	
-	public void write(Object a_object, Buffer a_bytes){
+	public void write(Object a_object, BufferImpl a_bytes){
 		a_bytes.writeLong(Platform4.doubleToLong(((Double)a_object).doubleValue()));
 	}
 	

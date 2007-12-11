@@ -17,7 +17,7 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     	super(transaction);
     }
     
-    protected AbstractReadContext(Transaction transaction, Buffer buffer){
+    protected AbstractReadContext(Transaction transaction, BufferImpl buffer){
     	super(transaction, buffer);
     }
     

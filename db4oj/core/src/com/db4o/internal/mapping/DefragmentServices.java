@@ -16,14 +16,14 @@ import com.db4o.internal.slots.*;
  */
 public interface DefragmentServices extends IDMapping {
 	
-	Buffer sourceBufferByAddress(int address,int length) throws IOException;
-	Buffer targetBufferByAddress(int address,int length) throws IOException;
+	BufferImpl sourceBufferByAddress(int address,int length) throws IOException;
+	BufferImpl targetBufferByAddress(int address,int length) throws IOException;
 
-	Buffer sourceBufferByID(int sourceID) throws IOException;
+	BufferImpl sourceBufferByID(int sourceID) throws IOException;
 
 	Slot allocateTargetSlot(int targetLength);
 
-	void targetWriteBytes(Buffer targetPointerReader, int targetID);
+	void targetWriteBytes(BufferImpl targetPointerReader, int targetID);
 
 	Transaction systemTrans();
 
