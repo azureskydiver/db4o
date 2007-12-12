@@ -85,8 +85,12 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 //		  old MarshallerFamily implementations don't implement 
 // 		  defrag. 
 		    
-//        Fix by fully implementing defrag in Typehandler versions. 		    
+//        Fix by fully implementing defrag in Typehandler versions.
 		    
+//			Db4o.configure().allowVersionUpdates(true);
+//			ObjectContainer oc = Db4o.openFile(testFileName);
+//			oc.close();
+//		    
 //		    String backupFileName = Path4.getTempFileName();
 //		    
 //		    try{
