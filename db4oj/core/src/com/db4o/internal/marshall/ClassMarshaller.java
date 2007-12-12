@@ -127,24 +127,24 @@ public abstract class ClassMarshaller {
         return len;
     }
 
-	public void defrag(ClassMetadata yapClass,LatinStringIO sio,BufferPair readers, int classIndexID) throws CorruptionException, IOException {
-		readName(sio, readers.source());
-		readName(sio, readers.target());
+	public void defrag(ClassMetadata classMetadata,LatinStringIO sio,DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {
+		readName(sio, context.source());
+		readName(sio, context.target());
 		
 		int metaClassID=0;
-		readers.writeInt(metaClassID);
+		context.writeInt(metaClassID);
 
 		// ancestor ID
-		readers.copyID();
+		context.copyID();
 
-		readers.writeInt(indexIDForWriting(classIndexID));
+		context.writeInt(indexIDForWriting(classIndexID));
 		
 		// field length
-		readers.incrementIntSize();
+		context.incrementIntSize();
 		
-		FieldMetadata[] fields=yapClass.i_fields;
+		FieldMetadata[] fields=classMetadata.i_fields;
 		for(int fieldIdx=0;fieldIdx<fields.length;fieldIdx++) {
-			_family._field.defrag(yapClass,fields[fieldIdx],sio,readers);
+			_family._field.defrag(classMetadata,fields[fieldIdx],sio,context);
 		}
 	}
 }

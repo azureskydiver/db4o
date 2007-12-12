@@ -105,7 +105,7 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	return false;
     }
 
-	public void defragFields(ClassMetadata yapClass,ObjectHeader header, BufferPair readers) {
+	public void defragFields(ClassMetadata yapClass,ObjectHeader header, DefragmentContextImpl context) {
 	}
 
 	public void writeObjectClassID(BufferImpl reader, int id) {

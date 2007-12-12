@@ -13,7 +13,7 @@ public interface Indexable4 extends Comparable4{
     
     void writeIndexEntry(BufferImpl writer, Object obj);
     
-	void defragIndexEntry(BufferPair readers);
+	void defragIndexEntry(DefragmentContextImpl context);
 	
 }
 

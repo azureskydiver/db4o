@@ -87,14 +87,14 @@ public class FieldMarshaller0 implements FieldMarshaller {
     }
 
 
-	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,BufferPair readers) throws CorruptionException, IOException {
-		readers.incrementStringOffset(sio);
+	public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,DefragmentContextImpl context) throws CorruptionException, IOException {
+		context.incrementStringOffset(sio);
         if (yapField.isVirtual()) {
         	return;
         }
         // handler ID
-        readers.copyID();
+        context.copyID();
         // skip primitive/array/narray attributes
-        readers.incrementOffset(1);
+        context.incrementOffset(1);
 	}
 }

@@ -149,10 +149,10 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     	context.incrementOffset(linkLength());
     }
     
-    public void defragIndexEntry(BufferPair readers) {
+    public void defragIndexEntry(DefragmentContextImpl context) {
     	try {
-			read1(readers.source());
-			read1(readers.target());
+			read1(context.source());
+			read1(context.target());
 		} catch (CorruptionException exc) {
 			Exceptions4.virtualException();
 		}

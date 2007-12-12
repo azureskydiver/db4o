@@ -151,8 +151,8 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		return _targetDb.getSlot(length);
 	}
 
-	public void targetWriteBytes(BufferPair readers,int address) {
-		readers.write(_targetDb,address);
+	public void targetWriteBytes(DefragmentContextImpl context,int address) {
+		context.write(_targetDb,address);
 	}
 
 	public void targetWriteBytes(BufferImpl reader,int address) {

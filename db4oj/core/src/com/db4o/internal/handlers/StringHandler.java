@@ -175,11 +175,11 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         return with.length - compare.length;
     }
 
-	public void defragIndexEntry(BufferPair readers) {
+	public void defragIndexEntry(DefragmentContextImpl context) {
 		// address
-		readers.copyID(false,true);
+		context.copyID(false,true);
 		// length
-		readers.incrementIntSize();
+		context.incrementIntSize();
 	}
 	
 	public abstract void defragment(DefragmentContext context);

@@ -1106,28 +1106,28 @@ public final class BTreeNode extends PersistentBase{
 		}
 	}
 
-	public static void defragIndex(BufferPair readers,Indexable4 keyHandler) {
+	public static void defragIndex(DefragmentContextImpl context,Indexable4 keyHandler) {
         if (Deploy.debug) {
-            readers.readBegin(Const4.BTREE_NODE);
+            context.readBegin(Const4.BTREE_NODE);
         }
 		// count
-		int count=readers.readInt();
+		int count=context.readInt();
 		// leafByte
-        byte leafByte = readers.readByte();
+        byte leafByte = context.readByte();
         boolean isLeaf = (leafByte == 1);
 
-        readers.copyID(); // parent ID
-        readers.copyID(); // previous ID
-        readers.copyID(); // next ID
+        context.copyID(); // parent ID
+        context.copyID(); // previous ID
+        context.copyID(); // next ID
 
         for (int i = 0; i < count; i++) {
-            keyHandler.defragIndexEntry(readers);
+            keyHandler.defragIndexEntry(context);
             if(!isLeaf){
-            	readers.copyID();
+            	context.copyID();
             }
         }
         if (Deploy.debug) {
-            readers.readEnd();
+            context.readEnd();
         }
 	}
 

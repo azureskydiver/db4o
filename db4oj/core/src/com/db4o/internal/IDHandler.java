@@ -12,8 +12,8 @@ public class IDHandler extends PrimitiveIntHandler {
 		super(stream);
 	}
 
-    public void defragIndexEntry(BufferPair readers) {
-    	readers.copyID(true,false);
+    public void defragIndexEntry(DefragmentContextImpl context) {
+    	context.copyID(true,false);
     }
 
 }

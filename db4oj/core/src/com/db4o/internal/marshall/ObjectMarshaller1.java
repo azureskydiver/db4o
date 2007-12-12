@@ -110,16 +110,16 @@ public class ObjectMarshaller1 extends ObjectMarshaller{
     	return fieldList.isNull(fieldIndex);
     }
 
-	public void defragFields(ClassMetadata yc,ObjectHeader header, final BufferPair readers) {
+	public void defragFields(ClassMetadata yc,ObjectHeader header, final DefragmentContextImpl context) {
         TraverseFieldCommand command = new TraverseFieldCommand() {
         	
         	public int fieldCount(ClassMetadata yapClass, BufferImpl reader) {
-        		return readers.readInt();
+        		return context.readInt();
         	}
         	
 			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
 				if (!isNull) {
-					field.defragField(_family,readers);
+					field.defragField(_family,context);
 				} 
 			}
 		};

@@ -159,15 +159,15 @@ public class Defragment {
 		db.close();
 	}
 
-	private static void defragUnindexed(DefragmentServicesImpl context)
+	private static void defragUnindexed(DefragmentServicesImpl services)
 			throws CorruptionException, IOException {
-		Iterator4 unindexedIDs = context.unindexedIDs();
+		Iterator4 unindexedIDs = services.unindexedIDs();
 		while (unindexedIDs.moveNext()) {
 			final int origID = ((Integer) unindexedIDs.current()).intValue();
-			BufferPair.processCopy(context, origID, new SlotCopyHandler() {
-				public void processCopy(BufferPair readers)
+			DefragmentContextImpl.processCopy(services, origID, new SlotCopyHandler() {
+				public void processCopy(DefragmentContextImpl context)
 						throws CorruptionException {
-					ClassMetadata.defragObject(readers);
+					ClassMetadata.defragObject(context);
 				}
 
 			}, true);

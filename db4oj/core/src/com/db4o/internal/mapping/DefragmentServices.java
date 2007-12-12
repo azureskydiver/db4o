@@ -27,7 +27,7 @@ public interface DefragmentServices extends IDMapping {
 
 	Transaction systemTrans();
 
-	void targetWriteBytes(BufferPair readers, int targetAddress);
+	void targetWriteBytes(DefragmentContextImpl context, int targetAddress);
 
 	void traverseAllIndexSlots(BTree tree, Visitor4 visitor4);	
 	

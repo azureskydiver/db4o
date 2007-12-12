@@ -83,9 +83,9 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
 	public void dontDelete(Transaction transaction, int id) {
 	}
 	
-	public void defragReference(ClassMetadata yapClass, BufferPair readers,int classIndexID) {
+	public void defragReference(ClassMetadata classMetadata, DefragmentContextImpl context,int classIndexID) {
 		int newID = -classIndexID;
-		readers.writeInt(newID);
+		context.writeInt(newID);
 	}
 	
 	public int id() {
@@ -96,8 +96,8 @@ public class BTreeClassIndexStrategy extends AbstractClassIndexStrategy {
         return _btreeIndex.allNodeIds(trans);
 	}
 
-	public void defragIndex(BufferPair readers) {
-		_btreeIndex.defragIndex(readers);
+	public void defragIndex(DefragmentContextImpl context) {
+		_btreeIndex.defragIndex(context);
 	}
 	
 	public static BTree btree(ClassMetadata clazz) {

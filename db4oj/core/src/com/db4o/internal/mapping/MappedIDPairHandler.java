@@ -19,7 +19,7 @@ public class MappedIDPairHandler implements Indexable4 {
 		_mappedHandler=new IntHandler(stream);
 	}
 
-	public void defragIndexEntry(BufferPair readers) {
+	public void defragIndexEntry(DefragmentContextImpl context) {
         throw new NotImplementedException();
 	}
 

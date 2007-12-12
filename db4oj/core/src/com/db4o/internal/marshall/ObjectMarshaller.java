@@ -144,7 +144,7 @@ public abstract class ObjectMarshaller {
             ObjectHeaderAttributes attributes, 
             BufferImpl reader);
 
-	public abstract void defragFields(ClassMetadata yapClass,ObjectHeader header, BufferPair readers);
+	public abstract void defragFields(ClassMetadata yapClass,ObjectHeader header, DefragmentContextImpl context);
  
 	public abstract void writeObjectClassID(BufferImpl reader,int id);
 	
