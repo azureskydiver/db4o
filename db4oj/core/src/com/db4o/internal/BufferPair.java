@@ -74,9 +74,10 @@ public final class BufferPair implements Buffer {
 		return internalCopyID(flipNegative, lenient, id);
 	}
 
-	public MappedIDPair copyIDAndRetrieveMapping() {
+	public int copyIDReturnOriginalID() {
 		int id=_source.readInt();
-		return new MappedIDPair(id,internalCopyID(false, false, id));
+		internalCopyID(false, false, id);
+		return id;
 	}
 
 	private int internalCopyID(boolean flipNegative, boolean lenient, int id) {

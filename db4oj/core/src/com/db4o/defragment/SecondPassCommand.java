@@ -99,7 +99,7 @@ final class SecondPassCommand implements PassCommand {
 				}
 
 				private boolean accept(int classId) {
-					return context.accept(context.yapClass(classId));
+					return context.accept(context.classMetadataForId(classId));
 				}
 			});
 	}
