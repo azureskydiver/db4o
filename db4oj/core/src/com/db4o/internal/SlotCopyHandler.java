@@ -10,5 +10,5 @@ import com.db4o.*;
  * @exclude
  */
 public interface SlotCopyHandler {
-	void processCopy(BufferPair readers) throws CorruptionException, IOException;
+	void processCopy(DefragmentContextImpl context) throws CorruptionException, IOException;
 }

@@ -57,11 +57,11 @@ public final class ObjectHeader {
         _headerAttributes = readAttributes(_marshallerFamily,reader);
     }
 
-    public static ObjectHeader defrag(BufferPair readers) {
-    	BufferImpl source = readers.source();
-    	BufferImpl target = readers.target();
-		ObjectHeader header=new ObjectHeader(readers.services().systemTrans().container(),null,source);
-    	int newID =readers.mapping().mappedID(header.classMetadata().getID());
+    public static ObjectHeader defrag(DefragmentContextImpl context) {
+    	BufferImpl source = context.source();
+    	BufferImpl target = context.target();
+		ObjectHeader header=new ObjectHeader(context.services().systemTrans().container(),null,source);
+    	int newID =context.mapping().mappedID(header.classMetadata().getID());
         if (Deploy.debug) {
             target.readBegin(Const4.YAPOBJECT);
         }

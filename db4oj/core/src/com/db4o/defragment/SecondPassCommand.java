@@ -28,29 +28,29 @@ final class SecondPassCommand implements PassCommand {
 		_objectCommitFrequency = objectCommitFrequency;
 	}
 
-	public void processClass(final DefragmentServicesImpl context, final ClassMetadata yapClass, int id,final int classIndexID) throws CorruptionException, IOException {
-		if(context.mappedID(id,-1)==-1) {
+	public void processClass(final DefragmentServicesImpl services, final ClassMetadata yapClass, int id,final int classIndexID) throws CorruptionException, IOException {
+		if(services.mappedID(id,-1)==-1) {
 			System.err.println("MAPPING NOT FOUND: "+id);
 		}
-		BufferPair.processCopy(context, id, new SlotCopyHandler() {
-			public void processCopy(BufferPair readers) throws CorruptionException, IOException {
-				yapClass.defragClass(readers, classIndexID);
+		DefragmentContextImpl.processCopy(services, id, new SlotCopyHandler() {
+			public void processCopy(DefragmentContextImpl context) throws CorruptionException, IOException {
+				yapClass.defragClass(context, classIndexID);
 			}
 		});
 	}
 
-	public void processObjectSlot(final DefragmentServicesImpl context, final ClassMetadata yapClass, int id) throws CorruptionException, IOException {
-		BufferImpl sourceBuffer = context.sourceBufferByID(id);
-		ObjectHeader objHead = context.sourceObjectHeader(sourceBuffer);
+	public void processObjectSlot(final DefragmentServicesImpl services, final ClassMetadata yapClass, int id) throws CorruptionException, IOException {
+		BufferImpl sourceBuffer = services.sourceBufferByID(id);
+		ObjectHeader objHead = services.sourceObjectHeader(sourceBuffer);
 		sourceBuffer._offset = 0;
-		boolean registerAddresses = context.hasFieldIndex(objHead.classMetadata());
-		BufferPair.processCopy(context, id, new SlotCopyHandler() {
-			public void processCopy(BufferPair buffers) {
-				ClassMetadata.defragObject(buffers);
+		boolean registerAddresses = services.hasFieldIndex(objHead.classMetadata());
+		DefragmentContextImpl.processCopy(services, id, new SlotCopyHandler() {
+			public void processCopy(DefragmentContextImpl context) {
+				ClassMetadata.defragObject(context);
 				if(_objectCommitFrequency>0) {
 					_objectCount++;
 					if(_objectCount==_objectCommitFrequency) {
-						context.targetCommit();
+						services.targetCommit();
 						_objectCount=0;
 					}
 				}
@@ -58,33 +58,33 @@ final class SecondPassCommand implements PassCommand {
 		},registerAddresses, sourceBuffer);
 	}
 
-	public void processClassCollection(final DefragmentServicesImpl context) throws CorruptionException, IOException {
-		BufferPair.processCopy(context, context.sourceClassCollectionID(), new SlotCopyHandler() {
-				public void processCopy(BufferPair readers) {
+	public void processClassCollection(final DefragmentServicesImpl services) throws CorruptionException, IOException {
+		DefragmentContextImpl.processCopy(services, services.sourceClassCollectionID(), new SlotCopyHandler() {
+				public void processCopy(DefragmentContextImpl context) {
 					if (Deploy.debug) {
-					    readers.readBegin(Const4.YAPCLASSCOLLECTION);
+					    context.readBegin(Const4.YAPCLASSCOLLECTION);
 					}
 					
 					int acceptedClasses = 0;
-					int numClassesOffset = readers.target().offset();
-					acceptedClasses = copyAcceptedClasses(readers, acceptedClasses);
-					writeIntAt(readers.target(), numClassesOffset, acceptedClasses);
+					int numClassesOffset = context.target().offset();
+					acceptedClasses = copyAcceptedClasses(context, acceptedClasses);
+					writeIntAt(context.target(), numClassesOffset, acceptedClasses);
 					
 					if (Deploy.debug) {
-					    readers.readEnd();
+					    context.readEnd();
 					}
 				}
 
-				private int copyAcceptedClasses(BufferPair readers,
+				private int copyAcceptedClasses(DefragmentContextImpl context,
 						int acceptedClasses) {
-					int numClasses=readers.readInt();
+					int numClasses=context.readInt();
 					for(int classIdx=0;classIdx<numClasses;classIdx++) {
-						int classId = readers.source().readInt();
+						int classId = context.source().readInt();
 						if (! accept(classId)) {
 							continue;
 						}
 						++acceptedClasses;
-						readers.writeMappedID(classId);
+						context.writeMappedID(classId);
 					}
 					return acceptedClasses;
 				}
@@ -99,7 +99,7 @@ final class SecondPassCommand implements PassCommand {
 				}
 
 				private boolean accept(int classId) {
-					return context.accept(context.classMetadataForId(classId));
+					return services.accept(services.classMetadataForId(classId));
 				}
 			});
 	}

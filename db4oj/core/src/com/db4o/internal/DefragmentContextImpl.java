@@ -13,13 +13,13 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public final class BufferPair implements Buffer, DefragmentContext {
+public final class DefragmentContextImpl implements Buffer, DefragmentContext {
 	private BufferImpl _source;
 	private BufferImpl _target;
 	private DefragmentServices _services;
 	private int _handlerVersion;
 	
-	public BufferPair(BufferImpl source,DefragmentServices services) {
+	public DefragmentContextImpl(BufferImpl source,DefragmentServices services) {
 		_source = source;
 		_services=services;
 		_target = new BufferImpl(length());
@@ -163,14 +163,14 @@ public final class BufferPair implements Buffer, DefragmentContext {
 		processCopy(context, sourceID, command, registerAddressMapping, sourceReader);
 	}
 
-	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, BufferImpl sourceReader) throws CorruptionException, IOException {
-		int targetID=context.mappedID(sourceID);
+	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, BufferImpl sourceReader) throws CorruptionException, IOException {
+		int targetID=services.mappedID(sourceID);
 	
-		Slot targetSlot = context.allocateTargetSlot(sourceReader.length());
+		Slot targetSlot = services.allocateTargetSlot(sourceReader.length());
 		
 		if(registerAddressMapping) {
-			int sourceAddress=context.sourceAddressByID(sourceID);
-			context.mapIDs(sourceAddress, targetSlot.address(), false);
+			int sourceAddress=services.sourceAddressByID(sourceID);
+			services.mapIDs(sourceAddress, targetSlot.address(), false);
 		}
 		
 		BufferImpl targetPointerReader=new BufferImpl(Const4.POINTER_LENGTH);
@@ -182,11 +182,11 @@ public final class BufferPair implements Buffer, DefragmentContext {
 		if(Deploy.debug) {
 			targetPointerReader.writeEnd();
 		}
-		context.targetWriteBytes(targetPointerReader,targetID);
+		services.targetWriteBytes(targetPointerReader,targetID);
 		
-		BufferPair readers=new BufferPair(sourceReader,context);
-		command.processCopy(readers);
-		context.targetWriteBytes(readers,targetSlot.address());
+		DefragmentContextImpl context=new DefragmentContextImpl(sourceReader,services);
+		command.processCopy(context);
+		services.targetWriteBytes(context,targetSlot.address());
 	}
 
 	public void writeByte(byte value) {

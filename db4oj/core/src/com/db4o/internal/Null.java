@@ -34,7 +34,7 @@ public class Null implements Indexable4{
         // do nothing
     }
 
-	public void defragIndexEntry(BufferPair readers) {
+	public void defragIndexEntry(DefragmentContextImpl context) {
         // do nothing
 	}
 }

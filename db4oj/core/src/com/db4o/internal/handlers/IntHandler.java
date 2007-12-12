@@ -6,7 +6,7 @@ import com.db4o.CorruptionException;
 import com.db4o.Deploy;
 import com.db4o.foundation.Coercion4;
 import com.db4o.internal.BufferImpl;
-import com.db4o.internal.BufferPair;
+import com.db4o.internal.DefragmentContextImpl;
 import com.db4o.internal.Const4;
 import com.db4o.internal.LatinStringIO;
 import com.db4o.internal.ObjectContainerBase;
@@ -118,8 +118,8 @@ public class IntHandler extends PrimitiveHandler {
         return obj instanceof Integer && val(obj) < i_compareTo;
     }
 
-    public void defragIndexEntry(BufferPair readers) {
-    	readers.incrementIntSize();
+    public void defragIndexEntry(DefragmentContextImpl context) {
+    	context.incrementIntSize();
     }
     
     public Object read(ReadContext context) {

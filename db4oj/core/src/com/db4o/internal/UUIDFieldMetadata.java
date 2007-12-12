@@ -235,10 +235,10 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         return hardRef;
 	}
  
-	public void defragField(MarshallerFamily mf, BufferPair readers) {
+	public void defragField(MarshallerFamily mf, DefragmentContextImpl context) {
 		// database id
-		readers.copyID(); 
+		context.copyID(); 
 		// uuid
-		readers.incrementOffset(Const4.LONG_LENGTH);
+		context.incrementOffset(Const4.LONG_LENGTH);
 	}
 }

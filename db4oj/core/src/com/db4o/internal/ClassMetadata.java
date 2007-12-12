@@ -1857,11 +1857,11 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         throw new IllegalComparisonException(); 
     }
     
-    public static void defragObject(BufferPair readers) {
-    	ObjectHeader header=ObjectHeader.defrag(readers);
-    	header._marshallerFamily._object.defragFields(header.classMetadata(),header,readers);
+    public static void defragObject(DefragmentContextImpl context) {
+    	ObjectHeader header=ObjectHeader.defrag(context);
+    	header._marshallerFamily._object.defragFields(header.classMetadata(),header,context);
         if (Deploy.debug) {
-            readers.readEnd();
+            context.readEnd();
         }
     }	
 
@@ -1876,9 +1876,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		context.incrementOffset(restLength);
 	}
 	
-	public void defragClass(BufferPair readers, int classIndexID) throws CorruptionException, IOException {
+	public void defragClass(DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {
 		MarshallerFamily mf = MarshallerFamily.current();
-		mf._class.defrag(this,_container.stringIO(), readers, classIndexID);
+		mf._class.defrag(this,_container.stringIO(), context, classIndexID);
 	}
 
     public static ClassMetadata readClass(ObjectContainerBase stream, BufferImpl reader) {
@@ -1890,8 +1890,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return classReflector().isAssignableFrom(other.classReflector());
 	}
 
-	public final void defragIndexEntry(BufferPair readers) {
-		readers.copyID();
+	public final void defragIndexEntry(DefragmentContextImpl context) {
+		context.copyID();
 	}
 	
 	public void setAncestor(ClassMetadata ancestor){

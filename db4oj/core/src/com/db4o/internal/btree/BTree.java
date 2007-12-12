@@ -370,25 +370,25 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         _root.traverseAllNodes(trans, command);
     }
 
-	public void defragIndex(BufferPair readers) {
+	public void defragIndex(DefragmentContextImpl context) {
         if (Deploy.debug) {
-            readers.readBegin(Const4.BTREE);
+            context.readBegin(Const4.BTREE);
         }
-		readers.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
-		readers.copyID();
+		context.incrementOffset(DEFRAGMENT_INCREMENT_OFFSET);
+		context.copyID();
         if (Deploy.debug) {
-            readers.readEnd();
+            context.readEnd();
         }
 	}
 
-	public void defragIndexNode(BufferPair readers) {
-		BTreeNode.defragIndex(readers, _keyHandler);
+	public void defragIndexNode(DefragmentContextImpl context) {
+		BTreeNode.defragIndex(context, _keyHandler);
 	}
 
 	public void defragBTree(final DefragmentServices services) throws CorruptionException, IOException {
-		BufferPair.processCopy(services,getID(),new SlotCopyHandler() {
-			public void processCopy(BufferPair readers) throws CorruptionException {
-				defragIndex(readers);
+		DefragmentContextImpl.processCopy(services,getID(),new SlotCopyHandler() {
+			public void processCopy(DefragmentContextImpl context) throws CorruptionException {
+				defragIndex(context);
 			}
 		});
 		final CorruptionException[] corruptx={null};
@@ -398,9 +398,9 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 				public void visit(Object obj) {
 					final int id=((Integer)obj).intValue();
 					try {
-						BufferPair.processCopy(services, id, new SlotCopyHandler() {
-							public void processCopy(BufferPair readers) {
-								defragIndexNode(readers);
+						DefragmentContextImpl.processCopy(services, id, new SlotCopyHandler() {
+							public void processCopy(DefragmentContextImpl context) {
+								defragIndexNode(context);
 							}
 						});
 					} catch (CorruptionException e) {

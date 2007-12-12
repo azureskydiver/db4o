@@ -59,21 +59,21 @@ public class FieldMarshaller1 extends FieldMarshaller0 {
     }
 
     public void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,
-    		final BufferPair readers)
+    		final DefragmentContextImpl context)
     		throws CorruptionException, IOException {
-    	super.defrag(yapClass, yapField, sio, readers);
+    	super.defrag(yapClass, yapField, sio, context);
     	if(yapField.isVirtual()) {
     		return;
     	}
     	if(yapField.hasIndex()) {
-        	BTree index = yapField.getIndex(readers.systemTrans());
-    		int targetIndexID=readers.copyID();
+        	BTree index = yapField.getIndex(context.systemTrans());
+    		int targetIndexID=context.copyID();
     		if(targetIndexID!=0) {
-    			index.defragBTree(readers.services());
+    			index.defragBTree(context.services());
     		}
     	}
     	else {
-        	readers.writeInt(0);
+        	context.writeInt(0);
     	}
     }
 }

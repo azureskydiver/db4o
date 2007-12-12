@@ -21,6 +21,6 @@ public interface FieldMarshaller {
 
     int marshalledLength(ObjectContainerBase stream, FieldMetadata field);
 
-	void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,BufferPair readers) throws CorruptionException, IOException;
+	void defrag(ClassMetadata yapClass, FieldMetadata yapField, LatinStringIO sio,DefragmentContextImpl context) throws CorruptionException, IOException;
 
 }
