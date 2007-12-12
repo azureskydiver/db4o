@@ -2,38 +2,26 @@
 
 package com.db4o.internal;
 
-import com.db4o.internal.mapping.*;
+import com.db4o.marshall.*;
 
-public interface DefragmentContext {
+public interface DefragmentContext extends Context, ReadBuffer {
 	
-	boolean isLegacyHandlerVersion();
-	
-	public boolean redirect();
+	public ClassMetadata classMetadataForId(int id);
 
 	public void copyID();
+
+	public int copyIDReturnOriginalID();
 
 	public void copyUnindexedID();
 
 	public void incrementOffset(int length);
 
-	public void readBegin(byte identifier);
-
-	public void readEnd();
-
-	public int readInt();
-
-	public IDMapping mapping();
-
+	boolean isLegacyHandlerVersion();
+	
+	public int mappedID(int origID);
+	
 	public Buffer sourceBuffer();
 	
 	public Buffer targetBuffer();
 
-	public void seek(int offset);
-
-	public int offset();
-
-	public MappedIDPair copyIDAndRetrieveMapping();
-
-	public DefragmentServices services();
-	
 }

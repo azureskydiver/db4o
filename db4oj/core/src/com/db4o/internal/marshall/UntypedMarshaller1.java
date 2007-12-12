@@ -42,11 +42,11 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         int linkOffSet = context.offset();
         context.seek(payLoadOffSet);
         
-        int yapClassID = context.copyIDAndRetrieveMapping().orig();
+        int classMetadataID = context.copyIDReturnOriginalID();
         
-        ClassMetadata yc = context.services().yapClass(yapClassID);
-        if(yc != null){
-            yc.defragment(new DefragmentContextImpl(context, false));
+        ClassMetadata classMetadata = context.classMetadataForId(classMetadataID);
+        if(classMetadata != null){
+            classMetadata.defragment(context);
         }
         
         context.seek(linkOffSet);

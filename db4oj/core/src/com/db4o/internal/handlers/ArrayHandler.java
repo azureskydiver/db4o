@@ -7,7 +7,6 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
-import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
@@ -278,7 +277,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         return elements;
     }
 
-   final protected int mapElementsEntry(int orig,IDMapping mapping) {
+   final protected int mapElementsEntry(DefragmentContext context, int orig) {
     	if(orig>=0||orig==Const4.IGNORE_ID) {
     		return orig;
     	}
@@ -287,7 +286,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     		orig-=Const4.PRIMITIVE;
     	}
     	int origID=-orig;
-    	int mappedID=mapping.mappedID(origID);
+    	int mappedID=context.mappedID(origID);
     	int mapped=-mappedID;
     	if(primitive) {
     		mapped+=Const4.PRIMITIVE;
@@ -408,7 +407,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     
     private void defragIDs(DefragmentContext context) {
     	int offset= preparePayloadRead(context);
-        defrag1(new DefragmentContextImpl(context, true));
+        defrag1(context);
         context.seek(offset);
     }
     
@@ -423,20 +422,20 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     
     public void defrag1(DefragmentContext context) {
 		if (Deploy.debug) {
-			context.readBegin(identifier());
+			Debug.readBegin(context, Const4.YAPARRAY);
 		}
 		int elements = readElementsDefrag(context);
 		for (int i = 0; i < elements; i++) {
 			_handler.defragment(context);
 		}
         if (Deploy.debug) {
-            context.readEnd();
+        	Debug.readEnd(context);
         }
     }
 
 	protected int readElementsDefrag(DefragmentContext context) {
         int elements = context.sourceBuffer().readInt();
-        context.targetBuffer().writeInt(mapElementsEntry(elements,context.mapping()));
+        context.targetBuffer().writeInt(mapElementsEntry(context, elements));
         if (elements < 0) {
             elements = context.readInt();
         }

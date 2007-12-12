@@ -91,11 +91,11 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         int linkOffSet = context.offset();
         context.seek(payLoadOffSet);
         
-        int classMetadataID = context.copyIDAndRetrieveMapping().orig();
+        int classMetadataID = context.copyIDReturnOriginalID();
         
-        ClassMetadata classMetadata = context.services().yapClass(classMetadataID);
+        ClassMetadata classMetadata = context.classMetadataForId(classMetadataID);
         if(classMetadata != null){
-            classMetadata.defragment(new DefragmentContextImpl(context, false));
+            classMetadata.defragment(context);
         }
         
         context.seek(linkOffSet);

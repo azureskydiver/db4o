@@ -31,7 +31,7 @@ public interface DefragmentServices extends IDMapping {
 
 	void traverseAllIndexSlots(BTree tree, Visitor4 visitor4);	
 	
-	ClassMetadata yapClass(int id);
+	ClassMetadata classMetadataForId(int id);
 
 	int mappedID(int id,boolean lenient);
 

@@ -277,7 +277,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		return _sourceDb.systemData().uuidIndexId();
 	}
 	
-	public ClassMetadata yapClass(int id) {
+	public ClassMetadata classMetadataForId(int id) {
 		return _sourceDb.classMetadataForId(id);
 	}
 	

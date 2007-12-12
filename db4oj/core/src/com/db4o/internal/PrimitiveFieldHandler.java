@@ -149,7 +149,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         if(context.isLegacyHandlerVersion()){
             super.defragment(context);
         } else {
-            _handler.defragment(new DefragmentContextImpl(context, false));
+            _handler.defragment(context);
         }
     }
     

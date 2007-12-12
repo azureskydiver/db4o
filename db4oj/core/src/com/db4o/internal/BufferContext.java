@@ -82,6 +82,4 @@ public abstract class BufferContext implements ReadBuffer{
 		return handlerVersion() == 0;
 	}
 
-
-
 }
