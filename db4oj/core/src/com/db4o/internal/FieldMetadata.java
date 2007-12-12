@@ -1003,8 +1003,8 @@ public class FieldMetadata implements StoredField {
     }    
     
     public void defragField(MarshallerFamily mf,BufferPair readers) {
-    	DefragmentContextImpl context = new DefragmentContextImpl(mf.handlerVersion(), readers);
-    	context.correctHandlerVersion(getHandler()).defragment(context);
+    	readers.handlerVersion(mf.handlerVersion());
+    	readers.correctHandlerVersion(getHandler()).defragment(readers);
     }
     
 	public void createIndex() {
