@@ -3,7 +3,6 @@
 package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 /**
@@ -66,14 +65,7 @@ public abstract class BufferContext implements ReadBuffer{
 	}
 
 	public TypeHandler4 correctHandlerVersion(TypeHandler4 handler) {
-	    if(! oldHandlerVersion()){
-	        return handler;
-	    }
 	    return container().handlers().correctHandlerVersion(handler, handlerVersion());
-	}
-
-	public boolean oldHandlerVersion() {
-	    return handlerVersion() != MarshallingContext.HANDLER_VERSION;
 	}
 
 	public abstract int handlerVersion();

@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.handlers.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.internal.replication.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -233,6 +234,9 @@ public final class HandlerRegistry {
     }
 
     public TypeHandler4 correctHandlerVersion(TypeHandler4 handler, int version){
+    	if(version == MarshallingContext.HANDLER_VERSION){
+    		return handler;
+    	}
         TypeHandler4 replacement = (TypeHandler4) _handlerVersions.get(new HandlerVersionKey(handler, version));
         if(replacement != null){
             return replacement;

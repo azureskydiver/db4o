@@ -13,18 +13,17 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public final class BufferPair implements Buffer {
+public final class BufferPair implements Buffer, DefragmentContext {
 	private BufferImpl _source;
 	private BufferImpl _target;
 	private DefragmentServices _services;
-	private Transaction _systemTrans;
+	private int _handlerVersion;
 	
-	public BufferPair(BufferImpl source,DefragmentServices services,Transaction systemTrans) {
+	public BufferPair(BufferImpl source,DefragmentServices services) {
 		_source = source;
 		_services=services;
 		_target = new BufferImpl(length());
 		_source.copyTo(_target, 0, 0, length());
-		_systemTrans=systemTrans;
 	}
 	
 	public int offset() {
@@ -148,7 +147,7 @@ public final class BufferPair implements Buffer {
 	}
 
 	public Transaction systemTrans() {
-		return _systemTrans;
+		return transaction();
 	}
 
 	public DefragmentServices services() {
@@ -185,7 +184,7 @@ public final class BufferPair implements Buffer {
 		}
 		context.targetWriteBytes(targetPointerReader,targetID);
 		
-		BufferPair readers=new BufferPair(sourceReader,context,context.systemTrans());
+		BufferPair readers=new BufferPair(sourceReader,context);
 		command.processCopy(readers);
 		context.targetWriteBytes(readers,targetSlot.address());
 	}
@@ -225,6 +224,50 @@ public final class BufferPair implements Buffer {
 
 	public int length() {
 		return _source.length();
+	}
+	
+	public Transaction transaction() {
+		return services().systemTrans();
+	}
+	
+	private ObjectContainerBase container() {
+	    return transaction().container();
+	}
+
+	public ClassMetadata classMetadataForId(int id) {
+		return container().classMetadataForId(id);
+	}
+	
+	private int handlerVersion(){
+		return _handlerVersion;
+	}
+
+	public boolean isLegacyHandlerVersion() {
+		return handlerVersion() == 0;
+	}
+
+	public int mappedID(int origID) {
+		return mapping().mappedID(origID);
+	}
+
+	public Buffer sourceBuffer() {
+		return source();
+	}
+
+	public Buffer targetBuffer() {
+		return target();
+	}
+
+	public ObjectContainer objectContainer() {
+		return (ObjectContainer) container();
+	}
+
+	public void handlerVersion(int version) {
+		_handlerVersion = version;
+	}
+
+	public TypeHandler4 correctHandlerVersion(TypeHandler4 handler) {
+	    return container().handlers().correctHandlerVersion(handler, handlerVersion());
 	}
 
 }

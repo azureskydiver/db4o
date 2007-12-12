@@ -8,11 +8,11 @@ public interface DefragmentContext extends Context, ReadBuffer {
 	
 	public ClassMetadata classMetadataForId(int id);
 
-	public void copyID();
+	public int copyID();
 
 	public int copyIDReturnOriginalID();
 
-	public void copyUnindexedID();
+	public int copyUnindexedID();
 
 	public void incrementOffset(int length);
 
