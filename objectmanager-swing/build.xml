@@ -2,11 +2,7 @@
     <description>
         ObjectManager build file
     </description>
-	<!-- set the appropriate db4o jar file to use -->
-    <property name="dir.workspace" location=".." />
-    <property file="${dir.workspace}/db4obuild/ant.properties" />
-	<import file="${dir.workspace}/db4obuild/common.xml" />
-	
+
 	<!-- set global properties for this build -->
 	<property name="src" location="src"/>
     <property name="lib" location="lib"/>
@@ -15,6 +11,8 @@
 	<property name="docs" location="docs"/>
 	<property name="launch" location="launch"/>
 	<property name="dist.root" location="dist"/>
+	<property name="dist.version" value="7.0"/>
+	<property name="version.info" value="${dist.version}"/>
     <property name="webstart" value="webstart"/>
     <property name="dist-webstart" value="dist-webstart"/>
 
@@ -25,23 +23,14 @@
         </fileset>
     </path>
 
-    <target name="init" depends="properties">
-    	<property name="db4o.version" value="${db4o.file}java5.jar"/>
-    	<property name="version.info" value="${db4o.version.dotted}.${db4o.iteration}.${svn.revision}" />
-    	<property name="dist.version" value="objectmanager-${version.info}"/>
-    	<property name="om.jar" value="${dist.version}.jar" />
+    <target name="init">
+    	<property name="om.jar" value="objectmanager.jar" />
     	<property name="dist" location="${dist.root}/${dist.version}"/>
-    	<property name="om-api.jar" value="objectmanager-api-${db4o.version.dotted}.${db4o.iteration}.${svn.revision}.jar" />
+    	<property name="om-api.jar" value="objectmanager-api.jar" />
     	
-        <!-- Create the time stamp -->
-        <tstamp/>
         <!-- Create the build directory structure used by compile -->
     	<delete dir="${build.root}" />
         <delete dir="${dist.root}" />
-        <delete dir="${lib}">
-            <include name="db4o-*-java5.jar" />
-            <include name="objectmanager-api*.jar" />
-        </delete>
     	<delete dir=".">
     		<include name="objectmanager-*.zip" />
     	</delete>
@@ -55,7 +44,6 @@
              target="dist"
              inheritAll="false">
 			<property name="om-api.jar" value="${om-api.jar}" />
-			<property name="svn.revision" value="${svn.revision}" />
 		</ant>
 		<!-- copy dependencies -->
 		<copy  todir="./lib/">
@@ -97,7 +85,7 @@
         <jar jarfile="${dist}/${om.jar}" basedir="${build}">
             <manifest>
                 <attribute name="Class-Path"
-                           value="lib/${db4o.version} lib/db4o-sql.jar lib/looks-2.0.4.jar lib/forms-1.0.7.jar lib/${om-api.jar}"/>
+                           value="lib/${db4o.version} lib/db4o-sql.jar lib/looks-2.0.4.jar lib/forms-1.0.7.jar lib/${om-api.jar} lib/db4o-java1.2.jar lib/db4o-taj.jar lib/db4o-instrumentation.jar lib/bloat-1.0.jar"/>
                 <attribute name="Main-Class" value="com.db4o.objectManager.v2.Dashboard"/>
             </manifest>
         </jar>
@@ -155,7 +143,7 @@
     </target>
 
     <target name="zip" depends="dist" description="Create the distribution zip file.">
-		<zip destfile="${dist.version}-java.zip" basedir="${dist.root}" />
+		<zip destfile="$objectmanager-{dist.version}-java.zip" basedir="${dist.root}" />
     </target>
 
     <target name="clean"
