@@ -131,6 +131,8 @@
 		<jar destfile="${file.java5.jar}">
 			<fileset dir="${dir.dist.classes.java5}" />
 		</jar>
+		
+		<echo file="${dir.dist.java}/tempfile.txt" message="${file.java5.jar}"/>
 	</target>
 	
 	<target name="build.instrumentation" depends="build.db4ojdk1.2">
