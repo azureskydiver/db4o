@@ -151,8 +151,8 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     
     public void defragIndexEntry(DefragmentContextImpl context) {
     	try {
-			read1(context.source());
-			read1(context.target());
+			read1(context.sourceBuffer());
+			read1(context.targetBuffer());
 		} catch (CorruptionException exc) {
 			Exceptions4.virtualException();
 		}

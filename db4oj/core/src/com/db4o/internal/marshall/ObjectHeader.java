@@ -58,8 +58,8 @@ public final class ObjectHeader {
     }
 
     public static ObjectHeader defrag(DefragmentContextImpl context) {
-    	BufferImpl source = context.source();
-    	BufferImpl target = context.target();
+    	BufferImpl source = context.sourceBuffer();
+    	BufferImpl target = context.targetBuffer();
 		ObjectHeader header=new ObjectHeader(context.services().systemTrans().container(),null,source);
     	int newID =context.mapping().mappedID(header.classMetadata().getID());
         if (Deploy.debug) {
