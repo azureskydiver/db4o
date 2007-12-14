@@ -73,7 +73,7 @@ public class NativeQueryHandler {
         if(shouldOptimize()){
             DiagnosticProcessor dp = ((ObjectContainerBase)_container)._handlers._diagnosticProcessor;
             if(dp.enabled()){
-                dp.nativeQueryUnoptimized(predicate);
+                dp.nativeQueryUnoptimized(predicate, null);
             }
         }
 		return query;
@@ -96,7 +96,7 @@ public class NativeQueryHandler {
 		
 		if(clazz == null){
             if(dp.enabled()){
-                dp.nativeQueryOptimizerNotLoaded(NativeQueryOptimizerNotLoaded.NQ_NOT_PRESENT);
+                dp.nativeQueryOptimizerNotLoaded(NativeQueryOptimizerNotLoaded.NQ_NOT_PRESENT, null);
             }
 			return;
 		}
@@ -115,7 +115,7 @@ public class NativeQueryHandler {
 												}); 
 		} catch (Exception e) {
             if(dp.enabled()){
-                dp.nativeQueryOptimizerNotLoaded(NativeQueryOptimizerNotLoaded.NQ_CONSTRUCTION_FAILED);
+                dp.nativeQueryOptimizerNotLoaded(NativeQueryOptimizerNotLoaded.NQ_CONSTRUCTION_FAILED, e);
             }
 		}
 		

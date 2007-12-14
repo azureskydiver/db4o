@@ -2,7 +2,7 @@
 
 package com.db4o.diagnostic;
 
-import com.db4o.query.*;
+import com.db4o.query.Predicate;
 
 /**
  * Diagnostic, if Native Query can not be run optimized.
@@ -10,13 +10,16 @@ import com.db4o.query.*;
 public class NativeQueryNotOptimized extends DiagnosticBase{
     
     private final Predicate _predicate;
+    private final Exception _details;
     
-    public NativeQueryNotOptimized(Predicate predicate) {
+    public NativeQueryNotOptimized(Predicate predicate, Exception details) {
         _predicate = predicate;
+        _details = details;
     }
 
     public Object reason() {
-        return _predicate;
+    	if (_details == null) return _predicate;
+    	return _predicate.toString() + "\n" + _details.getMessage();
     }
 
     public String problem() {

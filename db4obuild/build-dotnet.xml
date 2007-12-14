@@ -1035,6 +1035,7 @@
 		<copy todir="${target.dir}/db4oj.tests/src">
 			<fileset dir="${dir.j.nqopt}/test/src">
 				<include name="**/mocks/*.java" />
+				<include name="**/diagnostics/*.java" />
 			</fileset>
 		</copy>		
 		

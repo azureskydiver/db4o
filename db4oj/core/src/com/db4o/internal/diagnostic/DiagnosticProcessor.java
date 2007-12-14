@@ -93,12 +93,12 @@ public class DiagnosticProcessor implements DiagnosticConfiguration, DeepClone{
         onDiagnostic(new DescendIntoTranslator(parent.getName(),fieldName));
     }
     
-    public void nativeQueryUnoptimized(Predicate predicate) {
-        onDiagnostic(new NativeQueryNotOptimized(predicate));
+    public void nativeQueryUnoptimized(Predicate predicate, Exception exception) {
+        onDiagnostic(new NativeQueryNotOptimized(predicate, exception));
     }
     
-    public void nativeQueryOptimizerNotLoaded(int reason) {
-        onDiagnostic(new NativeQueryOptimizerNotLoaded(reason));
+    public void nativeQueryOptimizerNotLoaded(int reason, Exception e) {
+        onDiagnostic(new NativeQueryOptimizerNotLoaded(reason, e));
     }
 
     public void onDiagnostic(Diagnostic d) {
