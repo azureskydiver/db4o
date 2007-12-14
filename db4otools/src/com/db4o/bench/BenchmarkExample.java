@@ -12,19 +12,15 @@ public class BenchmarkExample {
 
 	private static final String LOG_FILE_NAME = "db4o-benchmark.log";
 	private static final String DB_FILE_NAME = "benchmark.db4o";
-	private static final String REPLAY_FILE_NAME = "rssowl_open-close.log";
+	public static final String REPLAY_LOG_FILE_NAME = "simplecrud_10000.log";
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new BenchmarkExample();
-
-	}
-	
-	public BenchmarkExample() {
-		//minimalRun();
-		extendedRun();
+		// new BenchmarkExample().minimalRun();
+		new BenchmarkExample().extendedRun();
+		System.out.println("Statistics written to " + LOG_FILE_NAME);
 	}
 
 	private void minimalRun() {
@@ -40,18 +36,16 @@ public class BenchmarkExample {
 
 	private void configureMinimalIo() throws FileNotFoundException {
 		IoAdapter delegate = new RandomAccessFileAdapter();
-		IoAdapter io = new BenchmarkIoAdapter(delegate, LOG_FILE_NAME);
+		IoAdapter io = new BenchmarkIoAdapter(delegate, LOG_FILE_NAME, 1);
 		Db4o.configure().io(io);
 	}
 	
 	private void extendedRun() {
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter bmFactory = new BenchmarkIoAdapter(rafFactory, LOG_FILE_NAME);
-		IoAdapter io = bmFactory.open(DB_FILE_NAME, false, 0, false);
-		LogReplayer replayer = new LogReplayer(REPLAY_FILE_NAME, io);
+		IoAdapter bmFactory = new BenchmarkIoAdapter(rafFactory, LOG_FILE_NAME, 1);
+		BenchmarkIoAdapter io = (BenchmarkIoAdapter) bmFactory.open(DB_FILE_NAME, false, 0, false);
+		LogReplayer replayer = new LogReplayer(REPLAY_LOG_FILE_NAME, io);
 		replayer.replayLog();
 	}
-	
-	
 
 }
