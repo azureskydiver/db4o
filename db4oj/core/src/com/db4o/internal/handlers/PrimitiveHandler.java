@@ -5,6 +5,7 @@ package com.db4o.internal.handlers;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.handlers.IntHandler.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
@@ -174,6 +175,19 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         return primitiveNull();
     }
     
+	public PreparedComparison newPrepareCompare(final Object obj) {
+		if(obj == null){
+			return Null.INSTANCE;
+		}
+		return internalPrepareComparison(obj);
+	}
+	
+	/**
+	 * FIXME: make abstract when all derived handlers are implemented 
+	 */
+	public PreparedComparison internalPrepareComparison(final Object obj) {
+		throw new NotImplementedException();
+	}
 
 
 }
