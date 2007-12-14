@@ -2,13 +2,15 @@
 
 package com.db4o.internal;
 
+import com.db4o.foundation.*;
+
 
 /**
  * @exclude
  */
-public class Null implements Indexable4{
+public class Null implements Indexable4, PreparedComparison{
     
-    public static final Indexable4 INSTANCE = new Null();
+    public static final Null INSTANCE = new Null();
 
     public int compareTo(Object a_obj) {
         if(a_obj == null) {

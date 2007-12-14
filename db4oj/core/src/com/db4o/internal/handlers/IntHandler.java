@@ -4,7 +4,7 @@ package com.db4o.internal.handlers;
 
 import com.db4o.CorruptionException;
 import com.db4o.Deploy;
-import com.db4o.foundation.Coercion4;
+import com.db4o.foundation.*;
 import com.db4o.internal.BufferImpl;
 import com.db4o.internal.DefragmentContextImpl;
 import com.db4o.internal.Const4;
@@ -56,7 +56,7 @@ public class IntHandler extends PrimitiveHandler {
     }    
 
     public void write(Object obj, BufferImpl writer) {
-        write(((Integer) obj).intValue(), writer);
+        write(((Integer)obj).intValue(), writer);
     }
 
     public void write(int intValue, BufferImpl writer) {
@@ -127,6 +127,25 @@ public class IntHandler extends PrimitiveHandler {
     }
 
     public void write(WriteContext context, Object obj) {
-        context.writeInt(((Integer) obj).intValue());
+        context.writeInt(((Integer)obj).intValue());
     }
+
+    public PreparedComparison internalPrepareComparison(Object obj) {
+    	return new IntComparable(((Integer)obj).intValue());
+    }
+	
+	private final class IntComparable implements PreparedComparison{
+		
+		private final int _source;
+		
+		public IntComparable(int i) {
+			_source = i;
+		}
+		
+		public int compareTo(Object target) {
+			return _source - ((Integer)target).intValue();
+		}
+	}
+	
+	
 }
