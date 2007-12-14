@@ -12,5 +12,7 @@ public interface Comparable4 {
 	
 	int compareTo(Object obj);
 	
+	// public int compare(Object obj, Object with);
+	
 }
 

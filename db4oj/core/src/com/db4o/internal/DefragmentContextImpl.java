@@ -134,11 +134,11 @@ public final class DefragmentContextImpl implements Buffer, DefragmentContext {
 	    }
 	}
 	
-	public BufferImpl source() {
+	public BufferImpl sourceBuffer() {
 		return _source;
 	}
 
-	public BufferImpl target() {
+	public BufferImpl targetBuffer() {
 		return _target;
 	}
 	
@@ -248,14 +248,6 @@ public final class DefragmentContextImpl implements Buffer, DefragmentContext {
 
 	public int mappedID(int origID) {
 		return mapping().mappedID(origID);
-	}
-
-	public Buffer sourceBuffer() {
-		return source();
-	}
-
-	public Buffer targetBuffer() {
-		return target();
 	}
 
 	public ObjectContainer objectContainer() {

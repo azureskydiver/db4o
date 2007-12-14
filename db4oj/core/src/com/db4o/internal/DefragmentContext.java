@@ -20,8 +20,8 @@ public interface DefragmentContext extends Context, ReadBuffer {
 	
 	public int mappedID(int origID);
 	
-	public Buffer sourceBuffer();
+	public BufferImpl sourceBuffer();
 	
-	public Buffer targetBuffer();
+	public BufferImpl targetBuffer();
 
 }

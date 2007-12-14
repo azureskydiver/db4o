@@ -128,8 +128,8 @@ public abstract class ClassMarshaller {
     }
 
 	public void defrag(ClassMetadata classMetadata,LatinStringIO sio,DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {
-		readName(sio, context.source());
-		readName(sio, context.target());
+		readName(sio, context.sourceBuffer());
+		readName(sio, context.targetBuffer());
 		
 		int metaClassID=0;
 		context.writeInt(metaClassID);

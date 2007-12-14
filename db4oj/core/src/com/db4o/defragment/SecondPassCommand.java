@@ -66,9 +66,9 @@ final class SecondPassCommand implements PassCommand {
 					}
 					
 					int acceptedClasses = 0;
-					int numClassesOffset = context.target().offset();
+					int numClassesOffset = context.targetBuffer().offset();
 					acceptedClasses = copyAcceptedClasses(context, acceptedClasses);
-					writeIntAt(context.target(), numClassesOffset, acceptedClasses);
+					writeIntAt(context.targetBuffer(), numClassesOffset, acceptedClasses);
 					
 					if (Deploy.debug) {
 					    context.readEnd();
@@ -79,7 +79,7 @@ final class SecondPassCommand implements PassCommand {
 						int acceptedClasses) {
 					int numClasses=context.readInt();
 					for(int classIdx=0;classIdx<numClasses;classIdx++) {
-						int classId = context.source().readInt();
+						int classId = context.sourceBuffer().readInt();
 						if (! accept(classId)) {
 							continue;
 						}
