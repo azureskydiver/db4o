@@ -11,12 +11,14 @@ public class BenchmarkStatistics {
 	private long _byteCount;
 	private long _timeCount;
 	private long _operationCount;
+	private int _iterations;
 	
 	private String _name;
 	
-	public BenchmarkStatistics(String name) {
+	public BenchmarkStatistics(String name, int iterations) {
 		_byteCount = _timeCount = _operationCount = 0;
 		_name = name;
+		_iterations = iterations;
 	}
 	
 	public void log(long time) {
@@ -36,9 +38,13 @@ public class BenchmarkStatistics {
 		out.println("> Total time taken: " + formatCount.format(_timeCount) + " milliseconds");
 		out.println("> Number of bytes handled: " + formatCount.format(_byteCount));
 		
-		double avgTimePerOp = (double)_timeCount / (double)_operationCount;
+		double avgTimePerOp = (double)_timeCount / (double)_operationCount / (double)_iterations;
 		out.println(_name + avgTimePerOp + " (I/O Benchmark value, smaller numbers are better)");
 		
 		out.println();
+	}
+	
+	public void iterations(int i){
+		_iterations = i;
 	}
 }

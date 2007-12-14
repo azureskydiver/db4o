@@ -33,11 +33,9 @@ public class LoggingExample {
 		}
 	}
 	
-	
 	private void configureIo() throws FileNotFoundException {
-		PrintStream out = new PrintStream(new FileOutputStream(LOG_FILE_NAME));
 		IoAdapter delegate = new RandomAccessFileAdapter();
-		IoAdapter io = new LoggingIoAdapter(delegate, out, LOG_MODE);
+		IoAdapter io = new LoggingIoAdapter(delegate, LOG_FILE_NAME, LOG_MODE);
 		Db4o.configure().io(io);
 	}
 

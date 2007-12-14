@@ -30,26 +30,19 @@ public class ReplayExample {
 	}
 	
 	public ReplayExample(){
-		try {			
-			IoAdapter rafFactory = new RandomAccessFileAdapter();
-			IoAdapter factory;
-			if ( LOG_REPLAY ) {
-				PrintStream out = new PrintStream(new FileOutputStream(WRITE_LOG_FILE_NAME));
-				factory = new LoggingIoAdapter(rafFactory, out, LOG_MODE);
-			}
-			else {
-				factory = rafFactory;
-			}
-			
-			IoAdapter io = factory.open(DB_FILE_NAME, false, 0, false);
-			
-			LogReplayer replayer = new LogReplayer(OPEN_LOG_FILE_NAME, io);
-			replayer.replayLog();
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		IoAdapter rafFactory = new RandomAccessFileAdapter();
+		IoAdapter factory;
+		if ( LOG_REPLAY ) {
+			factory = new LoggingIoAdapter(rafFactory, WRITE_LOG_FILE_NAME, LOG_MODE);
 		}
+		else {
+			factory = rafFactory;
+		}
+		
+		IoAdapter io = factory.open(DB_FILE_NAME, false, 0, false);
+		
+		LogReplayer replayer = new LogReplayer(OPEN_LOG_FILE_NAME, io);
+		replayer.replayLog();
 	}
 
 }
