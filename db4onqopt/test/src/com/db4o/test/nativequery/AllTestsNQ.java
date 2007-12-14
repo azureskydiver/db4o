@@ -4,6 +4,7 @@ package com.db4o.test.nativequery;
 
 import com.db4o.test.nativequery.analysis.*;
 import com.db4o.test.nativequery.cats.*;
+import com.db4o.test.nativequery.diagnostics.NativeQueryOptimizerDiagnosticsTestCase;
 import com.db4o.test.nativequery.expr.*;
 import com.db4o.test.nativequery.expr.build.*;
 
@@ -25,6 +26,7 @@ public class AllTestsNQ {
 		).build();
 		TestSuite db4oTests=new Db4oTestSuiteBuilder(new Db4oSolo(),
 					new Class[] {
+						NativeQueryOptimizerDiagnosticsTestCase.class,
 						NQRegressionTestCase.class,
 						NQCatConsistencyTestCase.class,
 					}
