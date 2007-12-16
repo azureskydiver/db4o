@@ -16,7 +16,7 @@ public abstract class VanillaIoAdapter extends IoAdapter {
     }
     
     protected VanillaIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-        _delegate = delegateAdapter.open(path, lockFile, initialLength, readOnly);
+    	this(delegateAdapter.open(path, lockFile, initialLength, readOnly));
     }
 
     public void close() throws Db4oIOException {
