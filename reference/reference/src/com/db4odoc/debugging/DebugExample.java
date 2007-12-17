@@ -11,6 +11,8 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
+import com.db4o.diagnostic.Diagnostic;
+import com.db4o.diagnostic.DiagnosticListener;
 import com.db4o.query.Query;
 
 public class DebugExample {
@@ -18,11 +20,11 @@ public class DebugExample {
 
 	public static void main(String[] args) {
 		setCars();
-		try {
-			setCarsWithFileOutput();
-		} catch (Exception ex) {
-			//
-		}
+//		try {
+//			setCarsWithFileOutput();
+//		} catch (Exception ex) {
+//			//
+//		}
 	}
 	// end main
 
@@ -30,7 +32,13 @@ public class DebugExample {
 	{
 		 // Set the debug message levet to the maximum
 		Configuration configuration = Db4o.newConfiguration();
-		configuration.messageLevel(3);
+		//configuration.messageLevel(3);
+		configuration.diagnostic().addListener(new DiagnosticListener(){
+			public void onDiagnostic(Diagnostic d) {
+				    System.out.println(d.toString());
+			    }
+		});
+		//configuration.objectClass(Car.class).objectField("model").indexed(true);
 		
 		 // Do some db4o operations
 		new File(DB4O_FILE_NAME).delete();
@@ -41,8 +49,14 @@ public class DebugExample {
 			Car car2 = new Car("Ferrari");
 			container.set(car2);
 			container.deactivate(car1,2);
+		}finally {
+			container.close();
+		}
+		container=Db4o.openFile(configuration, DB4O_FILE_NAME);
+		try {
 			Query query = container.query();
 			query.constrain(Car.class);
+			query.descend("model").constrain("BMW");
 			ObjectSet results = query.execute();
 			listResult(results);
 		} finally {
