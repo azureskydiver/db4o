@@ -83,4 +83,17 @@ public class DoubleHandler extends LongHandler {
     public void write(WriteContext context, Object obj) {
         context.writeLong(Platform4.doubleToLong(((Double)obj).doubleValue()));
     }
+    
+    public PreparedComparison internalPrepareComparison(Object source) {
+    	final double sourceDouble = ((Double)source).doubleValue();
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				double targetDouble = ((Double)target).doubleValue();
+				return sourceDouble == targetDouble ? 0 : (sourceDouble < targetDouble ? - 1 : 1); 
+			}
+		};
+    }
+
+    
+    
 }

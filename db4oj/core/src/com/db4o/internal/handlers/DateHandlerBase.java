@@ -79,5 +79,18 @@ public abstract class DateHandlerBase extends LongHandler {
     public void write(WriteContext context, Object obj) {
         long milliseconds = ((Date)obj).getTime();
         super.write(context, new Long(milliseconds));
-    }	
+    }
+    
+    public PreparedComparison internalPrepareComparison(Object source) {
+    	final long sourceDate = ((Date)source).getTime();
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				long targetDate = ((Date)target).getTime();
+				return sourceDate == targetDate ? 0 : (sourceDate < targetDate ? - 1 : 1); 
+			}
+		};
+    }
+
+    
+    
 }

@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.internal;
 
+import java.util.*;
+
 import com.db4o.foundation.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
@@ -24,10 +26,30 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		assertHandlerComparison(CharHandler.class, new Character((char)1), new Character((char)2));
 		assertHandlerComparison(CharHandler.class, new Character(Character.MIN_VALUE), new Character(Character.MAX_VALUE));
 		
+		assertDateHandler();
 		
+		assertHandlerComparison(DoubleHandler.class, new Double(1), new Double(2));
+		assertHandlerComparison(DoubleHandler.class, new Double(0.1), new Double(0.2));
+		assertHandlerComparison(DoubleHandler.class, new Double(Double.MIN_VALUE), new Double(Double.MAX_VALUE));
+		assertHandlerComparison(FloatHandler.class, new Float(1), new Float(2));
+		assertHandlerComparison(FloatHandler.class, new Float(0.1), new Float(0.2));
+		assertHandlerComparison(FloatHandler.class, new Float(Float.MIN_VALUE), new Float(Float.MAX_VALUE));
 		assertHandlerComparison(IntHandler.class, new Integer(2), new Integer(4));
 		assertHandlerComparison(IntHandler.class, new Integer(Integer.MIN_VALUE), new Integer(Integer.MAX_VALUE));
+		assertHandlerComparison(LongHandler.class, new Long(2), new Long(4));
+		assertHandlerComparison(LongHandler.class, new Long(Long.MIN_VALUE), new Long(Long.MAX_VALUE));
+		assertHandlerComparison(ShortHandler.class, new Short((short)2), new Short((short)4));
+		assertHandlerComparison(ShortHandler.class, new Short(Short.MIN_VALUE), new Short(Short.MAX_VALUE));
 		
+	}
+
+
+	/**
+	 * @sharpen.remove
+	 */
+	private void assertDateHandler() {
+		assertHandlerComparison(DateHandler.class, new Date(1), new Date(2));
+		assertHandlerComparison(DateHandler.class, new Date(Long.MIN_VALUE), new Date(Long.MAX_VALUE));
 	}
 	
 	private void assertHandlerComparison(Class handlerClass, Object smaller, Object greater) {

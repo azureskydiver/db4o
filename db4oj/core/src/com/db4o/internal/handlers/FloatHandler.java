@@ -3,7 +3,7 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.CorruptionException;
-import com.db4o.foundation.Coercion4;
+import com.db4o.foundation.*;
 import com.db4o.internal.BufferImpl;
 import com.db4o.internal.ObjectContainerBase;
 import com.db4o.internal.StatefulBuffer;
@@ -84,4 +84,15 @@ public class FloatHandler extends IntHandler {
     public void write(WriteContext context, Object obj) {
         context.writeInt(Float.floatToIntBits(((Float)obj).floatValue()));
     }
+    
+    public PreparedComparison internalPrepareComparison(Object source) {
+    	final float sourceFloat = ((Float)source).floatValue();
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				float targetFloat = ((Float)target).floatValue();
+				return sourceFloat == targetFloat ? 0 : (sourceFloat < targetFloat ? - 1 : 1); 
+			}
+		};
+    }
+
 }
