@@ -131,21 +131,12 @@ public class IntHandler extends PrimitiveHandler {
     }
 
     public PreparedComparison internalPrepareComparison(Object obj) {
-    	return new IntComparable(((Integer)obj).intValue());
+    	final int source = ((Integer)obj).intValue();
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				return source - ((Integer)target).intValue();
+			}
+		};
     }
-	
-	private final class IntComparable implements PreparedComparison{
-		
-		private final int _source;
-		
-		public IntComparable(int i) {
-			_source = i;
-		}
-		
-		public int compareTo(Object target) {
-			return _source - ((Integer)target).intValue();
-		}
-	}
-	
 	
 }
