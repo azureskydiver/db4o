@@ -18,7 +18,15 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 	
 	
 	public void testHandlers(){
+		assertHandlerComparison(BooleanHandler.class, new Boolean(false), new Boolean(true));
+		assertHandlerComparison(ByteHandler.class, new Byte((byte)1), new Byte((byte)2));
+		assertHandlerComparison(ByteHandler.class, new Byte(Byte.MIN_VALUE), new Byte(Byte.MAX_VALUE));
+		assertHandlerComparison(CharHandler.class, new Character((char)1), new Character((char)2));
+		assertHandlerComparison(CharHandler.class, new Character(Character.MIN_VALUE), new Character(Character.MAX_VALUE));
+		
+		
 		assertHandlerComparison(IntHandler.class, new Integer(2), new Integer(4));
+		assertHandlerComparison(IntHandler.class, new Integer(Integer.MIN_VALUE), new Integer(Integer.MAX_VALUE));
 		
 	}
 	

@@ -130,11 +130,12 @@ public class IntHandler extends PrimitiveHandler {
         context.writeInt(((Integer)obj).intValue());
     }
 
-    public PreparedComparison internalPrepareComparison(Object obj) {
-    	final int source = ((Integer)obj).intValue();
+    public PreparedComparison internalPrepareComparison(Object source) {
+    	final int sourceInt = ((Integer)source).intValue();
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
-				return source - ((Integer)target).intValue();
+				int targetInt = ((Integer)target).intValue();
+				return sourceInt == targetInt ? 0 : (sourceInt < targetInt ? - 1 : 1); 
 			}
 		};
     }
