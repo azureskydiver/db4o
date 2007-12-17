@@ -19,7 +19,7 @@ public class NativeQueryNotOptimized extends DiagnosticBase{
 
     public Object reason() {
     	if (_details == null) return _predicate;
-    	return _predicate.toString() + "\n" + _details.getMessage();
+    	return _predicate != null ? _predicate.toString() : ""  + "\n" + _details.getMessage();
     }
 
     public String problem() {
