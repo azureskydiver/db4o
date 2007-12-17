@@ -616,7 +616,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return count;
     }
     
-    private static class FieldMetadataIterator implements Iterator4 {
+	private static class FieldMetadataIterator implements Iterator4 {
     	private final ClassMetadata _initialClazz;
     	private ClassMetadata _curClazz;
     	private int _curIdx;
@@ -1847,6 +1847,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             if (i_compareTo == null){
                 return 0;
             }
+            
+            // FIXME: This looks like it's the wrong way around.
+            // Probably this is caught further up with the substraction.
+            
             return -1;
         }
         if(i_compareTo != null){
@@ -1855,6 +1859,60 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
         }
         throw new IllegalComparisonException(); 
+    }
+    
+	public PreparedComparison newPrepareCompare(Object source) {
+		if(source == null){
+			return new PreparedComparison() {
+				public int compareTo(Object obj) {
+					if(obj == null){
+						return 0;
+					}
+					return -1;
+				}
+			
+			};
+		}
+		int id = 0;
+		ReflectClass claxx = null;
+        if(source instanceof Integer){
+        	id = ((Integer)source).intValue();
+        } else if(source instanceof TransactionContext){
+            TransactionContext tc = (TransactionContext)source;
+            Object obj = tc._object;
+            id = _container.getID(tc._transaction, obj);
+            claxx = reflector().forObject(obj);
+        }else{
+        	throw new IllegalComparisonException();
+        }
+    	return new PreparedClassMetadataComparison(id, claxx);
+	}
+	
+    public final class PreparedClassMetadataComparison implements PreparedComparison {
+    	
+    	private final int _id;
+    	
+    	private final ReflectClass _claxx;
+
+		public PreparedClassMetadataComparison(int id, ReflectClass claxx) {
+			_id = id;
+			_claxx = claxx;
+		}
+
+		public int compareTo(Object obj) {
+		    if(obj instanceof TransactionContext){
+		        obj = ((TransactionContext)obj)._object;
+		    }
+		    if(obj instanceof Integer){
+		        return ((Integer)obj).intValue() - _id;
+		    }
+		    if(_claxx != null){
+		    	if(_claxx.isAssignableFrom(reflector().forObject(obj))){
+		    		return 0;
+		    	}
+		    }
+		    throw new IllegalComparisonException();
+		}
     }
     
     public static void defragObject(DefragmentContextImpl context) {
@@ -1927,5 +1985,5 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public TypeHandler4 typeHandler(){
         return this;
     }
-    
+
 }

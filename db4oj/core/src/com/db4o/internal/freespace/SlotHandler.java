@@ -36,5 +36,7 @@ public abstract class SlotHandler implements Indexable4{
 		_current = (Slot)obj;
 		return this;
 	}
+	
+
 
 }

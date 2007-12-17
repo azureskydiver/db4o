@@ -3,6 +3,7 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.CorruptionException;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 
@@ -110,5 +111,9 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
 			return compare(i_compareTo, obj) < 0;
 		}
 		return false;
+	}
+	
+	public PreparedComparison internalPrepareComparison(Object obj) {
+		throw new NotImplementedException();
 	}
 }

@@ -53,4 +53,16 @@ public class MappedIDPairHandler implements Indexable4 {
 	private int readID(BufferImpl a_reader) {
 		return ((Integer)_origHandler.readIndexEntry(a_reader)).intValue();
 	}
+
+	public PreparedComparison newPrepareCompare(Object source) {
+		MappedIDPair sourceIDPair = (MappedIDPair)source;
+		final int sourceID = sourceIDPair.orig();
+		return new PreparedComparison() {
+			public int compareTo(Object target) {
+				MappedIDPair targetIDPair = (MappedIDPair)target;
+				int targetID = targetIDPair.orig();
+				return sourceID == targetID ? 0 : (sourceID < targetID ? - 1 : 1); 
+			}
+		};
+	}
 }
