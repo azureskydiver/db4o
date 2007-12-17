@@ -836,9 +836,13 @@
 			
 		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2005.csproj">
 			<sources refid="core.net.files" />
-		</updatecsharpproject>		
+		</updatecsharpproject>
 
 		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-CF-2005.csproj">
+			<sources refid="core.net.files" />
+		</updatecsharpproject>
+
+		<updatecsharpproject projectFile="${dir.n.v6.core}/Db4objects.Db4o-2008.csproj">
 			<sources refid="core.net.files" />
 		</updatecsharpproject>
 
@@ -873,6 +877,10 @@
 		</updatecsharpproject>
 
 		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-CF-2005.csproj">
+			<sources refid="db4ounit.files" />
+		</updatecsharpproject>
+
+		<updatecsharpproject projectfile="${dir.n.db4ounit}/Db4oUnit-2008.csproj">
 			<sources refid="db4ounit.files" />
 		</updatecsharpproject>
 		
@@ -968,6 +976,13 @@
 				<include name="**/*.cs" />
 			</sources>
 		</updatecsharpproject>
+
+		<updatecsharpproject projectFile="${dir.n.v6.extensions}/Db4oUnit.Extensions-2008.csproj">
+			<sources dir="${dir.n.v6.extensions}">
+				<include name="**/*.cs" />
+			</sources>
+		</updatecsharpproject>
+
 	</target>		
 	
 	<target name="sharpen-tests" depends="sharpen-db4ounit-extensions"
