@@ -39,5 +39,19 @@ public class Null implements Indexable4, PreparedComparison{
 	public void defragIndexEntry(DefragmentContextImpl context) {
         // do nothing
 	}
+
+	public PreparedComparison newPrepareCompare(Object obj) {
+		return new PreparedComparison() {
+			public int compareTo(Object obj) {
+				if(obj == null){
+					return 0;
+				}
+				if(obj instanceof Null){
+					return 0;
+				}
+				return -1;
+			}
+		};
+	}
 }
 

@@ -5,12 +5,7 @@ package com.db4o.internal.handlers;
 import com.db4o.CorruptionException;
 import com.db4o.Deploy;
 import com.db4o.foundation.*;
-import com.db4o.internal.BufferImpl;
-import com.db4o.internal.DefragmentContextImpl;
-import com.db4o.internal.Const4;
-import com.db4o.internal.LatinStringIO;
-import com.db4o.internal.ObjectContainerBase;
-import com.db4o.internal.StatefulBuffer;
+import com.db4o.internal.*;
 import com.db4o.internal.marshall.MarshallerFamily;
 import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteContext;
@@ -21,7 +16,8 @@ import com.db4o.reflect.ReflectClass;
  */
 public class IntHandler extends PrimitiveHandler {
     
-    private static final Integer i_primitive = new Integer(0);
+
+	private static final Integer i_primitive = new Integer(0);
     
     public IntHandler(ObjectContainerBase container) {
         super(container);
@@ -131,13 +127,26 @@ public class IntHandler extends PrimitiveHandler {
     }
 
     public PreparedComparison internalPrepareComparison(Object source) {
-    	final int sourceInt = ((Integer)source).intValue();
-    	return new PreparedComparison() {
-			public int compareTo(Object target) {
-				int targetInt = ((Integer)target).intValue();
-				return sourceInt == targetInt ? 0 : (sourceInt < targetInt ? - 1 : 1); 
-			}
-		};
+    	return newPrepareCompare(((Integer)source).intValue());
     }
+    
+	public PreparedComparison newPrepareCompare(int i) {
+		return new PreparedIntComparison(i);
+	}
+	
+	
+    public final class PreparedIntComparison implements PreparedComparison {
+    	
+		private final int _sourceInt;
+
+		public PreparedIntComparison(int sourceInt) {
+			_sourceInt = sourceInt;
+		}
+
+		public int compareTo(Object target) {
+			int targetInt = ((Integer)target).intValue();
+			return _sourceInt == targetInt ? 0 : (_sourceInt < targetInt ? - 1 : 1); 
+		}
+	}
 	
 }

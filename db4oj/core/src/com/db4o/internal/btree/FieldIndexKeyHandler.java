@@ -82,5 +82,25 @@ public class FieldIndexKeyHandler implements Indexable4{
 		_parentIdHandler.defragIndexEntry(context);
         _valueHandler.defragIndexEntry(context);
 	}
+
+	public PreparedComparison newPrepareCompare(Object obj) {
+		final FieldIndexKey source = (FieldIndexKey)obj;
+        final PreparedComparison preparedValueComparison = _valueHandler.newPrepareCompare(source.value());
+        final PreparedComparison preparedParentIdComparison = _parentIdHandler.newPrepareCompare(source.parentID());
+		return new PreparedComparison() {
+			public int compareTo(Object obj) {
+				FieldIndexKey target = (FieldIndexKey) obj;
+		        try{
+		        	int delegateResult = preparedValueComparison.compareTo(target.value());  
+		            if(delegateResult != 0 ){
+		                return delegateResult;
+		            }
+		        }catch (IllegalComparisonException ex){
+		            // can happen, is expected
+		        }
+		        return preparedParentIdComparison.compareTo(new Integer(target.parentID()));
+			}
+		};
+	}
 }
 

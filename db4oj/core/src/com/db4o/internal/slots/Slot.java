@@ -58,6 +58,10 @@ public class Slot {
     public static int MARSHALLED_LENGTH = Const4.INT_LENGTH * 2;
 
 	public int compareByAddress(Slot slot) {
+		
+		// FIXME: This is the wrong way around !!!
+		// Fix here and in all referers.
+		
         int res = slot._address - _address;
         if(res != 0){
             return res;
@@ -66,6 +70,10 @@ public class Slot {
 	}
 	
 	public int compareByLength(Slot slot) {
+		
+		// FIXME: This is the wrong way around !!!
+		// Fix here and in all referers.
+		
 		int res = slot.length() - length();
 		if(res != 0){
 			return res;

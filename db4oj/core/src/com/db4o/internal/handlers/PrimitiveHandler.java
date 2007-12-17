@@ -181,12 +181,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
 		return internalPrepareComparison(obj);
 	}
 	
-	/**
-	 * FIXME: make abstract when all derived handlers are implemented 
-	 */
-	public PreparedComparison internalPrepareComparison(final Object obj) {
-		throw new NotImplementedException();
-	}
+	public abstract PreparedComparison internalPrepareComparison(final Object obj);
 
 
 }

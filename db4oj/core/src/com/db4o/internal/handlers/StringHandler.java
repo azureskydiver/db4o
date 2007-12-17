@@ -4,6 +4,7 @@ package com.db4o.internal.handlers;
 
 import com.db4o.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
@@ -143,7 +144,9 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
     }
 
     /** 
-     * returns: -x for left is greater and +x for right is greater 
+     * returns: -x for left is greater and +x for right is greater
+     * 
+     * FIXME: The returned value is the wrong way around.
      *
      * TODO: You will need collators here for different languages.  
      */
@@ -241,5 +244,19 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         }
         return str;
     }
+    
+	public PreparedComparison newPrepareCompare(final Object obj) {
+	    final BufferImpl sourceBuffer = val(obj);
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				BufferImpl targetBuffer = val(obj);
+				
+				// FIXME: Fix the compare method to return the right result  
+				//        after it is no longer referenced elsewhere.
+				return - compare(sourceBuffer, targetBuffer);
+			}
+		};
+
+	}
 
 }

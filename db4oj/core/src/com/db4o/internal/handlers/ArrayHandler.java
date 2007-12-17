@@ -482,5 +482,18 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
             Debug.writeEnd(context);
         }
     }
+
+	public PreparedComparison newPrepareCompare(Object obj) {
+		return new PreparedComparison() {
+			public int compareTo(Object obj) {
+				
+				// FIXME: This is consistent with the old implementation.
+				
+				// Array and collection comparison is supposedly going to be special.
+				
+				return -1;
+			}
+		};
+	}
     
 }
