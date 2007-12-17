@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.internal;
 import java.util.*;
 
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.reflect.*;
 
@@ -15,9 +16,12 @@ import db4ounit.extensions.fixtures.*;
 public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutCS{
 
 	public static void main(String[] args) {
-		new Comparable4TestCase().runSolo();
+		new Comparable4TestCase().runAll();
 	}
 	
+	public static class Item {
+		
+	}
 	
 	public void testHandlers(){
 		assertHandlerComparison(BooleanHandler.class, new Boolean(false), new Boolean(true));
@@ -25,8 +29,6 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		assertHandlerComparison(ByteHandler.class, new Byte(Byte.MIN_VALUE), new Byte(Byte.MAX_VALUE));
 		assertHandlerComparison(CharHandler.class, new Character((char)1), new Character((char)2));
 		assertHandlerComparison(CharHandler.class, new Character(Character.MIN_VALUE), new Character(Character.MAX_VALUE));
-		
-		assertDateHandler();
 		
 		assertHandlerComparison(DoubleHandler.class, new Double(1), new Double(2));
 		assertHandlerComparison(DoubleHandler.class, new Double(0.1), new Double(0.2));
@@ -41,7 +43,32 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		assertHandlerComparison(ShortHandler.class, new Short((short)2), new Short((short)4));
 		assertHandlerComparison(ShortHandler.class, new Short(Short.MIN_VALUE), new Short(Short.MAX_VALUE));
 		
+		assertDateHandler();
+		
+		assertHandlerComparison(StringHandler.class, "a", "b");
+		assertHandlerComparison(StringHandler.class, "Hello", "Hello_");
+		
+		assertClassHandler();
 	}
+
+	private void assertClassHandler() {
+		int id1 = storeItem();
+		int id2 = storeItem();
+		int smallerID = Math.min(id1, id2);
+		int biggerID = Math.max(id1, id2);
+		assertHandlerComparison(ClassMetadata.class, new Integer(smallerID), new Integer(biggerID));
+	}
+
+
+
+
+	private int storeItem() {
+		Item item = new Item();
+		db().set(item);
+		return (int) db().getID(item);
+	}
+	
+	
 
 
 	/**
@@ -53,10 +80,8 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 	}
 	
 	private void assertHandlerComparison(Class handlerClass, Object smaller, Object greater) {
-		// FIXME: Change to TypeHandler4 when medthod is added to interface 
-		// TypeHandler4 handler = (TypeHandler4) newInstace(handlerClass);
 		
-		PrimitiveHandler handler = (PrimitiveHandler) newInstance(handlerClass);
+		TypeHandler4 handler = (TypeHandler4) newInstance(handlerClass);
 		
 		PreparedComparison comparable = handler.newPrepareCompare(smaller);
 		Assert.isNotNull(comparable);
@@ -81,8 +106,14 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		for (int i = 0; i < constructors.length; i++) {
 			ReflectClass[] parameterTypes = constructors[i].getParameterTypes();
 			Object[] args = new Object[parameterTypes.length];
+			if(args.length > 0){
+				args[0] = db();
+			}
 			try {
-				return constructors[i].newInstance(args);
+				Object result = constructors[i].newInstance(args);
+				if(result != null){
+					return result;
+				}
 			} catch (Exception e) {
 				
 			} 

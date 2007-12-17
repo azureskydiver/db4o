@@ -16,7 +16,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public abstract class StringHandler extends VariableLengthTypeHandler implements IndexableTypeHandler, BuiltinTypeHandler{
+public class StringHandler extends VariableLengthTypeHandler implements IndexableTypeHandler, BuiltinTypeHandler{
 	
     public StringHandler(ObjectContainerBase container) {
         super(container);
@@ -185,10 +185,6 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
 		context.incrementIntSize();
 	}
 	
-	public abstract void defragment(DefragmentContext context);
-
-    public abstract Object read(ReadContext context);
-    
     public void write(WriteContext context, Object obj) {
         internalWrite((InternalObjectContainer) context.objectContainer(), context, (String) obj);
     }
@@ -245,11 +241,19 @@ public abstract class StringHandler extends VariableLengthTypeHandler implements
         return str;
     }
     
+    public Object read(ReadContext context) {
+        return readString(context, context);
+    }
+    
+    public void defragment(DefragmentContext context) {
+    	context.incrementOffset(linkLength());
+    }
+    
 	public PreparedComparison newPrepareCompare(final Object obj) {
 	    final BufferImpl sourceBuffer = val(obj);
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
-				BufferImpl targetBuffer = val(obj);
+				BufferImpl targetBuffer = val(target);
 				
 				// FIXME: Fix the compare method to return the right result  
 				//        after it is no longer referenced elsewhere.

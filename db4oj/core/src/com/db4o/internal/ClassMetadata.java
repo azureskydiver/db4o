@@ -91,7 +91,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return new BTreeClassIndexStrategy(this);
 	}
 
-    ClassMetadata(ObjectContainerBase container, ReflectClass reflector){
+    public ClassMetadata(ObjectContainerBase container, ReflectClass reflector){
     	_container = container;
         _reflector = reflector;
         _index = createIndexStrategy();
@@ -1904,7 +1904,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		        obj = ((TransactionContext)obj)._object;
 		    }
 		    if(obj instanceof Integer){
-		        return ((Integer)obj).intValue() - _id;
+		        return _id - ((Integer)obj).intValue();
 		    }
 		    if(_claxx != null){
 		    	if(_claxx.isAssignableFrom(reflector().forObject(obj))){
