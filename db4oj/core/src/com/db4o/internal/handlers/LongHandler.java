@@ -127,4 +127,16 @@ public class LongHandler extends PrimitiveHandler {
     public void write(WriteContext context, Object obj) {
         context.writeLong(((Long) obj).longValue());
     }
+    
+    public PreparedComparison internalPrepareComparison(Object source) {
+    	final long sourceLong = ((Long)source).longValue();
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				long targetLong = ((Long)target).longValue();
+				return sourceLong == targetLong ? 0 : (sourceLong < targetLong ? - 1 : 1); 
+			}
+		};
+    }
+	
+
 }

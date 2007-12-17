@@ -113,5 +113,18 @@ public class ShortHandler extends PrimitiveHandler {
             Debug.writeEnd(context);
         }
     }
+    
+    public PreparedComparison internalPrepareComparison(Object source) {
+    	final short sourceShort = ((Short)source).shortValue();
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				short targetShort = ((Short)target).shortValue();
+				return sourceShort == targetShort ? 0 : (sourceShort < targetShort ? - 1 : 1); 
+			}
+		};
+    }
+	
+
+    
 	
 }
