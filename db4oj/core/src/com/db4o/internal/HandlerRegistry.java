@@ -174,7 +174,7 @@ public final class HandlerRegistry {
         registerBuiltinHandler(Handlers4.SHORT_ID, shortHandler);
         registerHandlerVersion(shortHandler, 0, new ShortHandler0(_container));
         
-        _stringHandler = new StringHandler2(_container);
+        _stringHandler = new StringHandler(_container);
         registerBuiltinHandler(Handlers4.STRING_ID, _stringHandler);
         registerHandlerVersion(_stringHandler, 0, new StringHandler0(_stringHandler));
 
