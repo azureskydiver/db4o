@@ -109,4 +109,15 @@ public final class ByteHandler extends PrimitiveHandler {
             Debug.writeEnd(context);
         }
     }
+    
+    public PreparedComparison internalPrepareComparison(Object source) {
+    	final byte sourceByte = ((Byte)source).byteValue();
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				byte targetByte = ((Byte)target).byteValue();
+				return sourceByte == targetByte ? 0 : (sourceByte < targetByte ? - 1 : 1); 
+			}
+		};
+    }
+
 }

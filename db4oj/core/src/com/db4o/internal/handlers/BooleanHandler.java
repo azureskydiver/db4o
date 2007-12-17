@@ -3,6 +3,7 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteContext;
@@ -144,5 +145,16 @@ public final class BooleanHandler extends PrimitiveHandler {
     public Object nullRepresentationInUntypedArrays(){
         return null;
     }
+    
+    public PreparedComparison internalPrepareComparison(Object source) {
+    	final boolean sourceBoolean = ((Boolean)source).booleanValue();
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				boolean targetBoolean = ((Boolean)target).booleanValue();
+				return sourceBoolean == targetBoolean ? 0 : (sourceBoolean ? 1 : -1); 
+			}
+		};
+    }
+
 	
 }

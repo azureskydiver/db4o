@@ -3,6 +3,7 @@
 package com.db4o.internal.handlers;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteContext;
@@ -116,5 +117,16 @@ public final class CharHandler extends PrimitiveHandler {
             Debug.writeEnd(context);
         }
     }
+    
+    public PreparedComparison internalPrepareComparison(Object source) {
+    	final char sourceChar = ((Character)source).charValue();
+    	return new PreparedComparison() {
+			public int compareTo(Object target) {
+				char targetChar = ((Character)target).charValue();
+				return sourceChar == targetChar ? 0 : (sourceChar < targetChar ? - 1 : 1); 
+			}
+		};
+    }
+
 
 }
