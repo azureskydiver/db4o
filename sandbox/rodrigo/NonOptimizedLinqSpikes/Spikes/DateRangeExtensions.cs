@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Spikes {
-    static class DateRangeExtensions {
-        public static IEnumerable<DateTime> DaysUntil(this DateTime self, DateTime end) {
-            DateTime current = self;
-            while (current < end) {
-                yield return current;
-                current = current.AddDays(1);
-            }
-        }
+namespace Spikes
+{
+	static class DateRangeExtensions
+	{
+		public static IEnumerable<DateTime> DaysUntil(this DateTime self, DateTime end)
+		{
+			DateTime current = self;
+			while (current < end)
+			{
+				yield return current;
+				current = current.AddDays(1);
+			}
+		}
 
-    }
+	}
 }
