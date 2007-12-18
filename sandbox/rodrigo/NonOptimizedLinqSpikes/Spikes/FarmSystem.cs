@@ -5,34 +5,17 @@ using System.Linq;
 using System.Text;
 using Db4objects.Db4o;
 using Db4objects.Db4o.Query;
+using Db4objects.Db4o.Config;
 
 namespace Spikes
 {
 	class FarmSystem : IDisposable
 	{
-		public static readonly string DefaultFileLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "farm.odb");
-
 		private IObjectContainer _container;
 
-		public FarmSystem()
-			: this(DefaultFileLocation)
+		public FarmSystem(IConfiguration config, string fname)
 		{
-		}
-
-		public FarmSystem(string fname)
-		{
-			_container = Db4oFactory.OpenFile(GetConfig(), fname);
-		}
-
-		private Db4objects.Db4o.Config.IConfiguration GetConfig()
-		{
-			var config = Db4oFactory.NewConfiguration();
-			config.ObjectClass(typeof(Cow)).ObjectField("Code").Indexed(true);
-
-			var cowEventClass = config.ObjectClass(typeof(CowEvent));
-			cowEventClass.ObjectField("Cow").Indexed(true);
-			cowEventClass.ObjectField("Date").Indexed(true);
-			return config;
+			_container = Db4oFactory.OpenFile(config, fname);
 		}
 
 		public IObjectContainer Container

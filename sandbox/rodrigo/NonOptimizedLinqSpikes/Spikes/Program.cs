@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Db4objects.Db4o;
 using System.Reflection;
+using Db4objects.Db4o.Config;
 
 namespace Spikes
 {
@@ -12,14 +13,14 @@ namespace Spikes
 	{
 		static void Main(string[] args)
 		{
-			int totalCows = 15;
+			int totalCows = 30;
 			int totalDays = 365;
 			new Program(totalCows, totalDays).Run();
 		}
 
 		class BenchmarkResult
 		{
-			public string Label { get; set;  }
+			public string Action { get; set;  }
 			public TimeSpan NonOptimizedTime { get; set; }
 			public TimeSpan OptimizedTime { get; set;  }
 		}
@@ -36,14 +37,18 @@ namespace Spikes
 
 		public void Run()
 		{
-			PrepareDatabase();
-			RunBenchmarks();
+			var configurations = new[] { Configurations.IndexedFields(), Configurations.Faster() };
+			foreach (var config in configurations)
+			{
+				PrepareDatabase(config);
+				RunBenchmarks(config);
+			}
 			_summary.PrettyPrint();
 		}
 
-		private void RunBenchmarks()
+		private void RunBenchmarks(IConfiguration config)
 		{
-			using (var system = new FarmSystem())
+			using (var system = new FarmSystem(config, DatabaseLocation))
 			{
 				var cow1 = RandomCow(system);
 				var cow2 = RandomCow(system);
@@ -138,7 +143,6 @@ namespace Spikes
 							  Month = g.Key,
 							  Count = g.Distinct().Count()
 						  });
-
 			}
 		}
 
@@ -159,7 +163,12 @@ namespace Spikes
 		{
 			var nonOptimizedTime = Time("LINQ => " + label, () => linq().PrettyPrint());
 			var optimizedTime = Time("Optimized => " + label, () => optimized().PrettyPrint());
-			_summary.Add(new BenchmarkResult { Label = label.Substring(0, 4) + "...", NonOptimizedTime = nonOptimizedTime, OptimizedTime = optimizedTime });
+			AddToSummary(label.Substring(0, 4) + "...", nonOptimizedTime, optimizedTime);
+		}
+
+		private void AddToSummary(string label, TimeSpan nonOptimizedTime, TimeSpan optimizedTime)
+		{
+			_summary.Add(new BenchmarkResult { Action = label, NonOptimizedTime = nonOptimizedTime, OptimizedTime = optimizedTime });
 		}
 
 		delegate void CodeBlock();
@@ -174,27 +183,25 @@ namespace Spikes
 			return time;
 		}
 
-		const string BigFile = "bigfile.odb";
+		const string DatabaseLocation = "bigfile.odb";
 
-		private void PrepareDatabase()
+		private void PrepareDatabase(IConfiguration config)
 		{
-			File.Delete(FarmSystem.DefaultFileLocation);
+			File.Delete(DatabaseLocation);
+			
+			var elapsed = Time("Database generation", ()=> GenerateBigFile(config));
 
-			File.Delete(BigFile);
-			//if (!File.Exists(BigFile))
-			{
-				Time("Database generation", GenerateBigFile);
-			}
-			File.Copy(BigFile, FarmSystem.DefaultFileLocation);
+			var objectCount = _totalCows + (_totalCows * 4 * _totalDays);
+			AddToSummary(objectCount.ToString() + " objects", elapsed, elapsed);
 		}
 
 		static readonly string[] EventIds = new[] { "give_birth", "drying", "sick" };
 
-		void GenerateBigFile()
+		void GenerateBigFile(IConfiguration config)
 		{
 			var random = new Random();
 
-			using (var system = new FarmSystem(BigFile))
+			using (var system = new FarmSystem(config, DatabaseLocation))
 			{
 				Cow[] cows = new Cow[_totalCows];
 				for (int i = 0; i < _totalCows; ++i)
