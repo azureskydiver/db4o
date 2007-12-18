@@ -6,153 +6,218 @@ using System.Text;
 using Db4objects.Db4o;
 using System.Reflection;
 
-namespace Spikes {
-    static class Program {
+namespace Spikes
+{
+	class Program
+	{
+		static void Main(string[] args)
+		{
+			int totalCows = 15;
+			int totalDays = 365;
+			new Program(totalCows, totalDays).Run();
+		}
 
-        public static void Main(string[] args) {
+		class BenchmarkResult
+		{
+			public string Label { get; set;  }
+			public TimeSpan NonOptimizedTime { get; set; }
+			public TimeSpan OptimizedTime { get; set;  }
+		}
 
-            PrepareDatabase();
+		readonly List<BenchmarkResult> _summary = new List<BenchmarkResult>();
+		readonly int _totalCows;
+		readonly int _totalDays;
 
-            using (var system = new FarmSystem()) {
-                var cow1 = RandomCow(system);
-                var cow2 = RandomCow(system);
+		public Program(int totalCows, int totalDays)
+		{
+			_totalCows = totalCows;
+			_totalDays = totalDays;
+		}
 
-                // “find all cows whose average milk during august was less than 0.75 of the herd’s average.”
+		public void Run()
+		{
+			PrepareDatabase();
+			RunBenchmarks();
+			_summary.PrettyPrint();
+		}
 
-                var august = new DateTime(2007, 8, 1);
-                var september = august.AddMonths(1);
+		private void RunBenchmarks()
+		{
+			using (var system = new FarmSystem())
+			{
+				var cow1 = RandomCow(system);
+				var cow2 = RandomCow(system);
 
-                Benchmark("find all cows whose average milk during august was less than 0.75 of the herd’s average.", () => {
-                    var herdAverage = system.HerdAverage(august, september);
-                    var threshold = .90 * herdAverage;
-                    return from c in system.Cows
-                                  let CowAverage = system.CowAverage(c, august, september)
-                                  where CowAverage < threshold
-                                  select new { c.Code, CowAverage };
-                }, ()=>null);
+				var code = RandomCowCode();
+				Benchmark("select a single cow",
+					() => from c in system.Cows where c.Code == code select new { c.Code },
+					() => from c in new[] { system.OptimizedSingleCow(code) } select new { c.Code });
 
-                // The example queries:
-                // A. For each cow, calculate total milk between date1 and date2
+				// “find all cows whose average milk during august was less than 0.75 of the herd’s average.”
+				var august = new DateTime(2007, 8, 1);
+				var september = august.AddMonths(1);
 
-                Time("For each cow, calculate total milk between date1 and date2", () => {
-                    var result2 = from c in system.Cows
-                                  let CowTotal = system.CowTotal(c, august, september)
-                                  select new { c.Code, CowTotal };
+				Benchmark("find all cows whose average milk during august was less than 0.75 of the herd’s average.", () =>
+				{
+					var herdAverage = system.HerdAverage(august, september);
+					var threshold = .90 * herdAverage;
+					return from c in system.Cows
+						   let CowAverage = system.CowAverage(c, august, september)
+						   where CowAverage < threshold
+						   select new { c.Code, CowAverage };
+				}, () =>
+				{
+					var herdAverage = system.OptimizedHerdAverage(august, september);
+					var threshold = .90 * herdAverage;
+					return from c in system.Cows
+						   let CowAverage = system.OptimizedCowAverage(c, august, september)
+						   where CowAverage < threshold
+						   select new { c.Code, CowAverage };
+				});
 
-                    result2.PrettyPrint();
-                });
-
-
-                // B. Find cows whose total(date1,date2) < X
-
-                Time("Find cows whose total(date1,date2) < X", () => {
-                    var result3 = from c in system.Cows
-                                  let CowTotal = system.CowTotal(c, august, september)
-                                  where CowTotal < 2
-                                  select new { c.Code, CowTotal };
-
-                    result3.PrettyPrint();
-                });
-
-
-                // C. Find cows whose total(date1,date2) < 0.75 * average total(date1,date2)
-
-                // D. Days from last give_birth event for cows who are in active milking
-                // [these are cows that have a "give_birth" event and no "drying" event
-                // after it]
-
-                var result4 = from c in system.Cows
-                            let LastGaveBirth = system.DateOfLastEvent(c, "give_birth")
-                            let LastDrying = system.DateOfLastEvent(c, "drying")
-                            where LastDrying == null || LastGaveBirth > LastDrying 
-                            select new { c.Code, (DateTime.Now - LastGaveBirth.Value).TotalDays };
-
-                result4.PrettyPrint();
+				// The example queries:
+				// A. For each cow, calculate total milk between date1 and date2
+				Benchmark("For each cow, calculate total milk between date1 and date2",
+					() => from c in system.Cows
+						  let CowTotal = system.CowTotal(c, august, september)
+						  select new { c.Code, CowTotal },
+					() => from c in system.Cows
+						  let CowTotal = system.OptimizedCowTotal(c, august, september)
+						  select new { c.Code, CowTotal });
 
 
-                // E. How many cows gave birth in each month during the last year
-                var lastYear = new DateTime(2007, 1, 1);
-                var lastYearEnd = lastYear.AddYears(1);
+				// B. Find cows whose total(date1,date2) < X
 
-                var result6 = from e in system.Events
-                              where e.Id == "give_birth" && e.Date >= lastYear && e.Date <= lastYearEnd
-                              group e.Cow by e.Date.Month into g
-                              select new {
-                                  Month = g.Key,
-                                  Count = g.Distinct().Count()
-                              };
+				Benchmark("Find cows whose total(date1,date2) < X",
+					() => from c in system.Cows
+						  let CowTotal = system.CowTotal(c, august, september)
+						  where CowTotal < 2
+						  select new { c.Code, CowTotal },
+					() => from c in system.Cows
+						  let CowTotal = system.OptimizedCowTotal(c, august, september)
+						  where CowTotal < 2
+						  select new { c.Code, CowTotal });
 
-                result6.PrettyPrint();
 
-            }
-        }
+				// C. Find cows whose total(date1,date2) < 0.75 * average total(date1,date2)
 
-        private static Cow RandomCow(FarmSystem system) {
-            var code = "Cow " + new Random().Next(TotalCows);
-            return (from c in system.Cows where c.Code == code select c).First();
-        }
+				// D. Days from last give_birth event for cows who are in active milking
+				// [these are cows that have a "give_birth" event and no "drying" event
+				// after it]
 
-        delegate IEnumerable<T> QueryBlock<T>();
+				Benchmark("Days in active milking",
+					() => from c in system.Cows
+						  let LastGaveBirth = system.DateOfLastEvent(c, "give_birth")
+						  let LastDrying = system.DateOfLastEvent(c, "drying")
+						  where LastDrying == null || LastGaveBirth > LastDrying
+						  select new { c.Code, (DateTime.Now - LastGaveBirth.Value).TotalDays },
+					() => from c in system.OptimizedCowsThatEverGaveBirth()
+						  let LastGaveBirth = system.OptimizedDateOfLastEvent(c, "give_birth")
+						  let LastDrying = system.OptimizedDateOfLastEvent(c, "drying")
+						  where LastDrying == null || LastGaveBirth > LastDrying
+						  select new { c.Code, (DateTime.Now - LastGaveBirth.Value).TotalDays });
 
-        private static void Benchmark<T>(string label, QueryBlock<T> linq, QueryBlock<T> optimized) {
-            Time("LINQ => " + label, () => linq().PrettyPrint());
-            Time("Optimized => " + label, () => optimized().PrettyPrint());
-        }
 
-        delegate void CodeBlock();
+				// E. How many cows gave birth in each month during the last year
+				var lastYear = new DateTime(2007, 1, 1);
+				var lastYearEnd = lastYear.AddYears(1);
 
-        private static void Time(string label, CodeBlock code) {
-            Console.WriteLine(" ======  {0} ======= ", label);
-            DateTime start = DateTime.Now;
-            try {
-                code();
-            } finally {
-                Console.WriteLine("'{0}' took {1}ms", label, (DateTime.Now - start).TotalMilliseconds);
-            }
-        }
+				Benchmark("How many cows gave birth in each month",
+					() => from e in system.Events
+						  where e.Id == "give_birth" && e.Date >= lastYear && e.Date <= lastYearEnd
+						  group e.Cow by e.Date.Month into g
+						  select new
+						  {
+							  Month = g.Key,
+							  Count = g.Distinct().Count()
+						  },
+					() => from CustomCowEvent e in system.OptimizedEventRange("give_birth", lastYear, lastYearEnd)
+						  group e.Cow by e.Date.Month into g
+						  select new
+						  {
+							  Month = g.Key,
+							  Count = g.Distinct().Count()
+						  });
 
-        const string BigFile = "bigfile.odb";
+			}
+		}
 
-        private static void PrepareDatabase() {
-            File.Delete(FarmSystem.DefaultFileLocation);
+		private Cow RandomCow(FarmSystem system)
+		{
+			var code = RandomCowCode();
+			return (from c in system.Cows where c.Code == code select c).First();
+		}
 
-            File.Delete(BigFile);
+		private string RandomCowCode()
+		{
+			return "Cow " + new Random().Next(_totalCows);
+		}
 
-            if (!File.Exists(BigFile)) {
-                Time("Database generation", GenerateBigFile);
-            }
-            File.Copy(BigFile, FarmSystem.DefaultFileLocation);
-        }
+		delegate IEnumerable<T> QueryBlock<T>();
 
-        const int TotalCows = 30;
+		private void Benchmark<T>(string label, QueryBlock<T> linq, QueryBlock<T> optimized)
+		{
+			var nonOptimizedTime = Time("LINQ => " + label, () => linq().PrettyPrint());
+			var optimizedTime = Time("Optimized => " + label, () => optimized().PrettyPrint());
+			_summary.Add(new BenchmarkResult { Label = label.Substring(0, 4) + "...", NonOptimizedTime = nonOptimizedTime, OptimizedTime = optimizedTime });
+		}
 
-        static readonly string[] EventIds = new[] { "give_birth", "drying", "sick" };
+		delegate void CodeBlock();
 
-        static void GenerateBigFile() {
+		private static TimeSpan Time(string label, CodeBlock code)
+		{
+			Console.WriteLine(" ======  {0} ======= ", label);
+			DateTime start = DateTime.Now;
+			code();
+			var time = DateTime.Now - start;
+			Console.WriteLine("'{0}' took {1}ms", label, time.TotalMilliseconds);
+			return time;
+		}
 
-            var random = new Random();
+		const string BigFile = "bigfile.odb";
 
-            using (var system = new FarmSystem(BigFile)) {
+		private void PrepareDatabase()
+		{
+			File.Delete(FarmSystem.DefaultFileLocation);
 
-                Cow[] cows = new Cow[TotalCows];
-                for (int i = 0; i < TotalCows; ++i) {
-                    cows[i] = new Cow("Cow " + i);
-                    system.Track(cows[i]);
-                }
+			File.Delete(BigFile);
+			//if (!File.Exists(BigFile))
+			{
+				Time("Database generation", GenerateBigFile);
+			}
+			File.Copy(BigFile, FarmSystem.DefaultFileLocation);
+		}
 
-                int days = 0;
-                foreach (DateTime day in (DateTime.Now - TimeSpan.FromDays(365)).DaysUntil(DateTime.Now)) {
-                    Console.Write("{0} ", ++days);
-                    foreach (Cow cow in cows) {
-                        system.Milked(new Milking(cow, day, (float)(2 * random.NextDouble())));
-                        system.Milked(new Milking(cow, day.AddHours(8), (float)(2 * random.NextDouble())));
-                        system.Milked(new Milking(cow, day.AddHours(8), (float)(2 * random.NextDouble())));
-                        system.CustomEvent(cow, day, EventIds[random.Next(EventIds.Length)]);
-                    }
-                }
-                Console.WriteLine();
-            }
-        }
-    }
+		static readonly string[] EventIds = new[] { "give_birth", "drying", "sick" };
+
+		void GenerateBigFile()
+		{
+			var random = new Random();
+
+			using (var system = new FarmSystem(BigFile))
+			{
+				Cow[] cows = new Cow[_totalCows];
+				for (int i = 0; i < _totalCows; ++i)
+				{
+					cows[i] = new Cow { Code = "Cow " + i };
+					system.Track(cows[i]);
+				}
+
+				int days = 0;
+				foreach (DateTime day in (DateTime.Now - TimeSpan.FromDays(_totalDays)).DaysUntil(DateTime.Now))
+				{
+					Console.Write("{0} ", ++days);
+					foreach (Cow cow in cows)
+					{
+						system.Milked(cow, day, (float)(2 * random.NextDouble()));
+						system.Milked(cow, day.AddHours(8), (float)(2 * random.NextDouble()));
+						system.Milked(cow, day.AddHours(8), (float)(2 * random.NextDouble()));
+						system.CustomEvent(cow, day, EventIds[random.Next(EventIds.Length)]);
+					}
+				}
+				Console.WriteLine();
+			}
+		}
+	}
 }
 
