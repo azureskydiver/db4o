@@ -5,6 +5,7 @@ package com.db4o.bench;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.bench.logging.replay.*;
 import com.db4o.io.*;
 
 

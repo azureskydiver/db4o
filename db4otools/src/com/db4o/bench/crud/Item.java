@@ -6,6 +6,9 @@ public class Item {
 	
 	private static final String LOAD = "LOAD__________________________";
 	
+	private static final String UPDATE = "ccccc";
+	
+	
 	public String _string;
 	
 	public Item(){
@@ -21,7 +24,7 @@ public class Item {
 	}
 
 	public void change() {
-		_string = _string + "c";
+		_string = _string + UPDATE;
 	}
 
 }

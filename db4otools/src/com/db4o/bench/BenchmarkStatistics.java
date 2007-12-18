@@ -27,7 +27,9 @@ public class BenchmarkStatistics {
 	}
 	
 	public void log(long time, long byteCount) {
-		_byteCount += byteCount;
+		if ( byteCount > 0 ) {
+			_byteCount += byteCount;
+		}
 		log(time);
 	}
 	
@@ -35,7 +37,7 @@ public class BenchmarkStatistics {
 		DecimalFormat formatCount = new DecimalFormat("###,###");
 		out.println("Statistics for command " + _name);
 		out.println("> Number of operations: " + formatCount.format(_operationCount));
-		out.println("> Total time taken: " + formatCount.format(_timeCount) + " milliseconds");
+		out.println("> Total time taken: " + formatCount.format(_timeCount) + " nanoseconds");
 		out.println("> Number of bytes handled: " + formatCount.format(_byteCount));
 		
 		double avgTimePerOp = (double)_timeCount / (double)_operationCount / (double)_iterations;

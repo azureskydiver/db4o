@@ -4,6 +4,7 @@ package com.db4o.bench;
 
 import java.io.*;
 
+import com.db4o.bench.logging.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
@@ -13,7 +14,7 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
 
 	private static String _logFileName = "db4o-benchmark.log";
 	
-	private final StopWatch _watch;
+	private final NanoStopWatch _watch;
 	
 	private final BenchmarkStatistics _readStats;
 	private final BenchmarkStatistics _writeStats;
@@ -26,7 +27,7 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
 		super(delegateAdapter);
 		_iterations = iterations;
 		_logFileName = logFileName;
-		_watch = new StopWatch();
+		_watch = new NanoStopWatch();
 		_readStats = new BenchmarkStatistics(LogConstants.READ_ENTRY, iterations);
 		_writeStats = new BenchmarkStatistics(LogConstants.WRITE_ENTRY, iterations);
 		_seekStats = new BenchmarkStatistics(LogConstants.SEEK_ENTRY, iterations);

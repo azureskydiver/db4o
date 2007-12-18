@@ -1,17 +1,21 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
-package com.db4o.bench;
+package com.db4o.bench.delaying;
+
+import java.io.*;
 
 import com.db4o.*;
+import com.db4o.bench.*;
+import com.db4o.bench.logging.replay.*;
 import com.db4o.io.*;
 
 
 public class DelayingExample {
 
-	private static final String _logFileName1 = "slower-nanos.log";
-	private static final String _logFileName2 = "z3raDesk2_polepos-allopt-cs.log";
+	private static final String _logFileName1 = "db4o-io-benchmark-results-100000_faster.log";
+	private static final String _logFileName2 = "db4o-io-benchmark-results-100000_slower.log";
 	private static final String DB_FILE_NAME = "delay-test.db4o";
-	private static final String OPEN_LOG_FILE_NAME = "rssowl_open-close.log";
+	private static final String OPEN_LOG_FILE_NAME = "simplecrud_100000.log";
 	private static final String BENCHMARK_LOG_FILE_NAME = "DelayingExample-benchmarkTest.log";
 	
 	/**
@@ -22,20 +26,38 @@ public class DelayingExample {
 	}
 
 	public DelayingExample() {
-		DelayCalculation calculation = new DelayCalculation(_logFileName1, _logFileName2);
-		calculation.validateData();
-		if (calculation.isValidData()) {
-			System.out.println("Data is valid!");
-			Delays delays = calculation.getDelays();
-			System.out.println("delays: " + delays);
-			
-			dbTest(delays);
-//			replayTest(delays);
-//			benchmarkTestRAF(delays);
+		DelayCalculation calculation;
+		try {
+			calculation = new DelayCalculation(_logFileName1, _logFileName2);
+			calculation.validateData();
+			if (calculation.isValidData()) {
+				System.out.println("Data is valid!");
+				Delays delays = calculation.getDelays();
+				
+				System.out.println(delays);
+				if ( delays.units == Delays.UNITS_MILLISECONDS ) {
+					System.out.println("Delaying with Thread.sleep() ...");
+				}
+				else if ( delays.units == Delays.UNITS_NANOSECONDS ) {
+					System.out.println("Delaying with busy waiting ...");
+				}
+				
+//				dbTest(delays);
+//				replayTest(delays);
+				benchmarkTestRAF(delays);
+			}
+			else {
+				System.err.println("Data is not valid!");
+			}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		else {
-			System.err.println("Data is not valid!");
-		}
+		
+		new File(DB_FILE_NAME).delete();
 	}
 
 	private void dbTest(Delays delays) {
