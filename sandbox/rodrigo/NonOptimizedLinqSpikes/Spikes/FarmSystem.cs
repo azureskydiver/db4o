@@ -9,9 +9,21 @@ using Db4objects.Db4o.Config;
 
 namespace Spikes
 {
-	class FarmSystem : IDisposable
+	public class FarmSystem : IDisposable
 	{
+		public static readonly string DatabaseLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "farm.odb");
+
 		private IObjectContainer _container;
+
+		public FarmSystem()
+			: this(Configurations.Faster(), DatabaseLocation)
+		{
+		}
+
+		public FarmSystem(IConfiguration config)
+			: this(config, DatabaseLocation)
+		{
+		}
 
 		public FarmSystem(IConfiguration config, string fname)
 		{

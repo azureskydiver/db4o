@@ -13,7 +13,7 @@ namespace Spikes
 	{
 		static void Main(string[] args)
 		{
-			int totalCows = 30;
+			int totalCows = 5;
 			int totalDays = 365;
 			new Program(totalCows, totalDays).Run();
 		}
@@ -48,10 +48,11 @@ namespace Spikes
 
 		private void RunBenchmarks(IConfiguration config)
 		{
-			using (var system = new FarmSystem(config, DatabaseLocation))
+			using (var system = new FarmSystem(config))
 			{
 				var cow1 = RandomCow(system);
 				var cow2 = RandomCow(system);
+
 
 				var code = RandomCowCode();
 				Benchmark("select a single cow",
@@ -183,11 +184,9 @@ namespace Spikes
 			return time;
 		}
 
-		const string DatabaseLocation = "bigfile.odb";
-
 		private void PrepareDatabase(IConfiguration config)
 		{
-			File.Delete(DatabaseLocation);
+			File.Delete(FarmSystem.DatabaseLocation);
 			
 			var elapsed = Time("Database generation", ()=> GenerateBigFile(config));
 
@@ -201,7 +200,7 @@ namespace Spikes
 		{
 			var random = new Random();
 
-			using (var system = new FarmSystem(config, DatabaseLocation))
+			using (var system = new FarmSystem(config))
 			{
 				Cow[] cows = new Cow[_totalCows];
 				for (int i = 0; i < _totalCows; ++i)

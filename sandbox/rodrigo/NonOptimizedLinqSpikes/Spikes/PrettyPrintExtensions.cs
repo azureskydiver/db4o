@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace Spikes
 {
-	static class PrettyPrintExtensions
+	public static class PrettyPrintExtensions
 	{
 		public static void PrettyPrint<T>(this IEnumerable<T> self)
 		{

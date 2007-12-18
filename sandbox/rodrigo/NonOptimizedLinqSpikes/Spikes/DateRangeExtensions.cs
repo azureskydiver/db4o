@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Spikes
 {
-	static class DateRangeExtensions
+	public static class DateRangeExtensions
 	{
 		public static IEnumerable<DateTime> DaysUntil(this DateTime self, DateTime end)
 		{
