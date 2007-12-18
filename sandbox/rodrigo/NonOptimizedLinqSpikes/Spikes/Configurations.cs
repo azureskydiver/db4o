@@ -23,10 +23,16 @@ namespace Spikes
 		public static IConfiguration Faster()
 		{
 			var config = IndexedFields();
-			config.FlushFileBuffers(false);
+			
 			config.WeakReferences(false);
 			config.BTreeCacheHeight(3);
 			config.BTreeNodeSize(120);
+
+			config.FlushFileBuffers(false);
+
+			config.Callbacks(false);
+			config.CallConstructors(false);
+
 			return config;
 		}
 	}
