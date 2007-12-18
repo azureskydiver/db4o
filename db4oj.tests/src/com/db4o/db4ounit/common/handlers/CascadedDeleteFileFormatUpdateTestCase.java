@@ -18,8 +18,12 @@ public class CascadedDeleteFileFormatUpdateTestCase extends FormatMigrationTestC
 	
 	private boolean _failed;
 	
-	protected void configure(Configuration config) {
+	protected void configureForStore(Configuration config) {
 		config.objectClass(ParentItem.class).cascadeOnDelete(true);
+	}
+	
+	protected void configureForTest(Configuration config) {
+		configureForStore(config);
 		config.diagnostic().addListener(new DiagnosticListener() {
 			public void onDiagnostic(Diagnostic d) {
 				if(d instanceof DeletionFailed){

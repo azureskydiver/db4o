@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.migration;
 
+import com.db4o.db4ounit.common.freespace.*;
 import com.db4o.db4ounit.common.handlers.*;
 import com.db4o.db4ounit.util.*;
 
@@ -35,6 +36,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 
 	protected Class[] testCases() {
 		return new Class[] {
+			IxFreespaceMigrationTestCase.class,
             BooleanHandlerUpdateTestCase.class,
             ByteHandlerUpdateTestCase.class,
 			CascadedDeleteFileFormatUpdateTestCase.class,

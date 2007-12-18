@@ -21,7 +21,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     public void configure(){
         Configuration config = Db4o.configure();
         config.allowVersionUpdates(true);
-        configure(config);
+        configureForTest(config);
     }
     
     protected static final String PATH = Path4.combine(Path4.getTempPath(), "test/db4oVersions");
@@ -45,6 +45,16 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     
     public void createDatabaseFor(String versionName) {
         _db4oVersion = versionName;
+        Configuration config = Db4o.configure();
+        try{
+        	configureForStore(config);
+        } catch(Throwable t){
+        	// Some old database engines may throw NoSuchMethodError
+        	// for configuration methods they don't know yet. Ignore,
+        	// but tell the implementor:
+        	
+        	// System.out.println("Exception in configureForStore for " + versionName + " in " + getClass().getName());
+        }
     	createDatabase(fileName(versionName));
     }
 
@@ -141,7 +151,13 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     
     protected abstract String fileNamePrefix();
 
-    protected abstract void configure(Configuration config);
+    protected void configureForTest(Configuration config){
+    	// Override for special testing configuration.
+    }
+    
+    protected void configureForStore(Configuration config){
+    	// Override for special storage configuration.
+    }
     
     protected abstract void store(ExtObjectContainer objectContainer);
     

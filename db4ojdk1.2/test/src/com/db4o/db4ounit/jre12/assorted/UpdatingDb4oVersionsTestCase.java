@@ -22,7 +22,11 @@ public class UpdatingDb4oVersionsTestCase extends FormatMigrationTestCaseBase {
 		new TestRunner(UpdatingDb4oVersionsTestCase.class).run();
 	}
 
-    protected void configure(Configuration config){
+    protected void configureForTest(Configuration config){
+        config.objectClass(UpdatingDb4oVersions.class).objectField("name").indexed(true);
+    }
+    
+    protected void configureForStore(Configuration config){
         config.objectClass(UpdatingDb4oVersions.class).objectField("name").indexed(true);
     }
     
