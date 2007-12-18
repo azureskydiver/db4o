@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.handlers;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.BufferImpl;
 import com.db4o.internal.Indexable4;
 import com.db4o.internal.handlers.DoubleHandler;
@@ -36,14 +37,14 @@ public class DoubleHandlerTestCase extends TypeHandlerTestCaseBase {
 
 	public void testComparison() {		
 		assertComparison(0, 1.1, 1.1);
-		assertComparison(1, 1.0, 1.1);
-		assertComparison(-1, 1.1, 0.5);
+		assertComparison(-1, 1.0, 1.1);
+		assertComparison(1, 1.1, 0.5);
 	}
 
 	private void assertComparison(final int expected, final double prepareWith, final double compareTo) {
-		_handler.prepareComparison(new Double(prepareWith));		
+		PreparedComparison preparedComparison = _handler.newPrepareCompare(new Double(prepareWith));
 		final Double doubleCompareTo = new Double(compareTo);
-		Assert.areEqual(expected, _handler.compareTo(doubleCompareTo));
+		Assert.areEqual(expected, preparedComparison.compareTo(doubleCompareTo));
 	}
 	
 	public void testReadWrite() {
