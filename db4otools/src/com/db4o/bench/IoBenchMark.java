@@ -5,31 +5,32 @@ package com.db4o.bench;
 import java.io.*;
 
 import com.db4o.bench.crud.*;
+import com.db4o.bench.logging.replay.*;
 import com.db4o.io.*;
 
 public class IoBenchMark {
 	
-	private static final int ITERATIONS = 100;
+	private static final int ITERATIONS = 1;	//100
 	
-	private static final int SMALL = 10;
+	private static final int SMALL 	= 100000;		//1'000
 	
-	private static final int MEDIUM = 3000;
+	private static final int MEDIUM	= 30000;	//30'000
 	
-	private static final int LARGE = 10000;
+	private static final int LARGE 	= 1000000;	//1'000'000
 	
 	private static final String DB_FILE_NAME = "ioBenchMark.db4o";
 	
 	public static void main(String[] args) throws IOException {
 		
-		printLine();
+		printDoubleLine();
 		System.out.println("Running db4o IoBenchMark");
 		System.out.println("Iterations on each operation: " + ITERATIONS);
-		printLine();
+		printDoubleLine();
 
 		IoBenchMark ioBenchMark = new IoBenchMark();
 		ioBenchMark.run(SMALL, ITERATIONS);
-		ioBenchMark.run(MEDIUM, ITERATIONS);
-		ioBenchMark.run(LARGE, ITERATIONS);
+//		ioBenchMark.run(MEDIUM, ITERATIONS);
+//		ioBenchMark.run(LARGE, ITERATIONS);
 	}
 
 	private void run(int itemCount, int iterations) throws FileNotFoundException, IOException {
@@ -42,9 +43,12 @@ public class IoBenchMark {
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), io);
 		replayer.replayLog();
 		
-		System.out.println("\nIoBenchmark results with " + itemCount + " items:\n");
+		new File(DB_FILE_NAME).delete();
+		
+		printSingleLine();
+		System.out.println("IoBenchmark results with " + itemCount + " items");
 		System.out.println("Statistics written to " + logFileName(itemCount));
-		printLine();
+		printSingleLine();
 		
 		BufferedReader reader = new BufferedReader(new FileReader(new File(logFileName(itemCount))));
 		String line = null;
@@ -57,8 +61,12 @@ public class IoBenchMark {
 		return "db4o-io-benchmark-results-" + itemCount + ".log";
 	}
 	
-	private static void printLine() {
-		System.out.println("---------------------------------------------------");
+	private static void printSingleLine() {
+		System.out.println("-------------------------------------------------------------");
+	}
+	
+	private static void printDoubleLine() {
+		System.out.println("=============================================================");
 	}
 	
 	

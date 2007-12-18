@@ -6,20 +6,23 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.bench.*;
+import com.db4o.bench.logging.*;
 import com.db4o.config.*;
 import com.db4o.io.*;
 
 /**
- * Very simple CRUD (Create, Read, Update, Delete) app to 
- * produce log files as an input for benchmarking IO.
+ * Very simple CRUD (Create, Read, Update, Delete) application to 
+ * produce log files as an input for I/O-benchmarking.
  */
 public class CrudApplication {
 	
 	
+	private static final int ITEM_COUNT = 10000;
 	private static final String DATABASE_FILE = "simplecrud.db4o";
 	
+	
 	public static void main(String[] args) {
-		new CrudApplication().run(10000);
+		new CrudApplication().run(ITEM_COUNT);
 	}
 
 	public void run(int itemCount) {
@@ -28,6 +31,7 @@ public class CrudApplication {
 		read(config);
 		update(config);
 		delete(config);
+		deleteDbFile();
 	}
 
 	private void create(int itemCount, Configuration config) {
@@ -68,12 +72,16 @@ public class CrudApplication {
 	}
 
 	private Configuration prepare(int itemCount) {
-		new File(DATABASE_FILE).delete();
+		deleteDbFile();
 		RandomAccessFileAdapter rafAdapter = new RandomAccessFileAdapter();
 		IoAdapter ioAdapter = new LoggingIoAdapter(rafAdapter, logFileName(itemCount));
 		Configuration config = Db4o.cloneConfiguration();
 		config.io(ioAdapter);
 		return config;
+	}
+
+	private void deleteDbFile() {
+		new File(DATABASE_FILE).delete();
 	}
 
 	private ObjectSet allItems(ObjectContainer oc) {
