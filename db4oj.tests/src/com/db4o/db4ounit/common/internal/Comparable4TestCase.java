@@ -13,6 +13,9 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
+/**
+ * @sharpen.partial 
+ */
 public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutCS{
 
 	public static void main(String[] args) {
