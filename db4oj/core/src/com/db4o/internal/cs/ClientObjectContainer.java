@@ -570,7 +570,8 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	public void send(Object obj) {
 		synchronized (_lock) {
 			if (obj != null) {
-				write(Msg.USER_MESSAGE.getWriter(Serializer.marshall(_transaction,obj)));
+				final MUserMessage message = Msg.USER_MESSAGE;
+				write(message.marshallUserMessage(_transaction, obj));
 			}
 		}
 	}

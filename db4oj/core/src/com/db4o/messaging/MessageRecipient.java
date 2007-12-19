@@ -21,6 +21,6 @@ public interface MessageRecipient {
 	
 	/**
 	 * the method called upon the arrival of messages.
-	 * @param con the ObjectContainer the message was sent to.	 * @param message the message received.	 */
-	public void processMessage(ObjectContainer con, Object message);
+	 * @param container the ObjectContainer the message was sent to.	 * @param message the message received.	 */
+	public void processMessage(ObjectContainer container, Object message);
 }
