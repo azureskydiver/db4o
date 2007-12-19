@@ -53,13 +53,9 @@ public interface FreespaceConfiguration {
     public void useBTreeSystem(); 
     
     /**
-     * configures db4o to use an index-based freespace system.
-     * <br><br><b>Advantages</b><br>
-     * - ACID, no freespace is lost on abnormal system termination<br>
-     * - low memory consumption<br>
-     * <br><b>Disadvantages</b><br>
-     * - slower than the RAM-based system, since freespace information
-     * is written during every commit<br>
+     * discontinued freespace system, only available before db4o 7.0. 
+     * @deprecated Please use the BTree freespace system instead by
+     * calling {@link #useBTreeSystem()}.
      */
     public void useIndexSystem(); 
 

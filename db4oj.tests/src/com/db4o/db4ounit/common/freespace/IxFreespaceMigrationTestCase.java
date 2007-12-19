@@ -34,7 +34,6 @@ public class IxFreespaceMigrationTestCase extends FormatMigrationTestCaseBase {
 			item = item._next;
 		}
 		objectContainer.commit();
-		assertObjectsAreReadable(objectContainer);
 	}
 
 	private Item queryForItem(ExtObjectContainer objectContainer, int n) {
