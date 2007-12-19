@@ -131,5 +131,9 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return (LocalTransaction)_file.systemTransaction();
     }
 
+	public static boolean migrationRequired(byte systemType) {
+		return systemType == FM_LEGACY_RAM  || systemType == FM_IX ;
+	}
+
     
 }
