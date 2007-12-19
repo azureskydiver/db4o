@@ -109,8 +109,6 @@ public class LocalTransaction extends Transaction {
         
         commit3Stream();
         
-        commit4FieldIndexes();
-        
         commitParticipants();
         
         container().writeDirty();
@@ -199,8 +197,6 @@ public class LocalTransaction extends Transaction {
         synchronized (container()._lock) {
             
             rollbackParticipants();
-            
-            rollbackFieldIndexes();
             
             rollbackSlotChanges();
             

@@ -4,7 +4,6 @@ package com.db4o.internal;
 
 import com.db4o.*;
 import com.db4o.foundation.*;
-import com.db4o.internal.ix.IndexTransaction;
 import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.Reflector;
@@ -18,8 +17,6 @@ public abstract class Transaction {
     // contains DeleteInfo nodes
     protected Tree _delete;
 
-    private List4 _dirtyFieldIndexes;
-    
     protected final Transaction _systemTransaction;
 
     /**
@@ -48,10 +45,6 @@ public abstract class Transaction {
         _referenceSystem = referenceSystem;
     }
 
-    public void addDirtyFieldIndex(IndexTransaction indexTransaction) {
-        _dirtyFieldIndexes = new List4(_dirtyFieldIndexes, indexTransaction);
-    }
-
 	public final void checkSynchronization() {
 		if(Debug.checkSychronization){
             container()._lock.notify();
@@ -64,7 +57,6 @@ public abstract class Transaction {
     
     protected final void clearAll() {
         clear();
-        _dirtyFieldIndexes = null;
         _transactionListeners = null;
     }
     
@@ -84,19 +76,6 @@ public abstract class Transaction {
 	}
     
     public abstract void commit();    
-    
-    protected void commit4FieldIndexes(){
-        if(_systemTransaction != null){
-            _systemTransaction.commit4FieldIndexes();
-        }
-        if (_dirtyFieldIndexes != null) {
-            Iterator4 i = new Iterator4Impl(_dirtyFieldIndexes);
-            while (i.moveNext()) {
-                ((IndexTransaction) i.current()).commit();
-            }
-        }
-    }
-
     
     protected void commitTransactionListeners() {
         checkSynchronization();
@@ -179,15 +158,6 @@ public abstract class Transaction {
     
     public abstract void rollback();
 
-	protected void rollbackFieldIndexes() {
-		if (_dirtyFieldIndexes != null) {
-		    Iterator4 i = new Iterator4Impl(_dirtyFieldIndexes);
-		    while (i.moveNext()) {
-		        ((IndexTransaction) i.current()).rollback();
-		    }
-		}
-	}
-    
 	protected void rollBackTransactionListeners() {
         checkSynchronization();
         if (_transactionListeners != null) {
