@@ -39,6 +39,10 @@ public class QConClass extends QConObject{
 	QConClass(Transaction trans, ReflectClass claxx){
 	    this(trans ,null, null, claxx);
 	}
+	
+	public String getClassName() {
+		return _claxx.getName();
+	}
     
     public boolean canBeIndexLeaf(){
         return false;
