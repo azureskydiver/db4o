@@ -10,8 +10,12 @@ public final class MUserMessage extends MsgObject implements ServerSideMessage {
 	public final boolean processAtServer() {
 		if (messageRecipient() != null) {
 			unmarshall();
-			final UserMessagePayload payload = (UserMessagePayload)readObjectFromPayLoad();
-			messageRecipient().processMessage(transaction().objectContainer(), payload.message);
+			try {
+				final UserMessagePayload payload = (UserMessagePayload)readObjectFromPayLoad();
+				messageRecipient().processMessage(transaction().objectContainer(), payload.message);
+			} catch (Exception x) {
+				x.printStackTrace();
+			}
 		}
 		return true;
 	}
