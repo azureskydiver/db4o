@@ -16,10 +16,6 @@ public class IxFreespaceMigrationTestCase extends FormatMigrationTestCaseBase {
 		config.freespace().useIndexSystem();
 	}
 	
-	protected void configureForTest(Configuration config) {
-		config.freespace().useRamSystem();
-	}
-	
 	protected void store(ExtObjectContainer objectContainer) {
 		Item nextItem = null;
 		for (int i = 9; i >= 0; i--) {

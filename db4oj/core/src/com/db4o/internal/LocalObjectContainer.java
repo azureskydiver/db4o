@@ -471,7 +471,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 			_freespaceManager.start(_systemData.freespaceAddress());
 		}
         
-        if(needFreespaceMigration()){
+        if(freespaceMigrationRequired()){
         	migrateFreespace();
         }
         
@@ -497,11 +497,19 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
     }
     
-    private boolean needFreespaceMigration() {
+    private boolean freespaceMigrationRequired() {
+		if(_freespaceManager == null){
+			return false;
+		}
 		byte readSystem = _systemData.freespaceSystem();
 		byte configuredSystem = configImpl().freespaceSystem();
-		return (configuredSystem != 0 || readSystem == AbstractFreespaceManager.FM_LEGACY_RAM)
-			&& (_freespaceManager.systemType() != configuredSystem);
+		if(_freespaceManager.systemType() == configuredSystem){
+			return false;
+		}
+		if (configuredSystem != 0){
+			return true;
+		}
+		return AbstractFreespaceManager.migrationRequired(readSystem);
 	}
 
 	private void migrateFreespace() {
