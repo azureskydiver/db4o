@@ -583,9 +583,9 @@ public final class Config4Impl implements Configuration, DeepClone,
         _config.put(FREESPACE_SYSTEM,AbstractFreespaceManager.FM_RAM);
     }
 
-    public void useIndexSystem() {
-        _config.put(FREESPACE_SYSTEM,AbstractFreespaceManager.FM_IX);
-    }
+	public void useIndexSystem() {
+		throw new NotSupportedException();
+	}
     
     public void weakReferenceCollectionInterval(int milliseconds) {
     	_config.put(WEAK_REFERENCE_COLLECTION_INTERVAL,milliseconds);
