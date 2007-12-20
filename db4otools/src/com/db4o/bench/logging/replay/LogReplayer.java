@@ -14,11 +14,17 @@ public class LogReplayer {
 	private String _logFilePath;
 	private IoAdapter _io;
 	private Set _commands;
+	private Map _counts;
 	
 	public LogReplayer(String logFilePath, IoAdapter io, Set commands) {
 		_logFilePath = logFilePath;
 		_io = io;
 		_commands = commands;
+		_counts = new HashMap();
+		Iterator it = commands.iterator();
+		while (it.hasNext()) {
+			_counts.put(it.next(), new Long(0));
+		}
 	}
 	
 	public LogReplayer(String logFilePath, IoAdapter io) {
@@ -46,29 +52,34 @@ public class LogReplayer {
 		if ( line.startsWith(LogConstants.WRITE_ENTRY) ) {
 			if (_commands.contains(LogConstants.WRITE_ENTRY)) {
 				replayWrite(line);
+				incrementCount(LogConstants.WRITE_ENTRY);
 			}
 			return;
 		}
 		if ( line.startsWith(LogConstants.READ_ENTRY) ) {
 			if (_commands.contains(LogConstants.READ_ENTRY)) {
 				replayRead(line);
+				incrementCount(LogConstants.READ_ENTRY);
 			}
 			return;
 		}
 		if ( line.startsWith(LogConstants.SYNC_ENTRY) ) {
 			if (_commands.contains(LogConstants.SYNC_ENTRY)) {
 				replaySync();
+				incrementCount(LogConstants.SYNC_ENTRY);
 			}
 			return;
 		}
 		if ( line.startsWith(LogConstants.SEEK_ENTRY) ) {
 			if (_commands.contains(LogConstants.SEEK_ENTRY)) {
 				replaySeek(line);
+				incrementCount(LogConstants.SEEK_ENTRY);
 			}
 			return;
 		}
 		throw new IllegalArgumentException("Unknown command in log: " + line);
 	}
+
 
 	private void replaySync() {
 		_io.sync();
@@ -96,5 +107,14 @@ public class LogReplayer {
 
 	private long parameter(int start, String line) {
 		return Long.parseLong(line.substring(start));
+	}
+	
+	private void incrementCount(String key) {
+		long count = ((Long)_counts.get(key)).longValue();
+		_counts.put(key, new Long(count+1));
+	}
+	
+	public Map operationCounts() {
+		return _counts;
 	}
 }
