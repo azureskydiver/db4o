@@ -15,7 +15,8 @@ import com.db4o.*;
  * <b>See Also:</b><br> 
  * {@link com.db4o.config.ClientServerConfiguration#setMessageRecipient(com.db4o.messaging.MessageRecipient) ClientServerConfiguration.setMessageRecipient(MessageRecipient)}, <br>
  * {@link MessageSender},<br>
- * {@link com.db4o.config.ClientServerConfiguration#getMessageSender()}<br>
+ * {@link com.db4o.config.ClientServerConfiguration#getMessageSender()},<br>
+ * {@link MessageRecipientWithContext}<br>
  */
 public interface MessageRecipient {
 	

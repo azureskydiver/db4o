@@ -4,20 +4,54 @@ package com.db4o.internal.cs.messages;
 
 import com.db4o.internal.*;
 import com.db4o.messaging.*;
+import com.db4o.messaging.internal.*;
 
-public final class MUserMessage extends MsgObject implements ServerSideMessage {
+public final class MUserMessage extends MsgObject implements ServerSideMessage, ClientSideMessage, MessageContextProvider {
 	
 	public final boolean processAtServer() {
-		if (messageRecipient() != null) {
-			unmarshall();
-			try {
-				final UserMessagePayload payload = (UserMessagePayload)readObjectFromPayLoad();
-				messageRecipient().processMessage(transaction().objectContainer(), payload.message);
-			} catch (Exception x) {
-				x.printStackTrace();
-			}
+		return processUserMessage();
+	}
+	
+	public final boolean processAtClient() {
+		return processUserMessage();
+	}
+	
+	private boolean processUserMessage() {
+		final MessageRecipient recipient = messageRecipient();
+		if (recipient == null) {
+			return true;
+		}
+		
+		try {
+			MessageContextInfrastructure.contextProvider.with(this, new Runnable() {
+				public void run() {
+					recipient.processMessage(transaction().objectContainer(), readUserMessage());
+				}
+			});
+			
+		} catch (Exception x) {
+			// TODO: use MessageContext.sender() to send
+			// error back to client
+			x.printStackTrace();
 		}
 		return true;
+	}
+	
+	public MessageContext messageContext() {
+		return new MessageContext() {
+			public MessageSender sender() {
+				return new MessageSender() {
+					public void send(Object message) {
+						serverMessageDispatcher().write(Msg.USER_MESSAGE.marshallUserMessage(transaction(), message));
+					}
+				};
+			}
+		};
+	}
+
+	private Object readUserMessage() {
+		unmarshall();
+		return ((UserMessagePayload)readObjectFromPayLoad()).message;
 	}
 	
 	private MessageRecipient messageRecipient() {
