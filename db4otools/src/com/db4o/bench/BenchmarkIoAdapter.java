@@ -5,6 +5,7 @@ package com.db4o.bench;
 import java.io.*;
 
 import com.db4o.bench.logging.*;
+import com.db4o.bench.timing.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
@@ -22,20 +23,26 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
 	private final BenchmarkStatistics _syncStats;
 	
 	private final int _iterations;
+	private final boolean _append;
 	
-	public BenchmarkIoAdapter(IoAdapter delegateAdapter, String logFileName, int iterations) {
+	public BenchmarkIoAdapter(IoAdapter delegateAdapter, String logFileName, int iterations, boolean append) {
 		super(delegateAdapter);
 		_iterations = iterations;
 		_logFileName = logFileName;
-		_watch = new NanoStopWatch();
+		try {
+			_watch = new NanoStopWatch();
+		} catch (Exception e) {
+			throw new Db4oIOException(e.getMessage());
+		}
 		_readStats = new BenchmarkStatistics(LogConstants.READ_ENTRY, iterations);
 		_writeStats = new BenchmarkStatistics(LogConstants.WRITE_ENTRY, iterations);
 		_seekStats = new BenchmarkStatistics(LogConstants.SEEK_ENTRY, iterations);
 		_syncStats = new BenchmarkStatistics(LogConstants.SYNC_ENTRY, iterations);
+		_append = append;
 	}
 	
 	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		return new BenchmarkIoAdapter(_delegate.open(path, lockFile, initialLength, false),_logFileName, _iterations);
+		return new BenchmarkIoAdapter(_delegate.open(path, lockFile, initialLength, false),_logFileName, _iterations, _append);
 	}
 	
 	public void close() throws Db4oIOException {
@@ -45,7 +52,7 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
 	
 	private void outputStatistics() {
 		try {
-			PrintStream out = new PrintStream(new FileOutputStream(_logFileName));
+			PrintStream out = new PrintStream(new FileOutputStream(_logFileName, _append));
 			_readStats.printStatistics(out);
 			_writeStats.printStatistics(out);
 			_seekStats.printStatistics(out);

@@ -2,6 +2,8 @@
 
 package com.db4o.bench.logging;
 
+import java.util.*;
+
 
 public class LogConstants {
 
@@ -10,6 +12,13 @@ public class LogConstants {
 	public static final String SYNC_ENTRY = "SYNC ";
 	public static final String SEEK_ENTRY = "SEEK ";
 	
+	public static final String[] ALL_ENTRIES = {READ_ENTRY, WRITE_ENTRY, SYNC_ENTRY, SEEK_ENTRY};
+	
 	public static final String SEPARATOR = ",";
 	
+	public static Set allEntries() {
+		HashSet entries = new HashSet();
+		entries.addAll(Arrays.asList(ALL_ENTRIES));
+		return entries;
+	}
 }

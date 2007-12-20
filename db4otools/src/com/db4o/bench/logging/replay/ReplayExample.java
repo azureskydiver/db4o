@@ -21,9 +21,6 @@ public class ReplayExample {
 	private static final String WRITE_LOG_FILE_NAME = "replay.log";
 	private static final String DB_FILE_NAME = "replaytest.yap";
 	
-	private static final int LOG_MODE = LoggingIoAdapter.LOG_READ + LoggingIoAdapter.LOG_SYNC + LoggingIoAdapter.LOG_WRITE;
-	
-	
 	
 	public static void main(String[] args) {
 		new ReplayExample();
@@ -34,7 +31,7 @@ public class ReplayExample {
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
 		IoAdapter factory;
 		if ( LOG_REPLAY ) {
-			factory = new LoggingIoAdapter(rafFactory, WRITE_LOG_FILE_NAME, LOG_MODE);
+			factory = new LoggingIoAdapter(rafFactory, WRITE_LOG_FILE_NAME, LoggingIoAdapter.LOG_ALL);
 		}
 		else {
 			factory = rafFactory;
@@ -43,7 +40,12 @@ public class ReplayExample {
 		IoAdapter io = factory.open(DB_FILE_NAME, false, 0, false);
 		
 		LogReplayer replayer = new LogReplayer(OPEN_LOG_FILE_NAME, io);
-		replayer.replayLog();
+		try {
+			replayer.replayLog();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

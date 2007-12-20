@@ -15,7 +15,7 @@ public class DelayingExample {
 	private static final String _logFileName1 = "db4o-io-benchmark-results-100000_faster.log";
 	private static final String _logFileName2 = "db4o-io-benchmark-results-100000_slower.log";
 	private static final String DB_FILE_NAME = "delay-test.db4o";
-	private static final String OPEN_LOG_FILE_NAME = "simplecrud_100000.log";
+	private static final String OPEN_LOG_FILE_NAME = "simplecrud_1000.log";
 	private static final String BENCHMARK_LOG_FILE_NAME = "DelayingExample-benchmarkTest.log";
 	
 	/**
@@ -74,16 +74,26 @@ public class DelayingExample {
 		IoAdapter delFactory = new DelayingIoAdapter(rafFactory, delays);
 		IoAdapter io = delFactory.open(DB_FILE_NAME, false, 0, false);
 		LogReplayer replayer = new LogReplayer(OPEN_LOG_FILE_NAME, io);
-		replayer.replayLog();
+		try {
+			replayer.replayLog();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void benchmarkTestRAF(Delays delays) {
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
 		IoAdapter delFactory = new DelayingIoAdapter(rafFactory, delays);
-		IoAdapter bmFactory = new BenchmarkIoAdapter(delFactory, BENCHMARK_LOG_FILE_NAME, 1);
+		IoAdapter bmFactory = new BenchmarkIoAdapter(delFactory, BENCHMARK_LOG_FILE_NAME, 1, false);
 		IoAdapter io = bmFactory.open(DB_FILE_NAME, false, 0, false);
 		LogReplayer replayer = new LogReplayer(OPEN_LOG_FILE_NAME, io);
-		replayer.replayLog();
+		try {
+			replayer.replayLog();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

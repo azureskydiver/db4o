@@ -37,16 +37,21 @@ public class BenchmarkExample {
 
 	private void configureMinimalIo() throws FileNotFoundException {
 		IoAdapter delegate = new RandomAccessFileAdapter();
-		IoAdapter io = new BenchmarkIoAdapter(delegate, LOG_FILE_NAME, 1);
+		IoAdapter io = new BenchmarkIoAdapter(delegate, LOG_FILE_NAME, 1, false);
 		Db4o.configure().io(io);
 	}
 	
 	private void extendedRun() {
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter bmFactory = new BenchmarkIoAdapter(rafFactory, LOG_FILE_NAME, 1);
+		IoAdapter bmFactory = new BenchmarkIoAdapter(rafFactory, LOG_FILE_NAME, 1, false);
 		BenchmarkIoAdapter io = (BenchmarkIoAdapter) bmFactory.open(DB_FILE_NAME, false, 0, false);
 		LogReplayer replayer = new LogReplayer(REPLAY_LOG_FILE_NAME, io);
-		replayer.replayLog();
+		try {
+			replayer.replayLog();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
