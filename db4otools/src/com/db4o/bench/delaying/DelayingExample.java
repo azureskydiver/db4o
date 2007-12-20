@@ -85,7 +85,7 @@ public class DelayingExample {
 	private void benchmarkTestRAF(Delays delays) {
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
 		IoAdapter delFactory = new DelayingIoAdapter(rafFactory, delays);
-		IoAdapter bmFactory = new BenchmarkIoAdapter(delFactory, BENCHMARK_LOG_FILE_NAME, 1, false);
+		IoAdapter bmFactory = new BenchmarkIoAdapter(delFactory, BENCHMARK_LOG_FILE_NAME,1, false);
 		IoAdapter io = bmFactory.open(DB_FILE_NAME, false, 0, false);
 		LogReplayer replayer = new LogReplayer(OPEN_LOG_FILE_NAME, io);
 		try {

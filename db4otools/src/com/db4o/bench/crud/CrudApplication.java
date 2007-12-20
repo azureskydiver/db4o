@@ -38,7 +38,12 @@ public class CrudApplication {
 		ObjectContainer oc = open(config);
 		for (int i = 0; i < itemCount; i++) {
 			oc.set(Item.newItem(i));
+			// preventing heap space problems by committing from time to time
+			if(i % 100000 == 0) {
+				oc.commit();
+			}
 		}
+		oc.commit();
 		oc.close();
 	}
 	
@@ -67,7 +72,9 @@ public class CrudApplication {
 		ObjectSet objectSet = allItems(oc);
 		while(objectSet.hasNext()){
 			oc.delete(objectSet.next());
-			oc.commit();
+			// adding commit results in more syncs in the log, which is necessary for
+			// meaningful statistics!
+			oc.commit();	 
 		}
 		oc.close();
 	}
