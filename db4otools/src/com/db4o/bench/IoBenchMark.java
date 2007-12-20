@@ -3,8 +3,10 @@
 package com.db4o.bench;
 
 import java.io.*;
+import java.util.*;
 
 import com.db4o.bench.crud.*;
+import com.db4o.bench.logging.*;
 import com.db4o.bench.logging.replay.*;
 import com.db4o.io.*;
 
@@ -12,7 +14,7 @@ public class IoBenchMark {
 	
 	private static final int ITERATIONS = 1;	//100
 	
-	private static final int SMALL 	= 100000;		//1'000
+	private static final int SMALL 	= 10;		//1'000
 	
 	private static final int MEDIUM	= 30000;	//30'000
 	
@@ -38,10 +40,22 @@ public class IoBenchMark {
 		new CrudApplication().run(itemCount);
 		
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter bmFactory = new BenchmarkIoAdapter(rafFactory, logFileName(itemCount), iterations);
-		BenchmarkIoAdapter io = (BenchmarkIoAdapter) bmFactory.open(DB_FILE_NAME, false, 0, false);
-		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), io);
+		IoAdapter raf = rafFactory.open(DB_FILE_NAME, false, 0, false);
+		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf);
 		replayer.replayLog();
+		
+		new File(logFileName(itemCount)).delete();
+		
+		for (int i = 0; i < LogConstants.ALL_ENTRIES.length; i++) {
+			HashSet commands = new HashSet();
+			commands.add(LogConstants.ALL_ENTRIES[i]);
+			
+			rafFactory = new RandomAccessFileAdapter();
+			IoAdapter bmFactory = new BenchmarkIoAdapter(rafFactory, logFileName(itemCount), iterations, true);
+			BenchmarkIoAdapter io = (BenchmarkIoAdapter) bmFactory.open(DB_FILE_NAME, false, 0, false);
+			replayer = new LogReplayer(CrudApplication.logFileName(itemCount), io, commands);
+			replayer.replayLog();
+		}
 		
 		new File(DB_FILE_NAME).delete();
 		

@@ -3,6 +3,7 @@
 package com.db4o.bench.logging.replay;
 
 import java.io.*;
+import java.util.*;
 
 import com.db4o.bench.logging.*;
 import com.db4o.io.IoAdapter;
@@ -11,19 +12,24 @@ import com.db4o.io.IoAdapter;
 public class LogReplayer {
 	
 	private String _logFilePath;
-	
 	private IoAdapter _io;
+	private Set _commands;
 	
-	public LogReplayer(String logFilePath, IoAdapter io) {
+	public LogReplayer(String logFilePath, IoAdapter io, Set commands) {
 		_logFilePath = logFilePath;
 		_io = io;
+		_commands = commands;
+	}
+	
+	public LogReplayer(String logFilePath, IoAdapter io) {
+		this(logFilePath, io, LogConstants.allEntries());
 	}
 	
 	public void setLog(String logFilePath) {
 		_logFilePath = logFilePath;
 	}
 	
-	public void replayLog() {
+	public void replayLog() throws IOException {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(_logFilePath));
 			String line = null;
@@ -31,12 +37,6 @@ public class LogReplayer {
 				replayLine(line);
 			}
 			reader.close();
-		} catch (FileNotFoundException fne) {
-			// TODO Auto-generated catch block
-			fne.printStackTrace();
-		} catch (IOException ioe) {
-			// TODO Auto-generated catch block
-			ioe.printStackTrace();
 		} finally {
 			_io.close();
 		}
@@ -44,19 +44,27 @@ public class LogReplayer {
 
 	private void replayLine(String line) {
 		if ( line.startsWith(LogConstants.WRITE_ENTRY) ) {
-			replayWrite(line);
+			if (_commands.contains(LogConstants.WRITE_ENTRY)) {
+				replayWrite(line);
+			}
 			return;
 		}
 		if ( line.startsWith(LogConstants.READ_ENTRY) ) {
-			replayRead(line);
+			if (_commands.contains(LogConstants.READ_ENTRY)) {
+				replayRead(line);
+			}
 			return;
 		}
 		if ( line.startsWith(LogConstants.SYNC_ENTRY) ) {
-			replaySync();
+			if (_commands.contains(LogConstants.SYNC_ENTRY)) {
+				replaySync();
+			}
 			return;
 		}
 		if ( line.startsWith(LogConstants.SEEK_ENTRY) ) {
-			replaySeek(line);
+			if (_commands.contains(LogConstants.SEEK_ENTRY)) {
+				replaySeek(line);
+			}
 			return;
 		}
 		throw new IllegalArgumentException("Unknown command in log: " + line);

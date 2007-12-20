@@ -2,6 +2,8 @@
 
 package com.db4o.bench.delaying;
 
+import com.db4o.bench.*;
+import com.db4o.bench.timing.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
@@ -11,6 +13,8 @@ public class DelayingIoAdapter extends VanillaIoAdapter {
 
 	private static Delays _delays = new Delays(0,0,0,0, Delays.UNITS_MILLISECONDS);
 	
+	private NanoTiming _timing;
+	
 	public DelayingIoAdapter(IoAdapter delegateAdapter) {
 		this(delegateAdapter, _delays);
 	}
@@ -18,6 +22,11 @@ public class DelayingIoAdapter extends VanillaIoAdapter {
 	public DelayingIoAdapter(IoAdapter delegateAdapter, Delays delays) {
 		super(delegateAdapter);
 		_delays = delays;
+		try {
+			_timing = NanoTimingInstance.newInstance();
+		} catch (Exception e) {
+			throw new Db4oIOException(e.getMessage());
+		}
 	}
 	
 	public DelayingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength)throws Db4oIOException {
@@ -25,8 +34,7 @@ public class DelayingIoAdapter extends VanillaIoAdapter {
 	}
 	
 	public DelayingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, Delays delays)throws Db4oIOException {
-		super(delegateAdapter.open(path, lockFile, initialLength, false));
-		_delays = delays;
+		this(delegateAdapter.open(path, lockFile, initialLength, false), delays);
 	}
 	
 	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
@@ -58,9 +66,7 @@ public class DelayingIoAdapter extends VanillaIoAdapter {
     		Cool.sleepIgnoringInterruption(time);
     	}
     	else if (_delays.units == Delays.UNITS_NANOSECONDS) {
-    		long target = System.nanoTime() + time;
-    	    while (System.nanoTime() < target) {
-    	    }
+    		_timing.waitNano(time);
     	}
     }
 }

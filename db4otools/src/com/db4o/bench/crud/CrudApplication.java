@@ -67,6 +67,7 @@ public class CrudApplication {
 		ObjectSet objectSet = allItems(oc);
 		while(objectSet.hasNext()){
 			oc.delete(objectSet.next());
+			oc.commit();
 		}
 		oc.close();
 	}

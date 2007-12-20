@@ -11,5 +11,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4otaj"/>
 	<classpathentry kind="lib" path="lib/ant-launcher.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4o.instrumentation"/>
+	<classpathentry kind="lib" path="lib/nano-timing.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

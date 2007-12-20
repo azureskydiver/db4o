@@ -21,7 +21,7 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
 	
 	private int _config;
 	
-    public LoggingIoAdapter(IoAdapter delegateAdapter,String fileName,int config)  {
+    public LoggingIoAdapter(IoAdapter delegateAdapter, String fileName, int config)  {
         super(delegateAdapter);
         _fileName = fileName;
         try {
@@ -29,19 +29,19 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
 		} catch (FileNotFoundException e) {
 			throw new Db4oIOException(e);
 		}
-        _config=config;
+        _config = config;
     }
     
-    public LoggingIoAdapter(IoAdapter delegateAdapter,String fileName)  {
+    public LoggingIoAdapter(IoAdapter delegateAdapter, String fileName)  {
     	this(delegateAdapter, fileName, LOG_ALL);
     }
 
-    private LoggingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, String fileName,int config) throws Db4oIOException{
+    private LoggingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength, String fileName, int config) throws Db4oIOException{
         this(delegateAdapter.open(path, lockFile, initialLength, false), fileName, config);
     }
 
 	public IoAdapter open(String path, boolean lockFile, long initialLength, boolean readOnly) throws Db4oIOException {
-		return new LoggingIoAdapter(_delegate,path,lockFile,initialLength,_fileName,_config);
+		return new LoggingIoAdapter(_delegate, path, lockFile, initialLength, _fileName, _config);
 	}
 	
 	public void close() throws Db4oIOException {
