@@ -3,35 +3,27 @@
 package com.db4o.db4ounit.common.cs;
 
 import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.foundation.*;
-import com.db4o.io.*;
 import com.db4o.messaging.*;
 
 import db4ounit.*;
 
-public class PrimitiveMessageTestCase implements TestCase {
+public class PrimitiveMessageTestCase extends MessagingTestCaseBase {
 	
 	public static void main(String[] args) {
 		new TestRunner(PrimitiveMessageTestCase.class).run();
 	}
 	
-	public void testCustomMessageReply() {
+	public void test() {
 		
-		final Collection4 messages = new Collection4();
-		final MessageRecipient recipient = new MessageRecipient() {
-			public void processMessage(ObjectContainer container, Object message) {
-				messages.add(message);
-			}
-		};
-		
+		final Collection4 expected = new Collection4(new Object[] { "PING", Boolean.TRUE, new Integer(42) });
+		final MessageCollector recipient = new MessageCollector();
 		final ObjectServer server = openServerWith(recipient);
 		try {
-			
-			final ObjectContainer client = openClient(server);
+			final ObjectContainer client = openClient("client", server);
 			try {
 				final MessageSender sender = messageSender(client);
-				sender.send("PING");
+				sendAll(expected, sender);
 			} finally {
 				client.close();
 			}
@@ -39,27 +31,14 @@ public class PrimitiveMessageTestCase implements TestCase {
 			server.close();
 		}
 		
-		Assert.areEqual("[PING]", messages.toString());
+		Assert.areEqual(expected.toString(), recipient.messages.toString());
 	}
 
-	private MessageSender messageSender(final ObjectContainer client) {
-		return client.ext().configure().clientServer().getMessageSender();
-	}
-
-	private ObjectContainer openClient(final ObjectServer server) {
-		return Db4o.openClient("127.0.0.1", server.ext().port(), "u", "p");
-	}
-
-	private ObjectServer openServerWith(final MessageRecipient recipient) {
-		
-		final Configuration config = Db4o.newConfiguration();
-		config.io(new MemoryIoAdapter());
-		config.clientServer().setMessageRecipient(recipient);
-		
-		final ObjectServer server = Db4o.openServer(config, "nofile", 0xdb40);
-		server.grantAccess("u", "p");
-		
-		return server;
+	private void sendAll(final Iterable4 messages, final MessageSender sender) {
+		final Iterator4 iterator = messages.iterator();
+		while (iterator.moveNext()) {
+			sender.send(iterator.current());
+		}
 	}
 
 }
