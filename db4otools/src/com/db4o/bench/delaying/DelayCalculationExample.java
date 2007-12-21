@@ -7,8 +7,8 @@ import java.io.*;
 
 public class DelayCalculationExample {
 
-	private static final String _logFileName1 = "slower-millis.log";
-	private static final String _logFileName2 = "z3raDesk2_polepos-allopt-cs.log";
+	private static final String _logFileName1 = "db4o-io-benchmark-results-30000_faster.log";
+	private static final String _logFileName2 = "db4o-io-benchmark-results-30000_slower.log";
 	
 	/**
 	 * @param args

@@ -98,23 +98,25 @@ class MachineCharacteristics {
 		String line = null;
 		while ( (line = reader.readLine()) != null ) {
 			if (line.startsWith(LogConstants.READ_ENTRY)) {
-				String[] parts = line.split(" ");
-				_readTime = Double.parseDouble(parts[1]);
+				_readTime = Double.parseDouble(extractNumber(line));
 			}
 			else if (line.startsWith(LogConstants.WRITE_ENTRY)) {
-				String[] parts = line.split(" ");
-				_writeTime = Double.parseDouble(parts[1]);
+				_writeTime = Double.parseDouble(extractNumber(line));
 			}
 			else if (line.startsWith(LogConstants.SEEK_ENTRY)) {
-				String[] parts = line.split(" ");
-				_seekTime = Double.parseDouble(parts[1]);
+				_seekTime = Double.parseDouble(extractNumber(line));
 			}
 			else if (line.startsWith(LogConstants.SYNC_ENTRY)) {
-				String[] parts = line.split(" ");
-				_syncTime = Double.parseDouble(parts[1]);
+				_syncTime = Double.parseDouble(extractNumber(line));
 			}
 		}
 		reader.close();
+	}
+
+	private String extractNumber(String line) {
+		int start = line.indexOf(' ');
+		int end = line.indexOf(' ', start+1);
+		return line.substring(start, end);
 	}
 	
 	public String logFileName() {
