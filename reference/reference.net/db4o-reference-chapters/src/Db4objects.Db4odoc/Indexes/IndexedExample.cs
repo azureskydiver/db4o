@@ -13,7 +13,7 @@ namespace Db4objects.Db4odoc.Indexes
 
         public static void Main(string[] args)
         {
-            FillUpDB();
+            //FillUpDB();
             NoIndex();
             FullIndex();
             PilotIndex();
