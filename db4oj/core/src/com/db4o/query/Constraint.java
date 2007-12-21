@@ -104,6 +104,12 @@ public interface Constraint {
      */
     public Constraint identity ();
 	
+    /**
+     * set the evaluation mode to object comparison (query by example).
+     * 
+     * @return this {@link Constraint} to allow the chaining of method calls.
+     */
+	public Constraint byExample();
 	
     /**
      * sets the evaluation mode to "like" comparison. This mode will include 
