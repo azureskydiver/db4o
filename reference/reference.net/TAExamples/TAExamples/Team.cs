@@ -1,17 +1,17 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
-using System.Collections;
+using System.Collections.Generic;
 
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
 using Db4objects.Db4o.TA;
-using Db4objects.Db4o.Tests.Common.TA;
+using Db4objects.Db4o.Collections;
 
 namespace Db4ojects.Db4odoc.TAExamples
 {
     public class Team : IActivatable
     {
 
-        IList _pilots = new ArrayList4();
+        IList<Pilot> _pilots = new ArrayList4<Pilot>();
 
         string _name;
 
@@ -39,7 +39,7 @@ namespace Db4ojects.Db4odoc.TAExamples
         public void AddPilot(Pilot pilot)
         {
 			// activate before adding new pilots
-			activate();
+			Activate();
 			_pilots.Add(pilot);
         }
 
@@ -48,7 +48,7 @@ namespace Db4ojects.Db4odoc.TAExamples
             // activate before printing the collection members
             Activate();
 
-            for (IEnumerator iter = _pilots.GetEnumerator(); iter.MoveNext(); )
+            for (IEnumerator<Pilot> iter = _pilots.GetEnumerator(); iter.MoveNext(); )
             {
                 Pilot pilot = (Pilot)iter.Current;
                 System.Console.WriteLine(pilot);

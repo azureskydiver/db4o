@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Db4objects.Db4o;
+using Db4objects.Db4o.Ext;
 using Db4objects.Db4o.Config;
 using Db4objects.Db4o.Query;
 using System.Drawing;

@@ -18,7 +18,7 @@ namespace Db4objects.Db4odoc.Semaphores
 		 * returns	a singleton object of one	class for an	IObjectContainer.
 		 * <br><b>Caution !!!	This	method contains a commit() call.</b> 
 		 */
-		public static	Object GetSingleton(IObjectContainer objectContainer, Class	clazz) 
+		public static	Object GetSingleton(IObjectContainer objectContainer, Type	clazz) 
 		{
 			Object obj =	queryForSingletonClass(objectContainer, clazz);
 			if (obj != null) 
@@ -26,7 +26,7 @@ namespace Db4objects.Db4odoc.Semaphores
 				return obj;
 			}
 
-			String semaphore =	"Singleton#getSingleton_" + clazz.GetName();
+			String semaphore =	"Singleton#getSingleton_" + clazz.FullName;
 
 			if (!objectContainer.Ext().SetSemaphore(semaphore,	10000)) 
 			{
@@ -40,7 +40,7 @@ namespace Db4objects.Db4odoc.Semaphores
 
 				try 
 				{
-					obj =	clazz.NewInstance();
+                    obj = Activator.CreateInstance(clazz);
 				} 
 				catch (Exception e) 
 				{
@@ -64,7 +64,7 @@ namespace Db4objects.Db4odoc.Semaphores
 			return obj;
 		}
 
-		private	static Object queryForSingletonClass(IObjectContainer objectContainer, Sharpen.Lang.Class	clazz) 
+		private	static Object queryForSingletonClass(IObjectContainer objectContainer, Type	clazz) 
 		{
 			IQuery q = objectContainer.Query();
 			q.Constrain(clazz);
@@ -76,7 +76,7 @@ namespace Db4objects.Db4odoc.Semaphores
 			if (objectSet.Size() > 1) 
 			{
 				throw new Exception(
-					"Singleton problem. Multiple	instances of: "	+ clazz.GetName());
+					"Singleton problem. Multiple	instances of: "	+ clazz.Name );
 			}
 			return null;
 		}

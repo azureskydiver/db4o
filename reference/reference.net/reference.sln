@@ -1,22 +1,58 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "db4o-reference-chapters", "db4o-reference-chapters\db4o-reference-chapters.csproj", "{575B2796-1C95-4910-B698-D5E5B2906FCB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o.Tools-2005", "..\db4o.net\Db4objects.Db4o.Tools\Db4objects.Db4o.Tools-2005.csproj", "{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestClient", "TestClient\TestClient.csproj", "{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "drs", "..\drs\drs.net\src\drs\drs.csproj", "{CD3E1D15-61A8-4F0E-9416-D4100E316239}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o-2005", "..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj", "{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAExamples", "TAExamples\TAExamples\TAExamples.csproj", "{6A3A9721-EA3E-4C9B-ABF3-EC3865EB1A4E}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o.Tests-2005", "..\db4o.net\Db4objects.Db4o.Tests\Db4objects.Db4o.Tests-2005.csproj", "{990A783E-B09D-4E44-B833-7D344EA64B85}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit-2005", "..\db4o.net\Db4oUnit\Db4oUnit-2005.csproj", "{9ABAFC31-D29D-4000-B6A0-C24F0BB221F5}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit.Extensions-2005", "..\db4o.net\Db4oUnit.Extensions\Db4oUnit.Extensions-2005.csproj", "{9ABAFC31-D29D-4000-B6A0-C24F0BB221F6}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o.Instrumentation", "..\db4o.net\Db4objects.Db4o.Instrumentation\Db4objects.Db4o.Instrumentation.csproj", "{C12D551F-7969-4BC8-9096-CEF2A9B8DDBD}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4objects.Db4o.NativeQueries", "..\db4o.net\Db4objects.Db4o.NativeQueries\Db4objects.Db4o.NativeQueries.csproj", "{B72796C1-6F2D-41B8-BC42-BF0E54BA4575}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,18 +64,10 @@ Global
 		{575B2796-1C95-4910-B698-D5E5B2906FCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{575B2796-1C95-4910-B698-D5E5B2906FCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{575B2796-1C95-4910-B698-D5E5B2906FCB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C135BD61-C8CA-4EEF-9F3F-52788EE9FA64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD3E1D15-61A8-4F0E-9416-D4100E316239}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,6 +88,14 @@ Global
 		{9ABAFC31-D29D-4000-B6A0-C24F0BB221F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ABAFC31-D29D-4000-B6A0-C24F0BB221F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9ABAFC31-D29D-4000-B6A0-C24F0BB221F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C12D551F-7969-4BC8-9096-CEF2A9B8DDBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C12D551F-7969-4BC8-9096-CEF2A9B8DDBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C12D551F-7969-4BC8-9096-CEF2A9B8DDBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C12D551F-7969-4BC8-9096-CEF2A9B8DDBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B72796C1-6F2D-41B8-BC42-BF0E54BA4575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B72796C1-6F2D-41B8-BC42-BF0E54BA4575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B72796C1-6F2D-41B8-BC42-BF0E54BA4575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B72796C1-6F2D-41B8-BC42-BF0E54BA4575}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.NQCollection.SimpleExamples</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.ClientServer.StartServer</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -72,6 +72,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Db4objects.Db4o, Version=6.4.0.7623, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\install\db4o-net\db4o-6.4\bin\compact-2.0\Db4objects.Db4o.dll</HintPath>
+    </Reference>
     <Reference Include="drs, Version=6.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\install\db4o-net\dRS-net-6.3\bin\drs.dll</HintPath>
@@ -505,16 +509,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="src\Db4objects.Db4odoc\VersionUpdate\UpdateExample.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o.Tools\Db4objects.Db4o.Tools-2005.csproj">
-      <Project>{1D28DD3C-4D59-4003-96C6-9CBB3BA68FA6}</Project>
-      <Name>Db4objects.Db4o.Tools-2005</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
-      <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
-      <Name>Db4objects.Db4o-2005</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
