@@ -27,6 +27,7 @@ public class AllTests extends Db4oTestSuite {
             MultiFieldIndexQueryTestCase.class,
             ObjectSetTestCase.class,
             OrderedQueryTestCase.class,
+            QueryByExampleTestCase.class,
 		};
 	}
 }
