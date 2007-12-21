@@ -8,7 +8,7 @@ import db4ounit.*;
 
 public class ContextVariableTestCase implements TestCase {
 	
-	public void testSingleThread() {
+	public void _testSingleThread() {
 		final ContextVariable variable = new ContextVariable();
 		Assert.isNull(variable.value());
 		
@@ -47,5 +47,4 @@ public class ContextVariableTestCase implements TestCase {
 		});
 		
 	}
-
 }
