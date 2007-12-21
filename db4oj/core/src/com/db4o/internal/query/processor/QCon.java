@@ -441,6 +441,10 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
     public Constraint identity() {
         throw notSupported();
     }
+    
+    public Constraint byExample() {
+        throw notSupported();
+    }
 
     public int identityID() {
         return 0;

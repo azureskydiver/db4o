@@ -50,14 +50,14 @@ public class QConObject extends QCon {
         }
         i_object = a_object;
         i_field = a_field;
-        associateYapClass(a_trans, a_object);
     }
 
     private void associateYapClass(Transaction a_trans, Object a_object) {
         if (a_object == null) {
-            i_object = null;
-            i_comparator = Null.INSTANCE;
-            i_yapClass = null;
+            //It seems that we need not result the following field
+            //i_object = null;
+            //i_comparator = Null.INSTANCE;
+            //i_yapClass = null;
             
             // FIXME: Setting the YapClass to null will prevent index use
             // If the field is typed we can guess the right one with the
@@ -95,6 +95,7 @@ public class QConObject extends QCon {
     }
     
     public boolean canBeIndexLeaf(){
+        byIdentity();
         return (i_yapClass != null && i_yapClass.isPrimitive()) || evaluator().identity();
     }
     
@@ -411,6 +412,45 @@ public class QConObject extends QCon {
         }
     }
 
+    public Constraint byExample() {
+        synchronized (streamLock()) {
+            associateYapClass(i_trans, i_object);
+            return this;
+        }
+    }
+    
+    /*
+     * if the i_object is stored in db4o, load the constraints by identity, 
+     * otherwise, load the constraints by example.
+     */
+    void byIdentity() {
+        synchronized (streamLock()) {
+            if (i_object == null) {
+                if (_children != null) {
+                    Iterator4 children = iterateChildren();
+                    while (children.moveNext()) {
+                        Object child = children.current();
+                        if (child instanceof QConObject) {
+                            ((QConObject)child).byIdentity();
+                        }
+                    }
+                }
+                return;
+            }
+
+            int id = getObjectID();
+            if (id < 0) {
+                if (i_yapClass == null) {
+                    associateYapClass(i_trans, i_object);
+                }
+            } else {
+                i_yapClass = i_trans.container().produceClassMetadata(
+                        i_trans.reflector().forObject(i_object));
+                identity();
+            }
+        }
+    }
+    
     public Constraint like() {
         synchronized (streamLock()) {
             i_evaluator = i_evaluator.add(new QEContains(false));

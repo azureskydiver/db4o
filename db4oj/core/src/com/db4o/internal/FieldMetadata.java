@@ -342,8 +342,10 @@ public class FieldMetadata implements StoredField {
                     	return;
                     }
                     if (!a_parent.hasObjectInParentPath(obj)) {
-                        a_visitor.visit(new QConObject(a_trans, a_parent,
-                            qField(a_trans), obj));
+                        QConObject constraint = new QConObject(a_trans, a_parent,
+                                qField(a_trans), obj);
+                        constraint.byExample();
+                        a_visitor.visit(constraint);
                     }
                 }
             }

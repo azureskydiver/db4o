@@ -85,6 +85,15 @@ public class ClusterConstraint implements Constraint{
             return this;
         }
     }
+    
+    public Constraint byExample() {
+        synchronized(_cluster){
+            for (int i = 0; i < _constraints.length; i++) {
+                _constraints[i].byExample();
+            }
+            return this;
+        }
+    }
 
     public Constraint like() {
         synchronized(_cluster){

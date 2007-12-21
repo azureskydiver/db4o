@@ -289,6 +289,9 @@ public abstract class QQueryBase implements Unversioned {
             });
 
         }
+        
+        loadConstraints();
+        
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
             if (((QCon)i.current()).attach(query, a_field)) {
@@ -394,7 +397,8 @@ public abstract class QQueryBase implements Unversioned {
     }
     
     public Iterator4 executeLazy(){
-    	
+        loadConstraints();
+        
 		final CreateCandidateCollectionResult r = createCandidateCollection();
 		
         final Collection4 executionPath = executionPath(r);
@@ -435,9 +439,20 @@ public abstract class QQueryBase implements Unversioned {
 		return r.topLevel ? null : fieldPathFromTop();
 	}
 
+	/*
+	 * load constraint byIdentity
+	 */
+	private void loadConstraints() {
+	    Iterator4 constraints = iterateConstraints();
+        while (constraints.moveNext()) {
+            ((QConObject)constraints.current()).byIdentity();
+        }
+	}
+	
     public void executeLocal(final IdListQueryResult result) {
-        
-		CreateCandidateCollectionResult r = createCandidateCollection();
+        loadConstraints();
+
+        CreateCandidateCollectionResult r = createCandidateCollection();
         
         boolean checkDuplicates = r.checkDuplicates;
         boolean topLevel = r.topLevel;
@@ -615,6 +630,8 @@ public abstract class QQueryBase implements Unversioned {
     }
     
     public void marshall() {
+        loadConstraints();
+        
     	_evaluationModeAsInt = _evaluationMode.asInt();
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
