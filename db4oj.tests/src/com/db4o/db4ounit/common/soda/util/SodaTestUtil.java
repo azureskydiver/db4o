@@ -34,7 +34,7 @@ public class SodaTestUtil {
             return;
         }
         int j = 0;
-        Assert.areEqual(set.size(), results.length);
+        Assert.areEqual(results.length, set.size());
         while (set.hasNext()) {
             Object obj = set.next();
             boolean found = false;
