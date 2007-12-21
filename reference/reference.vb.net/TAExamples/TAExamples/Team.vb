@@ -3,7 +3,7 @@ Imports System.Collections
 Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Activation
 Imports Db4objects.Db4o.TA
-Imports Db4objects.Db4o.Tests.Common.TA
+Imports Db4objects.Db4o.Collections
 
 
 Namespace Db4ojects.Db4odoc.TAExamples
@@ -11,7 +11,7 @@ Namespace Db4ojects.Db4odoc.TAExamples
     Public Class Team
         Implements IActivatable
 
-        Private _pilots As IList = New ArrayList4
+        Private _pilots As IList = New ArrayList4(Of Pilot)
         Private _name As String
 
         ' TA Activator

@@ -2,6 +2,7 @@
 Imports System
 Imports System.IO
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Ext
 Imports Db4objects.Db4o.Config
 Imports Db4objects.Db4o.Query
 Imports System.Drawing

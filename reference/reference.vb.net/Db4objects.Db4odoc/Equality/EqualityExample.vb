@@ -5,6 +5,7 @@ Imports System.Collections.Generic
 Imports System.IO
 
 Imports Db4objects.Db4o
+Imports Db4objects.Db4o.Ext
 Imports Db4objects.Db4o.Query
 
 
