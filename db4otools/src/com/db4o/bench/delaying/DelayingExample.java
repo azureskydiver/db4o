@@ -12,20 +12,21 @@ import com.db4o.io.*;
 
 public class DelayingExample {
 
-	private static final String _logFileName1 = "db4o-io-benchmark-results-100000_faster.log";
-	private static final String _logFileName2 = "db4o-io-benchmark-results-100000_slower.log";
+	private static final String _logFileName1 = "db4o-io-benchmark-results-30000_faster.log";
+	private static final String _logFileName2 = "db4o-io-benchmark-results-30000_slower-milli.log";
 	private static final String DB_FILE_NAME = "delay-test.db4o";
-	private static final String OPEN_LOG_FILE_NAME = "simplecrud_1000.log";
+	private static final String OPEN_LOG_FILE_NAME = "simplecrud_30000.log";
 	private static final String BENCHMARK_LOG_FILE_NAME = "DelayingExample-benchmarkTest.log";
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new DelayingExample();
+		new DelayingExample().run();
 	}
 
-	public DelayingExample() {
+
+	private void run() {
 		DelayCalculation calculation;
 		try {
 			calculation = new DelayCalculation(_logFileName1, _logFileName2);
