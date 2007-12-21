@@ -656,6 +656,10 @@
 				file="${src.dir}/TA/Resources/TAUnsafeInstrumentationSubject.cs"
 				name="Db4oTool.Tests.TA.Resources.TAUnsafeInstrumentationSubject.cs" />
 			
+			<resource
+				file="${src.dir}/TA/Resources/TAFieldSetterSubject.cs"
+				name="Db4oTool.Tests.TA.Resources.TAFieldSetterSubject.cs" />	
+			
 			<src dir="${src.dir}">
 				<include name="**/*.cs" />
 				<exclude name="**/Resources/**" />
