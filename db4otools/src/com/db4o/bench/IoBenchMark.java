@@ -119,7 +119,7 @@ public class IoBenchMark {
 		printSingleLine();
 		System.out.println("Be aware: running the LARGE benchmark\n" +
 							"1) May take a very long time, depending on your machine speed\n" +
-							"2) May require to increase the heap size of your JVM (eg with '-Xmx512m')" +
+							"2) May require to increase the heap size of your JVM (eg with '-Xmx512m')\n" +
 							"3) Will need about 1.5GB of disk space");
 		printDoubleLine();
 	}

@@ -13,7 +13,7 @@ public class BenchmarkExample {
 
 	private static final String LOG_FILE_NAME = "db4o-benchmark.log";
 	private static final String DB_FILE_NAME = "benchmark.db4o";
-	public static final String REPLAY_LOG_FILE_NAME = "simplecrud_10000.log";
+	public static final String REPLAY_LOG_FILE_NAME = "simplecrud_30000.log";
 	
 	/**
 	 * @param args
@@ -32,7 +32,8 @@ public class BenchmarkExample {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
+		new File(DB_FILE_NAME).delete();
 	}
 
 	private void configureMinimalIo() throws FileNotFoundException {
@@ -52,6 +53,7 @@ public class BenchmarkExample {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		new File(DB_FILE_NAME).delete();
 	}
 
 }
