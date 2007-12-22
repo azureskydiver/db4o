@@ -88,6 +88,8 @@ public class TARefreshTestCase extends TransparentActivationTestCaseBase impleme
             assertItemValue(i, next2);
             next2 = next2.next();
         }
+        client1.close();
+        client2.close();
     }
 
 	private void assertItemValue(final int expectedValue, TAItem item) {
