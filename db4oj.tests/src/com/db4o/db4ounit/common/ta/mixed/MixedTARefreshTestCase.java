@@ -92,6 +92,9 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
             Assert.areEqual(i, next2.getValue());
             next2 = next2.next();
         }
+        
+        client1.close();
+        client2.close();
     }
 
     private Item retrieveInstance(ExtObjectContainer client) {

@@ -74,6 +74,8 @@ public class NonTARefreshTestCase extends TransparentActivationTestCaseBase
             Assert.areEqual(i, next2.value());
             next2 = next2.next();
         }
+        client1.close();
+        client2.close();
     }
 
 	private void updateAscendingWithRange(TAItem item, int startingValue) {
