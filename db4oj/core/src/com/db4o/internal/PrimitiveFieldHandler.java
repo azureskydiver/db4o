@@ -113,6 +113,10 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         return _handler;
     }
     
+    public PreparedComparison newPrepareCompare(Object source) {
+    	return _handler.newPrepareCompare(source);
+    }
+    
     public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, BufferImpl[] a_bytes) {
         if (isArray()) {
             return _handler;

@@ -2,6 +2,7 @@
 
 package com.db4o.internal;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.marshall.*;
 
 /**
@@ -13,9 +14,9 @@ public class NullFieldMetadata extends FieldMetadata {
         super(null);
     }
     
-    public Comparable4 prepareComparison(Object obj){
-		return Null.INSTANCE;
-	}
+    public PreparedComparison prepareComparison(Object obj) {
+    	return Null.INSTANCE;
+    }
 	
 	public final Object read(InternalReadContext context) {
 	    return null;
