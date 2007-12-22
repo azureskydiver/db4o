@@ -6,7 +6,6 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.config.Configuration;
-import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
@@ -169,7 +168,7 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 
 	private void populate(ObjectContainer container) {
 		for (int i = 0; i < 10; i++) {
-            container.set(new SimplestPossibleItem("delme"));
+            container.set(new Item("delme"));
         }
         CrashData one = new CrashData(null, "one");
         CrashData two = new CrashData(one, "two");
@@ -178,10 +177,32 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         container.set(two);
         container.set(three);
         container.commit();
-        ObjectSet objectSet = container.query(SimplestPossibleItem.class);
+        ObjectSet objectSet = container.query(Item.class);
         while(objectSet.hasNext()){
             container.delete(objectSet.next());
         }
 	}
+	
+    public static class Item{
+    	
+        public String name;
+        
+        public Item() {
+        }
+        
+        public Item(String name_) {
+            this.name = name_;
+        }
+
+        public String getName() {
+            return name;
+        }
+        
+        public void setName(String name_){
+        	name = name_;
+        }
+
+    }
+
 	
 }
