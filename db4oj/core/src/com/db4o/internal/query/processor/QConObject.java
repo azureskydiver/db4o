@@ -31,7 +31,7 @@ public class QConObject extends QCon {
 
     public QField                        i_field;
 
-    transient Comparable4       i_comparator;
+    transient PreparedComparison _preparedComparison;
 
     public ObjectAttribute               i_attributeProvider;
 
@@ -165,7 +165,7 @@ public class QConObject extends QCon {
                     i_selfComparison = true;
                 }
                 Object transactionalObject = i_yapClass.wrapWithTransactionContext(transaction(), i_object);
-                i_comparator = i_yapClass.prepareComparison(transactionalObject);
+                _preparedComparison = i_yapClass.newPrepareCompare(transactionalObject);
             }
         }
         super.evaluateSelf();
@@ -191,11 +191,11 @@ public class QConObject extends QCon {
     	}
     }
     
-    Comparable4 getComparator(QCandidate a_candidate) {
-        if (i_comparator == null) {
-            return a_candidate.prepareComparison(i_trans.container(), i_object);
-        }
-        return i_comparator;
+    PreparedComparison prepareComparison(QCandidate candidate){
+    	if(_preparedComparison != null){
+    		return _preparedComparison; 
+    	}
+    	return candidate.prepareComparison(container(), i_object);
     }
 
     ClassMetadata getYapClass() {
@@ -272,9 +272,9 @@ public class QConObject extends QCon {
 
     void prepareComparison(QField a_field) {
         if (isNullConstraint() & !a_field.isArray()) {
-            i_comparator = Null.INSTANCE;
+            _preparedComparison = Null.INSTANCE;
         } else {
-            i_comparator = a_field.prepareComparison(i_object);
+            _preparedComparison = a_field.prepareComparison(i_object);
         }
     }
 
@@ -319,7 +319,7 @@ public class QConObject extends QCon {
             super.unmarshall(trans);
 
             if (i_object == null) {
-                i_comparator = Null.INSTANCE;
+                _preparedComparison = Null.INSTANCE;
             }
             if (i_yapClassID != 0) {
                 i_yapClass = trans.container().classMetadataForId(i_yapClassID);
@@ -355,10 +355,10 @@ public class QConObject extends QCon {
         if (hasOrdering() && res && qc.fieldIsAvailable()) {
             Object cmp = qc.value();
             if (cmp != null && i_field != null) {
-                Comparable4 comparatorBackup = i_comparator;
-                i_comparator = i_field.prepareComparison(qc.value());
+                PreparedComparison preparedComparisonBackup = _preparedComparison;
+                _preparedComparison = i_field.prepareComparison(qc.value());
                 i_candidates.addOrder(new QOrder(this, qc));
-                i_comparator = comparatorBackup.prepareComparison(i_object);
+                _preparedComparison = preparedComparisonBackup;
             }
         }
         visit1(qc.getRoot(), this, res);
@@ -424,30 +424,28 @@ public class QConObject extends QCon {
      * otherwise, load the constraints by example.
      */
     void byIdentity() {
-        synchronized (streamLock()) {
-            if (i_object == null) {
-                if (_children != null) {
-                    Iterator4 children = iterateChildren();
-                    while (children.moveNext()) {
-                        Object child = children.current();
-                        if (child instanceof QConObject) {
-                            ((QConObject)child).byIdentity();
-                        }
+        if (i_object == null) {
+            if (_children != null) {
+                Iterator4 children = iterateChildren();
+                while (children.moveNext()) {
+                    Object child = children.current();
+                    if (child instanceof QConObject) {
+                        ((QConObject)child).byIdentity();
                     }
                 }
-                return;
             }
+            return;
+        }
 
-            int id = getObjectID();
-            if (id < 0) {
-                if (i_yapClass == null) {
-                    associateYapClass(i_trans, i_object);
-                }
-            } else {
-                i_yapClass = i_trans.container().produceClassMetadata(
-                        i_trans.reflector().forObject(i_object));
-                identity();
+        int id = getObjectID();
+        if (id < 0) {
+            if (i_yapClass == null) {
+                associateYapClass(i_trans, i_object);
             }
+        } else {
+            i_yapClass = i_trans.container().produceClassMetadata(
+                    i_trans.reflector().forObject(i_object));
+            identity();
         }
     }
     

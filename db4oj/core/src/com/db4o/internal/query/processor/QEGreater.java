@@ -2,8 +2,8 @@
 
 package com.db4o.internal.query.processor;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 
 /**
  * @exclude
@@ -14,11 +14,11 @@ public class QEGreater extends QEAbstract {
         if (obj == null) {
             return false;
         }
-        Comparable4 comparator = constraint.getComparator(candidate);
-        if (comparator instanceof ArrayHandler) {
-            return ((ArrayHandler) comparator).isGreater(obj);
+        PreparedComparison preparedComparison = constraint.prepareComparison(candidate);
+        if(preparedComparison instanceof PreparedArrayContainsComparison){
+        	return ((PreparedArrayContainsComparison)preparedComparison).isSmallerThan(obj);
         }
-        return comparator.compareTo(obj) > 0;
+        return preparedComparison.compareTo(obj) < 0;
     }
 
     public void indexBitMap(boolean[] bits) {

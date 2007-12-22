@@ -50,8 +50,8 @@ class QOrder extends Tree{
 	}
 	
 	private int internalCompare(){
-	    int comparisonResult = _constraint.i_comparator.compareTo(_candidate.value());
-	    if(comparisonResult < 0){
+	    int comparisonResult = _constraint._preparedComparison.compareTo(_candidate.value());
+	    if(comparisonResult > 0){
 	        return - _constraint.ordering();
 	    }
 	    if(comparisonResult == 0){

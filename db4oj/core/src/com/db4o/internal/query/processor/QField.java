@@ -97,7 +97,7 @@ public class QField implements Visitor4, Unversioned{
 		return i_yapField != null &&  Handlers4.handlesSimple(i_yapField.getHandler());
 	}
 	
-	Comparable4 prepareComparison(Object obj){
+	PreparedComparison prepareComparison(Object obj){
 		if(i_yapField != null){
 			return i_yapField.prepareComparison(obj);
 		}
@@ -111,6 +111,7 @@ public class QField implements Visitor4, Unversioned{
 		}
 		return null;
 	}
+
 	
 	void unmarshall(Transaction a_trans){
 		if(i_yapClassID != 0){

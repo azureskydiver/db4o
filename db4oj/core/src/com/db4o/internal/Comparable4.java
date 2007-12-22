@@ -7,8 +7,6 @@ import com.db4o.foundation.*;
 
 /**
  * @exclude
- * 
- * 
  */
 public interface Comparable4 {
 	

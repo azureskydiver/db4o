@@ -457,40 +457,39 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 		return transaction().reflector().forObject(_member);
 	}
 
-	Comparable4 prepareComparison(ObjectContainerBase a_stream, Object a_constraint) {
+	
+	PreparedComparison prepareComparison(ObjectContainerBase container, Object constraint) {
 		if (_yapField != null) {
-			return _yapField.prepareComparison(a_constraint);
+			return _yapField.prepareComparison(constraint);
 		}
-		if (_yapClass == null) {
-
-			ClassMetadata yc = null;
-			if (_bytes != null) {
-				yc = a_stream.produceClassMetadata(a_stream.reflector().forObject(a_constraint));
-			} else {
-				if (_member != null) {
-					yc = a_stream.classMetadataForReflectClass(a_stream.reflector().forObject(_member));
-				}
+		if (_yapClass != null) {
+			return _yapClass.newPrepareCompare(constraint);
+		}
+		Reflector reflector = container.reflector();
+		ClassMetadata classMetadata = null;
+		if (_bytes != null) {
+			classMetadata = container.produceClassMetadata(reflector.forObject(constraint));
+		} else {
+			if (_member != null) {
+				classMetadata = container.classMetadataForReflectClass(reflector.forObject(_member));
 			}
-			if (yc != null) {
-				if (_member != null && _member.getClass().isArray()) {
-					TypeHandler4 ydt = (TypeHandler4) yc
-							.prepareComparison(a_constraint);
-					if (a_stream.reflector().array().isNDimensional(
-							memberClass())) {
-						MultidimensionalArrayHandler yan = new MultidimensionalArrayHandler(a_stream, ydt, false);
-						return yan;
-					} 
-					ArrayHandler ya = new ArrayHandler(a_stream, ydt, false);
-					return ya;
-					
+		}
+		if (classMetadata != null) {
+			if (_member != null && _member.getClass().isArray()) {
+				TypeHandler4 arrayElementTypehandler = classMetadata.typeHandler(); 
+				if (reflector.array().isNDimensional(memberClass())) {
+					MultidimensionalArrayHandler mah = 
+						new MultidimensionalArrayHandler(container, arrayElementTypehandler, false);
+					return mah.newPrepareCompare(_member);
 				} 
-				return yc.prepareComparison(a_constraint);
-				
-			}
-			return null;
-		} 
-		return _yapClass.prepareComparison(a_constraint);
+				ArrayHandler ya = new ArrayHandler(container, arrayElementTypehandler, false);
+				return ya.newPrepareCompare(_member);
+			} 
+			return classMetadata.newPrepareCompare(constraint);
+		}
+		return null;
 	}
+
 
 	private void read() {
 		if (_include) {
@@ -665,5 +664,6 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
     private MarshallerFamily marshallerFamily(){
         return MarshallerFamily.version(_handlerVersion);
     }
+
     
 }

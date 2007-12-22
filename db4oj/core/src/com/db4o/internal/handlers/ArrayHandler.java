@@ -363,39 +363,6 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     public int compareTo(Object a_obj) {
         return -1;
     }
-    
-    public boolean isEqual(Object obj) {
-        if(obj == null){
-            return false;
-        }
-        Iterator4 compareWith = allElements(obj);
-        while (compareWith.moveNext()) {
-            if (_handler.compareTo(compareWith.current()) == 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isGreater(Object obj) {
-        Iterator4 compareWith = allElements(obj);
-        while (compareWith.moveNext()) {
-            if (_handler.compareTo(compareWith.current()) > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isSmaller(Object obj) {
-        Iterator4 compareWith = allElements(obj);
-        while (compareWith.moveNext()) {
-            if (_handler.compareTo(compareWith.current()) < 0) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public void defragment(DefragmentContext context) {
         if(Handlers4.handlesSimple(_handler)){
@@ -484,16 +451,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     }
 
 	public PreparedComparison newPrepareCompare(Object obj) {
-		return new PreparedComparison() {
-			public int compareTo(Object obj) {
-				
-				// FIXME: This is consistent with the old implementation.
-				
-				// Array and collection comparison is supposedly going to be special.
-				
-				return -1;
-			}
-		};
+		return new PreparedArrayContainsComparison(this, _handler, obj);
 	}
     
 }

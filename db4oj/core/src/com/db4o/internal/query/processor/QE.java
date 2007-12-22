@@ -2,8 +2,8 @@
 
 package com.db4o.internal.query.processor;
 
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
-import com.db4o.internal.handlers.*;
 import com.db4o.types.Unversioned;
 
 
@@ -34,14 +34,14 @@ public class QE implements Unversioned {
     }
 
 	boolean evaluate(QConObject constraint, QCandidate candidate, Object obj){
-        Comparable4 comparator = constraint.getComparator(candidate);
-		if(obj == null){
-			return comparator instanceof Null;
-		}
-        if (comparator instanceof ArrayHandler) {
-            return ((ArrayHandler) comparator).isEqual(obj);
+        PreparedComparison prepareComparison = constraint.prepareComparison(candidate);
+        if (obj == null) {
+            return prepareComparison instanceof Null;
         }
-        return comparator.compareTo(obj) == 0;
+        if(prepareComparison instanceof PreparedArrayContainsComparison){
+        	return ((PreparedArrayContainsComparison)prepareComparison).IsEqual(obj);
+        }
+        return prepareComparison.compareTo(obj) == 0;
 	}
 	
 	public boolean equals(Object obj){

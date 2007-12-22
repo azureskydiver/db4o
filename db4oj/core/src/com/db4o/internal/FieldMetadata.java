@@ -760,12 +760,11 @@ public class FieldMetadata implements StoredField {
         return true;
     }
     
-    public Comparable4 prepareComparison(Object obj) {
-        if (alive()) {
-            _handler.prepareComparison(obj);
-            return _handler;
+    public PreparedComparison prepareComparison(Object obj) {
+        if (!alive()) {
+        	return null;
         }
-        return null;
+        return _handler.newPrepareCompare(obj);
     }
     
     public QField qField(Transaction a_trans) {
