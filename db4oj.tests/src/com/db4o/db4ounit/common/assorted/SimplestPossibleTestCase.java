@@ -1,4 +1,4 @@
-/* Copyright (C) 2006  db4objects Inc.  http://www.db4o.com */
+/* Copyright (C) 2006 - 2007 db4objects Inc.  http://www.db4o.com */
 
 package com.db4o.db4ounit.common.assorted;
 
@@ -15,17 +15,34 @@ public class SimplestPossibleTestCase extends AbstractDb4oTestCase {
     }
     
     protected void store() {
-        db().set(new SimplestPossibleItem("one"));
+        db().set(new Item("one"));
     }
     
     public void test(){
         Query q = db().query();
-        q.constrain(SimplestPossibleItem.class);
+        q.constrain(Item.class);
         q.descend("name").constrain("one");
         ObjectSet objectSet = q.execute();
-        SimplestPossibleItem item = (SimplestPossibleItem) objectSet.next();
+        Item item = (Item) objectSet.next();
         Assert.isNotNull(item);
         Assert.areEqual("one", item.getName());
+    }
+    
+    public static class Item{
+    	
+        public String name;
+        
+        public Item() {
+        }
+        
+        public Item(String name_) {
+            this.name = name_;
+        }
+
+        public String getName() {
+            return name;
+        }
+
     }
 
 }

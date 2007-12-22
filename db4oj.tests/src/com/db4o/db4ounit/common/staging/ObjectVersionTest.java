@@ -2,7 +2,6 @@
 package com.db4o.db4ounit.common.staging;
 
 import com.db4o.config.*;
-import com.db4o.db4ounit.common.assorted.*;
 import com.db4o.ext.*;
 
 import db4ounit.Assert;
@@ -17,7 +16,7 @@ public class ObjectVersionTest extends AbstractDb4oTestCase {
 
 	public void test() {
 		final ExtObjectContainer oc = this.db();
-		SimplestPossibleItem object = new SimplestPossibleItem("c1");
+		Item object = new Item("c1");
 		
 		oc.set(object);
 		
@@ -40,4 +39,26 @@ public class ObjectVersionTest extends AbstractDb4oTestCase {
 		Assert.areEqual(objectInfo1.getUUID(), objectInfo2.getUUID());
 		Assert.isTrue(newVer > oldVer);
 	}
+	
+    public static class Item{
+    	
+        public String name;
+        
+        public Item() {
+        }
+        
+        public Item(String name_) {
+            this.name = name_;
+        }
+
+        public String getName() {
+            return name;
+        }
+        
+        public void setName(String name_){
+        	name = name_;
+        }
+
+    }
+
 }
