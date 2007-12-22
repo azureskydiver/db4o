@@ -11,12 +11,19 @@ Namespace Db4ojects.Db4odoc.TAExamples
     Public Class Team
         Implements IActivatable
 
-        Private _pilots As IList = New ArrayList4(Of Pilot)
+        Private _pilots As IList(Of Pilot) = New ArrayList4(Of Pilot)
         Private _name As String
 
         ' TA Activator
         <Transient()> _
         Private _activator As IActivator
+
+        Public ReadOnly Property Pilots() As IList(Of Pilot)
+            Get
+                Return _pilots
+            End Get
+        End Property
+
 
         ' Bind the class to an object container
         Public Sub Bind(ByVal activator As IActivator) Implements IActivatable.Bind
@@ -40,15 +47,11 @@ Namespace Db4ojects.Db4odoc.TAExamples
             _pilots.Add(pilot)
         End Sub
 
-        Public Sub ListAllPilots()
-            ' activate before printing the collection members
+        Public Function Size() As Integer
+            ' activate before returning
             Activate()
-            Dim iter As IEnumerator = _pilots.GetEnumerator
-            While iter.MoveNext
-                Dim pilot As Pilot = CType(iter.Current, Pilot)
-                System.Console.WriteLine(pilot)
-            End While
-        End Sub
+            Return _pilots.Count
+        End Function
 
     End Class
 End Namespace
