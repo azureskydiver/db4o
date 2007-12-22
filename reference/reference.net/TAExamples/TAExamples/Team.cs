@@ -1,5 +1,6 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 using System.Collections.Generic;
+using System.Collections;
 
 using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
@@ -13,11 +14,18 @@ namespace Db4ojects.Db4odoc.TAExamples
 
         IList<Pilot> _pilots = new ArrayList4<Pilot>();
 
+        
         string _name;
 
         //TA Activator
         [System.NonSerialized]
         IActivator _activator;
+
+        public IList<Pilot> Pilots
+        {
+            get { return _pilots; }
+            set { _pilots = value; }
+        }
 
         //	Bind the class to an object container
         public void Bind(IActivator activator)
@@ -43,16 +51,13 @@ namespace Db4ojects.Db4odoc.TAExamples
 			_pilots.Add(pilot);
         }
 
-        public void ListAllPilots()
+        public int Size()
         {
-            // activate before printing the collection members
+            // activate before returning
             Activate();
-
-            for (IEnumerator<Pilot> iter = _pilots.GetEnumerator(); iter.MoveNext(); )
-            {
-                Pilot pilot = (Pilot)iter.Current;
-                System.Console.WriteLine(pilot);
-            }
+            return _pilots.Count;
         }
+        // end Size
+
     }
 }

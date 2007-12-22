@@ -151,8 +151,10 @@ namespace Db4ojects.Db4odoc.TAExamples
                 try
                 {
                     Team team = (Team)container.Get(new Team()).Next();
-                    // this method will activate all the members in the collection 
-                    team.ListAllPilots();
+                    for (int j = 0; j < team.Size(); j++)
+                    {
+                        System.Console.WriteLine(team.Pilots[j]);
+                    }
                 }
                 catch (Exception ex)
                 {

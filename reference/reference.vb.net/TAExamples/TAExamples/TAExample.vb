@@ -117,8 +117,11 @@ Namespace Db4ojects.Db4odoc.TAExamples
             If Not (container Is Nothing) Then
                 Try
                     Dim team As Team = CType(container.Get(New Team).Next, Team)
-                    ' this method will activate all the members in the collection 
-                    team.ListAllPilots()
+                    Dim j As Integer
+                    For j = 0 To team.Size - 1
+                        System.Console.WriteLine(team.Pilots(j))
+                    Next
+
                 Catch ex As Exception
                     System.Console.WriteLine(ex.StackTrace)
                 Finally
