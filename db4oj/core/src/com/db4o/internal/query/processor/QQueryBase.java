@@ -223,15 +223,15 @@ public abstract class QQueryBase implements Unversioned {
     public Query descend(final String a_field) {
         synchronized (streamLock()) {
             final QQuery query = new QQuery(_trans, _this, a_field);
-            int[] run = { 1 };
+            IntByRef run = new IntByRef(1);
             if (!descend1(query, a_field, run)) {
 
                 // try to add unparented nodes on the second run,
                 // if not added in the first run and a descendant
                 // was not found
 
-                if (run[0] == 1) {
-                    run[0] = 2;
+                if (run.value == 1) {
+                    run.value = 2;
                     if (!descend1(query, a_field, run)) {
                         new QConUnconditional(_trans, false).attach(query, a_field);
                     }
@@ -241,18 +241,17 @@ public abstract class QQueryBase implements Unversioned {
         }
     }
 
-    private boolean descend1(final QQuery query, final String a_field, int[] run) {
-        final boolean[] foundClass = { false };
-        if (run[0] == 2 || i_constraints.size() == 0) {
+    private boolean descend1(final QQuery query, final String a_field, IntByRef run) {
+        if (run.value == 2 || i_constraints.size() == 0) {
 
             // On the second run we are really creating a second independant
             // query network that is not joined to other higher level
 			// constraints.
             // Let's see how this works out. We may need to join networks.
 
-            run[0] = 0; // prevent a double run of this code
+            run.value = 0; // prevent a double run of this code
 
-            final boolean[] anyClassCollected = { false };
+            final BooleanByRef anyClassCollected = new BooleanByRef(false);
 
             stream().classCollection().attachQueryNode(a_field, new Visitor4() {
 
@@ -266,10 +265,10 @@ public abstract class QQueryBase implements Unversioned {
                     boolean take = true;
 
                     if (childYc instanceof UntypedFieldHandler) {
-                        if (anyClassCollected[0]) {
+                        if (anyClassCollected.value) {
                             take = false;
                         } else {
-                            anyClassCollected[0] = true;
+                            anyClassCollected.value = true;
                         }
                     }
 
@@ -292,13 +291,14 @@ public abstract class QQueryBase implements Unversioned {
         
         loadConstraints();
         
+        final BooleanByRef foundClass = new BooleanByRef(false);
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
             if (((QCon)i.current()).attach(query, a_field)) {
-                foundClass[0] = true;
+                foundClass.value = true;
             }
         }
-        return foundClass[0];
+        return foundClass.value;
     }
 
     public ObjectSet execute() {
@@ -491,10 +491,10 @@ public abstract class QQueryBase implements Unversioned {
                             QCandidate candidate = (QCandidate)a_object;
                             if (candidate.include()) {
                                 TreeInt ids = new TreeInt(candidate._key);
-                                final TreeInt[] idsNew = new TreeInt[1];
+                                final ObjectByRef idsNew = new ObjectByRef(null);
                                 Iterator4 itPath = executionPath.iterator();
                                 while (itPath.moveNext()) {
-                                    idsNew[0] = null;
+                                    idsNew.value = null;
                                     final String fieldName = (String) (itPath.current());
                                     if (ids != null) {
                                         ids.traverse(new Visitor4() {
@@ -504,17 +504,17 @@ public abstract class QQueryBase implements Unversioned {
                                                     stream.readWriterByID(_trans, id);
                                                 if (reader != null) {
                                                     ObjectHeader oh = new ObjectHeader(stream, reader);
-                                                    idsNew[0] = oh.classMetadata().collectFieldIDs(
+                                                    idsNew.value = oh.classMetadata().collectFieldIDs(
                                                             oh._marshallerFamily,
                                                             oh._headerAttributes,
-                                                            idsNew[0],
+                                                            (TreeInt)idsNew.value,
                                                             reader,
                                                             fieldName);
                                                 }
                                             }
                                         });
                                     }
-                                    ids = idsNew[0];
+                                    ids = (TreeInt) idsNew.value;
                                 }
                                 if(ids != null){
                                     ids.traverse(new Visitor4() {
