@@ -3,7 +3,7 @@ package com.db4o.activation;
 
 /**
  * Activator interface.<br>
- * <br><br>Activatable objects need to have a reference to 
+ * <br><br>{@link com.db4o.ta.Activatable} objects need to have a reference to 
  * an Activator implementation, which is called
  * by Transparent Activation, when a request is received to 
  * activate the host object.
