@@ -60,8 +60,8 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 
 	private void waitForMessagesToBeDispatched(ObjectContainer client1, ObjectContainer client2) {
 		// TODO: uncomment the following two lines to make it deadlock
-//		client2.commit();
-//		client1.commit();
+		client2.commit();
+		client1.commit();
 		// give some time for all the message to be processed...
 		Cool.sleepIgnoringInterruption(500);
 	}

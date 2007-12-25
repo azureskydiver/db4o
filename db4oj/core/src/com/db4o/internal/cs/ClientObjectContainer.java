@@ -302,8 +302,15 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	 * dead) on the client.
 	 */
 	public Msg getResponse() {
-		return _singleThreaded ? getResponseSingleThreaded()
-				: getResponseMultiThreaded();
+		while(true){
+			Msg msg = _singleThreaded ? getResponseSingleThreaded(): getResponseMultiThreaded();
+			if(isClientSideTask(msg)){
+				if(((ClientSideTask)msg).runOnClient()){
+					continue;
+				}
+			}
+			return msg;
+		}
 	}
 
 	private Msg getResponseMultiThreaded() {
@@ -321,6 +328,11 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 		return msg;
 	}
+	
+	private boolean isClientSideTask(Msg message) {
+		return message instanceof ClientSideTask;
+	}
+
 	
 	private void onMsgError() {
 		close();
