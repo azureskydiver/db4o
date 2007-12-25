@@ -13,6 +13,15 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
     static final int COUNT = 100;
 
     static LinkedList list = LinkedList.newLongCircularList();
+    
+    public static class Item {
+    	
+    	public String _name;
+    	
+    	public Item(String name){
+    		_name = name;
+    	}
+    }
 
     public static void main(String[] args) {
         new QueryByExampleTestCase().runSolo();
@@ -21,6 +30,48 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
     protected void store() {
         store(list);
     }
+    
+    public void testDefaultQueryModeIsIdentity(){
+    	Item itemOne = new Item("one");
+    	Item itemTwo = new Item("two");
+    	store(itemOne);
+    	store(itemTwo);
+    	
+    	// Change the name of the "sample"
+    	itemOne._name = "two";
+    	
+    	// Query by Identity
+    	Query q = db().query();
+    	q.constrain(itemOne);
+    	ObjectSet objectSet = q.execute();
+    	
+    	// Expect to get the sample 
+    	Assert.areEqual(1, objectSet.size());
+    	Item retrievedItem = (Item) objectSet.next();
+    	Assert.areSame(itemOne, retrievedItem);
+    }
+    
+    
+    public void _testQueryByExample(){
+    	Item itemOne = new Item("one");
+    	Item itemTwo = new Item("two");
+    	store(itemOne);
+    	store(itemTwo);
+    	
+    	// Change the name of the "sample"
+    	itemOne._name = "two";
+    	
+    	// Query by Example
+    	Query q = db().query();
+    	q.constrain(itemOne).byExample();
+    	ObjectSet objectSet = q.execute();
+    	
+    	// Expect to get the other 
+    	Assert.areEqual(1, objectSet.size());
+    	Item retrievedItem = (Item) objectSet.next();
+    	Assert.areSame(itemTwo, retrievedItem);
+    }
+    
 
     public void testByExample() {
         Query q = db().query();
@@ -52,6 +103,8 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
         Assert.areEqual(1, result.size());
 
     }
+    
+    
 
     public void testClassConstraint() {
         Query q = db().query();
