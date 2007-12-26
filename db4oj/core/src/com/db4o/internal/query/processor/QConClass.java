@@ -127,5 +127,15 @@ public class QConClass extends QConObject{
         }
     }
     
+    void setEvaluationMode() {
+        Iterator4 children = iterateChildren();
+        while (children.moveNext()) {
+            Object child = children.current();
+            if (child instanceof QConObject) {
+                ((QConObject) child).setEvaluationMode();
+            }
+        }
+    }
+    
 }
 

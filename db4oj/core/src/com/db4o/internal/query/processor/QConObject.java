@@ -95,7 +95,6 @@ public class QConObject extends QCon {
     }
     
     public boolean canBeIndexLeaf(){
-        byIdentity();
         return (i_yapClass != null && i_yapClass.isPrimitive()) || evaluator().identity();
     }
     
@@ -420,28 +419,17 @@ public class QConObject extends QCon {
     }
     
     /*
-     * if the i_object is stored in db4o, load the constraints by identity, 
-     * otherwise, load the constraints by example.
+     * if the i_object is stored in db4o, set the evaluation mode as identity, 
+     * otherwise, set the evaluation mode as example.
      */
-    void byIdentity() {
-        if (i_object == null) {
-            if (_children != null) {
-                Iterator4 children = iterateChildren();
-                while (children.moveNext()) {
-                    Object child = children.current();
-                    if (child instanceof QConObject) {
-                        ((QConObject)child).byIdentity();
-                    }
-                }
-            }
+    void setEvaluationMode() {
+        if ((i_object == null) || (i_yapClass !=null)) {
             return;
         }
 
         int id = getObjectID();
         if (id < 0) {
-            if (i_yapClass == null) {
-                associateYapClass(i_trans, i_object);
-            }
+            byExample();
         } else {
             i_yapClass = i_trans.container().produceClassMetadata(
                     i_trans.reflector().forObject(i_object));
