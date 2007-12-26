@@ -16,6 +16,7 @@ public class AllTests extends Db4oTestSuite {
 		    CollectionActivationTestCase.class,
 			CollectionUuidTest.class,
 			EmbeddedClientObjectContainerJre12TestCase.class,
+			HashMapUpdateFileSizeTestCase.class,
 			Iterator4JdkIteratorTestCase.class,
 			JdkCollectionIterator4TestCase.class,
 			NoP1ObjectIndexTestCase.class,
