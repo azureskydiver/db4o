@@ -11,6 +11,7 @@ import java.util.List;
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.db4o.diagnostic.DiagnosticToConsole;
 import com.db4o.query.Candidate;
 import com.db4o.query.Evaluation;
 import com.db4o.query.Predicate;
@@ -26,8 +27,8 @@ public class SortingExample {
 		Db4o.configure().objectClass(Pilot.class).objectField(
 				"points").indexed(true);
 		setObjects();
-		//getObjectsNQ();
-		getObjectsSODA();
+		getObjectsNQ();
+		//getObjectsSODA();
 		//getObjectsEval();
 	}
 

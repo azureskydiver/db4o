@@ -9,7 +9,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.ext.StoredClass;
 import com.db4o.ext.StoredField;
 
-public class MetaInfExample {
+public class MetaInfoExample {
 	private final static String DB4O_FILE_NAME = "reference.db4o";
 
 	public static void main(String[] args) {
