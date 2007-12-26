@@ -183,13 +183,13 @@ Namespace Db4objects.Db4odoc.NQCollection
                 ' return all Professional and Test pilots and count in
                 ' each category
                 Dim keywords As String() = {"Professional", "Test"}
-                Dim i As Integer
-                For i = 0 To keywords.Length - 1 Step i + 1
-                    If (p.Name.StartsWith(keywords(i))) Then
-                        If countTable.ContainsKey(keywords(i)) Then
-                            countTable(keywords(i)) = CType(countTable(keywords(i)), Integer) + 1
+                Dim keyword As String
+                For Each keyword In keywords
+                    If (p.Name.StartsWith(keyword)) Then
+                        If countTable.ContainsKey(keyword) Then
+                            countTable(keyword) = CType(countTable(keyword), Integer) + 1
                         Else
-                            countTable.Add(keywords(i), 1)
+                            countTable.Add(keyword, 1)
                         End If
                         Return True
                     End If
@@ -221,18 +221,18 @@ Namespace Db4objects.Db4odoc.NQCollection
 
         Private Shared Sub ListResult(ByVal result As IList(Of Pilot))
             System.Console.WriteLine(result.Count)
-            Dim i As Integer
-            For i = 0 To result.Count - 1 Step i + 1
-                System.Console.WriteLine(result(i))
+            Dim obj As Pilot
+            For Each obj In result
+                System.Console.WriteLine(obj)
             Next
         End Sub
         ' end ListResult
 
         Private Shared Sub ListResult(ByVal result As IObjectSet)
             System.Console.WriteLine(result.Count)
-            Dim i As Integer
-            For i = 0 To result.Count - 1 Step i + 1
-                System.Console.WriteLine(result(i).ToString())
+            Dim obj As Object
+            For Each obj In result
+                System.Console.WriteLine(obj)
             Next
         End Sub
         ' end ListResult

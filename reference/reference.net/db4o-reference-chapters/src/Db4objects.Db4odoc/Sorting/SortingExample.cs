@@ -164,9 +164,9 @@ namespace Db4objects.Db4odoc.Sorting
         private static void ListResult<Pilot>(IList<Pilot> result)
         {
             Console.WriteLine(result.Count);
-            for (int i = 0; i < result.Count; i++)
+            foreach (Pilot pilot in result)
             {
-                Console.WriteLine(result[i]);
+                Console.WriteLine(pilot);
             }
         }
         // end ListResult
@@ -174,9 +174,9 @@ namespace Db4objects.Db4odoc.Sorting
         private static void ListResult(ArrayList result)
         {
             Console.WriteLine(result.Count);
-            for (int i = 0; i < result.Count; i++)
+            foreach (object obj in result)
             {
-                Console.WriteLine(result[i]);
+                Console.WriteLine(obj);
             }
         }
         // end ListResult

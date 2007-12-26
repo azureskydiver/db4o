@@ -161,18 +161,18 @@ Namespace Db4objects.Db4odoc.NQCollection
 
         Private Shared Sub ListResult(ByVal result As IList(Of Person))
             System.Console.WriteLine(result.Count)
-            Dim i As Integer
-            For i = 0 To result.Count - 1 Step i + 1
-                System.Console.WriteLine(result(i))
+            Dim obj As Person
+            For Each obj In result
+                System.Console.WriteLine(obj)
             Next
         End Sub
         ' end ListResult
 
         Private Shared Sub ListResult(ByVal result As IObjectSet)
             System.Console.WriteLine(result.Count)
-            Dim i As Integer
-            For i = 0 To result.Count - 1 Step i + 1
-                System.Console.WriteLine(result(i))
+            Dim obj As Object
+            For Each obj In result
+                System.Console.WriteLine(obj)
             Next
         End Sub
         ' end ListResult

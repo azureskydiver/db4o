@@ -43,8 +43,9 @@ Namespace Db4objects.Db4odoc.ListDeleting
                     lo1.Data.RemoveRange(0, lo1.Data.Count)
                     db.Set(lo1)
                     ' and delete them from the database
-                    For i As Integer = 0 To tempList.Count - 1
-                        db.Delete(tempList(i))
+                    Dim obj As DataObject
+                    For Each obj In tempList
+                        db.Delete(obj)
                     Next
                     ' remove all the objects from the list
                     lo1.Data.RemoveRange(0, lo1.Data.Count)

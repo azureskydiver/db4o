@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.ClientServer.StartServer</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.StaticFields.StaticFieldExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>

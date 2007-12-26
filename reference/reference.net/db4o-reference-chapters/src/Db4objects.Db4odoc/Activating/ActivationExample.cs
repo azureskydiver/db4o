@@ -16,14 +16,14 @@ namespace Db4objects.Db4odoc.Activating
 
 		public static void Main(string[] args)
 		{
-			TestActivationDefault();
-			TestActivationConfig();
-			TestCascadeActivate();
-			TestMaxActivate();
-			TestMinActivate();
-			TestActivateDeactivate();
-			TestCollectionDef();
-			TestCollectionActivation();
+            TestActivationDefault();
+            TestActivationConfig();
+            TestCascadeActivate();
+            TestMaxActivate();
+            TestMinActivate();
+            TestActivateDeactivate();
+            TestCollectionDef();
+            TestCollectionActivation();
 		}
 		// end Main
 	
@@ -249,6 +249,7 @@ namespace Db4objects.Db4odoc.Activating
 		}
 		// end TestActivated
 
+        // This is not used anymore as IDb4oList is deprecated
         private static void StoreCollection()
 		{
 			File.Delete(Db4oFileName);    
@@ -270,6 +271,7 @@ namespace Db4objects.Db4odoc.Activating
 		}
 		// end StoreCollection
 
+        // This is not used anymore as IDb4oList is deprecated
         private static void TestCollectionDef()
 		{
 			StoreCollection();
@@ -278,12 +280,12 @@ namespace Db4objects.Db4odoc.Activating
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try 
 			{
-				IObjectSet result = db.Get(typeof(IList));
+                IObjectSet result = db.Get(typeof(IList));
 				ListResult(result);
 				IDb4oList list = (IDb4oList)result[0];
-				for (int i = 0; i < list.Count; i++)
+				foreach (object element in list)
 				{
-					Console.WriteLine("List element: " + list[i]);
+					Console.WriteLine("List element: " + element);
 				}
 			} 
 			finally 
@@ -294,6 +296,7 @@ namespace Db4objects.Db4odoc.Activating
 		// end TestCollectionDef
 
 
+        // This is not used anymore as IDb4oList is deprecated
         private static void TestCollectionActivation()
 		{
 			StoreCollection();

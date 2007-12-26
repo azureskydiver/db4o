@@ -78,16 +78,17 @@ Namespace Db4objects.Db4odoc.Reflections
                 ' public fields
                 Console.WriteLine("FIELDS:")
                 Dim fields() As IReflectField = carClass.GetDeclaredFields()
-                Dim i As Integer
-                For i = 0 To fields.Length - 1 Step i + 1
-                    Console.WriteLine(fields(i).GetName())
+                Dim field As IReflectField
+                For Each field In fields
+                    Console.WriteLine(field.GetName())
                 Next
 
                 ' constructors
                 Console.WriteLine("CONSTRUCTORS:")
                 Dim cons() As IReflectConstructor = carClass.GetDeclaredConstructors()
-                For i = 0 To cons.Length - 1 Step i + 1
-                    Console.WriteLine(cons(i))
+                Dim constructor As IReflectConstructor
+                For Each constructor In cons
+                    Console.WriteLine(constructor)
                 Next
 
                 ' public methods
@@ -115,8 +116,9 @@ Namespace Db4objects.Db4odoc.Reflections
                 count = knownClasses.Length
                 Console.WriteLine("Known classes: " + count.ToString())
                 Dim i As Integer
-                For i = 0 To knownClasses.Length - 1 Step i + 1
-                    Console.WriteLine(knownClasses(i).GetName())
+                Dim knownClass As IReflectClass
+                For Each knownClass In knownClasses
+                    Console.WriteLine(knownClass.GetName())
                 Next
 
             Finally

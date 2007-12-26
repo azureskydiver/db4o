@@ -53,9 +53,9 @@ namespace Db4objects.Db4odoc.Refactoring
 			try 
 			{
 				IObjectSet result = container.Get(typeof(Pilot));
-				for (int i=0; i< result.Size();i++)
+				foreach (object obj in result)
 				{
-					Pilot pilot = (Pilot)result[i];
+					Pilot pilot = (Pilot)obj;
 					System.Console.WriteLine("Pilot="+ pilot);
 				}
 			} 
@@ -101,9 +101,9 @@ namespace Db4objects.Db4odoc.Refactoring
 				IQuery q = container.Query();
 				q.Constrain(typeof(PilotNew));
 				IObjectSet result = q.Execute();
-				for (int i=0; i< result.Size();i++)
+				foreach (object obj in result)
 				{
-					PilotNew pilot = (PilotNew)result[i];
+					PilotNew pilot = (PilotNew)obj;
 					System.Console.WriteLine("Pilot="+ pilot);
 				} 
 			}

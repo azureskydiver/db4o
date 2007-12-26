@@ -20,11 +20,10 @@ Namespace Db4objects.Db4odoc.ClassNameFormat
                 ListResult(result)
                 ' Check what classes are actualy stored in the database
                 Dim storedClasses As IStoredClass() = container.Ext.StoredClasses
-                Dim i As Integer = 0
-                While i < storedClasses.Length
-                    System.Console.WriteLine("Stored class: " + storedClasses(i).GetName)
-                    System.Math.Min(System.Threading.Interlocked.Increment(i), i - 1)
-                End While
+                Dim storedClass As IStoredClass
+                For Each storedClass In storedClasses
+                    System.Console.WriteLine("Stored class: " + storedClass.GetName)
+                Next
             Finally
                 container.Commit()
             End Try

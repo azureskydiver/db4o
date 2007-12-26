@@ -169,8 +169,9 @@ Namespace Db4objects.Db4odoc.QBE
 
         Private Shared Sub ListResult(ByVal result As IObjectSet)
             System.Console.WriteLine(result.Count)
-            For i As Integer = 0 To result.Count - 1
-                System.Console.WriteLine(result(i))
+            Dim obj As Object
+            For Each obj In result
+                System.Console.WriteLine(obj)
             Next
         End Sub
 

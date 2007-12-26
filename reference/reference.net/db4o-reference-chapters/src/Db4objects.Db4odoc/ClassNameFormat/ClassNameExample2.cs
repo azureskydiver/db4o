@@ -24,9 +24,9 @@ namespace Db4objects.Db4odoc.ClassNameFormat
                 ListResult(result);
                 // Check what classes are actualy stored in the database
                 IStoredClass[] storedClasses = container.Ext().StoredClasses();
-                for (int i = 0; i < storedClasses.Length; i++)
+                foreach (IStoredClass storedClass in storedClasses)
                 {
-                    System.Console.WriteLine("Stored class: " + storedClasses[i].GetName());
+                    System.Console.WriteLine("Stored class: " + storedClass.GetName());
                 }
             }
             finally

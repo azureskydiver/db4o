@@ -239,17 +239,17 @@ namespace Db4objects.Db4odoc.NQCollection
                 // return all Professional and Test pilots and count in
                 // each category
                 String[] keywords = { "Professional", "Test" };
-                for (int i = 0; i < keywords.Length; i++)
+                foreach (string keyword in keywords)
                 {
-                    if (pilot.Name.StartsWith(keywords[i]))
+                    if (pilot.Name.StartsWith(keyword))
                     {
-                        if (countTable.ContainsKey(keywords[i]))
+                        if (countTable.ContainsKey(keyword))
                         {
-                            countTable[keywords[i]] = ((int)countTable[keywords[i]]) + 1;
+                            countTable[keyword] = ((int)countTable[keyword]) + 1;
                         }
                         else
                         {
-                            countTable.Add(keywords[i], 1);
+                            countTable.Add(keyword, 1);
                         }
                         return true;
                     }
@@ -292,9 +292,9 @@ namespace Db4objects.Db4odoc.NQCollection
         private static void ListResult(IList<Pilot> result)
         {
             System.Console.WriteLine(result.Count);
-            for (int i = 0; i < result.Count; i++)
+            foreach (Pilot pilot in result)
             {
-                System.Console.WriteLine(result[i]);
+                System.Console.WriteLine(pilot);
             }
         }
 
@@ -303,9 +303,9 @@ namespace Db4objects.Db4odoc.NQCollection
         private static void ListResult(IObjectSet result)
         {
             System.Console.WriteLine(result.Count);
-            for (int i = 0; i < result.Count; i++)
+            foreach (object obj in result)
             {
-                System.Console.WriteLine(result[i]);
+                System.Console.WriteLine(obj);
             }
         }
 

@@ -99,8 +99,9 @@ Namespace Db4objects.Db4odoc.StaticFields
             If db IsNot Nothing Then
                 Try
                     Dim result As IObjectSet = db.[Get](GetType(Pilot))
-                    For x As Integer = 0 To result.Count - 1
-                        Dim pilot As Pilot = DirectCast(result(x), Pilot)
+                    Dim obj As Object
+                    For Each obj In result
+                        Dim pilot As Pilot = DirectCast(obj, Pilot)
                         If pilot.Category Is PilotCategories.WINNER Then
                             Console.WriteLine("Winner pilot: " + pilot.ToString())
                         ElseIf pilot.Category Is PilotCategories.TALENTED Then
@@ -122,8 +123,9 @@ Namespace Db4objects.Db4odoc.StaticFields
             If db IsNot Nothing Then
                 Try
                     Dim result As IObjectSet = db.[Get](GetType(Pilot))
-                    For x As Integer = 0 To result.Count - 1
-                        Dim pilot As Pilot = DirectCast(result(x), Pilot)
+                    Dim obj As Object
+                    For Each obj In result
+                        Dim pilot As Pilot = DirectCast(obj, Pilot)
                         If pilot.Category Is PilotCategories.WINNER Then
                             Console.WriteLine("Winner pilot: " + pilot.ToString())
                             Dim pc As PilotCategories = pilot.Category
@@ -145,8 +147,9 @@ Namespace Db4objects.Db4odoc.StaticFields
             If db IsNot Nothing Then
                 Try
                     Dim result As IObjectSet = db.[Get](GetType(PilotCategories))
-                    For x As Integer = 0 To result.Count - 1
-                        Dim pc As PilotCategories = DirectCast(result(x), PilotCategories)
+                    Dim obj As Object
+                    For Each obj In result
+                        Dim pc As PilotCategories = DirectCast(obj, PilotCategories)
                         If pc Is PilotCategories.WINNER Then
                             pc.TestChange("WINNER2006")
                             db.[Set](pc)
@@ -173,15 +176,16 @@ Namespace Db4objects.Db4odoc.StaticFields
                 Try
                     Console.WriteLine("Deleting Pilots :")
                     Dim result As IObjectSet = db.[Get](GetType(Pilot))
-                    For x As Integer = 0 To result.Count - 1
-                        Dim pilot As Pilot = DirectCast(result(x), Pilot)
+                    Dim obj As Object
+                    For Each obj In result
+                        Dim pilot As Pilot = DirectCast(obj, Pilot)
                         db.Delete(pilot)
                     Next
                     PrintCategories(db)
                     Console.WriteLine("Deleting PilotCategories :")
                     result = db.[Get](GetType(PilotCategories))
-                    For x As Integer = 0 To result.Count - 1
-                        db.Delete(result(x))
+                    For Each obj In result
+                        db.Delete(obj)
                     Next
                     PrintCategories(db)
                 Finally
@@ -194,8 +198,9 @@ Namespace Db4objects.Db4odoc.StaticFields
         Private Shared Sub PrintCategories(ByVal db As IObjectContainer)
             Dim result As IObjectSet = db.[Get](GetType(PilotCategories))
             Console.WriteLine("Stored categories: " + result.Count.ToString())
-            For x As Integer = 0 To result.Count - 1
-                Dim pc As PilotCategories = DirectCast(result(x), PilotCategories)
+            Dim obj As Object
+            For Each obj In result
+                Dim pc As PilotCategories = DirectCast(obj, PilotCategories)
                 Console.WriteLine("Category: " + pc.ToString())
             Next
         End Sub
@@ -207,8 +212,9 @@ Namespace Db4objects.Db4odoc.StaticFields
                 Try
                     PrintCategories(db)
                     Dim result As IObjectSet = db.[Get](GetType(PilotCategories))
-                    For x As Integer = 0 To result.Count - 1
-                        Dim pc As PilotCategories = DirectCast(result(x), PilotCategories)
+                    Dim obj As Object
+                    For Each obj In result
+                        Dim pc As PilotCategories = DirectCast(obj, PilotCategories)
                         db.Delete(pc)
                     Next
                     PrintCategories(db)

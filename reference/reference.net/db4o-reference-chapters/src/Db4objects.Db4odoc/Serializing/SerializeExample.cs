@@ -69,13 +69,13 @@ namespace Db4objects.Db4odoc.Serializing
 			FileStream xmlFileStream = new FileStream(XmlFileName, FileMode.Open);
 			Car[] cars = (Car[])carSerializer.Deserialize(xmlFileStream);
 			IObjectContainer db;
-			for (int i = 0; i < cars.Length; i++)
+			foreach (Car car in cars)
 			{
 				db = Db4oFactory.OpenFile(Db4oFileName);
 				try 
 				{
-					Car car = (Car)cars[i];
-					db.Set(car);
+					Car newCar = (Car)car;
+					db.Set(newCar);
 				} 
 				finally 
 				{

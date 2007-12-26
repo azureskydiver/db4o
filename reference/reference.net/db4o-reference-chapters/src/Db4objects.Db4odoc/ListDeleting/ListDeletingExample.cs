@@ -85,9 +85,9 @@ namespace Db4objects.Db4odoc.ListDeleting
                     lo1.Data.RemoveRange(0, lo1.Data.Count);
                     db.Set(lo1);
                     // and delete them from the database
-                   for (int i =0; i < tempList.Count; i++)
-                   {
-                       db.Delete(tempList[i]);
+                    foreach (DataObject obj in tempList)
+                    {
+                       db.Delete(obj);
                     }
                 }
             }

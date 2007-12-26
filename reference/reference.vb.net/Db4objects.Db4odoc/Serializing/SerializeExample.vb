@@ -59,12 +59,12 @@ Namespace Db4objects.Db4odoc.Serializing
             Dim xmlFileStream As FileStream = New FileStream(XmlFileName, FileMode.Open)
             Dim cars() As Car = CType(carSerializer.Deserialize(xmlFileStream), Car())
             Dim db As IObjectContainer
-            Dim i As Integer
-            For i = 0 To cars.Length - 1 Step i + 1
+            Dim car As Car
+            For Each car In cars
                 db = Db4oFactory.OpenFile(Db4oFileName)
                 Try
-                    Dim car As Car = CType(cars(i), Car)
-                    db.Set(car)
+                    Dim newCar As Car = CType(car, Car)
+                    db.Set(newCar)
                 Finally
                     db.Close()
                 End Try
