@@ -3,7 +3,7 @@
 package com.db4o.internal;
 
 import java.net.*;
-import java.util.Date;
+import java.util.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
