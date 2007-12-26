@@ -289,7 +289,7 @@ public abstract class QQueryBase implements Unversioned {
 
         }
         
-        loadConstraints();
+        checkConstraintsEvaluationMode();
         
         final BooleanByRef foundClass = new BooleanByRef(false);
         Iterator4 i = iterateConstraints();
@@ -397,7 +397,7 @@ public abstract class QQueryBase implements Unversioned {
     }
     
     public Iterator4 executeLazy(){
-        loadConstraints();
+        checkConstraintsEvaluationMode();
         
 		final CreateCandidateCollectionResult r = createCandidateCollection();
 		
@@ -440,17 +440,17 @@ public abstract class QQueryBase implements Unversioned {
 	}
 
 	/*
-	 * load constraint byIdentity
+	 * check constraints evaluation mode
 	 */
-	private void loadConstraints() {
+	public void checkConstraintsEvaluationMode() {
 	    Iterator4 constraints = iterateConstraints();
         while (constraints.moveNext()) {
-            ((QConObject)constraints.current()).byIdentity();
+            ((QConObject)constraints.current()).setEvaluationMode();
         }
 	}
 	
     public void executeLocal(final IdListQueryResult result) {
-        loadConstraints();
+        checkConstraintsEvaluationMode();
 
         CreateCandidateCollectionResult r = createCandidateCollection();
         
@@ -630,7 +630,7 @@ public abstract class QQueryBase implements Unversioned {
     }
     
     public void marshall() {
-        loadConstraints();
+        checkConstraintsEvaluationMode();
         
     	_evaluationModeAsInt = _evaluationMode.asInt();
         Iterator4 i = iterateConstraints();
