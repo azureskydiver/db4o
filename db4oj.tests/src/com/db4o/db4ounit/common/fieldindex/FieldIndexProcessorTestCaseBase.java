@@ -46,6 +46,7 @@ public abstract class FieldIndexProcessorTestCaseBase extends
 
 	private QCandidates getQCandidates(final Query query) {
 		final CreateCandidateCollectionResult result = ((QQuery)query).createCandidateCollection();
+		 ((QQuery)query).checkConstraintsEvaluationMode();
 		QCandidates candidates = (QCandidates)result.candidateCollection._element;
 		return candidates;
 	}

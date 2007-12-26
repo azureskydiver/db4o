@@ -52,7 +52,7 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
     }
     
     
-    public void _testQueryByExample(){
+    public void testQueryByExample(){
     	Item itemOne = new Item("one");
     	Item itemTwo = new Item("two");
     	store(itemOne);
