@@ -551,9 +551,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
-        Config4Class config = configOrAncestorConfig();
         try{
-	        if (config != null && (config.cascadeOnDelete() == TernaryBool.YES)) {
+	        if (cascadeOnDelete()) {
 	            int preserveCascade = a_bytes.cascadeDeletes();
 	            if (classReflector().isCollection()) {
 	                int newCascade =
@@ -587,6 +586,25 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             }
         }
     }
+
+    /*
+     * If we use KEY as the parameter, this method can be more generic.
+     */
+	public TernaryBool cascadeOnDeleteTernary() {
+		Config4Class config = config();
+		TernaryBool cascadeOnDelete = TernaryBool.UNSPECIFIED;
+		if(config != null && (cascadeOnDelete = config.cascadeOnDelete())!= TernaryBool.UNSPECIFIED) {
+			return cascadeOnDelete;
+		}
+		if(i_ancestor == null) {
+			return cascadeOnDelete;
+		}
+		return i_ancestor.cascadeOnDeleteTernary();
+	}
+	
+	public boolean cascadeOnDelete() {
+		return cascadeOnDeleteTernary() == TernaryBool.YES;
+	}
 
     public final boolean dispatchEvent(ObjectContainerBase stream, Object obj, int message) {
     	if(!dispatchingEvents(stream)){
