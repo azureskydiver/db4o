@@ -47,9 +47,9 @@ namespace Db4objects.Db4odoc.MetaInfo
 				
 				System.Console.WriteLine("Retrieve meta information for all classes in database: ");
 				IStoredClass[] sclasses = container.Ext().StoredClasses();
-				for (int i=0; i< sclasses.Length; i++)
+				foreach (IStoredClass sclass in sclasses)
 				{
-					System.Console.WriteLine(sclasses[i].GetName());	
+					System.Console.WriteLine(sclass.GetName());	
 				}
 			} 
 			finally 
@@ -71,9 +71,9 @@ namespace Db4objects.Db4odoc.MetaInfo
 				
 				System.Console.WriteLine("Retrieve all fields: ");
 				IStoredField[] sfields = sc.GetStoredFields();
-				for (int i=0; i< sfields.Length; i++)
+				foreach (IStoredField sfield in sfields)
 				{
-					System.Console.WriteLine("Stored field:  "+ sfields[i].GetName()+"/"+sfields[i].GetStoredType());
+                    System.Console.WriteLine("Stored field:  " + sfield.GetName() + "/" + sfield.GetStoredType());
 				}
 			} 
 			finally 

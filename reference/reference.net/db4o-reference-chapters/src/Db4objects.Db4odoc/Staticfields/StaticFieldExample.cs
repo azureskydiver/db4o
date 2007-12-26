@@ -125,9 +125,9 @@ namespace Db4objects.Db4odoc.StaticFields
                 try
                 {
                     IObjectSet result = db.Get(typeof(Pilot));
-                    for (int x = 0; x < result.Count; x++)
+                    foreach (object obj in result)
                     {
-                        Pilot pilot = (Pilot)result[x];
+                        Pilot pilot = (Pilot)obj;
                         if (pilot.Category == PilotCategories.Winner)
                         {
                             Console.WriteLine("Winner pilot: " + pilot);
@@ -159,9 +159,9 @@ namespace Db4objects.Db4odoc.StaticFields
                 try
                 {
                     IObjectSet result = db.Get(typeof(Pilot));
-                    for (int x = 0; x < result.Count; x++)
+                    foreach (object obj in result)
                     {
-                        Pilot pilot = (Pilot)result[x];
+                        Pilot pilot = (Pilot)obj;
                         if (pilot.Category == PilotCategories.Winner)
                         {
                             Console.WriteLine("Winner pilot: " + pilot);
@@ -189,9 +189,9 @@ namespace Db4objects.Db4odoc.StaticFields
                 try
                 {
                     IObjectSet result = db.Get(typeof(PilotCategories));
-                    for (int x = 0; x < result.Count; x++)
+                    foreach (object obj in result)
                     {
-                        PilotCategories pc = (PilotCategories)result[x];
+                        PilotCategories pc = (PilotCategories)obj;
                         if (pc == PilotCategories.Winner)
                         {
                             pc.TestChange("WINNER2006");
@@ -224,17 +224,17 @@ namespace Db4objects.Db4odoc.StaticFields
                 {
                     Console.WriteLine("Deleting Pilots :");
                     IObjectSet result = db.Get(typeof(Pilot));
-                    for (int x = 0; x < result.Count; x++)
+                    foreach (object obj in result)
                     {
-                        Pilot pilot = (Pilot)result[x];
+                        Pilot pilot = (Pilot)obj;
                         db.Delete(pilot);
                     }
                     PrintCategories(db);
                     Console.WriteLine("Deleting PilotCategories :");
                     result = db.Get(typeof(PilotCategories));
-                    for (int x = 0; x < result.Count; x++)
+                    foreach (object obj in result)
                     {
-                        db.Delete(result[x]);
+                        db.Delete(obj);
                     }
                     PrintCategories(db);
                 }
@@ -267,9 +267,9 @@ namespace Db4objects.Db4odoc.StaticFields
                 {
                     PrintCategories(db);
                     IObjectSet result = db.Get(typeof(PilotCategories));
-                    for (int x = 0; x < result.Count; x++)
+                    foreach (object obj in result)
                     {
-                        PilotCategories pc = (PilotCategories)result[x];
+                        PilotCategories pc = (PilotCategories)obj;
                         db.Delete(pc);
                     }
                     PrintCategories(db);

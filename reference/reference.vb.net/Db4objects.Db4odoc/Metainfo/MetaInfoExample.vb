@@ -39,9 +39,9 @@ Namespace Db4objects.Db4odoc.MetaInfo
 
                 System.Console.WriteLine("Retrieve meta information for all classes in database: ")
                 Dim sclasses() As IStoredClass = container.Ext().StoredClasses()
-                Dim i As Integer
-                For i = 0 To sclasses.Length - 1 Step i + 1
-                    System.Console.WriteLine(sclasses(i).GetName())
+                Dim sclass As IStoredClass
+                For Each sclass In sclasses
+                    System.Console.WriteLine(sclass.GetName())
                 Next
             Finally
                 container.Close()
@@ -59,9 +59,9 @@ Namespace Db4objects.Db4odoc.MetaInfo
 
                 System.Console.WriteLine("Retrieve all fields: ")
                 Dim sfields() As IStoredField = sc.GetStoredFields()
-                Dim i As Integer
-                For i = 0 To sfields.Length - 1 Step i + 1
-                    System.Console.WriteLine("Stored field:  " + sfields(i).GetName() + "/" + sfields(i).GetStoredType().GetName())
+                Dim sfield As IStoredField
+                For Each sfield In sfields
+                    System.Console.WriteLine("Stored field:  " + sfield.GetName() + "/" + sfield.GetStoredType().GetName())
                 Next
             Finally
                 container.Close()

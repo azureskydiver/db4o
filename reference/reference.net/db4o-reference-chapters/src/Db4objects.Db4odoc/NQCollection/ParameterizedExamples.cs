@@ -168,12 +168,13 @@ namespace Db4objects.Db4odoc.NQCollection
 
         // end GetProfessionalPilots
 
+
         private static void ListResult(IList<Pilot> result)
         {
             System.Console.WriteLine(result.Count);
-            for (int i = 0; i < result.Count; i++)
+            foreach (Pilot pilot in result)
             {
-                System.Console.WriteLine(result[i]);
+                System.Console.WriteLine(pilot);
             }
         }
 
@@ -182,12 +183,13 @@ namespace Db4objects.Db4odoc.NQCollection
         private static void ListResult(IObjectSet result)
         {
             System.Console.WriteLine(result.Count);
-            for (int i = 0; i < result.Count; i++)
+            foreach (object obj in result)
             {
-                System.Console.WriteLine(result[i]);
+                System.Console.WriteLine(obj);
             }
         }
 
         // end ListResult
+
     }
 }

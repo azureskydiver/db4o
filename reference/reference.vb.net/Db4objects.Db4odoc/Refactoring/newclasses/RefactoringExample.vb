@@ -36,9 +36,9 @@ Namespace Db4objects.Db4odoc.Refactoring.Newclasses
                 Dim q As IQuery = container.Query()
                 q.Constrain(GetType(Pilot))
                 Dim result As IObjectSet = q.Execute()
-                Dim i As Integer
-                For i = 0 To result.Size() - 1 Step i + 1
-                    Dim pilot As Pilot = CType(result(i), Pilot)
+                Dim obj As Object
+                For Each obj In result
+                    Dim pilot As Pilot = CType(obj, Pilot)
                     pilot.Name = New Identity(sfOld.Get(pilot).ToString(), "")
                     System.Console.WriteLine("Pilot=" + pilot.ToString())
                     container.Set(pilot)

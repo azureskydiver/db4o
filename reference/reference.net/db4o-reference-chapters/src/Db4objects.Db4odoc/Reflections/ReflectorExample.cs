@@ -91,14 +91,14 @@ namespace Db4objects.Db4odoc.Reflections
 				// public fields
 				Console.WriteLine("FIELDS:");
 				IReflectField[] fields = carClass.GetDeclaredFields();
-				for (int i = 0; i < fields.Length; i++)
-					Console.WriteLine(fields[i].GetName());
+				foreach (IReflectField field in fields)
+					Console.WriteLine(field.GetName());
 				
 				// constructors
 				Console.WriteLine("CONSTRUCTORS:");
 				IReflectConstructor[] cons = carClass.GetDeclaredConstructors();
-				for (int i = 0; i < cons.Length; i++)
-					Console.WriteLine( cons[i]);
+				foreach (IReflectConstructor constructor in cons)
+                    Console.WriteLine(constructor);
 				
 				// public methods
 				Console.WriteLine("METHODS:");
@@ -126,9 +126,9 @@ namespace Db4objects.Db4odoc.Reflections
 				IReflectClass[] knownClasses = db.Ext().Reflector().KnownClasses();
 				int count = knownClasses.Length;
 				Console.WriteLine("Known classes: " + count);
-				for (int i=0; i <knownClasses.Length; i++)
+				foreach (IReflectClass knownClass in knownClasses)
 				{
-					Console.WriteLine(knownClasses[i]);
+					Console.WriteLine(knownClass);
 				}
 			} 
 			finally 

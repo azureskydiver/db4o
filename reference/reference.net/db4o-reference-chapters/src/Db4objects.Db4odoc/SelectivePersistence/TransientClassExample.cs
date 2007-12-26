@@ -57,8 +57,8 @@ namespace Db4objects.Db4odoc.SelectivePersistence
         private static void ListResult(IList result)
         {
             Console.WriteLine(result.Count);
-            for (int x = 0; x < result.Count; x++)
-                Console.WriteLine(result[x]);
+            foreach (object obj in result)
+                Console.WriteLine(obj);
         }
         // end ListResult
     }

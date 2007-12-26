@@ -44,9 +44,9 @@ Namespace Db4objects.Db4odoc.Refactoring
             Dim container As IObjectContainer = Db4oFactory.OpenFile(Db4oFileName)
             Try
                 Dim result As IObjectSet = container.Get(GetType(Pilot))
-                Dim i As Integer
-                For i = 0 To result.Size() - 1 Step i + 1
-                    Dim pilot As Pilot = CType(result(i), Pilot)
+                Dim obj As Object
+                For Each obj In result
+                    Dim pilot As Pilot = CType(obj, Pilot)
                     System.Console.WriteLine("Pilot=" + pilot.ToString())
                 Next
             Finally
@@ -83,9 +83,9 @@ Namespace Db4objects.Db4odoc.Refactoring
                 Dim q As IQuery = container.Query()
                 q.Constrain(GetType(PilotNew))
                 Dim result As IObjectSet = q.Execute()
-                Dim i As Integer
-                For i = 0 To result.Size() - 1 Step i + 1
-                    Dim pilot As PilotNew = CType(result(i), PilotNew)
+                Dim obj As Object
+                For Each obj In result
+                    Dim pilot As PilotNew = CType(obj, PilotNew)
                     System.Console.WriteLine("Pilot=" + pilot.ToString())
                 Next
             Finally

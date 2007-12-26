@@ -40,9 +40,9 @@ namespace Db4objects.Db4odoc.Refactoring.NewClasses
 				IQuery q = container.Query();
 				q.Constrain(typeof(Pilot));
 				IObjectSet result = q.Execute();
-				for (int i = 0; i< result.Size(); i++)
+				foreach (object obj in result)
 				{
-					Pilot pilot = (Pilot)result[i];
+					Pilot pilot = (Pilot)obj;
 					pilot.Name = new Identity(sfOld.Get(pilot).ToString(),"");
 					System.Console.WriteLine("Pilot="+ pilot);
 					container.Set(pilot);
