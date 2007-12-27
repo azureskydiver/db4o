@@ -3,7 +3,6 @@ package com.db4odoc.translators;
 
 import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
 
@@ -12,7 +11,7 @@ public class TranslatorExample {
 
 	public static void main(String[] args) {
 		tryStoreWithoutCallConstructors();
-		//tryStoreWithCallConstructors();
+		tryStoreWithCallConstructors();
 		storeWithTranslator();
 	}
 
@@ -48,12 +47,7 @@ public class TranslatorExample {
 	// end storeWithTranslator
 
 	private static void tryStoreAndRetrieve(Configuration configuration) {
-		ObjectServer server = Db4o.openServer( configuration,  DB4O_FILE_NAME, 0xdb40);
-		server.grantAccess("A", "A");
-		//ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
-		//ObjectContainer container = server.openClient(configuration);
-		ObjectContainer container = Db4o.openClient("localhost", 0xdb40, "A", "A");
-		//ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			NotStorable notStorable = new NotStorable(42, "Test");
 			System.out.println("ORIGINAL: " + notStorable);
@@ -63,7 +57,6 @@ public class TranslatorExample {
 			return;
 		} finally {
 			container.close();
-			server.close();
 		}
 		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
