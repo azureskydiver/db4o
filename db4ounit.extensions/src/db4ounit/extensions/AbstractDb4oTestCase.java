@@ -269,8 +269,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 	
 	protected int countOccurences(Class clazz) {
-		ObjectSet result = newQuery(clazz).execute();
-		return result.size();
+		return countOccurences(db(), clazz);
 	}
 	
 	protected int countOccurences(ExtObjectContainer oc, Class clazz) {
