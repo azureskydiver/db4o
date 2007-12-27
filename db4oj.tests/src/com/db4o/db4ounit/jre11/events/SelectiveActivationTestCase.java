@@ -4,7 +4,7 @@ package com.db4o.db4ounit.jre11.events;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.events.*;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
@@ -33,12 +33,39 @@ public class SelectiveActivationTestCase
         print("test activate full tree");
         Assert.areEqual(3, queryItems().size());
 
+        reopen();
+        
         Item a = queryItem("A");
         Assert.isNull(a.child.child); // only A and B should be activated.
 
         reopen(); // start fresh
 
-        // Add listener for activated event
+        addActivationListener();
+
+        a = queryItem("A");        
+        Assert.isNotNull(a.child.child); // this time, they should all be activated.  
+    }
+
+    public void testActivateEventsAndSort() throws Exception {
+    	reopen(); // start fresh
+
+    	print("test activate events and sorting");
+    	
+        addActivationListener();
+        
+        ObjectSet queryItems = queryItems();
+        
+        // check items are sorted the right way
+        Item a = (Item)queryItems.next();
+        Assert.areEqual(a.id, "A");
+        a = (Item)queryItems.next();
+        Assert.areEqual(a.id, "B");
+        a = (Item)queryItems.next();
+        Assert.areEqual(a.id, "C");
+    }
+    
+    private void addActivationListener() {
+		// Add listener for activated event
         eventRegistry().activated().addListener(new EventListener4() {
             public void onEvent(Event4 e, EventArgs args) {
                 try {
@@ -62,10 +89,7 @@ public class SelectiveActivationTestCase
                 }
             }
         });
-
-        a = queryItem("A");
-        Assert.isNotNull(a.child.child); // this time, they should all be activated.
-    }
+	}
 
     private void print(String s) {
         if(debug) System.out.println(s);
@@ -79,11 +103,11 @@ public class SelectiveActivationTestCase
         Query q = db().query();
         q.constrain(Item.class);
         // todo: having this here will not fire the activation events!
-        /*q.sortBy(new QueryComparator() {
+        q.sortBy(new QueryComparator() {
 			public int compare(Object first, Object second) {
 				return ((Item)first).id.compareTo(((Item)second).id);
 			}
-		});*/
+		});
         return q;
     }
 
