@@ -6,6 +6,8 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
+import sun.io.*;
+
 
 public class LogStatistics {
 
@@ -20,6 +22,7 @@ public class LogStatistics {
 	private long _writeCount = 0;
 	private long _writeBytes = 0;
 	private long _syncCount = 0;
+	private long _seekCount = 0;
 	
 	
 	
@@ -119,7 +122,7 @@ public class LogStatistics {
 		DecimalFormat formatPercentage = new DecimalFormat("##.##");
 		DecimalFormat formatCount = new DecimalFormat("###,###");
 		
-		long totalCount = _readCount + _writeCount + _syncCount;
+		long totalCount = _readCount + _writeCount + _syncCount + _seekCount;
 		String totalCountString = formatCount.format(totalCount);
 		
 		double readCountPercentage = 100 * (double)_readCount / (double)totalCount;
@@ -130,6 +133,9 @@ public class LogStatistics {
 		
 		double syncCountPercentage = 100 * (double)_syncCount / (double)totalCount;
 		String syncCountPercentageString = formatPercentage.format(syncCountPercentage);
+		
+		double seekCountPercentage = 100 * (double)_seekCount / (double)totalCount;
+		String seekCountPercentageString = formatPercentage.format(seekCountPercentage);
 		
 		long totalBytes = _readBytes + _writeBytes;
 		String totalBytesString = formatCount.format(totalBytes);
@@ -143,6 +149,7 @@ public class LogStatistics {
 		String readCountString = formatCount.format(_readCount);
 		String writeCountString = formatCount.format(_writeCount);
 		String syncCountString = formatCount.format(_syncCount);
+		String seekCountString = formatCount.format(_seekCount);
 		
 		String readBytesString = formatCount.format(_readBytes);
 		String writeBytesString = formatCount.format(_writeBytes);
@@ -159,6 +166,7 @@ public class LogStatistics {
 		_out.println("<tr><th></th><th></th><th>Count</th><th></th><th>%</th><th></th><th>Bytes</th><th></th><th>%</th></tr>");
 		_out.println("<tr><td>Reads</td><td></td><td align=\"right\">" + readCountString + "</td><td></td><td align=\"right\">" + readCountPercentageString + "</td><td></td><td align=\"right\">" + readBytesString + "</td><td></td><td align=\"right\">" + readBytesPercentageString + "</td></tr>");
 		_out.println("<tr><td>Writes</td><td></td><td align=\"right\">" + writeCountString + "</td><td></td><td align=\"right\">" + writeCountPercentageString + "</td><td></td><td align=\"right\">" + writeBytesString + "</td><td></td><td align=\"right\">" + writeBytesPercentageString + "</td></tr>");
+		_out.println("<tr><td>Seeks</td><td></td><td align=\"right\">" + seekCountString + "</td><td></td><td align=\"right\">" + seekCountPercentageString + "</td><td></td><td></td></tr>");
 		_out.println("<tr><td>Syncs</td><td></td><td align=\"right\">" + syncCountString + "</td><td></td><td align=\"right\">" + syncCountPercentageString + "</td><td></td><td></td></tr>");
 		_out.println("<tr><td colspan=\"9\"></td></tr>");
 		_out.println("<tr><td>Total</td><td></td><td align=\"right\">" + totalCountString + "</td><td></td><td></td><td></td><td>" + totalBytesString + "</td><td></td></tr>");
@@ -190,9 +198,17 @@ public class LogStatistics {
 		else if ( line.startsWith(LogConstants.SYNC_ENTRY) ) {
 			handleSync();
 		}
-		else {
-			// TODO: unknown command. how to react??
+		else if ( line.startsWith(LogConstants.SEEK_ENTRY)  ) {
+			handleSeek();
 		}
+		else {
+			throw new IllegalArgumentException("Unknown command in log: " + line);
+		}
+	}
+
+
+	private void handleSeek() {
+		_seekCount++;
 	}
 
 
@@ -203,20 +219,18 @@ public class LogStatistics {
 
 	private void handleRead(String line) {
 		_readCount++;
-		_readBytes += bytesForLine(line);
+		_readBytes += bytesForLine(line, LogConstants.READ_ENTRY.length());
 	}
 
 
 	private void handleWrite(String line) {
 		_writeCount++;
-		_writeBytes += bytesForLine(line);
+		_writeBytes += bytesForLine(line, LogConstants.WRITE_ENTRY.length());
 	}
 
 
-	private long bytesForLine(String line) {
-		int separatorIndex = line.indexOf(LogConstants.SEPARATOR);
-		long length = Long.parseLong(line.substring(separatorIndex+1));
-		return length;
+	private long bytesForLine(String line, int commandLength) {
+		return Long.parseLong(line.substring(commandLength));
 	}
 
 	
