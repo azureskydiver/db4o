@@ -1578,8 +1578,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         
         ObjectReference ref = analyzer.objectReference();
         
-        boolean isNewObject = (ref == null) || ref.isFlaggedForDelete();
-		if (isNewObject) {
+		if (ref == null) {
             ClassMetadata classMetadata = analyzer.classMetadata();
             if (!objectCanNew(trans, classMetadata, obj)) {
                 return 0;
