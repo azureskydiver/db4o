@@ -62,9 +62,9 @@ public class StartServer
   
   /**
    * messaging callback
-   * @see com.db4o.messaging.MessageRecipient#processMessage(ObjectContainer, Object)
+   * @see com.db4o.messaging.MessageRecipient#processMessage(MessageContext, Object)
    */
-  public void processMessage(ObjectContainer con, Object message) {
+  public void processMessage(MessageContext con, Object message) {
     if(message instanceof StopServer){
       close();
     }
