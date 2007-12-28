@@ -27,6 +27,7 @@ public interface ObjectField {
 	 * The default setting is <b>false</b>.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
 	 * @param flag whether activation is to be cascaded to the member object.
 	 * @see Configuration#activationDepth Why activation?
 	 * @see ObjectClass#cascadeOnActivate
@@ -53,6 +54,7 @@ public interface ObjectField {
 	 * The default setting is <b>false</b>.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
 	 * @param flag whether deletes are to be cascaded to the member object.
 	 * @see ObjectClass#cascadeOnDelete
 	 * @see com.db4o.ObjectContainer#delete
@@ -72,6 +74,7 @@ public interface ObjectField {
 	 * The default setting is <b>false</b>.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
 	 * @param flag whether updates are to be cascaded to the member object.
 	 * @see com.db4o.ObjectContainer#set
 	 * @see ObjectClass#cascadeOnUpdate
@@ -93,6 +96,8 @@ public interface ObjectField {
 	 * index will be dropped.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * If this setting is applied to an open ObjectContainer it will take an effect on the next
+     * time ObjectContainer is opened.<br><br>
 	 * @param flag specify <code>true</code> or <code>false</code> to turn indexing on for
 	 * this field
 	 */
@@ -105,6 +110,7 @@ public interface ObjectField {
      * <br><br>
      * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can NOT be applied to an open object container. <br><br>
      * @param newName the new fieldname.
      */
     public void rename (String newName);
@@ -113,7 +119,7 @@ public interface ObjectField {
     /**
 	 * toggles query evaluation.
 	 * <br><br>All fields are evaluated by default. Use this method to turn query
-	 * evaluation of for specific fields.<br><br>
+	 * evaluation off for specific fields.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
      * @param flag specify <code>false</code> to ignore this field during query evaluation.
