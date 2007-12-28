@@ -91,11 +91,8 @@ public class ActivationExample {
 		storeSensorPanel();
 		Configuration configuration = Db4o.newConfiguration();
 		configuration.objectClass(SensorPanel.class).cascadeOnActivate(true);
-		ObjectServer server = Db4o.openServer(DB4O_FILE_NAME, 0xdb40);
-		server.grantAccess("A", "A");
-		//ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		configuration.activationDepth(0);
-		ObjectContainer container = Db4o.openClient(configuration, "localhost", 0xdb40, "A", "A");
+		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			System.out.println("Cascade activation");
 			ObjectSet result = container.get(new SensorPanel(1));
