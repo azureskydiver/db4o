@@ -2,11 +2,11 @@
 
 package com.db4o.internal.cs.messages;
 
+import com.db4o.*;
 import com.db4o.internal.*;
 import com.db4o.messaging.*;
-import com.db4o.messaging.internal.*;
 
-public final class MUserMessage extends MsgObject implements ServerSideMessage, ClientSideTask, MessageContextProvider {
+public final class MUserMessage extends MsgObject implements ServerSideMessage, ClientSideTask {
 	
 	public final boolean processAtServer() {
 		return processUserMessage();
@@ -16,6 +16,21 @@ public final class MUserMessage extends MsgObject implements ServerSideMessage, 
 		return processUserMessage();
 	}
 	
+	private class MessageContextImpl implements MessageContext {
+	
+		public MessageSender sender() {
+			return new MessageSender() {
+				public void send(Object message) {
+					serverMessageDispatcher().write(Msg.USER_MESSAGE.marshallUserMessage(transaction(), message));
+				}
+			};
+		}
+	
+		public ObjectContainer container() {
+			return transaction().objectContainer();
+		}
+	};
+	
 	private boolean processUserMessage() {
 		final MessageRecipient recipient = messageRecipient();
 		if (recipient == null) {
@@ -23,30 +38,13 @@ public final class MUserMessage extends MsgObject implements ServerSideMessage, 
 		}
 		
 		try {
-			MessageContextInfrastructure.contextProvider.with(this, new Runnable() {
-				public void run() {
-					recipient.processMessage(transaction().objectContainer(), readUserMessage());
-				}
-			});
-			
+			recipient.processMessage(new MessageContextImpl(), readUserMessage());
 		} catch (Exception x) {
 			// TODO: use MessageContext.sender() to send
 			// error back to client
 			x.printStackTrace();
 		}
 		return true;
-	}
-	
-	public MessageContext messageContext() {
-		return new MessageContext() {
-			public MessageSender sender() {
-				return new MessageSender() {
-					public void send(Object message) {
-						serverMessageDispatcher().write(Msg.USER_MESSAGE.marshallUserMessage(transaction(), message));
-					}
-				};
-			}
-		};
 	}
 
 	private Object readUserMessage() {

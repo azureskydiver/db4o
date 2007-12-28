@@ -2,24 +2,21 @@
 
 package com.db4o.messaging;
 
-import com.db4o.messaging.internal.*;
-
+import com.db4o.*;
 
 /**
  * Additional message-related information.
  */
-public abstract class MessageContext {
+public interface MessageContext {
 	
 	/**
-	 * The context associated to the current message.
+	 * The container the message was dispatched to.
 	 * 
-	 * Only valid during {@link MessageRecipient#processMessage(com.db4o.ObjectContainer, Object)}
+	 * @return
 	 * 
 	 * @sharpen.property
 	 */
-	public static MessageContext current() {
-		return MessageContextInfrastructure.context();
-	}
+	ObjectContainer container();
 	
 	/**
 	 * The sender of the current message.
@@ -30,5 +27,5 @@ public abstract class MessageContext {
 	 * 
 	 * @sharpen.property
 	 */
-	public abstract MessageSender sender();
+	MessageSender sender();
 }

@@ -56,7 +56,7 @@ public class MessagingTestCase extends Db4oClientServerTestCase {
 			processed = new boolean[threadCount];
 		}
 
-		public void processMessage(ObjectContainer con, Object message) {
+		public void processMessage(MessageContext con, Object message) {
 			Assert.isTrue(message instanceof Data);
 			int value = ((Data) message).value;
 			processed[value] = true;
