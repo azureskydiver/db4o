@@ -8,10 +8,9 @@ import db4ounit.*;
 
 public class ContextVariableTestCase implements TestCase {
 	
-	public void _testSingleThread() {
+	public void testSingleThread() {
 		final ContextVariable variable = new ContextVariable();
 		Assert.isNull(variable.value());
-		
 		variable.with("foo", new Runnable() {
 			public void run() {
 				Assert.areEqual("foo", variable.value());
@@ -24,10 +23,6 @@ public class ContextVariableTestCase implements TestCase {
 			}
 		});
 		Assert.isNull(variable.value());
-	}
-	
-	public void testMultipleThreads() {
-		
 	}
 	
 	public void testTypeChecking() {
