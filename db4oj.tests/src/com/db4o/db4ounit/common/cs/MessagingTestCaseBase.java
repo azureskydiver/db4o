@@ -16,7 +16,7 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 	public static final class MessageCollector implements MessageRecipient {
 		public final Collection4 messages = new Collection4();
 		
-		public void processMessage(ObjectContainer container, Object message) {
+		public void processMessage(MessageContext context, Object message) {
 			messages.add(message);
 		}
 	}

@@ -16,8 +16,8 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 	
 	static final class AutoReplyRecipient implements MessageRecipient {
 		
-		public void processMessage(ObjectContainer container, Object message) {
-			final MessageSender sender = MessageContext.current().sender();
+		public void processMessage(MessageContext context, Object message) {
+			final MessageSender sender = context.sender();
 			sender.send("reply: " + message);
 		}		
 	};
@@ -77,7 +77,7 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 		}
 	}
 
-	private void setMessageRecipient(final ObjectContainer container, final MessageCollector recipient) {
+	private void setMessageRecipient(final ObjectContainer container, final MessageRecipient recipient) {
 		container.ext().configure().clientServer().setMessageRecipient(recipient);
 	}
 

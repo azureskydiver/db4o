@@ -2,7 +2,6 @@
 
 package com.db4o.db4ounit.common.cs;
 
-import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -68,7 +67,7 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase implements O
 	}
 
 	public static class TestMessageRecipient implements MessageRecipient {
-		public void processMessage(ObjectContainer con, Object message) {
+		public void processMessage(MessageContext con, Object message) {
             _clientWasBlocked = true;
 			Cool.sleepIgnoringInterruption(TIMEOUT * 3);
 		}

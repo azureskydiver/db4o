@@ -52,7 +52,7 @@ public class PingTestCase extends Db4oClientServerTestCase {
 	}
 
 	public static class TestMessageRecipient implements MessageRecipient {
-		public void processMessage(ObjectContainer con, Object message) {
+		public void processMessage(MessageContext con, Object message) {
 			Cool.sleepIgnoringInterruption(3000);
 		}
 	}

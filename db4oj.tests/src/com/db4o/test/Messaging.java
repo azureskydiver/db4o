@@ -37,7 +37,7 @@ public class Messaging implements MessageRecipient{
 		}
 	}
 
-    public void processMessage(ObjectContainer con, Object message) {
+    public void processMessage(MessageContext con, Object message) {
 		synchronized(this) {
 	    	lastMessage = message;
 	    	this.notify();

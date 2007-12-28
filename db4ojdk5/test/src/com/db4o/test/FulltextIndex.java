@@ -92,10 +92,11 @@ public class FulltextIndex implements MessageRecipient{
         
     }
     
-    public void processMessage(ObjectContainer objectContainer, Object message) {
-        FulltextIndex fti = (FulltextIndex)objectContainer.ext().getByID(((IDMessage)message).id);
-        objectContainer.activate(fti, 1);
-        fti.updateIndex(objectContainer);
+    public void processMessage(MessageContext context, Object message) {
+        final ObjectContainer container = context.container();
+		FulltextIndex fti = (FulltextIndex)container.ext().getByID(((IDMessage)message).id);
+        container.activate(fti, 1);
+        fti.updateIndex(container);
     }
     
     /**

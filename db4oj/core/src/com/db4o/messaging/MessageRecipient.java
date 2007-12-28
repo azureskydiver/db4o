@@ -2,7 +2,6 @@
 
 package com.db4o.messaging;
 
-import com.db4o.*;
 
 /**
  * message recipient for client/server messaging.
@@ -22,6 +21,6 @@ public interface MessageRecipient {
 	
 	/**
 	 * the method called upon the arrival of messages.
-	 * @param container the ObjectContainer the message was sent to.	 * @param message the message received.	 */
-	public void processMessage(ObjectContainer container, Object message);
+	 * @param context contextual information for the message.	 * @param message the message received.	 */
+	public void processMessage(MessageContext context, Object message);
 }
