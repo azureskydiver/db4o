@@ -33,6 +33,7 @@ public interface ObjectClass {
      * {@link Configuration#callConstructors(boolean)}.<br><br>
      * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
      * @param flag - specify true, to request calling constructors, specify
      * false to request <b>not</b> calling constructors.
 	 * @see Configuration#callConstructors
@@ -49,6 +50,7 @@ public interface ObjectClass {
 	 * The default setting is <b>false</b>.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * Can be applied to an open ObjectContainer.<br><br>
      * @param flag whether activation is to be cascaded to member objects.
 	 * @see ObjectField#cascadeOnActivate
 	 * @see com.db4o.ObjectContainer#activate
@@ -85,6 +87,7 @@ public interface ObjectClass {
 	 * The default setting is <b>false</b>.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
      * @param flag whether deletes are to be cascaded to member objects.
 	 * @see ObjectField#cascadeOnDelete
 	 * @see com.db4o.ObjectContainer#delete
@@ -102,6 +105,7 @@ public interface ObjectClass {
 	 * The default setting is <b>false</b>.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
      * @param flag whether updates are to be cascaded to member objects.
 	 * @see ObjectField#cascadeOnUpdate
 	 * @see com.db4o.ObjectContainer#set
@@ -118,6 +122,7 @@ public interface ObjectClass {
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
 	 * @param attributeProvider the attribute provider to be used
+	 * @deprecated since version 7.0
 	 */
 	public void compare(ObjectAttribute attributeProvider);
 	
@@ -161,6 +166,7 @@ public interface ObjectClass {
      * - The application always works with IDs.<br><br>
      * In client-server environment this setting should be used on both 
      * client and server. <br><br> 
+     * This setting can be applied to an open object container. <br><br>
      */
     public void indexed(boolean flag);
     
@@ -171,6 +177,7 @@ public interface ObjectClass {
      * <br><br>
      * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
      * @param depth the desired maximum activation depth
 	 * @see Configuration#activationDepth Why activation?
 	 * @see ObjectClass#cascadeOnActivate
@@ -184,6 +191,7 @@ public interface ObjectClass {
 	 * <br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
      * @param depth the desired minimum activation depth
 	 * @see Configuration#activationDepth Why activation?
 	 * @see ObjectClass#cascadeOnActivate
@@ -234,6 +242,8 @@ public interface ObjectClass {
      * files and the stored objects will occupy space in the database file.
      * <br><br>In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can NOT be applied to an open object container. <br><br>
+     * 
      */
     public void persistStaticFieldValues();
     
@@ -262,6 +272,7 @@ public interface ObjectClass {
 	 * <br><br>Use this method to refactor classes.
      * <br><br>In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can NOT be applied to an open object container. <br><br>
      * @param newName the new fully qualified classname.
      */
     public void rename (String newName);
@@ -273,6 +284,7 @@ public interface ObjectClass {
 	 * <br>The default for every class is <code>false</code>.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
      * @param flag whether or not transient fields are to be stored.
      */
     public void storeTransientFields (boolean flag);
@@ -287,6 +299,7 @@ public interface ObjectClass {
 	 * internal class ObjectMarshaller.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
+     * This setting can be applied to an open object container. <br><br>
      * @param translator this may be an {@link ObjectTranslator ObjectTranslator}
      *  or an {@link ObjectConstructor ObjectConstructor}
 	 * @see ObjectTranslator
