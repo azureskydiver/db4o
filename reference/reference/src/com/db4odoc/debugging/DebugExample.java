@@ -20,25 +20,24 @@ public class DebugExample {
 
 	public static void main(String[] args) {
 		setCars();
-//		try {
-//			setCarsWithFileOutput();
-//		} catch (Exception ex) {
-//			//
-//		}
+		try {
+			setCarsWithFileOutput();
+		} catch (Exception ex) {
+			//
+		}
 	}
 	// end main
 
 	private static void setCars()
 	{
-		 // Set the debug message levet to the maximum
+		 // Set the debug message level to the maximum
 		Configuration configuration = Db4o.newConfiguration();
-		//configuration.messageLevel(3);
+		configuration.messageLevel(3);
 		configuration.diagnostic().addListener(new DiagnosticListener(){
 			public void onDiagnostic(Diagnostic d) {
 				    System.out.println(d.toString());
 			    }
 		});
-		//configuration.objectClass(Car.class).objectField("model").indexed(true);
 		
 		 // Do some db4o operations
 		new File(DB4O_FILE_NAME).delete();
@@ -75,7 +74,7 @@ public class DebugExample {
 		Configuration configuration = Db4o.newConfiguration();
 		configuration.setOut(debugWriter);
         
-        // Set the debug message levet to the maximum
+        // Set the debug message level to the maximum
 		configuration.messageLevel(3);
 		
 		 // Do some db4o operations
