@@ -64,7 +64,7 @@ Namespace Db4objects.Db4odoc.ClientServer
         ''' messaging callback
         ''' see com.db4o.messaging.MessageRecipient#ProcessMessage()
         ''' </summary>
-        Public Sub ProcessMessage(ByVal con As IObjectContainer, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
+        Public Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
             If TypeOf message Is StopServer Then
                 Close()
             End If

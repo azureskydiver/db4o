@@ -70,11 +70,12 @@ Namespace Db4objects.Db4odoc.Remote
             ' create message handler on the server
             Dim configuration As IConfiguration = Db4oFactory.NewConfiguration()
             configuration.ClientServer.SetMessageRecipient(New UpdateMessageRecipient())
-            Dim server As IObjectServer = Db4oFactory.OpenServer(configuration, Db4oFileName, 0)
+            Dim server As IObjectServer = Db4oFactory.OpenServer(configuration, Db4oFileName, &HDB40)
+            server.GrantAccess("user", "password")
             Try
                 Dim clientConfiguration As IConfiguration = Db4oFactory.NewConfiguration()
                 Dim sender As IMessageSender = clientConfiguration.ClientServer().GetMessageSender()
-                Dim client As IObjectContainer = server.OpenClient(clientConfiguration)
+                Dim client As IObjectContainer = Db4oFactory.OpenClient(clientConfiguration, "localhost", &HDB40, "user", "password")
                 ' send message object to the server
                 sender.Send(New UpdateServer())
                 client.Close()
@@ -117,18 +118,18 @@ Namespace Db4objects.Db4odoc.Remote
 
     Public Class UpdateMessageRecipient
         Implements IMessageRecipient
-        Public Sub ProcessMessage(ByVal objectContainer As IObjectContainer, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
+        Public Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
             ' message type defines the code to be executed
             If message.GetType().Equals(GetType(UpdateServer)) Then
-                Dim q As IQuery = objectContainer.Query()
+                Dim q As IQuery = context.Container.Query()
                 q.Constrain(GetType(Car))
                 Dim objectSet As IObjectSet = q.Execute()
                 While objectSet.HasNext()
                     Dim car As Car = CType(objectSet.Next(), Car)
                     car.Model = "Updated2-" + car.Model
-                    objectContainer.Set(car)
+                    context.Container.Set(car)
                 End While
-                objectContainer.Commit()
+                context.Container.Commit()
             End If
         End Sub
     End Class
