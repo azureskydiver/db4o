@@ -53,13 +53,15 @@ public class UntypedFieldHandler0 extends UntypedFieldHandler {
 			Slot targetPayloadSlot = context.allocateTargetSlot(sourceBuffer.length());
 			BufferImpl pointerBuffer = new BufferImpl(Const4.POINTER_LENGTH);
 
+// FIXME COR-770 work in progress
+
 			pointerBuffer.writeInt(0);
 			pointerBuffer.writeInt(0);
 
 //			pointerBuffer.writeInt(targetPayloadSlot.address());
 //			pointerBuffer.writeInt(targetPayloadSlot.length());
 			context.targetWriteBytes(targetPointerSlot.address(), pointerBuffer);
-			context.targetWriteBytes(targetPayloadSlot.address(), sourceBuffer);
+//			context.targetWriteBytes(targetPayloadSlot.address(), sourceBuffer);
 			return targetPointerSlot.address();
 		}
 		catch (IOException ioexc) {
