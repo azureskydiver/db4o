@@ -9,6 +9,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
+import com.db4o.messaging.MessageContext;
 import com.db4o.messaging.MessageRecipient;
 import com.db4o.messaging.MessageSender;
 import com.db4o.query.Candidate;
@@ -98,31 +99,32 @@ public class RemoteExample {
 	private static void updateCarsWithMessage() {
 		Configuration configuration = Db4o.newConfiguration();
 		configuration.messageLevel(0);
-		ObjectServer server = Db4o.openServer(configuration, DB4O_FILE_NAME, 0);
+		ObjectServer server = Db4o.openServer(configuration, DB4O_FILE_NAME, 0xdb40);
+		server.grantAccess("user", "password");
 		// create message handler on the server
 		server.ext().configure().clientServer().setMessageRecipient(
 				new MessageRecipient() {
 					public void processMessage(
-							ObjectContainer objectContainer,
+							MessageContext context,
 							Object message) {
 						// message type defines the code to be
 						// executed
 						if (message instanceof UpdateServer) {
-							Query q = objectContainer.query();
+							Query q = context.container().query();
 							q.constrain(Car.class);
 							ObjectSet objectSet = q.execute();
 							while (objectSet.hasNext()) {
 								Car car = (Car) objectSet.next();
 								car.setModel("Updated2-"
 										+ car.getModel());
-								objectContainer.set(car);
+								context.container().set(car);
 							}
-							objectContainer.commit();
+							context.container().commit();
 						}
 					}
 				});
 		try {
-			ObjectContainer client = server.openClient();
+			ObjectContainer client = Db4o.openClient("localhost", 0xdb40, "user", "password");
 			// send message object to the server
 			MessageSender sender = client.ext().configure()
 					.clientServer().getMessageSender();

@@ -6,6 +6,7 @@ import com.db4o.Db4o;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectServer;
 import com.db4o.config.Configuration;
+import com.db4o.messaging.MessageContext;
 import com.db4o.messaging.MessageRecipient;
 import com.db4o.messaging.MessageSender;
 
@@ -16,7 +17,7 @@ public class MessagingExample {
 	public static void configureServer() {
 		Configuration configuration = Db4o.newConfiguration();
 		configuration.clientServer().setMessageRecipient(new MessageRecipient() {
-			public void processMessage(ObjectContainer objectContainer,
+			public void processMessage(MessageContext context,
 					Object message) {
 				// message objects will arrive in this code block
 				System.out.println(message);

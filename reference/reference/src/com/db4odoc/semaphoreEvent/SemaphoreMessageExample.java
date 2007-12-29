@@ -19,6 +19,7 @@ import com.db4o.ext.DatabaseFileLockedException;
 import com.db4o.ext.ObjectInfo;
 import com.db4o.ext.ObjectInfoCollection;
 import com.db4o.foundation.Iterator4;
+import com.db4o.messaging.MessageContext;
 import com.db4o.messaging.MessageRecipient;
 import com.db4o.messaging.MessageSender;
 
@@ -49,7 +50,7 @@ public class SemaphoreMessageExample {
 			final ObjectContainer oc = server.openClient();
 			
 			configuration.clientServer().setMessageRecipient(new MessageRecipient() {
-				public void processMessage(ObjectContainer objectContainer,
+				public void processMessage(MessageContext context,
 						Object message) {
 					oc.set(message);
 					oc.commit();
