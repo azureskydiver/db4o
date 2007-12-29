@@ -86,13 +86,15 @@ namespace Db4objects.Db4odoc.Remote
             // create message handler on the server
             configuration.ClientServer().SetMessageRecipient(
 				new UpdateMessageRecipient());
-			IObjectServer server=Db4oFactory.OpenServer(configuration, Db4oFileName,0);
+			IObjectServer server=Db4oFactory.OpenServer(configuration, Db4oFileName,0xdb40);
+            server.GrantAccess("user", "password");
 			try 
 			{
 				// send message object to the server
                 IConfiguration clientConfiguration = Db4oFactory.NewConfiguration();
                 IMessageSender sender = clientConfiguration.ClientServer().GetMessageSender();
-                IObjectContainer client = server.OpenClient(clientConfiguration);
+                IObjectContainer client = Db4oFactory.OpenClient(clientConfiguration, 
+                    "localhost", 0xdb40, "user", "password");
 				sender.Send(new UpdateServer());
 				client.Close();
 			}
@@ -140,21 +142,21 @@ namespace Db4objects.Db4odoc.Remote
 
 	public class UpdateMessageRecipient: IMessageRecipient
 	{
-		public void ProcessMessage(IObjectContainer objectContainer,object message) 
+        public void ProcessMessage(IMessageContext context, object message) 
 		{
 			// message type defines the code to be executed
 			if(message.GetType().Equals(typeof(UpdateServer)))
 			{
-				IQuery q = objectContainer.Query();
+				IQuery q = context.Container.Query();
 				q.Constrain(typeof(Car));
 				IObjectSet objectSet = q.Execute();
 				while(objectSet.HasNext())
 				{
 					Car car = (Car)objectSet.Next();
 					car.Model ="Updated2-"+ car.Model;
-					objectContainer.Set(car);
+                    context.Container.Set(car);
 				}
-				objectContainer.Commit();
+                context.Container.Commit();
 			}
 		}
 		// end ProcessMessage

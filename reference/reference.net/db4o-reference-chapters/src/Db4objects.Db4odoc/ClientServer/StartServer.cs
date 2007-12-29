@@ -72,7 +72,7 @@ namespace Db4objects.Db4odoc.ClientServer
         /// messaging callback
         /// see com.db4o.messaging.MessageRecipient#ProcessMessage()
         /// </summary>
-        public void ProcessMessage(IObjectContainer con, object message)
+        public void ProcessMessage(IMessageContext context, object message)
         {
             if (message is StopServer)
             {
