@@ -11,7 +11,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4o.instrumentation"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4onqopt"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bloat"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk1.2"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/db4oj"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
