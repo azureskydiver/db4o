@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Db4objects.Db4odoc.StaticFields.StaticFieldExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.ClientServer.StopServer</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>

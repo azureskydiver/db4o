@@ -30,7 +30,7 @@ Namespace Db4objects.Db4odoc.Messaging
 
     Public Class SimpleMessageRecipient
         Implements IMessageRecipient
-        Public Sub ProcessMessage(ByVal objectContainer As IObjectContainer, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
+        Public Sub ProcessMessage(ByVal context As IMessageContext, ByVal message As Object) Implements IMessageRecipient.ProcessMessage
             ' message objects will arrive in this code block
             System.Console.WriteLine(message)
         End Sub
