@@ -41,7 +41,7 @@ namespace Db4objects.Db4odoc.Messaging
 
 	public class SimpleMessageRecipient: IMessageRecipient
 	{
-		public void ProcessMessage(IObjectContainer objectContainer,Object message) 
+		public void ProcessMessage(IMessageContext context,Object message) 
 		{
 			// message objects will arrive in this code block
 			System.Console.WriteLine(message);
