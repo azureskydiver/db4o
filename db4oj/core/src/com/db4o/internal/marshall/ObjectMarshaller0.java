@@ -3,7 +3,9 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.ObjectMarshaller.*;
 import com.db4o.internal.slots.*;
 
 /**
@@ -105,7 +107,21 @@ class ObjectMarshaller0 extends ObjectMarshaller {
     	return false;
     }
 
-	public void defragFields(ClassMetadata yapClass,ObjectHeader header, DefragmentContextImpl context) {
+	public void defragFields(ClassMetadata clazz,ObjectHeader header, final DefragmentContextImpl context) {
+		// FIXME copied from ObjectMarshaller1
+        TraverseFieldCommand command = new TraverseFieldCommand() {
+        	
+        	public int fieldCount(ClassMetadata yapClass, BufferImpl reader) {
+        		return context.readInt();
+        	}
+        	
+			public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+				if (!isNull) {
+					field.defragField(_family,context);
+				} 
+			}
+		};
+		traverseFields(clazz, null, header._headerAttributes, command);
 	}
 
 	public void writeObjectClassID(BufferImpl reader, int id) {

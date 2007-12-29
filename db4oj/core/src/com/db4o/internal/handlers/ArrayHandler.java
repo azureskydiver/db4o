@@ -41,8 +41,8 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         _usePrimitiveClassReflector = usePrimitiveClassReflector;
     }
     
-    protected ArrayHandler(TypeHandler4 template) {
-        this(((ArrayHandler)template).container(),((ArrayHandler)template)._handler, ((ArrayHandler)template)._usePrimitiveClassReflector );
+    protected ArrayHandler(ArrayHandler template, HandlerRegistry registry, int version) {
+        this(template.container(), registry.correctHandlerVersion(template._handler, version), template._usePrimitiveClassReflector);
     }
 
     protected ReflectArray arrayReflector(){
@@ -386,7 +386,6 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         return linkOffSet;
     }
 
-    
     public void defrag1(DefragmentContext context) {
 		if (Deploy.debug) {
 			Debug.readBegin(context, Const4.YAPARRAY);

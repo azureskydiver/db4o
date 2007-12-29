@@ -23,7 +23,7 @@ public interface DefragmentServices extends IDMapping {
 
 	Slot allocateTargetSlot(int targetLength);
 
-	void targetWriteBytes(BufferImpl targetPointerReader, int targetID);
+	void targetWriteBytes(BufferImpl targetPointerReader, int targetAddress);
 
 	Transaction systemTrans();
 

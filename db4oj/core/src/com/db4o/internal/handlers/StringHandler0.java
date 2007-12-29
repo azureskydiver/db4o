@@ -2,7 +2,9 @@
 
 package com.db4o.internal.handlers;
 
-import com.db4o.foundation.*;
+import java.io.*;
+
+import com.db4o.ext.*;
 import com.db4o.internal.*;
 import com.db4o.marshall.*;
 
@@ -30,7 +32,23 @@ public class StringHandler0 extends StringHandler {
     }
     
     public void defragment(DefragmentContext context) {
-    	throw new NotImplementedException();
+    	int sourceAddress = context.sourceBuffer().readInt();
+    	int length = context.sourceBuffer().readInt();
+    	if(sourceAddress == 0 && length == 0) {
+        	context.targetBuffer().writeInt(0);
+        	context.targetBuffer().writeInt(0);
+        	return;
+    	}
+
+    	int targetAddress = 0;
+    	try {
+			targetAddress = context.copySlotToNewMapped(sourceAddress, length);
+		} 
+    	catch (IOException exc) {
+    		throw new Db4oIOException(exc);
+		}
+    	context.targetBuffer().writeInt(targetAddress);
+    	context.targetBuffer().writeInt(length);
     }
 
 }

@@ -12,8 +12,8 @@ import com.db4o.marshall.*;
  */
 public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler {
 
-    public MultidimensionalArrayHandler0(TypeHandler4 template) {
-        super(template);
+    public MultidimensionalArrayHandler0(ArrayHandler template, HandlerRegistry registry, int version) {
+        super(template, registry, version);
     }
     
     public Object read(ReadContext readContext) {

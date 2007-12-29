@@ -2,12 +2,14 @@
 
 package com.db4o.internal.handlers;
 
+import java.io.*;
+
 import com.db4o.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
+import com.db4o.internal.slots.*;
 import com.db4o.marshall.*;
 
 
@@ -16,8 +18,8 @@ import com.db4o.marshall.*;
  */
 public class ArrayHandler0 extends ArrayHandler {
 
-    public ArrayHandler0(TypeHandler4 template) {
-        super(template);
+    public ArrayHandler0(ArrayHandler template, HandlerRegistry registry, int version) {
+        super(template, registry, version);
     }
     
     public void delete(DeleteContext context) throws Db4oIOException {
@@ -63,6 +65,25 @@ public class ArrayHandler0 extends ArrayHandler {
     }
     
     public void defragment(DefragmentContext context) {
-    	throw new NotImplementedException();
+    	int sourceAddress = context.sourceBuffer().readInt();
+    	int length = context.sourceBuffer().readInt();
+    	if(sourceAddress == 0 && length == 0) {
+        	context.targetBuffer().writeInt(0);
+        	context.targetBuffer().writeInt(0);
+        	return;
+    	}
+    	Slot slot = context.allocateMappedTargetSlot(sourceAddress, length);
+    	BufferImpl sourceBuffer = null;
+    	try {
+			sourceBuffer = context.sourceBufferByAddress(sourceAddress, length);
+		}
+    	catch (IOException exc) {
+    		throw new Db4oIOException(exc);
+		}
+    	DefragmentContextImpl payloadContext = new DefragmentContextImpl(sourceBuffer, (DefragmentContextImpl) context);
+    	defrag1(payloadContext);
+    	payloadContext.writeToTarget(slot.address());
+    	context.targetBuffer().writeInt(slot.address());
+    	context.targetBuffer().writeInt(length);
     }
 }
