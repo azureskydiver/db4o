@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.util.*;
+import com.db4o.defragment.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.io.*;
 
@@ -95,19 +96,8 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 //		  old MarshallerFamily implementations don't implement 
 // 		  defrag. 
 		    
-//        Fix by fully implementing defrag in Typehandler versions.
-		    
-//			Db4o.configure().allowVersionUpdates(true);
-//			ObjectContainer oc = Db4o.openFile(testFileName);
-//			oc.close();
-//		    
-//		    String backupFileName = Path4.getTempFileName();
-//		    
-//		    try{
-//		    	Defragment.defrag(testFileName, backupFileName);
-//		    } finally{
-//		    	File4.delete(backupFileName);
-//		    }
+//        Fix by fully implementing defrag in Typehandler versions.		    
+//			runDefrag(testFileName);
 
 		    checkDatabaseFile(testFileName);
 		    // Twice, to ensure everything is fine after opening, converting and closing.
@@ -120,6 +110,20 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		    // FIXME: The following fails the CC build since not all files are there on .NET.
 		    //        Change back when we have all files.
 		    // Assert.fail("Version upgrade check failed. File not found:" + testFileName);
+		}
+	}
+
+	private void runDefrag(String testFileName) throws IOException {
+		Db4o.configure().allowVersionUpdates(true);
+		ObjectContainer oc = Db4o.openFile(testFileName);
+		oc.close();
+		
+		String backupFileName = Path4.getTempFileName();
+		
+		try{
+			Defragment.defrag(testFileName, backupFileName);
+		} finally{
+			File4.delete(backupFileName);
 		}
 	}
     
