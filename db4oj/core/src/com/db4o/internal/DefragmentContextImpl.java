@@ -19,6 +19,10 @@ public final class DefragmentContextImpl implements Buffer, DefragmentContext {
 	private DefragmentServices _services;
 	private int _handlerVersion;
 	
+	public DefragmentContextImpl(BufferImpl source, DefragmentContextImpl context) {
+		this(source, context._services);
+	}
+
 	public DefragmentContextImpl(BufferImpl source,DefragmentServices services) {
 		_source = source;
 		_services=services;
@@ -262,4 +266,38 @@ public final class DefragmentContextImpl implements Buffer, DefragmentContext {
 	    return container().handlers().correctHandlerVersion(handler, handlerVersion());
 	}
 
+	public Slot allocateTargetSlot(int length) {
+		return _services.allocateTargetSlot(length);
+	}
+
+	public Slot allocateMappedTargetSlot(int sourceAddress, int length) {
+		Slot slot = allocateTargetSlot(length);
+		_services.mapIDs(sourceAddress, slot.address(), false);
+		return slot;
+	}
+
+	public int copySlotToNewMapped(int sourceAddress, int length) throws IOException {
+    	Slot slot = allocateMappedTargetSlot(sourceAddress, length);
+    	BufferImpl sourceBuffer = sourceBufferByAddress(sourceAddress, length);
+    	targetWriteBytes(slot.address(), sourceBuffer);
+		return slot.address();
+	}
+
+	public void targetWriteBytes(int address, BufferImpl buffer) {
+		_services.targetWriteBytes(buffer, address);
+	}
+
+	public BufferImpl sourceBufferByAddress(int sourceAddress, int length) throws IOException {
+		BufferImpl sourceBuffer = _services.sourceBufferByAddress(sourceAddress, length);
+		return sourceBuffer;
+	}
+
+	public BufferImpl sourceBufferById(int sourceId) throws IOException {
+		BufferImpl sourceBuffer = _services.sourceBufferByID(sourceId);
+		return sourceBuffer;
+	}
+
+	public void writeToTarget(int address) {
+		_services.targetWriteBytes(this, address);
+	}
 }

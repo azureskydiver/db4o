@@ -3,6 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
 
@@ -50,6 +51,6 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
     }
 
 	public void defrag(DefragmentContext context) {
-		// TODO
+		throw new NotImplementedException();
 	}
 }

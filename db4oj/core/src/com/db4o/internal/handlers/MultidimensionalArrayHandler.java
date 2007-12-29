@@ -20,8 +20,8 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
         super(stream, a_handler, a_isPrimitive);
     }
     
-    protected MultidimensionalArrayHandler(TypeHandler4 template) {
-        super(template);
+    protected MultidimensionalArrayHandler(ArrayHandler template, HandlerRegistry registry, int version) {
+        super(template, registry, version);
     }
 
     public final Iterator4 allElements(Object array) {

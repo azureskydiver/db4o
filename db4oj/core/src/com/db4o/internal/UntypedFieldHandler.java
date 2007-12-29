@@ -92,16 +92,16 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         context.seek(payLoadOffSet);
         
         int classMetadataID = context.copyIDReturnOriginalID();
-        
-        ClassMetadata classMetadata = context.classMetadataForId(classMetadataID);
-        if(classMetadata != null){
-            classMetadata.defragment(context);
-        }
+		ClassMetadata classMetadata = context.classMetadataForId(classMetadataID);
+		if(classMetadata != null){
+		    classMetadata.defragment(context);
+		}
         
         context.seek(linkOffSet);
     }
-    
-    private boolean isArray(TypeHandler4 handler){
+
+
+	private boolean isArray(TypeHandler4 handler){
         if(handler instanceof ClassMetadata){
             return ((ClassMetadata)handler).isArray();
         }

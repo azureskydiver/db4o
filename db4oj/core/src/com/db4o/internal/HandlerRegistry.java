@@ -242,10 +242,10 @@ public final class HandlerRegistry {
             return replacement;
         }
         if(handler instanceof MultidimensionalArrayHandler && (version == 0)){
-            return new MultidimensionalArrayHandler0(handler);
+            return new MultidimensionalArrayHandler0((ArrayHandler)handler, this, version);
         }
         if(handler instanceof ArrayHandler  && (version == 0)){
-            return new ArrayHandler0(handler);
+            return new ArrayHandler0((ArrayHandler)handler, this, version);
         }
         return handler;
     }
