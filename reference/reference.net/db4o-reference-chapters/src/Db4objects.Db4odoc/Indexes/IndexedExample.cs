@@ -33,7 +33,7 @@ namespace Db4objects.Db4odoc.Indexes
 				DateTime dt2 = DateTime.UtcNow;
 				TimeSpan  diff = dt2 - dt1;
 				Console.WriteLine("Test 1: no indexes");
-				Console.WriteLine("Execution time="+diff.Milliseconds + " ms");
+				Console.WriteLine("Execution time="+diff.TotalMilliseconds + " ms");
 				ListResult(result);
 			}
 			finally {
@@ -73,7 +73,7 @@ namespace Db4objects.Db4odoc.Indexes
 				DateTime dt2 = DateTime.UtcNow;
 				TimeSpan  diff = dt2 - dt1;
 				Console.WriteLine("Test 3: index on pilot");
-				Console.WriteLine("Execution time="+diff.Milliseconds + " ms");
+				Console.WriteLine("Execution time="+diff.TotalMilliseconds + " ms");
 				ListResult(result);
 			}
 			finally {
@@ -98,7 +98,7 @@ namespace Db4objects.Db4odoc.Indexes
 				DateTime dt2 = DateTime.UtcNow;
 				TimeSpan  diff = dt2 - dt1;
 				Console.WriteLine("Test 4: index on points");
-				Console.WriteLine("Execution time="+diff.Milliseconds + " ms");
+				Console.WriteLine("Execution time="+diff.TotalMilliseconds + " ms");
 				ListResult(result);
 			}
 			finally {
@@ -123,7 +123,7 @@ namespace Db4objects.Db4odoc.Indexes
 				DateTime dt2 = DateTime.UtcNow;
 				TimeSpan  diff = dt2 - dt1;
 				Console.WriteLine("Test 2: index on pilot and points");
-				Console.WriteLine("Execution time="+diff.Milliseconds + " ms");
+				Console.WriteLine("Execution time="+diff.TotalMilliseconds + " ms");
 				ListResult(result);
 			}
 			finally {

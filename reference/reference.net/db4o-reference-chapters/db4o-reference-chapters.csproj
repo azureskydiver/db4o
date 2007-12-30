@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.ClientServer.StopServer</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.Performance.InsertPerformanceBenchmark</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -267,6 +267,7 @@
     <Compile Include="src\Db4objects.Db4odoc\NQCollection\SimpleExamples.cs" />
     <Compile Include="src\Db4objects.Db4odoc\NQCollection\Trainee.cs" />
     <Compile Include="src\Db4objects.Db4odoc\NQConcepts\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Performance\InsertPerformanceBenchmark.cs" />
     <Compile Include="src\Db4objects.Db4odoc\QBE\Pilot1Derived.cs" />
     <Compile Include="src\Db4objects.Db4odoc\QBE\Pilot2.cs" />
     <Compile Include="src\Db4objects.Db4odoc\QBE\Pilot2Derived.cs" />
