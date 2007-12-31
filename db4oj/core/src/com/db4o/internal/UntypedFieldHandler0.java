@@ -52,16 +52,18 @@ public class UntypedFieldHandler0 extends UntypedFieldHandler {
 			Slot targetPointerSlot = context.allocateMappedTargetSlot(sourceId, Const4.POINTER_LENGTH);
 			Slot targetPayloadSlot = context.allocateTargetSlot(sourceBuffer.length());
 			BufferImpl pointerBuffer = new BufferImpl(Const4.POINTER_LENGTH);
-
-// FIXME COR-770 work in progress
-
-			pointerBuffer.writeInt(0);
-			pointerBuffer.writeInt(0);
-
-//			pointerBuffer.writeInt(targetPayloadSlot.address());
-//			pointerBuffer.writeInt(targetPayloadSlot.length());
+			pointerBuffer.writeInt(targetPayloadSlot.address());
+			pointerBuffer.writeInt(targetPayloadSlot.length());
 			context.targetWriteBytes(targetPointerSlot.address(), pointerBuffer);
-//			context.targetWriteBytes(targetPayloadSlot.address(), sourceBuffer);
+
+			DefragmentContextImpl payloadContext = new DefragmentContextImpl(sourceBuffer, (DefragmentContextImpl) context);
+
+			int clazzId = payloadContext.copyIDReturnOriginalID();
+			ClassMetadata payloadClazz = payloadContext.classMetadataForId(clazzId);
+			TypeHandler4 payloadHandler = payloadContext.correctHandlerVersion(payloadClazz);
+			payloadHandler.defragment(payloadContext);
+			
+			payloadContext.writeToTarget(targetPayloadSlot.address());
 			return targetPointerSlot.address();
 		}
 		catch (IOException ioexc) {

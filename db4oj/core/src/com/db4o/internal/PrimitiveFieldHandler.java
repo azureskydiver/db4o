@@ -24,7 +24,11 @@ public class PrimitiveFieldHandler extends ClassMetadata{
         _handler = handler;
         _id = handlerID;
     }
-    
+
+    PrimitiveFieldHandler(PrimitiveFieldHandler prototype, HandlerRegistry registry, int version) {
+    	this(prototype.container(), registry.correctHandlerVersion(prototype._handler, version), prototype._id, prototype.classReflector());
+    }
+
     void activateFields(Transaction trans, Object obj, ActivationDepth depth) {
         // Override
         // do nothing
@@ -150,11 +154,11 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     public void defragment(DefragmentContext context) {
-        if(context.isLegacyHandlerVersion()){
-            super.defragment(context);
-        } else {
+//        if(context.isLegacyHandlerVersion()){
+//            super.defragment(context);
+//        } else {
             _handler.defragment(context);
-        }
+//        }
     }
     
     public Object wrapWithTransactionContext(Transaction transaction, Object value) {

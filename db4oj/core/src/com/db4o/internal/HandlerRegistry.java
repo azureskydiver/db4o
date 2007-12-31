@@ -247,6 +247,9 @@ public final class HandlerRegistry {
         if(handler instanceof ArrayHandler  && (version == 0)){
             return new ArrayHandler0((ArrayHandler)handler, this, version);
         }
+        if(handler instanceof PrimitiveFieldHandler  && (version == 0)){
+            return new PrimitiveFieldHandler((PrimitiveFieldHandler) handler, this, version);
+        }
         return handler;
     }
 
