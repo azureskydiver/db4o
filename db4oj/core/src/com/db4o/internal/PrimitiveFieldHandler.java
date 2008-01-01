@@ -154,11 +154,7 @@ public class PrimitiveFieldHandler extends ClassMetadata{
     }
 
     public void defragment(DefragmentContext context) {
-//        if(context.isLegacyHandlerVersion()){
-//            super.defragment(context);
-//        } else {
-            _handler.defragment(context);
-//        }
+    	_handler.defragment(context);
     }
     
     public Object wrapWithTransactionContext(Transaction transaction, Object value) {
