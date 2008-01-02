@@ -2,6 +2,8 @@ package com.db4o.f1.chapter7;
 
 import java.util.*;
 
+import com.db4o.activation.*;
+
 
 public class PressureSensorReadout extends SensorReadout {
     private double pressure;
@@ -14,7 +16,7 @@ public class PressureSensorReadout extends SensorReadout {
     }
     
     public double getPressure() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return pressure;
     }
     

@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.ta.ta;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 
@@ -14,7 +15,7 @@ public class TALinkedListItem extends ActivatableImpl {
 		}
 		
 		public TALinkedList list() {
-			activate();
+			activate(ActivationPurpose.READ);
 			return list;
 		}
 	}

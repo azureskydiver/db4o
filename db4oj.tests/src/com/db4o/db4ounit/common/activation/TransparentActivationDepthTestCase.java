@@ -14,7 +14,7 @@ public class TransparentActivationDepthTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public static final class TAAware implements Activatable {
-		public void activate() {
+		public void activate(ActivationPurpose purpose) {
 		}
 
 		public void bind(Activator activator) {

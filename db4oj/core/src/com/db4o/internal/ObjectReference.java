@@ -3,7 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
-import com.db4o.activation.Activator;
+import com.db4o.activation.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
@@ -51,19 +51,39 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		_id = id;
 	}
 	
-	public void activate() {
-		activateOn(container().transaction());
+	public void activate(ActivationPurpose purpose) {
+		activateOn(container().transaction(), purpose);
 	}
 
-	public void activateOn(final Transaction transaction) {
+	public void activateOn(final Transaction transaction, ActivationPurpose purpose) {
 		final ObjectContainerBase container = transaction.container(); 
 	    synchronized(container.lock()){
-    		if (isActive()) {
+	    	if (ActivationPurpose.WRITE == purpose) {
+	    		enlistForUpdate(transaction);
+	    	}
+    		if (isActive()) {    			
     			return;
     		}
     		TransparentActivationDepthProvider provider = (TransparentActivationDepthProvider) container.activationDepthProvider();
 			activate(transaction, getObject(), new DescendingActivationDepth(provider, ActivationMode.ACTIVATE));
 	    }
+	}
+	
+	private transient TransactionListener _updateListener;
+
+	private void enlistForUpdate(final Transaction transaction) {
+		if (null != _updateListener) {
+			return;
+		}
+		_updateListener = new TransactionListener() {
+			public void postRollback() {
+			}
+
+			public void preCommit() {
+				container().set(transaction, getObject());
+			}
+		};
+		transaction.addTransactionListener(_updateListener);
 	}
 
 	public void activate(Transaction ta, Object obj, ActivationDepth depth) {

@@ -4,10 +4,10 @@ package com.db4o.ta.instrumentation;
 import EDU.purdue.cs.bloat.editor.*;
 import EDU.purdue.cs.bloat.reflect.*;
 
-import com.db4o.activation.Activator;
+import com.db4o.activation.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.util.*;
-import com.db4o.ta.Activatable;
+import com.db4o.ta.*;
 
 /**
  * @exclude
@@ -95,9 +95,10 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 
 	private void createActivateMethod(ClassEditor ce) {
 		// protected void activate()
-		final Type activatorType = Type.getType(Activator.class);
+		final Type activationPurpose = Type.getType(ActivationPurpose.class);
+		final Type activatorType = Type.getType(Activator.class);		
 		String methodName = TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME;
-		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID, methodName, new Type[] { }, new Type[] {});
+		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID, methodName, new Type[] { activationPurpose }, new Type[] {});
 		LabelGenerator labelGen = new LabelGenerator();
 		Label startLabel = labelGen.createLabel(true);
 		Label activateLabel = labelGen.createLabel(true);
@@ -108,10 +109,11 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		methodEditor.addInstruction(Opcode.opc_ifnonnull, activateLabel);
 		methodEditor.addInstruction(Opcode.opc_return);
 		
-		// _activator.activate();
+		// _activator.activateForRead();
 		methodEditor.addLabel(activateLabel);
 		loadActivatorFieldOnStack(methodEditor);
-		methodEditor.addInstruction(Opcode.opc_invokeinterface, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.ACTIVATOR_ACTIVATE_METHOD_NAME, new Type[] { }, Type.VOID));
+		methodEditor.addInstruction(Opcode.opc_getstatic, createMemberRef(activationPurpose, "READ", activationPurpose));
+		methodEditor.addInstruction(Opcode.opc_invokeinterface, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.ACTIVATOR_ACTIVATE_METHOD_NAME, new Type[] { activationPurpose }, Type.VOID));
 		methodEditor.addInstruction(Opcode.opc_return);
 		
 		methodEditor.commit();
@@ -128,13 +130,16 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 	}
 	
 	private MemberRef createMethodReference(Type parent, String name, Type[] args, Type ret) {
-		NameAndType nameAndType = new NameAndType(name, Type.getType(args, ret));
+		return createMemberRef(parent, name, Type.getType(args, ret));
+	}
+
+	private MemberRef createMemberRef(Type parent, String name, Type type) {
+		NameAndType nameAndType = new NameAndType(name, type);
 		return new MemberRef(parent, nameAndType);
 	}
 
 	private MemberRef createFieldReference(Type parent, String name, Type type) {
-		NameAndType nameAndType = new NameAndType(name, type);
-		return new MemberRef(parent, nameAndType);
+		return createMemberRef(parent, name, type);
 	}
 
 }

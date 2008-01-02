@@ -10,7 +10,7 @@ public abstract class TransparentActivationInstrumentationConstants {
 	public final static String BIND_METHOD_NAME = "bind";
 	public static final String INIT_METHOD_NAME = "<init>";
 	public static final String ACTIVATE_METHOD_NAME = "activate";
-	public static final String ACTIVATOR_ACTIVATE_METHOD_NAME = "activate";
+	public static final String ACTIVATOR_ACTIVATE_METHOD_NAME = ACTIVATE_METHOD_NAME;
 	
 	private TransparentActivationInstrumentationConstants() {}
 }

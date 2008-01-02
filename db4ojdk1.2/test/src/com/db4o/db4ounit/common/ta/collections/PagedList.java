@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.ta.collections;
 
 import java.util.*;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 /**
@@ -23,14 +24,14 @@ public class PagedList extends /* TA BEGIN */ ActivatableImpl /* TA END */ imple
 
 	public boolean add(Object item) {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return _store.add(item);
 	}
 	
 	public Object get(int index) {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return _store.get(index);
 	}
@@ -38,7 +39,7 @@ public class PagedList extends /* TA BEGIN */ ActivatableImpl /* TA END */ imple
 	
 	public int size() {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return _store.size();
 	}
@@ -77,7 +78,7 @@ public class PagedList extends /* TA BEGIN */ ActivatableImpl /* TA END */ imple
 
 	public Iterator iterator() {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return new SimpleListIterator(this);
 	}

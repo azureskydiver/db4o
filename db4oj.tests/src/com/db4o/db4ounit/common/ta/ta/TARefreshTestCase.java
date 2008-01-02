@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.ta.ta;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 import com.db4o.ext.*;
 import com.db4o.query.*;
@@ -137,7 +138,7 @@ public class TARefreshTestCase extends TransparentActivationTestCaseBase impleme
         }
 
         public int value() {
-            activate();
+            activate(ActivationPurpose.READ);
             return _value;
         }
 
@@ -146,7 +147,7 @@ public class TARefreshTestCase extends TransparentActivationTestCaseBase impleme
         }
         
         public TAItem next() {
-            activate();
+            activate(ActivationPurpose.READ);
             return _next;
         }
     }

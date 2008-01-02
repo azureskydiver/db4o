@@ -174,24 +174,24 @@ public class MixedActivateTestCase extends ItemTestCaseBase {
         }
 
         public String getName() {
-            activate();
+            activate(ActivationPurpose.READ);
             return _name;
         }
 
         public int getValue() {
-            activate();
+            activate(ActivationPurpose.READ);
             return _value;
         }
 
         public Item next() {
-            activate();
+            activate(ActivationPurpose.READ);
             return _next;
         }
 
-        public void activate() {
+        public void activate(ActivationPurpose purpose) {
             if (_activator == null)
                 return;
-            _activator.activate();
+            _activator.activate(purpose);
         }
 
         public void bind(Activator activator) {

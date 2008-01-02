@@ -2,6 +2,8 @@ package com.db4o.f1.chapter7;
 
 import java.util.*;
 
+import com.db4o.activation.*;
+
 
 public class TemperatureSensorReadout extends SensorReadout {
     private double temperature;
@@ -14,7 +16,7 @@ public class TemperatureSensorReadout extends SensorReadout {
     }
     
     public double getTemperature() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return temperature;
     }
 

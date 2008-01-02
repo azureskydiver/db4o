@@ -1,6 +1,7 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.ta.collections;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 public class Page extends ActivatableImpl {
@@ -20,7 +21,7 @@ public class Page extends ActivatableImpl {
 
 	public boolean add(Object obj) {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		_dirty = true;
 		_data[_top++] = obj;
@@ -29,14 +30,14 @@ public class Page extends ActivatableImpl {
 
 	public int size() {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return _top;
 	}
 
 	public Object get(int indexInPage) {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 //		System.out.println("got from page: " + _pageIndex);
 		_dirty = true; // just to be safe, we'll mark things as dirty if they are used.
@@ -59,7 +60,7 @@ public class Page extends ActivatableImpl {
 
 	public int getPageIndex() {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return _pageIndex;
 	}
@@ -70,7 +71,7 @@ public class Page extends ActivatableImpl {
 	
 	public int capacity() {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return Page.PAGESIZE - size();
 	}

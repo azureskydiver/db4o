@@ -20,27 +20,27 @@ public class SensorReadout implements Activatable {
     }
 
     public Car getCar() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return car;
     }
 
     public Date getTime() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return time;
     }
 
     public String getDescription() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return description;
     }
 
     public SensorReadout getNext() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return next;
     }
     
     public void append(SensorReadout readout) {
-        activate();
+    	activate(ActivationPurpose.WRITE);
         if(next==null) {
             next=readout;
         }
@@ -50,18 +50,18 @@ public class SensorReadout implements Activatable {
     }
     
     public int countElements() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return (next==null ? 1 : next.countElements()+1);
     }
     
     public String toString() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return car+" : "+time+" : "+description;
     }
 
-    public void activate() {
+    public void activate(ActivationPurpose purpose) {
         if(_activator != null) {
-            _activator.activate();
+            _activator.activate(purpose);
         }
     }
 

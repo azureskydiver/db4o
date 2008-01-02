@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.jre5.collections;
 
-import com.db4o.activation.Activator;
+import com.db4o.activation.*;
 import com.db4o.foundation.ArgumentNullException;
 import com.db4o.ta.*;
 
@@ -14,17 +14,17 @@ public class Product implements Activatable {
 	}
 	
 	public String code() {
-		activate();
+		activate(ActivationPurpose.READ);
 		return _code;
 	}
 	
 	public String description() {
-		activate();
+		activate(ActivationPurpose.READ);
 		return _description;
 	}
 	
 	public boolean equals(Object p) {
-		activate();
+		activate(ActivationPurpose.READ);
 		
 		if (p == null) return false;
 		if (p.getClass() != this.getClass()) return false;
@@ -33,10 +33,10 @@ public class Product implements Activatable {
 		return  rhs._code == _code;
 	}
 
-	public void activate()
+	public void activate(ActivationPurpose purpose)
 	{
 		if (_activator != null) {
-			_activator.activate();
+			_activator.activate(purpose);
 		}
 	}
 

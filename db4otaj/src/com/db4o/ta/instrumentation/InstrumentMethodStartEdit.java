@@ -12,7 +12,7 @@ import EDU.purdue.cs.bloat.editor.NameAndType;
 import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
 
-import com.db4o.activation.Activator;
+import com.db4o.activation.*;
 import com.db4o.foundation.*;
 import com.db4o.instrumentation.core.*;
 
@@ -53,7 +53,7 @@ class InstrumentMethodStartEdit implements BloatClassEdit {
 				instrumented.value = InstrumentationStatus.INSTRUMENTED;
 			}
 
-			private void insertActivateCall(final ClassEditor ce, MethodEditor editor, int idx) {
+			private void insertActivateCall(final ClassEditor ce, MethodEditor editor, int idx) {				
 				editor.insertCodeAt(new Instruction(Opcode.opc_aload, new LocalVariable(0)), idx);
 				editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, createMethodReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID)), idx + 1);
 			}
@@ -62,7 +62,11 @@ class InstrumentMethodStartEdit implements BloatClassEdit {
 	}
 
 	private MemberRef createMethodReference(Type parent, String name, Type[] args, Type ret) {
-		NameAndType nameAndType = new NameAndType(name, Type.getType(args, ret));
+		return createMemberRef(parent, name, Type.getType(args, ret));
+	}
+
+	private MemberRef createMemberRef(Type parent, String name, Type type) {
+		NameAndType nameAndType = new NameAndType(name, type);
 		return new MemberRef(parent, nameAndType);
 	}
 }

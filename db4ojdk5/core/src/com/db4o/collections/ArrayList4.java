@@ -48,9 +48,9 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * 
 	 * @see com.db4o.ta.Activatable
 	 */
-	public void activate() {
+	public void activate(ActivationPurpose purpose) {
 		if(_activator != null) {
-			_activator.activate();
+			_activator.activate(purpose);
 		}
 	}
 
@@ -226,7 +226,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	@SuppressWarnings("unchecked")
 	public Object clone() {
-		activate();
+		activate(ActivationPurpose.READ);
 		try {
 			ArrayList4 <E> clonedList = (ArrayList4<E>) super.clone();
 			clonedList.elements = elements.clone();
@@ -244,7 +244,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * @see com.db4o.ta.Activatable
 	 */
 	public void ensureCapacity(int minCapacity) {
-		activate();
+		activate(ActivationPurpose.READ);
 		if (minCapacity <= capacity) {
 			return;
 		}
@@ -371,7 +371,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * @sharpen.property
 	 */
 	public int size() {
-		activate();
+		activate(ActivationPurpose.READ);
 		return listSize;
 	}
 

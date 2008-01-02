@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.ta.ta;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 
@@ -20,22 +21,22 @@ public class TANArrayItem extends ActivatableImpl {
 		}
 		
 		public int[][] value() {
-			activate();
+			activate(ActivationPurpose.READ);
 			return value;
 		}
 		
 		public Object object() {
-			activate();
+			activate(ActivationPurpose.READ);
 			return obj;
 		}
 		
 		public LinkedList[][] lists() {
-			activate();
+			activate(ActivationPurpose.READ);
 			return lists;
 		}
 		
 		public Object listsObject() {
-			activate();
+			activate(ActivationPurpose.READ);
 			return listsObject;
 		}
 	}

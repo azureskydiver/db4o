@@ -1,5 +1,6 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
-package com.db4o.ta;import com.db4o.activation.Activator;
+package com.db4o.ta;import com.db4o.activation.*;
+
 /**
  * Activatable must be implemented by classes in order to support
  * Transparent Activation.<br><br>
@@ -92,7 +93,8 @@ package com.db4o.ta;import com.db4o.activation.Activator;
 	/**
 	 * should be called by every reading field access of an object.
      * <br><br>The recommended implementation of this method is to call
-     * {@link Activator#activate()} on the {@link Activator} that was 
+     * {@link Activator#activate(ActivationPurpose)} on the {@link Activator} that was 
      * previously passed to {@link #bind(Activator)}.   
+	 * @param purpose TODO
 	 */
-	void activate();}
+	void activate(ActivationPurpose purpose);}

@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.common.ta.hierarchy;
 
+import com.db4o.activation.*;
+
 class PrioritizedProject extends Project {
 
 	private int _priority;
@@ -13,7 +15,7 @@ class PrioritizedProject extends Project {
 
 	public int getPriority() {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return _priority;
 	}

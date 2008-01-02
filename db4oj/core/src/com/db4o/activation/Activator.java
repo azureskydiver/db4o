@@ -13,6 +13,9 @@ public interface Activator {
 	
 	/**
 	 * Method to be called to activate the host object.
+	 * 
+	 * @param purpose for which purpose is the object being activated? {@link ActivationPurpose#WRITE} will cause the object
+	 * to be saved on the next {@link com.db4o.ObjectContainer#commit} operation.
 	 */
-	void activate();
+	void activate(ActivationPurpose purpose);
 }

@@ -1,6 +1,7 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.ta.collections;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 /**
@@ -20,21 +21,21 @@ class PagedBackingStore extends ActivatableImpl {
 	
 	public boolean add(Object item) {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return getPageForAdd().add(item);
 	}
 	
 	public int size() {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return _top * Page.PAGESIZE - lastPage().capacity();
 	}
 	
 	public Object get(int itemIndex) {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		Page page = pageHolding(itemIndex);
 		return page.get(indexInPage(itemIndex));

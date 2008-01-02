@@ -18,7 +18,7 @@ public class Car implements Activatable {
     }
 
     public Pilot getPilot() {
-        activate();
+        activate(ActivationPurpose.READ);
         return pilot;
     }
     
@@ -31,17 +31,17 @@ public class Car implements Activatable {
     }
 
     public String getModel() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return model;
     }
     
     public SensorReadout getHistory() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return history;
     }
     
     public void snapshot() {
-        activate();
+    	activate(ActivationPurpose.WRITE);
         appendToHistory(new TemperatureSensorReadout(
                 new Date(),this,"oil",pollOilTemperature()));
         appendToHistory(new TemperatureSensorReadout(
@@ -63,17 +63,17 @@ public class Car implements Activatable {
     }
 
     public String toString() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return model+"["+pilot+"]/"+countHistoryElements();
     }
     
     private int countHistoryElements() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return (history==null ? 0 : history.countElements());
     }
     
     private void appendToHistory(SensorReadout readout) {
-        activate();
+    	activate(ActivationPurpose.WRITE);
         if(history==null) {
             history=readout;
         }
@@ -82,9 +82,9 @@ public class Car implements Activatable {
         }
     }
 
-    public void activate() {
+    public void activate(ActivationPurpose purpose) {
         if(_activator != null) {
-            _activator.activate();
+            _activator.activate(purpose);
         }
     }
 

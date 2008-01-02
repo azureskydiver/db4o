@@ -55,9 +55,9 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * 
 	 * @see com.db4o.ta.Activatable
 	 */
-    public void activate() {
+    public void activate(ActivationPurpose purpose) {
         if (_activator != null) {
-            _activator.activate();
+            _activator.activate(purpose);
         }
     }
 
@@ -81,7 +81,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @see com.db4o.ta.Activatable
 	 */
     public void clear() {
-        activate();
+        activate(ActivationPurpose.READ);
         
         _startIndex = 0;
         _endIndex = 0;
@@ -103,7 +103,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
 
 	private boolean containsKeyImpl(K key) {
-		activate();
+		activate(ActivationPurpose.READ);
         
         return indexOfKey(key) != -1;
 	}
@@ -119,7 +119,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 */
     @SuppressWarnings("unchecked")
 	public boolean containsValue(Object value) {
-		activate();
+		activate(ActivationPurpose.READ);
         
         return indexOf(_values, ((V)value)) != -1;
 	}
@@ -134,7 +134,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @sharpen.ignore
 	 */
     public Set<Map.Entry<K, V>> entrySet() {
-        activate();
+        activate(ActivationPurpose.READ);
         
         HashSet<Map.Entry<K, V>> set = new HashSet<Entry<K, V>>();
         for (int i = _startIndex; i < _endIndex; i++) {
@@ -154,7 +154,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @sharpen.ignore
 	 */
     public V get(Object key) {
-        activate();
+        activate(ActivationPurpose.READ);
         
         int index = indexOfKey((K)key);
         return index == -1 ? null : valueAt(index);
@@ -187,7 +187,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @sharpen.ignore
 	 */
     public Set<K> keySet() {
-        activate();
+        activate(ActivationPurpose.READ);
         
         HashSet<K> set = new HashSet<K>();
         for (int i = _startIndex; i < _endIndex; i++) {
@@ -210,7 +210,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @sharpen.ignore
 	 */
     public V put(K key, V value) {
-        activate();
+        activate(ActivationPurpose.READ);
         
         int index = indexOfKey(key);
         if (index == -1) {
@@ -259,7 +259,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 */
     @SuppressWarnings("unchecked")
     public V remove(Object key) {
-        activate();
+        activate(ActivationPurpose.READ);
         
         int index = indexOf(_keys, key);
         if (index == -1) {
@@ -279,7 +279,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @sharpen.property
 	 */
     public int size() {
-        activate();
+        activate(ActivationPurpose.READ);
         
         return _endIndex - _startIndex;
     }
@@ -294,7 +294,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @sharpen.property
 	 */
     public Collection<V> values() {
-        activate();
+        activate(ActivationPurpose.READ);
         
         ArrayList<V> list = new ArrayList<V>();
         for (int i = _startIndex; i < _endIndex; i++) {
@@ -314,7 +314,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 */
     @SuppressWarnings("unchecked")
     public Object clone() {
-        activate();
+        activate(ActivationPurpose.READ);
         try {
             ArrayMap4<K, V> mapClone = (ArrayMap4<K, V>) super.clone();
             mapClone._keys =  _keys.clone();
