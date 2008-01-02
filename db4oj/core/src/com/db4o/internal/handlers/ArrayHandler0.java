@@ -86,4 +86,18 @@ public class ArrayHandler0 extends ArrayHandler {
     	context.targetBuffer().writeInt(slot.address());
     	context.targetBuffer().writeInt(length);
     }
+
+    // FIXME copied from ArrayHandler
+    public void defrag1(DefragmentContext context) {
+		if (Deploy.debug) {
+			Debug.readBegin(context, Const4.YAPARRAY);
+		}
+		int elements = readElementsDefrag(context);
+		for (int i = 0; i < elements; i++) {
+			_handler.defragment(context);
+		}
+        if (Deploy.debug) {
+        	Debug.readEnd(context);
+        }
+    }
 }
