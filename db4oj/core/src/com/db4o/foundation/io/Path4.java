@@ -39,6 +39,11 @@ public class Path4 {
 		while (true) {
 			String fname = combine(tempPath, "db4o-test-" + nextRandom() + ".tmp");
 			if (!File4.exists(fname)) {
+				try {
+					new FileWriter(fname).close();
+				} catch (IOException e) {
+					throw new RuntimeException(e.getMessage());
+				}
 				return fname;
 			}
 		}
