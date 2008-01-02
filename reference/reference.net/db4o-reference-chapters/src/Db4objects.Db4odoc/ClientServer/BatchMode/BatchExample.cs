@@ -50,7 +50,7 @@ namespace Db4objects.Db4odoc.ClientServer.BatchMode
                 }
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                Console.WriteLine("Operation time: " + diff.Milliseconds + " ms.");
+                Console.WriteLine("Operation time: " + diff.TotalMilliseconds + " ms.");
             }
             finally
             {

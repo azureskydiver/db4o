@@ -56,12 +56,12 @@ namespace Db4objects.Db4odoc.CachedIO
 			    }
 			    DateTime dt2 = DateTime.UtcNow;
 			    TimeSpan  diff = dt2 - dt1;
-			    System.Console.WriteLine("Time elapsed for setting objects ="+ diff.Milliseconds + " ms");
+			    System.Console.WriteLine("Time elapsed for setting objects ="+ diff.TotalMilliseconds + " ms");
 			    dt1 = DateTime.UtcNow;
                 db.Commit(); ;
 			    dt2 = DateTime.UtcNow;
 			    diff = dt2 - dt1;
-                System.Console.WriteLine("Time elapsed for commit =" + diff.Milliseconds + " ms");
+                System.Console.WriteLine("Time elapsed for commit =" + diff.TotalMilliseconds + " ms");
 
             }
             finally
@@ -79,7 +79,7 @@ namespace Db4objects.Db4odoc.CachedIO
                 IObjectSet result = db.Get(null);
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                System.Console.WriteLine("Time elapsed for the query =" + diff.Milliseconds + " ms");
+                System.Console.WriteLine("Time elapsed for the query =" + diff.TotalMilliseconds + " ms");
                 Console.WriteLine("Objects in the database: " + result.Count);
             }
             finally
