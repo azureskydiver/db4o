@@ -423,7 +423,7 @@ public class QConObject extends QCon {
      * otherwise, set the evaluation mode as example.
      */
     void setEvaluationMode() {
-        if ((i_object == null) || (i_yapClass !=null)) {
+        if ((i_object == null) || evaluationModeAlreadySet()) {
             return;
         }
 
@@ -435,6 +435,10 @@ public class QConObject extends QCon {
                     i_trans.reflector().forObject(i_object));
             identity();
         }
+    }
+    
+    boolean evaluationModeAlreadySet(){
+        return i_yapClass != null;
     }
     
     public Constraint like() {
