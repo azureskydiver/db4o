@@ -10,7 +10,7 @@ import db4ounit.extensions.*;
 
 public class QueryByExampleTestCase extends AbstractDb4oTestCase {
 
-    static final int COUNT = 100;
+    static final int COUNT = 10;
 
     static LinkedList list = LinkedList.newLongCircularList();
     
@@ -115,7 +115,7 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
         q = db().query();
         q.constrain(LinkedList.class).byExample();
         result = q.execute();
-        Assert.areEqual(100, result.size());
+        Assert.areEqual(COUNT, result.size());
 
     }
 
