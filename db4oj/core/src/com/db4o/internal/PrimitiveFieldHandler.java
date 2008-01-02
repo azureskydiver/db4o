@@ -112,11 +112,6 @@ public class PrimitiveFieldHandler extends ClassMetadata{
 		return false;
 	}
     
-    public Comparable4 prepareComparison(Object a_constraint) {
-        _handler.prepareComparison(a_constraint);
-        return _handler;
-    }
-    
     public PreparedComparison newPrepareCompare(Object source) {
     	return _handler.newPrepareCompare(source);
     }

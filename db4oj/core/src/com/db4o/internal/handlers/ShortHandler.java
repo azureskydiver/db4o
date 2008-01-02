@@ -65,30 +65,6 @@ public class ShortHandler extends PrimitiveHandler {
 		}
 	}
 	
-	// Comparison_______________________
-	
-	private short i_compareTo;
-	
-	private short val(Object obj){
-		return ((Short)obj).shortValue();
-	}
-	
-	void prepareComparison1(Object obj){
-		i_compareTo = val(obj);
-	}
-    
-	boolean isEqual1(Object obj){
-		return obj instanceof Short && val(obj) == i_compareTo;
-	}
-	
-	boolean isGreater1(Object obj){
-		return obj instanceof Short && val(obj) > i_compareTo;
-	}
-	
-	boolean isSmaller1(Object obj){
-		return obj instanceof Short && val(obj) < i_compareTo;
-	}
-
     public Object read(ReadContext context) {
         if (Deploy.debug) {
             Debug.readBegin(context, Const4.YAPSHORT);
@@ -126,8 +102,5 @@ public class ShortHandler extends PrimitiveHandler {
 			}
 		};
     }
-	
-
-    
 	
 }

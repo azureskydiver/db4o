@@ -82,37 +82,6 @@ public final class BooleanHandler extends PrimitiveHandler {
 		return FALSE;
 	}
 
-
-	// Comparison_______________________
-	
-	private boolean i_compareTo;
-	
-	private boolean val(Object obj){
-		return ((Boolean)obj).booleanValue();
-	}
-	
-	void prepareComparison1(Object obj){
-		i_compareTo = val(obj);
-	}
-    
-	boolean isEqual1(Object obj){
-		return obj instanceof Boolean && val(obj) == i_compareTo;
-	}
-	
-	boolean isGreater1(Object obj){
-	    if(i_compareTo){
-	        return false;
-	    }
-		return obj instanceof Boolean && val(obj);
-	}
-	
-	boolean isSmaller1(Object obj){
-	    if(! i_compareTo){
-	        return false;
-	    }
-	    return obj instanceof Boolean && ! val(obj);
-	}
-	
 	public Object read(ReadContext context) {
         if (Deploy.debug) {
             Debug.readBegin(context, Const4.YAPBOOLEAN);

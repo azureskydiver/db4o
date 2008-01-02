@@ -352,18 +352,6 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 	    return container().reflector();
 	}
 	
-
-    // Comparison_______________________
-
-    public Comparable4 prepareComparison(Object obj) {
-        _handler.prepareComparison(obj);
-        return this;
-    }
-    
-    public int compareTo(Object a_obj) {
-        return -1;
-    }
-
     public void defragment(DefragmentContext context) {
         if(Handlers4.handlesSimple(_handler)){
             context.incrementOffset(linkLength());

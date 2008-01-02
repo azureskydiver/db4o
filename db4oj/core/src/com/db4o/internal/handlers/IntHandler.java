@@ -78,42 +78,6 @@ public class IntHandler extends PrimitiveHandler {
         }
     }
 
-    // Comparison_______________________
-
-    private int i_compareTo;
-
-    protected final int val(Object obj) {
-        return ((Integer) obj).intValue();
-    }
-    
-    public int compareTo(int other){
-        return other - i_compareTo;
-    }
-
-    public void prepareComparison(int i) {
-        i_compareTo = i;
-    }
-    
-    void prepareComparison1(Object obj) {
-        prepareComparison(val(obj));
-    }
-    
-    public int currentInt(){
-        return i_compareTo;
-    }
-
-    boolean isEqual1(Object obj) {
-        return obj instanceof Integer && val(obj) == i_compareTo;
-    }
-
-    boolean isGreater1(Object obj) {
-        return obj instanceof Integer && val(obj) > i_compareTo;
-    }
-
-    boolean isSmaller1(Object obj) {
-        return obj instanceof Integer && val(obj) < i_compareTo;
-    }
-
     public void defragIndexEntry(DefragmentContextImpl context) {
     	context.incrementIntSize();
     }
@@ -133,7 +97,6 @@ public class IntHandler extends PrimitiveHandler {
 	public PreparedComparison newPrepareCompare(int i) {
 		return new PreparedIntComparison(i);
 	}
-	
 	
     public final class PreparedIntComparison implements PreparedComparison {
     	

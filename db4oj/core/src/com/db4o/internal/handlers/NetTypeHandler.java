@@ -18,8 +18,6 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
 
 	private int i_linkLength;
 	
-	private Object i_compareTo;
-	
 	public abstract int compare(Object compare, Object with);
     
     public String dotNetClassName(){
@@ -91,28 +89,6 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
         a_bytes._offset = offset + linkLength();
     }
 
-	void prepareComparison1(Object obj) {
-		i_compareTo = obj;
-	}
-    
-	boolean isEqual1(Object obj) {
-		return isEqual(i_compareTo, obj);
-	}
-
-	boolean isGreater1(Object obj) {
-		if(classReflector().isInstance(obj) && ! isEqual(i_compareTo, obj)){
-			return compare(i_compareTo, obj) > 0;
-		}
-		return false;
-	}
-
-	boolean isSmaller1(Object obj) {
-		if(classReflector().isInstance(obj)  && ! isEqual(i_compareTo, obj)){
-			return compare(i_compareTo, obj) < 0;
-		}
-		return false;
-	}
-	
 	public PreparedComparison internalPrepareComparison(Object obj) {
 		throw new NotImplementedException();
 	}

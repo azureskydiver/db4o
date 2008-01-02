@@ -54,10 +54,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     
     private boolean _unversioned;
     
-	// for indexing purposes.
-    // TODO: check race conditions, upon multiple calls against the same class
-    private int i_lastID;
-    
     private TernaryBool _canUpdateFast=TernaryBool.UNSPECIFIED;
     
     public final ObjectContainerBase stream() {
@@ -1831,54 +1827,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         MarshallerFamily.current()._class.write(trans, this, writer);
     }
 
-    // Comparison_______________________
-
-    private ReflectClass i_compareTo;
-    
-    public Comparable4 prepareComparison(Object obj) {
-        if(obj == null){
-            i_lastID = 0;
-            i_compareTo = null;
-            return this;
-        }
-        if(obj instanceof Integer){
-            i_lastID = ((Integer)obj).intValue();
-        }else if (obj instanceof TransactionContext){
-            TransactionContext tc = (TransactionContext)obj;
-            obj = tc._object;
-            i_lastID = _container.getID(tc._transaction, obj);
-        }else{
-            throw new IllegalComparisonException();
-        }
-        i_compareTo = reflector().forObject(obj);
-        return this;
-    }
-    
-    public int compareTo(Object obj) {
-        if(obj instanceof TransactionContext){
-            obj = ((TransactionContext)obj)._object;
-        }
-        if(obj instanceof Integer){
-            return ((Integer)obj).intValue() - i_lastID;
-        }
-        if( obj == null ){
-            if (i_compareTo == null){
-                return 0;
-            }
-            
-            // FIXME: This looks like it's the wrong way around.
-            // Probably this is caught further up with the substraction.
-            
-            return -1;
-        }
-        if(i_compareTo != null){
-            if (i_compareTo.isAssignableFrom(reflector().forObject(obj))){
-                return 0;
-            }
-        }
-        throw new IllegalComparisonException(); 
-    }
-    
 	public PreparedComparison newPrepareCompare(Object source) {
 		if(source == null){
 			return new PreparedComparison() {

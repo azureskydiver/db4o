@@ -39,17 +39,6 @@ public class MappedIDPairHandler implements Indexable4 {
 		_mappedHandler.writeIndexEntry(reader, new Integer(mappedIDs.mapped()));
 	}
 
-	public int compareTo(Object obj) {
-        return _origHandler.compareTo(((MappedIDPair)obj).orig());
-	}
-
-	public Comparable4 prepareComparison(Object obj) {
-        MappedIDPair mappedIDs = (MappedIDPair)obj;
-        _origHandler.prepareComparison(mappedIDs.orig());
-        _mappedHandler.prepareComparison(mappedIDs.mapped());
-        return this;
-	}
-	
 	private int readID(BufferImpl a_reader) {
 		return ((Integer)_origHandler.readIndexEntry(a_reader)).intValue();
 	}

@@ -25,8 +25,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         _stream = stream;
     }
 
-    private boolean i_compareToIsNull;
-
     public Object coerce(ReflectClass claxx, Object obj) {
         return Handlers4.handlerCanHold(this, claxx) ? obj : No4.INSTANCE;
     }
@@ -105,43 +103,6 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         write(a_object, a_writer);
     }
     
-    public Comparable4 prepareComparison(Object obj) {
-        if (obj == null) {
-            i_compareToIsNull = true;
-            return Null.INSTANCE;
-        }
-        i_compareToIsNull = false;
-        prepareComparison1(obj);
-        return this;
-    }
-    
-    abstract void prepareComparison1(Object obj);
-    
-    public int compareTo(Object obj) {
-        if (i_compareToIsNull) {
-            if (obj == null) {
-                return 0;
-            }
-            return 1;
-        }
-        if (obj == null) {
-            return -1;
-        }
-        if (isEqual1(obj)) {
-            return 0;
-        }
-        if (isGreater1(obj)) {
-            return 1;
-        }
-        return -1;
-    }
-
-    abstract boolean isEqual1(Object obj);
-
-    abstract boolean isGreater1(Object obj);
-
-    abstract boolean isSmaller1(Object obj);
-
     // redundant, only added to make Sun JDK 1.2's java happy :(
     public abstract int linkLength();
     

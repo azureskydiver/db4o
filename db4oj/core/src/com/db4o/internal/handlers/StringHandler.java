@@ -101,10 +101,6 @@ public class StringHandler extends VariableLengthTypeHandler implements Indexabl
         }
     }
 
-    // Comparison_______________________
-
-    private BufferImpl i_compareTo;
-
     private BufferImpl val(Object obj) {
     	return val(obj,container());
     }
@@ -122,25 +118,6 @@ public class StringHandler extends VariableLengthTypeHandler implements Indexabl
 		}
         
 		return null;
-    }
-
-    public Comparable4 prepareComparison(Object obj) {
-        if (obj == null) {
-            i_compareTo = null;
-            return Null.INSTANCE;
-        }
-        i_compareTo = val(obj);
-        return this;
-    }
-    
-    public int compareTo(Object obj) {
-        if(i_compareTo == null) {
-            if(obj == null) {
-                return 0;
-            }
-            return 1;
-        }
-        return compare(i_compareTo, val(obj));
     }
 
     /** 

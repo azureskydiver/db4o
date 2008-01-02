@@ -46,35 +46,10 @@ public class FloatHandler extends IntHandler {
 		return primitiveMarshaller().readFloat(a_bytes);
 	}
 
-
 	public void write(Object a_object, BufferImpl a_bytes) {
 		writeInt(
 			Float.floatToIntBits(((Float) a_object).floatValue()),
 			a_bytes);
-	}
-
-	// Comparison_______________________
-
-	private float i_compareTo;
-
-	private float valu(Object obj) {
-		return ((Float) obj).floatValue();
-	}
-
-	void prepareComparison1(Object obj) {
-		i_compareTo = valu(obj);
-	}
-    
-	boolean isEqual1(Object obj) {
-		return obj instanceof Float && valu(obj) == i_compareTo;
-	}
-
-	boolean isGreater1(Object obj) {
-		return obj instanceof Float && valu(obj) > i_compareTo;
-	}
-
-	boolean isSmaller1(Object obj) {
-		return obj instanceof Float && valu(obj) < i_compareTo;
 	}
 
     public Object read(ReadContext context) {
