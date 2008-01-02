@@ -39,4 +39,8 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 		return Db4o.openServer(config, "nofile", 0xdb40);
 	}
 
+	protected void setMessageRecipient(final ObjectContainer container, final MessageRecipient recipient) {
+		container.ext().configure().clientServer().setMessageRecipient(recipient);
+	}
+
 }
