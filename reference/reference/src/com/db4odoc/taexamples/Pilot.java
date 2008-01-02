@@ -2,7 +2,7 @@
 
 package com.db4odoc.taexamples;
 
-import com.db4o.activation.Activator;
+import com.db4o.activation.*;
 import com.db4o.ta.Activatable;
 
 public class Pilot implements Activatable {
@@ -24,15 +24,15 @@ public class Pilot implements Activatable {
 	}
 
 	// activate the object fields
-	public void activate() {
+	public void activate(ActivationPurpose purpose) {
 		if (_activator == null)
 			return;
-		_activator.activate();
+		_activator.activate(purpose);
 	}
 
 	public String getName() {
 		// even simple String needs to be activated
-		activate();
+		activate(ActivationPurpose.READ);
 		return _name;
 	}
 

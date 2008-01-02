@@ -2,9 +2,8 @@
 
 package com.db4odoc.taexamples;
 
-import com.db4o.ObjectContainer;
-import com.db4o.activation.Activator;
-import com.db4o.ta.Activatable;
+import com.db4o.activation.*;
+import com.db4o.ta.*;
 
 public class SensorPanelTA /*must implement Activatable for TA*/implements Activatable {
 
@@ -35,21 +34,21 @@ public class SensorPanelTA /*must implement Activatable for TA*/implements Activ
 	 * the activator remembers the objects that were already 
 	 * activated and won't activate them twice. 
 	 */
-	public void activate() {
+	public void activate(ActivationPurpose purpose) {
 		if (_activator == null)
 			return;
-		_activator.activate();
+		_activator.activate(purpose);
 	}
 	
 	public SensorPanelTA getNext() {
 		/*activate direct members*/
-		activate();
+		activate(ActivationPurpose.READ);
 		return _next;
 	}
 	
 	public Object getSensor() {
 		/*activate direct members*/
-		activate();
+		activate(ActivationPurpose.READ);
 		return _sensor;
 	}
 	
