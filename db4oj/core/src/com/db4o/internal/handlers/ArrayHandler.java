@@ -11,6 +11,7 @@ import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
+import com.db4o.reflect.jdk.*;
 
 /**
  * @exclude
@@ -390,14 +391,40 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 		if (Deploy.debug) {
 			Debug.readBegin(context, Const4.YAPARRAY);
 		}
-		int elements = readElementsDefrag(context);
-		for (int i = 0; i < elements; i++) {
-			_handler.defragment(context);
-		}
+		defrag2(context);
         if (Deploy.debug) {
         	Debug.readEnd(context);
         }
     }
+
+    public void defrag2(DefragmentContext context) {
+		if(!(_handler instanceof UntypedFieldHandler)) {
+			defragElements(context);
+			return;
+		}
+		ReflectClassByRef clazzRef = new ReflectClassByRef();
+		int offset = context.offset();
+		int numElements = readElementsAndClass(context.transaction(), context, clazzRef);
+		if(!(byte.class.equals(JdkReflector.toNative(clazzRef.value)))) {
+			// FIXME behavior should be identical to seek/defrag below - why failure?
+			// defragElements(context, numElements);
+			context.seek(offset);
+			defragElements(context);
+			return;
+		}
+		context.incrementOffset(numElements);
+    }
+
+	private void defragElements(DefragmentContext context) {
+		int elements = readElementsDefrag(context);
+		defragElements(context, elements);
+	}
+
+	private void defragElements(DefragmentContext context, int elements) {
+		for (int i = 0; i < elements; i++) {
+			_handler.defragment(context);
+		}
+	}
 
 	protected int readElementsDefrag(DefragmentContext context) {
         int elements = context.sourceBuffer().readInt();
