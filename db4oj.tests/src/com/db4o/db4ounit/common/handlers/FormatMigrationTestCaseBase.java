@@ -92,12 +92,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 			
 		    investigateFileHeaderVersion(testFileName);
 		    
-// FIXME: Defragmenting here will not work, because some of the
-//		  old MarshallerFamily implementations don't implement 
-// 		  defrag. 
-		    
-//        Fix by fully implementing defrag in Typehandler versions.		    
-//			runDefrag(testFileName);
+			runDefrag(testFileName);
 
 		    checkDatabaseFile(testFileName);
 		    // Twice, to ensure everything is fine after opening, converting and closing.
