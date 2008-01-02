@@ -41,7 +41,6 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
         query.descend("child").constrain(item).identity();
         assertExpectedFoos(ComplexFieldIndexItem.class, new int[]{4}, query);
     }
-    
 
     public void testSingleIndexNotSmaller(){
         final Query query = createItemQuery();
@@ -98,20 +97,6 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
     	assertAndOverOrQuery(false);
     }
 
-	private void assertAndOverOrQuery(boolean explicitAnd) {
-		Query query = createItemQuery();
-        Constraint c1 = query.descend("foo").constrain(new Integer(3));
-        Constraint c2 = query.descend("foo").constrain(new Integer(9));
-        Constraint c3 = query.descend("foo").constrain(new Integer(3));
-        Constraint c4 = query.descend("foo").constrain(new Integer(7));
-        Constraint cc1 = c1.or(c2);
-        Constraint cc2 = c3.or(c4);
-        if (explicitAnd) {
-        	cc1.and(cc2);
-        }
-        assertExpectedFoos(FieldIndexItem.class, new int[] { 3 }, query);
-	}
-    
     public void testSingleIndexOrRange() {
     	Query query = createItemQuery();
         Constraint c1 = query.descend("foo").constrain(new Integer(1)).greater();
@@ -175,11 +160,6 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
     	assertCantOptimize(query);
     }
 	
-	private void assertCantOptimize(Query query) {
-		final FieldIndexProcessorResult result = executeProcessor(query);
-		Assert.areSame(FieldIndexProcessorResult.NO_INDEX_FOUND,  result);
-	}
-
 	public void testIndexSelection() {		
 		Query query = createComplexItemQuery();		
 		query.descend("bar").constrain(new Integer(2));
@@ -192,11 +172,6 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		query.descend("bar").constrain(new Integer(2));
 		
 		assertBestIndex("foo", query);
-	}
-
-	private void assertBestIndex(String expectedFieldIndex, final Query query) {
-		IndexedNode node = selectBestIndex(query);
-		assertComplexItemIndex(expectedFieldIndex, node);
 	}
 
 	public void testDoubleDescendingOnQuery() {
@@ -273,6 +248,30 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
 		assertGreater(new int[] { 4, 7, 9 }, 3);
 	}
 	
+	private void assertCantOptimize(Query query) {
+		final FieldIndexProcessorResult result = executeProcessor(query);
+		Assert.areSame(FieldIndexProcessorResult.NO_INDEX_FOUND,  result);
+	}
+
+	private void assertBestIndex(String expectedFieldIndex, final Query query) {
+		IndexedNode node = selectBestIndex(query);
+		assertComplexItemIndex(expectedFieldIndex, node);
+	}
+
+	private void assertAndOverOrQuery(boolean explicitAnd) {
+		Query query = createItemQuery();
+        Constraint c1 = query.descend("foo").constrain(new Integer(3));
+        Constraint c2 = query.descend("foo").constrain(new Integer(9));
+        Constraint c3 = query.descend("foo").constrain(new Integer(3));
+        Constraint c4 = query.descend("foo").constrain(new Integer(7));
+        Constraint cc1 = c1.or(c2);
+        Constraint cc2 = c3.or(c4);
+        if (explicitAnd) {
+        	cc1.and(cc2);
+        }
+        assertExpectedFoos(FieldIndexItem.class, new int[] { 3 }, query);
+	}
+
 	private void assertGreater(int[] expectedFoos, int greaterThan) {
 		final Query query = createItemQuery();
 		query.descend("foo").constrain(new Integer(greaterThan)).greater();		
