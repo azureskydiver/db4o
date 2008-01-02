@@ -18,8 +18,6 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
 
 	private int i_linkLength;
 	
-	public abstract int compare(Object compare, Object with);
-    
     public String dotNetClassName(){
         String className = this.getClass().getName();
         int pos = className.indexOf(".Net") ;
@@ -29,8 +27,6 @@ public abstract class NetTypeHandler extends PrimitiveHandler implements NetType
         return defaultValue().getClass().getName();
     }
 	
-	public abstract boolean isEqual(Object compare, Object with);
-
 	public void initialize(){
 		byte[] bytes = new byte[65];
 		for (int i = 0; i < bytes.length; i++) {

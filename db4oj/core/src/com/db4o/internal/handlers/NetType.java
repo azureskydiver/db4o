@@ -13,8 +13,4 @@ interface NetType {
 	
 	public Object read(byte[] bytes, int offset);
 	
-	public int compare(Object compare, Object with);
-	
-	public boolean isEqual(Object compare, Object with);
-
 }

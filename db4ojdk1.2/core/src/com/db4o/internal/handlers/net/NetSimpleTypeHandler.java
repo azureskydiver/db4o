@@ -78,23 +78,6 @@ public abstract class NetSimpleTypeHandler extends NetTypeHandler implements Gen
 		return genericObjectBytes(obj);
 	}
 	
-	public int compare(Object compare, Object with) {
-		byte[] byteCompare = bytesFor(compare);
-		byte[] byteWith = bytesFor(with);
-		int min = byteCompare.length < byteWith.length ? byteCompare.length : byteWith.length;
-        for(int i = 0;i < min;i++) {
-            if (byteCompare[i] != byteWith[i]) {
-                return byteWith[i] - byteCompare[i];
-            }
-            
-        }
-        return byteWith.length - byteCompare.length;
-	}
-
-	public boolean isEqual(Object cmp, Object with) {
-		return compare(cmp, with) == 0;
-	}
-	
 	public String toString(GenericObject obj) {
 		return toString((byte[])obj.get(0));
 	}
