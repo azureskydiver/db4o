@@ -11,7 +11,6 @@ import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
-import com.db4o.reflect.jdk.*;
 
 /**
  * @exclude
@@ -405,7 +404,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 		ReflectClassByRef clazzRef = new ReflectClassByRef();
 		int offset = context.offset();
 		int numElements = readElementsAndClass(context.transaction(), context, clazzRef);
-		if(!(byte.class.equals(JdkReflector.toNative(clazzRef.value)))) {
+		if(!(context.transaction().reflector().forClass(byte.class).equals(clazzRef.value))) {
 			// FIXME behavior should be identical to seek/defrag below - why failure?
 			// defragElements(context, numElements);
 			context.seek(offset);
