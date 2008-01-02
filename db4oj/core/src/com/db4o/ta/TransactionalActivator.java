@@ -19,7 +19,7 @@ final class TransactionalActivator implements Activator {
 		_transaction = transaction;
 	}
 
-	public void activate() {
-		_objectReference.activateOn(_transaction);
+	public void activate(ActivationPurpose purpose) {
+		_objectReference.activateOn(_transaction, purpose);
 	}
 }

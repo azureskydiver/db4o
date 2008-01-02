@@ -4,6 +4,7 @@ package com.db4o.db4ounit.common.ta.ta;
 
 import java.util.*;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 public class TADateArrayItem extends ActivatableImpl {
@@ -13,12 +14,12 @@ public class TADateArrayItem extends ActivatableImpl {
     public Object[] _untyped;
 
     public Date[] getTyped() {
-        activate();
+        activate(ActivationPurpose.READ);
         return _typed;
     }
 
     public Object[] getUntyped() {
-        activate();
+        activate(ActivationPurpose.READ);
         return _untyped;
     }
 }

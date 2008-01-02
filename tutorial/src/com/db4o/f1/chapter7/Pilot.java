@@ -14,28 +14,28 @@ public class Pilot implements Activatable{
     }
 
     public int getPoints() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return points;
     }
 
     public void addPoints(int points) {
-        activate();
+    	activate(ActivationPurpose.WRITE);
         this.points+=points;
     }
 
     public String getName() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return name;
     }
 
     public String toString() {
-        activate();
+    	activate(ActivationPurpose.READ);
         return name+"/"+points;
     }
     
-    public void activate() {
+    public void activate(ActivationPurpose purpose) {
         if(_activator != null) {
-            _activator.activate();
+            _activator.activate(purpose);
         }
     }
 

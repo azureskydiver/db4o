@@ -2,6 +2,7 @@ package com.db4o.db4ounit.common.ta.ta;
 
 import java.util.*;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 public class TADateItem extends ActivatableImpl {
@@ -13,17 +14,17 @@ public class TADateItem extends ActivatableImpl {
     public Object _untyped;
 
     public Date getTyped() {
-        activate();
+        activate(ActivationPurpose.READ);
         return _typed;
     }
 
     public Object getUntyped() {
-        activate();
+        activate(ActivationPurpose.READ);
         return _untyped;
     }
 
     public String toString() {
-        activate();
+        activate(ActivationPurpose.READ);
         return _typed.toString();
     }
 }

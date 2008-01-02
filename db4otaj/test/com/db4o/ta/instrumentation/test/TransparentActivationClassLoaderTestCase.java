@@ -148,14 +148,14 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	}
 	
 	private void assertActivateMethod(Class clazz) throws Exception {
-		final Method activateMethod = clazz.getDeclaredMethod(TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Class[]{});
+		final Method activateMethod = clazz.getDeclaredMethod(TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Class[]{ActivationPurpose.class});
 		activateMethod.setAccessible(true);
 		Assert.isTrue((activateMethod.getModifiers() & Modifier.PUBLIC) > 0);
 		final Activatable obj = (Activatable) clazz.newInstance();
 		MockActivator activator = new MockActivator();
 		obj.bind(activator);
-		activateMethod.invoke(obj, new Object[]{});
-		activateMethod.invoke(obj, new Object[]{});
+		activateMethod.invoke(obj, new Object[]{ActivationPurpose.READ});
+		activateMethod.invoke(obj, new Object[]{ActivationPurpose.READ});
 		Assert.areEqual(2, activator.count());
 	}
 

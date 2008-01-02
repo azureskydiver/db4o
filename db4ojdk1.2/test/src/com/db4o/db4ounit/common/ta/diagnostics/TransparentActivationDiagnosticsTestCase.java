@@ -30,7 +30,7 @@ public class TransparentActivationDiagnosticsTestCase
 		public void bind(Activator activator) {
 		}
 		
-		public void activate() {			
+		public void activate(ActivationPurpose purpose) {			
 		}
 
 		public SomeOtherTAAwareData(SomeTAAwareData data) {

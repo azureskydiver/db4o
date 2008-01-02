@@ -12,9 +12,9 @@ public class City implements Activatable{
     
     private transient Activator _activator;
     
-    public void activate() {
+    public void activate(ActivationPurpose purpose) {
         if(_activator != null) {
-            _activator.activate();
+            _activator.activate(purpose);
         }
     }
 

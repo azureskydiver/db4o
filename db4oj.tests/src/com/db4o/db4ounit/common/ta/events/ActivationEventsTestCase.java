@@ -35,8 +35,8 @@ public class ActivationEventsTestCase extends TransparentActivationTestCaseBase 
 		public ActivatableItem() {
 		}
 
-		public void activate() {
-			_activator.activate();
+		public void activate(ActivationPurpose purpose) {
+			_activator.activate(purpose);
 		}
 
 		public void bind(Activator activator) {
@@ -61,7 +61,7 @@ public class ActivationEventsTestCase extends TransparentActivationTestCaseBase 
 		
 		addCancelAnyListener();
 		ActivatableItem item = queryActivatableItem();
-		item.activate();
+		item.activate(ActivationPurpose.READ);
 		Assert.isNull(item.name);
 	}
 	
@@ -69,7 +69,7 @@ public class ActivationEventsTestCase extends TransparentActivationTestCaseBase 
 		addCancelNonActivatableListener();
 		
 		ActivatableItem item = queryActivatableItem();
-		item.activate();
+		item.activate(ActivationPurpose.READ);
 		Assert.isNotNull(item.name);
 		Assert.isNotNull(item.child);
 		Assert.isNull(item.child.name);

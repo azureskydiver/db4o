@@ -15,7 +15,7 @@ import EDU.purdue.cs.bloat.editor.NameAndType;
 import EDU.purdue.cs.bloat.editor.Opcode;
 import EDU.purdue.cs.bloat.editor.Type;
 
-import com.db4o.activation.Activator;
+import com.db4o.activation.*;
 import com.db4o.foundation.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.util.*;
@@ -84,12 +84,17 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 						instrumented.value = InstrumentationStatus.FAILED;
 						return;
 					}
-					MemberRef targetActivateMethod = createMethodReference(fieldRef.declaringClass(),  TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{}, Type.VOID);
+					
+					final Type activationPurpose = Type.getType(ActivationPurpose.class);
+					final MemberRef targetActivateMethod = createMethodReference(fieldRef.declaringClass(),  TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{ activationPurpose}, Type.VOID);
 					if(targetActivateMethod == null) {
 						continue;
 					}
-					editor.insertCodeAt(new Instruction(Opcode.opc_dup), idx.intValue());
-					editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, targetActivateMethod), idx.intValue() + 1);
+					
+					int ip = idx.intValue();
+					editor.insertCodeAt(new Instruction(Opcode.opc_dup), ip);
+					editor.insertCodeAt(new Instruction(Opcode.opc_getstatic, createMemberRef(activationPurpose, "READ", activationPurpose)), ++ip);
+					editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, targetActivateMethod), ++ip);
 					modifiedCount++;
 				}
 				editor.commit();
@@ -126,7 +131,10 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 		return (InstrumentationStatus) instrumented.value;
 	}
 	private MemberRef createMethodReference(Type parent, String name, Type[] args, Type ret) {
-		NameAndType nameAndType = new NameAndType(name, Type.getType(args, ret));
+		return createMemberRef(parent, name, Type.getType(args, ret));
+	}
+	private MemberRef createMemberRef(Type parent, String name, Type type) {
+		NameAndType nameAndType = new NameAndType(name, type);
 		return new MemberRef(parent, nameAndType);
 	}
 }

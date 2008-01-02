@@ -1,6 +1,6 @@
 package com.db4o.db4ounit.jre5.collections;
 
-import com.db4o.activation.Activator;
+import com.db4o.activation.*;
 import com.db4o.foundation.ArgumentNullException;
 import com.db4o.ta.*;
 
@@ -14,18 +14,18 @@ public class OrderItem implements Activatable {
 	}
 	
 	public Product product() {
-		activate();
+		activate(ActivationPurpose.READ);
 		return _product;
 	}
 	
 	public int quantity() {
-		activate();
+		activate(ActivationPurpose.READ);
 		return _quantity;
 	}
 	
-	public void activate()
+	public void activate(ActivationPurpose purpose)
 	{
-		if (_activator != null) _activator.activate();
+		if (_activator != null) _activator.activate(purpose);
 	}
 
 	public void bind(Activator activator) {

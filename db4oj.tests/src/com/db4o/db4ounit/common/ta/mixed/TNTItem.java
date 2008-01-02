@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.ta.mixed;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 /**
@@ -20,7 +21,7 @@ public class TNTItem extends ActivatableImpl {
 	}
 
 	public NTItem value() {
-		activate();
+		activate(ActivationPurpose.READ);
 		return ntItem;
 	}
 }

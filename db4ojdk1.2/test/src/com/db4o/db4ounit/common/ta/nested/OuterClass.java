@@ -1,6 +1,7 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.db4ounit.common.ta.nested;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 public class OuterClass extends ActivatableImpl {
@@ -9,7 +10,7 @@ public class OuterClass extends ActivatableImpl {
 	
 	public int foo() {
 		// TA BEGIN
-		activate();
+		activate(ActivationPurpose.READ);
 		// TA END
 		return _foo;
 	}
@@ -22,7 +23,7 @@ public class OuterClass extends ActivatableImpl {
 		
 		public OuterClass getOuterObject(){
 			// TA BEGIN
-			activate();
+			activate(ActivationPurpose.READ);
 			// TA END
 			return OuterClass.this;
 		}

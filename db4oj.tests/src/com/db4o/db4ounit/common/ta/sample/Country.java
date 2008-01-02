@@ -11,15 +11,15 @@ public class Country implements Activatable {
     public State[] _states;
     
     public State getState(String zipCode){
-        activate();
+        activate(ActivationPurpose.READ);
         return _states[0];
     }
     
     private transient Activator _activator;
     
-    public void activate() {
+    public void activate(ActivationPurpose purpose) {
         if(_activator != null) {
-            _activator.activate();
+            _activator.activate(purpose);
         }
     }
 

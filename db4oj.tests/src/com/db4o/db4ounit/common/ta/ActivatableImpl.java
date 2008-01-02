@@ -18,9 +18,9 @@ public class ActivatableImpl /* TA BEGIN */ implements com.db4o.ta.Activatable /
 		_activator = activator;
 	}
 	
-	public void activate() {
+	public void activate(ActivationPurpose purpose) {
 		if (_activator == null) return;
-		_activator.activate();
+		_activator.activate(purpose);
 	}
 	// TA END
 }

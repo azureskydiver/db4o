@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.ta.ta;
 
+import com.db4o.activation.*;
 import com.db4o.db4ounit.common.ta.*;
 
 
@@ -15,12 +16,12 @@ public class TAStringItem extends ActivatableImpl {
 		}
 		
 		public String value() {
-			activate();
+			activate(ActivationPurpose.READ);
 			return value;
 		}
 		
 		public Object object() {
-			activate();
+			activate(ActivationPurpose.READ);
 			return obj;
 		}
 		

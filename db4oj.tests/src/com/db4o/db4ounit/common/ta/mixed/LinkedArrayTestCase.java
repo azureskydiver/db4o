@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.ta.mixed;
 
+import com.db4o.activation.*;
 import com.db4o.config.*;
 import com.db4o.db4ounit.common.ta.*;
 import com.db4o.db4ounit.common.ta.LinkedArrays.*;
@@ -83,11 +84,11 @@ public class LinkedArrayTestCase extends AbstractDb4oTestCase implements OptOutT
     public void testTransparentActivationTraversal(){
         LinkedArrays root = queryForRoot();
         ActivatableItem activatableItem = root._activatableItemArray[0];
-        activatableItem.activate();
+        activatableItem.activate(ActivationPurpose.READ);
         LinkedArrays descendant = activatableItem._linkedArrays; 
         descendant.assertActivationDepth(TESTED_DEPTH - 3, true);
         db().deactivate(activatableItem, 1);
-        activatableItem.activate();
+        activatableItem.activate(ActivationPurpose.READ);
         descendant.assertActivationDepth(TESTED_DEPTH - 3, true);
     }
     
