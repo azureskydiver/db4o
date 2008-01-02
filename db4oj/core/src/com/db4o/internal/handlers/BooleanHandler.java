@@ -150,6 +150,9 @@ public final class BooleanHandler extends PrimitiveHandler {
     	final boolean sourceBoolean = ((Boolean)source).booleanValue();
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
+				if(target == null){
+					return 1;
+				}
 				boolean targetBoolean = ((Boolean)target).booleanValue();
 				return sourceBoolean == targetBoolean ? 0 : (sourceBoolean ? 1 : -1); 
 			}

@@ -144,6 +144,9 @@ public class IntHandler extends PrimitiveHandler {
 		}
 
 		public int compareTo(Object target) {
+			if(target == null){
+				return 1;
+			}
 			int targetInt = ((Integer)target).intValue();
 			return _sourceInt == targetInt ? 0 : (_sourceInt < targetInt ? - 1 : 1); 
 		}

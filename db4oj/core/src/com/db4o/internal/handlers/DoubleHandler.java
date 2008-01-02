@@ -88,6 +88,9 @@ public class DoubleHandler extends LongHandler {
     	final double sourceDouble = ((Double)source).doubleValue();
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
+				if(target == null){
+					return 1;
+				}
 				double targetDouble = ((Double)target).doubleValue();
 				return sourceDouble == targetDouble ? 0 : (sourceDouble < targetDouble ? - 1 : 1); 
 			}
