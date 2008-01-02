@@ -59,7 +59,6 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 	}
 
 	private void waitForMessagesToBeDispatched(ObjectContainer client1, ObjectContainer client2) {
-		// TODO: uncomment the following two lines to make it deadlock
 		client2.commit();
 		client1.commit();
 		// give some time for all the message to be processed...
@@ -75,10 +74,6 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 				odd.send(message);
 			}
 		}
-	}
-
-	private void setMessageRecipient(final ObjectContainer container, final MessageRecipient recipient) {
-		container.ext().configure().clientServer().setMessageRecipient(recipient);
 	}
 
 }
