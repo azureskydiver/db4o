@@ -226,7 +226,7 @@ public class StringHandler extends VariableLengthTypeHandler implements Indexabl
     	context.incrementOffset(linkLength());
     }
     
-	public PreparedComparison newPrepareCompare(final Object obj) {
+	public PreparedComparison prepareComparison(final Object obj) {
 	    final BufferImpl sourceBuffer = val(obj);
     	return new PreparedComparison() {
 			public int compareTo(Object target) {

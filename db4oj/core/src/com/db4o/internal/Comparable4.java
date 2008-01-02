@@ -10,7 +10,7 @@ import com.db4o.foundation.*;
  */
 public interface Comparable4 {
 	
-	PreparedComparison newPrepareCompare(Object obj);
+	PreparedComparison prepareComparison(Object obj);
 	
 }
 

@@ -16,7 +16,7 @@ public class PreparedArrayContainsComparison implements PreparedComparison {
 	
 	public PreparedArrayContainsComparison(ArrayHandler arrayHandler, TypeHandler4 typeHandler, Object obj){
 		_arrayHandler = arrayHandler;
-		_preparedComparison = typeHandler.newPrepareCompare(obj);
+		_preparedComparison = typeHandler.prepareComparison(obj);
 	}
 
 	public int compareTo(Object obj) {

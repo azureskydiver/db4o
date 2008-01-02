@@ -1827,7 +1827,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         MarshallerFamily.current()._class.write(trans, this, writer);
     }
 
-	public PreparedComparison newPrepareCompare(Object source) {
+	public PreparedComparison prepareComparison(Object source) {
 		if(source == null){
 			return new PreparedComparison() {
 				public int compareTo(Object obj) {

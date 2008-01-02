@@ -15,7 +15,7 @@ public class LengthKeySlotHandler extends SlotHandler{
 		return _current.compareByLength((Slot)obj);
 	}
 	
-	public PreparedComparison newPrepareCompare(Object obj) {
+	public PreparedComparison prepareComparison(Object obj) {
 		final Slot sourceSlot = (Slot)obj;
 		return new PreparedComparison() {
 			public int compareTo(Object obj) {

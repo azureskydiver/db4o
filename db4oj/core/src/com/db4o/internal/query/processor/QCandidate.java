@@ -463,7 +463,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 			return _yapField.prepareComparison(constraint);
 		}
 		if (_yapClass != null) {
-			return _yapClass.newPrepareCompare(constraint);
+			return _yapClass.prepareComparison(constraint);
 		}
 		Reflector reflector = container.reflector();
 		ClassMetadata classMetadata = null;
@@ -480,12 +480,12 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 				if (reflector.array().isNDimensional(memberClass())) {
 					MultidimensionalArrayHandler mah = 
 						new MultidimensionalArrayHandler(container, arrayElementTypehandler, false);
-					return mah.newPrepareCompare(_member);
+					return mah.prepareComparison(_member);
 				} 
 				ArrayHandler ya = new ArrayHandler(container, arrayElementTypehandler, false);
-				return ya.newPrepareCompare(_member);
+				return ya.prepareComparison(_member);
 			} 
-			return classMetadata.newPrepareCompare(constraint);
+			return classMetadata.prepareComparison(constraint);
 		}
 		return null;
 	}

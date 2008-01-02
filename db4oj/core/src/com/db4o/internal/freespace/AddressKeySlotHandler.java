@@ -15,7 +15,7 @@ public class AddressKeySlotHandler extends SlotHandler{
 		return _current.compareByAddress((Slot)obj);
 	}
 	
-	public PreparedComparison newPrepareCompare(Object obj) {
+	public PreparedComparison prepareComparison(Object obj) {
 		final Slot sourceSlot = (Slot)obj;
 		return new PreparedComparison() {
 			public int compareTo(Object obj) {
