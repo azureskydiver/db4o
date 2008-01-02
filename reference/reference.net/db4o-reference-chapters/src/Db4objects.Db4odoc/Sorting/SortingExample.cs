@@ -83,7 +83,7 @@ namespace Db4objects.Db4odoc.Sorting
                 result.Sort(new PilotComparer());
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                Console.WriteLine("Time to execute with Evaluation query and collection sorting: " + diff.Milliseconds + " ms.");
+                Console.WriteLine("Time to execute with Evaluation query and collection sorting: " + diff.TotalMilliseconds + " ms.");
                 ListResult(result);
             }
             finally
@@ -106,7 +106,7 @@ namespace Db4objects.Db4odoc.Sorting
                 IObjectSet result = query.Execute();
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                Console.WriteLine("Time to query and sort with  SODA: " + diff.Milliseconds + " ms.");
+                Console.WriteLine("Time to query and sort with  SODA: " + diff.TotalMilliseconds + " ms.");
                 ListResult(result);
             }
             finally
@@ -141,7 +141,7 @@ namespace Db4objects.Db4odoc.Sorting
                 }));
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                Console.WriteLine("Time to execute with NQ and comparator: " + diff.Milliseconds + " ms.");
+                Console.WriteLine("Time to execute with NQ and comparator: " + diff.TotalMilliseconds + " ms.");
                 ListResult(result);
             }
             finally

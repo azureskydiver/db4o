@@ -64,7 +64,7 @@ namespace Db4objects.Db4odoc.Querymode
                 query.Execute();
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                Console.WriteLine("Query execution time=" + diff.Milliseconds + " ms");
+                Console.WriteLine("Query execution time=" + diff.TotalMilliseconds + " ms");
             }
             finally
             {
@@ -91,7 +91,7 @@ namespace Db4objects.Db4odoc.Querymode
                 query.Execute();
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                Console.WriteLine("Query execution time=" + diff.Milliseconds + " ms");
+                Console.WriteLine("Query execution time=" + diff.TotalMilliseconds + " ms");
             }
             finally
             {
@@ -160,7 +160,7 @@ namespace Db4objects.Db4odoc.Querymode
                 query.Execute();
                 DateTime dt2 = DateTime.UtcNow;
                 TimeSpan diff = dt2 - dt1;
-                Console.WriteLine("Query execution time=" + diff.Milliseconds + " ms");
+                Console.WriteLine("Query execution time=" + diff.TotalMilliseconds + " ms");
             }
             finally
             {
