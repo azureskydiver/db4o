@@ -92,7 +92,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 			
 		    investigateFileHeaderVersion(testFileName);
 		    
-//			runDefrag(testFileName);
+			runDefrag(testFileName);
 
 		    checkDatabaseFile(testFileName);
 		    // Twice, to ensure everything is fine after opening, converting and closing.
@@ -114,8 +114,9 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		oc.close();
 		
 		String backupFileName = Path4.getTempFileName();
-		
 		try{
+			DefragmentConfig defragConfig = new DefragmentConfig(testFileName, backupFileName);
+			defragConfig.forceBackupDelete(true);
 			Defragment.defrag(testFileName, backupFileName);
 		} finally{
 			File4.delete(backupFileName);
