@@ -2,11 +2,13 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.handlers.*;
+
 
 /**
  * @exclude
  */
-public class IDHandler extends PrimitiveIntHandler {
+public class IDHandler extends IntHandler {
 
 	public IDHandler(ObjectContainerBase stream) {
 		super(stream);

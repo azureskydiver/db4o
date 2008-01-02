@@ -55,22 +55,6 @@ public abstract class DateHandlerBase extends LongHandler {
 		return Platform4.format(Platform4.now(), true);
 	}
 	
-	long val(Object obj){
-		return ((Date)obj).getTime();
-	}
-	
-	boolean isEqual1(Object obj){
-		return obj instanceof Date && val(obj) == currentLong();
-	}
-	
-	boolean isGreater1(Object obj){
-		return obj instanceof Date && val(obj) > currentLong();
-	}
-	
-	boolean isSmaller1(Object obj){
-		return obj instanceof Date && val(obj) < currentLong();
-	}
-
     public Object read(ReadContext context) {
         long milliseconds = ((Long)super.read(context)).longValue();
         return new Date(milliseconds);

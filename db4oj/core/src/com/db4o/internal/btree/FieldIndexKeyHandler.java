@@ -55,29 +55,6 @@ public class FieldIndexKeyHandler implements Indexable4{
     	return _valueHandler;
     }
     
-    public Comparable4 prepareComparison(Object obj) {
-        FieldIndexKey composite = (FieldIndexKey)obj;
-        _valueHandler.prepareComparison(composite.value());
-        _parentIdHandler.prepareComparison(composite.parentID());
-        return this;
-    }
-
-    public int compareTo(Object obj) {
-    	if (null == obj) {
-    		throw new ArgumentNullException();
-    	}
-        FieldIndexKey composite = (FieldIndexKey)obj;
-        try{
-            int delegateResult = _valueHandler.compareTo(composite.value());  
-            if(delegateResult != 0 ){
-                return delegateResult;
-            }
-        }catch (IllegalComparisonException ex){
-            // can happen, is expected
-        }
-        return _parentIdHandler.compareTo(composite.parentID());
-    }
-
 	public void defragIndexEntry(DefragmentContextImpl context) {
 		_parentIdHandler.defragIndexEntry(context);
         _valueHandler.defragIndexEntry(context);

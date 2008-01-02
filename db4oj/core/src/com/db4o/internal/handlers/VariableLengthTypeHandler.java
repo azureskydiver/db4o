@@ -33,8 +33,6 @@ public abstract class VariableLengthTypeHandler implements TypeHandler4 {
     }
     
     // redundant, only added to make Sun JDK 1.2's java happy :(
-    public abstract Comparable4 prepareComparison(Object obj);
-    public abstract int compareTo(Object obj);
     
     public abstract void defragment(DefragmentContext context);
     

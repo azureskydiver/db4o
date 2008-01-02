@@ -50,31 +50,6 @@ public class DoubleHandler extends LongHandler {
 		a_bytes.writeLong(Platform4.doubleToLong(((Double)a_object).doubleValue()));
 	}
 	
-	
-	// Comparison_______________________
-	
-	private double i_compareToDouble;
-	
-	private double dval(Object obj){
-		return ((Double)obj).doubleValue();
-	}
-	
-	void prepareComparison1(Object obj){
-		i_compareToDouble = dval(obj);
-	}
-    
-	boolean isEqual1(Object obj){
-		return obj instanceof Double && dval(obj) == i_compareToDouble;
-	}
-	
-	boolean isGreater1(Object obj){
-		return obj instanceof Double && dval(obj) > i_compareToDouble;
-	}
-	
-	boolean isSmaller1(Object obj){
-		return obj instanceof Double && dval(obj) < i_compareToDouble;
-	}
-
     public Object read(ReadContext context) {
         Long l = (Long)super.read(context);
         return new Double(Platform4.longToDouble(l.longValue()));

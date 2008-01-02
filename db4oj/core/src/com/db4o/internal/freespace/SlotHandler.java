@@ -32,11 +32,5 @@ public abstract class SlotHandler implements Indexable4{
 		writer.writeInt(slot.length());
 	}
 
-	public Comparable4 prepareComparison(Object obj) {
-		_current = (Slot)obj;
-		return this;
-	}
-	
-
 
 }

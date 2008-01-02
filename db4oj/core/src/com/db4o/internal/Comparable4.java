@@ -10,10 +10,6 @@ import com.db4o.foundation.*;
  */
 public interface Comparable4 {
 	
-	Comparable4 prepareComparison(Object obj);
-	
-	int compareTo(Object obj);
-	
 	PreparedComparison newPrepareCompare(Object obj);
 	
 }

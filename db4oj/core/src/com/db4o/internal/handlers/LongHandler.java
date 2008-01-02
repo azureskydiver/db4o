@@ -91,35 +91,6 @@ public class LongHandler extends PrimitiveHandler {
         return ret;
 	}
 	
-		
-	// Comparison_______________________
-	
-	private long i_compareTo;
-	
-	protected final long currentLong() {
-		return i_compareTo;
-	}
-	
-	long val(Object obj){
-		return ((Long)obj).longValue();
-	}
-	
-	void prepareComparison1(Object obj){
-		i_compareTo = val(obj);
-	}
-    
-	boolean isEqual1(Object obj){
-		return obj instanceof Long && val(obj) == i_compareTo;
-	}
-	
-	boolean isGreater1(Object obj){
-		return obj instanceof Long && val(obj) > i_compareTo;
-	}
-	
-	boolean isSmaller1(Object obj){
-		return obj instanceof Long && val(obj) < i_compareTo;
-	}
-
     public Object read(ReadContext context) {
         return new Long(context.readLong());
     }
@@ -140,6 +111,5 @@ public class LongHandler extends PrimitiveHandler {
 			}
 		};
     }
-	
 
 }

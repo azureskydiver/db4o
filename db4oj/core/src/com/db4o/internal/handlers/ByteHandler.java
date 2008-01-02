@@ -60,30 +60,6 @@ public final class ByteHandler extends PrimitiveHandler {
 		}
 	}
 					
-	// Comparison_______________________
-	
-	private byte i_compareTo;
-	
-	private byte val(Object obj){
-		return ((Byte)obj).byteValue();
-	}
-	
-	void prepareComparison1(Object obj){
-		i_compareTo = val(obj);
-	}
-    
-	boolean isEqual1(Object obj){
-		return obj instanceof Byte && val(obj) == i_compareTo;
-	}
-	
-	boolean isGreater1(Object obj){
-		return obj instanceof Byte && val(obj) > i_compareTo;
-	}
-	
-	boolean isSmaller1(Object obj){
-		return obj instanceof Byte && val(obj) < i_compareTo;
-	}
-
     public Object read(ReadContext context) {
         if (Deploy.debug) {
             Debug.readBegin(context, Const4.YAPBYTE);

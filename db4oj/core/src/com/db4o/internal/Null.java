@@ -23,11 +23,6 @@ public class Null implements Indexable4, PreparedComparison{
         return 0;
     }
 
-	public Comparable4 prepareComparison(Object obj) {
-		// do nothing
-		return this;
-	}
-	
     public Object readIndexEntry(BufferImpl a_reader) {
         return null;
     }
