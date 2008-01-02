@@ -86,17 +86,17 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		
 		TypeHandler4 handler = (TypeHandler4) newInstance(handlerClass);
 		
-		PreparedComparison comparable = handler.newPrepareCompare(smaller);
+		PreparedComparison comparable = handler.prepareComparison(smaller);
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(smaller));
 		Assert.isSmaller(0, comparable.compareTo(greater));
 		
-		comparable = handler.newPrepareCompare(greater);
+		comparable = handler.prepareComparison(greater);
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(greater));
 		Assert.isGreater(0, comparable.compareTo(smaller));
 		
-		comparable = handler.newPrepareCompare(null);
+		comparable = handler.prepareComparison(null);
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(null));
 		Assert.isSmaller(0, comparable.compareTo(smaller));

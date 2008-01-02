@@ -80,7 +80,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 
 	public void add(Transaction trans, Object key){	
     	keyCantBeNull(key);
-    	PreparedComparison preparedComparison = _keyHandler.newPrepareCompare(key);
+    	PreparedComparison preparedComparison = _keyHandler.prepareComparison(key);
         ensureDirty(trans);
         BTreeNode rootOrSplit = _root.add(trans, preparedComparison, key);
         if(rootOrSplit != null && rootOrSplit != _root){
@@ -94,7 +94,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 	public void remove(Transaction trans, Object key){
     	keyCantBeNull(key);
     	
-    	PreparedComparison preparedComparison = keyHandler().newPrepareCompare(key);
+    	PreparedComparison preparedComparison = keyHandler().prepareComparison(key);
     	
         final Iterator4 pointers = search(trans, preparedComparison, key).pointers();
         if (!pointers.moveNext()) {
@@ -108,7 +108,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     
     public BTreeRange search(Transaction trans, Object key) {
     	keyCantBeNull(key);
-    	PreparedComparison preparedComparison = keyHandler().newPrepareCompare(key);
+    	PreparedComparison preparedComparison = keyHandler().prepareComparison(key);
         return search(trans, preparedComparison, key);
     }
     
@@ -138,7 +138,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 
 	public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
         ensureActive(trans);
-        PreparedComparison preparedComparison = _keyHandler.newPrepareCompare(key);
+        PreparedComparison preparedComparison = _keyHandler.prepareComparison(key);
         return _root.searchLeaf(trans, preparedComparison, target);
     }
     
@@ -433,7 +433,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 	}
 
 	public int compareKeys(Object key1, Object key2) {
-		PreparedComparison preparedComparison = _keyHandler.newPrepareCompare(key1);
+		PreparedComparison preparedComparison = _keyHandler.prepareComparison(key1);
 		return preparedComparison.compareTo(key2);
 	}
 	

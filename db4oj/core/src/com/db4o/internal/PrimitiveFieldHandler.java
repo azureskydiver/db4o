@@ -112,8 +112,8 @@ public class PrimitiveFieldHandler extends ClassMetadata{
 		return false;
 	}
     
-    public PreparedComparison newPrepareCompare(Object source) {
-    	return _handler.newPrepareCompare(source);
+    public PreparedComparison prepareComparison(Object source) {
+    	return _handler.prepareComparison(source);
     }
     
     public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, BufferImpl[] a_bytes) {

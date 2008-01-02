@@ -463,7 +463,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         }
     }
 
-	public PreparedComparison newPrepareCompare(Object obj) {
+	public PreparedComparison prepareComparison(Object obj) {
 		return new PreparedArrayContainsComparison(this, _handler, obj);
 	}
     

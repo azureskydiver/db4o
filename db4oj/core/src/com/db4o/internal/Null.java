@@ -35,7 +35,7 @@ public class Null implements Indexable4, PreparedComparison{
         // do nothing
 	}
 
-	public PreparedComparison newPrepareCompare(Object obj) {
+	public PreparedComparison prepareComparison(Object obj) {
 		return new PreparedComparison() {
 			public int compareTo(Object obj) {
 				if(obj == null){

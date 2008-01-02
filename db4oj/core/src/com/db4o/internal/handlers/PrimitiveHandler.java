@@ -135,7 +135,7 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         return primitiveNull();
     }
     
-	public PreparedComparison newPrepareCompare(final Object obj) {
+	public PreparedComparison prepareComparison(final Object obj) {
 		if(obj == null){
 			return Null.INSTANCE;
 		}
