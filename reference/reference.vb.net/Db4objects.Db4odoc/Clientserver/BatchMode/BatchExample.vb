@@ -40,7 +40,7 @@ Namespace Db4objects.Db4odoc.ClientServer.BatchMode
                 End While
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                Console.WriteLine("Operation time: " + diff.Milliseconds.ToString() + " ms.")
+                Console.WriteLine("Operation time: " + diff.TotalMilliseconds.ToString() + " ms.")
             Finally
                 container.Close()
             End Try

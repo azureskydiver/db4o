@@ -30,7 +30,7 @@ Namespace Db4objects.Db4odoc.Indexes
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
                 Console.WriteLine("Test 1: no indexes")
-                Console.WriteLine("Execution time=" + diff.Milliseconds.ToString() + " ms")
+                Console.WriteLine("Execution time=" + diff.TotalMilliseconds.ToString() + " ms")
                 ListResult(result)
             Finally
                 db.Close()
@@ -65,7 +65,7 @@ Namespace Db4objects.Db4odoc.Indexes
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
                 Console.WriteLine("Test 3: index on pilot")
-                Console.WriteLine("Execution time=" + diff.Milliseconds.ToString() + " ms")
+                Console.WriteLine("Execution time=" + diff.TotalMilliseconds.ToString() + " ms")
                 ListResult(result)
             Finally
                 db.Close()
@@ -87,7 +87,7 @@ Namespace Db4objects.Db4odoc.Indexes
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
                 Console.WriteLine("Test 4: index on points")
-                Console.WriteLine("Execution time=" + diff.Milliseconds.ToString() + " ms")
+                Console.WriteLine("Execution time=" + diff.TotalMilliseconds.ToString() + " ms")
                 ListResult(result)
             Finally
                 db.Close()
@@ -110,7 +110,7 @@ Namespace Db4objects.Db4odoc.Indexes
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
                 Console.WriteLine("Test 2: index on pilot and points")
-                Console.WriteLine("Execution time=" + diff.Milliseconds.ToString() + " ms")
+                Console.WriteLine("Execution time=" + diff.TotalMilliseconds.ToString() + " ms")
                 ListResult(result)
             Finally
                 db.Close()

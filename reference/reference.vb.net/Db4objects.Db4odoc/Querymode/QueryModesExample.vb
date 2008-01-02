@@ -57,7 +57,7 @@ Namespace Db4objects.Db4odoc.Querymode
                 query.Execute()
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                Console.WriteLine("Query execution time=" + diff.Milliseconds.ToString() + " ms")
+                Console.WriteLine("Query execution time=" + diff.TotalMilliseconds.ToString() + " ms")
             Finally
                 db.Close()
             End Try
@@ -78,7 +78,7 @@ Namespace Db4objects.Db4odoc.Querymode
                 query.Execute()
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                Console.WriteLine("Query execution time=" + diff.Milliseconds.ToString() + " ms")
+                Console.WriteLine("Query execution time=" + diff.TotalMilliseconds.ToString() + " ms")
             Finally
                 db.Close()
             End Try
@@ -135,7 +135,7 @@ Namespace Db4objects.Db4odoc.Querymode
                 query.Execute()
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                Console.WriteLine("Query execution time=" + diff.Milliseconds.ToString() + " ms")
+                Console.WriteLine("Query execution time=" + diff.TotalMilliseconds.ToString() + " ms")
             Finally
                 db.Close()
             End Try

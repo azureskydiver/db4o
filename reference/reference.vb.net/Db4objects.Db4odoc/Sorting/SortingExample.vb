@@ -74,7 +74,7 @@ Namespace Db4objects.Db4odoc.Sorting
                 result.Sort(New PilotComparer)
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                Console.WriteLine("Time to execute with Evaluation query and collection sorting: " + diff.Milliseconds.ToString() + " ms.")
+                Console.WriteLine("Time to execute with Evaluation query and collection sorting: " + diff.TotalMilliseconds.ToString() + " ms.")
                 ListResult(result)
             Finally
                 db.Close()
@@ -93,7 +93,7 @@ Namespace Db4objects.Db4odoc.Sorting
                 Dim result As IObjectSet = query.Execute
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                Console.WriteLine("Time to query and sort with SODA: " + diff.Milliseconds.ToString() + " ms.")
+                Console.WriteLine("Time to query and sort with SODA: " + diff.TotalMilliseconds.ToString() + " ms.")
                 ListResult(result)
             Finally
                 db.Close()
@@ -135,7 +135,7 @@ Namespace Db4objects.Db4odoc.Sorting
                 Dim result As IObjectSet = db.Query(New AllPilots, New PilotQueryComparer)
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                Console.WriteLine("Time to execute with NQ and comparator: " + diff.Milliseconds.ToString() + " ms.")
+                Console.WriteLine("Time to execute with NQ and comparator: " + diff.TotalMilliseconds.ToString() + " ms.")
                 ListResult(result)
             Finally
                 db.Close()

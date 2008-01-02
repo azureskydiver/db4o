@@ -52,13 +52,13 @@ Namespace Db4objects.Db4odoc.CachedIO
                 End While
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                System.Console.WriteLine("Time elapsed for setting objects =" + diff.Milliseconds.ToString() + " ms")
+                System.Console.WriteLine("Time elapsed for setting objects =" + diff.TotalMilliseconds.ToString() + " ms")
                 dt1 = DateTime.UtcNow
                 db.Commit()
 
                 dt2 = DateTime.UtcNow
                 diff = dt2 - dt1
-                System.Console.WriteLine("Time elapsed for commit =" + diff.Milliseconds.ToString() + " ms")
+                System.Console.WriteLine("Time elapsed for commit =" + diff.TotalMilliseconds.ToString() + " ms")
             Finally
                 db.Close()
             End Try
@@ -72,7 +72,7 @@ Namespace Db4objects.Db4odoc.CachedIO
                 Dim result As IObjectSet = db.Get(Nothing)
                 Dim dt2 As DateTime = DateTime.UtcNow
                 Dim diff As TimeSpan = dt2 - dt1
-                System.Console.WriteLine("Time elapsed for the query =" + diff.Milliseconds.ToString() + " ms")
+                System.Console.WriteLine("Time elapsed for the query =" + diff.TotalMilliseconds.ToString() + " ms")
                 Console.WriteLine("Objects in the database: " + result.Count.ToString())
             Finally
                 db.Close()
