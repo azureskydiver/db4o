@@ -27,20 +27,20 @@ public class Team implements Activatable {
 	}
 	
 	// activate object fields 
-	public void activate() {
+	public void activate(ActivationPurpose purpose) {
 		if (_activator == null) return;
-		_activator.activate();
+		_activator.activate(purpose);
 	}
 	
 	public void addPilot(Pilot pilot) {
 		// activate before adding new pilots
-		activate();
+		activate(ActivationPurpose.WRITE);
 		_pilots.add(pilot);
 	}
 
 	public void listAllPilots() {
 		// activate before printing the collection members
-		activate();
+		activate(ActivationPurpose.READ);
 		
 		for (Iterator<Pilot> iter = _pilots.iterator(); iter.hasNext();) {
 			Pilot pilot = (Pilot) iter.next();
