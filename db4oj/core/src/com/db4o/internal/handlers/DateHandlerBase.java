@@ -85,6 +85,9 @@ public abstract class DateHandlerBase extends LongHandler {
     	final long sourceDate = ((Date)source).getTime();
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
+				if(target == null){
+					return 1;
+				}
 				long targetDate = ((Date)target).getTime();
 				return sourceDate == targetDate ? 0 : (sourceDate < targetDate ? - 1 : 1); 
 			}

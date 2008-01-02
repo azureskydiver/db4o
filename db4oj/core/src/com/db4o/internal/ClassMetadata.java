@@ -1921,8 +1921,12 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		    if(obj instanceof TransactionContext){
 		        obj = ((TransactionContext)obj)._object;
 		    }
+		    if(obj == null){
+		    	return 1;
+		    }
 		    if(obj instanceof Integer){
-		        return _id - ((Integer)obj).intValue();
+				int targetInt = ((Integer)obj).intValue();
+				return _id == targetInt ? 0 : (_id < targetInt ? - 1 : 1); 
 		    }
 		    if(_claxx != null){
 		    	if(_claxx.isAssignableFrom(reflector().forObject(obj))){

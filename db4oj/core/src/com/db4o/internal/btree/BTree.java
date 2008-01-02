@@ -80,9 +80,9 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 
 	public void add(Transaction trans, Object key){	
     	keyCantBeNull(key);
-        _keyHandler.prepareComparison(key);
+    	PreparedComparison preparedComparison = _keyHandler.newPrepareCompare(key);
         ensureDirty(trans);
-        BTreeNode rootOrSplit = _root.add(trans, key);
+        BTreeNode rootOrSplit = _root.add(trans, preparedComparison, key);
         if(rootOrSplit != null && rootOrSplit != _root){
             _root = new BTreeNode(trans, _root, rootOrSplit);
             _root.write(trans.systemTransaction());
@@ -94,18 +94,27 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 	public void remove(Transaction trans, Object key){
     	keyCantBeNull(key);
     	
-        final Iterator4 pointers = search(trans, key).pointers();
+    	PreparedComparison preparedComparison = keyHandler().newPrepareCompare(key);
+    	
+        final Iterator4 pointers = search(trans, preparedComparison, key).pointers();
         if (!pointers.moveNext()) {
         	return;
         }
         BTreePointer first = (BTreePointer)pointers.current();
         ensureDirty(trans);
         BTreeNode node = first.node();
-        node.remove(trans, key, first.index());
+        node.remove(trans, preparedComparison, key, first.index());
     }
     
     public BTreeRange search(Transaction trans, Object key) {
     	keyCantBeNull(key);
+    	PreparedComparison preparedComparison = keyHandler().newPrepareCompare(key);
+        return search(trans, preparedComparison, key);
+    }
+    
+    private BTreeRange search(Transaction trans, PreparedComparison preparedComparison, Object key) {
+    	keyCantBeNull(key);
+    	ensureActive(trans);
         
         // TODO: Optimize the following.
         //       Part of the search operates against the same nodes.
@@ -129,8 +138,8 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 
 	public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
         ensureActive(trans);
-        _keyHandler.prepareComparison(key);
-        return _root.searchLeaf(trans, target);
+        PreparedComparison preparedComparison = _keyHandler.newPrepareCompare(key);
+        return _root.searchLeaf(trans, preparedComparison, target);
     }
     
     public void commit(final Transaction trans){
@@ -424,8 +433,8 @@ public class BTree extends PersistentBase implements TransactionParticipant {
 	}
 
 	public int compareKeys(Object key1, Object key2) {
-		_keyHandler.prepareComparison(key2);
-		return _keyHandler.compareTo(key1);
+		PreparedComparison preparedComparison = _keyHandler.newPrepareCompare(key1);
+		return preparedComparison.compareTo(key2);
 	}
 	
 	private static Config4Impl config(Transaction trans) {

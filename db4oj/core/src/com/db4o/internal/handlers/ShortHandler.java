@@ -118,6 +118,9 @@ public class ShortHandler extends PrimitiveHandler {
     	final short sourceShort = ((Short)source).shortValue();
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
+				if(target == null){
+					return 1;
+				}
 				short targetShort = ((Short)target).shortValue();
 				return sourceShort == targetShort ? 0 : (sourceShort < targetShort ? - 1 : 1); 
 			}

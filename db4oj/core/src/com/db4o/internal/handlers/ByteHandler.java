@@ -114,6 +114,9 @@ public final class ByteHandler extends PrimitiveHandler {
     	final byte sourceByte = ((Byte)source).byteValue();
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
+				if(target == null){
+					return 1;
+				}
 				byte targetByte = ((Byte)target).byteValue();
 				return sourceByte == targetByte ? 0 : (sourceByte < targetByte ? - 1 : 1); 
 			}

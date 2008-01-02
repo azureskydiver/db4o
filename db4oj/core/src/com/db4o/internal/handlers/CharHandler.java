@@ -122,6 +122,9 @@ public final class CharHandler extends PrimitiveHandler {
     	final char sourceChar = ((Character)source).charValue();
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
+				if(target == null){
+					return 1;
+				}
 				char targetChar = ((Character)target).charValue();
 				return sourceChar == targetChar ? 0 : (sourceChar < targetChar ? - 1 : 1); 
 			}

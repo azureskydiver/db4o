@@ -132,6 +132,9 @@ public class LongHandler extends PrimitiveHandler {
     	final long sourceLong = ((Long)source).longValue();
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
+				if(target == null){
+					return 1;
+				}
 				long targetLong = ((Long)target).longValue();
 				return sourceLong == targetLong ? 0 : (sourceLong < targetLong ? - 1 : 1); 
 			}

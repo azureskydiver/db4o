@@ -89,6 +89,9 @@ public class FloatHandler extends IntHandler {
     	final float sourceFloat = ((Float)source).floatValue();
     	return new PreparedComparison() {
 			public int compareTo(Object target) {
+				if(target == null){
+					return 1;
+				}
 				float targetFloat = ((Float)target).floatValue();
 				return sourceFloat == targetFloat ? 0 : (sourceFloat < targetFloat ? - 1 : 1); 
 			}

@@ -91,10 +91,10 @@ public final class BTreeNode extends PersistentBase{
      * @return the split node if this node is split
      * or this if the first key has changed
      */
-    public BTreeNode add(Transaction trans, Object obj){
+    public BTreeNode add(Transaction trans, PreparedComparison preparedComparison, Object obj){
         
         BufferImpl reader = prepareRead(trans);        
-        Searcher s = search(reader);
+        Searcher s = search(preparedComparison, reader);
         
         if(_isLeaf){
             
@@ -114,7 +114,7 @@ public final class BTreeNode extends PersistentBase{
         }else{
             
             BTreeNode childNode = child(reader, s.cursor());
-            BTreeNode childNodeOrSplit = childNode.add(trans, obj);
+            BTreeNode childNodeOrSplit = childNode.add(trans, preparedComparison, obj);
             if(childNodeOrSplit == null){
                 return null;
             }
@@ -171,11 +171,11 @@ public final class BTreeNode extends PersistentBase{
         return patch != null && patch.isRemove();
 	}
     
-    BTreeNodeSearchResult searchLeaf(Transaction trans, SearchTarget target) {
+    BTreeNodeSearchResult searchLeaf(Transaction trans, PreparedComparison preparedComparison, SearchTarget target) {
         BufferImpl reader = prepareRead(trans);
-        Searcher s = search(reader, target);
+        Searcher s = search(preparedComparison, reader, target);
         if(! _isLeaf){
-            return child(reader, s.cursor()).searchLeaf(trans, target);
+            return child(reader, s.cursor()).searchLeaf(trans, preparedComparison, target);
         }
             
         if(! s.foundMatch() || target == SearchTarget.ANY || target == SearchTarget.HIGHEST){
@@ -183,7 +183,7 @@ public final class BTreeNode extends PersistentBase{
         }
         
         if(target == SearchTarget.LOWEST){
-            BTreeNodeSearchResult res = findLowestLeafMatch(trans, s.cursor() - 1);
+            BTreeNodeSearchResult res = findLowestLeafMatch(trans, preparedComparison, s.cursor() - 1);
             if(res != null){
                 return res;
             }
@@ -194,18 +194,18 @@ public final class BTreeNode extends PersistentBase{
         
     }
 
-	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, int index){		
-		return findLowestLeafMatch(trans, prepareRead(trans), index);
+	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, PreparedComparison preparedComparison, int index){		
+		return findLowestLeafMatch(trans, preparedComparison, prepareRead(trans), index);
 	}
 	
-	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, BufferImpl reader, int index){
+	private BTreeNodeSearchResult findLowestLeafMatch(Transaction trans, PreparedComparison preparedComparison, BufferImpl reader, int index){
         
         if(index >= 0){
-            if(!compareEquals(reader, index)){
+            if(!compareEquals(preparedComparison, reader, index)){
                 return null;
             }
             if(index > 0){
-                BTreeNodeSearchResult res = findLowestLeafMatch(trans, reader, index - 1);
+                BTreeNodeSearchResult res = findLowestLeafMatch(trans, preparedComparison, reader, index - 1);
                 if(res != null){
                     return res;
                 }
@@ -216,7 +216,7 @@ public final class BTreeNode extends PersistentBase{
         final BTreeNode node = previousNode();
         if(node != null){
         	final BufferImpl nodeReader = node.prepareRead(trans);
-            BTreeNodeSearchResult res = node.findLowestLeafMatch(trans, nodeReader, node.lastIndex());
+            BTreeNodeSearchResult res = node.findLowestLeafMatch(trans, preparedComparison, nodeReader, node.lastIndex());
             if(res != null){
                 return res;
             }
@@ -229,11 +229,11 @@ public final class BTreeNode extends PersistentBase{
         return createMatchingSearchResult(trans, reader, index);
     }
 
-	private boolean compareEquals(final BufferImpl reader, int index) {
+	private boolean compareEquals(PreparedComparison preparedComparison, final BufferImpl reader, int index) {
 		if(canWrite()){
-			return compareInWriteMode(index) == 0;
+			return compareInWriteMode(preparedComparison, index) == 0;
 		}
-		return compareInReadMode(reader, index) == 0;
+		return compareInReadMode(preparedComparison, reader, index) == 0;
 	}
 
     private BTreeNodeSearchResult createMatchingSearchResult(Transaction trans, BufferImpl reader, int index) {
@@ -467,13 +467,13 @@ public final class BTreeNode extends PersistentBase{
         return false;
     }
     
-    private int compareInWriteMode(int index){
-        return keyHandler().compareTo(key(index));
+    private int compareInWriteMode(PreparedComparison preparedComparison, int index){
+        return - preparedComparison.compareTo(key(index));
     }
     
-    private int compareInReadMode(BufferImpl reader, int index){
+    private int compareInReadMode(PreparedComparison preparedComparison, BufferImpl reader, int index){
         seekKey(reader, index);
-        return keyHandler().compareTo(keyHandler().readIndexEntry(reader));
+        return - preparedComparison.compareTo(keyHandler().readIndexEntry(reader));
     }
     
     public int count() {
@@ -704,7 +704,7 @@ public final class BTreeNode extends PersistentBase{
         }
     }
     
-    public void remove(Transaction trans, Object obj, int index){
+    public void remove(Transaction trans, PreparedComparison preparedComparison, Object obj, int index){
         if(!_isLeaf){
             throw new IllegalStateException();
         }
@@ -743,10 +743,10 @@ public final class BTreeNode extends PersistentBase{
         
         // now we try if removal is OK for the next element in this node
         if(index != lastIndex()){
-            if(compareInWriteMode(index + 1 ) != 0){
+            if(compareInWriteMode(preparedComparison, index + 1 ) != 0){
                 return;
             }
-            remove(trans, obj, index + 1);
+            remove(trans, preparedComparison, obj, index + 1);
             return;
         }
         
@@ -758,11 +758,11 @@ public final class BTreeNode extends PersistentBase{
         }
         
         node.prepareWrite(trans);
-        if(node.compareInWriteMode(0) != 0){
+        if(node.compareInWriteMode(preparedComparison, 0) != 0){
             return;
         }
         
-        node.remove(trans, obj, 0);
+        node.remove(trans, preparedComparison, obj, 0);
     }
 
 	private void cancelAdding(Transaction trans, int index) {
@@ -803,19 +803,19 @@ public final class BTreeNode extends PersistentBase{
         commitOrRollback(trans, false);
     }
     
-    private Searcher search(BufferImpl reader){
-        return search(reader, SearchTarget.ANY);
+    private Searcher search(PreparedComparison preparedComparison, BufferImpl reader){
+        return search(preparedComparison, reader, SearchTarget.ANY);
     }
     
-    private Searcher search(BufferImpl reader, SearchTarget target){
+    private Searcher search(PreparedComparison preparedComparison, BufferImpl reader, SearchTarget target){
         Searcher s = new Searcher(target, _count);
         if(canWrite()){
             while(s.incomplete()){
-            	s.resultIs( compareInWriteMode(s.cursor()));
+            	s.resultIs( compareInWriteMode(preparedComparison, s.cursor()));
             }
         }else{
             while(s.incomplete()){
-            	s.resultIs( compareInReadMode(reader, s.cursor()));
+            	s.resultIs( compareInReadMode(preparedComparison, reader, s.cursor()));
             }
         }
         return s;
