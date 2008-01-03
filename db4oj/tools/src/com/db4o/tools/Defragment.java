@@ -216,7 +216,7 @@ public class Defragment {
                 origin.deactivate(obj, 2);
     
                 origin.activate(obj, 3);
-                destination.set(obj);
+                destination.store(obj);
     
                 // Both Containers keep track of state individually,
                 // so we need to make sure, both know, the object is deactivated

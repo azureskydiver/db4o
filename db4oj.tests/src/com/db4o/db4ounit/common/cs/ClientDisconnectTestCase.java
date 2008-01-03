@@ -26,11 +26,11 @@ public class ClientDisconnectTestCase extends Db4oClientServerTestCase implement
             Assert.isFalse(oc1.isClosed());
             Assert.expect(Db4oException.class, new CodeBlock() {
                 public void run() throws Throwable {
-                    client1.get(null);
+                    client1.queryByExample(null);
                 }
             });
             // It's ok for client2 to get something.
-            client2.get(null);
+            client2.queryByExample(null);
         } finally {
             oc1.close();
             oc2.close();

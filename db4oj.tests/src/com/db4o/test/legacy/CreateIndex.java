@@ -216,13 +216,13 @@ public class CreateIndex {
         ObjectSet res = query("b");
         CreateIndex ci = (CreateIndex)res.next();
         ci.i_name = "j";
-        Test.objectContainer().set(ci);
+        Test.objectContainer().store(ci);
         res = query("b");
         Test.ensure(res.size() == 0);
         res = query("j");
         Test.ensure(res.size() == 1);
         ci.i_name = "b";
-        Test.objectContainer().set(ci);
+        Test.objectContainer().store(ci);
         tQueryB();
     }
 

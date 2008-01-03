@@ -70,7 +70,7 @@ public class STDb4oClientServer implements STEngine {
 	}
 	
 	public void store(Object obj) {
-		con.set(obj);
+		con.store(obj);
 	}
 
 	public void commit(){

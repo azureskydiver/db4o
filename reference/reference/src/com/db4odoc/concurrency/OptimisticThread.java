@@ -64,7 +64,7 @@ class OptimisticThread extends Thread {
 	
     public void run() {
     	try {
-    		ObjectSet result = _container.get(Pilot.class);
+    		ObjectSet result = _container.queryByExample(Pilot.class);
     		while (result.hasNext()){
     			Pilot pilot = (Pilot)result.next();
     			/* We will need to set a lock to make sure that the 
@@ -97,7 +97,7 @@ class OptimisticThread extends Thread {
     	        	System.out.println("Error. The object is locked");
     	        	continue;
     	        }
-    	        _container.set(pilot);
+    	        _container.store(pilot);
     	        /* The changes should be committed to be 
     	         * visible to the other clients
     	         */

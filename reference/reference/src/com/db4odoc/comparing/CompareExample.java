@@ -48,11 +48,11 @@ public class CompareExample {
 		//ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Record record = new Record("Michael Schumacher, points: 100");
-			container.set(record);
+			container.store(record);
 			record = new Record("Rubens Barrichello, points: 98");
-			container.set(record);
+			container.store(record);
 			record = new Record("Kimi Raikonnen, points: 55");
-			container.set(record);
+			container.store(record);
 		} finally {
 			container.close();
 			server.close();

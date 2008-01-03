@@ -54,7 +54,7 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
         ArrayMap4Asserter.assertClear(map);
         markTaskDone(seq, true);
         waitForAllTasksDone();
-        db.set(map);
+        db.store(map);
     }
 
     public void checkClear(ExtObjectContainer db) throws Exception {
@@ -69,7 +69,7 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
         ArrayMap4Asserter.assertClone(map);
         markTaskDone(seq, true);
         waitForAllTasksDone();
-        db.set(map);
+        db.store(map);
     }
 
     public void concContainsKey(ExtObjectContainer db, int seq) {
@@ -114,7 +114,7 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
         ArrayMap4Asserter.assertPut(map);
         markTaskDone(seq, true);
         waitForAllTasksDone();
-        db.set(map);
+        db.store(map);
     }
     
     public void checkPut(ExtObjectContainer db) {
@@ -129,7 +129,7 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
         ArrayMap4Asserter.assertPutAll(map);
         markTaskDone(seq, true);
         waitForAllTasksDone();
-        db.set(map);
+        db.store(map);
     }
     
     public void checkPutAll(ExtObjectContainer db) {
@@ -144,7 +144,7 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
         ArrayMap4Asserter.assertRemove_FromHead(map);
         markTaskDone(seq, true);
         waitForAllTasksDone();
-        db.set(map);
+        db.store(map);
     }
     
     public void checkRemove_FromHead(ExtObjectContainer db) {
@@ -159,7 +159,7 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
         ArrayMap4Asserter.assertRemove_FromEnd(map);
         markTaskDone(seq, true);
         waitForAllTasksDone();
-        db.set(map);
+        db.store(map);
     }
     
     public void checkRemove_FromEnd(ExtObjectContainer db) {
@@ -173,7 +173,7 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
         ArrayMap4Asserter.assertRemove_FromMiddle(map);
         markTaskDone(seq, true);
         waitForAllTasksDone();
-        db.set(map);
+        db.store(map);
     }
     
     public void checkRemove_FromMiddle(ExtObjectContainer db) {
@@ -188,7 +188,7 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
         ArrayMap4Asserter.assertSize(map);
         markTaskDone(seq, true);
         waitForAllTasksDone();
-        db.set(map);
+        db.store(map);
     }
 
     public void checkSize(ExtObjectContainer db) {
@@ -216,7 +216,7 @@ public class ArrayMap4TestCase extends Db4oConcurrenyTestCase {
         ArrayMap4Asserter.assertIncreaseSize(map);
         markTaskDone(seq, true);
         waitForAllTasksDone();
-        db.set(map);
+        db.store(map);
     }
     
     public void checkIncreaseSize(ExtObjectContainer db) {

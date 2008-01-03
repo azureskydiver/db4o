@@ -45,7 +45,7 @@ public class CascadeToVectorTestCase extends Db4oClientServerTestCase {
 				atom.child.name = "updated";
 			}
 		}
-		oc.set(ctv);
+		oc.store(ctv);
 	}
 
 	public void check(ExtObjectContainer oc) {

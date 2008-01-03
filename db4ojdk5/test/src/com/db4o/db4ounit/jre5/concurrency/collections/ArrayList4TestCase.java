@@ -39,7 +39,7 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4Asserter.assertAdd(list);
 		markTaskDone(seq, true);
 		waitForAllTasksDone();
-		oc.set(list);
+		oc.store(list);
 	}
 	
 	public void checkAdd(ExtObjectContainer oc) throws Exception {
@@ -52,7 +52,7 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4Asserter.assertAdd_LObject(list);
 		markTaskDone(seq, true);
 		waitForAllTasksDone();
-		oc.set(list);
+		oc.store(list);
 	}
 
 	public void checkAdd_LObject(ExtObjectContainer oc) throws Exception {
@@ -65,7 +65,7 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4Asserter.assertAddAll_LCollection(list);
 		markTaskDone(seq, true);
 		waitForAllTasksDone();
-		oc.set(list);
+		oc.store(list);
 	}
 
 	public void checkAddAll_LCollection(ExtObjectContainer oc) throws Exception {
@@ -78,7 +78,7 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4Asserter.assertClear(list);
 		markTaskDone(seq, true);
 		waitForAllTasksDone();
-		oc.set(list);
+		oc.store(list);
 	}
 	
 	public void checkClear(ExtObjectContainer oc) throws Exception {
@@ -115,7 +115,7 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4Asserter.assertRemove_LObject(list);
 		markTaskDone(seq, true);
 		waitForAllTasksDone();
-		oc.set(list);
+		oc.store(list);
 	}
 	
 	public void checkRemove_LObject(ExtObjectContainer oc) throws Exception {
@@ -129,7 +129,7 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4Asserter.assertRemoveAll(list);
 		markTaskDone(seq, true);
 		waitForAllTasksDone();
-		oc.set(list);
+		oc.store(list);
 	}
 	
 	public void checkRemoveAll(ExtObjectContainer oc) throws Exception {
@@ -162,7 +162,7 @@ public class ArrayList4TestCase extends Db4oConcurrenyTestCase {
 		ArrayList4Asserter.assertTrimToSize_EnsureCapacity(list);
 		markTaskDone(seq, true);
 		waitForAllTasksDone();
-		oc.set(list);
+		oc.store(list);
 	}
 	
 	public void checkTrimToSize_EnsureCapacity(ExtObjectContainer oc) throws Exception {

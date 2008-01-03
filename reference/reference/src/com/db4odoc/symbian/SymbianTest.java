@@ -31,7 +31,7 @@ public class SymbianTest {
 		try {
 			ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 			try {
-				container.set(new SymbianTest());
+				container.store(new SymbianTest());
 			} finally {
 				container.close();
 			}
@@ -51,7 +51,7 @@ public class SymbianTest {
 		try {
 			ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 			try {
-				container.set(new SymbianTest());
+				container.store(new SymbianTest());
 			} finally {
 				container.close();
 			}
@@ -71,7 +71,7 @@ public class SymbianTest {
 		try {
 			ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 			try {
-				ObjectSet result = container.get(new Object());
+				ObjectSet result = container.queryByExample(new Object());
 				System.out.println("Objects in the database: "
 						+ result.size());
 			} finally {
@@ -92,7 +92,7 @@ public class SymbianTest {
 		try {
 			ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 			try {
-				ObjectSet result = container.get(new Object());
+				ObjectSet result = container.queryByExample(new Object());
 				System.out.println("Objects in the database: "
 						+ result.size());
 			} finally {

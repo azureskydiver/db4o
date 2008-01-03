@@ -41,7 +41,7 @@ public class SortingExample {
 			for (int i = 0; i < 10; i++) {
 				for (int j = 0; j < 5; j++) {
 					Pilot pilot = new Pilot("Pilot #" + i, j + 1);
-					container.set(pilot);
+					container.store(pilot);
 				}
 			}
 		} finally {

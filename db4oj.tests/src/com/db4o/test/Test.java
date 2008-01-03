@@ -145,7 +145,7 @@ public class Test extends AllTests {
     }
     
     public static void deleteAll(ObjectContainer container) {
-		deleteObjectSet(container, container.get(null));
+		deleteObjectSet(container, container.queryByExample(null));
 	}
 
 	public static void deleteObjectSet(ObjectContainer container, ObjectSet all) {
@@ -243,7 +243,7 @@ public class Test extends AllTests {
     public static void forEach(Object obj, Visitor4 vis) {
         ObjectContainer con = objectContainer();
         con.deactivate(obj, Integer.MAX_VALUE);
-        ObjectSet set = oc.get(obj);
+        ObjectSet set = oc.queryByExample(obj);
         while (set.hasNext()) {
             vis.visit(set.next());
         }
@@ -271,7 +271,7 @@ public class Test extends AllTests {
     }
 
     public static void logAll() {
-        ObjectSet set = oc.get(null);
+        ObjectSet set = oc.queryByExample(null);
         while (set.hasNext()) {
             Logger.log(oc, set.next());
         }
@@ -382,7 +382,7 @@ public class Test extends AllTests {
     
 
     public static void store(Object obj) {
-        objectContainer().set(obj);
+        objectContainer().store(obj);
     }
 
     public static void statistics() {

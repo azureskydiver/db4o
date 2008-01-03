@@ -62,11 +62,11 @@ public class CalculationExamples {
 				Pilot pilot;
 				for (int i = 0; i < OBJECT_COUNT; i++) {
 					pilot = new Pilot("Test Pilot #" + i, i);
-					container.set(pilot);
+					container.store(pilot);
 				}
 				for (int i = 0; i < OBJECT_COUNT; i++) {
 					pilot = new Pilot("Professional Pilot #" + (i + 10), i + 10);
-					container.set(pilot);
+					container.store(pilot);
 				}
 				container.commit();
 			} catch (Db4oException ex) {

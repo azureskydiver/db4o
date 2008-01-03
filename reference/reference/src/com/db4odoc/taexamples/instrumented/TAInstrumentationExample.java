@@ -58,7 +58,7 @@ public class TAInstrumentationExample {
 			try {
 				// create a linked list with length 10
 				SensorPanel list = new SensorPanel().createList(10);
-				container.set(list);
+				container.store(list);
 			} finally {
 				closeDatabase();
 			}

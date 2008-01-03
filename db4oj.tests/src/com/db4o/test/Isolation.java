@@ -13,7 +13,7 @@ public class Isolation {
 	public void test(){
 		if(Test.isClientServer()){
 			ObjectContainer oc = Test.currentServer().ext().objectContainer();
-			oc.set(new Isolation());
+			oc.store(new Isolation());
 			Test.ensure(Test.occurrences(this) == 0);
 			oc.commit();
 			Test.ensure(Test.occurrences(this) == 1);

@@ -24,7 +24,7 @@ public class FinalFieldTestCase extends AbstractDb4oTestCase {
 	}
 	
 	protected void store() {
-		db().set(new Item(42, "jb"));
+		db().store(new Item(42, "jb"));
 	}
 	
 	public void _testFinalField() {

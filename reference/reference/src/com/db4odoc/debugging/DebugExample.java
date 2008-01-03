@@ -44,9 +44,9 @@ public class DebugExample {
 		ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Car car1 = new Car("BMW");
-			container.set(car1);
+			container.store(car1);
 			Car car2 = new Car("Ferrari");
-			container.set(car2);
+			container.store(car2);
 			container.deactivate(car1,2);
 		}finally {
 			container.close();
@@ -82,9 +82,9 @@ public class DebugExample {
 		 ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Car car1 = new Car("BMW");
-			container.set(car1);
+			container.store(car1);
 			Car car2 = new Car("Ferrari");
-			container.set(car2);
+			container.store(car2);
 			container.deactivate(car1,2);
 			Query query = container.query();
 			query.constrain(Car.class);

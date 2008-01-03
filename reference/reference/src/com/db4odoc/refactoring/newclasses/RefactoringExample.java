@@ -41,7 +41,7 @@ public class RefactoringExample {
 				System.out.println("Pilot="+ pilot);
 				pilot.setName(new Identity(sfOld.get(pilot).toString(),""));
 				System.out.println("Pilot="+ pilot);
-				container.set(pilot);
+				container.store(pilot);
 			}
 			
 		} finally {

@@ -35,11 +35,11 @@ public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase implements
 	}
 
 	protected void store() {
-		db().set(new STSItem("one"));
+		db().store(new STSItem("one"));
 	}
 
 	public void test() throws Exception {
-		STSItem item = (STSItem) db().get(STSItem.class).next();
+		STSItem item = (STSItem) db().queryByExample(STSItem.class).next();
 
 		long version = db().getObjectInfo(item).getVersion();
 		Assert.isGreater(0, version);
@@ -48,7 +48,7 @@ public class SimpleTimeStampIdTestCase extends AbstractDb4oTestCase implements
 		reopen();
 
 		STSItem item2 = new STSItem("two");
-		db().set(item2);
+		db().store(item2);
 
 		long secondVersion = db().getObjectInfo(item2).getVersion();
 

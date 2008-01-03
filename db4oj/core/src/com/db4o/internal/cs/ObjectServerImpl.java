@@ -238,12 +238,12 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	}
 
 	private void addUser(String userName, String password) {
-		_container.set(new User(userName, password));
+		_container.store(new User(userName, password));
 	}
 
 	private void setPassword(User existing, String password) {
 		existing.password = password;
-		_container.set(existing);
+		_container.store(existing);
 	}
 
 	public User getUser(String userName) {
@@ -257,7 +257,7 @@ public class ObjectServerImpl implements ObjectServer, ExtObjectServer, Runnable
 	private ObjectSet queryUsers(String userName) {
 		_container.showInternalClasses(true);
 		try {
-			return _container.get(new User(userName, null));
+			return _container.queryByExample(new User(userName, null));
 		} finally {
 			_container.showInternalClasses(false);
 		}

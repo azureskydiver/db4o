@@ -73,7 +73,7 @@ public class ArrayListCandidatesTestCase implements TestCase {
 	private void storeObjects(ObjectContainer db) {
 		Object[] data = new Object[]{new DataA("A"), new DataB("B")};
 		DataHolder holder = new DataHolder(data);
-		db.set(holder);
+		db.store(holder);
 	}
 
 	private void retrieveObjectByUsingConstraints(ObjectContainer db) {

@@ -41,7 +41,7 @@ public class RVector implements RTestable{
 		Vector vt = (Vector)newInstance();
 		if(step > 0){
 			vt.addElement(entry.key);
-			ObjectSet set = con.get(vt);
+			ObjectSet set = con.queryByExample(vt);
 			if(set.size() != step){
 				Regression.addError("Vector member query not found");
 			}else{
@@ -53,7 +53,7 @@ public class RVector implements RTestable{
 		}
 		entry = new TEntry().noElement();
 		vt.addElement(entry.key);
-		if(con.get(vt).size() != 0){
+		if(con.queryByExample(vt).size() != 0){
 			Regression.addError("Vector member query found too many");
 		}
 	}

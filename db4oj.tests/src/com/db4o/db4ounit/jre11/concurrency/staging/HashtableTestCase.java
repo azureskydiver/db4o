@@ -34,7 +34,7 @@ public class HashtableTestCase extends Db4oClientServerTestCase {
 		ht.put("key1", "updated1");
 		String str = (String) ht.get("key2");
 		Assert.areEqual("val2", str);
-		oc.set(ht);
+		oc.store(ht);
 	}
 	
 }

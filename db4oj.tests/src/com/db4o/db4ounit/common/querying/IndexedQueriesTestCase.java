@@ -50,12 +50,12 @@ public class IndexedQueriesTestCase extends AbstractDb4oTestCase{
     protected void store() {
         String[] strings = new String[] {"a", "c", "b", "f", "e"};        
         for (int i = 0; i < strings.length; i++) {
-            db().set(new IndexedQueriesItem(strings[i]));
+            db().store(new IndexedQueriesItem(strings[i]));
         }
         
         int[] ints = new int[] {1, 5, 7, 3, 2, 3};        
         for (int i = 0; i < ints.length; i++) {
-            db().set(new IndexedQueriesItem(ints[i]));
+            db().store(new IndexedQueriesItem(ints[i]));
         }
     }
     
@@ -74,13 +74,13 @@ public class IndexedQueriesTestCase extends AbstractDb4oTestCase{
         
         assertNullNameCount(6);
         
-        db().set(new IndexedQueriesItem("d"));
+        db().store(new IndexedQueriesItem("d"));
         assertQuery(1, "b");
         
         updateB();
         
-        db().set(new IndexedQueriesItem("z"));
-        db().set(new IndexedQueriesItem("y"));
+        db().store(new IndexedQueriesItem("z"));
+        db().store(new IndexedQueriesItem("y"));
         
         reopen();
         assertQuery(1, "b");
@@ -214,13 +214,13 @@ public class IndexedQueriesTestCase extends AbstractDb4oTestCase{
         ObjectSet res = queryForName("b");
         IndexedQueriesItem ci = (IndexedQueriesItem)res.next();
         ci._name = "j";
-        db().set(ci);
+        db().store(ci);
         res = queryForName("b");
         Assert.areEqual(0, res.size());
         res = queryForName("j");
         Assert.areEqual(1, res.size());
         ci._name = "b";
-        db().set(ci);
+        db().store(ci);
         assertQuery(1, "b");
     }
 

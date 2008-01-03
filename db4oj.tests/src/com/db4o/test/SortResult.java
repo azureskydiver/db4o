@@ -38,7 +38,7 @@ public class SortResult {
 	}
 	
 	public void test() {
-		ObjectSet result=Test.objectContainer().get(SortResult.class);
+		ObjectSet result=Test.objectContainer().queryByExample(SortResult.class);
 // FIXME: Why 0 results?
 //		ObjectSet result=Test.objectContainer().query(
 //				new Predicate() {

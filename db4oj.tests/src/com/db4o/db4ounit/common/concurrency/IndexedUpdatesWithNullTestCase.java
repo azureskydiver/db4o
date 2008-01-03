@@ -63,7 +63,7 @@ public class IndexedUpdatesWithNullTestCase extends Db4oClientServerTestCase {
 			IndexedUpdatesWithNullTestCase iuwn = (IndexedUpdatesWithNullTestCase) objectSet
 					.next();
 			iuwn.str = "hi";
-			oc.set(iuwn);
+			oc.store(iuwn);
 			Thread.sleep(100);
 		}
 	}

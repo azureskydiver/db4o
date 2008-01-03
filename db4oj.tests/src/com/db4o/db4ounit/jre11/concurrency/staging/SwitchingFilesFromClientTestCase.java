@@ -27,7 +27,7 @@ public class SwitchingFilesFromClientTestCase extends Db4oClientServerTestCase {
 		ExtClient client = (ExtClient) oc;
 		client.switchToFile(DB_FILE);
 		client.switchToMainFile();
-		client.set(new SimpleObject("hello", 1));
+		client.store(new SimpleObject("hello", 1));
 	}
 
 }

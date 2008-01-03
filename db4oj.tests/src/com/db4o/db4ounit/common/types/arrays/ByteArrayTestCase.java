@@ -61,8 +61,8 @@ public class ByteArrayTestCase extends AbstractDb4oTestCase {
 	
 	protected void store() {
 		for (int i=0; i<INSTANCES; ++i) {
-			db().set(new ByteArrayHolder(createByteArray()));
-			db().set(new SerializableByteArrayHolder(createByteArray()));
+			db().store(new ByteArrayHolder(createByteArray()));
+			db().store(new SerializableByteArrayHolder(createByteArray()));
 		}
 	}
 	

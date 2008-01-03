@@ -38,11 +38,11 @@ public class QueryExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Pilot pilot = new Pilot("Michael Schumacher", 0);
-			container.set(pilot);
+			container.store(pilot);
 			System.out.println("Stored " + pilot);
 			// change pilot and resave updated
 			pilot.addPoints(10);
-			container.set(pilot);
+			container.store(pilot);
 			System.out.println("Stored " + pilot);
 		} finally {
 			container.close();
@@ -56,11 +56,11 @@ public class QueryExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			// first retrieve the object from the database
-			ObjectSet result = container.get(new Pilot(
+			ObjectSet result = container.queryByExample(new Pilot(
 					"Michael Schumacher", 10));
 			Pilot found = (Pilot) result.next();
 			found.addPoints(10);
-			container.set(found);
+			container.store(found);
 			System.out.println("Added 10 points for " + found);
 		} finally {
 			container.close();
@@ -77,7 +77,7 @@ public class QueryExample {
 			// won't work for update of the saved pilot
 			Pilot pilot = new Pilot("Michael Schumacher", 10);
 			pilot.addPoints(10);
-			container.set(pilot);
+			container.store(pilot);
 			System.out.println("Added 10 points for " + pilot);
 		} finally {
 			container.close();
@@ -91,7 +91,7 @@ public class QueryExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			// first retrieve the object from the database
-			ObjectSet result = container.get(new Pilot(
+			ObjectSet result = container.queryByExample(new Pilot(
 					"Michael Schumacher", 10));
 			Pilot found = (Pilot) result.next();
 			container.delete(found);
@@ -179,7 +179,7 @@ public class QueryExample {
 	private static void retrieveByDefaultFieldValue(
 			ObjectContainer container) {
 		Pilot somebody = new Pilot("Somebody else", 0);
-		container.set(somebody);
+		container.store(somebody);
 		Query query = container.query();
 		query.constrain(Pilot.class);
 		query.descend("points").constrain(new Integer(0));
@@ -202,7 +202,7 @@ public class QueryExample {
 	// end retrieveSorted
 
 	private static void clearDatabase(ObjectContainer container) {
-		ObjectSet result = container.get(Pilot.class);
+		ObjectSet result = container.queryByExample(Pilot.class);
 		while (result.hasNext()) {
 			container.delete(result.next());
 		}

@@ -49,7 +49,7 @@ public abstract class RMap implements RTestable{
 		Map map = (Map)newInstance();
 		if(step > 0){
 			map.put(entry.key, entry.value);
-			ObjectSet set = con.get(map);
+			ObjectSet set = con.queryByExample(map);
 			Collection4 col = new Collection4();
 			while(set.hasNext()){
 				Object obj = set.next();
@@ -63,7 +63,7 @@ public abstract class RMap implements RTestable{
 		}
 		entry = entry().noElement();
 		map.put(entry.key, entry.value);
-		if(con.get(map).size() != 0){
+		if(con.queryByExample(map).size() != 0){
 			Regression.addError("Map member query found too many");
 		}
 	}

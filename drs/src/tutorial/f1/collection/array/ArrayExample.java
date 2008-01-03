@@ -36,7 +36,7 @@ public class ArrayExample {
 
 		pilot.cars = new Car[]{car1, car2};
 
-		objectContainer.set(pilot);
+		objectContainer.store(pilot);
 		objectContainer.commit();
 
 		Configuration config = new Configuration().configure("f1/collection/array/hibernate.cfg.xml");

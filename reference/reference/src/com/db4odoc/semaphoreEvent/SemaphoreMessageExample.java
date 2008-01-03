@@ -52,7 +52,7 @@ public class SemaphoreMessageExample {
 			configuration.clientServer().setMessageRecipient(new MessageRecipient() {
 				public void processMessage(MessageContext context,
 						Object message) {
-					oc.set(message);
+					oc.store(message);
 					oc.commit();
 					System.out.println("Server received: " + message);
 					// we don't need this message any more - mark it deleted. 
@@ -69,7 +69,7 @@ public class SemaphoreMessageExample {
 					waitForCompletion();
 
 					Item item = new Item();
-					client1.set(item);
+					client1.store(item);
 					client1.commit();
 
 					waitForCompletion();

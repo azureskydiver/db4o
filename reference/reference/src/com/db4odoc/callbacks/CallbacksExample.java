@@ -49,7 +49,7 @@ public class CallbacksExample {
 			});
 
 			Car car = new Car("BMW",new Pilot("Rubens Barrichello"));
-			container.set(car);
+			container.store(car);
 		} finally {
 			container.close();
 			server.close();
@@ -62,9 +62,9 @@ public class CallbacksExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Car car = new Car("BMW",new Pilot("Rubens Barrichello"));
-			container.set(car);
+			container.store(car);
 			car = new Car("Ferrari",new Pilot("Kimi Raikkonen"));
-			container.set(car);
+			container.store(car);
 		} finally {
 			container.close();
 		}
@@ -82,7 +82,7 @@ public class CallbacksExample {
 		//final ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			// check the contents of the database
-			ObjectSet result = container.get(null);
+			ObjectSet result = container.queryByExample(null);
 			listResult(result);
 			
 			EventRegistry registry =  EventRegistryFactory.forObjectContainer(container);
@@ -102,7 +102,7 @@ public class CallbacksExample {
 	            container.delete(result.next());
 	        }
 			// check if the database is empty
-			result = container.get(null);
+			result = container.queryByExample(null);
 			listResult(result);
 		} finally {
 			container.close();
@@ -135,7 +135,7 @@ public class CallbacksExample {
 			});
 			
 			// check the contents of the database
-			ObjectSet result = container.get(null);
+			ObjectSet result = container.queryByExample(null);
 			listResult(result);
 			
 			// try to delete all the pilots
@@ -144,7 +144,7 @@ public class CallbacksExample {
 	            container.delete(result.next());
 	        }
 			// check if any of the objects were deleted
-			result = container.get(null);
+			result = container.queryByExample(null);
 			listResult(result);
 		} finally {
 			container.close();

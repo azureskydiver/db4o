@@ -16,7 +16,7 @@ public class LogAll
 	public static void run(String fileName){
 		System.out.println("/** Logging database file: '" + fileName + "' **/");
 		ObjectContainer con = Db4o.openFile(fileName);
-		ObjectSet set = con.get(null);
+		ObjectSet set = con.queryByExample(null);
 		while(set.hasNext()){
 			Logger.log(con, set.next());
 		}

@@ -68,8 +68,8 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	public void testCommittedAdded() {
 		Item item4 = new Item(4);
 		Item item5 = new Item(5);
-		_anotherClient.set(item4);
-		_anotherClient.set(item5);
+		_anotherClient.store(item4);
+		_anotherClient.store(item5);
 		
 		ObjectInfo info4 = getInfo(_anotherClient, 4);
 		ObjectInfo info5 = getInfo(_anotherClient, 5);
@@ -89,7 +89,7 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		ObjectInfo info1 = getInfo(_anotherClient, 1);
 		ObjectInfo info2 = getInfo(_anotherClient, 2);
 		
-		_anotherClient.set(item4);
+		_anotherClient.store(item4);
 		_anotherClient.delete(item1);
 		_anotherClient.delete(item2);
 		
@@ -109,8 +109,8 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 		ObjectInfo info2 = getInfo(_anotherClient, 2);
 		
 		Item item4 = new Item(4);
-		_anotherClient.set(item4);
-		_anotherClient.set(item2);
+		_anotherClient.store(item4);
+		_anotherClient.store(item2);
 		_anotherClient.delete(item1);
 		
 		ObjectInfo info4 = getInfo(_anotherClient, 4);
@@ -136,8 +136,8 @@ public class CommittedCallbacksByAnotherClientTestCase extends Db4oClientServerT
 	
 	public void testObjectSetTwiceShouldStillAppearAsAdded() {
 		final Item item4 = new Item(4);
-		_anotherClient.set(item4);
-		_anotherClient.set(item4);
+		_anotherClient.store(item4);
+		_anotherClient.store(item4);
 		
 		ObjectInfo info4 = getInfo(_anotherClient, 4);
 		

@@ -29,7 +29,7 @@ public class ServerClosedTestCase extends Db4oClientServerTestCase implements Op
 			Cool.sleepIgnoringInterruption(1000);
 			Assert.expect(DatabaseClosedException.class, new CodeBlock() {
 				public void run() throws Throwable {
-					db.get(null);
+					db.queryByExample(null);
 				}
 			});
 			Assert.isTrue(db.isClosed());

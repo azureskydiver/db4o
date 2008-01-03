@@ -54,7 +54,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     
     public void testSetAndCommitIsolation() {
         Item item = new Item("one");
-        _client1.set(item);
+        _client1.store(item);
         assertItemCount(_client2, 0);
         _client1.commit();
         assertItemCount(_client2, 1);
@@ -117,7 +117,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void testCommitOnClose(){
         Item storedItem = storeItemToClient1AndCommit();
         storedItem._name = CHANGED_NAME;
-        _client1.set(storedItem);
+        _client1.store(storedItem);
         _client1.close();
         Item retrievedItem = retrieveItemFromClient2();
         Assert.areEqual(CHANGED_NAME, retrievedItem._name);
@@ -130,7 +130,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void testDeactivate(){
         Item item = storeItemToClient1AndCommit();
         ItemHolder holder = new ItemHolder(item);
-        _client1.set(holder);
+        _client1.store(holder);
         _client1.commit();
         _client1.deactivate(holder, 1);
         Assert.isNull(holder._item);
@@ -146,7 +146,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void testDescendIsolation(){
         Item storedItem = storeItemToClient1AndCommit();
         storedItem._name = CHANGED_NAME;
-        _client1.set(storedItem);
+        _client1.store(storedItem);
         
         int id = (int) _client1.getID(storedItem);
         Object retrievedItem = _client2.getByID(id);
@@ -167,7 +167,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     
     public void testGet(){
         Item storedItem = storeItemToClient1AndCommit();
-        Object retrievedItem = _client1.get(new Item()).next();
+        Object retrievedItem = _client1.queryByExample(new Item()).next();
         Assert.areSame(storedItem, retrievedItem);
     }
     
@@ -247,7 +247,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void testPeekPersisted(){
         Item storedItem = storeItemToClient1AndCommit();
         storedItem._name = CHANGED_NAME;
-        _client1.set(storedItem);
+        _client1.store(storedItem);
         
         Item peekedItem = (Item) _client1.peekPersisted(storedItem, 2, true);
         Assert.isNotNull(peekedItem);
@@ -287,7 +287,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void testRollback(){
         Item storedItem = storeItemToClient1AndCommit();
         storedItem._name = CHANGED_NAME;
-        _client1.set(storedItem);
+        _client1.store(storedItem);
         _client1.rollback();
         _client1.commit();
         
@@ -308,10 +308,10 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void testSetWithDepth(){
         Item item = storeItemToClient1AndCommit();
         ItemHolder holder = new ItemHolder(item);
-        _client1.set(holder);
+        _client1.store(holder);
         _client1.commit();
         item._name = CHANGED_NAME;
-        _client1.set(holder, 3);
+        _client1.store(holder, 3);
         _client1.refresh(holder, 3);
         Assert.areEqual(CHANGED_NAME, item._name);
     }
@@ -319,7 +319,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     public void testStoredFieldIsolation(){
         Item storedItem = storeItemToClient1AndCommit();
         storedItem._name = CHANGED_NAME;
-        _client1.set(storedItem);
+        _client1.store(storedItem);
         
         Item retrievedItem = retrieveItemFromClient2();
         
@@ -361,7 +361,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
     
     protected Item storeItemToClient1AndCommit() {
         Item storedItem = new Item(ORIGINAL_NAME);
-        _client1.set(storedItem);
+        _client1.store(storedItem);
         _client1.commit();
         return storedItem;
     }

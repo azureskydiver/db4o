@@ -33,13 +33,13 @@ public class DeepSetTestCase extends AbstractDb4oTestCase {
 	public void test() throws Exception {
         ExtObjectContainer oc = db(); 
         _item.name = "1";
-        Item item = (Item)oc.get(_item).next();
+        Item item = (Item)oc.queryByExample(_item).next();
         item.name="11";
         item.child.name = "12";
-        oc.set(item, 2);
+        oc.store(item, 2);
         oc.deactivate(item, Integer.MAX_VALUE);
         item.name = "11";
-        item = (Item)oc.get(item).next();
+        item = (Item)oc.queryByExample(item).next();
         Assert.areEqual("12", item.child.name);
         Assert.areEqual("3", item.child.child.name);
     }

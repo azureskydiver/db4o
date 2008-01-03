@@ -26,9 +26,9 @@ public class OrderedQueryTestCase extends AbstractDb4oTestCase {
 	}
 	
 	protected void store() throws Exception {
-		db().set(new Item(1));
-		db().set(new Item(3));
-		db().set(new Item(2));
+		db().store(new Item(1));
+		db().store(new Item(3));
+		db().store(new Item(2));
 	}
 
 	public void testOrderAscending() {

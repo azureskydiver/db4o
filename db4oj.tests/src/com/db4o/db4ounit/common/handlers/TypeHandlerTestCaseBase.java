@@ -9,7 +9,7 @@ import db4ounit.extensions.*;
 public class TypeHandlerTestCaseBase extends AbstractDb4oTestCase {
 	
 	protected void doTestStoreObject(Object storedItem){
-        db().set(storedItem);
+        db().store(storedItem);
         db().purge(storedItem);
     
         Object readItem = retrieveOnlyInstance(storedItem.getClass());

@@ -36,9 +36,9 @@ public class RefactoringExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Pilot pilot = new Pilot("Rubens Barrichello");
-			container.set(pilot);
+			container.store(pilot);
 			pilot = new Pilot("Michael Schumacher");
-			container.set(pilot);
+			container.store(pilot);
 		} finally {
 			container.close();
 		}
@@ -49,9 +49,9 @@ public class RefactoringExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			PilotNew pilot = new PilotNew("Rubens Barrichello",99);
-			container.set(pilot);
+			container.store(pilot);
 			pilot = new PilotNew("Michael Schumacher",100);
-			container.set(pilot);
+			container.store(pilot);
 		} finally {
 			container.close();
 		}
@@ -61,7 +61,7 @@ public class RefactoringExample {
 	private static void checkDB(){
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet result=container.get(new Object());
+			ObjectSet result=container.queryByExample(new Object());
 	        listResult(result);
 		} finally {
 			container.close();

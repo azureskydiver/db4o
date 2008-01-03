@@ -20,7 +20,7 @@ public class TypedDerivedArrayTestCase extends AbstractDb4oTestCase {
 	}
 	
 	protected void store(){
-		db().set(new Data(ARRAY));
+		db().store(new Data(ARRAY));
 	}
 	
 	public void test(){

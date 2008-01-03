@@ -72,9 +72,9 @@ public class SlotDefragmentVectorTestCase implements TestCase {
                 Object obj=(entryIdx%2==0 ? (Object)new Data(entryIdx) : (Object)String.valueOf(entryIdx));
                 vector.addElement(obj);
             }
-            db.set(new Holder(vector));
+            db.store(new Holder(vector));
         }
-        db.set(new Holder(new Vector(0)));
+        db.store(new Holder(new Vector(0)));
         db.close();
     }
 }

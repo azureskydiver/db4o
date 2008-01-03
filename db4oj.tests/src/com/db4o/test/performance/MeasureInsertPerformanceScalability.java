@@ -55,7 +55,7 @@ public class MeasureInsertPerformanceScalability {
 
     private int storeSingle(ObjectContainer objectContainer) {
         long start = System.currentTimeMillis();
-        objectContainer.set(new Item((int)start));
+        objectContainer.store(new Item((int)start));
         objectContainer.commit();
         long stop = System.currentTimeMillis();
         long duration = stop - start;
@@ -66,7 +66,7 @@ public class MeasureInsertPerformanceScalability {
     private int storeBulk(ObjectContainer objectContainer) {
         long start = System.currentTimeMillis();
         for (int i = 0; i < BULK_COUNT; i++) {
-            objectContainer.set(new Item((int)start));
+            objectContainer.store(new Item((int)start));
         }
         objectContainer.commit();
         long stop = System.currentTimeMillis();

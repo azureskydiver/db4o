@@ -25,7 +25,7 @@ public class LookingAtFileFormat {
         LookingAtFileFormat laff = new LookingAtFileFormat();
         for (int i = 0; i < 10000; i++) {
             laff.str = "WWWWWWWWWW" + i;
-            con.set(laff);
+            con.store(laff);
             con.commit();
         }
         con.close();

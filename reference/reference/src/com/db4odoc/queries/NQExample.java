@@ -48,8 +48,8 @@ public class NQExample {
 	// end advancedQuery
 
 	private static void storePilots(ObjectContainer container) {
-		container.set(new Pilot("Michael Schumacher", 100));
-		container.set(new Pilot("Rubens Barrichello", 99));
+		container.store(new Pilot("Michael Schumacher", 100));
+		container.store(new Pilot("Rubens Barrichello", 99));
 	}
 	// end storePilots
 
@@ -97,7 +97,7 @@ public class NQExample {
 	// end retrieveArbitraryCodeNQ
 
 	private static void clearDatabase(ObjectContainer container) {
-		ObjectSet result = container.get(Pilot.class);
+		ObjectSet result = container.queryByExample(Pilot.class);
 		while (result.hasNext()) {
 			container.delete(result.next());
 		}

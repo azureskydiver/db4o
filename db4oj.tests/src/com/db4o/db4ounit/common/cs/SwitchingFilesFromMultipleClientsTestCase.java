@@ -89,6 +89,6 @@ public class SwitchingFilesFromMultipleClientsTestCase extends StandaloneCSTestC
 	}
 	
 	private void addData(ClientObjectContainer client) {
-		client.set(new Data(_counter++));
+		client.store(new Data(_counter++));
 	}
 }

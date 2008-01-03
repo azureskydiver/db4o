@@ -32,7 +32,7 @@ public class DeleteUpdateTestCase extends Db4oClientServerTestCase {
 					SimpleObject.class);
 			Assert.areEqual("hello", o2.getS());
 			o2.setS("o2");
-			oc2.set(o2);
+			oc2.store(o2);
 
 			oc1.commit();
 			oc2.commit();
@@ -73,7 +73,7 @@ public class DeleteUpdateTestCase extends Db4oClientServerTestCase {
 					SimpleObject.class);
 			Assert.areEqual("hello", o2.getS());
 			o2.setS("o2");
-			oc2.set(o2);
+			oc2.store(o2);
 
 			oc2.commit();
 			oc1.commit();

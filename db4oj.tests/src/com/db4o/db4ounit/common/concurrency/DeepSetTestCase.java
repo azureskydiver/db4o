@@ -29,19 +29,19 @@ public class DeepSetTestCase extends Db4oClientServerTestCase {
 	public void conc(ExtObjectContainer oc, int seq) {
 		DeepSetTestCase example = new DeepSetTestCase();
 		example.name = "1";
-		DeepSetTestCase ds = (DeepSetTestCase) oc.get(example).next();
+		DeepSetTestCase ds = (DeepSetTestCase) oc.queryByExample(example).next();
 		Assert.areEqual("1", ds.name);
 		Assert.areEqual("3", ds.child.child.name);
 		ds.name = "1";
 		ds.child.name = "12" + seq;
 		ds.child.child.name = "13" + seq;
-		oc.set(ds, 2);
+		oc.store(ds, 2);
 	}
 
 	public void check(ExtObjectContainer oc) {
 		DeepSetTestCase example = new DeepSetTestCase();
 		example.name = "1";
-		DeepSetTestCase ds = (DeepSetTestCase) oc.get(example).next();
+		DeepSetTestCase ds = (DeepSetTestCase) oc.queryByExample(example).next();
 		Assert.isTrue(ds.child.name.startsWith("12"));
 		Assert.isTrue(ds.child.name.length() > "12".length());
 		Assert.areEqual("3", ds.child.child.name);

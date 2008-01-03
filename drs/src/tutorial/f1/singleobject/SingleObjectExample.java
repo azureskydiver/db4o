@@ -25,7 +25,7 @@ public class SingleObjectExample {
 		Pilot pilot = new Pilot();
 		pilot.name = "John";
 		pilot.points = 9;
-		objectContainer.set(pilot);
+		objectContainer.store(pilot);
 		objectContainer.commit();
 
 		Configuration config = new Configuration().configure("f1/singleobject/hibernate.cfg.xml");

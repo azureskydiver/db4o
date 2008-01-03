@@ -28,7 +28,7 @@ public class CallbackCanDelete {
     
     public void test(){
         ObjectContainer oc = Test.objectContainer();
-        ObjectSet objectSet = oc.get(new CallbackCanDelete("p1", null));
+        ObjectSet objectSet = oc.queryByExample(new CallbackCanDelete("p1", null));
         CallbackCanDelete ccd = (CallbackCanDelete) objectSet.next();
         oc.deactivate(ccd, Integer.MAX_VALUE);
         oc.delete(ccd);

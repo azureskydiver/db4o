@@ -21,7 +21,7 @@ public class RTreeMapComparator extends RMap{
 	public void specific(ObjectContainer con, int step){
 		if(step > 0){
 			int foundComparators = 0;
-			ObjectSet set = con.get(new TreeMap());
+			ObjectSet set = con.queryByExample(new TreeMap());
 			while(set.hasNext()){
 				TreeMap tm = (TreeMap)set.next();
 				Comparator cmp = tm.comparator();

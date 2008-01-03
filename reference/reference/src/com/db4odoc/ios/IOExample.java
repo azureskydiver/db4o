@@ -30,7 +30,7 @@ public class IOExample  {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Pilot pilot = new Pilot("Rubens Barrichello");
-			container.set(pilot);
+			container.store(pilot);
 		} finally {
 			container.close();
 		}
@@ -57,11 +57,11 @@ public class IOExample  {
 		configuration.io(adapter);
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			 ObjectSet result=container.get(Pilot.class);
+			 ObjectSet result=container.queryByExample(Pilot.class);
 			 System.out.println("Read stored results through memory file");
 		     listResult(result);
 		     Pilot pilotNew = new Pilot("Michael Schumacher");
-		     container.set(pilotNew);
+		     container.store(pilotNew);
 		     System.out.println("New pilot added");
 		} finally {
 			container.close();
@@ -83,7 +83,7 @@ public class IOExample  {
 		configuration.io(new RandomAccessFileAdapter());
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			 ObjectSet result=container.get(Pilot.class);
+			 ObjectSet result=container.queryByExample(Pilot.class);
 			 System.out.println("Read stored results through disc file");
 		     listResult(result);
 		} finally {
@@ -101,7 +101,7 @@ public class IOExample  {
 		//ObjectContainer container = Db4o.openClient(configuration, "localhost", 0xdb40,"y", "y");
 		try {
 		     Pilot pilot = new Pilot("Michael Schumacher");
-		     container.set(pilot);
+		     container.store(pilot);
 		     System.out.println("New pilot added");
 		} finally {
 			
@@ -111,7 +111,7 @@ public class IOExample  {
 	
 		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			 ObjectSet result=container.get(Pilot.class);
+			 ObjectSet result=container.queryByExample(Pilot.class);
 			 listResult(result);
 		} finally {
 			container.close();

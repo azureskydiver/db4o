@@ -65,7 +65,7 @@ public class RefreshTestCase extends Db4oClientServerTestCase {
 			r2.name = "o21";
 			r2.child.name = "o22";
 			r2.child.child.name = "o23";
-			oc2.set(r2);
+			oc2.store(r2);
 			oc2.commit();
 
 			// the next line is failing

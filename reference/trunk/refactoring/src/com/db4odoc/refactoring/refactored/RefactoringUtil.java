@@ -18,14 +18,14 @@ public class RefactoringUtil {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			// querying for B will bring back B and C values
-			ObjectSet result = container.get(new B());
+			ObjectSet result = container.queryByExample(new B());
 			while (result.hasNext()){
 				B b = (B)result.next();
 				D d = new D();
 				d.name = b.name;
 				d.number = b.number;
 				container.delete(b);
-				container.set(d);
+				container.store(d);
 			}
 			
 		} finally {

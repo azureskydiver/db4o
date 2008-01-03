@@ -20,13 +20,13 @@ public class ClientDisconnectTestCase extends Db4oClientServerTestCase {
 		try {
 			if (seq % 2 == 0) {
 				// ok to get something
-				client.get(null);
+				client.queryByExample(null);
 			} else {
 				client.socket().close();
 				Assert.isFalse(oc.isClosed());
 				Assert.expect(Db4oException.class, new CodeBlock() {
 					public void run() throws Throwable {
-						client.get(null);	
+						client.queryByExample(null);	
 					}
 				});
 			}

@@ -145,6 +145,47 @@ public interface ObjectContainer {
     public ExtObjectContainer ext();
 	
     /**
+	 * Query-By-Example interface to retrieve objects.
+	 * <br><br><code>get()</code> creates an
+	 * {@link ObjectSet ObjectSet} containing
+	 * all objects in the <code>ObjectContainer</code> that match the passed
+	 * template object.<br><br>
+	 * Calling <code>get(NULL)</code> returns all objects stored in the
+	 * <code>ObjectContainer</code>.<br><br><br>
+	 * <b>Query Evaluation</b>
+	 * <br>All non-null members of the template object are compared against
+	 * all stored objects of the same class.
+	 * Primitive type members are ignored if they are 0 or false respectively.
+	 * <br><br>Arrays and all supported <code>Collection</code> classes are
+	 * evaluated for containment. Differences in <code>length/size()</code> are
+	 * ignored.
+	 * <br><br>Consult the documentation of the Configuration package to
+	 * configure class-specific behaviour.<br><br><br>
+	 * <b>Returned Objects</b><br>
+	 * The objects returned in the
+	 * {@link ObjectSet ObjectSet} are instantiated
+	 * and activated to the preconfigured depth of 5. The
+	 * {@link com.db4o.config.Configuration#activationDepth activation depth}
+	 * may be configured {@link com.db4o.config.Configuration#activationDepth globally} or
+	 * {@link com.db4o.config.ObjectClass individually for classes}.
+	 * <br><br>
+	 * db4o keeps track of all instantiatied objects. Queries will return
+	 * references to these objects instead of instantiating them a second time.
+	 * <br><br>
+	 * Objects newly activated by <code>get()</code> can respond to the callback
+	 * method {@link com.db4o.ext.ObjectCallbacks#objectOnActivate objectOnActivate}.
+	 * <br><br>
+	 * @param template object to be used as an example to find all matching objects.<br><br>
+	 * @return {@link ObjectSet ObjectSet} containing all found objects.<br><br>
+	 * @see com.db4o.config.Configuration#activationDepth Why activation?
+	 * @see ObjectCallbacks Using callbacks
+	 * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
+	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
+	 * @deprecated Use {@link #queryByExample(Object)} instead
+	 */
+	public <T> ObjectSet<T> get (Object template) throws Db4oIOException, DatabaseClosedException;
+
+	/**
      * Query-By-Example interface to retrieve objects.
      * <br><br><code>get()</code> creates an
      * {@link ObjectSet ObjectSet} containing
@@ -182,7 +223,7 @@ public interface ObjectContainer {
 	 * @throws Db4oIOException I/O operation failed or was unexpectedly interrupted.
 	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
 	 */
-    public <T> ObjectSet<T> get (Object template) throws Db4oIOException, DatabaseClosedException;
+    public <T> ObjectSet<T> queryByExample (Object template) throws Db4oIOException, DatabaseClosedException;
     
     /**
      * creates a new S.O.D.A. {@link Query Query}.
@@ -325,6 +366,44 @@ public interface ObjectContainer {
     public void rollback() throws Db4oIOException, DatabaseClosedException, DatabaseReadOnlyException;
     
     /**
+	 * newly stores objects or updates stored objects.
+	 * <br><br>An object not yet stored in the <code>ObjectContainer</code> will be
+	 * stored when it is passed to <code>set()</code>. An object already stored
+	 * in the <code>ObjectContainer</code> will be updated.
+	 * <br><br><b>Updates</b><br>
+	 * - will affect all simple type object members.<br>
+	 * - links to object members that are already stored will be updated.<br>
+	 * - new object members will be newly stored. The algorithm traverses down
+	 * new members, as long as further new members are found.<br>
+	 * - object members that are already stored will <b>not</b> be updated
+	 * themselves.<br>Every object member needs to be updated individually with a
+	 * call to <code>set()</code> unless a deep
+	 * {@link com.db4o.config.Configuration#updateDepth global} or 
+	 * {@link com.db4o.config.ObjectClass#updateDepth class-specific}
+	 * update depth was configured or cascaded updates were 
+	 * {@link com.db4o.config.ObjectClass#cascadeOnUpdate defined in the class}
+	 * or in {@link com.db4o.config.ObjectField#cascadeOnUpdate one of the member fields}.
+	 * <br><br><b>Examples: ../com/db4o/samples/update.</b><br><br>
+	 * Depending if the passed object is newly stored or updated, the
+	 * callback method
+	 * {@link com.db4o.ext.ObjectCallbacks#objectOnNew objectOnNew} or
+	 * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate} is triggered.
+	 * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate}
+	 * might also be used for cascaded updates.<br><br>
+	 * @param obj the object to be stored or updated.
+	 * @see ExtObjectContainer#store(java.lang.Object, int) ExtObjectContainer#set(object, depth)
+	 * @see com.db4o.config.Configuration#updateDepth
+	 * @see com.db4o.config.ObjectClass#updateDepth
+	 * @see com.db4o.config.ObjectClass#cascadeOnUpdate
+	 * @see com.db4o.config.ObjectField#cascadeOnUpdate
+	 * @see ObjectCallbacks Using callbacks
+	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
+	 * @throws DatabaseReadOnlyException database was configured as read-only.
+	 * @deprecated Use {@link #store(Object)} instead
+	 */
+	public void set (Object obj) throws DatabaseClosedException, DatabaseReadOnlyException;
+
+	/**
      * newly stores objects or updates stored objects.
      * <br><br>An object not yet stored in the <code>ObjectContainer</code> will be
      * stored when it is passed to <code>set()</code>. An object already stored
@@ -350,7 +429,7 @@ public interface ObjectContainer {
      * {@link com.db4o.ext.ObjectCallbacks#objectOnUpdate objectOnUpdate}
      * might also be used for cascaded updates.<br><br>
      * @param obj the object to be stored or updated.
-	 * @see ExtObjectContainer#set(java.lang.Object, int) ExtObjectContainer#set(object, depth)
+	 * @see ExtObjectContainer#store(java.lang.Object, int) ExtObjectContainer#set(object, depth)
 	 * @see com.db4o.config.Configuration#updateDepth
 	 * @see com.db4o.config.ObjectClass#updateDepth
 	 * @see com.db4o.config.ObjectClass#cascadeOnUpdate
@@ -359,7 +438,7 @@ public interface ObjectContainer {
 	 * @throws DatabaseClosedException db4o database file was closed or failed to open.
 	 * @throws DatabaseReadOnlyException database was configured as read-only.
      */
-    public void set (Object obj) throws DatabaseClosedException, DatabaseReadOnlyException;
+    public void store (Object obj) throws DatabaseClosedException, DatabaseReadOnlyException;
     
     
     

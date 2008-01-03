@@ -32,7 +32,7 @@ public class CanUpdateFalseRefreshTestCase extends AbstractDb4oTestCase{
 	public void test(){
 		Item item = (Item) retrieveOnlyInstance(Item.class);
 		item._name = "two";
-		db().set(item);
+		db().store(item);
 		
 		Assert.areEqual("two", item._name);
 		db().refresh(item, 2);

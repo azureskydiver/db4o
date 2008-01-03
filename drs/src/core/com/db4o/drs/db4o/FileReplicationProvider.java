@@ -308,11 +308,11 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 	}
 
 	public void storeNew(Object o) {
-		_stream.set(o);
+		_stream.store(o);
 	}
 
 	public void update(Object o) {
-		_stream.set(o);
+		_stream.store(o);
 	}
 
 	public String getName() {

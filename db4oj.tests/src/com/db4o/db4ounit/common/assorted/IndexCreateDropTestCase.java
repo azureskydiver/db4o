@@ -58,7 +58,7 @@ public class IndexCreateDropTestCase extends AbstractDb4oTestCase implements Opt
     
     protected void store(){
         for (int i = 0; i < VALUES.length; i++) {
-            db().set(new IndexCreateDropItem(VALUES[i]));
+            db().store(new IndexCreateDropItem(VALUES[i]));
         }
     }
     

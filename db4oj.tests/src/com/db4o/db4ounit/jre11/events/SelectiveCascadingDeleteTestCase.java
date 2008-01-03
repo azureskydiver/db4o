@@ -24,7 +24,7 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 		Item c = new Item("C", null);
 		Item b = new Item("B", c);
 		Item a = new Item("A", b);
-		db().set(a);
+		db().store(a);
 	}
 	
 	public void testPreventMiddleObjectDeletion() throws Exception {
@@ -52,7 +52,7 @@ public class SelectiveCascadingDeleteTestCase extends AbstractDb4oTestCase {
 					
 					// and disconnect it
 					item.child = null;
-					container.set(item);
+					container.store(item);
 				}
 			}
 		});

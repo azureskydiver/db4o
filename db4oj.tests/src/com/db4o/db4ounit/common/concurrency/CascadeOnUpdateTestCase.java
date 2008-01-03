@@ -40,7 +40,7 @@ public class CascadeOnUpdateTestCase extends Db4oClientServerTestCase {
 		for (int i = 0; i < ATOM_COUNT; i++) {
 			item.child[i].name = "updated" + seq;
 			item.child[i].child.name = "updated" + seq;
-			oc.set(item);
+			oc.store(item);
 		}
 	}
 

@@ -29,7 +29,7 @@ public class UtilityExample {
 			SensorPanel list = new SensorPanel().createList(10);
 			// store all elements with one statement, since all
 			// elements are new
-			container.set(list);
+			container.store(list);
 		} finally {
 			container.close();
 		}
@@ -45,7 +45,7 @@ public class UtilityExample {
 		try {
 			System.out
 					.println("Object container activation depth = 1");
-			ObjectSet result = container.get(new SensorPanel(1));
+			ObjectSet result = container.queryByExample(new SensorPanel(1));
 			SensorPanel spParent = (SensorPanel) result.get(0);
 			SensorPanel spDescend = (SensorPanel) container.ext()
 					.descend(
@@ -68,7 +68,7 @@ public class UtilityExample {
 			container.ext().configure().activationDepth(2);
 			System.out
 					.println("Object container activation depth = 2");
-			ObjectSet result = container.get(new SensorPanel(1));
+			ObjectSet result = container.queryByExample(new SensorPanel(1));
 			SensorPanel sensor = (SensorPanel) result.get(0);
 			SensorPanel next = sensor.next;
 			while (next != null) {
@@ -91,7 +91,7 @@ public class UtilityExample {
 		try {
 			// store all elements with one statement, since all
 			// elements are new
-			container.set(list);
+			container.store(list);
 			Object sensor = (Object) list.sensor;
 			SensorPanel sp5 = list.next.next.next.next;
 			System.out.println("Root element " + list + " isStored: "

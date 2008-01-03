@@ -61,7 +61,7 @@ public class MultiExamples {
 				for (int i = 0; i < OBJECT_COUNT; i++) {
 					pilot = new Pilot("Professional Pilot #" + i, i);
 					trainee = new Trainee("Trainee #" + i, pilot);
-					container.set(trainee);
+					container.store(trainee);
 				}
 				container.commit();
 			} catch (Db4oException ex) {
@@ -84,12 +84,12 @@ public class MultiExamples {
 				Car car;
 				for (int i = 0; i < OBJECT_COUNT; i++) {
 					car = new Car("BMW", new Pilot("Test Pilot #" + i, i));
-					container.set(car);
+					container.store(car);
 				}
 				for (int i = 0; i < OBJECT_COUNT; i++) {
 					car = new Car("Ferrari", new Pilot("Professional Pilot #"
 							+ (i + 10), (i + 10)));
-					container.set(car);
+					container.store(car);
 				}
 				container.commit();
 			} catch (Db4oException ex) {

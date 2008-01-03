@@ -20,7 +20,7 @@ public class IncrementedId {
 
 	public int getNextID(ObjectContainer container) {
 		no++;
-		container.set(this);
+		container.store(this);
 		return no;
 	}
 
@@ -31,7 +31,7 @@ public class IncrementedId {
 		if (ref == null) {
 			// check if there is a stored instance from the previous 
 			// session in the database
-			ObjectSet os = container.get(IncrementedId.class);
+			ObjectSet os = container.queryByExample(IncrementedId.class);
 			if (os.size() > 0)
 				ref = (IncrementedId) os.next();
 		}
@@ -40,7 +40,7 @@ public class IncrementedId {
 			// create new instance and store it
 			System.out.println("Id object is created");
 			ref = new IncrementedId();
-			container.set(ref);
+			container.store(ref);
 		}
 		return ref;
 	}

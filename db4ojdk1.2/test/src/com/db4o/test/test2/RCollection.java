@@ -46,7 +46,7 @@ public abstract class RCollection implements RTestable{
 		Collection col = (Collection)newInstance();
 		if(step > 0){
 			col.add(entry.key);
-						ObjectSet set = con.get(col);
+						ObjectSet set = con.queryByExample(col);
 			Collection4 sizeCalc = new Collection4();
 			while(set.hasNext()){
 				Object obj = set.next();
@@ -60,7 +60,7 @@ public abstract class RCollection implements RTestable{
 		}
 		entry = entry().noElement();
 		col.add(entry.key);
-		if(con.get(col).size() != 0){
+		if(con.queryByExample(col).size() != 0){
 			Regression.addError("Collection member query found too many");
 		}
 	}

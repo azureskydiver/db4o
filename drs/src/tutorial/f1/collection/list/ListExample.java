@@ -39,7 +39,7 @@ public class ListExample {
 		pilot.cars.add(car1);
 		pilot.cars.add(car2);
 
-		objectContainer.set(pilot);
+		objectContainer.store(pilot);
 		objectContainer.commit();
 
 		Configuration config = new Configuration().configure("f1/collection/list/hibernate.cfg.xml");

@@ -40,14 +40,14 @@ public class CascadeOnDelete extends AbstractDb4oTestCase {
 		Item i = new Item();
 		CascadeOnDelete cod = new CascadeOnDelete();
 		cod.items = new Item[]{ i };
-		db().set(cod);
+		db().store(cod);
 		db().commit();
 		
 		cod.items[0].item = "abrakadabra";
-		db().set(cod);
+		db().store(cod);
 		if(! cascadeOnDelete && ! cascadeOnUpdate){
 			// the only case, where we don't cascade
-			db().set(cod.items[0]);
+			db().store(cod.items[0]);
 		}
 		
 		Assert.areEqual(1, countOccurences(Item.class));

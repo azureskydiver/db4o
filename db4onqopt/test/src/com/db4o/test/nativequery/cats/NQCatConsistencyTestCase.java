@@ -159,12 +159,12 @@ public class NQCatConsistencyTestCase extends AbstractDb4oTestCase {
         
         ObjectContainer db=db();
         
-        db.set(achat);
-        db.set(acrobat);
+        db.store(achat);
+        db.store(acrobat);
         
         Cat trulla = new Cat();
         trulla._firstName = "Trulla";
-        db.set(trulla);
+        db.store(trulla);
         
     }
     

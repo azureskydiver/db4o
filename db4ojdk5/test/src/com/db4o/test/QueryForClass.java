@@ -25,7 +25,7 @@ public class QueryForClass {
     
     public void testGet(){
         ObjectContainer oc = Test.objectContainer();
-        List <QueryForClass> list = oc.get(QueryForClass.class);
+        List <QueryForClass> list = oc.queryByExample(QueryForClass.class);
         for (QueryForClass res : list) {
             Test.ensure(res.name.equals("one"));
         }

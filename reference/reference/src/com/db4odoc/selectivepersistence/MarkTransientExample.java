@@ -33,7 +33,7 @@ public class MarkTransientExample {
 		try 
 		{
 			Test test = new Test("Transient string","Persistent string");
-			container.set(test);
+			container.store(test);
 		} 
 		finally 
 		{

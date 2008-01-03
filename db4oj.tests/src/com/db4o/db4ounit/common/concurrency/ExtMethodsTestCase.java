@@ -16,7 +16,7 @@ public class ExtMethodsTestCase extends Db4oClientServerTestCase {
 	public void conc(ExtObjectContainer oc) {
 
 		ExtMethodsTestCase em = new ExtMethodsTestCase();
-		oc.set(em);
+		oc.store(em);
 		Assert.isFalse(oc.isClosed());
 
 		Assert.isTrue(oc.isActive(em));

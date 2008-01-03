@@ -15,7 +15,7 @@ public class NakedObjectTestCase extends AbstractDb4oTestCase {
 	public void testStoreNakedObjects() {
 		Assert.expect(ObjectNotStorableException.class, new CodeBlock() {
 			public void run() {
-				db().set(new Item());
+				db().store(new Item());
 			}
 		});
 	}

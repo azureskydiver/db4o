@@ -50,8 +50,8 @@ public class CollectionFieldIndexTestCase extends AbstractDb4oTestCase {
 	}
 	
 	protected void store() throws Exception {
-		db().set(new UntypedContainer(new Item("foo")));
-		db().set(new UntypedContainer(new Item("bar")));
+		db().store(new UntypedContainer(new Item("foo")));
+		db().store(new UntypedContainer(new Item("bar")));
 	}
 	
 	public void testUntypedContainer() {

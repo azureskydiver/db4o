@@ -49,7 +49,7 @@ public class ObjectNotStorable implements Runnable{
 		throwException = false;
 		ObjectContainer con = Db4o.openFile(FILE);
 		ObjectNotStorable ons = new ObjectNotStorable("setOK");
-		con.set(ons);
+		con.store(ons);
 		con.close();
 	}
 	
@@ -58,14 +58,14 @@ public class ObjectNotStorable implements Runnable{
 		throwException = false;
 		ObjectNotStorable ons = new ObjectNotStorable("setExc");
 		throwException = true;
-		con.set(ons);
+		con.store(ons);
 		con.close();
 	}
 	
 	private static void getOK(){
 		throwException = false;
 		ObjectContainer con = Db4o.openFile(FILE);
-		ObjectSet set = con.get(new ObjectNotStorable(null));
+		ObjectSet set = con.queryByExample(new ObjectNotStorable(null));
 		while(set.hasNext()){
 			Logger.log(con, set.next());
 		}
@@ -75,7 +75,7 @@ public class ObjectNotStorable implements Runnable{
 	private static void getExc(){
 		throwException = true;
 		ObjectContainer con = Db4o.openFile(FILE);
-		ObjectSet set = con.get(null);
+		ObjectSet set = con.queryByExample(null);
 		while(set.hasNext()){
 			Logger.log(con, set.next());
 		}

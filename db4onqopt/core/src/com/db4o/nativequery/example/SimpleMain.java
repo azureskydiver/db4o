@@ -26,9 +26,9 @@ public class SimpleMain {
 			Student mumon = new Student(100,"Mumon",1.50f);
 			Student tortoise = new Student(101,"Tortoise",0.85f,mumon);
 			Student achilles = new Student(30,"Achilles",1.80f,tortoise);
-			db.set(mumon);
-			db.set(tortoise);
-			db.set(achilles);
+			db.store(mumon);
+			db.store(tortoise);
+			db.store(achilles);
 //			for(int i=0;i<100000;i++) {
 //				db.set(new Student(1,"noone",achilles));
 //			}

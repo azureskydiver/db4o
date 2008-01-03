@@ -62,8 +62,8 @@ public class Db4oHashMap {
         runElementTest(true);
         
         oc = Test.objectContainer();
-        oc.set(this);
-        oc.set(i_helper);
+        oc.store(this);
+        oc.store(i_helper);
         oc.commit();
         
         checkHelper(i_helper);
@@ -162,15 +162,15 @@ public class Db4oHashMap {
         Test.objectContainer().deactivate(i_map, Integer.MAX_VALUE);
         i_map.put("yup", new Atom("yup"));
         
-        Test.objectContainer().set(this);
-        Test.objectContainer().set(this);
-        Test.objectContainer().set(this);
-        Test.objectContainer().set(i_map);
-        Test.objectContainer().set(i_map);
-        Test.objectContainer().set(i_map);
-        Test.objectContainer().set(i_helper);
-        Test.objectContainer().set(i_helper);
-        Test.objectContainer().set(i_helper);
+        Test.objectContainer().store(this);
+        Test.objectContainer().store(this);
+        Test.objectContainer().store(this);
+        Test.objectContainer().store(i_map);
+        Test.objectContainer().store(i_map);
+        Test.objectContainer().store(i_map);
+        Test.objectContainer().store(i_helper);
+        Test.objectContainer().store(i_helper);
+        Test.objectContainer().store(i_helper);
         Test.objectContainer().commit();
         
         Test.ensure(i_map.size() == 4);

@@ -25,7 +25,7 @@ public class Serializer {
         memoryFile.setIncrementSizeBy(300);
     	TransportObjectContainer carrier = new TransportObjectContainer(serviceProvider, memoryFile);
     	carrier.produceClassMetadata(carrier.reflector().forObject(obj));
-		carrier.set(obj);
+		carrier.store(obj);
 		int id = (int)carrier.getID(obj);
 		carrier.close();
 		return new SerializedGraph(id, memoryFile.getBytes());

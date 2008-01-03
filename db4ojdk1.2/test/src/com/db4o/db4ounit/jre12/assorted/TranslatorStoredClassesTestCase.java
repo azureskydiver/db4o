@@ -54,7 +54,7 @@ public class TranslatorStoredClassesTestCase implements TestCase {
 	private static void createFile(Class translated,Object data) {
 		new File(FILENAME).delete();
         ObjectContainer server = db(translated,new TSerializable());
-        server.set(data);
+        server.store(data);
         server.close();
 	}
 

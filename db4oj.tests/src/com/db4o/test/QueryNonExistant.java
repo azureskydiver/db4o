@@ -22,7 +22,7 @@ public class QueryNonExistant {
 	
 	public void test(){
 		ObjectContainer con = Test.objectContainer(); 
-		con.get((new QueryNonExistant(true)));
+		con.queryByExample((new QueryNonExistant(true)));
 		Test.ensureOccurrences(new QueryNonExistant(), 0);
 		Query q = con.query();
 		q.constrain(new QueryNonExistant(true));

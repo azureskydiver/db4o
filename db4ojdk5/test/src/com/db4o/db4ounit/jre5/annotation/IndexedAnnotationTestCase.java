@@ -43,8 +43,8 @@ public class IndexedAnnotationTestCase extends AbstractDb4oTestCase {
 	}
 
 	private void storeData() {
-		db().set(new DataAnnotated(42));
-		db().set(new DataNotAnnotated(43));
+		db().store(new DataAnnotated(42));
+		db().store(new DataNotAnnotated(43));
 	}
 
 	private void assertIndexed() {

@@ -32,7 +32,7 @@ public class ReadCollectionQBETestCase extends Db4oClientServerTestCase {
 	}
 
 	public void concReadCollection(ExtObjectContainer oc) throws Exception {
-		ObjectSet result = oc.get(new ArrayList());
+		ObjectSet result = oc.queryByExample(new ArrayList());
 		Assert.areEqual(1, result.size());
 		List resultList = (List) result.next();
 		Assert.areEqual(list, resultList);

@@ -48,7 +48,7 @@ public class TimestampExample {
 				Timestamp timestamp = new Timestamp(System.currentTimeMillis()); 
 				System.out.println("timestamp: " + timestamp);
 
-				container.set(timestamp); 
+				container.store(timestamp); 
 				
 				container.commit();
 		} catch (Exception ex) {

@@ -26,13 +26,13 @@ public class PCollectionReferencedTwiceTestCase extends AbstractDb4oTestCase {
         
         one._list.add("Hi");
         
-        oc.set(one);
+        oc.store(one);
         
         PCRTHolder two = new PCRTHolder();
         
         two._list = one._list;
         
-        oc.set(two);
+        oc.store(two);
     }
     
     public void test() throws Exception{

@@ -40,7 +40,7 @@ public class AutoIncExample {
 	// end main
 	
 	private static void retrieveObjects(ObjectContainer container){
-		ObjectSet result = container.get(new TestObject(null));
+		ObjectSet result = container.queryByExample(new TestObject(null));
 		listResult(result);
 	}
 	// end retrieveObjects
@@ -48,11 +48,11 @@ public class AutoIncExample {
 	private static void storeObjects(ObjectContainer container){
 		TestObject test;
 		test = new TestObject("FirstObject");
-		container.set(test);
+		container.store(test);
 		test = new TestObject("SecondObject");
-		container.set(test);
+		container.store(test);
 		test = new TestObject("ThirdObject");
-		container.set(test);
+		container.store(test);
 	}
 	// end storeObjects
 	

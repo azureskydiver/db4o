@@ -17,7 +17,7 @@ public class Jdk5EnumTest {
         // We make sure the Jdk5Enum class is already loaded, otherwise
         // we may get the side effect that storing it will load the class
         // and overwrite our changes exactly when we store them. 
-        db.set(Jdk5Enum.A);
+        db.store(Jdk5Enum.A);
         
         Jdk5Data<String> data=new Jdk5Data<String>("Test",Jdk5Enum.A);
         Jdk5Enum.A.reset();
@@ -27,7 +27,7 @@ public class Jdk5EnumTest {
         // The Jdk5Enum object may already be stored on the server, so we
         // can't persist by reachability. We have to store the object
         // explicitely.
-        db.set(Jdk5Enum.A);
+        db.store(Jdk5Enum.A);
         
         Test.ensure(Jdk5Enum.A.getCount() == 1);
         Test.ensure(Jdk5Enum.B.getCount() == 0);
@@ -39,7 +39,7 @@ public class Jdk5EnumTest {
         Test.ensure(data.getMax() == 6);
         Test.ensure(Jdk5Data.class.isAnnotationPresent(Jdk5Annotation.class));
         
-        db.set(data);
+        db.store(data);
         db = reopen();        
         data=null;
         
@@ -70,11 +70,11 @@ public class Jdk5EnumTest {
     	ObjectContainer db=reopen();
     	for(int i=0;i<NUMRUNS;i++) {
     		Jdk5Data<Integer> data=new Jdk5Data<Integer>(Integer.valueOf(i),nthEnum(i));    		
-    		db.set(data);
+    		db.store(data);
     	}
 
     	db=reopen();
-    	ObjectSet result=db.get(Jdk5Data.class);
+    	ObjectSet result=db.queryByExample(Jdk5Data.class);
     	Test.ensure(result.size()==NUMRUNS);
     	Comparator<Jdk5Data<Integer>> comp=new Comparator<Jdk5Data<Integer>>() {
 			public int compare(Jdk5Data<Integer> d1, Jdk5Data<Integer> d2) {
@@ -146,10 +146,10 @@ public class Jdk5EnumTest {
 			holder.db4ovalmap.put(Jdk5Enum.A.name(),Jdk5Enum.A);
 			holder.db4ovalmap.put(Jdk5Enum.B.name(),Jdk5Enum.B);
 		}
-    	db.set(holder);
+    	db.store(holder);
     	
     	db=reopen();
-    	ObjectSet result=db.get(CollectionHolder.class);
+    	ObjectSet result=db.queryByExample(CollectionHolder.class);
     	Test.ensure(result.size()==1);
     	holder=(CollectionHolder)result.next();
 

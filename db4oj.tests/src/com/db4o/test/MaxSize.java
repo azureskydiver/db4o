@@ -42,7 +42,7 @@ public class MaxSize {
         long start = System.currentTimeMillis();
         long elapsed;
         for (int i = 1; i <= SIZE; i++) {
-            objectContainer.set(new MaxSize("" + i));
+            objectContainer.store(new MaxSize("" + i));
             if (((double) i / (double) COMMIT_INTERVAL) == i / COMMIT_INTERVAL) {
                 objectContainer.commit();
                 objectContainer.ext().purge();

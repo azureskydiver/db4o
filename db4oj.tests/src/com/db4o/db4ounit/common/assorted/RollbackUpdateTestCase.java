@@ -25,7 +25,7 @@ public class RollbackUpdateTestCase extends Db4oClientServerTestCase {
 			SimpleObject o1 = (SimpleObject) retrieveOnlyInstance(oc1,
 					SimpleObject.class);
 			o1.setS("o1");
-			oc1.set(o1);
+			oc1.store(o1);
 			SimpleObject o2 = (SimpleObject) retrieveOnlyInstance(oc2,
 					SimpleObject.class);
 			Assert.areEqual("hello", o2.getS());
@@ -39,7 +39,7 @@ public class RollbackUpdateTestCase extends Db4oClientServerTestCase {
 			o2 = (SimpleObject) retrieveOnlyInstance(oc2, SimpleObject.class);
 			Assert.areEqual("hello", o2.getS());
 
-			oc1.set(o1);
+			oc1.store(o1);
 			oc1.commit();
 			oc2.refresh(o2, Integer.MAX_VALUE);
 			o2 = (SimpleObject) retrieveOnlyInstance(oc2, SimpleObject.class);

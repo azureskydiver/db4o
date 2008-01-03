@@ -53,8 +53,8 @@ public class QBEExample {
 		if (container != null) {
 			try {
 				Pilot pilot = new Pilot("Kimi Raikkonen", 100);
-				container.set(pilot);
-				ObjectSet result = container.get(new Pilot("Kimi Raikkonen", 100));
+				container.store(pilot);
+				ObjectSet result = container.queryByExample(new Pilot("Kimi Raikkonen", 100));
 				System.out.println("Test QBE");
 				listResult(result);
 			} catch (Exception ex) {
@@ -73,9 +73,9 @@ public class QBEExample {
 			try {
 				// Pilot1 contains initialisation in the constructor
 				Pilot1 pilot = new Pilot1("Kimi Raikkonen");
-				container.set(pilot);
+				container.store(pilot);
 				// QBE does not return any results
-				ObjectSet result = container.get(new Pilot1("Kimi Raikonnen"));
+				ObjectSet result = container.queryByExample(new Pilot1("Kimi Raikonnen"));
 				System.out.println("Test QBE on class with member initialization in constructor");
 				listResult(result);
 			} catch (Exception ex) {
@@ -94,9 +94,9 @@ public class QBEExample {
 			try {
 				// Pilot1Derived derives the constructor with initialisation
 				Pilot1Derived pilot = new Pilot1Derived("Kimi Raikkonen");
-				container.set(pilot);
+				container.store(pilot);
 				// QBE does not return any results
-				ObjectSet result = container.get(new Pilot1Derived("Kimi Raikonnen"));
+				ObjectSet result = container.queryByExample(new Pilot1Derived("Kimi Raikonnen"));
 				System.out.println("Test QBE on class with member initialization in ancestor constructor");
 				listResult(result);
 			} catch (Exception ex) {
@@ -116,9 +116,9 @@ public class QBEExample {
 			try {
 				// Pilot2 uses static initialization of points member
 				Pilot2 pilot = new Pilot2("Kimi Raikkonen");
-				container.set(pilot);
+				container.store(pilot);
 				// QBE does not return any results
-				ObjectSet result = container.get(new Pilot2("Kimi Raikonnen"));
+				ObjectSet result = container.queryByExample(new Pilot2("Kimi Raikonnen"));
 				System.out.println("Test QBE on class with static member initialization");
 				listResult(result);
 			} catch (Exception ex) {
@@ -137,9 +137,9 @@ public class QBEExample {
 			try {
 				// Pilot2Derived is derived from class with static initialization of points member
 				Pilot2Derived pilot = new Pilot2Derived("Kimi Raikkonen");
-				container.set(pilot);
+				container.store(pilot);
 				// QBE does not return any results
-				ObjectSet result = container.get(new Pilot2Derived("Kimi Raikonnen"));
+				ObjectSet result = container.queryByExample(new Pilot2Derived("Kimi Raikonnen"));
 				System.out.println("Test QBE on class derived from a class with static member initialization");
 				listResult(result);
 			} catch (Exception ex) {

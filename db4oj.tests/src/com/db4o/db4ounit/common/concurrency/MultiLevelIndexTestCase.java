@@ -65,7 +65,7 @@ public class MultiLevelIndexTestCase extends Db4oClientServerTestCase {
 		MultiLevelIndexTestCase mli = (MultiLevelIndexTestCase) objectSet.next();
 		Assert.areEqual(102 - seq, mli._i);
 		mli._child._i = -(seq + 201);
-		oc.set(mli);
+		oc.store(mli);
 	}
 
 	public void check2(ExtObjectContainer oc) {

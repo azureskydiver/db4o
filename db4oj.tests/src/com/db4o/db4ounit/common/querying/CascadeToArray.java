@@ -45,7 +45,7 @@ public class CascadeToArray extends AbstractDb4oTestCase {
 		CascadeToArray cta = new CascadeToArray();
 		cta.objects = new Object[] { new Atom("stored1"),
 				new Atom(new Atom("storedChild1"), "stored2") };
-		db().set(cta);
+		db().store(cta);
 	}
 
 	public void test() throws Exception {
@@ -60,7 +60,7 @@ public class CascadeToArray extends AbstractDb4oTestCase {
 						atom.child.name = "updated";
 					}
 				}
-				db().set(cta);
+				db().store(cta);
 			}
 		});
 

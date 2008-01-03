@@ -17,7 +17,7 @@ public class ArrayExample {
 		team.addPilot(pilot);
 		new File("reference.db4o").delete();
 		ObjectContainer db = Db4o.openFile("reference.db4o");
-		db.set(team);
+		db.store(team);
 		db.close();
 	}
 

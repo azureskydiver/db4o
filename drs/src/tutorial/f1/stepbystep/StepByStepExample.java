@@ -62,7 +62,7 @@ public class StepByStepExample {
 		System.out.println("Opening the db4o database");
 		ObjectContainer db4o = Db4o.openFile(db4oFileName);
 		System.out.println("Saving pilot and car to db4o");
-		db4o.set(pilot);
+		db4o.store(pilot);
 		db4o.commit();
 		db4o.close();
 		System.out.println("Committed and closed db4o");
@@ -163,7 +163,7 @@ public class StepByStepExample {
 		System.out.println("Changing the brand of Car from 'BMW' to 'Honda' and model from 'M3' to 'Fit' ");
 		anna.car.brand = "Honda";
 		anna.car.brand = "Fit";
-		db4o.set(anna);
+		db4o.store(anna);
 
 		db4o.commit();
 		db4o.close();

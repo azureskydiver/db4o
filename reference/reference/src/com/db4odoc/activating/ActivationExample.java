@@ -36,7 +36,7 @@ public class ActivationExample {
 			// create a linked list with length 10
 			SensorPanel list = new SensorPanel().createList(10); 
 			// store all elements with one statement, since all elements are new		
-			container.set(list);
+			container.store(list);
 		} finally {
 			container.close();
 		}
@@ -50,7 +50,7 @@ public class ActivationExample {
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			System.out.println("Object container activation depth = 1");
-			ObjectSet result = container.get(new SensorPanel(1));
+			ObjectSet result = container.queryByExample(new SensorPanel(1));
 			listResult(result);
 			if (result.size() >0) {
 				SensorPanel sensor = (SensorPanel)result.get(0);
@@ -71,7 +71,7 @@ public class ActivationExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			System.out.println("Default activation depth");
-			ObjectSet result = container.get(new SensorPanel(1));
+			ObjectSet result = container.queryByExample(new SensorPanel(1));
 			listResult(result);
 			if (result.size() >0) {
 				SensorPanel sensor = (SensorPanel)result.get(0);
@@ -95,7 +95,7 @@ public class ActivationExample {
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			System.out.println("Cascade activation");
-			ObjectSet result = container.get(new SensorPanel(1));
+			ObjectSet result = container.queryByExample(new SensorPanel(1));
 			listResult(result);
 			if (result.size() >0) {
 				SensorPanel sensor = (SensorPanel)result.get(0);
@@ -121,7 +121,7 @@ public class ActivationExample {
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			System.out.println("Minimum activation depth = 1");
-			ObjectSet result = container.get(new SensorPanel(1));
+			ObjectSet result = container.queryByExample(new SensorPanel(1));
 			listResult(result);
 			if (result.size() >0) {
 				SensorPanel sensor = (SensorPanel)result.get(0);
@@ -147,7 +147,7 @@ public class ActivationExample {
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			System.out.println("Maximum activation depth = 2 (default = 5)");
-			ObjectSet result = container.get(new SensorPanel(1));
+			ObjectSet result = container.queryByExample(new SensorPanel(1));
 			listResult(result);
 			if (result.size() > 0) {
 				SensorPanel sensor = (SensorPanel) result.get(0);
@@ -170,7 +170,7 @@ public class ActivationExample {
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			System.out.println("Object container activation depth = 0" );
-			ObjectSet result = container.get(new SensorPanel(1));
+			ObjectSet result = container.queryByExample(new SensorPanel(1));
 			System.out.println("Sensor1:");
 			listResult(result);
 			SensorPanel sensor1 = (SensorPanel)result.get(0);
@@ -181,7 +181,7 @@ public class ActivationExample {
 			testActivated(sensor1);
 			
 			System.out.println("Sensor5 activated:");
-			result = container.get(new SensorPanel(5));
+			result = container.queryByExample(new SensorPanel(5));
 			SensorPanel sensor5 = (SensorPanel)result.get(0);
 			container.activate(sensor5,4);
 			listResult(result);
@@ -221,7 +221,7 @@ public class ActivationExample {
 				SensorPanel sensor = new SensorPanel(i);
 				list.add(sensor);
 			}		
-			container.set(list);
+			container.store(list);
 		} finally {
 			container.close();
 		}
@@ -234,7 +234,7 @@ public class ActivationExample {
 		configuration.activationDepth(5);
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
-			ObjectSet result = container.get(List.class);
+			ObjectSet result = container.queryByExample(List.class);
 			listResult(result);
 			P2LinkedList list = (P2LinkedList)result.get(0);
 			//System.out.println("Default List activation depth: " + list.activationDepth());
@@ -253,7 +253,7 @@ public class ActivationExample {
 		configuration.activationDepth(5);
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet result = container.get(List.class);
+			ObjectSet result = container.queryByExample(List.class);
 			listResult(result);
 			P2LinkedList list = (P2LinkedList)result.get(0);
 			System.out.println("Setting list activation depth to 0 ");

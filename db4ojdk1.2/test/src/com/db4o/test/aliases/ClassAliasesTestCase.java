@@ -18,8 +18,8 @@ public class ClassAliasesTestCase {
 		
 		ObjectContainer container = Test.objectContainer();
 
-		container.set(new Person1("Homer Simpson"));
-		container.set(new Person1("John Cleese"));
+		container.store(new Person1("Homer Simpson"));
+		container.store(new Person1("John Cleese"));
 		
 		container = Test.reOpen();
 		container.ext().configure().addAlias(
@@ -40,8 +40,8 @@ public class ClassAliasesTestCase {
 				new TypeAlias("com.db4o.test.aliases.Person1",
 						"com.db4o.test.aliases.Person2"));
 		
-		container.set(new Person2("Homer Simpson"));
-		container.set(new Person2("John Cleese"));
+		container.store(new Person2("Homer Simpson"));
+		container.store(new Person2("John Cleese"));
 		
 		container = Test.reOpen();
 		assertData(container);

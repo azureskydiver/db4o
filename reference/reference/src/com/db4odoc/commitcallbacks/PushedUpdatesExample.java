@@ -54,7 +54,7 @@ public class PushedUpdatesExample {
 					// save pilot with client1
 					Car client1Car = new Car("Ferrari", 2006, new Pilot(
 							"Schumacher"));
-					client1.set(client1Car);
+					client1.store(client1Car);
 					client1.commit();
 
 					waitForCompletion();
@@ -66,7 +66,7 @@ public class PushedUpdatesExample {
 					// modify the pilot with client1
 					client1Car.setModel(2007);
 					client1Car.setPilot(new Pilot("Hakkinnen"));
-					client1.set(client1Car);
+					client1.store(client1Car);
 					client1.commit();
 
 					waitForCompletion();

@@ -27,7 +27,7 @@ public class SwitchingFilesFromClient {
 			ExtClient client = (ExtClient)Test.objectContainer();
 			client.switchToFile(DB_FILE);
 			name = "hohoho";
-			client.set(this);
+			client.store(this);
 			Query q = client.query();
 			q.constrain(this.getClass());
 			ObjectSet results = q.execute();

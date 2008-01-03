@@ -33,13 +33,13 @@ public class TransactionExample {
         Pilot pilot=new Pilot("Rubens Barrichello",99);
         Car car=new Car("BMW");
         car.setPilot(pilot);
-        container.set(car);
+        container.store(car);
         container.commit();
     }
     // end storeCarCommit
 
 	private static void listAllCars(ObjectContainer container) {
-        ObjectSet result=container.get(Car.class);
+        ObjectSet result=container.queryByExample(Car.class);
         listResult(result);
     }
     // end listAllCars
@@ -48,26 +48,26 @@ public class TransactionExample {
         Pilot pilot=new Pilot("Michael Schumacher",100);
         Car car=new Car("Ferrari");
         car.setPilot(pilot);
-        container.set(car);
+        container.store(car);
         container.rollback();
     }
     // end storeCarRollback
 
 	private static void carSnapshotRollback(ObjectContainer container) {
-        ObjectSet result=container.get(new Car("BMW"));
+        ObjectSet result=container.queryByExample(new Car("BMW"));
         Car car=(Car)result.next();
         car.snapshot();
-        container.set(car);
+        container.store(car);
         container.rollback();
         System.out.println(car);
     }
     // end carSnapshotRollback
 
 	private static void carSnapshotRollbackRefresh(ObjectContainer container) {
-        ObjectSet result=container.get(new Car("BMW"));
+        ObjectSet result=container.queryByExample(new Car("BMW"));
         Car car=(Car)result.next();
         car.snapshot();
-        container.set(car);
+        container.store(car);
         container.rollback();
         container.ext().refresh(car,Integer.MAX_VALUE);
         System.out.println(car);

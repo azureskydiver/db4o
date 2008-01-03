@@ -44,7 +44,7 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 		CascadeDeleteDeletedTestCase cdd = new CascadeDeleteDeletedTestCase(name);
 		cdd.untypedMember = new CddMember();
 		cdd.typedMember = new CddMember();
-		oc.set(cdd);
+		oc.store(cdd);
 	}
 
 	private void twoRef(ExtObjectContainer oc, String name) {
@@ -54,8 +54,8 @@ public class CascadeDeleteDeletedTestCase extends Db4oClientServerTestCase {
 		CascadeDeleteDeletedTestCase cdd2 = new CascadeDeleteDeletedTestCase(name);
 		cdd2.untypedMember = cdd.untypedMember;
 		cdd2.typedMember = cdd.typedMember;
-		oc.set(cdd);
-		oc.set(cdd2);
+		oc.store(cdd);
+		oc.store(cdd2);
 	}
 
 	public void _testDeleteDeleted() throws Exception {

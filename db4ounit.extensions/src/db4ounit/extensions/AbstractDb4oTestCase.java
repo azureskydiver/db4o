@@ -317,7 +317,7 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 	
 	public final void store(Object obj) {
-		db().set(obj);
+		db().store(obj);
 	}
 	
 	protected ClassMetadata classMetadataFor(Class clazz) {

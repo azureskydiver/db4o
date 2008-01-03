@@ -41,7 +41,7 @@ public class COR756TestCase extends AbstractDb4oTestCase {
         B b = new B();
         b.a = a;
         ObjectContainer oc = db();
-        oc.set(b);
+        oc.store(b);
         oc.commit();
         Assert.areEqual(1, oc.query(new BReferencedFromAPredicate(a)).size());
     }

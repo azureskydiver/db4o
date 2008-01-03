@@ -73,7 +73,7 @@ public class CascadedDeleteFileFormatUpdateTestCase extends FormatMigrationTestC
 	}
 
 	protected void store(ExtObjectContainer objectContainer) {
-		objectContainer.set(ParentItem.newTestInstance());
+		storeObject(objectContainer, ParentItem.newTestInstance());
 	}
 
 	protected String[] versionNames() {

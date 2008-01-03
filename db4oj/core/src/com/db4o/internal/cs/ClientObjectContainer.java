@@ -731,7 +731,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     public void readBlobFrom(Transaction trans, BlobImpl blob, File file) throws IOException {
         MsgBlob msg = null;
         synchronized (lock()) {
-            set(blob);
+            store(blob);
             int id = (int) getID(blob);
             msg = (MsgBlob) Msg.WRITE_BLOB.getWriterForInt(trans, id);
             msg._blob = blob;

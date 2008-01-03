@@ -17,14 +17,14 @@ public class RefactoringUtil {
 	public static void moveValues(){
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet result = container.get(new C());
+			ObjectSet result = container.queryByExample(new C());
 			while (result.hasNext()){
 				C c = (C)result.next();
 				E e = new E();
 				e.name = c.name;
 				e.number = c.number;
 				container.delete(c);
-				container.set(e);
+				container.store(e);
 			}
 			
 		} finally {

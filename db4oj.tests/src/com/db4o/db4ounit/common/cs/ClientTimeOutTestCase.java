@@ -57,7 +57,7 @@ public class ClientTimeOutTestCase extends Db4oClientServerTestCase implements O
        long start = System.currentTimeMillis();
        Assert.expect(DatabaseClosedException.class, new CodeBlock() {
            public void run() throws Throwable {
-               client.get(null);
+               client.queryByExample(null);
            }
        });
        long stop = System.currentTimeMillis();

@@ -29,7 +29,7 @@ public class OneToOneExample {
 		pilot.name = "John";
 		pilot.helmet = helmet;
 
-		objectContainer.set(pilot);
+		objectContainer.store(pilot);
 		objectContainer.commit();
 
 		Configuration config = new Configuration().configure("f1/one_to_one/hibernate.cfg.xml");

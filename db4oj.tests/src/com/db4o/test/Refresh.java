@@ -58,9 +58,9 @@ public class Refresh extends AllTests {
             r11.child.name = "n2";
             r11.child.child.name = "n3";
             r11.child.child.child = new Refresh("n4", null);
-            oc1.set(r11.child.child);
-            oc1.set(r11.child);
-            oc1.set(r11);
+            oc1.store(r11.child.child);
+            oc1.store(r11.child);
+            oc1.store(r11);
 
             oc2.refresh(r12, Integer.MAX_VALUE);
             Test.ensure(r12.child.name.equals("o2"));
@@ -73,14 +73,14 @@ public class Refresh extends AllTests {
             Test.ensure(r12.child.child.child.name.equals("n4"));
 
             r11.child.child.child = null;
-            oc1.set(r11.child.child);
+            oc1.store(r11.child.child);
             Test.commitSync(oc1,oc2);
 
             oc2.refresh(r12, Integer.MAX_VALUE);
             Test.ensure(r12.child.child.child == null);
 
             r11.child.child = new Refresh("nn2", null);
-            oc1.set(r11.child);
+            oc1.store(r11.child);
             Test.commitSync(oc1,oc2);
 
             oc2.refresh(r12, Integer.MAX_VALUE);

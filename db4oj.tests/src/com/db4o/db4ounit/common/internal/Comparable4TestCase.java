@@ -67,7 +67,7 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 
 	private int storeItem() {
 		Item item = new Item();
-		db().set(item);
+		db().store(item);
 		return (int) db().getID(item);
 	}
 	

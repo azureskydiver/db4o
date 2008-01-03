@@ -46,8 +46,8 @@ public class TransientClone {
         modified.molecules[0].name = "changed";
         str = "changed";
         molecules[0].name = "changed";
-        oc.set(molecules[0]);
-        oc.set(this);
+        oc.store(molecules[0]);
+        oc.store(this);
 
         TransientClone tc = peekPersisted(true);
         cmp(originalValues, tc);

@@ -58,12 +58,12 @@ public class ComplexParameterizedExample {
 				for (int i = 0; i < OBJECT_COUNT; i++) {
 					trainee = new Trainee("Trainee #" + i, new Pilot(
 							"Professional Pilot #" + i, i));
-					container.set(trainee);
+					container.store(trainee);
 				}
 				// store a new trainee with a "Training" pilot
 				trainee = new Trainee("Trainee #1", new Pilot(
 						"Training Pilot #1", 20));
-				container.set(trainee);
+				container.store(trainee);
 				container.commit();
 			} catch (Db4oException ex) {
 				System.out.println("Db4o Exception: " + ex.getMessage());

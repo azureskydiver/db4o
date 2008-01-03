@@ -30,8 +30,8 @@ public class EnumExample {
 		new File(DB4O_FILE_NAME).delete();
 		ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			container.set(new Pilot("Michael Schumacher",Qualification.WINNER));
-			container.set(new Pilot("Rubens Barrichello",Qualification.PROFESSIONAL));
+			container.store(new Pilot("Michael Schumacher",Qualification.WINNER));
+			container.store(new Pilot("Rubens Barrichello",Qualification.PROFESSIONAL));
 		} finally {
 			container.close();
 		}
@@ -70,7 +70,7 @@ public class EnumExample {
 	        for(int x = 0; x < result.size(); x++){
 	        	Qualification qualification = (Qualification)result.get(x);
 	        	qualification.testChange("WINNER2006");
-	        	container.set(qualification);
+	        	container.store(qualification);
 	        }
 		} finally {
 			container.close();

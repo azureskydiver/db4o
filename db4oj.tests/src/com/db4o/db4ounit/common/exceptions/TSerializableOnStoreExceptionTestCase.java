@@ -41,7 +41,7 @@ public class TSerializableOnStoreExceptionTestCase extends AbstractDb4oTestCase 
 		Assert.expect(ReflectException.class, IOException.class,
 				new CodeBlock() {
 					public void run() throws Throwable {
-						db().set(new SerializableItem());
+						db().store(new SerializableItem());
 					}
 				});
 	}

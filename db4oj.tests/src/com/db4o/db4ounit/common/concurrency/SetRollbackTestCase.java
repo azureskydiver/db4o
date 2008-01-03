@@ -18,15 +18,15 @@ public class SetRollbackTestCase extends Db4oClientServerTestCase {
 		if (seq % 2 == 0) { // if the thread sequence is even, store something
 			for (int i = 0; i < 1000; i++) {
 				SimpleObject c = new SimpleObject("oc " + i, i);
-				oc.set(c);
+				oc.store(c);
 			}
 		} else { // if the thread sequence is odd, rollback
 			for (int i = 0; i < 1000; i++) {
 				SimpleObject c = new SimpleObject("oc " + i, i);
-				oc.set(c);
+				oc.store(c);
 				oc.rollback();
 				c = new SimpleObject("oc2.2 " + i, i);
-				oc.set(c);
+				oc.store(c);
 			}
 			oc.rollback();
 		}

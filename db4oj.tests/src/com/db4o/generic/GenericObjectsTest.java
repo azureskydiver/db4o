@@ -54,7 +54,7 @@ public class GenericObjectsTest extends AbstractDb4oTestCase {
 		// todo: FIXME: nArray doesn't work
 		// nArray.set(person, arrayData);
 		birthdate.set(person, new Date());
-		fixture().db().set(person);
+		fixture().db().store(person);
 		fixture().db().commit();
 		return person;
 	}

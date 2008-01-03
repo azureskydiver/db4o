@@ -21,7 +21,7 @@ public class StoreNumberTestCase extends AbstractDb4oTestCase {
 
 	protected void store() throws Exception {
 		for(int i=0;i<NUMENTRIES;i++) {
-			db().set(new Data(i));
+			db().store(new Data(i));
 		}
 	}
 

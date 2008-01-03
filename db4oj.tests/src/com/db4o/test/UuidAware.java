@@ -29,8 +29,8 @@ public class UuidAware {
     }
     
     public void store(){
-        Test.objectContainer().set(new UuidAware("one"));
-        Test.objectContainer().set(new UuidAware("two"));
+        Test.objectContainer().store(new UuidAware("one"));
+        Test.objectContainer().store(new UuidAware("two"));
     }
     
     public void test(){

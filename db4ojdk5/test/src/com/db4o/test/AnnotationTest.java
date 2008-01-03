@@ -32,20 +32,20 @@ public class AnnotationTest {
 
 	private static void updateSheep(ObjectContainer db) {
 		System.out.println("updating annotated sheeps");
-		Sheep sheep = (Sheep) db.get(new Sheep("test7", null)).next();
+		Sheep sheep = (Sheep) db.queryByExample(new Sheep("test7", null)).next();
 		sheep.setName(sheep.getName() + "_new");
-		db.set(sheep);
-		ObjectSet<Sheep> result = db.get(Sheep.class);
+		db.store(sheep);
+		ObjectSet<Sheep> result = db.queryByExample(Sheep.class);
 		while (result.hasNext()) {
 			System.out.println(result.next());
 		}
 
 		System.out.println("updating not annotated sheeps");
-		SheepNotAnnotated notAnnot = (SheepNotAnnotated) db.get(
+		SheepNotAnnotated notAnnot = (SheepNotAnnotated) db.queryByExample(
 				new SheepNotAnnotated("notAnnotTest7", null)).next();
 		notAnnot.setName(notAnnot.getName() + "_new");
-		db.set(notAnnot);
-		ObjectSet<SheepNotAnnotated> res = db.get(SheepNotAnnotated.class);
+		db.store(notAnnot);
+		ObjectSet<SheepNotAnnotated> res = db.queryByExample(SheepNotAnnotated.class);
 		while (res.hasNext()) {
 			System.out.println(res.next());
 
@@ -56,17 +56,17 @@ public class AnnotationTest {
 
 	private static void deleteSheep(ObjectContainer db) {
 		System.out.println("deleting annotated sheeps");
-		Sheep sheep = (Sheep) db.get(new Sheep("test15", null)).next();
+		Sheep sheep = (Sheep) db.queryByExample(new Sheep("test15", null)).next();
 		db.delete(sheep);
-		ObjectSet<Sheep> result = db.get(Sheep.class);
+		ObjectSet<Sheep> result = db.queryByExample(Sheep.class);
 		while (result.hasNext()) {
 			System.out.println(">>" + (Sheep) result.next());
 		}
 		System.out.println("deleting not annotated sheeps");
-		SheepNotAnnotated notAnnot = (SheepNotAnnotated) db.get(
+		SheepNotAnnotated notAnnot = (SheepNotAnnotated) db.queryByExample(
 				new SheepNotAnnotated("notAnnotTest15", null)).next();
 		db.delete(notAnnot);
-		ObjectSet<SheepNotAnnotated> res = db.get(SheepNotAnnotated.class);
+		ObjectSet<SheepNotAnnotated> res = db.queryByExample(SheepNotAnnotated.class);
 		while (res.hasNext()) {
 			System.out.println(">>>" + (SheepNotAnnotated) res.next());
 		}
@@ -76,11 +76,11 @@ public class AnnotationTest {
 
 	private static void retriveSheep(ObjectContainer db) {
 		System.out.println("retriving annotated sheeps");
-		ObjectSet<Sheep> result = db.get(new Sheep("test23", null));
+		ObjectSet<Sheep> result = db.queryByExample(new Sheep("test23", null));
 		System.out.println((Sheep) result.next());
 
 		System.out.println("retriving not annotated sheeps");
-		ObjectSet<SheepNotAnnotated> res = db.get(new SheepNotAnnotated(
+		ObjectSet<SheepNotAnnotated> res = db.queryByExample(new SheepNotAnnotated(
 				"notAnnotTest23", null));
 		System.out.println((SheepNotAnnotated) res.next());
 		db.close();
@@ -90,7 +90,7 @@ public class AnnotationTest {
 		Sheep parent = null;
 		for (int i = 0; i < 36; i++) {
 			Sheep sheep = new Sheep("test" + i, parent);
-			db.set(sheep);
+			db.store(sheep);
 			parent = sheep;
 		}
 
@@ -98,7 +98,7 @@ public class AnnotationTest {
 		for (int j = 0; j < 36; j++) {
 			SheepNotAnnotated notAnnotChild = new SheepNotAnnotated(
 					"notAnnotTest" + j, notAnnotParent);
-			db.set(notAnnotChild);
+			db.store(notAnnotChild);
 			notAnnotParent = notAnnotChild;
 		}
 

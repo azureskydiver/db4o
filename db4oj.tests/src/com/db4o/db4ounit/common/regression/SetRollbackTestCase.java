@@ -24,11 +24,11 @@ public class SetRollbackTestCase extends Db4oClientServerTestCase {
 			for (int i = 0; i < 1000; i++) {
 				SimpleObject obj1 = new SimpleObject("oc " + i, i);
 				SimpleObject obj2 = new SimpleObject("oc2 " + i, i);
-				oc1.set(obj1);
-				oc2.set(obj2);
+				oc1.store(obj1);
+				oc2.store(obj2);
 				oc2.rollback();
 				obj2 = new SimpleObject("oc2.2 " + i, i);
-				oc2.set(obj2);
+				oc2.store(obj2);
 			}
 			oc1.commit();
 			oc2.rollback();

@@ -26,7 +26,7 @@ public class CascadeDeleteFalse extends AbstractDb4oTestCase {
         cdf.h1 = new CascadeDeleteFalseHelper();
         cdf.h2 = new CascadeDeleteFalseHelper();
         cdf.h3 = new CascadeDeleteFalseHelper();
-        db().set(cdf);
+        db().store(cdf);
     }
     
     public void test() {

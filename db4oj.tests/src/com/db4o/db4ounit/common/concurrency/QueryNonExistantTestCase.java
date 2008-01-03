@@ -28,7 +28,7 @@ public class QueryNonExistantTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc) {
-		oc.get((new QueryNonExistantTestCase(true)));
+		oc.queryByExample((new QueryNonExistantTestCase(true)));
 		assertOccurrences(oc, QueryNonExistantTestCase.class, 0);
 		Query q = oc.query();
 		q.constrain(new QueryNonExistantTestCase(true));

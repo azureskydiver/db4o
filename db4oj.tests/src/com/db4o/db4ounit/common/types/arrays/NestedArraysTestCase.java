@@ -26,7 +26,7 @@ public class NestedArraysTestCase extends AbstractDb4oTestCase {
         fill(obj, DEPTH);
         Object[] arr = new Object[ELEMENTS];
         fill(arr, DEPTH);
-        db().set(new Data(obj,arr));
+        db().store(new Data(obj,arr));
     }
     
     private void fill(Object[] arr, int depth){

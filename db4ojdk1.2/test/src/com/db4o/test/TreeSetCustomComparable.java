@@ -25,12 +25,12 @@ public class TreeSetCustomComparable implements Comparable{
         Test.deleteAllInstances(TreeMap.class);
         Map map=new TreeMap();
         map.put(new TreeSetCustomComparable(),new TreeSet());
-        Test.objectContainer().set(map);
+        Test.objectContainer().store(map);
     }
     
     public void test(){
         TreeMap map=new TreeMap();
-        ObjectSet result=Test.objectContainer().get(map);
+        ObjectSet result=Test.objectContainer().queryByExample(map);
         while(result.hasNext()) {
             TreeMap tm = (TreeMap)result.next();
             Test.ensure(tm.size() == 1);

@@ -44,7 +44,7 @@ public class PingTestCase extends Db4oClientServerTestCase {
 		
 
 		// The following query will be block by the sender
-		ObjectSet os = client.get(null);
+		ObjectSet os = client.queryByExample(null);
 		while (os.hasNext()) {
 			os.next();
 		}

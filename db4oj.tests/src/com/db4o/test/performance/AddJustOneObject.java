@@ -19,13 +19,13 @@ public class AddJustOneObject {
         new File(FILE).delete();
         ObjectContainer oc = Db4o.openFile(FILE);
         for (int i = 0; i < COUNT; i++) {
-            oc.set(new AddJustOneObject());
+            oc.store(new AddJustOneObject());
         }
         oc.close();
         
         oc = Db4o.openFile(FILE);
         long start = System.currentTimeMillis();
-        oc.set(new AddJustOneObject());
+        oc.store(new AddJustOneObject());
         oc.commit();
         long stop = System.currentTimeMillis();
         oc.close();

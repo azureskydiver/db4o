@@ -27,7 +27,7 @@ public class TransparentActivationSampleMain extends AbstractDb4oTestCase {
 		ObjectContainer db = Db4o.openFile(config, FILENAME);
 		PrioritizedProject project = new PrioritizedProject("db4o",PRIORITY);
 		project.logWorkDone(new UnitOfWork("ta kick-off", new Date(1000), new Date(2000)));
-		db.set(project);
+		db.store(project);
 		db.close();
 		project = null;
 

@@ -14,7 +14,7 @@ public class CallConstructorsConfigTestCase extends StandaloneCSTestCaseBase {
 	protected void runTest() throws Throwable {
 		withClient(new ContainerBlock() {
 			public void run(ObjectContainer client) {	
-				client.set(new Item());
+				client.store(new Item());
 			}
 		});
 		

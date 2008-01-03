@@ -53,7 +53,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
 
     public void testIntArrayStoreObject() throws Exception{
         IntArrayHolder expectedItem = new IntArrayHolder(new int[] {1, 2, 3});
-        db().set(expectedItem);
+        db().store(expectedItem);
         db().purge(expectedItem);
         IntArrayHolder readItem = (IntArrayHolder) retrieveOnlyInstance(IntArrayHolder.class);
         Assert.areNotSame(expectedItem, readItem);
@@ -71,7 +71,7 @@ public class ArrayHandlerTestCase extends AbstractDb4oTestCase {
 
     public void testStringArrayStoreObject() throws Exception{
         StringArrayHolder expectedItem = new StringArrayHolder(new String[] {"one", "two", "three"});
-        db().set(expectedItem);
+        db().store(expectedItem);
         db().purge(expectedItem);
         StringArrayHolder readItem = (StringArrayHolder) retrieveOnlyInstance(StringArrayHolder.class);
         Assert.areNotSame(expectedItem, readItem);

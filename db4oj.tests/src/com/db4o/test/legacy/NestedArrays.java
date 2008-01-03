@@ -34,7 +34,7 @@ public class NestedArrays {
         nr.storeOne();
         
         long storeStart = System.currentTimeMillis();
-        oc.set(nr);
+        oc.store(nr);
         long storeStop = System.currentTimeMillis();
         oc.commit();
         long commitStop = System.currentTimeMillis();
@@ -43,7 +43,7 @@ public class NestedArrays {
         Db4o.configure().activationDepth(0);
         oc = Db4o.openFile(FILE);
         long loadStart = System.currentTimeMillis();
-        nr = (NestedArrays)oc.get(new NestedArrays()).next();
+        nr = (NestedArrays)oc.queryByExample(new NestedArrays()).next();
         oc.activate(nr, Integer.MAX_VALUE);
         long loadStop = System.currentTimeMillis();
         

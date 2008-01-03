@@ -163,14 +163,14 @@ public class STRTH1TestCase extends com.db4o.db4ounit.common.soda.util.SodaBaseT
 	
 	public void testDeleteAll() throws Exception {
 		ExtObjectContainer oc = fixture().db(); 
-		ObjectSet os = oc.get(null); 
+		ObjectSet os = oc.queryByExample(null); 
 		while(os.hasNext()) {
 			oc.delete(os.next()); 
 		}
 		db().commit();
 		fixture().reopen(getClass()); 
 		oc = fixture().db(); 
-		os = oc.get(null);
+		os = oc.queryByExample(null);
 		Assert.areEqual(0, os.size()); 
 	}
 	

@@ -33,7 +33,7 @@ public class SystemInfoTestCase extends AbstractDb4oTestCase{
     private void assertFreespaceInfo(SystemInfo info){
         Assert.isNotNull(info);
         Item item = new Item();
-        db().set(item);
+        db().store(item);
         db().commit();
         db().delete(item);
         db().commit();

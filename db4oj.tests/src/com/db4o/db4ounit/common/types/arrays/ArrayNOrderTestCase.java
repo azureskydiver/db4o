@@ -38,7 +38,7 @@ public class ArrayNOrderTestCase extends AbstractDb4oTestCase {
         objArr[0][1] = "01";
         objArr[1][0] = new Float(10);
         objArr[1][1] = new Double(1.1);
-        db().set(new Data(strArr,objArr));
+        db().store(new Data(strArr,objArr));
     }
 
     public void test() {

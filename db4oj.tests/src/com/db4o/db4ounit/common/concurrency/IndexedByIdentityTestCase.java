@@ -61,7 +61,7 @@ public class IndexedByIdentityTestCase extends Db4oClientServerTestCase {
 		while (os.hasNext()) {
 			IndexedByIdentityTestCase idi = (IndexedByIdentityTestCase) os.next();
 			idi.atom.name = "updated" + seq;
-			oc.set(idi);
+			oc.store(idi);
 			Thread.sleep(100);
 		}
 	}

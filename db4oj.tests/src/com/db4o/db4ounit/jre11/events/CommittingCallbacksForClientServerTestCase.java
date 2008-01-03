@@ -31,7 +31,7 @@ public class CommittingCallbacksForClientServerTestCase extends AbstractDb4oTest
 		
 		final Item item = new Item();
 		final ExtObjectContainer client = db();
-		client.set(item);
+		client.store(item);
 		client.commit();
 		
 		Cool.sleepIgnoringInterruption(50);

@@ -89,7 +89,7 @@ public class SSLSocketsExample {
 		Configuration config = Db4o.newConfiguration();
         ObjectContainer client=Db4o.openClient(config, "localhost",port,user,password, socketFactory);
         Pilot pilot = new Pilot("Fernando Alonso", 89);
-        client.set(pilot);
+        client.store(pilot);
         client.close();
     }
     // end storeObjectsRemotely
@@ -97,7 +97,7 @@ public class SSLSocketsExample {
 	private static void queryRemoteServer(String host, int port,String user,String password) throws IOException {
 		Configuration config = Db4o.newConfiguration();
         ObjectContainer client=Db4o.openClient(config, "localhost",port,user,password, socketFactory);
-        listResult(client.get(new Pilot(null, 0)));
+        listResult(client.queryByExample(new Pilot(null, 0)));
         client.close();
     }
     // end queryRemoteServer

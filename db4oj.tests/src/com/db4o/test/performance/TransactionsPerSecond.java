@@ -36,7 +36,7 @@ public class TransactionsPerSecond {
         long start = System.currentTimeMillis();
         
         for (int i = 0; i < TOTAL_COUNT; i++) {
-            objectContainer.set(new Item(i));
+            objectContainer.store(new Item(i));
             objectContainer.commit();
         }
         

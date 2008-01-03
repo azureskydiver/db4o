@@ -50,7 +50,7 @@ public class NonStaticConfigurationTestCase implements Db4oTestCase {
 		try {
 			Assert.expect(DatabaseReadOnlyException.class, new CodeBlock() {
 				public void run() throws Throwable {
-					db1.set(new Data(1));
+					db1.store(new Data(1));
 				}
 			});
 		} finally {
@@ -60,7 +60,7 @@ public class NonStaticConfigurationTestCase implements Db4oTestCase {
 		Configuration config2 = Db4o.newConfiguration();
 		ObjectContainer db2 = Db4o.openFile(config2, FILENAME);
 		try {
-			db2.set(new Data(2));
+			db2.store(new Data(2));
 			Assert.areEqual(1, db2.query(Data.class).size());
 		} finally {
 			db2.close();

@@ -18,8 +18,8 @@ public class Db4oWithDb4oExample {
 
 		ObjectContainer handheld = Db4o.openFile("handheld.yap");
 
-		handheld.set(pilot1);
-		handheld.set(pilot2);
+		handheld.store(pilot1);
+		handheld.store(pilot2);
 
 		ObjectContainer desktop = Db4o.openFile("desktop.yap");
 

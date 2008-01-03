@@ -55,24 +55,24 @@ public class StructuredExample {
 		Car car1 = new Car("Ferrari");
 		Pilot pilot1 = new Pilot("Michael Schumacher", 100);
 		car1.setPilot(pilot1);
-		container.set(car1);
+		container.store(car1);
 	}
 
 	// end storeFirstCar
 
 	private static void storeSecondCar(ObjectContainer container) {
 		Pilot pilot2 = new Pilot("Rubens Barrichello", 99);
-		container.set(pilot2);
+		container.store(pilot2);
 		Car car2 = new Car("BMW");
 		car2.setPilot(pilot2);
-		container.set(car2);
+		container.store(car2);
 	}
 
 	// end storeSecondCar
 
 	private static void retrieveAllCarsQBE(ObjectContainer container) {
 		Car proto = new Car(null);
-		ObjectSet result = container.get(proto);
+		ObjectSet result = container.queryByExample(proto);
 		listResult(result);
 	}
 
@@ -80,14 +80,14 @@ public class StructuredExample {
 
 	private static void retrieveAllPilotsQBE(ObjectContainer container) {
 		Pilot proto = new Pilot(null, 0);
-		ObjectSet result = container.get(proto);
+		ObjectSet result = container.queryByExample(proto);
 		listResult(result);
 	}
 
 	// end retrieveAllPilotsQBE
 
 	private static void retrieveAllPilots(ObjectContainer container) {
-		ObjectSet result = container.get(Pilot.class);
+		ObjectSet result = container.queryByExample(Pilot.class);
 		listResult(result);
 	}
 
@@ -97,7 +97,7 @@ public class StructuredExample {
 		Pilot pilotproto = new Pilot("Rubens Barrichello", 0);
 		Car carproto = new Car(null);
 		carproto.setPilot(pilotproto);
-		ObjectSet result = container.get(carproto);
+		ObjectSet result = container.queryByExample(carproto);
 		listResult(result);
 	}
 
@@ -152,7 +152,7 @@ public class StructuredExample {
 	// end retrieveAllPilotsNative
 
 	private static void retrieveAllCars(ObjectContainer container) {
-		ObjectSet results = container.get(Car.class);
+		ObjectSet results = container.queryByExample(Car.class);
 		listResult(results);
 	}
 
@@ -179,7 +179,7 @@ public class StructuredExample {
 		});
 		Car found = (Car) result.next();
 		found.setPilot(new Pilot("Somebody else", 0));
-		container.set(found);
+		container.store(found);
 		result = container.query(new Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
@@ -199,7 +199,7 @@ public class StructuredExample {
 		});
 		Car found = (Car) result.next();
 		found.getPilot().addPoints(1);
-		container.set(found);
+		container.store(found);
 		result = container.query(new Predicate<Car>() {
 			public boolean match(Car car) {
 				return car.getModel().equals("Ferrari");
@@ -219,7 +219,7 @@ public class StructuredExample {
 		});
 		Car found = (Car) result.next();
 		found.getPilot().addPoints(1);
-		container.set(found);
+		container.store(found);
 	}
 
 	// end updatePilotSeparateSessionsPart1
@@ -254,7 +254,7 @@ public class StructuredExample {
 		});
 		Car found = (Car) result.next();
 		found.getPilot().addPoints(1);
-		container.set(found);
+		container.store(found);
 	}
 
 	// end updatePilotSeparateSessionsImprovedPart2
@@ -279,7 +279,7 @@ public class StructuredExample {
 		});
 		Car found = (Car) result.next();
 		container.delete(found);
-		result = container.get(new Car(null));
+		result = container.queryByExample(new Car(null));
 		listResult(result);
 	}
 
@@ -323,8 +323,8 @@ public class StructuredExample {
 		Car car2 = new Car("BMW");
 		car1.setPilot(pilot);
 		car2.setPilot(pilot);
-		container.set(car1);
-		container.set(car2);
+		container.store(car1);
+		container.store(car2);
 		container.delete(car2);
 		result = container.query(new Predicate<Car>() {
 			public boolean match(Car car) {

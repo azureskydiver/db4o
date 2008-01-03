@@ -152,12 +152,12 @@ public class Db4oHashMapTestCase extends AbstractDb4oTestCase {
 		db().deactivate(data.i_map, Integer.MAX_VALUE);
 		data.i_map.put("yup", new AtomData("yup"));
 
-		db().set(data.i_map);
-		db().set(data.i_map);
-		db().set(data.i_map);
-		db().set(data.i_helper);
-		db().set(data.i_helper);
-		db().set(data.i_helper);
+		db().store(data.i_map);
+		db().store(data.i_map);
+		db().store(data.i_map);
+		db().store(data.i_helper);
+		db().store(data.i_helper);
+		db().store(data.i_helper);
 		db().commit();
 
 		Assert.areEqual(4,data.i_map.size());

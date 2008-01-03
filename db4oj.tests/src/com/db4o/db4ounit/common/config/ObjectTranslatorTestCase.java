@@ -60,7 +60,7 @@ public class ObjectTranslatorTestCase extends AbstractDb4oTestCase {
 	}
 
 	protected void store() throws Exception {
-		db().set(new Thing("jbe"));
+		db().store(new Thing("jbe"));
 	}
 
 	public void _testTranslationCount() {

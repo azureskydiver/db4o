@@ -34,7 +34,7 @@ public class TAExample {
 		try {
 			// create a linked list with length 10
 			SensorPanelTA list = new SensorPanelTA().createList(10);
-			container.set(list);
+			container.store(list);
 		} finally {
 			closeDatabase();
 		}
@@ -74,7 +74,7 @@ public class TAExample {
 		ObjectContainer container = database(configuration);
 		if (container != null) {
 		try {
-			ObjectSet result = container.get(new SensorPanelTA(1));
+			ObjectSet result = container.queryByExample(new SensorPanelTA(1));
 			listResult(result);
 			if (result.size() > 0) {
 				SensorPanelTA sensor = (SensorPanelTA) result.get(0);
@@ -103,7 +103,7 @@ public class TAExample {
 				for (int i = 0; i < 10; i++) {
 					team.addPilot(new Pilot("Pilot #" + i));
 				}
-				container.set(team);
+				container.store(team);
 				container.commit();
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -120,7 +120,7 @@ public class TAExample {
 		ObjectContainer container = database(configureTA());
 		if (container != null) {
 			try {
-				Team team = (Team) container.get(new Team()).next();
+				Team team = (Team) container.queryByExample(new Team()).next();
 				// this method will activate all the members in the collection 
 				team.listAllPilots();
 			} catch (Exception ex) {

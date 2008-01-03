@@ -18,7 +18,7 @@ class PessimisticThread extends Thread {
     
 	public void run() {
     	try {
-    		ObjectSet result = _container.get(Pilot.class);
+    		ObjectSet result = _container.queryByExample(Pilot.class);
     		while (result.hasNext()){
     			Pilot pilot = (Pilot)result.next();
     			/* with pessimistic approach the object is locked as soon 
@@ -30,7 +30,7 @@ class PessimisticThread extends Thread {
     			
     			System.out.println(getName() + "Updating pilot: " + pilot);
     	        pilot.addPoints(1);
-    	        _container.set(pilot);
+    	        _container.store(pilot);
     	        /* The changes should be committed to be 
     	         * visible to the other clients
     	         */

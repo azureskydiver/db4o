@@ -46,7 +46,7 @@ public class BatchExample {
 			long t1 = System.currentTimeMillis();
 			for (int i = 0; i < NO_OF_OBJECTS; i++) {
 				Pilot pilot = new Pilot("pilot #" + i, i);
-				container.set(pilot);
+				container.store(pilot);
 			}
 			long t2 = System.currentTimeMillis();
 			long diff = t2 - t1;

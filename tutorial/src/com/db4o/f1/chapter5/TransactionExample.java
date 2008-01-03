@@ -30,12 +30,12 @@ public class TransactionExample extends Util {
         Pilot pilot=new Pilot("Rubens Barrichello",99);
         Car car=new Car("BMW");
         car.setPilot(pilot);
-        db.set(car);
+        db.store(car);
         db.commit();
     }
 
     public static void listAllCars(ObjectContainer db) {
-        ObjectSet result=db.get(Car.class);
+        ObjectSet result=db.queryByExample(Car.class);
         listResult(result);
     }
     
@@ -43,24 +43,24 @@ public class TransactionExample extends Util {
         Pilot pilot=new Pilot("Michael Schumacher",100);
         Car car=new Car("Ferrari");
         car.setPilot(pilot);
-        db.set(car);
+        db.store(car);
         db.rollback();
     }
 
     public static void carSnapshotRollback(ObjectContainer db) {
-        ObjectSet result=db.get(new Car("BMW"));
+        ObjectSet result=db.queryByExample(new Car("BMW"));
         Car car=(Car)result.next();
         car.snapshot();
-        db.set(car);
+        db.store(car);
         db.rollback();
         System.out.println(car);
     }
 
     public static void carSnapshotRollbackRefresh(ObjectContainer db) {
-        ObjectSet result=db.get(new Car("BMW"));
+        ObjectSet result=db.queryByExample(new Car("BMW"));
         Car car=(Car)result.next();
         car.snapshot();
-        db.set(car);
+        db.store(car);
         db.rollback();
         db.ext().refresh(car,Integer.MAX_VALUE);
         System.out.println(car);

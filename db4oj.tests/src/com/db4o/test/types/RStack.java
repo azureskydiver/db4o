@@ -19,7 +19,7 @@ public class RStack extends RVector{
 		Stack stack = new Stack();
 		if(step > 0){
 			stack.addElement(entry.key);
-			ObjectSet set = con.get(stack);
+			ObjectSet set = con.queryByExample(stack);
 			if(set.size() != step){
 				Regression.addError("Stack member query not found");
 			}else{

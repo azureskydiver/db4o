@@ -27,7 +27,7 @@ public class CascadeOnActivate extends AbstractDb4oTestCase implements OptOutTA 
 		coa.child.child = new CascadeOnActivate();
 		coa.child.child.name = "3";
 
-		db().set(coa);
+		db().store(coa);
 	}
 
 	public void test() {

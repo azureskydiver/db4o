@@ -51,7 +51,7 @@ public class SlotDefragmentVectorUUIDTestCase implements TestCase {
     private void store() {
         new File(SlotDefragmentTestConstants.FILENAME).delete();
         ObjectContainer db=openDatabase();
-        db.set(new Holder(new Vector()));
+        db.store(new Holder(new Vector()));
         db.close();
     }
 

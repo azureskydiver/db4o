@@ -14,7 +14,7 @@ public class TestListInMap {
 	    ExtObjectContainer db = Test.objectContainer();
 		List list = db.collections().newLinkedList();
 		list.add("ListEntry 1");
-		db.set(list);
+		db.store(list);
 		map = db.collections().newHashMap(0); 			
 		map.put("1", list);
 	}

@@ -39,7 +39,7 @@ public class CascadedDeleteUpdate extends AbstractDb4oTestCase {
 		parentItem1.child = child; 
 		parentItem2.child = child;
 		
-		db().set(parentItem1);
+		db().store(parentItem1);
 	}
 	
 	public void testAllObjectStored() throws Exception{
@@ -50,7 +50,7 @@ public class CascadedDeleteUpdate extends AbstractDb4oTestCase {
 		Query q = newQuery(ParentItem.class);
 		ObjectSet objectSet = q.execute();
 		while(objectSet.hasNext()){
-			db().set(objectSet.next());
+			db().store(objectSet.next());
 		}
 		db().commit();
 		assertAllObjectStored();
