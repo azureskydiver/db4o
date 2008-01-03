@@ -60,7 +60,14 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
         return this;
     }
     
-    public final ObjectSet get(Object template) throws DatabaseClosedException {
+    /**
+	 * @deprecated Use {@link #queryByExample(Object)} instead
+	 */
+	public final ObjectSet get(Object template) throws DatabaseClosedException {
+		return queryByExample(template);
+	}
+
+	public final ObjectSet queryByExample(Object template) throws DatabaseClosedException {
         return get(null, template);
     }
 
@@ -105,7 +112,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
     }
     
     public final ObjectSet query(Class clazz) {
-        return get(clazz);
+        return queryByExample(clazz);
     }
     
     public final ObjectSet query(Predicate predicate){
@@ -124,12 +131,28 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
         rollback(null);
     }
     
-    public final void set(Object obj) 
+    /**
+	 * @deprecated Use {@link #store(Object)} instead
+	 */
+	public final void set(Object obj) 
+	    throws DatabaseClosedException, DatabaseReadOnlyException {
+			store(obj);
+		}
+
+	public final void store(Object obj) 
         throws DatabaseClosedException, DatabaseReadOnlyException {
-        set(obj, Const4.UNSPECIFIED);
+        store(obj, Const4.UNSPECIFIED);
     }
 
-    public final void set(Object obj, int depth) 
+    /**
+	 * @deprecated Use {@link #store(Object,int)} instead
+	 */
+	public final void set(Object obj, int depth) 
+	    throws DatabaseClosedException, DatabaseReadOnlyException {
+			store(obj, depth);
+		}
+
+	public final void store(Object obj, int depth) 
         throws DatabaseClosedException, DatabaseReadOnlyException {
         set(null, obj, depth);
     }

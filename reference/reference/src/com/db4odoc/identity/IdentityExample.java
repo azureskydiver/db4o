@@ -28,9 +28,9 @@ public class IdentityExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
-			container.set(car);
+			container.store(car);
 			car = new Car("Ferrari", new Pilot("Michael Schumacher"));
-			container.set(car);
+			container.store(car);
 		} finally {
 			container.close();
 		}
@@ -44,7 +44,7 @@ public class IdentityExample {
 			ObjectSet cars = container.query(Car.class);
 			Car car = (Car)cars.get(0);
 			String pilotName = car.getPilot().getName();
-			ObjectSet pilots = container.get(new Pilot(pilotName));
+			ObjectSet pilots = container.queryByExample(new Pilot(pilotName));
 			Pilot pilot = (Pilot)pilots.get(0);
 			System.out.println("Retrieved objects are identical: " + (pilot == car.getPilot()));
 		} finally {
@@ -62,7 +62,7 @@ public class IdentityExample {
 			String pilotName = pilot.getName();
 			pilot.setName("new name");
 			System.out.println("Retrieving pilot by name: " + pilotName);
-			ObjectSet pilots1 = container.get(new Pilot(pilotName));
+			ObjectSet pilots1 = container.queryByExample(new Pilot(pilotName));
 			listResult(pilots1);
 		} finally {
 			container.close();
@@ -83,7 +83,7 @@ public class IdentityExample {
 			if (container.ext().isCached(pilotID)){
 				container.ext().purge(pilot);
 			}
-			ObjectSet pilots1 = container.get(new Pilot(pilotName));
+			ObjectSet pilots1 = container.queryByExample(new Pilot(pilotName));
 			listResult(pilots1);
 		} finally {
 			container.close();
@@ -98,7 +98,7 @@ public class IdentityExample {
 			ObjectSet pilots = container.query(Pilot.class);
 			Pilot pilot = (Pilot)pilots.get(0);
 			container.ext().purge(pilot);
-			container.set(pilot);
+			container.store(pilot);
 			pilots = container.query(Pilot.class);
 			listResult(pilots);
 		} finally {
@@ -119,7 +119,7 @@ public class IdentityExample {
 			long IdCar1 = container.ext().getID(car1);
 			Car car2 = new Car("BMW", new Pilot("Rubens Barrichello"));
 			container.ext().bind(car2,289);
-			container.set(car2);
+			container.store(car2);
 
 			result = container.query(Car.class);
 			listResult(result);

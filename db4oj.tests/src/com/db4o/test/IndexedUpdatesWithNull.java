@@ -50,7 +50,7 @@ public class IndexedUpdatesWithNull {
         IndexedUpdatesWithNull iuwn = (IndexedUpdatesWithNull)objectSet.next();
         iuwn.str = "hi";
         ObjectContainer oc = Test.objectContainer();
-        oc.set(iuwn);
+        oc.store(iuwn);
         if(commit){
             oc.commit();
         }

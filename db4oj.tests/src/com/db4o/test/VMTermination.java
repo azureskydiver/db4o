@@ -58,7 +58,7 @@ public class VMTermination {
 		Test.clientServer = false;
 		Test.delete();
 		ObjectContainer con = Test.open();
-		con.set(new VMTermination("willbethere"));
+		con.store(new VMTermination("willbethere"));
 		con.commit();
 		
 		// place a breakpoint on the following line 
@@ -81,7 +81,7 @@ public class VMTermination {
 		Test.clientServer = true;
 		Test.delete();
 		ObjectContainer con = Test.open();
-		con.set(new VMTermination("willbethere"));
+		con.store(new VMTermination("willbethere"));
 		con.commit();
 		
 		// place a breakpoint on the following line 
@@ -102,7 +102,7 @@ public class VMTermination {
 		Test.runServer = true;
 		Test.clientServer = true;
 		ObjectContainer con = Test.open();
-		con.set(new VMTermination("willbethere"));
+		con.store(new VMTermination("willbethere"));
 		
 		
 		// a bit tougher now: place a

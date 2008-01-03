@@ -18,15 +18,15 @@ public class TwoClients extends AllTestsConfAll{
             Atom a_1_1 = new Atom("One");
             Atom a_1_2 = new Atom("Two");
             Atom a_1_3 = new Atom("Three");
-            client1.set(a_1_1);
-            client1.set(a_1_2);
-            client1.set(a_1_3);
+            client1.store(a_1_1);
+            client1.store(a_1_2);
+            client1.store(a_1_3);
             ensureAtomCount(client2,null, 0);
             Test.commitSync(client1, client2);
             ensureAtomCount(client2,null, 3);
-            Atom a_2_1 = (Atom)client2.get(new Atom("One")).next();
+            Atom a_2_1 = (Atom)client2.queryByExample(new Atom("One")).next();
             a_1_1.child = new Atom("OneChild");
-            client1.set(a_1_1);
+            client1.store(a_1_1);
             ensureAtomCount(client2,null, 3);
             Test.commitSync(client1, client2);
             ensureAtomCount(client2,null, 4);
@@ -34,12 +34,12 @@ public class TwoClients extends AllTestsConfAll{
             client2.activate(a_2_1, Integer.MAX_VALUE);
             Test.ensure(a_2_1.child.name.equals("OneChild"));
             a_2_1.name = "Zulu";
-            client2.set(a_2_1);
+            client2.store(a_2_1);
             
             Atom a_1_4 = new Atom("Zorro");
-            client1.set(a_1_4);
+            client1.store(a_1_4);
             Atom a_1_5 = new Atom("Zzerk");
-            client1.set(a_1_5);
+            client1.store(a_1_5);
             
             ensureAtomCount(client1, "Zulu", 0);
             
@@ -56,13 +56,13 @@ public class TwoClients extends AllTestsConfAll{
             
             Test.ensure(a_1_1 == q_1_1);
             a_1_1.name = "Bozo";
-            client1.set(a_1_1);
+            client1.store(a_1_1);
             a_1_1.child.name = "BozoChild";
-            client1.set(a_1_1.child);
+            client1.store(a_1_1.child);
             a_1_4.name = "Bozo";
-            client1.set(a_1_4);
+            client1.store(a_1_4);
             a_1_5.name = "Cue";
-            client1.set(a_1_5);
+            client1.store(a_1_5);
             
             client2.refresh(a_2_1, Integer.MAX_VALUE);
             Test.ensure(a_2_1.name.equals("Zulu"));

@@ -218,7 +218,14 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
         throw new NotSupportedException();
     }
 
-    public void set(Object obj, int depth) {
+    /**
+	 * @deprecated Use {@link #store(Object,int)} instead
+	 */
+	public void set(Object obj, int depth) {
+		store(obj, depth);
+	}
+
+	public void store(Object obj, int depth) {
         synchronized(lock()){
             checkClosed();
             _server.set(_transaction, obj, depth);
@@ -321,7 +328,14 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
         return (ExtObjectContainer)this;
     }
 
-    public ObjectSet get(Object template) throws Db4oIOException, DatabaseClosedException {
+    /**
+	 * @deprecated Use {@link #queryByExample(Object)} instead
+	 */
+	public ObjectSet get(Object template) throws Db4oIOException, DatabaseClosedException {
+		return queryByExample(template);
+	}
+
+	public ObjectSet queryByExample(Object template) throws Db4oIOException, DatabaseClosedException {
         synchronized(lock()){
             checkClosed();
             return _server.get(_transaction, template);
@@ -365,7 +379,14 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
         }
     }
 
-    public void set(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
+    /**
+	 * @deprecated Use {@link #store(Object)} instead
+	 */
+	public void set(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
+		store(obj);
+	}
+
+	public void store(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
         synchronized(lock()){
             checkClosed();
             _server.set(_transaction, obj);

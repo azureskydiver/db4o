@@ -31,9 +31,9 @@ public class CollectionExample {
 			   Pilot pilot2 = new Pilot("David Schumacher", 98);
 			   ferrariTeam.addPilot(pilot2);
 				
-			   container.set(ferrariTeam);
+			   container.store(ferrariTeam);
 			   List protoList = CollectionFactory.newList();
-			   ObjectSet result = container.get(protoList);
+			   ObjectSet result = container.queryByExample(protoList);
 			   listResult(result);
 		   }  finally {
 		      container.close();
@@ -54,10 +54,10 @@ public class CollectionExample {
 				 Pilot pilot = new Pilot("David Schumacher", 100);
 				 ferrariTeam.updatePilot(1,pilot);
 					
-				 container.set(ferrariTeam);
+				 container.store(ferrariTeam);
 			 }
 			 List protoList = CollectionFactory.newList();
-			 result = container.get(protoList);
+			 result = container.queryByExample(protoList);
 			 listResult(result);
 		}  finally {
 			container.close();

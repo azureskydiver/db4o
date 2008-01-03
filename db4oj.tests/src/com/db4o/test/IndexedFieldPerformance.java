@@ -43,7 +43,7 @@ public class IndexedFieldPerformance implements Serializable {
         long start = System.currentTimeMillis();
         long elapsed;
         for (int i = 1; i <= SIZE; i++) {
-            objectContainer.set(new IndexedFieldPerformance("" + i));
+            objectContainer.store(new IndexedFieldPerformance("" + i));
             if (((double) i / (double) COMMIT_STEP) == i / COMMIT_STEP) {
                 objectContainer.commit();
                 objectContainer.ext().purge();

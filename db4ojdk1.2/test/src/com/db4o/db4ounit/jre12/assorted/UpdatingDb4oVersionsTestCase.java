@@ -38,7 +38,8 @@ public class UpdatingDb4oVersionsTestCase extends FormatMigrationTestCaseBase {
         udv.name = "check";
         udv.list = oc.collections().newLinkedList();
         udv.map = oc.collections().newHashMap(1);
-        oc.set(udv);
+        storeObject(oc, udv);
+        oc.store(udv);
         udv.list.add("check");
         udv.map.put("check","check");
     }

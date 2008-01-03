@@ -51,7 +51,7 @@ public class CreateSomeData {
 			for (int j = 0; j < DEPTH; j++) {
 				obj = new SomeData(c++, obj);
 			}
-			db.set(obj);
+			db.store(obj);
 
 		}
 		db.commit();

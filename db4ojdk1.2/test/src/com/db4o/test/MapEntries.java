@@ -30,17 +30,17 @@ public class MapEntries {
 		ObjectContainer con = Db4o.openFile(FILE);
 		HashMap map = new HashMap();
 		map.put("delme", new Integer(99));
-		con.set(map);
+		con.store(map);
 		con.close();
 		con = Db4o.openFile(FILE);
-		con.delete(con.get(new HashMap()).next());
+		con.delete(con.queryByExample(new HashMap()).next());
 		con.close();
 		LogAll.run(FILE);
 	}
 	
 	static void check(){
 		ObjectContainer con = Db4o.openFile(FILE);
-		System.out.println("Entry elements: " + con.get(new com.db4o.config.Entry()).size());
+		System.out.println("Entry elements: " + con.queryByExample(new com.db4o.config.Entry()).size());
 		con.close();
 	}
 	
@@ -51,17 +51,17 @@ public class MapEntries {
 		me.hm = new HashMap();
 		me.hm.put("t1", new ObjectSimplePublic());
 		me.hm.put("t2", new ObjectSimplePublic());
-		con.set(me);
+		con.store(me);
 		con.close();
 	}
 	
 	static void update(){
 		ObjectContainer con = Db4o.openFile(FILE);
-		ObjectSet set = con.get(new MapEntries());
+		ObjectSet set = con.queryByExample(new MapEntries());
 		while(set.hasNext()){
 			MapEntries me = (MapEntries)set.next();
 			me.hm.put("t1", new Integer(100));
-			con.set(me.hm);
+			con.store(me.hm);
 		}
 		con.close();
 	}

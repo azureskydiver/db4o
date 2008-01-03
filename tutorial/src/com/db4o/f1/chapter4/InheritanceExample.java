@@ -30,7 +30,7 @@ public class InheritanceExample extends Util {
         Car car1=new Car("Ferrari");
         Pilot pilot1=new Pilot("Michael Schumacher",100);
         car1.setPilot(pilot1);
-        db.set(car1);
+        db.store(car1);
     }
     
     public static void storeSecondCar(ObjectContainer db) {
@@ -39,13 +39,13 @@ public class InheritanceExample extends Util {
         car2.setPilot(pilot2);
         car2.snapshot();
         car2.snapshot();
-        db.set(car2);
+        db.store(car2);
     }
 
     public static void retrieveAllSensorReadoutsQBE(
             ObjectContainer db) {
         SensorReadout proto=new SensorReadout(null,null,null);
-        ObjectSet result=db.get(proto);
+        ObjectSet result=db.queryByExample(proto);
         listResult(result);
     }
 
@@ -53,13 +53,13 @@ public class InheritanceExample extends Util {
             ObjectContainer db) {
         SensorReadout proto=
             new TemperatureSensorReadout(null,null,null,0.0);
-        ObjectSet result=db.get(proto);
+        ObjectSet result=db.queryByExample(proto);
         listResult(result);
     }
 
     public static void retrieveAllSensorReadoutsQBEAlternative(
             ObjectContainer db) {
-        ObjectSet result=db.get(SensorReadout.class);
+        ObjectSet result=db.queryByExample(SensorReadout.class);
         listResult(result);
     }
 
@@ -72,7 +72,7 @@ public class InheritanceExample extends Util {
     }
     
     public static void retrieveAllObjectsQBE(ObjectContainer db) {
-        ObjectSet result=db.get(new Object());
+        ObjectSet result=db.queryByExample(new Object());
         listResult(result);
     }
     

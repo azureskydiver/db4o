@@ -79,12 +79,12 @@ public class BackupStressTestCase implements Db4oTestCase {
         }
         
         BackupStressIteration iteration = new BackupStressIteration();
-        _objectContainer.set(iteration);
+        _objectContainer.store(iteration);
         _objectContainer.commit();
         Thread backupThread = startBackupThread();
         for (int i = 1; i <= ITERATIONS; i++) {
             for (int obj = 0; obj < OBJECTS; obj++) {
-                _objectContainer.set(new BackupStressItem("i" + obj, i));
+                _objectContainer.store(new BackupStressItem("i" + obj, i));
                 _commitCounter ++;
                 if(_commitCounter >= COMMITS){
                     _objectContainer.commit();
@@ -92,7 +92,7 @@ public class BackupStressTestCase implements Db4oTestCase {
                 }
             }
             iteration.setCount(i);
-            _objectContainer.set(iteration);
+            _objectContainer.store(iteration);
             _objectContainer.commit();
         }
         _noMoreBackups = true;

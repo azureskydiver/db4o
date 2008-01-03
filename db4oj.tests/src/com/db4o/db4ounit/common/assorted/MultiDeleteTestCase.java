@@ -52,7 +52,7 @@ public class MultiDeleteTestCase extends AbstractDb4oTestCase implements OptOutD
         md.setMembers();
         md.child = new Item();
         md.child.setMembers();
-        db().set(md);
+        db().store(md);
     }
     
     public void testDeleteCanBeCalledTwice(){

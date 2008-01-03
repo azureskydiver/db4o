@@ -36,7 +36,7 @@ public class DeepExample extends Util {
         Pilot pilot=new Pilot("Rubens Barrichello",99);
         Car car=new Car("BMW");
         car.setPilot(pilot);
-        db.set(car);
+        db.store(car);
     }
 
     public static void setCascadeOnUpdate() {
@@ -44,16 +44,16 @@ public class DeepExample extends Util {
     }
     
     public static void takeManySnapshots(ObjectContainer db) {
-        ObjectSet result=db.get(Car.class);
+        ObjectSet result=db.queryByExample(Car.class);
         Car car=(Car)result.next();
         for(int i=0;i<5;i++) {
             car.snapshot();
         }
-        db.set(car);
+        db.store(car);
     }
     
     public static void retrieveAllSnapshots(ObjectContainer db) {
-        ObjectSet result=db.get(SensorReadout.class);
+        ObjectSet result=db.queryByExample(SensorReadout.class);
         while(result.hasNext()) {
             System.out.println(result.next());
         }
@@ -61,7 +61,7 @@ public class DeepExample extends Util {
 
     public static void retrieveSnapshotsSequentially(
             ObjectContainer db) {
-        ObjectSet result=db.get(Car.class);
+        ObjectSet result=db.queryByExample(Car.class);
         Car car=(Car)result.next();
         SensorReadout readout=car.getHistory();
         while(readout!=null) {
@@ -72,7 +72,7 @@ public class DeepExample extends Util {
     
     public static void retrieveSnapshotsSequentiallyImproved(
             ObjectContainer db) {
-        ObjectSet result=db.get(Car.class);
+        ObjectSet result=db.queryByExample(Car.class);
         Car car=(Car)result.next();
         SensorReadout readout=car.getHistory();
         while(readout!=null) {

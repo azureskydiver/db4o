@@ -17,10 +17,10 @@ public class EnhanceTestMain {
         Db4o.configure().reflectWith(new SelfReflector(registry));
         new File(FILENAME).delete();
         ObjectContainer db=Db4o.openFile(FILENAME);
-        db.set(new Dog("Laika",111,new Dog[]{},new int[]{1,2,3}));
+        db.store(new Dog("Laika",111,new Dog[]{},new int[]{1,2,3}));
         db.close();
         db=Db4o.openFile(FILENAME);
-        ObjectSet result=db.get(Dog.class);
+        ObjectSet result=db.queryByExample(Dog.class);
         while(result.hasNext()) {
         	System.out.println(result.next());
         }

@@ -72,7 +72,7 @@ public class LegacyDatabaseDefragTestCase implements TestCase {
 	private void fragmentDatabase(final ObjectContainer container) {
 		Item[] items = createItems();
 		for (int i=0; i<items.length; ++i) {
-			container.set(items[i]);
+			container.store(items[i]);
 		}
 		for (int i=0; i<items.length; i += 2) {
 			container.delete(items[i]);

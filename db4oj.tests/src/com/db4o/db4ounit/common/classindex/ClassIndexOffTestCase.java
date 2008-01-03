@@ -30,7 +30,7 @@ public class ClassIndexOffTestCase extends AbstractDb4oTestCase implements OptOu
 	}
 	
 	public void test(){
-		db().set(new Item("1"));
+		db().store(new Item("1"));
 		StoredClass yc = db().storedClass(Item.class);
 		Assert.isFalse(yc.hasClassIndex());
 		

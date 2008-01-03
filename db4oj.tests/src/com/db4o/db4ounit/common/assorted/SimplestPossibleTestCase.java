@@ -15,7 +15,7 @@ public class SimplestPossibleTestCase extends AbstractDb4oTestCase {
     }
     
     protected void store() {
-        db().set(new Item("one"));
+        db().store(new Item("one"));
     }
     
     public void test(){

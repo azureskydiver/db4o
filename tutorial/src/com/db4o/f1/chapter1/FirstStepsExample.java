@@ -42,50 +42,50 @@ public class FirstStepsExample extends Util {
     
     public static void storeFirstPilot(ObjectContainer db) {
         Pilot pilot1=new Pilot("Michael Schumacher",100);
-        db.set(pilot1);
+        db.store(pilot1);
         System.out.println("Stored "+pilot1);
     }
 
     public static void storeSecondPilot(ObjectContainer db) {
         Pilot pilot2=new Pilot("Rubens Barrichello",99);
-        db.set(pilot2);
+        db.store(pilot2);
         System.out.println("Stored "+pilot2);
     }
 
     public static void retrieveAllPilotQBE(ObjectContainer db) {
         Pilot proto=new Pilot(null,0);
-        ObjectSet result=db.get(proto);
+        ObjectSet result=db.queryByExample(proto);
         listResult(result);
     }
     
     public static void retrieveAllPilots(ObjectContainer db) {
-        ObjectSet result=db.get(Pilot.class);
+        ObjectSet result=db.queryByExample(Pilot.class);
         listResult(result);
     }
 
     public static void retrievePilotByName(ObjectContainer db) {
         Pilot proto=new Pilot("Michael Schumacher",0);
-        ObjectSet result=db.get(proto);
+        ObjectSet result=db.queryByExample(proto);
         listResult(result);
     }
     
     public static void retrievePilotByExactPoints(ObjectContainer db) {
         Pilot proto=new Pilot(null,100);
-        ObjectSet result=db.get(proto);
+        ObjectSet result=db.queryByExample(proto);
         listResult(result);
     }
 
     public static void updatePilot(ObjectContainer db) {
-        ObjectSet result=db.get(new Pilot("Michael Schumacher",0));
+        ObjectSet result=db.queryByExample(new Pilot("Michael Schumacher",0));
         Pilot found=(Pilot)result.next();
         found.addPoints(11);
-        db.set(found);
+        db.store(found);
         System.out.println("Added 11 points for "+found);
         retrieveAllPilots(db);
     }
 
     public static void deleteFirstPilotByName(ObjectContainer db) {
-        ObjectSet result=db.get(new Pilot("Michael Schumacher",0));
+        ObjectSet result=db.queryByExample(new Pilot("Michael Schumacher",0));
         Pilot found=(Pilot)result.next();
         db.delete(found);
         System.out.println("Deleted "+found);
@@ -93,7 +93,7 @@ public class FirstStepsExample extends Util {
     }
 
     public static void deleteSecondPilotByName(ObjectContainer db) {
-        ObjectSet result=db.get(new Pilot("Rubens Barrichello",0));
+        ObjectSet result=db.queryByExample(new Pilot("Rubens Barrichello",0));
         Pilot found=(Pilot)result.next();
         db.delete(found);
         System.out.println("Deleted "+found);

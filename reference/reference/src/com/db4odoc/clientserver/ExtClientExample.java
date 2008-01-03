@@ -29,7 +29,7 @@ public class ExtClientExample  {
             ObjectContainer client=server.openClient();
             deleteAll(client); // added to solve sticking objects in doctor 
             Car car = new Car("BMW");
-            client.set(car);
+            client.store(car);
             System.out.println("Objects in the main database file:");
             retrieveAll(client);
 			
@@ -37,7 +37,7 @@ public class ExtClientExample  {
             ExtClient clientExt = (ExtClient)client;
             clientExt.switchToFile(EXTFILENAME);
             car = new Car("Ferrari");
-            clientExt.set(car);
+            clientExt.store(car);
             retrieveAll(clientExt);
 			System.out.println("Main database file again: ");
 			clientExt.switchToMainFile();
@@ -51,13 +51,13 @@ public class ExtClientExample  {
     // end switchExtClients
     
 	private static void retrieveAll(ObjectContainer container){
-        ObjectSet result=container.get(new Object());
+        ObjectSet result=container.queryByExample(new Object());
         listResult(result);
     }
     // end retrieveAll
     
 	private static void deleteAll(ObjectContainer container) {
-        ObjectSet result=container.get(new Object());
+        ObjectSet result=container.queryByExample(new Object());
         while(result.hasNext()) {
             container.delete(result.next());
         }

@@ -46,7 +46,7 @@ public class CascadeDeleteDeleted extends AbstractDb4oTestCase {
 		CascadeDeleteDeleted cdd = new CascadeDeleteDeleted(name);
 		cdd.untypedMember = new CddMember();
 		cdd.typedMember = new CddMember();
-		db().set(cdd);
+		db().store(cdd);
 	}
 
 	private void twoRef(String name) {
@@ -56,8 +56,8 @@ public class CascadeDeleteDeleted extends AbstractDb4oTestCase {
 		CascadeDeleteDeleted cdd2 = new CascadeDeleteDeleted(name);
 		cdd2.untypedMember = cdd.untypedMember;
 		cdd2.typedMember = cdd.typedMember;
-		db().set(cdd);
-		db().set(cdd2);
+		db().store(cdd);
+		db().store(cdd2);
 
 	}
 

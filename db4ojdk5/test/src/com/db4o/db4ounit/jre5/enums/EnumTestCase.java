@@ -18,7 +18,7 @@ public class EnumTestCase extends AbstractDb4oTestCase {
         // We make sure the Jdk5Enum class is already loaded, otherwise
         // we may get the side effect that storing it will load the class
         // and overwrite our changes exactly when we store them. 
-        db().set(TypeCountEnum.A);
+        db().store(TypeCountEnum.A);
         
         EnumHolder data=new EnumHolder(TypeCountEnum.A);
         TypeCountEnum.A.reset();
@@ -28,13 +28,13 @@ public class EnumTestCase extends AbstractDb4oTestCase {
         // The Jdk5Enum object may already be stored on the server, so we
         // can't persist by reachability. We have to store the object
         // explicitely.
-        db().set(TypeCountEnum.A);
+        db().store(TypeCountEnum.A);
         
         Assert.areEqual(1, TypeCountEnum.A.getCount());
         Assert.areEqual(0, TypeCountEnum.B.getCount());
         Assert.areEqual(TypeCountEnum.A, data.getType());
         
-        db().set(data);
+        db().store(data);
         reopen();        
         data=null;
         
@@ -110,10 +110,10 @@ public class EnumTestCase extends AbstractDb4oTestCase {
 			holder.db4ovalmap.put(TypeCountEnum.A.name(),TypeCountEnum.A);
 			holder.db4ovalmap.put(TypeCountEnum.B.name(),TypeCountEnum.B);
 		}
-    	db().set(holder);
+    	db().store(holder);
     	
     	reopen();
-    	ObjectSet result=db().get(CollectionHolder.class);
+    	ObjectSet result=db().queryByExample(CollectionHolder.class);
     	Assert.areEqual(1, result.size());
     	holder=(CollectionHolder)result.next();
 

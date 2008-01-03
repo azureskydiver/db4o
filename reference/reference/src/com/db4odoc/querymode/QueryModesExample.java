@@ -42,7 +42,7 @@ public class QueryModesExample {
 
 	private static void addPilot(ObjectContainer container, int points) {
 		Pilot pilot = new Pilot("Tester", points);
-		container.set(pilot);
+		container.store(pilot);
 	}
 	// end addPilot
 
@@ -115,7 +115,7 @@ public class QueryModesExample {
 			container.delete(pilotToDelete);
 			Pilot pilot = new Pilot("Tester", 2);
 			System.out.println("Pilot to be added: " + pilot);
-			container.set(pilot);
+			container.store(pilot);
 
 			System.out
 					.println("Query result after changing from the same transaction");
@@ -179,7 +179,7 @@ public class QueryModesExample {
 			container.delete(pilotToDelete);
 			Pilot pilot = new Pilot("Tester", 2);
 			System.out.println("Pilot to be added: " + pilot);
-			container.set(pilot);
+			container.store(pilot);
 
 			System.out
 					.println("Query result after changing from the same transaction");
@@ -210,7 +210,7 @@ public class QueryModesExample {
 			ObjectSet result2 = query2.execute();
 			Pilot pilot2 = (Pilot) result2.get(0);
 			pilot2.addPoints(22);
-			container.set(pilot2);
+			container.store(pilot2);
 			listResult(result1);
 		} finally {
 			container.close();

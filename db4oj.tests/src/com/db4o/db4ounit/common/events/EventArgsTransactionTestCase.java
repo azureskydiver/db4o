@@ -23,7 +23,7 @@ public class EventArgsTransactionTestCase extends AbstractDb4oTestCase {
 				foundTrans.value = ((TransactionalEventArgs)args).transaction();
 			}
 		});
-		db().set(new Item());
+		db().store(new Item());
 		db().commit();
 		Assert.isTrue(called.value);
 		Assert.areSame(trans(), foundTrans.value);

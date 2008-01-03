@@ -24,7 +24,7 @@ public class ObjectCanActiviateExceptionTestCase extends AbstractDb4oTestCase {
 		Assert.expect(ReflectException.class, ItemException.class,
 				new CodeBlock() {
 					public void run() throws Throwable {
-						ObjectSet os = db().get(null);
+						ObjectSet os = db().queryByExample(null);
 						os.next();
 					}
 				});

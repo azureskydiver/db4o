@@ -18,14 +18,14 @@ public class ObjectVersionTest extends AbstractDb4oTestCase {
 		final ExtObjectContainer oc = this.db();
 		Item object = new Item("c1");
 		
-		oc.set(object);
+		oc.store(object);
 		
 		ObjectInfo objectInfo1 = oc.getObjectInfo(object);
 		long oldVer = objectInfo1.getVersion();
 
 		//Update
 		object.setName("c3");
-		oc.set(object);
+		oc.store(object);
 
 		ObjectInfo objectInfo2 = oc.getObjectInfo(object);
 		long newVer = objectInfo2.getVersion();

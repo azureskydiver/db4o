@@ -23,17 +23,17 @@ public class RefactoringExample {
 		try {
 			A a = new A();
 			a.name = "A class";
-			container.set(a);
+			container.store(a);
 			
 			B b = new B();
 			b.name = "B class";
 			b.number = 1;
-			container.set(b);
+			container.store(b);
 			
 			C c = new C();
 			c.name = "C class";
 			c.number = 2;
-			container.set(c);
+			container.store(c);
 		} finally {
 			container.close();
 		}
@@ -51,12 +51,12 @@ public class RefactoringExample {
 			System.out.println("A class: ");
 			listResult(result);
 			
-			result = container.get(new B());
+			result = container.queryByExample(new B());
 			System.out.println();
 			System.out.println("B class: ");
 			listResult(result);
 			
-			result = container.get(new C());
+			result = container.queryByExample(new C());
 			System.out.println();
 			System.out.println("C class: ");
 			listResult(result);

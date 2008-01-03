@@ -82,7 +82,7 @@ public class CallbacksTestCase
 	    
 	    setReturn(false);
 	    name = "modified";
-	    oc.set(this);
+	    oc.store(this);
 	    ensure(CAN_UPDATE);
 	    ensureNot(UPDATE);
 	    setReturn(true);
@@ -92,7 +92,7 @@ public class CallbacksTestCase
 	    
 	    setReturn(true);
 	    name = "modified";
-	    oc.set(this);
+	    oc.store(this);
 	    ensure(CAN_UPDATE);
 	    ensure(UPDATE);
 	    oc.ext().refresh(this, 3);
@@ -103,7 +103,7 @@ public class CallbacksTestCase
 	    helper = new CallbackHelper();
 	    helper.name = "helper";
 	    helper.parent = this;
-	    oc.set(this);
+	    oc.store(this);
 	    oc.activate(this, 3);
 	    oc.deactivate(this, 3);
 	    
@@ -189,14 +189,14 @@ public class CallbacksTestCase
 	public void objectOnNew(ObjectContainer container){
 	    called[NEW] = true;
 	    if(helper != null){
-	        container.set(helper);
+	        container.store(helper);
 	    }
 	}	
 	
 	public void objectOnUpdate(ObjectContainer container){
 	    called[UPDATE] = true;
 	    if(helper != null){
-	        container.set(helper);
+	        container.store(helper);
 	    }
 	}
 	

@@ -101,11 +101,11 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 		Data c=new Data(3,true,2.2f,CSTR,b, Integer.MIN_VALUE, date1);
 		Data cc=new Data(3,false,3.3f,CSTR,null, Integer.MIN_VALUE, date2);
 		ObjectContainer db=db();
-		db.set(a);
-		db.set(b);
-		db.set(c);
-		db.set(cc);
-		db.set(new Other());
+		db.store(a);
+		db.store(b);
+		db.store(c);
+		db.store(cc);
+		db.store(new Other());
 		_prevData=a;
 	}
 	
@@ -617,7 +617,7 @@ public class NQRegressionTestCase extends AbstractDb4oTestCase {
 	private static ExpectingPredicate[] PREDICATES = _PREDICATES;
 	
 	public void testAll() throws Exception {
-		_prevData = (Data) db().get(_prevData).next();
+		_prevData = (Data) db().queryByExample(_prevData).next();
 		for (int predIdx = 0; predIdx < PREDICATES.length; predIdx++) {
 			ExpectingPredicate predicate = PREDICATES[predIdx];
 			assertNQResult(predicate);

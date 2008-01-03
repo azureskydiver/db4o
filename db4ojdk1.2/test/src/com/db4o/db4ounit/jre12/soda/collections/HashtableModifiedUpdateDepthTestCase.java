@@ -41,7 +41,7 @@ public class HashtableModifiedUpdateDepthTestCase extends Db4oClientServerTestCa
 			ht2.put("hi", "updated2");
 
 			// oc1 sets updated value, but doesn't commit
-			oc1.set(ht1);
+			oc1.store(ht1);
 			ht1 = (Hashtable) retrieveOnlyInstance(oc1, Hashtable.class);
 			Assert.areEqual("updated1", ht1.get("hi"));
 			ht2 = (Hashtable) retrieveOnlyInstance(oc2, Hashtable.class);
@@ -58,7 +58,7 @@ public class HashtableModifiedUpdateDepthTestCase extends Db4oClientServerTestCa
 
 			// oc2 sets updated value, but doesn't commit
 			ht2.put("hi", "updated2");
-			oc2.set(ht2);
+			oc2.store(ht2);
 			ht1 = (Hashtable) retrieveOnlyInstance(oc1, Hashtable.class);
 			oc1.refresh(ht1, Integer.MAX_VALUE);
 			Assert.areEqual("updated1", ht1.get("hi"));

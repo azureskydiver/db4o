@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
 public class GetSingleSimpleArrayTestCase extends AbstractDb4oTestCase{
 	
 	public void test(){
-        final ObjectSet result=db().get(new double[]{0.6,0.4});
+        final ObjectSet result=db().queryByExample(new double[]{0.6,0.4});
         Assert.isFalse(result.hasNext());
         Assert.isFalse(result.hasNext());
         Assert.expect(IllegalStateException.class, new CodeBlock() {

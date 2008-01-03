@@ -39,7 +39,7 @@ public class MapExample {
 		pilot.cars.put("car1", car1);
 		pilot.cars.put("car2", car2);
 
-		objectContainer.set(pilot);
+		objectContainer.store(pilot);
 		objectContainer.commit();
 
 		Configuration config = new Configuration().configure("f1/collection/map/hibernate.cfg.xml");

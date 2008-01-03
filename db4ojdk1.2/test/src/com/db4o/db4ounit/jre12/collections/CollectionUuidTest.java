@@ -18,7 +18,7 @@ public class CollectionUuidTest extends AbstractDb4oTestCase {
 	
 	public void test() {
 		ArrayList list = new ArrayList();
-		db().set(list);
+		db().store(list);
 		Assert.isNotNull(db().getObjectInfo(list).getUUID());
 	}
 	

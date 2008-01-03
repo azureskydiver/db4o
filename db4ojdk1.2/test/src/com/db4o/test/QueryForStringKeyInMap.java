@@ -23,7 +23,7 @@ public class QueryForStringKeyInMap {
     private void store1(String key){
         ExtObjectContainer oc = Test.objectContainer();
         QueryForStringKeyInMap holder = new QueryForStringKeyInMap();
-        oc.set(holder);
+        oc.store(holder);
         holder.map = oc.collections().newHashMap(1);
         holder.map.put("somethingelse", "somethingelse");
         holder.map.put(key, key);

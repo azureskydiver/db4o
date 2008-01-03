@@ -25,13 +25,13 @@ public class EvaluationExample extends Util {
     Car car1=new Car("Ferrari");
     car1.setPilot(pilot1);
     car1.snapshot();
-    db.set(car1);
+    db.store(car1);
     Pilot pilot2=new Pilot("Rubens Barrichello",99);
     Car car2=new Car("BMW");
     car2.setPilot(pilot2);
     car2.snapshot();
     car2.snapshot();
-    db.set(car2);
+    db.store(car2);
   }
 	
   public static void queryWithEvaluation(ObjectContainer db) {

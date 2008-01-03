@@ -75,7 +75,7 @@ public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle, 
 	protected void updateItemDate(String itemName, Object newValue) {
 		final MigrationItem item = getItem(itemName);
 		item.setValue(newValue);
-		db().set(item);
+		db().store(item);
 	}
 
 	protected void assertItem(final Object expectedValue, final String itemName) {
@@ -111,10 +111,10 @@ public abstract class MigrationTestCaseBase implements TestCase, TestLifeCycle, 
 		new java.io.File(getDatabaseFileName()).delete();
 		final ObjectContainer container = Db4o.openFile(getDatabaseFileName());
 		try {
-			container.set(newItem(NULL_NAME, null));
-			container.set(newItem(MAX_VALUE_NAME, getMaxValue()));
-			container.set(newItem(MIN_VALUE_NAME, getMinValue()));
-			container.set(newItem(ORDINARY_NAME, getOrdinaryValue()));
+			container.store(newItem(NULL_NAME, null));
+			container.store(newItem(MAX_VALUE_NAME, getMaxValue()));
+			container.store(newItem(MIN_VALUE_NAME, getMinValue()));
+			container.store(newItem(ORDINARY_NAME, getOrdinaryValue()));
 		} finally {
 			container.close();
 		}

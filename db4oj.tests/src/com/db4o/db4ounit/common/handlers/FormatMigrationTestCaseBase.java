@@ -161,6 +161,10 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     
     protected abstract void store(ExtObjectContainer objectContainer);
     
+    protected void storeObject(ExtObjectContainer objectContainer, Object obj){
+    	objectContainer.set(obj);
+    }
+    
     protected abstract void assertObjectsAreReadable(ExtObjectContainer objectContainer);
     
 }

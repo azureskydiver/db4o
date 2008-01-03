@@ -41,8 +41,8 @@ public class DeleteDeep {
     
     private void deleteDeep(ObjectContainer objectContainer, Object obj){
         ObjectContainer allToDelete = ExtDb4o.openMemoryFile(null);
-        allToDelete.set(obj);
-        ObjectSet objectSet = allToDelete.get(null);
+        allToDelete.store(obj);
+        ObjectSet objectSet = allToDelete.queryByExample(null);
         while(objectSet.hasNext()){
             objectContainer.delete(objectSet.next());
         }

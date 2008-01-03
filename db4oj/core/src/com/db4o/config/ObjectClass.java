@@ -70,7 +70,7 @@ public interface ObjectClass {
 	 * <br><br>
 	 * <b>Caution !</b><br>
 	 * This setting will also trigger deletion of old member objects, on
-	 * calls to {@link com.db4o.ObjectContainer#set(Object)}.<br><br>
+	 * calls to {@link com.db4o.ObjectContainer#store(Object)}.<br><br>
 	 * An example of the behaviour:<br>
 	 * <code>
 	 * ObjectContainer con;<br>
@@ -101,7 +101,7 @@ public interface ObjectClass {
 	 * <br><br>
 	 * Setting cascadeOnUpdate to true will result in the update
 	 * of all member objects if a stored instance of this class is passed
-	 * to {@link com.db4o.ObjectContainer#set(Object)}.<br><br>
+	 * to {@link com.db4o.ObjectContainer#store(Object)}.<br><br>
 	 * The default setting is <b>false</b>.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
@@ -312,10 +312,10 @@ public interface ObjectClass {
     /**
 	 * specifies the updateDepth for this class.
 	 * <br><br>see the documentation of
-	 * {@link com.db4o.ObjectContainer#set(Object)}
+	 * {@link com.db4o.ObjectContainer#store(Object)}
 	 * for further details.<br><br>
 	 * The default setting is 0: Only the object passed to
-	 * {@link com.db4o.ObjectContainer#set(Object)} will be updated.<br><br>
+	 * {@link com.db4o.ObjectContainer#store(Object)} will be updated.<br><br>
 	 * In client-server environment this setting should be used on both 
      * client and server. <br><br>
      * @param depth the depth of the desired update for this class.

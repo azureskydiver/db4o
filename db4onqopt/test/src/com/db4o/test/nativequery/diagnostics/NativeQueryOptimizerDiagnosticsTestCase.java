@@ -32,8 +32,8 @@ public class NativeQueryOptimizerDiagnosticsTestCase extends AbstractDb4oTestCas
 	}
 	
 	protected void store() {
-		db().set(new Subject("Test"));
-		db().set(new Subject("Test2"));
+		db().store(new Subject("Test"));
+		db().store(new Subject("Test2"));
 	}
 	
 	public void testNativeQueryNotOptimized() {

@@ -29,12 +29,12 @@ public class Util {
     }
     
     public static void retrieveAll(ObjectContainer container){
-        ObjectSet result=container.get(new Object());
+        ObjectSet result=container.queryByExample(new Object());
         listResult(result);
     }
     
     public static void deleteAll(ObjectContainer container) {
-        ObjectSet result=container.get(new Object());
+        ObjectSet result=container.queryByExample(new Object());
         while(result.hasNext()) {
             container.delete(result.next());
         }

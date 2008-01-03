@@ -42,7 +42,7 @@ public class ListOperationsExample {
                         dataObject.setData( System.currentTimeMillis() + " ---- Data Object " + String.format("%5d", j));
                         lo.getData().add(dataObject);
                     }
-                    container.set(lo);
+                    container.store(lo);
                 }
                 long t2 = System.currentTimeMillis();
                 elapsedTime = t2 - t1;
@@ -112,8 +112,8 @@ public class ListOperationsExample {
                     long t1 = System.currentTimeMillis();
                     // save ListObjects. UpdateDepth = 1 will ensure that 
                     // the DataObject list is saved as well
-                    container.set(lo1);
-                    container.set(lo2);
+                    container.store(lo1);
+                    container.store(lo2);
                     container.commit();
                     long t2 = System.currentTimeMillis();
                     timeElapsed = t2 - t1;
@@ -150,7 +150,7 @@ public class ListOperationsExample {
                     long t1 = System.currentTimeMillis();
                     // save only the DataObject. List of DataObjects will
                     // automatically include the new value
-                    container.set(dataobject);
+                    container.store(dataobject);
                     container.commit();
                     long t2 = System.currentTimeMillis();
                     timeElapsed = t2 -t1;

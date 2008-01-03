@@ -9,7 +9,7 @@ import com.db4o.internal.*;
 public class EmptyObjectSet {
     
     public void test(){
-        ObjectSet objectSet = Test.objectContainer().get(ObjectContainerBase.class);
+        ObjectSet objectSet = Test.objectContainer().queryByExample(ObjectContainerBase.class);
         Test.ensure(objectSet.size() == 0);
     }
 

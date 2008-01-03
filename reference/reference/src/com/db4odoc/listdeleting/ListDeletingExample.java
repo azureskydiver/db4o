@@ -36,7 +36,7 @@ public class ListDeletingExample {
 				ListObject lo1 = result.get(0);
 				// remove all the objects from the list
 				lo1.getData().removeAll(lo1.getData());
-				container.set(lo1);
+				container.store(lo1);
 			}
 		} finally {
 			container.close();
@@ -83,7 +83,7 @@ public class ListDeletingExample {
 					container.delete(it.next());
 				}
 
-				container.set(lo1);
+				container.store(lo1);
 			}
 		} finally {
 			container.close();
@@ -161,7 +161,7 @@ public class ListDeletingExample {
 							+ " ---- Data Object " + String.format("%5d", j));
 					lo.getData().add(dataObject);
 				}
-				container.set(lo);
+				container.store(lo);
 			}
 			long t2 = System.currentTimeMillis();
 			elapsedTime = t2 - t1;

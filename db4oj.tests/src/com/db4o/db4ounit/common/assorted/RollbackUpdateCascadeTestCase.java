@@ -39,7 +39,7 @@ public class RollbackUpdateCascadeTestCase extends Db4oClientServerTestCase {
 			Assert.areEqual(1, os1.size());
 			Atom o1 = (Atom) os1.next();
 			o1.child.child.name = "o1";
-			oc1.set(o1);
+			oc1.store(o1);
 
 			Query query2 = oc2.query();
 			query2.descend("name").constrain("root");
@@ -55,7 +55,7 @@ public class RollbackUpdateCascadeTestCase extends Db4oClientServerTestCase {
 			o2 = (Atom) os2.next();
 			Assert.areEqual("child.child", o2.child.child.name);
 
-			oc1.set(o1);
+			oc1.store(o1);
 			oc1.commit();
 			
 			os2 = query2.execute();

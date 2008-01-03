@@ -58,7 +58,7 @@ public class UpdatingDb4oVersions {
 	        udv.name = "check";
 	        udv.list = objectContainer.collections().newLinkedList();
 	        udv.map = objectContainer.collections().newHashMap(1);
-	        objectContainer.set(udv);
+	        objectContainer.store(udv);
 	        udv.list.add("check");
 	        udv.map.put("check","check");
         } finally {

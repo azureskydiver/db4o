@@ -59,7 +59,7 @@ public class SimpleIoBenchmark {
 	private static void query() {
 		ObjectContainer db = Db4o.openFile(DBFILENAME);
 		try {
-			ObjectSet set = db.get(TestDummy.class);
+			ObjectSet set = db.queryByExample(TestDummy.class);
 			if (ITERATIONS != set.size()) {
 				System.err.println("Expected: " + ITERATIONS + ", actual: " + set.size());
 			}
@@ -73,7 +73,7 @@ public class SimpleIoBenchmark {
 		ObjectContainer db = Db4o.openFile(DBFILENAME);
 		try {
 			for (int i=0; i<ITERATIONS; ++i) {
-				db.set(new TestDummy("Dummy " + i));
+				db.store(new TestDummy("Dummy " + i));
 				if (0 == i % 10) {
 					db.commit();
 				}

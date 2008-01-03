@@ -51,7 +51,7 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
         
         item1.setValue(100);
         item1.next().setValue(200);
-        client1.set(item1, 2);
+        client1.store(item1, 2);
         client1.commit();
         
         Assert.areEqual(100, item1.getValue());
@@ -83,7 +83,7 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
             next1 = next1.next();
             value++;
         }
-        client1.set(item1, 5);
+        client1.store(item1, 5);
         client1.commit();
         
         client2.refresh(item2, 5);

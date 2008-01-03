@@ -32,13 +32,13 @@ public class QueryExample extends Util {
 
     public static void storeFirstPilot(ObjectContainer db) {
         Pilot pilot1=new Pilot("Michael Schumacher",100);
-        db.set(pilot1);
+        db.store(pilot1);
         System.out.println("Stored "+pilot1);
     }
 
     public static void storeSecondPilot(ObjectContainer db) {
         Pilot pilot2=new Pilot("Rubens Barrichello",99);
-        db.set(pilot2);
+        db.store(pilot2);
         System.out.println("Stored "+pilot2);
     }
 
@@ -108,7 +108,7 @@ public class QueryExample extends Util {
     public static void retrieveByDefaultFieldValue(
                     ObjectContainer db) {
         Pilot somebody=new Pilot("Somebody else",0);
-        db.set(somebody);
+        db.store(somebody);
         Query query=db.query();
         query.constrain(Pilot.class);
         query.descend("points").constrain(new Integer(0));
@@ -129,7 +129,7 @@ public class QueryExample extends Util {
     }
 
     public static void clearDatabase(ObjectContainer db) {
-        ObjectSet result=db.get(Pilot.class);
+        ObjectSet result=db.queryByExample(Pilot.class);
         while(result.hasNext()) {
             db.delete(result.next());
         }

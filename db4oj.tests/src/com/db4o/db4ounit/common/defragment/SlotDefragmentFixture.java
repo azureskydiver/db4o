@@ -52,7 +52,7 @@ public class SlotDefragmentFixture {
 		Data data=null;
 		for(int value=VALUE-1;value<=VALUE+1;value++) {
 			data=new Data(value,data);
-			db.set(data);
+			db.store(data);
 		}
 		db.close();
 	}

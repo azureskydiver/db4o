@@ -46,12 +46,12 @@ public class TransparentActivationExample extends Util {
         for(int i=0;i<5;i++) {
             car.snapshot();
         }
-        db.set(car);
+        db.store(car);
     }
     
     public static void retrieveSnapshotsSequentially(
         ObjectContainer db) {
-        ObjectSet result=db.get(Car.class);
+        ObjectSet result=db.queryByExample(Car.class);
         Car car=(Car)result.next();
         SensorReadout readout=car.getHistory();
         while(readout!=null) {
@@ -62,7 +62,7 @@ public class TransparentActivationExample extends Util {
     
     public static void demonstrateTransparentActivation(
         ObjectContainer db)  {
-        ObjectSet result=db.get(Car.class);
+        ObjectSet result=db.queryByExample(Car.class);
         Car car=(Car)result.next();
         
         System.out.println("#getPilotWithoutActivation() before the car is activated");

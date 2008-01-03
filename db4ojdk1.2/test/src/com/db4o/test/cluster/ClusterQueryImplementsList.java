@@ -29,8 +29,8 @@ public class ClusterQueryImplementsList {
         Test.store(new ClusterQueryImplementsList("inOne"));
         Test.store(new ClusterQueryImplementsList("inBoth"));
         ObjectContainer second = Db4o.openFile(SECOND_FILE);
-        second.set(new ClusterQueryImplementsList("inBoth"));
-        second.set(new ClusterQueryImplementsList("inTwo"));
+        second.store(new ClusterQueryImplementsList("inBoth"));
+        second.store(new ClusterQueryImplementsList("inTwo"));
         second.close();
     }
     

@@ -22,7 +22,7 @@ public class TestFinal
       ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
       try {
     	  TestFinal test = new TestFinal(1,"test");
-    	  container.set(test);
+    	  container.store(test);
     	  System.out.println("Added: " + test);
       } finally {
     	  // Close does implicit commit and refreshes the reference cache
@@ -30,7 +30,7 @@ public class TestFinal
       }
       container = Db4o.openFile(DB4O_FILE_NAME);
       try {
-    	  ObjectSet result = container.get(null);
+    	  ObjectSet result = container.queryByExample(null);
     	  listResult(result);
       } finally { 
     	  container.close();

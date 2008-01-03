@@ -58,9 +58,9 @@ public class COR57TestCase extends AbstractDb4oTestCase {
 	protected void store() throws Exception {
 		 for (int i = 0; i < 5; i++) {
 			 String name = String.valueOf(i);
-			 db().set(new Base(name));
-			 db().set(new BaseExt(name));
-			 db().set(new BaseExtExt(name));
+			 db().store(new Base(name));
+			 db().store(new BaseExt(name));
+			 db().store(new BaseExtExt(name));
 		 } 
 	}
 	
@@ -87,7 +87,7 @@ public class COR57TestCase extends AbstractDb4oTestCase {
 	}
 
 	private void assertQBE(int expectedCount, final Base template) {
-		assertQueryResult(expectedCount, template, db().get(template));
+		assertQueryResult(expectedCount, template, db().queryByExample(template));
 	}
 
 	private void assertQueryResult(int expectedCount, final Base expectedTemplate, final ObjectSet result) {

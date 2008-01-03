@@ -30,11 +30,11 @@ public class StringIndexCorruptionTestCase extends StringIndexTestCaseBase {
     	final int itemCount = 300;
 		for (int i=0; i<itemCount; ++i) {
     		Item item = new Item(itemName(i));
-    		container.set(item);
-    		container.set(item);
+    		container.store(item);
+    		container.store(item);
     		container.commit();
-    		container.set(item);
-    		container.set(item);
+    		container.store(item);
+    		container.store(item);
     		container.commit();
     	}    	
     	for (int i=0; i<itemCount; ++i) {

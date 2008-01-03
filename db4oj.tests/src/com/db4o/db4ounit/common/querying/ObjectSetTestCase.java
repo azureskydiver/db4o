@@ -34,9 +34,9 @@ public class ObjectSetTestCase extends AbstractDb4oTestCase {
 	}
 	
 	protected void store() throws Exception {
-		db().set(new Item("foo"));
-		db().set(new Item("bar"));
-		db().set(new Item("baz"));
+		db().store(new Item("foo"));
+		db().store(new Item("bar"));
+		db().store(new Item("baz"));
 	}
 	
 	public void testObjectsCantBeSeenAfterDelete() {

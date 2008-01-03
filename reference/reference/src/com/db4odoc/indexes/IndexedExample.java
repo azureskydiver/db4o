@@ -136,7 +136,7 @@ public class IndexedExample {
 	{
 		Car car = new Car("BMW");
 		car.setPilot(new Pilot("Tester", points));
-		container.set(car);
+		container.store(car);
 	}
     // end AddCar
     

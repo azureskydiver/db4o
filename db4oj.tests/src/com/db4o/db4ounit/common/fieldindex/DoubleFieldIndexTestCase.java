@@ -34,9 +34,9 @@ public class DoubleFieldIndexTestCase extends AbstractDb4oTestCase {
     }
     
     protected void store() throws Exception {
-    	db().set(new Item(0.5));
-    	db().set(new Item(1.1));
-    	db().set(new Item(2));
+    	db().store(new Item(0.5));
+    	db().store(new Item(1.1));
+    	db().store(new Item(2));
     }
     
     public void testEqual() {

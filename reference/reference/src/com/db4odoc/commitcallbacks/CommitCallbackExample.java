@@ -67,7 +67,7 @@ public class CommitCallbackExample {
 			if (info.getObject() instanceof Item){
 				Item item  = (Item)info.getObject();
 				// search for objects with the same fields in the database
-				ObjectSet found = container().get(new Item(item.getNumber(), item.getWord()));
+				ObjectSet found = container().queryByExample(new Item(item.getNumber(), item.getWord()));
 				if (found.size() > 1){
 					throw new Db4oException("Object is not unique: " + item);
 				}
@@ -81,7 +81,7 @@ public class CommitCallbackExample {
 		try {
 			// creating and storing item1 to the database
 			Item item = new Item(1, "one");
-			container.set(item);
+			container.store(item);
 			// no problems here
 			container.commit();
 		} catch (Db4oException ex){
@@ -95,9 +95,9 @@ public class CommitCallbackExample {
 		ObjectContainer container = container();
 		// creating and storing similar items to the database
 		Item item = new Item(2, "one");
-		container.set(item);
+		container.store(item);
 		item = new Item(1, "two");
-		container.set(item);
+		container.store(item);
 		try {
 			// commit should work as there were no duplicate objects
 			container.commit();
@@ -109,7 +109,7 @@ public class CommitCallbackExample {
 		
 		// trying to save a duplicate object to the database
 		item = new Item(1, "one");
-		container.set(item);
+		container.store(item);
 		try {
 			// Commit should fail as duplicates are not allowed
 			container.commit();

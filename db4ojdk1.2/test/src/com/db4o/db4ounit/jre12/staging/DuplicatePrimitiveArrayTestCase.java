@@ -34,7 +34,7 @@ public class DuplicatePrimitiveArrayTestCase implements TestCase {
 
 	private void store() {
 		ObjectContainer db = Db4o.openFile(Db4o.newConfiguration(), FILENAME);
-		db.set(new Data(new boolean[] { true, false }));
+		db.store(new Data(new boolean[] { true, false }));
 		db.close();
 	}
 

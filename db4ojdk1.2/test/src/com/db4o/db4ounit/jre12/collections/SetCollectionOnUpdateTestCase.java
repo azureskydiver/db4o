@@ -39,21 +39,21 @@ public class SetCollectionOnUpdateTestCase extends AbstractDb4oTestCase {
 		}
 		
 		public void objectOnUpdate(ObjectContainer container) {
-			container.ext().set(this.list, 1);
+			container.ext().store(this.list, 1);
 		}
 	}
 
     protected void store() {
 		Data data=new Data(OLDNAME);
 		DataList list=new DataList(data);
-		db().set(list);
+		db().store(list);
     }
     
     public void _testUpdateAndReread() throws Exception{
 		DataList list=readDataList();
 		db().ext().activate(list,Integer.MAX_VALUE);
 		list.data().name(OLDNAME+"X");
-		db().set(list);
+		db().store(list);
 		db().commit();
         
         reopen();
@@ -63,7 +63,7 @@ public class SetCollectionOnUpdateTestCase extends AbstractDb4oTestCase {
     }
 
 	private DataList readDataList() {
-		ObjectSet result = db().get(DataList.class);
+		ObjectSet result = db().queryByExample(DataList.class);
 		return (DataList)result.next();
 	}
 

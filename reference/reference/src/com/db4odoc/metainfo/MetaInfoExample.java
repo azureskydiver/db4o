@@ -25,9 +25,9 @@ public class MetaInfoExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
-			container.set(car);
+			container.store(car);
 			car = new Car("Ferrari", new Pilot("Michael Schumacher"));
-			container.set(car);
+			container.store(car);
 		} finally {
 			container.close();
 		}

@@ -35,7 +35,7 @@ public class UpdateCollectionTestCase extends Db4oClientServerTestCase {
 	public void concUpdateSameElement(ExtObjectContainer oc, int seq)
 			throws Exception {
 
-		ObjectSet result = oc.get(List.class);
+		ObjectSet result = oc.queryByExample(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
 		Assert.areEqual(LIST_SIZE, l.size());
@@ -51,12 +51,12 @@ public class UpdateCollectionTestCase extends Db4oClientServerTestCase {
 			}
 		}
 		Assert.isTrue(found);
-		oc.set(l);
+		oc.store(l);
 	}
 
 	public void checkUpdateSameElement(ExtObjectContainer oc) throws Exception {
 
-		ObjectSet result = oc.get(List.class);
+		ObjectSet result = oc.queryByExample(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
 		Assert.areEqual(LIST_SIZE, l.size());
@@ -79,7 +79,7 @@ public class UpdateCollectionTestCase extends Db4oClientServerTestCase {
 	public void concUpdateDifferentElement(ExtObjectContainer oc, int seq)
 			throws Exception {
 
-		ObjectSet result = oc.get(List.class);
+		ObjectSet result = oc.queryByExample(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
 		Assert.areEqual(LIST_SIZE, l.size());
@@ -89,7 +89,7 @@ public class UpdateCollectionTestCase extends Db4oClientServerTestCase {
 			SimpleObject o = (SimpleObject) iter.next();
 			if ((testString + seq).equals(o.getS())) {
 				o.setI(LIST_SIZE + seq);
-				oc.set(o);
+				oc.store(o);
 				found = true;
 				break;
 			}
@@ -101,7 +101,7 @@ public class UpdateCollectionTestCase extends Db4oClientServerTestCase {
 	public void checkUpdateDifferentElement(ExtObjectContainer oc)
 			throws Exception {
 
-		ObjectSet result = oc.get(List.class);
+		ObjectSet result = oc.queryByExample(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
 		Assert.areEqual(LIST_SIZE, l.size());
@@ -119,7 +119,7 @@ public class UpdateCollectionTestCase extends Db4oClientServerTestCase {
 
 	public void concUpdateList(ExtObjectContainer oc, int seq) throws Exception {
 
-		ObjectSet result = oc.get(List.class);
+		ObjectSet result = oc.queryByExample(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
 		Assert.areEqual(LIST_SIZE, l.size());
@@ -129,13 +129,13 @@ public class UpdateCollectionTestCase extends Db4oClientServerTestCase {
 			// set all SimpleObject.i as thread sequence.
 			o.setI(seq);
 		}
-		oc.set(l);
+		oc.store(l);
 
 	}
 
 	public void checkUpdateList(ExtObjectContainer oc) throws Exception {
 
-		ObjectSet result = oc.get(List.class);
+		ObjectSet result = oc.queryByExample(List.class);
 		Assert.areEqual(1, result.size());
 		List l = (ArrayList) result.next();
 		Assert.areEqual(LIST_SIZE, l.size());

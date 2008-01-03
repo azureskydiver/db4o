@@ -58,7 +58,7 @@ public class GenericArrayFieldTypeTestCase implements TestLifeCycle {
 			new SubData(42),
 		};
 		Data data = new Data(subData);
-		db.set(data);
+		db.store(data);
 		db.close();
 	}
 

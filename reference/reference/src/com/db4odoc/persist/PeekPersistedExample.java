@@ -22,7 +22,7 @@ public class PeekPersistedExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Car car = new Car("BMW");
-			container.set(car);
+			container.store(car);
 		} finally {
 			container.close();
 		}
@@ -50,7 +50,7 @@ public class PeekPersistedExample {
 				}
 				// We can work on the database object at the same time
 				car.setModel("BMW M3Coupe");
-				container.set(car);
+				container.store(car);
 				ch1.stop();
 				ch2.stop();
 				System.out.println("car1 saved to the database: "
@@ -60,7 +60,7 @@ public class PeekPersistedExample {
 				int temperature = (int) ((car1.getTemperature() + car2
 						.getTemperature()) / 2);
 				car.setTemperature(temperature);
-				container.set(car);
+				container.store(car);
 			}
 		} finally {
 			container.close();

@@ -39,7 +39,7 @@ public class CascadeToHashtableTestCase extends AbstractDb4oTestCase {
 		cth.ht.put("key1", new Atom("updated1"));
 		Atom atom = (Atom) cth.ht.get("key2");
 		atom.name = "updated2";
-		oc.set(cth);
+		oc.store(cth);
 	}
 
 	public void check(ExtObjectContainer oc) {

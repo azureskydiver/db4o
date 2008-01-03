@@ -81,8 +81,8 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	public void testCommittedAdded() {
 		Item item4 = new Item(4);
 		Item item5 = new Item(5);
-		db().set(item4);
-		db().set(item5);
+		db().store(item4);
+		db().store(item5);
 		
 		ObjectInfo info4 = getInfo(4);
 		ObjectInfo info5 = getInfo(5);
@@ -102,7 +102,7 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		ObjectInfo info1 = getInfo(1);
 		ObjectInfo info2 = getInfo(2);
 		
-		db().set(item4);
+		db().store(item4);
 		db().delete(item1);
 		db().delete(item2);
 		
@@ -122,8 +122,8 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 		ObjectInfo info2 = getInfo(2);
 		
 		Item item4 = new Item(4);
-		db().set(item4);
-		db().set(item2);
+		db().store(item4);
+		db().store(item2);
 		db().delete(item1);
 		
 		ObjectInfo info4 = getInfo(4);
@@ -149,8 +149,8 @@ public class CommittedCallbacksTestCase extends AbstractDb4oTestCase {
 	
 	public void testObjectSetTwiceShouldStillAppearAsAdded() {
 		final Item item4 = new Item(4);
-		db().set(item4);
-		db().set(item4);
+		db().store(item4);
+		db().store(item4);
 		
 		ObjectInfo info4 = getInfo(4);
 		

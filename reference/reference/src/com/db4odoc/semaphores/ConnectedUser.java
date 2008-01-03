@@ -59,7 +59,7 @@ public class ConnectedUser {
 		q.descend("userName").constrain(userName);
 		q.descend("ipAddress").constrain(ipAddress);
 		if (q.execute().size() == 0) {
-			client.set(new ConnectedUser(userName, ipAddress));
+			client.store(new ConnectedUser(userName, ipAddress));
 			client.commit();
 		}
 		String connectedSemaphoreName = SEMAPHORE_CONNECTED

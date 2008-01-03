@@ -36,9 +36,9 @@ public class ReflectorExample  {
 		 ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Car car1 = new Car("BMW");
-			container.set(car1);
+			container.store(car1);
 			Car car2 = new Car("Ferrari");
-			container.set(car2);
+			container.store(car2);
 			
 			System.out.println("Saved:");
 			Query query = container.query();

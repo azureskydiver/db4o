@@ -65,7 +65,7 @@ public class UpdateDepthTestCase extends AbstractDb4oTestCase {
 	
 	public void testDepth0() throws Exception {
 		
-		db().set(pokeName(queryRoot()), 0);
+		db().store(pokeName(queryRoot()), 0);
 		
 		expect(newGraph());
 	}
@@ -74,7 +74,7 @@ public class UpdateDepthTestCase extends AbstractDb4oTestCase {
 		
 		final Item item = pokeChild(pokeName(queryRoot()));
 		
-		db().set(item, 1);
+		db().store(item, 1);
 		
 		expect(pokeName(newGraph()));
 	}
@@ -84,7 +84,7 @@ public class UpdateDepthTestCase extends AbstractDb4oTestCase {
 		final Item root = pokeChild(pokeName(queryRoot()));
 		pokeChild(root.child); // one level too many
 		
-		db().set(root, 2);
+		db().store(root, 2);
 		
 		expect(pokeChild(pokeName(newGraph())));
 	}
@@ -93,7 +93,7 @@ public class UpdateDepthTestCase extends AbstractDb4oTestCase {
 		final Item item = pokeChild(pokeName(queryRoot()));
 		pokeChild(item.child);
 		
-		db().set(item, 3);
+		db().store(item, 3);
 		
 		expect(item);
 	}

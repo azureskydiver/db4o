@@ -31,7 +31,7 @@ public class CachedIOExample  {
 			long t1 = System.currentTimeMillis();
 			for (int i = 0; i< 50000; i++){
 				Pilot pilot = new Pilot("Pilot #"+i);
-				container.set(pilot);
+				container.store(pilot);
 			}
 			long t2 = System.currentTimeMillis();
 			long  timeElapsed = t2 - t1;
@@ -69,7 +69,7 @@ public class CachedIOExample  {
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			long t1 = System.currentTimeMillis();
-			ObjectSet result=container.get(null);
+			ObjectSet result=container.queryByExample(null);
 			long t2 = System.currentTimeMillis();
 			long  timeElapsed = t2 - t1;
 			System.out.println("Time elapsed for the query ="+ timeElapsed + " ms");

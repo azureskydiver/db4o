@@ -20,7 +20,7 @@ public class IxFreespaceMigrationTestCase extends FormatMigrationTestCaseBase {
 		Item nextItem = null;
 		for (int i = 9; i >= 0; i--) {
 			Item storedItem = new Item("item" + i, nextItem);
-			objectContainer.set(storedItem);
+			storeObject(objectContainer, storedItem);
 			nextItem = storedItem;
 		}
 		objectContainer.commit();

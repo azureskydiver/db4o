@@ -18,7 +18,7 @@ public class SimpleTypeArrayInUntypedVariableTestCase extends AbstractDb4oTestCa
 	}
 	
     protected void store(){
-    	db().set(new Data(ARRAY));
+    	db().store(new Data(ARRAY));
     }
     
     public void testRetrieval(){

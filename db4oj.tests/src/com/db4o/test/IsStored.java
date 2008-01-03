@@ -15,7 +15,7 @@ public class IsStored {
 		
 		IsStored isStored = new IsStored();
 		isStored.myString = "isStored";
-		con.set(isStored);
+		con.store(isStored);
 		Test.ensure( con.ext().isStored(isStored) );
 		Test.ensure( Test.occurrences(this) == 1 );
 		con.delete(isStored);
@@ -31,7 +31,7 @@ public class IsStored {
 			
 		}
 		Test.ensure( Test.occurrences(this) == 0 );
-		con.set(isStored);
+		con.store(isStored);
 		Test.ensure( con.ext().isStored(isStored) );
 		Test.ensure( Test.occurrences(this) == 1 );
 		con.commit();

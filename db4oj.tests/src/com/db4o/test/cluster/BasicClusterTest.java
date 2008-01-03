@@ -31,8 +31,8 @@ public class BasicClusterTest {
         Test.store(new BasicClusterTest("inOne"));
         Test.store(new BasicClusterTest("inBoth"));
         ObjectContainer second = Db4o.openFile(SECOND_FILE);
-        second.set(new BasicClusterTest("inBoth"));
-        second.set(new BasicClusterTest("inTwo"));
+        second.store(new BasicClusterTest("inBoth"));
+        second.store(new BasicClusterTest("inTwo"));
         second.close();
     }
     

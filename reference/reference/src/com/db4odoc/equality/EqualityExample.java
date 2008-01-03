@@ -48,7 +48,7 @@ public class EqualityExample {
 		if (container != null) {
 			try {
 				Pilot pilot = new Pilot("Kimi Raikkonnen", 100);
-				container.set(pilot);
+				container.store(pilot);
 			} catch (Exception ex) {
 				System.out.println("System Exception: " + ex.getMessage());
 			} finally {
@@ -87,7 +87,7 @@ public class EqualityExample {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				ObjectSet result = container.get(new Pilot("Kimi Raikkonnen", 100));
+				ObjectSet result = container.queryByExample(new Pilot("Kimi Raikkonnen", 100));
 				if (result.size() > 0){
 					System.out.println("Found equal object: " + result.next().toString());
 				} else {

@@ -66,7 +66,7 @@ public class RollbackDeleteTestCase extends Db4oClientServerTestCase {
 		try {
 			SimpleObject o1 = (SimpleObject) retrieveOnlyInstance(oc1,
 					SimpleObject.class);
-			oc1.set(o1);
+			oc1.store(o1);
 			SimpleObject o2 = (SimpleObject) retrieveOnlyInstance(oc2,
 					SimpleObject.class);
 			Assert.areEqual("hello", o2.getS());

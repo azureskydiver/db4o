@@ -35,9 +35,9 @@ public class RemoteExample {
 		try {
 			for (int i = 0; i < 5; i++) {
 				Car car = new Car("car" + i);
-				container.set(car);
+				container.store(car);
 			}
-			container.set(new RemoteExample());
+			container.store(new RemoteExample());
 		} finally {
 			container.close();
 		}
@@ -68,7 +68,7 @@ public class RemoteExample {
 					while (objectSet.hasNext()) {
 						Car car = (Car) objectSet.next();
 						car.setModel("Update1-" + car.getModel());
-						objectContainer.set(car);
+						objectContainer.store(car);
 					}
 					objectContainer.commit();
 				}
@@ -117,7 +117,7 @@ public class RemoteExample {
 								Car car = (Car) objectSet.next();
 								car.setModel("Updated2-"
 										+ car.getModel());
-								context.container().set(car);
+								context.container().store(car);
 							}
 							context.container().commit();
 						}

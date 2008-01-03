@@ -26,7 +26,7 @@ public class NullWrapperTestCase extends AbstractDb4oTestCase {
     public void test() throws Exception{
         for (int i = 0; i < VALUES.length; i++) {
             Integer integer = VALUES[i] == USE_AS_NULL ? null : new Integer(VALUES[i]);
-            db().set(new NullWrapperItem(integer));
+            db().store(new NullWrapperItem(integer));
         }
         reopen();
         

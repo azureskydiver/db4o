@@ -46,7 +46,7 @@ public class RHashtable implements RTestable{
 		Hashtable ht = (Hashtable)newInstance();
 		if(step > 0){
 			ht.put(entry.key, entry.value);
-			ObjectSet set = con.get(ht);
+			ObjectSet set = con.queryByExample(ht);
 			Collection4 col = new Collection4();
 			while(set.hasNext()){
 				Object obj = set.next();
@@ -60,7 +60,7 @@ public class RHashtable implements RTestable{
 		}
 		entry = new TEntry().noElement();
 		ht.put(entry.key, entry.value);
-		if(con.get(ht).size() != 0){
+		if(con.queryByExample(ht).size() != 0){
 			Regression.addError("Hashtable member query found too many");
 		}
 	}

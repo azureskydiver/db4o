@@ -22,13 +22,13 @@ public class SimpleDb4oTestCase extends AbstractDb4oTestCase {
 	protected void store() {
 		Assert.isTrue(everythingCalledBefore(1));
 		_everythingCalled[1]=true;
-		fixture().db().set(new Data());
+		fixture().db().store(new Data());
 	}
 	
 	public void testResultSize() {
 		Assert.isTrue(everythingCalledBefore(2));
 		_everythingCalled[2] = true;
-		Assert.areEqual(1, fixture().db().get(Data.class).size());
+		Assert.areEqual(1, fixture().db().queryByExample(Data.class).size());
 	}
 	
 	public boolean everythingCalled() {

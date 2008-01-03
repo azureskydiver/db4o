@@ -65,7 +65,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				ExceptionIOAdapter.exception = true;
-				db().get(Item.class);
+				db().queryByExample(Item.class);
 			}
 		});
 	}
@@ -75,7 +75,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				ExceptionIOAdapter.exception = true;
-				ObjectSet os = db().get(null);
+				ObjectSet os = db().queryByExample(null);
 				while(os.hasNext()) {
 					os.next();
 				}
@@ -107,7 +107,7 @@ public class Db4oIOExceptionTestCase extends Db4oIOExceptionTestCaseBase {
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				ExceptionIOAdapter.exception = true;
-				db().set(new Item(3));
+				db().store(new Item(3));
 			}
 		});
 	}

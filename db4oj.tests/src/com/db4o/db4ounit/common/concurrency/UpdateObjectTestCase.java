@@ -35,7 +35,7 @@ public class UpdateObjectTestCase extends Db4oClientServerTestCase {
 		Assert.areEqual(1, result.size());
 		SimpleObject o = (SimpleObject) result.next();
 		o.setI(COUNT + seq);
-		oc.set(o);
+		oc.store(o);
 
 	}
 
@@ -59,7 +59,7 @@ public class UpdateObjectTestCase extends Db4oClientServerTestCase {
 		Assert.areEqual(1, result.size());
 		SimpleObject o = (SimpleObject) result.next();
 		o.setI(seq + COUNT);
-		oc.set(o);
+		oc.store(o);
 	}
 
 	public void checkUpdateDifferentObject(ExtObjectContainer oc)

@@ -54,9 +54,9 @@ public class AliasExample {
 		ObjectContainer container = Db4o.openClient(configuration, "localhost", 0xdb40, "user", "password");
 		try {
 			Driver driver = new Driver("David Barrichello",99);
-			container.set(driver);
+			container.store(driver);
 			driver = new Driver("Kimi Raikkonen",100);
-			container.set(driver);
+			container.store(driver);
 		} finally {
 			container.close();
 			server.close();
@@ -69,9 +69,9 @@ public class AliasExample {
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Pilot pilot = new Pilot("David Barrichello",99);
-			container.set(pilot);
+			container.store(pilot);
 			pilot = new Pilot("Kimi Raikkonen",100);
-			container.set(pilot);
+			container.store(pilot);
 		} finally {
 			container.close();
 		}

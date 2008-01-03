@@ -35,7 +35,7 @@ public class TranslatorExample extends Util {
     try {
       NotStorable notStorable = new NotStorable(42,"Test");
       System.out.println("ORIGINAL: "+notStorable);
-      db.set(notStorable);
+      db.store(notStorable);
     }
     catch(Exception exc) {
       System.out.println(exc.toString());
@@ -46,7 +46,7 @@ public class TranslatorExample extends Util {
     }
     db=Db4o.openFile(DB4OFILENAME);
     try {
-      ObjectSet result=db.get(NotStorable.class);
+      ObjectSet result=db.queryByExample(NotStorable.class);
       while(result.hasNext()) {
         NotStorable notStorable=(NotStorable)result.next();
         System.out.println("RETRIEVED: "+notStorable);

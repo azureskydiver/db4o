@@ -39,9 +39,9 @@ public class CascadeToExistingVectorMemberTestCase extends Db4oClientServerTestC
 		Item item = (Item) retrieveOnlyInstance(oc, Item.class);
 		Atom atom = (Atom) item.vec.elementAt(0);
 		atom.name = "two" + seq;
-		oc.set(item);
+		oc.store(item);
 		atom.name = "three" + seq;
-		oc.set(item);
+		oc.store(item);
 	}
 
 	public void check(final ExtObjectContainer oc) {

@@ -17,7 +17,7 @@ public class GetAll {
 	}
 	
 	private int allObjectCount(){
-		return Test.objectContainer().get(null).size();
+		return Test.objectContainer().queryByExample(null).size();
 	}
 	
 

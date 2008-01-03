@@ -31,7 +31,7 @@ public class CascadeDeleteArray extends AbstractDb4oTestCase {
 			new ArrayElem("two"),
 			new ArrayElem("three"),
 		};
-		db().set(cda);
+		db().store(cda);
 	}
 
 	public void test(){

@@ -45,7 +45,7 @@ public class CascadeOnUpdate extends AbstractDb4oTestCase {
 	protected void store() {
 		CascadeOnUpdate cou = new CascadeOnUpdate();
 		cou.child = new Atom(new Atom("storedChild"), "stored");
-		db().set(cou);
+		db().store(cou);
 	}
 
 	public void test() throws Exception {
@@ -54,7 +54,7 @@ public class CascadeOnUpdate extends AbstractDb4oTestCase {
 				CascadeOnUpdate cou = (CascadeOnUpdate) obj;
 				((Atom)cou.child).name = "updated";
 				((Atom)cou.child).child.name = "updated";
-				db().set(cou);
+				db().store(cou);
 			}
 		});
 		

@@ -23,7 +23,7 @@ public class DeleteEnumTestCase extends AbstractDb4oTestCase {
         for (int i = 0; i < 2; i++) {
             Item item = new Item();
             item.a = TypeCountEnum.A;
-            db().set(item);
+            db().store(item);
         }
     }
     

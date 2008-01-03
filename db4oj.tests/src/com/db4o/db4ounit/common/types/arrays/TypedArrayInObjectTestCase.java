@@ -23,7 +23,7 @@ public class TypedArrayInObjectTestCase extends AbstractDb4oTestCase {
 	
 	protected void store(){
 		Data data = new Data(ARRAY,ARRAY);
-		db().set(data);
+		db().store(data);
 	}
 	
 	public void testRetrieve(){

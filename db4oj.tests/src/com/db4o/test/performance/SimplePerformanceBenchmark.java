@@ -72,7 +72,7 @@ public class SimplePerformanceBenchmark {
             for (int j = 1; j < DEPTH; j++) {
                 item = new Item("load", item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer("Store "+ totalObjects() + " objects");

@@ -84,15 +84,15 @@ public class MultiFieldIndexQueryTestCase extends AbstractDb4oTestCase {
 		Person dave = new Person("Dave", "FourOK");
 		Person neil = new Person("Neil", "Notwanted");
 		Person nat = new Person("Nat", "Neverwanted");
-		db().set(new Book("Persistence possibilities", new Person[] { aaron,
+		db().store(new Book("Persistence possibilities", new Person[] { aaron,
 				bill, chris }));
-		db().set(new Book("Persistence using S.O.D.A.",
+		db().store(new Book("Persistence using S.O.D.A.",
 				new Person[] { aaron }));
-		db().set(new Book("Persistence using JDO",
+		db().store(new Book("Persistence using JDO",
 				new Person[] { bill, dave }));
-		db().set(new Book("Don't want to find Phil", new Person[] { aaron,
+		db().store(new Book("Don't want to find Phil", new Person[] { aaron,
 				bill, neil }));
-		db().set(new Book("Persistence by Jeff", new Person[] { nat }));
+		db().store(new Book("Persistence by Jeff", new Person[] { nat }));
 	}
 
 	public void test() {

@@ -33,10 +33,10 @@ public class BlobExample {
 		  //ObjectContainer container=Db4o.openFile(DB4O_FILE_NAME);
 		   try {
 			    Car car1=new Car("Ferrari");
-			    container.set(car1);
+			    container.store(car1);
 			    storeImage(car1);
 			    Car car2=new Car("BMW");
-			    container.set(car2);
+			    container.store(car2);
 			    storeImage(car2);
 		   }  finally {
 		      container.close();

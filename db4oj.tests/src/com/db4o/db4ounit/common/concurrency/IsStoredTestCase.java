@@ -18,7 +18,7 @@ public class IsStoredTestCase extends Db4oClientServerTestCase {
 	public void conc(ExtObjectContainer oc) {
 		IsStoredTestCase isStored = new IsStoredTestCase();
 		isStored.myString = "isStored";
-		oc.set(isStored);
+		oc.store(isStored);
 		Assert.isTrue(oc.isStored(isStored));
 		oc.commit();
 		oc.delete(isStored);

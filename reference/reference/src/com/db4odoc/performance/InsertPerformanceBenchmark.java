@@ -289,7 +289,7 @@ public class InsertPerformanceBenchmark {
             for (int j = 1; j < _depth; j++) {
                 item = new Item("load", item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer("Store "+ totalObjects() + " objects");
@@ -303,7 +303,7 @@ public class InsertPerformanceBenchmark {
             for (int j = 1; j < _depth; j++) {
                 item = new ItemDerived("load", item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer("Store "+ totalObjects() + " objects");
@@ -320,7 +320,7 @@ public class InsertPerformanceBenchmark {
 	            for (int j = 1; j < _depth; j++) {
 	                item = new Item("load", item);
 	            }
-	            objectContainer.set(item);
+	            objectContainer.store(item);
 	        }
 	        objectContainer.commit();
         }
@@ -336,7 +336,7 @@ public class InsertPerformanceBenchmark {
             for (int j = 1; j < _depth; j++) {
                 item = new ItemWithStringBuffer(new StringBuffer("load"), item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer("Store "+ totalObjects() + " objects");
@@ -350,7 +350,7 @@ public class InsertPerformanceBenchmark {
             for (int j = 1; j < _depth; j++) {
                 item = new SimplestItem(i, item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer("Store "+ totalObjects() + " objects");
@@ -367,7 +367,7 @@ public class InsertPerformanceBenchmark {
             	int[] id1 = new int[]{1,2,3,4};
                 item = new ItemWithArray(id1, item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer("Store "+ totalObjects() + " objects");
@@ -390,7 +390,7 @@ public class InsertPerformanceBenchmark {
             	ids1.addAll(idList);
             	item = new ItemWithArrayList(ids1, item);
             }
-            objectContainer.set(item);
+            objectContainer.store(item);
         }
         objectContainer.commit();
         stopTimer("Store "+ totalObjects() + " objects");

@@ -127,12 +127,12 @@ public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCa
         ArrayMap4Asserter.assertEntrySet(map5);
         ArrayMap4Asserter.assertKeySet(map6);
         
-        client1.set(map1);
-        client2.set(map2);
-        client3.set(map3);
-        client4.set(map4);
-        client5.set(map5);
-        client6.set(map6);
+        client1.store(map1);
+        client2.store(map2);
+        client3.store(map3);
+        client4.store(map4);
+        client5.store(map5);
+        client6.store(map6);
         
         client1.close();
         client2.close();
@@ -158,9 +158,9 @@ public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCa
         ArrayMap4Asserter.checkMap(map2, 0, 10);
         map1.clear();
         ArrayMap4<String, Integer> clone = (ArrayMap4<String, Integer>) map2.clone();
-        client1.set(map1);
+        client1.store(map1);
         client2.delete(map2);
-        client2.set(clone);
+        client2.store(clone);
         client1.close();
         client2.close();
         
@@ -270,8 +270,8 @@ public class ArrayMap4TAMultiClientsTestCase extends TransparentActivationTestCa
         op1.operate(map1);
         op2.operate(map2);
         
-        client1.set(map1);
-        client2.set(map2);
+        client1.store(map1);
+        client2.store(map2);
         client1.close();
         client2.close();
     }

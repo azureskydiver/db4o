@@ -35,34 +35,34 @@ public class DeepSetClientServerTestCase extends Db4oClientServerTestCase {
 		Item example = new Item();
 		example.name = "1";
 		try {
-			Item item1 = (Item) oc1.get(example).next();
+			Item item1 = (Item) oc1.queryByExample(example).next();
 			Assert.areEqual("1", item1.name);
 			Assert.areEqual("2", item1.child.name);
 			Assert.areEqual("3", item1.child.child.name);
 
-			Item item2 = (Item) oc2.get(example).next();
+			Item item2 = (Item) oc2.queryByExample(example).next();
 			Assert.areEqual("1", item2.name);
 			Assert.areEqual("2", item2.child.name);
 			Assert.areEqual("3", item2.child.child.name);
 
 			item1.child.name = "12";
 			item1.child.child.name = "13";
-			oc1.set(item1, 2);
+			oc1.store(item1, 2);
 			oc1.commit();
 
 			// check result
-			Item item = (Item) oc1.get(example).next();
+			Item item = (Item) oc1.queryByExample(example).next();
 			Assert.areEqual("1", item.name);
 			Assert.areEqual("12", item.child.name);
 			Assert.areEqual("13", item.child.child.name);
 
-			item = (Item) oc2.get(example).next();
+			item = (Item) oc2.queryByExample(example).next();
 			oc2.refresh(item, 3);
 			Assert.areEqual("1", item.name);
 			Assert.areEqual("12", item.child.name);
 			Assert.areEqual("3", item.child.child.name);
 
-			item = (Item) oc3.get(example).next();
+			item = (Item) oc3.queryByExample(example).next();
 			Assert.areEqual("1", item.name);
 			Assert.areEqual("12", item.child.name);
 			Assert.areEqual("3", item.child.child.name);

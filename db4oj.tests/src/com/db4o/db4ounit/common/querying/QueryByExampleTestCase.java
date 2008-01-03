@@ -96,7 +96,7 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
         Assert.areEqual(0, result.size());
 
         LinkedList newList = LinkedList.newLongCircularList();
-        db().set(newList);
+        db().store(newList);
         q = db().query();
         q.constrain(newList);
         result = q.execute();

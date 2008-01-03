@@ -16,7 +16,7 @@ public class StorePrimitiveDirectly {
         oc.configure().exceptionsOnNotStorable(false);
 
         try{
-            oc.set(new Integer(1));
+            oc.store(new Integer(1));
         }catch(ObjectNotStorableException onse){
             
            // happens now in test compbination but shouldn't
@@ -35,7 +35,7 @@ public class StorePrimitiveDirectly {
         exceptionOccurred = false;
         
         try{
-            oc.set(new Integer(1));
+            oc.store(new Integer(1));
         }catch(ObjectNotStorableException onse){
             exceptionOccurred = true;
         }

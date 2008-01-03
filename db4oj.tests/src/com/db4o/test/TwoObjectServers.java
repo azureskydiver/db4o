@@ -23,7 +23,7 @@ public class TwoObjectServers extends AllTests {
             
             ObjectContainer oc = server.openClient();
             
-            ObjectSet os = oc.get(null);
+            ObjectSet os = oc.queryByExample(null);
             while(os.hasNext()){
                 Logger.log(os.next());
             }

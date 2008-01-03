@@ -86,7 +86,7 @@ public class UUIDExample {
 		ObjectContainer container = Db4o.openFile(configuration, DB4O_FILE_NAME);
 		try {
 			Car car = new Car("BMW", new Pilot("Rubens Barrichello"));
-			container.set(car);
+			container.store(car);
 		} finally {
 			container.close();
 		}

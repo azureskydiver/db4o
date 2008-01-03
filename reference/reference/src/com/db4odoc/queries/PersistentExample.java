@@ -42,34 +42,34 @@ public class PersistentExample {
 
 	private static void storeFirstPilot(ObjectContainer container) {
 		Pilot pilot1 = new Pilot("Michael Schumacher", 100);
-		container.set(pilot1);
+		container.store(pilot1);
 		System.out.println("Stored " + pilot1);
 	}
 	// end storeFirstPilot
 
 	private static void storeSecondPilot(ObjectContainer container) {
 		Pilot pilot2 = new Pilot("Rubens Barrichello", 99);
-		container.set(pilot2);
+		container.store(pilot2);
 		System.out.println("Stored " + pilot2);
 	}
 	// end storeSecondPilot
 
 	private static void retrieveAllPilotQBE(ObjectContainer container) {
 		Pilot proto = new Pilot(null, 0);
-		ObjectSet result = container.get(proto);
+		ObjectSet result = container.queryByExample(proto);
 		listResult(result);
 	}
 	// end retrieveAllPilotQBE
 
 	private static void retrieveAllPilots(ObjectContainer container) {
-		ObjectSet result = container.get(Pilot.class);
+		ObjectSet result = container.queryByExample(Pilot.class);
 		listResult(result);
 	}
 	// end retrieveAllPilots
 
 	private static void retrievePilotByName(ObjectContainer container) {
 		Pilot proto = new Pilot("Michael Schumacher", 0);
-		ObjectSet result = container.get(proto);
+		ObjectSet result = container.queryByExample(proto);
 		listResult(result);
 	}
 	// end retrievePilotByName
@@ -77,17 +77,17 @@ public class PersistentExample {
 	private static void retrievePilotByExactPoints(
 			ObjectContainer container) {
 		Pilot proto = new Pilot(null, 100);
-		ObjectSet result = container.get(proto);
+		ObjectSet result = container.queryByExample(proto);
 		listResult(result);
 	}
 	// end retrievePilotByExactPoints
 
 	private static void updatePilot(ObjectContainer container) {
-		ObjectSet result = container.get(new Pilot(
+		ObjectSet result = container.queryByExample(new Pilot(
 				"Michael Schumacher", 0));
 		Pilot found = (Pilot) result.next();
 		found.addPoints(11);
-		container.set(found);
+		container.store(found);
 		System.out.println("Added 11 points for " + found);
 		retrieveAllPilots(container);
 	}
@@ -95,7 +95,7 @@ public class PersistentExample {
 
 	private static void deleteFirstPilotByName(
 			ObjectContainer container) {
-		ObjectSet result = container.get(new Pilot(
+		ObjectSet result = container.queryByExample(new Pilot(
 				"Michael Schumacher", 0));
 		Pilot found = (Pilot) result.next();
 		container.delete(found);
@@ -106,7 +106,7 @@ public class PersistentExample {
 
 	private static void deleteSecondPilotByName(
 			ObjectContainer container) {
-		ObjectSet result = container.get(new Pilot(
+		ObjectSet result = container.queryByExample(new Pilot(
 				"Rubens Barrichello", 0));
 		Pilot found = (Pilot) result.next();
 		container.delete(found);

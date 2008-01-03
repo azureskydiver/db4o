@@ -26,7 +26,7 @@ public class ReadObjectQBETestCase extends Db4oClientServerTestCase {
 	public void concReadSameObject(ExtObjectContainer oc) throws Exception {
 		int mid = threadCount() / 2;
 		SimpleObject example = new SimpleObject(testString + mid, mid);
-		ObjectSet result = oc.get(example);
+		ObjectSet result = oc.queryByExample(example);
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(example, result.next());
 	}
@@ -34,7 +34,7 @@ public class ReadObjectQBETestCase extends Db4oClientServerTestCase {
 	public void concReadDifferentObject(ExtObjectContainer oc, int seq)
 			throws Exception {
 		SimpleObject example = new SimpleObject(testString + seq, seq);
-		ObjectSet result = oc.get(example);
+		ObjectSet result = oc.queryByExample(example);
 		Assert.areEqual(1, result.size());
 		Assert.areEqual(example, result.next());
 	}

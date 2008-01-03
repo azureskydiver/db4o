@@ -53,11 +53,11 @@ public class CreateIndexInheritedTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void conc2(ExtObjectContainer oc) {
-		oc.set(new CreateIndexFor("d"));
+		oc.store(new CreateIndexFor("d"));
 		tQueryB(oc);
 		tUpdateB(oc);
-		oc.set(new CreateIndexFor("z"));
-		oc.set(new CreateIndexFor("y"));
+		oc.store(new CreateIndexFor("z"));
+		oc.store(new CreateIndexFor("y"));
 	}
 
 	public void check2(ExtObjectContainer oc) {
@@ -188,13 +188,13 @@ public class CreateIndexInheritedTestCase extends Db4oClientServerTestCase {
 		ObjectSet res = query(oc, "b");
 		CreateIndexFor ci = (CreateIndexFor) res.next();
 		ci.i_name = "j";
-		oc.set(ci);
+		oc.store(ci);
 		res = query(oc, "b");
 		Assert.areEqual(0, res.size());
 		res = query(oc, "j");
 		Assert.areEqual(1, res.size());
 		ci.i_name = "b";
-		oc.set(ci);
+		oc.store(ci);
 		tQueryB(oc);
 	}
 

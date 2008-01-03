@@ -51,7 +51,7 @@ public class BindFileSize {
 		for (int call = 0; call < 50; call++) {
 			item = new Item(LENGTH);
 			Test.objectContainer().bind(item, id);
-			Test.objectContainer().set(item);
+			Test.objectContainer().store(item);
 			Test.commit();
 			checkFileSize(call);
 			Test.reOpen();

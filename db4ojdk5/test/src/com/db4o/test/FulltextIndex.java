@@ -85,7 +85,7 @@ public class FulltextIndex implements MessageRecipient{
                 ftie.text = strings[i];
                 ftie.objects = objectContainer.ext().collections().newLinkedList();
                 ftie.objects.add(this);
-                objectContainer.set(ftie);
+                objectContainer.store(ftie);
             }
         }
         objectContainer.commit();

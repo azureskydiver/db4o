@@ -36,7 +36,7 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
         Holder holder = new Holder();
         holder._values = createValues();
         holder._arrays = createArrays();
-        objectContainer.set(holder);
+        storeObject(objectContainer, holder);
     }
     
     protected void assertObjectsAreReadable(ExtObjectContainer objectContainer) {

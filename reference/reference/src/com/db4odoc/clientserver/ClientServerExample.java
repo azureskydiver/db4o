@@ -57,7 +57,7 @@ public class ClientServerExample  {
         Pilot pilot=new Pilot("Rubens Barrichello",99);
         Car car=new Car("BMW");
         car.setPilot(pilot);
-        container.set(car);
+        container.store(car);
     }
     // end setFirstCar
 
@@ -65,7 +65,7 @@ public class ClientServerExample  {
         Pilot pilot=new Pilot("Michael Schumacher",100);
         Car car=new Car("Ferrari");
         car.setPilot(pilot);
-        container.set(car);
+        container.store(car);
     }
     // end setSecondCar
 
@@ -84,7 +84,7 @@ public class ClientServerExample  {
 
     private static void queryLocalServer(ObjectServer server) {
         ObjectContainer client=server.openClient();
-        listResult(client.get(new Car(null)));
+        listResult(client.queryByExample(new Car(null)));
         client.close();
     }
     // end queryLocalServer
@@ -100,15 +100,15 @@ public class ClientServerExample  {
         ObjectContainer client1=server.openClient();
         ObjectContainer client2=server.openClient();
         Pilot pilot=new Pilot("David Coulthard",98);
-        ObjectSet result=client1.get(new Car("BMW"));
+        ObjectSet result=client1.queryByExample(new Car("BMW"));
         Car car=(Car)result.next();
         car.setPilot(pilot);
-        client1.set(car);
-        listResult(client1.get(new Car(null)));
-        listResult(client2.get(new Car(null)));
+        client1.store(car);
+        listResult(client1.queryByExample(new Car(null)));
+        listResult(client2.queryByExample(new Car(null)));
         client1.commit();        
-        listResult(client1.get(Car.class));
-        listRefreshedResult(client2,client2.get(Car.class),2);
+        listResult(client1.queryByExample(Car.class));
+        listRefreshedResult(client2,client2.queryByExample(Car.class),2);
         client1.close();
         client2.close();
     }
@@ -117,16 +117,16 @@ public class ClientServerExample  {
     private static void demonstrateLocalRollback(ObjectServer server) {
         ObjectContainer client1=server.openClient();
         ObjectContainer client2=server.openClient();
-        ObjectSet result=client1.get(new Car("BMW"));
+        ObjectSet result=client1.queryByExample(new Car("BMW"));
         Car car=(Car)result.next();
         car.setPilot(new Pilot("Someone else",0));
-        client1.set(car);
-        listResult(client1.get(new Car(null)));
-        listResult(client2.get(new Car(null)));
+        client1.store(car);
+        listResult(client1.queryByExample(new Car(null)));
+        listResult(client2.queryByExample(new Car(null)));
         client1.rollback();
         client1.ext().refresh(car,2);
-        listResult(client1.get(new Car(null)));
-        listResult(client2.get(new Car(null)));
+        listResult(client1.queryByExample(new Car(null)));
+        listResult(client2.queryByExample(new Car(null)));
         client1.close();
         client2.close();
     }
@@ -148,7 +148,7 @@ public class ClientServerExample  {
 
     private static void queryRemoteServer(int port,String user,String password) throws IOException {
         ObjectContainer client=Db4o.openClient("localhost",port,user,password);
-        listResult(client.get(new Car(null)));
+        listResult(client.queryByExample(new Car(null)));
         client.close();
     }
     // end queryRemoteServer
@@ -157,15 +157,15 @@ public class ClientServerExample  {
         ObjectContainer client1=Db4o.openClient("localhost",port,user,password);
         ObjectContainer client2=Db4o.openClient("localhost",port,user,password);
         Pilot pilot=new Pilot("Jenson Button",97);
-        ObjectSet result=client1.get(new Car(null));
+        ObjectSet result=client1.queryByExample(new Car(null));
         Car car=(Car)result.next();
         car.setPilot(pilot);
-        client1.set(car);
-        listResult(client1.get(new Car(null)));
-        listResult(client2.get(new Car(null)));
+        client1.store(car);
+        listResult(client1.queryByExample(new Car(null)));
+        listResult(client2.queryByExample(new Car(null)));
         client1.commit();
-        listResult(client1.get(new Car(null)));
-        listRefreshedResult(client2,client2.get(Car.class),2);
+        listResult(client1.queryByExample(new Car(null)));
+        listRefreshedResult(client2,client2.queryByExample(Car.class),2);
         client1.close();
         client2.close();
     }
@@ -174,16 +174,16 @@ public class ClientServerExample  {
     private static void demonstrateRemoteRollback(int port,String user,String password) throws IOException {
         ObjectContainer client1=Db4o.openClient("localhost",port,user,password);
         ObjectContainer client2=Db4o.openClient("localhost",port,user,password);
-        ObjectSet result=client1.get(new Car(null));
+        ObjectSet result=client1.queryByExample(new Car(null));
         Car car=(Car)result.next();
         car.setPilot(new Pilot("Someone else",0));
-        client1.set(car);
-        listResult(client1.get(new Car(null)));
-        listResult(client2.get(new Car(null)));
+        client1.store(car);
+        listResult(client1.queryByExample(new Car(null)));
+        listResult(client2.queryByExample(new Car(null)));
         client1.rollback();
         client1.ext().refresh(car,2);
-        listResult(client1.get(new Car(null)));
-        listResult(client2.get(new Car(null)));
+        listResult(client1.queryByExample(new Car(null)));
+        listResult(client2.queryByExample(new Car(null)));
         client1.close();
         client2.close();
     }

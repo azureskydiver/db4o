@@ -92,9 +92,9 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 		assertSingleObjectEventArgs(event, expectedItem);
 		
 		if (cancel) {
-			Assert.areSame(item, db().get(Item.class).next());
+			Assert.areSame(item, db().queryByExample(Item.class).next());
 		} else {
-			Assert.areEqual(0, db().get(Item.class).size());
+			Assert.areEqual(0, db().queryByExample(Item.class).size());
 		}
 	}
 	
@@ -111,7 +111,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 		
 		assertSingleObjectEventArgs(eventRegistry().creating(), item);
 		
-		Assert.areEqual(0, db().get(Item.class).size());
+		Assert.areEqual(0, db().queryByExample(Item.class).size());
 	}
 
 	public void testCancelUpdating() throws Exception {
@@ -121,13 +121,13 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 		
 		Item item = storeItem();
 		item.id = 42;
-		db().set(item);
+		db().store(item);
 		
 		assertSingleObjectEventArgs(eventRegistry().updating(), item);
 		
 		reopen();
 		
-		item = (Item)db().get(Item.class).next();
+		item = (Item)db().queryByExample(Item.class).next();
 		Assert.areEqual(1, item.id);
 	}
 	
@@ -163,7 +163,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 	private void assertActivationEvent(Event4 event) throws Exception {
 		listenToEvent(event);
 		
-		Item item = (Item)db().get(Item.class).next();
+		Item item = (Item)db().queryByExample(Item.class).next();
 		
 		assertSingleObjectEventArgs(event, item);
 	}
@@ -175,7 +175,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 		
 		assertSingleObjectEventArgs(event, item);
 		
-		Assert.areSame(item, db().get(Item.class).next());
+		Assert.areSame(item, db().queryByExample(Item.class).next());
 	}
 	
 	private void assertDeactivationEvent(Event4 event) throws Exception {
@@ -190,7 +190,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 	}
 	
 	private Item queryServerItem(Item item) {
-		return (Item)fileSession().get(item).next();
+		return (Item)fileSession().queryByExample(item).next();
 	}
 
 	private void assertSingleObjectEventArgs(Event4 expectedEvent, Item expectedItem) {
@@ -207,11 +207,11 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 		
 		Item item = storeItem();		
 		item.id = 42;
-		db().set(item);
+		db().store(item);
 		
 		assertSingleObjectEventArgs(event, item);
 		
-		Assert.areSame(item, db().get(Item.class).next());
+		Assert.areSame(item, db().queryByExample(Item.class).next());
 	}
 	
 	private EventRegistry eventRegistryForDelete() {
@@ -229,7 +229,7 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 
 	private Item storeItem() {
 		Item item = new Item(1);
-		db().set(item);
+		db().store(item);
 		db().commit();
 		sync();
 		return item;

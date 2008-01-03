@@ -49,7 +49,7 @@ public class TARefreshTestCase extends TransparentActivationTestCaseBase impleme
         //update depth = 1
         item1.value(100);
         item1.next().value(200);
-        client1.set(item1, 2);
+        client1.store(item1, 2);
         client1.commit();
         
         assertItemValue(100, item1);
@@ -80,7 +80,7 @@ public class TARefreshTestCase extends TransparentActivationTestCaseBase impleme
             next1 = next1.next();
             value++;
         }
-        client1.set(item1, 5);
+        client1.store(item1, 5);
         client1.commit();
         
         client2.refresh(item2, 5);

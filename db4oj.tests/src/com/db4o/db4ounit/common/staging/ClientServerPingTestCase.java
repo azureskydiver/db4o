@@ -38,7 +38,7 @@ public class ClientServerPingTestCase extends ClientServerTestCaseBase {
 			Item item = new Item(i);
 			store(item);
 		}
-		Assert.areEqual(ITEM_COUNT, db().get(Item.class).size());
+		Assert.areEqual(ITEM_COUNT, db().queryByExample(Item.class).size());
 		pingThread.close();
 	}
 

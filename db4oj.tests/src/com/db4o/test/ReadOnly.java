@@ -33,7 +33,7 @@ public class ReadOnly implements Runnable{
 		for (int i = 0; i < COUNT; i++) {
 			ReadOnly ro = new ReadOnly();
 			ro.myString = MY_STRING + i;
-			con.set(ro);
+			con.store(ro);
 		}
 		con.close();
 	}
@@ -42,7 +42,7 @@ public class ReadOnly implements Runnable{
 		Db4o.configure().readOnly(true);
 		checkCount();
 		ObjectContainer con = Db4o.openFile(FILE);
-		con.set(new ReadOnly());
+		con.store(new ReadOnly());
 		con.close();
 		checkCount();
 		try{
@@ -60,7 +60,7 @@ public class ReadOnly implements Runnable{
 	private void spendSomeTime(){
 		Db4o.configure().readOnly(true);
 		ObjectContainer con = Db4o.openFile(FILE);
-		ObjectSet set = con.get(new ReadOnly());
+		ObjectSet set = con.queryByExample(new ReadOnly());
 		while(set.hasNext()){
 			ReadOnly ro = (ReadOnly)set.next();
 			if(ro.myString.equals(MY_STRING + "1")){
@@ -82,7 +82,7 @@ public class ReadOnly implements Runnable{
 	private void checkCount(){
 		Db4o.configure().readOnly(true);
 		ObjectContainer con = Db4o.openFile(FILE);
-		int size = con.get(new ReadOnly()).size();
+		int size = con.queryByExample(new ReadOnly()).size();
 		if (size != COUNT){
 			throw new RuntimeException("ReadOnly.test: unexpected number of objects:" + size);
 		}

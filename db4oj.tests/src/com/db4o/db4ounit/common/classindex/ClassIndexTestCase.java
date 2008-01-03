@@ -30,7 +30,7 @@ public class ClassIndexTestCase extends AbstractDb4oTestCase implements OptOutCS
 
 		reopen();
 		
-		item=(Item)db().get(item).next();
+		item=(Item)db().queryByExample(item).next();
 		id=(int)db().getID(item);
 		assertID(id);
 		

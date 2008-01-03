@@ -48,7 +48,7 @@ private final static String DB4O_FILE_NAME = "reference.db4o";
 				BigDecimal d = new BigDecimal("-918.099995e-15"); 
 				System.out.println("BigDecimal value: " + d);
 
-				container.set(d); 
+				container.store(d); 
 				
 				container.commit();
 		} catch (Exception ex) {

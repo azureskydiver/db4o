@@ -25,9 +25,9 @@ public class MappingExample {
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
 			Pilot pilot = new Pilot("Michael Schumacher", 100);
-			container.set(pilot);
+			container.store(pilot);
 			pilot = new Pilot("Rubens Barichello", 99);
-			container.set(pilot);
+			container.store(pilot);
 		} finally {
 			container.close();
 		}

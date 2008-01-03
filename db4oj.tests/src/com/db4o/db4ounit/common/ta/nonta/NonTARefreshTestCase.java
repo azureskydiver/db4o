@@ -40,7 +40,7 @@ public class NonTARefreshTestCase extends TransparentActivationTestCaseBase
 
         item1.value(100);
         item1.next().value(200);
-        client1.set(item1, 2);
+        client1.store(item1, 2);
         client1.commit();
         
         Assert.areEqual(100, item1.value());
@@ -65,7 +65,7 @@ public class NonTARefreshTestCase extends TransparentActivationTestCaseBase
         Assert.areEqual(200, item2.next().value());
         
         updateAscendingWithRange(item1, 1000);
-        client1.set(item1, 5);
+        client1.store(item1, 5);
         client1.commit();
         
         client2.refresh(item2, 5);

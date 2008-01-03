@@ -26,13 +26,13 @@ public class EvaluationExample {
 		Car car1 = new Car("Ferrari");
 		car1.setPilot(pilot1);
 		car1.snapshot();
-		container.set(car1);
+		container.store(car1);
 		Pilot pilot2 = new Pilot("Rubens Barrichello", 99);
 		Car car2 = new Car("BMW");
 		car2.setPilot(pilot2);
 		car2.snapshot();
 		car2.snapshot();
-		container.set(car2);
+		container.store(car2);
 	}
 	// end storeCars
 

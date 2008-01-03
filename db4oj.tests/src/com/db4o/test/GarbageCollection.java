@@ -30,7 +30,7 @@ public class GarbageCollection
 
 			atp = new ArrayTypedPublic();
 			atp.set(1);
-			con.set(atp);
+			con.store(atp);
 
 			if( (((double)i / toGetTen) - (i / toGetTen)) < 0.000001){
 				con.commit();

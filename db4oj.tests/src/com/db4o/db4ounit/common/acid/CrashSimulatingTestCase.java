@@ -65,20 +65,20 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
         
         ObjectContainer oc = Db4o.openFile(recordConfig, fileName);
         
-        ObjectSet objectSet = oc.get(new CrashData(null, "three"));
+        ObjectSet objectSet = oc.queryByExample(new CrashData(null, "three"));
         oc.delete(objectSet.next());
         
-        oc.set(new CrashData(null, "four"));
-        oc.set(new CrashData(null, "five"));
-        oc.set(new CrashData(null, "six"));
-        oc.set(new CrashData(null, "seven"));
-        oc.set(new CrashData(null, "eight"));
-        oc.set(new CrashData(null, "nine"));
-        oc.set(new CrashData(null, "10"));
-        oc.set(new CrashData(null, "11"));
-        oc.set(new CrashData(null, "12"));
-        oc.set(new CrashData(null, "13"));
-        oc.set(new CrashData(null, "14"));
+        oc.store(new CrashData(null, "four"));
+        oc.store(new CrashData(null, "five"));
+        oc.store(new CrashData(null, "six"));
+        oc.store(new CrashData(null, "seven"));
+        oc.store(new CrashData(null, "eight"));
+        oc.store(new CrashData(null, "nine"));
+        oc.store(new CrashData(null, "10"));
+        oc.store(new CrashData(null, "11"));
+        oc.store(new CrashData(null, "12"));
+        oc.store(new CrashData(null, "13"));
+        oc.store(new CrashData(null, "14"));
         
         oc.commit();
         
@@ -168,14 +168,14 @@ public class CrashSimulatingTestCase implements TestCase, OptOutCS {
 
 	private void populate(ObjectContainer container) {
 		for (int i = 0; i < 10; i++) {
-            container.set(new Item("delme"));
+            container.store(new Item("delme"));
         }
         CrashData one = new CrashData(null, "one");
         CrashData two = new CrashData(one, "two");
         CrashData three = new CrashData(one, "three");
-        container.set(one);
-        container.set(two);
-        container.set(three);
+        container.store(one);
+        container.store(two);
+        container.store(three);
         container.commit();
         ObjectSet objectSet = container.query(Item.class);
         while(objectSet.hasNext()){

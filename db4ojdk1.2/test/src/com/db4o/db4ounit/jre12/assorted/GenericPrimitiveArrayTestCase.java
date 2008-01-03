@@ -48,7 +48,7 @@ public class GenericPrimitiveArrayTestCase implements TestCase {
 	private void store(final String filePath) {
 		File4.delete(filePath);
 		ObjectContainer db = Db4o.openFile(Db4o.newConfiguration(), filePath);
-		db.set(new Data(BYTES));
+		db.store(new Data(BYTES));
 		db.close();
 	}
 

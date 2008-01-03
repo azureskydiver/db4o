@@ -104,7 +104,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 
 		// clone the entry because clients are allowed to reuse
 		// entry objects
-		dataContainer(context).set(clone(entry));
+		dataContainer(context).store(clone(entry));
 	}
 
 	public Iterator4 select(PersistenceContext context, PersistentEntryTemplate template) {
@@ -118,7 +118,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 		PersistentEntry existing = selectByUid(context, entry.className, entry.uid);
 		existing.fieldValues = entry.fieldValues;
 		
-		dataContainer(context).set(existing);
+		dataContainer(context).store(existing);
 	}
 
 	private PersistentEntry selectByUid(PersistenceContext context, String className, Object uid) {
@@ -281,7 +281,7 @@ public class Db4oPersistenceProvider implements PersistenceProvider {
 	}
 
 	private void store(ObjectContainer container, Object obj) {
-		container.set(obj);
+		container.store(obj);
 		container.commit();
 	}
 

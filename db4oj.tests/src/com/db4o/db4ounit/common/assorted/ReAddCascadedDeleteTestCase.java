@@ -38,7 +38,7 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
     }
     
     protected void store() {
-        db().set(new Item("parent", new Item("child")));
+        db().store(new Item("parent", new Item("child")));
     }
     
     public void testDeletingAndReaddingMember() throws Exception{
@@ -53,12 +53,12 @@ public class ReAddCascadedDeleteTestCase extends AbstractDb4oTestCase {
 	private void deleteParentAndReAddChild() {
 		Item i = query("parent");
         db().delete(i);
-        db().set(i._member);
+        db().store(i._member);
         db().commit();
 	}
     
     private Item query(String name){
-    	ObjectSet objectSet = db().get(new Item(name));
+    	ObjectSet objectSet = db().queryByExample(new Item(name));
         if (!objectSet.hasNext()) {
         	return null;
         }

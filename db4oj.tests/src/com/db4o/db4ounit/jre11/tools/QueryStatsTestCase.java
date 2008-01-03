@@ -32,7 +32,7 @@ public class QueryStatsTestCase extends AbstractDb4oTestCase {
 
 	protected void store() {
 		for (int i=0; i<ITEM_COUNT; ++i) {
-			db().set(new Item());
+			db().store(new Item());
 		}
 	}
 	

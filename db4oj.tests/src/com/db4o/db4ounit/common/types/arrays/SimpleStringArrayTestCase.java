@@ -18,7 +18,7 @@ public class SimpleStringArrayTestCase extends AbstractDb4oTestCase {
 	}
 
 	protected void store() throws Exception {
-		db().set(new Data(ARRAY));
+		db().store(new Data(ARRAY));
 	}
 	
     public void testRetrieve(){

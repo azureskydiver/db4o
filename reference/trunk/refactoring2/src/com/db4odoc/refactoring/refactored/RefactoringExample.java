@@ -17,12 +17,12 @@ public class RefactoringExample {
 	public static void readData(){
 		ObjectContainer container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet result = container.get(new D());
+			ObjectSet result = container.queryByExample(new D());
 			System.out.println();
 			System.out.println("D class: ");
 			listResult(result);
 			
-			result = container.get(new E());
+			result = container.queryByExample(new E());
 			System.out.println();
 			System.out.println("E class: ");
 			listResult(result);

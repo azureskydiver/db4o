@@ -23,7 +23,7 @@ public class CallbackHelper {
 		}
 		
 		public void objectOnNew(ObjectContainer container){
-			container.set(parent);
+			container.store(parent);
 		}
 		
 		public void objectOnUpdate(ObjectContainer container){

@@ -34,7 +34,7 @@ public class HashtableModifiedUpdateDepthTestCase extends Db4oClientServerTestCa
 	public void conc(ExtObjectContainer oc, int seq) {
 		Hashtable ht = (Hashtable) retrieveOnlyInstance(oc, Hashtable.class);
 		ht.put("hi", "updated" + seq);
-		oc.set(ht);
+		oc.store(ht);
 	}
 
 	public void check(ExtObjectContainer oc) {

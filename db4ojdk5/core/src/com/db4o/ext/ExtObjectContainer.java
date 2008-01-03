@@ -250,7 +250,7 @@ public interface ExtObjectContainer extends ObjectContainer {
 	 * With the <code>committed</code> parameter it is possible to specify,
 	 * whether the desired object should contain the committed values or the
 	 * values that were set by the running transaction with 
-	 * {@link ObjectContainer#set(java.lang.Object)}.
+	 * {@link ObjectContainer#store(java.lang.Object)}.
 	 * <br><br>A possible usecase for this feature:<br>
 	 * An application might want to check all changes applied to an object
 	 * by the running transaction.<br><br>
@@ -337,6 +337,18 @@ public interface ExtObjectContainer extends ObjectContainer {
     
     
     /**
+	 * deep update interface to store or update objects.
+	 * <br><br>In addition to the normal storage interface, 
+	 * {@link com.db4o.ObjectContainer#set ObjectContainer#set(Object)},
+	 * this method allows a manual specification of the depth, the passed object is to be updated.<br><br>
+	 * @param obj the object to be stored or updated.
+	 * @param depth the depth to which the object is to be updated
+	 * @see com.db4o.ObjectContainer#set
+	 * @deprecated Use {@link #store(Object,int)} instead
+	 */
+	public void set (Object obj, int depth);
+
+	/**
      * deep update interface to store or update objects.
      * <br><br>In addition to the normal storage interface, 
      * {@link com.db4o.ObjectContainer#set ObjectContainer#set(Object)},
@@ -345,7 +357,7 @@ public interface ExtObjectContainer extends ObjectContainer {
      * @param depth the depth to which the object is to be updated
      * @see com.db4o.ObjectContainer#set
      */
-    public void set (Object obj, int depth);
+    public void store (Object obj, int depth);
     
 
     /**

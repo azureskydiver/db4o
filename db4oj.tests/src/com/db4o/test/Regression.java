@@ -115,7 +115,7 @@ public class Regression {
 		if (returnedThreads >= openedThreads) {
 			if (errors.length() == 0) {
 				ObjectContainer con = open();
-				int objectCount = con.get(null).size();
+				int objectCount = con.queryByExample(null).size();
 				closeAllButMemoryFile(con);
 				System.out.println(
 					PROFILE_ONLY
@@ -193,14 +193,14 @@ public class Regression {
 		// remove all
 		Object get = clazz.newInstance();
 		con.deactivate(get, Integer.MAX_VALUE);
-		ObjectSet set = con.get(get);
+		ObjectSet set = con.queryByExample(get);
 		while (set.hasNext()) {
 			con.delete(set.next());
 		}
 
 		// STEP1 add one object
 		clazz.set(obj, 1);
-		con.set(obj);
+		con.store(obj);
 		specificTest(clazz, con, ONE);
 		con = reOpen(con);
 
@@ -225,7 +225,7 @@ public class Regression {
 		for (int i = 0; i < 4; i++) {
 			obj = clazz.newInstance();
 			clazz.set(obj, 1);
-			con.set(obj);
+			con.store(obj);
 		}
 		con = reOpen(con);
 
@@ -235,7 +235,7 @@ public class Regression {
 		con = reOpen(con);
 
 		// delete 1
-		set = con.get(get);
+		set = con.queryByExample(get);
 		obj = set.next();
 		con.delete(obj);
 		con = reOpen(con);
@@ -246,10 +246,10 @@ public class Regression {
 		con = reOpen(con);
 		
 		// update 1
-		set = con.get(get);
+		set = con.queryByExample(get);
 		obj = set.next();
 		clazz.set(obj, 2);
-		con.set(obj);
+		con.store(obj);
 		con = reOpen(con);
 		
 		
@@ -276,10 +276,10 @@ public class Regression {
 		if (clazz.ver3()) {
 
 			// update another 1 with ver3
-			set = con.get(get);
+			set = con.queryByExample(get);
 			obj = set.next();
 			clazz.set(obj, 3);
-			con.set(obj);
+			con.store(obj);
 			con = reOpen(con);
 
 			// check 2
@@ -303,7 +303,7 @@ public class Regression {
 	}
 
 	public void compare(ObjectContainer con, Object get, RTestable clazz, int ver, int count) {
-		ObjectSet set = con.get(get);
+		ObjectSet set = con.queryByExample(get);
 		if (!PROFILE_ONLY) {
 			set.reset();
 			if (set.size() == count) {

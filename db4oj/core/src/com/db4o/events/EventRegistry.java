@@ -45,7 +45,7 @@ public interface EventRegistry {
 	 * @sharpen.event com.db4o.events.CancellableObjectEventArgs
 	 * @return event
 	 * @see CancellableObjectEventArgs
-	 * @see com.db4o.ObjectContainer#set(Object)
+	 * @see com.db4o.ObjectContainer#store(Object)
 	 */
 	public Event4 creating();
 
@@ -70,7 +70,7 @@ public interface EventRegistry {
 	 * @sharpen.event com.db4o.events.CancellableObjectEventArgs
 	 * @return event
 	 * @see CancellableObjectEventArgs
-	 * @see com.db4o.ObjectContainer#set(Object)
+	 * @see com.db4o.ObjectContainer#store(Object)
 	 */
 	public Event4 updating();
 	
@@ -124,7 +124,7 @@ public interface EventRegistry {
 	 * @sharpen.event com.db4o.events.ObjectEventArgs
 	 * @return event
 	 * @see ObjectEventArgs
-	 * @see com.db4o.ObjectContainer#set(Object)
+	 * @see com.db4o.ObjectContainer#store(Object)
 	 */
 	public Event4 created();
 
@@ -138,7 +138,7 @@ public interface EventRegistry {
 	 * @sharpen.event com.db4o.events.ObjectEventArgs
 	 * @return event
 	 * @see ObjectEventArgs
-	 * @see com.db4o.ObjectContainer#set(Object)
+	 * @see com.db4o.ObjectContainer#store(Object)
 	 */
 	public Event4 updated();
 

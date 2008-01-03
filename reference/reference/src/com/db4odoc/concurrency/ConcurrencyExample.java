@@ -46,11 +46,11 @@ public class ConcurrencyExample {
 		ObjectContainer container = _server.openClient();
 		try {
 			Pilot pilot = new Pilot("Kimi Raikkonnen",0);
-			container.set(pilot);
+			container.store(pilot);
 			pilot = new Pilot("David Barrichello",0);
-			container.set(pilot);
+			container.store(pilot);
 			pilot = new Pilot("David Coulthard",0);
-			container.set(pilot);
+			container.store(pilot);
 		} finally {
 			container.close();
 		}

@@ -62,7 +62,7 @@ public class Logger
 						msgCount(ids.length);
 					}
 				}else{
-					ObjectSet set = con.get(null);
+					ObjectSet set = con.queryByExample(null);
 					int i = 0;
 					while(set.hasNext()){
 						Object obj = set.next();
@@ -111,7 +111,7 @@ public class Logger
 	 * @param container the {@link ObjectContainer} to be used.
 	 */
 	public static void logAll(ObjectContainer container){
-		ObjectSet set = container.get(null);
+		ObjectSet set = container.queryByExample(null);
 		while(set.hasNext()){
 			log(container, set.next());
 		}

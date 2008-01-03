@@ -25,10 +25,10 @@ public class TransientClassExample {
 		try {
 			// Save Test1 object with a NotStorable class field
 			Test1 test1 = new Test1("Test1", new NotStorable());
-			container.set(test1);
+			container.store(test1);
 			// Save Test2 object with a NotStorable class field
 			Test2 test2 = new Test2("Test2", new NotStorable(), test1);
-			container.set(test2);
+			container.store(test2);
 		} finally {
 			container.close();
 		}
@@ -41,7 +41,7 @@ public class TransientClassExample {
 		try {
 			// retrieve the results and check if the NotStorable
 			// instances were saved
-			ObjectSet result = container.get(null);
+			ObjectSet result = container.queryByExample(null);
 			listResult(result);
 		} finally {
 			container.close();

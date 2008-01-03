@@ -18,8 +18,8 @@ public class GetByUUIDTestCase extends AbstractDb4oTestCase {
 	}
 
 	protected void store() {
-		db().set(new UUIDTestItem("one"));
-		db().set(new UUIDTestItem("two"));
+		db().store(new UUIDTestItem("one"));
+		db().store(new UUIDTestItem("two"));
 	}
 
 	public void test() throws Exception {

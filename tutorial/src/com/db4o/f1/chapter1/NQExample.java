@@ -21,8 +21,8 @@ public class NQExample extends Util {
     }
 
     public static void storePilots(ObjectContainer db) {
-        db.set(new Pilot("Michael Schumacher",100));
-        db.set(new Pilot("Rubens Barrichello",99));
+        db.store(new Pilot("Michael Schumacher",100));
+        db.store(new Pilot("Rubens Barrichello",99));
     }
 
     public static void retrieveComplexSODA(ObjectContainer db) {
@@ -63,7 +63,7 @@ public class NQExample extends Util {
     }
 
     public static void clearDatabase(ObjectContainer db) {
-        ObjectSet result=db.get(Pilot.class);
+        ObjectSet result=db.queryByExample(Pilot.class);
         while(result.hasNext()) {
             db.delete(result.next());
         }

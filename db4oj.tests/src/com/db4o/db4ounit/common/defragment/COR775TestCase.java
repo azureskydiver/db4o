@@ -59,13 +59,13 @@ public class COR775TestCase implements TestLifeCycle {
         
         ObjectContainer testDB = openDB();
         Item item = new Item("richard", 100);
-        testDB.set(item);
+        testDB.store(item);
         testDB.close();
     }
     
     private void verifyDB() {
         ObjectContainer testDB = openDB();
-        ObjectSet result = testDB.get(Item.class);
+        ObjectSet result = testDB.queryByExample(Item.class);
         if (result.hasNext()) {
             Item retrievedItem = (Item) result.next();
             Assert.areEqual("richard", retrievedItem.name);

@@ -43,7 +43,7 @@ public class CollectionsExample extends Util {
         Car car1=new Car("Ferrari");
         Pilot pilot1=new Pilot("Michael Schumacher",100);
         car1.setPilot(pilot1);
-        db.set(car1);
+        db.store(car1);
     }
     
     public static void storeSecondCar(ObjectContainer db) {
@@ -52,13 +52,13 @@ public class CollectionsExample extends Util {
         car2.setPilot(pilot2);
         car2.snapshot();
         car2.snapshot();
-        db.set(car2);
+        db.store(car2);
     }
     
     public static void retrieveAllSensorReadout(
                 ObjectContainer db) {
         SensorReadout proto=new SensorReadout(null,null,null);
-        ObjectSet results=db.get(proto);
+        ObjectSet results=db.queryByExample(proto);
         listResult(results);
     }
 
@@ -76,7 +76,7 @@ public class CollectionsExample extends Util {
                 ObjectContainer db) {
         SensorReadout proto=new SensorReadout(
                 new double[]{0.3,0.1},null,null);
-        ObjectSet results=db.get(proto);
+        ObjectSet results=db.queryByExample(proto);
         listResult(results);
     }
 
@@ -97,7 +97,7 @@ public class CollectionsExample extends Util {
         List protohistory=new ArrayList();
         protohistory.add(protoreadout);
         Car protocar=new Car(null,protohistory);
-        ObjectSet result=db.get(protocar);
+        ObjectSet result=db.queryByExample(protocar);
         listResult(result);
     }
 
@@ -119,12 +119,12 @@ public class CollectionsExample extends Util {
     }
     
     public static void retrieveCollections(ObjectContainer db) {
-        ObjectSet result=db.get(new ArrayList());
+        ObjectSet result=db.queryByExample(new ArrayList());
         listResult(result);
     }
 
     public static void retrieveArrays(ObjectContainer db) {
-        ObjectSet result=db.get(new double[]{0.6,0.4});
+        ObjectSet result=db.queryByExample(new double[]{0.6,0.4});
         listResult(result);
     }
 
@@ -163,7 +163,7 @@ public class CollectionsExample extends Util {
     	});
     	Car car=(Car)results.next();
         car.snapshot();
-        db.set(car);
+        db.store(car);
         retrieveAllSensorReadoutNative(db);
     }
     
@@ -175,7 +175,7 @@ public class CollectionsExample extends Util {
     	});
         Car car =(Car)results.next();
         car.getHistory().remove(0);
-        db.set(car.getHistory());
+        db.store(car.getHistory());
     	results = db.query(new Predicate() {
     		public boolean match(Car candidate){
     			return true;

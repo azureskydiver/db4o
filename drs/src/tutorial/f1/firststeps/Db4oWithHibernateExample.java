@@ -20,8 +20,8 @@ public class Db4oWithHibernateExample {
 
 		ObjectContainer handheld = Db4o.openFile("handheld.yap");
 
-		handheld.set(pilot1);
-		handheld.set(pilot2);
+		handheld.store(pilot1);
+		handheld.store(pilot2);
 
 		Configuration cfg = new Configuration().configure("f1/firststeps/hibernate.cfg.xml");
 		ReplicationSession session = HibernateReplication.begin(handheld, cfg);

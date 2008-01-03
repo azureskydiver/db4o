@@ -45,7 +45,7 @@ public class ClassHandlerTestCase extends AbstractDb4oTestCase {
 
     public void testStoreObject() throws Exception{
         Item expectedItem = new Item("parent", new Item("child", null));
-        db().set(expectedItem);
+        db().store(expectedItem);
         db().purge(expectedItem);
         Query q = db().query();
         q.constrain(Item.class);

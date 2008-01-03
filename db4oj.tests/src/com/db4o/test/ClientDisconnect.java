@@ -15,7 +15,7 @@ public class ClientDisconnect {
 		ExtClient client=(ExtClient)Test.objectContainer();
 		((ClientObjectContainer)client).socket().close();
 		try {
-			client.get(null);
+			client.queryByExample(null);
 			Test.error("expected exception on get after close");
 		}
 		catch(Db4oException exc) {

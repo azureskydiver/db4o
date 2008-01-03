@@ -81,7 +81,7 @@ public class StoredClassFilterTestCase implements TestCase {
 		String fname = DB4O_FILE;
 		ObjectContainer db = Db4o.openFile(fname);
 		try {
-			db.set(new SimpleClass("verySimple"));
+			db.store(new SimpleClass("verySimple"));
 			db.commit();
 		} finally {
 			db.close();

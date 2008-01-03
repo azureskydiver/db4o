@@ -18,7 +18,7 @@ public class GetAllTestCase extends Db4oClientServerTestCase {
 	}
 
 	public void conc(ExtObjectContainer oc) {
-		Assert.areEqual(2, oc.get(null).size());
+		Assert.areEqual(2, oc.queryByExample(null).size());
 	}
 
 	public void concSODA(ExtObjectContainer oc) {

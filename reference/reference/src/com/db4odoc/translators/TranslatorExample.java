@@ -51,7 +51,7 @@ public class TranslatorExample {
 		try {
 			NotStorable notStorable = new NotStorable(42, "Test");
 			System.out.println("ORIGINAL: " + notStorable);
-			container.set(notStorable);
+			container.store(notStorable);
 		} catch (Exception exc) {
 			System.out.println(exc.toString());
 			return;
@@ -60,7 +60,7 @@ public class TranslatorExample {
 		}
 		container = Db4o.openFile(DB4O_FILE_NAME);
 		try {
-			ObjectSet result = container.get(NotStorable.class);
+			ObjectSet result = container.queryByExample(NotStorable.class);
 			while (result.hasNext()) {
 				NotStorable notStorable = (NotStorable) result.next();
 				System.out.println("RETRIEVED: " + notStorable);

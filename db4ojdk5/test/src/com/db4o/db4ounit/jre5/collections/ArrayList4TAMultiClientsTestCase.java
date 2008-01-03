@@ -342,8 +342,8 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 		ArrayList4<Integer> list2 = retrieveAndAssertNullArrayList4(client2);
 		op1.operate(list1);
 		op2.operate(list2);
-		client1.set(list1);
-		client2.set(list2);
+		client1.store(list1);
+		client2.store(list2);
 		client1.commit();
 		client2.commit();
 		client1.close();

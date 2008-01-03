@@ -21,7 +21,7 @@ public class DeleteSetTestCase extends AbstractDb4oTestCase {
 	public void test() throws Exception {
 		Object item = retrieveOnlyInstance(Item.class);
 		db().delete(item);
-		db().set(item);
+		db().store(item);
 		db().commit();
 		assertOccurrences(Item.class, 1);
 	}

@@ -38,7 +38,7 @@ public class DiagnosticExample{
     
     private static void setEmptyObject(ObjectContainer container){
     	Empty empty = new Empty();
-        container.set(empty);
+        container.store(empty);
     }
     // end setEmptyObject
     	
@@ -49,7 +49,7 @@ public class DiagnosticExample{
         ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
         try {
         	Pilot pilot = new Pilot("Rubens Barrichello",99);
-        	container.set(pilot);
+        	container.store(pilot);
         	queryPilot(container);
         }
         finally {
@@ -76,9 +76,9 @@ public class DiagnosticExample{
         ObjectContainer container=Db4o.openFile(configuration, DB4O_FILE_NAME);
         try {
         	Pilot pilot1 = new Pilot("Rubens Barrichello",99);
-        	container.set(pilot1);
+        	container.store(pilot1);
         	Pilot pilot2 = new Pilot("Michael Schumacher",100);
-        	container.set(pilot2);
+        	container.store(pilot2);
         	queryPilot(container);
         	setEmptyObject(container);
         	Query query = container.query();
@@ -114,10 +114,10 @@ public class DiagnosticExample{
 		try {
 			Car car1 = new Car("BMW");
 			System.out.println("ORIGINAL: " + car1);
-			container.set(car1);
+			container.store(car1);
 			Car car2 = new Car("Ferrari");
 			System.out.println("ORIGINAL: " + car2);
-			container.set(car2);
+			container.store(car2);
 		} catch (Exception exc) {
 			System.out.println(exc.toString());
 			return;

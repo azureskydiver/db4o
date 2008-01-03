@@ -44,7 +44,7 @@ public class StaticFieldExample {
 		try {
 			Car car = new Car();
 			car.color = Color.GREEN;
-			container.set(car);
+			container.store(car);
 		} finally {
 			container.close();
 		}
@@ -92,9 +92,9 @@ public class StaticFieldExample {
 		ObjectContainer container = database();
 		if (container != null) {
 			try {
-				container.set(new Pilot("Michael Schumacher",
+				container.store(new Pilot("Michael Schumacher",
 						PilotCategories.WINNER));
-				container.set(new Pilot("Rubens Barrichello",
+				container.store(new Pilot("Rubens Barrichello",
 						PilotCategories.TALENTED));
 			} finally {
 				closeDatabase();
@@ -142,7 +142,7 @@ public class StaticFieldExample {
 						System.out.println("Winner pilot: " + pilot);
 						PilotCategories pc = pilot.getCategory();
 						pc.testChange("WINNER2006");
-						container.set(pilot);
+						container.store(pilot);
 					}
 				}
 				printCategories(container);
@@ -164,7 +164,7 @@ public class StaticFieldExample {
 					PilotCategories pc = (PilotCategories) result.get(x);
 					if (pc == PilotCategories.WINNER) {
 						pc.testChange("WINNER2006");
-						container.set(pc);
+						container.store(pc);
 					}
 				}
 				printCategories(container);
@@ -181,7 +181,7 @@ public class StaticFieldExample {
 					PilotCategories pc = (PilotCategories) result.get(x);
 					if (pc == PilotCategories.WINNER) {
 						pc.testChange("WINNER");
-						container.set(pc);
+						container.store(pc);
 					}
 				}
 				printCategories(container);

@@ -46,7 +46,7 @@ public class Singleton {
 				e.printStackTrace();
 			}
 
-			objectContainer.set(obj);
+			objectContainer.store(obj);
 
 			/*
 			 * !!! CAUTION !!! There is a commit call here.
