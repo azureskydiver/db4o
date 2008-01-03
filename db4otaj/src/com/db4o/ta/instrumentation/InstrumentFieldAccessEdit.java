@@ -113,7 +113,7 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 				
 				int insertionPoint = idx.intValue();				
 				if (ActivationPurpose.WRITE == fieldAccess.purpose) {
-					LoadStore instructions = loadStoreInstructionsFor(fieldRef.type());
+					LoadStoreInstructions instructions = BloatUtil.loadStoreInstructionsFor(fieldRef.type());
 					LocalVariable temp = editor.newLocal(fieldRef.type());
 					editor.insertCodeAt(new Instruction(instructions.store, temp), insertionPoint++);					
 					insertionPoint = insertActivateCall(editor, targetActivateMethod, insertionPoint, ActivationPurpose.WRITE);					
@@ -184,31 +184,5 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 	private MemberRef createMemberRef(Type parent, String name, Type type) {
 		NameAndType nameAndType = new NameAndType(name, type);
 		return new MemberRef(parent, nameAndType);
-	}
-	
-	static class LoadStore {
-		public final int load;
-		public final int store;
-		
-		public LoadStore(int load_, int store_) {
-			load = load_;
-			store = store_;
-		}
-	}
-	
-	private LoadStore loadStoreInstructionsFor(Type type) {
-		if (type.isPrimitive()) {
-			switch (type.typeCode()) {
-			case Type.DOUBLE_CODE:
-				return new LoadStore(Opcode.opc_dload, Opcode.opc_dstore);
-			case Type.FLOAT_CODE:
-				return new LoadStore(Opcode.opc_fload, Opcode.opc_fstore);
-			case Type.LONG_CODE:
-				return new LoadStore(Opcode.opc_lload, Opcode.opc_lstore);
-			default:
-				return new LoadStore(Opcode.opc_iload, Opcode.opc_istore);
-			}
-		}
-		return new LoadStore(Opcode.opc_aload, Opcode.opc_astore);
 	}
 }

@@ -40,4 +40,20 @@ public class BloatUtil {
 	private BloatUtil() {
 	}
 
+	public static LoadStoreInstructions loadStoreInstructionsFor(Type type) {
+		if (type.isPrimitive()) {
+			switch (type.typeCode()) {
+			case Type.DOUBLE_CODE:
+				return new LoadStoreInstructions(Opcode.opc_dload, Opcode.opc_dstore);
+			case Type.FLOAT_CODE:
+				return new LoadStoreInstructions(Opcode.opc_fload, Opcode.opc_fstore);
+			case Type.LONG_CODE:
+				return new LoadStoreInstructions(Opcode.opc_lload, Opcode.opc_lstore);
+			default:
+				return new LoadStoreInstructions(Opcode.opc_iload, Opcode.opc_istore);
+			}
+		}
+		return new LoadStoreInstructions(Opcode.opc_aload, Opcode.opc_astore);
+	}
+
 }
