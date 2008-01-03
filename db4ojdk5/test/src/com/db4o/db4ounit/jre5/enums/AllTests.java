@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
 			DeleteEnumTestCase.class,
 			EnumTestCase.class,
 			SimpleEnumTestCase.class,
+			TAEnumsTestCase.class,
 		};
 	}
 
