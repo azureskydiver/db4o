@@ -68,7 +68,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
 	}
 
 	public final ObjectSet queryByExample(Object template) throws DatabaseClosedException {
-        return get(null, template);
+        return queryByExample(null, template);
     }
 
     public final Object getByID(long id) throws DatabaseClosedException, InvalidIDException  {

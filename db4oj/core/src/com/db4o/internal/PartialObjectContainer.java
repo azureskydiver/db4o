@@ -719,13 +719,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         _references.pollReferenceQueue();
     }
     
-    public final ObjectSet get(Transaction trans, Object template) {
+    public final ObjectSet queryByExample(Transaction trans, Object template) {
         synchronized (_lock) {
             trans = checkTransaction(trans);
             QueryResult res = null;
     		try {
     			beginTopLevelCall();
-    			res = getInternal(trans, template);
+    			res = queryByExampleInternal(trans, template);
     			completeTopLevelCall();
     		} catch (Db4oException e) {
     			completeTopLevelCall(e);
@@ -736,16 +736,16 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
 
-    private final QueryResult getInternal(Transaction trans, Object template) {
+    private final QueryResult queryByExampleInternal(Transaction trans, Object template) {
         if (template == null || template.getClass() == Const4.CLASS_OBJECT) {
-            return getAll(trans);
+            return queryAllObjects(trans);
         } 
         Query q = query(trans);
         q.constrain(template);
         return executeQuery((QQuery)q);
     }
     
-    public abstract AbstractQueryResult getAll(Transaction ta);
+    public abstract AbstractQueryResult queryAllObjects(Transaction ta);
 
     public final Object getByID(Transaction ta, long id) throws DatabaseClosedException, InvalidIDException {
         synchronized (_lock) {
@@ -1281,7 +1281,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     public final ObjectSet query(Transaction trans, Class clazz) {
-        return get(trans, clazz);
+        return queryByExample(trans, clazz);
     }
 
     public final Query query(Transaction ta) {
@@ -1386,7 +1386,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 		Iterator4 i = config.rename().iterator();
 		while (i.moveNext()) {
 			Rename ren = (Rename) i.current();
-			if (get(systemTransaction(), ren).size() == 0) {
+			if (queryByExample(systemTransaction(), ren).size() == 0) {
 				boolean renamed = false;
 				boolean isField = ren.rClass.length() > 0;
 				ClassMetadata yapClass = _classCollection
@@ -1413,7 +1413,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
 					// delete all that rename from the new name
 					// to allow future backswitching
-					ObjectSet backren = get(systemTransaction(), new Rename(ren.rClass, null,
+					ObjectSet backren = queryByExample(systemTransaction(), new Rename(ren.rClass, null,
 							ren.rFrom));
 					while (backren.hasNext()) {
 						delete(systemTransaction(), backren.next());

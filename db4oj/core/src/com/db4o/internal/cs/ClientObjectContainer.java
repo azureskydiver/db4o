@@ -289,7 +289,7 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		}
 	}
 		
-	public AbstractQueryResult getAll(Transaction trans) {
+	public AbstractQueryResult queryAllObjects(Transaction trans) {
 		int mode = config().queryEvaluationMode().asInt();
 		MsgD msg = Msg.GET_ALL.getWriterForInt(trans, mode);
 		write(msg);

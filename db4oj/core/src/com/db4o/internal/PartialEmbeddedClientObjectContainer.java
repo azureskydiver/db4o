@@ -338,7 +338,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
 	public ObjectSet queryByExample(Object template) throws Db4oIOException, DatabaseClosedException {
         synchronized(lock()){
             checkClosed();
-            return _server.get(_transaction, template);
+            return _server.queryByExample(_transaction, template);
         }
     }
 

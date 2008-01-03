@@ -225,7 +225,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
     	}
     }
 
-    public AbstractQueryResult getAll(Transaction trans) {
+    public AbstractQueryResult queryAllObjects(Transaction trans) {
         return getAll(trans, config().queryEvaluationMode());
     }
     
