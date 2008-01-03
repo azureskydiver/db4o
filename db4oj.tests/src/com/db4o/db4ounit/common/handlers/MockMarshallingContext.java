@@ -75,7 +75,7 @@ public abstract class MockMarshallingContext {
     }
  
     public void writeObject(Object obj) {
-        int id = container().setInternal(transaction(), obj, false);
+        int id = container().storeInternal(transaction(), obj, false);
         writeInt(id);
     }
     

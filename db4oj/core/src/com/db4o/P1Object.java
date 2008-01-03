@@ -46,7 +46,7 @@ public class P1Object implements Db4oTypeImpl{
 	        
 	        i_yapObject = i_trans.referenceForObject(this);
 	        if(i_yapObject == null){
-	            stream().set(i_trans, this);
+	            stream().store(i_trans, this);
 	            i_yapObject = i_trans.referenceForObject(this);
 	        }
 	    }
@@ -116,7 +116,7 @@ public class P1Object implements Db4oTypeImpl{
     
     protected void store(Object a_obj){
         if(i_trans != null){
-            stream().setInternal(i_trans, a_obj, true);
+            stream().storeInternal(i_trans, a_obj, true);
         }
     }
     
@@ -140,7 +140,7 @@ public class P1Object implements Db4oTypeImpl{
         if(i_yapObject == null){
             i_yapObject = i_trans.referenceForObject(this);
             if(i_yapObject == null){
-                i_trans.container().setInternal(i_trans, this, true);
+                i_trans.container().storeInternal(i_trans, this, true);
                 i_yapObject = i_trans.referenceForObject(this);
                 return;
             }

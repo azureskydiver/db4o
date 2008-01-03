@@ -80,7 +80,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 			}
 
 			public void preCommit() {
-				container().set(transaction, getObject());
+				container().store(transaction, getObject());
 			}
 		};
 		transaction.addTransactionListener(_updateListener);

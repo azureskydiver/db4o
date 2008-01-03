@@ -134,7 +134,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
             copy(file, serverFile(checkExt(file), true));
         }
         synchronized (i_stream._lock) {
-            i_stream.setInternal(i_trans, this, false);
+            i_stream.storeInternal(i_trans, this, false);
         }
         i_status = Status.COMPLETED;
     }
@@ -168,7 +168,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
                 }
                 fileName = tryPath;
                 synchronized (i_stream._lock) {
-                    i_stream.setInternal(i_trans, this, false);
+                    i_stream.storeInternal(i_trans, this, false);
                 }
             }
         } else {
@@ -243,7 +243,7 @@ public class BlobImpl implements Blob, Cloneable, Db4oTypeImpl {
         i_length = 0;
         setStatus(Status.UNUSED);
         synchronized (i_stream._lock) {
-            i_stream.setInternal(i_trans, this, false);
+            i_stream.storeInternal(i_trans, this, false);
         }
     } 
 

@@ -1420,7 +1420,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 					}
 
 					// store the rename, so we only do it once
-					set(systemTransaction(), ren);
+					store(systemTransaction(), ren);
 				}
 			}
 		}
@@ -1451,32 +1451,32 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         throw new NotSupportedException();
     }
 
-    public final void set(Transaction trans, Object obj)
+    public final void store(Transaction trans, Object obj)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
-    	set(trans, obj, Const4.UNSPECIFIED);
+    	store(trans, obj, Const4.UNSPECIFIED);
     }    
     
-	public final void set(Transaction trans, Object obj, int depth)
+	public final void store(Transaction trans, Object obj, int depth)
 			throws DatabaseClosedException, DatabaseReadOnlyException {
 		synchronized (_lock) {
-            setInternal(trans, obj, depth, true);
+            storeInternal(trans, obj, depth, true);
         }
 	}
     
-    public final int setInternal(Transaction trans, Object obj,
+    public final int storeInternal(Transaction trans, Object obj,
 			boolean checkJustSet) throws DatabaseClosedException,
 			DatabaseReadOnlyException {
-       return setInternal(trans, obj, Const4.UNSPECIFIED, checkJustSet);
+       return storeInternal(trans, obj, Const4.UNSPECIFIED, checkJustSet);
     }
     
-    public final int setInternal(Transaction trans, Object obj, int depth,
+    public final int storeInternal(Transaction trans, Object obj, int depth,
 			boolean checkJustSet) throws DatabaseClosedException,
 			DatabaseReadOnlyException {
     	trans = checkTransaction(trans);
     	checkReadOnly();
     	beginTopLevelSet();
     	try{
-	        int id = setAfterReplication(trans, obj, depth, checkJustSet);
+	        int id = storeAfterReplication(trans, obj, depth, checkJustSet);
 	        completeTopLevelSet();
 			return id;
     	} catch(Db4oException e) {
@@ -1487,7 +1487,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	}
     }
     
-    public final int setAfterReplication(Transaction trans, Object obj, int depth,  boolean checkJust) {
+    public final int storeAfterReplication(Transaction trans, Object obj, int depth,  boolean checkJust) {
         
         if (obj instanceof Db4oType) {
             Db4oType db4oType = db4oTypeStored(trans, obj);
@@ -1496,23 +1496,23 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             }
         }
         
-        return set2(trans, obj, depth, checkJust);
+        return store2(trans, obj, depth, checkJust);
     }
     
-    public final void setByNewReplication(Db4oReplicationReferenceProvider referenceProvider, Object obj){
+    public final void storeByNewReplication(Db4oReplicationReferenceProvider referenceProvider, Object obj){
         synchronized(_lock){
             _replicationCallState = Const4.NEW;
             _handlers._replicationReferenceProvider = referenceProvider;
             
-            set2(checkTransaction(), obj, 1, false);
+            store2(checkTransaction(), obj, 1, false);
             
             _replicationCallState = Const4.NONE;
             _handlers._replicationReferenceProvider = null;
         }
     }
     
-    private final int set2(Transaction trans, Object obj, int depth, boolean checkJust) {
-        int id = set3(trans, obj, depth, checkJust);
+    private final int store2(Transaction trans, Object obj, int depth, boolean checkJust) {
+        int id = store3(trans, obj, depth, checkJust);
         if(stackIsSmall()){
             checkStillToSet();
         }
@@ -1561,7 +1561,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
 
-    public final int set3(Transaction trans, Object obj, int updateDepth, boolean checkJustSet) {
+    public final int store3(Transaction trans, Object obj, int updateDepth, boolean checkJustSet) {
         if (obj == null || (obj instanceof TransientClass)) {
             return 0;
         }

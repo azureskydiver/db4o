@@ -307,7 +307,7 @@ public class FieldIndexProcessorTestCase extends FieldIndexProcessorTestCaseBase
     }
 
 	private void store(final Transaction trans, final FieldIndexItem item) {
-		stream().set(trans, item);
+		stream().store(trans, item);
 	}
 	
 	private void fillTransactionWith(Transaction trans, final int bar) {

@@ -22,7 +22,7 @@ public class P2Collections implements Db4oCollections{
         synchronized(lock()) {
         	if(canCreateCollection(container())){
 	            Db4oList l = new P2LinkedList();
-	            container().set(_transaction, l);
+	            container().store(_transaction, l);
 	            return l;
 	        }
 	        return null;
@@ -43,7 +43,7 @@ public class P2Collections implements Db4oCollections{
 	        if(canCreateCollection(container())){
 	            P2HashMap m = new P2HashMap(a_size);
 	            m.i_type = 1;
-	            container().set(_transaction, m);
+	            container().store(_transaction, m);
 	            return m;
 	        }
 	        return null;
