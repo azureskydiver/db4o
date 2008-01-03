@@ -9,6 +9,7 @@ import EDU.purdue.cs.bloat.editor.ClassEditor;
 import EDU.purdue.cs.bloat.editor.EditorVisitor;
 import EDU.purdue.cs.bloat.editor.FieldEditor;
 import EDU.purdue.cs.bloat.editor.Instruction;
+import EDU.purdue.cs.bloat.editor.LocalVariable;
 import EDU.purdue.cs.bloat.editor.MemberRef;
 import EDU.purdue.cs.bloat.editor.MethodEditor;
 import EDU.purdue.cs.bloat.editor.NameAndType;
@@ -64,41 +65,87 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 					Object curCode = editor.codeElementAt(codeIdx);
 					MemberRef fieldRef = fieldRef(curCode);
 					if(fieldRef != null && accept(fieldRef)) {
-						fieldAccessIndexes.put(new Integer(codeIdx), fieldRef);
+						boolean writeAccess = ((Instruction)curCode).origOpcode() == Opcode.opc_putfield;						
+						fieldAccessIndexes.put(
+								new Integer(codeIdx),
+								new FieldAccess(
+										fieldRef,
+										writeAccess
+											? ActivationPurpose.WRITE
+											: ActivationPurpose.READ));
 					}
 				}
 				if(fieldAccessIndexes.isEmpty()) {
 					return;
 				}
-				int modifiedCount = 0;
-				for (Iterator idxIter = fieldAccessIndexes.keySet().iterator(); idxIter.hasNext();) {
-					Integer idx = ((Integer) idxIter.next());
-					MemberRef fieldRef = (MemberRef)fieldAccessIndexes.get(idx);
-					try {
-						FieldEditor fieldEdit = loaderContext.field(ce, fieldRef.name(), fieldRef.type());
-						if(fieldEdit.isTransient() || fieldEdit.isStatic()) {
-							continue;
+				try {					
+					int modifiedCount = 0;
+					for (Iterator idxIter = fieldAccessIndexes.keySet().iterator(); idxIter.hasNext();) {
+						Integer idx = ((Integer) idxIter.next());
+						FieldAccess fieldAccess = (FieldAccess)fieldAccessIndexes.get(idx);
+						if (instrumentFieldAccess(loaderContext, ce, editor, idx, fieldAccess)) {
+							modifiedCount++;
 						}
-					} 
-					catch (ClassNotFoundException e) {
-						instrumented.value = InstrumentationStatus.FAILED;
-						return;
 					}
+					editor.commit();
+					instrumented.value = (modifiedCount > 0 ? InstrumentationStatus.INSTRUMENTED : InstrumentationStatus.NOT_INSTRUMENTED);
 					
-					final Type activationPurpose = Type.getType(ActivationPurpose.class);
-					final MemberRef targetActivateMethod = createMethodReference(fieldRef.declaringClass(),  TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{ activationPurpose}, Type.VOID);
-					if(targetActivateMethod == null) {
-						continue;
-					}
-					
-					int ip = idx.intValue();
-					editor.insertCodeAt(new Instruction(Opcode.opc_dup), ip);
-					editor.insertCodeAt(new Instruction(Opcode.opc_getstatic, createMemberRef(activationPurpose, "READ", activationPurpose)), ++ip);
-					editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, targetActivateMethod), ++ip);
-					modifiedCount++;
+				} catch (ClassNotFoundException e) {
+					instrumented.value = InstrumentationStatus.FAILED;
+					return;
 				}
-				editor.commit();
-				instrumented.value = (modifiedCount > 0 ? InstrumentationStatus.INSTRUMENTED : InstrumentationStatus.NOT_INSTRUMENTED);
+			}
+
+			private boolean instrumentFieldAccess(
+					final BloatLoaderContext loaderContext,
+					final ClassEditor ce, MethodEditor editor, Integer idx,
+					FieldAccess fieldAccess) throws ClassNotFoundException {
+				
+				MemberRef fieldRef = fieldAccess.fieldRef;
+				if (!isPersistentField(loaderContext, ce, fieldRef)) {
+					return false;
+				}
+				
+				final MemberRef targetActivateMethod = createMethodReference(fieldRef.declaringClass(),  TransparentActivationInstrumentationConstants.ACTIVATE_METHOD_NAME, new Type[]{ Type.getType(ActivationPurpose.class)}, Type.VOID);
+				if(targetActivateMethod == null) {
+					return false;
+				}
+				
+				int insertionPoint = idx.intValue();				
+				if (ActivationPurpose.WRITE == fieldAccess.purpose) {
+					LoadStore instructions = loadStoreInstructionsFor(fieldRef.type());
+					LocalVariable temp = editor.newLocal(fieldRef.type());
+					editor.insertCodeAt(new Instruction(instructions.store, temp), insertionPoint++);					
+					insertionPoint = insertActivateCall(editor, targetActivateMethod, insertionPoint, ActivationPurpose.WRITE);					
+					editor.insertCodeAt(new Instruction(instructions.load, temp), insertionPoint);
+					
+				} else {				
+					insertActivateCall(editor, targetActivateMethod, insertionPoint, ActivationPurpose.READ);
+				}
+				
+				return true;
+			}			
+
+			private int insertActivateCall(MethodEditor editor,
+					final MemberRef targetActivateMethod, int insertionPoint, ActivationPurpose purpose) {
+				
+				editor.insertCodeAt(new Instruction(Opcode.opc_dup), insertionPoint);
+				editor.insertCodeAt(new Instruction(Opcode.opc_getstatic, purposeFieldFor(purpose)), ++insertionPoint);
+				editor.insertCodeAt(new Instruction(Opcode.opc_invokevirtual, targetActivateMethod), ++insertionPoint);
+				return ++insertionPoint;
+			}
+
+			private MemberRef purposeFieldFor(ActivationPurpose purpose) {
+				String fieldName = ActivationPurpose.READ == purpose ? "READ" : "WRITE";
+				return createMemberRef(Type.getType(ActivationPurpose.class), fieldName, Type.getType(ActivationPurpose.class));
+			}
+
+			private boolean isPersistentField(
+					final BloatLoaderContext loaderContext,
+					final ClassEditor ce, MemberRef fieldRef)
+					throws ClassNotFoundException {
+				FieldEditor fieldEdit = loaderContext.field(ce, fieldRef.name(), fieldRef.type());
+				return !fieldEdit.isTransient() && !fieldEdit.isStatic();
 			}
 
 			private boolean accept(MemberRef fieldRef) {
@@ -118,7 +165,8 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 					return null;
 				}
 				Instruction curInstr = (Instruction)code;
-				if(curInstr.origOpcode() == Opcode.opc_getfield) {
+				if(curInstr.origOpcode() == Opcode.opc_getfield
+					|| curInstr.origOpcode() == Opcode.opc_putfield) {
 					return (MemberRef) curInstr.operand();
 				}
 				return null;
@@ -136,5 +184,31 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 	private MemberRef createMemberRef(Type parent, String name, Type type) {
 		NameAndType nameAndType = new NameAndType(name, type);
 		return new MemberRef(parent, nameAndType);
+	}
+	
+	static class LoadStore {
+		public final int load;
+		public final int store;
+		
+		public LoadStore(int load_, int store_) {
+			load = load_;
+			store = store_;
+		}
+	}
+	
+	private LoadStore loadStoreInstructionsFor(Type type) {
+		if (type.isPrimitive()) {
+			switch (type.typeCode()) {
+			case Type.DOUBLE_CODE:
+				return new LoadStore(Opcode.opc_dload, Opcode.opc_dstore);
+			case Type.FLOAT_CODE:
+				return new LoadStore(Opcode.opc_fload, Opcode.opc_fstore);
+			case Type.LONG_CODE:
+				return new LoadStore(Opcode.opc_lload, Opcode.opc_lstore);
+			default:
+				return new LoadStore(Opcode.opc_iload, Opcode.opc_istore);
+			}
+		}
+		return new LoadStore(Opcode.opc_aload, Opcode.opc_astore);
 	}
 }
