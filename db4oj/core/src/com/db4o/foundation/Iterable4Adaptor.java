@@ -10,24 +10,24 @@ package com.db4o.foundation;
  */
 public class Iterable4Adaptor {
 	
-	private static final Object EOF = new Object();
-	private static final Object MOVE_NEXT = new Object();
+	private static final Object EOF_MARKER = new Object();
+	private static final Object MOVE_NEXT_MARKER = new Object();
 	
 	private final Iterable4 _delegate;
     
     private Iterator4 _iterator; 
     
-    private Object _current = MOVE_NEXT;
+    private Object _current = MOVE_NEXT_MARKER;
     
     public Iterable4Adaptor(Iterable4 delegate_) {
     	_delegate = delegate_;
     }
     
     public boolean hasNext() {
-    	if (_current == MOVE_NEXT) {
+    	if (_current == MOVE_NEXT_MARKER) {
     		return moveNext();
     	}
-    	return _current != EOF;
+    	return _current != EOF_MARKER;
     }
     
     public Object next() {
@@ -35,7 +35,7 @@ public class Iterable4Adaptor {
     		throw new IllegalStateException();
     	}
         Object returnValue = _current;
-        _current = MOVE_NEXT;
+        _current = MOVE_NEXT_MARKER;
         return returnValue;
     }
 
@@ -47,12 +47,12 @@ public class Iterable4Adaptor {
     		_current = _iterator.current();
     		return true;
     	}
-    	_current = EOF;
+    	_current = EOF_MARKER;
     	return false;
 	}
 
 	public void reset() {
         _iterator = null;
-        _current = MOVE_NEXT;
+        _current = MOVE_NEXT_MARKER;
     }
 }

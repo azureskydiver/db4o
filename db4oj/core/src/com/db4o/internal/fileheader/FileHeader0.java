@@ -11,7 +11,7 @@ import com.db4o.internal.*;
  */
 public class FileHeader0 extends FileHeader {
     
-    static final int LENGTH = 2 + (Const4.INT_LENGTH * 4);
+    static final int HEADER_LENGTH = 2 + (Const4.INT_LENGTH * 4);
 
     // The header format is:
 
@@ -132,7 +132,7 @@ public class FileHeader0 extends FileHeader {
     }
 
     public int length(){
-        return LENGTH;
+        return HEADER_LENGTH;
     }
 
     public void writeFixedPart(LocalObjectContainer file, boolean startFileLockingThread, boolean shuttingDown, StatefulBuffer writer, int blockSize_, int freespaceID) {

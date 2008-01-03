@@ -84,10 +84,10 @@ public class SODAMethodBuilder {
 		private void constrain(ComparisonOperator op) {
 			invoke(constrainRef);
 			
-			if (op.equals(ComparisonOperator.EQUALS)) {
+			if (op.equals(ComparisonOperator.VALUE_EQUALITY)) {
 				return;
 			}
-			if (op.equals(ComparisonOperator.IDENTITY)) {
+			if (op.equals(ComparisonOperator.REFERENCE_EQUALITY)) {
 				invoke(identityRef);
 				return;
 			}
@@ -103,12 +103,12 @@ public class SODAMethodBuilder {
 				invoke(containsRef);
 				return;
 			}
-			if (op.equals(ComparisonOperator.STARTSWITH)) {
+			if (op.equals(ComparisonOperator.STARTS_WITH)) {
 				ldc(new Integer(1));
 				invoke(startsWithRef);
 				return;
 			}
-			if (op.equals(ComparisonOperator.ENDSWITH)) {
+			if (op.equals(ComparisonOperator.ENDS_WITH)) {
 				ldc(new Integer(1));
 				invoke(endsWithRef);
 				return;

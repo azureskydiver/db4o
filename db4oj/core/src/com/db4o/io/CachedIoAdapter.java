@@ -277,7 +277,7 @@ public class CachedIoAdapter extends IoAdapter {
 	}
 
 	private boolean containsHeaderBlock(Page page) {
-		return page.startAddress() <= FileHeader1.LENGTH;
+		return page.startAddress() <= FileHeader1.HEADER_LENGTH;
 	}
 
 	private void resetPageAddress(Page page, long startAddress) {

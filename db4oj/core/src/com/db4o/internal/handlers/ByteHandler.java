@@ -13,7 +13,7 @@ public final class ByteHandler extends PrimitiveHandler {
 
     static final int LENGTH = 1 + Const4.ADDED_LENGTH;
 	
-	private static final Byte DEFAULT_VALUE = new Byte((byte)0);
+	private static final Byte DEFAULT_BYTE_VALUE = new Byte((byte)0);
 	
     public ByteHandler(ObjectContainerBase stream) {
         super(stream);
@@ -24,7 +24,7 @@ public final class ByteHandler extends PrimitiveHandler {
     }
 
 	public Object defaultValue(){
-		return DEFAULT_VALUE;
+		return DEFAULT_BYTE_VALUE;
 	}
 	
 	public int linkLength(){
@@ -36,7 +36,7 @@ public final class ByteHandler extends PrimitiveHandler {
 	}
 	
 	public Object primitiveNull(){
-		return DEFAULT_VALUE;
+		return DEFAULT_BYTE_VALUE;
 	}
 	
 	Object read1(BufferImpl a_bytes){

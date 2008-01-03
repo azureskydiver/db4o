@@ -11,13 +11,13 @@ import com.db4o.foundation.*;
 public abstract class Config4Abstract {
 	protected KeySpecHashtable4 _config;
 
-	private final static KeySpec CASCADE_ON_ACTIVATE=new KeySpec(TernaryBool.UNSPECIFIED);
+	private final static KeySpec CASCADE_ON_ACTIVATE_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
     
-	private final static KeySpec CASCADE_ON_DELETE=new KeySpec(TernaryBool.UNSPECIFIED);
+	private final static KeySpec CASCADE_ON_DELETE_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
     
-	private final static KeySpec CASCADE_ON_UPDATE=new KeySpec(TernaryBool.UNSPECIFIED);
+	private final static KeySpec CASCADE_ON_UPDATE_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
 
-    private final static KeySpec NAME=new KeySpec(null);
+    private final static KeySpec NAME_KEY=new KeySpec(null);
 
 	public Config4Abstract() {
 		this(new KeySpecHashtable4(10));
@@ -28,15 +28,15 @@ public abstract class Config4Abstract {
 	}
 	
 	public void cascadeOnActivate(boolean flag){
-		putThreeValued(CASCADE_ON_ACTIVATE,flag);
+		putThreeValued(CASCADE_ON_ACTIVATE_KEY,flag);
 	}
 	
 	public void cascadeOnDelete(boolean flag){
-		putThreeValued(CASCADE_ON_DELETE,flag);
+		putThreeValued(CASCADE_ON_DELETE_KEY,flag);
 	}
 	
 	public void cascadeOnUpdate(boolean flag){
-		putThreeValued(CASCADE_ON_UPDATE,flag);
+		putThreeValued(CASCADE_ON_UPDATE_KEY,flag);
 	}
 
 	protected void putThreeValued(KeySpec spec,boolean flag) {
@@ -48,15 +48,15 @@ public abstract class Config4Abstract {
 	}
 
 	public TernaryBool cascadeOnActivate(){
-		return cascade(CASCADE_ON_ACTIVATE);
+		return cascade(CASCADE_ON_ACTIVATE_KEY);
 	}
 	
 	public TernaryBool cascadeOnDelete(){
-		return cascade(CASCADE_ON_DELETE);
+		return cascade(CASCADE_ON_DELETE_KEY);
 	}
 	
 	public TernaryBool cascadeOnUpdate(){
-		return cascade(CASCADE_ON_UPDATE);
+		return cascade(CASCADE_ON_UPDATE_KEY);
 	}
 
 	private TernaryBool cascade(KeySpec spec) {
@@ -86,10 +86,10 @@ public abstract class Config4Abstract {
 	}
 	
 	public String getName(){
-		return _config.getAsString(NAME);
+		return _config.getAsString(NAME_KEY);
 	}
 	
 	protected void setName(String name) {
-		_config.put(NAME,name);
+		_config.put(NAME_KEY,name);
 	}
 }

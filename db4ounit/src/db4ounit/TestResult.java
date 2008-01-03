@@ -51,10 +51,10 @@ public class TestResult extends Printable {
 	
 	public void print(Writer writer) throws IOException {		
 		if (green()) {
-			writer.write("GREEN (" + _testCount + " tests) - " + elapsedString() + TestPlatform.NEWLINE);
+			writer.write("GREEN (" + _testCount + " tests) - " + elapsedString() + TestPlatform.NEW_LINE);
 			return;
 		}
-		writer.write("RED (" + _failures.size() +" out of " + _testCount + " tests failed) - " + elapsedString() + TestPlatform.NEWLINE);				
+		writer.write("RED (" + _failures.size() +" out of " + _testCount + " tests failed) - " + elapsedString() + TestPlatform.NEW_LINE);				
 		_failures.print(writer);
 	}
 	
@@ -76,7 +76,7 @@ public class TestResult extends Printable {
 	
 	private void print(String message) {
 			try {
-				_writer.write(message + TestPlatform.NEWLINE);
+				_writer.write(message + TestPlatform.NEW_LINE);
 				_writer.flush();
 			} catch (IOException x) {
 				TestPlatform.printStackTrace(_writer, x);

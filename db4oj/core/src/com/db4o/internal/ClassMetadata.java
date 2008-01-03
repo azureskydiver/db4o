@@ -1205,7 +1205,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     public final boolean callConstructor() {
         TernaryBool specialized = callConstructorSpecialized();
 		// FIXME: If specified, return yes?!?
-		if(!specialized.unspecified()){
+		if(!specialized.isUnspecified()){
 		    return specialized.definiteYes();
 		}
 		return _container.configImpl().callConstructors().definiteYes();
@@ -1214,7 +1214,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private final TernaryBool callConstructorSpecialized(){
         if(i_config!= null){
             TernaryBool res = i_config.callConstructor();
-            if(!res.unspecified()){
+            if(!res.isUnspecified()){
                 return res;
             }
         }

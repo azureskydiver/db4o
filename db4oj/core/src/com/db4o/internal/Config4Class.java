@@ -21,39 +21,39 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     
     private final Config4Impl _configImpl;
 
-	private final static KeySpec CALL_CONSTRUCTOR=new KeySpec(TernaryBool.UNSPECIFIED);
+	private final static KeySpec CALL_CONSTRUCTOR_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
 	
-	private final static KeySpec CLASS_INDEXED = new KeySpec(true);
+	private final static KeySpec CLASS_INDEXED_KEY = new KeySpec(true);
 	
-	private final static KeySpec EXCEPTIONAL_FIELDS=new KeySpec(null);
+	private final static KeySpec EXCEPTIONAL_FIELDS_KEY=new KeySpec(null);
 
-	private final static KeySpec GENERATE_UUIDS=new KeySpec(false);
+	private final static KeySpec GENERATE_UUIDS_KEY=new KeySpec(false);
     
-	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(false);
+	private final static KeySpec GENERATE_VERSION_NUMBERS_KEY=new KeySpec(false);
     
     /**
      * We are running into cyclic dependancies on reading the PBootRecord
      * object, if we maintain MetaClass information there 
      */
-	private final static KeySpec MAINTAIN_METACLASS=new KeySpec(true);
+	private final static KeySpec MAINTAIN_METACLASS_KEY=new KeySpec(true);
 	
-	private final static KeySpec MAXIMUM_ACTIVATION_DEPTH=new KeySpec(0);
+	private final static KeySpec MAXIMUM_ACTIVATION_DEPTH_KEY=new KeySpec(0);
 
-	private final static KeySpec MINIMUM_ACTIVATION_DEPTH=new KeySpec(0);
+	private final static KeySpec MINIMUM_ACTIVATION_DEPTH_KEY=new KeySpec(0);
 
-	private final static KeySpec PERSIST_STATIC_FIELD_VALUES=new KeySpec(false);
+	private final static KeySpec PERSIST_STATIC_FIELD_VALUES_KEY=new KeySpec(false);
     
-	private final static KeySpec QUERY_ATTRIBUTE_PROVIDER=new KeySpec(null);
+	private final static KeySpec QUERY_ATTRIBUTE_PROVIDER_KEY=new KeySpec(null);
     
-	private final static KeySpec STORE_TRANSIENT_FIELDS=new KeySpec(false);
+	private final static KeySpec STORE_TRANSIENT_FIELDS_KEY=new KeySpec(false);
     
-	private final static KeySpec TRANSLATOR=new KeySpec(null);
+	private final static KeySpec TRANSLATOR_KEY=new KeySpec(null);
 
-	private final static KeySpec TRANSLATOR_NAME=new KeySpec((String)null);
+	private final static KeySpec TRANSLATOR_NAME_KEY=new KeySpec((String)null);
     
-	private final static KeySpec UPDATE_DEPTH=new KeySpec(0);
+	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(0);
     
-	private final static KeySpec WRITE_AS=new KeySpec((String)null);
+	private final static KeySpec WRITE_AS_KEY=new KeySpec((String)null);
     
     protected Config4Class(Config4Impl configuration, KeySpecHashtable4 config) {
     	super(config);
@@ -87,7 +87,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	}
     
     public void callConstructor(boolean flag){
-    	putThreeValued(CALL_CONSTRUCTOR, flag);
+    	putThreeValued(CALL_CONSTRUCTOR_KEY, flag);
     }
 
     String className() {
@@ -99,7 +99,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     public void compare(ObjectAttribute comparator) {
-        _config.put(QUERY_ATTRIBUTE_PROVIDER,comparator);
+        _config.put(QUERY_ATTRIBUTE_PROVIDER_KEY,comparator);
     }
 
     Config4Field configField(String fieldName) {
@@ -120,21 +120,21 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	}
     
     public void generateUUIDs(boolean setting) {
-    	_config.put(GENERATE_UUIDS, setting);
+    	_config.put(GENERATE_UUIDS_KEY, setting);
     }
 
     public void generateVersionNumbers(boolean setting) {
-    	_config.put(GENERATE_VERSION_NUMBERS, setting);
+    	_config.put(GENERATE_VERSION_NUMBERS_KEY, setting);
     }
     
     public ObjectTranslator getTranslator() {
     	ObjectTranslator translator = (ObjectTranslator) _config
-				.get(TRANSLATOR);
+				.get(TRANSLATOR_KEY);
 		if (translator != null) {
 			return translator;
 		}
 
-		String translatorName = _config.getAsString(TRANSLATOR_NAME);
+		String translatorName = _config.getAsString(TRANSLATOR_NAME_KEY);
 		if (translatorName == null) {
 			return null;
 		}
@@ -162,15 +162,15 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	}
     
 	public void indexed(boolean flag) {
-		_config.put(CLASS_INDEXED, flag);
+		_config.put(CLASS_INDEXED_KEY, flag);
 	}
 	
 	public boolean indexed() {
-		return _config.getAsBoolean(CLASS_INDEXED);
+		return _config.getAsBoolean(CLASS_INDEXED_KEY);
 	}
 	
     Object instantiate(ObjectContainerBase a_stream, Object a_toTranslate) {
-        return ((ObjectConstructor) _config.get(TRANSLATOR)).onInstantiate((InternalObjectContainer)a_stream, a_toTranslate);
+        return ((ObjectConstructor) _config.get(TRANSLATOR_KEY)).onInstantiate((InternalObjectContainer)a_stream, a_toTranslate);
     }
 
     boolean instantiates() {
@@ -178,30 +178,30 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
     
     public void maximumActivationDepth(int depth) {
-    	_config.put(MAXIMUM_ACTIVATION_DEPTH,depth);
+    	_config.put(MAXIMUM_ACTIVATION_DEPTH_KEY,depth);
     }
     
     int maximumActivationDepth() {
-    	return _config.getAsInt(MAXIMUM_ACTIVATION_DEPTH);
+    	return _config.getAsInt(MAXIMUM_ACTIVATION_DEPTH_KEY);
     }
 
     public void minimumActivationDepth(int depth) {
-    	_config.put(MINIMUM_ACTIVATION_DEPTH,depth);
+    	_config.put(MINIMUM_ACTIVATION_DEPTH_KEY,depth);
     }
     
     public int minimumActivationDepth() {
-    	return _config.getAsInt(MINIMUM_ACTIVATION_DEPTH);
+    	return _config.getAsInt(MINIMUM_ACTIVATION_DEPTH_KEY);
     }
     
     public TernaryBool callConstructor() {
-        if(_config.get(TRANSLATOR) != null){
+        if(_config.get(TRANSLATOR_KEY) != null){
             return TernaryBool.YES;
         }
-        return _config.getAsTernaryBool(CALL_CONSTRUCTOR);
+        return _config.getAsTernaryBool(CALL_CONSTRUCTOR_KEY);
     }
 
     private Hashtable4 exceptionalFieldsOrNull() {
-    	return (Hashtable4)_config.get(EXCEPTIONAL_FIELDS);
+    	return (Hashtable4)_config.get(EXCEPTIONAL_FIELDS_KEY);
 
     }
     
@@ -209,7 +209,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     	Hashtable4 exceptionalFieldsCollection=exceptionalFieldsOrNull();
         if (exceptionalFieldsCollection == null) {
             exceptionalFieldsCollection = new Hashtable4(16);
-            _config.put(EXCEPTIONAL_FIELDS,exceptionalFieldsCollection);
+            _config.put(EXCEPTIONAL_FIELDS_KEY,exceptionalFieldsCollection);
         }
         return exceptionalFieldsCollection;
     }
@@ -225,7 +225,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     public void persistStaticFieldValues() {
-        _config.put(PERSIST_STATIC_FIELD_VALUES, true);
+        _config.put(PERSIST_STATIC_FIELD_VALUES_KEY, true);
     }
 
     boolean queryEvaluation(String fieldName) {
@@ -246,7 +246,7 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
        if (claxx == null) {
            return;
        }
-       _config.put(WRITE_AS,getName());
+       _config.put(WRITE_AS_KEY,getName());
        configRef.readAs().put(getName(), claxx.getName());
    }
 
@@ -256,22 +256,22 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
     }
 
     public void storeTransientFields(boolean flag) {
-    	_config.put(STORE_TRANSIENT_FIELDS, flag);
+    	_config.put(STORE_TRANSIENT_FIELDS_KEY, flag);
     }
 
     public void translate(ObjectTranslator translator) {
         if (translator == null) {
-            _config.put(TRANSLATOR_NAME, null);
+            _config.put(TRANSLATOR_NAME_KEY, null);
         }
-        _config.put(TRANSLATOR, translator);
+        _config.put(TRANSLATOR_KEY, translator);
     }
 
     void translateOnDemand(String a_translatorName) {
-        _config.put(TRANSLATOR_NAME,a_translatorName);
+        _config.put(TRANSLATOR_NAME_KEY,a_translatorName);
     }
 
     public void updateDepth(int depth) {
-    	_config.put(UPDATE_DEPTH, depth);
+    	_config.put(UPDATE_DEPTH_KEY, depth);
     }
 
 	Config4Impl config() {
@@ -279,35 +279,35 @@ public class Config4Class extends Config4Abstract implements ObjectClass,
 	}
 
 	boolean generateUUIDs() {
-		return _config.getAsBoolean(GENERATE_UUIDS);
+		return _config.getAsBoolean(GENERATE_UUIDS_KEY);
 	}
 
 	boolean generateVersionNumbers() {
-		return _config.getAsBoolean(GENERATE_VERSION_NUMBERS);
+		return _config.getAsBoolean(GENERATE_VERSION_NUMBERS_KEY);
 	}
 
 	void maintainMetaClass(boolean flag){
-		_config.put(MAINTAIN_METACLASS,flag);
+		_config.put(MAINTAIN_METACLASS_KEY,flag);
 	}
 
 	boolean staticFieldValuesArePersisted() {
-		return _config.getAsBoolean(PERSIST_STATIC_FIELD_VALUES);
+		return _config.getAsBoolean(PERSIST_STATIC_FIELD_VALUES_KEY);
 	}
 
 	public ObjectAttribute queryAttributeProvider() {
-		return (ObjectAttribute)_config.get(QUERY_ATTRIBUTE_PROVIDER);
+		return (ObjectAttribute)_config.get(QUERY_ATTRIBUTE_PROVIDER_KEY);
 	}
 
 	boolean storeTransientFields() {
-		return _config.getAsBoolean(STORE_TRANSIENT_FIELDS);
+		return _config.getAsBoolean(STORE_TRANSIENT_FIELDS_KEY);
 	}
 
 	int updateDepth() {
-		return _config.getAsInt(UPDATE_DEPTH);
+		return _config.getAsInt(UPDATE_DEPTH_KEY);
 	}
 
 	String writeAs() {
-		return _config.getAsString(WRITE_AS);
+		return _config.getAsString(WRITE_AS_KEY);
 	}
 
 

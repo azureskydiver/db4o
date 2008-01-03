@@ -12,13 +12,13 @@ public final class ComparisonOperator {
 	public final static int ENDSWITH_ID=5;
 	public final static int IDENTITY_ID=6;
 
-	public final static ComparisonOperator EQUALS=new ComparisonOperator(EQUALS_ID,"==", true);
+	public final static ComparisonOperator VALUE_EQUALITY=new ComparisonOperator(EQUALS_ID,"==", true);
 	public final static ComparisonOperator SMALLER=new ComparisonOperator(SMALLER_ID,"<", false);
 	public final static ComparisonOperator GREATER=new ComparisonOperator(GREATER_ID,">", false);
 	public final static ComparisonOperator CONTAINS=new ComparisonOperator(CONTAINS_ID,"<CONTAINS>", false);
-	public final static ComparisonOperator STARTSWITH=new ComparisonOperator(STARTSWITH_ID,"<STARTSWITH>", false);
-	public final static ComparisonOperator ENDSWITH=new ComparisonOperator(ENDSWITH_ID,"<ENDSWITH>", false);
-	public final static ComparisonOperator IDENTITY=new ComparisonOperator(IDENTITY_ID,"===", true);
+	public final static ComparisonOperator STARTS_WITH=new ComparisonOperator(STARTSWITH_ID,"<STARTSWITH>", false);
+	public final static ComparisonOperator ENDS_WITH=new ComparisonOperator(ENDSWITH_ID,"<ENDSWITH>", false);
+	public final static ComparisonOperator REFERENCE_EQUALITY=new ComparisonOperator(IDENTITY_ID,"===", true);
 
 	private int _id;
 	private String _op;

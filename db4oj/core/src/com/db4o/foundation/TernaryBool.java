@@ -36,7 +36,7 @@ public final class TernaryBool implements Serializable {
 		}
 	}
 	
-	public boolean unspecified() {
+	public boolean isUnspecified() {
 		return this==UNSPECIFIED;
 	}
 

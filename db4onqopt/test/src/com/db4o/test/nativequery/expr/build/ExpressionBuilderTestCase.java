@@ -44,8 +44,8 @@ public class ExpressionBuilderTestCase implements TestCase, TestLifeCycle {
 		Assert.areSame(BoolConstExpression.TRUE,builder.not(builder.not(BoolConstExpression.TRUE)));
 		Assert.areSame(BoolConstExpression.FALSE,builder.not(builder.not(BoolConstExpression.FALSE)));
 		Assert.areEqual(new NotExpression(expr),builder.not(expr));
-		Assert.areEqual(new ComparisonExpression(fieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.TRUE),ComparisonOperator.EQUALS),
-					builder.not(new ComparisonExpression(fieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.FALSE),ComparisonOperator.EQUALS)));
+		Assert.areEqual(new ComparisonExpression(fieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.TRUE),ComparisonOperator.VALUE_EQUALITY),
+					builder.not(new ComparisonExpression(fieldValue(CandidateFieldRoot.INSTANCE,"foo"),new ConstValue(Boolean.FALSE),ComparisonOperator.VALUE_EQUALITY)));
 	}
 	
 	private FieldValue fieldValue(ComparisonOperandAnchor instance, String name) {
