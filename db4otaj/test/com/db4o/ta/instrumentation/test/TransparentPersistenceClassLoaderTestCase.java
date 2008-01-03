@@ -69,10 +69,44 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 
 	public void testFieldSetterIsInstrumented() throws Exception {
 		final Activatable obj = newToBeInstrumentedInstance();
-		final MockActivator activator = activatorFor(obj);		
-		invoke(obj, "setId", new Class[] { Integer.TYPE }, new Object[] { new Integer(42) });
-		Assert.areEqual(1, activator.writeCount());
-		Assert.areEqual(0, activator.readCount());
+		final MockActivator activator = activatorFor(obj);
+		
+		int expectedWrites = 0;
+		invoke(obj, "setInt", Integer.TYPE, new Integer(42));
+		assertActivateCalls(activator, 0, ++expectedWrites);
+		
+		invoke(obj, "setChar", Character.TYPE, new Character('a'));
+		assertActivateCalls(activator, 0, ++expectedWrites);
+		
+		invoke(obj, "setByte", Byte.TYPE, new Byte((byte)42));
+		assertActivateCalls(activator, 0, ++expectedWrites);
+		
+		invoke(obj, "setVolatileByte", Byte.TYPE, new Byte((byte)42));
+		assertActivateCalls(activator, 0, ++expectedWrites);
+		
+		invoke(obj, "setLong", Long.TYPE, new Long(42L));
+		assertActivateCalls(activator, 0, ++expectedWrites);
+		
+		invoke(obj, "setFloat", Float.TYPE, new Float(42));
+		assertActivateCalls(activator, 0, ++expectedWrites);
+		
+		invoke(obj, "setDouble", Double.TYPE, new Double(42));
+		assertActivateCalls(activator, 0, ++expectedWrites);
+		
+		invoke(obj, "setIntArray", int[].class, null);
+		assertActivateCalls(activator, 0, ++expectedWrites);
+	}
+
+	private void invoke(final Object obj, String methodName,
+			Class signature, Object value) throws NoSuchMethodException,
+			IllegalAccessException, InvocationTargetException {
+		invoke(obj, methodName, new Class[] { signature }, new Object[] { value });
+	}
+
+	private void assertActivateCalls(final MockActivator activator,
+			int readCount, int writeCount) {
+		Assert.areEqual(writeCount, activator.writeCount());
+		Assert.areEqual(readCount, activator.readCount());
 	}
 
 	public void testInterObjectFieldAccessIsInstrumented() throws Exception {
