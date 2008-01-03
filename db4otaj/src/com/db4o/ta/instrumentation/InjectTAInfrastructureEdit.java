@@ -112,7 +112,7 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		// _activator.activateForRead();
 		methodEditor.addLabel(activateLabel);
 		loadActivatorFieldOnStack(methodEditor);
-		methodEditor.addInstruction(Opcode.opc_getstatic, createMemberRef(activationPurpose, "READ", activationPurpose));
+		methodEditor.addInstruction(Opcode.opc_aload, new LocalVariable(1));
 		methodEditor.addInstruction(Opcode.opc_invokeinterface, createMethodReference(activatorType, TransparentActivationInstrumentationConstants.ACTIVATOR_ACTIVATE_METHOD_NAME, new Type[] { activationPurpose }, Type.VOID));
 		methodEditor.addInstruction(Opcode.opc_return);
 		

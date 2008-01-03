@@ -7,4 +7,8 @@ public class ToBeInstrumentedWithFieldAccess {
 	public boolean compareID(ToBeInstrumentedWithFieldAccess other) {
 		return _id == other._id;
 	}
+	
+	public void setId(int id) {
+		_id = id;
+	}
 }

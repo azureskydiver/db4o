@@ -14,7 +14,7 @@ import com.db4o.ta.instrumentation.*;
 
 import db4ounit.*;
 
-public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
+public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle {
 
 	private static final Class ORIG_CLASS = ToBeInstrumented.class;	
 	private static final String CLASS_NAME = ORIG_CLASS.getName();
@@ -58,18 +58,21 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	}
 
 	public void testFieldAccessIsInstrumented() throws Exception {
-		Class clazz = _loader.loadClass(FA_CLASS_NAME);
-		final Activatable objOne = (Activatable) clazz.newInstance();
-		final Activatable objTwo = (Activatable) clazz.newInstance();
-		MockActivator ocOne = new MockActivator();
-		objOne.bind(ocOne);
-		MockActivator ocTwo = new MockActivator();
-		objTwo.bind(ocTwo);
-		final Method method = clazz.getDeclaredMethod("compareID", new Class[]{ clazz });
-		method.setAccessible(true);
-		method.invoke(objOne, new Object[]{ objTwo });
+		final Activatable objOne = newToBeInstrumentedInstance();
+		final Activatable objTwo = newToBeInstrumentedInstance();
+		MockActivator ocOne = activatorFor(objOne);
+		MockActivator ocTwo = activatorFor(objTwo);
+		invoke(objOne, "compareID", new Class[]{ objTwo.getClass() }, new Object[]{ objTwo });
 		Assert.areEqual(1, ocOne.count());
 		Assert.areEqual(1, ocTwo.count());
+	}
+
+	public void testFieldSetterIsInstrumented() throws Exception {
+		final Activatable obj = newToBeInstrumentedInstance();
+		final MockActivator activator = activatorFor(obj);		
+		invoke(obj, "setId", new Class[] { Integer.TYPE }, new Object[] { new Integer(42) });
+		Assert.areEqual(1, activator.writeCount());
+		Assert.areEqual(0, activator.readCount());
 	}
 
 	public void testInterObjectFieldAccessIsInstrumented() throws Exception {
@@ -77,14 +80,33 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		Class niClazz = _loader.loadClass(NI_CLASS_NAME);
 		final Activatable iObj = (Activatable) iClazz.newInstance();
 		final Object niObj = niClazz.newInstance();
-		MockActivator act = new MockActivator();
-		iObj.bind(act);
-		final Method method = niClazz.getDeclaredMethod("accessToBeInstrumented", new Class[]{ iClazz });
-		method.setAccessible(true);
-		method.invoke(niObj, new Object[]{ iObj });
+		MockActivator act = activatorFor(iObj);
+		invoke(niObj, "accessToBeInstrumented", new Class[]{ iClazz }, new Object[]{ iObj });
 		Assert.areEqual(1, act.count());
 	}
+	
+	private Object invoke(final Object obj, String methodName,
+			Class[] signature, Object[] arguments)
+			throws NoSuchMethodException, IllegalAccessException,
+			InvocationTargetException {
+		final Method method = obj.getClass().getDeclaredMethod(methodName, signature);
+		method.setAccessible(true);
+		return method.invoke(obj, arguments);
+	}
 
+	private MockActivator activatorFor(final Activatable obj) {
+		MockActivator activator = new MockActivator();
+		obj.bind(activator);
+		return activator;
+	}
+
+	private Activatable newToBeInstrumentedInstance()
+			throws ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
+		Class clazz = _loader.loadClass(FA_CLASS_NAME);
+		return (Activatable) clazz.newInstance();
+	}
+	
 	private void assertActivatableInterface(Class clazz) {
 		Assert.isTrue(Activatable.class.isAssignableFrom(clazz));
 	}
@@ -152,8 +174,7 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 		activateMethod.setAccessible(true);
 		Assert.isTrue((activateMethod.getModifiers() & Modifier.PUBLIC) > 0);
 		final Activatable obj = (Activatable) clazz.newInstance();
-		MockActivator activator = new MockActivator();
-		obj.bind(activator);
+		MockActivator activator = activatorFor(obj);
 		activateMethod.invoke(obj, new Object[]{ActivationPurpose.READ});
 		activateMethod.invoke(obj, new Object[]{ActivationPurpose.READ});
 		Assert.areEqual(2, activator.count());
@@ -161,11 +182,8 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 
 	private void assertMethodInstrumentation(Class clazz,String methodName,boolean expectInstrumentation) throws Exception {
 		final Activatable obj = (Activatable) clazz.newInstance();
-		MockActivator oc = new MockActivator();
-		obj.bind(oc);
-		final Method method = clazz.getDeclaredMethod(methodName, new Class[]{});
-		method.setAccessible(true);
-		method.invoke(obj, new Object[]{});
+		MockActivator oc = activatorFor(obj);
+		invoke(obj, methodName, new Class[]{}, new Object[]{});
 		if (expectInstrumentation) {
 			Assert.areEqual(1, oc.count());
 		} else {
@@ -200,6 +218,6 @@ public class TransparentActivationClassLoaderTestCase implements TestLifeCycle {
 	}
 	
 	public static void main(String[] args) {
-		new TestRunner(TransparentActivationClassLoaderTestCase.class).run();
+		new TestRunner(TransparentPersistenceClassLoaderTestCase.class).run();
 	}
 }
