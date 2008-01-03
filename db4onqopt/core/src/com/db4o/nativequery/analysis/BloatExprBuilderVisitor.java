@@ -109,13 +109,13 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 	
 	static {
 		BUILDERS.put(new BuilderSpec(IfStmt.EQ,false), new ComparisonBuilder(
-				ComparisonOperator.IDENTITY));
+				ComparisonOperator.REFERENCE_EQUALITY));
 		BUILDERS.put(new BuilderSpec(IfStmt.EQ,true), new ComparisonBuilder(
-				ComparisonOperator.EQUALS));
+				ComparisonOperator.VALUE_EQUALITY));
 		BUILDERS.put(new BuilderSpec(IfStmt.NE,false), new NegateComparisonBuilder(
-				ComparisonOperator.IDENTITY));
+				ComparisonOperator.REFERENCE_EQUALITY));
 		BUILDERS.put(new BuilderSpec(IfStmt.NE,true), new NegateComparisonBuilder(
-				ComparisonOperator.EQUALS));
+				ComparisonOperator.VALUE_EQUALITY));
 		BUILDERS.put(new BuilderSpec(IfStmt.LT,false), new ComparisonBuilder(
 				ComparisonOperator.SMALLER));
 		BUILDERS.put(new BuilderSpec(IfStmt.LT,true),builder(IfStmt.LT,false));
@@ -221,7 +221,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 					constVal=new Integer(0);
 				}
 				retval = new ComparisonExpression(fieldVal,
-						new ConstValue(constVal), ComparisonOperator.EQUALS);
+						new ConstValue(constVal), ComparisonOperator.VALUE_EQUALITY);
 				cmpNull = true;
 			}
 		}
@@ -247,11 +247,11 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		switch (comparison) {
 		case IfStmt.EQ:
 			expr = new ComparisonExpression(cmp.left(), cmp.right(),
-					ComparisonOperator.EQUALS);
+					ComparisonOperator.VALUE_EQUALITY);
 			break;
 		case IfStmt.NE:
 			expr = BUILDER.not(new ComparisonExpression(cmp.left(),
-					cmp.right(), ComparisonOperator.EQUALS));
+					cmp.right(), ComparisonOperator.VALUE_EQUALITY));
 			break;
 		case IfStmt.LT:
 			expr = new ComparisonExpression(cmp.left(), cmp.right(),
@@ -315,7 +315,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if (!isStatic && expr.method().name().equals("equals")) {
 			CallMethodExpr call = (CallMethodExpr) expr;
 			if (isPrimitiveWrapper(call.receiver().type())) {
-				processEqualsCall(call, ComparisonOperator.EQUALS);
+				processEqualsCall(call, ComparisonOperator.VALUE_EQUALITY);
 			}
 			return;
 		}
@@ -490,7 +490,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		if(rcvRetval instanceof FieldValue) {
 			FieldValue fieldval=(FieldValue)rcvRetval;
 			if(isBooleanField(fieldval)) {
-				retval(new ComparisonExpression(fieldval,new ConstValue(Boolean.TRUE),ComparisonOperator.EQUALS));
+				retval(new ComparisonExpression(fieldval,new ConstValue(Boolean.TRUE),ComparisonOperator.VALUE_EQUALITY));
 			}
 			if(fieldval.root().equals(CandidateFieldRoot.INSTANCE)) {
 				return true;
@@ -507,12 +507,12 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		}
 		if (expr.method().name().equals("startsWith")) {
 			processEqualsCall((CallMethodExpr) expr,
-					ComparisonOperator.STARTSWITH);
+					ComparisonOperator.STARTS_WITH);
 			return true;
 		}
 		if (expr.method().name().equals("endsWith")) {
 			processEqualsCall((CallMethodExpr) expr,
-					ComparisonOperator.ENDSWITH);
+					ComparisonOperator.ENDS_WITH);
 			return true;
 		}
 		return false;
@@ -666,7 +666,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		return new ComparisonExpression(
 						fieldVal,
 						new ConstValue(Boolean.TRUE),
-						ComparisonOperator.EQUALS);
+						ComparisonOperator.VALUE_EQUALITY);
 	}
 
 	private static boolean isPrimitiveBoolean(TypeRef fieldType) {
@@ -724,7 +724,7 @@ public class BloatExprBuilderVisitor extends TreeVisitor {
 		case ArithExpr.XOR:
 			if (left instanceof FieldValue) {
 				retval(BUILDER.not(new ComparisonExpression((FieldValue) left,
-						right, ComparisonOperator.EQUALS)));
+						right, ComparisonOperator.VALUE_EQUALITY)));
 			}
 			break;
 		default:

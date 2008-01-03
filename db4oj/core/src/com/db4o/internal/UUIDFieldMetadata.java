@@ -18,8 +18,6 @@ import com.db4o.marshall.*;
  */
 public class UUIDFieldMetadata extends VirtualFieldMetadata {
     
-    private static final int LINK_LENGTH = Const4.LONG_LENGTH + Const4.ID_LENGTH;
-
     UUIDFieldMetadata(ObjectContainerBase container) {
         super(Handlers4.LONG_ID, new LongHandler(container));
         setName(Const4.VIRTUAL_FIELD_PREFIX + "uuid");
@@ -160,7 +158,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
     }
 
     protected int linkLength() {
-        return LINK_LENGTH;
+        return Const4.LONG_LENGTH + Const4.ID_LENGTH;
     }
     
     void marshall(Transaction trans, ObjectReference ref, WriteBuffer buffer, boolean isMigrating, boolean isNew) {

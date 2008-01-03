@@ -30,117 +30,117 @@ public final class Config4Impl implements Configuration, DeepClone,
     
 	private KeySpecHashtable4 _config=new KeySpecHashtable4(50);
 	
-	private final static KeySpec ACTIVATION_DEPTH=new KeySpec(5);
+	private final static KeySpec ACTIVATION_DEPTH_KEY=new KeySpec(5);
 	
-	private final static KeySpec ACTIVATION_DEPTH_PROVIDER=new KeySpec(LegacyActivationDepthProvider.INSTANCE);
+	private final static KeySpec ACTIVATION_DEPTH_PROVIDER_KEY=new KeySpec(LegacyActivationDepthProvider.INSTANCE);
     
-	private final static KeySpec ALLOW_VERSION_UPDATES=new KeySpec(false);
+	private final static KeySpec ALLOW_VERSION_UPDATES_KEY=new KeySpec(false);
 
-    private final static KeySpec AUTOMATIC_SHUTDOWN=new KeySpec(true);
+    private final static KeySpec AUTOMATIC_SHUTDOWN_KEY=new KeySpec(true);
 
     //  TODO: consider setting default to 8, it's more efficient with freespace.
-    private final static KeySpec BLOCKSIZE=new KeySpec((byte)1);
+    private final static KeySpec BLOCKSIZE_KEY=new KeySpec((byte)1);
     
-	private final static KeySpec BLOBPATH=new KeySpec(null);
+	private final static KeySpec BLOB_PATH_KEY=new KeySpec(null);
     
-    private final static KeySpec BTREE_NODE_SIZE=new KeySpec(119);
+    private final static KeySpec BTREE_NODE_SIZE_KEY=new KeySpec(119);
     
-    private final static KeySpec BTREE_CACHE_HEIGHT=new KeySpec(1);
+    private final static KeySpec BTREE_CACHE_HEIGHT_KEY=new KeySpec(1);
     
-	private final static KeySpec CALLBACKS=new KeySpec(true);
+	private final static KeySpec CALLBACKS_KEY=new KeySpec(true);
     
-	private final static KeySpec CALL_CONSTRUCTORS=new KeySpec(TernaryBool.UNSPECIFIED);
+	private final static KeySpec CALL_CONSTRUCTORS_KEY=new KeySpec(TernaryBool.UNSPECIFIED);
 	
-	private final static KeySpec CONFIGURATION_ITEMS=new KeySpec(null);
+	private final static KeySpec CONFIGURATION_ITEMS_KEY=new KeySpec(null);
     
-	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE=new KeySpec(true);
+	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE_KEY=new KeySpec(true);
     
-	private final static KeySpec CLASSLOADER=new KeySpec(null);
+	private final static KeySpec CLASSLOADER_KEY=new KeySpec(null);
     
-	private final static KeySpec DETECT_SCHEMA_CHANGES=new KeySpec(true);
+	private final static KeySpec DETECT_SCHEMA_CHANGES_KEY=new KeySpec(true);
     
-    private final static KeySpec DIAGNOSTIC=new KeySpec(new DiagnosticProcessor());
+    private final static KeySpec DIAGNOSTIC_KEY=new KeySpec(new DiagnosticProcessor());
     
-    private final static KeySpec DISABLE_COMMIT_RECOVERY=new KeySpec(false);
+    private final static KeySpec DISABLE_COMMIT_RECOVERY_KEY=new KeySpec(false);
     
-	private final static KeySpec DISCARD_FREESPACE=new KeySpec(0);
+	private final static KeySpec DISCARD_FREESPACE_KEY=new KeySpec(0);
     
-	private final static KeySpec ENCODING=new KeySpec(Const4.UNICODE);
+	private final static KeySpec ENCODING_KEY=new KeySpec(Const4.UNICODE);
     
-	private final static KeySpec ENCRYPT=new KeySpec(false);
+	private final static KeySpec ENCRYPT_KEY=new KeySpec(false);
     
-	private final static KeySpec EXCEPTIONAL_CLASSES=new KeySpec(null);
+	private final static KeySpec EXCEPTIONAL_CLASSES_KEY=new KeySpec(null);
     
-	private final static KeySpec EXCEPTIONS_ON_NOT_STORABLE=new KeySpec(false);
+	private final static KeySpec EXCEPTIONS_ON_NOT_STORABLE_KEY=new KeySpec(false);
     
-	private final static KeySpec FLUSH_FILE_BUFFERS=new KeySpec(true);
+	private final static KeySpec FLUSH_FILE_BUFFERS_KEY=new KeySpec(true);
     
-	private final static KeySpec FREESPACE_FILLER=new KeySpec(null);
+	private final static KeySpec FREESPACE_FILLER_KEY=new KeySpec(null);
 
-	private final static KeySpec FREESPACE_SYSTEM=new KeySpec(AbstractFreespaceManager.FM_DEFAULT);
+	private final static KeySpec FREESPACE_SYSTEM_KEY=new KeySpec(AbstractFreespaceManager.FM_DEFAULT);
     
-	private final static KeySpec GENERATE_UUIDS=new KeySpec(ConfigScope.INDIVIDUALLY);
+	private final static KeySpec GENERATE_UUIDS_KEY=new KeySpec(ConfigScope.INDIVIDUALLY);
     
-	private final static KeySpec GENERATE_VERSION_NUMBERS=new KeySpec(ConfigScope.INDIVIDUALLY);
+	private final static KeySpec GENERATE_VERSION_NUMBERS_KEY=new KeySpec(ConfigScope.INDIVIDUALLY);
 	
-	private final static KeySpec IS_SERVER=new KeySpec(false);
+	private final static KeySpec IS_SERVER_KEY=new KeySpec(false);
     
-	private final static KeySpec QUERY_EVALUATION_MODE=new KeySpec(QueryEvaluationMode.IMMEDIATE);
+	private final static KeySpec QUERY_EVALUATION_MODE_KEY=new KeySpec(QueryEvaluationMode.IMMEDIATE);
 	
-	private final static KeySpec LOCK_FILE=new KeySpec(true);
+	private final static KeySpec LOCK_FILE_KEY=new KeySpec(true);
     
-	private final static KeySpec MESSAGE_RECIPIENT=new KeySpec(null);
+	private final static KeySpec MESSAGE_RECIPIENT_KEY=new KeySpec(null);
     
-	private final static KeySpec OPTIMIZE_NQ=new KeySpec(true);
+	private final static KeySpec OPTIMIZE_NQ_KEY=new KeySpec(true);
     
-	private final static KeySpec OUTSTREAM=new KeySpec(null);
+	private final static KeySpec OUTSTREAM_KEY=new KeySpec(null);
     
-	private final static KeySpec PASSWORD=new KeySpec((String)null);
+	private final static KeySpec PASSWORD_KEY=new KeySpec((String)null);
 	
 	// for playing with different strategies of prefetching
 	// object
-	private static final KeySpec CLIENT_QUERY_RESULT_ITERATOR_FACTORY=new KeySpec(null);
+	private static final KeySpec CLIENT_QUERY_RESULT_ITERATOR_FACTORY_KEY=new KeySpec(null);
     
-	private static final KeySpec PREFETCH_ID_COUNT = new KeySpec(10);
+	private static final KeySpec PREFETCH_ID_COUNT_KEY = new KeySpec(10);
 
-	private static final KeySpec PREFETCH_OBJECT_COUNT = new KeySpec(10);
+	private static final KeySpec PREFETCH_OBJECT_COUNT_KEY = new KeySpec(10);
 	
-	private final static KeySpec READ_AS=new KeySpec(new Hashtable4(16));
+	private final static KeySpec READ_AS_KEY=new KeySpec(new Hashtable4(16));
     
-	private final static KeySpec CONFIGURED_REFLECTOR=new KeySpec(null);
+	private final static KeySpec CONFIGURED_REFLECTOR_KEY=new KeySpec(null);
     
-	private final static KeySpec REFLECTOR=new KeySpec(null);
+	private final static KeySpec REFLECTOR_KEY=new KeySpec(null);
     
-	private final static KeySpec RENAME=new KeySpec(null);
+	private final static KeySpec RENAME_KEY=new KeySpec(null);
     
-	private final static KeySpec RESERVED_STORAGE_SPACE=new KeySpec(0);
+	private final static KeySpec RESERVED_STORAGE_SPACE_KEY=new KeySpec(0);
     
-	private final static KeySpec SINGLE_THREADED_CLIENT=new KeySpec(false);
+	private final static KeySpec SINGLE_THREADED_CLIENT_KEY=new KeySpec(false);
     
-	private final static KeySpec TEST_CONSTRUCTORS=new KeySpec(true);
+	private final static KeySpec TEST_CONSTRUCTORS_KEY=new KeySpec(true);
     
-	private final static KeySpec TIMEOUT_CLIENT_SOCKET=new KeySpec(Const4.CLIENT_SOCKET_TIMEOUT);
+	private final static KeySpec TIMEOUT_CLIENT_SOCKET_KEY=new KeySpec(Const4.CLIENT_SOCKET_TIMEOUT);
     
-	private final static KeySpec TIMEOUT_SERVER_SOCKET=new KeySpec(Const4.SERVER_SOCKET_TIMEOUT);
+	private final static KeySpec TIMEOUT_SERVER_SOCKET_KEY=new KeySpec(Const4.SERVER_SOCKET_TIMEOUT);
     
-	private final static KeySpec UPDATE_DEPTH=new KeySpec(0);
+	private final static KeySpec UPDATE_DEPTH_KEY=new KeySpec(0);
     
-	private final static KeySpec WEAK_REFERENCE_COLLECTION_INTERVAL=new KeySpec(1000);
+	private final static KeySpec WEAK_REFERENCE_COLLECTION_INTERVAL_KEY=new KeySpec(1000);
     
-	private final static KeySpec WEAK_REFERENCES=new KeySpec(true);
+	private final static KeySpec WEAK_REFERENCES_KEY=new KeySpec(true);
     
-	private final static KeySpec IOADAPTER=new KeySpec(new CachedIoAdapter(new RandomAccessFileAdapter()));
+	private final static KeySpec IOADAPTER_KEY=new KeySpec(new CachedIoAdapter(new RandomAccessFileAdapter()));
 	
-//	private final static KeySpec IOADAPTER=new KeySpec(new RandomAccessFileAdapter());
+//	private final static KeySpec IOADAPTER_KEY=new KeySpec(new RandomAccessFileAdapter());
     
     	// NOTE: activate this config to trigger the defragment failure
     	//= new NIOFileAdapter(512,3);
     
-	private final static KeySpec ALIASES=new KeySpec(null);
+	private final static KeySpec ALIASES_KEY=new KeySpec(null);
 	
-	private final static KeySpec BATCH_MESSAGES=new KeySpec(true);
+	private final static KeySpec BATCH_MESSAGES_KEY=new KeySpec(true);
 	
-	private static final KeySpec MAX_BATCH_QUEUE_SIZE = new KeySpec(Integer.MAX_VALUE);
+	private static final KeySpec MAX_BATCH_QUEUE_SIZE_KEY = new KeySpec(Integer.MAX_VALUE);
 
 	//  is null in the global configuration until deepClone is called
 	private ObjectContainerBase        i_stream;
@@ -152,11 +152,11 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private boolean	_readOnly;
 
     public int activationDepth() {
-    	return _config.getAsInt(ACTIVATION_DEPTH);
+    	return _config.getAsInt(ACTIVATION_DEPTH_KEY);
     }
 
     public void activationDepth(int depth) {
-    	_config.put(ACTIVATION_DEPTH,depth);
+    	_config.put(ACTIVATION_DEPTH_KEY,depth);
     }
     
 	public void add(ConfigurationItem item) {
@@ -168,17 +168,17 @@ public final class Config4Impl implements Configuration, DeepClone,
 		Hashtable4 items = configurationItems();
 		if(items==null) {
 			items=new Hashtable4(16);
-			_config.put(CONFIGURATION_ITEMS,items);
+			_config.put(CONFIGURATION_ITEMS_KEY,items);
 		}
 		return items;
 	}
 	
     public void allowVersionUpdates(boolean flag){
-    	_config.put(ALLOW_VERSION_UPDATES,flag);
+    	_config.put(ALLOW_VERSION_UPDATES_KEY,flag);
     }
     
     private Hashtable4 configurationItems(){
-    	return (Hashtable4)_config.get(CONFIGURATION_ITEMS);
+    	return (Hashtable4)_config.get(CONFIGURATION_ITEMS_KEY);
     }
     
 	public void applyConfigurationItems(final InternalObjectContainer container) {
@@ -195,7 +195,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
     public void automaticShutDown(boolean flag) {
-    	_config.put(AUTOMATIC_SHUTDOWN,flag);
+    	_config.put(AUTOMATIC_SHUTDOWN_KEY,flag);
     }
     
     public void blockSize(int bytes){
@@ -203,27 +203,27 @@ public final class Config4Impl implements Configuration, DeepClone,
            throw new IllegalArgumentException();
        } 
        globalSettingOnly();       
-       _config.put(BLOCKSIZE,(byte)bytes);
+       _config.put(BLOCKSIZE_KEY,(byte)bytes);
     }
     
     public void bTreeNodeSize(int size){
-        _config.put(BTREE_NODE_SIZE,size);
+        _config.put(BTREE_NODE_SIZE_KEY,size);
     }
     
     public void bTreeCacheHeight(int height){
-        _config.put(BTREE_CACHE_HEIGHT,height);
+        _config.put(BTREE_CACHE_HEIGHT_KEY,height);
     }
 
     public void callbacks(boolean turnOn) {
-        _config.put(CALLBACKS,turnOn);
+        _config.put(CALLBACKS_KEY,turnOn);
     }
     
     public void callConstructors(boolean flag){
-        _config.put(CALL_CONSTRUCTORS,TernaryBool.forBoolean(flag));
+        _config.put(CALL_CONSTRUCTORS_KEY,TernaryBool.forBoolean(flag));
     }
 
     public void classActivationDepthConfigurable(boolean turnOn) {
-        _config.put(CLASS_ACTIVATION_DEPTH_CONFIGURABLE,turnOn);
+        _config.put(CLASS_ACTIVATION_DEPTH_CONFIGURABLE_KEY,turnOn);
     }
 
     Config4Class configClass(String className) {
@@ -277,11 +277,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void detectSchemaChanges(boolean flag) {
-        _config.put(DETECT_SCHEMA_CHANGES,flag);
+        _config.put(DETECT_SCHEMA_CHANGES_KEY,flag);
     }
 
     public void disableCommitRecovery() {
-        _config.put(DISABLE_COMMIT_RECOVERY,true);
+        _config.put(DISABLE_COMMIT_RECOVERY_KEY,true);
     }
 
     /**
@@ -291,7 +291,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     	if(bytes < 0){
     		throw new IllegalArgumentException();
     	}
-        _config.put(DISCARD_FREESPACE,bytes);
+        _config.put(DISCARD_FREESPACE_KEY,bytes);
     }
     
     public void discardSmallerThan(int byteCount) {
@@ -303,11 +303,11 @@ public final class Config4Impl implements Configuration, DeepClone,
      */
     public void encrypt(boolean flag) {
         globalSettingOnly();
-        _config.put(ENCRYPT,flag);
+        _config.put(ENCRYPT_KEY,flag);
     }
     
     void oldEncryptionOff() {
-        _config.put(ENCRYPT,false);
+        _config.put(ENCRYPT_KEY,false);
     }
 
     void ensureDirExists(String path) throws IOException {
@@ -327,11 +327,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void exceptionsOnNotStorable(boolean flag) {
-        _config.put(EXCEPTIONS_ON_NOT_STORABLE,flag);
+        _config.put(EXCEPTIONS_ON_NOT_STORABLE_KEY,flag);
     }
     
     public void flushFileBuffers(boolean flag){
-        _config.put(FLUSH_FILE_BUFFERS,flag);
+        _config.put(FLUSH_FILE_BUFFERS_KEY,flag);
     }
 
     public FreespaceConfiguration freespace() {
@@ -339,11 +339,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
     
     public void freespaceFiller(FreespaceFiller freespaceFiller) {
-    	_config.put(FREESPACE_FILLER, freespaceFiller);
+    	_config.put(FREESPACE_FILLER_KEY, freespaceFiller);
     }
 
     public FreespaceFiller freespaceFiller() {
-    	return (FreespaceFiller) _config.get(FREESPACE_FILLER);
+    	return (FreespaceFiller) _config.get(FREESPACE_FILLER_KEY);
     }
     
     /**
@@ -354,7 +354,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
 	public void generateUUIDs(ConfigScope scope) {
-        _config.put(GENERATE_UUIDS,scope);
+        _config.put(GENERATE_UUIDS_KEY,scope);
     }
 
     /**
@@ -365,7 +365,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void generateVersionNumbers(ConfigScope scope) {
-        _config.put(GENERATE_VERSION_NUMBERS,scope);
+        _config.put(GENERATE_VERSION_NUMBERS_KEY,scope);
     }
 
     public MessageSender getMessageSender() {
@@ -384,11 +384,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     
     public void io(IoAdapter adapter){
         globalSettingOnly();
-        _config.put(IOADAPTER,adapter);
+        _config.put(IOADAPTER_KEY,adapter);
     }
 
     public void lockDatabaseFile(boolean flag) {
-    	_config.put(LOCK_FILE,flag);
+    	_config.put(LOCK_FILE_KEY,flag);
     }
     
     public void markTransient(String marker) {
@@ -403,11 +403,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void optimizeNativeQueries(boolean optimizeNQ) {
-    	_config.put(OPTIMIZE_NQ,optimizeNQ);
+    	_config.put(OPTIMIZE_NQ_KEY,optimizeNQ);
     }
     
     public boolean optimizeNativeQueries() {
-    	return _config.getAsBoolean(OPTIMIZE_NQ);
+    	return _config.getAsBoolean(OPTIMIZE_NQ_KEY);
     }
     
     public ObjectClass objectClass(Object clazz) {
@@ -434,7 +434,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     private PrintStream outStreamOrNull() {
-    	return (PrintStream)_config.get(OUTSTREAM);
+    	return (PrintStream)_config.get(OUTSTREAM_KEY);
     }
     
     PrintStream outStream() {
@@ -447,7 +447,7 @@ public final class Config4Impl implements Configuration, DeepClone,
      */
     public void password(String pw) {
         globalSettingOnly();
-        _config.put(PASSWORD,pw);
+        _config.put(PASSWORD_KEY,pw);
     }
 
     public void readOnly(boolean flag) {
@@ -455,15 +455,15 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
 	public GenericReflector reflector() {
-		GenericReflector reflector=(GenericReflector)_config.get(REFLECTOR);
+		GenericReflector reflector=(GenericReflector)_config.get(REFLECTOR_KEY);
 		if(reflector == null){
-			Reflector configuredReflector=(Reflector)_config.get(CONFIGURED_REFLECTOR);
+			Reflector configuredReflector=(Reflector)_config.get(CONFIGURED_REFLECTOR_KEY);
 			if(configuredReflector == null){
 				configuredReflector=Platform4.createReflector(classLoader());
-				_config.put(CONFIGURED_REFLECTOR,configuredReflector);	
+				_config.put(CONFIGURED_REFLECTOR_KEY,configuredReflector);	
 			}
 			reflector=new GenericReflector(null, configuredReflector);
-            _config.put(REFLECTOR,reflector);
+            _config.put(REFLECTOR_KEY,reflector);
             configuredReflector.setParent(reflector);
 		}
 // TODO: transaction assignment has been moved to YapStreamBase#initialize1().
@@ -483,8 +483,8 @@ public final class Config4Impl implements Configuration, DeepClone,
         if (reflect == null) {
             throw new NullPointerException();
         }
-        _config.put(CONFIGURED_REFLECTOR,reflect);
-		_config.put(REFLECTOR,null);
+        _config.put(CONFIGURED_REFLECTOR_KEY,reflect);
+		_config.put(REFLECTOR_KEY,null);
     }
 
     public void refreshClasses() {
@@ -497,7 +497,7 @@ public final class Config4Impl implements Configuration, DeepClone,
     	Collection4 renameCollection=rename();
         if (renameCollection == null) {
             renameCollection = new Collection4();
-            _config.put(RENAME,renameCollection);
+            _config.put(RENAME_KEY,renameCollection);
         }
         renameCollection.add(a_rename);
     }
@@ -507,7 +507,7 @@ public final class Config4Impl implements Configuration, DeepClone,
         if (reservedStorageSpace < 0) {
             reservedStorageSpace = 0;
         }
-        _config.put(RESERVED_STORAGE_SPACE,reservedStorageSpace);
+        _config.put(RESERVED_STORAGE_SPACE_KEY,reservedStorageSpace);
         if (i_stream != null) {
             i_stream.reserve(reservedStorageSpace);
         }
@@ -524,7 +524,7 @@ public final class Config4Impl implements Configuration, DeepClone,
 
     public void setBlobPath(String path) throws IOException {
         ensureDirExists(path);
-        _config.put(BLOBPATH,path);
+        _config.put(BLOB_PATH_KEY,path);
     }
 
     /**
@@ -535,11 +535,11 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void setMessageRecipient(MessageRecipient messageRecipient) {
-    	_config.put(MESSAGE_RECIPIENT,messageRecipient);
+    	_config.put(MESSAGE_RECIPIENT_KEY,messageRecipient);
     }
 
     public void setOut(PrintStream outStream) {
-        _config.put(OUTSTREAM,outStream);
+        _config.put(OUTSTREAM_KEY,outStream);
         if (i_stream != null) {
             i_stream.logMsg(19, Db4o.version());
         } else {
@@ -548,23 +548,23 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
     public void singleThreadedClient(boolean flag) {
-    	_config.put(SINGLE_THREADED_CLIENT,flag);
+    	_config.put(SINGLE_THREADED_CLIENT_KEY,flag);
     }
 
     public void testConstructors(boolean flag) {
-    	_config.put(TEST_CONSTRUCTORS,flag);
+    	_config.put(TEST_CONSTRUCTORS_KEY,flag);
     }
 
     public void timeoutClientSocket(int milliseconds) {
-    	_config.put(TIMEOUT_CLIENT_SOCKET,milliseconds);
+    	_config.put(TIMEOUT_CLIENT_SOCKET_KEY,milliseconds);
     }
 
     public void timeoutServerSocket(int milliseconds) {
-    	_config.put(TIMEOUT_SERVER_SOCKET,milliseconds);
+    	_config.put(TIMEOUT_SERVER_SOCKET_KEY,milliseconds);
     }
 
     public void unicode(boolean unicodeOn) {
-    	_config.put(ENCODING,(unicodeOn ? Const4.UNICODE : Const4.ISO8859));
+    	_config.put(ENCODING_KEY,(unicodeOn ? Const4.UNICODE : Const4.ISO8859));
     }
 
     public void updateDepth(int depth) {
@@ -572,15 +572,15 @@ public final class Config4Impl implements Configuration, DeepClone,
         if (dp.enabled()) {
             dp.checkUpdateDepth(depth);
         }
-    	_config.put(UPDATE_DEPTH,depth);
+    	_config.put(UPDATE_DEPTH_KEY,depth);
     }
     
     public void useBTreeSystem() {
-        _config.put(FREESPACE_SYSTEM,AbstractFreespaceManager.FM_BTREE);
+        _config.put(FREESPACE_SYSTEM_KEY,AbstractFreespaceManager.FM_BTREE);
     }
 
     public void useRamSystem() {
-        _config.put(FREESPACE_SYSTEM,AbstractFreespaceManager.FM_RAM);
+        _config.put(FREESPACE_SYSTEM_KEY,AbstractFreespaceManager.FM_RAM);
     }
 
 	public void useIndexSystem() {
@@ -588,18 +588,18 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
     
     public void weakReferenceCollectionInterval(int milliseconds) {
-    	_config.put(WEAK_REFERENCE_COLLECTION_INTERVAL,milliseconds);
+    	_config.put(WEAK_REFERENCE_COLLECTION_INTERVAL_KEY,milliseconds);
     }
 
     public void weakReferences(boolean flag) {
-    	_config.put(WEAK_REFERENCES,flag);
+    	_config.put(WEAK_REFERENCES_KEY,flag);
     }
     
     private Collection4 aliases() {
-    	Collection4 aliasesCollection=(Collection4)_config.get(ALIASES);
+    	Collection4 aliasesCollection=(Collection4)_config.get(ALIASES_KEY);
     	if (null == aliasesCollection) {
     		aliasesCollection = new Collection4();
-    		_config.put(ALIASES,aliasesCollection);
+    		_config.put(ALIASES_KEY,aliasesCollection);
     	}
     	return aliasesCollection;
     }
@@ -655,100 +655,100 @@ public final class Config4Impl implements Configuration, DeepClone,
     }
 
 	public boolean allowVersionUpdates() {
-		return _config.getAsBoolean(ALLOW_VERSION_UPDATES);
+		return _config.getAsBoolean(ALLOW_VERSION_UPDATES_KEY);
 	}
 
 	boolean automaticShutDown() {
-		return _config.getAsBoolean(AUTOMATIC_SHUTDOWN);
+		return _config.getAsBoolean(AUTOMATIC_SHUTDOWN_KEY);
 	}
 
 	public byte blockSize() {
-		return _config.getAsByte(BLOCKSIZE);
+		return _config.getAsByte(BLOCKSIZE_KEY);
 	}
     
     public int bTreeNodeSize() {
-        return _config.getAsInt(BTREE_NODE_SIZE);
+        return _config.getAsInt(BTREE_NODE_SIZE_KEY);
     }
     
     public int bTreeCacheHeight(){
-        return _config.getAsInt(BTREE_CACHE_HEIGHT);
+        return _config.getAsInt(BTREE_CACHE_HEIGHT_KEY);
     }
     
 	String blobPath() {
-		return _config.getAsString(BLOBPATH);
+		return _config.getAsString(BLOB_PATH_KEY);
 	}
 
 	boolean callbacks() {
-		return _config.getAsBoolean(CALLBACKS);
+		return _config.getAsBoolean(CALLBACKS_KEY);
 	}
 
 	TernaryBool callConstructors() {
-		return _config.getAsTernaryBool(CALL_CONSTRUCTORS);
+		return _config.getAsTernaryBool(CALL_CONSTRUCTORS_KEY);
 	}
 
 	boolean classActivationDepthConfigurable() {
-		return _config.getAsBoolean(CLASS_ACTIVATION_DEPTH_CONFIGURABLE);
+		return _config.getAsBoolean(CLASS_ACTIVATION_DEPTH_CONFIGURABLE_KEY);
 	}
 
 	Object classLoader() {
-		return _config.get(CLASSLOADER);
+		return _config.get(CLASSLOADER_KEY);
 	}
 
 	boolean detectSchemaChanges() {
-		return _config.getAsBoolean(DETECT_SCHEMA_CHANGES);
+		return _config.getAsBoolean(DETECT_SCHEMA_CHANGES_KEY);
 	}
 
 	boolean commitRecoveryDisabled() {
-		return _config.getAsBoolean(DISABLE_COMMIT_RECOVERY);
+		return _config.getAsBoolean(DISABLE_COMMIT_RECOVERY_KEY);
 	}
 
     public DiagnosticConfiguration diagnostic() {
-        return (DiagnosticConfiguration)_config.get(DIAGNOSTIC);
+        return (DiagnosticConfiguration)_config.get(DIAGNOSTIC_KEY);
     }
     
     public DiagnosticProcessor diagnosticProcessor(){
-        return (DiagnosticProcessor)_config.get(DIAGNOSTIC); 
+        return (DiagnosticProcessor)_config.get(DIAGNOSTIC_KEY); 
     }
 
 	public int discardFreeSpace() {
-		return _config.getAsInt(DISCARD_FREESPACE);
+		return _config.getAsInt(DISCARD_FREESPACE_KEY);
 	}
 
 	byte encoding() {
-		return _config.getAsByte(ENCODING);
+		return _config.getAsByte(ENCODING_KEY);
 	}
 
 	boolean encrypt() {
-		return _config.getAsBoolean(ENCRYPT);
+		return _config.getAsBoolean(ENCRYPT_KEY);
 	}
 
 	public Hashtable4 exceptionalClasses() {
-		Hashtable4 exceptionalClasses = (Hashtable4)_config.get(EXCEPTIONAL_CLASSES);
+		Hashtable4 exceptionalClasses = (Hashtable4)_config.get(EXCEPTIONAL_CLASSES_KEY);
 		if(exceptionalClasses==null) {
 			exceptionalClasses=new Hashtable4(16);
-			_config.put(EXCEPTIONAL_CLASSES,exceptionalClasses);
+			_config.put(EXCEPTIONAL_CLASSES_KEY,exceptionalClasses);
 		}
 		return exceptionalClasses;
 	}
 
 	public boolean exceptionsOnNotStorable() {
-		return _config.getAsBoolean(EXCEPTIONS_ON_NOT_STORABLE);
+		return _config.getAsBoolean(EXCEPTIONS_ON_NOT_STORABLE_KEY);
 	}
 
 	public boolean flushFileBuffers() {
-		return _config.getAsBoolean(FLUSH_FILE_BUFFERS);
+		return _config.getAsBoolean(FLUSH_FILE_BUFFERS_KEY);
 	}
 
 	byte freespaceSystem() {
-		return _config.getAsByte(FREESPACE_SYSTEM);
+		return _config.getAsByte(FREESPACE_SYSTEM_KEY);
 	}
 
 	public ConfigScope generateUUIDs() {
-		return (ConfigScope) _config.get(GENERATE_UUIDS);
+		return (ConfigScope) _config.get(GENERATE_UUIDS_KEY);
 	}
 
 	public ConfigScope generateVersionNumbers() {
-		return (ConfigScope) _config.get(GENERATE_VERSION_NUMBERS);
+		return (ConfigScope) _config.get(GENERATE_VERSION_NUMBERS_KEY);
 	}
 
 	public boolean internStrings() {
@@ -756,15 +756,15 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 	
 	public void isServer(boolean flag){
-		_config.put(IS_SERVER,flag);
+		_config.put(IS_SERVER_KEY,flag);
 	}
 
 	boolean isServer() {
-		return _config.getAsBoolean(IS_SERVER);
+		return _config.getAsBoolean(IS_SERVER_KEY);
 	}
 
 	boolean lockFile() {
-		return _config.getAsBoolean(LOCK_FILE);
+		return _config.getAsBoolean(LOCK_FILE_KEY);
 	}
 
 	int messageLevel() {
@@ -772,35 +772,35 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	public MessageRecipient messageRecipient() {
-		return (MessageRecipient)_config.get(MESSAGE_RECIPIENT);
+		return (MessageRecipient)_config.get(MESSAGE_RECIPIENT_KEY);
 	}
 
 	boolean optimizeNQ() {
-		return _config.getAsBoolean(OPTIMIZE_NQ);
+		return _config.getAsBoolean(OPTIMIZE_NQ_KEY);
 	}
 
 	String password() {
-		return _config.getAsString(PASSWORD);
+		return _config.getAsString(PASSWORD_KEY);
 	}
 
 	public void prefetchIDCount(int prefetchIDCount) {
-		_config.put(PREFETCH_ID_COUNT,prefetchIDCount);
+		_config.put(PREFETCH_ID_COUNT_KEY,prefetchIDCount);
 	}
 
 	public int prefetchIDCount() {
-		return _config.getAsInt(PREFETCH_ID_COUNT);
+		return _config.getAsInt(PREFETCH_ID_COUNT_KEY);
 	}
 
 	public void prefetchObjectCount(int prefetchObjectCount) {
-		_config.put(PREFETCH_OBJECT_COUNT,prefetchObjectCount);
+		_config.put(PREFETCH_OBJECT_COUNT_KEY,prefetchObjectCount);
 	}
 
 	public int prefetchObjectCount() {
-		return _config.getAsInt(PREFETCH_OBJECT_COUNT);
+		return _config.getAsInt(PREFETCH_OBJECT_COUNT_KEY);
 	}
 
 	Hashtable4 readAs() {
-		return (Hashtable4)_config.get(READ_AS);
+		return (Hashtable4)_config.get(READ_AS_KEY);
 	}
 
 	public boolean isReadOnly() {
@@ -808,43 +808,43 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	Collection4 rename() {
-		return (Collection4)_config.get(RENAME);
+		return (Collection4)_config.get(RENAME_KEY);
 	}
 
 	int reservedStorageSpace() {
-		return _config.getAsInt(RESERVED_STORAGE_SPACE);
+		return _config.getAsInt(RESERVED_STORAGE_SPACE_KEY);
 	}
 
 	public boolean singleThreadedClient() {
-		return _config.getAsBoolean(SINGLE_THREADED_CLIENT);
+		return _config.getAsBoolean(SINGLE_THREADED_CLIENT_KEY);
 	}
 
 	boolean testConstructors() {
-		return _config.getAsBoolean(TEST_CONSTRUCTORS);
+		return _config.getAsBoolean(TEST_CONSTRUCTORS_KEY);
 	}
 
 	public int timeoutClientSocket() {
-		return _config.getAsInt(TIMEOUT_CLIENT_SOCKET);
+		return _config.getAsInt(TIMEOUT_CLIENT_SOCKET_KEY);
 	}
 
 	public int timeoutServerSocket() {
-		return _config.getAsInt(TIMEOUT_SERVER_SOCKET);
+		return _config.getAsInt(TIMEOUT_SERVER_SOCKET_KEY);
 	}
 
 	int updateDepth() {
-		return _config.getAsInt(UPDATE_DEPTH);
+		return _config.getAsInt(UPDATE_DEPTH_KEY);
 	}
 
 	int weakReferenceCollectionInterval() {
-		return _config.getAsInt(WEAK_REFERENCE_COLLECTION_INTERVAL);
+		return _config.getAsInt(WEAK_REFERENCE_COLLECTION_INTERVAL_KEY);
 	}
 
 	boolean weakReferences() {
-		return _config.getAsBoolean(WEAK_REFERENCES);
+		return _config.getAsBoolean(WEAK_REFERENCES_KEY);
 	}
 
 	IoAdapter ioAdapter() {
-		return (IoAdapter)_config.get(IOADAPTER);
+		return (IoAdapter)_config.get(IOADAPTER_KEY);
 	}
 	
 	public QueryConfiguration queries() {
@@ -852,20 +852,20 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	public void evaluationMode(QueryEvaluationMode mode) {
-		_config.put(QUERY_EVALUATION_MODE, mode);
+		_config.put(QUERY_EVALUATION_MODE_KEY, mode);
 	}
 	
 	public QueryEvaluationMode queryEvaluationMode() {
-		return (QueryEvaluationMode)_config.get(QUERY_EVALUATION_MODE);
+		return (QueryEvaluationMode)_config.get(QUERY_EVALUATION_MODE_KEY);
 	}
 	
 
 	public void queryResultIteratorFactory(QueryResultIteratorFactory factory) {
-		_config.put(CLIENT_QUERY_RESULT_ITERATOR_FACTORY, factory);
+		_config.put(CLIENT_QUERY_RESULT_ITERATOR_FACTORY_KEY, factory);
 	}
 	
 	public QueryResultIteratorFactory queryResultIteratorFactory() {
-		return (QueryResultIteratorFactory)_config.get(CLIENT_QUERY_RESULT_ITERATOR_FACTORY);
+		return (QueryResultIteratorFactory)_config.get(CLIENT_QUERY_RESULT_ITERATOR_FACTORY_KEY);
 	}
 
 
@@ -874,26 +874,26 @@ public final class Config4Impl implements Configuration, DeepClone,
 	}
 
 	public void batchMessages(boolean flag) {
-		_config.put(BATCH_MESSAGES, flag);
+		_config.put(BATCH_MESSAGES_KEY, flag);
 	}
 	
 	public boolean batchMessages() {
-		return _config.getAsBoolean(BATCH_MESSAGES);
+		return _config.getAsBoolean(BATCH_MESSAGES_KEY);
 	}
 	
 	public void maxBatchQueueSize(int maxSize) {
-		_config.put(MAX_BATCH_QUEUE_SIZE, maxSize);
+		_config.put(MAX_BATCH_QUEUE_SIZE_KEY, maxSize);
 	}
 
 	public int maxBatchQueueSize() {
-		return _config.getAsInt(MAX_BATCH_QUEUE_SIZE);
+		return _config.getAsInt(MAX_BATCH_QUEUE_SIZE_KEY);
 	}
 
 	public void activationDepthProvider(ActivationDepthProvider provider) {
-		_config.put(ACTIVATION_DEPTH_PROVIDER, provider);
+		_config.put(ACTIVATION_DEPTH_PROVIDER_KEY, provider);
 	}
 
 	public ActivationDepthProvider activationDepthProvider() {
-		return (ActivationDepthProvider) _config.get(ACTIVATION_DEPTH_PROVIDER);
+		return (ActivationDepthProvider) _config.get(ACTIVATION_DEPTH_PROVIDER_KEY);
 	}
 }

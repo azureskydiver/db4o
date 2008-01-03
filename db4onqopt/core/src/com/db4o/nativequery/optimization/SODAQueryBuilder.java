@@ -50,10 +50,10 @@ public class SODAQueryBuilder {
 			expression.right().accept(visitor);
 			_constraint = subQuery.constrain(visitor.value());
 			ComparisonOperator op = expression.op();
-			if (op.equals(ComparisonOperator.EQUALS)) {
+			if (op.equals(ComparisonOperator.VALUE_EQUALITY)) {
 				return;
 			}
-			if (op.equals(ComparisonOperator.IDENTITY)) {
+			if (op.equals(ComparisonOperator.REFERENCE_EQUALITY)) {
 				_constraint.identity();
 				return;
 			}
@@ -69,11 +69,11 @@ public class SODAQueryBuilder {
 				_constraint.contains();
 				return;
 			}
-			if (op.equals(ComparisonOperator.STARTSWITH)) {
+			if (op.equals(ComparisonOperator.STARTS_WITH)) {
 				_constraint.startsWith(true);
 				return;
 			}
-			if (op.equals(ComparisonOperator.ENDSWITH)) {
+			if (op.equals(ComparisonOperator.ENDS_WITH)) {
 				_constraint.endsWith(true);
 				return;
 			}

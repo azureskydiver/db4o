@@ -47,10 +47,10 @@ public class ExpressionTestCase implements TestCase {
 	public void testEqualsHashCodeComparison() {
 		FieldValue[] fieldVals={fieldValue(PredicateFieldRoot.INSTANCE, "A"),fieldValue(CandidateFieldRoot.INSTANCE,"B")};
 		ConstValue[] constVals={new ConstValue("X"),new ConstValue("Y")};
-		ComparisonExpression expr = new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.EQUALS);
-		assertEqualsHashCode(expr,new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.EQUALS));
-		assertNotEquals(expr,new ComparisonExpression(fieldVals[1],constVals[0],ComparisonOperator.EQUALS));
-		assertNotEquals(expr,new ComparisonExpression(fieldVals[0],constVals[1],ComparisonOperator.EQUALS));
+		ComparisonExpression expr = new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.VALUE_EQUALITY);
+		assertEqualsHashCode(expr,new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.VALUE_EQUALITY));
+		assertNotEquals(expr,new ComparisonExpression(fieldVals[1],constVals[0],ComparisonOperator.VALUE_EQUALITY));
+		assertNotEquals(expr,new ComparisonExpression(fieldVals[0],constVals[1],ComparisonOperator.VALUE_EQUALITY));
 		assertNotEquals(expr,new ComparisonExpression(fieldVals[0],constVals[0],ComparisonOperator.SMALLER));
 	}
 

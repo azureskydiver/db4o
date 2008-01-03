@@ -11,14 +11,14 @@ import db4ounit.extensions.*;
 
 public class ServerPortUsedTestCase extends Db4oClientServerTestCase {
 
-	private static final String DB = "PortUsed.db";
+	private static final String DATABASE_FILE = "PortUsed.db";
 
 	public static void main(String[] args) {
 		new ServerPortUsedTestCase().runAll();
 	}
 
 	protected void db4oTearDownBeforeClean() throws Exception {
-		File4.delete(DB);
+		File4.delete(DATABASE_FILE);
 
 	}
 
@@ -26,7 +26,7 @@ public class ServerPortUsedTestCase extends Db4oClientServerTestCase {
 		final int port = clientServerFixture().serverPort();
 		Assert.expect(Db4oIOException.class, new CodeBlock() {
 			public void run() throws Throwable {
-				Db4o.openServer(DB, port);
+				Db4o.openServer(DATABASE_FILE, port);
 			}
 		});
 

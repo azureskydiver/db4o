@@ -13,7 +13,7 @@ public class BooleanReturnValueTestCase extends
 	private static final String FIELDNAME = "bool";
 
 	protected void assertOptimization(Expression expression) throws Exception {
-		NQOptimizationAssertUtil.assertComparison(expression, new String[]{ FIELDNAME }, Boolean.TRUE, ComparisonOperator.EQUALS, false);
+		NQOptimizationAssertUtil.assertComparison(expression, new String[]{ FIELDNAME }, Boolean.TRUE, ComparisonOperator.VALUE_EQUALITY, false);
 	}
 
 	protected void generateMethodBody(MethodEditor method) {

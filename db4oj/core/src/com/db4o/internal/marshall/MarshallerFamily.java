@@ -28,7 +28,7 @@ public class MarshallerFamily {
         
     }
     
-    private static int FAMILY_VERSION = FamilyVersion.BTREE_FIELD_INDEXES;
+    private static int CURRENT_VERSION = FamilyVersion.BTREE_FIELD_INDEXES;
     
     public final ArrayMarshaller _array;
     
@@ -118,10 +118,10 @@ public class MarshallerFamily {
     }
 
     public static MarshallerFamily current() {
-        if(FAMILY_VERSION < FamilyVersion.BTREE_FIELD_INDEXES){
+        if(CURRENT_VERSION < FamilyVersion.BTREE_FIELD_INDEXES){
             throw new IllegalStateException("Using old marshaller versions to write database files is not supported, source code has been removed.");
         }
-        return version(FAMILY_VERSION);
+        return version(CURRENT_VERSION);
     }
     
     public static MarshallerFamily forConverterVersion(int n){

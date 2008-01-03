@@ -75,7 +75,7 @@ public class SortMultipleTestCase extends AbstractDb4oTestCase {
 		}
 	}
 	
-	private final static Data[] DATA={
+	private final static Data[] TEST_DATA={
 		new Data(1,2,4), // 0
 		new Data(1,4,3), // 1
 		new Data(2,4,2), // 2
@@ -85,8 +85,8 @@ public class SortMultipleTestCase extends AbstractDb4oTestCase {
 	};
 	
 	protected void store() throws Exception {
-		for (int dataIdx = 0; dataIdx < DATA.length; dataIdx++) {
-			store(DATA[dataIdx]);
+		for (int dataIdx = 0; dataIdx < TEST_DATA.length; dataIdx++) {
+			store(TEST_DATA[dataIdx]);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class SortMultipleTestCase extends AbstractDb4oTestCase {
 		ObjectSet result=query.execute();
 		Assert.areEqual(expectedIndexes.length,result.size());
 		for (int i = 0; i < expectedIndexes.length; i++) {
-			Assert.areEqual(DATA[expectedIndexes[i]], result.next());
+			Assert.areEqual(TEST_DATA[expectedIndexes[i]], result.next());
 		}
 	}
 }

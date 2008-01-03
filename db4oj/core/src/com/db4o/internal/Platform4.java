@@ -78,7 +78,7 @@ public final class Platform4 {
     }
 
     public static final boolean canSetAccessible() {
-        if (setAccessibleCheck.unspecified()) {
+        if (setAccessibleCheck.isUnspecified()) {
             if (jdk().ver() >= 2) {
                 setAccessibleCheck = TernaryBool.YES;
             } else {
@@ -314,7 +314,7 @@ public final class Platform4 {
     }
 
     static final synchronized boolean hasCollections() {
-        if (collectionCheck.unspecified()) {
+        if (collectionCheck.isUnspecified()) {
         	if (classIsAvailable(UTIL + "Collection")) {
         		collectionCheck = TernaryBool.YES;
         		return true;
@@ -332,7 +332,7 @@ public final class Platform4 {
         if (!Debug.nio) {
             return false;
         }
-        if (nioCheck.unspecified()) {
+        if (nioCheck.isUnspecified()) {
             if ((jdk().ver() >= 4)
                 && (!noNIO())) {
                 nioCheck = TernaryBool.YES;
@@ -345,7 +345,7 @@ public final class Platform4 {
     }
 
     static final boolean hasShutDownHook() {
-        if (shutDownHookCheck.unspecified()) {            
+        if (shutDownHookCheck.isUnspecified()) {            
             if (jdk().ver() >= 3){
                 shutDownHookCheck = TernaryBool.YES;
                 return true;
@@ -360,7 +360,7 @@ public final class Platform4 {
         if (!Debug.weakReferences) {
             return false;
         }
-        if (weakReferenceCheck.unspecified()) {
+        if (weakReferenceCheck.isUnspecified()) {
             if (classIsAvailable(ACCESSIBLEOBJECT)
                 && classIsAvailable(REFERENCEQUEUE)
                 && jdk().ver() >= 2) {
@@ -485,7 +485,7 @@ public final class Platform4 {
     }
 
     static boolean callConstructor() {
-        if (callConstructorCheck.unspecified()) {
+        if (callConstructorCheck.isUnspecified()) {
             
             if(jdk().methodIsAvailable(
                 REFLECTIONFACTORY,

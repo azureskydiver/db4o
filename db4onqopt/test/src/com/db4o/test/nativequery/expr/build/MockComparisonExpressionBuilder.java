@@ -17,6 +17,6 @@ public class MockComparisonExpressionBuilder {
 						CandidateFieldRoot.INSTANCE,
 						new MockFieldRef("a"+id)),
 					new ConstValue(String.valueOf(id)),
-					ComparisonOperator.EQUALS);
+					ComparisonOperator.VALUE_EQUALITY);
 	}
 }

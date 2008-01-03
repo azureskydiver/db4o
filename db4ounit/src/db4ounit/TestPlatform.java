@@ -8,7 +8,7 @@ import java.lang.reflect.*;
  */
 public class TestPlatform {
 	
-	public static String NEWLINE = System.getProperty("line.separator");
+	public static String NEW_LINE = System.getProperty("line.separator");
 	
 	public static Throwable getExceptionCause(Throwable e) {
 		try {

@@ -25,7 +25,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         configureForTest(config);
     }
     
-    protected static final String PATH = Path4.combine(Path4.getTempPath(), "test/db4oVersions");
+    protected static final String TEMP_PATH = Path4.combine(Path4.getTempPath(), "test/db4oVersions");
 
     protected String fileName(){
         _db4oVersion = Db4oVersion.NAME;
@@ -37,7 +37,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     }
     
     protected String oldVersionFileName(String versionName){
-        return Path4.combine(PATH, fileNamePrefix() + versionName.replace(' ', '_'));
+        return Path4.combine(TEMP_PATH, fileNamePrefix() + versionName.replace(' ', '_'));
     }
     
     public void createDatabase() {
@@ -60,7 +60,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     }
 
 	private void createDatabase(String file) {
-		File4.mkdirs(PATH);
+		File4.mkdirs(TEMP_PATH);
         if(File4.exists(file)){
             File4.delete(file);
         }

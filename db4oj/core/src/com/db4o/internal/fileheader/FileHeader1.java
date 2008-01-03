@@ -37,7 +37,7 @@ public class FileHeader1 extends FileHeader {
     private static final int ACCESS_TIME_OFFSET = OPEN_TIME_OFFSET + Const4.LONG_LENGTH;
     private static final int TRANSACTION_POINTER_OFFSET = ACCESS_TIME_OFFSET + Const4.LONG_LENGTH; 
     
-    public static final int LENGTH = TRANSACTION_POINTER_OFFSET + (Const4.INT_LENGTH * 6);
+    public static final int HEADER_LENGTH = TRANSACTION_POINTER_OFFSET + (Const4.INT_LENGTH * 6);
     
     private TimerFileLock _timerFileLock;
 
@@ -72,7 +72,7 @@ public class FileHeader1 extends FileHeader {
     }
 
     public int length() {
-        return LENGTH;
+        return HEADER_LENGTH;
     }
 
     protected void readFixedPart(LocalObjectContainer file, BufferImpl reader) {

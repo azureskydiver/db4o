@@ -15,7 +15,7 @@ import com.db4o.reflect.*;
  */
 public class DoubleHandler extends LongHandler {
 	
-    private static final Double DEFAULT_VALUE = new Double(0);
+    private static final Double DEFAULT_DOUBLE_VALUE = new Double(0);
     
     public DoubleHandler(ObjectContainerBase stream) {
         super(stream);
@@ -26,7 +26,7 @@ public class DoubleHandler extends LongHandler {
     }
 
 	public Object defaultValue(){
-		return DEFAULT_VALUE;
+		return DEFAULT_DOUBLE_VALUE;
 	}
 	
 	protected Class primitiveJavaClass(){
@@ -34,7 +34,7 @@ public class DoubleHandler extends LongHandler {
 	}
 	
 	public Object primitiveNull(){
-		return DEFAULT_VALUE;
+		return DEFAULT_DOUBLE_VALUE;
 	}
 	
 	public Object read(MarshallerFamily mf, StatefulBuffer buffer,
