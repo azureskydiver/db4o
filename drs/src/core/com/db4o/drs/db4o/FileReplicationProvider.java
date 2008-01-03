@@ -141,7 +141,7 @@ class FileReplicationProvider implements Db4oReplicationProvider {
 
 	public void storeReplica(Object obj) {
 		synchronized (getMonitor()) {
-			_stream.setByNewReplication(this, obj);
+			_stream.storeByNewReplication(this, obj);
 
 			// the ID is an int internally, it can be casted to int.
 			final TreeInt node = new TreeInt((int) _stream.getID(obj));

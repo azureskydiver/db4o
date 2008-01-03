@@ -154,7 +154,7 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
 
 	public final void store(Object obj, int depth) 
         throws DatabaseClosedException, DatabaseReadOnlyException {
-        set(null, obj, depth);
+        store(null, obj, depth);
     }
     
     public final StoredClass storedClass(Object clazz) {

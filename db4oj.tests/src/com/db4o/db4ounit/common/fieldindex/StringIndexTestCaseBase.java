@@ -75,7 +75,7 @@ public abstract class StringIndexTestCaseBase extends AbstractDb4oTestCase {
 	}
 
 	protected void add(Transaction transaction, String itemName) {
-		stream().set(transaction, new Item(itemName));
+		stream().store(transaction, new Item(itemName));
 	}
 
 	protected void assertExists(Transaction transaction, String itemName) {
@@ -86,7 +86,7 @@ public abstract class StringIndexTestCaseBase extends AbstractDb4oTestCase {
 		final Item item = query(transaction, from);
 		Assert.isNotNull(item);
 		item.name = to;
-		stream().set(transaction, item);
+		stream().store(transaction, item);
 	}
 
 	protected void rename(String from, String to) {

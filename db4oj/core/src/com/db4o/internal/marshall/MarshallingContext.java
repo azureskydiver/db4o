@@ -267,7 +267,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
 
     public void writeObject(Object obj) {
         
-        int id = container().setInternal(transaction(), obj, _updateDepth, true);
+        int id = container().storeInternal(transaction(), obj, _updateDepth, true);
         
         writeInt(id);
         

@@ -1705,7 +1705,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
 	private void setStaticClass(Transaction trans, StaticClass sc) {
 		// TODO: we should probably use a specific update depth here, 4?
-		trans.container().setInternal(trans, sc, true);
+		trans.container().storeInternal(trans, sc, true);
 	}
 
 	private StaticField[] toStaticFieldArray(Iterator4 iterator4) {

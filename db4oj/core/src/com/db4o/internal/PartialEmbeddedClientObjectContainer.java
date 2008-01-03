@@ -228,7 +228,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
 	public void store(Object obj, int depth) {
         synchronized(lock()){
             checkClosed();
-            _server.set(_transaction, obj, depth);
+            _server.store(_transaction, obj, depth);
         }
     }
 
@@ -389,7 +389,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
 	public void store(Object obj) throws DatabaseClosedException, DatabaseReadOnlyException {
         synchronized(lock()){
             checkClosed();
-            _server.set(_transaction, obj);
+            _server.store(_transaction, obj);
         }
     }
     
