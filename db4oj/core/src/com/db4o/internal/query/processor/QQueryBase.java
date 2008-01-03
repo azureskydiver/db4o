@@ -314,7 +314,7 @@ public abstract class QQueryBase implements Unversioned {
 	public QueryResult getQueryResult() {
 		synchronized (streamLock()) {
 	        if(i_constraints.size() == 0){
-	            return stream().getAll(_trans);
+	            return stream().queryAllObjects(_trans);
 	        }
 			QueryResult result = classOnlyQuery();
 			if(result != null) {
