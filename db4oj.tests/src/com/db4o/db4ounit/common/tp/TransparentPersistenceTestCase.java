@@ -60,6 +60,13 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 		store(new Item("Bar"));
 	}
 	
+	public void testActivateOnWrite() throws Exception {
+		
+		Item foo = itemByName("Foo");
+		foo.setName("Foo*");
+		Assert.areEqual("Foo*", foo.getName());
+	}
+	
 	public void testTransparentUpdate() throws Exception {
 		
 		Item foo = itemByName("Foo");
