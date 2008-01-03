@@ -53,4 +53,9 @@ public class ToBeInstrumentedWithFieldAccess {
 	public void setIntArray(int[] value) {
 		_intArray = value;
 	}
+	
+	public int setDoubledAndGetInt(int value) {
+		_int = value*2; // arbitrarily long expressions
+		return _int;
+	}
 }
