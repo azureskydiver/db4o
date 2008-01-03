@@ -13,12 +13,18 @@ import com.yetac.doctor.workers.*;
 
 public class Doctor extends Task {
 
+	private static final PlatformConfiguration MAIN_PLATFORM = PlatformConfiguration.JAVA;
+	
+	private static final String MAIN_WORKSPACE = "I:/HEAD";
+	
+	private static final String MAIN_FONT = "C:/WINDOWS/Fonts/VERDANA.TTF";
+
     public static void main(String[] args){
         
         if(args == null || args.length == 0){
         	args = new String[] {
-        	    	"C:/_db4o/HEAD",
-        	    	"C:/WINDOWS/Fonts/VERDANA.TTF"
+        	    	MAIN_WORKSPACE,
+        	    	MAIN_FONT,
         	} ;
         }
 
@@ -27,13 +33,23 @@ public class Doctor extends Task {
 			return;
 		}
         Doctor doctor = new Doctor();
-        String path = doctor.configureJavaTutorial(args[0],(args.length>1 ? args[1] : null));
+        String path = doctor.configure(args);
         doctor.execute();
         try {
             BrowserLauncher.openURL(path);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    private String configure(String[] args){
+        if(MAIN_PLATFORM == PlatformConfiguration.JAVA){
+        	return configureJavaTutorial(args[0],(args.length>1 ? args[1] : null));
+        }
+        if (MAIN_PLATFORM == PlatformConfiguration.NET){
+        	return configureNetTutorial(args[0],(args.length>1 ? args[1] : null));
+        } 
+       throw new IllegalStateException();
     }
     
     public String configureJavaTutorial(String workspace,String pdffontpath){
@@ -55,30 +71,29 @@ public class Doctor extends Task {
         return tutorial + "/out/index.html";
     }
     
-    public String configureMonoTutorial(String workspace,String pdffontpath){
+    public String configureNetTutorial(String workspace,String pdffontpath){
 		if(pdffontpath!=null) {
 			setPdfBaseFont(pdffontpath);
 		}
-        String tutorial = workspace + "/db4oj/tutorial"; 
+        String tutorial = workspace + "/tutorial"; 
         setName("f1");
         setHome(tutorial);
         setInteractive(false);
         setShowCodeExecutionResults(true);
         setWorkspace(workspace);
-        setInputSource(workspace + "/db4on/tutorial/db4o-tutorial-chapters/src");
+        
+        setInputSource(workspace + "/db4o.net/Db4oTutorial/Db4objects.Db4o.Tutorial.Chapters");
         setSourceExtension("cs");
         setArchive("doctor-applets.jar, db4o-4.5-java1.4.jar, f1.jar");
         setVariable("java", false);
-        setVariable("net", false);
-        setVariable("mono", true);
+        setVariable("net", true);
+        setVariable("mono", false);
         IgnoreInputFolder iif = createIgnoreInputFolder();
         iif.setName("java");
         iif = createIgnoreInputFolder();
-        iif.setName("net");
+        iif.setName("mono");
         return tutorial + "/out/index.html";
     }
-
-    
     
     private String home;
     private String name;
@@ -474,4 +489,10 @@ public class Doctor extends Task {
     public boolean isMonoOrDotNet(){
     	return (variableIsTrue("net") || variableIsTrue("mono"));
     }
+    
+	private static class PlatformConfiguration{
+		private static final PlatformConfiguration JAVA = new PlatformConfiguration();
+		private static final PlatformConfiguration NET = new PlatformConfiguration();
+	}
+
 }
