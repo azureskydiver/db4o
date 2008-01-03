@@ -66,6 +66,15 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 		Assert.areEqual(1, ocOne.count());
 		Assert.areEqual(1, ocTwo.count());
 	}
+	
+	public void  testMixedMethod() throws Exception {
+		final Activatable obj = newToBeInstrumentedInstance();
+		final MockActivator activator = activatorFor(obj);
+		
+		Object returnValue = invoke(obj, "setDoubledAndGetInt", Integer.TYPE, new Integer(42));
+		assertActivateCalls(activator, 1, 1);
+		Assert.areEqual(new Integer(42*2), returnValue);
+	}
 
 	public void testFieldSetterIsInstrumented() throws Exception {
 		final Activatable obj = newToBeInstrumentedInstance();
@@ -97,10 +106,10 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 		assertActivateCalls(activator, 0, ++expectedWrites);
 	}
 
-	private void invoke(final Object obj, String methodName,
+	private Object invoke(final Object obj, String methodName,
 			Class signature, Object value) throws NoSuchMethodException,
 			IllegalAccessException, InvocationTargetException {
-		invoke(obj, methodName, new Class[] { signature }, new Object[] { value });
+		return invoke(obj, methodName, new Class[] { signature }, new Object[] { value });
 	}
 
 	private void assertActivateCalls(final MockActivator activator,
