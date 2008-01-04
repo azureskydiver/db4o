@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.*;
 
 import com.db4o.bench.logging.*;
+import com.db4o.foundation.*;
 import com.db4o.io.IoAdapter;
 
 
@@ -35,18 +36,75 @@ public class LogReplayer {
 		_logFilePath = logFilePath;
 	}
 	
-	public void replayLog() throws IOException {
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(_logFilePath));
-			String line = null;
-			while ( (line = reader.readLine()) != null ) {
-				replayLine(line);
+	public List4 readCommandList() throws IOException {
+		List4 list = null;
+		BufferedReader reader = new BufferedReader(new FileReader(_logFilePath));
+		String line = null;
+		while ( (line = reader.readLine()) != null ) {
+			IoCommand ioCommand = readLine(line);
+			if(ioCommand != null){
+				list = new List4(list, ioCommand);
 			}
-			reader.close();
-		} finally {
-			_io.close();
+		}
+		reader.close();
+		return list;
+	}
+	
+	public void playCommandList(List4 commandList){
+		while(commandList != null){
+			IoCommand ioCommand = (IoCommand) commandList._element;
+			ioCommand.replay(_io);
+			commandList = commandList._next;
 		}
 	}
+	
+	public void replayLog() throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(_logFilePath));
+		String line = null;
+		while ( (line = reader.readLine()) != null ) {
+			replayLine(line);
+		}
+		reader.close();
+	}
+	
+	private IoCommand readLine(String line) {
+		if ( line.startsWith(LogConstants.WRITE_ENTRY) ) {
+			if (! _commands.contains(LogConstants.WRITE_ENTRY)) {
+				return null;
+			}
+			int length = (int) parameter(LogConstants.WRITE_ENTRY,  line);
+			incrementCount(LogConstants.WRITE_ENTRY);
+			return new WriteCommand(length);
+		}
+		if ( line.startsWith(LogConstants.READ_ENTRY) ) {
+			if (! _commands.contains(LogConstants.READ_ENTRY)) {
+				return null;
+			}
+			int length = (int) parameter(LogConstants.READ_ENTRY,  line);
+			incrementCount(LogConstants.READ_ENTRY);
+			return new ReadCommand(length);
+		}
+		if ( line.startsWith(LogConstants.SYNC_ENTRY) ) {
+			if (! _commands.contains(LogConstants.SYNC_ENTRY)) {
+				return null;
+			}
+			incrementCount(LogConstants.SYNC_ENTRY);
+			return new SyncCommand();
+		}
+		if ( line.startsWith(LogConstants.SEEK_ENTRY) ) {
+			if (! _commands.contains(LogConstants.SEEK_ENTRY)) {
+				return null;
+			}
+			int address = (int) parameter(LogConstants.READ_ENTRY,  line);
+			incrementCount(LogConstants.SEEK_ENTRY);
+			return new SeekCommand(address);
+		}
+		if(line.length() == 0){
+			return null;
+		}
+		throw new IllegalArgumentException("Unknown command in log: " + line);
+	}
+
 
 	private void replayLine(String line) {
 		if ( line.startsWith(LogConstants.WRITE_ENTRY) ) {
@@ -106,6 +164,10 @@ public class LogReplayer {
 	private byte[] prepareBuffer(String command, String line) {
 		int length = (int) parameter(command.length(),  line);
 		return new byte[length];
+	}
+	
+	private long parameter(String command, String line){
+		return parameter(command.length(),  line);
 	}
 
 	private long parameter(int start, String line) {
