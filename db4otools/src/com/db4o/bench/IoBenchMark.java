@@ -32,7 +32,7 @@ public class IoBenchMark {
 
 		IoBenchMark ioBenchMark = new IoBenchMark();
 		ioBenchMark.run(SMALL);
-		ioBenchMark.run(MEDIUM);
+//		ioBenchMark.run(MEDIUM);
 //		ioBenchMark.run(LARGE);
 	}
 
@@ -40,21 +40,20 @@ public class IoBenchMark {
 	private void run(int itemCount) throws FileNotFoundException, IOException {
 		runTargetApplication(itemCount);
 		prepareDbFile(itemCount);
-		
+		runBenchmark(itemCount);
+	}
+
+	private void runBenchmark(int itemCount) throws FileNotFoundException,
+			IOException {
 		removeExistingLog(itemCount);
 		PrintStream out = new PrintStream(new FileOutputStream(logFileName(itemCount), true));
-		
 		printRunHeader(itemCount, out);
-		
 		for (int i = 0; i < LogConstants.ALL_ENTRIES.length; i++) {
 			String currentCommand = LogConstants.ALL_ENTRIES[i];
 			benchmarkCommand(currentCommand, itemCount, out);	
 		}
-		
 		removeDbFile();
 	}
-
-
 
 	/**
 	 * This runs a "real world" application to generate an I/O-access log.
@@ -72,10 +71,12 @@ public class IoBenchMark {
 	 * @throws IOException
 	 */
 	private void prepareDbFile(int itemCount) throws IOException {
+		removeDbFile();
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
 		IoAdapter raf = rafFactory.open(DB_FILE_NAME, false, 0, false);
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf);
 		replayer.replayLog();
+		raf.close();
 	}
 
 
@@ -90,12 +91,19 @@ public class IoBenchMark {
 		IoAdapter raf = rafFactory.open(DB_FILE_NAME, false, 0, false);
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf, commands);
 		
+		List4 commandList = replayer.readCommandList();
+		raf.seek(0);
+		
 		watch.start();
-		replayer.replayLog();
+		replayer.playCommandList(commandList);
+		// replayer.replayLog();
+		
 		watch.stop();
 		
 		timeElapsed = watch.elapsed();
 		operationCount = ((Long)replayer.operationCounts().get(command)).longValue();
+		
+		raf.close();
 		
 		printStatisticsForCommand(out, command, timeElapsed, operationCount);
 	}

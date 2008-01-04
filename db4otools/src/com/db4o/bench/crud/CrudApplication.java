@@ -5,7 +5,6 @@ package com.db4o.bench.crud;
 import java.io.*;
 
 import com.db4o.*;
-import com.db4o.bench.*;
 import com.db4o.bench.logging.*;
 import com.db4o.config.*;
 import com.db4o.io.*;
