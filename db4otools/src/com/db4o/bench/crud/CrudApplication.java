@@ -37,7 +37,7 @@ public class CrudApplication {
 	private void create(int itemCount, Configuration config) {
 		ObjectContainer oc = open(config);
 		for (int i = 0; i < itemCount; i++) {
-			oc.set(Item.newItem(i));
+			oc.store(Item.newItem(i));
 			// preventing heap space problems by committing from time to time
 			if(i % 100000 == 0) {
 				oc.commit();
@@ -62,7 +62,7 @@ public class CrudApplication {
 		while(objectSet.hasNext()){
 			Item item = (Item) objectSet.next();
 			item.change();
-			oc.set(item);
+			oc.store(item);
 		}
 		oc.close();
 	}
