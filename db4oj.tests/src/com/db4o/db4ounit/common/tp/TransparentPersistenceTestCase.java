@@ -80,7 +80,6 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 			foo1.setName("Foo*");
 			
 			Item foo2 = itemByName(client2, "Foo");
-			Assert.isNotNull(foo2);
 			foo2.setName("Foo**");
 			
 			assertUpdatedObjects(client1, foo1);
