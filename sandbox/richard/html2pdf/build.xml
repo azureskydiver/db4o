@@ -36,7 +36,7 @@
 			<arg line="${dir.reference}/html/_contents.html" />
 		</java>
     	
-    	<java classname="tools.HTML2PDF" failonerror="true">
+    	<java classname="tools.HTML2PDF" failonerror="true" fork="true">
     		<classpath>
     			<pathelement location="bin" />
     		</classpath>
