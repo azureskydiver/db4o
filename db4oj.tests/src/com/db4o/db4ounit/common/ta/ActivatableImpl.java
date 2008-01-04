@@ -12,7 +12,7 @@ public class ActivatableImpl /* TA BEGIN */ implements com.db4o.ta.Activatable /
 
 	//	 TA BEGIN
 	public void bind(Activator activator) {
-		if (null != _activator) {
+		if (null != _activator && activator != _activator) {
 			throw new IllegalStateException();
 		}
 		_activator = activator;
