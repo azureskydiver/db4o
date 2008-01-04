@@ -12,16 +12,17 @@ public class AllTests extends Db4oTestSuite {
     
     protected Class[] testCases() {
 		return new Class[] {
-				ArrayList4SODATestCase.class,
-				ArrayList4TAMultiClientsTestCase.class,
-				ArrayList4TATestCase.class,
-				ArrayList4TestCase.class,
-				ArrayMap4TAMultiClientsTestCase.class,
-				ArrayMap4TATestCase.class,
-				ArrayMap4TestCase.class,
-				SubArrayList4TestCase.class,
-				ArrayMap4TestCase.class,
-				ArrayMap4TATestCase.class,
+			ArrayList4SODATestCase.class,
+			ArrayList4TAMultiClientsTestCase.class,
+			ArrayList4TATestCase.class,
+			ArrayList4TestCase.class,
+			ArrayList4TransparentUpdateTestCase.class,
+			ArrayMap4TAMultiClientsTestCase.class,
+			ArrayMap4TATestCase.class,
+			ArrayMap4TestCase.class,
+			SubArrayList4TestCase.class,
+			ArrayMap4TestCase.class,
+			ArrayMap4TATestCase.class,
 		};
 	}
 

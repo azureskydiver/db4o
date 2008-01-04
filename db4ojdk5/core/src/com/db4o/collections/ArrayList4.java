@@ -142,10 +142,15 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	public void add(int index, E element) {
 		checkIndex(index, 0, size());
 		ensureCapacity(size() + 1);
-		System.arraycopy(elements, index, elements, index + 1, listSize - index);
+		arrayCopyElements(index, index + 1, listSize - index);
 		elements[index] = element;
 		increaseSize(1);
 		markModified();
+	}
+
+	private void arrayCopyElements(int sourceIndex, int targetIndex, int length) {
+		activateForWrite();
+		System.arraycopy(elements, sourceIndex, elements, targetIndex, length);
 	}
 
 	/**
@@ -185,7 +190,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 			return false;
 		}
 		ensureCapacity(size() + length);
-		System.arraycopy(elements, index, elements, index+length, size() - index);
+		arrayCopyElements(index, index+length, size() - index);
 		System.arraycopy(toBeAdded, 0, elements, index, length);
 		increaseSize(length);
 		markModified();
@@ -201,6 +206,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	public void clear() { 
 		int size = size();
+		activateForWrite();
 		Arrays.fill(elements, 0, size, defaultValue());
 		setSize(0);
 		markModified();
@@ -315,8 +321,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	public E remove(int index) {
 		int size = size();
 		E element = get(index);
-		System.arraycopy(elements, index + 1, 
-				elements, index, size - index	- 1);
+		arrayCopyElements(index + 1, index, size - index - 1);
 		elements[size - 1] = defaultValue();
 		decreaseSize(1);
 		markModified();
@@ -356,6 +361,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	public E set(int index, E element) {
 		E oldValue = get(index);
+		activateForWrite();
 		elements[index] = element;
 		return oldValue;
 	}
@@ -420,6 +426,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * @sharpen.rename TrimExcess
 	 */
 	public void trimToSize() {
+		activateForWrite();
 		resize(size());
 	}
 
@@ -457,5 +464,9 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	void markModified() {
 		++modCount;
+	}
+	
+	private void activateForWrite() {
+		activate(ActivationPurpose.WRITE);
 	}
 }

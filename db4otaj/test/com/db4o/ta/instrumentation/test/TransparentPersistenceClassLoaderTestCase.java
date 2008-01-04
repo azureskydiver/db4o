@@ -6,6 +6,7 @@ import java.net.*;
 
 import com.db4o.*;
 import com.db4o.activation.*;
+import com.db4o.db4ounit.common.ta.MockActivator;
 import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.main.*;
@@ -109,8 +110,8 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 
 	private void assertActivateCalls(final MockActivator activator,
 			int readCount, int writeCount) {
-		Assert.areEqual(writeCount, activator.writeCount());
 		Assert.areEqual(readCount, activator.readCount());
+		Assert.areEqual(writeCount, activator.writeCount());
 	}
 
 	public void testInterObjectFieldAccessIsInstrumented() throws Exception {

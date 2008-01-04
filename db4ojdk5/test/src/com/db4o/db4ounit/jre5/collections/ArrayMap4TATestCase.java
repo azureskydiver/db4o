@@ -19,8 +19,7 @@ public class ArrayMap4TATestCase extends TransparentActivationTestCaseBase {
     
     @SuppressWarnings("unchecked")
     private ArrayMap4<String, Integer> retrieveOnlyInstance() {
-        ArrayMap4<String, Integer> map = CollectionsUtil.retrieveMapFromDB(db(), reflector());
-        return map;
+        return CollectionsUtil.retrieveMapFromDB(db(), reflector());
     }
 
     public void testClear() {
