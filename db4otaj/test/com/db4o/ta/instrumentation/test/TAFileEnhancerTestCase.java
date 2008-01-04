@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 
 import EDU.purdue.cs.bloat.editor.*;
 
+import com.db4o.db4ounit.common.ta.MockActivator;
 import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
