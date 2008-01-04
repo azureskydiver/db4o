@@ -2,6 +2,7 @@
 package com.db4o.ta.instrumentation.test;
 
 import com.db4o.activation.*;
+import com.db4o.ta.Activatable;
 
 public class MockActivator implements Activator {
 	private int _readCount;
@@ -28,6 +29,12 @@ public class MockActivator implements Activator {
 	
 	public int readCount() {
 		return _readCount;
+	}
+
+	public static MockActivator activatorFor(final Activatable obj) {
+		MockActivator activator = new MockActivator();
+		obj.bind(activator);
+		return activator;
 	}
 
 }

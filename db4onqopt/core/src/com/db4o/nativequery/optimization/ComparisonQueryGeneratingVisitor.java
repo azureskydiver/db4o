@@ -8,6 +8,7 @@ package com.db4o.nativequery.optimization;
 import java.lang.reflect.*;
 
 import com.db4o.instrumentation.api.*;
+import com.db4o.internal.Reflection4;
 import com.db4o.nativequery.expr.cmp.*;
 import com.db4o.nativequery.expr.cmp.operand.*;
 
@@ -32,7 +33,7 @@ final class ComparisonQueryGeneratingVisitor implements ComparisonOperandVisitor
 		operand.parent().accept(this);
 		Class clazz=((operand.parent() instanceof StaticFieldRoot) ? (Class)_value : _value.getClass());
 		try {
-			Field field=ReflectUtil.fieldFor(clazz,operand.fieldName());
+			Field field=Reflection4.getField(clazz,operand.fieldName());
 			_value=field.get(_value); // arg is ignored for static
 		} catch (Exception exc) {
 			exc.printStackTrace();

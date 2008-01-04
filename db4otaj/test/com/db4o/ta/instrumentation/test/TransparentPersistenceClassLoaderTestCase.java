@@ -9,6 +9,7 @@ import com.db4o.activation.*;
 import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.main.*;
+import com.db4o.internal.Reflection4;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
 
@@ -60,56 +61,50 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 	public void testFieldAccessIsInstrumented() throws Exception {
 		final Activatable objOne = newToBeInstrumentedInstance();
 		final Activatable objTwo = newToBeInstrumentedInstance();
-		MockActivator ocOne = activatorFor(objOne);
-		MockActivator ocTwo = activatorFor(objTwo);
-		invoke(objOne, "compareID", new Class[]{ objTwo.getClass() }, new Object[]{ objTwo });
+		MockActivator ocOne = MockActivator.activatorFor(objOne);
+		MockActivator ocTwo = MockActivator.activatorFor(objTwo);
+		Reflection4.invoke(objOne, "compareID", new Class[]{ objTwo.getClass() }, new Object[]{ objTwo });
 		Assert.areEqual(1, ocOne.count());
 		Assert.areEqual(1, ocTwo.count());
 	}
 	
 	public void  testMixedMethod() throws Exception {
 		final Activatable obj = newToBeInstrumentedInstance();
-		final MockActivator activator = activatorFor(obj);
+		final MockActivator activator = MockActivator.activatorFor(obj);
 		
-		Object returnValue = invoke(obj, "setDoubledAndGetInt", Integer.TYPE, new Integer(42));
+		Object returnValue = Reflection4.invoke(obj, "setDoubledAndGetInt", Integer.TYPE, new Integer(42));
 		assertActivateCalls(activator, 1, 1);
 		Assert.areEqual(new Integer(42*2), returnValue);
 	}
 
 	public void testFieldSetterIsInstrumented() throws Exception {
 		final Activatable obj = newToBeInstrumentedInstance();
-		final MockActivator activator = activatorFor(obj);
+		final MockActivator activator = MockActivator.activatorFor(obj);
 		
 		int expectedWrites = 0;
-		invoke(obj, "setInt", Integer.TYPE, new Integer(42));
+		Reflection4.invoke(obj, "setInt", Integer.TYPE, new Integer(42));
 		assertActivateCalls(activator, 0, ++expectedWrites);
 		
-		invoke(obj, "setChar", Character.TYPE, new Character('a'));
+		Reflection4.invoke(obj, "setChar", Character.TYPE, new Character('a'));
 		assertActivateCalls(activator, 0, ++expectedWrites);
 		
-		invoke(obj, "setByte", Byte.TYPE, new Byte((byte)42));
+		Reflection4.invoke(obj, "setByte", Byte.TYPE, new Byte((byte)42));
 		assertActivateCalls(activator, 0, ++expectedWrites);
 		
-		invoke(obj, "setVolatileByte", Byte.TYPE, new Byte((byte)42));
+		Reflection4.invoke(obj, "setVolatileByte", Byte.TYPE, new Byte((byte)42));
 		assertActivateCalls(activator, 0, ++expectedWrites);
 		
-		invoke(obj, "setLong", Long.TYPE, new Long(42L));
+		Reflection4.invoke(obj, "setLong", Long.TYPE, new Long(42L));
 		assertActivateCalls(activator, 0, ++expectedWrites);
 		
-		invoke(obj, "setFloat", Float.TYPE, new Float(42));
+		Reflection4.invoke(obj, "setFloat", Float.TYPE, new Float(42));
 		assertActivateCalls(activator, 0, ++expectedWrites);
 		
-		invoke(obj, "setDouble", Double.TYPE, new Double(42));
+		Reflection4.invoke(obj, "setDouble", Double.TYPE, new Double(42));
 		assertActivateCalls(activator, 0, ++expectedWrites);
 		
-		invoke(obj, "setIntArray", int[].class, null);
+		Reflection4.invoke(obj, "setIntArray", int[].class, null);
 		assertActivateCalls(activator, 0, ++expectedWrites);
-	}
-
-	private Object invoke(final Object obj, String methodName,
-			Class signature, Object value) throws NoSuchMethodException,
-			IllegalAccessException, InvocationTargetException {
-		return invoke(obj, methodName, new Class[] { signature }, new Object[] { value });
 	}
 
 	private void assertActivateCalls(final MockActivator activator,
@@ -123,26 +118,11 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 		Class niClazz = _loader.loadClass(NI_CLASS_NAME);
 		final Activatable iObj = (Activatable) iClazz.newInstance();
 		final Object niObj = niClazz.newInstance();
-		MockActivator act = activatorFor(iObj);
-		invoke(niObj, "accessToBeInstrumented", new Class[]{ iClazz }, new Object[]{ iObj });
+		MockActivator act = MockActivator.activatorFor(iObj);
+		Reflection4.invoke(niObj, "accessToBeInstrumented", new Class[]{ iClazz }, new Object[]{ iObj });
 		Assert.areEqual(1, act.count());
 	}
 	
-	private Object invoke(final Object obj, String methodName,
-			Class[] signature, Object[] arguments)
-			throws NoSuchMethodException, IllegalAccessException,
-			InvocationTargetException {
-		final Method method = obj.getClass().getDeclaredMethod(methodName, signature);
-		method.setAccessible(true);
-		return method.invoke(obj, arguments);
-	}
-
-	private MockActivator activatorFor(final Activatable obj) {
-		MockActivator activator = new MockActivator();
-		obj.bind(activator);
-		return activator;
-	}
-
 	private Activatable newToBeInstrumentedInstance()
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
@@ -217,7 +197,7 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 		activateMethod.setAccessible(true);
 		Assert.isTrue((activateMethod.getModifiers() & Modifier.PUBLIC) > 0);
 		final Activatable obj = (Activatable) clazz.newInstance();
-		MockActivator activator = activatorFor(obj);
+		MockActivator activator = MockActivator.activatorFor(obj);
 		activateMethod.invoke(obj, new Object[]{ActivationPurpose.READ});
 		activateMethod.invoke(obj, new Object[]{ActivationPurpose.READ});
 		Assert.areEqual(2, activator.count());
@@ -225,8 +205,8 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 
 	private void assertMethodInstrumentation(Class clazz,String methodName,boolean expectInstrumentation) throws Exception {
 		final Activatable obj = (Activatable) clazz.newInstance();
-		MockActivator oc = activatorFor(obj);
-		invoke(obj, methodName, new Class[]{}, new Object[]{});
+		MockActivator oc = MockActivator.activatorFor(obj);
+		Reflection4.invoke(obj, methodName, new Class[]{}, new Object[]{});
 		if (expectInstrumentation) {
 			Assert.areEqual(1, oc.count());
 		} else {
