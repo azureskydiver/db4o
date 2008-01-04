@@ -88,7 +88,9 @@ class InstrumentFieldAccessEdit implements BloatClassEdit {
 						}
 					}
 					editor.commit();
-					instrumented.value = (modifiedCount > 0 ? InstrumentationStatus.INSTRUMENTED : InstrumentationStatus.NOT_INSTRUMENTED);
+					if (modifiedCount > 0) {
+						instrumented.value = InstrumentationStatus.INSTRUMENTED;
+					}
 					
 				} catch (ClassNotFoundException e) {
 					instrumented.value = InstrumentationStatus.FAILED;

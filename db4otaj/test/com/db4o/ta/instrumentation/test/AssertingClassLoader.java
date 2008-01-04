@@ -56,4 +56,8 @@ public class AssertingClassLoader {
 	private Class loadClass(Class actual) throws ClassNotFoundException {
 		return _loader.loadClass(actual.getName());
 	}
+
+	public Object newInstance(Class clazz) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		return loadClass(clazz).newInstance();
+	}
 }

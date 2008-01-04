@@ -1,6 +1,7 @@
 package com.db4o.ta.instrumentation.test;
 
 import java.io.*;
+import java.net.MalformedURLException;
 
 import EDU.purdue.cs.bloat.editor.*;
 
@@ -8,6 +9,7 @@ import com.db4o.foundation.io.*;
 import com.db4o.instrumentation.classfilter.*;
 import com.db4o.instrumentation.core.*;
 import com.db4o.instrumentation.main.*;
+import com.db4o.internal.Reflection4;
 import com.db4o.ta.*;
 import com.db4o.ta.instrumentation.*;
 
@@ -33,13 +35,34 @@ public class TAFileEnhancerTestCase implements TestCase, TestLifeCycle {
 	
 	public void test() throws Exception {
 		
+		enhance();
+		
+		AssertingClassLoader loader = newAssertingClassLoader();
+		loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_CLAZZ);
+		loader.assertNotAssignableFrom(Activatable.class, NOT_INSTRUMENTED_CLAZZ);
+	}
+
+	private AssertingClassLoader newAssertingClassLoader()
+			throws MalformedURLException {
+		return new AssertingClassLoader(new File(targetDir), new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ });
+	}
+
+	private void enhance() throws Exception {
 		ClassFilter filter = new ByNameClassFilter(new String[]{ INSTRUMENTED_CLAZZ.getName() });
 		Db4oFileInstrumentor enhancer = new Db4oFileInstrumentor(new InjectTransparentActivationEdit(filter));
 		enhancer.enhance(srcDir, targetDir, new String[]{});
+	}
+	
+	public void testMethodInstrumentation() throws Exception {
+		enhance();
 		
-		AssertingClassLoader loader = new AssertingClassLoader(new File(targetDir), new Class[] { INSTRUMENTED_CLAZZ, NOT_INSTRUMENTED_CLAZZ });
-		loader.assertAssignableFrom(Activatable.class, INSTRUMENTED_CLAZZ);
-		loader.assertNotAssignableFrom(Activatable.class, NOT_INSTRUMENTED_CLAZZ);
+		AssertingClassLoader loader = newAssertingClassLoader();
+		
+		Activatable instrumented = (Activatable) loader.newInstance(INSTRUMENTED_CLAZZ);
+		MockActivator activator = MockActivator.activatorFor(instrumented);
+		Reflection4.invoke(instrumented, "setInt", Integer.TYPE, new Integer(42));
+		Assert.areEqual(1, activator.writeCount());
+		Assert.areEqual(0, activator.readCount());
 	}
 	
 	public void testExceptionsAreBubbledUp() throws Exception {

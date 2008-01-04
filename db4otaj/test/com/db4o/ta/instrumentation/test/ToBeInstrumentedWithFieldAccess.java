@@ -17,6 +17,8 @@ public class ToBeInstrumentedWithFieldAccess {
 	private byte _byte;
 	
 	private volatile byte _volatileByte;
+	
+	private transient Object _transientField;
 
 	public boolean compareID(ToBeInstrumentedWithFieldAccess other) {
 		return _int == other._int;
@@ -57,5 +59,9 @@ public class ToBeInstrumentedWithFieldAccess {
 	public int setDoubledAndGetInt(int value) {
 		_int = value*2; // arbitrarily long expressions
 		return _int;
+	}
+	
+	public void wontBeInstrumented() {
+		_transientField = null;
 	}
 }
