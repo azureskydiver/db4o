@@ -6,6 +6,7 @@ import com.db4o.*;
 import com.db4o.activation.*;
 import com.db4o.config.*;
 import com.db4o.events.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.query.*;
 import com.db4o.ta.*;
@@ -67,6 +68,35 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual("Foo*", foo.getName());
 	}
 	
+	public void testConcurrentClientModification() throws Exception {
+		if (!isClientServer()) {
+			return;
+		}
+		
+		final ExtObjectContainer client1 = db();
+		final ExtObjectContainer client2 = openNewClient();
+		try {
+			Item foo1 = itemByName(client1, "Foo");
+			foo1.setName("Foo*");
+			
+			Item foo2 = itemByName(client2, "Foo");
+			Assert.isNotNull(foo2);
+			foo2.setName("Foo**");
+			
+			assertUpdatedObjects(client1, foo1);
+			assertUpdatedObjects(client2, foo2);
+			
+			client1.refresh(foo1, 1);
+			Assert.areEqual(foo2.getName(), foo1.getName());
+		} finally {
+			client2.close();
+		}
+	}
+
+	private ExtObjectContainer openNewClient() {
+		return ((Db4oClientServerFixture)this.fixture()).openNewClient();
+	}
+	
 	public void testTransparentUpdate() throws Exception {
 		
 		Item foo = itemByName("Foo");
@@ -86,7 +116,6 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 	}
 	
 	public void testUpdateAfterActivation() throws Exception {
-		
 		Item foo = itemByName("Foo");
 		Assert.areEqual("Foo", foo.getName());
 		foo.setName("Foo*");
@@ -94,29 +123,35 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 	}
 
 	private void assertUpdatedObjects(Item expected) {
-		Collection4 updated = commitCapturingUpdatedObjects();
+		assertUpdatedObjects(db(), expected);
+	}
+
+	private void assertUpdatedObjects(final ExtObjectContainer container,
+			Item expected) {
+		Collection4 updated = commitCapturingUpdatedObjects(container);
 		Assert.areEqual(1, updated.size(), updated.toString());
 		Assert.areSame(expected, updated.singleElement());
 	}
-
-	private Collection4 commitCapturingUpdatedObjects() {
+	
+	private Collection4 commitCapturingUpdatedObjects(
+			final ExtObjectContainer container) {
 		final Collection4 updated = new Collection4();
-		eventRegistry().updated().addListener(new EventListener4() {
+		eventRegistryFor(container).updated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				ObjectEventArgs objectArgs = (ObjectEventArgs)args;
 				updated.add(objectArgs.object());
 			}
 		});
-		commit();
+		container.commit();
 		return updated;
 	}
 
-	private void commit() {
-		db().commit();
+	private Item itemByName(String name) {
+		return itemByName(db(), name);
 	}
 
-	private Item itemByName(String name) {
-		Query q = newQuery(Item.class);
+	private Item itemByName(final ExtObjectContainer container, String name) {
+		Query q = newQuery(container, Item.class);
 		q.descend("name").constrain(name);
 		ObjectSet result = q.execute();
 		if (result.hasNext()) {
