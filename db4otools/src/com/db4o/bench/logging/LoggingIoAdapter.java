@@ -52,33 +52,38 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
 
     public int read(byte[] bytes, int length) throws Db4oIOException {
     	if(config(LOG_READ)) {
-    		_out.println(LogConstants.READ_ENTRY + length);
+    		println(LogConstants.READ_ENTRY + length);
     	}
         return _delegate.read(bytes, length);
     }
 
     public void seek(long pos) throws Db4oIOException {
     	if(config(LOG_SEEK)) {
-    		_out.println(LogConstants.SEEK_ENTRY + pos);
+    		println(LogConstants.SEEK_ENTRY + pos);
     	}
         _delegate.seek(pos);
     }
 
     public void sync() throws Db4oIOException {
     	if(config(LOG_SYNC)) {
-    		_out.println(LogConstants.SYNC_ENTRY);
+    		println(LogConstants.SYNC_ENTRY);
     	}
         _delegate.sync();
     }
 
     public void write(byte[] buffer, int length) throws Db4oIOException {
     	if(config(LOG_WRITE)) {
-    		_out.println(LogConstants.WRITE_ENTRY + length);
+    		println(LogConstants.WRITE_ENTRY + length);
     	}
         _delegate.write(buffer, length);
+    }
+    
+    private void println(String s){
+    	_out.println(s);
     }
 
     private boolean config(int mask) {
     	return (_config&mask)!=0;
     }
+    
 }

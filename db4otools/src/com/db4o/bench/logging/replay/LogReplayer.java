@@ -77,6 +77,9 @@ public class LogReplayer {
 			}
 			return;
 		}
+		if(line.length() == 0){
+			return;
+		}
 		throw new IllegalArgumentException("Unknown command in log: " + line);
 	}
 
