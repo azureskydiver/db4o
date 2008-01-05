@@ -33,5 +33,4 @@ public interface ExtObjectSet extends ObjectSet {
      */
     public Object get(int index);
 	
-	// public void sort(QueryComparator cmp);
 }
