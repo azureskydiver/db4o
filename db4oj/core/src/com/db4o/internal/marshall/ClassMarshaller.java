@@ -140,10 +140,13 @@ public abstract class ClassMarshaller {
 		context.writeInt(indexIDForWriting(classIndexID));
 		
 		// field length
-		context.incrementIntSize();
+		int numFields = context.readInt();
 		
 		FieldMetadata[] fields=classMetadata.i_fields;
-		for(int fieldIdx=0;fieldIdx<fields.length;fieldIdx++) {
+		if(numFields > fields.length) {
+			throw new IllegalStateException();
+		}
+		for(int fieldIdx=0;fieldIdx<numFields;fieldIdx++) {
 			_family._field.defrag(classMetadata,fields[fieldIdx],sio,context);
 		}
 	}

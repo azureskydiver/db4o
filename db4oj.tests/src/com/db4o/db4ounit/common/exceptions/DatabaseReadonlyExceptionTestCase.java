@@ -74,6 +74,11 @@ public class DatabaseReadonlyExceptionTestCase
 		});
 	}
 	
+	public void testStoredClasses() {
+	    configReadOnly();
+	    db().storedClasses();
+	}
+	
 	private void configReadOnly() {
 		db().configure().readOnly(true);
 	}
