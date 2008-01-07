@@ -45,6 +45,8 @@ public final class QCandidates implements Visitor4 {
     private int _majorOrderingID;
     
     private IDGenerator _idGenerator;
+    
+    private boolean _loadedFromClassIndex;
 
     QCandidates(LocalTransaction a_trans, ClassMetadata a_yapClass, QField a_field) {
     	i_trans = a_trans;
@@ -437,6 +439,8 @@ public final class QCandidates implements Visitor4 {
             dp.loadedFromClassIndex(i_yapClass);
         }
         
+        _loadedFromClassIndex = true;
+        
     }
 
 	void setCurrentConstraint(QCon a_constraint) {
@@ -510,5 +514,9 @@ public final class QCandidates implements Visitor4 {
 	
 	public final Transaction transaction(){
 	    return i_trans;
+	}
+	
+	public boolean wasLoadedFromClassIndex(){
+		return _loadedFromClassIndex;
 	}
 }
