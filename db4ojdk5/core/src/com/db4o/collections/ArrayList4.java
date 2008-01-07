@@ -117,19 +117,9 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		}
 		capacity = initialCapacity;
 		elements = allocateStorage(initialCapacity);
-		
-		listSize = adjustSize(initialCapacity);
+		listSize = 0;
 	}
 	
-	/**
-	 * In java list size doesn't take initial capacity into account.
-	 * 
-	 * @sharpen.ignore
-	 */
-	private int adjustSize(int initialCapacity) {
-		return 0;
-	}
-
 	/**
 	 * same as java.util.ArrayList but transparently 
 	 * activates the members as required.

@@ -12,7 +12,6 @@ public class ArrayList4TATestCase extends ArrayList4TATestCaseBase {
 		new ArrayList4TATestCase().runAll();
 	}
 
-
 	public void testAdd() throws Exception {
 		ArrayList4Asserter.assertAdd(retrieveAndAssertNullArrayList4());
 	}
