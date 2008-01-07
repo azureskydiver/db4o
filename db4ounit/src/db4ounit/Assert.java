@@ -1,5 +1,8 @@
 package db4ounit;
 
+/**
+ * @sharpen.partial
+ */
 public final class Assert {
 	
 	public static Throwable expect(Class exception, CodeBlock block) {
