@@ -343,10 +343,14 @@ public class AbstractDb4oTestCase implements Db4oTestCase {
 	}
 
 	protected EventRegistry eventRegistry() {
-		return EventRegistryFactory.forObjectContainer(db());
+		return eventRegistryFor(db());
+	}
+
+	protected EventRegistry eventRegistryFor(final ExtObjectContainer container) {
+		return EventRegistryFactory.forObjectContainer(container);
 	}
 
 	protected EventRegistry serverEventRegistry() {
-		return EventRegistryFactory.forObjectContainer(fileSession());
+		return eventRegistryFor(fileSession());
 	}
 }
