@@ -337,8 +337,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                 }
                 if (_reflector != null) {
                     addMembers(_container);
-                    if (!_container.isClient()) {
-                        write(_container.systemTransaction());
+                    Transaction trans = _container.systemTransaction();
+                    if (!_container.isClient() && !isReadOnlyContainer(trans)) {
+						write(trans);
                     }
                 }
             }
@@ -1647,9 +1648,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
 	private boolean shouldStoreStaticFields(Transaction trans) {
-		return !trans.container().config().isReadOnly() 
+		return !isReadOnlyContainer(trans) 
 					&&  (staticFieldValuesArePersisted()
         			|| Platform4.storeStaticFieldValues(trans.reflector(), classReflector()));
+	}
+
+	private boolean isReadOnlyContainer(Transaction trans) {
+		return trans.container().config().isReadOnly();
 	}
 
 	private void updateStaticClass(final Transaction trans, final StaticClass sc) {
