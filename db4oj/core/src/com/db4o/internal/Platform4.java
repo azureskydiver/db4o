@@ -533,16 +533,6 @@ public final class Platform4 {
         jdk().pollReferenceQueue((ObjectContainerBase) a_stream, a_referenceQueue);
     }
 
-    /** @param oc */
-    public static void postOpen(ObjectContainer oc) {
-        // do nothing 
-    }
-    
-    /** @param oc */
-    static void preClose(ObjectContainer oc) {
-        // do nothing 
-    }
-
     private static final boolean propertyIs(String propertyName, String propertyValue) {
         String property = System.getProperty(propertyName);
         return (property != null) && (property.indexOf(propertyValue) == 0);

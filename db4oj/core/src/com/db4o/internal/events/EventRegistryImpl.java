@@ -2,10 +2,11 @@
 
 package com.db4o.internal.events;
 
+import com.db4o.*;
 import com.db4o.events.*;
 import com.db4o.internal.*;
-import com.db4o.internal.callbacks.Callbacks;
-import com.db4o.query.Query;
+import com.db4o.internal.callbacks.*;
+import com.db4o.query.*;
 
 /**
  * @exclude
@@ -30,6 +31,7 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	protected final Event4Impl _committed = new CommittedEvent();
 	protected final Event4Impl _instantiated = new Event4Impl();
 	protected final Event4Impl _classRegistered = new Event4Impl();	
+	protected final Event4Impl _closing = new Event4Impl();
 	
 	/**
 	 * @sharpen.ignore
@@ -108,6 +110,10 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 	public void commitOnCompleted(Transaction transaction, CallbackObjectInfoCollections objectInfoCollections) {
 		EventPlatform.triggerCommitEvent(transaction, _committed, objectInfoCollections);
 	}
+	
+	public void closeOnStarted(ObjectContainer container) {
+		EventPlatform.triggerObjectContainerEvent(container, _closing);
+	}
 
 	public Event4 queryFinished() {
 		return _queryFinished;
@@ -174,6 +180,10 @@ public class EventRegistryImpl  implements Callbacks, EventRegistry {
 
 	public Event4 instantiated() {
 		return _instantiated;
+	}
+	
+	public Event4 closing() {
+		return _closing;
 	}
 	
 	protected void onCommittedListener() {

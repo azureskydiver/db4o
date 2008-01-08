@@ -118,7 +118,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 	            initialize1(_config);
 	        	openImpl();
 				initializePostOpen();
-				Platform4.postOpen(cast(_this));
 				ok = true;
 			} finally {
 				if(!ok) {
@@ -308,6 +307,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
 
     final public boolean close() {
 		synchronized (_lock) {
+			callbacks().closeOnStarted(cast(this));
 			if(DTrace.enabled){
 				DTrace.CLOSE_CALLED.logStack(this.toString());
 			}
@@ -325,7 +325,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (_classCollection == null) {
             return;
         }
-        Platform4.preClose(cast(_this));
         processPendingClassUpdates();
         if (stateMessages()) {
             logMsg(2, toString());

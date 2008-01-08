@@ -2,8 +2,9 @@
 
 package com.db4o.internal.callbacks;
 
+import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
 public interface Callbacks {
 
@@ -33,4 +34,6 @@ public interface Callbacks {
 
     boolean caresAboutDeleting();
     boolean caresAboutDeleted();
+    
+    void closeOnStarted(ObjectContainer container);
 }

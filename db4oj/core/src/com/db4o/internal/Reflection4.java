@@ -106,4 +106,8 @@ public class Reflection4 {
 		return null;
 	}
 
+	public static Object getFieldValue(final Object obj, final String fieldName)
+			throws IllegalAccessException {
+		return getField(obj.getClass(), fieldName).get(obj);
+	}
 }

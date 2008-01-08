@@ -2,8 +2,9 @@
 
 package com.db4o.internal.callbacks;
 
+import com.db4o.*;
 import com.db4o.internal.*;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
 public class NullCallbacks implements Callbacks {
 
@@ -75,4 +76,7 @@ public class NullCallbacks implements Callbacks {
     public boolean caresAboutDeleted() {
         return false;
     }
+
+	public void closeOnStarted(ObjectContainer container) {
+	}
 }
