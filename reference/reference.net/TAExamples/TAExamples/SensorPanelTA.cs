@@ -39,11 +39,11 @@ namespace Db4ojects.Db4odoc.TAExamples
          * the activator remembers the objects that were already 
          * activated and won't activate them twice. 
          */
-        public void Activate()
+        public void Activate(ActivationPurpose purpose)
         {
             if (_activator == null)
                 return;
-            _activator.Activate();
+            _activator.Activate(purpose);
         }
 
         public SensorPanelTA Next
@@ -51,7 +51,7 @@ namespace Db4ojects.Db4odoc.TAExamples
             get
             {
                 /*activate direct members*/
-                Activate();
+                Activate(ActivationPurpose.Read);
                 return _next;
             }
         }
@@ -61,7 +61,7 @@ namespace Db4ojects.Db4odoc.TAExamples
             get
             {
                 /*activate direct members*/
-                Activate();
+                Activate(ActivationPurpose.Read);
                 return _sensor;
             }
         }

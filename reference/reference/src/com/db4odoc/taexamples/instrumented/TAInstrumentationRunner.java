@@ -20,7 +20,7 @@ public class TAInstrumentationRunner {
 		// inject TA awareness
 		BloatClassEdit edits[] = new BloatClassEdit[]{new InjectTransparentActivationEdit(filter)};
 		// get URL for the classloader
-		URL[] urls = { new File("/work/workspaces/db4o/reference/bin").toURI().toURL() };
+		URL[] urls = { new File("e:\\sb4o\\trunk\\reference\\bin").toURI().toURL() };
 		Db4oInstrumentationLauncher.launch(edits, urls, TAInstrumentationExample.class.getName(), new String[]{});
 
 	}

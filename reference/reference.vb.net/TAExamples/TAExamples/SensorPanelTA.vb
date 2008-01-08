@@ -33,17 +33,17 @@ Namespace Db4ojects.Db4odoc.TAExamples
         'Call the registered activator to activate the next level,
         ' the activator remembers the objects that were already 
         ' activated and won't activate them twice. 
-        Public Sub Activate() Implements IActivatable.Activate
+        Public Sub Activate(ByVal purpose As ActivationPurpose) Implements IActivatable.Activate
             If _activator Is Nothing Then
                 Return
             End If
-            _activator.Activate()
+            _activator.Activate(ActivationPurpose.Read)
         End Sub
 
         Public ReadOnly Property NextSensor() As SensorPanelTA
             Get
                 ' activate direct members
-                Activate()
+                Activate(ActivationPurpose.Read)
                 Return _next
             End Get
         End Property
@@ -51,7 +51,7 @@ Namespace Db4ojects.Db4odoc.TAExamples
         Public ReadOnly Property Sensor() As Object
             Get
                 ' activate direct members
-                Activate()
+                Activate(ActivationPurpose.Read)
                 Return _sensor
             End Get
         End Property

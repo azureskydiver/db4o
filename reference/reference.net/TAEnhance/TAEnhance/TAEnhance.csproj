@@ -30,13 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Db4objects.Db4o, Version=7.0.19.8648, Culture=neutral, PublicKeyToken=6199cd4f203aa8eb, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\reference.net\TAExhance\Enhance\Db4objects.Db4o.dll</HintPath>
-    </Reference>
     <Reference Include="Db4oTool.MSBuild, Version=7.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\reference.net\TAExhance\Enhance\Db4oTool.MSBuild.dll</HintPath>
+      <HintPath>..\..\..\db4o.net\Db4oTool\Db4oTool.MSBuild\bin\Debug\Db4oTool.MSBuild.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -47,14 +43,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorPanel.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
+      <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
+      <Name>Db4objects.Db4o-2005</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <UsingTask AssemblyFile="$(OutputPath)Db4oTool.MSBuild.dll"
-	TaskName="Db4oTool.MSBuild.Db4oEnhancerMSBuildTask" />
+  <UsingTask AssemblyFile="$(OutputPath)Db4oTool.MSBuild.dll" TaskName="Db4oTool.MSBuild.Db4oEnhancerMSBuildTask" />
   <ItemGroup>
     <Db4oEnhance Include="$(TargetPath)" />
   </ItemGroup>
   <Target Name="AfterBuild">
     <Db4oEnhancerMSBuildTask Assemblies="@(Db4oEnhance)" />
   </Target>
-
 </Project>

@@ -28,11 +28,11 @@ namespace Db4ojects.Db4odoc.TAExamples
         }
 
         // activate the object fields
-        public void Activate()
+        public void Activate(ActivationPurpose purpose)
         {
             if (_activator == null)
                 return;
-            _activator.Activate();
+            _activator.Activate(purpose);
         }
 
         public string Name
@@ -40,7 +40,7 @@ namespace Db4ojects.Db4odoc.TAExamples
             get
             {
                 // even simple string needs to be activated
-                Activate();
+                Activate(ActivationPurpose.Read);
                 return _name;
             }
         }
