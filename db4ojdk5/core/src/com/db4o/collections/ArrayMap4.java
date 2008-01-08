@@ -67,7 +67,10 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @see com.db4o.ta.Activatable
 	 */
     public void bind(Activator activator) {
-        if (_activator != null || activator == null) {
+    	if (_activator == activator) {
+    		return;
+    	}
+    	if (activator != null && _activator != null) {
             throw new IllegalStateException();
         }
         _activator = activator;
@@ -317,6 +320,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         activate(ActivationPurpose.READ);
         try {
             ArrayMap4<K, V> mapClone = (ArrayMap4<K, V>) super.clone();
+            mapClone._activator = null;
             mapClone._keys =  _keys.clone();
             mapClone._values = _values.clone();
             return mapClone;

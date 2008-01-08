@@ -37,8 +37,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 
 	private E[] elements;
 
-	private int capacity;
-
 	private int listSize;
 	
 	private transient Activator _activator;
@@ -60,9 +58,12 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 * @see com.db4o.ta.Activatable
 	 */
 	public void bind(Activator activator) {
-		if(_activator != null || activator == null) {
-			throw new IllegalStateException();
-		}
+    	if (_activator == activator) {
+    		return;
+    	}
+    	if (activator != null && _activator != null) {
+            throw new IllegalStateException();
+        }
 		_activator = activator;
 	}
 	
@@ -83,8 +84,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	@SuppressWarnings("unchecked")
 	public ArrayList4(Collection<? extends E> c) {
 		E[] data = collectionToArray(c);
-		capacity = data.length;
-		elements = allocateStorage(capacity);
+		elements = allocateStorage(data.length);
 		listSize = data.length;
 		System.arraycopy(data, 0, elements, 0, data.length);
 	}
@@ -115,7 +115,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		if (initialCapacity < 0) {
 			throw new IllegalArgumentException();
 		}
-		capacity = initialCapacity;
 		elements = allocateStorage(initialCapacity);
 		listSize = 0;
 	}
@@ -226,6 +225,7 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		try {
 			ArrayList4 <E> clonedList = (ArrayList4<E>) super.clone();
 			clonedList.elements = elements.clone();
+			clonedList._activator = null;
 			return clonedList;
 		} catch (CloneNotSupportedException e) {
 			throw new Error(e);
@@ -241,10 +241,14 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 	 */
 	public void ensureCapacity(int minCapacity) {
 		activate(ActivationPurpose.READ);
-		if (minCapacity <= capacity) {
+		if (minCapacity <= capacity()) {
 			return;
 		}
 		resize(minCapacity);
+	}
+
+	private int capacity() {
+		return elements.length;
 	}
 
 	/**
@@ -426,7 +430,6 @@ public class ArrayList4<E> extends AbstractList4<E> implements Cloneable,
 		E[] temp = allocateStorage(minCapacity);
 		System.arraycopy(elements, 0, temp, 0, size());
 		elements = temp;
-		capacity = minCapacity;
 	}
 
 	/**

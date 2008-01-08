@@ -89,7 +89,10 @@ public class Car implements Activatable {
     }
 
     public void bind(Activator activator) {
-        if(_activator != null || activator == null) {
+    	if (_activator == activator) {
+    		return;
+    	}
+    	if (activator != null && _activator != null) {
             throw new IllegalStateException();
         }
         _activator = activator;

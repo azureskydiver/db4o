@@ -1,11 +1,10 @@
 package com.db4o.db4ounit.jre5.collections;
 
 import com.db4o.activation.*;
-import com.db4o.collections.ArrayList4;
-import com.db4o.foundation.ArgumentNullException;
-import com.db4o.ta.Activatable;
+import com.db4o.collections.*;
+import com.db4o.db4ounit.common.ta.*;
 
-public class Order implements Activatable {
+public class Order extends ActivatableImpl {
 	private ArrayList4<OrderItem> _items;
 
 	public Order() {
@@ -26,16 +25,4 @@ public class Order implements Activatable {
 		activate(ActivationPurpose.READ);
 		return _items.size();
 	}
-
-	public void activate(ActivationPurpose purpose)
-	{
-		if (_activator != null) _activator.activate(purpose);
-	}
-
-	public void bind(Activator activator) {
-		if (activator == null || _activator != null) throw new ArgumentNullException();
-		_activator = activator;
-	}
-	
-	private transient Activator _activator;
 }

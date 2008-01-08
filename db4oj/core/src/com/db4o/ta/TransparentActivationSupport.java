@@ -1,6 +1,7 @@
 /* Copyright (C) 2007   db4objects Inc.   http://www.db4o.com */
 package com.db4o.ta;
 
+import com.db4o.*;
 import com.db4o.activation.*;
 import com.db4o.config.*;
 import com.db4o.events.*;
@@ -9,6 +10,7 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.reflect.*;
 
+// TODO: unbindOnClose should be configurable
 public class TransparentActivationSupport implements ConfigurationItem {
 
 	public void prepare(Configuration configuration) {
@@ -18,14 +20,12 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	public void apply(final InternalObjectContainer container) {
 		container.configImpl().activationDepthProvider(new TransparentActivationDepthProvider());
 
-		EventRegistry registry = EventRegistryFactory.forObjectContainer(container);
-
+		EventRegistry registry = eventRegistryFor(container);
 		registry.instantiated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				bindActivatableToActivator((ObjectEventArgs) args);
 			}
 		});
-		
 		registry.created().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
 				bindActivatableToActivator((ObjectEventArgs) args);
@@ -40,17 +40,40 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			}
 		});
 	}
+
+	private EventRegistry eventRegistryFor(final ObjectContainer container) {
+		return EventRegistryFactory.forObjectContainer(container);
+	}
 	
 	private void bindActivatableToActivator(ObjectEventArgs oea) {
 		Object obj = oea.object();
 		if (obj instanceof Activatable) {
 			final Transaction transaction = (Transaction) oea.transaction();
-			((Activatable) obj).bind(activatorForObject(transaction, obj));
+			final ObjectReference objectReference = transaction.referenceForObject(obj);
+			bind(obj, activatorForObject(transaction, objectReference));
+			unbindActivatableUponClosing(transaction, objectReference);
 		}
 	}
 
-	private Activator activatorForObject(final Transaction transaction, Object obj) {
-		final ObjectReference objectReference = transaction.referenceForObject(obj);
+	private void bind(Object activatable, final Activator activator) {
+		((Activatable) activatable).bind(activator);
+	}
+	
+	private void unbindActivatableUponClosing(Transaction transaction, final ObjectReference objectReference) {
+		final EventRegistry eventRegistry = eventRegistryFor(transaction.objectContainer());
+		eventRegistry.closing().addListener(new EventListener4() {
+			public void onEvent(Event4 e, EventArgs args) {
+				final Object obj = objectReference.getObject();
+				if (obj == null) {
+					return;
+				}
+				bind(obj, null);
+			}
+		});
+	}
+
+	private Activator activatorForObject(final Transaction transaction, ObjectReference objectReference) {
+		
 		if (isEmbeddedClient(transaction)) {
 			return new TransactionalActivator(transaction, objectReference);
 		}

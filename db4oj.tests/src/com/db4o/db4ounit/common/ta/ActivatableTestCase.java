@@ -12,18 +12,30 @@ public class ActivatableTestCase extends TransparentActivationTestCaseBase {
 		store(mock);
 		assertSingleBindCall(mock);
 	}
-
-	private void assertSingleBindCall(final MockActivatable mock) {
-		mock.recorder().verify(new MethodCall[] {
-			new MethodCall("bind", MethodCall.IGNORED_ARGUMENT)
-		});
-	}
 	
 	public void testActivatorIsBoundUponRetrieval() throws Exception {
 		
 		store(new MockActivatable());
 		reopen();
 		assertSingleBindCall(retrieveMock());
+	}
+
+	
+	public void testActivatorIsUnboundUponClose() throws Exception {
+		final MockActivatable mock = new MockActivatable();
+		store(mock);
+		fixture().close();
+		
+		mock.recorder().verify(new MethodCall[] {
+			new MethodCall("bind", MethodCall.IGNORED_ARGUMENT),
+			new MethodCall("bind", new Object[] { null }),
+		});
+	}
+
+	private void assertSingleBindCall(final MockActivatable mock) {
+		mock.recorder().verify(new MethodCall[] {
+			new MethodCall("bind", MethodCall.IGNORED_ARGUMENT)
+		});
 	}
 
 	private MockActivatable retrieveMock() {

@@ -64,9 +64,6 @@ public class LinkedArrays implements CanAssertActivationDepth {
         }
 
         public void bind(Activator activator) {
-            if(_activator != null || activator == null) {
-                throw new IllegalStateException();
-            }
             _activator = activator;
         }
 
