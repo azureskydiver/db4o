@@ -2,9 +2,10 @@
 
 package com.db4o.internal.events;
 
+import com.db4o.*;
 import com.db4o.events.*;
 import com.db4o.internal.*;
-import com.db4o.query.Query;
+import com.db4o.query.*;
 
 /**
  * Platform dependent code for dispatching events.
@@ -34,7 +35,11 @@ public class EventPlatform {
 	public static void triggerCommitEvent(Transaction transaction, Event4Impl e, CallbackObjectInfoCollections collections) {
 		e.trigger(new CommitEventArgs(transaction, collections));
 	}
-
+	
+	public static void triggerObjectContainerEvent(ObjectContainer container, Event4Impl e) {
+		e.trigger(new ObjectContainerEventArgs(container));
+	}
+	
 	public static boolean hasListeners(Event4Impl e) {
 		return e.hasListeners();
 	}

@@ -220,5 +220,13 @@ public interface EventRegistry {
 	 * @see ClassEventArgs
 	 */
 	public Event4 classRegistered();
-
+	
+	/**
+	 * This event is fired when the {@link com.db4o.ObjectContainer#close} is
+	 * called.
+	 * 
+	 * @sharpen.event com.db4o.events.ObjectContainerEventArgs
+	 * @return event
+	 */
+	public Event4 closing();
 }

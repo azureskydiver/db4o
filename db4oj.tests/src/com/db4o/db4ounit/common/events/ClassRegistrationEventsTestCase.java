@@ -13,7 +13,7 @@ public class ClassRegistrationEventsTestCase extends AbstractDb4oTestCase {
 	}
 
 	private static class EventFlag {
-		public boolean _eventOccurred = false;
+		public boolean eventOccurred = false;
 	}
 	
 	public void testClassRegistrationEvents() {	
@@ -27,11 +27,11 @@ public class ClassRegistrationEventsTestCase extends AbstractDb4oTestCase {
 						Data.class.getName(),
 						CrossPlatformServices.simpleName(
 								classEventArgs.classMetadata().getName()));
-				eventFlag._eventOccurred = true;
+				eventFlag.eventOccurred = true;
 			}
 		});
 		store(new Data());		
-		Assert.isTrue(eventFlag._eventOccurred);
+		Assert.isTrue(eventFlag.eventOccurred);
 	}
 
 }
