@@ -20,9 +20,12 @@ public class Team implements Activatable {
 	
 	//	Bind the class to an object container
 	public void bind(Activator activator) {
-		if (null != _activator) {
-			throw new IllegalStateException();
-		}
+    	if (_activator == activator) {
+    		return;
+    	}
+    	if (activator != null && _activator != null) {
+            throw new IllegalStateException();
+        }
 		_activator = activator;
 	}
 	

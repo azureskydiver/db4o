@@ -175,15 +175,11 @@ public class MixedTARefreshTestCase extends TransparentActivationTestCaseBase
         }
 
         public void activate(ActivationPurpose purpose) {
-            if (_activator == null)
-                return;
+            if (_activator == null) return;
             _activator.activate(purpose);
         }
 
         public void bind(Activator activator) {
-            if (null != _activator) {
-                throw new IllegalStateException();
-            }
             _activator = activator;
         }
     }

@@ -24,9 +24,12 @@ public class SensorPanelTA /*must implement Activatable for TA*/implements Activ
 
 	/*Bind the class to the specified object container, create the activator*/
 	public void bind(Activator activator) {
-		if (null != _activator) {
-			throw new IllegalStateException();
-		}
+    	if (_activator == activator) {
+    		return;
+    	}
+    	if (activator != null && _activator != null) {
+            throw new IllegalStateException();
+        }
 		_activator = activator;
 	}
 

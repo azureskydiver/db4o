@@ -3,6 +3,8 @@
 package com.db4o.db4ounit.jre5.collections;
 
 import com.db4o.collections.ArrayMap4;
+import com.db4o.db4ounit.common.ta.*;
+import com.db4o.internal.*;
 
 import db4ounit.Assert;
 import db4ounit.TestLifeCycle;
@@ -24,8 +26,15 @@ public class ArrayMap4TestCase implements TestLifeCycle {
     public void tearDown() throws Exception {
         map.clear();
     }
+    
+    public void testCloneWontCopyActivator() throws Exception {
+    	map.bind(new MockActivator());
+		
+		final Object clone = map.clone();
+		Assert.isNull(Reflection4.getFieldValue(clone, "_activator"));
+    }
 
-    // Function Test
+	// Function Test
     public void testConstructor() {
         ArrayMap4<String, Integer> m = new ArrayMap4<String, Integer>();
         ArrayMap4Asserter.assertInitalStatus(m);

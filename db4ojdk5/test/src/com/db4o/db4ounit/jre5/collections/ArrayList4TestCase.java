@@ -5,6 +5,8 @@ package com.db4o.db4ounit.jre5.collections;
 import java.util.*;
 
 import com.db4o.collections.*;
+import com.db4o.db4ounit.common.ta.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 
@@ -24,6 +26,13 @@ public class ArrayList4TestCase implements TestLifeCycle {
 	public void tearDown() throws Exception {
 		
 	}
+	
+    public void testCloneWontCopyActivator() throws Exception {
+    	_list.bind(new MockActivator());
+		
+		final Object clone = _list.clone();
+		Assert.isNull(Reflection4.getFieldValue(clone, "_activator"));
+    }
 	
 	public void testConstructor() throws Exception {
 		ArrayList4<Integer> arrayList = new ArrayList4<Integer>();

@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.tp;
 import com.db4o.*;
 import com.db4o.activation.*;
 import com.db4o.config.*;
+import com.db4o.db4ounit.common.ta.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -16,9 +17,7 @@ import db4ounit.extensions.*;
 
 public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 	
-	public static class Item implements Activatable {
-		
-		private transient Activator _activator;
+	public static class Item extends ActivatableImpl {
 		
 		public String name;
 		
@@ -39,14 +38,6 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 			name = newName;
 		}
 
-		public void activate(ActivationPurpose purpose) {
-			_activator.activate(purpose);
-		}
-
-		public void bind(Activator activator) {
-			_activator = activator;
-		}
-		
 		public String toString() {
 			return "Item(" + getName() + ")";
 		}
