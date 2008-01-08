@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace UGMan6000.Extensible
 {
-	delegate void Block();
-
 	class UnitOfWork
 	{	
 		public static void Changed(object o)
@@ -14,6 +12,8 @@ namespace UGMan6000.Extensible
 			if (current.Contains(o)) return;
 			current.Add(o);
 		}
+		
+		public delegate void Block();
 
 		public static List<object> Run(Block code)
 		{	
