@@ -15,22 +15,20 @@ import db4ounit.extensions.*;
  */
 public class NestedClassesTestCase
 	extends AbstractDb4oTestCase
-	implements OptOutTA {
-	
-	private OuterClass _outerObject;
+	implements OptOutTA { 
 
 	public static void main(String[] args) {
 		new NestedClassesTestCase().runSolo();
 	}
 	
 	protected void store() throws Exception {
-		_outerObject = new OuterClass();
-		_outerObject._foo = 10;
+		OuterClass outerObject = new OuterClass();
+		outerObject._foo = 42;
 		
-		final Activatable objOne = (Activatable)_outerObject.createInnerObject();
+		final Activatable objOne = (Activatable)outerObject.createInnerObject();
 		store(objOne);
 		
-		final Activatable objTwo = (Activatable)_outerObject.createInnerObject();
+		final Activatable objTwo = (Activatable)outerObject.createInnerObject();
 		store(objTwo);
 	}
 
@@ -44,7 +42,7 @@ public class NestedClassesTestCase
 		while(query.hasNext()){
 			OuterClass.InnerClass innerObject = (OuterClass.InnerClass) query.next();
 			Assert.isNull(innerObject.getOuterObjectWithoutActivation());
-			Assert.areEqual(_outerObject.foo(), innerObject.getOuterObject().foo());
+			Assert.areEqual(42, innerObject.getOuterObject().foo());
 		}
 	}
 	

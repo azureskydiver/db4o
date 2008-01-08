@@ -9,21 +9,23 @@ import db4ounit.*;
  */
 public class TALinkedListTestCase extends TAItemTestCaseBase {
     
-	private static final TALinkedList LIST = TALinkedList.newList(10);
-
 	public static void main(String[] args) {
-		new TALinkedListTestCase().runAll();
+		new TALinkedListTestCase().runAll();	
 	}
-
+	
 	protected Object createItem() throws Exception {
 		TALinkedListItem item = new TALinkedListItem();
-		item.list = LIST;
+		item.list = newList();
 		return item;
+	}
+
+	private TALinkedList newList() {
+		return TALinkedList.newList(10);
 	}
 
 	protected void assertItemValue(Object obj) throws Exception {
 		TALinkedListItem item = (TALinkedListItem) obj;
-		Assert.areEqual(LIST,item.list());
+		Assert.areEqual(newList(),item.list());
 	}
 
 	 public void testDeactivateDepth() throws Exception {
@@ -44,6 +46,4 @@ public class TALinkedListTestCase extends TAItemTestCaseBase {
 //	    	Assert.isNull(next3.next);
 	    	Assert.isNotNull(next5.next);
 	    }
-
-
 }

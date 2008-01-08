@@ -17,6 +17,7 @@ public class AllCommonTATests extends Db4oTestSuite {
 			com.db4o.db4ounit.common.ta.nonta.AllTests.class,
 			com.db4o.db4ounit.common.ta.sample.AllTests.class,
 			com.db4o.db4ounit.common.ta.ta.AllTests.class,
+			com.db4o.db4ounit.common.ta.ActivatableTestCase.class,
 		};
 	}
 

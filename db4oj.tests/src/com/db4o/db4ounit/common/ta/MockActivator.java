@@ -2,9 +2,7 @@
 package com.db4o.db4ounit.common.ta;
 
 import com.db4o.activation.*;
-import com.db4o.ta.Activatable;
-
-import db4ounit.Assert;
+import com.db4o.ta.*;
 
 public class MockActivator implements Activator {
 	private int _readCount;
