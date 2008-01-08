@@ -17,6 +17,9 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 	public static final class Item {
 
 		public int id;
+		
+		public Item() {
+		}
 
 		public Item(int id_) {
 			id = id_;
@@ -37,6 +40,18 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 	protected void db4oSetupBeforeStore() throws Exception {
 		_recorder = new EventRecorder(fileSession().lock());
 	}	
+	
+	public void testStoreLifecycle() {
+		listenToEvent(eventRegistry().instantiated());
+		final Event4 creating = eventRegistry().creating();
+		final Event4 created = eventRegistry().created();
+		
+		listenToEvent(creating);
+		listenToEvent(created);
+		
+		final Item item = storeItem();
+		assertEvents(new Event4[] { creating, created }, item);
+	}
 	
 	public void testActivating() throws Exception {
 		// FIXME: It fails in c/s mode. The objects are activated twice during
@@ -194,12 +209,18 @@ public class GlobalLifecycleEventsTestCase extends AbstractDb4oTestCase implemen
 	}
 
 	private void assertSingleObjectEventArgs(Event4 expectedEvent, Item expectedItem) {
-		Assert.areEqual(1, _recorder.size());
-		EventRecord record = _recorder.get(0);
-		Assert.areSame(expectedEvent, record.e);
-		
-		final Object actual = ((ObjectEventArgs)record.args).object();
-		Assert.areSame(expectedItem, actual);
+		assertEvents(new Event4[] { expectedEvent }, expectedItem);
+	}
+
+	private void assertEvents(Event4[] expectedEvents, Item expectedItem) {
+		Assert.areEqual(expectedEvents.length, _recorder.size());
+		for (int i=0; i<expectedEvents.length; ++i) {
+			EventRecord record = _recorder.get(i);
+			Assert.areSame(expectedEvents[i], record.e);
+			
+			final Object actual = ((ObjectEventArgs)record.args).object();
+			Assert.areSame(expectedItem, actual);
+		}
 	}	
 	
 	private void assertUpdateEvent(Event4 event) {
