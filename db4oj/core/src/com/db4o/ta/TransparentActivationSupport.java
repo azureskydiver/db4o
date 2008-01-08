@@ -24,25 +24,11 @@ public class TransparentActivationSupport implements ConfigurationItem {
 			public void onEvent(Event4 e, EventArgs args) {
 				bindActivatableToActivator((ObjectEventArgs) args);
 			}
-
-			private void bindActivatableToActivator(ObjectEventArgs oea) {
-				Object obj = oea.object();
-				if (obj instanceof Activatable) {
-					final Transaction transaction = (Transaction) oea.transaction();
-					((Activatable) obj).bind(activatorForObject(transaction, obj));
-				}
-			}
-
-			private Activator activatorForObject(final Transaction transaction, Object obj) {
-				final ObjectReference objectReference = transaction.referenceForObject(obj);
-				if (isEmbeddedClient(transaction)) {
-					return new TransactionalActivator(transaction, objectReference);
-				}
-				return objectReference;
-			}
-
-			private boolean isEmbeddedClient(Transaction transaction) {
-				return transaction.objectContainer() instanceof EmbeddedClientObjectContainer;
+		});
+		
+		registry.created().addListener(new EventListener4() {
+			public void onEvent(Event4 e, EventArgs args) {
+				bindActivatableToActivator((ObjectEventArgs) args);
 			}
 		});
 
@@ -53,6 +39,26 @@ public class TransparentActivationSupport implements ConfigurationItem {
 				processor.onClassRegistered(cea.classMetadata());
 			}
 		});
+	}
+	
+	private void bindActivatableToActivator(ObjectEventArgs oea) {
+		Object obj = oea.object();
+		if (obj instanceof Activatable) {
+			final Transaction transaction = (Transaction) oea.transaction();
+			((Activatable) obj).bind(activatorForObject(transaction, obj));
+		}
+	}
+
+	private Activator activatorForObject(final Transaction transaction, Object obj) {
+		final ObjectReference objectReference = transaction.referenceForObject(obj);
+		if (isEmbeddedClient(transaction)) {
+			return new TransactionalActivator(transaction, objectReference);
+		}
+		return objectReference;
+	}
+
+	private boolean isEmbeddedClient(Transaction transaction) {
+		return transaction.objectContainer() instanceof EmbeddedClientObjectContainer;
 	}
 
 	private final class TADiagnosticProcessor {
