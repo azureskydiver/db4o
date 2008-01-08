@@ -23,17 +23,17 @@ Namespace Db4ojects.Db4odoc.TAExamples
         End Sub
 
         ' activate the object fields
-        Public Sub Activate() Implements IActivatable.Activate
+        Public Sub Activate(ByVal purpose As ActivationPurpose) Implements IActivatable.Activate
             If _activator Is Nothing Then
                 Return
             End If
-            _activator.Activate()
+            _activator.Activate(ActivationPurpose.Read)
         End Sub
 
         Public ReadOnly Property Name() As String
             Get
                 ' even simple string needs to be activated
-                Activate()
+                Activate(ActivationPurpose.Read)
                 Return _name
             End Get
         End Property

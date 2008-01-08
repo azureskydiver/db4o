@@ -20,6 +20,7 @@ Namespace Db4ojects.Db4odoc.TAExamples
 
         Public ReadOnly Property Pilots() As IList(Of Pilot)
             Get
+                Activate(ActivationPurpose.Read)
                 Return _pilots
             End Get
         End Property
@@ -34,22 +35,22 @@ Namespace Db4ojects.Db4odoc.TAExamples
         End Sub
 
         ' activate object fields 
-        Public Sub Activate() Implements IActivatable.Activate
+        Public Sub Activate(ByVal purpose As ActivationPurpose) Implements IActivatable.Activate
             If _activator Is Nothing Then
                 Return
             End If
-            _activator.Activate()
+            _activator.Activate(ActivationPurpose.Read)
         End Sub
 
         Public Sub AddPilot(ByVal pilot As Pilot)
             ' activate before adding new pilots
-            Activate()
+            Activate(ActivationPurpose.Read)
             _pilots.Add(pilot)
         End Sub
 
         Public Function Size() As Integer
             ' activate before returning
-            Activate()
+            Activate(ActivationPurpose.Read)
             Return _pilots.Count
         End Function
 
