@@ -1,0 +1,40 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Db4o-Osgi Usage</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Db4o-Osgi Usage</h1><p><font color="#990000">This topic applies to Java version only.</font>&nbsp;</p><p>db4o-osgi service can be accessed like any other OSGI
+service:</p>
+
+<p><code>ServiceReference serviceRef =
+_context.getServiceReference(Db4oService.class.getName());</code></p>
+
+<p><code>Db4oService db4oService =
+(Db4oService)_context.getService(serviceRef);</code></p><p>db4o-osgi uses Bundle-ActivationPolicy:lazy header to define the lazy bundle loading policy (only utilized in some environments, like Eclipse).</p><p>Db4oService instance can be used as Db4o class in usual
+environment:</p>
+
+<p><code>Configuration config =
+db4oService.newConfiguration();</code></p>
+
+<p><code>ObjectContainer db = db4oService.openFile(config,
+filename);</code></p>
+
+<p>Also available are methods for opening db4o server and
+client. For more information see the API documentation.</p>
+
+<p>Once the service instance is obtained, you can continue to
+work with db4o API as usual.</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-08-05T17:01:04 by Tetyana.
+				</div>
+  </body>
+</html>

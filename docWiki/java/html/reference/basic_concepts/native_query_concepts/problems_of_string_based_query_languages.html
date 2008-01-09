@@ -1,0 +1,76 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Problems Of String Based Query Languages</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Problems Of String Based Query Languages</h1>
+
+
+
+<p>Let's look how a query can be expressed against the Car
+class in some of the object querying languages:<br></p>
+
+<p><b>OQL</b> </p>
+
+<p><code>String oql = "select *
+from pilot in AllPilots where pilot.points &lt; 100";</code></p>
+
+<p><code>OQLQuery query = new
+OQLQuery(oql); </code></p>
+
+<p><code>Object pilots =
+query.execute();</code></p>
+
+<p><b>JDOQL</b> </p>
+
+<p><code>Query query =
+persistenceManager.newQuery(Pilot.class, "points &lt; 100");</code></p>
+
+<p><code>Collection pilots =
+(Collection)query.execute();</code></p>
+
+<p><b>db4o SODA, using C#</b> </p>
+
+<p><code>Query query =
+database.Query();</code></p>
+
+<p><code>query.Constrain(typeof(Pilot));
+</code></p>
+
+<p><code>query.Descend("points").Constrain(100).Smaller();</code></p>
+
+<p><code>IList pilots =
+query.Execute();</code></p>
+
+<p>As you can see, query parameters ("points") and constraints
+("&lt;100") are expressed as strings, which results in the following problems:</p>
+
+<ul><li>Modern
+     development environments do not check embedded strings for syntactic and
+     semantic correctness. A small typo in a query (for example 10 instead of
+     100) will be very difficult trace, moreover it can pass unnoticed to a
+     production version.</li><li>Embedded
+     strings are not affected by refactoring tools. As the application evolves
+     and the changes are made to the field variables, the string-based queries
+     will become obsolete and will need to be changed by hand.</li><li>String
+     queries address fields directly instead of using publicly accessible
+     methods/attributes, breaking encapsulation principle.</li><li>Embedded
+     strings can be on the way of modern agile techniques, which encourage
+     constant refactoring. Since string queries are difficult to refactor and
+     maintain they will delay a decision to refactor and result in a
+     lower-quality code.</li><li>Working
+     with a string query language inside an OO language requires a developer to
+     learn both and switch between them in the development cycle. </li><li>Reusability
+     support of OO languages (method calls, polymorphism, overriding) are not
+     accessible to string-based queries.</li><li>Embedded
+     strings can be subject to injection attacks.</li></ul></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-06-02T18:25:48 by Tetyana.
+				</div>
+  </body>
+</html>

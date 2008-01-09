@@ -1,0 +1,53 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Android</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Android</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Step by Step installation">Step by Step installation</a></li><li><a href ="#Things to remember when using db4o under Andoid">Things to remember when using db4o under Andoid</a></li></ul></li></ul></div></div></div>
+<P><FONT color=#990000>This topic applies to Java version only</FONT><BR></P>
+<P><A href="http://code.google.com/android/index.html">Android</A> is a new complete, open and free mobile platform. Android offers developers a java based software developer kit with lots of helpful APIs, including geolocational services. Of course, there is a database support as well: Android has a built-in support for SQLite database. The basic API is similar to standard JDBC API, however some effort was added to create some convenience methods:</P>
+<P><code>public int delete(String table, String whereClause, String[] whereArgs)</code></P>
+<P><code>public long insert(String table, String nullColumnHack, <A href="http://code.google.com/android/reference/android/content/ContentValues.html">ContentValues</A> values)</code></P>
+<P><code>public <A href="http://code.google.com/android/reference/android/database/Cursor.html">Cursor</A> query(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy)</code></P>
+<P><code>public long replace(String table, String nullColumnHack, <A href="http://code.google.com/android/reference/android/content/ContentValues.html">ContentValues</A> initialValues)</code></P>
+<P>This may look better than SQL, but if you look closer you can see that all column names and selection criteria are specified as strings, so we still stay with a problem of run-time checking instead of compile-time. </P>
+<P>Luckily even for this very early Android release we already have an alternative - db4o. Yes, db4o runs on Android out of the box and produces very competitive results as well. The following application compares db4o and SQLite usage for basic operations. It also contains some operation duration calculations that can be used to compare db4o vs SQLite performance. Please, note that these results are for an overview purpose only and there are many configuration settings that can change performance of both databases. Also running in emulator does not guarantee the same results as in real device. You can download the whole application code <a href="android/dbcomparejava.zip.html" class="wikiLink">here</a>.</P>
+<P><div class="childTopicList">More Reading:<ul>
+<li><p><a href="android/general_info.html" class="wikiLink">General Info</a></p></li>
+<li><p><a href="android/application_structure.html" class="wikiLink">Application Structure</a></p></li>
+<li><p><a href="android/opening_a_database.html" class="wikiLink">Opening A Database</a></p></li>
+<li><p><a href="android/storing_data.html" class="wikiLink">Storing Data</a></p></li>
+<li><p><a href="android/retrieving_data.html" class="wikiLink">Retrieving Data</a></p></li>
+<li><p><a href="android/changing_data.html" class="wikiLink">Changing Data</a></p></li>
+<li><p><a href="android/deleting_data.html" class="wikiLink">Deleting Data</a></p></li>
+<li><p><a href="android/backup.html" class="wikiLink">Backup</a></p></li>
+<li><p><a href="android/closing_a_database.html" class="wikiLink">Closing A Database</a></p></li>
+<li><p><a href="android/schema_evolution.html" class="wikiLink">Schema Evolution</a></p></li>
+<li><p><a href="android/car.html" class="wikiLink">Car</a></p></li>
+<li><p><a href="android/pilot.html" class="wikiLink">Pilot</a></p></li>
+</ul></div>
+</P>
+<a name="Step by Step installation"></a><H4>Step by Step installation</H4>
+<P>The steps to install db4o&nbsp;on Android are quite simple thanks to Eclipse.</P>
+<OL>
+<LI>Point your browser to <A href="http://developer.db4o.com/files/default.aspx"><FONT color=#555555>http://developer.db4o.com/files/default.aspx</FONT></A>.&nbsp;Here you have to choose stable, production or development release (I recommend the current production version) and then download the Java version of db4o.</LI>
+<LI>Copy <STRONG><EM>db4o-xxx-java1.1.jar </EM></STRONG>available in the&nbsp;lib folder of your db4o installation to a lib folder in your Android project root directory.</LI>
+<LI>Refresh the Eclipse project folders, click on lib, right-click on&nbsp;<STRONG><EM>db4o-xxx-java1.1.jar&nbsp;</EM></STRONG> and select "Add to build path".</LI>
+<LI>You're done! You can now use db4o in your Android application and it will be deployed automatically when running the Android emulator.</LI></OL>
+<a name="Things to remember when using db4o under Andoid"></a><H4>Things to remember when using db4o under Andoid</H4>
+<OL>
+<LI>Use the Java 1.1 version of the db4o library available on the lib folder of your db4o installation&nbsp;(<B><I>db4o-xxx-java1.1.jar</I></B>). The other db4o Java versions still suffer from some issues with the way in which Android handles reflection.</LI>
+<LI>Open the database relative to your parent activity (context) data directory:<BR><FONT face="Courier New">Db4o.<I>openFile</I>(dbConfig(), db4oDBFullPath(<SPAN style="FONT-SIZE:10pt;FONT-FAMILY:'Courier New';">context</SPAN></FONT><SPAN style="FONT-SIZE:10pt;COLOR:black;FONT-FAMILY:'Courier New';">));</SPAN><BR>
+<P class=MsoNormal style="MARGIN:0in 0in 0pt;"><B><SPAN style="FONT-SIZE:10pt;FONT-FAMILY:'Courier New';">private</SPAN></B><SPAN style="FONT-SIZE:10pt;COLOR:black;FONT-FAMILY:'Courier New';"> String db4oDBFullPath(Context ctx) {</SPAN><SPAN style="FONT-SIZE:10pt;FONT-FAMILY:'Courier New';"></SPAN></P>
+<P class=MsoNormal style="MARGIN:0in 0in 0pt;"><SPAN style="FONT-SIZE:10pt;COLOR:black;FONT-FAMILY:'Courier New';"><SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </SPAN></SPAN><B><SPAN style="FONT-SIZE:10pt;FONT-FAMILY:'Courier New';">return</SPAN></B><SPAN style="FONT-SIZE:10pt;COLOR:black;FONT-FAMILY:'Courier New';"> ctx.getDataDir() + </SPAN><SPAN style="FONT-SIZE:10pt;FONT-FAMILY:'Courier New';">"/"</SPAN><SPAN style="FONT-SIZE:10pt;COLOR:black;FONT-FAMILY:'Courier New';"> + </SPAN><SPAN style="FONT-SIZE:10pt;FONT-FAMILY:'Courier New';">"dbfile.yap"</SPAN><SPAN style="FONT-SIZE:10pt;COLOR:black;FONT-FAMILY:'Courier New';">;</SPAN><SPAN style="FONT-SIZE:10pt;FONT-FAMILY:'Courier New';"></SPAN></P>
+<P class=MsoNormal style="MARGIN:0in 0in 0pt;"><SPAN style="FONT-SIZE:10pt;COLOR:black;FONT-FAMILY:'Courier New';">}</SPAN><BR>Otherwise Android security will prevent the creation of the database file.</P></LI></OL></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2007-12-11T20:42:18 by German Viscuso.
+				</div>
+  </body>
+</html>

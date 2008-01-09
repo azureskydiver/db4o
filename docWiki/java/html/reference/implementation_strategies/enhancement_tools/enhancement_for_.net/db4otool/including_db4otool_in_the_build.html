@@ -1,0 +1,28 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Including Db4oTool In The Build</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Including Db4oTool In The Build</h1>
+<p><font color="#990000">This topic applies to .NET version only.</font></p>
+<p>The easiest way to use Db4oTools is to include it directly into the build process. This will enable you to get a processed assembly immediately after a successful build. If you are using Visual Studio Compact Framework emulator, you will get the processed assembly straight into the emulator.</p>
+<p>Use the following steps to enable Db4oTools in VS2005 project:</p>
+<ul>
+<li>Make sure that Db4oTools.exe together with the other libraries from the bin folder in the distribution are accessible to your project.</li>
+<li>Open Project Properties page and select "Build Events" tab.</li>
+<li>In the "Post-build event command line:" enter the following command:</li>
+<ul>
+<li>[path_to_Db4oTools_folder]/Db4oTools.exe -cf2-delegates $(TargetPath)</li></ul>
+<li>In the "Run the post-build event:" select "On successful build"</li>
+<li>Run the build. The resulting assembly will contain all the modifications made by Db4oTools.</li></ul>
+<p>An example of this is included in the distribution in src/Db4oTools/Db4oTools.Example folder.</p></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-11-27T07:07:10 by Tetyana.
+				</div>
+  </body>
+</html>

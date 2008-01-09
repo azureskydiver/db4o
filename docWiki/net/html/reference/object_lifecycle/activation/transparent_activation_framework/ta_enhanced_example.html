@@ -1,0 +1,50 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>TA Enhanced Example</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TA Enhanced Example</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#TA Enhancement In .NET&nbsp;">TA Enhancement In .NET&nbsp;</a></li></ul></li></ul></div></div></div>
+
+As it was mentioned
+<a href="ta_implementation.html" class="wikiLink">before</a> you can inject TA awareness in your persistent classes without modifying their original
+code. In the current scenario this means: 
+
+<ul>
+<li>generate
+the <code>Activatable</code> interface declaration;</li>
+<li>add
+<code>bind(objectContainer)</code> method implementation;</li>
+<li>generate
+a field to keep a reference to the corresponding <code>Activator</code>
+instance;</li>
+<li>generate
+<code>activate()</code> call at the beginning of every method.</li>
+</ul>
+These tasks can be fulfilled in the classes bytecode by using <a href="../../../implementation_strategies/enhancement_tools.html" class="wikiLink">Enhancement Tools</a>.<br>
+
+
+
+
+
+<span name="cs_wiki_filter" csw_filters="net">
+
+
+<a name="TA Enhancement In .NET&nbsp;"></a><h2>TA Enhancement In .NET&nbsp;<br></h2>
+<p>TA enhancement for .NET can be done at build or post-build time. In both cases it requires Db4oTool project distribution. </p>
+<p>When build-time option is used Db4oEnhanceMSBuildTask is added to the build file (*.csproj or *.vbproj in Visual Studio 2005), this requires Db4oTool.MSBuild.dll library.<br></p>
+<p>In post-build enhancement case, Db4oTool.exe command line utility is used to enhanced built assemblies.</p>
+<ul>
+<li><a href="ta_enhanced_example/ta_enhancement_with_db4otool.html" class="wikiLink">TA Enhancement With Db4oTool</a> <br></li>
+<li><a href="../../../implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement.html" class="wikiLink">Build Time Enhancement</a><br></li>
+</ul>
+</span></div>
+    </div>
+    <div id="footer">
+					This revision (21) was last Modified 2007-12-03T18:56:38 by Tetyana.
+				</div>
+  </body>
+</html>

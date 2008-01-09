@@ -1,0 +1,162 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Defragmentation Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Defragmentation Configuration</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Original File">Original File</a></li><li><a href ="#Backup File">Backup File</a></li><li><a href ="#Mapping">Mapping</a></li><li><a href ="#Class Filter">Class Filter</a></li><li><a href ="#Database Configuration">Database Configuration</a></li><li><a href ="#Commit Frequency">Commit Frequency</a></li><li><a href ="#Upgrading">Upgrading</a></li></ul></li></ul></div></div></div>
+
+<p>DefragmentConfig class allows you fine-tune the
+defragmentation process. This topic discusses different settings available
+through DefragmentConfig.</p>
+
+
+
+<a name="Original File"></a><h2>Original File</h2>
+
+<p>The path to the file to be defragmented. Can be specified in
+the constructor:</p>
+
+<p>&nbsp;<code>configuration
+= new DefragmentConfig(origPath)</code></p>
+
+
+
+<a name="Backup File"></a><h2>Backup File</h2>
+
+<p><code>configuration = new DefragmentConfig(origPath, backupPath)</code></p>
+
+<p>The path to the
+backup of the original file. If this file exists before the defragmentation, an
+IOException will be thrown and no action taken.</p>
+
+<p>If you want the
+backup file to be deleted automatically before the defragment run, specify:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>configuration.forceBackupDelete(true)</code></p>
+
+</span>
+
+
+
+
+
+<a name="Mapping"></a><h2>Mapping</h2>
+
+<p>You can also specify the desired Mapping to be used
+internally:</p>
+
+<p><code>configuration = new DefragmentConfig(origPath, backupPath, mapping)</code></p>
+
+<p><code>mapping</code>
+is an object of a class implementing ContextIDMapping interface. Mapping is
+used to keep track of objects moved during defragmentation. Db4o provides 2
+mapping classes.</p>
+
+<p><b>TreeIDMapping </b>- default in-memory mapping. Will increase the
+memory usage, but is a faster alternative. Set up <a href="http://developer.db4o.com/Resources/view.aspx/Reference/Implementation_Strategies/Maintenance/Defragment/Defragmentation_Configuration#Commit Frequency">objectCommitFrequency</a> to
+control memory usage.</p>
+
+<p><b>BTreeIDMapping</b> - mapping is done in a separate file using
+B-tree method. Reduces the memory usage, but is a much slower option.</p>
+
+
+
+<a name="Class Filter"></a><h2>Class Filter</h2>
+
+<p>Defragmentation
+process uses <code>StoredClassFilter accept</code> method to define which
+classes should be left in a database after the defragmentation. By default, all
+classes are left. However, you can use AvailableClassFilter to get rid of the
+deleted classes instances:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>configuration.storedClassFilter(new
+AvailableClassFilter())</code></p>
+
+</span>
+
+
+
+<p>In this case only the classes known to the classloader will
+be left in the database, the rest will be deleted.</p>
+
+
+
+<a name="Database Configuration"></a><h2>Database Configuration</h2>
+
+<p>For db4o configurations that influence low-level file layout
+details, it is important to provide the defragmentation process with the copy
+of db4o configuration:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>configuration.db4oConfig(db4oConfiguration)</code></p>
+
+</span>
+
+
+
+<p>For more information about db4o configuration see
+<a href="../../../tuning/configuration.html" class="wikiLink">Configuration</a>.</p>
+
+
+
+<a name="Commit Frequency"></a><h2>Commit Frequency</h2>
+
+<p>Commit frequency sets the number of processed objects that
+should trigger an immediate commit of the target file. By default, frequency =
+0 and commit never happens.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>configuration.objectCommitFrequency(frequency)</code></p>
+
+</span>
+
+
+
+<p>This method can be used to reduce memory usage during
+defragmentation.</p>
+
+
+
+<a name="Upgrading"></a><h2>Upgrading</h2>
+
+<p>You can upgrade your database file together with the
+defragmentation:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>configuration.upgradeFile(tempFile)</code></p>
+
+</span>
+
+
+
+<p>This method can be used to reduce memory usage during
+defragmentation, however it will make it slower.</p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2007-11-21T13:19:14 by Tetyana.
+				</div>
+  </body>
+</html>

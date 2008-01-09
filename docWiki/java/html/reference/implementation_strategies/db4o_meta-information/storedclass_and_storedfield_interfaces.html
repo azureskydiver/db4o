@@ -1,0 +1,78 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>StoredClass and StoredField interfaces</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>StoredClass and StoredField interfaces</h1>
+
+
+<p>(IStoredClass and IStoredField in .NET)</p>
+
+<p>Let's look closer at the class meta-information interfaces.</p>
+
+<p>They look quite similar to reflection API, but unlike reflection there is no information about methods and constructors.</p>
+
+<p>You can only use StoredClass to get the class's fields:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:<code> StoredClass#getStoredFields()</code> </p>
+
+</span>
+
+
+
+
+
+<p>
+returns all stored fields of this stored class.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: <code>StoredClass#storedField(name, type) </code></p>
+
+</span>
+
+
+
+
+
+<p>
+returns an existing stored field of this stored class.</p>
+
+<p>You can also use this interface to explore classes hierarchy.</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: <code>StoredClass#getParentStoredClass </code></p>
+
+</span>
+
+
+
+<p></p>
+
+<p>returns the parent of the class.</p>
+
+<p>
+StoredField interface gives you access to various meta-field information, such as field name, field type. It also provides some helpful methods for manipulating fields accepting their object as a variable (see db4o API for more information).</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<div class="AttachmentInfo">Code attachment not found: /Resources/Reference/Implementation_Strategies/Db4o_Meta-Information/MetainfJava.Zip</div>
+
+</span>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (9) was last Modified 2007-12-26T13:08:22 by Tetyana.
+				</div>
+  </body>
+</html>

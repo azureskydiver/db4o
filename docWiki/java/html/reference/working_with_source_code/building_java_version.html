@@ -1,0 +1,60 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Building Java Version</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Building Java Version</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Projects Required&nbsp;">Projects Required&nbsp;</a></li><li><a href ="#machine.properties">machine.properties</a></li><li><a href ="#Running the Build">Running the Build</a></li></ul></li></ul></div></div></div><p><font color="#cc0033">This topic applies
+to Java version only</font> <br></p><span name="cs_wiki_filter" csw_filters="java"><a name="Projects Required&nbsp;"></a><h3>Projects Required&nbsp;</h3><p>In order to build db4o you must have access to db4obuild project, which contains build scripts for creating a full db4o java distribution. You will need to check out the following projects.
+
+</p><p>db4obuild - db4o
+build tool</p>
+
+<p>bloat - bytecode
+optimization library, required for db4o NQ optimizer</p><p>db4o-osgi - db4o OSGI library</p><p>db4o-osgi-tests - tests for db4o OSGI</p><p>db4oj - db4o core</p><p>db4ojdk1.2 - db4o core for JDK1.2-1.4</p><p>db4ojdk5 - db4o core for JDK5</p><p>db4otaj - TA instrumentation</p><p>db4otools - bytecode instrumentation for db4o&nbsp;</p>
+
+<p>db4onqopt - db4o NQ
+optimizer</p><p>db4ounit - db4o unit-test framework&nbsp;</p><p>db4ounit.extensions - db4o unit-test framework extensions<br></p>
+
+<p>doctor -
+documentation generation tool, required for building interactive tutorial</p>
+
+<p>tutorial -
+interactive tutorial</p>
+
+<p>docWiki - db4o
+reference documentation</p>
+
+
+
+<a name="machine.properties"></a><h3>machine.properties</h3>
+
+<p>You will need to
+create machine.properties file in db4obuild folder. The contents of the file
+can be copied from build.xml (see the comments at the beginning of the file). Modify the paths where applicable to set the build variables for your environment.<br> </p>
+
+<p>If you do not have a JDK 1.3 installed and you want to use
+JDK 5 to build db4o for Java 1.1, you will need this line:</p>
+
+<p><code>file.compiler.jdk1.3.args.optional=-source
+1.3</code></p>
+
+<a name="Running the Build"></a><h3>Running the Build</h3>
+
+<p>You can start the build by right-clicking build.xml file and
+selecting "Run As/Ant Build". You will run "buildjava" target. (You can't use "buildall" or "buildnet" as they require javatocsharp project, which is not public.)<br> </p>
+
+<p>The ready distribution can be found in /dist folder of db4obuild project</p></span><p>Further reading:</p><p><a href="testing_db4o.html" class="wikiLink">Testing Db4o</a>&nbsp;</p>
+
+
+
+<p><a href="patch_submission.html" class="wikiLink">Patch Submission</a><br>&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (9) was last Modified 2007-12-23T08:39:48 by Tetyana.
+				</div>
+  </body>
+</html>

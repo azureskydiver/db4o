@@ -1,0 +1,169 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>TA Enhancement At Build Time</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>TA Enhancement At Build Time</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p><font color="#990000">This topic applies to Java version only.&nbsp;</font></p><p>In the <a href="ta_enhancement_at_load_time.html" class="wikiLink">previous topic</a> we discussed
+how TA can be enabled on classes while they are loaded. In this topic we will
+look at even more convenient and performant way of enhancing classes to support
+TA: during application build time. </p>
+
+<p>For our example we will take the same classes as in the
+<a href="ta_enhancement_at_load_time.html" class="wikiLink">previous example</a>, with the exception
+of TAInstrumentationRunner class, which won't be needed for build-time
+enhancement. Basically, we will move all the enhancing functionality of
+TAInstrumentationRunner into the build script. For this example we will create
+an ant script, which should be run after the classes (or jar) is built. <br></p>
+
+<p>For simplistic example our build script should:</p>
+
+<ul><li>Use classes, created by
+     normal build script</li><li>Create a new enhanced-bin
+     folder for the enhanced classes</li><li>Use TAAntClassEditFactory
+     to create InjectTransparentActivationEdit (can be based on class filter)</li><li>Call
+     Db4oFileEnhancerAntTask#execute, which will call
+     Db4oClassInstrumenter#enhance passing the previously created InjectTransparentActivationEdit
+     to instrument classes with TA.</li></ul>
+
+<p>All
+these can be done with the following script:</p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">Build.Xml</span></div><div class="fscCode"><pre ID="ResourcesReferenceObject_LifecycleActivationTransparent_Activation_FrameworkTA_Enhanced_ExampleTA_Enhancement_At_Build_Timebuild.Xml_1379_23"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">&lt;?</span><span style="color: #FF00FF;">xml version=&quot;1.0&quot;</span><span style="color: #0000FF;">?&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 
+</span><span style="color: #008080;">04</span><span style="color: #008000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  TA build time enhancement sample.
+</span><span style="color: #008080;">05</span><span style="color: #008000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #008000;">--&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">project </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;taenhance&quot;</span><span style="color: #FF0000;"> default</span><span style="color: #0000FF;">=&quot;buildall&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 
+</span><span style="color: #008080;">10</span><span style="color: #008000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  Set up the required class path for the enhancement task.
+</span><span style="color: #008080;">11</span><span style="color: #008000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  In a production environment, this will be composed of jars, of course. 
+</span><span style="color: #008080;">12</span><span style="color: #008000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #008000;">--&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">path </span><span style="color: #FF0000;">id</span><span style="color: #0000FF;">=&quot;db4o.enhance.path&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">pathelement </span><span style="color: #FF0000;">path</span><span style="color: #0000FF;">=&quot;${basedir}&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">fileset </span><span style="color: #FF0000;">dir</span><span style="color: #0000FF;">=&quot;lib&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">include </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;**/*.jar&quot;</span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">fileset</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">path</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Define enhancement task. </span><span style="color: #008000;">--&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">taskdef
+</span><span style="color: #008080;">22</span><span style="color: #800000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;db4o-enhance&quot;</span><span style="color: #FF0000;"> 
+</span><span style="color: #008080;">23</span><span style="color: #FF0000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  classname</span><span style="color: #0000FF;">=&quot;com.db4o.instrumentation.ant.Db4oFileEnhancerAntTask&quot;</span><span style="color: #FF0000;">
+</span><span style="color: #008080;">24</span><span style="color: #FF0000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  classpathref</span><span style="color: #0000FF;">=&quot;db4o.enhance.path&quot;</span><span style="color: #FF0000;">
+</span><span style="color: #008080;">25</span><span style="color: #FF0000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  loaderref</span><span style="color: #0000FF;">=&quot;db4o.enhance.loader&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">26</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">27</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">typedef
+</span><span style="color: #008080;">28</span><span style="color: #800000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;transparent-activation&quot;</span><span style="color: #FF0000;"> 
+</span><span style="color: #008080;">29</span><span style="color: #FF0000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  classname</span><span style="color: #0000FF;">=&quot;com.db4o.ta.instrumentation.ant.TAAntClassEditFactory&quot;</span><span style="color: #FF0000;">
+</span><span style="color: #008080;">30</span><span style="color: #FF0000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  classpathref</span><span style="color: #0000FF;">=&quot;db4o.enhance.path&quot;</span><span style="color: #FF0000;">
+</span><span style="color: #008080;">31</span><span style="color: #FF0000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  loaderref</span><span style="color: #0000FF;">=&quot;db4o.enhance.loader&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">32</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">33</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">34</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">35</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">target </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;buildall&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">36</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">37</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>        </span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Create enhanced output directory</span><span style="color: #008000;">--&gt;</span><span style="color: #000000;">  
+</span><span style="color: #008080;">38</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">mkdir </span><span style="color: #FF0000;">dir</span><span style="color: #0000FF;">=&quot;${basedir}/enhanced-bin&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">39</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">delete </span><span style="color: #FF0000;">dir</span><span style="color: #0000FF;">=&quot;${basedir}/enhanced-bin&quot;</span><span style="color: #FF0000;"> quiet </span><span style="color: #0000FF;">= &quot;true&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">40</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">include </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;**/*&quot;</span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">41</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">delete</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">42</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">43</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">db4o-enhance </span><span style="color: #FF0000;">classTargetDir</span><span style="color: #0000FF;">=&quot;${basedir}/enhanced-bin&quot;</span><span style="color: #FF0000;"> jarTargetDir</span><span style="color: #0000FF;">=&quot;${basedir}/enhanced-lib&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">44</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">45</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">classpath </span><span style="color: #FF0000;">refid</span><span style="color: #0000FF;">=&quot;db4o.enhance.path&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">    
+</span><span style="color: #008080;">46</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>                </span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Use compiled classes as an input </span><span style="color: #008000;">--&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">47</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">sources </span><span style="color: #FF0000;">dir</span><span style="color: #0000FF;">=&quot;${basedir}/bin&quot;</span><span style="color: #FF0000;"> </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">48</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">49</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>                </span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Call transparent activation enhancement </span><span style="color: #008000;">--&gt;</span><span style="color: #000000;"> 
+</span><span style="color: #008080;">50</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">transparent-activation </span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">51</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    
+</span><span style="color: #008080;">52</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">db4o-enhance</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">53</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  
+</span><span style="color: #008080;">54</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">target</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">55</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">56</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  
+</span><span style="color: #008080;">57</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  
+</span><span style="color: #008080;">58</span><span style="color: #000000;"><img src="../../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">project</span><span style="color: #0000FF;">&gt;</span></div></pre></div></div>
+
+<p>In
+order to test this script:</p>
+
+<ul><li>Create a new project,
+     consisting of TAInstrumentationExample and SensorPanel classes from the
+     <a href="ta_enhancement_at_load_time.html" class="wikiLink">previous example</a></li><li>Add lib folder to the
+     project root and copy the following jars from db4o distribution:</li><ul><li>ant.jar </li><li>bloat-1.0.jar</li><li>db4o-x.x-instrumentation.jar</li><li>db4o-x.x-java5.jar</li><li>db4o-x.x-taj.jar</li><li>db4o-x.x-tools.jar<br>
+      (Note, that the described functionality is only valid for db4o releases
+      after 7.0)</li></ul><li>Build the project with your
+     IDE or any other build tools (it is assumed that the built class files go
+     to the project's bin directory)</li><li>Copy build.xml into the
+     root project folder and execute it</li></ul>
+
+<p>Successfully
+executed build script will produce an instrumented copy of the project classes
+in enhanced-bin folder. You can check the results by running the following
+batch file from bin and enhanced-bin folders:</p>
+
+<p><code>set
+CLASSPATH=.;{$PROJECT_ROOT}\lib\db4o-x.x-java5.jar</code></p>
+
+<p><code>java
+com.db4odoc.taexamples.enhancer.TAInstrumentationExample</code></p>
+
+<p>(In
+enhanced version the warning about classes that do not support TA should
+disappear).</p>
+
+<p>Of
+course, the presented example is very simple and limited in functionality. In
+fact you can do a lot more things using the build script:</p>
+
+<p>o&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Add NQ optimization in the same enhancer task</p>
+
+<p>o&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Use ClassFilter to select classes for
+enhancement</p>
+
+<p>o&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Use regex to select classes for enhancement</p>
+
+<p>o&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Use several source folders</p>
+
+<p>o&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Use jar as the source for enhancement</p>
+
+<p>An example of the above features can be found in our <a href="http://developer.db4o.com/Resources/edit.aspx/ProjectSpaces/view.aspx/Educational_Projects/TA_And_NQ_Enhancement_Example">Project
+Spaces</a>.</p></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2007-11-27T19:39:00 by Tetyana.
+				</div>
+  </body>
+</html>
