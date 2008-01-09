@@ -1,0 +1,67 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Native Query Implementation</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Native Query Implementation</h1>
+
+<p>So how are Native Queries
+realized in practice?</p>
+
+<p>Let's return to the <a href="../native_query_concepts.html" class="wikiLink">Pilot</a> class.
+Suppose we need to find all pilots with the name starting from "M" and points
+over 100. In a native OO language it would be expressed as:</p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>pilot.getName().startsWith("M")
+&amp;&amp; pilot.getPoints() &gt; 100</code></p>
+
+</span>In order to pass this condition to a database, collection or
+other query processor a special object is used. In .NET2 it is a delegate, in
+Java5 it is a named method. 
+
+
+
+
+
+<p><span name="cs_wiki_filter" csw_filters="java"></p><p>Java:&nbsp;</p>
+
+<p><code>public abstract class
+Predicate &lt;ExtentType&gt; {</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp; public &lt;ExtentType&gt; Predicate (){}</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp; public abstract boolean match (ExtentType candidate); </code></p>
+
+<p><code>} </code></p>
+
+
+
+<p><code>new Predicate &lt;Pilot&gt;
+() {</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp; public boolean match(Pilot pilot){ </code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;return
+pilot.getName().contains("M") &amp;&amp; pilot.getPoints() &gt; 100; </code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp; } </code></p>
+
+<p><code>} </code></p><p></span>&nbsp;</p>For more information about NQ implementations in the other
+Java and .NET versions see
+<a href="../../object_lifecycle/querying/native_queries/native_query_syntax.html" class="wikiLink">Native Query Syntax</a>.
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-06-04T17:25:45 by Tetyana.
+				</div>
+  </body>
+</html>

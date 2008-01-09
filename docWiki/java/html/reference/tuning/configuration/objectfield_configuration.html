@@ -1,0 +1,118 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ObjectField Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>ObjectField Configuration</h1>
+
+<p>ObjectField/IObjectField is an
+interface providing configuration methods for class fields. ObjectField
+instance can be obtained through:</p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>ObjectField of =
+Db4o.configure().objectClass(clazz).objectField("fieldName");</code></p>
+
+</span>
+
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void
+cascadeOnActivate(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>sets cascaded activation behavior.
+For more information see <a href="../../object_lifecycle/activation.html" class="wikiLink">Activation</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void
+cascadeOnDelete(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>sets cascaded delete behavior. For
+more information see <a href="../../object_lifecycle/delete_behavior.html" class="wikiLink">Delete Behavior</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void
+cascadeOnUpdate(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>sets cascaded update behavior. For
+more information see <a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void indexed(boolean
+flag);</code></p>
+
+</span>
+
+
+
+<p>turns indexing on or off. For more
+information see <a href="../indexing.html" class="wikiLink">Indexing</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void rename(String
+newName);</code></p>
+
+</span>
+
+
+
+<p>renames a field of a stored class.
+For more information see
+<a href="../../implementation_strategies/refactoring_and_schema_evolution.html" class="wikiLink">Refactoring and Schema Evolution</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void queryEvaluation
+(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>toggles query evaluation.</p>
+
+<p>All fields are evaluated by default.
+Use this method to turn query evaluation off for specific fields.&nbsp;&nbsp;&nbsp; </p>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2007-06-04T18:09:17 by Tetyana.
+				</div>
+  </body>
+</html>

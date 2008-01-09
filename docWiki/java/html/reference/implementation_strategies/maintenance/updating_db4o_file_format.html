@@ -1,0 +1,86 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Updating Db4o File Format</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Updating Db4o File Format</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script><p>The db4o database file format is a subject to change to
+allow progress for performance and additional features. <br>
+<br>
+db4o does not support downgrades back to previous versions of database files. <br>
+<br>
+In order to prevent accidental upgrades when using different db4o versions or
+ObjectManager, db4o does not upgrade databases by default. <br>
+<br>
+Database upgrading can be turned on with the following configuration switch: </p>
+
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p><p><code>Db4o.configure().allowVersionUpdates(true) </code></p>
+
+</span>
+
+<p>Please note that, once the database file version is updated, there is no way to
+get back to the older version of the database file <br>
+<br>
+If a database file is opened successfully with the new db4o version, the
+upgrade of the file will take place automatically. You can simply upgrade
+database files by opening and closing a db4o database once with code like the
+following: <br>
+<span name="cs_wiki_filter" csw_filters="java"><br>
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">UpdateExample.java</span></div><div class="fscCode"><pre ID="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Open_Text').style.display='inline';"/><span id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">/**/</span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_0_60_Open_Text"><span style="color: #008000;">/*</span><span style="color: #008000;"> Copyright (C) 2007 db4objects Inc. </span><span style="color: #008000; text-decoration: underline;">http://www.db4o.com</span><span style="color: #008000;"> </span><span style="color: #008000;">*/</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">package</span><span style="color: #000000;"> com.db4odoc.versionupdate;
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">import</span><span style="color: #000000;"> com.db4o.Db4o;
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">import</span><span style="color: #000000;"> com.db4o.ObjectContainer;
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Open_Text').style.display='inline';"/></span><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">class</span><span style="color: #000000;"> UpdateExample </span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_181_445_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Open_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Closed_Image" src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Open_Text').style.display='inline';"/>  </span><span style="color: #0000FF;">public</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> main(String[] args) </span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceImplementation_StrategiesMaintenanceUpdating_Db4o_File_FormatVersionUpdatesJava.ZipsUpdateExample.Java_UpdateExample.Java_1041_52_224_442_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    Db4o.configure().allowVersionUpdates(</span><span style="color: #0000FF;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    ObjectContainer objectContainer </span><span style="color: #000000;">=</span><span style="color: #000000;"> Db4o.openFile(args[</span><span style="color: #000000;">0</span><span style="color: #000000;">]);
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    objectContainer.close();
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>    System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">The database is ready for the version </span><span style="color: #000000;">&quot;</span><span style="color: #000000;"> </span><span style="color: #000000;">+</span><span style="color: #000000;"> Db4o.version());
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>  }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>}</span></span></div></pre></div></div>
+
+<p></span></p>
+
+<p></p>
+
+<p></p>
+
+Recommendations for upgrading: <br><ul><li>backup your database file to be able to switch back. </li><li>check the content of database files before and after upgrading, using
+com.db4o.tools.Statistics. </li><li><a href="defragment.html" class="wikiLink">Defragmenting</a> a database file with the new db4o version
+after upgrading can make the database more efficient.
+
+</li></ul><p><font color="#cc0000"></font><br></p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-05-04T14:33:39 by Tetyana.
+				</div>
+  </body>
+</html>

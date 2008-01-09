@@ -1,0 +1,16 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>.NET Example Class</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>.NET Example Class</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Using The Constructor&nbsp;">Using The Constructor&nbsp;</a></li><li><a href ="#Bypassing The Constructor&nbsp;">Bypassing The Constructor&nbsp;</a></li></ul></li></ul></div></div></div><p><font color="#990000">This topic applies to .NET version only.</font>&nbsp;</p><p>For this example we'll be using a hypothetical <code>LocalizedItemList</code> class which binds together culture<br>information with a list of items.</p><p><code>System.Globalization.CultureInfo</code> is particularly interesting because it internally holds a native pointer<br>to a system structure which in turn cannot be cleanly stored by db4o.</p><p>&nbsp;</p><p> <br></p><p>We'll be using this code to store and retrieve and instance of this class with different configuration<br>settings:</p><p>&nbsp;</p><p>&nbsp;</p><a name="Using The Constructor&nbsp;"></a><h2>Using The Constructor&nbsp;</h2><p>&nbsp;</p><p> <br></p><p>At storage time, db4o tests the only available constructor with null arguments and runs into a<br>NullPointerException, so it refuses to accept our object.<br>(Note that this test only occurs when configured with <a href="../../object_lifecycle/object_construction/troubleshooting.html" class="wikiLink">exceptionsOnNotStorable</a> - otherwise db4o will<br>silently fail when trying to reinstantiate the object.) <br></p><a name="Bypassing The Constructor&nbsp;"></a><h2>Bypassing The Constructor&nbsp;</h2><p>&nbsp;</p><p> <br></p><p>This still does not work for our case because the native pointer will definitely be invalid. In fact this<br>example crashes the Common Language Runtime. <br></p><p>In order to solve the problem we will need to use <a href="the_translator_api.html" class="wikiLink">db4o Translators</a>.&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2007-08-04T20:14:33 by Tetyana.
+				</div>
+  </body>
+</html>

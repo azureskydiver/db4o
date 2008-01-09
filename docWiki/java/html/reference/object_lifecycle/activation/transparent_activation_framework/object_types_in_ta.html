@@ -1,0 +1,76 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Object Types In TA</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Object Types In TA</h1>
+<p>When working in TA enabled environment you must remember that db4o treats Activatable (TA Aware) and non Activatable (other) types differently.&nbsp;</p>
+<p>In general we can distinguish the following types:</p>
+<ul>
+<li>Value types with no identity (char, boolean, integer etc). These types are handled internally by db4o engine and behave the same in TA enabled and disabled modes.</li>
+<li>Activatable types, as it is clear from the name, implement Activatable interface and are responsible for their own activation.</li>
+<li>Non Activatable type - all the other types, including user types or third-party classes.</li>
+</ul>
+<p>As it was mentioned  <a href="ta_implementation.html" class="wikiLink">before</a> in TA enabled mode non-Activatable types are fully activated whereas Activatable types have 0 activation depth and are getting activated as requested.<br></p>
+<p>Let's look at an example model below, which includes Activatable and non-Activatable classes:</p>
+
+
+<p><img src="Object_Types_In_TA/TA.Gif"/></p>
+
+<p>Querying and traversing in TA enabled mode:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:&nbsp;</p>
+
+<p><code>Customer c =
+container.get(Customer.class).next();</code></p>
+
+</span>
+
+
+<p>
+At this point the following paths should be already activated (Customer is not Activatable):</p>
+<p><code>c.name</code><br>
+<code>c.addresses</code><br>
+<code>c.addresses[N].firstLine</code><br>
+<code>c.addresses[N].country</code> - available but not activated (Activatable type).</p>
+<p>Country.getState would cause the Country object to be activated</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:&nbsp;</p>
+<p><code>State state = c.getAddress(0).country().getState(someZipCode);</code></p>
+
+</span>
+
+
+<p>
+At this point the following paths become activated<br>
+<code>c.addresses[0].country.states</code><br>
+<code>c.addresses[0].country.states[N].name</code><br>
+<code>c.addresses[0].country.states[N].city</code><br>
+<code>c.addresses[0].country.states[N].cities[N]</code>- available but not
+activated (Activatable type)</p>
+&nbsp; &nbsp;<br>
+The following general rules apply:<br>
+<ol>
+<li>Arrays of Arrays of non Activatable types: non Activatable behavior</li>
+<li>Arrays of Arrays of Activatable types: non Activatable behavior except for leaves</li>
+<li>JDK collections: non Activatable behavior</li>
+<li>Value types with references to non Activatable reference types and to Activatable
+reference types: the&nbsp;non Activatable path should be activated fully; Activatable
+path stops activation.</li>
+</ol>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (7) was last Modified 2007-12-03T18:08:01 by Tetyana.
+				</div>
+  </body>
+</html>
