@@ -4,7 +4,7 @@ package com.db4o.ext;
 /**
  * db4o-specific exception.<br><br>
  * This exception is thrown when the supplied object ID
- * is incorrect (ouside the scope of the database IDs).
+ * is incorrect (outside the scope of the database IDs).
  * @see com.db4o.ext.ExtObjectContainer#bind(Object, long)
  * @see com.db4o.ext.ExtObjectContainer#getByID(long)
  */
@@ -16,5 +16,13 @@ public class InvalidIDException extends Db4oException {
 	 */
 	public InvalidIDException(Throwable cause) {
 		super(cause);
+	}
+	
+	/**
+	 * Constructor allowing to specify the offending id 
+	 * @param id the offending id
+	 */
+	public InvalidIDException(int id){
+		super("id: " + id);
 	}
 }
