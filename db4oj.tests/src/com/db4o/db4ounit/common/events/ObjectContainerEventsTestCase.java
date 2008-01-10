@@ -3,26 +3,32 @@
 package com.db4o.db4ounit.common.events;
 
 import com.db4o.events.*;
+import com.db4o.ext.*;
+import com.db4o.foundation.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
-
+import db4ounit.extensions.foundation.*;
 
 public class ObjectContainerEventsTestCase extends AbstractDb4oTestCase {
-	private static class EventFlag {
-		public boolean eventOccurred = false;
-	}
 	
-	public void testClassRegistrationEvents() throws Exception {	
-		final EventFlag eventFlag = new EventFlag();
+	public void testClose() throws Exception {
+		
+		final ExtObjectContainer container = db();
+		final LocalObjectContainer session = fileSession(); 
+		final Collection4 actual = new Collection4();
 		eventRegistry().closing().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
-				eventFlag.eventOccurred = true;
+				actual.add(((ObjectContainerEventArgs)args).objectContainer());
 			}
 		});
 		fixture().close();
-		Assert.isTrue(eventFlag.eventOccurred);
+		
+		if (isEmbeddedClientServer()) {
+			Iterator4Assert.areEqual(new Object[] { container, session }, actual.iterator());
+		} else {
+			Assert.areSame(container, actual.singleElement());
+		}
 	}
-
-
 }
