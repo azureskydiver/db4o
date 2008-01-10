@@ -291,7 +291,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         }
     }
 
-    public void writeBytes(BufferImpl bytes, int address, int addressOffset) {
+    public void writeBytes(BufferImpl buffer, int blockedAddress, int addressOffset) {
 		if (Deploy.debug && !Deploy.flush) {
 			return;
 		}
@@ -299,27 +299,27 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
 		if (Debug.xbytes && Deploy.overwrite) {
 
 			boolean doCheck = true;
-			if (bytes instanceof StatefulBuffer) {
-				StatefulBuffer writer = (StatefulBuffer) bytes;
+			if (buffer instanceof StatefulBuffer) {
+				StatefulBuffer writer = (StatefulBuffer) buffer;
 				if (writer.getID() == Const4.IGNORE_ID) {
 					doCheck = false;
 				}
 			}
 			if (doCheck) {
-				checkXBytes(address, addressOffset, bytes.length());
+				checkXBytes(blockedAddress, addressOffset, buffer.length());
 			}
 		}
 
 		if (DTrace.enabled) {
-			DTrace.WRITE_BYTES.logLength(address + addressOffset, bytes
+			DTrace.WRITE_BYTES.logLength(blockedAddress + addressOffset, buffer
 					.length());
 		}
 
-		_file.blockSeek(address, addressOffset);
-		_file.write(bytes._buffer, bytes.length());
+		_file.blockSeek(blockedAddress, addressOffset);
+		_file.write(buffer._buffer, buffer.length());
 		if (_backupFile != null) {
-			_backupFile.blockSeek(address, addressOffset);
-			_backupFile.write(bytes._buffer, bytes.length());
+			_backupFile.blockSeek(blockedAddress, addressOffset);
+			_backupFile.write(buffer._buffer, buffer.length());
 		}
 	}
 

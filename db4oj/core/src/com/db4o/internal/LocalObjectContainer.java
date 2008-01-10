@@ -273,9 +273,33 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
             if(slot != null){
                 return slot;
             }
+            while(growDatabaseByConfiguredSize()){
+            	slot = _freespaceManager.getSlot(blocks);
+                if(slot != null){
+                    return slot;
+                }
+            }
         }
 		return appendBlocks(blocks);
     }
+
+	private boolean growDatabaseByConfiguredSize() {
+		int reservedStorageSpace = configImpl().databaseGrowthSize();
+		if(reservedStorageSpace <= 0){
+			return false;
+		}
+		int reservedBlocks = bytesToBlocks(reservedStorageSpace);
+		int reservedBytes = blocksToBytes(reservedBlocks);
+		Slot slot = new Slot(_blockEndAddress, reservedBlocks);
+        if (Debug.xbytes && Deploy.overwrite) {
+            overwriteDeletedBlockedSlot(slot);
+        }else{
+			writeBytes(new BufferImpl(reservedBytes), _blockEndAddress, 0);
+        }
+		_freespaceManager.free(slot);
+		_blockEndAddress += reservedBlocks;
+		return true;
+	}
     
     protected final Slot appendBlocks(int blockCount){
     	int blockedStartAddress = _blockEndAddress;
@@ -652,7 +676,7 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         _transaction.commit();
     }
 
-    public abstract void writeBytes(BufferImpl a_Bytes, int address, int addressOffset);
+    public abstract void writeBytes(BufferImpl buffer, int blockedAddress, int addressOffset);
 
     public final void writeDirty() {        
         writeCachedDirty();

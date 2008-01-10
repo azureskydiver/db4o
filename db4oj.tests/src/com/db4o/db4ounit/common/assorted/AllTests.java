@@ -21,6 +21,7 @@ public class AllTests extends Db4oTestSuite {
             ClassMetadataTestCase.class,
             CloseUnlocksFileTestCase.class,
             ComparatorSortTestCase.class,
+            DatabaseGrowthSizeTestCase.class,
             DatabaseUnicityTest.class,
             // FIXME: COR-1060
 //            DeleteSetTestCase.class,
