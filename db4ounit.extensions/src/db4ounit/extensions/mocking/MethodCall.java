@@ -5,11 +5,16 @@ import com.db4o.foundation.*;
 import db4ounit.*;
 
 public class MethodCall {
+	
 	public static final Object IGNORED_ARGUMENT = new Object() {
 		public String toString() {
 			return "...";
 		}
 	};
+	
+	public static interface ArgumentCondition {
+		void verify(Object argument);
+	}
 	
 	public final String methodName;
 	public final Object[] args;
@@ -38,10 +43,17 @@ public class MethodCall {
 		if (!methodName.equals(other.methodName)) return false;
 		if (args.length != other.args.length) return false;
 		for (int i=0; i<args.length; ++i) {
-			if (args[i] == IGNORED_ARGUMENT) {
+			final Object expectedArg = args[i];
+			if (expectedArg == IGNORED_ARGUMENT) {
 				continue;
 			}
-			if (!Check.objectsAreEqual(args[i], other.args[i])) {
+			final Object actualArg = other.args[i];
+			if (expectedArg instanceof ArgumentCondition) {
+				((ArgumentCondition)expectedArg).verify(actualArg);
+				continue;
+			}
+			
+			if (!Check.objectsAreEqual(expectedArg, actualArg)) {
 				return false;
 			}
 		}
