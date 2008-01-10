@@ -295,6 +295,7 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
                     commit();
                 }
             }
+            _server.callbacks().closeOnStarted(cast(this));
             _transaction.close(false);
             _closed = true;
             return true;
@@ -445,5 +446,4 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
     public HandlerRegistry handlers(){
         return _server.handlers();
     }
-
 }
