@@ -152,6 +152,34 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
     protected void writeVariableHeader(){
         
     }
-
+    
+    public static class KnownObjectIdentity {
+    	int _id;
+    	public KnownObjectIdentity(int id) {
+			_id = id;
+		}
+    }
+    
+    public int storeInternal(Transaction trans, Object obj, int depth,
+			boolean checkJustSet)
+    		throws DatabaseClosedException, DatabaseReadOnlyException {
+    	int id = _parent.getID(null, obj);
+    	if(id > 0){
+    		return super.storeInternal(trans, new KnownObjectIdentity(id), depth, checkJustSet);
+    	}else{
+    		return super.storeInternal(trans, obj, depth, checkJustSet);
+    	}
+    }
+    
+    public Object getByID2(Transaction ta, int id) {
+    	Object obj = super.getByID2(ta, id);
+    	if(obj instanceof KnownObjectIdentity){
+    		KnownObjectIdentity oi = (KnownObjectIdentity)obj;
+    		activate(oi);
+    		obj = _parent.getByID(null, oi._id);
+    	}
+    	
+    	return obj;
+    }
 
 }
