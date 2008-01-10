@@ -768,7 +768,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
-    public final Object getByID2(Transaction ta, int id) {
+    public Object getByID2(Transaction ta, int id) {
 		Object obj = ta.objectForIdFromCache(id);
 		if (obj != null) {
 			// Take care about handling the returned candidate reference.
@@ -1468,7 +1468,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
        return storeInternal(trans, obj, Const4.UNSPECIFIED, checkJustSet);
     }
     
-    public final int storeInternal(Transaction trans, Object obj, int depth,
+    public int storeInternal(Transaction trans, Object obj, int depth,
 			boolean checkJustSet) throws DatabaseClosedException,
 			DatabaseReadOnlyException {
     	trans = checkTransaction(trans);

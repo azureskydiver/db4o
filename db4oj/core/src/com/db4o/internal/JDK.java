@@ -210,4 +210,8 @@ public class JDK {
     public NetTypeHandler[] types(ObjectContainerBase container) {
         return new NetTypeHandler[]{};
     }
+
+	public boolean useNativeSerialization() {
+		return true;
+	}
 }

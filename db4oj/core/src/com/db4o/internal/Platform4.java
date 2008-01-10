@@ -659,5 +659,9 @@ public final class Platform4 {
 	public static Date now(){
 		return new Date();
 	}
+
+	public static boolean useNativeSerialization() {
+		return jdk().useNativeSerialization();
+	}
 	
 }
