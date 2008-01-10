@@ -3,6 +3,7 @@
 package com.db4o.internal;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.freespace.*;
@@ -407,6 +408,10 @@ public class LocalTransaction extends Transaction {
         if (Deploy.debug) {
             return debugReadPointer(id);
         }
+        if(!isValidId(id)){
+        	throw new InvalidIDException(id);
+        }
+        
        	_file.readBytes(_pointerBuffer, id, Const4.POINTER_LENGTH);
         int address = (_pointerBuffer[3] & 255)
             | (_pointerBuffer[2] & 255) << 8 | (_pointerBuffer[1] & 255) << 16
@@ -414,8 +419,25 @@ public class LocalTransaction extends Transaction {
         int length = (_pointerBuffer[7] & 255)
             | (_pointerBuffer[6] & 255) << 8 | (_pointerBuffer[5] & 255) << 16
             | _pointerBuffer[4] << 24;
+        
+        if(!isValidSlot(address, length)){
+        	throw new InvalidSlotException(address, length, id);
+        }
+        
         return new Pointer4(id, new Slot(address, length));
     }
+
+	private boolean isValidId(int id) {
+		return _file.fileLength() >= id;
+	}
+
+	private boolean isValidSlot(int address, int length) {
+		// just in case overflow 
+		boolean validAddress = _file.fileLength() >= address;
+        boolean validLength = _file.fileLength() >= length ;
+        boolean validSlot = _file.fileLength() >= (address+length);
+        return validAddress && validLength && validSlot;
+	}
 
 	private Pointer4 debugReadPointer(int id) {
         if (Deploy.debug) {
