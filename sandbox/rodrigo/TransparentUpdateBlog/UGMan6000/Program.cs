@@ -1,13 +1,13 @@
+using System;
+
 namespace UGMan6000
 {
 	class Program
 	{
 		static void Main(string[] args)
 		{
-//			Transient.Application.Run();
-//			AdHoc.Application.Run();
-//			Extensible.Application.Run();
-			Transparent.Application.Run();
+			Console.Title = "UGMan6000";
+			new ConsoleView(new ApplicationController()).Interact();
 		}
 	}
 }

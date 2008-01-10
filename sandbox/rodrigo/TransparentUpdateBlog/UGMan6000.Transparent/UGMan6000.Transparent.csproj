@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5DC57FC5-8922-4152-B37E-4245F1D4DC12}</ProjectGuid>
+    <ProjectGuid>{F692627C-C5D4-457E-9B98-3835B9378C73}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UGMan6000</RootNamespace>
-    <AssemblyName>UGMan6000</AssemblyName>
+    <RootNamespace>UGMan6000.Transparent</RootNamespace>
+    <AssemblyName>UGMan6000.Transparent</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -61,7 +61,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>C:\workspaces\db4o\db4o.net\Db4oTool\Db4oTool\bin\Debug\Db4oTool.exe -debug -ta -by-name UGMan6000.Transparent.Model $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
 </Project>
