@@ -13,7 +13,7 @@ namespace Spikes
 	{
 		static void Main(string[] args)
 		{
-			int totalCows = 5;
+			int totalCows = 30;
 			int totalDays = 365;
 			new Program(totalCows, totalDays).Run();
 		}
