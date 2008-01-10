@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5DC57FC5-8922-4152-B37E-4245F1D4DC12}</ProjectGuid>
+    <ProjectGuid>{FD9E6CC5-962C-422B-8C0F-A351C7B20D89}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UGMan6000</RootNamespace>
-    <AssemblyName>UGMan6000</AssemblyName>
+    <RootNamespace>UGMan6000.AdHoc</RootNamespace>
+    <AssemblyName>UGMan6000.AdHoc</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,8 +29,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationController.cs" />
@@ -48,9 +46,10 @@
       <Project>{30619997-9421-4311-8754-EB6E3E06192E}</Project>
       <Name>UGMan6000.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="README.txt" />
+    <ProjectReference Include="..\UGMan6000\UGMan6000.csproj">
+      <Project>{5DC57FC5-8922-4152-B37E-4245F1D4DC12}</Project>
+      <Name>UGMan6000</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -60,8 +59,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>

@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5DC57FC5-8922-4152-B37E-4245F1D4DC12}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{30619997-9421-4311-8754-EB6E3E06192E}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UGMan6000</RootNamespace>
-    <AssemblyName>UGMan6000</AssemblyName>
+    <RootNamespace>UGMan6000.Common</RootNamespace>
+    <AssemblyName>UGMan6000.Common</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,24 +33,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApplicationController.cs" />
-    <Compile Include="ConsoleView.cs" />
-    <Compile Include="Model\User.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
-      <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
-      <Name>Db4objects.Db4o-2005</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UGMan6000.Common\UGMan6000.Common.csproj">
-      <Project>{30619997-9421-4311-8754-EB6E3E06192E}</Project>
-      <Name>UGMan6000.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="README.txt" />
+    <Compile Include="UI\ConsoleUI.cs" />
+    <Compile Include="UI\Menu.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -60,8 +45,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>

@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5DC57FC5-8922-4152-B37E-4245F1D4DC12}</ProjectGuid>
+    <ProjectGuid>{CA430247-7257-4824-A957-5565812EAC5D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UGMan6000</RootNamespace>
-    <AssemblyName>UGMan6000</AssemblyName>
+    <RootNamespace>UGMan6000.Extensible</RootNamespace>
+    <AssemblyName>UGMan6000.Extensible</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +35,7 @@
   <ItemGroup>
     <Compile Include="ApplicationController.cs" />
     <Compile Include="ConsoleView.cs" />
+    <Compile Include="Model\UnitOfWork.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -49,9 +50,6 @@
       <Name>UGMan6000.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="README.txt" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -60,8 +58,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>
