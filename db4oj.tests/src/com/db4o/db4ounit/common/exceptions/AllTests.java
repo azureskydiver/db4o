@@ -21,6 +21,7 @@ public class AllTests extends Db4oTestSuite {
 			IncompatibleFileFormatExceptionTestCase.class,
 			InvalidIDExceptionTestCase.class,
 			InvalidPasswordTestCase.class,
+			InvalidSlotExceptionTestCase.class,
 			ObjectCanActiviateExceptionTestCase.class,
 			ObjectCanDeleteExceptionTestCase.class,
 			ObjectOnDeleteExceptionTestCase.class,

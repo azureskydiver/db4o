@@ -11,11 +11,11 @@ public class InvalidIDExceptionTestCase extends AbstractDb4oTestCase {
 		new InvalidIDExceptionTestCase().runAll();
 	}
 
-	public void test() {
+	public void testBigId() {
 		Item item = new Item();
 		store(item);
 		final long id = db().getID(item);
-		Assert.expect(InvalidIDException.class, new CodeBlock() {
+		Assert.expect(InvalidIDException.class, InvalidIDException.class, new CodeBlock() {
 			public void run() throws Throwable {
 				db().getByID(id + 10000000);
 			}
@@ -28,6 +28,14 @@ public class InvalidIDExceptionTestCase extends AbstractDb4oTestCase {
 //			}
 //			
 //		});
+	}
+	
+	public void testSmallId() throws Exception {
+		Assert.expect(InvalidIDException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				db().getByID(1000);
+			}			
+		});
 	}
 
 }
