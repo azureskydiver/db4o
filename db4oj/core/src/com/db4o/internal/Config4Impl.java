@@ -56,6 +56,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private final static KeySpec CLASS_ACTIVATION_DEPTH_CONFIGURABLE_KEY=new KeySpec(true);
     
 	private final static KeySpec CLASSLOADER_KEY=new KeySpec(null);
+	
+	private final static KeySpec DATABASE_GROWTH_SIZE_KEY=new KeySpec(0);
     
 	private final static KeySpec DETECT_SCHEMA_CHANGES_KEY=new KeySpec(true);
     
@@ -275,6 +277,14 @@ public final class Config4Impl implements Configuration, DeepClone,
     public void stream(ObjectContainerBase stream) {
     	i_stream=stream;
     }
+    
+	public void databaseGrowthSize(int bytes) {
+		_config.put(DATABASE_GROWTH_SIZE_KEY,bytes);
+	}
+	
+	public int databaseGrowthSize() {
+		return _config.getAsInt(DATABASE_GROWTH_SIZE_KEY);
+	}
 
     public void detectSchemaChanges(boolean flag) {
         _config.put(DETECT_SCHEMA_CHANGES_KEY,flag);

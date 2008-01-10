@@ -262,6 +262,31 @@ public interface Configuration {
      * @see Configuration#activationDepth Why activation?
      */
     public void classActivationDepthConfigurable(boolean flag);
+    
+    /**
+     * returns client/server configuration interface.
+     */
+    public ClientServerConfiguration clientServer();
+    
+	/**
+	 * configures the size database files should grow in bytes, when no 
+	 * free slot is found within.
+	 * <br><br>Tuning setting.
+	 * <br><br>Whenever no free slot of sufficient length can be found 
+	 * within the current database file, the database file's length
+	 * is extended. This configuration setting configures by how much
+	 * it should be extended, in bytes.<br><br>
+	 * This configuration setting is intended to reduce fragmentation.
+	 * Higher values will produce bigger database files and less
+	 * fragmentation.<br><br>
+	 * To extend the database file, a single byte array is created 
+	 * and written to the end of the file in one write operation. Be 
+	 * aware that a high setting will require allocating memory for 
+	 * this byte array.
+	 *  
+     * @param bytes amount of bytes
+     */
+    public void databaseGrowthSize(int bytes);
 
     /**
      * tuning feature: configures whether db4o checks all persistent classes upon system
@@ -745,8 +770,5 @@ public interface Configuration {
      */
     public void weakReferenceCollectionInterval(int milliseconds);
     
-    /**
-     * returns client/server configuration interface.
-     */
-    public ClientServerConfiguration clientServer();
+	    
 }
