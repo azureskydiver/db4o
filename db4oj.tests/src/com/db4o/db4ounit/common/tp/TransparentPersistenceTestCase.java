@@ -44,7 +44,7 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 	}
 	
 	protected void configure(Configuration config) throws Exception {
-		config.add(new TransparentActivationSupport());
+		config.add(new TransparentPersistenceSupport());
 	}
 	
 	protected void store() throws Exception {
