@@ -5,6 +5,7 @@ import com.db4o.*;
 import com.db4o.activation.*;
 import com.db4o.config.*;
 import com.db4o.events.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.diagnostic.*;
@@ -31,6 +32,12 @@ public class TransparentActivationSupport implements ConfigurationItem {
 				bindActivatableToActivator((ObjectEventArgs) args);
 			}
 		});
+		
+		registry.closing().addListener(new EventListener4() {
+			public void onEvent(Event4 e, EventArgs args) {
+				unbindAll((InternalObjectContainer) ((ObjectContainerEventArgs)args).objectContainer());
+			}
+		});
 
 		final TADiagnosticProcessor processor = new TADiagnosticProcessor(container);
 		registry.classRegistered().addListener(new EventListener4() {
@@ -45,31 +52,33 @@ public class TransparentActivationSupport implements ConfigurationItem {
 		return EventRegistryFactory.forObjectContainer(container);
 	}
 	
+	private void unbindAll(final InternalObjectContainer container) {
+		container.transaction().referenceSystem().traverseReferences(new Visitor4() {
+			public void visit(Object obj) {
+				unbind((ObjectReference) obj);
+			}
+		});
+	}
+	
+	private void unbind(final ObjectReference objectReference) {
+		final Object obj = objectReference.getObject();
+		if (obj == null || !(obj instanceof Activatable)) {
+			return;
+		}
+		bind(obj, null);
+	}
+	
 	private void bindActivatableToActivator(ObjectEventArgs oea) {
 		Object obj = oea.object();
 		if (obj instanceof Activatable) {
 			final Transaction transaction = (Transaction) oea.transaction();
 			final ObjectReference objectReference = transaction.referenceForObject(obj);
 			bind(obj, activatorForObject(transaction, objectReference));
-			unbindActivatableUponClosing(transaction, objectReference);
 		}
 	}
 
 	private void bind(Object activatable, final Activator activator) {
 		((Activatable) activatable).bind(activator);
-	}
-	
-	private void unbindActivatableUponClosing(Transaction transaction, final ObjectReference objectReference) {
-		final EventRegistry eventRegistry = eventRegistryFor(transaction.objectContainer());
-		eventRegistry.closing().addListener(new EventListener4() {
-			public void onEvent(Event4 e, EventArgs args) {
-				final Object obj = objectReference.getObject();
-				if (obj == null) {
-					return;
-				}
-				bind(obj, null);
-			}
-		});
 	}
 
 	private Activator activatorForObject(final Transaction transaction, ObjectReference objectReference) {
