@@ -44,6 +44,7 @@ public class AllTests extends Db4oTestSuite {
             PersistStaticFieldValuesTestCase.class,
             PersistTypeTestCase.class,
             PreventMultipleOpenTestCase.class,
+            QueryByInterface.class,
             ReAddCascadedDeleteTestCase.class,
             RollbackDeleteTestCase.class,
             RollbackTestCase.class,

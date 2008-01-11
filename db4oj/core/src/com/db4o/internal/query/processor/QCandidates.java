@@ -453,6 +453,17 @@ public final class QCandidates implements Visitor4 {
         }
     }
 
+    // FIXME: This method should go completely.
+    //        We changed the code to create the QCandidates graph in two steps:
+    //        (1) call fitsIntoExistingConstraintHierarchy to determine whether
+    //            or not we need more QCandidates objects
+    //        (2) add all constraints
+    //        This method tries to do both in one, which results in missing
+    //        constraints. Not all are added to all QCandiates.
+    //        Right methodology is in 
+    //        QQueryBase#createCandidateCollection
+    //        and
+    //        QQueryBase#createQCandidatesList
     boolean tryAddConstraint(QCon a_constraint) {
 
         if (i_field != null) {
@@ -477,6 +488,7 @@ public final class QCandidates implements Visitor4 {
                 return true;
             }
         }
+        addConstraint(a_constraint);
         return false;
     }
 
@@ -518,5 +530,30 @@ public final class QCandidates implements Visitor4 {
 	
 	public boolean wasLoadedFromClassIndex(){
 		return _loadedFromClassIndex;
+	}
+
+	public boolean fitsIntoExistingConstraintHierarchy(QCon constraint) {
+        if (i_field != null) {
+            QField qf = constraint.getField();
+            if (qf != null) {
+                if (i_field.i_name!=null&&!i_field.i_name.equals(qf.i_name)) {
+                    return false;
+                }
+            }
+        }
+
+        if (i_yapClass == null || constraint.isNullConstraint()) {
+            return true;
+        }
+        ClassMetadata classMetadata = constraint.getYapClass();
+        if (classMetadata == null) {
+        	return false;
+        }
+        classMetadata = i_yapClass.getHigherOrCommonHierarchy(classMetadata);
+        if (classMetadata == null) {
+        	return false;
+        }
+        i_yapClass = classMetadata;
+        return true;
 	}
 }
