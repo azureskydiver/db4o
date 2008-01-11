@@ -26,7 +26,9 @@ import com.db4o.reflect.generic.*;
  */
 public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass {
     
-    public ClassMetadata i_ancestor;
+	private final TypeHandler4 _typeHandler;
+    
+	public ClassMetadata i_ancestor;
 
     private Config4Class i_config;
     public int _metaClassID;
@@ -88,6 +90,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
     public ClassMetadata(ObjectContainerBase container, ReflectClass reflector){
+    	_typeHandler = new FirstClassObjectHandler(this);
     	_container = container;
         _reflector = reflector;
         _index = createIndexStrategy();
@@ -542,9 +545,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
-    	((ObjectContainerBase)context.objectContainer()).deleteByID(
-    			context.transaction(), context.readInt(), context.cascadeDeleteDepth());
-    	
+    	_typeHandler.delete(context);
     }
 
     void deleteMembers(MarshallerFamily mf, ObjectHeaderAttributes attributes, StatefulBuffer a_bytes, int a_type, boolean isUpdate) {
@@ -1833,63 +1834,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
 
 	public PreparedComparison prepareComparison(Object source) {
-		if(source == null){
-			return new PreparedComparison() {
-				public int compareTo(Object obj) {
-					if(obj == null){
-						return 0;
-					}
-					return -1;
-				}
-			
-			};
-		}
-		int id = 0;
-		ReflectClass claxx = null;
-        if(source instanceof Integer){
-        	id = ((Integer)source).intValue();
-        } else if(source instanceof TransactionContext){
-            TransactionContext tc = (TransactionContext)source;
-            Object obj = tc._object;
-            id = _container.getID(tc._transaction, obj);
-            claxx = reflector().forObject(obj);
-        }else{
-        	throw new IllegalComparisonException();
-        }
-    	return new PreparedClassMetadataComparison(id, claxx);
+		return _typeHandler.prepareComparison(source);
 	}
 	
-    public final class PreparedClassMetadataComparison implements PreparedComparison {
-    	
-    	private final int _id;
-    	
-    	private final ReflectClass _claxx;
-
-		public PreparedClassMetadataComparison(int id, ReflectClass claxx) {
-			_id = id;
-			_claxx = claxx;
-		}
-
-		public int compareTo(Object obj) {
-		    if(obj instanceof TransactionContext){
-		        obj = ((TransactionContext)obj)._object;
-		    }
-		    if(obj == null){
-		    	return 1;
-		    }
-		    if(obj instanceof Integer){
-				int targetInt = ((Integer)obj).intValue();
-				return _id == targetInt ? 0 : (_id < targetInt ? - 1 : 1); 
-		    }
-		    if(_claxx != null){
-		    	if(_claxx.isAssignableFrom(reflector().forObject(obj))){
-		    		return 0;
-		    	}
-		    }
-		    throw new IllegalComparisonException();
-		}
-    }
-    
     public static void defragObject(DefragmentContextImpl context) {
     	ObjectHeader header=ObjectHeader.defrag(context);
     	header._marshallerFamily._object.defragFields(header.classMetadata(),header,context);
@@ -1899,14 +1846,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }	
 
 	public void defragment(DefragmentContext context) {
-		if(hasClassIndex()) {
-			context.copyID();
-		}
-		else {
-			context.copyUnindexedID();
-		}
-		int restLength = (linkLength()-Const4.INT_LENGTH);
-		context.incrementOffset(restLength);
+		_typeHandler.defragment(context);
 	}
 	
 	public void defragClass(DefragmentContextImpl context, int classIndexID) throws CorruptionException, IOException {
@@ -1942,23 +1882,46 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public Object read(ReadContext context) {
-        
-        // FIXME: .NET value types should get their own TypeHandler and it 
-        //        should do the following:
-        if(isValueType()){
-            ActivationDepth activationDepth = ((UnmarshallingContext)context).activationDepth();
-			return readValueType(context.transaction(), context.readInt(), activationDepth.descend(this));
-        }
-        
-        return context.readObject();
+    	return _typeHandler.read(context);
     }
 
     public void write(WriteContext context, Object obj) {
-        context.writeObject(obj);
+        _typeHandler.write(context, obj);
     }
     
     public TypeHandler4 typeHandler(){
         return this;
+    }
+    
+    public final static class PreparedComparisonImpl implements PreparedComparison {
+    	
+    	private final int _id;
+    	
+    	private final ReflectClass _claxx;
+
+    	public PreparedComparisonImpl(int id, ReflectClass claxx) {
+    		_id = id;
+    		_claxx = claxx;
+    	}
+
+    	public int compareTo(Object obj) {
+    	    if(obj instanceof TransactionContext){
+    	        obj = ((TransactionContext)obj)._object;
+    	    }
+    	    if(obj == null){
+    	    	return 1;
+    	    }
+    	    if(obj instanceof Integer){
+    			int targetInt = ((Integer)obj).intValue();
+    			return _id == targetInt ? 0 : (_id < targetInt ? - 1 : 1); 
+    	    }
+    	    if(_claxx != null){
+    	    	if(_claxx.isAssignableFrom(_claxx.reflector().forObject(obj))){
+    	    		return 0;
+    	    	}
+    	    }
+    	    throw new IllegalComparisonException();
+    	}
     }
 
 }
