@@ -8,11 +8,10 @@ import java.util.*;
 import com.db4o.bench.crud.*;
 import com.db4o.bench.logging.*;
 import com.db4o.bench.logging.replay.*;
-import com.db4o.bench.logging.replay.commands.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
 
-public class IoBenchquark {
+public class IoBenchmark {
 	
 	
 	private static final String _doubleLine = "=============================================================";
@@ -22,22 +21,21 @@ public class IoBenchquark {
 	
 	public static void main(String[] args) throws IOException {
 		if (args.length < 2) {
-			System.out.println("Usage: IoBenchmark <> <>");
+			System.out.println("Usage: IoBenchmark <object-count> <db-file-name>");
+			System.exit(1);
 		}
 		
 		printBenchmarkHeader();
 
-		IoBenchquark ioBenchMark = new IoBenchquark();
-		//ioBenchMark.run(SMALL);
-//		ioBenchMark.run(MEDIUM);
-//		ioBenchMark.run(LARGE);
+		IoBenchmark ioBenchmark = new IoBenchmark();
+		ioBenchmark.run(Integer.parseInt(args[0]), args[1]);
 	}
 
 	
-	private void run(int itemCount) throws FileNotFoundException, IOException {
+	private void run(int itemCount, String dbFileName) throws FileNotFoundException, IOException {
 		runTargetApplication(itemCount);
-		prepareDbFile(itemCount);
-		runBenchmark(itemCount);
+		prepareDbFile(itemCount, dbFileName);
+		runBenchmark(itemCount, dbFileName);
 	}
 
 
@@ -57,10 +55,10 @@ public class IoBenchquark {
 	 * @param itemCount	The number of items to be stored
 	 * @throws IOException
 	 */
-	private void prepareDbFile(int itemCount) throws IOException {
-		removeDbFile();
+	private void prepareDbFile(int itemCount, String dbFileName) throws IOException {
+		removeDbFile(dbFileName);
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter raf = rafFactory.open(DB_FILE_NAME, false, 0, false);
+		IoAdapter raf = rafFactory.open(dbFileName, false, 0, false);
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf);
 		replayer.replayLog();
 		
@@ -76,18 +74,18 @@ public class IoBenchquark {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private void runBenchmark(int itemCount) throws FileNotFoundException, IOException {
+	private void runBenchmark(int itemCount, String dbFileName) throws FileNotFoundException, IOException {
 		removeExistingLog(itemCount);
 		PrintStream out = new PrintStream(new FileOutputStream(logFileName(itemCount), true));
 		printRunHeader(itemCount, out);
 		for (int i = 0; i < LogConstants.ALL_ENTRIES.length; i++) {
 			String currentCommand = LogConstants.ALL_ENTRIES[i];
-			benchmarkCommand(currentCommand, itemCount, out);	
+			benchmarkCommand(currentCommand, itemCount, dbFileName, out);	
 		}
-		removeDbFile();
+		removeDbFile(dbFileName);
 	}
 
-	private void benchmarkCommand(String command, int itemCount, PrintStream out) throws IOException {
+	private void benchmarkCommand(String command, int itemCount, String dbFileName, PrintStream out) throws IOException {
 		StopWatch watch = new StopWatch();
 		long timeElapsed, operationCount;
 		
@@ -95,7 +93,7 @@ public class IoBenchquark {
 		commands.add(command);
 		
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter raf = rafFactory.open(DB_FILE_NAME, false, 0, false);
+		IoAdapter raf = rafFactory.open(dbFileName, false, 0, false);
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf, commands);
 		List4 commandList = replayer.readCommandList();
 		//raf.seek(0);
@@ -121,8 +119,8 @@ public class IoBenchquark {
 		new File(logFileName(itemCount)).delete();
 	}
 	
-	private void removeDbFile() {
-		new File(DB_FILE_NAME).delete();
+	private void removeDbFile(String dbFileName) {
+		new File(dbFileName).delete();
 	}
 	
 	private static void printBenchmarkHeader() {
