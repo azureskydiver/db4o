@@ -8,18 +8,11 @@ import java.util.*;
 import com.db4o.bench.crud.*;
 import com.db4o.bench.logging.*;
 import com.db4o.bench.logging.replay.*;
+import com.db4o.bench.logging.replay.commands.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
 
-public class IoBenchMark {
-	
-	private static final int SMALL 	= 1000;		//1'000
-	
-	private static final int MEDIUM	= 30000;	//30'000
-	
-	private static final int LARGE 	= 1000000;	//1'000'000
-	
-	private static final String DB_FILE_NAME = "ioBenchMark.db4o";
+public class IoBenchquark {
 	
 	
 	private static final String _doubleLine = "=============================================================";
@@ -28,10 +21,14 @@ public class IoBenchMark {
 	
 	
 	public static void main(String[] args) throws IOException {
+		if (args.length < 2) {
+			System.out.println("Usage: IoBenchmark <> <>");
+		}
+		
 		printBenchmarkHeader();
 
-		IoBenchMark ioBenchMark = new IoBenchMark();
-		ioBenchMark.run(SMALL);
+		IoBenchquark ioBenchMark = new IoBenchquark();
+		//ioBenchMark.run(SMALL);
 //		ioBenchMark.run(MEDIUM);
 //		ioBenchMark.run(LARGE);
 	}
@@ -43,20 +40,10 @@ public class IoBenchMark {
 		runBenchmark(itemCount);
 	}
 
-	private void runBenchmark(int itemCount) throws FileNotFoundException,
-			IOException {
-		removeExistingLog(itemCount);
-		PrintStream out = new PrintStream(new FileOutputStream(logFileName(itemCount), true));
-		printRunHeader(itemCount, out);
-		for (int i = 0; i < LogConstants.ALL_ENTRIES.length; i++) {
-			String currentCommand = LogConstants.ALL_ENTRIES[i];
-			benchmarkCommand(currentCommand, itemCount, out);	
-		}
-		removeDbFile();
-	}
+
 
 	/**
-	 * This runs a "real world" application to generate an I/O-access log.
+	 * Runs a "real world" application to generate an I/O-access log.
 	 *  
 	 * @param itemCount	The number of items to be stored
 	 */
@@ -65,7 +52,7 @@ public class IoBenchMark {
 	}
 	
 	/**
-	 * Replays an I/O-access log to prepare a DB-file for benchmarking
+	 * Replays an I/O-access log to prepare a DB-file for benchmarking.
 	 *  
 	 * @param itemCount	The number of items to be stored
 	 * @throws IOException
@@ -76,9 +63,29 @@ public class IoBenchMark {
 		IoAdapter raf = rafFactory.open(DB_FILE_NAME, false, 0, false);
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf);
 		replayer.replayLog();
+		
 		raf.close();
 	}
 
+	/**
+	 * Runs the actual benchmark.<br><br>
+	 * Each I/O command (read, write, seek, sync) is benchmarked separately by measuring the
+	 * total time taken for all executions of this particular command.
+	 * 
+	 * @param itemCount
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private void runBenchmark(int itemCount) throws FileNotFoundException, IOException {
+		removeExistingLog(itemCount);
+		PrintStream out = new PrintStream(new FileOutputStream(logFileName(itemCount), true));
+		printRunHeader(itemCount, out);
+		for (int i = 0; i < LogConstants.ALL_ENTRIES.length; i++) {
+			String currentCommand = LogConstants.ALL_ENTRIES[i];
+			benchmarkCommand(currentCommand, itemCount, out);	
+		}
+		removeDbFile();
+	}
 
 	private void benchmarkCommand(String command, int itemCount, PrintStream out) throws IOException {
 		StopWatch watch = new StopWatch();
@@ -90,14 +97,11 @@ public class IoBenchMark {
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
 		IoAdapter raf = rafFactory.open(DB_FILE_NAME, false, 0, false);
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf, commands);
-		
 		List4 commandList = replayer.readCommandList();
-		raf.seek(0);
+		//raf.seek(0);
 		
 		watch.start();
-		replayer.playCommandList(commandList);
-		// replayer.replayLog();
-		
+		replayer.playCommandList(commandList);		
 		watch.stop();
 		
 		timeElapsed = watch.elapsed();
@@ -141,7 +145,6 @@ public class IoBenchMark {
 	}
 	
 	private void printStatisticsForCommand(PrintStream out, String currentCommand, long timeElapsed, long operationCount) {
-		
 		double avgTimePerOp = (double)timeElapsed/(double)operationCount;
 		double opsPerMs = (double)operationCount/(double)timeElapsed;
 		double nanosPerMilli = Math.pow(10, 6);
