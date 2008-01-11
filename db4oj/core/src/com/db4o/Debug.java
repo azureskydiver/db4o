@@ -21,6 +21,15 @@ public abstract class Debug extends Debug4 {
      * prints query graph information to the console
      */
     public static final boolean queries = false;
+    
+    /**
+     * allows faking the Db4oDatabase identity object, so the first
+     * stored object in the debugger is the actually persisted object
+     * 
+     * Changing this setting to true will fail some tests that expect 
+     * database files to have identity
+     */
+    public static final boolean staticIdentity = queries;
 
     /**
      * prints more stack traces
@@ -80,12 +89,6 @@ public abstract class Debug extends Debug4 {
      * allows overriding the file locking mechanism to turn it off
      */
     public static final boolean lockFile = true;
-    
-    /**
-     * allows faking the Db4oDatabase identity object, so the first
-     * stored object in the debugger is the actually persisted object  
-     */
-    public static final boolean staticIdentity = false;
     
     /**
      * turn to false, to prevent reading old PBootRecord object

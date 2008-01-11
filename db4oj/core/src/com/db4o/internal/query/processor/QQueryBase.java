@@ -552,45 +552,63 @@ public abstract class QQueryBase implements Unversioned {
 	}
 
 	public CreateCandidateCollectionResult createCandidateCollection() {
+		List4 candidatesList = createQCandidatesList();
 		boolean checkDuplicates = false;
         boolean topLevel = true;
-        List4 candidateCollection = null;
         Iterator4 i = iterateConstraints();
         while (i.moveNext()) {
-            QCon qcon = (QCon)i.current();
-            QCon old = qcon;            
-            qcon = qcon.getRoot();
-            if (qcon != old) {
+            QCon constraint = (QCon)i.current();
+            QCon old = constraint;            
+            constraint = constraint.getRoot();
+            if (constraint != old) {
                 checkDuplicates = true;
                 topLevel = false;
             }
-            ClassMetadata yc = qcon.getYapClass();
-            if (yc == null) {
+            ClassMetadata classMetadata = constraint.getYapClass();
+            if (classMetadata == null) {
             	break;
             }
-            candidateCollection = addConstraintToCandidateCollection(candidateCollection, qcon);
+            addConstraintToCandidatesList(candidatesList, constraint);
+            
         }
-		return new CreateCandidateCollectionResult(candidateCollection, checkDuplicates, topLevel);
+		return new CreateCandidateCollectionResult(candidatesList, checkDuplicates, topLevel);
 	}
-
-	private List4 addConstraintToCandidateCollection(List4 candidateCollection, QCon qcon) {
-		
-		if (candidateCollection != null) {
-		    if (tryToAddToExistingCandidate(candidateCollection, qcon)) {
-		    	return candidateCollection;
-		    }
+	
+	private void addConstraintToCandidatesList(List4 candidatesList, QCon qcon) {
+		if (candidatesList == null) {
+			return;
 		}
-		
-		QCandidates candidates = new QCandidates((LocalTransaction) _trans, qcon.getYapClass(), null);
-		candidates.addConstraint(qcon);
-		return new List4(candidateCollection, candidates);
-	}
-
-	private boolean tryToAddToExistingCandidate(List4 candidateCollection, QCon qcon) {
-		Iterator4 j = new Iterator4Impl(candidateCollection);
+		Iterator4 j = new Iterator4Impl(candidatesList);
 		while (j.moveNext()) {
 		    QCandidates candidates = (QCandidates)j.current();
-		    if (candidates.tryAddConstraint(qcon)) {
+		    candidates.addConstraint(qcon);
+		}
+	}
+	
+	private List4 createQCandidatesList(){
+        List4 candidatesList = null;
+        Iterator4 i = iterateConstraints();
+        while (i.moveNext()) {
+            QCon constraint = (QCon)i.current();
+            constraint = constraint.getRoot();
+            ClassMetadata classMetadata = constraint.getYapClass();
+            if (classMetadata == null) {
+            	continue;
+            }
+            if(constraintCanBeAddedToExisting(candidatesList, constraint)){
+            	continue;
+            }
+    		QCandidates candidates = new QCandidates((LocalTransaction) _trans, classMetadata, null);
+    		candidatesList = new List4(candidatesList, candidates);
+        }
+		return candidatesList;
+	}
+	
+	private boolean constraintCanBeAddedToExisting(List4 candidatesList, QCon constraint){
+		Iterator4 j = new Iterator4Impl(candidatesList);
+		while (j.moveNext()) {
+		    QCandidates candidates = (QCandidates)j.current();
+		    if (candidates.fitsIntoExistingConstraintHierarchy(constraint)) {
 		        return true;
 		    }
 		}
@@ -707,6 +725,18 @@ public abstract class QQueryBase implements Unversioned {
 	
 	public void evaluationMode(QueryEvaluationMode mode){
 		_evaluationMode = mode;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append("QQueryBase\n");
+		Iterator4 i = iterateConstraints();
+		while(i.moveNext()){
+			QCon constraint = (QCon) i.current();
+			sb.append(constraint);
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 }
