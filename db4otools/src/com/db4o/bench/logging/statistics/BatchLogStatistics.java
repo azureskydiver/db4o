@@ -1,6 +1,6 @@
 /* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */
 
-package com.db4o.bench.logging;
+package com.db4o.bench.logging.statistics;
 
 import java.io.*;
 
@@ -8,22 +8,17 @@ import java.io.*;
 
 public class BatchLogStatistics {
 
-	
-	/**
-	 * @param args
-	 */
+
 	public static void main(String[] args) {
 		if ( args.length < 1 ) {
 			System.out.println("[BATCH] No path given.");
-		}
-		else {
-			new BatchLogStatistics(args[0]);
-		}
-
+			System.exit(1);
+		}		
+		new BatchLogStatistics().run(args[0]);
 	}
 
 	
-	public BatchLogStatistics(String logDirectoryPath) {
+	public void run(String logDirectoryPath) {
 		File directory = new File(logDirectoryPath);
 		if ( directory.isDirectory() ) {
 			System.out.println("[BATCH] Creating statistics for logs in " + logDirectoryPath);
@@ -32,10 +27,10 @@ public class BatchLogStatistics {
 			
 			int i;
 			for ( i = 0; i < logFiles.length; i++ ) {
-				new LogStatistics(logFiles[i].getPath());
+				new LogStatistics().run(logFiles[i].getPath());
 			}
 			
-			System.out.println("[BATCH] Statistics for " + (++i) + " log files have been created!");
+			System.out.println("[BATCH] Statistics for " + i + " log files have been created!");
 		}
 		else {
 			System.out.println("[BATCH] Given path is no directory!");
