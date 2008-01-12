@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.*;
 import com.db4o.bench.logging.replay.*;
+import com.db4o.bench.logging.replay.commands.*;
 import com.db4o.io.*;
 
 
