@@ -83,7 +83,7 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
     }
 
     private boolean config(int mask) {
-    	return (_config&mask)!=0;
+    	return (_config & mask) != 0;
     }
     
 }
