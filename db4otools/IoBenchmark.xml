@@ -24,9 +24,13 @@
 				<classpath>
 					<pathelement location="bin"/>
 					<pathelement location="lib/${db4o.jar}"/>
+					<pathelement location="lib/nano-timing.jar"/>
 				</classpath>
+				<jvmarg line="${jvm.args}"/>
 				<arg line="@{object.count}" />
 				<arg line="${db.file.name}" />
+				<arg line="${results.file.1}" />
+				<arg line="${results.file.2}" />
 			</java>
 		</sequential>
 	</macrodef>
