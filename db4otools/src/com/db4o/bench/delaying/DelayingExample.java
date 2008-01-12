@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.bench.*;
 import com.db4o.bench.logging.replay.*;
+import com.db4o.bench.logging.replay.commands.*;
 import com.db4o.io.*;
 
 
@@ -76,6 +77,7 @@ public class DelayingExample {
 		IoAdapter io = delFactory.open(DB_FILE_NAME, false, 0, false);
 		LogReplayer replayer = new LogReplayer(OPERATIONS_LOG_FILE_NAME, io);
 		try {
+			//replayer.replayLog();
 			replayer.replayLog();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

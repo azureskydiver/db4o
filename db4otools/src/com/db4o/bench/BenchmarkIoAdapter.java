@@ -8,7 +8,6 @@ import java.util.*;
 import com.db4o.bench.logging.*;
 import com.db4o.bench.timing.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.io.*;
 
 
@@ -17,11 +16,6 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
 	private static String _logFileName = "db4o-benchmark.log";
 	
 	private final NanoStopWatch _watch;
-	
-//	private final BenchmarkStatistics _readStats;
-//	private final BenchmarkStatistics _writeStats;
-//	private final BenchmarkStatistics _seekStats;
-//	private final BenchmarkStatistics _syncStats;
 	
 	private final Set _operations;
 	private final int _iterations;
@@ -38,10 +32,7 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
 		} catch (Exception e) {
 			throw new Db4oIOException(e.getMessage());
 		}
-//		_readStats = new BenchmarkStatistics(LogConstants.READ_ENTRY, iterations);
-//		_writeStats = new BenchmarkStatistics(LogConstants.WRITE_ENTRY, iterations);
-//		_seekStats = new BenchmarkStatistics(LogConstants.SEEK_ENTRY, iterations);
-//		_syncStats = new BenchmarkStatistics(LogConstants.SYNC_ENTRY, iterations);
+
 		_append = append;
 		_operations = operations;
 		
@@ -71,10 +62,6 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
 	private void outputStatistics() {
 		try {
 			PrintStream out = new PrintStream(new FileOutputStream(_logFileName, _append));
-//			_readStats.printStatistics(out);
-//			_writeStats.printStatistics(out);
-//			_seekStats.printStatistics(out);
-//			_syncStats.printStatistics(out);
 
 			Iterator it = _statistics.values().iterator();
 			while (it.hasNext()) {
@@ -96,8 +83,7 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
 	        bytesRead = _delegate.read(bytes, length);
 		}
         _watch.stop();
-//        _readStats.log(_watch.elapsed(), bytesRead);
-        
+
         BenchmarkStatistics bms = (BenchmarkStatistics)_statistics.get(LogConstants.READ_ENTRY);
         bms.log(_watch.elapsed(), bytesRead);
         _statistics.put(LogConstants.READ_ENTRY, bms);
@@ -111,7 +97,6 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
     		_delegate.seek(pos);
     	}
         _watch.stop();
-//        _seekStats.log(_watch.elapsed());
         
         BenchmarkStatistics bms = (BenchmarkStatistics)_statistics.get(LogConstants.SEEK_ENTRY);
         bms.log(_watch.elapsed());
@@ -124,7 +109,6 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
     		_delegate.sync();
     	}
         _watch.stop();
-//        _syncStats.log(_watch.elapsed());
         
         BenchmarkStatistics bms = (BenchmarkStatistics)_statistics.get(LogConstants.SYNC_ENTRY);
         bms.log(_watch.elapsed());
@@ -137,7 +121,6 @@ public class BenchmarkIoAdapter extends VanillaIoAdapter {
     		_delegate.write(buffer, length);
     	}
         _watch.stop();
-//        _writeStats.log(_watch.elapsed(), length);
         
         BenchmarkStatistics bms = (BenchmarkStatistics)_statistics.get(LogConstants.WRITE_ENTRY);
         bms.log(_watch.elapsed(), length);
