@@ -6,8 +6,10 @@ import java.io.*;
 import java.util.*;
 
 import com.db4o.bench.crud.*;
+import com.db4o.bench.delaying.*;
 import com.db4o.bench.logging.*;
 import com.db4o.bench.logging.replay.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
 
@@ -18,63 +20,57 @@ public class IoBenchmark {
 
 	private static final String _singleLine = "-------------------------------------------------------------";
 	
+	private Delays _delays = null;
+	
 	
 	public static void main(String[] args) throws IOException {
-		if (args.length < 2) {
-			System.out.println("Usage: IoBenchmark <object-count> <db-file-name>");
+		if (args.length != 2 && args.length != 4) {
+			System.out.println("Usage: IoBenchmark <object-count> <db-file-name> [<results-file-1> <results-file-2>]");
 			System.exit(1);
-		}
-		
+		}		
 		printBenchmarkHeader();
-
 		IoBenchmark ioBenchmark = new IoBenchmark();
-		ioBenchmark.run(Integer.parseInt(args[0]), args[1]);
+		if (args.length == 2 || (args[2] == "" && args[3] == "")) {
+			ioBenchmark.run(Integer.parseInt(args[0]), args[1]);
+		}
+		else {
+			ioBenchmark.runDelayed(Integer.parseInt(args[0]), args[1], args[2], args[3]);
+		}	
 	}
 
 	
-	private void run(int itemCount, String dbFileName) throws FileNotFoundException, IOException {
+	private void run(int itemCount, String dbFileName) throws IOException {
 		runTargetApplication(itemCount);
 		prepareDbFile(itemCount, dbFileName);
 		runBenchmark(itemCount, dbFileName);
 	}
 
+	
+	private void runDelayed(int itemCount, String dbFileName, String resultsFile1, String resultsFile2) throws IOException {
+		processResultsFiles(resultsFile1, resultsFile2);;
+		run(itemCount, dbFileName);
+	}
 
-
-	/**
-	 * Runs a "real world" application to generate an I/O-access log.
-	 *  
-	 * @param itemCount	The number of items to be stored
-	 */
+	
 	private void runTargetApplication(int itemCount) {
+		System.out.println("Running target application ...");
 		new CrudApplication().run(itemCount);
 	}
 	
-	/**
-	 * Replays an I/O-access log to prepare a DB-file for benchmarking.
-	 *  
-	 * @param itemCount	The number of items to be stored
-	 * @throws IOException
-	 */
+
 	private void prepareDbFile(int itemCount, String dbFileName) throws IOException {
+		System.out.println("Preparing DB file ...");
 		removeDbFile(dbFileName);
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
 		IoAdapter raf = rafFactory.open(dbFileName, false, 0, false);
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf);
-		replayer.replayLog();
-		
+		replayer.replayLog();		
 		raf.close();
 	}
 
-	/**
-	 * Runs the actual benchmark.<br><br>
-	 * Each I/O command (read, write, seek, sync) is benchmarked separately by measuring the
-	 * total time taken for all executions of this particular command.
-	 * 
-	 * @param itemCount
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	private void runBenchmark(int itemCount, String dbFileName) throws FileNotFoundException, IOException {
+
+	private void runBenchmark(int itemCount, String dbFileName) throws IOException {
+		System.out.println("Running benchmark ...");
 		removeExistingLog(itemCount);
 		PrintStream out = new PrintStream(new FileOutputStream(logFileName(itemCount), true));
 		printRunHeader(itemCount, out);
@@ -85,36 +81,83 @@ public class IoBenchmark {
 		removeDbFile(dbFileName);
 	}
 
+		
 	private void benchmarkCommand(String command, int itemCount, String dbFileName, PrintStream out) throws IOException {
-		StopWatch watch = new StopWatch();
-		long timeElapsed, operationCount;
-		
-		HashSet commands = new HashSet();
-		commands.add(command);
-		
-		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter raf = rafFactory.open(dbFileName, false, 0, false);
-		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf, commands);
+		HashSet commands = commandSet(command);
+		IoAdapter io = ioAdapter(dbFileName);
+		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), io, commands);
 		List4 commandList = replayer.readCommandList();
-		//raf.seek(0);
 		
+		StopWatch watch = new StopWatch();
 		watch.start();
 		replayer.playCommandList(commandList);		
 		watch.stop();
+		io.close();
 		
-		timeElapsed = watch.elapsed();
-		operationCount = ((Long)replayer.operationCounts().get(command)).longValue();
-		
-		raf.close();
-		
+		long timeElapsed = watch.elapsed();
+		long operationCount = ((Long)replayer.operationCounts().get(command)).longValue();
 		printStatisticsForCommand(out, command, timeElapsed, operationCount);
 	}
+
+
+	private IoAdapter ioAdapter(String dbFileName) throws NumberFormatException, IOException, Db4oIOException {
+		if (delayed()) {
+			return delayingIoAdapter(dbFileName);
+		}
+		
+		IoAdapter rafFactory = new RandomAccessFileAdapter();
+		return rafFactory.open(dbFileName, false, 0, false);
+	}
 	
 	
-	private static String logFileName(int itemCount){
-		return "db4o-io-benchmark-results-" + itemCount + ".log";
+	private IoAdapter delayingIoAdapter(String dbFileName) throws NumberFormatException, IOException {
+		IoAdapter rafFactory = new RandomAccessFileAdapter();
+		IoAdapter delFactory = new DelayingIoAdapter(rafFactory, _delays);
+		return delFactory.open(dbFileName, false, 0, false);
 	}
 
+
+	private void processResultsFiles(String resultsFile1, String resultsFile2) throws NumberFormatException, IOException {
+		System.out.println("Delaying:");
+		System.out.print("> ");
+		DelayCalculation calculation = new DelayCalculation(resultsFile1, resultsFile2);
+		calculation.validateData();
+		if (calculation.isValidData()) {
+			_delays = calculation.getDelays();
+			System.out.println("> " + _delays);
+			if ( _delays.units == Delays.UNITS_MILLISECONDS ) {
+				System.out.println("> Delaying with Thread.sleep() ...");
+			}
+			else if ( _delays.units == Delays.UNITS_NANOSECONDS ) {
+				System.out.println("> Delaying with busy waiting ...");
+			}
+		}
+		else {
+			System.err.println("> Results file are invalid for delaying!");
+			System.err.println("> Aborting execution!");
+			System.exit(1);
+		}
+	}
+	
+	private String logFileName(int itemCount){
+		String fileName =  "db4o-IoBenchmark-results-" + itemCount;
+		if (delayed()) {
+			fileName += "-delayed";
+		}
+		fileName += ".log";
+		return fileName;
+	}
+
+	private boolean delayed() {
+		return _delays != null;
+	}
+	
+	private HashSet commandSet(String command) {
+		HashSet commands = new HashSet();
+		commands.add(command);
+		return commands;
+	}
+	
 	private void removeExistingLog(int itemCount) {
 		new File(logFileName(itemCount)).delete();
 	}
@@ -126,11 +169,6 @@ public class IoBenchmark {
 	private static void printBenchmarkHeader() {
 		printDoubleLine();
 		System.out.println("Running db4o IoBenchMark");
-		printSingleLine();
-		System.out.println("Be aware: running the LARGE benchmark\n" +
-							"1) May take a very long time, depending on your machine speed\n" +
-							"2) May require to increase the heap size of your JVM (eg with '-Xmx512m')\n" +
-							"3) Will need about 1.5GB of disk space");
 		printDoubleLine();
 	}
 	
@@ -161,10 +199,7 @@ public class IoBenchmark {
 		out.println(text);
 		System.out.println(text);
 	}
-		
-	private static void printSingleLine() {
-		System.out.println(_singleLine);
-	}
+	
 	
 	private static void printDoubleLine() {
 		System.out.println(_doubleLine);
