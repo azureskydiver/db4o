@@ -35,8 +35,7 @@ public class CollectionsUtil {
             ArrayMap4<String, Integer> map) {
         Assert.isNull(getField(reflector, map, "_keys"));
         Assert.isNull(getField(reflector, map, "_values"));
-        Assert.areEqual(new Integer(0), getField(reflector, map, "_startIndex"));
-        Assert.areEqual(new Integer(0), getField(reflector, map, "_endIndex"));
+        Assert.areEqual(new Integer(0), getField(reflector, map, "_size"));
     }
 
     @SuppressWarnings("unchecked")
