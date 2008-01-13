@@ -265,10 +265,9 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 	 * @sharpen.ignore
 	 */
     @SuppressWarnings("unchecked")
-    public V remove(Object key) {
-        activate(ActivationPurpose.WRITE);
-        
-        int index = indexOf(_keys, key);
+    public V remove(Object key) {        
+        activate(ActivationPurpose.READ);
+        int index = indexOfKey(key);
         if (index == -1) {
             return null;
         }
@@ -427,6 +426,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     }
    
 	private V delete(int index) {
+        activate(ActivationPurpose.WRITE);
         V value = valueAt(index);
         for (int i = index; i < _size -1; i++) {
             _keys[i] = _keys[i + 1];
