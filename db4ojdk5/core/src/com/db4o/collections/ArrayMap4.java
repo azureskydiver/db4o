@@ -36,9 +36,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
 
     private V[] _values;
 
-    private int _startIndex;
-
-    private int _endIndex;
+    private int _size;
 
     private transient Activator _activator;
 
@@ -86,8 +84,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     public void clear() {
         activate(ActivationPurpose.WRITE);
         
-        _startIndex = 0;
-        _endIndex = 0;
+        _size = 0;
         Arrays.fill(_keys, defaultKeyValue());
         Arrays.fill(_values, defaultValue());
     }
@@ -140,7 +137,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         activate(ActivationPurpose.READ);
         
         HashSet<Map.Entry<K, V>> set = new HashSet<Entry<K, V>>();
-        for (int i = _startIndex; i < _endIndex; i++) {
+        for (int i = 0; i < _size; i++) {
             MapEntry4<K, V> entry = new MapEntry4<K, V>(keyAt(i), valueAt(i));
             set.add(entry);
         }
@@ -193,7 +190,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         activate(ActivationPurpose.READ);
         
         HashSet<K> set = new HashSet<K>();
-        for (int i = _startIndex; i < _endIndex; i++) {
+        for (int i = 0; i < _size; i++) {
             set.add(keyAt(i));
         }
         return set;
@@ -291,7 +288,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     public int size() {
         activate(ActivationPurpose.READ);
         
-        return _endIndex - _startIndex;
+        return _size;
     }
 
 	/**
@@ -307,7 +304,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
         activate(ActivationPurpose.READ);
         
         ArrayList<V> list = new ArrayList<V>();
-        for (int i = _startIndex; i < _endIndex; i++) {
+        for (int i = 0; i < _size; i++) {
             list.add(valueAt(i));
         }
         return list;
@@ -399,7 +396,7 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
      */
     private int indexOf(Object[] array, Object obj) {
         int index = -1;
-        for (int i = _startIndex; i < _endIndex; i++) {
+        for (int i = 0; i < _size; i++) {
             if (array[i] ==null ? obj == null : array[i].equals(obj)) {
                 index = i;
                 break;
@@ -410,22 +407,20 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
     
     private void insert(K key, V value) {
         ensureCapacity();
-        _keys[_endIndex] = key;
-        _values[_endIndex] = value;
+        _keys[_size] = key;
+        _values[_size] = value;
         
-        _endIndex ++;
+        _size ++;
     }
     
     @SuppressWarnings("unchecked")
     private void ensureCapacity() {
-        if (_endIndex == _keys.length) {
+        if (_size == _keys.length) {
             int count = _keys.length * 2;
 			K[] newKeys = allocateKeyStorage(count);
             V[] newValues = allocateValueStorage(count);
-            System.arraycopy(_keys, _startIndex, newKeys, 0, _endIndex - _startIndex);
-            System.arraycopy(_values, _startIndex, newValues, 0, _endIndex - _startIndex);
-            Arrays.fill(_keys, defaultKeyValue());
-            Arrays.fill(_values, defaultValue());
+            System.arraycopy(_keys, 0, newKeys, 0, _size);
+            System.arraycopy(_values, 0, newValues, 0, _size);
             _keys = newKeys;
             _values = newValues;
         }
@@ -433,13 +428,13 @@ public class ArrayMap4<K, V> implements Map<K, V>, Serializable, Cloneable,
    
 	private V delete(int index) {
         V value = valueAt(index);
-        for (int i = index; i < _endIndex -1; i++) {
+        for (int i = index; i < _size -1; i++) {
             _keys[i] = _keys[i + 1];
             _values[i] = _values[i + 1];
         }
-        _endIndex--;
-        _keys[_endIndex] = defaultKeyValue();
-        _values[_endIndex] = defaultValue();
+        _size--;
+        _keys[_size] = defaultKeyValue();
+        _values[_size] = defaultValue();
         return value;
     }
     
