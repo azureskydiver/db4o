@@ -25,7 +25,7 @@ public class ArrayMap4TransparentUpdateTestCase implements TestLifeCycle {
 		_map.remove("foo");
 		assertWriteCount(2);
 		_map.remove("baz");
-		assertWriteCount(3);
+		assertWriteCount(2);
 	}
 	
 	public void testClear() {
