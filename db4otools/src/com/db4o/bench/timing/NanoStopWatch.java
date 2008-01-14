@@ -11,7 +11,7 @@ public class NanoStopWatch {
 	
 	private NanoTiming _timing;
 
-	public NanoStopWatch() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public NanoStopWatch() {
 		_timing = NanoTimingInstance.newInstance();
 	}
 	

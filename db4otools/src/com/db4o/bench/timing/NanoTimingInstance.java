@@ -5,8 +5,12 @@ package com.db4o.bench.timing;
 
 public class NanoTimingInstance {
 
-	public static NanoTiming newInstance() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		return (NanoTiming) Class.forName("com.db4o.bench.timing.NanoTimingImpl").newInstance();
+	public static NanoTiming newInstance() {
+		try {
+			return (NanoTiming) Class.forName("com.db4o.bench.timing.NanoTimingImpl").newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("Could not load NanoTiming!\r\n" + e);
+		}
 	}
 	
 }
