@@ -130,6 +130,7 @@ public abstract class QQueryBase implements Unversioned {
                     ClassMetadata classMetadata = (ClassMetadata) obj;
                     QConClass qcc = new QConClass(_trans,classMetadata.classReflector());
                     addConstraint(qcc);
+                    toConstraint(i_constraints).or(qcc);
                 }
             });
 	    }
