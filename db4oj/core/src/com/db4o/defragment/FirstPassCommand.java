@@ -64,13 +64,13 @@ final class FirstPassCommand implements PassCommand {
 			return;
 		}
 		int blockSize = context.blockSize();
-		int blockLength=Math.max(Const4.POINTER_LENGTH,blockSize);
 		boolean overlapping=(Const4.POINTER_LENGTH%blockSize>0);
 		int blocksPerPointer=Const4.POINTER_LENGTH/blockSize;
 		if(overlapping) {
 			blocksPerPointer++;
 		}
-		int batchSize = _ids.size()*blockLength;
+		int bytesPerPointer = blocksPerPointer * blockSize;
+		int batchSize = _ids.size() * bytesPerPointer;
 		Slot pointerSlot = context.allocateTargetSlot(batchSize);
 		int pointerAddress=pointerSlot.address();
 		Iterator4 idIter=new TreeKeyIterator(_ids);
