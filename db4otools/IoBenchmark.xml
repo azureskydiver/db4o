@@ -20,6 +20,24 @@
 	<macrodef name="run.benchmark">
 		<attribute name="object.count" />
 		<sequential>
+			<condition property="run.delayed" value="true" else="false">
+				<and>
+					<length string="${results.file.1}" when="greater" length="0" />
+					<length string="${results.file.2}" when="greater" length="0" />
+				</and>
+			</condition>
+			<condition property="adjust.delays.true" value="true" else="">
+				<and>
+					<istrue value="${run.delayed}" />
+					<istrue value="${adjust.delays}" />
+				</and>
+			</condition>
+			<condition property="adjust.delays.false" value="false" else="">
+				<and>
+					<istrue value="${run.delayed}" />
+					<isfalse value="${adjust.delays}" />
+				</and>
+			</condition>
 			<java classname="com.db4o.bench.IoBenchmark" failonerror="true" fork="true">
 				<classpath>
 					<pathelement location="bin"/>
@@ -31,6 +49,8 @@
 				<arg line="${db.file.name}" />
 				<arg line="${results.file.1}" />
 				<arg line="${results.file.2}" />
+				<arg line="${adjust.delays.true}"/>
+				<arg line="${adjust.delays.false}"/>
 			</java>
 		</sequential>
 	</macrodef>
