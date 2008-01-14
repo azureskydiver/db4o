@@ -5,10 +5,13 @@ package com.db4o.bench.delaying;
 import java.io.*;
 
 import com.db4o.bench.logging.*;
+import com.db4o.bench.timing.*;
 
 
 public class DelayCalculation {
 
+	private static final int ADJUSTMENT_ITERATIONS = 10000;
+	
 	private MachineCharacteristics _machine1;
 	private MachineCharacteristics _machine2;
 	private MachineCharacteristics _fasterMachine = null;
@@ -49,7 +52,8 @@ public class DelayCalculation {
 		return ((_fasterMachine != null) && (_slowerMachine != null));
 	}
 	
-	public Delays getDelays() {
+
+	public Delays calculatedDelays() {
 		long writeDelay, readDelay, seekDelay, syncDelay;
 		String units = null;
 		
@@ -76,6 +80,27 @@ public class DelayCalculation {
 		
 		Delays delays = new Delays(readDelay, writeDelay, seekDelay, syncDelay, units);
 		return delays;
+	}
+	
+	public Delays adjustDelays(Delays delays) {
+		long readDelay = adjustDelay(delays.readDelay);
+		long writeDelay = adjustDelay(delays.writeDelay);
+		long seekDelay = adjustDelay(delays.seekDelay);
+		long syncDelay = adjustDelay(delays.syncDelay);
+		return new Delays(readDelay, writeDelay, seekDelay, syncDelay, delays.units);
+	}
+	
+	private long adjustDelay(long delay) {
+		NanoStopWatch watch = new NanoStopWatch();
+		NanoTiming timing = NanoTimingInstance.newInstance();
+		watch.start();
+		for (int i = 0; i < ADJUSTMENT_ITERATIONS; i++) {
+			timing.waitNano(delay);
+		}
+		watch.stop();
+		long difference = ADJUSTMENT_ITERATIONS*delay - watch.elapsed();
+		long adjustedReadDelay = delay + difference/ADJUSTMENT_ITERATIONS;
+		return adjustedReadDelay;
 	}
 }
 
