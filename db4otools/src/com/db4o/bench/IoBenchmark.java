@@ -24,17 +24,17 @@ public class IoBenchmark {
 	
 	
 	public static void main(String[] args) throws IOException {
-		if (args.length < 2 || (args.length > 2 && args.length < 5)) {
-			System.out.println("Usage: IoBenchmark <object-count> <db-file-name> [<results-file-1> <results-file-2> <adjust-delays>]");
+		if (args.length != 2 && args.length != 4) {
+			System.out.println("Usage: IoBenchmark <object-count> <db-file-name> [<results-file-1> <results-file-2>]");
 			System.exit(1);
 		}		
 		printBenchmarkHeader();
 		IoBenchmark ioBenchmark = new IoBenchmark();
-		if (args.length == 2 || (args[2] == "" && args[3] == "" && args[4] == "")) {
+		if (args.length == 2 || (args[2] == "" && args[3] == "")) {
 			ioBenchmark.run(Integer.parseInt(args[0]), args[1]);
 		}
 		else {
-			ioBenchmark.runDelayed(Integer.parseInt(args[0]), args[1], args[2], args[3], Boolean.parseBoolean(args[4]));
+			ioBenchmark.runDelayed(Integer.parseInt(args[0]), args[1], args[2], args[3]);
 		}	
 	}
 
@@ -46,8 +46,8 @@ public class IoBenchmark {
 	}
 
 	
-	private void runDelayed(int itemCount, String dbFileName, String resultsFile1, String resultsFile2, boolean adjustDelays) throws IOException {
-		processResultsFiles(resultsFile1, resultsFile2, adjustDelays);
+	private void runDelayed(int itemCount, String dbFileName, String resultsFile1, String resultsFile2) throws IOException {
+		processResultsFiles(resultsFile1, resultsFile2);
 		run(itemCount, dbFileName);
 	}
 
@@ -117,23 +117,16 @@ public class IoBenchmark {
 	}
 
 
-	private void processResultsFiles(String resultsFile1, String resultsFile2, boolean adjustDelays) throws NumberFormatException, IOException {
+	private void processResultsFiles(String resultsFile1, String resultsFile2) throws NumberFormatException, IOException {
 		System.out.println("Delaying:");
 		System.out.print("> ");
 		DelayCalculation calculation = new DelayCalculation(resultsFile1, resultsFile2);
 		calculation.validateData();
 		if (calculation.isValidData()) {
-			if (adjustDelays) {
-				System.out.println("> Working with adjusted delays.");
-				Delays delays = calculation.calculatedDelays();
-				System.out.println("> Calculated delays: " + delays);
-				System.out.println("> Adjusting delays ...");
-				_delays = calculation.adjustDelays(delays);
-			}
-			else {
-				System.out.println("> Working with calculated delays.");
-				_delays = calculation.calculatedDelays();
-			}
+			Delays delays = calculation.calculatedDelays();
+			System.out.println("> Calculated delays: " + delays);
+			System.out.println("> Adjusting delays ...");
+			_delays = calculation.adjustDelays(delays);
 			System.out.println("> " + _delays);
 			if ( _delays.units == Delays.UNITS_MILLISECONDS ) {
 				System.out.println("> Delaying with Thread.sleep().");
