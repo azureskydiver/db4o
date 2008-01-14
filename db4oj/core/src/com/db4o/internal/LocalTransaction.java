@@ -433,9 +433,12 @@ public class LocalTransaction extends Transaction {
 
 	private boolean isValidSlot(int address, int length) {
 		// just in case overflow 
-		boolean validAddress = _file.fileLength() >= address;
-        boolean validLength = _file.fileLength() >= length ;
-        boolean validSlot = _file.fileLength() >= (address+length);
+		long fileLength = _file.fileLength();
+		
+		boolean validAddress = fileLength >= address;
+        boolean validLength = fileLength >= length ;
+        boolean validSlot = fileLength >= (address+length);
+        
         return validAddress && validLength && validSlot;
 	}
 
