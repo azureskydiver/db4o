@@ -138,7 +138,6 @@ public class COR756TestCase extends AbstractDb4oTestCase {
 	@SuppressWarnings("unchecked")
 	private ObjectSet executeSODAQuery(final A a, Evaluation e) {
 		Query q = db().query();
-		q.constrain(B.class);
         q.constrain(e);
 		ObjectSet set = q.execute();
 		return set;
