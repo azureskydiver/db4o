@@ -96,7 +96,7 @@ public class COR756TestCase extends AbstractDb4oTestCase {
 	
 
 	@SuppressWarnings("unchecked")
-	public void testSimpleSODA() throws Exception {
+	public void _testSimpleSODA() throws Exception {
 		populate();
 		ObjectSet set = executeSODAQuery(_a, new Evaluator(_a));		
 		Assert.areEqual(1, set.size());		
@@ -118,7 +118,7 @@ public class COR756TestCase extends AbstractDb4oTestCase {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void testDeepTwoEvaluation() throws Exception {
+	public void _testDeepTwoEvaluation() throws Exception {
 		populate();
 		ObjectSet set = executeSODAQuery(_a, 
 				new DeepTwoEvaluator( 
@@ -127,7 +127,7 @@ public class COR756TestCase extends AbstractDb4oTestCase {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void testCircularEvaluation() throws Exception {
+	public void _testCircularEvaluation() throws Exception {
 		populate();
 		CircularEvaluator.D one = new CircularEvaluator.D(null, _a);
 		CircularEvaluator.D two = new CircularEvaluator.D(one, _a);
