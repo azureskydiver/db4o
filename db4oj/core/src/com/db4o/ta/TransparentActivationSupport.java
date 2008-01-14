@@ -53,7 +53,13 @@ public class TransparentActivationSupport implements ConfigurationItem {
 	}
 	
 	private void unbindAll(final InternalObjectContainer container) {
-		container.transaction().referenceSystem().traverseReferences(new Visitor4() {
+		Transaction transaction = container.transaction();
+		// FIXME should that ever happen?
+		if(transaction == null) {
+			return;
+		}
+		ReferenceSystem referenceSystem = transaction.referenceSystem();
+		referenceSystem.traverseReferences(new Visitor4() {
 			public void visit(Object obj) {
 				unbind((ObjectReference) obj);
 			}
