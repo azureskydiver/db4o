@@ -8,7 +8,7 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
 
-public class DatabaseGrowthSizeTestCase extends AbstractDb4oTestCase implements OptOutCS{
+public class DatabaseGrowthSizeTestCase extends AbstractDb4oTestCase implements OptOutCS, OptOutDefragSolo {
 	
 	private static final int SIZE = 10000;
 	
