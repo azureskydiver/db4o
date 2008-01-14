@@ -30,7 +30,6 @@ public class COR756TestCase extends AbstractDb4oTestCase {
 	}
 	
 	public static class Evaluator implements Evaluation{
-		private static final long serialVersionUID = -4154497144509610486L;
 		public A _a;
 		public Evaluator(A a) {
 			_a = a;
@@ -96,7 +95,7 @@ public class COR756TestCase extends AbstractDb4oTestCase {
 	
 
 	@SuppressWarnings("unchecked")
-	public void _testSimpleSODA() throws Exception {
+	public void testSimpleSODA() throws Exception {
 		populate();
 		ObjectSet set = executeSODAQuery(_a, new Evaluator(_a));		
 		Assert.areEqual(1, set.size());		
@@ -118,7 +117,7 @@ public class COR756TestCase extends AbstractDb4oTestCase {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void _testDeepTwoEvaluation() throws Exception {
+	public void testDeepTwoEvaluation() throws Exception {
 		populate();
 		ObjectSet set = executeSODAQuery(_a, 
 				new DeepTwoEvaluator( 
@@ -127,7 +126,7 @@ public class COR756TestCase extends AbstractDb4oTestCase {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void _testCircularEvaluation() throws Exception {
+	public void testCircularEvaluation() throws Exception {
 		populate();
 		CircularEvaluator.D one = new CircularEvaluator.D(null, _a);
 		CircularEvaluator.D two = new CircularEvaluator.D(one, _a);
@@ -139,7 +138,8 @@ public class COR756TestCase extends AbstractDb4oTestCase {
 	@SuppressWarnings("unchecked")
 	private ObjectSet executeSODAQuery(final A a, Evaluation e) {
 		Query q = db().query();
-		q.constrain(e);
+		q.constrain(B.class);
+        q.constrain(e);
 		ObjectSet set = q.execute();
 		return set;
 	}
