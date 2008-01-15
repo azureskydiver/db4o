@@ -282,6 +282,7 @@ public abstract class QQueryBase implements Unversioned {
                                 yf.qField(_trans),
                                 parentYc.classReflector());
                         addConstraint(qcc);
+                        toConstraint(i_constraints).or(qcc);
                     }
 
                 }
