@@ -17,6 +17,7 @@ public class AllTests extends Db4oTestSuite {
             CharHandlerTestCase.class,
 		    ClassHandlerTestCase.class,
 		    ClassMetadataTypehandlerTestCase.class,
+		    CustomTypeHandlerTestCase.class,
             DoubleHandlerTestCase.class,
             FloatHandlerTestCase.class,
             IntHandlerTestCase.class,
