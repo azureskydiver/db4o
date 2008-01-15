@@ -12,12 +12,15 @@ public class AllCommonTATests extends Db4oTestSuite {
 	
 	protected Class[] testCases() {
 		return new Class[] {
+				
+			ActivatableTestCase.class,
+			TransparentActivationSupportTestCase.class,
+				
 			com.db4o.db4ounit.common.ta.events.AllTests.class,
 			com.db4o.db4ounit.common.ta.mixed.AllTests.class,
 			com.db4o.db4ounit.common.ta.nonta.AllTests.class,
 			com.db4o.db4ounit.common.ta.sample.AllTests.class,
 			com.db4o.db4ounit.common.ta.ta.AllTests.class,
-			com.db4o.db4ounit.common.ta.ActivatableTestCase.class,
 		};
 	}
 

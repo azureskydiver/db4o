@@ -169,6 +169,21 @@ public final class Config4Impl implements Configuration, DeepClone,
 		item.prepare(this);
 		safeConfigurationItems().put(item, item);
 	}
+	
+	/**
+	 * Returns an iterator for all {@link ConfigurationItem} instances
+	 * added.
+	 * 
+	 * @see Config4Impl#add
+	 * @return the iterator
+	 */
+	public Iterator4 configurationItemsIterator() {
+		Hashtable4 items = configurationItems();
+		if (items == null) {
+			return Iterators.EMPTY_ITERATOR;
+		}
+		return items.keys();
+	}
 
 	private Hashtable4 safeConfigurationItems() {
 		Hashtable4 items = configurationItems();

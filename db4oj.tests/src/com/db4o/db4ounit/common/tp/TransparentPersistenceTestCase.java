@@ -83,10 +83,6 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	private ExtObjectContainer openNewClient() {
-		return ((Db4oClientServerFixture)this.fixture()).openNewClient();
-	}
-	
 	public void testTransparentUpdate() throws Exception {
 		
 		Item foo = itemByName("Foo");
@@ -103,6 +99,15 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 		Assert.isNotNull(itemByName("Foo*"));
 		Assert.isNull(itemByName("Foo"));
 		Assert.isNotNull(itemByName("Bar"));
+	}
+	
+	public void testChangedAfterCommit() throws Exception {
+		final Item item = itemByName("Foo");
+		item.setName("Bar");
+		assertUpdatedObjects(item);
+		
+		item.setName("Foo");
+		assertUpdatedObjects(item);
 	}
 	
 	public void testUpdateAfterActivation() throws Exception {
@@ -148,6 +153,10 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 			return (Item)result.next();
 		}
 		return null;
+	}
+	
+	private ExtObjectContainer openNewClient() {
+		return ((Db4oClientServerFixture)this.fixture()).openNewClient();
 	}
 
 }

@@ -10,6 +10,7 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.slots.*;
 import com.db4o.reflect.*;
+import com.db4o.ta.*;
 
 
 /**
@@ -75,15 +76,36 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		if (null != _updateListener) {
 			return;
 		}
+		if (!isTransparentPersistenceEnabled()) {
+			// don't check for update again for this object
+			_updateListener = NullTransactionListener.INSTANCE;
+			return;
+		}
 		_updateListener = new TransactionListener() {
 			public void postRollback() {
+				resetListener();
 			}
 
 			public void preCommit() {
+				resetListener();
 				container().store(transaction, getObject());
 			}
 		};
 		transaction.addTransactionListener(_updateListener);
+	}
+	
+	private void resetListener() {
+		_updateListener = null;
+	}
+
+	private boolean isTransparentPersistenceEnabled() {
+		final Iterator4 iterator = container().config().configurationItemsIterator();
+		while (iterator.moveNext()) {
+			if (iterator.current() instanceof TransparentPersistenceSupport) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void activate(Transaction ta, Object obj, ActivationDepth depth) {
