@@ -633,7 +633,7 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
             // we can't get a value for the field, comparisons should definitely run against null
             _yapField = new NullFieldMetadata();
         }
-        _handlerVersion = MarshallingContext.HANDLER_VERSION;  
+        _handlerVersion = HandlerRegistry.HANDLER_VERSION;  
 	}
 	
 

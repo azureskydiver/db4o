@@ -20,8 +20,6 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
             + 1 // Marshaller Version
             + Const4.INT_LENGTH; // number of fields
     
-    public static final byte HANDLER_VERSION = (byte)2;
-    
     private static final int NO_INDIRECTION = 3; // and number above 2 
     
     private final Transaction _transaction;
@@ -118,7 +116,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         }
         
         writeObjectClassID(buffer, classMetadata().getID());
-        buffer.writeByte(HANDLER_VERSION);
+        buffer.writeByte(HandlerRegistry.HANDLER_VERSION);
         buffer.writeInt(fieldCount());
         buffer.writeBitMap(_nullBitMap);
         
