@@ -59,11 +59,9 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		int id2 = storeItem();
 		int smallerID = Math.min(id1, id2);
 		int biggerID = Math.max(id1, id2);
-		assertHandlerComparison(ClassMetadata.class, new Integer(smallerID), new Integer(biggerID));
+		ClassMetadata classMetadata = new ClassMetadata(stream(), reflector().forClass(Item.class));
+		assertHandlerComparison(classMetadata, new Integer(smallerID), new Integer(biggerID));
 	}
-
-
-
 
 	private int storeItem() {
 		Item item = new Item();
@@ -83,10 +81,12 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 	}
 	
 	private void assertHandlerComparison(Class handlerClass, Object smaller, Object greater) {
-		
 		TypeHandler4 handler = (TypeHandler4) newInstance(handlerClass);
-		
-		PreparedComparison comparable = handler.prepareComparison(smaller);
+		assertHandlerComparison(handler, smaller, greater);
+	}
+
+    private void assertHandlerComparison(TypeHandler4 handler, Object smaller, Object greater) {
+        PreparedComparison comparable = handler.prepareComparison(smaller);
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(smaller));
 		Assert.isSmaller(0, comparable.compareTo(greater));
@@ -100,8 +100,7 @@ public class Comparable4TestCase extends AbstractDb4oTestCase implements OptOutC
 		Assert.isNotNull(comparable);
 		Assert.areEqual(0, comparable.compareTo(null));
 		Assert.isSmaller(0, comparable.compareTo(smaller));
-		
-	}
+    }
 	
 	private Object newInstance (Class clazz){
 		ReflectClass classReflector = reflector().forClass(clazz);
