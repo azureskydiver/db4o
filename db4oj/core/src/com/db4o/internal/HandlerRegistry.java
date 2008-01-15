@@ -25,6 +25,8 @@ import com.db4o.reflect.generic.*;
  * 
  */
 public final class HandlerRegistry {
+    
+    public static final byte HANDLER_VERSION = (byte)2;
 	
 	private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
@@ -234,7 +236,7 @@ public final class HandlerRegistry {
     }
 
     public TypeHandler4 correctHandlerVersion(TypeHandler4 handler, int version){
-    	if(version == MarshallingContext.HANDLER_VERSION){
+    	if(version == HandlerRegistry.HANDLER_VERSION){
     		return handler;
     	}
         TypeHandler4 replacement = (TypeHandler4) _handlerVersions.get(new HandlerVersionKey(handler, version));

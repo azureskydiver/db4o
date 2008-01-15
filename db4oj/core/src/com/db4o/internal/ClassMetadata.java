@@ -26,7 +26,7 @@ import com.db4o.reflect.generic.*;
  */
 public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass {
     
-	private final TypeHandler4 _typeHandler;
+	private TypeHandler4 _typeHandler;
     
 	public ClassMetadata i_ancestor;
 
@@ -46,7 +46,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     private boolean _classIndexed;
     
-    private ReflectClass _reflector;
+    private ReflectClass _classReflector;
     
     private boolean _isEnum;
     
@@ -89,10 +89,10 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return new BTreeClassIndexStrategy(this);
 	}
 
-    public ClassMetadata(ObjectContainerBase container, ReflectClass reflector){
+    public ClassMetadata(ObjectContainerBase container, ReflectClass claxx){
     	_typeHandler = new FirstClassObjectHandler(this);
     	_container = container;
-        _reflector = reflector;
+    	classReflector(claxx);
         _index = createIndexStrategy();
         _classIndexed = true;
     }
@@ -338,7 +338,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
                     // Ancestor first, so the object length calculates
                     // correctly
                 }
-                if (_reflector != null) {
+                if (_classReflector != null) {
                     addMembers(_container);
                     Transaction trans = _container.systemTransaction();
                     if (!_container.isClient() && !isReadOnlyContainer(trans)) {
@@ -456,15 +456,15 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return createConstructor(container, claxx , className, true);
     }
 
-    public boolean createConstructor(ObjectContainerBase a_stream, ReflectClass a_class, String a_name, boolean errMessages) {
+    public boolean createConstructor(ObjectContainerBase container, ReflectClass claxx, String name, boolean errMessages) {
         
-        _reflector = a_class;
+        classReflector(claxx);
         
-        _eventDispatcher = EventDispatcher.forClass(a_stream, a_class);
+        _eventDispatcher = EventDispatcher.forClass(container, claxx);
         
         if(! Deploy.csharp){
-            if(a_class != null){
-                _isEnum = Platform4.isEnum(reflector(), a_class);
+            if(claxx != null){
+                _isEnum = Platform4.isEnum(reflector(), claxx);
             }
         }
         
@@ -472,40 +472,52 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             return true;
         }
         
-        if(a_class != null){
-            if(a_stream._handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(a_class)
-            	|| Platform4.isTransient(a_class)) {
-                a_class = null;
+        if(claxx != null){
+            if(container._handlers.ICLASS_TRANSIENTCLASS.isAssignableFrom(claxx)
+            	|| Platform4.isTransient(claxx)) {
+                claxx = null;
             }
         }
-        if (a_class == null) {
-            if(a_name == null || !Platform4.isDb4oClass(a_name)){
+        if (claxx == null) {
+            if(name == null || !Platform4.isDb4oClass(name)){
                 if(errMessages){
-                    a_stream.logMsg(23, a_name);
+                    container.logMsg(23, name);
                 }
             }
             setStateDead();
             return false;
         }
         
-        if(a_stream._handlers.createConstructor(a_class, ! callConstructor())){
+        if(container._handlers.createConstructor(claxx, ! callConstructor())){
             return true;
         }
         
         setStateDead();
         if(errMessages){
-            a_stream.logMsg(7, a_name);
+            container.logMsg(7, name);
         }
         
-        if (a_stream.configImpl().exceptionsOnNotStorable()) {
-            throw new ObjectNotStorableException(a_class);
+        if (container.configImpl().exceptionsOnNotStorable()) {
+            throw new ObjectNotStorableException(claxx);
         }
 
         return false;
         
     }
 
-	public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
+	private void classReflector(ReflectClass claxx) {
+	    _classReflector = claxx;
+	    if(claxx == null){
+	        _typeHandler = null;
+	        return;
+	    }
+	    TypeHandler4 registeredTypeHandler4 =
+	        container().configImpl().typeHandlerForClass(claxx, HandlerRegistry.HANDLER_VERSION);
+	    _typeHandler = registeredTypeHandler4 != null ?
+	        registeredTypeHandler4 : new FirstClassObjectHandler(this);
+    }
+
+    public void deactivate(Transaction trans, Object obj, ActivationDepth depth) {
         if(objectCanDeactivate(trans, obj)){
             deactivateFields(trans, obj, depth);
             objectOnDeactivate(trans, obj);
@@ -867,13 +879,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }    
 
     public ReflectClass classReflector(){
-        return _reflector;
+        return _classReflector;
     }
 
     public String getName() {
         if(i_name == null){
-            if(_reflector != null){
-                i_name = _reflector.getName();
+            if(_classReflector != null){
+                i_name = _classReflector.getName();
             }
         }
         return i_name;
@@ -965,7 +977,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     final void initConfigOnUp(Transaction systemTrans) {
-        Config4Class extendedConfig=Platform4.extendConfiguration(_reflector, _container.configure(), i_config);
+        Config4Class extendedConfig=Platform4.extendConfiguration(_classReflector, _container.configure(), i_config);
     	if(extendedConfig!=null) {
     		i_config=extendedConfig;
     	}
@@ -1095,13 +1107,13 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 	}
 
 	Object instantiateFromReflector(ObjectContainerBase stream) {
-		if (_reflector == null) {
+		if (_classReflector == null) {
 		    return null;
 		}
 
 		stream.instantiating(true);
 		try {
-		    return _reflector.newInstance();
+		    return _classReflector.newInstance();
 		} catch (NoSuchMethodError e) {
 		    stream.logMsg(7, classReflector().getName());
 		    return null;
@@ -1414,8 +1426,8 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             i_nameBytes = asBytes(i_name);
             setStateDirty();
             write(_container.systemTransaction());
-            ReflectClass oldReflector = _reflector;
-            _reflector = container().reflector().forName(newName);
+            ReflectClass oldReflector = _classReflector;
+            classReflector(container().reflector().forName(newName));
             container().classCollection().refreshClassCache(this, oldReflector);
             refresh();
             _state = tempState;

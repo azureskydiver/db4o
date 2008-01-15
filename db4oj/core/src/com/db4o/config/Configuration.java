@@ -8,8 +8,10 @@ import java.io.PrintStream;
 import com.db4o.diagnostic.DiagnosticConfiguration;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
+import com.db4o.internal.*;
 import com.db4o.io.IoAdapter;
 import com.db4o.reflect.Reflector;
+import com.db4o.typehandlers.*;
 
 /**
  * configuration interface.
@@ -769,6 +771,15 @@ public interface Configuration {
      * @param milliseconds the time in milliseconds
      */
     public void weakReferenceCollectionInterval(int milliseconds);
+    
+    /**
+     * allows registering special TypeHandlers for customized marshalling
+     * and customized comparisons. 
+     * @param predicate to specify for which classes and versions the
+     * TypeHandler is to be used.
+     * @param typeHandler to be used for the classes that match the predicate.
+     */
+    public void registerTypeHandler(TypeHandlerPredicate predicate, TypeHandler4 typeHandler);
     
 	    
 }

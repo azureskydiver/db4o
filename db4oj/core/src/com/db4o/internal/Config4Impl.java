@@ -13,10 +13,12 @@ import com.db4o.internal.activation.*;
 import com.db4o.internal.cs.*;
 import com.db4o.internal.diagnostic.*;
 import com.db4o.internal.freespace.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.io.*;
 import com.db4o.messaging.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
+import com.db4o.typehandlers.*;
 
 
 /**
@@ -152,6 +154,8 @@ public final class Config4Impl implements Configuration, DeepClone,
 	private boolean _internStrings;
 	private int _messageLevel;
 	private boolean	_readOnly;
+	
+	private Collection4 _registeredTypeHandlers;
 
     public int activationDepth() {
     	return _config.getAsInt(ACTIVATION_DEPTH_KEY);
@@ -271,6 +275,9 @@ public final class Config4Impl implements Configuration, DeepClone,
         ret._internStrings = _internStrings;
         ret._messageLevel = _messageLevel;
         ret._readOnly = _readOnly;
+        if(_registeredTypeHandlers != null){
+            ret._registeredTypeHandlers = (Collection4) _registeredTypeHandlers.deepClone(this);
+        }
         return ret;
     }
     
@@ -906,4 +913,27 @@ public final class Config4Impl implements Configuration, DeepClone,
 	public ActivationDepthProvider activationDepthProvider() {
 		return (ActivationDepthProvider) _config.get(ACTIVATION_DEPTH_PROVIDER_KEY);
 	}
+	
+	public void registerTypeHandler(TypeHandlerPredicate predicate, TypeHandler4 typeHandler){
+	    if(_registeredTypeHandlers == null){
+	        _registeredTypeHandlers = new Collection4();
+	    }
+	    _registeredTypeHandlers.add(new TypeHandlerPredicatePair(predicate, typeHandler));
+	}
+	
+	public TypeHandler4 typeHandlerForClass(ReflectClass classReflector, byte handlerVersion){
+	    if(_registeredTypeHandlers == null){
+	        return null;
+	    }
+	    Iterator4 i = _registeredTypeHandlers.iterator();
+	    while(i.moveNext()){
+	        TypeHandlerPredicatePair pair = (TypeHandlerPredicatePair) i.current();
+	        if(pair._predicate.match(classReflector, handlerVersion)){
+	            return pair._typeHandler;
+	        }
+	    }
+	    return null;
+	}
+	
+	
 }
