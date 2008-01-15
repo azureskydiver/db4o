@@ -136,7 +136,7 @@ public class IoBenchmark {
 			}
 		}
 		else {
-			System.err.println("> Results file are invalid for delaying!");
+			System.err.println("> Result files are invalid for delaying!");
 			System.err.println("> Aborting execution!");
 			System.exit(1);
 		}
