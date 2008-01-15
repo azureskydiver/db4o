@@ -673,6 +673,7 @@
 				<include name="Mono.Cecil.dll" />
 				<include name="Cecil.FlowAnalysis.dll" />
 				<include name="Db4oTool.exe" />
+				<include name="Mono.GetOptions.dll" />
 			</reference>
 		</csc>
 	</target>
