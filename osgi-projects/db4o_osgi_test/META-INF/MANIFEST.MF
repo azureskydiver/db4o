@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Class-Path: libs/db4o-tests-nq.jar libs/ant.jar libs/bloat-1.0.jar libs/db4o-6.3-nqopt.jar libs/db4o-6.3-db4ounit.jar
+Class-Path: lib/db4o-tests-nq.jar lib/ant.jar lib/bloat-1.0.jar lib/db4o-7.1-nqopt.jar lib/db4o-7.1-db4ounit.jar
 Bundle-Name: db4o OSGi test
 Created-By: 1.5.0-beta2 (Sun Microsystems Inc.)
 Bundle-Activator: com.db4o.osgi.test.Db4oWorkspaceActivator
@@ -12,7 +12,7 @@ Require-Bundle: db4o_osgi
 Bundle-ClassPath: .,
  lib/db4o-tests.jar,
  lib/db4o-tests-nq.jar,
- lib/db4o-6.4-db4ounit.jar
+ lib/db4o-7.1-db4ounit.jar
 Bundle-ActivationPolicy: lazy 
 Provide-Package: com.db4o.osgi.test
 
