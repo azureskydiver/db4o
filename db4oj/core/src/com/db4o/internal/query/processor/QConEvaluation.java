@@ -40,7 +40,7 @@ public class QConEvaluation extends QCon {
 
     void marshall() {
         super.marshall();
-		if(Deploy.csharp || !Platform4.useNativeSerialization()){
+		if(!Platform4.useNativeSerialization()){
 			marshallUsingDb4oFormat();
 		}else{
     		try{
@@ -60,7 +60,7 @@ public class QConEvaluation extends QCon {
     void unmarshall(Transaction a_trans) {
         if (i_trans == null) {
             super.unmarshall(a_trans);
-            if(Deploy.csharp || Platform4.useNativeSerialization()){
+            if(Deploy.csharp){
             	i_evaluation = Serializer.unmarshall(container(), i_marshalledEvaluation, i_marshalledID);
             }else{
                 if(i_marshalledID > 0){
