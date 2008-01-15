@@ -154,7 +154,7 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
     }
     
     public static class KnownObjectIdentity {
-    	int _id;
+    	public int _id;
     	public KnownObjectIdentity(int id) {
 			_id = id;
 		}
