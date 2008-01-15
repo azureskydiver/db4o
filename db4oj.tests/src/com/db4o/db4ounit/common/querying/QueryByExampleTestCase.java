@@ -24,14 +24,14 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
     }
 
     public static void main(String[] args) {
-        new QueryByExampleTestCase().runSolo();
+        new QueryByExampleTestCase().runAll();
     }
 
     protected void store() {
         store(list);
     }
     
-    public void testDefaultQueryModeIsIdentity(){
+    public void _testDefaultQueryModeIsIdentity(){
     	Item itemOne = new Item("one");
     	Item itemTwo = new Item("two");
     	store(itemOne);
@@ -52,7 +52,7 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
     }
     
     
-    public void testQueryByExample(){
+    public void _testQueryByExample(){
     	Item itemOne = new Item("one");
     	Item itemTwo = new Item("two");
     	store(itemOne);
@@ -80,7 +80,7 @@ public class QueryByExampleTestCase extends AbstractDb4oTestCase {
         Assert.areEqual(COUNT, result.size());
     }
 
-    public void testByIdentity() {
+    public void _testByIdentity() {
         Query q = db().query();
 
         q.constrain(LinkedList.class);
