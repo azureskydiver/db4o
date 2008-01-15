@@ -117,8 +117,6 @@ public class SodaTest {
             new STVectorU(),
             new STVectorET(),
             new STVectorEU(),
-
-        // Take a look at this one!!!
         	new STMagic(),
        };
 
