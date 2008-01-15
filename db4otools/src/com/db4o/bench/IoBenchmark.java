@@ -171,7 +171,7 @@ public class IoBenchmark {
 	
 	private static void printBenchmarkHeader() {
 		printDoubleLine();
-		System.out.println("Running db4o IoBenchMark");
+		System.out.println("Running db4o IoBenchmark");
 		printDoubleLine();
 	}
 	

@@ -2,7 +2,6 @@
 
 package com.db4o.bench.delaying;
 
-import com.db4o.bench.*;
 import com.db4o.bench.timing.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
