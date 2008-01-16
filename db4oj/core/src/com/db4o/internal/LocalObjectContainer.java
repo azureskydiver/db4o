@@ -99,7 +99,6 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
         
         _fileHeader.initNew(this);
         
-        _freespaceManager.onNew(this);
         _freespaceManager.start(_systemData.freespaceAddress());
     }
     
@@ -538,10 +537,15 @@ public abstract class LocalObjectContainer extends ExternalObjectContainer imple
 
 	private void migrateFreespace() {
 		FreespaceManager oldFreespaceManager = _freespaceManager;
-		_freespaceManager = AbstractFreespaceManager.createNew(this, configImpl().freespaceSystem());
+		
+		FreespaceManager newFreespaceManager = AbstractFreespaceManager.createNew(this, configImpl().freespaceSystem());
+		newFreespaceManager.start(0);
+		
         systemData().freespaceAddress(0);
         systemData().freespaceSystem(configImpl().freespaceSystem());
-		_freespaceManager.start(_freespaceManager.onNew(this));
+        
+        _freespaceManager = newFreespaceManager;
+		
 		AbstractFreespaceManager.migrate(oldFreespaceManager, _freespaceManager);
 		_fileHeader.writeVariablePart(this, 1);
 	}

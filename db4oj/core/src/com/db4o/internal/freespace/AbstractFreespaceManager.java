@@ -35,8 +35,6 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
         return createNew(file, file.systemData().freespaceSystem());
     }
     
-	public abstract int onNew(LocalObjectContainer file);
-    
     public static AbstractFreespaceManager createNew(LocalObjectContainer file, byte systemType){
         systemType = checkType(systemType);
         switch(systemType){
@@ -107,8 +105,6 @@ public abstract class AbstractFreespaceManager implements FreespaceManager {
     public static void migrate(FreespaceManager oldFM, FreespaceManager newFM) {
     	oldFM.migrateTo(newFM);
     	oldFM.freeSelf();
-    	newFM.beginCommit();
-    	newFM.endCommit();
     }
     
     public void debugCheckIntegrity(){

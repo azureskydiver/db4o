@@ -138,6 +138,10 @@ public abstract class PersistentBase implements Persistent {
 	            
 	        LocalObjectContainer stream = (LocalObjectContainer)trans.container();
 	        
+	        if(DTrace.enabled){
+	            DTrace.PERSISTENT_OWN_LENGTH.log(getID());
+	        }
+	        
 	        int length = ownLength();
 	        length = stream.blockAlignedBytes(length);
 	        

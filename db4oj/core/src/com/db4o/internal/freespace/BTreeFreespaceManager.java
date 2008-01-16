@@ -39,7 +39,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	}
 
 	public void beginCommit() {
-		// TODO: FB remove
+        beginDelegation();
 	}
 
 	private void beginDelegation(){
@@ -47,7 +47,6 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
     }
 	
 	public void commit() {
-		beginDelegation();
 		_slotsByAddress.commit(transaction());
 		_slotsByLength.commit(transaction());
 	}
@@ -76,7 +75,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 		try{
             beginDelegation();
 	        if(DTrace.enabled){
-	            DTrace.FREE.logLength(slot.address(), slot.length());
+	            DTrace.FREESPACEMANAGER_BTREE_FREE.logLength(slot.address(), slot.length());
 	        }
             Slot remove[] = new Slot[2];
 	        Slot newFreeSlot = slot;
@@ -140,7 +139,7 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
                 slot = slot.truncate(length);
 			}
 	        if(DTrace.enabled){
-	        	DTrace.GET_FREESPACE.logLength(slot.address(), slot.length());
+	        	DTrace.FREESPACEMANAGER_GET_SLOT.logLength(slot.address(), slot.length());
 	        }
 			return slot;
 		} finally{
@@ -177,10 +176,6 @@ public class BTreeFreespaceManager extends AbstractFreespaceManager {
 	
 	private boolean isDelegating(){
 		return _delegationRequests > 0;
-	}
-
-    public int onNew(LocalObjectContainer file) {
-		return 0;
 	}
 
     public void read(int freeSpaceID) {

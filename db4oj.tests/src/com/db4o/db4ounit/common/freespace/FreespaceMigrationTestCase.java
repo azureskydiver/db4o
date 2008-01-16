@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.freespace;
 
+import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.internal.freespace.*;
 
@@ -26,18 +27,45 @@ public class FreespaceMigrationTestCase extends FreespaceManagerTestCaseBase imp
     public void testSwitchingBackAndForth() throws Exception{
         produceSomeFreeSpace();
         db().commit();
-        for (int i = 0; i < 5; i++) {
-            int oldFreespace = currentFreespaceManager().totalFreespace();
+        int maximumFreespace = stabilizeFreespaceManagerAlterationEffects();
+        for (int i = 0; i < 10; i++) {
+            
+            assertFreespaceSmallerThan(maximumFreespace);
             configuration.freespace().useRamSystem();
             reopen();
-            Assert.isInstanceOf(RamFreespaceManager.class, currentFreespaceManager());
-            int newFreespace = currentFreespaceManager().totalFreespace();
-            if(i > 2){
-                Assert.areEqual(oldFreespace, newFreespace);
-            }
+            assertFreespaceManagerClass(RamFreespaceManager.class);
+            
+            assertFreespaceSmallerThan(maximumFreespace);
             configuration.freespace().useBTreeSystem();
+            reopen();
+            assertFreespaceManagerClass(BTreeFreespaceManager.class);
         }
 
+    }
+
+    private void assertFreespaceManagerClass(Class clazz) {
+        Assert.isInstanceOf(clazz, currentFreespaceManager());
+    }
+
+    private void assertFreespaceSmallerThan(int maximumFreespace) {
+        Assert.isSmaller(maximumFreespace, currentFreespace());
+    }
+
+    private int currentFreespace() {
+        return currentFreespaceManager().totalFreespace();
+    }
+
+    private int stabilizeFreespaceManagerAlterationEffects() throws Exception {
+        int maximumFreespace = 0;
+        for (int i = 0; i < 3; i++) {
+            configuration.freespace().useRamSystem();
+            reopen();
+            maximumFreespace = Math.max(maximumFreespace, currentFreespace());
+            configuration.freespace().useBTreeSystem();
+            reopen();
+            maximumFreespace = Math.max(maximumFreespace, currentFreespace());
+        }
+        return maximumFreespace;
     }
 
 }
