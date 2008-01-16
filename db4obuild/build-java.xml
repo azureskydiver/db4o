@@ -507,7 +507,7 @@
 			fork="true" 
 			classname="com.db4o.db4ounit.jre11.AllTests" 
 			failonerror="true" 
-			timeout="1200000">
+			timeout="1800000">
 			<classpath refid="tests.java1.1.cp" />
 			<sysproperty key="dir.workspace" value="${dir.workspace}" />
 		</java>
