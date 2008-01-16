@@ -59,11 +59,9 @@ public class LocalTransaction extends Transaction {
         	if(doCommittingCallbacks()){
         		callbacks().commitOnStarted(this, collectCallbackObjectInfos());
         	}
-            freespaceBeginCommit();
             commitImpl();
             CallbackObjectInfoCollections committedInfo = committedInfoFor(dispatcher); 
             commitClearAll();
-            freespaceEndCommit();
             if (null != committedInfo) {
     	        dispatcher.dispatchCommitted(committedInfo);
             } 
@@ -118,11 +116,15 @@ public class LocalTransaction extends Transaction {
         
         freeSlotChanges(false);
         
+        freespaceBeginCommit();
+        
         commitFreespace();
         
         freeSlotChanges(true);
         
         commit6WriteChanges(reservedSlot);
+        
+        freespaceEndCommit();
     }
 	
 	private final void freeSlotChanges(final boolean forFreespace) {

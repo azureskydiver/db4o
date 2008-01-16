@@ -59,10 +59,6 @@ public class FreespaceManagerIx extends AbstractFreespaceManager{
     	throw new IllegalStateException();
 	}
     
-	public int onNew(LocalObjectContainer file) {
-		return file.ensureFreespaceSlot();
-	}
-    
     public void read(int freespaceID) {
     	
     }

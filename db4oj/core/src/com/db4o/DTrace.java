@@ -30,6 +30,8 @@ public class DTrace {
 	private static final LatinStringIO stringIO = new LatinStringIO();
 	
 	public static RandomAccessFile _logFile;
+	
+	private static int UNUSED = -1;
     
     private static void breakPoint(){
         if(enabled){ /* breakpoint here */ }
@@ -61,13 +63,15 @@ public class DTrace {
             
 //            turnAllOffExceptFor(new DTrace[] {YAPMETA_SET_ID});
         	
-          turnAllOffExceptFor(new DTrace[] {
-        	  BLOCKING_QUEUE_STOPPED_EXCEPTION, 
-        	  CLIENT_MESSAGE_LOOP_EXCEPTION, 
-        	  CLOSE, 
-        	  CLOSE_CALLED,
-        	  FATAL_EXCEPTION,
-        	  SERVER_MESSAGE_LOOP_EXCEPTION});
+            turnAllOffExceptFor(new DTrace[] {
+                PERSISTENT_OWN_LENGTH,
+                });
+            
+//            turnAllOffExceptFor(new DTrace[] {
+//                FREESPACEMANAGER_GET_SLOT,
+//                FREESPACEMANAGER_RAM_FREE,
+//                FREESPACEMANAGER_BTREE_FREE,
+//                });
         	
 //          turnAllOffExceptFor(new DTrace[] {BTREE_NODE_COMMIT_OR_ROLLBACK });
 //            turnAllOffExceptFor(new DTrace[] {BTREE_NODE_REMOVE, BTREE_NODE_COMMIT_OR_ROLLBACK YAPMETA_SET_ID});
@@ -100,13 +104,14 @@ public class DTrace {
 			FATAL_EXCEPTION = new DTrace(true, true, "fatal exception", true);
 			FREE = new DTrace(true, true, "free", true);
 			FILE_FREE = new DTrace(true, true, "fileFree", true);
-			FREE_RAM = new DTrace(true, true, "freeRAM", true);
+            FREESPACEMANAGER_GET_SLOT = new DTrace(true, true, "FreespaceManager getSlot", true);
+            FREESPACEMANAGER_RAM_FREE = new DTrace(true, true, "RamFreeSpaceManager free", true);
+            FREESPACEMANAGER_BTREE_FREE = new DTrace(true, true, "BTreeFreeSpaceManager free", true);
 			FREE_ON_COMMIT = new DTrace(true, true, "trans freeOnCommit", true);
 	        FREE_ON_ROLLBACK = new DTrace(true, true, "trans freeOnRollback", true);
 	        FREE_POINTER_ON_ROLLBACK = new DTrace(true, true, "freePointerOnRollback", true);
 	        GET_POINTER_SLOT = new DTrace(true, true, "getPointerSlot", true);
 	        GET_SLOT = new DTrace(true, true, "getSlot", true);
-			GET_FREESPACE = new DTrace(true, true, "getFreespace", true);
 			GET_FREESPACE_RAM = new DTrace(true, true, "getFreespaceRam", true);
 			GET_YAPOBJECT = new DTrace(true, true, "get yapObject", true);
 			ID_TREE_ADD = new DTrace(true, true, "id tree add", true);
@@ -114,8 +119,10 @@ public class DTrace {
 			IO_COPY = new DTrace(true, true, "io copy", true);
 			JUST_SET = new DTrace(true, true, "just set", true);
 			NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
-			PRODUCE_SLOT_CHANGE = new DTrace(true, true, "produce slot change",
-					true);
+			PERSISTENT_OWN_LENGTH = new DTrace(true, true, "Persistent own length",
+                true);
+            PRODUCE_SLOT_CHANGE = new DTrace(true, true, "produce slot change",
+                true);
 			QUERY_PROCESS = new DTrace(true, true, "query process", true);
 			READ_ARRAY_WRAPPER = new DTrace(true, true, "read array wrapper", true);
 			READ_BYTES = new DTrace(true, true, "readBytes", true);
@@ -206,13 +213,14 @@ public class DTrace {
     public static DTrace FATAL_EXCEPTION;
     public static DTrace FILE_FREE;
     public static DTrace FREE;
-    public static DTrace FREE_RAM;
+    public static DTrace FREESPACEMANAGER_GET_SLOT;
+    public static DTrace FREESPACEMANAGER_RAM_FREE;
+    public static DTrace FREESPACEMANAGER_BTREE_FREE;
     public static DTrace FREE_ON_COMMIT;
     public static DTrace FREE_ON_ROLLBACK;
     public static DTrace FREE_POINTER_ON_ROLLBACK;
     public static DTrace GET_SLOT;
     public static DTrace GET_POINTER_SLOT;
-    public static DTrace GET_FREESPACE;
     public static DTrace GET_FREESPACE_RAM;
     public static DTrace GET_YAPOBJECT;
     public static DTrace ID_TREE_ADD;
@@ -220,6 +228,7 @@ public class DTrace {
     public static DTrace IO_COPY;
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
+    public static DTrace PERSISTENT_OWN_LENGTH;
 	public static DTrace PRODUCE_SLOT_CHANGE;
     public static DTrace QUERY_PROCESS;
     public static DTrace READ_ARRAY_WRAPPER;
@@ -258,7 +267,7 @@ public class DTrace {
     
     public void log(){
         if(enabled){
-            log(-1);
+            log(UNUSED);
         }
     }
     
@@ -271,7 +280,7 @@ public class DTrace {
     
     public void log(String msg){
         if(enabled){
-            log(-1, msg);
+            log(UNUSED, msg);
         }
     }
     
@@ -283,7 +292,7 @@ public class DTrace {
     
     public void logInfo(String info){
         if(enabled){
-            logEnd(-1,0, info );
+            logEnd(UNUSED,0, info );
         }
     }
     
@@ -346,22 +355,22 @@ public class DTrace {
                     }
                 }
             }
-            if(inRange || ( _trackEventsWithoutRange &&  (start == -1) )){
+            if(inRange || ( _trackEventsWithoutRange &&  (start == UNUSED) )){
                 if(_log){
                     _eventNr ++;
                     StringBuffer sb = new StringBuffer(":");
                     sb.append(formatInt(_eventNr, 6));
                     sb.append(":");
-                    if(start != 0){
-                        sb.append(formatInt(start));
-                        sb.append(":");
-                    }
+                    sb.append(formatInt(start));
+                    sb.append(":");
                     if(end != 0  && start != end){
                         sb.append(formatInt(end));
                         sb.append(":");
                         sb.append(formatInt(end - start + 1));
                     }else{
-                        sb.append(formatInt(0));
+                        sb.append(formatUnused());
+                        sb.append(":");
+                        sb.append(formatUnused());
                     }
                     sb.append(":");
                     if(info != null){
@@ -386,6 +395,10 @@ public class DTrace {
                 }
             }
         }
+    }
+
+    private String formatUnused() {
+        return formatInt(UNUSED);
     }
     
     private static void logToOutput(String msg){
@@ -486,7 +499,7 @@ public class DTrace {
     private String formatInt(long i, int len){
         if(enabled){
             String str = "              ";
-            if( i != 0){
+            if( i != UNUSED){
                 str += i + " ";
             }
             return str.substring(str.length() - len);

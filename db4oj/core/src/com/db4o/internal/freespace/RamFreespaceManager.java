@@ -70,7 +70,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         }
         
         if(DTrace.enabled){
-            DTrace.FREE_RAM.logLength(address, length);
+            DTrace.FREESPACEMANAGER_RAM_FREE.logLength(address, length);
         }
         
         _finder._key = address;
@@ -146,7 +146,7 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
     	}
         
         if(DTrace.enabled){
-        	DTrace.GET_FREESPACE.logLength(address, length);
+        	DTrace.FREESPACEMANAGER_GET_SLOT.logLength(address, length);
         }
         
         return new Slot(address, length);
@@ -156,11 +156,6 @@ public class RamFreespaceManager extends AbstractFreespaceManager {
         return TreeInt.marshalledLength((TreeInt)_freeBySize);
     }
 
-    public int onNew(LocalObjectContainer file) {
-		// do nothing
-    	return 0;
-	}
-    
     public void read(int freeSlotsID) {
         readById(freeSlotsID);
     }

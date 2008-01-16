@@ -11,14 +11,8 @@ import com.db4o.internal.slots.*;
  */
 public interface FreespaceManager {
 	
-	
-	// TODO: FB delete method when FreespaceManagerIx is removed
-	public int onNew(LocalObjectContainer file);
-
-	// TODO: FB delete method when FreespaceManagerIx is removed
 	public void beginCommit();
 
-	// TODO: FB delete method when FreespaceManagerIx is removed
 	public void endCommit();
 	
 	public int slotCount();
@@ -35,7 +29,6 @@ public interface FreespaceManager {
 
 	public void read(int freeSpaceID);
 
-//	 TODO: FB delete method when FreespaceManagerIx is removed
 	public void start(int slotAddress);
 
 	public byte systemType();

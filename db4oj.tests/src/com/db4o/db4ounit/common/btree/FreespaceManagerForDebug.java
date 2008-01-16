@@ -53,10 +53,6 @@ public class FreespaceManagerForDebug extends AbstractFreespaceManager {
 		return null;
 	}
 
-	public int onNew(LocalObjectContainer file) {
-		return 0;
-	}
-	
     public void read(int freeSlotsID) {
 
     }
