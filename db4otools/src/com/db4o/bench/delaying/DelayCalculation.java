@@ -93,14 +93,31 @@ public class DelayCalculation {
 	private long adjustDelay(long delay) {
 		NanoStopWatch watch = new NanoStopWatch();
 		NanoTiming timing = NanoTimingInstance.newInstance();
-		watch.start();
-		for (int i = 0; i < ADJUSTMENT_ITERATIONS; i++) {
-			timing.waitNano(delay);
-		}
-		watch.stop();
-		long difference = ADJUSTMENT_ITERATIONS*delay - watch.elapsed();
-		long adjustedReadDelay = delay + difference/ADJUSTMENT_ITERATIONS;
-		return adjustedReadDelay;
+		long average = 0, oldAverage = 0;
+		long delayPerIteration;
+		int adjustmentRuns = 0;
+		
+		do {
+			watch.start();
+			for (int i = 0; i < ADJUSTMENT_ITERATIONS; i++) {
+				timing.waitNano(delay);
+			}
+			watch.stop();
+			
+			delayPerIteration = watch.elapsed()/ADJUSTMENT_ITERATIONS;
+			oldAverage = average;
+			if (adjustmentRuns == 1) {
+				average = delayPerIteration;
+			}
+			else if (adjustmentRuns > 1) {
+				average = ((average * (adjustmentRuns-1)) + delayPerIteration) / adjustmentRuns; 
+			}
+			
+			System.out.println(">> Run: " + adjustmentRuns + " | Average: " + average);
+			adjustmentRuns++;
+		} while ((adjustmentRuns <= 1) || (adjustmentRuns > 1 && Math.abs(average - oldAverage) > 0.01*delay));
+		
+		return average;
 	}
 }
 
