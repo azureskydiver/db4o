@@ -58,16 +58,13 @@ public class QConEvaluation extends QCon {
     }
 
     void unmarshall(Transaction a_trans) {
-        if (i_trans == null) {
-            super.unmarshall(a_trans);
-            if(Deploy.csharp){
+    	if (i_trans == null) {
+    		super.unmarshall(a_trans);
+    		
+            if(i_marshalledID > 0 || !Platform4.useNativeSerialization()){
             	i_evaluation = Serializer.unmarshall(container(), i_marshalledEvaluation, i_marshalledID);
             }else{
-                if(i_marshalledID > 0){
-                	i_evaluation = Serializer.unmarshall(container(), i_marshalledEvaluation, i_marshalledID);
-                }else{
-                    i_evaluation = Platform4.deserialize(i_marshalledEvaluation);
-                }
+                i_evaluation = Platform4.deserialize(i_marshalledEvaluation);
             }
         }
     }
