@@ -705,33 +705,41 @@
 	</target>
 	
 	<target name="sharpen-instrumentation" depends="sharpen-core" unless="skip.sharpen">
-		<updatecsharpproject projectfile="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation.csproj">
-			<sources dir="${dir.n.v6.instrumentation}">
-				<include name="**/*.cs" />
-			</sources>
+		<fileset id="instrumentation.net.files" dir="${dir.n.v6.instrumentation}">
+			<include name="**/*.cs" />
+		</fileset>
+			
+		<updatecsharpproject projectfile="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation-2005.csproj">
+			<sources refid="instrumentation.net.files" />
 		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation-2008.csproj">
+			<sources refid="instrumentation.net.files" />
+		</updatecsharpproject>
+		
 		<updatecsharpproject 
 			projectfile="${dir.n.v6.instrumentation}/Db4objects.Db4o.Instrumentation-CF-2005.csproj">
-			<sources dir="${dir.n.v6.instrumentation}">
-				<include name="**/*.cs" />
-			</sources>
-		</updatecsharpproject>
-
+			<sources refid="instrumentation.net.files" />
+		</updatecsharpproject>		
 	</target>
 	
 	<target name="sharpen-nq" depends="sharpen-core" unless="skip.sharpen">
-		<updatecsharpproject projectfile="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries.csproj">
-			<sources dir="${dir.n.v6.nq}">
-				<include name="**/*.cs" />
-			</sources>
+		<fileset id="nativequeries.net.files" dir="${dir.n.v6.nq}">
+			<include name="**/*.cs" />
+		</fileset>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries-2005.csproj">
+			<sources refid="nativequeries.net.files" />
 		</updatecsharpproject>
-		<updatecsharpproject 
-			projectfile="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries-CF-2005.csproj">
-			<sources dir="${dir.n.v6.nq}">
-				<include name="**/*.cs" />
-			</sources>
+				
+		<updatecsharpproject projectfile="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries-2008.csproj">
+			<sources refid="nativequeries.net.files" />
 		</updatecsharpproject>
 		
+		<updatecsharpproject 
+			projectfile="${dir.n.v6.nq}/Db4objects.Db4o.NativeQueries-CF-2005.csproj">
+			<sources refid="nativequeries.net.files" />
+		</updatecsharpproject>		
 	</target>
 	
 	<target name="sharpen"
@@ -1089,17 +1097,21 @@
 			</fileset>
 		</copy>
 		
+		<fileset id="db4objects.test.net.files" dir="${dir.n.v6.tests}">
+			<include name="**/*.cs" />
+		</fileset>
+		
 		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-CF-2005.csproj">
-			<sources dir="${dir.n.v6.tests}">
-				<include name="**/*.cs" />
-			</sources>
+			<sources refid="db4objects.test.net.files" />
 		</updatecsharpproject>
 		
 		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-2005.csproj">
-			<sources dir="${dir.n.v6.tests}">
-				<include name="**/*.cs" />
-			</sources>
+			<sources refid="db4objects.test.net.files" />
 		</updatecsharpproject>
+		
+		<updatecsharpproject projectfile="${dir.n.v6.tests}/Db4objects.Db4o.Tests-2008.csproj">
+			<sources refid="db4objects.test.net.files" />
+		</updatecsharpproject>			
 	</target>
 	
 	<target name="preparendoc">
