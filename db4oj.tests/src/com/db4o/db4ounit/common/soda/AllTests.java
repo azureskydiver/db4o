@@ -5,7 +5,7 @@ package com.db4o.db4ounit.common.soda;
 import com.db4o.db4ounit.common.soda.classes.simple.*;
 import com.db4o.db4ounit.common.soda.classes.typedhierarchy.*;
 import com.db4o.db4ounit.common.soda.classes.untypedhierarchy.*;
-import com.db4o.db4ounit.common.soda.joins.typed.STOrTTestCase;
+import com.db4o.db4ounit.common.soda.joins.typed.*;
 import com.db4o.db4ounit.common.soda.joins.untyped.STOrUTestCase;
 import com.db4o.db4ounit.common.soda.ordered.*;
 import com.db4o.db4ounit.common.soda.wrapper.untyped.*;
@@ -51,6 +51,7 @@ public class AllTests extends Db4oTestSuite {
 				STTH1TestCase.class,
 				STUH1TestCase.class,
 				UntypedEvaluationTestCase.class,
+				JointEqualsIdentityTestCase.class,
 		};
 	}
 	
