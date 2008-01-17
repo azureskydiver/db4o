@@ -26,7 +26,7 @@ public class Db4oClientServer extends
 
     private ObjectServer _server;
 
-    private final File _yap;
+    private final File _file;
 
 	private boolean _embeddedClient;
 
@@ -41,7 +41,7 @@ public class Db4oClientServer extends
     
     public Db4oClientServer(ConfigurationSource configSource,String fileName, boolean embeddedClient, String label) {
     	super(configSource);
-        _yap = new File(fileName);
+        _file = new File(fileName);
         _embeddedClient = embeddedClient;
         _label = label;
     }
@@ -66,7 +66,7 @@ public class Db4oClientServer extends
 
     private void openServer() throws Exception {
         _serverConfig = cloneDb4oConfiguration(config());
-		_server = Db4o.openServer(_serverConfig,_yap.getAbsolutePath(), -1);
+		_server = Db4o.openServer(_serverConfig,_file.getAbsolutePath(), -1);
         _port = _server.ext().port();
         _server.grantAccess(USERNAME, PASSWORD);
     }
@@ -91,7 +91,7 @@ public class Db4oClientServer extends
 	}
     
     protected void doClean() {
-        _yap.delete();
+        _file.delete();
     }
     
     public ObjectServer server() {
