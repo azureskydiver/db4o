@@ -76,7 +76,8 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		if (null != _updateListener) {
 			return;
 		}
-		if (!isTransparentPersistenceEnabled()) {
+		final TransparentPersistenceSupport transparentPersistence = configuredTransparentPersistence();
+		if (null == transparentPersistence) {
 			// don't check for update again for this object
 			_updateListener = NullTransactionListener.INSTANCE;
 			return;
@@ -84,6 +85,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		_updateListener = new TransactionListener() {
 			public void postRollback() {
 				resetListener();
+				transparentPersistence.rollback(transaction.objectContainer(), ObjectReference.this);
 			}
 
 			public void preCommit() {
@@ -98,14 +100,14 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		_updateListener = null;
 	}
 
-	private boolean isTransparentPersistenceEnabled() {
+	private TransparentPersistenceSupport configuredTransparentPersistence() {
 		final Iterator4 iterator = container().config().configurationItemsIterator();
 		while (iterator.moveNext()) {
 			if (iterator.current() instanceof TransparentPersistenceSupport) {
-				return true;
+				return (TransparentPersistenceSupport) iterator.current();
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public void activate(Transaction ta, Object obj, ActivationDepth depth) {

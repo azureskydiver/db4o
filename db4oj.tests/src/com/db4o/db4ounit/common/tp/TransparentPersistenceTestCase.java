@@ -3,9 +3,7 @@
 package com.db4o.db4ounit.common.tp;
 
 import com.db4o.*;
-import com.db4o.activation.*;
 import com.db4o.config.*;
-import com.db4o.db4ounit.common.ta.*;
 import com.db4o.events.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -16,32 +14,6 @@ import db4ounit.*;
 import db4ounit.extensions.*;
 
 public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
-	
-	public static class Item extends ActivatableImpl {
-		
-		public String name;
-		
-		public Item() {
-		}
-		
-		public Item(String initialName) {
-			name = initialName;
-		}
-		
-		public String getName() {
-			activate(ActivationPurpose.READ);
-			return name;
-		}
-		
-		public void setName(String newName) {
-			activate(ActivationPurpose.WRITE);
-			name = newName;
-		}
-
-		public String toString() {
-			return "Item(" + getName() + ")";
-		}
-	}
 	
 	protected void configure(Configuration config) throws Exception {
 		config.add(new TransparentPersistenceSupport());
@@ -121,15 +93,13 @@ public class TransparentPersistenceTestCase extends AbstractDb4oTestCase {
 		assertUpdatedObjects(db(), expected);
 	}
 
-	private void assertUpdatedObjects(final ExtObjectContainer container,
-			Item expected) {
+	private void assertUpdatedObjects(final ExtObjectContainer container, Item expected) {
 		Collection4 updated = commitCapturingUpdatedObjects(container);
 		Assert.areEqual(1, updated.size(), updated.toString());
 		Assert.areSame(expected, updated.singleElement());
 	}
 	
-	private Collection4 commitCapturingUpdatedObjects(
-			final ExtObjectContainer container) {
+	private Collection4 commitCapturingUpdatedObjects(final ExtObjectContainer container) {
 		final Collection4 updated = new Collection4();
 		eventRegistryFor(container).updated().addListener(new EventListener4() {
 			public void onEvent(Event4 e, EventArgs args) {
