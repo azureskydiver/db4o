@@ -615,20 +615,22 @@ public abstract class QCon implements Constraint, Visitor4, Unversioned {
         if (! hasJoins()) {
         	return;
         }
-        Collection4 toBeRemoved = new Collection4();
-        Iterator4 joinIter = iterateJoins();
+        final Collection4 toBeRemoved = collectJoinsToBeRemoved();
+        i_joins.removeAll(toBeRemoved);
+        checkLastJoinRemoved();
+    }
+
+	private Collection4 collectJoinsToBeRemoved() {
+		final Collection4 toBeRemoved = new Collection4();
+        final Iterator4 joinIter = iterateJoins();
         while(joinIter.moveNext()){
         	QConJoin join = (QConJoin) joinIter.current();
         	if (join.removeForParent(this)) {
         		toBeRemoved.add(join);
         	}
         }
-        Iterator4 removeIter = toBeRemoved.iterator();
-        while(removeIter.moveNext()) {
-    		i_joins.remove(removeIter.current());
-        }
-        checkLastJoinRemoved();
-    }
+		return toBeRemoved;
+	}
 
     void removeJoin(QConJoin a_join) {
         i_joins.remove(a_join);

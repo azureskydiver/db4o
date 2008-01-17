@@ -207,6 +207,28 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 			? Iterators.EMPTY_ITERATOR
 			: new Collection4Iterator(this, _first);
 	}
+	
+	/**
+	 * Removes all the elements from this collection that are returned by
+	 * iterable.
+	 * 
+	 * @param iterable
+	 */
+	public void removeAll(Iterable4 iterable) {
+		removeAll(iterable.iterator());
+	}
+
+	/**
+	 * Removes all the elements from this collection that are returned by
+	 * iterator.
+	 * 
+	 * @param iterable
+	 */
+	public void removeAll(Iterator4 iterator) {
+		while (iterator.moveNext()) {
+			remove(iterator.current());
+		}
+	}
 
 	/**
 	 * removes an object from the Collection equals() comparison returns the
@@ -299,5 +321,4 @@ public class Collection4 implements Iterable4, DeepClone, Unversioned {
 	private Iterator4 internalIterator() {
 		return new Iterator4Impl(_first);
 	}
-
 }
