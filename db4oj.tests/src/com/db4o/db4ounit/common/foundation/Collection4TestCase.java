@@ -13,6 +13,20 @@ public class Collection4TestCase implements TestCase {
 		new TestRunner(Collection4TestCase.class).run();
 	}
 	
+	public void testRemoveAll() {
+		final String[] originalElements = new String[] { "foo", "bar", "baz" };
+		final Collection4 c = newCollection(originalElements);
+		c.removeAll(newCollection(new String[0]));
+		assertCollection(originalElements, c);
+		
+		c.removeAll(newCollection(new String[] { "baz", "bar", "zeng" }));
+		assertCollection(new String[] { "foo" }, c);
+		
+		c.removeAll(newCollection(originalElements));
+		assertCollection(new String[0], c);
+		 
+	}
+	
 	public void testReplace(){
         final Collection4 c = new Collection4();
         c.replace("one", "two");
