@@ -123,23 +123,34 @@ public class IoBenchmark {
 		DelayCalculation calculation = new DelayCalculation(resultsFile1, resultsFile2);
 		calculation.validateData();
 		if (calculation.isValidData()) {
-			Delays delays = calculation.calculatedDelays();
-			System.out.println("> Calculated delays: " + delays);
-			System.out.println("> Adjusting delays ...");
-			_delays = calculation.adjustDelays(delays);
-			System.out.println("> " + _delays);
+			_delays = calculation.calculatedDelays();
 			if ( _delays.units == Delays.UNITS_MILLISECONDS ) {
 				System.out.println("> Delaying with Thread.sleep().");
+				/**
+				 * TODO: Adjustment also necessary here?
+				 */
 			}
 			else if ( _delays.units == Delays.UNITS_NANOSECONDS ) {
 				System.out.println("> Delaying with busy waiting.");
+//				System.out.println("> Calculated delays: " + _delays);
+				System.out.println("> Adjusting delays ...");
+				try {
+					_delays = calculation.adjustDelays(_delays);
+				} catch (InvalidDelayException ide) {
+					exitWithError(ide.getMessage());
+				}
 			}
+			System.out.println("> " + _delays);
 		}
 		else {
-			System.err.println("> Result files are invalid for delaying!");
-			System.err.println("> Aborting execution!");
-			System.exit(1);
+			exitWithError("> Result files are invalid for delaying!\n> Aborting execution!");
 		}
+	}
+
+
+	private void exitWithError(String error) {
+		System.err.println(error);
+		System.exit(1);
 	}
 	
 	private String logFileName(int itemCount){
@@ -190,9 +201,9 @@ public class IoBenchmark {
 		
 		String output = "Results for " + currentCommand + "\r\n" +
 						"> operations executed: " + operationCount + "\r\n" +
-						"> time elapsed: " + timeElapsed + " ms" + "\r\n" + 
+						"> time elapsed: " + timeElapsed + " ms\r\n" + 
 						"> operations per millisecond: " + opsPerMs + "\r\n" +
-						"> average duration per operation: " + avgTimePerOp + " ms" + "\r\n" +
+						"> average duration per operation: " + avgTimePerOp + " ms\r\n" +
 						currentCommand + (avgTimePerOp*nanosPerMilli) + " ns\r\n";
 		
 		output(out, output);

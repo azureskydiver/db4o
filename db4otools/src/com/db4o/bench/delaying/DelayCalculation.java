@@ -82,7 +82,7 @@ public class DelayCalculation {
 		return delays;
 	}
 	
-	public Delays adjustDelays(Delays delays) {
+	public Delays adjustDelays(Delays delays) throws InvalidDelayException {
 		long readDelay = adjustDelay(delays.readDelay);
 		long writeDelay = adjustDelay(delays.writeDelay);
 		long seekDelay = adjustDelay(delays.seekDelay);
@@ -90,34 +90,73 @@ public class DelayCalculation {
 		return new Delays(readDelay, writeDelay, seekDelay, syncDelay, delays.units);
 	}
 	
-	private long adjustDelay(long delay) {
+
+	private long adjustDelay(long delay) throws InvalidDelayException {
 		NanoStopWatch watch = new NanoStopWatch();
 		NanoTiming timing = NanoTimingInstance.newInstance();
+		long difference, differencePerIteration;
 		long average = 0, oldAverage = 0;
-		long delayPerIteration;
-		int adjustmentRuns = 0;
+		long adjustedDelay = delay;
+		int adjustmentRuns = 1;
+		long targetRuntime = ADJUSTMENT_ITERATIONS*delay;
+		long minimumDelay = minimumDelay();
+		
+		warmUpIterations(delay, timing);	
 		
 		do {
 			watch.start();
 			for (int i = 0; i < ADJUSTMENT_ITERATIONS; i++) {
-				timing.waitNano(delay);
+				timing.waitNano(adjustedDelay);
 			}
 			watch.stop();
 			
-			delayPerIteration = watch.elapsed()/ADJUSTMENT_ITERATIONS;
-			oldAverage = average;
-			if (adjustmentRuns == 1) {
-				average = delayPerIteration;
-			}
-			else if (adjustmentRuns > 1) {
-				average = ((average * (adjustmentRuns-1)) + delayPerIteration) / adjustmentRuns; 
-			}
+			difference = targetRuntime - watch.elapsed();
+			differencePerIteration = difference/ADJUSTMENT_ITERATIONS;
 			
-			System.out.println(">> Run: " + adjustmentRuns + " | Average: " + average);
-			adjustmentRuns++;
-		} while ((adjustmentRuns <= 1) || (adjustmentRuns > 1 && Math.abs(average - oldAverage) > 0.01*delay));
-		
+			if (-differencePerIteration > adjustedDelay) {
+//				System.out.println(">> Too large: adjustedDelay = " + adjustedDelay + " | differencePerIteration = " + differencePerIteration);
+				adjustedDelay /= 2;				
+			}
+			else {
+				/**
+				 * TODO: Which version to use ???
+				 * adjustedDelay += differencePerIteration
+				 * adjustedDelay = delay + differencePerIteration; 
+				 */
+				adjustedDelay += differencePerIteration;
+				
+				oldAverage = average;
+				if (adjustmentRuns == 1) {
+					average = adjustedDelay;
+				}
+				else {
+					average = ((average*(adjustmentRuns-1)) / adjustmentRuns) + (adjustedDelay / adjustmentRuns);
+				}
+//				System.out.println(">> Run: " + adjustmentRuns + " | Average: " + average);
+				adjustmentRuns++;
+			}
+		} while ((adjustedDelay > 0) && ((adjustmentRuns <= 2) || (adjustmentRuns > 2 && Math.abs(average - oldAverage) > 0.01*delay)));
+		if (average < minimumDelay) {
+			throw new InvalidDelayException("Delay is smaller than the smallest achievable delay on this machine!");
+		}
 		return average;
+	}
+
+	private void warmUpIterations(long delay, NanoTiming timing) {
+		for (int i = 0; i < ADJUSTMENT_ITERATIONS; i++) {
+			timing.waitNano(delay);
+		}
+	}
+	
+	private long minimumDelay() {
+		NanoStopWatch watch = new NanoStopWatch();
+		NanoTiming timing = NanoTimingInstance.newInstance();
+		watch.start();
+		for (int i = 0; i < ADJUSTMENT_ITERATIONS; i++) {
+			timing.waitNano(0);
+		}
+		watch.stop();
+		return watch.elapsed()/ADJUSTMENT_ITERATIONS;
 	}
 }
 
