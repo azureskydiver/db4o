@@ -57,6 +57,10 @@ class JDK_5 extends JDK_1_4 {
 		return enumClass.isAssignableFrom(claxx);
 	}
 	
+	long nanoTime() {
+		return System.nanoTime();
+	}
+	
 	public boolean useNativeSerialization() {
 		return false;
 	}
