@@ -145,6 +145,10 @@ public class JDK {
     	return false;
     }
 
+	long nanoTime() {
+		throw new NotImplementedException();
+	}
+	
 	/**
 	 * @param session
 	 * @param referenceQueue
