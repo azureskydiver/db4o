@@ -12,7 +12,7 @@ public class NanoStopWatch {
 	private NanoTiming _timing;
 
 	public NanoStopWatch() {
-		_timing = NanoTimingInstance.newInstance();
+		_timing = new NanoTiming();
 	}
 	
 	public void start() {
