@@ -69,7 +69,7 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 		    }
 		}
 		if(_idTree == null){
-			ref.hc_init();
+			ref.id_init();
 			_idTree = ref;
 			return;
 		}
