@@ -7,6 +7,7 @@ import com.db4o.config.*;
 import com.db4o.defragment.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
+import com.db4o.reflect.jdk.*;
 
 import db4ounit.*;
 
@@ -117,6 +118,7 @@ public class BlockSizeDefragTestCase implements TestCase {
 	private Configuration config(int blockSize) {
 		Configuration config = Db4o.newConfiguration();
 		config.blockSize(blockSize);
+		config.reflectWith(new JdkReflector(ItemA.class.getClassLoader()));
 		return config;
 	}
 	
