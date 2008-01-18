@@ -665,12 +665,16 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	/***** IDTREE *****/
 
 	ObjectReference id_add(ObjectReference newRef) {
-		newRef._idPreceding = null;
-		newRef._idSubsequent = null;
-		newRef._idSize = 1;
+		newRef.id_init();
 		return id_add1(newRef);
 	}
 
+	void id_init() {
+		_idPreceding = null;
+		_idSubsequent = null;
+		_idSize = 1;
+	}
+	
 	private ObjectReference id_add1(ObjectReference newRef) {
 		int cmp = newRef._id - _id;
 		if (cmp < 0) {
