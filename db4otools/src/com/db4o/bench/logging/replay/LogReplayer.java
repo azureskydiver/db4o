@@ -33,9 +33,6 @@ public class LogReplayer {
 		this(logFilePath, io, LogConstants.allEntries());
 	}
 	
-	public void setLog(String logFilePath) {
-		_logFilePath = logFilePath;
-	}
 	
 	public void replayLog() throws IOException {
 		playCommandList(readCommandList());

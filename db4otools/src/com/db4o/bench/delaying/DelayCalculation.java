@@ -62,8 +62,8 @@ public class DelayCalculation {
 		double seekDifference  = _slowerMachine.seekTime()  - _fasterMachine.seekTime();
 		double snycDifference  = _slowerMachine.syncTime()  - _fasterMachine.syncTime();
 		
-		long millisecond = (long)Math.pow(10, 6);	// 1ms in nanoseconds
-		if ( (writeDifference < millisecond) || (readDifference < millisecond) || (seekDifference < millisecond) || (snycDifference < millisecond) ) {
+		long nanosPerMilli = (long)Math.pow(10, 6);
+		if ( (writeDifference < nanosPerMilli) || (readDifference < nanosPerMilli) || (seekDifference < nanosPerMilli) || (snycDifference < nanosPerMilli) ) {
 			writeDelay = (long)writeDifference;
 			readDelay  = (long)readDifference;
 			seekDelay  = (long)seekDifference;
@@ -71,10 +71,10 @@ public class DelayCalculation {
 			units = Delays.UNITS_NANOSECONDS;
 		}
 		else {	
-			writeDelay = (long)writeDifference / millisecond;
-			readDelay  = (long)readDifference / millisecond;
-			seekDelay  = (long)seekDifference / millisecond;
-			syncDelay  = (long)snycDifference / millisecond;
+			writeDelay = (long)writeDifference / nanosPerMilli;
+			readDelay  = (long)readDifference / nanosPerMilli;
+			seekDelay  = (long)seekDifference / nanosPerMilli;
+			syncDelay  = (long)snycDifference / nanosPerMilli;
 			units = Delays.UNITS_MILLISECONDS;
 		}
 		

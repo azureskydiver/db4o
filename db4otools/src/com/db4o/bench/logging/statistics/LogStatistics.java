@@ -26,9 +26,6 @@ public class LogStatistics {
 	
 	
 	
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		if ( args.length < 1 ) {
 			System.out.println("Usage: LogStatistics <log file path> [<statistics file path>]");
@@ -192,40 +189,33 @@ public class LogStatistics {
 		_seekCount++;
 	}
 
-
 	private void handleSync() {
 		_syncCount++;
 	}
-
 
 	private void handleRead(String line) {
 		_readCount++;
 		_readBytes += bytesForLine(line, LogConstants.READ_ENTRY.length());
 	}
 
-
 	private void handleWrite(String line) {
 		_writeCount++;
 		_writeBytes += bytesForLine(line, LogConstants.WRITE_ENTRY.length());
 	}
 
-
 	private long bytesForLine(String line, int commandLength) {
 		return Long.parseLong(line.substring(commandLength));
 	}
-
 	
 	private void closeFiles() {
 		closeStatisticsFile();
 		closeLogFile();
 	}
 
-
 	private void openFiles() throws FileNotFoundException {
 		openStatisticsFile();
 		openLogFile();
 	}
-
 	
 	private void closeLogFile() {
 		try {
@@ -235,22 +225,18 @@ public class LogStatistics {
 		}
 	}
 
-
 	private void closeStatisticsFile() {
 		_out.flush();
 		_out.close();
 	}
 
-
 	private void openLogFile() throws FileNotFoundException {
 		_in = new BufferedReader(new FileReader(_logFilePath));
 	}
 
-
 	private void openStatisticsFile() throws FileNotFoundException {
 		_out = new PrintStream(new FileOutputStream(_statisticsFilePath));
 	}
-
 
 	private String formatTime(long millis) {
 		Date date = new Date(millis);
@@ -259,7 +245,4 @@ public class LogStatistics {
 		return elapsedString;
 	}
 	
-	
-	
-
 }

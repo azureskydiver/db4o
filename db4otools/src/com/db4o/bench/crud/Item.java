@@ -11,9 +11,6 @@ public class Item {
 	
 	public String _string;
 	
-	public Item(){
-		
-	}
 	
 	public Item(String str){
 		_string = str;

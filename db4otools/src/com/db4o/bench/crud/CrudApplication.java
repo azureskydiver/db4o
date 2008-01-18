@@ -15,15 +15,9 @@ import com.db4o.io.*;
  */
 public class CrudApplication {
 	
-	
-	private static final int ITEM_COUNT = 10000;
 	private static final String DATABASE_FILE = "simplecrud.db4o";
 	
 	
-	public static void main(String[] args) {
-		new CrudApplication().run(ITEM_COUNT);
-	}
-
 	public void run(int itemCount) {
 		Configuration config = prepare(itemCount);
 		create(itemCount, config);
@@ -103,10 +97,4 @@ public class CrudApplication {
 		return "simplecrud_" + itemCount + ".log";
 	}
 	
-
-	
-	
-	
-	
-
 }
