@@ -5,8 +5,10 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.diagnostic.*;
+import com.db4o.internal.fieldhandlers.UntypedArrayFieldHandler;
+import com.db4o.internal.fieldhandlers.FieldHandler;
+import com.db4o.internal.fieldhandlers.UntypedMultidimensionalArrayFieldHandler;
 import com.db4o.internal.handlers.*;
-import com.db4o.internal.marshall.*;
 import com.db4o.internal.replication.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
@@ -33,19 +35,22 @@ public final class HandlerRegistry {
 
     private static final Db4oTypeImpl[]   _db4oTypes     = { new BlobImpl()};
 
-    private ClassMetadata                i_anyArray;
+    private ClassMetadata                _untypedArrayFieldHandler;
     
-    private ClassMetadata                i_anyArrayN;
+    private ClassMetadata                _untypedMultiDimensionalArrayFieldHandler;
 
     public StringHandler          _stringHandler;
 
-    private Hashtable4           _handlers = new Hashtable4(16);
+    private Hashtable4           _mapIdToTypeHandler = new Hashtable4(16);
     
-    private Hashtable4           _classes = new Hashtable4(16);
+    private Hashtable4           _mapIdToReflector = new Hashtable4(16);
     
-    private Hashtable4          _classMetadata = new Hashtable4(16);
+    // TODO: This will be fully replaced by _fieldHandlers
+    private Hashtable4          _mapIdToClassMetadata = new Hashtable4(16);
     
-    private Hashtable4          _ids = new Hashtable4(16);
+    private Hashtable4          _mapIdToFieldHandler = new Hashtable4(16);
+    
+    private Hashtable4          _mapFieldHandlerToId = new Hashtable4(16);
     
 
     private int                     _highestBuiltinTypeID     = Handlers4.ANY_ARRAY_N_ID + 1;
@@ -56,9 +61,11 @@ public final class HandlerRegistry {
     
     private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[2]; 
 
-    private final Hashtable4        _mapReflectorToHandler  = new Hashtable4(32);
+    private final Hashtable4        _mapReflectorToFieldHandler  = new Hashtable4(32);
     
-    private final Hashtable4        _mapHandlerToReflector  = new Hashtable4(32);
+    private final Hashtable4        _mapReflectorToTypeHandler  = new Hashtable4(32);
+    
+    private final Hashtable4        _mapFieldHandlerToReflector  = new Hashtable4(32);
     
     private SharedIndexedFields              		_indexes;
     
@@ -114,27 +121,27 @@ public final class HandlerRegistry {
     }
 
     private void initArrayHandlers() {
-        UntypedFieldHandler handler = untypedHandler();
-        ReflectClass classReflector = handler.classReflector();
-        
-        i_anyArray = new PrimitiveFieldHandler(
-            _container, 
-            new ArrayHandler(_container,handler, false), 
+        TypeHandler4 handler = handlerForID(Handlers4.UNTYPED_ID);
+        _untypedArrayFieldHandler = new PrimitiveFieldHandler(
+            container(), 
+            new ArrayHandler(container(),handler, false), 
             Handlers4.ANY_ARRAY_ID,
-            classReflector);
-        _classMetadata.put(Handlers4.ANY_ARRAY_ID, i_anyArray);
+            ICLASS_OBJECT);
+        _mapIdToClassMetadata.put(Handlers4.ANY_ARRAY_ID, _untypedArrayFieldHandler);
+        _mapIdToFieldHandler.put(Handlers4.ANY_ARRAY_ID, new UntypedArrayFieldHandler());
 
-        i_anyArrayN = new PrimitiveFieldHandler(
-            _container, 
-            new MultidimensionalArrayHandler(_container, handler, false), 
+        _untypedMultiDimensionalArrayFieldHandler = new PrimitiveFieldHandler(
+            container(), 
+            new MultidimensionalArrayHandler(container(), handler, false), 
             Handlers4.ANY_ARRAY_N_ID,
-            classReflector);
+            ICLASS_OBJECT);
         
-        _classMetadata.put(Handlers4.ANY_ARRAY_N_ID, i_anyArrayN);
+        _mapIdToClassMetadata.put(Handlers4.ANY_ARRAY_N_ID, _untypedMultiDimensionalArrayFieldHandler);
+        _mapIdToFieldHandler.put(Handlers4.ANY_ARRAY_N_ID, new UntypedMultidimensionalArrayFieldHandler());
     }
 
     private void registerPlatformTypes() {
-        NetTypeHandler[] handlers = Platform4.types(_container);
+        NetTypeHandler[] handlers = Platform4.types(container());
         for (int i = 0; i < handlers.length; i++) {
             handlers[i].initialize();
         	GenericConverter converter = (handlers[i] instanceof GenericConverter) ? (GenericConverter)handlers[i] : null;
@@ -144,90 +151,112 @@ public final class HandlerRegistry {
     
     private void registerBuiltinHandlers(){
         
-        IntHandler intHandler = new IntHandler(_container);
+        IntHandler intHandler = new IntHandler(container());
         registerBuiltinHandler(Handlers4.INT_ID, intHandler);
-        registerHandlerVersion(intHandler, 0, new IntHandler0(_container));
+        registerHandlerVersion(intHandler, 0, new IntHandler0(container()));
         
-        LongHandler longHandler = new LongHandler(_container);
+        LongHandler longHandler = new LongHandler(container());
         registerBuiltinHandler(Handlers4.LONG_ID, longHandler);
-        registerHandlerVersion(longHandler, 0, new LongHandler0(_container));
+        registerHandlerVersion(longHandler, 0, new LongHandler0(container()));
         
-        FloatHandler floatHandler = new FloatHandler(_container);
+        FloatHandler floatHandler = new FloatHandler(container());
         registerBuiltinHandler(Handlers4.FLOAT_ID, floatHandler);
-        registerHandlerVersion(floatHandler, 0, new FloatHandler0(_container));
+        registerHandlerVersion(floatHandler, 0, new FloatHandler0(container()));
         
-        BooleanHandler booleanHandler = new BooleanHandler(_container);
+        BooleanHandler booleanHandler = new BooleanHandler(container());
         registerBuiltinHandler(Handlers4.BOOLEAN_ID, booleanHandler);
         // TODO: Are we missing a boolean handler version?
         
-        DoubleHandler doubleHandler = new DoubleHandler(_container);
+        DoubleHandler doubleHandler = new DoubleHandler(container());
         registerBuiltinHandler(Handlers4.DOUBLE_ID, doubleHandler);
-        registerHandlerVersion(doubleHandler, 0, new DoubleHandler0(_container));
+        registerHandlerVersion(doubleHandler, 0, new DoubleHandler0(container()));
         
-        ByteHandler byteHandler = new ByteHandler(_container);
+        ByteHandler byteHandler = new ByteHandler(container());
         registerBuiltinHandler(Handlers4.BYTE_ID, byteHandler);
         // TODO: Are we missing a byte handler version?
 
-        CharHandler charHandler = new CharHandler(_container);
+        CharHandler charHandler = new CharHandler(container());
         registerBuiltinHandler(Handlers4.CHAR_ID, charHandler);
         // TODO: Are we missing a char handler version?
         
-        ShortHandler shortHandler = new ShortHandler(_container);
+        ShortHandler shortHandler = new ShortHandler(container());
         registerBuiltinHandler(Handlers4.SHORT_ID, shortHandler);
-        registerHandlerVersion(shortHandler, 0, new ShortHandler0(_container));
+        registerHandlerVersion(shortHandler, 0, new ShortHandler0(container()));
         
-        _stringHandler = new StringHandler(_container);
+        _stringHandler = new StringHandler(container());
         registerBuiltinHandler(Handlers4.STRING_ID, _stringHandler);
         registerHandlerVersion(_stringHandler, 0, new StringHandler0(_stringHandler));
 
-        DateHandler dateHandler = new DateHandler(_container);
+        DateHandler dateHandler = new DateHandler(container());
         registerBuiltinHandler(Handlers4.DATE_ID, dateHandler);
-        registerHandlerVersion(dateHandler, 0, new DateHandler0(_container));
+        registerHandlerVersion(dateHandler, 0, new DateHandler0(container()));
         
-        UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(_container);
-        registerBuiltinHandler(Handlers4.UNTYPED_ID, untypedFieldHandler, false, null, null);
-        registerHandlerVersion(untypedFieldHandler, 0, new UntypedFieldHandler0(_container));
+        registerUntypedHandlers();
+    }
+
+    private void registerUntypedHandlers() {
+        int id = Handlers4.UNTYPED_ID;
+        UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(container());
+        
+      registerBuiltinHandler(Handlers4.UNTYPED_ID, untypedFieldHandler, false, null, null);
+      
+//        PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), untypedFieldHandler, id, ICLASS_OBJECT);
+//        map(id, classMetadata, untypedFieldHandler, new PlainObjectHandler(), ICLASS_OBJECT);
+        
+        registerHandlerVersion(untypedFieldHandler, 0, new UntypedFieldHandler0(container()));
     }
     
     private void registerBuiltinHandler(int id, BuiltinTypeHandler handler) {
         registerBuiltinHandler(id, handler, true, handler.classReflector().getName(), null);
     }
 
-    private void registerBuiltinHandler(int id, BuiltinTypeHandler handler, boolean registerPrimitiveClass, String primitiveName, GenericConverter converter) {
+    private void registerBuiltinHandler(int id, BuiltinTypeHandler typeHandler, boolean registerPrimitiveClass, String primitiveName, GenericConverter converter) {
 
         if(registerPrimitiveClass){
             _reflector.registerPrimitiveClass(id, primitiveName, converter);
         }
         
-        ReflectClass classReflector = handler.classReflector();
+        ReflectClass classReflector = typeHandler.classReflector();
+        PrimitiveFieldHandler fieldHandler = new PrimitiveFieldHandler(container(), typeHandler, id, classReflector);
         
-        _handlers.put(id, handler);
-        _classes.put(id, classReflector);
-        
-        PrimitiveFieldHandler primitiveFieldHandler = new PrimitiveFieldHandler(_container, handler, id, classReflector);
-        _classMetadata.put(id, primitiveFieldHandler);
-        map(id, primitiveFieldHandler, classReflector);
+        map(id, fieldHandler, fieldHandler, typeHandler, classReflector);
 
         if (!Deploy.csharp) {
-            if(handler instanceof PrimitiveHandler){
-                PrimitiveHandler primitiveHandler = (PrimitiveHandler) handler;
-                ReflectClass primitiveClassReflector = primitiveHandler.primitiveClassReflector();
+            if(typeHandler instanceof PrimitiveHandler){
+                ReflectClass primitiveClassReflector = 
+                    ((PrimitiveHandler) typeHandler).primitiveClassReflector();
                 if(primitiveClassReflector != null){
-                    map(0, primitiveFieldHandler, primitiveClassReflector);
+                    mapPrimitive(0, fieldHandler, typeHandler, primitiveClassReflector);
                 }
             }
         }
+    }
+    
+    private void map(
+        int id,
+        ClassMetadata classMetadata,  // TODO: remove when _mapIdToClassMetadata is gone 
+        FieldHandler fieldHandler, 
+        TypeHandler4 typeHandler, 
+        ReflectClass classReflector) {
         
+        _mapIdToTypeHandler.put(id, typeHandler);
+        _mapIdToReflector.put(id, classReflector);
+        
+        _mapIdToClassMetadata.put(id, classMetadata);
+        
+        _mapIdToFieldHandler.put(id, fieldHandler);
+        mapPrimitive(id, fieldHandler, typeHandler, classReflector);
         if (id > _highestBuiltinTypeID) {
             _highestBuiltinTypeID = id;
         }
     }
 
-    private void map(int id, TypeHandler4 handler, ReflectClass classReflector) {
-        _mapReflectorToHandler.put(classReflector, handler);
-        _mapHandlerToReflector.put(handler, classReflector);
+    private void mapPrimitive(int id, FieldHandler fieldHandler, TypeHandler4 typeHandler, ReflectClass classReflector) {
+        _mapReflectorToFieldHandler.put(classReflector, fieldHandler);
+        _mapFieldHandlerToReflector.put(fieldHandler, classReflector);
+        _mapReflectorToTypeHandler.put(classReflector, typeHandler);
         if(id != 0){
-            _ids.put(handler, new Integer(id));
+            _mapFieldHandlerToId.put(fieldHandler, new Integer(id));
         }
     }
 
@@ -256,11 +285,11 @@ public final class HandlerRegistry {
     }
 
     int arrayType(Object a_object) {
-    	ReflectClass claxx = _container.reflector().forObject(a_object);
+    	ReflectClass claxx = reflector().forObject(a_object);
         if (! claxx.isArray()) {
             return 0;
         }
-        if (_container.reflector().array().isNDimensional(claxx)) {
+        if (reflector().array().isNDimensional(claxx)) {
             return Const4.TYPE_NARRAY;
         } 
         return Const4.TYPE_ARRAY;
@@ -277,12 +306,12 @@ public final class HandlerRegistry {
         }
         
         if(! Platform4.callConstructor()){
-            if(claxx.skipConstructor(skipConstructor, _container.config().testConstructors())){
+            if(claxx.skipConstructor(skipConstructor, container().config().testConstructors())){
                 return true;
             }
         }
         
-        if (! _container.configImpl().testConstructors()) {
+        if (! container().configImpl().testConstructors()) {
             return true;
         }
         
@@ -290,7 +319,7 @@ public final class HandlerRegistry {
             return true;
         }
         
-        if (_container.reflector().constructorCallsSupported()) {
+        if (reflector().constructorCallsSupported()) {
 			Tree sortedConstructors = sortConstructorsByParamsCount(claxx);
 			return findConstructor(claxx, sortedConstructors);
 		}
@@ -381,22 +410,22 @@ public final class HandlerRegistry {
         i_encrypt = false;
         i_encryptor = null;
         i_lastEncryptorByte = 0;
-        _container.configImpl().oldEncryptionOff();
+        container().configImpl().oldEncryptionOff();
     }
     
     public final ReflectClass classForID(int id) {
-        return (ReflectClass) _classes.get(id);
+        return (ReflectClass) _mapIdToReflector.get(id);
     }
 
     public final TypeHandler4 handlerForID(int id) {
-        return (TypeHandler4) _handlers.get(id);
+        return (TypeHandler4) _mapIdToTypeHandler.get(id);
     }
     
     public final int handlerID(TypeHandler4 handler){
         if(handler instanceof ClassMetadata){
             return ((ClassMetadata)handler).getID();
         }
-        Object idAsInt = _ids.get(handler);
+        Object idAsInt = _mapFieldHandlerToId.get(handler);
         if(idAsInt == null){
             return 0;
         }
@@ -425,11 +454,7 @@ public final class HandlerRegistry {
         return container.produceClassMetadata(baseType);
     }
 
-	public UntypedFieldHandler untypedHandler() {
-		return (UntypedFieldHandler) handlerForID(Handlers4.UNTYPED_ID);
-	}
-    
-    private void initClassReflectors(GenericReflector reflector){
+	private void initClassReflectors(GenericReflector reflector){
 		ICLASS_COMPARE = reflector.forClass(Const4.CLASS_COMPARE);
 		ICLASS_DB4OTYPE = reflector.forClass(Const4.CLASS_DB4OTYPE);
 		ICLASS_DB4OTYPEIMPL = reflector.forClass(Const4.CLASS_DB4OTYPEIMPL);
@@ -471,7 +496,11 @@ public final class HandlerRegistry {
     }
 
     public ClassMetadata classMetadataForId(int id) {
-        return (ClassMetadata) _classMetadata.get(id);
+        return (ClassMetadata) _mapIdToClassMetadata.get(id);
+    }
+    
+    public FieldHandler fieldHandlerForId(int id){
+        return (FieldHandler)_mapIdToFieldHandler.get(id);
     }
 
     ClassMetadata classMetadataForClass(ReflectClass clazz) {
@@ -479,22 +508,29 @@ public final class HandlerRegistry {
             return null;
         }
         if (clazz.isArray()) {
-            if (_container.reflector().array().isNDimensional(clazz)) {
-                return i_anyArrayN;
+            if (reflector().array().isNDimensional(clazz)) {
+                return _untypedMultiDimensionalArrayFieldHandler;
             }
-            return i_anyArray;
+            return _untypedArrayFieldHandler;
         }
-        return (ClassMetadata) _mapReflectorToHandler.get(clazz);
+        return (ClassMetadata) _mapReflectorToFieldHandler.get(clazz);
+    }
+    
+    public TypeHandler4 typeHandlerForClass(ReflectClass clazz){
+        if(clazz == null){
+            return null;
+        }
+        return (TypeHandler4) _mapReflectorToTypeHandler.get(clazz);
     }
     
     public ReflectClass classReflectorForHandler(TypeHandler4 handler){
-        return (ReflectClass) _mapHandlerToReflector.get(handler);
+        return (ReflectClass) _mapFieldHandlerToReflector.get(handler);
     }
     
     public boolean isSecondClass(Object a_object){
     	if(a_object != null){
-    		ReflectClass claxx = _container.reflector().forObject(a_object);
-    		if(_mapReflectorToHandler.get(claxx) != null){
+    		ReflectClass claxx = reflector().forObject(a_object);
+    		if(_mapReflectorToFieldHandler.get(claxx) != null){
     			return true;
     		}
             return Platform4.isValueType(claxx);
@@ -538,4 +574,18 @@ public final class HandlerRegistry {
     public void stringIO(LatinStringIO io) {
         _stringIO = io;
     }
+    
+    public ClassMetadata classMetadataForObject(Object obj){
+        ReflectClass reflectClass = reflector().forObject(obj);
+        return container().produceClassMetadata(reflectClass);
+    }
+
+    private GenericReflector reflector() {
+        return container().reflector();
+    }
+
+    private ObjectContainerBase container() {
+        return _container;
+    }
+
 }

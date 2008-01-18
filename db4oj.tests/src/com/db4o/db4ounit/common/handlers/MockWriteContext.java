@@ -18,7 +18,7 @@ public class MockWriteContext extends MockMarshallingContext implements WriteCon
     }
 
     public void writeAny(Object obj) {
-        ClassMetadata classMetadata = ClassMetadata.forObject(transaction(), obj, false);
+        ClassMetadata classMetadata = container().classMetadataForObject(obj);
         writeInt(classMetadata.getID());
         classMetadata.write(this, obj);
     }
