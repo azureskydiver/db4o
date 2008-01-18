@@ -93,7 +93,7 @@ public class DelayCalculation {
 
 	private long adjustDelay(long delay) throws InvalidDelayException {
 		NanoStopWatch watch = new NanoStopWatch();
-		NanoTiming timing = NanoTimingInstance.newInstance();
+		NanoTiming timing = new NanoTiming();
 		long difference, differencePerIteration;
 		long average = 0, oldAverage = 0;
 		long adjustedDelay = delay;
@@ -150,7 +150,7 @@ public class DelayCalculation {
 	
 	private long minimumDelay() {
 		NanoStopWatch watch = new NanoStopWatch();
-		NanoTiming timing = NanoTimingInstance.newInstance();
+		NanoTiming timing = new NanoTiming();
 		watch.start();
 		for (int i = 0; i < ADJUSTMENT_ITERATIONS; i++) {
 			timing.waitNano(0);

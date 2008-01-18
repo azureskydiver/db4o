@@ -2,11 +2,19 @@
 
 package com.db4o.bench.timing;
 
+import com.db4o.internal.*;
 
-public interface NanoTiming {
 
-	public long nanoTime();
-	
-	public void waitNano(long nanos);
+public class NanoTiming {
+
+	public long nanoTime() {
+		return Platform4.nanoTime();
+	}
+
+	public void waitNano(long nanos) {
+		long target = nanoTime() + nanos;
+	    while (nanoTime() <= target) {
+	    }
+	}
 	
 }

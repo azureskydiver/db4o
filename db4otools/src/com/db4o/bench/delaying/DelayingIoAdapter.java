@@ -21,7 +21,7 @@ public class DelayingIoAdapter extends VanillaIoAdapter {
 	public DelayingIoAdapter(IoAdapter delegateAdapter, Delays delays) {
 		super(delegateAdapter);
 		_delays = delays;
-		_timing = NanoTimingInstance.newInstance();
+		_timing = new NanoTiming();
 	}
 	
 	public DelayingIoAdapter(IoAdapter delegateAdapter, String path, boolean lockFile, long initialLength)throws Db4oIOException {
