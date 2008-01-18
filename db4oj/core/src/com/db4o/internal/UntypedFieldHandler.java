@@ -4,27 +4,32 @@ package com.db4o.internal;
 
 import com.db4o.ext.*;
 import com.db4o.internal.activation.*;
+import com.db4o.internal.fieldhandlers.FieldHandler;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 
-public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHandler{
+public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHandler, FieldHandler{
     
 	public UntypedFieldHandler(ObjectContainerBase container){
 		super(container, container._handlers.ICLASS_OBJECT);
 	}
-	
 
 	public void cascadeActivation(
 		Transaction trans,
 		Object onObject,
 		ActivationDepth depth) {
-		ClassMetadata classMetadata = forObject(trans, onObject, false);
+	    
+		ClassMetadata classMetadata = container().classMetadataForObject(onObject);
 		if (classMetadata != null) {
 			classMetadata.cascadeActivation(trans, onObject, depth);
 		}
 	}
+
+    private HandlerRegistry handlerRegistry() {
+        return container()._handlers;
+    }
     
 	public void delete(DeleteContext context) throws Db4oIOException {
         int payLoadOffset = context.readInt();
@@ -146,16 +151,16 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return;
         }
         MarshallingContext marshallingContext = (MarshallingContext) context;
-        TypeHandler4 handler =   ClassMetadata.forObject(context.transaction(), obj, true);
-        if(handler == null){
+        TypeHandler4 typeHandler = handlerRegistry().classMetadataForObject(obj);
+        if(typeHandler == null){
             context.writeInt(0);
             return;
         }
         MarshallingContextState state = marshallingContext.currentState();
         marshallingContext.createChildBuffer(false, false);
-        int id = marshallingContext.container().handlers().handlerID(handler);
+        int id = marshallingContext.container().handlers().handlerID(typeHandler);
         context.writeInt(id);
-        if(isArray(handler)){
+        if(isArray(typeHandler)){
             // TODO: This indirection is unneccessary, but it is required by the 
             // current old reading format. 
             // Remove in the next version of UntypedFieldHandler  
@@ -163,7 +168,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         }else{
             marshallingContext.doNotIndirectWrites();
         }
-        handler.write(context, obj);
+        typeHandler.write(context, obj);
         marshallingContext.restoreState(state);
     }
 

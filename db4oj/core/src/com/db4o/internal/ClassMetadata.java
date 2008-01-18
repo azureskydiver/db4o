@@ -712,20 +712,6 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         }
     }
     
-    public static ClassMetadata forObject(Transaction trans, Object obj, boolean allowCreation){
-        ReflectClass reflectClass = trans.reflector().forObject(obj);
-        
-        // TODO: The following conditions look strange. Check !
-        if (reflectClass != null && reflectClass.getSuperclass() == null && obj != null) {
-        	throw new ObjectNotStorableException(obj.toString());
-        }
-        
-        if(allowCreation){
-        	return trans.container().produceClassMetadata(reflectClass);
-        }
-        return trans.container().classMetadataForReflectClass(reflectClass);
-    }
-    
     public boolean generateUUIDs() {
         if(! generateVirtual()){
             return false;

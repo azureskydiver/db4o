@@ -79,14 +79,6 @@ public class FieldMetadata implements StoredField {
 		}
 	}
 
-    FieldMetadata(ClassMetadata containingClass, ObjectMarshaller marshaller) {
-        // for CustomMarshallerFieldMetadata only
-    	this(containingClass);
-        init(containingClass, marshaller.getClass().getName());
-        _state = AVAILABLE;
-        _handler = container()._handlers.untypedHandler();
-    }
-
     FieldMetadata(ClassMetadata containingClass, ReflectField field, TypeHandler4 handler, int handlerID) {
     	this(containingClass);
         init(containingClass, field.getName());

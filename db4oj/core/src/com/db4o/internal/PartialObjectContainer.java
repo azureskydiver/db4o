@@ -890,20 +890,35 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final ClassMetadata classMetadataForReflectClass(ReflectClass claxx){
-    	if(cantGetClassMetadata(claxx)){
+    	if(hideClassForExternalUse(claxx)){
     		return null;
     	}
-        ClassMetadata yc = _handlers.classMetadataForClass(claxx);
-        if (yc != null) {
-            return yc;
+        ClassMetadata classMetadata = _handlers.classMetadataForClass(claxx);
+        if (classMetadata != null) {
+            return classMetadata;
         }
         return _classCollection.classMetadataForReflectClass(claxx);
+    }
+    
+    public final TypeHandler4 typeHandlerForReflectClass(ReflectClass claxx){
+        if(hideClassForExternalUse(claxx)){
+            return null;
+        }
+        TypeHandler4 typeHandler = _handlers.typeHandlerForClass(claxx);
+        if (typeHandler != null) {
+            return typeHandler;
+        }
+        ClassMetadata classMetadata = _classCollection.classMetadataForReflectClass(claxx);
+        if(classMetadata == null){
+            return null;
+        }
+        return classMetadata.typeHandler();
     }
     
     // TODO: Some ReflectClass implementations could hold a 
     // reference to ClassMetadata to improve lookup performance here.
     public ClassMetadata produceClassMetadata(ReflectClass claxx) {
-    	if(cantGetClassMetadata(claxx)){
+    	if(hideClassForExternalUse(claxx)){
     		return null;
     	}
         ClassMetadata classMetadata = _handlers.classMetadataForClass(claxx);
@@ -924,7 +939,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
      * is not done on purpose
      */
     final ClassMetadata getActiveClassMetadata(ReflectClass claxx) {
-    	if(cantGetClassMetadata(claxx)){
+    	if(hideClassForExternalUse(claxx)){
     		return null;
     	}
         ClassMetadata yc = _handlers.classMetadataForClass(claxx);
@@ -934,7 +949,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return _classCollection.getActiveClassMetadata(claxx);
     }
     
-    private final boolean cantGetClassMetadata(ReflectClass claxx){
+    private final boolean hideClassForExternalUse(ReflectClass claxx){
         if (claxx == null) {
             return true;
         }
