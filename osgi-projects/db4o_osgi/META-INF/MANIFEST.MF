@@ -103,4 +103,5 @@ Export-Package: EDU.purdue.cs.bloat.benchmark,
  com.db4o.replication,
  com.db4o.ta,
  com.db4o.typehandlers,
+ com.db4o.internal.fieldhandlers,
  com.db4o.types
