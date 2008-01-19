@@ -6,7 +6,7 @@ import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
-import com.db4o.reflect.jdk.*;
+import com.db4o.internal.*;
 
 import db4ounit.*;
 
@@ -113,7 +113,7 @@ public class RepeatDeleteReaddTestCase implements TestCase {
 
 	private Configuration config() {
 		Configuration config = Db4o.newConfiguration();
-		config.reflectWith(new JdkReflector(ItemA.class.getClassLoader()));
+		config.reflectWith(Platform4.reflectorForType(ItemA.class));
 		return config;
 	}
 	
