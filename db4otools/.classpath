@@ -9,7 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ounit.extensions"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4onqopt"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4otaj"/>
-	<classpathentry kind="lib" path="lib/ant-launcher.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4o.instrumentation"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/db4ojdk5"/>
 	<classpathentry kind="output" path="bin"/>
