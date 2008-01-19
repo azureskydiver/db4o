@@ -548,6 +548,16 @@
 	</target>
 	
 	<target name="build-msbuild" depends="build-admin">
+		<updateAssemblyInfo 
+			version="${assembly.version}"
+			title="Db4oTool.MSBuild"
+			product="Db4oTool.MSBuild"		
+			>
+			<fileset dir="${dir.n.v6.msbuild}">
+				<include name="**/AssemblyInfo.cs" />
+			</fileset>
+		</updateAssemblyInfo>
+
 		<csc outputfile="${dir.dist.dll.net}/Db4oTool.MSBuild.dll"
 			docfile="${dir.dist.dll.net}/Db4oTool.MSBuild.xml"
 			targettype="library"
@@ -680,6 +690,16 @@
 	
 	<target name="build-admin" depends="build-nq" unless="skip.admin">
 		<copy todir="${dir.dist.dll.net}" file="${dir.libs.net}/Mono.Cecil.Pdb.dll" />
+		<updateAssemblyInfo 
+			version="${assembly.version}"
+			title="Db4oTool"
+			product="Db4oTool"
+			>
+			<fileset dir="${dir.n.v6}/Db4oTool/Db4oTool">
+				<include name="**/AssemblyInfo.cs" />
+			</fileset>
+		</updateAssemblyInfo>
+
 		<csc outputfile="${dir.dist.dll.net}/Db4oTool.exe"
 			targettype="exe"
 			debug="true"
