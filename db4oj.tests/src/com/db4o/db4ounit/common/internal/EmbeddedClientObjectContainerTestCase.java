@@ -17,7 +17,7 @@ public class EmbeddedClientObjectContainerTestCase implements TestLifeCycle {
 
     private static final String FIELD_NAME = "_name";
 
-    private static final String FILENAME = "mtoc.db4o";
+    private static final String FILENAME = Path4.getTempFileName();
     
     private LocalObjectContainer _server;
 

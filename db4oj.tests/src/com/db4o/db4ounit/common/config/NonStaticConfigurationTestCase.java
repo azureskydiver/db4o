@@ -7,6 +7,7 @@ import java.io.*;
 import com.db4o.*;
 import com.db4o.config.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
@@ -34,7 +35,7 @@ public class NonStaticConfigurationTestCase implements Db4oTestCase {
 		}
 	}
 
-	private static final String FILENAME = "nonstaticcfg.yap";
+	private static final String FILENAME = Path4.getTempFileName();
 
 	public void testOpenWithNonStaticConfiguration() {
 		final Configuration config1 = Db4o.newConfiguration();

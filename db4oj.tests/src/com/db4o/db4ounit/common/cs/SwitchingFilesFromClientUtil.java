@@ -6,9 +6,9 @@ import com.db4o.foundation.io.*;
 
 public final class SwitchingFilesFromClientUtil {
 
-	static final String FILENAME_A = "switchto.a.db4o";
-	static final String FILENAME_B = "switchto.b.db4o";
-	public static final String MAINFILE_NAME = "mainfile";
+	static final String FILENAME_A = Path4.getTempFileName();
+	static final String FILENAME_B = Path4.getTempFileName();
+	public static final String MAINFILE_NAME = Path4.getTempFileName();
 
 	private SwitchingFilesFromClientUtil() {
 	}
