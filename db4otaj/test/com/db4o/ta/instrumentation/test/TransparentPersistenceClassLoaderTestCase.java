@@ -123,7 +123,23 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 		Reflection4.invoke(niObj, "accessToBeInstrumented", new Class[]{ iClazz }, new Object[]{ iObj });
 		Assert.areEqual(1, act.count());
 	}
-	
+
+	public void testBindCallOnInstrumentedObject() throws Exception {
+		Class activatableClazz = _loader.loadClass(CLASS_NAME);
+		final Activatable activatable = (Activatable) activatableClazz.newInstance();
+		MockActivator activator = new MockActivator();
+		activatable.bind(activator);
+		activatable.bind(activator);
+		activatable.bind(null);
+		activatable.bind(null);
+		activatable.bind(new MockActivator());
+		Assert.expect(IllegalStateException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				activatable.bind(new MockActivator());
+			}
+		});
+	}
+
 	private Activatable newToBeInstrumentedInstance()
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
@@ -165,14 +181,16 @@ public class TransparentPersistenceClassLoaderTestCase implements TestLifeCycle 
 		bindMethod.invoke(obj, new Object[]{ oc });
 		Object activator = activatorField.get(obj);
 		Assert.isNotNull(activator);
-		
-		try {
-			bindMethod.invoke(obj, new Object[]{ oc });
-			Assert.fail();
-		} catch (InvocationTargetException x) {
-			Assert.isInstanceOf(IllegalStateException.class, x.getTargetException());
-		}
-		
+
+		// same activator, ok
+		bindMethod.invoke(obj, new Object[]{ oc });
+
+		// null activator, ok
+		bindMethod.invoke(obj, new Object[]{ null });
+
+		// reset activator after null, ok
+		bindMethod.invoke(obj, new Object[]{ oc });
+
 		MockActivator otherOc = new MockActivator();
 		try {
 			bindMethod.invoke(obj, new Object[]{ otherOc });

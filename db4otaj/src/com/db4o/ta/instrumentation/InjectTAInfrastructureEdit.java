@@ -61,21 +61,32 @@ class InjectTAInfrastructureEdit implements BloatClassEdit {
 		MethodEditor methodEditor = new MethodEditor(ce, Modifiers.PUBLIC, Type.VOID, methodName, paramTypes, new Type[] {});
 		LabelGenerator labelGen = new LabelGenerator();
 		Label startLabel = labelGen.createLabel(true);
+		Label differentActivatorLabel = labelGen.createLabel(true);
 		Label setActivatorLabel = labelGen.createLabel(true);
 		LocalVariable activatorArg = new LocalVariable(1);
 		
 		methodEditor.addLabel(startLabel);
 
-		// if (null != _activator) 
+    	// if (_activator == activator) {
+    	//   return;
+    	// }
+		loadActivatorFieldOnStack(methodEditor);
+		methodEditor.addInstruction(Opcode.opc_aload, activatorArg);
+		methodEditor.addInstruction(Opcode.opc_if_acmpne, differentActivatorLabel);
+		methodEditor.addInstruction(Opcode.opc_return);
+		
+		// if (activator != null && _activator != null) {
+        //   throw new IllegalStateException();
+        // }
+		methodEditor.addLabel(differentActivatorLabel);
+		methodEditor.addInstruction(Opcode.opc_aload, activatorArg);
+		methodEditor.addInstruction(Opcode.opc_ifnull, setActivatorLabel);
 		loadActivatorFieldOnStack(methodEditor);
 		methodEditor.addInstruction(Opcode.opc_ifnull, setActivatorLabel);
-		
-		// throw new IllegalStateException();
 		throwException(methodEditor, IllegalStateException.class);
-		
-		methodEditor.addLabel(setActivatorLabel);
-		
+				
 		// _activator = activator;
+		methodEditor.addLabel(setActivatorLabel);
 		loadThisOnStack(methodEditor);
 		methodEditor.addInstruction(Opcode.opc_aload, activatorArg);
 		methodEditor.addInstruction(Opcode.opc_putfield, createFieldReference(ce.type(), TransparentActivationInstrumentationConstants.ACTIVATOR_FIELD_NAME, activatorType));		
