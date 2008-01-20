@@ -205,12 +205,6 @@ public class UnmarshallingContext extends AbstractReadContext implements FieldLi
         return _reference;
     }
 
-    public void addToIDTree() {
-        if(_addToIDTree == Const4.ADD_TO_ID_TREE){
-            _reference.addExistingReferenceToIdTree(transaction());    
-        }
-    }
-
     public void persistentObject(Object obj) {
         _object = obj;
     }

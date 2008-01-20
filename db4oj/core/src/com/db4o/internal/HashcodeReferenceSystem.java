@@ -24,16 +24,9 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 	}
 
 	private void addReference(ObjectReference ref){
+		ref.ref_init();
 		idAdd(ref);
 		hashCodeAdd(ref);
-	}
-	
-	public void addExistingReferenceToObjectTree(ObjectReference ref) {
-		hashCodeAdd(ref);
-	}
-	
-	public void addExistingReferenceToIdTree(ObjectReference ref) {
-		idAdd(ref);
 	}
 	
 	public void commit() {
@@ -51,7 +44,6 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 		    }
 		}
 		if(_hashCodeTree == null){
-			ref.hc_init();
 			_hashCodeTree = ref;
 			return;
 		}
@@ -69,7 +61,6 @@ public class HashcodeReferenceSystem implements ReferenceSystem {
 		    }
 		}
 		if(_idTree == null){
-			ref.id_init();
 			_idTree = ref;
 			return;
 		}

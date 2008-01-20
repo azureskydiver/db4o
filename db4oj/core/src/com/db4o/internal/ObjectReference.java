@@ -149,12 +149,6 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		}
 	}
 
-	public final void addExistingReferenceToIdTree(Transaction trans) {
-		if (!(_class instanceof PrimitiveFieldHandler)) {
-			trans.referenceSystem().addExistingReferenceToIdTree(this);
-		}
-	}
-	
 	/** return false if class not completely initialized, otherwise true **/
 	boolean continueSet(Transaction trans, int updateDepth) {
 		if (! bitIsTrue(Const4.CONTINUE)) {
@@ -462,6 +456,11 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 			&& _class.dispatchEvent(container, obj, EventDispatcher.CAN_UPDATE);
 	}
 
+	public void ref_init() {
+		hc_init();
+		id_init();
+	}
+	
 	/***** HCTREE *****/
 
 	public ObjectReference hc_add(ObjectReference newRef) {
@@ -472,7 +471,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return hc_add1(newRef);
 	}
     
-    public void hc_init(){
+    private void hc_init(){
         _hcPreceding = null;
         _hcSubsequent = null;
         _hcSize = 1;
@@ -669,7 +668,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		return id_add1(newRef);
 	}
 
-	void id_init() {
+	private void id_init() {
 		_idPreceding = null;
 		_idSubsequent = null;
 		_idSize = 1;

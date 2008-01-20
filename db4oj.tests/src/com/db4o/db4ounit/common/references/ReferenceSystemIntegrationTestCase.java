@@ -8,14 +8,14 @@ import com.db4o.internal.*;
 import db4ounit.extensions.*;
 
 
-public class ReferenceSystemTestCase extends AbstractDb4oTestCase{
+public class ReferenceSystemIntegrationTestCase extends AbstractDb4oTestCase{
 	
 	private static final int[] IDS = new int[] {100,134,689, 666, 775};
 	
 	private static final Object[] REFERENCES = createReferences();
 
 	public static void main(String[] args) {
-		new ReferenceSystemTestCase().runSolo();
+		new ReferenceSystemIntegrationTestCase().runSolo();
 	}
 	
 	public void testTransactionalReferenceSystem(){

@@ -22,14 +22,6 @@ public class TransactionalReferenceSystem implements ReferenceSystem{
 		_committedReferences.addExistingReference(ref);
 	}
 
-	public void addExistingReferenceToIdTree(ObjectReference ref) {
-		_committedReferences.addExistingReferenceToIdTree(ref);
-	}
-
-	public void addExistingReferenceToObjectTree(ObjectReference ref) {
-		_committedReferences.addExistingReferenceToObjectTree(ref);
-	}
-
 	public void addNewReference(ObjectReference ref) {
 		_newReferences.addNewReference(ref);
 	}
