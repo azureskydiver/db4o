@@ -19,7 +19,7 @@ public class BackupStressTestCase implements Db4oTestCase {
     
     private static boolean runOnOldJDK = false;
     
-    private static final String FILE = "backupstress.yap";
+    private static final String FILE = Path4.getTempFileName();
     
     private static final int ITERATIONS = 5;
     
@@ -177,7 +177,7 @@ public class BackupStressTestCase implements Db4oTestCase {
     }
     
     private String backupFile(int count){
-        return "" + count + FILE;
+        return FILE + count;
     }
 
     private void stdout(String string) {

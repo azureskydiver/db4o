@@ -15,7 +15,7 @@ public class IncompatibleFileFormatExceptionTestCase implements Db4oTestCase {
 		new TestRunner(IncompatibleFileFormatExceptionTestCase.class).run();
 	}
 
-	private static final String INCOMPATIBLE_FILE_FORMAT = "IncompatibleFileFormatExceptionTestCase";
+	private static final String INCOMPATIBLE_FILE_FORMAT = Path4.getTempFileName();
 
 	public void setUp() throws Exception {
 		File4.delete(INCOMPATIBLE_FILE_FORMAT);

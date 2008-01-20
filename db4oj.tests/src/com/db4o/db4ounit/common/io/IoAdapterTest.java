@@ -5,6 +5,7 @@ package com.db4o.db4ounit.common.io;
 import java.io.*;
 
 import com.db4o.ext.*;
+import com.db4o.foundation.io.*;
 import com.db4o.io.*;
 
 import db4ounit.*;
@@ -15,9 +16,9 @@ public class IoAdapterTest implements TestLifeCycle {
 		new TestRunner(IoAdapterTest.class).run();
 	}
 	
-	private String _cachedIoAdapterFile = "CachedIoAdapter.dat";
+	private String _cachedIoAdapterFile = Path4.getTempFileName();
 
-	private String _randomAccessFileAdapterFile = "_randomAccessFileAdapter.dat";
+	private String _randomAccessFileAdapterFile = Path4.getTempFileName();
 
 	private IoAdapter[] _adapters;
 

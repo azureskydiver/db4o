@@ -2,10 +2,12 @@
 
 package com.db4o.db4ounit.common.defragment;
 
+import com.db4o.foundation.io.*;
+
 public abstract class SlotDefragmentTestConstants {
 	
-	public final static String FILENAME="defrag.yap";
-	public final static String BACKUPFILENAME=FILENAME+".backup";
+	public final static String FILENAME = Path4.getTempFileName();
+	public final static String BACKUPFILENAME = FILENAME+".backup";
 
 	private SlotDefragmentTestConstants() {
 	}

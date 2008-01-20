@@ -15,7 +15,7 @@ import db4ounit.*;
 
 public class COR775TestCase implements TestLifeCycle {
 
-    private static final String ORIGINAL = "cor775.yap";
+    private static final String ORIGINAL = Path4.getTempFileName();
     
     private static final String DEFGARED = ORIGINAL + ".bk";
 

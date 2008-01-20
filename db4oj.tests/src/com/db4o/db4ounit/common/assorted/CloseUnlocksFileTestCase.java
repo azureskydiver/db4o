@@ -10,7 +10,7 @@ import db4ounit.*;
 
 public class CloseUnlocksFileTestCase implements TestCase {
     
-    private static final String FILE = "unlocked.db4o";
+    private static final String FILE = Path4.getTempFileName();
     
     public void test(){
         File4.delete(FILE);
