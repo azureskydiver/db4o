@@ -1018,20 +1018,18 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
             
             context.setObjectWeak(obj);
             
-            context.transaction().referenceSystem().addExistingReferenceToObjectTree(context.reference());
+            context.transaction().referenceSystem().addExistingReference(context.reference());
             
             objectOnInstantiate(context.transaction(), obj);
-        }
-        
-        context.addToIDTree();
-        
-        if (instantiating) {
+
             if (!context.activationDepth().requiresActivation()) {
                 context.reference().setStateDeactivated();
-            } else {
+            } 
+            else {
                 activate(context);
             }
-        } else {
+        } 
+        else {
             if (activatingActiveObject(context.activationDepth().mode(), context.reference())) {
             	ActivationDepth child = context.activationDepth().descend(this);
                 if (child.requiresActivation()) {

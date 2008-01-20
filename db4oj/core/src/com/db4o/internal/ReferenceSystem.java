@@ -13,10 +13,6 @@ public interface ReferenceSystem {
 
 	public void addExistingReference(ObjectReference ref);
 
-	public void addExistingReferenceToObjectTree(ObjectReference ref);
-
-	public void addExistingReferenceToIdTree(ObjectReference ref);
-	
 	public void commit();
 	
 	public ObjectReference referenceForId(int id);
