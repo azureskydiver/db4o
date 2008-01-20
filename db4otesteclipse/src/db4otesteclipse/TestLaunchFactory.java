@@ -18,7 +18,7 @@ public class TestLaunchFactory {
 		this.spec = spec;
 	}
 
-	public ILaunchConfiguration getLaunchConfig(List testTypes) throws CoreException {
+	public ILaunchConfiguration getLaunchConfig(List<IMember> testTypes) throws CoreException {
 		IJavaProject javaProject=containerForTypes(testTypes);
 		ILaunchManager launchMgr=DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType launchType=launchMgr.getLaunchConfigurationType(LAUNCHCONFIG_ID);
@@ -38,23 +38,43 @@ public class TestLaunchFactory {
 		}
 	}
 
-	private ILaunchConfiguration findExistingLaunchConfig(ILaunchManager launchMgr,ILaunchConfigurationType launchType,List testTypes,String name) throws CoreException {
+	private ILaunchConfiguration findExistingLaunchConfig(ILaunchManager launchMgr,ILaunchConfigurationType launchType,List<IMember> testTypes,String name) throws CoreException {
 		ILaunchConfiguration[] launchConfigs=launchMgr.getLaunchConfigurations(launchType);
+		Set<IMember> testTypeSet = new HashSet<IMember>(testTypes);
 		for (int launchConfigIdx = 0; launchConfigIdx < launchConfigs.length; launchConfigIdx++) {
-			List curTestTypes=launchConfigs[launchConfigIdx].getAttribute(TESTTYPES_KEY, (List)null);
-			if(launchConfigs[launchConfigIdx].getName().equals(name)) {
-				if(namesForTestTypes(testTypes).equals(curTestTypes)) {
-					return launchConfigs[launchConfigIdx];
-				}
+			ILaunchConfiguration launchConfig = launchConfigs[launchConfigIdx];
+			if(configMatches(testTypeSet, name, launchConfig)) {
+				return launchConfigs[launchConfigIdx];
 			}
 		}
 		return null;
 	}
 
-	private List namesForTestTypes(List testTypes) {
-		List names=new ArrayList(testTypes.size());
-		for (Iterator iter = testTypes.iterator(); iter.hasNext();) {
-			names.add(((IMember)iter.next()).getElementName());
+	private boolean configMatches(Set<IMember> testTypes, String name,
+			ILaunchConfiguration launchConfig) throws CoreException {
+		if(!launchConfig.getName().equals(name)) {
+			return false;
+		}
+		List<IMember> configTestTypes=testTypesFor(launchConfig);
+		if(configTestTypes == null) {
+			return false;
+		}
+		if(testTypes.equals(new HashSet<IMember>(configTestTypes))) {
+			return true;
+		}
+		return false;
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<IMember> testTypesFor(ILaunchConfiguration launchConfig)
+			throws CoreException {
+		return (List<IMember>)launchConfig.getAttribute(TESTTYPES_KEY, (List<IMember>)null);
+	}
+
+	private List<String> namesForTestTypes(List<IMember> testTypes) {
+		List<String> names=new ArrayList<String>(testTypes.size());
+		for (IMember curType : testTypes) {
+			names.add(curType.getElementName());
 		}
 		return names;
 	}
@@ -64,20 +84,19 @@ public class TestLaunchFactory {
 		return workingCopy;
 	}
 
-	private void configureLaunchConfig(IJavaProject javaProject, List testTypes, ILaunchConfigurationWorkingCopy workingCopy) throws CoreException {
+	private void configureLaunchConfig(IJavaProject javaProject, List<IMember> testTypes, ILaunchConfigurationWorkingCopy workingCopy) throws CoreException {
 		IRuntimeClasspathEntry projectClasspath=JavaRuntime.newDefaultProjectClasspathEntry(javaProject);
 		spec.configureSpecific(workingCopy, testTypes, parameterString(testTypes));
-		List classPath=new ArrayList();
+		List<String> classPath=new ArrayList<String>();
 		classPath.add(projectClasspath.getMemento());
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_CLASSPATH, classPath);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_DEFAULT_CLASSPATH, false);
 		workingCopy.setAttribute(TESTTYPES_KEY, namesForTestTypes(testTypes));
 	}
 	
-	private IJavaProject containerForTypes(List testTypes) {
+	private IJavaProject containerForTypes(List<IMember> testTypes) {
 		IJavaProject container=null;
-		for (Iterator testTypeIter = testTypes.iterator(); testTypeIter.hasNext();) {
-			IMember type = (IMember) testTypeIter.next();
+		for (IMember type : testTypes) {
 			IJavaProject curContainer = type.getJavaProject();
 			if(container!=null) {
 				if(!container.equals(curContainer)) {
@@ -91,12 +110,10 @@ public class TestLaunchFactory {
 		return container;
 	}
 	
-	private String parameterString(List testTypes) {
+	private String parameterString(List<IMember> testTypes) {
 		StringBuffer buf = new StringBuffer();
 		boolean firstRun = true;
-		for (Iterator testTypeIter = testTypes.iterator(); testTypeIter
-				.hasNext(); firstRun = false) {
-			IMember type = (IMember) testTypeIter.next();
+		for (IMember type : testTypes) {
 			if (!firstRun) {
 				buf.append(' ');
 			}
@@ -109,12 +126,13 @@ public class TestLaunchFactory {
 					.append('#')
 					.append(method.getElementName());
 			}
+			firstRun = false;
 		}
 		return buf.toString();
 	}
 	
 
-	private String nameForTestTypes(List testTypes) {
+	private String nameForTestTypes(List<IMember> testTypes) {
 		String name=((IMember)testTypes.iterator().next()).getElementName();
 		if(testTypes.size()>1) {
 			name+=",...["+testTypes.size()+"]";
