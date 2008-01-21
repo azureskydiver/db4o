@@ -4,10 +4,10 @@ import db4ounit.Assert;
 import db4ounit.extensions.AbstractDb4oTestCase;
 
 
-public class StoringPlainObjectTestCase extends AbstractDb4oTestCase{
+public class PlainObjectTestCase extends AbstractDb4oTestCase{
 
     public static void main(String[] args) {
-        new StoringPlainObjectTestCase().runSolo();
+        new PlainObjectTestCase().runSolo();
     }
     
     public static class Item{
