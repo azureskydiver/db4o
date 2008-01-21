@@ -1,5 +1,12 @@
 package db4ounit;
 
+/**
+ * A group of tests.
+ * 
+ * A TestSuite can be ran only once because it disposes of test instances
+ * as it runs them.
+ *
+ */
 public class TestSuite implements Test {
 	private Test[] _tests;
 	private String _label;
@@ -26,9 +33,14 @@ public class TestSuite implements Test {
 	}
 
 	public void run(TestResult result) {
-		Test[] tests = getTests();
-		for (int i = 0; i < tests.length; i++) {
-			tests[i].run(result);
+		try {
+			final Test[] tests = getTests();
+			for (int i = 0; i < tests.length; i++) {
+				tests[i].run(result);
+				tests[i] = null;
+			}
+		} finally {
+			_tests = null;
 		}
 	}
 	
