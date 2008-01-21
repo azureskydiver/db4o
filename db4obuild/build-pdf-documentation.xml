@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="project" default="generate.pdf.all">
+
+	<import file="common.xml" />
+	
+	<target name="init">
+		<property name="dir.build.dist" value="dist" />
+		<property name="dir.docWiki" value="C:/db4o_workspace/docWiki" />
+		<property name="dir.pdf.titles" value="${dir.docWiki}/pdf-title"/>
+
+		<property name="dir.reference.java" value="${dir.docWiki}/java" />
+		<property name="dir.reference.net" value="${dir.docWiki}/net" />
+		<property name="file.content.xml" value="content.xml" />
+		<property name="file.list" value="htmlFileList.txt" />
+		
+		<property name="reference.type.java" value="java" />
+		<property name="reference.type.net" value="net" />
+		<property name="pdf.filename.java" value="db4o-reference-java.pdf"/>
+		<property name="pdf.filename.net" value="db4o-reference-net.pdf"/>
+		<property name="pdf.title.page.java" value="db4o-reference-title-java.pdf"/>
+		<property name="pdf.title.page.net" value="db4o-reference-title-net.pdf"/>
+
+		<property name="lib" value="lib" />
+		<property name="bin" value="bin" />
+		<property name="src" value="src/com/db4o/devtools/pdfdoc" />
+		<property name="scripts" value="scripts" />
+		
+		<property name="tidy.error.file" value="tidy.error" />
+	</target>
+
+	<target name="generate.pdf.all" depends="generate.pdf.java, generate.pdf.net" />
+	
+    <target name="generate.pdf.java" depends="init">
+    	<convert working.dir="${dir.dist.java.build.reference}"
+    			 dir.reference="${dir.reference.java}"
+    			 pdf.filename="${pdf.filename.java}"
+    			 pdf.title.page="${dir.pdf.titles}/${pdf.title.page.java}"
+    	/>
+    </target>
+
+    <target name="generate.pdf.net" depends="init">
+    	<convert working.dir="${dir.dist.net.build.reference}"
+    			 dir.reference="${dir.reference.net}"
+    			 pdf.filename="${pdf.filename.net}"
+    			 pdf.title.page="${dir.pdf.titles}/${pdf.title.page.net}"
+    	/>
+    </target>
+	
+ 
+    <macrodef name="convert">
+        <attribute name="working.dir" />
+    	<attribute name="dir.reference" />
+    	<attribute name="pdf.filename" />
+    	<attribute name="pdf.title.page"/>
+        <sequential>
+ 	
+			<delete dir="@{working.dir}" />
+			<mkdir dir="@{working.dir}" />
+       	
+        	<java fork="true" 
+					jar="${lib}/tidy.jar"
+					output="@{working.dir}/${file.content.xml}"
+					error="${tidy.error.file}">
+				<arg line="-config ${lib}/tidy.config"/>
+				<arg line="-asxml" />
+				<arg line="@{dir.reference}/html/_contents.html" />
+			</java>
+       	
+	    	<java classname="com.db4o.devtools.pdfdoc.HtmlFileListing" failonerror="true" fork="true">
+	    		<classpath>
+	    			<pathelement location="bin" />
+	    		</classpath>
+	    		<arg line="-ref @{dir.reference}/html/" />
+	    		<arg line="-conv @{working.dir}" />
+	    		<arg line="-content @{working.dir}/${file.content.xml}" />
+	    		<arg line="-output-name ${file.list}" />
+	    	</java>
+        	        	
+	    	<exec executable="cscript.exe" failonerror="true" >
+	    		<arg line="${dir.build}/${scripts}/AcrobatAutomation.vbs" />
+	    		<arg line='"@{pdf.title.page}"' />
+	    		<arg line='"@{pdf.filename}"' />
+	    		<arg line='"@{working.dir}/${file.list}"' />
+	    	</exec>
+      	
+        	<delete>
+				<fileset dir="@{working.dir}">
+				    <include name="${file.list}"/>
+					<include name="${file.content.xml}"/>
+				</fileset>
+        	</delete>
+        	<delete>
+        		<fileset dir="${dir.build}">
+        			<include name="${tidy.error.file}"/>
+        		</fileset>
+			</delete>
+	    	
+	    	<move file="@{pdf.filename}" todir="@{working.dir}" />   	
+        	 	
+        </sequential>
+    </macrodef>
+	
+
+</project>
