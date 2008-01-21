@@ -126,16 +126,12 @@ public class IoBenchmark {
 			_delays = calculation.calculatedDelays();
 			if ( _delays.units == Delays.UNITS_MILLISECONDS ) {
 				System.out.println("> Delaying with Thread.sleep().");
-				/**
-				 * TODO: Adjustment also necessary here?
-				 */
 			}
 			else if ( _delays.units == Delays.UNITS_NANOSECONDS ) {
 				System.out.println("> Delaying with busy waiting.");
-//				System.out.println("> Calculated delays: " + _delays);
 				System.out.println("> Adjusting delays ...");
 				try {
-					_delays = calculation.adjustDelays(_delays);
+					_delays = calculation.adjustNanoDelays(_delays);
 				} catch (InvalidDelayException ide) {
 					exitWithError(ide.getMessage());
 				}

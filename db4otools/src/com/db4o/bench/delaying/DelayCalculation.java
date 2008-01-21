@@ -82,16 +82,16 @@ public class DelayCalculation {
 		return delays;
 	}
 	
-	public Delays adjustDelays(Delays delays) throws InvalidDelayException {
-		long readDelay = adjustDelay(delays.readDelay);
-		long writeDelay = adjustDelay(delays.writeDelay);
-		long seekDelay = adjustDelay(delays.seekDelay);
-		long syncDelay = adjustDelay(delays.syncDelay);
+	public Delays adjustNanoDelays(Delays delays) throws InvalidDelayException {
+		long readDelay = adjustNanoDelay(delays.readDelay);
+		long writeDelay = adjustNanoDelay(delays.writeDelay);
+		long seekDelay = adjustNanoDelay(delays.seekDelay);
+		long syncDelay = adjustNanoDelay(delays.syncDelay);
 		return new Delays(readDelay, writeDelay, seekDelay, syncDelay, delays.units);
 	}
 	
 
-	private long adjustDelay(long delay) throws InvalidDelayException {
+	private long adjustNanoDelay(long delay) throws InvalidDelayException {
 		NanoStopWatch watch = new NanoStopWatch();
 		NanoTiming timing = new NanoTiming();
 		long difference, differencePerIteration;
