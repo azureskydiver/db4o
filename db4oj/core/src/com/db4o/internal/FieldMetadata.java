@@ -68,8 +68,8 @@ public class FieldMetadata implements StoredField {
         init(containingClass, translator.getClass().getName());
         _state = AVAILABLE;
         ObjectContainerBase stream =container(); 
-        _handler = stream._handlers.handlerForClass(
-            stream, stream.reflector().forClass(translatorStoredClass(translator)));
+        ReflectClass claxx = stream.reflector().forClass(translatorStoredClass(translator));
+        _handler = fieldHandlerForClass(stream, claxx);
     }
 
 	protected final Class translatorStoredClass(ObjectTranslator translator) {
@@ -188,11 +188,11 @@ public class FieldMetadata implements StoredField {
 
                 // TODO: add class refactoring features
 
-                _handler = loadJavaField1();
+                _handler = detectHandlerForField();
                 checkHandlerID();
             }
 
-            loadJavaField();
+            checkCorrectHandlerForField();
 
             if(_handler != null) {
                 // TODO: This part is not quite correct.
@@ -685,39 +685,42 @@ public class FieldMetadata implements StoredField {
         throw new NotImplementedException();
     }
     
-    public void loadHandler(ObjectContainerBase a_stream) {
+    public void loadHandlerById(ObjectContainerBase container) {
         if(FieldHandlerRefactoring.COMPLETED){
-            _handler=(TypeHandler4) a_stream.fieldHandlerForId(_handlerID);
+            _handler=(TypeHandler4) container.fieldHandlerForId(_handlerID);
         }else{
-            _handler=a_stream.handlerByID(_handlerID);
+            _handler=container.handlerByID(_handlerID);
         }
     }
+    
+    private TypeHandler4 detectHandlerForField() {
+        ReflectClass claxx = _containingClass.classReflector();
+        if (claxx == null) {
+            return null;
+        }
+        _reflectField = claxx.getDeclaredField(_name);
+        if (_reflectField == null) {
+            return null;
+        }
+        _reflectField.setAccessible();
+        return fieldHandlerForClass(container(), _reflectField.getFieldType());
+    }
 
-    private void loadJavaField() {
-        TypeHandler4 handler = loadJavaField1();
+    private TypeHandler4 fieldHandlerForClass(ObjectContainerBase container, ReflectClass fieldType) {
+        container.showInternalClasses(true);
+        TypeHandler4 handlerForClass = 
+            (TypeHandler4) container.fieldHandlerForClass(Handlers4.baseType(fieldType));
+        container.showInternalClasses(false);
+        return handlerForClass;
+    }
+
+    private void checkCorrectHandlerForField() {
+        TypeHandler4 handler = detectHandlerForField();
         if (handler == null || (!handler.equals(_handler))) {
             _reflectField = null;
             _state = UNAVAILABLE;
         }
     }
-
-    private TypeHandler4 loadJavaField1() {
-		ReflectClass claxx = _containingClass.classReflector();
-		if (claxx == null) {
-			return null;
-		}
-		_reflectField = claxx.getDeclaredField(_name);
-		if (_reflectField == null) {
-			return null;
-		}
-		_reflectField.setAccessible();
-		ObjectContainerBase container = container();
-		container.showInternalClasses(true);
-		TypeHandler4 handlerForClass = container._handlers.handlerForClass(
-				container, _reflectField.getFieldType());
-		container.showInternalClasses(false);
-		return handlerForClass;
-	}
 
     private int adjustUpdateDepth(Object obj, int updateDepth) {
         int minimumUpdateDepth = 1;
@@ -793,7 +796,7 @@ public class FieldMetadata implements StoredField {
     }
     
     void refresh() {
-        TypeHandler4 handler = loadJavaField1();
+        TypeHandler4 handler = detectHandlerForField();
         if (handler != null) {
             handler = wrapHandlerToArrays(container(), handler);
             if (handler.equals(_handler)) {
@@ -909,7 +912,7 @@ public class FieldMetadata implements StoredField {
 		    return null;
 		}
 		ReflectClass indexType = _reflectField.indexType();
-		TypeHandler4 classHandler = stream._handlers.handlerForClass(stream,indexType);
+		TypeHandler4 classHandler = fieldHandlerForClass(stream,indexType);
 		if(! (classHandler instanceof Indexable4)){
 		    return null;
 		}

@@ -183,7 +183,9 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		ReflectField[] fields = reflectFields();
 		for (int i = 0; i < fields.length; i++) {
 		    if (storeField(fields[i])) {
-		        ClassMetadata fieldClassMetadata = container._handlers.classMetadataForClass(container, fields[i].getFieldType());
+		        ReflectClass fieldType = Handlers4.baseType(fields[i].getFieldType());
+                ClassMetadata fieldClassMetadata = 
+		            container.produceClassMetadata(fieldType);
                 if (fieldClassMetadata == null) {
                     continue;
                 }

@@ -438,14 +438,6 @@ public final class HandlerRegistry {
         return typeInfo.typeHandler;
     }
     
-    public final FieldHandler fieldHandlerForID(int id) {
-        TypeInfo typeInfo = typeInfoForID(id);
-        if(typeInfo == null){
-            return null;
-        }
-        return typeInfo.fieldHandler;
-    }
-    
     private TypeInfo typeInfoForID(int id){
         return (TypeInfo)_mapIdToTypeInfo.get(id);
     }
@@ -459,28 +451,6 @@ public final class HandlerRegistry {
             return 0;
         }
         return ((Integer)idAsInt).intValue();
-    }
-
-    // TODO: Interfaces should be handled by the ANY handler but we
-    // need to write the code to migrate from the old field handler to the new
-    public final TypeHandler4 handlerForClass(ObjectContainerBase container, ReflectClass clazz) {
-        ClassMetadata classMetadata = classMetadataForClass(container, clazz);
-        if(classMetadata == null){
-        	return null;
-        }
-		return classMetadata.typeHandler();
-    }
-    
-    public final ClassMetadata classMetadataForClass(ObjectContainerBase container, ReflectClass clazz) {
-        if(clazz == null){
-            return null;
-        }
-        ReflectClass baseType = Handlers4.baseType(clazz);
-        ClassMetadata classMetadata = classMetadataForClass(baseType);
-        if (classMetadata != null) {
-            return classMetadata;
-        }
-        return container.produceClassMetadata(baseType);
     }
 
 	private void initClassReflectors(GenericReflector reflector){
@@ -538,6 +508,14 @@ public final class HandlerRegistry {
             return null;
         }
         return typeInfo.fieldHandler;
+    }
+    
+    public FieldHandler fieldHandlerForClass(ReflectClass claxx) {
+        ClassMetadata classMetadata = classMetadataForClass(claxx);
+        if(classMetadata == null){
+            return null;
+        }
+        return classMetadata.typeHandler();
     }
 
     ClassMetadata classMetadataForClass(ReflectClass clazz) {

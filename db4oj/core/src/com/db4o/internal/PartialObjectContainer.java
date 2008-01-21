@@ -1152,9 +1152,20 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return null;
         }
         if (_handlers.isSystemHandler(id)) {
-            return _handlers.fieldHandlerForID(id);
+            return _handlers.fieldHandlerForId(id);
         } 
         return classMetadataForId(id);
+    }
+    
+    public FieldHandler fieldHandlerForClass(ReflectClass claxx) {
+        if(hideClassForExternalUse(claxx)){
+            return null;
+        }
+        FieldHandler fieldHandler = _handlers.fieldHandlerForClass(claxx);
+        if(fieldHandler != null){
+            return fieldHandler;
+        }
+        return _classCollection.produceClassMetadata(claxx);
     }
     
     /**

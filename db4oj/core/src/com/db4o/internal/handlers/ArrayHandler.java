@@ -328,7 +328,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
         ReflectClass claxx = componentType(obj);
         boolean primitive = Deploy.csharp ? false : claxx.isPrimitive();
         if(primitive){
-            claxx = container()._handlers.classMetadataForClass(container(),claxx).classReflector();
+            claxx = container().produceClassMetadata(claxx).classReflector();
         }
         ClassMetadata classMetadata = container().produceClassMetadata(claxx);
         if (classMetadata == null) {
