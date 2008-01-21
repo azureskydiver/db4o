@@ -1,0 +1,70 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>How To Use Defragmentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>How To Use Defragmentation</h1>
+<p>The simplest way to defragment a db4o file would be:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p>
+
+<p><code>Defragment.defrag("filename")</code></p>
+
+</span>
+
+
+
+<p>The file must not be opened by another process during
+defragmentation!</p>
+
+<p>This will move the file <i>filename </i>to <i>filename.backup</i>,
+then create a defragmented version of this file in the original position. If
+the backup file already exists, this will throw an IOException and no action
+will be taken.</p>
+
+<p>You can also specify the backup filename manually:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p>
+
+<p><code>Defragment.defrag(filename, backupfile);</code></p>
+
+</span>
+
+
+
+<p>For more detailed configuration of the defragmentation
+process, you can use a <a href="defragmentation_configuration.html" class="wikiLink">DefragmentConfig</a>
+instance within the following methods:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p>
+
+<p><code>Defragment.defrag(configuration);</code></p>
+
+<p><code>Defragment.defrag(configuration, listener);</code></p>
+
+</span>
+
+
+<p>You can use listener parameter to track problems during defragmentation process. For more
+information see <a href="tracking_defragmentation_errors.html" class="wikiLink">Tracking Defragmentation Errors</a>.</p>
+
+<p>Defragmentation can throw IOException in the following
+situations:</p>
+
+<ul><li>backup file exists</li><li>database file not found</li><li>database file is opened by another process</li></ul></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-04-01T09:38:30 by Tetyana.
+				</div>
+  </body>
+</html>

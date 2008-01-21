@@ -1,0 +1,185 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Coding Style</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Coding Style</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#File Header">File Header</a></li><li><a href ="#Naming Conventions">Naming Conventions</a><ul><li><a href ="#General Naming">General Naming</a></li><li><a href ="#Package naming">Package naming</a></li><li><a href ="#Class Naming">Class Naming</a></li><li><a href ="#Methods Naming">Methods Naming</a></li><li><a href ="#Abbreviations and Acronyms">Abbreviations and Acronyms</a></li><li><a href ="#Type Naming">Type Naming</a></li><li><a href ="#Variable Naming">Variable Naming</a></li><li><a href ="#Constants">Constants</a></li><li><a href ="#Getters/Setters">Getters/Setters</a></li><li><a href ="#Boolean Methods And Variables">Boolean Methods And Variables</a></li><li><a href ="#Initialize">Initialize</a></li><li><a href ="#Complementary Names">Complementary Names</a></li><li><a href ="#Abbreviations">Abbreviations</a></li><li><a href ="#Named Constants">Named Constants</a></li></ul></li><li><a href ="#Code Organization">Code Organization</a><ul><li><a href ="#Package Structure">Package Structure</a></li><li><a href ="#Classes and Interfaces">Classes and Interfaces</a></li><li><a href ="#Methods">Methods</a></li><li><a href ="#Wait &amp; Notify">Wait &amp; Notify</a></li><li><a href ="#Blank Lines">Blank Lines</a></li><li><a href ="#Import Declarations">Import Declarations</a></li><li><a href ="#Initialization">Initialization</a></li></ul></li><li><a href ="#Exception Handling">Exception Handling</a></li><li><a href ="#Comments">Comments</a></li></ul></li></ul></div></div></div> 
+Coding conventions proved to be very important for producing maintainable and reliable code. In db4o production cycle, coding conventions have a special value, as the code ownership is spread over all the members of the team and any developer is able to work with any piece of code. 
+<P>In general, we follow <A href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">Code Conventions for the Java Programming Language</A>, however there are some specifics, which can be useful to know for db4o users and core contributors.</P>
+<P>This document is supposed to emphasize some of the java coding style recommendations used by db4o and explain db4o specific coding style requirements.</P>
+
+
+<a name="File Header"></a><H2>File Header</H2>
+<P>All code files must have copyright.The normal db4o copyright notice should be created as the standard template in your Eclipse workspace for db4o development. <BR>Window + Preferences + Java + Code Style + Code Templates + Code + New Java Files<BR><BR><FONT color=#3f7f5f size=2>/* Copyright (C) 2004 - 2007 db4objects Inc. http://www.db4o.com */<BR><BR></FONT><FONT size=2>${package_declaration}<BR><BR>${typecomment}<BR><BR>${type_declaration}</FONT></P>
+
+<a name="Naming Conventions"></a><H2>Naming Conventions</H2>
+
+<a name="General Naming"></a><H3>General Naming</H3>
+<P>All names should be written in English. </P>
+<P>English is the preferred language for international development.</P>
+
+<a name="Package naming"></a><H3>Package naming</H3>
+<P>Package names should be in all lower case. </P>
+<P><code>com.db4o.reflection</code></P>
+
+<a name="Class Naming"></a><H3>Class Naming</H3>
+<P>Class names should be nouns and written in mixed case starting with&nbsp;upper case. </P>
+<P><code>ObjectContainer, Configuration</code></P>
+<a name="Methods Naming"></a><H3>Methods Naming</H3>
+<P>Method names must be verbs and written in mixed case starting with lower case. </P>
+<P><code>isReadOnly(), rename()</code></P>
+
+<a name="Abbreviations and Acronyms"></a><H3>Abbreviations and Acronyms</H3>
+<P>Abbreviations and acronyms should not be uppercase when used as name. </P>
+<P><code>IoAdapter(); // NOT: IOAdapter</code></P>
+<P>Using all uppercase for the base name will give conflicts with the naming conventions given above and will reduce the readability.</P>
+
+<a name="Type Naming"></a><H3>Type Naming</H3>
+<P>Type names must be nouns and written in mixed case starting with upper case. </P>
+<P><code>Db4oList, TransientClass</code></P>
+
+<a name="Variable Naming"></a><H3>Variable Naming</H3>
+<P>Variable names must be in mixed case starting with lower case. Variables should have full sensible name, reflecting their purpose.</P>
+<P><code>listener, objectContainer</code></P>
+
+<UL>
+<LI>Private Variables</LI>
+<P>Private class variables should have underscore prefix. </P>
+<P><code>public abstract class IoAdapter {</code></P>
+<P><code>&nbsp; private int _blockSize;</code></P>
+<P><code>.....</code></P>
+<P><code>}</code></P>
+<P>Underscore prefix will help a programmer to distinguish private class variables from local scratch variables.</P>
+
+</UL>
+<UL>
+<LI>Scratch Variables</LI>
+<P>Scratch variables used for iterations or indices should be kept short. Common practice is to use i, j, k, m, n for numbers and c, d for characters. </P></UL>
+
+<a name="Constants"></a><H3>Constants</H3>
+<P>Constants names (final variables) must be all uppercase using underscore to separate words. </P>
+<P><code>ACTIVATION_DEPTH, READ_ONLY</code></P>
+<P>It is a good practice to add methods to retrieve constant values for user interface:</P>
+<P><code>boolean isReadOnly() {</code></P>
+<P><code>&nbsp; return _config.getAsBoolean(READ_ONLY);</code></P>
+<P><code>}</code></P>
+
+<a name="Getters/Setters"></a><H3>Getters/Setters </H3>
+<P>Normally we do not use <I>get/set</I> prefix for methods accessing attributes directly, unless such usage adds&nbsp; valuable information:<BR></P>
+<P><code>public void setStateDirty() {}</code></P>
+<P>In other cases feel free to access attributes by names:</P>
+<P><code>clientServer(), configuration()</code>&nbsp;</P>
+
+<a name="Boolean Methods And Variables"></a><H3>Boolean Methods And Variables</H3>
+<P><I>is(can, has, should)</I> prefix should be used for boolean variables and methods. </P>
+<P><code>isDirty(), canHold(reflectClass)</code></P>
+<P>Using the <I>is(can, has, should)</I> prevents choosing bad names like <I>status</I> or <I>flag</I>. <I>isStatus</I> or <I>isFlag</I> simply doesn't fit, and the programmer is forced to choose more meaningful names. </P>
+<P>Setter methods for boolean variables must have <I>set</I> prefix as in: </P>
+<P><code>public void setStateDirty() {}</code></P>
+
+<a name="Initialize"></a><H3>Initialize</H3>
+<P>The term <I>initialize</I> can be used where an object or a concept is established. <code>classIndex.initialize(_targetDb);</code></P>
+<P>Abbreviations like <I>init</I> must be avoided.</P>
+
+<a name="Complementary Names"></a><H3>Complementary Names</H3>
+<P>Complementary names must be used for complementary entities:</P>
+<P>get/set, add/remove, create/destroy, start/stop, insert/delete, increment/decrement, old/new, begin/end, first/last, up/down, min/max, next/previous, old/new, open/close, show/hide, suspend/resume, etc. For example:</P>
+<P><code>startServer();</code></P>
+<P><code>stopServer();</code></P>
+<P>This convention helps to distinguish the borders of a logical operation and to recognize opposite action methods.</P>
+
+<a name="Abbreviations"></a><H3>Abbreviations </H3>
+<P>Abbreviations in names should be avoided.</P>
+<P><code>copyIdentity (); // NOT: cpIdentity, NOT:copyId</code></P>
+<P>However some well established and commonly used acronyms or abbreviations must be preferred to full names:</P>
+<P><code>html // NOT: HypertextMarkupLanguage</code><BR><code>cpu // NOT: CentralProcessingUnit </code><BR><BR></P>
+<a name="Named Constants"></a><H3>Named Constants</H3>
+<P>Named constants should be used instead of:</P>
+<P>&nbsp;- magic numbers:</P>
+<P><code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (blockSize &gt; MAX_BLOCK_SIZE) // NOT: blockSize &gt; 256</code></P>
+<P>- fixed phrases:</P>
+<P><code> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (fieldname == CREATIONTIME_FIELD) // NOT if (fieldname == "i_uuid")</code></P>
+<P>This convention gives a programmer an idea about the meaning of the constant value. At the same time, it makes it easier to change the constant value: the change must be made only in one place.&nbsp; </P>
+
+
+
+
+<a name="Code Organization"></a><H2>Code Organization</H2>
+<a name="Package Structure"></a><H3>Package Structure</H3>
+<P>Internal class implementations should be placed in com.db4o.internal package. This helps to keep the top-level API smaller and more understandable.<BR></P>
+<P><code>com.db4o.query.Evaluation</code></P>
+<P>has implementation in<BR></P>
+<P><code>com.db4o.internal.query.PredicateEvaluation</code></P>
+
+<a name="Classes and Interfaces"></a><H3>Classes and Interfaces</H3>
+<P>Class and Interface declarations should be organized in the following manner: </P>
+<OL>
+<LI>Class/Interface documentation. </LI>
+<LI><code>class</code> or <code>interface</code> statement. </LI>
+<LI>Class (<code>static</code>) variables in the order <code>public</code>, <code>protected</code>,&nbsp; <code>package</code>(no access modifier), <code>private</code>.</LI>
+<LI>Instance variables in the order&nbsp; <code>public</code>, <code>protected</code>,&nbsp; <code>package</code>(no access modifier), <code>private</code>.</LI>
+<LI>Constructors. </LI>
+<LI>Methods. </LI></OL>
+
+<a name="Methods"></a><H3>Methods </H3>
+<P>Group class methods by functionality rather than by scope or accessibility. For example, a private class method can be in between two public instance methods. The goal is to make reading and understanding of the code easier.</P>
+<a name="Wait &amp; Notify"></a><H3>Wait &amp; Notify<BR></H3>
+<P>Use Lock4#snooze(), #awake() instead of Object#wait directly for CF reason.</P>
+<P><BR></P>
+<a name="Blank Lines"></a><H3>Blank Lines</H3>
+<P>Use blank lines to separate methods, class variable declarations of different scope, and logical units within a block of code. Consider extracting logical blocks of code into separate methods</P>
+
+<a name="Import Declarations"></a><H3>Import Declarations</H3>
+<P>Import declarations should only include package name:. </P>
+<P><code>import java.util.*; <I>// NOT: import java.util.List;</I> </code></P>
+<P>Modern IDEs, such as <A href="http://www.eclipse.org/">Eclipse</A>, provide an automated way to create correct import statements (see "Source/Organize Imports" command in Eclipse).</P>
+
+<a name="Initialization"></a><H3>Initialization</H3>
+<P>Local variables should appear at the beginning of a code block. (A block is any code surrounded by curly braces "{" and "}".) Try to initialize the variable immediately to prevent using uninitialized values. </P>
+<P>The exception to the rule is indexes of <code><CODE>for</code></CODE> loops, which in Java can be declared in the <code><CODE>for</code></CODE> statement: </P>
+<P><code>for (int i = 0; i &lt; maxLoops; i++) { ... }</code></P>
+<P>Avoid local declarations that hide declarations at higher levels. For example, do not declare the same variable name in an inner block: </P>
+<P><code>int count; </code></P>
+<P><code>... </code></P>
+<P><code>myMethod() {</code></P>
+<P><code>&nbsp;&nbsp;&nbsp; if (condition) {</code></P>
+<P><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int count = 0;&nbsp;&nbsp;&nbsp;&nbsp; // AVOID! </code></P>
+<P><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... </code></P>
+<P><code>&nbsp;&nbsp;&nbsp; }</code></P>
+<P><code>&nbsp;&nbsp;&nbsp; ... </code></P>
+<P><code>} </code></P>
+
+<a name="Exception Handling"></a><H2>Exception Handling</H2>
+<P>Never use exception#printStackTrace() in db4o productive code.</P>
+<P>There are three possible choices that can be used:</P>
+<UL>
+<LI>throw (the base type is Db4oException)<BR></LI>
+<LI>swallow silently</LI>
+<LI>swallow with a com.db4o.diagnostic message to the user</LI></UL>
+
+<a name="Comments"></a><H2>Comments</H2>
+
+<P>Supply your code with javadoc comments. All public classes and public and protected functions within public classes should be documented. This makes it easy to keep up-to-date online code documentation. If a class or a method is not part of public API use <code>@exlude</code> tag. For further details, see "<A href="http://java.sun.com/javadoc/writingdoccomments">How to Write Doc Comments for Javadoc</A>"</P>
+
+<P>All comments should be written in English. In an international environment, English is the preferred language.</P>
+
+<P>Avoid using comments to explain tricky code, rather rewrite it to make it self-explanatory. </P>
+
+<P>For more information see: <A href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">Code Conventions for the Java Programming Language</A>. </P>
+
+<P>This document was compiled based on db4o team coding practices and the following documents:</P>
+<P><A href="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html</A></P>
+<P><A href="http://geosoft.no/development/javastyle.html">http://geosoft.no/development/javastyle.html</A></P>
+<P><A href="http://java.sun.com/j2se/javadoc/writingdoccomments/index.html">http://java.sun.com/j2se/javadoc/writingdoccomments/index.html</A></P>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (12) was last Modified 2007-12-20T05:20:22 by German Viscuso.
+				</div>
+  </body>
+</html>

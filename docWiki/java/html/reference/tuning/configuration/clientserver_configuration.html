@@ -1,0 +1,221 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ClientServer Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>ClientServer Configuration</h1>
+<p>Client/server configuration methods are defined in
+ClientServerConfiguration/IClientServerConfiguration interface. You can access
+them through:
+</p>
+
+<p><br></p>
+<span name="cs_wiki_filter" csw_filters="java"><p>Java:&nbsp;</p>
+
+<p><code>public Configuration.ClientServerConfiguration
+clientServer();</code></p>
+
+</span>
+
+
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>void
+prefetchIDCount(int prefetchIDCount);</code></p>
+
+</span>
+
+
+
+<p>Sets the number of
+IDs to be prefetched from the server for new objects created on the client. For more information see
+<a href="../performance_hints/prefetching_ids_for_new_objects.html" class="wikiLink">Prefetching IDs For New Objects</a></p>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>void
+prefetchObjectCount(int prefetchObjectCount);</code></p>
+
+</span>
+
+
+
+<p>Sets the number of objects to be prefetched for an ObjectSet in client/server mode. For more information see
+<a href="../performance_hints/prefetching_objects_for_query_results.html" class="wikiLink">Prefetching Objects For Query Results</a></p>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void
+setMessageRecipient(MessageRecipient messageRecipient);</code></p>
+
+</span>
+
+
+
+<p>sets the
+MessageRecipient to receive Client Server messages. For more information see
+<a href="../../client-server/messaging.html" class="wikiLink">Messaging</a>.</p>
+
+
+<p><br></p>
+
+
+
+<p><span name="cs_wiki_filter" csw_filters="java"><br>Java:</p><p><code>public
+MessageSender getMessageSender();</code></p>
+
+<p></span></p>
+
+
+
+<p>returns the
+MessageSender for this Configuration context. For more information see
+<a href="../../client-server/messaging.html" class="wikiLink">Messaging</a>.</p>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void
+timeoutClientSocket(int milliseconds);</code></p>
+
+</span>
+
+
+
+<p>configures the time a
+client waits for a message response from the server. The default value:
+300000ms (5 minutes). </p>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+
+
+<p>Java:</p><p><code>public void
+timeoutServerSocket(int milliseconds);</code></p></span>
+
+<p>configures the
+timeout of the server side socket. </p>
+
+<p>All server connection
+threads are checking if the server was shut down on a regular basis. Use this
+method to configure the interval for the checks.</p>
+
+<p>The default value:
+5000ms (5 seconds)</p>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void
+timeoutPingClients(int milliseconds);</code></p>
+
+</span>
+
+<p>.NET: <br></p>
+
+<p>configures the delay
+time after which the server starts pinging connected clients to check the
+connection. If no client messages are received by the server for the configured
+interval, the server sends a "PING" message to the client and waits
+for an "OK" response. After 5 unsuccessful attempts, the client
+connection is closed. </p>
+
+
+
+<p>This value may need
+to be increased for single-threaded clients, since they can't respond
+instantaneously. </p>
+
+<p>The default timeout
+value is 180000ms (3 minutes).</p>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void
+singleThreadedClient(boolean flag);</code></p>
+
+</span>
+
+<p>.NET: <br></p>
+
+<p>configures the client
+messaging system to be single threaded&nbsp;
+or multithreaded.</p>
+
+<p>Recommended settings:</p>
+
+<ul><li><code>true</code> for low resource
+systems.</li><li><code>false</code> for best asynchronous
+performance and fast GUI response.</li></ul>
+
+
+
+<p>The default value is:</p>
+
+<ul><li>for .NET Compactframework:
+<code>true</code></li><li>all other plaforms: <code>false</code></li></ul>
+
+
+
+
+
+
+<p><br></p>
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void
+maxBatchQueueSize(int maxSize);</code></p>
+
+</span>
+
+<p>.NET: <br></p>
+
+<p>configures to batch
+messages between client and server. By default, batch mode is disabled. For
+more information see <a href="../../client-server/batch_mode.html" class="wikiLink">Batch Mode</a></p>
+
+
+<p><br></p>
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p><p><code>public void
+batchMessages(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>configures the
+maximum memory buffer size for batched message. If the size of batched messages
+is greater than <code>maxSize</code>, batched messages will be sent to server.
+For more information see <a href="../../client-server/batch_mode.html" class="wikiLink">Batch Mode</a></p></div>
+    </div>
+    <div id="footer">
+					This revision (13) was last Modified 2007-06-04T17:59:29 by Tetyana.
+				</div>
+  </body>
+</html>

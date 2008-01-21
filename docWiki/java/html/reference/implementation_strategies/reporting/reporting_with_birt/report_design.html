@@ -1,0 +1,40 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Report Design</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Report Design</h1><p>Open Report Design perspective (Window/Open
+Perspective/Report Design). Create a new report (select the project in the
+Navigator window, right-click, select New/Report). In the New Report window
+change the default filename to Pilots.rptdesign and press "Finish".</p>
+
+<p>Report designer layout window opens. </p>
+
+<p>Open Palette view and drag "table" icon onto the report
+layout. In the "Insert Table" window change number of columns to 2 and click
+"OK".</p>
+
+<p>On the next step we will need to specify a DataSource for
+the report. Open Data Explorer view, right-click "Data Sources", select "New
+Data Source". In order to deal with the object data we will need to use a
+"Scripted Data Source". This data source does not accept any other parameters,
+so you can just click "Finish".</p>
+
+<p>Now we can define a data set for our table. Select "Data
+Sets"/"New Data Set" from the drop-down menu. Change the data set name to
+"Pilot". In the next window define 2 columns: "Name" and "Points", and press
+"Finish".</p>
+
+Now we have data that can be used for the layout. Open
+report layout window again and drag Pilot.Name and Pilot.Points columns from
+the Data Explorer/Data Sets onto "Detail Row" on the table.&nbsp;</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-02-16T18:36:25 by Tetyana.
+				</div>
+  </body>
+</html>

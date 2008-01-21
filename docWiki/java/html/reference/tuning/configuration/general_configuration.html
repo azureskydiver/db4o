@@ -1,0 +1,882 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>General Configuration</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>General Configuration</h1>
+
+
+<p>Db4o configuration resides in com.db4o.config
+package/Db4object.Db4o.Config namespace. </p>
+
+<p>Below is a short description of all general configuration
+methods. For client/server specific settings see <a href="clientserver_configuration.html" class="wikiLink">ClientServer Configuration</a>
+interface. For class and field specific configuration see <a href="objectclass_configuration.html" class="wikiLink">ObjectClass Configuration</a> and
+<a href="objectfield_configuration.html" class="wikiLink">ObjectField Configuration</a> interface.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void activationDepth(int depth);</code></p>
+
+</span>
+
+
+
+<p>sets the activation depth to the specified value.
+</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void classActivationDepthConfigurable(boolean
+flag);</code></p>
+
+</span>
+
+
+
+<p>turns maximumActivationDepth setting of ObjectClass/IObjectClass
+configuration on and off.</p>
+
+<p>This feature is turned on by default.</p>
+
+
+<p>For more information on the activation depth see
+<a href="../../object_lifecycle/activation.html" class="wikiLink">Activation</a> topic.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: </p>
+
+<p><code>public void addAlias(Alias alias);</code></p>
+
+<p><code>public void removeAlias(Alias alias);</code></p>
+
+</span>
+
+
+
+<p>these methods, as the names suggest, add or remove aliases.
+Aliases should be configured before opening a database file or connecting to a
+server. For more information on aliases please check
+<a href="../../implementation_strategies/aliases.html" class="wikiLink">Aliases</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java: <br></p>
+
+<p><code>public void allowVersionUpdates(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>Turns automatic database file format version updates on. For
+more information see <a href="../../implementation_strategies/maintenance/updating_db4o_file_format.html" class="wikiLink">Updating Db4o File Format</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void automaticShutDown(boolean flag);</code></p>
+
+<p>turns automatic shutdown of the engine on and off.</p>
+
+<p>Depending on the JDK, db4o uses one of the following two
+methods to shut down, if no more references to the ObjectContainer are being
+held or the JVM terminates:</p>
+
+<ul>
+<li>JDK 1.3 and above: </li>
+
+<p><code>Runtime.addShutdownHook()</code></p>
+
+<li>JDK 1.2 and below: <br></li>
+
+<code>System.runFinalizersOnExit(true)</code>
+and code in the finalizer</ul>
+
+<p>Some JVMs have severe problems with both methods. For these
+rare cases the autoShutDown feature may be turned off.</p>
+
+
+<p>The default and recommended setting is <code>true</code>.</p>
+
+</span>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void blockSize(int bytes);</code></p>
+
+</span>
+
+
+
+<p>sets the storage data blocksize for new ObjectContainers.
+For more information read
+<a href="../performance_hints/increasing_the_maximum_database_file_size.html" class="wikiLink">Increasing The Maximum Database File Size</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void bTreeNodeSize(int size);</code></p>
+
+</span>
+
+
+
+<p>configures the size of BTree nodes in indexes. </p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void bTreeCacheHeight(int height);</code></p>
+
+</span>
+
+
+
+<p>configures caching of BTree nodes.</p>
+
+<p>For more information see
+<a href="../performance_hints/b-tree_tuning.html" class="wikiLink">B-Tree tuning</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void callbacks(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>turns <a href="../../implementation_strategies/callbacks.html" class="wikiLink">object
+callbacks</a> on and off. <a href="../performance_hints/no_callbacks.html" class="wikiLink">No callbacks</a> article explains
+how this setting can be useful for tuning.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void callConstructors(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>advises db4o to try instantiating objects with/without
+calling constructors.</p>
+
+<p>Not all JDKs / .NET-environments support this feature. db4o
+will attempt, to follow the setting as good as the enviroment supports. In
+doing so, it may call implementation-specific features like</p>
+
+<p>sun.reflect.ReflectionFactory#newConstructorForSerialization
+on the Sun Java 1.4.x/5 VM (not available on other VMs) and&nbsp; FormatterServices.GetUninitializedObject()
+on the .NET framework (not available on CompactFramework).</p>
+
+<p>This setting may also be overridden for individual classes
+in ObjectClass#callConstructor(boolean).</p>
+
+
+<p>The default setting depends on the features supported by
+your current environment.</p>
+
+<p>For more information see
+<a href="../../object_lifecycle/object_construction.html" class="wikiLink">Object Construction</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void detectSchemaChanges(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>tuning feature: configures whether db4o checks all
+persistent classes upon system startup for added or removed fields. For more
+information see <a href="../performance_hints/no_schema_changes.html" class="wikiLink">No schema changes</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public DiagnosticConfiguration diagnostic();</code></p>
+
+</span>
+
+
+
+<p>returns the configuration interface for diagnostics. See
+<a href="../diagnostics.html" class="wikiLink">Diagnostics</a> for more information.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void disableCommitRecovery();</code></p>
+
+</span>
+
+
+
+<p>turns commit recovery off.</p>
+
+<p>db4o uses a two-phase commit algorithm. In a first step all
+intended changes are written to a free place in the database file, the
+"transaction commit record". In a second step the actual changes are
+performed. If the system breaks down during commit, the commit process is
+restarted when the database file is opened the next time. On very rare
+occasions (possibilities: hardware failure or editing the database file with an
+external tool) the transaction commit record may be broken. In this case, this
+method can be used to try to open the database file without commit recovery.
+The method should only be used in emergency situations after consulting db4o
+support. </p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void flushFileBuffers(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>configures file buffers to be flushed during transaction
+commits. For more information see <a href="../performance_hints/flushfilebuffers.html" class="wikiLink">FlushFileBuffers</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void discardFreeSpace(int byteCount);</code></p>
+
+</span>
+
+
+
+<p>tuning feature: configures the minimum size of free space
+slots in the database file that are to be reused. For more information see
+<a href="../performance_hints/discarding_free_space.html" class="wikiLink">Discarding Free Space</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void encrypt(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>configures the use of <a href="../../implementation_strategies/encryption/built-in_simple_encryption.html" class="wikiLink">encryption</a>.
+This method is deprecated, please use:</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>Db4o.configure().io(new
+XTeaEncryptionFileAdapter(password)) </code></p>
+
+</span>
+
+
+
+<p>or any of the other XTeaEncryptionFileAdapter constructors.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void exceptionsOnNotStorable(boolean
+flag);</code></p>
+
+</span>
+
+
+
+<p>configures whether Exceptions are to be thrown, if objects
+can not be stored. For more information see
+<a href="../debugging_db4o/exceptionsonnotstorable.html" class="wikiLink">ExceptionsOnNotStorable</a>. The default for this setting is
+false.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public FreespaceConfiguration freespace();</code></p>
+
+</span>
+
+
+
+<p>returns the
+<a href="../../implementation_strategies/freespace_management_system.html" class="wikiLink">freespace</a> configuration
+interface.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void generateUUIDs(int setting);</code></p>
+
+</span>
+
+
+
+<p>configures db4o to generate UUIDs for stored objects.</p>
+
+
+
+<p>setting parameter can have one of the following values:</p>
+
+<ul>
+<li>1 - off</li>
+
+<li>1 - configure classes individually</li>
+
+<li>Integer.MAX_VALUE/Itn32.MaxValue - on for all classes</li>
+</ul>
+
+
+<p>This method is deprecated. Use the next method instead.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void generateUUIDs(ConfigScope)</code></p>
+
+</span>
+
+
+
+<p>configures db4o to generate UUIDs for stored objects. For
+more information see
+<a href="../../implementation_strategies/ids_and_uuids/unique_universal_ids.html" class="wikiLink">Unique Universal IDs</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void generateVersionNumbers(int
+setting);</code></p>
+
+</span>
+
+
+
+<p>configures db4o to generate version numbers for stored
+objects. This method is deprecated. Use the next method instead.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void generateVersionNumbers(ConfigScope
+setting);</code></p>
+
+</span>
+
+
+
+<p>configures db4o to generate version numbers for stored
+objects. Version numbers are used for <a href="../../db4o_replication_system_drs.html" class="wikiLink">db4o Replication System (dRS)</a></p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void internStrings(boolean doIntern);</code></p>
+
+</span>
+
+
+
+<p>Configures db4o to call intern() on strings upon retrieval.
+For more information see Java/.NET documentation for string class.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void io(IoAdapter adapter);</code></p>
+
+</span>
+
+
+
+<p>allows to configure db4o to use a customized byte IO
+adapter. <a href="../../implementation_strategies/io_adapter.html" class="wikiLink">IO Adapter</a> topic discusses how to
+use a pluggable IO-adapter and how to create you own IO-adapter.</p>
+
+<p><br></p>
+
+
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void messageLevel(int level);</code></p>
+
+</span>
+
+
+
+<p>Sets the detail level of db4o messages (from1 to 3). For
+more information see <a href="../debugging_db4o.html" class="wikiLink">Debugging db4o</a></p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void lockDatabaseFile(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>can be used to turn the database file locking thread off.
+This tuning setting makes sense with java version 1.4 and higher. For more
+information see <a href="../performance_hints/no_lock_file_thread.html" class="wikiLink">No lock file thread</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public ObjectClass objectClass(Object clazz);</code></p>
+
+</span>
+
+
+
+<p>returns an ObjectClass/IObjectClass to
+configure the specified class.</p>
+
+<p>The clazz parameter can be any of the following:</p>
+
+<ul>
+<li>a fully qualified classname as a string.</li>
+
+<li>a Class/Type object.</li>
+
+<li>any other object to be used as a template.</li>
+</ul>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void optimizeNativeQueries(boolean
+optimizeNQ);</code></p>
+
+</span>
+
+
+
+<p>If set to true, db4o will try to optimize native queries
+dynamically at query execution time, otherwise it will run native queries in
+unoptimized mode as SODA evaluations. For more information see
+<a href="../native_query_optimization.html" class="wikiLink">Native Query Optimization</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public boolean optimizeNativeQueries();</code></p>
+
+</span>
+
+
+
+<p>returns true if native queries will be optimized
+dynamically. For more information see <a href="../native_query_optimization.html" class="wikiLink">Native Query Optimization</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void password(String pass);</code></p>
+
+</span>
+
+
+
+<p>protects the database file with a password when
+<a href="../../implementation_strategies/encryption/built-in_simple_encryption.html" class="wikiLink">simple
+encryption</a> is used. This method is deprecated . Please use:</p>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>Db4o.configure().io(new
+XTeaEncryptionFileAdapter(password))</code></p>
+
+</span>
+
+
+
+<p>or any of the other XTeaEncryptionFileAdapter constructors.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public QueryConfiguration queries();</code></p>
+
+</span>
+
+
+
+<p>returns the Query configuration interface. For more
+information see <a href="../../object_lifecycle/querying/query_modes.html" class="wikiLink">Query Modes</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void readOnly(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>turns readOnly mode on and off.</p>
+
+<p>Readonly mode allows opening an unlimited number of reading
+processes on one database file. It can be convenient when deploying db4o
+database files on CD-ROM.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void reflectWith(Reflector reflector);</code></p>
+
+</span>
+
+
+
+<p>Configures the use of a specially designed reflection
+implementation.</p>
+
+<p>On platforms that do not support reflection, customized
+reflection implementations may be written to enable db4o. For more information
+see <a href="../../implementation_strategies/db4o_reflection_api.html" class="wikiLink">Db4o Reflection API</a>.</p>
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void refreshClasses();</code></p>
+
+</span>
+
+
+
+<p>forces analysis of all Classes during a running session.</p>
+
+
+
+<p>This method may be useful in combination with a modified
+ClassLoader and allows exchanging classes during a running db4o session.</p>
+
+<p>Calling this method on the global Configuration context will
+refresh the classes in all db4o sessions in the running VM. Calling this method
+in an ObjectContainer Configuration context, only the classes of the respective
+ObjectContainer will be refreshed.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void reserveStorageSpace(long
+byteCount);</code></p>
+
+</span>
+
+
+
+<p>tuning feature only: reserves a number of bytes on creation
+of a database file.</p>
+
+<p>An allocation of a fixed number of bytes at one time makes
+it more likely that the database will be stored in one chunk on the mass
+storage. Less read/write head movement can result in improved performance</p>
+
+<p>Note: Allocated space will be lost on abnormal termination
+of the database engine (hardware crash, VM crash). A Defragment run will
+recover the lost space. For the best possible performance, this method should
+be called before the Defragment run to configure the allocation of storage
+space to be slightly greater than the anticipated database file size.</p>
+
+<p>The default configuration: 0.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void setBlobPath(String path) throws
+IOException;</code></p>
+
+</span>
+
+
+
+<p>configures the path to be used to store and read Blob data.
+For more information see <a href="../../implementation_strategies/type_handling/blobs.html" class="wikiLink">Blobs</a></p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void setClassLoader(Object classLoader);</code></p>
+
+</span>
+
+
+
+<p>configures db4o to use a custom ClassLoader. This method is
+deprecated, use instead:</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>reflectWith(new JdkReflector(classLoader)) </code></p>
+
+</span>
+
+
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void setOut(PrintStream outStream);</code></p>
+
+</span>
+
+
+
+<p>Assigns a stream to print db4o event messages.</p>
+
+<p>For more information see
+<a href="../debugging_db4o/customizing_the_debug_message_output.html" class="wikiLink">Customizing The Debug Message Output</a>&nbsp;&nbsp;&nbsp; </p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void testConstructors(boolean flag);</code></p>
+
+<p>[/filter] </p>
+
+<p> </p>
+
+<p>tuning feature: configures whether db4o should try to
+instantiate one instance of each persistent class on system startup. For more
+information see <a href="../performance_hints/no_test_instances.html" class="wikiLink">No test instances</a>&nbsp;&nbsp;&nbsp; </p>
+
+
+<p><br></p>
+
+<p>[filter=java]</p>
+
+<p>Java:</p>
+
+<p><code>public void unicode(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>configures the storage format of Strings.</p>
+
+<p>This method needs to be called before a database file is
+created. db4o database files keep their string format after creation.</p>
+
+<p>Turning Unicode support off reduces the file storage space
+for strings by factor 2 and improves performance.</p>
+
+<p>The default setting: <code>true</code></p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void updateDepth(int depth);</code></p>
+
+</span>
+
+
+
+<p>specifies the global updateDepth. For more information see
+<a href="../../object_lifecycle/update_depth.html" class="wikiLink">Update Depth</a></p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void weakReferences(boolean flag);</code></p>
+
+</span>
+
+
+
+<p>turns weak reference management on or off. For more
+information see <a href="../performance_hints/turning_off_weak_references.html" class="wikiLink">Turning Off Weak References</a>.</p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p><code>public void weakReferenceCollectionInterval(int
+milliseconds);</code></p>
+
+</span>
+
+
+
+<p>configures the timer for WeakReference collection.</p>
+
+<p>The default setting is 1000 milliseconds.</p>
+
+<p>Configure this setting to zero to turn WeakReference
+collection off. For more information see <a href="../../basic_concepts/object_identity/weak_references.html" class="wikiLink">Weak References</a>&nbsp;&nbsp;&nbsp; </p>
+
+<p><br></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:</p>
+
+<p>public ClientServerConfiguration clientServer();</p>
+
+</span>
+
+
+
+<p>returns an interface for client/server specific
+configuration.</p>
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (13) was last Modified 2007-06-04T16:55:04 by Tetyana.
+				</div>
+  </body>
+</html>

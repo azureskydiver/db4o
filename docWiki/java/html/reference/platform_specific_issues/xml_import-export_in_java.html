@@ -1,0 +1,38 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Xml Import-Export In Java</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Xml Import-Export In Java</h1>
+<P><FONT color=#990000>This topic applies to Java version only</FONT> <BR></P>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>One of the most widely used platform independent formats of data exchange today is xml.<BR>Db4o does not provide any specific API to be used for XML import/export, but with the variety of XML serialization tools available for Java and .NET (freeware and licensed) this is not really necessary. <BR>All that you need to export your database/query results is:<BR></P>
+<OL>
+<LI>Retrieve objects from the database.</LI>
+<LI>Serialize them in XML format (using language, or external tools, or your own serializing software).</LI>
+<LI>Save XML stream (to a disc location, into memory, into another database).</LI></OL>
+<P>Import process is just the reverse:</P>
+<OL>
+<LI>Read XML stream</LI>
+<LI>Create an objects from XML</LI>
+<LI>Save objects to db4o</LI></OL>
+<P>Let's go through a simple example. We will use xstream library (<A class="" href="http://xstream.codehaus.org/">http://xstream.codehaus.org/</A>) for object serialization, but any other tool capable of serializing objects into XML will do as well.</P>
+<P>First, let's prepare a database:</P>
+<div class="AttachmentInfo">Code attachment not found: /Resources/Reference/Platform_Specific_Issues/SerializeJava.Zip</div>
+<P>We will save the database to XML file "formula1.xml":</P>
+<div class="AttachmentInfo">Code attachment not found: /Resources/Reference/Platform_Specific_Issues/SerializeJava.Zip</div>
+<P>After the method executes all car objects from the database will be stored in the export file as an array. Note that child objects (Pilot) are stored as well without any additional settings. You can check the created XML file to see how it looks like.</P>
+<P>Now we can clean the database and try to recreate it from the XML file:</P>
+<div class="AttachmentInfo">Code attachment not found: /Resources/Reference/Platform_Specific_Issues/SerializeJava.Zip</div>
+<P>Easy, isn't it? Obviously there is much more about XML serialization: renaming fields, storing collections, selective persistence etc. You should be able to find detailed description together with the serialization library, which you will use.</P>
+</span></div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2007-02-01T21:20:44 by treeder.
+				</div>
+  </body>
+</html>

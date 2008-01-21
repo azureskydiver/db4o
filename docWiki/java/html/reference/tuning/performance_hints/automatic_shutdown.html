@@ -1,0 +1,52 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Automatic Shutdown</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Automatic Shutdown</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Advantage">Advantage</a></li><li><a href ="#Effect">Effect</a></li><li><a href ="#Alternate Strategies">Alternate Strategies</a></li></ul></li></ul></div></div></div>
+
+<p><font color="#cc0000">This topic applies to Java version only</font></p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p><code>configuration.automaticShutDown(flag)</code></p>
+
+<a name="Advantage"></a><h2>Advantage</h2>
+
+<p>Automatic shutdown ensures that all db4o
+processes are terminated correctly.</p>
+
+<a name="Effect"></a><h2>Effect</h2>
+
+<p>Depending on the JDK, db4o uses one of the
+following two methods to shut down, if no more references to the
+ObjectContainer are being held or the JVM terminates:</p>
+<ul>
+<li>JDK 1.3 and above: <br>
+<code>Runtime.addShutdownHook()/code]</li>
+<li>JDK 1.2 and below: <br>
+<code>System.runFinalizersOnExit(true)</code>
+</li>
+</ul>
+
+<p>and code in the
+finalizer.</p>
+
+<p>AutomaticShutDown setting is true by default.</p>
+
+<a name="Alternate Strategies"></a><h2>Alternate Strategies</h2>
+
+<p>Some JVMs have severe problems with both methods. For these rare cases
+the automaticShutDown feature may be turned off.</p>
+
+</span></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-03-06T13:24:10 by Tetyana.
+				</div>
+  </body>
+</html>

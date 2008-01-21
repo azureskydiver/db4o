@@ -1,0 +1,61 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Creating A Plugin</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Creating A Plugin</h1><p><font color="#990000">This topic applies to Java version only.</font>&nbsp;</p><p>First of all you will need to install db4o_osgi into the
+Eclipse environment. You can do that by copying db4o_osgi.jar into
+ECLIPSE_HOME\plugins folder. If you do not want to do that, you can open
+Eclipse and create a usual java project from the db4o_osgi sources.</p>
+
+<p>Now you are ready to create a new plug-in project.</p>
+
+<ul><li>Open Eclipse workspace if not yet opened. </li><li>Select File/New from the menu and select "Plug-in Project" as
+the project type. </li><li>Select MemoPlugin as the project name, leave the default
+values for the other settings and press "Next"</li><li>Leave all the default values and press "Next"</li><li>In the "Templates" screen select "Hello, World" template. This
+template creates a menu in the Eclipse environment, which we will use for our
+example. Click "Finish"</li></ul>
+
+
+
+
+
+
+
+
+
+<p>You might be asked to switch to "Plug-in development"
+perspective, which you can surely do.</p>
+
+<p>You should see a MemoPlugin window opened in the
+environment. This window represents important plug-in properties and it can be
+opened by double-clicking plugin.xml file in Package Explorer. </p>
+
+<p>You can use the tab-scroll at the bottom to navigate to
+different pages. Please, open the "Overview" page of the plugin.xml window and
+review the information presented there. Note, that this page can be used to
+start testing and debugging (see Testing paragraph).</p>
+
+<p>Our plug-in will depend on db4o_osgi bundle; therefore we
+must define this dependency somewhere. Select "Dependencies" hyperlink in the
+"Plug-in Content" paragraph. (You can gain the same effect by selecting
+"Dependencies" tab page.) In the "Required Plug-ins" list click "Add" and
+select "db4o-osgi".</p>
+
+<p>Please, note that you should not specify Java Build path as
+in a normal Java project, otherwise the environment will find duplicates in
+your project dependencies.</p>
+
+
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-07-29T14:30:21 by Tetyana.
+				</div>
+  </body>
+</html>

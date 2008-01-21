@@ -1,0 +1,55 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Diagnostics</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Diagnostics</h1>
+<p>Db4o engine provides user with a special mechanism showing runtime diagnostics information. This functionality can become your guide to excellent performance and low memory consumption.<br>
+Diagnostics can be switched on in the configuration before opening the database file:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java: </p><p><code>configuration.diagnostic().addListener(new DiagnosticListener())</code> </p>
+</span>
+
+
+<p>where DiagnosticListener is a callback interface tracking diagnostic messages from different parts of the system:</p>
+<p><code>public interface DiagnosticListener {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;    public void onDiagnostic(Diagnostic d);<br>
+}</code><br>
+</p>
+
+<p>Db4o provides 2 different listeners:</p>
+<ul>
+<li>
+DiagnosticToConsole (Java, prints diagnostic messages to the console);</li>
+<li>DiagnosticToTrace (.NET, prints diagnostic messages to the debug output window).</li>
+</ul>
+<p>Every diagnostic message is represented by it's own type, all possible types can be found in the com.db4o.diagnostic package/namespace.</p>
+<p>At the present moment the following diagnostic classes are implemented:</p>
+<ul>
+<li>
+ClassHasNoFields </li>
+<li>LoadedFromClassIndex </li>
+<li>NativeQueryNotOptimized </li>
+<li>UpdateDepthGreaterOne</li>
+<li>DescendIntoTranslator</li>
+</ul><div class="childTopicList">More Reading:<ul>
+<li><p><a href="diagnostics/classhasnofields.html" class="wikiLink">ClassHasNoFields</a></p></li>
+<li><p><a href="diagnostics/loadedfromclassindex.html" class="wikiLink">LoadedFromClassIndex</a></p></li>
+<li><p><a href="diagnostics/nativequerynotoptimized.html" class="wikiLink">NativeQueryNotOptimized</a></p></li>
+<li><p><a href="diagnostics/updatedepthgreaterone.html" class="wikiLink">UpdateDepthGreaterOne</a></p></li>
+<li><p><a href="diagnostics/diagnostic_messages_filter.html" class="wikiLink">Diagnostic Messages Filter</a></p></li>
+<li><p><a href="diagnostics/descendintotranslator.html" class="wikiLink">DescendIntoTranslator</a></p></li>
+</ul></div>
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2007-05-07T16:57:08 by Tetyana.
+				</div>
+  </body>
+</html>

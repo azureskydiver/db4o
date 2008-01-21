@@ -1,0 +1,95 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Switching Database Files in CS Mode</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Switching Database Files in CS Mode</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Switching Database Files">Switching Database Files</a></li><li><a href ="#Multiple Database Usecase">Multiple Database Usecase</a></li></ul></li></ul></div></div></div><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script> 
+
+<P>ExtClient is an extended interface, which can be used to access database from the client side. ExtClient object can be simply cast from the ObjectContainer, returned by openClient method:</P>
+<OL>
+<span name="cs_wiki_filter" csw_filters="java">
+<P>Java: <code>ExtClient clientExt = (ExtClient) server.openClient()</code></P>
+</span>
+
+</OL>
+<P>Please, note that this cast is only possible in embedded server mode. </P>
+<P>ExtClient is extending ExtObjectContainer interface. In addition ExtClient provides 3 client-specific methods:</P>
+<UL>
+<LI>switchToFile(String fileName)/SwitchToFile(string fileName)</LI>allows to switch your client database connection to another file using the same server connection. 
+<LI>switchToMainFile()/SwitchToMainFile() </LI>switchs the connection back to the original database file. 
+<LI>boolean isAlive()/IsAlive()</LI>checks if the client is currently connected to a server, returns true if the client is alive.</UL>
+<a name="Switching Database Files"></a><H2>Switching Database Files</H2>
+<P>In some special cases you may want to store different objects to different files. </P>
+<P>This approach has the following advantages:</P>
+<UL>
+<LI>easier rights management</LI>
+<LI>easier backup</LI>
+<LI>possible later load balancing to multiple servers</LI>
+<LI>better performance of smaller individual database files</LI>
+<LI>special debugging database files can be used</LI></UL>
+<P>To make database switch handling easier you should consider using the ExtClient#switchToFile(fileName) and ExtClient#switchToMainFile() methods. This allows you to use single connection to the server for all database files, thus avoiding overhead of opening and managing new connections (a server starts a new thread for each connection). All you have to do is just point out which database file to use.</P>
+<span name="cs_wiki_filter" csw_filters="java">
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">ExtClientExample.java: <span class="fscMemberName">switchExtClients</span></span></div><div class="fscCode"><pre ID="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Open_Text').style.display='inline';"/><span style="color: #0000FF;">private</span><span style="color: #000000;"> </span><span style="color: #0000FF;">static</span><span style="color: #000000;"> </span><span style="color: #0000FF;">void</span><span style="color: #000000;"> switchExtClients() </span><span id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_39_976_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> File(DB4O_FILE_NAME).delete();
+</span><span style="color: #008080;">03</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> File(EXTFILENAME).delete();
+</span><span style="color: #008080;">04</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>        ObjectServer server</span><span style="color: #000000;">=</span><span style="color: #000000;">Db4o.openServer(DB4O_FILE_NAME,</span><span style="color: #000000;">0</span><span style="color: #000000;">);
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Open_Text').style.display='inline';"/>        </span><span style="color: #0000FF;">try</span><span style="color: #000000;"> </span><span id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_193_914_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            ObjectContainer client</span><span style="color: #000000;">=</span><span style="color: #000000;">server.openClient();
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            deleteAll(client); </span><span style="color: #008000;">//</span><span style="color: #008000;"> added to solve sticking objects in doctor </span><span style="color: #008000;">
+</span><span style="color: #008080;">08</span><span style="color: #008000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/></span><span style="color: #000000;">            Car car </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Car(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">BMW</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            client.set(car);
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Objects in the main database file:</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            retrieveAll(client);
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Switching to additional database:</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            ExtClient clientExt </span><span style="color: #000000;">=</span><span style="color: #000000;"> (ExtClient)client;
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            clientExt.switchToFile(EXTFILENAME);
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            car </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000FF;">new</span><span style="color: #000000;"> Car(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Ferrari</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">17</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            clientExt.set(car);
+</span><span style="color: #008080;">18</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            retrieveAll(clientExt);
+</span><span style="color: #008080;">19</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      System.out.println(</span><span style="color: #000000;">&quot;</span><span style="color: #000000;">Main database file again: </span><span style="color: #000000;">&quot;</span><span style="color: #000000;">);
+</span><span style="color: #008080;">20</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      clientExt.switchToMainFile();
+</span><span style="color: #008080;">21</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      retrieveAll(clientExt);
+</span><span style="color: #008080;">22</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>      clientExt.close();
+</span><span style="color: #008080;">23</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>        }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">24</span><span style="color: #000000;"><img id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Open_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockStart.gif" align="top" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Open_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Closed_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Closed_Text').style.display='inline';"/><img id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Closed_Image" src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ContractedSubBlock.gif" align="top" style="display: none;" onClick="this.style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Closed_Text').style.display='none'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Open_Image').style.display='inline'; document.getElementById('ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Open_Text').style.display='inline';"/>        </span><span style="color: #0000FF;">finally</span><span style="color: #000000;"> </span><span id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Closed_Text" style="border: solid 1px #808080; background-color: #FFFFFF; display: none;">...</span><span id="ResourcesReferenceClient-ServerclientserverJava.ZipsExtClientExample.Java_ExtClientExample.Java_SwitchExtClients_1862_73_931_970_Open_Text"><span style="color: #000000;">{
+</span><span style="color: #008080;">25</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/InBlock.gif" align="top"/>            server.close();
+</span><span style="color: #008080;">26</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedSubBlockEnd.gif" align="top"/>        }</span></span><span style="color: #000000;">
+</span><span style="color: #008080;">27</span><span style="color: #000000;"><img src="../../Utility/ActiPro.CodeHighligher/OutliningIndicators/ExpandedBlockEnd.gif" align="top"/>    }</span></span></div></pre></div></div>
+</span>
+
+
+<a name="Multiple Database Usecase"></a><H2>Multiple Database Usecase</H2>
+<P>The following can be an example usecase of multiple database usage.</P>
+<P>The main database file is used for login, user and rights management only. Multiple satellite database files are used for different applications or multiple user circles. User authorization to the satellite databases is not checked.</P>
+<P>Only one single db4o server session needs to be run. </P></div>
+    </div>
+    <div id="footer">
+					This revision (8) was last Modified 2007-09-01T14:19:29 by Tetyana.
+				</div>
+  </body>
+</html>

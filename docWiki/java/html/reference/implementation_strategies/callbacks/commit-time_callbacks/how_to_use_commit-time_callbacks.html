@@ -1,0 +1,52 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>How To Use Commit-Time Callbacks</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>How To Use Commit-Time Callbacks</h1>
+
+<p>The
+general usage of external callbacks is described in <a href="../event_registry_api.html" class="wikiLink">Event Registry API</a>.
+Commit-time event handlers can be defined:</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+
+<p>Java:&nbsp;</p><p><code> registry.committing().addListener(new
+EventListener4() { ... }); </code></p><p><code> registry.committed().addListener(new
+EventListener4() { ... }); </code> <br></p>
+
+</span>
+
+
+
+
+
+
+
+<p>Event
+arguments can be reached through CommitEventArgs
+parameter. CommitEventArgs class provides the following properties:</p>
+
+<p><code>added</code> - lists the objects
+added in the current transaction.</p>
+
+<p><code>deleted</code> - lists the
+objects deleted in the current transaction.</p>
+
+<p><code>updated</code> - lists the
+objects updated in the current transaction.</p>
+
+<code>transaction</code>
+- returns the current transaction.
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (5) was last Modified 2007-05-07T10:30:56 by Tetyana.
+				</div>
+  </body>
+</html>

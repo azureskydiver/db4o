@@ -1,0 +1,764 @@
+﻿<html xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:user="http://mycompany.com/mynamespace">
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title></title><script type="text/javascript" src="simpletreemenu.js">
+/***********************************************
+* Simple Tree Menu- &copy; Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+</script><link rel="stylesheet" type="text/css" href="simpletree.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+body{
+background-color:#838383;
+}
+				</style>
+    <base target="content">
+  </head>
+  <body><a href="http://www.db4o.com" target="_blank"><img src="db4objects1.jpg" border="0"></a><div><BR><input type="button" onClick="ddtreemenu.flatten('refTree', 'expand')" value="Expand All" style="font-size: 80%"> | 
+					<input type="button" onClick="ddtreemenu.flatten('refTree', 'contact')" value="Collapse All" style="font-size: 80%"></div>
+    <div id="NavFrameTOC">
+      <ul id="refTree" class="treeview">
+        <li><a target="content" href="reference.html">Reference Documentation</a><ul>
+            <li><a target="content" href="reference/navigation_guide.html">Navigation Guide</a></li>
+            <li><a target="content" href="reference/using_sample_code.html">Using Sample Code</a></li>
+            <li><a target="content" href="reference/getting_started.html">Getting Started</a></li>
+            <li><a target="content" href="reference/product_philosophy.html">Product Philosophy</a><ul>
+                <li><a target="content" href="reference/product_philosophy/data_persistence.html">Data Persistence</a></li>
+                <li><a target="content" href="reference/product_philosophy/oodbms.html">OODBMS</a></li>
+                <li><a target="content" href="reference/product_philosophy/db4o_position.html">Db4o Position</a></li>
+                <li><a target="content" href="reference/product_philosophy/why_choose_db4o.html">Why Choose Db4o</a></li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/basic_concepts.html">Basic Concepts</a><ul>
+                <li><a target="content" href="reference/basic_concepts/acid_model.html">ACID Model</a><ul>
+                    <li><a target="content" href="reference/basic_concepts/acid_model/atomicity.html">Atomicity</a></li>
+                    <li><a target="content" href="reference/basic_concepts/acid_model/consistency.html">Consistency</a></li>
+                    <li><a target="content" href="reference/basic_concepts/acid_model/isolation.html">Isolation</a></li>
+                    <li><a target="content" href="reference/basic_concepts/acid_model/durability.html">Durability</a></li>
+                    <li><a target="content" href="reference/basic_concepts/acid_model/acid_properties_for_db4o.html">ACID Properties For Db4o</a><ul></ul>
+                    </li>
+                    <li><a target="content" href="reference/basic_concepts/acid_model/isolation_level_for_db4o.html">Isolation Level For Db4o</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/basic_concepts/concurrency_control_and_locking.html">Concurrency Control And Locking</a><ul>
+                    <li><a target="content" href="reference/basic_concepts/concurrency_control_and_locking/pessimistic_locking.html">Pessimistic Locking</a></li>
+                    <li><a target="content" href="reference/basic_concepts/concurrency_control_and_locking/optimistic_locking.html">Optimistic Locking</a><ul></ul>
+                    </li>
+                    <li><a target="content" href="reference/basic_concepts/concurrency_control_and_locking/overly_optimistic_locking.html">Overly Optimistic Locking</a></li>
+                    <li><a target="content" href="reference/basic_concepts/concurrency_control_and_locking/concurrency_control_in_db4o.html">Concurrency Control In Db4o</a></li>
+                    <li><a target="content" href="reference/basic_concepts/concurrency_control_and_locking/types_of_locks.html">Types Of Locks</a></li>
+                    <li><a target="content" href="reference/basic_concepts/concurrency_control_and_locking/locks_in_db4o.html">Locks In Db4o</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/basic_concepts/object_identity.html">Object Identity</a><ul>
+                    <li><a target="content" href="reference/basic_concepts/object_identity/unique_identity_concept.html">Unique identity concept</a></li>
+                    <li><a target="content" href="reference/basic_concepts/object_identity/binding_objects.html">Binding objects</a></li>
+                    <li><a target="content" href="reference/basic_concepts/object_identity/weak_references.html">Weak References</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/basic_concepts/transaction.html">Transaction</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/basic_concepts/database_models.html">Database Models</a><ul>
+                    <li><a target="content" href="reference/basic_concepts/database_models/object_database_model.html">Object Database Model</a><ul>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object_database_model/data_abstraction.html">Data Abstraction</a></li>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object_database_model/encapsulation.html">Encapsulation</a></li>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object_database_model/inheritance.html">Inheritance</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/basic_concepts/database_models/relational_database_model.html">Relational Database Model</a><ul></ul>
+                    </li>
+                    <li><a target="content" href="reference/basic_concepts/database_models/object_and_relational_model_comparison.html">Object And Relational Model Comparison</a><ul>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object_and_relational_model_comparison/basic_terms.html">Basic Terms</a></li>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object_and_relational_model_comparison/rdbms_and_oodbms_application.html">RDBMS And OODBMS Application</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/basic_concepts/database_models/object-relational_how_to.html">Object-Relational How To</a><ul>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object-relational_how_to/identity_and_primary_keys.html">Identity And Primary Keys</a></li>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object-relational_how_to/foreign_keys.html">Foreign Keys</a></li>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object-relational_how_to/referential_integrity.html">Referential Integrity</a></li>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object-relational_how_to/triggers.html">Triggers</a></li>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object-relational_how_to/unique_constraints.html">Unique Constraints</a></li>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object-relational_how_to/indexes.html">Indexes</a></li>
+                        <li><a target="content" href="reference/basic_concepts/database_models/object-relational_how_to/concurrency_control.html">Concurrency Control</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/basic_concepts/native_query_concepts.html">Native Query Concepts</a><ul>
+                    <li><a target="content" href="reference/basic_concepts/native_query_concepts/problems_of_string_based_query_languages.html">Problems Of String Based Query Languages</a></li>
+                    <li><a target="content" href="reference/basic_concepts/native_query_concepts/native_query_characteristics.html">Native Query Characteristics</a></li>
+                    <li><a target="content" href="reference/basic_concepts/native_query_concepts/native_query_implementation.html">Native Query Implementation</a></li>
+                    <li><a target="content" href="reference/basic_concepts/native_query_concepts/native_query_optimization.html">Native Query Optimization</a></li>
+                    <li><a target="content" href="reference/basic_concepts/native_query_concepts/code_inside.html">Code Inside</a></li>
+                    <li><a target="content" href="reference/basic_concepts/native_query_concepts/sorting_results.html">Sorting Results</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/object_lifecycle.html">Object Lifecycle</a><ul>
+                <li><a target="content" href="reference/object_lifecycle/object_container.html">Object Container</a></li>
+                <li><a target="content" href="reference/object_lifecycle/simple_persistence.html">Simple Persistence</a></li>
+                <li><a target="content" href="reference/object_lifecycle/class_name_format_in_.net.html">Class Name Format In .NET</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/object_lifecycle/querying.html">Querying</a><ul>
+                    <li><a target="content" href="reference/object_lifecycle/querying/query_by_example.html">Query By Example</a><ul>
+                        <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations.html">QBE Limitations</a><ul>
+                            <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations/pilot1.html">Pilot1</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations/pilot1derived.html">Pilot1Derived</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations/pilot2.html">Pilot2</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/querying/query_by_example/qbe_limitations/pilot2derived.html">Pilot2Derived</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/object_lifecycle/querying/soda_query_api.html">SODA Query API</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/querying/native_queries.html">Native Queries</a><ul>
+                        <li><a target="content" href="reference/object_lifecycle/querying/native_queries/native_query_syntax.html">Native Query Syntax</a><ul>
+                            <li><a target="content" href="reference/object_lifecycle/querying/native_queries/native_query_syntax/java_syntax.html">Java Syntax</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/querying/native_queries/native_query_syntax/.net_syntax.html">.NET Syntax</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/object_lifecycle/querying/query_modes.html">Query Modes</a><ul>
+                        <li><a target="content" href="reference/object_lifecycle/querying/query_modes/immediate_queries.html">Immediate Queries</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/querying/query_modes/lazy_queries.html">Lazy Queries</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/querying/query_modes/snapshot_queries.html">Snapshot Queries</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/object_lifecycle/querying/soda_evaluations.html">SODA Evaluations</a><ul>
+                        <li><a target="content" href="reference/object_lifecycle/querying/soda_evaluations/evaluation_api.html">Evaluation API</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/querying/soda_evaluations/using_evaluations.html">Using Evaluations</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/querying/soda_evaluations/drawbacks.html">Drawbacks</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/object_lifecycle/querying/sorting_query_results.html">Sorting Query Results</a><ul>
+                        <li><a target="content" href="reference/object_lifecycle/querying/sorting_query_results/soda_sorting.html">SODA Sorting</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/querying/sorting_query_results/native_query_sorting.html">Native Query Sorting</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/querying/sorting_query_results/evaluation_results_sorting.html">Evaluation Results Sorting</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/object_lifecycle/querying/custom_query_comparator.html">Custom Query Comparator</a><ul></ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/object_lifecycle/transparent_persistence.html">Transparent Persistence</a><ul>
+                    <li><a target="content" href="reference/object_lifecycle/transparent_persistence/transparent_persistence_implementation.html">Transparent Persistence Implementation</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/transparent_persistence/tp_enhanced_example.html">TP Enhanced Example</a><ul>
+                        <li><a target="content" href="reference/object_lifecycle/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java.html">TP Enhancement On Java</a><ul>
+                            <li><a target="content" href="reference/object_lifecycle/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java/sensorpanel.html">SensorPanel</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/object_lifecycle/transparent_persistence/detailed_example.html">Detailed Example</a><ul></ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/object_lifecycle/working_with_structured_objects.html">Working With Structured Objects</a><ul>
+                    <li><a target="content" href="reference/object_lifecycle/working_with_structured_objects/retrieving_structured_objects.html">Retrieving Structured Objects</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/working_with_structured_objects/updating_structured_objects.html">Updating Structured Objects</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/working_with_structured_objects/deleting_structured_objects.html">Deleting Structured Objects</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/object_lifecycle/activation.html">Activation</a><ul>
+                    <li><a target="content" href="reference/object_lifecycle/activation/global_activation_settings.html">Global Activation Settings</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/activation/object-specific_activation.html">Object-Specific Activation</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework.html">Transparent Activation Framework</a><ul>
+                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_implementation.html">TA Implementation</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example.html">TA Enhanced Example</a><ul>
+                            <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_load_time.html">TA Enhancement At Loading Time</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_build_time.html">TA Enhancement At Build Time</a><ul></ul>
+                            </li>
+                            <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_with_db4otool.html">TA Enhancement With Db4oTool</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/sensorpanel.html">SensorPanel</a></li>
+                            <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/sensorpanelta.html">SensorPanelTA</a></li>
+                          </ul>
+                        </li>
+                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/detailed_example.html">Detailed Example</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/collection_example.html">Collection Example</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/object_types_in_ta.html">Object Types In TA</a><ul></ul>
+                        </li>
+                        <li><a target="content" href="reference/object_lifecycle/activation/transparent_activation_framework/ta_diagnostics.html">TA Diagnostics</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/object_lifecycle/update_depth.html">Update Depth</a><ul>
+                    <li><a target="content" href="reference/object_lifecycle/update_depth/collections_update_depth.html">Collections Update Depth</a><ul>
+                        <li><a target="content" href="reference/object_lifecycle/update_depth/collections_update_depth/insert_and_remove.html">Insert And Remove</a></li>
+                        <li><a target="content" href="reference/object_lifecycle/update_depth/collections_update_depth/updating_list_objects.html">Updating List Objects</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/object_lifecycle/delete_behavior.html">Delete Behavior</a><ul>
+                    <li><a target="content" href="reference/object_lifecycle/delete_behavior/deleting_collection_members.html">Deleting Collection Members</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/delete_behavior/deleting_collections.html">Deleting Collections</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/delete_behavior/example_classes.html">Example Classes</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/delete_behavior/filling_the_database.html">Filling The Database</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/object_lifecycle/object_construction.html">Object Construction</a><ul>
+                    <li><a target="content" href="reference/object_lifecycle/object_construction/creating_objects.html">Creating objects</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/object_construction/configuration.html">Configuration</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/object_construction/troubleshooting.html">Troubleshooting</a></li>
+                    <li><a target="content" href="reference/object_lifecycle/object_construction/examples.html">Examples</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/implementation_strategies.html">Implementation Strategies</a><ul>
+                <li><a target="content" href="reference/implementation_strategies/maintenance.html">Maintenance</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/maintenance/defragment.html">Defragment</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/maintenance/defragment/how_to_use_defragmentation.html">How To Use Defragmentation</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/maintenance/defragment/defragmentation_configuration.html">Defragmentation Configuration</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/maintenance/defragment/tracking_defragmentation_errors.html">Tracking Defragmentation Errors</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/maintenance/defragment/defragmentation_examples.html">Defragmentation Examples</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/maintenance/updating_db4o_file_format.html">Updating Db4o File Format</a><ul></ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/maintenance/system_info.html">System Info</a><ul></ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/maintenance/backup.html">Backup</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/type_handling.html">Type Handling</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/type_handling/collections.html">Collections</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/collections/built-in_db4o_collections.html">Built-in db4o collections</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/collections/fast_collections.html">Fast collections</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/collections/collections_or_arrays.html">Collections Or Arrays</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/type_handling/blobs.html">Blobs</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/blobs/db4o_blob_implementation.html">Db4o Blob Implementation</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/type_handling/static_fields_and_enums.html">Static Fields And Enums</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/static_fields_and_enums/static_fields_api.html">Static fields API</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/static_fields_and_enums/usage_of_static_fields.html">Usage of static fields</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/static_fields_and_enums/java_enumerations.html">Java enumerations</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/type_handling/delegates_and_events.html">Delegates And Events</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/type_handling/final_fields.html">Final Fields</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/final_fields/final_fields_specifics.html">Final Fields Specifics</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/type_handling/final_fields/possible_solutions.html">Possible Solutions</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/using_annotations.html">Using Annotations</a></li>
+                <li><a target="content" href="reference/implementation_strategies/enhancement_tools.html">Enhancement Tools</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_java.html">Enhancement For Java</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_java/complex_example.html">Complex Example</a><ul>
+                            <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_java/complex_example/model_classes.html">Model Classes</a></li>
+                            <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_java/complex_example/load_time_enhancement.html">Load Time Enhancement</a></li>
+                            <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_java/complex_example/build_time_enhancement.html">Build Time Enhancement</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_.net.html">Enhancement For .NET</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement.html">Build Time Enhancement</a><ul>
+                            <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement/ta_and_nq_example_code.html">TA and NQ Example Code</a></li>
+                            <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement/tp_example_code.html">TP Example Code</a><ul></ul>
+                            </li>
+                            <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement/example_enhancement.html">Example Enhancement</a></li>
+                            <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_.net/build_time_enhancement/sensorpanel.html">SensorPanel</a></li>
+                          </ul>
+                        </li>
+                        <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool.html">Db4oTool</a><ul>
+                            <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool/db4otool_usage.html">Db4oTool Usage</a></li>
+                            <li><a target="content" href="reference/implementation_strategies/enhancement_tools/enhancement_for_.net/db4otool/including_db4otool_in_the_build.html">Including Db4oTool In The Build</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/using_attributes.html">Using Attributes</a></li>
+                <li><a target="content" href="reference/implementation_strategies/unique_constraints.html">Unique Constraints</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/unique_constraints/how_to_use_unique_constraints.html">How To Use Unique Constraints</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/unique_constraints/unique_constraints_example.html">Unique Constraints Example</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/object_callbacks.html">Object Callbacks</a></li>
+                <li><a target="content" href="reference/implementation_strategies/callbacks.html">Callbacks</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/callbacks/event_registry_api.html">Event Registry API</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/callbacks/possible_usecases.html">Possible Usecases</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/callbacks/possible_usecases/cascaded_behavior.html">Cascaded Behavior</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/callbacks/possible_usecases/referential_integrity.html">Referential Integrity</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/callbacks/possible_usecases/query_statistics.html">Query Statistics</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/callbacks/possible_usecases/autoincrement.html">Autoincrement</a><ul></ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/callbacks/benefits.html">Benefits</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/callbacks/commit-time_callbacks.html">Commit-Time Callbacks</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/callbacks/commit-time_callbacks/how_to_use_commit-time_callbacks.html">How To Use Commit-Time Callbacks</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/callbacks/commit-time_callbacks/committing_event_example.html">Committing Event Example</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/callbacks/commit-time_callbacks/committed_event_example.html">Committed Event Example</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/callbacks/commit-time_callbacks/car.html">Car</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/translators.html">Translators</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/translators/java_example_class.html">Java Example Class</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/translators/.net_example_class.html">.NET Example Class</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/translators/the_translator_api.html">The Translator API</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/translators/the_translator_api/objectconstructor.html">ObjectConstructor</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/translators/.net_translator_implementation.html">.NET Translator Implementation</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/translators/java_translator_implementation.html">Java Translator Implementation</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators.html">Built-In Translators</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/tnull_translator.html">TNull Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/collection_translators.html">Collection Translators</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/tserializable_translator.html">TSerializable Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/ttransient_translator.html">TTransient Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/tcultureinfo_translator.html">TCultureInfo Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/ttype_translator.html">TType Translator</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/translators/built-in_translators/tclass_translator.html">TClass Translator</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/db4o_reflection_api.html">Db4o Reflection API</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/db4o_reflection_api/genericreflector.html">GenericReflector</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/db4o_reflection_api/using_db4o_reflection_api.html">Using db4o reflection API</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/db4o_reflection_api/creating_your_own_reflector.html">Creating your own reflector</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/io_adapter.html">IO Adapter</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/io_adapter/pluggable_io_concept.html">Pluggable IO Concept</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/io_adapter/memoryioadapter.html">MemoryIoAdapter</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/io_adapter/cachedioadapter.html">CachedIoAdapter</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/io_adapter/cachedioadapter/using_cachedioadapter.html">Using CachedIoAdapter</a><ul></ul>
+                        </li>
+                        <li><a target="content" href="reference/implementation_strategies/io_adapter/cachedioadapter/cachedioadapter_example.html">CachedIoAdapter Example</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/db4o_meta-information.html">Db4o meta-information</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/db4o_meta-information/accessing_db4o_meta-information.html">Accessing db4o meta-information</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/db4o_meta-information/storedclass_and_storedfield_interfaces.html">StoredClass and StoredField interfaces</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/native_query_collection.html">Native Query Collection</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/simple_selection.html">Simple Selection</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/using_selection_criterias.html">Using Selection Criterias</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/selecting_ranges.html">Selecting Ranges</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/sorting.html">Sorting</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/result_representation.html">Result Representation</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/calculation_examples.html">Calculation Examples</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/combined_result_sets.html">Combined Result Sets</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/parameterized_nq.html">Parameterized NQ</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/store_pilots.html">Store Pilots</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/store_persons.html">Store Persons</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/store_cars.html">Store Cars</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/native_query_collection/persistent_classes.html">Persistent Classes</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/data_binding.html">Data Binding</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution.html">Refactoring and Schema Evolution</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution/automatic_refactoring.html">Automatic refactoring</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution/refactoring_api.html">Refactoring API</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution/field_type_change.html">Field type change</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy.html">Refactoring Class Hierarchy</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/removing_class_from_a_hierarchy.html">Removing Class From A Hierarchy</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/inserting_class_into_a_hierarchy.html">Inserting Class Into A Hierarchy</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/a.html">A</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/b.html">B</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/refactoring_and_schema_evolution/refactoring_class_hierarchy/c.html">C</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/aliases.html">Aliases</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/aliases/typealias.html">TypeAlias</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/aliases/wildcardalias.html">WildcardAlias</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/aliases/cross-platform_aliasing.html">Cross-Platform Aliasing</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/aliases/cross-platform_aliasing_from_.net_to_java.html">Cross-Platform Aliasing From .NET To Java</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/encryption.html">Encryption</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/encryption/built-in_simple_encryption.html">Built-In Simple Encryption</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/encryption/custom_encryption_adapters.html">Custom Encryption Adapters</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/class_mapping.html">Class Mapping</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/class_mapping/pilot.html">Pilot</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/class_mapping/pilotreplacement.html">PilotReplacement</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/ids_and_uuids.html">IDs and UUIDs</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/ids_and_uuids/internal_ids.html">Internal IDs</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/ids_and_uuids/unique_universal_ids.html">Unique Universal IDs</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/freespace_management_system.html">Freespace Management System</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/freespace_management_system/two_freespace_systems.html">Two Freespace Systems</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/freespace_management_system/how_to_use_freespacemanager.html">How To Use FreeSpacemanager</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/freespace_management_system/defragmentation_role.html">Defragmentation Role</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/reporting.html">Reporting</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_jasperreports.html">Reporting With JasperReports</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_jasperreports/report_structure.html">Report Structure</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_jasperreports/data_source.html">Data Source</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_jasperreports/data_preparation.html">Data Preparation</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_jasperreports/report_design.html">Report Design</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_jasperreports/report_generation.html">Report Generation</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_jasperreports/objectdatasource.html">ObjectDataSource</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_birt.html">Reporting With BIRT</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_birt/data_preparation.html">Data Preparation</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_birt/report_design.html">Report Design</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_birt/scripted_data_source.html">Scripted Data Source</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/reporting_with_birt/application-report_integration.html">Application-Report Integration</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/implementation_strategies/reporting/.net_reporting.html">.NET Reporting</a><ul>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/.net_reporting/persistent_class.html">Persistent Class</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/.net_reporting/adding_a_report.html">Adding A Report</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/.net_reporting/db4o_integration.html">Db4o Integration</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/.net_reporting/report_integration.html">Report Integration</a></li>
+                        <li><a target="content" href="reference/implementation_strategies/reporting/.net_reporting/db4o_manager.html">Db4o Manager</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/implementation_strategies/exceptions.html">Exceptions</a><ul>
+                    <li><a target="content" href="reference/implementation_strategies/exceptions/exception_types.html">Exception Types</a></li>
+                    <li><a target="content" href="reference/implementation_strategies/exceptions/how_to_work_with_db4o_exceptions.html">How To Work With Db4o Exceptions</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/platform_specific_issues.html">Platform Specific Issues</a><ul>
+                <li><a target="content" href="reference/platform_specific_issues/db4o_on_java_platforms.html">db4o on Java Platforms</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/security_requirements_on_java_platform.html">Security Requirements On Java Platform</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/db4o_on_.net_platforms.html">db4o on .NET Platforms</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/security_requirements_on_.net_platform.html">Security Requirements On .NET Platform</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/deployment_instructions.html">Deployment Instructions</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/db4o_on_mono.html">Db4o On Mono</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/cross-platform_applications.html">Cross-Platform Applications</a><ul>
+                    <li><a target="content" href="reference/platform_specific_issues/cross-platform_applications/configuration.html">Configuration</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/cross-platform_applications/limitations_of_db4o_cross-platform_usage.html">Limitations Of Db4o Cross-Platform Usage</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/symbian_os.html">Symbian OS</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/servlets.html">Servlets</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/asp.net.html">ASP.NET</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/xml_import-export_in_.net.html">Xml Import-Export In .NET</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/xml_import-export_in_java.html">Xml Import-Export In Java</a></li>
+                <li><a target="content" href="reference/platform_specific_issues/classloader_issues.html">Classloader issues</a><ul>
+                    <li><a target="content" href="reference/platform_specific_issues/classloader_issues/classloader_basics.html">Classloader basics</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/classloader_issues/configuration.html">Configuration</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/classloader_issues/special_cases.html">Special Cases</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/database_for_osgi.html">Database For OSGi</a><ul>
+                    <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/db4o-osgi_usage.html">Db4o-Osgi Usage</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service.html">Eclipse Plug-In With Db4o Service</a><ul>
+                        <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/creating_a_plugin.html">Creating A Plugin</a></li>
+                        <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/code_overview.html">Code Overview</a></li>
+                        <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/connecting_to_db4o.html">Connecting To Db4o</a></li>
+                        <li><a target="content" href="reference/platform_specific_issues/database_for_osgi/eclipse_plug-in_with_db4o_service/testing_memoplugin.html">Testing MemoPlugin</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/isolated_storage.html">Isolated Storage</a><ul>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/isolated_storage_io_adapter.html">Isolated Storage IO Adapter</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/isolated_storage_example.html">Isolated Storage Example</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/benefits_and_limitations.html">Benefits And Limitations</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/db4oisolatedstoragefile.html">Db4oIsolatedStorageFile</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/isolated_storage/isolatedstoragefileadapter.html">IsolatedStorageFileAdapter</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/platform_specific_issues/android.html">Android</a><ul>
+                    <li><a target="content" href="reference/platform_specific_issues/android/general_info.html">General Info</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/application_structure.html">Application Structure</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/opening_a_database.html">Opening A Database</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/storing_data.html">Storing Data</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/retrieving_data.html">Retrieving Data</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/changing_data.html">Changing Data</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/deleting_data.html">Deleting Data</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/backup.html">Backup</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/closing_a_database.html">Closing A Database</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/schema_evolution.html">Schema Evolution</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/car.html">Car</a></li>
+                    <li><a target="content" href="reference/platform_specific_issues/android/pilot.html">Pilot</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/tuning.html">Tuning</a><ul>
+                <li><a target="content" href="reference/tuning/main_operations_performance.html">Main Operations Performance</a><ul>
+                    <li><a target="content" href="reference/tuning/main_operations_performance/insert_performance.html">Insert Performance</a><ul>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/insert_performance/hardware_resources.html">Hardware Resources</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/insert_performance/local_and_remote_modes.html">Local And Remote Modes</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/insert_performance/commit_frequency.html">Commit Frequency</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/insert_performance/object_structure.html">Object Structure</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/insert_performance/indexes.html">Indexes</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/insert_performance/inherited_objects.html">Inherited Objects</a></li>
+                        <li><a target="content" href="reference/tuning/main_operations_performance/insert_performance/configuration_options.html">Configuration Options</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/tuning/configuration.html">Configuration</a><ul>
+                    <li><a target="content" href="reference/tuning/configuration/general_configuration.html">General Configuration</a></li>
+                    <li><a target="content" href="reference/tuning/configuration/clientserver_configuration.html">ClientServer Configuration</a></li>
+                    <li><a target="content" href="reference/tuning/configuration/objectclass_configuration.html">ObjectClass Configuration</a></li>
+                    <li><a target="content" href="reference/tuning/configuration/objectfield_configuration.html">ObjectField Configuration</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/tuning/selective_persistence.html">Selective Persistence</a><ul>
+                    <li><a target="content" href="reference/tuning/selective_persistence/transient_fields_in_java.html">Transient Fields In Java</a></li>
+                    <li><a target="content" href="reference/tuning/selective_persistence/transient_fields_in_.net.html">Transient Fields In .NET</a></li>
+                    <li><a target="content" href="reference/tuning/selective_persistence/transient_classes.html">Transient Classes</a><ul>
+                        <li><a target="content" href="reference/tuning/selective_persistence/transient_classes/test1.html">Test1</a></li>
+                        <li><a target="content" href="reference/tuning/selective_persistence/transient_classes/test2.html">Test2</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/tuning/selective_persistence/storing_transient_fields.html">Storing Transient Fields</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/tuning/indexing.html">Indexing</a></li>
+                <li><a target="content" href="reference/tuning/performance_hints.html">Performance Hints</a><ul>
+                    <li><a target="content" href="reference/tuning/performance_hints/enable_field_indexes.html">Enable Field Indexes</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/discarding_free_space.html">Discarding Free Space</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/calling_constructors.html">Calling constructors</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/defragment.html">Defragment</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/turning_off_weak_references.html">Turning Off Weak References</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/no_shutdown_thread.html">No Shutdown Thread</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/no_callbacks.html">No callbacks</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/no_schema_changes.html">No schema changes</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/no_lock_file_thread.html">No lock file thread</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/no_test_instances.html">No test instances</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/increasing_the_maximum_database_file_size.html">Increasing The Maximum Database File Size</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/flushfilebuffers.html">FlushFileBuffers</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/b-tree_tuning.html">B-Tree tuning</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/inheritance_hierarchies.html">Inheritance hierarchies</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/persistent_and_transient_fields.html">Persistent and transient fields</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/activation_strategies.html">Activation strategies</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/automatic_shutdown.html">Automatic Shutdown</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/reserving_storage_space.html">Reserving Storage Space</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/unicode.html">Unicode</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/prefetching_ids_for_new_objects.html">Prefetching IDs For New Objects</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/prefetching_objects_for_query_results.html">Prefetching Objects For Query Results</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/no_class_index.html">No Class Index</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/no_field_evaluation.html">No Field Evaluation</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/randomaccessfileadapter.html">RandomAccessFileAdapter</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/commit_strategies.html">Commit Strategies</a></li>
+                    <li><a target="content" href="reference/tuning/performance_hints/optimizing_native_queries.html">Optimizing Native Queries</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/tuning/debugging_db4o.html">Debugging db4o</a><ul>
+                    <li><a target="content" href="reference/tuning/debugging_db4o/debug_messaging_system.html">Debug Messaging System</a></li>
+                    <li><a target="content" href="reference/tuning/debugging_db4o/customizing_the_debug_message_output.html">Customizing The Debug Message Output</a></li>
+                    <li><a target="content" href="reference/tuning/debugging_db4o/exceptionsonnotstorable.html">ExceptionsOnNotStorable</a></li>
+                    <li><a target="content" href="reference/tuning/debugging_db4o/using_dtrace.html">Using DTrace</a></li>
+                    <li><a target="content" href="reference/tuning/debugging_db4o/reading_db4o_file.html">Reading Db4o File</a><ul></ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/tuning/diagnostics.html">Diagnostics</a><ul>
+                    <li><a target="content" href="reference/tuning/diagnostics/classhasnofields.html">ClassHasNoFields</a></li>
+                    <li><a target="content" href="reference/tuning/diagnostics/loadedfromclassindex.html">LoadedFromClassIndex</a></li>
+                    <li><a target="content" href="reference/tuning/diagnostics/nativequerynotoptimized.html">NativeQueryNotOptimized</a></li>
+                    <li><a target="content" href="reference/tuning/diagnostics/updatedepthgreaterone.html">UpdateDepthGreaterOne</a></li>
+                    <li><a target="content" href="reference/tuning/diagnostics/diagnostic_messages_filter.html">Diagnostic Messages Filter</a></li>
+                    <li><a target="content" href="reference/tuning/diagnostics/descendintotranslator.html">DescendIntoTranslator</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/tuning/native_query_optimization.html">Native Query Optimization</a><ul>
+                    <li><a target="content" href="reference/tuning/native_query_optimization/optimization_at_query_execution_time.html">Optimization at Query Execution Time</a></li>
+                    <li><a target="content" href="reference/tuning/native_query_optimization/nq_optimization_at_load_time.html">NQ Optimization At Load Time</a><ul>
+                        <li><a target="content" href="reference/tuning/native_query_optimization/nq_optimization_at_load_time/pilot.html">Pilot</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/tuning/native_query_optimization/nq_optimization_at_build_time.html">NQ Optimization At Build Time</a><ul></ul>
+                    </li>
+                    <li><a target="content" href="reference/tuning/native_query_optimization/nq_optimization_on_cf2.0.html">NQ Optimization On CF2.0</a></li>
+                    <li><a target="content" href="reference/tuning/native_query_optimization/build-time_optimization_for_.net.html">Build-time Optimization For .NET</a></li>
+                    <li><a target="content" href="reference/tuning/native_query_optimization/monitoring_optimization.html">Monitoring Optimization</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/tuning/utility_methods.html">Utility Methods</a><ul>
+                    <li><a target="content" href="reference/tuning/utility_methods/peekpersisted.html">PeekPersisted</a></li>
+                    <li><a target="content" href="reference/tuning/utility_methods/isactive.html">IsActive</a></li>
+                    <li><a target="content" href="reference/tuning/utility_methods/isstored.html">IsStored</a></li>
+                    <li><a target="content" href="reference/tuning/utility_methods/descend.html">Descend</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/usage_pitfalls.html">Usage Pitfalls</a><ul>
+                <li><a target="content" href="reference/usage_pitfalls/equality_comparison.html">Equality Comparison</a><ul>
+                    <li><a target="content" href="reference/usage_pitfalls/equality_comparison/qbe.html">QBE</a></li>
+                    <li><a target="content" href="reference/usage_pitfalls/equality_comparison/using_equals.html">Using Equals</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/usage_pitfalls/reference_cache_in_client-server_mode.html">Reference Cache In Client-Server Mode</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/usage_pitfalls/storing_bigdecimal.html">Storing BigDecimal</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/usage_pitfalls/storing_marshalbyref_objects.html">Storing MarshalByRef Objects</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/usage_pitfalls/storing_timestamp_and_date_values.html">Storing Timestamp And Date Values</a><ul></ul>
+                </li>
+                <li><a target="content" href="reference/usage_pitfalls/transparent_activation.html">Transparent Activation</a><ul>
+                    <li><a target="content" href="reference/usage_pitfalls/transparent_activation/migrating_between_databases.html">Migrating Between Databases</a><ul></ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/usage_pitfalls/accessing_persistent_classes_from_different_.net_applications.html">Accessing Persistent Classes From Different .NET Applications</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/activation_depth.html">Activation Depth</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/classloader_and_generic_classes.html">Classloader And Generic Classes</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/client-server_timeouts.html">Client-Server Timeouts</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/dangerous_practices.html">Dangerous Practices</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/update_depth.html">Update Depth</a></li>
+                <li><a target="content" href="reference/usage_pitfalls/working_with_large_amounts_of_data.html">Working With Large Amounts Of Data</a></li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/client-server.html">Client-Server</a><ul>
+                <li><a target="content" href="reference/client-server/embedded.html">Embedded</a></li>
+                <li><a target="content" href="reference/client-server/networked.html">Networked</a><ul>
+                    <li><a target="content" href="reference/client-server/networked/network_server.html">Network Server</a></li>
+                    <li><a target="content" href="reference/client-server/networked/out-of-band_signalling.html">Out-of-band Signalling</a></li>
+                    <li><a target="content" href="reference/client-server/networked/simple_db4o_server.html">Simple db4o Server</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/client-server/native_queries_in_client-server_mode.html">Native Queries In Client-Server Mode</a></li>
+                <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed.html">Server Without Persistent Classes Deployed</a><ul>
+                    <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/saving_objects.html">Saving Objects</a></li>
+                    <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/qbe.html">QBE</a></li>
+                    <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/soda.html">SODA</a></li>
+                    <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/native_queries.html">Native Queries</a></li>
+                    <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/evaluations.html">Evaluations</a></li>
+                    <li><a target="content" href="reference/client-server/server_without_persistent_classes_deployed/multidimensional_arrays.html">Multidimensional Arrays</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/client-server/switching_database_files_in_cs_mode.html">Switching Database Files in CS Mode</a></li>
+                <li><a target="content" href="reference/client-server/semaphores.html">Semaphores</a><ul>
+                    <li><a target="content" href="reference/client-server/semaphores/locking_objects.html">Locking Objects</a></li>
+                    <li><a target="content" href="reference/client-server/semaphores/ensuring_singletons.html">Ensuring Singletons</a></li>
+                    <li><a target="content" href="reference/client-server/semaphores/limiting_the_number_of_users.html">Limiting the Number of Users</a></li>
+                    <li><a target="content" href="reference/client-server/semaphores/controlling_login_information.html">Controlling Login Information</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/client-server/pluggable_sockets.html">Pluggable Sockets</a><ul>
+                    <li><a target="content" href="reference/client-server/pluggable_sockets/using_ssl_for_client-server_communication.html">Using SSL For Client-Server Communication</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/client-server/remote_code_execution.html">Remote Code Execution</a><ul>
+                    <li><a target="content" href="reference/client-server/remote_code_execution/remote_execution_through_evaluation_api.html">Remote Execution Through Evaluation API</a></li>
+                    <li><a target="content" href="reference/client-server/remote_code_execution/using_messaging_api_for_remote_code_execution.html">Using Messaging API For Remote Code Execution</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/client-server/concurrency_control.html">Concurrency Control</a><ul>
+                    <li><a target="content" href="reference/client-server/concurrency_control/optimistic_locking.html">Optimistic Locking</a></li>
+                    <li><a target="content" href="reference/client-server/concurrency_control/pessimistic_locking.html">Pessimistic Locking</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/client-server/messaging.html">Messaging</a></li>
+                <li><a target="content" href="reference/client-server/batch_mode.html">Batch Mode</a><ul>
+                    <li><a target="content" href="reference/client-server/batch_mode/controlling_memory_consumption.html">Controlling Memory Consumption</a></li>
+                    <li><a target="content" href="reference/client-server/batch_mode/batch_messaging_example.html">Batch Messaging Example</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/db4o_replication_system_drs.html">db4o Replication System (dRS)</a><ul>
+                <li><a target="content" href="reference/db4o_replication_system_drs/getting_started.html">Getting Started</a></li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication.html">Db4o Databases Replication</a><ul>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication/initial_setup.html">Initial Setup</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication/simple_example.html">Simple Example</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication/bi-directional_replication.html">Bi-Directional Replication</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/db4o_databases_replication/selective_replication.html">Selective Replication</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms.html">Replication With RDBMS</a><ul>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/configuration.html">Configuration</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/running_drs.html">Running DRS</a></li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples.html">Replication Examples</a><ul>
+                        <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/simple_example.html">Simple Example</a></li>
+                        <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections.html">Collections</a><ul>
+                            <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/array.html">Array</a></li>
+                            <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/list.html">List</a></li>
+                            <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/set.html">Set</a></li>
+                            <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/replication_examples/collections/map.html">Map</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/replication_with_rdbms/hibernate_replication_internals.html">Hibernate Replication Internals</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/advanced_replication_strategies.html">Advanced Replication Strategies</a><ul>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/advanced_replication_strategies/events.html">Events</a><ul>
+                        <li><a target="content" href="reference/db4o_replication_system_drs/advanced_replication_strategies/events/conflict_resolution.html">Conflict Resolution</a></li>
+                      </ul>
+                    </li>
+                    <li><a target="content" href="reference/db4o_replication_system_drs/advanced_replication_strategies/deleted_objects_replication.html">Deleted Objects Replication</a></li>
+                  </ul>
+                </li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/deployment_instructions.html">Deployment Instructions</a></li>
+                <li><a target="content" href="reference/db4o_replication_system_drs/license.html">License</a></li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/db4o_testing_framework.html">Db4o Testing Framework</a><ul>
+                <li><a target="content" href="reference/db4o_testing_framework/db4ounit_methods.html">Db4ounit Methods</a></li>
+                <li><a target="content" href="reference/db4o_testing_framework/creating_a_sample_test.html">Creating A Sample Test</a></li>
+                <li><a target="content" href="reference/db4o_testing_framework/running_the_tests.html">Running The Tests</a></li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/object_manager_for_db4o.html">Object Manager For db4o</a><ul>
+                <li><a target="content" href="reference/object_manager_for_db4o/installation.html">Installation</a></li>
+                <li><a target="content" href="reference/object_manager_for_db4o/object_manager_specifics.html">Object Manager Specifics</a></li>
+                <li><a target="content" href="reference/object_manager_for_db4o/object_manager_tour.html">Object Manager Tour</a></li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/working_with_source_code.html">Working With Source Code</a><ul>
+                <li><a target="content" href="reference/working_with_source_code/using_the_sources_from_db4o_distribution.html">Using The Sources From Db4o Distribution</a></li>
+                <li><a target="content" href="reference/working_with_source_code/using_the_repository.html">Using The Repository</a></li>
+                <li><a target="content" href="reference/working_with_source_code/db4o_directory_structure.html">Db4o Directory Structure</a></li>
+                <li><a target="content" href="reference/working_with_source_code/configuring_java_system_libraries.html">Configuring Java System Libraries</a></li>
+                <li><a target="content" href="reference/working_with_source_code/building_java_version.html">Building Java Version</a></li>
+                <li><a target="content" href="reference/working_with_source_code/building_.net_version.html">Building .NET Version</a></li>
+                <li><a target="content" href="reference/working_with_source_code/testing_db4o.html">Testing Db4o</a></li>
+                <li><a target="content" href="reference/working_with_source_code/object_manager_sources.html">Object Manager Sources</a></li>
+                <li><a target="content" href="reference/working_with_source_code/patch_submission.html">Patch Submission</a></li>
+                <li><a target="content" href="reference/working_with_source_code/project_dependencies.html">Project Dependencies</a></li>
+                <li><a target="content" href="reference/working_with_source_code/coding_style.html">Coding Style</a></li>
+              </ul>
+            </li>
+            <li><a target="content" href="reference/license.html">License</a></li>
+            <li><a target="content" href="reference/contacts.html">Contacts</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><script lang="javascript">
+						ddtreemenu.openfolder = "images/open.gif";
+						ddtreemenu.closefolder = "images/closed.gif";
+						//ddtreemenu.createTree(treeid, enablepersist, opt_persist_in_days (default is 1));
+						ddtreemenu.createTree("refTree", false, 5); //false -> do not persist state
+						//ddtreemenu.flatten('refTree', 'expand');
+						parent['content'].location.href = 'reference.html';
+					</script></body>
+</html>

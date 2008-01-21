@@ -1,0 +1,22 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Classloader And Generic Classes</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Classloader And Generic Classes</h1><P><FONT color=#990000>This topic applies to Java version only</FONT></P>
+<P>db4o uses class information available from the classloader to store and recreate class objects. When a class definition is not available from the classloader db4o resolves to <a href="../implementation_strategies/db4o_reflection_api/genericreflector.html" class="wikiLink">Generic Objects</a>, which represent the class information stored in object arrays. With this approach db4o is ready to function both with and without <a href="../client-server/server_without_persistent_classes_deployed.html" class="wikiLink">class definitions available</a>. However, the problem can appear when your application and db4o use different classloaders, because in this case db4o won't match objects in the database to their definitions in the runtime. In order to avoid this:</P>
+<OL>
+<LI>Make sure that your db4o lib is not in JRE or JDK lib folder. Libraries in these folders get a special classloader, which is unaware of your application classes. Instead put db4o library into any other suitable for you location and make it available to your application through CLASSPATH or using IDE provided methods.</LI>
+<LI>If your application design does not guarantee that application classes and db4o will be loaded by the same classloader, use 
+<P><code> Configuration#reflectWith(new JdkReflector(classLoader))</code></P>where classLoader is the classloader of your application classes.</LI></OL>
+<P>The above-mentioned cases should be distinguished from a case when Java application uses a db4o database created from a .NET application. In this particular case .NET class definitions should be replaced by Java class definitions with the help of <a href="../implementation_strategies/aliases.html" class="wikiLink">Aliases</a>.</P></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-10-14T15:56:42 by Tetyana.
+				</div>
+  </body>
+</html>

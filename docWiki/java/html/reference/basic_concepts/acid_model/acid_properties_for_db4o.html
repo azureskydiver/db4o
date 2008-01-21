@@ -1,0 +1,86 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ACID Properties For Db4o</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>ACID Properties For Db4o</h1>
+
+<p>As any
+reliable database system db4o ensures ACID transactions. When a commit is
+executed, the following order of disc writes is ensured:</p>
+
+<ol>
+<li>a list of "pointers that
+     are to be modified" is written to the database file;</li>
+<li>the database file is switched
+     into "in-commit" mode;</li>
+<li>the pointers are actually
+     modified in the database file;</li>
+<li>the database file is switched
+     to "not-in-commit" mode.</li>
+</ol><img src="ACID_Properties_For_Db4o/Trnflow.Jpg"/><br>
+
+As you
+can see from the picture above if a fatal failure occurs after the stage 1, the
+database will be restored to its pre-transaction consistent state. If the
+failure occurs after any other stage, the transaction information will be
+available from the transaction commit record and the commit will be restarted
+when the database will be open again.
+
+
+<p>The
+isolation in db4o database is at degree one, which means that a transaction
+does not overwrite "dirty data" of the other transactions and does not
+commit any writes until it completes all its writes (transaction commit
+record).</p>
+
+
+
+<p>There are
+2 settings that can effect ACID behavior in db4o:</p>
+
+<ol>
+<li>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:&nbsp;</p>
+
+<p><code>configuration.flushFileBuffers(false)</code></p>
+
+</span>
+
+
+
+<p>this setting can be potentially dangerous on systems
+using in-memory file caching. Instead of carrying out all writes immediately,
+the kernel stores data temporally in the buffer cache, waiting to see if it is
+possible to group several writes together. Cached file changes can also be
+reversed, which can break the ACID model.</p>
+
+</li>
+<li>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java:&nbsp;</p>
+
+<p><code>configuration.disableCommitRecovery()</code></p>
+
+</span>
+
+
+
+This setting disables commit recovery when the fatal
+failure occurs on stage 2-3 of the commit process. This setting should only be
+used in emergency situations after consulting db4o support. The ACID flow of
+the commit can be re-enabled after restoring the original configuration.</li>
+</ol></div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-05-22T11:27:41 by Tetyana.
+				</div>
+  </body>
+</html>

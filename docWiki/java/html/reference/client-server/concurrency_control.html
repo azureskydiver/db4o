@@ -1,0 +1,37 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Concurrency Control</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Concurrency Control</h1>
+<p>As soon as you will start using db4o with multiple client
+connections you will recognize the necessity of implementing a concurrency
+control system. Db4o itself works as an overly optimistic scheme, i.e. an
+object is locked for read and write, but no collision check is made. This
+approach makes db4o very flexible and gives you an opportunity to organize a
+concurrency control system, which will suit your needs the best. Your main
+tools to build your concurrency control system would be:</p>
+
+<ul>
+<li><a href="semaphores.html" class="wikiLink">semaphores</a></li>
+<li><a href="../implementation_strategies/callbacks.html" class="wikiLink">callbacks</a></li>
+</ul>
+<p>
+
+The articles in this topic set will show you how to implement locking and will give you an advice which strategy to use in different situations.</p>
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="concurrency_control/optimistic_locking.html" class="wikiLink">Optimistic Locking</a></p></li>
+<li><p><a href="concurrency_control/pessimistic_locking.html" class="wikiLink">Pessimistic Locking</a></p></li>
+</ul></div>
+&nbsp;</p>
+</div>
+    </div>
+    <div id="footer">
+					This revision (6) was last Modified 2007-05-09T07:46:13 by Tetyana.
+				</div>
+  </body>
+</html>
