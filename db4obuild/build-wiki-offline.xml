@@ -1,0 +1,33 @@
+<project name="wiki.offline" basedir="." default="">
+    <import file="common.xml" />
+    
+    <target name="init">
+        <property name="dir.tool.wikioffline" value="${dir.build}/wikiOffline"/>
+        <property name="tool.wikioffline" value="${dir.tool.wikioffline}/com.db4o.Wiki.Offline.exe" />
+        <property name="dir.wikioffline" value="${dir.dist}/wikiOffline" />
+        <property name="dir.wikioffline.java" value="${dir.wikioffline}/java" />
+        <property name="dir.wikioffline.net" value="${dir.wikioffline}/net" />
+    </target>
+    
+    <target name="extract.wiki.offline" depends="extract.wiki.offline.java, extract.wiki.offline.net" />
+    
+    <target name="extract.wiki.offline.java" depends="init">
+        <delete dir="${dir.wikioffline.java}" />
+        
+        <exec executable="${tool.wikioffline}"
+            dir="${dir.tool.wikioffline}">
+            <arg line="-filter:&quot;java&quot;" />
+            <arg line="-out:&quot;${dir.wikioffline.java}&quot;" />
+        </exec>
+    </target>
+    
+    <target name="extract.wiki.offline.net" depends="init">
+        <delete dir="${dir.wikioffline.net}" />
+        
+        <exec executable="${tool.wikioffline}"
+            dir="${dir.tool.wikioffline}">
+            <arg line="-filter:&quot;net,cs,vb&quot;" />
+            <arg line="-out:&quot;${dir.wikioffline.net}&quot;" />
+        </exec>
+    </target>
+</project>
