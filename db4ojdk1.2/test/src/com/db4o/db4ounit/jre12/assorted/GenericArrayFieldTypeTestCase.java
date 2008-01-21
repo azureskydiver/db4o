@@ -27,7 +27,7 @@ public class GenericArrayFieldTypeTestCase implements TestLifeCycle {
 		}
 	}
 
-	private static final String FILENAME = "genericarray.db4o";
+	private static final String FILENAME = Path4.getTempFileName();
 	
 	public void testGenericArrayFieldType() {
 		Class[] excludedClasses = new Class[]{

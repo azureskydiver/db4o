@@ -10,29 +10,35 @@ import com.db4o.db4ounit.util.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 
-public class OldHeaderTest implements TestCase {
-    
-    private static final String ORIGINAL_FILE = WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2");
-    
-    private static final String DB_FILE = WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2.yap");   
+public class OldHeaderTest implements TestCase, OptOutNoFileSystemData {
     
     public void test() throws IOException {
-    	
-    	if(! File4.exists(ORIGINAL_FILE)){
-    		TestPlatform.emitWarning(ORIGINAL_FILE + " does not exist. Can not run " + getClass().getName());
+    	final String originalFilePath = originalFilePath();
+    	final String dbFilePath = dbFilePath();
+    	if(! File4.exists(originalFilePath)){
+    		TestPlatform.emitWarning(originalFilePath + " does not exist. Can not run " + getClass().getName());
     		return;
     	}
         
-    	File4.copy(ORIGINAL_FILE, DB_FILE);
+    	File4.copy(originalFilePath, dbFilePath);
         
     	Db4o.configure().allowVersionUpdates(true);    	
-        ObjectContainer oc = Db4o.openFile(DB_FILE);
+        ObjectContainer oc = Db4o.openFile(dbFilePath);
         try {
         	Assert.isNotNull(oc);
         } finally {
         	oc.close();
         	Db4o.configure().allowVersionUpdates(false);
         }
+    }
+    
+    private static String originalFilePath() {
+    	return WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2");
+    }
+
+    private static String dbFilePath() {
+    	return WorkspaceServices.workspaceTestFilePath("db4oVersions/db4o_5.5.2.yap");
     }
 }
