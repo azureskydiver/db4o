@@ -112,7 +112,26 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         }
         return handler instanceof ArrayHandler;
     }
+
+    private ClassMetadata readClassMetadata(InternalReadContext context, int payloadOffset) {
+        context.seek(payloadOffset);
+        ClassMetadata classMetadata = container().classMetadataForId(context.readInt());
+        return classMetadata;
+    }
     
+    private TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {
+        context.seek(payloadOffset);
+        TypeHandler4 typeHandler = container().typeHandlerForId(context.readInt());
+        return typeHandler;
+    }
+
+    private void seekSecondaryOffset(InternalReadContext context, TypeHandler4 classMetadata) {
+        if(classMetadata instanceof PrimitiveFieldHandler && ((PrimitiveFieldHandler)classMetadata).isArray()){
+            // unnecessary secondary offset, consistent with old format
+            context.seek(context.readInt());
+        }
+    }
+
     public Object read(ReadContext readContext) {
         InternalReadContext context = (InternalReadContext) readContext;
         int payloadOffset = context.readInt();
@@ -120,29 +139,20 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return null;
         }
         int savedOffSet = context.offset();
-        ClassMetadata classMetadata = readClassMetadata(context, payloadOffset);
-        if(classMetadata == null){
+        TypeHandler4 typeHandler = null;
+        if(FieldHandlerRefactoring.COMPLETED){
+            typeHandler = readTypeHandler(context, payloadOffset);
+        }else{
+            typeHandler = readClassMetadata(context, payloadOffset);
+        }
+        if(typeHandler == null){
             context.seek(savedOffSet);
             return null;
         }
-        seekSecondaryOffset(context, classMetadata);
-        Object obj = classMetadata.read(context);
+        seekSecondaryOffset(context, typeHandler);
+        Object obj = typeHandler.read(context);
         context.seek(savedOffSet);
         return obj;
-    }
-
-
-    private ClassMetadata readClassMetadata(InternalReadContext context, int payloadOffset) {
-        context.seek(payloadOffset);
-        ClassMetadata classMetadata = container().classMetadataForId(context.readInt());
-        return classMetadata;
-    }
-
-    private void seekSecondaryOffset(InternalReadContext context, ClassMetadata classMetadata) {
-        if(classMetadata instanceof PrimitiveFieldHandler && classMetadata.isArray()){
-            // unnecessary secondary offset, consistent with old format
-            context.seek(context.readInt());
-        }
     }
 
     public void write(WriteContext context, Object obj) {

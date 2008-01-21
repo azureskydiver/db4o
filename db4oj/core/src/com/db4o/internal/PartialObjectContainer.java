@@ -9,6 +9,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.callbacks.*;
 import com.db4o.internal.cs.*;
+import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.*;
@@ -973,14 +974,14 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     
     public ClassMetadata classMetadataForId(int id) {
     	if(DTrace.enabled){
-    		DTrace.YAPCLASS_BY_ID.log(id);
+    		DTrace.CLASSMETADATA_BY_ID.log(id);
     	}
         if (id == 0) {
             return null;
         }
-        ClassMetadata yc = _handlers.classMetadataForId(id);
-        if (yc != null) {
-            return yc;
+        ClassMetadata classMetadata = _handlers.classMetadataForId(id);
+        if (classMetadata != null) {
+            return classMetadata;
         }
         return _classCollection.getClassMetadata(id);
     }
@@ -1146,14 +1147,37 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
+    public FieldHandler fieldHandlerForId(int id) {
+        if (id < 1) {
+            return null;
+        }
+        if (_handlers.isSystemHandler(id)) {
+            return _handlers.fieldHandlerForID(id);
+        } 
+        return classMetadataForId(id);
+    }
+    
+    /**
+     * TODO: Remove when FieldHandlerRefactoring.COMPLETED
+     */
     public TypeHandler4 handlerByID(int id) {
         if (id < 1) {
             return null;
         }
         if (_handlers.isSystemHandler(id)) {
-            return _handlers.handlerForID(id);
+            return _handlers.typeHandlerForID(id);
         } 
         return classMetadataForId(id);
+    }
+    
+    public TypeHandler4 typeHandlerForId(int id) {
+        if (id < 1) {
+            return null;
+        }
+        if (_handlers.isSystemHandler(id)) {
+            return _handlers.typeHandlerForID(id);
+        } 
+        return classMetadataForId(id).typeHandler();
     }
 
     public Object lock() {

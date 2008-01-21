@@ -115,7 +115,7 @@ public final class HandlerRegistry {
     }
 
     private void initArrayHandlers() {
-        TypeHandler4 handler = handlerForID(Handlers4.UNTYPED_ID);
+        TypeHandler4 handler = typeHandlerForID(Handlers4.UNTYPED_ID);
         _untypedArrayFieldHandler = new PrimitiveFieldHandler(
             container(), 
             new ArrayHandler(container(),handler, false), 
@@ -361,7 +361,7 @@ public final class HandlerRegistry {
 
 	private Object nullValue(ReflectClass clazz) {
 		for (int k = 1; k <= PRIMITIVECOUNT; k++) {
-		    PrimitiveHandler handler = (PrimitiveHandler) handlerForID(k); 
+		    PrimitiveHandler handler = (PrimitiveHandler) typeHandlerForID(k); 
 			if (clazz.equals(handler.primitiveClassReflector())) {
 				return handler.primitiveNull();
 			}
@@ -430,12 +430,20 @@ public final class HandlerRegistry {
         return typeInfo.classReflector;
     }
 
-    public final TypeHandler4 handlerForID(int id) {
+    public final TypeHandler4 typeHandlerForID(int id) {
         TypeInfo typeInfo = typeInfoForID(id);
         if(typeInfo == null){
             return null;
         }
         return typeInfo.typeHandler;
+    }
+    
+    public final FieldHandler fieldHandlerForID(int id) {
+        TypeInfo typeInfo = typeInfoForID(id);
+        if(typeInfo == null){
+            return null;
+        }
+        return typeInfo.fieldHandler;
     }
     
     private TypeInfo typeInfoForID(int id){

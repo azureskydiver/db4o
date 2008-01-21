@@ -11,6 +11,7 @@ import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.classindex.*;
 import com.db4o.internal.diagnostic.*;
+import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -24,7 +25,7 @@ import com.db4o.reflect.generic.*;
 /**
  * @exclude
  */
-public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass {
+public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler {
     
 	private TypeHandler4 _typeHandler;
     
@@ -938,7 +939,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     final boolean init( ObjectContainerBase a_stream, ClassMetadata a_ancestor,ReflectClass claxx) {
         
         if(DTrace.enabled){
-            DTrace.YAPCLASS_INIT.log(getID());
+            DTrace.CLASSMETADATA_INIT.log(getID());
         }
         
         setAncestor(a_ancestor);

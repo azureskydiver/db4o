@@ -34,6 +34,18 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 		return stream().handlers();
 	}
 	
+	public void testTypeHandlerForID(){
+	    assertTypeHandlerClass(Handlers4.INT_ID, IntHandler.class);
+	    if(FieldHandlerRefactoring.COMPLETED){
+	        assertTypeHandlerClass(Handlers4.UNTYPED_ID, PlainObjectHandler.class);
+	    }
+	}
+
+    private void assertTypeHandlerClass(int id, Class clazz) {
+        TypeHandler4 typeHandler = handlers().typeHandlerForID(id);
+        Assert.isInstanceOf(clazz, typeHandler);
+    }
+	
 	public void testTypeHandlerID(){
 	    assertTypeHandlerID(Handlers4.INT_ID, integerClassReflector());
 	    if(FieldHandlerRefactoring.COMPLETED){

@@ -90,6 +90,8 @@ public class DTrace {
 			BTREE_NODE_COMMIT_OR_ROLLBACK = new DTrace(true, true,
 					"btreenode commit or rollback", true);
 			CANDIDATE_READ = new DTrace(true, true, "candidate read", true);
+            CLASSMETADATA_BY_ID = new DTrace(true, true, "classmetadata by id", true);
+            CLASSMETADATA_INIT = new DTrace(true, true, "classmetadata init", true);
 			CLIENT_MESSAGE_LOOP_EXCEPTION = new DTrace(true, true, "client message loop exception", true);
 			CLOSE = new DTrace(true, true, "close", true);
 			CLOSE_CALLED = new DTrace(true, true, "close called", true);
@@ -121,6 +123,8 @@ public class DTrace {
 			NEW_INSTANCE = new DTrace(true, true, "newInstance", true);
 			PERSISTENT_OWN_LENGTH = new DTrace(true, true, "Persistent own length",
                 true);
+            PERSISTENTBASE_WRITE = new DTrace(true, true, "persistentbase write", true);
+            PERSISTENTBASE_SET_ID = new DTrace(true, true, "persistentbase setid", true);
             PRODUCE_SLOT_CHANGE = new DTrace(true, true, "produce slot change",
                 true);
 			QUERY_PROCESS = new DTrace(true, true, "query process", true);
@@ -146,10 +150,6 @@ public class DTrace {
 			TRANS_DELETE = new DTrace(true, true, "trans delete", true);
 			TRANS_DONT_DELETE = new DTrace(true, true, "trans dontDelete", true);
 			TRANS_FLUSH = new DTrace(true, true, "trans flush", true);
-			YAPMETA_WRITE = new DTrace(true, true, "yapmeta write", true);
-			YAPCLASS_BY_ID = new DTrace(true, true, "yapclass by id", true);
-			YAPCLASS_INIT = new DTrace(true, true, "yapclass init", true);
-			YAPMETA_SET_ID = new DTrace(true, true, "yapmeta setid", true);
 			WRITE_BYTES = new DTrace(true, true, "writeBytes", true);
 			WRITE_POINTER = new DTrace(true, true, "write pointer", true);
 			WRITE_UPDATE_DELETE_MEMBERS = new DTrace(true, true,
@@ -199,6 +199,8 @@ public class DTrace {
 	public static DTrace BTREE_NODE_COMMIT_OR_ROLLBACK;
 	public static DTrace BTREE_NODE_REMOVE;
     public static DTrace CANDIDATE_READ;
+    public static DTrace CLASSMETADATA_BY_ID;
+    public static DTrace CLASSMETADATA_INIT;
     public static DTrace CLIENT_MESSAGE_LOOP_EXCEPTION;
     public static DTrace CLOSE;
     public static DTrace CLOSE_CALLED;
@@ -229,6 +231,8 @@ public class DTrace {
     public static DTrace JUST_SET;
     public static DTrace NEW_INSTANCE;
     public static DTrace PERSISTENT_OWN_LENGTH;
+    public static DTrace PERSISTENTBASE_SET_ID;
+    public static DTrace PERSISTENTBASE_WRITE;
 	public static DTrace PRODUCE_SLOT_CHANGE;
     public static DTrace QUERY_PROCESS;
     public static DTrace READ_ARRAY_WRAPPER;
@@ -249,10 +253,6 @@ public class DTrace {
     public static DTrace TRANS_DONT_DELETE;
     public static DTrace TRANS_DELETE;
     public static DTrace TRANS_FLUSH;
-    public static DTrace YAPCLASS_BY_ID;
-    public static DTrace YAPCLASS_INIT;
-	public static DTrace YAPMETA_SET_ID;
-    public static DTrace YAPMETA_WRITE;
     public static DTrace WRITE_BYTES;
     public static DTrace WRITE_POINTER;
     public static DTrace WRITE_XBYTES;
