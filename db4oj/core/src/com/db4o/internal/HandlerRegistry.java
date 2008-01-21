@@ -5,9 +5,7 @@ package com.db4o.internal;
 import com.db4o.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.diagnostic.*;
-import com.db4o.internal.fieldhandlers.UntypedArrayFieldHandler;
-import com.db4o.internal.fieldhandlers.FieldHandler;
-import com.db4o.internal.fieldhandlers.UntypedMultidimensionalArrayFieldHandler;
+import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.replication.*;
 import com.db4o.reflect.*;
@@ -29,8 +27,8 @@ import com.db4o.reflect.generic.*;
 public final class HandlerRegistry {
     
     public static final byte HANDLER_VERSION = (byte)2;
-	
-	private final ObjectContainerBase _container;  // this is the master container and not valid
+    
+    private final ObjectContainerBase _container;  // this is the master container and not valid
 	                                   // for TransportObjectContainer
 
     private static final Db4oTypeImpl[]   _db4oTypes     = { new BlobImpl()};
@@ -40,17 +38,12 @@ public final class HandlerRegistry {
     private ClassMetadata                _untypedMultiDimensionalArrayFieldHandler;
 
     public StringHandler          _stringHandler;
-
-    private Hashtable4           _mapIdToTypeHandler = new Hashtable4(16);
     
-    private Hashtable4           _mapIdToReflector = new Hashtable4(16);
+    private Hashtable4           _mapIdToTypeInfo = newHashtable();
     
-    // TODO: This will be fully replaced by _fieldHandlers
-    private Hashtable4          _mapIdToClassMetadata = new Hashtable4(16);
+    private Hashtable4          _mapFieldHandlerToId = newHashtable();
     
-    private Hashtable4          _mapIdToFieldHandler = new Hashtable4(16);
-    
-    private Hashtable4          _mapFieldHandlerToId = new Hashtable4(16);
+    private Hashtable4          _mapTypeHandlerToId = newHashtable();
     
 
     private int                     _highestBuiltinTypeID     = Handlers4.ANY_ARRAY_N_ID + 1;
@@ -61,11 +54,11 @@ public final class HandlerRegistry {
     
     private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[2]; 
 
-    private final Hashtable4        _mapReflectorToFieldHandler  = new Hashtable4(32);
+    private final Hashtable4        _mapReflectorToFieldHandler  = newHashtable();
     
-    private final Hashtable4        _mapReflectorToTypeHandler  = new Hashtable4(32);
+    private final Hashtable4        _mapReflectorToTypeHandler  = newHashtable();
     
-    private final Hashtable4        _mapFieldHandlerToReflector  = new Hashtable4(32);
+    private final Hashtable4        _mapFieldHandlerToReflector  = newHashtable();
     
     private SharedIndexedFields              		_indexes;
     
@@ -81,7 +74,7 @@ public final class HandlerRegistry {
     
     final GenericReflector                _reflector;
     
-    private final Hashtable4 _handlerVersions = new Hashtable4(16);
+    private final Hashtable4 _handlerVersions = newHashtable();
     
     private LatinStringIO _stringIO;
     
@@ -95,6 +88,7 @@ public final class HandlerRegistry {
 	public ReflectClass ICLASS_STATICCLASS;
 	public ReflectClass ICLASS_STRING;
     ReflectClass ICLASS_TRANSIENTCLASS;
+
 
     HandlerRegistry(final ObjectContainerBase container, byte stringEncoding, GenericReflector reflector) {
         
@@ -127,19 +121,27 @@ public final class HandlerRegistry {
             new ArrayHandler(container(),handler, false), 
             Handlers4.ANY_ARRAY_ID,
             ICLASS_OBJECT);
-        _mapIdToClassMetadata.put(Handlers4.ANY_ARRAY_ID, _untypedArrayFieldHandler);
-        _mapIdToFieldHandler.put(Handlers4.ANY_ARRAY_ID, new UntypedArrayFieldHandler());
+        mapTypeInfo(
+            Handlers4.ANY_ARRAY_ID, 
+            _untypedArrayFieldHandler, 
+            new UntypedArrayFieldHandler(), 
+            null,
+            null );
 
         _untypedMultiDimensionalArrayFieldHandler = new PrimitiveFieldHandler(
             container(), 
             new MultidimensionalArrayHandler(container(), handler, false), 
             Handlers4.ANY_ARRAY_N_ID,
             ICLASS_OBJECT);
-        
-        _mapIdToClassMetadata.put(Handlers4.ANY_ARRAY_N_ID, _untypedMultiDimensionalArrayFieldHandler);
-        _mapIdToFieldHandler.put(Handlers4.ANY_ARRAY_N_ID, new UntypedMultidimensionalArrayFieldHandler());
-    }
+        mapTypeInfo(
+            Handlers4.ANY_ARRAY_N_ID, 
+            _untypedMultiDimensionalArrayFieldHandler, 
+            new UntypedMultidimensionalArrayFieldHandler(), 
+            null,
+            null );
 
+    }
+    
     private void registerPlatformTypes() {
         NetTypeHandler[] handlers = Platform4.types(container());
         for (int i = 0; i < handlers.length; i++) {
@@ -197,12 +199,12 @@ public final class HandlerRegistry {
     private void registerUntypedHandlers() {
         int id = Handlers4.UNTYPED_ID;
         UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(container());
-        
-      registerBuiltinHandler(Handlers4.UNTYPED_ID, untypedFieldHandler, false, null, null);
-      
-//        PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), untypedFieldHandler, id, ICLASS_OBJECT);
-//        map(id, classMetadata, untypedFieldHandler, new PlainObjectHandler(), ICLASS_OBJECT);
-        
+        if(FieldHandlerRefactoring.COMPLETED){
+            PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), untypedFieldHandler, id, ICLASS_OBJECT);
+            map(id, classMetadata, untypedFieldHandler, new PlainObjectHandler(), ICLASS_OBJECT);
+        } else {
+            registerBuiltinHandler(Handlers4.UNTYPED_ID, untypedFieldHandler, false, null, null);
+        }
         registerHandlerVersion(untypedFieldHandler, 0, new UntypedFieldHandler0(container()));
     }
     
@@ -239,24 +241,31 @@ public final class HandlerRegistry {
         TypeHandler4 typeHandler, 
         ReflectClass classReflector) {
         
-        _mapIdToTypeHandler.put(id, typeHandler);
-        _mapIdToReflector.put(id, classReflector);
+        mapTypeInfo(id, classMetadata, fieldHandler, typeHandler, classReflector);
         
-        _mapIdToClassMetadata.put(id, classMetadata);
-        
-        _mapIdToFieldHandler.put(id, fieldHandler);
         mapPrimitive(id, fieldHandler, typeHandler, classReflector);
         if (id > _highestBuiltinTypeID) {
             _highestBuiltinTypeID = id;
         }
     }
-
+    
+    private void mapTypeInfo(
+        int id,
+        ClassMetadata classMetadata, 
+        FieldHandler fieldHandler,
+        TypeHandler4 typeHandler, 
+        ReflectClass classReflector) {
+        _mapIdToTypeInfo.put(id, new TypeInfo(classMetadata,fieldHandler, typeHandler, classReflector));
+    }
+    
     private void mapPrimitive(int id, FieldHandler fieldHandler, TypeHandler4 typeHandler, ReflectClass classReflector) {
-        _mapReflectorToFieldHandler.put(classReflector, fieldHandler);
         _mapFieldHandlerToReflector.put(fieldHandler, classReflector);
+        _mapReflectorToFieldHandler.put(classReflector, fieldHandler);
         _mapReflectorToTypeHandler.put(classReflector, typeHandler);
         if(id != 0){
-            _mapFieldHandlerToId.put(fieldHandler, new Integer(id));
+            Integer wrappedID = new Integer(id);
+            _mapFieldHandlerToId.put(fieldHandler, wrappedID);
+            _mapTypeHandlerToId.put(typeHandler, wrappedID);
         }
     }
 
@@ -414,18 +423,30 @@ public final class HandlerRegistry {
     }
     
     public final ReflectClass classForID(int id) {
-        return (ReflectClass) _mapIdToReflector.get(id);
+        TypeInfo typeInfo = typeInfoForID(id);
+        if(typeInfo == null){
+            return null;
+        }
+        return typeInfo.classReflector;
     }
 
     public final TypeHandler4 handlerForID(int id) {
-        return (TypeHandler4) _mapIdToTypeHandler.get(id);
+        TypeInfo typeInfo = typeInfoForID(id);
+        if(typeInfo == null){
+            return null;
+        }
+        return typeInfo.typeHandler;
     }
     
-    public final int handlerID(TypeHandler4 handler){
+    private TypeInfo typeInfoForID(int id){
+        return (TypeInfo)_mapIdToTypeInfo.get(id);
+    }
+    
+    public final int typeHandlerID(TypeHandler4 handler){
         if(handler instanceof ClassMetadata){
             return ((ClassMetadata)handler).getID();
         }
-        Object idAsInt = _mapFieldHandlerToId.get(handler);
+        Object idAsInt = _mapTypeHandlerToId.get(handler);
         if(idAsInt == null){
             return 0;
         }
@@ -496,11 +517,19 @@ public final class HandlerRegistry {
     }
 
     public ClassMetadata classMetadataForId(int id) {
-        return (ClassMetadata) _mapIdToClassMetadata.get(id);
+        TypeInfo typeInfo = typeInfoForID(id);
+        if(typeInfo == null){
+            return null;
+        }
+        return typeInfo.classMetadata;
     }
     
     public FieldHandler fieldHandlerForId(int id){
-        return (FieldHandler)_mapIdToFieldHandler.get(id);
+        TypeInfo typeInfo = typeInfoForID(id);
+        if(typeInfo == null){
+            return null;
+        }
+        return typeInfo.fieldHandler;
     }
 
     ClassMetadata classMetadataForClass(ReflectClass clazz) {
@@ -586,6 +615,10 @@ public final class HandlerRegistry {
 
     private ObjectContainerBase container() {
         return _container;
+    }
+    
+    private static final Hashtable4 newHashtable(){
+        return new Hashtable4(32);
     }
 
 }

@@ -4,7 +4,7 @@ package com.db4o.internal;
 
 import com.db4o.ext.*;
 import com.db4o.internal.activation.*;
-import com.db4o.internal.fieldhandlers.FieldHandler;
+import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
@@ -151,14 +151,20 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return;
         }
         MarshallingContext marshallingContext = (MarshallingContext) context;
-        TypeHandler4 typeHandler = handlerRegistry().classMetadataForObject(obj);
+        TypeHandler4 typeHandler = null;
+        if(FieldHandlerRefactoring.COMPLETED){
+            typeHandler = container().typeHandlerForObject(obj);
+        }else{
+            typeHandler = handlerRegistry().classMetadataForObject(obj);
+        }
+        
         if(typeHandler == null){
             context.writeInt(0);
             return;
         }
+        int id = handlerRegistry().typeHandlerID(typeHandler);
         MarshallingContextState state = marshallingContext.currentState();
         marshallingContext.createChildBuffer(false, false);
-        int id = marshallingContext.container().handlers().handlerID(typeHandler);
         context.writeInt(id);
         if(isArray(typeHandler)){
             // TODO: This indirection is unneccessary, but it is required by the 

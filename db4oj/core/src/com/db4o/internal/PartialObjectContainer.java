@@ -900,6 +900,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return _classCollection.classMetadataForReflectClass(claxx);
     }
     
+    public final TypeHandler4 typeHandlerForObject(Object obj){
+        return typeHandlerForReflectClass(reflector().forObject(obj));
+    }
+    
     public final TypeHandler4 typeHandlerForReflectClass(ReflectClass claxx){
         if(hideClassForExternalUse(claxx)){
             return null;

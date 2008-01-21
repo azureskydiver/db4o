@@ -1,10 +1,11 @@
 package com.db4o.internal.handlers;
 
+import sun.security.action.*;
+
 import com.db4o.ext.Db4oIOException;
+import com.db4o.foundation.NotImplementedException;
 import com.db4o.foundation.PreparedComparison;
-import com.db4o.internal.DefragmentContext;
-import com.db4o.internal.DeleteContext;
-import com.db4o.internal.TypeHandler4;
+import com.db4o.internal.*;
 import com.db4o.marshall.ReadContext;
 import com.db4o.marshall.WriteContext;
 
@@ -12,28 +13,31 @@ import com.db4o.marshall.WriteContext;
 public class PlainObjectHandler implements TypeHandler4{
 
     public void defragment(DefragmentContext context) {
-        // TODO Auto-generated method stub
-        
+        throw new NotImplementedException();
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
-        // TODO Auto-generated method stub
-        
+        throw new NotImplementedException();
     }
 
     public Object read(ReadContext context) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException();
     }
 
     public void write(WriteContext context, Object obj) {
+        Transaction transaction = context.transaction();
+        ObjectContainerBase container = transaction.container();
+        int id = container.getID(transaction, obj);
+        if(id > 0){
+            return;
+        }
+        id = container.newUserObject();
         
-        // TODO Auto-generated method stub
+        throw new NotImplementedException();
     }
 
     public PreparedComparison prepareComparison(Object obj) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new NotImplementedException();
     }
 
 }

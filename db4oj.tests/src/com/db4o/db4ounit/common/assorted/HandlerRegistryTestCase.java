@@ -3,11 +3,11 @@
 package com.db4o.db4ounit.common.assorted;
 
 import com.db4o.internal.*;
+import com.db4o.internal.fieldhandlers.FieldHandlerRefactoring;
 import com.db4o.internal.fieldhandlers.UntypedArrayFieldHandler;
 import com.db4o.internal.fieldhandlers.FieldHandler;
 import com.db4o.internal.fieldhandlers.UntypedMultidimensionalArrayFieldHandler;
 import com.db4o.internal.handlers.IntHandler;
-import com.db4o.internal.handlers.MultidimensionalArrayHandler;
 import com.db4o.internal.handlers.PlainObjectHandler;
 import com.db4o.reflect.*;
 
@@ -34,13 +34,28 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 		return stream().handlers();
 	}
 	
-	public void _testTypeHandlerForClass(){
+	public void testTypeHandlerID(){
+	    assertTypeHandlerID(Handlers4.INT_ID, integerClassReflector());
+	    if(FieldHandlerRefactoring.COMPLETED){
+	        assertTypeHandlerID(Handlers4.UNTYPED_ID, objectClassReflector());
+	    }
+	}
+
+    private void assertTypeHandlerID(int handlerID, ReflectClass integerClassReflector) {
+        TypeHandler4 typeHandler = handlers().typeHandlerForClass(integerClassReflector);
+	    int id = handlers().typeHandlerID(typeHandler);
+        Assert.areEqual(handlerID, id);
+    }
+	
+	public void testTypeHandlerForClass(){
 	    Assert.isInstanceOf(
 	        IntHandler.class, 
 	        handlers().typeHandlerForClass(integerClassReflector()));
-        Assert.isInstanceOf(
-            PlainObjectHandler.class, 
-            handlers().typeHandlerForClass(objectClassReflector()));
+	    if(FieldHandlerRefactoring.COMPLETED){
+            Assert.isInstanceOf(
+                PlainObjectHandler.class, 
+                handlers().typeHandlerForClass(objectClassReflector()));
+	    }
 	}
 	
 	public void testFieldHandlerForID(){
