@@ -13,6 +13,7 @@ import com.db4o.osgi.*;
 
 import db4ounit.extensions.*;
 import db4ounit.extensions.fixtures.*;
+import db4ounit.extensions.util.*;
 
 class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 
@@ -23,7 +24,7 @@ class Db4oOSGiBundleFixture extends AbstractSoloDb4oFixture {
 	public Db4oOSGiBundleFixture(BundleContext context, String fileName) {
 		super(new IndependentConfigurationSource());
 		_context = context;
-		_fileName = fileName;
+		_fileName = CrossPlatformServices.databasePath(fileName);
 	}
 
 	protected ObjectContainer createDatabase(Configuration config) {

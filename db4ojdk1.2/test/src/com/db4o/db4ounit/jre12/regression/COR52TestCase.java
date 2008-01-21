@@ -5,6 +5,7 @@ package com.db4o.db4ounit.jre12.regression;
 import java.io.*;
 
 import com.db4o.*;
+import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 
 import db4ounit.*;
@@ -15,7 +16,7 @@ public class COR52TestCase implements TestCase {
 		new TestRunner(COR52TestCase.class).run();
 	}
 	
-	private static final String TEST_FILE = "COR52.db4o";
+	private static final String TEST_FILE = Path4.getTempFileName();
 	
 	public void test() throws Exception {
 		int originalActivationDepth = ((Config4Impl) Db4o.configure())

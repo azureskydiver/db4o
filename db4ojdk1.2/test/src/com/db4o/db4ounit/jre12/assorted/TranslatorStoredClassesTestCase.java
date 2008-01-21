@@ -7,12 +7,13 @@ import java.math.*;
 
 import com.db4o.*;
 import com.db4o.config.*;
+import com.db4o.foundation.io.*;
 
 import db4ounit.*;
 
 public class TranslatorStoredClassesTestCase implements TestCase {
 
-	private final static String FILENAME="translator.yap";
+	private final static String FILENAME=Path4.getTempFileName();
 	
 	public static class DataRawChild implements Serializable {
 		public int _id;

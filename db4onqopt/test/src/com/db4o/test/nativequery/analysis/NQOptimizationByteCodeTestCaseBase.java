@@ -12,9 +12,10 @@ import com.db4o.nativequery.analysis.*;
 import com.db4o.nativequery.expr.*;
 
 import db4ounit.*;
+import db4ounit.extensions.fixtures.*;
 import db4ounit.extensions.util.*;
 
-public abstract class NQOptimizationByteCodeTestCaseBase implements TestLifeCycle {
+public abstract class NQOptimizationByteCodeTestCaseBase implements TestLifeCycle, OptOutNoFileSystemData {
 
 	public final static int NO_MODIFIERS = 0;
 	public final static String CLASSNAME = "invalid.CandidateClass";
