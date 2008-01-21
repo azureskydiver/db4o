@@ -27,7 +27,7 @@ public class HandlerRegistryTestCase extends AbstractDb4oTestCase {
 	}
 
 	private TypeHandler4 handlerForClass(Class clazz) {
-		return handlers().handlerForClass(stream(), reflectClass(clazz));
+	    return (TypeHandler4) stream().fieldHandlerForClass(reflectClass(clazz));
 	}
 
 	private HandlerRegistry handlers() {

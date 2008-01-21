@@ -53,7 +53,7 @@ public class FieldMarshaller0 implements FieldMarshaller {
         
         field.init(field.containingClass(), name);
         field.init(spec.handlerID(), spec.isPrimitive(), spec.isArray(), spec.isNArray());
-        field.loadHandler(stream);
+        field.loadHandlerById(stream);
         field.alive();
         
         return field;

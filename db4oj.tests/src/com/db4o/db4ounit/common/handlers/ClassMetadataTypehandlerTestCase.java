@@ -58,7 +58,7 @@ public class ClassMetadataTypehandlerTestCase extends AbstractDb4oTestCase{
     }
 
 	private TypeHandler4 classMetadataHandler() {
-		return stream().handlers().handlerForClass(stream(), itemClass());
+		return (TypeHandler4) stream().fieldHandlerForClass(itemClass());
 	}
 
 	private ReflectClass itemClass() {

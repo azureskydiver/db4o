@@ -84,7 +84,7 @@ public abstract class VirtualFieldMetadata extends FieldMetadata {
 
     abstract void instantiate1(Transaction trans, ObjectReference ref, Buffer buffer);
     
-    public void loadHandler(ObjectContainerBase a_stream){
+    public void loadHandlerById(ObjectContainerBase container){
     	// do nothing
     }
     
