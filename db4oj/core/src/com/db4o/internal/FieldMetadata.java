@@ -8,6 +8,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.activation.*;
 import com.db4o.internal.btree.*;
+import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
@@ -685,7 +686,11 @@ public class FieldMetadata implements StoredField {
     }
     
     public void loadHandler(ObjectContainerBase a_stream) {
-    	_handler=a_stream.handlerByID(_handlerID);
+        if(FieldHandlerRefactoring.COMPLETED){
+            _handler=(TypeHandler4) a_stream.fieldHandlerForId(_handlerID);
+        }else{
+            _handler=a_stream.handlerByID(_handlerID);
+        }
     }
 
     private void loadJavaField() {

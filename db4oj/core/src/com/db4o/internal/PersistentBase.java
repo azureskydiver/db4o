@@ -99,7 +99,7 @@ public abstract class PersistentBase implements Persistent {
     
     public void setID(int a_id) {
     	if(DTrace.enabled){
-    		DTrace.YAPMETA_SET_ID.log(a_id);
+    		DTrace.PERSISTENTBASE_SET_ID.log(a_id);
     	}
         _id = a_id;
     }
@@ -176,7 +176,7 @@ public abstract class PersistentBase implements Persistent {
 	private final void writeToFile(Transaction trans, BufferImpl writer, Slot slot) {
 		
         if(DTrace.enabled){
-        	DTrace.YAPMETA_WRITE.log(getID());
+        	DTrace.PERSISTENTBASE_WRITE.log(getID());
         }
 		
 		LocalObjectContainer container = (LocalObjectContainer)trans.container();

@@ -11,7 +11,7 @@ import db4ounit.extensions.*;
 public class SimplestPossibleTestCase extends AbstractDb4oTestCase {
     
     public static void main(String[] args) {
-        new SimplestPossibleTestCase().runClientServer();
+        new SimplestPossibleTestCase().runSolo();
     }
     
     protected void store() {
