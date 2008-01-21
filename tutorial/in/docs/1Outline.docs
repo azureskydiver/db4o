@@ -8,6 +8,7 @@
 .e Deep ..
 .e Transactions ..
 .e TransparentActivation ..
+.e TransparentPersistence ..
 .e ClientServer ..
 .e Evaluations ..
 .e Translators ..
