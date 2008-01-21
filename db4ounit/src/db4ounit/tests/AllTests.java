@@ -12,6 +12,7 @@ public class AllTests implements TestSuiteBuilder {
 			FrameworkTestCase.class,
 			AssertTestCase.class,
 			TestLifeCycleTestCase.class,
+			TestSuiteTestCase.class,
 			ReflectionTestSuiteBuilderTestCase.class,
 			ReinstantiatePerMethodTest.class,
 		}).build();
