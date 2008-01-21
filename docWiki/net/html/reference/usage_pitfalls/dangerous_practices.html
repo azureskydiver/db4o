@@ -1,0 +1,97 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Dangerous Practices</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Dangerous Practices</h1>
+<p>Db4o
+databases are well protected against corruption. However some specific
+configurations can make your database file vulnerable.
+</p>
+<ol>
+<li><code>Configuration#lockDatabaseFile(false)</code> 
+
+<p>Java platforms before JDK1.4 do not prevent concurrent access to a file from different JVM. If database file locking is turned off on these platforms, concurrent write access to
+the same database file from different JVM sessions will corrupt the
+database file immediately. Do not use this setting unless your
+application logic guarantees that only one VM session can access your
+database file at a time. For more information see <a href="../tuning/performance_hints/no_lock_file_thread.html" class="wikiLink">No lock file thread</a>.</p>
+</li>
+<li> <code>Db4o.configure().flushFileBuffers(false)</code>
+
+
+<p>In order to ensure ACID transaction db4o uses a <a href="../basic_concepts/acid_model/acid_properties_for_db4o.html" class="wikiLink">special strategy</a>, which relies on the order of writes to the storage medium.
+On operating systems that use in-memory file caching, the OS cache may
+revert the order of writes to optimize file performance. db4o can
+enforce the correct order by flushing file buffers after every step of
+transaction commit. Turning this setting off puts you in potential
+danger of data corruption if a system or hardware failure occurs during
+commit.
+</p>
+
+</li>
+<li>The following refactorings are incompatible with db4o:</li>
+<ol>
+<li>Adding classes within a class hierarchy or above a class hierarchy. Example:
+
+<p>
+<br>Original
+<br>--------------
+<br>class A
+<br>class B extends A
+<br>
+<br>Refactored
+<br>------------------
+<br>class A
+<br>class C extends A
+<br>class B extends C
+<br>
+<br>
+
+</p></li><li>Removing a class from the top or within a class hierarchy. Example:
+<br>
+<br>Original
+<br>--------------
+<br>class A
+<br>class B extends A
+<br>class C extends B
+<br>
+<br>Refactored
+<br>------------------
+<br>class A
+<br>class C extends A
+<br>
+<br>
+</li>
+<li>Changing the type of a field to be an array or back. Example:
+<br>
+<br>Original
+<br>--------------
+<br>class Foo {
+<br>  String bar;
+<br>}
+<br>
+<br>Refactored
+<br>------------------
+<br>class Foo {
+<br>  String [] bar;
+<br>}
+<br>
+</li>
+</ol>
+
+</ol>
+<br>If you apply such a refactoring, you will not be able to read existing objects correctly.
+<p>More information on refactorings see <a href="../implementation_strategies/refactoring_and_schema_evolution.html" class="wikiLink">Refactoring and Schema Evolution</a><br>
+<br>
+<br><br></p></div>
+    </div>
+    <div id="footer">
+					This revision (1) was last Modified 2007-09-09T12:22:25 by Tetyana.
+				</div>
+  </body>
+</html>

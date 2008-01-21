@@ -1,0 +1,66 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Callbacks</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Callbacks</h1><p>External
+Callbacks enable you to add Listeners to an ObjectContainer for the following
+db4o events</p>
+
+<ul><li>QueryStarted </li><li>QueryFinished </li><li>Creating (first time an object is about to be saved) </li><li>Created (after the object is saved)</li><li>Activating </li><li>Activated </li><li>Deactivating </li><li>Deactivated</li><li>Updating </li><li>Updated</li><li>Deleting </li><li>Deleted</li><li>Committing</li><li>Committed<br></li></ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>QueryStarted
+and QueryFinished events accept QueryEventArgs as a parameter and can be used
+to gather query statistics information.</p>
+
+<p>Created,
+Activated, Deactivated, Updated and Deleted events accept ObjectEventArgs and
+can be used to gather statistics information or to initiate some special
+behavior after the action has been taken.</p>
+
+<p>Creating,
+Activating, Deactivating, Updating and Deleting events accept
+CancellableObjectEventArgs. Their primary usage is to perform action validity check
+and to stop the execution if necessary.</p><p>Committing event can be used to check some application-specific conditions before commit. For example it can</p><p> be used to check unique constraints. Committing event accepts CommitEventArgs as a parameter.</p><p>Committed event is raised when the container has completely finished the commit operation. Event subscribers get the notification in a separate thread. Committed event accepts CommitEventArgs.&nbsp;</p>
+
+
+
+<p><div class="childTopicList">More Reading:<ul>
+<li><p><a href="callbacks/event_registry_api.html" class="wikiLink">Event Registry API</a></p></li>
+<li><p><a href="callbacks/possible_usecases.html" class="wikiLink">Possible Usecases</a></p></li>
+<li><p><a href="callbacks/benefits.html" class="wikiLink">Benefits</a></p></li>
+<li><p><a href="callbacks/commit-time_callbacks.html" class="wikiLink">Commit-Time Callbacks</a></p></li>
+</ul></div>
+&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (4) was last Modified 2007-04-28T09:33:35 by Tetyana.
+				</div>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Object Container</title>
+    <link rel="stylesheet" type="text/css" href="../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Object Container</h1><div id="TOC"><div id="TOCinner"><span class="TOCtitle">Contents</span><div class="TOCcontents"><ul><li><a href ="#Accessing A Database&nbsp;">Accessing A Database&nbsp;</a></li></ul></li><li><a href ="#"></a><ul><li><a href ="#Working With Objects&nbsp;">Working With Objects&nbsp;</a></li><li><a href ="#Extended Object Container Interface&nbsp;">Extended Object Container Interface&nbsp;</a></li></ul></li></ul></div></div></div>
+<p>Db4o gives you a simple and straightforward interface to object persistence - ObjectContainer. In .NET versions a conventional name IObjectContainer is used.</p><a name="Accessing A Database&nbsp;"></a><h2>Accessing A Database&nbsp;</h2>
+<p> ObjectContainer is your db4o database.</p>
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java: </p><p><code>ObjectContainer container = Db4o.openFile(filename)</code></p>
+</span>
+
+<a name=""></a><h1>
+
+</h1><p>Applications using db4o versions
+lower than 6.1can issue multiple calls to open the same file (without closing
+it). These calls will get the already existing open ObjectContainer instance
+and no error will be produced. However as many close calls will have to be
+issued to close the ObjectContainer.</p>
+
+<p>This behavior was changed since
+db4o version 6.1: only the first call against a file can be successful.
+Subsequent calls that request to open a database file that is already open will
+get a DatabaseFileLockedException. This behavior is much more intuitive and
+allows to simplify the internal db4o design as well.</p>
+
+
+
+<a name="Working With Objects&nbsp;"></a><h2>Working With Objects&nbsp;</h2>
+<p>ObjectContainer interface gives you all the basic functionality to work with persistent objects. Normally you can save a new or updated object of any class using <code>objectContainer.set(object)</code></p>
+<p>Deletion is done with the following method:</p>
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java: </p><p><code>container.delete(object)</code> </p>
+</span>
+
+
+<p>Through ObjectContainer#get and ObjectContainer#query you get access to objects retrieval functionality. </p><p>Object Container Features&nbsp;</p><p>The characteristic features of an ObjectContainer are: </p>
+<ul>
+<li>An ObjectContainer can either be a database in a single-user mode or a client connection to a db4o server.</li>
+<li>Every ObjectContainer owns one transaction. All work is transactional. When you open an ObjectContainer, you are in a transaction, when you commit() or rollback(), the next transaction is started immediately.</li>
+<li>Every ObjectContainer maintains it's own references to stored and instantiated objects. In doing so, it manages object identities, and is able to achieve a high level of performance.</li>
+<li>ObjectContainers are intended to be kept open as long as you work against them. When you close an ObjectContainer, all database references to objects in RAM will be discarded.</li>
+</ul>
+<p>Basically ObjectContainer supplies functionality, which is enough for the most common usage of db4o database.</p><a name="Extended Object Container Interface&nbsp;"></a><h2>Extended Object Container Interface&nbsp;</h2><p> Additional db4o features are provided by an interface extending ObjectContainer - ExtObjectContainer.</p>
+<p>The idea of splitting basic and advanced functionality between 2 interfaces is:</p>
+<ul>
+<li>Keep the root package/namespace very small and well readable.</li>
+<li>Separate vital and optional functionality.</li>
+<li>Make it easy for other products to implement the basic db4o interface.</li>
+<li>Show an example of how a lightweight version of db4o could look.</li>
+</ul>
+<p>Every ObjectContainer object is also an ExtObjectContainer. You can cast it to ExtObjectContainer or you can use #ext() method to get to the advanced features.
+</p></div>
+    </div>
+    <div id="footer">
+					This revision (10) was last Modified 2007-04-23T05:58:56 by Tetyana.
+				</div>
+  </body>
+</html>

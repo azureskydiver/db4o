@@ -1,0 +1,102 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Report Structure</title>
+    <link rel="stylesheet" type="text/css" href="../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Report Structure</h1><script>
+//We attach this function to a browser object as a variable so that if multiple of these blocks are
+//present on the same page, then they will simply over-write eachother with the same function instead
+//of generating a naming collision.
+window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
+	var sContent = document.getElementById(sID).innerText;
+	if( window.clipboardData && clipboardData.setData )
+	{
+		clipboardData.setData("Text", sContent);
+	}
+	else
+	{
+		alert("You must enable javascript access to your clipboard for this feature to work. Please referr to your browser documentation or Google search for instructions.");
+	}
+}
+</script>
+
+<p>Report design is defined in an xml file with a conventional
+extension *.jrxml. The xml structure is defined in a DTD file and can be
+downloaded from the <a href="http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">sourceforge</a>.</p>
+
+<p>A simplest table report definition can look like this:</p>
+
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">simple_report.xml</span></div><div class="fscCode"><pre ID="ResourcesReferenceImplementation_StrategiesReportingReporting_With_JasperReportsJasperJava.Zipsreportssimple_Report.Xml_Reportssimple_Report.Xml_320_54"><div><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+http://www.CodeHighlighter.com/
+
+--><span style="color: #008080;">01</span><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/><span style="color: #0000FF;">&lt;?</span><span style="color: #FF00FF;">xml version=&quot;1.0&quot;</span><span style="color: #0000FF;">?&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">02</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;!</span><span style="color: #FF00FF;">DOCTYPE jasperReport
+</span><span style="color: #008080;">03</span><span style="color: #FF00FF;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  PUBLIC &quot;-//JasperReports//DTD Report Design//EN&quot;
+</span><span style="color: #008080;">04</span><span style="color: #FF00FF;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  &quot;http://jasperreports.sourceforge.net/dtds/jasperreport.dtd&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">05</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>
+</span><span style="color: #008080;">06</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">jasperReport </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;Simple_Report&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">07</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">field </span><span style="color: #FF0000;">name</span><span style="color: #0000FF;">=&quot;Name&quot;</span><span style="color: #FF0000;"> class</span><span style="color: #0000FF;">=&quot;java.lang.String&quot;</span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">08</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">detail</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">09</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">band </span><span style="color: #FF0000;">height</span><span style="color: #0000FF;">=&quot;20&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">10</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>      </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">textField </span><span style="color: #FF0000;">bookmarkLevel</span><span style="color: #0000FF;">=&quot;2&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">11</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>        </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">reportElement </span><span style="color: #FF0000;">x</span><span style="color: #0000FF;">=&quot;0&quot;</span><span style="color: #FF0000;"> y</span><span style="color: #0000FF;">=&quot;0&quot;</span><span style="color: #FF0000;"> width</span><span style="color: #0000FF;">=&quot;100&quot;</span><span style="color: #FF0000;"> height</span><span style="color: #0000FF;">=&quot;15&quot;</span><span style="color: #0000FF;">/&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">12</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>        </span><span style="color: #0000FF;">&lt;</span><span style="color: #800000;">textFieldExpression </span><span style="color: #FF0000;">class</span><span style="color: #0000FF;">=&quot;java.lang.String&quot;</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">$F{Name}</span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">textFieldExpression</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">13</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>      </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">textField</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">14</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>    </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">band</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">15</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/>  </span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">detail</span><span style="color: #0000FF;">&gt;</span><span style="color: #000000;">
+</span><span style="color: #008080;">16</span><span style="color: #000000;"><img src="../../../../Utility/ActiPro.CodeHighligher/OutliningIndicators/None.gif" align="top"/></span><span style="color: #0000FF;">&lt;/</span><span style="color: #800000;">jasperReport</span><span style="color: #0000FF;">&gt;</span></div></pre></div></div>
+
+<p>For a simple example, we will use the following Jasper xml
+elements:</p>
+
+<p><b>parameter</b> - represents the definition of a report
+parameter. </p>
+
+<p>In jrxml file:</p>
+
+<p><code>&lt;parameter
+name="Title" class="java.lang.String"&gt;
+&lt;/parameter&gt;</code></p>
+
+<p>In *.java file:</p>
+
+<p><code>Map parameters = <b>new</b>
+HashMap();</code></p>
+
+<p><code>parameters.put("Title",
+"The Pilot Report");</code></p>
+
+<p>parameters map is
+further passed to the <a href="report_generation.html" class="wikiLink">report filling function</a>.</p>
+
+
+
+<p><b>field</b> - represents the definition of a data
+field that will store values retrieved from the data source of the report.</p>
+
+<p>In *.jrxml file:</p>
+
+<p><code>&lt;field
+name="Name" class="java.lang.String"/&gt;</code></p>
+
+<p>In *.java file fields are handled by classes implementing
+<a href="data_source.html" class="wikiLink">JRDataSource</a> interface.</p>
+
+
+
+For the full description of JasperReports xml elements
+please refer to the <a href="http://jasperforge.org/sf/sfmain/do/downloadAttachment/projects.jasperreports/wiki/HomePage?id=atch1532">Reference</a>.
+
+</div>
+    </div>
+    <div id="footer">
+					This revision (2) was last Modified 2007-04-27T16:37:49 by Tetyana.
+				</div>
+  </body>
+</html>

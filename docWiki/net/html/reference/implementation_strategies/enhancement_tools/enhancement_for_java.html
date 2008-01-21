@@ -1,0 +1,79 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Enhancement For Java</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Enhancement For Java</h1><p>db4o enhancement framework relies on the following jars:</p>
+
+<table border="1" cellpadding="0" cellspacing="0">
+ <tr>
+  <td valign="top">
+  <p>bloat-1.0 </p>
+  </td>
+  <td valign="top">
+  <p>Third-party bytecode instrumentation library</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>db4o-x.x-instrumentation</p>
+  </td>
+  <td valign="top">
+  <p>Instrumentation library on top of bloat</p>
+  </td>
+ </tr>
+ <tr>
+  <td valign="top">
+  <p>db4o-x.x-tools</p>
+  </td>
+  <td valign="top">
+  <p>Enhancement and other utilities</p>
+  </td>
+ </tr>
+</table>
+
+
+
+<p>In addition </p>
+
+<ul><li>for TA
+    /TP instrumentation enhancement db4o-x.x-taj.jar should be used (contains TA
+    /TP instrumentation classes);</li><li>for
+     NQ optimization db4o-x.x-nqopt.jar is used (provides instrumentation
+     functionality for NQ).</li></ul>
+
+
+
+<p>The basic steps required to enhance classes are:</p>
+
+<ol><li>Create
+     ClassFilter instance to select the classes for enhancement. ClassFilter is
+     an interface in db4oinstrumentation project and is implemented by several
+     classes, like AcceptAllClassesFilter, ByNameClassFilter and others (see
+     ClassFilter hierarchy for a list of all implementations).</li><li>Create
+     BloatClassEdit array of classes capable of editing class bytecode.
+     BloatClassEdit is an interface in db4oinstrumentation project. Among its
+     implementations are TranslateNQToSODAEdit (implements NQ optimization) and
+     InjectTransparentActivationEdit (injects TA/TP awareness). Filter can be used
+     in some of the edit classes (InjectTransparentActivationEdit).</li><li>For
+     load-time instrumentation the edit classes created above are passed to
+     Db4oInstrumentationLauncher together with the application entry point
+     class. Db4oInstrumentationLauncher is a public class in db4oinctrumentation project, which creates a special instrumenting classloader and uses it to
+     load the application's main class.</li><li>For
+     build time instrumentation Db4oFileEnhancerAntTask is used to create an
+     enhancer task in Ant, which must call the class edit classes inside.
+     Db4oFileEnhancerAntTask is a class extending Ant task in db4oinstrumentation project. It loads and instruments the classes using class edits supplied
+     as parameters to the enhancer task and copies the resulted classes to the
+     output directory. It can also work on Jars instead of classes.</li></ol><p>The examples below shows how enhancer works at load and
+build time:</p><ul><li><a href="../../object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_load_time.html" class="wikiLink">TA Enhancement at Loading Time</a></li><li><a href="../../object_lifecycle/activation/transparent_activation_framework/ta_enhanced_example/ta_enhancement_at_build_time.html" class="wikiLink">TA Enhancement at Build Time</a></li><li><a href="../../object_lifecycle/transparent_persistence/tp_enhanced_example/tp_enhancement_on_java.html" class="wikiLink">TP
+Enhancement at Build Time</a></li><li><a href="../../tuning/native_query_optimization/nq_optimization_at_load_time.html" class="wikiLink">NQ Enhancement at Loading Time</a></li><li><a href="../../tuning/native_query_optimization/nq_optimization_at_build_time.html" class="wikiLink">NQ Enhancement at Build Time</a></li><li><a href="enhancement_for_java/complex_example.html" class="wikiLink">Complex Example</a><br></li></ul></div>
+    </div>
+    <div id="footer">
+					This revision (9) was last Modified 2008-01-20T13:43:59 by Tetyana.
+				</div>
+  </body>
+</html>

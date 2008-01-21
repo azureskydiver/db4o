@@ -1,0 +1,64 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Two Freespace Systems</title>
+    <link rel="stylesheet" type="text/css" href="../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Two Freespace Systems</h1>
+
+<p>db4o comes with three freespace systems:</p><ul><li>RAM-based: the information about freespace is held in RAM;</li><li>b-Tree-based: the information about freespace is written to disk, b-Trees are used to manage this information;<br></li><li>index-based: similar to b-Trees, but existing index functionality to store freespace information. </li></ul><p>You can configure db4o to use either of these by calling</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java: <code>configuration.freespace().useRamSystem()</code> </p>
+</span>
+
+
+
+<p>or</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java: <code>configuration.freespace().useBTreeSystem() </code></p>
+</span>
+
+
+<p>or</p>
+
+<span name="cs_wiki_filter" csw_filters="java">
+<p>Java: <code>configuration.freespace().useIndexSystem() </code></p>
+</span>
+
+<p>
+This call should be made before you open the database for the first time</p>
+<p>By default db4o uses <b>RAM freespace management system</b>. The information about free slots is loaded into memory on opening a database file and discarded on closing it. This system is quite fast, but it has its downside:</p>
+<ol>
+<li>Higher RAM usage during operation.</li>
+<li>Loss of freespace upon abnormal termination. That is done for security reasons and freespace can be reclaimed using defragmentation.</li>
+</ol>
+<p>
+RAM-based freespace management is a good performance solution, but it can be insufficient for the systems with limited RAM resources and high probability of abnormal system termination (power failure on mobile devices).</p>
+<p>In order to meet the requirements of such environments you can use new <b>b-Tree-based freespace management system</b>. It solves the problems of RAM-based system:</p>
+<ol>
+<li>
+RAM usage is kept at the minimum.</li>
+<li>No freespace is lost on abnormal system termination (database file won't grow unnecessarily).</li>
+</ol>
+<p>
+How it works?:
+</p><ul>
+<li>The system uses b-Trees to keep information about available freespace</li>
+<li>b-Trees operate against the file, and only uses memory for caching</li><li>For every new write to the database file the system tries to find a freed slot, which is at least the size needed or greater, traversing freespace index</li>
+<li>When an object is updated or deleted, its 'old' slot is added to the freespace b-Tree entry<br></li>
+<li>This b-Tree system is ACID (no information is lost upon abnormal system termination)</li>
+
+</ul>
+<p>b-Tree-based freespace system can show poorer performance compared to RAM-based system, as it needs to access the file to write updated freespace information.<br> </p>
+<p>However, b-Tree-based freespace system is fast enough, especially for mobile devices, where file access is not much slower than RAM-access, and ACID transactions together with low memory consumption are most valuable factors.</p><p>Index-based freespace system has similar to b-Tree characteristics, but poorer performance and is used for legacy reasons.&nbsp;</p></div>
+    </div>
+    <div id="footer">
+					This revision (9) was last Modified 2007-10-21T18:34:18 by Tetyana.
+				</div>
+  </body>
+</html>

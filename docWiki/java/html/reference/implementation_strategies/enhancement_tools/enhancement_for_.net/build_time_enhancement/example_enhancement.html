@@ -1,0 +1,63 @@
+﻿<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Example Enhancement</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../style.css">
+  </head>
+  <body>
+    <div class="CommonContent">
+      <div class="CommonContentArea">
+        <h1>Example Enhancement</h1><p><font color="#990000">This topic applies to .NET version only</font>&nbsp;</p><p>If
+you've already set up the <a href="ta_and_nq_example_code.html" class="wikiLink">TA</a> or <a href="tp_example_code.html" class="wikiLink">TP</a> example project in the Visual
+Studio, you can try to compile and run it. In current state TA example
+produces diagnostic messages about classes that are not Activatable, and TP example does not really save any runtime modifications to SensorPanel objects. Let's fix
+this.</p>
+
+<p>First
+of all you will need to add a reference to Db4oTool.MSBuild.dll (from Db4oTool distro) to your project.
+Note, that this dll in its turn references Db4oTool.exe, Mono.Cecil.dll and
+Mono.GetOptions.dll, so you must keep them in the same directory.</p>
+
+<p>Open
+the project file (csproj for c# and vbproj for VB) in any text editor and add
+the following lines at the end of the file before the closing &lt;/Project&gt;
+tag:</p>
+
+<p><code>&nbsp; &lt;UsingTask
+AssemblyFile="$(OutputPath)Db4oTool.MSBuild.dll"</code></p>
+
+<p><code>&nbsp; TaskName="Db4oTool.MSBuild.Db4oEnhancerMSBuildTask"
+/&gt;</code></p>
+
+<p><code>&nbsp; &lt;ItemGroup&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp; &lt;Db4oEnhance
+Include="$(TargetPath)" /&gt;</code></p>
+
+<p><code>&nbsp; &lt;/ItemGroup&gt;</code></p>
+
+<p><code>&nbsp; &lt;Target
+Name="AfterBuild"&gt;</code></p>
+
+<p><code>&nbsp;&nbsp;&nbsp; &lt;Db4oEnhancerMSBuildTask
+Assemblies="@(Db4oEnhance)" /&gt;</code></p>
+
+<p><code>&nbsp; &lt;/Target&gt;</code></p>
+
+<p>Save
+the file and go back to VS (a note should appear asking to update the project
+file, you must agree to update).&nbsp; Now
+rebuild and run the application once again. In the build file we did not
+specify and filters, so all the application classes should be Activatable now
+and all diagnostic messages should be gone and the modifications should be saved in TP example.</p>
+
+<p>Note,
+that though the first example does not provide diagnostic information for Native
+Queries, &nbsp;NQ were also optimized by the
+updated build script.</p></div>
+    </div>
+    <div id="footer">
+					This revision (3) was last Modified 2008-01-21T06:17:58 by Tetyana.
+				</div>
+  </body>
+</html>
