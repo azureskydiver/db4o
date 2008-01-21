@@ -3,13 +3,14 @@
 package com.db4o.internal;
 
 import com.db4o.ext.*;
+import com.db4o.internal.fieldhandlers.*;
 import com.db4o.marshall.*;
 
 
 /**
  * @exclude
  */
-public interface TypeHandler4 extends Comparable4 {
+public interface TypeHandler4 extends Comparable4, FieldHandler {
 	
 	void delete(DeleteContext context) throws Db4oIOException;
 	

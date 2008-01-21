@@ -2,7 +2,6 @@
 
 package com.db4o.internal.fieldhandlers;
 
-import com.db4o.internal.TypeHandler4;
 
 
 /**

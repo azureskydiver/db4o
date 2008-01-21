@@ -210,12 +210,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if (oldObject == null) {
                 throw new IllegalArgumentException("id");
             }
-            ObjectReference yo = trans.referenceForId(intID);
-            if(yo == null){
+            ObjectReference ref = trans.referenceForId(intID);
+            if(ref == null){
                 throw new IllegalArgumentException("obj");
             }
-            if (trans.reflector().forObject(obj) == yo.classMetadata().classReflector()) {
-                ObjectReference newRef = bind2(trans, yo, obj);
+            if (trans.reflector().forObject(obj) == ref.classMetadata().classReflector()) {
+                ObjectReference newRef = bind2(trans, ref, obj);
                 newRef.virtualAttributes(trans);
             } else {
                 throw new RuntimeException(Messages.get(57));

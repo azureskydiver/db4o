@@ -21,10 +21,16 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 		Object onObject,
 		ActivationDepth depth) {
 	    
-		ClassMetadata classMetadata = container().classMetadataForObject(onObject);
-		if (classMetadata != null) {
-			classMetadata.cascadeActivation(trans, onObject, depth);
-		}
+	    TypeHandler4 typeHandler = null;
+	    if(FieldHandlerRefactoring.COMPLETED){
+	        typeHandler = container().typeHandlerForObject(onObject);
+	    }else{
+    		typeHandler = container().classMetadataForObject(onObject);
+	    }
+        if (typeHandler instanceof FirstClassHandler) {
+            ((FirstClassHandler)typeHandler).cascadeActivation(trans, onObject, depth);
+        }
+        
 	}
 
     private HandlerRegistry handlerRegistry() {
