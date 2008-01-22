@@ -145,7 +145,7 @@ public class JDK {
     	return false;
     }
 
-	long nanoTime() {
+	public long nanoTime() {
 		throw new NotImplementedException();
 	}
 	
