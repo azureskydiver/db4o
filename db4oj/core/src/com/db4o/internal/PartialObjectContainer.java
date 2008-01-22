@@ -947,10 +947,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if(hideClassForExternalUse(claxx)){
     		return null;
     	}
-//        ClassMetadata classMetadata = _handlers.classMetadataForClass(claxx);
-//        if (classMetadata != null) {
-//            return classMetadata;
-//        }
         return _classCollection.getActiveClassMetadata(claxx);
     }
     
