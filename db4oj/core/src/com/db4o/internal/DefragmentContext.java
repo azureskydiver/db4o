@@ -9,11 +9,13 @@ import com.db4o.marshall.*;
 
 public interface DefragmentContext extends Context, ReadBuffer {
 	
-	public ClassMetadata classMetadataForId(int id);
+	public TypeHandler4 typeHandlerForId(int id);
 
 	public int copyID();
 
 	public int copyIDReturnOriginalID();
+	
+	public int copySlotlessID();
 
 	public int copyUnindexedID();
 

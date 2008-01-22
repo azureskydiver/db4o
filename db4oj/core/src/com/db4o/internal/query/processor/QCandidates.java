@@ -123,9 +123,8 @@ public final class QCandidates implements Visitor4 {
         ObjectID objectID = ObjectID.NOT_POSSIBLE;
         try {
             int offset = context.offset();
-            if(handler instanceof ClassMetadata){
-                ClassMetadata classMetadata = (ClassMetadata) handler;
-                objectID = classMetadata.readObjectID(context);
+            if(handler instanceof ReadsObjectIds){
+                objectID = ((ReadsObjectIds)handler).readObjectID(context);
             }
             if(objectID.isValid()){
                 return new QCandidate(this, null, objectID._id, true);

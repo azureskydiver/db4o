@@ -25,7 +25,7 @@ import com.db4o.reflect.generic.*;
 /**
  * @exclude
  */
-public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler {
+public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler , ReadsObjectIds{
     
 	private TypeHandler4 _typeHandler;
     
@@ -1300,8 +1300,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     }
     
     public ObjectID readObjectID(InternalReadContext context){
-        int id = context.readInt();
-        return id == 0 ? ObjectID.IS_NULL : new ObjectID(id);
+        return ObjectID.read(context);
     }
     
     public void readCandidates(int handlerVersion, final BufferImpl buffer, final QCandidates candidates) {
