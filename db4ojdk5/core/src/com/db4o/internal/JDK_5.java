@@ -57,7 +57,7 @@ class JDK_5 extends JDK_1_4 {
 		return enumClass.isAssignableFrom(claxx);
 	}
 	
-	long nanoTime() {
+	public long nanoTime() {
 		return System.nanoTime();
 	}
 	
