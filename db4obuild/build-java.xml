@@ -987,17 +987,9 @@
 			</fileset>
 		</copy>
 	</target>
-	
-	<target name="prepare.reference.pdf" unless="no.ftp">
-		<ftp server="${ftp.server}"
-			userid="${ftp.user}"
-			password="${ftp.password}" 
-			remotedir="${ftp.reference.path}/${db4o.version.dotted}"
-			action="get">
-			<fileset dir="${dir.dist.java.build}/doc/reference">
-				<include name="db4o-reference-java.pdf" />
-			</fileset>
-		</ftp>
+
+	<target name="prepare.reference.pdf">
+		<ant antfile="build-pdf-documentation.xml" target="generate.pdf.java" />
 	</target>
 	
 	<target name="package.java" depends="init, build.db4ojava, build.db4ojava.tests, 

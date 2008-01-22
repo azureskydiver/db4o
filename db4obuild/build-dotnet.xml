@@ -410,18 +410,9 @@
 		
 	</target>
 	
-	<target name="prepare.reference.pdf" unless="no.ftp">
-		<ftp server="${ftp.server}"
-			userid="${ftp.user}"
-			password="${ftp.password}" 
-			remotedir="${ftp.reference.path}/${db4o.version.dotted}"
-			action="get">
-			<fileset dir="${dir.dist.net.build}/doc/reference">
-				<include name="db4o-reference-net.pdf" />
-			</fileset>
-		</ftp>
+	<target name="prepare.reference.pdf">
+		<ant antfile="build-pdf-documentation.xml" target="generate.pdf.net" />
 	</target>
-
 	
 	<target name="build-zip" depends="prepare-package-structure">
 	
