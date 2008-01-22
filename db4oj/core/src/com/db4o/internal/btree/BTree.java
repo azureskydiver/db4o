@@ -96,7 +96,7 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     	
     	PreparedComparison preparedComparison = keyHandler().prepareComparison(key);
     	
-        final Iterator4 pointers = search(trans, preparedComparison, key).pointers();
+        final Iterator4 pointers = search(trans, preparedComparison).pointers();
         if (!pointers.moveNext()) {
         	return;
         }
@@ -108,12 +108,10 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     
     public BTreeRange search(Transaction trans, Object key) {
     	keyCantBeNull(key);
-    	PreparedComparison preparedComparison = keyHandler().prepareComparison(key);
-        return search(trans, preparedComparison, key);
+    	return search(trans, keyHandler().prepareComparison(key));
     }
     
-    private BTreeRange search(Transaction trans, PreparedComparison preparedComparison, Object key) {
-    	keyCantBeNull(key);
+    private BTreeRange search(Transaction trans, PreparedComparison preparedComparison) {
     	ensureActive(trans);
         
         // TODO: Optimize the following.
@@ -121,8 +119,8 @@ public class BTree extends PersistentBase implements TransactionParticipant {
         //       As long as the bounds are on one node, the search
         //       should walk the nodes in one go.
         
-        BTreeNodeSearchResult start = searchLeaf(trans, key, SearchTarget.LOWEST);
-        BTreeNodeSearchResult end = searchLeaf(trans, key, SearchTarget.HIGHEST);
+        BTreeNodeSearchResult start = searchLeaf(trans, preparedComparison, SearchTarget.LOWEST);
+        BTreeNodeSearchResult end = searchLeaf(trans, preparedComparison, SearchTarget.HIGHEST);
         return start.createIncludingRange(end);
     }
     
@@ -137,8 +135,11 @@ public class BTree extends PersistentBase implements TransactionParticipant {
     }
 
 	public BTreeNodeSearchResult searchLeaf(Transaction trans, Object key, SearchTarget target) {
+	    return searchLeaf(trans, _keyHandler.prepareComparison(key), target);
+    }
+	
+	public BTreeNodeSearchResult searchLeaf(Transaction trans, PreparedComparison preparedComparison, SearchTarget target) {
         ensureActive(trans);
-        PreparedComparison preparedComparison = _keyHandler.prepareComparison(key);
         return _root.searchLeaf(trans, preparedComparison, target);
     }
     

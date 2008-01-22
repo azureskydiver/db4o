@@ -64,9 +64,8 @@ class Order implements Orderable {
 	    for (int i = 0; i < i_minors.size(); i++) {
 	        if (i_minors.get(i) == other.get(i)) {
 	            continue;
-	        } else {
-	            return (i_minors.get(i) - other.get(i));
-	        }
+	        } 
+	        return (i_minors.get(i) - other.get(i));
 	    }
 	    return result;
 	}

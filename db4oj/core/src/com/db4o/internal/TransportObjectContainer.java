@@ -166,9 +166,8 @@ public class TransportObjectContainer extends InMemoryObjectContainer {
     	int id = _parent.getID(null, obj);
     	if(id > 0){
     		return super.storeInternal(trans, new KnownObjectIdentity(id), depth, checkJustSet);
-    	}else{
-    		return super.storeInternal(trans, obj, depth, checkJustSet);
     	}
+    	return super.storeInternal(trans, obj, depth, checkJustSet);
     }
     
     public Object getByID2(Transaction ta, int id) {

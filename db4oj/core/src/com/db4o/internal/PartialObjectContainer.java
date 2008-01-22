@@ -214,7 +214,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             if(ref == null){
                 throw new IllegalArgumentException("obj");
             }
-            if (trans.reflector().forObject(obj) == ref.classMetadata().classReflector()) {
+            if (reflectorForObject(obj) == ref.classMetadata().classReflector()) {
                 ObjectReference newRef = bind2(trans, ref, obj);
                 newRef.virtualAttributes(trans);
             } else {
@@ -234,7 +234,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
 	public ClassMetadata classMetadataForObject(Object obj) {
-		return classMetadataForReflectClass(reflector().forObject(obj));
+		return classMetadataForReflectClass(reflectorForObject(obj));
 	}
     
     public abstract byte blockSize();
@@ -902,7 +902,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     public final TypeHandler4 typeHandlerForObject(Object obj){
-        return typeHandlerForReflectClass(reflector().forObject(obj));
+        return typeHandlerForReflectClass(reflectorForObject(obj));
     }
     
     public final TypeHandler4 typeHandlerForReflectClass(ReflectClass claxx){
@@ -913,7 +913,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (typeHandler != null) {
             return typeHandler;
         }
-        ClassMetadata classMetadata = _classCollection.classMetadataForReflectClass(claxx);
+        ClassMetadata classMetadata = _classCollection.produceClassMetadata(claxx);
         if(classMetadata == null){
             return null;
         }
@@ -934,7 +934,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
     
     /**
-     * Differentiating getActiveYapClass from getYapClass is a tuning 
+     * Differentiating getActiveClassMetadata from getYapClass is a tuning 
      * optimization: If we initialize a YapClass, #set3() has to check for
      * the possibility that class initialization associates the currently
      * stored object with a previously stored static object, causing the
@@ -947,10 +947,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     	if(hideClassForExternalUse(claxx)){
     		return null;
     	}
-        ClassMetadata yc = _handlers.classMetadataForClass(claxx);
-        if (yc != null) {
-            return yc;
-        }
+//        ClassMetadata classMetadata = _handlers.classMetadataForClass(claxx);
+//        if (classMetadata != null) {
+//            return classMetadata;
+//        }
         return _classCollection.getActiveClassMetadata(claxx);
     }
     
@@ -1157,6 +1157,13 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return classMetadataForId(id);
     }
     
+    public int fieldHandlerIdForFieldHandler(FieldHandler fieldHandler) {
+        if(fieldHandler instanceof ClassMetadata){
+            return ((ClassMetadata)fieldHandler).getID();
+        }
+        return _handlers.fieldHandlerIdForFieldHandler(fieldHandler);
+    }
+    
     public FieldHandler fieldHandlerForClass(ReflectClass claxx) {
         if(hideClassForExternalUse(claxx)){
             return null;
@@ -1168,19 +1175,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         return _classCollection.produceClassMetadata(claxx);
     }
     
-    /**
-     * TODO: Remove when FieldHandlerRefactoring.COMPLETED
-     */
-    public TypeHandler4 handlerByID(int id) {
-        if (id < 1) {
-            return null;
-        }
-        if (_handlers.isSystemHandler(id)) {
-            return _handlers.typeHandlerForID(id);
-        } 
-        return classMetadataForId(id);
-    }
-    
     public TypeHandler4 typeHandlerForId(int id) {
         if (id < 1) {
             return null;
@@ -1188,7 +1182,11 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         if (_handlers.isSystemHandler(id)) {
             return _handlers.typeHandlerForID(id);
         } 
-        return classMetadataForId(id).typeHandler();
+        ClassMetadata classMetadata = classMetadataForId(id);
+        if(classMetadata == null){
+            return null;
+        }
+        return classMetadata.typeHandler();
     }
 
     public Object lock() {
@@ -1725,7 +1723,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	flagAsHandled(ref);
             return new List4(still, new PendingActivation(ref, depth));
         } 
-        final ReflectClass clazz = reflector().forObject(obj);
+        final ReflectClass clazz = reflectorForObject(obj);
 		if (clazz.isArray()) {
 			if (!clazz.getComponentType().isPrimitive()) {
                 Iterator4 arr = ArrayHandler.iterator(clazz, obj);
@@ -2010,7 +2008,7 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	return;
         }
         cascadeDeleteDepth--;
-        ReflectClass claxx = reflector().forObject(obj);
+        ReflectClass claxx = reflectorForObject(obj);
 		if (claxx.isCollection()) {
             cascadeDeleteDepth += reflector().collectionUpdateDepth(claxx) - 1;
         }
@@ -2019,6 +2017,10 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         	return;
         }
         delete2(transaction, ref, obj,cascadeDeleteDepth, false);
+	}
+	
+	ReflectClass reflectorForObject(Object obj){
+	    return reflector().forObject(obj);
 	}
 
 }

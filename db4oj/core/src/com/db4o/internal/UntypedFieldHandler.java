@@ -8,6 +8,7 @@ import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
+import com.db4o.reflect.*;
 
 
 public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHandler, FieldHandler{
@@ -21,16 +22,10 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 		Object onObject,
 		ActivationDepth depth) {
 	    
-	    TypeHandler4 typeHandler = null;
-	    if(FieldHandlerRefactoring.COMPLETED){
-	        typeHandler = container().typeHandlerForObject(onObject);
-	    }else{
-    		typeHandler = container().classMetadataForObject(onObject);
-	    }
+	    TypeHandler4 typeHandler = typeHandlerForObject(onObject);
         if (typeHandler instanceof FirstClassHandler) {
             ((FirstClassHandler)typeHandler).cascadeActivation(trans, onObject, depth);
         }
-        
 	}
 
     private HandlerRegistry handlerRegistry() {
@@ -145,12 +140,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return null;
         }
         int savedOffSet = context.offset();
-        TypeHandler4 typeHandler = null;
-        if(FieldHandlerRefactoring.COMPLETED){
-            typeHandler = readTypeHandler(context, payloadOffset);
-        }else{
-            typeHandler = readClassMetadata(context, payloadOffset);
-        }
+        TypeHandler4 typeHandler = readTypeHandler(context, payloadOffset);
         if(typeHandler == null){
             context.seek(savedOffSet);
             return null;
@@ -167,13 +157,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
             return;
         }
         MarshallingContext marshallingContext = (MarshallingContext) context;
-        TypeHandler4 typeHandler = null;
-        if(FieldHandlerRefactoring.COMPLETED){
-            typeHandler = container().typeHandlerForObject(obj);
-        }else{
-            typeHandler = handlerRegistry().classMetadataForObject(obj);
-        }
-        
+        TypeHandler4 typeHandler = typeHandlerForObject(obj);
         if(typeHandler == null){
             context.writeInt(0);
             return;
@@ -192,6 +176,14 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         }
         typeHandler.write(context, obj);
         marshallingContext.restoreState(state);
+    }
+
+    private TypeHandler4 typeHandlerForObject(Object obj) {
+        ReflectClass claxx = reflector().forObject(obj);
+        if(claxx.isArray()){
+            return handlerRegistry().untypedArrayHandler(claxx);
+        }
+        return container().typeHandlerForObject(obj);
     }
 
 }

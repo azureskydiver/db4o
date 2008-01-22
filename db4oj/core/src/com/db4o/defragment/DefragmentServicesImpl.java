@@ -12,7 +12,6 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
-import com.db4o.internal.fieldhandlers.*;
 import com.db4o.internal.handlers.*;
 import com.db4o.internal.mapping.*;
 import com.db4o.internal.marshall.*;
@@ -179,11 +178,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	}
 	
 	public TypeHandler4 sourceHandler(int id) {
-	    if(FieldHandlerRefactoring.COMPLETED){
-	        return _sourceDb.typeHandlerForId(id);
-	    }else {
-	        return _sourceDb.handlerByID(id);
-	    }
+	    return _sourceDb.typeHandlerForId(id);
 	}
 	
 	public int sourceClassCollectionID() {
