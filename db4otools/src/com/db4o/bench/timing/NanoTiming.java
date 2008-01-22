@@ -8,7 +8,7 @@ import com.db4o.internal.*;
 public class NanoTiming {
 
 	public long nanoTime() {
-		return Platform4.nanoTime();
+		return Platform4.jdk().nanoTime();
 	}
 
 	public void waitNano(long nanos) {
