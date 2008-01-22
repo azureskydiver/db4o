@@ -202,21 +202,20 @@ public final class Platform4 {
         }
     }
 
-    static final void flattenCollection2(final ObjectContainerBase a_stream, Object a_object, final com.db4o.foundation.Collection4 col) {
-        Reflector reflector = a_stream.reflector();
-        if (reflector.forObject(a_object).isCollection()) {
-            forEachCollectionElement(a_object, new Visitor4() {
-                public void visit(Object obj) {
-                    flattenCollection1(a_stream, obj, col);
+    static final void flattenCollection2(final ObjectContainerBase container, Object obj, final Collection4 col) {
+        if (container.reflector().forObject(obj).isCollection()) {
+            forEachCollectionElement(obj, new Visitor4() {
+                public void visit(Object element) {
+                    flattenCollection1(container, element, col);
                 }
             });
         } else {
-            col.add(a_object);
+            col.add(obj);
         }
     }
 
-    static final void forEachCollectionElement(Object a_object, Visitor4 a_visitor) {
-        jdk().forEachCollectionElement(a_object, a_visitor);
+    static final void forEachCollectionElement(Object obj, Visitor4 visitor) {
+        jdk().forEachCollectionElement(obj, visitor);
     }
 
     public static final String format(Date date, boolean showTime) {

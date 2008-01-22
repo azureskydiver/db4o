@@ -1,7 +1,5 @@
 package com.db4o.internal.handlers;
 
-import sun.security.action.*;
-
 import com.db4o.ext.Db4oIOException;
 import com.db4o.foundation.NotImplementedException;
 import com.db4o.foundation.PreparedComparison;
