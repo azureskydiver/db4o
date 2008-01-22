@@ -670,8 +670,5 @@ public final class Platform4 {
 		return jdk().useNativeSerialization();
 	}
 	
-	public static long nanoTime() {
-		return jdk().nanoTime();
-	}
 	
 }
