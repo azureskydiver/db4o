@@ -37,7 +37,6 @@ public class AllTests extends Db4oTestSuite {
             LockedTreeTestCase.class,
             LongLinkedListTestCase.class,
             MultiDeleteTestCase.class,
-            NanoTimeTestCase.class,
             PlainObjectTestCase.class,
             PeekPersistedTestCase.class,
             PersistentIntegerArrayTestCase.class,
