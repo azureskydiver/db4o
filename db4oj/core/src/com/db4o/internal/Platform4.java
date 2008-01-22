@@ -239,14 +239,7 @@ public final class Platform4 {
     		config.reflectWith(jdk().createReflector(null));
     	}
     	
-        config.objectClass("java.lang.StringBuffer").compare(new ObjectAttribute() {
-            public Object attribute(Object original) {
-                if (original instanceof StringBuffer) {
-                    return ((StringBuffer) original).toString();
-                }
-                return original;
-            }
-        });
+        configStringBufferCompare(config);
         
         translate(config.objectClass("java.lang.Class"), "TClass");
         translateCollection(config, "Hashtable", "THashtable", true);
@@ -287,6 +280,20 @@ public final class Platform4 {
         activationDepth(config, "P2HashMap", 2);
         activationDepth(config, "P1HashElement", 1);
     }
+
+    /**
+     * @deprecated uses deprecated API
+     */
+	private static void configStringBufferCompare(Config4Impl config) {
+		config.objectClass("java.lang.StringBuffer").compare(new ObjectAttribute() {
+            public Object attribute(Object original) {
+                if (original instanceof StringBuffer) {
+                    return ((StringBuffer) original).toString();
+                }
+                return original;
+            }
+        });
+	}
 
 	private static void activationDepth(Config4Impl config, String className, int depth) {
 		final ObjectClass classConfig = db4oClassConfig(config, className);
