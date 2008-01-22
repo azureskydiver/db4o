@@ -50,7 +50,4 @@ public class UntypedMarshaller0 extends UntypedMarshaller {
         return null;
     }
 
-	public void defrag(DefragmentContext context) {
-		throw new NotImplementedException();
-	}
 }

@@ -34,21 +34,4 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
         return ret;
     }
     
-	public void defrag(DefragmentContext context) {
-        int payLoadOffSet = context.readInt();
-        if(payLoadOffSet == 0){
-            return;
-        }
-        int linkOffSet = context.offset();
-        context.seek(payLoadOffSet);
-        
-        int classMetadataID = context.copyIDReturnOriginalID();
-        
-        ClassMetadata classMetadata = context.classMetadataForId(classMetadataID);
-        if(classMetadata != null){
-            classMetadata.defragment(context);
-        }
-        
-        context.seek(linkOffSet);
-	}
 }

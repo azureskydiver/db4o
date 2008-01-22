@@ -58,9 +58,9 @@ public class UntypedFieldHandler0 extends UntypedFieldHandler {
 			DefragmentContextImpl payloadContext = new DefragmentContextImpl(sourceBuffer, (DefragmentContextImpl) context);
 
 			int clazzId = payloadContext.copyIDReturnOriginalID();
-			ClassMetadata payloadClazz = payloadContext.classMetadataForId(clazzId);
-			TypeHandler4 payloadHandler = payloadContext.correctHandlerVersion(payloadClazz);
-			payloadHandler.defragment(payloadContext);
+			TypeHandler4 payloadHandler = payloadContext.typeHandlerForId(clazzId);
+			TypeHandler4 versionedPayloadHandler = payloadContext.correctHandlerVersion(payloadHandler);
+			versionedPayloadHandler.defragment(payloadContext);
 			
 			payloadContext.writeToTarget(targetPayloadSlot.address());
 			return targetPointerSlot.address();

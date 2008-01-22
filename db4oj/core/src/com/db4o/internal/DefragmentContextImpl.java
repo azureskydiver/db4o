@@ -47,19 +47,29 @@ public final class DefragmentContextImpl implements Buffer, DefragmentContext {
 	public void incrementIntSize() {
 		incrementOffset(Const4.INT_LENGTH);
 	}
+	
+	public int copySlotlessID() {
+	    return copyUnindexedId(false);
+	}
 
 	public int copyUnindexedID() {
-		int orig=_source.readInt();
-		int mapped=-1;
-		try {
-			mapped=_services.mappedID(orig);
-		} catch (MappingNotFoundException exc) {
-			mapped=_services.allocateTargetSlot(Const4.POINTER_LENGTH).address();
-			_services.mapIDs(orig,mapped, false);
-			_services.registerUnindexed(orig);
-		}
-		_target.writeInt(mapped);
-		return mapped;
+	    return copyUnindexedId(true);
+	}
+	
+	private int copyUnindexedId(boolean doRegister){
+        int orig=_source.readInt();
+        int mapped=-1;
+        try {
+            mapped=_services.mappedID(orig);
+        } catch (MappingNotFoundException exc) {
+            mapped=_services.allocateTargetSlot(Const4.POINTER_LENGTH).address();
+            _services.mapIDs(orig,mapped, false);
+            if(doRegister){
+                _services.registerUnindexed(orig);
+            }
+        }
+        _target.writeInt(mapped);
+        return mapped;
 	}
 
 	public int copyID() {
@@ -238,8 +248,8 @@ public final class DefragmentContextImpl implements Buffer, DefragmentContext {
 	    return transaction().container();
 	}
 
-	public ClassMetadata classMetadataForId(int id) {
-		return container().classMetadataForId(id);
+	public TypeHandler4 typeHandlerForId(int id) {
+		return container().typeHandlerForId(id);
 	}
 	
 	private int handlerVersion(){

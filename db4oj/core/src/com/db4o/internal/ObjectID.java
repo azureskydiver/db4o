@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.marshall.*;
+
 
 /**
  * @exclude
@@ -22,6 +24,11 @@ public class ObjectID {
     
     public boolean isValid(){
         return _id > 0;
+    }
+
+    public static ObjectID read(InternalReadContext context) {
+        int id = context.readInt();
+        return id == 0 ? ObjectID.IS_NULL : new ObjectID(id);
     }
 
 }

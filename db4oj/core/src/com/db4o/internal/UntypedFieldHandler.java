@@ -44,10 +44,10 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         int linkOffset = context.offset();
         context.seek(payLoadOffset);
         int classMetadataID = context.readInt();
-        ClassMetadata classMetadata = 
-        	((ObjectContainerBase)context.objectContainer()).classMetadataForId(classMetadataID);
-        if(classMetadata != null){
-            classMetadata.delete(context);
+        TypeHandler4 typeHandler = 
+        	((ObjectContainerBase)context.objectContainer()).typeHandlerForId(classMetadataID);
+        if(typeHandler != null){
+            typeHandler.delete(context);
         }
         context.seek(linkOffset);
 	}
@@ -81,12 +81,15 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         if(payloadOffset == 0){
             return ObjectID.IS_NULL;
         }
-        ClassMetadata classMetadata = readClassMetadata(context, payloadOffset);
-        if(classMetadata == null){
+        TypeHandler4 typeHandler = readTypeHandler(context, payloadOffset);
+        if(typeHandler == null){
             return ObjectID.IS_NULL;
         }
-        seekSecondaryOffset(context, classMetadata);
-        return classMetadata.readObjectID(context);
+        seekSecondaryOffset(context, typeHandler);
+        if(typeHandler instanceof ReadsObjectIds){
+            return ((ReadsObjectIds)typeHandler).readObjectID(context);
+        }
+        return ObjectID.NOT_POSSIBLE;
     }
     
     public void defragment(DefragmentContext context) {
@@ -97,12 +100,12 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         int linkOffSet = context.offset();
         context.seek(payLoadOffSet);
         
-        int classMetadataID = context.copyIDReturnOriginalID();
-		ClassMetadata classMetadata = context.classMetadataForId(classMetadataID);
-		if(classMetadata != null){
-		    classMetadata.defragment(context);
+        int typeHandlerId = context.copyIDReturnOriginalID();
+		TypeHandler4 typeHandler = context.typeHandlerForId(typeHandlerId);
+		if(typeHandler != null){
+		    // TODO: correct handler version here.
+		    typeHandler.defragment(context);
 		}
-        
         context.seek(linkOffSet);
     }
 
@@ -114,15 +117,10 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         return handler instanceof ArrayHandler;
     }
 
-    private ClassMetadata readClassMetadata(InternalReadContext context, int payloadOffset) {
-        context.seek(payloadOffset);
-        ClassMetadata classMetadata = container().classMetadataForId(context.readInt());
-        return classMetadata;
-    }
-    
     private TypeHandler4 readTypeHandler(InternalReadContext context, int payloadOffset) {
         context.seek(payloadOffset);
         TypeHandler4 typeHandler = container().typeHandlerForId(context.readInt());
+        // TODO: Correct handler version here?
         return typeHandler;
     }
 

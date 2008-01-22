@@ -4,17 +4,18 @@ import com.db4o.ext.Db4oIOException;
 import com.db4o.foundation.NotImplementedException;
 import com.db4o.foundation.PreparedComparison;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 
-public class PlainObjectHandler implements TypeHandler4{
+public class PlainObjectHandler implements TypeHandler4, ReadsObjectIds{
 
     public void defragment(DefragmentContext context) {
-        throw new NotImplementedException();
+        context.copySlotlessID();
     }
 
     public void delete(DeleteContext context) throws Db4oIOException {
-        throw new NotImplementedException();
+        // do nothing
     }
 
     public Object read(ReadContext context) {
@@ -52,6 +53,10 @@ public class PlainObjectHandler implements TypeHandler4{
 
     public PreparedComparison prepareComparison(Object obj) {
         throw new NotImplementedException();
+    }
+
+    public ObjectID readObjectID(InternalReadContext context) {
+        return ObjectID.read(context);
     }
 
 }
