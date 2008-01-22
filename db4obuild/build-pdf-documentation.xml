@@ -4,8 +4,7 @@
 	<import file="common.xml" />
 	
 	<target name="init">
-		<property name="dir.build.dist" value="dist" />
-		<property name="dir.docWiki" value="C:/db4o_workspace/docWiki" />
+		<property name="dir.docWiki" value="${dir.workspace}/docWiki" />
 		<property name="dir.pdf.titles" value="${dir.docWiki}/pdf-title"/>
 
 		<property name="dir.reference.java" value="${dir.docWiki}/java" />
@@ -13,17 +12,13 @@
 		<property name="file.content.xml" value="content.xml" />
 		<property name="file.list" value="htmlFileList.txt" />
 		
-		<property name="reference.type.java" value="java" />
-		<property name="reference.type.net" value="net" />
 		<property name="pdf.filename.java" value="db4o-reference-java.pdf"/>
 		<property name="pdf.filename.net" value="db4o-reference-net.pdf"/>
 		<property name="pdf.title.page.java" value="db4o-reference-title-java.pdf"/>
 		<property name="pdf.title.page.net" value="db4o-reference-title-net.pdf"/>
 
 		<property name="lib" value="lib" />
-		<property name="bin" value="bin" />
-		<property name="src" value="src/com/db4o/devtools/pdfdoc" />
-		<property name="scripts" value="scripts" />
+		<property name="scripts" value="${dir.build}/scripts" />
 		
 		<property name="tidy.error.file" value="tidy.error" />
 	</target>
@@ -68,7 +63,7 @@
        	
 	    	<java classname="com.db4o.devtools.pdfdoc.HtmlFileListing" failonerror="true" fork="true">
 	    		<classpath>
-	    			<pathelement location="bin" />
+	    			<pathelement location="${dir.build}/bin" />
 	    		</classpath>
 	    		<arg line="-ref @{dir.reference}/html/" />
 	    		<arg line="-conv @{working.dir}" />
