@@ -5,15 +5,17 @@ package com.db4o.bench.timing;
 import com.db4o.internal.*;
 
 
-public class NanoTiming {
+public final class NanoTiming {
+    
+    private final JDK jdk = Platform4.jdk();
 
-	public long nanoTime() {
-		return Platform4.jdk().nanoTime();
+	public final long nanoTime() {
+        return jdk.nanoTime();
 	}
 
-	public void waitNano(long nanos) {
-		long target = nanoTime() + nanos;
-	    while (nanoTime() <= target) {
+	public final void waitNano(final long nanos) {
+		final long target = jdk.nanoTime() + nanos;
+	    while (jdk.nanoTime() <= target) {
 	    }
 	}
 	
