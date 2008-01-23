@@ -2,23 +2,38 @@
 
 package com.db4o.db4ounit.jre11.assorted;
 
-import db4ounit.*;
-import db4ounit.extensions.*;
-
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
 
+import db4ounit.*;
 
-public class NanoTimeTestCase extends AbstractDb4oTestCase {
 
-	public void testNanoTimeAvailable() {
+public class NanoTimeTestCase implements TestCase {
+
+	public void testCorrectExceptionThrownOnJdkLowerThan5() {
+		if (jdkVer() >= 5) {
+			return;
+		}
+		Assert.expect(NotImplementedException.class, new CodeBlock() {
+			public void run() {
+				Platform4.jdk().nanoTime();
+			}
+		});
+	}
+	
+	public void testNanoTimeAvailableOnJdk5Plus() {
+		if (jdkVer() < 5) {
+			return;
+		}
 		try {
 			Platform4.jdk().nanoTime();
-		} catch (NotImplementedException nie) {			
-			return;
 		} catch (Exception e) {
-			Assert.fail("Wrong exception type", e);
+			Assert.fail("nanoTime should be available on JDK 5 and higher.", e);
 		}
+	}
+	
+	private int jdkVer() {
+		return Platform4.jdk().ver();
 	}
 	
 }
