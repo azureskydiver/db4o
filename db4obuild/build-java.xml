@@ -690,7 +690,7 @@
 			jvm="${file.jvm.cdc_fp}" 
 			jvmargs="${java.vmargs}"
 			failonerror="true" 
-			timeout="1800000">
+			timeout="3600000">
 			<!-- TODO extract reference to build classpath in common.xml -->
 			<classpath>
 				<dirset dir="${dir.build.bin}"/>
