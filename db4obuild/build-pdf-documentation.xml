@@ -49,7 +49,6 @@
     	<attribute name="pdf.title.page"/>
         <sequential>
  	
-			<delete dir="@{working.dir}" />
 			<mkdir dir="@{working.dir}" />
        	
         	<java fork="true" 
