@@ -2,6 +2,7 @@
 
 package com.db4o.db4ounit.common.foundation;
 
+
 import db4ounit.ReflectionTestSuiteBuilder;
 import db4ounit.TestRunner;
 import db4ounit.TestSuite;
