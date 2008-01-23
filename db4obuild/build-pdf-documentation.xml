@@ -72,7 +72,7 @@
 	    	</java>
         	        	
 	    	<exec executable="cscript.exe" failonerror="true" >
-	    		<arg line="${dir.build}/${scripts}/AcrobatAutomation.vbs" />
+	    		<arg line="${scripts}/AcrobatAutomation.vbs" />
 	    		<arg line='"@{pdf.title.page}"' />
 	    		<arg line='"@{pdf.filename}"' />
 	    		<arg line='"@{working.dir}/${file.list}"' />
