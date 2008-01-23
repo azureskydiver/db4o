@@ -110,7 +110,7 @@ public class IoBenchmark {
 	}
 	
 	
-	private IoAdapter delayingIoAdapter(String dbFileName) throws NumberFormatException, IOException {
+	private IoAdapter delayingIoAdapter(String dbFileName) throws NumberFormatException{
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
 		IoAdapter delFactory = new DelayingIoAdapter(rafFactory, _delays);
 		return delFactory.open(dbFileName, false, 0, false);
@@ -125,17 +125,19 @@ public class IoBenchmark {
 		if (calculation.isValidData()) {
 			_delays = calculation.calculatedDelays();
 			if ( _delays.units == Delays.UNITS_MILLISECONDS ) {
-				System.out.println("> Delaying with Thread.sleep().");
+				System.out.println("> Adjusting delay timer for Thread.sleep().");
 			}
 			else if ( _delays.units == Delays.UNITS_NANOSECONDS ) {
-				System.out.println("> Delaying with busy waiting.");
-				System.out.println("> Adjusting delays ...");
+                System.out.println("> Adjusting delay timer for busy waiting.");
+                System.out.println("> Required delays:");
+				System.out.println(_delays);
 				try {
 					_delays = calculation.adjustNanoDelays(_delays);
 				} catch (InvalidDelayException ide) {
 					exitWithError(ide.getMessage());
 				}
 			}
+			System.out.println("> Adjusted delays:");
 			System.out.println("> " + _delays);
 		}
 		else {
