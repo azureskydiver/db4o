@@ -99,46 +99,51 @@ public class DelayCalculation {
 		long adjustedDelay = delay;
 		int adjustmentRuns = 1;
 		long targetRuntime = ADJUSTMENT_ITERATIONS*delay;
-		long minimumDelay = minimumDelay();
-		
-		warmUpIterations(delay, timing);	
-		
-		do {
-			watch.start();
-			for (int i = 0; i < ADJUSTMENT_ITERATIONS; i++) {
-				timing.waitNano(adjustedDelay);
-			}
-			watch.stop();
-			
-			difference = targetRuntime - watch.elapsed();
-			differencePerIteration = difference/ADJUSTMENT_ITERATIONS;
-			
-			if (-differencePerIteration > adjustedDelay) {
-//				System.out.println(">> Too large: adjustedDelay = " + adjustedDelay + " | differencePerIteration = " + differencePerIteration);
-				adjustedDelay /= 2;				
-			}
-			else {
-				/**
-				 * TODO: Which version to use ???
-				 * adjustedDelay += differencePerIteration
-				 * adjustedDelay = delay + differencePerIteration; 
-				 */
-				adjustedDelay += differencePerIteration;
-				
-				oldAverage = average;
-				if (adjustmentRuns == 1) {
-					average = adjustedDelay;
-				}
-				else {
-					average = ((average*(adjustmentRuns-1)) / adjustmentRuns) + (adjustedDelay / adjustmentRuns);
-				}
-//				System.out.println(">> Run: " + adjustmentRuns + " | Average: " + average);
-				adjustmentRuns++;
-			}
-		} while ((adjustedDelay > 0) && ((adjustmentRuns <= 2) || (adjustmentRuns > 2 && Math.abs(average - oldAverage) > 0.01*delay)));
-		if (average < minimumDelay) {
-			throw new InvalidDelayException("Delay is smaller than the smallest achievable delay on this machine!");
-		}
+        long minimumDelay = minimumDelay();
+        warmUpIterations(delay, timing);	
+        
+        do {
+        	watch.start();
+        	for (int i = 0; i < ADJUSTMENT_ITERATIONS; i++) {
+        		timing.waitNano(adjustedDelay);
+        	}
+        	watch.stop();
+        	
+        	difference = targetRuntime - watch.elapsed();
+        	differencePerIteration = difference/ADJUSTMENT_ITERATIONS;
+        	if (-differencePerIteration > adjustedDelay) {
+        		adjustedDelay /= 2;				
+        	} else {
+        		/**
+        		 * TODO: Which version to use ???
+        		 * adjustedDelay += differencePerIteration
+        		 * adjustedDelay = delay + differencePerIteration; 
+        		 */
+        		adjustedDelay += differencePerIteration;
+        		
+        		oldAverage = average;
+        		if (adjustmentRuns == 1) {
+        			average = adjustedDelay;
+        		}
+        		else {
+        			average = ((average*(adjustmentRuns-1)) / adjustmentRuns) + (adjustedDelay / adjustmentRuns);
+        		}
+        		adjustmentRuns++;
+        	}
+        	if(adjustedDelay <= 0){
+        	    break;
+        	}
+        	if( (Math.abs(average - oldAverage) < (0.01*delay)) && adjustmentRuns > 100){
+        	    break;
+        	}
+        } while (true);
+        if (average < minimumDelay) {
+            System.err.println("Smallest achievable delay: " + minimumDelay);
+            System.err.println("Required delay setting: " + average);
+            System.err.println("Using delay(0) to wait as short as possible.");
+            System.err.println("Results will not be accurate.");
+            return 0;
+        }
 		return average;
 	}
 
