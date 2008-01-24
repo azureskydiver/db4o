@@ -167,6 +167,11 @@ public final class Assert {
         fail(failureMessage(new Long(expected), new Long(actual), "smaller than ", null));
     }
 
+    public static void isSmallerOrEqual(long expected, long actual) {
+        if (actual <= expected) return;
+        fail(expected, actual, "smaller than or equal to ");
+    }
+    
 	private static void fail(long expected, long actual, final String operator) {
 		fail(failureMessage(new Long(expected), new Long(actual), operator, null));
 	}
