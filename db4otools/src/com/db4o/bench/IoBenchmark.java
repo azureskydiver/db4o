@@ -9,9 +9,17 @@ import com.db4o.bench.crud.*;
 import com.db4o.bench.delaying.*;
 import com.db4o.bench.logging.*;
 import com.db4o.bench.logging.replay.*;
+import com.db4o.bench.util.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.io.*;
+
+
+/** 
+ * IoBenchmark is a benchmark that measures I/O performance as seen by db4o.
+ * The benchmark can also run in delayed mode which allows simulating the I/O behaviour of a slower machine
+ * on a faster one.
+ */
 
 public class IoBenchmark {
 	
@@ -20,65 +28,63 @@ public class IoBenchmark {
 
 	private static final String _singleLine = "-------------------------------------------------------------";
 	
+	private static final String _dbFileName = "IoBenchmark.db4o";
+	
 	private Delays _delays = null;
 	
 	
 	public static void main(String[] args) throws IOException {
-		if (args.length != 2 && args.length != 4) {
-			System.out.println("Usage: IoBenchmark <object-count> <db-file-name> [<results-file-1> <results-file-2>]");
-			System.exit(1);
-		}		
+		IoBenchmarkArgumentParser argumentParser = new IoBenchmarkArgumentParser(args);		
 		printBenchmarkHeader();
 		IoBenchmark ioBenchmark = new IoBenchmark();
-		if (args.length == 2 || (args[2] == "" && args[3] == "")) {
-			ioBenchmark.run(Integer.parseInt(args[0]), args[1]);
+		if (argumentParser.delayed()) {
+			ioBenchmark.processResultsFiles(argumentParser.resultsFile1(), argumentParser.resultsFile2());
 		}
-		else {
-			ioBenchmark.runDelayed(Integer.parseInt(args[0]), args[1], args[2], args[3]);
-		}	
+		ioBenchmark.run(argumentParser);
 	}
 
 	
-	private void run(int itemCount, String dbFileName) throws IOException {
-		runTargetApplication(itemCount);
-		prepareDbFile(itemCount, dbFileName);
-		runBenchmark(itemCount, dbFileName);
+	private void run(IoBenchmarkArgumentParser argumentParser) throws IOException {
+		runTargetApplication(argumentParser.objectCount());
+		prepareDbFile(argumentParser.objectCount());
+		runBenchmark(argumentParser.objectCount());
 	}
 
-	
-	private void runDelayed(int itemCount, String dbFileName, String resultsFile1, String resultsFile2) throws IOException {
-		processResultsFiles(resultsFile1, resultsFile2);
-		run(itemCount, dbFileName);
-	}
 
 	
 	private void runTargetApplication(int itemCount) {
-		System.out.println("Running target application ...");
+		sysout("Running target application ...");
 		new CrudApplication().run(itemCount);
 	}
-	
 
-	private void prepareDbFile(int itemCount, String dbFileName) throws IOException {
-		System.out.println("Preparing DB file ...");
-		removeDbFile(dbFileName);
+
+	private void prepareDbFile(int itemCount) {
+		sysout("Preparing DB file ...");
+		deleteFile(_dbFileName);
 		IoAdapter rafFactory = new RandomAccessFileAdapter();
-		IoAdapter raf = rafFactory.open(dbFileName, false, 0, false);
+		IoAdapter raf = rafFactory.open(_dbFileName, false, 0, false);
 		LogReplayer replayer = new LogReplayer(CrudApplication.logFileName(itemCount), raf);
-		replayer.replayLog();		
-		raf.close();
+		try {
+			replayer.replayLog();
+		} catch (IOException e) {
+			exitWithError("Error reading I/O operations log file");
+		} finally {
+			raf.close();
+		}
 	}
 
 
-	private void runBenchmark(int itemCount, String dbFileName) throws IOException {
-		System.out.println("Running benchmark ...");
-		removeExistingLog(itemCount);
-		PrintStream out = new PrintStream(new FileOutputStream(logFileName(itemCount), true));
+	private void runBenchmark(int itemCount) throws IOException {
+		sysout("Running benchmark ...");
+		deleteBenchmarkResultsFile(itemCount);
+		PrintStream out = new PrintStream(new FileOutputStream(resultsFileName(itemCount), true));
 		printRunHeader(itemCount, out);
 		for (int i = 0; i < LogConstants.ALL_ENTRIES.length; i++) {
 			String currentCommand = LogConstants.ALL_ENTRIES[i];
-			benchmarkCommand(currentCommand, itemCount, dbFileName, out);	
+			benchmarkCommand(currentCommand, itemCount, _dbFileName, out);	
 		}
-		removeDbFile(dbFileName);
+		deleteFile(_dbFileName);
+		deleteCrudLogFile(itemCount);
 	}
 
 		
@@ -117,41 +123,38 @@ public class IoBenchmark {
 	}
 
 
-	private void processResultsFiles(String resultsFile1, String resultsFile2) throws NumberFormatException, IOException {
-		System.out.println("Delaying:");
-		System.out.print("> ");
-		DelayCalculation calculation = new DelayCalculation(resultsFile1, resultsFile2);
-		calculation.validateData();
-		if (calculation.isValidData()) {
+	private void processResultsFiles(String resultsFile1, String resultsFile2) throws NumberFormatException {
+		sysout("Delaying:");
+		try {
+			DelayCalculation calculation = new DelayCalculation(resultsFile1, resultsFile2);
+			calculation.validateData();
+			if (!calculation.isValidData()) {
+				exitWithError("> Result files are invalid for delaying!");
+			}
 			_delays = calculation.calculatedDelays();
-			if ( _delays.units == Delays.UNITS_MILLISECONDS ) {
-				System.out.println("> Adjusting delay timer for Thread.sleep().");
+			sysout("> Required delays:");
+			sysout("> " + _delays);
+            sysout("> Adjusting delay timer to match required delays...");
+			try {
+				calculation.adjustDelays(_delays);
+			} catch (InvalidDelayException ide) {
+				exitWithError(ide.getMessage());
 			}
-			else if ( _delays.units == Delays.UNITS_NANOSECONDS ) {
-                System.out.println("> Adjusting delay timer for busy waiting.");
-                System.out.println("> Required delays:");
-				System.out.println(_delays);
-				try {
-					_delays = calculation.adjustNanoDelays(_delays);
-				} catch (InvalidDelayException ide) {
-					exitWithError(ide.getMessage());
-				}
-			}
-			System.out.println("> Adjusted delays:");
-			System.out.println("> " + _delays);
-		}
-		else {
-			exitWithError("> Result files are invalid for delaying!\n> Aborting execution!");
+			sysout("> Adjusted delays:");
+			sysout("> " + _delays);
+		} catch (IOException e) {
+			exitWithError("> Could not open results file(s)!\n" +
+						"> Please check the file name settings in IoBenchmark.properties.");
 		}
 	}
 
 
 	private void exitWithError(String error) {
-		System.err.println(error);
+		System.err.println(error + "\n Aborting execution!");
 		System.exit(1);
 	}
 	
-	private String logFileName(int itemCount){
+	private String resultsFileName(int itemCount){
 		String fileName =  "db4o-IoBenchmark-results-" + itemCount;
 		if (delayed()) {
 			fileName += "-delayed";
@@ -170,24 +173,28 @@ public class IoBenchmark {
 		return commands;
 	}
 	
-	private void removeExistingLog(int itemCount) {
-		new File(logFileName(itemCount)).delete();
+	private void deleteBenchmarkResultsFile(int itemCount) {
+		deleteFile(resultsFileName(itemCount));
 	}
 	
-	private void removeDbFile(String dbFileName) {
-		new File(dbFileName).delete();
+	private void deleteCrudLogFile(int itemCount) {
+		deleteFile(CrudApplication.logFileName(itemCount));
+	}
+
+	private void deleteFile(String fileName) {
+		new File(fileName).delete();
 	}
 	
 	private static void printBenchmarkHeader() {
 		printDoubleLine();
-		System.out.println("Running db4o IoBenchmark");
+		sysout("Running db4o IoBenchmark");
 		printDoubleLine();
 	}
 	
 	private void printRunHeader(int itemCount, PrintStream out) {
 		output(out, _singleLine);
 		output(out, "db4o IoBenchmark results with " + itemCount + " items");
-		System.out.println("Statistics written to " + logFileName(itemCount));
+		sysout("Statistics written to " + resultsFileName(itemCount));
 		output(out, _singleLine);
 		output(out, "");
 	}
@@ -202,19 +209,23 @@ public class IoBenchmark {
 						"> time elapsed: " + timeElapsed + " ms\r\n" + 
 						"> operations per millisecond: " + opsPerMs + "\r\n" +
 						"> average duration per operation: " + avgTimePerOp + " ms\r\n" +
-						currentCommand + (avgTimePerOp*nanosPerMilli) + " ns\r\n";
+						currentCommand + (int)(avgTimePerOp*nanosPerMilli) + " ns\r\n";
 		
 		output(out, output);
+		sysout(" ");
 	}
 
 	private void output(PrintStream out, String text) {
 		out.println(text);
-		System.out.println(text);
+		sysout(text);
 	}
 	
 	
 	private static void printDoubleLine() {
-		System.out.println(_doubleLine);
+		sysout(_doubleLine);
 	}
 	
+	private static void sysout(String text) {
+		System.out.println(text);
+	}
 }
