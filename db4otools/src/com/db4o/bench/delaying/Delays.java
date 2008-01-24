@@ -5,27 +5,25 @@ package com.db4o.bench.delaying;
 
 public class Delays {
 
-	public long readDelay;
-	public long writeDelay;
-	public long seekDelay;
-	public long syncDelay;
+	public static final int READ = 0;
+	public static final int WRITE = 1;
+	public static final int SEEK = 2;
+	public static final int SYNC = 3;
 	
-	public String units;
+	public static final int COUNT = 4;
+
+	public static final String units = "nanoseconds";
+
+	public long[] values;
+
 	
-	public static final String UNITS_MILLISECONDS = "milliseconds";
-	public static final String UNITS_NANOSECONDS = "nanoseconds";
-	
-	public Delays(long read, long write, long seek, long sync, String timeUnits) {
-		readDelay = read;
-		writeDelay = write;
-		seekDelay = seek;
-		syncDelay = sync;
-		units = timeUnits;
+	public Delays(long read, long write, long seek, long sync) {
+		values = new long[] {read, write, seek, sync};
 	}
 	
 	public String toString() {
-		return "[delays in " + units + "] read: " + readDelay + " | write: " + writeDelay +
-				" | seek: " + seekDelay + " | sync: " + syncDelay;
+		return "[delays in " + units + "] read: " + values[READ] + " | write: " + values[WRITE] +
+				" | seek: " + values[SEEK] + " | sync: " + values[SYNC];
 	}
 	
 }

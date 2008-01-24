@@ -61,7 +61,6 @@
 				</classpath>
 				<jvmarg line="${jvm.args}"/>
 				<arg line="@{object.count}" />
-				<arg line="${db.file.name}" />
 				<arg line="@{file.1}" />
 				<arg line="@{file.2}" />
 			</java>

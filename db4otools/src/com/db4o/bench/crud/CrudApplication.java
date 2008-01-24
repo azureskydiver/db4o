@@ -65,8 +65,8 @@ public class CrudApplication {
 		ObjectSet objectSet = allItems(oc);
 		while(objectSet.hasNext()){
 			oc.delete(objectSet.next());
-			// adding commit results in more syncs in the log, which is necessary for
-			// meaningful statistics!
+			// adding commit results in more syncs in the log, 
+			// which is necessary for meaningful statistics!
 			oc.commit();	 
 		}
 		oc.close();

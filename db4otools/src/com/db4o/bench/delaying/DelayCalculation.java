@@ -23,28 +23,15 @@ public class DelayCalculation {
 	}
 	
 	public void validateData() {
-		if (
-				(_machine1.writeTime() <= _machine2.writeTime()) &&
-				(_machine1.readTime()  <= _machine2.readTime() ) &&
-				(_machine1.seekTime()  <= _machine2.seekTime() ) &&
-				(_machine1.syncTime()  <= _machine2.syncTime() )
-			) 
-		{
+		if (_machine1.isFasterThan(_machine2)) {
 			_fasterMachine = _machine1;
 			_slowerMachine = _machine2;
 			System.out.println("machine1 ("+ _machine1.logFileName() +") is faster!");
 		}
-			
-		else if (
-				(_machine1.writeTime() >= _machine2.writeTime()) &&
-				(_machine1.readTime()  >= _machine2.readTime() ) &&
-				(_machine1.seekTime()  >= _machine2.seekTime() ) &&
-				(_machine1.syncTime()  >= _machine2.syncTime() )
-			)
-		{
+		else if (_machine2.isFasterThan(_machine1)) {
 			_fasterMachine = _machine2;
 			_slowerMachine = _machine1;
-			System.out.println("machine2 ("+ _machine2.logFileName() +") is faster!");
+			System.out.println("> machine2 ("+ _machine2.logFileName() +") is faster!");
 		}
 	}
 	
@@ -54,48 +41,25 @@ public class DelayCalculation {
 	
 
 	public Delays calculatedDelays() {
-		long writeDelay, readDelay, seekDelay, syncDelay;
-		String units = null;
-		
-		double writeDifference = _slowerMachine.writeTime() - _fasterMachine.writeTime();
-		double readDifference  = _slowerMachine.readTime()  - _fasterMachine.readTime();
-		double seekDifference  = _slowerMachine.seekTime()  - _fasterMachine.seekTime();
-		double snycDifference  = _slowerMachine.syncTime()  - _fasterMachine.syncTime();
-		
-		long nanosPerMilli = (long)Math.pow(10, 6);
-		if ( (writeDifference < nanosPerMilli) || (readDifference < nanosPerMilli) || (seekDifference < nanosPerMilli) || (snycDifference < nanosPerMilli) ) {
-			writeDelay = (long)writeDifference;
-			readDelay  = (long)readDifference;
-			seekDelay  = (long)seekDifference;
-			syncDelay  = (long)snycDifference;
-			units = Delays.UNITS_NANOSECONDS;
-		}
-		else {	
-			writeDelay = (long)writeDifference / nanosPerMilli;
-			readDelay  = (long)readDifference / nanosPerMilli;
-			seekDelay  = (long)seekDifference / nanosPerMilli;
-			syncDelay  = (long)snycDifference / nanosPerMilli;
-			units = Delays.UNITS_MILLISECONDS;
-		}
-		
-		Delays delays = new Delays(readDelay, writeDelay, seekDelay, syncDelay, units);
-		return delays;
+		long[] tempDelays = new long[Delays.COUNT];
+		for (int i = 0; i < Delays.COUNT; i++) {
+			tempDelays[i] = _slowerMachine.times.values[i] - _fasterMachine.times.values[i];
+		}	
+		return new Delays(tempDelays[Delays.READ], tempDelays[Delays.WRITE], tempDelays[Delays.SEEK], tempDelays[Delays.SYNC]);
 	}
 	
-	public Delays adjustNanoDelays(Delays delays) throws InvalidDelayException {
-		long readDelay = adjustNanoDelay(delays.readDelay);
-		long writeDelay = adjustNanoDelay(delays.writeDelay);
-		long seekDelay = adjustNanoDelay(delays.seekDelay);
-		long syncDelay = adjustNanoDelay(delays.syncDelay);
-		return new Delays(readDelay, writeDelay, seekDelay, syncDelay, delays.units);
+	public void adjustDelays(Delays delays) throws InvalidDelayException {
+		for(int i = 0; i < Delays.COUNT; i++) {
+			adjustDelay(delays, i);
+		}
 	}
 	
-
-	private long adjustNanoDelay(long delay) throws InvalidDelayException {
+	private void adjustDelay(Delays delays, int index) throws InvalidDelayException {
 		NanoStopWatch watch = new NanoStopWatch();
 		NanoTiming timing = new NanoTiming();
 		long difference, differencePerIteration;
 		long average = 0, oldAverage = 0;
+		long delay = delays.values[index];
 		long adjustedDelay = delay;
 		int adjustmentRuns = 1;
 		long targetRuntime = ADJUSTMENT_ITERATIONS*delay;
@@ -113,14 +77,9 @@ public class DelayCalculation {
         	differencePerIteration = difference/ADJUSTMENT_ITERATIONS;
         	if (-differencePerIteration > adjustedDelay) {
         		adjustedDelay /= 2;				
-        	} else {
-        		/**
-        		 * TODO: Which version to use ???
-        		 * adjustedDelay += differencePerIteration
-        		 * adjustedDelay = delay + differencePerIteration; 
-        		 */
+        	} 
+        	else {
         		adjustedDelay += differencePerIteration;
-        		
         		oldAverage = average;
         		if (adjustmentRuns == 1) {
         			average = adjustedDelay;
@@ -133,18 +92,18 @@ public class DelayCalculation {
         	if(adjustedDelay <= 0){
         	    break;
         	}
-        	if( (Math.abs(average - oldAverage) < (0.01*delay)) && adjustmentRuns > 100){
+        	if( (Math.abs(average - oldAverage) < (0.01*delay)) && adjustmentRuns > 10){
         	    break;
         	}
         } while (true);
         if (average < minimumDelay) {
-            System.err.println("Smallest achievable delay: " + minimumDelay);
-            System.err.println("Required delay setting: " + average);
-            System.err.println("Using delay(0) to wait as short as possible.");
-            System.err.println("Results will not be accurate.");
-            return 0;
+            System.err.println(">> Smallest achievable delay: " + minimumDelay);
+            System.err.println(">> Required delay setting: " + average);
+            System.err.println(">> Using delay(0) to wait as short as possible.");
+            System.err.println(">> Results will not be accurate.");
+            average = 0;
         }
-		return average;
+        delays.values[index] = average;
 	}
 
 	private void warmUpIterations(long delay, NanoTiming timing) {
@@ -169,10 +128,7 @@ public class DelayCalculation {
 class MachineCharacteristics {
 
 	private String _logFileName;
-	private double _writeTime;
-	private double _readTime;
-	private double _syncTime;
-	private double _seekTime;
+	public Delays times;
 
 	public MachineCharacteristics(String logFileName) throws NumberFormatException, IOException {
 		_logFileName = logFileName;
@@ -181,47 +137,47 @@ class MachineCharacteristics {
 
 	private void parseLog() throws NumberFormatException, IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(_logFileName));
+		long readTime = 0, writeTime = 0, seekTime = 0, syncTime = 0;
 		String line = null;
 		while ( (line = reader.readLine()) != null ) {
 			if (line.startsWith(LogConstants.READ_ENTRY)) {
-				_readTime = Double.parseDouble(extractNumber(line));
+				readTime = extractNumber(line);
 			}
 			else if (line.startsWith(LogConstants.WRITE_ENTRY)) {
-				_writeTime = Double.parseDouble(extractNumber(line));
+				writeTime = extractNumber(line);
 			}
 			else if (line.startsWith(LogConstants.SEEK_ENTRY)) {
-				_seekTime = Double.parseDouble(extractNumber(line));
+				seekTime = extractNumber(line);
 			}
 			else if (line.startsWith(LogConstants.SYNC_ENTRY)) {
-				_syncTime = Double.parseDouble(extractNumber(line));
+				syncTime = extractNumber(line);
 			}
 		}
 		reader.close();
+		times = new Delays(readTime, writeTime, seekTime, syncTime);
 	}
 
-	private String extractNumber(String line) {
-		int start = line.indexOf(' ');
-		int end = line.indexOf(' ', start+1);
+	private long extractNumber(String line) {
+		return Long.parseLong(extractNumberString(line));
+	}
+	
+	private String extractNumberString(String line) {
+		int start = line.indexOf(' ') + 1;
+		int end = line.indexOf(' ', start);
 		return line.substring(start, end);
+	}
+	
+	public boolean isFasterThan(MachineCharacteristics otherMachine) {
+		boolean result = true;
+		for (int i = 0; i < Delays.COUNT; i++) {
+			result = result && (times.values[i] <= otherMachine.times.values[i]);
+		}
+		return result;
 	}
 	
 	public String logFileName() {
 		return _logFileName;
 	}
 	
-	public double writeTime() {
-		return _writeTime;
-	}
-	
-	public double readTime() {
-		return _readTime;
-	}
-	
-	public double seekTime() {
-		return _seekTime;
-	}
-	
-	public double syncTime() {
-		return _syncTime;
-	}
+
 }

@@ -45,9 +45,9 @@ public class LoggingIoAdapter extends VanillaIoAdapter {
 	}
 	
 	public void close() throws Db4oIOException {
-		super.close();
 		_out.flush();
 		_out.close();
+		super.close();
 	}
 
     public int read(byte[] bytes, int length) throws Db4oIOException {

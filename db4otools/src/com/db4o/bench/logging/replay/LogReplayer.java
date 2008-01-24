@@ -86,18 +86,18 @@ public class LogReplayer {
 	
 	private IoCommand commandForLine(String line) {
 		if (line.startsWith(LogConstants.READ_ENTRY)) {
-			int length = (int) parameter(LogConstants.READ_ENTRY,  line);
+			int length = parameter(LogConstants.READ_ENTRY,  line);
 			return new ReadCommand(length);
 		}
 		if ( line.startsWith(LogConstants.WRITE_ENTRY) ) {
-			int length = (int) parameter(LogConstants.WRITE_ENTRY,  line);
+			int length = parameter(LogConstants.WRITE_ENTRY,  line);
 			return new WriteCommand(length);
 		}
 		if ( line.startsWith(LogConstants.SYNC_ENTRY) ) {
 			return new SyncCommand();
 		}
 		if ( line.startsWith(LogConstants.SEEK_ENTRY) ) {
-			int address = (int) parameter(LogConstants.READ_ENTRY,  line);
+			int address = parameter(LogConstants.READ_ENTRY,  line);
 			return new SeekCommand(address);
 		}
 		
@@ -105,12 +105,12 @@ public class LogReplayer {
 	}
 
 	
-	private long parameter(String command, String line){
+	private int parameter(String command, String line){
 		return parameter(command.length(),  line);
 	}
 
-	private long parameter(int start, String line) {
-		return Long.parseLong(line.substring(start));
+	private int parameter(int start, String line) {
+		return Integer.parseInt(line.substring(start));
 	}
 	
 	private void incrementCount(String key) {

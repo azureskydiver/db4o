@@ -4,13 +4,12 @@ package com.db4o.bench.delaying;
 
 import com.db4o.bench.timing.*;
 import com.db4o.ext.*;
-import com.db4o.foundation.*;
 import com.db4o.io.*;
 
 
 public class DelayingIoAdapter extends VanillaIoAdapter {
 
-	private static Delays _delays = new Delays(0,0,0,0, Delays.UNITS_MILLISECONDS);
+	private static Delays _delays = new Delays(0,0,0,0);
 	
 	private NanoTiming _timing;
 	
@@ -37,31 +36,27 @@ public class DelayingIoAdapter extends VanillaIoAdapter {
 	}
 
 	public int read(byte[] bytes, int length) throws Db4oIOException {
-		delay(_delays.readDelay);
+		delay(_delays.values[Delays.READ]);
 		return _delegate.read(bytes, length);
     }
 
     public void seek(long pos) throws Db4oIOException {
-    	delay(_delays.seekDelay);
+    	delay(_delays.values[Delays.SEEK]);
         _delegate.seek(pos);
     }
 
     public void sync() throws Db4oIOException {
-		delay(_delays.syncDelay);
+		delay(_delays.values[Delays.SYNC]);
     	_delegate.sync();
     }
 
     public void write(byte[] buffer, int length) throws Db4oIOException {
-		delay(_delays.writeDelay);
+		delay(_delays.values[Delays.WRITE]);
     	_delegate.write(buffer, length);
     }
 	
     private void delay(long time) {
-    	if (_delays.units == Delays.UNITS_MILLISECONDS) {
-    		Cool.sleepIgnoringInterruption(time);
-    	}
-    	else if (_delays.units == Delays.UNITS_NANOSECONDS) {
-    		_timing.waitNano(time);
-    	}
+    	_timing.waitNano(time);
     }
+    
 }
