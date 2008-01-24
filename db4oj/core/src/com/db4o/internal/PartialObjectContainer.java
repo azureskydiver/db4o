@@ -1070,6 +1070,9 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
     }
 
     void initializeEssentialClasses(){
+        if(Debug.staticIdentity){
+            return;
+        }
         for (int i = 0; i < Const4.ESSENTIAL_CLASSES.length; i++) {
             produceClassMetadata(reflector().forClass(Const4.ESSENTIAL_CLASSES[i]));    
         }

@@ -22,7 +22,7 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
         
     }
     
-    protected int _handlerVersion;
+    private int _handlerVersion;
     
     protected String fileNamePrefix() {
         return "migrate_" + typeName() + "_" ;
@@ -75,7 +75,7 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
      * @sharpen.remove
      */
     private void castToIntArrayJavaOnly(ObjectByRef byRef) {
-        if(_db4oHeaderVersion != VersionServices.HEADER_30_40){
+        if(db4oHeaderVersion() != VersionServices.HEADER_30_40){
             return;
         }
             
@@ -100,6 +100,10 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
      */
     protected void assertPrimitiveWrapperIsNullJavaOnly(Object obj) {
         Assert.isNull(obj);
+    }
+
+    protected int db4oHandlerVersion() {
+        return _handlerVersion;
     }
 
 }

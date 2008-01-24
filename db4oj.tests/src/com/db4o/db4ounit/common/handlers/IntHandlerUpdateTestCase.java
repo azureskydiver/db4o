@@ -184,7 +184,7 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private void assertAreEqual(int expected, int actual){
-        if(expected == Integer.MAX_VALUE  && _handlerVersion == 0){
+        if(expected == Integer.MAX_VALUE  && db4oHandlerVersion() == 0){
             // Bug in the oldest format: It treats Integer.MAX_VALUE as null. 
             expected = 0;
         }
@@ -192,7 +192,7 @@ public class IntHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private void assertAreEqual(Object expected, Object actual){
-        if(new Integer(Integer.MAX_VALUE).equals(expected) && _handlerVersion == 0){
+        if(new Integer(Integer.MAX_VALUE).equals(expected) && db4oHandlerVersion() == 0){
             // Bug in the oldest format: It treats Integer.MAX_VALUE as null.
             expected = null;
         }

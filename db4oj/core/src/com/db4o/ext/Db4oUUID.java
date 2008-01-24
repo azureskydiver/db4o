@@ -80,15 +80,10 @@ public class Db4oUUID {
 	}
 
 	public String toString() {
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
-        
         String sig = "";
         for (int i = 0; i < signaturePart.length; i++) {
             sig += signaturePart[i] + " ";
         }
-        
 		return "long " + longPart + " ,  signature " + sig;
 	}
 

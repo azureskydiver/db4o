@@ -131,9 +131,6 @@ public class QConJoin extends QCon {
 	}
 	
 	public String toString(){
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
 		String str = "QConJoin " + (i_and ? "AND ": "OR");
 		if(i_constraint1 != null){
 			str += "\n   " + i_constraint1;  

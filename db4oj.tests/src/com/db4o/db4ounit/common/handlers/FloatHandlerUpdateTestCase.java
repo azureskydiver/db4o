@@ -51,7 +51,7 @@ public class FloatHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         ItemArrays itemArrays = (ItemArrays)obj;
         
         assertPrimitiveArray(itemArrays._typedPrimitiveArray);
-        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
+        if(db4oHeaderVersion() == VersionServices.HEADER_30_40){
          // Bug in the oldest format: It accidentally float[] arrays to Float[] arrays.
             assertWrapperArray((Float[])itemArrays._primitiveArrayInObject);
         } else {
@@ -98,7 +98,7 @@ public class FloatHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
 
     private void assertAreEqual(float expected, float actual) {
-        if (Float.isNaN(expected) && _handlerVersion == 0) {
+        if (Float.isNaN(expected) && db4oHandlerVersion() == 0) {
             expected = 0;
         }
         if (Float.isNaN(expected) && Float.isNaN(actual)) {
@@ -108,7 +108,7 @@ public class FloatHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
 
     private void assertAreEqual(Object expected, Object actual) {
-        if (((Float)expected).isNaN() && _handlerVersion == 0) {
+        if (((Float)expected).isNaN() && db4oHandlerVersion() == 0) {
             expected = null;
         }
         Assert.areEqual(expected, actual);

@@ -48,7 +48,7 @@ public class ShortHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         ItemArrays itemArrays = (ItemArrays)obj;
         
         assertPrimitiveArray(itemArrays._typedPrimitiveArray);
-        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
+        if(db4oHeaderVersion() == VersionServices.HEADER_30_40){
          // Bug in the oldest format: It accidentally short[] arrays to Short[] arrays.
             assertWrapperArray((Short[])itemArrays._primitiveArrayInObject);
         } else {
@@ -95,7 +95,7 @@ public class ShortHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
 
     private void assertAreEqual(short expected, short actual) {
-        if(expected == Short.MAX_VALUE  && _handlerVersion == 0){
+        if(expected == Short.MAX_VALUE  && db4oHandlerVersion() == 0){
          // Bug in the oldest format: It treats Short.MAX_VALUE as null.
             expected = 0;
         }
@@ -103,7 +103,7 @@ public class ShortHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
 
     private void assertAreEqual(Object expected, Object actual) {
-        if(new Short(Short.MAX_VALUE).equals(expected) && _handlerVersion == 0){
+        if(new Short(Short.MAX_VALUE).equals(expected) && db4oHandlerVersion() == 0){
             // Bug in the oldest format: It treats Short.MAX_VALUE as null.
             expected = null;
         }

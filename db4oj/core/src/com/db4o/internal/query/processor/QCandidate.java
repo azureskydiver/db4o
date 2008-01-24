@@ -571,9 +571,6 @@ public class QCandidate extends TreeInt implements Candidate, Orderable {
 	}
 
 	public String toString() {
-		if (!Debug4.prettyToStrings) {
-			return super.toString();
-		}
 		String str = "QCandidate ";
 		if (_yapClass != null) {
 			str += "\n   YapClass " + _yapClass.getName();

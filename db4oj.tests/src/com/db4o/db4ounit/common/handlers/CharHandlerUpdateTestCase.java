@@ -161,7 +161,7 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
      * @sharpen.remove
      */
     private void assertCharWrapperIsNullJavaOnly(Object obj){
-        if(_handlerVersion == 0){
+        if(db4oHandlerVersion() == 0){
             
             // Bug when reading old format:
             // Null wrappers are converted to Character.MAX_VALUE
@@ -182,7 +182,7 @@ public class CharHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
      * @sharpen.remove
      */
     private void castToCharArrayJavaOnly(ObjectByRef byRef) {
-        if(_db4oHeaderVersion != VersionServices.HEADER_30_40){
+        if(db4oHeaderVersion() != VersionServices.HEADER_30_40){
             return;
         }
             

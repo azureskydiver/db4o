@@ -98,9 +98,6 @@ import com.db4o.internal.slots.*;
     }
     
     public String toString(){
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
         return _clazz + " index";  
     }
 }

@@ -265,7 +265,7 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
     
     final int readElementsAndClass(Transaction trans, ReadBuffer buffer, ReflectClassByRef clazz){
         int elements = buffer.readInt();
-        if (elements < 0) {
+        if (newerArrayFormat(elements)) {
             clazz.value = reflectClassFromElementsEntry(trans, elements);
             elements = buffer.readInt();
         } else {
@@ -275,6 +275,10 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
             return 0;
         }
         return elements;
+    }
+
+    private boolean newerArrayFormat(int elements) {
+        return elements < 0;
     }
 
    final protected int mapElementsEntry(DefragmentContext context, int orig) {

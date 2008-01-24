@@ -185,7 +185,7 @@ public class MultiDimensionalArrayHandlerUpdateTestCase extends HandlerUpdateTes
      * @sharpen.remove
      */
     protected void correctIntArray2DJavaOnly(ObjectByRef byRef){
-        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
+        if(db4oHeaderVersion() == VersionServices.HEADER_30_40){
             
             // Bug in the oldest format: 
             // It accidentally converted int[][] arrays to Integer[][] arrays.

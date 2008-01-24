@@ -3,6 +3,7 @@
 package com.db4o.internal.marshall;
 
 import com.db4o.*;
+import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.slots.*;
 
@@ -151,8 +152,16 @@ public abstract class ObjectMarshaller {
 	public abstract void skipMarshallerInfo(BufferImpl reader);
 
     public final void instantiateFields(final UnmarshallingContext context) {
+        
+        final BooleanByRef updateFieldFound = new BooleanByRef();
+        
+        int savedOffset = context.offset();
+        
         TraverseFieldCommand command = new TraverseFieldCommand() {
             public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                if(field.updating()){
+                    updateFieldFound.value = true;
+                }
                 if (isNull) {
                     field.set(context.persistentObject(), null);
                     return;
@@ -169,6 +178,17 @@ public abstract class ObjectMarshaller {
             }
         };
         traverseFields(context, command);
+        
+        if(updateFieldFound.value){
+            context.seek(savedOffset);
+            command = new TraverseFieldCommand() {
+                public void processField(FieldMetadata field, boolean isNull, ClassMetadata containingClass) {
+                    field.attemptUpdate(context);
+                }
+            };
+            traverseFields(context, command);
+        }
+        
     }
     
     public void marshall(final Object obj, final MarshallingContext context) {

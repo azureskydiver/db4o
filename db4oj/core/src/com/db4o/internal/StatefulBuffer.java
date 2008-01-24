@@ -309,9 +309,6 @@ public final class StatefulBuffer extends BufferImpl {
     }
     
     public String toString(){
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
         return "id " + i_id + " adr " + i_address + " len " + i_length;
     }
     

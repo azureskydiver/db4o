@@ -516,9 +516,6 @@ public final class ClassMetadataRepository extends PersistentBase {
     }
 
 	public String toString(){
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
 		String str = "Active:\n";
 		Iterator4 i = _classes.iterator();
 		while(i.moveNext()){

@@ -108,9 +108,6 @@ public class QConClass extends QConObject{
     }
 	
 	public String toString(){
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
 		String str = "QConClass ";
 		if(_claxx != null){
 			str += _claxx.toString() + " ";

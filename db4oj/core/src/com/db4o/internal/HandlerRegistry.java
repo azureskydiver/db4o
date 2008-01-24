@@ -36,6 +36,8 @@ public final class HandlerRegistry {
     private ClassMetadata                _untypedArrayHandler;
     
     private ClassMetadata                _untypedMultiDimensionalArrayHandler;
+    
+    private FieldHandler _untypedFieldHandler;
 
     public StringHandler          _stringHandler;
     
@@ -52,14 +54,13 @@ public final class HandlerRegistry {
 
     static private final int        PRIMITIVECOUNT  = 8;
 
-    public static final int         ANY_ID        = 11;
-    
     private final VirtualFieldMetadata[]         _virtualFields = new VirtualFieldMetadata[2]; 
 
     private final Hashtable4        _mapReflectorToFieldHandler  = newHashtable();
     
     private final Hashtable4        _mapReflectorToTypeHandler  = newHashtable();
     
+    // see comment in classReflectorForHandler
     private final Hashtable4        _mapFieldHandlerToReflector  = newHashtable();
     
     private SharedIndexedFields              		_indexes;
@@ -114,6 +115,8 @@ public final class HandlerRegistry {
         registerPlatformTypes();
         
         initArrayHandlers();
+        
+        Platform4.registerPlatformHandlers(container);
     }
 
     private void initArrayHandlers() {
@@ -200,10 +203,10 @@ public final class HandlerRegistry {
 
     private void registerUntypedHandlers() {
         int id = Handlers4.UNTYPED_ID;
-        UntypedFieldHandler untypedFieldHandler = new UntypedFieldHandler(container());
-        PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), untypedFieldHandler, id, ICLASS_OBJECT);
-        map(id, classMetadata, untypedFieldHandler, new PlainObjectHandler(), ICLASS_OBJECT);
-        registerHandlerVersion(untypedFieldHandler, 0, new UntypedFieldHandler0(container()));
+        _untypedFieldHandler = new UntypedFieldHandler(container());
+        PrimitiveFieldHandler classMetadata = new PrimitiveFieldHandler(container(), (TypeHandler4)_untypedFieldHandler, id, ICLASS_OBJECT);
+        map(id, classMetadata, _untypedFieldHandler, new PlainObjectHandler(), ICLASS_OBJECT);
+        registerHandlerVersion(_untypedFieldHandler, 0, new UntypedFieldHandler0(container()));
     }
     
     private void registerBuiltinHandler(int id, BuiltinTypeHandler handler) {
@@ -259,7 +262,7 @@ public final class HandlerRegistry {
     
     private void mapPrimitive(int id, ClassMetadata classMetadata, FieldHandler fieldHandler, TypeHandler4 typeHandler, ReflectClass classReflector) {
         _mapFieldHandlerToReflector.put(fieldHandler, classReflector);
-        _mapReflectorToFieldHandler.put(classReflector, fieldHandler);
+        mapFieldHandler(classReflector, fieldHandler);
         _mapReflectorToTypeHandler.put(classReflector, typeHandler);
         if(classReflector != null){
             _mapReflectorToClassMetadata.put(classReflector, classMetadata);
@@ -271,7 +274,11 @@ public final class HandlerRegistry {
         }
     }
 
-	private void registerHandlerVersion(TypeHandler4 handler, int version, TypeHandler4 replacement) {
+    public void mapFieldHandler(ReflectClass classReflector, FieldHandler fieldHandler) {
+        _mapReflectorToFieldHandler.put(classReflector, fieldHandler);
+    }
+
+	private void registerHandlerVersion(FieldHandler handler, int version, TypeHandler4 replacement) {
 	    _handlerVersions.put(new HandlerVersionKey(handler, version), replacement);
     }
 
@@ -519,6 +526,11 @@ public final class HandlerRegistry {
         if (clazz == null) {
             return null;
         }
+        
+        if(clazz.isInterface()){
+           return untypedFieldHandler();
+        }
+        
         if (clazz.isArray()) {
             if (reflector().array().isNDimensional(clazz)) {
                 return _untypedMultiDimensionalArrayHandler;
@@ -539,6 +551,10 @@ public final class HandlerRegistry {
         return (ClassMetadata) _mapReflectorToClassMetadata.get(clazz);
     }
     
+    public FieldHandler untypedFieldHandler(){
+        return _untypedFieldHandler;
+    }
+    
     public TypeHandler4 untypedArrayHandler(ReflectClass clazz){
         if (clazz.isArray()) {
             if (reflector().array().isNDimensional(clazz)) {
@@ -557,6 +573,16 @@ public final class HandlerRegistry {
     }
     
     public ReflectClass classReflectorForHandler(TypeHandler4 handler){
+        
+        // This method never gets called from test cases so far.
+        
+        // It is written for the usecase of custom Typehandlers and
+        // it is only require for arrays.
+        
+        // The methodology is highly problematic since it implies that 
+        // one Typehandler can only be used for one ReflectClass.
+        
+        
         return (ReflectClass) _mapFieldHandlerToReflector.get(handler);
     }
     

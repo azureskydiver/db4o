@@ -41,7 +41,7 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 
         assertPrimitiveArray(itemArrays._typedPrimitiveArray);
 
-        if (_db4oHeaderVersion == VersionServices.HEADER_30_40) {
+        if (db4oHeaderVersion() == VersionServices.HEADER_30_40) {
             // Bug in the oldest format: It accidentally byte[] arrays to Byte[]
             // arrays.
             assertWrapperArray((Byte[]) itemArrays._primitiveArrayInObject);
@@ -160,7 +160,7 @@ public class ByteHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
      * @sharpen.remove
      */
     private void assertByteWrapperIsNullJavaOnly(Object obj){
-        if(_handlerVersion == 0){
+        if(db4oHandlerVersion() == 0){
             
             // Bug when reading old format:
             // Null wrappers are converted to 0

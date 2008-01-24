@@ -72,4 +72,8 @@ public class JdkField implements ReflectField {
 	public ReflectClass indexType() {
 		return getFieldType();
 	}
+	
+	public String toString() {
+	    return "JDKField " + getFieldType().getName() + ":" + getName();
+	}
 }
