@@ -2,7 +2,6 @@
 
 package com.db4o;
 
-import com.db4o.foundation.*;
 import com.db4o.internal.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
@@ -10,7 +9,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public abstract class Debug extends Debug4 {
+public abstract class Debug {
     
     /**
      * indexes all fields

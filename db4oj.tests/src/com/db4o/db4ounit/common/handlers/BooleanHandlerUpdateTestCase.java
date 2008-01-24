@@ -38,7 +38,7 @@ public class BooleanHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         ItemArrays itemArrays = (ItemArrays) obj;
 
         assertPrimitiveArray(itemArrays._typedPrimitiveArray);
-        if (_db4oHeaderVersion == VersionServices.HEADER_30_40) {
+        if (db4oHeaderVersion() == VersionServices.HEADER_30_40) {
             // Bug in the oldest format: It accidentally boolean[] arrays to
             // Boolean[] arrays.
             assertWrapperArray((Boolean[]) itemArrays._primitiveArrayInObject);

@@ -27,7 +27,7 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 		if (true) {
 			// run against specific libraries + the current one
 			return new String[] {
-				WorkspaceServices.workspacePath("db4o.archives/java1.2/db4o-3.0.jar"),
+				// WorkspaceServices.workspacePath("db4o.archives/java1.2/db4o-3.0.jar"),
 				WorkspaceServices.workspacePath("db4o.archives/java1.2/db4o-4.0-java1.1.jar"),
 			};
 		} 
@@ -36,7 +36,6 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
 
 	protected Class[] testCases() {
 		return new Class[] {
-			IxFreespaceMigrationTestCase.class,
             BooleanHandlerUpdateTestCase.class,
             ByteHandlerUpdateTestCase.class,
 			CascadedDeleteFileFormatUpdateTestCase.class,
@@ -45,6 +44,8 @@ public class Db4oMigrationTestSuite implements TestSuiteBuilder {
             DoubleHandlerUpdateTestCase.class,
             FloatHandlerUpdateTestCase.class,
             IntHandlerUpdateTestCase.class,
+            InterfaceHandlerUpdateTestCase.class,
+            IxFreespaceMigrationTestCase.class,
             LongHandlerUpdateTestCase.class,
             MultiDimensionalArrayHandlerUpdateTestCase.class,
             NestedArrayUpdateTestCase.class,

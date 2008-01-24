@@ -2,17 +2,19 @@
 
 package com.db4o.internal;
 
+import com.db4o.internal.fieldhandlers.*;
+
 
 /**
  * @exclude
  */
 public class HandlerVersionKey {
     
-    private final TypeHandler4 _handler;
+    private final FieldHandler _handler;
     
     private final int _version;
     
-    public HandlerVersionKey(TypeHandler4 handler, int version){
+    public HandlerVersionKey(FieldHandler handler, int version){
         _handler = handler;
         _version = version;
     }

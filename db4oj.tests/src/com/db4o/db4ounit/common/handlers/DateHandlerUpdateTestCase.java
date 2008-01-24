@@ -76,7 +76,7 @@ public class DateHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 	}
 
     private void assertAreEqual(Date expected, Date actual) {
-        if(expected.equals(new Date(DatePlatform.MAX_DATE)) && _handlerVersion == 0){
+        if(expected.equals(new Date(DatePlatform.MAX_DATE)) && db4oHandlerVersion() == 0){
             // Bug in the oldest format: It treats a Long.MAX_VALUE date as null. 
             expected = MarshallingConstants0.NULL_DATE;
         }

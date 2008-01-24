@@ -181,7 +181,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
         if(claxx.isArray()){
             return handlerRegistry().untypedArrayHandler(claxx);
         }
-        return container().typeHandlerForObject(obj);
+        return container().typeHandlerForReflectClass(claxx);
     }
 
 }

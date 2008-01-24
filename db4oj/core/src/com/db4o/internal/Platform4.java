@@ -669,6 +669,11 @@ public final class Platform4 {
 	public static boolean useNativeSerialization() {
 		return jdk().useNativeSerialization();
 	}
+
+    public static void registerPlatformHandlers(ObjectContainerBase container) {
+        ReflectClass claxx = container.reflector().forClass(java.lang.Number.class);
+        container.handlers().mapFieldHandler(claxx, container.handlers().untypedFieldHandler());
+    }
 	
 	
 }

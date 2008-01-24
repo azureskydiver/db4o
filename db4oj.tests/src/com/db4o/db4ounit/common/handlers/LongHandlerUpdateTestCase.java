@@ -40,7 +40,7 @@ public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
         ItemArrays itemArrays = (ItemArrays)obj;
         
         assertPrimitiveArray(itemArrays._typedPrimitiveArray);
-        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
+        if(db4oHeaderVersion() == VersionServices.HEADER_30_40){
          // Bug in the oldest format: It accidentally long[] arrays to Long[] arrays.
             assertWrapperArray((Long[])itemArrays._primitiveArrayInObject);
         } else {
@@ -87,7 +87,7 @@ public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private void assertAreEqual(long expected, long actual) {
-        if(expected == Long.MAX_VALUE  && _handlerVersion == 0){
+        if(expected == Long.MAX_VALUE  && db4oHandlerVersion() == 0){
          // Bug in the oldest format: It treats Long.MAX_VALUE as null.
             expected = 0;
         }
@@ -95,7 +95,7 @@ public class LongHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private void assertAreEqual(Object expected, Object actual) {
-        if(new Long(Long.MAX_VALUE).equals(expected) && _handlerVersion == 0){
+        if(new Long(Long.MAX_VALUE).equals(expected) && db4oHandlerVersion() == 0){
             // Bug in the oldest format: It treats Long.MAX_VALUE as null.
             expected = null;
         }

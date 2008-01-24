@@ -17,6 +17,7 @@ public class AllTests extends Db4oTestSuite {
             NullWrapperTestCase.class,
             ObjectNotStorableExceptionTestCase.class,
             UUIDMigrationTestCase.class,
+            StoreComparableFieldTestCase.class,
             StoreNumberTestCase.class,
 		};
 	}

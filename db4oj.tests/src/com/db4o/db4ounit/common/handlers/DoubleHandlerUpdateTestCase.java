@@ -78,7 +78,7 @@ public class DoubleHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private void assertPrimitiveArrayInObject(ItemArrays item) {
-        if(_db4oHeaderVersion == VersionServices.HEADER_30_40){
+        if(db4oHeaderVersion() == VersionServices.HEADER_30_40){
            // Bug in the oldest format: It accidentally double[] arrays to Double[] arrays.
             assertWrapperData((Double[]) item._primitiveArrayInObject);
         } else{
@@ -194,7 +194,7 @@ public class DoubleHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
 	}
 
     private void assertAreEqual(double expected, double actual){
-        if(Double.isNaN(expected) && _handlerVersion == 0){
+        if(Double.isNaN(expected) && db4oHandlerVersion() == 0){
             expected = 0;
         }
         if(Double.isNaN(expected) && Double.isNaN(actual)){
@@ -204,7 +204,7 @@ public class DoubleHandlerUpdateTestCase extends HandlerUpdateTestCaseBase {
     }
     
     private void assertAreEqual(Object expected, Object actual){
-        if(((Double)expected).isNaN() && _handlerVersion == 0){
+        if(((Double)expected).isNaN() && db4oHandlerVersion() == 0){
             expected = null;
         }
         if(expected != null && actual != null && ((Double)expected).isNaN() && ((Double)actual).isNaN()){

@@ -145,7 +145,7 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
         return new Integer (_db4oVersion.substring(0, 1)).intValue();
     }
     
-    protected byte _db4oHeaderVersion;
+    private byte _db4oHeaderVersion;
     
     protected abstract String[] versionNames();
     
@@ -166,5 +166,9 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     }
     
     protected abstract void assertObjectsAreReadable(ExtObjectContainer objectContainer);
+
+    protected byte db4oHeaderVersion() {
+        return _db4oHeaderVersion;
+    }
     
 }

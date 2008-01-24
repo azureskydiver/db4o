@@ -811,9 +811,6 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 	}
 	
 	public String toString(){
-        if(! Debug4.prettyToStrings){
-            return super.toString();
-        }
 	    try{
 		    int id = getID();
 		    String str = "ObjectReference\nID=" + id;
@@ -837,9 +834,9 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		    }
 		    return str;
 	    }catch(Exception e){
-	        // e.printStackTrace();
+	        
 	    }
-	    return "Exception in YapObject analyzer";
+	    return "ObjectReference " + getID();
 	}
 
 	

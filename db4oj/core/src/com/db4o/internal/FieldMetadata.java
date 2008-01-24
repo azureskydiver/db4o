@@ -39,13 +39,7 @@ public class FieldMetadata implements StoredField {
     
     protected int              _handlerID;
 
-    private int              _state;
-
-    private static final int NOT_LOADED  = 0;
-
-    private static final int UNAVAILABLE = -1;
-
-    private static final int AVAILABLE   = 1;
+    private FieldMetadataState              _state = FieldMetadataState.NOT_LOADED;
 
     private Config4Field     _config;
 
@@ -65,7 +59,7 @@ public class FieldMetadata implements StoredField {
         // for TranslatedFieldMetadata only
     	this(containingClass);
         init(containingClass, translator.getClass().getName());
-        _state = AVAILABLE;
+        _state = FieldMetadataState.AVAILABLE;
         ObjectContainerBase stream =container(); 
         ReflectClass claxx = stream.reflector().forClass(translatorStoredClass(translator));
         _handler = fieldHandlerForClass(stream, claxx);
@@ -94,7 +88,7 @@ public class FieldMetadata implements StoredField {
         }
         configure( field.getFieldType(), isPrimitive);
         checkDb4oType();
-        _state = AVAILABLE;
+        _state = FieldMetadataState.AVAILABLE;
     }
     
     protected FieldMetadata(int handlerID, TypeHandler4 handler){
@@ -169,10 +163,10 @@ public class FieldMetadata implements StoredField {
     }
 
     public boolean alive() {
-        if (_state == AVAILABLE) {
+        if (_state == FieldMetadataState.AVAILABLE) {
             return true;
         }
-        if (_state == NOT_LOADED) {
+        if (_state == FieldMetadataState.NOT_LOADED) {
 
             if (_handler == null) {
 
@@ -193,25 +187,28 @@ public class FieldMetadata implements StoredField {
 
             checkCorrectHandlerForField();
 
-            if(_handler != null) {
-                // TODO: This part is not quite correct.
-                // We are using the old array information read from file to wrap.
+            // TODO: This part is not quite correct.
+            // We are using the old array information read from file to wrap.
 
-                // If a schema evolution changes an array to a different variable,
-                // we are in trouble here.
-                _handler = wrapHandlerToArrays(container(), _handler);
-            }
+            // If a schema evolution changes an array to a different variable,
+            // we are in trouble here.
+            _handler = wrapHandlerToArrays(container(), _handler);
             
             if(_handler == null || _reflectField == null){
-                _state = UNAVAILABLE;
+                _state = FieldMetadataState.UNAVAILABLE;
                 _reflectField = null;
-            }
-            else {
-                _state = AVAILABLE;
-                checkDb4oType();
+            } else {
+                if(! updating()){
+                    _state = FieldMetadataState.AVAILABLE;
+                    checkDb4oType();
+                }
             }
         }
-        return _state == AVAILABLE;
+        return _state == FieldMetadataState.AVAILABLE;
+    }
+
+    public boolean updating() {
+        return _state == FieldMetadataState.UPDATING;
     }
 
     private void checkHandlerID() {
@@ -370,6 +367,9 @@ public class FieldMetadata implements StoredField {
     }
     
     private final TypeHandler4 wrapHandlerToArrays(ObjectContainerBase container, TypeHandler4 handler) {
+        if(handler == null){
+            return null;
+        }
         if (_isNArray) {
             return new MultidimensionalArrayHandler(container, handler, arraysUsePrimitiveClassReflector());
         } 
@@ -627,6 +627,24 @@ public class FieldMetadata implements StoredField {
         set(context.persistentObject(), toSet);
     }
     
+    public void attemptUpdate(UnmarshallingContext context) {
+        if(! updating()){
+            incrementOffset(context.buffer());
+            return;
+        }
+        int savedOffset = context.offset();
+        try{
+            Object toSet = context.read(_handler);
+            set(context.persistentObject(), toSet);
+        }catch(Exception ex){
+            
+            // FIXME: COR-547 Diagnostics here please.
+            
+            context.buffer().seek(savedOffset);
+            incrementOffset(context.buffer());
+        }
+    }
+    
     private boolean checkAlive(Buffer buffer){
         boolean alive = alive(); 
         if (! alive) {
@@ -711,9 +729,16 @@ public class FieldMetadata implements StoredField {
 
     private void checkCorrectHandlerForField() {
         TypeHandler4 handler = detectHandlerForField();
-        if (handler == null || (!handler.equals(_handler))) {
+        if (handler == null){
             _reflectField = null;
-            _state = UNAVAILABLE;
+            _state = FieldMetadataState.UNAVAILABLE;
+            return;
+        }
+        if(!handler.equals(_handler)) {
+            
+            // FIXME: COR-547 Diagnostics here please.
+            
+            _state = FieldMetadataState.UPDATING;
         }
     }
 
@@ -785,8 +810,9 @@ public class FieldMetadata implements StoredField {
         incrementOffset(buffer);
     }
 
+    /** never called but keep for Rickie */
     public void refreshActivated() {
-    	_state = AVAILABLE;
+    	_state = FieldMetadataState.AVAILABLE;
     	refresh();
     }
     
@@ -799,7 +825,7 @@ public class FieldMetadata implements StoredField {
             }
         }
         _reflectField = null;
-        _state = UNAVAILABLE;
+        _state = FieldMetadataState.UNAVAILABLE;
     }
 
     // FIXME: needs test case
