@@ -988,7 +988,7 @@
 		</copy>
 	</target>
 
-	<target name="prepare.reference.pdf">
+	<target name="prepare.reference.pdf" unless="no.ftp">
         <ftp server="${ftp.server}"
             userid="${ftp.user}"
             password="${ftp.password}" 
