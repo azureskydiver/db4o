@@ -135,11 +135,7 @@ public class IoBenchmark {
 			sysout("> Required delays:");
 			sysout("> " + _delays);
             sysout("> Adjusting delay timer to match required delays...");
-			try {
-				calculation.adjustDelays(_delays);
-			} catch (InvalidDelayException ide) {
-				exitWithError(ide.getMessage());
-			}
+			calculation.adjustDelays(_delays);
 			sysout("> Adjusted delays:");
 			sysout("> " + _delays);
 		} catch (IOException e) {

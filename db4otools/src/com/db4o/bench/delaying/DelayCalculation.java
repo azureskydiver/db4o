@@ -48,13 +48,13 @@ public class DelayCalculation {
 		return new Delays(tempDelays[Delays.READ], tempDelays[Delays.WRITE], tempDelays[Delays.SEEK], tempDelays[Delays.SYNC]);
 	}
 	
-	public void adjustDelays(Delays delays) throws InvalidDelayException {
+	public void adjustDelays(Delays delays) {
 		for(int i = 0; i < Delays.COUNT; i++) {
 			adjustDelay(delays, i);
 		}
 	}
 	
-	private void adjustDelay(Delays delays, int index) throws InvalidDelayException {
+	private void adjustDelay(Delays delays, int index) {
 		NanoStopWatch watch = new NanoStopWatch();
 		NanoTiming timing = new NanoTiming();
 		long difference, differencePerIteration;
