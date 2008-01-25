@@ -26,7 +26,7 @@ public class DelayCalculation {
 		if (_machine1.isFasterThan(_machine2)) {
 			_fasterMachine = _machine1;
 			_slowerMachine = _machine2;
-			System.out.println("machine1 ("+ _machine1.logFileName() +") is faster!");
+			System.out.println("> machine1 ("+ _machine1.logFileName() +") is faster!");
 		}
 		else if (_machine2.isFasterThan(_machine1)) {
 			_fasterMachine = _machine2;
