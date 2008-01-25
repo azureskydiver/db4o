@@ -27,12 +27,12 @@ window.WikiCodeFormattingCopyToClipboard = function copyToClipboard(sID){
 <p>Note: Instrumented optimized classes will work with JDK1.1, but the
 optimization process itself requires at least JDK 1.3.</p>
 
-<p>In the <a href="instrumenting_classes_at_load_time.html" class="wikiLink">previous topic</a> we discussed
+<p>In the <a href="nq_optimization_at_load_time.html" class="wikiLink">previous topic</a> we discussed
 how NQ optimization can be enabled on classes while they are loaded. In this
 topic we will look at even more convenient and performant way of enhancing
 classes to optimize NQ: during application build time. </p>
 
-<p>For our example we will take the same classes as in the <a href="instrumenting_classes_at_load_time.html" class="wikiLink">previous
+<p>For our example we will take the same classes as in the <a href="nq_optimization_at_load_time.html" class="wikiLink">previous
 example</a>, with the exception of NQEnhancedStarter class, which won't be needed
 for build-time enhancement. Its functionality will be fulfilled be the build
 script. For this example we will create an ant script, which should be run
@@ -51,7 +51,7 @@ after the classes (or jar) is built. <br></p>
 <p>This
 can be done with the following script:</p>
 
-<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">Build.Xml</span></div><div class="fscCode"><pre ID="ResourcesReferenceTuningNative_Query_OptimizationNQ_Optimization_At_Build_Timebuild.Xml_1472_23"><div><!--
+<div class="FormattedSourceCode"><div class="fscHeader"><span class="fscFileName">Build.Xml</span></div><div class="fscCode"><pre ID="ResourcesReferenceTuningNative_Query_OptimizationNQ_Optimization_At_Build_Timebuild.Xml_1460_23"><div><!--
 
 Code highlighting produced by Actipro CodeHighlighter (freeware)
 http://www.CodeHighlighter.com/
@@ -162,7 +162,7 @@ Use jar as the source for enhancement</p>
 Spaces</a>.</p></div>
     </div>
     <div id="footer">
-					This revision (7) was last Modified 2007-11-05T15:29:25 by Tetyana.
+					This revision (8) was last Modified 2008-01-21T08:48:11 by richard_liang.
 				</div>
   </body>
 </html>
