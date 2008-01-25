@@ -1,7 +1,8 @@
-<project name="wiki.offline" basedir="." default="">
-    <import file="common.xml" />
+<project name="wiki.offline" basedir="." default="extract.wiki.offline">
     
     <target name="init">
+    	<property name="dir.workspace" value="../"/>
+    	<property file="ant.properties" />
         <property name="dir.tool.wikioffline" value="${dir.build}/wikiOffline"/>
         <property name="tool.wikioffline" value="${dir.tool.wikioffline}/com.db4o.Wiki.Offline.exe" />
         <property name="dir.wikioffline" value="${dir.dist}/wikiOffline" />
@@ -9,7 +10,8 @@
         <property name="dir.wikioffline.net" value="${dir.wikioffline}/net" />
     </target>
     
-    <target name="extract.wiki.offline" depends="extract.wiki.offline.java, extract.wiki.offline.net" />
+    <target name="extract.wiki.offline" depends="extract.wiki.offline.java, 
+    	extract.wiki.offline.net, sync.docWiki" />
     
     <target name="extract.wiki.offline.java" depends="init">
         <delete dir="${dir.wikioffline.java}" />
@@ -30,4 +32,15 @@
             <arg line="-out:&quot;${dir.wikioffline.net}&quot;" />
         </exec>
     </target>
+	
+	<target name="sync.docWiki" depends="init">
+		<taskdef name="svnsync" classname="com.db4o.devtools.ant.SvnSync">
+			<classpath>
+	            <pathelement location="${dir.build.bin}" />
+	            <pathelement location="${dir.build.lib}/svnkit/svnkit.jar" />
+			</classpath>
+		</taskdef>
+		<svnsync workingcopy="${dir.workspace}/docWiki/java" sourcefolder="${dir.wikioffline.java}" />
+		<svnsync workingcopy="${dir.workspace}/docWiki/net" sourcefolder="${dir.wikioffline.net}" />
+	</target>
 </project>

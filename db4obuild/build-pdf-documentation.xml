@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="project" default="generate.pdf.all">
+<project name="project" default="upload.pdf.doc">
 
 	<import file="common.xml" />
 	
@@ -19,14 +19,26 @@
 
 		<property name="lib" value="lib" />
 		<property name="scripts" value="${dir.build}/scripts" />
-		
 		<property name="tidy.error.file" value="tidy.error" />
+		<property name="dir.pdf.doc" value="${dir.dist}/pdf.doc/${db4o.version.dotted}" />
 	</target>
 
+	<target name="upload.pdf.doc" depends="generate.pdf.all" >
+		<ftp server="${ftp.server}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+			remotedir="${ftp.reference.path}"
+			>
+            <fileset dir="${dir.dist}/pdf.doc">
+                <include name="${db4o.version.dotted}/" />
+            </fileset>
+		</ftp>
+	</target>
+	
 	<target name="generate.pdf.all" depends="generate.pdf.java, generate.pdf.net" />
 	
     <target name="generate.pdf.java" depends="init">
-    	<convert working.dir="${dir.dist.java.build.reference}"
+    	<convert working.dir="${dir.pdf.doc}"
     			 dir.reference="${dir.reference.java}"
     			 pdf.filename="${pdf.filename.java}"
     			 pdf.title.page="${dir.pdf.titles}/${pdf.title.page.java}"
@@ -34,7 +46,7 @@
     </target>
 
     <target name="generate.pdf.net" depends="init">
-    	<convert working.dir="${dir.dist.net.build.reference}"
+    	<convert working.dir="${dir.pdf.doc}"
     			 dir.reference="${dir.reference.net}"
     			 pdf.filename="${pdf.filename.net}"
     			 pdf.title.page="${dir.pdf.titles}/${pdf.title.page.net}"
