@@ -1,8 +1,8 @@
 <project name="wiki.offline" basedir="." default="extract.wiki.offline">
     
+	<import file="common.xml" />
+	
     <target name="init">
-    	<property name="dir.workspace" value="../"/>
-    	<property file="ant.properties" />
         <property name="dir.tool.wikioffline" value="${dir.build}/wikiOffline"/>
         <property name="tool.wikioffline" value="${dir.tool.wikioffline}/com.db4o.Wiki.Offline.exe" />
         <property name="dir.wikioffline" value="${dir.dist}/wikiOffline" />
