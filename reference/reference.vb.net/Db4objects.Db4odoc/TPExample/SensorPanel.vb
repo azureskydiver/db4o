@@ -3,7 +3,7 @@ Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Activation
 Imports Db4objects.Db4o.TA
 
-Namespace Db4ojects.Db4odoc.TPExample
+Namespace Db4objects.Db4odoc.TPExample
 
     Public Class SensorPanel ' must implement Activatable for TA and TP
         Implements IActivatable
