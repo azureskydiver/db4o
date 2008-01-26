@@ -9,7 +9,7 @@ import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
 import com.db4o.ext.DatabaseFileLockedException;
-import com.db4o.ta.TransparentActivationSupport;
+import com.db4o.ta.TransparentPersistenceSupport;
 
 public class TPExample {
 
@@ -40,18 +40,18 @@ public class TPExample {
 	// end storeSensorPanel
 
 
-	private static Configuration configureTA() {
+	private static Configuration configureTP() {
 		Configuration configuration = Db4o.newConfiguration();
-		// add TA support
-		configuration.add(new TransparentActivationSupport());
+		// add TP support
+		configuration.add(new TransparentPersistenceSupport());
 		return configuration;
 	}
 
-	// end configureTA
+	// end configureTP
 
 	private static void testTransparentPersistence() {
 		storeSensorPanel();
-		Configuration configuration = configureTA();
+		Configuration configuration = configureTP();
 
 		ObjectContainer container = database(configuration);
 		if (container != null) {

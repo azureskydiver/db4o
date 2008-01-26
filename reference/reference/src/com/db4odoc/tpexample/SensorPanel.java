@@ -17,12 +17,12 @@ public class SensorPanel implements Activatable {
 	public SensorPanel() {
 		// default constructor for instantiation
 	}
-	// end SensorPanelTA
+	// end SensorPanel
 
 	public SensorPanel(int value) {
 		_sensor = new Integer(value);
 	}
-	// end SensorPanelTA
+	// end SensorPanel
 
 	/*Bind the class to the specified object container, create the activator*/
 	public void bind(Activator activator) {
