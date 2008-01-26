@@ -9,7 +9,7 @@ using Db4objects.Db4o.Diagnostic;
 using Db4objects.Db4o.TA;
 
 
-namespace Db4ojects.Db4odoc.TPExample
+namespace Db4objects.Db4odoc.TPExample
 {
     public class TPExample
     {
@@ -45,19 +45,19 @@ namespace Db4ojects.Db4odoc.TPExample
 
         // end StoreSensorPanel
 
-        private static IConfiguration ConfigureTA()
+        private static IConfiguration ConfigureTP()
         {
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            // add TA support
-            configuration.Add(new TransparentActivationSupport());
+            // add TP support
+            configuration.Add(new TransparentPersistenceSupport());
             return configuration;
         }
-        // end ConfigureTA
+        // end ConfigureTP
 
         private static void TestTransparentPersistence()
         {
             StoreSensorPanel();
-            IConfiguration configuration = ConfigureTA();
+            IConfiguration configuration = ConfigureTP();
 
             IObjectContainer container = Database(configuration);
             if (container != null)
