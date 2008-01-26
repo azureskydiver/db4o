@@ -16,7 +16,10 @@ Namespace Db4ojects.Db4odoc.TAExamples
 
         ' Bind the class to an object container
         Public Sub Bind(ByVal activator As Activation.IActivator) Implements IActivatable.Bind
-            If Not Nothing Is _activator Then
+            If _activator Is activator Then
+                Return
+            End If
+            If Not (activator Is Nothing Or _activator Is Nothing) Then
                 Throw New System.InvalidOperationException()
             End If
             _activator = activator

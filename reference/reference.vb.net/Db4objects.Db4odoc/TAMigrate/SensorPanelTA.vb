@@ -3,7 +3,7 @@ Imports Db4objects.Db4o
 Imports Db4objects.Db4o.Activation
 Imports Db4objects.Db4o.TA
 
-Namespace Db4ojects.Db4odoc.TAMigrate
+Namespace Db4objects.Db4odoc.TAMigrate
 
     Public Class SensorPanelTA ' must implement Activatable for TA
         Implements IActivatable
