@@ -35,7 +35,7 @@ namespace Db4objects.Db4odoc.Concurrency
             {
                 File.Delete(Db4oFileName);
                 IConfiguration configuration = Db4oFactory.NewConfiguration();
-                configuration.GenerateVersionNumbers(ConfigScope.GLOBALLY);
+                configuration.GenerateVersionNumbers(ConfigScope.Globally);
                 _server = Db4oFactory.OpenServer(configuration, Db4oFileName, 0);
             }
         }

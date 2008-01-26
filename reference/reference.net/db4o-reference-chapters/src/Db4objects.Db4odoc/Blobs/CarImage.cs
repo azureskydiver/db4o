@@ -33,22 +33,22 @@ namespace Db4objects.Db4odoc.Blobs
 		{
 			_blob.ReadFrom(new File(inFolder + _file));
 			double status = _blob.GetStatus();
-			while(status >  Status.COMPLETED){
+			while(status >  Status.Completed){
 					Thread.Sleep(50);
 					status = _blob.GetStatus();
 			}
-			return (status == Status.COMPLETED);
+			return (status == Status.Completed);
 		}
 		
 		public bool WriteFile()
 		{
 			_blob.WriteTo(new File(outFolder + _file));
 			double status = _blob.GetStatus();
-			while(status > Status.COMPLETED){
+			while(status > Status.Completed){
 					Thread.Sleep(50);
 					status = _blob.GetStatus();
 			}
-			return (status == Status.COMPLETED);
+			return (status == Status.Completed);
 		}
 	}
 }

@@ -53,7 +53,7 @@ namespace Db4objects.Db4odoc.Querymode
             Console.WriteLine("Testing query performance on 10000 pilot objects in Immediate mode");
             FillUpDB(10000);
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            configuration.Queries().EvaluationMode(QueryEvaluationMode.IMMEDIATE);
+            configuration.Queries().EvaluationMode(QueryEvaluationMode.Immediate);
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
             {
@@ -78,7 +78,7 @@ namespace Db4objects.Db4odoc.Querymode
             Console.WriteLine("Testing query performance on 10000 pilot objects in Lazy mode");
             FillUpDB(10000);
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            configuration.Queries().EvaluationMode(QueryEvaluationMode.LAZY);
+            configuration.Queries().EvaluationMode(QueryEvaluationMode.Lazy);
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
             {
@@ -105,7 +105,7 @@ namespace Db4objects.Db4odoc.Querymode
             Console.WriteLine("Testing lazy mode with concurrent modifications");
             FillUpDB(10);
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            configuration.Queries().EvaluationMode(QueryEvaluationMode.LAZY);
+            configuration.Queries().EvaluationMode(QueryEvaluationMode.Lazy);
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
             {
@@ -149,7 +149,7 @@ namespace Db4objects.Db4odoc.Querymode
             Console.WriteLine("Testing query performance on 10000 pilot objects in Snapshot mode");
             FillUpDB(10000);
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            configuration.Queries().EvaluationMode(QueryEvaluationMode.SNAPSHOT);
+            configuration.Queries().EvaluationMode(QueryEvaluationMode.Snapshot);
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
             {
@@ -174,7 +174,7 @@ namespace Db4objects.Db4odoc.Querymode
             Console.WriteLine("Testing snapshot mode with concurrent modifications");
             FillUpDB(10);
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            configuration.Queries().EvaluationMode(QueryEvaluationMode.SNAPSHOT);
+            configuration.Queries().EvaluationMode(QueryEvaluationMode.Snapshot);
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
             {
@@ -209,7 +209,7 @@ namespace Db4objects.Db4odoc.Querymode
             Console.WriteLine("Testing immediate mode with field changes");
             FillUpDB(10);
             IConfiguration configuration = Db4oFactory.NewConfiguration();
-            configuration.Queries().EvaluationMode(QueryEvaluationMode.IMMEDIATE);
+            configuration.Queries().EvaluationMode(QueryEvaluationMode.Immediate);
             IObjectContainer db = Db4oFactory.OpenFile(configuration, Db4oFileName);
             try
             {
