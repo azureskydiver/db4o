@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.Performance.InsertPerformanceBenchmark</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.TPExample.TPCollectionExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -278,6 +278,15 @@
     <Compile Include="src\Db4objects.Db4odoc\ReplicationEvents\EventsExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\ReplicationEvents\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Staticfields\Car.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\TAMigrate\SensorPanelTA.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\TAMigrate\TAExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\TPBuildTime\SensorPanel.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\TPBuildTime\TPExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\TPExample\TPCollectionExample.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\TPExample\Pilot.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\TPExample\Team.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\TPExample\SensorPanel.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\TPExample\TPExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Transactions\Car.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Transactions\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Transactions\PressureSensorReadout.cs" />
@@ -512,12 +521,15 @@
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
       <Name>Db4objects.Db4o-2005</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4oTool\Db4oTool\Db4oTool-2005.csproj">
+      <Project>{6F3BE659-0653-4982-94D6-F1D9D8887E09}</Project>
+      <Name>Db4oTool-2005</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>Db4oTool.exe -tp -by-name Db4objects.Db4odoc.TPBuildTime.SensorPanel $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
 </Project>

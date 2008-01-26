@@ -10,7 +10,7 @@ namespace Db4objects.Db4odoc.VersionUpdate
             Db4oFactory.Configure().AllowVersionUpdates(true);
             IObjectContainer objectContainer = Db4oFactory.OpenFile(args[0]);
             objectContainer.Close();
-            System.Console.WriteLine("The database is ready for the version " + Db4o.Db4oVersion.NAME);
+            System.Console.WriteLine("The database is ready for the version " + Db4o.Db4oVersion.Name);
         }
     }
 }

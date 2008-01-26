@@ -3,7 +3,7 @@ using Db4objects.Db4o;
 using Db4objects.Db4o.Activation;
 using Db4objects.Db4o.TA;
 
-namespace Db4ojects.Db4odoc.TAMigrate
+namespace Db4objects.Db4odoc.TAMigrate
 {
     public class SensorPanelTA /*must implement Activatable for TA*/: IActivatable
     {

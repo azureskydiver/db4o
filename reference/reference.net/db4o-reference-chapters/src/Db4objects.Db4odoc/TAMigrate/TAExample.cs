@@ -9,7 +9,7 @@ using Db4objects.Db4o.Diagnostic;
 using Db4objects.Db4o.TA;
 
 
-namespace Db4ojects.Db4odoc.TAMigrate
+namespace Db4objects.Db4odoc.TAMigrate
 {
     public class TAExample
     {
@@ -53,7 +53,7 @@ namespace Db4ojects.Db4odoc.TAMigrate
             configuration.Add(new TransparentActivationSupport());
             return configuration;
         }
-        // end ConfigureTA
+        // end ConfigureTP
 
         private static void TestSwitchDatabases()
         {
