@@ -10,7 +10,7 @@ Imports Db4objects.Db4o.Diagnostic
 Imports Db4objects.Db4o.TA
 
 
-Namespace Db4ojects.Db4odoc.TAMigrate
+Namespace Db4objects.Db4odoc.TAMigrate
     Public Class TAExample
 
         Private Const FirstDbName As String = "reference.db4o"

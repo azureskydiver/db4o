@@ -24,7 +24,10 @@ Namespace Db4ojects.Db4odoc.TAExamples
 
         ' Bind the class to the specified object container, create the activator 
         Public Sub Bind(ByVal activator As IActivator) Implements IActivatable.Bind
-            If Not Nothing Is _activator Then
+            If _activator Is activator Then
+                Return
+            End If
+            If Not (activator Is Nothing Or _activator Is Nothing) Then
                 Throw New System.InvalidOperationException()
             End If
             _activator = activator
@@ -37,7 +40,7 @@ Namespace Db4ojects.Db4odoc.TAExamples
             If _activator Is Nothing Then
                 Return
             End If
-            _activator.Activate(ActivationPurpose.Read)
+            _activator.Activate(purpose)
         End Sub
 
         Public ReadOnly Property NextSensor() As SensorPanelTA

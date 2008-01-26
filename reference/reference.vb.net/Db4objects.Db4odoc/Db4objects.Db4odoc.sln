@@ -43,6 +43,24 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oUnit.Extensions-2005", 
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oTool-2005", "..\..\db4o.net\Db4oTool\Db4oTool\Db4oTool-2005.csproj", "{6F3BE659-0653-4982-94D6-F1D9D8887E09}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Db4oTool.MSBuild", "..\..\db4o.net\Db4oTool\Db4oTool.MSBuild\Db4oTool.MSBuild.csproj", "{03E2AD50-7A21-4D03-8504-3E190AE5361F}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "TPExamples", "..\TPExamples\TPExamples.vbproj", "{706FAFFB-F627-4B1E-985B-6A39CEA8E990}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +95,18 @@ Global
 		{9ABAFC31-D29D-4000-B6A0-C24F0BB221F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9ABAFC31-D29D-4000-B6A0-C24F0BB221F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9ABAFC31-D29D-4000-B6A0-C24F0BB221F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F3BE659-0653-4982-94D6-F1D9D8887E09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F3BE659-0653-4982-94D6-F1D9D8887E09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F3BE659-0653-4982-94D6-F1D9D8887E09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F3BE659-0653-4982-94D6-F1D9D8887E09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03E2AD50-7A21-4D03-8504-3E190AE5361F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03E2AD50-7A21-4D03-8504-3E190AE5361F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03E2AD50-7A21-4D03-8504-3E190AE5361F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03E2AD50-7A21-4D03-8504-3E190AE5361F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{706FAFFB-F627-4B1E-985B-6A39CEA8E990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{706FAFFB-F627-4B1E-985B-6A39CEA8E990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{706FAFFB-F627-4B1E-985B-6A39CEA8E990}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{706FAFFB-F627-4B1E-985B-6A39CEA8E990}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

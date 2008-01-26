@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Db4objects.Db4odoc.ClientServer.StopServer</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.TPExample.TPCollectionExample</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>
@@ -153,6 +153,15 @@
     <Compile Include="ReplicationEvents\EventsExample.vb" />
     <Compile Include="ReplicationEvents\Pilot.vb" />
     <Compile Include="StaticFields\Car.vb" />
+    <Compile Include="TAMigrate\SensorPanelTA.vb" />
+    <Compile Include="TAMigrate\TAExample.vb" />
+    <Compile Include="TPBuildTime\SensorPanel.vb" />
+    <Compile Include="TPBuildTime\TPExample.vb" />
+    <Compile Include="TPExample\Pilot.vb" />
+    <Compile Include="TPExample\SensorPanel.vb" />
+    <Compile Include="TPExample\Team.vb" />
+    <Compile Include="TPExample\TPCollectionExample.vb" />
+    <Compile Include="TPExample\TPExample.vb" />
     <Compile Include="Transactions\Car.vb" />
     <Compile Include="Transactions\Pilot.vb" />
     <Compile Include="Transactions\PressureSensorReadout.vb" />
@@ -256,6 +265,10 @@
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
       <Name>Db4objects.Db4o-2005</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\db4o.net\Db4oTool\Db4oTool\Db4oTool-2005.csproj">
+      <Project>{6F3BE659-0653-4982-94D6-F1D9D8887E09}</Project>
+      <Name>Db4oTool-2005</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="My Project\" />
@@ -264,8 +277,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>Db4oTool.exe -tp -by-name Db4objects.Db4odoc.TPBuildTime.SensorPanel $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />
