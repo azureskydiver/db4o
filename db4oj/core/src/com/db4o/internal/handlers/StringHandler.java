@@ -16,10 +16,12 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class StringHandler extends VariableLengthTypeHandler implements IndexableTypeHandler, BuiltinTypeHandler{
-	
+public class StringHandler implements IndexableTypeHandler, BuiltinTypeHandler, VariableLengthTypeHandler{
+    
+    private final ObjectContainerBase _container;
+    
     public StringHandler(ObjectContainerBase container) {
-        super(container);
+        _container = container;
     }
     
     protected StringHandler(TypeHandler4 template){
@@ -30,6 +32,9 @@ public class StringHandler extends VariableLengthTypeHandler implements Indexabl
     	return container()._handlers.ICLASS_STRING;
     }
     
+    public ObjectContainerBase container(){
+        return _container;
+    }
     public void delete(DeleteContext context){
     	context.readSlot();
     }
@@ -239,5 +244,9 @@ public class StringHandler extends VariableLengthTypeHandler implements Indexabl
 		};
 
 	}
+
+    public int linkLength() {
+        return Const4.INDIRECTION_LENGTH;
+    }
 
 }

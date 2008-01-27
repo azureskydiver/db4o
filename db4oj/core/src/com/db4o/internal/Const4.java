@@ -60,6 +60,10 @@ public final class Const4
 	public static final int	ID_LENGTH		= INT_LENGTH;
 	public static final int	LONG_LENGTH		= LONG_BYTES + ADDED_LENGTH;
 	
+	// TODO: Is this the right place for the knowledge, that an indirection
+	//       within a slot is an address and a length?
+	public static final int INDIRECTION_LENGTH = INT_LENGTH + ID_LENGTH;
+	
 	public static final int	WRITE_LOOP			= (INTEGER_BYTES - 1) * 8;
 	
 	public static final int	OBJECT_LENGTH		= ADDED_LENGTH;

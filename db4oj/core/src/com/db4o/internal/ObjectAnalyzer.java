@@ -2,6 +2,8 @@
 
 package com.db4o.internal;
 
+import com.db4o.ext.*;
+import com.db4o.internal.fieldhandlers.*;
 import com.db4o.reflect.*;
 
 
@@ -49,6 +51,10 @@ class ObjectAnalyzer {
     private boolean detectClassMetadata(Transaction trans, ReflectClass claxx) {
         _classMetadata = _container.getActiveClassMetadata(claxx);
         if (_classMetadata == null) {
+            FieldHandler fieldHandler = _container.fieldHandlerForClass(claxx);
+            if(fieldHandler instanceof SecondClassTypeHandler){
+                notStorable(_obj, claxx);
+            }
             _classMetadata = _container.produceClassMetadata(claxx);
             if ( _classMetadata == null){
                 notStorable(_obj, claxx);

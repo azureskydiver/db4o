@@ -6,6 +6,7 @@ import com.db4o.config.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.internal.*;
+import com.db4o.internal.handlers.*;
 import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.typehandlers.*;
@@ -29,7 +30,7 @@ public class StringBufferTypeHandlerTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	static final class StringBufferTypeHandler implements TypeHandler4, SecondClassTypeHandler4 {
+	static final class StringBufferTypeHandler implements TypeHandler4, SecondClassTypeHandler, VariableLengthTypeHandler {
 
 		public void defragment(DefragmentContext context) {
 			throw new NotImplementedException();
@@ -76,7 +77,8 @@ public class StringBufferTypeHandlerTestCase extends AbstractDb4oTestCase {
 		}
 	}
 
-	protected void configure(Configuration config) throws Exception {		
+	protected void configure(Configuration config) throws Exception {
+	    config.exceptionsOnNotStorable(true);
 		config.registerTypeHandler(
 				new ClassPredicate(StringBuffer.class),
 				new StringBufferTypeHandler());
@@ -86,10 +88,17 @@ public class StringBufferTypeHandlerTestCase extends AbstractDb4oTestCase {
 		store(new Item(new StringBuffer("42")));
 	}
 	
-	public void _testRetrieve() {
-		
+	public void testRetrieve() {
 		Item item = retrieveItem();
 		Assert.areEqual("42", item.buffer.toString());
+	}
+	
+	public void testTopLevelStore(){
+	    Assert.expect(ObjectNotStorableException.class, new CodeBlock() {
+            public void run() throws Throwable {
+                store(new StringBuffer("a"));
+            }
+        });
 	}
 
 	private Item retrieveItem() {

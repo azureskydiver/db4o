@@ -4,6 +4,7 @@ package com.db4o.internal.marshall;
 
 import com.db4o.internal.*;
 import com.db4o.internal.activation.*;
+import com.db4o.marshall.*;
 
 
 /**
@@ -112,5 +113,15 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     private HandlerRegistry handlerRegistry(){
         return container().handlers();
     }
+    
+    public Buffer readIndirectedBuffer() {
+        int address = readInt();
+        int length = readInt();
+        if(address == 0){
+            return null;
+        }
+        return container().bufferByAddress(address, length);
+    }
+
 
 }

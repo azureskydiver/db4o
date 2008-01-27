@@ -60,7 +60,7 @@ public class Handlers4 {
         TypeHandler4 baseTypeHandler = baseTypeHandler(handler); 
         return (baseTypeHandler instanceof PrimitiveHandler)
         	|| (baseTypeHandler instanceof StringHandler)
-        	|| (baseTypeHandler instanceof SecondClassTypeHandler4); 
+        	|| (baseTypeHandler instanceof SecondClassTypeHandler); 
     }
     
     public static boolean handlesClass(TypeHandler4 handler){

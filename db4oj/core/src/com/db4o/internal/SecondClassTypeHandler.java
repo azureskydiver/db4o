@@ -6,6 +6,6 @@ package com.db4o.internal;
  * Marker interface for {@link TypeHandle4}s for second class
  * types.
  */
-public interface SecondClassTypeHandler4 {
+public interface SecondClassTypeHandler extends TypeHandler4 {
 
 }

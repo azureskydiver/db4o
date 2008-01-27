@@ -15,7 +15,7 @@ import com.db4o.reflect.*;
 /**
  * @exclude
  */
-public class ArrayHandler extends VariableLengthTypeHandler implements FirstClassHandler, Comparable4 {
+public class ArrayHandler implements FirstClassHandler, Comparable4, TypeHandler4, VariableLengthTypeHandler{
 	
     private static final class ReflectArrayIterator extends IndexedIterator {
 		private final Object _array;
@@ -33,10 +33,13 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 	}
 
 	public final TypeHandler4 _handler;
+	
     public final boolean _usePrimitiveClassReflector;
-
+    
+    private final ObjectContainerBase _container;
+    
     public ArrayHandler(ObjectContainerBase container, TypeHandler4 handler, boolean usePrimitiveClassReflector) {
-        super(container);
+        _container = container;
         _handler = handler;
         _usePrimitiveClassReflector = usePrimitiveClassReflector;
     }
@@ -78,6 +81,10 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
             	}
             }
         }
+    }
+    
+    public ObjectContainerBase container(){
+        return _container;
     }
     
     private ActivationDepth descend(ActivationDepth depth, Object obj){
@@ -470,5 +477,10 @@ public class ArrayHandler extends VariableLengthTypeHandler implements FirstClas
 	public PreparedComparison prepareComparison(Object obj) {
 		return new PreparedArrayContainsComparison(this, _handler, obj);
 	}
+	
+    public int linkLength() {
+        return Const4.INDIRECTION_LENGTH;
+    }
+
     
 }
