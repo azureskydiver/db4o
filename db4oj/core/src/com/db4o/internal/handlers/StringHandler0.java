@@ -6,6 +6,7 @@ import java.io.*;
 
 import com.db4o.ext.*;
 import com.db4o.internal.*;
+import com.db4o.internal.marshall.*;
 import com.db4o.marshall.*;
 
 
@@ -19,7 +20,7 @@ public class StringHandler0 extends StringHandler {
     }
     
     public Object read(ReadContext context) {
-        BufferImpl buffer = readIndirectedBuffer(context); 
+        BufferImpl buffer = (BufferImpl) ((InternalReadContext)context).readIndirectedBuffer();
         if (buffer == null) {
             return null;
         }

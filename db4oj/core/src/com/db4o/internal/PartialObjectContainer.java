@@ -1593,16 +1593,6 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
             return;
         }
         
-        // FIXME:   Exceptions configuration setting cant be modified
-        //          from running ObjectContainer. 
-        //          Right now all tests fail, if we don't jump out here.
-        
-        //          The StorePrimitiveDirectly test case documents the err.
-        
-        if(true){
-            return;
-        }
-        
         if(claxx != null){
             throw new ObjectNotStorableException(claxx);
         }

@@ -538,7 +538,17 @@ public final class HandlerRegistry {
             return _untypedArrayHandler;
         }
         
-        return (FieldHandler) _mapReflectorToFieldHandler.get(clazz);
+        FieldHandler fieldHandler = (FieldHandler) _mapReflectorToFieldHandler.get(clazz);
+        if(fieldHandler != null){
+            return fieldHandler;
+        }
+        TypeHandler4 configuredHandler =
+            container().configImpl().typeHandlerForClass(clazz, HandlerRegistry.HANDLER_VERSION);
+        if(configuredHandler != null){
+            mapFieldHandler(clazz, configuredHandler);
+            return configuredHandler;
+        }
+        return null;
     }
 
     ClassMetadata classMetadataForClass(ReflectClass clazz) {

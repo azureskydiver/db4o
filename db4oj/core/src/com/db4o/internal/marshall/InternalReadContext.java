@@ -20,6 +20,8 @@ public interface InternalReadContext extends ReadContext{
     public int offset();
 
     public Object read(TypeHandler4 handler);
+    
+    public Buffer readIndirectedBuffer();
 
     public void seek(int offset);
     

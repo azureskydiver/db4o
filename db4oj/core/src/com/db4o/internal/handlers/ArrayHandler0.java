@@ -43,7 +43,7 @@ public class ArrayHandler0 extends ArrayHandler {
         
         InternalReadContext context = (InternalReadContext) readContext;
         
-        BufferImpl buffer = readIndirectedBuffer(context); 
+        BufferImpl buffer = (BufferImpl) context.readIndirectedBuffer(); 
         if (buffer == null) {
             return null;
         }

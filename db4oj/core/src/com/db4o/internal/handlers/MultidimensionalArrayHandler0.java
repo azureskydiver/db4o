@@ -23,7 +23,7 @@ public class MultidimensionalArrayHandler0 extends MultidimensionalArrayHandler 
     public Object read(ReadContext readContext) {
         InternalReadContext context = (InternalReadContext) readContext;
         
-        BufferImpl buffer = readIndirectedBuffer(context); 
+        BufferImpl buffer = (BufferImpl) context.readIndirectedBuffer();
         if (buffer == null) {
             return null;
         }

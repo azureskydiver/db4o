@@ -27,6 +27,8 @@ import com.db4o.reflect.generic.*;
  */
 public class ClassMetadata extends PersistentBase implements IndexableTypeHandler, FirstClassHandler, StoredClass, FieldHandler , ReadsObjectIds{
     
+    // FIXME: remove this again. We solved more nicely by directly
+    //        passing out configured Field Handlers from HandlerRegistry. 
 	private TypeHandler4 _typeHandler;
     
 	public ClassMetadata i_ancestor;

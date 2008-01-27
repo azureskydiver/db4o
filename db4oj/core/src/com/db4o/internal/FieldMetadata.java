@@ -674,6 +674,11 @@ public class FieldMetadata implements StoredField {
     }
     
     private int calculateLinkLength(){
+        
+        // TODO: Clean up here by creating a common interface
+        //       for the Typehandlers that have a "linkLength"
+        //       concept.
+        
         if (_handler == null) {
             // must be ClassMetadata
             return Const4.ID_LENGTH;
@@ -685,7 +690,7 @@ public class FieldMetadata implements StoredField {
             return ((PrimitiveHandler)_handler).linkLength();
         }
         if(_handler instanceof VariableLengthTypeHandler){
-            return ((VariableLengthTypeHandler)_handler).linkLength();
+            return Const4.INDIRECTION_LENGTH;
         }
         
         // TODO: For custom handlers there will have to be a way 
