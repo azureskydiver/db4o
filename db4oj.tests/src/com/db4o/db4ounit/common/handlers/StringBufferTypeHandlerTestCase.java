@@ -77,8 +77,9 @@ public class StringBufferTypeHandlerTestCase extends AbstractDb4oTestCase {
 	}
 
 	protected void configure(Configuration config) throws Exception {		
-		final TypeHandlerPredicate typeHandlerPredicate = new ClassPredicate(StringBuffer.class);
-		config.registerTypeHandler(typeHandlerPredicate, new StringBufferTypeHandler());
+		config.registerTypeHandler(
+				new ClassPredicate(StringBuffer.class),
+				new StringBufferTypeHandler());
 	}
 	
 	protected void store() throws Exception {
