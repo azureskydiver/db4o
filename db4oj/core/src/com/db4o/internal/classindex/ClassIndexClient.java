@@ -30,7 +30,7 @@ final class ClassIndexClient extends ClassIndex {
 		// do nothing
 	}
 
-	public final void writeOwnID(Transaction trans, BufferImpl a_writer) {
+	public final void writeOwnID(Transaction trans, ByteArrayBuffer a_writer) {
 		a_writer.writeInt(0);
 	}
 	

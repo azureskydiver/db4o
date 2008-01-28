@@ -14,7 +14,7 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
     
     protected ActivationDepth _activationDepth = UnknownActivationDepth.INSTANCE;
     
-    protected AbstractReadContext(Transaction transaction, BufferImpl buffer){
+    protected AbstractReadContext(Transaction transaction, ByteArrayBuffer buffer){
     	super(transaction, buffer);
     }
     

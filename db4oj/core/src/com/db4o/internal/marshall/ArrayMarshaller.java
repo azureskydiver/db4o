@@ -18,5 +18,5 @@ public abstract class ArrayMarshaller {
         return arrayHandler.collectIDs1(trans, tree, prepareIDReader(trans,reader));
     }
 
-    protected abstract BufferImpl prepareIDReader(Transaction trans,BufferImpl reader) throws Db4oIOException;
+    protected abstract ByteArrayBuffer prepareIDReader(Transaction trans,ByteArrayBuffer reader) throws Db4oIOException;
 }

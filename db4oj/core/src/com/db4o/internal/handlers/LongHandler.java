@@ -47,11 +47,11 @@ public class LongHandler extends PrimitiveHandler {
 		return mf._primitive.readLong(buffer);
 	}
 	
-	Object read1(BufferImpl a_bytes){
+	Object read1(ByteArrayBuffer a_bytes){
 		return new Long(a_bytes.readLong());
 	}
 	
-	public void write(Object obj, BufferImpl buffer){
+	public void write(Object obj, ByteArrayBuffer buffer){
 	    writeLong(buffer, ((Long)obj).longValue());
 	}
 	

@@ -23,7 +23,7 @@ public final class MGetClasses extends MsgD implements ServerSideMessage {
 			}
 		}
 		MsgD message = Msg.GET_CLASSES.getWriterForLength(transaction(), Const4.INT_LENGTH + 1);
-		BufferImpl writer = message.payLoad();
+		ByteArrayBuffer writer = message.payLoad();
 		writer.writeInt(stream.classCollection().getID());
 		writer.writeByte(stream.stringIO().encodingByte());
 		write(message);

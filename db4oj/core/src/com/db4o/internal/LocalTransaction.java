@@ -513,7 +513,7 @@ public class LocalTransaction extends Transaction {
         }
     }
 	
-	private void appendSlotChanges(final BufferImpl writer){
+	private void appendSlotChanges(final ByteArrayBuffer writer){
 		traverseSlotChanges(new Visitor4() {
 			public void visit(Object obj) {
 				((SlotChange)obj).write(writer);
@@ -749,7 +749,7 @@ public class LocalTransaction extends Transaction {
         i_address = a_address;
     }
 
-	public static Transaction readInterruptedTransaction(LocalObjectContainer file, BufferImpl reader) {
+	public static Transaction readInterruptedTransaction(LocalObjectContainer file, ByteArrayBuffer reader) {
 	    int transactionID1 = reader.readInt();
 	    int transactionID2 = reader.readInt();
 	    if( (transactionID1 > 0)  &&  (transactionID1 == transactionID2)){

@@ -128,7 +128,7 @@ public abstract class Msg implements Cloneable {
 	 * dummy method to allow clean override handling
 	 * without casting
 	 */
-	public BufferImpl getByteLoad() {
+	public ByteArrayBuffer getByteLoad() {
 		return null;
 	}
 
@@ -192,14 +192,14 @@ public abstract class Msg implements Cloneable {
 	}
 
 	/** @param sock */
-	Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, BufferImpl reader){
+	Msg readPayLoad(MessageDispatcher messageDispatcher, Transaction a_trans, Socket4 sock, ByteArrayBuffer reader){
 		Msg msg = publicClone();
 		msg.setMessageDispatcher(messageDispatcher);
 		msg.setTransaction(checkParentTransaction(a_trans, reader));
 	    return msg;
 	}
 
-	protected final Transaction checkParentTransaction(Transaction a_trans, BufferImpl reader) {
+	protected final Transaction checkParentTransaction(Transaction a_trans, ByteArrayBuffer reader) {
 		if(reader.readByte() == Const4.SYSTEM_TRANS && a_trans.parentTransaction() != null){
 	        return a_trans.parentTransaction();
 	    }

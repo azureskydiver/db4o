@@ -71,7 +71,7 @@ public class UUIDFieldMetadata extends VirtualFieldMetadata {
         if(DTrace.enabled){
             DTrace.REREAD_OLD_UUID.logLength(oldSlot.address(), oldSlot.length());
         }
-		BufferImpl reader = stream.bufferByAddress(oldSlot.address(), oldSlot.length());
+		ByteArrayBuffer reader = stream.bufferByAddress(oldSlot.address(), oldSlot.length());
 		if(checkClass){
             ClassMetadata realClass = ClassMetadata.readClass(stream,reader);
             if(realClass != classMetadata){

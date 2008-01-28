@@ -43,7 +43,7 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         return LENGTH;
     }
 
-    public void readThis(Transaction trans, BufferImpl reader) {
+    public void readThis(Transaction trans, ByteArrayBuffer reader) {
         _systemData.converterVersion(reader.readInt());
         _systemData.freespaceSystem(reader.readByte());
         _systemData.freespaceAddress(reader.readInt());
@@ -52,7 +52,7 @@ public class FileHeaderVariablePart1 extends PersistentBase{
         _systemData.uuidIndexId(reader.readInt());
     }
 
-    public void writeThis(Transaction trans, BufferImpl writer) {
+    public void writeThis(Transaction trans, ByteArrayBuffer writer) {
         writer.writeInt(_systemData.converterVersion());
         writer.writeByte(_systemData.freespaceSystem());
         writer.writeInt(_systemData.freespaceAddress());

@@ -22,11 +22,11 @@ public abstract class SlotHandler implements Indexable4{
 		return Slot.MARSHALLED_LENGTH;
 	}
 
-	public Object readIndexEntry(BufferImpl reader) {
+	public Object readIndexEntry(ByteArrayBuffer reader) {
 		return new Slot(reader.readInt(), reader.readInt());
 	}
 
-	public void writeIndexEntry(BufferImpl writer, Object obj) {
+	public void writeIndexEntry(ByteArrayBuffer writer, Object obj) {
 		Slot slot = (Slot) obj;
 		writer.writeInt(slot.address());
 		writer.writeInt(slot.length());

@@ -14,19 +14,19 @@ import com.db4o.internal.slots.*;
  * @exclude
  */
 public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentContext {
-	private BufferImpl _source;
-	private BufferImpl _target;
+	private ByteArrayBuffer _source;
+	private ByteArrayBuffer _target;
 	private DefragmentServices _services;
 	private int _handlerVersion;
 	
-	public DefragmentContextImpl(BufferImpl source, DefragmentContextImpl context) {
+	public DefragmentContextImpl(ByteArrayBuffer source, DefragmentContextImpl context) {
 		this(source, context._services);
 	}
 
-	public DefragmentContextImpl(BufferImpl source,DefragmentServices services) {
+	public DefragmentContextImpl(ByteArrayBuffer source,DefragmentServices services) {
 		_source = source;
 		_services=services;
-		_target = new BufferImpl(length());
+		_target = new ByteArrayBuffer(length());
 		_source.copyTo(_target, 0, 0, length());
 	}
 	
@@ -141,18 +141,18 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	    incrementStringOffset(sio, _target);
 	}
 	
-	private void incrementStringOffset(LatinStringIO sio, BufferImpl buffer) {
+	private void incrementStringOffset(LatinStringIO sio, ByteArrayBuffer buffer) {
 	    int length = buffer.readInt();
 	    if(length > 0){
 	        sio.read(buffer, length);
 	    }
 	}
 	
-	public BufferImpl sourceBuffer() {
+	public ByteArrayBuffer sourceBuffer() {
 		return _source;
 	}
 
-	public BufferImpl targetBuffer() {
+	public ByteArrayBuffer targetBuffer() {
 		return _target;
 	}
 	
@@ -173,11 +173,11 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 	}
 
 	public static void processCopy(DefragmentServices context, int sourceID,SlotCopyHandler command,boolean registerAddressMapping) throws CorruptionException, IOException {
-		BufferImpl sourceReader = context.sourceBufferByID(sourceID);
+		ByteArrayBuffer sourceReader = context.sourceBufferByID(sourceID);
 		processCopy(context, sourceID, command, registerAddressMapping, sourceReader);
 	}
 
-	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, BufferImpl sourceReader) throws CorruptionException, IOException {
+	public static void processCopy(DefragmentServices services, int sourceID,SlotCopyHandler command,boolean registerAddressMapping, ByteArrayBuffer sourceReader) throws CorruptionException, IOException {
 		int targetID=services.mappedID(sourceID);
 	
 		Slot targetSlot = services.allocateTargetSlot(sourceReader.length());
@@ -187,7 +187,7 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 			services.mapIDs(sourceAddress, targetSlot.address(), false);
 		}
 		
-		BufferImpl targetPointerReader=new BufferImpl(Const4.POINTER_LENGTH);
+		ByteArrayBuffer targetPointerReader=new ByteArrayBuffer(Const4.POINTER_LENGTH);
 		if(Deploy.debug) {
 			targetPointerReader.writeBegin(Const4.YAPPOINTER);
 		}
@@ -288,22 +288,22 @@ public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentC
 
 	public int copySlotToNewMapped(int sourceAddress, int length) throws IOException {
     	Slot slot = allocateMappedTargetSlot(sourceAddress, length);
-    	BufferImpl sourceBuffer = sourceBufferByAddress(sourceAddress, length);
+    	ByteArrayBuffer sourceBuffer = sourceBufferByAddress(sourceAddress, length);
     	targetWriteBytes(slot.address(), sourceBuffer);
 		return slot.address();
 	}
 
-	public void targetWriteBytes(int address, BufferImpl buffer) {
+	public void targetWriteBytes(int address, ByteArrayBuffer buffer) {
 		_services.targetWriteBytes(buffer, address);
 	}
 
-	public BufferImpl sourceBufferByAddress(int sourceAddress, int length) throws IOException {
-		BufferImpl sourceBuffer = _services.sourceBufferByAddress(sourceAddress, length);
+	public ByteArrayBuffer sourceBufferByAddress(int sourceAddress, int length) throws IOException {
+		ByteArrayBuffer sourceBuffer = _services.sourceBufferByAddress(sourceAddress, length);
 		return sourceBuffer;
 	}
 
-	public BufferImpl sourceBufferById(int sourceId) throws IOException {
-		BufferImpl sourceBuffer = _services.sourceBufferByID(sourceId);
+	public ByteArrayBuffer sourceBufferById(int sourceId) throws IOException {
+		ByteArrayBuffer sourceBuffer = _services.sourceBufferByID(sourceId);
 		return sourceBuffer;
 	}
 

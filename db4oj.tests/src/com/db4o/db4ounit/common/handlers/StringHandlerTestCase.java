@@ -42,7 +42,7 @@ public class StringHandlerTestCase extends TypeHandlerTestCaseBase {
     
 
 	public void testIndexMarshalling() {
-		BufferImpl reader=new BufferImpl(2*Const4.INT_LENGTH);
+		ByteArrayBuffer reader=new ByteArrayBuffer(2*Const4.INT_LENGTH);
 		final Slot original = new Slot(0xdb,0x40);
 		stringHandler().writeIndexEntry(reader,original);
 		reader._offset=0;

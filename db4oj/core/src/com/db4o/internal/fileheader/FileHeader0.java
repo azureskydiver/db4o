@@ -46,7 +46,7 @@ public class FileHeader0 extends FileHeader {
         _configBlock.close();
     }
     
-    protected FileHeader newOnSignatureMatch(LocalObjectContainer file, BufferImpl reader) {
+    protected FileHeader newOnSignatureMatch(LocalObjectContainer file, ByteArrayBuffer reader) {
         byte firstFileByte = reader.readByte();
         if (firstFileByte != Const4.YAPBEGIN) {
             if(firstFileByte != Const4.YAPFILEVERSION){
@@ -62,13 +62,13 @@ public class FileHeader0 extends FileHeader {
     }
 
     
-    protected void readFixedPart(LocalObjectContainer file, BufferImpl reader) throws OldFormatException {
+    protected void readFixedPart(LocalObjectContainer file, ByteArrayBuffer reader) throws OldFormatException {
         _configBlock = ConfigBlock.forExistingFile(file, reader.readInt());
         skipConfigurationLockTime(reader);
         readClassCollectionAndFreeSpace(file, reader);
     }
 
-    private void skipConfigurationLockTime(BufferImpl reader) {
+    private void skipConfigurationLockTime(ByteArrayBuffer reader) {
         reader.incrementOffset(Const4.ID_LENGTH);
     }
 

@@ -20,7 +20,7 @@ public class StringHandler0 extends StringHandler {
     }
     
     public Object read(ReadContext context) {
-        BufferImpl buffer = (BufferImpl) ((InternalReadContext)context).readIndirectedBuffer();
+        ByteArrayBuffer buffer = (ByteArrayBuffer) ((InternalReadContext)context).readIndirectedBuffer();
         if (buffer == null) {
             return null;
         }

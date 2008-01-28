@@ -14,7 +14,7 @@ public abstract class ClassMarshaller {
     
     public MarshallerFamily _family;
     
-    public RawClassSpec readSpec(Transaction trans,BufferImpl reader) {
+    public RawClassSpec readSpec(Transaction trans,ByteArrayBuffer reader) {
 		byte[] nameBytes=readName(trans, reader);
 		String className=trans.container().stringIO().read(nameBytes);
 		readMetaClassID(reader); // skip
@@ -24,7 +24,7 @@ public abstract class ClassMarshaller {
 		return new RawClassSpec(className,ancestorID,numFields);
     }
 
-    public void write(Transaction trans, ClassMetadata clazz, BufferImpl writer) {
+    public void write(Transaction trans, ClassMetadata clazz, ByteArrayBuffer writer) {
         
         writer.writeShortString(trans, clazz.nameToWrite());
         
@@ -47,23 +47,23 @@ public abstract class ClassMarshaller {
         }
     }
 
-    protected void writeIndex(Transaction trans, ClassMetadata clazz, BufferImpl writer) {
+    protected void writeIndex(Transaction trans, ClassMetadata clazz, ByteArrayBuffer writer) {
         int indexID = clazz.index().write(trans);
         writer.writeInt(indexIDForWriting(indexID));
     }
     
     protected abstract int indexIDForWriting(int indexID);
 
-    public byte[] readName(Transaction trans, BufferImpl reader) {
+    public byte[] readName(Transaction trans, ByteArrayBuffer reader) {
         byte[] name = readName(trans.container().stringIO(), reader);
         return name;
     }
     
-    public int readMetaClassID(BufferImpl reader) {
+    public int readMetaClassID(ByteArrayBuffer reader) {
     	return reader.readInt();
     }
     
-    private byte[] readName(LatinStringIO sio, BufferImpl reader) {
+    private byte[] readName(LatinStringIO sio, ByteArrayBuffer reader) {
         if (Deploy.debug) {
             reader.readBegin(Const4.YAPCLASS);
         }
@@ -76,7 +76,7 @@ public abstract class ClassMarshaller {
         return nameBytes;
     }
 
-    public final void read(ObjectContainerBase stream, ClassMetadata clazz, BufferImpl reader) {
+    public final void read(ObjectContainerBase stream, ClassMetadata clazz, ByteArrayBuffer reader) {
         clazz.setAncestor(stream.classMetadataForId(reader.readInt()));
         
         if(clazz.callConstructor()){
@@ -94,7 +94,7 @@ public abstract class ClassMarshaller {
         readFields(stream, reader, clazz.i_fields);        
     }
 
-    protected abstract void readIndex(ObjectContainerBase stream, ClassMetadata clazz, BufferImpl reader) ;
+    protected abstract void readIndex(ObjectContainerBase stream, ClassMetadata clazz, ByteArrayBuffer reader) ;
 
 	private FieldMetadata[] createFields(ClassMetadata clazz, final int fieldCount) {
 		final FieldMetadata[] fields = new FieldMetadata[fieldCount];
@@ -105,7 +105,7 @@ public abstract class ClassMarshaller {
 		return fields;
 	}
 
-	private void readFields(ObjectContainerBase stream, BufferImpl reader, final FieldMetadata[] fields) {
+	private void readFields(ObjectContainerBase stream, ByteArrayBuffer reader, final FieldMetadata[] fields) {
 		for (int i = 0; i < fields.length; i++) {
             fields[i] = _family._field.read(stream, fields[i], reader);
         }

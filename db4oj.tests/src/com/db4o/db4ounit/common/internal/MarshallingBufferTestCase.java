@@ -21,7 +21,7 @@ public class MarshallingBufferTestCase implements TestCase {
         buffer.writeInt(DATA_1);
         buffer.writeByte(DATA_2);
         
-        BufferImpl content = inspectContent(buffer);
+        ByteArrayBuffer content = inspectContent(buffer);
         
         Assert.areEqual(DATA_1, content.readInt());
         Assert.areEqual(DATA_2, content.readByte());
@@ -41,7 +41,7 @@ public class MarshallingBufferTestCase implements TestCase {
         
         Assert.areEqual(lastOffset, offset(buffer));
         
-        BufferImpl content = inspectContent(other);
+        ByteArrayBuffer content = inspectContent(other);
         Assert.areEqual(DATA_2, content.readByte());
     }
 
@@ -49,8 +49,8 @@ public class MarshallingBufferTestCase implements TestCase {
         return buffer.testDelegate().offset();
     }
     
-    private BufferImpl inspectContent(MarshallingBuffer buffer) {
-        BufferImpl bufferDelegate = buffer.testDelegate();
+    private ByteArrayBuffer inspectContent(MarshallingBuffer buffer) {
+        ByteArrayBuffer bufferDelegate = buffer.testDelegate();
         bufferDelegate.seek(0);
         return bufferDelegate;
     }
@@ -66,7 +66,7 @@ public class MarshallingBufferTestCase implements TestCase {
         
         buffer.mergeChildren(null, 0, 0);
         
-        BufferImpl content = inspectContent(buffer);
+        ByteArrayBuffer content = inspectContent(buffer);
         Assert.areEqual(DATA_1, content.readInt());
         Assert.areEqual(DATA_2, content.readByte());
         
@@ -92,7 +92,7 @@ public class MarshallingBufferTestCase implements TestCase {
         
         buffer.mergeChildren(null, 0, 0);
         
-        BufferImpl content = inspectContent(buffer);
+        ByteArrayBuffer content = inspectContent(buffer);
         Assert.areEqual(DATA_1, content.readInt());
         Assert.areEqual(DATA_2, content.readByte());
         
@@ -125,9 +125,9 @@ public class MarshallingBufferTestCase implements TestCase {
         
         buffer.mergeChildren(null, 0, linkOffset);
         
-        BufferImpl content = inspectContent(buffer);
+        ByteArrayBuffer content = inspectContent(buffer);
         
-        BufferImpl extendedBuffer = new BufferImpl(content.length() + linkOffset);
+        ByteArrayBuffer extendedBuffer = new ByteArrayBuffer(content.length() + linkOffset);
         
         content.copyTo(extendedBuffer, 0, linkOffset, content.length());
         
@@ -158,7 +158,7 @@ public class MarshallingBufferTestCase implements TestCase {
         child.writeInt(DATA_4);
         buffer.mergeChildren(null, 0, 0);
         
-        BufferImpl content = inspectContent(buffer);
+        ByteArrayBuffer content = inspectContent(buffer);
         Assert.areEqual(DATA_1, content.readInt());
         
         int address = content.readInt();

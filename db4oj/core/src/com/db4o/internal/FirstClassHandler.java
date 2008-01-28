@@ -15,8 +15,8 @@ public interface FirstClassHandler {
     
     void cascadeActivation(Transaction trans, Object obj, ActivationDepth depth);
     
-    void readCandidates(int handlerVersion, BufferImpl buffer, QCandidates candidates) throws Db4oIOException;
+    void readCandidates(int handlerVersion, ByteArrayBuffer buffer, QCandidates candidates) throws Db4oIOException;
     
-    TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, BufferImpl[] a_bytes);
+    TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes);
 
 }

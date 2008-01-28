@@ -291,7 +291,7 @@ public class IoAdaptedObjectContainer extends LocalObjectContainer {
         }
     }
 
-    public void writeBytes(BufferImpl buffer, int blockedAddress, int addressOffset) {
+    public void writeBytes(ByteArrayBuffer buffer, int blockedAddress, int addressOffset) {
 		if (Deploy.debug && !Deploy.flush) {
 			return;
 		}

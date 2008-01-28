@@ -18,8 +18,8 @@ public abstract class QEStringCmp extends QEAbstract {
 
 	boolean evaluate(QConObject constraint, QCandidate candidate, Object obj){
 		if(obj != null){
-		    if(obj instanceof BufferImpl) {
-                obj = candidate.readString((BufferImpl)obj);
+		    if(obj instanceof ByteArrayBuffer) {
+                obj = candidate.readString((ByteArrayBuffer)obj);
 		    }
 		    String candidateStringValue = obj.toString();
 		    String stringConstraint = constraint.i_object.toString();

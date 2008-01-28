@@ -13,7 +13,7 @@ public class StringMarshaller0 extends StringMarshaller {
         return false;
     }
     
-    public BufferImpl readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, Db4oIOException{
+    public ByteArrayBuffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException, Db4oIOException{
         return parentSlot.getStream().readWriterByAddress(parentSlot.getTransaction(), parentSlot.readInt(), parentSlot.readInt());
     }
 	

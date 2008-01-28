@@ -38,11 +38,11 @@ public abstract class DateHandlerBase extends LongHandler {
 		return mf._primitive.readDate(writer);
 	}
 	
-	Object read1(BufferImpl a_bytes) {
+	Object read1(ByteArrayBuffer a_bytes) {
 		return primitiveMarshaller().readDate(a_bytes);
 	}
 
-	public void write(Object a_object, BufferImpl a_bytes){
+	public void write(Object a_object, ByteArrayBuffer a_bytes){
         // TODO: This is a temporary fix to prevent exceptions with
         // Marshaller.LEGACY.  
         if(a_object == null){

@@ -72,7 +72,7 @@ public class UntypedFieldHandler extends ClassMetadata implements BuiltinTypeHan
 		return false;
 	}
     
-	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, BufferImpl[] a_bytes) {
+	public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
         return mf._untyped.readArrayHandler(a_trans, a_bytes);
 	}
     

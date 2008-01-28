@@ -394,7 +394,7 @@ public final class HandlerRegistry {
 		return sortedConstructors;
 	}
     
-	public final void decrypt(BufferImpl reader) {
+	public final void decrypt(ByteArrayBuffer reader) {
 	    if(i_encrypt){
 			int encryptorOffSet = i_lastEncryptorByte;
 			byte[] bytes = reader._buffer;
@@ -409,7 +409,7 @@ public final class HandlerRegistry {
 	    }
 	}
 	
-    public final void encrypt(BufferImpl reader) {
+    public final void encrypt(ByteArrayBuffer reader) {
         if(i_encrypt){
 	        byte[] bytes = reader._buffer;
 	        int encryptorOffSet = i_lastEncryptorByte;

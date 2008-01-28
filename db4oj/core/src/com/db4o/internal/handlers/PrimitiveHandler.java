@@ -59,9 +59,9 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
     	return read1(buffer);
     }
 
-    abstract Object read1(BufferImpl reader) throws CorruptionException;
+    abstract Object read1(ByteArrayBuffer reader) throws CorruptionException;
 
-    public Object readIndexEntry(BufferImpl buffer) {
+    public Object readIndexEntry(ByteArrayBuffer buffer) {
         try {
             return read1(buffer);
         } catch (CorruptionException e) {
@@ -94,9 +94,9 @@ public abstract class PrimitiveHandler implements IndexableTypeHandler, BuiltinT
         }
     }
 
-    public abstract void write(Object a_object, BufferImpl a_bytes);
+    public abstract void write(Object a_object, ByteArrayBuffer a_bytes);
     
-    public void writeIndexEntry(BufferImpl a_writer, Object a_object) {
+    public void writeIndexEntry(ByteArrayBuffer a_writer, Object a_object) {
         if (a_object == null) {
             a_object = primitiveNull();
         }

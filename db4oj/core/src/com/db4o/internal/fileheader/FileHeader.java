@@ -26,7 +26,7 @@ public abstract class FileHeader {
     }
 
     public static FileHeader readFixedPart(LocalObjectContainer file) throws OldFormatException {
-        BufferImpl reader = prepareFileHeaderReader(file);
+        ByteArrayBuffer reader = prepareFileHeaderReader(file);
         FileHeader header = detectFileHeader(file, reader);
         if(header == null){
             Exceptions4.throwRuntimeException(Messages.INCOMPATIBLE_FORMAT);
@@ -36,13 +36,13 @@ public abstract class FileHeader {
         return header;
     }
 
-	private static BufferImpl prepareFileHeaderReader(LocalObjectContainer file) {
-		BufferImpl reader = new BufferImpl(readerLength()); 
+	private static ByteArrayBuffer prepareFileHeaderReader(LocalObjectContainer file) {
+		ByteArrayBuffer reader = new ByteArrayBuffer(readerLength()); 
         reader.read(file, 0, 0);
 		return reader;
 	}
 
-	private static FileHeader detectFileHeader(LocalObjectContainer file, BufferImpl reader) {
+	private static FileHeader detectFileHeader(LocalObjectContainer file, ByteArrayBuffer reader) {
         for (int i = 0; i < AVAILABLE_FILE_HEADERS.length; i++) {
             reader.seek(0);
             FileHeader result = AVAILABLE_FILE_HEADERS[i].newOnSignatureMatch(file, reader);
@@ -61,17 +61,17 @@ public abstract class FileHeader {
 
     public abstract int length();
     
-    protected abstract FileHeader newOnSignatureMatch(LocalObjectContainer file, BufferImpl reader);
+    protected abstract FileHeader newOnSignatureMatch(LocalObjectContainer file, ByteArrayBuffer reader);
     
     protected long timeToWrite(long time, boolean shuttingDown) {
     	return shuttingDown ? 0 : time;
     }
 
-    protected abstract void readFixedPart(LocalObjectContainer file, BufferImpl reader);
+    protected abstract void readFixedPart(LocalObjectContainer file, ByteArrayBuffer reader);
 
     public abstract void readVariablePart(LocalObjectContainer file);
     
-    protected boolean signatureMatches(BufferImpl reader, byte[] signature, byte version){
+    protected boolean signatureMatches(ByteArrayBuffer reader, byte[] signature, byte version){
         for (int i = 0; i < signature.length; i++) {
             if(reader.readByte() != signature[i]){
                 return false;
@@ -99,7 +99,7 @@ public abstract class FileHeader {
     
     public abstract void writeVariablePart(LocalObjectContainer file, int part);
 
-    protected void readClassCollectionAndFreeSpace(LocalObjectContainer file, BufferImpl reader) {
+    protected void readClassCollectionAndFreeSpace(LocalObjectContainer file, ByteArrayBuffer reader) {
         SystemData systemData = file.systemData();
         systemData.classCollectionID(reader.readInt());
         systemData.freespaceID(reader.readInt());

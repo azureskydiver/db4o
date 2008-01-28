@@ -33,7 +33,7 @@ public class VersionServices {
         ObjectInfo objectInfo = objectContainer.getObjectInfo(obj);
         ObjectContainerBase container = (ObjectContainerBase) objectContainer;
         Transaction trans = container.transaction();
-        BufferImpl buffer = container.readReaderByID(trans, id);
+        ByteArrayBuffer buffer = container.readReaderByID(trans, id);
         UnmarshallingContext context = new UnmarshallingContext(trans, (ObjectReference)objectInfo, Const4.TRANSIENT, false);
         context.buffer(buffer);
         context.persistentObject(obj);

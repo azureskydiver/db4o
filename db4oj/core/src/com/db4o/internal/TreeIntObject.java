@@ -39,7 +39,7 @@ public class TreeIntObject extends TreeInt {
         _object = obj;
     }
 
-	public Object read(BufferImpl a_bytes) {
+	public Object read(ByteArrayBuffer a_bytes) {
 		int key = a_bytes.readInt();
 		Object obj = null;
 		if (_object instanceof TreeInt) {
@@ -50,7 +50,7 @@ public class TreeIntObject extends TreeInt {
 		return new TreeIntObject(key, obj);
 	}
 
-	public void write(BufferImpl a_writer) {
+	public void write(ByteArrayBuffer a_writer) {
 		a_writer.writeInt(_key);
 		if (_object == null) {
 			a_writer.writeInt(0);

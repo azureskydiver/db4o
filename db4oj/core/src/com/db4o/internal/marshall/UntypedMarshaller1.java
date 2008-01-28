@@ -14,7 +14,7 @@ public class UntypedMarshaller1 extends UntypedMarshaller{
     }
     
     
-    public TypeHandler4 readArrayHandler(Transaction trans, BufferImpl[] reader) {
+    public TypeHandler4 readArrayHandler(Transaction trans, ByteArrayBuffer[] reader) {
         
         int payLoadOffSet = reader[0].readInt();
         if(payLoadOffSet == 0){

@@ -13,11 +13,11 @@ import com.db4o.internal.*;
  */
 public interface FieldMarshaller {
 
-    void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, BufferImpl writer);
+    void write(Transaction trans, ClassMetadata clazz, FieldMetadata field, ByteArrayBuffer writer);
 
-    RawFieldSpec readSpec(ObjectContainerBase stream,BufferImpl reader);
+    RawFieldSpec readSpec(ObjectContainerBase stream,ByteArrayBuffer reader);
     
-    FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, BufferImpl reader);
+    FieldMetadata read(ObjectContainerBase stream, FieldMetadata field, ByteArrayBuffer reader);
 
     int marshalledLength(ObjectContainerBase stream, FieldMetadata field);
 

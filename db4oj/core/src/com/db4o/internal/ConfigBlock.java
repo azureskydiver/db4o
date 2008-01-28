@@ -101,7 +101,7 @@ public final class ConfigBlock {
         if(configImpl().encrypt() && fullpwd!=null) {
             try {
                 byte[] pwdbytes=new LatinStringIO().write(fullpwd);
-                BufferImpl encwriter=new StatefulBuffer(_container.transaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
+                ByteArrayBuffer encwriter=new StatefulBuffer(_container.transaction(),pwdbytes.length+ENCRYPTION_PASSWORD_LENGTH);
                 encwriter.append(pwdbytes);
                 encwriter.append(new byte[ENCRYPTION_PASSWORD_LENGTH]);
                 _container._handlers.decrypt(encwriter);

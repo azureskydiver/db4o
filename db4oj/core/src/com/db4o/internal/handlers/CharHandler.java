@@ -36,7 +36,7 @@ public final class CharHandler extends PrimitiveHandler {
 		return i_primitive;
 	}
 
-	Object read1(BufferImpl a_bytes) {
+	Object read1(ByteArrayBuffer a_bytes) {
 		if (Deploy.debug) {
 			a_bytes.readBegin(Const4.YAPCHAR);
 		}
@@ -49,7 +49,7 @@ public final class CharHandler extends PrimitiveHandler {
 		return new Character(ret);
 	}
 
-	public void write(Object a_object, BufferImpl a_bytes) {
+	public void write(Object a_object, ByteArrayBuffer a_bytes) {
 		if (Deploy.debug) {
 			a_bytes.writeBegin(Const4.YAPCHAR);
 		}

@@ -27,9 +27,9 @@ public class ArrayHandler0 extends ArrayHandler {
     	context.defragmentRecommended();
     }
     
-    public void readCandidates(int handlerVersion, BufferImpl reader, QCandidates candidates) throws Db4oIOException {
+    public void readCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates) throws Db4oIOException {
         Transaction transaction = candidates.transaction();
-        BufferImpl arrayBuffer = reader.readEmbeddedObject(transaction);
+        ByteArrayBuffer arrayBuffer = reader.readEmbeddedObject(transaction);
         if(Deploy.debug){
             arrayBuffer.readBegin(identifier());
         }
@@ -43,7 +43,7 @@ public class ArrayHandler0 extends ArrayHandler {
         
         InternalReadContext context = (InternalReadContext) readContext;
         
-        BufferImpl buffer = (BufferImpl) context.readIndirectedBuffer(); 
+        ByteArrayBuffer buffer = (ByteArrayBuffer) context.readIndirectedBuffer(); 
         if (buffer == null) {
             return null;
         }
@@ -73,7 +73,7 @@ public class ArrayHandler0 extends ArrayHandler {
             return;
         }
         Slot slot = context.allocateMappedTargetSlot(sourceAddress, length);
-        BufferImpl sourceBuffer = null;
+        ByteArrayBuffer sourceBuffer = null;
         try {
             sourceBuffer = context.sourceBufferByAddress(sourceAddress, length);
         }

@@ -58,8 +58,8 @@ public final class ObjectHeader {
     }
 
     public static ObjectHeader defrag(DefragmentContextImpl context) {
-    	BufferImpl source = context.sourceBuffer();
-    	BufferImpl target = context.targetBuffer();
+    	ByteArrayBuffer source = context.sourceBuffer();
+    	ByteArrayBuffer target = context.targetBuffer();
 		ObjectHeader header=new ObjectHeader(context.services().systemTrans().container(),null,source);
     	int newID =context.mapping().mappedID(header.classMetadata().getID());
         if (Deploy.debug) {
@@ -86,7 +86,7 @@ public final class ObjectHeader {
 	}
     
     private static ObjectHeaderAttributes readAttributes(MarshallerFamily marshallerFamily,ReadWriteBuffer reader) {
-    	return marshallerFamily._object.readHeaderAttributes((BufferImpl)reader);
+    	return marshallerFamily._object.readHeaderAttributes((ByteArrayBuffer)reader);
     }
 
     private boolean marshallerAware(int id) {
