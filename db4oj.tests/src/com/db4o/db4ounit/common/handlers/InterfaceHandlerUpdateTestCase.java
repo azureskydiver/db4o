@@ -24,7 +24,7 @@ public class InterfaceHandlerUpdateTestCase extends HandlerUpdateTestCaseBase{
         
         public static ItemContainer createNew(){
             ItemContainer itemContainer = new ItemContainer();
-            itemContainer._item = new Item();
+            itemContainer._item = storedItem();
             itemContainer._items = newItemInterfaceArray();
             itemContainer._objects = newItemInterfaceArray();
             itemContainer._object = newItemInterfaceArray();
@@ -32,13 +32,30 @@ public class InterfaceHandlerUpdateTestCase extends HandlerUpdateTestCaseBase{
         }
 
         private static ItemInterface[] newItemInterfaceArray() {
-            return new ItemInterface[]{ new Item() };
+            return new ItemInterface[]{ storedItem() };
         }
         
     }
     
     public static class Item implements ItemInterface {
         
+        public String _name;
+        
+        
+        public Item(String name) {
+            _name = name;
+        }
+        
+        public boolean equals(Object obj) {
+            if(! (obj instanceof Item)){
+                return false;
+            }
+            return _name.equals(((Item)obj)._name);
+        }
+        
+        public String toString() {
+            return "Item " + _name;
+        }
         
     }
     
@@ -56,31 +73,94 @@ public class InterfaceHandlerUpdateTestCase extends HandlerUpdateTestCaseBase{
         if(db4oMajorVersion() == 4){
             return;
         }
-        ItemContainer itemContainer = (ItemContainer) obj;
-        assertItemInterfaceArray(itemContainer._items);
-        assertItemInterfaceArray(itemContainer._objects);
-        assertItemInterfaceArray((Object[]) itemContainer._object);
+        assertItemInterfaceArrays(storedItemName(), obj);
+    }
+
+    private void assertItemInterfaceArrays(String name, Object itemContainerObject) {
+        ItemContainer itemContainer = (ItemContainer) itemContainerObject;
+        assertItemInterfaceArray(name, itemContainer._items);
+        assertItemInterfaceArray(name, itemContainer._objects);
+        assertItemInterfaceArray(name, (Object[]) itemContainer._object);
     }
 
     protected void assertValues(Object[] values) {
         if(db4oMajorVersion() == 4){
             return;
         }
+        assertItem(storedItemName(), itemFromValues(values));
+    }
+    
+    protected void updateValues(Object[] values) {
+        if(db4oMajorVersion() == 4){
+            return;
+        }
+        updateItem(itemFromValues(values));
+    }
+
+    private void updateItem(Item item) {
+        item._name = updatedItemName();
+    }
+
+    private String updatedItemName() {
+        return "updated";
+    }
+    
+    protected void assertUpdatedValues(Object[] values) {
+        if(db4oMajorVersion() == 4){
+            return;
+        }
+        assertItem(updatedItemName(), itemFromValues(values));
+    }
+    
+    protected void updateArrays(Object obj) {
+        if(db4oMajorVersion() == 4){
+            return;
+        }
+        ItemContainer itemContainer = (ItemContainer) obj;
+        updateItemInterfaceArray(itemContainer._items);
+        updateItemInterfaceArray(itemContainer._objects);
+        updateItemInterfaceArray((Object[]) itemContainer._object);
+    }
+    
+    protected void assertUpdatedArrays(Object obj) {
+        if(db4oMajorVersion() == 4){
+            return;
+        }
+        assertItemInterfaceArrays(updatedItemName(), obj);
+    }
+
+    private Item itemFromValues(Object[] values) {
         ItemContainer itemContainer = (ItemContainer) values[0];
-        assertIsItemInstance(itemContainer._item);
+        ItemInterface item = itemContainer._item;
+        return (Item) item;
     }
 
-    private void assertIsItemInstance(Object item) {
+    private void assertItem(String name, Object item) {
         Assert.isInstanceOf(Item.class, item);
+        Assert.areEqual(name, ((Item)item)._name);
     }
 
-    private void assertItemInterfaceArray(Object[] items) {
-        assertIsItemInstance(items[0]);
+    private void assertItemInterfaceArray(String itemName, Object[] items) {
+        assertItem(itemName, items[0]);
+    }
+    
+    private void updateItemInterfaceArray(Object[] items) {
+        updateItem((Item) items[0]);
     }
 
     protected String typeName() {
         return "interface";
     }
+    
+    public static Item storedItem() {
+        return new Item(storedItemName());
+    }
+
+    private static String storedItemName() {
+        return "stored";
+    }
+    
+
     
 
 }

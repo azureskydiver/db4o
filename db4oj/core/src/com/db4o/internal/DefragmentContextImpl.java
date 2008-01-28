@@ -310,4 +310,9 @@ public final class DefragmentContextImpl implements Buffer, DefragmentContext {
 	public void writeToTarget(int address) {
 		_services.targetWriteBytes(this, address);
 	}
+
+    public void writeBytes(byte[] bytes) {
+        _target.writeBytes(bytes);
+        _source.incrementOffset(bytes.length);
+    }
 }

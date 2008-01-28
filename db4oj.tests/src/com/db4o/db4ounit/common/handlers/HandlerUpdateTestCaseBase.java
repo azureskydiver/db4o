@@ -4,7 +4,6 @@ package com.db4o.db4ounit.common.handlers;
 
 
 import com.db4o.*;
-import com.db4o.config.*;
 import com.db4o.db4ounit.util.*;
 import com.db4o.ext.*;
 import com.db4o.foundation.*;
@@ -40,15 +39,31 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     }
     
     protected void assertObjectsAreReadable(ExtObjectContainer objectContainer) {
+        Holder holder = retrieveHolderInstance(objectContainer);
+        assertValues(holder._values);
+        assertArrays(holder._arrays);
+    }
+
+    private Holder retrieveHolderInstance(ExtObjectContainer objectContainer) {
         Query q = objectContainer.query();
         q.constrain(Holder.class);
         ObjectSet objectSet = q.execute();
         Holder holder = (Holder) objectSet.next();
-        
         investigateHandlerVersion(objectContainer, holder);
-        
-        assertValues(holder._values);
-        assertArrays(holder._arrays);
+        return holder;
+    }
+    
+    protected void update(ExtObjectContainer objectContainer) {
+        Holder holder = retrieveHolderInstance(objectContainer);
+        updateValues(holder._values);
+        updateArrays(holder._arrays);
+        objectContainer.store(holder, Integer.MAX_VALUE);
+    }
+    
+    protected void assertObjectsAreUpdated(ExtObjectContainer objectContainer) {
+        Holder holder = retrieveHolderInstance(objectContainer);
+        assertUpdatedValues(holder._values);
+        assertUpdatedArrays(holder._arrays);
     }
     
     private void investigateHandlerVersion(ExtObjectContainer objectContainer, Object obj){
@@ -105,5 +120,22 @@ public abstract class HandlerUpdateTestCaseBase extends FormatMigrationTestCaseB
     protected int db4oHandlerVersion() {
         return _handlerVersion;
     }
+    
+    protected void updateValues(Object[] values){
+        // Override to check updates also
+    }
+    
+    protected void updateArrays(Object obj){
+        // Override to check updates also
+    }
+
+    protected void assertUpdatedValues(Object[] values){
+        // Override to check updates also
+    }
+    
+    protected void assertUpdatedArrays(Object obj){
+        // Override to check updates also
+    }
+    
 
 }

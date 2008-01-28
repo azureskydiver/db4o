@@ -12,6 +12,7 @@ import com.db4o.internal.handlers.*;
 import com.db4o.internal.marshall.*;
 import com.db4o.internal.query.processor.*;
 import com.db4o.internal.slots.*;
+import com.db4o.marshall.*;
 import com.db4o.reflect.*;
 import com.db4o.reflect.generic.*;
 
@@ -582,7 +583,7 @@ public class FieldMetadata implements StoredField {
         return _index != null;
     }
 
-    public final void incrementOffset(Buffer buffer) {
+    public final void incrementOffset(ReadBuffer buffer) {
     	buffer.seek(buffer.offset() + linkLength());
     }
 
@@ -629,19 +630,21 @@ public class FieldMetadata implements StoredField {
     
     public void attemptUpdate(UnmarshallingContext context) {
         if(! updating()){
-            incrementOffset(context.buffer());
+            incrementOffset(context);
             return;
         }
         int savedOffset = context.offset();
         try{
             Object toSet = context.read(_handler);
-            set(context.persistentObject(), toSet);
+            if(toSet != null){
+                set(context.persistentObject(), toSet);
+            }
         }catch(Exception ex){
             
             // FIXME: COR-547 Diagnostics here please.
             
             context.buffer().seek(savedOffset);
-            incrementOffset(context.buffer());
+            incrementOffset(context);
         }
     }
     
