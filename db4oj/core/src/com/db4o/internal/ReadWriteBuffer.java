@@ -9,7 +9,7 @@ import com.db4o.marshall.*;
 /**
  * @exclude
  */
-public interface Buffer extends ReadBuffer, WriteBuffer{
+public interface ReadWriteBuffer extends ReadBuffer, WriteBuffer{
 
 	void incrementOffset(int numBytes);
 	void incrementIntSize();

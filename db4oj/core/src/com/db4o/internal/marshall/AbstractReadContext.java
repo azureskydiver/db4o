@@ -114,7 +114,7 @@ public abstract class AbstractReadContext extends BufferContext implements Inter
         return container().handlers();
     }
     
-    public Buffer readIndirectedBuffer() {
+    public ReadWriteBuffer readIndirectedBuffer() {
         int address = readInt();
         int length = readInt();
         if(address == 0){

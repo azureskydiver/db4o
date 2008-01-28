@@ -648,7 +648,7 @@ public class FieldMetadata implements StoredField {
         }
     }
     
-    private boolean checkAlive(Buffer buffer){
+    private boolean checkAlive(ReadWriteBuffer buffer){
         boolean alive = alive(); 
         if (! alive) {
             incrementOffset(buffer);
