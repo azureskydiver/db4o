@@ -9,6 +9,7 @@ import com.db4o.config.*;
 import com.db4o.db4ounit.util.*;
 import com.db4o.defragment.*;
 import com.db4o.ext.*;
+import com.db4o.foundation.*;
 import com.db4o.foundation.io.*;
 
 import db4ounit.*;
@@ -97,6 +98,12 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 		    checkDatabaseFile(testFileName);
 		    // Twice, to ensure everything is fine after opening, converting and closing.
 		    checkDatabaseFile(testFileName);
+		    
+		    updateDatabaseFile(testFileName);
+		    
+		    checkUpdatedDatabaseFile(testFileName);
+		    
+		    
 		}else{
 		    
 		    System.out.println("Version upgrade check failed. File not found:" + testFileName);
@@ -128,10 +135,40 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     }
     
     private void checkDatabaseFile(String testFile) {
+        withDatabase(testFile, new Function4() {
+            public Object apply(Object objectContainer) {
+                assertObjectsAreReadable((ExtObjectContainer) objectContainer);
+                return null;
+            }
+        });
+    }
+    
+    private void updateDatabaseFile(String testFile) {
+        withDatabase(testFile, new Function4() {
+            public Object apply(Object objectContainer) {
+                update((ExtObjectContainer) objectContainer);
+                return null;
+            }
+
+        });
+    }
+    
+    private void checkUpdatedDatabaseFile(String testFile) {
+        withDatabase(testFile, new Function4() {
+            public Object apply(Object objectContainer) {
+                assertObjectsAreUpdated((ExtObjectContainer) objectContainer);
+                return null;
+            }
+        });
+    }
+    
+
+    
+    private void withDatabase(String file, Function4 function){
         configure();
-        ExtObjectContainer objectContainer = Db4o.openFile(testFile).ext();
+        ExtObjectContainer objectContainer = Db4o.openFile(file).ext();
         try {
-            assertObjectsAreReadable(objectContainer);
+            function.apply(objectContainer);
         } finally {
             objectContainer.close();
         }
@@ -169,6 +206,14 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
 
     protected byte db4oHeaderVersion() {
         return _db4oHeaderVersion;
+    }
+    
+    protected void update(ExtObjectContainer objectContainer) {
+        // Override to do updates also
+    }
+    
+    protected void assertObjectsAreUpdated(ExtObjectContainer objectContainer) {
+        // Override to check updates also
     }
     
 }

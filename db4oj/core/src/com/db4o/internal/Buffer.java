@@ -3,35 +3,22 @@
 package com.db4o.internal;
 
 import com.db4o.foundation.*;
+import com.db4o.marshall.*;
 
 
 /**
  * @exclude
  */
-public interface Buffer {
+public interface Buffer extends ReadBuffer, WriteBuffer{
 
-	int offset();
-
-	void seek(int offset);
-	
 	void incrementOffset(int numBytes);
 	void incrementIntSize();
 
+    int length();
+    
 	void readBegin(byte identifier);
 	void readEnd();
 
-	byte readByte();
-	void writeByte(byte value);
-
-	int readInt();
-	void writeInt(int value);
-
-	long readLong();
-	void writeLong(long value);
-
 	public BitMap4 readBitMap(int bitCount);
 
-	int length();
-
-	void readBytes(byte[] bytes);
 }
