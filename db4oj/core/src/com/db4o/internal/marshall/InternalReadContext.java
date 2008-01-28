@@ -11,9 +11,9 @@ import com.db4o.marshall.*;
  */
 public interface InternalReadContext extends ReadContext{
     
-    public Buffer buffer(Buffer buffer);
+    public ReadWriteBuffer buffer(ReadWriteBuffer buffer);
     
-    public Buffer buffer();
+    public ReadWriteBuffer buffer();
     
     public ObjectContainerBase container();
 
@@ -21,7 +21,7 @@ public interface InternalReadContext extends ReadContext{
 
     public Object read(TypeHandler4 handler);
     
-    public Buffer readIndirectedBuffer();
+    public ReadWriteBuffer readIndirectedBuffer();
 
     public void seek(int offset);
     

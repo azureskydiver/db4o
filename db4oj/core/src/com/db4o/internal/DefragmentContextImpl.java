@@ -13,7 +13,7 @@ import com.db4o.internal.slots.*;
 /**
  * @exclude
  */
-public final class DefragmentContextImpl implements Buffer, DefragmentContext {
+public final class DefragmentContextImpl implements ReadWriteBuffer, DefragmentContext {
 	private BufferImpl _source;
 	private BufferImpl _target;
 	private DefragmentServices _services;
