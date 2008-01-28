@@ -13,16 +13,16 @@ public abstract class PrimitiveMarshaller {
     
     public abstract boolean useNormalClassRead();
     
-    public abstract Date readDate(BufferImpl bytes);
+    public abstract Date readDate(ByteArrayBuffer bytes);
     
-    public abstract Object readShort(BufferImpl buffer);
+    public abstract Object readShort(ByteArrayBuffer buffer);
     
-    public abstract Object readInteger(BufferImpl buffer);
+    public abstract Object readInteger(ByteArrayBuffer buffer);
     
-    public abstract Object readFloat(BufferImpl buffer);
+    public abstract Object readFloat(ByteArrayBuffer buffer);
     
-    public abstract Object readDouble(BufferImpl buffer);
+    public abstract Object readDouble(ByteArrayBuffer buffer);
     
-    public abstract Object readLong(BufferImpl buffer);
+    public abstract Object readLong(ByteArrayBuffer buffer);
     
 }

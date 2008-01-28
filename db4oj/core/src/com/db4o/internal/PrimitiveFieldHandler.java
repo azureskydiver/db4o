@@ -117,7 +117,7 @@ public class PrimitiveFieldHandler extends ClassMetadata implements FieldHandler
     	return _handler.prepareComparison(source);
     }
     
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, BufferImpl[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
         if (isArray()) {
             return _handler;
         }

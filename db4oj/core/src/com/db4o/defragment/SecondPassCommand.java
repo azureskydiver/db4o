@@ -40,7 +40,7 @@ final class SecondPassCommand implements PassCommand {
 	}
 
 	public void processObjectSlot(final DefragmentServicesImpl services, final ClassMetadata yapClass, int id) throws CorruptionException, IOException {
-		BufferImpl sourceBuffer = services.sourceBufferByID(id);
+		ByteArrayBuffer sourceBuffer = services.sourceBufferByID(id);
 		ObjectHeader objHead = services.sourceObjectHeader(sourceBuffer);
 		sourceBuffer._offset = 0;
 		boolean registerAddresses = services.hasFieldIndex(objHead.classMetadata());
@@ -89,7 +89,7 @@ final class SecondPassCommand implements PassCommand {
 					return acceptedClasses;
 				}
 
-				private void writeIntAt(BufferImpl target, int offset,
+				private void writeIntAt(ByteArrayBuffer target, int offset,
 						int value) {
 					int currentOffset = target.offset();
 					target.seek(offset);

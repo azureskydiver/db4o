@@ -38,7 +38,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     
     private int _fieldWriteCount;
     
-    private BufferImpl _debugPrepend;
+    private ByteArrayBuffer _debugPrepend;
     
     private Object _currentMarshalledObject;
     
@@ -106,9 +106,9 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
     }
     
 
-    public BufferImpl ToWriteBuffer(Pointer4 pointer) {
+    public ByteArrayBuffer ToWriteBuffer(Pointer4 pointer) {
         
-        BufferImpl buffer = new BufferImpl(pointer.length());
+        ByteArrayBuffer buffer = new ByteArrayBuffer(pointer.length());
         _writeBuffer.mergeChildren(this, pointer.address(), writeBufferOffset());
         
         if (Deploy.debug) {
@@ -146,7 +146,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         return container().blockAlignedBytes(buffer.length());
     }
     
-    private void writeObjectClassID(BufferImpl reader, int id) {
+    private void writeObjectClassID(ByteArrayBuffer reader, int id) {
         reader.writeInt(-id);
     }
 
@@ -253,7 +253,7 @@ public class MarshallingContext implements FieldListInfo, MarshallingInfo, Write
         _writeBuffer.writeInt(fieldCount);
     }
 
-    public void debugPrependNextWrite(BufferImpl prepend) {
+    public void debugPrependNextWrite(ByteArrayBuffer prepend) {
         if(Deploy.debug){
             _debugPrepend = prepend;
         }

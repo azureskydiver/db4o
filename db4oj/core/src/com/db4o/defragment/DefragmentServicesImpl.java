@@ -126,20 +126,20 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		_mapping.close();
 	}
 	
-	public BufferImpl bufferByID(DbSelector selector,int id) {
+	public ByteArrayBuffer bufferByID(DbSelector selector,int id) {
 		Slot slot=readPointer(selector, id);
 		return bufferByAddress(selector,slot.address(),slot.length());
 	}
 
-	public BufferImpl sourceBufferByAddress(int address,int length) throws IOException {
+	public ByteArrayBuffer sourceBufferByAddress(int address,int length) throws IOException {
 		return bufferByAddress(SOURCEDB, address, length);
 	}
 
-	public BufferImpl targetBufferByAddress(int address,int length) throws IOException {
+	public ByteArrayBuffer targetBufferByAddress(int address,int length) throws IOException {
 		return bufferByAddress(TARGETDB, address, length);
 	}
 
-	public BufferImpl bufferByAddress(DbSelector selector,int address,int length) {
+	public ByteArrayBuffer bufferByAddress(DbSelector selector,int address,int length) {
 		return selector.db(this).bufferByAddress(address,length);
 	}
 
@@ -155,7 +155,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		context.write(_targetDb,address);
 	}
 
-	public void targetWriteBytes(BufferImpl reader,int address) {
+	public void targetWriteBytes(ByteArrayBuffer reader,int address) {
 		_targetDb.writeBytes(reader,address,0);
 	}
 
@@ -188,7 +188,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 	public static void targetClassCollectionID(String file,int id) throws IOException {
 		RandomAccessFile raf=new RandomAccessFile(file,"rw");
 		try {
-			BufferImpl reader=new BufferImpl(Const4.INT_LENGTH);
+			ByteArrayBuffer reader=new ByteArrayBuffer(Const4.INT_LENGTH);
 
 			raf.seek(CLASSCOLLECTION_POINTER_ADDRESS);			
 			reader._offset=0;
@@ -258,7 +258,7 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		_targetDb.systemData().classCollectionID(newClassCollectionID);
 	}
 
-	public BufferImpl sourceBufferByID(int sourceID) throws IOException {
+	public ByteArrayBuffer sourceBufferByID(int sourceID) throws IOException {
 		return bufferByID(SOURCEDB,sourceID);
 	}
 	
@@ -289,12 +289,12 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		return _unindexed.iterator();
 	}
 
-	public ObjectHeader sourceObjectHeader(BufferImpl buffer) {
+	public ObjectHeader sourceObjectHeader(ByteArrayBuffer buffer) {
 		return new ObjectHeader(_sourceDb, buffer);
 	}
 	
 	private Slot readPointer(DbSelector selector,int id) {
-		BufferImpl reader=bufferByAddress(selector, id, Const4.POINTER_LENGTH);
+		ByteArrayBuffer reader=bufferByAddress(selector, id, Const4.POINTER_LENGTH);
         if(Deploy.debug){
             reader.readBegin(Const4.YAPPOINTER);    
         }

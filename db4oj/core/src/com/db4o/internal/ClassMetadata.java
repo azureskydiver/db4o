@@ -45,7 +45,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     private final ObjectContainerBase _container;
 
     byte[] i_nameBytes;
-    private BufferImpl i_reader;
+    private ByteArrayBuffer i_reader;
 
     private boolean _classIndexed;
     
@@ -692,7 +692,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 
     // Scrolls offset in passed reader to the offset the passed field should
     // be read at.
-    public final HandlerVersion findOffset(BufferImpl buffer, FieldMetadata field) {
+    public final HandlerVersion findOffset(ByteArrayBuffer buffer, FieldMetadata field) {
         if (buffer == null) {
             return HandlerVersion.INVALID;
         }
@@ -932,7 +932,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
       return classReflector().isCollection();
     }
 
-    void incrementFieldsOffset1(BufferImpl a_bytes) {
+    void incrementFieldsOffset1(ByteArrayBuffer a_bytes) {
         int length = readFieldCount(a_bytes);
         for (int i = 0; i < length; i++) {
             i_fields[i].incrementOffset(a_bytes);
@@ -1275,14 +1275,14 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		return new ObjectReference(id).read(trans, depth, Const4.ADD_TO_ID_TREE, false);
 	}
     
-    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, BufferImpl[] a_bytes) {
+    public TypeHandler4 readArrayHandler(Transaction a_trans, MarshallerFamily mf, ByteArrayBuffer[] a_bytes) {
         if (isArray()) {
             return this;
         }
         return null;
     }
 
-    public TypeHandler4 readArrayHandler1(BufferImpl[] a_bytes) {
+    public TypeHandler4 readArrayHandler1(ByteArrayBuffer[] a_bytes) {
         if(DTrace.enabled){
             if(a_bytes[0] instanceof StatefulBuffer){
                 DTrace.READ_ARRAY_WRAPPER.log(((StatefulBuffer)a_bytes[0]).getID());
@@ -1305,7 +1305,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return ObjectID.read(context);
     }
     
-    public void readCandidates(int handlerVersion, final BufferImpl buffer, final QCandidates candidates) {
+    public void readCandidates(int handlerVersion, final ByteArrayBuffer buffer, final QCandidates candidates) {
         int id = 0;
 
         int offset = buffer._offset;
@@ -1336,7 +1336,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     	return stream().activationDepthProvider();
 	}
 
-	public final int readFieldCount(BufferImpl buffer) {
+	public final int readFieldCount(ByteArrayBuffer buffer) {
         int count = buffer.readInt();
         if (count > i_fields.length) {
             if (Debug.atHome) {
@@ -1354,7 +1354,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return count;
     }
 
-    public Object readIndexEntry(BufferImpl a_reader) {
+    public Object readIndexEntry(ByteArrayBuffer a_reader) {
         return new Integer(a_reader.readInt());
     }
     
@@ -1367,7 +1367,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return readName1(a_trans, i_reader);
     }
 
-    public final byte[] readName1(Transaction trans, BufferImpl reader) {
+    public final byte[] readName1(Transaction trans, ByteArrayBuffer reader) {
 		if (reader == null)
 			return null;
 
@@ -1396,7 +1396,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
     void readVirtualAttributes(Transaction a_trans, ObjectReference a_yapObject) {
         int id = a_yapObject.getID();
         ObjectContainerBase stream = a_trans.container();
-        BufferImpl reader = stream.readReaderByID(a_trans, id);
+        ByteArrayBuffer reader = stream.readReaderByID(a_trans, id);
         ObjectHeader oh = new ObjectHeader(stream, this, reader);
         oh.objectMarshaller().readVirtualAttributes(a_trans, this, a_yapObject, oh._headerAttributes, reader);
     }
@@ -1480,7 +1480,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         bitFalse(Const4.READING);
     }	
 
-    public void readThis(Transaction a_trans, BufferImpl a_reader) {
+    public void readThis(Transaction a_trans, ByteArrayBuffer a_reader) {
         throw Exceptions4.virtualException();
     }
 
@@ -1818,7 +1818,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         return super.writeObjectBegin();
     }
 
-    public void writeIndexEntry(BufferImpl a_writer, Object a_object) {
+    public void writeIndexEntry(ByteArrayBuffer a_writer, Object a_object) {
         
         if(a_object == null){
             a_writer.writeInt(0);
@@ -1828,7 +1828,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
         a_writer.writeInt(((Integer)a_object).intValue());
     }
     
-    public final void writeThis(Transaction trans, BufferImpl writer) {
+    public final void writeThis(Transaction trans, ByteArrayBuffer writer) {
         MarshallerFamily.current()._class.write(trans, this, writer);
     }
 
@@ -1853,7 +1853,7 @@ public class ClassMetadata extends PersistentBase implements IndexableTypeHandle
 		mf._class.defrag(this,_container.stringIO(), context, classIndexID);
 	}
 
-    public static ClassMetadata readClass(ObjectContainerBase stream, BufferImpl reader) {
+    public static ClassMetadata readClass(ObjectContainerBase stream, ByteArrayBuffer reader) {
         ObjectHeader oh = new ObjectHeader(stream, reader);
         return oh.classMetadata();
     }

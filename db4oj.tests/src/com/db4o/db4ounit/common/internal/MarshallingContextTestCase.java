@@ -74,7 +74,7 @@ public class MarshallingContextTestCase extends AbstractDb4oTestCase {
         MarshallingContext marshallingContext = new MarshallingContext(trans(), ref, Integer.MAX_VALUE, true);
         marshaller.marshall(ref.getObject(), marshallingContext);
         Pointer4 pointer = marshallingContext.allocateSlot();
-        BufferImpl buffer = marshallingContext.ToWriteBuffer(pointer);
+        ByteArrayBuffer buffer = marshallingContext.ToWriteBuffer(pointer);
         
         
         buffer.seek(0);

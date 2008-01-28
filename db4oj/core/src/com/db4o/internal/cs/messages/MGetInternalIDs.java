@@ -6,7 +6,7 @@ import com.db4o.internal.*;
 
 public final class MGetInternalIDs extends MsgD implements ServerSideMessage {
 	public final boolean processAtServer() {
-		BufferImpl bytes = this.getByteLoad();
+		ByteArrayBuffer bytes = this.getByteLoad();
 		long[] ids;
 		synchronized (streamLock()) {
 			try {
@@ -17,7 +17,7 @@ public final class MGetInternalIDs extends MsgD implements ServerSideMessage {
 		}
 		int size = ids.length;
 		MsgD message = Msg.ID_LIST.getWriterForLength(transaction(), Const4.ID_LENGTH * (size + 1));
-		BufferImpl writer = message.payLoad();
+		ByteArrayBuffer writer = message.payLoad();
 		writer.writeInt(size);
 		for (int i = 0; i < size; i++) {
 			writer.writeInt((int) ids[i]);

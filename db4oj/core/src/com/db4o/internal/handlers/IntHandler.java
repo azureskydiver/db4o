@@ -47,19 +47,19 @@ public class IntHandler extends PrimitiveHandler {
         return mf._primitive.readInteger(writer);
     }
 
-    Object read1(BufferImpl a_bytes) {
+    Object read1(ByteArrayBuffer a_bytes) {
         return new Integer(a_bytes.readInt());
     }    
 
-    public void write(Object obj, BufferImpl writer) {
+    public void write(Object obj, ByteArrayBuffer writer) {
         write(((Integer)obj).intValue(), writer);
     }
 
-    public void write(int intValue, BufferImpl writer) {
+    public void write(int intValue, ByteArrayBuffer writer) {
         writeInt(intValue, writer);
     }
 
-    public static final void writeInt(int a_int, BufferImpl a_bytes) {
+    public static final void writeInt(int a_int, ByteArrayBuffer a_bytes) {
         if (Deploy.debug) {
             a_bytes.writeBegin(Const4.YAPINTEGER);
             if (Deploy.debugLong) {

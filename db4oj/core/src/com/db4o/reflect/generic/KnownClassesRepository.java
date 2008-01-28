@@ -118,7 +118,7 @@ public class KnownClassesRepository {
 			return ret;
 		}
         
-		BufferImpl classreader=_stream.readWriterByID(_trans,id);
+		ByteArrayBuffer classreader=_stream.readWriterByID(_trans,id);
 
 		ClassMarshaller marshaller = marshallerFamily()._class;
 		RawClassSpec spec=marshaller.readSpec(_trans, classreader);
@@ -144,7 +144,7 @@ public class KnownClassesRepository {
 
 		ReflectClass clazz = lookupByID(id);
 		
-		BufferImpl classreader=_stream.readWriterByID(_trans,id);
+		ByteArrayBuffer classreader=_stream.readWriterByID(_trans,id);
 
 		ClassMarshaller classMarshaller = marshallerFamily()._class;
 		RawClassSpec classInfo=classMarshaller.readSpec(_trans, classreader);

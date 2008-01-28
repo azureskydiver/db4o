@@ -67,7 +67,7 @@ public class MultidimensionalArrayHandler extends ArrayHandler {
 	    return elementCount(dimensions);
     }
     
-    public void readSubCandidates(int handlerVersion, BufferImpl reader, QCandidates candidates) {
+    public void readSubCandidates(int handlerVersion, ByteArrayBuffer reader, QCandidates candidates) {
         if(Deploy.debug){
             reader.readBegin(identifier());
         }

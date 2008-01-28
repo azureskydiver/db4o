@@ -160,7 +160,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
             }
             _timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
-                BufferImpl lockBytes = new BufferImpl(Const4.LONG_LENGTH);
+                ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.LONG_LENGTH);
                 lockBytes.writeLong(time);
                 _timerFile.write(lockBytes._buffer);
             } else {
@@ -178,7 +178,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
             }
             _timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
-                BufferImpl lockBytes = new BufferImpl(Const4.LONG_LENGTH);
+                ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.LONG_LENGTH);
                 _timerFile.read(lockBytes._buffer, Const4.LONG_LENGTH);
                 return lockBytes.readLong();
             }
@@ -194,7 +194,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
             }
             _timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
-                BufferImpl lockBytes = new BufferImpl(Const4.INT_LENGTH);
+                ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.INT_LENGTH);
                 lockBytes.writeInt(time);
                 _timerFile.write(lockBytes._buffer);
             } else {
@@ -212,7 +212,7 @@ public class TimerFileLockEnabled extends TimerFileLock{
             }
             _timerFile.blockSeek(address, offset);
             if (Deploy.debug) {
-                BufferImpl lockBytes = new BufferImpl(Const4.INT_LENGTH);
+                ByteArrayBuffer lockBytes = new ByteArrayBuffer(Const4.INT_LENGTH);
                 _timerFile.read(lockBytes._buffer, Const4.INT_LENGTH);
                 return lockBytes.readInt();
             }

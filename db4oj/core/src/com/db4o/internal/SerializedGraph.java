@@ -25,13 +25,13 @@ public class SerializedGraph {
 		return (Const4.INT_LENGTH * 2 )+ length();
 	}
 	
-	public void write(BufferImpl buffer){
+	public void write(ByteArrayBuffer buffer){
 		buffer.writeInt(_id);
 		buffer.writeInt(length());
 		buffer.append(_bytes);
 	}
 	
-	public static SerializedGraph read(BufferImpl buffer){
+	public static SerializedGraph read(ByteArrayBuffer buffer){
 		int id = buffer.readInt();
 		int length = buffer.readInt();
 		return new SerializedGraph(id, buffer.readBytes(length));

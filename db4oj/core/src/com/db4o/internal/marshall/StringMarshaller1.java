@@ -12,7 +12,7 @@ public class StringMarshaller1 extends StringMarshaller{
         return true;
     }
     
-    public BufferImpl readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException{
+    public ByteArrayBuffer readIndexEntry(StatefulBuffer parentSlot) throws CorruptionException{
         int payLoadOffSet = parentSlot.readInt();
         int length = parentSlot.readInt();
         if(payLoadOffSet == 0){

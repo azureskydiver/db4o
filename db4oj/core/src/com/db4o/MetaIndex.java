@@ -27,7 +27,7 @@ public class MetaIndex implements Internal4{
 	private final int patchEntries = 0;
 	private final int patchLength = 0;
     
-    public void read(BufferImpl reader){
+    public void read(ByteArrayBuffer reader){
         indexAddress = reader.readInt();
         indexEntries = reader.readInt();
         indexLength = reader.readInt();
@@ -38,7 +38,7 @@ public class MetaIndex implements Internal4{
         /*patchLength = */reader.readInt();
     }
     
-    public void write(BufferImpl writer){
+    public void write(ByteArrayBuffer writer){
         writer.writeInt(indexAddress);
         writer.writeInt(indexEntries);
         writer.writeInt(indexLength);

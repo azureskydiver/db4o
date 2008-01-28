@@ -25,9 +25,9 @@ public interface DefragmentContext extends Context, ReadBuffer {
 	
 	public int mappedID(int origID);
 	
-	public BufferImpl sourceBuffer();
+	public ByteArrayBuffer sourceBuffer();
 	
-	public BufferImpl targetBuffer();
+	public ByteArrayBuffer targetBuffer();
 
 	public Slot allocateTargetSlot(int length);
 
@@ -35,9 +35,9 @@ public interface DefragmentContext extends Context, ReadBuffer {
 
 	public int copySlotToNewMapped(int sourceAddress, int length) throws IOException;
 
-	public BufferImpl sourceBufferByAddress(int sourceAddress, int length) throws IOException;
+	public ByteArrayBuffer sourceBufferByAddress(int sourceAddress, int length) throws IOException;
 	
-	public BufferImpl sourceBufferById(int sourceId) throws IOException;
+	public ByteArrayBuffer sourceBufferById(int sourceId) throws IOException;
 	
-	public void targetWriteBytes(int address, BufferImpl buffer);
+	public void targetWriteBytes(int address, ByteArrayBuffer buffer);
 }

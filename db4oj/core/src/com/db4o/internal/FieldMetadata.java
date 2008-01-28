@@ -814,7 +814,7 @@ public class FieldMetadata implements StoredField {
      * @param trans
      * @param ref
      */
-    public void readVirtualAttribute(Transaction trans, BufferImpl buffer, ObjectReference ref) {
+    public void readVirtualAttribute(Transaction trans, ByteArrayBuffer buffer, ObjectReference ref) {
         incrementOffset(buffer);
     }
 

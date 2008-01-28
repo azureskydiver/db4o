@@ -65,7 +65,7 @@ public final class FreeSlotNode extends TreeInt {
 		return a_in;
 	}
 
-	public Object read(BufferImpl buffer) {
+	public Object read(ByteArrayBuffer buffer) {
 		int size = buffer.readInt();
 		int address = buffer.readInt();
 		if (size > sizeLimit) {
@@ -79,7 +79,7 @@ public final class FreeSlotNode extends TreeInt {
 		return null;
 	}
 
-	private void debugCheckBuffer(BufferImpl buffer, FreeSlotNode node) {
+	private void debugCheckBuffer(ByteArrayBuffer buffer, FreeSlotNode node) {
 		if (!(buffer instanceof StatefulBuffer)) {
 			return;
 		}
@@ -101,7 +101,7 @@ public final class FreeSlotNode extends TreeInt {
 	
 	
 
-	public final void write(BufferImpl a_writer) {
+	public final void write(ByteArrayBuffer a_writer) {
 		// byte order: size, address
 		a_writer.writeInt(_key);
 		a_writer.writeInt(_peer._key);

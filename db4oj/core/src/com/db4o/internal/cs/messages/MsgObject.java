@@ -14,7 +14,7 @@ public class MsgObject extends MsgD {
 	private int _id;
 	private int _address;
 	
-	final MsgD getWriter(Transaction trans, Pointer4 pointer, BufferImpl buffer,int[] prependInts) {
+	final MsgD getWriter(Transaction trans, Pointer4 pointer, ByteArrayBuffer buffer,int[] prependInts) {
 		int lengthNeeded = buffer.length() + LENGTH_FOR_FIRST;
 		if(prependInts != null){
 			lengthNeeded += (prependInts.length * Const4.INT_LENGTH);
@@ -29,7 +29,7 @@ public class MsgObject extends MsgD {
 		return message;
 	}
 	
-    private void appendPayLoad(StatefulBuffer target, Pointer4 pointer, final BufferImpl payLoad) {
+    private void appendPayLoad(StatefulBuffer target, Pointer4 pointer, final ByteArrayBuffer payLoad) {
         target.writeInt(payLoad.length());
         target.writeInt(pointer.id());
         target.writeInt(pointer.address());
@@ -41,14 +41,14 @@ public class MsgObject extends MsgD {
 		return getWriter(buffer.getTransaction(), buffer.pointer(), buffer, null);
 	}
 	
-	public final MsgD getWriter(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, BufferImpl buffer) {
+	public final MsgD getWriter(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, ByteArrayBuffer buffer) {
         if(classMetadata == null){
             return getWriter(trans, pointer, buffer, new int[]{0});
         }
 		return getWriter(trans, pointer, buffer, new int[]{ classMetadata.getID()});
 	}
 	
-	public final MsgD getWriter(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, int param, BufferImpl buffer) {
+	public final MsgD getWriter(Transaction trans, Pointer4 pointer, ClassMetadata classMetadata, int param, ByteArrayBuffer buffer) {
 		return getWriter(trans, pointer, buffer, new int[]{ classMetadata.getID(), param});
 	}
 	

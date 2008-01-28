@@ -158,7 +158,7 @@ public class SlotChange extends TreeInt {
         return _shared.slot();
     }
 
-	public Object read(BufferImpl reader) {
+	public Object read(ByteArrayBuffer reader) {
 		SlotChange change = new SlotChange(reader.readInt());
 		change._newSlot = new Slot(reader.readInt(), reader.readInt());
 		change.doSetPointer();
@@ -189,7 +189,7 @@ public class SlotChange extends TreeInt {
 		_newSlot = slot;
 	}
 
-	public void write(BufferImpl writer) {
+	public void write(ByteArrayBuffer writer) {
 		if (isSetPointer()) {
 			writer.writeInt(_key);
 			writer.writeInt(_newSlot.address());

@@ -12,17 +12,17 @@ import com.db4o.marshall.*;
  * 
  * @exclude
  */
-public class BufferImpl implements ReadBuffer, ReadWriteBuffer, WriteBuffer {
+public class ByteArrayBuffer implements ReadBuffer, ReadWriteBuffer, WriteBuffer {
 	
 	// for coding convenience, we allow objects to grab into the buffer
 	public byte[] _buffer;
 	public int _offset;
 
 	
-	BufferImpl(){
+	ByteArrayBuffer(){
 	}
 	
-	public BufferImpl(int a_length){
+	public ByteArrayBuffer(int a_length){
 		_buffer = new byte[a_length];
 	}
 	
@@ -40,14 +40,14 @@ public class BufferImpl implements ReadBuffer, ReadWriteBuffer, WriteBuffer {
         writeBytes(bytes);
     }
 	
-	public final boolean containsTheSame(BufferImpl other) {
+	public final boolean containsTheSame(ByteArrayBuffer other) {
 	    if (other != null) {
 	        return Arrays4.areEqual(_buffer, other._buffer);
 	    }
 	    return false;
 	}
 	
-    public void copyTo(BufferImpl to, int fromOffset, int toOffset, int length) {
+    public void copyTo(ByteArrayBuffer to, int fromOffset, int toOffset, int length) {
         System.arraycopy(_buffer, fromOffset, to._buffer, toOffset, length);
     }
 
@@ -96,7 +96,7 @@ public class BufferImpl implements ReadBuffer, ReadWriteBuffer, WriteBuffer {
 	    _offset += length;
 	}
     
-	public final BufferImpl readEmbeddedObject(Transaction trans) throws Db4oIOException {
+	public final ByteArrayBuffer readEmbeddedObject(Transaction trans) throws Db4oIOException {
 	    int address = readInt();
 	    int length = readInt();
 	    if(address == 0){
@@ -146,8 +146,8 @@ public class BufferImpl implements ReadBuffer, ReadWriteBuffer, WriteBuffer {
         return LongHandler.readLong(this);
     }
     
-    public BufferImpl readPayloadReader(int offset, int length){
-        BufferImpl payLoad = new BufferImpl(length);
+    public ByteArrayBuffer readPayloadReader(int offset, int length){
+        ByteArrayBuffer payLoad = new ByteArrayBuffer(length);
         System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
         return payLoad;
     }

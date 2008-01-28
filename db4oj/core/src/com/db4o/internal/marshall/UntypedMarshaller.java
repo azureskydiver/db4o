@@ -11,7 +11,7 @@ public abstract class UntypedMarshaller {
     
     MarshallerFamily _family;
     
-    public abstract TypeHandler4 readArrayHandler(Transaction a_trans, BufferImpl[] a_bytes);
+    public abstract TypeHandler4 readArrayHandler(Transaction a_trans, ByteArrayBuffer[] a_bytes);
 
     public abstract boolean useNormalClassRead();
     

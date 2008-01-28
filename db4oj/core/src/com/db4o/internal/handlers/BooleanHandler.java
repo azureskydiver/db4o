@@ -42,7 +42,7 @@ public final class BooleanHandler extends PrimitiveHandler {
 		return i_primitive;
 	}
 
-	Object read1(BufferImpl a_bytes){
+	Object read1(ByteArrayBuffer a_bytes){
 		if (Deploy.debug){
 			a_bytes.readBegin(Const4.YAPBOOLEAN);
 		}
@@ -61,7 +61,7 @@ public final class BooleanHandler extends PrimitiveHandler {
 		return null;
 	}
 	
-	public void write(Object obj, BufferImpl buffer){
+	public void write(Object obj, ByteArrayBuffer buffer){
 		if(Deploy.debug){
 			buffer.writeBegin(Const4.YAPBOOLEAN);
 		}		

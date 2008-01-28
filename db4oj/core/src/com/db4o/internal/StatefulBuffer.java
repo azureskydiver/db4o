@@ -16,7 +16,7 @@ import com.db4o.internal.slots.*;
  * 
  * @exclude
  */
-public final class StatefulBuffer extends BufferImpl {
+public final class StatefulBuffer extends ByteArrayBuffer {
 	
     private int i_address;
     private int _addressOffset;
@@ -280,7 +280,7 @@ public final class StatefulBuffer extends BufferImpl {
         return linkOffset;
     }
     
-    public BufferImpl readPayloadWriter(int offset, int length){
+    public ByteArrayBuffer readPayloadWriter(int offset, int length){
         StatefulBuffer payLoad = new StatefulBuffer(i_trans, 0, length);
         System.arraycopy(_buffer,offset, payLoad._buffer, 0, length);
         transferPayLoadAddress(payLoad, offset);

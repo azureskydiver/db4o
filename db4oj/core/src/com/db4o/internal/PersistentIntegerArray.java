@@ -27,7 +27,7 @@ public class PersistentIntegerArray extends PersistentBase {
 		return (Const4.INT_LENGTH * (size() + 1)) + Const4.ADDED_LENGTH;
 	}
 
-	public void readThis(Transaction trans, BufferImpl reader) {
+	public void readThis(Transaction trans, ByteArrayBuffer reader) {
 		int length = reader.readInt();
 		_ints = new int[length];
 		for (int i = 0; i < length; i++) {
@@ -35,7 +35,7 @@ public class PersistentIntegerArray extends PersistentBase {
 		}
 	}
 
-	public void writeThis(Transaction trans, BufferImpl writer) {
+	public void writeThis(Transaction trans, ByteArrayBuffer writer) {
 		writer.writeInt(size());
 		for (int i = 0; i < _ints.length; i++) {
 			writer.writeInt(_ints[i]);

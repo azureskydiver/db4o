@@ -47,10 +47,10 @@ public class UntypedFieldHandler0 extends UntypedFieldHandler {
 
 	private int copyDependentSlot(DefragmentContext context, int sourceId) {
 		try {
-			BufferImpl sourceBuffer = context.sourceBufferById(sourceId);
+			ByteArrayBuffer sourceBuffer = context.sourceBufferById(sourceId);
 			Slot targetPointerSlot = context.allocateMappedTargetSlot(sourceId, Const4.POINTER_LENGTH);
 			Slot targetPayloadSlot = context.allocateTargetSlot(sourceBuffer.length());
-			BufferImpl pointerBuffer = new BufferImpl(Const4.POINTER_LENGTH);
+			ByteArrayBuffer pointerBuffer = new ByteArrayBuffer(Const4.POINTER_LENGTH);
 			pointerBuffer.writeInt(targetPayloadSlot.address());
 			pointerBuffer.writeInt(targetPayloadSlot.length());
 			context.targetWriteBytes(targetPointerSlot.address(), pointerBuffer);
