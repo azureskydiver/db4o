@@ -8,7 +8,7 @@ package  com.db4o.foundation;
  */
 public class Iterator4Impl implements Iterator4 {
 	
-    private List4 _first;
+    private final List4 _first;
     private List4 _next;
 	
 	private Object _current;

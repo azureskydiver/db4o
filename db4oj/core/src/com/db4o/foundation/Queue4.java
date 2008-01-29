@@ -3,12 +3,22 @@ package com.db4o.foundation;
 
 public interface Queue4 {
 
-	public abstract void add(Object obj);
+	void add(Object obj);
 
-	public abstract Object next();
+	Object next();
 
-	public abstract boolean hasNext();
+	boolean hasNext();
+	
+	/**
+	 * Returns the next object in the queue that matches the specified condition.
+	 * 
+	 * The operation is always NON-BLOCKING.
+	 *  
+	 * @param predicate condition the object must satisfy to be returned
+	 * 
+	 * @return the object satisfying the condition or null if none does
+	 */
+	Object nextMatching(Predicate4 condition);
 
-	public abstract Iterator4 iterator();
-
+	Iterator4 iterator();
 }
