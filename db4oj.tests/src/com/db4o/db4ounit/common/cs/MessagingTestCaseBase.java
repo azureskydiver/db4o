@@ -34,13 +34,17 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 		
 		final Configuration config = Db4o.newConfiguration();
 		config.io(new MemoryIoAdapter());
-		config.clientServer().setMessageRecipient(recipient);
+		setMessageRecipient(config, recipient);
 		
 		return Db4o.openServer(config, "nofile", 0xdb40);
 	}
 
 	protected void setMessageRecipient(final ObjectContainer container, final MessageRecipient recipient) {
-		container.ext().configure().clientServer().setMessageRecipient(recipient);
+		setMessageRecipient(container.ext().configure(), recipient);
+	}
+
+	private void setMessageRecipient(final Configuration config, final MessageRecipient recipient) {
+		config.clientServer().setMessageRecipient(recipient);
 	}
 
 }
