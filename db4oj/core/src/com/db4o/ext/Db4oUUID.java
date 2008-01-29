@@ -2,9 +2,6 @@
 
 package com.db4o.ext;
 
-import com.db4o.foundation.*;
-
-
 /**
  * a unique universal identify for an object. <br><br>The db4o UUID consists of
  * two parts:<br> - an indexed long for fast access,<br> - the signature of the
