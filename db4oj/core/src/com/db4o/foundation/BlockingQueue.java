@@ -67,4 +67,12 @@ public class BlockingQueue implements Queue4 {
 			}
 		});
 	}
+
+	public Object nextMatching(final Predicate4 condition) {
+		return _lock.run(new SafeClosure4() {
+			public Object run() {
+				return _queue.nextMatching(condition);
+			}
+		});
+	}
 }

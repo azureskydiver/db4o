@@ -10,77 +10,77 @@ package com.db4o.foundation;
  * @exclude
  */
 public class NonblockingQueue implements Queue4 {
-    
-	protected final class Queue4Iterator implements Iterator4 {
-	    
-		protected boolean _active=false;
-		protected List4 _current=null;
-		
-		public Object current() {
-			return _current._element;
-		}
 
-		public boolean moveNext() {
-			if(!_active) {
-				_current=_last;
-				_active=true;
-			} else {
-				if(_current!=null) {
-					_current=_current._next;
-				}
-			}
-			return _current!=null;
-		}
-
-		public void reset() {
-			_current=null;
-			_active=false;
-		}
-	}
-
-	private List4 _first;
-	protected List4 _last;
+	private List4 _insertionPoint;
+	private List4 _next;
 	
     /* (non-Javadoc)
 	 * @see com.db4o.foundation.Queue4#add(java.lang.Object)
 	 */
     public final void add(Object obj) {
-    	List4 ce = new List4(null, obj); 
-    	if(_first == null){
-    		_last = ce;
-    	}else{
-    		_first._next = ce;
+    	List4 newNode = new List4(null, obj);
+    	if (_insertionPoint == null) {
+    		_next = newNode;
+    	} else {
+    		_insertionPoint._next = newNode;
     	}
-    	_first = ce;
+    	_insertionPoint = newNode;
     }
     
 	/* (non-Javadoc)
 	 * @see com.db4o.foundation.Queue4#next()
 	 */
 	public final Object next() {
-		if(_last == null){
+		if(_next == null){
 			return null;
 		}
-		Object ret = _last._element;
-		_last = _last._next;
-		if(_last == null){
-			_first = null;
-		}
+		Object ret = _next._element;
+		removeNext();
 		return ret;
+	}
+
+	private void removeNext() {
+		_next = _next._next;
+		if (_next == null) {
+			_insertionPoint = null;
+		}
+	}
+	
+	public Object nextMatching(Predicate4 condition) {
+		if (null == condition) {
+			throw new ArgumentNullException();
+		}
+		
+		List4 current = _next;
+		List4 previous = null;
+		while (null != current) {
+			final Object element = current._element;
+			if (condition.match(element)) {
+				if (previous == null) {
+					removeNext();
+				} else {
+					previous._next = current._next;
+				}
+				return element;
+			}
+			previous = current;
+			current = current._next;
+		}
+		return null;
 	}
     
     /* (non-Javadoc)
 	 * @see com.db4o.foundation.Queue4#hasNext()
 	 */
     public final boolean hasNext(){
-        return _last != null;
+        return _next != null;
     }
 
 	/* (non-Javadoc)
 	 * @see com.db4o.foundation.Queue4#iterator()
 	 */
 	public Iterator4 iterator() {
-		return new Queue4Iterator();
+		return new Iterator4Impl(_next);
 	}
-    
+
 }
