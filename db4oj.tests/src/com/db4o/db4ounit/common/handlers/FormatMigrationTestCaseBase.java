@@ -199,6 +199,8 @@ public abstract class FormatMigrationTestCaseBase implements TestLifeCycle, OptO
     protected abstract void store(ExtObjectContainer objectContainer);
     
     protected void storeObject(ExtObjectContainer objectContainer, Object obj){
+    	// code MUST use the deprecated API here
+    	// because it will be run against old db4o versions
     	objectContainer.set(obj);
     }
     
