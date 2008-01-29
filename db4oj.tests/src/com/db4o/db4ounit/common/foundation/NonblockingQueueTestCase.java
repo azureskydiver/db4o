@@ -32,7 +32,8 @@ public class NonblockingQueueTestCase extends Queue4TestCaseBase {
 	
 	public void testNextMatchingOnEmptyQueue() {
 
-		assertNextMatching(new Object[] { }, null, new Object[0]);
+		final Object[] empty = new Object[0];
+		assertNextMatching(empty, null, empty);
 	}
 	
 	public void testNextMatching() {
