@@ -2,6 +2,8 @@
 
 package com.db4o.ext;
 
+import com.db4o.messaging.*;
+
 /**
  * extended client functionality for the
  * {@link ExtObjectContainer ExtObjectContainer} interface.
@@ -56,5 +58,11 @@ public interface ExtClient extends ExtObjectContainer{
      * @return true if the client is alive.
      */
 	public boolean isAlive();
+	
+	/**
+	 * Dispatches any pending messages to
+	 * the currently configured {@link MessageRecipient}.
+	 */
+	public void dispatchPendingMessages();
 }
 

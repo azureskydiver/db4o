@@ -10,7 +10,7 @@ import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.foundation.network.*;
 import com.db4o.internal.*;
-import com.db4o.internal.activation.FixedActivationDepth;
+import com.db4o.internal.activation.*;
 import com.db4o.internal.convert.*;
 import com.db4o.internal.cs.messages.*;
 import com.db4o.internal.query.processor.*;
@@ -312,6 +312,23 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 			return msg;
 		}
 	}
+	
+	private Msg getResponseSingleThreaded() {
+		while (isMessageDispatcherAlive()) {
+			try {
+				final Msg message = Msg.readMessage(this, _transaction, i_socket);
+				if(message instanceof ClientSideMessage) {
+					if(((ClientSideMessage)message).processAtClient()){
+						continue;
+					}
+				}
+				return message;
+	         } catch (Db4oIOException exc) {
+	             onMsgError();
+	         }
+		}
+		return null;
+	}
 
 	private Msg getResponseMultiThreaded() {
 		Msg msg;
@@ -339,23 +356,6 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 		throw new DatabaseClosedException();
 	}
 	
-	private Msg getResponseSingleThreaded() {
-		while (isMessageDispatcherAlive()) {
-			try {
-				final Msg message = Msg.readMessage(this, _transaction, i_socket);
-				if(message instanceof ClientSideMessage) {
-					if(((ClientSideMessage)message).processAtClient()){
-						continue;
-					}
-				}
-				return message;
-	         } catch (Db4oIOException exc) {
-	             onMsgError();
-	         }
-		}
-		return null;
-	}
-
 	public boolean isMessageDispatcherAlive() {
 		return i_socket != null;
 	}
@@ -851,4 +851,19 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         return response.readInt();
     }
 	
+	public void dispatchPendingMessages() {
+		synchronized (_lock) {
+			while(true) {
+				ClientSideTask task = (ClientSideTask) _messageQueue.nextMatching(new Predicate4() {
+					public boolean match(Object message) {
+						return message instanceof ClientSideTask;
+					}
+				});
+				if (null == task) {
+					break;
+				}
+				task.runOnClient();
+			}
+		}
+	}
 }

@@ -3,6 +3,7 @@
 package com.db4o.db4ounit.common.cs;
 
 import com.db4o.*;
+import com.db4o.ext.*;
 import com.db4o.foundation.*;
 import com.db4o.messaging.*;
 
@@ -15,15 +16,40 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 	}
 	
 	static final class AutoReplyRecipient implements MessageRecipient {
-		
 		public void processMessage(MessageContext context, Object message) {
 			final MessageSender sender = context.sender();
 			sender.send("reply: " + message);
 		}		
 	};
 	
-	public void test() {
+	interface ClientWaitLogic {
+		void wait(ObjectContainer client1, ObjectContainer client2); 
+	}
+	
+	public void testDispatchPendingMessages() {
+		assertReplyBehavior(new ClientWaitLogic() {
+			public void wait(ObjectContainer client1, ObjectContainer client2) {
+				
+				((ExtClient)client1).dispatchPendingMessages();
+				((ExtClient)client2).dispatchPendingMessages();
+				
+				waitForMessagesToBeProcessed();
+			}
+		});
+	}
+	
+	public void testInterleavedCommits() {
 		
+		assertReplyBehavior(new ClientWaitLogic() {
+			public void wait(ObjectContainer client1, ObjectContainer client2) {
+				client2.commit();
+				client1.commit();
+				waitForMessagesToBeProcessed();
+			}
+		});
+	}
+	
+	private void assertReplyBehavior(final ClientWaitLogic clientWaitLogic) {
 		final MessageCollector collector1 = new MessageCollector();
 		final MessageCollector collector2 = new MessageCollector();
 		
@@ -41,7 +67,10 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 					final MessageSender sender2 = messageSender(client2);
 					sendEvenOddMessages(sender1, sender2);
 					
-					waitForMessagesToBeDispatched(client1, client2);
+					clientWaitLogic.wait(client1, client2);
+					
+					Assert.areEqual("[reply: 0, reply: 2, reply: 4, reply: 6, reply: 8]", collector1.messages.toString());
+					Assert.areEqual("[reply: 1, reply: 3, reply: 5, reply: 7, reply: 9]", collector2.messages.toString());
 					
 				} finally {
 					client2.close();
@@ -53,16 +82,6 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 		} finally {
 			server.close();
 		}
-		
-		Assert.areEqual("[reply: 0, reply: 2, reply: 4, reply: 6, reply: 8]", collector1.messages.toString());
-		Assert.areEqual("[reply: 1, reply: 3, reply: 5, reply: 7, reply: 9]", collector2.messages.toString());
-	}
-
-	private void waitForMessagesToBeDispatched(ObjectContainer client1, ObjectContainer client2) {
-		client2.commit();
-		client1.commit();
-		// give some time for all the message to be processed...
-		Cool.sleepIgnoringInterruption(500);
 	}
 
 	private void sendEvenOddMessages(final MessageSender even, final MessageSender odd) {
@@ -74,6 +93,11 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 				odd.send(message);
 			}
 		}
+	}
+
+	private void waitForMessagesToBeProcessed() {
+		// give some time for all the message to be processed...
+		Cool.sleepIgnoringInterruption(500);
 	}
 
 }
