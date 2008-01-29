@@ -6,7 +6,7 @@ import db4ounit.extensions.*;
 
 public class AllTests extends Db4oTestSuite {
 	public static void main(String[] args) {
-		new AllTests().runSolo();
+		new AllTests().runAll();
     }
 
 	protected Class[] testCases() {
@@ -23,6 +23,7 @@ public class AllTests extends Db4oTestSuite {
             IntHandlerTestCase.class,
             LongHandlerTestCase.class,
             MultiDimensionalArrayHandlerTestCase.class,
+            StringBufferTypeHandlerTestCase.class,
 			StringHandlerTestCase.class,
 			ShortHandlerTestCase.class,
 			UntypedHandlerTestCase.class,
