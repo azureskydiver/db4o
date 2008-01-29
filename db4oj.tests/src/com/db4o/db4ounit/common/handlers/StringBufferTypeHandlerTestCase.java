@@ -57,13 +57,12 @@ public class StringBufferTypeHandlerTestCase extends AbstractDb4oTestCase {
 		}
 
 		private HandlerRegistry handlers(Context context) {
-			return ((ObjectContainerBase) context.objectContainer()).handlers();
+			return ((InternalObjectContainer) context.objectContainer()).handlers();
 		}
 
 		public PreparedComparison prepareComparison(Object obj) {
 			throw new NotImplementedException();
 		}
-		
 	}
 	
 	public static class Item {
