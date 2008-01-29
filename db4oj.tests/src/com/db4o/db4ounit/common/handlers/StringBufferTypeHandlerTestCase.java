@@ -13,10 +13,12 @@ import com.db4o.typehandlers.*;
 
 import db4ounit.*;
 import db4ounit.extensions.*;
+import db4ounit.extensions.fixtures.*;
 
 
-public class StringBufferTypeHandlerTestCase extends AbstractDb4oTestCase {
-	
+public class StringBufferTypeHandlerTestCase extends AbstractDb4oTestCase implements OptOutDefragSolo {
+    //TODO: quick for failure in "defrag-solo" mode
+    
 	private final class ClassPredicate implements TypeHandlerPredicate {
 		private final Class _klass;
 		
