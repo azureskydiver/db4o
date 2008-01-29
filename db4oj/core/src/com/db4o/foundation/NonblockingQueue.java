@@ -2,11 +2,7 @@
 
 package com.db4o.foundation;
 
-
 /**
- * Using the CollectionElement the other way around:
- * CollectionElement.i_next points to the previous element
- * 
  * @exclude
  */
 public class NonblockingQueue implements Queue4 {
