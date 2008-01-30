@@ -37,7 +37,7 @@ public interface DefragmentServices extends IDMapping {
 
 	void registerUnindexed(int id);
 	
-	Iterator4 unindexedIDs();
+	IdSource unindexedIDs();
 	
 	int sourceAddressByID(int sourceID);
 }
