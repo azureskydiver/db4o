@@ -24,8 +24,7 @@ public class Cool {
 	 * @param block
 	 */
 	public static void loopWithTimeout(long millisecondsTimeout, ConditionalBlock block) {
-		final StopWatch watch = new StopWatch();
-		watch.start();
+		final StopWatch watch = new AutoStopWatch();
 		do {
 			if (!block.run()) {
 				break;
