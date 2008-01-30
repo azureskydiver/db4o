@@ -31,12 +31,15 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 	}
 
 	protected ObjectServer openServerWith(final MessageRecipient recipient) {
-		
+		final Configuration config = memoryIoConfiguration();
+		setMessageRecipient(config, recipient);
+		return openServer(config);
+	}
+
+	protected Configuration memoryIoConfiguration() {
 		final Configuration config = Db4o.newConfiguration();
 		config.io(new MemoryIoAdapter());
-		setMessageRecipient(config, recipient);
-		
-		return openServer(config);
+		return config;
 	}
 
 	protected ObjectServer openServer(final Configuration config) {

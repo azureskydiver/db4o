@@ -13,7 +13,7 @@ public class DispatchPendingMessagesTestCase extends MessagingTestCaseBase {
 
 	public void testReturnsImmediatelyWithNoMessages() {
 		
-		final ObjectServer server = openServer(Db4o.newConfiguration());
+		final ObjectServer server = openServer(memoryIoConfiguration());
 		try {
 			final ObjectContainer client = openClient("client", server);
 			try {
