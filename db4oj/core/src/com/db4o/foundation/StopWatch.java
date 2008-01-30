@@ -15,7 +15,11 @@ public class StopWatch {
 	}
 	
 	public void stop() {
-		_elapsed = System.currentTimeMillis() - _started;
+		_elapsed = peek();
+	}
+
+	public long peek() {
+		return System.currentTimeMillis() - _started;
 	}
 	
 	public long elapsed() {

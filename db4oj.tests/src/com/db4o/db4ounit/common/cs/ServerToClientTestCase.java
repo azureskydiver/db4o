@@ -28,12 +28,15 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 	
 	public void testDispatchPendingMessages() {
 		assertReplyBehavior(new ClientWaitLogic() {
-			public void wait(ObjectContainer client1, ObjectContainer client2) {
+			public void wait(final ObjectContainer client1, final ObjectContainer client2) {
 				
-				((ExtClient)client1).dispatchPendingMessages();
-				((ExtClient)client2).dispatchPendingMessages();
-				
-				waitForMessagesToBeProcessed();
+				final int timeout = 100;				
+				loopWithTimeout(timeout, new Runnable() {
+					public void run() {
+						((ExtClient)client1).dispatchPendingMessages();
+						((ExtClient)client2).dispatchPendingMessages();
+					}
+				});
 			}
 		});
 	}
@@ -47,6 +50,17 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 				waitForMessagesToBeProcessed();
 			}
 		});
+	}
+	
+	private void loopWithTimeout(int millisecondsTimeout, Runnable block) {
+		final StopWatch watch = new StopWatch();
+		watch.start();
+		while (true) {
+			block.run();
+			if (watch.peek() > millisecondsTimeout) {
+				break;
+			}
+		}
 	}
 	
 	private void assertReplyBehavior(final ClientWaitLogic clientWaitLogic) {
