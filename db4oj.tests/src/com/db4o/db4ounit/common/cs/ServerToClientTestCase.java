@@ -31,10 +31,11 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 			public void wait(final ObjectContainer client1, final ObjectContainer client2) {
 				
 				final int timeout = 100;				
-				Cool.loopWithTimeout(timeout, new Runnable() {
-					public void run() {
+				Cool.loopWithTimeout(timeout, new ConditionalBlock() {
+					public boolean run() {
 						((ExtClient)client1).dispatchPendingMessages(timeout);
 						((ExtClient)client2).dispatchPendingMessages(timeout);
+						return true;
 					}
 				});
 			}

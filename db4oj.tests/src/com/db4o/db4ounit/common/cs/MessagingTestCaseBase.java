@@ -36,6 +36,10 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 		config.io(new MemoryIoAdapter());
 		setMessageRecipient(config, recipient);
 		
+		return openServer(config);
+	}
+
+	protected ObjectServer openServer(final Configuration config) {
 		return Db4o.openServer(config, "nofile", 0xdb40);
 	}
 
