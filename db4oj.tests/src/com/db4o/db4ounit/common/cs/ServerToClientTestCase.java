@@ -33,8 +33,8 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 				final int timeout = 100;				
 				loopWithTimeout(timeout, new Runnable() {
 					public void run() {
-						((ExtClient)client1).dispatchPendingMessages();
-						((ExtClient)client2).dispatchPendingMessages();
+						((ExtClient)client1).dispatchPendingMessages(timeout);
+						((ExtClient)client2).dispatchPendingMessages(timeout);
 					}
 				});
 			}
