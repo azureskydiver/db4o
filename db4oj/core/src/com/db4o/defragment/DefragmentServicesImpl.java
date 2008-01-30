@@ -285,8 +285,8 @@ public class DefragmentServicesImpl implements DefragmentServices {
 		_unindexed.add(new Integer(id));
 	}
 
-	public Iterator4 unindexedIDs() {
-		return _unindexed.iterator();
+	public IdSource unindexedIDs() {
+		return new IdSource(_unindexed);
 	}
 
 	public ObjectHeader sourceObjectHeader(ByteArrayBuffer buffer) {

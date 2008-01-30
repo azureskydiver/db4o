@@ -12,6 +12,7 @@ import com.db4o.foundation.io.*;
 import com.db4o.internal.*;
 import com.db4o.internal.btree.*;
 import com.db4o.internal.classindex.*;
+import com.db4o.internal.mapping.*;
 
 /**
  * defragments database files.
@@ -161,9 +162,9 @@ public class Defragment {
 
 	private static void defragUnindexed(DefragmentServicesImpl services)
 			throws CorruptionException, IOException {
-		Iterator4 unindexedIDs = services.unindexedIDs();
-		while (unindexedIDs.moveNext()) {
-			final int origID = ((Integer) unindexedIDs.current()).intValue();
+		IdSource unindexedIDs = services.unindexedIDs();
+		while (unindexedIDs.hasMoreIds()) {
+			final int origID = unindexedIDs.nextId();
 			DefragmentContextImpl.processCopy(services, origID, new SlotCopyHandler() {
 				public void processCopy(DefragmentContextImpl context)
 						throws CorruptionException {
