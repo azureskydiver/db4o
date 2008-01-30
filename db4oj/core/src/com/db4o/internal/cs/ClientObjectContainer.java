@@ -853,9 +853,9 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 	
 	public void dispatchPendingMessages(long maxTimeSlice) {
 		synchronized (_lock) {
-			Cool.loopWithTimeout(maxTimeSlice, new Runnable() {
-				public void run() {
-					dispatchPendingMessage();
+			Cool.loopWithTimeout(maxTimeSlice, new ConditionalBlock() {
+				public boolean run() {
+					return dispatchPendingMessage();
 				}
 			});
 		}

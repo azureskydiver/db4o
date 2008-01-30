@@ -21,6 +21,7 @@ public class AllTests implements TestSuiteBuilder {
 			Collection4TestCase.class,
 			CompositeIterator4TestCase.class,
 			ContextVariableTestCase.class,
+			CoolTestCase.class,
 			Hashtable4TestCase.class,
 			IntArrayListTestCase.class,
 			IntMatcherTestCase.class,

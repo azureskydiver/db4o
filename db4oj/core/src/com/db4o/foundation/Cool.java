@@ -15,12 +15,21 @@ public class Cool {
 		} catch (Exception ignored) {
    		}
 	}
-
-	public static void loopWithTimeout(long millisecondsTimeout, Runnable block) {
+	
+	/**
+	 * Keeps executing a block of code until it either returns false or millisecondsTimeout
+	 * elapses.
+	 * 
+	 * @param millisecondsTimeout
+	 * @param block
+	 */
+	public static void loopWithTimeout(long millisecondsTimeout, ConditionalBlock block) {
 		final StopWatch watch = new StopWatch();
 		watch.start();
 		do {
-			block.run();
+			if (!block.run()) {
+				break;
+			}
 		} while (watch.peek() < millisecondsTimeout);
 	}
 
