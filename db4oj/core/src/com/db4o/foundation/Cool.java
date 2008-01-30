@@ -16,4 +16,12 @@ public class Cool {
    		}
 	}
 
+	public static void loopWithTimeout(long millisecondsTimeout, Runnable block) {
+		final StopWatch watch = new StopWatch();
+		watch.start();
+		do {
+			block.run();
+		} while (watch.peek() < millisecondsTimeout);
+	}
+
 }

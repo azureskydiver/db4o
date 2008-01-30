@@ -31,7 +31,7 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 			public void wait(final ObjectContainer client1, final ObjectContainer client2) {
 				
 				final int timeout = 100;				
-				loopWithTimeout(timeout, new Runnable() {
+				Cool.loopWithTimeout(timeout, new Runnable() {
 					public void run() {
 						((ExtClient)client1).dispatchPendingMessages(timeout);
 						((ExtClient)client2).dispatchPendingMessages(timeout);
@@ -50,17 +50,6 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 				waitForMessagesToBeProcessed();
 			}
 		});
-	}
-	
-	private void loopWithTimeout(int millisecondsTimeout, Runnable block) {
-		final StopWatch watch = new StopWatch();
-		watch.start();
-		while (true) {
-			block.run();
-			if (watch.peek() > millisecondsTimeout) {
-				break;
-			}
-		}
 	}
 	
 	private void assertReplyBehavior(final ClientWaitLogic clientWaitLogic) {
