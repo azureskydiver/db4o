@@ -5,17 +5,35 @@ package com.db4o.db4ounit.common.foundation;
 import com.db4o.foundation.*;
 
 import db4ounit.*;
+import db4ounit.extensions.foundation.*;
 
 public class NonblockingQueueTestCase extends Queue4TestCaseBase {
 
 	public void testIterator() {
 		Queue4 queue=new NonblockingQueue();
-		String[] data={"a","b","c","d"};
+		String[] data = {"a","b","c","d"};
 		for (int idx = 0; idx < data.length; idx++) {
 			assertIterator(queue, data, idx);
 			queue.add(data[idx]);
 			assertIterator(queue, data, idx+1);
 		}
+	}
+	
+	public void testIteratorThrowsOnConcurrentModification() {
+		
+		final Object[] elements = new Object[] { "foo", "bar" };
+		final Queue4 queue = newQueue(elements);
+		final Iterator4 iterator = queue.iterator();
+		Iterator4Assert.assertNext("foo", iterator);
+		queue.add("baz");
+		
+		Assert.areEqual("foo", iterator.current(), "accessing current element should be harmless");
+		
+		Assert.expect(IllegalStateException.class, new CodeBlock() {
+			public void run() throws Throwable {
+				iterator.moveNext();
+			}
+		});
 	}
 	
 	public void testNextMatchingFailure() {
