@@ -68,7 +68,7 @@ public class NonblockingQueue implements Queue4 {
     /* (non-Javadoc)
 	 * @see com.db4o.foundation.Queue4#hasNext()
 	 */
-    public final boolean hasNext(){
+    public final boolean hasNext() {
         return _next != null;
     }
 
@@ -76,7 +76,21 @@ public class NonblockingQueue implements Queue4 {
 	 * @see com.db4o.foundation.Queue4#iterator()
 	 */
 	public Iterator4 iterator() {
-		return new Iterator4Impl(_next);
-	}
+		final List4 origInsertionPoint = _insertionPoint;
+		final List4 origNext = _next;
+		return new Iterator4Impl(_next) {
+			
+			public boolean moveNext() {
+				if (queueWasModified()) {
+					throw new IllegalStateException();
+				}
+				return super.moveNext();
+			}
 
+			private boolean queueWasModified() {
+				return origInsertionPoint != _insertionPoint
+					|| origNext != _next;
+			}
+		};
+	}
 }
