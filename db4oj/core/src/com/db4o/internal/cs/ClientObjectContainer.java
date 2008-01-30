@@ -852,25 +852,29 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
     }
 	
 	public void dispatchPendingMessages(long maxTimeSlice) {
-		final StopWatch watch = startStopWatch();
 		synchronized (_lock) {
-			do {
-				ClientSideTask task = (ClientSideTask) _messageQueue.nextMatching(new Predicate4() {
-					public boolean match(Object message) {
-						return message instanceof ClientSideTask;
-					}
-				});
-				if (null == task) {
-					break;
+			Cool.loopWithTimeout(maxTimeSlice, new Runnable() {
+				public void run() {
+					dispatchPendingMessage();
 				}
-				task.runOnClient();
-			} while (watch.peek() > maxTimeSlice);
+			});
 		}
 	}
 
-	private StopWatch startStopWatch() {
-		final StopWatch watch = new StopWatch();
-		watch.start();
-		return watch;
+	private boolean dispatchPendingMessage() {
+		ClientSideTask task = nextClientSideTask();
+		if (null == task) {
+			return false;
+		}
+		task.runOnClient();
+		return true;
+	}
+
+	private ClientSideTask nextClientSideTask() {
+		return (ClientSideTask) _messageQueue.nextMatching(new Predicate4() {
+			public boolean match(Object message) {
+				return message instanceof ClientSideTask;
+			}
+		});
 	}
 }
