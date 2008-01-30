@@ -47,7 +47,6 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 			public void wait(ObjectContainer client1, ObjectContainer client2) {
 				client2.commit();
 				client1.commit();
-				waitForMessagesToBeProcessed();
 			}
 		});
 	}
@@ -97,10 +96,4 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 			}
 		}
 	}
-
-	private void waitForMessagesToBeProcessed() {
-		// give some time for all the message to be processed...
-		Cool.sleepIgnoringInterruption(500);
-	}
-
 }
