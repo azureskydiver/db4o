@@ -851,9 +851,10 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
         return response.readInt();
     }
 	
-	public void dispatchPendingMessages() {
+	public void dispatchPendingMessages(long maxTimeSlice) {
+		final StopWatch watch = startStopWatch();
 		synchronized (_lock) {
-			while(true) {
+			do {
 				ClientSideTask task = (ClientSideTask) _messageQueue.nextMatching(new Predicate4() {
 					public boolean match(Object message) {
 						return message instanceof ClientSideTask;
@@ -863,7 +864,13 @@ public class ClientObjectContainer extends ExternalObjectContainer implements Ex
 					break;
 				}
 				task.runOnClient();
-			}
+			} while (watch.peek() > maxTimeSlice);
 		}
+	}
+
+	private StopWatch startStopWatch() {
+		final StopWatch watch = new StopWatch();
+		watch.start();
+		return watch;
 	}
 }

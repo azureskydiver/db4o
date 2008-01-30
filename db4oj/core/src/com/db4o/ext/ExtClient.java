@@ -62,7 +62,9 @@ public interface ExtClient extends ExtObjectContainer{
 	/**
 	 * Dispatches any pending messages to
 	 * the currently configured {@link MessageRecipient}.
+	 * 
+	 * @param maxTimeSlice how long before the method returns leaving messages on the queue for later dispatching
 	 */
-	public void dispatchPendingMessages();
+	public void dispatchPendingMessages(long maxTimeSlice);
 }
 
