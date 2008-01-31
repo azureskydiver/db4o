@@ -2,9 +2,9 @@
 <project name="drs.net" default="package">
 	<import file="common.xml" />
     
-    <property name="drs.dir" location="${dir.workspace}/drs" />
+    <property name="drs.dir" location="${dir.base}/drs" />
     <property name="drs.src.dir" location="${drs.dir}/src" />
-	<property name="db4o.net.dir" location="${dir.workspace}/db4o.net" />
+	<property name="db4o.net.dir" location="${dir.base}/db4o.net" />
     <property name="drs.net.dir" location="${db4o.net.dir}/drs" />
     <property name="drs.net.bin.dir" location="${drs.net.dir}/bin" />
     <property name="drs.net.src.dir" location="${drs.net.dir}" />

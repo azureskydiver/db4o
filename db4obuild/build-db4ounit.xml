@@ -3,7 +3,7 @@
 	<import file="common.xml" />
 	
 	<property name="projectName" value="Db4oUnit" />
-	<property name="db4ounit.dir" location="${dir.workspace}/db4ounit" />
+	<property name="db4ounit.dir" location="${dir.base}/db4ounit" />
 	<property name="db4ounit.src.dir" location="${db4ounit.dir}/src" />
 	<property name="db4ounit.bin.dir" location="${db4ounit.dir}/bin" />
 	<property name="db4ounit.jar.dir" location="${dir.j}/lib" />
