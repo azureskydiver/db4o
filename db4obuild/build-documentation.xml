@@ -1,14 +1,14 @@
 <project name="General documentation" default="build">
 	<import file="common.xml" />
 	
-	<property name="dir.documentation" location="${dir.workspace}/documentation" />
+	<property name="dir.documentation" location="${dir.base}/documentation" />
 	
 	<target name="build">
 		<doctor 
 			name="f1" 
 			home="${dir.documentation}" 
 			interactive="false" 
-			workspace="${dir.workspace}" 
+			workspace="${dir.base}" 
 			inputsource="${dir.documentation}/src" 
 			sourceextension="java" 
 			outputfile="documentation" 

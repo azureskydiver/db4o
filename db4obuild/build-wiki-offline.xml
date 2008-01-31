@@ -40,7 +40,7 @@
 	            <pathelement location="${dir.build.lib}/svnkit/svnkit.jar" />
 			</classpath>
 		</taskdef>
-		<svnsync workingcopy="${dir.workspace}/docWiki/java" sourcefolder="${dir.wikioffline.java}" />
-		<svnsync workingcopy="${dir.workspace}/docWiki/net" sourcefolder="${dir.wikioffline.net}" />
+		<svnsync workingcopy="${dir.base}/docWiki/java" sourcefolder="${dir.wikioffline.java}" />
+		<svnsync workingcopy="${dir.base}/docWiki/net" sourcefolder="${dir.wikioffline.net}" />
 	</target>
 </project>

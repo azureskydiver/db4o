@@ -509,7 +509,7 @@
 			failonerror="true" 
 			timeout="1800000">
 			<classpath refid="tests.java1.1.cp" />
-			<sysproperty key="dir.workspace" value="${dir.workspace}" />
+			<sysproperty key="dir.workspace" value="${dir.base}" />
 		</java>
 
 		<java jvm="${file.jvm.jdk1.1}" 
@@ -537,9 +537,9 @@
 			failonerror="true" 
 			timeout="1200000">
 			<classpath refid="tests.java1.2.cp" />
-			<sysproperty key="dir.workspace" value="${dir.workspace}" />
+			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<sysproperty key="db4oj.tests.bin" value="${dir.dist.classes.test.jdk1.2}" />
-			<sysproperty key="db4o.archives.path" value="${dir.workspace}/db4o.archives/java1.2/" />
+			<sysproperty key="db4o.archives.path" value="${dir.base}/db4o.archives/java1.2/" />
 		</java>
         
 		<java jvm="${file.jvm.jdk1.3}" 
@@ -579,7 +579,7 @@
 			failonerror="true" 
 			timeout="10000000">
 			<jvmarg value="-Xmx512m"/>
-			<sysproperty key="dir.workspace" value="${dir.workspace}" />
+			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<classpath refid="tests.java5.cp" />
 		</java>
 
@@ -598,7 +598,7 @@
 			classname="com.db4o.db4ounit.jre5.defrag.RunTestsDefrag" 
 			failonerror="true" 
 			timeout="3000000">
-			<sysproperty key="dir.workspace" value="${dir.workspace}" />
+			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<classpath refid="tests.java5.cp" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" 
@@ -607,7 +607,7 @@
 			classname="com.db4o.db4ounit.jre5.AllTestsWithTAJdk5" 
 			failonerror="true" 
 			timeout="3000000">
-			<sysproperty key="dir.workspace" value="${dir.workspace}" />
+			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<classpath refid="tests.java5.cp" />
 		</java>
 		<java jvm="${file.jvm.jdk1.5}" 
@@ -701,7 +701,7 @@
 			<jvmarg value="-Xmx64m"/>
 			<jvmarg value="-Dosgi.configuration.area=${dir.test.osgi.conf}"/>
 			<jvmarg value="-Dosgi.instance.area=${dir.test.osgi}/data"/>
-			<sysproperty key="dir.workspace" value="${dir.workspace}" />
+			<sysproperty key="dir.workspace" value="${dir.base}" />
 			<arg value="${dir.test.osgi}/db4o-osgi-edition.jar" />
 			<arg value="${dir.test.osgi}/db4o-osgi-test.jar" />
 		</java>

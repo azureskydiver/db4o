@@ -56,7 +56,7 @@
 			<fileset dir="${dir.build}/build/mono">				
 				<include name="*.txt" />
 			</fileset>
-			<fileset dir="${dir.workspace}/db4o.net/Libs">				
+			<fileset dir="${dir.base}/db4o.net/Libs">				
 				<include name="*.txt" />
 			</fileset>
 		</copy>
