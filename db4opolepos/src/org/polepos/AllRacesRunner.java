@@ -49,7 +49,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     public Team[] teams() {
 
 		return new Team[] {
-            db4oTeam(Db4oVersions.JAR45, null),
+//            db4oTeam(Db4oVersions.JAR45, null),
             db4oTeam(Db4oVersions.JAR57, null),
             db4oTeam(Db4oVersions.JAR61, null),
             db4oTeam(Db4oVersions.JAR63, null),
