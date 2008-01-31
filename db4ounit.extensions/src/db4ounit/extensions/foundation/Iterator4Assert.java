@@ -14,12 +14,16 @@ public class Iterator4Assert {
 		}
 		Assert.isNotNull(actual);		
 		while (expected.moveNext()) {
-			Assert.isTrue(actual.moveNext(), "'" + expected.current() + "' expected.");
-			Assert.areEqual(expected.current(), actual.current());
+			assertNext(expected.current(), actual);
 		}
 		if (actual.moveNext()) {
 			Assert.fail("Unexpected element: " + actual.current());
 		}
+	}
+
+	public static void assertNext(final Object expected, Iterator4 iterator) {
+		Assert.isTrue(iterator.moveNext(), "'" + expected + "' expected.");
+		Assert.areEqual(expected, iterator.current());
 	}
 
 	public static void areEqual(Object[] expected, Iterator4 iterator) {
