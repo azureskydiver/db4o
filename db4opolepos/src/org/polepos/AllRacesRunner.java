@@ -40,6 +40,8 @@ import org.polepos.teams.db4o.*;
  */
 public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     
+    private static String JAR_TRUNK = "db4o-trunk-java5.jar";
+    
     public static void main(String[] arguments) {
         new AllRacesRunner().run();
     }
@@ -47,29 +49,30 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     public Team[] teams() {
 
 		return new Team[] {
-                db4oTeam(Db4oVersions.JAR45, null),
-                db4oTeam(Db4oVersions.JAR57, null),
-                db4oTeam(Db4oVersions.JAR61, null),
-                db4oTeam(Db4oVersions.JAR63, null),
-                db4oTeam(Db4oVersions.JAR57, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
-                db4oTeam(Db4oVersions.JAR61, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
-                db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+//                db4oTeam(Db4oVersions.JAR45, null),
+//                db4oTeam(Db4oVersions.JAR57, null),
+//                db4oTeam(Db4oVersions.JAR61, null),
+            db4oTeam(Db4oVersions.JAR63, null),
+            db4oTeam(JAR_TRUNK, null),
+//                db4oTeam(Db4oVersions.JAR57, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+//                db4oTeam(Db4oVersions.JAR61, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
+//                db4oTeam(Db4oVersions.JAR63, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
 		};
 	}
 
 	public Circuit[] circuits() {
 		return new Circuit[] { 
 				 new Melbourne(),
-				 new Sepang(),
-				 new Bahrain(),
-				 new Imola(),
-				 new Barcelona(),
-				 new Monaco(),
-				 new Nurburgring(),
-				 new Montreal(),
-				 new Indianapolis(),
-				 new Magnycours(),
-                 new Silverstone(),
+//				 new Sepang(),
+//				 new Bahrain(),
+//				 new Imola(),
+//				 new Barcelona(),
+//				 new Monaco(),
+//				 new Nurburgring(),
+//				 new Montreal(),
+//				 new Indianapolis(),
+//				 new Magnycours(),
+//                 new Silverstone(),
 		};
 	}
 
