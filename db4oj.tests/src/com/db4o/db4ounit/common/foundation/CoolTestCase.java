@@ -16,7 +16,7 @@ public class CoolTestCase implements TestCase {
 				return false;
 			}
 		});
-		Assert.isTrue(watch.peek() < 500);
+		Assert.isSmaller(500, watch.peek());
 	}
 	
 	public void testLoopWithTimeoutReturnsAfterTimeout() {
