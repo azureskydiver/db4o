@@ -322,6 +322,7 @@ public abstract class QQueryBase implements Unversioned {
 			if(result != null) {
 				return result;
 			}
+    		optimizeJoins();
 	        return stream().executeQuery(_this);
 	    }
 	}
@@ -729,6 +730,63 @@ public abstract class QQueryBase implements Unversioned {
 		_evaluationMode = mode;
 	}
 	
+    private void optimizeJoins() {
+    	if(!hasOrJoins()) {
+    		removeJoins();
+    	}
+    }
+
+	private boolean hasOrJoins() {
+		return forEachConstraintRecursively(new Function4() {
+			public Object apply(Object obj) {
+				QCon constr = (QCon) obj;
+				Iterator4 joinIter = constr.iterateJoins();
+				while(joinIter.moveNext()) {
+					QConJoin join = (QConJoin) joinIter.current();
+					if(join.isOr()) {
+						return Boolean.TRUE;
+					}
+				}
+				return Boolean.FALSE;
+			}
+		});
+	}
+
+	private void removeJoins() {
+		forEachConstraintRecursively(new Function4() {
+			public Object apply(Object obj) {
+				QCon constr = (QCon) obj;
+				constr.i_joins = null;
+				return Boolean.FALSE;
+			}
+		});
+	}
+
+	private boolean forEachConstraintRecursively(Function4 block) {
+		Queue4 queue = new NoDuplicatesQueue(new NonblockingQueue());
+		Iterator4 constrIter = iterateConstraints();
+		while(constrIter.moveNext()) {
+			queue.add(constrIter.current());
+		}
+		while(queue.hasNext()) {
+    		QCon constr = (QCon) queue.next();
+    		Boolean cancel = (Boolean) block.apply(constr);
+    		if(cancel.booleanValue()) {
+    			return true;
+    		}
+    		
+    		Iterator4 childIter = constr.iterateChildren();
+    		while(childIter.moveNext()) {
+    			queue.add(childIter.current());
+    		}
+    		Iterator4 joinIter = constr.iterateJoins();
+    		while(joinIter.moveNext()) {
+    			queue.add(joinIter.current());
+    		}
+		}
+		return false;
+	}
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("QQueryBase\n");

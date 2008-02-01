@@ -27,6 +27,7 @@ public class AllTests implements TestSuiteBuilder {
 			IntMatcherTestCase.class,
 			Iterable4AdaptorTestCase.class,
 			IteratorsTestCase.class,
+			NoDuplicatesQueueTestCase.class,
 			NonblockingQueueTestCase.class,
 			Path4TestCase.class,
 			SortedCollection4TestCase.class,
