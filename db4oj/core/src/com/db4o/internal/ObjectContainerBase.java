@@ -16,7 +16,4 @@ public abstract class ObjectContainerBase extends PartialObjectContainer {
 	public ObjectContainerBase(Configuration config,ObjectContainerBase a_parent) {
 		super(config,a_parent);
 	}
-
-
-
 }

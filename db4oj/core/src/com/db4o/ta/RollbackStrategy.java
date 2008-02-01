@@ -3,10 +3,9 @@
 package com.db4o.ta;
 
 import com.db4o.*;
-import com.db4o.ext.*;
 
 public interface RollbackStrategy {
 	
-	void rollback(ObjectContainer container, ObjectInfo o);
+	void rollback(ObjectContainer container, Object obj);
 
 }
