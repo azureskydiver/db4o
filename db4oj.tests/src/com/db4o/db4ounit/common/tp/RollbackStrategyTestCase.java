@@ -24,22 +24,15 @@ public class RollbackStrategyTestCase extends AbstractDb4oTestCase {
 		change(item1);
 		change(item2);
 		
-		final Object item1Ref = referenceForObject(item1);
-		final Object item2Ref = referenceForObject(item2);
-		
 		_mock.verify(new MethodCall[0]);
 		
 		db().rollback();
 		
 		_mock.verify(new MethodCall[] {
-			new MethodCall("rollback", db(), item2Ref),
-			new MethodCall("rollback", db(), item1Ref),
+			new MethodCall("rollback", db(), item2),
+			new MethodCall("rollback", db(), item1),
 		});
 		
-	}
-
-	private Object referenceForObject(Item item1) {
-		return trans().referenceForObject(item1);
 	}
 
 	private void change(Item item) {
@@ -50,6 +43,10 @@ public class RollbackStrategyTestCase extends AbstractDb4oTestCase {
 		final Item item = new Item(name);
 		store(item);
 		return item;
+	}
+	
+	public static void main(String []args) {
+		new RollbackStrategyTestCase().runAll();
 	}
 
 }

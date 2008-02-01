@@ -29,10 +29,14 @@ public abstract class ExternalObjectContainer extends ObjectContainerBase implem
         activate(null, obj, activationDepthProvider().activationDepth(depth, ActivationMode.ACTIVATE));
     }
     
+    public final void deactivate(Object obj) {
+    	deactivate(null, obj);
+    }
+    
     public final void bind(Object obj, long id) throws ArgumentNullException, IllegalArgumentException {
         bind(null, obj, id);
     }
-
+   
     /**
      * @deprecated
      */

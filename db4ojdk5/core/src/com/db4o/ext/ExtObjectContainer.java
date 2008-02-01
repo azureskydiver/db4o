@@ -38,6 +38,15 @@ public interface ExtObjectContainer extends ObjectContainer {
     public void activate(Object obj)throws Db4oIOException, DatabaseClosedException; 
 
     /**
+     * deactivates an object. 
+     * Only the passed object will be deactivated, i.e, no object referenced by this
+     * object will be deactivated.  
+     * 
+     * @param obj the object to be deactivated.
+     */
+    public void deactivate(Object obj);
+    
+    /**
      * backs up a database file of an open ObjectContainer.
      * <br><br>While the backup is running, the ObjectContainer can continue to be
      * used. Changes that are made while the backup is in progress, will be applied to

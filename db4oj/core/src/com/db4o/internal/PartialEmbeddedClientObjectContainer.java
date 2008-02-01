@@ -316,6 +316,10 @@ public abstract class PartialEmbeddedClientObjectContainer implements TransientC
             _server.deactivate(_transaction, obj, depth);
         }
     }
+    
+    public void deactivate(Object obj) throws DatabaseClosedException {
+    	deactivate(obj, 1);
+    }
 
     public void delete(Object obj) throws Db4oIOException, DatabaseClosedException,
         DatabaseReadOnlyException {

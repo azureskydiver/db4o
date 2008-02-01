@@ -85,7 +85,7 @@ public class ObjectReference extends PersistentBase implements ObjectInfo, Activ
 		_updateListener = new TransactionListener() {
 			public void postRollback() {
 				resetListener();
-				transparentPersistence.rollback(transaction.objectContainer(), ObjectReference.this);
+				transparentPersistence.rollback(transaction.objectContainer(), ObjectReference.this.getObject());
 			}
 
 			public void preCommit() {

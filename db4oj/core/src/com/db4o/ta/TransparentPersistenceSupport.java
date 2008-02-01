@@ -4,7 +4,6 @@ package com.db4o.ta;
 
 import com.db4o.*;
 import com.db4o.config.*;
-import com.db4o.ext.*;
 import com.db4o.internal.*;
 
 /**
@@ -29,10 +28,10 @@ public class TransparentPersistenceSupport implements ConfigurationItem {
 		configuration.add(new TransparentActivationSupport());
 	}
 
-	public void rollback(ObjectContainer container, ObjectInfo objectInfo) {
+	public void rollback(ObjectContainer container, Object obj) {
 		if (null == _rollbackStrategy) {
 			return;
 		}
-		_rollbackStrategy.rollback(container, objectInfo);
+		_rollbackStrategy.rollback(container, obj);
 	}
 }

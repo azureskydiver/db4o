@@ -14,6 +14,7 @@ public class AllTests extends Db4oTestSuite {
 	protected Class[] testCases() {
 		return new Class[] {
 			Comparable4TestCase.class,
+			DeactivateTestCase.class,
 		    EmbeddedClientObjectContainerTestCase.class,
 		    InternalObjectContainerAPITestCase.class,
 		    MarshallingBufferTestCase.class,

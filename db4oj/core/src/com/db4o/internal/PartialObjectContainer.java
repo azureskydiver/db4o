@@ -144,6 +144,12 @@ public abstract class PartialObjectContainer implements TransientClass, Internal
         }
     }
     
+    public final void deactivate(Transaction trans, Object obj){
+    	synchronized (_lock) {
+            deactivate(checkTransaction(trans), obj, 1);
+        }
+    }
+    
     private final ActivationDepth defaultActivationDepthForObject(Object obj) {
         ClassMetadata classMetadata = classMetadataForObject(obj);
         return defaultActivationDepth(classMetadata);
