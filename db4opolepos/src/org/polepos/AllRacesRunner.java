@@ -41,7 +41,11 @@ import org.polepos.teams.db4o.*;
 public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
     
     private static String JAR_TRUNK = "db4o-trunk-java5.jar";
+    
     private static String JAR64 = "db4o-6.4.14.8131-java5.jar";
+    
+    private static String JAR70 = "db4o-7.0.21.8746-java5.jar";
+    
     
     public static void main(String[] arguments) {
         new AllRacesRunner().run();
@@ -55,6 +59,7 @@ public class AllRacesRunner extends AbstractDb4oVersionsRaceRunner{
             db4oTeam(Db4oVersions.JAR61, null),
 //            db4oTeam(Db4oVersions.JAR63, null),
             db4oTeam(JAR64, null),
+            db4oTeam(JAR70, null),
             db4oTeam(JAR_TRUNK, null),
 //                db4oTeam(Db4oVersions.JAR57, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
 //                db4oTeam(Db4oVersions.JAR61, new int[] {Db4oOptions.CLIENT_SERVER, Db4oOptions.CLIENT_SERVER_TCP }),
