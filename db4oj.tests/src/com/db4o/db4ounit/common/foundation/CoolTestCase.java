@@ -28,7 +28,6 @@ public class CoolTestCase implements TestCase {
 		});
 		watch.stop();
 		Assert.isGreaterOrEqual(500, watch.elapsed());
-		Assert.isSmallerOrEqual(600, watch.elapsed());
 	}
 	
 }
