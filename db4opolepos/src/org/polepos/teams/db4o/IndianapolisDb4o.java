@@ -51,6 +51,54 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
         commit();
     }
     
+    public void queryAndBigResult() {
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+            Query q = newIndianapolisListQuery();
+            Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(0)).greater();
+            Constraint c2 = q.descend(fieldPayload()).constrain(new Integer(maximumPayload)).smaller();
+            c1.and(c2);
+            doQuery(q);
+        }
+    }
+    
+    public void queryNestedAnd() {
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+            Query q = newIndianapolisListQuery();
+            Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(0)).greater();
+            Constraint c2 = q.descend(fieldPayload()).constrain(new Integer(1)).greater();
+            Constraint c3 = q.descend(fieldPayload()).constrain(new Integer(2)).greater();
+            Constraint c4 = q.descend(fieldPayload()).constrain(new Integer(3)).greater();
+            Constraint and1 = c1.and(c2);
+            Constraint and2 = c3.and(c4);
+            and1.and(and2);
+            doQuery(q);
+        }
+    }
+
+    public void queryTwoFieldAnd() {
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+            Query q = newIndianapolisListQuery();
+            Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(maximumPayload - 1)).greater();
+            Constraint c2 = q.descend(fieldNext()).constrain(null);
+            c1.and(c2);
+            doQuery(q);
+        }
+    }
+    
+    public void queryTwoFieldAndNot() {
+        int count = setup().getSelectCount();
+        for (int i = 1; i <= count; i++) {
+            Query q = newIndianapolisListQuery();
+            Constraint c1 = q.descend(fieldPayload()).constrain(new Integer(maximumPayload / 2)).greater();
+            Constraint c2 = q.descend(fieldNext()).constrain(null).not();
+            c1.and(c2);
+            doQuery(q);
+        }
+    }
+    
     public void queryRange(){
         int count = setup().getSelectCount();
         for (int i = 1; i <= count; i++) {
@@ -219,5 +267,6 @@ public class IndianapolisDb4o extends Db4oDriver implements IndianapolisDriver{
     private String fieldPayload(){
         return IndianapolisList.FIELD_PAYLOAD;
     }
+
 
 }

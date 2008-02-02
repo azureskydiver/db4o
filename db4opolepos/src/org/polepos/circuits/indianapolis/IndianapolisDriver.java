@@ -30,6 +30,14 @@ public interface IndianapolisDriver {
     
     void queryPreferShortPath();
     
+    void queryAndBigResult();
+    
+    void queryNestedAnd();
+    
+    void queryTwoFieldAnd();
+    
+    void queryTwoFieldAndNot();
+    
     void queryOr();
     
     void queryOrRange();
@@ -45,5 +53,4 @@ public interface IndianapolisDriver {
     void queryByChildIdentity();
     
     void addSingleObjectAndCommit();
-
 }
