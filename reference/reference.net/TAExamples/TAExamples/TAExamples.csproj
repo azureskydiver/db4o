@@ -41,10 +41,6 @@
     <Compile Include="Team.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\db4o.net\Db4objects.Db4o.Tests\Db4objects.Db4o.Tests-2005.csproj">
-      <Project>{990A783E-B09D-4E44-B833-7D344EA64B85}</Project>
-      <Name>Db4objects.Db4o.Tests-2005</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\db4o.net\Db4objects.Db4o\Db4objects.Db4o-2005.csproj">
       <Project>{4FA6645B-E14B-4F18-A2CC-C1925663EFCE}</Project>
       <Name>Db4objects.Db4o-2005</Name>
