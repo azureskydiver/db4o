@@ -20,7 +20,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Db4objects.Db4odoc</RootNamespace>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <StartupObject>Db4objects.Db4odoc.TPExample.TPCollectionExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.Typehandler.TypehandlerExample</StartupObject>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
@@ -490,6 +490,9 @@
     <Compile Include="src\Db4objects.Db4odoc\Structured\StructuredExample.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="src\Db4objects.Db4odoc\Typehandler\Car.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Typehandler\StringBuilderHandler.cs" />
+    <Compile Include="src\Db4objects.Db4odoc\Typehandler\TypehandlerExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\UniqueConstraint\Pilot.cs" />
     <Compile Include="src\Db4objects.Db4odoc\UniqueConstraint\UniqueConstraintExample.cs" />
     <Compile Include="src\Db4objects.Db4odoc\Utility\SensorPanel.cs">
@@ -530,6 +533,7 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>Db4oTool.exe -tp -by-name Db4objects.Db4odoc.TPBuildTime.SensorPanel $(TargetPath)</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
