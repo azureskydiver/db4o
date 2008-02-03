@@ -20,7 +20,11 @@ namespace Db4ojects.Db4odoc.TAExamples
         // Bind the class to an object container
         public void Bind(IActivator activator)
         {
-            if (null != _activator)
+            if (_activator == activator)
+            {
+                return;
+            }
+            if (activator != null && null != _activator)
             {
                 throw new System.InvalidOperationException();
             }

@@ -14,19 +14,23 @@ namespace Db4ojects.Db4odoc.TAExamples
 
         IList<Pilot> _pilots = new ArrayList4<Pilot>();
 
-      
-        
+
+
         string _name;
 
         //TA Activator
         [System.NonSerialized]
         IActivator _activator;
 
-     
+
         //	Bind the class to an object container
         public void Bind(IActivator activator)
         {
-            if (null != _activator)
+            if (_activator == activator)
+            {
+                return;
+            }
+            if (activator != null && null != _activator)
             {
                 throw new System.InvalidOperationException();
             }
@@ -42,9 +46,9 @@ namespace Db4ojects.Db4odoc.TAExamples
 
         public void AddPilot(Pilot pilot)
         {
-			// activate before adding new pilots
-			Activate(ActivationPurpose.Read);
-			_pilots.Add(pilot);
+            // activate before adding new pilots
+            Activate(ActivationPurpose.Read);
+            _pilots.Add(pilot);
         }
 
         public int Size()
@@ -57,10 +61,10 @@ namespace Db4ojects.Db4odoc.TAExamples
 
         public IList<Pilot> Pilots
         {
-            get 
+            get
             {
                 Activate(ActivationPurpose.Read);
-                return _pilots; 
+                return _pilots;
             }
         }
         // end Pilots
