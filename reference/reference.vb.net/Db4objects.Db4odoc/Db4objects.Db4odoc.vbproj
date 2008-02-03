@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A17AD37B-ECB2-4D0D-9401-5B2F73E0DCD9}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <StartupObject>Db4objects.Db4odoc.TPExample.TPCollectionExample</StartupObject>
+    <StartupObject>Db4objects.Db4odoc.Typehandler.TypehandlerExample</StartupObject>
     <RootNamespace>
     </RootNamespace>
     <AssemblyName>Db4objects.Db4odoc</AssemblyName>
@@ -157,6 +157,9 @@
     <Compile Include="TAMigrate\TAExample.vb" />
     <Compile Include="TPBuildTime\SensorPanel.vb" />
     <Compile Include="TPBuildTime\TPExample.vb" />
+    <Compile Include="TPClone\Car.vb" />
+    <Compile Include="TPClone\Pilot.vb" />
+    <Compile Include="TPClone\TPCloneExample.vb" />
     <Compile Include="TPExample\Pilot.vb" />
     <Compile Include="TPExample\SensorPanel.vb" />
     <Compile Include="TPExample\Team.vb" />
@@ -250,6 +253,9 @@
     <Compile Include="Structured\Car.vb" />
     <Compile Include="Structured\Pilot.vb" />
     <Compile Include="Structured\StructuredExample.vb" />
+    <Compile Include="Typehandler\Car.vb" />
+    <Compile Include="Typehandler\StringBuilderHandler.vb" />
+    <Compile Include="Typehandler\TypehandlerExample.vb" />
     <Compile Include="UniqueConstraint\Pilot.vb" />
     <Compile Include="UniqueConstraint\UniqueConstraintExample.vb" />
     <Compile Include="Utility\SensorPanel.vb" />
@@ -277,7 +283,8 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
-    <PostBuildEvent>Db4oTool.exe -tp -by-name Db4objects.Db4odoc.TPBuildTime.SensorPanel $(TargetPath)</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />
