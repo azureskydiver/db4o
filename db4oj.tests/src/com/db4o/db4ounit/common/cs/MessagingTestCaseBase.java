@@ -27,7 +27,14 @@ public class MessagingTestCaseBase implements TestCase, OptOutCS {
 
 	protected ObjectContainer openClient(String clientId, final ObjectServer server) {
 		server.grantAccess(clientId, "p");
-		return Db4o.openClient("127.0.0.1", server.ext().port(), clientId, "p");
+		
+		return Db4o.openClient(multithreadedClientConfig(), "127.0.0.1", server.ext().port(), clientId, "p");
+	}
+
+	private Configuration multithreadedClientConfig() {
+		final Configuration config = Db4o.newConfiguration();
+		config.clientServer().singleThreadedClient(false);
+		return config;
 	}
 
 	protected ObjectServer openServerWith(final MessageRecipient recipient) {
