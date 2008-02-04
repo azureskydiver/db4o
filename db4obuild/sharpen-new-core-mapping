@@ -29,3 +29,5 @@
 -typeMapping java.io.OutputStream Sharpen.IO.IOutputStream
 
 -methodMapping java.util.Date.getTime Sharpen.Runtime.ToJavaMilliseconds
+
+-typeMapping java.lang.Comparable System.IComparable
