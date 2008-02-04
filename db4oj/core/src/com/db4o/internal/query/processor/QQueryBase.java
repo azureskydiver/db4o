@@ -622,7 +622,7 @@ public abstract class QQueryBase implements Unversioned {
         return _trans;
     }
     
-    Iterator4 iterateConstraints(){
+    public Iterator4 iterateConstraints(){
     	// clone the collection first to avoid
     	// InvalidIteratorException as i_constraints might be 
     	// modified during the execution of callee

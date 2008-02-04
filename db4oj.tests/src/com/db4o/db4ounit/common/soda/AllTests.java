@@ -18,6 +18,7 @@ public class AllTests extends Db4oTestSuite {
 		return new Class[]{
 				STOrderingTestCase.class,
 				com.db4o.db4ounit.common.soda.arrays.AllTests.class,
+				AndJoinOptimizationTestCase.class,
 				CollectionIndexedJoinTestCase.class,
 				NullIdentityConstraintTestCase.class,
 				QueryUnknownClassTestCase.class,
