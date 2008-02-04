@@ -26,10 +26,12 @@ public class ServerToClientTestCase extends MessagingTestCaseBase {
 		void wait(ObjectContainer client1, ObjectContainer client2); 
 	}
 	
+	/**
+	 * @sharpen.if !CF_2_0
+	 */
 	public void testDispatchPendingMessages() {
 		assertReplyBehavior(new ClientWaitLogic() {
 			public void wait(final ObjectContainer client1, final ObjectContainer client2) {
-				
 				final int timeout = 500;				
 				Cool.loopWithTimeout(timeout, new ConditionalBlock() {
 					public boolean run() {
