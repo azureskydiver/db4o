@@ -171,7 +171,7 @@ public interface EventRegistry {
 	public Event4 deactivated();
 	
 	/**
-	 * This event is fired after a transaction has been committed.
+	 * This event is fired just before a transaction is committed.
 	 * The transaction and a list of the modified objects can 
 	 * be obtained from the {@link CommitEventArgs}
 	 * event parameter.<br><br>
