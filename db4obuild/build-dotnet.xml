@@ -67,97 +67,7 @@
 		</sequential>
 	</macrodef>
 	
-	<macrodef name="csc-all">
-		<attribute name="assemblyName" />		
-		<attribute name="sources" description="sources fileset id" />
-		
-		<attribute name="netOutputDir" default="${dir.dist.dll.net}" />
-		<attribute name="netConfiguration" default=".NET" />
-		
-		<attribute name="compactOutputDir" default="${dir.dist.dll.compact}" />
-		<attribute name="compactConfiguration" default=".NET CompactFramework" />
-		
-		<element name="references" optional="yes" />
-		<element name="compact-args" optional="yes" />
-		
-		<sequential>
-			<mkdir dir="@{netOutputDir}" />
-			<mkdir dir="@{compactOutputDir}" />
-			
-			<reset-dir dir="${dir.dist.net.compile}" />
-			<copy todir="${dir.dist.net.compile}">
-				<fileset refid="@{sources}" />
-			</copy>			
-			<prepare-assemblyInfo configuration="@{netConfiguration}" />
-				
-			<csc
-				destfile="@{netOutputDir}/@{assemblyName}.dll"
-				docfile="@{netOutputDir}/@{assemblyName}.xml"
-				targettype="library"
-				definitions="${csharp.definitions}"
-				executable="${csc.executable}"
-				debug="${debug}"
-				optimize="true"
-				warnlevel="0"
-				srcdir="${dir.dist.net.compile}">
-				
-				<include name="**/*.cs" />
-				
-				<references />
-			</csc>
-			
-			<if>
-			<equals arg1="${mono}" arg2="true" />
-			<then>
-				<echo>skipping CompactFramework build</echo>
-			</then>
-			<else>
-				<prepare-assemblyInfo configuration="@{compactConfiguration}" />
-				<echo>
-	@{assemblyName} (Compact Framework)
-	=================
-	csc = ${csc.executable}
-	dir = ${dir.dll.cf}
-	=================
-				</echo>
-				<exec executable="${csc.executable}" dir="${dir.dist.net.compile}" failonerror="true">
-					<arg value="/optimize" />
-					<arg value="/debug-" />
-					<arg value="/define:${csharp.definitions.cf}" />
-					<arg value="/out:@{compactOutputDir}/@{assemblyName}.dll" />
-					<arg value="/target:library" />
-					<arg value="/warn:0" />
-					<arg value="/noconfig" />
-					<arg value="/nostdlib+" />
-					<arg value="/reference:${dir.dll.cf}/mscorlib.dll" />
-					<arg value="/reference:${dir.dll.cf}/System.dll" />
-					<arg value="/doc:@{compactOutputDir}/@{assemblyName}.xml" />
-					<compact-args />
-					<arg value="/recurse:*.cs" />
-				</exec>
-			</else>
-			</if>
-		</sequential>
-	</macrodef>
-	
 	<target name="check-dependencies">
-		<copy todir="${dir.dist.dll.net}">
-			<fileset dir="${dir.libs.net}">
-				<include name="*.*" />
-			</fileset>
-		</copy>
-		<if>
-			<not>
-				<equals arg1="${mono}" arg2="true" />
-			</not>
-			<then>
-				<copy todir="${dir.dist.dll.compact}">
-					<fileset dir="${dir.libs.cf}">
-						<include name="*.*" />
-					</fileset>
-				</copy>
-			</then>
-		</if>
 		<uptodate
 			property="skip.sharpen"
 			targetfile="${dir.n.v6.core.src}/LocalTransaction.cs">
@@ -168,11 +78,10 @@
 		</uptodate>
 	</target>
 	
-	
 	<target name="run-tests" depends="clean, configure, run-tests-mono, run-tests-net">
 	</target>
 
-	<target name="run-core-tests-instrumented" depends="configure, build-tests, build-admin">
+	<target name="run-core-tests-instrumented" depends="configure, build-core, build-admin">
 		<mkdir dir="${dir.dist.dll.net}/Instrumented" />
 					
 		<copy todir="${dir.dist.dll.net}/Instrumented" overwrite="true">
@@ -217,12 +126,12 @@
 		<antcall target="run-core-tests-instrumented" />
 	</target>
 	
-	<target name="run-tests-core" depends="build-tests">
+	<target name="run-tests-core" depends="build-core">
 		<exec executable="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" failonerror="true" timeout="3600000">
 		</exec>
 	</target>
 
-	<target name="run-tests-admin" depends="build-admin-tests" unless="skip.admin">
+	<target name="run-tests-admin" depends="build-admin" unless="skip.admin">
 		<exec executable="${dir.dist.dll.net}/Db4oTool.Tests.exe" dir="${dir.dist.dll.net}" failonerror="true" timeout="1800000">
 		</exec>
 	</target>
@@ -230,7 +139,7 @@
 	<target name="run-tests-net" depends="run-tests-core, run-tests-admin, run-msbuild-tests" unless="mono">
 	</target>
 	
-	<target name="run-tests-mono" depends="build-tests" if="mono">
+	<target name="run-tests-mono" depends="build-core" if="mono">
 		<exec executable="${mono.vm.executable}" failonerror="true">
 			<arg value="--debug" />
 			<arg file="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe" />
@@ -241,7 +150,6 @@
 	</target>
 	
 	<target name="meta-package" depends="build-zip, build-net-installer">
-	
 	</target>
 	
 	<target name="prepare-package-structure" depends="package-sources, package-binaries, package-docs">
@@ -441,34 +349,16 @@
 	
 	<target name="build" depends="init, configure, build-all">
 	</target>
+	
+	<target name="build-net35" depends="init, configure-net35, build-all" description="Builds Db4o for the .net 3.5 framework including LINQ">
+	</target>
 
-	<target name="build-all" depends="build-core, build-instrumentation, build-nq, build-tests, build-admin, build-tutorial, build-msbuild">
+	<target name="build-all" depends="check-dependencies, build-core, build-admin, build-tutorial">
 	</target>
 	
 	<target name="rebuild" depends="clean, build">
 	</target>
 
-	<target name="build-tests" depends="build-instrumentation, build-nq, build-db4ounit-extensions, sharpen-tests">
-		<csc
-			destfile="${dir.dist.dll.net}/Db4objects.Db4o.Tests.exe"
-			targettype="exe"
-			srcdir="${dir.n.v6}/Db4objects.Db4o.Tests"
-			mainclass="Db4objects.Db4o.Tests.AllTests"
-			definitions="${csharp.definitions}"
-			debug="true"
-			executable="${csc.executable}"
-			extraoptions="${csc.tests.extraoptions}">
-			<reference dir="${dir.dist.dll.net}">
-				<include name="Db4objects.Db4o.dll" />
-				<include name="Db4objects.Db4o.Instrumentation.dll" />
-				<include name="Db4objects.Db4o.NativeQueries.dll" />
-				<include name="Mono.Cecil.dll" />
-				<include name="Db4oUnit.dll" />
-				<include name="Db4oUnit.Extensions.dll" />
-			</reference>
-		</csc>
-	</target>
-		
 	<target name="build-db4ounit-extensions" depends="build-core, build-db4ounit, sharpen-db4ounit-extensions"> 
 		<csc
 			destfile="${dir.dist.dll.net}/Db4oUnit.Extensions.dll"
@@ -491,231 +381,30 @@
 			debug="true">
 		</csc>
 	</target>
-	
-	<target name="build-nq" depends="build-core, build-instrumentation, sharpen-nq">
-			
-		<fileset id="nq.sources" dir="${dir.n.v6.nq}">
-			<include name="**/*.cs" />
-		</fileset>
-				
-		<csc-all
-			assemblyName="Db4objects.Db4o.NativeQueries"
-			sources="nq.sources">			
-			
-			<references>
-				<reference dir="${dir.dist.dll.net}">
-					<include name="Db4objects.Db4o.dll" />
-					<include name="Db4objects.Db4o.Instrumentation.dll" />
-					<include name="Mono.Cecil.dll" />
-					<include name="Cecil.FlowAnalysis.dll" />
-				</reference>
-			</references>
-			
-			<compact-args>
-				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
-				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.Instrumentation.dll" />
-				<arg value="/r:${dir.dist.dll.compact}/Mono.Cecil.dll" />
-				<arg value="/r:${dir.dist.dll.compact}/Cecil.FlowAnalysis.dll" />
-			</compact-args>
-		</csc-all>
-	</target>
-	
-	<target name="build-instrumentation" depends="build-core, sharpen-instrumentation">
-		
-		<fileset id="instrumentation.sources" dir="${dir.n.v6.instrumentation}">
-			<include name="**/*.cs" />
-		</fileset>
-				
-		<csc-all
-			assemblyName="Db4objects.Db4o.Instrumentation"
-			sources="instrumentation.sources">			
-			
-			<references>
-				<reference dir="${dir.dist.dll.net}">
-					<include name="Db4objects.Db4o.dll" />
-					<include name="Mono.Cecil.dll" />
-					<include name="Cecil.FlowAnalysis.dll" />
-				</reference>
-			</references>
-			
-			<compact-args>
-				<arg value="/r:${dir.dist.dll.compact}/Db4objects.Db4o.dll" />
-				<arg value="/r:${dir.dist.dll.compact}/Mono.Cecil.dll" />
-				<arg value="/r:${dir.dist.dll.compact}/Cecil.FlowAnalysis.dll" />
-			</compact-args>
-		</csc-all>
-	</target>
-	
-	<target name="build-msbuild" depends="build-admin">
-		<updateAssemblyInfo 
-			version="${assembly.version}"
-			title="Db4oTool.MSBuild"
-			product="Db4oTool.MSBuild"		
-			>
-			<fileset dir="${dir.n.v6.msbuild}">
-				<include name="**/AssemblyInfo.cs" />
-			</fileset>
-		</updateAssemblyInfo>
 
-		<csc outputfile="${dir.dist.dll.net}/Db4oTool.MSBuild.dll"
-			docfile="${dir.dist.dll.net}/Db4oTool.MSBuild.xml"
-			targettype="library"
-			debug="true"
-			definitions="TRACE"
-			executable="${csc.executable}">
-			<src dir="${dir.n.v6.msbuild}">
-				<include name="**/*.cs" />
-			</src>
-			<reference dir="${dir.dist.dll.net}">
-				<include name="Db4oTool.exe" />
-			</reference>
-			<reference dir="${csc.executable.path.net2}">
-				<include name="Microsoft.Build.Framework.dll" />
-				<include name="Microsoft.Build.Utilities.dll" />
-			</reference>
-		</csc>
-	</target>
-	
-	<target name="build-msbuild-tests" depends="define-msbuild-task">
+	<target name="build-core" depends="sharpen">
 		
-        <msbuild buildfile="${dir.n.v6}/Db4oTool/Db4oTool.MSBuild.Tests-2005.sln">
-            <target name="rebuild" />
-            <property name="Configuration" value="Debug" />
-            <property name="OutputPath" value="${dir.dist.dll}/msbuild.tests" />
-        </msbuild>
-	</target>
-
-	<target name="run-msbuild-tests" depends="build-msbuild-tests">
-		<exec executable="${dir.dist.dll}/msbuild.tests/Db4oTool.MSBuild.Tests.exe" failonerror="true"/>
-	</target>
-
-	<target name="build-core" depends="init, configure, check-dependencies, sharpen-core">
-	
-		<fileset id="core.sources" dir="${dir.n.v6.core}">
-			<include name="**/*.cs" />
-		</fileset>
-		
-		<csc-all
-				assemblyName="Db4objects.Db4o"
-				sources="core.sources">
-		</csc-all>		
-	</target>
-	
-	<target name="build-admin-tests" depends="build-admin" unless="skip.admin">
-	
-		<property name="src.dir" location="${dir.n.v6}/Db4oTool/Db4oTool.Tests" />
-
-		<csc
-			destfile="${dir.dist.dll.net}/Db4oTool.Tests.exe"
-			targettype="exe"
-			mainclass="Db4oTool.Tests.Program"
-			definitions="${csharp.definitions}"
-			debug="true"
-			executable="${csc.executable}"
-			extraoptions="${csc.tests.extraoptions}">
-	
-			<resource
-				file="${src.dir}/Core/Resources/PreserveDebugInfoSubject.cs"
-				name="Db4oTool.Tests.Core.Resources.PreserveDebugInfoSubject.cs" />
+		<msb solution="${dir.n.v6}/Db4o" />
+		<msb solution="${dir.n.v6}/Db4o-CF" outputPath="${dir.dist.dll.compact}" />
 			
-			<resource
-				file="${src.dir}/Core/Resources/CustomInstrumentationSubject.cs"
-				name="Db4oTool.Tests.Core.Resources.CustomInstrumentationSubject.cs" />
-			
-			<resource
-				file="${src.dir}/Core/Resources/ByAttributeInstrumentationSubject.cs"
-				name="Db4oTool.Tests.Core.Resources.ByAttributeInstrumentationSubject.cs" />
-			
-			<resource
-				file="${src.dir}/Core/Resources/ByNotAttributeInstrumentationSubject.cs"
-				name="Db4oTool.Tests.Core.Resources.ByNotAttributeInstrumentationSubject.cs" />
-		
-			<resource
-				file="${src.dir}/Core/Resources/ByFilterInstrumentationSubject.cs"
-				name="Db4oTool.Tests.Core.Resources.ByFilterInstrumentationSubject.cs" />
-		
-			<resource
-				file="${src.dir}/Core/Resources/ByNameInstrumentationSubject.cs"
-				name="Db4oTool.Tests.Core.Resources.ByNameInstrumentationSubject.cs" />
-
-			<resource
-					file="${src.dir}/NQ/Resources/DelegateSubject.cs"
-					name="Db4oTool.Tests.NQ.Resources.DelegateSubject.cs" />
-			
-			<resource
-				file="${src.dir}/NQ/Resources/PredicateSubject.cs"
-				name="Db4oTool.Tests.NQ.Resources.PredicateSubject.cs" />
-			<resource
-				file="${src.dir}/NQ/Resources/UnoptimizablePredicateSubject.cs"
-				name="Db4oTool.Tests.NQ.Resources.UnoptimizablePredicateSubject.cs" />
+	</target>	
 	
-			<resource
-				file="${src.dir}/TA/Resources/TAInstrumentationSubject.cs"
-				name="Db4oTool.Tests.TA.Resources.TAInstrumentationSubject.cs" />	
-			
-			<resource
-				file="${src.dir}/TA/Resources/TAAssemblyReferenceSubject.cs"
-				name="Db4oTool.Tests.TA.Resources.TAAssemblyReferenceSubject.cs" />
+	<target name="run-msbuild-tests" depends="build-admin">
+		<exec executable="${dir.dist.dll}/Db4oTool.MSBuild.Tests.exe" failonerror="true"/>
+	</target>	
 	
-			<resource
-				file="${src.dir}/TA/Resources/TADoubleInstrumentationSubject.cs"
-				name="Db4oTool.Tests.TA.Resources.TADoubleInstrumentationSubject.cs" />
-			
-			<resource
-				file="${src.dir}/TA/Resources/TAUnsafeInstrumentationSubject.cs"
-				name="Db4oTool.Tests.TA.Resources.TAUnsafeInstrumentationSubject.cs" />
-			
-			<resource
-				file="${src.dir}/TA/Resources/TAFieldSetterSubject.cs"
-				name="Db4oTool.Tests.TA.Resources.TAFieldSetterSubject.cs" />	
-			
-			<src dir="${src.dir}">
-				<include name="**/*.cs" />
-				<exclude name="**/Resources/**" />
-				<exclude name="**/obj/**" />
-			</src>
-	
-			<reference dir="${dir.dist.dll.net}">
-				<include name="Db4objects.Db4o.dll" />
-				<include name="Db4oUnit.dll" />
-				<include name="Db4oUnit.Extensions.dll" />
-				<include name="Mono.Cecil.dll" />
-				<include name="Cecil.FlowAnalysis.dll" />
-				<include name="Db4oTool.exe" />
-				<include name="Mono.GetOptions.dll" />
-			</reference>
-		</csc>
-	</target>
-	
-	<target name="build-admin" depends="build-nq" unless="skip.admin">
-		<copy todir="${dir.dist.dll.net}" file="${dir.libs.net}/Mono.Cecil.Pdb.dll" />
+	<target name="build-admin" depends="build-core" unless="skip.admin">
 		<updateAssemblyInfo 
 			version="${assembly.version}"
 			title="Db4oTool"
-			product="Db4oTool"
-			>
+			product="Db4oTool">
 			<fileset dir="${dir.n.v6}/Db4oTool/Db4oTool">
 				<include name="**/AssemblyInfo.cs" />
 			</fileset>
 		</updateAssemblyInfo>
-
-		<csc outputfile="${dir.dist.dll.net}/Db4oTool.exe"
-			targettype="exe"
-			debug="true"
-			definitions="TRACE"
-			executable="${csc.executable}">
-			<src dir="${dir.n.v6}/Db4oTool/Db4oTool">
-				<include name="**/*.cs" />
-			</src>
-			<reference dir="${dir.dist.dll.net}">
-				<include name="Db4objects.Db4o.dll" />
-				<include name="Db4objects.Db4o.Instrumentation.dll" />
-				<include name="Db4objects.Db4o.NativeQueries.dll" />
-				<include name="Mono.GetOptions.dll" />
-				<include name="Mono.Cecil.dll" />
-				<include name="Cecil.FlowAnalysis.dll" />
-			</reference>
-		</csc>
+		
+		<msb solution="${dir.n.v6}/Db4oTool/Db4oTool" />
+		
 	</target>
 
 	<target name="build-tutorial" >

@@ -33,7 +33,7 @@
 					Execute="firstSequence" />
 
 		<CustomAction Id="Launch_Tutorial"				
-				FileKey="doc.tutorial.Db4objects.Db4o.Tutorial.exe"
+				FileKey="doc.tutorial.Db4oTutorial.exe"
 				ExeCommand=""
 				Execute="firstSequence"
 				Return="asyncNoWait" />
@@ -81,7 +81,7 @@
 								LongName="Db4o Tutorial"
 								Show="normal"
 								WorkingDirectory="TARGETDIR"
-								Target="[#doc.tutorial.Db4objects.Db4o.Tutorial.exe]" />
+								Target="[#doc.tutorial.Db4oTutorial.exe]" />
 						</Component>
 					</Directory>
 				</Directory>

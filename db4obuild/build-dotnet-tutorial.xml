@@ -1,33 +1,17 @@
 <?xml version="1.0"?>
 <project name="db4o-tutorial" default="update-doc">
 	
-	<property file="machine.properties" />
-	<property file="ant.properties" />		
-	
-	<property name="csc.executable" value="csc" />
+	<import file="common-dotnet.xml" />
 
 	<property name="dir.n.v6.tutorial" location="../db4o.net/Db4oTutorial" />	
 	
-	<property name="project.name" value="Db4objects.Db4o.Tutorial" />
-	<property name="exe.name" value="${project.name}.exe" />	
-	<property name="base.project.dir" value="${dir.n.v6.tutorial}/${project.name}" />
-	
-	<condition property="mono" value="true">
-		<os family="unix" />
-	</condition>
-	
-	<target name="update-doc" depends="update-doc-mono, update-doc-net">
+	<target name="update-doc" depends="update-doc-net">
 	</target>
 	
-	<target name="update-doc-mono" if="mono">
-		<copy todir="${dir.dist.net.build.tutorial}">
-			<fileset dir="${dir.j.tutorial.out.mono}">
-				<include name="**/**" />
-			</fileset>
-		</copy>
+	<target name="standalone-build" depends="init, configure, update-doc">
 	</target>
-	
-	<target name="update-doc-net" depends="build" unless="mono">
+
+	<target name="update-doc-net" depends="build">
 		<copy todir="${dir.n.v6.tutorial.bin}">
 			<fileset dir="${dir.j.tutorial.out.net}">
 				<include name="**/**" />
@@ -35,65 +19,28 @@
 		</copy>
 	</target>
 	
-	<target name="build" depends="init" unless="mono">
-		<csc targetType="library"
-			destFile="${dir.n.v6.tutorial.bin}/bin/${project.name}.Chapters.dll"
-			srcdir="${base.project.dir}.Chapters"
-			executable="${csc.executable}">
-			
-			<include name="**/*.cs" />
-			
-			<reference dir="${dir.n.v6.tutorial.bin}/bin">			
-				<include name="${file.name.dll}" />
-			</reference>
-		</csc>
+	<target name="build" depends="init">
 		
-		<csc targetType="winexe"
-			destFile="${dir.n.v6.tutorial.bin}/${exe.name}"
-			win32icon="${base.project.dir}/Resources/db4o.ico"
-			srcdir="${base.project.dir}"
-			executable="${csc.executable}">
-			
-			<include name="**/*.cs" />
-			
-			<resource
-				file="${base.project.dir}/${project.name}.WebBrowserViewControl.resources" embed="true" />
-				
-			<resource
-				file="${base.project.dir}/${project.name}.TutorialOutlineViewControl.resources" embed="true" />			
-			
-			<reference dir="${dir.n.v6.tutorial.bin}/bin">
-				<include name="${file.name.dll}" />
-				<include name="${project.name}.Chapters.dll" />
-				<include name="WeifenLuo.WinFormsUI.dll" />
-				<include name="AxSHDocVw.dll" />
-				<include name="SHDocVw.dll" />
-				<include name="System.Windows.Forms.dll" />
-			</reference>			
-		</csc>
+		<msb
+			solution="${dir.n.v6.tutorial}/Db4objects.Db4o.Tutorial"
+			outputPath="${dir.n.v6.tutorial.bin}/bin" />
 		
-		<copy tofile="${dir.n.v6.tutorial.bin}/${exe.name}.config" file="${base.project.dir}/App.config" />
-
+		<move todir="${dir.n.v6.tutorial.bin}">
+			<fileset dir="${dir.n.v6.tutorial.bin}/bin">
+				<include name="Db4oTutorial.*" />
+			</fileset>
+		</move>
+		
 	</target>
 		
-	<target name="run" depends="update-doc">
-		<exec dir="${dir.n.v6.tutorial.bin}" executable="${dir.n.v6.tutorial.bin}/${exe.name}">
+	<target name="run" depends="standalone-build">
+		<exec dir="${dir.n.v6.tutorial.bin}" executable="${dir.n.v6.tutorial.bin}/Db4oTutorial.exe">
 		</exec>
 	</target>
 
 	<target name="init">
 		<mkdir dir="${dir.n.v6.tutorial.bin}" />
 		<mkdir dir="${dir.n.v6.tutorial.bin}/bin" />
-		<copy todir="${dir.n.v6.tutorial.bin}/bin">
-			<fileset dir="${dir.dist.dll.net}">
-				<include name="*.dll" />
-			</fileset>
-		</copy>
-		<copy todir="${dir.n.v6.tutorial.bin}/bin">
-			<fileset dir="${dir.n.v6.tutorial}/Libs">
-				<include name="*.dll" />
-			</fileset>
-		</copy>
 	</target>
 	
 	<target name="clean">
