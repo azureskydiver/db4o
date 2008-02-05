@@ -2,6 +2,8 @@
 
 package com.db4o.db4ounit.jre5.collections;
 
+import java.util.*;
+
 import com.db4o.collections.*;
 import com.db4o.db4ounit.common.ta.*;
 import com.db4o.ext.*;
@@ -17,8 +19,8 @@ public class ArrayList4TATestCaseBase extends TransparentActivationTestCaseBase 
 	
 	@Override
 	protected void store() throws Exception {
-		ArrayList4<Integer> list = new ArrayList4<Integer>();
-		ListAsserter.createList(list);
+		List<Integer> list = new ArrayList4<Integer>();
+		ArrayList4Asserter.createList(list);
 		store(list);
 	}
 	

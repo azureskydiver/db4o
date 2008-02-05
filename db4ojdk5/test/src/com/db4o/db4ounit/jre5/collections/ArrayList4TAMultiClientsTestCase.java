@@ -21,7 +21,7 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	
 	private static final ArrayList4Operation <Integer> _addOp = new ArrayList4Operation<Integer>() {
 		public void operate(ArrayList4<Integer> list) {
-			list.add(new Integer(ListAsserter.CAPACITY));
+			list.add(new Integer(ArrayList4Asserter.CAPACITY));
 		}
 	};
 	
@@ -46,15 +46,15 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 
 	private static final ArrayList4Operation<Integer> _containsOp = new ArrayList4Operation<Integer>() {
 		public void operate(ArrayList4<Integer> list) {
-			Assert.isFalse(list.contains(new Integer(ListAsserter.CAPACITY)));
+			Assert.isFalse(list.contains(new Integer(ArrayList4Asserter.CAPACITY)));
 		}
 	};
 	
 	private static final ArrayList4Operation<Integer> _addAllOp = new ArrayList4Operation<Integer>() {
 		public void operate(ArrayList4<Integer> list) {
 			final Vector<Integer> v = new Vector<Integer>();
-			for (int i = 0; i < ListAsserter.CAPACITY; ++i) {
-				v.add(new Integer(ListAsserter.CAPACITY + i));
+			for (int i = 0; i < ArrayList4Asserter.CAPACITY; ++i) {
+				v.add(new Integer(ArrayList4Asserter.CAPACITY + i));
 			}
 			list.addAll(v);
 		}
@@ -62,14 +62,14 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	
 	private static final ArrayList4Operation<Integer> _removeRangeOp = new ArrayList4Operation<Integer>() {
 		public void operate(ArrayList4<Integer> list) {
-			list.subList(ListAsserter.CAPACITY-10, ListAsserter.CAPACITY).clear();
+			list.subList(ArrayList4Asserter.CAPACITY-10, ArrayList4Asserter.CAPACITY).clear();
 		}
 	};
 	
 	public void testAddAdd() throws Exception {
 		ArrayList4Operation<Integer> anotherAddOp = new ArrayList4Operation<Integer>() {
 			public void operate(ArrayList4<Integer> list) {
-				list.add(new Integer(ListAsserter.CAPACITY + 42));
+				list.add(new Integer(ArrayList4Asserter.CAPACITY + 42));
 			}	
 		};	
 		operate(anotherAddOp, _addOp);
@@ -87,11 +87,11 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	}
 	
 	private void checkAdd() throws Exception {
-		checkListSizeAndContents(ListAsserter.CAPACITY+1);
+		checkListSizeAndContents(ArrayList4Asserter.CAPACITY+1);
 	}
 	
 	private void checkNotModified() throws Exception {
-		checkListSizeAndContents(ListAsserter.CAPACITY);
+		checkListSizeAndContents(ArrayList4Asserter.CAPACITY);
 	}
 	
 	private void checkListSizeAndContents(int expectedSize) throws Exception {
@@ -124,8 +124,8 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	
 	private void checkRemove() throws Exception {
 		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
-		Assert.areEqual(ListAsserter.CAPACITY - 1, list.size());
-		for (int i = 0; i < ListAsserter.CAPACITY - 1; ++i) {
+		Assert.areEqual(ArrayList4Asserter.CAPACITY - 1, list.size());
+		for (int i = 0; i < ArrayList4Asserter.CAPACITY - 1; ++i) {
 			Assert.areEqual(new Integer(i + 1), list.get(i));
 		}
 	}
@@ -311,12 +311,12 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 	}
 	
 	private void checkRemoveRange() throws Exception {
-		checkListSizeAndContents(ListAsserter.CAPACITY-10);
+		checkListSizeAndContents(ArrayList4Asserter.CAPACITY-10);
 	}
 	
 	private void checkAddAll() throws Exception {
 		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
-		for (int i = 0; i < ListAsserter.CAPACITY * 2; ++i) {
+		for (int i = 0; i < ArrayList4Asserter.CAPACITY * 2; ++i) {
 			Assert.areEqual(new Integer(i), list.get(i));
 		}
 	}
@@ -328,9 +328,9 @@ public class ArrayList4TAMultiClientsTestCase extends ArrayList4TATestCaseBase i
 
 	private void checkSet() throws Exception {
 		ArrayList4<Integer> list = retrieveAndAssertNullArrayList4();
-		Assert.areEqual(ListAsserter.CAPACITY, list.size());
+		Assert.areEqual(ArrayList4Asserter.CAPACITY, list.size());
 		Assert.areEqual(new Integer(1), list.get(0));
-		for (int i = 1; i < ListAsserter.CAPACITY; ++i) {
+		for (int i = 1; i < ArrayList4Asserter.CAPACITY; ++i) {
 			Assert.areEqual(new Integer(i), list.get(i));
 		}
 	}
