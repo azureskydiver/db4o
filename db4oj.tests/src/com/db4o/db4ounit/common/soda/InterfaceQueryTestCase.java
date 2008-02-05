@@ -64,8 +64,8 @@ public class InterfaceQueryTestCase extends AbstractDb4oTestCase {
 
 	public void testExplicitNotQuery2() {
 		Query query = newQuery();
+        query.constrain(DataA.class).or(query.constrain(DataB.class));
 		query.descend(FIELD_A).constrain(new Integer(10)).not();
-		query.constrain(DataA.class).or(query.constrain(DataB.class));
 		Assert.areEqual(2, query.execute().size());
 	}
 
@@ -118,7 +118,7 @@ public class InterfaceQueryTestCase extends AbstractDb4oTestCase {
 		Assert.areEqual(expected, query.execute().size());
 	}
 	
-	private static interface QueryConstrainer {
+	public static interface QueryConstrainer {
 		void constrain(Query query);
 	}
 }

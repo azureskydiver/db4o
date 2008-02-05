@@ -16,48 +16,65 @@ public class ArrayList4TestCase implements TestLifeCycle {
 		new TestRunner(ArrayList4TestCase.class).run();
 	}
 	
-	public ArrayList4 <Integer> _list;
+	public List <Integer> _list;
 
 	public void setUp() throws Exception {
-		_list = new ArrayList4<Integer>();
-		ListAsserter.createList(_list);
+		_list = newList(Integer.class);
+		ArrayList4Asserter.createList(_list);
 	}
 
 	public void tearDown() throws Exception {
 		
 	}
 	
+	/**
+	 * @param elementType
+	 */
+    private <T> List<T> newList(Class <T> elementType) {
+        return new ArrayList4<T>();
+    }
+    
+    private List<Integer> newList(int capacity) {
+        return new ArrayList4<Integer>(capacity);
+    }
+    
+    private <T> List<T> newList(List<T> list) {
+        return new ArrayList4<T>(list);
+    }
+	
+	private ArrayList4<Integer> castedList(){
+	    return (ArrayList4<Integer>)_list;
+	}
+	
     public void testCloneWontCopyActivator() throws Exception {
-    	_list.bind(new MockActivator());
-		
-		final Object clone = _list.clone();
+    	castedList().bind(new MockActivator());
+		final Object clone = castedList().clone();
 		Assert.isNull(Reflection4.getFieldValue(clone, "_activator"));
     }
 	
 	public void testConstructor() throws Exception {
-		ArrayList4<Integer> arrayList = new ArrayList4<Integer>();
+		List<Integer> arrayList = newList(Integer.class);
 		fill(arrayList);
-		Assert.areEqual(ListAsserter.CAPACITY, arrayList.size());
+		Assert.areEqual(ArrayList4Asserter.CAPACITY, arrayList.size());
 	}
-	
+
 	public void testConstructor_I_LegalArguments1() throws Exception {
-		ArrayList4<Integer> arrayList; 
-		arrayList = new ArrayList4<Integer>(ListAsserter.CAPACITY);
+		int capacity = ArrayList4Asserter.CAPACITY;
+        List<Integer> arrayList = newList(capacity);
 		fill(arrayList);
-		Assert.areEqual(ListAsserter.CAPACITY, arrayList.size());
+		Assert.areEqual(capacity, arrayList.size());
 	}
-	
+
 	public void testConstructor_I_LegalArguments2() throws Exception {
-		ArrayList4<Integer> arrayList; 
-		arrayList = new ArrayList4<Integer>(0);
+		List<Integer> arrayList= newList(0);
 		fill(arrayList);
-		Assert.areEqual(ListAsserter.CAPACITY, arrayList.size());
+		Assert.areEqual(ArrayList4Asserter.CAPACITY, arrayList.size());
 	}
 
 	public void testConstructor_I_IllegalArgumentException() throws Exception {
 		Assert.expect(IllegalArgumentException.class, new CodeBlock(){
 			public void run() throws Throwable {
-				new ArrayList4<Integer>(-1);
+				newList(-1);
 			}
 		});
 	}
@@ -65,92 +82,93 @@ public class ArrayList4TestCase implements TestLifeCycle {
 	public void testConstructor_LCollection_NullPointerException() throws Exception {
 		Assert.expect(NullPointerException.class, new CodeBlock(){
 			public void run() throws Throwable {
-				new ArrayList4<Integer>(null);
+				newList((List<Integer>)null);
 			}
 		});
 	}
 	
 	public void testConstructor_LCollection() throws Exception {
-		ArrayList4<Integer> arrayList = new ArrayList4<Integer>(_list);
-		Assert.areEqual(_list.size(), arrayList.size());
-		Assert.isTrue(Arrays.equals(_list.toArray(), arrayList.toArray()));
+		List<Integer> list = _list;
+        List<Integer> arrayList = newList(list);
+		Assert.areEqual(list.size(), arrayList.size());
+		Assert.isTrue(Arrays.equals(list.toArray(), arrayList.toArray()));
 		
 	}
 
-	private void fill(ArrayList4<Integer> arrayList) {
-		for (int i = 0; i < ListAsserter.CAPACITY; i++) {
+	private void fill(List <Integer> arrayList) {
+		for (int i = 0; i < ArrayList4Asserter.CAPACITY; i++) {
 			arrayList.add(new Integer(i));
 		}
 	}
 
 	public void testAdd() throws Exception {
-		ListAsserter.assertAdd(_list);
+		ArrayList4Asserter.assertAdd(_list);
 	}
 
 	public void testAdd_LObject() throws Exception {
-		ListAsserter.assertAdd_LObject(_list);
+		ArrayList4Asserter.assertAdd_LObject(_list);
 	}
 
 	public void testAddAll_LCollection() throws Exception {
-		ListAsserter.assertAddAll_LCollection(_list);
+		ArrayList4Asserter.assertAddAll_LCollection(_list);
 	}
 
 	public void testClear() throws Exception {
-		ListAsserter.assertClear(_list);
+		ArrayList4Asserter.assertClear(_list);
 	}
 
 	public void testContains() throws Exception {
-		ListAsserter.assertContains(_list);
+		ArrayList4Asserter.assertContains(_list);
 	}
 
 	public void testContainsAll() throws Exception {
-		ListAsserter.assertContainsAll(_list);
+		ArrayList4Asserter.assertContainsAll(_list);
 	}
 
 	public void testIndexOf() throws Exception {
-		ListAsserter.assertIndexOf(_list);
+		ArrayList4Asserter.assertIndexOf(_list);
 	}
 
 	public void testIsEmpty() throws Exception {
-		ListAsserter.assertIsEmpty(_list);
-		Assert.isTrue(new ArrayList4<Integer>().isEmpty());
+		ArrayList4Asserter.assertIsEmpty(_list);
+		Assert.isTrue(newList(Integer.class).isEmpty());
 	}
 
 	public void testIterator() throws Exception {
-		ListAsserter.assertIterator(_list);
+		ArrayList4Asserter.assertIterator(_list);
 	}
 
 	public void testLastIndexOf() throws Exception {
-		ListAsserter.assertLastIndexOf(_list);
+		ArrayList4Asserter.assertLastIndexOf(_list);
 	}
 
 	public void testRemove_LObject() throws Exception {
-		ListAsserter.assertRemove_LObject(_list);
+		ArrayList4Asserter.assertRemove_LObject(_list);
 	}
 
 	public void testRemoveAll() throws Exception {
-		ListAsserter.assertRemoveAll(_list);
+		ArrayList4Asserter.assertRemoveAll(_list);
 	}
 
 	public void testSet() throws Exception {
-		ListAsserter.assertSet(_list);
+		ArrayList4Asserter.assertSet(_list);
 	}
 
 	public void testSize() throws Exception {
-		ListAsserter.assertSize(_list);
+		ArrayList4Asserter.assertSize(_list);
 	}
 	
 	public void testToArray() throws Exception {
-		ListAsserter.assertToArray(_list);
+		ArrayList4Asserter.assertToArray(_list);
 	}
 	
 	public void testToArray_LObject() throws Exception {
-		ListAsserter.assertToArray_LObject(_list);
+		ArrayList4Asserter.assertToArray_LObject(_list);
 	}
 	
 	public void testToString() throws Exception {
-		ListAsserter.assertToString(_list);
-        ArrayList4<Object> oList = new ArrayList4<Object>();    
+		ArrayList4Asserter.assertToString(_list);
+        List<Object> oList = newList(Object.class);    
         Assert.areEqual("[]",oList.toString());
         
         oList.add(new Integer(1));
@@ -163,71 +181,71 @@ public class ArrayList4TestCase implements TestLifeCycle {
 	}
 	
 	public void testTrimToSize_EnsureCapacity() throws Exception {
-		ArrayList4Asserter.assertTrimToSize_EnsureCapacity(_list);
+		ArrayList4Asserter.assertTrimToSize_EnsureCapacity(castedList());
 	}
 	
 	public void testTrimToSize_Remove() throws Exception {
-		ListAsserter.assertTrimToSize_Remove(_list);
+		ArrayList4Asserter.assertTrimToSize_Remove(_list);
 	}
 	
 	public void testTrimToSize_Iterator() throws Exception {
-		ArrayList4Asserter.assertTrimToSize_Iterator(_list);
+		ArrayList4Asserter.assertTrimToSize_Iterator(castedList());
 	}
 	
 	public void testEnsureCapacity_Iterator() throws Exception {
-		ArrayList4Asserter.assertEnsureCapacity_Iterator(_list);
+		ArrayList4Asserter.assertEnsureCapacity_Iterator(castedList());
 	}
 	
 	public void testClear_Iterator() throws Exception {
-		ListAsserter.assertClear_Iterator(_list);
+		ArrayList4Asserter.assertClear_Iterator(_list);
 	}
 	
 	public void testClone() throws Exception {
-		ListAsserter.assertClone(_list);
+		ArrayList4Asserter.assertClone(_list);
 	}
 	
 	public void testEquals() throws Exception {
-		ListAsserter.assertEquals(_list);
+		ArrayList4Asserter.assertEquals(_list);
 	}
 	
 	public void testIteratorNext_NoSuchElementException() throws Exception {
-		ListAsserter.assertIteratorNext_NoSuchElementException(_list);
+		ArrayList4Asserter.assertIteratorNext_NoSuchElementException(_list);
 	}
 	
 	public void testIteratorNext_ConcurrentModificationException() throws Exception {
-		ListAsserter.assertIteratorNext_ConcurrentModificationException(_list);
+		ArrayList4Asserter.assertIteratorNext_ConcurrentModificationException(_list);
 	}
 	
 	public void testIteratorNext() throws Exception {
-		ListAsserter.assertIteratorNext(_list);
+		ArrayList4Asserter.assertIteratorNext(_list);
 	}
 	
 	public void testIteratorRemove() throws Exception {
-		ListAsserter.assertIteratorRemove(_list);
+		ArrayList4Asserter.assertIteratorRemove(_list);
 	}
 	
 	public void testRemove_IllegalStateException() throws Exception {
-		ListAsserter.assertRemove_IllegalStateException(_list);
+		ArrayList4Asserter.assertRemove_IllegalStateException(_list);
 	}
 	
 	public void testIteratorRemove_ConcurrentModificationException() throws Exception {
-		ListAsserter.assertIteratorRemove_ConcurrentModificationException(_list);
+		ArrayList4Asserter.assertIteratorRemove_ConcurrentModificationException(_list);
 	}
 	
 	public void testSubList() throws Exception {
-		ListAsserter.assertSubList(_list);
+		ArrayList4Asserter.assertSubList(_list);
 	}
 	
 	public void testSubList_ConcurrentModification() throws Exception {
-		ListAsserter.assertSubList_ConcurrentModification(_list);
+		ArrayList4Asserter.assertSubList_ConcurrentModification(_list);
 	}
 	
 	public void testSubList_Clear() throws Exception {
-		ListAsserter.assertSubList_Clear(_list);
+		ArrayList4Asserter.assertSubList_Clear(_list);
 	}
 	
 	public void testSubList_Clear2() throws Exception {
-		ListAsserter.assertSubList_Clear2(_list);
+		ArrayList4Asserter.assertSubList_Clear2(_list);
 	}
 	
 }
