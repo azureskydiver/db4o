@@ -18,7 +18,7 @@ public class ArrayList4TATestCaseBase extends TransparentActivationTestCaseBase 
 	@Override
 	protected void store() throws Exception {
 		ArrayList4<Integer> list = new ArrayList4<Integer>();
-		ArrayList4Asserter.createList(list);
+		ListAsserter.createList(list);
 		store(list);
 	}
 	
