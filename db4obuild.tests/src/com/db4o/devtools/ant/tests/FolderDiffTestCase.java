@@ -2,7 +2,6 @@ package com.db4o.devtools.ant.tests;
 
 import java.io.*;
 import java.util.*;
-import java.util.regex.*;
 
 import com.db4o.devtools.ant.*;
 
@@ -16,14 +15,14 @@ public class FolderDiffTestCase implements TestCase, TestLifeCycle {
 	
 	public void setUp() throws Exception {
 		
-		folder1Path = createFolderStructure(
+		folder1Path = IO.createFolderStructure(
 						"Folder1",
 						"A/f1.txt(file1 contents)",
 						"A/f2.txt(file2 contents)",
 						"A/B/f3.txt(file3 contents)",
 						"A/B/C/f4.txt(file4 contents)");
 		
-		folder2Path = createFolderStructure(
+		folder2Path = IO.createFolderStructure(
 						"Folder2",
 						
 						"A/f1_new.txt(file1 new contents)", 
@@ -32,7 +31,7 @@ public class FolderDiffTestCase implements TestCase, TestLifeCycle {
 						"A/B/C/f4.txt(file4 contents)", 
 						"D/f5.txt()");
 		
-		folder3Path = createFolderStructure(
+		folder3Path = IO.createFolderStructure(
 						"Folder3", 
 						
 						"A/f2.txt(contents file2)",
@@ -66,7 +65,7 @@ public class FolderDiffTestCase implements TestCase, TestLifeCycle {
 	}
 	
 	public void testBoundaryConditions() throws Throwable {
-		final String emptyFolderPath = createFolderStructure("emptyFolder");
+		final String emptyFolderPath = IO.createFolderStructure("emptyFolder");
 		assertFolder(FolderDiff.diff(emptyFolderPath, emptyFolderPath));
 		assertFolder(FolderDiff.diff(folder1Path, folder1Path));
 		assertFolder(
@@ -86,7 +85,7 @@ public class FolderDiffTestCase implements TestCase, TestLifeCycle {
 	
 	public void testFolderFilter() throws Throwable {
 		
-		final String folderWithIgnoredSubFolders = createFolderStructure(
+		final String folderWithIgnoredSubFolders = IO.createFolderStructure(
 				"FolderWithIgnoredSubFolders", 
 				
 				"A/.svn/f1.txt(file in svn folder!)",
@@ -156,53 +155,6 @@ public class FolderDiffTestCase implements TestCase, TestLifeCycle {
 		Assert.isTrue(files.contains(expectedFile), "Expecting '" + operation + expectedFile + "'. Found '" + files + "'");
 	}
 	
-	private String createFolderStructure(String folderName, String... files) throws IOException {
-		String tempPath = getTempPath();
-		String fullFolderPath = tempPath + "/" + folderName;
-		
-		for(int i = 0; i < files.length; i++) {
-			createFileContents(fullFolderPath, files[i]);
-		}
-		
-		return fullFolderPath;
-	}
-
-	private String getTempPath() throws IOException {
-		return new File(System.getProperty("java.io.tmpdir")).getCanonicalPath();
-	}
-	
-	static final Pattern FILE_CONTENTS_REGEX = Pattern.compile("(.*)\\((.*)\\)");
-
-	private void createFileContents(String parent, String string) throws IOException {
-		
-		Matcher m = FILE_CONTENTS_REGEX.matcher(string);
-		if (m.matches()) {
-			String filePath = parent + "/" + m.group(1);
-			String fileContents = m.group(2);
-			
-			createFolder(new File(filePath).getParent());
-			createFile(filePath, fileContents);
-		} else {
-			createFolder(parent);
-		}
-	}
-
-	private void createFolder(String path) {
-		File targetFolder = new File(path);
-		if (!targetFolder.exists())	{
-			targetFolder.mkdirs();
-		}
-	}
-
-	private void createFile(String filePath, String fileContents) throws IOException {
-		FileWriter writer = new FileWriter(filePath);
-		try {
-			writer.write(fileContents);
-		} finally {
-			writer.close();
-		}		
-	}
-
 	public void tearDown() throws Exception {
 	}
 }

@@ -44,7 +44,7 @@ public class UpdateCSharpProjectAntTask extends Task {
 			
 			log("writing '" + _projectFile + "'");
 			log("base source dir is '" + _baseDir + "'");
-			project.writeToURI(_projectFile.toURI().toString());
+			project.writeToFile(_projectFile);
 			
 		} catch (Exception x) {
 			throw new BuildException(x, getLocation());

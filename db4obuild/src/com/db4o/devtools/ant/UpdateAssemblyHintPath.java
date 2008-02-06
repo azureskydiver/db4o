@@ -31,7 +31,7 @@ public class UpdateAssemblyHintPath extends AbstractMultiFileSetTask {
 		if (hintPath == null) return;
 		
 		project.setHintPathFor(assemblyName(), _to);
-		project.writeToURI(file.toURI().toString());
+		project.writeToFile(file);
 	}
 
 	private String assemblyName() {
